@@ -16,7 +16,7 @@ export const MainNavigation: FC<MainNavigationProps> = ({
 }) => {
   return (
     <div
-      className={classNames(
+      className={
         tw(
           "flex",
           "sm:w-full",
@@ -26,7 +26,6 @@ export const MainNavigation: FC<MainNavigationProps> = ({
           "md:h-full",
           "md:flex-col",
           "md:flex-shrink-0"
-        )
       )}
       style={{ background: "#30404d", color: "#f5f8fa" }}
     >
