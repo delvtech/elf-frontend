@@ -1,3 +1,8 @@
+.smTabs :global(.bp3-tab-indicator-wrapper) {
+  /* don't show the tab indicator */
+  display: none;
+}
+
 .tabs :global(.bp3-tab-list) {
   width: 100%;
 }
