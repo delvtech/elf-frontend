@@ -23,15 +23,15 @@ export const SwapView: FC<SwapViewProps> = () => {
           description={
             <div
               className={classNames(
-                tw("md:text-left", "flex", "flex-col", "gap-y-5")
+                tw("md:text-left", "flex", "flex-col", "justify-center", "gap-y-5")
               )}
             >
               <span>
                 Connecting your wallet lets Element.fi do a few things:
               </span>
               <ol>
-                <li>View and display your balances</li>
-                <li>Initialize transactions on your behalf</li>
+                <li className={tw("text-center")}>View and display your balances</li>
+                <li className={tw("text-center")}>Initialize transactions on your behalf</li>
               </ol>
             </div>
           }

@@ -16,7 +16,7 @@ export const MainNavigation: FC<MainNavigationProps> = ({
 }) => {
   return (
     <div
-      className={classNames(
+      className={
         tw(
           "flex",
           "sm:w-full",
@@ -26,7 +26,6 @@ export const MainNavigation: FC<MainNavigationProps> = ({
           "md:h-full",
           "md:flex-col",
           "md:flex-shrink-0"
-        )
       )}
       style={{ background: "#30404d", color: "#f5f8fa" }}
     >
@@ -56,12 +55,10 @@ export const MainNavigation: FC<MainNavigationProps> = ({
           <Tab id={Navigation.FUNDS} title="Funds" />
         </Tabs>
 
-        <div className={tw("flex", "md:flex-col", "md:py-4", "gap-y-12")}>
-          <ButtonGroup large vertical minimal>
-            <Button>Connect your wallet</Button>
-            <Button>Resources</Button>
-          </ButtonGroup>
-        </div>
+        <ButtonGroup large vertical minimal>
+          <Button>Connect your wallet</Button>
+          <Button>Resources</Button>
+        </ButtonGroup>
       </div>
     </div>
   );
