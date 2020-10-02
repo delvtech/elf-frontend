@@ -55,12 +55,10 @@ export const MainNavigation: FC<MainNavigationProps> = ({
           <Tab id={Navigation.FUNDS} title="Funds" />
         </Tabs>
 
-        <div className={tw("flex", "md:flex-col", "md:py-4", "gap-y-12")}>
-          <ButtonGroup large vertical minimal>
-            <Button>Connect your wallet</Button>
-            <Button>Resources</Button>
-          </ButtonGroup>
-        </div>
+        <ButtonGroup large vertical minimal>
+          <Button>Connect your wallet</Button>
+          <Button>Resources</Button>
+        </ButtonGroup>
       </div>
     </div>
   );
