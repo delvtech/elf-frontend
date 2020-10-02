@@ -1,13 +1,4 @@
-import {
-  Button,
-  Callout,
-  Classes,
-  Intent,
-  NonIdealState,
-  OL,
-  Tag,
-  UL,
-} from "@blueprintjs/core";
+import { Button, Intent, NonIdealState, Tag } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import classNames from "classnames";
 import React, { FC } from "react";

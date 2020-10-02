@@ -4,13 +4,16 @@ import { Navigation } from "efi/app/navigation";
 import React from "react";
 import { FC } from "react";
 import tw from "tailwindcss-classnames";
-import styles from "./Sidebar.module.css";
+import styles from "./MainNavigation.module.css";
 
-interface SidebarProps {
+interface MainNavigationProps {
   activeTab: Navigation;
   setActiveTab: (newActiveTab: Navigation) => void;
 }
-export const Sidebar: FC<SidebarProps> = ({ activeTab, setActiveTab }) => {
+export const MainNavigation: FC<MainNavigationProps> = ({
+  activeTab,
+  setActiveTab,
+}) => {
   return (
     <div
       className={classNames(

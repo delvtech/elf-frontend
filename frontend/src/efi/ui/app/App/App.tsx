@@ -1,5 +1,5 @@
 import React, { FC, useState } from "react";
-import { Sidebar } from "efi/ui/app/Sidebar/Sidebar";
+import { MainNavigation } from "efi/ui/app/MainNavigation/MainNavigation";
 import { Classes } from "@blueprintjs/core";
 import classNames from "classnames";
 import { tw } from "tailwindcss-classnames";
@@ -18,7 +18,7 @@ const App: FC<{}> = () => {
         tw("flex", "w-screen", "h-screen")
       )}
     >
-      <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+      <MainNavigation activeTab={activeTab} setActiveTab={setActiveTab} />
 
       {activeTab === Navigation.SWAP && <SwapView />}
     </div>
