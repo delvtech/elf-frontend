@@ -88,7 +88,7 @@ export const MainNavigation: FC<MainNavigationProps> = ({
             <Tab id={Navigation.FUNDS} title="Funds" className={tw("my-2")} />
           </Tabs>
 
-          <ButtonGroup large vertical minimal>
+          <ButtonGroup large vertical minimal className={tw("pb-10")}>
             <Button>Connect your wallet</Button>
             <Button>Resources</Button>
           </ButtonGroup>
