@@ -11,3 +11,19 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+:root {
+  /* 
+   * Taken from Blueprint, this is the color of the dark mode Navbar component.
+   * If using the blueprint Classes module, this is equivalent to
+   * Classes.DARK_GRAY5.
+   */
+  --bp3-dark-navbar-bg-color: #394b59;
+
+  /* 
+   * Taken from Blueprint, this is the color of the dark mode Navbar text.
+   * If using the blueprint Classes module, this is equivalent to
+   * Classes.LIGHT_GRAY5.
+   */
+  --bp3-dark-navbar-font-color: #f5f8fa;
+}

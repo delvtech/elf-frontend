@@ -60,7 +60,10 @@ export const MainNavigation: FC<MainNavigationProps> = ({
           "flex-col",
           "flex-shrink-0"
         )}
-        style={{ background: "#394b59", color: "#f5f8fa" }}
+        style={{
+          background: "var(--bp3-dark-navbar-bg-color)",
+          color: "var(--bp3-dark-navbar-color)",
+        }}
       >
         <span className={tw("py-10", "text-center", "text-xl", "font-bold")}>
           Element.fi
