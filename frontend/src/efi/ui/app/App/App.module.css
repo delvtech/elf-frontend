@@ -1,3 +1,7 @@
 .app {
-  background-color: #202b33; /* DARK_GRAY2 */
+  background-color: var(--bp3-dark-bg-color);
+}
+
+.contentContainer {
+  padding-top: var(--bp3-navbar-height);
 }
