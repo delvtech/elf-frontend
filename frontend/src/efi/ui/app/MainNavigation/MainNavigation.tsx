@@ -14,6 +14,7 @@ import { Navigation } from "efi/app/navigation";
 import React, { Fragment } from "react";
 import { FC } from "react";
 import tw from "tailwindcss-classnames";
+import { t } from "ttag";
 import styles from "./MainNavigation.module.css";
 
 interface MainNavigationProps {
@@ -32,7 +33,7 @@ export const MainNavigation: FC<MainNavigationProps> = ({
           <NavbarHeading>
             <AnchorButton minimal outlined>
               <strong>Element.fi</strong>
-            </AnchorButton>{" "}
+            </AnchorButton>
           </NavbarHeading>
         </NavbarGroup>
         <NavbarGroup align={Alignment.RIGHT}>
@@ -42,9 +43,9 @@ export const MainNavigation: FC<MainNavigationProps> = ({
             selectedTabId={activeTab}
             onChange={setActiveTab}
           >
-            <Tab id={Navigation.PORTFOLIO} title="Portfolio" />
-            <Tab id={Navigation.SWAP} title="Swap" />
-            <Tab id={Navigation.FUNDS} title="Funds" />
+            <Tab id={Navigation.PORTFOLIO} title={t`Portfolio`} />
+            <Tab id={Navigation.SWAP} title={t`Swap`} />
+            <Tab id={Navigation.FUNDS} title={t`Funds`} />
           </Tabs>
         </NavbarGroup>
       </Navbar>
@@ -84,16 +85,20 @@ export const MainNavigation: FC<MainNavigationProps> = ({
           >
             <Tab
               id={Navigation.PORTFOLIO}
-              title="Portfolio"
+              title={t`Portfolio`}
               className={tw("my-2")}
             />
-            <Tab id={Navigation.SWAP} title="Swap" className={tw("my-2")} />
-            <Tab id={Navigation.FUNDS} title="Funds" className={tw("my-2")} />
+            <Tab id={Navigation.SWAP} title={t`Swap`} className={tw("my-2")} />
+            <Tab
+              id={Navigation.FUNDS}
+              title={t`Funds`}
+              className={tw("my-2")}
+            />
           </Tabs>
 
           <ButtonGroup large vertical minimal className={tw("pb-10")}>
-            <Button>Connect your wallet</Button>
-            <Button>Resources</Button>
+            <Button>{t`Connect your wallet`}</Button>
+            <Button>{t`Resources`}</Button>
           </ButtonGroup>
         </div>
       </div>

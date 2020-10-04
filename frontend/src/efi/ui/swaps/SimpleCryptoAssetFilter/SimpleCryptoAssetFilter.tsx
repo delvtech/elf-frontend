@@ -4,6 +4,7 @@ import classNames from "classnames";
 import { CryptoAssetSuggest } from "efi/ui/base/CryptoAssetSuggest/CryptoAssetSuggest";
 import React, { FC } from "react";
 import tw from "tailwindcss-classnames";
+import { t } from "ttag";
 
 interface SimpleCryptoAssetFilterProps {
   className?: string;
@@ -21,9 +22,9 @@ export const SimpleCryptoAssetFilter: FC<SimpleCryptoAssetFilterProps> = ({
       <span
         className={tw("text-lg", "inline-flex", "items-center", "space-x-4")}
       >
-        <CryptoAssetSuggest placeholder="Base asset" />
+        <CryptoAssetSuggest placeholder={t`Base asset`} />
         <Icon icon={IconNames.ARROW_RIGHT} />
-        <CryptoAssetSuggest placeholder="Desired asset" />
+        <CryptoAssetSuggest placeholder={t`Desired asset`} />
       </span>
     </div>
   );

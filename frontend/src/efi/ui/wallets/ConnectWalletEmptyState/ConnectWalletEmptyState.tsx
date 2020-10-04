@@ -3,12 +3,23 @@ import { IconNames } from "@blueprintjs/icons";
 import classNames from "classnames";
 import React, { FC } from "react";
 import tw from "tailwindcss-classnames";
+import { jt, t } from "ttag";
+
+const betaTag = (
+  <Tag minimal intent={Intent.WARNING}>
+    {t`BETA`}
+  </Tag>
+);
+
+const howSwapsWorkLink = (
+  <a key="how-swaps-work" href="/">{t`how Swaps work`}</a>
+);
 
 export const ConnectWalletEmptyState: FC<{}> = () => {
   return (
     <NonIdealState
       icon={IconNames.SEND_TO_GRAPH}
-      title="No wallet connected."
+      title={t`No wallet connected.`}
       description={
         <div
           className={classNames(
@@ -22,32 +33,24 @@ export const ConnectWalletEmptyState: FC<{}> = () => {
             )
           )}
         >
-          <span>Connecting your wallet lets Element.fi do a few things:</span>
+          <span>{t`Connecting your wallet lets Element.fi do a few things:`}</span>
           <ul className={tw("w-9/12", "list-disc", "text-left")}>
             <li className={tw("mb-3")}>
-              View and display your crypto balances
+              {t`View and display your crypto balances`}
             </li>
-            <li>Initialize Ethereum transactions on your behalf</li>
+            <li>{t`Initialize Ethereum transactions on your behalf`}</li>
           </ul>
         </div>
       }
       action={
         <Button large minimal outlined>
-          Connect your wallet
+          {t`Connect your wallet`}
         </Button>
       }
     >
       <div className={tw("pt-32")}>
-        <p className={tw("pb-4")}>
-          Swaps are currently in{" "}
-          <Tag minimal intent={Intent.WARNING}>
-            BETA
-          </Tag>
-          .
-        </p>
-        <p>
-          Read more about <a href="#">how Swaps work</a>.
-        </p>
+        <p className={tw("pb-4")}>{jt`Swaps are currently in ${betaTag}.`}</p>
+        <p>{jt`Read more about (${howSwapsWorkLink}).`}</p>
       </div>
     </NonIdealState>
   );
