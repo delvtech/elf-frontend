@@ -6,10 +6,15 @@ import { tw } from "tailwindcss-classnames";
 
 import styles from "./App.module.css";
 import { Navigation } from "efi/app/navigation";
-import { SwapView } from "efi/ui/swaps/SwapView/SwapView";
+import { ConnectWalletEmptyState } from "efi/ui/wallets/ConnectWalletEmptyState/ConnectWalletEmptyState";
+import { ActiveTab } from "../ActiveTab/ActiveTab";
 
 const App: FC<{}> = () => {
+  // TODO: wire this up to a real wallet connection
+  const hasWalletConnection = true;
+
   const [activeTab, setActiveTab] = useState(Navigation.SWAP);
+
   return (
     <div
       className={classNames(
@@ -20,7 +25,19 @@ const App: FC<{}> = () => {
     >
       <MainNavigation activeTab={activeTab} setActiveTab={setActiveTab} />
 
-      {activeTab === Navigation.SWAP && <SwapView />}
+      {/* Mobile */}
+      <div
+        className={classNames(
+          tw("flex", "w-screen", "h-screen"),
+          styles.contentContainer
+        )}
+      >
+        {!hasWalletConnection ? (
+          <ConnectWalletEmptyState />
+        ) : (
+          <ActiveTab activeTab={activeTab} />
+        )}
+      </div>
     </div>
   );
 };

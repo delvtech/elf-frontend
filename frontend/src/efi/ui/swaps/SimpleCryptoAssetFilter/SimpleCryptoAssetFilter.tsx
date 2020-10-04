@@ -1,0 +1,30 @@
+import { Icon } from "@blueprintjs/core";
+import { IconNames } from "@blueprintjs/icons";
+import classNames from "classnames";
+import { CryptoAssetSuggest } from "efi/ui/base/CryptoAssetSuggest/CryptoAssetSuggest";
+import React, { FC } from "react";
+import tw from "tailwindcss-classnames";
+
+interface SimpleCryptoAssetFilterProps {
+  className?: string;
+}
+export const SimpleCryptoAssetFilter: FC<SimpleCryptoAssetFilterProps> = ({
+  className,
+}) => {
+  return (
+    <div
+      className={classNames(
+        tw("flex", "flex-col", "justify-center", "items-center", "gap-6"),
+        className
+      )}
+    >
+      <span
+        className={tw("text-lg", "inline-flex", "items-center", "space-x-4")}
+      >
+        <CryptoAssetSuggest placeholder="Base asset" />
+        <Icon icon={IconNames.ARROW_RIGHT} />
+        <CryptoAssetSuggest placeholder="Desired asset" />
+      </span>
+    </div>
+  );
+};

@@ -14,16 +14,31 @@ code {
 
 :root {
   /* 
+   * This is the height of the top navbar. Because of how the Navbar manages
+   * "stickiness", we need to offset the position of our main content by the
+   * height of the navbar.
+   * https://blueprintjs.com/docs/#core/components/navbar.fixed-to-viewport-top
+   */
+  --bp3-navbar-height: 50px;
+
+  /* 
+   * Taken from Blueprint, this is the color of the dark mode app background.
+   * If using the blueprint Colors module, this is equivalent to
+   * Colors.DARK_GRAY2.
+   */
+  --bp3-dark-bg-color: #202b33;
+
+  /* 
    * Taken from Blueprint, this is the color of the dark mode Navbar component.
-   * If using the blueprint Classes module, this is equivalent to
-   * Classes.DARK_GRAY5.
+   * If using the blueprint Colors module, this is equivalent to
+   * Colors.DARK_GRAY5.
    */
   --bp3-dark-navbar-bg-color: #394b59;
 
   /* 
    * Taken from Blueprint, this is the color of the dark mode Navbar text.
-   * If using the blueprint Classes module, this is equivalent to
-   * Classes.LIGHT_GRAY5.
+   * If using the blueprint Colors module, this is equivalent to
+   * Colors.LIGHT_GRAY5.
    */
   --bp3-dark-navbar-font-color: #f5f8fa;
 }

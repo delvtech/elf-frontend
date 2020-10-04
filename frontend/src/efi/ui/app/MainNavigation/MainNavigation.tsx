@@ -53,7 +53,7 @@ export const MainNavigation: FC<MainNavigationProps> = ({
       <div
         className={tw(
           "hidden",
-          "sm:flex",
+          "md:flex",
           "flex-row",
           "w-1/6",
           "h-full",
