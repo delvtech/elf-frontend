@@ -2,6 +2,7 @@ import { CryptoAssetTable } from "efi/ui/base/CryptoAssetTable/CryptoAssetTable"
 import { SimpleCryptoAssetFilter } from "efi/ui/swaps/SimpleCryptoAssetFilter/SimpleCryptoAssetFilter";
 import React, { FC } from "react";
 import tw from "tailwindcss-classnames";
+import { t } from "ttag";
 
 interface SwapViewProps {}
 export const SwapView: FC<SwapViewProps> = () => {
@@ -28,11 +29,11 @@ export const SwapView: FC<SwapViewProps> = () => {
         )}
       >
         <span className={tw("text-lg", "font-bold", "lg:text-2xl")}>
-          Pick two assets to swap
+          {t`Pick two assets to swap`}
         </span>
         <SimpleCryptoAssetFilter className={tw("py-4")} />
         <span className={tw("text-lg", "font-bold", "lg:text-2xl")}>
-          or choose a pair below
+          {t`or choose a pair below`}
         </span>
 
         <CryptoAssetTable />
