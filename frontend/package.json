@@ -30,7 +30,8 @@
     "build": "react-scripts build",
     "build:tailwind": "tailwindcss build src/tailwind.css -o src/tailwind.output.css",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "add:language": "bash ./scripts/add-language.sh"
   },
   "eslintConfig": {
     "extends": "react-app"
