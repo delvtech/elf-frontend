@@ -1,0 +1,1 @@
+export const INFURA_ID = process.env.EFI_INFURA_ID;

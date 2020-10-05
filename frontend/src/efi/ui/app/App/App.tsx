@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from "react";
+import React, { FC, useState } from "react";
 import { MainNavigation } from "efi/ui/app/MainNavigation/MainNavigation";
 import { Classes } from "@blueprintjs/core";
 import classNames from "classnames";

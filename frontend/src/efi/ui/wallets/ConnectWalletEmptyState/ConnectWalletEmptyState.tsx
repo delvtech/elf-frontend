@@ -4,6 +4,7 @@ import classNames from "classnames";
 import React, { FC } from "react";
 import tw from "tailwindcss-classnames";
 import { jt, t } from "ttag";
+import { useModalWallet } from "efi/ui/wallets/web3modal";
 
 const betaTag = (
   <Tag minimal intent={Intent.WARNING}>
@@ -16,6 +17,7 @@ const howSwapsWorkLink = (
 );
 
 export const ConnectWalletEmptyState: FC<{}> = () => {
+  const { connectWallet } = useModalWallet();
   return (
     <NonIdealState
       icon={IconNames.SEND_TO_GRAPH}
@@ -43,7 +45,7 @@ export const ConnectWalletEmptyState: FC<{}> = () => {
         </div>
       }
       action={
-        <Button large minimal outlined>
+        <Button large minimal outlined onClick={connectWallet}>
           {t`Connect your wallet`}
         </Button>
       }
