@@ -6,7 +6,11 @@ import { useAccountInfo } from "efi/ui/wallets/hooks";
 
 interface WalletSummaryProps {}
 export const WalletSummary: FunctionComponent<WalletSummaryProps> = props => {
-  const { address, balance, ethBalance, providerName }= useAccountInfo();
+  const { address, balance, ethBalance, providerName, isConnected }= useAccountInfo();
+
+  if (!isConnected) {
+    return null;
+  }
 
   return (
     <Card>
