@@ -42,3 +42,15 @@ export const useAccountInfo = (): AccountInfo => {
 
   return accountInfo;
 }
+
+export const useWalletConnection = (): boolean => {
+  const { active, error, setFirstValidConnector }= useWeb3Context();
+  const hasWalletConnection = active && !error;
+  useEffect(() => {
+      if (!hasWalletConnection) {
+        setFirstValidConnector(['MetaMask', 'Infura']);
+      }
+  }, [hasWalletConnection, setFirstValidConnector]);
+
+  return hasWalletConnection;
+}
