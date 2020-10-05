@@ -24,11 +24,12 @@ const { InjectedConnector, NetworkOnlyConnector } = Connectors
 
 const MetaMask = new InjectedConnector({ supportedNetworks: [1, 4] })
 
-const Infura = new NetworkOnlyConnector({
-  providerURL: 'https://mainnet.infura.io/v3/e0fa283e03bd41229e7d19cb630f1cdd',
-})
+// keep around for now for testing
+// const Infura = new NetworkOnlyConnector({
+//   providerURL: 'https://mainnet.infura.io/v3/e0fa283e03bd41229e7d19cb630f1cdd',
+// })
 
-const connectors = { MetaMask, Infura }
+const connectors = { MetaMask }
 
 ReactDOM.render(
   <React.StrictMode>

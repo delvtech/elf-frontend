@@ -11,7 +11,7 @@ export interface AccountInfo {
 }
 
 export const useAccountInfo = (): AccountInfo => {
-  const { library, connectorName } = useWeb3Context();
+  const { account, library, connectorName } = useWeb3Context();
   const web3: Web3 = library;
   const [accountInfo, setAccountInfo] = useState<AccountInfo>({
     address: '',
@@ -24,6 +24,7 @@ export const useAccountInfo = (): AccountInfo => {
   useEffect(() => {
     const getInfo = async () => {
       const accounts = await web3.eth.getAccounts();
+      console.log('accounts', accounts);
       // TODO: return all accounts.  Metamask currently just returns the first connected account.
       const balance = await web3.eth.getBalance(accounts[0]);
       const ethBalance = web3.utils.fromWei(balance, "ether");
@@ -36,7 +37,9 @@ export const useAccountInfo = (): AccountInfo => {
       };
       setAccountInfo(accountInfo);
     }
-    getInfo();
+    if (account) {
+      getInfo();
+    }
   }, [web3, connectorName]);
 
   return accountInfo;
