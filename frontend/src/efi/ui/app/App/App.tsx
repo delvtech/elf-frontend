@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useState, useEffect } from "react";
 import { MainNavigation } from "efi/ui/app/MainNavigation/MainNavigation";
 import { Classes } from "@blueprintjs/core";
 import classNames from "classnames";
@@ -8,37 +8,35 @@ import styles from "./App.module.css";
 import { Navigation } from "efi/app/navigation";
 import { ConnectWalletEmptyState } from "efi/ui/wallets/ConnectWalletEmptyState/ConnectWalletEmptyState";
 import { ActiveTab } from "../ActiveTab/ActiveTab";
+import { useWalletConnection } from "efi/ui/wallets/hooks";
 
 const App: FC<{}> = () => {
-  // TODO: wire this up to a real wallet connection
-  const hasWalletConnection = true;
-
+  const hasWalletConnection = useWalletConnection();
   const [activeTab, setActiveTab] = useState(Navigation.SWAP);
 
   return (
-    <div
-      className={classNames(
-        styles.app,
-        Classes.DARK,
-        tw("flex", "w-screen", "h-screen")
-      )}
-    >
-      <MainNavigation activeTab={activeTab} setActiveTab={setActiveTab} />
-
-      {/* Mobile */}
       <div
         className={classNames(
-          tw("flex", "w-screen", "h-screen"),
-          styles.contentContainer
+          styles.app,
+          Classes.DARK,
+          tw("flex", "w-screen", "h-screen")
         )}
       >
-        {!hasWalletConnection ? (
-          <ConnectWalletEmptyState />
-        ) : (
-          <ActiveTab activeTab={activeTab} />
-        )}
+        <MainNavigation activeTab={activeTab} setActiveTab={setActiveTab} />
+
+        <div
+          className={classNames(
+            tw("flex", "w-screen", "h-screen"),
+            styles.contentContainer
+          )}
+        >
+          {!hasWalletConnection ? (
+            <ConnectWalletEmptyState />
+          ) : (
+            <ActiveTab activeTab={activeTab} />
+          )}
+        </div>
       </div>
-    </div>
   );
 };
 
