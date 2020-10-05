@@ -11,7 +11,7 @@ import { ActiveTab } from "../ActiveTab/ActiveTab";
 import { useWalletConnection } from "efi/ui/wallets/hooks";
 
 const App: FC<{}> = () => {
-  const hasWalletConnection = useWalletConnection();
+  const { hasWalletConnection } = useWalletConnection();
   const [activeTab, setActiveTab] = useState(Navigation.SWAP);
 
   return (
@@ -30,11 +30,20 @@ const App: FC<{}> = () => {
           styles.contentContainer
         )}
       >
-        {!hasWalletConnection ? (
-          <ConnectWalletEmptyState />
-        ) : (
-          <ActiveTab activeTab={activeTab} />
-        )}
+        <MainNavigation activeTab={activeTab} setActiveTab={setActiveTab} />
+
+        <div
+          className={classNames(
+            tw("flex", "w-screen", "h-screen"),
+            styles.contentContainer
+          )}
+        >
+          {!hasWalletConnection ? (
+            <ConnectWalletEmptyState />
+          ) : (
+            <ActiveTab activeTab={activeTab} />
+          )}
+        </div>
       </div>
     </div>
   );
