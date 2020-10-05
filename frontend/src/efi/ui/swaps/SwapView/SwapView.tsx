@@ -3,6 +3,7 @@ import { SimpleCryptoAssetFilter } from "efi/ui/swaps/SimpleCryptoAssetFilter/Si
 import React, { FC } from "react";
 import tw from "tailwindcss-classnames";
 import { t } from "ttag";
+import WalletSummary from "efi/ui/wallets/WalletSummary";
 
 interface SwapViewProps {}
 export const SwapView: FC<SwapViewProps> = () => {
@@ -10,12 +11,14 @@ export const SwapView: FC<SwapViewProps> = () => {
     <div
       className={tw(
         "flex",
+        "flex-col",
         "h-full",
         "w-full",
         "md:justify-center",
         "md:items-center"
       )}
     >
+      <WalletSummary />
       <div
         className={tw(
           "flex",
