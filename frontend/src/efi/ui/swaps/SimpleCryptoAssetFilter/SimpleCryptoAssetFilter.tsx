@@ -15,16 +15,36 @@ export const SimpleCryptoAssetFilter: FC<SimpleCryptoAssetFilterProps> = ({
   return (
     <div
       className={classNames(
-        tw("flex", "flex-col", "justify-center", "items-center", "gap-6"),
+        tw(
+          "flex",
+          "flex-col",
+          "w-full",
+          "justify-center",
+          "items-center",
+          "gap-6"
+        ),
         className
       )}
     >
       <span
-        className={tw("text-lg", "inline-flex", "items-center", "space-x-4")}
+        className={tw(
+          "text-lg",
+          "w-full",
+          "inline-flex",
+          "items-center",
+          "space-x-4",
+          "justify-center"
+        )}
       >
-        <CryptoAssetSuggest placeholder={t`Base asset`} />
+        <CryptoAssetSuggest
+          placeholder={t`Base asset`}
+          onCryptoAssetSelect={() => {}}
+        />
         <Icon icon={IconNames.ARROW_RIGHT} />
-        <CryptoAssetSuggest placeholder={t`Desired asset`} />
+        <CryptoAssetSuggest
+          placeholder={t`Desired asset`}
+          onCryptoAssetSelect={() => {}}
+        />
       </span>
     </div>
   );

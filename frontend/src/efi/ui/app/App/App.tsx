@@ -15,28 +15,28 @@ const App: FC<{}> = () => {
   const [activeTab, setActiveTab] = useState(Navigation.SWAP);
 
   return (
+    <div
+      className={classNames(
+        styles.app,
+        Classes.DARK,
+        tw("flex", "w-screen", "h-screen")
+      )}
+    >
+      <MainNavigation activeTab={activeTab} setActiveTab={setActiveTab} />
+
       <div
         className={classNames(
-          styles.app,
-          Classes.DARK,
-          tw("flex", "w-screen", "h-screen")
+          tw("flex", "w-screen", "h-screen"),
+          styles.contentContainer
         )}
       >
-        <MainNavigation activeTab={activeTab} setActiveTab={setActiveTab} />
-
-        <div
-          className={classNames(
-            tw("flex", "w-screen", "h-screen"),
-            styles.contentContainer
-          )}
-        >
-          {!hasWalletConnection ? (
-            <ConnectWalletEmptyState />
-          ) : (
-            <ActiveTab activeTab={activeTab} />
-          )}
-        </div>
+        {!hasWalletConnection ? (
+          <ConnectWalletEmptyState />
+        ) : (
+          <ActiveTab activeTab={activeTab} />
+        )}
       </div>
+    </div>
   );
 };
 
