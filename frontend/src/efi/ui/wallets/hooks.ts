@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { t } from "ttag";
 import { useWeb3Context } from "web3-react";
 import Web3 from "web3";
 
