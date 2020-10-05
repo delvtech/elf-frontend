@@ -7,9 +7,10 @@ import ReactDOM from "react-dom";
 import Web3Provider, { Connectors } from 'web3-react'
 import Web3 from 'web3';
 
-import "@blueprintjs/icons/lib/css/blueprint-icons.css";
 import "normalize.css/normalize.css";
+import "@blueprintjs/icons/lib/css/blueprint-icons.css";
 import "@blueprintjs/core/lib/css/blueprint.css";
+import "@blueprintjs/select/lib/css/blueprint-select.css";
 
 // Import tailwind after blueprint so that applying tailwind classes to
 // blueprint components overrides the blueprint styling

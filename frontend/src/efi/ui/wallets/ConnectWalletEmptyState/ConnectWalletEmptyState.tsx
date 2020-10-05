@@ -52,7 +52,7 @@ export const ConnectWalletEmptyState: FC<{}> = () => {
     >
       <div className={tw("pt-32")}>
         <p className={tw("pb-4")}>{jt`Swaps are currently in ${betaTag}.`}</p>
-        <p>{jt`Read more about (${howSwapsWorkLink}).`}</p>
+        <p>{jt`Read more about ${howSwapsWorkLink}.`}</p>
       </div>
     </NonIdealState>
   );

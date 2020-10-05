@@ -5,18 +5,18 @@ export const EFI_SUPPORTED_CRYPTO_ASSETS: CryptoAssetInfo[] = [
     id: "ethereum",
     name: "Ethereum",
     symbol: "ETH",
-    logoPath: "",
+    logoPath: "./assets/logos/ETH-logo.png",
   },
   {
     id: "dai",
     name: "Dai",
     symbol: "DAI",
-    logoPath: "",
+    logoPath: "./assets/logos/DAI-logo.png",
   },
   {
     id: "yfi",
     name: "yearn.finance",
     symbol: "YFI",
-    logoPath: "",
+    logoPath: "./assets/logos/YFI-logo.png",
   },
 ];

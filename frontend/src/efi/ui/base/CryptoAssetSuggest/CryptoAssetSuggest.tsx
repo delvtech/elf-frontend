@@ -1,45 +1,87 @@
 import {
+  Classes,
   HTMLInputProps,
   IInputGroupProps,
-  IPopoverProps,
+  IOverlayProps,
   MenuItem,
+  TagInput,
 } from "@blueprintjs/core";
-import { ItemRenderer, Suggest } from "@blueprintjs/select";
+import { ItemRenderer, Omnibar } from "@blueprintjs/select";
+import classNames from "classnames";
 import { EFI_SUPPORTED_CRYPTO_ASSETS } from "cryptoAssets";
 import { CryptoAssetInfo } from "efi/base/CryptoAssetInfo";
-import React, { FC } from "react";
+import React, { FC, Fragment, useCallback, useMemo, useState } from "react";
+import tw from "tailwindcss-classnames";
 import { t } from "ttag";
 
 interface CryptoAssetSuggestProps {
+  onCryptoAssetSelect: (cryptoAsset: CryptoAssetInfo) => void;
+  activeCryptoAsset?: CryptoAssetInfo;
   cryptoAssets?: CryptoAssetInfo[];
   className?: string;
 
   placeholder?: string;
 }
 
-const popoverProps: Partial<IPopoverProps> = { minimal: true };
+const overlayProps: Partial<IOverlayProps> = {
+  className: classNames(tw("flex", "justify-center"), Classes.DARK),
+};
 export const CryptoAssetSuggest: FC<CryptoAssetSuggestProps> = ({
+  activeCryptoAsset,
+  onCryptoAssetSelect = () => {},
   cryptoAssets = EFI_SUPPORTED_CRYPTO_ASSETS,
   placeholder = t`Choose an asset`,
   className,
 }) => {
-  const inputProps: IInputGroupProps & HTMLInputProps = {
-    large: true,
-    placeholder,
-  };
+  const {
+    isOpen: isOmnibarOpen,
+    open: openOmnibar,
+    close: closeOmnibar,
+  } = useOmnibar();
+
+  const tagInputProps: IInputGroupProps & HTMLInputProps = useMemo(() => {
+    return {
+      large: true,
+      placeholder,
+      onClick: openOmnibar,
+    };
+  }, [openOmnibar, placeholder]);
+
+  const omnibarInputProps: IInputGroupProps & HTMLInputProps = useMemo(() => {
+    return {
+      large: true,
+      placeholder,
+    };
+  }, [placeholder]);
 
   return (
-    <Suggest
-      inputProps={inputProps}
-      className={className}
-      popoverProps={popoverProps}
-      items={cryptoAssets}
-      itemRenderer={itemRenderer}
-      inputValueRenderer={({ name }) => name}
-      onItemSelect={() => {}}
-    />
+    <Fragment>
+      <TagInput
+        large
+        values={[activeCryptoAsset]}
+        inputProps={tagInputProps}
+        className={tw("w-full", "md:w-48")}
+      />
+      <Omnibar<CryptoAssetInfo>
+        isOpen={isOmnibarOpen}
+        inputProps={omnibarInputProps}
+        overlayProps={overlayProps}
+        className={tw("w-4/5", "left-auto")}
+        items={cryptoAssets}
+        itemRenderer={itemRenderer}
+        onItemSelect={() => {}}
+        onClose={closeOmnibar}
+      />
+    </Fragment>
   );
 };
+
+function useOmnibar() {
+  const [isOpen, setOpen] = useState(false);
+  const open = useCallback(() => setOpen(true), []);
+  const close = useCallback(() => setOpen(false), []);
+  return { isOpen, open, close };
+}
 
 const itemRenderer: ItemRenderer<CryptoAssetInfo> = ({
   id,
@@ -47,5 +89,20 @@ const itemRenderer: ItemRenderer<CryptoAssetInfo> = ({
   symbol,
   logoPath,
 }) => {
-  return <MenuItem text={name} />;
+  const icon = logoPath ? logoPath : undefined;
+  return (
+    <MenuItem
+      key={id}
+      className={tw("py-6", "items-center")}
+      text={<span className={tw("text-lg", "px-6")}>{name}</span>}
+      icon={
+        <img
+          src={icon}
+          className={tw("h-6", "w-6")}
+          alt={`${name} (${symbol})`}
+        />
+      }
+      label={symbol}
+    />
+  );
 };
