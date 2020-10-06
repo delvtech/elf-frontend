@@ -62,7 +62,7 @@ export function useAccountInfo(): AccountInfo {
       };
       setAccountInfo(accountInfo);
     })();
-  }, [web3, connectorName]);
+  }, [web3, connectorName, account]);
 
   return accountInfo;
 }
