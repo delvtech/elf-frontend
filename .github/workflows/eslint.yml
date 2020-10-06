@@ -2,16 +2,18 @@ name: Eslint check
 
 on: [pull_request]
 
+defaults:
+  run:
+    working-directory: frontend
+
 jobs:
   eslint-check:
-
     runs-on: ubuntu-18.04
 
     steps:
-    - uses: actions/checkout@v1
-    - uses: actions/setup-node@v1
-      with:
-        node-version: '13.x'
-    - run: cd frontend
-    - run: npm ci 
-    - run: npm run lint
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "13.x"
+      - run: npm ci
+      - run: npm run lint
