@@ -12,5 +12,6 @@ jobs:
     - uses: actions/setup-node@v1
       with:
         node-version: '13.x'
+    - run: cd frontend
     - run: npm ci 
     - run: npm run lint
