@@ -3,10 +3,15 @@ import { Card } from "@blueprintjs/core";
 import { jt } from "ttag";
 import { useAccountInfo } from "efi/ui/wallets/hooks";
 
-
 interface WalletSummaryProps {}
-export const WalletSummary: FunctionComponent<WalletSummaryProps> = props => {
-  const { address, balance, ethBalance, providerName, isConnected }= useAccountInfo();
+export const WalletSummary: FunctionComponent<WalletSummaryProps> = (props) => {
+  const {
+    address,
+    balance,
+    ethBalance,
+    providerName,
+    isConnected,
+  } = useAccountInfo();
 
   if (!isConnected) {
     return null;
@@ -20,6 +25,6 @@ export const WalletSummary: FunctionComponent<WalletSummaryProps> = props => {
       <div>{jt`Eth Balance: ${ethBalance}`}</div>
     </Card>
   );
-}
+};
 
 export default WalletSummary;

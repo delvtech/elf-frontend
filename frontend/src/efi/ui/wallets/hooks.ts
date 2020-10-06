@@ -36,11 +36,11 @@ export function useAccountInfo(): AccountInfo {
   const { account, library, connectorName } = useWeb3Context();
   const web3: Web3 = library;
   const [accountInfo, setAccountInfo] = useState<AccountInfo>({
-    address: '',
-    providerName: '',
+    address: "",
+    providerName: "",
     isConnected: false,
-    balance: '0',
-    ethBalance: '0',
+    balance: "0",
+    ethBalance: "0",
   });
 
   useEffect(() => {
@@ -55,7 +55,7 @@ export function useAccountInfo(): AccountInfo {
       const ethBalance = web3.utils.fromWei(balance, "ether");
       const accountInfo = {
         address: accounts[0],
-        providerName:  connectorName ?? 'Unknown',
+        providerName: connectorName ?? "Unknown",
         isConnected: true,
         balance,
         ethBalance,
@@ -74,13 +74,13 @@ export interface Walletconnection {
  *  returns whether there is a wallet currently connected to the web app
  */
 export const useWalletConnection = (): Walletconnection => {
-  const { active, error, setFirstValidConnector }= useWeb3Context();
+  const { active, error, setFirstValidConnector } = useWeb3Context();
   const hasWalletConnection = active && !error;
   useEffect(() => {
-      if (!hasWalletConnection) {
-        setFirstValidConnector(['MetaMask']);
-      }
+    if (!hasWalletConnection) {
+      setFirstValidConnector(["MetaMask"]);
+    }
   }, [hasWalletConnection, setFirstValidConnector]);
 
   return { hasWalletConnection };
-}
+};
