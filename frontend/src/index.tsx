@@ -21,7 +21,7 @@ import "./index.css";
 import App from "efi/ui/app/App/App";
 import * as serviceWorker from "serviceWorker";
 
-const { InjectedConnector, NetworkOnlyConnector } = Connectors;
+const { InjectedConnector } = Connectors;
 
 const MetaMask = new InjectedConnector({ supportedNetworks: [1, 4] });
 
