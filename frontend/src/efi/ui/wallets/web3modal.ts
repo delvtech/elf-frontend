@@ -15,13 +15,13 @@ export function initalizeWeb3Modal() {
       package: WalletConnectProvider,
       options: {
         infuraId: INFURA_ID,
-      }
+      },
     },
   };
 
   return new Web3Modal({
     providerOptions,
-    theme: 'dark',
+    theme: "dark",
     cacheProvider: false,
   });
 }
@@ -39,10 +39,12 @@ interface ModalWallet {
 }
 export const useModalWallet = (): ModalWallet => {
   return {
-    connectWallet: useCallback(() => { connectWallet(); }, []),
+    connectWallet: useCallback(() => {
+      connectWallet();
+    }, []),
     disconnectWallet: useCallback(disconnectWallet, []),
-  }
-}
+  };
+};
 
 /**
  * Connects to an ethereum wallet using Web3Modal.
@@ -56,7 +58,7 @@ async function connectWallet() {
 
   try {
     provider = await web3Modal.connect();
-  } catch(e) {
+  } catch (e) {
     console.error("Wallet connection failed", e);
     return;
   }
@@ -67,17 +69,17 @@ async function connectWallet() {
 
   // TODO: add functionality here
   provider.on("accountsChanged", (accounts: string[]) => {
-    console.log('accounts', accounts);
+    console.log("accounts", accounts);
   });
 
   // TODO: add functionality here
   provider.on("chainChanged", (chainId: string) => {
-    console.log('chainId', chainId);
+    console.log("chainId", chainId);
   });
 
   // TODO: add functionality here
   provider.on("networkChanged", (networkId: string) => {
-    console.log('networkId', networkId);
+    console.log("networkId", networkId);
   });
 }
 

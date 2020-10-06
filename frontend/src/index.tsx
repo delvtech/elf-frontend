@@ -4,8 +4,8 @@
 
 import React from "react";
 import ReactDOM from "react-dom";
-import Web3Provider, { Connectors } from 'web3-react'
-import Web3 from 'web3';
+import Web3Provider, { Connectors } from "web3-react";
+import Web3 from "web3";
 
 import "normalize.css/normalize.css";
 import "@blueprintjs/icons/lib/css/blueprint-icons.css";
@@ -21,20 +21,24 @@ import "./index.css";
 import App from "efi/ui/app/App/App";
 import * as serviceWorker from "serviceWorker";
 
-const { InjectedConnector, NetworkOnlyConnector } = Connectors
+const { InjectedConnector, NetworkOnlyConnector } = Connectors;
 
-const MetaMask = new InjectedConnector({ supportedNetworks: [1, 4] })
+const MetaMask = new InjectedConnector({ supportedNetworks: [1, 4] });
 
 // keep around for now for testing
 // const Infura = new NetworkOnlyConnector({
 //   providerURL: 'https://mainnet.infura.io/v3/e0fa283e03bd41229e7d19cb630f1cdd',
 // })
 
-const connectors = { MetaMask }
+const connectors = { MetaMask };
 
 ReactDOM.render(
   <React.StrictMode>
-    <Web3Provider connectors={connectors} libraryName={'web3.js'} web3Api={Web3}>
+    <Web3Provider
+      connectors={connectors}
+      libraryName={"web3.js"}
+      web3Api={Web3}
+    >
       <App />
     </Web3Provider>
   </React.StrictMode>,
