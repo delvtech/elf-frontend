@@ -43,6 +43,16 @@
     "add:language": "bash ./scripts/add-language.sh",
     "update:language": "bash ./scripts/update-language.sh"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
+      "prettier --write"
+    ]
+  },
   "eslintConfig": {
     "extends": [
       "react-app",
