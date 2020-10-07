@@ -30,20 +30,11 @@ const App: FC<{}> = () => {
           styles.contentContainer
         )}
       >
-        <MainNavigation activeTab={activeTab} setActiveTab={setActiveTab} />
-
-        <div
-          className={classNames(
-            tw("flex", "w-screen", "h-screen"),
-            styles.contentContainer
-          )}
-        >
-          {!hasWalletConnection ? (
-            <ConnectWalletEmptyState />
-          ) : (
-            <ActiveTab activeTab={activeTab} />
-          )}
-        </div>
+        {!hasWalletConnection ? (
+          <ConnectWalletEmptyState />
+        ) : (
+          <ActiveTab activeTab={activeTab} />
+        )}
       </div>
     </div>
   );
