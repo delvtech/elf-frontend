@@ -20,7 +20,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.3",
-    "tailwindcss": "^1.8.11",
+    "tailwindcss": "^1.8.12",
     "tailwindcss-classnames": "^1.8.3",
     "ttag": "^1.7.22",
     "typescript": "~3.8.2",
