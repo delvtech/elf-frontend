@@ -7,7 +7,7 @@ import { jt, t } from "ttag";
 import { useModalWallet } from "efi/ui/wallets/web3modal";
 
 const betaTag = (
-  <Tag minimal intent={Intent.WARNING}>
+  <Tag key="beta-tag" minimal intent={Intent.WARNING}>
     {t`BETA`}
   </Tag>
 );
