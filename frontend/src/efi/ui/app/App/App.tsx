@@ -1,6 +1,6 @@
-import React, { FC, useState } from "react";
+import React, { FC, useState, useEffect } from "react";
 import { MainNavigation } from "efi/ui/app/MainNavigation/MainNavigation";
-import { Classes } from "@blueprintjs/core";
+import { Classes, Intent } from "@blueprintjs/core";
 import classNames from "classnames";
 import { tw } from "tailwindcss-classnames";
 
@@ -9,9 +9,23 @@ import { Navigation } from "efi/app/navigation";
 import { ConnectWalletEmptyState } from "efi/ui/wallets/ConnectWalletEmptyState/ConnectWalletEmptyState";
 import { ActiveTab } from "../ActiveTab/ActiveTab";
 import { useWalletConnection } from "efi/ui/wallets/hooks";
+import { AppToaster } from "efi/ui/app/AppToaster/AppToaster";
 
 const App: FC<{}> = () => {
-  const { hasWalletConnection } = useWalletConnection();
+  const {
+    isConnected: hasWalletConnection,
+    error: walletConnectionError,
+  } = useWalletConnection();
+
+  useEffect(() => {
+    if (walletConnectionError) {
+      AppToaster.show({
+        message: walletConnectionError?.message,
+        className: Classes.DARK,
+      });
+    }
+  }, [walletConnectionError]);
+
   const [activeTab, setActiveTab] = useState(Navigation.SWAP);
 
   return (
