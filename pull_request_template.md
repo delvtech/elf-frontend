@@ -6,4 +6,4 @@ description
 
 |Mobile Portrait|Mobile Landscape|Desktop|
 |---|---|---|
-| image1 | image2 | image3| 
+| mobile_portrait_img | mobile_landscape_img | desktop_img | 
