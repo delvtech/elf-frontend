@@ -3,6 +3,14 @@ import WalletConnectProvider from "@walletconnect/web3-provider";
 import { useCallback } from "react";
 
 import { INFURA_ID } from "efi/app/infura";
+import {
+  AppToaster,
+  makeErrorToast,
+  makeSuccessToast,
+} from "efi/ui/app/AppToaster/AppToaster";
+import { t } from "ttag";
+import { Intent, Classes } from "@blueprintjs/core";
+import { IconNames } from "@blueprintjs/icons";
 
 /**
  *  Initialize the Web3Modal
@@ -39,10 +47,8 @@ interface ModalWallet {
 }
 export const useModalWallet = (): ModalWallet => {
   return {
-    connectWallet: useCallback(() => {
-      connectWallet();
-    }, []),
-    disconnectWallet: useCallback(disconnectWallet, []),
+    connectWallet,
+    disconnectWallet,
   };
 };
 
@@ -59,7 +65,8 @@ async function connectWallet() {
   try {
     provider = await web3Modal.connect();
   } catch (e) {
-    console.error("Wallet connection failed", e);
+    const errorToast = makeErrorToast(t`Wallet connection failed.`);
+    AppToaster.show(errorToast);
     return;
   }
 
@@ -67,9 +74,16 @@ async function connectWallet() {
     return;
   }
 
-  // TODO: add functionality here
   provider.on("accountsChanged", (accounts: string[]) => {
-    console.log("accounts", accounts);
+    if (!accounts.length) {
+      AppToaster.show({
+        message: t`Disconnected from all wallets.`,
+        className: Classes.DARK,
+      });
+    } else {
+      const connectedToast = makeSuccessToast(t`Connected to ${accounts}`);
+      AppToaster.show(connectedToast);
+    }
   });
 
   // TODO: add functionality here
@@ -77,10 +91,11 @@ async function connectWallet() {
     console.log("chainId", chainId);
   });
 
-  // TODO: add functionality here
   provider.on("networkChanged", (networkId: string) => {
     console.log("networkId", networkId);
   });
+
+  return provider;
 }
 
 /**

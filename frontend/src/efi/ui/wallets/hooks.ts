@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useWeb3Context } from "web3-react";
 import Web3 from "web3";
+import { DEFAULT_WALLET_CONNECTORS } from "efi/wallets/connectors";
 
 export interface AccountInfo {
   /**
@@ -68,19 +69,26 @@ export function useAccountInfo(): AccountInfo {
 }
 
 export interface WalletConnection {
-  hasWalletConnection: boolean;
+  isConnected: boolean;
+
+  error: Error | null;
 }
 /**
  *  returns whether there is a wallet currently connected to the web app
  */
 export const useWalletConnection = (): WalletConnection => {
   const { active, error, setFirstValidConnector } = useWeb3Context();
-  const hasWalletConnection = active && !error;
-  useEffect(() => {
-    if (!hasWalletConnection) {
-      setFirstValidConnector(["MetaMask"]);
-    }
-  }, [hasWalletConnection, setFirstValidConnector]);
 
-  return { hasWalletConnection };
+  useEffect(() => {
+    // When there is an error, we want users to have to click to retry
+    // establishing connection.
+    const shouldSetConnector = !active && !error;
+    if (!shouldSetConnector) {
+      setFirstValidConnector(DEFAULT_WALLET_CONNECTORS);
+    }
+  }, [active, error, setFirstValidConnector]);
+
+  const isConnected = active && !error;
+
+  return { isConnected, error };
 };
