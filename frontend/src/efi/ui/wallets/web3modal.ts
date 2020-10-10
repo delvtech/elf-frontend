@@ -91,6 +91,10 @@ async function connectWallet() {
     console.log("chainId", chainId);
   });
 
+  provider.on("networkChanged", (networkId: string) => {
+    console.log("networkId", networkId);
+  });
+
   return provider;
 }
 
