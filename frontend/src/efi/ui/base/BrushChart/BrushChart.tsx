@@ -28,16 +28,12 @@ const getDate = (d: AppleStock) => new Date(d.date);
 const getStockValue = (d: AppleStock) => d.close;
 
 interface BrushChartProps {
-  width: number;
-  height: number;
   margin?: { top: number; right: number; bottom: number; left: number };
   compact?: boolean;
 }
 
 export const BrushChart: FunctionComponent<BrushChartProps> = ({
   compact = false,
-  width,
-  height,
   margin = {
     top: 20,
     left: 50,
@@ -45,6 +41,8 @@ export const BrushChart: FunctionComponent<BrushChartProps> = ({
     right: 20,
   },
 }) => {
+  const [ref, dimensions] = useDimensions();
+  const {} = dimensions;
   const [filteredStock, setFilteredStock] = useState(stock);
 
   const onBrushChange = (domain: Bounds | null) => {
@@ -119,67 +117,69 @@ export const BrushChart: FunctionComponent<BrushChartProps> = ({
   );
 
   return (
-    <svg width={width} height={height}>
-      <LinearGradient
-        id={GRADIENT_ID}
-        from={background}
-        to={background2}
-        rotate={45}
-      />
-      <rect
-        x={0}
-        y={0}
-        width={width}
-        height={height}
-        fill={`url(#${GRADIENT_ID})`}
-        rx={14}
-      />
-      <AreaChart
-        hideBottomAxis={compact}
-        data={filteredStock}
-        width={width}
-        margin={{ ...margin, bottom: topChartBottomMargin }}
-        yMax={yMax}
-        xScale={dateScale}
-        yScale={stockScale}
-        gradientColor={background2}
-      />
-      <AreaChart
-        hideBottomAxis
-        hideLeftAxis
-        data={stock}
-        width={width}
-        yMax={yBrushMax}
-        xScale={brushDateScale}
-        yScale={brushStockScale}
-        margin={brushMargin}
-        top={topChartHeight + topChartBottomMargin + margin.top}
-        gradientColor={background2}
-      >
-        <PatternLines
-          id={PATTERN_ID}
-          height={8}
-          width={8}
-          stroke={accentColor}
-          strokeWidth={1}
-          orientation={["diagonal"]}
+    <div ref={ref}>
+      <svg width={width} height={height}>
+        <LinearGradient
+          id={GRADIENT_ID}
+          from={background}
+          to={background2}
+          rotate={45}
         />
-        <Brush
+        <rect
+          x={0}
+          y={0}
+          width={width}
+          height={height}
+          fill={`url(#${GRADIENT_ID})`}
+          rx={14}
+        />
+        <AreaChart
+          hideBottomAxis={compact}
+          data={filteredStock}
+          width={width}
+          margin={{ ...margin, bottom: topChartBottomMargin }}
+          yMax={yMax}
+          xScale={dateScale}
+          yScale={stockScale}
+          gradientColor={background2}
+        />
+        <AreaChart
+          hideBottomAxis
+          hideLeftAxis
+          data={stock}
+          width={width}
+          yMax={yBrushMax}
           xScale={brushDateScale}
           yScale={brushStockScale}
-          width={xBrushMax}
-          height={yBrushMax}
           margin={brushMargin}
-          handleSize={8}
-          resizeTriggerAreas={["left", "right"]}
-          brushDirection="horizontal"
-          initialBrushPosition={initialBrushPosition}
-          onChange={onBrushChange}
-          onClick={() => setFilteredStock(stock)}
-          selectedBoxStyle={selectedBrushStyle}
-        />
-      </AreaChart>
-    </svg>
+          top={topChartHeight + topChartBottomMargin + margin.top}
+          gradientColor={background2}
+        >
+          <PatternLines
+            id={PATTERN_ID}
+            height={8}
+            width={8}
+            stroke={accentColor}
+            strokeWidth={1}
+            orientation={["diagonal"]}
+          />
+          <Brush
+            xScale={brushDateScale}
+            yScale={brushStockScale}
+            width={xBrushMax}
+            height={yBrushMax}
+            margin={brushMargin}
+            handleSize={8}
+            resizeTriggerAreas={["left", "right"]}
+            brushDirection="horizontal"
+            initialBrushPosition={initialBrushPosition}
+            onChange={onBrushChange}
+            onClick={() => setFilteredStock(stock)}
+            selectedBoxStyle={selectedBrushStyle}
+          />
+        </AreaChart>
+      </svg>
+    </div>
   );
 };
 
