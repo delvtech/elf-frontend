@@ -12,10 +12,9 @@ import { useWalletConnection } from "efi/ui/wallets/hooks";
 import { AppToaster, makeToast } from "efi/ui/app/AppToaster/AppToaster";
 
 const App: FC<{}> = () => {
-  const {
-    isConnected: hasWalletConnection,
-    error: walletConnectionError,
-  } = useWalletConnection();
+  const { isConnected, error: walletConnectionError } = useWalletConnection();
+
+  const hasWalletConnection = true;
 
   useEffect(() => {
     if (walletConnectionError) {
