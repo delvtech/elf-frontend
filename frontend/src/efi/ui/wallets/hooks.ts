@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useWeb3Context } from "web3-react";
 import Web3 from "web3";
+import { DEFAULT_WALLET_CONNECTORS } from "efi/wallets/connectors";
 
 export interface AccountInfo {
   /**
