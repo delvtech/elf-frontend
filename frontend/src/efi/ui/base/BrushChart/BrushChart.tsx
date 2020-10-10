@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, FunctionComponent } from "react";
 import { scaleTime, scaleLinear } from "@visx/scale";
 import appleStock, { AppleStock } from "@visx/mock-data/lib/mocks/appleStock";
 import { Brush } from "@visx/brush";
@@ -27,14 +27,14 @@ const selectedBrushStyle = {
 const getDate = (d: AppleStock) => new Date(d.date);
 const getStockValue = (d: AppleStock) => d.close;
 
-export type BrushProps = {
+interface BrushChartProps {
   width: number;
   height: number;
   margin?: { top: number; right: number; bottom: number; left: number };
   compact?: boolean;
-};
+}
 
-function BrushChart({
+export const BrushChart: FunctionComponent<BrushChartProps> = ({
   compact = false,
   width,
   height,
@@ -44,7 +44,7 @@ function BrushChart({
     bottom: 20,
     right: 20,
   },
-}: BrushProps) {
+}) => {
   const [filteredStock, setFilteredStock] = useState(stock);
 
   const onBrushChange = (domain: Bounds | null) => {
@@ -181,6 +181,6 @@ function BrushChart({
       </AreaChart>
     </svg>
   );
-}
+};
 
 export default BrushChart;

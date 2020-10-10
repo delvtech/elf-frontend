@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FunctionComponent } from "react";
 import { Group } from "@visx/group";
 import { AreaClosed } from "@visx/shape";
 import { AxisLeft, AxisBottom, AxisScale } from "@visx/axis";
@@ -28,20 +28,10 @@ const axisLeftTickLabelProps = {
 const getDate = (d: AppleStock) => new Date(d.date);
 const getStockValue = (d: AppleStock) => d.close;
 
-export default function AreaChart({
-  data,
-  gradientColor,
-  width,
-  yMax,
-  margin,
-  xScale,
-  yScale,
-  hideBottomAxis = false,
-  hideLeftAxis = false,
-  top,
-  left,
-  children,
-}: {
+interface AreaChartProps {
+  /**
+   * data for the AreaChart
+   */
   data: AppleStock[];
   gradientColor: string;
   xScale: AxisScale<number>;
@@ -54,7 +44,22 @@ export default function AreaChart({
   top?: number;
   left?: number;
   children?: React.ReactNode;
-}) {
+}
+
+export const AreaChart: FunctionComponent<AreaChartProps> = ({
+  data,
+  gradientColor,
+  width,
+  yMax,
+  margin,
+  xScale,
+  yScale,
+  hideBottomAxis = false,
+  hideLeftAxis = false,
+  top,
+  left,
+  children,
+}) => {
   if (width < 10) return null;
   return (
     <Group left={left || margin.left} top={top || margin.top}>
@@ -97,4 +102,6 @@ export default function AreaChart({
       {children}
     </Group>
   );
-}
+};
+
+export default AreaChart;
