@@ -14,6 +14,14 @@
     "@types/node": "^12.0.0",
     "@types/react": "^16.9.51",
     "@types/react-dom": "^16.9.0",
+    "@visx/axis": "^1.0.0",
+    "@visx/brush": "^1.0.0",
+    "@visx/gradient": "^1.0.0",
+    "@visx/group": "^1.0.0",
+    "@visx/mock-data": "^1.0.0",
+    "@visx/pattern": "^1.0.0",
+    "@visx/scale": "^1.0.0",
+    "@visx/shape": "^1.0.0",
     "@walletconnect/web3-provider": "^1.2.2",
     "classnames": "^2.2.6",
     "ethers": "^5.0.16",
@@ -85,6 +93,7 @@
     ]
   },
   "devDependencies": {
+    "@types/d3-array": "^2.1.0",
     "eslint-config-prettier": "^6.12.0",
     "eslint-plugin-jest": "^24.1.0",
     "eslint-plugin-prettier": "^3.1.4",
