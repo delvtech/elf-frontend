@@ -27,8 +27,8 @@ export const MainNavigation: FC<MainNavigationProps> = ({
 }) => {
   return (
     <Fragment>
-      {/* Mobile */}
-      <Navbar fixedToTop className={tw("md:hidden")}>
+      {/* Mobile/Tablet */}
+      <Navbar fixedToTop className={tw("lg:hidden")}>
         <NavbarGroup>
           <NavbarHeading>
             <AnchorButton minimal outlined>
@@ -54,7 +54,7 @@ export const MainNavigation: FC<MainNavigationProps> = ({
       <div
         className={tw(
           "hidden",
-          "md:flex",
+          "lg:flex",
           "flex-row",
           "w-1/6",
           "h-full",

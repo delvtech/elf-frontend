@@ -67,13 +67,13 @@ export function useAccountInfo(): AccountInfo {
   return accountInfo;
 }
 
-export interface Walletconnection {
+export interface WalletConnection {
   hasWalletConnection: boolean;
 }
 /**
  *  returns whether there is a wallet currently connected to the web app
  */
-export const useWalletConnection = (): Walletconnection => {
+export const useWalletConnection = (): WalletConnection => {
   const { active, error, setFirstValidConnector } = useWeb3Context();
   const hasWalletConnection = active && !error;
   useEffect(() => {

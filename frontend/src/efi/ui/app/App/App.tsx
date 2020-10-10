@@ -19,14 +19,14 @@ const App: FC<{}> = () => {
       className={classNames(
         styles.app,
         Classes.DARK,
-        tw("flex", "w-screen", "h-screen")
+        tw("flex", "w-full", "h-full", "overflow-auto")
       )}
     >
       <MainNavigation activeTab={activeTab} setActiveTab={setActiveTab} />
 
       <div
         className={classNames(
-          tw("flex", "w-screen", "h-screen"),
+          tw("flex", "w-full", "h-full"),
           styles.contentContainer
         )}
       >
