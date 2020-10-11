@@ -15,6 +15,7 @@ import {
   NoEthereumProviderError,
   UserRejectedRequestError as UserRejectedRequestErrorInjected,
 } from "@web3-react/injected-connector";
+import { getConnectorName } from "efi/wallets/connectors";
 
 export function useWallet() {
   const {
@@ -36,6 +37,8 @@ export function useWallet() {
   // fetch eth balance of the connected account
   const ethBalance = useEthBalance(library, account, chainId);
 
+  const connectorName = useConnectorName(library, connector);
+
   useErrorToast(error);
 
   return {
@@ -47,6 +50,7 @@ export function useWallet() {
     active,
     error,
     ethBalance,
+    connectorName,
   };
 }
 
@@ -91,6 +95,23 @@ function useActiveConnector(
   useSyncWithInjectedEthereum(!triedEager || !!activeConnector);
 
   return { setActiveConnector };
+}
+
+function useConnectorName(
+  library: Web3Provider | undefined,
+  connector: AbstractConnector | undefined
+): string {
+  const [connectorName, setConnectorName] = useState(t`No connection.`);
+
+  useEffect(() => {
+    if (!library) {
+      return;
+    }
+
+    setConnectorName(getConnectorName(library, connector));
+  }, [connector, library]);
+
+  return connectorName;
 }
 
 function useEthBalance(
