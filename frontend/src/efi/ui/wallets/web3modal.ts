@@ -2,7 +2,7 @@ import Web3Modal, { getInjectedProvider } from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import { useCallback } from "react";
 
-import { INFURA_ID } from "efi/app/infura";
+import { INFURA_ID } from "infura";
 import {
   AppToaster,
   makeErrorToast,
