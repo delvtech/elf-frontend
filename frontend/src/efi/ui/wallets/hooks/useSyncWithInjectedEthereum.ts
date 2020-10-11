@@ -21,7 +21,7 @@ export function useSyncWithInjectedEthereum(suppress = false) {
 
     const { ethereum } = window;
 
-    if (!ethereum.on || error || active) {
+    if (!ethereum?.on || error || active) {
       return;
     }
 
