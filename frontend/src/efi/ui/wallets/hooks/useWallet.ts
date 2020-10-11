@@ -1,5 +1,5 @@
 import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useEagerConnect } from "efi/ui/wallets/hooks/useEagerConnect";
 import { useSyncWithInjectedEthereum } from "efi/ui/wallets/hooks/useSyncWithInjectedEthereum";
 import {
@@ -31,21 +31,7 @@ export function useWallet() {
   // Handle logic to recognize the connector currently being activated. This can
   // happen when the user changes to a different wallet or deactivates their
   // active wallet.
-  const [activeConnector, setActiveConnector] = useState<AbstractConnector>();
-  useEffect(() => {
-    if (activeConnector && activeConnector === connector) {
-      AppToaster.show(makeToast(t`Syncing wallet`));
-      setActiveConnector(undefined);
-    }
-  }, [activeConnector, connector]);
-
-  // handle logic to eagerly connect to the injected ethereum provider, eg:
-  // MetaMask, if it exists and has granted access already
-  const triedEager = useEagerConnect();
-
-  // handle logic to connect in reaction to certain events on the injected
-  // ethereum provider, ie: window.ethereum, if it exists
-  useSyncWithInjectedEthereum(!triedEager || !!activeConnector);
+  const { setActiveConnector } = useActiveConnector(connector, activate);
 
   // fetch eth balance of the connected account
   const ethBalance = useEthBalance(library, account, chainId);
@@ -71,6 +57,40 @@ function useErrorToast(error: Error | undefined) {
       AppToaster.show(errorToast);
     }
   }, [error]);
+}
+
+function useActiveConnector(
+  connector: AbstractConnector | undefined,
+  activate: (connector: AbstractConnector) => void
+) {
+  const [activeConnector, setActiveConnectorState] = useState<
+    AbstractConnector
+  >();
+
+  const setActiveConnector = useCallback(
+    (connector: AbstractConnector) => {
+      setActiveConnectorState(connector);
+      activate(connector);
+    },
+    [activate]
+  );
+
+  useEffect(() => {
+    if (activeConnector && activeConnector === connector) {
+      AppToaster.show(makeToast(t`Syncing wallet`));
+      setActiveConnectorState(undefined);
+    }
+  }, [activeConnector, connector]);
+
+  // handle logic to eagerly connect to the injected ethereum provider, eg:
+  // MetaMask, if it exists and has granted access already
+  const triedEager = useEagerConnect();
+
+  // handle logic to connect in reaction to certain events on the injected
+  // ethereum provider, ie: window.ethereum, if it exists
+  useSyncWithInjectedEthereum(!triedEager || !!activeConnector);
+
+  return { setActiveConnector };
 }
 
 function useEthBalance(
