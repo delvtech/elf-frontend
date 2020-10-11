@@ -32,7 +32,10 @@ export function useWallet() {
   // Handle logic to recognize the connector currently being activated. This can
   // happen when the user changes to a different wallet or deactivates their
   // active wallet.
-  const { setActiveConnector } = useActiveConnector(connector, activate);
+  const { setActiveConnector, isPending } = useActiveConnector(
+    connector,
+    activate
+  );
 
   // fetch eth balance of the connected account
   const ethBalance = useEthBalance(library, account, chainId);
@@ -45,7 +48,8 @@ export function useWallet() {
     library,
     chainId,
     account,
-    activate: setActiveConnector,
+    setActiveConnector,
+    isPending,
     deactivate,
     active,
     error,
@@ -67,24 +71,26 @@ function useActiveConnector(
   connector: AbstractConnector | undefined,
   activate: (connector: AbstractConnector) => void
 ) {
-  const [activeConnector, setActiveConnectorState] = useState<
+  const [pendingConnector, setPendingConnectorState] = useState<
     AbstractConnector
   >();
+  const isPending = !!pendingConnector;
+
+  // Handle clearing out the pending connector
+  useEffect(() => {
+    if (isPending && pendingConnector === connector) {
+      AppToaster.show(makeToast(t`Wallet connected.`));
+      setPendingConnectorState(undefined);
+    }
+  }, [pendingConnector, connector, isPending]);
 
   const setActiveConnector = useCallback(
     (connector: AbstractConnector) => {
-      setActiveConnectorState(connector);
+      setPendingConnectorState(connector);
       activate(connector);
     },
     [activate]
   );
-
-  useEffect(() => {
-    if (activeConnector && activeConnector === connector) {
-      AppToaster.show(makeToast(t`Syncing wallet`));
-      setActiveConnectorState(undefined);
-    }
-  }, [activeConnector, connector]);
 
   // handle logic to eagerly connect to the injected ethereum provider, eg:
   // MetaMask, if it exists and has granted access already
@@ -92,9 +98,14 @@ function useActiveConnector(
 
   // handle logic to connect in reaction to certain events on the injected
   // ethereum provider, ie: window.ethereum, if it exists
-  useSyncWithInjectedEthereum(!triedEager || !!activeConnector);
+  const suppress = !triedEager || isPending;
+  useSyncWithInjectedEthereum(suppress);
 
-  return { setActiveConnector };
+  return {
+    setActiveConnector,
+    pendingConnector,
+    isPending: !!pendingConnector,
+  };
 }
 
 function useConnectorName(

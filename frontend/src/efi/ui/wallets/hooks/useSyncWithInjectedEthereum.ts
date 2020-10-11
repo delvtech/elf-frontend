@@ -15,9 +15,13 @@ export function useSyncWithInjectedEthereum(suppress = false) {
   const { active, error, activate } = useWeb3React();
 
   useEffect(() => {
+    if (suppress) {
+      return;
+    }
+
     const { ethereum } = window;
 
-    if (!ethereum.on || suppress || error || active) {
+    if (!ethereum.on || error || active) {
       return;
     }
 
