@@ -19,10 +19,10 @@ import "./index.css";
 import App from "efi/ui/app/App/App";
 import * as serviceWorker from "serviceWorker";
 import { Web3ReactProvider } from "@web3-react/core";
-import { getWeb3ProviderLibrary } from "efi/wallets/providers";
+import { getEthereumProviderLibrary } from "efi/wallets/providers";
 
 ReactDOM.render(
-  <Web3ReactProvider getLibrary={getWeb3ProviderLibrary}>
+  <Web3ReactProvider getLibrary={getEthereumProviderLibrary}>
     <React.StrictMode>
       <App />
     </React.StrictMode>

@@ -18,12 +18,13 @@ const howSwapsWorkLink = (
 );
 
 export const ConnectWalletEmptyState: FC<{}> = () => {
-  const { activate } = useWallet();
+  const { setActiveConnector } = useWallet();
 
   // TODO: Make our own modal w/ buttons for all the different wallet connectors
-  const connectToMetaMask = useCallback(() => activate(injectedConnector), [
-    activate,
-  ]);
+  const connectToMetaMask = useCallback(
+    () => setActiveConnector(injectedConnector),
+    [setActiveConnector]
+  );
 
   return (
     <NonIdealState
