@@ -6,6 +6,8 @@
     "@blueprintjs/core": "^3.33.0",
     "@blueprintjs/icons": "^3.22.0",
     "@blueprintjs/select": "^3.14.2",
+    "@ethersproject/providers": "^5.0.12",
+    "@ethersproject/units": "^5.0.6",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
