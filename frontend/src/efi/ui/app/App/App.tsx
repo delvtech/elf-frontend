@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from "react";
+import React, { FC, useState } from "react";
 import { MainNavigation } from "efi/ui/app/MainNavigation/MainNavigation";
 import { Classes } from "@blueprintjs/core";
 import classNames from "classnames";
@@ -8,19 +8,10 @@ import styles from "./App.module.css";
 import { Navigation } from "efi/app/navigation";
 import { ConnectWalletEmptyState } from "efi/ui/wallets/ConnectWalletEmptyState/ConnectWalletEmptyState";
 import { ActiveTab } from "../ActiveTab/ActiveTab";
-import { useWalletConnection } from "efi/ui/wallets/hooks";
-import { AppToaster, makeToast } from "efi/ui/app/AppToaster/AppToaster";
+import { useWallet } from "efi/ui/wallets/hooks/useWallet";
 
 const App: FC<{}> = () => {
-  const { isConnected, error: walletConnectionError } = useWalletConnection();
-
-  const hasWalletConnection = true;
-
-  useEffect(() => {
-    if (walletConnectionError) {
-      AppToaster.show(makeToast(walletConnectionError?.message));
-    }
-  }, [walletConnectionError]);
+  const { account } = useWallet();
 
   const [activeTab, setActiveTab] = useState(Navigation.SWAP);
 
@@ -40,7 +31,7 @@ const App: FC<{}> = () => {
           styles.contentContainer
         )}
       >
-        {!hasWalletConnection ? (
+        {!account ? (
           <ConnectWalletEmptyState />
         ) : (
           <ActiveTab activeTab={activeTab} />

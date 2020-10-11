@@ -18,6 +18,7 @@ import { IconNames } from "@blueprintjs/icons";
  *
  * AppToaster.show({ message: "Toasted." });
  */
+
 export const AppToaster = Toaster.create({
   position: Position.BOTTOM_RIGHT,
 
@@ -26,7 +27,6 @@ export const AppToaster = Toaster.create({
   // or have multiple toasters.
   className: Classes.DARK,
 });
-
 export function makeToast(message: string): IToastProps {
   return {
     message,
