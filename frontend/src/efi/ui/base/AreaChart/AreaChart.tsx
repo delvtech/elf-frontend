@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, useCallback } from "react";
 import { Group } from "@visx/group";
 import { AreaClosed } from "@visx/shape";
 import { AxisLeft, AxisBottom, AxisScale } from "@visx/axis";
@@ -14,6 +14,7 @@ const axisBottomTickLabelProps = {
   fontSize: 10,
   fill: axisColor,
 };
+const setAxisBottomTickLabelProps = () => axisBottomTickLabelProps;
 
 const axisLeftTickLabelProps = {
   dx: "-0.25em",
@@ -23,6 +24,7 @@ const axisLeftTickLabelProps = {
   textAnchor: "end" as const,
   fill: axisColor,
 };
+const setAxisLeftTickLabelProps = () => axisLeftTickLabelProps;
 
 // accessors
 const getDate = (d: AppleStock) => new Date(d.date);
@@ -60,7 +62,19 @@ export const AreaChart: FunctionComponent<AreaChartProps> = ({
   left,
   children,
 }) => {
-  if (width < 10) return null;
+  const setXScale = useCallback((d) => xScale(getDate(d)) || 0, [
+    xScale,
+    getDate,
+  ]);
+  const setYScale = useCallback((d) => yScale(getStockValue(d)) || 0, [
+    yScale,
+    getStockValue,
+  ]);
+
+  if (width < 10) {
+    return null;
+  }
+
   return (
     <Group left={left || margin.left} top={top || margin.top}>
       <LinearGradient
@@ -72,8 +86,8 @@ export const AreaChart: FunctionComponent<AreaChartProps> = ({
       />
       <AreaClosed<AppleStock>
         data={data}
-        x={(d) => xScale(getDate(d)) || 0}
-        y={(d) => yScale(getStockValue(d)) || 0}
+        x={setXScale}
+        y={setYScale}
         yScale={yScale}
         strokeWidth={1}
         stroke="url(#gradient)"
@@ -87,16 +101,16 @@ export const AreaChart: FunctionComponent<AreaChartProps> = ({
           numTicks={width > 520 ? 10 : 5}
           stroke={axisColor}
           tickStroke={axisColor}
-          tickLabelProps={() => axisBottomTickLabelProps}
+          tickLabelProps={setAxisBottomTickLabelProps}
         />
       )}
       {!hideLeftAxis && (
         <AxisLeft
           scale={yScale}
-          numTicks={5}
+          numTicks={width > 520 ? 5 : 2}
           stroke={axisColor}
           tickStroke={axisColor}
-          tickLabelProps={() => axisLeftTickLabelProps}
+          tickLabelProps={setAxisLeftTickLabelProps}
         />
       )}
       {children}

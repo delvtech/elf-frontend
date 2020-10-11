@@ -9,16 +9,25 @@ export const PortfolioView: FC<PortfolioViewProps> = () => {
     <div
       className={tw(
         "flex",
-        "flex-col",
-        "h-full",
-        "w-full",
-        "md:justify-center",
-        "md:items-center"
+        "flex-1",
+        "grid",
+        "grid-cols-1",
+        "sm:grid-cols-2",
+        "gap-4",
+        "py-4"
       )}
     >
-      <WalletSummary />
-      <div className={tw("w-full", "h-full", "md:w-1/2", "md:h-64")}>
-        <BrushChart width={100} height={80} />
+      <div className={tw("md:justify-center", "md:items-center", "px-4")}>
+        <WalletSummary />
+      </div>
+      <div className={tw("justify-center", "items-center", "px-4")}>
+        <BrushChart />
+      </div>
+      <div className={tw("md:justify-center", "md:items-center", "px-4")}>
+        <WalletSummary />
+      </div>
+      <div className={tw("justify-center", "items-center", "px-4")}>
+        <BrushChart />
       </div>
     </div>
   );

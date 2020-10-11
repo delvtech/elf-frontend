@@ -1,4 +1,10 @@
-import React, { useState, useMemo, FunctionComponent } from "react";
+import React, {
+  useState,
+  useMemo,
+  FunctionComponent,
+  RefObject,
+  useCallback,
+} from "react";
 import { scaleTime, scaleLinear } from "@visx/scale";
 import appleStock, { AppleStock } from "@visx/mock-data/lib/mocks/appleStock";
 import { Brush } from "@visx/brush";
@@ -8,6 +14,9 @@ import { LinearGradient } from "@visx/gradient";
 import { max, extent } from "d3-array";
 import AreaChart from "efi/ui/base/AreaChart/AreaChart";
 import { Colors } from "@blueprintjs/core";
+import useDimensions from "efi/ui/base/hooks/useDimensions";
+import tw from "tailwindcss-classnames";
+import classNames from "classnames";
 
 // Initialize some variables
 const stock = appleStock.slice(1000);
@@ -16,7 +25,7 @@ const chartSeparation = 30;
 const PATTERN_ID = "brush_pattern";
 const GRADIENT_ID = "brush_gradient";
 export const accentColor = Colors.GRAY5;
-export const background = Colors.DARK_GRAY5;
+export const background = Colors.DARK_GRAY4;
 export const background2 = Colors.GRAY1;
 const selectedBrushStyle = {
   fill: `url(#${PATTERN_ID})`,
@@ -28,6 +37,7 @@ const getDate = (d: AppleStock) => new Date(d.date);
 const getStockValue = (d: AppleStock) => d.close;
 
 interface BrushChartProps {
+  className?: string;
   margin?: { top: number; right: number; bottom: number; left: number };
   compact?: boolean;
 }
@@ -40,21 +50,28 @@ export const BrushChart: FunctionComponent<BrushChartProps> = ({
     bottom: 20,
     right: 20,
   },
+  className,
 }) => {
   const [ref, dimensions] = useDimensions();
-  const {} = dimensions;
+  const { width = 0, height = 0 } = dimensions;
   const [filteredStock, setFilteredStock] = useState(stock);
 
-  const onBrushChange = (domain: Bounds | null) => {
-    if (!domain) return;
-    const { x0, x1, y0, y1 } = domain;
-    const stockCopy = stock.filter((s) => {
-      const x = getDate(s).getTime();
-      const y = getStockValue(s);
-      return x > x0 && x < x1 && y > y0 && y < y1;
-    });
-    setFilteredStock(stockCopy);
-  };
+  const onBrushChange = useCallback(
+    (domain: Bounds | null) => {
+      if (!domain) {
+        return;
+      }
+
+      const { x0, x1, y0, y1 } = domain;
+      const stockCopy = stock.filter((s) => {
+        const x = getDate(s).getTime();
+        const y = getStockValue(s);
+        return x > x0 && x < x1 && y > y0 && y < y1;
+      });
+      setFilteredStock(stockCopy);
+    },
+    [stock, getDate, getStockValue, setFilteredStock]
+  );
 
   const innerHeight = height - margin.top - margin.bottom;
   const topChartBottomMargin = compact
@@ -115,9 +132,16 @@ export const BrushChart: FunctionComponent<BrushChartProps> = ({
     }),
     [brushDateScale]
   );
+  const onSetFilteredStock = useCallback(() => setFilteredStock(stock), [
+    stock,
+    setFilteredStock,
+  ]);
 
   return (
-    <div ref={ref}>
+    <div
+      className={classNames(tw("w-full", "h-full"))}
+      ref={ref as RefObject<HTMLDivElement>}
+    >
       <svg width={width} height={height}>
         <LinearGradient
           id={GRADIENT_ID}
@@ -131,7 +155,7 @@ export const BrushChart: FunctionComponent<BrushChartProps> = ({
           width={width}
           height={height}
           fill={`url(#${GRADIENT_ID})`}
-          rx={14}
+          rx={4}
         />
         <AreaChart
           hideBottomAxis={compact}
@@ -174,7 +198,7 @@ export const BrushChart: FunctionComponent<BrushChartProps> = ({
             brushDirection="horizontal"
             initialBrushPosition={initialBrushPosition}
             onChange={onBrushChange}
-            onClick={() => setFilteredStock(stock)}
+            onClick={onSetFilteredStock}
             selectedBoxStyle={selectedBrushStyle}
           />
         </AreaChart>
