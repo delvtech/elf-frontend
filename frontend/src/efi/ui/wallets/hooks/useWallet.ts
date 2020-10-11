@@ -56,7 +56,7 @@ export function useWallet() {
     library,
     chainId,
     account,
-    activate,
+    activate: setActiveConnector,
     deactivate,
     active,
     error,
