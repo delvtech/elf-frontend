@@ -2,11 +2,7 @@ import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core";
 import { useState, useEffect, useCallback } from "react";
 import { useEagerConnect } from "efi/ui/wallets/hooks/useEagerConnect";
 import { useSyncWithInjectedEthereum } from "efi/ui/wallets/hooks/useSyncWithInjectedEthereum";
-import {
-  AppToaster,
-  makeErrorToast,
-  makeToast,
-} from "efi/ui/app/AppToaster/AppToaster";
+import { AppToaster, makeErrorToast } from "efi/ui/app/AppToaster/AppToaster";
 import { t } from "ttag";
 import { BigNumber } from "ethers";
 import { Web3Provider } from "@ethersproject/providers";
@@ -61,6 +57,8 @@ export function useWallet() {
 function useErrorToast(error: Error | undefined) {
   useEffect(() => {
     if (error) {
+      AppToaster.clear(); // Only show one wallet error at a time
+
       const errorToast = makeErrorToast(getErrorMessage(error));
       AppToaster.show(errorToast);
     }
@@ -79,7 +77,6 @@ function useActiveConnector(
   // Handle clearing out the pending connector
   useEffect(() => {
     if (isPending && pendingConnector === connector) {
-      AppToaster.show(makeToast(t`Wallet connected.`));
       setPendingConnectorState(undefined);
     }
   }, [pendingConnector, connector, isPending]);
