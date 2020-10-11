@@ -11,62 +11,54 @@ export interface Dimensions {
   bottom: number;
 }
 
-export type UseDimensionsHook = [
-  React.RefObject<HTMLElement> | null,
-  Dimensions
-];
-
-function useDimensions(liveMeasure = true): UseDimensionsHook {
+function useDimensions(
+  updateOnResize = true
+): [React.RefObject<HTMLElement> | null, Dimensions] {
   const [dimensions, setDimensions] = useState<Dimensions>({} as Dimensions);
   const ref = useRef<HTMLElement>();
-  const measure = useCallback(() => {
-    const element = ref.current;
-    if (refExists(element)) {
-      window.requestAnimationFrame(() => {
-        setDimensions(getDimensions(element));
-      });
+
+  const updateDimensions = useCallback(() => {
+    if (!ref.current) {
+      return;
     }
+
+    const {
+      width,
+      height,
+      x,
+      y,
+    }: DOMRect = ref.current.getBoundingClientRect();
+
+    const dimensions: Dimensions = {
+      width,
+      height,
+      x,
+      y,
+      top: y,
+      left: x,
+      right: x + width,
+      bottom: y + height,
+    };
+
+    window.requestAnimationFrame(() => {
+      setDimensions(dimensions);
+    });
   }, [ref, setDimensions]);
 
   useLayoutEffect(() => {
     if (ref.current) {
-      measure();
-      if (liveMeasure) {
-        window.addEventListener("resize", measure);
-        window.addEventListener("scroll", measure);
+      updateDimensions();
+      if (updateOnResize) {
+        window.addEventListener("resize", updateDimensions);
 
         return () => {
-          window.removeEventListener("resize", measure);
-          window.removeEventListener("scroll", measure);
+          window.removeEventListener("resize", updateDimensions);
         };
       }
     }
-  }, [ref.current]);
+  }, [updateDimensions, updateOnResize]);
 
   return [ref as React.RefObject<HTMLElement>, dimensions];
 }
 
-function getDimensions(node: HTMLElement): Dimensions {
-  if (!node) {
-    return {} as Dimensions;
-  }
-
-  const { width, height, x, y }: DOMRect = node.getBoundingClientRect();
-
-  return {
-    width,
-    height,
-    x,
-    y,
-    top: y,
-    left: x,
-    right: x + width,
-    bottom: y + height,
-  };
-}
-
 export default useDimensions;
-
-function refExists(ref: HTMLElement | undefined): ref is HTMLElement {
-  return !!ref;
-}
