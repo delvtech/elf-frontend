@@ -14,7 +14,7 @@ import { LinearGradient } from "@visx/gradient";
 import { max, extent } from "d3-array";
 import AreaChart from "efi/ui/base/AreaChart/AreaChart";
 import { Colors } from "@blueprintjs/core";
-import useDimensions from "efi/ui/base/hooks/useDimensions";
+import { useMeasure } from "react-use";
 import tw from "tailwindcss-classnames";
 import classNames from "classnames";
 
@@ -52,7 +52,7 @@ export const BrushChart: FunctionComponent<BrushChartProps> = ({
   },
   className,
 }) => {
-  const [ref, dimensions] = useDimensions();
+  const [ref, dimensions] = useMeasure();
   const { width = 0, height = 0 } = dimensions;
   const [filteredStock, setFilteredStock] = useState(stock);
 
@@ -138,10 +138,7 @@ export const BrushChart: FunctionComponent<BrushChartProps> = ({
   ]);
 
   return (
-    <div
-      className={classNames(tw("w-full", "h-full"))}
-      ref={ref as RefObject<HTMLDivElement>}
-    >
+    <div className={classNames(tw("w-full", "h-full"))} ref={ref as any}>
       <svg width={width} height={height}>
         <LinearGradient
           id={GRADIENT_ID}
