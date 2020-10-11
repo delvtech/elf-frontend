@@ -3,22 +3,17 @@ import { Card } from "@blueprintjs/core";
 import { jt } from "ttag";
 import { useAccountInfo } from "efi/ui/wallets/hooks";
 
-interface WalletSummaryProps {}
-export const WalletSummary: FunctionComponent<WalletSummaryProps> = (props) => {
-  const {
-    address,
-    balance,
-    ethBalance,
-    providerName,
-    isConnected,
-  } = useAccountInfo();
+interface WalletSummaryProps {
+  className?: string;
+}
 
-  if (!isConnected) {
-    return null;
-  }
+export const WalletSummary: FunctionComponent<WalletSummaryProps> = ({
+  className,
+}) => {
+  const { address, balance, ethBalance, providerName } = useAccountInfo();
 
   return (
-    <Card>
+    <Card className={className}>
       <div>{jt`Provider: ${providerName}`}</div>
       <div>{jt`Address: ${address}`}</div>
       <div>{jt`Balance: ${balance}`}</div>

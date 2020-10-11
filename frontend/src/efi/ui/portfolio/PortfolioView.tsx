@@ -1,0 +1,34 @@
+import React, { FC } from "react";
+import tw from "tailwindcss-classnames";
+import WalletSummary from "efi/ui/wallets/WalletSummary";
+import BrushChart from "efi/ui/base/BrushChart/BrushChart";
+
+interface PortfolioViewProps {}
+export const PortfolioView: FC<PortfolioViewProps> = () => {
+  return (
+    <div
+      className={tw(
+        "flex",
+        "flex-1",
+        "grid",
+        "grid-cols-1",
+        "sm:grid-cols-2",
+        "gap-4",
+        "py-4"
+      )}
+    >
+      <div className={tw("md:justify-center", "md:items-center", "px-4")}>
+        <WalletSummary />
+      </div>
+      <div className={tw("justify-center", "items-center", "px-4")}>
+        <BrushChart />
+      </div>
+      <div className={tw("md:justify-center", "md:items-center", "px-4")}>
+        <WalletSummary />
+      </div>
+      <div className={tw("justify-center", "items-center", "px-4")}>
+        <BrushChart />
+      </div>
+    </div>
+  );
+};
