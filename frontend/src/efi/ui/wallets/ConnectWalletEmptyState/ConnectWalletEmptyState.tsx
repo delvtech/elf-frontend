@@ -4,7 +4,6 @@ import classNames from "classnames";
 import React, { FC, useCallback } from "react";
 import tw from "tailwindcss-classnames";
 import { jt, t } from "ttag";
-import { useWallet } from "efi/ui/wallets/hooks/useWallet";
 import { injectedConnector } from "efi/wallets/connectors";
 import { useWalletConnection } from "efi/ui/wallets/hooks/useWalletConnection";
 
