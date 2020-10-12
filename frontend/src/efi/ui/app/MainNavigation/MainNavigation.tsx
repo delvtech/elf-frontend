@@ -9,9 +9,13 @@ import {
   Tab,
   Tabs,
 } from "@blueprintjs/core";
+import { IconNames } from "@blueprintjs/icons";
 import classNames from "classnames";
 import { Navigation } from "efi/app/navigation";
-import React, { Fragment } from "react";
+import { useWallet } from "efi/ui/wallets/hooks/useWallet";
+import { useWalletConnection } from "efi/ui/wallets/hooks/useWalletConnection";
+import { injectedConnector } from "efi/wallets/connectors";
+import React, { Fragment, useCallback } from "react";
 import { FC } from "react";
 import tw from "tailwindcss-classnames";
 import { t } from "ttag";
@@ -19,12 +23,19 @@ import styles from "./MainNavigation.module.css";
 
 interface MainNavigationProps {
   activeTab: Navigation;
-  setActiveTab: (newActiveTab: Navigation) => void;
+  onSetActiveTab: (newActiveTab: Navigation) => void;
 }
 export const MainNavigation: FC<MainNavigationProps> = ({
   activeTab,
-  setActiveTab,
+  onSetActiveTab,
 }) => {
+  const { account } = useWallet();
+
+  const { disconnect, connect } = useWalletConnection();
+  const connectToMetaMask = useCallback(() => connect(injectedConnector), [
+    connect,
+  ]);
+
   return (
     <Fragment>
       {/* Mobile/Tablet */}
@@ -37,11 +48,19 @@ export const MainNavigation: FC<MainNavigationProps> = ({
           </NavbarHeading>
         </NavbarGroup>
         <NavbarGroup align={Alignment.RIGHT}>
+          <Button
+            minimal
+            outlined
+            icon={IconNames.LOG_OUT}
+            onClick={disconnect}
+          />
+        </NavbarGroup>
+        <NavbarGroup align={Alignment.RIGHT}>
           <Tabs
             id="primary-nav-mobile"
             className={classNames(styles.smTabs)}
             selectedTabId={activeTab}
-            onChange={setActiveTab}
+            onChange={onSetActiveTab}
           >
             <Tab id={Navigation.PORTFOLIO} title={t`Portfolio`} />
             <Tab id={Navigation.SWAP} title={t`Swap`} />
@@ -81,7 +100,7 @@ export const MainNavigation: FC<MainNavigationProps> = ({
             vertical
             className={classNames(tw("w-full"), styles.tabs)}
             selectedTabId={activeTab}
-            onChange={setActiveTab}
+            onChange={onSetActiveTab}
           >
             <Tab
               id={Navigation.PORTFOLIO}
@@ -97,7 +116,9 @@ export const MainNavigation: FC<MainNavigationProps> = ({
           </Tabs>
 
           <ButtonGroup large vertical minimal className={tw("pb-10")}>
-            <Button>{t`Connect your wallet`}</Button>
+            <Button onClick={account ? disconnect : connectToMetaMask}>
+              {account ? t`Disconnect wallet` : t`Connect your wallet`}
+            </Button>
             <Button>{t`Resources`}</Button>
           </ButtonGroup>
         </div>

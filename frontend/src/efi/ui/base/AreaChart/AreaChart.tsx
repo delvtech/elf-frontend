@@ -62,14 +62,8 @@ export const AreaChart: FunctionComponent<AreaChartProps> = ({
   left,
   children,
 }) => {
-  const setXScale = useCallback((d) => xScale(getDate(d)) || 0, [
-    xScale,
-    getDate,
-  ]);
-  const setYScale = useCallback((d) => yScale(getStockValue(d)) || 0, [
-    yScale,
-    getStockValue,
-  ]);
+  const setXScale = useCallback((d) => xScale(getDate(d)) || 0, [xScale]);
+  const setYScale = useCallback((d) => yScale(getStockValue(d)) || 0, [yScale]);
 
   if (width < 10) {
     return null;

@@ -1,4 +1,5 @@
 import { useWeb3React } from "@web3-react/core";
+import { AbstractConnector } from "@web3-react/abstract-connector";
 import { useEffect } from "react";
 import { injectedConnector } from "efi/wallets/connectors";
 import { ChainIds, NetworkIds } from "efi/base/ethereum";
@@ -11,8 +12,11 @@ import { ChainIds, NetworkIds } from "efi/base/ethereum";
  * This effect keeps the app's Web3 context in sync w/ window.ethereum (if it
  * exists).
  */
-export function useSyncWithInjectedEthereum(suppress = false) {
-  const { active, error, activate } = useWeb3React();
+export function useSyncWithInjectedEthereum(
+  connect: (connector: AbstractConnector) => void,
+  suppress = false
+) {
+  const { active, error } = useWeb3React();
 
   useEffect(() => {
     if (suppress) {
@@ -27,19 +31,19 @@ export function useSyncWithInjectedEthereum(suppress = false) {
 
     const handleChainChanged = (chainId: ChainIds) => {
       console.log("chainChanged", chainId);
-      activate(injectedConnector);
+      connect(injectedConnector);
     };
 
     const handleAccountsChanged = (accounts: any) => {
       console.log("accountsChanged", accounts);
       if (accounts.length > 0) {
-        activate(injectedConnector);
+        connect(injectedConnector);
       }
     };
 
     const handleNetworkChanged = (networkId: NetworkIds) => {
       console.log("networkChanged", networkId);
-      activate(injectedConnector);
+      connect(injectedConnector);
     };
 
     ethereum.on("chainChanged", handleChainChanged);
@@ -53,5 +57,5 @@ export function useSyncWithInjectedEthereum(suppress = false) {
         ethereum.removeListener("networkChanged", handleNetworkChanged);
       }
     };
-  }, [active, error, suppress, activate]);
+  }, [active, error, suppress, connect]);
 }

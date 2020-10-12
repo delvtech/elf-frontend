@@ -2,7 +2,6 @@ import React, {
   useState,
   useMemo,
   FunctionComponent,
-  RefObject,
   useCallback,
 } from "react";
 import { scaleTime, scaleLinear } from "@visx/scale";
@@ -70,7 +69,7 @@ export const BrushChart: FunctionComponent<BrushChartProps> = ({
       });
       setFilteredStock(stockCopy);
     },
-    [stock, getDate, getStockValue, setFilteredStock]
+    [setFilteredStock]
   );
 
   const innerHeight = height - margin.top - margin.bottom;
@@ -133,7 +132,6 @@ export const BrushChart: FunctionComponent<BrushChartProps> = ({
     [brushDateScale]
   );
   const onSetFilteredStock = useCallback(() => setFilteredStock(stock), [
-    stock,
     setFilteredStock,
   ]);
 

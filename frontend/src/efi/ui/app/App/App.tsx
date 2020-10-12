@@ -23,7 +23,7 @@ const App: FC<{}> = () => {
         tw("flex", "w-full", "h-full", "overflow-auto")
       )}
     >
-      <MainNavigation activeTab={activeTab} setActiveTab={setActiveTab} />
+      <MainNavigation activeTab={activeTab} onSetActiveTab={setActiveTab} />
 
       <div
         className={classNames(
