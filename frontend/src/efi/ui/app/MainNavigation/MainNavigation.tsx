@@ -12,7 +12,10 @@ import {
 import { IconNames } from "@blueprintjs/icons";
 import classNames from "classnames";
 import { Navigation } from "efi/app/navigation";
-import React, { Fragment } from "react";
+import { useWallet } from "efi/ui/wallets/hooks/useWallet";
+import { useWalletConnection } from "efi/ui/wallets/hooks/useWalletConnection";
+import { injectedConnector } from "efi/wallets/connectors";
+import React, { Fragment, useCallback } from "react";
 import { FC } from "react";
 import tw from "tailwindcss-classnames";
 import { t } from "ttag";
@@ -21,13 +24,18 @@ import styles from "./MainNavigation.module.css";
 interface MainNavigationProps {
   activeTab: Navigation;
   onSetActiveTab: (newActiveTab: Navigation) => void;
-  onDisconnectWallet: () => void;
 }
 export const MainNavigation: FC<MainNavigationProps> = ({
   activeTab,
   onSetActiveTab,
-  onDisconnectWallet,
 }) => {
+  const { account } = useWallet();
+
+  const { disconnect, connect } = useWalletConnection();
+  const connectToMetaMask = useCallback(() => connect(injectedConnector), [
+    connect,
+  ]);
+
   return (
     <Fragment>
       {/* Mobile/Tablet */}
@@ -44,7 +52,7 @@ export const MainNavigation: FC<MainNavigationProps> = ({
             minimal
             outlined
             icon={IconNames.LOG_OUT}
-            onClick={onDisconnectWallet}
+            onClick={disconnect}
           />
         </NavbarGroup>
         <NavbarGroup align={Alignment.RIGHT}>
@@ -108,7 +116,9 @@ export const MainNavigation: FC<MainNavigationProps> = ({
           </Tabs>
 
           <ButtonGroup large vertical minimal className={tw("pb-10")}>
-            <Button>{t`Connect your wallet`}</Button>
+            <Button onClick={account ? disconnect : connectToMetaMask}>
+              {account ? t`Disconnect wallet` : t`Connect your wallet`}
+            </Button>
             <Button>{t`Resources`}</Button>
           </ButtonGroup>
         </div>
