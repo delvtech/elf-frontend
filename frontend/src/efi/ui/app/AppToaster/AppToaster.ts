@@ -18,7 +18,6 @@ import { IconNames } from "@blueprintjs/icons";
  *
  * AppToaster.show({ message: "Toasted." });
  */
-
 export const AppToaster = Toaster.create({
   position: Position.BOTTOM_RIGHT,
 

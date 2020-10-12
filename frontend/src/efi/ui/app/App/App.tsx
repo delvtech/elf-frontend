@@ -9,9 +9,11 @@ import { Navigation } from "efi/app/navigation";
 import { ConnectWalletEmptyState } from "efi/ui/wallets/ConnectWalletEmptyState/ConnectWalletEmptyState";
 import { ActiveTab } from "../ActiveTab/ActiveTab";
 import { useWallet } from "efi/ui/wallets/hooks/useWallet";
+import { useWalletConnection } from "efi/ui/wallets/hooks/useWalletConnection";
 
 const App: FC<{}> = () => {
   const { account } = useWallet();
+  const { disconnect } = useWalletConnection();
 
   const [activeTab, setActiveTab] = useState(Navigation.SWAP);
 
@@ -23,7 +25,11 @@ const App: FC<{}> = () => {
         tw("flex", "w-full", "h-full", "overflow-auto")
       )}
     >
-      <MainNavigation activeTab={activeTab} setActiveTab={setActiveTab} />
+      <MainNavigation
+        activeTab={activeTab}
+        onSetActiveTab={setActiveTab}
+        onDisconnectWallet={disconnect}
+      />
 
       <div
         className={classNames(

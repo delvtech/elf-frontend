@@ -9,6 +9,7 @@ import {
   Tab,
   Tabs,
 } from "@blueprintjs/core";
+import { IconNames } from "@blueprintjs/icons";
 import classNames from "classnames";
 import { Navigation } from "efi/app/navigation";
 import React, { Fragment } from "react";
@@ -19,11 +20,13 @@ import styles from "./MainNavigation.module.css";
 
 interface MainNavigationProps {
   activeTab: Navigation;
-  setActiveTab: (newActiveTab: Navigation) => void;
+  onSetActiveTab: (newActiveTab: Navigation) => void;
+  onDisconnectWallet: () => void;
 }
 export const MainNavigation: FC<MainNavigationProps> = ({
   activeTab,
-  setActiveTab,
+  onSetActiveTab,
+  onDisconnectWallet,
 }) => {
   return (
     <Fragment>
@@ -37,11 +40,19 @@ export const MainNavigation: FC<MainNavigationProps> = ({
           </NavbarHeading>
         </NavbarGroup>
         <NavbarGroup align={Alignment.RIGHT}>
+          <Button
+            minimal
+            outlined
+            icon={IconNames.LOG_OUT}
+            onClick={onDisconnectWallet}
+          />
+        </NavbarGroup>
+        <NavbarGroup align={Alignment.RIGHT}>
           <Tabs
             id="primary-nav-mobile"
             className={classNames(styles.smTabs)}
             selectedTabId={activeTab}
-            onChange={setActiveTab}
+            onChange={onSetActiveTab}
           >
             <Tab id={Navigation.PORTFOLIO} title={t`Portfolio`} />
             <Tab id={Navigation.SWAP} title={t`Swap`} />
@@ -81,7 +92,7 @@ export const MainNavigation: FC<MainNavigationProps> = ({
             vertical
             className={classNames(tw("w-full"), styles.tabs)}
             selectedTabId={activeTab}
-            onChange={setActiveTab}
+            onChange={onSetActiveTab}
           >
             <Tab
               id={Navigation.PORTFOLIO}

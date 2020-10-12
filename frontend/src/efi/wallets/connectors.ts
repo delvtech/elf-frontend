@@ -2,7 +2,6 @@ import { InjectedConnector } from "@web3-react/injected-connector";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { DEFAULT_CHAIN_IDS } from "efi/base/ethereum";
 import { t } from "ttag";
-import { Web3Provider } from "@ethersproject/providers";
 
 /**
  * The 'injected' connector refers to plugin-based wallets like MetaMask, which
@@ -16,12 +15,9 @@ const ConnectorsByName: Record<string, AbstractConnector> = {
   Injected: injectedConnector,
 };
 
-export function getConnectorName(
-  library: Web3Provider,
-  connector?: AbstractConnector
-): string {
+export function getConnectorName(connector?: AbstractConnector): string {
   if (!connector) {
-    return t`No connector.`;
+    return t`No connector`;
   }
 
   // Lookup the connector name
