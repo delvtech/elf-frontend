@@ -1,0 +1,28 @@
+{
+  "settings": {
+    "import/resolver": {
+      "eslint-import-resolver-typescript": {
+        "alwaysTryTypes": true
+      }
+    }
+  },
+  "extends": ["react-app", "shared-config", "prettier"],
+  "overrides": [
+    {
+      "files": ["**/*.ts", "**/*.tsx"],
+      "rules": {
+        "no-undef": ["off"],
+        "react-hooks/exhaustive-deps": "error"
+      }
+    }
+  ],
+  "rules": {
+    "no-console": [
+      "warn",
+      {
+        "allow": ["warn", "error", "info", "assert"]
+      }
+    ],
+    "no-unused-vars": "warn"
+  }
+}
