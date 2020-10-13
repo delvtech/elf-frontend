@@ -1,0 +1,33 @@
+{
+  "settings": {
+    "import/resolver": {
+      // always try to resolve types under `<root>@types` directory even it doesn't contain any
+      // source code, like `@types/unist`
+      "eslint-import-resolver-typescript": {
+        "alwaysTryTypes": true
+      }
+    }
+  },
+  "extends": ["react-app", "prettier"],
+  "overrides": [
+    {
+      "files": ["**/*.ts", "**/*.tsx"],
+      "rules": {
+        "no-undef": ["off"],
+        "react-hooks/exhaustive-deps": "error"
+      }
+    }
+  ],
+  "rules": {
+    "no-console": [
+      "warn",
+      {
+        "allow": ["warn", "error", "info", "assert"]
+      }
+    ],
+    // const func = new Function()
+    "no-new-func": "error",
+    "no-unused-vars": "error",
+    "import/no-unused-modules": "error"
+  }
+}
