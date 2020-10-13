@@ -103,19 +103,13 @@ const itemPredicate: ItemPredicate<CryptoAssetInfo> = (
 };
 
 const itemListRenderer: ItemListRenderer<CryptoAssetInfo> = ({
-  activeItem,
   filteredItems,
   items,
   query,
   renderItem,
-  itemsParentRef,
 }) => {
   const listItems = query ? filteredItems : items;
-  return (
-    <Menu ulRef={itemsParentRef}>
-      {listItems.map((item, i) => renderItem(item, i))}
-    </Menu>
-  );
+  return <Menu>{listItems.map((item, i) => renderItem(item, i))}</Menu>;
 };
 
 const itemRenderer: ItemRenderer<CryptoAssetInfo> = ({
