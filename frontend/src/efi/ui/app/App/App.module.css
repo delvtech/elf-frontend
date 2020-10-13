@@ -1,7 +1,3 @@
 .app {
   background-color: var(--bp3-dark-bg-color);
 }
-
-.contentContainer {
-  padding-top: var(--bp3-navbar-height);
-}
