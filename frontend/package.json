@@ -1,5 +1,5 @@
 {
-  "name": "frontend",
+  "name": "efi-frontend",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -44,18 +44,20 @@
     "web3": "^1.3.0"
   },
   "scripts": {
-    "prestart": "npm run build:tailwind",
-    "start": "react-scripts start",
-    "prebuild": "npm run build:tailwind",
+    "add:language": "bash ./scripts/add-language.sh",
     "build": "react-scripts build",
     "build:tailwind": "tailwindcss build src/tailwind.css -o src/tailwind.output.css",
-    "prettier": "prettier --write src/**/*.ts{,x}",
-    "prettier:check": "prettier --check src/**/*.ts{,x}",
+    "build:version-json": "bash ./scripts/build-version-json.sh",
+    "eject": "react-scripts eject",
     "lint": "tsc --noEmit && eslint src/**/*.ts{,x}",
     "lint:fix": "tsc --noEmit && eslint --fix src/**/*.ts{,x}",
+    "prebuild": "npm run build:version-json && npm run build:tailwind",
+    "prestart": "npm run build:version-json && npm run build:tailwind",
+    "postinstall": "npm run build:version-json",
+    "prettier": "prettier --write src/**/*.ts{,x}",
+    "prettier:check": "prettier --check src/**/*.ts{,x}",
+    "start": "react-scripts start",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "add:language": "bash ./scripts/add-language.sh",
     "update:language": "bash ./scripts/update-language.sh"
   },
   "husky": {
