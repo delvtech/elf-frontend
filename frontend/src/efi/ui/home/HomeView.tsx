@@ -6,8 +6,8 @@ import React, { FC } from "react";
 import tw from "tailwindcss-classnames";
 import { t } from "ttag";
 
-interface SwapViewProps extends RouteComponentProps {}
-export const SwapView: FC<SwapViewProps> = () => {
+interface HomeViewProps extends RouteComponentProps {}
+export const HomeView: FC<HomeViewProps> = () => {
   return (
     <div
       className={tw(

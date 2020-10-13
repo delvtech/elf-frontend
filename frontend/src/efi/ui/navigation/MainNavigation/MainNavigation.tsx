@@ -11,7 +11,8 @@ import {
 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import classNames from "classnames";
-import { Navigation } from "efi/app/navigation";
+import { useTab } from "efi/ui/navigation/hooks/useTab";
+import { Navigation } from "efi/ui/navigation/navigation";
 import { useWallet } from "efi/ui/wallets/hooks/useWallet";
 import { useWalletConnection } from "efi/ui/wallets/hooks/useWalletConnection";
 import { injectedConnector } from "efi/wallets/connectors";
@@ -21,15 +22,10 @@ import tw from "tailwindcss-classnames";
 import { t } from "ttag";
 import styles from "./MainNavigation.module.css";
 
-interface MainNavigationProps {
-  activeTab: Navigation;
-  onSetActiveTab: (newActiveTab: Navigation) => void;
-}
-export const MainNavigation: FC<MainNavigationProps> = ({
-  activeTab,
-  onSetActiveTab,
-}) => {
+interface MainNavigationProps {}
+export const MainNavigation: FC<MainNavigationProps> = () => {
   const { account } = useWallet();
+  const { activeTab, changeTab } = useTab();
 
   const { disconnect, connect } = useWalletConnection();
   const connectToMetaMask = useCallback(() => connect(injectedConnector), [
@@ -60,8 +56,9 @@ export const MainNavigation: FC<MainNavigationProps> = ({
             id="primary-nav-mobile"
             className={classNames(styles.smTabs)}
             selectedTabId={activeTab}
-            onChange={onSetActiveTab}
+            onChange={changeTab}
           >
+            <Tab id={Navigation.HOME} title={t`Home`} />
             <Tab id={Navigation.PORTFOLIO} title={t`Portfolio`} />
             <Tab id={Navigation.SWAP} title={t`Swap`} />
             <Tab id={Navigation.FUNDS} title={t`Funds`} />
@@ -74,10 +71,9 @@ export const MainNavigation: FC<MainNavigationProps> = ({
         className={tw(
           "hidden",
           "lg:flex",
-          "flex-row",
+          "flex-col",
           "w-1/6",
           "h-full",
-          "flex-col",
           "flex-shrink-0"
         )}
         style={{
@@ -98,21 +94,14 @@ export const MainNavigation: FC<MainNavigationProps> = ({
             }
             large
             vertical
-            className={classNames(tw("w-full"), styles.tabs)}
+            className={classNames(tw("w-full", "space-y-2"), styles.tabs)}
+            onChange={changeTab}
             selectedTabId={activeTab}
-            onChange={onSetActiveTab}
           >
-            <Tab
-              id={Navigation.PORTFOLIO}
-              title={t`Portfolio`}
-              className={tw("my-2")}
-            />
-            <Tab id={Navigation.SWAP} title={t`Swap`} className={tw("my-2")} />
-            <Tab
-              id={Navigation.FUNDS}
-              title={t`Funds`}
-              className={tw("my-2")}
-            />
+            <Tab id={Navigation.HOME} title={t`Home`} />
+            <Tab id={Navigation.PORTFOLIO} title={t`Portfolio`} />
+            <Tab id={Navigation.SWAP} title={t`Swap`} />
+            <Tab id={Navigation.FUNDS} title={t`Funds`} />
           </Tabs>
 
           <ButtonGroup large vertical minimal className={tw("pb-10")}>

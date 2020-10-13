@@ -1,0 +1,14 @@
+import { useActiveTab } from "efi/ui/navigation/hooks/useActiveTab";
+import { useChangeTab } from "efi/ui/navigation/hooks/useChangeTab";
+import { Navigation } from "efi/ui/navigation/navigation";
+
+export interface UseTab {
+  changeTab: (tabId: Navigation) => void;
+  activeTab: Navigation;
+}
+export function useTab(): UseTab {
+  const changeTab = useChangeTab();
+  const activeTab = useActiveTab();
+
+  return { changeTab, activeTab };
+}
