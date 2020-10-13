@@ -21,6 +21,7 @@ interface CryptoAssetSuggestProps {
   className?: string;
 
   placeholder?: string;
+  omnibarPlaceholder?: string;
 }
 
 const overlayProps: Partial<IOverlayProps> = {
@@ -31,6 +32,7 @@ export const CryptoAssetSuggest: FC<CryptoAssetSuggestProps> = ({
   onCryptoAssetSelect = () => {},
   cryptoAssets = EFI_SUPPORTED_CRYPTO_ASSETS,
   placeholder = t`Choose an asset`,
+  omnibarPlaceholder = t`Choose an asset`,
   className,
 }) => {
   const {
@@ -50,9 +52,9 @@ export const CryptoAssetSuggest: FC<CryptoAssetSuggestProps> = ({
   const omnibarInputProps: IInputGroupProps & HTMLInputProps = useMemo(() => {
     return {
       large: true,
-      placeholder,
+      placeholder: omnibarPlaceholder,
     };
-  }, [placeholder]);
+  }, [omnibarPlaceholder]);
 
   return (
     <Fragment>
@@ -66,7 +68,7 @@ export const CryptoAssetSuggest: FC<CryptoAssetSuggestProps> = ({
         isOpen={isOmnibarOpen}
         inputProps={omnibarInputProps}
         overlayProps={overlayProps}
-        className={tw("w-4/5", "left-auto")}
+        className={tw("w-4/5", "lg:w-1/2", "left-auto")}
         items={cryptoAssets}
         itemRenderer={itemRenderer}
         onItemSelect={() => {}}

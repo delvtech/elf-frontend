@@ -38,11 +38,13 @@ export const SimpleCryptoAssetFilter: FC<SimpleCryptoAssetFilterProps> = ({
       >
         <CryptoAssetSuggest
           placeholder={t`Base asset`}
+          omnibarPlaceholder={t`Choose a base asset...`}
           onCryptoAssetSelect={() => {}}
         />
         <Icon icon={IconNames.ARROW_RIGHT} />
         <CryptoAssetSuggest
           placeholder={t`Desired asset`}
+          omnibarPlaceholder={t`Choose a desired asset...`}
           onCryptoAssetSelect={() => {}}
         />
       </span>
