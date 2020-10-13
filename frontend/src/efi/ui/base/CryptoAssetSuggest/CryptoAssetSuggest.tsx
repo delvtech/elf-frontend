@@ -3,10 +3,16 @@ import {
   HTMLInputProps,
   IInputGroupProps,
   IOverlayProps,
+  Menu,
   MenuItem,
   TagInput,
 } from "@blueprintjs/core";
-import { ItemRenderer, Omnibar } from "@blueprintjs/select";
+import {
+  ItemListRenderer,
+  ItemPredicate,
+  ItemRenderer,
+  Omnibar,
+} from "@blueprintjs/select";
 import classNames from "classnames";
 import { EFI_SUPPORTED_CRYPTO_ASSETS } from "cryptoAssets";
 import { CryptoAssetInfo } from "efi/base/CryptoAssetInfo";
@@ -71,6 +77,8 @@ export const CryptoAssetSuggest: FC<CryptoAssetSuggestProps> = ({
         className={tw("w-4/5", "lg:w-1/2", "left-auto")}
         items={cryptoAssets}
         itemRenderer={itemRenderer}
+        itemPredicate={itemPredicate}
+        itemListRenderer={itemListRenderer}
         onItemSelect={() => {}}
         onClose={closeOmnibar}
       />
@@ -85,6 +93,31 @@ function useOmnibar() {
   return { isOpen, open, close };
 }
 
+const itemPredicate: ItemPredicate<CryptoAssetInfo> = (
+  query,
+  item,
+  index,
+  exactMatch
+) => {
+  return item.name.toLocaleLowerCase().indexOf(query.toLocaleLowerCase()) > -1;
+};
+
+const itemListRenderer: ItemListRenderer<CryptoAssetInfo> = ({
+  activeItem,
+  filteredItems,
+  items,
+  query,
+  renderItem,
+  itemsParentRef,
+}) => {
+  const listItems = query ? filteredItems : items;
+  return (
+    <Menu ulRef={itemsParentRef}>
+      {listItems.map((item, i) => renderItem(item, i))}
+    </Menu>
+  );
+};
+
 const itemRenderer: ItemRenderer<CryptoAssetInfo> = ({
   id,
   name,
@@ -95,6 +128,10 @@ const itemRenderer: ItemRenderer<CryptoAssetInfo> = ({
   return (
     <MenuItem
       key={id}
+      tabIndex={
+        // hack to make tab navigation work
+        0
+      }
       className={tw("py-6", "items-center")}
       text={<span className={tw("text-lg", "px-6")}>{name}</span>}
       icon={
