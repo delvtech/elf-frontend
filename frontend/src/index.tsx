@@ -2,24 +2,22 @@
  * CRA requires that this file live at the top-level, ie: src/index.tsx
  */
 
-import React from "react";
-import ReactDOM from "react-dom";
-
-import "normalize.css/normalize.css";
-import "@blueprintjs/icons/lib/css/blueprint-icons.css";
 import "@blueprintjs/core/lib/css/blueprint.css";
+import "@blueprintjs/icons/lib/css/blueprint-icons.css";
 import "@blueprintjs/select/lib/css/blueprint-select.css";
-
+import "normalize.css/normalize.css";
+import "./index.css";
 // Import tailwind after blueprint so that applying tailwind classes to
 // blueprint components overrides the blueprint styling
 import "./tailwind.output.css";
 
-import "./index.css";
-
-import App from "efi/ui/app/App/App";
-import * as serviceWorker from "serviceWorker";
 import { Web3ReactProvider } from "@web3-react/core";
+import App from "efi/ui/app/App/App";
 import { getEthereumProviderLibrary } from "efi/wallets/providers";
+import React from "react";
+import ReactDOM from "react-dom";
+import * as serviceWorker from "serviceWorker";
+
 import versionJson from "./version.output.json";
 
 logAppVersion();
@@ -27,7 +25,6 @@ logAppVersion();
 if (process.env.NODE_ENV === "development") {
   prefixDocumentTitle("(D)");
 }
-
 ReactDOM.render(
   <Web3ReactProvider getLibrary={getEthereumProviderLibrary}>
     <React.StrictMode>

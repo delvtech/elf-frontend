@@ -1,9 +1,10 @@
+import { RouteComponentProps } from "@reach/router";
+import BrushChart from "efi/ui/base/BrushChart/BrushChart";
+import WalletSummary from "efi/ui/wallets/WalletSummary";
 import React, { FC } from "react";
 import tw from "tailwindcss-classnames";
-import WalletSummary from "efi/ui/wallets/WalletSummary";
-import BrushChart from "efi/ui/base/BrushChart/BrushChart";
 
-interface PortfolioViewProps {}
+interface PortfolioViewProps extends RouteComponentProps {}
 export const PortfolioView: FC<PortfolioViewProps> = () => {
   return (
     <div
