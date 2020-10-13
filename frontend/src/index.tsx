@@ -24,6 +24,10 @@ import versionJson from "./version.output.json";
 
 logAppVersion();
 
+if (process.env.NODE_ENV === "development") {
+  prefixDocumentTitle("(D)");
+}
+
 ReactDOM.render(
   <Web3ReactProvider getLibrary={getEthereumProviderLibrary}>
     <React.StrictMode>
@@ -32,6 +36,10 @@ ReactDOM.render(
   </Web3ReactProvider>,
   document.getElementById("root")
 );
+
+function prefixDocumentTitle(prefix: string) {
+  document.title = `${prefix} ${document.title}`;
+}
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
