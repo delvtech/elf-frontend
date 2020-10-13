@@ -6,7 +6,7 @@
       }
     }
   },
-  "extends": ["react-app", "shared-config", "prettier"],
+  "extends": ["react-app", "prettier"],
   "overrides": [
     {
       "files": ["**/*.ts", "**/*.tsx"],
@@ -23,6 +23,9 @@
         "allow": ["warn", "error", "info", "assert"]
       }
     ],
-    "no-unused-vars": "warn"
+    // const func = new Function()
+    "no-new-func": "error",
+    "no-unused-vars": "error",
+    "import/no-unused-modules": "error"
   }
 }

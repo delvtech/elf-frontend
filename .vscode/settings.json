@@ -1,3 +1,9 @@
 {
-    "typescript.tsdk":"/Users/dannydelott/Documents/efi-frontend/frontend/node_modules/typescript/lib",
+  "typescript.tsdk": "./node_modules/typescript/lib",
+  "eslint.workingDirectories": ["./frontend"],
+  "eslint.nodePath": "./node_modules/.bin/eslint",
+  "eslint.options": { "configFile": ".eslintrc" },
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true
+  }
 }
