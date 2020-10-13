@@ -53,6 +53,7 @@
     "lint:fix": "tsc --noEmit && eslint --fix src/**/*.ts{,x}",
     "prebuild": "npm run build:version-json && npm run build:tailwind",
     "prestart": "npm run build:version-json && npm run build:tailwind",
+    "postinstall": "npm run build:version-json",
     "prettier": "prettier --write src/**/*.ts{,x}",
     "prettier:check": "prettier --check src/**/*.ts{,x}",
     "start": "react-scripts start",
