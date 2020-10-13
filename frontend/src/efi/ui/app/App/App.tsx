@@ -6,7 +6,7 @@ import { tw } from "tailwindcss-classnames";
 
 import styles from "./App.module.css";
 import { Navigation } from "efi/app/navigation";
-import { ConnectWalletEmptyState } from "efi/ui/wallets/ConnectWalletEmptyState/ConnectWalletEmptyState";
+import { MissingWalletEmptyState } from "efi/ui/wallets/MissingWalletEmptyState/MissingWalletEmptyState";
 import { ActiveTab } from "../ActiveTab/ActiveTab";
 import { useWallet } from "efi/ui/wallets/hooks/useWallet";
 
@@ -32,7 +32,7 @@ const App: FC<{}> = () => {
         )}
       >
         {!account ? (
-          <ConnectWalletEmptyState />
+          <MissingWalletEmptyState />
         ) : (
           <ActiveTab activeTab={activeTab} />
         )}

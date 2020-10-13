@@ -17,7 +17,7 @@ const howSwapsWorkLink = (
   <a key="how-swaps-work" href="/">{t`how Swaps work`}</a>
 );
 
-export const ConnectWalletEmptyState: FC<{}> = () => {
+export const MissingWalletEmptyState: FC<{}> = () => {
   const { connect } = useWalletConnection();
 
   // TODO: Make our own modal w/ buttons for all the different wallet connectors
