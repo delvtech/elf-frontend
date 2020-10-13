@@ -24,5 +24,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# This is generated fresh on every build
+# These are generated fresh on every build
 version.output.json
+tailwind.output.css
