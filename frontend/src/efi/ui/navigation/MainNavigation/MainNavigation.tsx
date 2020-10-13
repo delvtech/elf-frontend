@@ -11,6 +11,7 @@ import {
 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import classNames from "classnames";
+import { useTab } from "efi/ui/navigation/hooks/useTab";
 import { Navigation } from "efi/ui/navigation/navigation";
 import { useWallet } from "efi/ui/wallets/hooks/useWallet";
 import { useWalletConnection } from "efi/ui/wallets/hooks/useWalletConnection";
@@ -20,14 +21,11 @@ import { FC } from "react";
 import tw from "tailwindcss-classnames";
 import { t } from "ttag";
 import styles from "./MainNavigation.module.css";
-import { useChangeTab } from "efi/ui/navigation/hooks/useChangeTab";
-import { useActiveTab } from "efi/ui/navigation/hooks/useActiveTab";
 
 interface MainNavigationProps {}
 export const MainNavigation: FC<MainNavigationProps> = () => {
   const { account } = useWallet();
-  const activeTab = useActiveTab();
-  const changeTab = useChangeTab();
+  const { activeTab, changeTab } = useTab();
 
   const { disconnect, connect } = useWalletConnection();
   const connectToMetaMask = useCallback(() => connect(injectedConnector), [
