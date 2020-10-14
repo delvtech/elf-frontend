@@ -21,7 +21,7 @@ export interface Wallet {
   /**
    * The Id to identify which Ethereum network the account is on.
    */
-  chainId: ChainId;
+  chainId: ChainId | undefined;
 
   /**
    * Account address.
