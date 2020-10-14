@@ -1,11 +1,19 @@
 import { RouteComponentProps } from "@reach/router";
 import BrushChart from "efi/ui/base/BrushChart/BrushChart";
+import { useWallet } from "efi/ui/wallets/hooks/useWallet";
+import { MissingWalletEmptyState } from "efi/ui/wallets/MissingWalletEmptyState/MissingWalletEmptyState";
 import WalletSummary from "efi/ui/wallets/WalletSummary";
 import React, { FC } from "react";
 import tw from "tailwindcss-classnames";
 
 interface PortfolioViewProps extends RouteComponentProps {}
 export const PortfolioView: FC<PortfolioViewProps> = () => {
+  const { active } = useWallet();
+
+  if (!active) {
+    return <MissingWalletEmptyState />;
+  }
+
   return (
     <div
       className={tw(
