@@ -8,9 +8,9 @@ import tw from "tailwindcss-classnames";
 
 interface PortfolioViewProps extends RouteComponentProps {}
 export const PortfolioView: FC<PortfolioViewProps> = () => {
-  const { active } = useWallet();
+  const { account } = useWallet();
 
-  if (!active) {
+  if (!!account) {
     return <MissingWalletEmptyState />;
   }
 

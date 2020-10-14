@@ -10,6 +10,7 @@ import {
 } from "@web3-react/injected-connector";
 import { getConnectorName } from "efi/wallets/connectors";
 import { useWalletConnection } from "efi/ui/wallets/hooks/useWalletConnection";
+import { ChainId } from "efi/base/ethereum";
 
 export interface Wallet {
   /**
@@ -20,7 +21,7 @@ export interface Wallet {
   /**
    * The Id to identify which Ethereum network the account is on.
    */
-  chainId: number | undefined;
+  chainId: ChainId;
 
   /**
    * Account address.

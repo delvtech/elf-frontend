@@ -6,9 +6,9 @@ import tw from "tailwindcss-classnames";
 
 interface InvestViewProps extends RouteComponentProps {}
 export const InvestView: FC<InvestViewProps> = () => {
-  const { active } = useWallet();
+  const { account } = useWallet();
 
-  if (!active) {
+  if (!!account) {
     return <MissingWalletEmptyState />;
   }
 

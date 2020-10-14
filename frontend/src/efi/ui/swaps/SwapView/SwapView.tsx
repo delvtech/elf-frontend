@@ -10,9 +10,9 @@ import { t } from "ttag";
 
 interface SwapViewProps extends RouteComponentProps {}
 export const SwapView: FC<SwapViewProps> = () => {
-  const { active } = useWallet();
+  const { account } = useWallet();
 
-  if (!active) {
+  if (!!account) {
     return <MissingWalletEmptyState />;
   }
 
