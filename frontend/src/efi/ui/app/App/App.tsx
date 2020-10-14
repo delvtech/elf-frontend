@@ -10,6 +10,7 @@ import React, { FC } from "react";
 import { tw } from "tailwindcss-classnames";
 
 import styles from "./App.module.css";
+import { InvestView } from "efi/ui/invest/InvestView";
 
 const appClassName = classNames(
   styles.app,
@@ -40,6 +41,7 @@ const App: FC<AppProps> = () => {
         <HomeView path="/" />
         <PortfolioView path={Navigation.PORTFOLIO} />
         <SwapView path={Navigation.SWAP} />
+        <InvestView path={Navigation.INVEST} />
       </Router>
     </div>
   );

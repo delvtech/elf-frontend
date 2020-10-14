@@ -1,24 +1,24 @@
 /*
  * See https://chainid.network/
  */
-export enum ChainIds {
+export enum ChainId {
   MAINNET = 1,
   KOVAN = 42,
 }
 
-export enum ChainNames {
+export enum ChainName {
   MAINNET = "Ethereum Mainnet",
   KOVAN = "Ethereum Testnet Kovan",
 }
 
-export enum NetworkIds {
+export enum NetworkId {
   MAINNET = 1,
   KOVAN = 42,
 }
 
-export enum NetworkNames {
+export enum NetworkName {
   MAINNET = "mainnet",
   KOVAN = "kovan",
 }
 
-export const DEFAULT_CHAIN_IDS = [ChainIds.MAINNET, ChainIds.KOVAN];
+export const DEFAULT_CHAIN_IDS = [ChainId.MAINNET, ChainId.KOVAN];

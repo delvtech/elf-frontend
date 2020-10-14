@@ -2,7 +2,7 @@ import { useWeb3React } from "@web3-react/core";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { useEffect } from "react";
 import { injectedConnector } from "efi/wallets/connectors";
-import { ChainIds, NetworkIds } from "efi/base/ethereum";
+import { ChainId, NetworkId } from "efi/base/ethereum";
 
 /**
  * It's possible for an ethereum client to exist on window, which can change
@@ -29,7 +29,7 @@ export function useSyncWithInjectedEthereum(
       return;
     }
 
-    const handleChainChanged = (chainId: ChainIds) => {
+    const handleChainChanged = (chainId: ChainId) => {
       console.log("chainChanged", chainId);
       connect(injectedConnector);
     };
@@ -41,7 +41,7 @@ export function useSyncWithInjectedEthereum(
       }
     };
 
-    const handleNetworkChanged = (networkId: NetworkIds) => {
+    const handleNetworkChanged = (networkId: NetworkId) => {
       console.log("networkChanged", networkId);
       connect(injectedConnector);
     };

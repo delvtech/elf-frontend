@@ -16,8 +16,8 @@ export function useActiveTab(): Navigation {
     case Navigation.SWAP: {
       return Navigation.SWAP;
     }
-    case Navigation.FUNDS: {
-      return Navigation.FUNDS;
+    case Navigation.INVEST: {
+      return Navigation.INVEST;
     }
     default:
       typeAassertNever(navigation);

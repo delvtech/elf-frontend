@@ -10,8 +10,44 @@ import {
 } from "@web3-react/injected-connector";
 import { getConnectorName } from "efi/wallets/connectors";
 import { useWalletConnection } from "efi/ui/wallets/hooks/useWalletConnection";
+import { ChainId } from "efi/base/ethereum";
 
-export function useWallet() {
+export interface Wallet {
+  /**
+   * The library that provides the API to interface with ethereum blockchain, i.e. web3 or ethers.
+   */
+  library: Web3Provider | undefined;
+
+  /**
+   * The Id to identify which Ethereum network the account is on.
+   */
+  chainId: ChainId | undefined;
+
+  /**
+   * Account address.
+   */
+  account: string | null | undefined;
+
+  /**
+   * If a wallet is connected.
+   */
+  active: boolean;
+
+  /**
+   * Errors associated with wallet operations.
+   */
+  error: Error | undefined;
+
+  /**
+   * Balance of the wallet in Eth, as opposed to Wei.
+   */
+  ethBalance: BigNumber | null;
+  /**
+   * Display name of the wallet connector, i.e. MetaMask, WalletConnect.
+   */
+  connectorName: string | undefined;
+}
+export function useWallet(): Wallet {
   const { connector, library, chainId, account, active, error } = useWeb3React<
     Web3Provider
   >();
