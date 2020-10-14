@@ -94,7 +94,6 @@ const itemRenderer: ItemRenderer<CryptoAssetInfo> = (
   }
 
   const { id, name, symbol, logoPath } = item;
-  const icon = logoPath ? logoPath : undefined;
   return (
     <MenuItem
       key={id}
@@ -104,7 +103,7 @@ const itemRenderer: ItemRenderer<CryptoAssetInfo> = (
       text={<span className={tw("text-lg", "px-6")}>{name}</span>}
       icon={
         <img
-          src={icon}
+          src={logoPath}
           className={tw("h-6", "w-6")}
           alt={`${name} (${symbol})`}
         />

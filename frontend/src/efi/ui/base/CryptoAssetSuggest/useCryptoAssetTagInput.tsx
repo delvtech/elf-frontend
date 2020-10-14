@@ -71,14 +71,13 @@ export function useCryptoAssetTagInput(
         // it's safe to cast this as a string, because we control the tagValue type.
         value as string
       ];
-      const icon = logoPath ? logoPath : undefined;
       const props: ITagProps = {
         intent: Intent.PRIMARY,
         interactive: true,
         minimal: true,
         icon: (
           <img
-            src={icon}
+            src={logoPath}
             className={tw("h-6", "w-6")}
             alt={`${name} (${symbol})`}
           />
