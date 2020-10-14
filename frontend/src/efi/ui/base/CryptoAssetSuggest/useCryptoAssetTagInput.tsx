@@ -38,7 +38,7 @@ export function useCryptoAssetTagInput(
   );
 
   const tagInputProps: IInputGroupProps & HTMLInputProps = useMemo(() => {
-    const placeholder = activeCryptoAsset && initialPlaceholder;
+    const placeholder = activeCryptoAsset ? undefined : initialPlaceholder;
     const props: IInputGroupProps & HTMLInputProps = {
       large: true,
       placeholder,
@@ -57,7 +57,7 @@ export function useCryptoAssetTagInput(
   }, [cryptoAssets]);
 
   const onRemoveTag = useCallback(
-    (valueAsString: string, index: number, value: React.ReactNode) => {
+    (valueAsString: string) => {
       const assetToRemove = cryptoAssetsByName[valueAsString];
       onRemove(assetToRemove);
     },

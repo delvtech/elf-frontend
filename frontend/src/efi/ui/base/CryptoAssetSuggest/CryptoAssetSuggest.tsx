@@ -1,6 +1,7 @@
 import React from "react";
+import { filter } from "fuzzaldrin-plus";
 import { Classes, IOverlayProps, MenuItem, TagInput } from "@blueprintjs/core";
-import { ItemRenderer, Omnibar } from "@blueprintjs/select";
+import { ItemListPredicate, ItemRenderer, Omnibar } from "@blueprintjs/select";
 import classNames from "classnames";
 import { EFI_SUPPORTED_CRYPTO_ASSETS } from "cryptoAssets";
 import { CryptoAssetInfo } from "efi/base/CryptoAssetInfo";
@@ -75,7 +76,7 @@ export const CryptoAssetSuggest: FC<CryptoAssetSuggestProps> = ({
         overlayProps={overlayProps}
         className={omnibarClassName}
         items={cryptoAssets}
-        itemListPredicate={(query, items) => items}
+        itemListPredicate={itemListPredicate}
         initialContent={undefined}
         itemRenderer={itemRenderer}
         onItemSelect={onItemSelect}
@@ -112,4 +113,21 @@ const itemRenderer: ItemRenderer<CryptoAssetInfo> = (
       onClick={handleClick}
     />
   );
+};
+
+const itemListPredicate: ItemListPredicate<CryptoAssetInfo> = (
+  query,
+  items
+) => {
+  if (!query) {
+    return items;
+  }
+
+  return filter(items, query, {
+    key: "id",
+    maxInners: items.length / 5,
+    maxResults: 10,
+    pathSeparator: "/",
+    usePathScoring: true,
+  });
 };
