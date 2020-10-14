@@ -38,7 +38,7 @@ export function useCryptoAssetTagInput(
   );
 
   const tagInputProps: IInputGroupProps & HTMLInputProps = useMemo(() => {
-    const placeholder = activeCryptoAsset ? undefined : initialPlaceholder;
+    const placeholder = activeCryptoAsset && initialPlaceholder;
     const props: IInputGroupProps & HTMLInputProps = {
       large: true,
       placeholder,
