@@ -8,13 +8,24 @@ import { CryptoAssetInfo } from "efi/base/CryptoAssetInfo";
 import React, { ReactNode, useCallback, useMemo } from "react";
 import tw from "tailwindcss-classnames";
 
+interface CryptoAssetTagInput {
+  tagInputProps: IInputGroupProps & HTMLInputProps;
+  onRemoveTag: (
+    valueAsString: string,
+    index: number,
+    value: React.ReactNode
+  ) => void;
+  tagValues: ReactNode[];
+  tagProps: (value: ReactNode) => ITagProps;
+}
+
 export function useCryptoAssetTagInput(
   openOmnibar: () => void,
   initialPlaceholder: string,
   cryptoAssets: CryptoAssetInfo[],
   onRemove: (cryptoAsset: CryptoAssetInfo) => void,
   activeCryptoAsset: CryptoAssetInfo | undefined
-) {
+): CryptoAssetTagInput {
   const onTagInputKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
       // non-alphanumeric characters like Escape, Tab, Shift should not trigger

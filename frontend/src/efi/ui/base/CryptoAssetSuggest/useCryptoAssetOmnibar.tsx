@@ -3,10 +3,18 @@ import { CryptoAssetInfo } from "efi/base/CryptoAssetInfo";
 import { useBoolean } from "efi/ui/base/useBoolean/useBoolean";
 import { useCallback, useMemo } from "react";
 
+interface CryptoAssetOmnibar {
+  isOmnibarOpen: boolean;
+  openOmnibar: () => void;
+  closeOmnibar: () => void;
+  omnibarInputProps: IInputGroupProps & HTMLInputProps;
+  onItemSelect: (cryptoAsset: CryptoAssetInfo) => void;
+}
+
 export function useCryptoAssetOmnibar(
   omnibarPlaceholder: string,
   onSelect: (cryptoAsset: CryptoAssetInfo) => void
-) {
+): CryptoAssetOmnibar {
   const {
     value: isOmnibarOpen,
     setTrue: openOmnibar,
@@ -28,21 +36,11 @@ export function useCryptoAssetOmnibar(
     [closeOmnibar, onSelect]
   );
 
-  const onActiveItemChange = useCallback(
-    (activeItem: CryptoAssetInfo | null) => {
-      if (activeItem) {
-        onSelect(activeItem);
-      }
-    },
-    [onSelect]
-  );
-
   return {
     isOmnibarOpen,
     openOmnibar,
     closeOmnibar,
     omnibarInputProps,
     onItemSelect,
-    onActiveItemChange,
   };
 }
