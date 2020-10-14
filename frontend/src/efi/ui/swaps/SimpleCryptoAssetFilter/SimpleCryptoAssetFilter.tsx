@@ -1,8 +1,9 @@
 import { Icon } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import classNames from "classnames";
+import { CryptoAssetInfo } from "efi/base/CryptoAssetInfo";
 import { CryptoAssetSuggest } from "efi/ui/base/CryptoAssetSuggest/CryptoAssetSuggest";
-import React, { FC } from "react";
+import React, { FC, useCallback, useState } from "react";
 import tw from "tailwindcss-classnames";
 import { t } from "ttag";
 
@@ -12,6 +13,17 @@ interface SimpleCryptoAssetFilterProps {
 export const SimpleCryptoAssetFilter: FC<SimpleCryptoAssetFilterProps> = ({
   className,
 }) => {
+  const [baseAsset, setBaseAsset] = useState<CryptoAssetInfo | undefined>();
+  const onRemoveBaseAsset = useCallback(() => setBaseAsset(undefined), []);
+
+  const [desiredAsset, setDesiredAsset] = useState<
+    CryptoAssetInfo | undefined
+  >();
+  const onRemoveDesiredAsset = useCallback(
+    () => setDesiredAsset(undefined),
+    []
+  );
+
   return (
     <div
       className={classNames(
@@ -39,13 +51,17 @@ export const SimpleCryptoAssetFilter: FC<SimpleCryptoAssetFilterProps> = ({
         <CryptoAssetSuggest
           placeholder={t`Base asset`}
           omnibarPlaceholder={t`Choose a base asset...`}
-          onCryptoAssetSelect={() => {}}
+          activeCryptoAsset={baseAsset}
+          onSelect={setBaseAsset}
+          onRemove={onRemoveBaseAsset}
         />
         <Icon icon={IconNames.ARROW_RIGHT} />
         <CryptoAssetSuggest
           placeholder={t`Desired asset`}
           omnibarPlaceholder={t`Choose a desired asset...`}
-          onCryptoAssetSelect={() => {}}
+          activeCryptoAsset={desiredAsset}
+          onSelect={setDesiredAsset}
+          onRemove={onRemoveDesiredAsset}
         />
       </span>
     </div>
