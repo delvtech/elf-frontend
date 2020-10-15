@@ -81,9 +81,18 @@ export const MainNavigation: FC<MainNavigationProps> = () => {
           color: "var(--bp3-dark-navbar-color)",
         }}
       >
-        <span className={tw("py-10", "text-center", "text-xl", "font-bold")}>
-          Element.fi
-        </span>
+        <div
+          className={tw("flex", "justify-center", "items-center", "space-x-4")}
+        >
+          <img
+            className={tw("w-8", "h-8")}
+            alt="Logo"
+            src={`${process.env.PUBLIC_URL}/element-icon.png`}
+          />
+          <span className={tw("py-10", "text-center", "text-xl", "font-bold")}>
+            Element.fi
+          </span>
+        </div>
         <div className={tw("flex", "flex-col", "h-full", "justify-between")}>
           <Tabs
             id="primary-nav-desktop"

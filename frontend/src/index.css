@@ -7,9 +7,11 @@ body {
   height: 100%;
   width: 100%;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+    "Helvetica Neue", sans-serif;
+  font-weight: 300;
+  font-size: 1.4em;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -26,7 +28,7 @@ code {
 }
 
 :root {
-  /* 
+  /*
    * This is the height of the top navbar. Because of how the Navbar manages
    * "stickiness", we need to offset the position of our main content by the
    * height of the navbar.
@@ -34,21 +36,21 @@ code {
    */
   --bp3-navbar-height: 50px;
 
-  /* 
+  /*
    * Taken from Blueprint, this is the color of the dark mode app background.
    * If using the blueprint Colors module, this is equivalent to
    * Colors.DARK_GRAY2.
    */
   --bp3-dark-bg-color: #202b33;
 
-  /* 
+  /*
    * Taken from Blueprint, this is the color of the dark mode Navbar component.
    * If using the blueprint Colors module, this is equivalent to
    * Colors.DARK_GRAY5.
    */
   --bp3-dark-navbar-bg-color: #394b59;
 
-  /* 
+  /*
    * Taken from Blueprint, this is the color of the dark mode Navbar text.
    * If using the blueprint Colors module, this is equivalent to
    * Colors.LIGHT_GRAY5.
