@@ -111,7 +111,7 @@ const itemRenderer: ItemRenderer<CryptoAssetInfo> = (
             className={tw("h-6", "w-6")}
             alt={`${name} (${symbol})`}
           />
-          <span className={Classes.TEXT_SMALL}>{symbol}</span>
+          <span className={tw("text-xs", "font-bold")}>{symbol}</span>
         </div>
       }
       onClick={handleClick}

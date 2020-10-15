@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Classes, H4, Spinner } from "@blueprintjs/core";
+import { Classes, H4 as span, Spinner } from "@blueprintjs/core";
 import classNames from "classnames";
 import { FC } from "react";
 import tw from "tailwindcss-classnames";
@@ -47,8 +47,10 @@ export const CryptoAssetSuggestItem: FC<{
         "items-center"
       )}
     >
-      <div className={tw("text-lg")}>
-        <H4 className={classNames(Classes.TEXT_LARGE, tw("m-0"))}>{name}</H4>
+      <div>
+        <span className={classNames(tw("text-base", "font-bold", "m-0"))}>
+          {name}
+        </span>
       </div>
 
       {sections.map(({ header, value, valueLabel, priceLoading }) => {
@@ -62,7 +64,7 @@ export const CryptoAssetSuggestItem: FC<{
               />
             ) : (
               <div
-                className={classNames(Classes.TEXT_LARGE, {
+                className={classNames(tw("text-base"), {
                   [Classes.TEXT_MUTED]: value <= 0,
                 })}
               >
