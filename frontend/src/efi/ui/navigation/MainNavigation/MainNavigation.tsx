@@ -87,7 +87,7 @@ export const MainNavigation: FC<MainNavigationProps> = () => {
           <img
             className={tw("w-8", "h-8")}
             alt="Logo"
-            src={process.env.PUBLIC_URL + "/element-icon.png"}
+            src={`${process.env.PUBLIC_URL}/element-icon.png`}
           />
           <span className={tw("py-10", "text-center", "text-xl", "font-bold")}>
             Element.fi
