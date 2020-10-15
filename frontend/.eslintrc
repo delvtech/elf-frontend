@@ -27,6 +27,7 @@
     ],
     // const func = new Function()
     "no-new-func": "error",
+    "prefer-template": "error",
     "no-unused-vars": "error",
     "import/no-unused-modules": "error"
   }
