@@ -10,6 +10,7 @@ import tw from "tailwindcss-classnames";
 import { t } from "ttag";
 import { useCryptoAssetTagInput } from "./useCryptoAssetTagInput";
 import { useCryptoAssetOmnibar } from "./useCryptoAssetOmnibar";
+import { CryptoAssetSuggestItem } from "./CryptoAssetSuggestItem";
 
 interface CryptoAssetSuggestProps {
   onSelect: (cryptoAsset: CryptoAssetInfo) => void;
@@ -77,7 +78,6 @@ export const CryptoAssetSuggest: FC<CryptoAssetSuggestProps> = ({
         className={omnibarClassName}
         items={cryptoAssets}
         itemListPredicate={itemListPredicate}
-        initialContent={undefined}
         itemRenderer={itemRenderer}
         onItemSelect={onItemSelect}
         onClose={closeOmnibar}
@@ -95,21 +95,27 @@ const itemRenderer: ItemRenderer<CryptoAssetInfo> = (
   }
 
   const { id, name, symbol, logoPath } = item;
+
   return (
     <MenuItem
       key={id}
       active={active}
       disabled={disabled}
+      multiline
       className={tw("py-6", "items-center")}
-      text={<span className={tw("text-lg", "px-6")}>{name}</span>}
+      text={<CryptoAssetSuggestItem cryptoAsset={item} />}
       icon={
-        <img
-          src={logoPath}
-          className={tw("h-6", "w-6")}
-          alt={`${name} (${symbol})`}
-        />
+        <div
+          className={tw("flex", "flex-col", "items-center", "gap-1", "pr-6")}
+        >
+          <img
+            src={logoPath}
+            className={tw("h-6", "w-6")}
+            alt={`${name} (${symbol})`}
+          />
+          <span className={tw("text-xs", "font-bold")}>{symbol}</span>
+        </div>
       }
-      label={symbol}
       onClick={handleClick}
     />
   );
@@ -124,8 +130,8 @@ const itemListPredicate: ItemListPredicate<CryptoAssetInfo> = (
   }
 
   return filter(items, query, {
-    key: "id",
-    maxInners: items.length / 5,
+    allowErrors: true,
+    key: "name",
     maxResults: 10,
     pathSeparator: "/",
     usePathScoring: true,
