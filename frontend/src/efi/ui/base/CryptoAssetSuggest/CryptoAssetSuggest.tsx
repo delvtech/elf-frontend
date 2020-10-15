@@ -105,7 +105,9 @@ const itemRenderer: ItemRenderer<CryptoAssetInfo> = (
       className={tw("py-6", "items-center")}
       text={<CryptoAssetSuggestItem cryptoAsset={item} />}
       icon={
-        <div className={tw("flex", "flex-col", "items-center")}>
+        <div
+          className={tw("flex", "flex-col", "items-center", "gap-1", "pr-6")}
+        >
           <img
             src={logoPath}
             className={tw("h-6", "w-6")}

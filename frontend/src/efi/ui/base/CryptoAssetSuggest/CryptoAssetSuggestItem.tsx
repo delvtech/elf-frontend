@@ -40,18 +40,15 @@ export const CryptoAssetSuggestItem: FC<{
     <div
       className={tw(
         "grid",
-        "md:grid-cols-4",
-        "gap-4",
+        "gap-6",
         "px-6",
         "w-full",
-        "items-center"
+        "items-center",
+        "md:grid-cols-4",
+        "md:gap-12"
       )}
     >
-      <div>
-        <span className={classNames(tw("text-base", "font-bold", "m-0"))}>
-          {name}
-        </span>
-      </div>
+      <span className={classNames(tw("text-base", "font-bold"))}>{name}</span>
 
       {sections.map(({ header, value, valueLabel, priceLoading }) => {
         return (
