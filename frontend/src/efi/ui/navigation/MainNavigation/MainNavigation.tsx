@@ -51,7 +51,7 @@ export const MainNavigation: FC<MainNavigationProps> = () => {
             onClick={disconnect}
           />
         </NavbarGroup>
-        <NavbarGroup align={Alignment.RIGHT}>
+        <NavbarGroup className={tw("sm:pr-2")} align={Alignment.RIGHT}>
           <Tabs
             id="primary-nav-mobile"
             className={classNames(styles.smTabs)}
