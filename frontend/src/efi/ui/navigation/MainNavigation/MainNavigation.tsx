@@ -74,7 +74,8 @@ export const MainNavigation: FC<MainNavigationProps> = () => {
           "flex-col",
           "w-1/6",
           "h-full",
-          "flex-shrink-0"
+          "flex-shrink-0",
+          "pt-10"
         )}
         style={{
           background: "var(--bp3-dark-navbar-bg-color)",
@@ -82,14 +83,19 @@ export const MainNavigation: FC<MainNavigationProps> = () => {
         }}
       >
         <div
-          className={tw("flex", "justify-center", "items-center", "space-x-4")}
+          className={tw(
+            "flex",
+            "flex-col",
+            "justify-center",
+            "gap-4",
+            "items-center",
+            "mb-12"
+          )}
         >
-          <img
-            className={tw("w-8", "h-8")}
-            alt="Logo"
-            src={`${process.env.PUBLIC_URL}/element-icon.png`}
-          />
-          <span className={tw("py-10", "text-center", "text-xl", "font-bold")}>
+          <span role="img" className={tw("text-3xl")} aria-label="Element.fi">
+            ✨
+          </span>
+          <span className={tw("text-center", "text-xl", "font-bold")}>
             Element.fi
           </span>
         </div>
@@ -103,7 +109,7 @@ export const MainNavigation: FC<MainNavigationProps> = () => {
             }
             large
             vertical
-            className={classNames(tw("w-full", "space-y-2"), styles.tabs)}
+            className={classNames(tw("w-full"), styles.tabs)}
             onChange={changeTab}
             selectedTabId={activeTab}
           >

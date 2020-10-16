@@ -5,4 +5,5 @@
 
 .tabs :global(.bp3-tab-list) {
   width: 100%;
+  gap: 1rem;
 }
