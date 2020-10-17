@@ -96,6 +96,7 @@ function useEthBalance(
           setEthBalance(balance);
         }
       } catch (e) {
+        console.warn("Error retreiving ether balance", e);
         if (!stale) {
           setEthBalance(undefined);
         }
