@@ -12,7 +12,7 @@ interface SwapViewProps extends RouteComponentProps {}
 export const SwapView: FC<SwapViewProps> = () => {
   const { account } = useWallet();
 
-  if (!!account) {
+  if (!account) {
     return <MissingWalletEmptyState />;
   }
 

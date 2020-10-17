@@ -24,14 +24,9 @@ export interface Wallet {
   chainId: ChainId | undefined;
 
   /**
-   * Account address.
+   * The wallet address if it is connected
    */
   account: string | null | undefined;
-
-  /**
-   * If a wallet is connected.
-   */
-  active: boolean;
 
   /**
    * Errors associated with wallet operations.
@@ -41,14 +36,14 @@ export interface Wallet {
   /**
    * Balance of the wallet in Eth, as opposed to Wei.
    */
-  ethBalance: BigNumber | null;
+  ethBalance: BigNumber | undefined;
   /**
    * Display name of the wallet connector, i.e. MetaMask, WalletConnect.
    */
   connectorName: string | undefined;
 }
 export function useWallet(): Wallet {
-  const { connector, library, chainId, account, active, error } = useWeb3React<
+  const { connector, library, chainId, account, error } = useWeb3React<
     Web3Provider
   >();
 
@@ -58,7 +53,7 @@ export function useWallet(): Wallet {
   const { isDisconnected } = useWalletConnection();
 
   // fetch eth balance of the connected account
-  const ethBalance = useEthBalance(library, account, chainId);
+  const ethBalance = useEthBalance(library, account);
 
   const connectorName = getConnectorName(connector);
 
@@ -66,7 +61,6 @@ export function useWallet(): Wallet {
     library,
     chainId,
     account: isDisconnected ? undefined : account,
-    active,
     error,
     ethBalance,
     connectorName,
@@ -84,34 +78,35 @@ function useErrorToast(error: Error | undefined) {
 
 function useEthBalance(
   library: Web3Provider | undefined,
-  account: string | null | undefined,
-  chainId: number | undefined
-): BigNumber | null {
-  const [ethBalance, setEthBalance] = useState<BigNumber | null>(null);
+  account: string | null | undefined
+): BigNumber | undefined {
+  const [ethBalance, setEthBalance] = useState<BigNumber | undefined>();
   useEffect(() => {
-    if (library && account) {
-      let stale = false;
-
-      (async () => {
-        let balance: BigNumber;
-        try {
-          balance = await library.getBalance(account);
-          if (!stale) {
-            setEthBalance(balance);
-          }
-        } catch {
-          if (!stale) {
-            setEthBalance(null);
-          }
-        }
-      })();
-
-      return () => {
-        stale = true;
-        setEthBalance(null);
-      };
+    if (!library || !account) {
+      return;
     }
-  }, [library, account, chainId]);
+
+    let stale = false;
+
+    (async () => {
+      let balance: BigNumber;
+      try {
+        balance = await library.getBalance(account);
+        if (!stale) {
+          setEthBalance(balance);
+        }
+      } catch (e) {
+        if (!stale) {
+          setEthBalance(undefined);
+        }
+      }
+    })();
+
+    return () => {
+      stale = true;
+      setEthBalance(undefined);
+    };
+  }, [library, account]);
 
   return ethBalance;
 }
