@@ -8,7 +8,7 @@ interface InvestViewProps extends RouteComponentProps {}
 export const InvestView: FC<InvestViewProps> = () => {
   const { account } = useWallet();
 
-  if (!!account) {
+  if (!account) {
     return <MissingWalletEmptyState />;
   }
 
