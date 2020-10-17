@@ -11,7 +11,7 @@ import {
 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import classNames from "classnames";
-import { useTab } from "efi/ui/navigation/hooks/useTab";
+import { useNavigation } from "efi/ui/navigation/hooks/useTab";
 import { Navigation } from "efi/ui/navigation/navigation";
 import { useWallet } from "efi/ui/wallets/hooks/useWallet";
 import { useWalletConnection } from "efi/ui/wallets/hooks/useWalletConnection";
@@ -25,7 +25,7 @@ import styles from "./MainNavigation.module.css";
 interface MainNavigationProps {}
 export const MainNavigation: FC<MainNavigationProps> = () => {
   const { account } = useWallet();
-  const { activeTab, changeTab } = useTab();
+  const { activeTab, changeTab } = useNavigation();
 
   const { disconnect, connect } = useWalletConnection();
   const connectToMetaMask = useCallback(() => connect(injectedConnector), [

@@ -10,9 +10,9 @@ interface WalletSummaryProps {
 export const WalletSummary: FunctionComponent<WalletSummaryProps> = ({
   className,
 }) => {
-  const { account, ethBalance, library, active, connectorName } = useWallet();
+  const { account, ethBalance = 0, library, connectorName } = useWallet();
 
-  if (!active || !library || !ethBalance) {
+  if (!account || !library) {
     return null;
   }
 

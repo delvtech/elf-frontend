@@ -10,7 +10,7 @@ interface PortfolioViewProps extends RouteComponentProps {}
 export const PortfolioView: FC<PortfolioViewProps> = () => {
   const { account } = useWallet();
 
-  if (!!account) {
+  if (!account) {
     return <MissingWalletEmptyState />;
   }
 
@@ -18,7 +18,8 @@ export const PortfolioView: FC<PortfolioViewProps> = () => {
     <div
       className={tw(
         "flex",
-        "flex-1",
+        "h-full",
+        "w-full",
         "grid",
         "grid-cols-1",
         "sm:grid-cols-2",

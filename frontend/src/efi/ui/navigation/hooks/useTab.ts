@@ -6,7 +6,7 @@ export interface UseTab {
   changeTab: (tabId: Navigation) => void;
   activeTab: Navigation;
 }
-export function useTab(): UseTab {
+export function useNavigation(): UseTab {
   const changeTab = useChangeTab();
   const activeTab = useActiveTab();
 
