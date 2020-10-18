@@ -38,7 +38,7 @@
     "fuzzaldrin-plus": "^0.6.0",
     "fontsource-poppins": "^3.0.9",
     "react": "^16.14.0",
-    "react-dom": "^16.13.1",
+    "react-dom": "^16.14.0",
     "react-scripts": "3.4.3",
     "react-use": "^15.3.4",
     "tailwindcss": "^1.9.2",
