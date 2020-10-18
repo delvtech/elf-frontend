@@ -4,7 +4,8 @@ import classNames from "classnames";
 import { FC } from "react";
 import tw from "tailwindcss-classnames";
 import { t } from "ttag";
-import { CryptoAssetInfo } from "efi/base/CryptoAssetInfo";
+import { CryptoAssetInfo } from "efi/crypto/CryptoAssetInfo";
+import { CryptoName } from "efi/crypto/crypto";
 
 export const itemHeaderClassName = classNames(
   Classes.TEXT_SMALL,
@@ -18,19 +19,19 @@ export const CryptoAssetSuggestItem: FC<{
     () => [
       {
         header: t`Wallet balance`,
-        value: id === "yfi" ? 0 : Math.random() * 10,
+        value: id === CryptoName.YFI ? 0 : Math.random() * 10,
         valueLabel: (val: number) => `${val.toFixed(5)} ${symbol}`,
       },
       {
         header: t`Total value`,
-        value: id === "yfi" ? 0 : Math.random() * 100,
+        value: id === CryptoName.YFI ? 0 : Math.random() * 100,
         valueLabel: (val: number) => `$${val.toFixed(2)}`,
       },
       {
         header: t`Market price`,
         value: Math.random() * 100,
         valueLabel: (val: number) => `1 ${symbol} = $${val.toFixed(2)}`,
-        priceLoading: id === "yfi",
+        priceLoading: id === CryptoName.YFI,
       },
     ],
     [id, symbol]

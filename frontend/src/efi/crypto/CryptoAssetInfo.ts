@@ -1,8 +1,10 @@
+import { CryptoName } from "efi/crypto/crypto";
+
 export interface CryptoAssetInfo {
   /**
    * Unique identifier for this crypt asset.
    */
-  id: string;
+  id: CryptoName;
 
   /**
    * The full name of the currency, eg: "Ethereum".

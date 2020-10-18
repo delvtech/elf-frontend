@@ -4,7 +4,7 @@ import {
   Intent,
   ITagProps,
 } from "@blueprintjs/core";
-import { CryptoAssetInfo } from "efi/base/CryptoAssetInfo";
+import { CryptoAssetInfo } from "efi/crypto/CryptoAssetInfo";
 import React, { ReactNode, useCallback, useMemo } from "react";
 import tw from "tailwindcss-classnames";
 

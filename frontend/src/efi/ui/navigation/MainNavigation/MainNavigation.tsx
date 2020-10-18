@@ -60,8 +60,8 @@ export const MainNavigation: FC<MainNavigationProps> = () => {
           >
             <Tab id={Navigation.HOME} title={t`Home`} />
             <Tab id={Navigation.PORTFOLIO} title={t`Portfolio`} />
-            <Tab id={Navigation.SWAP} title={t`Swap`} />
             <Tab id={Navigation.INVEST} title={t`Invest`} />
+            <Tab id={Navigation.SWAP} title={t`Swap`} />
           </Tabs>
         </NavbarGroup>
       </Navbar>
@@ -115,8 +115,8 @@ export const MainNavigation: FC<MainNavigationProps> = () => {
           >
             <Tab id={Navigation.HOME} title={t`Home`} />
             <Tab id={Navigation.PORTFOLIO} title={t`Portfolio`} />
-            <Tab id={Navigation.SWAP} title={t`Swap`} />
             <Tab id={Navigation.INVEST} title={t`Invest`} />
+            <Tab id={Navigation.SWAP} title={t`Swap`} />
           </Tabs>
 
           <ButtonGroup large vertical minimal className={tw("pb-10")}>

@@ -1,6 +1,6 @@
 import { InjectedConnector } from "@web3-react/injected-connector";
 import { AbstractConnector } from "@web3-react/abstract-connector";
-import { DEFAULT_CHAIN_IDS } from "efi/base/ethereum";
+import { DEFAULT_CHAIN_IDS } from "efi/crypto/ethereum";
 import { t } from "ttag";
 
 /**
