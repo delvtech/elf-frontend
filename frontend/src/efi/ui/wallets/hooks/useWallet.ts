@@ -10,7 +10,7 @@ import {
 } from "@web3-react/injected-connector";
 import { getConnectorName } from "efi/wallets/connectors";
 import { useWalletConnection } from "efi/ui/wallets/hooks/useWalletConnection";
-import { ChainId } from "efi/base/ethereum";
+import { ChainId } from "efi/crypto/ethereum";
 
 export interface Wallet {
   /**

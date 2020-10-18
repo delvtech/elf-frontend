@@ -1,5 +1,5 @@
 import { HTMLInputProps, IInputGroupProps } from "@blueprintjs/core";
-import { CryptoAssetInfo } from "efi/base/CryptoAssetInfo";
+import { CryptoAssetInfo } from "efi/crypto/CryptoAssetInfo";
 import { useBoolean } from "efi/ui/base/useBoolean/useBoolean";
 import { useCallback, useMemo } from "react";
 
