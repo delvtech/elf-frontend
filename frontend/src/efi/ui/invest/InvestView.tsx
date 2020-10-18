@@ -4,6 +4,7 @@ import { useWallet } from "efi/ui/wallets/hooks/useWallet";
 import { MissingWalletEmptyState } from "efi/ui/wallets/MissingWalletEmptyState/MissingWalletEmptyState";
 import React, { FC } from "react";
 import tw from "tailwindcss-classnames";
+import { t } from "ttag";
 
 interface InvestViewProps extends RouteComponentProps {}
 
@@ -29,7 +30,7 @@ export const InvestView: FC<InvestViewProps> = () => {
         <div className={tw("flex", "gap-4")}>
           <span className={tw("text-6xl")}>⛰</span>
           <div className={tw("flex", "flex-col")}>
-            <H3>Liquid pool</H3>
+            <H3>{t`Liquid pool`}</H3>
           </div>
         </div>
       </Card>
