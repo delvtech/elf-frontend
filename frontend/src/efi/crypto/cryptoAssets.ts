@@ -1,35 +1,39 @@
 import { CryptoName } from "efi/crypto/crypto";
 import { CryptoAssetInfo } from "efi/crypto/CryptoAssetInfo";
 
+import ethLogo from "efi/ui/staticAssets/logos/ETH-logo.png";
+import daiLogo from "efi/ui/staticAssets/logos/DAI-logo.png";
+import yfiLogo from "efi/ui/staticAssets/logos/YFI-logo.png";
+
 export const EFI_SUPPORTED_CRYPTO_ASSETS: CryptoAssetInfo[] = [
   {
     id: CryptoName.ETHER,
     name: "Ethereum",
     symbol: "ETH",
-    logoPath: "./assets/logos/ETH-logo.png",
+    logoImgSrc: ethLogo,
   },
   {
     id: CryptoName.YETH,
     name: "Yearn Wrapped Ethereum",
     symbol: "yETH",
-    logoPath: "./assets/logos/ETH-logo.png",
+    logoImgSrc: ethLogo,
   },
   {
     id: CryptoName.DAI,
     name: "Dai",
     symbol: "DAI",
-    logoPath: "./assets/logos/DAI-logo.png",
+    logoImgSrc: daiLogo,
   },
   {
     id: CryptoName.YDAI,
     name: "Yearn Wrapped Dai",
     symbol: "yDAI",
-    logoPath: "./assets/logos/DAI-logo.png",
+    logoImgSrc: daiLogo,
   },
   {
     id: CryptoName.YFI,
     name: "yearn.finance",
     symbol: "YFI",
-    logoPath: "./assets/logos/YFI-logo.png",
+    logoImgSrc: yfiLogo,
   },
 ];

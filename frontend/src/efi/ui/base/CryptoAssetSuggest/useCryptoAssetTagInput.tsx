@@ -78,7 +78,7 @@ export function useCryptoAssetTagInput(
 
   const tagProps = useCallback(
     (value: ReactNode): ITagProps => {
-      const { name, symbol, logoPath } = cryptoAssetsByName[
+      const { name, symbol, logoImgSrc } = cryptoAssetsByName[
         // it's safe to cast this as a string, because we control the tagValue type.
         value as string
       ];
@@ -88,7 +88,7 @@ export function useCryptoAssetTagInput(
         minimal: true,
         icon: (
           <img
-            src={logoPath}
+            src={logoImgSrc}
             className={tw("h-6", "w-6")}
             alt={`${name} (${symbol})`}
           />

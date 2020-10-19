@@ -23,8 +23,7 @@ export interface CryptoAssetInfo {
   color?: string;
 
   /**
-   * String path to the logo, starting from the public/ directory, eg:
-   * "./assets/logos/etherum.svg".
+   * The image to use as the logo.
    */
-  logoPath?: string;
+  logoImgSrc?: string;
 }
