@@ -5,7 +5,7 @@ import { FC } from "react";
 import tw from "tailwindcss-classnames";
 import { t } from "ttag";
 import { CryptoAssetInfo } from "efi/crypto/CryptoAssetInfo";
-import { CryptoName } from "efi/crypto/crypto";
+import { CryptoName } from "efi/crypto/CryptoName";
 
 export const itemHeaderClassName = classNames(
   Classes.TEXT_SMALL,

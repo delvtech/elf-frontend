@@ -1,4 +1,4 @@
-import { CryptoName } from "efi/crypto/crypto";
+import { CryptoName } from "efi/crypto/CryptoName";
 import { Strategy } from "efi/pools/strategy";
 
 const ELF_STRATEGY_LOW_RISK = "ELF_STRATEGY_LOW_RISK";

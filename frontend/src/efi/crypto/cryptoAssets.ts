@@ -1,4 +1,4 @@
-import { CryptoName } from "efi/crypto/crypto";
+import { CryptoName } from "efi/crypto/CryptoName";
 import { CryptoAssetInfo } from "efi/crypto/CryptoAssetInfo";
 
 import ethLogo from "efi/ui/staticAssets/logos/ETH-logo.png";
