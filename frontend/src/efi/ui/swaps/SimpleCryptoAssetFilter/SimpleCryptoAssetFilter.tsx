@@ -2,7 +2,7 @@ import { Icon } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import classNames from "classnames";
 import { CryptoAssetInfo } from "efi/crypto/CryptoAssetInfo";
-import { CryptoAssetSuggest } from "efi/ui/base/CryptoAssetSuggest/CryptoAssetSuggest";
+import { CryptoAssetSuggest } from "efi/ui/crypto/CryptoAssetSuggest/CryptoAssetSuggest";
 import React, { FC, useCallback, useState } from "react";
 import tw from "tailwindcss-classnames";
 import { t } from "ttag";
