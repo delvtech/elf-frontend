@@ -1,0 +1,40 @@
+digraph Symbology {
+        graph [fontname="Roboto", nodesep=1.3, ranksep=2.5];
+        node [fontname="Roboto"];
+        edge [fontname="Roboto"];
+        size="5,5!";
+        labelloc="top";
+        compound="true";
+        label="Element Pools Architecture";
+
+        subgraph cluster_assets {
+                style="filled";
+                label=< <B>Assets</B> >;
+                ydai,yeth,yusdt,yusdc,ytusd,eth,wbtc
+        }
+
+        subgraph cluster_strategies{
+                style="filled";
+                label=< <B>High Risk Pools (funds)</B> >;
+                Elf_Strategy_HighRisk
+        }
+
+        subgraph cluster_lr_pools {
+                style="filled";
+                label=< <B>Low Risk Pools (funds)</B> >;
+                Elf_Strategy_LowRisk
+                Elf_Strategy_LowRisk_2
+        }
+
+        Elf_Strategy_LowRisk -> ydai[label="20%"]
+        Elf_Strategy_LowRisk ->yeth[label="20%"]
+        Elf_Strategy_LowRisk -> yusdt[label="20%"]
+        Elf_Strategy_LowRisk -> yusdc[label="20%"]
+        Elf_Strategy_LowRisk -> ytusd[label="20%"]
+
+        Elf_Strategy_LowRisk_2 -> ydai[label="100%"]
+
+        Elf_Strategy_HighRisk -> eth[label="50%"]
+        Elf_Strategy_HighRisk -> wbtc[label="50%"]
+
+}
