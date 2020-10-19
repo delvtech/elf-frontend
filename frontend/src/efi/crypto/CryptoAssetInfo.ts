@@ -1,26 +1,16 @@
-import { CryptoName } from "efi/crypto/crypto";
+import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
+import { CryptoName } from "efi/crypto/CryptoName";
 
 export interface CryptoAssetInfo {
   /**
-   * Unique identifier for this crypt asset.
-   */
-  id: CryptoName;
-
-  /**
    * The full name of the currency, eg: "Ethereum".
    */
-  name: string;
+  name: CryptoName;
 
   /**
    * The trading symbol of the currency, eg:  "Eth".
    */
-  symbol: string;
-
-  /**
-   * Optional main color, useful for styling tags and other UIs after the
-   * asset.
-   */
-  color?: string;
+  symbol: CryptoSymbol;
 
   /**
    * The image to use as the logo.

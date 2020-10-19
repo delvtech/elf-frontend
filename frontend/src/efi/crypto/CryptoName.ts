@@ -5,45 +5,45 @@ export enum CryptoName {
   /**
    * Ether
    */
-  ETHER = "ETHER",
+  ETH = "Ethereum",
 
   /**
    * Dai
    */
-  DAI = "DAI",
+  DAI = "Dai",
 
   /**
    * Yearn-Wrapped Dai
    */
-  YDAI = "YDAI",
+  YDAI = "Yearn Wrapped Dai",
 
   /**
    * Yearn LP Token
    */
-  YFI = "YFI",
+  YFI = "yearn.finance",
 
   /**
    * Yearn-Wrapped tUSD
    */
-  YTUSD = "YTUSD",
+  YTUSD = "Yearn Wrapped TUSD",
 
   /**
    * Yearn-Wrapped USDCoin
    */
-  YUSDCOIN = "YUSDCOIN",
+  YUSDC = "Yearn Wrapped USD Coin",
 
   /**
    * Yearn-Wrapped USDT
    */
-  YUSDT = "YUSDT",
+  YUSDT = "Yearn Wrapped USDT",
 
   /**
    * Yearn-Wrapped Ether
    */
-  YETH = "YETH",
+  YETH = "Yearn Wrapped Ethereum",
 
   /**
-   * Element Low Risk Fund Token
+   * Element Low Risk Pool Token
    */
-  ELF_LOW_RISK_FUND_TOKEN = "ELF_LOW_RISK_FUND_TOKEN",
+  ELF_LOW_RISK_POOL_TOKEN = "Element Low Risk Pool Token",
 }
