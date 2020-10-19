@@ -94,11 +94,11 @@ const itemRenderer: ItemRenderer<CryptoAssetInfo> = (
     return null;
   }
 
-  const { id, name, symbol, logoImgSrc } = item;
+  const { name, symbol, logoImgSrc } = item;
 
   return (
     <MenuItem
-      key={id}
+      key={symbol}
       active={active}
       disabled={disabled}
       multiline

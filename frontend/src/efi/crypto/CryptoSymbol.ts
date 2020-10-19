@@ -1,49 +1,49 @@
 /**
  * The names of all crypto assets supported in Element.
  */
-export enum CryptoName {
+export enum CryptoSymbol {
   /**
    * Ether
    */
-  ETH = "Ethereum",
+  ETH = "ETH",
 
   /**
    * Dai
    */
-  DAI = "Dai",
+  DAI = "DAI",
 
   /**
    * Yearn-Wrapped Dai
    */
-  YDAI = "Yearn Wrapped Dai",
+  YDAI = "yDAI",
 
   /**
    * Yearn LP Token
    */
-  YFI = "yearn.finance",
+  YFI = "YFI",
 
   /**
    * Yearn-Wrapped tUSD
    */
-  YTUSD = "Yearn Wrapped TUSD",
+  YTUSD = "yTUSD",
 
   /**
    * Yearn-Wrapped USDCoin
    */
-  YUSDC = "Yearn Wrapped USD Coin",
+  YUSDC = "yUSDC",
 
   /**
    * Yearn-Wrapped USDT
    */
-  YUSDT = "Yearn Wrapped USDT",
+  YUSDT = "yUSDT",
 
   /**
    * Yearn-Wrapped Ether
    */
-  YETH = "Yearn Wrapped Ethereum",
+  YETH = "yETH",
 
   /**
    * Element Low Risk Fund Token
    */
-  ELF_LOW_RISK_POOL_TOKEN = "Element Low Risk Pool Token",
+  ELF_LOW_RISK_POOL_TOKEN = "ELF-L",
 }

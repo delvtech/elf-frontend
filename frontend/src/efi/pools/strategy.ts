@@ -1,4 +1,4 @@
-import { CryptoName } from "efi/crypto/crypto";
+import { CryptoName } from "efi/crypto/CryptoName";
 
 export interface Strategy<PrimaryAsset extends CryptoName> {
   /**
