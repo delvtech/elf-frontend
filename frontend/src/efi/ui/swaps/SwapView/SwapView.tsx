@@ -1,5 +1,4 @@
 import { RouteComponentProps } from "@reach/router";
-import { CryptoAssetTable } from "efi/ui/base/CryptoAssetTable/CryptoAssetTable";
 import { SimpleCryptoAssetFilter } from "efi/ui/swaps/SimpleCryptoAssetFilter/SimpleCryptoAssetFilter";
 import { useWallet } from "efi/ui/wallets/hooks/useWallet";
 import { MissingWalletEmptyState } from "efi/ui/wallets/MissingWalletEmptyState/MissingWalletEmptyState";
@@ -44,11 +43,6 @@ export const SwapView: FC<SwapViewProps> = () => {
           {t`Pick two assets to swap`}
         </span>
         <SimpleCryptoAssetFilter className={tw("py-4")} />
-        <span className={tw("text-lg", "font-bold", "lg:text-2xl")}>
-          {t`or choose a pair below`}
-        </span>
-
-        <CryptoAssetTable />
       </div>
     </div>
   );
