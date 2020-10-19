@@ -43,7 +43,7 @@ export enum CryptoName {
   YETH = "Yearn Wrapped Ethereum",
 
   /**
-   * Element Low Risk Fund Token
+   * Element Low Risk Pool Token
    */
   ELF_LOW_RISK_POOL_TOKEN = "Element Low Risk Pool Token",
 }

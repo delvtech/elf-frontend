@@ -43,7 +43,7 @@ export enum CryptoSymbol {
   YETH = "yETH",
 
   /**
-   * Element Low Risk Fund Token
+   * Element Low Risk Pool Token
    */
   ELF_LOW_RISK_POOL_TOKEN = "ELF-L",
 }
