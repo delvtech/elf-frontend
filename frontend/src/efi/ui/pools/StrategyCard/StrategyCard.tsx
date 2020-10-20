@@ -21,15 +21,15 @@ export const StrategyCard: FC<StrategyCardProps> = ({
   strategy: { name, heldAssets, stakingAsset },
 }) => {
   return (
-    <Card className={tw("flex", "flex-col", "w-3/5", "max-w-xl", "gap-8")}>
-      <div className={tw("flex", "gap-8", "items-center", "w-full")}>
-        <div className={tw("flex", "flex-col", "gap-8")}>
+    <Card className={tw("flex", "flex-col", "w-3/5", "max-w-xl", "space-x-8")}>
+      <div className={tw("flex", "space-x-8", "items-center", "w-full")}>
+        <div className={tw("flex", "flex-col", "space-y-8")}>
           <H3>{name}</H3>
 
           {/* Staking Asset */}
-          <div className={tw("flex", "flex-col", "gap-3")}>
+          <div className={tw("flex", "flex-col", "space-y-3")}>
             <span> {t`Primary asset`}</span>
-            <div className={tw("flex", "gap-4")}>
+            <div>
               <Tag minimal intent={Intent.PRIMARY} interactive large>
                 {stakingAsset}
               </Tag>
@@ -37,9 +37,9 @@ export const StrategyCard: FC<StrategyCardProps> = ({
           </div>
 
           {/*Held Assets Tags*/}
-          <div className={tw("flex", "flex-col", "gap-3")}>
+          <div className={tw("flex", "flex-col", "space-y-3")}>
             <span> {t`Assets in this strategy`}</span>
-            <div className={tw("flex", "gap-4")}>
+            <div className={tw("flex", "space-x-4")}>
               {heldAssets.map((assetName) => {
                 return (
                   <Tag
@@ -56,7 +56,7 @@ export const StrategyCard: FC<StrategyCardProps> = ({
             </div>
           </div>
 
-          <div className={tw("flex", "flex-col", "gap-4")}>
+          <div className={tw("flex", "flex-col", "space-y-4")}>
             <span>{t`Exected APY`}</span>
             <Spinner
               className={tw("justify-start")}
@@ -83,11 +83,11 @@ export const StrategyCard: FC<StrategyCardProps> = ({
           />
         </div>
       </div>
-      <div className={tw("flex", "gap-8")}>
+      <div className={tw("flex", "space-x-8")}>
         {/* Deposit */}
-        <div className={tw("flex", "flex-col", "gap-5")}>
+        <div className={tw("flex", "flex-col", "space-y-5")}>
           <span>{t`Deposit`}</span>
-          <div className={tw("flex", "flex-col", "gap-2")}>
+          <div className={tw("flex", "flex-col", "space-y-2")}>
             <InputGroup
               className={styles.depositInput}
               large
@@ -119,9 +119,9 @@ export const StrategyCard: FC<StrategyCardProps> = ({
         </div>
 
         {/* Withdraw */}
-        <div className={tw("flex", "flex-col", "gap-5")}>
+        <div className={tw("flex", "flex-col", "space-y-5")}>
           <span>{t`Withdraw`}</span>
-          <div className={tw("flex", "flex-col", "gap-2")}>
+          <div className={tw("flex", "flex-col", "space-y-2")}>
             <InputGroup
               className={styles.depositInput}
               large
