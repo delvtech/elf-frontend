@@ -1,29 +1,23 @@
-import {
-  Button,
-  Card,
-  H3,
-  InputGroup,
-  Intent,
-  Spinner,
-  Tag,
-} from "@blueprintjs/core";
-import { CryptoName } from "efi/crypto/CryptoName";
-import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
+import { Card, H3, Intent, Spinner, Tag } from "@blueprintjs/core";
 import { Strategy } from "efi/pools/strategy";
-import { CryptoIcon } from "efi/ui/crypto/CryptoIcon";
 import React, { FC } from "react";
 import tw from "tailwindcss-classnames";
 import { t } from "ttag";
-import styles from "efi/ui/pools/StrategyCard/StrategyCard.module.css";
 import pieChart from "efi/ui/staticAssets/piechart.png";
+import { TransactionForm } from "efi/ui/crypto/TransactionForm/TransactionForm";
+
+interface StrategyCardProps {
+  strategy: Strategy<any>;
+}
 
 export const StrategyCard: FC<StrategyCardProps> = ({
   strategy: { name, heldAssets, stakingAsset },
 }) => {
   return (
-    <Card className={tw("flex", "flex-col", "w-3/5", "max-w-xl", "space-x-8")}>
-      <div className={tw("flex", "space-x-8", "items-center", "w-full")}>
+    <Card className={tw("flex", "flex-col")}>
+      <div className={tw("flex", "mb-8", "items-center", "w-full")}>
         <div className={tw("flex", "flex-col", "space-y-8")}>
+          {/* Strategy name */}
           <H3>{name}</H3>
 
           {/* Staking Asset */}
@@ -56,6 +50,7 @@ export const StrategyCard: FC<StrategyCardProps> = ({
             </div>
           </div>
 
+          {/* Expected APY */}
           <div className={tw("flex", "flex-col", "space-y-4")}>
             <span>{t`Exected APY`}</span>
             <Spinner
@@ -68,7 +63,7 @@ export const StrategyCard: FC<StrategyCardProps> = ({
         <div
           className={tw(
             "hidden",
-            "lg:flex",
+            "sm:flex",
             "w-full",
             "h-full",
             "justify-center",
@@ -83,78 +78,23 @@ export const StrategyCard: FC<StrategyCardProps> = ({
           />
         </div>
       </div>
-      <div className={tw("flex", "space-x-8")}>
+      <div className={tw("flex", "justify-between", "w-full", "space-x-8")}>
         {/* Deposit */}
-        <div className={tw("flex", "flex-col", "space-y-5")}>
-          <span>{t`Deposit`}</span>
-          <div className={tw("flex", "flex-col", "space-y-2")}>
-            <InputGroup
-              className={styles.depositInput}
-              large
-              rightElement={
-                <Tag large minimal>
-                  <span>{stakingAsset}</span>
-                </Tag>
-              }
-              leftElement={
-                <div className={tw("px-2")}>
-                  <img
-                    className={tw("h-5", "w-5")}
-                    src={CryptoIcon[stakingAsset as keyof typeof CryptoSymbol]}
-                    alt={CryptoName[stakingAsset as keyof typeof CryptoSymbol]}
-                  />
-                </div>
-              }
-            />
-            <span
-              className={tw("text-xs", "text-right")}
-            >{t`Available: 0.328 ${stakingAsset}`}</span>
-          </div>
-          <Button
-            minimal
-            outlined
-            large
-            intent={Intent.PRIMARY}
-          >{t`Deposit ${stakingAsset}`}</Button>
-        </div>
+        <TransactionForm
+          inputLabel={t`Deposit`}
+          cryptoSymbol={stakingAsset}
+          cryptoBalance="3.00000"
+          buttonLabel={t`Deposit ${stakingAsset}`}
+        />
 
         {/* Withdraw */}
-        <div className={tw("flex", "flex-col", "space-y-5")}>
-          <span>{t`Withdraw`}</span>
-          <div className={tw("flex", "flex-col", "space-y-2")}>
-            <InputGroup
-              className={styles.depositInput}
-              large
-              rightElement={
-                <Tag large minimal>
-                  <span>{stakingAsset}</span>
-                </Tag>
-              }
-              leftElement={
-                <div className={tw("px-2")}>
-                  <img
-                    className={tw("h-5", "w-5")}
-                    src={CryptoIcon[stakingAsset as keyof typeof CryptoSymbol]}
-                    alt={CryptoName[stakingAsset as keyof typeof CryptoSymbol]}
-                  />
-                </div>
-              }
-            />
-            <span
-              className={tw("text-xs", "text-right")}
-            >{t`Available: 0.328 ${stakingAsset}`}</span>
-          </div>
-          <Button
-            minimal
-            outlined
-            large
-            intent={Intent.PRIMARY}
-          >{t`Withdraw ${stakingAsset}`}</Button>
-        </div>
+        <TransactionForm
+          inputLabel={t`Withdraw`}
+          cryptoSymbol={stakingAsset}
+          cryptoBalance="12.21943"
+          buttonLabel={t`Withdraw ${stakingAsset}`}
+        />
       </div>
     </Card>
   );
 };
-interface StrategyCardProps {
-  strategy: Strategy<any>;
-}

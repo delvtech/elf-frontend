@@ -13,8 +13,8 @@ const investViewClassName = tw(
   "flex-col",
   "h-full",
   "w-full",
-  "md:justify-center",
-  "md:items-center"
+  "justify-center",
+  "items-center"
 );
 
 const availableStrategies = [ElfStrategyLowRisk];
