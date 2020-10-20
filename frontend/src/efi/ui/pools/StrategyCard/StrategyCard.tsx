@@ -77,7 +77,7 @@ export const StrategyCard: FC<StrategyCardProps> = ({
         >
           <img
             src={pieChart}
-            alt="asset percentages"
+            alt={t`asset percentages`}
             height={128}
             width={128}
           />
