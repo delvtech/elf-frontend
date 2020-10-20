@@ -4,7 +4,7 @@ import { useWallet } from "efi/ui/wallets/hooks/useWallet";
 import { MissingWalletEmptyState } from "efi/ui/wallets/MissingWalletEmptyState/MissingWalletEmptyState";
 import React, { FC } from "react";
 import tw from "tailwindcss-classnames";
-import { StrategyCard } from "../pools/StrategyCard/StrategyCard";
+import { StrategyCard } from "efi/ui/pools/StrategyCard/StrategyCard";
 
 interface InvestViewProps extends RouteComponentProps {}
 
