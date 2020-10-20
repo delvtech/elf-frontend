@@ -42,7 +42,7 @@
     "react-scripts": "3.4.3",
     "react-use": "^15.3.4",
     "tailwindcss": "^1.9.2",
-    "tailwindcss-classnames": "^1.8.3",
+    "tailwindcss-classnames": "^1.9.0",
     "ttag": "^1.7.22",
     "typescript": "~3.8.2",
     "warning": "^4.0.3",
