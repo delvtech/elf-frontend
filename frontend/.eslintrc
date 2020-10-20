@@ -29,6 +29,6 @@
     "no-new-func": "error",
     "prefer-template": "error",
     "no-unused-vars": "off",
-    "import/no-unused-modules": "error"
+    "import/no-unused-modules": "warn"
   }
 }
