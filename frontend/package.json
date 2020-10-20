@@ -34,7 +34,7 @@
     "@web3-react/injected-connector": "^6.0.7",
     "classnames": "^2.2.6",
     "d3-array": "^2.8.0",
-    "ethers": "^5.0.17",
+    "ethers": "^5.0.18",
     "fuzzaldrin-plus": "^0.6.0",
     "fontsource-poppins": "^3.0.9",
     "react": "^16.14.0",
