@@ -10,7 +10,7 @@ interface WalletSummaryProps {
 export const WalletSummary: FunctionComponent<WalletSummaryProps> = ({
   className,
 }) => {
-  const { account, ethBalance = 0, library, connectorName } = useWallet();
+  const { account, ethBalance = 0, library } = useWallet();
 
   if (!account || !library) {
     return null;
@@ -18,7 +18,7 @@ export const WalletSummary: FunctionComponent<WalletSummaryProps> = ({
 
   return (
     <Card className={className}>
-      <div>{t`Wallet connector: ${connectorName}`}</div>
+      <div>{t`Wallet connector: Metamask`}</div>
       <div>{t`Address: ${account}`}</div>
       <div>{t`Balance (gwei): ${ethBalance?.toString()}`}</div>
       <div>{t`Eth balance: ${formatEther(ethBalance)}`}</div>

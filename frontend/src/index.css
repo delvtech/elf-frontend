@@ -42,6 +42,13 @@ code {
   --bp3-dark-bg-color: #202b33;
 
   /*
+   * Taken from Blueprint, this is the color of the light mode app background.
+   * If using the blueprint Colors module, this is equivalent to
+   * Colors.LIGHT_GRAY5.
+   */
+  --bp3-bg-color: #f5f8fa;
+
+  /*
    * Taken from Blueprint, this is the color of the dark mode Navbar component.
    * If using the blueprint Colors module, this is equivalent to
    * Colors.DARK_GRAY5.
