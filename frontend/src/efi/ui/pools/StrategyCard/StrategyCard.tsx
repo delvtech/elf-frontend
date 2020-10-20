@@ -16,6 +16,7 @@ import tw from "tailwindcss-classnames";
 import { t } from "ttag";
 import styles from "efi/ui/pools/StrategyCard/StrategyCard.module.css";
 import pieChart from "efi/ui/staticAssets/piechart.png";
+
 export const StrategyCard: FC<StrategyCardProps> = ({
   strategy: { name, heldAssets, stakingAsset },
 }) => {
