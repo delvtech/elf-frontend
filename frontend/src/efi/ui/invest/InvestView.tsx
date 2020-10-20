@@ -1,10 +1,10 @@
-import { Card, H3 } from "@blueprintjs/core";
 import { RouteComponentProps } from "@reach/router";
+import { ElfStrategyLowRisk } from "efi/pools/lowRisk";
 import { useWallet } from "efi/ui/wallets/hooks/useWallet";
 import { MissingWalletEmptyState } from "efi/ui/wallets/MissingWalletEmptyState/MissingWalletEmptyState";
 import React, { FC } from "react";
 import tw from "tailwindcss-classnames";
-import { t } from "ttag";
+import { StrategyCard } from "../pools/StrategyCard/StrategyCard";
 
 interface InvestViewProps extends RouteComponentProps {}
 
@@ -17,6 +17,8 @@ const investViewClassName = tw(
   "md:items-center"
 );
 
+const availableStrategies = [ElfStrategyLowRisk];
+
 export const InvestView: FC<InvestViewProps> = () => {
   const { account } = useWallet();
 
@@ -26,14 +28,9 @@ export const InvestView: FC<InvestViewProps> = () => {
 
   return (
     <div className={investViewClassName}>
-      <Card className={tw("flex", "flex-col", "items-center")}>
-        <div className={tw("flex", "gap-4")}>
-          <span className={tw("text-6xl")}>⛰</span>
-          <div className={tw("flex", "flex-col")}>
-            <H3>{t`Liquid pool`}</H3>
-          </div>
-        </div>
-      </Card>
+      {availableStrategies.map((strategy) => {
+        return <StrategyCard strategy={strategy} />;
+      })}
     </div>
   );
 };

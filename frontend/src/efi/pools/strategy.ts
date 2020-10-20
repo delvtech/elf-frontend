@@ -1,6 +1,6 @@
-import { CryptoName } from "efi/crypto/CryptoName";
+import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 
-export interface Strategy<StakingAsset extends CryptoName> {
+export interface Strategy<StakingAsset extends CryptoSymbol> {
   /**
    * Unique identifier for the strategy
    */
@@ -20,10 +20,10 @@ export interface Strategy<StakingAsset extends CryptoName> {
    * The name of the token which represents the strategy.
    *  This must be different than the stakingAsset.
    */
-  strategyAsset: Exclude<CryptoName, StakingAsset>;
+  strategyAsset: Exclude<CryptoSymbol, StakingAsset>;
 
   /**
    * The assets held in the strategy. This can include the StakingAsset.
    */
-  heldAssets: CryptoName[];
+  heldAssets: CryptoSymbol[];
 }

@@ -1,4 +1,4 @@
-import { CryptoName } from "efi/crypto/CryptoName";
+import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { Strategy } from "efi/pools/strategy";
 import { t } from "ttag";
 
@@ -7,15 +7,15 @@ const ELF_STRATEGY_LOW_RISK = "ELF_STRATEGY_LOW_RISK";
 /**
  * A low-risk strategy made up of stablecoins.
  */
-export const ElfStrategyLowRisk: Strategy<CryptoName.ETH> = {
+export const ElfStrategyLowRisk: Strategy<CryptoSymbol.ETH> = {
   id: ELF_STRATEGY_LOW_RISK,
-  stakingAsset: CryptoName.ETH,
+  stakingAsset: CryptoSymbol.ETH,
   name: t`Low Risk Strategy`,
   heldAssets: [
-    CryptoName.YDAI,
-    CryptoName.YTUSD,
-    CryptoName.YUSDC,
-    CryptoName.YUSDT,
+    CryptoSymbol.YDAI,
+    CryptoSymbol.YTUSD,
+    CryptoSymbol.YUSDC,
+    CryptoSymbol.YUSDT,
   ],
-  strategyAsset: CryptoName.ELF_LOW_RISK_POOL_TOKEN,
+  strategyAsset: CryptoSymbol.ELF_LOW_RISK_POOL_TOKEN,
 };
