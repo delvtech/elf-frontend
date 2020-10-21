@@ -10,11 +10,7 @@ import tw from "tailwindcss-classnames";
 
 interface CryptoAssetTagInput {
   tagInputProps: IInputGroupProps & HTMLInputProps;
-  onRemoveTag: (
-    valueAsString: string,
-    index: number,
-    value: React.ReactNode
-  ) => void;
+  onRemoveTag: (value: ReactNode, index: number) => void;
   tagValues: ReactNode[];
   tagProps: (value: ReactNode) => ITagProps;
 }
@@ -57,8 +53,12 @@ export function useCryptoAssetTagInput(
   }, [cryptoAssets]);
 
   const onRemoveTag = useCallback(
-    (valueAsString: string) => {
-      const assetToRemove = cryptoAssetsByName[valueAsString];
+    (value: ReactNode, index: number) => {
+      const assetToRemove =
+        cryptoAssetsByName[
+          // it's safe to cast this as a string, because we control the tagValue type.
+          value as string
+        ];
       onRemove(assetToRemove);
     },
 
