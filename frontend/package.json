@@ -89,12 +89,14 @@
     ]
   },
   "devDependencies": {
+    "@typechain/ethers-v5": "^2.0.0",
     "eslint-config-prettier": "^6.13.0",
     "eslint-plugin-jest": "^24.1.0",
     "eslint-plugin-prettier": "^3.1.4",
     "husky": "^4.3.0",
     "lint-staged": "^10.4.2",
     "prettier": "^2.1.2",
-    "ttag-cli": "^1.8.6"
+    "ttag-cli": "^1.8.6",
+    "typechain": "^3.0.0"
   }
 }
