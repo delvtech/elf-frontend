@@ -28,8 +28,8 @@ export async function fetchBalance(): Promise<BigNumber> {
   return result[0];
 }
 
-export async function fetchGovernance(): Promise<string> {
-  const result = await elf.functions.governance();
+export async function fetchSymbol(): Promise<string> {
+  const result = await elf.functions.symbol();
   return result[0];
 }
 

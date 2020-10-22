@@ -1,5 +1,5 @@
 import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { AppToaster, makeErrorToast } from "efi/ui/app/AppToaster/AppToaster";
 import { t } from "ttag";
 import { BigNumber } from "ethers";
@@ -11,6 +11,7 @@ import {
 import { getConnectorName } from "efi/wallets/connectors";
 import { useWalletConnection } from "efi/ui/wallets/hooks/useWalletConnection";
 import { ChainId } from "efi/crypto/ethereum";
+import { useWalletBalance } from "efi/ui/wallets/hooks/useWalletBalance";
 
 export interface Wallet {
   /**
@@ -49,11 +50,10 @@ export function useWallet(): Wallet {
 
   useErrorToast(error);
 
+  const { data: ethBalance } = useWalletBalance();
+
   // Don't provide the account if the wallet was disconnected
   const { isDisconnected } = useWalletConnection();
-
-  // fetch eth balance of the connected account
-  const ethBalance = useEthBalance(library, account);
 
   const connectorName = getConnectorName(connector);
 
@@ -74,42 +74,6 @@ function useErrorToast(error: Error | undefined) {
       AppToaster.show(errorToast);
     }
   }, [error]);
-}
-
-function useEthBalance(
-  library: Web3Provider | undefined,
-  account: string | null | undefined
-): BigNumber | undefined {
-  const [ethBalance, setEthBalance] = useState<BigNumber | undefined>();
-  useEffect(() => {
-    if (!library || !account) {
-      return;
-    }
-
-    let stale = false;
-
-    (async () => {
-      let balance: BigNumber;
-      try {
-        balance = await library.getBalance(account);
-        if (!stale) {
-          setEthBalance(balance);
-        }
-      } catch (e) {
-        console.warn("Error retreiving ether balance", e);
-        if (!stale) {
-          setEthBalance(undefined);
-        }
-      }
-    })();
-
-    return () => {
-      stale = true;
-      setEthBalance(undefined);
-    };
-  }, [library, account]);
-
-  return ethBalance;
 }
 
 export function getErrorMessage(error: Error) {
