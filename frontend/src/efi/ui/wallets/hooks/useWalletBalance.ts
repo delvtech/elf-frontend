@@ -7,15 +7,16 @@ export function useWalletBalance() {
   const { library, account } = useWeb3React<Web3Provider>();
 
   const walletBalanceKey = makeWalletBalanceQueryKey(library, account);
-
-  return useQuery(walletBalanceKey, async () => {
+  const walletBalance = useQuery(walletBalanceKey, async () => {
     if (library && account) {
       return fetchEthBalance(library, account);
     }
   });
+
+  return walletBalance;
 }
 
-function makeWalletBalanceQueryKey(
+export function makeWalletBalanceQueryKey(
   library: Web3Provider | undefined,
   account: string | null | undefined
 ) {
