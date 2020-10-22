@@ -72,7 +72,7 @@ export const MainNavigation: FC<MainNavigationProps> = () => {
           "hidden",
           "lg:flex",
           "flex-col",
-          "w-1/6",
+          "w-1/4",
           "h-full",
           "flex-shrink-0",
           "pt-10"
