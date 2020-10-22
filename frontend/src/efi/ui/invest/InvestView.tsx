@@ -29,7 +29,7 @@ export const InvestView: FC<InvestViewProps> = () => {
   return (
     <div className={investViewClassName}>
       {availableStrategies.map((strategy) => {
-        return <StrategyCard strategy={strategy} />;
+        return <StrategyCard key={strategy.id} strategy={strategy} />;
       })}
     </div>
   );
