@@ -5,6 +5,7 @@ import tw from "tailwindcss-classnames";
 import { t } from "ttag";
 import pieChart from "efi/ui/staticAssets/piechart.png";
 import { TransactionForm } from "efi/ui/crypto/TransactionForm/TransactionForm";
+import { useElfContractSymbol } from "efi/ui/contracts/useElfContract";
 
 interface StrategyCardProps {
   strategy: Strategy<any>;
@@ -13,6 +14,7 @@ interface StrategyCardProps {
 export const StrategyCard: FC<StrategyCardProps> = ({
   strategy: { name, heldAssets, stakingAsset },
 }) => {
+  const { data: strategyCryptoSymbol } = useElfContractSymbol();
   return (
     <Card className={tw("flex", "flex-col")}>
       <div className={tw("flex", "mb-8", "items-center", "w-full")}>
@@ -26,6 +28,16 @@ export const StrategyCard: FC<StrategyCardProps> = ({
             <div>
               <Tag minimal intent={Intent.PRIMARY} interactive large>
                 {stakingAsset}
+              </Tag>
+            </div>
+          </div>
+
+          {/* Strategy Token */}
+          <div className={tw("flex", "flex-col", "space-y-3")}>
+            <span> {t`Strategy token`}</span>
+            <div>
+              <Tag minimal intent={Intent.PRIMARY} interactive large>
+                {strategyCryptoSymbol}
               </Tag>
             </div>
           </div>

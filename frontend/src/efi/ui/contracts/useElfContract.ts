@@ -3,7 +3,7 @@ import {
   fetchBalance,
   fetchContractName,
   fetchDecimals,
-  fetchGovernance,
+  fetchSymbol,
 } from "efi/contracts/Elf";
 
 // Keys are arrays so that we can do things like prefix-matching to invalidate
@@ -24,6 +24,6 @@ export function useElfContractDecimals() {
 }
 
 const contractGovernanceKey = ["contract", "elf", "governance"];
-export function useElfContractGovernance() {
-  return useQuery(contractGovernanceKey, () => fetchGovernance());
+export function useElfContractSymbol() {
+  return useQuery(contractGovernanceKey, () => fetchSymbol());
 }
