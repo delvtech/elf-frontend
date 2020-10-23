@@ -29,9 +29,10 @@ export const MainNavigation: FC<MainNavigationProps> = () => {
   const { activeTab, changeTab } = useNavigation();
 
   const { deactivate, activate } = useWeb3React<Web3Provider>();
-  const connectToMetaMask = useCallback(() => activate(injectedConnector), [
-    activate,
-  ]);
+  const connectToInjectedWallet = useCallback(
+    () => activate(injectedConnector),
+    [activate]
+  );
 
   return (
     <Fragment>
@@ -121,7 +122,7 @@ export const MainNavigation: FC<MainNavigationProps> = () => {
           </Tabs>
 
           <ButtonGroup large vertical minimal className={tw("pb-10")}>
-            <Button onClick={account ? deactivate : connectToMetaMask}>
+            <Button onClick={account ? deactivate : connectToInjectedWallet}>
               {account ? t`Disconnect wallet` : t`Connect your wallet`}
             </Button>
             <Button>{t`Resources`}</Button>
