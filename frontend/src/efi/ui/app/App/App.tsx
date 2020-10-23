@@ -6,6 +6,8 @@ import { MainNavigation } from "efi/ui/navigation/MainNavigation/MainNavigation"
 import { HomeView } from "efi/ui/home/HomeView";
 import { PortfolioView } from "efi/ui/portfolio/PortfolioView";
 import { SwapView } from "efi/ui/swaps/SwapView/SwapView";
+import { ReactQueryDevtools } from "react-query-devtools";
+
 import React, { FC } from "react";
 import { tw } from "tailwindcss-classnames";
 
@@ -32,18 +34,24 @@ interface AppProps {}
 
 const App: FC<AppProps> = () => {
   return (
-    <div className={appClassName}>
-      <LocationProvider>
-        <MainNavigation />
-      </LocationProvider>
+    <>
+      <div className={appClassName}>
+        <LocationProvider>
+          <MainNavigation />
+        </LocationProvider>
 
-      <Router className={contentClassName}>
-        <HomeView path="/" />
-        <PortfolioView path={Navigation.PORTFOLIO} />
-        <SwapView path={Navigation.SWAP} />
-        <InvestView path={Navigation.INVEST} />
-      </Router>
-    </div>
+        <Router className={contentClassName}>
+          <HomeView path="/" />
+          <PortfolioView path={Navigation.PORTFOLIO} />
+          <SwapView path={Navigation.SWAP} />
+          <InvestView path={Navigation.INVEST} />
+        </Router>
+      </div>
+
+      {/* Safe to render unconditionally as it does not render in production
+      builds by default */}
+      <ReactQueryDevtools initialIsOpen={false} />
+    </>
   );
 };
 
