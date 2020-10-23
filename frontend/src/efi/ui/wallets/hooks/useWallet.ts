@@ -9,12 +9,12 @@ import {
   UserRejectedRequestError as UserRejectedRequestErrorInjected,
 } from "@web3-react/injected-connector";
 import { getConnectorName } from "efi/wallets/connectors";
-import {
-  useWalletConnection,
-  WalletConnectionStatus,
-} from "efi/ui/wallets/hooks/useWalletConnection";
 import { ChainId } from "efi/crypto/ethereum";
 import { useWalletBalance } from "efi/ui/wallets/hooks/useWalletBalance";
+import {
+  useWalletConnectionStatus,
+  WalletConnectionStatus,
+} from "efi/ui/wallets/hooks/useWalletConnectionStatus";
 
 export interface Wallet {
   /**
@@ -46,6 +46,7 @@ export interface Wallet {
    */
   connectorName: string | undefined;
 }
+
 export function useWallet(): Wallet {
   const { connector, library, chainId, account, error } = useWeb3React<
     Web3Provider
@@ -56,7 +57,7 @@ export function useWallet(): Wallet {
   const { data: ethBalance } = useWalletBalance();
 
   // Don't provide the account if the wallet was disconnected
-  const { status } = useWalletConnection();
+  const { status } = useWalletConnectionStatus();
   const isDisconnected = status === WalletConnectionStatus.DISCONNECTED;
 
   const connectorName = getConnectorName(connector);
@@ -81,14 +82,21 @@ function useErrorToast(error: Error | undefined) {
 }
 
 export function getErrorMessage(error: Error) {
+  // These are the well-known error types
   if (error instanceof NoEthereumProviderError) {
     return t`No Ethereum browser extension detected, install MetaMask on desktop or visit from a dApp browser on mobile.`;
   } else if (error instanceof UnsupportedChainIdError) {
     return t`You're connected to an unsupported network.`;
   } else if (error instanceof UserRejectedRequestErrorInjected) {
     return t`Please authorize this website to access your Ethereum account.`;
-  } else {
-    console.error(error);
-    return t`An unknown error occurred. Check the console for more details.`;
   }
+
+  // Otherwise check if the error has it's own message we can show
+  if (error.message) {
+    return error.message;
+  }
+
+  // Final resort, it's an unknown error
+  console.error(error);
+  return t`An unknown error occurred. Check the console for more details.`;
 }
