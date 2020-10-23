@@ -1,18 +1,19 @@
 import { Classes } from "@blueprintjs/core";
 import { LocationProvider, Router } from "@reach/router";
 import classNames from "classnames";
-import { Navigation } from "efi/ui/navigation/navigation";
-import { MainNavigation } from "efi/ui/navigation/MainNavigation/MainNavigation";
-import { HomeView } from "efi/ui/home/HomeView";
-import { PortfolioView } from "efi/ui/portfolio/PortfolioView";
-import { SwapView } from "efi/ui/swaps/SwapView/SwapView";
-import { ReactQueryDevtools } from "react-query-devtools";
-
 import React, { FC } from "react";
+import { ReactQueryDevtools } from "react-query-devtools";
 import { tw } from "tailwindcss-classnames";
 
-import styles from "./App.module.css";
+import { HomeView } from "efi/ui/home/HomeView";
 import { InvestView } from "efi/ui/invest/InvestView";
+import { MainNavigation } from "efi/ui/navigation/MainNavigation/MainNavigation";
+import { Navigation } from "efi/ui/navigation/navigation";
+import { PortfolioView } from "efi/ui/portfolio/PortfolioView";
+import { SwapView } from "efi/ui/swaps/SwapView/SwapView";
+import { useSyncWithInjectedEthereum } from "efi/ui/wallets/hooks/useSyncWithInjectedEthereum";
+
+import styles from "./App.module.css";
 
 const appClassName = classNames(
   styles.app,
@@ -33,6 +34,10 @@ const contentClassName = tw(
 interface AppProps {}
 
 const App: FC<AppProps> = () => {
+  // Do this at the top in one place so we don't have multiple callers trying to
+  // set event handlers. TODO: clean this up further so it can live in useWallet
+  useSyncWithInjectedEthereum();
+
   return (
     <>
       <div className={appClassName}>

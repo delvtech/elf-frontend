@@ -1,8 +1,8 @@
 import { useWeb3React } from "@web3-react/core";
-import { AbstractConnector } from "@web3-react/abstract-connector";
 import { useEffect } from "react";
 import { injectedConnector } from "efi/wallets/connectors";
 import { ChainId, NetworkId } from "efi/crypto/ethereum";
+import { Web3Provider } from "@ethersproject/providers";
 
 /**
  * It's possible for an ethereum client to exist on window, which can change
@@ -12,17 +12,10 @@ import { ChainId, NetworkId } from "efi/crypto/ethereum";
  * This effect keeps the app's Web3 context in sync w/ window.ethereum (if it
  * exists).
  */
-export function useSyncWithInjectedEthereum(
-  connect: (connector: AbstractConnector) => void,
-  suppress = false
-) {
-  const { active, error } = useWeb3React();
+export function useSyncWithInjectedEthereum() {
+  const { active, error, activate, deactivate } = useWeb3React<Web3Provider>();
 
   useEffect(() => {
-    if (suppress) {
-      return;
-    }
-
     const { ethereum } = window;
 
     if (!ethereum?.on || error || active) {
@@ -30,20 +23,20 @@ export function useSyncWithInjectedEthereum(
     }
 
     const handleChainChanged = (chainId: ChainId) => {
-      console.log("chainChanged", chainId);
-      connect(injectedConnector);
+      console.warn("chainChanged", chainId);
+      activate(injectedConnector);
     };
 
     const handleAccountsChanged = (accounts: any) => {
-      console.log("accountsChanged", accounts);
+      console.warn("accountsChanged", accounts);
       if (accounts.length > 0) {
-        connect(injectedConnector);
+        activate(injectedConnector);
       }
     };
 
     const handleNetworkChanged = (networkId: NetworkId) => {
-      console.log("networkChanged", networkId);
-      connect(injectedConnector);
+      console.warn("networkChanged", networkId);
+      activate(injectedConnector);
     };
 
     ethereum.on("chainChanged", handleChainChanged);
@@ -57,5 +50,5 @@ export function useSyncWithInjectedEthereum(
         ethereum.removeListener("networkChanged", handleNetworkChanged);
       }
     };
-  }, [active, error, suppress, connect]);
+  }, [active, error, activate, deactivate]);
 }
