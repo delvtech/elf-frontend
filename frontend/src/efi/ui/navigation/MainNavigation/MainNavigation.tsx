@@ -10,11 +10,12 @@ import {
   Tabs,
 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
+import { Web3Provider } from "@ethersproject/providers";
+import { useWeb3React } from "@web3-react/core";
 import classNames from "classnames";
 import { useNavigation } from "efi/ui/navigation/hooks/useTab";
 import { Navigation } from "efi/ui/navigation/navigation";
 import { useWallet } from "efi/ui/wallets/hooks/useWallet";
-import { useWalletConnection } from "efi/ui/wallets/hooks/useWalletConnection";
 import { injectedConnector } from "efi/wallets/connectors";
 import React, { Fragment, useCallback } from "react";
 import { FC } from "react";
@@ -27,9 +28,9 @@ export const MainNavigation: FC<MainNavigationProps> = () => {
   const { account } = useWallet();
   const { activeTab, changeTab } = useNavigation();
 
-  const { disconnect, connect } = useWalletConnection();
-  const connectToMetaMask = useCallback(() => connect(injectedConnector), [
-    connect,
+  const { deactivate, activate } = useWeb3React<Web3Provider>();
+  const connectToMetaMask = useCallback(() => activate(injectedConnector), [
+    activate,
   ]);
 
   return (
@@ -48,7 +49,7 @@ export const MainNavigation: FC<MainNavigationProps> = () => {
             minimal
             outlined
             icon={IconNames.LOG_OUT}
-            onClick={disconnect}
+            onClick={deactivate}
           />
         </NavbarGroup>
         <NavbarGroup className={tw("sm:pr-2")} align={Alignment.RIGHT}>
@@ -120,7 +121,7 @@ export const MainNavigation: FC<MainNavigationProps> = () => {
           </Tabs>
 
           <ButtonGroup large vertical minimal className={tw("pb-10")}>
-            <Button onClick={account ? disconnect : connectToMetaMask}>
+            <Button onClick={account ? deactivate : connectToMetaMask}>
               {account ? t`Disconnect wallet` : t`Connect your wallet`}
             </Button>
             <Button>{t`Resources`}</Button>

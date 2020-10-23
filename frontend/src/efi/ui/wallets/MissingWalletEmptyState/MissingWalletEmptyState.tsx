@@ -5,7 +5,8 @@ import React, { FC, useCallback } from "react";
 import tw from "tailwindcss-classnames";
 import { jt, t } from "ttag";
 import { injectedConnector } from "efi/wallets/connectors";
-import { useWalletConnection } from "efi/ui/wallets/hooks/useWalletConnection";
+import { useWeb3React } from "@web3-react/core";
+import { Web3Provider } from "@ethersproject/providers";
 
 const betaTag = (
   <Tag key="beta-tag" minimal intent={Intent.WARNING}>
@@ -18,11 +19,11 @@ const howSwapsWorkLink = (
 );
 
 export const MissingWalletEmptyState: FC<{}> = () => {
-  const { connect } = useWalletConnection();
+  const { activate } = useWeb3React<Web3Provider>();
 
   // TODO: Make our own modal w/ buttons for all the different wallet connectors
-  const connectToMetaMask = useCallback(() => connect(injectedConnector), [
-    connect,
+  const connectToMetaMask = useCallback(() => activate(injectedConnector), [
+    activate,
   ]);
 
   return (
