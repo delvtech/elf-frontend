@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@blueprintjs/core": "^3.34.1",
+    "@blueprintjs/core": "^3.35.0",
     "@blueprintjs/icons": "^3.22.0",
     "@blueprintjs/select": "^3.14.3",
     "@ethersproject/hash": "^5.0.6",
