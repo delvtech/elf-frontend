@@ -20,15 +20,18 @@ export const StrategyPreviewCard: FC<StrategyPreviewCardProps> = ({
   }, [id, onSelectStrategy]);
 
   return (
-    <Card onClick={selectStrategy} interactive className={tw("flex")}>
+    <Card onClick={selectStrategy} interactive className={tw("flex", "w-full")}>
       <div
         className={tw(
           "flex",
+          "sm:flex-col",
           "flex-wrap",
+          "justify-between",
           "mb-8",
           "items-center",
           "w-full",
-          "space-x-3"
+          "space-x-3",
+          "sm:space-y-3"
         )}
       >
         {/* Strategy name */}
@@ -36,20 +39,12 @@ export const StrategyPreviewCard: FC<StrategyPreviewCardProps> = ({
           <H3 className={tw("m-0")}>{name}</H3>
         </div>
 
-        {/* Staking Asset */}
-        <div className={tw("flex", "flex-col", "space-y-3")}>
-          <div>
-            <Tag minimal intent={Intent.PRIMARY} interactive large>
-              {stakingAsset}
-            </Tag>
-          </div>
-        </div>
-
-        {/* Expected APY */}
-        <div className={tw("flex", "flex-col", "space-y-4")}>
-          <span>
-            {t`Exected APY`} {apy}
-          </span>
+        <div className={tw("flex", "flex", "space-x-3", "items-center")}>
+          {/* Staking Asset */}
+          <Tag minimal intent={Intent.PRIMARY} interactive large>
+            {stakingAsset}
+          </Tag>
+          <div>{t`Exected APY ${apy}%`}</div>
         </div>
       </div>
     </Card>
