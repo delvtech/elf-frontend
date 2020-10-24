@@ -1,3 +1,4 @@
+import { Button, Intent } from "@blueprintjs/core";
 import { RouteComponentProps } from "@reach/router";
 import { ElfStrategyHighRisk } from "efi/pools/highRisk";
 import { ElfStrategyLowRisk } from "efi/pools/lowRisk";
@@ -6,8 +7,9 @@ import { StrategyPreviewCard } from "efi/ui/pools/StrategeyPreviewCard/StrategyP
 import { StrategyCard } from "efi/ui/pools/StrategyCard/StrategyCard";
 import { useWallet } from "efi/ui/wallets/hooks/useWallet";
 import { MissingWalletEmptyState } from "efi/ui/wallets/MissingWalletEmptyState/MissingWalletEmptyState";
-import React, { FC, useState } from "react";
+import React, { FC, useCallback, useState } from "react";
 import tw from "tailwindcss-classnames";
+import { t } from "ttag";
 
 interface InvestViewProps extends RouteComponentProps {}
 
@@ -36,9 +38,16 @@ const availableStrategies = [
   ElfStrategyHighRisk,
 ];
 
+const strategiesById = Object.fromEntries(
+  availableStrategies.map((strategy) => [strategy.id, strategy])
+);
+
 export const InvestView: FC<InvestViewProps> = () => {
   const { account } = useWallet();
   const [selectedStrategy, setSelectedStrategy] = useState<string>();
+  const showAvailableStrategies = useCallback(() => {
+    setSelectedStrategy(undefined);
+  }, []);
 
   if (!account) {
     return <MissingWalletEmptyState />;
@@ -48,11 +57,11 @@ export const InvestView: FC<InvestViewProps> = () => {
     return (
       <div className={investViewClassName}>
         <div className={CardContainer}>
-          {availableStrategies.map((strategy, index) => {
+          {availableStrategies.map((strategy) => {
             return (
               <StrategyPreviewCard
                 onSelectStrategy={setSelectedStrategy}
-                key={strategy.id + index}
+                key={strategy.id}
                 strategy={strategy}
               />
             );
@@ -65,9 +74,14 @@ export const InvestView: FC<InvestViewProps> = () => {
   return (
     <div className={investViewClassName}>
       <div className={CardContainer}>
-        {availableStrategies.map((strategy) => {
-          return <StrategyCard key={strategy.id} strategy={strategy} />;
-        })}
+        <Button
+          minimal
+          outlined
+          large
+          intent={Intent.PRIMARY}
+          onClick={showAvailableStrategies}
+        >{t`Show Available Strategies`}</Button>
+        <StrategyCard strategy={strategiesById[selectedStrategy]} />
       </div>
     </div>
   );
