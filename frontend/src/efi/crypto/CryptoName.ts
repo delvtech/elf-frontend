@@ -46,4 +46,14 @@ export enum CryptoName {
    * Element Low Risk Pool Token
    */
   ELF_LOW_RISK_POOL_TOKEN = "Element Low Risk Pool Token",
+
+  /**
+   * Element Low Risk Pool Token
+   */
+  ELF_MEDIUM_RISK_POOL_TOKEN = "Element Medium Risk Pool Token",
+
+  /**
+   * Element Low Risk Pool Token
+   */
+  ELF_HIGH_RISK_POOL_TOKEN = "Element High Risk Pool Token",
 }

@@ -26,4 +26,6 @@ export interface Strategy<StakingAsset extends CryptoSymbol> {
    * The assets held in the strategy. This can include the StakingAsset.
    */
   heldAssets: CryptoSymbol[];
+
+  apy: number;
 }
