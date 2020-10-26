@@ -27,6 +27,7 @@
     "@types/warning": "^3.0.0",
     "@visx/axis": "^1.1.0",
     "@visx/brush": "^1.1.0",
+    "@visx/curve": "^1.0.0",
     "@visx/gradient": "^1.0.0",
     "@visx/group": "^1.0.0",
     "@visx/mock-data": "^1.0.0",
