@@ -59,6 +59,7 @@
     "eject": "react-scripts eject",
     "lint": "tsc --noEmit && eslint src/**/*.ts{,x}",
     "lint:fix": "tsc --noEmit && eslint --fix src/**/*.ts{,x}",
+    "depcruise": "depcruise --config .dependency-cruiser.js src",
     "prebuild": "npm run build:version-json && npm run build:tailwind",
     "prestart": "npm run build:version-json && npm run build:tailwind",
     "postinstall": "npm run build:version-json",
