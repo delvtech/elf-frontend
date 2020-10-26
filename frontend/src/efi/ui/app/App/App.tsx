@@ -27,8 +27,9 @@ const contentClassName = tw(
   "h-auto",
   "lg:h-full",
   "lg:w-auto",
-  "pt-12",
-  "lg:pt-0"
+  // larger padding on small screens because of secondary navbar
+  "pt-24",
+  "lg:pt-12"
 );
 
 interface AppProps {}
