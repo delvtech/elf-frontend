@@ -1,14 +1,51 @@
 import { Breadcrumbs, IBreadcrumbProps } from "@blueprintjs/core";
-import React, { FC } from "react";
+import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
+import { Strategy } from "efi/pools/strategy";
+import React, { FC, useMemo } from "react";
+import { t } from "ttag";
 
-interface InvestBreadcrumbProps {}
+interface InvestBreadcrumbProps {
+  availableStrategies: Strategy<CryptoSymbol.ETH>[];
+  activeStrategy?: string;
+  setActiveStrategy: (strategyId: string | undefined) => void;
+}
 
-const BREADCRUMBS: IBreadcrumbProps[] = [
-  { href: "/users", icon: "folder-close", text: "Users" },
-  { href: "/users/janet", icon: "folder-close", text: "Janet" },
-  { icon: "document", text: "image.jpg" },
-];
+export const InvestBreadcrumb: FC<InvestBreadcrumbProps> = ({
+  availableStrategies,
+  activeStrategy,
+  setActiveStrategy,
+}) => {
+  const items = useBreadcrumbItems(
+    availableStrategies,
+    activeStrategy,
+    setActiveStrategy
+  );
 
-export const InvestBreadcrumb: FC<InvestBreadcrumbProps> = () => {
-  return <Breadcrumbs items={BREADCRUMBS} />;
+  return <Breadcrumbs items={items} />;
 };
+
+function useBreadcrumbItems(
+  availableStrategies: Strategy<CryptoSymbol.ETH>[],
+  activeStrategy: string | undefined,
+  setActiveStrategy: (strategyId: string | undefined) => void
+): IBreadcrumbProps[] {
+  return useMemo(() => {
+    const strategiesById = Object.fromEntries(
+      availableStrategies.map((strategy) => [strategy.id, strategy])
+    );
+
+    const newItems: IBreadcrumbProps[] = [
+      // Always start w/ the root Invest crumb
+      {
+        onClick: () => setActiveStrategy(undefined),
+        text: t`Invest`,
+      },
+    ];
+
+    if (activeStrategy) {
+      newItems.push({ text: strategiesById[activeStrategy].name });
+    }
+
+    return newItems;
+  }, [activeStrategy, availableStrategies, setActiveStrategy]);
+}
