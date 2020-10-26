@@ -69,12 +69,12 @@ export const InvestView: FC<InvestViewProps> = () => {
     return <MissingWalletEmptyState />;
   }
 
-  if (!selectedStrategy) {
-    return (
-      <div className={investViewClassName}>
-        <div className={tw("flex", "w-full")}>
-          <InvestBreadcrumb />
-        </div>
+  return (
+    <div className={investViewClassName}>
+      <div className={tw("flex", "w-full", "justify-center")}>
+        <InvestBreadcrumb />
+      </div>
+      {!selectedStrategy ? (
         <div className={previewCardContainerClassName}>
           {availableStrategies.map((strategy) => {
             return (
@@ -86,25 +86,18 @@ export const InvestView: FC<InvestViewProps> = () => {
             );
           })}
         </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className={investViewClassName}>
-      <div className={tw("flex", "w-full")}>
-        <InvestBreadcrumb />
-      </div>
-      <div className={strategyCardContainerClassName}>
-        <Button
-          minimal
-          outlined
-          large
-          intent={Intent.PRIMARY}
-          onClick={showAvailableStrategies}
-        >{t`Show Available Strategies`}</Button>
-        <StrategyCard strategy={strategiesById[selectedStrategy]} />
-      </div>
+      ) : (
+        <div className={strategyCardContainerClassName}>
+          <Button
+            minimal
+            outlined
+            large
+            intent={Intent.PRIMARY}
+            onClick={showAvailableStrategies}
+          >{t`Show Available Strategies`}</Button>
+          <StrategyCard strategy={strategiesById[selectedStrategy]} />
+        </div>
+      )}
     </div>
   );
 };
