@@ -36,7 +36,8 @@ interface AppProps {}
 
 const App: FC<AppProps> = () => {
   // Do this at the top in one place so we don't have multiple callers trying to
-  // set event handlers. TODO: clean this up further so it can live in useWallet
+  // set event handlers. TODO: clean this up so that it's more of a portable
+  // singleton and can live in useWallet and be called multiple times safely
   useSyncWithInjectedEthereum();
 
   return (
