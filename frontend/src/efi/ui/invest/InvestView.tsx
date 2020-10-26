@@ -23,7 +23,7 @@ const investViewClassName = tw(
   "overflow-y-scroll"
 );
 
-const PreviewCardContainer = tw(
+const previewCardContainerClassName = tw(
   "flex-1",
   "flex",
   "flex-col",
@@ -36,7 +36,7 @@ const PreviewCardContainer = tw(
   "space-y-3"
 );
 
-const StrategyCardContainer = tw(
+const strategyCardContainerClassName = tw(
   "flex-1",
   "flex",
   "flex-col",
@@ -71,7 +71,7 @@ export const InvestView: FC<InvestViewProps> = () => {
   if (!selectedStrategy) {
     return (
       <div className={investViewClassName}>
-        <div className={PreviewCardContainer}>
+        <div className={previewCardContainerClassName}>
           {availableStrategies.map((strategy) => {
             return (
               <StrategyPreviewCard
@@ -88,7 +88,7 @@ export const InvestView: FC<InvestViewProps> = () => {
 
   return (
     <div className={investViewClassName}>
-      <div className={StrategyCardContainer}>
+      <div className={strategyCardContainerClassName}>
         <Button
           minimal
           outlined

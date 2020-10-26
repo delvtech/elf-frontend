@@ -27,5 +27,8 @@ export interface Strategy<StakingAsset extends CryptoSymbol> {
    */
   heldAssets: CryptoSymbol[];
 
+  /**
+   * Annual Percentage Yield.  Value from 1-100.
+   */
   apy: number;
 }

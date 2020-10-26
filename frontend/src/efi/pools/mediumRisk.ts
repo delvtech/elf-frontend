@@ -5,7 +5,7 @@ import { t } from "ttag";
 const ELF_STRATEGY_MEDIUM_RISK = "ELF_STRATEGY_MEDIUM_RISK";
 
 /**
- * A low-risk strategy made up of stablecoins and others.
+ * A medium-risk strategy made up of stablecoins and others.
  */
 export const ElfStrategyMediumRisk: Strategy<CryptoSymbol.ETH> = {
   id: ELF_STRATEGY_MEDIUM_RISK,
