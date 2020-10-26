@@ -1,5 +1,6 @@
 import { RouteComponentProps } from "@reach/router";
 import BrushChart from "efi/ui/base/BrushChart/BrushChart";
+import { PieChart } from "efi/ui/base/PieChart/PieChart";
 import { useWallet } from "efi/ui/wallets/hooks/useWallet";
 import { MissingWalletEmptyState } from "efi/ui/wallets/MissingWalletEmptyState/MissingWalletEmptyState";
 import WalletSummary from "efi/ui/wallets/WalletSummary";
@@ -34,7 +35,7 @@ export const PortfolioView: FC<PortfolioViewProps> = () => {
         <BrushChart />
       </div>
       <div className={tw("md:justify-center", "md:items-center", "px-4")}>
-        <WalletSummary />
+        <PieChart width={300} height={300} />
       </div>
       <div className={tw("justify-center", "items-center", "px-4")}>
         <BrushChart />

@@ -1,8 +1,4 @@
-import { GradientPinkBlue } from "@visx/gradient";
 import { Group } from "@visx/group";
-import browserUsage, {
-  BrowserUsage as Browsers,
-} from "@visx/mock-data/lib/mocks/browserUsage";
 import letterFrequency, {
   LetterFrequency,
 } from "@visx/mock-data/lib/mocks/letterFrequency";
@@ -11,48 +7,15 @@ import Pie, { PieArcDatum, ProvidedProps } from "@visx/shape/lib/shapes/Pie";
 import React, { useState } from "react";
 import { animated, interpolate, useTransition } from "react-spring";
 
-// data and types
-type BrowserNames = keyof Browsers;
-
-interface BrowserUsage {
-  label: BrowserNames;
-  usage: number;
-}
-
 const letters: LetterFrequency[] = letterFrequency.slice(0, 4);
-const browserNames = Object.keys(browserUsage[0]).filter(
-  (k) => k !== "date"
-) as BrowserNames[];
-const browsers: BrowserUsage[] = browserNames.map((name) => ({
-  label: name,
-  usage: Number(browserUsage[0][name]),
-}));
 
 // accessor functions
-const usage = (d: BrowserUsage) => d.usage;
 const frequency = (d: LetterFrequency) => d.frequency;
 
 // color scales
-const getBrowserColor = scaleOrdinal({
-  domain: browserNames,
-  range: [
-    "rgba(255,255,255,0.7)",
-    "rgba(255,255,255,0.6)",
-    "rgba(255,255,255,0.5)",
-    "rgba(255,255,255,0.4)",
-    "rgba(255,255,255,0.3)",
-    "rgba(255,255,255,0.2)",
-    "rgba(255,255,255,0.1)",
-  ],
-});
 const getLetterFrequencyColor = scaleOrdinal({
   domain: letters.map((l) => l.letter),
-  range: [
-    "rgba(93,30,91,1)",
-    "rgba(93,30,91,0.8)",
-    "rgba(93,30,91,0.6)",
-    "rgba(93,30,91,0.4)",
-  ],
+  range: ["#97F3EB", "#78D5CC", "#58B8AE", "#369C91", "#008075"],
 });
 
 const defaultMargin = { top: 20, right: 20, bottom: 20, left: 20 };
@@ -64,13 +27,12 @@ export type PieProps = {
   animate?: boolean;
 };
 
-export default function Example({
+export const PieChart: React.FunctionComponent<PieProps> = ({
   width,
   height,
   margin = defaultMargin,
   animate = true,
-}: PieProps) {
-  const [selectedBrowser, setSelectedBrowser] = useState<string | null>(null);
+}: PieProps) => {
   const [selectedAlphabetLetter, setSelectedAlphabetLetter] = useState<
     string | null
   >(null);
@@ -86,7 +48,6 @@ export default function Example({
 
   return (
     <svg width={width} height={height}>
-      <GradientPinkBlue id="visx-pie-gradient" />
       <rect
         rx={14}
         width={width}
@@ -94,33 +55,6 @@ export default function Example({
         fill="url('#visx-pie-gradient')"
       />
       <Group top={centerY + margin.top} left={centerX + margin.left}>
-        <Pie
-          data={
-            selectedBrowser
-              ? browsers.filter(({ label }) => label === selectedBrowser)
-              : browsers
-          }
-          pieValue={usage}
-          outerRadius={radius}
-          innerRadius={radius - donutThickness}
-          cornerRadius={3}
-          padAngle={0.005}
-        >
-          {(pie) => (
-            <AnimatedPie<BrowserUsage>
-              {...pie}
-              animate={animate}
-              getKey={(arc) => arc.data.label}
-              onClickDatum={({ data: { label } }) =>
-                animate &&
-                setSelectedBrowser(
-                  selectedBrowser && selectedBrowser === label ? null : label
-                )
-              }
-              getColor={(arc) => getBrowserColor(arc.data.label)}
-            />
-          )}
-        </Pie>
         <Pie
           data={
             selectedAlphabetLetter
@@ -153,22 +87,9 @@ export default function Example({
           )}
         </Pie>
       </Group>
-      {animate && (
-        <text
-          textAnchor="end"
-          x={width - 16}
-          y={height - 16}
-          fill="white"
-          fontSize={11}
-          fontWeight={300}
-          pointerEvents="none"
-        >
-          Click segments to update
-        </text>
-      )}
     </svg>
   );
-}
+};
 
 // react-spring transition definitions
 type AnimatedStyles = { startAngle: number; endAngle: number; opacity: number };
