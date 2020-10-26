@@ -3,13 +3,14 @@ import { LinearGradient } from "@visx/gradient";
 import { Group } from "@visx/group";
 import { scaleOrdinal } from "@visx/scale";
 import Pie, { PieArcDatum, ProvidedProps } from "@visx/shape/lib/shapes/Pie";
-import React, { useCallback, useState } from "react";
+import classNames from "classnames";
+import React, { Fragment, useCallback, useState } from "react";
 import { animated, interpolate, useTransition } from "react-spring";
 import { useMeasure } from "react-use";
 import tw from "tailwindcss-classnames";
 
 const GRADIENT_ID = "pie_gradient";
-export const background = Colors.DARK_GRAY4;
+export const background1 = Colors.DARK_GRAY4;
 export const background2 = Colors.GRAY1;
 
 export interface PieData {
@@ -31,14 +32,15 @@ const tokens: PieData[] = [
     name: "Eth",
     frequency: 100,
   },
-  { name: "Dai", frequency: 50 },
+  { name: "DAI", frequency: 50 },
   {
     name: "ELF-1",
     frequency: 80,
     subData: [
-      { name: "yDai", frequency: 100 },
-      { name: "yETH", frequency: 300 },
+      { name: "yDAI", frequency: 100 },
+      { name: "yUSDC", frequency: 300 },
       { name: "yUSDT", frequency: 150 },
+      { name: "yTUSD", frequency: 150 },
     ],
   },
 ];
@@ -49,11 +51,13 @@ const frequency = (d: PieData) => d.frequency;
 // color scales
 const getDataFrequencyColor = scaleOrdinal({
   domain: tokens.map((token) => token.name),
+  // blueprint color scale
   range: ["#97F3EB", "#78D5CC", "#58B8AE", "#369C91", "#008075"],
 });
 
 const getSubDataFrequencyColor = scaleOrdinal({
   domain: tokens[2]?.subData?.map((token) => token.name),
+  // blueprint color scale
   range: ["#FFB3D0", "#EB91AF", "#D56F90", "#BF4B72", "#A82255"],
 });
 
@@ -65,10 +69,11 @@ interface PieProps {
   margin?: typeof defaultMargin;
   animate?: boolean;
   pieData?: PieData;
+  background?: boolean;
 }
 
 export const PieChart: React.FunctionComponent<PieProps> = (props) => {
-  const { margin = defaultMargin, animate = true } = props;
+  const { margin = defaultMargin, animate = true, background = false } = props;
   const pieData = tokens;
   const [ref, dimensions] = useMeasure();
   const width = props.width ?? dimensions.width ?? 0;
@@ -102,7 +107,7 @@ export const PieChart: React.FunctionComponent<PieProps> = (props) => {
 
   const innerWidth = width - margin.left - margin.right;
   const innerHeight = height - margin.top - margin.bottom;
-  const radius = Math.min(innerWidth, innerHeight) / 2;
+  const radius = Math.min(innerWidth, innerHeight) / 1.5;
   const centerY = innerHeight / 2;
   const centerX = innerWidth / 2;
   const donutThickness = 50;
@@ -110,18 +115,22 @@ export const PieChart: React.FunctionComponent<PieProps> = (props) => {
   return (
     <div className={tw("w-full", "h-full")} ref={ref as any}>
       <svg width={width} height={height}>
-        <rect
-          rx={4}
-          width={width}
-          height={height}
-          fill={`url(#${GRADIENT_ID})`}
-        />
-        <LinearGradient
-          id={GRADIENT_ID}
-          from={background}
-          to={background2}
-          rotate={45}
-        />
+        {background && (
+          <Fragment>
+            <rect
+              rx={4}
+              width={width}
+              height={height}
+              fill={`url(#${GRADIENT_ID})`}
+            />
+            <LinearGradient
+              id={GRADIENT_ID}
+              from={background1}
+              to={background2}
+              rotate={45}
+            />
+          </Fragment>
+        )}
         <Group top={centerY + margin.top} left={centerX + margin.left}>
           <Pie
             data={data}
@@ -226,7 +235,7 @@ function AnimatedPie<Datum>({
                     x={centroidX}
                     y={centroidY}
                     dy=".33em"
-                    fontSize={9}
+                    fontSize={12}
                     textAnchor="middle"
                     pointerEvents="none"
                   >

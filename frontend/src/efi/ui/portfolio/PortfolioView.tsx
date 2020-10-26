@@ -38,7 +38,7 @@ export const PortfolioView: FC<PortfolioViewProps> = () => {
         <BrushChart />
       </div>
       <div className={tw("justify-center", "items-center", "px-4")}>
-        <PieChart />
+        <PieChart background />
       </div>
       <div className={tw("justify-center", "items-center", "px-4")}>
         <BrushChart />
