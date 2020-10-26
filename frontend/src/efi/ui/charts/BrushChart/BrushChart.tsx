@@ -5,9 +5,8 @@ import { LinearGradient } from "@visx/gradient";
 import appleStock, { AppleStock } from "@visx/mock-data/lib/mocks/appleStock";
 import { PatternLines } from "@visx/pattern";
 import { scaleLinear, scaleTime } from "@visx/scale";
-import classNames from "classnames";
 import { extent, max } from "d3-array";
-import AreaChart from "efi/ui/base/AreaChart/AreaChart";
+import AreaChart from "efi/ui/charts/AreaChart/AreaChart";
 import React, {
   FunctionComponent,
   useCallback,
@@ -36,7 +35,6 @@ const getDate = (d: AppleStock) => new Date(d.date);
 const getStockValue = (d: AppleStock) => d.close;
 
 interface BrushChartProps {
-  className?: string;
   margin?: { top: number; right: number; bottom: number; left: number };
   compact?: boolean;
 }
@@ -49,7 +47,6 @@ export const BrushChart: FunctionComponent<BrushChartProps> = ({
     bottom: 20,
     right: 20,
   },
-  className,
 }) => {
   const [ref, dimensions] = useMeasure();
   const { width = 0, height = 0 } = dimensions;
@@ -136,7 +133,7 @@ export const BrushChart: FunctionComponent<BrushChartProps> = ({
   ]);
 
   return (
-    <div className={classNames(tw("w-full", "h-full"))} ref={ref as any}>
+    <div className={tw("w-full", "h-full")} ref={ref as any}>
       <svg width={width} height={height}>
         <LinearGradient
           id={GRADIENT_ID}

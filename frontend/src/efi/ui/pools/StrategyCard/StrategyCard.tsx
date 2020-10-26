@@ -1,11 +1,11 @@
 import { Card, H3, Intent, Spinner, Tag } from "@blueprintjs/core";
 import { Strategy } from "efi/pools/strategy";
+import { PieChart } from "efi/ui/charts/PieChart/PieChart";
+import { useElfContractSymbol } from "efi/ui/contracts/useElfContract";
+import { TransactionForm } from "efi/ui/crypto/TransactionForm/TransactionForm";
 import React, { FC } from "react";
 import tw from "tailwindcss-classnames";
 import { t } from "ttag";
-import pieChart from "efi/ui/staticAssets/piechart.png";
-import { TransactionForm } from "efi/ui/crypto/TransactionForm/TransactionForm";
-import { useElfContractSymbol } from "efi/ui/contracts/useElfContract";
 
 interface StrategyCardProps {
   strategy: Strategy<any>;
@@ -82,12 +82,7 @@ export const StrategyCard: FC<StrategyCardProps> = ({
             "items-center"
           )}
         >
-          <img
-            src={pieChart}
-            alt={t`asset percentages`}
-            height={128}
-            width={128}
-          />
+          <PieChart />
         </div>
       </div>
       <div className={tw("flex", "justify-between", "w-full", "space-x-8")}>
