@@ -19,11 +19,14 @@ export const PortfolioView: FC<PortfolioViewProps> = () => {
     <div
       className={tw(
         "flex",
+        "flex-wrap",
         "h-full",
         "w-full",
         "grid",
         "grid-cols-1",
-        "sm:grid-cols-2",
+        "md:grid-cols-2",
+        "grid-rows-none",
+        "md:grid-rows-2",
         "gap-4",
         "py-4"
       )}
@@ -34,8 +37,8 @@ export const PortfolioView: FC<PortfolioViewProps> = () => {
       <div className={tw("justify-center", "items-center", "px-4")}>
         <BrushChart />
       </div>
-      <div className={tw("md:justify-center", "md:items-center", "px-4")}>
-        <PieChart width={300} height={300} />
+      <div className={tw("justify-center", "items-center", "px-4")}>
+        <PieChart />
       </div>
       <div className={tw("justify-center", "items-center", "px-4")}>
         <BrushChart />

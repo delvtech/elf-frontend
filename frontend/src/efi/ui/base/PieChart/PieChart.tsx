@@ -1,43 +1,104 @@
+import { Colors } from "@blueprintjs/core";
+import { LinearGradient } from "@visx/gradient";
 import { Group } from "@visx/group";
-import letterFrequency, {
-  LetterFrequency,
-} from "@visx/mock-data/lib/mocks/letterFrequency";
 import { scaleOrdinal } from "@visx/scale";
 import Pie, { PieArcDatum, ProvidedProps } from "@visx/shape/lib/shapes/Pie";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { animated, interpolate, useTransition } from "react-spring";
+import { useMeasure } from "react-use";
+import tw from "tailwindcss-classnames";
 
-const letters: LetterFrequency[] = letterFrequency.slice(0, 4);
+const GRADIENT_ID = "pie_gradient";
+export const background = Colors.DARK_GRAY4;
+export const background2 = Colors.GRAY1;
+
+export interface PieData {
+  /**
+   * The name of the slice.
+   */
+  name: string;
+
+  /**
+   * Any positive value, PieChart will figure out how much of the pie chart this should occupy
+   */
+  frequency: number;
+
+  subData?: PieData[];
+}
+
+const tokens: PieData[] = [
+  {
+    name: "Eth",
+    frequency: 100,
+  },
+  { name: "Dai", frequency: 50 },
+  {
+    name: "ELF-1",
+    frequency: 80,
+    subData: [
+      { name: "yDai", frequency: 100 },
+      { name: "yETH", frequency: 300 },
+      { name: "yUSDT", frequency: 150 },
+    ],
+  },
+];
 
 // accessor functions
-const frequency = (d: LetterFrequency) => d.frequency;
+const frequency = (d: PieData) => d.frequency;
 
 // color scales
-const getLetterFrequencyColor = scaleOrdinal({
-  domain: letters.map((l) => l.letter),
+const getDataFrequencyColor = scaleOrdinal({
+  domain: tokens.map((token) => token.name),
   range: ["#97F3EB", "#78D5CC", "#58B8AE", "#369C91", "#008075"],
+});
+
+const getSubDataFrequencyColor = scaleOrdinal({
+  domain: tokens[2]?.subData?.map((token) => token.name),
+  range: ["#FFB3D0", "#EB91AF", "#D56F90", "#BF4B72", "#A82255"],
 });
 
 const defaultMargin = { top: 20, right: 20, bottom: 20, left: 20 };
 
-export type PieProps = {
-  width: number;
-  height: number;
+interface PieProps {
+  width?: number;
+  height?: number;
   margin?: typeof defaultMargin;
   animate?: boolean;
-};
+  pieData?: PieData;
+}
 
-export const PieChart: React.FunctionComponent<PieProps> = ({
-  width,
-  height,
-  margin = defaultMargin,
-  animate = true,
-}: PieProps) => {
-  const [selectedAlphabetLetter, setSelectedAlphabetLetter] = useState<
-    string | null
-  >(null);
+export const PieChart: React.FunctionComponent<PieProps> = (props) => {
+  const { margin = defaultMargin, animate = true } = props;
+  const pieData = tokens;
+  const [ref, dimensions] = useMeasure();
+  const width = props.width ?? dimensions.width ?? 0;
+  const height = props.height ?? dimensions.height ?? 0;
+  const [selectedSlice, setSelectedSlice] = useState<string | null>(null);
+  const data = selectedSlice
+    ? pieData.find(({ name }) => name === selectedSlice)?.subData
+    : pieData;
 
-  if (width < 10) return null;
+  const onClickDatum = useCallback<(d: PieArcDatum<PieData>) => void>(
+    ({ data: { name } }) => {
+      const hasSubData = !!pieData.find((d) => d.name === name)?.subData;
+      if (!selectedSlice && hasSubData) {
+        setSelectedSlice(name);
+      } else {
+        setSelectedSlice(null);
+      }
+    },
+    [pieData, selectedSlice]
+  );
+
+  const getDataColor = useCallback<(d: PieArcDatum<PieData>) => string>(
+    ({ data: { name } }) => {
+      if (selectedSlice) {
+        return getSubDataFrequencyColor(name);
+      }
+      return getDataFrequencyColor(name);
+    },
+    [selectedSlice]
+  );
 
   const innerWidth = width - margin.left - margin.right;
   const innerHeight = height - margin.top - margin.bottom;
@@ -47,47 +108,40 @@ export const PieChart: React.FunctionComponent<PieProps> = ({
   const donutThickness = 50;
 
   return (
-    <svg width={width} height={height}>
-      <rect
-        rx={14}
-        width={width}
-        height={height}
-        fill="url('#visx-pie-gradient')"
-      />
-      <Group top={centerY + margin.top} left={centerX + margin.left}>
-        <Pie
-          data={
-            selectedAlphabetLetter
-              ? letters.filter(
-                  ({ letter }) => letter === selectedAlphabetLetter
-                )
-              : letters
-          }
-          pieValue={frequency}
-          pieSortValues={() => -1}
-          outerRadius={radius - donutThickness * 1.3}
-        >
-          {(pie) => (
-            <AnimatedPie<LetterFrequency>
-              {...pie}
-              animate={animate}
-              getKey={({ data: { letter } }) => letter}
-              onClickDatum={({ data: { letter } }) =>
-                animate &&
-                setSelectedAlphabetLetter(
-                  selectedAlphabetLetter && selectedAlphabetLetter === letter
-                    ? null
-                    : letter
-                )
-              }
-              getColor={({ data: { letter } }) =>
-                getLetterFrequencyColor(letter)
-              }
-            />
-          )}
-        </Pie>
-      </Group>
-    </svg>
+    <div className={tw("w-full", "h-full")} ref={ref as any}>
+      <svg width={width} height={height}>
+        <rect
+          rx={4}
+          width={width}
+          height={height}
+          fill={`url(#${GRADIENT_ID})`}
+        />
+        <LinearGradient
+          id={GRADIENT_ID}
+          from={background}
+          to={background2}
+          rotate={45}
+        />
+        <Group top={centerY + margin.top} left={centerX + margin.left}>
+          <Pie
+            data={data}
+            pieValue={frequency}
+            pieSortValues={() => -1}
+            outerRadius={radius - donutThickness * 1.3}
+          >
+            {(pie) => (
+              <AnimatedPie<PieData>
+                {...pie}
+                animate={animate}
+                getKey={({ data: { name } }) => name}
+                onClickDatum={onClickDatum}
+                getColor={getDataColor}
+              />
+            )}
+          </Pie>
+        </Group>
+      </svg>
+    </div>
   );
 };
 
