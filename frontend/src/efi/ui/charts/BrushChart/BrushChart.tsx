@@ -6,7 +6,7 @@ import appleStock, { AppleStock } from "@visx/mock-data/lib/mocks/appleStock";
 import { PatternLines } from "@visx/pattern";
 import { scaleLinear, scaleTime } from "@visx/scale";
 import { extent, max } from "d3-array";
-import AreaChart from "efi/ui/base/AreaChart/AreaChart";
+import AreaChart from "efi/ui/charts/AreaChart/AreaChart";
 import React, {
   FunctionComponent,
   useCallback,

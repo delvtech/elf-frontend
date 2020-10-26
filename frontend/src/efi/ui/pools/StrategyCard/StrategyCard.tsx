@@ -1,6 +1,6 @@
 import { Card, H3, Intent, Spinner, Tag } from "@blueprintjs/core";
 import { Strategy } from "efi/pools/strategy";
-import { PieChart } from "efi/ui/base/PieChart/PieChart";
+import { PieChart } from "efi/ui/charts/PieChart/PieChart";
 import { useElfContractSymbol } from "efi/ui/contracts/useElfContract";
 import { TransactionForm } from "efi/ui/crypto/TransactionForm/TransactionForm";
 import React, { FC } from "react";

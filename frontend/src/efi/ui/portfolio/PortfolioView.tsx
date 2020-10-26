@@ -1,6 +1,6 @@
 import { RouteComponentProps } from "@reach/router";
-import BrushChart from "efi/ui/base/BrushChart/BrushChart";
-import { PieChart } from "efi/ui/base/PieChart/PieChart";
+import BrushChart from "efi/ui/charts/BrushChart/BrushChart";
+import { PieChart } from "efi/ui/charts/PieChart/PieChart";
 import { useWallet } from "efi/ui/wallets/hooks/useWallet";
 import { MissingWalletEmptyState } from "efi/ui/wallets/MissingWalletEmptyState/MissingWalletEmptyState";
 import WalletSummary from "efi/ui/wallets/WalletSummary";
