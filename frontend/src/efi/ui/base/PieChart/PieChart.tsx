@@ -3,7 +3,6 @@ import { LinearGradient } from "@visx/gradient";
 import { Group } from "@visx/group";
 import { scaleOrdinal } from "@visx/scale";
 import Pie, { PieArcDatum, ProvidedProps } from "@visx/shape/lib/shapes/Pie";
-import classNames from "classnames";
 import React, { Fragment, useCallback, useState } from "react";
 import { animated, interpolate, useTransition } from "react-spring";
 import { useMeasure } from "react-use";
