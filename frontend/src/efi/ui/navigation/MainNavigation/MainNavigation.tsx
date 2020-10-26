@@ -37,36 +37,44 @@ export const MainNavigation: FC<MainNavigationProps> = () => {
   return (
     <Fragment>
       {/* Mobile/Tablet */}
-      <Navbar fixedToTop className={tw("lg:hidden")}>
-        <NavbarGroup>
-          <NavbarHeading>
-            <AnchorButton minimal outlined>
-              <strong>Element.fi</strong>
-            </AnchorButton>
-          </NavbarHeading>
-        </NavbarGroup>
-        <NavbarGroup align={Alignment.RIGHT}>
-          <Button
-            minimal
-            outlined
-            icon={IconNames.LOG_OUT}
-            onClick={deactivate}
-          />
-        </NavbarGroup>
-        <NavbarGroup className={tw("sm:pr-2")} align={Alignment.RIGHT}>
-          <Tabs
-            id="primary-nav-mobile"
-            className={classNames(styles.smTabs)}
-            selectedTabId={activeTab}
-            onChange={changeTab}
-          >
-            <Tab id={Navigation.HOME} title={t`Home`} />
-            <Tab id={Navigation.PORTFOLIO} title={t`Portfolio`} />
-            <Tab id={Navigation.INVEST} title={t`Invest`} />
-            <Tab id={Navigation.SWAP} title={t`Swap`} />
-          </Tabs>
-        </NavbarGroup>
-      </Navbar>
+      <div
+        className={tw("lg:hidden", "flex", "flex-col", "h-24", "justify-end")}
+      >
+        <Navbar fixedToTop>
+          <NavbarGroup>
+            <NavbarHeading>
+              <AnchorButton minimal outlined>
+                <strong>Element.fi</strong>
+              </AnchorButton>
+            </NavbarHeading>
+          </NavbarGroup>
+          <NavbarGroup align={Alignment.RIGHT}>
+            <Button
+              minimal
+              outlined
+              icon={IconNames.LOG_OUT}
+              onClick={deactivate}
+            />
+          </NavbarGroup>
+        </Navbar>
+        <div
+          className={tw("lg:hidden", "flex", "w-full", "px-4", "justify-end")}
+        >
+          <NavbarGroup className={tw("sm:pr-2")} align={Alignment.RIGHT}>
+            <Tabs
+              id="primary-nav-mobile"
+              className={classNames(styles.smTabs)}
+              selectedTabId={activeTab}
+              onChange={changeTab}
+            >
+              <Tab id={Navigation.HOME} title={t`Home`} />
+              <Tab id={Navigation.PORTFOLIO} title={t`Portfolio`} />
+              <Tab id={Navigation.INVEST} title={t`Invest`} />
+              <Tab id={Navigation.SWAP} title={t`Swap`} />
+            </Tabs>
+          </NavbarGroup>
+        </div>
+      </div>
 
       {/* Desktop */}
       <div
