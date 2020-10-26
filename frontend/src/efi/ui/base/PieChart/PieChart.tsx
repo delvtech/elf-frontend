@@ -19,9 +19,9 @@ export interface PieData {
   name: string;
 
   /**
-   * Any positive value, PieChart will figure out how much of the pie chart this should occupy
+   * Any positive numeric value, PieChart will figure out how much of the pie chart this should occupy
    */
-  frequency: number;
+  value: number;
 
   subData?: PieData[];
 }
@@ -29,35 +29,33 @@ export interface PieData {
 const tokens: PieData[] = [
   {
     name: "Eth",
-    frequency: 100,
+    value: 100,
   },
-  { name: "DAI", frequency: 50 },
+  { name: "DAI", value: 50 },
   {
     name: "ELF-1",
-    frequency: 80,
+    value: 80,
     subData: [
-      { name: "yDAI", frequency: 100 },
-      { name: "yUSDC", frequency: 300 },
-      { name: "yUSDT", frequency: 150 },
-      { name: "yTUSD", frequency: 150 },
+      { name: "yDAI", value: 100 },
+      { name: "yUSDC", value: 300 },
+      { name: "yUSDT", value: 150 },
+      { name: "yTUSD", value: 150 },
     ],
   },
 ];
 
 // accessor functions
-const frequency = (d: PieData) => d.frequency;
+const getValue = (d: PieData) => d.value;
 
 // color scales
-const getDataFrequencyColor = scaleOrdinal({
+const getDatumColor = scaleOrdinal({
   domain: tokens.map((token) => token.name),
-  // blueprint color scale
-  range: ["#97F3EB", "#78D5CC", "#58B8AE", "#369C91", "#008075"],
+  range: [Colors.BLUE1, Colors.BLUE2, Colors.BLUE3, Colors.BLUE4, Colors.BLUE5],
 });
 
-const getSubDataFrequencyColor = scaleOrdinal({
+const getSubDatumColor = scaleOrdinal({
   domain: tokens[2]?.subData?.map((token) => token.name),
-  // blueprint color scale
-  range: ["#FFB3D0", "#EB91AF", "#D56F90", "#BF4B72", "#A82255"],
+  range: [Colors.ROSE1, Colors.ROSE2, Colors.ROSE3, Colors.ROSE4, Colors.ROSE5],
 });
 
 const defaultMargin = { top: 20, right: 20, bottom: 20, left: 20 };
@@ -97,9 +95,9 @@ export const PieChart: React.FunctionComponent<PieProps> = (props) => {
   const getDataColor = useCallback<(d: PieArcDatum<PieData>) => string>(
     ({ data: { name } }) => {
       if (selectedSlice) {
-        return getSubDataFrequencyColor(name);
+        return getSubDatumColor(name);
       }
-      return getDataFrequencyColor(name);
+      return getDatumColor(name);
     },
     [selectedSlice]
   );
@@ -133,7 +131,7 @@ export const PieChart: React.FunctionComponent<PieProps> = (props) => {
         <Group top={centerY + margin.top} left={centerX + margin.left}>
           <Pie
             data={data}
-            pieValue={frequency}
+            pieValue={getValue}
             pieSortValues={() => -1}
             outerRadius={radius - donutThickness * 1.3}
           >
