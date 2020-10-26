@@ -18,4 +18,6 @@ export const CryptoIcon: Record<keyof typeof CryptoSymbol, string> = {
   YUSDC: usdcLogo,
   YUSDT: usdtLogo,
   ELF_LOW_RISK_POOL_TOKEN: efiLogo,
+  ELF_MEDIUM_RISK_POOL_TOKEN: efiLogo,
+  ELF_HIGH_RISK_POOL_TOKEN: efiLogo,
 };

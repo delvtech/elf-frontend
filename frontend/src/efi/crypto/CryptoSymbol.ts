@@ -46,4 +46,14 @@ export enum CryptoSymbol {
    * Element Low Risk Pool Token
    */
   ELF_LOW_RISK_POOL_TOKEN = "ELF-L",
+
+  /**
+   * Element Medium Risk Pool Token
+   */
+  ELF_MEDIUM_RISK_POOL_TOKEN = "ELF-M",
+
+  /**
+   * Element High Risk Pool Token
+   */
+  ELF_HIGH_RISK_POOL_TOKEN = "ELF-H",
 }
