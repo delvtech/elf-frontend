@@ -3,6 +3,7 @@ import { RouteComponentProps } from "@reach/router";
 import { ElfStrategyHighRisk } from "efi/pools/highRisk";
 import { ElfStrategyLowRisk } from "efi/pools/lowRisk";
 import { ElfStrategyMediumRisk } from "efi/pools/mediumRisk";
+import { InvestBreadcrumb } from "efi/ui/invest/InvestBreadcrumb/InvestBreadcrumb";
 import { StrategyPreviewCard } from "efi/ui/pools/StrategeyPreviewCard/StrategyPreviewCard";
 import { StrategyCard } from "efi/ui/pools/StrategyCard/StrategyCard";
 import { useWallet } from "efi/ui/wallets/hooks/useWallet";
@@ -71,6 +72,9 @@ export const InvestView: FC<InvestViewProps> = () => {
   if (!selectedStrategy) {
     return (
       <div className={investViewClassName}>
+        <div className={tw("flex", "w-full")}>
+          <InvestBreadcrumb />
+        </div>
         <div className={previewCardContainerClassName}>
           {availableStrategies.map((strategy) => {
             return (
@@ -88,6 +92,9 @@ export const InvestView: FC<InvestViewProps> = () => {
 
   return (
     <div className={investViewClassName}>
+      <div className={tw("flex", "w-full")}>
+        <InvestBreadcrumb />
+      </div>
       <div className={strategyCardContainerClassName}>
         <Button
           minimal
