@@ -34,15 +34,14 @@ function useBreadcrumbItems(
       availableStrategies.map((strategy) => [strategy.id, strategy])
     );
 
-    const newItems: IBreadcrumbProps[] = [
-      // Always start w/ the root Invest crumb
-      {
-        onClick: () => setActiveStrategy(undefined),
-        text: t`Invest`,
-      },
-    ];
+    const newItems: IBreadcrumbProps[] = [];
 
     if (activeStrategy) {
+      // Only show the root breadcrumb if we're deeper than the root
+      newItems.push({
+        onClick: () => setActiveStrategy(undefined),
+        text: t`Invest`,
+      });
       newItems.push({ text: strategiesById[activeStrategy].name });
     }
 
