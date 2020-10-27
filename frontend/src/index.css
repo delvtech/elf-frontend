@@ -34,6 +34,11 @@ code {
    */
   --bp3-navbar-height: 50px;
 
+  /**
+   *  This is the color of the <Card> component's border.
+   */
+  --bp3-card-border-color: #d4d6d9;
+
   /*
    * Taken from Blueprint, this is the color of the dark mode app background.
    * If using the blueprint Colors module, this is equivalent to
