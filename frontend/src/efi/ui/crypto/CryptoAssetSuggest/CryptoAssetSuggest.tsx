@@ -11,6 +11,7 @@ import { t } from "ttag";
 import { useCryptoAssetTagInput } from "./useCryptoAssetTagInput";
 import { useCryptoAssetOmnibar } from "./useCryptoAssetOmnibar";
 import { CryptoAssetSuggestItem } from "./CryptoAssetSuggestItem";
+import { useDarkMode } from "efi/ui/base/useDarkMode/useDarkMode";
 
 interface CryptoAssetSuggestProps {
   onSelect: (cryptoAsset: CryptoAssetInfo) => void;
@@ -22,9 +23,6 @@ interface CryptoAssetSuggestProps {
   omnibarPlaceholder?: string;
 }
 
-const overlayProps: Partial<IOverlayProps> = {
-  className: classNames(tw("flex", "justify-center"), Classes.DARK),
-};
 const omnibarClassName = tw("w-4/5", "lg:w-1/2", "left-auto");
 export const CryptoAssetSuggest: FC<CryptoAssetSuggestProps> = ({
   activeCryptoAsset,
@@ -34,6 +32,13 @@ export const CryptoAssetSuggest: FC<CryptoAssetSuggestProps> = ({
   placeholder = t`Choose an asset`,
   omnibarPlaceholder = t`Choose an asset`,
 }) => {
+  const { isDarkMode } = useDarkMode();
+
+  const overlayProps: Partial<IOverlayProps> = {
+    className: classNames(tw("flex", "justify-center"), {
+      [Classes.DARK]: isDarkMode,
+    }),
+  };
   const {
     isOmnibarOpen,
     closeOmnibar,
