@@ -7,3 +7,15 @@
   width: 100%;
   gap: 1rem;
 }
+
+.sideBar {
+  background: white;
+  border-right-color: var(--bp3-card-border-color);
+  border-right-width: 1px;
+}
+
+.sideBarDark {
+  background: var(--bp3-dark-navbar-bg-color);
+  color: var(--bp3-dark-navbar-color);
+  border-right: none;
+}

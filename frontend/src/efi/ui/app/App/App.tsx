@@ -14,12 +14,7 @@ import { SwapView } from "efi/ui/swaps/SwapView/SwapView";
 import { useSyncWithInjectedEthereum } from "efi/ui/wallets/hooks/useSyncWithInjectedEthereum";
 
 import styles from "./App.module.css";
-
-const appClassName = classNames(
-  styles.app,
-  Classes.DARK,
-  tw("flex", "flex-col", "lg:flex-row", "w-full", "h-full", "overflow-auto")
-);
+import { useDarkMode } from "efi/ui/base/useDarkMode/useDarkMode";
 
 const contentClassName = tw(
   "flex-1",
@@ -35,6 +30,14 @@ const contentClassName = tw(
 interface AppProps {}
 
 const App: FC<AppProps> = () => {
+  const { isDarkMode } = useDarkMode();
+
+  const appClassName = classNames(
+    styles.app,
+    { [styles.appDark]: isDarkMode, [Classes.DARK]: isDarkMode },
+    tw("flex", "flex-col", "lg:flex-row", "w-full", "h-full", "overflow-auto")
+  );
+
   // Do this at the top in one place so we don't have multiple callers trying to
   // set event handlers. TODO: clean this up so that it's more of a portable
   // singleton and can live in useWallet and be called multiple times safely
