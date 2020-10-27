@@ -92,6 +92,7 @@ export const StrategyCard: FC<StrategyCardProps> = ({
           cryptoSymbol={stakingAsset}
           cryptoBalance="3.00000"
           buttonLabel={t`Deposit ${stakingAsset}`}
+          onTransaction={() => {}}
         />
 
         {/* Withdraw */}
@@ -100,6 +101,7 @@ export const StrategyCard: FC<StrategyCardProps> = ({
           cryptoSymbol={stakingAsset}
           cryptoBalance="12.21943"
           buttonLabel={t`Withdraw ${stakingAsset}`}
+          onTransaction={() => {}}
         />
       </div>
     </Card>
