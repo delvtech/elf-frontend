@@ -6,6 +6,7 @@ import {
   Navbar,
   NavbarGroup,
   NavbarHeading,
+  Switch,
   Tab,
   Tabs,
 } from "@blueprintjs/core";
@@ -13,20 +14,29 @@ import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
 import classNames from "classnames";
+import React, { FC, Fragment, useCallback } from "react";
+import tw from "tailwindcss-classnames";
+import { t } from "ttag";
+
+import { useDarkMode } from "efi/ui/base/useDarkMode/useDarkMode";
 import { useNavigation } from "efi/ui/navigation/hooks/useTab";
 import { Navigation } from "efi/ui/navigation/navigation";
 import { useWallet } from "efi/ui/wallets/hooks/useWallet";
 import { injectedConnector } from "efi/wallets/connectors";
-import React, { Fragment, useCallback } from "react";
-import { FC } from "react";
-import tw from "tailwindcss-classnames";
-import { t } from "ttag";
+
 import styles from "./MainNavigation.module.css";
 
 interface MainNavigationProps {}
 export const MainNavigation: FC<MainNavigationProps> = () => {
   const { account } = useWallet();
   const { activeTab, changeTab } = useNavigation();
+
+  const { isDarkMode, setDarkMode } = useDarkMode();
+
+  const onDarkModeChange = useCallback(
+    (event) => setDarkMode((event.target as HTMLInputElement).checked),
+    [setDarkMode]
+  );
 
   const { deactivate, activate } = useWeb3React<Web3Provider>();
   const connectToInjectedWallet = useCallback(
@@ -49,11 +59,15 @@ export const MainNavigation: FC<MainNavigationProps> = () => {
             </NavbarHeading>
           </NavbarGroup>
           <NavbarGroup align={Alignment.RIGHT}>
-            <Button
-              minimal
-              outlined
-              icon={IconNames.LOG_OUT}
-              onClick={deactivate}
+            <Button minimal icon={IconNames.LOG_OUT} onClick={deactivate} />
+          </NavbarGroup>
+          <NavbarGroup align={Alignment.RIGHT}>
+            <Switch
+              className={tw("m-0")}
+              checked={isDarkMode}
+              onChange={onDarkModeChange}
+              innerLabel={t`Light mode`}
+              innerLabelChecked={t`Dark mode`}
             />
           </NavbarGroup>
         </Navbar>
@@ -78,19 +92,19 @@ export const MainNavigation: FC<MainNavigationProps> = () => {
 
       {/* Desktop */}
       <div
-        className={tw(
-          "hidden",
-          "lg:flex",
-          "flex-col",
-          "w-1/4",
-          "h-full",
-          "flex-shrink-0",
-          "pt-10"
+        className={classNames(
+          styles.sideBar,
+          { [styles.sideBarDark]: isDarkMode },
+          tw(
+            "hidden",
+            "lg:flex",
+            "flex-col",
+            "w-1/4",
+            "h-full",
+            "flex-shrink-0",
+            "pt-10"
+          )
         )}
-        style={{
-          background: "var(--bp3-dark-navbar-bg-color)",
-          color: "var(--bp3-dark-navbar-color)",
-        }}
       >
         <div
           className={tw(
@@ -109,7 +123,15 @@ export const MainNavigation: FC<MainNavigationProps> = () => {
             Element.fi
           </span>
         </div>
-        <div className={tw("flex", "flex-col", "h-full", "justify-between")}>
+        <div
+          className={tw(
+            "flex",
+            "flex-col",
+            "h-full",
+            "justify-between",
+            "pb-8"
+          )}
+        >
           <Tabs
             id="primary-nav-desktop"
             animate={
@@ -129,12 +151,30 @@ export const MainNavigation: FC<MainNavigationProps> = () => {
             <Tab id={Navigation.SWAP} title={t`Swap`} />
           </Tabs>
 
-          <ButtonGroup large vertical minimal className={tw("pb-10")}>
-            <Button onClick={account ? deactivate : connectToInjectedWallet}>
-              {account ? t`Disconnect wallet` : t`Connect your wallet`}
-            </Button>
-            <Button>{t`Resources`}</Button>
-          </ButtonGroup>
+          <div
+            className={tw(
+              "flex",
+              "flex-col",
+              "space-y-12",
+              "w-full",
+              "items-center"
+            )}
+          >
+            <ButtonGroup large vertical minimal className={tw("w-full")}>
+              <Button onClick={account ? deactivate : connectToInjectedWallet}>
+                {account ? t`Disconnect wallet` : t`Connect your wallet`}
+              </Button>
+              <Button>{t`Resources`}</Button>
+            </ButtonGroup>
+
+            <Switch
+              large
+              checked={isDarkMode}
+              onChange={onDarkModeChange}
+              innerLabel={t`Light mode`}
+              innerLabelChecked={t`Dark mode`}
+            />
+          </div>
         </div>
       </div>
     </Fragment>
