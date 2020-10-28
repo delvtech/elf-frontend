@@ -2,12 +2,16 @@ import { Button, InputGroup, Intent, Tag } from "@blueprintjs/core";
 import { CryptoName } from "efi/crypto/CryptoName";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { CryptoIcon } from "efi/ui/crypto/CryptoIcon";
-import React, { ChangeEvent, FC, useCallback, useState } from "react";
+import React, { FC, useCallback } from "react";
 import tw from "tailwindcss-classnames";
 import { t } from "ttag";
 import styles from "efi/ui/crypto/TransactionForm/TransactionForm.module.css";
 import { BigNumber } from "ethers";
 import { parseEther, formatEther } from "ethers/lib/utils";
+import {
+  NumericInputOptions,
+  useNumericInput,
+} from "efi/ui/base/useBoolean/useNumericInput/useNumericInput";
 
 interface TransactionFormProps {
   inputLabel: string;
@@ -17,6 +21,14 @@ interface TransactionFormProps {
   onTransaction: (amount: BigNumber) => void;
 }
 
+const numericInputOptions: NumericInputOptions = {
+  min: 0,
+  /**
+   * limit precision to prevent BigNumber overflows
+   */
+  precision: 18,
+};
+
 export const TransactionForm: FC<TransactionFormProps> = ({
   inputLabel,
   cryptoSymbol,
@@ -24,14 +36,9 @@ export const TransactionForm: FC<TransactionFormProps> = ({
   buttonLabel,
   onTransaction,
 }) => {
-  const [valueString, setValue] = useState<string | undefined>();
-  const value = valueString ? parseEther(valueString) : undefined;
+  const [stringValue, onChange] = useNumericInput(numericInputOptions);
+  const value = stringValue ? parseEther(stringValue) : undefined;
   const validValue = value ? value.lte(cryptoBalance) : true;
-
-  const updateValue = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    const inputValue = event.target.value as string;
-    setValue(inputValue);
-  }, []);
 
   // TODO: make this component handle any type of crypto.  We'll formalize this into a function that
   // does the proper operations depending on the asset.  This is fine for V0.
@@ -51,10 +58,12 @@ export const TransactionForm: FC<TransactionFormProps> = ({
       <span>{inputLabel}</span>
       <div className={tw("flex", "flex-col", "space-y-2")}>
         <InputGroup
-          onChange={updateValue}
+          onChange={onChange}
+          value={stringValue}
           className={styles.depositInput}
           large
           intent={validValue ? undefined : Intent.DANGER}
+          pattern="^-?[0-9]\d*\.?\d*$"
           rightElement={
             <Tag large minimal>
               <span>{cryptoSymbol}</span>
