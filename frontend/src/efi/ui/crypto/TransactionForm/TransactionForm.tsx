@@ -6,13 +6,15 @@ import React, { FC, useCallback, useState } from "react";
 import tw from "tailwindcss-classnames";
 import { t } from "ttag";
 import styles from "efi/ui/crypto/TransactionForm/TransactionForm.module.css";
+import { BigNumber } from "ethers";
+import { parseEther, formatEther } from "ethers/lib/utils";
 
 interface TransactionFormProps {
   inputLabel: string;
   buttonLabel: string;
   cryptoSymbol: CryptoSymbol;
-  cryptoBalance: string;
-  onTransaction: (amount: number) => void;
+  cryptoBalance: BigNumber;
+  onTransaction: (amount: BigNumber) => void;
 }
 
 export const TransactionForm: FC<TransactionFormProps> = ({
@@ -23,19 +25,29 @@ export const TransactionForm: FC<TransactionFormProps> = ({
   onTransaction,
 }) => {
   const [value, setValue] = useState<string | undefined>(undefined);
+  const valueNumber = Number(value);
   const updateValue = useCallback((event) => {
-    const inputValue = event.target.value;
+    const inputValue = event.target.value as string;
     setValue(inputValue);
   }, []);
 
+  // TODO: make this component handle any type of crypto.  We'll formalize this into a function that
+  // does the proper operations depending on the asset.  This is fine for V0.
+  const ethBalance = formatEther(cryptoBalance);
+  const ethBalanceNumber = Number(ethBalance);
+
   let validValue = true;
-  if (value && cryptoBalance) {
-    validValue = Number(value) <= Number(cryptoBalance);
+  if (value && ethBalanceNumber) {
+    validValue = valueNumber <= ethBalanceNumber;
   }
 
   const onClick = useCallback(() => {
     if (validValue && onTransaction) {
-      onTransaction(Number(value));
+      if (!value) {
+        return;
+      }
+      const wei = parseEther(value);
+      onTransaction(wei);
     }
   }, [onTransaction, validValue, value]);
 
@@ -67,7 +79,7 @@ export const TransactionForm: FC<TransactionFormProps> = ({
           className={tw("text-xs", "text-right", {
             "text-red-500": !validValue,
           })}
-        >{t`Available: ${cryptoBalance} ${cryptoSymbol}`}</span>
+        >{t`Available: ${ethBalance} ${cryptoSymbol}`}</span>
       </div>
       <Button
         disabled={!value || !validValue}

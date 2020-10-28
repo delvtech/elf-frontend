@@ -1,9 +1,14 @@
 import { Card, H3, Intent, Spinner, Tag } from "@blueprintjs/core";
 import { Strategy } from "efi/pools/strategy";
 import { PieChart } from "efi/ui/charts/PieChart/PieChart";
-import { useElfContractSymbol } from "efi/ui/contracts/useElfContract";
+import {
+  useElfContractDepositEth,
+  useElfContractSymbol,
+} from "efi/ui/contracts/useElfContract";
 import { TransactionForm } from "efi/ui/crypto/TransactionForm/TransactionForm";
-import React, { FC } from "react";
+import { BigNumber } from "ethers";
+import { parseEther } from "ethers/lib/utils";
+import React, { FC, useCallback } from "react";
 import tw from "tailwindcss-classnames";
 import { t } from "ttag";
 
@@ -15,6 +20,17 @@ export const StrategyCard: FC<StrategyCardProps> = ({
   strategy: { name, heldAssets, stakingAsset },
 }) => {
   const { data: strategyCryptoSymbol } = useElfContractSymbol();
+  const [depositEth] = useElfContractDepositEth();
+
+  // TODO: add some checks here to make sure that the balance is greater than the amount depositing.
+  //  Later we'll also pass the asset and determine which contract to call.
+  const onDeposit = useCallback(
+    (amount: BigNumber) => {
+      depositEth(amount);
+    },
+    [depositEth]
+  );
+
   return (
     <Card className={tw("flex", "flex-col")}>
       <div className={tw("flex", "mb-8", "items-center", "w-full")}>
@@ -90,16 +106,16 @@ export const StrategyCard: FC<StrategyCardProps> = ({
         <TransactionForm
           inputLabel={t`Deposit`}
           cryptoSymbol={stakingAsset}
-          cryptoBalance="3.00000"
+          cryptoBalance={parseEther("3.00000")}
           buttonLabel={t`Deposit ${stakingAsset}`}
-          onTransaction={() => {}}
+          onTransaction={onDeposit}
         />
 
         {/* Withdraw */}
         <TransactionForm
           inputLabel={t`Withdraw`}
           cryptoSymbol={stakingAsset}
-          cryptoBalance="12.21943"
+          cryptoBalance={parseEther("12.21943")}
           buttonLabel={t`Withdraw ${stakingAsset}`}
           onTransaction={() => {}}
         />
