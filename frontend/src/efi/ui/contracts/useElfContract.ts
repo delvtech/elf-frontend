@@ -38,7 +38,8 @@ export function useElfContractDepositEth() {
       if (!library) {
         return new Promise(() => {});
       }
-      return postDepositEth(library, amount);
+      const signer = library.getSigner();
+      return postDepositEth(signer, amount);
     },
     {
       onSuccess: (data, variables) => {

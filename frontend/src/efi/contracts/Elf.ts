@@ -1,7 +1,12 @@
-import { providers, Contract, ContractTransaction, BigNumber } from "ethers";
+import {
+  providers,
+  Contract,
+  ContractTransaction,
+  BigNumber,
+  Signer,
+} from "ethers";
 import { Elf } from "elf-contracts/types/Elf";
 import elfAbi from "elf-contracts/contracts/Elf.json";
-import { Web3Provider } from "@ethersproject/providers";
 
 // TODO: Get this from the environment
 const RPC_HOST = "http://127.0.0.1:8545";
@@ -33,10 +38,9 @@ export async function fetchDecimals(): Promise<number> {
 }
 
 export async function postDepositEth(
-  provider: Web3Provider,
+  signer: Signer,
   amount: BigNumber
 ): Promise<ContractTransaction> {
-  const signer = provider.getSigner();
   const elfWithSigner = elf.connect(signer);
   const result = await elfWithSigner.functions.depositETH({ value: amount });
   return result;

@@ -2,7 +2,7 @@ import { Button, InputGroup, Intent, Tag } from "@blueprintjs/core";
 import { CryptoName } from "efi/crypto/CryptoName";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { CryptoIcon } from "efi/ui/crypto/CryptoIcon";
-import React, { FC, useCallback, useState } from "react";
+import React, { ChangeEvent, FC, useCallback, useState } from "react";
 import tw from "tailwindcss-classnames";
 import { t } from "ttag";
 import styles from "efi/ui/crypto/TransactionForm/TransactionForm.module.css";
@@ -24,9 +24,11 @@ export const TransactionForm: FC<TransactionFormProps> = ({
   buttonLabel,
   onTransaction,
 }) => {
-  const [value, setValue] = useState<string | undefined>(undefined);
-  const valueNumber = Number(value);
-  const updateValue = useCallback((event) => {
+  const [valueString, setValue] = useState<string | undefined>();
+  const value = valueString ? parseEther(valueString) : undefined;
+  const validValue = value ? value.lte(cryptoBalance) : true;
+
+  const updateValue = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     const inputValue = event.target.value as string;
     setValue(inputValue);
   }, []);
@@ -34,20 +36,13 @@ export const TransactionForm: FC<TransactionFormProps> = ({
   // TODO: make this component handle any type of crypto.  We'll formalize this into a function that
   // does the proper operations depending on the asset.  This is fine for V0.
   const ethBalance = formatEther(cryptoBalance);
-  const ethBalanceNumber = Number(ethBalance);
-
-  let validValue = true;
-  if (value && ethBalanceNumber) {
-    validValue = valueNumber <= ethBalanceNumber;
-  }
 
   const onClick = useCallback(() => {
     if (validValue && onTransaction) {
       if (!value) {
         return;
       }
-      const wei = parseEther(value);
-      onTransaction(wei);
+      onTransaction(value);
     }
   }, [onTransaction, validValue, value]);
 
