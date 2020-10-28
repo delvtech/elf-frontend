@@ -5,6 +5,7 @@ import {
   Navbar,
   NavbarGroup,
   NavbarHeading,
+  Popover,
   Switch,
   Tab,
   Tabs,
@@ -45,7 +46,7 @@ export const TopbarNavigation: FC<TopbarNavigationProps> = ({
         "justify-end"
       )}
     >
-      <Navbar fixedToTop>
+      <Navbar fixedToTop className={tw("flex")}>
         <NavbarGroup>
           <NavbarHeading>
             <AnchorButton minimal outlined>
@@ -53,14 +54,14 @@ export const TopbarNavigation: FC<TopbarNavigationProps> = ({
             </AnchorButton>
           </NavbarHeading>
         </NavbarGroup>
-        <NavbarGroup align={Alignment.CENTER}>
-          <WalletSummary />
+
+        <NavbarGroup className={tw("flex-1", "justify-center")}>
+          <Popover minimal content={<WalletSummary />}>
+            <Button minimal outlined text="Wallet" />
+          </Popover>
         </NavbarGroup>
+
         <NavbarGroup align={Alignment.RIGHT}>
-          <Button minimal icon={IconNames.LOG_OUT} onClick={deactivate} />
-        </NavbarGroup>
-        <NavbarGroup align={Alignment.RIGHT}>
-          {" "}
           <Switch
             className={tw("m-0")}
             checked={isDarkMode}
@@ -68,8 +69,10 @@ export const TopbarNavigation: FC<TopbarNavigationProps> = ({
             innerLabel={t`Light mode`}
             innerLabelChecked={t`Dark mode`}
           />
+          <Button minimal icon={IconNames.LOG_OUT} onClick={deactivate} />
         </NavbarGroup>
       </Navbar>
+
       <div className={tw("lg:hidden", "flex", "w-full", "px-4", "justify-end")}>
         <Tabs
           id="primary-nav-mobile"
