@@ -21,7 +21,7 @@ export const WalletSummary: FunctionComponent<WalletSummaryProps> = ({
     <Callout className={className}>
       <div>{t`Wallet connector: Metamask`}</div>
       <div>{t`Address: ${account}`}</div>
-      <div>{t`Balance (gwei): ${ethBalance?.toString()}`}</div>
+      <div>{t`Balance (wei): ${ethBalance?.toString()}`}</div>
       <div>{t`Eth balance: ${formatEther(ethBalance)}`}</div>
     </Callout>
   );

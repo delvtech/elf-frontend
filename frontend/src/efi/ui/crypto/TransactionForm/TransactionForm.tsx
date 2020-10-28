@@ -2,24 +2,59 @@ import { Button, InputGroup, Intent, Tag } from "@blueprintjs/core";
 import { CryptoName } from "efi/crypto/CryptoName";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { CryptoIcon } from "efi/ui/crypto/CryptoIcon";
-import React, { FC } from "react";
+import React, { ChangeEvent, FC, useCallback, useState } from "react";
 import tw from "tailwindcss-classnames";
 import { t } from "ttag";
 import styles from "efi/ui/crypto/TransactionForm/TransactionForm.module.css";
+import { BigNumber } from "ethers";
+import { parseEther, formatEther } from "ethers/lib/utils";
+
+interface TransactionFormProps {
+  inputLabel: string;
+  buttonLabel: string;
+  cryptoSymbol: CryptoSymbol;
+  cryptoBalance: BigNumber;
+  onTransaction: (amount: BigNumber) => void;
+}
 
 export const TransactionForm: FC<TransactionFormProps> = ({
   inputLabel,
   cryptoSymbol,
   cryptoBalance,
   buttonLabel,
+  onTransaction,
 }) => {
+  const [valueString, setValue] = useState<string | undefined>();
+  const value = valueString ? parseEther(valueString) : undefined;
+  const validValue = value ? value.lte(cryptoBalance) : true;
+
+  const updateValue = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+    const inputValue = event.target.value as string;
+    setValue(inputValue);
+  }, []);
+
+  // TODO: make this component handle any type of crypto.  We'll formalize this into a function that
+  // does the proper operations depending on the asset.  This is fine for V0.
+  const ethBalance = formatEther(cryptoBalance);
+
+  const onClick = useCallback(() => {
+    if (validValue && onTransaction) {
+      if (!value) {
+        return;
+      }
+      onTransaction(value);
+    }
+  }, [onTransaction, validValue, value]);
+
   return (
     <div className={tw("flex", "flex-col", "space-y-5")}>
       <span>{inputLabel}</span>
       <div className={tw("flex", "flex-col", "space-y-2")}>
         <InputGroup
+          onChange={updateValue}
           className={styles.depositInput}
           large
+          intent={validValue ? undefined : Intent.DANGER}
           rightElement={
             <Tag large minimal>
               <span>{cryptoSymbol}</span>
@@ -36,18 +71,21 @@ export const TransactionForm: FC<TransactionFormProps> = ({
           }
         />
         <span
-          className={tw("text-xs", "text-right")}
-        >{t`Available: ${cryptoBalance} ${cryptoSymbol}`}</span>
+          className={tw("text-xs", "text-right", {
+            "text-red-500": !validValue,
+          })}
+        >{t`Available: ${ethBalance} ${cryptoSymbol}`}</span>
       </div>
-      <Button minimal outlined large intent={Intent.PRIMARY}>
+      <Button
+        disabled={!value || !validValue}
+        onClick={onClick}
+        minimal
+        outlined
+        large
+        intent={Intent.PRIMARY}
+      >
         {buttonLabel}
       </Button>
     </div>
   );
 };
-interface TransactionFormProps {
-  inputLabel: string;
-  buttonLabel: string;
-  cryptoSymbol: CryptoSymbol;
-  cryptoBalance: string;
-}

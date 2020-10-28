@@ -1,10 +1,13 @@
-import { useQuery } from "react-query";
+import { queryCache, useMutation, useQuery } from "react-query";
 import {
   fetchBalance,
   fetchContractName,
   fetchDecimals,
   fetchSymbol,
+  postDepositEth,
 } from "efi/contracts/Elf";
+import { BigNumber } from "ethers";
+import { useWallet } from "efi/ui/wallets/hooks/useWallet";
 
 // Keys are arrays so that we can do things like prefix-matching to invalidate
 // queries elsewhere. We should expect to export these keys as needed.
@@ -26,4 +29,25 @@ export function useElfContractDecimals() {
 const contractGovernanceKey = ["contract", "elf", "governance"];
 export function useElfContractSymbol() {
   return useQuery(contractGovernanceKey, () => fetchSymbol());
+}
+
+export function useElfContractDepositEth() {
+  const { library } = useWallet();
+  return useMutation(
+    (amount: BigNumber) => {
+      if (!library) {
+        return new Promise(() => {});
+      }
+      const signer = library.getSigner();
+      return postDepositEth(signer, amount);
+    },
+    {
+      onSuccess: (data, variables) => {
+        queryCache.invalidateQueries(contractBalanceKey);
+      },
+      onError: (data, variables) => {
+        console.error("There was an error depositing Eth in the Elf Strategy.");
+      },
+    }
+  );
 }

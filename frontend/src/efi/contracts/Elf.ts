@@ -1,10 +1,9 @@
 import {
   providers,
-  BigNumberish,
-  Overrides,
   Contract,
   ContractTransaction,
   BigNumber,
+  Signer,
 } from "ethers";
 import { Elf } from "elf-contracts/types/Elf";
 import elfAbi from "elf-contracts/contracts/Elf.json";
@@ -38,10 +37,11 @@ export async function fetchDecimals(): Promise<number> {
   return result[0];
 }
 
-export async function postDeposit(
-  amount: BigNumberish,
-  overrides?: Overrides
+export async function postDepositEth(
+  signer: Signer,
+  amount: BigNumber
 ): Promise<ContractTransaction> {
-  const result = await elf.functions.deposit(amount, overrides);
+  const elfWithSigner = elf.connect(signer);
+  const result = await elfWithSigner.functions.depositETH({ value: amount });
   return result;
 }
