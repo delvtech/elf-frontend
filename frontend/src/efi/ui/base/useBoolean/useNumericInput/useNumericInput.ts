@@ -61,7 +61,7 @@ export const useNumericInput = (
         }
       }
 
-      if ("precision" in options && NumberIsFinite(precision)) {
+      if ("precision" in options && NumberIsInteger(precision)) {
         const placesAfterDecimal = getPlacesAfterDecimal(inputString);
         if (placesAfterDecimal > precision) {
           return;
@@ -98,4 +98,12 @@ function getPlacesAfterDecimal(stringValue: string): number {
  */
 function NumberIsFinite(num: unknown): num is number {
   return Number.isFinite(num as number);
+}
+
+/**
+ * Number.isInteger doesn't type guard to number.
+ * @param num value to test
+ */
+function NumberIsInteger(num: unknown): num is number {
+  return Number.isInteger(num as number);
 }
