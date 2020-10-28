@@ -18,6 +18,7 @@ import { t } from "ttag";
 import { Navigation } from "efi/ui/navigation/navigation";
 
 import styles from "./TopbarNavigation.module.css";
+import WalletSummary from "efi/ui/wallets/WalletSummary/WalletSummary";
 
 interface TopbarNavigationProps {
   deactivate: () => void;
@@ -52,10 +53,14 @@ export const TopbarNavigation: FC<TopbarNavigationProps> = ({
             </AnchorButton>
           </NavbarHeading>
         </NavbarGroup>
+        <NavbarGroup align={Alignment.CENTER}>
+          <WalletSummary />
+        </NavbarGroup>
         <NavbarGroup align={Alignment.RIGHT}>
           <Button minimal icon={IconNames.LOG_OUT} onClick={deactivate} />
         </NavbarGroup>
         <NavbarGroup align={Alignment.RIGHT}>
+          {" "}
           <Switch
             className={tw("m-0")}
             checked={isDarkMode}
