@@ -15,7 +15,7 @@ export interface NumericInputOptions {
    * Integer value for the number of digits allowed after the decimal.  If the user tries to enter
    * more digits than precision, the change is ignored.
    */
-  precision?: number;
+  maxPrecision?: number;
 }
 
 const validDecimalNumber = /^-?[0-9]\d*\.?\d*$/;
@@ -28,7 +28,7 @@ const validDecimalNumber = /^-?[0-9]\d*\.?\d*$/;
 export const useNumericInput = (
   options: NumericInputOptions
 ): [string | undefined, (event: ChangeEvent<HTMLInputElement>) => void] => {
-  const { min, max, precision } = options;
+  const { min, max, maxPrecision: precision } = options;
   const [stringValue, setStringValue] = useState<string | undefined>();
 
   const onChange = useCallback(
@@ -49,19 +49,19 @@ export const useNumericInput = (
         return;
       }
 
-      if ("min" in options && NumberIsFinite(min)) {
+      if ("min" in options && isFiniteNumber(min)) {
         if (inputValue < min) {
           return;
         }
       }
 
-      if ("max" in options && NumberIsFinite(max)) {
+      if ("max" in options && isFiniteNumber(max)) {
         if (inputValue > max) {
           return;
         }
       }
 
-      if ("precision" in options && NumberIsInteger(precision)) {
+      if ("precision" in options && isIntegerNumber(precision)) {
         const placesAfterDecimal = getPlacesAfterDecimal(inputString);
         if (placesAfterDecimal > precision) {
           return;
@@ -96,7 +96,7 @@ function getPlacesAfterDecimal(stringValue: string): number {
  * Number.isFinite doesn't type guard to number.
  * @param num value to test
  */
-function NumberIsFinite(num: unknown): num is number {
+function isFiniteNumber(num: unknown): num is number {
   return Number.isFinite(num as number);
 }
 
@@ -104,6 +104,6 @@ function NumberIsFinite(num: unknown): num is number {
  * Number.isInteger doesn't type guard to number.
  * @param num value to test
  */
-function NumberIsInteger(num: unknown): num is number {
+function isIntegerNumber(num: unknown): num is number {
   return Number.isInteger(num as number);
 }

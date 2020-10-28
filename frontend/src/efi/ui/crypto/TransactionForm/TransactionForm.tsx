@@ -26,7 +26,7 @@ const numericInputOptions: NumericInputOptions = {
   /**
    * limit precision to prevent BigNumber overflows
    */
-  precision: 18,
+  maxPrecision: 18,
 };
 
 export const TransactionForm: FC<TransactionFormProps> = ({
@@ -63,7 +63,6 @@ export const TransactionForm: FC<TransactionFormProps> = ({
           className={styles.depositInput}
           large
           intent={validValue ? undefined : Intent.DANGER}
-          pattern="^-?[0-9]\d*\.?\d*$"
           rightElement={
             <Tag large minimal>
               <span>{cryptoSymbol}</span>
