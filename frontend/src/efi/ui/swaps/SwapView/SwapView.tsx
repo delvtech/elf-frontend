@@ -2,7 +2,6 @@ import { RouteComponentProps } from "@reach/router";
 import { SimpleCryptoAssetFilter } from "efi/ui/swaps/SimpleCryptoAssetFilter/SimpleCryptoAssetFilter";
 import { useWallet } from "efi/ui/wallets/hooks/useWallet";
 import { MissingWalletEmptyState } from "efi/ui/wallets/MissingWalletEmptyState/MissingWalletEmptyState";
-import WalletSummary from "efi/ui/wallets/WalletSummary";
 import React, { FC } from "react";
 import tw from "tailwindcss-classnames";
 import { t } from "ttag";
@@ -26,7 +25,6 @@ export const SwapView: FC<SwapViewProps> = () => {
         "md:items-center"
       )}
     >
-      <WalletSummary />
       <div
         className={tw(
           "flex",

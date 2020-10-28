@@ -7,6 +7,7 @@ import { t } from "ttag";
 import { Navigation } from "efi/ui/navigation/navigation";
 
 import styles from "./SidebarNavigation.module.css";
+import WalletSummary from "efi/ui/wallets/WalletSummary/WalletSummary";
 
 interface SidebarNavigationProps {
   isDarkMode: boolean;
@@ -80,6 +81,8 @@ export const SidebarNavigation: FC<SidebarNavigationProps> = ({
           <Tab id={Navigation.INVEST} title={t`Invest`} />
           <Tab id={Navigation.SWAP} title={t`Swap`} />
         </Tabs>
+
+        <WalletSummary />
 
         <div
           className={tw(

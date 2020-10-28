@@ -3,7 +3,6 @@ import BrushChart from "efi/ui/charts/BrushChart/BrushChart";
 import { PieChart } from "efi/ui/charts/PieChart/PieChart";
 import { useWallet } from "efi/ui/wallets/hooks/useWallet";
 import { MissingWalletEmptyState } from "efi/ui/wallets/MissingWalletEmptyState/MissingWalletEmptyState";
-import WalletSummary from "efi/ui/wallets/WalletSummary";
 import React, { FC } from "react";
 import tw from "tailwindcss-classnames";
 
@@ -31,9 +30,7 @@ export const PortfolioView: FC<PortfolioViewProps> = () => {
         "py-4"
       )}
     >
-      <div className={tw("md:justify-center", "md:items-center", "px-4")}>
-        <WalletSummary />
-      </div>
+      <div className={tw("md:justify-center", "md:items-center", "px-4")} />
       <div className={tw("justify-center", "items-center", "px-4")}>
         <BrushChart />
       </div>
