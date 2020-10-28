@@ -1,13 +1,7 @@
-import {
-  providers,
-  BigNumberish,
-  Overrides,
-  Contract,
-  ContractTransaction,
-  BigNumber,
-} from "ethers";
+import { providers, Contract, ContractTransaction, BigNumber } from "ethers";
 import { Elf } from "elf-contracts/types/Elf";
 import elfAbi from "elf-contracts/contracts/Elf.json";
+import { Web3Provider } from "@ethersproject/providers";
 
 // TODO: Get this from the environment
 const RPC_HOST = "http://127.0.0.1:8545";
@@ -38,10 +32,12 @@ export async function fetchDecimals(): Promise<number> {
   return result[0];
 }
 
-export async function postDeposit(
-  amount: BigNumberish,
-  overrides?: Overrides
+export async function postDepositEth(
+  provider: Web3Provider,
+  amount: BigNumber
 ): Promise<ContractTransaction> {
-  const result = await elf.functions.deposit(amount, overrides);
+  const signer = provider.getSigner();
+  const elfWithSigner = elf.connect(signer);
+  const result = await elfWithSigner.functions.depositETH({ value: amount });
   return result;
 }
