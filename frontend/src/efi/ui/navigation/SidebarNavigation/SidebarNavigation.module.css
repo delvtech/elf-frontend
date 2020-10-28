@@ -1,13 +1,3 @@
-.smTabs :global(.bp3-tab-indicator-wrapper) {
-  /* don't show the tab indicator */
-  display: none;
-}
-
-.tabs :global(.bp3-tab-list) {
-  width: 100%;
-  gap: 1rem;
-}
-
 .sideBar {
   background: white;
   border-right-color: var(--bp3-card-border-color);
@@ -18,4 +8,9 @@
   background: var(--bp3-dark-navbar-bg-color);
   color: var(--bp3-dark-navbar-color);
   border-right: none;
+}
+
+.tabs :global(.bp3-tab-list) {
+  width: 100%;
+  gap: 1rem;
 }
