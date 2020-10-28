@@ -11,7 +11,7 @@ import { t } from "ttag";
 import { useCryptoAssetTagInput } from "./useCryptoAssetTagInput";
 import { useCryptoAssetOmnibar } from "./useCryptoAssetOmnibar";
 import { CryptoAssetSuggestItem } from "./CryptoAssetSuggestItem";
-import { useDarkMode } from "efi/ui/base/useDarkMode/useDarkMode";
+import { useDarkMode } from "efi/ui/prefs/useDarkMode/useDarkMode";
 
 interface CryptoAssetSuggestProps {
   onSelect: (cryptoAsset: CryptoAssetInfo) => void;

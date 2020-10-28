@@ -14,7 +14,7 @@ import { SwapView } from "efi/ui/swaps/SwapView/SwapView";
 import { useSyncWithInjectedEthereum } from "efi/ui/wallets/hooks/useSyncWithInjectedEthereum";
 
 import styles from "./App.module.css";
-import { useDarkMode } from "efi/ui/base/useDarkMode/useDarkMode";
+import { useDarkMode } from "efi/ui/prefs/useDarkMode/useDarkMode";
 
 const contentClassName = tw(
   "flex-1",

@@ -18,7 +18,7 @@ import React, { FC, Fragment, useCallback } from "react";
 import tw from "tailwindcss-classnames";
 import { t } from "ttag";
 
-import { useDarkMode } from "efi/ui/base/useDarkMode/useDarkMode";
+import { useDarkMode } from "efi/ui/prefs/useDarkMode/useDarkMode";
 import { useNavigation } from "efi/ui/navigation/hooks/useTab";
 import { Navigation } from "efi/ui/navigation/navigation";
 import { useWallet } from "efi/ui/wallets/hooks/useWallet";
