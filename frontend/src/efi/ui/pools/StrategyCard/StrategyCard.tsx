@@ -1,8 +1,9 @@
 import { Card, H3, Intent, Spinner, Tag } from "@blueprintjs/core";
-import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { Strategy } from "efi/pools/strategy";
 import { PieChart } from "efi/ui/charts/PieChart/PieChart";
 import {
+  useElfContractAssetBalances,
+  useElfContractAssetSymbols,
   useElfContractBalance,
   useElfContractDepositEth,
   useElfContractSymbol,
@@ -28,6 +29,8 @@ export const StrategyCard: FC<StrategyCardProps> = ({
   const { data: strategyCryptoSymbol } = useElfContractSymbol();
   const { data: elfTotalSupply } = useElfContractTotalSupply();
   const { data: elfBalance } = useElfContractBalance();
+  const { data: strategyAssetBalances } = useElfContractAssetBalances();
+  const { data: strategyAssetSymbols } = useElfContractAssetSymbols();
   const [depositEth] = useElfContractDepositEth();
   const [withdrawEth] = useElfContractWithdrawEth();
 
@@ -80,7 +83,7 @@ export const StrategyCard: FC<StrategyCardProps> = ({
           <div className={tw("flex", "flex-col", "space-y-3")}>
             <span> {t`Assets in this strategy`}</span>
             <div className={tw("flex", "space-x-4")}>
-              {heldAssets.map((assetName) => {
+              {strategyAssetSymbols?.map((assetName) => {
                 return (
                   <Tag
                     minimal

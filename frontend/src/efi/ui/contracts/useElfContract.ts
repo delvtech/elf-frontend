@@ -1,6 +1,8 @@
 import { queryCache, useMutation, useQuery } from "react-query";
 import {
   fetchBalance,
+  fetchContractAssetBalances,
+  fetchContractAssetSymbols,
   fetchContractName,
   fetchDecimals,
   fetchSymbol,
@@ -15,6 +17,16 @@ import { useWallet } from "efi/ui/wallets/hooks/useWallet";
 const contractNameKey = ["contract", "elf", "name"];
 export function useElfContractName() {
   return useQuery(contractNameKey, fetchContractName);
+}
+
+const contractAssetSymbolsKey = ["contract", "elf", "assetSymbols"];
+export function useElfContractAssetSymbols() {
+  return useQuery(contractAssetSymbolsKey, fetchContractAssetSymbols);
+}
+
+const contractAssetBalancesKey = ["contract", "elf", "assetBalances"];
+export function useElfContractAssetBalances() {
+  return useQuery(contractAssetBalancesKey, fetchContractAssetBalances);
 }
 
 const contractBalanceKey = ["contract", "elf", "balance"];
