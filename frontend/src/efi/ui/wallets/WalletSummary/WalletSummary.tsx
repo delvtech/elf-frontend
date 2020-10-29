@@ -1,16 +1,17 @@
-import React, { CSSProperties, FunctionComponent, useCallback } from "react";
 import { Button, Classes, Colors, Icon } from "@blueprintjs/core";
-import { t } from "ttag";
-import { useWallet } from "efi/ui/wallets/hooks/useWallet";
-import { formatEther } from "@ethersproject/units";
+import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
-import { IconNames } from "@blueprintjs/icons";
-import tw from "tailwindcss-classnames";
 import classNames from "classnames";
-import { ChainId, ChainNames } from "efi/crypto/ethereum";
+import React, { CSSProperties, FunctionComponent, useCallback } from "react";
+import tw from "tailwindcss-classnames";
+import { t } from "ttag";
+
+import { formatChainName } from "efi/ui/crypto/formatChainName";
+import { formatEthBalance } from "efi/ui/crypto/formatEthBalance";
+import { formatWalletAddress } from "efi/ui/wallets/formatWalletAddress";
 import { useDarkMode } from "efi/ui/prefs/useDarkMode/useDarkMode";
-import { BigNumber } from "ethers";
+import { useWallet } from "efi/ui/wallets/hooks/useWallet";
 import { injectedConnector } from "efi/wallets/connectors";
 
 interface WalletSummaryProps {}
@@ -97,36 +98,5 @@ export const WalletSummary: FunctionComponent<WalletSummaryProps> = () => {
     </div>
   );
 };
-
-function formatWalletAddress(address: string): string {
-  const hexPrefix = address.slice(0, 2);
-  const firstFive = address.slice(2, 7); // after the 0x, take the first 5 uuniqu
-  const lastFive = address.slice(-5);
-
-  return `${hexPrefix}${firstFive}...${lastFive}`;
-}
-
-// Show eth in the format of xxxxxx.12345 place values after the decimal
-function formatEthBalance(ethBalance: BigNumber | number): string {
-  const ethBalanceString = formatEther(ethBalance);
-  const decimalIndex = ethBalanceString.indexOf(".");
-  if (decimalIndex > -1) {
-    return ethBalanceString.slice(0, decimalIndex + 5);
-  }
-  return ethBalanceString;
-}
-
-function formatChainName(
-  active: boolean,
-  chainId: ChainId | undefined
-): string {
-  if (!active) {
-    return t`Not connected`;
-  }
-
-  const chainName = chainId ? ChainNames[chainId as ChainId] : t`Unknown`;
-
-  return chainName;
-}
 
 export default WalletSummary;
