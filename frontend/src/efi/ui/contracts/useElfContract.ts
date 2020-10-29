@@ -51,3 +51,24 @@ export function useElfContractDepositEth() {
     }
   );
 }
+
+export function useElfContractWithdrawEth() {
+  const { library } = useWallet();
+  return useMutation(
+    (amount: BigNumber) => {
+      if (!library) {
+        return new Promise(() => {});
+      }
+      const signer = library.getSigner();
+      return postDepositEth(signer, amount);
+    },
+    {
+      onSuccess: (data, variables) => {
+        queryCache.invalidateQueries(contractBalanceKey);
+      },
+      onError: (data, variables) => {
+        console.error("There was an error depositing Eth in the Elf Strategy.");
+      },
+    }
+  );
+}

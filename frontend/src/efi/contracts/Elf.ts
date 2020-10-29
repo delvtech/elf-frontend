@@ -27,6 +27,11 @@ export async function fetchBalance(): Promise<BigNumber> {
   return result[0];
 }
 
+export async function fetchTotalSupply(): Promise<BigNumber> {
+  const result = await elf.functions.totalSupply();
+  return result[0];
+}
+
 export async function fetchSymbol(): Promise<string> {
   const result = await elf.functions.symbol();
   return result[0];
@@ -42,6 +47,18 @@ export async function postDepositEth(
   amount: BigNumber
 ): Promise<ContractTransaction> {
   const elfWithSigner = elf.connect(signer);
-  const result = await elfWithSigner.functions.depositETH({ value: amount });
+  const result = await elfWithSigner.functions.depositETH({
+    value: amount,
+  });
+  return result;
+}
+
+export async function postWithdrawEth(
+  signer: Signer,
+  amount: BigNumber
+): Promise<ContractTransaction> {
+  const elfWithSigner = elf.connect(signer);
+  console.log("amount to withdraw ", amount.toString());
+  const result = await elfWithSigner.functions.withdrawETH(amount.toString());
   return result;
 }

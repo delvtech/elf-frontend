@@ -4,6 +4,7 @@ import { PieChart } from "efi/ui/charts/PieChart/PieChart";
 import {
   useElfContractDepositEth,
   useElfContractSymbol,
+  useElfContractWithdrawEth,
 } from "efi/ui/contracts/useElfContract";
 import { TransactionForm } from "efi/ui/crypto/TransactionForm/TransactionForm";
 import { BigNumber } from "ethers";
@@ -21,6 +22,7 @@ export const StrategyCard: FC<StrategyCardProps> = ({
 }) => {
   const { data: strategyCryptoSymbol } = useElfContractSymbol();
   const [depositEth] = useElfContractDepositEth();
+  const [withdrawEth] = useElfContractWithdrawEth();
 
   // TODO: add some checks here to make sure that the balance is greater than the amount depositing.
   //  Later we'll also pass the asset and determine which contract to call.
@@ -29,6 +31,13 @@ export const StrategyCard: FC<StrategyCardProps> = ({
       depositEth(amount);
     },
     [depositEth]
+  );
+
+  const onWithdraw = useCallback(
+    (amount: BigNumber) => {
+      withdrawEth(amount);
+    },
+    [withdrawEth]
   );
 
   return (
@@ -117,7 +126,7 @@ export const StrategyCard: FC<StrategyCardProps> = ({
           cryptoSymbol={stakingAsset}
           cryptoBalance={parseEther("12.21943")}
           buttonLabel={t`Withdraw ${stakingAsset}`}
-          onTransaction={() => {}}
+          onTransaction={onWithdraw}
         />
       </div>
     </Card>
