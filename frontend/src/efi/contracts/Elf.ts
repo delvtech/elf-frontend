@@ -7,6 +7,7 @@ import {
 } from "ethers";
 import { Elf } from "elf-contracts/types/Elf";
 import elfAbi from "elf-contracts/contracts/Elf.json";
+import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 
 // TODO: Get this from the environment
 const RPC_HOST = "http://127.0.0.1:8545";
@@ -15,10 +16,53 @@ const RPC_HOST = "http://127.0.0.1:8545";
 const ELF_ADDRESS = "0xddc0543eBD9b9DD61222407d95Ce5eB9A32e3560";
 
 const provider = new providers.JsonRpcProvider(RPC_HOST);
-const elf = (new Contract(ELF_ADDRESS, elfAbi, provider) as any) as Elf;
+
+interface ElfStubs {
+  functions: {
+    assetBalances(): Promise<{
+      0: BigNumber[];
+    }>;
+    assetSymbols(): Promise<{
+      0: string[];
+    }>;
+  };
+}
+
+type ElfWithStubs = Elf & ElfStubs;
+
+const elf = (new Contract(
+  ELF_ADDRESS,
+  elfAbi,
+  provider
+) as any) as ElfWithStubs;
+
+// stub out call to get asset symbols
+elf.functions.assetSymbols = () =>
+  Promise.resolve({
+    0: [
+      CryptoSymbol.YDAI,
+      CryptoSymbol.YTUSD,
+      CryptoSymbol.YUSDC,
+      CryptoSymbol.YUSDT,
+    ],
+  });
+// stub out call to get asset balances
+elf.functions.assetBalances = () =>
+  Promise.resolve({
+    0: [BigNumber.from(100), BigNumber.from(200), BigNumber.from(100)],
+  });
 
 export async function fetchContractName(): Promise<string> {
   const result = await elf.functions.name();
+  return result[0];
+}
+export async function fetchContractAssetSymbols(): Promise<string[]> {
+  const result = await elf.functions.assetSymbols();
+  return result[0];
+}
+
+export async function fetchContractAssetBalances(): Promise<BigNumber[]> {
+  const result = await elf.functions.assetBalances();
   return result[0];
 }
 
@@ -47,7 +91,6 @@ export async function postDepositEth(
   amount: BigNumber
 ): Promise<ContractTransaction> {
   const elfWithSigner = elf.connect(signer);
-  console.log("amount to deposit", amount.toString());
   const result = await elfWithSigner.functions.depositETH({
     value: amount,
   });
@@ -59,7 +102,6 @@ export async function postWithdrawEth(
   amount: BigNumber
 ): Promise<ContractTransaction> {
   const elfWithSigner = elf.connect(signer);
-  console.log("amount to withdraw ", amount.toString());
-  const result = await elfWithSigner.functions.withdrawETH(amount.toString());
+  const result = await elfWithSigner.functions.withdrawETH(amount);
   return result;
 }
