@@ -2,12 +2,18 @@ import { Card, H3, Intent, Spinner, Tag } from "@blueprintjs/core";
 import { Strategy } from "efi/pools/strategy";
 import { PieChart } from "efi/ui/charts/PieChart/PieChart";
 import {
+  useElfContractAssetBalances,
+  useElfContractAssetSymbols,
+  useElfContractBalance,
   useElfContractDepositEth,
   useElfContractSymbol,
+  useElfContractTotalSupply,
+  useElfContractWithdrawEth,
 } from "efi/ui/contracts/useElfContract";
 import { TransactionForm } from "efi/ui/crypto/TransactionForm/TransactionForm";
+import { useWalletBalance } from "efi/ui/wallets/hooks/useWalletBalance";
 import { BigNumber } from "ethers";
-import { parseEther } from "ethers/lib/utils";
+import { formatEther } from "ethers/lib/utils";
 import React, { FC, useCallback } from "react";
 import tw from "tailwindcss-classnames";
 import { t } from "ttag";
@@ -19,8 +25,14 @@ interface StrategyCardProps {
 export const StrategyCard: FC<StrategyCardProps> = ({
   strategy: { name, heldAssets, stakingAsset },
 }) => {
+  const { data: walletBalance } = useWalletBalance();
   const { data: strategyCryptoSymbol } = useElfContractSymbol();
+  const { data: elfTotalSupply } = useElfContractTotalSupply();
+  const { data: elfBalance } = useElfContractBalance();
+  const { data: strategyAssetBalances } = useElfContractAssetBalances();
+  const { data: strategyAssetSymbols } = useElfContractAssetSymbols();
   const [depositEth] = useElfContractDepositEth();
+  const [withdrawEth] = useElfContractWithdrawEth();
 
   // TODO: add some checks here to make sure that the balance is greater than the amount depositing.
   //  Later we'll also pass the asset and determine which contract to call.
@@ -30,6 +42,15 @@ export const StrategyCard: FC<StrategyCardProps> = ({
     },
     [depositEth]
   );
+
+  const onWithdraw = useCallback(
+    (amount: BigNumber) => {
+      withdrawEth(amount);
+    },
+    [withdrawEth]
+  );
+
+  const totalSupply = elfTotalSupply && formatEther(elfTotalSupply);
 
   return (
     <Card className={tw("flex", "flex-col")}>
@@ -62,7 +83,7 @@ export const StrategyCard: FC<StrategyCardProps> = ({
           <div className={tw("flex", "flex-col", "space-y-3")}>
             <span> {t`Assets in this strategy`}</span>
             <div className={tw("flex", "space-x-4")}>
-              {heldAssets.map((assetName) => {
+              {strategyAssetSymbols?.map((assetName) => {
                 return (
                   <Tag
                     minimal
@@ -86,6 +107,17 @@ export const StrategyCard: FC<StrategyCardProps> = ({
               size={Spinner.SIZE_SMALL}
             />
           </div>
+
+          {/* Total Supply*/}
+          <div className={tw("flex", "flex-col", "space-y-4")}>
+            <span>{t`Total Supply`}</span>
+            <div className={tw("space-x-4")}>
+              <span>{totalSupply}</span>
+              <Tag minimal intent={Intent.PRIMARY} interactive large>
+                {stakingAsset}
+              </Tag>
+            </div>
+          </div>
         </div>
 
         <div
@@ -106,7 +138,7 @@ export const StrategyCard: FC<StrategyCardProps> = ({
         <TransactionForm
           inputLabel={t`Deposit`}
           cryptoSymbol={stakingAsset}
-          cryptoBalance={parseEther("3.00000")}
+          cryptoBalance={walletBalance}
           buttonLabel={t`Deposit ${stakingAsset}`}
           onTransaction={onDeposit}
         />
@@ -115,9 +147,9 @@ export const StrategyCard: FC<StrategyCardProps> = ({
         <TransactionForm
           inputLabel={t`Withdraw`}
           cryptoSymbol={stakingAsset}
-          cryptoBalance={parseEther("12.21943")}
+          cryptoBalance={elfBalance}
           buttonLabel={t`Withdraw ${stakingAsset}`}
-          onTransaction={() => {}}
+          onTransaction={onWithdraw}
         />
       </div>
     </Card>
