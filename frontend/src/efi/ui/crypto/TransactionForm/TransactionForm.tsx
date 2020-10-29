@@ -17,7 +17,7 @@ interface TransactionFormProps {
   inputLabel: string;
   buttonLabel: string;
   cryptoSymbol: CryptoSymbol;
-  cryptoBalance: BigNumber;
+  cryptoBalance: BigNumber | undefined;
   onTransaction: (amount: BigNumber) => void;
 }
 
@@ -38,11 +38,11 @@ export const TransactionForm: FC<TransactionFormProps> = ({
 }) => {
   const [stringValue, onChange] = useNumericInput(numericInputOptions);
   const value = stringValue ? parseEther(stringValue) : undefined;
-  const validValue = value ? value.lte(cryptoBalance) : true;
+  const validValue = value && cryptoBalance ? value.lte(cryptoBalance) : true;
 
   // TODO: make this component handle any type of crypto.  We'll formalize this into a function that
   // does the proper operations depending on the asset.  This is fine for V0.
-  const ethBalance = formatEther(cryptoBalance);
+  const ethBalance = cryptoBalance && formatEther(cryptoBalance);
 
   const onClick = useCallback(() => {
     if (validValue && onTransaction) {
