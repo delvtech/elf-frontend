@@ -23,7 +23,7 @@ const rowClassName = tw(
   "justify-between",
   "items-center"
 );
-const labelClassName = classNames(Classes.TEXT_MUTED, tw("text-xs"));
+const labelClassName = classNames(Classes.TEXT_MUTED);
 export const WalletSummary: FunctionComponent<WalletSummaryProps> = () => {
   const { ethBalance } = useWallet();
 
