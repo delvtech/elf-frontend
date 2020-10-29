@@ -4,6 +4,7 @@ import {
   fetchContractName,
   fetchDecimals,
   fetchSymbol,
+  fetchTotalSupply,
   postDepositEth,
 } from "efi/contracts/Elf";
 import { BigNumber } from "ethers";
@@ -19,6 +20,11 @@ export function useElfContractName() {
 const contractBalanceKey = ["contract", "elf", "balance"];
 export function useElfContractBalance() {
   return useQuery(contractBalanceKey, () => fetchBalance());
+}
+
+const contractTotalSupplyKey = ["contract", "elf", "totalSupply"];
+export function useElfContractTotalSupply() {
+  return useQuery(contractTotalSupplyKey, () => fetchTotalSupply());
 }
 
 const contractDecimalsKey = ["contract", "elf", "decimals"];
