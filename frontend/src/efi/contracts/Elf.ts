@@ -47,6 +47,7 @@ export async function postDepositEth(
   amount: BigNumber
 ): Promise<ContractTransaction> {
   const elfWithSigner = elf.connect(signer);
+  console.log("amount to deposit", amount.toString());
   const result = await elfWithSigner.functions.depositETH({
     value: amount,
   });
