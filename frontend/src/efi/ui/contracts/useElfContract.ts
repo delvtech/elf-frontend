@@ -1,4 +1,3 @@
-import { queryCache, useMutation, useQuery } from "react-query";
 import {
   fetchBalance,
   fetchContractAssetBalances,
@@ -8,9 +7,11 @@ import {
   fetchSymbol,
   fetchTotalSupply,
   postDepositEth,
+  postWithdrawEth,
 } from "efi/contracts/Elf";
-import { BigNumber } from "ethers";
 import { useWallet } from "efi/ui/wallets/hooks/useWallet";
+import { BigNumber } from "ethers";
+import { queryCache, useMutation, useQuery } from "react-query";
 
 // Keys are arrays so that we can do things like prefix-matching to invalidate
 // queries elsewhere. We should expect to export these keys as needed.
@@ -78,7 +79,7 @@ export function useElfContractWithdrawEth() {
         return new Promise(() => {});
       }
       const signer = library.getSigner();
-      return postDepositEth(signer, amount);
+      return postWithdrawEth(signer, amount);
     },
     {
       onSuccess: (data, variables) => {
