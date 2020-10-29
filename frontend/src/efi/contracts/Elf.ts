@@ -37,20 +37,18 @@ const elf = (new Contract(
 ) as any) as ElfWithStubs;
 
 // stub out call to get asset symbols
-elf.functions.assetSymbols = () =>
-  Promise.resolve({
-    0: [
-      CryptoSymbol.YDAI,
-      CryptoSymbol.YTUSD,
-      CryptoSymbol.YUSDC,
-      CryptoSymbol.YUSDT,
-    ],
-  });
+elf.functions.assetSymbols = async () => ({
+  0: [
+    CryptoSymbol.YDAI,
+    CryptoSymbol.YTUSD,
+    CryptoSymbol.YUSDC,
+    CryptoSymbol.YUSDT,
+  ],
+});
 // stub out call to get asset balances
-elf.functions.assetBalances = () =>
-  Promise.resolve({
-    0: [BigNumber.from(100), BigNumber.from(200), BigNumber.from(100)],
-  });
+elf.functions.assetBalances = async () => ({
+  0: [BigNumber.from(100), BigNumber.from(200), BigNumber.from(100)],
+});
 
 export async function fetchContractName(): Promise<string> {
   const result = await elf.functions.name();

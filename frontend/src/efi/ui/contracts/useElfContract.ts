@@ -22,12 +22,12 @@ export function useElfContractName() {
 
 const contractAssetSymbolsKey = ["contract", "elf", "assetSymbols"];
 export function useElfContractAssetSymbols() {
-  return useQuery(contractAssetSymbolsKey, fetchContractAssetSymbols);
+  return useQuery(contractAssetSymbolsKey, () => fetchContractAssetSymbols());
 }
 
 const contractAssetBalancesKey = ["contract", "elf", "assetBalances"];
 export function useElfContractAssetBalances() {
-  return useQuery(contractAssetBalancesKey, fetchContractAssetBalances);
+  return useQuery(contractAssetBalancesKey, () => fetchContractAssetBalances());
 }
 
 const contractBalanceKey = ["contract", "elf", "balance"];
@@ -74,19 +74,22 @@ export function useElfContractDepositEth() {
 export function useElfContractWithdrawEth() {
   const { library } = useWallet();
   return useMutation(
-    (amount: BigNumber) => {
+    async (amount: BigNumber) => {
       if (!library) {
-        return new Promise(() => {});
+        return {};
       }
       const signer = library.getSigner();
       return postWithdrawEth(signer, amount);
     },
     {
-      onSuccess: (data, variables) => {
+      onSuccess: () => {
         queryCache.invalidateQueries(contractBalanceKey);
       },
-      onError: (data, variables) => {
-        console.error("There was an error depositing Eth in the Elf Strategy.");
+      onError: (error) => {
+        console.error(
+          "There was an error depositing Eth in the Elf Strategy.",
+          error
+        );
       },
     }
   );
