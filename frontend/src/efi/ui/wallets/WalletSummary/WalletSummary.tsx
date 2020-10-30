@@ -5,7 +5,7 @@ import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
 import classNames from "classnames";
-import tw from "tailwindcss-classnames";
+import tw from "efi/tailwindcss-classnames";
 import { t } from "ttag";
 
 import { formatChainName } from "efi/ui/crypto/formatChainName";

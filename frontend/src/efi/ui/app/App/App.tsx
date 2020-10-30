@@ -4,7 +4,7 @@ import { ReactQueryDevtools } from "react-query-devtools";
 import { Classes } from "@blueprintjs/core";
 import { LocationProvider, Router } from "@reach/router";
 import classNames from "classnames";
-import { tw } from "tailwindcss-classnames";
+import { tw } from "efi/tailwindcss-classnames";
 
 import { HomeView } from "efi/ui/home/HomeView";
 import { InvestView } from "efi/ui/invest/InvestView";

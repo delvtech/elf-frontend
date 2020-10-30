@@ -1,7 +1,7 @@
 import React, { FC, useCallback } from "react";
 
 import { Card, H3, Intent, Tag } from "@blueprintjs/core";
-import tw from "tailwindcss-classnames";
+import tw from "efi/tailwindcss-classnames";
 import { t } from "ttag";
 
 import { Strategy } from "efi/pools/strategy";

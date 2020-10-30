@@ -4,7 +4,7 @@ import { Classes, IOverlayProps, MenuItem, TagInput } from "@blueprintjs/core";
 import { ItemListPredicate, ItemRenderer, Omnibar } from "@blueprintjs/select";
 import classNames from "classnames";
 import { filter } from "fuzzaldrin-plus";
-import tw from "tailwindcss-classnames";
+import tw from "efi/tailwindcss-classnames";
 import { t } from "ttag";
 
 import { CryptoAssetInfo } from "efi/crypto/CryptoAssetInfo";
