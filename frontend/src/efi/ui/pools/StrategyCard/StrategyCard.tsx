@@ -1,12 +1,14 @@
-import React, { FC, useCallback } from "react";
+import React, { FC, useCallback, useState } from "react";
 
-import { Card, H3, Intent, Spinner, Tag } from "@blueprintjs/core";
+import { Button, Card, H3, Intent, Spinner, Tag } from "@blueprintjs/core";
 import { BigNumber } from "ethers";
 import { formatEther } from "ethers/lib/utils";
-import tw from "efi-tailwindcss-classnames";
 import { t } from "ttag";
 
+import tw from "efi-tailwindcss-classnames";
+import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { Strategy } from "efi/pools/strategy";
+import { useBoolean } from "efi/ui/base/useBoolean/useBoolean";
 import { PieChart } from "efi/ui/charts/PieChart/PieChart";
 import {
   useElfContractAssetSymbols,
@@ -24,7 +26,7 @@ interface StrategyCardProps {
 }
 
 export const StrategyCard: FC<StrategyCardProps> = ({
-  strategy: { name, heldAssets, stakingAsset },
+  strategy: { name, stakingAsset },
 }) => {
   const { data: walletBalance } = useWalletBalance();
   const { data: strategyCryptoSymbol } = useElfContractSymbol();
@@ -34,13 +36,32 @@ export const StrategyCard: FC<StrategyCardProps> = ({
   const [depositEth] = useElfContractDepositEth();
   const [withdrawEth] = useElfContractWithdrawEth();
 
+  // const [depositPending, setDepositPending] = useBoolean(false);
+  const {
+    value: showConfirmation,
+    setTrue: setShowConfirmation,
+    setFalse: hideConfirmation,
+  } = useBoolean(false);
+  const [amountToDeposit, setAmountToDeposit] = useState<
+    BigNumber | undefined
+  >();
+
+  const showDepositConfirmation = useCallback(
+    (amount: BigNumber) => {
+      setShowConfirmation();
+      setAmountToDeposit(amount);
+    },
+    [setShowConfirmation]
+  );
+
   // TODO: add some checks here to make sure that the balance is greater than the amount depositing.
   //  Later we'll also pass the asset and determine which contract to call.
   const onDeposit = useCallback(
     (amount: BigNumber) => {
       depositEth(amount);
+      hideConfirmation();
     },
-    [depositEth]
+    [depositEth, hideConfirmation]
   );
 
   const onWithdraw = useCallback(
@@ -52,8 +73,41 @@ export const StrategyCard: FC<StrategyCardProps> = ({
 
   const totalSupply = elfTotalSupply && formatEther(elfTotalSupply);
 
+  if (showConfirmation && amountToDeposit && walletBalance) {
+    return (
+      <Card className={tw("flex", "flex-col", "md:w-1/2", "transition-all")}>
+        <div
+          className={tw("flex", "flex-col", "mb-8", "items-center", "w-full")}
+        >
+          <H3>{t`Deposit into Stratgey`}</H3>
+
+          <div className={tw("flex", "flex-col", "space-y-8", "w-full")}>
+            {/* */}
+            <div className={tw("flex", "flex-col", "items-start", "space-y-3")}>
+              <span> {t`Amount to deposit`}</span>
+              <div className={tw("space-x-4")}>
+                <span>{formatEther(amountToDeposit)}</span>
+                <Tag minimal intent={Intent.PRIMARY} interactive large>
+                  {stakingAsset}
+                </Tag>
+              </div>
+            </div>
+
+            <ConfirmDepositButton
+              cryptoSymbol={stakingAsset}
+              amountToDeposit={amountToDeposit}
+              cryptoBalance={walletBalance}
+              buttonLabel={t`Deposit ${stakingAsset}`}
+              onConfirmDeposit={onDeposit}
+            />
+          </div>
+        </div>
+      </Card>
+    );
+  }
+
   return (
-    <Card className={tw("flex", "flex-col")}>
+    <Card className={tw("flex", "flex-col", "md:w-1/2", "transition-all")}>
       <div className={tw("flex", "mb-8", "items-center", "w-full")}>
         <div className={tw("flex", "flex-col", "space-y-8")}>
           {/* Strategy name */}
@@ -140,7 +194,7 @@ export const StrategyCard: FC<StrategyCardProps> = ({
           cryptoSymbol={stakingAsset}
           cryptoBalance={walletBalance}
           buttonLabel={t`Deposit ${stakingAsset}`}
-          onTransaction={onDeposit}
+          onTransaction={showDepositConfirmation}
         />
 
         {/* Withdraw */}
@@ -153,5 +207,55 @@ export const StrategyCard: FC<StrategyCardProps> = ({
         />
       </div>
     </Card>
+  );
+};
+
+interface ConfirmDepositButtonProps {
+  buttonLabel: string;
+  amountToDeposit: BigNumber;
+  cryptoSymbol: CryptoSymbol;
+  cryptoBalance: BigNumber;
+  onConfirmDeposit: (amount: BigNumber) => void;
+}
+
+const ConfirmDepositButton: FC<ConfirmDepositButtonProps> = ({
+  cryptoSymbol,
+  cryptoBalance,
+  amountToDeposit,
+  buttonLabel,
+  onConfirmDeposit,
+}) => {
+  const validValue = amountToDeposit.lte(cryptoBalance);
+
+  // TODO: make this component handle any type of crypto.  We'll formalize this into a function that
+  // does the proper operations depending on the asset.  This is fine for V0.
+  const ethBalance = cryptoBalance && formatEther(cryptoBalance);
+
+  const onClick = useCallback(() => {
+    if (validValue && onConfirmDeposit) {
+      onConfirmDeposit(amountToDeposit);
+    }
+  }, [amountToDeposit, onConfirmDeposit, validValue]);
+
+  return (
+    <div className={tw("flex", "flex-col", "space-y-5")}>
+      <div className={tw("flex", "flex-col", "space-y-2")}>
+        <span
+          className={tw("text-xs", "text-right", {
+            "text-red-500": !validValue,
+          })}
+        >{t`Available: ${ethBalance} ${cryptoSymbol}`}</span>
+      </div>
+      <Button
+        disabled={!validValue}
+        onClick={onClick}
+        minimal
+        outlined
+        large
+        intent={Intent.PRIMARY}
+      >
+        {buttonLabel}
+      </Button>
+    </div>
   );
 };
