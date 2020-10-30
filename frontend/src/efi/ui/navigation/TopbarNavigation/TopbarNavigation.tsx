@@ -1,3 +1,5 @@
+import React, { FC } from "react";
+
 import {
   Alignment,
   AnchorButton,
@@ -12,14 +14,13 @@ import {
 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import classNames from "classnames";
-import React, { FC } from "react";
 import tw from "tailwindcss-classnames";
 import { t } from "ttag";
 
 import { Navigation } from "efi/ui/navigation/navigation";
+import WalletSummary from "efi/ui/wallets/WalletSummary/WalletSummary";
 
 import styles from "./TopbarNavigation.module.css";
-import WalletSummary from "efi/ui/wallets/WalletSummary/WalletSummary";
 
 interface TopbarNavigationProps {
   deactivate: () => void;

@@ -1,4 +1,8 @@
+import React, { FC, useState } from "react";
+
 import { RouteComponentProps } from "@reach/router";
+import tw from "tailwindcss-classnames";
+
 import { ElfStrategyHighRisk } from "efi/pools/highRisk";
 import { ElfStrategyLowRisk } from "efi/pools/lowRisk";
 import { ElfStrategyMediumRisk } from "efi/pools/mediumRisk";
@@ -7,8 +11,6 @@ import { StrategyPreviewCard } from "efi/ui/pools/StrategeyPreviewCard/StrategyP
 import { StrategyCard } from "efi/ui/pools/StrategyCard/StrategyCard";
 import { useWallet } from "efi/ui/wallets/hooks/useWallet";
 import { MissingWalletEmptyState } from "efi/ui/wallets/MissingWalletEmptyState/MissingWalletEmptyState";
-import React, { FC, useState } from "react";
-import tw from "tailwindcss-classnames";
 
 interface InvestViewProps extends RouteComponentProps {}
 

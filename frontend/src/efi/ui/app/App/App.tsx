@@ -1,8 +1,9 @@
+import React, { FC } from "react";
+import { ReactQueryDevtools } from "react-query-devtools";
+
 import { Classes } from "@blueprintjs/core";
 import { LocationProvider, Router } from "@reach/router";
 import classNames from "classnames";
-import React, { FC } from "react";
-import { ReactQueryDevtools } from "react-query-devtools";
 import { tw } from "tailwindcss-classnames";
 
 import { HomeView } from "efi/ui/home/HomeView";
@@ -10,11 +11,11 @@ import { InvestView } from "efi/ui/invest/InvestView";
 import { MainNavigation } from "efi/ui/navigation/MainNavigation/MainNavigation";
 import { Navigation } from "efi/ui/navigation/navigation";
 import { PortfolioView } from "efi/ui/portfolio/PortfolioView";
+import { useDarkMode } from "efi/ui/prefs/useDarkMode/useDarkMode";
 import { SwapView } from "efi/ui/swaps/SwapView/SwapView";
 import { useSyncWithInjectedEthereum } from "efi/ui/wallets/hooks/useSyncWithInjectedEthereum";
 
 import styles from "./App.module.css";
-import { useDarkMode } from "efi/ui/prefs/useDarkMode/useDarkMode";
 
 const contentClassName = tw(
   "flex-1",

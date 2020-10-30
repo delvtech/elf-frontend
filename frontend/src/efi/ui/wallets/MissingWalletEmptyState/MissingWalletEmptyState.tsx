@@ -1,12 +1,14 @@
+import React, { FC, useCallback } from "react";
+
 import { Button, Intent, NonIdealState, Tag } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
+import { Web3Provider } from "@ethersproject/providers";
+import { useWeb3React } from "@web3-react/core";
 import classNames from "classnames";
-import React, { FC, useCallback } from "react";
 import tw from "tailwindcss-classnames";
 import { jt, t } from "ttag";
+
 import { injectedConnector } from "efi/wallets/connectors";
-import { useWeb3React } from "@web3-react/core";
-import { Web3Provider } from "@ethersproject/providers";
 
 const betaTag = (
   <Tag key="beta-tag" minimal intent={Intent.WARNING}>

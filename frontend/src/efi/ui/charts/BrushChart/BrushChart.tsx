@@ -1,3 +1,11 @@
+import React, {
+  FunctionComponent,
+  useCallback,
+  useMemo,
+  useState,
+} from "react";
+import { useMeasure } from "react-use";
+
 import { Colors } from "@blueprintjs/core";
 import { Brush } from "@visx/brush";
 import { Bounds } from "@visx/brush/lib/types";
@@ -6,15 +14,9 @@ import appleStock, { AppleStock } from "@visx/mock-data/lib/mocks/appleStock";
 import { PatternLines } from "@visx/pattern";
 import { scaleLinear, scaleTime } from "@visx/scale";
 import { extent, max } from "d3-array";
-import AreaChart from "efi/ui/charts/AreaChart/AreaChart";
-import React, {
-  FunctionComponent,
-  useCallback,
-  useMemo,
-  useState,
-} from "react";
-import { useMeasure } from "react-use";
 import tw from "tailwindcss-classnames";
+
+import AreaChart from "efi/ui/charts/AreaChart/AreaChart";
 
 // Initialize some variables
 const stock = appleStock.slice(1000);

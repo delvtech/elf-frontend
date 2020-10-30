@@ -1,17 +1,19 @@
-import { Button, InputGroup, Intent, Tag } from "@blueprintjs/core";
-import { CryptoName } from "efi/crypto/CryptoName";
-import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
-import { CryptoIcon } from "efi/ui/crypto/CryptoIcon";
 import React, { FC, useCallback } from "react";
+
+import { Button, InputGroup, Intent, Tag } from "@blueprintjs/core";
+import { BigNumber } from "ethers";
+import { formatEther, parseEther } from "ethers/lib/utils";
 import tw from "tailwindcss-classnames";
 import { t } from "ttag";
-import styles from "efi/ui/crypto/TransactionForm/TransactionForm.module.css";
-import { BigNumber } from "ethers";
-import { parseEther, formatEther } from "ethers/lib/utils";
+
+import { CryptoName } from "efi/crypto/CryptoName";
+import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import {
   NumericInputOptions,
   useNumericInput,
 } from "efi/ui/base/useBoolean/useNumericInput/useNumericInput";
+import { CryptoIcon } from "efi/ui/crypto/CryptoIcon";
+import styles from "efi/ui/crypto/TransactionForm/TransactionForm.module.css";
 
 interface TransactionFormProps {
   inputLabel: string;

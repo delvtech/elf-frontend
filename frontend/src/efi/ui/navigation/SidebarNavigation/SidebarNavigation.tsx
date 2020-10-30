@@ -1,13 +1,14 @@
+import React, { FC } from "react";
+
 import { Switch, Tab, Tabs } from "@blueprintjs/core";
 import classNames from "classnames";
-import React, { FC } from "react";
 import tw from "tailwindcss-classnames";
 import { t } from "ttag";
 
 import { Navigation } from "efi/ui/navigation/navigation";
+import WalletSummary from "efi/ui/wallets/WalletSummary/WalletSummary";
 
 import styles from "./SidebarNavigation.module.css";
-import WalletSummary from "efi/ui/wallets/WalletSummary/WalletSummary";
 
 interface SidebarNavigationProps {
   isDarkMode: boolean;

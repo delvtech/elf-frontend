@@ -1,10 +1,11 @@
+import React, { FunctionComponent, useCallback } from "react";
+
 import { AxisBottom, AxisLeft, AxisScale } from "@visx/axis";
 import { curveMonotoneX } from "@visx/curve";
 import { LinearGradient } from "@visx/gradient";
 import { Group } from "@visx/group";
 import { AppleStock } from "@visx/mock-data/lib/mocks/appleStock";
 import { AreaClosed } from "@visx/shape";
-import React, { FunctionComponent, useCallback } from "react";
 
 // Initialize some variables
 const axisColor = "#fff";

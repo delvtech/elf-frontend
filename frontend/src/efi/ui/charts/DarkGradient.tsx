@@ -1,7 +1,8 @@
+import React, { FC } from "react";
+
 import { Colors } from "@blueprintjs/core";
 import { LinearGradient } from "@visx/gradient";
 import { LinearGradientProps } from "@visx/gradient/lib/gradients/LinearGradient";
-import React, { FC } from "react";
 
 type DarkGradientProps = Omit<LinearGradientProps, "from" | "to" | "rotate">;
 export const DarkGradient: FC<DarkGradientProps> = (props) => {

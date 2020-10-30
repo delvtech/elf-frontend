@@ -5,27 +5,28 @@
 import "@blueprintjs/core/lib/css/blueprint.css";
 import "@blueprintjs/icons/lib/css/blueprint-icons.css";
 import "@blueprintjs/select/lib/css/blueprint-select.css";
-import "fontsource-poppins/900.css"; // All styles included.
-import "fontsource-poppins/800.css"; // All styles included.
-import "fontsource-poppins/700.css"; // All styles included.
-import "fontsource-poppins/600.css"; // All styles included.
-import "fontsource-poppins/500.css"; // All styles included.
-import "fontsource-poppins/400.css"; // All styles included.
-import "fontsource-poppins/300.css"; // All styles included.
-import "fontsource-poppins/200.css"; // All styles included.
 import "fontsource-poppins/100.css"; // All styles included.
+import "fontsource-poppins/200.css"; // All styles included.
+import "fontsource-poppins/300.css"; // All styles included.
+import "fontsource-poppins/400.css"; // All styles included.
+import "fontsource-poppins/500.css"; // All styles included.
+import "fontsource-poppins/600.css"; // All styles included.
+import "fontsource-poppins/700.css"; // All styles included.
+import "fontsource-poppins/800.css"; // All styles included.
+import "fontsource-poppins/900.css"; // All styles included.
 import "normalize.css/normalize.css";
+import React from "react";
+import ReactDOM from "react-dom";
 import "./index.css";
 // Import tailwind after blueprint so that applying tailwind classes to
 // blueprint components overrides the blueprint styling
 import "./tailwind.output.css";
 
 import { Web3ReactProvider } from "@web3-react/core";
+import * as serviceWorker from "serviceWorker";
+
 import App from "efi/ui/app/App/App";
 import { getEthereumProviderLibrary } from "efi/wallets/providers";
-import React from "react";
-import ReactDOM from "react-dom";
-import * as serviceWorker from "serviceWorker";
 
 import versionJson from "./version.output.json";
 

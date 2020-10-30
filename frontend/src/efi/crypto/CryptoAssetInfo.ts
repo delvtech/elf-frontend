@@ -1,5 +1,5 @@
-import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { CryptoName } from "efi/crypto/CryptoName";
+import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 
 export interface CryptoAssetInfo {
   /**

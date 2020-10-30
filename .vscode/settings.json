@@ -5,5 +5,32 @@
   "eslint.options": { "configFile": ".eslintrc" },
   "editor.codeActionsOnSave": {
     "source.fixAll": true
-  }
+  },
+  "importSorter.importStringConfiguration.trailingComma": "multiLine",
+  "importSorter.importStringConfiguration.maximumNumberOfImportExpressionsPerLine.type": "newLineEachExpressionAfterCountLimit",
+  "importSorter.importStringConfiguration.maximumNumberOfImportExpressionsPerLine.count": 80,
+  "importSorter.importStringConfiguration.tabSize": 2,
+  "importSorter.sortConfiguration.customOrderingRules.rules": [
+    {
+      "type": "importMember",
+      "regex": "^$",
+      "orderLevel": 10
+    },
+    {
+      "regex": "^react",
+      "orderLevel": 10
+    },
+    {
+      "regex": "^efi",
+      "orderLevel": 40
+    },
+    {
+      "regex": "^efi.ui",
+      "orderLevel": 40
+    },
+    {
+      "regex": "^[.]",
+      "orderLevel": 50
+    }
+  ],
 }

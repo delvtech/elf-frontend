@@ -1,4 +1,11 @@
+import React, { FC, useCallback } from "react";
+
 import { Card, H3, Intent, Spinner, Tag } from "@blueprintjs/core";
+import { BigNumber } from "ethers";
+import { formatEther } from "ethers/lib/utils";
+import tw from "tailwindcss-classnames";
+import { t } from "ttag";
+
 import { Strategy } from "efi/pools/strategy";
 import { PieChart } from "efi/ui/charts/PieChart/PieChart";
 import {
@@ -12,11 +19,6 @@ import {
 } from "efi/ui/contracts/useElfContract";
 import { TransactionForm } from "efi/ui/crypto/TransactionForm/TransactionForm";
 import { useWalletBalance } from "efi/ui/wallets/hooks/useWalletBalance";
-import { BigNumber } from "ethers";
-import { formatEther } from "ethers/lib/utils";
-import React, { FC, useCallback } from "react";
-import tw from "tailwindcss-classnames";
-import { t } from "ttag";
 
 interface StrategyCardProps {
   strategy: Strategy<any>;

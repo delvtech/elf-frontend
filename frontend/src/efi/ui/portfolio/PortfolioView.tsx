@@ -1,10 +1,12 @@
+import React, { FC } from "react";
+
 import { RouteComponentProps } from "@reach/router";
+import tw from "tailwindcss-classnames";
+
 import BrushChart from "efi/ui/charts/BrushChart/BrushChart";
 import { PieChart } from "efi/ui/charts/PieChart/PieChart";
 import { useWallet } from "efi/ui/wallets/hooks/useWallet";
 import { MissingWalletEmptyState } from "efi/ui/wallets/MissingWalletEmptyState/MissingWalletEmptyState";
-import React, { FC } from "react";
-import tw from "tailwindcss-classnames";
 
 interface PortfolioViewProps extends RouteComponentProps {}
 export const PortfolioView: FC<PortfolioViewProps> = () => {
