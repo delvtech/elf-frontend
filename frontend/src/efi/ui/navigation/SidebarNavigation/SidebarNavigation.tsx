@@ -74,7 +74,7 @@ export const SidebarNavigation: FC<SidebarNavigationProps> = ({
             selectedTabId={activeTab}
           >
             <Tab id={Navigation.HOME} title={t`Home`} />
-            <Tab id={Navigation.PORTFOLIO} title={t`Portfolio`} />
+            <Tab id={Navigation.PULSE} title={t`Pulse`} />
             <Tab id={Navigation.INVEST} title={t`Invest`} />
           </Tabs>
         </div>

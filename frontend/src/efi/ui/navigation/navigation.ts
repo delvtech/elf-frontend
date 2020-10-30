@@ -1,6 +1,6 @@
 export enum Navigation {
   HOME = "",
-  PORTFOLIO = "portfolio",
+  PULSE = "pulse",
   SWAP = "swap",
   INVEST = "invest",
 }

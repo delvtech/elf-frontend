@@ -5,17 +5,9 @@ import tw from "efi-tailwindcss-classnames";
 
 import BrushChart from "efi/ui/charts/BrushChart/BrushChart";
 import { PieChart } from "efi/ui/charts/PieChart/PieChart";
-import { useWallet } from "efi/ui/wallets/hooks/useWallet";
-import { MissingWalletEmptyState } from "efi/ui/wallets/MissingWalletEmptyState/MissingWalletEmptyState";
 
-interface PortfolioViewProps extends RouteComponentProps {}
-export const PortfolioView: FC<PortfolioViewProps> = () => {
-  const { account } = useWallet();
-
-  if (!account) {
-    return <MissingWalletEmptyState />;
-  }
-
+interface PulseViewProps extends RouteComponentProps {}
+export const PulseView: FC<PulseViewProps> = () => {
   return (
     <div
       className={tw(
