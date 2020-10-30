@@ -3,7 +3,7 @@ import React, { FC, useCallback } from "react";
 import { Button, InputGroup, Intent, Tag } from "@blueprintjs/core";
 import { BigNumber } from "ethers";
 import { formatEther, parseEther } from "ethers/lib/utils";
-import tw from "tailwindcss-classnames";
+import tw from "efi-tailwindcss-classnames";
 import { t } from "ttag";
 
 import { CryptoName } from "efi/crypto/CryptoName";
@@ -82,7 +82,7 @@ export const TransactionForm: FC<TransactionFormProps> = ({
         />
         <span
           className={tw("text-xs", "text-right", {
-            "text-red-500": !validValue,
+            "text-danger": !validValue,
           })}
         >{t`Available: ${ethBalance} ${cryptoSymbol}`}</span>
       </div>

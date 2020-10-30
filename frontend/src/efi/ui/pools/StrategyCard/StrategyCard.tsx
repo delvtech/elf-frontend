@@ -3,7 +3,7 @@ import React, { FC, useCallback } from "react";
 import { Card, H3, Intent, Spinner, Tag } from "@blueprintjs/core";
 import { BigNumber } from "ethers";
 import { formatEther } from "ethers/lib/utils";
-import tw from "tailwindcss-classnames";
+import tw from "efi-tailwindcss-classnames";
 import { t } from "ttag";
 
 import { Strategy } from "efi/pools/strategy";

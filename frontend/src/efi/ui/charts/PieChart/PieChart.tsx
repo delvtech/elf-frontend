@@ -7,7 +7,7 @@ import { LinearGradient } from "@visx/gradient";
 import { Group } from "@visx/group";
 import { scaleOrdinal } from "@visx/scale";
 import Pie, { PieArcDatum, ProvidedProps } from "@visx/shape/lib/shapes/Pie";
-import tw from "tailwindcss-classnames";
+import tw from "efi-tailwindcss-classnames";
 
 const GRADIENT_ID = "pie_gradient";
 export const background1 = Colors.DARK_GRAY4;

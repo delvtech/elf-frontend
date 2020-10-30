@@ -6,7 +6,7 @@ import {
   Intent,
   ITagProps,
 } from "@blueprintjs/core";
-import tw from "tailwindcss-classnames";
+import tw from "efi-tailwindcss-classnames";
 
 import { CryptoAssetInfo } from "efi/crypto/CryptoAssetInfo";
 

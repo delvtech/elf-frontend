@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 
 import { RouteComponentProps } from "@reach/router";
-import tw from "tailwindcss-classnames";
+import tw from "efi-tailwindcss-classnames";
 import { t } from "ttag";
 
 import { SimpleCryptoAssetFilter } from "efi/ui/swaps/SimpleCryptoAssetFilter/SimpleCryptoAssetFilter";

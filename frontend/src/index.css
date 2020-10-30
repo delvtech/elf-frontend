@@ -66,4 +66,21 @@ code {
    * Colors.LIGHT_GRAY5.
    */
   --bp3-dark-navbar-font-color: #f5f8fa;
+
+  /*
+   * Taken from Blueprint, these are intent colors used to stylize text and border. In order, the
+   * colors are equivalent to:
+   * Colors.BLUE3,
+   * Colors.GREEN3,
+   * Colors.ORANGE3.
+   * Colors.RED3,
+   * Colors.GRAY1,
+   * Colors.GRAY1, opacity at 60%
+   */
+  --bp3-intent-primary: #137cbd;
+  --bp3-intent-success: #0f9960;
+  --bp3-intent-warning: #d9822b;
+  --bp3-intent-danger: #db3737;
+  --bp3-text-color-muted: #5c7080;
+  --bp3-text-color-disabled: rgba(#5c7080, 0.6);
 }
