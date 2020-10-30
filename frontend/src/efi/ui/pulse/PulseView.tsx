@@ -6,8 +6,8 @@ import tw from "efi-tailwindcss-classnames";
 import BrushChart from "efi/ui/charts/BrushChart/BrushChart";
 import { PieChart } from "efi/ui/charts/PieChart/PieChart";
 
-interface PortfolioViewProps extends RouteComponentProps {}
-export const PortfolioView: FC<PortfolioViewProps> = () => {
+interface PulseViewProps extends RouteComponentProps {}
+export const PulseView: FC<PulseViewProps> = () => {
   return (
     <div
       className={tw(

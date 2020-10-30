@@ -11,8 +11,8 @@ export function useActiveTab(): Navigation {
     case Navigation.HOME: {
       return Navigation.HOME;
     }
-    case Navigation.PORTFOLIO: {
-      return Navigation.PORTFOLIO;
+    case Navigation.PULSE: {
+      return Navigation.PULSE;
     }
     case Navigation.SWAP: {
       return Navigation.SWAP;
