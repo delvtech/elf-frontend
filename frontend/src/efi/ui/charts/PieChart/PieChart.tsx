@@ -8,10 +8,9 @@ import { Group } from "@visx/group";
 import { scaleOrdinal } from "@visx/scale";
 import Pie, { PieArcDatum, ProvidedProps } from "@visx/shape/lib/shapes/Pie";
 import tw from "efi-tailwindcss-classnames";
+import { getGradientBackgroundColors } from "efi/ui/charts/colors";
 
 const GRADIENT_ID = "pie_gradient";
-export const background1 = Colors.DARK_GRAY4;
-export const background2 = Colors.GRAY1;
 
 export interface PieData {
   /**
@@ -62,6 +61,7 @@ const getSubDatumColor = scaleOrdinal({
 const defaultMargin = { top: 20, right: 20, bottom: 20, left: 20 };
 
 interface PieProps {
+  isDarkMode?: boolean;
   width?: number;
   height?: number;
   margin?: typeof defaultMargin;
@@ -71,7 +71,13 @@ interface PieProps {
 }
 
 export const PieChart: React.FunctionComponent<PieProps> = (props) => {
-  const { margin = defaultMargin, animate = true, background = false } = props;
+  const {
+    margin = defaultMargin,
+    animate = true,
+    background = false,
+    isDarkMode,
+  } = props;
+
   const pieData = tokens;
   const [ref, dimensions] = useMeasure();
   const width = props.width ?? dimensions.width ?? 0;
@@ -103,6 +109,8 @@ export const PieChart: React.FunctionComponent<PieProps> = (props) => {
     [selectedSlice]
   );
 
+  const { startColor, endColor } = getGradientBackgroundColors({ isDarkMode });
+
   const innerWidth = width - margin.left - margin.right;
   const innerHeight = height - margin.top - margin.bottom;
   const radius = Math.min(innerWidth, innerHeight) / 1.5;
@@ -123,8 +131,8 @@ export const PieChart: React.FunctionComponent<PieProps> = (props) => {
             />
             <LinearGradient
               id={GRADIENT_ID}
-              from={background1}
-              to={background2}
+              from={startColor}
+              to={endColor}
               rotate={45}
             />
           </Fragment>

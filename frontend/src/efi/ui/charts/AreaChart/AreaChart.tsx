@@ -6,26 +6,10 @@ import { LinearGradient } from "@visx/gradient";
 import { Group } from "@visx/group";
 import { AppleStock } from "@visx/mock-data/lib/mocks/appleStock";
 import { AreaClosed } from "@visx/shape";
+import { useDarkMode } from "efi/ui/prefs/useDarkMode/useDarkMode";
+import { getAxisColor } from "efi/ui/charts/colors";
 
 // Initialize some variables
-const axisColor = "#fff";
-const axisBottomTickLabelProps = {
-  textAnchor: "middle" as const,
-  fontFamily: "Arial",
-  fontSize: 10,
-  fill: axisColor,
-};
-const setAxisBottomTickLabelProps = () => axisBottomTickLabelProps;
-
-const axisLeftTickLabelProps = {
-  dx: "-0.25em",
-  dy: "0.25em",
-  fontFamily: "Arial",
-  fontSize: 10,
-  textAnchor: "end" as const,
-  fill: axisColor,
-};
-const setAxisLeftTickLabelProps = () => axisLeftTickLabelProps;
 
 // accessors
 const getDate = (d: AppleStock) => new Date(d.date);
@@ -66,9 +50,30 @@ export const AreaChart: FunctionComponent<AreaChartProps> = ({
   const setXScale = useCallback((d) => xScale(getDate(d)) || 0, [xScale]);
   const setYScale = useCallback((d) => yScale(getStockValue(d)) || 0, [yScale]);
 
+  const { isDarkMode } = useDarkMode();
+
   if (width < 10) {
     return null;
   }
+
+  const axisColor = getAxisColor({ isDarkMode });
+  const axisBottomTickLabelProps = {
+    textAnchor: "middle" as const,
+    fontFamily: "Arial",
+    fontSize: 10,
+    fill: axisColor,
+  };
+  const setAxisBottomTickLabelProps = () => axisBottomTickLabelProps;
+
+  const axisLeftTickLabelProps = {
+    dx: "-0.25em",
+    dy: "0.25em",
+    fontFamily: "Arial",
+    fontSize: 10,
+    textAnchor: "end" as const,
+    fill: axisColor,
+  };
+  const setAxisLeftTickLabelProps = () => axisLeftTickLabelProps;
 
   return (
     <Group left={left || margin.left} top={top || margin.top}>

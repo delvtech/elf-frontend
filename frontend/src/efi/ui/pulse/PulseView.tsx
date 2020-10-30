@@ -5,9 +5,12 @@ import tw from "efi-tailwindcss-classnames";
 
 import BrushChart from "efi/ui/charts/BrushChart/BrushChart";
 import { PieChart } from "efi/ui/charts/PieChart/PieChart";
+import { useDarkMode } from "efi/ui/prefs/useDarkMode/useDarkMode";
+import { Card } from "@blueprintjs/core";
 
 interface PulseViewProps extends RouteComponentProps {}
 export const PulseView: FC<PulseViewProps> = () => {
+  const { isDarkMode } = useDarkMode();
   return (
     <div
       className={tw(
@@ -20,20 +23,22 @@ export const PulseView: FC<PulseViewProps> = () => {
         "md:grid-cols-2",
         "grid-rows-none",
         "md:grid-rows-2",
-        "gap-4",
-        "py-4"
+        "gap-6",
+        "p-8"
       )}
     >
-      <div className={tw("md:justify-center", "md:items-center", "px-4")} />
-      <div className={tw("justify-center", "items-center", "px-4")}>
-        <BrushChart />
-      </div>
-      <div className={tw("justify-center", "items-center", "px-4")}>
-        <PieChart background />
-      </div>
-      <div className={tw("justify-center", "items-center", "px-4")}>
-        <BrushChart />
-      </div>
+      <div className={tw("md:justify-center", "md:items-center")} />
+      <Card className={tw("justify-center", "items-center")}>
+        <BrushChart isDarkMode={isDarkMode} />
+      </Card>
+
+      <Card className={tw("justify-center", "items-center")}>
+        <PieChart isDarkMode={isDarkMode} />
+      </Card>
+
+      <Card className={tw("justify-center", "items-center")}>
+        <BrushChart isDarkMode={isDarkMode} />
+      </Card>
     </div>
   );
 };
