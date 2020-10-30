@@ -1,9 +1,9 @@
 import {
-  Toaster,
-  Position,
   Classes,
-  IToastProps,
   Intent,
+  IToastProps,
+  Position,
+  Toaster,
 } from "@blueprintjs/core";
 import { IconName, IconNames } from "@blueprintjs/icons";
 

@@ -1,8 +1,10 @@
+import React, { FC, useMemo } from "react";
+
 import { Breadcrumbs, IBreadcrumbProps } from "@blueprintjs/core";
+import { t } from "ttag";
+
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { Strategy } from "efi/pools/strategy";
-import React, { FC, useMemo } from "react";
-import { t } from "ttag";
 
 interface InvestBreadcrumbProps {
   availableStrategies: Strategy<CryptoSymbol.ETH>[];

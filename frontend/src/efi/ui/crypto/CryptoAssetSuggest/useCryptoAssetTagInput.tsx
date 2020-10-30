@@ -1,12 +1,14 @@
+import React, { ReactNode, useCallback, useMemo } from "react";
+
 import {
   HTMLInputProps,
   IInputGroupProps,
   Intent,
   ITagProps,
 } from "@blueprintjs/core";
-import { CryptoAssetInfo } from "efi/crypto/CryptoAssetInfo";
-import React, { ReactNode, useCallback, useMemo } from "react";
 import tw from "tailwindcss-classnames";
+
+import { CryptoAssetInfo } from "efi/crypto/CryptoAssetInfo";
 
 interface CryptoAssetTagInput {
   tagInputProps: IInputGroupProps & HTMLInputProps;

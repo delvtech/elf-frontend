@@ -1,17 +1,19 @@
-import React from "react";
-import { filter } from "fuzzaldrin-plus";
+import React, { FC, Fragment } from "react";
+
 import { Classes, IOverlayProps, MenuItem, TagInput } from "@blueprintjs/core";
 import { ItemListPredicate, ItemRenderer, Omnibar } from "@blueprintjs/select";
 import classNames from "classnames";
-import { EFI_SUPPORTED_CRYPTO_ASSETS } from "efi/crypto/cryptoAssets";
-import { CryptoAssetInfo } from "efi/crypto/CryptoAssetInfo";
-import { FC, Fragment } from "react";
+import { filter } from "fuzzaldrin-plus";
 import tw from "tailwindcss-classnames";
 import { t } from "ttag";
-import { useCryptoAssetTagInput } from "./useCryptoAssetTagInput";
-import { useCryptoAssetOmnibar } from "./useCryptoAssetOmnibar";
-import { CryptoAssetSuggestItem } from "./CryptoAssetSuggestItem";
+
+import { CryptoAssetInfo } from "efi/crypto/CryptoAssetInfo";
+import { EFI_SUPPORTED_CRYPTO_ASSETS } from "efi/crypto/cryptoAssets";
 import { useDarkMode } from "efi/ui/prefs/useDarkMode/useDarkMode";
+
+import { CryptoAssetSuggestItem } from "./CryptoAssetSuggestItem";
+import { useCryptoAssetOmnibar } from "./useCryptoAssetOmnibar";
+import { useCryptoAssetTagInput } from "./useCryptoAssetTagInput";
 
 interface CryptoAssetSuggestProps {
   onSelect: (cryptoAsset: CryptoAssetInfo) => void;

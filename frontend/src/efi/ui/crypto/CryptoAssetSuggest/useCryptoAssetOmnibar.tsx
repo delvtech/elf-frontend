@@ -1,7 +1,9 @@
+import { useCallback, useMemo } from "react";
+
 import { HTMLInputProps, IInputGroupProps } from "@blueprintjs/core";
+
 import { CryptoAssetInfo } from "efi/crypto/CryptoAssetInfo";
 import { useBoolean } from "efi/ui/base/useBoolean/useBoolean";
-import { useCallback, useMemo } from "react";
 
 interface CryptoAssetOmnibar {
   isOmnibarOpen: boolean;

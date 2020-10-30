@@ -1,7 +1,8 @@
-import { InjectedConnector } from "@web3-react/injected-connector";
 import { AbstractConnector } from "@web3-react/abstract-connector";
-import { DEFAULT_CHAIN_IDS } from "efi/crypto/ethereum";
+import { InjectedConnector } from "@web3-react/injected-connector";
 import { t } from "ttag";
+
+import { DEFAULT_CHAIN_IDS } from "efi/crypto/ethereum";
 
 /**
  * The 'injected' connector refers to plugin-based wallets like MetaMask, which

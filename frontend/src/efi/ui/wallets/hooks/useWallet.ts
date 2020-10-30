@@ -1,16 +1,18 @@
-import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core";
 import { useEffect } from "react";
-import { AppToaster, makeErrorToast } from "efi/ui/app/AppToaster/AppToaster";
-import { t } from "ttag";
-import { BigNumber } from "ethers";
+
 import { Web3Provider } from "@ethersproject/providers";
+import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core";
 import {
   NoEthereumProviderError,
   UserRejectedRequestError as UserRejectedRequestErrorInjected,
 } from "@web3-react/injected-connector";
-import { getConnectorName } from "efi/wallets/connectors";
+import { BigNumber } from "ethers";
+import { t } from "ttag";
+
+import { AppToaster, makeErrorToast } from "efi/ui/app/AppToaster/AppToaster";
 import { useWalletBalance } from "efi/ui/wallets/hooks/useWalletBalance";
 import { useWalletConnectionStatus } from "efi/ui/wallets/hooks/useWalletConnectionStatus";
+import { getConnectorName } from "efi/wallets/connectors";
 
 export interface Wallet {
   /**

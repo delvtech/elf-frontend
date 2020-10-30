@@ -1,7 +1,9 @@
+import { useQuery } from "react-query";
+
 import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
+
 import { fetchEthBalance } from "efi/wallets/providers";
-import { useQuery } from "react-query";
 
 export function useWalletBalance() {
   const { library, account } = useWeb3React<Web3Provider>();

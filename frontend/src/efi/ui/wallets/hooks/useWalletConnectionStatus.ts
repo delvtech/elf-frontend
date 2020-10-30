@@ -1,15 +1,18 @@
-import { useWeb3React } from "@web3-react/core";
 import { useEffect } from "react";
+import { QueryConfig, useQuery } from "react-query";
+import { usePrevious } from "react-use";
+
+import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
+import { useWeb3React } from "@web3-react/core";
+import { t } from "ttag";
+
 import {
   AppToaster,
   makeErrorToast,
   makeSuccessToast,
 } from "efi/ui/app/AppToaster/AppToaster";
-import { t } from "ttag";
-import { QueryConfig, useQuery } from "react-query";
-import { usePrevious } from "react-use";
-import { IconNames } from "@blueprintjs/icons";
+
 export enum WalletConnectionStatus {
   /**
    * When the user has disconnected their wallet.

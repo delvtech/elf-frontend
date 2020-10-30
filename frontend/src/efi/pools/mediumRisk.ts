@@ -1,6 +1,7 @@
+import { t } from "ttag";
+
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { Strategy } from "efi/pools/strategy";
-import { t } from "ttag";
 
 const ELF_STRATEGY_MEDIUM_RISK = "ELF_STRATEGY_MEDIUM_RISK";
 

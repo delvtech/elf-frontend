@@ -1,16 +1,17 @@
+import React, { CSSProperties, FunctionComponent, useCallback } from "react";
+
 import { Button, Classes, Colors, Icon } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
 import classNames from "classnames";
-import React, { CSSProperties, FunctionComponent, useCallback } from "react";
 import tw from "tailwindcss-classnames";
 import { t } from "ttag";
 
 import { formatChainName } from "efi/ui/crypto/formatChainName";
 import { formatEthBalance } from "efi/ui/crypto/formatEthBalance";
-import { formatWalletAddress } from "efi/ui/wallets/formatWalletAddress";
 import { useDarkMode } from "efi/ui/prefs/useDarkMode/useDarkMode";
+import { formatWalletAddress } from "efi/ui/wallets/formatWalletAddress";
 import { useWallet } from "efi/ui/wallets/hooks/useWallet";
 import { injectedConnector } from "efi/wallets/connectors";
 

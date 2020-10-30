@@ -1,10 +1,12 @@
+import React, { FC } from "react";
+
 import { RouteComponentProps } from "@reach/router";
+import tw from "tailwindcss-classnames";
+import { t } from "ttag";
+
 import { SimpleCryptoAssetFilter } from "efi/ui/swaps/SimpleCryptoAssetFilter/SimpleCryptoAssetFilter";
 import { useWallet } from "efi/ui/wallets/hooks/useWallet";
 import { MissingWalletEmptyState } from "efi/ui/wallets/MissingWalletEmptyState/MissingWalletEmptyState";
-import React, { FC } from "react";
-import tw from "tailwindcss-classnames";
-import { t } from "ttag";
 
 interface SwapViewProps extends RouteComponentProps {}
 export const SwapView: FC<SwapViewProps> = () => {

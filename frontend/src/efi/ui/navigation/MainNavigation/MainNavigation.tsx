@@ -1,11 +1,12 @@
-import { Web3Provider } from "@ethersproject/providers";
-import { useWeb3React } from "@web3-react/core";
 import React, { FC, Fragment, useCallback } from "react";
 
-import { useDarkMode } from "efi/ui/prefs/useDarkMode/useDarkMode";
+import { Web3Provider } from "@ethersproject/providers";
+import { useWeb3React } from "@web3-react/core";
+
 import { useNavigation } from "efi/ui/navigation/hooks/useTab";
 import { SidebarNavigation } from "efi/ui/navigation/SidebarNavigation/SidebarNavigation";
 import { TopbarNavigation } from "efi/ui/navigation/TopbarNavigation/TopbarNavigation";
+import { useDarkMode } from "efi/ui/prefs/useDarkMode/useDarkMode";
 
 interface MainNavigationProps {}
 export const MainNavigation: FC<MainNavigationProps> = () => {
