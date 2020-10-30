@@ -82,7 +82,7 @@ export const TransactionForm: FC<TransactionFormProps> = ({
         />
         <span
           className={tw("text-xs", "text-right", {
-            "text-red-500": !validValue,
+            "text-danger": !validValue,
           })}
         >{t`Available: ${ethBalance} ${cryptoSymbol}`}</span>
       </div>
