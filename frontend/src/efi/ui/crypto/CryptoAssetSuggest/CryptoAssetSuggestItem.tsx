@@ -2,7 +2,7 @@ import React, { FC, useMemo } from "react";
 
 import { Classes, H4 as span, Spinner } from "@blueprintjs/core";
 import classNames from "classnames";
-import tw from "efi/tailwindcss-classnames";
+import tw from "efi-tailwindcss-classnames";
 import { t } from "ttag";
 
 import { CryptoAssetInfo } from "efi/crypto/CryptoAssetInfo";

@@ -3,7 +3,7 @@ import React, { FC, useCallback } from "react";
 import { Button, InputGroup, Intent, Tag } from "@blueprintjs/core";
 import { BigNumber } from "ethers";
 import { formatEther, parseEther } from "ethers/lib/utils";
-import tw from "efi/tailwindcss-classnames";
+import tw from "efi-tailwindcss-classnames";
 import { t } from "ttag";
 
 import { CryptoName } from "efi/crypto/CryptoName";

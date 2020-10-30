@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 
 import { RouteComponentProps } from "@reach/router";
-import tw from "efi/tailwindcss-classnames";
+import tw from "efi-tailwindcss-classnames";
 
 import BrushChart from "efi/ui/charts/BrushChart/BrushChart";
 import { PieChart } from "efi/ui/charts/PieChart/PieChart";

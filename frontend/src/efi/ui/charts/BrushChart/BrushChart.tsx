@@ -14,7 +14,7 @@ import appleStock, { AppleStock } from "@visx/mock-data/lib/mocks/appleStock";
 import { PatternLines } from "@visx/pattern";
 import { scaleLinear, scaleTime } from "@visx/scale";
 import { extent, max } from "d3-array";
-import tw from "efi/tailwindcss-classnames";
+import tw from "efi-tailwindcss-classnames";
 
 import AreaChart from "efi/ui/charts/AreaChart/AreaChart";
 

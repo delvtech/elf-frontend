@@ -2,7 +2,7 @@ import React, { FC } from "react";
 
 import { Switch, Tab, Tabs } from "@blueprintjs/core";
 import classNames from "classnames";
-import tw from "efi/tailwindcss-classnames";
+import tw from "efi-tailwindcss-classnames";
 import { t } from "ttag";
 
 import { Navigation } from "efi/ui/navigation/navigation";
