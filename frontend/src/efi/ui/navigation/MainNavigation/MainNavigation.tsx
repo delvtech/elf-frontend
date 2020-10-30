@@ -6,12 +6,9 @@ import { useDarkMode } from "efi/ui/prefs/useDarkMode/useDarkMode";
 import { useNavigation } from "efi/ui/navigation/hooks/useTab";
 import { SidebarNavigation } from "efi/ui/navigation/SidebarNavigation/SidebarNavigation";
 import { TopbarNavigation } from "efi/ui/navigation/TopbarNavigation/TopbarNavigation";
-import { useWallet } from "efi/ui/wallets/hooks/useWallet";
-import { injectedConnector } from "efi/wallets/connectors";
 
 interface MainNavigationProps {}
 export const MainNavigation: FC<MainNavigationProps> = () => {
-  const { account } = useWallet();
   const { activeTab, changeTab } = useNavigation();
 
   const { isDarkMode, setDarkMode } = useDarkMode();
@@ -21,11 +18,7 @@ export const MainNavigation: FC<MainNavigationProps> = () => {
     [setDarkMode]
   );
 
-  const { deactivate, activate } = useWeb3React<Web3Provider>();
-  const connectToInjectedWallet = useCallback(
-    () => activate(injectedConnector),
-    [activate]
-  );
+  const { deactivate } = useWeb3React<Web3Provider>();
 
   return (
     <Fragment>
@@ -46,9 +39,6 @@ export const MainNavigation: FC<MainNavigationProps> = () => {
           isDarkMode={isDarkMode}
           changeTab={changeTab}
           activeTab={activeTab}
-          account={account}
-          deactivate={deactivate}
-          connectToInjectedWallet={connectToInjectedWallet}
           onDarkModeChange={onDarkModeChange}
         />
       }

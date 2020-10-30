@@ -5,7 +5,7 @@ import {
   IToastProps,
   Intent,
 } from "@blueprintjs/core";
-import { IconNames } from "@blueprintjs/icons";
+import { IconName, IconNames } from "@blueprintjs/icons";
 
 /**
  * Create toasts in response to interactions.
@@ -40,10 +40,10 @@ export function makeSuccessToast(message: string): IToastProps {
   };
 }
 
-export function makeErrorToast(message: string): IToastProps {
+export function makeErrorToast(message: string, icon?: IconName): IToastProps {
   return {
     message,
-    icon: IconNames.ERROR,
+    icon: icon || IconNames.ERROR,
     intent: Intent.DANGER,
   };
 }

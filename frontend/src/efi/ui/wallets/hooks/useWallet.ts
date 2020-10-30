@@ -9,23 +9,14 @@ import {
   UserRejectedRequestError as UserRejectedRequestErrorInjected,
 } from "@web3-react/injected-connector";
 import { getConnectorName } from "efi/wallets/connectors";
-import { ChainId } from "efi/crypto/ethereum";
 import { useWalletBalance } from "efi/ui/wallets/hooks/useWalletBalance";
-import {
-  useWalletConnectionStatus,
-  WalletConnectionStatus,
-} from "efi/ui/wallets/hooks/useWalletConnectionStatus";
+import { useWalletConnectionStatus } from "efi/ui/wallets/hooks/useWalletConnectionStatus";
 
 export interface Wallet {
   /**
    * The library that provides the API to interface with ethereum blockchain, i.e. web3 or ethers.
    */
   library: Web3Provider | undefined;
-
-  /**
-   * The Id to identify which Ethereum network the account is on.
-   */
-  chainId: ChainId | undefined;
 
   /**
    * The wallet address if it is connected
@@ -48,24 +39,20 @@ export interface Wallet {
 }
 
 export function useWallet(): Wallet {
-  const { connector, library, chainId, account, error } = useWeb3React<
-    Web3Provider
-  >();
+  const { connector, library, account, error } = useWeb3React<Web3Provider>();
+
+  // Manages the toasts for connections
+  useWalletConnectionStatus();
 
   useErrorToast(error);
 
   const { data: ethBalance } = useWalletBalance();
 
-  // Don't provide the account if the wallet was disconnected
-  const { status } = useWalletConnectionStatus();
-  const isDisconnected = status === WalletConnectionStatus.DISCONNECTED;
-
   const connectorName = getConnectorName(connector);
 
   return {
     library,
-    chainId,
-    account: isDisconnected ? undefined : account,
+    account,
     error,
     ethBalance,
     connectorName,

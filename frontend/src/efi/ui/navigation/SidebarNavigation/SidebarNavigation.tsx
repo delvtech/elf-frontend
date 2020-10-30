@@ -1,4 +1,4 @@
-import { Button, ButtonGroup, Switch, Tab, Tabs } from "@blueprintjs/core";
+import { Switch, Tab, Tabs } from "@blueprintjs/core";
 import classNames from "classnames";
 import React, { FC } from "react";
 import tw from "tailwindcss-classnames";
@@ -13,18 +13,12 @@ interface SidebarNavigationProps {
   isDarkMode: boolean;
   changeTab: (tabId: Navigation) => void;
   activeTab: Navigation;
-  account: string | null | undefined;
-  deactivate: () => void;
-  connectToInjectedWallet: () => Promise<void>;
   onDarkModeChange: (event: any) => void;
 }
 export const SidebarNavigation: FC<SidebarNavigationProps> = ({
   isDarkMode,
   changeTab,
   activeTab,
-  account,
-  deactivate,
-  connectToInjectedWallet,
   onDarkModeChange,
 }) => {
   return (
@@ -63,43 +57,28 @@ export const SidebarNavigation: FC<SidebarNavigationProps> = ({
       <div
         className={tw("flex", "flex-col", "h-full", "justify-between", "pb-8")}
       >
-        <Tabs
-          id="primary-nav-desktop"
-          animate={
-            // Turned off because it transitions poorly when screen
-            // size is adjusted via dragging the window
-            false
-          }
-          large
-          vertical
-          className={classNames(tw("w-full"), styles.tabs)}
-          onChange={changeTab}
-          selectedTabId={activeTab}
-        >
-          <Tab id={Navigation.HOME} title={t`Home`} />
-          <Tab id={Navigation.PORTFOLIO} title={t`Portfolio`} />
-          <Tab id={Navigation.INVEST} title={t`Invest`} />
-          <Tab id={Navigation.SWAP} title={t`Swap`} />
-        </Tabs>
+        <div className={tw("space-y-12")}>
+          <WalletSummary />
+          <Tabs
+            id="primary-nav-desktop"
+            animate={
+              // Turned off because it transitions poorly when screen
+              // size is adjusted via dragging the window
+              false
+            }
+            large
+            vertical
+            className={classNames(tw("w-full"), styles.tabs)}
+            onChange={changeTab}
+            selectedTabId={activeTab}
+          >
+            <Tab id={Navigation.HOME} title={t`Home`} />
+            <Tab id={Navigation.PORTFOLIO} title={t`Portfolio`} />
+            <Tab id={Navigation.INVEST} title={t`Invest`} />
+          </Tabs>
+        </div>
 
-        <WalletSummary />
-
-        <div
-          className={tw(
-            "flex",
-            "flex-col",
-            "space-y-12",
-            "w-full",
-            "items-center"
-          )}
-        >
-          <ButtonGroup large vertical minimal className={tw("w-full")}>
-            <Button onClick={account ? deactivate : connectToInjectedWallet}>
-              {account ? t`Disconnect wallet` : t`Connect your wallet`}
-            </Button>
-            <Button>{t`Resources`}</Button>
-          </ButtonGroup>
-
+        <div className={tw("flex", "flex-col", "w-full", "items-center")}>
           <Switch
             large
             checked={isDarkMode}

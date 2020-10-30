@@ -14,6 +14,12 @@ export enum ChainName {
   LOCAL = "Local development",
 }
 
+export const ChainNames: Record<ChainId, ChainName> = {
+  [ChainId.MAINNET]: ChainName.MAINNET,
+  [ChainId.KOVAN]: ChainName.KOVAN,
+  [ChainId.LOCAL]: ChainName.LOCAL,
+};
+
 export enum NetworkId {
   MAINNET = 1,
   KOVAN = 42,
