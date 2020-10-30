@@ -12,6 +12,21 @@ export const injectedConnector = new InjectedConnector({
   supportedChainIds: DEFAULT_CHAIN_IDS,
 });
 
+// Patch chainChanged 0xNaN causing app to crash when switching from the mainnet
+// to localnet. See: https://github.com/NoahZinsmeister/web3-react/issues/73
+//@ts-ignore
+const originalChainIdChangeHandler = injectedConnector.handleChainChanged;
+//@ts-ignore
+injectedConnector.handleChainChanged = (chainId: string | number) => {
+  // preserve the existing console log from the
+  // eslint-disable-next-line no-console
+  console.debug("Handling 'chainChanged' event with payload", chainId);
+  if (chainId === "0xNaN") {
+    return; //Ignore 0xNaN, when user doesn't set chainId
+  }
+  originalChainIdChangeHandler(chainId);
+};
+
 const ConnectorsByName: Record<string, AbstractConnector> = {
   Injected: injectedConnector,
 };
@@ -27,7 +42,6 @@ export function getConnectorName(connector?: AbstractConnector): string {
   );
 
   if (!connectorName) {
-    console.warn("Unkown connector", connector);
     return t`Uknown connector`;
   }
 
