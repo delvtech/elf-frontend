@@ -20,17 +20,6 @@ export const ChainNames: Record<ChainId, ChainName> = {
   [ChainId.LOCAL]: ChainName.LOCAL,
 };
 
-export enum NetworkId {
-  MAINNET = 1,
-  KOVAN = 42,
-  LOCAL = 99,
-}
-
-export enum NetworkName {
-  MAINNET = "mainnet",
-  KOVAN = "kovan",
-}
-
 export const DEFAULT_CHAIN_IDS = [
   ChainId.MAINNET,
   ChainId.KOVAN,

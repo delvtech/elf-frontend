@@ -1,7 +1,7 @@
 import { useWeb3React } from "@web3-react/core";
 import { useEffect } from "react";
 import { injectedConnector } from "efi/wallets/connectors";
-import { ChainId, NetworkId } from "efi/crypto/ethereum";
+import { ChainId } from "efi/crypto/ethereum";
 import { Web3Provider } from "@ethersproject/providers";
 
 /**
@@ -22,6 +22,11 @@ export function useSyncWithInjectedEthereum() {
       return;
     }
 
+    // MetaMask: MetaMask will soon stop reloading pages on network change.
+    // For more information, see: https://docs.metamask.io/guide/ethereum-provider.html#ethereum-autorefreshonnetworkchange
+    // Set 'ethereum.autoRefreshOnNetworkChange' to 'false' to silence this warning.
+    ethereum.autoRefreshOnNetworkChange = false;
+
     const handleChainChanged = (chainId: ChainId) => {
       console.warn("chainChanged", chainId);
       activate(injectedConnector);
@@ -34,20 +39,13 @@ export function useSyncWithInjectedEthereum() {
       }
     };
 
-    const handleNetworkChanged = (networkId: NetworkId) => {
-      console.warn("networkChanged", networkId);
-      activate(injectedConnector);
-    };
-
     ethereum.on("chainChanged", handleChainChanged);
     ethereum.on("accountsChanged", handleAccountsChanged);
-    ethereum.on("networkChanged", handleNetworkChanged);
 
     return () => {
       if (ethereum.removeListener) {
         ethereum.removeListener("chainChanged", handleChainChanged);
         ethereum.removeListener("accountsChanged", handleAccountsChanged);
-        ethereum.removeListener("networkChanged", handleNetworkChanged);
       }
     };
   }, [active, error, activate, deactivate]);
