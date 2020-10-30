@@ -9,7 +9,6 @@ import { t } from "ttag";
 import { Strategy } from "efi/pools/strategy";
 import { PieChart } from "efi/ui/charts/PieChart/PieChart";
 import {
-  useElfContractAssetBalances,
   useElfContractAssetSymbols,
   useElfContractBalance,
   useElfContractDepositEth,
@@ -31,7 +30,6 @@ export const StrategyCard: FC<StrategyCardProps> = ({
   const { data: strategyCryptoSymbol } = useElfContractSymbol();
   const { data: elfTotalSupply } = useElfContractTotalSupply();
   const { data: elfBalance } = useElfContractBalance();
-  const { data: strategyAssetBalances } = useElfContractAssetBalances();
   const { data: strategyAssetSymbols } = useElfContractAssetSymbols();
   const [depositEth] = useElfContractDepositEth();
   const [withdrawEth] = useElfContractWithdrawEth();
