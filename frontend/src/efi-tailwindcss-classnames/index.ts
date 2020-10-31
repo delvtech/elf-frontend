@@ -1945,7 +1945,12 @@ export type THeight =
   | "h-full"
   | "h-screen";
 
-export type TMinHeight = "min-h-0" | "min-h-full" | "min-h-screen";
+export type TMinHeight =
+  | "min-h-0"
+  | "min-h-1/4"
+  | "min-h-1/2"
+  | "min-h-3/4"
+  | "min-h-full";
 
 export type TMaxHeight = "max-h-full" | "max-h-screen";
 
@@ -8562,14 +8567,22 @@ export type TPseudoClasses =
   | "md:min-h-0"
   | "lg:min-h-0"
   | "xl:min-h-0"
+  | "sm:min-h-1/4"
+  | "md:min-h-1/4"
+  | "lg:min-h-1/4"
+  | "xl:min-h-1/4"
+  | "sm:min-h-1/2"
+  | "md:min-h-1/2"
+  | "lg:min-h-1/2"
+  | "xl:min-h-1/2"
+  | "sm:min-h-3/4"
+  | "md:min-h-3/4"
+  | "lg:min-h-3/4"
+  | "xl:min-h-3/4"
   | "sm:min-h-full"
   | "md:min-h-full"
   | "lg:min-h-full"
   | "xl:min-h-full"
-  | "sm:min-h-screen"
-  | "md:min-h-screen"
-  | "lg:min-h-screen"
-  | "xl:min-h-screen"
   | "sm:min-w-0"
   | "md:min-w-0"
   | "lg:min-w-0"
