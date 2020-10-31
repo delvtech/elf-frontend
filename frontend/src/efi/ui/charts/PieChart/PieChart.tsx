@@ -58,7 +58,7 @@ const getSubDatumColor = scaleOrdinal({
   range: [Colors.ROSE1, Colors.ROSE2, Colors.ROSE3, Colors.ROSE4, Colors.ROSE5],
 });
 
-const defaultMargin = { top: 20, right: 20, bottom: 20, left: 20 };
+const defaultMargin = { top: 12, right: 12, bottom: 12, left: 12 };
 
 interface PieProps {
   isDarkMode?: boolean;

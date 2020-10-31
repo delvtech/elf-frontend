@@ -59,7 +59,6 @@ export const AreaChart: FunctionComponent<AreaChartProps> = ({
   const axisColor = getAxisColor({ isDarkMode });
   const axisBottomTickLabelProps = {
     textAnchor: "middle" as const,
-    fontFamily: "Arial",
     fontSize: 10,
     fill: axisColor,
   };

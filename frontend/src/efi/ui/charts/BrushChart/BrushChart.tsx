@@ -138,7 +138,7 @@ export const BrushChart: FunctionComponent<BrushChartProps> = ({
   const { startColor, endColor } = getGradientBackgroundColors({ isDarkMode });
 
   return (
-    <div className={tw("w-full", "h-full")} ref={ref as any}>
+    <div className={tw("flex", "w-full", "h-full")} ref={ref as any}>
       <svg width={width} height={height}>
         {background && (
           <LinearGradient
@@ -167,41 +167,44 @@ export const BrushChart: FunctionComponent<BrushChartProps> = ({
           yScale={stockScale}
           gradientColor={endColor}
         />
-        <AreaChart
-          hideBottomAxis
-          hideLeftAxis
-          data={stock}
-          width={width}
-          yMax={yBrushMax}
-          xScale={brushDateScale}
-          yScale={brushStockScale}
-          margin={brushMargin}
-          top={topChartHeight + topChartBottomMargin + margin.top}
-          gradientColor={endColor}
-        >
-          <PatternLines
-            id={PATTERN_ID}
-            height={8}
-            width={8}
-            stroke={getAccentColor({ isDarkMode })}
-            strokeWidth={1}
-            orientation={["diagonal"]}
-          />
-          <Brush
+
+        {!compact && (
+          <AreaChart
+            hideBottomAxis
+            hideLeftAxis
+            data={stock}
+            width={width}
+            yMax={yBrushMax}
             xScale={brushDateScale}
             yScale={brushStockScale}
-            width={xBrushMax}
-            height={yBrushMax}
             margin={brushMargin}
-            handleSize={8}
-            resizeTriggerAreas={["left", "right"]}
-            brushDirection="horizontal"
-            initialBrushPosition={initialBrushPosition}
-            onChange={onBrushChange}
-            onClick={onSetFilteredStock}
-            selectedBoxStyle={getBrushStyle({ isDarkMode })}
-          />
-        </AreaChart>
+            top={topChartHeight + topChartBottomMargin + margin.top}
+            gradientColor={endColor}
+          >
+            <PatternLines
+              id={PATTERN_ID}
+              height={8}
+              width={8}
+              stroke={getAccentColor({ isDarkMode })}
+              strokeWidth={1}
+              orientation={["diagonal"]}
+            />
+            <Brush
+              xScale={brushDateScale}
+              yScale={brushStockScale}
+              width={xBrushMax}
+              height={yBrushMax}
+              margin={brushMargin}
+              handleSize={8}
+              resizeTriggerAreas={["left", "right"]}
+              brushDirection="horizontal"
+              initialBrushPosition={initialBrushPosition}
+              onChange={onBrushChange}
+              onClick={onSetFilteredStock}
+              selectedBoxStyle={getBrushStyle({ isDarkMode })}
+            />
+          </AreaChart>
+        )}
       </svg>
     </div>
   );
