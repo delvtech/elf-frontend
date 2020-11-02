@@ -14,6 +14,7 @@ interface PulseViewProps extends RouteComponentProps {}
 enum PulseTab {
   ALL_MARKETS = "all-markets",
   WALLET = "current-wallet",
+  GOVERNANCE = "governance",
 }
 export const PulseView: FC<PulseViewProps> = () => {
   const { isDarkMode } = useDarkMode();
@@ -41,8 +42,9 @@ export const PulseView: FC<PulseViewProps> = () => {
           onChange={(tabId: PulseTab) => setActivePulse(tabId)}
           className={tw("flex", "w-full", "justify-center")}
         >
-          <Tab id={PulseTab.ALL_MARKETS}>{t`All strategies`}</Tab>
           <Tab id={PulseTab.WALLET}>{t`My portfolio`}</Tab>
+          <Tab id={PulseTab.ALL_MARKETS}>{t`All strategies`}</Tab>
+          <Tab id={PulseTab.GOVERNANCE}>{t`Governance`}</Tab>
         </Tabs>
       </div>
 

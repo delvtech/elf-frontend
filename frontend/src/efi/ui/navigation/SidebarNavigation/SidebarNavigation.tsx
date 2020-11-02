@@ -1,10 +1,11 @@
 import React, { FC } from "react";
 
-import { Switch, Tab, Tabs } from "@blueprintjs/core";
+import { Icon, Switch, Tab, Tabs } from "@blueprintjs/core";
+import { IconNames } from "@blueprintjs/icons";
 import classNames from "classnames";
-import tw from "efi-tailwindcss-classnames";
 import { t } from "ttag";
 
+import tw from "efi-tailwindcss-classnames";
 import { Navigation } from "efi/ui/navigation/navigation";
 import WalletSummary from "efi/ui/wallets/WalletSummary/WalletSummary";
 
@@ -16,6 +17,8 @@ interface SidebarNavigationProps {
   activeTab: Navigation;
   onDarkModeChange: (event: any) => void;
 }
+
+const tabTitleClassName = tw("flex", "space-x-6", "items-center", "p-3");
 export const SidebarNavigation: FC<SidebarNavigationProps> = ({
   isDarkMode,
   changeTab,
@@ -73,9 +76,33 @@ export const SidebarNavigation: FC<SidebarNavigationProps> = ({
             onChange={changeTab}
             selectedTabId={activeTab}
           >
-            <Tab id={Navigation.HOME} title={t`Home`} />
-            <Tab id={Navigation.PULSE} title={t`Pulse`} />
-            <Tab id={Navigation.INVEST} title={t`Invest`} />
+            <Tab
+              id={Navigation.HOME}
+              title={
+                <div className={tabTitleClassName}>
+                  <Icon icon={IconNames.HOME} iconSize={Icon.SIZE_LARGE} />
+                  <span>{t`Home`}</span>
+                </div>
+              }
+            />
+            <Tab
+              id={Navigation.PULSE}
+              title={
+                <div className={tabTitleClassName}>
+                  <Icon icon={IconNames.PULSE} iconSize={Icon.SIZE_LARGE} />
+                  <span>{t`Pulse`}</span>
+                </div>
+              }
+            />
+            <Tab
+              id={Navigation.INVEST}
+              title={
+                <div className={tabTitleClassName}>
+                  <Icon icon={IconNames.CUBE_ADD} iconSize={Icon.SIZE_LARGE} />
+                  <span>{t`Invest`}</span>
+                </div>
+              }
+            />
           </Tabs>
         </div>
 
