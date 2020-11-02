@@ -100,7 +100,7 @@
   },
   "devDependencies": {
     "@typechain/ethers-v5": "^2.0.0",
-    "dependency-cruiser": "^9.15.1",
+    "dependency-cruiser": "^9.16.0",
     "eslint-config-prettier": "^6.15.0",
     "eslint-plugin-jest": "^24.1.0",
     "eslint-plugin-prettier": "^3.1.4",
