@@ -6,7 +6,6 @@ import { formatEther } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { Strategy } from "efi/pools/strategy";
 import { useBoolean } from "efi/ui/base/useBoolean/useBoolean";
 import { PieChart } from "efi/ui/charts/PieChart/PieChart";
@@ -19,6 +18,7 @@ import {
   useElfContractWithdrawEth,
 } from "efi/ui/contracts/useElfContract";
 import { TransactionForm } from "efi/ui/crypto/TransactionForm/TransactionForm";
+import { ConfirmDepositButton } from "efi/ui/pools/ConfrimDepositButton/ConfirmDepositButton";
 import { useWalletBalance } from "efi/ui/wallets/hooks/useWalletBalance";
 
 interface StrategyCardProps {
@@ -36,7 +36,13 @@ export const StrategyCard: FC<StrategyCardProps> = ({
   const [depositEth] = useElfContractDepositEth();
   const [withdrawEth] = useElfContractWithdrawEth();
 
-  // const [depositPending, setDepositPending] = useBoolean(false);
+  // TODO: get this from ethers for actual transaction
+  const {
+    value: depositPending,
+    setTrue: setDepositPending,
+    // setFalse: cancelDepositPending,
+  } = useBoolean(false);
+
   const {
     value: showConfirmation,
     setTrue: setShowConfirmation,
@@ -59,10 +65,15 @@ export const StrategyCard: FC<StrategyCardProps> = ({
   const onDeposit = useCallback(
     (amount: BigNumber) => {
       depositEth(amount);
-      hideConfirmation();
+      setDepositPending();
     },
-    [depositEth, hideConfirmation]
+    [depositEth, setDepositPending]
   );
+
+  const onCancelDeposit = useCallback(() => {
+    setAmountToDeposit(undefined);
+    hideConfirmation();
+  }, [hideConfirmation]);
 
   const onWithdraw = useCallback(
     (amount: BigNumber) => {
@@ -98,8 +109,20 @@ export const StrategyCard: FC<StrategyCardProps> = ({
               amountToDeposit={amountToDeposit}
               cryptoBalance={walletBalance}
               buttonLabel={t`Deposit ${stakingAsset}`}
+              depositPending={depositPending}
               onConfirmDeposit={onDeposit}
             />
+            <Button
+              minimal
+              outlined
+              large
+              intent={Intent.DANGER}
+              onClick={onCancelDeposit}
+              loading={depositPending}
+              disabled={depositPending}
+            >
+              {t`Cancel`}
+            </Button>
           </div>
         </div>
       </Card>
@@ -207,55 +230,5 @@ export const StrategyCard: FC<StrategyCardProps> = ({
         />
       </div>
     </Card>
-  );
-};
-
-interface ConfirmDepositButtonProps {
-  buttonLabel: string;
-  amountToDeposit: BigNumber;
-  cryptoSymbol: CryptoSymbol;
-  cryptoBalance: BigNumber;
-  onConfirmDeposit: (amount: BigNumber) => void;
-}
-
-const ConfirmDepositButton: FC<ConfirmDepositButtonProps> = ({
-  cryptoSymbol,
-  cryptoBalance,
-  amountToDeposit,
-  buttonLabel,
-  onConfirmDeposit,
-}) => {
-  const validValue = amountToDeposit.lte(cryptoBalance);
-
-  // TODO: make this component handle any type of crypto.  We'll formalize this into a function that
-  // does the proper operations depending on the asset.  This is fine for V0.
-  const ethBalance = cryptoBalance && formatEther(cryptoBalance);
-
-  const onClick = useCallback(() => {
-    if (validValue && onConfirmDeposit) {
-      onConfirmDeposit(amountToDeposit);
-    }
-  }, [amountToDeposit, onConfirmDeposit, validValue]);
-
-  return (
-    <div className={tw("flex", "flex-col", "space-y-5")}>
-      <div className={tw("flex", "flex-col", "space-y-2")}>
-        <span
-          className={tw("text-xs", "text-right", {
-            "text-red-500": !validValue,
-          })}
-        >{t`Available: ${ethBalance} ${cryptoSymbol}`}</span>
-      </div>
-      <Button
-        disabled={!validValue}
-        onClick={onClick}
-        minimal
-        outlined
-        large
-        intent={Intent.PRIMARY}
-      >
-        {buttonLabel}
-      </Button>
-    </div>
   );
 };
