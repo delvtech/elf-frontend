@@ -131,15 +131,23 @@ export const StrategyCard: FC<StrategyCardProps> = ({
   const confirmationMessage =
     progress === 1
       ? t`Transaction complete!`
-      : `Confirming transaction, ${confirmations} of 6 confirmations complete...`;
+      : t`Confirming transaction, ${confirmations} of ${NUM_CONFIRMATIONS_REQUIRED_FOR_TRANSACTION} blocks confirmed...`;
 
   if (showConfirmation && amountToDeposit && walletBalance) {
     return (
-      <Card className={tw("flex", "flex-col", "md:w-1/2", "transition-all")}>
+      <Card
+        className={tw(
+          "flex",
+          "flex-col",
+          "w-full",
+          "md:w-1/2",
+          "transition-all"
+        )}
+      >
         <div
           className={tw("flex", "flex-col", "mb-8", "items-center", "w-full")}
         >
-          <H3>{t`Deposit into Stratgey`}</H3>
+          <H3>{t`Deposit into Strategy`}</H3>
 
           <div className={tw("flex", "flex-col", "space-y-8", "w-full")}>
             {/* */}
@@ -160,18 +168,12 @@ export const StrategyCard: FC<StrategyCardProps> = ({
                   stripes={false}
                   value={progress}
                 />
-                <div className={tw("flex", "flex-wrap", "justify-between")}>
-                  <div
-                    className={tw(
-                      "flex-shrink-0",
-                      "whitespace-no-wrap",
-                      "mr-2"
-                    )}
-                  >
+                <div className={tw("flex", "flex-col", "lg:flex-row")}>
+                  <div className={tw("flex-1", "truncate")}>
                     {confirmationMessage}
                   </div>
                   <div
-                    className={tw("flex-shrink-0", "whitespace-no-wrap")}
+                    className={tw("flex-shrink-0")}
                   >{jt`View on ${etherscan}`}</div>
                 </div>
               </div>
