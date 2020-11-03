@@ -1,24 +1,28 @@
 import React, { FC, useCallback, useState } from "react";
 
 import { Card, H3, Intent, Tag } from "@blueprintjs/core";
-import { BigNumber } from "ethers";
+import { BigNumber, ContractTransaction } from "ethers";
 import { formatEther } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { Strategy } from "efi/pools/strategy";
-import { useBoolean } from "efi/ui/base/useBoolean/useBoolean";
+import {
+  AppToaster,
+  makeErrorToast,
+  makeSuccessToast,
+} from "efi/ui/app/AppToaster/AppToaster";
 import { PieChart } from "efi/ui/charts/PieChart/PieChart";
 import {
   useElfContractAssetSymbols,
   useElfContractBalance,
+  useElfContractDepositEth,
   useElfContractSymbol,
   useElfContractTotalSupply,
+  useElfContractWithdrawEth,
 } from "efi/ui/contracts/useElfContract";
 import { TransactionForm } from "efi/ui/crypto/TransactionForm/TransactionForm";
-import { StrategyDepositConfirmationCard } from "efi/ui/pools/StrategyDepositConfirmationCard/StrategyDepositConfirmationCard";
-import { StrategyWithdrawConfirmationCard } from "efi/ui/pools/StrategyWithdrawConfirmationCard/StrategyWithdrawConfirmationCard";
 import { useWalletBalance } from "efi/ui/wallets/hooks/useWalletBalance";
 
 interface StrategyCardProps {
@@ -33,83 +37,109 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
   const { data: elfBalance } = useElfContractBalance();
   const { data: strategyAssetSymbols } = useElfContractAssetSymbols();
 
-  const {
-    value: confirmDeposit,
-    setTrue: showDepositConfirmation,
-    setFalse: hideDepositConfirmation,
-  } = useBoolean(false);
-  const [amountToDeposit, setAmountToDeposit] = useState<
-    BigNumber | undefined
-  >();
+  /****
+   * Deposit hooks
+   ****/
+  const [, setAmountToDeposit] = useState<BigNumber | undefined>();
+
+  const { depositEth } = useElfContractDepositEth();
+
+  const [depositStarted, setDepositStarted] = useState(false);
+  const [, setPendingTransaction] = useState<ContractTransaction>();
+
   const startDeposit = useCallback(
-    (amount: BigNumber) => {
+    async (amount: BigNumber) => {
+      setDepositStarted(true);
       setAmountToDeposit(amount);
-      showDepositConfirmation();
+      try {
+        const depositTransaction = await depositEth(amount);
+        AppToaster.show({
+          ...makeSuccessToast(t`View transaction on etherscan`),
+          intent: Intent.PRIMARY,
+          action: {
+            href: `https://etherscan.io/tx/${depositTransaction?.hash}`,
+            text: "View",
+            intent: Intent.SUCCESS,
+          },
+        });
+      } catch (error) {
+        // if the user Rejects the transaction in their wallet
+        setPendingTransaction(undefined);
+        AppToaster.show({
+          ...makeErrorToast(t`Transaction failed`),
+          intent: Intent.PRIMARY,
+        });
+      }
+      setDepositStarted(false);
     },
-    [showDepositConfirmation]
+    [depositEth, setDepositStarted]
   );
 
-  const onDepositComplete = useCallback(() => {
-    setAmountToDeposit(undefined);
-    hideDepositConfirmation();
-  }, [hideDepositConfirmation]);
-
-  const onCancelDeposit = useCallback(() => {
-    setAmountToDeposit(undefined);
-    hideDepositConfirmation();
-  }, [hideDepositConfirmation]);
-
-  const {
-    value: confirmWithdraw,
-    setTrue: showWithdrawConfirmation,
-    setFalse: hideWithdrawConfirmation,
-  } = useBoolean(false);
-
+  /****
+   * Withdraw hooks
+   ****/
   const [amountToWithdraw, setAmountToWithdraw] = useState<
     BigNumber | undefined
   >();
-
+  const { withdrawEth } = useElfContractWithdrawEth(amountToWithdraw);
+  const [withdrawStarted, setWithdrawStarted] = useState(false);
   const startWithdraw = useCallback(
-    (amount: BigNumber) => {
+    async (amount: BigNumber) => {
+      setWithdrawStarted(true);
       setAmountToWithdraw(amount);
-      showWithdrawConfirmation();
+      try {
+        const withdrawTransaction = await withdrawEth(amount);
+        AppToaster.show({
+          ...makeSuccessToast(t`View transaction on etherscan`),
+          intent: Intent.PRIMARY,
+          action: {
+            href: `https://etherscan.io/tx/${withdrawTransaction?.hash}`,
+            text: "View",
+            intent: Intent.SUCCESS,
+          },
+        });
+      } catch (error) {
+        // if the user Rejects the transaction in their wallet
+        setPendingTransaction(undefined);
+        AppToaster.show({
+          ...makeErrorToast(t`Transaction failed`),
+          intent: Intent.PRIMARY,
+        });
+      }
+      setWithdrawStarted(false);
     },
-    [showWithdrawConfirmation]
+    [withdrawEth]
   );
 
-  const onWithdrawComplete = useCallback(() => {
-    setAmountToWithdraw(undefined);
-    hideWithdrawConfirmation();
-  }, [hideWithdrawConfirmation]);
+  // const {
+  //   value: confirmWithdraw,
+  //   setTrue: showWithdrawConfirmation,
+  //   setFalse: hideWithdrawConfirmation,
+  // } = useBoolean(false);
 
-  const onCancelWithdraw = useCallback(() => {
-    setAmountToWithdraw(undefined);
-    hideWithdrawConfirmation();
-  }, [hideWithdrawConfirmation]);
+  // const [amountToWithdraw, setAmountToWithdraw] = useState<
+  //   BigNumber | undefined
+  // >();
+
+  // const startWithdraw = useCallback(
+  //   (amount: BigNumber) => {
+  //     setAmountToWithdraw(amount);
+  //     showWithdrawConfirmation();
+  //   },
+  //   [showWithdrawConfirmation]
+  // );
+
+  // const onWithdrawComplete = useCallback(() => {
+  //   setAmountToWithdraw(undefined);
+  //   hideWithdrawConfirmation();
+  // }, [hideWithdrawConfirmation]);
+
+  // const onCancelWithdraw = useCallback(() => {
+  //   setAmountToWithdraw(undefined);
+  //   hideWithdrawConfirmation();
+  // }, [hideWithdrawConfirmation]);
 
   const totalSupply = elfTotalSupply && formatEther(elfTotalSupply);
-
-  if (confirmDeposit && amountToDeposit) {
-    return (
-      <StrategyDepositConfirmationCard
-        strategy={strategy}
-        amountToDeposit={amountToDeposit}
-        onDepositComplete={onDepositComplete}
-        onCancel={onCancelDeposit}
-      />
-    );
-  }
-
-  if (confirmWithdraw && amountToWithdraw) {
-    return (
-      <StrategyWithdrawConfirmationCard
-        strategy={strategy}
-        amountToWithdraw={amountToWithdraw}
-        onWithdrawComplete={onWithdrawComplete}
-        onCancel={onCancelWithdraw}
-      />
-    );
-  }
 
   return (
     <Card className={tw("flex", "flex-col", "md:w-1/2", "transition-all")}>
@@ -189,7 +219,13 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
           inputLabel={t`Deposit`}
           cryptoSymbol={stakingAsset}
           cryptoBalance={walletBalance}
-          buttonLabel={t`Deposit ${stakingAsset}`}
+          buttonIntent={depositStarted ? Intent.WARNING : Intent.PRIMARY}
+          buttonEnabled={!depositStarted}
+          buttonLabel={
+            depositStarted
+              ? t`Confirming deposit...`
+              : t`Deposit ${stakingAsset}`
+          }
           onTransaction={startDeposit}
         />
 
@@ -198,7 +234,13 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
           inputLabel={t`Withdraw`}
           cryptoSymbol={strategyCryptoSymbol as CryptoSymbol}
           cryptoBalance={elfBalance}
-          buttonLabel={t`Withdraw ${stakingAsset}`}
+          buttonIntent={withdrawStarted ? Intent.WARNING : Intent.PRIMARY}
+          buttonEnabled={!withdrawStarted}
+          buttonLabel={
+            withdrawStarted
+              ? t`Confirming withdraw...`
+              : t`Withdraw ${stakingAsset}`
+          }
           onTransaction={startWithdraw}
         />
       </div>

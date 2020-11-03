@@ -16,11 +16,13 @@ import { CryptoIcon } from "efi/ui/crypto/CryptoIcon";
 import styles from "efi/ui/crypto/TransactionForm/TransactionForm.module.css";
 
 interface TransactionFormProps {
+  buttonEnabled?: boolean;
   inputLabel: string;
   buttonLabel: string;
+  buttonIntent?: Intent;
   cryptoSymbol: CryptoSymbol;
   cryptoBalance: BigNumber | undefined;
-  onTransaction: (amount: BigNumber) => void;
+  onTransaction: (amount: BigNumber) => Promise<void>;
 }
 
 const numericInputOptions: NumericInputOptions = {
@@ -32,10 +34,12 @@ const numericInputOptions: NumericInputOptions = {
 };
 
 export const TransactionForm: FC<TransactionFormProps> = ({
+  buttonEnabled = true,
   inputLabel,
   cryptoSymbol,
   cryptoBalance,
   buttonLabel,
+  buttonIntent = Intent.PRIMARY,
   onTransaction,
 }) => {
   const [stringValue, onChange] = useNumericInput(numericInputOptions);
@@ -46,14 +50,17 @@ export const TransactionForm: FC<TransactionFormProps> = ({
   // does the proper operations depending on the asset.  This is fine for V0.
   const ethBalance = cryptoBalance && commify(formatEther(cryptoBalance));
 
-  const onClick = useCallback(() => {
+  const onClick = useCallback(async () => {
     if (validValue && onTransaction) {
       if (!value) {
         return;
       }
-      onTransaction(value);
+      await onTransaction(value);
+      // TODO: Hack to reset the value of the Numeric Input. This should instead
+      // call onResetValue or something from userNumericInput instead.
+      onChange({ target: { value: "" } } as any);
     }
-  }, [onTransaction, validValue, value]);
+  }, [onChange, onTransaction, validValue, value]);
 
   return (
     <div className={tw("flex", "flex-col", "space-y-5")}>
@@ -98,12 +105,12 @@ export const TransactionForm: FC<TransactionFormProps> = ({
         </div>
       </div>
       <Button
-        disabled={!value || !validValue}
+        disabled={!value || !validValue || !buttonEnabled}
         onClick={onClick}
         minimal
         outlined
         large
-        intent={Intent.PRIMARY}
+        intent={buttonIntent}
       >
         {buttonLabel}
       </Button>
