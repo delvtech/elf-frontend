@@ -2,7 +2,7 @@ import React, { FC, useCallback } from "react";
 
 import { Button, Intent } from "@blueprintjs/core";
 import { BigNumber } from "ethers";
-import { formatEther } from "ethers/lib/utils";
+import { commify, formatEther } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -29,7 +29,7 @@ export const ConfirmDepositButton: FC<ConfirmDepositButtonProps> = ({
 
   // TODO: make this component handle any type of crypto.  We'll formalize this into a function that
   // does the proper operations depending on the asset.  This is fine for V0.
-  const ethBalance = cryptoBalance && formatEther(cryptoBalance);
+  const ethBalance = cryptoBalance && commify(formatEther(cryptoBalance));
 
   const onClick = useCallback(() => {
     if (validValue && onConfirmDeposit) {
