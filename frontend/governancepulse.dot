@@ -1,0 +1,60 @@
+digraph ElementGoverancePulse {
+        graph [fontname="Roboto", nodesep=2.5, ranksep=3.5];
+        node [fontname="Roboto"];
+        edge [fontname="Roboto"];
+        size="5,5!";
+        labelloc="top";
+        compound="true";
+        label="Element Pulse dashboards";
+
+        governance_tokens[label=<<b>Governance Tokens</b>
+          <br />
+          <font point-size="12">getTokenName()</font>
+          <font point-size="12">getEthValue()</font>
+          <font point-size="12">delegate()</font>
+          <font point-size="12">getAllocations()</font>
+          <font point-size="12">getTotalSupply()</font>
+          >]
+
+        governance_event[label=<<b>Governance Events</b>
+          <br />
+          <font point-size="12">getEventName()</font>
+          <font point-size="12">getEventParameters()</font>
+          <font point-size="12">getVotes()</font>
+          <font point-size="12">getEventHistory()</font>
+          >]
+
+        gsc_members[label=<<b>Governance Members</b>
+          <br />
+          <font point-size="12">getAllMembers()</font>
+          <font point-size="12">getMember()</font>
+          <font point-size="12">getMemberBalance()</font>
+          <font point-size="12">getMemberDelegations()</font>
+          >]
+
+        subgraph cluster_governance { 
+                style="filled";
+                label=< <B>Governance</B> >;
+
+                VotingRecordsDashboard[shape=box]
+                DelegationDashboard[shape=box]
+                RiskParametersDashboard[shape=box]
+        }
+
+        VotingRecordsDashboard -> gsc_members[label="member voting history"]
+        VotingRecordsDashboard -> governance_event[label="Active/past events"]
+        DelegationDashboard -> governance_tokens[label="- total governance tokens delegated\n- in-dashboard user delegation controls"]
+        DelegationDashboard -> gsc_members[label="# of members"]
+        RiskParametersDashboard -> governance_event[label="precedent for current parameters"]
+
+        subgraph cluster_userDashboards {
+                style="filled";
+                label=< <B>User</B> >;
+
+                PortfolioDashboard[shape=box]
+        }
+        PortfolioDashboard -> governance_tokens[label="token balance"]
+
+
+
+}
