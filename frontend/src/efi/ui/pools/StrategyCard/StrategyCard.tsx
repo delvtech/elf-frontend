@@ -14,9 +14,7 @@ import { formatEther } from "ethers/lib/utils";
 import { jt, t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import {
-  NUM_CONFIRMATIONS_REQUIRED_FOR_TRANSACTION,
-} from "efi/crypto/confirmations";
+import { NUM_CONFIRMATIONS_REQUIRED_FOR_TRANSACTION } from "efi/crypto/confirmations";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { Strategy } from "efi/pools/strategy";
 import { useBoolean } from "efi/ui/base/useBoolean/useBoolean";
@@ -30,9 +28,7 @@ import {
   useElfContractWithdrawEth,
 } from "efi/ui/contracts/useElfContract";
 import { TransactionForm } from "efi/ui/crypto/TransactionForm/TransactionForm";
-import {
-  ConfirmDepositButton,
-} from "efi/ui/pools/ConfrimDepositButton/ConfirmDepositButton";
+import { ConfirmDepositButton } from "efi/ui/pools/ConfrimDepositButton/ConfirmDepositButton";
 import { useWalletBalance } from "efi/ui/wallets/hooks/useWalletBalance";
 
 interface StrategyCardProps {
