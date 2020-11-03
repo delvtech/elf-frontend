@@ -13,7 +13,7 @@ import {
   makeErrorToast,
   makeSuccessToast,
 } from "efi/ui/app/AppToaster/AppToaster";
-import { PieChart } from "efi/ui/charts/PieChart/PieChart";
+import { PieChart, PieData } from "efi/ui/charts/PieChart/PieChart";
 import {
   useElfContractAssetSymbols,
   useElfContractBalance,
@@ -28,6 +28,13 @@ import { useWalletBalance } from "efi/ui/wallets/hooks/useWalletBalance";
 interface StrategyCardProps {
   strategy: Strategy<any>;
 }
+
+const stubbedStrategyData: PieData[] = [
+  { name: "yDAI", value: 100 },
+  { name: "yUSDC", value: 300 },
+  { name: "yUSDT", value: 150 },
+  { name: "yTUSD", value: 150 },
+];
 
 export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
   const { name, stakingAsset, apy } = strategy;
@@ -210,7 +217,7 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
             "overflow-hidden" // required to make responsiveness work
           )}
         >
-          <PieChart />
+          <PieChart pieData={stubbedStrategyData} />
         </div>
       </div>
       <div className={tw("flex", "justify-between", "w-full", "space-x-8")}>

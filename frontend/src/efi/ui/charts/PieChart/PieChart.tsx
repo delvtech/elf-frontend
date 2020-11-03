@@ -67,7 +67,7 @@ interface PieProps {
   height?: number;
   margin?: typeof defaultMargin;
   animate?: boolean;
-  pieData?: PieData;
+  pieData?: PieData[];
   background?: boolean;
 }
 
@@ -77,9 +77,9 @@ export const PieChart: React.FunctionComponent<PieProps> = (props) => {
     animate = true,
     background = false,
     isDarkMode,
+    pieData = tokens,
   } = props;
 
-  const pieData = tokens;
   const [ref, dimensions] = useMeasure();
   const width = props.width ?? dimensions.width ?? 0;
   const height = props.height ?? dimensions.height ?? 0;
