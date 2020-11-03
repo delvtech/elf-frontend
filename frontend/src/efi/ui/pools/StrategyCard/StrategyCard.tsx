@@ -128,7 +128,7 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
             </div>
           </div>
 
-          {/*Held Assets Tags*/}
+          {/* Held Assets Tags*/}
           <div className={tw("flex", "flex-col", "space-y-3")}>
             <span> {t`Assets in this strategy`}</span>
             <div className={tw("flex", "space-x-4")}>
