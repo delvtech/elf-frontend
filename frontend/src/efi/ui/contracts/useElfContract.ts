@@ -3,6 +3,7 @@ import { queryCache, useMutation, useQuery } from "react-query";
 import { BigNumber } from "ethers";
 
 import {
+  estimateGasForDepositEth,
   fetchBalance,
   fetchContractAssetBalances,
   fetchContractAssetSymbols,
@@ -52,25 +53,49 @@ export function useElfContractSymbol() {
   return useQuery(contractGovernanceKey, () => fetchSymbol());
 }
 
-export function useElfContractDepositEth() {
+interface ElfDepositEth {
+  gasEstimate: any;
+  depositEth: any;
+}
+
+const contractDepositEthGasEstimateKey = [
+  "contract",
+  "elf",
+  "depositEth",
+  "gasEstimate",
+];
+
+export function useElfContractDepositEth(): ElfDepositEth {
   const { library } = useWallet();
-  return useMutation(
+  const signer = library?.getSigner();
+  const gasEstimate = useQuery(contractDepositEthGasEstimateKey, () => {
+    if (!signer) {
+      return new Promise(() => {});
+    }
+
+    return estimateGasForDepositEth(signer);
+  });
+  const depositEth = useMutation(
     (amount: BigNumber) => {
-      if (!library) {
+      if (!signer) {
         return new Promise(() => {});
       }
-      const signer = library.getSigner();
       return postDepositEth(signer, amount);
     },
     {
-      onSuccess: (data, variables) => {
+      onSuccess: () => {
         queryCache.invalidateQueries(contractBalanceKey);
       },
-      onError: (data, variables) => {
-        console.error("There was an error depositing Eth in the Elf Strategy.");
+      onError: (error) => {
+        console.error(
+          "There was an error depositing Eth in the Elf Strategy.",
+          error
+        );
       },
     }
   );
+
+  return { gasEstimate, depositEth };
 }
 
 export function useElfContractWithdrawEth() {
