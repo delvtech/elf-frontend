@@ -14,7 +14,7 @@ import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 const RPC_HOST = "http://127.0.0.1:8545";
 
 // TODO: Get this from the environment
-const ELF_ADDRESS = "0xddc0543eBD9b9DD61222407d95Ce5eB9A32e3560";
+const ELF_ADDRESS = "0xac64f6df4a679a65d62ef31E2f0568E4e99e0124";
 
 const provider = new providers.JsonRpcProvider(RPC_HOST);
 
