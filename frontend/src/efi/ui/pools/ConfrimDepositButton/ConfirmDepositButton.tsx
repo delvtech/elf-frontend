@@ -12,7 +12,7 @@ interface ConfirmDepositButtonProps {
   buttonLabel: string;
   amountToDeposit: BigNumber;
   cryptoSymbol: CryptoSymbol;
-  cryptoBalance: BigNumber;
+  cryptoBalance: BigNumber | undefined;
   depositPending: boolean;
   onConfirmDeposit: (amount: BigNumber) => void;
 }
@@ -25,7 +25,7 @@ export const ConfirmDepositButton: FC<ConfirmDepositButtonProps> = ({
   depositPending,
   onConfirmDeposit,
 }) => {
-  const validValue = amountToDeposit.lte(cryptoBalance);
+  const validValue = cryptoBalance ? amountToDeposit.lte(cryptoBalance) : false;
 
   // TODO: make this component handle any type of crypto.  We'll formalize this into a function that
   // does the proper operations depending on the asset.  This is fine for V0.
