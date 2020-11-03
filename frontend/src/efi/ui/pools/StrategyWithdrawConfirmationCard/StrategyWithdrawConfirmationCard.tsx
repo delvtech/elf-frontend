@@ -27,7 +27,9 @@ export const StrategyWithdrawConfirmationCard: FC<StrategyWithdrawConfirmationCa
   onCancel,
 }) => {
   const { data: walletBalance } = useWalletBalance();
-  const { withdrawEth, gasEstimate } = useElfContractWithdrawEth();
+  const { withdrawEth, gasEstimate } = useElfContractWithdrawEth(
+    amountToWithdraw
+  );
   const [currentTransaction, setCurrentTransaction] = useState<
     ContractTransaction
   >();
