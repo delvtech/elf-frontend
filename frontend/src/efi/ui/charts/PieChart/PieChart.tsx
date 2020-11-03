@@ -5,8 +5,6 @@ import { useMeasure } from "react-use";
 import { Colors } from "@blueprintjs/core";
 import { LinearGradient } from "@visx/gradient";
 import { Group } from "@visx/group";
-import { withParentSize } from "@visx/responsive";
-import { WithParentSizeProvidedProps } from "@visx/responsive/lib/enhancers/withParentSize";
 import { scaleOrdinal } from "@visx/scale";
 import Pie, { PieArcDatum, ProvidedProps } from "@visx/shape/lib/shapes/Pie";
 
@@ -73,9 +71,7 @@ interface PieProps {
   background?: boolean;
 }
 
-export const PieChart: React.FunctionComponent<
-  PieProps & WithParentSizeProvidedProps
-> = (props) => {
+export const PieChart: React.FunctionComponent<PieProps> = (props) => {
   const {
     margin = defaultMargin,
     animate = true,
@@ -167,8 +163,6 @@ export const PieChart: React.FunctionComponent<
     </div>
   );
 };
-
-export const ResponsivePieChart = withParentSize(PieChart);
 
 // react-spring transition definitions
 type AnimatedStyles = { startAngle: number; endAngle: number; opacity: number };
