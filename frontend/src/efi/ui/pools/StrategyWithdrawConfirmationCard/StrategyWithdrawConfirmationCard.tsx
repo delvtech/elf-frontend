@@ -33,6 +33,7 @@ export const StrategyWithdrawConfirmationCard: FC<StrategyWithdrawConfirmationCa
   const [currentTransaction, setCurrentTransaction] = useState<
     ContractTransaction
   >();
+  console.log("currentTransaction", currentTransaction);
   const { data: gasEstimateInWei } = gasEstimate;
   const gasEstimateInEth = gasEstimateInWei
     ? formatEther(gasEstimateInWei)
@@ -53,9 +54,11 @@ export const StrategyWithdrawConfirmationCard: FC<StrategyWithdrawConfirmationCa
     async (amount: BigNumber) => {
       setConfirmations(0);
       const transaction = await withdrawEth(amount);
-      if (transaction) {
-        setCurrentTransaction(transaction);
+      if (!transaction) {
+        onCancel();
+        return;
       }
+      setCurrentTransaction(transaction);
       setWithdrawPending();
 
       let clearId: number;
@@ -73,7 +76,7 @@ export const StrategyWithdrawConfirmationCard: FC<StrategyWithdrawConfirmationCa
         });
       }, 1000);
     },
-    [setWithdrawPending, withdrawEth]
+    [onCancel, setWithdrawPending, withdrawEth]
   );
 
   // delay for 3 seconds so the user has a little bit to see the transaction completed
