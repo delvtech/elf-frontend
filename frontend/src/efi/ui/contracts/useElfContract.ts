@@ -4,6 +4,7 @@ import { BigNumber, ContractTransaction } from "ethers";
 
 import {
   estimateGasForDepositEth,
+  estimateGasForWithdrawEth,
   fetchBalance,
   fetchContractAssetBalances,
   fetchContractAssetSymbols,
@@ -68,12 +69,14 @@ const contractDepositEthGasEstimateKey = [
 export function useElfContractDepositEth(): ElfDepositEth {
   const { library } = useWallet();
   const signer = library?.getSigner();
+
   const gasEstimate = useQuery<BigNumber | undefined>(
     contractDepositEthGasEstimateKey,
     () => {
       return estimateGasForDepositEth(signer);
     }
   );
+
   const [depositEth] = useMutation(
     (amount: BigNumber) => {
       return postDepositEth(signer, amount);
@@ -94,14 +97,33 @@ export function useElfContractDepositEth(): ElfDepositEth {
   return { gasEstimate, depositEth };
 }
 
-export function useElfContractWithdrawEth() {
+interface ElfWithdrawEth {
+  gasEstimate: QueryResult<BigNumber | undefined>;
+  withdrawEth: (amount: BigNumber) => Promise<ContractTransaction | undefined>;
+}
+
+const contractWithdrawEthGasEstimateKey = [
+  "contract",
+  "elf",
+  "withdrawEth",
+  "gasEstimate",
+];
+
+export function useElfContractWithdrawEth(
+  amount: BigNumber | undefined
+): ElfWithdrawEth {
   const { library } = useWallet();
-  return useMutation(
+  const signer = library?.getSigner();
+
+  const gasEstimate = useQuery<BigNumber | undefined>(
+    contractWithdrawEthGasEstimateKey,
+    () => {
+      return estimateGasForWithdrawEth(signer, amount || "0");
+    }
+  );
+
+  const [withdrawEth] = useMutation(
     async (amount: BigNumber) => {
-      if (!library) {
-        return {};
-      }
-      const signer = library.getSigner();
       return postWithdrawEth(signer, amount);
     },
     {
@@ -116,4 +138,6 @@ export function useElfContractWithdrawEth() {
       },
     }
   );
+
+  return { gasEstimate, withdrawEth };
 }

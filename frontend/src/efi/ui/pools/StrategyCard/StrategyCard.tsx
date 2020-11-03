@@ -15,10 +15,10 @@ import {
   useElfContractBalance,
   useElfContractSymbol,
   useElfContractTotalSupply,
-  useElfContractWithdrawEth,
 } from "efi/ui/contracts/useElfContract";
 import { TransactionForm } from "efi/ui/crypto/TransactionForm/TransactionForm";
 import { StrategyDepositConfirmationCard } from "efi/ui/pools/StrategyDepositConfirmationCard/StrategyDepositConfirmationCard";
+import { StrategyWithdrawConfirmationCard } from "efi/ui/pools/StrategyWithdrawConfirmationCard/StrategyWithdrawConfirmationCard";
 import { useWalletBalance } from "efi/ui/wallets/hooks/useWalletBalance";
 
 interface StrategyCardProps {
@@ -33,8 +33,6 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
   const { data: elfBalance } = useElfContractBalance();
   const { data: strategyAssetSymbols } = useElfContractAssetSymbols();
 
-  const [withdrawEth] = useElfContractWithdrawEth();
-
   const {
     value: confirmDeposit,
     setTrue: showDepositConfirmation,
@@ -43,7 +41,6 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
   const [amountToDeposit, setAmountToDeposit] = useState<
     BigNumber | undefined
   >();
-
   const startDeposit = useCallback(
     (amount: BigNumber) => {
       setAmountToDeposit(amount);
@@ -52,8 +49,6 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
     [showDepositConfirmation]
   );
 
-  // TODO: add some checks here to make sure that the balance is greater than the amount depositing.
-  //  Later we'll also pass the asset and determine which contract to call.
   const onDepositComplete = useCallback(() => {
     setAmountToDeposit(undefined);
     hideDepositConfirmation();
@@ -64,12 +59,33 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
     hideDepositConfirmation();
   }, [hideDepositConfirmation]);
 
-  const onWithdraw = useCallback(
+  const {
+    value: confirmWithdraw,
+    setTrue: showWithdrawConfirmation,
+    setFalse: hideWithdrawConfirmation,
+  } = useBoolean(false);
+
+  const [amountToWithdraw, setAmountToWithdraw] = useState<
+    BigNumber | undefined
+  >();
+
+  const startWithdraw = useCallback(
     (amount: BigNumber) => {
-      withdrawEth(amount);
+      setAmountToWithdraw(amount);
+      showWithdrawConfirmation();
     },
-    [withdrawEth]
+    [showWithdrawConfirmation]
   );
+
+  const onWithdrawComplete = useCallback(() => {
+    setAmountToWithdraw(undefined);
+    hideWithdrawConfirmation();
+  }, [hideWithdrawConfirmation]);
+
+  const onCancelWithdraw = useCallback(() => {
+    setAmountToWithdraw(undefined);
+    hideWithdrawConfirmation();
+  }, [hideWithdrawConfirmation]);
 
   const totalSupply = elfTotalSupply && formatEther(elfTotalSupply);
 
@@ -80,6 +96,17 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
         amountToDeposit={amountToDeposit}
         onDepositComplete={onDepositComplete}
         onCancel={onCancelDeposit}
+      />
+    );
+  }
+
+  if (confirmWithdraw && amountToWithdraw) {
+    return (
+      <StrategyWithdrawConfirmationCard
+        strategy={strategy}
+        amountToWithdraw={amountToWithdraw}
+        onWithdrawComplete={onWithdrawComplete}
+        onCancel={onCancelWithdraw}
       />
     );
   }
@@ -173,7 +200,7 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
           cryptoSymbol={strategyCryptoSymbol as CryptoSymbol}
           cryptoBalance={elfBalance}
           buttonLabel={t`Withdraw ${stakingAsset}`}
-          onTransaction={onWithdraw}
+          onTransaction={startWithdraw}
         />
       </div>
     </Card>

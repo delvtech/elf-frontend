@@ -2,6 +2,7 @@ import elfAbi from "elf-contracts/contracts/Elf.json";
 import { Elf } from "elf-contracts/types/Elf";
 import {
   BigNumber,
+  BigNumberish,
   Contract,
   ContractTransaction,
   providers,
@@ -109,10 +110,24 @@ export async function postDepositEth(
   return result;
 }
 
+export async function estimateGasForWithdrawEth(
+  signer: Signer | undefined,
+  amount: BigNumberish
+): Promise<BigNumber | undefined> {
+  if (!signer) {
+    return undefined;
+  }
+  const elfWithSigner = elf.connect(signer);
+  return elfWithSigner.estimateGas.withdrawETH(amount);
+}
+
 export async function postWithdrawEth(
-  signer: Signer,
+  signer: Signer | undefined,
   amount: BigNumber
-): Promise<ContractTransaction> {
+): Promise<ContractTransaction | undefined> {
+  if (!signer) {
+    return undefined;
+  }
   const elfWithSigner = elf.connect(signer);
   const result = await elfWithSigner.functions.withdrawETH(amount);
   return result;

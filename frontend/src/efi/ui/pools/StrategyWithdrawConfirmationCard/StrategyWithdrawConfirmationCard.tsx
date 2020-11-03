@@ -9,25 +9,27 @@ import tw from "efi-tailwindcss-classnames";
 import { NUM_CONFIRMATIONS_REQUIRED_FOR_TRANSACTION } from "efi/crypto/confirmations";
 import { Strategy } from "efi/pools/strategy";
 import { useBoolean } from "efi/ui/base/useBoolean/useBoolean";
-import { useElfContractDepositEth } from "efi/ui/contracts/useElfContract";
-import { ConfirmDepositButton } from "efi/ui/pools/ConfrimDepositButton/ConfirmDepositButton";
+import { useElfContractWithdrawEth } from "efi/ui/contracts/useElfContract";
+import { ConfirmWithdrawButton } from "efi/ui/pools/StrategyWithdrawConfirmationCard/ConfirmWithdrawButton";
 import { useWalletBalance } from "efi/ui/wallets/hooks/useWalletBalance";
 
-interface StrategyDepositConfirmationCardProps {
+interface StrategyWithdrawConfirmationCardProps {
   strategy: Strategy<any>;
-  amountToDeposit: BigNumber;
-  onDepositComplete: () => void;
+  amountToWithdraw: BigNumber;
+  onWithdrawComplete: () => void;
   onCancel: () => void;
 }
 
-export const StrategyDepositConfirmationCard: FC<StrategyDepositConfirmationCardProps> = ({
+export const StrategyWithdrawConfirmationCard: FC<StrategyWithdrawConfirmationCardProps> = ({
   strategy: { stakingAsset },
-  amountToDeposit,
-  onDepositComplete,
+  amountToWithdraw,
+  onWithdrawComplete,
   onCancel,
 }) => {
   const { data: walletBalance } = useWalletBalance();
-  const { depositEth, gasEstimate } = useElfContractDepositEth();
+  const { withdrawEth, gasEstimate } = useElfContractWithdrawEth(
+    amountToWithdraw
+  );
   const [currentTransaction, setCurrentTransaction] = useState<
     ContractTransaction
   >();
@@ -41,22 +43,22 @@ export const StrategyDepositConfirmationCard: FC<StrategyDepositConfirmationCard
   const transactionConfirmed = progress >= 1;
 
   // TODO: get this from ethers for actual transaction
-  const { value: depositPending, setTrue: setDepositPending } = useBoolean(
+  const { value: depositPending, setTrue: setWithdrawPending } = useBoolean(
     false
   );
 
   // TODO: add some checks here to make sure that the balance is greater than the amount depositing.
   //  Later we'll also pass the asset and determine which contract to call.
-  const onDeposit = useCallback(
+  const onWithdraw = useCallback(
     async (amount: BigNumber) => {
       setConfirmations(0);
-      const transaction = await depositEth(amount);
+      const transaction = await withdrawEth(amount);
       if (!transaction) {
         onCancel();
         return;
       }
       setCurrentTransaction(transaction);
-      setDepositPending();
+      setWithdrawPending();
 
       let clearId: number;
 
@@ -73,17 +75,17 @@ export const StrategyDepositConfirmationCard: FC<StrategyDepositConfirmationCard
         });
       }, 1000);
     },
-    [depositEth, onCancel, setDepositPending]
+    [onCancel, setWithdrawPending, withdrawEth]
   );
 
   // delay for 3 seconds so the user has a little bit to see the transaction completed
   useEffect(() => {
     if (transactionConfirmed) {
       setTimeout(() => {
-        onDepositComplete();
+        onWithdrawComplete();
       }, 3000);
     }
-  }, [onDepositComplete, progress, transactionConfirmed]);
+  }, [onWithdrawComplete, progress, transactionConfirmed]);
 
   const etherscan = (
     <a
@@ -104,14 +106,14 @@ export const StrategyDepositConfirmationCard: FC<StrategyDepositConfirmationCard
       className={tw("flex", "flex-col", "w-full", "md:w-1/2", "transition-all")}
     >
       <div className={tw("flex", "flex-col", "mb-8", "items-center", "w-full")}>
-        <H3>{t`Deposit into Strategy`}</H3>
+        <H3>{t`Withdraw from Strategy`}</H3>
 
         <div className={tw("flex", "flex-col", "space-y-8", "w-full")}>
           {/* Staking Asset */}
           <div className={tw("flex", "flex-col", "items-start", "space-y-3")}>
-            <span> {t`Amount to deposit`}</span>
+            <span> {t`Amount to withdraw`}</span>
             <div className={tw("space-x-4", "pl-2")}>
-              <span>{formatEther(amountToDeposit)}</span>
+              <span>{formatEther(amountToWithdraw)}</span>
               <Tag minimal intent={Intent.PRIMARY} interactive large>
                 {stakingAsset}
               </Tag>
@@ -157,13 +159,13 @@ export const StrategyDepositConfirmationCard: FC<StrategyDepositConfirmationCard
             </div>
           )}
 
-          <ConfirmDepositButton
+          <ConfirmWithdrawButton
             cryptoSymbol={stakingAsset}
-            amountToDeposit={amountToDeposit}
+            amountToWithdraw={amountToWithdraw}
             cryptoBalance={walletBalance}
-            buttonLabel={t`Deposit ${stakingAsset}`}
-            depositPending={depositPending}
-            onConfirmDeposit={onDeposit}
+            buttonLabel={t`Withdraw ${stakingAsset}`}
+            withdrawPending={depositPending}
+            onConfirmWithdraw={onWithdraw}
           />
 
           <Button
