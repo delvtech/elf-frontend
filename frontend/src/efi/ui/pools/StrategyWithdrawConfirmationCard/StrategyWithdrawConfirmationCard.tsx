@@ -104,12 +104,12 @@ export const StrategyWithdrawConfirmationCard: FC<StrategyWithdrawConfirmationCa
       className={tw("flex", "flex-col", "w-full", "md:w-1/2", "transition-all")}
     >
       <div className={tw("flex", "flex-col", "mb-8", "items-center", "w-full")}>
-        <H3>{t`Withdraw into Strategy`}</H3>
+        <H3>{t`Withdraw from Strategy`}</H3>
 
         <div className={tw("flex", "flex-col", "space-y-8", "w-full")}>
           {/* Staking Asset */}
           <div className={tw("flex", "flex-col", "items-start", "space-y-3")}>
-            <span> {t`Amount to deposit`}</span>
+            <span> {t`Amount to withdraw`}</span>
             <div className={tw("space-x-4", "pl-2")}>
               <span>{formatEther(amountToWithdraw)}</span>
               <Tag minimal intent={Intent.PRIMARY} interactive large>
