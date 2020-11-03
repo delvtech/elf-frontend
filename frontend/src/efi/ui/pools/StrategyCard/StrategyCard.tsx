@@ -26,7 +26,7 @@ interface StrategyCardProps {
 }
 
 export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
-  const { name, stakingAsset } = strategy;
+  const { name, stakingAsset, apy } = strategy;
   const { data: walletBalance } = useWalletBalance();
   const { data: strategyCryptoSymbol } = useElfContractSymbol();
   const { data: elfTotalSupply } = useElfContractTotalSupply();
@@ -151,10 +151,9 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
           {/* Expected APY */}
           <div className={tw("flex", "flex-col", "space-y-4")}>
             <span>{t`Exected APY`}</span>
-            <Spinner
-              className={tw("justify-start")}
-              size={Spinner.SIZE_SMALL}
-            />
+            <div className={tw("space-x-4")}>
+              <span>{`${apy}%`}</span>
+            </div>
           </div>
 
           {/* Total Supply*/}
