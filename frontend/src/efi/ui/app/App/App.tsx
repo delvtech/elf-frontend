@@ -1,5 +1,4 @@
 import React, { FC } from "react";
-import { ReactQueryDevtools } from "react-query-devtools";
 
 import { Classes } from "@blueprintjs/core";
 import { LocationProvider, Router } from "@reach/router";
