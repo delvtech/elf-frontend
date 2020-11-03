@@ -15,12 +15,14 @@ import { jt, t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { NUM_CONFIRMATIONS_REQUIRED_FOR_TRANSACTION } from "efi/crypto/confirmations";
+import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { Strategy } from "efi/pools/strategy";
 import { useBoolean } from "efi/ui/base/useBoolean/useBoolean";
 import { PieChart } from "efi/ui/charts/PieChart/PieChart";
 import {
   useElfContractAssetSymbols,
   useElfContractBalance,
+  useElfContractDepositEth,
   useElfContractSymbol,
   useElfContractTotalSupply,
   useElfContractWithdrawEth,
@@ -42,7 +44,7 @@ export const StrategyCard: FC<StrategyCardProps> = ({
   const { data: elfBalance } = useElfContractBalance();
   const { data: strategyAssetSymbols } = useElfContractAssetSymbols();
   // use this again once testnet is fixed
-  // const [depositEth] = useElfContractDepositEth();
+  const [depositEth] = useElfContractDepositEth();
   const [withdrawEth] = useElfContractWithdrawEth();
 
   const [confirmations, setConfirmations] = useState(0);
@@ -86,7 +88,7 @@ export const StrategyCard: FC<StrategyCardProps> = ({
   //  Later we'll also pass the asset and determine which contract to call.
   const onDeposit = useCallback(
     (amount: BigNumber) => {
-      // depositEth(amount);
+      depositEth(amount);
       setDepositPending();
 
       let clearId: number;
@@ -104,7 +106,7 @@ export const StrategyCard: FC<StrategyCardProps> = ({
         });
       }, 1000);
     },
-    [setDepositPending]
+    [depositEth, setDepositPending]
   );
 
   const onCancelDeposit = useCallback(() => {
@@ -221,16 +223,6 @@ export const StrategyCard: FC<StrategyCardProps> = ({
             </div>
           </div>
 
-          {/* Strategy Token */}
-          <div className={tw("flex", "flex-col", "space-y-3")}>
-            <span> {t`Strategy token`}</span>
-            <div>
-              <Tag minimal intent={Intent.PRIMARY} interactive large>
-                {strategyCryptoSymbol}
-              </Tag>
-            </div>
-          </div>
-
           {/*Held Assets Tags*/}
           <div className={tw("flex", "flex-col", "space-y-3")}>
             <span> {t`Assets in this strategy`}</span>
@@ -266,7 +258,7 @@ export const StrategyCard: FC<StrategyCardProps> = ({
             <div className={tw("space-x-4")}>
               <span>{totalSupply}</span>
               <Tag minimal intent={Intent.PRIMARY} interactive large>
-                {stakingAsset}
+                {strategyCryptoSymbol}
               </Tag>
             </div>
           </div>
@@ -298,7 +290,7 @@ export const StrategyCard: FC<StrategyCardProps> = ({
         {/* Withdraw */}
         <TransactionForm
           inputLabel={t`Withdraw`}
-          cryptoSymbol={stakingAsset}
+          cryptoSymbol={strategyCryptoSymbol as CryptoSymbol}
           cryptoBalance={elfBalance}
           buttonLabel={t`Withdraw ${stakingAsset}`}
           onTransaction={onWithdraw}

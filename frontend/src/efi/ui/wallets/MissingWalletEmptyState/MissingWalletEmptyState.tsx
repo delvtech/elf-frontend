@@ -5,9 +5,9 @@ import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
 import classNames from "classnames";
-import tw from "efi-tailwindcss-classnames";
 import { jt, t } from "ttag";
 
+import tw from "efi-tailwindcss-classnames";
 import { injectedConnector } from "efi/wallets/connectors";
 
 const betaTag = (
@@ -16,8 +16,8 @@ const betaTag = (
   </Tag>
 );
 
-const howSwapsWorkLink = (
-  <a key="how-swaps-work" href="/">{t`how Swaps work`}</a>
+const howItWorksLink = (
+  <a key="how-it-work" href="/">{t`how investing works`}</a>
 );
 
 export const MissingWalletEmptyState: FC<{}> = () => {
@@ -61,8 +61,8 @@ export const MissingWalletEmptyState: FC<{}> = () => {
       }
     >
       <div className={tw("pt-32")}>
-        <p className={tw("pb-4")}>{jt`Swaps are currently in ${betaTag}.`}</p>
-        <p>{jt`Read more about ${howSwapsWorkLink}.`}</p>
+        <p className={tw("pb-4")}>{jt`Element is currently in ${betaTag}.`}</p>
+        <p>{jt`Read more about ${howItWorksLink}.`}</p>
       </div>
     </NonIdealState>
   );

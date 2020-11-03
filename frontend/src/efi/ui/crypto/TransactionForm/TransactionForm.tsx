@@ -3,9 +3,9 @@ import React, { FC, useCallback } from "react";
 import { Button, InputGroup, Intent, Tag } from "@blueprintjs/core";
 import { BigNumber } from "ethers";
 import { formatEther, parseEther } from "ethers/lib/utils";
-import tw from "efi-tailwindcss-classnames";
 import { t } from "ttag";
 
+import tw from "efi-tailwindcss-classnames";
 import { CryptoName } from "efi/crypto/CryptoName";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import {
@@ -72,19 +72,30 @@ export const TransactionForm: FC<TransactionFormProps> = ({
           }
           leftElement={
             <div className={tw("px-2")}>
-              <img
-                className={tw("h-5", "w-5")}
-                src={CryptoIcon[cryptoSymbol as keyof typeof CryptoSymbol]}
-                alt={CryptoName[cryptoSymbol as keyof typeof CryptoSymbol]}
-              />
+              {cryptoSymbol === ("ELF" as any) ? (
+                "✨"
+              ) : (
+                <img
+                  className={tw("h-5", "w-5")}
+                  src={CryptoIcon[cryptoSymbol as keyof typeof CryptoSymbol]}
+                  alt={CryptoName[cryptoSymbol as keyof typeof CryptoSymbol]}
+                />
+              )}
             </div>
           }
         />
-        <span
-          className={tw("text-xs", "text-right", {
-            "text-danger": !validValue,
-          })}
-        >{t`Available: ${ethBalance} ${cryptoSymbol}`}</span>
+        <div className={tw("flex", "justify-between")}>
+          <span
+            className={tw("text-xs", "text-right", {
+              "text-danger": !validValue,
+            })}
+          >{t`Balance:`}</span>
+          <span
+            className={tw("text-xs", "text-right", {
+              "text-danger": !validValue,
+            })}
+          >{`${ethBalance} ${cryptoSymbol}`}</span>
+        </div>
       </div>
       <Button
         disabled={!value || !validValue}
