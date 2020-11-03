@@ -53,7 +53,7 @@ export const ConfirmDepositButton: FC<ConfirmDepositButtonProps> = ({
         minimal
         outlined
         large
-        intent={Intent.PRIMARY}
+        intent={Intent.WARNING}
       >
         {buttonLabel}
       </Button>
