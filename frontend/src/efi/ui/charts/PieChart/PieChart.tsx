@@ -5,6 +5,8 @@ import { useMeasure } from "react-use";
 import { Colors } from "@blueprintjs/core";
 import { LinearGradient } from "@visx/gradient";
 import { Group } from "@visx/group";
+import { withParentSize } from "@visx/responsive";
+import { WithParentSizeProvidedProps } from "@visx/responsive/lib/enhancers/withParentSize";
 import { scaleOrdinal } from "@visx/scale";
 import Pie, { PieArcDatum, ProvidedProps } from "@visx/shape/lib/shapes/Pie";
 
@@ -71,7 +73,9 @@ interface PieProps {
   background?: boolean;
 }
 
-export const PieChart: React.FunctionComponent<PieProps> = (props) => {
+export const PieChart: React.FunctionComponent<
+  PieProps & WithParentSizeProvidedProps
+> = (props) => {
   const {
     margin = defaultMargin,
     animate = true,
@@ -83,6 +87,7 @@ export const PieChart: React.FunctionComponent<PieProps> = (props) => {
   const [ref, dimensions] = useMeasure();
   const width = props.width ?? dimensions.width ?? 0;
   const height = props.height ?? dimensions.height ?? 0;
+
   const [selectedSlice, setSelectedSlice] = useState<string | null>(null);
   const data = selectedSlice
     ? pieData.find(({ name }) => name === selectedSlice)?.subData
@@ -110,7 +115,9 @@ export const PieChart: React.FunctionComponent<PieProps> = (props) => {
     [selectedSlice]
   );
 
-  const { startColor, endColor } = getGradientBackgroundColors({ isDarkMode });
+  const { startColor, endColor } = getGradientBackgroundColors({
+    isDarkMode,
+  });
 
   const innerWidth = width - margin.left - margin.right;
   const innerHeight = height - margin.top - margin.bottom;
@@ -120,7 +127,7 @@ export const PieChart: React.FunctionComponent<PieProps> = (props) => {
   const donutThickness = 50;
 
   return (
-    <div className={tw("w-full", "h-full")} ref={ref as any}>
+    <div className={tw("flex", "h-full", "w-full")} ref={ref as any}>
       <svg width={width} height={height}>
         {background && (
           <Fragment>
@@ -160,6 +167,8 @@ export const PieChart: React.FunctionComponent<PieProps> = (props) => {
     </div>
   );
 };
+
+export const ResponsivePieChart = withParentSize(PieChart);
 
 // react-spring transition definitions
 type AnimatedStyles = { startAngle: number; endAngle: number; opacity: number };

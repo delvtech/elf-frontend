@@ -18,7 +18,7 @@ import { NUM_CONFIRMATIONS_REQUIRED_FOR_TRANSACTION } from "efi/crypto/confirmat
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { Strategy } from "efi/pools/strategy";
 import { useBoolean } from "efi/ui/base/useBoolean/useBoolean";
-import { PieChart } from "efi/ui/charts/PieChart/PieChart";
+import { ResponsivePieChart } from "efi/ui/charts/PieChart/PieChart";
 import {
   useElfContractAssetSymbols,
   useElfContractBalance,
@@ -302,14 +302,16 @@ export const StrategyCard: FC<StrategyCardProps> = ({
         <div
           className={tw(
             "hidden",
-            "sm:flex",
+            "xl:flex",
             "w-full",
             "h-full",
             "justify-center",
-            "items-center"
+            "items-center",
+            "p-5",
+            "overflow-hidden" // required to make responsiveness work
           )}
         >
-          <PieChart />
+          <ResponsivePieChart />
         </div>
       </div>
       <div className={tw("flex", "justify-between", "w-full", "space-x-8")}>
