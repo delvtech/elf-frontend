@@ -2,12 +2,15 @@ import React, { FC, useState } from "react";
 
 import { Card, Tab, Tabs } from "@blueprintjs/core";
 import { RouteComponentProps } from "@reach/router";
+import { formatEther } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import BrushChart from "efi/ui/charts/BrushChart/BrushChart";
-import { PieChart } from "efi/ui/charts/PieChart/PieChart";
+import { PieChart, PieData } from "efi/ui/charts/PieChart/PieChart";
+import { useElfContractBalance } from "efi/ui/contracts/useElfContract";
 import { useDarkMode } from "efi/ui/prefs/useDarkMode/useDarkMode";
+import { useWalletBalance } from "efi/ui/wallets/hooks/useWalletBalance";
 
 interface PulseViewProps extends RouteComponentProps {}
 
@@ -21,6 +24,30 @@ export const PulseView: FC<PulseViewProps> = () => {
   const [activePulse, setActivePulse] = useState<PulseTab>(
     PulseTab.ALL_MARKETS
   );
+  const balance = useWalletBalance();
+  const ethBalance = balance.data ? formatEther(balance.data) : "0";
+  const contractBalance = useElfContractBalance();
+  const elfBalance = contractBalance.data
+    ? formatEther(contractBalance.data)
+    : "0";
+
+  const tokens: PieData[] = [
+    {
+      name: "Eth",
+      value: Number(ethBalance),
+    },
+    {
+      name: "ELF-1",
+      value: Number(elfBalance),
+      subData: [
+        { name: "yDAI", value: 100 },
+        { name: "yUSDC", value: 300 },
+        { name: "yUSDT", value: 150 },
+        { name: "yTUSD", value: 150 },
+      ],
+    },
+  ];
+
   return (
     <div
       className={tw(
@@ -93,7 +120,7 @@ export const PulseView: FC<PulseViewProps> = () => {
           )}
         >
           {activePulse === PulseTab.ALL_MARKETS ? (
-            <PieChart isDarkMode={isDarkMode} />
+            <PieChart pieData={tokens} isDarkMode={isDarkMode} />
           ) : (
             <BrushChart compact isDarkMode={isDarkMode} />
           )}
