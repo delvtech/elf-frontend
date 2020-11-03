@@ -4,14 +4,14 @@ import { ReactQueryDevtools } from "react-query-devtools";
 import { Classes } from "@blueprintjs/core";
 import { LocationProvider, Router } from "@reach/router";
 import classNames from "classnames";
-import { tw } from "efi-tailwindcss-classnames";
 
+import { tw } from "efi-tailwindcss-classnames";
 import { HomeView } from "efi/ui/home/HomeView";
 import { InvestView } from "efi/ui/invest/InvestView";
 import { MainNavigation } from "efi/ui/navigation/MainNavigation/MainNavigation";
 import { Navigation } from "efi/ui/navigation/navigation";
-import { PulseView } from "efi/ui/pulse/PulseView";
 import { useDarkMode } from "efi/ui/prefs/useDarkMode/useDarkMode";
+import { PulseView } from "efi/ui/pulse/PulseView";
 import { SwapView } from "efi/ui/swaps/SwapView/SwapView";
 import { useSyncWithInjectedEthereum } from "efi/ui/wallets/hooks/useSyncWithInjectedEthereum";
 
@@ -61,7 +61,7 @@ const App: FC<AppProps> = () => {
 
       {/* Safe to render unconditionally as it does not render in production
       builds by default */}
-      <ReactQueryDevtools initialIsOpen={false} />
+      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
     </>
   );
 };

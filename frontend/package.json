@@ -63,6 +63,7 @@
     "build:tailwind": "tailwindcss build src/tailwind.css -o src/tailwind.output.css",
     "build:tailwindcss-classnames": "tailwindcss-classnames --config tailwind.config.js -o src/efi-tailwindcss-classnames/index.ts",
     "build:version-json": "bash ./scripts/build-version-json.sh",
+    "build:typechain":"typechain --target ethers-v5 --outDir elf-contracts/types/ 'elf-contracts/contracts/*.json'",
     "eject": "react-scripts eject",
     "lint": "tsc --noEmit && eslint src/**/*.ts{,x}",
     "lint:fix": "tsc --noEmit && eslint --fix src/**/*.ts{,x}",
