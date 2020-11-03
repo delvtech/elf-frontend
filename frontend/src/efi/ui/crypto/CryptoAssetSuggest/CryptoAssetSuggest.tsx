@@ -25,7 +25,7 @@ interface CryptoAssetSuggestProps {
   omnibarPlaceholder?: string;
 }
 
-const omnibarClassName = tw("w-4/5", "lg:w-1/2", "left-auto");
+const omnibarClassName = tw("w-4/5", "md:w-2/3", "lg:w-1/2", "left-auto");
 export const CryptoAssetSuggest: FC<CryptoAssetSuggestProps> = ({
   activeCryptoAsset,
   onSelect,
