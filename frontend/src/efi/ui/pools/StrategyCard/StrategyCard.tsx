@@ -9,12 +9,14 @@ import {
   Spinner,
   Tag,
 } from "@blueprintjs/core";
-import { BigNumber } from "ethers";
+import { BigNumber, ContractTransaction } from "ethers";
 import { formatEther } from "ethers/lib/utils";
 import { jt, t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { NUM_CONFIRMATIONS_REQUIRED_FOR_TRANSACTION } from "efi/crypto/confirmations";
+import {
+  NUM_CONFIRMATIONS_REQUIRED_FOR_TRANSACTION,
+} from "efi/crypto/confirmations";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { Strategy } from "efi/pools/strategy";
 import { useBoolean } from "efi/ui/base/useBoolean/useBoolean";
@@ -28,7 +30,9 @@ import {
   useElfContractWithdrawEth,
 } from "efi/ui/contracts/useElfContract";
 import { TransactionForm } from "efi/ui/crypto/TransactionForm/TransactionForm";
-import { ConfirmDepositButton } from "efi/ui/pools/ConfrimDepositButton/ConfirmDepositButton";
+import {
+  ConfirmDepositButton,
+} from "efi/ui/pools/ConfrimDepositButton/ConfirmDepositButton";
 import { useWalletBalance } from "efi/ui/wallets/hooks/useWalletBalance";
 
 interface StrategyCardProps {
@@ -43,8 +47,15 @@ export const StrategyCard: FC<StrategyCardProps> = ({
   const { data: elfTotalSupply } = useElfContractTotalSupply();
   const { data: elfBalance } = useElfContractBalance();
   const { data: strategyAssetSymbols } = useElfContractAssetSymbols();
-  // use this again once testnet is fixed
-  const [depositEth] = useElfContractDepositEth();
+  const { depositEth, gasEstimate } = useElfContractDepositEth();
+  const [currentTransaction, setCurrentTransaction] = useState<
+    ContractTransaction
+  >();
+  const { data: gasEstimateInWei } = gasEstimate;
+  const gasEstimateInEth = gasEstimateInWei
+    ? formatEther(gasEstimateInWei)
+    : undefined;
+
   const [withdrawEth] = useElfContractWithdrawEth();
 
   const [confirmations, setConfirmations] = useState(0);
@@ -87,8 +98,11 @@ export const StrategyCard: FC<StrategyCardProps> = ({
   // TODO: add some checks here to make sure that the balance is greater than the amount depositing.
   //  Later we'll also pass the asset and determine which contract to call.
   const onDeposit = useCallback(
-    (amount: BigNumber) => {
-      depositEth(amount);
+    async (amount: BigNumber) => {
+      const transaction = await depositEth(amount);
+      if (transaction) {
+        setCurrentTransaction(transaction);
+      }
       setDepositPending();
 
       let clearId: number;
@@ -125,7 +139,11 @@ export const StrategyCard: FC<StrategyCardProps> = ({
 
   // TODO: add a real link to the transaction
   const etherscan = (
-    <a rel="noreferrer" target="_blank" href="http://etherscan.io">
+    <a
+      rel="noreferrer"
+      target="_blank"
+      href={`https://etherscan.io/tx/${currentTransaction?.hash}`}
+    >
       etherscan.io
     </a>
   );
@@ -152,14 +170,33 @@ export const StrategyCard: FC<StrategyCardProps> = ({
           <H3>{t`Deposit into Strategy`}</H3>
 
           <div className={tw("flex", "flex-col", "space-y-8", "w-full")}>
-            {/* */}
+            {/* Staking Asset */}
             <div className={tw("flex", "flex-col", "items-start", "space-y-3")}>
               <span> {t`Amount to deposit`}</span>
-              <div className={tw("space-x-4")}>
+              <div className={tw("space-x-4", "pl-2")}>
                 <span>{formatEther(amountToDeposit)}</span>
                 <Tag minimal intent={Intent.PRIMARY} interactive large>
                   {stakingAsset}
                 </Tag>
+              </div>
+            </div>
+
+            {/* Gas Fee */}
+            <div className={tw("flex", "flex-col", "items-start", "space-y-3")}>
+              <span> {t`Gas estimate`}</span>
+              <div className={tw("space-x-4", "pl-2")}>
+                <span>{gasEstimateInEth}</span>
+                <Tag minimal intent={Intent.PRIMARY} interactive large>
+                  {stakingAsset}
+                </Tag>
+              </div>
+            </div>
+
+            {/* Gas Fee */}
+            <div className={tw("flex", "flex-col", "items-start", "space-y-3")}>
+              <span> {t`Transaction fee`}</span>
+              <div className={tw("space-x-4", "pl-2")}>
+                <span>{t`0 (no deposit fee)`}</span>
               </div>
             </div>
 
@@ -174,9 +211,11 @@ export const StrategyCard: FC<StrategyCardProps> = ({
                   <div className={tw("flex-1", "truncate")}>
                     {confirmationMessage}
                   </div>
-                  <div
-                    className={tw("flex-shrink-0")}
-                  >{jt`View on ${etherscan}`}</div>
+                  {currentTransaction && (
+                    <div
+                      className={tw("flex-shrink-0")}
+                    >{jt`View on ${etherscan}`}</div>
+                  )}
                 </div>
               </div>
             )}

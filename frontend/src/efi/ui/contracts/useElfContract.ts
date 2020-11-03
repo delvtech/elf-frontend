@@ -1,6 +1,6 @@
-import { queryCache, useMutation, useQuery } from "react-query";
+import { queryCache, QueryResult, useMutation, useQuery } from "react-query";
 
-import { BigNumber } from "ethers";
+import { BigNumber, ContractTransaction } from "ethers";
 
 import {
   estimateGasForDepositEth,
@@ -54,8 +54,8 @@ export function useElfContractSymbol() {
 }
 
 interface ElfDepositEth {
-  gasEstimate: any;
-  depositEth: any;
+  gasEstimate: QueryResult<BigNumber | undefined>;
+  depositEth: (amount: BigNumber) => Promise<ContractTransaction | undefined>;
 }
 
 const contractDepositEthGasEstimateKey = [
@@ -68,18 +68,14 @@ const contractDepositEthGasEstimateKey = [
 export function useElfContractDepositEth(): ElfDepositEth {
   const { library } = useWallet();
   const signer = library?.getSigner();
-  const gasEstimate = useQuery(contractDepositEthGasEstimateKey, () => {
-    if (!signer) {
-      return new Promise(() => {});
+  const gasEstimate = useQuery<BigNumber | undefined>(
+    contractDepositEthGasEstimateKey,
+    () => {
+      return estimateGasForDepositEth(signer);
     }
-
-    return estimateGasForDepositEth(signer);
-  });
-  const depositEth = useMutation(
+  );
+  const [depositEth] = useMutation(
     (amount: BigNumber) => {
-      if (!signer) {
-        return new Promise(() => {});
-      }
       return postDepositEth(signer, amount);
     },
     {
