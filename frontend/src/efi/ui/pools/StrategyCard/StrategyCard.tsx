@@ -1,6 +1,6 @@
 import React, { FC, useCallback, useState } from "react";
 
-import { Card, H3, Intent, Spinner, Tag } from "@blueprintjs/core";
+import { Card, H3, Intent, Tag } from "@blueprintjs/core";
 import { BigNumber } from "ethers";
 import { formatEther } from "ethers/lib/utils";
 import { t } from "ttag";
@@ -26,7 +26,7 @@ interface StrategyCardProps {
 }
 
 export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
-  const { name, stakingAsset } = strategy;
+  const { name, stakingAsset, apy } = strategy;
   const { data: walletBalance } = useWalletBalance();
   const { data: strategyCryptoSymbol } = useElfContractSymbol();
   const { data: elfTotalSupply } = useElfContractTotalSupply();
@@ -128,7 +128,7 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
             </div>
           </div>
 
-          {/*Held Assets Tags*/}
+          {/* Held Assets Tags*/}
           <div className={tw("flex", "flex-col", "space-y-3")}>
             <span> {t`Assets in this strategy`}</span>
             <div className={tw("flex", "space-x-4")}>
@@ -151,10 +151,9 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
           {/* Expected APY */}
           <div className={tw("flex", "flex-col", "space-y-4")}>
             <span>{t`Exected APY`}</span>
-            <Spinner
-              className={tw("justify-start")}
-              size={Spinner.SIZE_SMALL}
-            />
+            <div className={tw("space-x-4")}>
+              <span>{`${apy}%`}</span>
+            </div>
           </div>
 
           {/* Total Supply*/}
