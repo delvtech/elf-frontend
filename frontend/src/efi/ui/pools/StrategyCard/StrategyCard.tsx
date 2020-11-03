@@ -145,11 +145,13 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
         <div
           className={tw(
             "hidden",
-            "sm:flex",
+            "xl:flex",
             "w-full",
             "h-full",
             "justify-center",
-            "items-center"
+            "items-center",
+            "p-5",
+            "overflow-hidden" // required to make responsiveness work
           )}
         >
           <PieChart />
