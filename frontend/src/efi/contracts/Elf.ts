@@ -85,10 +85,23 @@ export async function fetchDecimals(): Promise<number> {
   return result[0];
 }
 
+export async function estimateGasForDepositEth(
+  signer: Signer | undefined
+): Promise<BigNumber | undefined> {
+  if (!signer) {
+    return undefined;
+  }
+  const elfWithSigner = elf.connect(signer);
+  return elfWithSigner.estimateGas.depositETH();
+}
+
 export async function postDepositEth(
-  signer: Signer,
+  signer: Signer | undefined,
   amount: BigNumber
-): Promise<ContractTransaction> {
+): Promise<ContractTransaction | undefined> {
+  if (!signer) {
+    return undefined;
+  }
   const elfWithSigner = elf.connect(signer);
   const result = await elfWithSigner.functions.depositETH({
     value: amount,
