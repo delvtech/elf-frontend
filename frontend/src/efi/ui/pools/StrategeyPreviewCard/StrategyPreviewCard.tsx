@@ -1,9 +1,9 @@
 import React, { FC, useCallback } from "react";
 
 import { Card, H3, Intent, Tag } from "@blueprintjs/core";
-import tw from "efi-tailwindcss-classnames";
 import { t } from "ttag";
 
+import tw from "efi-tailwindcss-classnames";
 import { Strategy } from "efi/pools/strategy";
 
 interface StrategyPreviewCardProps {

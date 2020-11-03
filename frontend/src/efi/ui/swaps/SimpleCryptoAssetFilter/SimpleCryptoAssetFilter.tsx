@@ -3,9 +3,9 @@ import React, { FC, useCallback, useState } from "react";
 import { Icon } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import classNames from "classnames";
-import tw from "efi-tailwindcss-classnames";
 import { t } from "ttag";
 
+import tw from "efi-tailwindcss-classnames";
 import { CryptoAssetInfo } from "efi/crypto/CryptoAssetInfo";
 import { CryptoAssetSuggest } from "efi/ui/crypto/CryptoAssetSuggest/CryptoAssetSuggest";
 

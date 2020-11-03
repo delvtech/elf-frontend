@@ -1,8 +1,8 @@
 import React, { FC, useState } from "react";
 
 import { RouteComponentProps } from "@reach/router";
-import tw from "efi-tailwindcss-classnames";
 
+import tw from "efi-tailwindcss-classnames";
 import { ElfStrategyHighRisk } from "efi/pools/highRisk";
 import { ElfStrategyLowRisk } from "efi/pools/lowRisk";
 import { ElfStrategyMediumRisk } from "efi/pools/mediumRisk";

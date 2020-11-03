@@ -14,9 +14,9 @@ import {
 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import classNames from "classnames";
-import tw from "efi-tailwindcss-classnames";
 import { t } from "ttag";
 
+import tw from "efi-tailwindcss-classnames";
 import { Navigation } from "efi/ui/navigation/navigation";
 import WalletSummary from "efi/ui/wallets/WalletSummary/WalletSummary";
 

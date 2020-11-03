@@ -13,14 +13,14 @@ import appleStock, { AppleStock } from "@visx/mock-data/lib/mocks/appleStock";
 import { PatternLines } from "@visx/pattern";
 import { scaleLinear, scaleTime } from "@visx/scale";
 import { extent, max } from "d3-array";
-import tw from "efi-tailwindcss-classnames";
 
+import tw from "efi-tailwindcss-classnames";
 import AreaChart from "efi/ui/charts/AreaChart/AreaChart";
+import { getBrushStyle } from "efi/ui/charts/brush";
 import {
   getAccentColor,
   getGradientBackgroundColors,
 } from "efi/ui/charts/colors";
-import { getBrushStyle } from "efi/ui/charts/brush";
 
 // Initialize some variables
 const stock = appleStock.slice(1000);

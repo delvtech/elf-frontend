@@ -1,5 +1,6 @@
-import { Colors } from "@blueprintjs/core";
 import { SVGProps } from "react";
+
+import { Colors } from "@blueprintjs/core";
 
 interface BrushStyleOptions {
   isDarkMode?: boolean;

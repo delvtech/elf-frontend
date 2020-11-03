@@ -5,9 +5,9 @@ import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
 import classNames from "classnames";
-import tw from "efi-tailwindcss-classnames";
 import { t } from "ttag";
 
+import tw from "efi-tailwindcss-classnames";
 import { formatChainName } from "efi/ui/crypto/formatChainName";
 import { formatEthBalance } from "efi/ui/crypto/formatEthBalance";
 import { useDarkMode } from "efi/ui/prefs/useDarkMode/useDarkMode";

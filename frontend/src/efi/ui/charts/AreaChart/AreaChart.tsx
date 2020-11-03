@@ -6,8 +6,9 @@ import { LinearGradient } from "@visx/gradient";
 import { Group } from "@visx/group";
 import { AppleStock } from "@visx/mock-data/lib/mocks/appleStock";
 import { AreaClosed } from "@visx/shape";
-import { useDarkMode } from "efi/ui/prefs/useDarkMode/useDarkMode";
+
 import { getAxisColor } from "efi/ui/charts/colors";
+import { useDarkMode } from "efi/ui/prefs/useDarkMode/useDarkMode";
 
 // Initialize some variables
 
