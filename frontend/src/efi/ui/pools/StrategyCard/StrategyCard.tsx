@@ -1,6 +1,6 @@
 import React, { FC, useCallback, useState } from "react";
 
-import { Card, H3, Intent, Spinner, Tag } from "@blueprintjs/core";
+import { Card, H3, Intent, Tag } from "@blueprintjs/core";
 import { BigNumber } from "ethers";
 import { formatEther } from "ethers/lib/utils";
 import { t } from "ttag";
