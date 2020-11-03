@@ -33,7 +33,6 @@ export const StrategyWithdrawConfirmationCard: FC<StrategyWithdrawConfirmationCa
   const [currentTransaction, setCurrentTransaction] = useState<
     ContractTransaction
   >();
-  console.log("currentTransaction", currentTransaction);
   const { data: gasEstimateInWei } = gasEstimate;
   const gasEstimateInEth = gasEstimateInWei
     ? formatEther(gasEstimateInWei)

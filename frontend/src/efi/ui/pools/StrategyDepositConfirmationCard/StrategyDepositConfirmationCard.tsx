@@ -51,9 +51,11 @@ export const StrategyDepositConfirmationCard: FC<StrategyDepositConfirmationCard
     async (amount: BigNumber) => {
       setConfirmations(0);
       const transaction = await depositEth(amount);
-      if (transaction) {
-        setCurrentTransaction(transaction);
+      if (!transaction) {
+        onCancel();
+        return;
       }
+      setCurrentTransaction(transaction);
       setDepositPending();
 
       let clearId: number;
@@ -71,7 +73,7 @@ export const StrategyDepositConfirmationCard: FC<StrategyDepositConfirmationCard
         });
       }, 1000);
     },
-    [depositEth, setDepositPending]
+    [depositEth, onCancel, setDepositPending]
   );
 
   // delay for 3 seconds so the user has a little bit to see the transaction completed
