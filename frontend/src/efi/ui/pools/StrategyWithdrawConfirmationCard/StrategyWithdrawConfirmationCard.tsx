@@ -43,11 +43,11 @@ export const StrategyWithdrawConfirmationCard: FC<StrategyWithdrawConfirmationCa
   const transactionConfirmed = progress >= 1;
 
   // TODO: get this from ethers for actual transaction
-  const { value: depositPending, setTrue: setWithdrawPending } = useBoolean(
+  const { value: withdrawPending, setTrue: setWithdrawPending } = useBoolean(
     false
   );
 
-  // TODO: add some checks here to make sure that the balance is greater than the amount depositing.
+  // TODO: add some checks here to make sure that the balance is greater than the amount withdrawn.
   //  Later we'll also pass the asset and determine which contract to call.
   const onWithdraw = useCallback(
     async (amount: BigNumber) => {
@@ -135,11 +135,11 @@ export const StrategyWithdrawConfirmationCard: FC<StrategyWithdrawConfirmationCa
           <div className={tw("flex", "flex-col", "items-start", "space-y-3")}>
             <span> {t`Transaction fee`}</span>
             <div className={tw("space-x-4", "pl-2")}>
-              <span>{t`0 (no deposit fee)`}</span>
+              <span>{t`0.3%`}</span>
             </div>
           </div>
 
-          {depositPending && (
+          {withdrawPending && (
             <div>
               <ProgressBar
                 intent={Intent.PRIMARY}
@@ -164,7 +164,7 @@ export const StrategyWithdrawConfirmationCard: FC<StrategyWithdrawConfirmationCa
             amountToWithdraw={amountToWithdraw}
             cryptoBalance={walletBalance}
             buttonLabel={t`Withdraw ${stakingAsset}`}
-            withdrawPending={depositPending}
+            withdrawPending={withdrawPending}
             onConfirmWithdraw={onWithdraw}
           />
 
@@ -174,7 +174,7 @@ export const StrategyWithdrawConfirmationCard: FC<StrategyWithdrawConfirmationCa
             large
             intent={Intent.DANGER}
             onClick={onCancel}
-            disabled={depositPending}
+            disabled={withdrawPending}
           >
             {t`Cancel`}
           </Button>
