@@ -2,7 +2,7 @@ import React, { FC, useCallback, useEffect, useState } from "react";
 
 import { Button, Card, H3, Intent, ProgressBar, Tag } from "@blueprintjs/core";
 import { BigNumber, ContractTransaction } from "ethers";
-import { formatEther } from "ethers/lib/utils";
+import { commify, formatEther } from "ethers/lib/utils";
 import { jt, t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -35,7 +35,7 @@ export const StrategyWithdrawConfirmationCard: FC<StrategyWithdrawConfirmationCa
   >();
   const { data: gasEstimateInWei } = gasEstimate;
   const gasEstimateInEth = gasEstimateInWei
-    ? formatEther(gasEstimateInWei)
+    ? commify(formatEther(gasEstimateInWei))
     : undefined;
 
   const [confirmations, setConfirmations] = useState(0);
