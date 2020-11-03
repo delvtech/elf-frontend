@@ -1,9 +1,9 @@
 import React, { FC } from "react";
 
 import { RouteComponentProps } from "@reach/router";
-import tw from "efi-tailwindcss-classnames";
 import { t } from "ttag";
 
+import tw from "efi-tailwindcss-classnames";
 import { SimpleCryptoAssetFilter } from "efi/ui/swaps/SimpleCryptoAssetFilter/SimpleCryptoAssetFilter";
 import { useWallet } from "efi/ui/wallets/hooks/useWallet";
 import { MissingWalletEmptyState } from "efi/ui/wallets/MissingWalletEmptyState/MissingWalletEmptyState";

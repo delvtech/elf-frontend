@@ -2,8 +2,9 @@ import React, { FC } from "react";
 
 import { Card } from "@blueprintjs/core";
 import { RouteComponentProps } from "@reach/router";
-import tw from "efi-tailwindcss-classnames";
 import { t } from "ttag";
+
+import tw from "efi-tailwindcss-classnames";
 
 interface HomeViewProps extends RouteComponentProps {}
 export const HomeView: FC<HomeViewProps> = () => {
