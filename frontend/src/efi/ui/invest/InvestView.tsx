@@ -68,7 +68,7 @@ export const InvestView: FC<InvestViewProps> = () => {
 
   return (
     <div className={investViewClassName}>
-      <div className={tw("flex", "w-full", "justify-center")}>
+      <div className={tw("flex", "w-full", "justify-center", "lg:pt-12")}>
         <InvestBreadcrumb
           availableStrategies={availableStrategies}
           activeStrategy={selectedStrategy}
