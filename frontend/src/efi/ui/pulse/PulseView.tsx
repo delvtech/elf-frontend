@@ -104,7 +104,7 @@ export const PulseView: FC<PulseViewProps> = () => {
           {activePulse === PulseTab.ALL_MARKETS ? (
             <BrushChart compact isDarkMode={isDarkMode} />
           ) : (
-            <PieChart isDarkMode={isDarkMode} />
+            <PieChart isDarkMode={isDarkMode} pieData={tokens} />
           )}
         </Card>
 
@@ -120,7 +120,7 @@ export const PulseView: FC<PulseViewProps> = () => {
           )}
         >
           {activePulse === PulseTab.ALL_MARKETS ? (
-            <PieChart pieData={tokens} isDarkMode={isDarkMode} />
+            <PieChart isDarkMode={isDarkMode} />
           ) : (
             <BrushChart compact isDarkMode={isDarkMode} />
           )}
