@@ -8,7 +8,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { CryptoAssetInfo } from "efi/crypto/CryptoAssetInfo";
-import { EFI_SUPPORTED_CRYPTO_ASSETS } from "efi/crypto/cryptoAssets";
+import { EFI_SUPPORTED_CRYPTO_ASSETS } from "efi/ui/crypto/cryptoAssets";
 import { useDarkMode } from "efi/ui/prefs/useDarkMode/useDarkMode";
 
 import { CryptoAssetSuggestItem } from "./CryptoAssetSuggestItem";
