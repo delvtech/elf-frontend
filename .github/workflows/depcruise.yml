@@ -1,13 +1,13 @@
-name: Dependency Cruiser check
+name: Dependency cruiser
 
 on: [pull_request]
 
 defaults:
-    run:
-        working-directory: frontend
+  run:
+    working-directory: frontend
 
 jobs:
-  depcruise-check:
+  depcruise:
     runs-on: ubuntu-latest
 
     steps:

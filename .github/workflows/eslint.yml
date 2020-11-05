@@ -1,4 +1,4 @@
-name: Eslint check
+name: Eslint
 
 on: [pull_request]
 
@@ -7,7 +7,7 @@ defaults:
     working-directory: frontend
 
 jobs:
-  eslint-check:
+  eslint:
     runs-on: ubuntu-latest
 
     steps:
