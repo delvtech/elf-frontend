@@ -3,12 +3,12 @@ name: Prettier check
 on: [pull_request]
 
 defaults:
-    run:
-        working-directory: frontend
+  run:
+    working-directory: frontend
 
 jobs:
   eslint-check:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v1
