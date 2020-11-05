@@ -1,5 +1,7 @@
 import { queryCache, useQuery } from "react-query";
 
+import efiLocalStorage from "efi/base/localStorage";
+
 interface DarkMode {
   isDarkMode: boolean;
   setDarkMode: (isDarkMode: boolean) => void;
@@ -12,7 +14,7 @@ export function useDarkMode(): DarkMode {
   const { data: isDarkMode } = useQuery<boolean>(
     DARK_MODE_QUERY_KEY,
     () => {
-      const item = window.localStorage.getItem(DARK_MODE_QUERY_KEY);
+      const item = efiLocalStorage.getItem(DARK_MODE_QUERY_KEY);
       return item ? JSON.parse(item) : DARK_MODE_DEFAULT;
     },
     { placeholderData: DARK_MODE_DEFAULT }
@@ -27,7 +29,7 @@ export function useDarkMode(): DarkMode {
 
 function setDarkMode(darkMode: boolean) {
   // Save to local storage
-  window.localStorage.setItem(DARK_MODE_QUERY_KEY, JSON.stringify(darkMode));
+  efiLocalStorage.setItem(DARK_MODE_QUERY_KEY, JSON.stringify(darkMode));
 
   // Invalidate so callers will re-ensure the data as needed
   queryCache.invalidateQueries(DARK_MODE_QUERY_KEY);
