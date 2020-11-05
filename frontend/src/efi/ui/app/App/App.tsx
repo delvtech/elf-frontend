@@ -1,7 +1,6 @@
 import React, { FC } from "react";
 import { ReactQueryDevtools } from "react-query-devtools";
 
-import { Classes } from "@blueprintjs/core";
 import { LocationProvider, Router } from "@reach/router";
 import classNames from "classnames";
 
@@ -32,11 +31,12 @@ const contentClassName = tw(
 interface AppProps {}
 
 const App: FC<AppProps> = () => {
-  const { isDarkMode } = useDarkMode();
+  const { isDarkMode, darkModeClassName } = useDarkMode();
 
   const appClassName = classNames(
     styles.app,
-    { [styles.appDark]: isDarkMode, [Classes.DARK]: isDarkMode },
+    darkModeClassName,
+    { [styles.appDark]: isDarkMode },
     tw("flex", "flex-col", "lg:flex-row", "w-full", "h-full", "overflow-auto")
   );
 

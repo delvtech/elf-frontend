@@ -1,6 +1,6 @@
 import React, { FC, Fragment } from "react";
 
-import { Classes, IOverlayProps, MenuItem, TagInput } from "@blueprintjs/core";
+import { IOverlayProps, MenuItem, TagInput } from "@blueprintjs/core";
 import { ItemListPredicate, ItemRenderer, Omnibar } from "@blueprintjs/select";
 import classNames from "classnames";
 import { filter } from "fuzzaldrin-plus";
@@ -34,13 +34,12 @@ export const CryptoAssetSuggest: FC<CryptoAssetSuggestProps> = ({
   placeholder = t`Choose an asset`,
   omnibarPlaceholder = t`Choose an asset`,
 }) => {
-  const { isDarkMode } = useDarkMode();
+  const { darkModeClassName } = useDarkMode();
 
   const overlayProps: Partial<IOverlayProps> = {
-    className: classNames(tw("flex", "justify-center"), {
-      [Classes.DARK]: isDarkMode,
-    }),
+    className: classNames(darkModeClassName, tw("flex", "justify-center")),
   };
+
   const {
     isOmnibarOpen,
     closeOmnibar,

@@ -3,7 +3,7 @@ import { useQuery } from "react-query";
 import { Markup } from "react-render-markup";
 import { useWindowSize } from "react-use";
 
-import { Button, Classes, Drawer, H4, H6 } from "@blueprintjs/core";
+import { Button, Drawer, H4, H6 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import classNames from "classnames";
 import { t } from "ttag";
@@ -17,7 +17,7 @@ import { useDarkMode } from "efi/ui/prefs/useDarkMode/useDarkMode";
 interface CryptoDrawerProps {}
 
 export const CryptoDrawer: FC<CryptoDrawerProps> = () => {
-  const { isDarkMode } = useDarkMode();
+  const { darkModeClassName } = useDarkMode();
   const { cryptoDrawerIsOpen, setCryptoDrawerIsOpen } = useCryptoDrawer();
   const { width: screenWidth } = useWindowSize();
   const closeCryptoDrawer = useCallback(() => setCryptoDrawerIsOpen(false), [
@@ -54,19 +54,19 @@ export const CryptoDrawer: FC<CryptoDrawerProps> = () => {
       canOutsideClickClose={false}
       enforceFocus={false}
       hasBackdrop={false}
-      className={tw("w-full", "md:w-1/2", "lg:w-1/3", "flex", {
-        [Classes.DARK]: isDarkMode,
-      })}
+      className={darkModeClassName}
       isOpen={cryptoDrawerIsOpen}
     >
       {status === "loading" ? (
         <SkeletonText />
       ) : (
-        <div className={tw("pointer-events-auto", "text-justify")}>
+        <div
+          className={tw("flex", "flex-col", "h-full", "pointer-events-auto")}
+        >
           <div
             className={classNames(
               "bp3-drawer-header",
-              tw("flex", "justify-between")
+              tw("flex-shrink-0", "justify-between")
             )}
           >
             <H4>{title}</H4>
@@ -76,18 +76,20 @@ export const CryptoDrawer: FC<CryptoDrawerProps> = () => {
               icon={IconNames.CROSS}
             />
           </div>
-          <div className={tw("p-6")}>
-            <H4>{t`Price`}</H4>
-            <div>{`$${price}`}</div>
-          </div>
-          <div className={tw("p-6", "space-x-2")}>
-            <H4>{t`Supply`}</H4>
-            <H6>{t`total: ${totalSupply || "(no total)"}`}</H6>
-            <H6>{t`circulating: ${circulatingSupply}`}</H6>
-          </div>
-          <div className={tw("whitespace-pre-wrap", "p-6")}>
-            <H4>{t`Description`}</H4>
-            <Markup markup={description} />
+          <div className={tw("overflow-y-scroll", "text-justify")}>
+            <div className={tw("p-6")}>
+              <H4>{t`Price`}</H4>
+              <div>{`$${price}`}</div>
+            </div>
+            <div className={tw("p-6", "space-x-2")}>
+              <H4>{t`Supply`}</H4>
+              <H6>{t`total: ${totalSupply || "(no total)"}`}</H6>
+              <H6>{t`circulating: ${circulatingSupply}`}</H6>
+            </div>
+            <div className={tw("whitespace-pre-wrap", "p-6")}>
+              <H4>{t`Description`}</H4>
+              <Markup markup={description} />
+            </div>
           </div>
         </div>
       )}

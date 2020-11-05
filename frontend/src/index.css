@@ -25,10 +25,6 @@ code {
   width: 100%;
 }
 
-body a {
-  color: var(--bp3-intent-primary);
-}
-
 :root {
   /*
    * This is the height of the top navbar. Because of how the Navbar manages
