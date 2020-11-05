@@ -14,7 +14,7 @@ import { ConfirmDepositButton } from "efi/ui/pools/ConfrimDepositButton/ConfirmD
 import { useWalletBalance } from "efi/ui/wallets/hooks/useWalletBalance";
 
 interface StrategyDepositConfirmationCardProps {
-  strategy: Strategy<any>;
+  strategy: Strategy;
   amountToDeposit: BigNumber;
   onDepositComplete: () => void;
   onCancel: () => void;

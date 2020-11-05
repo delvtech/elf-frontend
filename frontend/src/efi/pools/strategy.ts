@@ -1,6 +1,6 @@
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 
-export interface Strategy<StakingAsset extends CryptoSymbol> {
+export interface Strategy {
   /**
    * Unique identifier for the strategy
    */
@@ -14,13 +14,13 @@ export interface Strategy<StakingAsset extends CryptoSymbol> {
   /**
    * The asset (usually Ether) for deposits and withdrawals from the strategy.
    */
-  stakingAsset: StakingAsset;
+  stakingAsset: CryptoSymbol;
 
   /**
    * The name of the token which represents the strategy.
    *  This must be different than the stakingAsset.
    */
-  strategyAsset: Exclude<CryptoSymbol, StakingAsset>;
+  strategyAsset: CryptoSymbol;
 
   /**
    * The assets held in the strategy. This can include the StakingAsset.

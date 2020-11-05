@@ -14,7 +14,7 @@ import { ConfirmWithdrawButton } from "efi/ui/pools/StrategyWithdrawConfirmation
 import { useWalletBalance } from "efi/ui/wallets/hooks/useWalletBalance";
 
 interface StrategyWithdrawConfirmationCardProps {
-  strategy: Strategy<any>;
+  strategy: Strategy;
   amountToWithdraw: BigNumber;
   onWithdrawComplete: () => void;
   onCancel: () => void;
