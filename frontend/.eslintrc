@@ -42,9 +42,6 @@
     "prefer-template": "error",
     "no-unused-vars": "off",
     "import/no-unused-modules": "warn",
-    "no-restricted-globals": [
-      "error"
-    ],
     "no-restricted-syntax": [
       "error",
       {
