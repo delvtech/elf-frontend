@@ -169,6 +169,16 @@ module.exports = {
         path: "efi/ui/",
       },
     },
+
+    {
+      name: "efi-not-to-react",
+      comment: "Importing react from outside the ui/ directory is prohibited",
+      severity: "error",
+      from: { pathNot: `(${["index.tsx", "efi/ui"].join("|")})` },
+      to: {
+        path: "node_modules/react",
+      },
+    },
   ],
   options: {
     /* conditions specifying which files not to follow further when encountered:
