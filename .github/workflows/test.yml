@@ -1,4 +1,4 @@
-name: Eslint check
+name: Jest check
 
 on: [pull_request]
 
@@ -7,7 +7,7 @@ defaults:
     working-directory: frontend
 
 jobs:
-  eslint-check:
+  jest-check:
     runs-on: ubuntu-latest
 
     steps:
@@ -15,5 +15,6 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: "13.x"
+
       - run: npm ci
-      - run: npm run lint
+      - run: npm run test

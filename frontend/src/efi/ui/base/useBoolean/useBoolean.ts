@@ -5,6 +5,9 @@ interface BooleanState {
   setTrue: () => void;
   setFalse: () => void;
 }
+/**
+ * @param defaultState - Default state of the boolean, default: `false`
+ */
 export function useBoolean(defaultState = false): BooleanState {
   const [value, setValue] = useState(defaultState);
 

@@ -11,7 +11,7 @@ import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import {
   NumericInputOptions,
   useNumericInput,
-} from "efi/ui/base/useBoolean/useNumericInput/useNumericInput";
+} from "efi/ui/base/useNumericInput/useNumericInput";
 import { CryptoIcon } from "efi/ui/crypto/CryptoIcon";
 import styles from "efi/ui/crypto/TransactionForm/TransactionForm.module.css";
 
