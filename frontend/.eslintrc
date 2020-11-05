@@ -8,12 +8,20 @@
       }
     }
   },
-  "extends": ["react-app", "prettier"],
+  "extends": [
+    "react-app",
+    "prettier"
+  ],
   "overrides": [
     {
-      "files": ["**/*.ts", "**/*.tsx"],
+      "files": [
+        "**/*.ts",
+        "**/*.tsx"
+      ],
       "rules": {
-        "no-undef": ["off"],
+        "no-undef": [
+          "off"
+        ],
         "react-hooks/exhaustive-deps": "error"
       }
     }
@@ -22,13 +30,27 @@
     "no-console": [
       "warn",
       {
-        "allow": ["warn", "error", "info", "assert"]
+        "allow": [
+          "warn",
+          "error",
+          "info",
+          "assert"
+        ]
       }
     ],
-    // const func = new Function()
-    "no-new-func": "error",
+    "no-new-func": "error", // const func = new Function()
     "prefer-template": "error",
     "no-unused-vars": "off",
-    "import/no-unused-modules": "warn"
+    "import/no-unused-modules": "warn",
+    "no-restricted-globals": [
+      "error"
+    ],
+    "no-restricted-syntax": [
+      "error",
+      {
+        "selector": "Identifier[name='localStorage']",
+        "message": "Direct usage of window.localStorage is forbidden. Use efiLocalStorage instead."
+      }
+    ]
   }
 }
