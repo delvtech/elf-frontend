@@ -23,10 +23,11 @@ import {
   useElfContractWithdrawEth,
 } from "efi/ui/contracts/useElfContract";
 import { TransactionForm } from "efi/ui/crypto/TransactionForm/TransactionForm";
+import { useCryptoDrawer } from "efi/ui/crypto/useCryptoDrawer/useCryptoDrawer";
 import { useWalletBalance } from "efi/ui/wallets/hooks/useWalletBalance";
 
 interface StrategyCardProps {
-  strategy: Strategy<any>;
+  strategy: Strategy;
 }
 
 const stubbedStrategyData: PieData[] = [
@@ -118,33 +119,10 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
     [withdrawEth]
   );
 
-  // const {
-  //   value: confirmWithdraw,
-  //   setTrue: showWithdrawConfirmation,
-  //   setFalse: hideWithdrawConfirmation,
-  // } = useBoolean(false);
-
-  // const [amountToWithdraw, setAmountToWithdraw] = useState<
-  //   BigNumber | undefined
-  // >();
-
-  // const startWithdraw = useCallback(
-  //   (amount: BigNumber) => {
-  //     setAmountToWithdraw(amount);
-  //     showWithdrawConfirmation();
-  //   },
-  //   [showWithdrawConfirmation]
-  // );
-
-  // const onWithdrawComplete = useCallback(() => {
-  //   setAmountToWithdraw(undefined);
-  //   hideWithdrawConfirmation();
-  // }, [hideWithdrawConfirmation]);
-
-  // const onCancelWithdraw = useCallback(() => {
-  //   setAmountToWithdraw(undefined);
-  //   hideWithdrawConfirmation();
-  // }, [hideWithdrawConfirmation]);
+  const { setCryptoDrawerIsOpen } = useCryptoDrawer();
+  const clickStakingAsset = useCallback(() => {
+    setCryptoDrawerIsOpen(true);
+  }, [setCryptoDrawerIsOpen]);
 
   const totalSupply = elfTotalSupply && formatEther(elfTotalSupply);
 
@@ -159,7 +137,13 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
           <div className={tw("flex", "flex-col", "space-y-3")}>
             <span> {t`Primary asset`}</span>
             <div>
-              <Tag minimal intent={Intent.PRIMARY} interactive large>
+              <Tag
+                onClick={clickStakingAsset}
+                minimal
+                intent={Intent.PRIMARY}
+                interactive
+                large
+              >
                 {stakingAsset}
               </Tag>
             </div>

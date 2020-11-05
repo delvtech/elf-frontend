@@ -1,20 +1,33 @@
-import React, { FC, useState } from "react";
+import React, { FC, useCallback } from "react";
 import { useQuery } from "react-query";
 import { Markup } from "react-render-markup";
+import { useWindowSize } from "react-use";
 
-import { Drawer } from "@blueprintjs/core";
+import { Button, Classes, Drawer, H4, H6 } from "@blueprintjs/core";
+import { IconNames } from "@blueprintjs/icons";
+import classNames from "classnames";
+import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { SMALL_BREAKBOINT } from "efi/ui/base/mediaBreakpoints";
 import { SkeletonText } from "efi/ui/base/SkeletonText/SkeletonText";
+import { useCryptoDrawer } from "efi/ui/crypto/useCryptoDrawer/useCryptoDrawer";
+import { useDarkMode } from "efi/ui/prefs/useDarkMode/useDarkMode";
 
 interface CryptoDrawerProps {}
 
 export const CryptoDrawer: FC<CryptoDrawerProps> = () => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  setTimeout(() => {
-    setIsOpen(true);
-  }, 5000);
+  const { isDarkMode } = useDarkMode();
+  const { cryptoDrawerIsOpen, setCryptoDrawerIsOpen } = useCryptoDrawer();
+  const { width: screenWidth } = useWindowSize();
+  const closeCryptoDrawer = useCallback(() => setCryptoDrawerIsOpen(false), [
+    setCryptoDrawerIsOpen,
+  ]);
 
+  // blueprint has some pretty high css specificity for the width.
+  const width = screenWidth < SMALL_BREAKBOINT ? "100%" : SMALL_BREAKBOINT;
+
+  // TODO: get this from the useCryptoDrawer
   const cryptoId = "ethereum";
 
   const { data, status } = useQuery(["crypto", "description"], async () => {
@@ -26,20 +39,56 @@ export const CryptoDrawer: FC<CryptoDrawerProps> = () => {
   });
   const ethData = data as any;
 
+  const title = ethData?.name;
+  const price = ethData?.market_data?.current_price?.usd;
+  const totalSupply = ethData?.market_data?.total_supply;
+  const circulatingSupply = ethData?.market_data?.circulating_supply;
   const description = ethData?.description?.en;
-  const drawerIsOpen = (isOpen && status === "success") || status === "loading";
   return (
     <Drawer
       lazy
+      style={{ width }}
+      onClose={closeCryptoDrawer}
+      onClosing={closeCryptoDrawer}
+      portalClassName={tw("pointer-events-none")}
+      canOutsideClickClose={false}
+      enforceFocus={false}
       hasBackdrop={false}
-      className={tw("w-full", "md:w-1/2", "lg:w-1/3", "flex", "p-2")}
-      isOpen={drawerIsOpen}
+      className={tw("w-full", "md:w-1/2", "lg:w-1/3", "flex", {
+        [Classes.DARK]: isDarkMode,
+      })}
+      isOpen={cryptoDrawerIsOpen}
     >
       {status === "loading" ? (
         <SkeletonText />
       ) : (
-        <div className={tw("whitespace-pre-wrap")}>
-          <Markup markup={description} />
+        <div className={tw("pointer-events-auto", "text-justify")}>
+          <div
+            className={classNames(
+              "bp3-drawer-header",
+              tw("flex", "justify-between")
+            )}
+          >
+            <H4>{title}</H4>
+            <Button
+              onClick={closeCryptoDrawer}
+              minimal
+              icon={IconNames.CROSS}
+            />
+          </div>
+          <div className={tw("p-6")}>
+            <H4>{t`Price`}</H4>
+            <div>{`$${price}`}</div>
+          </div>
+          <div className={tw("p-6", "space-x-2")}>
+            <H4>{t`Supply`}</H4>
+            <H6>{t`total: ${totalSupply || "(no total)"}`}</H6>
+            <H6>{t`circulating: ${circulatingSupply}`}</H6>
+          </div>
+          <div className={tw("whitespace-pre-wrap", "p-6")}>
+            <H4>{t`Description`}</H4>
+            <Markup markup={description} />
+          </div>
         </div>
       )}
     </Drawer>

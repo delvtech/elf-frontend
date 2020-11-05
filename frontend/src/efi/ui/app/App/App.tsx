@@ -1,10 +1,12 @@
 import React, { FC } from "react";
+import { ReactQueryDevtools } from "react-query-devtools";
 
 import { Classes } from "@blueprintjs/core";
 import { LocationProvider, Router } from "@reach/router";
 import classNames from "classnames";
 
 import { tw } from "efi-tailwindcss-classnames";
+import { CryptoDrawer } from "efi/ui/crypto/CryptoDrawer/CryptoDrawer";
 import { HomeView } from "efi/ui/home/HomeView";
 import { InvestView } from "efi/ui/invest/InvestView";
 import { MainNavigation } from "efi/ui/navigation/MainNavigation/MainNavigation";
@@ -56,11 +58,12 @@ const App: FC<AppProps> = () => {
           <SwapView path={Navigation.SWAP} />
           <InvestView path={Navigation.INVEST} />
         </Router>
+        <CryptoDrawer />
       </div>
 
       {/* Safe to render unconditionally as it does not render in production
       builds by default */}
-      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+      <ReactQueryDevtools initialIsOpen={false} />
     </>
   );
 };
