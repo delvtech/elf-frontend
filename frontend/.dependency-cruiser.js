@@ -179,6 +179,16 @@ module.exports = {
         path: "node_modules/react",
       },
     },
+
+    {
+      name: "efi-not-to-localStorage",
+      comment: "Importing localStorage outside of prefs/ is prohibited",
+      severity: "error",
+      from: { pathNot: `(${["efi/prefs", "efi/ui/prefs"].join("|")})` },
+      to: {
+        path: "efi/base/localStorage.ts",
+      },
+    },
   ],
   options: {
     /* conditions specifying which files not to follow further when encountered:
