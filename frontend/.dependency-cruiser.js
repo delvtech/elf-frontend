@@ -108,7 +108,8 @@ module.exports = {
       severity: "error",
       from: {},
       to: {
-        path: "\\.spec\\.(js|mjs|cjs|ts|ls|coffee|litcoffee|coffee\\.md)$",
+        path:
+          "\\.(spec|test)\\.(js|mjs|cjs|ts|ls|coffee|litcoffee|coffee\\.md)$",
       },
     },
     {
@@ -122,7 +123,8 @@ module.exports = {
         "from.pathNot re of the not-to-dev-dep rule in the dependency-cruiser configuration",
       from: {
         path: "^(src)",
-        pathNot: "\\.spec\\.(js|mjs|cjs|ts|ls|coffee|litcoffee|coffee\\.md)$",
+        pathNot:
+          "\\.(spec|test)\\.(js|mjs|cjs|ts|ls|coffee|litcoffee|coffee\\.md)$",
       },
       to: {
         dependencyTypes: ["npm-dev"],
@@ -152,6 +154,19 @@ module.exports = {
       from: {},
       to: {
         dependencyTypes: ["npm-peer"],
+      },
+    },
+
+    /* custom rules specific to Element.fi */
+    {
+      name: "efi-not-to-ui",
+      comment: "Importing from ui/ is prohibited outside of the ui/ directory",
+      severity: "error",
+      from: {
+        pathNot: `(${["index.tsx", "efi/ui"].join("|")})`,
+      },
+      to: {
+        path: "efi/ui/",
       },
     },
   ],
