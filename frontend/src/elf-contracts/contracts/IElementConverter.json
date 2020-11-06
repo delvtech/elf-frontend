@@ -1,0 +1,27 @@
+[
+  {
+    "inputs": [],
+    "name": "balance",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "_from", "type": "address" },
+      { "internalType": "address", "name": "_to", "type": "address" },
+      { "internalType": "uint256", "name": "_amount", "type": "uint256" },
+      {
+        "internalType": "uint256",
+        "name": "_converterType",
+        "type": "uint256"
+      },
+      { "internalType": "bool", "name": "_isAlloc", "type": "bool" },
+      { "internalType": "address", "name": "_sender", "type": "address" }
+    ],
+    "name": "convert",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]
