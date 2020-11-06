@@ -212,6 +212,17 @@ module.exports = {
         path: "efi/(?!base)",
       },
     },
+    {
+      name: "efi-not-to-crypto",
+      comment: "Importing certain modules in crypto/ is prohibited",
+      severity: "error",
+      from: {
+        path: "efi/crypto",
+      },
+      to: {
+        path: `(${["efi/wallets", "efi/pools"].join("|")})`,
+      },
+    },
   ],
   options: {
     /* conditions specifying which files not to follow further when encountered:
