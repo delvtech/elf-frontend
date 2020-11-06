@@ -182,11 +182,34 @@ module.exports = {
 
     {
       name: "efi-not-to-localStorage",
-      comment: "Importing localStorage outside of prefs/ is prohibited",
+      comment: "Importing efiLocalStorage outside of prefs/ is prohibited",
       severity: "error",
       from: { pathNot: `(${["efi/prefs", "efi/ui/prefs"].join("|")})` },
       to: {
         path: "efi/base/localStorage.ts",
+      },
+    },
+
+    {
+      name: "efi-not-outside-ui-base",
+      comment: "Importing modules outside of ui/base/ is prohibited",
+      severity: "error",
+      from: {
+        path: "efi/ui/base",
+      },
+      to: {
+        path: "efi/ui/(?!base)",
+      },
+    },
+    {
+      name: "efi-not-outside-base",
+      comment: "Importing modules outside of base/ is prohibited",
+      severity: "error",
+      from: {
+        path: "efi/base",
+      },
+      to: {
+        path: "efi/(?!base)",
       },
     },
   ],
