@@ -5,11 +5,14 @@
 import { Contract, Signer } from "ethers";
 import { Provider } from "@ethersproject/providers";
 
-import type { Elf } from "./Elf";
+import type { AyVault } from "./AyVault";
 
-export class ElfFactory {
-  static connect(address: string, signerOrProvider: Signer | Provider): Elf {
-    return new Contract(address, _abi, signerOrProvider) as Elf;
+export class AyVaultFactory {
+  static connect(
+    address: string,
+    signerOrProvider: Signer | Provider
+  ): AyVault {
+    return new Contract(address, _abi, signerOrProvider) as AyVault;
   }
 }
 
@@ -17,8 +20,8 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: "address payable",
-        name: "_weth",
+        internalType: "address",
+        name: "_token",
         type: "address",
       },
     ],
@@ -124,19 +127,6 @@ const _abi = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "balance",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
     inputs: [
       {
         internalType: "address",
@@ -196,7 +186,7 @@ const _abi = [
     inputs: [
       {
         internalType: "uint256",
-        name: "amount",
+        name: "_amount",
         type: "uint256",
       },
     ],
@@ -207,19 +197,19 @@ const _abi = [
   },
   {
     inputs: [],
-    name: "depositETH",
+    name: "depositAll",
     outputs: [],
-    stateMutability: "payable",
+    stateMutability: "nonpayable",
     type: "function",
   },
   {
     inputs: [],
-    name: "governance",
+    name: "getPricePerFullShare",
     outputs: [
       {
-        internalType: "address",
+        internalType: "uint256",
         name: "",
-        type: "address",
+        type: "uint256",
       },
     ],
     stateMutability: "view",
@@ -251,58 +241,12 @@ const _abi = [
   },
   {
     inputs: [],
-    name: "invest",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
     name: "name",
     outputs: [
       {
         internalType: "string",
         name: "",
         type: "string",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_governance",
-        type: "address",
-      },
-    ],
-    name: "setGovernance",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address payable",
-        name: "_strategy",
-        type: "address",
-      },
-    ],
-    name: "setStrategy",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "strategy",
-    outputs: [
-      {
-        internalType: "address payable",
-        name: "",
-        type: "address",
       },
     ],
     stateMutability: "view",
@@ -316,6 +260,19 @@ const _abi = [
         internalType: "string",
         name: "",
         type: "string",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "token",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
       },
     ],
     stateMutability: "view",
@@ -388,23 +345,10 @@ const _abi = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "weth",
-    outputs: [
-      {
-        internalType: "contract IERC20",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
     inputs: [
       {
         internalType: "uint256",
-        name: "_shares",
+        name: "_amount",
         type: "uint256",
       },
     ],
@@ -414,20 +358,10 @@ const _abi = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_shares",
-        type: "uint256",
-      },
-    ],
-    name: "withdrawETH",
+    inputs: [],
+    name: "withdrawAll",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
-  },
-  {
-    stateMutability: "payable",
-    type: "receive",
   },
 ];

@@ -5,45 +5,34 @@
 import { Contract, Signer } from "ethers";
 import { Provider } from "@ethersproject/providers";
 
-import type { Elf } from "./Elf";
+import type { Weth } from "./Weth";
 
-export class ElfFactory {
-  static connect(address: string, signerOrProvider: Signer | Provider): Elf {
-    return new Contract(address, _abi, signerOrProvider) as Elf;
+export class WethFactory {
+  static connect(address: string, signerOrProvider: Signer | Provider): Weth {
+    return new Contract(address, _abi, signerOrProvider) as Weth;
   }
 }
 
 const _abi = [
-  {
-    inputs: [
-      {
-        internalType: "address payable",
-        name: "_weth",
-        type: "address",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "constructor",
-  },
   {
     anonymous: false,
     inputs: [
       {
         indexed: true,
         internalType: "address",
-        name: "owner",
+        name: "src",
         type: "address",
       },
       {
         indexed: true,
         internalType: "address",
-        name: "spender",
+        name: "guy",
         type: "address",
       },
       {
         indexed: false,
         internalType: "uint256",
-        name: "value",
+        name: "wad",
         type: "uint256",
       },
     ],
@@ -56,19 +45,38 @@ const _abi = [
       {
         indexed: true,
         internalType: "address",
-        name: "from",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "to",
+        name: "dst",
         type: "address",
       },
       {
         indexed: false,
         internalType: "uint256",
-        name: "value",
+        name: "wad",
+        type: "uint256",
+      },
+    ],
+    name: "Deposit",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "src",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "dst",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "wad",
         type: "uint256",
       },
     ],
@@ -76,15 +84,34 @@ const _abi = [
     type: "event",
   },
   {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "src",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "wad",
+        type: "uint256",
+      },
+    ],
+    name: "Withdrawal",
+    type: "event",
+  },
+  {
     inputs: [
       {
         internalType: "address",
-        name: "owner",
+        name: "",
         type: "address",
       },
       {
         internalType: "address",
-        name: "spender",
+        name: "",
         type: "address",
       },
     ],
@@ -103,12 +130,12 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
-        name: "spender",
+        name: "guy",
         type: "address",
       },
       {
         internalType: "uint256",
-        name: "amount",
+        name: "wad",
         type: "uint256",
       },
     ],
@@ -124,23 +151,10 @@ const _abi = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "balance",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
     inputs: [
       {
         internalType: "address",
-        name: "account",
+        name: "",
         type: "address",
       },
     ],
@@ -169,91 +183,10 @@ const _abi = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "address",
-        name: "spender",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "subtractedValue",
-        type: "uint256",
-      },
-    ],
-    name: "decreaseAllowance",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-    ],
+    inputs: [],
     name: "deposit",
     outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "depositETH",
-    outputs: [],
     stateMutability: "payable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "governance",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "spender",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "addedValue",
-        type: "uint256",
-      },
-    ],
-    name: "increaseAllowance",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "invest",
-    outputs: [],
-    stateMutability: "nonpayable",
     type: "function",
   },
   {
@@ -264,45 +197,6 @@ const _abi = [
         internalType: "string",
         name: "",
         type: "string",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_governance",
-        type: "address",
-      },
-    ],
-    name: "setGovernance",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address payable",
-        name: "_strategy",
-        type: "address",
-      },
-    ],
-    name: "setStrategy",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "strategy",
-    outputs: [
-      {
-        internalType: "address payable",
-        name: "",
-        type: "address",
       },
     ],
     stateMutability: "view",
@@ -338,12 +232,12 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
-        name: "recipient",
+        name: "dst",
         type: "address",
       },
       {
         internalType: "uint256",
-        name: "amount",
+        name: "wad",
         type: "uint256",
       },
     ],
@@ -362,17 +256,17 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
-        name: "sender",
+        name: "src",
         type: "address",
       },
       {
         internalType: "address",
-        name: "recipient",
+        name: "dst",
         type: "address",
       },
       {
         internalType: "uint256",
-        name: "amount",
+        name: "wad",
         type: "uint256",
       },
     ],
@@ -388,40 +282,14 @@ const _abi = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "weth",
-    outputs: [
-      {
-        internalType: "contract IERC20",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
     inputs: [
       {
         internalType: "uint256",
-        name: "_shares",
+        name: "wad",
         type: "uint256",
       },
     ],
     name: "withdraw",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_shares",
-        type: "uint256",
-      },
-    ],
-    name: "withdrawETH",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

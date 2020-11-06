@@ -17,3 +17,7 @@ done < src/elf-contracts/dapp.sol.json
 
 # Generate typescript types for the smart contracts
 typechain --target ethers-v5 --outDir src/elf-contracts/types/ 'src/elf-contracts/contracts/*.json'
+
+# Remove the index.ts file since typechain doesn't generate properly, and it's
+# breaking CRA's tsconfig.json hard rule for --isolatedModules
+rm -f src/elf-contracts/types/index.ts
