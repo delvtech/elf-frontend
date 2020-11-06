@@ -119,10 +119,10 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
     [withdrawEth]
   );
 
-  const { setCryptoDrawerIsOpen } = useCryptoDrawer();
+  const { openCryptoDrawer } = useCryptoDrawer();
   const clickStakingAsset = useCallback(() => {
-    setCryptoDrawerIsOpen(true);
-  }, [setCryptoDrawerIsOpen]);
+    openCryptoDrawer();
+  }, [openCryptoDrawer]);
 
   const totalSupply = elfTotalSupply && formatEther(elfTotalSupply);
 

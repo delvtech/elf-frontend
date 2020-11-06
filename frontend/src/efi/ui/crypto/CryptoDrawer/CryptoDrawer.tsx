@@ -81,7 +81,7 @@ export const CryptoDrawer: FC<CryptoDrawerProps> = () => {
             <div className={tw("p-6", "space-x-2")}>
               <H4>{t`Supply`}</H4>
               <H6>{t`total: ${totalSupply || "(no total)"}`}</H6>
-              <H6>{t`circulating: ${circulatingSupply.toLocalizedString()}`}</H6>
+              <H6>{t`circulating: ${circulatingSupply.toLocaleString()}`}</H6>
             </div>
             <div className={tw("whitespace-pre-wrap", "p-6")}>
               <H4>{t`Description`}</H4>
