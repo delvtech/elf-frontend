@@ -83,20 +83,34 @@ export const WalletSummary: FunctionComponent<WalletSummaryProps> = () => {
       {account && (
         <div className={rowClassName}>
           <span className={labelClassName}>{t`Wallet address`}</span>
-          <Button
-            minimal
-            outlined
-            icon={
+          <button
+            className={classNames("bp3-button", "bp3-minimal", "bp3-outlined")}
+            onClick={active ? deactivate : connectToInjectedWallet}
+          >
+            <div
+              className={tw(
+                "flex",
+                "content-center",
+                "space-x-1",
+                "w-full",
+                "items-center"
+              )}
+            >
               <Icon
+                className={tw("flex-shrink-0", "block")}
                 icon={IconNames.DOT}
                 color={account ? Colors.GREEN4 : Colors.RED4}
               />
-            }
-            rightIcon={<Icon icon={IconNames.CROSS} iconSize={12} />}
-            onClick={active ? deactivate : connectToInjectedWallet}
-          >
-            {formatWalletAddress(account)}
-          </Button>
+              <div className={tw("flex", "flex-shrink", "truncate")}>
+                {formatWalletAddress(account)}
+              </div>
+              <Icon
+                className={tw("flex-shrink-0", "flex", "items-center")}
+                icon={IconNames.CROSS}
+                iconSize={12}
+              />
+            </div>
+          </button>
         </div>
       )}
 
