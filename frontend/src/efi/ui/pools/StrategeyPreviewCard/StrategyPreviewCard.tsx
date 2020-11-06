@@ -7,7 +7,7 @@ import tw from "efi-tailwindcss-classnames";
 import { Strategy } from "efi/pools/strategy";
 
 interface StrategyPreviewCardProps {
-  strategy: Strategy<any>;
+  strategy: Strategy;
   onSelectStrategy?: (strategyId: string) => void;
 }
 

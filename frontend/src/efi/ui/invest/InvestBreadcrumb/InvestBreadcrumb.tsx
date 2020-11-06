@@ -3,11 +3,10 @@ import React, { FC, useMemo } from "react";
 import { Breadcrumbs, IBreadcrumbProps } from "@blueprintjs/core";
 import { t } from "ttag";
 
-import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { Strategy } from "efi/pools/strategy";
 
 interface InvestBreadcrumbProps {
-  availableStrategies: Strategy<CryptoSymbol.ETH>[];
+  availableStrategies: Strategy[];
   activeStrategy?: string;
   setActiveStrategy: (strategyId: string | undefined) => void;
 }
@@ -27,7 +26,7 @@ export const InvestBreadcrumb: FC<InvestBreadcrumbProps> = ({
 };
 
 function useBreadcrumbItems(
-  availableStrategies: Strategy<CryptoSymbol.ETH>[],
+  availableStrategies: Strategy[],
   activeStrategy: string | undefined,
   setActiveStrategy: (strategyId: string | undefined) => void
 ): IBreadcrumbProps[] {

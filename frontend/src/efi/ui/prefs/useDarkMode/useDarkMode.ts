@@ -1,9 +1,12 @@
 import { queryCache, useQuery } from "react-query";
 
+import { Classes } from "@blueprintjs/core";
+
 import efiLocalStorage from "efi/base/localStorage";
 
 interface DarkMode {
   isDarkMode: boolean;
+  darkModeClassName: string | undefined;
   setDarkMode: (isDarkMode: boolean) => void;
 }
 
@@ -20,9 +23,12 @@ export function useDarkMode(): DarkMode {
     { placeholderData: DARK_MODE_DEFAULT }
   );
 
+  const darkModeClassName = isDarkMode ? Classes.DARK : undefined;
+
   return {
     // safe to cast when placeholder is set in useQuery
     isDarkMode: isDarkMode as boolean,
+    darkModeClassName,
     setDarkMode,
   };
 }

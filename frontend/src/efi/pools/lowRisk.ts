@@ -8,7 +8,7 @@ const ELF_STRATEGY_LOW_RISK = "ELF_STRATEGY_LOW_RISK";
 /**
  * A low-risk strategy made up of stablecoins.
  */
-export const ElfStrategyLowRisk: Strategy<CryptoSymbol.ETH> = {
+export const ElfStrategyLowRisk: Strategy = {
   id: ELF_STRATEGY_LOW_RISK,
   stakingAsset: CryptoSymbol.ETH,
   name: t`Low Risk Strategy`,

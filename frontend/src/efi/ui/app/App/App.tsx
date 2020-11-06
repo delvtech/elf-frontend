@@ -1,10 +1,11 @@
 import React, { FC } from "react";
+import { ReactQueryDevtools } from "react-query-devtools";
 
-import { Classes } from "@blueprintjs/core";
 import { LocationProvider, Router } from "@reach/router";
 import classNames from "classnames";
 
 import { tw } from "efi-tailwindcss-classnames";
+import { CryptoDrawer } from "efi/ui/crypto/CryptoDrawer/CryptoDrawer";
 import { HomeView } from "efi/ui/home/HomeView";
 import { InvestView } from "efi/ui/invest/InvestView";
 import { MainNavigation } from "efi/ui/navigation/MainNavigation/MainNavigation";
@@ -30,11 +31,12 @@ const contentClassName = tw(
 interface AppProps {}
 
 const App: FC<AppProps> = () => {
-  const { isDarkMode } = useDarkMode();
+  const { isDarkMode, darkModeClassName } = useDarkMode();
 
   const appClassName = classNames(
     styles.app,
-    { [styles.appDark]: isDarkMode, [Classes.DARK]: isDarkMode },
+    darkModeClassName,
+    { [styles.appDark]: isDarkMode },
     tw("flex", "flex-col", "lg:flex-row", "w-full", "h-full", "overflow-auto")
   );
 
@@ -56,11 +58,12 @@ const App: FC<AppProps> = () => {
           <SwapView path={Navigation.SWAP} />
           <InvestView path={Navigation.INVEST} />
         </Router>
+        <CryptoDrawer />
       </div>
 
       {/* Safe to render unconditionally as it does not render in production
       builds by default */}
-      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+      <ReactQueryDevtools initialIsOpen={false} />
     </>
   );
 };
