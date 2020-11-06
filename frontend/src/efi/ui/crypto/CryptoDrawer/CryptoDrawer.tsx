@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from "react";
+import React, { FC } from "react";
 import { useQuery } from "react-query";
 import { Markup } from "react-render-markup";
 import { useWindowSize } from "react-use";

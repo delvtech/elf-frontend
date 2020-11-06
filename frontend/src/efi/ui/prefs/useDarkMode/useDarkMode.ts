@@ -1,10 +1,8 @@
 import { queryCache, useQuery } from "react-query";
 
-<<<<<<< HEAD
-import efiLocalStorage from "efi/base/localStorage";
-=======
 import { Classes } from "@blueprintjs/core";
->>>>>>> 36f6330... add darkModeClassName, scrolling, remove selector
+
+import efiLocalStorage from "efi/base/localStorage";
 
 interface DarkMode {
   isDarkMode: boolean;

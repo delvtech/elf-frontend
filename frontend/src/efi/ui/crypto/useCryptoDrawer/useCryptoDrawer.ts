@@ -1,6 +1,8 @@
 import { useCallback } from "react";
 import { queryCache, useQuery } from "react-query";
 
+import efiLocalStorage from "efi/base/localStorage";
+
 interface CryptoDrawer {
   cryptoDrawerIsOpen: boolean;
   setCryptoDrawerIsOpen: (isOpen: boolean) => void;
@@ -15,7 +17,7 @@ export function useCryptoDrawer(): CryptoDrawer {
   const { data } = useQuery<boolean>(
     DRAWER_CRYPTO_IS_OPEN_QUERY_KEY,
     () => {
-      const item = window.localStorage.getItem(
+      const item = efiLocalStorage.getItem(
         DRAWER_CRYPTO_IS_OPEN_QUERY_KEY.join()
       );
       return item ? JSON.parse(item) : DRAWER_IS_OPEN_DEFAULT;
@@ -38,7 +40,7 @@ export function useCryptoDrawer(): CryptoDrawer {
 
 function setCryptoDrawerIsOpen(drawerIsOpen: boolean) {
   // Save to local storage
-  window.localStorage.setItem(
+  efiLocalStorage.setItem(
     DRAWER_CRYPTO_IS_OPEN_QUERY_KEY.join(),
     JSON.stringify(drawerIsOpen)
   );
