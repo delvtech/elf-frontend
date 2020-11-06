@@ -1,5 +1,6 @@
 import React, { FC } from "react";
 
+import { Classes } from "@blueprintjs/core";
 import classNames from "classnames";
 
 import tw from "efi-tailwindcss-classnames";
@@ -17,7 +18,7 @@ export const SkeletonText: FC<SkeletonTextProps> = ({ text = loremIpsum }) => {
       {text.split(" ").map((word, index) => (
         <div
           key={index}
-          className={classNames("bp3-skeleton", tw("mr-1", "mt-1", "w-auto"))}
+          className={classNames(Classes.SKELETON, tw("mr-1", "mt-1", "w-auto"))}
         >
           {word}
         </div>

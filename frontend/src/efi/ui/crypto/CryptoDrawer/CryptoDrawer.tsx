@@ -9,7 +9,7 @@ import classNames from "classnames";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { SMALL_BREAKBOINT } from "efi/ui/base/mediaBreakpoints";
+import { SMALL_BREAKPOINT } from "efi/ui/base/mediaBreakpoints";
 import { SkeletonText } from "efi/ui/base/SkeletonText/SkeletonText";
 import { useCryptoDrawer } from "efi/ui/crypto/useCryptoDrawer/useCryptoDrawer";
 import { useDarkMode } from "efi/ui/prefs/useDarkMode/useDarkMode";
@@ -18,14 +18,11 @@ interface CryptoDrawerProps {}
 
 export const CryptoDrawer: FC<CryptoDrawerProps> = () => {
   const { darkModeClassName } = useDarkMode();
-  const { cryptoDrawerIsOpen, setCryptoDrawerIsOpen } = useCryptoDrawer();
+  const { cryptoDrawerIsOpen, closeCryptoDrawer } = useCryptoDrawer();
   const { width: screenWidth } = useWindowSize();
-  const closeCryptoDrawer = useCallback(() => setCryptoDrawerIsOpen(false), [
-    setCryptoDrawerIsOpen,
-  ]);
 
   // blueprint has some pretty high css specificity for the width.
-  const width = screenWidth < SMALL_BREAKBOINT ? "100%" : SMALL_BREAKBOINT;
+  const width = screenWidth < SMALL_BREAKPOINT ? "100%" : SMALL_BREAKPOINT;
 
   // TODO: get this from the useCryptoDrawer
   const cryptoId = "ethereum";
@@ -42,14 +39,14 @@ export const CryptoDrawer: FC<CryptoDrawerProps> = () => {
   const title = ethData?.name;
   const price = ethData?.market_data?.current_price?.usd;
   const totalSupply = ethData?.market_data?.total_supply;
-  const circulatingSupply = ethData?.market_data?.circulating_supply;
+  const circulatingSupply =
+    ethData?.market_data?.circulating_supply || ("" as string);
   const description = ethData?.description?.en;
   return (
     <Drawer
       lazy
       style={{ width }}
       onClose={closeCryptoDrawer}
-      onClosing={closeCryptoDrawer}
       portalClassName={tw("pointer-events-none")}
       canOutsideClickClose={false}
       enforceFocus={false}
@@ -84,7 +81,7 @@ export const CryptoDrawer: FC<CryptoDrawerProps> = () => {
             <div className={tw("p-6", "space-x-2")}>
               <H4>{t`Supply`}</H4>
               <H6>{t`total: ${totalSupply || "(no total)"}`}</H6>
-              <H6>{t`circulating: ${circulatingSupply}`}</H6>
+              <H6>{t`circulating: ${circulatingSupply.toLocalizedString()}`}</H6>
             </div>
             <div className={tw("whitespace-pre-wrap", "p-6")}>
               <H4>{t`Description`}</H4>

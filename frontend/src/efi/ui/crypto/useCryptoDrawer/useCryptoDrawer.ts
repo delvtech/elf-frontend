@@ -1,8 +1,11 @@
+import { useCallback } from "react";
 import { queryCache, useQuery } from "react-query";
 
 interface CryptoDrawer {
   cryptoDrawerIsOpen: boolean;
   setCryptoDrawerIsOpen: (isOpen: boolean) => void;
+  openCryptoDrawer: () => void;
+  closeCryptoDrawer: () => void;
 }
 
 const DRAWER_CRYPTO_IS_OPEN_QUERY_KEY = ["drawer", "crypto", "isOpen"];
@@ -22,9 +25,14 @@ export function useCryptoDrawer(): CryptoDrawer {
 
   const cryptoDrawerIsOpen = data || DRAWER_IS_OPEN_DEFAULT;
 
+  const closeCryptoDrawer = useCallback(() => setCryptoDrawerIsOpen(false), []);
+  const openCryptoDrawer = useCallback(() => setCryptoDrawerIsOpen(true), []);
+
   return {
     cryptoDrawerIsOpen,
     setCryptoDrawerIsOpen,
+    openCryptoDrawer,
+    closeCryptoDrawer,
   };
 }
 
