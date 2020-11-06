@@ -7,7 +7,7 @@ defaults:
     working-directory: frontend
 
 jobs:
-  prettier:
+  prettier-check:
     runs-on: ubuntu-latest
 
     steps:
