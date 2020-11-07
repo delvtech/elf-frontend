@@ -1,6 +1,6 @@
 import React, { FC, useCallback, useState } from "react";
 
-import { Card, H3, Intent, Tag } from "@blueprintjs/core";
+import { Card, H3, Intent, Tag, Tooltip } from "@blueprintjs/core";
 import { BigNumber, ContractTransaction } from "ethers";
 import { formatEther } from "ethers/lib/utils";
 import { t } from "ttag";
@@ -135,7 +135,15 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
 
           {/* Staking Asset */}
           <div className={tw("flex", "flex-col", "space-y-3")}>
-            <span> {t`Primary asset`}</span>
+            <div className={tw("flex", "space-x-1")}>
+              <span>{t`Primary asset`}</span>
+              <Tooltip
+                inheritDarkTheme={false}
+                content={t`You must provide this asset in order to take a position in this strategy.`}
+              >
+                <sup>?</sup>
+              </Tooltip>
+            </div>
             <div>
               <Tag
                 onClick={clickStakingAsset}
@@ -171,7 +179,7 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
 
           {/* Total Supply*/}
           <div className={tw("flex", "flex-col", "space-y-4")}>
-            <span>{t`Total Supply`}</span>
+            <span>{t`Total supply`}</span>
             <div className={tw("space-x-4")}>
               <span>{totalSupply}</span>
               <Tag minimal intent={Intent.PRIMARY} interactive large>
@@ -196,7 +204,9 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
           <PieChart pieData={stubbedStrategyData} />
         </div>
       </div>
-      <div className={tw("flex", "justify-between", "w-full", "space-x-8")}>
+      <div
+        className={tw("flex", "justify-between", "w-full", "space-x-8", "pt-4")}
+      >
         {/* Deposit */}
         <TransactionForm
           inputLabel={t`Deposit`}
