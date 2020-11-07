@@ -19,5 +19,4 @@ export const ElfStrategyHighRisk: Strategy = {
     CryptoSymbol.YUSDT,
   ],
   strategyAsset: CryptoSymbol.ELF_HIGH_RISK_POOL_TOKEN,
-  apy: 8.64,
 };

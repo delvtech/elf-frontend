@@ -38,7 +38,7 @@ const stubbedStrategyData: PieData[] = [
 ];
 
 export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
-  const { name, stakingAsset, apy } = strategy;
+  const { name, stakingAsset } = strategy;
   const { data: walletBalance } = useWalletBalance();
   const { data: strategyCryptoSymbol } = useElfContractSymbol();
   const { data: elfTotalSupply } = useElfContractTotalSupply();
@@ -166,14 +166,6 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
                   </Tag>
                 );
               })}
-            </div>
-          </div>
-
-          {/* Expected APY */}
-          <div className={tw("flex", "flex-col", "space-y-4")}>
-            <span>{t`Exected APY`}</span>
-            <div className={tw("space-x-4")}>
-              <span>{`${apy}%`}</span>
             </div>
           </div>
 
