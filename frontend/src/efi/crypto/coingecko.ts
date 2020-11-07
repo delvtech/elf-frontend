@@ -1,3 +1,5 @@
+import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
+
 /**
  * Supported crypto ids
  */
@@ -6,10 +8,21 @@ export type CoinGeckoCryptoId = "ethereum" | "dai" | "yearn-finance";
 /**
  * Crosswalk for looking up CoinGecko ids given an efi CryptoSymbol value.
  */
-export const CoinGeckoCryptoIds: Record<string, CoinGeckoCryptoId> = {
+export const CoinGeckoCryptoIds: Record<
+  CryptoSymbol,
+  CoinGeckoCryptoId | undefined
+> = {
   ETH: "ethereum",
   DAI: "dai",
   YFI: "yearn-finance",
+  "ELF-H": undefined,
+  "ELF-L": undefined,
+  "ELF-M": undefined,
+  yDAI: undefined,
+  yETH: undefined,
+  yTUSD: undefined,
+  yUSDC: undefined,
+  yUSDT: undefined,
 };
 
 export async function fetchCryptoPrice(
