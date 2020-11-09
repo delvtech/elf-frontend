@@ -41,7 +41,9 @@ export interface Wallet {
 }
 
 export function useWallet(): Wallet {
-  const { connector, library, account, error } = useWeb3React<Web3Provider>();
+  const web3React = useWeb3React<Web3Provider>();
+  window.__web3React = web3React;
+  const { connector, library, account, error } = web3React;
 
   // Manages the toasts for connections
   useWalletConnectionStatus();
