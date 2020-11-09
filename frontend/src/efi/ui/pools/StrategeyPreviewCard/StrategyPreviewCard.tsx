@@ -1,7 +1,6 @@
 import React, { FC, useCallback } from "react";
 
 import { Card, H3, Intent, Tag } from "@blueprintjs/core";
-import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { Strategy } from "efi/pools/strategy";
@@ -12,7 +11,7 @@ interface StrategyPreviewCardProps {
 }
 
 export const StrategyPreviewCard: FC<StrategyPreviewCardProps> = ({
-  strategy: { name, stakingAsset, id, apy },
+  strategy: { name, stakingAsset, id },
   onSelectStrategy,
 }) => {
   const selectStrategy = useCallback(() => {
@@ -46,7 +45,6 @@ export const StrategyPreviewCard: FC<StrategyPreviewCardProps> = ({
           <Tag minimal intent={Intent.PRIMARY} interactive large>
             {stakingAsset}
           </Tag>
-          <div>{t`Exected APY ${apy}%`}</div>
         </div>
       </div>
     </Card>
