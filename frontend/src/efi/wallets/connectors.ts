@@ -19,6 +19,21 @@ export const injectedConnector = new InjectedConnector({
   supportedChainIds: DEFAULT_CHAIN_IDS,
 });
 
+// Patch chainChanged 0xNaN causing app to crash when switching from the mainnet
+// to localnet. See: https://github.com/NoahZinsmeister/web3-react/issues/73
+//@ts-ignore
+const originalChainIdChangeHandler = injectedConnector.handleChainChanged;
+//@ts-ignore
+injectedConnector.handleChainChanged = (chainId: string | number) => {
+  // preserve the existing console log from the
+  // eslint-disable-next-line no-console
+  console.debug("Handling 'chainChanged' event with payload", chainId);
+  if (chainId === "0xNaN") {
+    return; //Ignore 0xNaN, when user doesn't set chainId
+  }
+  originalChainIdChangeHandler(chainId);
+};
+
 /**
  * WalletConnect.  This provides access to many mobile wallets that use the wallet connect protocol
  * like Rainbow, Argent etc.
@@ -49,21 +64,6 @@ export const fortmaticConnector = new FortmaticConnector({
 export const torusConnector = new TorusConnector({
   chainId: ChainId.MAINNET,
 });
-
-// Patch chainChanged 0xNaN causing app to crash when switching from the mainnet
-// to localnet. See: https://github.com/NoahZinsmeister/web3-react/issues/73
-//@ts-ignore
-const originalChainIdChangeHandler = injectedConnector.handleChainChanged;
-//@ts-ignore
-injectedConnector.handleChainChanged = (chainId: string | number) => {
-  // preserve the existing console log from the
-  // eslint-disable-next-line no-console
-  console.debug("Handling 'chainChanged' event with payload", chainId);
-  if (chainId === "0xNaN") {
-    return; //Ignore 0xNaN, when user doesn't set chainId
-  }
-  originalChainIdChangeHandler(chainId);
-};
 
 export function getConnectorName(
   connector?: AbstractConnector | undefined,
