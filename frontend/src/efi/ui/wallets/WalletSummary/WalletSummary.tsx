@@ -61,7 +61,7 @@ export const WalletSummary: FunctionComponent<WalletSummaryProps> = () => {
           minimal
           fill
           className={tw("py-8")}
-          onClick={active ? deactivate : connectToInjectedWallet}
+          onClick={active ? deactivate : () => {}}
         >
           {t`Connect your wallet`}
         </Button>
