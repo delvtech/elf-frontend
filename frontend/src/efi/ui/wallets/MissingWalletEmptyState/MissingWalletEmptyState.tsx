@@ -16,7 +16,10 @@ import { ReactComponent as TorusIcon } from "efi/ui/staticAssets/logos/torus.svg
 import { ReactComponent as WalletConnectIcon } from "efi/ui/staticAssets/logos/walletConnectIcon.svg";
 import { ConnectWalletButton } from "efi/ui/wallets/hooks/WalletConnectButton/WalletConnectButton";
 import {
+  fortmaticConnector,
   injectedConnector,
+  ledgerConnector,
+  torusConnector,
   walletConnectConnector,
 } from "efi/wallets/connectors";
 
@@ -38,15 +41,28 @@ const howItWorksLink = (
 export const MissingWalletEmptyState: FC<{}> = () => {
   const { activate } = useWeb3React<Web3Provider>();
 
-  // TODO: Make our own modal w/ buttons for all the different wallet connectors
   const connectToMetaMask = useCallback(() => activate(injectedConnector), [
     activate,
   ]);
 
+  // TODO: fix reactivate problem when user
   const connectToWalletConnect = useCallback(
     () => activate(walletConnectConnector),
     [activate]
   );
+
+  const connectToFortmatic = useCallback(() => activate(fortmaticConnector), [
+    activate,
+  ]);
+
+  // TODO: test this.  Need to add a U2F (i.e. Fido once we can connect a hardware wallet)
+  const connectToLedger = useCallback(() => activate(ledgerConnector), [
+    activate,
+  ]);
+
+  const connectToTorus = useCallback(() => activate(torusConnector), [
+    activate,
+  ]);
 
   return (
     <NonIdealState
@@ -106,7 +122,7 @@ export const MissingWalletEmptyState: FC<{}> = () => {
           <ConnectWalletButton
             icon={<TorusIcon style={iconStyle} />}
             name="Torus"
-            onClick={connectToMetaMask}
+            onClick={connectToTorus}
           />
           <ConnectWalletButton
             icon={
@@ -115,12 +131,12 @@ export const MissingWalletEmptyState: FC<{}> = () => {
               </div>
             }
             name="Ledger"
-            onClick={connectToMetaMask}
+            onClick={connectToLedger}
           />
           <ConnectWalletButton
             icon={<FortmaticIcon style={iconStyle} />}
             name="Fortmatic"
-            onClick={connectToMetaMask}
+            onClick={connectToFortmatic}
           />
         </div>
       }

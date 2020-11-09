@@ -1,4 +1,4 @@
-import React, { CSSProperties, FunctionComponent, useCallback } from "react";
+import React, { CSSProperties, Fragment, FunctionComponent } from "react";
 
 import { Button, Classes, Colors, Icon } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
@@ -16,7 +16,7 @@ import { useCryptoPrice } from "efi/ui/crypto/hooks/useCryptoPrice/useCryptoPric
 import { useDarkMode } from "efi/ui/prefs/useDarkMode/useDarkMode";
 import { formatWalletAddress } from "efi/ui/wallets/formatWalletAddress";
 import { useWallet } from "efi/ui/wallets/hooks/useWallet";
-import { injectedConnector } from "efi/wallets/connectors";
+import { getConnectorName } from "efi/wallets/connectors";
 
 interface WalletSummaryProps {}
 
@@ -35,14 +35,11 @@ export const WalletSummary: FunctionComponent<WalletSummaryProps> = () => {
 
   const { isDarkMode } = useDarkMode();
 
-  const { deactivate, activate, chainId, account, active } = useWeb3React<
+  const { deactivate, chainId, account, active, connector } = useWeb3React<
     Web3Provider
   >();
 
-  const connectToInjectedWallet = useCallback(
-    () => activate(injectedConnector),
-    [activate]
-  );
+  const connectorName = getConnectorName(connector);
 
   const walletSummaryStyle: CSSProperties = {
     backgroundColor: isDarkMode ? Colors.DARK_GRAY4 : Colors.LIGHT_GRAY5,
@@ -72,12 +69,24 @@ export const WalletSummary: FunctionComponent<WalletSummaryProps> = () => {
   return (
     <div style={walletSummaryStyle} className={tw("p-8", "space-y-4")}>
       {active && (
-        <div className={rowClassName}>
-          <span className={labelClassName}>{t`Chain`}</span>
-          <span className={classNames(tw("flex", "items-center", "space-x-1"))}>
-            <span>{formatChainName(active, chainId)}</span>
-          </span>
-        </div>
+        <Fragment>
+          <div className={rowClassName}>
+            <span className={labelClassName}>{t`Chain`}</span>
+            <span
+              className={classNames(tw("flex", "items-center", "space-x-1"))}
+            >
+              <span>{formatChainName(active, chainId)}</span>
+            </span>
+          </div>
+          <div className={rowClassName}>
+            <span className={labelClassName}>{t`Connector`}</span>
+            <span
+              className={classNames(tw("flex", "items-center", "space-x-1"))}
+            >
+              <span>{connectorName}</span>
+            </span>
+          </div>
+        </Fragment>
       )}
 
       {account && (
@@ -85,7 +94,7 @@ export const WalletSummary: FunctionComponent<WalletSummaryProps> = () => {
           <span className={labelClassName}>{t`Wallet address`}</span>
           <button
             className={classNames("bp3-button", "bp3-minimal", "bp3-outlined")}
-            onClick={active ? deactivate : connectToInjectedWallet}
+            onClick={active ? deactivate : () => {}}
           >
             <div
               className={tw(

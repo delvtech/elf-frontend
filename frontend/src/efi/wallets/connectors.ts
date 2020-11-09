@@ -1,9 +1,14 @@
 import { AbstractConnector } from "@web3-react/abstract-connector";
+import { FortmaticConnector } from "@web3-react/fortmatic-connector";
 import { InjectedConnector } from "@web3-react/injected-connector";
+import { LedgerConnector } from "@web3-react/ledger-connector";
+import { TorusConnector } from "@web3-react/torus-connector";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
+import { INFURA_URL } from "infura";
 import { t } from "ttag";
 
 import { ChainId, ChainNames, DEFAULT_CHAIN_IDS } from "efi/crypto/ethereum";
+import { FORTMATIC_API_KEY } from "efi/fortmatic";
 
 /**
  * The 'injected' connector refers to plugin-based wallets like MetaMask, which
@@ -19,6 +24,29 @@ export const injectedConnector = new InjectedConnector({
  */
 export const walletConnectConnector = new WalletConnectConnector({
   rpc: { [ChainId.MAINNET]: ChainNames[ChainId.MAINNET] },
+});
+
+/**
+ * Ledger hardware wallet.
+ */
+export const ledgerConnector = new LedgerConnector({
+  chainId: ChainId.MAINNET,
+  url: INFURA_URL,
+});
+
+/**
+ * Fortmatic web wallet.
+ */
+export const fortmaticConnector = new FortmaticConnector({
+  chainId: ChainId.MAINNET,
+  apiKey: FORTMATIC_API_KEY,
+});
+
+/**
+ * Torus web wallet.
+ */
+export const torusConnector = new TorusConnector({
+  chainId: ChainId.MAINNET,
 });
 
 // Patch chainChanged 0xNaN causing app to crash when switching from the mainnet
@@ -40,19 +68,43 @@ const ConnectorsByName: Record<string, AbstractConnector> = {
   Injected: injectedConnector,
 };
 
-export function getConnectorName(connector?: AbstractConnector): string {
+export function getConnectorName(
+  connector?: AbstractConnector | undefined
+): string {
   if (!connector) {
     return t`No connector`;
   }
 
-  // Lookup the connector name
-  const connectorName = Object.keys(ConnectorsByName).find(
-    (name) => ConnectorsByName[name] === connector
-  );
-
-  if (!connectorName) {
-    return t`Uknown connector`;
+  if (isTorusConnector(connector)) {
+    return "Torus";
   }
 
-  return connectorName;
+  if (isWalletConnectConnector(connector)) {
+    const walletBrand = connector.walletConnectProvider?.wc?._peerMeta?.name;
+    return `WalletConnect (${walletBrand})`;
+  }
+
+  if (isFortmaticConnector(connector)) {
+    return "Fortmatic";
+  }
+
+  return t`Uknown connector`;
 }
+
+const isTorusConnector = (
+  connector: AbstractConnector
+): connector is TorusConnector => {
+  return !!(connector as TorusConnector)?.torus;
+};
+
+const isWalletConnectConnector = (
+  connector: AbstractConnector
+): connector is WalletConnectConnector => {
+  return !!(connector as WalletConnectConnector)?.walletConnectProvider;
+};
+
+const isFortmaticConnector = (
+  connector: AbstractConnector
+): connector is FortmaticConnector => {
+  return !!(connector as FortmaticConnector)?.fortmatic;
+};
