@@ -35,11 +35,16 @@ export const WalletSummary: FunctionComponent<WalletSummaryProps> = () => {
 
   const { isDarkMode } = useDarkMode();
 
-  const { deactivate, chainId, account, active, connector } = useWeb3React<
-    Web3Provider
-  >();
+  const {
+    deactivate,
+    chainId,
+    account,
+    active,
+    connector,
+    library,
+  } = useWeb3React<Web3Provider>();
 
-  const connectorName = getConnectorName(connector);
+  const connectorName = getConnectorName(connector, library);
 
   const walletSummaryStyle: CSSProperties = {
     backgroundColor: isDarkMode ? Colors.DARK_GRAY4 : Colors.LIGHT_GRAY5,

@@ -1,3 +1,4 @@
+import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { FortmaticConnector } from "@web3-react/fortmatic-connector";
 import { InjectedConnector } from "@web3-react/injected-connector";
@@ -64,15 +65,16 @@ injectedConnector.handleChainChanged = (chainId: string | number) => {
   originalChainIdChangeHandler(chainId);
 };
 
-const ConnectorsByName: Record<string, AbstractConnector> = {
-  Injected: injectedConnector,
-};
-
 export function getConnectorName(
-  connector?: AbstractConnector | undefined
+  connector?: AbstractConnector | undefined,
+  library?: Web3Provider | undefined
 ): string {
   if (!connector) {
     return t`No connector`;
+  }
+
+  if (isMetaMaskConnector(library?.connection?.url)) {
+    return "MetaMask";
   }
 
   if (isTorusConnector(connector)) {
@@ -107,4 +109,8 @@ const isFortmaticConnector = (
   connector: AbstractConnector
 ): connector is FortmaticConnector => {
   return !!(connector as FortmaticConnector)?.fortmatic;
+};
+
+const isMetaMaskConnector = (url: string | undefined): boolean => {
+  return url === "metamask";
 };
