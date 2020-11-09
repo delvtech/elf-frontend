@@ -11,7 +11,7 @@ module.exports = {
     purgeLayersByDefault: true,
   },
   theme: {
-    minHeight: {
+    minWidth: {
       0: "0",
       "1/4": "25%",
       "1/3": "33%",
@@ -36,7 +36,6 @@ module.exports = {
       success: "var(--bp3-intent-success)",
       warning: "var(--bp3-intent-warning)",
       danger: "var(--bp3-intent-danger)",
-      muted: "var(--bp3-text-color-muted)",
       disabled: "var(--bp3-text-color-disabled)",
       ...defaultTheme.colors,
     },
