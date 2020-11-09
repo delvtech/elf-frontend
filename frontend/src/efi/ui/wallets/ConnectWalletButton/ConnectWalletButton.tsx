@@ -17,6 +17,7 @@ interface ConnectWalletButtonProps {
 
 export const ConnectWalletButton: FC<ConnectWalletButtonProps> = (props) => {
   const { icon, name, onClick } = props;
+  // Blueprint wraps the body in a span tag.  Use <button/> with blueprint classnames so we can use flex styles.
   return (
     <button
       className={classNames(

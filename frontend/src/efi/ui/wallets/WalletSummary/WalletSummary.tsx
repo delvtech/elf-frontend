@@ -111,7 +111,7 @@ export const WalletSummary: FunctionComponent<WalletSummaryProps> = () => {
               )}
             >
               <Icon
-                className={tw("flex-shrink-0", "block")}
+                className={tw("flex-shrink-0")}
                 icon={IconNames.DOT}
                 color={account ? Colors.GREEN4 : Colors.RED4}
               />
