@@ -1,1 +1,1 @@
-export const INFURA_ID = process.env.REACT_APP_EFI_INFURA_ID;
+export const INFURA_URL = process.env.REACT_APP_INFURA_MAINNET_URL as string;
