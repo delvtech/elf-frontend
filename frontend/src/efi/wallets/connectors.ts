@@ -1,8 +1,9 @@
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { InjectedConnector } from "@web3-react/injected-connector";
+import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import { t } from "ttag";
 
-import { DEFAULT_CHAIN_IDS } from "efi/crypto/ethereum";
+import { ChainId, ChainNames, DEFAULT_CHAIN_IDS } from "efi/crypto/ethereum";
 
 /**
  * The 'injected' connector refers to plugin-based wallets like MetaMask, which
@@ -10,6 +11,14 @@ import { DEFAULT_CHAIN_IDS } from "efi/crypto/ethereum";
  */
 export const injectedConnector = new InjectedConnector({
   supportedChainIds: DEFAULT_CHAIN_IDS,
+});
+
+/**
+ * WalletConnect.  This provides access to many mobile wallets that use the wallet connect protocol
+ * like Rainbow, Argent etc.
+ */
+export const walletConnectConnector = new WalletConnectConnector({
+  rpc: { [ChainId.MAINNET]: ChainNames[ChainId.MAINNET] },
 });
 
 // Patch chainChanged 0xNaN causing app to crash when switching from the mainnet

@@ -15,7 +15,10 @@ import { ReactComponent as MetamaskIcon } from "efi/ui/staticAssets/logos/metama
 import { ReactComponent as TorusIcon } from "efi/ui/staticAssets/logos/torus.svg";
 import { ReactComponent as WalletConnectIcon } from "efi/ui/staticAssets/logos/walletConnectIcon.svg";
 import { ConnectWalletButton } from "efi/ui/wallets/hooks/WalletConnectButton/WalletConnectButton";
-import { injectedConnector } from "efi/wallets/connectors";
+import {
+  injectedConnector,
+  walletConnectConnector,
+} from "efi/wallets/connectors";
 
 const iconStyle: CSSProperties = {
   height: 24,
@@ -39,6 +42,11 @@ export const MissingWalletEmptyState: FC<{}> = () => {
   const connectToMetaMask = useCallback(() => activate(injectedConnector), [
     activate,
   ]);
+
+  const connectToWalletConnect = useCallback(
+    () => activate(walletConnectConnector),
+    [activate]
+  );
 
   return (
     <NonIdealState
@@ -88,7 +96,7 @@ export const MissingWalletEmptyState: FC<{}> = () => {
           <ConnectWalletButton
             icon={<WalletConnectIcon style={iconStyle} />}
             name="WalletConnect"
-            onClick={connectToMetaMask}
+            onClick={connectToWalletConnect}
           />
           <ConnectWalletButton
             icon={<CoinbaseWalletIcon style={iconStyle} />}
