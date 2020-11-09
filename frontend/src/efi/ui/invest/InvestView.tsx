@@ -25,12 +25,10 @@ const investViewClassName = tw(
 );
 
 const previewCardContainerClassName = tw(
-  "flex-1",
   "flex",
   "flex-col",
-  "w-full",
-  "sm:w-1/2",
-  "xl:w-1/3",
+  "flex-1",
+  "md:w-1/2",
   "justify-center",
   "items-center",
   "p-3",
