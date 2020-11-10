@@ -37,7 +37,7 @@ export const StrategyPreviewCard: FC<StrategyPreviewCardProps> = ({
 
       <div className={tw("flex", "flex-col", "space-y-8")}>
         {/* Summary */}
-        <div className={tw("flex", "flex-col", "w-full", "space-y-4")}>
+        <div className={tw("flex", "flex-col", "w-full", "space-y-2")}>
           <span
             className={classNames(tw("text-base"), Classes.TEXT_MUTED)}
           >{t`Summary`}</span>
