@@ -96,7 +96,7 @@ export function getErrorMessage(error: Error) {
 function setWeb3ReactOnWindow(
   web3React: Web3ReactContextInterface<Web3Provider>
 ) {
-  if (process.env.NODE_ENV !== "production") {
+  if (process.env.NODE_ENV === "production") {
     return;
   }
 
