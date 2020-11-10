@@ -6,7 +6,7 @@ import { useWeb3React } from "@web3-react/core";
 import tw from "efi-tailwindcss-classnames";
 import { ReactComponent as CoinbaseWalletIcon } from "efi/ui/staticAssets/logos/coinbaseWalletIcon.svg";
 import { ReactComponent as FortmaticIcon } from "efi/ui/staticAssets/logos/fortmatic.svg";
-import { ReactComponent as LedgerIcon } from "efi/ui/staticAssets/logos/ledgerIcon.svg";
+// import { ReactComponent as LedgerIcon } from "efi/ui/staticAssets/logos/ledgerIcon.svg";
 import { ReactComponent as MetamaskIcon } from "efi/ui/staticAssets/logos/metamask.svg";
 import { ReactComponent as TorusIcon } from "efi/ui/staticAssets/logos/torus.svg";
 import { ReactComponent as WalletConnectIcon } from "efi/ui/staticAssets/logos/walletConnectIcon.svg";
@@ -14,7 +14,6 @@ import { ConnectWalletButton } from "efi/ui/wallets/ConnectWalletButton/ConnectW
 import {
   fortmaticConnector,
   injectedConnector,
-  ledgerConnector,
   torusConnector,
   walletConnectConnector,
 } from "efi/wallets/connectors";
@@ -42,9 +41,9 @@ export const ConnectWalletButtons: FC<{}> = () => {
   ]);
 
   // TODO: test this.  Need to add a U2F (i.e. Fido once we can connect a hardware wallet)
-  const connectToLedger = useCallback(() => activate(ledgerConnector), [
-    activate,
-  ]);
+  // const connectToLedger = useCallback(() => activate(ledgerConnector), [
+  //   activate,
+  // ]);
 
   const connectToTorus = useCallback(() => activate(torusConnector), [
     activate,
@@ -83,7 +82,7 @@ export const ConnectWalletButtons: FC<{}> = () => {
         name="Torus"
         onClick={connectToTorus}
       />
-      <ConnectWalletButton
+      {/* <ConnectWalletButton
         icon={
           <div className={tw("bg-white", "rounded", "p-1")}>
             <LedgerIcon style={iconStyle} />
@@ -91,7 +90,7 @@ export const ConnectWalletButtons: FC<{}> = () => {
         }
         name="Ledger"
         onClick={connectToLedger}
-      />
+      /> */}
       <ConnectWalletButton
         icon={<FortmaticIcon style={iconStyle} />}
         name="Fortmatic"

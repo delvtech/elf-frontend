@@ -2,10 +2,9 @@ import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { FortmaticConnector } from "@web3-react/fortmatic-connector";
 import { InjectedConnector } from "@web3-react/injected-connector";
-import { LedgerConnector } from "@web3-react/ledger-connector";
+// import { LedgerConnector } from "@web3-react/ledger-connector";
 import { TorusConnector } from "@web3-react/torus-connector";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
-import { INFURA_URL } from "infura";
 import { t } from "ttag";
 
 import { ChainId, ChainNames, DEFAULT_CHAIN_IDS } from "efi/crypto/ethereum";
@@ -42,13 +41,13 @@ export const walletConnectConnector = new WalletConnectConnector({
   rpc: { [ChainId.MAINNET]: ChainNames[ChainId.MAINNET] },
 });
 
-/**
- * Ledger hardware wallet.
- */
-export const ledgerConnector = new LedgerConnector({
-  chainId: ChainId.MAINNET,
-  url: INFURA_URL,
-});
+// /**
+//  * Ledger hardware wallet.
+//  */
+// export const ledgerConnector = new LedgerConnector({
+//   chainId: ChainId.MAINNET,
+//   url: INFURA_URL,
+// });
 
 /**
  * Fortmatic web wallet.
