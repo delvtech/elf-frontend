@@ -1,14 +1,12 @@
-import React, { FC, useCallback } from "react";
+import React, { FC } from "react";
 
-import { Button, Intent, NonIdealState, Tag } from "@blueprintjs/core";
+import { Intent, NonIdealState, Tag } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
-import { Web3Provider } from "@ethersproject/providers";
-import { useWeb3React } from "@web3-react/core";
 import classNames from "classnames";
 import { jt, t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { injectedConnector } from "efi/wallets/connectors";
+import { ConnectWalletButtons } from "efi/ui/wallets/ConnectWalletButtons/ConnectWalletButtons";
 
 const betaTag = (
   <Tag key="beta-tag" minimal intent={Intent.WARNING}>
@@ -21,17 +19,11 @@ const howItWorksLink = (
 );
 
 export const MissingWalletEmptyState: FC<{}> = () => {
-  const { activate } = useWeb3React<Web3Provider>();
-
-  // TODO: Make our own modal w/ buttons for all the different wallet connectors
-  const connectToMetaMask = useCallback(() => activate(injectedConnector), [
-    activate,
-  ]);
-
   return (
     <NonIdealState
       icon={IconNames.SEND_TO_GRAPH}
       title={t`No wallet connected.`}
+      className={tw("max-w-full")}
       description={
         <div
           className={classNames(
@@ -54,11 +46,7 @@ export const MissingWalletEmptyState: FC<{}> = () => {
           </ul>
         </div>
       }
-      action={
-        <Button large minimal outlined onClick={connectToMetaMask}>
-          {t`Connect your wallet`}
-        </Button>
-      }
+      action={<ConnectWalletButtons />}
     >
       <div className={tw("pt-32")}>
         <p className={tw("pb-4")}>{jt`Element is currently in ${betaTag}.`}</p>

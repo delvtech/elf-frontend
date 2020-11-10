@@ -1,0 +1,101 @@
+import React, { CSSProperties, FC, useCallback } from "react";
+
+import { Web3Provider } from "@ethersproject/providers";
+import { useWeb3React } from "@web3-react/core";
+
+import tw from "efi-tailwindcss-classnames";
+import { ReactComponent as CoinbaseWalletIcon } from "efi/ui/staticAssets/logos/coinbaseWalletIcon.svg";
+import { ReactComponent as FortmaticIcon } from "efi/ui/staticAssets/logos/fortmatic.svg";
+// import { ReactComponent as LedgerIcon } from "efi/ui/staticAssets/logos/ledgerIcon.svg";
+import { ReactComponent as MetamaskIcon } from "efi/ui/staticAssets/logos/metamask.svg";
+import { ReactComponent as TorusIcon } from "efi/ui/staticAssets/logos/torus.svg";
+import { ReactComponent as WalletConnectIcon } from "efi/ui/staticAssets/logos/walletConnectIcon.svg";
+import { ConnectWalletButton } from "efi/ui/wallets/ConnectWalletButton/ConnectWalletButton";
+import {
+  fortmaticConnector,
+  injectedConnector,
+  torusConnector,
+  walletConnectConnector,
+} from "efi/wallets/connectors";
+
+const iconStyle: CSSProperties = {
+  height: 24,
+  width: 24,
+};
+
+export const ConnectWalletButtons: FC<{}> = () => {
+  const { activate } = useWeb3React<Web3Provider>();
+
+  const connectToMetaMask = useCallback(() => activate(injectedConnector), [
+    activate,
+  ]);
+
+  // TODO: fix reactivate problem when user
+  const connectToWalletConnect = useCallback(
+    () => activate(walletConnectConnector),
+    [activate]
+  );
+
+  const connectToFortmatic = useCallback(() => activate(fortmaticConnector), [
+    activate,
+  ]);
+
+  // TODO: test this.  Need to add a U2F (i.e. Fido once we can connect a hardware wallet)
+  // const connectToLedger = useCallback(() => activate(ledgerConnector), [
+  //   activate,
+  // ]);
+
+  const connectToTorus = useCallback(() => activate(torusConnector), [
+    activate,
+  ]);
+
+  return (
+    <div
+      className={tw(
+        "p-8",
+        "grid",
+        "grid-cols-1",
+        "md:grid-cols-2",
+        "lg:grid-cols-3",
+        "gap-2",
+        "w-3/4",
+        "max-w-full"
+      )}
+    >
+      <ConnectWalletButton
+        icon={<MetamaskIcon style={iconStyle} />}
+        name="Metamask"
+        onClick={connectToMetaMask}
+      />
+      <ConnectWalletButton
+        icon={<WalletConnectIcon style={iconStyle} />}
+        name="WalletConnect"
+        onClick={connectToWalletConnect}
+      />
+      <ConnectWalletButton
+        icon={<CoinbaseWalletIcon style={iconStyle} />}
+        name="Coinbase"
+        onClick={connectToMetaMask}
+      />
+      <ConnectWalletButton
+        icon={<TorusIcon style={iconStyle} />}
+        name="Torus"
+        onClick={connectToTorus}
+      />
+      {/* <ConnectWalletButton
+        icon={
+          <div className={tw("bg-white", "rounded", "p-1")}>
+            <LedgerIcon style={iconStyle} />
+          </div>
+        }
+        name="Ledger"
+        onClick={connectToLedger}
+      /> */}
+      <ConnectWalletButton
+        icon={<FortmaticIcon style={iconStyle} />}
+        name="Fortmatic"
+        onClick={connectToFortmatic}
+      />
+    </div>
+  );
+};

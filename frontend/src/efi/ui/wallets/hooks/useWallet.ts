@@ -2,6 +2,7 @@ import { useEffect } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
 import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core";
+import { Web3ReactContextInterface } from "@web3-react/core/dist/types";
 import {
   NoEthereumProviderError,
   UserRejectedRequestError as UserRejectedRequestErrorInjected,
@@ -41,7 +42,9 @@ export interface Wallet {
 }
 
 export function useWallet(): Wallet {
-  const { connector, library, account, error } = useWeb3React<Web3Provider>();
+  const web3React = useWeb3React<Web3Provider>();
+  setWeb3ReactOnWindow(web3React);
+  const { connector, library, account, error } = web3React;
 
   // Manages the toasts for connections
   useWalletConnectionStatus();
@@ -88,4 +91,14 @@ export function getErrorMessage(error: Error) {
   // Final resort, it's an unknown error
   console.error(error);
   return t`An unknown error occurred. Check the console for more details.`;
+}
+
+function setWeb3ReactOnWindow(
+  web3React: Web3ReactContextInterface<Web3Provider>
+) {
+  if (process.env.NODE_ENV !== "production") {
+    return;
+  }
+
+  window.__web3React = web3React;
 }

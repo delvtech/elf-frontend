@@ -5,4 +5,8 @@ interface Window {
    * we can listen for events on this client to sync our app state.
    */
   ethereum: any;
+  /**
+   * web3react context object.  placed on global for easier debugging
+   */
+  __web3React: any;
 }
