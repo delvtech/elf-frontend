@@ -5,6 +5,8 @@ import { InjectedConnector } from "@web3-react/injected-connector";
 // import { LedgerConnector } from "@web3-react/ledger-connector";
 import { TorusConnector } from "@web3-react/torus-connector";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
+import { WalletLinkConnector } from "@web3-react/walletlink-connector";
+import { INFURA_URL } from "infura";
 import { t } from "ttag";
 
 import { ChainId, ChainNames, DEFAULT_CHAIN_IDS } from "efi/crypto/ethereum";
@@ -39,6 +41,14 @@ injectedConnector.handleChainChanged = (chainId: string | number) => {
  */
 export const walletConnectConnector = new WalletConnectConnector({
   rpc: { [ChainId.MAINNET]: ChainNames[ChainId.MAINNET] },
+});
+
+/**
+ * WalletLink.  This provides access to coinbase wallet.
+ */
+export const walletLinkConnector = new WalletLinkConnector({
+  url: INFURA_URL,
+  appName: "Element Finance",
 });
 
 // /**
