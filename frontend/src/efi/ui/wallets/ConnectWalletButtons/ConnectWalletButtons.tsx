@@ -4,7 +4,7 @@ import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
 
 import tw from "efi-tailwindcss-classnames";
-import { ReactComponent as CoinbaseWalletIcon } from "efi/ui/staticAssets/logos/coinbaseWalletIcon.svg";
+import { ReactComponent as CoinbaseWalletIcon } from "efi/ui/staticAssets/logos/coinbasewallet.svg";
 import { ReactComponent as FortmaticIcon } from "efi/ui/staticAssets/logos/fortmatic.svg";
 // import { ReactComponent as LedgerIcon } from "efi/ui/staticAssets/logos/ledgerIcon.svg";
 import { ReactComponent as MetamaskIcon } from "efi/ui/staticAssets/logos/metamask.svg";
@@ -16,6 +16,7 @@ import {
   injectedConnector,
   torusConnector,
   walletConnectConnector,
+  walletLinkConnector,
 } from "efi/wallets/connectors";
 
 const iconStyle: CSSProperties = {
@@ -30,11 +31,16 @@ export const ConnectWalletButtons: FC<{}> = () => {
     activate,
   ]);
 
-  // TODO: fix reactivate problem when user
+  // TODO: fix reactivate problem when user closes QR code without connecting
   const connectToWalletConnect = useCallback(
     () => activate(walletConnectConnector),
     [activate]
   );
+
+  // TODO: fix reactivate problem when user closes QR code without connecting
+  const connectToWalletLink = useCallback(() => activate(walletLinkConnector), [
+    activate,
+  ]);
 
   const connectToFortmatic = useCallback(() => activate(fortmaticConnector), [
     activate,
@@ -73,9 +79,10 @@ export const ConnectWalletButtons: FC<{}> = () => {
         onClick={connectToWalletConnect}
       />
       <ConnectWalletButton
+        iconClassName={tw("rounded", "overflow-hidden")}
         icon={<CoinbaseWalletIcon style={iconStyle} />}
         name="Coinbase"
-        onClick={connectToMetaMask}
+        onClick={connectToWalletLink}
       />
       <ConnectWalletButton
         icon={<TorusIcon style={iconStyle} />}

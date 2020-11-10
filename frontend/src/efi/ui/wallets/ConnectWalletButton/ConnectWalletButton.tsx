@@ -10,13 +10,14 @@ export enum WalletIconId {
 }
 
 interface ConnectWalletButtonProps {
+  iconClassName?: string;
   icon: JSX.Element;
   name: string;
   onClick: () => void;
 }
 
 export const ConnectWalletButton: FC<ConnectWalletButtonProps> = (props) => {
-  const { icon, name, onClick } = props;
+  const { iconClassName, icon, name, onClick } = props;
   // Blueprint wraps the body in a span tag.  Use <button/> with blueprint classnames so we can use flex styles.
   return (
     <button
@@ -37,7 +38,7 @@ export const ConnectWalletButton: FC<ConnectWalletButtonProps> = (props) => {
           "justify-center"
         )}
       >
-        <div className={tw("p-2")}>{icon}</div>
+        <div className={classNames(iconClassName, tw("m-2"))}>{icon}</div>
         <div className={tw("flex-1", "items-center", "justify-center")}>
           <H5>{name}</H5>
         </div>
