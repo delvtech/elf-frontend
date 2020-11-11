@@ -116,8 +116,17 @@ export const SidebarNavigation: FC<SidebarNavigationProps> = ({
           </Tabs>
         </div>
 
-        <div className={tw("flex", "flex-col", "w-full", "items-center")}>
+        <div
+          className={tw(
+            "flex",
+            "flex-col",
+            "w-full",
+            "items-center",
+            "space-y-4"
+          )}
+        >
           <CurrencySelect />
+
           <Switch
             large
             checked={isDarkMode}

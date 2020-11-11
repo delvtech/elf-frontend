@@ -3,16 +3,13 @@ import React, { CSSProperties, Fragment, FunctionComponent } from "react";
 import { Button, Classes, Colors, Icon } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
-import { formatEther } from "@ethersproject/units";
 import { useWeb3React } from "@web3-react/core";
 import classNames from "classnames";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { formatChainName } from "efi/ui/crypto/formatChainName";
 import { formatEthBalance } from "efi/ui/crypto/formatEthBalance";
-import { useCryptoPrice } from "efi/ui/crypto/hooks/useCryptoPrice/useCryptoPrice";
 import { useDarkMode } from "efi/ui/prefs/useDarkMode/useDarkMode";
 import { formatWalletAddress } from "efi/ui/wallets/formatWalletAddress";
 import { useWallet } from "efi/ui/wallets/hooks/useWallet";
@@ -27,14 +24,9 @@ const rowClassName = tw(
   "justify-between",
   "items-center"
 );
+
 const labelClassName = classNames(Classes.TEXT_MUTED);
 export const WalletSummary: FunctionComponent<WalletSummaryProps> = () => {
-  const { ethBalance } = useWallet();
-
-  const { data: ethPrice } = useCryptoPrice(CryptoSymbol.ETH);
-
-  const { isDarkMode } = useDarkMode();
-
   const {
     deactivate,
     chainId,
@@ -43,17 +35,16 @@ export const WalletSummary: FunctionComponent<WalletSummaryProps> = () => {
     connector,
     library,
   } = useWeb3React<Web3Provider>();
+  const { isDarkMode } = useDarkMode();
+
+  const { ethBalance, fiatBalance } = useWallet();
+  const currencyInfo = fiatBalance?.getCurrencyInfo();
 
   const connectorName = getConnectorName(connector, library);
 
   const walletSummaryStyle: CSSProperties = {
     backgroundColor: isDarkMode ? Colors.DARK_GRAY4 : Colors.LIGHT_GRAY5,
   };
-
-  let balanceUSD: number | undefined;
-  if (ethPrice && ethBalance) {
-    balanceUSD = ethPrice * +formatEther(ethBalance);
-  }
 
   if (!active) {
     return (
@@ -93,7 +84,6 @@ export const WalletSummary: FunctionComponent<WalletSummaryProps> = () => {
           </div>
         </Fragment>
       )}
-
       {account && (
         <div className={rowClassName}>
           <span className={labelClassName}>{t`Wallet address`}</span>
@@ -127,18 +117,20 @@ export const WalletSummary: FunctionComponent<WalletSummaryProps> = () => {
           </button>
         </div>
       )}
-
       {ethBalance !== undefined && (
         <div className={rowClassName}>
           <span className={labelClassName}>{t`Available balance`}</span>
           <span>{t`${formatEthBalance(ethBalance)} ETH`}</span>
         </div>
       )}
-
-      {balanceUSD !== undefined && (
+      {!!fiatBalance && !!currencyInfo && (
         <div className={rowClassName}>
-          <span className={labelClassName}>{t`Available balance (USD)`}</span>
-          <span>{t`$${(+balanceUSD.toFixed(2)).toLocaleString()} `}</span>
+          <span
+            className={labelClassName}
+          >{t`Available balance (${currencyInfo.code})`}</span>
+          <span>{`${fiatBalance.toDecimal().toLocaleString()} (${
+            currencyInfo.symbol_native || currencyInfo.symbol
+          })`}</span>
         </div>
       )}
     </div>
