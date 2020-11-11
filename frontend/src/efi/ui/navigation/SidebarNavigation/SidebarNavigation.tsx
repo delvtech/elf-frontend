@@ -7,6 +7,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { Navigation } from "efi/ui/navigation/navigation";
+import { CurrencySelect } from "efi/ui/prefs/CurrencySelect/CurrencySelect";
 import WalletSummary from "efi/ui/wallets/WalletSummary/WalletSummary";
 
 import styles from "./SidebarNavigation.module.css";
@@ -116,6 +117,7 @@ export const SidebarNavigation: FC<SidebarNavigationProps> = ({
         </div>
 
         <div className={tw("flex", "flex-col", "w-full", "items-center")}>
+          <CurrencySelect />
           <Switch
             large
             checked={isDarkMode}
