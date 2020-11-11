@@ -6,6 +6,7 @@ import classNames from "classnames";
 
 import { tw } from "efi-tailwindcss-classnames";
 import { CryptoDrawer } from "efi/ui/crypto/CryptoDrawer/CryptoDrawer";
+import { FAQView } from "efi/ui/faq/FAQView";
 import { HomeView } from "efi/ui/home/HomeView";
 import { InvestView } from "efi/ui/invest/InvestView";
 import { MainNavigation } from "efi/ui/navigation/MainNavigation/MainNavigation";
@@ -57,6 +58,7 @@ const App: FC<AppProps> = () => {
           <PulseView path={Navigation.PULSE} />
           <SwapView path={Navigation.SWAP} />
           <InvestView path={Navigation.INVEST} />
+          <FAQView path={Navigation.FAQ} />
         </Router>
         <CryptoDrawer />
       </div>
