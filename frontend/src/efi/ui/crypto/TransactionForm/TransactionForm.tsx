@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from "react";
+import React, { ChangeEvent, FC, useCallback } from "react";
 
 import { Button, InputGroup, Intent, Tag } from "@blueprintjs/core";
 import { BigNumber } from "ethers";
@@ -64,7 +64,20 @@ export const TransactionForm: FC<TransactionFormProps> = ({
 
   return (
     <div className={tw("flex", "flex-col", "space-y-5")}>
-      <span>{inputLabel}</span>
+      <div className={tw("flex", "justify-between", "items-center")}>
+        <span>{inputLabel}</span>
+        <Button
+          onClick={() =>
+            onChange({
+              target: { value: formatEther(cryptoBalance as BigNumber) },
+            } as ChangeEvent<HTMLInputElement>)
+          }
+          minimal
+          outlined
+          small
+          intent={Intent.SUCCESS}
+        >{t`MAX`}</Button>
+      </div>
       <div className={tw("flex", "flex-col", "space-y-2")}>
         <InputGroup
           onChange={onChange}
