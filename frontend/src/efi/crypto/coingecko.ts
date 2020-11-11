@@ -44,3 +44,18 @@ export async function fetchCryptoPrice(
 
   return price;
 }
+
+export async function fetchCryptoSymbol(
+  cryptoId: CoinGeckoCryptoId
+): Promise<any> {
+  const result = await fetch(
+    `https://api.coingecko.com/api/v3/coins/${cryptoId}?tickers=true&market_data=true`
+  );
+
+  const resultJSON = (await result.json()) as Record<
+    string,
+    Record<string, number>
+  >;
+
+  return resultJSON;
+}

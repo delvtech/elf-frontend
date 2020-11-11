@@ -7,7 +7,10 @@ import {
 } from "efi/crypto/coingecko";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 
-export function useCryptoPrice(cryptoSymbol: CryptoSymbol) {
+export function useCryptoPrice(
+  cryptoSymbol: CryptoSymbol,
+  denomination: string
+) {
   const enabled = !!CoinGeckoCryptoIds[cryptoSymbol];
 
   return useQuery(
@@ -15,7 +18,8 @@ export function useCryptoPrice(cryptoSymbol: CryptoSymbol) {
     async (key: string, variables: CryptoPriceVariables) => {
       const price = await fetchCryptoPrice(
         // safe to cast because this query is only enabled when it exists
-        CoinGeckoCryptoIds[variables.cryptoSymbol] as CoinGeckoCryptoId
+        CoinGeckoCryptoIds[variables.cryptoSymbol] as CoinGeckoCryptoId,
+        denomination.toLowerCase()
       );
       return price;
     },

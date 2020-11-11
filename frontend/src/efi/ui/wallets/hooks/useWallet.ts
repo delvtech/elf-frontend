@@ -8,9 +8,14 @@ import {
   UserRejectedRequestError as UserRejectedRequestErrorInjected,
 } from "@web3-react/injected-connector";
 import { BigNumber } from "ethers";
+import { formatEther } from "ethers/lib/utils";
+import { Money } from "ts-money";
 import { t } from "ttag";
 
+import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { AppToaster, makeErrorToast } from "efi/ui/app/AppToaster/AppToaster";
+import { useCryptoPrice } from "efi/ui/crypto/hooks/useCryptoPrice/useCryptoPrice";
+import { useCurrencyPref } from "efi/ui/prefs/useCurrency/useCurency";
 import { useWalletBalance } from "efi/ui/wallets/hooks/useWalletBalance";
 import { useWalletConnectionStatus } from "efi/ui/wallets/hooks/useWalletConnectionStatus";
 import { getConnectorName } from "efi/wallets/connectors";
@@ -35,6 +40,8 @@ export interface Wallet {
    * Balance of the wallet in Eth, as opposed to Wei.
    */
   ethBalance: BigNumber | undefined;
+
+  fiatBalance: Money | undefined;
   /**
    * Display name of the wallet connector, i.e. MetaMask, WalletConnect.
    */
@@ -43,15 +50,24 @@ export interface Wallet {
 
 export function useWallet(): Wallet {
   const web3React = useWeb3React<Web3Provider>();
-  setWeb3ReactOnWindow(web3React);
   const { connector, library, account, error } = web3React;
-
-  // Manages the toasts for connections
+  useErrorToast(error);
+  setWeb3ReactOnWindow(web3React);
   useWalletConnectionStatus();
 
-  useErrorToast(error);
-
   const { data: ethBalance } = useWalletBalance();
+  // Manages the toasts for connections
+  const { currency } = useCurrencyPref();
+  const { data: ethPrice } = useCryptoPrice(CryptoSymbol.ETH, currency.code);
+
+  let fiatBalance: Money | undefined;
+  if (ethPrice && ethBalance) {
+    // Money wants the atomic value, it handles formatting.
+    const integerValue = Math.floor(
+      ethPrice * +formatEther(ethBalance) * 10 ** currency.decimal_digits
+    );
+    fiatBalance = new Money(integerValue, currency.code);
+  }
 
   const connectorName = getConnectorName(connector);
 
@@ -60,6 +76,7 @@ export function useWallet(): Wallet {
     account,
     error,
     ethBalance,
+    fiatBalance,
     connectorName,
   };
 }
