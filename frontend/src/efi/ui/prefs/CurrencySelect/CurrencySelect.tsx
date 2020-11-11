@@ -4,6 +4,8 @@ import { Button, Intent, MenuItem } from "@blueprintjs/core";
 import { Select } from "@blueprintjs/select";
 import { t } from "ttag";
 
+import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
+import { useCryptoSymbol } from "efi/ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { useCurrencyPref } from "efi/ui/prefs/useCurrency/useCurency";
 
 interface CurrencySelectProps {}
@@ -11,7 +13,11 @@ interface CurrencySelectProps {}
 const CurrencySelectComponent = Select.ofType<string>();
 export const CurrencySelect: FC<CurrencySelectProps> = (props) => {
   const { currency, setCurrency } = useCurrencyPref();
-  const supportedCurrencies = ["usd", "eu", "asdf"];
+  const { data: symbolData } = useCryptoSymbol(CryptoSymbol.ETH);
+  // TODO: get this from an enum
+  const supportedCurrencies = Object.keys(
+    symbolData?.market_data?.current_price || {}
+  );
   const renderItems = useCallback((item: string, { handleClick }) => {
     return <MenuItem onClick={handleClick} text={item} />;
   }, []);

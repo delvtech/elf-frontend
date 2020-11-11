@@ -28,7 +28,6 @@ export function useCurrencyPref(): CurrencyPref {
 }
 
 function setCurrency(currency: string) {
-  console.log("setCurrency", currency);
   // Save to local storage
   efiLocalStorage.setItem(CURRENCY_QUERY_KEY, JSON.stringify(currency));
 

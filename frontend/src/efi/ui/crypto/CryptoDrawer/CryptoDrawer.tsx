@@ -1,5 +1,4 @@
 import React, { FC } from "react";
-import { useQuery } from "react-query";
 import { Markup } from "react-render-markup";
 import { useWindowSize } from "react-use";
 
@@ -9,8 +8,10 @@ import classNames from "classnames";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { SMALL_BREAKPOINT } from "efi/ui/base/mediaBreakpoints";
 import { SkeletonText } from "efi/ui/base/SkeletonText/SkeletonText";
+import { useCryptoSymbol } from "efi/ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { useCryptoDrawer } from "efi/ui/crypto/useCryptoDrawer/useCryptoDrawer";
 import { useDarkMode } from "efi/ui/prefs/useDarkMode/useDarkMode";
 
@@ -24,16 +25,8 @@ export const CryptoDrawer: FC<CryptoDrawerProps> = () => {
   // blueprint has some pretty high css specificity for the width.
   const width = screenWidth < SMALL_BREAKPOINT ? "100%" : SMALL_BREAKPOINT;
 
-  // TODO: get this from the useCryptoDrawer
-  const cryptoId = "ethereum";
-
-  const { data, status } = useQuery(["crypto", "description"], async () => {
-    // TODO: use swagger.json from coingecko
-    const result = await fetch(
-      `https://api.coingecko.com/api/v3/coins/${cryptoId}?tickers=true&market_data=true`
-    );
-    return result.json();
-  });
+  // TODO: get symbol from useCryptoDrawer
+  const { data, status } = useCryptoSymbol(CryptoSymbol.ETH);
   const ethData = data as any;
 
   const title = ethData?.name;
