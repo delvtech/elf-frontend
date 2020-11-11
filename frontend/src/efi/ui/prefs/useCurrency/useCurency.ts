@@ -1,17 +1,19 @@
 import { queryCache, useQuery } from "react-query";
 
+import { Currencies, Currency } from "ts-money";
+
 import efiLocalStorage from "efi/base/localStorage";
 
 interface CurrencyPref {
-  currency: string;
-  setCurrency: (currency: string) => void;
+  currency: Currency;
+  setCurrency: (currency: Currency) => void;
 }
 
 const CURRENCY_QUERY_KEY = "currency";
-const CURRENCY_DEFAULT = "usd";
+const CURRENCY_DEFAULT = Currencies.USD;
 
 export function useCurrencyPref(): CurrencyPref {
-  const { data: currency = CURRENCY_DEFAULT } = useQuery<string>(
+  const { data: currency = CURRENCY_DEFAULT } = useQuery<Currency>(
     CURRENCY_QUERY_KEY,
     () => {
       const item = efiLocalStorage.getItem(CURRENCY_QUERY_KEY);
@@ -27,7 +29,7 @@ export function useCurrencyPref(): CurrencyPref {
   };
 }
 
-function setCurrency(currency: string) {
+function setCurrency(currency: Currency) {
   // Save to local storage
   efiLocalStorage.setItem(CURRENCY_QUERY_KEY, JSON.stringify(currency));
 
