@@ -1,7 +1,8 @@
 import React, { FC, useCallback } from "react";
 
 import { Button, Intent, MenuItem } from "@blueprintjs/core";
-import { Select } from "@blueprintjs/select";
+import { ItemListPredicate, ItemRenderer, Select } from "@blueprintjs/select";
+import { filter } from "fuzzaldrin-plus";
 import { Currencies, Currency } from "ts-money";
 import { t } from "ttag";
 
@@ -16,19 +17,6 @@ export const CurrencySelect: FC<CurrencySelectProps> = () => {
   const { currency, setCurrency } = useCurrencyPref();
   const { data: symbolData } = useCryptoSymbol(CryptoSymbol.ETH);
   const supportedCurrencies = getSupportedCurrencies(symbolData);
-
-  const renderItems = useCallback((item: Currency, { handleClick }) => {
-    return (
-      <MenuItem
-        onClick={handleClick}
-        text={
-          <span>
-            {item.code} {item.name} {`(${item.symbol_native || item.symbol})`}
-          </span>
-        }
-      />
-    );
-  }, []);
 
   const onItemSelect = useCallback(
     (item: Currency) => {
@@ -46,7 +34,7 @@ export const CurrencySelect: FC<CurrencySelectProps> = () => {
       onItemSelect={onItemSelect}
       itemRenderer={renderItems}
       activeItem={activeItem}
-      itemPredicate={() => true}
+      itemListPredicate={itemListPredicate}
       noResults={<MenuItem disabled={true} text={t`No results.`} />}
       items={supportedCurrencies}
     >
@@ -73,3 +61,42 @@ function getSupportedCurrencies(symbolData: any) {
     })
     .filter((metadata) => !!metadata);
 }
+
+const renderItems: ItemRenderer<Currency> = (
+  item: Currency,
+  { handleClick }
+) => {
+  return (
+    <MenuItem
+      onClick={handleClick}
+      text={
+        <span>
+          {item.code} {item.name} {`(${item.symbol_native || item.symbol})`}
+        </span>
+      }
+    />
+  );
+};
+
+const itemListPredicate: ItemListPredicate<Currency> = (query, items) => {
+  if (!query) {
+    return items;
+  }
+
+  const itemsBySearchStrings = Object.fromEntries(
+    items.map((item) => [
+      item.code + item.name + item.symbol + item.symbol_native,
+      item,
+    ])
+  );
+
+  const searchStrings = Object.keys(itemsBySearchStrings);
+
+  const results = filter<string>(searchStrings, query, {
+    maxResults: 10,
+    pathSeparator: "/",
+    usePathScoring: true,
+  });
+
+  return results.map((searchString) => itemsBySearchStrings[searchString]);
+};
