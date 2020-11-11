@@ -3,4 +3,5 @@ export enum Navigation {
   PULSE = "pulse",
   SWAP = "swap",
   INVEST = "invest",
+  FAQ = "faq",
 }

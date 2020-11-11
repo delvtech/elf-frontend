@@ -20,6 +20,9 @@ export function useActiveTab(): Navigation {
     case Navigation.INVEST: {
       return Navigation.INVEST;
     }
+    case Navigation.FAQ: {
+      return Navigation.FAQ;
+    }
     default:
       typeAassertNever(navigation);
       return Navigation.HOME;

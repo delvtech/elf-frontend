@@ -113,6 +113,15 @@ export const SidebarNavigation: FC<SidebarNavigationProps> = ({
                 </div>
               }
             />
+            <Tab
+              id={Navigation.FAQ}
+              title={
+                <div className={tabTitleClassName}>
+                  <Icon icon={IconNames.HELP} iconSize={Icon.SIZE_LARGE} />
+                  <span>{t`FAQ`}</span>
+                </div>
+              }
+            />
           </Tabs>
         </div>
 
