@@ -6,11 +6,11 @@ import { InjectedConnector } from "@web3-react/injected-connector";
 import { TorusConnector } from "@web3-react/torus-connector";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import { WalletLinkConnector } from "@web3-react/walletlink-connector";
-import { INFURA_URL } from "infura";
 import { t } from "ttag";
 
 import { ChainId, ChainNames, DEFAULT_CHAIN_IDS } from "efi/crypto/ethereum";
 import { FORTMATIC_API_KEY } from "efi/fortmatic";
+import { INFURA_URL } from "efi/infura";
 
 /**
  * The 'injected' connector refers to plugin-based wallets like MetaMask, which
