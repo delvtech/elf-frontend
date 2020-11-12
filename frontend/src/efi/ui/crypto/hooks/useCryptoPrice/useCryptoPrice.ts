@@ -9,7 +9,7 @@ import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 
 export function useCryptoPrice(
   cryptoSymbol: CryptoSymbol,
-  denomination: string
+  denomination = "usd"
 ) {
   const enabled = !!CoinGeckoCryptoIds[cryptoSymbol];
 
