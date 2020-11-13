@@ -13,8 +13,6 @@ export function useCryptoSymbol(cryptoSymbol: CryptoSymbol) {
   return useQuery(
     makeCryptoSymbolQueryKey(cryptoSymbol),
     async (key: string, variables: CryptoSymbolVariables) => {
-      console.log("variables", variables);
-      console.log("key", key);
       const price = await fetchCryptoSymbol(
         // safe to cast because this query is only enabled when it exists
         CoinGeckoCryptoIds[variables.cryptoSymbol] as CoinGeckoCryptoId
