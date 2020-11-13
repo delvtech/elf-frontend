@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, useCallback } from "react";
+import React, { FC, useCallback } from "react";
 
 import { Button, InputGroup, Intent, Tag } from "@blueprintjs/core";
 import { BigNumber } from "ethers";
@@ -42,7 +42,9 @@ export const TransactionForm: FC<TransactionFormProps> = ({
   buttonIntent = Intent.PRIMARY,
   onTransaction,
 }) => {
-  const [stringValue, onChange] = useNumericInput(numericInputOptions);
+  const [stringValue, onChange, setValue] = useNumericInput(
+    numericInputOptions
+  );
   const value = stringValue ? parseEther(stringValue) : undefined;
   const validValue = value && cryptoBalance ? value.lte(cryptoBalance) : true;
 
@@ -62,16 +64,16 @@ export const TransactionForm: FC<TransactionFormProps> = ({
     }
   }, [onChange, onTransaction, validValue, value]);
 
+  const setMaxValue = useCallback(() => {
+    setValue(formatEther(cryptoBalance as BigNumber));
+  }, [cryptoBalance, setValue]);
+
   return (
     <div className={tw("flex", "flex-col", "space-y-5")}>
       <div className={tw("flex", "justify-between", "items-center")}>
         <span>{inputLabel}</span>
         <Button
-          onClick={() =>
-            onChange({
-              target: { value: formatEther(cryptoBalance as BigNumber) },
-            } as ChangeEvent<HTMLInputElement>)
-          }
+          onClick={setMaxValue}
           minimal
           outlined
           small

@@ -27,7 +27,11 @@ const validDecimalNumber = /^-?[0-9]\d*\.?\d*$/;
  */
 export const useNumericInput = (
   options: NumericInputOptions
-): [string | undefined, (event: ChangeEvent<HTMLInputElement>) => void] => {
+): [
+  string | undefined,
+  (event: ChangeEvent<HTMLInputElement>) => void,
+  (value: string) => void
+] => {
   const { min, max, maxPrecision: precision } = options;
   const [stringValue, setStringValue] = useState<string | undefined>();
 
@@ -73,7 +77,7 @@ export const useNumericInput = (
     [max, min, options, precision]
   );
 
-  return [stringValue, onChange];
+  return [stringValue, onChange, setStringValue];
 };
 
 /**
