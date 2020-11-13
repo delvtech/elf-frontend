@@ -2,11 +2,18 @@ import React, { FC, useCallback } from "react";
 
 import { Card, Classes, H3, Icon, Intent, Tag } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
+import { formatEther } from "@ethersproject/units";
 import classNames from "classnames";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { Strategy } from "efi/pools/strategy";
+import {
+  useElfContractSymbol,
+  useElfContractTotalSupply,
+} from "efi/ui/contracts/useElfContract";
+import { useCryptoPrice } from "efi/ui/crypto/hooks/useCryptoPrice/useCryptoPrice";
 
 interface StrategyPreviewCardProps {
   strategy: Strategy;
@@ -25,6 +32,14 @@ export const StrategyPreviewCard: FC<StrategyPreviewCardProps> = ({
       onSelectStrategy(id);
     }
   }, [id, onSelectStrategy]);
+
+  const { data: strategyCryptoSymbol } = useElfContractSymbol();
+  const { data: elfTotalSupply } = useElfContractTotalSupply();
+  const { data: ethPrice } = useCryptoPrice(CryptoSymbol.ETH);
+  let marketCap: number | undefined;
+  if (ethPrice !== undefined && elfTotalSupply !== undefined) {
+    marketCap = ethPrice * +formatEther(elfTotalSupply);
+  }
 
   return (
     <Card
@@ -73,13 +88,18 @@ export const StrategyPreviewCard: FC<StrategyPreviewCardProps> = ({
             <span
               className={classNames(tw("text-base"), Classes.TEXT_MUTED)}
             >{t`Total supply`}</span>
-            <span className={tw("text-lg")}>23,343</span>
+            <span className={tw("text-lg")}>
+              {elfTotalSupply && formatEther(elfTotalSupply)}{" "}
+              {strategyCryptoSymbol}
+            </span>
           </div>
           <div className={tw("flex", "flex-col")}>
             <span
               className={classNames(tw("text-base"), Classes.TEXT_MUTED)}
             >{t`Market cap`}</span>
-            <span className={tw("text-lg")}>$1,223,343</span>
+            <span className={tw("text-lg")}>{`$${Number(
+              marketCap?.toFixed(2)
+            ).toLocaleString()}`}</span>
           </div>
         </div>
       </div>
