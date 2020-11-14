@@ -1,6 +1,14 @@
 import React, { FC, useCallback } from "react";
 
-import { Card, Classes, H3, Icon, Intent, Tag } from "@blueprintjs/core";
+import {
+  Card,
+  Classes,
+  Colors,
+  H3,
+  Icon,
+  Intent,
+  Tag,
+} from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { formatEther } from "@ethersproject/units";
 import classNames from "classnames";
@@ -14,6 +22,7 @@ import {
   useElfContractTotalSupply,
 } from "efi/ui/contracts/useElfContract";
 import { useCryptoPrice } from "efi/ui/crypto/hooks/useCryptoPrice/useCryptoPrice";
+import { useDarkMode } from "efi/ui/prefs/useDarkMode/useDarkMode";
 
 interface StrategyPreviewCardProps {
   strategy: Strategy;
@@ -33,6 +42,8 @@ export const StrategyPreviewCard: FC<StrategyPreviewCardProps> = ({
     }
   }, [id, onSelectStrategy]);
 
+  const { isDarkMode } = useDarkMode();
+
   const { data: strategyCryptoSymbol } = useElfContractSymbol();
   const { data: elfTotalSupply } = useElfContractTotalSupply();
   const { data: ethPrice } = useCryptoPrice(CryptoSymbol.ETH);
@@ -48,7 +59,12 @@ export const StrategyPreviewCard: FC<StrategyPreviewCardProps> = ({
       className={classNames(tw("flex", "flex-col", "space-y-8"), className)}
     >
       {/* Strategy name */}
-      <H3 className={tw("m-0")}>{name}</H3>
+      <H3
+        className={tw("m-0")}
+        style={{ color: isDarkMode ? Colors.BLUE5 : Colors.BLUE2 }}
+      >
+        {name}
+      </H3>
 
       <div className={tw("flex", "flex-col", "space-y-8")}>
         {/* Summary */}
