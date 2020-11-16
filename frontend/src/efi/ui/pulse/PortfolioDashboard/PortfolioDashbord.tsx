@@ -5,6 +5,7 @@ import { Card } from "@blueprintjs/core";
 import tw from "efi-tailwindcss-classnames";
 import BrushChart from "efi/ui/charts/BrushChart/BrushChart";
 import { useDarkMode } from "efi/ui/prefs/useDarkMode/useDarkMode";
+import { useMarketData } from "efi/ui/pulse/hook/useMarketData/useMarketData";
 import { WalletBalancesPieChart } from "efi/ui/wallets/WalletBalancesPieChart/WalletBalancesPieChart";
 
 const portfolioDashboardClassName = tw(
@@ -47,6 +48,8 @@ const bottomRowClassName = tw(
 interface PortfolioDashboardProps {}
 export const PortfolioDashboard: FC<PortfolioDashboardProps> = () => {
   const { isDarkMode } = useDarkMode();
+  const { data: marketData } = useMarketData();
+  console.log(marketData);
 
   return (
     <div className={portfolioDashboardClassName}>
