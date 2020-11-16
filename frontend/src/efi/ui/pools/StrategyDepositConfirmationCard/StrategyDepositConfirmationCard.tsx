@@ -10,7 +10,7 @@ import { NUM_CONFIRMATIONS_REQUIRED_FOR_TRANSACTION } from "efi/crypto/confirmat
 import { Strategy } from "efi/pools/strategy";
 import { useBoolean } from "efi/ui/base/useBoolean/useBoolean";
 import { useElfContractDepositEth } from "efi/ui/contracts/useElfContract";
-import { ConfirmDepositButton } from "efi/ui/pools/ConfrimDepositButton/ConfirmDepositButton";
+import { ConfirmDepositButton } from "efi/ui/pools/ConfirmDepositButton/ConfirmDepositButton";
 import { useWalletBalance } from "efi/ui/wallets/hooks/useWalletBalance";
 
 interface StrategyDepositConfirmationCardProps {

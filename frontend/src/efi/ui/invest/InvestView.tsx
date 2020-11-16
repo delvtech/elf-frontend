@@ -7,8 +7,8 @@ import { ElfStrategyHighRisk } from "efi/pools/highRisk";
 import { ElfStrategyLowRisk } from "efi/pools/lowRisk";
 import { ElfStrategyMediumRisk } from "efi/pools/mediumRisk";
 import { InvestBreadcrumb } from "efi/ui/invest/InvestBreadcrumb/InvestBreadcrumb";
-import { StrategyPreviewCard } from "efi/ui/pools/StrategeyPreviewCard/StrategyPreviewCard";
 import { StrategyCard } from "efi/ui/pools/StrategyCard/StrategyCard";
+import { StrategyPreviewCard } from "efi/ui/pools/StrategyPreviewCard/StrategyPreviewCard";
 import { useWallet } from "efi/ui/wallets/hooks/useWallet";
 import { MissingWalletEmptyState } from "efi/ui/wallets/MissingWalletEmptyState/MissingWalletEmptyState";
 
