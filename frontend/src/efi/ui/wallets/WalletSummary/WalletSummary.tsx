@@ -37,7 +37,11 @@ export const WalletSummary: FunctionComponent<WalletSummaryProps> = () => {
   } = useWeb3React<Web3Provider>();
   const { isDarkMode } = useDarkMode();
 
-  const { ethBalance, fiatBalance } = useWallet();
+  const { ethBalance, fiatBalance, wethBalance } = useWallet();
+  const formattedEthBalance = ethBalance ? formatEthBalance(ethBalance) : "0";
+  const formattedWethBalance = wethBalance
+    ? formatEthBalance(wethBalance)
+    : "0";
   const currencyInfo = fiatBalance?.getCurrencyInfo();
 
   const connectorName = getConnectorName(connector, library);
@@ -117,10 +121,16 @@ export const WalletSummary: FunctionComponent<WalletSummaryProps> = () => {
           </button>
         </div>
       )}
-      {ethBalance !== undefined && (
+      {ethBalance && (
         <div className={rowClassName}>
           <span className={labelClassName}>{t`Available balance`}</span>
-          <span>{t`${formatEthBalance(ethBalance)} ETH`}</span>
+          <span>{t`${formattedEthBalance} ETH`}</span>
+        </div>
+      )}
+      {wethBalance && (
+        <div className={rowClassName}>
+          <span className={labelClassName}>{t`Available balance (WETH)`}</span>
+          <span>{t`${formattedWethBalance}`}</span>
         </div>
       )}
       {!!fiatBalance && !!currencyInfo && (
