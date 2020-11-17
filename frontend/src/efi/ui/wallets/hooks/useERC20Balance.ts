@@ -43,7 +43,7 @@ export function useERC20Balance(
 }
 
 export function makeERC20BalanceOfQueryKey(
-  name: string,
+  name: ERC20TokenSymbol,
   account: string | null | undefined
 ): string[] {
   const accountString = account ?? "0x0";

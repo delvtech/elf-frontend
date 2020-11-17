@@ -13,11 +13,13 @@ import { Money } from "ts-money";
 import { t } from "ttag";
 
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
-import { SupportedERC20StakingAssets } from "efi/crypto/erc20";
 import { AppToaster, makeErrorToast } from "efi/ui/app/AppToaster/AppToaster";
 import { useCryptoPrice } from "efi/ui/crypto/hooks/useCryptoPrice/useCryptoPrice";
 import { useCurrencyPref } from "efi/ui/prefs/useCurrency/useCurency";
-import { useERC20Balance } from "efi/ui/wallets/hooks/useERC20Balance";
+import {
+  ERC20Balance,
+  useERC20Balance,
+} from "efi/ui/wallets/hooks/useERC20Balance";
 import { useWalletBalance } from "efi/ui/wallets/hooks/useWalletBalance";
 import { useWalletConnectionStatus } from "efi/ui/wallets/hooks/useWalletConnectionStatus";
 import { getConnectorName } from "efi/wallets/connectors";
@@ -42,7 +44,7 @@ export interface Wallet {
    * Balance of the wallet in Eth, as opposed to Wei.
    */
   ethBalance: BigNumber | undefined;
-  wethBalance: BigNumber | undefined;
+  wethBalance: ERC20Balance | undefined;
 
   fiatBalance: Money | undefined;
   /**
@@ -59,10 +61,7 @@ export function useWallet(): Wallet {
   useWalletConnectionStatus();
 
   const { data: ethBalance } = useWalletBalance();
-  const { data: wethBalance } = useERC20Balance(
-    SupportedERC20StakingAssets.WETH,
-    account
-  );
+  const wethBalance = useERC20Balance(CryptoSymbol.WETH, account);
   // Manages the toasts for connections
   const { currency } = useCurrencyPref();
   const { data: ethPrice } = useCryptoPrice(CryptoSymbol.ETH, currency.code);

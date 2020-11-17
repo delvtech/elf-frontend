@@ -40,7 +40,7 @@ export const WalletSummary: FunctionComponent<WalletSummaryProps> = () => {
   const { ethBalance, fiatBalance, wethBalance } = useWallet();
   const formattedEthBalance = ethBalance ? formatEthBalance(ethBalance) : "0";
   const formattedWethBalance = wethBalance
-    ? formatEthBalance(wethBalance)
+    ? formatEthBalance(wethBalance?.balance)
     : "0";
   const currencyInfo = fiatBalance?.getCurrencyInfo();
 

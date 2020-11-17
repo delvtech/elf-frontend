@@ -8,6 +8,16 @@ export enum CryptoName {
   ETH = "Ethereum",
 
   /**
+   * Ether
+   */
+  WETH = "Wrapped Ether",
+
+  /**
+   * USD Coin
+   */
+  USDC = "USD Coin",
+
+  /**
    * Dai
    */
   DAI = "Dai",
