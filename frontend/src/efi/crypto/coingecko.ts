@@ -3,7 +3,7 @@ import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 /**
  * Supported crypto ids
  */
-export type CoinGeckoCryptoId = "ethereum" | "dai" | "yearn-finance";
+export type CoinGeckoCryptoId = "ethereum" | "dai" | "yearn-finance" | "weth";
 
 /**
  * Crosswalk for looking up CoinGecko ids given an efi CryptoSymbol value.
@@ -13,6 +13,7 @@ export const CoinGeckoCryptoIds: Record<
   CoinGeckoCryptoId | undefined
 > = {
   ETH: "ethereum",
+  WETH: "weth",
   DAI: "dai",
   YFI: "yearn-finance",
   "ELF-H": undefined,
