@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { QueryKey, useQuery } from "react-query";
 
 import { BigNumber } from "ethers";
 
@@ -11,7 +11,8 @@ export interface ERC20Balance {
   decimals: BigNumber;
 }
 /**
- * Gets the ERC20 token balance for the prodvided account addres
+ * Gets the ERC20 token balance for the prodvided account address and the number of decimals.
+ *
  * @param {SupportedERC20StakingAssets} name 'name of ERC20 token to get a user's balance of'
  * @param {string} account {string} 'user's account address.
  */
@@ -19,16 +20,16 @@ export function useERC20Balance(
   name: ERC20TokenSymbol,
   account: string | null | undefined
 ): ERC20Balance | undefined {
-  const contract = ERC20ContractsByName[name];
-  const balanceKey = makeERC20BalanceOfQueryKey(name, account);
+  const balanceKey = makeERC20BalanceQueryKey(name, account);
 
   const result = useQuery<[BigNumber, BigNumber] | undefined>(
     balanceKey,
-    async () => {
+    async (key: string[], { name, account }: ERC20BalanceQueryVariables) => {
+      const contract = ERC20ContractsByName[name];
       if (account) {
         return Promise.all([
           fetchERC20Balance(contract, account),
-          fetchERC20Decimals(contract, account),
+          fetchERC20Decimals(contract),
         ]);
       }
     }
@@ -42,10 +43,13 @@ export function useERC20Balance(
   return undefined;
 }
 
-export function makeERC20BalanceOfQueryKey(
+export interface ERC20BalanceQueryVariables {
+  name: ERC20TokenSymbol;
+  account: string | null | undefined;
+}
+export function makeERC20BalanceQueryKey(
   name: ERC20TokenSymbol,
   account: string | null | undefined
-): string[] {
-  const accountString = account ?? "0x0";
-  return ["contract", "erc20", name, "balanceOf", accountString];
+): QueryKey {
+  return [["contract", "erc20", "balance"], { name, account }];
 }

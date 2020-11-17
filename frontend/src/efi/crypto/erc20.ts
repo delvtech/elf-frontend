@@ -3,7 +3,10 @@ import { Contract } from "ethers";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import erc20abi from "efi/crypto/erc20abi.json";
 
-export type ERC20TokenSymbol = CryptoSymbol.WETH | CryptoSymbol.USDC;
+export type ERC20TokenSymbol = Extract<
+  CryptoSymbol,
+  CryptoSymbol.WETH | CryptoSymbol.USDC
+>;
 
 const USDC_CONTRACT_ADDRESS_MAINNET =
   "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48";

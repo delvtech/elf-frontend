@@ -1,8 +1,7 @@
 import { BigNumber, Contract } from "ethers";
 
 export async function fetchERC20Decimals(
-  contract: Contract,
-  account: string
+  contract: Contract
 ): Promise<BigNumber> {
-  return contract.decimals(account);
+  return contract.decimals();
 }
