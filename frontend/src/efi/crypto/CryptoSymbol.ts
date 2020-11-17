@@ -3,14 +3,39 @@
  */
 export enum CryptoSymbol {
   /**
+   * Dai
+   */
+  DAI = "DAI",
+
+  /**
+   * Element Low Risk Pool Token
+   */
+  ELF_LOW_RISK_POOL_TOKEN = "ELF-L",
+
+  /**
+   * Element Medium Risk Pool Token
+   */
+  ELF_MEDIUM_RISK_POOL_TOKEN = "ELF-M",
+
+  /**
+   * Element High Risk Pool Token
+   */
+  ELF_HIGH_RISK_POOL_TOKEN = "ELF-H",
+
+  /**
    * Ether
    */
   ETH = "ETH",
 
   /**
-   * Dai
+   * USD Coin
    */
-  DAI = "DAI",
+  USDC = "yETH",
+
+  /**
+   * Wrapped Ether
+   */
+  WETH = "WETH",
 
   /**
    * Yearn-Wrapped Dai
@@ -41,19 +66,4 @@ export enum CryptoSymbol {
    * Yearn-Wrapped Ether
    */
   YETH = "yETH",
-
-  /**
-   * Element Low Risk Pool Token
-   */
-  ELF_LOW_RISK_POOL_TOKEN = "ELF-L",
-
-  /**
-   * Element Medium Risk Pool Token
-   */
-  ELF_MEDIUM_RISK_POOL_TOKEN = "ELF-M",
-
-  /**
-   * Element High Risk Pool Token
-   */
-  ELF_HIGH_RISK_POOL_TOKEN = "ELF-H",
 }

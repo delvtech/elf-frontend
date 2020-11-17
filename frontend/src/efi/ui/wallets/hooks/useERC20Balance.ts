@@ -1,29 +1,45 @@
 import { useQuery } from "react-query";
 
-import { Contract } from "ethers";
+import { BigNumber } from "ethers";
 
-import {
-  ERC20Abi,
-  ERC20ContractAddressesByName,
-  SupportedERC20StakingAssets,
-} from "efi/crypto/erc20";
+import { ERC20ContractsByName, ERC20TokenSymbol } from "efi/crypto/erc20";
 import { fetchERC20Balance } from "efi/crypto/fetchERC20Balance";
+import { fetchERC20Decimals } from "efi/crypto/fetchERC20Decimals";
 
+export interface ERC20Balance {
+  balance: BigNumber;
+  decimals: BigNumber;
+}
+/**
+ * Gets the ERC20 token balance for the prodvided account addres
+ * @param {SupportedERC20StakingAssets} name 'name of ERC20 token to get a user's balance of'
+ * @param {string} account {string} 'user's account address.
+ */
 export function useERC20Balance(
-  name: SupportedERC20StakingAssets,
+  name: ERC20TokenSymbol,
   account: string | null | undefined
-) {
-  const address = ERC20ContractAddressesByName[name];
-  const contract = new Contract(address, ERC20Abi);
+): ERC20Balance | undefined {
+  const contract = ERC20ContractsByName[name];
   const balanceKey = makeERC20BalanceOfQueryKey(name, account);
 
-  const erc20Balance = useQuery(balanceKey, async () => {
-    if (account) {
-      return fetchERC20Balance(contract, account);
+  const result = useQuery<[BigNumber, BigNumber] | undefined>(
+    balanceKey,
+    async () => {
+      if (account) {
+        return Promise.all([
+          fetchERC20Balance(contract, account),
+          fetchERC20Decimals(contract, account),
+        ]);
+      }
     }
-  });
+  );
 
-  return erc20Balance;
+  if (result.data) {
+    const [balance, decimals] = result.data;
+    return { balance, decimals };
+  }
+
+  return undefined;
 }
 
 export function makeERC20BalanceOfQueryKey(
