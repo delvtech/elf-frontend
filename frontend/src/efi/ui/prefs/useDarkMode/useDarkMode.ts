@@ -11,23 +11,21 @@ interface DarkMode {
 }
 
 const DARK_MODE_QUERY_KEY = "isDarkMode";
-const DARK_MODE_DEFAULT = false;
+export const DARK_MODE_DEFAULT = false;
 
 export function useDarkMode(): DarkMode {
-  const { data: isDarkMode } = useQuery<boolean>(
+  const { data: isDarkMode = DARK_MODE_DEFAULT } = useQuery(
     DARK_MODE_QUERY_KEY,
     () => {
       const item = efiLocalStorage.getItem(DARK_MODE_QUERY_KEY);
       return item ? JSON.parse(item) : DARK_MODE_DEFAULT;
-    },
-    { placeholderData: DARK_MODE_DEFAULT }
+    }
   );
 
   const darkModeClassName = isDarkMode ? Classes.DARK : undefined;
 
   return {
-    // safe to cast when placeholder is set in useQuery
-    isDarkMode: isDarkMode as boolean,
+    isDarkMode,
     darkModeClassName,
     setDarkMode,
   };

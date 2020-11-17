@@ -42,7 +42,9 @@ export const TransactionForm: FC<TransactionFormProps> = ({
   buttonIntent = Intent.PRIMARY,
   onTransaction,
 }) => {
-  const [stringValue, onChange] = useNumericInput(numericInputOptions);
+  const [stringValue, onChange, setValue] = useNumericInput(
+    numericInputOptions
+  );
   const value = stringValue ? parseEther(stringValue) : undefined;
   const validValue = value && cryptoBalance ? value.lte(cryptoBalance) : true;
 
@@ -62,9 +64,22 @@ export const TransactionForm: FC<TransactionFormProps> = ({
     }
   }, [onChange, onTransaction, validValue, value]);
 
+  const setMaxValue = useCallback(() => {
+    setValue(formatEther(cryptoBalance as BigNumber));
+  }, [cryptoBalance, setValue]);
+
   return (
     <div className={tw("flex", "flex-col", "space-y-5")}>
-      <span>{inputLabel}</span>
+      <div className={tw("flex", "justify-between", "items-center")}>
+        <span>{inputLabel}</span>
+        <Button
+          onClick={setMaxValue}
+          minimal
+          outlined
+          small
+          intent={Intent.SUCCESS}
+        >{t`MAX`}</Button>
+      </div>
       <div className={tw("flex", "flex-col", "space-y-2")}>
         <InputGroup
           onChange={onChange}

@@ -18,12 +18,10 @@ export function useCurrencyPref(): CurrencyPref {
     () => {
       const item = efiLocalStorage.getItem(CURRENCY_QUERY_KEY);
       return item ? JSON.parse(item) : CURRENCY_DEFAULT;
-    },
-    { placeholderData: CURRENCY_DEFAULT }
+    }
   );
 
   return {
-    // safe to cast when placeholder is set in useQuery
     currency,
     setCurrency,
   };

@@ -68,6 +68,7 @@ const renderItems: ItemRenderer<Currency> = (
 ) => {
   return (
     <MenuItem
+      key={item.code}
       onClick={handleClick}
       text={
         <span>
