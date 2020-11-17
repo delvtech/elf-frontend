@@ -21,8 +21,7 @@ interface SidebarNavigationProps {
 
 const tabTitleClassName = tw("flex", "space-x-6", "items-center", "p-3");
 export const SidebarNavigation: FC<SidebarNavigationProps> = ({
-  /* defaults to false to keep Blueprint.Switch in controlled mode */
-  isDarkMode = false,
+  isDarkMode,
   changeTab,
   activeTab,
   onDarkModeChange,

@@ -31,8 +31,7 @@ interface TopbarNavigationProps {
 }
 export const TopbarNavigation: FC<TopbarNavigationProps> = ({
   deactivate,
-  /* defaults to false to keep Blueprint.Switch in controlled mode */
-  isDarkMode = false,
+  isDarkMode,
   onDarkModeChange,
   activeTab,
   changeTab,
