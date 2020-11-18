@@ -9,7 +9,12 @@ interface PrefVariables {
   id: string;
 }
 
-export function usePref<T>(id: string, defaultValue: T) {
+interface PrefResult<T> {
+  pref: T;
+  setPref: (newPref: T) => void;
+}
+
+export function usePref<T>(id: string, defaultValue: T): PrefResult<T> {
   const queryKey = makePrefQueryKey(id);
 
   const { data: pref } = useQuery<T>(
@@ -40,7 +45,7 @@ export function usePref<T>(id: string, defaultValue: T) {
   );
 
   return {
-    pref,
+    pref: pref as T, // safe to cast because initialData is set in useQuery
     setPref,
   };
 }
