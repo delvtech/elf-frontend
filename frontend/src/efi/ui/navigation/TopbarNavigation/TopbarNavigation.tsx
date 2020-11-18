@@ -8,16 +8,15 @@ import {
   NavbarGroup,
   NavbarHeading,
   Popover,
-  Switch,
   Tab,
   Tabs,
 } from "@blueprintjs/core";
-import { IconNames } from "@blueprintjs/icons";
 import classNames from "classnames";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { Navigation } from "efi/ui/navigation/navigation";
+import { PrefsMenuButton } from "efi/ui/prefs/PrefsMenuButton/PrefsMenuButton";
 import WalletSummary from "efi/ui/wallets/WalletSummary/WalletSummary";
 
 import styles from "./TopbarNavigation.module.css";
@@ -30,9 +29,6 @@ interface TopbarNavigationProps {
   changeTab: (tabId: Navigation) => void;
 }
 export const TopbarNavigation: FC<TopbarNavigationProps> = ({
-  deactivate,
-  isDarkMode,
-  onDarkModeChange,
   activeTab,
   changeTab,
 }) => {
@@ -63,14 +59,7 @@ export const TopbarNavigation: FC<TopbarNavigationProps> = ({
         </NavbarGroup>
 
         <NavbarGroup align={Alignment.RIGHT}>
-          <Switch
-            className={tw("m-0")}
-            checked={isDarkMode}
-            onChange={onDarkModeChange}
-            innerLabel={t`Light mode`}
-            innerLabelChecked={t`Dark mode`}
-          />
-          <Button minimal icon={IconNames.LOG_OUT} onClick={deactivate} />
+          <PrefsMenuButton />
         </NavbarGroup>
       </Navbar>
 

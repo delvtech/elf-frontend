@@ -1,13 +1,13 @@
 import React, { FC } from "react";
 
-import { Icon, Switch, Tab, Tabs } from "@blueprintjs/core";
+import { Icon, Tab, Tabs } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import classNames from "classnames";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { Navigation } from "efi/ui/navigation/navigation";
-import { CurrencySelect } from "efi/ui/prefs/CurrencySelect/CurrencySelect";
+import { PrefsMenuButton } from "efi/ui/prefs/PrefsMenuButton/PrefsMenuButton";
 import WalletSummary from "efi/ui/wallets/WalletSummary/WalletSummary";
 
 import styles from "./SidebarNavigation.module.css";
@@ -24,7 +24,6 @@ export const SidebarNavigation: FC<SidebarNavigationProps> = ({
   isDarkMode,
   changeTab,
   activeTab,
-  onDarkModeChange,
 }) => {
   return (
     <div
@@ -134,15 +133,7 @@ export const SidebarNavigation: FC<SidebarNavigationProps> = ({
             "space-y-4"
           )}
         >
-          <CurrencySelect />
-
-          <Switch
-            large
-            checked={isDarkMode}
-            onChange={onDarkModeChange}
-            innerLabel={t`Light mode`}
-            innerLabelChecked={t`Dark mode`}
-          />
+          <PrefsMenuButton />
         </div>
       </div>
     </div>
