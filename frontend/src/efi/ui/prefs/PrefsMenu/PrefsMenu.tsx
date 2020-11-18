@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from "react";
+import React, { ChangeEvent, FC, useCallback } from "react";
 
 import {
   Alignment,
@@ -22,14 +22,14 @@ export const PrefsMenu: FC<PrefsMenuProps> = () => {
   const { isDarkMode, setDarkMode } = useDarkMode();
 
   const onDarkModeChange = useCallback(
-    (event) => setDarkMode((event.target as HTMLInputElement).checked),
+    (event: ChangeEvent<HTMLInputElement>) => setDarkMode(event.target.checked),
     [setDarkMode]
   );
 
   const { currency, setCurrency } = useCurrencyPref();
-  const isUSD = currency.code.toUpperCase() === "USD";
+  const isUSD = currency.code === Currencies.USD.code;
   const setUSD = useCallback(() => setCurrency(Currencies.USD), [setCurrency]);
-  const isEUR = currency.code.toUpperCase() === "EUR";
+  const isEUR = currency.code === Currencies.EUR.code;
   const setEUR = useCallback(() => setCurrency(Currencies.EUR), [setCurrency]);
 
   return (
