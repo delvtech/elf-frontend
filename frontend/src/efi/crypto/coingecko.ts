@@ -1,3 +1,5 @@
+import { Currencies } from "ts-money";
+
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 
 /**
@@ -46,17 +48,25 @@ export async function fetchCryptoPrice(
   return price;
 }
 
+/**
+ * A temporary interface until we get full, codegened ones from coingecko's
+ * swagger.json. This is not exhaustive, but just a whitelist of properties we
+ * use.
+ */
+export interface FetchCryptoSymbolResult {
+  market_data: {
+    current_price: Record<keyof typeof Currencies, number>;
+  };
+}
+
 export async function fetchCryptoSymbol(
   cryptoId: CoinGeckoCryptoId
-): Promise<any> {
+): Promise<FetchCryptoSymbolResult> {
   const result = await fetch(
     `https://api.coingecko.com/api/v3/coins/${cryptoId}?tickers=true&market_data=true`
   );
 
-  const resultJSON = (await result.json()) as Record<
-    string,
-    Record<string, number>
-  >;
+  const resultJSON = (await result.json()) as FetchCryptoSymbolResult;
 
   return resultJSON;
 }
