@@ -1,11 +1,13 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 
 import { Card } from "@blueprintjs/core";
 
 import tw from "efi-tailwindcss-classnames";
+import { UNI_CONTRACT_ADDRESS_MAINNET } from "efi/crypto/erc20";
 import BrushChart from "efi/ui/charts/BrushChart/BrushChart";
 import { useDarkMode } from "efi/ui/prefs/useDarkMode/useDarkMode";
 import { useMarketData } from "efi/ui/pulse/hook/useMarketData/useMarketData";
+import { useTokenData } from "efi/ui/pulse/hook/useTokenData/useTokenData";
 import { WalletBalancesPieChart } from "efi/ui/wallets/WalletBalancesPieChart/WalletBalancesPieChart";
 
 const portfolioDashboardClassName = tw(
@@ -49,7 +51,16 @@ interface PortfolioDashboardProps {}
 export const PortfolioDashboard: FC<PortfolioDashboardProps> = () => {
   const { isDarkMode } = useDarkMode();
   const { data: marketData } = useMarketData();
-  console.log(marketData);
+  const [now] = useState(Math.round(Date.now() / 1000 - 60));
+  console.log("marketData", marketData);
+
+  const twelveHours = 60 * 60 * 24;
+  const { data: tokenData } = useTokenData(
+    UNI_CONTRACT_ADDRESS_MAINNET,
+    now - twelveHours,
+    now
+  );
+  console.log("tokenData", tokenData);
 
   return (
     <div className={portfolioDashboardClassName}>
