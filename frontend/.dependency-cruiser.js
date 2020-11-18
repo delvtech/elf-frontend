@@ -109,7 +109,7 @@ module.exports = {
       from: {},
       to: {
         path:
-          "\\.(spec|test)\\.(js|mjs|cjs|ts|ls|coffee|litcoffee|coffee\\.md)$",
+          "\\.(spec|test)\\.(js|mjs|cjs|ts|tsx|ls|coffee|litcoffee|coffee\\.md)$",
       },
     },
     {
@@ -124,7 +124,7 @@ module.exports = {
       from: {
         path: "^(src)",
         pathNot:
-          "\\.(spec|test)\\.(js|mjs|cjs|ts|ls|coffee|litcoffee|coffee\\.md)$",
+          "\\.(spec|test)\\.(js|mjs|cjs|ts|tsx|ls|coffee|litcoffee|coffee\\.md)$",
       },
       to: {
         dependencyTypes: ["npm-dev"],
@@ -174,7 +174,9 @@ module.exports = {
       name: "efi-not-to-react",
       comment: "Importing react from outside the ui/ directory is prohibited",
       severity: "error",
-      from: { pathNot: `(${["index.tsx", "efi/ui"].join("|")})` },
+      from: {
+        pathNot: `(${["index.tsx", "setupTests.ts", "efi/ui"].join("|")})`,
+      },
       to: {
         path: "node_modules/react",
       },
@@ -183,7 +185,11 @@ module.exports = {
       name: "efi-not-to-localStorage",
       comment: "Importing efiLocalStorage outside of prefs/ is prohibited",
       severity: "error",
-      from: { pathNot: `(${["efi/prefs", "efi/ui/prefs"].join("|")})` },
+      from: {
+        pathNot: `(${["efi/prefs", "setupTests.ts", "efi/ui/prefs"].join(
+          "|"
+        )})`,
+      },
       to: {
         path: "efi/base/localStorage.ts",
       },

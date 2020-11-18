@@ -1,40 +1,39 @@
-import React, { FC } from "react";
+import { act } from "@testing-library/react";
+import { renderHook } from "@testing-library/react-hooks";
 
-import { render } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-
+import efiLocalStorage from "efi/base/localStorage";
+import { makePrefEnvelope } from "efi/prefs/prefEnvelope";
 import { usePref } from "efi/ui/prefs/usePref/usePref";
 
-const SampleComponent: FC<{}> = () => {
-  const { pref, setPref } = usePref("test-pref", "my default pref value");
+test("Default value is provided when no pref exists", () => {
+  const { result } = renderUsePref();
 
-  return (
-    <button
-      onClick={() => {
-        setPref("my updated pref");
-      }}
-    >
-      {pref}
-    </button>
-  );
-};
+  expect(result.current.pref).toEqual("default value");
+});
 
-test("Default value is provided on initial render", () => {
-  const { getByText } = render(<SampleComponent />);
-  const value = getByText(/my default pref value/);
-  expect(value).toBeInTheDocument();
+test("Stored value is provided when a pref already exists", () => {
+  const prefEnvelope = makePrefEnvelope("this is a previously stored value");
+  efiLocalStorage.setItem("test-pref", JSON.stringify(prefEnvelope));
+
+  const { result } = renderUsePref();
+
+  expect(result.current.pref).toEqual("this is a previously stored value");
 });
 
 test("Updating the pref causes rerender correctly", async () => {
-  const { getByText, findByText } = render(<SampleComponent />);
+  const { result, waitForNextUpdate } = renderUsePref();
+  expect(result.current.pref).toEqual("default value");
 
-  // renders the default value
-  const button = getByText(/my default pref value/);
+  act(() => {
+    result.current.setPref("new value!");
+  });
 
-  // then the user clicks to update their pref
-  userEvent.click(button);
+  await waitForNextUpdate();
 
   // renders the new pref values
-  const buttonAfterClick = await findByText(/my updated pref/);
-  expect(buttonAfterClick).toBeInTheDocument();
+  expect(result.current.pref).toEqual("new value!");
 });
+
+function renderUsePref() {
+  return renderHook(() => usePref("test-pref", "default value"));
+}
