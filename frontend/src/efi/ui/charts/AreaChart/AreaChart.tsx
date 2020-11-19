@@ -4,23 +4,23 @@ import { AxisBottom, AxisLeft, AxisScale } from "@visx/axis";
 import { curveMonotoneX } from "@visx/curve";
 import { LinearGradient } from "@visx/gradient";
 import { Group } from "@visx/group";
-import { AppleStock } from "@visx/mock-data/lib/mocks/appleStock";
 import { AreaClosed } from "@visx/shape";
 
 import { getAxisColor } from "efi/ui/charts/colors";
 import { useDarkMode } from "efi/ui/prefs/useDarkMode/useDarkMode";
 
-// Initialize some variables
-
-// accessors
-const getDate = (d: AppleStock) => new Date(d.date);
-const getStockValue = (d: AppleStock) => d.close;
+interface TimeData {
+  time: number;
+  value: number;
+}
 
 interface AreaChartProps {
   /**
    * data for the AreaChart
    */
-  data: AppleStock[];
+  data: any[];
+  getXValue: (datum: any) => Date;
+  getYValue: (datum: any) => number;
   gradientColor: string;
   xScale: AxisScale<number>;
   yScale: AxisScale<number>;
@@ -36,6 +36,8 @@ interface AreaChartProps {
 
 export const AreaChart: FunctionComponent<AreaChartProps> = ({
   data,
+  getXValue,
+  getYValue,
   gradientColor,
   width,
   yMax,
@@ -48,8 +50,14 @@ export const AreaChart: FunctionComponent<AreaChartProps> = ({
   left,
   children,
 }) => {
-  const setXScale = useCallback((d) => xScale(getDate(d)) || 0, [xScale]);
-  const setYScale = useCallback((d) => yScale(getStockValue(d)) || 0, [yScale]);
+  const setXScale = useCallback((d) => xScale(getXValue(d)) ?? 0, [
+    getXValue,
+    xScale,
+  ]);
+  const setYScale = useCallback((d) => yScale(getYValue(d)) ?? 0, [
+    getYValue,
+    yScale,
+  ]);
 
   const { isDarkMode } = useDarkMode();
 
@@ -84,7 +92,7 @@ export const AreaChart: FunctionComponent<AreaChartProps> = ({
         to={gradientColor}
         toOpacity={0.2}
       />
-      <AreaClosed<AppleStock>
+      <AreaClosed<TimeData>
         data={data}
         x={setXScale}
         y={setYScale}

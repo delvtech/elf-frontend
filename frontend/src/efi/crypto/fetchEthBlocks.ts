@@ -11,8 +11,9 @@ const getEthBlocksQuery = (timestamp: number) => {
   {
     blocks(
       first: 500
+      skip: 10000
       orderBy: timestamp
-      orderDirection: desc
+      orderDirection: asc
       where: { timestamp_gt: "${timestamp}" }
     ) {
       id
@@ -29,6 +30,7 @@ const getEthBlocksQuery = (timestamp: number) => {
 export async function fetchEthBlocks(startTime: number, endTime: number) {
   const query = getEthBlocksQuery(startTime);
   const data = (await request(
+    // TODO: store this as a constant somewhere
     "https://api.thegraph.com/subgraphs/name/blocklytics/ethereum-blocks",
     query
   )) as { blocks: Block[] };

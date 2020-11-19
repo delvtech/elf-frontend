@@ -4,9 +4,8 @@ import { Card } from "@blueprintjs/core";
 
 import tw from "efi-tailwindcss-classnames";
 import { UNI_CONTRACT_ADDRESS_MAINNET } from "efi/crypto/erc20";
-import BrushChart from "efi/ui/charts/BrushChart/BrushChart";
+import BrushChart, { TimeData } from "efi/ui/charts/BrushChart/BrushChart";
 import { useDarkMode } from "efi/ui/prefs/useDarkMode/useDarkMode";
-import { useMarketData } from "efi/ui/pulse/hook/useMarketData/useMarketData";
 import { useTokenData } from "efi/ui/pulse/hook/useTokenData/useTokenData";
 import { WalletBalancesPieChart } from "efi/ui/wallets/WalletBalancesPieChart/WalletBalancesPieChart";
 
@@ -48,19 +47,28 @@ const bottomRowClassName = tw(
 );
 
 interface PortfolioDashboardProps {}
+const thirtyDays = 60 * 60 * 24 * 30;
 export const PortfolioDashboard: FC<PortfolioDashboardProps> = () => {
   const { isDarkMode } = useDarkMode();
-  const { data: marketData } = useMarketData();
-  const [now] = useState(Math.round(Date.now() / 1000 - 60));
-  console.log("marketData", marketData);
+  const [now] = useState(Math.round(Date.now() / 1000 - thirtyDays));
 
-  const twelveHours = 60 * 60 * 24;
+  // requires time in seconds
   const { data: tokenData } = useTokenData(
     UNI_CONTRACT_ADDRESS_MAINNET,
-    now - twelveHours,
+    now - thirtyDays,
     now
   );
-  console.log("tokenData", tokenData);
+
+  // requires time in ms
+  let data: TimeData[] = [];
+  if (tokenData) {
+    data = Object.keys(tokenData)
+      .map((timestamp) => ({
+        time: Number(timestamp.slice(1)) * 1000,
+        value: Number(tokenData[timestamp].derivedETH) * 480,
+      }))
+      .sort((a, b) => a.time - b.time);
+  }
 
   return (
     <div className={portfolioDashboardClassName}>
@@ -70,13 +78,34 @@ export const PortfolioDashboard: FC<PortfolioDashboardProps> = () => {
         </Card>
 
         <Card className={firstRowCardClassName}>
-          <BrushChart compact isDarkMode={isDarkMode} />
+          {!!data.length && (
+            <BrushChart
+              getXValue={getXValue}
+              getYValue={getYValue}
+              data={data}
+              isDarkMode={isDarkMode}
+            />
+          )}
         </Card>
       </div>
 
       <Card className={bottomRowClassName}>
-        <BrushChart isDarkMode={isDarkMode} />
+        {!!data.length && (
+          <BrushChart
+            getXValue={getXValue}
+            getYValue={getYValue}
+            data={data}
+            isDarkMode={isDarkMode}
+          />
+        )}
       </Card>
     </div>
   );
 };
+
+// accessors
+const getXValue = (d: any) => {
+  const date = new Date(d.time);
+  return date;
+};
+const getYValue = (d: any) => d.value;

@@ -1,6 +1,6 @@
-import { useQuery } from "react-query";
+import { QueryResult, useQuery } from "react-query";
 
-import { fetchTokenData } from "efi/crypto/fetchTokenData";
+import { fetchTokenData, TokenData } from "efi/crypto/fetchTokenData";
 
 /**
  * fetches the price of a token over the given range.  The price is in ETH.
@@ -12,13 +12,13 @@ export function useTokenData(
   tokenAddress: string,
   startTime: number,
   endTime: number
-) {
+): QueryResult<TokenData> {
   const marketDataQueryKey = makeTokenDataQueryKey(
     tokenAddress,
     startTime,
     endTime
   );
-  const marketData = useQuery(
+  const result = useQuery(
     marketDataQueryKey,
     async (keys: string[], variables: TokenDataVariables) => {
       const { tokenAddress, startTime, endTime } = variables;
@@ -26,7 +26,7 @@ export function useTokenData(
     }
   );
 
-  return marketData;
+  return result;
 }
 
 interface TokenDataVariables {

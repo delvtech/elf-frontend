@@ -22,15 +22,19 @@ const getTokenDataQuery = (address: string, blocks: Block[]) => {
 `;
 };
 
+export type TokenData = Record<
+  string,
+  { decimals: string; derivedETH: string }
+>;
 export async function fetchTokenData(
   tokenAddress: string,
   startTime: number,
   endTime: number
-) {
+): Promise<TokenData> {
   const blockData = await fetchEthBlocks(startTime, endTime);
-  console.log("blockData", blockData);
   const tokenQuery = getTokenDataQuery(tokenAddress, blockData.blocks);
   const tokenData = await request(
+    // TODO: store this as a constant somewhere
     "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2",
     tokenQuery
   );
