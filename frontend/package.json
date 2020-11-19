@@ -9,7 +9,7 @@
     "@ethersproject/abi": "^5.0.8",
     "@ethersproject/bytes": "^5.0.6",
     "@ethersproject/contracts": "^5.0.5",
-    "@ethersproject/hash": "^5.0.6",
+    "@ethersproject/hash": "^5.0.7",
     "@ethersproject/providers": "^5.0.15",
     "@ethersproject/units": "^5.0.7",
     "@reach/router": "^1.3.4",
