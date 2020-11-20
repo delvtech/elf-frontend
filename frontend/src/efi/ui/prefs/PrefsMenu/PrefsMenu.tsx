@@ -14,7 +14,7 @@ import { Currencies } from "ts-money";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { useCurrencyPref } from "efi/ui/prefs/useCurrency/useCurency";
+import { useCurrencyPref } from "efi/ui/prefs/useCurrency/useCurencyPref";
 import { useDarkMode } from "efi/ui/prefs/useDarkMode/useDarkMode";
 
 interface PrefsMenuProps {}
