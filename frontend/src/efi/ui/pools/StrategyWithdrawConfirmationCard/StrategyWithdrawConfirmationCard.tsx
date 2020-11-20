@@ -30,9 +30,10 @@ export const StrategyWithdrawConfirmationCard: FC<StrategyWithdrawConfirmationCa
   const { withdrawEth, gasEstimate } = useElfContractWithdrawEth(
     amountToWithdraw
   );
-  const [currentTransaction, setCurrentTransaction] = useState<
-    ContractTransaction
-  >();
+  const [
+    currentTransaction,
+    setCurrentTransaction,
+  ] = useState<ContractTransaction>();
   const { data: gasEstimateInWei } = gasEstimate;
   const gasEstimateInEth = gasEstimateInWei
     ? commify(formatEther(gasEstimateInWei))

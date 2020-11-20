@@ -28,9 +28,10 @@ export const StrategyDepositConfirmationCard: FC<StrategyDepositConfirmationCard
 }) => {
   const { data: walletBalance } = useWalletBalance();
   const { depositEth, gasEstimate } = useElfContractDepositEth();
-  const [currentTransaction, setCurrentTransaction] = useState<
-    ContractTransaction
-  >();
+  const [
+    currentTransaction,
+    setCurrentTransaction,
+  ] = useState<ContractTransaction>();
   const { data: gasEstimateInWei } = gasEstimate;
   const gasEstimateInEth = gasEstimateInWei
     ? formatEther(gasEstimateInWei)
