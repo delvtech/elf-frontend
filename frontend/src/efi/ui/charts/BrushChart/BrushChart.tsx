@@ -33,6 +33,7 @@ export interface TimeData {
 }
 
 interface BrushChartProps {
+  // TODO: either generalize this further or make this a TimeDataBrushChart
   data: TimeData[];
   getXValue: (datum: any) => Date;
   getYValue: (datum: any) => number;

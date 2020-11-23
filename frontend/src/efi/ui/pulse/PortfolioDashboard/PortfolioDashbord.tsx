@@ -62,12 +62,10 @@ export const PortfolioDashboard: FC<PortfolioDashboardProps> = () => {
   // requires time in ms
   let data: TimeData[] = [];
   if (tokenData) {
-    data = Object.keys(tokenData)
-      .map((timestamp) => ({
-        time: Number(timestamp.slice(1)) * 1000,
-        value: Number(tokenData[timestamp].derivedETH) * 480,
-      }))
-      .sort((a, b) => a.time - b.time);
+    data = tokenData.map(({ timestamp, derivedUSD }) => ({
+      time: timestamp,
+      value: derivedUSD,
+    }));
   }
 
   return (

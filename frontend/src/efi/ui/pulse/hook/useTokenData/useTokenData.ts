@@ -12,7 +12,7 @@ export function useTokenData(
   tokenAddress: string,
   startTime: number,
   endTime: number
-): QueryResult<TokenData> {
+): QueryResult<TokenData[]> {
   const marketDataQueryKey = makeTokenDataQueryKey(
     tokenAddress,
     startTime,

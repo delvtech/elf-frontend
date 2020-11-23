@@ -18,7 +18,7 @@ interface AreaChartProps {
   /**
    * data for the AreaChart
    */
-  data: any[];
+  data: TimeData[];
   getXValue: (datum: any) => Date;
   getYValue: (datum: any) => number;
   gradientColor: string;
