@@ -76,15 +76,6 @@ export const SidebarNavigation: FC<SidebarNavigationProps> = ({
             onChange={changeTab}
             selectedTabId={activeTab}
           >
-            {/* <Tab
-              id={Navigation.HOME}
-              title={
-                <div className={tabTitleClassName}>
-                  <Icon icon={IconNames.HOME} iconSize={Icon.SIZE_LARGE} />
-                  <span>{t`Home`}</span>
-                </div>
-              }
-            /> */}
             <Tab
               id={Navigation.PULSE}
               title={
@@ -100,15 +91,6 @@ export const SidebarNavigation: FC<SidebarNavigationProps> = ({
                 <div className={tabTitleClassName}>
                   <Icon icon={IconNames.CUBE_ADD} iconSize={Icon.SIZE_LARGE} />
                   <span>{t`Invest`}</span>
-                </div>
-              }
-            />
-            <Tab
-              id={Navigation.SWAP}
-              title={
-                <div className={tabTitleClassName}>
-                  <Icon icon={IconNames.EXCHANGE} iconSize={Icon.SIZE_LARGE} />
-                  <span>{t`Swap`}</span>
                 </div>
               }
             />

@@ -13,7 +13,6 @@ import { MainNavigation } from "efi/ui/navigation/MainNavigation/MainNavigation"
 import { Navigation } from "efi/ui/navigation/navigation";
 import { useDarkMode } from "efi/ui/prefs/useDarkMode/useDarkMode";
 import { PulseView } from "efi/ui/pulse/PulseView";
-import { SwapView } from "efi/ui/swaps/SwapView/SwapView";
 import { useSyncWithInjectedEthereum } from "efi/ui/wallets/hooks/useSyncWithInjectedEthereum";
 
 import styles from "./App.module.css";
@@ -56,7 +55,6 @@ const App: FC<AppProps> = () => {
         <Router className={contentClassName}>
           <HomeView path="/" />
           <PulseView path={Navigation.PULSE} />
-          <SwapView path={Navigation.SWAP} />
           <InvestView path={Navigation.INVEST} />
           <FAQView path={Navigation.FAQ} />
         </Router>
