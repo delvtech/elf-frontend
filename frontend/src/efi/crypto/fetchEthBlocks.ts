@@ -21,17 +21,17 @@ export interface BlockResponse {
 // TODO: add 'skip' variable to tune the granularity
 // TODO: use infinite query from react-query to grab chunks of blocks as user interacts
 export async function fetchEthBlocks(
-  startTime: number,
-  endTime: number
+  startTimeSeconds: number,
+  endTimeSeconds: number
 ): Promise<Block[][]> {
   const {
-    firstBlockNumber,
-    lastBlockNumber,
-  } = await fetchFirstAndLastBlockNumber(startTime, endTime);
+    startBlockNumber,
+    endBlockNumber,
+  } = await fetchFirstAndLastBlockNumber(startTimeSeconds, endTimeSeconds);
 
   // get blocks back in sets of 500 so that requests don't fail.  TheGraph only lets you query 500
   // at a time.
-  const blockSets = getBlockSets(firstBlockNumber, lastBlockNumber);
+  const blockSets = getBlockSets(startBlockNumber, endBlockNumber);
   const queries = blockSets.map((blockSet) => getEthBlocksQuery(blockSet));
   const requests: Promise<BlockResponse>[] = queries.map((query) =>
     request(THE_GRAPH_ETH_BLOCKS_URL, query)
@@ -46,28 +46,28 @@ export async function fetchEthBlocks(
 }
 
 /**
- * Returns numBlocks number of blocks between firstBlockNumber and lastBlockNumber.  The result is a
+ * Returns numBlocks number of blocks between startBlockNumber and endBlockNumber.  The result is a
  * chunked array so that each set is <= 500.  This is because we cannot query more than 500 blocks
  * at a time on TheGraph. i.e:
- * fistBlockNumer = 1, lastBlockNumber = 2000, numbBlocks = 1000 would yield a stepSize of 2, and
+ * fistBlockNumer = 1, endBlockNumber = 2000, numbBlocks = 1000 would yield a stepSize of 2, and
  * two 500 length sets of blocks:
  * [ [1, 3, ... 1000], [1001, 1003, ... 2000] ]
- * @param firstBlockNumber
- * @param lastBlockNumber
+ * @param startBlockNumber
+ * @param endBlockNumber
  * @param numbBlocks
  */
-const getBlockSets = (
-  firstBlockNumber: number,
-  lastBlockNumber: number,
+function getBlockSets(
+  startBlockNumber: number,
+  endBlockNumber: number,
   numbBlocks: number = 1000
-) => {
-  const numBlocks = lastBlockNumber - firstBlockNumber;
+): number[][] {
+  const numBlocks = endBlockNumber - startBlockNumber;
   const stepSize = Math.round(numBlocks / numbBlocks);
 
-  const blockSet = range(firstBlockNumber, lastBlockNumber, stepSize);
+  const blocks = range(startBlockNumber, endBlockNumber, stepSize);
 
-  return chunkArray(blockSet, 500);
-};
+  return chunkArray(blocks, 500);
+}
 
 // TODO: use lodash chunk instad
 function chunkArray<T = any>(array: T[], size: number) {
@@ -79,21 +79,21 @@ function chunkArray<T = any>(array: T[], size: number) {
   return chunkedArray;
 }
 
-interface FirstAndLastBlock {
-  first: Block[];
-  last: Block[];
+interface StartAndEndBlock {
+  start: Block[];
+  end: Block[];
 }
 async function fetchFirstAndLastBlockNumber(
-  startTime: number,
-  endTime: number
+  startTimeSeconds: number,
+  endTimeSeconds: number
 ) {
-  const blocks: FirstAndLastBlock = await request(
+  const blocks: StartAndEndBlock = await request(
     THE_GRAPH_ETH_BLOCKS_URL,
-    getFirstAndLastBlockInTimeRangeQuery(startTime, endTime)
+    getFirstAndLastBlockInTimeRangeQuery(startTimeSeconds, endTimeSeconds)
   );
 
   return {
-    firstBlockNumber: Number(blocks.first[0].number),
-    lastBlockNumber: Number(blocks.last[0].number),
+    startBlockNumber: Number(blocks.start[0].number),
+    endBlockNumber: Number(blocks.end[0].number),
   };
 }

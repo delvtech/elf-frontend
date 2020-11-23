@@ -12,5 +12,5 @@ export function useMarketData() {
 }
 
 export function makeMarketDataQueryKey() {
-  return ["marketData"];
+  return [["marketData"], {}];
 }

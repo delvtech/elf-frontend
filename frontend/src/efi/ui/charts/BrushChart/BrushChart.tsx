@@ -28,7 +28,7 @@ const PATTERN_ID = "brush_pattern";
 const GRADIENT_ID = "brush_gradient";
 
 export interface TimeData {
-  time: number;
+  timeMs: number;
   value: number;
 }
 

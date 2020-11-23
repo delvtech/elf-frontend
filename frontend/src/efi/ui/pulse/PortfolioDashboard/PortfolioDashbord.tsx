@@ -1,8 +1,9 @@
-import React, { FC, useState } from "react";
+import React, { FC, useMemo } from "react";
 
 import { Card } from "@blueprintjs/core";
 
 import tw from "efi-tailwindcss-classnames";
+import { THIRTY_DAYS_S } from "efi/base/time";
 import { UNI_CONTRACT_ADDRESS_MAINNET } from "efi/crypto/erc20";
 import BrushChart, { TimeData } from "efi/ui/charts/BrushChart/BrushChart";
 import { useDarkMode } from "efi/ui/prefs/useDarkMode/useDarkMode";
@@ -47,26 +48,32 @@ const bottomRowClassName = tw(
 );
 
 interface PortfolioDashboardProps {}
-const thirtyDays = 60 * 60 * 24 * 30;
+
 export const PortfolioDashboard: FC<PortfolioDashboardProps> = () => {
   const { isDarkMode } = useDarkMode();
-  const [now] = useState(Math.round(Date.now() / 1000 - thirtyDays));
-
-  // requires time in seconds
-  const { data: tokenData } = useTokenData(
-    UNI_CONTRACT_ADDRESS_MAINNET,
-    now - thirtyDays,
-    now
+  // go back 5 minutes from now to make sure there is block data, we can probably get this closer to
+  // 1 minute but this is good for now
+  const nowInSeconds = useMemo(
+    () => Math.round(Date.now() / 1000) - 60 * 5,
+    []
   );
 
-  // requires time in ms
-  let data: TimeData[] = [];
-  if (tokenData) {
-    data = tokenData.map(({ timestamp, derivedUSD }) => ({
-      time: timestamp,
+  // requires time in seconds, returns time in milliseconds
+  const { data: tokenData } = useTokenData(
+    UNI_CONTRACT_ADDRESS_MAINNET,
+    nowInSeconds - THIRTY_DAYS_S,
+    nowInSeconds
+  );
+
+  const data: TimeData[] = useMemo(() => {
+    if (!tokenData) {
+      return [];
+    }
+    return tokenData.map(({ timeMs, derivedUSD }) => ({
+      timeMs,
       value: derivedUSD,
     }));
-  }
+  }, [tokenData]);
 
   return (
     <div className={portfolioDashboardClassName}>
@@ -101,9 +108,6 @@ export const PortfolioDashboard: FC<PortfolioDashboardProps> = () => {
   );
 };
 
-// accessors
-const getXValue = (d: any) => {
-  const date = new Date(d.time);
-  return date;
-};
-const getYValue = (d: any) => d.value;
+const getYValue = (d: TimeData) => d.value;
+
+const getXValue = (d: TimeData) => new Date(d.timeMs);

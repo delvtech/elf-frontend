@@ -10,7 +10,7 @@ import { getAxisColor } from "efi/ui/charts/colors";
 import { useDarkMode } from "efi/ui/prefs/useDarkMode/useDarkMode";
 
 interface TimeData {
-  time: number;
+  timeMs: number;
   value: number;
 }
 

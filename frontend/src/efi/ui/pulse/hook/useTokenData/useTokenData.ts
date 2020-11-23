@@ -10,19 +10,19 @@ import { fetchTokenData, TokenData } from "efi/crypto/fetchTokenData";
  */
 export function useTokenData(
   tokenAddress: string,
-  startTime: number,
-  endTime: number
+  startTimeSeconds: number,
+  endTimeSeconds: number
 ): QueryResult<TokenData[]> {
   const marketDataQueryKey = makeTokenDataQueryKey(
     tokenAddress,
-    startTime,
-    endTime
+    startTimeSeconds,
+    endTimeSeconds
   );
   const result = useQuery(
     marketDataQueryKey,
     async (keys: string[], variables: TokenDataVariables) => {
-      const { tokenAddress, startTime, endTime } = variables;
-      return fetchTokenData(tokenAddress, startTime, endTime);
+      const { tokenAddress, startTimeSeconds, endTimeSeconds } = variables;
+      return fetchTokenData(tokenAddress, startTimeSeconds, endTimeSeconds);
     }
   );
 
@@ -31,13 +31,16 @@ export function useTokenData(
 
 interface TokenDataVariables {
   tokenAddress: string;
-  startTime: number;
-  endTime: number;
+  startTimeSeconds: number;
+  endTimeSeconds: number;
 }
 export function makeTokenDataQueryKey(
   tokenAddress: string,
-  startTime: number,
-  endTime: number
+  startTimeSeconds: number,
+  endTimeSeconds: number
 ): [string[], TokenDataVariables] {
-  return [["thegraph", "tokenData"], { tokenAddress, startTime, endTime }];
+  return [
+    ["thegraph", "tokenData"],
+    { tokenAddress, startTimeSeconds, endTimeSeconds },
+  ];
 }
