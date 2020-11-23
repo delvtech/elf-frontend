@@ -109,7 +109,7 @@
     ]
   },
   "devDependencies": {
-    "@testing-library/dom": "^7.26.7",
+    "@testing-library/dom": "^7.28.1",
     "@testing-library/react-hooks": "^3.4.2",
     "@testing-library/user-event": "^12.2.2",
     "@typechain/ethers-v5": "^2.0.0",
