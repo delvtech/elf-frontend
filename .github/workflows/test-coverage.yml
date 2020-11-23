@@ -1,0 +1,14 @@
+name: Test coverage
+
+on: pull_request
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Test coverage
+      id: test-coverage 
+      uses: raulanatol/jest-coverage-comment-action@v1.0.0
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        jest-command: 'npm run test -- --coverage'
