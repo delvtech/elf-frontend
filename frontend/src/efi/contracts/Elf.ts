@@ -5,19 +5,14 @@ import {
   BigNumberish,
   Contract,
   ContractTransaction,
-  providers,
   Signer,
 } from "ethers";
 
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
+import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 
 // TODO: Get this from the environment
-const RPC_HOST = "http://127.0.0.1:8545";
-
-// TODO: Get this from the environment
-const ELF_ADDRESS = "0xac64f6df4a679a65d62ef31E2f0568E4e99e0124";
-
-const provider = new providers.JsonRpcProvider(RPC_HOST);
+const ELF_ADDRESS_LOCALNET = "0xac64f6df4a679a65d62ef31E2f0568E4e99e0124";
 
 interface ElfStubs {
   functions: {
@@ -32,11 +27,11 @@ interface ElfStubs {
 
 type ElfWithStubs = Elf & ElfStubs;
 
-const elf = (new Contract(
-  ELF_ADDRESS,
+const elf = new Contract(
+  ELF_ADDRESS_LOCALNET,
   elfAbi,
-  provider
-) as any) as ElfWithStubs;
+  jsonRpcProvider
+) as ElfWithStubs;
 
 // stub out call to get asset symbols
 elf.functions.assetSymbols = async () => ({

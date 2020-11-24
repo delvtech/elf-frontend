@@ -228,6 +228,22 @@ module.exports = {
         path: `(${["efi/wallets", "efi/pools"].join("|")})`,
       },
     },
+    {
+      name: "efi-not-to-providers",
+      comment: "Importing certain modules in providers/ is prohibited",
+      severity: "error",
+      from: {
+        path: "efi/providers",
+      },
+      to: {
+        path: `(${[
+          "efi/wallets",
+          "efi/pools",
+          "efi/crypto",
+          "efi/contracts",
+        ].join("|")})`,
+      },
+    },
   ],
   options: {
     /* conditions specifying which files not to follow further when encountered:
