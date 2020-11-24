@@ -1,6 +1,6 @@
 name: Test coverage
 
-on: pull_request
+on: [pull_request]
 
 defaults:
   run:
@@ -10,9 +10,14 @@ jobs:
   test-coverage:
     runs-on: ubuntu-latest
     steps:
-      - name: Test coverage
-        id: test-coverage
-        uses: raulanatol/jest-coverage-comment-action@v1.0.1
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - run: npm ci
+      - run: npm run test:coverage
+
+      - name: PR comment (lcov)
+        uses: vebr/jest-lcov-reporter@v0.2.0
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          jest-command: "npm run test -- --coverage"
+          lcov-file: frontend/coverage/lcov.info
