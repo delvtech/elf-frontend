@@ -21,17 +21,35 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
-        name: "_converter",
+        name: "_weth",
         type: "address",
       },
       {
         internalType: "address",
-        name: "_weth",
+        name: "_borrowAsset",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_allocator",
         type: "address",
       },
     ],
     stateMutability: "nonpayable",
     type: "constructor",
+  },
+  {
+    inputs: [],
+    name: "allocator",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
   },
   {
     inputs: [],
@@ -47,39 +65,24 @@ const _abi = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_reserve",
-        type: "address",
-      },
+    inputs: [],
+    name: "balances",
+    outputs: [
       {
         internalType: "uint256",
-        name: "_amount",
+        name: "",
         type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "_interestRateModel",
-        type: "uint256",
-      },
-      {
-        internalType: "address",
-        name: "_sender",
-        type: "address",
       },
     ],
-    name: "borrow",
-    outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "view",
     type: "function",
   },
   {
     inputs: [],
-    name: "converter",
+    name: "borrowAsset",
     outputs: [
       {
-        internalType: "address",
+        internalType: "contract IERC20",
         name: "",
         type: "address",
       },
@@ -90,36 +93,26 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: "address",
-        name: "_reserve",
-        type: "address",
-      },
-      {
         internalType: "uint256",
         name: "_amount",
         type: "uint256",
       },
-      {
-        internalType: "address",
-        name: "_sender",
-        type: "address",
-      },
     ],
-    name: "deposit",
+    name: "depositAndBorrow",
     outputs: [],
-    stateMutability: "payable",
+    stateMutability: "nonpayable",
     type: "function",
   },
   {
     inputs: [
       {
         internalType: "address",
-        name: "fromToken",
+        name: "_fromToken",
         type: "address",
       },
       {
         internalType: "address",
-        name: "toToken",
+        name: "_toToken",
         type: "address",
       },
     ],
@@ -149,6 +142,19 @@ const _abi = [
   },
   {
     inputs: [],
+    name: "liabilities",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
     name: "priceOracle",
     outputs: [
       {
@@ -163,22 +169,12 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: "address",
-        name: "_reserve",
-        type: "address",
-      },
-      {
         internalType: "uint256",
         name: "_amount",
         type: "uint256",
       },
-      {
-        internalType: "address",
-        name: "_sender",
-        type: "address",
-      },
     ],
-    name: "repay",
+    name: "repayAndWithdraw",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -210,30 +206,16 @@ const _abi = [
     type: "function",
   },
   {
-    inputs: [
+    inputs: [],
+    name: "weth",
+    outputs: [
       {
-        internalType: "address",
-        name: "_reserve",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "_amount",
-        type: "uint256",
-      },
-      {
-        internalType: "address",
-        name: "_sender",
+        internalType: "contract IERC20",
+        name: "",
         type: "address",
       },
     ],
-    name: "withdraw",
-    outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "view",
     type: "function",
-  },
-  {
-    stateMutability: "payable",
-    type: "receive",
   },
 ];

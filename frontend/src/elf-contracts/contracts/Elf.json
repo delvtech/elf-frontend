@@ -57,6 +57,15 @@
     "type": "event"
   },
   {
+    "inputs": [],
+    "name": "allocator",
+    "outputs": [
+      { "internalType": "address payable", "name": "", "type": "address" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       { "internalType": "address", "name": "owner", "type": "address" },
       { "internalType": "address", "name": "spender", "type": "address" }
@@ -130,6 +139,34 @@
     "type": "function"
   },
   {
+    "inputs": [
+      { "internalType": "address", "name": "sender", "type": "address" }
+    ],
+    "name": "depositETHFrom",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "sender", "type": "address" },
+      { "internalType": "uint256", "name": "amount", "type": "uint256" }
+    ],
+    "name": "depositFrom",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getAllocator",
+    "outputs": [
+      { "internalType": "address payable", "name": "", "type": "address" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "governance",
     "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
@@ -148,16 +185,22 @@
   },
   {
     "inputs": [],
-    "name": "invest",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "name",
     "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address payable",
+        "name": "_allocator",
+        "type": "address"
+      }
+    ],
+    "name": "setAllocator",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -167,28 +210,6 @@
     "name": "setGovernance",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address payable",
-        "name": "_strategy",
-        "type": "address"
-      }
-    ],
-    "name": "setStrategy",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "strategy",
-    "outputs": [
-      { "internalType": "address payable", "name": "", "type": "address" }
-    ],
-    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -249,6 +270,26 @@
       { "internalType": "uint256", "name": "_shares", "type": "uint256" }
     ],
     "name": "withdrawETH",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "sender", "type": "address" },
+      { "internalType": "uint256", "name": "_shares", "type": "uint256" }
+    ],
+    "name": "withdrawETHFrom",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "sender", "type": "address" },
+      { "internalType": "uint256", "name": "_shares", "type": "uint256" }
+    ],
+    "name": "withdrawFrom",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

@@ -21,7 +21,17 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
-        name: "_strategy",
+        name: "_allocator",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_vault",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_usdc",
         type: "address",
       },
     ],
@@ -30,20 +40,7 @@ const _abi = [
   },
   {
     inputs: [],
-    name: "USDC",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "VAULT",
+    name: "allocator",
     outputs: [
       {
         internalType: "address",
@@ -101,14 +98,27 @@ const _abi = [
     type: "function",
   },
   {
-    inputs: [
+    inputs: [],
+    name: "secondary",
+    outputs: [
       {
         internalType: "address",
-        name: "_governance",
+        name: "",
         type: "address",
       },
     ],
-    name: "setGovernance",
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_allocator",
+        type: "address",
+      },
+    ],
+    name: "setAllocator",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -117,11 +127,11 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
-        name: "_strategy",
+        name: "_governance",
         type: "address",
       },
     ],
-    name: "setStrategy",
+    name: "setGovernance",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -154,19 +164,6 @@ const _abi = [
   },
   {
     inputs: [],
-    name: "strategy",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
     name: "token",
     outputs: [
       {
@@ -183,7 +180,7 @@ const _abi = [
     name: "vault",
     outputs: [
       {
-        internalType: "address",
+        internalType: "contract YearnVault",
         name: "",
         type: "address",
       },

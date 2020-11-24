@@ -1,11 +1,19 @@
 [
   {
     "inputs": [
-      { "internalType": "address", "name": "_converter", "type": "address" },
-      { "internalType": "address", "name": "_weth", "type": "address" }
+      { "internalType": "address", "name": "_weth", "type": "address" },
+      { "internalType": "address", "name": "_borrowAsset", "type": "address" },
+      { "internalType": "address", "name": "_allocator", "type": "address" }
     ],
     "stateMutability": "nonpayable",
     "type": "constructor"
+  },
+  {
+    "inputs": [],
+    "name": "allocator",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
   },
   {
     "inputs": [],
@@ -15,43 +23,34 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "_reserve", "type": "address" },
-      { "internalType": "uint256", "name": "_amount", "type": "uint256" },
-      {
-        "internalType": "uint256",
-        "name": "_interestRateModel",
-        "type": "uint256"
-      },
-      { "internalType": "address", "name": "_sender", "type": "address" }
-    ],
-    "name": "borrow",
-    "outputs": [],
-    "stateMutability": "nonpayable",
+    "inputs": [],
+    "name": "balances",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
-    "name": "converter",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "name": "borrowAsset",
+    "outputs": [
+      { "internalType": "contract IERC20", "name": "", "type": "address" }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "_reserve", "type": "address" },
-      { "internalType": "uint256", "name": "_amount", "type": "uint256" },
-      { "internalType": "address", "name": "_sender", "type": "address" }
+      { "internalType": "uint256", "name": "_amount", "type": "uint256" }
     ],
-    "name": "deposit",
+    "name": "depositAndBorrow",
     "outputs": [],
-    "stateMutability": "payable",
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "fromToken", "type": "address" },
-      { "internalType": "address", "name": "toToken", "type": "address" }
+      { "internalType": "address", "name": "_fromToken", "type": "address" },
+      { "internalType": "address", "name": "_toToken", "type": "address" }
     ],
     "name": "getLendingPrice",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
@@ -67,6 +66,13 @@
   },
   {
     "inputs": [],
+    "name": "liabilities",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "priceOracle",
     "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "stateMutability": "view",
@@ -74,11 +80,9 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "_reserve", "type": "address" },
-      { "internalType": "uint256", "name": "_amount", "type": "uint256" },
-      { "internalType": "address", "name": "_sender", "type": "address" }
+      { "internalType": "uint256", "name": "_amount", "type": "uint256" }
     ],
-    "name": "repay",
+    "name": "repayAndWithdraw",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -102,15 +106,12 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "_reserve", "type": "address" },
-      { "internalType": "uint256", "name": "_amount", "type": "uint256" },
-      { "internalType": "address", "name": "_sender", "type": "address" }
+    "inputs": [],
+    "name": "weth",
+    "outputs": [
+      { "internalType": "contract IERC20", "name": "", "type": "address" }
     ],
-    "name": "withdraw",
-    "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "view",
     "type": "function"
-  },
-  { "stateMutability": "payable", "type": "receive" }
+  }
 ]

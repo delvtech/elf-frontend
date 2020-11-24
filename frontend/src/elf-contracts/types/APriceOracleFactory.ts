@@ -26,12 +26,12 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
-        name: "fromToken",
+        name: "_fromToken",
         type: "address",
       },
       {
         internalType: "address",
-        name: "toToken",
+        name: "_toToken",
         type: "address",
       },
     ],
@@ -44,6 +44,32 @@ const _abi = [
       },
     ],
     stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "price",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_price",
+        type: "uint256",
+      },
+    ],
+    name: "setPrice",
+    outputs: [],
+    stateMutability: "nonpayable",
     type: "function",
   },
 ];

@@ -22,14 +22,27 @@ import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 
 interface ElfDeployInterface extends ethers.utils.Interface {
   functions: {
+    "allocator()": FunctionFragment;
+    "assets(uint256)": FunctionFragment;
+    "changeGovernance(address)": FunctionFragment;
     "config()": FunctionFragment;
-    "converter()": FunctionFragment;
     "dai()": FunctionFragment;
     "elf()": FunctionFragment;
+    "fromTokens(uint256)": FunctionFragment;
     "init()": FunctionFragment;
     "lender()": FunctionFragment;
-    "priceOracle()": FunctionFragment;
-    "strategy()": FunctionFragment;
+    "lender1()": FunctionFragment;
+    "lender2()": FunctionFragment;
+    "lender3()": FunctionFragment;
+    "lender4()": FunctionFragment;
+    "lenders(uint256)": FunctionFragment;
+    "percents(uint256)": FunctionFragment;
+    "priceOracle1()": FunctionFragment;
+    "priceOracle2()": FunctionFragment;
+    "priceOracle3()": FunctionFragment;
+    "priceOracle4()": FunctionFragment;
+    "proxy()": FunctionFragment;
+    "toTokens(uint256)": FunctionFragment;
     "tusd()": FunctionFragment;
     "usdc()": FunctionFragment;
     "usdt()": FunctionFragment;
@@ -44,17 +57,57 @@ interface ElfDeployInterface extends ethers.utils.Interface {
     "yusdtAsset()": FunctionFragment;
   };
 
+  encodeFunctionData(functionFragment: "allocator", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "assets",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "changeGovernance",
+    values: [string]
+  ): string;
   encodeFunctionData(functionFragment: "config", values?: undefined): string;
-  encodeFunctionData(functionFragment: "converter", values?: undefined): string;
   encodeFunctionData(functionFragment: "dai", values?: undefined): string;
   encodeFunctionData(functionFragment: "elf", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "fromTokens",
+    values: [BigNumberish]
+  ): string;
   encodeFunctionData(functionFragment: "init", values?: undefined): string;
   encodeFunctionData(functionFragment: "lender", values?: undefined): string;
+  encodeFunctionData(functionFragment: "lender1", values?: undefined): string;
+  encodeFunctionData(functionFragment: "lender2", values?: undefined): string;
+  encodeFunctionData(functionFragment: "lender3", values?: undefined): string;
+  encodeFunctionData(functionFragment: "lender4", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "priceOracle",
+    functionFragment: "lenders",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "percents",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "priceOracle1",
     values?: undefined
   ): string;
-  encodeFunctionData(functionFragment: "strategy", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "priceOracle2",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "priceOracle3",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "priceOracle4",
+    values?: undefined
+  ): string;
+  encodeFunctionData(functionFragment: "proxy", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "toTokens",
+    values: [BigNumberish]
+  ): string;
   encodeFunctionData(functionFragment: "tusd", values?: undefined): string;
   encodeFunctionData(functionFragment: "usdc", values?: undefined): string;
   encodeFunctionData(functionFragment: "usdt", values?: undefined): string;
@@ -77,17 +130,42 @@ interface ElfDeployInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
 
-  decodeFunctionResult(functionFragment: "config", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "converter", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "dai", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "elf", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "init", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "lender", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "allocator", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "assets", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "priceOracle",
+    functionFragment: "changeGovernance",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "strategy", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "config", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "dai", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "elf", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "fromTokens", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "init", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "lender", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "lender1", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "lender2", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "lender3", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "lender4", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "lenders", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "percents", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "priceOracle1",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "priceOracle2",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "priceOracle3",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "priceOracle4",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "proxy", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "toTokens", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "tusd", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "usdc", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "usdt", data: BytesLike): Result;
@@ -118,21 +196,45 @@ export class ElfDeploy extends Contract {
   interface: ElfDeployInterface;
 
   functions: {
+    allocator(
+      overrides?: CallOverrides
+    ): Promise<{
+      0: string;
+    }>;
+
+    "allocator()"(
+      overrides?: CallOverrides
+    ): Promise<{
+      0: string;
+    }>;
+
+    assets(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<{
+      0: string;
+    }>;
+
+    "assets(uint256)"(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<{
+      0: string;
+    }>;
+
+    changeGovernance(
+      _governance: string,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "changeGovernance(address)"(
+      _governance: string,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
     config(overrides?: Overrides): Promise<ContractTransaction>;
 
     "config()"(overrides?: Overrides): Promise<ContractTransaction>;
-
-    converter(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
-
-    "converter()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
 
     dai(
       overrides?: CallOverrides
@@ -158,6 +260,20 @@ export class ElfDeploy extends Contract {
       0: string;
     }>;
 
+    fromTokens(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<{
+      0: string;
+    }>;
+
+    "fromTokens(uint256)"(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<{
+      0: string;
+    }>;
+
     init(overrides?: Overrides): Promise<ContractTransaction>;
 
     "init()"(overrides?: Overrides): Promise<ContractTransaction>;
@@ -174,25 +290,151 @@ export class ElfDeploy extends Contract {
       0: string;
     }>;
 
-    priceOracle(
+    lender1(
       overrides?: CallOverrides
     ): Promise<{
       0: string;
     }>;
 
-    "priceOracle()"(
+    "lender1()"(
       overrides?: CallOverrides
     ): Promise<{
       0: string;
     }>;
 
-    strategy(
+    lender2(
       overrides?: CallOverrides
     ): Promise<{
       0: string;
     }>;
 
-    "strategy()"(
+    "lender2()"(
+      overrides?: CallOverrides
+    ): Promise<{
+      0: string;
+    }>;
+
+    lender3(
+      overrides?: CallOverrides
+    ): Promise<{
+      0: string;
+    }>;
+
+    "lender3()"(
+      overrides?: CallOverrides
+    ): Promise<{
+      0: string;
+    }>;
+
+    lender4(
+      overrides?: CallOverrides
+    ): Promise<{
+      0: string;
+    }>;
+
+    "lender4()"(
+      overrides?: CallOverrides
+    ): Promise<{
+      0: string;
+    }>;
+
+    lenders(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<{
+      0: string;
+    }>;
+
+    "lenders(uint256)"(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<{
+      0: string;
+    }>;
+
+    percents(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<{
+      0: BigNumber;
+    }>;
+
+    "percents(uint256)"(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<{
+      0: BigNumber;
+    }>;
+
+    priceOracle1(
+      overrides?: CallOverrides
+    ): Promise<{
+      0: string;
+    }>;
+
+    "priceOracle1()"(
+      overrides?: CallOverrides
+    ): Promise<{
+      0: string;
+    }>;
+
+    priceOracle2(
+      overrides?: CallOverrides
+    ): Promise<{
+      0: string;
+    }>;
+
+    "priceOracle2()"(
+      overrides?: CallOverrides
+    ): Promise<{
+      0: string;
+    }>;
+
+    priceOracle3(
+      overrides?: CallOverrides
+    ): Promise<{
+      0: string;
+    }>;
+
+    "priceOracle3()"(
+      overrides?: CallOverrides
+    ): Promise<{
+      0: string;
+    }>;
+
+    priceOracle4(
+      overrides?: CallOverrides
+    ): Promise<{
+      0: string;
+    }>;
+
+    "priceOracle4()"(
+      overrides?: CallOverrides
+    ): Promise<{
+      0: string;
+    }>;
+
+    proxy(
+      overrides?: CallOverrides
+    ): Promise<{
+      0: string;
+    }>;
+
+    "proxy()"(
+      overrides?: CallOverrides
+    ): Promise<{
+      0: string;
+    }>;
+
+    toTokens(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<{
+      0: string;
+    }>;
+
+    "toTokens(uint256)"(
+      arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<{
       0: string;
@@ -343,13 +585,30 @@ export class ElfDeploy extends Contract {
     }>;
   };
 
+  allocator(overrides?: CallOverrides): Promise<string>;
+
+  "allocator()"(overrides?: CallOverrides): Promise<string>;
+
+  assets(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
+
+  "assets(uint256)"(
+    arg0: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
+  changeGovernance(
+    _governance: string,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "changeGovernance(address)"(
+    _governance: string,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
   config(overrides?: Overrides): Promise<ContractTransaction>;
 
   "config()"(overrides?: Overrides): Promise<ContractTransaction>;
-
-  converter(overrides?: CallOverrides): Promise<string>;
-
-  "converter()"(overrides?: CallOverrides): Promise<string>;
 
   dai(overrides?: CallOverrides): Promise<string>;
 
@@ -359,6 +618,13 @@ export class ElfDeploy extends Contract {
 
   "elf()"(overrides?: CallOverrides): Promise<string>;
 
+  fromTokens(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
+
+  "fromTokens(uint256)"(
+    arg0: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
   init(overrides?: Overrides): Promise<ContractTransaction>;
 
   "init()"(overrides?: Overrides): Promise<ContractTransaction>;
@@ -367,13 +633,62 @@ export class ElfDeploy extends Contract {
 
   "lender()"(overrides?: CallOverrides): Promise<string>;
 
-  priceOracle(overrides?: CallOverrides): Promise<string>;
+  lender1(overrides?: CallOverrides): Promise<string>;
 
-  "priceOracle()"(overrides?: CallOverrides): Promise<string>;
+  "lender1()"(overrides?: CallOverrides): Promise<string>;
 
-  strategy(overrides?: CallOverrides): Promise<string>;
+  lender2(overrides?: CallOverrides): Promise<string>;
 
-  "strategy()"(overrides?: CallOverrides): Promise<string>;
+  "lender2()"(overrides?: CallOverrides): Promise<string>;
+
+  lender3(overrides?: CallOverrides): Promise<string>;
+
+  "lender3()"(overrides?: CallOverrides): Promise<string>;
+
+  lender4(overrides?: CallOverrides): Promise<string>;
+
+  "lender4()"(overrides?: CallOverrides): Promise<string>;
+
+  lenders(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
+
+  "lenders(uint256)"(
+    arg0: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
+  percents(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
+
+  "percents(uint256)"(
+    arg0: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  priceOracle1(overrides?: CallOverrides): Promise<string>;
+
+  "priceOracle1()"(overrides?: CallOverrides): Promise<string>;
+
+  priceOracle2(overrides?: CallOverrides): Promise<string>;
+
+  "priceOracle2()"(overrides?: CallOverrides): Promise<string>;
+
+  priceOracle3(overrides?: CallOverrides): Promise<string>;
+
+  "priceOracle3()"(overrides?: CallOverrides): Promise<string>;
+
+  priceOracle4(overrides?: CallOverrides): Promise<string>;
+
+  "priceOracle4()"(overrides?: CallOverrides): Promise<string>;
+
+  proxy(overrides?: CallOverrides): Promise<string>;
+
+  "proxy()"(overrides?: CallOverrides): Promise<string>;
+
+  toTokens(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
+
+  "toTokens(uint256)"(
+    arg0: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<string>;
 
   tusd(overrides?: CallOverrides): Promise<string>;
 
@@ -424,13 +739,30 @@ export class ElfDeploy extends Contract {
   "yusdtAsset()"(overrides?: CallOverrides): Promise<string>;
 
   callStatic: {
+    allocator(overrides?: CallOverrides): Promise<string>;
+
+    "allocator()"(overrides?: CallOverrides): Promise<string>;
+
+    assets(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
+
+    "assets(uint256)"(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    changeGovernance(
+      _governance: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "changeGovernance(address)"(
+      _governance: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     config(overrides?: CallOverrides): Promise<void>;
 
     "config()"(overrides?: CallOverrides): Promise<void>;
-
-    converter(overrides?: CallOverrides): Promise<string>;
-
-    "converter()"(overrides?: CallOverrides): Promise<string>;
 
     dai(overrides?: CallOverrides): Promise<string>;
 
@@ -440,6 +772,13 @@ export class ElfDeploy extends Contract {
 
     "elf()"(overrides?: CallOverrides): Promise<string>;
 
+    fromTokens(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
+
+    "fromTokens(uint256)"(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
     init(overrides?: CallOverrides): Promise<void>;
 
     "init()"(overrides?: CallOverrides): Promise<void>;
@@ -448,13 +787,62 @@ export class ElfDeploy extends Contract {
 
     "lender()"(overrides?: CallOverrides): Promise<string>;
 
-    priceOracle(overrides?: CallOverrides): Promise<string>;
+    lender1(overrides?: CallOverrides): Promise<string>;
 
-    "priceOracle()"(overrides?: CallOverrides): Promise<string>;
+    "lender1()"(overrides?: CallOverrides): Promise<string>;
 
-    strategy(overrides?: CallOverrides): Promise<string>;
+    lender2(overrides?: CallOverrides): Promise<string>;
 
-    "strategy()"(overrides?: CallOverrides): Promise<string>;
+    "lender2()"(overrides?: CallOverrides): Promise<string>;
+
+    lender3(overrides?: CallOverrides): Promise<string>;
+
+    "lender3()"(overrides?: CallOverrides): Promise<string>;
+
+    lender4(overrides?: CallOverrides): Promise<string>;
+
+    "lender4()"(overrides?: CallOverrides): Promise<string>;
+
+    lenders(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
+
+    "lenders(uint256)"(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    percents(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
+
+    "percents(uint256)"(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    priceOracle1(overrides?: CallOverrides): Promise<string>;
+
+    "priceOracle1()"(overrides?: CallOverrides): Promise<string>;
+
+    priceOracle2(overrides?: CallOverrides): Promise<string>;
+
+    "priceOracle2()"(overrides?: CallOverrides): Promise<string>;
+
+    priceOracle3(overrides?: CallOverrides): Promise<string>;
+
+    "priceOracle3()"(overrides?: CallOverrides): Promise<string>;
+
+    priceOracle4(overrides?: CallOverrides): Promise<string>;
+
+    "priceOracle4()"(overrides?: CallOverrides): Promise<string>;
+
+    proxy(overrides?: CallOverrides): Promise<string>;
+
+    "proxy()"(overrides?: CallOverrides): Promise<string>;
+
+    toTokens(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
+
+    "toTokens(uint256)"(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<string>;
 
     tusd(overrides?: CallOverrides): Promise<string>;
 
@@ -508,13 +896,30 @@ export class ElfDeploy extends Contract {
   filters: {};
 
   estimateGas: {
+    allocator(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "allocator()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    assets(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
+
+    "assets(uint256)"(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    changeGovernance(
+      _governance: string,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "changeGovernance(address)"(
+      _governance: string,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
     config(overrides?: Overrides): Promise<BigNumber>;
 
     "config()"(overrides?: Overrides): Promise<BigNumber>;
-
-    converter(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "converter()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     dai(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -524,6 +929,16 @@ export class ElfDeploy extends Contract {
 
     "elf()"(overrides?: CallOverrides): Promise<BigNumber>;
 
+    fromTokens(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "fromTokens(uint256)"(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     init(overrides?: Overrides): Promise<BigNumber>;
 
     "init()"(overrides?: Overrides): Promise<BigNumber>;
@@ -532,13 +947,62 @@ export class ElfDeploy extends Contract {
 
     "lender()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-    priceOracle(overrides?: CallOverrides): Promise<BigNumber>;
+    lender1(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "priceOracle()"(overrides?: CallOverrides): Promise<BigNumber>;
+    "lender1()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-    strategy(overrides?: CallOverrides): Promise<BigNumber>;
+    lender2(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "strategy()"(overrides?: CallOverrides): Promise<BigNumber>;
+    "lender2()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    lender3(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "lender3()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    lender4(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "lender4()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    lenders(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
+
+    "lenders(uint256)"(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    percents(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
+
+    "percents(uint256)"(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    priceOracle1(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "priceOracle1()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    priceOracle2(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "priceOracle2()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    priceOracle3(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "priceOracle3()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    priceOracle4(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "priceOracle4()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    proxy(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "proxy()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    toTokens(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
+
+    "toTokens(uint256)"(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     tusd(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -590,13 +1054,33 @@ export class ElfDeploy extends Contract {
   };
 
   populateTransaction: {
+    allocator(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "allocator()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    assets(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "assets(uint256)"(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    changeGovernance(
+      _governance: string,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "changeGovernance(address)"(
+      _governance: string,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
     config(overrides?: Overrides): Promise<PopulatedTransaction>;
 
     "config()"(overrides?: Overrides): Promise<PopulatedTransaction>;
-
-    converter(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "converter()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     dai(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -606,6 +1090,16 @@ export class ElfDeploy extends Contract {
 
     "elf()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    fromTokens(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "fromTokens(uint256)"(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     init(overrides?: Overrides): Promise<PopulatedTransaction>;
 
     "init()"(overrides?: Overrides): Promise<PopulatedTransaction>;
@@ -614,13 +1108,71 @@ export class ElfDeploy extends Contract {
 
     "lender()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    priceOracle(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    lender1(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "priceOracle()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    "lender1()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    strategy(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    lender2(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "strategy()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    "lender2()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    lender3(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "lender3()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    lender4(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "lender4()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    lenders(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "lenders(uint256)"(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    percents(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "percents(uint256)"(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    priceOracle1(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "priceOracle1()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    priceOracle2(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "priceOracle2()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    priceOracle3(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "priceOracle3()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    priceOracle4(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "priceOracle4()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    proxy(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "proxy()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    toTokens(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "toTokens(uint256)"(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     tusd(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 

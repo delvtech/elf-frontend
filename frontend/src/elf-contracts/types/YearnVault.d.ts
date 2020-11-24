@@ -22,13 +22,17 @@ import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 
 interface YearnVaultInterface extends ethers.utils.Interface {
   functions: {
+    "balanceOf(address)": FunctionFragment;
     "deposit(uint256)": FunctionFragment;
     "depositAll()": FunctionFragment;
     "getPricePerFullShare()": FunctionFragment;
+    "transfer(address,uint256)": FunctionFragment;
+    "transferFrom(address,address,uint256)": FunctionFragment;
     "withdraw(uint256)": FunctionFragment;
     "withdrawAll()": FunctionFragment;
   };
 
+  encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
   encodeFunctionData(
     functionFragment: "deposit",
     values: [BigNumberish]
@@ -42,6 +46,14 @@ interface YearnVaultInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "transfer",
+    values: [string, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "transferFrom",
+    values: [string, string, BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "withdraw",
     values: [BigNumberish]
   ): string;
@@ -50,10 +62,16 @@ interface YearnVaultInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
 
+  decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "depositAll", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getPricePerFullShare",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "transfer", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "transferFrom",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
@@ -79,6 +97,20 @@ export class YearnVault extends Contract {
   interface: YearnVaultInterface;
 
   functions: {
+    balanceOf(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<{
+      0: BigNumber;
+    }>;
+
+    "balanceOf(address)"(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<{
+      0: BigNumber;
+    }>;
+
     deposit(
       arg0: BigNumberish,
       overrides?: Overrides
@@ -105,6 +137,32 @@ export class YearnVault extends Contract {
       0: BigNumber;
     }>;
 
+    transfer(
+      arg0: string,
+      arg1: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "transfer(address,uint256)"(
+      arg0: string,
+      arg1: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    transferFrom(
+      arg0: string,
+      arg1: string,
+      arg2: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "transferFrom(address,address,uint256)"(
+      arg0: string,
+      arg1: string,
+      arg2: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
     withdraw(
       arg0: BigNumberish,
       overrides?: Overrides
@@ -119,6 +177,13 @@ export class YearnVault extends Contract {
 
     "withdrawAll()"(overrides?: Overrides): Promise<ContractTransaction>;
   };
+
+  balanceOf(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+  "balanceOf(address)"(
+    arg0: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   deposit(
     arg0: BigNumberish,
@@ -138,6 +203,32 @@ export class YearnVault extends Contract {
 
   "getPricePerFullShare()"(overrides?: CallOverrides): Promise<BigNumber>;
 
+  transfer(
+    arg0: string,
+    arg1: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "transfer(address,uint256)"(
+    arg0: string,
+    arg1: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  transferFrom(
+    arg0: string,
+    arg1: string,
+    arg2: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "transferFrom(address,address,uint256)"(
+    arg0: string,
+    arg1: string,
+    arg2: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
   withdraw(
     arg0: BigNumberish,
     overrides?: Overrides
@@ -153,6 +244,13 @@ export class YearnVault extends Contract {
   "withdrawAll()"(overrides?: Overrides): Promise<ContractTransaction>;
 
   callStatic: {
+    balanceOf(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    "balanceOf(address)"(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     deposit(arg0: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
     "deposit(uint256)"(
@@ -167,6 +265,32 @@ export class YearnVault extends Contract {
     getPricePerFullShare(overrides?: CallOverrides): Promise<BigNumber>;
 
     "getPricePerFullShare()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    transfer(
+      arg0: string,
+      arg1: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    "transfer(address,uint256)"(
+      arg0: string,
+      arg1: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    transferFrom(
+      arg0: string,
+      arg1: string,
+      arg2: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    "transferFrom(address,address,uint256)"(
+      arg0: string,
+      arg1: string,
+      arg2: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
 
     withdraw(arg0: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
@@ -183,6 +307,13 @@ export class YearnVault extends Contract {
   filters: {};
 
   estimateGas: {
+    balanceOf(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    "balanceOf(address)"(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     deposit(arg0: BigNumberish, overrides?: Overrides): Promise<BigNumber>;
 
     "deposit(uint256)"(
@@ -198,6 +329,32 @@ export class YearnVault extends Contract {
 
     "getPricePerFullShare()"(overrides?: CallOverrides): Promise<BigNumber>;
 
+    transfer(
+      arg0: string,
+      arg1: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "transfer(address,uint256)"(
+      arg0: string,
+      arg1: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    transferFrom(
+      arg0: string,
+      arg1: string,
+      arg2: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "transferFrom(address,address,uint256)"(
+      arg0: string,
+      arg1: string,
+      arg2: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
     withdraw(arg0: BigNumberish, overrides?: Overrides): Promise<BigNumber>;
 
     "withdraw(uint256)"(
@@ -211,6 +368,16 @@ export class YearnVault extends Contract {
   };
 
   populateTransaction: {
+    balanceOf(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "balanceOf(address)"(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     deposit(
       arg0: BigNumberish,
       overrides?: Overrides
@@ -231,6 +398,32 @@ export class YearnVault extends Contract {
 
     "getPricePerFullShare()"(
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    transfer(
+      arg0: string,
+      arg1: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "transfer(address,uint256)"(
+      arg0: string,
+      arg1: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    transferFrom(
+      arg0: string,
+      arg1: string,
+      arg2: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "transferFrom(address,address,uint256)"(
+      arg0: string,
+      arg1: string,
+      arg2: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     withdraw(

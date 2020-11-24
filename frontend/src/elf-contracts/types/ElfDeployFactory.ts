@@ -19,22 +19,54 @@ export class ElfDeployFactory {
 const _abi = [
   {
     inputs: [],
-    name: "config",
+    name: "allocator",
+    outputs: [
+      {
+        internalType: "contract ElfAllocator",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    name: "assets",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_governance",
+        type: "address",
+      },
+    ],
+    name: "changeGovernance",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },
   {
     inputs: [],
-    name: "converter",
-    outputs: [
-      {
-        internalType: "contract ElementConverter",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
+    name: "config",
+    outputs: [],
+    stateMutability: "nonpayable",
     type: "function",
   },
   {
@@ -64,6 +96,25 @@ const _abi = [
     type: "function",
   },
   {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    name: "fromTokens",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [],
     name: "init",
     outputs: [],
@@ -85,7 +136,97 @@ const _abi = [
   },
   {
     inputs: [],
-    name: "priceOracle",
+    name: "lender1",
+    outputs: [
+      {
+        internalType: "contract ALender",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "lender2",
+    outputs: [
+      {
+        internalType: "contract ALender",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "lender3",
+    outputs: [
+      {
+        internalType: "contract ALender",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "lender4",
+    outputs: [
+      {
+        internalType: "contract ALender",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    name: "lenders",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    name: "percents",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "priceOracle1",
     outputs: [
       {
         internalType: "contract APriceOracle",
@@ -98,10 +239,68 @@ const _abi = [
   },
   {
     inputs: [],
-    name: "strategy",
+    name: "priceOracle2",
     outputs: [
       {
-        internalType: "contract ElfStrategy",
+        internalType: "contract APriceOracle",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "priceOracle3",
+    outputs: [
+      {
+        internalType: "contract APriceOracle",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "priceOracle4",
+    outputs: [
+      {
+        internalType: "contract APriceOracle",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "proxy",
+    outputs: [
+      {
+        internalType: "contract ElfProxy",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    name: "toTokens",
+    outputs: [
+      {
+        internalType: "address",
         name: "",
         type: "address",
       },

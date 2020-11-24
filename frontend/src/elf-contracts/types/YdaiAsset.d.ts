@@ -22,24 +22,22 @@ import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 
 interface YdaiAssetInterface extends ethers.utils.Interface {
   functions: {
-    "DAI()": FunctionFragment;
-    "VAULT()": FunctionFragment;
+    "allocator()": FunctionFragment;
     "approve()": FunctionFragment;
     "balance()": FunctionFragment;
     "deposit(uint256)": FunctionFragment;
     "governance()": FunctionFragment;
+    "secondary()": FunctionFragment;
+    "setAllocator(address)": FunctionFragment;
     "setGovernance(address)": FunctionFragment;
-    "setStrategy(address)": FunctionFragment;
     "setToken(address)": FunctionFragment;
     "setVault(address)": FunctionFragment;
-    "strategy()": FunctionFragment;
     "token()": FunctionFragment;
     "vault()": FunctionFragment;
     "withdraw(uint256,address)": FunctionFragment;
   };
 
-  encodeFunctionData(functionFragment: "DAI", values?: undefined): string;
-  encodeFunctionData(functionFragment: "VAULT", values?: undefined): string;
+  encodeFunctionData(functionFragment: "allocator", values?: undefined): string;
   encodeFunctionData(functionFragment: "approve", values?: undefined): string;
   encodeFunctionData(functionFragment: "balance", values?: undefined): string;
   encodeFunctionData(
@@ -50,14 +48,17 @@ interface YdaiAssetInterface extends ethers.utils.Interface {
     functionFragment: "governance",
     values?: undefined
   ): string;
+  encodeFunctionData(functionFragment: "secondary", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "setAllocator",
+    values: [string]
+  ): string;
   encodeFunctionData(
     functionFragment: "setGovernance",
     values: [string]
   ): string;
-  encodeFunctionData(functionFragment: "setStrategy", values: [string]): string;
   encodeFunctionData(functionFragment: "setToken", values: [string]): string;
   encodeFunctionData(functionFragment: "setVault", values: [string]): string;
-  encodeFunctionData(functionFragment: "strategy", values?: undefined): string;
   encodeFunctionData(functionFragment: "token", values?: undefined): string;
   encodeFunctionData(functionFragment: "vault", values?: undefined): string;
   encodeFunctionData(
@@ -65,23 +66,22 @@ interface YdaiAssetInterface extends ethers.utils.Interface {
     values: [BigNumberish, string]
   ): string;
 
-  decodeFunctionResult(functionFragment: "DAI", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "VAULT", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "allocator", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balance", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "governance", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "secondary", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "setAllocator",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "setGovernance",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "setStrategy",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "setToken", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "setVault", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "strategy", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "token", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "vault", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
@@ -103,25 +103,13 @@ export class YdaiAsset extends Contract {
   interface: YdaiAssetInterface;
 
   functions: {
-    DAI(
+    allocator(
       overrides?: CallOverrides
     ): Promise<{
       0: string;
     }>;
 
-    "DAI()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
-
-    VAULT(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
-
-    "VAULT()"(
+    "allocator()"(
       overrides?: CallOverrides
     ): Promise<{
       0: string;
@@ -165,6 +153,28 @@ export class YdaiAsset extends Contract {
       0: string;
     }>;
 
+    secondary(
+      overrides?: CallOverrides
+    ): Promise<{
+      0: string;
+    }>;
+
+    "secondary()"(
+      overrides?: CallOverrides
+    ): Promise<{
+      0: string;
+    }>;
+
+    setAllocator(
+      _allocator: string,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "setAllocator(address)"(
+      _allocator: string,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
     setGovernance(
       _governance: string,
       overrides?: Overrides
@@ -172,16 +182,6 @@ export class YdaiAsset extends Contract {
 
     "setGovernance(address)"(
       _governance: string,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    setStrategy(
-      _strategy: string,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "setStrategy(address)"(
-      _strategy: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
@@ -204,18 +204,6 @@ export class YdaiAsset extends Contract {
       _vault: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
-
-    strategy(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
-
-    "strategy()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
 
     token(
       overrides?: CallOverrides
@@ -254,13 +242,9 @@ export class YdaiAsset extends Contract {
     ): Promise<ContractTransaction>;
   };
 
-  DAI(overrides?: CallOverrides): Promise<string>;
+  allocator(overrides?: CallOverrides): Promise<string>;
 
-  "DAI()"(overrides?: CallOverrides): Promise<string>;
-
-  VAULT(overrides?: CallOverrides): Promise<string>;
-
-  "VAULT()"(overrides?: CallOverrides): Promise<string>;
+  "allocator()"(overrides?: CallOverrides): Promise<string>;
 
   approve(overrides?: Overrides): Promise<ContractTransaction>;
 
@@ -284,6 +268,20 @@ export class YdaiAsset extends Contract {
 
   "governance()"(overrides?: CallOverrides): Promise<string>;
 
+  secondary(overrides?: CallOverrides): Promise<string>;
+
+  "secondary()"(overrides?: CallOverrides): Promise<string>;
+
+  setAllocator(
+    _allocator: string,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "setAllocator(address)"(
+    _allocator: string,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
   setGovernance(
     _governance: string,
     overrides?: Overrides
@@ -291,16 +289,6 @@ export class YdaiAsset extends Contract {
 
   "setGovernance(address)"(
     _governance: string,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  setStrategy(
-    _strategy: string,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "setStrategy(address)"(
-    _strategy: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -317,10 +305,6 @@ export class YdaiAsset extends Contract {
     _vault: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
-
-  strategy(overrides?: CallOverrides): Promise<string>;
-
-  "strategy()"(overrides?: CallOverrides): Promise<string>;
 
   token(overrides?: CallOverrides): Promise<string>;
 
@@ -343,13 +327,9 @@ export class YdaiAsset extends Contract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    DAI(overrides?: CallOverrides): Promise<string>;
+    allocator(overrides?: CallOverrides): Promise<string>;
 
-    "DAI()"(overrides?: CallOverrides): Promise<string>;
-
-    VAULT(overrides?: CallOverrides): Promise<string>;
-
-    "VAULT()"(overrides?: CallOverrides): Promise<string>;
+    "allocator()"(overrides?: CallOverrides): Promise<string>;
 
     approve(overrides?: CallOverrides): Promise<void>;
 
@@ -370,6 +350,17 @@ export class YdaiAsset extends Contract {
 
     "governance()"(overrides?: CallOverrides): Promise<string>;
 
+    secondary(overrides?: CallOverrides): Promise<string>;
+
+    "secondary()"(overrides?: CallOverrides): Promise<string>;
+
+    setAllocator(_allocator: string, overrides?: CallOverrides): Promise<void>;
+
+    "setAllocator(address)"(
+      _allocator: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     setGovernance(
       _governance: string,
       overrides?: CallOverrides
@@ -377,13 +368,6 @@ export class YdaiAsset extends Contract {
 
     "setGovernance(address)"(
       _governance: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    setStrategy(_strategy: string, overrides?: CallOverrides): Promise<void>;
-
-    "setStrategy(address)"(
-      _strategy: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -400,10 +384,6 @@ export class YdaiAsset extends Contract {
       _vault: string,
       overrides?: CallOverrides
     ): Promise<void>;
-
-    strategy(overrides?: CallOverrides): Promise<string>;
-
-    "strategy()"(overrides?: CallOverrides): Promise<string>;
 
     token(overrides?: CallOverrides): Promise<string>;
 
@@ -429,13 +409,9 @@ export class YdaiAsset extends Contract {
   filters: {};
 
   estimateGas: {
-    DAI(overrides?: CallOverrides): Promise<BigNumber>;
+    allocator(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "DAI()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    VAULT(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "VAULT()"(overrides?: CallOverrides): Promise<BigNumber>;
+    "allocator()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     approve(overrides?: Overrides): Promise<BigNumber>;
 
@@ -456,6 +432,17 @@ export class YdaiAsset extends Contract {
 
     "governance()"(overrides?: CallOverrides): Promise<BigNumber>;
 
+    secondary(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "secondary()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    setAllocator(_allocator: string, overrides?: Overrides): Promise<BigNumber>;
+
+    "setAllocator(address)"(
+      _allocator: string,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
     setGovernance(
       _governance: string,
       overrides?: Overrides
@@ -463,13 +450,6 @@ export class YdaiAsset extends Contract {
 
     "setGovernance(address)"(
       _governance: string,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    setStrategy(_strategy: string, overrides?: Overrides): Promise<BigNumber>;
-
-    "setStrategy(address)"(
-      _strategy: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
@@ -486,10 +466,6 @@ export class YdaiAsset extends Contract {
       _vault: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
-
-    strategy(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "strategy()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     token(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -513,13 +489,9 @@ export class YdaiAsset extends Contract {
   };
 
   populateTransaction: {
-    DAI(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    allocator(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "DAI()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    VAULT(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "VAULT()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    "allocator()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     approve(overrides?: Overrides): Promise<PopulatedTransaction>;
 
@@ -543,6 +515,20 @@ export class YdaiAsset extends Contract {
 
     "governance()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    secondary(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "secondary()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    setAllocator(
+      _allocator: string,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "setAllocator(address)"(
+      _allocator: string,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
     setGovernance(
       _governance: string,
       overrides?: Overrides
@@ -550,16 +536,6 @@ export class YdaiAsset extends Contract {
 
     "setGovernance(address)"(
       _governance: string,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    setStrategy(
-      _strategy: string,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "setStrategy(address)"(
-      _strategy: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
@@ -582,10 +558,6 @@ export class YdaiAsset extends Contract {
       _vault: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
-
-    strategy(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "strategy()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     token(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 

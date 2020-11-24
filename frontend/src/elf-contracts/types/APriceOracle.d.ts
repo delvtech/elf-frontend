@@ -13,6 +13,7 @@ import {
 import {
   Contract,
   ContractTransaction,
+  Overrides,
   CallOverrides,
 } from "@ethersproject/contracts";
 import { BytesLike } from "@ethersproject/bytes";
@@ -22,14 +23,23 @@ import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 interface APriceOracleInterface extends ethers.utils.Interface {
   functions: {
     "getPrice(address,address)": FunctionFragment;
+    "price()": FunctionFragment;
+    "setPrice(uint256)": FunctionFragment;
   };
 
   encodeFunctionData(
     functionFragment: "getPrice",
     values: [string, string]
   ): string;
+  encodeFunctionData(functionFragment: "price", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "setPrice",
+    values: [BigNumberish]
+  ): string;
 
   decodeFunctionResult(functionFragment: "getPrice", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "price", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "setPrice", data: BytesLike): Result;
 
   events: {};
 }
@@ -49,75 +59,147 @@ export class APriceOracle extends Contract {
 
   functions: {
     getPrice(
-      fromToken: string,
-      toToken: string,
+      _fromToken: string,
+      _toToken: string,
       overrides?: CallOverrides
     ): Promise<{
       0: BigNumber;
     }>;
 
     "getPrice(address,address)"(
-      fromToken: string,
-      toToken: string,
+      _fromToken: string,
+      _toToken: string,
       overrides?: CallOverrides
     ): Promise<{
       0: BigNumber;
     }>;
+
+    price(
+      overrides?: CallOverrides
+    ): Promise<{
+      0: BigNumber;
+    }>;
+
+    "price()"(
+      overrides?: CallOverrides
+    ): Promise<{
+      0: BigNumber;
+    }>;
+
+    setPrice(
+      _price: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "setPrice(uint256)"(
+      _price: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
   };
 
   getPrice(
-    fromToken: string,
-    toToken: string,
+    _fromToken: string,
+    _toToken: string,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
   "getPrice(address,address)"(
-    fromToken: string,
-    toToken: string,
+    _fromToken: string,
+    _toToken: string,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  price(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "price()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+  setPrice(
+    _price: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "setPrice(uint256)"(
+    _price: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
   callStatic: {
     getPrice(
-      fromToken: string,
-      toToken: string,
+      _fromToken: string,
+      _toToken: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     "getPrice(address,address)"(
-      fromToken: string,
-      toToken: string,
+      _fromToken: string,
+      _toToken: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    price(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "price()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    setPrice(_price: BigNumberish, overrides?: CallOverrides): Promise<void>;
+
+    "setPrice(uint256)"(
+      _price: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
   };
 
   filters: {};
 
   estimateGas: {
     getPrice(
-      fromToken: string,
-      toToken: string,
+      _fromToken: string,
+      _toToken: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     "getPrice(address,address)"(
-      fromToken: string,
-      toToken: string,
+      _fromToken: string,
+      _toToken: string,
       overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    price(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "price()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    setPrice(_price: BigNumberish, overrides?: Overrides): Promise<BigNumber>;
+
+    "setPrice(uint256)"(
+      _price: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
     getPrice(
-      fromToken: string,
-      toToken: string,
+      _fromToken: string,
+      _toToken: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     "getPrice(address,address)"(
-      fromToken: string,
-      toToken: string,
+      _fromToken: string,
+      _toToken: string,
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    price(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "price()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    setPrice(
+      _price: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "setPrice(uint256)"(
+      _price: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
   };
 }

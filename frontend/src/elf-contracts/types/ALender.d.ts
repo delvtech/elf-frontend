@@ -14,7 +14,6 @@ import {
   Contract,
   ContractTransaction,
   Overrides,
-  PayableOverrides,
   CallOverrides,
 } from "@ethersproject/contracts";
 import { BytesLike } from "@ethersproject/bytes";
@@ -23,28 +22,31 @@ import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 
 interface ALenderInterface extends ethers.utils.Interface {
   functions: {
+    "allocator()": FunctionFragment;
     "balance()": FunctionFragment;
-    "borrow(address,uint256,uint256,address)": FunctionFragment;
-    "converter()": FunctionFragment;
-    "deposit(address,uint256,address)": FunctionFragment;
+    "balances()": FunctionFragment;
+    "borrowAsset()": FunctionFragment;
+    "depositAndBorrow(uint256)": FunctionFragment;
     "getLendingPrice(address,address)": FunctionFragment;
     "governance()": FunctionFragment;
+    "liabilities()": FunctionFragment;
     "priceOracle()": FunctionFragment;
-    "repay(address,uint256,address)": FunctionFragment;
+    "repayAndWithdraw(uint256)": FunctionFragment;
     "setGovernance(address)": FunctionFragment;
     "setPriceOracle(address)": FunctionFragment;
-    "withdraw(address,uint256,address)": FunctionFragment;
+    "weth()": FunctionFragment;
   };
 
+  encodeFunctionData(functionFragment: "allocator", values?: undefined): string;
   encodeFunctionData(functionFragment: "balance", values?: undefined): string;
+  encodeFunctionData(functionFragment: "balances", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "borrow",
-    values: [string, BigNumberish, BigNumberish, string]
+    functionFragment: "borrowAsset",
+    values?: undefined
   ): string;
-  encodeFunctionData(functionFragment: "converter", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "deposit",
-    values: [string, BigNumberish, string]
+    functionFragment: "depositAndBorrow",
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "getLendingPrice",
@@ -55,12 +57,16 @@ interface ALenderInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "liabilities",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "priceOracle",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "repay",
-    values: [string, BigNumberish, string]
+    functionFragment: "repayAndWithdraw",
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "setGovernance",
@@ -70,25 +76,36 @@ interface ALenderInterface extends ethers.utils.Interface {
     functionFragment: "setPriceOracle",
     values: [string]
   ): string;
-  encodeFunctionData(
-    functionFragment: "withdraw",
-    values: [string, BigNumberish, string]
-  ): string;
+  encodeFunctionData(functionFragment: "weth", values?: undefined): string;
 
+  decodeFunctionResult(functionFragment: "allocator", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balance", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "borrow", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "converter", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "balances", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "borrowAsset",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "depositAndBorrow",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "getLendingPrice",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "governance", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "liabilities",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "priceOracle",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "repay", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "repayAndWithdraw",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "setGovernance",
     data: BytesLike
@@ -97,7 +114,7 @@ interface ALenderInterface extends ethers.utils.Interface {
     functionFragment: "setPriceOracle",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "weth", data: BytesLike): Result;
 
   events: {};
 }
@@ -116,6 +133,18 @@ export class ALender extends Contract {
   interface: ALenderInterface;
 
   functions: {
+    allocator(
+      overrides?: CallOverrides
+    ): Promise<{
+      0: string;
+    }>;
+
+    "allocator()"(
+      overrides?: CallOverrides
+    ): Promise<{
+      0: string;
+    }>;
+
     balance(
       overrides?: CallOverrides
     ): Promise<{
@@ -128,59 +157,51 @@ export class ALender extends Contract {
       0: BigNumber;
     }>;
 
-    borrow(
-      _reserve: string,
-      _amount: BigNumberish,
-      _interestRateModel: BigNumberish,
-      _sender: string,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
+    balances(
+      overrides?: CallOverrides
+    ): Promise<{
+      0: BigNumber;
+    }>;
 
-    "borrow(address,uint256,uint256,address)"(
-      _reserve: string,
-      _amount: BigNumberish,
-      _interestRateModel: BigNumberish,
-      _sender: string,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
+    "balances()"(
+      overrides?: CallOverrides
+    ): Promise<{
+      0: BigNumber;
+    }>;
 
-    converter(
+    borrowAsset(
       overrides?: CallOverrides
     ): Promise<{
       0: string;
     }>;
 
-    "converter()"(
+    "borrowAsset()"(
       overrides?: CallOverrides
     ): Promise<{
       0: string;
     }>;
 
-    deposit(
-      _reserve: string,
+    depositAndBorrow(
       _amount: BigNumberish,
-      _sender: string,
-      overrides?: PayableOverrides
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "deposit(address,uint256,address)"(
-      _reserve: string,
+    "depositAndBorrow(uint256)"(
       _amount: BigNumberish,
-      _sender: string,
-      overrides?: PayableOverrides
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     getLendingPrice(
-      fromToken: string,
-      toToken: string,
+      _fromToken: string,
+      _toToken: string,
       overrides?: CallOverrides
     ): Promise<{
       0: BigNumber;
     }>;
 
     "getLendingPrice(address,address)"(
-      fromToken: string,
-      toToken: string,
+      _fromToken: string,
+      _toToken: string,
       overrides?: CallOverrides
     ): Promise<{
       0: BigNumber;
@@ -198,6 +219,18 @@ export class ALender extends Contract {
       0: string;
     }>;
 
+    liabilities(
+      overrides?: CallOverrides
+    ): Promise<{
+      0: BigNumber;
+    }>;
+
+    "liabilities()"(
+      overrides?: CallOverrides
+    ): Promise<{
+      0: BigNumber;
+    }>;
+
     priceOracle(
       overrides?: CallOverrides
     ): Promise<{
@@ -210,17 +243,13 @@ export class ALender extends Contract {
       0: string;
     }>;
 
-    repay(
-      _reserve: string,
+    repayAndWithdraw(
       _amount: BigNumberish,
-      _sender: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "repay(address,uint256,address)"(
-      _reserve: string,
+    "repayAndWithdraw(uint256)"(
       _amount: BigNumberish,
-      _sender: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
@@ -244,68 +273,54 @@ export class ALender extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    withdraw(
-      _reserve: string,
-      _amount: BigNumberish,
-      _sender: string,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
+    weth(
+      overrides?: CallOverrides
+    ): Promise<{
+      0: string;
+    }>;
 
-    "withdraw(address,uint256,address)"(
-      _reserve: string,
-      _amount: BigNumberish,
-      _sender: string,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
+    "weth()"(
+      overrides?: CallOverrides
+    ): Promise<{
+      0: string;
+    }>;
   };
+
+  allocator(overrides?: CallOverrides): Promise<string>;
+
+  "allocator()"(overrides?: CallOverrides): Promise<string>;
 
   balance(overrides?: CallOverrides): Promise<BigNumber>;
 
   "balance()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-  borrow(
-    _reserve: string,
+  balances(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "balances()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+  borrowAsset(overrides?: CallOverrides): Promise<string>;
+
+  "borrowAsset()"(overrides?: CallOverrides): Promise<string>;
+
+  depositAndBorrow(
     _amount: BigNumberish,
-    _interestRateModel: BigNumberish,
-    _sender: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "borrow(address,uint256,uint256,address)"(
-    _reserve: string,
+  "depositAndBorrow(uint256)"(
     _amount: BigNumberish,
-    _interestRateModel: BigNumberish,
-    _sender: string,
     overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  converter(overrides?: CallOverrides): Promise<string>;
-
-  "converter()"(overrides?: CallOverrides): Promise<string>;
-
-  deposit(
-    _reserve: string,
-    _amount: BigNumberish,
-    _sender: string,
-    overrides?: PayableOverrides
-  ): Promise<ContractTransaction>;
-
-  "deposit(address,uint256,address)"(
-    _reserve: string,
-    _amount: BigNumberish,
-    _sender: string,
-    overrides?: PayableOverrides
   ): Promise<ContractTransaction>;
 
   getLendingPrice(
-    fromToken: string,
-    toToken: string,
+    _fromToken: string,
+    _toToken: string,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
   "getLendingPrice(address,address)"(
-    fromToken: string,
-    toToken: string,
+    _fromToken: string,
+    _toToken: string,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
@@ -313,21 +328,21 @@ export class ALender extends Contract {
 
   "governance()"(overrides?: CallOverrides): Promise<string>;
 
+  liabilities(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "liabilities()"(overrides?: CallOverrides): Promise<BigNumber>;
+
   priceOracle(overrides?: CallOverrides): Promise<string>;
 
   "priceOracle()"(overrides?: CallOverrides): Promise<string>;
 
-  repay(
-    _reserve: string,
+  repayAndWithdraw(
     _amount: BigNumberish,
-    _sender: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "repay(address,uint256,address)"(
-    _reserve: string,
+  "repayAndWithdraw(uint256)"(
     _amount: BigNumberish,
-    _sender: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -351,68 +366,46 @@ export class ALender extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  withdraw(
-    _reserve: string,
-    _amount: BigNumberish,
-    _sender: string,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
+  weth(overrides?: CallOverrides): Promise<string>;
 
-  "withdraw(address,uint256,address)"(
-    _reserve: string,
-    _amount: BigNumberish,
-    _sender: string,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
+  "weth()"(overrides?: CallOverrides): Promise<string>;
 
   callStatic: {
+    allocator(overrides?: CallOverrides): Promise<string>;
+
+    "allocator()"(overrides?: CallOverrides): Promise<string>;
+
     balance(overrides?: CallOverrides): Promise<BigNumber>;
 
     "balance()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-    borrow(
-      _reserve: string,
+    balances(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "balances()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    borrowAsset(overrides?: CallOverrides): Promise<string>;
+
+    "borrowAsset()"(overrides?: CallOverrides): Promise<string>;
+
+    depositAndBorrow(
       _amount: BigNumberish,
-      _interestRateModel: BigNumberish,
-      _sender: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "borrow(address,uint256,uint256,address)"(
-      _reserve: string,
+    "depositAndBorrow(uint256)"(
       _amount: BigNumberish,
-      _interestRateModel: BigNumberish,
-      _sender: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    converter(overrides?: CallOverrides): Promise<string>;
-
-    "converter()"(overrides?: CallOverrides): Promise<string>;
-
-    deposit(
-      _reserve: string,
-      _amount: BigNumberish,
-      _sender: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "deposit(address,uint256,address)"(
-      _reserve: string,
-      _amount: BigNumberish,
-      _sender: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
     getLendingPrice(
-      fromToken: string,
-      toToken: string,
+      _fromToken: string,
+      _toToken: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     "getLendingPrice(address,address)"(
-      fromToken: string,
-      toToken: string,
+      _fromToken: string,
+      _toToken: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -420,21 +413,21 @@ export class ALender extends Contract {
 
     "governance()"(overrides?: CallOverrides): Promise<string>;
 
+    liabilities(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "liabilities()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     priceOracle(overrides?: CallOverrides): Promise<string>;
 
     "priceOracle()"(overrides?: CallOverrides): Promise<string>;
 
-    repay(
-      _reserve: string,
+    repayAndWithdraw(
       _amount: BigNumberish,
-      _sender: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "repay(address,uint256,address)"(
-      _reserve: string,
+    "repayAndWithdraw(uint256)"(
       _amount: BigNumberish,
-      _sender: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -458,71 +451,49 @@ export class ALender extends Contract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    withdraw(
-      _reserve: string,
-      _amount: BigNumberish,
-      _sender: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    weth(overrides?: CallOverrides): Promise<string>;
 
-    "withdraw(address,uint256,address)"(
-      _reserve: string,
-      _amount: BigNumberish,
-      _sender: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    "weth()"(overrides?: CallOverrides): Promise<string>;
   };
 
   filters: {};
 
   estimateGas: {
+    allocator(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "allocator()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     balance(overrides?: CallOverrides): Promise<BigNumber>;
 
     "balance()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-    borrow(
-      _reserve: string,
+    balances(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "balances()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    borrowAsset(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "borrowAsset()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    depositAndBorrow(
       _amount: BigNumberish,
-      _interestRateModel: BigNumberish,
-      _sender: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    "borrow(address,uint256,uint256,address)"(
-      _reserve: string,
+    "depositAndBorrow(uint256)"(
       _amount: BigNumberish,
-      _interestRateModel: BigNumberish,
-      _sender: string,
       overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    converter(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "converter()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    deposit(
-      _reserve: string,
-      _amount: BigNumberish,
-      _sender: string,
-      overrides?: PayableOverrides
-    ): Promise<BigNumber>;
-
-    "deposit(address,uint256,address)"(
-      _reserve: string,
-      _amount: BigNumberish,
-      _sender: string,
-      overrides?: PayableOverrides
     ): Promise<BigNumber>;
 
     getLendingPrice(
-      fromToken: string,
-      toToken: string,
+      _fromToken: string,
+      _toToken: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     "getLendingPrice(address,address)"(
-      fromToken: string,
-      toToken: string,
+      _fromToken: string,
+      _toToken: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -530,21 +501,21 @@ export class ALender extends Contract {
 
     "governance()"(overrides?: CallOverrides): Promise<BigNumber>;
 
+    liabilities(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "liabilities()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     priceOracle(overrides?: CallOverrides): Promise<BigNumber>;
 
     "priceOracle()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-    repay(
-      _reserve: string,
+    repayAndWithdraw(
       _amount: BigNumberish,
-      _sender: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    "repay(address,uint256,address)"(
-      _reserve: string,
+    "repayAndWithdraw(uint256)"(
       _amount: BigNumberish,
-      _sender: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
@@ -568,69 +539,47 @@ export class ALender extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    withdraw(
-      _reserve: string,
-      _amount: BigNumberish,
-      _sender: string,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
+    weth(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "withdraw(address,uint256,address)"(
-      _reserve: string,
-      _amount: BigNumberish,
-      _sender: string,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
+    "weth()"(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
+    allocator(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "allocator()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     balance(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     "balance()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    borrow(
-      _reserve: string,
+    balances(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "balances()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    borrowAsset(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "borrowAsset()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    depositAndBorrow(
       _amount: BigNumberish,
-      _interestRateModel: BigNumberish,
-      _sender: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "borrow(address,uint256,uint256,address)"(
-      _reserve: string,
+    "depositAndBorrow(uint256)"(
       _amount: BigNumberish,
-      _interestRateModel: BigNumberish,
-      _sender: string,
       overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    converter(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "converter()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    deposit(
-      _reserve: string,
-      _amount: BigNumberish,
-      _sender: string,
-      overrides?: PayableOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "deposit(address,uint256,address)"(
-      _reserve: string,
-      _amount: BigNumberish,
-      _sender: string,
-      overrides?: PayableOverrides
     ): Promise<PopulatedTransaction>;
 
     getLendingPrice(
-      fromToken: string,
-      toToken: string,
+      _fromToken: string,
+      _toToken: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     "getLendingPrice(address,address)"(
-      fromToken: string,
-      toToken: string,
+      _fromToken: string,
+      _toToken: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -638,21 +587,21 @@ export class ALender extends Contract {
 
     "governance()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    liabilities(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "liabilities()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     priceOracle(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     "priceOracle()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    repay(
-      _reserve: string,
+    repayAndWithdraw(
       _amount: BigNumberish,
-      _sender: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "repay(address,uint256,address)"(
-      _reserve: string,
+    "repayAndWithdraw(uint256)"(
       _amount: BigNumberish,
-      _sender: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
@@ -676,18 +625,8 @@ export class ALender extends Contract {
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    withdraw(
-      _reserve: string,
-      _amount: BigNumberish,
-      _sender: string,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
+    weth(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "withdraw(address,uint256,address)"(
-      _reserve: string,
-      _amount: BigNumberish,
-      _sender: string,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
+    "weth()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }
