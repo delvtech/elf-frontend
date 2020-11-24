@@ -27,3 +27,5 @@ yarn-error.log*
 # These are generated fresh on every build
 version.output.json
 tailwind.output.css
+
+.eslintcache

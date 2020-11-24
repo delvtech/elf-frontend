@@ -50,6 +50,8 @@
     "fontsource-poppins": "^3.0.10",
     "fuzzaldrin-plus": "^0.6.0",
     "lodash.isequal": "^4.5.0",
+    "graphql": "^15.4.0",
+    "graphql-request": "^3.3.0",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "react-query": "^2.26.3",
