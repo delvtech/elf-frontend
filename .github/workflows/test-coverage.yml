@@ -2,13 +2,17 @@ name: Test coverage
 
 on: pull_request
 
+defaults:
+  run:
+    working-directory: frontend
+
 jobs:
   test-coverage:
     runs-on: ubuntu-latest
     steps:
-    - name: Test coverage
-      id: test-coverage 
-      uses: raulanatol/jest-coverage-comment-action@v1.0.1
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        jest-command: 'npm run test -- --coverage'
+      - name: Test coverage
+        id: test-coverage
+        uses: raulanatol/jest-coverage-comment-action@v1.0.1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          jest-command: "npm run test -- --coverage"
