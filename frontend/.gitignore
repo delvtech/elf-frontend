@@ -29,3 +29,5 @@ version.output.json
 tailwind.output.css
 
 .eslintcache
+
+src/contracts.json

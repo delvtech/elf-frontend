@@ -73,19 +73,6 @@ module.exports = {
       },
     },
     {
-      name: "not-to-unresolvable",
-      comment:
-        "This module depends on a module that cannot be found ('resolved to disk'). If it's an npm " +
-        "module: add it to your package.json. In all other cases you likely already know what to do.",
-      severity: "error",
-      from: {
-        pathNot: ["src/react-app-env.d.ts"],
-      },
-      to: {
-        couldNotResolve: true,
-      },
-    },
-    {
       name: "no-duplicate-dep-types",
       comment:
         "Likeley this module depends on an external ('npm') package that occurs more than once " +
@@ -158,6 +145,20 @@ module.exports = {
     },
 
     /* custom rules specific to Element.fi */
+    {
+      name: "not-to-unresolvable",
+      comment:
+        "This module depends on a module that cannot be found ('resolved to disk'). If it's an npm " +
+        "module: add it to your package.json. In all other cases you likely already know what to do.",
+      severity: "error",
+      from: {
+        pathNot: ["src/react-app-env.d.ts"],
+      },
+      to: {
+        couldNotResolve: true,
+        pathNot: ["contracts.json"],
+      },
+    },
     {
       name: "efi-not-to-ui",
       comment: "Importing from ui/ is prohibited outside of the ui/ directory",

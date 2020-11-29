@@ -71,6 +71,7 @@
   "scripts": {
     "add:language": "bash ./scripts/add-language.sh",
     "build": "react-scripts build",
+    "build:contracts-json": "bash ./scripts/copy-contracts.sh",
     "build:tailwind": "tailwindcss build src/tailwind.css -o src/tailwind.output.css",
     "build:tailwindcss-classnames": "tailwindcss-classnames --config tailwind.config.js -o src/efi-tailwindcss-classnames/index.ts",
     "build:version-json": "bash ./scripts/build-version-json.sh",
@@ -85,6 +86,7 @@
     "prettier": "prettier --write src/**/*.ts{,x}",
     "prettier:check": "prettier --check src/**/*.ts{,x}",
     "start": "react-scripts start",
+    "start:dev": "npm run build:contracts-json && npm run start",
     "test": "react-scripts test",
     "test:coverage": "npm run test -- --coverage --watchAll=false",
     "update:language": "bash ./scripts/update-language.sh"

@@ -10,9 +10,7 @@ import {
 
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
-
-// TODO: Get this from the environment
-const ELF_ADDRESS_LOCALNET = "0xac64f6df4a679a65d62ef31E2f0568E4e99e0124";
+import ContractAddresses from "efi/contracts/contractsJson";
 
 interface ElfStubs {
   functions: {
@@ -28,7 +26,7 @@ interface ElfStubs {
 type ElfWithStubs = Elf & ElfStubs;
 
 const elf = new Contract(
-  ELF_ADDRESS_LOCALNET,
+  ContractAddresses.ELF,
   elfAbi,
   jsonRpcProvider
 ) as ElfWithStubs;

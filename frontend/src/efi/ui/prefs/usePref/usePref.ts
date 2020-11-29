@@ -2,7 +2,6 @@ import { useCallback } from "react";
 import { queryCache, useQuery } from "react-query";
 
 import isEqual from "lodash.isequal";
-import warning from "warning";
 
 import efiLocalStorage from "efi/base/localStorage";
 import { makePrefEnvelope, PrefEnvelope } from "efi/prefs/prefEnvelope";
