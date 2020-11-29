@@ -8,7 +8,6 @@ import classNames from "classnames";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { SMALL_BREAKPOINT } from "efi/ui/base/mediaBreakpoints";
 import { SkeletonText } from "efi/ui/base/SkeletonText/SkeletonText";
 import { useCryptoSymbol } from "efi/ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
@@ -26,7 +25,7 @@ export const CryptoDrawer: FC<CryptoDrawerProps> = () => {
   const width = screenWidth < SMALL_BREAKPOINT ? "100%" : SMALL_BREAKPOINT;
 
   // TODO: get symbol from useCryptoDrawer
-  const { data, status } = useCryptoSymbol(CryptoSymbol.ETH);
+  const { data, status } = useCryptoSymbol("ETH");
   const ethData = data as any;
 
   const title = ethData?.name;

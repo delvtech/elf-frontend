@@ -1,69 +1,68 @@
+import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
+
 /**
  * The names of all crypto assets supported in Element.
  */
-export enum CryptoName {
-  /**
-   * Ether
-   */
-  ETH = "Ethereum",
+export const CryptoName: Record<CryptoSymbol, string> = {
+  ETH: "Ethereum",
 
   /**
    * Ether
    */
-  WETH = "Wrapped Ether",
+  WETH: "Wrapped Ether",
 
   /**
    * USD Coin
    */
-  USDC = "USD Coin",
+  USDC: "USD Coin",
 
   /**
    * Dai
    */
-  DAI = "Dai",
+  DAI: "Dai",
 
   /**
    * Yearn-Wrapped Dai
    */
-  YDAI = "Yearn Wrapped Dai",
+  yDAI: "Yearn Wrapped Dai",
 
   /**
    * Yearn LP Token
    */
-  YFI = "yearn.finance",
+  YFI: "yearn.finance",
 
   /**
    * Yearn-Wrapped tUSD
    */
-  YTUSD = "Yearn Wrapped TUSD",
+  yTUSD: "Yearn Wrapped TUSD",
 
   /**
    * Yearn-Wrapped USDCoin
    */
-  YUSDC = "Yearn Wrapped USD Coin",
+  yUSDC: "Yearn Wrapped USD Coin",
 
   /**
    * Yearn-Wrapped USDT
    */
-  YUSDT = "Yearn Wrapped USDT",
+  yUSDT: "Yearn Wrapped USDT",
 
   /**
    * Yearn-Wrapped Ether
    */
-  YETH = "Yearn Wrapped Ethereum",
+  yETH: "Yearn Wrapped Ethereum",
 
   /**
    * Element Low Risk Pool Token
    */
-  ELF_LOW_RISK_POOL_TOKEN = "Element Low Risk Pool Token",
+  "ELF-L": "Element Low Risk Pool Token",
 
   /**
    * Element Medium Risk Pool Token
    */
-  ELF_MEDIUM_RISK_POOL_TOKEN = "Element Medium Risk Pool Token",
+  "ELF-M": "Element Medium Risk Pool Token",
 
   /**
    * Element High Risk Pool Token
    */
-  ELF_HIGH_RISK_POOL_TOKEN = "Element High Risk Pool Token",
-}
+  "ELF-H": "Element High Risk Pool Token",
+};

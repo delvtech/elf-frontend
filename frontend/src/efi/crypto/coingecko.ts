@@ -14,6 +14,7 @@ export const CoinGeckoCryptoIds: Record<
   CryptoSymbol,
   CoinGeckoCryptoId | undefined
 > = {
+  USDC: undefined,
   ETH: "ethereum",
   WETH: "weth",
   DAI: "dai",

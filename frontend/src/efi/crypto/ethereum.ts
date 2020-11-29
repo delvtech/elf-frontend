@@ -7,20 +7,13 @@ export enum ChainId {
   LOCAL = 99,
 }
 
-export enum ChainName {
-  MAINNET = "Ethereum Mainnet",
-  KOVAN = "Ethereum Testnet Kovan",
-
-  LOCAL = "Local development",
-}
-
-export const ChainNames: Record<ChainId, ChainName> = {
-  [ChainId.MAINNET]: ChainName.MAINNET,
-  [ChainId.KOVAN]: ChainName.KOVAN,
-  [ChainId.LOCAL]: ChainName.LOCAL,
+export const ChainNames: Record<ChainId, string> = {
+  [ChainId.MAINNET]: "Ethereum Mainnet",
+  [ChainId.KOVAN]: "Ethereum Testnet Kovan",
+  [ChainId.LOCAL]: "Local development",
 };
 
-export const DEFAULT_CHAIN_IDS = [
+export const DEFAULT_CHAIN_IDS: ChainId[] = [
   ChainId.MAINNET,
   ChainId.KOVAN,
   ChainId.LOCAL,

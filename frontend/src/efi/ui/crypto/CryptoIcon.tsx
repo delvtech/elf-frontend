@@ -8,18 +8,18 @@ import usdtLogo from "efi/ui/staticAssets/logos/USDT-logo.png";
 import wethLogo from "efi/ui/staticAssets/logos/WETH-logo.png";
 import yfiLogo from "efi/ui/staticAssets/logos/YFI-logo.png";
 
-export const CryptoIcon: Record<keyof typeof CryptoSymbol, string> = {
+export const CryptoIcon: Record<CryptoSymbol, string> = {
   DAI: daiLogo,
-  YDAI: daiLogo,
+  yDAI: daiLogo,
   ETH: ethLogo,
   WETH: wethLogo,
   USDC: usdcLogo,
-  YETH: ethLogo,
+  yETH: ethLogo,
   YFI: yfiLogo,
-  YTUSD: tusdLogo,
-  YUSDC: usdcLogo,
-  YUSDT: usdtLogo,
-  ELF_LOW_RISK_POOL_TOKEN: efiLogo,
-  ELF_MEDIUM_RISK_POOL_TOKEN: efiLogo,
-  ELF_HIGH_RISK_POOL_TOKEN: efiLogo,
+  yTUSD: tusdLogo,
+  yUSDC: usdcLogo,
+  yUSDT: usdtLogo,
+  "ELF-L": efiLogo,
+  "ELF-M": efiLogo,
+  "ELF-H": efiLogo,
 };

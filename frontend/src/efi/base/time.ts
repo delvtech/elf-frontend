@@ -1,8 +1,7 @@
-// one day in seconds
-export const DAY_S = 60 * 60 * 24;
+const ONE_MINUTE_IN_SECONDS = 60;
 
-// one week in seconds
-export const WEEK_S = DAY_S * 7;
+const ONE_HOUR_IN_SECONDS = 60 * ONE_MINUTE_IN_SECONDS;
 
-// thirty days in seconds
-export const THIRTY_DAYS_S = DAY_S * 30;
+const ONE_DAY_IN_SECONDS = 24 * ONE_HOUR_IN_SECONDS;
+
+export const THIRTY_DAYS_IN_SECONDS = 30 * ONE_DAY_IN_SECONDS;

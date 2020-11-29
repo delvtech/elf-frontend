@@ -99,8 +99,8 @@ export const TransactionForm: FC<TransactionFormProps> = ({
               ) : (
                 <img
                   className={tw("h-5", "w-5")}
-                  src={CryptoIcon[cryptoSymbol as keyof typeof CryptoSymbol]}
-                  alt={CryptoName[cryptoSymbol as keyof typeof CryptoSymbol]}
+                  src={CryptoIcon[cryptoSymbol as CryptoSymbol]}
+                  alt={CryptoName[cryptoSymbol as CryptoSymbol]}
                 />
               )}
             </div>

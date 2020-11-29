@@ -15,7 +15,6 @@ import classNames from "classnames";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { Strategy } from "efi/pools/strategy";
 import {
   useElfContractSymbol,
@@ -46,7 +45,7 @@ export const StrategyPreviewCard: FC<StrategyPreviewCardProps> = ({
 
   const { data: strategyCryptoSymbol } = useElfContractSymbol();
   const { data: elfTotalSupply } = useElfContractTotalSupply();
-  const { data: ethPrice } = useCryptoPrice(CryptoSymbol.ETH);
+  const { data: ethPrice } = useCryptoPrice("ETH");
   let marketCap: number | undefined;
   if (ethPrice !== undefined && elfTotalSupply !== undefined) {
     marketCap = ethPrice * +formatEther(elfTotalSupply);

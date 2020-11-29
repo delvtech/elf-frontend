@@ -1,6 +1,5 @@
 import { t } from "ttag";
 
-import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { Strategy } from "efi/pools/strategy";
 
 const ELF_STRATEGY_HIGH_RISK = "ELF_STRATEGY_HIGH_RISK";
@@ -10,13 +9,8 @@ const ELF_STRATEGY_HIGH_RISK = "ELF_STRATEGY_HIGH_RISK";
  */
 export const ElfStrategyHighRisk: Strategy = {
   id: ELF_STRATEGY_HIGH_RISK,
-  stakingAsset: CryptoSymbol.ETH,
+  stakingAsset: "ETH",
   name: t`High Risk Strategy`,
-  heldAssets: [
-    CryptoSymbol.YDAI,
-    CryptoSymbol.YTUSD,
-    CryptoSymbol.YUSDC,
-    CryptoSymbol.YUSDT,
-  ],
-  strategyAsset: CryptoSymbol.ELF_HIGH_RISK_POOL_TOKEN,
+  heldAssets: ["yDAI", "yTUSD", "yUSDC", "yUSDT"],
+  strategyAsset: "ELF-H",
 };

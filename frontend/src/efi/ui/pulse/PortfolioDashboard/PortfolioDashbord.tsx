@@ -3,7 +3,7 @@ import React, { FC, useMemo } from "react";
 import { Card } from "@blueprintjs/core";
 
 import tw from "efi-tailwindcss-classnames";
-import { THIRTY_DAYS_S } from "efi/base/time";
+import { THIRTY_DAYS_IN_SECONDS } from "efi/base/time";
 import { UNI_CONTRACT_ADDRESS_MAINNET } from "efi/crypto/erc20";
 import BrushChart, { TimeData } from "efi/ui/charts/BrushChart/BrushChart";
 import { useDarkMode } from "efi/ui/prefs/useDarkMode/useDarkMode";
@@ -61,7 +61,7 @@ export const PortfolioDashboard: FC<PortfolioDashboardProps> = () => {
   // requires time in seconds, returns time in milliseconds
   const { data: tokenData } = useTokenData(
     UNI_CONTRACT_ADDRESS_MAINNET,
-    nowInSeconds - THIRTY_DAYS_S,
+    nowInSeconds - THIRTY_DAYS_IN_SECONDS,
     nowInSeconds
   );
 

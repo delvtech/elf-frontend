@@ -1,11 +1,10 @@
-import { CryptoName } from "efi/crypto/CryptoName";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 
 export interface CryptoAssetInfo {
   /**
    * The full name of the currency, eg: "Ethereum".
    */
-  name: CryptoName;
+  name: string;
 
   /**
    * The trading symbol of the currency, eg:  "Eth".

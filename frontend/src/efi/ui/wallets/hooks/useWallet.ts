@@ -12,7 +12,6 @@ import { formatEther } from "ethers/lib/utils";
 import { Money } from "ts-money";
 import { t } from "ttag";
 
-import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { AppToaster, makeErrorToast } from "efi/ui/app/AppToaster/AppToaster";
 import { useCryptoPrice } from "efi/ui/crypto/hooks/useCryptoPrice/useCryptoPrice";
 import { useCurrencyPref } from "efi/ui/prefs/useCurrency/useCurencyPref";
@@ -61,10 +60,10 @@ export function useWallet(): Wallet {
   useWalletConnectionStatus();
 
   const { data: ethBalance } = useWalletBalance();
-  const wethBalance = useERC20Balance(CryptoSymbol.WETH, account);
+  const wethBalance = useERC20Balance("WETH", account);
   // Manages the toasts for connections
   const { currency } = useCurrencyPref();
-  const { data: ethPrice } = useCryptoPrice(CryptoSymbol.ETH, currency.code);
+  const { data: ethPrice } = useCryptoPrice("ETH", currency.code);
 
   let fiatBalance: Money | undefined;
   if (ethPrice && ethBalance) {

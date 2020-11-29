@@ -6,7 +6,6 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { CryptoAssetInfo } from "efi/crypto/CryptoAssetInfo";
-import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 
 export const itemHeaderClassName = classNames(
   Classes.TEXT_SMALL,
@@ -20,19 +19,19 @@ export const CryptoAssetSuggestItem: FC<{
     () => [
       {
         header: t`Wallet balance`,
-        value: symbol === CryptoSymbol.YFI ? 0 : Math.random() * 10,
+        value: symbol === "YFI" ? 0 : Math.random() * 10,
         valueLabel: (val: number) => `${val.toFixed(5)} ${symbol}`,
       },
       {
         header: t`Total value`,
-        value: symbol === CryptoSymbol.YFI ? 0 : Math.random() * 100,
+        value: symbol === "YFI" ? 0 : Math.random() * 100,
         valueLabel: (val: number) => `$${val.toFixed(2)}`,
       },
       {
         header: t`Market price`,
         value: Math.random() * 100,
         valueLabel: (val: number) => `1 ${symbol} = $${val.toFixed(2)}`,
-        priceLoading: symbol === CryptoSymbol.YFI,
+        priceLoading: symbol === "YFI",
       },
     ],
     [symbol]
