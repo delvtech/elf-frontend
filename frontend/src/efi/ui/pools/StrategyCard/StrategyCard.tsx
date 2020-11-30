@@ -1,6 +1,18 @@
 import React, { FC, useCallback, useState } from "react";
 
-import { Card, H3, Intent, Tag, Tooltip } from "@blueprintjs/core";
+import {
+  Button,
+  Card,
+  H3,
+  Intent,
+  Menu,
+  MenuItem,
+  Popover,
+  Position,
+  Tag,
+  Tooltip,
+} from "@blueprintjs/core";
+import { IconNames } from "@blueprintjs/icons";
 import { BigNumber, ContractTransaction } from "ethers";
 import { formatEther } from "ethers/lib/utils";
 import { t } from "ttag";
@@ -204,38 +216,72 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
           <PieChart pieData={stubbedStrategyData} />
         </div>
       </div>
+      <div className={tw("flex", "w-full", "space-x-8", "pt-4")}>
+        <div className={tw("flex-1")}>
+          <Popover
+            content={
+              <Menu>
+                <MenuItem text="Ether" />
+                <MenuItem text="Wrapped Ether" />
+              </Menu>
+            }
+            position={Position.BOTTOM_LEFT}
+            minimal
+          >
+            <Button rightIcon={IconNames.CARET_DOWN} text="Ether" />
+          </Popover>
+        </div>
+        <div className={tw("flex-1")}>
+          <Popover
+            content={
+              <Menu>
+                <MenuItem text="Ether" />
+                <MenuItem text="Wrapped Ether" />
+              </Menu>
+            }
+            position={Position.BOTTOM_LEFT}
+            minimal
+          >
+            <Button rightIcon={IconNames.CARET_DOWN} text="Ether" />
+          </Popover>
+        </div>
+      </div>
       <div
         className={tw("flex", "justify-between", "w-full", "space-x-8", "pt-4")}
       >
-        {/* Deposit */}
-        <TransactionForm
-          inputLabel={t`Deposit`}
-          cryptoSymbol={stakingAsset}
-          cryptoBalance={walletBalance}
-          buttonIntent={depositStarted ? Intent.WARNING : Intent.PRIMARY}
-          buttonEnabled={!depositStarted}
-          buttonLabel={
-            depositStarted
-              ? t`Confirming deposit...`
-              : t`Deposit ${stakingAsset}`
-          }
-          onTransaction={startDeposit}
-        />
+        <div className={tw("flex-1")}>
+          {/* Deposit */}
+          <TransactionForm
+            inputLabel={t`Deposit`}
+            cryptoSymbol={stakingAsset}
+            cryptoBalance={walletBalance}
+            buttonIntent={depositStarted ? Intent.WARNING : Intent.PRIMARY}
+            buttonEnabled={!depositStarted}
+            buttonLabel={
+              depositStarted
+                ? t`Confirming deposit...`
+                : t`Deposit ${stakingAsset}`
+            }
+            onTransaction={startDeposit}
+          />
+        </div>
 
-        {/* Withdraw */}
-        <TransactionForm
-          inputLabel={t`Withdraw`}
-          cryptoSymbol={strategyCryptoSymbol as CryptoSymbol}
-          cryptoBalance={elfBalance}
-          buttonIntent={withdrawStarted ? Intent.WARNING : Intent.PRIMARY}
-          buttonEnabled={!withdrawStarted}
-          buttonLabel={
-            withdrawStarted
-              ? t`Confirming withdraw...`
-              : t`Withdraw ${stakingAsset}`
-          }
-          onTransaction={startWithdraw}
-        />
+        <div className={tw("flex-1")}>
+          {/* Withdraw */}
+          <TransactionForm
+            inputLabel={t`Withdraw`}
+            cryptoSymbol={strategyCryptoSymbol as CryptoSymbol}
+            cryptoBalance={elfBalance}
+            buttonIntent={withdrawStarted ? Intent.WARNING : Intent.PRIMARY}
+            buttonEnabled={!withdrawStarted}
+            buttonLabel={
+              withdrawStarted
+                ? t`Confirming withdraw...`
+                : t`Withdraw ${stakingAsset}`
+            }
+            onTransaction={startWithdraw}
+          />
+        </div>
       </div>
     </Card>
   );
