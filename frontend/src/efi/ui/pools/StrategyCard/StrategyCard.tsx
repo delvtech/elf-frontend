@@ -29,6 +29,7 @@ import { PieChart, PieData } from "efi/ui/charts/PieChart/PieChart";
 import {
   useElfContractAssetSymbols,
   useElfContractBalance,
+  useElfContractDeposit,
   useElfContractDepositEth,
   useElfContractSymbol,
   useElfContractTotalSupply,
@@ -63,6 +64,7 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
   const [, setAmountToDeposit] = useState<BigNumber | undefined>();
 
   const { depositEth } = useElfContractDepositEth();
+  const { deposit } = useElfContractDeposit();
 
   const [depositStarted, setDepositStarted] = useState(false);
   const [, setPendingTransaction] = useState<ContractTransaction>();

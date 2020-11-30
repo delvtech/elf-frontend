@@ -12,6 +12,7 @@ import {
   fetchDecimals,
   fetchSymbol,
   fetchTotalSupply,
+  postDeposit,
   postDepositEth,
   postWithdrawEth,
 } from "efi/contracts/Elf";
@@ -95,6 +96,42 @@ export function useElfContractDepositEth(): ElfDepositEth {
   );
 
   return { gasEstimate, depositEth };
+}
+
+interface ElfDeposit {
+  gasEstimate: QueryResult<BigNumber | undefined>;
+  deposit: (amount: BigNumber) => Promise<ContractTransaction | undefined>;
+}
+
+export function useElfContractDeposit(): ElfDeposit {
+  const { library } = useWallet();
+  const signer = library?.getSigner();
+
+  const gasEstimate = useQuery<BigNumber | undefined>(
+    contractDepositEthGasEstimateKey,
+    () => {
+      return estimateGasForDepositEth(signer);
+    }
+  );
+
+  const [deposit] = useMutation(
+    (amount: BigNumber) => {
+      return postDeposit(signer, amount);
+    },
+    {
+      onSuccess: () => {
+        queryCache.invalidateQueries(contractBalanceKey);
+      },
+      onError: (error) => {
+        console.error(
+          "There was an error depositing asset in the Elf Strategy.",
+          error
+        );
+      },
+    }
+  );
+
+  return { gasEstimate, deposit };
 }
 
 interface ElfWithdrawEth {

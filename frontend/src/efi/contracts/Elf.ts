@@ -8,9 +8,9 @@ import {
   Signer,
 } from "ethers";
 
+import ContractAddresses from "efi/contracts/contractsJson";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
-import ContractAddresses from "efi/contracts/contractsJson";
 
 interface ElfStubs {
   functions: {
@@ -95,6 +95,18 @@ export async function postDepositEth(
   const result = await elfWithSigner.functions.depositETH({
     value: amount,
   });
+  return result;
+}
+
+export async function postDeposit(
+  signer: Signer | undefined,
+  amount: BigNumber
+): Promise<ContractTransaction | undefined> {
+  if (!signer) {
+    return undefined;
+  }
+  const elfWithSigner = elf.connect(signer);
+  const result = await elfWithSigner.functions.deposit(amount);
   return result;
 }
 
