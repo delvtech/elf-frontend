@@ -3,6 +3,7 @@ import { queryCache, QueryResult, useMutation, useQuery } from "react-query";
 import { BigNumber, ContractTransaction } from "ethers";
 
 import {
+  estimateGasForDeposit,
   estimateGasForDepositEth,
   estimateGasForWithdrawEth,
   fetchBalance,
@@ -103,14 +104,21 @@ interface ElfDeposit {
   deposit: (amount: BigNumber) => Promise<ContractTransaction | undefined>;
 }
 
+const contractDepositGasEstimateKey = [
+  "contract",
+  "elf",
+  "deposit",
+  "gasEstimate",
+];
+
 export function useElfContractDeposit(): ElfDeposit {
   const { library } = useWallet();
   const signer = library?.getSigner();
 
   const gasEstimate = useQuery<BigNumber | undefined>(
-    contractDepositEthGasEstimateKey,
+    contractDepositGasEstimateKey,
     () => {
-      return estimateGasForDepositEth(signer);
+      return estimateGasForDeposit(signer);
     }
   );
 

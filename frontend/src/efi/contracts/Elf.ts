@@ -84,6 +84,16 @@ export async function estimateGasForDepositEth(
   return elfWithSigner.estimateGas.depositETH();
 }
 
+export async function estimateGasForDeposit(
+  signer: Signer | undefined
+): Promise<BigNumber | undefined> {
+  if (!signer) {
+    return undefined;
+  }
+  const elfWithSigner = elf.connect(signer);
+  return elfWithSigner.estimateGas.deposit(1);
+}
+
 export async function postDepositEth(
   signer: Signer | undefined,
   amount: BigNumber
