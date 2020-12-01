@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useState } from "react";
+import React, { FC, Fragment, useCallback, useState } from "react";
 
 import {
   Button,
@@ -18,7 +18,9 @@ import { formatEther } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { CryptoName } from "efi/crypto/CryptoName";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
+import { stakingAssets, StakingAssets } from "efi/crypto/stakingAssets";
 import { Strategy } from "efi/pools/strategy";
 import {
   AppToaster,
@@ -35,6 +37,7 @@ import {
   useElfContractTotalSupply,
   useElfContractWithdrawEth,
 } from "efi/ui/contracts/useElfContract";
+import { CryptoIcon } from "efi/ui/crypto/CryptoIcon";
 import { TransactionForm } from "efi/ui/crypto/TransactionForm/TransactionForm";
 import { useCryptoDrawer } from "efi/ui/crypto/useCryptoDrawer/useCryptoDrawer";
 import { useWalletBalance } from "efi/ui/wallets/hooks/useWalletBalance";
@@ -51,13 +54,16 @@ const stubbedStrategyData: PieData[] = [
 ];
 
 export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
-  const { name, stakingAsset } = strategy;
+  const { name, stakingAsset: defaultStakingAsset } = strategy;
   const { data: walletBalance } = useWalletBalance();
   const { data: strategyCryptoSymbol } = useElfContractSymbol();
   const { data: elfTotalSupply } = useElfContractTotalSupply();
   const { data: elfBalance } = useElfContractBalance();
   const { data: strategyAssetSymbols } = useElfContractAssetSymbols();
 
+  const [stakingAsset, setStakingAsset] = useState<StakingAssets>(
+    defaultStakingAsset
+  );
   /****
    * Deposit hooks
    ****/
@@ -74,7 +80,8 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
       setDepositStarted(true);
       setAmountToDeposit(amount);
       try {
-        const depositTransaction = await depositEth(amount);
+        const depositFn = stakingAsset === "ETH" ? depositEth : deposit;
+        const depositTransaction = await depositFn(amount);
         AppToaster.show({
           ...makeSuccessToast(t`View transaction on etherscan`),
           intent: Intent.PRIMARY,
@@ -94,7 +101,7 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
       }
       setDepositStarted(false);
     },
-    [depositEth, setDepositStarted]
+    [deposit, depositEth, stakingAsset]
   );
 
   /****
@@ -223,14 +230,31 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
           <Popover
             content={
               <Menu>
-                <MenuItem text="Ether" />
-                <MenuItem text="Wrapped Ether" />
+                <Fragment>
+                  {stakingAssets.map((asset) => (
+                    <MenuItem
+                      onClick={() => setStakingAsset(asset)}
+                      icon={
+                        <img
+                          className={tw("h-5", "w-5")}
+                          src={CryptoIcon[asset]}
+                          alt={CryptoName[asset]}
+                        />
+                      }
+                      key={asset}
+                      text={CryptoName[asset]}
+                    />
+                  ))}
+                </Fragment>
               </Menu>
             }
             position={Position.BOTTOM_LEFT}
             minimal
           >
-            <Button rightIcon={IconNames.CARET_DOWN} text="Ether" />
+            <Button
+              rightIcon={IconNames.CARET_DOWN}
+              text={CryptoName[stakingAsset]}
+            />
           </Popover>
         </div>
         <div className={tw("flex-1")}>
@@ -244,7 +268,10 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
             position={Position.BOTTOM_LEFT}
             minimal
           >
-            <Button rightIcon={IconNames.CARET_DOWN} text="Ether" />
+            <Button
+              rightIcon={IconNames.CARET_DOWN}
+              text={CryptoName[stakingAsset]}
+            />
           </Popover>
         </div>
       </div>
