@@ -19,7 +19,7 @@ import {
   ERC20Balance,
   useERC20Balance,
 } from "efi/ui/wallets/hooks/useERC20Balance";
-import { useWalletBalance } from "efi/ui/wallets/hooks/useWalletBalance";
+import { useWalletBalances } from "efi/ui/wallets/hooks/useWalletBalance";
 import { useWalletConnectionStatus } from "efi/ui/wallets/hooks/useWalletConnectionStatus";
 import { getConnectorName } from "efi/wallets/connectors";
 
@@ -59,8 +59,8 @@ export function useWallet(): Wallet {
   setWeb3ReactOnWindow(web3React);
   useWalletConnectionStatus();
 
-  const { data: ethBalance } = useWalletBalance();
-  const wethBalance = useERC20Balance("WETH", account);
+  const { ethBalance, wethBalance } = useWalletBalances();
+
   // Manages the toasts for connections
   const { currency } = useCurrencyPref();
   const { data: ethPrice } = useCryptoPrice("ETH", currency.code);
