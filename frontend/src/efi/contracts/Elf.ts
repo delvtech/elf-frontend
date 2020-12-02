@@ -7,7 +7,6 @@ import {
   ContractTransaction,
   Signer,
 } from "ethers";
-import { formatEther } from "ethers/lib/utils";
 
 import ContractAddresses from "efi/contracts/contractsJson";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
@@ -72,7 +71,7 @@ export async function fetchSymbol(): Promise<string> {
 }
 
 export async function fetchDecimals(): Promise<BigNumber> {
-  const result = await elf.decimals().toString();
+  const result = (await elf.decimals()).toString();
   return BigNumber.from(result);
 }
 
