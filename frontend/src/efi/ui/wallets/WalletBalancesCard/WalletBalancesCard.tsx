@@ -1,26 +1,31 @@
-import { Card, Classes, H4, HTMLTable } from "@blueprintjs/core";
 import React, { FunctionComponent } from "react";
+
+import { Card, Classes, H4, HTMLTable } from "@blueprintjs/core";
+import { Money } from "ts-money";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { formatEthBalance } from "efi/ui/crypto/formatEthBalance";
+import { getFormattedBalance } from "efi/crypto/balance";
+import { useCryptoPrice } from "efi/ui/crypto/hooks/useCryptoPrice/useCryptoPrice";
 import { useWallet } from "efi/ui/wallets/hooks/useWallet";
 import styles from "efi/ui/wallets/WalletSummaryPane/WalletSummaryPane.module.css";
 
 interface WalletBalancesCardProps {}
 
 export const WalletBalancesCard: FunctionComponent<WalletBalancesCardProps> = () => {
-  const { ethBalance, fiatBalance, wethBalance } = useWallet();
-  const formattedEthBalance = ethBalance ? formatEthBalance(ethBalance) : "0";
-  const formattedWethBalance = wethBalance
-    ? formatEthBalance(wethBalance?.balance)
-    : "0";
+  const { balances, fiatBalance } = useWallet();
+  const formattedEthBalance = getFormattedBalance(balances.ETH);
+  const formattedWethBalance = getFormattedBalance(balances.WETH);
+  const { data: ethPrice } = useCryptoPrice("ETH");
+  const totalBalance =
+    (Number(formattedEthBalance) + Number(formattedWethBalance)) *
+    (ethPrice || 0);
 
   return (
     <Card className={tw("flex", "flex-col", "space-y-4")}>
       <div className={tw("flex", "justify-between")}>
         <H4>{t`Wallet balance:`}</H4>
-        <H4>$52,323.23</H4>
+        <H4>${totalBalance.toLocaleString()}</H4>
       </div>
 
       <HTMLTable striped className={tw("w-full")}>
