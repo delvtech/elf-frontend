@@ -56,8 +56,8 @@ export async function fetchContractAssetBalances(): Promise<BigNumber[]> {
 }
 
 export async function fetchBalanceOf(account: string): Promise<BigNumber> {
-  const result = await (await elf.balanceOf(account)).toString();
-  return BigNumber.from(result);
+  const result = await elf.functions.balanceOf(account);
+  return result[0];
 }
 
 export async function fetchTotalSupply(): Promise<BigNumber> {
@@ -71,8 +71,8 @@ export async function fetchSymbol(): Promise<string> {
 }
 
 export async function fetchDecimals(): Promise<BigNumber> {
-  const result = (await elf.decimals()).toString();
-  return BigNumber.from(result);
+  const result = await elf.fucntions.decimals();
+  return result[0];
 }
 
 export async function estimateGasForDepositEth(
