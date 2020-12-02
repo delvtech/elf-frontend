@@ -72,7 +72,7 @@ export async function fetchSymbol(): Promise<string> {
 }
 
 export async function fetchDecimals(): Promise<BigNumber> {
-  const result = (await elf.decimals()).toString();
+  const result = await elf.decimals().toString();
   return BigNumber.from(result);
 }
 

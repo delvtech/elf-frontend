@@ -1,7 +1,6 @@
 import React, { FunctionComponent } from "react";
 
 import { Card, Classes, H4, HTMLTable } from "@blueprintjs/core";
-import { Money } from "ts-money";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";

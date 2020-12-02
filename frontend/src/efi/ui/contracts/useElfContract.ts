@@ -1,7 +1,6 @@
 import { queryCache, QueryResult, useMutation, useQuery } from "react-query";
 
 import { BigNumber, ContractTransaction } from "ethers";
-import { formatEther } from "ethers/lib/utils";
 
 import {
   estimateGasForDeposit,
