@@ -7,7 +7,6 @@ import {
   NoEthereumProviderError,
   UserRejectedRequestError as UserRejectedRequestErrorInjected,
 } from "@web3-react/injected-connector";
-import { BigNumber } from "ethers";
 import { formatEther } from "ethers/lib/utils";
 import { Money } from "ts-money";
 import { t } from "ttag";
@@ -15,11 +14,11 @@ import { t } from "ttag";
 import { AppToaster, makeErrorToast } from "efi/ui/app/AppToaster/AppToaster";
 import { useCryptoPrice } from "efi/ui/crypto/hooks/useCryptoPrice/useCryptoPrice";
 import { useCurrencyPref } from "efi/ui/prefs/useCurrency/useCurencyPref";
+import {} from "efi/ui/wallets/hooks/useERC20Balance";
 import {
-  ERC20Balance,
-  useERC20Balance,
-} from "efi/ui/wallets/hooks/useERC20Balance";
-import { useWalletBalances } from "efi/ui/wallets/hooks/useWalletBalance";
+  useWalletBalances,
+  WalletBalances,
+} from "efi/ui/wallets/hooks/useWalletBalance";
 import { useWalletConnectionStatus } from "efi/ui/wallets/hooks/useWalletConnectionStatus";
 import { getConnectorName } from "efi/wallets/connectors";
 
@@ -40,10 +39,9 @@ export interface Wallet {
   error: Error | undefined;
 
   /**
-   * Balance of the wallet in Eth, as opposed to Wei.
+   * Balances of the wallet.
    */
-  ethBalance: BigNumber | undefined;
-  wethBalance: ERC20Balance | undefined;
+  balances: WalletBalances;
 
   fiatBalance: Money | undefined;
   /**
@@ -59,7 +57,8 @@ export function useWallet(): Wallet {
   setWeb3ReactOnWindow(web3React);
   useWalletConnectionStatus();
 
-  const { ethBalance, wethBalance } = useWalletBalances();
+  const balances = useWalletBalances();
+  const ethBalance = balances.ETH?.value;
 
   // Manages the toasts for connections
   const { currency } = useCurrencyPref();
@@ -80,8 +79,7 @@ export function useWallet(): Wallet {
     library,
     account,
     error,
-    ethBalance,
-    wethBalance,
+    balances,
     fiatBalance,
     connectorName,
   };

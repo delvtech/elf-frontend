@@ -6,7 +6,7 @@ import {
   estimateGasForDeposit,
   estimateGasForDepositEth,
   estimateGasForWithdrawEth,
-  fetchBalance,
+  fetchBalanceOf,
   fetchContractAssetBalances,
   fetchContractAssetSymbols,
   fetchContractName,
@@ -18,6 +18,8 @@ import {
   postWithdrawEth,
 } from "efi/contracts/Elf";
 import { useWallet } from "efi/ui/wallets/hooks/useWallet";
+
+import { BalanceInfo } from "../../crypto/BalanceInfo";
 
 // Keys are arrays so that we can do things like prefix-matching to invalidate
 // queries elsewhere. We should expect to export these keys as needed.
@@ -36,9 +38,37 @@ export function useElfContractAssetBalances() {
   return useQuery(contractAssetBalancesKey, () => fetchContractAssetBalances());
 }
 
-const contractBalanceKey = ["contract", "elf", "balance"];
-export function useElfContractBalance() {
-  return useQuery(contractBalanceKey, () => fetchBalance());
+export function useElfContractBalance(
+  account: string | undefined | null
+): BalanceInfo | undefined {
+  const contractBalanceKey = makeElfContractBalanceKey(account);
+  const balanceResult = useQuery(contractBalanceKey, (key, { account }) => {
+    if (!account) {
+      return;
+    }
+    return fetchBalanceOf(account);
+  });
+
+  const decimalsResult = useQuery(
+    makeContractDecimalsKey(account),
+    (key, { account }) => {
+      if (!account) {
+        return;
+      }
+      return fetchDecimals();
+    }
+  );
+
+  const value = balanceResult.data?.toString();
+  if (balanceResult.data && decimalsResult.data) {
+    return {
+      value: BigNumber.from(value),
+      decimals: BigNumber.from(decimalsResult.data),
+    };
+  }
+}
+export function makeElfContractBalanceKey(account: string | undefined | null) {
+  return [["contract", "elf", "balance"], { account }];
 }
 
 const contractTotalSupplyKey = ["contract", "elf", "totalSupply"];
@@ -46,9 +76,11 @@ export function useElfContractTotalSupply() {
   return useQuery(contractTotalSupplyKey, () => fetchTotalSupply());
 }
 
-const contractDecimalsKey = ["contract", "elf", "decimals"];
+function makeContractDecimalsKey(account: string | undefined | null) {
+  return [["contract", "elf", "decimals"], { account }];
+}
 export function useElfContractDecimals() {
-  return useQuery(contractDecimalsKey, () => fetchDecimals());
+  return useQuery(makeContractDecimalsKey, () => fetchDecimals());
 }
 
 const contractGovernanceKey = ["contract", "elf", "governance"];
@@ -69,7 +101,7 @@ const contractDepositEthGasEstimateKey = [
 ];
 
 export function useElfContractDepositEth(): ElfDepositEth {
-  const { library } = useWallet();
+  const { library, account } = useWallet();
   const signer = library?.getSigner();
 
   const gasEstimate = useQuery<BigNumber | undefined>(
@@ -85,7 +117,11 @@ export function useElfContractDepositEth(): ElfDepositEth {
     },
     {
       onSuccess: () => {
-        queryCache.invalidateQueries(contractBalanceKey);
+        if (!account) {
+          return;
+        }
+        const elfContractBalanceKey = makeElfContractBalanceKey(account);
+        queryCache.invalidateQueries(elfContractBalanceKey);
       },
       onError: (error) => {
         console.error(
@@ -112,7 +148,7 @@ const contractDepositGasEstimateKey = [
 ];
 
 export function useElfContractDeposit(): ElfDeposit {
-  const { library } = useWallet();
+  const { library, account } = useWallet();
   const signer = library?.getSigner();
 
   const gasEstimate = useQuery<BigNumber | undefined>(
@@ -123,11 +159,15 @@ export function useElfContractDeposit(): ElfDeposit {
   );
 
   const [deposit] = useMutation(
-    (amount: BigNumber) => {
+    async (amount: BigNumber) => {
       return postDeposit(signer, amount);
     },
     {
       onSuccess: () => {
+        if (!account) {
+          return;
+        }
+        const contractBalanceKey = makeElfContractBalanceKey(account);
         queryCache.invalidateQueries(contractBalanceKey);
       },
       onError: (error) => {
@@ -157,7 +197,7 @@ const contractWithdrawEthGasEstimateKey = [
 export function useElfContractWithdrawEth(
   amount: BigNumber | undefined
 ): ElfWithdrawEth {
-  const { library } = useWallet();
+  const { library, account } = useWallet();
   const signer = library?.getSigner();
 
   const gasEstimate = useQuery<BigNumber | undefined>(
@@ -173,6 +213,10 @@ export function useElfContractWithdrawEth(
     },
     {
       onSuccess: () => {
+        if (!account) {
+          return;
+        }
+        const contractBalanceKey = makeElfContractBalanceKey(account);
         queryCache.invalidateQueries(contractBalanceKey);
       },
       onError: (error) => {

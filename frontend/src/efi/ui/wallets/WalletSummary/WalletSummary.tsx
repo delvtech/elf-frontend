@@ -37,11 +37,16 @@ export const WalletSummary: FunctionComponent<WalletSummaryProps> = () => {
   } = useWeb3React<Web3Provider>();
   const { isDarkMode } = useDarkMode();
 
-  const { ethBalance, fiatBalance, wethBalance } = useWallet();
+  const { balances, fiatBalance } = useWallet();
+  const ethBalance = balances.ETH?.value;
+  const wethBalance = balances.WETH?.value;
+
   const formattedEthBalance = ethBalance ? formatEthBalance(ethBalance) : "0";
+
   const formattedWethBalance = wethBalance
-    ? formatEthBalance(wethBalance?.balance)
+    ? formatEthBalance(wethBalance)
     : "0";
+
   const currencyInfo = fiatBalance?.getCurrencyInfo();
 
   const connectorName = getConnectorName(connector, library);

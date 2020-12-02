@@ -40,7 +40,7 @@ import {
 import { CryptoIcon } from "efi/ui/crypto/CryptoIcon";
 import { TransactionForm } from "efi/ui/crypto/TransactionForm/TransactionForm";
 import { useCryptoDrawer } from "efi/ui/crypto/useCryptoDrawer/useCryptoDrawer";
-import { useWalletBalance } from "efi/ui/wallets/hooks/useWalletBalance";
+import { useWallet } from "efi/ui/wallets/hooks/useWallet";
 
 interface StrategyCardProps {
   strategy: Strategy;
@@ -55,15 +55,18 @@ const stubbedStrategyData: PieData[] = [
 
 export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
   const { name, stakingAsset: defaultStakingAsset } = strategy;
-  const { data: walletBalance } = useWalletBalance();
+  const { balances, account } = useWallet();
   const { data: strategyCryptoSymbol } = useElfContractSymbol();
   const { data: elfTotalSupply } = useElfContractTotalSupply();
-  const { data: elfBalance } = useElfContractBalance();
+  const elfBalance = useElfContractBalance(account);
   const { data: strategyAssetSymbols } = useElfContractAssetSymbols();
 
   const [stakingAsset, setStakingAsset] = useState<StakingAssets>(
     defaultStakingAsset
   );
+
+  const cryptoBalance = balances[stakingAsset];
+
   /****
    * Deposit hooks
    ****/
@@ -283,7 +286,7 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
           <TransactionForm
             inputLabel={t`Deposit`}
             cryptoSymbol={stakingAsset}
-            cryptoBalance={walletBalance}
+            cryptoBalance={cryptoBalance}
             buttonIntent={depositStarted ? Intent.WARNING : Intent.PRIMARY}
             buttonEnabled={!depositStarted}
             buttonLabel={

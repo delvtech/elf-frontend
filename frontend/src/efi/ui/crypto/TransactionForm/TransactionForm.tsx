@@ -6,6 +6,7 @@ import { commify, formatEther, parseEther } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { BalanceInfo } from "efi/crypto/BalanceInfo";
 import { CryptoName } from "efi/crypto/CryptoName";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import {
@@ -21,7 +22,7 @@ interface TransactionFormProps {
   buttonLabel: string;
   buttonIntent?: Intent;
   cryptoSymbol: CryptoSymbol;
-  cryptoBalance: BigNumber | undefined;
+  cryptoBalance: BalanceInfo | undefined;
   onTransaction: (amount: BigNumber) => Promise<void>;
 }
 
@@ -46,11 +47,12 @@ export const TransactionForm: FC<TransactionFormProps> = ({
     numericInputOptions
   );
   const value = stringValue ? parseEther(stringValue) : undefined;
-  const validValue = value && cryptoBalance ? value.lte(cryptoBalance) : true;
+  const validValue =
+    value && cryptoBalance ? value.lte(cryptoBalance.value) : true;
 
   // TODO: make this component handle any type of crypto.  We'll formalize this into a function that
   // does the proper operations depending on the asset.  This is fine for V0.
-  const ethBalance = cryptoBalance && commify(formatEther(cryptoBalance));
+  const ethBalance = cryptoBalance && commify(formatEther(cryptoBalance.value));
 
   const onClick = useCallback(async () => {
     if (validValue && onTransaction) {
@@ -65,7 +67,7 @@ export const TransactionForm: FC<TransactionFormProps> = ({
   }, [onChange, onTransaction, validValue, value]);
 
   const setMaxValue = useCallback(() => {
-    setValue(formatEther(cryptoBalance as BigNumber));
+    setValue(formatEther(cryptoBalance?.value as BigNumber));
   }, [cryptoBalance, setValue]);
 
   return (

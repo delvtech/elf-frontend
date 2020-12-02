@@ -10,6 +10,7 @@ import {
 
 import ContractAddresses from "efi/contracts/contractsJson";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
+import { ERC20ContractsByName } from "efi/crypto/erc20";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 
 interface ElfStubs {
@@ -54,9 +55,9 @@ export async function fetchContractAssetBalances(): Promise<BigNumber[]> {
   return result[0];
 }
 
-export async function fetchBalance(): Promise<BigNumber> {
-  const result = await elf.functions.balance();
-  return result[0];
+export async function fetchBalanceOf(account: string): Promise<BigNumber> {
+  const result = await (await elf.balanceOf(account)).toString();
+  return BigNumber.from(result);
 }
 
 export async function fetchTotalSupply(): Promise<BigNumber> {
@@ -69,9 +70,9 @@ export async function fetchSymbol(): Promise<string> {
   return result[0];
 }
 
-export async function fetchDecimals(): Promise<number> {
-  const result = await elf.functions.decimals();
-  return result[0];
+export async function fetchDecimals(): Promise<BigNumber> {
+  const result = await elf.decimals().toString();
+  return BigNumber.from(result);
 }
 
 export async function estimateGasForDepositEth(
@@ -116,7 +117,10 @@ export async function postDeposit(
     return undefined;
   }
   const elfWithSigner = elf.connect(signer);
-  const result = await elfWithSigner.functions.deposit(amount);
+  const weth = ERC20ContractsByName.WETH;
+  const wethWithSigner = weth.connect(signer);
+  await wethWithSigner.approve(ContractAddresses.ELF, amount);
+  const result = elfWithSigner.functions.deposit(amount);
   return result;
 }
 
