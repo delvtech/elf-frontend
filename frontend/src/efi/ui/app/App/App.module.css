@@ -1,7 +1,7 @@
-.app {
+.appBackground {
   background-color: var(--bp3-bg-color);
 }
 
-.appDark {
+.appBackgroundDark {
   background-color: var(--bp3-dark-bg-color);
 }

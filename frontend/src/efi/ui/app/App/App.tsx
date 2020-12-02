@@ -1,5 +1,4 @@
-import React, { FC } from "react";
-import { ReactQueryDevtools } from "react-query-devtools";
+import React, { FC, Fragment } from "react";
 
 import { LocationProvider, Router } from "@reach/router";
 import classNames from "classnames";
@@ -16,6 +15,8 @@ import { PulseView } from "efi/ui/pulse/PulseView";
 import { useSyncWithInjectedEthereum } from "efi/ui/wallets/hooks/useSyncWithInjectedEthereum";
 
 import styles from "./App.module.css";
+import WalletSummaryPane from "efi/ui/wallets/WalletSummaryPane/WalletSummaryPane";
+import { ReactQueryDevtools } from "react-query-devtools";
 
 const contentClassName = tw(
   "flex-1",
@@ -23,8 +24,6 @@ const contentClassName = tw(
   "h-auto",
   "lg:h-full",
   "lg:w-auto",
-  // larger padding on small screens because of secondary navbar
-  "pt-24",
   "lg:pt-0"
 );
 
@@ -34,10 +33,10 @@ const App: FC<AppProps> = () => {
   const { isDarkMode, darkModeClassName } = useDarkMode();
 
   const appClassName = classNames(
-    styles.app,
+    styles.appBackground,
+    { [styles.appBackgroundDark]: isDarkMode },
     darkModeClassName,
-    { [styles.appDark]: isDarkMode },
-    tw("flex", "flex-col", "lg:flex-row", "w-full", "h-full", "overflow-auto")
+    tw("flex", "flex-col", "lg:flex-row", "w-full", "h-full")
   );
 
   // Do this at the top in one place so we don't have multiple callers trying to
@@ -46,7 +45,7 @@ const App: FC<AppProps> = () => {
   useSyncWithInjectedEthereum();
 
   return (
-    <>
+    <Fragment>
       <div className={appClassName}>
         <LocationProvider>
           <MainNavigation />
@@ -58,13 +57,17 @@ const App: FC<AppProps> = () => {
           <InvestView path={Navigation.INVEST} />
           <FAQView path={Navigation.FAQ} />
         </Router>
+
+        <div className={tw("flex", "h-full", "w-1/4")}>
+          <WalletSummaryPane />
+        </div>
         <CryptoDrawer />
       </div>
 
       {/* Safe to render unconditionally as it does not render in production
       builds by default */}
       <ReactQueryDevtools initialIsOpen={false} />
-    </>
+    </Fragment>
   );
 };
 

@@ -1,6 +1,7 @@
-import React, { FC, useState } from "react";
-
+import { Classes, H2, Intent, Tag } from "@blueprintjs/core";
 import { RouteComponentProps } from "@reach/router";
+import React, { FC, useState } from "react";
+import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { ElfStrategyHighRisk } from "efi/pools/highRisk";
@@ -11,17 +12,21 @@ import { StrategyCard } from "efi/ui/pools/StrategyCard/StrategyCard";
 import { StrategyPreviewCard } from "efi/ui/pools/StrategyPreviewCard/StrategyPreviewCard";
 import { useWallet } from "efi/ui/wallets/hooks/useWallet";
 import { MissingWalletEmptyState } from "efi/ui/wallets/MissingWalletEmptyState/MissingWalletEmptyState";
+import classNames from "classnames";
 
 interface InvestViewProps extends RouteComponentProps {}
 
-const investViewClassName = tw(
+const contentClassName = tw(
   "flex",
   "flex-col",
   "h-full",
   "w-full",
-  "justify-center",
-  "items-center",
-  "overflow-y-scroll"
+  "overflow-y-scroll",
+  "space-y-10",
+  "py-12",
+  "pl-12",
+  "lg:py-16",
+  "lg:pl-16"
 );
 
 const previewCardContainerClassName = tw(
@@ -64,16 +69,47 @@ export const InvestView: FC<InvestViewProps> = () => {
     return <MissingWalletEmptyState />;
   }
 
-  return (
-    <div className={investViewClassName}>
-      <div className={tw("flex", "w-full", "justify-center", "lg:pt-12")}>
-        <InvestBreadcrumb
-          availableStrategies={availableStrategies}
-          activeStrategy={selectedStrategy}
-          setActiveStrategy={setSelectedStrategy}
-        />
+  // TODO: Move to own compoent for specific StrategyView
+  if (selectedStrategy) {
+    return (
+      <div className={contentClassName}>
+        <div className={tw("flex", "w-full", "justify-center", "lg:pt-12")}>
+          <InvestBreadcrumb
+            availableStrategies={availableStrategies}
+            activeStrategy={selectedStrategy}
+            setActiveStrategy={setSelectedStrategy}
+          />
+        </div>
+
+        <div className={strategyCardContainerClassName}>
+          <StrategyCard strategy={strategiesById[selectedStrategy]} />
+        </div>
       </div>
-      {!selectedStrategy ? (
+    );
+  }
+
+  return (
+    <div className={contentClassName}>
+      <div className={tw("flex", "flex-col", "justify-start")}>
+        <div>
+          <H2 className={tw("mb-4")}>
+            {t`Strategies`}{" "}
+            <sup>
+              <Tag minimal intent={Intent.SUCCESS}>{t`beta`}</Tag>
+            </sup>
+          </H2>
+          <span
+            className={classNames(
+              Classes.RUNNING_TEXT,
+              Classes.TEXT_MUTED,
+              tw("text-base")
+            )}
+          >{t`Invest in the latest Defi projects without the fees or hassle of managing everything yourself.`}</span>
+        </div>
+      </div>
+
+      {/* Strategy cards */}
+      <div className={tw("flex", "w-full", "items-center")}>
         <div className={previewCardContainerClassName}>
           {availableStrategies.map((strategy) => {
             return (
@@ -85,11 +121,7 @@ export const InvestView: FC<InvestViewProps> = () => {
             );
           })}
         </div>
-      ) : (
-        <div className={strategyCardContainerClassName}>
-          <StrategyCard strategy={strategiesById[selectedStrategy]} />
-        </div>
-      )}
+      </div>
     </div>
   );
 };
