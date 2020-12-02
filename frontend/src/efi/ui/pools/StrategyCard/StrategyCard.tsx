@@ -35,6 +35,7 @@ import {
   useElfContractDepositEth,
   useElfContractSymbol,
   useElfContractTotalSupply,
+  useElfContractWithdraw,
   useElfContractWithdrawEth,
 } from "efi/ui/contracts/useElfContract";
 import { CryptoIcon } from "efi/ui/crypto/CryptoIcon";
@@ -114,13 +115,15 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
     BigNumber | undefined
   >();
   const { withdrawEth } = useElfContractWithdrawEth(amountToWithdraw);
+  const { withdraw } = useElfContractWithdraw(amountToWithdraw);
   const [withdrawStarted, setWithdrawStarted] = useState(false);
   const startWithdraw = useCallback(
     async (amount: BigNumber) => {
       setWithdrawStarted(true);
       setAmountToWithdraw(amount);
+      const withdrawFn = stakingAsset === "ETH" ? withdrawEth : withdraw;
       try {
-        const withdrawTransaction = await withdrawEth(amount);
+        const withdrawTransaction = await withdrawFn(amount);
         AppToaster.show({
           ...makeSuccessToast(t`View transaction on etherscan`),
           intent: Intent.PRIMARY,
@@ -140,7 +143,7 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
       }
       setWithdrawStarted(false);
     },
-    [withdrawEth]
+    [stakingAsset, withdraw, withdrawEth]
   );
 
   const { openCryptoDrawer } = useCryptoDrawer();
@@ -264,8 +267,20 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
           <Popover
             content={
               <Menu>
-                <MenuItem text="Ether" />
-                <MenuItem text="Wrapped Ether" />
+                {stakingAssets.map((asset) => (
+                  <MenuItem
+                    onClick={() => setStakingAsset(asset)}
+                    icon={
+                      <img
+                        className={tw("h-5", "w-5")}
+                        src={CryptoIcon[asset]}
+                        alt={CryptoName[asset]}
+                      />
+                    }
+                    key={asset}
+                    text={CryptoName[asset]}
+                  />
+                ))}
               </Menu>
             }
             position={Position.BOTTOM_LEFT}

@@ -1,6 +1,7 @@
 import { queryCache, QueryResult, useMutation, useQuery } from "react-query";
 
 import { BigNumber, ContractTransaction } from "ethers";
+import { formatEther } from "ethers/lib/utils";
 
 import {
   estimateGasForDeposit,
@@ -15,6 +16,7 @@ import {
   fetchTotalSupply,
   postDeposit,
   postDepositEth,
+  postWithdraw,
   postWithdrawEth,
 } from "efi/contracts/Elf";
 import { useWallet } from "efi/ui/wallets/hooks/useWallet";
@@ -221,7 +223,7 @@ export function useElfContractWithdrawEth(
       },
       onError: (error) => {
         console.error(
-          "There was an error depositing Eth in the Elf Strategy.",
+          "There was an error withdrawing Eth from the Elf Strategy.",
           error
         );
       },
@@ -229,4 +231,46 @@ export function useElfContractWithdrawEth(
   );
 
   return { gasEstimate, withdrawEth };
+}
+
+interface ElfWithdraw {
+  gasEstimate: QueryResult<BigNumber | undefined>;
+  withdraw: (amount: BigNumber) => Promise<ContractTransaction | undefined>;
+}
+
+export function useElfContractWithdraw(
+  amount: BigNumber | undefined
+): ElfWithdraw {
+  const { library, account } = useWallet();
+  const signer = library?.getSigner();
+
+  const gasEstimate = useQuery<BigNumber | undefined>(
+    contractWithdrawEthGasEstimateKey,
+    () => {
+      return estimateGasForWithdrawEth(signer, amount || "0");
+    }
+  );
+
+  const [withdraw] = useMutation(
+    async (amount: BigNumber) => {
+      return postWithdraw(signer, amount);
+    },
+    {
+      onSuccess: () => {
+        if (!account) {
+          return;
+        }
+        const contractBalanceKey = makeElfContractBalanceKey(account);
+        queryCache.invalidateQueries(contractBalanceKey);
+      },
+      onError: (error) => {
+        console.error(
+          "There was an error withdrawing wETH from the Elf Strategy.",
+          error
+        );
+      },
+    }
+  );
+
+  return { gasEstimate, withdraw };
 }

@@ -7,6 +7,7 @@ import {
   ContractTransaction,
   Signer,
 } from "ethers";
+import { formatEther } from "ethers/lib/utils";
 
 import ContractAddresses from "efi/contracts/contractsJson";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
@@ -71,7 +72,7 @@ export async function fetchSymbol(): Promise<string> {
 }
 
 export async function fetchDecimals(): Promise<BigNumber> {
-  const result = await elf.decimals().toString();
+  const result = (await elf.decimals()).toString();
   return BigNumber.from(result);
 }
 
@@ -145,4 +146,16 @@ export async function postWithdrawEth(
   const elfWithSigner = elf.connect(signer);
   const result = await elfWithSigner.functions.withdrawETH(amount);
   return result;
+}
+
+export async function postWithdraw(
+  signer: Signer | undefined,
+  amount: BigNumber
+): Promise<ContractTransaction | undefined> {
+  if (!signer) {
+    return undefined;
+  }
+  const elfWithSigner = elf.connect(signer);
+  const elfResult = await elfWithSigner.functions.withdraw(amount);
+  return elfResult;
 }

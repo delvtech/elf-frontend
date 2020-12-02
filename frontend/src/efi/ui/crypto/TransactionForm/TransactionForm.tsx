@@ -2,7 +2,7 @@ import React, { FC, useCallback } from "react";
 
 import { Button, InputGroup, Intent, Tag } from "@blueprintjs/core";
 import { BigNumber } from "ethers";
-import { commify, formatEther, parseEther } from "ethers/lib/utils";
+import { commify, formatEther, parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -46,7 +46,9 @@ export const TransactionForm: FC<TransactionFormProps> = ({
   const [stringValue, onChange, setValue] = useNumericInput(
     numericInputOptions
   );
-  const value = stringValue ? parseEther(stringValue) : undefined;
+  const value = stringValue
+    ? parseUnits(stringValue, cryptoBalance?.decimals)
+    : undefined;
   const validValue =
     value && cryptoBalance ? value.lte(cryptoBalance.value) : true;
 
