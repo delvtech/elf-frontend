@@ -11,7 +11,7 @@ import tw from "efi-tailwindcss-classnames";
 import { formatChainName } from "efi/ui/crypto/formatChainName";
 import { formatEthBalance } from "efi/ui/crypto/formatEthBalance";
 import { useDarkMode } from "efi/ui/prefs/useDarkMode/useDarkMode";
-import { formatWalletAddress } from "efi/ui/wallets/formatWalletAddress";
+import { formatWalletAddress } from "efi/wallets/formatWalletAddress";
 import { useWallet } from "efi/ui/wallets/hooks/useWallet";
 import { getConnectorName } from "efi/wallets/connectors";
 

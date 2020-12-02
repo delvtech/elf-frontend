@@ -10,7 +10,7 @@ const ELF_STRATEGY_LOW_RISK = "ELF_STRATEGY_LOW_RISK";
 export const ElfStrategyLowRisk: Strategy = {
   id: ELF_STRATEGY_LOW_RISK,
   stakingAsset: "ETH",
-  name: t`Low Risk Strategy`,
+  name: t`Low Risk Pool`,
   heldAssets: ["yDAI", "yTUSD", "yUSDC", "yUSDT"],
   strategyAsset: "ELF-L",
 };

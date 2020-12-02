@@ -1,4 +1,4 @@
-import { Classes, H2, Intent, Tag } from "@blueprintjs/core";
+import { Classes, H2 } from "@blueprintjs/core";
 import { RouteComponentProps } from "@reach/router";
 import React, { FC, useState } from "react";
 import { t } from "ttag";
@@ -92,12 +92,7 @@ export const InvestView: FC<InvestViewProps> = () => {
     <div className={contentClassName}>
       <div className={tw("flex", "flex-col", "justify-start")}>
         <div>
-          <H2 className={tw("mb-4")}>
-            {t`Strategies`}{" "}
-            <sup>
-              <Tag minimal intent={Intent.SUCCESS}>{t`beta`}</Tag>
-            </sup>
-          </H2>
+          <H2 className={tw("mb-4")}>{t`Element Pools`} </H2>
           <span
             className={classNames(
               Classes.RUNNING_TEXT,
