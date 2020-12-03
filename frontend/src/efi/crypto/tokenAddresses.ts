@@ -1,7 +1,3 @@
-import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
-
-export type TokenSymbol = Extract<CryptoSymbol, "WETH" | "USDC">;
-
 export const UNI_CONTRACT_ADDRESS_MAINNET =
   "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984";
 export const USDC_CONTRACT_ADDRESS_MAINNET =

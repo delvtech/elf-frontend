@@ -2,9 +2,9 @@ import { QueryKey, useQuery } from "react-query";
 
 import { BigNumber } from "ethers";
 
-import { fetchERC20BalanceOf } from "efi/crypto/fetchERC20Balance";
+import { fetchTokenBalanceOf } from "efi/crypto/fetchTokenBalanceOf";
 import { TokenSymbol } from "efi/crypto/tokenAddresses";
-import { TokenContractsByName } from "efi/crypto/TokenContractsByName";
+import { TokenContractsBySymbol } from "efi/crypto/TokenContractsByName";
 
 /**
  * Gets the ERC20 token balance for the prodvided account address and the number of decimals.
@@ -21,9 +21,9 @@ export function useERC20BalanceOf(
   const result = useQuery<BigNumber | undefined>(
     balanceKey,
     async (key: string[], { name, account }: ERC20BalanceOfQueryVariables) => {
-      const contract = TokenContractsByName[name];
+      const contract = TokenContractsBySymbol[name];
       if (account) {
-        return fetchERC20BalanceOf(contract, account);
+        return fetchTokenBalanceOf(contract, account);
       }
     }
   );
