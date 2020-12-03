@@ -39,5 +39,5 @@ export function makeTokenBalanceOfQueryKey(
   name: TokenContractSymbols,
   account: string | null | undefined
 ): QueryKey {
-  return [["contract", "erc20", "balance"], { name, account }];
+  return [["contract", name, "balanceOf"], { name, account }];
 }

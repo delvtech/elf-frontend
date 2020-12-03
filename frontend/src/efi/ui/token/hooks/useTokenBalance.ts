@@ -13,8 +13,8 @@ export function useTokenBalance(
   name: TokenContractSymbols,
   account: string | null | undefined
 ): TokenBalance | undefined {
-  const value = useTokenBalanceOf("WETH", account);
-  const decimals = useTokenDecimals("WETH");
+  const value = useTokenBalanceOf(name, account);
+  const decimals = useTokenDecimals(name);
 
   if (value && decimals) {
     return {
