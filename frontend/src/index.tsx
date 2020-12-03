@@ -27,7 +27,7 @@ import "./index.css";
 import { Web3ReactProvider } from "@web3-react/core";
 import * as serviceWorker from "serviceWorker";
 
-import App from "efi/ui/app/App/App";
+import App from "efi-ui/app/App/App";
 import { getEthereumProviderLibrary } from "efi/wallets/providers";
 
 import versionJson from "./version.output.json";
