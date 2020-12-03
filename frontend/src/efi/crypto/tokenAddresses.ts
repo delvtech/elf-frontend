@@ -1,8 +1,4 @@
-import { Contract } from "ethers";
-
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
-import erc20abi from "efi/crypto/erc20abi.json";
-import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 
 export type TokenSymbol = Extract<CryptoSymbol, "WETH" | "USDC">;
 
@@ -19,12 +15,7 @@ export const WETH_CONTRACT_ADDRESS_LOCALNET =
   "0x75c7169E0f273365873650b49A75dFe6F9a9d448";
 
 // TODO: we should use the chainId to get the correct address.
-const wethAddress =
+export const wethAddress =
   process.env.NODE_ENV === "production"
     ? WETH_CONTRACT_ADDRESS_MAINNET
     : WETH_CONTRACT_ADDRESS_LOCALNET;
-
-export const TokenContractsByName: Record<TokenSymbol, Contract> = {
-  WETH: new Contract(wethAddress, erc20abi, jsonRpcProvider),
-  USDC: new Contract(USDC_CONTRACT_ADDRESS_MAINNET, erc20abi, jsonRpcProvider),
-};

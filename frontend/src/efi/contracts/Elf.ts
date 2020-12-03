@@ -11,7 +11,7 @@ import {
 import ContractAddresses from "efi/contracts/contractsJson";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { ONE_ETHER } from "efi/crypto/ethereum";
-import { TokenContractsByName } from "efi/crypto/tokenAddresses";
+import { TokenContractsByName } from "efi/crypto/TokenContractsByName";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 
 interface ElfStubs {
