@@ -15,7 +15,7 @@ import { getFormattedBalance } from "efi/crypto/balance";
 import { CryptoName } from "efi/crypto/CryptoName";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { TokenBalance } from "efi/crypto/TokenBalance";
-import styles from "efi/ui/crypto/TransactionForm/TransactionForm.module.css";
+import styles from "efi-ui/crypto/TransactionForm/TransactionForm.module.css";
 
 interface TransactionFormProps {
   buttonEnabled?: boolean;

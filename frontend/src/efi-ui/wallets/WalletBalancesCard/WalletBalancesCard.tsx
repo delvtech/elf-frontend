@@ -7,7 +7,7 @@ import tw from "efi-tailwindcss-classnames";
 import { useCryptoPrice } from "efi-ui/crypto/hooks/useCryptoPrice/useCryptoPrice";
 import { useWallet } from "efi-ui/wallets/hooks/useWallet";
 import { getFormattedBalance } from "efi/crypto/balance";
-import styles from "efi/ui/wallets/WalletSummaryPane/WalletSummaryPane.module.css";
+import styles from "efi-ui/wallets/WalletSummaryPane/WalletSummaryPane.module.css";
 
 interface WalletBalancesCardProps {}
 

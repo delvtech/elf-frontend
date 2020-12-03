@@ -8,7 +8,7 @@ import tw from "efi-tailwindcss-classnames";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import WalletBalancesCard from "efi-ui/wallets/WalletBalancesCard/WalletBalancesCard";
 import { WalletConnectionCard } from "efi-ui/wallets/WalletConnectionCard/WalletConnectionCard";
-import styles from "efi/ui/wallets/WalletSummaryPane/WalletSummaryPane.module.css";
+import styles from "efi-ui/wallets/WalletSummaryPane/WalletSummaryPane.module.css";
 import { getConnectorName } from "efi/wallets/connectors";
 
 interface WalletSummaryPaneProps {}

@@ -8,10 +8,10 @@ import classNames from "classnames";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { formatEthBalance } from "efi-ui/crypto/formatEthBalance";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useWallet } from "efi-ui/wallets/hooks/useWallet";
 import { formatChainName } from "efi/crypto/formatChainName";
+import { formatEthBalance } from "efi/crypto/formatEthBalance";
 import { getConnectorName } from "efi/wallets/connectors";
 import { formatWalletAddress } from "efi/wallets/formatWalletAddress";
 
