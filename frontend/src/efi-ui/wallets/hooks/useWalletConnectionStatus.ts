@@ -11,7 +11,7 @@ import {
   AppToaster,
   makeErrorToast,
   makeSuccessToast,
-} from "efi-ui/app/AppToaster/AppToaster";
+} from "efi-ui/toaster/AppToaster/AppToaster";
 
 export enum WalletConnectionStatus {
   /**

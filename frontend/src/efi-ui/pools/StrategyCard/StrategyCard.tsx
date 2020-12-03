@@ -18,11 +18,6 @@ import { formatEther } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import {
-  AppToaster,
-  makeErrorToast,
-  makeSuccessToast,
-} from "efi-ui/app/AppToaster/AppToaster";
 import { PieChart, PieData } from "efi-ui/charts/PieChart/PieChart";
 import {
   useElfContractAssetSymbols,
@@ -37,6 +32,11 @@ import {
 import { useCryptoDrawer } from "efi-ui/crypto/CryptoDrawer/useCryptoDrawer/useCryptoDrawer";
 import { CryptoIcon } from "efi-ui/crypto/CryptoIcon";
 import { TransactionForm } from "efi-ui/crypto/TransactionForm/TransactionForm";
+import {
+  AppToaster,
+  makeErrorToast,
+  makeSuccessToast,
+} from "efi-ui/toaster/AppToaster/AppToaster";
 import { useWallet } from "efi-ui/wallets/hooks/useWallet";
 import { CryptoName } from "efi/crypto/CryptoName";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
@@ -85,6 +85,7 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
     openCryptoDrawer();
   }, [openCryptoDrawer]);
 
+  // TODO: refactor elfTotalSupply to be a TokenBalance
   const totalSupply = elfTotalSupply && formatEther(elfTotalSupply);
 
   return (
