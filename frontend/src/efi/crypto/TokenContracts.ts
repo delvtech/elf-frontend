@@ -3,7 +3,10 @@ import { Contract } from "ethers";
 import erc20abi from "efi/crypto/erc20abi.json";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 
-import { USDC_CONTRACT_ADDRESS_MAINNET, wethAddress } from "./TokenAddresses";
+import {
+  USDC_CONTRACT_ADDRESS_MAINNET,
+  wethAddress,
+} from "./TokenContractAddresses";
 import { TokenContractSymbols } from "./TokenContractSymbols";
 
 /**

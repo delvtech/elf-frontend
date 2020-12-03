@@ -2,7 +2,7 @@ import { gql, request } from "graphql-request";
 
 import { Block, fetchEthBlocks } from "efi/crypto/fetchEthBlocks";
 import { THE_GRAPH_UNISWAP_V2_URL } from "efi/crypto/thegraph";
-import { USDC_CONTRACT_ADDRESS_MAINNET } from "efi/crypto/TokenAddresses";
+import { USDC_CONTRACT_ADDRESS_MAINNET } from "efi/crypto/TokenContractAddresses";
 
 function getTokenDataQuery(address: string, blocks: Block[]) {
   let tokenQueries = "";
