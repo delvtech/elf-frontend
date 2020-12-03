@@ -288,7 +288,7 @@ export function useElfContractWithdraw(
     }
   );
 
-  const [withdraw, { data }] = useMutation<
+  const [withdraw] = useMutation<
     ContractTransaction | undefined,
     unknown,
     ElfWithdrawVariables
