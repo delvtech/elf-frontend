@@ -17,25 +17,26 @@ export function useTokenDecimals(
 ): BigNumber | undefined {
   const balanceKey = makeTokenDecimalsQueryKey(name);
 
-  const result = useQuery<BigNumber | undefined>(
+  const result = useQuery<number | undefined>(
     balanceKey,
-    async (key: string[], { name, account }: TokenDecimalsQueryVariables) => {
+    async (key: string[], { name }: TokenDecimalsQueryVariables) => {
       const contract = TokenContracts[name];
-      if (account) {
-        return fetchTokenDecimals(contract);
-      }
+      return fetchTokenDecimals(contract);
     }
   );
 
-  return result.data;
+  if (!result.data) {
+    return;
+  }
+
+  return BigNumber.from(result.data);
 }
 
 export interface TokenDecimalsQueryVariables {
   name: TokenContractSymbols;
-  account: string | null | undefined;
 }
 export function makeTokenDecimalsQueryKey(
   name: TokenContractSymbols
 ): QueryKey {
-  return [["contract", "erc20", "balance"], { name }];
+  return [["contract", name, "decimals"], { name }];
 }

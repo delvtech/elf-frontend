@@ -2,10 +2,11 @@ import React, { FC, useCallback } from "react";
 
 import { Button, InputGroup, Intent, Tag } from "@blueprintjs/core";
 import { BigNumber } from "ethers";
-import { commify, formatEther, parseUnits } from "ethers/lib/utils";
+import { formatEther, parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { getFormattedBalance } from "efi/crypto/balance";
 import { CryptoName } from "efi/crypto/CryptoName";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { TokenBalance } from "efi/crypto/TokenBalance";
@@ -54,7 +55,7 @@ export const TransactionForm: FC<TransactionFormProps> = ({
 
   // TODO: make this component handle any type of crypto.  We'll formalize this into a function that
   // does the proper operations depending on the asset.  This is fine for V0.
-  const ethBalance = cryptoBalance && commify(formatEther(cryptoBalance.value));
+  const balance = getFormattedBalance(cryptoBalance);
 
   const onClick = useCallback(async () => {
     if (validValue && onTransaction) {
@@ -120,7 +121,7 @@ export const TransactionForm: FC<TransactionFormProps> = ({
             className={tw("text-xs", "text-right", {
               "text-danger": !validValue,
             })}
-          >{`${ethBalance} ${cryptoSymbol}`}</span>
+          >{`${balance} ${cryptoSymbol}`}</span>
         </div>
       </div>
       <Button
