@@ -13,7 +13,7 @@ import {
   Tooltip,
 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
-import { BigNumber, ContractTransaction } from "ethers";
+import { BigNumber } from "ethers";
 import { formatEther } from "ethers/lib/utils";
 import { t } from "ttag";
 
@@ -72,47 +72,13 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
    * Deposit hooks
    ****/
   const [depositStarted, setDepositStarted] = useState(false);
-
   const startDeposit = useDeposit(stakingAsset, account, setDepositStarted);
 
   /****
    * Withdraw hooks
    ****/
-  const [amountToWithdraw, setAmountToWithdraw] = useState<
-    BigNumber | undefined
-  >();
-  const { withdrawEth } = useElfContractWithdrawEth(amountToWithdraw);
-  const { withdraw } = useElfContractWithdraw(amountToWithdraw);
   const [withdrawStarted, setWithdrawStarted] = useState(false);
-  // TODO: refactor this out to its own hook.
-  const startWithdraw = useCallback(
-    async (amount: BigNumber) => {
-      setWithdrawStarted(true);
-      setAmountToWithdraw(amount);
-      const withdrawFn = stakingAsset === "ETH" ? withdrawEth : withdraw;
-      try {
-        const withdrawTransaction = await withdrawFn({ amount, account });
-        // TODO: this should listen to queryCache
-        AppToaster.show({
-          ...makeSuccessToast(t`View transaction on etherscan`),
-          intent: Intent.PRIMARY,
-          action: {
-            href: `https://etherscan.io/tx/${withdrawTransaction?.hash}`,
-            text: "View",
-            intent: Intent.SUCCESS,
-          },
-        });
-      } catch (error) {
-        // if the user Rejects the transaction in their wallet
-        AppToaster.show({
-          ...makeErrorToast(t`Transaction failed`),
-          intent: Intent.PRIMARY,
-        });
-      }
-      setWithdrawStarted(false);
-    },
-    [account, stakingAsset, withdraw, withdrawEth]
-  );
+  const startWithdraw = useWithdraw(stakingAsset, account, setWithdrawStarted);
 
   const { openCryptoDrawer } = useCryptoDrawer();
   const clickStakingAsset = useCallback(() => {
@@ -312,7 +278,7 @@ function useDeposit(
   stakingAsset: StakingAssets,
   account: string | null | undefined,
   setDepositStarted: (started: boolean) => void
-) {
+): (amount: BigNumber) => void {
   const { depositEth } = useElfContractDepositEth();
   const { deposit } = useElfContractDeposit();
 
@@ -341,5 +307,46 @@ function useDeposit(
       setDepositStarted(false);
     },
     [account, deposit, depositEth, setDepositStarted, stakingAsset]
+  );
+}
+
+function useWithdraw(
+  stakingAsset: StakingAssets,
+  account: string | null | undefined,
+  setWithdrawStarted: (started: boolean) => void
+): (amount: BigNumber) => void {
+  const [amountToWithdraw, setAmountToWithdraw] = useState<
+    BigNumber | undefined
+  >();
+  const { withdrawEth } = useElfContractWithdrawEth(amountToWithdraw);
+  const { withdraw } = useElfContractWithdraw(amountToWithdraw);
+
+  return useCallback(
+    async (amount: BigNumber) => {
+      setWithdrawStarted(true);
+      setAmountToWithdraw(amount);
+      const withdrawFn = stakingAsset === "ETH" ? withdrawEth : withdraw;
+      try {
+        const withdrawTransaction = await withdrawFn({ amount, account });
+        // TODO: this should listen to queryCache
+        AppToaster.show({
+          ...makeSuccessToast(t`View transaction on etherscan`),
+          intent: Intent.PRIMARY,
+          action: {
+            href: `https://etherscan.io/tx/${withdrawTransaction?.hash}`,
+            text: "View",
+            intent: Intent.SUCCESS,
+          },
+        });
+      } catch (error) {
+        // if the user Rejects the transaction in their wallet
+        AppToaster.show({
+          ...makeErrorToast(t`Transaction failed`),
+          intent: Intent.PRIMARY,
+        });
+      }
+      setWithdrawStarted(false);
+    },
+    [account, setWithdrawStarted, stakingAsset, withdraw, withdrawEth]
   );
 }
