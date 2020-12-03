@@ -1,5 +1,5 @@
 import { TokenBalance } from "efi/crypto/TokenBalance";
-import { TokenSymbol } from "efi/crypto/TokenSymbol";
+import { TokenContractSymbols } from "efi/crypto/TokenContractSymbols";
 import { useTokenBalanceOf } from "efi/ui/token/hooks/useTokenBalanceOf";
 import { useTokenDecimals } from "efi/ui/token/hooks/useTokenDecimals";
 
@@ -10,7 +10,7 @@ import { useTokenDecimals } from "efi/ui/token/hooks/useTokenDecimals";
  * @param {string} account {string} 'user's account address.
  */
 export function useTokenBalance(
-  name: TokenSymbol,
+  name: TokenContractSymbols,
   account: string | null | undefined
 ): TokenBalance | undefined {
   const value = useTokenBalanceOf("WETH", account);

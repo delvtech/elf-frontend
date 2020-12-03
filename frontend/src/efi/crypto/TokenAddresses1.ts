@@ -1,3 +1,5 @@
+import { TokenContractSymbols } from "efi/crypto/TokenContractSymbols";
+
 export const UNI_CONTRACT_ADDRESS_MAINNET =
   "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984";
 export const USDC_CONTRACT_ADDRESS_MAINNET =
@@ -15,3 +17,10 @@ export const wethAddress =
   process.env.NODE_ENV === "production"
     ? WETH_CONTRACT_ADDRESS_MAINNET
     : WETH_CONTRACT_ADDRESS_LOCALNET;
+
+const TokenAddresses: Record<TokenContractSymbols, string> = {
+  WETH: wethAddress,
+  USDC: USDC_CONTRACT_ADDRESS_MAINNET,
+};
+
+export default TokenAddresses;
