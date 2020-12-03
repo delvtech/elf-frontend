@@ -6,11 +6,10 @@ import { BigNumber } from "ethers";
 
 import { fetchEthBalance } from "efi/crypto/fetchEthBalance";
 import { StakingAssets } from "efi/crypto/stakingAssets";
-import { useERC20Balance } from "efi/ui/wallets/hooks/useERC20Balance";
+import { TokenBalance } from "efi/crypto/TokenBalance";
+import { useTokenBalance } from "efi/ui/token/hooks/useTokenBalance";
 
-import { BalanceInfo } from "../../../crypto/BalanceInfo";
-
-export type WalletBalances = Record<StakingAssets, BalanceInfo | undefined>;
+export type WalletBalances = Record<StakingAssets, TokenBalance | undefined>;
 export function useWalletBalances(): WalletBalances {
   const { library, account } = useWeb3React<Web3Provider>();
 
@@ -21,14 +20,14 @@ export function useWalletBalances(): WalletBalances {
     }
   });
 
-  const ethBalance: BalanceInfo | undefined = result.data
+  const ethBalance: TokenBalance | undefined = result.data
     ? {
         value: result.data,
         decimals: BigNumber.from(18),
       }
     : undefined;
 
-  const wethBalance = useERC20Balance("WETH", account);
+  const wethBalance = useTokenBalance("WETH", account);
 
   return { ETH: ethBalance, WETH: wethBalance };
 }

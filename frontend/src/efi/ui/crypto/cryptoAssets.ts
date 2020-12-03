@@ -1,8 +1,8 @@
 import { CryptoAssetInfo } from "efi/crypto/CryptoAssetInfo";
 import { CryptoName } from "efi/crypto/CryptoName";
-import daiLogo from "efi/ui/staticAssets/logos/DAI-logo.png";
-import ethLogo from "efi/ui/staticAssets/logos/ETH-logo.png";
-import yfiLogo from "efi/ui/staticAssets/logos/YFI-logo.png";
+import daiLogo from "efi-static-assets/logos/DAI-logo.png";
+import ethLogo from "efi-static-assets/logos/ETH-logo.png";
+import yfiLogo from "efi-static-assets/logos/YFI-logo.png";
 
 export const EFI_SUPPORTED_CRYPTO_ASSETS: CryptoAssetInfo[] = [
   {

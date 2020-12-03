@@ -6,14 +6,14 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { getFormattedBalance } from "efi/crypto/balance";
-import { BalanceInfo } from "efi/crypto/BalanceInfo";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
+import { TokenBalance } from "efi/crypto/TokenBalance";
 
 interface ConfirmWithdrawButtonProps {
   buttonLabel: string;
   amountToWithdraw: BigNumber;
   cryptoSymbol: CryptoSymbol;
-  cryptoBalance: BalanceInfo | undefined;
+  cryptoBalance: TokenBalance | undefined;
   withdrawPending: boolean;
   onConfirmWithdraw: (amount: BigNumber) => void;
 }

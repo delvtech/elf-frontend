@@ -14,7 +14,6 @@ import { t } from "ttag";
 import { AppToaster, makeErrorToast } from "efi/ui/app/AppToaster/AppToaster";
 import { useCryptoPrice } from "efi/ui/crypto/hooks/useCryptoPrice/useCryptoPrice";
 import { useCurrencyPref } from "efi/ui/prefs/useCurrency/useCurencyPref";
-import {} from "efi/ui/wallets/hooks/useERC20Balance";
 import {
   useWalletBalances,
   WalletBalances,
@@ -43,7 +42,11 @@ export interface Wallet {
    */
   balances: WalletBalances;
 
+  /**
+   * The real world value of the Eth in the wallet (doesn't include token values).
+   */
   fiatBalance: Money | undefined;
+
   /**
    * Display name of the wallet connector, i.e. MetaMask, WalletConnect.
    */

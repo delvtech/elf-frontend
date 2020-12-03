@@ -20,10 +20,8 @@ import {
 } from "efi/contracts/Elf";
 import { useWallet } from "efi/ui/wallets/hooks/useWallet";
 
-import { BalanceInfo } from "../../crypto/BalanceInfo";
+import { TokenBalance } from "../../crypto/TokenBalance";
 
-// Keys are arrays so that we can do things like prefix-matching to invalidate
-// queries elsewhere. We should expect to export these keys as needed.
 const contractNameKey = ["contract", "elf", "name"];
 export function useElfContractName() {
   return useQuery(contractNameKey, fetchContractName);
@@ -42,7 +40,7 @@ export function useElfContractAssetBalances() {
 // TODO: refactor this to be a wrapper for useERC20Balance hook
 export function useElfContractBalance(
   account: string | undefined | null
-): BalanceInfo | undefined {
+): TokenBalance | undefined {
   const contractBalanceKey = makeElfContractBalanceKey(account);
   const balanceResult = useQuery(contractBalanceKey, (key, { account }) => {
     if (!account) {

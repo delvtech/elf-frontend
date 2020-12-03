@@ -6,9 +6,9 @@ import { commify, formatEther, parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { BalanceInfo } from "efi/crypto/BalanceInfo";
 import { CryptoName } from "efi/crypto/CryptoName";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
+import { TokenBalance } from "efi/crypto/TokenBalance";
 import {
   NumericInputOptions,
   useNumericInput,
@@ -22,7 +22,7 @@ interface TransactionFormProps {
   buttonLabel: string;
   buttonIntent?: Intent;
   cryptoSymbol: CryptoSymbol;
-  cryptoBalance: BalanceInfo | undefined;
+  cryptoBalance: TokenBalance | undefined;
   onTransaction: (amount: BigNumber) => Promise<void>;
 }
 

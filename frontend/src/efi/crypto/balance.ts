@@ -1,9 +1,9 @@
 import { formatUnits } from "ethers/lib/utils";
 
-import { BalanceInfo } from "efi/crypto/BalanceInfo";
+import { TokenBalance } from "efi/crypto/TokenBalance";
 
 export function getFormattedBalance(
-  balanceInfo: BalanceInfo | undefined,
+  balanceInfo: TokenBalance | undefined,
   defaultValue: string = "0"
 ): string {
   if (!balanceInfo) {

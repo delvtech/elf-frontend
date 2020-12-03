@@ -10,8 +10,8 @@ import {
 
 import ContractAddresses from "efi/contracts/contractsJson";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
-import { ERC20ContractsByName } from "efi/crypto/erc20";
 import { ONE_ETHER } from "efi/crypto/ethereum";
+import { TokenContracts } from "efi/crypto/TokenContracts";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 
 interface ElfStubs {
@@ -119,7 +119,7 @@ export async function postDeposit(
     return undefined;
   }
   const elfWithSigner = elf.connect(signer);
-  const weth = ERC20ContractsByName.WETH;
+  const weth = TokenContracts.WETH;
   const wethWithSigner = weth.connect(signer);
   await wethWithSigner.approve(ContractAddresses.ELF, amount);
   const result = elfWithSigner.functions.deposit(amount);

@@ -1,6 +1,6 @@
 import { BigNumber, Contract } from "ethers";
 
-export async function fetchERC20Balance(
+export async function fetchTokenBalanceOf(
   contract: Contract,
   account: string
 ): Promise<BigNumber> {

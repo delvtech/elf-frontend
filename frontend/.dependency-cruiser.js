@@ -230,6 +230,17 @@ module.exports = {
       },
     },
     {
+      name: "efi-static-assets-not-outside-efi-ui",
+      comment: "Importing static assets outside of efi-ui/ is prohibited",
+      severity: "error",
+      from: {
+        path: "efi-static-assets",
+      },
+      to: {
+        path: "efi/(?!ui)",
+      },
+    },
+    {
       name: "efi-not-to-providers",
       comment: "Importing certain modules in providers/ is prohibited",
       severity: "error",
