@@ -71,43 +71,9 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
   /****
    * Deposit hooks
    ****/
-  const [, setAmountToDeposit] = useState<BigNumber | undefined>();
-
-  const { depositEth } = useElfContractDepositEth();
-  const { deposit } = useElfContractDeposit();
-
   const [depositStarted, setDepositStarted] = useState(false);
-  const [, setPendingTransaction] = useState<ContractTransaction>();
 
-  // TODO: refactor this out to its own hook.
-  const startDeposit = useCallback(
-    async (amount: BigNumber) => {
-      setDepositStarted(true);
-      setAmountToDeposit(amount);
-      try {
-        const depositFn = stakingAsset === "ETH" ? depositEth : deposit;
-        const depositTransaction = await depositFn({ amount, account });
-        AppToaster.show({
-          ...makeSuccessToast(t`View transaction on etherscan`),
-          intent: Intent.PRIMARY,
-          action: {
-            href: `https://etherscan.io/tx/${depositTransaction?.hash}`,
-            text: "View",
-            intent: Intent.SUCCESS,
-          },
-        });
-      } catch (error) {
-        // if the user Rejects the transaction in their wallet
-        setPendingTransaction(undefined);
-        AppToaster.show({
-          ...makeErrorToast(t`Transaction failed`),
-          intent: Intent.PRIMARY,
-        });
-      }
-      setDepositStarted(false);
-    },
-    [account, deposit, depositEth, stakingAsset]
-  );
+  const startDeposit = useDeposit(stakingAsset, account, setDepositStarted);
 
   /****
    * Withdraw hooks
@@ -138,7 +104,6 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
         });
       } catch (error) {
         // if the user Rejects the transaction in their wallet
-        setPendingTransaction(undefined);
         AppToaster.show({
           ...makeErrorToast(t`Transaction failed`),
           intent: Intent.PRIMARY,
@@ -336,3 +301,45 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
     </Card>
   );
 };
+
+/**
+ * helper hook to handle the deposit process into the Elf contract
+ * @param stakingAsset
+ * @param account
+ * @param setDepositStarted
+ */
+function useDeposit(
+  stakingAsset: StakingAssets,
+  account: string | null | undefined,
+  setDepositStarted: (started: boolean) => void
+) {
+  const { depositEth } = useElfContractDepositEth();
+  const { deposit } = useElfContractDeposit();
+
+  return useCallback(
+    async (amount: BigNumber) => {
+      setDepositStarted(true);
+      try {
+        const depositFn = stakingAsset === "ETH" ? depositEth : deposit;
+        const depositTransaction = await depositFn({ amount, account });
+        AppToaster.show({
+          ...makeSuccessToast(t`View transaction on etherscan`),
+          intent: Intent.PRIMARY,
+          action: {
+            href: `https://etherscan.io/tx/${depositTransaction?.hash}`,
+            text: "View",
+            intent: Intent.SUCCESS,
+          },
+        });
+      } catch (error) {
+        // if the user Rejects the transaction in their wallet
+        AppToaster.show({
+          ...makeErrorToast(t`Transaction failed`),
+          intent: Intent.PRIMARY,
+        });
+      }
+      setDepositStarted(false);
+    },
+    [account, deposit, depositEth, setDepositStarted, stakingAsset]
+  );
+}
