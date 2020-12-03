@@ -7,7 +7,7 @@ import { BigNumber } from "ethers";
 import { fetchEthBalance } from "efi/crypto/fetchEthBalance";
 import { StakingAssets } from "efi/crypto/stakingAssets";
 import { TokenBalance } from "efi/crypto/TokenBalance";
-import { useTokenBalance } from "efi/ui/wallets/hooks/useTokenBalance";
+import { useTokenBalance } from "efi/ui/token/hooks/useTokenBalance";
 
 export type WalletBalances = Record<StakingAssets, TokenBalance | undefined>;
 export function useWalletBalances(): WalletBalances {
