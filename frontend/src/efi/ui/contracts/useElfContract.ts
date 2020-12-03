@@ -22,8 +22,6 @@ import { useWallet } from "efi/ui/wallets/hooks/useWallet";
 
 import { BalanceInfo } from "../../crypto/BalanceInfo";
 
-// Keys are arrays so that we can do things like prefix-matching to invalidate
-// queries elsewhere. We should expect to export these keys as needed.
 const contractNameKey = ["contract", "elf", "name"];
 export function useElfContractName() {
   return useQuery(contractNameKey, fetchContractName);

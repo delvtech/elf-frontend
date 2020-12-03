@@ -4,11 +4,10 @@ import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
 import { BigNumber } from "ethers";
 
+import { BalanceInfo } from "efi/crypto/BalanceInfo";
 import { fetchEthBalance } from "efi/crypto/fetchEthBalance";
 import { StakingAssets } from "efi/crypto/stakingAssets";
-import { useERC20Balance } from "efi/ui/wallets/hooks/useERC20Balance";
-
-import { BalanceInfo } from "../../../crypto/BalanceInfo";
+import { useERC20Balance } from "efi/ui/wallets/hooks/useERC20BalanceOf";
 
 export type WalletBalances = Record<StakingAssets, BalanceInfo | undefined>;
 export function useWalletBalances(): WalletBalances {
