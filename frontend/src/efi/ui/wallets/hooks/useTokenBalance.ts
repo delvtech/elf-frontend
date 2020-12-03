@@ -1,4 +1,4 @@
-import { ERC20TokenSymbol } from "efi/crypto/erc20";
+import { TokenSymbol } from "efi/crypto/tokenAddresses";
 import { TokenBalance } from "efi/crypto/TokenBalance";
 import { useERC20BalanceOf } from "efi/ui/wallets/hooks/useERC20BalanceOf";
 import { useERC20Decimals } from "efi/ui/wallets/hooks/useERC20Decimals";
@@ -10,7 +10,7 @@ import { useERC20Decimals } from "efi/ui/wallets/hooks/useERC20Decimals";
  * @param {string} account {string} 'user's account address.
  */
 export function useERC20BalanceInfo(
-  name: ERC20TokenSymbol,
+  name: TokenSymbol,
   account: string | null | undefined
 ): TokenBalance | undefined {
   const value = useERC20BalanceOf("WETH", account);

@@ -4,7 +4,7 @@ import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import erc20abi from "efi/crypto/erc20abi.json";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 
-export type ERC20TokenSymbol = Extract<CryptoSymbol, "WETH" | "USDC">;
+export type TokenSymbol = Extract<CryptoSymbol, "WETH" | "USDC">;
 
 export const UNI_CONTRACT_ADDRESS_MAINNET =
   "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984";
@@ -24,7 +24,7 @@ const wethAddress =
     ? WETH_CONTRACT_ADDRESS_MAINNET
     : WETH_CONTRACT_ADDRESS_LOCALNET;
 
-export const ERC20ContractsByName: Record<ERC20TokenSymbol, Contract> = {
+export const TokenContractsByName: Record<TokenSymbol, Contract> = {
   WETH: new Contract(wethAddress, erc20abi, jsonRpcProvider),
   USDC: new Contract(USDC_CONTRACT_ADDRESS_MAINNET, erc20abi, jsonRpcProvider),
 };
