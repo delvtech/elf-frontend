@@ -1,7 +1,14 @@
 import { queryCache, QueryResult, useMutation, useQuery } from "react-query";
 
+import { Intent } from "@blueprintjs/core";
 import { BigNumber, ContractTransaction } from "ethers";
+import { t } from "ttag";
 
+import {
+  AppToaster,
+  makeErrorToast,
+  makeSuccessToast,
+} from "efi-ui/toaster/AppToaster/AppToaster";
 import { useWallet } from "efi-ui/wallets/hooks/useWallet";
 import {
   estimateGasForDeposit,
@@ -91,6 +98,7 @@ export function useElfContractSymbol() {
 interface ElfDepositEthVariables {
   amount: BigNumber;
   account: string | undefined | null;
+  setDepositStarted: (started: boolean) => void;
 }
 interface ElfDepositEth {
   gasEstimate: QueryResult<BigNumber | undefined>;
@@ -123,18 +131,27 @@ export function useElfContractDepositEth(): ElfDepositEth {
     ElfDepositEthVariables
   >(
     (variables) => {
-      const { amount } = variables;
+      const { amount, setDepositStarted } = variables;
+      setDepositStarted(true);
       return postDepositEth(signer, amount);
     },
     {
-      onSuccess: (result, { account }) => {
+      onSuccess: (transaction, { account, setDepositStarted }) => {
+        setDepositStarted(false);
+
+        if (transaction) {
+          showSuccessfulTransactionToast(transaction);
+        }
+
         if (!account) {
           return;
         }
         const elfContractBalanceKey = makeElfContractBalanceKey(account);
         queryCache.invalidateQueries(elfContractBalanceKey);
       },
-      onError: (error) => {
+      onError: (error, { setDepositStarted }) => {
+        setDepositStarted(false);
+        showFailedTransactionToast();
         console.error(
           "There was an error depositing Eth in the Elf Strategy.",
           error
@@ -148,6 +165,7 @@ export function useElfContractDepositEth(): ElfDepositEth {
 interface ElfDepositVariables {
   amount: BigNumber;
   account: string | undefined | null;
+  setDepositStarted: (started: boolean) => void;
 }
 interface ElfDeposit {
   gasEstimate: QueryResult<BigNumber | undefined>;
@@ -183,14 +201,19 @@ export function useElfContractDeposit(): ElfDeposit {
       return postDeposit(signer, amount);
     },
     {
-      onSuccess: (result, { account }) => {
+      onSuccess: (transaction, { account }) => {
+        if (transaction) {
+          showSuccessfulTransactionToast(transaction);
+        }
         if (!account) {
           return;
         }
         const contractBalanceKey = makeElfContractBalanceKey(account);
         queryCache.invalidateQueries(contractBalanceKey);
       },
-      onError: (error) => {
+      onError: (error, { setDepositStarted }) => {
+        setDepositStarted(false);
+        showFailedTransactionToast();
         console.error(
           "There was an error depositing asset in the Elf Strategy.",
           error
@@ -205,6 +228,7 @@ export function useElfContractDeposit(): ElfDeposit {
 interface ElfWithdrawEthVariables {
   amount: BigNumber;
   account: string | undefined | null;
+  setWithdrawStarted: (started: boolean) => void;
 }
 interface ElfWithdrawEth {
   gasEstimate: QueryResult<BigNumber | undefined>;
@@ -242,14 +266,19 @@ export function useElfContractWithdrawEth(
       return postWithdrawEth(signer, amount);
     },
     {
-      onSuccess: (result, { account }) => {
+      onSuccess: (transaction, { account }) => {
+        if (transaction) {
+          showSuccessfulTransactionToast(transaction);
+        }
         if (!account) {
           return;
         }
         const contractBalanceKey = makeElfContractBalanceKey(account);
         queryCache.invalidateQueries(contractBalanceKey);
       },
-      onError: (error) => {
+      onError: (error, { setWithdrawStarted }) => {
+        setWithdrawStarted(false);
+        showFailedTransactionToast();
         console.error(
           "There was an error withdrawing Eth from the Elf Strategy.",
           error
@@ -264,6 +293,7 @@ export function useElfContractWithdrawEth(
 interface ElfWithdrawVariables {
   amount: BigNumber;
   account: string | undefined | null;
+  setWithdrawStarted: (started: boolean) => void;
 }
 
 interface ElfWithdraw {
@@ -302,7 +332,9 @@ export function useElfContractWithdraw(
         const contractBalanceKey = makeElfContractBalanceKey(account);
         queryCache.invalidateQueries(contractBalanceKey);
       },
-      onError: (error) => {
+      onError: (error, { setWithdrawStarted }) => {
+        setWithdrawStarted(false);
+        showFailedTransactionToast();
         console.error(
           "There was an error withdrawing wETH from the Elf Strategy.",
           error
@@ -312,4 +344,23 @@ export function useElfContractWithdraw(
   );
 
   return { gasEstimate, withdraw };
+}
+
+function showSuccessfulTransactionToast(transaction: ContractTransaction) {
+  AppToaster.show({
+    ...makeSuccessToast(t`View transaction on etherscan`),
+    intent: Intent.PRIMARY,
+    action: {
+      href: `https://etherscan.io/tx/${transaction?.hash}`,
+      text: "View",
+      intent: Intent.SUCCESS,
+    },
+  });
+}
+
+function showFailedTransactionToast() {
+  AppToaster.show({
+    ...makeErrorToast(t`Transaction failed`),
+    intent: Intent.PRIMARY,
+  });
 }
