@@ -5,8 +5,8 @@ import { IconNames } from "@blueprintjs/icons";
 import classNames from "classnames";
 
 import tw from "efi-tailwindcss-classnames";
-import { formatChainName } from "efi-ui/crypto/formatChainName";
 import { WalletJazzicon } from "efi-ui/wallets/WalletJazzicon/WalletJazzicon";
+import { formatChainName } from "efi/crypto/formatChainName";
 import { formatWalletAddress } from "efi/wallets/formatWalletAddress";
 
 interface WalletConnectionCardProps {
