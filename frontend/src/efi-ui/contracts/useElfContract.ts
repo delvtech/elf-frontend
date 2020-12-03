@@ -361,6 +361,6 @@ function showSuccessfulTransactionToast(transaction: ContractTransaction) {
 function showFailedTransactionToast() {
   AppToaster.show({
     ...makeErrorToast(t`Transaction failed`),
-    intent: Intent.PRIMARY,
+    intent: Intent.DANGER,
   });
 }
