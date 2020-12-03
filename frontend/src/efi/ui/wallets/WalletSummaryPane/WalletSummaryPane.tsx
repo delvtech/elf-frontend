@@ -8,16 +8,25 @@ import { useDarkMode } from "efi/ui/prefs/useDarkMode/useDarkMode";
 import styles from "efi/ui/wallets/WalletSummaryPane/WalletSummaryPane.module.css";
 import { WalletConnectionCard } from "efi/ui/wallets/WalletConnectionCard/WalletConnectionCard";
 import WalletBalancesCard from "efi/ui/wallets/WalletBalancesCard/WalletBalancesCard";
+import { getConnectorName } from "efi/wallets/connectors";
 
 interface WalletSummaryPaneProps {}
 
 export const WalletSummaryPane: FunctionComponent<WalletSummaryPaneProps> = () => {
-  const { active, account, chainId } = useWeb3React<Web3Provider>();
+  const {
+    active,
+    account,
+    chainId,
+    connector,
+    library,
+  } = useWeb3React<Web3Provider>();
   const { isDarkMode } = useDarkMode();
 
   if (!active) {
     return null;
   }
+
+  const connectorName = getConnectorName(connector, library);
 
   return (
     <div
@@ -38,6 +47,7 @@ export const WalletSummaryPane: FunctionComponent<WalletSummaryPaneProps> = () =
         active={active}
         account={account}
         chainId={chainId}
+        connectorName={connectorName}
       />
 
       <WalletBalancesCard />

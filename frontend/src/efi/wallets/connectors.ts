@@ -82,7 +82,9 @@ export function getConnectorName(
     return t`No connector`;
   }
 
-  if (isMetaMaskConnector(library?.connection?.url)) {
+  // Metamask is special. It's connector doesn't identify itself so we have to
+  // use the library instead. :(
+  if (isMetaMaskConnector(library)) {
     return "MetaMask";
   }
 
@@ -103,24 +105,26 @@ export function getConnectorName(
   return t`Uknown connector`;
 }
 
-const isTorusConnector = (
+export function isTorusConnector(
   connector: AbstractConnector
-): connector is TorusConnector => {
+): connector is TorusConnector {
   return !!(connector as TorusConnector)?.torus;
-};
+}
 
-const isWalletConnectConnector = (
+export function isWalletConnectConnector(
   connector: AbstractConnector
-): connector is WalletConnectConnector => {
+): connector is WalletConnectConnector {
   return !!(connector as WalletConnectConnector)?.walletConnectProvider;
-};
+}
 
-const isFortmaticConnector = (
+export function isFortmaticConnector(
   connector: AbstractConnector
-): connector is FortmaticConnector => {
+): connector is FortmaticConnector {
   return !!(connector as FortmaticConnector)?.fortmatic;
-};
+}
 
-const isMetaMaskConnector = (url: string | undefined): boolean => {
-  return url === "metamask";
-};
+export function isMetaMaskConnector(
+  library?: Web3Provider | undefined
+): boolean {
+  return library?.connection?.url === "metamask";
+}
