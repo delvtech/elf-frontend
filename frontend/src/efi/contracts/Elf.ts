@@ -11,6 +11,7 @@ import {
 import ContractAddresses from "efi/contracts/contractsJson";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { ERC20ContractsByName } from "efi/crypto/erc20";
+import { ONE_ETHER } from "efi/crypto/ethereum";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 
 interface ElfStubs {
@@ -70,8 +71,8 @@ export async function fetchSymbol(): Promise<string> {
   return result[0];
 }
 
-export async function fetchDecimals(): Promise<BigNumber> {
-  const result = await elf.fucntions.decimals();
+export async function fetchDecimals(): Promise<number> {
+  const result = await elf.functions.decimals();
   return result[0];
 }
 
@@ -92,7 +93,8 @@ export async function estimateGasForDeposit(
     return undefined;
   }
   const elfWithSigner = elf.connect(signer);
-  return elfWithSigner.estimateGas.deposit(1);
+  // The value doesn't affect the gas estimate, just stick in one ether.
+  return elfWithSigner.estimateGas.deposit(ONE_ETHER);
 }
 
 export async function postDepositEth(

@@ -3,10 +3,11 @@ import { formatUnits } from "ethers/lib/utils";
 import { BalanceInfo } from "efi/crypto/BalanceInfo";
 
 export function getFormattedBalance(
-  balanceInfo: BalanceInfo | undefined
+  balanceInfo: BalanceInfo | undefined,
+  defaultValue: string = "0"
 ): string {
   if (!balanceInfo) {
-    return "0";
+    return defaultValue;
   }
 
   const { value, decimals } = balanceInfo;

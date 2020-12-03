@@ -2,11 +2,10 @@ import { QueryKey, useQuery } from "react-query";
 
 import { BigNumber } from "ethers";
 
+import { BalanceInfo } from "efi/crypto/BalanceInfo";
 import { ERC20ContractsByName, ERC20TokenSymbol } from "efi/crypto/erc20";
 import { fetchERC20Balance } from "efi/crypto/fetchERC20Balance";
 import { fetchERC20Decimals } from "efi/crypto/fetchERC20Decimals";
-
-import { BalanceInfo } from "../../../crypto/BalanceInfo";
 
 /**
  * Gets the ERC20 token balance for the prodvided account address and the number of decimals.

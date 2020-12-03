@@ -79,13 +79,14 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
   const [depositStarted, setDepositStarted] = useState(false);
   const [, setPendingTransaction] = useState<ContractTransaction>();
 
+  // TODO: refactor this out to its own hook.
   const startDeposit = useCallback(
     async (amount: BigNumber) => {
       setDepositStarted(true);
       setAmountToDeposit(amount);
       try {
         const depositFn = stakingAsset === "ETH" ? depositEth : deposit;
-        const depositTransaction = await depositFn(amount);
+        const depositTransaction = await depositFn({ amount, account });
         AppToaster.show({
           ...makeSuccessToast(t`View transaction on etherscan`),
           intent: Intent.PRIMARY,
@@ -105,7 +106,7 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
       }
       setDepositStarted(false);
     },
-    [deposit, depositEth, stakingAsset]
+    [account, deposit, depositEth, stakingAsset]
   );
 
   /****
@@ -117,13 +118,15 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
   const { withdrawEth } = useElfContractWithdrawEth(amountToWithdraw);
   const { withdraw } = useElfContractWithdraw(amountToWithdraw);
   const [withdrawStarted, setWithdrawStarted] = useState(false);
+  // TODO: refactor this out to its own hook.
   const startWithdraw = useCallback(
     async (amount: BigNumber) => {
       setWithdrawStarted(true);
       setAmountToWithdraw(amount);
       const withdrawFn = stakingAsset === "ETH" ? withdrawEth : withdraw;
       try {
-        const withdrawTransaction = await withdrawFn(amount);
+        const withdrawTransaction = await withdrawFn({ amount, account });
+        // TODO: this should listen to queryCache
         AppToaster.show({
           ...makeSuccessToast(t`View transaction on etherscan`),
           intent: Intent.PRIMARY,
@@ -143,7 +146,7 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
       }
       setWithdrawStarted(false);
     },
-    [stakingAsset, withdraw, withdrawEth]
+    [account, stakingAsset, withdraw, withdrawEth]
   );
 
   const { openCryptoDrawer } = useCryptoDrawer();

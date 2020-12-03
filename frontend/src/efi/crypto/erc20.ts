@@ -14,6 +14,7 @@ export const USDC_CONTRACT_ADDRESS_MAINNET =
 export const WETH_CONTRACT_ADDRESS_MAINNET =
   "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2";
 
+// TODO: get from contracts.json
 export const WETH_CONTRACT_ADDRESS_LOCALNET =
   "0x75c7169E0f273365873650b49A75dFe6F9a9d448";
 

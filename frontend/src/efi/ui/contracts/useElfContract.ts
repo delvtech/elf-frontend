@@ -39,6 +39,7 @@ export function useElfContractAssetBalances() {
   return useQuery(contractAssetBalancesKey, () => fetchContractAssetBalances());
 }
 
+// TODO: refactor this to be a wrapper for useERC20Balance hook
 export function useElfContractBalance(
   account: string | undefined | null
 ): BalanceInfo | undefined {
@@ -69,7 +70,7 @@ export function useElfContractBalance(
   }
 }
 export function makeElfContractBalanceKey(account: string | undefined | null) {
-  return [["contract", "elf", "balance"], { account }];
+  return [["contract", "elf", "balanceOf"], { account }];
 }
 
 const contractTotalSupplyKey = ["contract", "elf", "totalSupply"];
@@ -89,9 +90,15 @@ export function useElfContractSymbol() {
   return useQuery(contractGovernanceKey, () => fetchSymbol());
 }
 
+interface ElfDepositEthVariables {
+  amount: BigNumber;
+  account: string | undefined | null;
+}
 interface ElfDepositEth {
   gasEstimate: QueryResult<BigNumber | undefined>;
-  depositEth: (amount: BigNumber) => Promise<ContractTransaction | undefined>;
+  depositEth: (
+    variables: ElfDepositEthVariables
+  ) => Promise<ContractTransaction | undefined>;
 }
 
 const contractDepositEthGasEstimateKey = [
@@ -102,7 +109,7 @@ const contractDepositEthGasEstimateKey = [
 ];
 
 export function useElfContractDepositEth(): ElfDepositEth {
-  const { library, account } = useWallet();
+  const { library } = useWallet();
   const signer = library?.getSigner();
 
   const gasEstimate = useQuery<BigNumber | undefined>(
@@ -112,12 +119,17 @@ export function useElfContractDepositEth(): ElfDepositEth {
     }
   );
 
-  const [depositEth] = useMutation(
-    (amount: BigNumber) => {
+  const [depositEth] = useMutation<
+    ContractTransaction | undefined,
+    unknown,
+    ElfDepositEthVariables
+  >(
+    (variables) => {
+      const { amount } = variables;
       return postDepositEth(signer, amount);
     },
     {
-      onSuccess: () => {
+      onSuccess: (result, { account }) => {
         if (!account) {
           return;
         }
@@ -135,10 +147,15 @@ export function useElfContractDepositEth(): ElfDepositEth {
 
   return { gasEstimate, depositEth };
 }
-
+interface ElfDepositVariables {
+  amount: BigNumber;
+  account: string | undefined | null;
+}
 interface ElfDeposit {
   gasEstimate: QueryResult<BigNumber | undefined>;
-  deposit: (amount: BigNumber) => Promise<ContractTransaction | undefined>;
+  deposit: (
+    variables: ElfDepositVariables
+  ) => Promise<ContractTransaction | undefined>;
 }
 
 const contractDepositGasEstimateKey = [
@@ -149,7 +166,7 @@ const contractDepositGasEstimateKey = [
 ];
 
 export function useElfContractDeposit(): ElfDeposit {
-  const { library, account } = useWallet();
+  const { library } = useWallet();
   const signer = library?.getSigner();
 
   const gasEstimate = useQuery<BigNumber | undefined>(
@@ -159,12 +176,16 @@ export function useElfContractDeposit(): ElfDeposit {
     }
   );
 
-  const [deposit] = useMutation(
-    async (amount: BigNumber) => {
+  const [deposit] = useMutation<
+    ContractTransaction | undefined,
+    unknown,
+    ElfDepositEthVariables
+  >(
+    async ({ amount }) => {
       return postDeposit(signer, amount);
     },
     {
-      onSuccess: () => {
+      onSuccess: (result, { account }) => {
         if (!account) {
           return;
         }
@@ -183,9 +204,15 @@ export function useElfContractDeposit(): ElfDeposit {
   return { gasEstimate, deposit };
 }
 
+interface ElfWithdrawEthVariables {
+  amount: BigNumber;
+  account: string | undefined | null;
+}
 interface ElfWithdrawEth {
   gasEstimate: QueryResult<BigNumber | undefined>;
-  withdrawEth: (amount: BigNumber) => Promise<ContractTransaction | undefined>;
+  withdrawEth: (
+    variables: ElfWithdrawEthVariables
+  ) => Promise<ContractTransaction | undefined>;
 }
 
 const contractWithdrawEthGasEstimateKey = [
@@ -198,7 +225,7 @@ const contractWithdrawEthGasEstimateKey = [
 export function useElfContractWithdrawEth(
   amount: BigNumber | undefined
 ): ElfWithdrawEth {
-  const { library, account } = useWallet();
+  const { library } = useWallet();
   const signer = library?.getSigner();
 
   const gasEstimate = useQuery<BigNumber | undefined>(
@@ -208,12 +235,16 @@ export function useElfContractWithdrawEth(
     }
   );
 
-  const [withdrawEth] = useMutation(
-    async (amount: BigNumber) => {
+  const [withdrawEth] = useMutation<
+    ContractTransaction | undefined,
+    unknown,
+    ElfWithdrawEthVariables
+  >(
+    async ({ amount }) => {
       return postWithdrawEth(signer, amount);
     },
     {
-      onSuccess: () => {
+      onSuccess: (result, { account }) => {
         if (!account) {
           return;
         }
@@ -232,15 +263,22 @@ export function useElfContractWithdrawEth(
   return { gasEstimate, withdrawEth };
 }
 
+interface ElfWithdrawVariables {
+  amount: BigNumber;
+  account: string | undefined | null;
+}
+
 interface ElfWithdraw {
   gasEstimate: QueryResult<BigNumber | undefined>;
-  withdraw: (amount: BigNumber) => Promise<ContractTransaction | undefined>;
+  withdraw: (
+    variables: ElfWithdrawVariables
+  ) => Promise<ContractTransaction | undefined>;
 }
 
 export function useElfContractWithdraw(
   amount: BigNumber | undefined
 ): ElfWithdraw {
-  const { library, account } = useWallet();
+  const { library } = useWallet();
   const signer = library?.getSigner();
 
   const gasEstimate = useQuery<BigNumber | undefined>(
@@ -250,12 +288,16 @@ export function useElfContractWithdraw(
     }
   );
 
-  const [withdraw] = useMutation(
-    async (amount: BigNumber) => {
+  const [withdraw, { data }] = useMutation<
+    ContractTransaction | undefined,
+    unknown,
+    ElfWithdrawVariables
+  >(
+    async ({ amount }) => {
       return postWithdraw(signer, amount);
     },
     {
-      onSuccess: () => {
+      onSuccess: (result, { account }) => {
         if (!account) {
           return;
         }
