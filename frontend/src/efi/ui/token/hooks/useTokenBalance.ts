@@ -1,7 +1,7 @@
 import { TokenBalance } from "efi/crypto/TokenBalance";
 import { TokenSymbol } from "efi/crypto/TokenSymbol";
-import { useTokenBalanceOf } from "efi/ui/wallets/hooks/useTokenBalanceOf";
-import { useTokenDecimals } from "efi/ui/wallets/hooks/useTokenDecimals";
+import { useTokenBalanceOf } from "efi/ui/token/hooks/useTokenBalanceOf";
+import { useTokenDecimals } from "efi/ui/token/hooks/useTokenDecimals";
 
 /**
  * Gets the ERC20 token balance for the prodvided account address and the number of decimals.
