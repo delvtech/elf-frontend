@@ -1,0 +1,59 @@
+import React, { FunctionComponent } from "react";
+
+import { Web3Provider } from "@ethersproject/providers";
+import { useWeb3React } from "@web3-react/core";
+import classNames from "classnames";
+
+import tw from "efi-tailwindcss-classnames";
+import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
+import WalletBalancesCard from "efi-ui/wallets/WalletBalancesCard/WalletBalancesCard";
+import { WalletConnectionCard } from "efi-ui/wallets/WalletConnectionCard/WalletConnectionCard";
+import styles from "efi-ui/wallets/WalletSummaryPane/WalletSummaryPane.module.css";
+import { getConnectorName } from "efi/wallets/connectors";
+
+interface WalletSummaryPaneProps {}
+
+export const WalletSummaryPane: FunctionComponent<WalletSummaryPaneProps> = () => {
+  const {
+    active,
+    account,
+    chainId,
+    connector,
+    library,
+  } = useWeb3React<Web3Provider>();
+  const { isDarkMode } = useDarkMode();
+
+  if (!active) {
+    return null;
+  }
+
+  const connectorName = getConnectorName(connector, library);
+
+  return (
+    <div
+      className={classNames(
+        { [styles.sideBarDark]: isDarkMode },
+        tw(
+          "flex",
+          "flex-col",
+          "pt-10",
+          "pr-12",
+          "lg:pr-16",
+          "space-y-8",
+          "flex-1"
+        )
+      )}
+    >
+      <WalletConnectionCard
+        active={active}
+        account={account}
+        chainId={chainId}
+        connectorName={connectorName}
+      />
+
+      <WalletBalancesCard />
+    </div>
+  );
+};
+
+export default WalletSummaryPane;

@@ -164,10 +164,10 @@ module.exports = {
       comment: "Importing from ui/ is prohibited outside of the ui/ directory",
       severity: "error",
       from: {
-        pathNot: `(${["index.tsx", "efi/ui"].join("|")})`,
+        pathNot: `(${["index.tsx", "efi-ui"].join("|")})`,
       },
       to: {
-        path: "efi/ui/",
+        path: "efi-ui/",
       },
     },
 
@@ -176,7 +176,7 @@ module.exports = {
       comment: "Importing react from outside the ui/ directory is prohibited",
       severity: "error",
       from: {
-        pathNot: `(${["index.tsx", "setupTests.ts", "efi/ui"].join("|")})`,
+        pathNot: `(${["index.tsx", "setupTests.ts", "efi-ui"].join("|")})`,
       },
       to: {
         path: "node_modules/react",
@@ -187,7 +187,7 @@ module.exports = {
       comment: "Importing efiLocalStorage outside of prefs/ is prohibited",
       severity: "error",
       from: {
-        pathNot: `(${["efi/prefs", "setupTests.ts", "efi/ui/prefs"].join(
+        pathNot: `(${["efi/prefs", "setupTests.ts", "efi-ui/prefs"].join(
           "|"
         )})`,
       },
@@ -201,10 +201,10 @@ module.exports = {
       comment: "Importing modules outside of ui/base/ is prohibited",
       severity: "error",
       from: {
-        path: "efi/ui/base",
+        path: "efi-ui/base",
       },
       to: {
-        path: "efi/ui/(?!base)",
+        path: "efi-ui/(?!base)",
       },
     },
     {
@@ -237,7 +237,7 @@ module.exports = {
         path: "efi-static-assets",
       },
       to: {
-        path: "efi/(?!ui)",
+        path: "efi-ui",
       },
     },
     {
