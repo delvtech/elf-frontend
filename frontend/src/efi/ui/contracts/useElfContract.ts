@@ -20,7 +20,7 @@ import {
 } from "efi/contracts/Elf";
 import { useWallet } from "efi/ui/wallets/hooks/useWallet";
 
-import { BalanceInfo } from "../../crypto/BalanceInfo";
+import { TokenBalance } from "../../crypto/TokenBalance";
 
 const contractNameKey = ["contract", "elf", "name"];
 export function useElfContractName() {
@@ -40,7 +40,7 @@ export function useElfContractAssetBalances() {
 // TODO: refactor this to be a wrapper for useERC20Balance hook
 export function useElfContractBalance(
   account: string | undefined | null
-): BalanceInfo | undefined {
+): TokenBalance | undefined {
   const contractBalanceKey = makeElfContractBalanceKey(account);
   const balanceResult = useQuery(contractBalanceKey, (key, { account }) => {
     if (!account) {
