@@ -3,8 +3,8 @@ import { QueryKey, useQuery } from "react-query";
 import { BigNumber } from "ethers";
 
 import { fetchTokenBalanceOf } from "efi/crypto/fetchTokenBalanceOf";
-import { TokenSymbol } from "efi/crypto/tokenAddresses";
 import { TokenContractsBySymbol } from "efi/crypto/TokenContractsByName";
+import { TokenSymbol } from "efi/crypto/TokenSymbol";
 
 /**
  * Gets the ERC20 token balance for the prodvided account address and the number of decimals.

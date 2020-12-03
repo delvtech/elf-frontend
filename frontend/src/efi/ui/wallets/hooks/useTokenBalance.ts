@@ -1,5 +1,5 @@
-import { TokenSymbol } from "efi/crypto/tokenAddresses";
 import { TokenBalance } from "efi/crypto/TokenBalance";
+import { TokenSymbol } from "efi/crypto/TokenSymbol";
 import { useERC20BalanceOf } from "efi/ui/wallets/hooks/useERC20BalanceOf";
 import { useERC20Decimals } from "efi/ui/wallets/hooks/useERC20Decimals";
 
