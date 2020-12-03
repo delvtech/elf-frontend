@@ -14,7 +14,7 @@ import { t } from "ttag";
 import { AppToaster, makeErrorToast } from "efi/ui/app/AppToaster/AppToaster";
 import { useCryptoPrice } from "efi/ui/crypto/hooks/useCryptoPrice/useCryptoPrice";
 import { useCurrencyPref } from "efi/ui/prefs/useCurrency/useCurencyPref";
-import {} from "efi/ui/wallets/hooks/useERC20BalanceOf";
+import {} from "efi/ui/wallets/hooks/useTokenBalanceOf";
 import {
   useWalletBalances,
   WalletBalances,

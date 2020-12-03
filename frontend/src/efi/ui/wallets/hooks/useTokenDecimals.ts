@@ -9,15 +9,15 @@ import { TokenSymbol } from "efi/crypto/TokenSymbol";
 /**
  * Gets the ERC20 token balance for the prodvided account address and the number of decimals.
  *
- * @param {SupportedERC20StakingAssets} name 'name of ERC20 token to get a user's balance of'
+ * @param {TokenSymbol} name 'name of ERC20 token to get a user's balance of'
  * @param {string} account {string} 'user's account address.
  */
-export function useERC20Decimals(name: TokenSymbol): BigNumber | undefined {
-  const balanceKey = makeERC20DecimalsQueryKey(name);
+export function useTokenDecimals(name: TokenSymbol): BigNumber | undefined {
+  const balanceKey = makeTokenDecimalsQueryKey(name);
 
   const result = useQuery<BigNumber | undefined>(
     balanceKey,
-    async (key: string[], { name, account }: ERC20DecimalsQueryVariables) => {
+    async (key: string[], { name, account }: TokenDecimalsQueryVariables) => {
       const contract = TokenContractsBySymbol[name];
       if (account) {
         return fetchTokenDecimals(contract);
@@ -28,10 +28,10 @@ export function useERC20Decimals(name: TokenSymbol): BigNumber | undefined {
   return result.data;
 }
 
-export interface ERC20DecimalsQueryVariables {
+export interface TokenDecimalsQueryVariables {
   name: TokenSymbol;
   account: string | null | undefined;
 }
-export function makeERC20DecimalsQueryKey(name: TokenSymbol): QueryKey {
+export function makeTokenDecimalsQueryKey(name: TokenSymbol): QueryKey {
   return [["contract", "erc20", "balance"], { name }];
 }

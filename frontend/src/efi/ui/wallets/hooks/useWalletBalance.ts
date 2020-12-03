@@ -7,7 +7,7 @@ import { BigNumber } from "ethers";
 import { fetchEthBalance } from "efi/crypto/fetchEthBalance";
 import { StakingAssets } from "efi/crypto/stakingAssets";
 import { TokenBalance } from "efi/crypto/TokenBalance";
-import { useERC20Balance } from "efi/ui/wallets/hooks/useERC20BalanceOf";
+import { useTokenBalance } from "efi/ui/wallets/hooks/useTokenBalance";
 
 export type WalletBalances = Record<StakingAssets, TokenBalance | undefined>;
 export function useWalletBalances(): WalletBalances {
@@ -27,7 +27,7 @@ export function useWalletBalances(): WalletBalances {
       }
     : undefined;
 
-  const wethBalance = useERC20Balance("WETH", account);
+  const wethBalance = useTokenBalance("WETH", account);
 
   return { ETH: ethBalance, WETH: wethBalance };
 }
