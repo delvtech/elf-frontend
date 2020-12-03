@@ -1,3 +1,5 @@
+import { parseUnits } from "ethers/lib/utils";
+
 /*
  * See https://chainid.network/
  */
@@ -18,3 +20,6 @@ export const DEFAULT_CHAIN_IDS: ChainId[] = [
   ChainId.KOVAN,
   ChainId.LOCAL,
 ];
+
+export const NUM_ETH_DECIMALS = 18;
+export const ONE_ETHER = parseUnits("1", NUM_ETH_DECIMALS);

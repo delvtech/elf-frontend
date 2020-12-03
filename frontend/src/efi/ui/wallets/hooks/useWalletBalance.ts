@@ -2,20 +2,35 @@ import { useQuery } from "react-query";
 
 import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
+import { BigNumber } from "ethers";
 
-import { fetchEthBalance } from "efi/wallets/providers";
+import { fetchEthBalance } from "efi/crypto/fetchEthBalance";
+import { StakingAssets } from "efi/crypto/stakingAssets";
+import { useERC20Balance } from "efi/ui/wallets/hooks/useERC20Balance";
 
-export function useWalletBalance() {
+import { BalanceInfo } from "../../../crypto/BalanceInfo";
+
+export type WalletBalances = Record<StakingAssets, BalanceInfo | undefined>;
+export function useWalletBalances(): WalletBalances {
   const { library, account } = useWeb3React<Web3Provider>();
 
   const walletBalanceKey = makeWalletBalanceQueryKey(library, account);
-  const walletBalance = useQuery(walletBalanceKey, async () => {
+  const result = useQuery(walletBalanceKey, async () => {
     if (library && account) {
       return fetchEthBalance(library, account);
     }
   });
 
-  return walletBalance;
+  const ethBalance: BalanceInfo | undefined = result.data
+    ? {
+        value: result.data,
+        decimals: BigNumber.from(18),
+      }
+    : undefined;
+
+  const wethBalance = useERC20Balance("WETH", account);
+
+  return { ETH: ethBalance, WETH: wethBalance };
 }
 
 export function makeWalletBalanceQueryKey(

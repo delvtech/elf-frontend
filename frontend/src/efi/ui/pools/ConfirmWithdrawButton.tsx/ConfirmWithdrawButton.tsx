@@ -2,17 +2,18 @@ import React, { FC, useCallback } from "react";
 
 import { Button, Intent } from "@blueprintjs/core";
 import { BigNumber } from "ethers";
-import { formatEther } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { getFormattedBalance } from "efi/crypto/balance";
+import { BalanceInfo } from "efi/crypto/BalanceInfo";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 
 interface ConfirmWithdrawButtonProps {
   buttonLabel: string;
   amountToWithdraw: BigNumber;
   cryptoSymbol: CryptoSymbol;
-  cryptoBalance: BigNumber | undefined;
+  cryptoBalance: BalanceInfo | undefined;
   withdrawPending: boolean;
   onConfirmWithdraw: (amount: BigNumber) => void;
 }
@@ -26,12 +27,10 @@ export const ConfirmWithdrawButton: FC<ConfirmWithdrawButtonProps> = ({
   onConfirmWithdraw,
 }) => {
   const validValue = cryptoBalance
-    ? amountToWithdraw.lte(cryptoBalance)
+    ? amountToWithdraw.lte(cryptoBalance.value)
     : false;
 
-  // TODO: make this component handle any type of crypto.  We'll formalize this into a function that
-  // does the proper operations depending on the asset.  This is fine for V0.
-  const ethBalance = cryptoBalance && formatEther(cryptoBalance);
+  const balance = getFormattedBalance(cryptoBalance);
 
   const onClick = useCallback(() => {
     if (validValue && onConfirmWithdraw) {
@@ -46,7 +45,7 @@ export const ConfirmWithdrawButton: FC<ConfirmWithdrawButtonProps> = ({
           className={tw("text-xs", "text-right", {
             "text-red-500": !validValue,
           })}
-        >{t`Available: ${ethBalance} ${cryptoSymbol}`}</span>
+        >{t`Available: ${balance} ${cryptoSymbol}`}</span>
       </div>
       <Button
         loading={withdrawPending}

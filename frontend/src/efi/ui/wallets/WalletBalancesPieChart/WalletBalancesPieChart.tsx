@@ -2,22 +2,21 @@ import React, { FC } from "react";
 
 import { formatEther } from "ethers/lib/utils";
 
+import { getFormattedBalance } from "efi/crypto/balance";
 import { PieChart, PieData } from "efi/ui/charts/PieChart/PieChart";
 import { useElfContractBalance } from "efi/ui/contracts/useElfContract";
 import { useDarkMode } from "efi/ui/prefs/useDarkMode/useDarkMode";
-import { useWalletBalance } from "efi/ui/wallets/hooks/useWalletBalance";
+import { useWallet } from "efi/ui/wallets/hooks/useWallet";
 
 interface WalletBalancesPieChartProps {}
 
 export const WalletBalancesPieChart: FC<WalletBalancesPieChartProps> = () => {
   const { isDarkMode } = useDarkMode();
 
-  const balance = useWalletBalance();
-  const ethBalance = balance.data ? formatEther(balance.data) : "0";
-  const contractBalance = useElfContractBalance();
-  const elfBalance = contractBalance.data
-    ? formatEther(contractBalance.data)
-    : "0";
+  const { balances, account } = useWallet();
+  const ethBalance = balances.ETH ? formatEther(balances.ETH.value) : "0";
+  const elfBalanceInfo = useElfContractBalance(account);
+  const elfBalance = getFormattedBalance(elfBalanceInfo);
 
   const tokens: PieData[] = [
     {

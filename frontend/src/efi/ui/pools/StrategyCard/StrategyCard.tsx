@@ -1,12 +1,26 @@
-import React, { FC, useCallback, useState } from "react";
+import React, { FC, Fragment, useCallback, useState } from "react";
 
-import { Card, H3, Intent, Tag, Tooltip } from "@blueprintjs/core";
+import {
+  Button,
+  Card,
+  H3,
+  Intent,
+  Menu,
+  MenuItem,
+  Popover,
+  Position,
+  Tag,
+  Tooltip,
+} from "@blueprintjs/core";
+import { IconNames } from "@blueprintjs/icons";
 import { BigNumber, ContractTransaction } from "ethers";
 import { formatEther } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { CryptoName } from "efi/crypto/CryptoName";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
+import { stakingAssets, StakingAssets } from "efi/crypto/stakingAssets";
 import { Strategy } from "efi/pools/strategy";
 import {
   AppToaster,
@@ -17,14 +31,17 @@ import { PieChart, PieData } from "efi/ui/charts/PieChart/PieChart";
 import {
   useElfContractAssetSymbols,
   useElfContractBalance,
+  useElfContractDeposit,
   useElfContractDepositEth,
   useElfContractSymbol,
   useElfContractTotalSupply,
+  useElfContractWithdraw,
   useElfContractWithdrawEth,
 } from "efi/ui/contracts/useElfContract";
+import { CryptoIcon } from "efi/ui/crypto/CryptoIcon";
 import { TransactionForm } from "efi/ui/crypto/TransactionForm/TransactionForm";
 import { useCryptoDrawer } from "efi/ui/crypto/useCryptoDrawer/useCryptoDrawer";
-import { useWalletBalance } from "efi/ui/wallets/hooks/useWalletBalance";
+import { useWallet } from "efi/ui/wallets/hooks/useWallet";
 
 interface StrategyCardProps {
   strategy: Strategy;
@@ -38,12 +55,18 @@ const stubbedStrategyData: PieData[] = [
 ];
 
 export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
-  const { name, stakingAsset } = strategy;
-  const { data: walletBalance } = useWalletBalance();
+  const { name, stakingAsset: defaultStakingAsset } = strategy;
+  const { balances, account } = useWallet();
   const { data: strategyCryptoSymbol } = useElfContractSymbol();
   const { data: elfTotalSupply } = useElfContractTotalSupply();
-  const { data: elfBalance } = useElfContractBalance();
+  const elfBalance = useElfContractBalance(account);
   const { data: strategyAssetSymbols } = useElfContractAssetSymbols();
+
+  const [stakingAsset, setStakingAsset] = useState<StakingAssets>(
+    defaultStakingAsset
+  );
+
+  const cryptoBalance = balances[stakingAsset];
 
   /****
    * Deposit hooks
@@ -51,16 +74,19 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
   const [, setAmountToDeposit] = useState<BigNumber | undefined>();
 
   const { depositEth } = useElfContractDepositEth();
+  const { deposit } = useElfContractDeposit();
 
   const [depositStarted, setDepositStarted] = useState(false);
   const [, setPendingTransaction] = useState<ContractTransaction>();
 
+  // TODO: refactor this out to its own hook.
   const startDeposit = useCallback(
     async (amount: BigNumber) => {
       setDepositStarted(true);
       setAmountToDeposit(amount);
       try {
-        const depositTransaction = await depositEth(amount);
+        const depositFn = stakingAsset === "ETH" ? depositEth : deposit;
+        const depositTransaction = await depositFn({ amount, account });
         AppToaster.show({
           ...makeSuccessToast(t`View transaction on etherscan`),
           intent: Intent.PRIMARY,
@@ -80,7 +106,7 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
       }
       setDepositStarted(false);
     },
-    [depositEth, setDepositStarted]
+    [account, deposit, depositEth, stakingAsset]
   );
 
   /****
@@ -90,13 +116,17 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
     BigNumber | undefined
   >();
   const { withdrawEth } = useElfContractWithdrawEth(amountToWithdraw);
+  const { withdraw } = useElfContractWithdraw(amountToWithdraw);
   const [withdrawStarted, setWithdrawStarted] = useState(false);
+  // TODO: refactor this out to its own hook.
   const startWithdraw = useCallback(
     async (amount: BigNumber) => {
       setWithdrawStarted(true);
       setAmountToWithdraw(amount);
+      const withdrawFn = stakingAsset === "ETH" ? withdrawEth : withdraw;
       try {
-        const withdrawTransaction = await withdrawEth(amount);
+        const withdrawTransaction = await withdrawFn({ amount, account });
+        // TODO: this should listen to queryCache
         AppToaster.show({
           ...makeSuccessToast(t`View transaction on etherscan`),
           intent: Intent.PRIMARY,
@@ -116,7 +146,7 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
       }
       setWithdrawStarted(false);
     },
-    [withdrawEth]
+    [account, stakingAsset, withdraw, withdrawEth]
   );
 
   const { openCryptoDrawer } = useCryptoDrawer();
@@ -204,38 +234,104 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
           <PieChart pieData={stubbedStrategyData} />
         </div>
       </div>
+      <div className={tw("flex", "w-full", "space-x-8", "pt-4")}>
+        <div className={tw("flex-1")}>
+          <Popover
+            content={
+              <Menu>
+                <Fragment>
+                  {stakingAssets.map((asset) => (
+                    <MenuItem
+                      onClick={() => setStakingAsset(asset)}
+                      icon={
+                        <img
+                          className={tw("h-5", "w-5")}
+                          src={CryptoIcon[asset]}
+                          alt={CryptoName[asset]}
+                        />
+                      }
+                      key={asset}
+                      text={CryptoName[asset]}
+                    />
+                  ))}
+                </Fragment>
+              </Menu>
+            }
+            position={Position.BOTTOM_LEFT}
+            minimal
+          >
+            <Button
+              rightIcon={IconNames.CARET_DOWN}
+              text={CryptoName[stakingAsset]}
+            />
+          </Popover>
+        </div>
+        <div className={tw("flex-1")}>
+          <Popover
+            content={
+              <Menu>
+                {stakingAssets.map((asset) => (
+                  <MenuItem
+                    onClick={() => setStakingAsset(asset)}
+                    icon={
+                      <img
+                        className={tw("h-5", "w-5")}
+                        src={CryptoIcon[asset]}
+                        alt={CryptoName[asset]}
+                      />
+                    }
+                    key={asset}
+                    text={CryptoName[asset]}
+                  />
+                ))}
+              </Menu>
+            }
+            position={Position.BOTTOM_LEFT}
+            minimal
+          >
+            <Button
+              rightIcon={IconNames.CARET_DOWN}
+              text={CryptoName[stakingAsset]}
+            />
+          </Popover>
+        </div>
+      </div>
       <div
         className={tw("flex", "justify-between", "w-full", "space-x-8", "pt-4")}
       >
-        {/* Deposit */}
-        <TransactionForm
-          inputLabel={t`Deposit`}
-          cryptoSymbol={stakingAsset}
-          cryptoBalance={walletBalance}
-          buttonIntent={depositStarted ? Intent.WARNING : Intent.PRIMARY}
-          buttonEnabled={!depositStarted}
-          buttonLabel={
-            depositStarted
-              ? t`Confirming deposit...`
-              : t`Deposit ${stakingAsset}`
-          }
-          onTransaction={startDeposit}
-        />
+        <div className={tw("flex-1")}>
+          {/* Deposit */}
+          <TransactionForm
+            inputLabel={t`Deposit`}
+            cryptoSymbol={stakingAsset}
+            cryptoBalance={cryptoBalance}
+            buttonIntent={depositStarted ? Intent.WARNING : Intent.PRIMARY}
+            buttonEnabled={!depositStarted}
+            buttonLabel={
+              depositStarted
+                ? t`Confirming deposit...`
+                : t`Deposit ${stakingAsset}`
+            }
+            onTransaction={startDeposit}
+          />
+        </div>
 
-        {/* Withdraw */}
-        <TransactionForm
-          inputLabel={t`Withdraw`}
-          cryptoSymbol={strategyCryptoSymbol as CryptoSymbol}
-          cryptoBalance={elfBalance}
-          buttonIntent={withdrawStarted ? Intent.WARNING : Intent.PRIMARY}
-          buttonEnabled={!withdrawStarted}
-          buttonLabel={
-            withdrawStarted
-              ? t`Confirming withdraw...`
-              : t`Withdraw ${stakingAsset}`
-          }
-          onTransaction={startWithdraw}
-        />
+        <div className={tw("flex-1")}>
+          {/* Withdraw */}
+          <TransactionForm
+            inputLabel={t`Withdraw`}
+            cryptoSymbol={strategyCryptoSymbol as CryptoSymbol}
+            cryptoBalance={elfBalance}
+            buttonIntent={withdrawStarted ? Intent.WARNING : Intent.PRIMARY}
+            buttonEnabled={!withdrawStarted}
+            buttonLabel={
+              withdrawStarted
+                ? t`Confirming withdraw...`
+                : t`Withdraw ${stakingAsset}`
+            }
+            onTransaction={startWithdraw}
+          />
+        </div>
       </div>
     </Card>
   );

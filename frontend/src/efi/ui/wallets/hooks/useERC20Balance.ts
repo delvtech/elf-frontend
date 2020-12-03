@@ -2,14 +2,11 @@ import { QueryKey, useQuery } from "react-query";
 
 import { BigNumber } from "ethers";
 
+import { BalanceInfo } from "efi/crypto/BalanceInfo";
 import { ERC20ContractsByName, ERC20TokenSymbol } from "efi/crypto/erc20";
 import { fetchERC20Balance } from "efi/crypto/fetchERC20Balance";
 import { fetchERC20Decimals } from "efi/crypto/fetchERC20Decimals";
 
-export interface ERC20Balance {
-  balance: BigNumber;
-  decimals: BigNumber;
-}
 /**
  * Gets the ERC20 token balance for the prodvided account address and the number of decimals.
  *
@@ -19,7 +16,7 @@ export interface ERC20Balance {
 export function useERC20Balance(
   name: ERC20TokenSymbol,
   account: string | null | undefined
-): ERC20Balance | undefined {
+): BalanceInfo | undefined {
   const balanceKey = makeERC20BalanceQueryKey(name, account);
 
   const result = useQuery<[BigNumber, BigNumber] | undefined>(
@@ -37,7 +34,7 @@ export function useERC20Balance(
 
   if (result.data) {
     const [balance, decimals] = result.data;
-    return { balance, decimals };
+    return { value: balance, decimals };
   }
 
   return undefined;

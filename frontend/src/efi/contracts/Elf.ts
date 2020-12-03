@@ -8,9 +8,11 @@ import {
   Signer,
 } from "ethers";
 
-import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
-import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 import ContractAddresses from "efi/contracts/contractsJson";
+import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
+import { ERC20ContractsByName } from "efi/crypto/erc20";
+import { ONE_ETHER } from "efi/crypto/ethereum";
+import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 
 interface ElfStubs {
   functions: {
@@ -54,8 +56,8 @@ export async function fetchContractAssetBalances(): Promise<BigNumber[]> {
   return result[0];
 }
 
-export async function fetchBalance(): Promise<BigNumber> {
-  const result = await elf.functions.balance();
+export async function fetchBalanceOf(account: string): Promise<BigNumber> {
+  const result = await elf.functions.balanceOf(account);
   return result[0];
 }
 
@@ -84,6 +86,17 @@ export async function estimateGasForDepositEth(
   return elfWithSigner.estimateGas.depositETH();
 }
 
+export async function estimateGasForDeposit(
+  signer: Signer | undefined
+): Promise<BigNumber | undefined> {
+  if (!signer) {
+    return undefined;
+  }
+  const elfWithSigner = elf.connect(signer);
+  // The value doesn't affect the gas estimate, just stick in one ether.
+  return elfWithSigner.estimateGas.deposit(ONE_ETHER);
+}
+
 export async function postDepositEth(
   signer: Signer | undefined,
   amount: BigNumber
@@ -95,6 +108,21 @@ export async function postDepositEth(
   const result = await elfWithSigner.functions.depositETH({
     value: amount,
   });
+  return result;
+}
+
+export async function postDeposit(
+  signer: Signer | undefined,
+  amount: BigNumber
+): Promise<ContractTransaction | undefined> {
+  if (!signer) {
+    return undefined;
+  }
+  const elfWithSigner = elf.connect(signer);
+  const weth = ERC20ContractsByName.WETH;
+  const wethWithSigner = weth.connect(signer);
+  await wethWithSigner.approve(ContractAddresses.ELF, amount);
+  const result = elfWithSigner.functions.deposit(amount);
   return result;
 }
 
@@ -119,4 +147,16 @@ export async function postWithdrawEth(
   const elfWithSigner = elf.connect(signer);
   const result = await elfWithSigner.functions.withdrawETH(amount);
   return result;
+}
+
+export async function postWithdraw(
+  signer: Signer | undefined,
+  amount: BigNumber
+): Promise<ContractTransaction | undefined> {
+  if (!signer) {
+    return undefined;
+  }
+  const elfWithSigner = elf.connect(signer);
+  const elfResult = await elfWithSigner.functions.withdraw(amount);
+  return elfResult;
 }
