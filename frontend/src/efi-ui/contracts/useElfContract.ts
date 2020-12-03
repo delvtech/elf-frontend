@@ -1,14 +1,11 @@
 import { queryCache, QueryResult, useMutation, useQuery } from "react-query";
 
-import { Intent } from "@blueprintjs/core";
 import { BigNumber, ContractTransaction } from "ethers";
-import { t } from "ttag";
 
 import {
-  AppToaster,
-  makeErrorToast,
-  makeSuccessToast,
-} from "efi-ui/toaster/AppToaster/AppToaster";
+  showFailedTransactionToast,
+  showSuccessfulTransactionToast,
+} from "efi-ui/crypto/toasts/transactionToasts";
 import { useWallet } from "efi-ui/wallets/hooks/useWallet";
 import {
   estimateGasForDeposit,
@@ -344,23 +341,4 @@ export function useElfContractWithdraw(
   );
 
   return { gasEstimate, withdraw };
-}
-
-function showSuccessfulTransactionToast(transaction: ContractTransaction) {
-  AppToaster.show({
-    ...makeSuccessToast(t`View transaction on etherscan`),
-    intent: Intent.PRIMARY,
-    action: {
-      href: `https://etherscan.io/tx/${transaction?.hash}`,
-      text: "View",
-      intent: Intent.SUCCESS,
-    },
-  });
-}
-
-function showFailedTransactionToast() {
-  AppToaster.show({
-    ...makeErrorToast(t`Transaction failed`),
-    intent: Intent.DANGER,
-  });
 }
