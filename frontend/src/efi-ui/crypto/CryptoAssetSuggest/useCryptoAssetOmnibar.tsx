@@ -2,7 +2,7 @@ import { useCallback, useMemo } from "react";
 
 import { HTMLInputProps, IInputGroupProps } from "@blueprintjs/core";
 
-import { useBoolean } from "efi-ui/base/useBoolean/useBoolean";
+import { useBoolean } from "efi-ui/base/hooks/useBoolean/useBoolean";
 import { CryptoAssetInfo } from "efi/crypto/CryptoAssetInfo";
 
 interface CryptoAssetOmnibar {

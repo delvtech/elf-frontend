@@ -2,7 +2,7 @@ import React, { FC } from "react";
 
 import { fireEvent, render } from "@testing-library/react";
 
-import { useBoolean } from "efi-ui/base/useBoolean/useBoolean";
+import { useBoolean } from "efi-ui/base/hooks/useBoolean/useBoolean";
 
 test("Default value is set correctly", () => {
   const SampleComponent: FC<{}> = () => {

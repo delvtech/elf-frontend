@@ -9,7 +9,7 @@ import tw from "efi-tailwindcss-classnames";
 import {
   NumericInputOptions,
   useNumericInput,
-} from "efi-ui/base/useNumericInput/useNumericInput";
+} from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { CryptoIcon } from "efi-ui/crypto/CryptoIcon";
 import { getFormattedBalance } from "efi/crypto/balance";
 import { CryptoName } from "efi/crypto/CryptoName";

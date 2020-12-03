@@ -9,10 +9,10 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { SMALL_BREAKPOINT } from "efi-ui/base/mediaBreakpoints";
-import { SkeletonText } from "efi-ui/base/SkeletonText/SkeletonText";
 import { useCryptoDrawer } from "efi-ui/crypto/CryptoDrawer/useCryptoDrawer/useCryptoDrawer";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
+import { SkeletonText } from "efi-ui/skeleton/SkeletonText/SkeletonText";
 
 interface CryptoDrawerProps {}
 
