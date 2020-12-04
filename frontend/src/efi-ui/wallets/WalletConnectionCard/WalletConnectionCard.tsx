@@ -43,7 +43,11 @@ export const WalletConnectionCard: FunctionComponent<WalletConnectionCardProps> 
             </div>
           </div>
         </div>
-        <Tag minimal icon={<Icon icon={IconNames.DOT} color={Colors.GREEN4} />}>
+        <Tag
+          minimal
+          large
+          icon={<Icon icon={IconNames.DOT} color={Colors.GREEN4} />}
+        >
           {connectorName}
         </Tag>
       </div>
