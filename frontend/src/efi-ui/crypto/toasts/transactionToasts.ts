@@ -8,7 +8,7 @@ import {
   makeSuccessToast,
 } from "efi-ui/toaster/AppToaster/AppToaster";
 
-export function showSuccessfulTransactionToast(
+export function showTransactionSuccessfulToast(
   transaction: ContractTransaction
 ) {
   AppToaster.show({
@@ -22,7 +22,7 @@ export function showSuccessfulTransactionToast(
   });
 }
 
-export function showFailedTransactionToast() {
+export function showTransactionFailedToast() {
   AppToaster.show({
     ...makeErrorToast(t`Transaction failed`),
     intent: Intent.DANGER,

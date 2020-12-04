@@ -3,8 +3,8 @@ import { queryCache, QueryResult, useMutation, useQuery } from "react-query";
 import { BigNumber, ContractTransaction } from "ethers";
 
 import {
-  showFailedTransactionToast,
-  showSuccessfulTransactionToast,
+  showTransactionFailedToast,
+  showTransactionSuccessfulToast,
 } from "efi-ui/crypto/toasts/transactionToasts";
 import { useWallet } from "efi-ui/wallets/hooks/useWallet";
 import {
@@ -137,7 +137,7 @@ export function useElfContractDepositEth(): ElfDepositEth {
         setDepositStarted(false);
 
         if (transaction) {
-          showSuccessfulTransactionToast(transaction);
+          showTransactionSuccessfulToast(transaction);
         }
 
         if (!account) {
@@ -148,7 +148,7 @@ export function useElfContractDepositEth(): ElfDepositEth {
       },
       onError: (error, { setDepositStarted }) => {
         setDepositStarted(false);
-        showFailedTransactionToast();
+        showTransactionFailedToast();
         console.error(
           "There was an error depositing Eth in the Elf Strategy.",
           error
@@ -200,7 +200,7 @@ export function useElfContractDeposit(): ElfDeposit {
     {
       onSuccess: (transaction, { account }) => {
         if (transaction) {
-          showSuccessfulTransactionToast(transaction);
+          showTransactionSuccessfulToast(transaction);
         }
         if (!account) {
           return;
@@ -210,7 +210,7 @@ export function useElfContractDeposit(): ElfDeposit {
       },
       onError: (error, { setDepositStarted }) => {
         setDepositStarted(false);
-        showFailedTransactionToast();
+        showTransactionFailedToast();
         console.error(
           "There was an error depositing asset in the Elf Strategy.",
           error
@@ -265,7 +265,7 @@ export function useElfContractWithdrawEth(
     {
       onSuccess: (transaction, { account }) => {
         if (transaction) {
-          showSuccessfulTransactionToast(transaction);
+          showTransactionSuccessfulToast(transaction);
         }
         if (!account) {
           return;
@@ -275,7 +275,7 @@ export function useElfContractWithdrawEth(
       },
       onError: (error, { setWithdrawStarted }) => {
         setWithdrawStarted(false);
-        showFailedTransactionToast();
+        showTransactionFailedToast();
         console.error(
           "There was an error withdrawing Eth from the Elf Strategy.",
           error
@@ -331,7 +331,7 @@ export function useElfContractWithdraw(
       },
       onError: (error, { setWithdrawStarted }) => {
         setWithdrawStarted(false);
-        showFailedTransactionToast();
+        showTransactionFailedToast();
         console.error(
           "There was an error withdrawing wETH from the Elf Strategy.",
           error
