@@ -14,14 +14,13 @@ import { Navigation } from "efi-ui/navigation/navigation";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { PulseView } from "efi-ui/pulse/PulseView";
 import { useSyncWithInjectedEthereum } from "efi-ui/wallets/hooks/useSyncWithInjectedEthereum";
-import WalletSummaryPane from "efi-ui/wallets/WalletSummaryPane/WalletSummaryPane";
 
 import styles from "./App.module.css";
 
 const contentClassName = tw(
   "flex-1",
   "w-full",
-  "h-auto",
+  "h-full",
   "lg:h-full",
   "lg:w-auto",
   "lg:pt-0"
@@ -57,12 +56,8 @@ const App: FC<AppProps> = () => {
           <InvestView path={Navigation.INVEST} />
           <FAQView path={Navigation.FAQ} />
         </Router>
-
-        <div className={tw("flex", "h-full", "w-1/4")}>
-          <WalletSummaryPane />
-        </div>
-        <CryptoDrawer />
       </div>
+      <CryptoDrawer />
 
       {/* Safe to render unconditionally as it does not render in production
       builds by default */}

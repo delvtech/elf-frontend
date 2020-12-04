@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from "react";
 
-import { Card, Classes, H4, HTMLTable } from "@blueprintjs/core";
+import { Card, Classes, Divider, H4, HTMLTable } from "@blueprintjs/core";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -23,31 +23,35 @@ export const WalletBalancesCard: FunctionComponent<WalletBalancesCardProps> = ()
   return (
     <Card className={tw("flex", "flex-col", "space-y-4")}>
       <div className={tw("flex", "justify-between")}>
-        <H4>{t`Wallet balance:`}</H4>
-        <H4>${totalBalance.toLocaleString()}</H4>
+        <H4 className={tw("m-0")}>{t`Wallet balance:`}</H4>
+        <H4 className={tw("m-0")}>
+          ${Number(totalBalance.toFixed(2)).toLocaleString()}
+        </H4>
       </div>
+      <Divider />
 
       <HTMLTable striped className={tw("w-full")}>
         <thead>
           <tr className={Classes.TEXT_SMALL}>
-            {[t`Asset`, t`Balance`, t`USD`].map((label) => (
+            {[t`Asset`, t`Price`, t`USD`, t`Balance`].map((label) => (
               <th key={label} className={styles.tableHeader}>
                 <span className={tw("text-xs")}>{label}</span>
               </th>
             ))}
           </tr>
         </thead>
-        <tbody>
+        <tbody className={Classes.TEXT_LARGE}>
           <tr>
             <td>
               <div className={tw("flex", "space-x-2")}>
                 <strong>ETH</strong>
               </div>
             </td>
-            <td>{formattedEthBalance}</td>
+            <td>$134.23</td>
             {fiatBalance && (
-              <td>{`${fiatBalance.toDecimal().toLocaleString()}`}</td>
+              <td>{`$${fiatBalance.toDecimal().toLocaleString()}`}</td>
             )}
+            <td>{formattedEthBalance}</td>
           </tr>
 
           <tr>
@@ -56,8 +60,9 @@ export const WalletBalancesCard: FunctionComponent<WalletBalancesCardProps> = ()
                 <strong>wETH</strong>
               </div>
             </td>
-            <td>{formattedWethBalance}</td>
+            <td>$134.23</td>
             <td>$1,210.23</td>
+            <td>{formattedWethBalance}</td>
           </tr>
         </tbody>
       </HTMLTable>

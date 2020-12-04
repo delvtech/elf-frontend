@@ -33,15 +33,7 @@ export const WalletSummaryPane: FunctionComponent<WalletSummaryPaneProps> = () =
     <div
       className={classNames(
         { [styles.sideBarDark]: isDarkMode },
-        tw(
-          "flex",
-          "flex-col",
-          "pt-10",
-          "pr-12",
-          "lg:pr-16",
-          "space-y-8",
-          "flex-1"
-        )
+        tw("flex", "flex-col", "space-y-8", "flex-1")
       )}
     >
       <WalletConnectionCard

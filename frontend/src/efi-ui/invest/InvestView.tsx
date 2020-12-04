@@ -14,6 +14,7 @@ import { MissingWalletEmptyState } from "efi-ui/wallets/MissingWalletEmptyState/
 import { ElfStrategyHighRisk } from "efi/pools/highRisk";
 import { ElfStrategyLowRisk } from "efi/pools/lowRisk";
 import { ElfStrategyMediumRisk } from "efi/pools/mediumRisk";
+import WalletSummaryPane from "efi-ui/wallets/WalletSummaryPane/WalletSummaryPane";
 
 interface InvestViewProps extends RouteComponentProps {}
 
@@ -23,11 +24,7 @@ const contentClassName = tw(
   "h-full",
   "w-full",
   "overflow-y-scroll",
-  "space-y-10",
-  "py-12",
-  "pl-12",
-  "lg:py-16",
-  "lg:pl-16"
+  "space-y-10"
 );
 
 const previewCardContainerClassName = tw(
@@ -90,33 +87,44 @@ export const InvestView: FC<InvestViewProps> = () => {
   }
 
   return (
-    <div className={contentClassName}>
-      <div className={tw("flex", "flex-col", "justify-start")}>
-        <div>
-          <H2 className={tw("mb-4")}>{t`Element Pools`} </H2>
-          <span
-            className={classNames(
-              Classes.RUNNING_TEXT,
-              Classes.TEXT_MUTED,
-              tw("text-base")
-            )}
-          >{t`Invest in the latest Defi projects without the fees or hassle of managing everything yourself.`}</span>
+    <div
+      className={tw("flex", "p-12", "h-full", "space-x-12", "overflow-scroll")}
+    >
+      {/* Main content */}
+      <div className={tw("flex", "flex-col", "flex-1", "space-y-12")}>
+        {/* page title */}
+        <div className={tw("flex", "flex-col", "justify-start")}>
+          <div>
+            <H2 className={tw("mb-4")}>{t`Element Pools`} </H2>
+            <span
+              className={classNames(
+                Classes.RUNNING_TEXT,
+                Classes.TEXT_MUTED,
+                tw("text-base")
+              )}
+            >{t`Invest in the latest Defi projects without the fees or hassle of managing everything yourself.`}</span>
+          </div>
+        </div>
+
+        {/* Strategy cards */}
+        <div className={tw("flex", "w-full", "items-center")}>
+          <div className={previewCardContainerClassName}>
+            {availableStrategies.map((strategy) => {
+              return (
+                <StrategyPreviewCard
+                  onSelectStrategy={setSelectedStrategy}
+                  key={strategy.id}
+                  strategy={strategy}
+                />
+              );
+            })}
+          </div>
         </div>
       </div>
 
-      {/* Strategy cards */}
-      <div className={tw("flex", "w-full", "items-center")}>
-        <div className={previewCardContainerClassName}>
-          {availableStrategies.map((strategy) => {
-            return (
-              <StrategyPreviewCard
-                onSelectStrategy={setSelectedStrategy}
-                key={strategy.id}
-                strategy={strategy}
-              />
-            );
-          })}
-        </div>
+      {/* Right hand side */}
+      <div className={tw("hidden", "lg:block", "h-full")}>
+        <WalletSummaryPane />
       </div>
     </div>
   );
