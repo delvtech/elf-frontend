@@ -11,9 +11,12 @@ import { formatEther } from "ethers/lib/utils";
 import { Money } from "ts-money";
 import { t } from "ttag";
 
-import { AppToaster, makeErrorToast } from "efi-ui/app/AppToaster/AppToaster";
 import { useCryptoPrice } from "efi-ui/crypto/hooks/useCryptoPrice/useCryptoPrice";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
+import {
+  AppToaster,
+  makeErrorToast,
+} from "efi-ui/toaster/AppToaster/AppToaster";
 import {
   useWalletBalances,
   WalletBalances,

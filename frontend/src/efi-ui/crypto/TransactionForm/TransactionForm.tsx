@@ -11,11 +11,11 @@ import {
   useNumericInput,
 } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { CryptoIcon } from "efi-ui/crypto/CryptoIcon";
+import styles from "efi-ui/crypto/TransactionForm/TransactionForm.module.css";
 import { getFormattedBalance } from "efi/crypto/balance";
 import { CryptoName } from "efi/crypto/CryptoName";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { TokenBalance } from "efi/crypto/TokenBalance";
-import styles from "efi-ui/crypto/TransactionForm/TransactionForm.module.css";
 
 interface TransactionFormProps {
   buttonEnabled?: boolean;
@@ -24,7 +24,7 @@ interface TransactionFormProps {
   buttonIntent?: Intent;
   cryptoSymbol: CryptoSymbol;
   cryptoBalance: TokenBalance | undefined;
-  onTransaction: (amount: BigNumber) => Promise<void>;
+  onTransaction: (amount: BigNumber) => void;
 }
 
 const numericInputOptions: NumericInputOptions = {
