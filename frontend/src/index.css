@@ -56,9 +56,9 @@ code {
   /*
    * Taken from Blueprint, this is the color of the dark mode Navbar component.
    * If using the blueprint Colors module, this is equivalent to
-   * Colors.DARK_GRAY5.
+   * Colors.DARK_GRAY4.
    */
-  --bp3-dark-navbar-bg-color: #394b59;
+  --bp3-dark-navbar-bg-color: #30404d;
 
   /*
    * Taken from Blueprint, this is the color of the dark mode Navbar text.
