@@ -94,16 +94,14 @@ export const InvestView: FC<InvestViewProps> = () => {
       <div className={tw("flex", "flex-col", "flex-1", "space-y-12")}>
         {/* page title */}
         <div className={tw("flex", "flex-col", "justify-start")}>
-          <div>
-            <H2 className={tw("mb-4")}>{t`Element Pools`} </H2>
-            <span
-              className={classNames(
-                Classes.RUNNING_TEXT,
-                Classes.TEXT_MUTED,
-                tw("text-base")
-              )}
-            >{t`Invest in the latest Defi projects without the fees or hassle of managing everything yourself.`}</span>
-          </div>
+          <H2 className={tw("mb-4")}>{t`Element Pools`} </H2>
+          <span
+            className={classNames(
+              Classes.RUNNING_TEXT,
+              Classes.TEXT_MUTED,
+              tw("text-base")
+            )}
+          >{t`Invest in the latest Defi projects without the fees or hassle of managing everything yourself.`}</span>
         </div>
 
         {/* Strategy cards */}
