@@ -10,14 +10,22 @@ import {
 } from "./TokenContractAddresses";
 import { TokenContractSymbols } from "./TokenContractSymbols";
 
+const WethContract = new Contract(
+  wethAddress,
+  erc20abi,
+  jsonRpcProvider
+) as Erc20;
+
+const UsdcContract = new Contract(
+  USDC_CONTRACT_ADDRESS_MAINNET,
+  erc20abi,
+  jsonRpcProvider
+) as Erc20;
+
 /**
- * lookup table for ERC20 tokens
+ * Lookup table for ERC20 tokens
  */
 export const TokenContracts: Record<TokenContractSymbols, Erc20> = {
-  WETH: new Contract(wethAddress, erc20abi, jsonRpcProvider) as Erc20,
-  USDC: new Contract(
-    USDC_CONTRACT_ADDRESS_MAINNET,
-    erc20abi,
-    jsonRpcProvider
-  ) as Erc20,
+  WETH: WethContract,
+  USDC: UsdcContract,
 };

@@ -1,35 +1,33 @@
-import { useQuery } from "react-query";
-
 import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
 import { BigNumber } from "ethers";
 
-import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
-import { fetchEthBalance } from "efi/crypto/fetchEthBalance";
-import { StakingAssets } from "efi/crypto/stakingAssets";
+import {
+  useTokenBalance,
+  UseTokenBalanceResult,
+} from "efi-ui/token/hooks/useTokenBalance/useTokenBalance";
 import { TokenBalance } from "efi/crypto/TokenBalance";
+import { useEthBalance } from "efi-ui/coins/ether/hooks/useEthBalance/useEthBalance";
 
-export type WalletBalances = Record<StakingAssets, TokenBalance | undefined>;
+export interface WalletBalances {
+  ETH: TokenBalance | undefined;
+  WETH: UseTokenBalanceResult;
+}
+
 export function useWalletBalances(): WalletBalances {
   const { library, account } = useWeb3React<Web3Provider>();
 
-  const walletBalanceKey = makeWalletBalanceQueryKey(library, account);
-  const result = useQuery(walletBalanceKey, async () => {
-    if (library && account) {
-      return fetchEthBalance(library, account);
-    }
-  });
-
-  const ethBalance: TokenBalance | undefined = result.data
+  const { data: ethBalance } = useEthBalance(library, account);
+  const ethBalanceAsTokenBalance: TokenBalance | undefined = ethBalance
     ? {
-        value: result.data,
+        value: ethBalance,
         decimals: BigNumber.from(18),
       }
     : undefined;
 
   const wethBalance = useTokenBalance("WETH", account);
 
-  return { ETH: ethBalance, WETH: wethBalance };
+  return { ETH: ethBalanceAsTokenBalance, WETH: wethBalance };
 }
 
 export function makeWalletBalanceQueryKey(

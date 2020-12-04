@@ -37,6 +37,8 @@ import { CryptoName } from "efi/crypto/CryptoName";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { stakingAssets, StakingAssets } from "efi/crypto/stakingAssets";
 import { Strategy } from "efi/pools/strategy";
+import { TokenBalance } from "efi/crypto/TokenBalance";
+import { useWalletBalances } from "efi-ui/wallets/hooks/useWalletBalance";
 
 interface StrategyCardProps {
   strategy: Strategy;
@@ -51,7 +53,8 @@ const stubbedStrategyData: PieData[] = [
 
 export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
   const { name, stakingAsset: defaultStakingAsset } = strategy;
-  const { balances, account } = useWallet();
+  const { account } = useWallet();
+  const balances = useWalletBalances();
   const { data: strategyCryptoSymbol } = useElfContractSymbol();
   const { data: elfTotalSupply } = useElfContractTotalSupply();
   const elfBalance = useElfContractBalance(account);
@@ -228,19 +231,21 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
       >
         <div className={tw("flex-1")}>
           {/* Deposit */}
-          <TransactionForm
-            inputLabel={t`Deposit`}
-            cryptoSymbol={stakingAsset}
-            cryptoBalance={cryptoBalance}
-            buttonIntent={depositStarted ? Intent.WARNING : Intent.PRIMARY}
-            buttonEnabled={!depositStarted}
-            buttonLabel={
-              depositStarted
-                ? t`Confirming deposit...`
-                : t`Deposit ${stakingAsset}`
-            }
-            onTransaction={startDeposit}
-          />
+          {cryptoBalance?.decimals && cryptoBalance?.value && (
+            <TransactionForm
+              inputLabel={t`Deposit`}
+              cryptoSymbol={stakingAsset}
+              cryptoBalance={cryptoBalance as TokenBalance}
+              buttonIntent={depositStarted ? Intent.WARNING : Intent.PRIMARY}
+              buttonEnabled={!depositStarted}
+              buttonLabel={
+                depositStarted
+                  ? t`Confirming deposit...`
+                  : t`Deposit ${stakingAsset}`
+              }
+              onTransaction={startDeposit}
+            />
+          )}
         </div>
 
         <div className={tw("flex-1")}>

@@ -14,6 +14,7 @@ import { formatChainName } from "efi/crypto/formatChainName";
 import { formatEthBalance } from "efi/crypto/formatEthBalance";
 import { getConnectorName } from "efi/wallets/connectors";
 import { formatWalletAddress } from "efi/wallets/formatWalletAddress";
+import { useWalletBalances } from "efi-ui/wallets/hooks/useWalletBalance";
 
 interface WalletSummaryProps {}
 
@@ -37,9 +38,10 @@ export const WalletSummary: FunctionComponent<WalletSummaryProps> = () => {
   } = useWeb3React<Web3Provider>();
   const { isDarkMode } = useDarkMode();
 
-  const { balances, fiatBalance } = useWallet();
+  const { fiatBalance } = useWallet();
+  const balances = useWalletBalances();
   const ethBalance = balances.ETH?.value;
-  const wethBalance = balances.WETH?.value;
+  const { data: wethBalance } = balances.WETH?.value;
 
   const formattedEthBalance = ethBalance ? formatEthBalance(ethBalance) : "0";
 

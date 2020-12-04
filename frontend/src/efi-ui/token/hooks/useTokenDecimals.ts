@@ -1,6 +1,4 @@
-import { QueryKey, useQuery } from "react-query";
-
-import { BigNumber } from "ethers";
+import { QueryKey, QueryResult, useQuery } from "react-query";
 
 import { fetchTokenDecimals } from "efi/crypto/fetchTokenDecimals";
 import { TokenContracts } from "efi/crypto/TokenContracts";
@@ -14,7 +12,7 @@ import { TokenContractSymbols } from "efi/crypto/TokenContractSymbols";
  */
 export function useTokenDecimals(
   name: TokenContractSymbols
-): BigNumber | undefined {
+): QueryResult<number | undefined> {
   const balanceKey = makeTokenDecimalsQueryKey(name);
 
   const result = useQuery<number | undefined>(
@@ -25,11 +23,7 @@ export function useTokenDecimals(
     }
   );
 
-  if (!result.data) {
-    return;
-  }
-
-  return BigNumber.from(result.data);
+  return result;
 }
 
 export interface TokenDecimalsQueryVariables {

@@ -17,12 +17,9 @@ import {
   AppToaster,
   makeErrorToast,
 } from "efi-ui/toaster/AppToaster/AppToaster";
-import {
-  useWalletBalances,
-  WalletBalances,
-} from "efi-ui/wallets/hooks/useWalletBalance";
 import { useWalletConnectionStatus } from "efi-ui/wallets/hooks/useWalletConnectionStatus";
 import { getConnectorName } from "efi/wallets/connectors";
+import { useEthBalance } from "efi-ui/coins/ether/hooks/useEthBalance/useEthBalance";
 
 export interface Wallet {
   /**
@@ -39,11 +36,6 @@ export interface Wallet {
    * Errors associated with wallet operations.
    */
   error: Error | undefined;
-
-  /**
-   * Balances of the wallet.
-   */
-  balances: WalletBalances;
 
   /**
    * The real world value of the Eth in the wallet (doesn't include token values).
@@ -63,8 +55,7 @@ export function useWallet(): Wallet {
   setWeb3ReactOnWindow(web3React);
   useWalletConnectionStatus();
 
-  const balances = useWalletBalances();
-  const ethBalance = balances.ETH?.value;
+  const { data: ethBalance } = useEthBalance(library, account);
 
   // Manages the toasts for connections
   const { currency } = useCurrencyPref();
@@ -73,10 +64,10 @@ export function useWallet(): Wallet {
   let fiatBalance: Money | undefined;
   if (ethPrice && ethBalance) {
     // Money wants the atomic value, it handles formatting.
-    const integerValue = Math.floor(
+    const fractionalAmount = Math.floor(
       ethPrice * +formatEther(ethBalance) * 10 ** currency.decimal_digits
     );
-    fiatBalance = new Money(integerValue, currency.code);
+    fiatBalance = new Money(fractionalAmount, currency.code);
   }
 
   const connectorName = getConnectorName(connector);
@@ -85,7 +76,6 @@ export function useWallet(): Wallet {
     library,
     account,
     error,
-    balances,
     fiatBalance,
     connectorName,
   };

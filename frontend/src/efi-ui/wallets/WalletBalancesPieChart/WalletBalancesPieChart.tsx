@@ -7,13 +7,15 @@ import { useElfContractBalance } from "efi-ui/contracts/useElfContract";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useWallet } from "efi-ui/wallets/hooks/useWallet";
 import { getFormattedBalance } from "efi/crypto/balance";
+import { useWalletBalances } from "efi-ui/wallets/hooks/useWalletBalance";
 
 interface WalletBalancesPieChartProps {}
 
 export const WalletBalancesPieChart: FC<WalletBalancesPieChartProps> = () => {
   const { isDarkMode } = useDarkMode();
 
-  const { balances, account } = useWallet();
+  const { account } = useWallet();
+  const balances = useWalletBalances();
   const ethBalance = balances.ETH ? formatEther(balances.ETH.value) : "0";
   const elfBalanceInfo = useElfContractBalance(account);
   const elfBalance = getFormattedBalance(elfBalanceInfo);

@@ -1,32 +1,41 @@
-import React, { FunctionComponent } from "react";
-
 import { Card, Classes, Divider, H4, HTMLTable } from "@blueprintjs/core";
+import { Web3Provider } from "@ethersproject/providers";
+import { useWeb3React } from "@web3-react/core";
+import classNames from "classnames";
+import React, { FC } from "react";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { useEthBalance } from "efi-ui/coins/ether/hooks/useEthBalance/useEthBalance";
 import { useCryptoPrice } from "efi-ui/crypto/hooks/useCryptoPrice/useCryptoPrice";
+import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance/useTokenBalance";
 import { useWallet } from "efi-ui/wallets/hooks/useWallet";
-import { getFormattedBalance } from "efi/crypto/balance";
 import styles from "efi-ui/wallets/WalletSummaryPane/WalletSummaryPane.module.css";
+import { TokenContractSymbols } from "efi/crypto/TokenContractSymbols";
+import { formatEth } from "efi/coins/ether/formatEth";
+import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
 
 interface WalletBalancesCardProps {}
 
-export const WalletBalancesCard: FunctionComponent<WalletBalancesCardProps> = () => {
-  const { balances, fiatBalance } = useWallet();
-  const formattedEthBalance = getFormattedBalance(balances.ETH);
-  const formattedWethBalance = getFormattedBalance(balances.WETH);
-  const { data: ethPrice } = useCryptoPrice("ETH");
-  const totalBalance =
-    (Number(formattedEthBalance) + Number(formattedWethBalance)) *
-    (ethPrice || 0);
+const WALLET_TOKENS: TokenContractSymbols[] = ["WETH"];
+
+export const WalletBalancesCard: FC<WalletBalancesCardProps> = () => {
+  const { fiatBalance } = useWallet();
+  const { library, account } = useWeb3React<Web3Provider>();
+
+  const { data: ethBalance } = useEthBalance(library, account);
+  const { data: ethPrice, isLoading: isEthPriceLoading } = useCryptoPrice(
+    "ETH"
+  );
+  const formattedEthBalance = formatEth(ethBalance);
+
+  const totalBalance = "$1,0000";
 
   return (
     <Card className={tw("flex", "flex-col", "space-y-4")}>
       <div className={tw("flex", "justify-between")}>
         <H4 className={tw("m-0")}>{t`Wallet balance:`}</H4>
-        <H4 className={tw("m-0")}>
-          ${Number(totalBalance.toFixed(2)).toLocaleString()}
-        </H4>
+        <H4 className={tw("m-0")}>{totalBalance}</H4>
       </div>
       <Divider />
 
@@ -47,23 +56,25 @@ export const WalletBalancesCard: FunctionComponent<WalletBalancesCardProps> = ()
                 <strong>ETH</strong>
               </div>
             </td>
-            <td>$134.23</td>
+            <td
+              className={classNames({ [Classes.SKELETON]: isEthPriceLoading })}
+            >
+              {`$${ethPrice}`}
+            </td>
             {fiatBalance && (
               <td>{`$${fiatBalance.toDecimal().toLocaleString()}`}</td>
             )}
             <td>{formattedEthBalance}</td>
           </tr>
-
-          <tr>
-            <td>
-              <div className={tw("flex", "space-x-2")}>
-                <strong>wETH</strong>
-              </div>
-            </td>
-            <td>$134.23</td>
-            <td>$1,210.23</td>
-            <td>{formattedWethBalance}</td>
-          </tr>
+          {WALLET_TOKENS.map((tokenSymbol) => {
+            return (
+              <TokenBalanceTableRow
+                key={tokenSymbol}
+                account={account}
+                tokenSymbol={tokenSymbol}
+              />
+            );
+          })}
         </tbody>
       </HTMLTable>
     </Card>
@@ -71,3 +82,43 @@ export const WalletBalancesCard: FunctionComponent<WalletBalancesCardProps> = ()
 };
 
 export default WalletBalancesCard;
+
+const TokenBalanceTableRow: FC<{
+  account: string | null | undefined;
+  tokenSymbol: TokenContractSymbols;
+}> = ({ account, tokenSymbol }) => {
+  const {
+    value: { data: tokenBalance },
+    decimals: { data: decimals },
+  } = useTokenBalance(tokenSymbol, account);
+
+  const { data: tokenPrice, isLoading: isTokenPriceLoading } = useCryptoPrice(
+    "WETH"
+  );
+
+  const formattedFiatBalance = "$1,000";
+
+  const formattedTokenBalance = formatCurrency(tokenBalance, decimals);
+
+  return (
+    <tr>
+      {/* Token name */}
+      <td>
+        <div className={tw("flex", "space-x-2")}>
+          <strong>{tokenSymbol}</strong>
+        </div>
+      </td>
+
+      {/* Price per token */}
+      <td className={classNames({ [Classes.SKELETON]: isTokenPriceLoading })}>
+        {`$${tokenPrice}`}
+      </td>
+
+      {/* Fiat balance */}
+      <td>{formattedFiatBalance}</td>
+
+      {/* Token balance */}
+      <td>{formattedTokenBalance}</td>
+    </tr>
+  );
+};

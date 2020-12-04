@@ -1,4 +1,4 @@
-import { QueryKey, useQuery } from "react-query";
+import { QueryKey, QueryResult, useQuery } from "react-query";
 
 import { BigNumber } from "ethers";
 
@@ -15,7 +15,7 @@ import { TokenContractSymbols } from "efi/crypto/TokenContractSymbols";
 export function useTokenBalanceOf(
   name: TokenContractSymbols,
   account: string | null | undefined
-): BigNumber | undefined {
+): QueryResult<BigNumber | undefined> {
   const balanceKey = makeTokenBalanceOfQueryKey(name, account);
 
   const result = useQuery<BigNumber | undefined>(
@@ -28,7 +28,7 @@ export function useTokenBalanceOf(
     }
   );
 
-  return result.data;
+  return result;
 }
 
 export interface TokenBalanceOfQueryVariables {
