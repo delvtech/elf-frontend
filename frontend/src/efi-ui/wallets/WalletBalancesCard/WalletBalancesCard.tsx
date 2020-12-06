@@ -16,7 +16,7 @@ import styles from "efi-ui/wallets/WalletSummaryPane/WalletSummaryPane.module.cs
 import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
 import { formatEth } from "efi/coins/ether/formatEth";
 import { TokenContractSymbols } from "efi/crypto/TokenContractSymbols";
-import { getFormattedMoney } from "efi/money/getFormattedMoney";
+import { formatMoney } from "efi/money/formatMoney";
 
 interface WalletBalancesCardProps {}
 
@@ -105,7 +105,7 @@ const TokenBalanceTableRow: FC<{
     tokenBalance?.value,
     tokenBalance?.decimals.toNumber()
   );
-  const formattedFiatBalance = getFormattedMoney(fiatBalance);
+  const formattedFiatBalance = formatMoney(fiatBalance);
 
   return (
     <tr>

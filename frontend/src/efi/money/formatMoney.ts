@@ -4,7 +4,7 @@ import { Money } from "ts-money";
  * Helper to convert a Money object to a human readable string
  * @param {Money} money value to be formatted
  */
-export function getFormattedMoney(
+export function formatMoney(
   money: Money | undefined,
   defaultValue: string = "0"
 ): string {
