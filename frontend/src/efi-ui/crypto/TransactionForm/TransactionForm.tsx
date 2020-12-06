@@ -12,7 +12,7 @@ import {
 } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { CryptoIcon } from "efi-ui/crypto/CryptoIcon";
 import styles from "efi-ui/crypto/TransactionForm/TransactionForm.module.css";
-import { getFormattedBalance } from "efi/crypto/balance";
+import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
 import { CryptoName } from "efi/crypto/CryptoName";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { TokenBalance } from "efi/crypto/TokenBalance";
@@ -53,9 +53,10 @@ export const TransactionForm: FC<TransactionFormProps> = ({
   const validValue =
     value && cryptoBalance ? value.lte(cryptoBalance.value) : true;
 
-  // TODO: make this component handle any type of crypto.  We'll formalize this into a function that
-  // does the proper operations depending on the asset.  This is fine for V0.
-  const balance = getFormattedBalance(cryptoBalance);
+  const balance = formatCurrency(
+    cryptoBalance?.value,
+    cryptoBalance?.decimals.toNumber()
+  );
 
   const onClick = useCallback(async () => {
     if (validValue && onTransaction) {

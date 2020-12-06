@@ -5,7 +5,7 @@ import { BigNumber } from "ethers";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { getFormattedBalance } from "efi/crypto/balance";
+import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { TokenBalance } from "efi/crypto/TokenBalance";
 
@@ -30,7 +30,10 @@ export const ConfirmWithdrawButton: FC<ConfirmWithdrawButtonProps> = ({
     ? amountToWithdraw.lte(cryptoBalance.value)
     : false;
 
-  const balance = getFormattedBalance(cryptoBalance);
+  const balance = formatCurrency(
+    cryptoBalance?.value,
+    cryptoBalance?.decimals.toNumber()
+  );
 
   const onClick = useCallback(() => {
     if (validValue && onConfirmWithdraw) {

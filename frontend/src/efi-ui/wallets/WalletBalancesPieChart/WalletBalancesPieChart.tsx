@@ -6,8 +6,8 @@ import { PieChart, PieData } from "efi-ui/charts/PieChart/PieChart";
 import { useElfContractBalance } from "efi-ui/contracts/useElfContract";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useWallet } from "efi-ui/wallets/hooks/useWallet";
-import { getFormattedBalance } from "efi/crypto/balance";
 import { useWalletBalances } from "efi-ui/wallets/hooks/useWalletBalance";
+import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
 
 interface WalletBalancesPieChartProps {}
 
@@ -17,8 +17,8 @@ export const WalletBalancesPieChart: FC<WalletBalancesPieChartProps> = () => {
   const { account } = useWallet();
   const balances = useWalletBalances();
   const ethBalance = balances.ETH ? formatEther(balances.ETH.value) : "0";
-  const elfBalanceInfo = useElfContractBalance(account);
-  const elfBalance = getFormattedBalance(elfBalanceInfo);
+  const elf = useElfContractBalance(account);
+  const elfBalance = formatCurrency(elf?.value, elf?.decimals.toNumber());
 
   const tokens: PieData[] = [
     {
