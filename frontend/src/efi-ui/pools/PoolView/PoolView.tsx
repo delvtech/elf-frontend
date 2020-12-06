@@ -4,7 +4,7 @@ import { RouteComponentProps } from "@reach/router";
 
 import tw from "efi-tailwindcss-classnames";
 import { InvestBreadcrumb } from "efi-ui/invest/InvestBreadcrumb/InvestBreadcrumb";
-import { StrategyCard } from "efi-ui/pools/StrategyCard/StrategyCard";
+import { PoolCard } from "efi-ui/pools/PoolCard/PoolCard";
 import { useWallet } from "efi-ui/wallets/hooks/useWallet";
 import { MissingWalletEmptyState } from "efi-ui/wallets/MissingWalletEmptyState/MissingWalletEmptyState";
 import { ElfStrategyHighRisk } from "efi/pools/highRisk";
@@ -64,7 +64,7 @@ export const PoolView: FC<PoolViewProps> = ({ pool, setActivePool }) => {
       </div>
 
       <div className={strategyCardContainerClassName}>
-        <StrategyCard strategy={strategiesById[pool]} />
+        <PoolCard strategy={strategiesById[pool]} />
       </div>
     </div>
   );

@@ -21,10 +21,10 @@ import {
 } from "efi-ui/contracts/useElfContract";
 import { useCryptoPrice } from "efi-ui/crypto/hooks/useCryptoPrice/useCryptoPrice";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import { Strategy } from "efi/pools/strategy";
+import { Pool } from "efi/pools/Pool";
 
 interface StrategyPreviewCardProps {
-  strategy: Strategy;
+  strategy: Pool;
   onSelectStrategy?: (strategyId: string) => void;
 
   className?: string;

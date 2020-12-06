@@ -2,7 +2,7 @@ import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 
 import { StakingAssets } from "../crypto/stakingAssets";
 
-export interface Strategy {
+export interface Pool {
   /**
    * Unique identifier for the strategy
    */

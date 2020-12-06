@@ -1,13 +1,13 @@
 import { t } from "ttag";
 
-import { Strategy } from "efi/pools/strategy";
+import { Pool } from "efi/pools/Pool";
 
 const ELF_STRATEGY_HIGH_RISK = "ELF_STRATEGY_HIGH_RISK";
 
 /**
  * A high-risk strategy made up of crazy coins.
  */
-export const ElfStrategyHighRisk: Strategy = {
+export const ElfStrategyHighRisk: Pool = {
   id: ELF_STRATEGY_HIGH_RISK,
   stakingAsset: "ETH",
   name: t`High Risk Pool`,
