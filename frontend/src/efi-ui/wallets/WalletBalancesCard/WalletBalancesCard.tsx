@@ -64,9 +64,7 @@ export const WalletBalancesCard: FC<WalletBalancesCardProps> = () => {
             >
               {`$${ethPrice}`}
             </td>
-            {fiatBalance && (
-              <td>{`$${fiatBalance.toDecimal().toLocaleString()}`}</td>
-            )}
+            {fiatBalance && <td>{`$${formatMoney(fiatBalance)}`}</td>}
             <td>{formattedEthBalance}</td>
           </tr>
           {WALLET_TOKENS.map((tokenSymbol) => {

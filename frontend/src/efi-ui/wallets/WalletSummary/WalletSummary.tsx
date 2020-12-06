@@ -10,11 +10,12 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useWallet } from "efi-ui/wallets/hooks/useWallet";
+import { useWalletBalances } from "efi-ui/wallets/hooks/useWalletBalance";
 import { formatChainName } from "efi/crypto/formatChainName";
 import { formatEthBalance } from "efi/crypto/formatEthBalance";
+import { formatMoney } from "efi/money/formatMoney";
 import { getConnectorName } from "efi/wallets/connectors";
 import { formatWalletAddress } from "efi/wallets/formatWalletAddress";
-import { useWalletBalances } from "efi-ui/wallets/hooks/useWalletBalance";
 
 interface WalletSummaryProps {}
 
@@ -145,7 +146,7 @@ export const WalletSummary: FunctionComponent<WalletSummaryProps> = () => {
           <span
             className={labelClassName}
           >{t`Available balance (${currencyInfo.code})`}</span>
-          <span>{`${fiatBalance.toDecimal().toLocaleString()} (${
+          <span>{`${formatMoney(fiatBalance)} (${
             currencyInfo.symbol_native || currencyInfo.symbol
           })`}</span>
         </div>
