@@ -14,6 +14,8 @@ import { ONE_ETHER } from "efi/crypto/ethereum";
 import { TokenContracts } from "efi/crypto/TokenContracts";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 
+import { ContractMethodArgs, ContractMethodName } from "./types";
+
 interface ElfStubs {
   functions: {
     assetBalances(): Promise<{
@@ -77,14 +79,16 @@ export async function fetchDecimals(): Promise<number> {
   const result = await elfContract.functions.decimals();
   return result[0];
 }
-
-export async function estimateGasForMethod(
-  methodName: keyof Elf["estmateGas"],
-  callArgs: any[]
+export async function estimateGasForMethod<
+  TMethodName extends ContractMethodName<Elf>,
+  TCallArgs extends ContractMethodArgs<Elf, TMethodName>
+>(
+  methodName: TMethodName,
+  callArgs?: TCallArgs
 ): Promise<BigNumber | undefined> {
-  // TODO: figure out why typescript breaks here
-  // @ts-ignore-next-line
-  return elf.estimateGas[methodName](...callArgs);
+  // typescript can't resolve which method this is and therefore which callArgs are correct.
+  // however, the caller of this function will have typesafe inputs.
+  return (elfContract.estimateGas[methodName] as any)(...(callArgs as any[]));
 }
 
 export async function estimateGasForDeposit(
