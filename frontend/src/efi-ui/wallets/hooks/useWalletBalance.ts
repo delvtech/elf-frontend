@@ -2,16 +2,13 @@ import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
 import { BigNumber } from "ethers";
 
-import {
-  useTokenBalance,
-  UseTokenBalanceResult,
-} from "efi-ui/token/hooks/useTokenBalance/useTokenBalance";
-import { TokenBalance } from "efi/crypto/TokenBalance";
 import { useEthBalance } from "efi-ui/coins/ether/hooks/useEthBalance/useEthBalance";
+import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance/useTokenBalance";
+import { TokenBalance } from "efi/crypto/TokenBalance";
 
 export interface WalletBalances {
   ETH: TokenBalance | undefined;
-  WETH: UseTokenBalanceResult;
+  WETH: TokenBalance | undefined;
 }
 
 export function useWalletBalances(): WalletBalances {
@@ -25,7 +22,7 @@ export function useWalletBalances(): WalletBalances {
       }
     : undefined;
 
-  const wethBalance = useTokenBalance("WETH", account);
+  const [wethBalance] = useTokenBalance("WETH", account);
 
   return { ETH: ethBalanceAsTokenBalance, WETH: wethBalance };
 }
