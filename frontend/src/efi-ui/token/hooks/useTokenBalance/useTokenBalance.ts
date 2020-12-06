@@ -18,8 +18,7 @@ export function useTokenBalance(
   account: string | null | undefined
 ): [
   TokenBalance | undefined,
-  QueryResult<BigNumber | undefined>,
-  QueryResult<number | undefined>
+  [QueryResult<BigNumber | undefined>, QueryResult<number | undefined>]
 ] {
   const valueResult = useTokenBalanceOf(name, account);
   const decimalsResult = useTokenDecimals(name);
@@ -27,7 +26,7 @@ export function useTokenBalance(
   const decimals = decimalsResult.data;
 
   if (value === undefined || decimals === undefined) {
-    return [undefined, valueResult, decimalsResult];
+    return [undefined, [valueResult, decimalsResult]];
   }
 
   return [
@@ -35,7 +34,6 @@ export function useTokenBalance(
       value,
       decimals: BigNumber.from(decimals),
     },
-    valueResult,
-    decimalsResult,
+    [valueResult, decimalsResult],
   ];
 }
