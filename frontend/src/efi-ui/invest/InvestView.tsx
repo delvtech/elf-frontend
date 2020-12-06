@@ -6,8 +6,6 @@ import classNames from "classnames";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { InvestBreadcrumb } from "efi-ui/invest/InvestBreadcrumb/InvestBreadcrumb";
-import { StrategyCard } from "efi-ui/pools/StrategyCard/StrategyCard";
 import { StrategyPreviewCard } from "efi-ui/pools/StrategyPreviewCard/StrategyPreviewCard";
 import { useWallet } from "efi-ui/wallets/hooks/useWallet";
 import { MissingWalletEmptyState } from "efi-ui/wallets/MissingWalletEmptyState/MissingWalletEmptyState";
@@ -15,17 +13,9 @@ import { ElfStrategyHighRisk } from "efi/pools/highRisk";
 import { ElfStrategyLowRisk } from "efi/pools/lowRisk";
 import { ElfStrategyMediumRisk } from "efi/pools/mediumRisk";
 import WalletSummaryPane from "efi-ui/wallets/WalletSummaryPane/WalletSummaryPane";
+import { PoolView } from "efi-ui/pools/PoolView/PoolView";
 
 interface InvestViewProps extends RouteComponentProps {}
-
-const contentClassName = tw(
-  "flex",
-  "flex-col",
-  "h-full",
-  "w-full",
-  "overflow-y-scroll",
-  "space-y-10"
-);
 
 const previewCardContainerClassName = tw(
   "flex",
@@ -38,26 +28,11 @@ const previewCardContainerClassName = tw(
   "space-y-3"
 );
 
-const strategyCardContainerClassName = tw(
-  "flex-1",
-  "flex",
-  "flex-col",
-  "w-full",
-  "justify-center",
-  "items-center",
-  "p-3",
-  "space-y-3"
-);
-
 const availableStrategies = [
   ElfStrategyLowRisk,
   ElfStrategyMediumRisk,
   ElfStrategyHighRisk,
 ];
-
-const strategiesById = Object.fromEntries(
-  availableStrategies.map((strategy) => [strategy.id, strategy])
-);
 
 export const InvestView: FC<InvestViewProps> = () => {
   const { account } = useWallet();
@@ -67,22 +42,10 @@ export const InvestView: FC<InvestViewProps> = () => {
     return <MissingWalletEmptyState />;
   }
 
-  // TODO: Move to own compoent for specific StrategyView
+  // TODO: Move to own route
   if (selectedStrategy) {
     return (
-      <div className={contentClassName}>
-        <div className={tw("flex", "w-full", "justify-center", "lg:pt-12")}>
-          <InvestBreadcrumb
-            availableStrategies={availableStrategies}
-            activeStrategy={selectedStrategy}
-            setActiveStrategy={setSelectedStrategy}
-          />
-        </div>
-
-        <div className={strategyCardContainerClassName}>
-          <StrategyCard strategy={strategiesById[selectedStrategy]} />
-        </div>
-      </div>
+      <PoolView pool={selectedStrategy} setActivePool={setSelectedStrategy} />
     );
   }
 
