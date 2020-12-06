@@ -4,6 +4,7 @@ import {
   BigNumber,
   BigNumberish,
   Contract,
+  ContractFunction,
   ContractTransaction,
   Signer,
 } from "ethers";
@@ -86,9 +87,11 @@ export async function estimateGasForMethod<
   methodName: TMethodName,
   callArgs?: TCallArgs
 ): Promise<BigNumber | undefined> {
-  // typescript can't resolve which method this is and therefore which callArgs are correct.
-  // however, the caller of this function will have typesafe inputs.
-  return (elfContract.estimateGas[methodName] as any)(...(callArgs as any[]));
+  // type cast here because typescript can't resolve which method this is and therefore which
+  // callArgs are correct. the caller of this function will still have typesafe inputs though.
+  return (elfContract.estimateGas[methodName] as ContractFunction<any>)(
+    ...(callArgs as any[])
+  );
 }
 
 export async function estimateGasForDeposit(
