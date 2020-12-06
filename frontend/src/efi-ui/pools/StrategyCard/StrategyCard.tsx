@@ -33,12 +33,12 @@ import { useCryptoDrawer } from "efi-ui/crypto/CryptoDrawer/useCryptoDrawer/useC
 import { CryptoIcon } from "efi-ui/crypto/CryptoIcon";
 import { TransactionForm } from "efi-ui/crypto/TransactionForm/TransactionForm";
 import { useWallet } from "efi-ui/wallets/hooks/useWallet";
+import { useWalletBalances } from "efi-ui/wallets/hooks/useWalletBalance";
 import { CryptoName } from "efi/crypto/CryptoName";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { stakingAssets, StakingAssets } from "efi/crypto/stakingAssets";
-import { Strategy } from "efi/pools/strategy";
 import { TokenBalance } from "efi/crypto/TokenBalance";
-import { useWalletBalances } from "efi-ui/wallets/hooks/useWalletBalance";
+import { Strategy } from "efi/pools/strategy";
 
 interface StrategyCardProps {
   strategy: Strategy;
@@ -69,14 +69,12 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
   /****
    * Deposit hooks
    ****/
-  const [depositStarted, setDepositStarted] = useState(false);
-  const startDeposit = useDeposit(stakingAsset, account, setDepositStarted);
+  const [startDeposit, depositPending] = useDeposit(stakingAsset, account);
 
   /****
    * Withdraw hooks
    ****/
-  const [withdrawStarted, setWithdrawStarted] = useState(false);
-  const startWithdraw = useWithdraw(stakingAsset, account, setWithdrawStarted);
+  const [startWithdraw, withdrawPending] = useWithdraw(stakingAsset, account);
 
   const { openCryptoDrawer } = useCryptoDrawer();
   const clickStakingAsset = useCallback(() => {
@@ -236,10 +234,10 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
               inputLabel={t`Deposit`}
               cryptoSymbol={stakingAsset}
               cryptoBalance={cryptoBalance as TokenBalance}
-              buttonIntent={depositStarted ? Intent.WARNING : Intent.PRIMARY}
-              buttonEnabled={!depositStarted}
+              buttonIntent={depositPending ? Intent.WARNING : Intent.PRIMARY}
+              buttonEnabled={!depositPending}
               buttonLabel={
-                depositStarted
+                depositPending
                   ? t`Confirming deposit...`
                   : t`Deposit ${stakingAsset}`
               }
@@ -254,10 +252,10 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
             inputLabel={t`Withdraw`}
             cryptoSymbol={strategyCryptoSymbol as CryptoSymbol}
             cryptoBalance={elfBalance}
-            buttonIntent={withdrawStarted ? Intent.WARNING : Intent.PRIMARY}
-            buttonEnabled={!withdrawStarted}
+            buttonIntent={withdrawPending ? Intent.WARNING : Intent.PRIMARY}
+            buttonEnabled={!withdrawPending}
             buttonLabel={
-              withdrawStarted
+              withdrawPending
                 ? t`Confirming withdraw...`
                 : t`Withdraw ${stakingAsset}`
             }
@@ -273,46 +271,66 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
  * helper hook to handle the deposit process into the Elf contract
  * @param stakingAsset
  * @param account
- * @param setDepositStarted
  */
 function useDeposit(
   stakingAsset: StakingAssets,
-  account: string | null | undefined,
-  setDepositStarted: (started: boolean) => void
-): (amount: BigNumber) => void {
-  const { depositEth } = useElfContractDepositEth();
-  const { deposit } = useElfContractDeposit();
+  account: string | null | undefined
+): [(amount: BigNumber) => void, boolean] {
+  const [depositEth, depositEthResult] = useElfContractDepositEth();
+  const [deposit, depositResult] = useElfContractDeposit();
 
-  return useCallback(
+  const depositPending = depositResult.isLoading || depositEthResult.isLoading;
+
+  const startDeposit = useCallback(
     async (amount: BigNumber) => {
-      const depositFn = stakingAsset === "ETH" ? depositEth : deposit;
-      depositFn({ amount, account, setDepositStarted });
+      if (stakingAsset === "ETH") {
+        depositEth({
+          amount,
+          account,
+        });
+      } else {
+        deposit({
+          amount,
+          account,
+        });
+      }
     },
-    [account, deposit, depositEth, setDepositStarted, stakingAsset]
+    [account, deposit, depositEth, stakingAsset]
   );
+
+  return [startDeposit, depositPending];
 }
 
+/**
+ * helper hook to handle the withdraw process into the Elf contract
+ * @param stakingAsset
+ * @param account
+ */
 function useWithdraw(
   stakingAsset: StakingAssets,
-  account: string | null | undefined,
-  setWithdrawStarted: (started: boolean) => void
-): (amount: BigNumber) => void {
-  const [amountToWithdraw, setAmountToWithdraw] = useState<
-    BigNumber | undefined
-  >();
-  const { withdrawEth } = useElfContractWithdrawEth(amountToWithdraw);
-  const { withdraw } = useElfContractWithdraw(amountToWithdraw);
+  account: string | null | undefined
+): [(amount: BigNumber) => void, boolean] {
+  const [withdrawEth, withdrawEthResult] = useElfContractWithdrawEth();
+  const [withdraw, withdrawResult] = useElfContractWithdraw();
+  const withdrawPending =
+    withdrawResult.isLoading || withdrawEthResult.isLoading;
 
-  return useCallback(
+  const startWithdraw = useCallback(
     async (amount: BigNumber) => {
-      setAmountToWithdraw(amount);
-      const withdrawFn = stakingAsset === "ETH" ? withdrawEth : withdraw;
-      withdrawFn({
-        amount,
-        account,
-        setWithdrawStarted,
-      });
+      if (stakingAsset === "ETH") {
+        withdrawEth({
+          amount,
+          account,
+        });
+      } else {
+        withdraw({
+          amount,
+          account,
+        });
+      }
     },
-    [account, setWithdrawStarted, stakingAsset, withdraw, withdrawEth]
+    [account, stakingAsset, withdraw, withdrawEth]
   );
+
+  return [startWithdraw, withdrawPending];
 }

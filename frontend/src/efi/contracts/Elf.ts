@@ -4,6 +4,7 @@ import {
   BigNumber,
   BigNumberish,
   Contract,
+  ContractFunction,
   ContractTransaction,
   Signer,
 } from "ethers";
@@ -13,6 +14,8 @@ import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { ONE_ETHER } from "efi/crypto/ethereum";
 import { TokenContracts } from "efi/crypto/TokenContracts";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
+
+import { ContractMethodArgs, ContractMethodName } from "./types";
 
 interface ElfStubs {
   functions: {
@@ -77,15 +80,18 @@ export async function fetchDecimals(): Promise<number> {
   const result = await elfContract.functions.decimals();
   return result[0];
 }
-
-export async function estimateGasForDepositEth(
-  signer: Signer | undefined
+export async function estimateGasForMethod<
+  TMethodName extends ContractMethodName<Elf>,
+  TCallArgs extends ContractMethodArgs<Elf, TMethodName>
+>(
+  methodName: TMethodName,
+  callArgs?: TCallArgs
 ): Promise<BigNumber | undefined> {
-  if (!signer) {
-    return undefined;
-  }
-  const elfWithSigner = elfContract.connect(signer);
-  return elfWithSigner.estimateGas.depositETH();
+  // type cast here because typescript can't resolve which method this is and therefore which
+  // callArgs are correct. the caller of this function will still have typesafe inputs though.
+  return (elfContract.estimateGas[methodName] as ContractFunction<any>)(
+    ...(callArgs as any[])
+  );
 }
 
 export async function estimateGasForDeposit(
