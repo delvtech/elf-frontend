@@ -1,19 +1,22 @@
+import React, { FC } from "react";
+
 import { Card, Classes, Divider, H4, HTMLTable } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
 import classNames from "classnames";
-import React, { FC } from "react";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { useEthBalance } from "efi-ui/coins/ether/hooks/useEthBalance/useEthBalance";
 import { useCryptoPrice } from "efi-ui/crypto/hooks/useCryptoPrice/useCryptoPrice";
+import { useConvertToFiatBalance } from "efi-ui/money/hooks/useConvertCryptoToFiatBalance";
 import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance/useTokenBalance";
 import { useWallet } from "efi-ui/wallets/hooks/useWallet";
 import styles from "efi-ui/wallets/WalletSummaryPane/WalletSummaryPane.module.css";
-import { TokenContractSymbols } from "efi/crypto/TokenContractSymbols";
-import { formatEth } from "efi/coins/ether/formatEth";
 import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
+import { formatEth } from "efi/coins/ether/formatEth";
+import { TokenContractSymbols } from "efi/crypto/TokenContractSymbols";
+import { formatMoney } from "efi/money/formatMoney";
 
 interface WalletBalancesCardProps {}
 
@@ -61,9 +64,7 @@ export const WalletBalancesCard: FC<WalletBalancesCardProps> = () => {
             >
               {`$${ethPrice}`}
             </td>
-            {fiatBalance && (
-              <td>{`$${fiatBalance.toDecimal().toLocaleString()}`}</td>
-            )}
+            {fiatBalance && <td>{`$${formatMoney(fiatBalance)}`}</td>}
             <td>{formattedEthBalance}</td>
           </tr>
           {WALLET_TOKENS.map((tokenSymbol) => {
@@ -87,18 +88,22 @@ const TokenBalanceTableRow: FC<{
   account: string | null | undefined;
   tokenSymbol: TokenContractSymbols;
 }> = ({ account, tokenSymbol }) => {
-  const {
-    value: { data: tokenBalance },
-    decimals: { data: decimals },
-  } = useTokenBalance(tokenSymbol, account);
-
   const { data: tokenPrice, isLoading: isTokenPriceLoading } = useCryptoPrice(
-    "WETH"
+    tokenSymbol
   );
 
-  const formattedFiatBalance = "$1,000";
+  const [tokenBalance] = useTokenBalance(tokenSymbol, account);
+  const [fiatBalance] = useConvertToFiatBalance(
+    tokenSymbol,
+    tokenBalance?.value,
+    tokenBalance?.decimals.toNumber()
+  );
 
-  const formattedTokenBalance = formatCurrency(tokenBalance, decimals);
+  const formattedTokenBalance = formatCurrency(
+    tokenBalance?.value,
+    tokenBalance?.decimals.toNumber()
+  );
+  const formattedFiatBalance = formatMoney(fiatBalance);
 
   return (
     <tr>
