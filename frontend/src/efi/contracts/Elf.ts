@@ -78,14 +78,13 @@ export async function fetchDecimals(): Promise<number> {
   return result[0];
 }
 
-export async function estimateGasForDepositEth(
-  signer: Signer | undefined
+export async function estimateGasForMethod(
+  methodName: keyof Elf["estmateGas"],
+  callArgs: any[]
 ): Promise<BigNumber | undefined> {
-  if (!signer) {
-    return undefined;
-  }
-  const elfWithSigner = elfContract.connect(signer);
-  return elfWithSigner.estimateGas.depositETH();
+  // TODO: figure out why typescript breaks here
+  // @ts-ignore-next-line
+  return elf.estimateGas[methodName](...callArgs);
 }
 
 export async function estimateGasForDeposit(
