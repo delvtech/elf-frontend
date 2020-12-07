@@ -70,10 +70,8 @@ export const TopbarNavigation: FC<TopbarNavigationProps> = ({
           selectedTabId={activeTab}
           onChange={changeTab}
         >
-          {/* <Tab id={Navigation.HOME} title={t`Home`} /> */}
-          <Tab id={Navigation.PULSE} title={t`Pulse`} />
           <Tab id={Navigation.INVEST} title={t`Invest`} />
-          <Tab id={Navigation.FAQ} title={t`FAQ`} />
+          <Tab id={Navigation.FAQ} title={t`Resources`} />
         </Tabs>
       </div>
     </div>

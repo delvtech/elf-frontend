@@ -60,15 +60,6 @@ export const SidebarNavigation: FC<SidebarNavigationProps> = ({
           selectedTabId={activeTab}
         >
           <Tab
-            id={Navigation.PULSE}
-            title={
-              <div className={tabTitleClassName}>
-                <Icon icon={IconNames.PULSE} iconSize={Icon.SIZE_LARGE} />
-                <span>{t`Pulse`}</span>
-              </div>
-            }
-          />
-          <Tab
             id={Navigation.INVEST}
             title={
               <div className={tabTitleClassName}>
@@ -81,8 +72,8 @@ export const SidebarNavigation: FC<SidebarNavigationProps> = ({
             id={Navigation.FAQ}
             title={
               <div className={tabTitleClassName}>
-                <Icon icon={IconNames.HELP} iconSize={Icon.SIZE_LARGE} />
-                <span>{t`FAQ`}</span>
+                <Icon icon={IconNames.MANUAL} iconSize={Icon.SIZE_LARGE} />
+                <span>{t`Resources`}</span>
               </div>
             }
           />

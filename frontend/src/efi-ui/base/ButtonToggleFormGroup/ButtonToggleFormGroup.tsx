@@ -1,4 +1,4 @@
-import { Button, FormGroup } from "@blueprintjs/core";
+import { Button, FormGroup, Intent } from "@blueprintjs/core";
 import React, { FC } from "react";
 
 import tw from "efi-tailwindcss-classnames";
@@ -35,6 +35,7 @@ export const ButtonToggleFormGroup: FC<ButtonToggleFormGroupProps> = ({
           key={id}
           large
           outlined
+          intent={id === selectedButtonId ? Intent.PRIMARY : Intent.NONE}
           active={id === selectedButtonId}
           onClick={() => {
             onSelect(id);
