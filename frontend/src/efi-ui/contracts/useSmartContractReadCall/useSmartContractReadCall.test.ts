@@ -25,3 +25,25 @@ test("provides data from smart contract read methods", async () => {
   expect(mockNameFn).toBeCalledTimes(1);
   expect(result.current.data).toEqual(SAMPLE_READ_CONTRACT_CALL_RESULT);
 });
+
+test("passes arguments to smart contract read methods", async () => {
+  const mockNameFn = jest.fn(async (name) => name);
+
+  const { result, waitForNextUpdate, rerender } = renderHook(() =>
+    useSmartContractReadCall(
+      ({ functions: { name: mockNameFn } } as any) as Contract,
+      "name",
+      ["some-value"]
+    )
+  );
+
+  expect(result.current.data).toEqual(undefined);
+
+  await waitForNextUpdate();
+  expect(mockNameFn).toBeCalledTimes(1);
+  expect(result.current.data).toEqual(["some-value"]);
+
+  rerender();
+
+  expect(mockNameFn).toBeCalledTimes(1);
+});

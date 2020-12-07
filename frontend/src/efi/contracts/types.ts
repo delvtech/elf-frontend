@@ -1,10 +1,9 @@
 import { Contract } from "ethers";
-import { Unpacked } from "efi/base/Unpacked";
 
 /**
  * Gets a type for the specific contract call
  */
-type ContractCall<
+export type ContractCall<
   TContract extends Contract,
   TMethodName extends ContractMethodName<TContract>
 > = TContract["functions"][TMethodName];
@@ -22,7 +21,7 @@ export type ContractMethodName<
 export type ContractReturnType<
   TContract extends Contract,
   TMethodName extends ContractMethodName<TContract>
-> = Unpacked<ReturnType<ContractCall<TContract, TMethodName>>>;
+> = ReturnType<ContractCall<TContract, TMethodName>>;
 
 /**
  * Gets a type for the call arguments of a given contract and method name

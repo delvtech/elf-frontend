@@ -53,11 +53,6 @@ export const SidebarNavigation: FC<SidebarNavigationProps> = ({
       >
         <Tabs
           id="primary-nav-desktop"
-          animate={
-            // Turned off because it transitions poorly when screen
-            // size is adjusted via dragging the window
-            false
-          }
           large
           vertical
           className={classNames(styles.tabs)}

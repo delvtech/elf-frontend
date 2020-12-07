@@ -5,15 +5,17 @@ import {
   ContractMethodArgs,
   ContractReturnType,
 } from "efi/contracts/types";
+import { Unpacked } from "efi/base/Unpacked";
 
 export function useSmartContractReadCall<
   TContract extends Contract,
-  TMethodName extends ContractMethodName<TContract>
+  TMethodName extends ContractMethodName<TContract>,
+  TReturnType extends Unpacked<ContractReturnType<TContract, TMethodName>>
 >(
   contract: TContract,
   methodName: TMethodName,
   callArgs?: ContractMethodArgs<TContract, TMethodName>
-): QueryResult<ContractReturnType<TContract, TMethodName>> {
+): QueryResult<TReturnType> {
   const queryKey = makeSmartContractReadCallQueryKey<TContract, TMethodName>(
     contract,
     methodName,
@@ -23,13 +25,13 @@ export function useSmartContractReadCall<
   const queryFn = async (
     key: string,
     { methodName, callArgs: args }: SmartContractReadCallVariables
-  ) => {
+  ): Promise<TReturnType> => {
     const finalArgs = args || [];
     const result = await contract.functions[methodName](finalArgs);
     return result;
   };
 
-  const queryResult = useQuery<ContractReturnType<TContract, TMethodName>>({
+  const queryResult = useQuery<TReturnType>({
     queryKey,
     queryFn,
   });

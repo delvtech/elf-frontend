@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 
-import { Card, Classes, Divider, H4, HTMLTable } from "@blueprintjs/core";
+import { Card, Classes, H4, HTMLTable } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
 import classNames from "classnames";
@@ -12,7 +12,6 @@ import { useCryptoPrice } from "efi-ui/crypto/hooks/useCryptoPrice/useCryptoPric
 import { useConvertToFiatBalance } from "efi-ui/money/hooks/useConvertCryptoToFiatBalance";
 import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance/useTokenBalance";
 import { useWallet } from "efi-ui/wallets/hooks/useWallet";
-import styles from "efi-ui/wallets/WalletSummaryPane/WalletSummaryPane.module.css";
 import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
 import { formatEth } from "efi/coins/ether/formatEth";
 import { TokenContractSymbols } from "efi/crypto/TokenContractSymbols";
@@ -32,22 +31,25 @@ export const WalletBalancesCard: FC<WalletBalancesCardProps> = () => {
   );
   const formattedEthBalance = formatEth(ethBalance);
 
-  const totalBalance = "$1,0000";
+  const totalBalance = "$10,000.00";
 
   return (
     <Card className={tw("flex", "flex-col", "space-y-4")}>
       <div className={tw("flex", "justify-between")}>
-        <H4 className={tw("m-0")}>{t`Wallet balance:`}</H4>
+        <H4
+          className={classNames(tw("m-0"), Classes.TEXT_MUTED)}
+        >{t`Wallet balance`}</H4>
         <H4 className={tw("m-0")}>{totalBalance}</H4>
       </div>
-      <Divider />
 
       <HTMLTable striped className={tw("w-full")}>
         <thead>
           <tr className={Classes.TEXT_SMALL}>
             {[t`Asset`, t`Price`, t`USD`, t`Balance`].map((label) => (
-              <th key={label} className={styles.tableHeader}>
-                <span className={tw("text-xs")}>{label}</span>
+              <th key={label}>
+                <span className={classNames(tw("text-xs"), Classes.TEXT_MUTED)}>
+                  {label}
+                </span>
               </th>
             ))}
           </tr>
@@ -55,8 +57,8 @@ export const WalletBalancesCard: FC<WalletBalancesCardProps> = () => {
         <tbody className={Classes.TEXT_LARGE}>
           <tr>
             <td>
-              <div className={tw("flex", "space-x-2")}>
-                <strong>ETH</strong>
+              <div className={tw("flex", "space-x-2", "font-semibold")}>
+                ETH
               </div>
             </td>
             <td
@@ -109,8 +111,8 @@ const TokenBalanceTableRow: FC<{
     <tr>
       {/* Token name */}
       <td>
-        <div className={tw("flex", "space-x-2")}>
-          <strong>{tokenSymbol}</strong>
+        <div className={tw("flex", "space-x-2", "font-semibold")}>
+          {tokenSymbol}
         </div>
       </td>
 
