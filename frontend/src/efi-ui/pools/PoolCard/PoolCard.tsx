@@ -29,9 +29,7 @@ import {
   useElfContractWithdraw,
   useElfContractWithdrawEth,
 } from "efi-ui/contracts/useElfContract";
-import {
-  useCryptoDrawer,
-} from "efi-ui/crypto/CryptoDrawer/useCryptoDrawer/useCryptoDrawer";
+import { useCryptoDrawer } from "efi-ui/crypto/CryptoDrawer/useCryptoDrawer/useCryptoDrawer";
 import { CryptoIcon } from "efi-ui/crypto/CryptoIcon";
 import { TransactionForm } from "efi-ui/crypto/TransactionForm/TransactionForm";
 import { useWallet } from "efi-ui/wallets/hooks/useWallet";
