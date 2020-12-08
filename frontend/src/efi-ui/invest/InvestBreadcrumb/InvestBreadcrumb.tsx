@@ -3,10 +3,10 @@ import React, { FC, useMemo } from "react";
 import { Breadcrumbs, IBreadcrumbProps } from "@blueprintjs/core";
 import { t } from "ttag";
 
-import { Strategy } from "efi/pools/strategy";
+import { Pool } from "efi/pools/Pool";
 
 interface InvestBreadcrumbProps {
-  availableStrategies: Strategy[];
+  availableStrategies: Pool[];
   activeStrategy?: string;
   setActiveStrategy: (strategyId: string | undefined) => void;
 }
@@ -26,7 +26,7 @@ export const InvestBreadcrumb: FC<InvestBreadcrumbProps> = ({
 };
 
 function useBreadcrumbItems(
-  availableStrategies: Strategy[],
+  availableStrategies: Pool[],
   activeStrategy: string | undefined,
   setActiveStrategy: (strategyId: string | undefined) => void
 ): IBreadcrumbProps[] {

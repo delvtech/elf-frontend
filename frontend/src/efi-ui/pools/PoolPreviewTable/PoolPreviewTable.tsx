@@ -1,23 +1,21 @@
 import React, { FC, useCallback } from "react";
 
 import { Classes, HTMLTable } from "@blueprintjs/core";
+import classNames from "classnames";
+import { Erc20 } from "elf-contracts/types/Erc20";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import {
-  useTokenName,
-  useTokenSymbol,
-  useTokenTotalSupply,
-} from "efi-ui/token/hooks/useTokenName";
-import { elfContract } from "efi/contracts/Elf";
-import { Erc20 } from "elf-contracts/types/Erc20";
+import { useTokenName } from "efi-ui/token/hooks/useTokenName";
+import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
+import { useTokenTotalSupply } from "efi-ui/token/hooks/useTokenTotalSupply";
 import { formatEth } from "efi/coins/ether/formatEth";
-import classNames from "classnames";
-import { Strategy } from "efi/pools/strategy";
+import { elfContract } from "efi/contracts/Elf";
+import { Pool } from "efi/pools/Pool";
 
 interface PoolPreviewTableProps {
   onSelectPool: (strategyId: string) => void;
-  pools: Strategy[];
+  pools: Pool[];
   className?: string;
 }
 

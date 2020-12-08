@@ -17,7 +17,7 @@ export function useTokenDecimals(
 
   const result = useQuery<number | undefined>(
     balanceKey,
-    async (key: string[], { name }: TokenDecimalsQueryVariables) => {
+    (key: string[], { name }: TokenDecimalsQueryVariables) => {
       const contract = TokenContracts[name];
       return fetchTokenDecimals(contract);
     }

@@ -38,20 +38,20 @@ import { CryptoName } from "efi/crypto/CryptoName";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { stakingAssets, StakingAssets } from "efi/crypto/stakingAssets";
 import { TokenBalance } from "efi/crypto/TokenBalance";
-import { Strategy } from "efi/pools/strategy";
+import { Pool } from "efi/pools/Pool";
 
-interface StrategyCardProps {
-  strategy: Strategy;
+interface PoolCardProps {
+  strategy: Pool;
 }
 
-const stubbedStrategyData: PieData[] = [
+const stubbedPoolData: PieData[] = [
   { name: "yDAI", value: 100 },
   { name: "yUSDC", value: 300 },
   { name: "yUSDT", value: 150 },
   { name: "yTUSD", value: 150 },
 ];
 
-export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
+export const PoolCard: FC<PoolCardProps> = ({ strategy }) => {
   const { name, stakingAsset: defaultStakingAsset } = strategy;
   const { account } = useWallet();
   const balances = useWalletBalances();
@@ -88,7 +88,7 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
     <Card className={tw("flex", "flex-col", "md:w-1/2", "transition-all")}>
       <div className={tw("flex", "mb-8", "items-center", "w-full")}>
         <div className={tw("flex", "flex-col", "space-y-8")}>
-          {/* Strategy name */}
+          {/* Pool name */}
           <H3>{name}</H3>
 
           {/* Staking Asset */}
@@ -159,7 +159,7 @@ export const StrategyCard: FC<StrategyCardProps> = ({ strategy }) => {
             "overflow-hidden" // required to make responsiveness work
           )}
         >
-          <PieChart pieData={stubbedStrategyData} />
+          <PieChart pieData={stubbedPoolData} />
         </div>
       </div>
       <div className={tw("flex", "w-full", "space-x-8", "pt-4")}>

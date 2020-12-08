@@ -1,13 +1,13 @@
 import { t } from "ttag";
 
-import { Strategy } from "efi/pools/strategy";
+import { Pool } from "efi/pools/Pool";
 
 const ELF_STRATEGY_LOW_RISK = "ELF_STRATEGY_LOW_RISK";
 
 /**
  * A low-risk strategy made up of stablecoins.
  */
-export const ElfStrategyLowRisk: Strategy = {
+export const ElfStrategyLowRisk: Pool = {
   id: ELF_STRATEGY_LOW_RISK,
   stakingAsset: "ETH",
   name: t`Low Risk Pool`,
