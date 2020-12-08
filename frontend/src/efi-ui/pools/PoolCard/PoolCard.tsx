@@ -1,4 +1,4 @@
-import React, { FC, Fragment, useCallback, useState } from "react";
+import React, { FC, useCallback, useState } from "react";
 
 import {
   Button,
@@ -32,6 +32,7 @@ import {
 import { useCryptoDrawer } from "efi-ui/crypto/CryptoDrawer/useCryptoDrawer/useCryptoDrawer";
 import { CryptoIcon } from "efi-ui/crypto/CryptoIcon";
 import { TransactionForm } from "efi-ui/crypto/TransactionForm/TransactionForm";
+import { StakingAssetSelect } from "efi-ui/pools/StakingAssetSelect/StakingAssetSelect";
 import { useWallet } from "efi-ui/wallets/hooks/useWallet";
 import { useWalletBalances } from "efi-ui/wallets/hooks/useWalletBalance";
 import { CryptoName } from "efi/crypto/CryptoName";
@@ -164,64 +165,16 @@ export const PoolCard: FC<PoolCardProps> = ({ strategy }) => {
       </div>
       <div className={tw("flex", "w-full", "space-x-8", "pt-4")}>
         <div className={tw("flex-1")}>
-          <Popover
-            content={
-              <Menu>
-                <Fragment>
-                  {stakingAssets.map((asset) => (
-                    <MenuItem
-                      onClick={() => setStakingAsset(asset)}
-                      icon={
-                        <img
-                          className={tw("h-5", "w-5")}
-                          src={CryptoIcon[asset]}
-                          alt={CryptoName[asset]}
-                        />
-                      }
-                      key={asset}
-                      text={CryptoName[asset]}
-                    />
-                  ))}
-                </Fragment>
-              </Menu>
-            }
-            position={Position.BOTTOM_LEFT}
-            minimal
-          >
-            <Button
-              rightIcon={IconNames.CARET_DOWN}
-              text={CryptoName[stakingAsset]}
-            />
-          </Popover>
+          <StakingAssetSelect
+            selectedAsset={stakingAsset}
+            onSelect={setStakingAsset}
+          />
         </div>
         <div className={tw("flex-1")}>
-          <Popover
-            content={
-              <Menu>
-                {stakingAssets.map((asset) => (
-                  <MenuItem
-                    onClick={() => setStakingAsset(asset)}
-                    icon={
-                      <img
-                        className={tw("h-5", "w-5")}
-                        src={CryptoIcon[asset]}
-                        alt={CryptoName[asset]}
-                      />
-                    }
-                    key={asset}
-                    text={CryptoName[asset]}
-                  />
-                ))}
-              </Menu>
-            }
-            position={Position.BOTTOM_LEFT}
-            minimal
-          >
-            <Button
-              rightIcon={IconNames.CARET_DOWN}
-              text={CryptoName[stakingAsset]}
-            />
-          </Popover>
+          <StakingAssetSelect
+            selectedAsset={stakingAsset}
+            onSelect={setStakingAsset}
+          />
         </div>
       </div>
       <div
