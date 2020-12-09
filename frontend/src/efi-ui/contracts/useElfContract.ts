@@ -135,12 +135,13 @@ export function useElfContractDepositEth() {
 interface ElfApproveDepositVariables {
   token: StakingTokens;
   account: string | undefined | null;
-  amount: BigNumber | undefined;
+  amount: BigNumber;
 }
 
+// TODO: refactor this to be generic for tokens and just pass elf contract address in as argument
+// TODO: refactor these to have the library passed in, don't want to use closure variables for useMutation
 export function useElfContractApproveDeposit() {
   const { library } = useWallet();
-  const signer = library?.getSigner();
 
   return useMutation<
     ContractTransaction | undefined,
@@ -149,6 +150,10 @@ export function useElfContractApproveDeposit() {
   >(
     async ({ token, amount }) => {
       const contract = TokenContracts[token];
+      const signer = library?.getSigner();
+      if (!signer) {
+        return;
+      }
       return postApprove(signer, contract, ContractAddresses.ELF, amount);
     },
     {

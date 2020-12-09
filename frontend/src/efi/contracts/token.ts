@@ -17,7 +17,7 @@ export const MAX_ALLOWANCE = BigNumber.from(
  * @param amount amount to approve, if no value given, approves the max value
  */
 export async function postApprove(
-  signer: Signer | undefined,
+  signer: Signer,
   assetContract: Erc20,
   poolAddress: string,
   amount: BigNumber
