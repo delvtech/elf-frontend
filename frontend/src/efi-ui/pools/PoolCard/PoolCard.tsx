@@ -284,6 +284,10 @@ function useApprove(
       return;
     }
 
+    if (!account) {
+      return;
+    }
+
     approve({
       token: stakingAsset,
       account,
