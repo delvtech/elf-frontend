@@ -7,6 +7,7 @@ import {
   showTransactionSuccessfulToast,
 } from "efi-ui/crypto/toasts/transactionToasts";
 import { useWallet } from "efi-ui/wallets/hooks/useWallet";
+import ContractAddresses from "efi/contracts/contractsJson";
 import {
   fetchBalanceOf,
   fetchContractAssetBalances,
@@ -20,8 +21,10 @@ import {
   postWithdraw,
   postWithdrawEth,
 } from "efi/contracts/Elf";
-
-import { TokenBalance } from "../../efi/crypto/TokenBalance";
+import { postApprove } from "efi/contracts/token";
+import { StakingTokens } from "efi/crypto/stakingAssets";
+import { TokenBalance } from "efi/crypto/TokenBalance";
+import { TokenContracts } from "efi/crypto/TokenContracts";
 
 const contractNameKey = ["contract", "elf", "name"];
 export function useElfContractName() {
@@ -122,6 +125,46 @@ export function useElfContractDepositEth() {
       onError: (error) => {
         console.error(
           "There was an error depositing Eth in the Elf Strategy.",
+          error
+        );
+      },
+    }
+  );
+}
+
+interface ElfApproveDepositVariables {
+  token: StakingTokens;
+  account: string | undefined | null;
+}
+
+export function useElfContractApproveDeposit() {
+  const { library } = useWallet();
+  const signer = library?.getSigner();
+
+  return useMutation<
+    ContractTransaction | undefined,
+    unknown,
+    ElfApproveDepositVariables
+  >(
+    async ({ token }) => {
+      const contract = TokenContracts[token];
+      return postApprove(signer, contract, ContractAddresses.ELF);
+    },
+    {
+      onSuccess: (transaction, { account }) => {
+        if (transaction) {
+          showTransactionSuccessfulToast(transaction);
+        }
+        if (!account) {
+          return;
+        }
+        const contractBalanceKey = makeElfContractBalanceKey(account);
+        queryCache.invalidateQueries(contractBalanceKey);
+      },
+      onError: (error) => {
+        showTransactionFailedToast();
+        console.error(
+          "There was an error depositing asset in the Elf Strategy.",
           error
         );
       },
