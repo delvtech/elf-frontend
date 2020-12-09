@@ -309,6 +309,9 @@ function useDeposit(
 
   const startDeposit = useCallback(
     async (amount: BigNumber) => {
+      if (!account) {
+        return;
+      }
       if (stakingAsset === "ETH") {
         depositEth({
           amount,

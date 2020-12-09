@@ -94,7 +94,7 @@ export function useElfContractSymbol() {
 
 interface ElfDepositEthVariables {
   amount: BigNumber;
-  account: string | undefined | null;
+  account: string;
 }
 
 export function useElfContractDepositEth() {
@@ -116,9 +116,6 @@ export function useElfContractDepositEth() {
           showTransactionSuccessfulToast(transaction);
         }
 
-        if (!account) {
-          return;
-        }
         const elfContractBalanceKey = makeElfContractBalanceKey(account);
         queryCache.invalidateQueries(elfContractBalanceKey);
       },
@@ -134,7 +131,7 @@ export function useElfContractDepositEth() {
 
 interface ElfApproveDepositVariables {
   token: StakingTokens;
-  account: string | undefined | null;
+  account: string;
   amount: BigNumber;
 }
 
@@ -161,9 +158,6 @@ export function useElfContractApproveDeposit() {
         if (transaction) {
           showTransactionSuccessfulToast(transaction);
         }
-        if (!account) {
-          return;
-        }
         const contractBalanceKey = makeElfContractBalanceKey(account);
         queryCache.invalidateQueries(contractBalanceKey);
       },
@@ -180,7 +174,7 @@ export function useElfContractApproveDeposit() {
 
 interface ElfDepositVariables {
   amount: BigNumber;
-  account: string | undefined | null;
+  account: string;
 }
 
 export function useElfContractDeposit() {
