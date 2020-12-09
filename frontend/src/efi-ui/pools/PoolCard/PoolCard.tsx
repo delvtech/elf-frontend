@@ -58,7 +58,7 @@ export const PoolCard: FC<PoolCardProps> = ({ strategy }) => {
 
   const [allowance, allowanceResult] = useAllowance(stakingAsset, account);
   const hasAllowance = allowance && allowance.gt(0);
-  const allowanceLoading = allowanceResult.isFetching;
+  const allowanceLoading = allowanceResult.isLoading;
 
   const cryptoBalance = balances[stakingAsset];
 

@@ -22,16 +22,12 @@ export async function postApprove(
   poolAddress: string,
   amount: BigNumber
 ): Promise<ContractTransaction | undefined> {
-  if (!signer) {
-    return undefined;
-  }
-
-  const amountInBounds = amount.gt(0) || amount.lte(MAX_ALLOWANCE);
-  if (!amountInBounds) {
-    warning(
-      amountInBounds,
-      "Amount must be greater than zero and less than MAX_ALLOWANCE"
-    );
+  const isValidAmount = amount.gt(0) || amount.lte(MAX_ALLOWANCE);
+  warning(
+    isValidAmount,
+    "Amount must be greater than zero and less than MAX_ALLOWANCE"
+  );
+  if (!isValidAmount) {
     return;
   }
 

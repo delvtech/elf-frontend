@@ -9,16 +9,17 @@ import { TokenContractSymbols } from "efi/crypto/TokenContractSymbols";
 /**
  * Gets the ERC20 allowance
  *
- * @param {TokenContractSymbols} name 'name of ERC20 token to get a user's balance of'
- * @param {string} account {string} 'user's account address.
+ * @param {TokenContractSymbols} tokenSymbol name of ERC20 token to set allowance for.
+ * @param {ownerAddress} {string} user's account address.
+ * @param {spenderAddress} {string} who the user is authorizing to transfer money to
  */
 export function useTokenAllowance(
-  name: TokenContractSymbols | undefined,
+  tokenSymbol: TokenContractSymbols | undefined,
   ownerAddress: string | undefined | null,
   spenderAddress: string
 ): QueryResult<BigNumber | undefined> {
   const balanceKey = makeTokenAllowanceQueryKey(
-    name,
+    tokenSymbol,
     ownerAddress,
     spenderAddress
   );
@@ -27,15 +28,19 @@ export function useTokenAllowance(
     balanceKey,
     (
       key: string[],
-      { name, ownerAddress, spenderAddress }: TokenAllowanceQueryVariables
+      {
+        tokenSymbol,
+        ownerAddress,
+        spenderAddress,
+      }: TokenAllowanceQueryVariables
     ) => {
       if (!ownerAddress) {
         return;
       }
-      if (!name) {
+      if (!tokenSymbol) {
         return;
       }
-      const contract = TokenContracts[name];
+      const contract = TokenContracts[tokenSymbol];
 
       return fetchTokenAllowance(contract, ownerAddress, spenderAddress);
     }
@@ -45,17 +50,17 @@ export function useTokenAllowance(
 }
 
 export interface TokenAllowanceQueryVariables {
-  name: TokenContractSymbols | undefined;
+  tokenSymbol: TokenContractSymbols | undefined;
   ownerAddress: string | undefined | null;
   spenderAddress: string;
 }
 export function makeTokenAllowanceQueryKey(
-  name: TokenContractSymbols | undefined,
+  tokenSymbol: TokenContractSymbols | undefined,
   ownerAddress: string | undefined | null,
   spenderAddress: string
 ): QueryKey {
   return [
-    ["contract", name, "allowance"],
-    { name, ownerAddress, spenderAddress },
+    ["contract", tokenSymbol, "allowance"],
+    { tokenSymbol, ownerAddress, spenderAddress },
   ];
 }
