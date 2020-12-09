@@ -1,18 +1,7 @@
-import React, { FC, Fragment, useCallback, useState } from "react";
+import React, { FC, useCallback, useState } from "react";
+import { QueryResult } from "react-query";
 
-import {
-  Button,
-  Card,
-  H3,
-  Intent,
-  Menu,
-  MenuItem,
-  Popover,
-  Position,
-  Tag,
-  Tooltip,
-} from "@blueprintjs/core";
-import { IconNames } from "@blueprintjs/icons";
+import { Button, Card, H3, Intent, Tag, Tooltip } from "@blueprintjs/core";
 import { BigNumber } from "ethers";
 import { formatEther } from "ethers/lib/utils";
 import { t } from "ttag";
@@ -20,6 +9,7 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { PieChart, PieData } from "efi-ui/charts/PieChart/PieChart";
 import {
+  useElfContractApproveDeposit,
   useElfContractAssetSymbols,
   useElfContractBalance,
   useElfContractDeposit,
@@ -30,14 +20,17 @@ import {
   useElfContractWithdrawEth,
 } from "efi-ui/contracts/useElfContract";
 import { useCryptoDrawer } from "efi-ui/crypto/CryptoDrawer/useCryptoDrawer/useCryptoDrawer";
-import { CryptoIcon } from "efi-ui/crypto/CryptoIcon";
 import { TransactionForm } from "efi-ui/crypto/TransactionForm/TransactionForm";
+import { StakingAssetSelect } from "efi-ui/pools/StakingAssetSelect/StakingAssetSelect";
+import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
 import { useWallet } from "efi-ui/wallets/hooks/useWallet";
 import { useWalletBalances } from "efi-ui/wallets/hooks/useWalletBalance";
-import { CryptoName } from "efi/crypto/CryptoName";
+import ContractAddresses from "efi/contracts/contractsJson";
+import { MAX_ALLOWANCE } from "efi/contracts/token";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
-import { stakingAssets, StakingAssets } from "efi/crypto/stakingAssets";
+import { StakingAssets } from "efi/crypto/stakingAssets";
 import { TokenBalance } from "efi/crypto/TokenBalance";
+import { TokenContractSymbols } from "efi/crypto/TokenContractSymbols";
 import { Pool } from "efi/pools/Pool";
 
 interface PoolCardProps {
@@ -59,12 +52,25 @@ export const PoolCard: FC<PoolCardProps> = ({ strategy }) => {
   const { data: elfTotalSupply } = useElfContractTotalSupply();
   const elfBalance = useElfContractBalance(account);
   const { data: strategyAssetSymbols } = useElfContractAssetSymbols();
-
   const [stakingAsset, setStakingAsset] = useState<StakingAssets>(
     defaultStakingAsset
   );
 
+  const [allowance, allowanceResult] = useAllowance(stakingAsset, account);
+  const hasAllowance = allowance && allowance.gt(0);
+  const allowanceLoading = allowanceResult.isLoading;
+
   const cryptoBalance = balances[stakingAsset];
+
+  /****
+   * Approve hooks
+   ****/
+  const [startApproval, approvalPending] = useApprove(stakingAsset, account);
+  const [clearApproval, clearApprovalPending] = useApprove(
+    stakingAsset,
+    account,
+    BigNumber.from(0)
+  );
 
   /****
    * Deposit hooks
@@ -163,65 +169,35 @@ export const PoolCard: FC<PoolCardProps> = ({ strategy }) => {
         </div>
       </div>
       <div className={tw("flex", "w-full", "space-x-8", "pt-4")}>
-        <div className={tw("flex-1")}>
-          <Popover
-            content={
-              <Menu>
-                <Fragment>
-                  {stakingAssets.map((asset) => (
-                    <MenuItem
-                      onClick={() => setStakingAsset(asset)}
-                      icon={
-                        <img
-                          className={tw("h-5", "w-5")}
-                          src={CryptoIcon[asset]}
-                          alt={CryptoName[asset]}
-                        />
-                      }
-                      key={asset}
-                      text={CryptoName[asset]}
-                    />
-                  ))}
-                </Fragment>
-              </Menu>
-            }
-            position={Position.BOTTOM_LEFT}
+        <div className={tw("flex", "flex-1", "justify-between")}>
+          <StakingAssetSelect
+            selectedAsset={stakingAsset}
+            onSelect={setStakingAsset}
+          />
+          <Button
             minimal
-          >
+            outlined
+            disabled={approvalPending || allowanceLoading || hasAllowance}
+            onClick={startApproval}
+            intent={Intent.SUCCESS}
+            text={hasAllowance ? t`Approved` : t`Approve Deposit`}
+          />
+          {hasAllowance && (
             <Button
-              rightIcon={IconNames.CARET_DOWN}
-              text={CryptoName[stakingAsset]}
+              minimal
+              outlined
+              disabled={clearApprovalPending || !hasAllowance}
+              onClick={clearApproval}
+              intent={Intent.DANGER}
+              text={t`Clear Approval`}
             />
-          </Popover>
+          )}
         </div>
         <div className={tw("flex-1")}>
-          <Popover
-            content={
-              <Menu>
-                {stakingAssets.map((asset) => (
-                  <MenuItem
-                    onClick={() => setStakingAsset(asset)}
-                    icon={
-                      <img
-                        className={tw("h-5", "w-5")}
-                        src={CryptoIcon[asset]}
-                        alt={CryptoName[asset]}
-                      />
-                    }
-                    key={asset}
-                    text={CryptoName[asset]}
-                  />
-                ))}
-              </Menu>
-            }
-            position={Position.BOTTOM_LEFT}
-            minimal
-          >
-            <Button
-              rightIcon={IconNames.CARET_DOWN}
-              text={CryptoName[stakingAsset]}
-            />
-          </Popover>
+          <StakingAssetSelect
+            selectedAsset={stakingAsset}
+            onSelect={setStakingAsset}
+          />
         </div>
       </div>
       <div
@@ -268,6 +244,60 @@ export const PoolCard: FC<PoolCardProps> = ({ strategy }) => {
 };
 
 /**
+ * helper hook to handle the deposit approval process
+ * @param stakingAsset
+ * @param account
+ */
+function useAllowance(
+  stakingAsset: StakingAssets,
+  account: string | null | undefined
+): [BigNumber | undefined, QueryResult<BigNumber | undefined>] {
+  // Eth is not a token
+  const tokenSymbol: TokenContractSymbols | undefined =
+    stakingAsset !== "ETH" ? stakingAsset : undefined;
+
+  const allowanceResult = useTokenAllowance(
+    tokenSymbol,
+    account,
+    ContractAddresses.ELF
+  );
+
+  return [allowanceResult.data, allowanceResult];
+}
+/**
+ * helper hook to handle the deposit approval process
+ * @param stakingAsset
+ * @param account
+ * @param amount amount to approve, defaults to the maximum allowed
+ */
+function useApprove(
+  stakingAsset: StakingAssets,
+  account: string | null | undefined,
+  amount: BigNumber = MAX_ALLOWANCE
+): [() => void, boolean] {
+  const [approve, approveResult] = useElfContractApproveDeposit();
+
+  const approvePending = approveResult.isLoading;
+
+  const startApprove = useCallback(async () => {
+    if (stakingAsset === "ETH") {
+      return;
+    }
+
+    if (!account) {
+      return;
+    }
+
+    approve({
+      token: stakingAsset,
+      account,
+      amount,
+    });
+  }, [account, amount, approve, stakingAsset]);
+
+  return [startApprove, approvePending];
+}
+/**
  * helper hook to handle the deposit process into the Elf contract
  * @param stakingAsset
  * @param account
@@ -283,6 +313,9 @@ function useDeposit(
 
   const startDeposit = useCallback(
     async (amount: BigNumber) => {
+      if (!account) {
+        return;
+      }
       if (stakingAsset === "ETH") {
         depositEth({
           amount,
