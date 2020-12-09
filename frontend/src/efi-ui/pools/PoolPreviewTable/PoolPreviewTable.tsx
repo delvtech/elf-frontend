@@ -19,7 +19,14 @@ interface PoolPreviewTableProps {
   className?: string;
 }
 
-const TABLE_HEADERS = [t`Pool`, t`APY`, t`Price`, t`USD`, t`Balance`];
+const TABLE_HEADERS = [
+  t`Pair`,
+  t`ROI`,
+  t`Underlying assets`,
+  t`Price`,
+  t`USD`,
+  t`Balance`,
+];
 
 const POOLS = [
   elfContract,
@@ -90,10 +97,13 @@ const PoolPreviewTableRow: FC<{
         </div>
       </td>
 
-      {/* APY */}
+      {/* ROI */}
       <td>
         <div className={tw("flex", "h-full", "items-center")}>5.16%</div>
       </td>
+
+      {/* Underlying assets */}
+      <td></td>
 
       {/* Price per token in staking asset */}
       <td>

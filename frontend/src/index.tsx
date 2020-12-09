@@ -6,15 +6,7 @@ import "normalize.css/normalize.css";
 import "@blueprintjs/icons/lib/css/blueprint-icons.css";
 import "@blueprintjs/core/lib/css/blueprint.css";
 import "@blueprintjs/select/lib/css/blueprint-select.css";
-import "fontsource-poppins/100.css"; // All styles included.
-import "fontsource-poppins/200.css"; // All styles included.
-import "fontsource-poppins/300.css"; // All styles included.
-import "fontsource-poppins/400.css"; // All styles included.
-import "fontsource-poppins/500.css"; // All styles included.
-import "fontsource-poppins/600.css"; // All styles included.
-import "fontsource-poppins/700.css"; // All styles included.
-import "fontsource-poppins/800.css"; // All styles included.
-import "fontsource-poppins/900.css"; // All styles included.
+import "fontsource-open-sans";
 
 import React from "react";
 import ReactDOM from "react-dom";
