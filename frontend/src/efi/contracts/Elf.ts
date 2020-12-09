@@ -12,7 +12,6 @@ import {
 import ContractAddresses from "efi/contracts/contractsJson";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { ONE_ETHER } from "efi/crypto/ethereum";
-import { TokenContracts } from "efi/crypto/TokenContracts";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 
 import { ContractMethodArgs, ContractMethodName } from "./types";
@@ -127,9 +126,6 @@ export async function postDeposit(
     return undefined;
   }
   const elfWithSigner = elfContract.connect(signer);
-  const weth = TokenContracts.WETH;
-  const wethWithSigner = weth.connect(signer);
-  await wethWithSigner.approve(ContractAddresses.ELF, amount);
   const result = elfWithSigner.functions.deposit(amount);
   return result;
 }
