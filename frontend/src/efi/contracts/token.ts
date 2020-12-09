@@ -1,10 +1,11 @@
 import { Erc20 } from "elf-contracts/types/Erc20";
 import { BigNumber, ContractTransaction, Signer } from "ethers";
+import warning from "warning";
 
 /**
  * the erc20 allowance() method takes a unit256, therefore the max you can approve is 2^256 - 1
  */
-const MAX_ALLOWANCE = BigNumber.from(
+export const MAX_ALLOWANCE = BigNumber.from(
   "115792089237316195423570985008687907853269984665640564039457584007913129639935"
 );
 
@@ -19,12 +20,29 @@ export async function postApprove(
   signer: Signer | undefined,
   assetContract: Erc20,
   poolAddress: string,
-  amount?: BigNumber
+  amount: BigNumber
 ): Promise<ContractTransaction | undefined> {
   if (!signer) {
     return undefined;
   }
-  const allowance = amount ?? MAX_ALLOWANCE;
+
+  const amountInBounds = amount.gt(0) || amount.lte(MAX_ALLOWANCE);
+  if (!amountInBounds) {
+    warning(
+      amountInBounds,
+      "Amount must be greater than zero and less than MAX_ALLOWANCE"
+    );
+    return;
+  }
+
   const contractWithSigner = assetContract.connect(signer);
-  return contractWithSigner.approve(poolAddress, allowance);
+  return contractWithSigner.approve(poolAddress, amount);
+}
+
+export async function fetchTokenAllowance(
+  tokenContract: Erc20,
+  ownerAddress: string,
+  spenderAddress: string
+): Promise<BigNumber | undefined> {
+  return tokenContract.allowance(ownerAddress, spenderAddress);
 }

@@ -135,6 +135,7 @@ export function useElfContractDepositEth() {
 interface ElfApproveDepositVariables {
   token: StakingTokens;
   account: string | undefined | null;
+  amount: BigNumber | undefined;
 }
 
 export function useElfContractApproveDeposit() {
@@ -146,9 +147,9 @@ export function useElfContractApproveDeposit() {
     unknown,
     ElfApproveDepositVariables
   >(
-    async ({ token }) => {
+    async ({ token, amount }) => {
       const contract = TokenContracts[token];
-      return postApprove(signer, contract, ContractAddresses.ELF);
+      return postApprove(signer, contract, ContractAddresses.ELF, amount);
     },
     {
       onSuccess: (transaction, { account }) => {

@@ -1,4 +1,5 @@
 import React, { FC, useCallback, useState } from "react";
+import { QueryResult } from "react-query";
 
 import { Button, Card, H3, Intent, Tag, Tooltip } from "@blueprintjs/core";
 import { BigNumber } from "ethers";
@@ -21,11 +22,15 @@ import {
 import { useCryptoDrawer } from "efi-ui/crypto/CryptoDrawer/useCryptoDrawer/useCryptoDrawer";
 import { TransactionForm } from "efi-ui/crypto/TransactionForm/TransactionForm";
 import { StakingAssetSelect } from "efi-ui/pools/StakingAssetSelect/StakingAssetSelect";
+import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
 import { useWallet } from "efi-ui/wallets/hooks/useWallet";
 import { useWalletBalances } from "efi-ui/wallets/hooks/useWalletBalance";
+import ContractAddresses from "efi/contracts/contractsJson";
+import { MAX_ALLOWANCE } from "efi/contracts/token";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { StakingAssets } from "efi/crypto/stakingAssets";
 import { TokenBalance } from "efi/crypto/TokenBalance";
+import { TokenContractSymbols } from "efi/crypto/TokenContractSymbols";
 import { Pool } from "efi/pools/Pool";
 
 interface PoolCardProps {
@@ -50,12 +55,22 @@ export const PoolCard: FC<PoolCardProps> = ({ strategy }) => {
   const [stakingAsset, setStakingAsset] = useState<StakingAssets>(
     defaultStakingAsset
   );
+
+  const [allowance, allowanceResult] = useAllowance(stakingAsset, account);
+  const hasAllowance = allowance && allowance.gt(0);
+  const allowanceLoading = allowanceResult.isFetching;
+
   const cryptoBalance = balances[stakingAsset];
 
   /****
    * Approve hooks
    ****/
   const [startApproval, approvalPending] = useApprove(stakingAsset, account);
+  const [clearApproval, clearApprovalPending] = useApprove(
+    stakingAsset,
+    account,
+    BigNumber.from(0)
+  );
 
   /****
    * Deposit hooks
@@ -162,11 +177,21 @@ export const PoolCard: FC<PoolCardProps> = ({ strategy }) => {
           <Button
             minimal
             outlined
-            disabled={approvalPending}
+            disabled={approvalPending || allowanceLoading || hasAllowance}
             onClick={startApproval}
             intent={Intent.SUCCESS}
-            text={t`Approve Deposit`}
+            text={hasAllowance ? t`Approved` : t`Approve Deposit`}
           />
+          {hasAllowance && (
+            <Button
+              minimal
+              outlined
+              disabled={clearApprovalPending || !hasAllowance}
+              onClick={clearApproval}
+              intent={Intent.DANGER}
+              text={t`Clear Approval`}
+            />
+          )}
         </div>
         <div className={tw("flex-1")}>
           <StakingAssetSelect
@@ -223,9 +248,32 @@ export const PoolCard: FC<PoolCardProps> = ({ strategy }) => {
  * @param stakingAsset
  * @param account
  */
-function useApprove(
+function useAllowance(
   stakingAsset: StakingAssets,
   account: string | null | undefined
+): [BigNumber | undefined, QueryResult<BigNumber | undefined>] {
+  // Eth is not a token
+  const tokenSymbol: TokenContractSymbols | undefined =
+    stakingAsset !== "ETH" ? stakingAsset : undefined;
+
+  const allowanceResult = useTokenAllowance(
+    tokenSymbol,
+    account,
+    ContractAddresses.ELF
+  );
+
+  return [allowanceResult.data, allowanceResult];
+}
+/**
+ * helper hook to handle the deposit approval process
+ * @param stakingAsset
+ * @param account
+ * @param amount amount to approve, defaults to the maximum allowed
+ */
+function useApprove(
+  stakingAsset: StakingAssets,
+  account: string | null | undefined,
+  amount: BigNumber = MAX_ALLOWANCE
 ): [() => void, boolean] {
   const [approve, approveResult] = useElfContractApproveDeposit();
 
@@ -239,8 +287,9 @@ function useApprove(
     approve({
       token: stakingAsset,
       account,
+      amount,
     });
-  }, [account, approve, stakingAsset]);
+  }, [account, amount, approve, stakingAsset]);
 
   return [startApprove, approvePending];
 }
