@@ -8,6 +8,7 @@ import tw from "efi-tailwindcss-classnames";
 import { WalletJazzicon } from "efi-ui/wallets/WalletJazzicon/WalletJazzicon";
 import { formatChainName } from "efi/crypto/formatChainName";
 import { formatWalletAddress } from "efi/wallets/formatWalletAddress";
+import { isMainnet } from "efi/crypto/ethereum";
 
 interface WalletConnectionCardProps {
   chainId: number | undefined;
@@ -23,7 +24,11 @@ export const WalletConnectionCard: FunctionComponent<WalletConnectionCardProps> 
   connectorName,
 }) => {
   return (
-    <Card className={classNames(tw("flex", "flex-col"))} interactive>
+    <Card
+      className={classNames(tw("flex", "flex-col"))}
+      interactive
+      style={getCardStyle(chainId)}
+    >
       <div
         className={tw("flex", "justify-between", "items-center", "space-x-8")}
       >
@@ -54,3 +59,10 @@ export const WalletConnectionCard: FunctionComponent<WalletConnectionCardProps> 
     </Card>
   );
 };
+function getCardStyle(chainId: number | undefined): React.CSSProperties {
+  return chainId !== undefined &&
+    isMainnet(chainId) &&
+    process.env.NODE_ENV !== "production"
+    ? { backgroundColor: Colors.RED1 }
+    : {};
+}

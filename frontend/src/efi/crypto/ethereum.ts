@@ -21,5 +21,9 @@ export const DEFAULT_CHAIN_IDS: ChainId[] = [
   ChainId.LOCAL,
 ];
 
+export function isMainnet(chainId: number) {
+  return chainId === ChainId.MAINNET;
+}
+
 export const NUM_ETH_DECIMALS = 18;
 export const ONE_ETHER = parseUnits("1", NUM_ETH_DECIMALS);
