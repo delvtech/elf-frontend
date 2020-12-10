@@ -98,9 +98,7 @@ const PoolPreviewTableRow: FC<{
       {/* Token name */}
       <td className={tw("h-16")} onClick={onRowClick}>
         <div className={tw("flex", "flex-col", "space-y-1")}>
-          <span className={tw("text-xl", "font-semibold")}>
-            {poolSymbol?.[0]} - ETH
-          </span>
+          <span className={tw("font-semibold")}>{poolSymbol?.[0]} - ETH</span>
           <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
             {poolName?.[0]}
           </span>
