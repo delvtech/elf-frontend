@@ -96,6 +96,7 @@ const PoolPreviewTableRow: FC<{
   return (
     <tr>
       {/* Token name */}
+
       <td className={tw("h-16")} onClick={onRowClick}>
         <div className={tw("flex", "flex-col", "space-y-1")}>
           <span className={tw("font-semibold")}>{poolSymbol?.[0]} - ETH</span>
