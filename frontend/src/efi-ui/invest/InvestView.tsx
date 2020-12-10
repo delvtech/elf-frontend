@@ -6,13 +6,13 @@ import classNames from "classnames";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { ButtonToggleFormGroup } from "efi-ui/base/ButtonToggleFormGroup/ButtonToggleFormGroup";
+import { SearchFormGroup } from "efi-ui/base/SearchFormGroup/SearchFormGroup";
+import { PoolPreviewTable } from "efi-ui/pools/PoolPreviewTable/PoolPreviewTable";
+import { PoolView } from "efi-ui/pools/PoolView/PoolView";
 import { useWallet } from "efi-ui/wallets/hooks/useWallet";
 import { MissingWalletEmptyState } from "efi-ui/wallets/MissingWalletEmptyState/MissingWalletEmptyState";
 import WalletSummaryPane from "efi-ui/wallets/WalletSummaryPane/WalletSummaryPane";
-import { PoolView } from "efi-ui/pools/PoolView/PoolView";
-import { PoolPreviewTable } from "efi-ui/pools/PoolPreviewTable/PoolPreviewTable";
-import { ButtonToggleFormGroup } from "efi-ui/base/ButtonToggleFormGroup/ButtonToggleFormGroup";
-import { SearchFormGroup } from "efi-ui/base/SearchFormGroup/SearchFormGroup";
 import { ElfStrategyHighRisk } from "efi/pools/highRisk";
 import { ElfStrategyLowRisk } from "efi/pools/lowRisk";
 import { ElfStrategyMediumRisk } from "efi/pools/mediumRisk";
