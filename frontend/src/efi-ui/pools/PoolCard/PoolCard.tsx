@@ -91,7 +91,7 @@ export const PoolCard: FC<PoolCardProps> = ({ strategy }) => {
   const totalSupply = elfTotalSupply && formatEther(elfTotalSupply?.[0]);
 
   return (
-    <Card className={tw("flex", "flex-col", "md:w-1/2", "transition-all")}>
+    <Card className={tw("flex", "flex-col", "w-full", "transition-all")}>
       <div className={tw("flex", "mb-8", "items-center", "w-full")}>
         <div className={tw("flex", "flex-col", "space-y-8")}>
           {/* Pool name */}
