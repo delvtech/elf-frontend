@@ -27,7 +27,7 @@ export function useSmartContractReadCall<
     { methodName, callArgs: args }: SmartContractReadCallVariables
   ): Promise<TReturnType> => {
     const finalArgs = args || [];
-    const result = await contract.functions[methodName](finalArgs);
+    const result = await contract.functions[methodName](...finalArgs);
     return result;
   };
 

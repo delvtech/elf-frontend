@@ -1,14 +1,15 @@
-import React, { FC, useCallback } from "react";
-
-import { Classes, HTMLTable } from "@blueprintjs/core";
+import { Classes, HTMLTable, Switch } from "@blueprintjs/core";
 import classNames from "classnames";
 import { Erc20 } from "elf-contracts/types/Erc20";
+import React, { FC, useCallback } from "react";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { useElfProxyGetPoolAPY } from "efi-ui/pools/hooks/elfProxy";
 import { useTokenName } from "efi-ui/token/hooks/useTokenName";
 import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
 import { useTokenTotalSupply } from "efi-ui/token/hooks/useTokenTotalSupply";
+import { formatAPY } from "efi/base/formatAPY/formatAPY";
 import { formatEth } from "efi/coins/ether/formatEth";
 import { elfContract } from "efi/contracts/Elf";
 import { Pool } from "efi/pools/Pool";
@@ -26,6 +27,7 @@ const TABLE_HEADERS = [
   t`Price`,
   t`USD`,
   t`Balance`,
+  t`Wallet approval`,
 ];
 
 const POOLS = [
@@ -83,10 +85,18 @@ const PoolPreviewTableRow: FC<{
     onClick(poolId);
   }, [onClick, poolId]);
 
+  const onPermissionChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {},
+    []
+  );
+
+  const { data: poolApy } = useElfProxyGetPoolAPY(pool);
+  const formattedPoolApy = formatAPY(poolApy?.[0]);
+
   return (
-    <tr onClick={onRowClick}>
+    <tr>
       {/* Token name */}
-      <td className={tw("h-16")}>
+      <td className={tw("h-16")} onClick={onRowClick}>
         <div className={tw("flex", "flex-col", "space-y-1")}>
           <span className={tw("text-xl", "font-semibold")}>
             {poolSymbol?.[0]} - ETH
@@ -98,15 +108,19 @@ const PoolPreviewTableRow: FC<{
       </td>
 
       {/* ROI */}
-      <td>
-        <div className={tw("flex", "h-full", "items-center")}>5.16%</div>
+      <td onClick={onRowClick}>
+        <div className={tw("flex", "h-full", "items-center")}>
+          {`${formattedPoolApy}%`}
+        </div>
       </td>
 
       {/* Underlying assets */}
-      <td></td>
+      <td onClick={onRowClick}>
+        <div className={tw("flex", "h-full", "items-center")}></div>
+      </td>
 
       {/* Price per token in staking asset */}
-      <td>
+      <td onClick={onRowClick}>
         <div
           className={tw("flex", "h-full", "items-center")}
         >{`${0.94658366} ETH`}</div>
@@ -114,13 +128,26 @@ const PoolPreviewTableRow: FC<{
 
       {/* Price per token in fiat */}
 
-      <td>
+      <td onClick={onRowClick}>
         <div className={tw("flex", "h-full", "items-center")}>{`$589.22`}</div>
       </td>
 
-      <td>
+      <td onClick={onRowClick}>
         <div className={tw("flex", "h-full", "items-center")}>
           {formatEth(poolTotalSupply?.[0])}
+        </div>
+      </td>
+
+      {/* Allowance granted */}
+      <td>
+        <div className={tw("flex", "h-full", "items-center")}>
+          <Switch
+            large
+            innerLabel={t`off`}
+            innerLabelChecked={t`on`}
+            className={tw("mb-0")}
+            onChange={onPermissionChange}
+          />
         </div>
       </td>
     </tr>

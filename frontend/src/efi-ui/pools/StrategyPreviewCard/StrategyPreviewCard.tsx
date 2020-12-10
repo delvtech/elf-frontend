@@ -18,7 +18,7 @@ import tw from "efi-tailwindcss-classnames";
 import {
   useElfContractSymbol,
   useElfContractTotalSupply,
-} from "efi-ui/contracts/useElfContract";
+} from "efi-ui/pools/hooks/useElfContract";
 import { useCryptoPrice } from "efi-ui/crypto/hooks/useCryptoPrice/useCryptoPrice";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { Pool } from "efi/pools/Pool";
@@ -48,7 +48,7 @@ export const StrategyPreviewCard: FC<StrategyPreviewCardProps> = ({
   const { data: ethPrice } = useCryptoPrice("ETH");
   let marketCap: number | undefined;
   if (ethPrice !== undefined && elfTotalSupply !== undefined) {
-    marketCap = ethPrice * +formatEther(elfTotalSupply);
+    marketCap = ethPrice * +formatEther(elfTotalSupply?.[0]);
   }
 
   return (
@@ -104,7 +104,7 @@ export const StrategyPreviewCard: FC<StrategyPreviewCardProps> = ({
               className={classNames(tw("text-base"), Classes.TEXT_MUTED)}
             >{t`Total supply`}</span>
             <span className={tw("text-lg")}>
-              {elfTotalSupply && formatEther(elfTotalSupply)}{" "}
+              {elfTotalSupply && formatEther(elfTotalSupply?.[0])}{" "}
               {strategyCryptoSymbol}
             </span>
           </div>

@@ -9,13 +9,11 @@ import {
 import { useWallet } from "efi-ui/wallets/hooks/useWallet";
 import ContractAddresses from "efi/contracts/contractsJson";
 import {
+  elfContract,
   fetchBalanceOf,
   fetchContractAssetBalances,
   fetchContractAssetSymbols,
-  fetchContractName,
   fetchDecimals,
-  fetchSymbol,
-  fetchTotalSupply,
   postDeposit,
   postDepositEth,
   postWithdraw,
@@ -25,11 +23,7 @@ import { postApprove } from "efi/contracts/token";
 import { StakingTokens } from "efi/crypto/stakingAssets";
 import { TokenBalance } from "efi/crypto/TokenBalance";
 import { TokenContracts } from "efi/crypto/TokenContracts";
-
-const contractNameKey = ["contract", "elf", "name"];
-export function useElfContractName() {
-  return useQuery(contractNameKey, fetchContractName);
-}
+import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 
 const contractAssetSymbolsKey = ["contract", "elf", "assetSymbols"];
 export function useElfContractAssetSymbols() {
@@ -75,21 +69,16 @@ export function makeElfContractBalanceKey(account: string | undefined | null) {
   return [["contract", "elf", "balanceOf"], { account }];
 }
 
-const contractTotalSupplyKey = ["contract", "elf", "totalSupply"];
 export function useElfContractTotalSupply() {
-  return useQuery(contractTotalSupplyKey, () => fetchTotalSupply());
+  return useSmartContractReadCall(elfContract, "totalSupply");
 }
 
 function makeContractDecimalsKey(account: string | undefined | null) {
   return [["contract", "elf", "decimals"], { account }];
 }
-export function useElfContractDecimals() {
-  return useQuery(makeContractDecimalsKey, () => fetchDecimals());
-}
 
-const contractGovernanceKey = ["contract", "elf", "governance"];
 export function useElfContractSymbol() {
-  return useQuery(contractGovernanceKey, () => fetchSymbol());
+  return useSmartContractReadCall(elfContract, "symbol");
 }
 
 interface ElfDepositEthVariables {

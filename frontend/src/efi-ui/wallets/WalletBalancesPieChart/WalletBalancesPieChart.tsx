@@ -3,7 +3,7 @@ import React, { FC } from "react";
 import { formatEther } from "ethers/lib/utils";
 
 import { PieChart, PieData } from "efi-ui/charts/PieChart/PieChart";
-import { useElfContractBalance } from "efi-ui/contracts/useElfContract";
+import { useElfContractBalance } from "efi-ui/pools/hooks/useElfContract";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useWallet } from "efi-ui/wallets/hooks/useWallet";
 import { useWalletBalances } from "efi-ui/wallets/hooks/useWalletBalance";

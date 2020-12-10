@@ -18,7 +18,7 @@ import {
   useElfContractTotalSupply,
   useElfContractWithdraw,
   useElfContractWithdrawEth,
-} from "efi-ui/contracts/useElfContract";
+} from "efi-ui/pools/hooks/useElfContract";
 import { useCryptoDrawer } from "efi-ui/crypto/CryptoDrawer/useCryptoDrawer/useCryptoDrawer";
 import { TransactionForm } from "efi-ui/crypto/TransactionForm/TransactionForm";
 import { StakingAssetSelect } from "efi-ui/pools/StakingAssetSelect/StakingAssetSelect";
@@ -88,7 +88,7 @@ export const PoolCard: FC<PoolCardProps> = ({ strategy }) => {
   }, [openCryptoDrawer]);
 
   // TODO: refactor elfTotalSupply to be a TokenBalance
-  const totalSupply = elfTotalSupply && formatEther(elfTotalSupply);
+  const totalSupply = elfTotalSupply && formatEther(elfTotalSupply?.[0]);
 
   return (
     <Card className={tw("flex", "flex-col", "md:w-1/2", "transition-all")}>
@@ -147,7 +147,7 @@ export const PoolCard: FC<PoolCardProps> = ({ strategy }) => {
             <div className={tw("space-x-4")}>
               <span>{totalSupply}</span>
               <Tag minimal intent={Intent.PRIMARY} interactive large>
-                {strategyCryptoSymbol}
+                {strategyCryptoSymbol?.[0]}
               </Tag>
             </div>
           </div>
@@ -226,7 +226,7 @@ export const PoolCard: FC<PoolCardProps> = ({ strategy }) => {
           {/* Withdraw */}
           <TransactionForm
             inputLabel={t`Withdraw`}
-            cryptoSymbol={strategyCryptoSymbol as CryptoSymbol}
+            cryptoSymbol={strategyCryptoSymbol?.[0] as CryptoSymbol}
             cryptoBalance={elfBalance}
             buttonIntent={withdrawPending ? Intent.WARNING : Intent.PRIMARY}
             buttonEnabled={!withdrawPending}

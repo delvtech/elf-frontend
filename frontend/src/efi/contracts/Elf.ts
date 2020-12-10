@@ -46,10 +46,6 @@ elfContract.functions.assetBalances = async () => ({
   0: [BigNumber.from(100), BigNumber.from(200), BigNumber.from(100)],
 });
 
-export async function fetchContractName(): Promise<string> {
-  const result = await elfContract.functions.name();
-  return result[0];
-}
 export async function fetchContractAssetSymbols(): Promise<string[]> {
   const result = await elfContract.functions.assetSymbols();
   return result[0];
@@ -62,16 +58,6 @@ export async function fetchContractAssetBalances(): Promise<BigNumber[]> {
 
 export async function fetchBalanceOf(account: string): Promise<BigNumber> {
   const result = await elfContract.functions.balanceOf(account);
-  return result[0];
-}
-
-export async function fetchTotalSupply(): Promise<BigNumber> {
-  const result = await elfContract.functions.totalSupply();
-  return result[0];
-}
-
-export async function fetchSymbol(): Promise<string> {
-  const result = await elfContract.functions.symbol();
   return result[0];
 }
 
