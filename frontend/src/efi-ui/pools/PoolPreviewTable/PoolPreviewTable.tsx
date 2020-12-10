@@ -1,4 +1,4 @@
-import { Classes, HTMLTable, Switch } from "@blueprintjs/core";
+import { Classes, HTMLTable, Switch, Tag } from "@blueprintjs/core";
 import classNames from "classnames";
 import { Erc20 } from "elf-contracts/types/Erc20";
 import React, { FC, useCallback } from "react";
@@ -85,10 +85,7 @@ const PoolPreviewTableRow: FC<{
     onClick(poolId);
   }, [onClick, poolId]);
 
-  const onPermissionChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {},
-    []
-  );
+  const onPermissionChange = useCallback(() => {}, []);
 
   const { data: poolApy } = useElfProxyGetPoolAPY(pool);
   const formattedPoolApy = formatAPY(poolApy?.[0]);
@@ -96,7 +93,6 @@ const PoolPreviewTableRow: FC<{
   return (
     <tr>
       {/* Token name */}
-
       <td className={tw("h-16")} onClick={onRowClick}>
         <div className={tw("flex", "flex-col", "space-y-1")}>
           <span className={tw("font-semibold")}>{poolSymbol?.[0]} - ETH</span>
@@ -115,7 +111,16 @@ const PoolPreviewTableRow: FC<{
 
       {/* Underlying assets */}
       <td onClick={onRowClick}>
-        <div className={tw("flex", "h-full", "items-center")}></div>
+        <div
+          className={tw("flex", "flex-col", "w-full", "h-full", "space-y-2")}
+        >
+          <Tag minimal rightIcon={<span>46%</span>} interactive>
+            DAI
+          </Tag>
+          <Tag minimal rightIcon={<span>54%</span>} interactive>
+            USDC
+          </Tag>
+        </div>
       </td>
 
       {/* Price per token in staking asset */}
@@ -126,7 +131,6 @@ const PoolPreviewTableRow: FC<{
       </td>
 
       {/* Price per token in fiat */}
-
       <td onClick={onRowClick}>
         <div className={tw("flex", "h-full", "items-center")}>{`$589.22`}</div>
       </td>
