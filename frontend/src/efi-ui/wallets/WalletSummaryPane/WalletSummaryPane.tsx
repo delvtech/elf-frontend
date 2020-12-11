@@ -23,9 +23,9 @@ export const WalletSummaryPane: FunctionComponent<WalletSummaryPaneProps> = () =
   } = useWeb3React<Web3Provider>();
   const { isDarkMode } = useDarkMode();
 
-  if (!active) {
-    return null;
-  }
+  // if (!active) {
+  //   return null;
+  // }
 
   const connectorName = getConnectorName(connector, library);
 
