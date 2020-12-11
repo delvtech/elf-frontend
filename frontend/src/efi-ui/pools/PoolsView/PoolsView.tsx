@@ -9,7 +9,6 @@ import tw from "efi-tailwindcss-classnames";
 import { ButtonToggleFormGroup } from "efi-ui/base/ButtonToggleFormGroup/ButtonToggleFormGroup";
 import { SearchFormGroup } from "efi-ui/base/SearchFormGroup/SearchFormGroup";
 import { PoolPreviewTable } from "efi-ui/pools/PoolPreviewTable/PoolPreviewTable";
-import { PoolView } from "efi-ui/pools/PoolView/PoolView";
 import { useWallet } from "efi-ui/wallets/hooks/useWallet";
 import { MissingWalletEmptyState } from "efi-ui/wallets/MissingWalletEmptyState/MissingWalletEmptyState";
 import WalletSummaryPane from "efi-ui/wallets/WalletSummaryPane/WalletSummaryPane";
@@ -45,17 +44,8 @@ export const PoolsView: FC<PoolsViewProps> = () => {
   const [selectedRisk, setSelectedRisk] = useState<string>("all-apy");
   const [searchValue, onSetSearchValue] = useState<string>("");
 
-  const [selectedStrategy, setSelectedStrategy] = useState<string>();
-
   if (!account) {
     return <MissingWalletEmptyState />;
-  }
-
-  // TODO: Move to own route
-  if (selectedStrategy) {
-    return (
-      <PoolView pool={selectedStrategy} setActivePool={setSelectedStrategy} />
-    );
   }
 
   return (
@@ -121,7 +111,6 @@ export const PoolsView: FC<PoolsViewProps> = () => {
               <PoolPreviewTable
                 className={tw("w-full")}
                 pools={availableStrategies}
-                onSelectPool={setSelectedStrategy}
               />
             </div>
           </div>

@@ -8,9 +8,10 @@ import { tw } from "efi-tailwindcss-classnames";
 import { CryptoDrawer } from "efi-ui/crypto/CryptoDrawer/CryptoDrawer";
 import { FAQView } from "efi-ui/faq/FAQView";
 import { HomeView } from "efi-ui/home/HomeView";
-import { PoolsView } from "efi-ui/pools/PoolsView/PoolsView";
 import { MainNavigation } from "efi-ui/navigation/MainNavigation/MainNavigation";
 import { Navigation } from "efi-ui/navigation/navigation";
+import { PoolsView } from "efi-ui/pools/PoolsView/PoolsView";
+import { PoolView } from "efi-ui/pools/PoolView/PoolView";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { PulseView } from "efi-ui/pulse/PulseView";
 import { useSyncWithInjectedEthereum } from "efi-ui/wallets/hooks/useSyncWithInjectedEthereum";
@@ -54,7 +55,8 @@ const App: FC<AppProps> = () => {
         <Router className={contentClassName}>
           <HomeView path="/" />
           <PulseView path={Navigation.PULSE} />
-          <PoolsView path={Navigation.INVEST} />
+          <PoolsView path={Navigation.POOLS} />
+          <PoolView path={`${Navigation.POOLS}/:poolId`} />
           <FAQView path={Navigation.FAQ} />
           <WalletView path={Navigation.WALLET} />
         </Router>
