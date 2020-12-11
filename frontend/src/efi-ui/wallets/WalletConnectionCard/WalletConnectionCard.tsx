@@ -5,18 +5,18 @@ import { IconNames } from "@blueprintjs/icons";
 import classNames from "classnames";
 
 import tw from "efi-tailwindcss-classnames";
-import { WalletJazzicon } from "efi-ui/wallets/WalletJazzicon/WalletJazzicon";
-import { formatChainName } from "efi/crypto/formatChainName";
-import { formatWalletAddress } from "efi/wallets/formatWalletAddress";
-import { isMainnet } from "efi/crypto/ethereum";
 import { useChangeTab } from "efi-ui/navigation/hooks/useChangeTab";
 import { Navigation } from "efi-ui/navigation/navigation";
+import { WalletJazzicon } from "efi-ui/wallets/WalletJazzicon/WalletJazzicon";
+import { isMainnet } from "efi/crypto/ethereum";
+import { formatChainName } from "efi/crypto/formatChainName";
+import { formatWalletAddress } from "efi/wallets/formatWalletAddress";
 
 interface WalletConnectionCardProps {
   chainId: number | undefined;
   account: string | null | undefined;
   active: boolean;
-  connectorName: string;
+  connectorName: string | undefined;
 }
 
 export const WalletConnectionCard: FunctionComponent<WalletConnectionCardProps> = ({
@@ -25,6 +25,8 @@ export const WalletConnectionCard: FunctionComponent<WalletConnectionCardProps> 
   active,
   connectorName,
 }) => {
+  const connectionStatusColor = active ? Colors.GREEN4 : Colors.RED4;
+  const connectorMessage = connectorName ?? "Connect wallet";
   const changeTab = useChangeTab();
   return (
     <Card
@@ -55,9 +57,9 @@ export const WalletConnectionCard: FunctionComponent<WalletConnectionCardProps> 
         <Tag
           minimal
           large
-          icon={<Icon icon={IconNames.DOT} color={Colors.GREEN4} />}
+          icon={<Icon icon={IconNames.DOT} color={connectionStatusColor} />}
         >
-          {connectorName}
+          {connectorMessage}
         </Tag>
       </div>
     </Card>

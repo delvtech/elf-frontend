@@ -77,9 +77,9 @@ export const torusConnector = new TorusConnector({
 export function getConnectorName(
   connector?: AbstractConnector | undefined,
   library?: Web3Provider | undefined
-): string {
+): string | undefined {
   if (!connector) {
-    return t`No connector`;
+    return undefined;
   }
 
   // Metamask is special. It's connector doesn't identify itself so we have to
