@@ -1,10 +1,14 @@
+import React, { FC, useCallback } from "react";
+
 import { Alignment, Classes, HTMLTable, Switch } from "@blueprintjs/core";
+import { useNavigate } from "@reach/router";
 import classNames from "classnames";
 import { Erc20 } from "elf-contracts/types/Erc20";
-import React, { FC, useCallback } from "react";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { FormGroupLabel } from "efi-ui/base/FormGroupLabel/FormGroupLabel";
+import { Navigation } from "efi-ui/navigation/navigation";
 import { useElfProxyGetPoolAPY } from "efi-ui/pools/hooks/elfProxy";
 import { useTokenName } from "efi-ui/token/hooks/useTokenName";
 import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
@@ -13,10 +17,8 @@ import { formatAPY } from "efi/base/formatAPY/formatAPY";
 import { formatEth } from "efi/coins/ether/formatEth";
 import { elfContract } from "efi/contracts/Elf";
 import { Pool } from "efi/pools/Pool";
-import { FormGroupLabel } from "efi-ui/base/FormGroupLabel/FormGroupLabel";
 
 interface PoolPreviewTableProps {
-  onSelectPool: (strategyId: string) => void;
   pools: Pool[];
   className?: string;
 }
@@ -44,7 +46,6 @@ const POOLS = [
 
 export const PoolPreviewTable: FC<PoolPreviewTableProps> = ({
   pools,
-  onSelectPool,
   className,
 }) => {
   return (
@@ -63,12 +64,7 @@ export const PoolPreviewTable: FC<PoolPreviewTableProps> = ({
       <tbody className={Classes.TEXT_LARGE}>
         {POOLS.map((pool, i) => {
           return (
-            <PoolPreviewTableRow
-              key={i}
-              pool={pool}
-              poolId={pools[0].id}
-              onClick={onSelectPool}
-            />
+            <PoolPreviewTableRow key={i} pool={pool} poolId={pools[0].id} />
           );
         })}
       </tbody>
@@ -99,25 +95,25 @@ const PoolPreviewTableHeader: FC<PoolPreviewTableHeaderProps> = ({
 const PoolPreviewTableRow: FC<{
   pool: Erc20;
   poolId: string;
-  onClick: (poolId: string) => void;
-}> = ({ pool, poolId, onClick }) => {
+}> = ({ pool, poolId }) => {
   const { data: poolName } = useTokenName(pool);
   const { data: poolSymbol } = useTokenSymbol(pool);
   const { data: poolTotalSupply } = useTokenTotalSupply(pool);
-
-  const onRowClick = useCallback(() => {
-    onClick(poolId);
-  }, [onClick, poolId]);
+  const navigate = useNavigate();
 
   const onPermissionChange = useCallback(() => {}, []);
 
   const { data: poolApy } = useElfProxyGetPoolAPY(pool);
   const formattedPoolApy = formatAPY(poolApy?.[0]);
 
+  const onRowClick = useCallback(() => {
+    navigate(`${Navigation.POOLS}/${poolId}`);
+  }, [navigate, poolId]);
+
   return (
-    <tr>
+    <tr onClick={onRowClick}>
       {/* Token name */}
-      <td className={tw("h-16")} onClick={onRowClick}>
+      <td className={tw("h-16")}>
         <div
           className={tw(
             "flex",
@@ -136,14 +132,14 @@ const PoolPreviewTableRow: FC<{
       </td>
 
       {/* ROI */}
-      <td onClick={onRowClick}>
+      <td>
         <div className={tw("flex", "h-full", "items-center")}>
           {`${formattedPoolApy}%`}
         </div>
       </td>
 
       {/* Price per token in staking asset */}
-      <td onClick={onRowClick}>
+      <td>
         <div
           className={tw(
             "flex",
@@ -161,7 +157,7 @@ const PoolPreviewTableRow: FC<{
         </div>
       </td>
 
-      <td onClick={onRowClick}>
+      <td>
         <div className={tw("flex", "h-full", "items-center")}>
           {formatEth(poolTotalSupply?.[0])}
         </div>
@@ -169,7 +165,12 @@ const PoolPreviewTableRow: FC<{
 
       {/* Allowance granted */}
       <td>
-        <div className={tw("flex", "h-full", "items-center")}>
+        <div
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+          className={tw("flex", "h-full", "items-center")}
+        >
           <Switch
             large
             innerLabel={t`off`}

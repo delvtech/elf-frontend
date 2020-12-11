@@ -1,9 +1,10 @@
 import React, { FC } from "react";
 
-import { RouteComponentProps } from "@reach/router";
+import { RouteComponentProps, useNavigate } from "@reach/router";
 
 import tw from "efi-tailwindcss-classnames";
-import { InvestBreadcrumb } from "efi-ui/invest/InvestBreadcrumb/InvestBreadcrumb";
+import { Navigation } from "efi-ui/navigation/navigation";
+import { PoolBreadcrumb } from "efi-ui/pools/PoolBreadCrumb/PoolBreadcrumb";
 import { PoolCard } from "efi-ui/pools/PoolCard/PoolCard";
 import { useWallet } from "efi-ui/wallets/hooks/useWallet";
 import { MissingWalletEmptyState } from "efi-ui/wallets/MissingWalletEmptyState/MissingWalletEmptyState";
@@ -13,24 +14,29 @@ import { ElfStrategyLowRisk } from "efi/pools/lowRisk";
 import { ElfStrategyMediumRisk } from "efi/pools/mediumRisk";
 
 interface PoolViewProps extends RouteComponentProps {
-  pool: string;
-  setActivePool: (pool: string | undefined) => void;
+  /**
+   * the contract address of the pool, provided from router
+   */
+  poolId?: string;
 }
 
-const availableStrategies = [
+const availablePools = [
   ElfStrategyLowRisk,
   ElfStrategyMediumRisk,
   ElfStrategyHighRisk,
 ];
 
-const strategiesById = Object.fromEntries(
-  availableStrategies.map((strategy) => [strategy.id, strategy])
+const poolsById = Object.fromEntries(
+  availablePools.map((pool) => [pool.id, pool])
 );
 
-export const PoolView: FC<PoolViewProps> = ({ pool, setActivePool }) => {
-  const { account } = useWallet();
+export const PoolView: FC<PoolViewProps> = (props) => {
+  const { poolId } = props;
 
-  if (!account) {
+  const { account } = useWallet();
+  const navigate = useNavigate();
+
+  if (!account || !poolId) {
     return <MissingWalletEmptyState />;
   }
 
@@ -42,14 +48,14 @@ export const PoolView: FC<PoolViewProps> = ({ pool, setActivePool }) => {
       <div className={tw("flex", "flex-col", "flex-1", "space-y-16")}>
         {/* page title */}
         <div className={tw("flex", "flex-col", "justify-start")}>
-          <InvestBreadcrumb
-            availableStrategies={availableStrategies}
-            activeStrategy={pool}
-            setActiveStrategy={setActivePool}
+          <PoolBreadcrumb
+            availablePools={availablePools}
+            activePool={poolId}
+            setActivePool={() => navigate(`/${Navigation.POOLS}`)}
           />
         </div>
 
-        <PoolCard strategy={strategiesById[pool]} />
+        <PoolCard pool={poolsById[poolId]} />
       </div>
 
       {/* Right hand side */}
@@ -59,22 +65,3 @@ export const PoolView: FC<PoolViewProps> = ({ pool, setActivePool }) => {
     </div>
   );
 };
-
-// <div
-//   className={tw("flex", "p-12", "h-full", "space-x-12", "overflow-scroll")}
-// >
-//   {/* Main content */}
-//   <div className={tw("flex", "flex-col", "flex-1", "space-y-16")}>
-//     {/* page title */}
-//     <div className={tw("flex", "flex-col", "justify-start")}>
-//     </div>
-
-//     <Card className={tw("p-10")}>
-//     </Card>
-//   </div>
-
-//   {/* Right hand side */}
-//   <div className={tw("hidden", "lg:block", "h-full")}>
-//     <WalletSummaryPane />
-//   </div>
-// </div>
