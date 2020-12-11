@@ -1,8 +1,8 @@
 import React, { FC, useMemo } from "react";
 
 import { Breadcrumbs, IBreadcrumbProps } from "@blueprintjs/core";
-import { t } from "ttag";
 
+import { Navigation } from "efi-ui/navigation/navigation";
 import { Pool } from "efi/pools/Pool";
 
 interface PoolBreadcrumbProps {
@@ -37,7 +37,7 @@ function useBreadcrumbItems(
       // Only show the root breadcrumb if we're deeper than the root
       newItems.push({
         onClick: () => setActivePool(undefined),
-        text: t`Invest`,
+        text: Navigation.POOLS,
       });
       newItems.push({ text: poolsById[activePool].name });
     }
