@@ -6,12 +6,12 @@ import tw from "efi-tailwindcss-classnames";
 import { Navigation } from "efi-ui/navigation/navigation";
 import { PoolBreadcrumb } from "efi-ui/pools/PoolBreadCrumb/PoolBreadcrumb";
 import { PoolCard } from "efi-ui/pools/PoolCard/PoolCard";
-import { useWallet } from "efi-ui/wallets/hooks/useWallet";
-import { MissingWalletEmptyState } from "efi-ui/wallets/MissingWalletEmptyState/MissingWalletEmptyState";
 import WalletSummaryPane from "efi-ui/wallets/WalletSummaryPane/WalletSummaryPane";
 import { ElfStrategyHighRisk } from "efi/pools/highRisk";
 import { ElfStrategyLowRisk } from "efi/pools/lowRisk";
 import { ElfStrategyMediumRisk } from "efi/pools/mediumRisk";
+
+import { PoolNotFoundCard } from "../PoolNotFoundCard/PoolNotFoundCard";
 
 interface PoolViewProps extends RouteComponentProps {
   /**
@@ -33,12 +33,10 @@ const poolsById = Object.fromEntries(
 export const PoolView: FC<PoolViewProps> = (props) => {
   const { poolId } = props;
 
-  const { account } = useWallet();
   const navigate = useNavigate();
 
-  if (!account || !poolId) {
-    return <MissingWalletEmptyState />;
-  }
+  const pool = poolId ? poolsById[poolId] : null;
+  const activePool = pool ? poolId : undefined;
 
   return (
     <div
@@ -50,12 +48,12 @@ export const PoolView: FC<PoolViewProps> = (props) => {
         <div className={tw("flex", "flex-col", "justify-start")}>
           <PoolBreadcrumb
             availablePools={availablePools}
-            activePool={poolId}
+            activePool={activePool}
             setActivePool={() => navigate(`/${Navigation.POOLS}`)}
           />
         </div>
 
-        <PoolCard pool={poolsById[poolId]} />
+        {pool ? <PoolCard pool={pool} /> : <PoolNotFoundCard />}
       </div>
 
       {/* Right hand side */}
