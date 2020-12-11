@@ -52,6 +52,18 @@ export const SidebarNavigation: FC<SidebarNavigationProps> = ({
           selectedTabId={activeTab}
         >
           <Tab
+            id={Navigation.WALLET}
+            title={
+              <div className={tabTitleClassName}>
+                <Icon
+                  icon={IconNames.TIMELINE_AREA_CHART}
+                  iconSize={Icon.SIZE_LARGE}
+                />
+                <span>{t`Summary`}</span>
+              </div>
+            }
+          />
+          <Tab
             id={Navigation.POOLS}
             title={
               <div className={tabTitleClassName}>

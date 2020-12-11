@@ -118,7 +118,7 @@ export const PoolsView: FC<PoolsViewProps> = () => {
       </div>
 
       {/* Right hand side */}
-      <div className={tw("hidden", "lg:block", "h-full")}>
+      <div className={tw("hidden", "lg:block", "h-full", "flex-shrink-0")}>
         <WalletSummaryPane />
       </div>
     </div>
