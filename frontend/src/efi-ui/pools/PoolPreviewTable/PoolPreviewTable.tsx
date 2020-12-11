@@ -1,4 +1,4 @@
-import { Classes, HTMLTable, Switch, Tag } from "@blueprintjs/core";
+import { Alignment, Classes, HTMLTable, Switch } from "@blueprintjs/core";
 import classNames from "classnames";
 import { Erc20 } from "elf-contracts/types/Erc20";
 import React, { FC, useCallback } from "react";
@@ -13,6 +13,7 @@ import { formatAPY } from "efi/base/formatAPY/formatAPY";
 import { formatEth } from "efi/coins/ether/formatEth";
 import { elfContract } from "efi/contracts/Elf";
 import { Pool } from "efi/pools/Pool";
+import { FormGroupLabel } from "efi-ui/base/FormGroupLabel/FormGroupLabel";
 
 interface PoolPreviewTableProps {
   onSelectPool: (strategyId: string) => void;
@@ -20,14 +21,15 @@ interface PoolPreviewTableProps {
   className?: string;
 }
 
-const TABLE_HEADERS = [
-  t`Pair`,
-  t`ROI`,
-  t`Underlying assets`,
-  t`Price`,
-  t`USD`,
-  t`Balance`,
-  t`Wallet approval`,
+const TABLE_HEADERS: PoolPreviewTableHeaderProps[] = [
+  { label: t`Pair` },
+  { label: t`ROI` },
+  { label: t`Price` },
+  { label: t`Balance` },
+  {
+    label: t`Wallet approval`,
+    tooltip: t`Wallet approval is required before a pool can invest your funds`,
+  },
 ];
 
 const POOLS = [
@@ -49,10 +51,12 @@ export const PoolPreviewTable: FC<PoolPreviewTableProps> = ({
     <HTMLTable striped className={className} interactive>
       <thead>
         <tr>
-          {TABLE_HEADERS.map((label) => (
-            <th key={label}>
-              <span className={classNames(Classes.TEXT_MUTED)}>{label}</span>
-            </th>
+          {TABLE_HEADERS.map(({ label, tooltip }) => (
+            <PoolPreviewTableHeader
+              key={label}
+              label={label}
+              tooltip={tooltip}
+            />
           ))}
         </tr>
       </thead>
@@ -69,6 +73,26 @@ export const PoolPreviewTable: FC<PoolPreviewTableProps> = ({
         })}
       </tbody>
     </HTMLTable>
+  );
+};
+
+interface PoolPreviewTableHeaderProps {
+  label: string;
+  tooltip?: string;
+}
+
+const PoolPreviewTableHeader: FC<PoolPreviewTableHeaderProps> = ({
+  label,
+  tooltip,
+}) => {
+  return (
+    <th key={label}>
+      <FormGroupLabel
+        label={label}
+        tooltipContent={tooltip}
+        alignIndicator={Alignment.RIGHT}
+      />
+    </th>
   );
 };
 
@@ -94,7 +118,16 @@ const PoolPreviewTableRow: FC<{
     <tr>
       {/* Token name */}
       <td className={tw("h-16")} onClick={onRowClick}>
-        <div className={tw("flex", "flex-col", "space-y-1")}>
+        <div
+          className={tw(
+            "flex",
+            "flex-col",
+            "h-full",
+            "w-full",
+            "justify-center",
+            "space-y-1"
+          )}
+        >
           <span className={tw("font-semibold")}>{poolSymbol?.[0]} - ETH</span>
           <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
             {poolName?.[0]}
@@ -109,30 +142,23 @@ const PoolPreviewTableRow: FC<{
         </div>
       </td>
 
-      {/* Underlying assets */}
-      <td onClick={onRowClick}>
-        <div
-          className={tw("flex", "flex-col", "w-full", "h-full", "space-y-2")}
-        >
-          <Tag minimal rightIcon={<span>46%</span>} interactive>
-            DAI
-          </Tag>
-          <Tag minimal rightIcon={<span>54%</span>} interactive>
-            USDC
-          </Tag>
-        </div>
-      </td>
-
       {/* Price per token in staking asset */}
       <td onClick={onRowClick}>
         <div
-          className={tw("flex", "h-full", "items-center")}
-        >{`${0.94658366} ETH`}</div>
-      </td>
-
-      {/* Price per token in fiat */}
-      <td onClick={onRowClick}>
-        <div className={tw("flex", "h-full", "items-center")}>{`$589.22`}</div>
+          className={tw(
+            "flex",
+            "h-full",
+            "flex-col",
+            "w-full",
+            "justify-center",
+            "space-y-1"
+          )}
+        >
+          <span>{`${0.94658366} ETH`}</span>
+          <span
+            className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
+          >{`589.22 USD`}</span>
+        </div>
       </td>
 
       <td onClick={onRowClick}>

@@ -17,9 +17,9 @@ import { ElfStrategyHighRisk } from "efi/pools/highRisk";
 import { ElfStrategyLowRisk } from "efi/pools/lowRisk";
 import { ElfStrategyMediumRisk } from "efi/pools/mediumRisk";
 
-interface InvestViewProps extends RouteComponentProps {}
+interface PoolsViewProps extends RouteComponentProps {}
 
-const APY_BUTTONS = [
+const ROI_BUTTONS = [
   { id: "all-apy", text: t`All` },
   { id: "low-apy", text: t`Low` },
   { id: "med-apy", text: t`Med` },
@@ -39,7 +39,7 @@ const availableStrategies = [
   ElfStrategyHighRisk,
 ];
 
-export const InvestView: FC<InvestViewProps> = () => {
+export const PoolsView: FC<PoolsViewProps> = () => {
   const { account } = useWallet();
   const [selectedPool, setSelectedPool] = useState<string>("all-pools");
   const [selectedRisk, setSelectedRisk] = useState<string>("all-apy");
@@ -107,11 +107,11 @@ export const InvestView: FC<InvestViewProps> = () => {
                 />
 
                 <ButtonToggleFormGroup
-                  label={t`Select APY`}
+                  label={t`Select ROI`}
                   tooltipContent={t`Risk is determined by the volatility of the underlying assets`}
                   selectedButtonId={selectedRisk}
                   onSelect={setSelectedRisk}
-                  buttons={APY_BUTTONS}
+                  buttons={ROI_BUTTONS}
                 />
               </div>
             </div>

@@ -33,17 +33,9 @@ export const SidebarNavigation: FC<SidebarNavigationProps> = ({
         tw("hidden", "w-32", "lg:flex", "flex-col", "h-full", "pt-10")
       )}
     >
-      <div
-        className={tw(
-          "flex",
-          "flex-col",
-          "justify-center",
-          "space-y-4",
-          "items-center",
-          "mb-20"
-        )}
-      >
-        <div className={tw("flex", "flex-col", "pt-2", "space-y-1")}>
+      <div className={tw("flex", "flex-col", "mb-20")}>
+        {/* Logo */}
+        <div className={tw("flex", "flex-col", "space-y-1")}>
           <span className={tw("text-center", "text-lg")}>Element</span>
           <span className={tw("text-center", "text-lg")}>Finance</span>
         </div>

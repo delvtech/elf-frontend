@@ -1,4 +1,4 @@
-import { Button, FormGroup, Intent } from "@blueprintjs/core";
+import { Alignment, Button, FormGroup, Intent } from "@blueprintjs/core";
 import React, { FC } from "react";
 
 import tw from "efi-tailwindcss-classnames";
@@ -28,7 +28,15 @@ export const ButtonToggleFormGroup: FC<ButtonToggleFormGroupProps> = ({
     <FormGroup
       className={tw("space-y-2")}
       contentClassName={tw("space-x-4")}
-      label={<FormGroupLabel label={label} tooltipContent={tooltipContent} />}
+      label={
+        <FormGroupLabel
+          large
+          fill
+          alignIndicator={Alignment.RIGHT}
+          label={label}
+          tooltipContent={tooltipContent}
+        />
+      }
     >
       {buttons.map(({ id, text }) => (
         <Button

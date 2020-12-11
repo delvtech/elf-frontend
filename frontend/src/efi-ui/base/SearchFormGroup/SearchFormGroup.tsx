@@ -1,4 +1,4 @@
-import { FormGroup, Icon, InputGroup } from "@blueprintjs/core";
+import { Alignment, FormGroup, Icon, InputGroup } from "@blueprintjs/core";
 import React, { ChangeEvent, FC, useCallback } from "react";
 
 import tw from "efi-tailwindcss-classnames";
@@ -30,7 +30,15 @@ export const SearchFormGroup: FC<SearchFormGroupProps> = ({
     <FormGroup
       className={tw("space-y-2")}
       contentClassName={tw("space-x-4")}
-      label={<FormGroupLabel label={label} tooltipContent={tooltipContent} />}
+      label={
+        <FormGroupLabel
+          large
+          fill
+          alignIndicator={Alignment.RIGHT}
+          label={label}
+          tooltipContent={tooltipContent}
+        />
+      }
     >
       <InputGroup
         large

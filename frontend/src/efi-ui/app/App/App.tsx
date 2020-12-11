@@ -8,7 +8,7 @@ import { tw } from "efi-tailwindcss-classnames";
 import { CryptoDrawer } from "efi-ui/crypto/CryptoDrawer/CryptoDrawer";
 import { FAQView } from "efi-ui/faq/FAQView";
 import { HomeView } from "efi-ui/home/HomeView";
-import { InvestView } from "efi-ui/invest/InvestView";
+import { PoolsView } from "efi-ui/pools/PoolsView/PoolsView";
 import { MainNavigation } from "efi-ui/navigation/MainNavigation/MainNavigation";
 import { Navigation } from "efi-ui/navigation/navigation";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
@@ -53,7 +53,7 @@ const App: FC<AppProps> = () => {
         <Router className={contentClassName}>
           <HomeView path="/" />
           <PulseView path={Navigation.PULSE} />
-          <InvestView path={Navigation.INVEST} />
+          <PoolsView path={Navigation.INVEST} />
           <FAQView path={Navigation.FAQ} />
         </Router>
       </div>
