@@ -165,7 +165,12 @@ const PoolPreviewTableRow: FC<{
 
       {/* Allowance granted */}
       <td>
-        <div className={tw("flex", "h-full", "items-center")}>
+        <div
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+          className={tw("flex", "h-full", "items-center")}
+        >
           <Switch
             large
             innerLabel={t`off`}
