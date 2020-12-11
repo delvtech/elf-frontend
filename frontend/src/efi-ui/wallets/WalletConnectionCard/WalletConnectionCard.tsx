@@ -9,6 +9,8 @@ import { WalletJazzicon } from "efi-ui/wallets/WalletJazzicon/WalletJazzicon";
 import { formatChainName } from "efi/crypto/formatChainName";
 import { formatWalletAddress } from "efi/wallets/formatWalletAddress";
 import { isMainnet } from "efi/crypto/ethereum";
+import { useChangeTab } from "efi-ui/navigation/hooks/useChangeTab";
+import { Navigation } from "efi-ui/navigation/navigation";
 
 interface WalletConnectionCardProps {
   chainId: number | undefined;
@@ -23,11 +25,13 @@ export const WalletConnectionCard: FunctionComponent<WalletConnectionCardProps> 
   active,
   connectorName,
 }) => {
+  const changeTab = useChangeTab();
   return (
     <Card
       className={classNames(tw("flex", "flex-col"))}
       interactive
       style={getCardStyle(chainId)}
+      onClick={() => changeTab(Navigation.WALLET)}
     >
       <div
         className={tw("flex", "justify-between", "items-center", "space-x-8")}

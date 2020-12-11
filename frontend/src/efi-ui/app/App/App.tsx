@@ -16,6 +16,7 @@ import { PulseView } from "efi-ui/pulse/PulseView";
 import { useSyncWithInjectedEthereum } from "efi-ui/wallets/hooks/useSyncWithInjectedEthereum";
 
 import styles from "./App.module.css";
+import { WalletView } from "efi-ui/wallets/WalletView/WalletView";
 
 const contentClassName = tw(
   "flex-1",
@@ -55,6 +56,7 @@ const App: FC<AppProps> = () => {
           <PulseView path={Navigation.PULSE} />
           <PoolsView path={Navigation.INVEST} />
           <FAQView path={Navigation.FAQ} />
+          <WalletView path={Navigation.WALLET} />
         </Router>
       </div>
       <CryptoDrawer />
