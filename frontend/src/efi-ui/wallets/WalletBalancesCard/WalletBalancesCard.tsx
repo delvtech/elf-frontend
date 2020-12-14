@@ -16,6 +16,7 @@ import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
 import { formatEth } from "efi/coins/ether/formatEth";
 import { TokenContractSymbols } from "efi/crypto/TokenContractSymbols";
 import { formatMoney } from "efi/money/formatMoney";
+import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 
 interface WalletBalancesCardProps {}
 
@@ -55,31 +56,19 @@ export const WalletBalancesCard: FC<WalletBalancesCardProps> = () => {
         <tbody className={Classes.TEXT_LARGE}>
           <tr>
             <td>
-              <div className={tw("flex", "space-x-2", "font-semibold")}>
-                ETH
-              </div>
+              <LabeledText bold text="ETH" label="Ether" />
             </td>
+
             <td
               className={classNames({ [Classes.SKELETON]: isEthPriceLoading })}
             >
               {`$${ethPrice}`}
             </td>
             <td>
-              <div
-                className={tw(
-                  "flex",
-                  "h-full",
-                  "flex-col",
-                  "w-full",
-                  "justify-center",
-                  "space-y-1"
-                )}
-              >
-                <span>{t`${formattedEthBalance} ETH`}</span>
-                <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
-                  {t`${formatMoney(fiatBalance)} USD`}
-                </span>
-              </div>
+              <LabeledText
+                text={t`${formattedEthBalance} ETH`}
+                label={t`${formatMoney(fiatBalance)} USD`}
+              />
             </td>
           </tr>
 
@@ -125,9 +114,7 @@ const TokenBalanceTableRow: FC<{
     <tr>
       {/* Token name */}
       <td>
-        <div className={tw("flex", "space-x-2", "font-semibold")}>
-          {tokenSymbol}
-        </div>
+        <LabeledText bold text={tokenSymbol} label={""} />
       </td>
 
       {/* Price per token */}
@@ -137,21 +124,10 @@ const TokenBalanceTableRow: FC<{
 
       {/* Fiat balance */}
       <td>
-        <div
-          className={tw(
-            "flex",
-            "h-full",
-            "flex-col",
-            "w-full",
-            "justify-center",
-            "space-y-1"
-          )}
-        >
-          <span>{t`${formattedTokenBalance} ETH`}</span>
-          <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
-            {t`${formattedFiatBalance} USD`}
-          </span>
-        </div>
+        <LabeledText
+          text={t`${formattedTokenBalance} ETH`}
+          label={t`${formattedFiatBalance} USD`}
+        />
       </td>
     </tr>
   );

@@ -2,7 +2,6 @@ import React, { FC, useCallback } from "react";
 
 import { Alignment, Classes, HTMLTable, Switch } from "@blueprintjs/core";
 import { useNavigate } from "@reach/router";
-import classNames from "classnames";
 import { Erc20 } from "elf-contracts/types/Erc20";
 import { t } from "ttag";
 
@@ -17,6 +16,7 @@ import { formatAPY } from "efi/base/formatAPY/formatAPY";
 import { formatEth } from "efi/coins/ether/formatEth";
 import { elfContract } from "efi/contracts/Elf";
 import { Pool } from "efi/pools/Pool";
+import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 
 interface PoolPreviewTableProps {
   pools: Pool[];
@@ -114,21 +114,11 @@ const PoolPreviewTableRow: FC<{
     <tr onClick={onRowClick}>
       {/* Token name */}
       <td className={tw("h-16")}>
-        <div
-          className={tw(
-            "flex",
-            "flex-col",
-            "h-full",
-            "w-full",
-            "justify-center",
-            "space-y-1"
-          )}
-        >
-          <span className={tw("font-semibold")}>{poolSymbol?.[0]} - ETH</span>
-          <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
-            {poolName?.[0]}
-          </span>
-        </div>
+        <LabeledText
+          bold
+          text={t`${poolSymbol?.[0]} - ETH`}
+          label={poolName?.[0] || ""}
+        />
       </td>
 
       {/* ROI */}
@@ -140,21 +130,7 @@ const PoolPreviewTableRow: FC<{
 
       {/* Price per token in staking asset */}
       <td>
-        <div
-          className={tw(
-            "flex",
-            "h-full",
-            "flex-col",
-            "w-full",
-            "justify-center",
-            "space-y-1"
-          )}
-        >
-          <span>{`${0.94658366} ETH`}</span>
-          <span
-            className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
-          >{`589.22 USD`}</span>
-        </div>
+        <LabeledText text={`${0.94658366} ETH`} label={`589.22 USD`} />
       </td>
 
       <td>
