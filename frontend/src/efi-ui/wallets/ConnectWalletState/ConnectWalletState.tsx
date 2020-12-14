@@ -18,7 +18,7 @@ const howItWorksLink = (
   <a key="how-it-work" href="/">{t`how investing works`}</a>
 );
 
-export const MissingWalletEmptyState: FC<{}> = () => {
+export const ConnectWalletState: FC<{}> = () => {
   return (
     <NonIdealState
       icon={IconNames.SEND_TO_GRAPH}

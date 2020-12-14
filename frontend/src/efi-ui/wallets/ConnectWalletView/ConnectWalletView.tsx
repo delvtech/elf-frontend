@@ -3,7 +3,7 @@ import React, { FC } from "react";
 import { RouteComponentProps } from "@reach/router";
 
 import tw from "efi-tailwindcss-classnames";
-import { MissingWalletEmptyState } from "efi-ui/wallets/MissingWalletEmptyState/MissingWalletEmptyState";
+import { ConnectWalletState } from "efi-ui/wallets/ConnectWalletState/ConnectWalletState";
 
 interface ConnectWalletViewProps extends RouteComponentProps {}
 export const ConnectWalletView: FC<ConnectWalletViewProps> = () => {
@@ -17,7 +17,7 @@ export const ConnectWalletView: FC<ConnectWalletViewProps> = () => {
         "items-center"
       )}
     >
-      <MissingWalletEmptyState />
+      <ConnectWalletState />
     </div>
   );
 };

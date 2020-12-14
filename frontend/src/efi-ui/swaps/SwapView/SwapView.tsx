@@ -5,15 +5,15 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { SimpleCryptoAssetFilter } from "efi-ui/swaps/SimpleCryptoAssetFilter/SimpleCryptoAssetFilter";
+import { ConnectWalletState } from "efi-ui/wallets/ConnectWalletState/ConnectWalletState";
 import { useWallet } from "efi-ui/wallets/hooks/useWallet";
-import { MissingWalletEmptyState } from "efi-ui/wallets/MissingWalletEmptyState/MissingWalletEmptyState";
 
 interface SwapViewProps extends RouteComponentProps {}
 export const SwapView: FC<SwapViewProps> = () => {
   const { account } = useWallet();
 
   if (!account) {
-    return <MissingWalletEmptyState />;
+    return <ConnectWalletState />;
   }
 
   return (
