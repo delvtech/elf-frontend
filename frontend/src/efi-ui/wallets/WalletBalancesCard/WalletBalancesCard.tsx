@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 
-import { Card, Classes, H4, HTMLTable } from "@blueprintjs/core";
+import { Card, Classes, HTMLTable } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
 import classNames from "classnames";
@@ -35,17 +35,15 @@ export const WalletBalancesCard: FC<WalletBalancesCardProps> = () => {
 
   return (
     <Card className={tw("flex", "flex-col", "space-y-4")}>
-      <div className={tw("flex", "justify-between")}>
-        <H4
-          className={classNames(tw("m-0"), Classes.TEXT_MUTED)}
-        >{t`Wallet balance`}</H4>
-        <H4 className={tw("m-0")}>{totalBalance}</H4>
+      <div className={tw("flex", "justify-between", "text-base")}>
+        <span className={Classes.TEXT_MUTED}>{t`Wallet balance`}</span>
+        <span>{totalBalance}</span>
       </div>
 
       <HTMLTable striped className={tw("w-full")}>
         <thead>
           <tr className={Classes.TEXT_SMALL}>
-            {[t`Asset`, t`Price`, t`USD`, t`Balance`].map((label) => (
+            {[t`Asset`, t`Price`, t`Balance`].map((label) => (
               <th key={label}>
                 <span className={classNames(tw("text-xs"), Classes.TEXT_MUTED)}>
                   {label}
@@ -66,9 +64,25 @@ export const WalletBalancesCard: FC<WalletBalancesCardProps> = () => {
             >
               {`$${ethPrice}`}
             </td>
-            {fiatBalance && <td>{`$${formatMoney(fiatBalance)}`}</td>}
-            <td>{formattedEthBalance}</td>
+            <td>
+              <div
+                className={tw(
+                  "flex",
+                  "h-full",
+                  "flex-col",
+                  "w-full",
+                  "justify-center",
+                  "space-y-1"
+                )}
+              >
+                <span>{t`${formattedEthBalance} ETH`}</span>
+                <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
+                  {t`${formatMoney(fiatBalance)} USD`}
+                </span>
+              </div>
+            </td>
           </tr>
+
           {WALLET_TOKENS.map((tokenSymbol) => {
             return (
               <TokenBalanceTableRow
@@ -122,10 +136,23 @@ const TokenBalanceTableRow: FC<{
       </td>
 
       {/* Fiat balance */}
-      <td>{formattedFiatBalance}</td>
-
-      {/* Token balance */}
-      <td>{formattedTokenBalance}</td>
+      <td>
+        <div
+          className={tw(
+            "flex",
+            "h-full",
+            "flex-col",
+            "w-full",
+            "justify-center",
+            "space-y-1"
+          )}
+        >
+          <span>{t`${formattedTokenBalance} ETH`}</span>
+          <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
+            {t`${formattedFiatBalance} USD`}
+          </span>
+        </div>
+      </td>
     </tr>
   );
 };

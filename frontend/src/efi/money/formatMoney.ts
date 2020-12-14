@@ -6,14 +6,21 @@ import { Money } from "ts-money";
  */
 export function formatMoney(
   money: Money | undefined,
-  defaultValue: string = "0"
+  defaultValue: string = "0.00"
 ): string {
   if (!money) {
     return defaultValue;
   }
 
-  return money
-    .toDecimal()
-    .toFixed(money.getCurrencyInfo().decimal_digits)
-    .toLocaleString();
+  const fractionDigits = money.getCurrencyInfo().decimal_digits;
+
+  // This is how you express `(10000).toFixed(precision).toLocaleString()` such
+  // that you get commmas inserted where they belong and the correct number of
+  // digits after the decimal point.
+  const formatted = money.toDecimal().toLocaleString(undefined, {
+    minimumFractionDigits: fractionDigits,
+    maximumFractionDigits: fractionDigits,
+  });
+
+  return formatted;
 }
