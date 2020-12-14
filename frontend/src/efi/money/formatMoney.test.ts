@@ -10,6 +10,11 @@ test("should format zero balance correctly", () => {
   expect(formatMoney(cents)).toEqual("0.00");
 });
 
+test("should format micro balances correctly", () => {
+  const cents = new Money(10, Currencies.USD);
+  expect(formatMoney(cents)).toEqual("0.10");
+});
+
 test("should format small balances correctly", () => {
   const cents = new Money(100, Currencies.USD);
   expect(formatMoney(cents)).toEqual("1.00");
