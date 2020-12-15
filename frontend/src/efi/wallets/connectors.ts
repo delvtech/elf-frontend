@@ -2,7 +2,7 @@ import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { FortmaticConnector } from "@web3-react/fortmatic-connector";
 import { InjectedConnector } from "@web3-react/injected-connector";
-// import { LedgerConnector } from "@web3-react/ledger-connector";
+import { LedgerConnector } from "@web3-react/ledger-connector";
 import { TorusConnector } from "@web3-react/torus-connector";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import { WalletLinkConnector } from "@web3-react/walletlink-connector";
@@ -54,10 +54,10 @@ export const walletLinkConnector = new WalletLinkConnector({
 // /**
 //  * Ledger hardware wallet.
 //  */
-// export const ledgerConnector = new LedgerConnector({
-//   chainId: ChainId.MAINNET,
-//   url: INFURA_URL,
-// });
+export const ledgerConnector = new LedgerConnector({
+  chainId: ChainId.MAINNET,
+  url: INFURA_URL,
+});
 
 /**
  * Fortmatic web wallet.

@@ -5,7 +5,7 @@ import { useWeb3React } from "@web3-react/core";
 
 import { ReactComponent as CoinbaseWalletIcon } from "efi-static-assets/logos/coinbasewallet.svg";
 import { ReactComponent as FortmaticIcon } from "efi-static-assets/logos/fortmatic.svg";
-// import { ReactComponent as LedgerIcon } from "efi-static-assets/logos/ledgerIcon.svg";
+import { ReactComponent as LedgerIcon } from "efi-static-assets/logos/ledgerIcon.svg";
 import { ReactComponent as MetamaskIcon } from "efi-static-assets/logos/metamask.svg";
 import { ReactComponent as TorusIcon } from "efi-static-assets/logos/torus.svg";
 import { ReactComponent as WalletConnectIcon } from "efi-static-assets/logos/walletConnectIcon.svg";
@@ -14,6 +14,7 @@ import { ConnectWalletButton } from "efi-ui/wallets/ConnectWalletButton/ConnectW
 import {
   fortmaticConnector,
   injectedConnector,
+  ledgerConnector,
   torusConnector,
   walletConnectConnector,
   walletLinkConnector,
@@ -54,9 +55,10 @@ export const ConnectWalletButtons: FC<{}> = () => {
   }, [activate, deactivateActiveConnector]);
 
   // TODO: test this.  Need to add a U2F (i.e. Fido once we can connect a hardware wallet)
-  // const connectToLedger = useCallback(() => activate(ledgerConnector), [
-  //   activate,
-  // ]);
+  const connectToLedger = useCallback(async () => {
+    await deactivateActiveConnector();
+    activate(ledgerConnector);
+  }, [activate, deactivateActiveConnector]);
 
   const connectToTorus = useCallback(() => {
     torusConnector.deactivate();
@@ -97,7 +99,7 @@ export const ConnectWalletButtons: FC<{}> = () => {
         name="Torus"
         onClick={connectToTorus}
       />
-      {/* <ConnectWalletButton
+      <ConnectWalletButton
         icon={
           <div className={tw("bg-white", "rounded", "p-1")}>
             <LedgerIcon style={iconStyle} />
@@ -105,7 +107,7 @@ export const ConnectWalletButtons: FC<{}> = () => {
         }
         name="Ledger"
         onClick={connectToLedger}
-      /> */}
+      />
       <ConnectWalletButton
         icon={<FortmaticIcon style={iconStyle} />}
         name="Fortmatic"
