@@ -14,7 +14,6 @@ import { ConnectWalletButton } from "efi-ui/wallets/ConnectWalletButton/ConnectW
 import {
   fortmaticConnector,
   injectedConnector,
-  ledgerConnector,
   torusConnector,
   walletConnectConnector,
   walletLinkConnector,
@@ -54,11 +53,14 @@ export const ConnectWalletButtons: FC<{}> = () => {
     activate(fortmaticConnector, deactivateActiveConnector);
   }, [activate, deactivateActiveConnector]);
 
-  // TODO: test this.  Need to add a U2F (i.e. Fido once we can connect a hardware wallet)
-  const connectToLedger = useCallback(async () => {
-    await deactivateActiveConnector();
-    activate(ledgerConnector);
-  }, [activate, deactivateActiveConnector]);
+  // TODO: fix this.  LedgerConnector package creates an error in our github actions:
+  // npm ERR! Error while executing:
+  // npm ERR! /usr/bin/git ls-remote -h -t ssh://git@github.com/ethereumjs/ethereumjs-abi.git
+  // npm ERR!
+  // npm ERR! Warning: Permanently added the RSA host key for IP address '140.82.114.4' to the list of known hosts.
+  // npm ERR! git@github.com: Permission denied (publickey).
+  // npm ERR! fatal: Could not read from remote repository.
+  const connectToLedger = useCallback(async () => {}, []);
 
   const connectToTorus = useCallback(() => {
     torusConnector.deactivate();
