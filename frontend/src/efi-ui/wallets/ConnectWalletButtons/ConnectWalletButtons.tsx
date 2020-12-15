@@ -25,35 +25,43 @@ const iconStyle: CSSProperties = {
 };
 
 export const ConnectWalletButtons: FC<{}> = () => {
-  const { activate } = useWeb3React<Web3Provider>();
+  const { active, activate, deactivate } = useWeb3React<Web3Provider>();
 
-  const connectToMetaMask = useCallback(() => activate(injectedConnector), [
-    activate,
-  ]);
+  const deactivateActiveConnector = useCallback(async () => {
+    if (active) {
+      await deactivate();
+    }
+  }, [active, deactivate]);
 
-  // TODO: fix reactivate problem when user closes QR code without connecting
-  const connectToWalletConnect = useCallback(
-    () => activate(walletConnectConnector),
-    [activate]
-  );
+  const connectToMetaMask = useCallback(async () => {
+    await deactivateActiveConnector();
+    activate(injectedConnector, deactivateActiveConnector);
+  }, [activate, deactivateActiveConnector]);
 
-  // TODO: fix reactivate problem when user closes QR code without connecting
-  const connectToWalletLink = useCallback(() => activate(walletLinkConnector), [
-    activate,
-  ]);
+  const connectToWalletConnect = useCallback(async () => {
+    await deactivateActiveConnector();
+    activate(walletConnectConnector, deactivateActiveConnector);
+  }, [activate, deactivateActiveConnector]);
 
-  const connectToFortmatic = useCallback(() => activate(fortmaticConnector), [
-    activate,
-  ]);
+  const connectToWalletLink = useCallback(async () => {
+    await deactivateActiveConnector();
+    activate(walletLinkConnector, deactivateActiveConnector);
+  }, [activate, deactivateActiveConnector]);
+
+  const connectToFortmatic = useCallback(async () => {
+    await deactivateActiveConnector();
+    activate(fortmaticConnector, deactivateActiveConnector);
+  }, [activate, deactivateActiveConnector]);
 
   // TODO: test this.  Need to add a U2F (i.e. Fido once we can connect a hardware wallet)
   // const connectToLedger = useCallback(() => activate(ledgerConnector), [
   //   activate,
   // ]);
 
-  const connectToTorus = useCallback(() => activate(torusConnector), [
-    activate,
-  ]);
+  const connectToTorus = useCallback(() => {
+    torusConnector.deactivate();
+    activate(torusConnector, deactivateActiveConnector);
+  }, [activate, deactivateActiveConnector]);
 
   return (
     <div
