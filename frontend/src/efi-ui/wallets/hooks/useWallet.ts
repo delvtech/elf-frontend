@@ -11,6 +11,7 @@ import { formatEther } from "ethers/lib/utils";
 import { Money } from "ts-money";
 import { t } from "ttag";
 
+import { useEthBalance } from "efi-ui/coins/ether/hooks/useEthBalance/useEthBalance";
 import { useCryptoPrice } from "efi-ui/crypto/hooks/useCryptoPrice/useCryptoPrice";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import {
@@ -19,7 +20,6 @@ import {
 } from "efi-ui/toaster/AppToaster/AppToaster";
 import { useWalletConnectionStatus } from "efi-ui/wallets/hooks/useWalletConnectionStatus";
 import { getConnectorName } from "efi/wallets/connectors";
-import { useEthBalance } from "efi-ui/coins/ether/hooks/useEthBalance/useEthBalance";
 
 export interface Wallet {
   /**
@@ -70,7 +70,7 @@ export function useWallet(): Wallet {
     fiatBalance = new Money(fractionalAmount, currency.code);
   }
 
-  const connectorName = getConnectorName(connector);
+  const connectorName = getConnectorName(connector, library);
 
   return {
     library,

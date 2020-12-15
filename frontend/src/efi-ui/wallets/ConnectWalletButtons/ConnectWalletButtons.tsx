@@ -5,7 +5,7 @@ import { useWeb3React } from "@web3-react/core";
 
 import { ReactComponent as CoinbaseWalletIcon } from "efi-static-assets/logos/coinbasewallet.svg";
 import { ReactComponent as FortmaticIcon } from "efi-static-assets/logos/fortmatic.svg";
-// import { ReactComponent as LedgerIcon } from "efi-static-assets/logos/ledgerIcon.svg";
+import { ReactComponent as LedgerIcon } from "efi-static-assets/logos/ledgerIcon.svg";
 import { ReactComponent as MetamaskIcon } from "efi-static-assets/logos/metamask.svg";
 import { ReactComponent as TorusIcon } from "efi-static-assets/logos/torus.svg";
 import { ReactComponent as WalletConnectIcon } from "efi-static-assets/logos/walletConnectIcon.svg";
@@ -25,35 +25,47 @@ const iconStyle: CSSProperties = {
 };
 
 export const ConnectWalletButtons: FC<{}> = () => {
-  const { activate } = useWeb3React<Web3Provider>();
+  const { active, activate, deactivate } = useWeb3React<Web3Provider>();
 
-  const connectToMetaMask = useCallback(() => activate(injectedConnector), [
-    activate,
-  ]);
+  const deactivateActiveConnector = useCallback(async () => {
+    if (active) {
+      await deactivate();
+    }
+  }, [active, deactivate]);
 
-  // TODO: fix reactivate problem when user closes QR code without connecting
-  const connectToWalletConnect = useCallback(
-    () => activate(walletConnectConnector),
-    [activate]
-  );
+  const connectToMetaMask = useCallback(async () => {
+    await deactivateActiveConnector();
+    activate(injectedConnector, deactivateActiveConnector);
+  }, [activate, deactivateActiveConnector]);
 
-  // TODO: fix reactivate problem when user closes QR code without connecting
-  const connectToWalletLink = useCallback(() => activate(walletLinkConnector), [
-    activate,
-  ]);
+  const connectToWalletConnect = useCallback(async () => {
+    await deactivateActiveConnector();
+    activate(walletConnectConnector, deactivateActiveConnector);
+  }, [activate, deactivateActiveConnector]);
 
-  const connectToFortmatic = useCallback(() => activate(fortmaticConnector), [
-    activate,
-  ]);
+  const connectToWalletLink = useCallback(async () => {
+    await deactivateActiveConnector();
+    activate(walletLinkConnector, deactivateActiveConnector);
+  }, [activate, deactivateActiveConnector]);
 
-  // TODO: test this.  Need to add a U2F (i.e. Fido once we can connect a hardware wallet)
-  // const connectToLedger = useCallback(() => activate(ledgerConnector), [
-  //   activate,
-  // ]);
+  const connectToFortmatic = useCallback(async () => {
+    await deactivateActiveConnector();
+    activate(fortmaticConnector, deactivateActiveConnector);
+  }, [activate, deactivateActiveConnector]);
 
-  const connectToTorus = useCallback(() => activate(torusConnector), [
-    activate,
-  ]);
+  // TODO: fix this.  LedgerConnector package creates an error in our github actions:
+  // npm ERR! Error while executing:
+  // npm ERR! /usr/bin/git ls-remote -h -t ssh://git@github.com/ethereumjs/ethereumjs-abi.git
+  // npm ERR!
+  // npm ERR! Warning: Permanently added the RSA host key for IP address '140.82.114.4' to the list of known hosts.
+  // npm ERR! git@github.com: Permission denied (publickey).
+  // npm ERR! fatal: Could not read from remote repository.
+  const connectToLedger = useCallback(async () => {}, []);
+
+  const connectToTorus = useCallback(() => {
+    torusConnector.deactivate();
+    activate(torusConnector, deactivateActiveConnector);
+  }, [activate, deactivateActiveConnector]);
 
   return (
     <div
@@ -89,7 +101,7 @@ export const ConnectWalletButtons: FC<{}> = () => {
         name="Torus"
         onClick={connectToTorus}
       />
-      {/* <ConnectWalletButton
+      <ConnectWalletButton
         icon={
           <div className={tw("bg-white", "rounded", "p-1")}>
             <LedgerIcon style={iconStyle} />
@@ -97,7 +109,7 @@ export const ConnectWalletButtons: FC<{}> = () => {
         }
         name="Ledger"
         onClick={connectToLedger}
-      /> */}
+      />
       <ConnectWalletButton
         icon={<FortmaticIcon style={iconStyle} />}
         name="Fortmatic"

@@ -9,8 +9,6 @@ import tw from "efi-tailwindcss-classnames";
 import { ButtonToggleFormGroup } from "efi-ui/base/ButtonToggleFormGroup/ButtonToggleFormGroup";
 import { SearchFormGroup } from "efi-ui/base/SearchFormGroup/SearchFormGroup";
 import { PoolPreviewTable } from "efi-ui/pools/PoolPreviewTable/PoolPreviewTable";
-import { useWallet } from "efi-ui/wallets/hooks/useWallet";
-import { MissingWalletEmptyState } from "efi-ui/wallets/MissingWalletEmptyState/MissingWalletEmptyState";
 import WalletSummaryPane from "efi-ui/wallets/WalletSummaryPane/WalletSummaryPane";
 import { ElfStrategyHighRisk } from "efi/pools/highRisk";
 import { ElfStrategyLowRisk } from "efi/pools/lowRisk";
@@ -39,14 +37,9 @@ const availableStrategies = [
 ];
 
 export const PoolsView: FC<PoolsViewProps> = () => {
-  const { account } = useWallet();
   const [selectedPool, setSelectedPool] = useState<string>("all-pools");
   const [selectedRisk, setSelectedRisk] = useState<string>("all-apy");
   const [searchValue, onSetSearchValue] = useState<string>("");
-
-  if (!account) {
-    return <MissingWalletEmptyState />;
-  }
 
   return (
     <div

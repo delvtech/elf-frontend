@@ -1,12 +1,13 @@
 import React, { FC } from "react";
 
-import { Intent, NonIdealState, Tag } from "@blueprintjs/core";
+import { Icon, Intent, NonIdealState, Tag } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import classNames from "classnames";
 import { jt, t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { ConnectWalletButtons } from "efi-ui/wallets/ConnectWalletButtons/ConnectWalletButtons";
+import { useWallet } from "efi-ui/wallets/hooks/useWallet";
 
 const betaTag = (
   <Tag key="beta-tag" minimal intent={Intent.WARNING}>
@@ -18,11 +19,22 @@ const howItWorksLink = (
   <a key="how-it-work" href="/">{t`how investing works`}</a>
 );
 
-export const MissingWalletEmptyState: FC<{}> = () => {
+export const ConnectWalletState: FC<{}> = () => {
+  const { connectorName } = useWallet();
+  const title = connectorName
+    ? t`Connected to ${connectorName}.`
+    : t`No wallet connected.`;
+
   return (
     <NonIdealState
-      icon={IconNames.SEND_TO_GRAPH}
-      title={t`No wallet connected.`}
+      icon={
+        <Icon
+          intent={connectorName ? Intent.SUCCESS : undefined}
+          icon={IconNames.SEND_TO_GRAPH}
+          iconSize={48}
+        />
+      }
+      title={title}
       className={tw("max-w-full")}
       description={
         <div

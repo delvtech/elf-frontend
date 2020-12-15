@@ -2,7 +2,6 @@ import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { FortmaticConnector } from "@web3-react/fortmatic-connector";
 import { InjectedConnector } from "@web3-react/injected-connector";
-// import { LedgerConnector } from "@web3-react/ledger-connector";
 import { TorusConnector } from "@web3-react/torus-connector";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import { WalletLinkConnector } from "@web3-react/walletlink-connector";
@@ -40,7 +39,7 @@ injectedConnector.handleChainChanged = (chainId: string | number) => {
  * like Rainbow, Argent etc.
  */
 export const walletConnectConnector = new WalletConnectConnector({
-  rpc: { [ChainId.MAINNET]: ChainNames[ChainId.MAINNET] },
+  rpc: { [ChainId.LOCAL]: ChainNames[ChainId.LOCAL] },
 });
 
 /**
@@ -51,19 +50,11 @@ export const walletLinkConnector = new WalletLinkConnector({
   appName: "Element Finance",
 });
 
-// /**
-//  * Ledger hardware wallet.
-//  */
-// export const ledgerConnector = new LedgerConnector({
-//   chainId: ChainId.MAINNET,
-//   url: INFURA_URL,
-// });
-
 /**
  * Fortmatic web wallet.
  */
 export const fortmaticConnector = new FortmaticConnector({
-  chainId: ChainId.MAINNET,
+  chainId: ChainId.LOCAL,
   apiKey: FORTMATIC_API_KEY,
 });
 
@@ -71,15 +62,15 @@ export const fortmaticConnector = new FortmaticConnector({
  * Torus web wallet.
  */
 export const torusConnector = new TorusConnector({
-  chainId: ChainId.MAINNET,
+  chainId: ChainId.LOCAL,
 });
 
 export function getConnectorName(
   connector?: AbstractConnector | undefined,
   library?: Web3Provider | undefined
-): string {
+): string | undefined {
   if (!connector) {
-    return t`No connector`;
+    return undefined;
   }
 
   // Metamask is special. It's connector doesn't identify itself so we have to
