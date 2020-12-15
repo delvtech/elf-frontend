@@ -3,7 +3,7 @@ import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadC
 import { elfProxyContract } from "efi/contracts/elfProxy";
 
 export function useElfProxyGetPoolAPY(pool: Erc20) {
-  return useSmartContractReadCall(elfProxyContract, "getPoolAPY", [
-    pool.address,
-  ]);
+  return useSmartContractReadCall(elfProxyContract, "getPoolAPY", {
+    callArgs: [pool.address],
+  });
 }

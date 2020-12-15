@@ -7,6 +7,14 @@ import {
 } from "efi/contracts/types";
 import { Unpacked } from "efi/base/Unpacked";
 
+interface UseSmartContractReadCallOptions<
+  TContract extends Contract,
+  TMethodName extends ContractMethodName<TContract>
+> {
+  callArgs?: ContractMethodArgs<TContract, TMethodName>;
+  enabled?: boolean;
+}
+
 export function useSmartContractReadCall<
   TContract extends Contract,
   TMethodName extends ContractMethodName<TContract>,
@@ -14,8 +22,10 @@ export function useSmartContractReadCall<
 >(
   contract: TContract,
   methodName: TMethodName,
-  callArgs?: ContractMethodArgs<TContract, TMethodName>
+  options?: UseSmartContractReadCallOptions<TContract, TMethodName>
 ): QueryResult<TReturnType> {
+  const { enabled = true, callArgs } = options || {};
+
   const queryKey = makeSmartContractReadCallQueryKey<TContract, TMethodName>(
     contract,
     methodName,
@@ -34,6 +44,7 @@ export function useSmartContractReadCall<
   const queryResult = useQuery<TReturnType>({
     queryKey,
     queryFn,
+    config: { enabled },
   });
 
   return queryResult;
