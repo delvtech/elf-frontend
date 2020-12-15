@@ -10,7 +10,7 @@ export type CoinGeckoCryptoId = "ethereum" | "dai" | "yearn-finance" | "weth";
 /**
  * Crosswalk for looking up CoinGecko ids given an efi CryptoSymbol value.
  */
-export const CoinGeckoCryptoIds: Record<
+export const CoinGeckoCryptoIdsOld: Record<
   CryptoSymbol,
   CoinGeckoCryptoId | undefined
 > = {
@@ -29,7 +29,7 @@ export const CoinGeckoCryptoIds: Record<
   yUSDT: undefined,
 };
 
-export async function fetchCryptoPrice(
+export async function fetchCryptoPriceOld(
   cryptoId: CoinGeckoCryptoId,
   currencyDenomination = "usd"
 ): Promise<number> {
@@ -54,13 +54,13 @@ export async function fetchCryptoPrice(
  * swagger.json. This is not exhaustive, but just a whitelist of properties we
  * use.
  */
-export interface FetchCryptoSymbolResult {
+interface FetchCryptoSymbolResult {
   market_data: {
     current_price: Record<keyof typeof Currencies, number>;
   };
 }
 
-export async function fetchCryptoSymbol(
+export async function fetchCryptoSymbolOld(
   cryptoId: CoinGeckoCryptoId
 ): Promise<FetchCryptoSymbolResult> {
   const result = await fetch(

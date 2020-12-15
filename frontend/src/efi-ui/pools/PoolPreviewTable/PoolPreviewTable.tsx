@@ -64,7 +64,11 @@ export const PoolPreviewTable: FC<PoolPreviewTableProps> = ({
       <tbody className={Classes.TEXT_LARGE}>
         {POOLS.map((pool, i) => {
           return (
-            <PoolPreviewTableRow key={i} pool={pool} poolId={pools[0].id} />
+            <PoolPreviewTableRow
+              key={i}
+              poolContract={pool}
+              poolId={pools[0].id}
+            />
           );
         })}
       </tbody>
@@ -92,18 +96,23 @@ const PoolPreviewTableHeader: FC<PoolPreviewTableHeaderProps> = ({
   );
 };
 
-const PoolPreviewTableRow: FC<{
-  pool: Erc20;
+interface PoolPreviewTableRowProps {
+  poolContract: Erc20;
   poolId: string;
-}> = ({ pool, poolId }) => {
-  const { data: poolName } = useTokenName(pool);
-  const { data: poolSymbol } = useTokenSymbol(pool);
-  const { data: poolTotalSupply } = useTokenTotalSupply(pool);
+}
+
+const PoolPreviewTableRow: FC<PoolPreviewTableRowProps> = ({
+  poolContract,
+  poolId,
+}) => {
+  const [poolName] = useTokenName(poolContract);
+  const [poolSymbol] = useTokenSymbol(poolContract);
+  const [poolTotalSupply] = useTokenTotalSupply(poolContract);
   const navigate = useNavigate();
 
   const onPermissionChange = useCallback(() => {}, []);
 
-  const { data: poolApy } = useElfProxyGetPoolAPY(pool);
+  const { data: poolApy } = useElfProxyGetPoolAPY(poolContract);
   const formattedPoolApy = formatAPY(poolApy?.[0]);
 
   const onRowClick = useCallback(() => {
@@ -116,8 +125,8 @@ const PoolPreviewTableRow: FC<{
       <td className={tw("h-16")}>
         <LabeledText
           bold
-          text={t`${poolSymbol?.[0]} - ETH`}
-          label={poolName?.[0] || ""}
+          text={t`${poolSymbol} - ETH`}
+          label={poolName || ""}
         />
       </td>
 
@@ -135,7 +144,7 @@ const PoolPreviewTableRow: FC<{
 
       <td>
         <div className={tw("flex", "h-full", "items-center")}>
-          {formatEth(poolTotalSupply?.[0])}
+          {formatEth(poolTotalSupply)}
         </div>
       </td>
 

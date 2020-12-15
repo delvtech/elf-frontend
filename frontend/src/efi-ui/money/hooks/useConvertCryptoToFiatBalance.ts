@@ -4,7 +4,7 @@ import { QueryResult } from "react-query";
 import { BigNumber } from "ethers";
 import { Money } from "ts-money";
 
-import { useCryptoPrice } from "efi-ui/crypto/hooks/useCryptoPrice/useCryptoPrice";
+import { useCryptoPriceOld } from "efi-ui/crypto/hooks/useCryptoPrice/useCryptoPrice";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { convertToFiatBalance } from "efi/money/convertToFiatBalance";
@@ -25,7 +25,7 @@ export function useConvertToFiatBalance(
   cryptoDecimals: number | undefined
 ): [Money | undefined, CryptoPriceQueryResult] {
   const { currency } = useCurrencyPref();
-  const priceResult = useCryptoPrice(cryptoSymbol, currency.code);
+  const priceResult = useCryptoPriceOld(cryptoSymbol, currency.code);
   const { data: cryptoPrice } = priceResult;
   return useMemo(() => {
     if (

@@ -12,7 +12,6 @@ import { Money } from "ts-money";
 import { t } from "ttag";
 
 import { useEthBalance } from "efi-ui/coins/ether/hooks/useEthBalance/useEthBalance";
-import { useCryptoPrice } from "efi-ui/crypto/hooks/useCryptoPrice/useCryptoPrice";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import {
   AppToaster,
@@ -20,6 +19,7 @@ import {
 } from "efi-ui/toaster/AppToaster/AppToaster";
 import { useWalletConnectionStatus } from "efi-ui/wallets/hooks/useWalletConnectionStatus";
 import { getConnectorName } from "efi/wallets/connectors";
+import { useEthPrice } from "efi-ui/coins/ether/hooks/useEthBalance/useEthPrice";
 
 export interface Wallet {
   /**
@@ -59,7 +59,7 @@ export function useWallet(): Wallet {
 
   // Manages the toasts for connections
   const { currency } = useCurrencyPref();
-  const { data: ethPrice } = useCryptoPrice("ETH", currency.code);
+  const { data: ethPrice } = useEthPrice(currency.code);
 
   let fiatBalance: Money | undefined;
   if (ethPrice && ethBalance) {

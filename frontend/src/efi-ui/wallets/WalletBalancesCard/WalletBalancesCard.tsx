@@ -1,35 +1,46 @@
-import React, { FC } from "react";
-
 import { Card, Classes, HTMLTable } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
 import classNames from "classnames";
+import { Erc20 } from "elf-contracts/types/Erc20";
+import React, { FC } from "react";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useEthBalance } from "efi-ui/coins/ether/hooks/useEthBalance/useEthBalance";
-import { useCryptoPrice } from "efi-ui/crypto/hooks/useCryptoPrice/useCryptoPrice";
+import { useEthPrice } from "efi-ui/coins/ether/hooks/useEthBalance/useEthPrice";
 import { useConvertToFiatBalance } from "efi-ui/money/hooks/useConvertCryptoToFiatBalance";
 import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance/useTokenBalance";
+import { useTokenName } from "efi-ui/token/hooks/useTokenName";
+import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
+import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
 import { useWallet } from "efi-ui/wallets/hooks/useWallet";
 import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
 import { formatEth } from "efi/coins/ether/formatEth";
+import { UsdcContract, WethContract } from "efi/crypto/TokenContracts";
 import { TokenContractSymbols } from "efi/crypto/TokenContractSymbols";
 import { formatMoney } from "efi/money/formatMoney";
-import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 
 interface WalletBalancesCardProps {}
 
-const WALLET_TOKENS: TokenContractSymbols[] = ["WETH"];
+interface WalletTokenInfo {
+  tokenSymbolOld: TokenContractSymbols;
+  tokenContract: Erc20;
+}
+
+const WALLET_TOKENS: WalletTokenInfo[] = [
+  { tokenSymbolOld: "WETH", tokenContract: WethContract },
+  { tokenSymbolOld: "USDC", tokenContract: UsdcContract },
+];
 
 export const WalletBalancesCard: FC<WalletBalancesCardProps> = () => {
   const { fiatBalance } = useWallet();
   const { library, account } = useWeb3React<Web3Provider>();
 
+  const { data: ethPrice, isLoading: isEthPriceLoading } = useEthPrice();
   const { data: ethBalance } = useEthBalance(library, account);
-  const { data: ethPrice, isLoading: isEthPriceLoading } = useCryptoPrice(
-    "ETH"
-  );
+
   const formattedEthBalance = formatEth(ethBalance);
 
   const totalBalance = "$10,000.00";
@@ -72,12 +83,13 @@ export const WalletBalancesCard: FC<WalletBalancesCardProps> = () => {
             </td>
           </tr>
 
-          {WALLET_TOKENS.map((tokenSymbol) => {
+          {WALLET_TOKENS.map(({ tokenSymbolOld, tokenContract }) => {
             return (
               <TokenBalanceTableRow
-                key={tokenSymbol}
+                key={tokenSymbolOld}
                 account={account}
-                tokenSymbol={tokenSymbol}
+                tokenSymbolOld={tokenSymbolOld}
+                tokenContract={tokenContract}
               />
             );
           })}
@@ -89,17 +101,28 @@ export const WalletBalancesCard: FC<WalletBalancesCardProps> = () => {
 
 export default WalletBalancesCard;
 
-const TokenBalanceTableRow: FC<{
+interface TokenBalanceTableRowProps {
   account: string | null | undefined;
-  tokenSymbol: TokenContractSymbols;
-}> = ({ account, tokenSymbol }) => {
-  const { data: tokenPrice, isLoading: isTokenPriceLoading } = useCryptoPrice(
-    tokenSymbol
+  tokenSymbolOld: TokenContractSymbols;
+  tokenContract: Erc20;
+}
+
+const TokenBalanceTableRow: FC<TokenBalanceTableRowProps> = ({
+  account,
+  tokenSymbolOld,
+  tokenContract,
+}) => {
+  const [tokenSymbol] = useTokenSymbol(tokenContract);
+  const [tokenName] = useTokenName(tokenContract);
+  const [tokenPrice, tokenPriceLoadingStates] = useTokenPrice(tokenContract);
+
+  const isTokenPriceLoading = tokenPriceLoadingStates.some(
+    ({ isLoading }) => isLoading
   );
 
-  const [tokenBalance] = useTokenBalance(tokenSymbol, account);
+  const [tokenBalance] = useTokenBalance(tokenSymbolOld, account);
   const [fiatBalance] = useConvertToFiatBalance(
-    tokenSymbol,
+    tokenSymbolOld,
     tokenBalance?.value,
     tokenBalance?.decimals.toNumber()
   );
@@ -114,7 +137,7 @@ const TokenBalanceTableRow: FC<{
     <tr>
       {/* Token name */}
       <td>
-        <LabeledText bold text={tokenSymbol} label={""} />
+        <LabeledText bold text={tokenSymbol || ""} label={tokenName || ""} />
       </td>
 
       {/* Price per token */}

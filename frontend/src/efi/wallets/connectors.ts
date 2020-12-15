@@ -54,7 +54,8 @@ export const walletLinkConnector = new WalletLinkConnector({
  * Fortmatic web wallet.
  */
 export const fortmaticConnector = new FortmaticConnector({
-  chainId: ChainId.LOCAL,
+  // does not accept local chain ids
+  chainId: ChainId.MAINNET,
   apiKey: FORTMATIC_API_KEY,
 });
 

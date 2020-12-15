@@ -2,20 +2,20 @@ import { useQuery } from "react-query";
 
 import {
   CoinGeckoCryptoId,
-  CoinGeckoCryptoIds,
-  fetchCryptoSymbol,
+  CoinGeckoCryptoIdsOld,
+  fetchCryptoSymbolOld,
 } from "efi/crypto/coingecko";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 
 export function useCryptoSymbol(cryptoSymbol: CryptoSymbol) {
-  const enabled = !!CoinGeckoCryptoIds[cryptoSymbol];
+  const enabled = !!CoinGeckoCryptoIdsOld[cryptoSymbol];
 
   return useQuery(
     makeCryptoSymbolQueryKey(cryptoSymbol),
     async (key: string, variables: CryptoSymbolVariables) => {
-      const price = await fetchCryptoSymbol(
+      const price = await fetchCryptoSymbolOld(
         // safe to cast because this query is only enabled when it exists
-        CoinGeckoCryptoIds[variables.cryptoSymbol] as CoinGeckoCryptoId
+        CoinGeckoCryptoIdsOld[variables.cryptoSymbol] as CoinGeckoCryptoId
       );
       return price;
     },

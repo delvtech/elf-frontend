@@ -2,23 +2,23 @@ import { useQuery } from "react-query";
 
 import {
   CoinGeckoCryptoId,
-  CoinGeckoCryptoIds,
-  fetchCryptoPrice,
+  CoinGeckoCryptoIdsOld,
+  fetchCryptoPriceOld,
 } from "efi/crypto/coingecko";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 
-export function useCryptoPrice(
+export function useCryptoPriceOld(
   cryptoSymbol: CryptoSymbol,
   denomination = "usd"
 ) {
-  const enabled = !!CoinGeckoCryptoIds[cryptoSymbol];
+  const enabled = !!CoinGeckoCryptoIdsOld[cryptoSymbol];
 
   return useQuery(
-    makeCryptoPriceQueryKey(cryptoSymbol),
-    async (key: string, variables: CryptoPriceVariables) => {
-      const price = await fetchCryptoPrice(
+    makeCryptoPriceQueryKeyOld(cryptoSymbol),
+    async (key: string, variables: CryptoPriceVariablesOld) => {
+      const price = await fetchCryptoPriceOld(
         // safe to cast because this query is only enabled when it exists
-        CoinGeckoCryptoIds[variables.cryptoSymbol] as CoinGeckoCryptoId,
+        CoinGeckoCryptoIdsOld[variables.cryptoSymbol] as CoinGeckoCryptoId,
         denomination.toLowerCase()
       );
       return price;
@@ -27,12 +27,12 @@ export function useCryptoPrice(
   );
 }
 
-interface CryptoPriceVariables {
+interface CryptoPriceVariablesOld {
   cryptoSymbol: CryptoSymbol;
 }
 
-export function makeCryptoPriceQueryKey(
+function makeCryptoPriceQueryKeyOld(
   cryptoSymbol: CryptoSymbol
-): [string, CryptoPriceVariables] {
+): [string, CryptoPriceVariablesOld] {
   return ["crypto-price", { cryptoSymbol }];
 }
