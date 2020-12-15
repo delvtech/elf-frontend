@@ -70,7 +70,7 @@ export function useWallet(): Wallet {
     fiatBalance = new Money(fractionalAmount, currency.code);
   }
 
-  const connectorName = getConnectorName(connector);
+  const connectorName = getConnectorName(connector, library);
 
   return {
     library,
