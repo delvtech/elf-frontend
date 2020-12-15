@@ -40,7 +40,7 @@ injectedConnector.handleChainChanged = (chainId: string | number) => {
  * like Rainbow, Argent etc.
  */
 export const walletConnectConnector = new WalletConnectConnector({
-  rpc: { [ChainId.MAINNET]: ChainNames[ChainId.MAINNET] },
+  rpc: { [ChainId.LOCAL]: ChainNames[ChainId.LOCAL] },
 });
 
 /**
@@ -55,7 +55,7 @@ export const walletLinkConnector = new WalletLinkConnector({
 //  * Ledger hardware wallet.
 //  */
 export const ledgerConnector = new LedgerConnector({
-  chainId: ChainId.MAINNET,
+  chainId: ChainId.LOCAL,
   url: INFURA_URL,
 });
 
@@ -63,7 +63,7 @@ export const ledgerConnector = new LedgerConnector({
  * Fortmatic web wallet.
  */
 export const fortmaticConnector = new FortmaticConnector({
-  chainId: ChainId.MAINNET,
+  chainId: ChainId.LOCAL,
   apiKey: FORTMATIC_API_KEY,
 });
 
@@ -71,7 +71,7 @@ export const fortmaticConnector = new FortmaticConnector({
  * Torus web wallet.
  */
 export const torusConnector = new TorusConnector({
-  chainId: ChainId.MAINNET,
+  chainId: ChainId.LOCAL,
 });
 
 export function getConnectorName(
