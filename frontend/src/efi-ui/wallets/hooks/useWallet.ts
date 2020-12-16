@@ -84,7 +84,7 @@ function useErrorToast(error: Error | undefined) {
   }, [error]);
 }
 
-export function getErrorMessage(error: Error) {
+function getErrorMessage(error: Error) {
   // These are the well-known error types
   if (error instanceof NoEthereumProviderError) {
     return t`No Ethereum browser extension detected, install MetaMask on desktop or visit from a dApp browser on mobile.`;
@@ -94,8 +94,9 @@ export function getErrorMessage(error: Error) {
     return t`Please authorize this website to access your Ethereum account.`;
   }
 
-  // Otherwise check if the error has it's own message we can show
-  if (error.message) {
+  // show unknown errors with messages in development.  we shouldn't show messages for things we
+  // don't know about since they could be technical.
+  if (error.message && process.env.NODE_ENV !== "production") {
     return error.message;
   }
 
@@ -104,6 +105,10 @@ export function getErrorMessage(error: Error) {
   return t`An unknown error occurred. Check the console for more details.`;
 }
 
+/**
+ * helper function to put web3React on the global scope for debugging
+ * @param web3React
+ */
 function setWeb3ReactOnWindow(
   web3React: Web3ReactContextInterface<Web3Provider>
 ) {
