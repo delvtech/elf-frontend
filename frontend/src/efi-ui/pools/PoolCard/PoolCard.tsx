@@ -8,7 +8,9 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { PieChart, PieData } from "efi-ui/charts/PieChart/PieChart";
-import { useCryptoDrawer } from "efi-ui/crypto/CryptoDrawer/useCryptoDrawer/useCryptoDrawer";
+import {
+  useCryptoDrawer,
+} from "efi-ui/crypto/CryptoDrawer/useCryptoDrawer/useCryptoDrawer";
 import { TransactionForm } from "efi-ui/crypto/TransactionForm/TransactionForm";
 import {
   useElfContractApproveDeposit,
@@ -21,7 +23,9 @@ import {
   useElfContractWithdraw,
   useElfContractWithdrawEth,
 } from "efi-ui/pools/hooks/useElfContract";
-import { StakingAssetSelect } from "efi-ui/pools/StakingAssetSelect/StakingAssetSelect";
+import {
+  StakingAssetSelect,
+} from "efi-ui/pools/StakingAssetSelect/StakingAssetSelect";
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
 import { useWallet } from "efi-ui/wallets/hooks/useWallet";
 import { useWalletBalances } from "efi-ui/wallets/hooks/useWalletBalance";
@@ -50,7 +54,7 @@ const stubbedPoolData: PieData[] = [
 
 export const PoolCard: FC<PoolCardProps> = ({ pool }) => {
   const { stakingAsset: defaultStakingAsset } = pool;
-  const { account } = useWallet();
+  const { accountAddress: account } = useWallet();
   const balances = useWalletBalances();
   const [walletStatus] = useWalletConnectionStatus();
   const { data: strategyCryptoSymbol } = useElfContractSymbol();

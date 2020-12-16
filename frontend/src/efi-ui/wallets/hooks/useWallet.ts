@@ -12,6 +12,7 @@ import { Money } from "ts-money";
 import { t } from "ttag";
 
 import { useEthBalance } from "efi-ui/coins/ether/hooks/useEthBalance/useEthBalance";
+import { useEthPrice } from "efi-ui/coins/ether/hooks/useEthBalance/useEthPrice";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import {
   AppToaster,
@@ -19,7 +20,6 @@ import {
 } from "efi-ui/toaster/AppToaster/AppToaster";
 import { useWalletConnectionStatus } from "efi-ui/wallets/hooks/useWalletConnectionStatus";
 import { getConnectorName } from "efi/wallets/connectors";
-import { useEthPrice } from "efi-ui/coins/ether/hooks/useEthBalance/useEthPrice";
 
 export interface Wallet {
   /**
@@ -30,7 +30,7 @@ export interface Wallet {
   /**
    * The wallet address if it is connected
    */
-  account: string | null | undefined;
+  accountAddress: string | null | undefined;
 
   /**
    * Errors associated with wallet operations.
@@ -50,12 +50,12 @@ export interface Wallet {
 
 export function useWallet(): Wallet {
   const web3React = useWeb3React<Web3Provider>();
-  const { connector, library, account, error } = web3React;
+  const { connector, library, account: accountAddress, error } = web3React;
   useErrorToast(error);
   setWeb3ReactOnWindow(web3React);
   useWalletConnectionStatus();
 
-  const { data: ethBalance } = useEthBalance(library, account);
+  const { data: ethBalance } = useEthBalance(library, accountAddress);
 
   // Manages the toasts for connections
   const { currency } = useCurrencyPref();
@@ -74,7 +74,7 @@ export function useWallet(): Wallet {
 
   return {
     library,
-    account,
+    accountAddress,
     error,
     fiatBalance,
     connectorName,

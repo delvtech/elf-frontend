@@ -14,7 +14,7 @@ interface WalletBalancesPieChartProps {}
 export const WalletBalancesPieChart: FC<WalletBalancesPieChartProps> = () => {
   const { isDarkMode } = useDarkMode();
 
-  const { account } = useWallet();
+  const { accountAddress: account } = useWallet();
   const balances = useWalletBalances();
   const ethBalance = balances.ETH ? formatEther(balances.ETH.value) : "0";
   const elf = useElfContractBalance(account);
