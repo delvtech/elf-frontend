@@ -11,7 +11,6 @@
     "source.fixAll": true
   },
   "importSorter.importStringConfiguration.quoteMark": "double",
-  "importSorter.generalConfiguration.sortOnBeforeSave": true,
   "importSorter.generalConfiguration.exclude": [
     "frontend/src/index.tsx"
   ],
