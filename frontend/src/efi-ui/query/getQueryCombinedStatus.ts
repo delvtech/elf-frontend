@@ -1,9 +1,9 @@
 import { QueryResult, QueryStatus } from "react-query";
 
-import { getQueryCombinedErrorState } from "efi/query/getQueryCombinedErrorState";
-import { getQueryCombinedIdleState } from "efi/query/getQueryCombinedIdleState";
-import { getQueryCombinedLoadingState } from "efi/query/getQueryCombinedLoadingState";
-import { getQueryCombinedSuccessState } from "efi/query/getQueryCombinedSuccessState";
+import { getQueryCombinedErrorState } from "efi-ui/query/getQueryCombinedErrorState";
+import { getQueryCombinedIdleState } from "efi-ui/query/getQueryCombinedIdleState";
+import { getQueryCombinedLoadingState } from "efi-ui/query/getQueryCombinedLoadingState";
+import { getQueryCombinedSuccessState } from "efi-ui/query/getQueryCombinedSuccessState";
 
 export function getQueryCombinedStatus(
   queryResults: QueryResult<unknown>[]

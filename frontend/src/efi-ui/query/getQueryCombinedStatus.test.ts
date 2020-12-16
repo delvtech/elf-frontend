@@ -1,5 +1,5 @@
 import { QueryResult, QueryStatus } from "react-query";
-import { getQueryCombinedStatus } from "efi/query/getQueryCombinedStatus";
+import { getQueryCombinedStatus } from "efi-ui/query/getQueryCombinedStatus";
 test("should return idle", () => {
   const queryResults = [
     { isIdle: true },

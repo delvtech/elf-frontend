@@ -8,7 +8,7 @@ import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useWallet } from "efi-ui/wallets/hooks/useWallet";
 import { useWalletBalances } from "efi-ui/wallets/hooks/useWalletBalance";
 import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
-import { getQueryCombinedStatus } from "efi/query/getQueryCombinedStatus";
+import { getQueryCombinedStatus } from "efi-ui/query/getQueryCombinedStatus";
 import { QueryStatus } from "react-query";
 
 interface WalletBalancesPieChartProps {}
