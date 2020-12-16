@@ -1,7 +1,7 @@
 import React, { FC, useCallback, useState } from "react";
 import { QueryResult } from "react-query";
 
-import { Button, Card, H3, Intent, Tag, Tooltip } from "@blueprintjs/core";
+import { Button, Card, Intent, Tag, Tooltip } from "@blueprintjs/core";
 import { BigNumber } from "ethers";
 import { formatEther } from "ethers/lib/utils";
 import { t } from "ttag";
@@ -49,7 +49,7 @@ const stubbedPoolData: PieData[] = [
 ];
 
 export const PoolCard: FC<PoolCardProps> = ({ pool }) => {
-  const { name, stakingAsset: defaultStakingAsset } = pool;
+  const { stakingAsset: defaultStakingAsset } = pool;
   const { account } = useWallet();
   const balances = useWalletBalances();
   const [walletStatus] = useWalletConnectionStatus();
@@ -100,9 +100,6 @@ export const PoolCard: FC<PoolCardProps> = ({ pool }) => {
     <Card className={tw("flex", "flex-col", "w-full", "transition-all")}>
       <div className={tw("flex", "mb-8", "items-center", "w-full")}>
         <div className={tw("flex", "flex-col", "space-y-8")}>
-          {/* Pool name */}
-          <H3>{name}</H3>
-
           {/* Staking Asset */}
           <div className={tw("flex", "flex-col", "space-y-3")}>
             <div className={tw("flex", "space-x-1")}>

@@ -13,6 +13,8 @@ export interface Pool {
    */
   name: string;
 
+  description?: string;
+
   /**
    * The asset (usually Ether) for deposits and withdrawals from the strategy.
    */

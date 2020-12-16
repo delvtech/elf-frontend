@@ -11,6 +11,7 @@ export const ElfStrategyLowRisk: Pool = {
   id: ELF_STRATEGY_LOW_RISK,
   stakingAsset: "ETH",
   name: t`Low Risk Pool`,
+  description: t`Generate a stable yield on your ETH in a pool that implements a low risk strategy.`,
   heldAssets: ["yDAI", "yTUSD", "yUSDC", "yUSDT"],
   strategyAsset: "ELF-L",
 };

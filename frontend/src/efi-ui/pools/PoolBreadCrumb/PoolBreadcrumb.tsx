@@ -2,8 +2,9 @@ import React, { FC, useMemo } from "react";
 
 import { Breadcrumbs, IBreadcrumbProps } from "@blueprintjs/core";
 
-import { Navigation } from "efi-ui/navigation/navigation";
 import { Pool } from "efi/pools/Pool";
+import { t } from "ttag";
+import tw from "efi-tailwindcss-classnames";
 
 interface PoolBreadcrumbProps {
   availablePools: Pool[];
@@ -18,7 +19,7 @@ export const PoolBreadcrumb: FC<PoolBreadcrumbProps> = ({
 }) => {
   const items = useBreadcrumbItems(availablePools, activePool, setActivePool);
 
-  return <Breadcrumbs items={items} />;
+  return <Breadcrumbs className={tw("text-lg")} items={items} />;
 };
 
 function useBreadcrumbItems(
@@ -37,7 +38,7 @@ function useBreadcrumbItems(
       // Only show the root breadcrumb if we're deeper than the root
       newItems.push({
         onClick: () => setActivePool(undefined),
-        text: Navigation.POOLS,
+        text: t`Element Pools`,
       });
       newItems.push({ text: poolsById[activePool].name });
     }

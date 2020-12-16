@@ -1,6 +1,6 @@
-import React, { FC } from "react";
-
+import { Classes, H2 } from "@blueprintjs/core";
 import { RouteComponentProps, useNavigate } from "@reach/router";
+import React, { FC } from "react";
 
 import tw from "efi-tailwindcss-classnames";
 import { Navigation } from "efi-ui/navigation/navigation";
@@ -12,6 +12,7 @@ import { ElfStrategyLowRisk } from "efi/pools/lowRisk";
 import { ElfStrategyMediumRisk } from "efi/pools/mediumRisk";
 
 import { PoolNotFoundCard } from "../PoolNotFoundCard/PoolNotFoundCard";
+import classNames from "classnames";
 
 interface PoolViewProps extends RouteComponentProps {
   /**
@@ -43,17 +44,29 @@ export const PoolView: FC<PoolViewProps> = (props) => {
       className={tw("flex", "p-12", "h-full", "space-x-12", "overflow-scroll")}
     >
       {/* Main content */}
-      <div className={tw("flex", "flex-col", "flex-1", "space-y-16")}>
-        {/* page title */}
-        <div className={tw("flex", "flex-col", "justify-start")}>
-          <PoolBreadcrumb
-            availablePools={availablePools}
-            activePool={activePool}
-            setActivePool={() => navigate(`/${Navigation.POOLS}`)}
-          />
-        </div>
+      <div className={tw("flex", "flex-col", "flex-1", "space-y-4")}>
+        <PoolBreadcrumb
+          availablePools={availablePools}
+          activePool={activePool}
+          setActivePool={() => navigate(`/${Navigation.POOLS}`)}
+        />
+        <div className={tw("space-y-12")}>
+          {/* page title */}
+          <div className={tw("flex", "flex-col")}>
+            {pool?.name && <H2 className={tw("mb-4")}>{pool?.name} </H2>}
+            <span
+              className={classNames(
+                Classes.RUNNING_TEXT,
+                Classes.TEXT_MUTED,
+                tw("text-base")
+              )}
+            >
+              {pool?.description}
+            </span>
+          </div>
 
-        {pool ? <PoolCard pool={pool} /> : <PoolNotFoundCard />}
+          {pool ? <PoolCard pool={pool} /> : <PoolNotFoundCard />}
+        </div>
       </div>
 
       {/* Right hand side */}

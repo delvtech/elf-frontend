@@ -46,7 +46,7 @@ export const PoolsView: FC<PoolsViewProps> = () => {
       className={tw("flex", "p-12", "h-full", "space-x-12", "overflow-scroll")}
     >
       {/* Main content */}
-      <div className={tw("flex", "flex-col", "flex-1", "space-y-16")}>
+      <div className={tw("flex", "flex-col", "flex-1", "space-y-12")}>
         {/* page title */}
         <div className={tw("flex", "flex-col", "justify-start")}>
           <H2 className={tw("mb-4")}>{t`Element Pools`} </H2>

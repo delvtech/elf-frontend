@@ -61,7 +61,11 @@ export const WalletConnectionCard: FunctionComponent<WalletConnectionCardProps> 
           >
             {/* button for a11y, this allows users to TAB through our UI */}
             <button
-              className={classNames(Classes.BUTTON_TEXT, Classes.TEXT_LARGE)}
+              className={classNames(
+                Classes.BUTTON_TEXT,
+                Classes.TEXT_LARGE,
+                tw("flex-1", "justify-center", "items-center", "flex", "mr-5")
+              )}
               style={{ color: isDarkMode ? Colors.BLUE5 : Colors.BLUE2 }}
             >
               {t`Connect wallet to begin`}
@@ -123,7 +127,7 @@ export const WalletConnectionCard: FunctionComponent<WalletConnectionCardProps> 
         className={classNames(darkModeClassName, tw("pb-0"))}
         isOpen={isWalletDialogOpen}
         icon={IconNames.SEND_TO_GRAPH}
-        title={t`Connect a wallet`}
+        title={<span className={tw("text-base")}>{t`Connect wallet`}</span>}
         onClose={() => setWalletDialogOpen(false)}
       >
         <div className={tw("flex", "w-full", "h-full", "p-12")}>
