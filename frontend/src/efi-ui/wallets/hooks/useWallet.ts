@@ -23,11 +23,6 @@ import { getConnectorName } from "efi/wallets/connectors";
 
 export interface Wallet {
   /**
-   * The library that provides the API to interface with ethereum blockchain, i.e. web3 or ethers.
-   */
-  library: Web3Provider | undefined;
-
-  /**
    * The wallet address if it is connected
    */
   accountAddress: string | null | undefined;
@@ -73,7 +68,6 @@ export function useWallet(): Wallet {
   const connectorName = getConnectorName(connector, library);
 
   return {
-    library,
     accountAddress,
     error,
     fiatBalance,

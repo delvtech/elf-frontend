@@ -1,5 +1,6 @@
 import { queryCache, useMutation, useQuery } from "react-query";
 
+import { useWeb3React } from "@web3-react/core";
 import { BigNumber, ContractTransaction } from "ethers";
 
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
@@ -7,7 +8,6 @@ import {
   showTransactionFailedToast,
   showTransactionSuccessfulToast,
 } from "efi-ui/crypto/toasts/transactionToasts";
-import { useWallet } from "efi-ui/wallets/hooks/useWallet";
 import ContractAddresses from "efi/contracts/contractsJson";
 import {
   elfContract,
@@ -87,7 +87,7 @@ interface ElfDepositEthVariables {
 }
 
 export function useElfContractDepositEth() {
-  const { library } = useWallet();
+  const { library } = useWeb3React();
   const signer = library?.getSigner();
 
   return useMutation<
@@ -127,7 +127,7 @@ interface ElfApproveDepositVariables {
 // TODO: refactor this to be generic for tokens and just pass elf contract address in as argument
 // TODO: refactor these to have the library passed in, don't want to use closure variables for useMutation
 export function useElfContractApproveDeposit() {
-  const { library } = useWallet();
+  const { library } = useWeb3React();
 
   return useMutation<
     ContractTransaction | undefined,
@@ -167,7 +167,7 @@ interface ElfDepositVariables {
 }
 
 export function useElfContractDeposit() {
-  const { library } = useWallet();
+  const { library } = useWeb3React();
   const signer = library?.getSigner();
 
   return useMutation<
@@ -205,7 +205,7 @@ interface ElfWithdrawEthVariables {
   account: string | undefined | null;
 }
 export function useElfContractWithdrawEth() {
-  const { library } = useWallet();
+  const { library } = useWeb3React();
   const signer = library?.getSigner();
 
   return useMutation<
@@ -244,7 +244,7 @@ interface ElfWithdrawVariables {
 }
 
 export function useElfContractWithdraw() {
-  const { library } = useWallet();
+  const { library } = useWeb3React();
   const signer = library?.getSigner();
 
   return useMutation<
