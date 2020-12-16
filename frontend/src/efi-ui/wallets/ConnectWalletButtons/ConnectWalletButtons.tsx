@@ -24,7 +24,9 @@ const iconStyle: CSSProperties = {
   width: 24,
 };
 
-export const ConnectWalletButtons: FC<{}> = () => {
+export const ConnectWalletButtons: FC<{ onClick?: () => void }> = ({
+  onClick,
+}) => {
   const { active, activate, deactivate } = useWeb3React<Web3Provider>();
 
   const deactivateActiveConnector = useCallback(async () => {
@@ -36,22 +38,26 @@ export const ConnectWalletButtons: FC<{}> = () => {
   const connectToMetaMask = useCallback(async () => {
     await deactivateActiveConnector();
     activate(injectedConnector, deactivateActiveConnector);
-  }, [activate, deactivateActiveConnector]);
+    onClick?.();
+  }, [activate, deactivateActiveConnector, onClick]);
 
   const connectToWalletConnect = useCallback(async () => {
     await deactivateActiveConnector();
     activate(walletConnectConnector, deactivateActiveConnector);
-  }, [activate, deactivateActiveConnector]);
+    onClick?.();
+  }, [activate, deactivateActiveConnector, onClick]);
 
   const connectToWalletLink = useCallback(async () => {
     await deactivateActiveConnector();
     activate(walletLinkConnector, deactivateActiveConnector);
-  }, [activate, deactivateActiveConnector]);
+    onClick?.();
+  }, [activate, deactivateActiveConnector, onClick]);
 
   const connectToFortmatic = useCallback(async () => {
     await deactivateActiveConnector();
     activate(fortmaticConnector, deactivateActiveConnector);
-  }, [activate, deactivateActiveConnector]);
+    onClick?.();
+  }, [activate, deactivateActiveConnector, onClick]);
 
   // TODO: fix this.  LedgerConnector package creates an error in our github actions:
   // npm ERR! Error while executing:
@@ -60,25 +66,19 @@ export const ConnectWalletButtons: FC<{}> = () => {
   // npm ERR! Warning: Permanently added the RSA host key for IP address '140.82.114.4' to the list of known hosts.
   // npm ERR! git@github.com: Permission denied (publickey).
   // npm ERR! fatal: Could not read from remote repository.
-  const connectToLedger = useCallback(async () => {}, []);
+  const connectToLedger = useCallback(async () => {
+    onClick?.();
+  }, [onClick]);
 
   const connectToTorus = useCallback(() => {
     torusConnector.deactivate();
     activate(torusConnector, deactivateActiveConnector);
-  }, [activate, deactivateActiveConnector]);
+    onClick?.();
+  }, [activate, deactivateActiveConnector, onClick]);
 
   return (
     <div
-      className={tw(
-        "p-8",
-        "grid",
-        "grid-cols-1",
-        "md:grid-cols-2",
-        "lg:grid-cols-3",
-        "gap-2",
-        "w-3/4",
-        "max-w-full"
-      )}
+      className={tw("flex", "h-full", "w-full", "flex-wrap", "justify-center")}
     >
       <ConnectWalletButton
         icon={<MetamaskIcon style={iconStyle} />}

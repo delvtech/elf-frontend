@@ -30,6 +30,11 @@ module.exports = {
       full: "100%",
     },
 
+    spacing: {
+      "3/10": "30%",
+      ...defaultTheme.spacing,
+    },
+
     colors: {
       // these can be used as 'text-primary' etc.
       primary: "var(--bp3-intent-primary)",

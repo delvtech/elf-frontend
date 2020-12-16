@@ -94,7 +94,7 @@ export const WalletView: FC<WalletViewProps> = () => {
         </div>
       </div>
       {/* Right hand side */}
-      <div className={tw("hidden", "lg:block", "h-full")}>
+      <div className={tw("hidden", "lg:block", "h-full", "w-3/10")}>
         <WalletSummaryPane />
       </div>
     </div>

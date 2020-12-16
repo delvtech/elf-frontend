@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 
-import { H5 } from "@blueprintjs/core";
+import { Classes, H5 } from "@blueprintjs/core";
 import classNames from "classnames";
 
 import tw from "efi-tailwindcss-classnames";
@@ -22,10 +22,10 @@ export const ConnectWalletButton: FC<ConnectWalletButtonProps> = (props) => {
   return (
     <button
       className={classNames(
-        "bp3-button",
-        "bp3-button-large",
-        "bp3-minimal",
-        "bp3-outlined"
+        Classes.BUTTON,
+        Classes.LARGE,
+        Classes.OUTLINED,
+        tw("w-40")
       )}
       onClick={onClick}
     >
@@ -34,12 +34,13 @@ export const ConnectWalletButton: FC<ConnectWalletButtonProps> = (props) => {
           "flex",
           "flex-col",
           "w-full",
+          "h-full",
           "items-center",
           "justify-center"
         )}
       >
         <div className={classNames(iconClassName, tw("m-2"))}>{icon}</div>
-        <div className={tw("flex-1", "items-center", "justify-center")}>
+        <div className={tw("flex", "w-full", "items-center", "justify-center")}>
           <H5>{name}</H5>
         </div>
       </div>

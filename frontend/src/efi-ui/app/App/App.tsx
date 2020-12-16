@@ -14,7 +14,6 @@ import { PoolsView } from "efi-ui/pools/PoolsView/PoolsView";
 import { PoolView } from "efi-ui/pools/PoolView/PoolView";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { PulseView } from "efi-ui/pulse/PulseView";
-import { ConnectWalletView } from "efi-ui/wallets/ConnectWalletView/ConnectWalletView";
 import { useSyncWithInjectedEthereum } from "efi-ui/wallets/hooks/useSyncWithInjectedEthereum";
 import { WalletView } from "efi-ui/wallets/WalletView/WalletView";
 
@@ -55,7 +54,6 @@ const App: FC<AppProps> = () => {
 
         <Router className={contentClassName}>
           <HomeView path="/" />
-          <ConnectWalletView path="/connect" />
           <PulseView path={Navigation.PULSE} />
           <PoolsView path={Navigation.POOLS} />
           <PoolView path={`${Navigation.POOLS}/:poolId`} />
