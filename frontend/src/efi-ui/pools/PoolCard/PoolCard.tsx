@@ -25,6 +25,10 @@ import { StakingAssetSelect } from "efi-ui/pools/StakingAssetSelect/StakingAsset
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
 import { useWallet } from "efi-ui/wallets/hooks/useWallet";
 import { useWalletBalances } from "efi-ui/wallets/hooks/useWalletBalance";
+import {
+  useWalletConnectionStatus,
+  WalletConnectionStatus,
+} from "efi-ui/wallets/hooks/useWalletConnectionStatus";
 import ContractAddresses from "efi/contracts/contractsJson";
 import { MAX_ALLOWANCE } from "efi/contracts/token";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
@@ -48,6 +52,7 @@ export const PoolCard: FC<PoolCardProps> = ({ pool }) => {
   const { name, stakingAsset: defaultStakingAsset } = pool;
   const { account } = useWallet();
   const balances = useWalletBalances();
+  const [walletStatus] = useWalletConnectionStatus();
   const { data: strategyCryptoSymbol } = useElfContractSymbol();
   const { data: elfTotalSupply } = useElfContractTotalSupply();
   const elfBalance = useElfContractBalance(account);
@@ -61,6 +66,7 @@ export const PoolCard: FC<PoolCardProps> = ({ pool }) => {
   const allowanceLoading = allowanceResult.isLoading;
 
   const cryptoBalance = balances[stakingAsset];
+  const walletConnected = walletStatus === WalletConnectionStatus.CONNECTED;
 
   /****
    * Approve hooks
@@ -205,21 +211,19 @@ export const PoolCard: FC<PoolCardProps> = ({ pool }) => {
       >
         <div className={tw("flex-1")}>
           {/* Deposit */}
-          {cryptoBalance?.decimals && cryptoBalance?.value && (
-            <TransactionForm
-              inputLabel={t`Deposit`}
-              cryptoSymbol={stakingAsset}
-              cryptoBalance={cryptoBalance as TokenBalance}
-              buttonIntent={depositPending ? Intent.WARNING : Intent.PRIMARY}
-              buttonEnabled={!depositPending}
-              buttonLabel={
-                depositPending
-                  ? t`Confirming deposit...`
-                  : t`Deposit ${stakingAsset}`
-              }
-              onTransaction={startDeposit}
-            />
-          )}
+          <TransactionForm
+            inputLabel={t`Deposit`}
+            buttonDisabled={!walletConnected || depositPending}
+            cryptoSymbol={stakingAsset}
+            cryptoBalance={cryptoBalance as TokenBalance}
+            buttonIntent={depositPending ? Intent.WARNING : Intent.PRIMARY}
+            buttonLabel={
+              depositPending
+                ? t`Confirming deposit...`
+                : t`Deposit ${stakingAsset}`
+            }
+            onTransaction={startDeposit}
+          />
         </div>
 
         <div className={tw("flex-1")}>
@@ -229,7 +233,7 @@ export const PoolCard: FC<PoolCardProps> = ({ pool }) => {
             cryptoSymbol={strategyCryptoSymbol?.[0] as CryptoSymbol}
             cryptoBalance={elfBalance}
             buttonIntent={withdrawPending ? Intent.WARNING : Intent.PRIMARY}
-            buttonEnabled={!withdrawPending}
+            buttonDisabled={!walletConnected || withdrawPending}
             buttonLabel={
               withdrawPending
                 ? t`Confirming withdraw...`

@@ -18,7 +18,7 @@ import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { TokenBalance } from "efi/crypto/TokenBalance";
 
 interface TransactionFormProps {
-  buttonEnabled?: boolean;
+  buttonDisabled?: boolean;
   inputLabel: string;
   buttonLabel: string;
   buttonIntent?: Intent;
@@ -36,7 +36,7 @@ const numericInputOptions: NumericInputOptions = {
 };
 
 export const TransactionForm: FC<TransactionFormProps> = ({
-  buttonEnabled = true,
+  buttonDisabled = false,
   inputLabel,
   cryptoSymbol,
   cryptoBalance,
@@ -126,7 +126,7 @@ export const TransactionForm: FC<TransactionFormProps> = ({
         </div>
       </div>
       <Button
-        disabled={!value || !validValue || !buttonEnabled}
+        disabled={!value || !validValue || buttonDisabled}
         onClick={onClick}
         minimal
         outlined
