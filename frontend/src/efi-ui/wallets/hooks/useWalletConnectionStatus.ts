@@ -37,10 +37,7 @@ const queryConfig: QueryConfig<WalletConnectionStatus> = {
 export function useWalletConnectionStatus() {
   const { active } = useWeb3React<Web3Provider>();
 
-  const {
-    data: status,
-    refetch: refetchStatus,
-  } = useQuery<WalletConnectionStatus>(
+  const result = useQuery<WalletConnectionStatus>(
     ["wallet-connection-status", active],
     (unusedString, activeFromKey) => {
       const newStatus = getStatus(activeFromKey);
@@ -58,10 +55,11 @@ export function useWalletConnectionStatus() {
     },
     queryConfig
   );
+  const { data: status, refetch: refetchStatus } = result;
 
   useRefetchStatusWhenStale(status, refetchStatus);
 
-  return { status, refetchStatus };
+  return [status, result];
 }
 
 function useRefetchStatusWhenStale(

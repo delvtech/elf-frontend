@@ -1,5 +1,6 @@
-import { formatMoney } from "efi/money/formatMoney";
 import { Currencies, Money } from "ts-money";
+
+import { formatMoney } from "efi/money/formatMoney";
 
 test("should format undefined balance correctly", () => {
   expect(formatMoney(undefined)).toEqual("0.00");

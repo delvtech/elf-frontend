@@ -1,3 +1,5 @@
+import React, { FC } from "react";
+
 import {
   Button,
   Card,
@@ -6,18 +8,17 @@ import {
   H3,
   NonIdealState,
 } from "@blueprintjs/core";
+import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
 import { RouteComponentProps } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
 import classNames from "classnames";
-import React, { FC } from "react";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import WalletSummaryPane from "efi-ui/wallets/WalletSummaryPane/WalletSummaryPane";
-import { IconNames } from "@blueprintjs/icons";
 import { useChangeTab } from "efi-ui/navigation/hooks/useChangeTab";
 import { Navigation } from "efi-ui/navigation/navigation";
+import WalletSummaryPane from "efi-ui/wallets/WalletSummaryPane/WalletSummaryPane";
 
 interface WalletViewProps extends RouteComponentProps {}
 export const WalletView: FC<WalletViewProps> = () => {

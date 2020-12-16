@@ -1,5 +1,6 @@
-import { Web3Provider } from "@ethersproject/providers";
 import { useQuery } from "react-query";
+
+import { Web3Provider } from "@ethersproject/providers";
 
 import { fetchEthBalance } from "efi/coins/ether/fetchEthBalance";
 
