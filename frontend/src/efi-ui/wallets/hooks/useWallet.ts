@@ -12,6 +12,7 @@ import { Money } from "ts-money";
 import { t } from "ttag";
 
 import { useEthBalance } from "efi-ui/coins/ether/hooks/useEthBalance/useEthBalance";
+import { useEthPrice } from "efi-ui/coins/ether/hooks/useEthBalance/useEthPrice";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import {
   AppToaster,
@@ -19,18 +20,12 @@ import {
 } from "efi-ui/toaster/AppToaster/AppToaster";
 import { useWalletConnectionStatus } from "efi-ui/wallets/hooks/useWalletConnectionStatus";
 import { getConnectorName } from "efi/wallets/connectors";
-import { useEthPrice } from "efi-ui/coins/ether/hooks/useEthBalance/useEthPrice";
 
 export interface Wallet {
   /**
-   * The library that provides the API to interface with ethereum blockchain, i.e. web3 or ethers.
-   */
-  library: Web3Provider | undefined;
-
-  /**
    * The wallet address if it is connected
    */
-  account: string | null | undefined;
+  accountAddress: string | null | undefined;
 
   /**
    * Errors associated with wallet operations.
@@ -50,12 +45,12 @@ export interface Wallet {
 
 export function useWallet(): Wallet {
   const web3React = useWeb3React<Web3Provider>();
-  const { connector, library, account, error } = web3React;
+  const { connector, library, account: accountAddress, error } = web3React;
   useErrorToast(error);
   setWeb3ReactOnWindow(web3React);
   useWalletConnectionStatus();
 
-  const { data: ethBalance } = useEthBalance(library, account);
+  const { data: ethBalance } = useEthBalance(library, accountAddress);
 
   // Manages the toasts for connections
   const { currency } = useCurrencyPref();
@@ -73,8 +68,7 @@ export function useWallet(): Wallet {
   const connectorName = getConnectorName(connector, library);
 
   return {
-    library,
-    account,
+    accountAddress,
     error,
     fiatBalance,
     connectorName,
@@ -90,7 +84,7 @@ function useErrorToast(error: Error | undefined) {
   }, [error]);
 }
 
-export function getErrorMessage(error: Error) {
+function getErrorMessage(error: Error) {
   // These are the well-known error types
   if (error instanceof NoEthereumProviderError) {
     return t`No Ethereum browser extension detected, install MetaMask on desktop or visit from a dApp browser on mobile.`;
@@ -100,8 +94,9 @@ export function getErrorMessage(error: Error) {
     return t`Please authorize this website to access your Ethereum account.`;
   }
 
-  // Otherwise check if the error has it's own message we can show
-  if (error.message) {
+  // show unknown errors with messages in development.  we shouldn't show messages for things we
+  // don't know about since they could be technical.
+  if (error.message && process.env.NODE_ENV !== "production") {
     return error.message;
   }
 
@@ -110,6 +105,10 @@ export function getErrorMessage(error: Error) {
   return t`An unknown error occurred. Check the console for more details.`;
 }
 
+/**
+ * helper function to put web3React on the global scope for debugging
+ * @param web3React
+ */
 function setWeb3ReactOnWindow(
   web3React: Web3ReactContextInterface<Web3Provider>
 ) {

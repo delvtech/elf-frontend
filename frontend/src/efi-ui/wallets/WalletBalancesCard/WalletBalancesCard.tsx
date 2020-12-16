@@ -1,9 +1,10 @@
+import React, { FC } from "react";
+
 import { Card, Classes, HTMLTable } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
 import classNames from "classnames";
 import { Erc20 } from "elf-contracts/types/Erc20";
-import React, { FC } from "react";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -18,7 +19,7 @@ import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
 import { useWallet } from "efi-ui/wallets/hooks/useWallet";
 import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
 import { formatEth } from "efi/coins/ether/formatEth";
-import { UsdcContract, WethContract } from "efi/crypto/TokenContracts";
+import { usdcContract, wethContract } from "efi/crypto/TokenContracts";
 import { TokenContractSymbols } from "efi/crypto/TokenContractSymbols";
 import { formatMoney } from "efi/money/formatMoney";
 
@@ -30,8 +31,8 @@ interface WalletTokenInfo {
 }
 
 const WALLET_TOKENS: WalletTokenInfo[] = [
-  { tokenSymbolOld: "WETH", tokenContract: WethContract },
-  { tokenSymbolOld: "USDC", tokenContract: UsdcContract },
+  { tokenSymbolOld: "WETH", tokenContract: wethContract },
+  { tokenSymbolOld: "USDC", tokenContract: usdcContract },
 ];
 
 export const WalletBalancesCard: FC<WalletBalancesCardProps> = () => {

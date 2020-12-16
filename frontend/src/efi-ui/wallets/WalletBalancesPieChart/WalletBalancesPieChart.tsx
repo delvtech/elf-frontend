@@ -8,14 +8,19 @@ import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useWallet } from "efi-ui/wallets/hooks/useWallet";
 import { useWalletBalances } from "efi-ui/wallets/hooks/useWalletBalance";
 import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
+import { getQueryCombinedStatus } from "efi-ui/query/getQueryCombinedStatus";
+import { QueryStatus } from "react-query";
 
 interface WalletBalancesPieChartProps {}
 
 export const WalletBalancesPieChart: FC<WalletBalancesPieChartProps> = () => {
   const { isDarkMode } = useDarkMode();
 
-  const { account } = useWallet();
-  const balances = useWalletBalances();
+  const { accountAddress: account } = useWallet();
+  const [balances, balancesResult] = useWalletBalances();
+  const balancesLoading =
+    getQueryCombinedStatus(balancesResult) === QueryStatus.Loading;
+
   const ethBalance = balances.ETH ? formatEther(balances.ETH.value) : "0";
   const elf = useElfContractBalance(account);
   const elfBalance = formatCurrency(elf?.value, elf?.decimals.toNumber());
@@ -36,6 +41,10 @@ export const WalletBalancesPieChart: FC<WalletBalancesPieChartProps> = () => {
       ],
     },
   ];
+
+  if (balancesLoading) {
+    return null;
+  }
 
   return <PieChart isDarkMode={isDarkMode} pieData={tokens} />;
 };

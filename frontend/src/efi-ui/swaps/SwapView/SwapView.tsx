@@ -10,7 +10,7 @@ import { useWallet } from "efi-ui/wallets/hooks/useWallet";
 
 interface SwapViewProps extends RouteComponentProps {}
 export const SwapView: FC<SwapViewProps> = () => {
-  const { account } = useWallet();
+  const { accountAddress: account } = useWallet();
 
   if (!account) {
     return <ConnectWalletState />;
