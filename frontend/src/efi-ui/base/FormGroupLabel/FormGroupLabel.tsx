@@ -1,9 +1,12 @@
+import React, { FC } from "react";
+
 import { Alignment, Classes, Icon, Position, Tooltip } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import classNames from "classnames";
-import React, { FC } from "react";
+
 import tw from "efi-tailwindcss-classnames";
 import styles from "efi-ui/base/FormGroupLabel/FormGroupLabel.module.css";
+
 interface FormGroupLabelProps {
   label: string;
   tooltipContent?: string | JSX.Element;

@@ -2,6 +2,7 @@ import { queryCache, useMutation, useQuery } from "react-query";
 
 import { BigNumber, ContractTransaction } from "ethers";
 
+import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import {
   showTransactionFailedToast,
   showTransactionSuccessfulToast,
@@ -23,7 +24,6 @@ import { postApprove } from "efi/contracts/token";
 import { StakingTokens } from "efi/crypto/stakingAssets";
 import { TokenBalance } from "efi/crypto/TokenBalance";
 import { TokenContracts } from "efi/crypto/TokenContracts";
-import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 
 const contractAssetSymbolsKey = ["contract", "elf", "assetSymbols"];
 export function useElfContractAssetSymbols() {

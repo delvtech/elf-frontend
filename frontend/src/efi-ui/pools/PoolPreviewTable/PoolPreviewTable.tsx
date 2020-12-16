@@ -7,6 +7,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { FormGroupLabel } from "efi-ui/base/FormGroupLabel/FormGroupLabel";
+import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { Navigation } from "efi-ui/navigation/navigation";
 import { useElfProxyGetPoolAPY } from "efi-ui/pools/hooks/elfProxy";
 import { useTokenName } from "efi-ui/token/hooks/useTokenName";
@@ -16,7 +17,6 @@ import { formatAPY } from "efi/base/formatAPY/formatAPY";
 import { formatEth } from "efi/coins/ether/formatEth";
 import { elfContract } from "efi/contracts/Elf";
 import { Pool } from "efi/pools/Pool";
-import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 
 interface PoolPreviewTableProps {
   pools: Pool[];

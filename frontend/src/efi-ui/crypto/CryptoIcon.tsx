@@ -1,4 +1,3 @@
-import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import daiLogo from "efi-static-assets/logos/DAI-logo.png";
 import efiLogo from "efi-static-assets/logos/efi-logo.svg";
 import ethLogo from "efi-static-assets/logos/ETH-logo.png";
@@ -7,6 +6,7 @@ import usdcLogo from "efi-static-assets/logos/USDC-logo.png";
 import usdtLogo from "efi-static-assets/logos/USDT-logo.png";
 import wethLogo from "efi-static-assets/logos/WETH-logo.png";
 import yfiLogo from "efi-static-assets/logos/YFI-logo.png";
+import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 
 export const CryptoIcon: Record<CryptoSymbol, string> = {
   DAI: daiLogo,

@@ -1,9 +1,10 @@
-import { Alignment, FormGroup, Icon, InputGroup } from "@blueprintjs/core";
 import React, { ChangeEvent, FC, useCallback } from "react";
+
+import { Alignment, FormGroup, Icon, InputGroup } from "@blueprintjs/core";
+import { IconNames } from "@blueprintjs/icons";
 
 import tw from "efi-tailwindcss-classnames";
 import { FormGroupLabel } from "efi-ui/base/FormGroupLabel/FormGroupLabel";
-import { IconNames } from "@blueprintjs/icons";
 
 interface SearchFormGroupProps {
   label: string;

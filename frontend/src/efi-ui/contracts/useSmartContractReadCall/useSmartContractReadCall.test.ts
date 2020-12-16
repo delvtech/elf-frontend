@@ -1,6 +1,7 @@
 import { renderHook } from "@testing-library/react-hooks";
-import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { Contract } from "ethers";
+
+import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 
 const SAMPLE_READ_CONTRACT_CALL_RESULT = { 0: "sample contract name" };
 
