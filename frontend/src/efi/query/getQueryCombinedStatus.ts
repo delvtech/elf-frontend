@@ -5,8 +5,8 @@ import { getQueryCombinedIdleState } from "efi/query/getQueryCombinedIdleState";
 import { getQueryCombinedLoadingState } from "efi/query/getQueryCombinedLoadingState";
 import { getQueryCombinedSuccessState } from "efi/query/getQueryCombinedSuccessState";
 
-export function getQueryCombinedStatus<T = unknown>(
-  queryResults: QueryResult<T>[]
+export function getQueryCombinedStatus(
+  queryResults: QueryResult<unknown>[]
 ): QueryStatus {
   const allIdle = getQueryCombinedIdleState(queryResults);
   const anyLoading = getQueryCombinedLoadingState(queryResults);
@@ -21,7 +21,7 @@ export function getQueryCombinedStatus<T = unknown>(
   // takes higher precedence than error or success. if any item reloads, the entire state should be
   // considered loading
   if (anyLoading) {
-    return QueryStatus.Error;
+    return QueryStatus.Loading;
   }
 
   // we shouldn't set success if there are any errors

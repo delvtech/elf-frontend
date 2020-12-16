@@ -24,6 +24,7 @@ import { postApprove } from "efi/contracts/token";
 import { StakingTokens } from "efi/crypto/stakingAssets";
 import { TokenBalance } from "efi/crypto/TokenBalance";
 import { TokenContracts } from "efi/crypto/TokenContracts";
+import { Web3Provider } from "@ethersproject/providers";
 
 const contractAssetSymbolsKey = ["contract", "elf", "assetSymbols"];
 export function useElfContractAssetSymbols() {
@@ -87,7 +88,7 @@ interface ElfDepositEthVariables {
 }
 
 export function useElfContractDepositEth() {
-  const { library } = useWeb3React();
+  const { library } = useWeb3React<Web3Provider>();
   const signer = library?.getSigner();
 
   return useMutation<
@@ -127,7 +128,7 @@ interface ElfApproveDepositVariables {
 // TODO: refactor this to be generic for tokens and just pass elf contract address in as argument
 // TODO: refactor these to have the library passed in, don't want to use closure variables for useMutation
 export function useElfContractApproveDeposit() {
-  const { library } = useWeb3React();
+  const { library } = useWeb3React<Web3Provider>();
 
   return useMutation<
     ContractTransaction | undefined,
@@ -167,7 +168,7 @@ interface ElfDepositVariables {
 }
 
 export function useElfContractDeposit() {
-  const { library } = useWeb3React();
+  const { library } = useWeb3React<Web3Provider>();
   const signer = library?.getSigner();
 
   return useMutation<
@@ -205,7 +206,7 @@ interface ElfWithdrawEthVariables {
   account: string | undefined | null;
 }
 export function useElfContractWithdrawEth() {
-  const { library } = useWeb3React();
+  const { library } = useWeb3React<Web3Provider>();
   const signer = library?.getSigner();
 
   return useMutation<
@@ -244,7 +245,7 @@ interface ElfWithdrawVariables {
 }
 
 export function useElfContractWithdraw() {
-  const { library } = useWeb3React();
+  const { library } = useWeb3React<Web3Provider>();
   const signer = library?.getSigner();
 
   return useMutation<
