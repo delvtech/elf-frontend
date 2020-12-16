@@ -5,16 +5,19 @@ import { BigNumber } from "ethers";
 import { useEthBalance } from "efi-ui/coins/ether/hooks/useEthBalance/useEthBalance";
 import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance/useTokenBalance";
 import { TokenBalance } from "efi/crypto/TokenBalance";
+import { QueryResult } from "react-query";
 
 export interface WalletBalances {
   ETH: TokenBalance | undefined;
   WETH: TokenBalance | undefined;
 }
 
-export function useWalletBalances(): WalletBalances {
+export function useWalletBalances(): [WalletBalances, QueryResult<unknown>[]] {
   const { library, account } = useWeb3React<Web3Provider>();
 
-  const { data: ethBalance } = useEthBalance(library, account);
+  const ethResult = useEthBalance(library, account);
+  const ethBalance = ethResult.data;
+
   const ethBalanceAsTokenBalance: TokenBalance | undefined = ethBalance
     ? {
         value: ethBalance,
@@ -22,9 +25,12 @@ export function useWalletBalances(): WalletBalances {
       }
     : undefined;
 
-  const [wethBalance] = useTokenBalance("WETH", account);
+  const [wethBalance, wethResults] = useTokenBalance("WETH", account);
 
-  return { ETH: ethBalanceAsTokenBalance, WETH: wethBalance };
+  return [
+    { ETH: ethBalanceAsTokenBalance, WETH: wethBalance },
+    [ethResult, ...wethResults],
+  ];
 }
 
 export function makeWalletBalanceQueryKey(

@@ -55,7 +55,7 @@ const stubbedPoolData: PieData[] = [
 export const PoolCard: FC<PoolCardProps> = ({ pool }) => {
   const { stakingAsset: defaultStakingAsset } = pool;
   const { accountAddress: account } = useWallet();
-  const balances = useWalletBalances();
+  const [balances] = useWalletBalances();
   const [walletStatus] = useWalletConnectionStatus();
   const { data: strategyCryptoSymbol } = useElfContractSymbol();
   const { data: elfTotalSupply } = useElfContractTotalSupply();

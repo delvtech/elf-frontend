@@ -40,7 +40,7 @@ export const WalletSummary: FunctionComponent<WalletSummaryProps> = () => {
   const { isDarkMode } = useDarkMode();
 
   const { fiatBalance } = useWallet();
-  const balances = useWalletBalances();
+  const [balances] = useWalletBalances();
   const ethBalance = balances.ETH?.value;
   const wethBalance = balances.WETH?.value;
 
