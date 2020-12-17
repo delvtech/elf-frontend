@@ -24,6 +24,7 @@ import { wethContract } from "efi/crypto/TokenContracts";
 import { formatMoney } from "efi/money/formatMoney";
 
 import { useTokenFiatBalance } from "../../token/hooks/useTokenFiatBalance";
+import { elfContract } from "efi/contracts/Elf";
 
 interface WalletBalancesCardProps {}
 
@@ -31,7 +32,10 @@ interface WalletTokenInfo {
   tokenContract: Erc20;
 }
 
-const WALLET_TOKENS: WalletTokenInfo[] = [{ tokenContract: wethContract }];
+const WALLET_TOKENS: WalletTokenInfo[] = [
+  { tokenContract: wethContract },
+  { tokenContract: elfContract },
+];
 
 export const WalletBalancesCard: FC<WalletBalancesCardProps> = () => {
   const { currency } = useCurrencyPref();
@@ -155,7 +159,7 @@ const TokenBalanceTableRow: FC<TokenBalanceTableRowProps> = ({
       </td>
       {/* Price per token */}
       <td className={classNames({ [Classes.SKELETON]: isTokenPriceLoading })}>
-        {t`${tokenPrice} ${currency.code}`}
+        {tokenPrice ? t`${tokenPrice} ${currency.code}` : t`N/A`}
       </td>
       {/* Fiat balance */}
       <td>
