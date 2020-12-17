@@ -15,13 +15,13 @@ import {
   useElfContractBalance,
   useElfContractDeposit,
   useElfContractDepositEth,
-  useElfContractSymbol,
-  useElfContractTotalSupply,
   useElfContractWithdraw,
   useElfContractWithdrawEth,
 } from "efi-ui/pools/hooks/useElfContract";
 import { StakingAssetSelect } from "efi-ui/pools/StakingAssetSelect/StakingAssetSelect";
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
+import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
+import { useTokenTotalSupply } from "efi-ui/token/hooks/useTokenTotalSupply";
 import { useWallet } from "efi-ui/wallets/hooks/useWallet";
 import { useWalletBalances } from "efi-ui/wallets/hooks/useWalletBalance";
 import {
@@ -34,13 +34,14 @@ import {
   ONE_MINUTE_IN_MILLISECONDS,
 } from "efi/base/time";
 import ContractAddresses from "efi/contracts/contractsJson";
+import { elfContract } from "efi/contracts/Elf";
 import { MAX_ALLOWANCE } from "efi/contracts/token";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
+import { formatEthBalance } from "efi/crypto/formatEthBalance";
 import { StakingAssets } from "efi/crypto/stakingAssets";
 import { TokenBalance } from "efi/crypto/TokenBalance";
 import { TokenContractSymbols } from "efi/crypto/TokenContractSymbols";
 import { Pool } from "efi/pools/Pool";
-import { formatEthBalance } from "efi/crypto/formatEthBalance";
 
 interface PoolLockedCardProps {
   pool: Pool;
@@ -50,18 +51,21 @@ const END_DATE = 1610760418863;
 
 export const PoolLockedCard: FC<PoolLockedCardProps> = ({ pool }) => {
   const { stakingAsset: defaultStakingAsset } = pool;
-  const { accountAddress: account } = useWallet();
+  const { accountAddress } = useWallet();
   const [balances] = useWalletBalances();
   const [walletStatus] = useWalletConnectionStatus();
-  const { data: strategyCryptoSymbol } = useElfContractSymbol();
-  const { data: elfTotalSupply } = useElfContractTotalSupply();
-  const elfBalance = useElfContractBalance(account);
+  const [poolCryptoSymbol] = useTokenSymbol(elfContract);
+  const [elfTotalSupply] = useTokenTotalSupply(elfContract);
+  const elfBalance = useElfContractBalance(accountAddress);
   const { data: strategyAssetSymbols } = useElfContractAssetSymbols();
   const [stakingAsset, setStakingAsset] = useState<StakingAssets>(
     defaultStakingAsset
   );
 
-  const [allowance, allowanceResult] = useAllowance(stakingAsset, account);
+  const [allowance, allowanceResult] = useAllowance(
+    stakingAsset,
+    accountAddress
+  );
   const hasAllowance = allowance && allowance.gt(0);
   const allowanceLoading = allowanceResult.isLoading;
 
@@ -71,22 +75,31 @@ export const PoolLockedCard: FC<PoolLockedCardProps> = ({ pool }) => {
   /****
    * Approve hooks
    ****/
-  const [startApproval, approvalPending] = useApprove(stakingAsset, account);
+  const [startApproval, approvalPending] = useApprove(
+    stakingAsset,
+    accountAddress
+  );
   const [clearApproval, clearApprovalPending] = useApprove(
     stakingAsset,
-    account,
+    accountAddress,
     BigNumber.from(0)
   );
 
   /****
    * Deposit hooks
    ****/
-  const [startDeposit, depositPending] = useDeposit(stakingAsset, account);
+  const [startDeposit, depositPending] = useDeposit(
+    stakingAsset,
+    accountAddress
+  );
 
   /****
    * Withdraw hooks
    ****/
-  const [startWithdraw, withdrawPending] = useWithdraw(stakingAsset, account);
+  const [startWithdraw, withdrawPending] = useWithdraw(
+    stakingAsset,
+    accountAddress
+  );
 
   const { openCryptoDrawer } = useCryptoDrawer();
   const clickStakingAsset = useCallback(() => {
@@ -95,7 +108,7 @@ export const PoolLockedCard: FC<PoolLockedCardProps> = ({ pool }) => {
 
   // TODO: refactor elfTotalSupply to be a TokenBalance
   const totalSupply =
-    elfTotalSupply && formatEthBalance(elfTotalSupply?.[0].mul(157345));
+    elfTotalSupply && formatEthBalance(elfTotalSupply.mul(157345));
 
   const endDate = new Date(END_DATE);
 
@@ -155,7 +168,7 @@ export const PoolLockedCard: FC<PoolLockedCardProps> = ({ pool }) => {
                 <div className={tw("space-x-4")}>
                   <span>{totalSupply}</span>
                   <Tag minimal intent={Intent.PRIMARY} interactive large>
-                    {strategyCryptoSymbol?.[0]}
+                    {poolCryptoSymbol?.[0]}
                   </Tag>
                 </div>
               </div>
@@ -164,7 +177,7 @@ export const PoolLockedCard: FC<PoolLockedCardProps> = ({ pool }) => {
                 <div className={tw("space-x-4")}>
                   <span>134,556.984</span>
                   <Tag minimal intent={Intent.PRIMARY} interactive large>
-                    {strategyCryptoSymbol?.[0]}
+                    {poolCryptoSymbol?.[0]}
                   </Tag>
                 </div>
               </div>
@@ -176,7 +189,7 @@ export const PoolLockedCard: FC<PoolLockedCardProps> = ({ pool }) => {
                 <div className={tw("space-x-4")}>
                   <span>100</span>
                   <Tag minimal intent={Intent.PRIMARY} interactive large>
-                    {strategyCryptoSymbol?.[0]} FYT
+                    {poolCryptoSymbol?.[0]} FYT
                   </Tag>
                 </div>
               </div>
@@ -185,7 +198,7 @@ export const PoolLockedCard: FC<PoolLockedCardProps> = ({ pool }) => {
                 <div className={tw("space-x-4")}>
                   <span>5.98</span>
                   <Tag minimal intent={Intent.PRIMARY} interactive large>
-                    {strategyCryptoSymbol?.[0]} IC
+                    {poolCryptoSymbol?.[0]} IC
                   </Tag>
                 </div>
               </div>
@@ -264,7 +277,7 @@ export const PoolLockedCard: FC<PoolLockedCardProps> = ({ pool }) => {
           {/* Deposit */}
           <TransactionForm
             inputLabel={t`Deposit`}
-            buttonDisabled={!walletConnected || depositPending}
+            formDisabled={!walletConnected || depositPending}
             cryptoSymbol={stakingAsset}
             cryptoBalance={cryptoBalance as TokenBalance}
             buttonIntent={depositPending ? Intent.WARNING : Intent.PRIMARY}
@@ -281,10 +294,10 @@ export const PoolLockedCard: FC<PoolLockedCardProps> = ({ pool }) => {
           {/* Withdraw */}
           <TransactionForm
             inputLabel={t`Claim assets (available after pool rolls over)`}
-            cryptoSymbol={strategyCryptoSymbol?.[0] as CryptoSymbol}
+            cryptoSymbol={poolCryptoSymbol?.[0] as CryptoSymbol}
             cryptoBalance={elfBalance}
             buttonIntent={withdrawPending ? Intent.WARNING : Intent.PRIMARY}
-            disabled={true}
+            formDisabled={true}
             buttonLabel={
               withdrawPending
                 ? t`Confirming withdraw...`

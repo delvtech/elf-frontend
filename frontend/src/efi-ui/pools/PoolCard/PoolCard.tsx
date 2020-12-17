@@ -210,7 +210,7 @@ export const PoolCard: FC<PoolCardProps> = ({ pool }) => {
           {/* Deposit */}
           <TransactionForm
             inputLabel={t`Deposit`}
-            buttonDisabled={!walletConnected || depositPending}
+            submitDisabled={!walletConnected || depositPending}
             cryptoSymbol={stakingAsset}
             cryptoBalance={cryptoBalance as TokenBalance}
             buttonIntent={depositPending ? Intent.WARNING : Intent.PRIMARY}
@@ -230,7 +230,7 @@ export const PoolCard: FC<PoolCardProps> = ({ pool }) => {
             cryptoSymbol={strategyCryptoSymbol?.[0] as CryptoSymbol}
             cryptoBalance={elfBalance}
             buttonIntent={withdrawPending ? Intent.WARNING : Intent.PRIMARY}
-            buttonDisabled={!walletConnected || withdrawPending}
+            submitDisabled={!walletConnected || withdrawPending}
             buttonLabel={
               withdrawPending
                 ? t`Confirming withdraw...`
