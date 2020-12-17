@@ -18,6 +18,7 @@ import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { TokenBalance } from "efi/crypto/TokenBalance";
 
 interface TransactionFormProps {
+  disabled?: boolean;
   buttonDisabled?: boolean;
   inputLabel: string;
   buttonLabel: string;
@@ -36,6 +37,7 @@ const numericInputOptions: NumericInputOptions = {
 };
 
 export const TransactionForm: FC<TransactionFormProps> = ({
+  disabled = false,
   buttonDisabled = false,
   inputLabel,
   cryptoSymbol,
@@ -79,6 +81,7 @@ export const TransactionForm: FC<TransactionFormProps> = ({
       <div className={tw("flex", "justify-between", "items-center")}>
         <span>{inputLabel}</span>
         <Button
+          disabled={disabled}
           onClick={setMaxValue}
           minimal
           outlined
@@ -88,6 +91,7 @@ export const TransactionForm: FC<TransactionFormProps> = ({
       </div>
       <div className={tw("flex", "flex-col", "space-y-2")}>
         <InputGroup
+          disabled={disabled}
           onChange={onChange}
           value={stringValue}
           className={styles.depositInput}
@@ -126,7 +130,7 @@ export const TransactionForm: FC<TransactionFormProps> = ({
         </div>
       </div>
       <Button
-        disabled={!value || !validValue || buttonDisabled}
+        disabled={!value || !validValue || buttonDisabled || disabled}
         onClick={onClick}
         minimal
         outlined
