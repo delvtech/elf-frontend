@@ -52,7 +52,7 @@
     "fontsource-open-sans": "^3.1.5",
     "fuzzaldrin-plus": "^0.6.0",
     "graphql": "^15.4.0",
-    "graphql-request": "^3.3.0",
+    "graphql-request": "^3.4.0",
     "lodash.isequal": "^4.5.0",
     "react": "^16.14.0",
     "react-blockies": "^1.4.1",
