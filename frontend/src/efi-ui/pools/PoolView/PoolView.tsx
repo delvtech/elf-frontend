@@ -5,7 +5,6 @@ import React, { FC } from "react";
 import tw from "efi-tailwindcss-classnames";
 import { Navigation } from "efi-ui/navigation/navigation";
 import { PoolBreadcrumb } from "efi-ui/pools/PoolBreadCrumb/PoolBreadcrumb";
-import { PoolCard } from "efi-ui/pools/PoolCard/PoolCard";
 import WalletSummaryPane from "efi-ui/wallets/WalletSummaryPane/WalletSummaryPane";
 import { ElfStrategyHighRisk } from "efi/pools/highRisk";
 import { ElfStrategyLowRisk } from "efi/pools/lowRisk";
@@ -13,6 +12,7 @@ import { ElfStrategyMediumRisk } from "efi/pools/mediumRisk";
 
 import { PoolNotFoundCard } from "../PoolNotFoundCard/PoolNotFoundCard";
 import classNames from "classnames";
+import { PoolLockedCard } from "efi-ui/pools/PoolLockedCard.tsx/PoolLockedCard";
 
 interface PoolViewProps extends RouteComponentProps {
   /**
@@ -65,7 +65,7 @@ export const PoolView: FC<PoolViewProps> = (props) => {
             </span>
           </div>
 
-          {pool ? <PoolCard pool={pool} /> : <PoolNotFoundCard />}
+          {pool ? <PoolLockedCard pool={pool} /> : <PoolNotFoundCard />}
         </div>
       </div>
 
