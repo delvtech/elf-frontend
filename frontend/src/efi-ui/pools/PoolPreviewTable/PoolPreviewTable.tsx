@@ -17,6 +17,7 @@ import { formatAPY } from "efi/base/formatAPY/formatAPY";
 import { formatEth } from "efi/coins/ether/formatEth";
 import { elfContract } from "efi/contracts/Elf";
 import { Pool } from "efi/pools/Pool";
+import classNames from "classnames";
 
 interface PoolPreviewTableProps {
   pools: Pool[];
@@ -123,11 +124,14 @@ const PoolPreviewTableRow: FC<PoolPreviewTableRowProps> = ({
     <tr onClick={onRowClick}>
       {/* Token name */}
       <td className={tw("h-16")}>
-        <LabeledText
-          bold
-          text={t`${poolSymbol} - ETH`}
-          label={poolName || ""}
-        />
+        {/* button for a11y, this allows users to TAB through our UI */}
+        <button className={classNames(Classes.BUTTON_TEXT, tw("text-left"))}>
+          <LabeledText
+            bold
+            text={t`${poolSymbol} - ETH`}
+            label={poolName || ""}
+          />
+        </button>
       </td>
 
       {/* ROI */}

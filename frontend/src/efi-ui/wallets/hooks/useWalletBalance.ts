@@ -3,7 +3,7 @@ import { useWeb3React } from "@web3-react/core";
 import { BigNumber } from "ethers";
 
 import { useEthBalance } from "efi-ui/coins/ether/hooks/useEthBalance/useEthBalance";
-import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance/useTokenBalance";
+import { useTokenBalanceOld } from "efi-ui/token/hooks/useTokenBalanceOld/useTokenBalanceOld";
 import { TokenBalance } from "efi/crypto/TokenBalance";
 import { QueryResult } from "react-query";
 
@@ -25,7 +25,7 @@ export function useWalletBalances(): [WalletBalances, QueryResult<unknown>[]] {
       }
     : undefined;
 
-  const [wethBalance, wethResults] = useTokenBalance("WETH", account);
+  const [wethBalance, wethResults] = useTokenBalanceOld("WETH", account);
 
   return [
     { ETH: ethBalanceAsTokenBalance, WETH: wethBalance },
