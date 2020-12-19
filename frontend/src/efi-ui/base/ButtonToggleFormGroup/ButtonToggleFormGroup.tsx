@@ -32,7 +32,6 @@ export const ButtonToggleFormGroup: FC<ButtonToggleFormGroupProps> = ({
       label={
         <FormGroupLabel
           large
-          fill
           alignIndicator={Alignment.RIGHT}
           label={label}
           tooltipContent={tooltipContent}
