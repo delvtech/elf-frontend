@@ -73,6 +73,18 @@ export const SidebarNavigation: FC<SidebarNavigationProps> = ({
             }
           />
           <Tab
+            id={Navigation.EXCHANGE}
+            title={
+              <div className={tabTitleClassName}>
+                <Icon
+                  icon={IconNames.ARROWS_HORIZONTAL}
+                  iconSize={Icon.SIZE_LARGE}
+                />
+                <span>{t`Exchange`}</span>
+              </div>
+            }
+          />
+          <Tab
             id={Navigation.FAQ}
             title={
               <div className={tabTitleClassName}>

@@ -4,12 +4,12 @@ import { RouteComponentProps } from "@reach/router";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { SimpleCryptoAssetFilter } from "efi-ui/swaps/SimpleCryptoAssetFilter/SimpleCryptoAssetFilter";
+import { SimpleCryptoAssetFilter } from "efi-ui/exchange/SimpleCryptoAssetFilter/SimpleCryptoAssetFilter";
 import { ConnectWalletState } from "efi-ui/wallets/ConnectWalletState/ConnectWalletState";
 import { useWallet } from "efi-ui/wallets/hooks/useWallet";
 
-interface SwapViewProps extends RouteComponentProps {}
-export const SwapView: FC<SwapViewProps> = () => {
+interface ExchangeViewProps extends RouteComponentProps {}
+export const ExchangeView: FC<ExchangeViewProps> = () => {
   const { accountAddress: account } = useWallet();
 
   if (!account) {
