@@ -8,11 +8,12 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { ButtonToggleFormGroup } from "efi-ui/base/ButtonToggleFormGroup/ButtonToggleFormGroup";
 import { SearchFormGroup } from "efi-ui/base/SearchFormGroup/SearchFormGroup";
-import { PoolPreviewTable } from "efi-ui/pools/PoolPreviewTable/PoolPreviewTable";
+import { ExchangeTable } from "efi-ui/exchange/ExchangeTable/ExchangeTable";
 import WalletSummaryPane from "efi-ui/wallets/WalletSummaryPane/WalletSummaryPane";
 import { ElfStrategyHighRisk } from "efi/pools/highRisk";
 import { ElfStrategyLowRisk } from "efi/pools/lowRisk";
 import { ElfStrategyMediumRisk } from "efi/pools/mediumRisk";
+import { Pool } from "efi/pools/Pool";
 
 interface ExchangeViewProps extends RouteComponentProps {}
 
@@ -35,10 +36,11 @@ const ASSET_BUTTONS = [
   { id: "yield-coupons", text: t`YC` },
 ];
 
-const availableStrategies = [
-  ElfStrategyLowRisk,
-  ElfStrategyMediumRisk,
-  ElfStrategyHighRisk,
+// TODO: change this to a list of Markets
+const availableMarkets: Pool[] = [
+  // ElfStrategyLowRisk,
+  // ElfStrategyMediumRisk,
+  // ElfStrategyHighRisk,
 ];
 
 export const ExchangeView: FC<ExchangeViewProps> = () => {
@@ -57,7 +59,7 @@ export const ExchangeView: FC<ExchangeViewProps> = () => {
       <div className={tw("flex", "flex-col", "flex-1", "space-y-12")}>
         {/* page title */}
         <div className={tw("flex", "flex-col", "justify-start")}>
-          <H2 className={tw("mb-4")}>{t`Element Exchange`} </H2>
+          <H2 className={tw("mb-4")}>{t`Element Exchange`}</H2>
           <span
             className={classNames(
               Classes.RUNNING_TEXT,
@@ -101,11 +103,10 @@ export const ExchangeView: FC<ExchangeViewProps> = () => {
               buttons={POOL_BUTTONS}
             />
 
-            {/* Strategy cards */}
             <div className={tw("flex", "justify-center")}>
-              <PoolPreviewTable
+              <ExchangeTable
                 className={tw("w-full")}
-                pools={availableStrategies}
+                markets={availableMarkets}
               />
             </div>
           </div>
