@@ -28,15 +28,18 @@ interface ElfAllocatorTestInterface extends ethers.utils.Interface {
     "elf()": FunctionFragment;
     "elfDeploy()": FunctionFragment;
     "failed()": FunctionFragment;
+    "hevm()": FunctionFragment;
     "lender1()": FunctionFragment;
     "lender2()": FunctionFragment;
     "lender3()": FunctionFragment;
     "setUp()": FunctionFragment;
-    "testFail_AllocationPercent()": FunctionFragment;
-    "testFail_setConverter()": FunctionFragment;
+    "testFail_setAllocationPercent()": FunctionFragment;
     "testFail_setGovernance()": FunctionFragment;
-    "testFail_setPriceOracle()": FunctionFragment;
-    "test_AllocationPercent()": FunctionFragment;
+    "testFail_setPool()": FunctionFragment;
+    "test_Allocate()": FunctionFragment;
+    "test_Deallocate()": FunctionFragment;
+    "test_getAllocations()": FunctionFragment;
+    "test_setAllocationPercent()": FunctionFragment;
     "tusd()": FunctionFragment;
     "usdc()": FunctionFragment;
     "weth()": FunctionFragment;
@@ -51,16 +54,13 @@ interface ElfAllocatorTestInterface extends ethers.utils.Interface {
   encodeFunctionData(functionFragment: "elf", values?: undefined): string;
   encodeFunctionData(functionFragment: "elfDeploy", values?: undefined): string;
   encodeFunctionData(functionFragment: "failed", values?: undefined): string;
+  encodeFunctionData(functionFragment: "hevm", values?: undefined): string;
   encodeFunctionData(functionFragment: "lender1", values?: undefined): string;
   encodeFunctionData(functionFragment: "lender2", values?: undefined): string;
   encodeFunctionData(functionFragment: "lender3", values?: undefined): string;
   encodeFunctionData(functionFragment: "setUp", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "testFail_AllocationPercent",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "testFail_setConverter",
+    functionFragment: "testFail_setAllocationPercent",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -68,11 +68,23 @@ interface ElfAllocatorTestInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "testFail_setPriceOracle",
+    functionFragment: "testFail_setPool",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "test_AllocationPercent",
+    functionFragment: "test_Allocate",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "test_Deallocate",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "test_getAllocations",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "test_setAllocationPercent",
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "tusd", values?: undefined): string;
@@ -94,16 +106,13 @@ interface ElfAllocatorTestInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "elf", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "elfDeploy", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "failed", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "hevm", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "lender1", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "lender2", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "lender3", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "setUp", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "testFail_AllocationPercent",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "testFail_setConverter",
+    functionFragment: "testFail_setAllocationPercent",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -111,11 +120,23 @@ interface ElfAllocatorTestInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "testFail_setPriceOracle",
+    functionFragment: "testFail_setPool",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "test_AllocationPercent",
+    functionFragment: "test_Allocate",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "test_Deallocate",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "test_getAllocations",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "test_setAllocationPercent",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "tusd", data: BytesLike): Result;
@@ -236,6 +257,18 @@ export class ElfAllocatorTest extends Contract {
       0: boolean;
     }>;
 
+    hevm(
+      overrides?: CallOverrides
+    ): Promise<{
+      0: string;
+    }>;
+
+    "hevm()"(
+      overrides?: CallOverrides
+    ): Promise<{
+      0: string;
+    }>;
+
     lender1(
       overrides?: CallOverrides
     ): Promise<{
@@ -276,17 +309,11 @@ export class ElfAllocatorTest extends Contract {
 
     "setUp()"(overrides?: Overrides): Promise<ContractTransaction>;
 
-    testFail_AllocationPercent(
+    testFail_setAllocationPercent(
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "testFail_AllocationPercent()"(
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    testFail_setConverter(overrides?: Overrides): Promise<ContractTransaction>;
-
-    "testFail_setConverter()"(
+    "testFail_setAllocationPercent()"(
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
@@ -296,17 +323,29 @@ export class ElfAllocatorTest extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    testFail_setPriceOracle(
+    testFail_setPool(overrides?: Overrides): Promise<ContractTransaction>;
+
+    "testFail_setPool()"(overrides?: Overrides): Promise<ContractTransaction>;
+
+    test_Allocate(overrides?: Overrides): Promise<ContractTransaction>;
+
+    "test_Allocate()"(overrides?: Overrides): Promise<ContractTransaction>;
+
+    test_Deallocate(overrides?: Overrides): Promise<ContractTransaction>;
+
+    "test_Deallocate()"(overrides?: Overrides): Promise<ContractTransaction>;
+
+    test_getAllocations(overrides?: Overrides): Promise<ContractTransaction>;
+
+    "test_getAllocations()"(
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "testFail_setPriceOracle()"(
+    test_setAllocationPercent(
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    test_AllocationPercent(overrides?: Overrides): Promise<ContractTransaction>;
-
-    "test_AllocationPercent()"(
+    "test_setAllocationPercent()"(
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
@@ -407,6 +446,10 @@ export class ElfAllocatorTest extends Contract {
 
   "failed()"(overrides?: CallOverrides): Promise<boolean>;
 
+  hevm(overrides?: CallOverrides): Promise<string>;
+
+  "hevm()"(overrides?: CallOverrides): Promise<string>;
+
   lender1(overrides?: CallOverrides): Promise<string>;
 
   "lender1()"(overrides?: CallOverrides): Promise<string>;
@@ -423,17 +466,11 @@ export class ElfAllocatorTest extends Contract {
 
   "setUp()"(overrides?: Overrides): Promise<ContractTransaction>;
 
-  testFail_AllocationPercent(
+  testFail_setAllocationPercent(
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "testFail_AllocationPercent()"(
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  testFail_setConverter(overrides?: Overrides): Promise<ContractTransaction>;
-
-  "testFail_setConverter()"(
+  "testFail_setAllocationPercent()"(
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -443,15 +480,27 @@ export class ElfAllocatorTest extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  testFail_setPriceOracle(overrides?: Overrides): Promise<ContractTransaction>;
+  testFail_setPool(overrides?: Overrides): Promise<ContractTransaction>;
 
-  "testFail_setPriceOracle()"(
+  "testFail_setPool()"(overrides?: Overrides): Promise<ContractTransaction>;
+
+  test_Allocate(overrides?: Overrides): Promise<ContractTransaction>;
+
+  "test_Allocate()"(overrides?: Overrides): Promise<ContractTransaction>;
+
+  test_Deallocate(overrides?: Overrides): Promise<ContractTransaction>;
+
+  "test_Deallocate()"(overrides?: Overrides): Promise<ContractTransaction>;
+
+  test_getAllocations(overrides?: Overrides): Promise<ContractTransaction>;
+
+  "test_getAllocations()"(overrides?: Overrides): Promise<ContractTransaction>;
+
+  test_setAllocationPercent(
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  test_AllocationPercent(overrides?: Overrides): Promise<ContractTransaction>;
-
-  "test_AllocationPercent()"(
+  "test_setAllocationPercent()"(
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -504,6 +553,10 @@ export class ElfAllocatorTest extends Contract {
 
     "failed()"(overrides?: CallOverrides): Promise<boolean>;
 
+    hevm(overrides?: CallOverrides): Promise<string>;
+
+    "hevm()"(overrides?: CallOverrides): Promise<string>;
+
     lender1(overrides?: CallOverrides): Promise<string>;
 
     "lender1()"(overrides?: CallOverrides): Promise<string>;
@@ -520,25 +573,33 @@ export class ElfAllocatorTest extends Contract {
 
     "setUp()"(overrides?: CallOverrides): Promise<void>;
 
-    testFail_AllocationPercent(overrides?: CallOverrides): Promise<void>;
+    testFail_setAllocationPercent(overrides?: CallOverrides): Promise<void>;
 
-    "testFail_AllocationPercent()"(overrides?: CallOverrides): Promise<void>;
-
-    testFail_setConverter(overrides?: CallOverrides): Promise<void>;
-
-    "testFail_setConverter()"(overrides?: CallOverrides): Promise<void>;
+    "testFail_setAllocationPercent()"(overrides?: CallOverrides): Promise<void>;
 
     testFail_setGovernance(overrides?: CallOverrides): Promise<void>;
 
     "testFail_setGovernance()"(overrides?: CallOverrides): Promise<void>;
 
-    testFail_setPriceOracle(overrides?: CallOverrides): Promise<void>;
+    testFail_setPool(overrides?: CallOverrides): Promise<void>;
 
-    "testFail_setPriceOracle()"(overrides?: CallOverrides): Promise<void>;
+    "testFail_setPool()"(overrides?: CallOverrides): Promise<void>;
 
-    test_AllocationPercent(overrides?: CallOverrides): Promise<void>;
+    test_Allocate(overrides?: CallOverrides): Promise<void>;
 
-    "test_AllocationPercent()"(overrides?: CallOverrides): Promise<void>;
+    "test_Allocate()"(overrides?: CallOverrides): Promise<void>;
+
+    test_Deallocate(overrides?: CallOverrides): Promise<void>;
+
+    "test_Deallocate()"(overrides?: CallOverrides): Promise<void>;
+
+    test_getAllocations(overrides?: CallOverrides): Promise<void>;
+
+    "test_getAllocations()"(overrides?: CallOverrides): Promise<void>;
+
+    test_setAllocationPercent(overrides?: CallOverrides): Promise<void>;
+
+    "test_setAllocationPercent()"(overrides?: CallOverrides): Promise<void>;
 
     tusd(overrides?: CallOverrides): Promise<string>;
 
@@ -612,6 +673,10 @@ export class ElfAllocatorTest extends Contract {
 
     "failed()"(overrides?: CallOverrides): Promise<BigNumber>;
 
+    hevm(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "hevm()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     lender1(overrides?: CallOverrides): Promise<BigNumber>;
 
     "lender1()"(overrides?: CallOverrides): Promise<BigNumber>;
@@ -628,25 +693,35 @@ export class ElfAllocatorTest extends Contract {
 
     "setUp()"(overrides?: Overrides): Promise<BigNumber>;
 
-    testFail_AllocationPercent(overrides?: Overrides): Promise<BigNumber>;
+    testFail_setAllocationPercent(overrides?: Overrides): Promise<BigNumber>;
 
-    "testFail_AllocationPercent()"(overrides?: Overrides): Promise<BigNumber>;
-
-    testFail_setConverter(overrides?: Overrides): Promise<BigNumber>;
-
-    "testFail_setConverter()"(overrides?: Overrides): Promise<BigNumber>;
+    "testFail_setAllocationPercent()"(
+      overrides?: Overrides
+    ): Promise<BigNumber>;
 
     testFail_setGovernance(overrides?: Overrides): Promise<BigNumber>;
 
     "testFail_setGovernance()"(overrides?: Overrides): Promise<BigNumber>;
 
-    testFail_setPriceOracle(overrides?: Overrides): Promise<BigNumber>;
+    testFail_setPool(overrides?: Overrides): Promise<BigNumber>;
 
-    "testFail_setPriceOracle()"(overrides?: Overrides): Promise<BigNumber>;
+    "testFail_setPool()"(overrides?: Overrides): Promise<BigNumber>;
 
-    test_AllocationPercent(overrides?: Overrides): Promise<BigNumber>;
+    test_Allocate(overrides?: Overrides): Promise<BigNumber>;
 
-    "test_AllocationPercent()"(overrides?: Overrides): Promise<BigNumber>;
+    "test_Allocate()"(overrides?: Overrides): Promise<BigNumber>;
+
+    test_Deallocate(overrides?: Overrides): Promise<BigNumber>;
+
+    "test_Deallocate()"(overrides?: Overrides): Promise<BigNumber>;
+
+    test_getAllocations(overrides?: Overrides): Promise<BigNumber>;
+
+    "test_getAllocations()"(overrides?: Overrides): Promise<BigNumber>;
+
+    test_setAllocationPercent(overrides?: Overrides): Promise<BigNumber>;
+
+    "test_setAllocationPercent()"(overrides?: Overrides): Promise<BigNumber>;
 
     tusd(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -698,6 +773,10 @@ export class ElfAllocatorTest extends Contract {
 
     "failed()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    hevm(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "hevm()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     lender1(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     "lender1()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -714,17 +793,11 @@ export class ElfAllocatorTest extends Contract {
 
     "setUp()"(overrides?: Overrides): Promise<PopulatedTransaction>;
 
-    testFail_AllocationPercent(
+    testFail_setAllocationPercent(
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "testFail_AllocationPercent()"(
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    testFail_setConverter(overrides?: Overrides): Promise<PopulatedTransaction>;
-
-    "testFail_setConverter()"(
+    "testFail_setAllocationPercent()"(
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
@@ -736,19 +809,29 @@ export class ElfAllocatorTest extends Contract {
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    testFail_setPriceOracle(
+    testFail_setPool(overrides?: Overrides): Promise<PopulatedTransaction>;
+
+    "testFail_setPool()"(overrides?: Overrides): Promise<PopulatedTransaction>;
+
+    test_Allocate(overrides?: Overrides): Promise<PopulatedTransaction>;
+
+    "test_Allocate()"(overrides?: Overrides): Promise<PopulatedTransaction>;
+
+    test_Deallocate(overrides?: Overrides): Promise<PopulatedTransaction>;
+
+    "test_Deallocate()"(overrides?: Overrides): Promise<PopulatedTransaction>;
+
+    test_getAllocations(overrides?: Overrides): Promise<PopulatedTransaction>;
+
+    "test_getAllocations()"(
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "testFail_setPriceOracle()"(
+    test_setAllocationPercent(
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    test_AllocationPercent(
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "test_AllocationPercent()"(
+    "test_setAllocationPercent()"(
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 

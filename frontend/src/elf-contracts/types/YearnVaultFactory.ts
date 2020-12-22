@@ -51,13 +51,6 @@ const _abi = [
   },
   {
     inputs: [],
-    name: "depositAll",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
     name: "getPricePerFullShare",
     outputs: [
       {
@@ -131,13 +124,6 @@ const _abi = [
       },
     ],
     name: "withdraw",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "withdrawAll",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

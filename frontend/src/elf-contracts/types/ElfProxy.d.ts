@@ -25,10 +25,6 @@ interface ElfProxyInterface extends ethers.utils.Interface {
   functions: {
     "deposit(address,uint256)": FunctionFragment;
     "depositETH(address)": FunctionFragment;
-    "getNumPoolAllocations(address)": FunctionFragment;
-    "getPoolAPY(address)": FunctionFragment;
-    "getPoolAllocations(address)": FunctionFragment;
-    "getPoolBalance(address)": FunctionFragment;
     "withdraw(address,uint256)": FunctionFragment;
     "withdrawETH(address,uint256)": FunctionFragment;
   };
@@ -38,19 +34,6 @@ interface ElfProxyInterface extends ethers.utils.Interface {
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "depositETH", values: [string]): string;
-  encodeFunctionData(
-    functionFragment: "getNumPoolAllocations",
-    values: [string]
-  ): string;
-  encodeFunctionData(functionFragment: "getPoolAPY", values: [string]): string;
-  encodeFunctionData(
-    functionFragment: "getPoolAllocations",
-    values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getPoolBalance",
-    values: [string]
-  ): string;
   encodeFunctionData(
     functionFragment: "withdraw",
     values: [string, BigNumberish]
@@ -62,19 +45,6 @@ interface ElfProxyInterface extends ethers.utils.Interface {
 
   decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "depositETH", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "getNumPoolAllocations",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "getPoolAPY", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "getPoolAllocations",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getPoolBalance",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "withdrawETH",
@@ -119,72 +89,6 @@ export class ElfProxy extends Contract {
       _pool: string,
       overrides?: PayableOverrides
     ): Promise<ContractTransaction>;
-
-    getNumPoolAllocations(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<{
-      0: BigNumber;
-    }>;
-
-    "getNumPoolAllocations(address)"(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<{
-      0: BigNumber;
-    }>;
-
-    getPoolAPY(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<{
-      0: BigNumber;
-    }>;
-
-    "getPoolAPY(address)"(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<{
-      0: BigNumber;
-    }>;
-
-    getPoolAllocations(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string[];
-      1: string[];
-      2: string[];
-      3: BigNumber[];
-      4: string[];
-      5: BigNumber;
-    }>;
-
-    "getPoolAllocations(address)"(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string[];
-      1: string[];
-      2: string[];
-      3: BigNumber[];
-      4: string[];
-      5: BigNumber;
-    }>;
-
-    getPoolBalance(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<{
-      0: BigNumber;
-    }>;
-
-    "getPoolBalance(address)"(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<{
-      0: BigNumber;
-    }>;
 
     withdraw(
       _pool: string,
@@ -233,54 +137,6 @@ export class ElfProxy extends Contract {
     overrides?: PayableOverrides
   ): Promise<ContractTransaction>;
 
-  getNumPoolAllocations(
-    _pool: string,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  "getNumPoolAllocations(address)"(
-    _pool: string,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  getPoolAPY(_pool: string, overrides?: CallOverrides): Promise<BigNumber>;
-
-  "getPoolAPY(address)"(
-    _pool: string,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  getPoolAllocations(
-    _pool: string,
-    overrides?: CallOverrides
-  ): Promise<{
-    0: string[];
-    1: string[];
-    2: string[];
-    3: BigNumber[];
-    4: string[];
-    5: BigNumber;
-  }>;
-
-  "getPoolAllocations(address)"(
-    _pool: string,
-    overrides?: CallOverrides
-  ): Promise<{
-    0: string[];
-    1: string[];
-    2: string[];
-    3: BigNumber[];
-    4: string[];
-    5: BigNumber;
-  }>;
-
-  getPoolBalance(_pool: string, overrides?: CallOverrides): Promise<BigNumber>;
-
-  "getPoolBalance(address)"(
-    _pool: string,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
   withdraw(
     _pool: string,
     _shares: BigNumberish,
@@ -324,57 +180,6 @@ export class ElfProxy extends Contract {
       _pool: string,
       overrides?: CallOverrides
     ): Promise<void>;
-
-    getNumPoolAllocations(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "getNumPoolAllocations(address)"(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    getPoolAPY(_pool: string, overrides?: CallOverrides): Promise<BigNumber>;
-
-    "getPoolAPY(address)"(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    getPoolAllocations(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string[];
-      1: string[];
-      2: string[];
-      3: BigNumber[];
-      4: string[];
-      5: BigNumber;
-    }>;
-
-    "getPoolAllocations(address)"(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string[];
-      1: string[];
-      2: string[];
-      3: BigNumber[];
-      4: string[];
-      5: BigNumber;
-    }>;
-
-    getPoolBalance(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "getPoolBalance(address)"(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
 
     withdraw(
       _pool: string,
@@ -423,43 +228,6 @@ export class ElfProxy extends Contract {
       overrides?: PayableOverrides
     ): Promise<BigNumber>;
 
-    getNumPoolAllocations(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "getNumPoolAllocations(address)"(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    getPoolAPY(_pool: string, overrides?: CallOverrides): Promise<BigNumber>;
-
-    "getPoolAPY(address)"(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    getPoolAllocations(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "getPoolAllocations(address)"(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    getPoolBalance(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "getPoolBalance(address)"(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     withdraw(
       _pool: string,
       _shares: BigNumberish,
@@ -506,46 +274,6 @@ export class ElfProxy extends Contract {
     "depositETH(address)"(
       _pool: string,
       overrides?: PayableOverrides
-    ): Promise<PopulatedTransaction>;
-
-    getNumPoolAllocations(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "getNumPoolAllocations(address)"(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    getPoolAPY(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "getPoolAPY(address)"(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    getPoolAllocations(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "getPoolAllocations(address)"(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    getPoolBalance(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "getPoolBalance(address)"(
-      _pool: string,
-      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     withdraw(

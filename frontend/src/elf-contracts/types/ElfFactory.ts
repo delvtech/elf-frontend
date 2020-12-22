@@ -17,8 +17,18 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: "address payable",
-        name: "_weth",
+        internalType: "address",
+        name: "_token",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_vault",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_proxy",
         type: "address",
       },
     ],
@@ -74,19 +84,6 @@ const _abi = [
     ],
     name: "Transfer",
     type: "event",
-  },
-  {
-    inputs: [],
-    name: "allocator",
-    outputs: [
-      {
-        internalType: "address payable",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
   },
   {
     inputs: [
@@ -170,6 +167,19 @@ const _abi = [
   },
   {
     inputs: [],
+    name: "balanceUnderlying",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
     name: "decimals",
     outputs: [
       {
@@ -208,6 +218,11 @@ const _abi = [
   {
     inputs: [
       {
+        internalType: "address",
+        name: "sender",
+        type: "address",
+      },
+      {
         internalType: "uint256",
         name: "amount",
         type: "uint256",
@@ -219,51 +234,19 @@ const _abi = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "depositETH",
-    outputs: [],
-    stateMutability: "payable",
-    type: "function",
-  },
-  {
     inputs: [
-      {
-        internalType: "address",
-        name: "sender",
-        type: "address",
-      },
-    ],
-    name: "depositETHFrom",
-    outputs: [],
-    stateMutability: "payable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "sender",
-        type: "address",
-      },
       {
         internalType: "uint256",
-        name: "amount",
+        name: "shares",
         type: "uint256",
       },
     ],
-    name: "depositFrom",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "getAllocator",
+    name: "getSharesToUnderlying",
     outputs: [
       {
-        internalType: "address payable",
+        internalType: "uint256",
         name: "",
-        type: "address",
+        type: "uint256",
       },
     ],
     stateMutability: "view",
@@ -320,16 +303,16 @@ const _abi = [
     type: "function",
   },
   {
-    inputs: [
+    inputs: [],
+    name: "proxy",
+    outputs: [
       {
-        internalType: "address payable",
-        name: "_allocator",
+        internalType: "contract IAssetProxy",
+        name: "",
         type: "address",
       },
     ],
-    name: "setAllocator",
-    outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "view",
     type: "function",
   },
   {
@@ -353,6 +336,19 @@ const _abi = [
         internalType: "string",
         name: "",
         type: "string",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "token",
+    outputs: [
+      {
+        internalType: "contract IERC20",
+        name: "",
+        type: "address",
       },
     ],
     stateMutability: "view",
@@ -426,7 +422,7 @@ const _abi = [
   },
   {
     inputs: [],
-    name: "weth",
+    name: "vault",
     outputs: [
       {
         internalType: "contract IERC20",
@@ -440,8 +436,13 @@ const _abi = [
   {
     inputs: [
       {
+        internalType: "address",
+        name: "sender",
+        type: "address",
+      },
+      {
         internalType: "uint256",
-        name: "_shares",
+        name: "shares",
         type: "uint256",
       },
     ],
@@ -449,58 +450,5 @@ const _abi = [
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_shares",
-        type: "uint256",
-      },
-    ],
-    name: "withdrawETH",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "sender",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "_shares",
-        type: "uint256",
-      },
-    ],
-    name: "withdrawETHFrom",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "sender",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "_shares",
-        type: "uint256",
-      },
-    ],
-    name: "withdrawFrom",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    stateMutability: "payable",
-    type: "receive",
   },
 ];

@@ -9,11 +9,9 @@ import tw from "efi-tailwindcss-classnames";
 import { FormGroupLabel } from "efi-ui/base/FormGroupLabel/FormGroupLabel";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { Navigation } from "efi-ui/navigation/navigation";
-import { useElfProxyGetPoolAPY } from "efi-ui/pools/hooks/elfProxy";
 import { useTokenName } from "efi-ui/token/hooks/useTokenName";
 import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
 import { useTokenTotalSupply } from "efi-ui/token/hooks/useTokenTotalSupply";
-import { formatAPY } from "efi/base/formatAPY/formatAPY";
 import { formatEth } from "efi/coins/ether/formatEth";
 import { elfContract } from "efi/contracts/Elf";
 import { Pool } from "efi/pools/Pool";
@@ -113,8 +111,7 @@ const PoolPreviewTableRow: FC<PoolPreviewTableRowProps> = ({
 
   const onPermissionChange = useCallback(() => {}, []);
 
-  const { data: poolApy } = useElfProxyGetPoolAPY(poolContract);
-  const formattedPoolApy = formatAPY(poolApy?.[0]);
+  const formattedPoolApy = "2.13%";
 
   const onRowClick = useCallback(() => {
     navigate(`${Navigation.POOLS}/${poolId}`);

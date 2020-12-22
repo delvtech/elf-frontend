@@ -287,6 +287,19 @@ const _abi = [
   },
   {
     inputs: [],
+    name: "hevm",
+    outputs: [
+      {
+        internalType: "contract Hevm",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
     name: "lender1",
     outputs: [
       {
@@ -333,14 +346,7 @@ const _abi = [
   },
   {
     inputs: [],
-    name: "testFail_AllocationPercent",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "testFail_setConverter",
+    name: "testFail_setAllocationPercent",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -354,14 +360,35 @@ const _abi = [
   },
   {
     inputs: [],
-    name: "testFail_setPriceOracle",
+    name: "testFail_setPool",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },
   {
     inputs: [],
-    name: "test_AllocationPercent",
+    name: "test_Allocate",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "test_Deallocate",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "test_getAllocations",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "test_setAllocationPercent",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -410,7 +437,7 @@ const _abi = [
     name: "ydaiAsset",
     outputs: [
       {
-        internalType: "contract YdaiAsset",
+        internalType: "contract YVaultAssetProxy",
         name: "",
         type: "address",
       },
@@ -423,7 +450,7 @@ const _abi = [
     name: "ytusdAsset",
     outputs: [
       {
-        internalType: "contract YtusdAsset",
+        internalType: "contract YVaultAssetProxy",
         name: "",
         type: "address",
       },
@@ -436,12 +463,16 @@ const _abi = [
     name: "yusdcAsset",
     outputs: [
       {
-        internalType: "contract YusdcAsset",
+        internalType: "contract YVaultAssetProxy",
         name: "",
         type: "address",
       },
     ],
     stateMutability: "view",
     type: "function",
+  },
+  {
+    stateMutability: "payable",
+    type: "receive",
   },
 ];

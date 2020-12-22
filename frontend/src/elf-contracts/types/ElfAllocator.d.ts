@@ -25,18 +25,14 @@ interface ElfAllocatorInterface extends ethers.utils.Interface {
     "allocate(uint256)": FunctionFragment;
     "allocations(uint256)": FunctionFragment;
     "balance()": FunctionFragment;
-    "converter()": FunctionFragment;
     "deallocate(uint256)": FunctionFragment;
     "getAllocations()": FunctionFragment;
     "getNumAllocations()": FunctionFragment;
     "governance()": FunctionFragment;
-    "numAllocations()": FunctionFragment;
     "pool()": FunctionFragment;
-    "priceOracle()": FunctionFragment;
     "setAllocations(address[],address[],address[],uint256[],address[],uint256)": FunctionFragment;
-    "setConverter(address)": FunctionFragment;
     "setGovernance(address)": FunctionFragment;
-    "setPriceOracle(address)": FunctionFragment;
+    "setPool(address)": FunctionFragment;
     "withdraw(uint256)": FunctionFragment;
   };
 
@@ -49,7 +45,6 @@ interface ElfAllocatorInterface extends ethers.utils.Interface {
     values: [BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "balance", values?: undefined): string;
-  encodeFunctionData(functionFragment: "converter", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "deallocate",
     values: [BigNumberish]
@@ -66,15 +61,7 @@ interface ElfAllocatorInterface extends ethers.utils.Interface {
     functionFragment: "governance",
     values?: undefined
   ): string;
-  encodeFunctionData(
-    functionFragment: "numAllocations",
-    values?: undefined
-  ): string;
   encodeFunctionData(functionFragment: "pool", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "priceOracle",
-    values?: undefined
-  ): string;
   encodeFunctionData(
     functionFragment: "setAllocations",
     values: [
@@ -87,17 +74,10 @@ interface ElfAllocatorInterface extends ethers.utils.Interface {
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "setConverter",
-    values: [string]
-  ): string;
-  encodeFunctionData(
     functionFragment: "setGovernance",
     values: [string]
   ): string;
-  encodeFunctionData(
-    functionFragment: "setPriceOracle",
-    values: [string]
-  ): string;
+  encodeFunctionData(functionFragment: "setPool", values: [string]): string;
   encodeFunctionData(
     functionFragment: "withdraw",
     values: [BigNumberish]
@@ -109,7 +89,6 @@ interface ElfAllocatorInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "balance", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "converter", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "deallocate", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getAllocations",
@@ -120,31 +99,16 @@ interface ElfAllocatorInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "governance", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "numAllocations",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "pool", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "priceOracle",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "setAllocations",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "setConverter",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "setGovernance",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "setPriceOracle",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "setPool", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
 
   events: {};
@@ -218,18 +182,6 @@ export class ElfAllocator extends Contract {
       0: BigNumber;
     }>;
 
-    converter(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
-
-    "converter()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
-
     deallocate(
       _amount: BigNumberish,
       overrides?: Overrides
@@ -286,18 +238,6 @@ export class ElfAllocator extends Contract {
       0: string;
     }>;
 
-    numAllocations(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: BigNumber;
-    }>;
-
-    "numAllocations()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: BigNumber;
-    }>;
-
     pool(
       overrides?: CallOverrides
     ): Promise<{
@@ -310,25 +250,13 @@ export class ElfAllocator extends Contract {
       0: string;
     }>;
 
-    priceOracle(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
-
-    "priceOracle()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
-
     setAllocations(
       _fromToken: string[],
       _toToken: string[],
       _lenders: string[],
       _percents: BigNumberish[],
       _asset: string[],
-      _numAllocations: BigNumberish,
+      numAllocations: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
@@ -338,17 +266,7 @@ export class ElfAllocator extends Contract {
       _lenders: string[],
       _percents: BigNumberish[],
       _asset: string[],
-      _numAllocations: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    setConverter(
-      _converter: string,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "setConverter(address)"(
-      _converter: string,
+      numAllocations: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
@@ -362,13 +280,10 @@ export class ElfAllocator extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    setPriceOracle(
-      _priceOracle: string,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
+    setPool(_pool: string, overrides?: Overrides): Promise<ContractTransaction>;
 
-    "setPriceOracle(address)"(
-      _priceOracle: string,
+    "setPool(address)"(
+      _pool: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
@@ -429,10 +344,6 @@ export class ElfAllocator extends Contract {
 
   "balance()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-  converter(overrides?: CallOverrides): Promise<string>;
-
-  "converter()"(overrides?: CallOverrides): Promise<string>;
-
   deallocate(
     _amount: BigNumberish,
     overrides?: Overrides
@@ -473,17 +384,9 @@ export class ElfAllocator extends Contract {
 
   "governance()"(overrides?: CallOverrides): Promise<string>;
 
-  numAllocations(overrides?: CallOverrides): Promise<BigNumber>;
-
-  "numAllocations()"(overrides?: CallOverrides): Promise<BigNumber>;
-
   pool(overrides?: CallOverrides): Promise<string>;
 
   "pool()"(overrides?: CallOverrides): Promise<string>;
-
-  priceOracle(overrides?: CallOverrides): Promise<string>;
-
-  "priceOracle()"(overrides?: CallOverrides): Promise<string>;
 
   setAllocations(
     _fromToken: string[],
@@ -491,7 +394,7 @@ export class ElfAllocator extends Contract {
     _lenders: string[],
     _percents: BigNumberish[],
     _asset: string[],
-    _numAllocations: BigNumberish,
+    numAllocations: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -501,17 +404,7 @@ export class ElfAllocator extends Contract {
     _lenders: string[],
     _percents: BigNumberish[],
     _asset: string[],
-    _numAllocations: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  setConverter(
-    _converter: string,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "setConverter(address)"(
-    _converter: string,
+    numAllocations: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -525,13 +418,10 @@ export class ElfAllocator extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  setPriceOracle(
-    _priceOracle: string,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
+  setPool(_pool: string, overrides?: Overrides): Promise<ContractTransaction>;
 
-  "setPriceOracle(address)"(
-    _priceOracle: string,
+  "setPool(address)"(
+    _pool: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -589,10 +479,6 @@ export class ElfAllocator extends Contract {
 
     "balance()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-    converter(overrides?: CallOverrides): Promise<string>;
-
-    "converter()"(overrides?: CallOverrides): Promise<string>;
-
     deallocate(_amount: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
     "deallocate(uint256)"(
@@ -630,17 +516,9 @@ export class ElfAllocator extends Contract {
 
     "governance()"(overrides?: CallOverrides): Promise<string>;
 
-    numAllocations(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "numAllocations()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     pool(overrides?: CallOverrides): Promise<string>;
 
     "pool()"(overrides?: CallOverrides): Promise<string>;
-
-    priceOracle(overrides?: CallOverrides): Promise<string>;
-
-    "priceOracle()"(overrides?: CallOverrides): Promise<string>;
 
     setAllocations(
       _fromToken: string[],
@@ -648,7 +526,7 @@ export class ElfAllocator extends Contract {
       _lenders: string[],
       _percents: BigNumberish[],
       _asset: string[],
-      _numAllocations: BigNumberish,
+      numAllocations: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -658,14 +536,7 @@ export class ElfAllocator extends Contract {
       _lenders: string[],
       _percents: BigNumberish[],
       _asset: string[],
-      _numAllocations: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    setConverter(_converter: string, overrides?: CallOverrides): Promise<void>;
-
-    "setConverter(address)"(
-      _converter: string,
+      numAllocations: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -679,15 +550,9 @@ export class ElfAllocator extends Contract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    setPriceOracle(
-      _priceOracle: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    setPool(_pool: string, overrides?: CallOverrides): Promise<void>;
 
-    "setPriceOracle(address)"(
-      _priceOracle: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    "setPool(address)"(_pool: string, overrides?: CallOverrides): Promise<void>;
 
     withdraw(_amount: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
@@ -721,10 +586,6 @@ export class ElfAllocator extends Contract {
 
     "balance()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-    converter(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "converter()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     deallocate(
       _amount: BigNumberish,
       overrides?: Overrides
@@ -747,17 +608,9 @@ export class ElfAllocator extends Contract {
 
     "governance()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-    numAllocations(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "numAllocations()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     pool(overrides?: CallOverrides): Promise<BigNumber>;
 
     "pool()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    priceOracle(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "priceOracle()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     setAllocations(
       _fromToken: string[],
@@ -765,7 +618,7 @@ export class ElfAllocator extends Contract {
       _lenders: string[],
       _percents: BigNumberish[],
       _asset: string[],
-      _numAllocations: BigNumberish,
+      numAllocations: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
@@ -775,14 +628,7 @@ export class ElfAllocator extends Contract {
       _lenders: string[],
       _percents: BigNumberish[],
       _asset: string[],
-      _numAllocations: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    setConverter(_converter: string, overrides?: Overrides): Promise<BigNumber>;
-
-    "setConverter(address)"(
-      _converter: string,
+      numAllocations: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
@@ -796,13 +642,10 @@ export class ElfAllocator extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    setPriceOracle(
-      _priceOracle: string,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
+    setPool(_pool: string, overrides?: Overrides): Promise<BigNumber>;
 
-    "setPriceOracle(address)"(
-      _priceOracle: string,
+    "setPool(address)"(
+      _pool: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
@@ -839,10 +682,6 @@ export class ElfAllocator extends Contract {
 
     "balance()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    converter(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "converter()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     deallocate(
       _amount: BigNumberish,
       overrides?: Overrides
@@ -869,19 +708,9 @@ export class ElfAllocator extends Contract {
 
     "governance()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    numAllocations(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "numAllocations()"(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     pool(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     "pool()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    priceOracle(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "priceOracle()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     setAllocations(
       _fromToken: string[],
@@ -889,7 +718,7 @@ export class ElfAllocator extends Contract {
       _lenders: string[],
       _percents: BigNumberish[],
       _asset: string[],
-      _numAllocations: BigNumberish,
+      numAllocations: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
@@ -899,17 +728,7 @@ export class ElfAllocator extends Contract {
       _lenders: string[],
       _percents: BigNumberish[],
       _asset: string[],
-      _numAllocations: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    setConverter(
-      _converter: string,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "setConverter(address)"(
-      _converter: string,
+      numAllocations: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
@@ -923,13 +742,13 @@ export class ElfAllocator extends Contract {
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    setPriceOracle(
-      _priceOracle: string,
+    setPool(
+      _pool: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "setPriceOracle(address)"(
-      _priceOracle: string,
+    "setPool(address)"(
+      _pool: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 

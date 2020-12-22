@@ -2,7 +2,6 @@ import elfAbi from "elf-contracts/contracts/Elf.json";
 import { Elf } from "elf-contracts/types/Elf";
 import {
   BigNumber,
-  BigNumberish,
   Contract,
   ContractFunction,
   ContractTransaction,
@@ -86,22 +85,19 @@ export async function estimateGasForDeposit(
     return undefined;
   }
   const elfWithSigner = elfContract.connect(signer);
+  const address = await signer.getAddress();
   // The value doesn't affect the gas estimate, just stick in one ether.
-  return elfWithSigner.estimateGas.deposit(ONE_ETHER);
+  return elfWithSigner.estimateGas.deposit(address, ONE_ETHER);
 }
 
+/**
+ * @deprecated depositing ETH directly into Elf is no longer supported. This is a noop.
+ */
 export async function postDepositEth(
   signer: Signer | undefined,
   amount: BigNumber
-): Promise<ContractTransaction | undefined> {
-  if (!signer) {
-    return undefined;
-  }
-  const elfWithSigner = elfContract.connect(signer);
-  const result = await elfWithSigner.functions.depositETH({
-    value: amount,
-  });
-  return result;
+): Promise<undefined> {
+  return undefined;
 }
 
 export async function postDeposit(
@@ -112,31 +108,19 @@ export async function postDeposit(
     return undefined;
   }
   const elfWithSigner = elfContract.connect(signer);
-  const result = elfWithSigner.functions.deposit(amount);
+  const address = await signer.getAddress();
+  const result = elfWithSigner.functions.deposit(address, amount);
   return result;
 }
 
-export async function estimateGasForWithdrawEth(
-  signer: Signer | undefined,
-  amount: BigNumberish
-): Promise<BigNumber | undefined> {
-  if (!signer) {
-    return undefined;
-  }
-  const elfWithSigner = elfContract.connect(signer);
-  return elfWithSigner.estimateGas.withdrawETH(amount);
-}
-
+/**
+ * @deprecated withdrawing ETH directly into Elf is no longer supported. This is a noop.
+ */
 export async function postWithdrawEth(
   signer: Signer | undefined,
   amount: BigNumber
-): Promise<ContractTransaction | undefined> {
-  if (!signer) {
-    return undefined;
-  }
-  const elfWithSigner = elfContract.connect(signer);
-  const result = await elfWithSigner.functions.withdrawETH(amount);
-  return result;
+): Promise<undefined> {
+  return undefined;
 }
 
 export async function postWithdraw(
@@ -147,6 +131,7 @@ export async function postWithdraw(
     return undefined;
   }
   const elfWithSigner = elfContract.connect(signer);
-  const elfResult = await elfWithSigner.functions.withdraw(amount);
+  const address = await signer.getAddress();
+  const elfResult = await elfWithSigner.functions.withdraw(address, amount);
   return elfResult;
 }

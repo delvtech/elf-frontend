@@ -35,7 +35,7 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: "address payable",
+        internalType: "address",
         name: "_obj",
         type: "address",
       },
@@ -53,8 +53,13 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: "address payable",
+        internalType: "address",
         name: "_obj",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_guy",
         type: "address",
       },
       {
@@ -63,15 +68,15 @@ const _abi = [
         type: "uint256",
       },
     ],
-    name: "call_depositETH",
+    name: "call_transfer",
     outputs: [],
-    stateMutability: "payable",
+    stateMutability: "nonpayable",
     type: "function",
   },
   {
     inputs: [
       {
-        internalType: "address payable",
+        internalType: "address",
         name: "_obj",
         type: "address",
       },
@@ -82,24 +87,6 @@ const _abi = [
       },
     ],
     name: "call_withdraw",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address payable",
-        name: "_obj",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "_amount",
-        type: "uint256",
-      },
-    ],
-    name: "call_withdrawETH",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

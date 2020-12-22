@@ -18,38 +18,6 @@ export class ElfDeployFactory {
 
 const _abi = [
   {
-    inputs: [],
-    name: "allocator",
-    outputs: [
-      {
-        internalType: "contract ElfAllocator",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    name: "assets",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
     inputs: [
       {
         internalType: "address",
@@ -71,19 +39,6 @@ const _abi = [
   },
   {
     inputs: [],
-    name: "dai",
-    outputs: [
-      {
-        internalType: "contract AToken",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
     name: "elf",
     outputs: [
       {
@@ -96,17 +51,11 @@ const _abi = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    name: "fromTokens",
+    inputs: [],
+    name: "factory",
     outputs: [
       {
-        internalType: "address",
+        internalType: "contract ElfFactory",
         name: "",
         type: "address",
       },
@@ -123,220 +72,7 @@ const _abi = [
   },
   {
     inputs: [],
-    name: "lender",
-    outputs: [
-      {
-        internalType: "contract ALender",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "lender1",
-    outputs: [
-      {
-        internalType: "contract ALender",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "lender2",
-    outputs: [
-      {
-        internalType: "contract ALender",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "lender3",
-    outputs: [
-      {
-        internalType: "contract ALender",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "lender4",
-    outputs: [
-      {
-        internalType: "contract ALender",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    name: "lenders",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    name: "percents",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "priceOracle1",
-    outputs: [
-      {
-        internalType: "contract APriceOracle",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "priceOracle2",
-    outputs: [
-      {
-        internalType: "contract APriceOracle",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "priceOracle3",
-    outputs: [
-      {
-        internalType: "contract APriceOracle",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "priceOracle4",
-    outputs: [
-      {
-        internalType: "contract APriceOracle",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "proxy",
-    outputs: [
-      {
-        internalType: "contract ElfProxy",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    name: "toTokens",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "tusd",
-    outputs: [
-      {
-        internalType: "contract AToken",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
     name: "usdc",
-    outputs: [
-      {
-        internalType: "contract AToken",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "usdt",
     outputs: [
       {
         internalType: "contract AToken",
@@ -362,58 +98,6 @@ const _abi = [
   },
   {
     inputs: [],
-    name: "ydai",
-    outputs: [
-      {
-        internalType: "contract AYVault",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "ydaiAsset",
-    outputs: [
-      {
-        internalType: "contract YdaiAsset",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "ytusd",
-    outputs: [
-      {
-        internalType: "contract AYVault",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "ytusdAsset",
-    outputs: [
-      {
-        internalType: "contract YtusdAsset",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
     name: "yusdc",
     outputs: [
       {
@@ -430,33 +114,7 @@ const _abi = [
     name: "yusdcAsset",
     outputs: [
       {
-        internalType: "contract YusdcAsset",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "yusdt",
-    outputs: [
-      {
-        internalType: "contract AYVault",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "yusdtAsset",
-    outputs: [
-      {
-        internalType: "contract YusdtAsset",
+        internalType: "contract YVaultAssetProxy",
         name: "",
         type: "address",
       },

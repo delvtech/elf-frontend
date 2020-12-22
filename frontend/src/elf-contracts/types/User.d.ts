@@ -14,7 +14,6 @@ import {
   Contract,
   ContractTransaction,
   Overrides,
-  PayableOverrides,
   CallOverrides,
 } from "@ethersproject/contracts";
 import { BytesLike } from "@ethersproject/bytes";
@@ -25,9 +24,8 @@ interface UserInterface extends ethers.utils.Interface {
   functions: {
     "approve(address,address)": FunctionFragment;
     "call_deposit(address,uint256)": FunctionFragment;
-    "call_depositETH(address,uint256)": FunctionFragment;
+    "call_transfer(address,address,uint256)": FunctionFragment;
     "call_withdraw(address,uint256)": FunctionFragment;
-    "call_withdrawETH(address,uint256)": FunctionFragment;
   };
 
   encodeFunctionData(
@@ -39,15 +37,11 @@ interface UserInterface extends ethers.utils.Interface {
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "call_depositETH",
-    values: [string, BigNumberish]
+    functionFragment: "call_transfer",
+    values: [string, string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "call_withdraw",
-    values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "call_withdrawETH",
     values: [string, BigNumberish]
   ): string;
 
@@ -57,15 +51,11 @@ interface UserInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "call_depositETH",
+    functionFragment: "call_transfer",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "call_withdraw",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "call_withdrawETH",
     data: BytesLike
   ): Result;
 
@@ -110,16 +100,18 @@ export class User extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    call_depositETH(
+    call_transfer(
       _obj: string,
+      _guy: string,
       _amount: BigNumberish,
-      overrides?: PayableOverrides
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "call_depositETH(address,uint256)"(
+    "call_transfer(address,address,uint256)"(
       _obj: string,
+      _guy: string,
       _amount: BigNumberish,
-      overrides?: PayableOverrides
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     call_withdraw(
@@ -129,18 +121,6 @@ export class User extends Contract {
     ): Promise<ContractTransaction>;
 
     "call_withdraw(address,uint256)"(
-      _obj: string,
-      _amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    call_withdrawETH(
-      _obj: string,
-      _amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "call_withdrawETH(address,uint256)"(
       _obj: string,
       _amount: BigNumberish,
       overrides?: Overrides
@@ -171,16 +151,18 @@ export class User extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  call_depositETH(
+  call_transfer(
     _obj: string,
+    _guy: string,
     _amount: BigNumberish,
-    overrides?: PayableOverrides
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "call_depositETH(address,uint256)"(
+  "call_transfer(address,address,uint256)"(
     _obj: string,
+    _guy: string,
     _amount: BigNumberish,
-    overrides?: PayableOverrides
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   call_withdraw(
@@ -190,18 +172,6 @@ export class User extends Contract {
   ): Promise<ContractTransaction>;
 
   "call_withdraw(address,uint256)"(
-    _obj: string,
-    _amount: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  call_withdrawETH(
-    _obj: string,
-    _amount: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "call_withdrawETH(address,uint256)"(
     _obj: string,
     _amount: BigNumberish,
     overrides?: Overrides
@@ -232,14 +202,16 @@ export class User extends Contract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    call_depositETH(
+    call_transfer(
       _obj: string,
+      _guy: string,
       _amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "call_depositETH(address,uint256)"(
+    "call_transfer(address,address,uint256)"(
       _obj: string,
+      _guy: string,
       _amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
@@ -251,18 +223,6 @@ export class User extends Contract {
     ): Promise<void>;
 
     "call_withdraw(address,uint256)"(
-      _obj: string,
-      _amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    call_withdrawETH(
-      _obj: string,
-      _amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "call_withdrawETH(address,uint256)"(
       _obj: string,
       _amount: BigNumberish,
       overrides?: CallOverrides
@@ -296,16 +256,18 @@ export class User extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    call_depositETH(
+    call_transfer(
       _obj: string,
+      _guy: string,
       _amount: BigNumberish,
-      overrides?: PayableOverrides
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
-    "call_depositETH(address,uint256)"(
+    "call_transfer(address,address,uint256)"(
       _obj: string,
+      _guy: string,
       _amount: BigNumberish,
-      overrides?: PayableOverrides
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     call_withdraw(
@@ -315,18 +277,6 @@ export class User extends Contract {
     ): Promise<BigNumber>;
 
     "call_withdraw(address,uint256)"(
-      _obj: string,
-      _amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    call_withdrawETH(
-      _obj: string,
-      _amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "call_withdrawETH(address,uint256)"(
       _obj: string,
       _amount: BigNumberish,
       overrides?: Overrides
@@ -358,16 +308,18 @@ export class User extends Contract {
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    call_depositETH(
+    call_transfer(
       _obj: string,
+      _guy: string,
       _amount: BigNumberish,
-      overrides?: PayableOverrides
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "call_depositETH(address,uint256)"(
+    "call_transfer(address,address,uint256)"(
       _obj: string,
+      _guy: string,
       _amount: BigNumberish,
-      overrides?: PayableOverrides
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     call_withdraw(
@@ -377,18 +329,6 @@ export class User extends Contract {
     ): Promise<PopulatedTransaction>;
 
     "call_withdraw(address,uint256)"(
-      _obj: string,
-      _amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    call_withdrawETH(
-      _obj: string,
-      _amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "call_withdrawETH(address,uint256)"(
       _obj: string,
       _amount: BigNumberish,
       overrides?: Overrides

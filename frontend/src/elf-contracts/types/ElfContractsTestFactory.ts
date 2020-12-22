@@ -222,61 +222,10 @@ const _abi = [
   },
   {
     inputs: [],
-    name: "allocator",
+    name: "_elfDeploy",
     outputs: [
       {
-        internalType: "contract ElfAllocator",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    name: "assets",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    name: "conversionType",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "dai",
-    outputs: [
-      {
-        internalType: "contract AToken",
+        internalType: "contract ElfDeploy",
         name: "",
         type: "address",
       },
@@ -311,153 +260,11 @@ const _abi = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    name: "fromTokens",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
     inputs: [],
     name: "hevm",
     outputs: [
       {
         internalType: "contract Hevm",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "lender1",
-    outputs: [
-      {
-        internalType: "contract ALender",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "lender2",
-    outputs: [
-      {
-        internalType: "contract ALender",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "lender3",
-    outputs: [
-      {
-        internalType: "contract ALender",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "lender4",
-    outputs: [
-      {
-        internalType: "contract ALender",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    name: "percents",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "priceOracle1",
-    outputs: [
-      {
-        internalType: "contract APriceOracle",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "priceOracle2",
-    outputs: [
-      {
-        internalType: "contract APriceOracle",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "priceOracle3",
-    outputs: [
-      {
-        internalType: "contract APriceOracle",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "priceOracle4",
-    outputs: [
-      {
-        internalType: "contract APriceOracle",
         name: "",
         type: "address",
       },
@@ -474,115 +281,42 @@ const _abi = [
   },
   {
     inputs: [],
-    name: "testFail_basic_sanity",
+    name: "testFail_setGovernance",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },
   {
     inputs: [],
-    name: "test_basic_sanity",
+    name: "test_balance",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },
   {
     inputs: [],
-    name: "test_correctUserBalances",
+    name: "test_balanceUnderlying",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },
   {
     inputs: [],
-    name: "test_depositingETH",
+    name: "test_depositAndWithdraw",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },
   {
     inputs: [],
-    name: "test_depositingWETH",
+    name: "test_setGovernance",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "test_multipleETHDeposits",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "test_multipleETHDepositsAndWithdraws",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "test_multipleWETHDeposits",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "test_multipleWETHDepositsAndWithdraws",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    name: "toTokens",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "tusd",
-    outputs: [
-      {
-        internalType: "contract AToken",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
     type: "function",
   },
   {
     inputs: [],
     name: "usdc",
-    outputs: [
-      {
-        internalType: "contract AToken",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "usdt",
     outputs: [
       {
         internalType: "contract AToken",
@@ -647,58 +381,6 @@ const _abi = [
   },
   {
     inputs: [],
-    name: "ydai",
-    outputs: [
-      {
-        internalType: "contract AYVault",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "ydaiAsset",
-    outputs: [
-      {
-        internalType: "contract YdaiAsset",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "ytusd",
-    outputs: [
-      {
-        internalType: "contract AYVault",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "ytusdAsset",
-    outputs: [
-      {
-        internalType: "contract YtusdAsset",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
     name: "yusdc",
     outputs: [
       {
@@ -715,42 +397,12 @@ const _abi = [
     name: "yusdcAsset",
     outputs: [
       {
-        internalType: "contract YusdcAsset",
+        internalType: "contract YVaultAssetProxy",
         name: "",
         type: "address",
       },
     ],
     stateMutability: "view",
     type: "function",
-  },
-  {
-    inputs: [],
-    name: "yusdt",
-    outputs: [
-      {
-        internalType: "contract AYVault",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "yusdtAsset",
-    outputs: [
-      {
-        internalType: "contract YusdtAsset",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    stateMutability: "payable",
-    type: "receive",
   },
 ];

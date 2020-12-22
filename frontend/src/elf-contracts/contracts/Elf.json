@@ -1,7 +1,9 @@
 [
   {
     "inputs": [
-      { "internalType": "address payable", "name": "_weth", "type": "address" }
+      { "internalType": "address", "name": "_token", "type": "address" },
+      { "internalType": "address", "name": "_vault", "type": "address" },
+      { "internalType": "address", "name": "_proxy", "type": "address" }
     ],
     "stateMutability": "nonpayable",
     "type": "constructor"
@@ -57,15 +59,6 @@
     "type": "event"
   },
   {
-    "inputs": [],
-    "name": "allocator",
-    "outputs": [
-      { "internalType": "address payable", "name": "", "type": "address" }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       { "internalType": "address", "name": "owner", "type": "address" },
       { "internalType": "address", "name": "spender", "type": "address" }
@@ -103,6 +96,13 @@
   },
   {
     "inputs": [],
+    "name": "balanceUnderlying",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "decimals",
     "outputs": [{ "internalType": "uint8", "name": "", "type": "uint8" }],
     "stateMutability": "view",
@@ -124,6 +124,7 @@
   },
   {
     "inputs": [
+      { "internalType": "address", "name": "sender", "type": "address" },
       { "internalType": "uint256", "name": "amount", "type": "uint256" }
     ],
     "name": "deposit",
@@ -132,37 +133,11 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "depositETH",
-    "outputs": [],
-    "stateMutability": "payable",
-    "type": "function"
-  },
-  {
     "inputs": [
-      { "internalType": "address", "name": "sender", "type": "address" }
+      { "internalType": "uint256", "name": "shares", "type": "uint256" }
     ],
-    "name": "depositETHFrom",
-    "outputs": [],
-    "stateMutability": "payable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "address", "name": "sender", "type": "address" },
-      { "internalType": "uint256", "name": "amount", "type": "uint256" }
-    ],
-    "name": "depositFrom",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getAllocator",
-    "outputs": [
-      { "internalType": "address payable", "name": "", "type": "address" }
-    ],
+    "name": "getSharesToUnderlying",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -191,16 +166,12 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address payable",
-        "name": "_allocator",
-        "type": "address"
-      }
+    "inputs": [],
+    "name": "proxy",
+    "outputs": [
+      { "internalType": "contract IAssetProxy", "name": "", "type": "address" }
     ],
-    "name": "setAllocator",
-    "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -216,6 +187,15 @@
     "inputs": [],
     "name": "symbol",
     "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "token",
+    "outputs": [
+      { "internalType": "contract IERC20", "name": "", "type": "address" }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
@@ -249,7 +229,7 @@
   },
   {
     "inputs": [],
-    "name": "weth",
+    "name": "vault",
     "outputs": [
       { "internalType": "contract IERC20", "name": "", "type": "address" }
     ],
@@ -258,41 +238,12 @@
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "_shares", "type": "uint256" }
+      { "internalType": "address", "name": "sender", "type": "address" },
+      { "internalType": "uint256", "name": "shares", "type": "uint256" }
     ],
     "name": "withdraw",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "uint256", "name": "_shares", "type": "uint256" }
-    ],
-    "name": "withdrawETH",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "address", "name": "sender", "type": "address" },
-      { "internalType": "uint256", "name": "_shares", "type": "uint256" }
-    ],
-    "name": "withdrawETHFrom",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "address", "name": "sender", "type": "address" },
-      { "internalType": "uint256", "name": "_shares", "type": "uint256" }
-    ],
-    "name": "withdrawFrom",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  { "stateMutability": "payable", "type": "receive" }
+  }
 ]

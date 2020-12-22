@@ -14,7 +14,6 @@ import {
   Contract,
   ContractTransaction,
   Overrides,
-  PayableOverrides,
   CallOverrides,
 } from "@ethersproject/contracts";
 import { BytesLike } from "@ethersproject/bytes";
@@ -23,35 +22,29 @@ import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 
 interface ElfInterface extends ethers.utils.Interface {
   functions: {
-    "allocator()": FunctionFragment;
     "allowance(address,address)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balance()": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
+    "balanceUnderlying()": FunctionFragment;
     "decimals()": FunctionFragment;
     "decreaseAllowance(address,uint256)": FunctionFragment;
-    "deposit(uint256)": FunctionFragment;
-    "depositETH()": FunctionFragment;
-    "depositETHFrom(address)": FunctionFragment;
-    "depositFrom(address,uint256)": FunctionFragment;
-    "getAllocator()": FunctionFragment;
+    "deposit(address,uint256)": FunctionFragment;
+    "getSharesToUnderlying(uint256)": FunctionFragment;
     "governance()": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
     "name()": FunctionFragment;
-    "setAllocator(address)": FunctionFragment;
+    "proxy()": FunctionFragment;
     "setGovernance(address)": FunctionFragment;
     "symbol()": FunctionFragment;
+    "token()": FunctionFragment;
     "totalSupply()": FunctionFragment;
     "transfer(address,uint256)": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
-    "weth()": FunctionFragment;
-    "withdraw(uint256)": FunctionFragment;
-    "withdrawETH(uint256)": FunctionFragment;
-    "withdrawETHFrom(address,uint256)": FunctionFragment;
-    "withdrawFrom(address,uint256)": FunctionFragment;
+    "vault()": FunctionFragment;
+    "withdraw(address,uint256)": FunctionFragment;
   };
 
-  encodeFunctionData(functionFragment: "allocator", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "allowance",
     values: [string, string]
@@ -62,6 +55,10 @@ interface ElfInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "balance", values?: undefined): string;
   encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "balanceUnderlying",
+    values?: undefined
+  ): string;
   encodeFunctionData(functionFragment: "decimals", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "decreaseAllowance",
@@ -69,23 +66,11 @@ interface ElfInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "deposit",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "depositETH",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "depositETHFrom",
-    values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "depositFrom",
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "getAllocator",
-    values?: undefined
+    functionFragment: "getSharesToUnderlying",
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "governance",
@@ -96,15 +81,13 @@ interface ElfInterface extends ethers.utils.Interface {
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "setAllocator",
-    values: [string]
-  ): string;
+  encodeFunctionData(functionFragment: "proxy", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "setGovernance",
     values: [string]
   ): string;
   encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
+  encodeFunctionData(functionFragment: "token", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "totalSupply",
     values?: undefined
@@ -117,46 +100,28 @@ interface ElfInterface extends ethers.utils.Interface {
     functionFragment: "transferFrom",
     values: [string, string, BigNumberish]
   ): string;
-  encodeFunctionData(functionFragment: "weth", values?: undefined): string;
+  encodeFunctionData(functionFragment: "vault", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "withdraw",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "withdrawETH",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "withdrawETHFrom",
-    values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "withdrawFrom",
     values: [string, BigNumberish]
   ): string;
 
-  decodeFunctionResult(functionFragment: "allocator", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balance", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "balanceUnderlying",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "decimals", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "decreaseAllowance",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "depositETH", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "depositETHFrom",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "depositFrom",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getAllocator",
+    functionFragment: "getSharesToUnderlying",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "governance", data: BytesLike): Result;
@@ -165,15 +130,13 @@ interface ElfInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "setAllocator",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "proxy", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "setGovernance",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "token", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "totalSupply",
     data: BytesLike
@@ -183,20 +146,8 @@ interface ElfInterface extends ethers.utils.Interface {
     functionFragment: "transferFrom",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "weth", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "vault", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "withdrawETH",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "withdrawETHFrom",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "withdrawFrom",
-    data: BytesLike
-  ): Result;
 
   events: {
     "Approval(address,address,uint256)": EventFragment;
@@ -221,18 +172,6 @@ export class Elf extends Contract {
   interface: ElfInterface;
 
   functions: {
-    allocator(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
-
-    "allocator()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
-
     allowance(
       owner: string,
       spender: string,
@@ -287,6 +226,18 @@ export class Elf extends Contract {
       0: BigNumber;
     }>;
 
+    balanceUnderlying(
+      overrides?: CallOverrides
+    ): Promise<{
+      0: BigNumber;
+    }>;
+
+    "balanceUnderlying()"(
+      overrides?: CallOverrides
+    ): Promise<{
+      0: BigNumber;
+    }>;
+
     decimals(
       overrides?: CallOverrides
     ): Promise<{
@@ -312,51 +263,29 @@ export class Elf extends Contract {
     ): Promise<ContractTransaction>;
 
     deposit(
-      amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "deposit(uint256)"(
-      amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    depositETH(overrides?: PayableOverrides): Promise<ContractTransaction>;
-
-    "depositETH()"(overrides?: PayableOverrides): Promise<ContractTransaction>;
-
-    depositETHFrom(
-      sender: string,
-      overrides?: PayableOverrides
-    ): Promise<ContractTransaction>;
-
-    "depositETHFrom(address)"(
-      sender: string,
-      overrides?: PayableOverrides
-    ): Promise<ContractTransaction>;
-
-    depositFrom(
       sender: string,
       amount: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "depositFrom(address,uint256)"(
+    "deposit(address,uint256)"(
       sender: string,
       amount: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    getAllocator(
+    getSharesToUnderlying(
+      shares: BigNumberish,
       overrides?: CallOverrides
     ): Promise<{
-      0: string;
+      0: BigNumber;
     }>;
 
-    "getAllocator()"(
+    "getSharesToUnderlying(uint256)"(
+      shares: BigNumberish,
       overrides?: CallOverrides
     ): Promise<{
-      0: string;
+      0: BigNumber;
     }>;
 
     governance(
@@ -395,15 +324,17 @@ export class Elf extends Contract {
       0: string;
     }>;
 
-    setAllocator(
-      _allocator: string,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
+    proxy(
+      overrides?: CallOverrides
+    ): Promise<{
+      0: string;
+    }>;
 
-    "setAllocator(address)"(
-      _allocator: string,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
+    "proxy()"(
+      overrides?: CallOverrides
+    ): Promise<{
+      0: string;
+    }>;
 
     setGovernance(
       _governance: string,
@@ -422,6 +353,18 @@ export class Elf extends Contract {
     }>;
 
     "symbol()"(
+      overrides?: CallOverrides
+    ): Promise<{
+      0: string;
+    }>;
+
+    token(
+      overrides?: CallOverrides
+    ): Promise<{
+      0: string;
+    }>;
+
+    "token()"(
       overrides?: CallOverrides
     ): Promise<{
       0: string;
@@ -465,66 +408,30 @@ export class Elf extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    weth(
+    vault(
       overrides?: CallOverrides
     ): Promise<{
       0: string;
     }>;
 
-    "weth()"(
+    "vault()"(
       overrides?: CallOverrides
     ): Promise<{
       0: string;
     }>;
 
     withdraw(
-      _shares: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "withdraw(uint256)"(
-      _shares: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    withdrawETH(
-      _shares: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "withdrawETH(uint256)"(
-      _shares: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    withdrawETHFrom(
       sender: string,
-      _shares: BigNumberish,
+      shares: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "withdrawETHFrom(address,uint256)"(
+    "withdraw(address,uint256)"(
       sender: string,
-      _shares: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    withdrawFrom(
-      sender: string,
-      _shares: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "withdrawFrom(address,uint256)"(
-      sender: string,
-      _shares: BigNumberish,
+      shares: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
   };
-
-  allocator(overrides?: CallOverrides): Promise<string>;
-
-  "allocator()"(overrides?: CallOverrides): Promise<string>;
 
   allowance(
     owner: string,
@@ -561,6 +468,10 @@ export class Elf extends Contract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  balanceUnderlying(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "balanceUnderlying()"(overrides?: CallOverrides): Promise<BigNumber>;
+
   decimals(overrides?: CallOverrides): Promise<number>;
 
   "decimals()"(overrides?: CallOverrides): Promise<number>;
@@ -578,44 +489,26 @@ export class Elf extends Contract {
   ): Promise<ContractTransaction>;
 
   deposit(
-    amount: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "deposit(uint256)"(
-    amount: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  depositETH(overrides?: PayableOverrides): Promise<ContractTransaction>;
-
-  "depositETH()"(overrides?: PayableOverrides): Promise<ContractTransaction>;
-
-  depositETHFrom(
-    sender: string,
-    overrides?: PayableOverrides
-  ): Promise<ContractTransaction>;
-
-  "depositETHFrom(address)"(
-    sender: string,
-    overrides?: PayableOverrides
-  ): Promise<ContractTransaction>;
-
-  depositFrom(
     sender: string,
     amount: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "depositFrom(address,uint256)"(
+  "deposit(address,uint256)"(
     sender: string,
     amount: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  getAllocator(overrides?: CallOverrides): Promise<string>;
+  getSharesToUnderlying(
+    shares: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
-  "getAllocator()"(overrides?: CallOverrides): Promise<string>;
+  "getSharesToUnderlying(uint256)"(
+    shares: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   governance(overrides?: CallOverrides): Promise<string>;
 
@@ -637,15 +530,9 @@ export class Elf extends Contract {
 
   "name()"(overrides?: CallOverrides): Promise<string>;
 
-  setAllocator(
-    _allocator: string,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
+  proxy(overrides?: CallOverrides): Promise<string>;
 
-  "setAllocator(address)"(
-    _allocator: string,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
+  "proxy()"(overrides?: CallOverrides): Promise<string>;
 
   setGovernance(
     _governance: string,
@@ -660,6 +547,10 @@ export class Elf extends Contract {
   symbol(overrides?: CallOverrides): Promise<string>;
 
   "symbol()"(overrides?: CallOverrides): Promise<string>;
+
+  token(overrides?: CallOverrides): Promise<string>;
+
+  "token()"(overrides?: CallOverrides): Promise<string>;
 
   totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -691,59 +582,23 @@ export class Elf extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  weth(overrides?: CallOverrides): Promise<string>;
+  vault(overrides?: CallOverrides): Promise<string>;
 
-  "weth()"(overrides?: CallOverrides): Promise<string>;
+  "vault()"(overrides?: CallOverrides): Promise<string>;
 
   withdraw(
-    _shares: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "withdraw(uint256)"(
-    _shares: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  withdrawETH(
-    _shares: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "withdrawETH(uint256)"(
-    _shares: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  withdrawETHFrom(
     sender: string,
-    _shares: BigNumberish,
+    shares: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "withdrawETHFrom(address,uint256)"(
+  "withdraw(address,uint256)"(
     sender: string,
-    _shares: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  withdrawFrom(
-    sender: string,
-    _shares: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "withdrawFrom(address,uint256)"(
-    sender: string,
-    _shares: BigNumberish,
+    shares: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    allocator(overrides?: CallOverrides): Promise<string>;
-
-    "allocator()"(overrides?: CallOverrides): Promise<string>;
-
     allowance(
       owner: string,
       spender: string,
@@ -779,6 +634,10 @@ export class Elf extends Contract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    balanceUnderlying(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "balanceUnderlying()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     decimals(overrides?: CallOverrides): Promise<number>;
 
     "decimals()"(overrides?: CallOverrides): Promise<number>;
@@ -795,39 +654,27 @@ export class Elf extends Contract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    deposit(amount: BigNumberish, overrides?: CallOverrides): Promise<void>;
-
-    "deposit(uint256)"(
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    depositETH(overrides?: CallOverrides): Promise<void>;
-
-    "depositETH()"(overrides?: CallOverrides): Promise<void>;
-
-    depositETHFrom(sender: string, overrides?: CallOverrides): Promise<void>;
-
-    "depositETHFrom(address)"(
-      sender: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    depositFrom(
+    deposit(
       sender: string,
       amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "depositFrom(address,uint256)"(
+    "deposit(address,uint256)"(
       sender: string,
       amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    getAllocator(overrides?: CallOverrides): Promise<string>;
+    getSharesToUnderlying(
+      shares: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
-    "getAllocator()"(overrides?: CallOverrides): Promise<string>;
+    "getSharesToUnderlying(uint256)"(
+      shares: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     governance(overrides?: CallOverrides): Promise<string>;
 
@@ -849,12 +696,9 @@ export class Elf extends Contract {
 
     "name()"(overrides?: CallOverrides): Promise<string>;
 
-    setAllocator(_allocator: string, overrides?: CallOverrides): Promise<void>;
+    proxy(overrides?: CallOverrides): Promise<string>;
 
-    "setAllocator(address)"(
-      _allocator: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    "proxy()"(overrides?: CallOverrides): Promise<string>;
 
     setGovernance(
       _governance: string,
@@ -869,6 +713,10 @@ export class Elf extends Contract {
     symbol(overrides?: CallOverrides): Promise<string>;
 
     "symbol()"(overrides?: CallOverrides): Promise<string>;
+
+    token(overrides?: CallOverrides): Promise<string>;
+
+    "token()"(overrides?: CallOverrides): Promise<string>;
 
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -900,48 +748,19 @@ export class Elf extends Contract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    weth(overrides?: CallOverrides): Promise<string>;
+    vault(overrides?: CallOverrides): Promise<string>;
 
-    "weth()"(overrides?: CallOverrides): Promise<string>;
+    "vault()"(overrides?: CallOverrides): Promise<string>;
 
-    withdraw(_shares: BigNumberish, overrides?: CallOverrides): Promise<void>;
-
-    "withdraw(uint256)"(
-      _shares: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    withdrawETH(
-      _shares: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "withdrawETH(uint256)"(
-      _shares: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    withdrawETHFrom(
+    withdraw(
       sender: string,
-      _shares: BigNumberish,
+      shares: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "withdrawETHFrom(address,uint256)"(
+    "withdraw(address,uint256)"(
       sender: string,
-      _shares: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    withdrawFrom(
-      sender: string,
-      _shares: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "withdrawFrom(address,uint256)"(
-      sender: string,
-      _shares: BigNumberish,
+      shares: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
   };
@@ -957,10 +776,6 @@ export class Elf extends Contract {
   };
 
   estimateGas: {
-    allocator(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "allocator()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     allowance(
       owner: string,
       spender: string,
@@ -996,6 +811,10 @@ export class Elf extends Contract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    balanceUnderlying(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "balanceUnderlying()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     decimals(overrides?: CallOverrides): Promise<BigNumber>;
 
     "decimals()"(overrides?: CallOverrides): Promise<BigNumber>;
@@ -1012,42 +831,27 @@ export class Elf extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    deposit(amount: BigNumberish, overrides?: Overrides): Promise<BigNumber>;
-
-    "deposit(uint256)"(
-      amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    depositETH(overrides?: PayableOverrides): Promise<BigNumber>;
-
-    "depositETH()"(overrides?: PayableOverrides): Promise<BigNumber>;
-
-    depositETHFrom(
-      sender: string,
-      overrides?: PayableOverrides
-    ): Promise<BigNumber>;
-
-    "depositETHFrom(address)"(
-      sender: string,
-      overrides?: PayableOverrides
-    ): Promise<BigNumber>;
-
-    depositFrom(
+    deposit(
       sender: string,
       amount: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    "depositFrom(address,uint256)"(
+    "deposit(address,uint256)"(
       sender: string,
       amount: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    getAllocator(overrides?: CallOverrides): Promise<BigNumber>;
+    getSharesToUnderlying(
+      shares: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
-    "getAllocator()"(overrides?: CallOverrides): Promise<BigNumber>;
+    "getSharesToUnderlying(uint256)"(
+      shares: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     governance(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1069,12 +873,9 @@ export class Elf extends Contract {
 
     "name()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-    setAllocator(_allocator: string, overrides?: Overrides): Promise<BigNumber>;
+    proxy(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "setAllocator(address)"(
-      _allocator: string,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
+    "proxy()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     setGovernance(
       _governance: string,
@@ -1089,6 +890,10 @@ export class Elf extends Contract {
     symbol(overrides?: CallOverrides): Promise<BigNumber>;
 
     "symbol()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    token(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "token()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1120,57 +925,24 @@ export class Elf extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    weth(overrides?: CallOverrides): Promise<BigNumber>;
+    vault(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "weth()"(overrides?: CallOverrides): Promise<BigNumber>;
+    "vault()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-    withdraw(_shares: BigNumberish, overrides?: Overrides): Promise<BigNumber>;
-
-    "withdraw(uint256)"(
-      _shares: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    withdrawETH(
-      _shares: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "withdrawETH(uint256)"(
-      _shares: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    withdrawETHFrom(
+    withdraw(
       sender: string,
-      _shares: BigNumberish,
+      shares: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    "withdrawETHFrom(address,uint256)"(
+    "withdraw(address,uint256)"(
       sender: string,
-      _shares: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    withdrawFrom(
-      sender: string,
-      _shares: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "withdrawFrom(address,uint256)"(
-      sender: string,
-      _shares: BigNumberish,
+      shares: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    allocator(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "allocator()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     allowance(
       owner: string,
       spender: string,
@@ -1209,6 +981,12 @@ export class Elf extends Contract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    balanceUnderlying(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "balanceUnderlying()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     decimals(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     "decimals()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -1226,44 +1004,26 @@ export class Elf extends Contract {
     ): Promise<PopulatedTransaction>;
 
     deposit(
-      amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "deposit(uint256)"(
-      amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    depositETH(overrides?: PayableOverrides): Promise<PopulatedTransaction>;
-
-    "depositETH()"(overrides?: PayableOverrides): Promise<PopulatedTransaction>;
-
-    depositETHFrom(
-      sender: string,
-      overrides?: PayableOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "depositETHFrom(address)"(
-      sender: string,
-      overrides?: PayableOverrides
-    ): Promise<PopulatedTransaction>;
-
-    depositFrom(
       sender: string,
       amount: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "depositFrom(address,uint256)"(
+    "deposit(address,uint256)"(
       sender: string,
       amount: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    getAllocator(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    getSharesToUnderlying(
+      shares: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
-    "getAllocator()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    "getSharesToUnderlying(uint256)"(
+      shares: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     governance(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -1285,15 +1045,9 @@ export class Elf extends Contract {
 
     "name()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    setAllocator(
-      _allocator: string,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
+    proxy(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "setAllocator(address)"(
-      _allocator: string,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
+    "proxy()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     setGovernance(
       _governance: string,
@@ -1308,6 +1062,10 @@ export class Elf extends Contract {
     symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     "symbol()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    token(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "token()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -1339,51 +1097,19 @@ export class Elf extends Contract {
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    weth(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    vault(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "weth()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    "vault()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     withdraw(
-      _shares: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "withdraw(uint256)"(
-      _shares: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    withdrawETH(
-      _shares: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "withdrawETH(uint256)"(
-      _shares: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    withdrawETHFrom(
       sender: string,
-      _shares: BigNumberish,
+      shares: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "withdrawETHFrom(address,uint256)"(
+    "withdraw(address,uint256)"(
       sender: string,
-      _shares: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    withdrawFrom(
-      sender: string,
-      _shares: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "withdrawFrom(address,uint256)"(
-      sender: string,
-      _shares: BigNumberish,
+      shares: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
   };

@@ -23,245 +23,98 @@ import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 interface ElfContractsTestInterface extends ethers.utils.Interface {
   functions: {
     "IS_TEST()": FunctionFragment;
-    "allocator()": FunctionFragment;
-    "assets(uint256)": FunctionFragment;
-    "conversionType(uint256)": FunctionFragment;
-    "dai()": FunctionFragment;
+    "_elfDeploy()": FunctionFragment;
     "elf()": FunctionFragment;
     "failed()": FunctionFragment;
-    "fromTokens(uint256)": FunctionFragment;
     "hevm()": FunctionFragment;
-    "lender1()": FunctionFragment;
-    "lender2()": FunctionFragment;
-    "lender3()": FunctionFragment;
-    "lender4()": FunctionFragment;
-    "percents(uint256)": FunctionFragment;
-    "priceOracle1()": FunctionFragment;
-    "priceOracle2()": FunctionFragment;
-    "priceOracle3()": FunctionFragment;
-    "priceOracle4()": FunctionFragment;
     "setUp()": FunctionFragment;
-    "testFail_basic_sanity()": FunctionFragment;
-    "test_basic_sanity()": FunctionFragment;
-    "test_correctUserBalances()": FunctionFragment;
-    "test_depositingETH()": FunctionFragment;
-    "test_depositingWETH()": FunctionFragment;
-    "test_multipleETHDeposits()": FunctionFragment;
-    "test_multipleETHDepositsAndWithdraws()": FunctionFragment;
-    "test_multipleWETHDeposits()": FunctionFragment;
-    "test_multipleWETHDepositsAndWithdraws()": FunctionFragment;
-    "toTokens(uint256)": FunctionFragment;
-    "tusd()": FunctionFragment;
+    "testFail_setGovernance()": FunctionFragment;
+    "test_balance()": FunctionFragment;
+    "test_balanceUnderlying()": FunctionFragment;
+    "test_depositAndWithdraw()": FunctionFragment;
+    "test_setGovernance()": FunctionFragment;
     "usdc()": FunctionFragment;
-    "usdt()": FunctionFragment;
     "user1()": FunctionFragment;
     "user2()": FunctionFragment;
     "user3()": FunctionFragment;
     "weth()": FunctionFragment;
-    "ydai()": FunctionFragment;
-    "ydaiAsset()": FunctionFragment;
-    "ytusd()": FunctionFragment;
-    "ytusdAsset()": FunctionFragment;
     "yusdc()": FunctionFragment;
     "yusdcAsset()": FunctionFragment;
-    "yusdt()": FunctionFragment;
-    "yusdtAsset()": FunctionFragment;
   };
 
   encodeFunctionData(functionFragment: "IS_TEST", values?: undefined): string;
-  encodeFunctionData(functionFragment: "allocator", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "assets",
-    values: [BigNumberish]
+    functionFragment: "_elfDeploy",
+    values?: undefined
   ): string;
-  encodeFunctionData(
-    functionFragment: "conversionType",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(functionFragment: "dai", values?: undefined): string;
   encodeFunctionData(functionFragment: "elf", values?: undefined): string;
   encodeFunctionData(functionFragment: "failed", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "fromTokens",
-    values: [BigNumberish]
-  ): string;
   encodeFunctionData(functionFragment: "hevm", values?: undefined): string;
-  encodeFunctionData(functionFragment: "lender1", values?: undefined): string;
-  encodeFunctionData(functionFragment: "lender2", values?: undefined): string;
-  encodeFunctionData(functionFragment: "lender3", values?: undefined): string;
-  encodeFunctionData(functionFragment: "lender4", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "percents",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "priceOracle1",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "priceOracle2",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "priceOracle3",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "priceOracle4",
-    values?: undefined
-  ): string;
   encodeFunctionData(functionFragment: "setUp", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "testFail_basic_sanity",
+    functionFragment: "testFail_setGovernance",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "test_basic_sanity",
+    functionFragment: "test_balance",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "test_correctUserBalances",
+    functionFragment: "test_balanceUnderlying",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "test_depositingETH",
+    functionFragment: "test_depositAndWithdraw",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "test_depositingWETH",
+    functionFragment: "test_setGovernance",
     values?: undefined
   ): string;
-  encodeFunctionData(
-    functionFragment: "test_multipleETHDeposits",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "test_multipleETHDepositsAndWithdraws",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "test_multipleWETHDeposits",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "test_multipleWETHDepositsAndWithdraws",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "toTokens",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(functionFragment: "tusd", values?: undefined): string;
   encodeFunctionData(functionFragment: "usdc", values?: undefined): string;
-  encodeFunctionData(functionFragment: "usdt", values?: undefined): string;
   encodeFunctionData(functionFragment: "user1", values?: undefined): string;
   encodeFunctionData(functionFragment: "user2", values?: undefined): string;
   encodeFunctionData(functionFragment: "user3", values?: undefined): string;
   encodeFunctionData(functionFragment: "weth", values?: undefined): string;
-  encodeFunctionData(functionFragment: "ydai", values?: undefined): string;
-  encodeFunctionData(functionFragment: "ydaiAsset", values?: undefined): string;
-  encodeFunctionData(functionFragment: "ytusd", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "ytusdAsset",
-    values?: undefined
-  ): string;
   encodeFunctionData(functionFragment: "yusdc", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "yusdcAsset",
     values?: undefined
   ): string;
-  encodeFunctionData(functionFragment: "yusdt", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "yusdtAsset",
-    values?: undefined
-  ): string;
 
   decodeFunctionResult(functionFragment: "IS_TEST", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "allocator", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "assets", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "conversionType",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "dai", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "_elfDeploy", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "elf", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "failed", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "fromTokens", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "hevm", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "lender1", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "lender2", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "lender3", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "lender4", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "percents", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "priceOracle1",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "priceOracle2",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "priceOracle3",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "priceOracle4",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "setUp", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "testFail_basic_sanity",
+    functionFragment: "testFail_setGovernance",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "test_basic_sanity",
+    functionFragment: "test_balance",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "test_correctUserBalances",
+    functionFragment: "test_balanceUnderlying",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "test_depositingETH",
+    functionFragment: "test_depositAndWithdraw",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "test_depositingWETH",
+    functionFragment: "test_setGovernance",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "test_multipleETHDeposits",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "test_multipleETHDepositsAndWithdraws",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "test_multipleWETHDeposits",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "test_multipleWETHDepositsAndWithdraws",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "toTokens", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "tusd", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "usdc", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "usdt", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "user1", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "user2", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "user3", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "weth", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "ydai", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "ydaiAsset", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "ytusd", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "ytusdAsset", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "yusdc", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "yusdcAsset", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "yusdt", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "yusdtAsset", data: BytesLike): Result;
 
   events: {
     "eventListener(address,bool)": EventFragment;
@@ -314,53 +167,13 @@ export class ElfContractsTest extends Contract {
       0: boolean;
     }>;
 
-    allocator(
+    _elfDeploy(
       overrides?: CallOverrides
     ): Promise<{
       0: string;
     }>;
 
-    "allocator()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
-
-    assets(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
-
-    "assets(uint256)"(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
-
-    conversionType(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<{
-      0: BigNumber;
-    }>;
-
-    "conversionType(uint256)"(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<{
-      0: BigNumber;
-    }>;
-
-    dai(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
-
-    "dai()"(
+    "_elfDeploy()"(
       overrides?: CallOverrides
     ): Promise<{
       0: string;
@@ -390,20 +203,6 @@ export class ElfContractsTest extends Contract {
       0: boolean;
     }>;
 
-    fromTokens(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
-
-    "fromTokens(uint256)"(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
-
     hevm(
       overrides?: CallOverrides
     ): Promise<{
@@ -416,205 +215,37 @@ export class ElfContractsTest extends Contract {
       0: string;
     }>;
 
-    lender1(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
-
-    "lender1()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
-
-    lender2(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
-
-    "lender2()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
-
-    lender3(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
-
-    "lender3()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
-
-    lender4(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
-
-    "lender4()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
-
-    percents(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<{
-      0: BigNumber;
-    }>;
-
-    "percents(uint256)"(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<{
-      0: BigNumber;
-    }>;
-
-    priceOracle1(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
-
-    "priceOracle1()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
-
-    priceOracle2(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
-
-    "priceOracle2()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
-
-    priceOracle3(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
-
-    "priceOracle3()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
-
-    priceOracle4(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
-
-    "priceOracle4()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
-
     setUp(overrides?: Overrides): Promise<ContractTransaction>;
 
     "setUp()"(overrides?: Overrides): Promise<ContractTransaction>;
 
-    testFail_basic_sanity(overrides?: Overrides): Promise<ContractTransaction>;
+    testFail_setGovernance(overrides?: Overrides): Promise<ContractTransaction>;
 
-    "testFail_basic_sanity()"(
+    "testFail_setGovernance()"(
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    test_basic_sanity(overrides?: Overrides): Promise<ContractTransaction>;
+    test_balance(overrides?: Overrides): Promise<ContractTransaction>;
 
-    "test_basic_sanity()"(overrides?: Overrides): Promise<ContractTransaction>;
+    "test_balance()"(overrides?: Overrides): Promise<ContractTransaction>;
 
-    test_correctUserBalances(
+    test_balanceUnderlying(overrides?: Overrides): Promise<ContractTransaction>;
+
+    "test_balanceUnderlying()"(
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "test_correctUserBalances()"(
+    test_depositAndWithdraw(
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    test_depositingETH(overrides?: Overrides): Promise<ContractTransaction>;
-
-    "test_depositingETH()"(overrides?: Overrides): Promise<ContractTransaction>;
-
-    test_depositingWETH(overrides?: Overrides): Promise<ContractTransaction>;
-
-    "test_depositingWETH()"(
+    "test_depositAndWithdraw()"(
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    test_multipleETHDeposits(
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
+    test_setGovernance(overrides?: Overrides): Promise<ContractTransaction>;
 
-    "test_multipleETHDeposits()"(
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    test_multipleETHDepositsAndWithdraws(
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "test_multipleETHDepositsAndWithdraws()"(
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    test_multipleWETHDeposits(
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "test_multipleWETHDeposits()"(
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    test_multipleWETHDepositsAndWithdraws(
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "test_multipleWETHDepositsAndWithdraws()"(
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    toTokens(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
-
-    "toTokens(uint256)"(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
-
-    tusd(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
-
-    "tusd()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    "test_setGovernance()"(overrides?: Overrides): Promise<ContractTransaction>;
 
     usdc(
       overrides?: CallOverrides
@@ -623,18 +254,6 @@ export class ElfContractsTest extends Contract {
     }>;
 
     "usdc()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
-
-    usdt(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
-
-    "usdt()"(
       overrides?: CallOverrides
     ): Promise<{
       0: string;
@@ -688,54 +307,6 @@ export class ElfContractsTest extends Contract {
       0: string;
     }>;
 
-    ydai(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
-
-    "ydai()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
-
-    ydaiAsset(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
-
-    "ydaiAsset()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
-
-    ytusd(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
-
-    "ytusd()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
-
-    ytusdAsset(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
-
-    "ytusdAsset()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
-
     yusdc(
       overrides?: CallOverrides
     ): Promise<{
@@ -759,60 +330,15 @@ export class ElfContractsTest extends Contract {
     ): Promise<{
       0: string;
     }>;
-
-    yusdt(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
-
-    "yusdt()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
-
-    yusdtAsset(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
-
-    "yusdtAsset()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
   };
 
   IS_TEST(overrides?: CallOverrides): Promise<boolean>;
 
   "IS_TEST()"(overrides?: CallOverrides): Promise<boolean>;
 
-  allocator(overrides?: CallOverrides): Promise<string>;
+  _elfDeploy(overrides?: CallOverrides): Promise<string>;
 
-  "allocator()"(overrides?: CallOverrides): Promise<string>;
-
-  assets(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
-
-  "assets(uint256)"(
-    arg0: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<string>;
-
-  conversionType(
-    arg0: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  "conversionType(uint256)"(
-    arg0: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  dai(overrides?: CallOverrides): Promise<string>;
-
-  "dai()"(overrides?: CallOverrides): Promise<string>;
+  "_elfDeploy()"(overrides?: CallOverrides): Promise<string>;
 
   elf(overrides?: CallOverrides): Promise<string>;
 
@@ -822,132 +348,43 @@ export class ElfContractsTest extends Contract {
 
   "failed()"(overrides?: CallOverrides): Promise<boolean>;
 
-  fromTokens(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
-
-  "fromTokens(uint256)"(
-    arg0: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<string>;
-
   hevm(overrides?: CallOverrides): Promise<string>;
 
   "hevm()"(overrides?: CallOverrides): Promise<string>;
-
-  lender1(overrides?: CallOverrides): Promise<string>;
-
-  "lender1()"(overrides?: CallOverrides): Promise<string>;
-
-  lender2(overrides?: CallOverrides): Promise<string>;
-
-  "lender2()"(overrides?: CallOverrides): Promise<string>;
-
-  lender3(overrides?: CallOverrides): Promise<string>;
-
-  "lender3()"(overrides?: CallOverrides): Promise<string>;
-
-  lender4(overrides?: CallOverrides): Promise<string>;
-
-  "lender4()"(overrides?: CallOverrides): Promise<string>;
-
-  percents(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
-
-  "percents(uint256)"(
-    arg0: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  priceOracle1(overrides?: CallOverrides): Promise<string>;
-
-  "priceOracle1()"(overrides?: CallOverrides): Promise<string>;
-
-  priceOracle2(overrides?: CallOverrides): Promise<string>;
-
-  "priceOracle2()"(overrides?: CallOverrides): Promise<string>;
-
-  priceOracle3(overrides?: CallOverrides): Promise<string>;
-
-  "priceOracle3()"(overrides?: CallOverrides): Promise<string>;
-
-  priceOracle4(overrides?: CallOverrides): Promise<string>;
-
-  "priceOracle4()"(overrides?: CallOverrides): Promise<string>;
 
   setUp(overrides?: Overrides): Promise<ContractTransaction>;
 
   "setUp()"(overrides?: Overrides): Promise<ContractTransaction>;
 
-  testFail_basic_sanity(overrides?: Overrides): Promise<ContractTransaction>;
+  testFail_setGovernance(overrides?: Overrides): Promise<ContractTransaction>;
 
-  "testFail_basic_sanity()"(
+  "testFail_setGovernance()"(
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  test_basic_sanity(overrides?: Overrides): Promise<ContractTransaction>;
+  test_balance(overrides?: Overrides): Promise<ContractTransaction>;
 
-  "test_basic_sanity()"(overrides?: Overrides): Promise<ContractTransaction>;
+  "test_balance()"(overrides?: Overrides): Promise<ContractTransaction>;
 
-  test_correctUserBalances(overrides?: Overrides): Promise<ContractTransaction>;
+  test_balanceUnderlying(overrides?: Overrides): Promise<ContractTransaction>;
 
-  "test_correctUserBalances()"(
+  "test_balanceUnderlying()"(
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  test_depositingETH(overrides?: Overrides): Promise<ContractTransaction>;
+  test_depositAndWithdraw(overrides?: Overrides): Promise<ContractTransaction>;
 
-  "test_depositingETH()"(overrides?: Overrides): Promise<ContractTransaction>;
-
-  test_depositingWETH(overrides?: Overrides): Promise<ContractTransaction>;
-
-  "test_depositingWETH()"(overrides?: Overrides): Promise<ContractTransaction>;
-
-  test_multipleETHDeposits(overrides?: Overrides): Promise<ContractTransaction>;
-
-  "test_multipleETHDeposits()"(
+  "test_depositAndWithdraw()"(
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  test_multipleETHDepositsAndWithdraws(
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
+  test_setGovernance(overrides?: Overrides): Promise<ContractTransaction>;
 
-  "test_multipleETHDepositsAndWithdraws()"(
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  test_multipleWETHDeposits(
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "test_multipleWETHDeposits()"(
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  test_multipleWETHDepositsAndWithdraws(
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "test_multipleWETHDepositsAndWithdraws()"(
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  toTokens(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
-
-  "toTokens(uint256)"(
-    arg0: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<string>;
-
-  tusd(overrides?: CallOverrides): Promise<string>;
-
-  "tusd()"(overrides?: CallOverrides): Promise<string>;
+  "test_setGovernance()"(overrides?: Overrides): Promise<ContractTransaction>;
 
   usdc(overrides?: CallOverrides): Promise<string>;
 
   "usdc()"(overrides?: CallOverrides): Promise<string>;
-
-  usdt(overrides?: CallOverrides): Promise<string>;
-
-  "usdt()"(overrides?: CallOverrides): Promise<string>;
 
   user1(overrides?: CallOverrides): Promise<string>;
 
@@ -965,22 +402,6 @@ export class ElfContractsTest extends Contract {
 
   "weth()"(overrides?: CallOverrides): Promise<string>;
 
-  ydai(overrides?: CallOverrides): Promise<string>;
-
-  "ydai()"(overrides?: CallOverrides): Promise<string>;
-
-  ydaiAsset(overrides?: CallOverrides): Promise<string>;
-
-  "ydaiAsset()"(overrides?: CallOverrides): Promise<string>;
-
-  ytusd(overrides?: CallOverrides): Promise<string>;
-
-  "ytusd()"(overrides?: CallOverrides): Promise<string>;
-
-  ytusdAsset(overrides?: CallOverrides): Promise<string>;
-
-  "ytusdAsset()"(overrides?: CallOverrides): Promise<string>;
-
   yusdc(overrides?: CallOverrides): Promise<string>;
 
   "yusdc()"(overrides?: CallOverrides): Promise<string>;
@@ -989,43 +410,14 @@ export class ElfContractsTest extends Contract {
 
   "yusdcAsset()"(overrides?: CallOverrides): Promise<string>;
 
-  yusdt(overrides?: CallOverrides): Promise<string>;
-
-  "yusdt()"(overrides?: CallOverrides): Promise<string>;
-
-  yusdtAsset(overrides?: CallOverrides): Promise<string>;
-
-  "yusdtAsset()"(overrides?: CallOverrides): Promise<string>;
-
   callStatic: {
     IS_TEST(overrides?: CallOverrides): Promise<boolean>;
 
     "IS_TEST()"(overrides?: CallOverrides): Promise<boolean>;
 
-    allocator(overrides?: CallOverrides): Promise<string>;
+    _elfDeploy(overrides?: CallOverrides): Promise<string>;
 
-    "allocator()"(overrides?: CallOverrides): Promise<string>;
-
-    assets(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
-
-    "assets(uint256)"(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<string>;
-
-    conversionType(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "conversionType(uint256)"(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    dai(overrides?: CallOverrides): Promise<string>;
-
-    "dai()"(overrides?: CallOverrides): Promise<string>;
+    "_elfDeploy()"(overrides?: CallOverrides): Promise<string>;
 
     elf(overrides?: CallOverrides): Promise<string>;
 
@@ -1035,122 +427,37 @@ export class ElfContractsTest extends Contract {
 
     "failed()"(overrides?: CallOverrides): Promise<boolean>;
 
-    fromTokens(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
-
-    "fromTokens(uint256)"(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<string>;
-
     hevm(overrides?: CallOverrides): Promise<string>;
 
     "hevm()"(overrides?: CallOverrides): Promise<string>;
-
-    lender1(overrides?: CallOverrides): Promise<string>;
-
-    "lender1()"(overrides?: CallOverrides): Promise<string>;
-
-    lender2(overrides?: CallOverrides): Promise<string>;
-
-    "lender2()"(overrides?: CallOverrides): Promise<string>;
-
-    lender3(overrides?: CallOverrides): Promise<string>;
-
-    "lender3()"(overrides?: CallOverrides): Promise<string>;
-
-    lender4(overrides?: CallOverrides): Promise<string>;
-
-    "lender4()"(overrides?: CallOverrides): Promise<string>;
-
-    percents(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
-
-    "percents(uint256)"(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    priceOracle1(overrides?: CallOverrides): Promise<string>;
-
-    "priceOracle1()"(overrides?: CallOverrides): Promise<string>;
-
-    priceOracle2(overrides?: CallOverrides): Promise<string>;
-
-    "priceOracle2()"(overrides?: CallOverrides): Promise<string>;
-
-    priceOracle3(overrides?: CallOverrides): Promise<string>;
-
-    "priceOracle3()"(overrides?: CallOverrides): Promise<string>;
-
-    priceOracle4(overrides?: CallOverrides): Promise<string>;
-
-    "priceOracle4()"(overrides?: CallOverrides): Promise<string>;
 
     setUp(overrides?: CallOverrides): Promise<void>;
 
     "setUp()"(overrides?: CallOverrides): Promise<void>;
 
-    testFail_basic_sanity(overrides?: CallOverrides): Promise<void>;
+    testFail_setGovernance(overrides?: CallOverrides): Promise<void>;
 
-    "testFail_basic_sanity()"(overrides?: CallOverrides): Promise<void>;
+    "testFail_setGovernance()"(overrides?: CallOverrides): Promise<void>;
 
-    test_basic_sanity(overrides?: CallOverrides): Promise<void>;
+    test_balance(overrides?: CallOverrides): Promise<void>;
 
-    "test_basic_sanity()"(overrides?: CallOverrides): Promise<void>;
+    "test_balance()"(overrides?: CallOverrides): Promise<void>;
 
-    test_correctUserBalances(overrides?: CallOverrides): Promise<void>;
+    test_balanceUnderlying(overrides?: CallOverrides): Promise<void>;
 
-    "test_correctUserBalances()"(overrides?: CallOverrides): Promise<void>;
+    "test_balanceUnderlying()"(overrides?: CallOverrides): Promise<void>;
 
-    test_depositingETH(overrides?: CallOverrides): Promise<void>;
+    test_depositAndWithdraw(overrides?: CallOverrides): Promise<void>;
 
-    "test_depositingETH()"(overrides?: CallOverrides): Promise<void>;
+    "test_depositAndWithdraw()"(overrides?: CallOverrides): Promise<void>;
 
-    test_depositingWETH(overrides?: CallOverrides): Promise<void>;
+    test_setGovernance(overrides?: CallOverrides): Promise<void>;
 
-    "test_depositingWETH()"(overrides?: CallOverrides): Promise<void>;
-
-    test_multipleETHDeposits(overrides?: CallOverrides): Promise<void>;
-
-    "test_multipleETHDeposits()"(overrides?: CallOverrides): Promise<void>;
-
-    test_multipleETHDepositsAndWithdraws(
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "test_multipleETHDepositsAndWithdraws()"(
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    test_multipleWETHDeposits(overrides?: CallOverrides): Promise<void>;
-
-    "test_multipleWETHDeposits()"(overrides?: CallOverrides): Promise<void>;
-
-    test_multipleWETHDepositsAndWithdraws(
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "test_multipleWETHDepositsAndWithdraws()"(
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    toTokens(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
-
-    "toTokens(uint256)"(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<string>;
-
-    tusd(overrides?: CallOverrides): Promise<string>;
-
-    "tusd()"(overrides?: CallOverrides): Promise<string>;
+    "test_setGovernance()"(overrides?: CallOverrides): Promise<void>;
 
     usdc(overrides?: CallOverrides): Promise<string>;
 
     "usdc()"(overrides?: CallOverrides): Promise<string>;
-
-    usdt(overrides?: CallOverrides): Promise<string>;
-
-    "usdt()"(overrides?: CallOverrides): Promise<string>;
 
     user1(overrides?: CallOverrides): Promise<string>;
 
@@ -1168,22 +475,6 @@ export class ElfContractsTest extends Contract {
 
     "weth()"(overrides?: CallOverrides): Promise<string>;
 
-    ydai(overrides?: CallOverrides): Promise<string>;
-
-    "ydai()"(overrides?: CallOverrides): Promise<string>;
-
-    ydaiAsset(overrides?: CallOverrides): Promise<string>;
-
-    "ydaiAsset()"(overrides?: CallOverrides): Promise<string>;
-
-    ytusd(overrides?: CallOverrides): Promise<string>;
-
-    "ytusd()"(overrides?: CallOverrides): Promise<string>;
-
-    ytusdAsset(overrides?: CallOverrides): Promise<string>;
-
-    "ytusdAsset()"(overrides?: CallOverrides): Promise<string>;
-
     yusdc(overrides?: CallOverrides): Promise<string>;
 
     "yusdc()"(overrides?: CallOverrides): Promise<string>;
@@ -1191,14 +482,6 @@ export class ElfContractsTest extends Contract {
     yusdcAsset(overrides?: CallOverrides): Promise<string>;
 
     "yusdcAsset()"(overrides?: CallOverrides): Promise<string>;
-
-    yusdt(overrides?: CallOverrides): Promise<string>;
-
-    "yusdt()"(overrides?: CallOverrides): Promise<string>;
-
-    yusdtAsset(overrides?: CallOverrides): Promise<string>;
-
-    "yusdtAsset()"(overrides?: CallOverrides): Promise<string>;
   };
 
   filters: {
@@ -1228,30 +511,9 @@ export class ElfContractsTest extends Contract {
 
     "IS_TEST()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-    allocator(overrides?: CallOverrides): Promise<BigNumber>;
+    _elfDeploy(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "allocator()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    assets(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
-
-    "assets(uint256)"(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    conversionType(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "conversionType(uint256)"(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    dai(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "dai()"(overrides?: CallOverrides): Promise<BigNumber>;
+    "_elfDeploy()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     elf(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1261,125 +523,37 @@ export class ElfContractsTest extends Contract {
 
     "failed()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-    fromTokens(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "fromTokens(uint256)"(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     hevm(overrides?: CallOverrides): Promise<BigNumber>;
 
     "hevm()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    lender1(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "lender1()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    lender2(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "lender2()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    lender3(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "lender3()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    lender4(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "lender4()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    percents(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
-
-    "percents(uint256)"(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    priceOracle1(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "priceOracle1()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    priceOracle2(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "priceOracle2()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    priceOracle3(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "priceOracle3()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    priceOracle4(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "priceOracle4()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     setUp(overrides?: Overrides): Promise<BigNumber>;
 
     "setUp()"(overrides?: Overrides): Promise<BigNumber>;
 
-    testFail_basic_sanity(overrides?: Overrides): Promise<BigNumber>;
+    testFail_setGovernance(overrides?: Overrides): Promise<BigNumber>;
 
-    "testFail_basic_sanity()"(overrides?: Overrides): Promise<BigNumber>;
+    "testFail_setGovernance()"(overrides?: Overrides): Promise<BigNumber>;
 
-    test_basic_sanity(overrides?: Overrides): Promise<BigNumber>;
+    test_balance(overrides?: Overrides): Promise<BigNumber>;
 
-    "test_basic_sanity()"(overrides?: Overrides): Promise<BigNumber>;
+    "test_balance()"(overrides?: Overrides): Promise<BigNumber>;
 
-    test_correctUserBalances(overrides?: Overrides): Promise<BigNumber>;
+    test_balanceUnderlying(overrides?: Overrides): Promise<BigNumber>;
 
-    "test_correctUserBalances()"(overrides?: Overrides): Promise<BigNumber>;
+    "test_balanceUnderlying()"(overrides?: Overrides): Promise<BigNumber>;
 
-    test_depositingETH(overrides?: Overrides): Promise<BigNumber>;
+    test_depositAndWithdraw(overrides?: Overrides): Promise<BigNumber>;
 
-    "test_depositingETH()"(overrides?: Overrides): Promise<BigNumber>;
+    "test_depositAndWithdraw()"(overrides?: Overrides): Promise<BigNumber>;
 
-    test_depositingWETH(overrides?: Overrides): Promise<BigNumber>;
+    test_setGovernance(overrides?: Overrides): Promise<BigNumber>;
 
-    "test_depositingWETH()"(overrides?: Overrides): Promise<BigNumber>;
-
-    test_multipleETHDeposits(overrides?: Overrides): Promise<BigNumber>;
-
-    "test_multipleETHDeposits()"(overrides?: Overrides): Promise<BigNumber>;
-
-    test_multipleETHDepositsAndWithdraws(
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "test_multipleETHDepositsAndWithdraws()"(
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    test_multipleWETHDeposits(overrides?: Overrides): Promise<BigNumber>;
-
-    "test_multipleWETHDeposits()"(overrides?: Overrides): Promise<BigNumber>;
-
-    test_multipleWETHDepositsAndWithdraws(
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "test_multipleWETHDepositsAndWithdraws()"(
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    toTokens(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
-
-    "toTokens(uint256)"(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    tusd(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "tusd()"(overrides?: CallOverrides): Promise<BigNumber>;
+    "test_setGovernance()"(overrides?: Overrides): Promise<BigNumber>;
 
     usdc(overrides?: CallOverrides): Promise<BigNumber>;
 
     "usdc()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    usdt(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "usdt()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     user1(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1397,22 +571,6 @@ export class ElfContractsTest extends Contract {
 
     "weth()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-    ydai(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "ydai()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    ydaiAsset(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "ydaiAsset()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    ytusd(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "ytusd()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    ytusdAsset(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "ytusdAsset()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     yusdc(overrides?: CallOverrides): Promise<BigNumber>;
 
     "yusdc()"(overrides?: CallOverrides): Promise<BigNumber>;
@@ -1420,14 +578,6 @@ export class ElfContractsTest extends Contract {
     yusdcAsset(overrides?: CallOverrides): Promise<BigNumber>;
 
     "yusdcAsset()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    yusdt(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "yusdt()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    yusdtAsset(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "yusdtAsset()"(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -1435,33 +585,9 @@ export class ElfContractsTest extends Contract {
 
     "IS_TEST()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    allocator(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    _elfDeploy(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "allocator()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    assets(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "assets(uint256)"(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    conversionType(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "conversionType(uint256)"(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    dai(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "dai()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    "_elfDeploy()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     elf(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -1471,149 +597,51 @@ export class ElfContractsTest extends Contract {
 
     "failed()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    fromTokens(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "fromTokens(uint256)"(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     hevm(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     "hevm()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    lender1(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "lender1()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    lender2(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "lender2()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    lender3(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "lender3()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    lender4(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "lender4()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    percents(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "percents(uint256)"(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    priceOracle1(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "priceOracle1()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    priceOracle2(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "priceOracle2()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    priceOracle3(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "priceOracle3()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    priceOracle4(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "priceOracle4()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     setUp(overrides?: Overrides): Promise<PopulatedTransaction>;
 
     "setUp()"(overrides?: Overrides): Promise<PopulatedTransaction>;
 
-    testFail_basic_sanity(overrides?: Overrides): Promise<PopulatedTransaction>;
-
-    "testFail_basic_sanity()"(
+    testFail_setGovernance(
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    test_basic_sanity(overrides?: Overrides): Promise<PopulatedTransaction>;
-
-    "test_basic_sanity()"(overrides?: Overrides): Promise<PopulatedTransaction>;
-
-    test_correctUserBalances(
+    "testFail_setGovernance()"(
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "test_correctUserBalances()"(
+    test_balance(overrides?: Overrides): Promise<PopulatedTransaction>;
+
+    "test_balance()"(overrides?: Overrides): Promise<PopulatedTransaction>;
+
+    test_balanceUnderlying(
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    test_depositingETH(overrides?: Overrides): Promise<PopulatedTransaction>;
-
-    "test_depositingETH()"(
+    "test_balanceUnderlying()"(
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    test_depositingWETH(overrides?: Overrides): Promise<PopulatedTransaction>;
-
-    "test_depositingWETH()"(
+    test_depositAndWithdraw(
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    test_multipleETHDeposits(
+    "test_depositAndWithdraw()"(
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "test_multipleETHDeposits()"(
+    test_setGovernance(overrides?: Overrides): Promise<PopulatedTransaction>;
+
+    "test_setGovernance()"(
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
-
-    test_multipleETHDepositsAndWithdraws(
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "test_multipleETHDepositsAndWithdraws()"(
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    test_multipleWETHDeposits(
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "test_multipleWETHDeposits()"(
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    test_multipleWETHDepositsAndWithdraws(
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "test_multipleWETHDepositsAndWithdraws()"(
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    toTokens(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "toTokens(uint256)"(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    tusd(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "tusd()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     usdc(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     "usdc()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    usdt(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "usdt()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     user1(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -1631,22 +659,6 @@ export class ElfContractsTest extends Contract {
 
     "weth()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    ydai(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "ydai()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    ydaiAsset(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "ydaiAsset()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    ytusd(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "ytusd()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    ytusdAsset(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "ytusdAsset()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     yusdc(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     "yusdc()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -1654,13 +666,5 @@ export class ElfContractsTest extends Contract {
     yusdcAsset(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     "yusdcAsset()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    yusdt(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "yusdt()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    yusdtAsset(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "yusdtAsset()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }

@@ -26,7 +26,7 @@ const _abi = [
       },
       {
         internalType: "address payable",
-        name: "_weth",
+        name: "weth",
         type: "address",
       },
     ],
@@ -93,19 +93,6 @@ const _abi = [
         internalType: "uint256",
         name: "",
         type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "converter",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
       },
     ],
     stateMutability: "view",
@@ -190,33 +177,7 @@ const _abi = [
   },
   {
     inputs: [],
-    name: "numAllocations",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
     name: "pool",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "priceOracle",
     outputs: [
       {
         internalType: "address",
@@ -256,24 +217,11 @@ const _abi = [
       },
       {
         internalType: "uint256",
-        name: "_numAllocations",
+        name: "numAllocations",
         type: "uint256",
       },
     ],
     name: "setAllocations",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_converter",
-        type: "address",
-      },
-    ],
-    name: "setConverter",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -295,11 +243,11 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
-        name: "_priceOracle",
+        name: "_pool",
         type: "address",
       },
     ],
-    name: "setPriceOracle",
+    name: "setPool",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
