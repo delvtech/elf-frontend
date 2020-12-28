@@ -22,8 +22,11 @@ test("should render an empty list", async () => {
   return getByText("no markets found");
 });
 
-test("should render a list", async () => {
-  const { getByText } = await render(<MarketsTable markets={MARKETS} />);
+test("should render a list", () => {
+  const { getByText } = render(<MarketsTable markets={MARKETS} />);
 
-  return getByText("ETH");
+  expect(getByText("Pair")).toBeInTheDocument();
+  expect(getByText("ROI")).toBeInTheDocument();
+  expect(getByText("Price")).toBeInTheDocument();
+  expect(getByText("Balance")).toBeInTheDocument();
 });
