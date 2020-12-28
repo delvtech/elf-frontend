@@ -4,30 +4,33 @@ import { StakingAssets } from "../crypto/stakingAssets";
 
 export interface Pool {
   /**
-   * Unique identifier for the strategy
+   * Unique identifier for the pool
    */
   id: string;
 
   /**
-   * Human-readable name for the strategy
+   * Human-readable name for the pool
    */
   name: string;
 
+  /**
+   * Human-readable description for the pool
+   */
   description?: string;
 
   /**
-   * The asset (usually Ether) for deposits and withdrawals from the strategy.
+   * The asset for deposits and withdrawals from the pool.
    */
   stakingAsset: StakingAssets;
 
   /**
-   * The name of the token which represents the strategy.
+   * The name of the token which represents the pool.
    *  This must be different than the stakingAsset.
    */
   strategyAsset: CryptoSymbol;
 
   /**
-   * The assets held in the strategy. This can include the StakingAsset.
+   * The assets held in the pool. This can include the StakingAsset.
    */
   heldAssets: CryptoSymbol[];
 }
