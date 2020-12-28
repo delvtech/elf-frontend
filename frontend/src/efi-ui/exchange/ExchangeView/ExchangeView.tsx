@@ -8,7 +8,7 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { ButtonToggleFormGroup } from "efi-ui/base/ButtonToggleFormGroup/ButtonToggleFormGroup";
 import { SearchFormGroup } from "efi-ui/base/SearchFormGroup/SearchFormGroup";
-import { ExchangeTable } from "efi-ui/exchange/ExchangeTable/ExchangeTable";
+import { MarketsTable } from "efi-ui/markets/MarketsTable/MarketsTable";
 import WalletSummaryPane from "efi-ui/wallets/WalletSummaryPane/WalletSummaryPane";
 import { ElfStrategyHighRisk } from "efi/pools/highRisk";
 import { ElfStrategyLowRisk } from "efi/pools/lowRisk";
@@ -104,7 +104,7 @@ export const ExchangeView: FC<ExchangeViewProps> = () => {
             />
 
             <div className={tw("flex", "justify-center")}>
-              <ExchangeTable
+              <MarketsTable
                 className={tw("w-full")}
                 markets={availableMarkets}
               />

@@ -2,7 +2,7 @@ import React from "react";
 
 import { render } from "@testing-library/react";
 
-import { ExchangeTable } from "efi-ui/exchange/ExchangeTable/ExchangeTable";
+import { MarketsTable } from "efi-ui/markets/MarketsTable/MarketsTable";
 import { Pool } from "efi/pools/Pool";
 
 const elfPool: Pool = {
@@ -17,7 +17,13 @@ const elfPool: Pool = {
 const MARKETS = [elfPool, elfPool, elfPool];
 
 test("should render an empty list", async () => {
-  const { getByText } = await render(<ExchangeTable markets={[]} />);
+  const { getByText } = await render(<MarketsTable markets={[]} />);
 
   return getByText("no markets found");
+});
+
+test("should render a list", async () => {
+  const { getByText } = await render(<MarketsTable markets={MARKETS} />);
+
+  return getByText("ETH");
 });

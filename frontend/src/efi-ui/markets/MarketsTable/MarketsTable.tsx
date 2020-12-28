@@ -1,14 +1,13 @@
 import React, { FC, useCallback } from "react";
 
 import { Alignment, Classes, HTMLTable, Switch } from "@blueprintjs/core";
-import { Link, useNavigate } from "@reach/router";
+import { Link } from "@reach/router";
 import { Erc20 } from "elf-contracts/types/Erc20";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { FormGroupLabel } from "efi-ui/base/FormGroupLabel/FormGroupLabel";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { Navigation } from "efi-ui/navigation/navigation";
 import { useTokenName } from "efi-ui/token/hooks/useTokenName";
 import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
 import { useTokenTotalSupply } from "efi-ui/token/hooks/useTokenTotalSupply";
@@ -16,12 +15,12 @@ import { formatEth } from "efi/coins/ether/formatEth";
 import { wethContract } from "efi/crypto/TokenContracts";
 import { Pool } from "efi/pools/Pool";
 
-interface ExchangeTableProps {
+interface MarketsTableProps {
   markets: Pool[];
   className?: string;
 }
 
-const TABLE_HEADERS: ExchangeTableHeaderProps[] = [
+const TABLE_HEADERS: MarketsTableHeaderProps[] = [
   { label: t`Pair` },
   { label: t`ROI` },
   { label: t`Price` },
@@ -32,10 +31,7 @@ const TABLE_HEADERS: ExchangeTableHeaderProps[] = [
   },
 ];
 
-export const ExchangeTable: FC<ExchangeTableProps> = ({
-  markets,
-  className,
-}) => {
+export const MarketsTable: FC<MarketsTableProps> = ({ markets, className }) => {
   if (!markets.length) {
     return <span>{t`no markets found`}</span>;
   }
@@ -44,14 +40,14 @@ export const ExchangeTable: FC<ExchangeTableProps> = ({
       <thead>
         <tr>
           {TABLE_HEADERS.map(({ label, tooltip }) => (
-            <ExchangeTableHeader key={label} label={label} tooltip={tooltip} />
+            <MarketsTableHeader key={label} label={label} tooltip={tooltip} />
           ))}
         </tr>
       </thead>
       <tbody className={Classes.TEXT_LARGE}>
         {markets.map((pool, i) => {
           return (
-            <ExchangeTableRow
+            <MarketsTableRow
               key={i}
               poolContract={wethContract}
               poolId={pool.id}
@@ -63,12 +59,12 @@ export const ExchangeTable: FC<ExchangeTableProps> = ({
   );
 };
 
-interface ExchangeTableHeaderProps {
+interface MarketsTableHeaderProps {
   label: string;
   tooltip?: string;
 }
 
-const ExchangeTableHeader: FC<ExchangeTableHeaderProps> = ({
+const MarketsTableHeader: FC<MarketsTableHeaderProps> = ({
   label,
   tooltip,
 }) => {
@@ -83,12 +79,12 @@ const ExchangeTableHeader: FC<ExchangeTableHeaderProps> = ({
   );
 };
 
-interface ExchangeTableRowProps {
+interface MarketsTableRowProps {
   poolContract: Erc20;
   poolId: string;
 }
 
-const ExchangeTableRow: FC<ExchangeTableRowProps> = ({
+const MarketsTableRow: FC<MarketsTableRowProps> = ({
   poolContract,
   poolId,
 }) => {
