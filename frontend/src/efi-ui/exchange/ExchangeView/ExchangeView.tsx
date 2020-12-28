@@ -38,9 +38,9 @@ const ASSET_BUTTONS = [
 
 // TODO: change this to a list of Markets
 const availableMarkets: Pool[] = [
-  // ElfStrategyLowRisk,
-  // ElfStrategyMediumRisk,
-  // ElfStrategyHighRisk,
+  ElfStrategyLowRisk,
+  ElfStrategyMediumRisk,
+  ElfStrategyHighRisk,
 ];
 
 export const ExchangeView: FC<ExchangeViewProps> = () => {
