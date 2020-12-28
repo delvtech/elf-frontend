@@ -23,6 +23,9 @@ export function useActiveTab(): Navigation {
     case Navigation.WALLET: {
       return Navigation.WALLET;
     }
+    case Navigation.EXCHANGE: {
+      return Navigation.EXCHANGE;
+    }
     default:
       typeAassertNever(navigation);
       return Navigation.HOME;

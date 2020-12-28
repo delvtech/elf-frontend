@@ -4,4 +4,5 @@ export enum Navigation {
   WALLET = "wallet",
   POOLS = "pools",
   FAQ = "faq",
+  EXCHANGE = "exchange",
 }

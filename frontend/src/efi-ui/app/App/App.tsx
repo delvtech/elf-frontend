@@ -18,6 +18,7 @@ import { useSyncWithInjectedEthereum } from "efi-ui/wallets/hooks/useSyncWithInj
 import { WalletView } from "efi-ui/wallets/WalletView/WalletView";
 
 import styles from "./App.module.css";
+import { ExchangeView } from "efi-ui/exchange/ExchangeView/ExchangeView";
 
 const contentClassName = tw(
   "flex-1",
@@ -59,6 +60,7 @@ const App: FC<AppProps> = () => {
           <PoolView path={`${Navigation.POOLS}/:poolId`} />
           <FAQView path={Navigation.FAQ} />
           <WalletView path={Navigation.WALLET} />
+          <ExchangeView path={Navigation.EXCHANGE} />
         </Router>
       </div>
       <CryptoDrawer />
