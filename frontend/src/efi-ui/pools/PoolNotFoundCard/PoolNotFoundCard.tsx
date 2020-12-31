@@ -1,9 +1,8 @@
-import React, { FC } from "react";
-
 import { Card, NonIdealState } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { Link } from "@reach/router";
 import classNames from "classnames";
+import React, { FC } from "react";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";

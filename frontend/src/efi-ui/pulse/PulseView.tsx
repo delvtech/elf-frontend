@@ -1,7 +1,6 @@
-import React, { FC, useState } from "react";
-
 import { Tab, Tabs } from "@blueprintjs/core";
 import { RouteComponentProps } from "@reach/router";
+import React, { FC, useState } from "react";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";

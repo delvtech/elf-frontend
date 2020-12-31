@@ -1,7 +1,7 @@
-import { QueryResult } from "react-query";
+import { QueryObserverResult } from "react-query";
 
 export function getQueryCombinedErrorState(
-  queryResults: QueryResult<unknown>[]
+  queryResults: QueryObserverResult<unknown>[]
 ) {
   return queryResults.some(({ isError }) => isError);
 }

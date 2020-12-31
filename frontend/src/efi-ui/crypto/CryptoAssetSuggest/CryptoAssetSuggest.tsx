@@ -1,9 +1,8 @@
-import React, { FC, Fragment } from "react";
-
 import { IOverlayProps, MenuItem, TagInput } from "@blueprintjs/core";
 import { ItemListPredicate, ItemRenderer, Omnibar } from "@blueprintjs/select";
 import classNames from "classnames";
 import { filter } from "fuzzaldrin-plus";
+import React, { FC, Fragment } from "react";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";

@@ -110,8 +110,11 @@ module.exports = {
         "from.pathNot re of the not-to-dev-dep rule in the dependency-cruiser configuration",
       from: {
         path: "^(src)",
-        pathNot:
+        pathNot: `(${[
           "\\.(spec|test)\\.(js|mjs|cjs|ts|tsx|ls|coffee|litcoffee|coffee\\.md)$",
+          // test utils aren't tests themselves, but should be allowed to import devDependencies
+          "testing\\.(ts|tsx)",
+        ].join("|")})`,
       },
       to: {
         dependencyTypes: ["npm-dev"],
@@ -179,7 +182,7 @@ module.exports = {
         pathNot: `(${["index.tsx", "setupTests.ts", "efi-ui"].join("|")})`,
       },
       to: {
-        path: "node_modules/react",
+        path: "node_modules/react$",
       },
     },
     {

@@ -1,6 +1,5 @@
-import { QueryKey, QueryResult, useQuery } from "react-query";
-
 import { BigNumber } from "ethers";
+import { QueryKey, QueryObserverResult, useQuery } from "react-query";
 
 import { fetchTokenBalanceOf } from "efi/crypto/fetchTokenBalanceOf";
 import { TokenContracts } from "efi/crypto/TokenContracts";
@@ -15,18 +14,18 @@ import { TokenContractSymbols } from "efi/crypto/TokenContractSymbols";
 export function useTokenBalanceOfOld(
   name: TokenContractSymbols,
   account: string | null | undefined
-): QueryResult<BigNumber | undefined> {
+): QueryObserverResult<BigNumber | undefined> {
   const balanceKey = makeTokenBalanceOfQueryKey(name, account);
 
-  const result = useQuery<BigNumber | undefined>(
-    balanceKey,
-    async (key: string[], { name, account }: TokenBalanceOfQueryVariables) => {
+  const result = useQuery<BigNumber | undefined>({
+    queryKey: balanceKey,
+    queryFn: async () => {
       const contract = TokenContracts[name];
       if (account) {
         return fetchTokenBalanceOf(contract, account);
       }
-    }
-  );
+    },
+  });
 
   return result;
 }

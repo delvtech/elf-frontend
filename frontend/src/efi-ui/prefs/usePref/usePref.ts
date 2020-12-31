@@ -1,14 +1,8 @@
 import { useCallback } from "react";
-import { queryCache, useQuery } from "react-query";
-
-import isEqual from "lodash.isequal";
+import { useQuery, useQueryClient } from "react-query";
 
 import efiLocalStorage from "efi/base/localStorage";
 import { makePrefEnvelope, PrefEnvelope } from "efi/prefs/prefEnvelope";
-
-interface PrefVariables {
-  id: string;
-}
 
 interface PrefResult<T> {
   pref: T;
@@ -16,20 +10,17 @@ interface PrefResult<T> {
 }
 
 export function usePref<T>(id: string, defaultValue: T): PrefResult<T> {
+  const queryClient = useQueryClient();
   const queryKey = makePrefQueryKey(id);
 
-  const { data: prefEnvelope } = useQuery<PrefEnvelope<T>>(
+  const { data: prefEnvelope } = useQuery<PrefEnvelope<T>>({
     queryKey,
-    (key: string[], variables: PrefVariables) => {
-      return (
-        getPrefFromLocalStorage(variables.id) ?? makePrefEnvelope(defaultValue)
-      );
+    queryFn: () => {
+      return getPrefFromLocalStorage(id) ?? makePrefEnvelope(defaultValue);
     },
-    {
-      initialData: () =>
-        getPrefFromLocalStorage<T>(id) ?? makePrefEnvelope(defaultValue),
-    }
-  );
+    initialData: () =>
+      getPrefFromLocalStorage<T>(id) ?? makePrefEnvelope(defaultValue),
+  });
 
   const setPref = useCallback(
     (newPref: T) => {
@@ -39,11 +30,9 @@ export function usePref<T>(id: string, defaultValue: T): PrefResult<T> {
       efiLocalStorage.setItem(id, JSON.stringify(prefEnvelope));
 
       // Invalidate this pref so callers will re-ensure the data as needed
-      queryCache.invalidateQueries((query) => {
-        return isEqual(query.queryKey, queryKey);
-      });
+      queryClient.invalidateQueries(queryKey);
     },
-    [id, queryKey]
+    [id, queryClient, queryKey]
   );
 
   return {

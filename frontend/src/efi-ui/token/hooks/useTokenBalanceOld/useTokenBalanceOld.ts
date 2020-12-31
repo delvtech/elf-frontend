@@ -1,10 +1,10 @@
 import { BigNumber } from "ethers";
 
+import { ComputedQueryResult } from "efi-ui/base/ComputedQueryResult";
 import { useTokenBalanceOfOld } from "efi-ui/token/hooks/useTokenBalanceOfOld";
 import { useTokenDecimalsOld } from "efi-ui/token/hooks/useTokenDecimalsOld";
 import { TokenBalance } from "efi/crypto/TokenBalance";
 import { TokenContractSymbols } from "efi/crypto/TokenContractSymbols";
-import { ComputedQueryResult } from "efi-ui/base/ComputedQueryResult";
 
 /**
  * Gets the ERC20 token balance for the prodvided account address and the number of decimals.

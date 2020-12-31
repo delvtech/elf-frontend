@@ -1,9 +1,9 @@
 import { Erc20 } from "elf-contracts/types/Erc20";
 
-import { ComputedQueryResult } from "efi-ui/base/ComputedQueryResult";
-import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
 import { getCoinGeckoId } from "efi-coingecko";
+import { ComputedQueryResult } from "efi-ui/base/ComputedQueryResult";
 import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
+import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
 
 export function useTokenPrice<TContract extends Erc20>(
   contract: TContract,

@@ -1,10 +1,9 @@
-import React, { FC, useMemo } from "react";
-
 import { Breadcrumbs, IBreadcrumbProps } from "@blueprintjs/core";
-
-import { Pool } from "efi/pools/Pool";
+import React, { FC, useMemo } from "react";
 import { t } from "ttag";
+
 import tw from "efi-tailwindcss-classnames";
+import { Pool } from "efi/pools/Pool";
 
 interface PoolBreadcrumbProps {
   availablePools: Pool[];

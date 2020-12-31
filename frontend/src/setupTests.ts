@@ -2,11 +2,9 @@
 // jest-dom's custom assertions, see:
 // https://github.com/testing-library/jest-dom
 import "@testing-library/jest-dom";
-import { queryCache } from "react-query";
 
 import efiLocalStorage from "efi/base/localStorage";
 
 beforeEach(() => {
-  queryCache.clear();
   efiLocalStorage.clear();
 });

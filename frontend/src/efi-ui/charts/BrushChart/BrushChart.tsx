@@ -1,3 +1,9 @@
+import { Brush } from "@visx/brush";
+import { Bounds } from "@visx/brush/lib/types";
+import { LinearGradient } from "@visx/gradient";
+import { PatternLines } from "@visx/pattern";
+import { scaleLinear, scaleTime } from "@visx/scale";
+import { extent, max } from "d3-array";
 import React, {
   FunctionComponent,
   useCallback,
@@ -5,13 +11,6 @@ import React, {
   useState,
 } from "react";
 import { useMeasure } from "react-use";
-
-import { Brush } from "@visx/brush";
-import { Bounds } from "@visx/brush/lib/types";
-import { LinearGradient } from "@visx/gradient";
-import { PatternLines } from "@visx/pattern";
-import { scaleLinear, scaleTime } from "@visx/scale";
-import { extent, max } from "d3-array";
 
 import tw from "efi-tailwindcss-classnames";
 import AreaChart from "efi-ui/charts/AreaChart/AreaChart";

@@ -1,7 +1,7 @@
-import { QueryResult } from "react-query";
+import { QueryObserverResult } from "react-query";
 
 export function getQueryCombinedIdleState<T = unknown>(
-  queryResults: QueryResult<T>[]
+  queryResults: QueryObserverResult<T>[]
 ) {
   return queryResults.every(({ isIdle }) => isIdle);
 }

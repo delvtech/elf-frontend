@@ -1,9 +1,8 @@
-import React, { FC, useCallback, useState } from "react";
-import { QueryResult } from "react-query";
-import { useInterval } from "react-use";
-
 import { Button, Card, Intent, Switch, Tag, Tooltip } from "@blueprintjs/core";
 import { BigNumber } from "ethers";
+import React, { FC, useCallback, useState } from "react";
+import { QueryObserverResult } from "react-query";
+import { useInterval } from "react-use";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -319,7 +318,7 @@ export const PoolLockedCard: FC<PoolLockedCardProps> = ({ pool }) => {
 function useAllowance(
   stakingAsset: StakingAssets,
   account: string | null | undefined
-): [BigNumber | undefined, QueryResult<BigNumber | undefined>] {
+): [BigNumber | undefined, QueryObserverResult<BigNumber | undefined>] {
   // Eth is not a token
   const tokenSymbol: TokenContractSymbols | undefined =
     stakingAsset !== "ETH" ? stakingAsset : undefined;
@@ -343,9 +342,10 @@ function useApprove(
   account: string | null | undefined,
   amount: BigNumber = MAX_ALLOWANCE
 ): [() => void, boolean] {
-  const [approve, approveResult] = useElfContractApproveDeposit();
-
-  const approvePending = approveResult.isLoading;
+  const {
+    mutate: approve,
+    isLoading: approvePending,
+  } = useElfContractApproveDeposit();
 
   const startApprove = useCallback(async () => {
     if (stakingAsset === "ETH") {
@@ -374,10 +374,16 @@ function useDeposit(
   stakingAsset: StakingAssets,
   account: string | null | undefined
 ): [(amount: BigNumber) => void, boolean] {
-  const [depositEth, depositEthResult] = useElfContractDepositEth();
-  const [deposit, depositResult] = useElfContractDeposit();
+  const {
+    mutate: depositEth,
+    isLoading: depositEthIsLoading,
+  } = useElfContractDepositEth();
+  const {
+    mutate: deposit,
+    isLoading: depositIsLoading,
+  } = useElfContractDeposit();
 
-  const depositPending = depositResult.isLoading || depositEthResult.isLoading;
+  const depositPending = depositIsLoading || depositEthIsLoading;
 
   const startDeposit = useCallback(
     async (amount: BigNumber) => {
@@ -411,10 +417,15 @@ function useWithdraw(
   stakingAsset: StakingAssets,
   account: string | null | undefined
 ): [(amount: BigNumber) => void, boolean] {
-  const [withdrawEth, withdrawEthResult] = useElfContractWithdrawEth();
-  const [withdraw, withdrawResult] = useElfContractWithdraw();
-  const withdrawPending =
-    withdrawResult.isLoading || withdrawEthResult.isLoading;
+  const {
+    mutate: withdrawEth,
+    isLoading: withdrawEthIsLoading,
+  } = useElfContractWithdrawEth();
+  const {
+    mutate: withdraw,
+    isLoading: withdrawIsLoading,
+  } = useElfContractWithdraw();
+  const withdrawPending = withdrawIsLoading || withdrawEthIsLoading;
 
   const startWithdraw = useCallback(
     async (amount: BigNumber) => {

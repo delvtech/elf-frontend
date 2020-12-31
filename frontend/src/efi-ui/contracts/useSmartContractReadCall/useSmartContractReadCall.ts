@@ -1,6 +1,5 @@
-import { QueryResult, useQuery } from "react-query";
-
 import { Contract } from "ethers";
+import { QueryObserverResult, useQuery } from "react-query";
 
 import { Unpacked } from "efi/base/Unpacked";
 import {
@@ -25,7 +24,7 @@ export function useSmartContractReadCall<
   contract: TContract,
   methodName: TMethodName,
   options?: UseSmartContractReadCallOptions<TContract, TMethodName>
-): QueryResult<TReturnType> {
+): QueryObserverResult<TReturnType> {
   const { enabled = true, callArgs } = options || {};
 
   const queryKey = makeSmartContractReadCallQueryKey<TContract, TMethodName>(
@@ -34,27 +33,19 @@ export function useSmartContractReadCall<
     callArgs
   );
 
-  const queryFn = async (
-    key: string,
-    { methodName, callArgs: args }: SmartContractReadCallVariables
-  ): Promise<TReturnType> => {
-    const finalArgs = args || [];
-    const result = await contract.functions[methodName](...finalArgs);
+  const queryFn = async (): Promise<TReturnType> => {
+    const finalArgs = callArgs || [];
+    const result = await contract.functions[methodName as string](...finalArgs);
     return result;
   };
 
   const queryResult = useQuery<TReturnType>({
     queryKey,
     queryFn,
-    config: { enabled },
+    enabled,
   });
 
   return queryResult;
-}
-
-interface SmartContractReadCallVariables {
-  methodName: string;
-  callArgs?: any[];
 }
 
 function makeSmartContractReadCallQueryKey<

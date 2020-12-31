@@ -1,10 +1,9 @@
-import React, { FunctionComponent, useCallback } from "react";
-
 import { AxisBottom, AxisLeft, AxisScale } from "@visx/axis";
 import { curveMonotoneX } from "@visx/curve";
 import { LinearGradient } from "@visx/gradient";
 import { Group } from "@visx/group";
 import { AreaClosed } from "@visx/shape";
+import React, { FunctionComponent, useCallback } from "react";
 
 import { getAxisColor } from "efi-ui/charts/colors";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";

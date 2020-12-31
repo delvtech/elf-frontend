@@ -1,7 +1,6 @@
-import React, { FC, useCallback } from "react";
-
 import { Button, Intent } from "@blueprintjs/core";
 import { BigNumber } from "ethers";
+import React, { FC, useCallback } from "react";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";

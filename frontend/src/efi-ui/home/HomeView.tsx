@@ -1,7 +1,6 @@
-import React, { FC } from "react";
-
 import { Card } from "@blueprintjs/core";
 import { RouteComponentProps } from "@reach/router";
+import React, { FC } from "react";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";

@@ -1,7 +1,6 @@
-import React, { CSSProperties, FC, useCallback } from "react";
-
 import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
+import React, { CSSProperties, FC, useCallback } from "react";
 
 import { ReactComponent as CoinbaseWalletIcon } from "efi-static-assets/logos/coinbasewallet.svg";
 import { ReactComponent as FortmaticIcon } from "efi-static-assets/logos/fortmatic.svg";

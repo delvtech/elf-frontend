@@ -1,10 +1,9 @@
-import React, { CSSProperties, Fragment, FunctionComponent } from "react";
-
 import { Button, Classes, Colors, Icon } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
 import classNames from "classnames";
+import React, { CSSProperties, Fragment, FunctionComponent } from "react";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";

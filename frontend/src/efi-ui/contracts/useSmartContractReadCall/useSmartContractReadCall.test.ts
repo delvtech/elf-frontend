@@ -1,14 +1,22 @@
-import { renderHook } from "@testing-library/react-hooks";
 import { Contract } from "ethers";
+import { QueryObserverResult } from "react-query";
 
+import { renderHookWithClient } from "efi-ui/base/testing";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
+import { createQueryClient } from "efi/queryClient";
 
 const SAMPLE_READ_CONTRACT_CALL_RESULT = { 0: "sample contract name" };
 
 test("provides data from smart contract read methods", async () => {
   const mockNameFn = jest.fn(async () => SAMPLE_READ_CONTRACT_CALL_RESULT);
 
-  const { result, waitForNextUpdate, rerender } = renderHook(() =>
+  const queryClient = createQueryClient();
+
+  const {
+    result,
+    waitForNextUpdate,
+    rerender,
+  } = renderHookWithClient(queryClient, () =>
     useSmartContractReadCall(
       ({ functions: { name: mockNameFn } } as any) as Contract,
       "name"
@@ -30,7 +38,12 @@ test("provides data from smart contract read methods", async () => {
 test("passes arguments to smart contract read methods", async () => {
   const mockFn = jest.fn(async (a: string, b: string) => [a, b].join(" "));
 
-  const { result, waitForNextUpdate, rerender } = renderHook(() =>
+  const queryClient = createQueryClient();
+  const {
+    result,
+    waitForNextUpdate,
+    rerender,
+  } = renderHookWithClient(queryClient, () =>
     useSmartContractReadCall(
       ({ functions: { name: mockFn } } as any) as Contract,
       "name",
@@ -53,7 +66,14 @@ test("passes arguments to smart contract read methods", async () => {
 test("properly handles enabled option", async () => {
   const mockFn = jest.fn(async (a: string, b: string) => [a, b].join(" "));
 
-  const { result, waitForNextUpdate, rerender } = renderHook(
+  const queryClient = createQueryClient();
+  const { result, waitForNextUpdate, rerender } = renderHookWithClient<
+    {
+      enabled: boolean;
+    },
+    QueryObserverResult<string>
+  >(
+    queryClient,
     ({ enabled }) =>
       useSmartContractReadCall(
         ({ functions: { name: mockFn } } as any) as Contract,

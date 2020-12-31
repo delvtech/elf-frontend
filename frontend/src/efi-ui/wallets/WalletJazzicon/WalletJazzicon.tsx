@@ -1,8 +1,7 @@
-import React, { FC, useEffect, useRef } from "react";
-
 import { Web3Provider } from "@ethersproject/providers";
 import jazzicon from "@metamask/jazzicon";
 import { useWeb3React } from "@web3-react/core";
+import React, { FC, useEffect, useRef } from "react";
 
 import { getMetamaskJazziconSeed } from "efi-ui/wallets/icons";
 

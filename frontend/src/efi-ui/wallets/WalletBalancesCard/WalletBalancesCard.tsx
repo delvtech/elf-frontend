@@ -20,11 +20,11 @@ import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
 import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
 import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
 import { formatEth } from "efi/coins/ether/formatEth";
+import { elfContract } from "efi/contracts/Elf";
 import { wethContract } from "efi/crypto/TokenContracts";
 import { formatMoney } from "efi/money/formatMoney";
 
 import { useTokenFiatBalance } from "../../token/hooks/useTokenFiatBalance";
-import { elfContract } from "efi/contracts/Elf";
 
 interface WalletBalancesCardProps {}
 

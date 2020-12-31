@@ -1,6 +1,5 @@
-import { QueryKey, QueryResult, useQuery } from "react-query";
-
 import { BigNumber } from "ethers";
+import { QueryKey, QueryObserverResult, useQuery } from "react-query";
 
 import { fetchTokenAllowance } from "efi/contracts/token";
 import { TokenContracts } from "efi/crypto/TokenContracts";
@@ -17,23 +16,16 @@ export function useTokenAllowance(
   tokenSymbol: TokenContractSymbols | undefined,
   ownerAddress: string | undefined | null,
   spenderAddress: string
-): QueryResult<BigNumber | undefined> {
+): QueryObserverResult<BigNumber | undefined> {
   const balanceKey = makeTokenAllowanceQueryKey(
     tokenSymbol,
     ownerAddress,
     spenderAddress
   );
 
-  const result = useQuery<BigNumber | undefined>(
-    balanceKey,
-    (
-      key: string[],
-      {
-        tokenSymbol,
-        ownerAddress,
-        spenderAddress,
-      }: TokenAllowanceQueryVariables
-    ) => {
+  const result = useQuery<BigNumber | undefined>({
+    queryKey: balanceKey,
+    queryFn: () => {
       if (!ownerAddress) {
         return;
       }
@@ -43,17 +35,12 @@ export function useTokenAllowance(
       const contract = TokenContracts[tokenSymbol];
 
       return fetchTokenAllowance(contract, ownerAddress, spenderAddress);
-    }
-  );
+    },
+  });
 
   return result;
 }
 
-export interface TokenAllowanceQueryVariables {
-  tokenSymbol: TokenContractSymbols | undefined;
-  ownerAddress: string | undefined | null;
-  spenderAddress: string;
-}
 export function makeTokenAllowanceQueryKey(
   tokenSymbol: TokenContractSymbols | undefined,
   ownerAddress: string | undefined | null,

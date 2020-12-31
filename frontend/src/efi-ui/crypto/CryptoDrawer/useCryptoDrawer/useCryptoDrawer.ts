@@ -1,9 +1,10 @@
 import { useCallback, useMemo } from "react";
-import { queryCache, useQuery } from "react-query";
+import { QueryClient, useQuery, useQueryClient } from "react-query";
+
+import { efiQueryClient } from "efi/queryClient";
 
 interface CryptoDrawer {
   cryptoDrawerIsOpen: boolean;
-  setCryptoDrawerIsOpen: (isOpen: boolean) => void;
   openCryptoDrawer: () => void;
   closeCryptoDrawer: () => void;
 }
@@ -12,10 +13,11 @@ const DRAWER_CRYPTO_IS_OPEN_QUERY_KEY = ["drawer", "crypto", "isOpen"];
 const DRAWER_IS_OPEN_DEFAULT = false;
 
 export function useCryptoDrawer(): CryptoDrawer {
+  const queryClient = useQueryClient();
   const { data } = useQuery<boolean | undefined>(
     DRAWER_CRYPTO_IS_OPEN_QUERY_KEY,
     async () => {
-      const drawerIsOpen = queryCache.getQueryData<boolean>(
+      const drawerIsOpen = efiQueryClient.getQueryData<boolean>(
         DRAWER_CRYPTO_IS_OPEN_QUERY_KEY
       );
       return drawerIsOpen;
@@ -23,13 +25,18 @@ export function useCryptoDrawer(): CryptoDrawer {
   );
 
   const cryptoDrawerIsOpen = data || DRAWER_IS_OPEN_DEFAULT;
-  const closeCryptoDrawer = useCallback(() => setCryptoDrawerIsOpen(false), []);
-  const openCryptoDrawer = useCallback(() => setCryptoDrawerIsOpen(true), []);
+  const closeCryptoDrawer = useCallback(
+    () => setCryptoDrawerIsOpen(queryClient, false),
+    [queryClient]
+  );
+  const openCryptoDrawer = useCallback(
+    () => setCryptoDrawerIsOpen(queryClient, true),
+    [queryClient]
+  );
 
-  const cryptoDawer: CryptoDrawer = useMemo(
+  const cryptoDawer = useMemo<CryptoDrawer>(
     () => ({
       cryptoDrawerIsOpen,
-      setCryptoDrawerIsOpen,
       openCryptoDrawer,
       closeCryptoDrawer,
     }),
@@ -39,8 +46,11 @@ export function useCryptoDrawer(): CryptoDrawer {
   return cryptoDawer;
 }
 
-function setCryptoDrawerIsOpen(drawerIsOpen: boolean) {
-  queryCache.setQueryData(DRAWER_CRYPTO_IS_OPEN_QUERY_KEY, () => drawerIsOpen);
+function setCryptoDrawerIsOpen(
+  queryClient: QueryClient,
+  drawerIsOpen: boolean
+) {
+  queryClient.setQueryData(DRAWER_CRYPTO_IS_OPEN_QUERY_KEY, () => drawerIsOpen);
   // Invalidate so callers will re-ensure the data as needed
-  queryCache.invalidateQueries(DRAWER_CRYPTO_IS_OPEN_QUERY_KEY);
+  queryClient.invalidateQueries(DRAWER_CRYPTO_IS_OPEN_QUERY_KEY);
 }

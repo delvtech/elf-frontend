@@ -1,6 +1,5 @@
-import React, { FC, useMemo } from "react";
-
 import { Card } from "@blueprintjs/core";
+import React, { FC, useMemo } from "react";
 
 import tw from "efi-tailwindcss-classnames";
 import BrushChart, { TimeData } from "efi-ui/charts/BrushChart/BrushChart";

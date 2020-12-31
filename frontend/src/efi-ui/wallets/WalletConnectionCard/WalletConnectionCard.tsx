@@ -18,12 +18,12 @@ import React, {
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
+import { ConnectWalletButtons } from "efi-ui/wallets/ConnectWalletButtons/ConnectWalletButtons";
 import { WalletJazzicon } from "efi-ui/wallets/WalletJazzicon/WalletJazzicon";
 import { isMainnet } from "efi/crypto/ethereum";
 import { formatChainName } from "efi/crypto/formatChainName";
 import { formatWalletAddress } from "efi/wallets/formatWalletAddress";
-import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import { ConnectWalletButtons } from "efi-ui/wallets/ConnectWalletButtons/ConnectWalletButtons";
 
 interface WalletConnectionCardProps {
   chainId: number | undefined;

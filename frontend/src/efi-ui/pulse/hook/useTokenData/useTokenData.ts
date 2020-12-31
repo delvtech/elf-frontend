@@ -1,4 +1,4 @@
-import { QueryResult, useQuery } from "react-query";
+import { QueryObserverResult, useQuery } from "react-query";
 
 import { fetchTokenData, TokenData } from "efi/crypto/fetchTokenData";
 
@@ -12,19 +12,15 @@ export function useTokenData(
   tokenAddress: string,
   startTimeSeconds: number,
   endTimeSeconds: number
-): QueryResult<TokenData[]> {
+): QueryObserverResult<TokenData[]> {
   const marketDataQueryKey = makeTokenDataQueryKey(
     tokenAddress,
     startTimeSeconds,
     endTimeSeconds
   );
-  const result = useQuery(
-    marketDataQueryKey,
-    async (keys: string[], variables: TokenDataVariables) => {
-      const { tokenAddress, startTimeSeconds, endTimeSeconds } = variables;
-      return fetchTokenData(tokenAddress, startTimeSeconds, endTimeSeconds);
-    }
-  );
+  const result = useQuery(marketDataQueryKey, async () => {
+    return fetchTokenData(tokenAddress, startTimeSeconds, endTimeSeconds);
+  });
 
   return result;
 }

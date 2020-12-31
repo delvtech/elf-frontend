@@ -1,5 +1,3 @@
-import React, { ChangeEvent, FC, useCallback } from "react";
-
 import {
   Alignment,
   Button,
@@ -10,6 +8,7 @@ import {
   Switch,
 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
+import React, { ChangeEvent, FC, useCallback } from "react";
 import { Currencies } from "ts-money";
 import { t } from "ttag";
 

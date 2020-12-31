@@ -1,7 +1,7 @@
-import { QueryResult } from "react-query";
+import { QueryObserverResult } from "react-query";
 
 export function getQueryCombinedSuccessState(
-  queryResults: QueryResult<unknown>[]
+  queryResults: QueryObserverResult<unknown>[]
 ) {
   return queryResults.every(({ isSuccess }) => isSuccess);
 }

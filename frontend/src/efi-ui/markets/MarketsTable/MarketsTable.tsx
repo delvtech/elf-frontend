@@ -1,8 +1,7 @@
-import React, { FC, useCallback } from "react";
-
 import { Alignment, Classes, HTMLTable, Switch } from "@blueprintjs/core";
 import { Link } from "@reach/router";
 import { Erc20 } from "elf-contracts/types/Erc20";
+import React, { FC, useCallback } from "react";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";

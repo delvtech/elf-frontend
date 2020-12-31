@@ -1,6 +1,5 @@
-import { useCallback, useMemo } from "react";
-
 import { HTMLInputProps, IInputGroupProps } from "@blueprintjs/core";
+import { useCallback, useMemo } from "react";
 
 import { useBoolean } from "efi-ui/base/hooks/useBoolean/useBoolean";
 import { CryptoAssetInfo } from "efi/crypto/CryptoAssetInfo";

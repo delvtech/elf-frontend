@@ -1,7 +1,6 @@
-import React, { FC, Fragment, useCallback } from "react";
-
 import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
+import React, { FC, Fragment, useCallback } from "react";
 
 import { useNavigation } from "efi-ui/navigation/hooks/useTab";
 import { SidebarNavigation } from "efi-ui/navigation/SidebarNavigation/SidebarNavigation";

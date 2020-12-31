@@ -1,6 +1,5 @@
-import React, { FC } from "react";
-
 import { fireEvent, render } from "@testing-library/react";
+import React, { FC } from "react";
 
 import { useBoolean } from "efi-ui/base/hooks/useBoolean/useBoolean";
 

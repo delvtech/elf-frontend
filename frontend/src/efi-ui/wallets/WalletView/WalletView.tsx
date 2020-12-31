@@ -1,5 +1,3 @@
-import React, { FC } from "react";
-
 import {
   Button,
   Card,
@@ -13,6 +11,7 @@ import { Web3Provider } from "@ethersproject/providers";
 import { RouteComponentProps } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
 import classNames from "classnames";
+import React, { FC } from "react";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";

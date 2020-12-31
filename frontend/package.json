@@ -57,8 +57,7 @@
     "react": "^16.14.0",
     "react-blockies": "^1.4.1",
     "react-dom": "^16.14.0",
-    "react-query": "^2.26.4",
-    "react-query-devtools": "^2.6.3",
+    "react-query": "^3.5.5",
     "react-render-markup": "^3.3.0",
     "react-scripts": "4.0.1",
     "react-spring": "^8.0.27",
@@ -126,7 +125,6 @@
   "devDependencies": {
     "@testing-library/dom": "^7.29.0",
     "@testing-library/react-hooks": "^3.7.0",
-    "@testing-library/user-event": "^12.6.0",
     "@typechain/ethers-v5": "^2.0.0",
     "dependency-cruiser": "^9.21.1",
     "eslint-config-prettier": "^7.1.0",

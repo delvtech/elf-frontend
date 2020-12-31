@@ -1,8 +1,7 @@
-import React, { FC } from "react";
-
 import { Icon, Intent, NonIdealState, Tag } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import classNames from "classnames";
+import React, { FC } from "react";
 import { jt, t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";

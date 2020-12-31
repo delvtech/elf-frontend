@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-
 import { Web3Provider } from "@ethersproject/providers";
 import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core";
 import { Web3ReactContextInterface } from "@web3-react/core/dist/types";
@@ -8,6 +6,7 @@ import {
   UserRejectedRequestError as UserRejectedRequestErrorInjected,
 } from "@web3-react/injected-connector";
 import { formatEther } from "ethers/lib/utils";
+import { useEffect } from "react";
 import { Money } from "ts-money";
 import { t } from "ttag";
 

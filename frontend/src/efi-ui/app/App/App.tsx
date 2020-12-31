@@ -1,11 +1,11 @@
-import React, { FC, Fragment } from "react";
-import { ReactQueryDevtools } from "react-query-devtools";
-
 import { LocationProvider, Router } from "@reach/router";
 import classNames from "classnames";
+import React, { FC, Fragment } from "react";
+import { ReactQueryDevtools } from "react-query/devtools";
 
 import { tw } from "efi-tailwindcss-classnames";
 import { CryptoDrawer } from "efi-ui/crypto/CryptoDrawer/CryptoDrawer";
+import { ExchangeView } from "efi-ui/exchange/ExchangeView/ExchangeView";
 import { FAQView } from "efi-ui/faq/FAQView";
 import { HomeView } from "efi-ui/home/HomeView";
 import { MainNavigation } from "efi-ui/navigation/MainNavigation/MainNavigation";
@@ -18,7 +18,6 @@ import { useSyncWithInjectedEthereum } from "efi-ui/wallets/hooks/useSyncWithInj
 import { WalletView } from "efi-ui/wallets/WalletView/WalletView";
 
 import styles from "./App.module.css";
-import { ExchangeView } from "efi-ui/exchange/ExchangeView/ExchangeView";
 
 const contentClassName = tw(
   "flex-1",

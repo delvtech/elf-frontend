@@ -1,11 +1,10 @@
-import React, { ReactNode, useCallback, useMemo } from "react";
-
 import {
   HTMLInputProps,
   IInputGroupProps,
   Intent,
   ITagProps,
 } from "@blueprintjs/core";
+import React, { ReactNode, useCallback, useMemo } from "react";
 
 import tw from "efi-tailwindcss-classnames";
 import { CryptoAssetInfo } from "efi/crypto/CryptoAssetInfo";

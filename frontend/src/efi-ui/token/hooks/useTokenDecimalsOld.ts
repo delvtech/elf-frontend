@@ -1,4 +1,4 @@
-import { QueryKey, QueryResult, useQuery } from "react-query";
+import { QueryKey, QueryObserverResult, useQuery } from "react-query";
 
 import { fetchTokenDecimals } from "efi/crypto/fetchTokenDecimals";
 import { TokenContracts } from "efi/crypto/TokenContracts";
@@ -12,16 +12,16 @@ import { TokenContractSymbols } from "efi/crypto/TokenContractSymbols";
  */
 export function useTokenDecimalsOld(
   name: TokenContractSymbols
-): QueryResult<number | undefined> {
+): QueryObserverResult<number | undefined> {
   const balanceKey = makeTokenDecimalsQueryKey(name);
 
-  const result = useQuery<number | undefined>(
-    balanceKey,
-    (key: string[], { name }: TokenDecimalsQueryVariables) => {
+  const result = useQuery<number | undefined>({
+    queryKey: balanceKey,
+    queryFn: () => {
       const contract = TokenContracts[name];
       return fetchTokenDecimals(contract);
-    }
-  );
+    },
+  });
 
   return result;
 }

@@ -1,10 +1,12 @@
 import React from "react";
 
-import { render } from "@testing-library/react";
+import { renderWithClient } from "efi-ui/base/testing";
 import { ExchangeView } from "efi-ui/exchange/ExchangeView/ExchangeView";
+import { createQueryClient } from "efi/queryClient";
 
 test("should render with a title", async () => {
-  const { getByText } = await render(<ExchangeView />);
+  const queryClient = createQueryClient();
+  const { getByText } = await renderWithClient(queryClient, <ExchangeView />);
 
   return getByText("Element Exchange");
 });

@@ -1,8 +1,8 @@
-import React, { FC, useCallback } from "react";
-
 import { Alignment, Classes, HTMLTable, Switch } from "@blueprintjs/core";
 import { useNavigate } from "@reach/router";
+import classNames from "classnames";
 import { Erc20 } from "elf-contracts/types/Erc20";
+import React, { FC, useCallback } from "react";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -15,7 +15,6 @@ import { useTokenTotalSupply } from "efi-ui/token/hooks/useTokenTotalSupply";
 import { formatEth } from "efi/coins/ether/formatEth";
 import { elfContract } from "efi/contracts/Elf";
 import { Pool } from "efi/pools/Pool";
-import classNames from "classnames";
 
 interface PoolPreviewTableProps {
   pools: Pool[];

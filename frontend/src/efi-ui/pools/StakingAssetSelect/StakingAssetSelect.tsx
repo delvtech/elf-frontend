@@ -1,7 +1,6 @@
-import React, { FC, Fragment } from "react";
-
 import { Button, Menu, MenuItem, Popover, Position } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
+import React, { FC, Fragment } from "react";
 
 import tw from "efi-tailwindcss-classnames";
 import { CryptoIcon } from "efi-ui/crypto/CryptoIcon";

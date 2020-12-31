@@ -1,8 +1,7 @@
-import React, { FunctionComponent } from "react";
-
 import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
 import classNames from "classnames";
+import React, { FunctionComponent } from "react";
 
 import tw from "efi-tailwindcss-classnames";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";

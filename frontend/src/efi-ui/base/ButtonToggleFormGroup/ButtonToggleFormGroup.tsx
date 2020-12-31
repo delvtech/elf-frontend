@@ -1,6 +1,5 @@
-import React, { FC } from "react";
-
 import { Alignment, Button, FormGroup, Intent } from "@blueprintjs/core";
+import React, { FC } from "react";
 
 import tw from "efi-tailwindcss-classnames";
 import { FormGroupLabel } from "efi-ui/base/FormGroupLabel/FormGroupLabel";

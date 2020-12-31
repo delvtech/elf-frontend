@@ -1,7 +1,7 @@
-import { queryCache, useMutation, useQuery } from "react-query";
-
+import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
 import { BigNumber, ContractTransaction } from "ethers";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import {
@@ -24,7 +24,6 @@ import { postApprove } from "efi/contracts/token";
 import { StakingTokens } from "efi/crypto/stakingAssets";
 import { TokenBalance } from "efi/crypto/TokenBalance";
 import { TokenContracts } from "efi/crypto/TokenContracts";
-import { Web3Provider } from "@ethersproject/providers";
 
 const contractAssetSymbolsKey = ["contract", "elf", "assetSymbols"];
 export function useElfContractAssetSymbols() {
@@ -41,22 +40,19 @@ export function useElfContractBalance(
   account: string | undefined | null
 ): TokenBalance | undefined {
   const contractBalanceKey = makeElfContractBalanceKey(account);
-  const balanceResult = useQuery(contractBalanceKey, (key, { account }) => {
+  const balanceResult = useQuery(contractBalanceKey, () => {
     if (!account) {
       return;
     }
     return fetchBalanceOf(account);
   });
 
-  const decimalsResult = useQuery(
-    makeContractDecimalsKey(account),
-    (key, { account }) => {
-      if (!account) {
-        return;
-      }
-      return fetchDecimals();
+  const decimalsResult = useQuery(makeContractDecimalsKey(account), () => {
+    if (!account) {
+      return;
     }
-  );
+    return fetchDecimals();
+  });
 
   const value = balanceResult.data?.toString();
   if (balanceResult.data && decimalsResult.data) {
@@ -89,6 +85,7 @@ interface ElfDepositEthVariables {
 
 export function useElfContractDepositEth() {
   const { library } = useWeb3React<Web3Provider>();
+  const queryClient = useQueryClient();
   const signer = library?.getSigner();
 
   return useMutation<
@@ -107,7 +104,7 @@ export function useElfContractDepositEth() {
         }
 
         const elfContractBalanceKey = makeElfContractBalanceKey(account);
-        queryCache.invalidateQueries(elfContractBalanceKey);
+        queryClient.invalidateQueries(elfContractBalanceKey);
       },
       onError: (error) => {
         console.error(
@@ -129,6 +126,7 @@ interface ElfApproveDepositVariables {
 // TODO: refactor these to have the library passed in, don't want to use closure variables for useMutation
 export function useElfContractApproveDeposit() {
   const { library } = useWeb3React<Web3Provider>();
+  const queryClient = useQueryClient();
 
   return useMutation<
     ContractTransaction | undefined,
@@ -149,7 +147,7 @@ export function useElfContractApproveDeposit() {
           showTransactionSuccessfulToast(transaction);
         }
         const contractBalanceKey = makeElfContractBalanceKey(account);
-        queryCache.invalidateQueries(contractBalanceKey);
+        queryClient.invalidateQueries(contractBalanceKey);
       },
       onError: (error) => {
         showTransactionFailedToast();
@@ -169,6 +167,7 @@ interface ElfDepositVariables {
 
 export function useElfContractDeposit() {
   const { library } = useWeb3React<Web3Provider>();
+  const queryClient = useQueryClient();
   const signer = library?.getSigner();
 
   return useMutation<
@@ -188,7 +187,7 @@ export function useElfContractDeposit() {
           return;
         }
         const contractBalanceKey = makeElfContractBalanceKey(account);
-        queryCache.invalidateQueries(contractBalanceKey);
+        queryClient.invalidateQueries(contractBalanceKey);
       },
       onError: (error) => {
         showTransactionFailedToast();
@@ -207,6 +206,7 @@ interface ElfWithdrawEthVariables {
 }
 export function useElfContractWithdrawEth() {
   const { library } = useWeb3React<Web3Provider>();
+  const queryClient = useQueryClient();
   const signer = library?.getSigner();
 
   return useMutation<
@@ -226,7 +226,7 @@ export function useElfContractWithdrawEth() {
           return;
         }
         const contractBalanceKey = makeElfContractBalanceKey(account);
-        queryCache.invalidateQueries(contractBalanceKey);
+        queryClient.invalidateQueries(contractBalanceKey);
       },
       onError: (error) => {
         showTransactionFailedToast();
@@ -246,6 +246,7 @@ interface ElfWithdrawVariables {
 
 export function useElfContractWithdraw() {
   const { library } = useWeb3React<Web3Provider>();
+  const queryClient = useQueryClient();
   const signer = library?.getSigner();
 
   return useMutation<
@@ -262,7 +263,7 @@ export function useElfContractWithdraw() {
           return;
         }
         const contractBalanceKey = makeElfContractBalanceKey(account);
-        queryCache.invalidateQueries(contractBalanceKey);
+        queryClient.invalidateQueries(contractBalanceKey);
       },
       onError: (error) => {
         showTransactionFailedToast();

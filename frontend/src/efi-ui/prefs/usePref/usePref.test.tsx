@@ -1,9 +1,12 @@
-import { act } from "@testing-library/react";
-import { renderHook } from "@testing-library/react-hooks";
+import { act } from "@testing-library/react-hooks";
+import userEvent from "@testing-library/user-event";
+import React, { FC, Fragment } from "react";
 
+import { renderHookWithClient, renderWithClient } from "efi-ui/base/testing";
 import { usePref } from "efi-ui/prefs/usePref/usePref";
 import efiLocalStorage from "efi/base/localStorage";
 import { makePrefEnvelope } from "efi/prefs/prefEnvelope";
+import { createQueryClient } from "efi/queryClient";
 
 test("Default value is provided when no pref exists", () => {
   const { result } = renderUsePref();
@@ -20,7 +23,21 @@ test("Stored value is provided when a pref already exists", () => {
   expect(result.current.pref).toEqual("this is a previously stored value");
 });
 
-test("Updating the pref causes rerender correctly", async () => {
+test("Updating the pref triggers a rerender correctly", async () => {
+  const { findByText, queryByText, getByRole } = renderTestComponent();
+  expect(await findByText("default value")).toBeVisible();
+
+  act(() => {
+    userEvent.click(getByRole("button"));
+  });
+
+  expect(await findByText("new value!")).toBeVisible();
+  expect(queryByText("default value")).not.toBeInTheDocument();
+});
+
+// TODO: Skip this until `renderHook` behaves more like a react component, ie:
+// triggering re-renders on custom hooks that wrap useQuery.
+test.skip("Updating the pref triggers a rerender correctly", async () => {
   const { result, waitForNextUpdate } = renderUsePref();
   expect(result.current.pref).toEqual("default value");
 
@@ -28,12 +45,31 @@ test("Updating the pref causes rerender correctly", async () => {
     result.current.setPref("new value!");
   });
 
+  // From here down this test will fail until `renderHook` updates as a result
+  // of calling `setPref`.
   await waitForNextUpdate();
 
-  // renders the new pref values
   expect(result.current.pref).toEqual("new value!");
 });
 
+function renderTestComponent() {
+  const queryClient = createQueryClient();
+  const TestComponent: FC = () => {
+    const { pref, setPref } = usePref("test-pref", "default value");
+
+    return (
+      <Fragment>
+        <span>{pref}</span>
+        <button onClick={() => setPref("new value!")}>click</button>
+      </Fragment>
+    );
+  };
+  return renderWithClient(queryClient, <TestComponent />);
+}
+
 function renderUsePref() {
-  return renderHook(() => usePref("test-pref", "default value"));
+  const queryClient = createQueryClient();
+  return renderHookWithClient(queryClient, () => {
+    return usePref("test-pref", "default value");
+  });
 }

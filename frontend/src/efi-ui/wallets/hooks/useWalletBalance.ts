@@ -1,18 +1,21 @@
 import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
 import { BigNumber } from "ethers";
+import { QueryObserverResult } from "react-query";
 
 import { useEthBalance } from "efi-ui/coins/ether/hooks/useEthBalance/useEthBalance";
 import { useTokenBalanceOld } from "efi-ui/token/hooks/useTokenBalanceOld/useTokenBalanceOld";
 import { TokenBalance } from "efi/crypto/TokenBalance";
-import { QueryResult } from "react-query";
 
 export interface WalletBalances {
   ETH: TokenBalance | undefined;
   WETH: TokenBalance | undefined;
 }
 
-export function useWalletBalances(): [WalletBalances, QueryResult<unknown>[]] {
+export function useWalletBalances(): [
+  WalletBalances,
+  QueryObserverResult<unknown>[]
+] {
   const { library, account } = useWeb3React<Web3Provider>();
 
   const ethResult = useEthBalance(library, account);

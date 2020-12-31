@@ -1,5 +1,3 @@
-import React, { FC } from "react";
-
 import {
   Alignment,
   AnchorButton,
@@ -12,6 +10,7 @@ import {
   Tabs,
 } from "@blueprintjs/core";
 import classNames from "classnames";
+import React, { FC } from "react";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";

@@ -1,10 +1,9 @@
-import React, { FC } from "react";
-import { Markup } from "react-render-markup";
-import { useWindowSize } from "react-use";
-
 import { Button, Drawer, H4, H6 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import classNames from "classnames";
+import React, { FC } from "react";
+import { Markup } from "react-render-markup";
+import { useWindowSize } from "react-use";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";

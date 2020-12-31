@@ -1,10 +1,9 @@
-import { useEffect } from "react";
-import { QueryConfig, useQuery } from "react-query";
-import { usePrevious } from "react-use";
-
 import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
+import { useEffect } from "react";
+import { useQuery } from "react-query";
+import { usePrevious } from "react-use";
 import { t } from "ttag";
 
 import {
@@ -30,17 +29,13 @@ export enum WalletConnectionStatus {
   CONNECTED = "connected",
 }
 
-const queryConfig: QueryConfig<WalletConnectionStatus> = {
-  refetchOnMount: false,
-};
-
 export function useWalletConnectionStatus() {
   const { active } = useWeb3React<Web3Provider>();
 
-  const result = useQuery<WalletConnectionStatus>(
-    ["wallet-connection-status", active],
-    (unusedString, activeFromKey) => {
-      const newStatus = getStatus(activeFromKey);
+  const result = useQuery<WalletConnectionStatus>({
+    queryKey: ["wallet-connection-status", active],
+    queryFn: () => {
+      const newStatus = getStatus(active);
 
       // Only show the toast when we set the newStatus to true.
       if (newStatus === WalletConnectionStatus.CONNECTED) {
@@ -53,8 +48,8 @@ export function useWalletConnectionStatus() {
 
       return newStatus;
     },
-    queryConfig
-  );
+    refetchOnMount: false,
+  });
   const { data: status, refetch: refetchStatus } = result;
 
   useRefetchStatusWhenStale(status, refetchStatus);

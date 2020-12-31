@@ -1,5 +1,6 @@
-import { fetchCoinGeckoPrice } from "efi-coingecko";
 import { useQuery } from "react-query";
+
+import { fetchCoinGeckoPrice } from "efi-coingecko";
 
 export function useCoinGeckoPrice(
   coinGeckoId: string | undefined,
@@ -7,14 +8,14 @@ export function useCoinGeckoPrice(
 ) {
   return useQuery<number>({
     queryKey: makeCoinGeckoPriceQueryKey(coinGeckoId, currencyDenomination),
-    queryFn: async (key: string, variables: CoinGeckoPriceVariables) => {
+    queryFn: async () => {
       const price = await fetchCoinGeckoPrice(
-        variables.coinGeckoId as string, // safe to cast because queryFn is only called when config.enabled is true
-        variables.currencyDenomination.toLowerCase()
+        coinGeckoId as string, // safe to cast because queryFn is only called when config.enabled is true
+        currencyDenomination.toLowerCase()
       );
       return price;
     },
-    config: { enabled: !!coinGeckoId },
+    enabled: !!coinGeckoId,
   });
 }
 

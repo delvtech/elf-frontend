@@ -4,8 +4,8 @@ import { Money } from "ts-money";
 import { ComputedQueryResult } from "efi-ui/base/ComputedQueryResult";
 import { useConvertToFiat } from "efi-ui/money/hooks/useConvertToFiat";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
-import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
+import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
 
 export function useTokenFiatBalance(
   tokenContract: Erc20,
