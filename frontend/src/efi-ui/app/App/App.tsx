@@ -18,6 +18,7 @@ import { useSyncWithInjectedEthereum } from "efi-ui/wallets/hooks/useSyncWithInj
 import { WalletView } from "efi-ui/wallets/WalletView/WalletView";
 
 import styles from "./App.module.css";
+import { MarketView } from "efi-ui/markets/MarketsTable/MarketView";
 
 const contentClassName = tw(
   "flex-1",
@@ -60,6 +61,7 @@ const App: FC<AppProps> = () => {
           <FAQView path={Navigation.FAQ} />
           <WalletView path={Navigation.WALLET} />
           <ExchangeView path={Navigation.EXCHANGE} />
+          <MarketView path={`${Navigation.EXCHANGE}/:marketId`} />
         </Router>
       </div>
       <CryptoDrawer />
