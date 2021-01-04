@@ -19,8 +19,8 @@ import { useChangeTab } from "efi-ui/navigation/hooks/useChangeTab";
 import { Navigation } from "efi-ui/navigation/navigation";
 import WalletSummaryPane from "efi-ui/wallets/WalletSummaryPane/WalletSummaryPane";
 
-interface WalletViewProps extends RouteComponentProps {}
-export const WalletView: FC<WalletViewProps> = () => {
+interface PortfolioViewProps extends RouteComponentProps {}
+export const PortfolioView: FC<PortfolioViewProps> = () => {
   const { account } = useWeb3React<Web3Provider>();
   const changeTab = useChangeTab();
 

@@ -1,7 +1,7 @@
 export enum Navigation {
   HOME = "",
   PULSE = "pulse",
-  WALLET = "wallet",
+  PORTFOLIO = "portfolio",
   POOLS = "pools",
   FAQ = "faq",
   EXCHANGE = "exchange",

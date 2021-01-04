@@ -20,8 +20,8 @@ export function useActiveTab(): Navigation {
     case Navigation.FAQ: {
       return Navigation.FAQ;
     }
-    case Navigation.WALLET: {
-      return Navigation.WALLET;
+    case Navigation.PORTFOLIO: {
+      return Navigation.PORTFOLIO;
     }
     case Navigation.EXCHANGE: {
       return Navigation.EXCHANGE;

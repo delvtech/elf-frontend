@@ -1,7 +1,8 @@
-import { LocationProvider, Router } from "@reach/router";
-import classNames from "classnames";
 import React, { FC, Fragment } from "react";
 import { ReactQueryDevtools } from "react-query/devtools";
+
+import { LocationProvider, Router } from "@reach/router";
+import classNames from "classnames";
 
 import { tw } from "efi-tailwindcss-classnames";
 import { CryptoDrawer } from "efi-ui/crypto/CryptoDrawer/CryptoDrawer";
@@ -12,10 +13,10 @@ import { MainNavigation } from "efi-ui/navigation/MainNavigation/MainNavigation"
 import { Navigation } from "efi-ui/navigation/navigation";
 import { PoolsView } from "efi-ui/pools/PoolsView/PoolsView";
 import { PoolView } from "efi-ui/pools/PoolView/PoolView";
+import { PortfolioView } from "efi-ui/portfolio/PortfolioView/PortfolioView";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { PulseView } from "efi-ui/pulse/PulseView";
 import { useSyncWithInjectedEthereum } from "efi-ui/wallets/hooks/useSyncWithInjectedEthereum";
-import { WalletView } from "efi-ui/wallets/WalletView/WalletView";
 
 import styles from "./App.module.css";
 
@@ -58,7 +59,7 @@ const App: FC<AppProps> = () => {
           <PoolsView path={Navigation.POOLS} />
           <PoolView path={`${Navigation.POOLS}/:poolId`} />
           <FAQView path={Navigation.FAQ} />
-          <WalletView path={Navigation.WALLET} />
+          <PortfolioView path={Navigation.PORTFOLIO} />
           <ExchangeView path={Navigation.EXCHANGE} />
         </Router>
       </div>

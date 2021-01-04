@@ -5,9 +5,9 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 
-interface InvestViewProps extends RouteComponentProps {}
+interface FAQViewProps extends RouteComponentProps {}
 
-const investViewClassName = tw(
+const faqViewClassName = tw(
   "flex",
   "flex-col",
   "h-full",
@@ -20,9 +20,9 @@ const investViewClassName = tw(
 
 const sectionClassName = tw("mb-8", "pb-4", "border-b", "w-full");
 
-export const FAQView: FC<InvestViewProps> = () => {
+export const FAQView: FC<FAQViewProps> = () => {
   return (
-    <div className={investViewClassName}>
+    <div className={faqViewClassName}>
       <div className={sectionClassName}>
         <H2>{t`What is Element Finance?`}</H2>
         <p>

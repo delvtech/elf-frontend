@@ -173,6 +173,19 @@ module.exports = {
         path: "efi-ui/",
       },
     },
+    {
+      name: "efi-not-to-portfolio",
+      comment:
+        "Importing from portfolio/ is prohibited outside of the app/ directory. Perhaps you want " +
+        "to import something specific from wallet/ or markets/ instead?",
+      severity: "error",
+      from: {
+        pathNot: "efi-ui/app",
+      },
+      to: {
+        path: "efi-ui/portfolio",
+      },
+    },
 
     {
       name: "efi-not-to-react",

@@ -51,7 +51,7 @@ export const SidebarNavigation: FC<SidebarNavigationProps> = ({
           selectedTabId={activeTab}
         >
           <Tab
-            id={Navigation.WALLET}
+            id={Navigation.PORTFOLIO}
             title={
               <div className={tabTitleClassName}>
                 <Icon
