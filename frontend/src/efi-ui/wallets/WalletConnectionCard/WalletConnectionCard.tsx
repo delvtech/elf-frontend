@@ -1,9 +1,4 @@
-import React, {
-  Fragment,
-  FunctionComponent,
-  useCallback,
-  useState,
-} from "react";
+import React, { FC, Fragment, useCallback, useState } from "react";
 
 import { Card, Classes, Colors, Elevation, Icon, Tag } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
@@ -24,13 +19,16 @@ interface WalletConnectionCardProps {
   account: string | null | undefined;
   active: boolean;
   connectorName: string | undefined;
+
+  className?: string;
 }
 
-export const WalletConnectionCard: FunctionComponent<WalletConnectionCardProps> = ({
+export const WalletConnectionCard: FC<WalletConnectionCardProps> = ({
   chainId,
   account,
   active,
   connectorName,
+  className,
 }) => {
   const { isDarkMode } = useDarkMode();
   const [isWalletDialogOpen, setWalletDialogOpen] = useState(false);
@@ -43,42 +41,25 @@ export const WalletConnectionCard: FunctionComponent<WalletConnectionCardProps> 
   return (
     <Fragment>
       <Card
-        className={classNames(tw("flex", "h-24"))}
+        className={classNames(tw("h-24"), className)}
         interactive
         elevation={!active ? Elevation.TWO : undefined}
         onClick={openWalletDialog}
         style={getCardStyle(chainId)}
       >
         {!active ? (
-          <div
-            className={tw("flex", "flex-1", "items-center", "justify-between")}
-          >
-            {/* button for a11y, this allows users to TAB through our UI */}
-            <button
-              className={classNames(
-                Classes.BUTTON_TEXT,
-                Classes.TEXT_LARGE,
-                tw("flex-1", "justify-center", "items-center", "flex", "mr-5")
-              )}
-              style={{ color: isDarkMode ? Colors.BLUE5 : Colors.BLUE2 }}
-            >
-              {t`Connect wallet to begin`}
-            </button>
-            <Tag
-              minimal
-              large
-              icon={<Icon icon={IconNames.DOT} color={connectionStatusColor} />}
-            >
-              {connectorMessage}
-            </Tag>
-          </div>
+          <ConnectToBegin
+            isDarkMode={isDarkMode}
+            statusColor={connectionStatusColor}
+            connectorMessage={connectorMessage}
+          />
         ) : (
           <div
             className={tw(
               "flex",
               "w-full",
               "items-center",
-              "space-x-8",
+              "space-x-10",
               "justify-between"
             )}
           >
@@ -122,6 +103,40 @@ export const WalletConnectionCard: FunctionComponent<WalletConnectionCardProps> 
         onClose={closeWalletDialog}
       />
     </Fragment>
+  );
+};
+
+interface ConnectToBeginProps {
+  isDarkMode: boolean;
+  statusColor: string;
+  connectorMessage: string;
+}
+
+const ConnectToBegin: FC<ConnectToBeginProps> = ({
+  isDarkMode,
+  statusColor,
+  connectorMessage,
+}) => {
+  return (
+    <div className={tw("flex", "flex-1", "items-center", "justify-between")}>
+      <button
+        className={classNames(
+          Classes.BUTTON_TEXT,
+          Classes.TEXT_LARGE,
+          tw("flex-1", "justify-center", "items-center", "flex", "mr-5")
+        )}
+        style={{ color: isDarkMode ? Colors.BLUE5 : Colors.BLUE2 }}
+      >
+        {t`Connect wallet to begin`}
+      </button>
+      <Tag
+        minimal
+        large
+        icon={<Icon icon={IconNames.DOT} color={statusColor} />}
+      >
+        {connectorMessage}
+      </Tag>
+    </div>
   );
 };
 

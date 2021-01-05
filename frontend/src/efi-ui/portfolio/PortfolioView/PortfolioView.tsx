@@ -10,13 +10,18 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { useChangeTab } from "efi-ui/navigation/hooks/useChangeTab";
 import { Navigation } from "efi-ui/navigation/navigation";
-import WalletSummaryPane from "efi-ui/wallets/WalletSummaryPane/WalletSummaryPane";
 
 import { PortfolioViewTitle } from "./PortfolioViewTitle";
 
 interface PortfolioViewProps extends RouteComponentProps {}
 export const PortfolioView: FC<PortfolioViewProps> = () => {
-  const { account } = useWeb3React<Web3Provider>();
+  const {
+    account,
+    active,
+    chainId,
+    connector,
+    library,
+  } = useWeb3React<Web3Provider>();
   const changeTab = useChangeTab();
 
   return (
@@ -24,61 +29,62 @@ export const PortfolioView: FC<PortfolioViewProps> = () => {
       className={tw("flex", "p-12", "h-full", "space-x-12", "overflow-scroll")}
     >
       {/* Main content */}
-      <div className={tw("flex", "flex-col", "flex-1", "space-y-10")}>
-        <PortfolioViewTitle account={account} />
+      <div className={tw("flex", "flex-col", "flex-1", "space-y-8")}>
+        <PortfolioViewTitle
+          account={account}
+          active={active}
+          chainId={chainId}
+          connector={connector}
+          library={library}
+        />
 
-        <div className={tw("flex", "space-x-8", "w-full", "h-full")}>
-          {/* Pools */}
+        <div className={tw("flex", "space-x-12", "w-full", "h-full")}>
+          {/* YTs */}
           <div
             className={tw("flex", "flex-col", "space-y-2", "h-full", "flex-1")}
           >
-            <H3>{t`Pools`}</H3>
+            <H3>{t`Fixed Yield Tokens (FYTs)`}</H3>
             <Card className={tw("flex", "flex-1")}>
               <NonIdealState
-                icon={IconNames.CUBE_ADD}
-                description={t`This wallet is not invested in any Pools`}
+                icon={IconNames.BANK_ACCOUNT}
+                description={t`This wallet does not contain any Fixed Yield Tokens.`}
                 action={
                   <Button
                     outlined
                     onClick={() => {
                       changeTab(Navigation.POOLS);
                     }}
-                  >{t`Go to Pools`}</Button>
+                  >{t`Go to Mint`}</Button>
                 }
               />
             </Card>
           </div>
 
-          {/* FYTs */}
+          {/* YCs */}
           <div
             className={tw("flex", "flex-col", "space-y-2", "h-full", "flex-1")}
           >
-            <H3>{t`FYTs`}</H3>
+            <H3>{t`Yield Coupons (YCs)`}</H3>
             <Card className={tw("flex", "flex-1")}>
               <NonIdealState
-                icon={IconNames.TRACTOR}
-                description={t`FYTs are under construction`}
-                action={<Button outlined disabled>{t`More about FYTs`}</Button>}
+                icon={IconNames.FLAG}
+                description={t`This wallet does not contain any Yield Coupons.`}
+                action={<Button outlined>{t`Go to Mint`}</Button>}
               />
             </Card>
           </div>
         </div>
 
-        {/* Transaction history */}
+        {/* Liquidity positions */}
         <div className={tw("flex", "flex-col", "space-y-2", "h-full")}>
-          <H3>{t`Transaction history`}</H3>
+          <H3>{t`Liquidity positions`}</H3>
           <Card className={tw("flex", "flex-1")}>
-            {" "}
             <NonIdealState
-              icon={IconNames.FLAG}
-              description={t`Transaction history is empty`}
+              icon={IconNames.TRACTOR}
+              description={t`This wallet does not contain any LP tokens.`}
             />
           </Card>
         </div>
-      </div>
-      {/* Right hand side */}
-      <div className={tw("hidden", "lg:block", "h-full", "w-3/10")}>
-        <WalletSummaryPane />
       </div>
     </div>
   );

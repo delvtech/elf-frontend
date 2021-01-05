@@ -11,7 +11,13 @@ test("should render with the wallet address visible", async () => {
   const queryClient = createQueryClient();
   const { getByText } = await renderWithClient(
     queryClient,
-    <PortfolioViewTitle account="0xdeadbeef" />
+    <PortfolioViewTitle
+      account="0xdeadbeef"
+      chainId={555}
+      active={false}
+      library={undefined}
+      connector={undefined}
+    />
   );
 
   expect(getByText("Portfolio")).toBeVisible();
@@ -22,12 +28,18 @@ test("should render with option to connect wallet if no account is present", asy
   const queryClient = createQueryClient();
   const { getByText, getByRole } = await renderWithClient(
     queryClient,
-    <PortfolioViewTitle account={null} />
+    <PortfolioViewTitle
+      account={null}
+      chainId={555}
+      active={false}
+      library={undefined}
+      connector={undefined}
+    />
   );
 
   expect(getByText("Portfolio")).toBeVisible();
 
-  const button = getByRole("button");
+  const button = getByRole("button", { name: /Connect a wallet to begin/i });
 
   userEvent.click(button);
 

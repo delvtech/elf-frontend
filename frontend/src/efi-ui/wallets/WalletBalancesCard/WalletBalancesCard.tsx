@@ -111,8 +111,6 @@ export const WalletBalancesCard: FC<WalletBalancesCardProps> = () => {
   );
 };
 
-export default WalletBalancesCard;
-
 interface TokenBalanceTableRowProps {
   account: string | null | undefined;
   tokenContract: Erc20;
