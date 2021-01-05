@@ -13,6 +13,7 @@ import { ElfStrategyHighRisk } from "efi/pools/highRisk";
 import { ElfStrategyLowRisk } from "efi/pools/lowRisk";
 import { ElfStrategyMediumRisk } from "efi/pools/mediumRisk";
 import { Pool } from "efi/pools/Pool";
+import { MarketFilterOptions } from "efi-ui/markets/MarketFilterOptions/MarketFilterOptions";
 
 interface ExchangeViewProps extends RouteComponentProps {}
 
@@ -68,6 +69,9 @@ export const ExchangeView: FC<ExchangeViewProps> = () => {
           >{t`Invest in the latest Defi projects without the fees or hassle of managing everything yourself.`}</span>
         </div>
 
+        <div className={tw("flex")}>
+          <MarketFilterOptions />
+        </div>
         <Card className={tw("p-10")}>
           <div className={tw("flex", "flex-col", "space-y-6")}>
             <div>
