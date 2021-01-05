@@ -1,12 +1,14 @@
 import React, { FC } from "react";
 
-import { Card, Classes, H2 } from "@blueprintjs/core";
+import { Classes, H2 } from "@blueprintjs/core";
 import { RouteComponentProps } from "@reach/router";
 import classNames from "classnames";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { MarketCard } from "efi-ui/markets/MarketsTable/MarketCard/MarketCard";
 import WalletSummaryPane from "efi-ui/wallets/WalletSummaryPane/WalletSummaryPane";
+import { ElfStrategyLowRisk } from "efi/pools/lowRisk";
 
 interface MarketViewProps extends RouteComponentProps {}
 
@@ -29,7 +31,7 @@ export const MarketView: FC<MarketViewProps> = () => {
           >{t`Provide liquidity for this market, or trade for what you want.`}</span>
         </div>
 
-        <Card className={tw("p-10")}></Card>
+        <MarketCard pool={ElfStrategyLowRisk} />
       </div>
 
       {/* Right hand side */}
