@@ -29,9 +29,10 @@ module.exports = {
       "3/4": "75%",
       full: "100%",
     },
-
     spacing: {
       "3/10": "30%",
+      "300": "300px",
+      "500": "500px",
       ...defaultTheme.spacing,
     },
 
