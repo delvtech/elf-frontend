@@ -8,7 +8,7 @@ import classNames from "classnames";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { MarketCard } from "efi-ui/markets/MarketsTable/MarketCard/MarketCard";
+import { MarketCard } from "efi-ui/markets/MarketCard/MarketCard";
 import { WalletConnectionCard } from "efi-ui/wallets/WalletConnectionCard/WalletConnectionCard";
 import { ElfStrategyLowRisk } from "efi/pools/lowRisk";
 import { getConnectorName } from "efi/wallets/connectors";
