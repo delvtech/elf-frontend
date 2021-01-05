@@ -1,23 +1,18 @@
-import {
-  Button,
-  Card,
-  Classes,
-  H2,
-  H3,
-  NonIdealState,
-} from "@blueprintjs/core";
+import React, { FC } from "react";
+
+import { Button, Card, H3, NonIdealState } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
 import { RouteComponentProps } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
-import classNames from "classnames";
-import React, { FC } from "react";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { useChangeTab } from "efi-ui/navigation/hooks/useChangeTab";
 import { Navigation } from "efi-ui/navigation/navigation";
 import WalletSummaryPane from "efi-ui/wallets/WalletSummaryPane/WalletSummaryPane";
+
+import { PortfolioViewTitle } from "./PortfolioViewTitle";
 
 interface PortfolioViewProps extends RouteComponentProps {}
 export const PortfolioView: FC<PortfolioViewProps> = () => {
@@ -30,19 +25,8 @@ export const PortfolioView: FC<PortfolioViewProps> = () => {
     >
       {/* Main content */}
       <div className={tw("flex", "flex-col", "flex-1", "space-y-10")}>
-        {/* page title */}
-        <div className={tw("flex", "flex-col", "justify-start")}>
-          <H2 className={tw("mb-4")}>{t`Investment summary`}</H2>
-          <span
-            className={classNames(
-              Classes.RUNNING_TEXT,
-              Classes.TEXT_MUTED,
-              tw("text-base")
-            )}
-          >
-            {t`Wallet address: ${account}`}
-          </span>
-        </div>
+        <PortfolioViewTitle account={account} />
+
         <div className={tw("flex", "space-x-8", "w-full", "h-full")}>
           {/* Pools */}
           <div

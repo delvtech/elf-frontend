@@ -180,7 +180,7 @@ module.exports = {
         "to import something specific from wallet/ or markets/ instead?",
       severity: "error",
       from: {
-        pathNot: "efi-ui/app",
+        pathNot: `(${["efi-ui/app", "efi-ui/portfolio"].join("|")})`,
       },
       to: {
         path: "efi-ui/portfolio",

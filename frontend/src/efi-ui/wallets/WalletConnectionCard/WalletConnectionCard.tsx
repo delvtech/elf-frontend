@@ -1,29 +1,23 @@
-import {
-  Card,
-  Classes,
-  Colors,
-  Dialog,
-  Elevation,
-  Icon,
-  Tag,
-} from "@blueprintjs/core";
-import { IconNames } from "@blueprintjs/icons";
-import classNames from "classnames";
 import React, {
   Fragment,
   FunctionComponent,
   useCallback,
   useState,
 } from "react";
+
+import { Card, Classes, Colors, Elevation, Icon, Tag } from "@blueprintjs/core";
+import { IconNames } from "@blueprintjs/icons";
+import classNames from "classnames";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import { ConnectWalletButtons } from "efi-ui/wallets/ConnectWalletButtons/ConnectWalletButtons";
 import { WalletJazzicon } from "efi-ui/wallets/WalletJazzicon/WalletJazzicon";
 import { isMainnet } from "efi/crypto/ethereum";
 import { formatChainName } from "efi/crypto/formatChainName";
 import { formatWalletAddress } from "efi/wallets/formatWalletAddress";
+
+import { ConnectWalletDialog } from "../ConnectWalletDialog/ConnectWalletDialog";
 
 interface WalletConnectionCardProps {
   chainId: number | undefined;
@@ -38,7 +32,7 @@ export const WalletConnectionCard: FunctionComponent<WalletConnectionCardProps> 
   active,
   connectorName,
 }) => {
-  const { isDarkMode, darkModeClassName } = useDarkMode();
+  const { isDarkMode } = useDarkMode();
   const [isWalletDialogOpen, setWalletDialogOpen] = useState(false);
   const openWalletDialog = useCallback(() => setWalletDialogOpen(true), []);
   const closeWalletDialog = useCallback(() => setWalletDialogOpen(false), []);
@@ -123,20 +117,14 @@ export const WalletConnectionCard: FunctionComponent<WalletConnectionCardProps> 
           </div>
         )}
       </Card>
-      <Dialog
-        className={classNames(darkModeClassName, tw("pb-0"))}
+      <ConnectWalletDialog
         isOpen={isWalletDialogOpen}
-        icon={IconNames.SEND_TO_GRAPH}
-        title={<span className={tw("text-base")}>{t`Connect wallet`}</span>}
-        onClose={() => setWalletDialogOpen(false)}
-      >
-        <div className={tw("flex", "w-full", "h-full", "p-12")}>
-          <ConnectWalletButtons onClick={closeWalletDialog} />
-        </div>
-      </Dialog>
+        onClose={closeWalletDialog}
+      />
     </Fragment>
   );
 };
+
 function getCardStyle(chainId: number | undefined): React.CSSProperties {
   return chainId !== undefined &&
     isMainnet(chainId) &&

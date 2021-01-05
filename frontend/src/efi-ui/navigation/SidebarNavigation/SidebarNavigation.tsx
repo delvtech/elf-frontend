@@ -58,7 +58,7 @@ export const SidebarNavigation: FC<SidebarNavigationProps> = ({
                   icon={IconNames.TIMELINE_AREA_CHART}
                   iconSize={Icon.SIZE_LARGE}
                 />
-                <span>{t`Summary`}</span>
+                <span>{t`Portfolio`}</span>
               </div>
             }
           />

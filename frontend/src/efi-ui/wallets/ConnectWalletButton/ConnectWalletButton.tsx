@@ -23,7 +23,7 @@ export const ConnectWalletButton: FC<ConnectWalletButtonProps> = (props) => {
       className={classNames(
         Classes.BUTTON,
         Classes.LARGE,
-        Classes.OUTLINED,
+        Classes.MINIMAL,
         tw("w-40")
       )}
       onClick={onClick}

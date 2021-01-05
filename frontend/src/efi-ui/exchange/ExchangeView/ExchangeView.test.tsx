@@ -8,5 +8,5 @@ test("should render with a title", async () => {
   const queryClient = createQueryClient();
   const { getByText } = await renderWithClient(queryClient, <ExchangeView />);
 
-  return getByText("Element Exchange");
+  expect(getByText("Element Exchange")).toBeVisible();
 });
