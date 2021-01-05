@@ -69,64 +69,64 @@ export const ExchangeView: FC<ExchangeViewProps> = () => {
           >{t`Invest in the latest Defi projects without the fees or hassle of managing everything yourself.`}</span>
         </div>
 
-        <div className={tw("flex")}>
-          <MarketFilterOptions />
-        </div>
-        <Card className={tw("p-10")}>
-          <div className={tw("flex", "flex-col", "space-y-6")}>
-            <div>
-              <SearchFormGroup
-                label={t`Search`}
-                value={searchValue}
-                onChange={onSetSearchValue}
-              />
-            </div>
-            <div className={tw("flex", "space-x-0", "lg:space-x-16")}>
-              <ButtonToggleFormGroup
-                label={t`Assets`}
-                tooltipContent={t`Filter markets for Fixed Yield Tokens or Yield Coupons`}
-                selectedButtonId={selectedAsset}
-                onSelect={setSelectedAsset}
-                buttons={ASSET_BUTTONS}
-              />
-
-              <ButtonToggleFormGroup
-                label={t`Risk`}
-                tooltipContent={t`Risk is determined by the volatility of the underlying assets`}
-                selectedButtonId={selectedRisk}
-                onSelect={setSelectedRisk}
-                buttons={ROI_BUTTONS}
-              />
-            </div>
-            <ButtonToggleFormGroup
-              label={t`Currencies`}
-              tooltipContent={t`Filter markets by currency`}
-              selectedButtonId={selectedPool}
-              onSelect={setSelectedPool}
-              buttons={POOL_BUTTONS}
-            />
-
-            <div className={tw("flex", "justify-center")}>
-              <MarketsTable
-                className={tw("w-full")}
-                markets={availableMarkets}
-              />
-            </div>
+        <div className={tw("flex", "space-x-12")}>
+          {/* Right hand side */}
+          <div
+            className={tw(
+              "hidden",
+              "lg:block",
+              "h-full",
+              "flex-shrink-0",
+              "w-64"
+            )}
+          >
+            <MarketFilterOptions />
           </div>
-        </Card>
-      </div>
+          <div className={tw("flex", "flex-1")}>
+            <Card className={tw("p-10", "flex", "flex-1")}>
+              <div className={tw("flex", "flex-col", "space-y-6")}>
+                <div>
+                  <SearchFormGroup
+                    label={t`Search`}
+                    value={searchValue}
+                    onChange={onSetSearchValue}
+                  />
+                </div>
+                <div className={tw("flex", "space-x-0", "lg:space-x-16")}>
+                  <ButtonToggleFormGroup
+                    label={t`Assets`}
+                    tooltipContent={t`Filter markets for Fixed Yield Tokens or Yield Coupons`}
+                    selectedButtonId={selectedAsset}
+                    onSelect={setSelectedAsset}
+                    buttons={ASSET_BUTTONS}
+                  />
 
-      {/* Right hand side */}
-      <div
-        className={tw(
-          "hidden",
-          "lg:block",
-          "h-full",
-          "flex-shrink-0",
-          "w-3/10"
-        )}
-      >
-        <WalletSummaryPane />
+                  <ButtonToggleFormGroup
+                    label={t`Risk`}
+                    tooltipContent={t`Risk is determined by the volatility of the underlying assets`}
+                    selectedButtonId={selectedRisk}
+                    onSelect={setSelectedRisk}
+                    buttons={ROI_BUTTONS}
+                  />
+                </div>
+                <ButtonToggleFormGroup
+                  label={t`Currencies`}
+                  tooltipContent={t`Filter markets by currency`}
+                  selectedButtonId={selectedPool}
+                  onSelect={setSelectedPool}
+                  buttons={POOL_BUTTONS}
+                />
+
+                <div className={tw("flex", "justify-center")}>
+                  <MarketsTable
+                    className={tw("w-full")}
+                    markets={availableMarkets}
+                  />
+                </div>
+              </div>
+            </Card>
+          </div>
+        </div>
       </div>
     </div>
   );
