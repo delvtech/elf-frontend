@@ -16,7 +16,7 @@ export const MarketActionsCard: FC<MarketActionsCardProps> = ({ pool }) => {
     <Card className={tw("flex", "flex-col", "w-full", "transition-all")}>
       <Tabs id="market-actions">
         <Tab
-          id="trade"
+          id="trade-tab"
           title={t`Trade`}
           panel={
             <NonIdealState
@@ -27,7 +27,7 @@ export const MarketActionsCard: FC<MarketActionsCardProps> = ({ pool }) => {
           }
         />
         <Tab
-          id="stake"
+          id="stake-tab"
           title={t`Stake`}
           panel={
             <NonIdealState
