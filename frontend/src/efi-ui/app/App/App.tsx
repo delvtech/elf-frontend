@@ -19,6 +19,7 @@ import { PulseView } from "efi-ui/pulse/PulseView";
 import { useSyncWithInjectedEthereum } from "efi-ui/wallets/hooks/useSyncWithInjectedEthereum";
 
 import styles from "./App.module.css";
+import { MarketView } from "efi-ui/markets/MarketView/MarketView";
 
 const contentClassName = tw(
   "flex-1",
@@ -61,6 +62,7 @@ const App: FC<AppProps> = () => {
           <FAQView path={Navigation.FAQ} />
           <PortfolioView path={Navigation.PORTFOLIO} />
           <ExchangeView path={Navigation.EXCHANGE} />
+          <MarketView path={`${Navigation.EXCHANGE}/:marketId`} />
         </Router>
       </div>
       <CryptoDrawer />
