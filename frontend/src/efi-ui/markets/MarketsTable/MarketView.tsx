@@ -12,6 +12,7 @@ import { MarketCard } from "efi-ui/markets/MarketsTable/MarketCard/MarketCard";
 import { WalletConnectionCard } from "efi-ui/wallets/WalletConnectionCard/WalletConnectionCard";
 import { ElfStrategyLowRisk } from "efi/pools/lowRisk";
 import { getConnectorName } from "efi/wallets/connectors";
+import { MarketActionsCard } from "efi-ui/markets/MarketActionsCard/MarketActionsCard";
 
 interface MarketViewProps extends RouteComponentProps {}
 
@@ -51,7 +52,12 @@ export const MarketView: FC<MarketViewProps> = () => {
           />
         </div>
 
-        <MarketCard pool={ElfStrategyLowRisk} />
+        <div className={tw("flex", "justify-between", "space-x-12")}>
+          <MarketCard pool={ElfStrategyLowRisk} />
+          <div className={tw("w-500")}>
+            <MarketActionsCard pool={ElfStrategyLowRisk} />
+          </div>
+        </div>
       </div>
     </div>
   );
