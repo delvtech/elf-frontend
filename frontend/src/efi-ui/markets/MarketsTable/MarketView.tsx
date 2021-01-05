@@ -8,7 +8,7 @@ import classNames from "classnames";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { MarketCard } from "efi-ui/markets/MarketCard/MarketCard";
+import { MarketDetailsCard } from "efi-ui/markets/MarketDetailsCard/MarketDetailsCard";
 import { WalletConnectionCard } from "efi-ui/wallets/WalletConnectionCard/WalletConnectionCard";
 import { ElfStrategyLowRisk } from "efi/pools/lowRisk";
 import { getConnectorName } from "efi/wallets/connectors";
@@ -53,7 +53,7 @@ export const MarketView: FC<MarketViewProps> = () => {
         </div>
 
         <div className={tw("flex", "justify-between", "space-x-12")}>
-          <MarketCard pool={ElfStrategyLowRisk} />
+          <MarketDetailsCard pool={ElfStrategyLowRisk} />
           <div className={tw("w-500")}>
             <MarketActionsCard pool={ElfStrategyLowRisk} />
           </div>

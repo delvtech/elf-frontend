@@ -15,13 +15,13 @@ import {
 import { Pool } from "efi/pools/Pool";
 import { IconNames } from "@blueprintjs/icons";
 
-interface MarketCardProps {
+interface MarketDetailsCardProps {
   pool: Pool;
 }
 
 const END_DATE = 1610760418863;
 
-export const MarketCard: FC<MarketCardProps> = ({ pool }) => {
+export const MarketDetailsCard: FC<MarketDetailsCardProps> = ({ pool }) => {
   const { data: strategyAssetSymbols } = useElfContractAssetSymbols();
 
   const { openCryptoDrawer } = useCryptoDrawer();
