@@ -96,6 +96,7 @@ export const MarketDetailsCard: FC<MarketDetailsCardProps> = ({ pool }) => {
                 <div className={tw("space-x-4")}>$1,456,789</div>
               </div>
             </div>
+
             {/* Fees (24hr)*/}
             <div className={tw("flex", "space-x-4")}>
               <div className={tw("flex", "flex-col", "space-y-4")}>
