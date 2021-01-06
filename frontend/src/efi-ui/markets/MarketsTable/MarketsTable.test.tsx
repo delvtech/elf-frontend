@@ -33,8 +33,10 @@ test("should render a list", () => {
     <MarketsTable markets={MARKETS} />
   );
 
-  expect(getByText("Pair")).toBeInTheDocument();
-  expect(getByText("ROI")).toBeInTheDocument();
-  expect(getByText("Price")).toBeInTheDocument();
-  expect(getByText("Balance")).toBeInTheDocument();
+  expect(getByText("Assets")).toBeVisible();
+  expect(getByText("Total Liquidity")).toBeVisible();
+  expect(getByText("Pool ROI")).toBeVisible();
+  expect(getByText("Mint Date")).toBeVisible();
+  expect(getByText("Tranche State")).toBeVisible();
+  expect(getByText("Wallet Approval")).toBeVisible();
 });

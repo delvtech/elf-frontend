@@ -12,6 +12,10 @@ import { ElfStrategyHighRisk } from "efi/pools/highRisk";
 import { ElfStrategyLowRisk } from "efi/pools/lowRisk";
 import { ElfStrategyMediumRisk } from "efi/pools/mediumRisk";
 import { Pool } from "efi/pools/Pool";
+import { WalletConnectionCard } from "efi-ui/wallets/WalletConnectionCard/WalletConnectionCard";
+import { useWeb3React } from "@web3-react/core";
+import { Web3Provider } from "@ethersproject/providers";
+import { getConnectorName } from "efi/wallets/connectors";
 
 interface ExchangeViewProps extends RouteComponentProps {}
 
@@ -23,6 +27,15 @@ const availableMarkets: Pool[] = [
 ];
 
 export const ExchangeView: FC<ExchangeViewProps> = () => {
+  const {
+    active,
+    account,
+    chainId,
+    connector,
+    library,
+  } = useWeb3React<Web3Provider>();
+
+  const connectorName = getConnectorName(connector, library);
   return (
     <div
       className={tw("flex", "p-12", "h-full", "space-x-12", "overflow-scroll")}
@@ -30,15 +43,23 @@ export const ExchangeView: FC<ExchangeViewProps> = () => {
       {/* Main content */}
       <div className={tw("flex", "flex-col", "flex-1", "space-y-12")}>
         {/* page title */}
-        <div className={tw("flex", "flex-col", "justify-start")}>
-          <H2 className={tw("mb-4")}>{t`Element Exchange`}</H2>
-          <span
-            className={classNames(
-              Classes.RUNNING_TEXT,
-              Classes.TEXT_MUTED,
-              tw("text-base")
-            )}
-          >{t`Invest in the latest Defi projects without the fees or hassle of managing everything yourself.`}</span>
+        <div className={tw("flex", "justify-between")}>
+          <div className={tw("flex", "flex-col", "justify-start")}>
+            <H2 className={tw("mb-4")}>{t`Element Exchange`}</H2>
+            <span
+              className={classNames(
+                Classes.RUNNING_TEXT,
+                Classes.TEXT_MUTED,
+                tw("text-base")
+              )}
+            >{t`Provide liquidity for this market, or trade for what you want.`}</span>
+          </div>
+          <WalletConnectionCard
+            active={active}
+            account={account}
+            chainId={chainId}
+            connectorName={connectorName}
+          />
         </div>
 
         <div className={tw("flex", "space-x-12")}>

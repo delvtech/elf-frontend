@@ -30,7 +30,7 @@ export const LabeledText: FC<LabeledTextProps> = ({
   bold = false,
 }) => {
   return (
-    <div className={tw("flex", "h-full", "flex-col", "w-full", "space-y-1")}>
+    <div className={tw("flex", "flex-col", "justify-center", "space-y-1")}>
       <span className={tw({ "font-semibold": bold })}>{text}</span>
       <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
         {label}
