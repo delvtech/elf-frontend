@@ -27,7 +27,7 @@ export const PortfolioView: FC<PortfolioViewProps> = () => {
   const changeTab = useChangeTab();
 
   // TODO: Stubbed values
-  const hasFYTsInWallet = true;
+  const hasFYTsInWallet = !!account;
 
   return (
     <div
@@ -49,7 +49,7 @@ export const PortfolioView: FC<PortfolioViewProps> = () => {
             className={tw("flex", "flex-col", "space-y-2", "h-full", "flex-1")}
           >
             <H3>{t`Fixed Yield Tokens (FYTs)`}</H3>
-            <Card className={tw("flex", "flex-1")}>
+            <Card className={tw("flex", "flex-1", "p-10")}>
               {hasFYTsInWallet ? (
                 <FYTTable />
               ) : (
@@ -68,31 +68,6 @@ export const PortfolioView: FC<PortfolioViewProps> = () => {
               )}
             </Card>
           </div>
-
-          {/* YCs */}
-          {/* <div
-            className={tw("flex", "flex-col", "space-y-2", "h-full", "flex-1")}
-          >
-            <H3>{t`Yield Coupons (YCs)`}</H3>
-            <Card className={tw("flex", "flex-1")}>
-              <NonIdealState
-                icon={IconNames.FLAG}
-                description={t`This wallet does not contain any Yield Coupons.`}
-                action={<Button outlined>{t`Go to Mint`}</Button>}
-              />
-            </Card>
-          </div> */}
-        </div>
-
-        {/* Liquidity positions */}
-        <div className={tw("flex", "flex-col", "space-y-2", "h-full")}>
-          <H3>{t`Liquidity positions`}</H3>
-          <Card className={tw("flex", "flex-1")}>
-            <NonIdealState
-              icon={IconNames.TRACTOR}
-              description={t`This wallet does not contain any LP tokens.`}
-            />
-          </Card>
         </div>
       </div>
     </div>

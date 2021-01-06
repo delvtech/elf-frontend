@@ -6,11 +6,14 @@ import tw from "efi-tailwindcss-classnames";
 interface LabeledProgressBarProps {
   progressValue: number;
   label?: string;
+
+  helperText?: string;
   intent?: Intent;
 }
 export const LabeledProgressBar: FC<LabeledProgressBarProps> = ({
-  label,
+  helperText,
   intent,
+  label,
   progressValue,
 }) => {
   return (
@@ -23,15 +26,18 @@ export const LabeledProgressBar: FC<LabeledProgressBarProps> = ({
         "space-y-2"
       )}
     >
+      <span>{label}</span>
       <ProgressBar
         intent={intent}
         animate={false}
         stripes={false}
         value={progressValue}
       />
-      <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
-        {label}
-      </span>
+      {!!helperText && (
+        <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
+          {helperText}
+        </span>
+      )}
     </div>
   );
 };

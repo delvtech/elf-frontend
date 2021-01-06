@@ -11,12 +11,11 @@ import { FYTTableRow } from "./FYTTableRow";
 interface FYTTableProps {}
 
 const tableHeaders = [
-  t`Maturity date`,
   t`Asset`,
   t`Quantity`,
   t`Current value`,
-  t`Mint date`,
-  t`Maturity`,
+  t`Yield rate`,
+  t`Maturation date`,
   t`Actions`,
 ];
 
@@ -24,10 +23,10 @@ export const FYTTable: FC<FYTTableProps> = () => {
   return (
     <HTMLTable striped className={tw("w-full")}>
       <thead>
-        <tr className={Classes.TEXT_SMALL}>
+        <tr>
           {tableHeaders.map((label) => (
             <th key={label}>
-              <span className={classNames(tw("text-xs"), Classes.TEXT_MUTED)}>
+              <span className={classNames(tw("pl-2"), Classes.TEXT_MUTED)}>
                 {label}
               </span>
             </th>
@@ -35,6 +34,8 @@ export const FYTTable: FC<FYTTableProps> = () => {
         </tr>
       </thead>
       <tbody className={Classes.TEXT_LARGE}>
+        <FYTTableRow />
+        <FYTTableRow />
         <FYTTableRow />
       </tbody>
     </HTMLTable>
