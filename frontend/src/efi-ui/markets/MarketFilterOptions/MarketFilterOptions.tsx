@@ -11,11 +11,7 @@ interface MarketFilterOptionsProps {}
 export const MarketFilterOptions: FC<MarketFilterOptionsProps> = () => {
   return (
     <div className={tw("space-y-6")}>
-      <FormGroup
-        helperText="type to filter results..."
-        label="Filter"
-        labelFor="text-input"
-      >
+      <FormGroup label="Filter" labelFor="text-input">
         <InputGroup
           leftIcon={IconNames.SEARCH}
           id="text-input"
@@ -32,7 +28,7 @@ export const MarketFilterOptions: FC<MarketFilterOptionsProps> = () => {
         />
       </FormGroup>
       <FormGroup label="Asset State" labelFor="asset-radios">
-        <Switch labelElement={t`Registering`} />
+        <Switch labelElement={t`Queue`} />
         <Switch labelElement={t`Running`} />
         <Switch labelElement={t`Mature`} />
       </FormGroup>
