@@ -4,8 +4,6 @@ import { FormGroup, InputGroup, RangeSlider, Switch } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { t } from "ttag";
 
-import tw from "efi-tailwindcss-classnames";
-
 interface MarketFilterOptionsProps {}
 
 export const MarketFilterOptions: FC<MarketFilterOptionsProps> = () => {
