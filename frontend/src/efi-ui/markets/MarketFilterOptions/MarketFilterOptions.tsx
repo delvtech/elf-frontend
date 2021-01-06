@@ -4,11 +4,13 @@ import { FormGroup, InputGroup, RangeSlider, Switch } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { t } from "ttag";
 
+import tw from "efi-tailwindcss-classnames";
+
 interface MarketFilterOptionsProps {}
 
 export const MarketFilterOptions: FC<MarketFilterOptionsProps> = () => {
   return (
-    <div>
+    <div className={tw("space-y-6")}>
       <FormGroup
         helperText="type to filter results..."
         label="Filter"
@@ -20,16 +22,12 @@ export const MarketFilterOptions: FC<MarketFilterOptionsProps> = () => {
           placeholder="Search markets"
         />
       </FormGroup>
-      <FormGroup
-        helperText="weeks until mature..."
-        label="Time to maturity"
-        labelFor="maturity-slider"
-      >
+      <FormGroup label="Time to maturity (weeks)" labelFor="maturity-slider">
         <RangeSlider
           min={0}
           max={52}
           stepSize={2}
-          labelStepSize={13}
+          labelStepSize={26}
           value={[12, 24]}
         />
       </FormGroup>

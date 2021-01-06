@@ -56,14 +56,10 @@ export const ExchangeView: FC<ExchangeViewProps> = () => {
           </div>
           <div className={tw("flex", "flex-1")}>
             <Card className={tw("p-10", "flex", "flex-1")}>
-              <div className={tw("flex", "flex-col", "space-y-6")}>
-                <div className={tw("flex", "justify-center")}>
-                  <MarketsTable
-                    className={tw("w-full")}
-                    markets={availableMarkets}
-                  />
-                </div>
-              </div>
+              <MarketsTable
+                className={tw("w-full")}
+                markets={availableMarkets}
+              />
             </Card>
           </div>
         </div>
