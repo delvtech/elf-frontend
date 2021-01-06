@@ -41,7 +41,7 @@ const TABLE_HEADERS: MarketsTableHeaderProps[] = [
     tooltip: t`The annual adjusted yield for staking in this market.`,
   },
   { label: t`Mint Date` },
-  { label: t`State` },
+  { label: t`Tranche State` },
   {
     label: t`Wallet approval`,
     tooltip: t`Wallet approval is required before a pool can invest your funds`,
