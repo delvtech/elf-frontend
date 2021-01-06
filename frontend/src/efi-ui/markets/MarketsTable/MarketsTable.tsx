@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from "react";
+import React, { FC } from "react";
 
 import {
   Alignment,
@@ -10,10 +10,11 @@ import {
   MenuItem,
   Popover,
   Position,
-  Switch,
   Tag,
 } from "@blueprintjs/core";
+import { IconNames } from "@blueprintjs/icons";
 import { Link } from "@reach/router";
+import classNames from "classnames";
 import { Erc20 } from "elf-contracts/types/Erc20";
 import { t } from "ttag";
 
@@ -21,14 +22,8 @@ import tw from "efi-tailwindcss-classnames";
 import { FormGroupLabel } from "efi-ui/base/FormGroupLabel/FormGroupLabel";
 import { LabeledProgressBar } from "efi-ui/base/LabeledProgressBar/LabeledProgressBar";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { useTokenName } from "efi-ui/token/hooks/useTokenName";
-import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
-import { useTokenTotalSupply } from "efi-ui/token/hooks/useTokenTotalSupply";
-import { formatEth } from "efi/coins/ether/formatEth";
 import { wethContract } from "efi/crypto/TokenContracts";
 import { Pool } from "efi/pools/Pool";
-import { IconNames } from "@blueprintjs/icons";
-import classNames from "classnames";
 
 interface MarketsTableProps {
   markets: Pool[];
@@ -143,76 +138,6 @@ const MarketsTableHeader: FC<MarketsTableHeaderProps> = ({
         alignIndicator={Alignment.RIGHT}
       />
     </th>
-  );
-};
-
-interface MarketsTableRowPropsOld {
-  poolContract: Erc20;
-  poolId: string;
-}
-
-const MarketsTableRowOld: FC<MarketsTableRowPropsOld> = ({
-  poolContract,
-  poolId,
-}) => {
-  const [poolName] = useTokenName(poolContract);
-  const [poolSymbol] = useTokenSymbol(poolContract);
-  const [poolTotalSupply] = useTokenTotalSupply(poolContract);
-
-  const onPermissionChange = useCallback(() => {}, []);
-
-  // TOOD: get this from smart contracts when available
-  const formattedPoolApy = "2.13";
-
-  return (
-    <tr>
-      {/* Token name */}
-      <td className={tw("h-16")}>
-        <Link to="0xDEADBEEF">
-          <LabeledText
-            bold
-            text={t`${poolSymbol} - ETH`}
-            label={poolName || ""}
-          />
-        </Link>
-      </td>
-
-      {/* ROI */}
-      <td>
-        <div className={tw("flex", "h-full", "items-center")}>
-          {`${formattedPoolApy}%`}
-        </div>
-      </td>
-
-      {/* Price per token in staking asset */}
-      <td>
-        <LabeledText text={`${0.94658366} ETH`} label={`589.22 USD`} />
-      </td>
-
-      <td>
-        <div className={tw("flex", "h-full", "items-center")}>
-          {formatEth(poolTotalSupply)}
-        </div>
-      </td>
-
-      {/* Allowance granted */}
-      <td>
-        <div
-          onClick={(e) => {
-            e.stopPropagation();
-          }}
-          className={tw("flex", "h-full", "items-center")}
-        >
-          <Switch
-            large
-            innerLabel={t`off`}
-            innerLabelChecked={t`on`}
-            className={tw("mb-0")}
-            onChange={onPermissionChange}
-          />
-        </div>
-      </td>
-    </tr>
   );
 };
 
