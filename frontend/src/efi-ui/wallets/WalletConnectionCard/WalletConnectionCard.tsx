@@ -41,7 +41,7 @@ export const WalletConnectionCard: FC<WalletConnectionCardProps> = ({
   return (
     <Fragment>
       <Card
-        className={classNames(tw("h-24"), className)}
+        className={classNames(tw("h-20", "flex", "items-center"), className)}
         interactive
         elevation={!active ? Elevation.TWO : undefined}
         onClick={openWalletDialog}
