@@ -12,6 +12,7 @@ import { useChangeTab } from "efi-ui/navigation/hooks/useChangeTab";
 import { Navigation } from "efi-ui/navigation/navigation";
 
 import { PortfolioViewTitle } from "./PortfolioViewTitle";
+import { FYTTable } from "efi-ui/portfolio/FYTTable/FYTTable";
 
 interface PortfolioViewProps extends RouteComponentProps {}
 export const PortfolioView: FC<PortfolioViewProps> = () => {
@@ -22,7 +23,11 @@ export const PortfolioView: FC<PortfolioViewProps> = () => {
     connector,
     library,
   } = useWeb3React<Web3Provider>();
+
   const changeTab = useChangeTab();
+
+  // TODO: Stubbed values
+  const hasFYTsInWallet = true;
 
   return (
     <div
@@ -39,29 +44,33 @@ export const PortfolioView: FC<PortfolioViewProps> = () => {
         />
 
         <div className={tw("flex", "space-x-12", "w-full", "h-full")}>
-          {/* YTs */}
+          {/* FYTs */}
           <div
             className={tw("flex", "flex-col", "space-y-2", "h-full", "flex-1")}
           >
             <H3>{t`Fixed Yield Tokens (FYTs)`}</H3>
             <Card className={tw("flex", "flex-1")}>
-              <NonIdealState
-                icon={IconNames.BANK_ACCOUNT}
-                description={t`This wallet does not contain any Fixed Yield Tokens.`}
-                action={
-                  <Button
-                    outlined
-                    onClick={() => {
-                      changeTab(Navigation.POOLS);
-                    }}
-                  >{t`Go to Mint`}</Button>
-                }
-              />
+              {hasFYTsInWallet ? (
+                <FYTTable />
+              ) : (
+                <NonIdealState
+                  icon={IconNames.BANK_ACCOUNT}
+                  description={t`This wallet does not contain any Fixed Yield Tokens.`}
+                  action={
+                    <Button
+                      outlined
+                      onClick={() => {
+                        changeTab(Navigation.POOLS);
+                      }}
+                    >{t`Go to Mint`}</Button>
+                  }
+                />
+              )}
             </Card>
           </div>
 
           {/* YCs */}
-          <div
+          {/* <div
             className={tw("flex", "flex-col", "space-y-2", "h-full", "flex-1")}
           >
             <H3>{t`Yield Coupons (YCs)`}</H3>
@@ -72,7 +81,7 @@ export const PortfolioView: FC<PortfolioViewProps> = () => {
                 action={<Button outlined>{t`Go to Mint`}</Button>}
               />
             </Card>
-          </div>
+          </div> */}
         </div>
 
         {/* Liquidity positions */}
