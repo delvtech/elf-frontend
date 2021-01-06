@@ -6,7 +6,12 @@ import {
   Classes,
   HTMLTable,
   Icon,
+  Menu,
+  MenuItem,
+  Popover,
+  Position,
   Switch,
+  Tag,
 } from "@blueprintjs/core";
 import { Link } from "@reach/router";
 import { Erc20 } from "elf-contracts/types/Erc20";
@@ -33,10 +38,12 @@ interface MarketsTableProps {
 const TABLE_HEADERS: MarketsTableHeaderProps[] = [
   { label: t`Maturity Date` },
   { label: t`Assets` },
-  { label: t`Price` },
   {
-    label: t`ROI`,
-    tooltip: t`The annual adjusted yield for the locked asset.`,
+    label: t`Total Liquidity`,
+  },
+  {
+    label: t`Pool ROI`,
+    tooltip: t`The annual adjusted yield for staking in this market.`,
   },
   { label: t`Mint Date` },
   { label: t`State` },
@@ -51,26 +58,52 @@ export const MarketsTable: FC<MarketsTableProps> = ({ markets, className }) => {
     return <span>{t`no markets found`}</span>;
   }
   return (
-    <HTMLTable striped className={className} interactive>
-      <thead>
-        <tr>
-          {TABLE_HEADERS.map(({ label, tooltip }) => (
-            <MarketsTableHeader key={label} label={label} tooltip={tooltip} />
-          ))}
-        </tr>
-      </thead>
-      <tbody className={Classes.TEXT_LARGE}>
-        {markets.map((pool, i) => {
-          return (
-            <MarketsTableRow
-              key={i}
-              poolContract={wethContract}
-              poolId={pool.id}
-            />
-          );
-        })}
-      </tbody>
-    </HTMLTable>
+    <div className={tw("w-full")}>
+      <div className={tw("flex", "space-x-4")}>
+        <Popover
+          content={
+            <Menu>
+              <MenuItem text={t`Name`} />
+              <MenuItem text={t`Asset Type`} />
+              <MenuItem text={t`Mint Date`} />
+              <MenuItem text={t`Maturity Date`} />
+              <MenuItem text={t`Time left`} />
+              <MenuItem text={t`ROI`} />
+            </Menu>
+          }
+          position={Position.BOTTOM_LEFT}
+          minimal
+        >
+          <Button
+            minimal
+            outlined
+            rightIcon={IconNames.DOUBLE_CARET_VERTICAL}
+          >{t`Sort`}</Button>
+        </Popover>
+        <Tag minimal onRemove={() => {}}>{t`Maturity Date`}</Tag>
+        <Tag minimal onRemove={() => {}}>{t`ROI`}</Tag>
+      </div>
+      <HTMLTable striped className={className} interactive>
+        <thead>
+          <tr>
+            {TABLE_HEADERS.map(({ label, tooltip }) => (
+              <MarketsTableHeader key={label} label={label} tooltip={tooltip} />
+            ))}
+          </tr>
+        </thead>
+        <tbody className={Classes.TEXT_LARGE}>
+          {markets.map((pool, i) => {
+            return (
+              <MarketsTableRow
+                key={i}
+                poolContract={wethContract}
+                poolId={pool.id}
+              />
+            );
+          })}
+        </tbody>
+      </HTMLTable>
+    </div>
   );
 };
 
@@ -173,18 +206,15 @@ export const MarketsTableRow: FC<MarketsTableRowProps> = () => {
     <tr>
       <td>{t`January 15, 2021`}</td>
       <td>
-        <div className={tw("flex", "justify-between")}>
+        <div className={tw("flex", "space-x-2")}>
           <LabeledText bold text="ETH" label={t`Ether`} />
           <Icon className={Classes.TEXT_MUTED} icon={IconNames.EXCHANGE} />
           <LabeledText bold text="fyETH" label={t`Fixed Yield Ether`} />
         </div>
       </td>
 
-      <td>{t`100 fyETH`}</td>
-
-      <td>
-        <LabeledText text={t`98.01893 ETH`} label={t`98,105.23 USD`} />
-      </td>
+      <td>$123,456,789</td>
+      <td>2.13%</td>
 
       <td>{"January 1, 2021"}</td>
 
