@@ -206,11 +206,11 @@ export const MarketsTableRow: FC<MarketsTableRowProps> = () => {
     <tr>
       <td>{t`January 15, 2021`}</td>
       <td>
-        <div className={tw("flex", "space-x-2")}>
+        <Link className={tw("flex", "space-x-2")} to="0xDEADBEEF">
           <LabeledText bold text="ETH" label={t`Ether`} />
           <Icon className={Classes.TEXT_MUTED} icon={IconNames.EXCHANGE} />
           <LabeledText bold text="fyETH" label={t`Fixed Yield Ether`} />
-        </div>
+        </Link>
       </td>
 
       <td>$123,456,789</td>
