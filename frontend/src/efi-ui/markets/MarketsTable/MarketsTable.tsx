@@ -59,29 +59,48 @@ export const MarketsTable: FC<MarketsTableProps> = ({ markets, className }) => {
   }
   return (
     <div className={tw("w-full")}>
-      <div className={tw("flex", "space-x-4")}>
+      <div className={tw("flex", "justify-between")}>
+        <div className={tw("flex", "space-x-4")}>
+          <Popover
+            content={
+              <Menu>
+                <MenuItem text={t`Name`} />
+                <MenuItem text={t`Asset Type`} />
+                <MenuItem text={t`Mint Date`} />
+                <MenuItem text={t`Maturity Date`} />
+                <MenuItem text={t`Time left`} />
+                <MenuItem text={t`ROI`} />
+              </Menu>
+            }
+            position={Position.BOTTOM_LEFT}
+            minimal
+          >
+            <Button
+              minimal
+              outlined
+              rightIcon={IconNames.DOUBLE_CARET_VERTICAL}
+            >{t`Sort`}</Button>
+          </Popover>
+          <Tag minimal onRemove={() => {}}>{t`Maturity Date`}</Tag>
+          <Tag minimal onRemove={() => {}}>{t`ROI`}</Tag>
+        </div>
         <Popover
           content={
             <Menu>
-              <MenuItem text={t`Name`} />
-              <MenuItem text={t`Asset Type`} />
-              <MenuItem text={t`Mint Date`} />
-              <MenuItem text={t`Maturity Date`} />
-              <MenuItem text={t`Time left`} />
-              <MenuItem text={t`ROI`} />
+              {TABLE_HEADERS.map(({ label }) => (
+                <MenuItem key={label} text={label} icon={IconNames.PIN} />
+              ))}
             </Menu>
           }
-          position={Position.BOTTOM_LEFT}
+          position={Position.BOTTOM_RIGHT}
           minimal
         >
           <Button
             minimal
             outlined
-            rightIcon={IconNames.DOUBLE_CARET_VERTICAL}
-          >{t`Sort`}</Button>
+            rightIcon={IconNames.CARET_DOWN}
+          >{t`Columns`}</Button>
         </Popover>
-        <Tag minimal onRemove={() => {}}>{t`Maturity Date`}</Tag>
-        <Tag minimal onRemove={() => {}}>{t`ROI`}</Tag>
       </div>
       <HTMLTable striped className={className} interactive>
         <thead>
