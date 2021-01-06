@@ -43,7 +43,7 @@ const TABLE_HEADERS: MarketsTableHeaderProps[] = [
   { label: t`Mint Date` },
   { label: t`Tranche State` },
   {
-    label: t`Wallet approval`,
+    label: t`Wallet Approval`,
     tooltip: t`Wallet approval is required before a pool can invest your funds`,
   },
 ];
