@@ -85,38 +85,6 @@ export const ExchangeView: FC<ExchangeViewProps> = () => {
           <div className={tw("flex", "flex-1")}>
             <Card className={tw("p-10", "flex", "flex-1")}>
               <div className={tw("flex", "flex-col", "space-y-6")}>
-                <div>
-                  <SearchFormGroup
-                    label={t`Search`}
-                    value={searchValue}
-                    onChange={onSetSearchValue}
-                  />
-                </div>
-                <div className={tw("flex", "space-x-0", "lg:space-x-16")}>
-                  <ButtonToggleFormGroup
-                    label={t`Assets`}
-                    tooltipContent={t`Filter markets for Fixed Yield Tokens or Yield Coupons`}
-                    selectedButtonId={selectedAsset}
-                    onSelect={setSelectedAsset}
-                    buttons={ASSET_BUTTONS}
-                  />
-
-                  <ButtonToggleFormGroup
-                    label={t`Risk`}
-                    tooltipContent={t`Risk is determined by the volatility of the underlying assets`}
-                    selectedButtonId={selectedRisk}
-                    onSelect={setSelectedRisk}
-                    buttons={ROI_BUTTONS}
-                  />
-                </div>
-                <ButtonToggleFormGroup
-                  label={t`Currencies`}
-                  tooltipContent={t`Filter markets by currency`}
-                  selectedButtonId={selectedPool}
-                  onSelect={setSelectedPool}
-                  buttons={POOL_BUTTONS}
-                />
-
                 <div className={tw("flex", "justify-center")}>
                   <MarketsTable
                     className={tw("w-full")}
