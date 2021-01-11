@@ -10,7 +10,7 @@
     "@ethersproject/bytes": "^5.0.8",
     "@ethersproject/contracts": "^5.0.8",
     "@ethersproject/hash": "^5.0.9",
-    "@ethersproject/providers": "^5.0.17",
+    "@ethersproject/providers": "^5.0.18",
     "@ethersproject/units": "^5.0.8",
     "@fontsource/open-sans": "^4.1.0",
     "@metamask/jazzicon": "^2.0.0",
