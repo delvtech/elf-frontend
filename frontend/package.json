@@ -9,7 +9,7 @@
     "@ethersproject/abi": "^5.0.10",
     "@ethersproject/bytes": "^5.0.9",
     "@ethersproject/contracts": "^5.0.8",
-    "@ethersproject/hash": "^5.0.9",
+    "@ethersproject/hash": "^5.0.10",
     "@ethersproject/providers": "^5.0.18",
     "@ethersproject/units": "^5.0.9",
     "@fontsource/open-sans": "^4.1.0",
