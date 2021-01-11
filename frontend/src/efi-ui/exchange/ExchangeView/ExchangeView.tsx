@@ -1,6 +1,6 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 
-import { Card, Classes, H2 } from "@blueprintjs/core";
+import { Card, Classes, H2, Tab, Tabs } from "@blueprintjs/core";
 import { RouteComponentProps } from "@reach/router";
 import classNames from "classnames";
 import { t } from "ttag";
@@ -19,6 +19,8 @@ import { getConnectorName } from "efi/wallets/connectors";
 
 interface ExchangeViewProps extends RouteComponentProps {}
 
+type ExchangeTabs = "markets" | "tranches";
+
 // TODO: change this to a list of Markets
 const availableMarkets: Pool[] = [
   ElfStrategyLowRisk,
@@ -34,8 +36,10 @@ export const ExchangeView: FC<ExchangeViewProps> = () => {
     connector,
     library,
   } = useWeb3React<Web3Provider>();
+  const [selectedTabId, setSelectedTabId] = useState<ExchangeTabs>("markets");
 
   const connectorName = getConnectorName(connector, library);
+
   return (
     <div
       className={tw("flex", "p-12", "h-full", "space-x-12", "overflow-scroll")}
@@ -76,12 +80,35 @@ export const ExchangeView: FC<ExchangeViewProps> = () => {
             <MarketFilterOptions />
           </div>
           <div className={tw("flex", "flex-1")}>
-            <Card className={tw("p-10", "flex", "flex-1")}>
-              <MarketsTable
-                className={tw("w-full")}
-                markets={availableMarkets}
+            <Tabs
+              onChange={setSelectedTabId as any}
+              selectedTabId={selectedTabId}
+            >
+              <Tab
+                id="markets"
+                title={<span className="h2">{t`Markets`}</span>}
+                panel={
+                  <Card className={tw("p-10", "flex", "flex-1")}>
+                    <MarketsTable
+                      className={tw("w-full")}
+                      markets={availableMarkets}
+                    />
+                  </Card>
+                }
               />
-            </Card>
+              <Tab
+                id="tranches"
+                title={<span className="h2">{t`Tranches`}</span>}
+                panel={
+                  <Card className={tw("p-10", "flex", "flex-1")}>
+                    <MarketsTable
+                      className={tw("w-full")}
+                      markets={availableMarkets}
+                    />
+                  </Card>
+                }
+              />
+            </Tabs>
           </div>
         </div>
       </div>
