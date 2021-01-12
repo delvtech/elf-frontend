@@ -26,6 +26,10 @@ export function useActiveTab(): Navigation {
     case Navigation.EXCHANGE: {
       return Navigation.EXCHANGE;
     }
+    case Navigation.MINT: {
+      return Navigation.MINT;
+    }
+
     default:
       typeAassertNever(navigation);
       return Navigation.HOME;

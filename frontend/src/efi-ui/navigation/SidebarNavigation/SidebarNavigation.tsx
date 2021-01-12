@@ -63,11 +63,11 @@ export const SidebarNavigation: FC<SidebarNavigationProps> = ({
             }
           />
           <Tab
-            id={Navigation.POOLS}
+            id={Navigation.MINT}
             title={
               <div className={tabTitleClassName}>
                 <Icon icon={IconNames.CUBE_ADD} iconSize={Icon.SIZE_LARGE} />
-                <span>{t`Pools`}</span>
+                <span>{t`Mint`}</span>
               </div>
             }
           />
@@ -75,10 +75,7 @@ export const SidebarNavigation: FC<SidebarNavigationProps> = ({
             id={Navigation.EXCHANGE}
             title={
               <div className={tabTitleClassName}>
-                <Icon
-                  icon={IconNames.ARROWS_HORIZONTAL}
-                  iconSize={Icon.SIZE_LARGE}
-                />
+                <Icon icon={IconNames.SHOP} iconSize={Icon.SIZE_LARGE} />
                 <span>{t`Exchange`}</span>
               </div>
             }

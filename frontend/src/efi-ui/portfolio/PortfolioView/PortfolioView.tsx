@@ -48,7 +48,7 @@ export const PortfolioView: FC<PortfolioViewProps> = () => {
           <div
             className={tw("flex", "flex-col", "space-y-2", "h-full", "flex-1")}
           >
-            <H3>{t`Fixed Yield Tokens (FYTs)`}</H3>
+            <H3>{t`Fixed Yield Tokens (3)`}</H3>
             <Card className={tw("flex", "flex-1", "p-10")}>
               {hasFYTsInWallet ? (
                 <FYTTable />

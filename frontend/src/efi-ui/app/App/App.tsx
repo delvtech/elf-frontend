@@ -9,6 +9,8 @@ import { CryptoDrawer } from "efi-ui/crypto/CryptoDrawer/CryptoDrawer";
 import { ExchangeView } from "efi-ui/exchange/ExchangeView/ExchangeView";
 import { FAQView } from "efi-ui/faq/FAQView";
 import { HomeView } from "efi-ui/home/HomeView";
+import { MarketView } from "efi-ui/markets/MarketView/MarketView";
+import { MintView } from "efi-ui/mint/MintView/MintView";
 import { MainNavigation } from "efi-ui/navigation/MainNavigation/MainNavigation";
 import { Navigation } from "efi-ui/navigation/navigation";
 import { PoolsView } from "efi-ui/pools/PoolsView/PoolsView";
@@ -19,7 +21,6 @@ import { PulseView } from "efi-ui/pulse/PulseView";
 import { useSyncWithInjectedEthereum } from "efi-ui/wallets/hooks/useSyncWithInjectedEthereum";
 
 import styles from "./App.module.css";
-import { MarketView } from "efi-ui/markets/MarketView/MarketView";
 
 const contentClassName = tw(
   "flex-1",
@@ -59,6 +60,7 @@ const App: FC<AppProps> = () => {
           <PulseView path={Navigation.PULSE} />
           <PoolsView path={Navigation.POOLS} />
           <PoolView path={`${Navigation.POOLS}/:poolId`} />
+          <MintView path={Navigation.MINT} />
           <FAQView path={Navigation.FAQ} />
           <PortfolioView path={Navigation.PORTFOLIO} />
           <ExchangeView path={Navigation.EXCHANGE} />

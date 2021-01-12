@@ -18,7 +18,7 @@ export const PoolBreadcrumb: FC<PoolBreadcrumbProps> = ({
 }) => {
   const items = useBreadcrumbItems(availablePools, activePool, setActivePool);
 
-  return <Breadcrumbs className={tw("text-lg")} items={items} />;
+  return <Breadcrumbs items={items} />;
 };
 
 function useBreadcrumbItems(
