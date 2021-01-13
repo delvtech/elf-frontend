@@ -36,7 +36,6 @@ export const FYTTable: FC<FYTTableProps> = () => {
       <tbody className={Classes.TEXT_LARGE}>
         <FYTTableRow />
         <FYTTableRow />
-        <FYTTableRow />
       </tbody>
     </HTMLTable>
   );

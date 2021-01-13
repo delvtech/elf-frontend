@@ -73,7 +73,6 @@ export const FYTTableRow: FC<FYTTableRowProps> = () => {
           </Tooltip>
           <Button outlined>{t`Sell`}</Button>
           <Button outlined>{t`Stake`}</Button>
-          <Button outlined>{t`Boost`}</Button>
         </div>
       </td>
     </tr>

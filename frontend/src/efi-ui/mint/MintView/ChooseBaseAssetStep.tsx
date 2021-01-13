@@ -60,33 +60,34 @@ export const ChooseBaseAssetStep: FC<ChooseBaseAssetStepProps> = ({
         {baseAssetInfos.map(
           ({ assetName, assetSymbol, assetPrice, icon, walletBalance }) => {
             return (
-              <Card
-                key={assetName}
-                className={tw(
-                  "p-10",
-                  "flex",
-                  "flex-col",
-                  "space-y-10",
-                  "flex-1"
-                )}
-              >
-                <div className={tw("flex", "w-full", "space-x-4")}>
-                  <div>{icon}</div>
-                  <div>
-                    <H4>{assetName}</H4>
-                    <span
-                      className={Classes.TEXT_LARGE}
-                    >{t`1 ${assetSymbol} = ${assetPrice}`}</span>
+              <Card key={assetName} className={tw("flex-1")}>
+                <div
+                  className={tw(
+                    "flex",
+                    "flex-col",
+                    "p-4",
+                    "space-y-10",
+                    "w-full"
+                  )}
+                >
+                  <div className={tw("flex", "w-full", "space-x-4")}>
+                    <div>{icon}</div>
+                    <div>
+                      <H4>{assetName}</H4>
+                      <span
+                        className={Classes.TEXT_LARGE}
+                      >{t`1 ${assetSymbol} = ${assetPrice}`}</span>
+                    </div>
                   </div>
-                </div>
-                <div className={tw("flex", "w-full", "justify-between")}>
-                  <div className={tw("grid", "grid-cols-2", "w-full")}>
-                    <span>{t`Your balance:`}</span> {walletBalance}
+                  <div className={tw("flex", "w-full", "justify-between")}>
+                    <div className={tw("grid", "grid-cols-2", "w-full")}>
+                      <span>{t`Your balance:`}</span> {walletBalance}
+                    </div>
                   </div>
+                  <Button outlined large intent={Intent.PRIMARY}>
+                    {t`Mint with ${assetSymbol}`}
+                  </Button>
                 </div>
-                <Button outlined large intent={Intent.PRIMARY}>
-                  {t`Mint with ${assetSymbol}`}
-                </Button>
               </Card>
             );
           }
@@ -106,17 +107,19 @@ const NoSupportedBaseAssetsCallout: FC<{}> = () => {
   );
 
   return (
-    <Callout className={tw("p-6")} intent={Intent.DANGER} icon={null}>
-      <H4>{t`There are no supported base assets in this wallet.`}</H4>
-      <span>
-        {t`You can still explore the minting process, however you'll need one of the supported base assets if you wish to mint yield tokens.`}
-      </span>
-      <UL>
-        <li className={tw("list-disc")}>{t`Switch to a different wallet`}</li>
-        <li
-          className={tw("list-disc")}
-        >{jt`Learn how to ${convertEthToWethLink}`}</li>
-      </UL>
+    <Callout intent={Intent.DANGER} icon={null}>
+      <div className={tw("p-6")}>
+        <H4>{t`There are no supported base assets in this wallet.`}</H4>
+        <span>
+          {t`You can still explore the minting process, however you'll need one of the supported base assets if you wish to mint yield tokens.`}
+        </span>
+        <UL>
+          <li className={tw("list-disc")}>{t`Switch to a different wallet`}</li>
+          <li
+            className={tw("list-disc")}
+          >{jt`Learn how to ${convertEthToWethLink}`}</li>
+        </UL>
+      </div>
     </Callout>
   );
 };
@@ -126,9 +129,11 @@ const NoWalletConnectedCallout: FC<{}> = () => {
     <a key="connect-your-wallet-link" href="/">{t`connect your wallet`}</a>
   );
   return (
-    <Callout className={tw("p-6")} intent={Intent.PRIMARY} icon={null}>
-      <H4>{t`More information is available when you connect your wallet`}</H4>
-      <span>{jt`Don't worry, you can still explore the minting process, but we'll show your balances and other relevant info when you ${connectYourWalletLink}.`}</span>
+    <Callout intent={Intent.PRIMARY} icon={null}>
+      <div className={tw("p-6")}>
+        <H4>{t`More information is available when you connect your wallet`}</H4>
+        <span>{jt`Don't worry, you can still explore the minting process, but we'll show your balances and other relevant info when you ${connectYourWalletLink}.`}</span>
+      </div>
     </Callout>
   );
 };
