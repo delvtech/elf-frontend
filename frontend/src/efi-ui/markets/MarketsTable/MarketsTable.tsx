@@ -5,7 +5,6 @@ import {
   Button,
   Classes,
   HTMLTable,
-  Icon,
   Menu,
   MenuItem,
   Popover,
@@ -14,7 +13,6 @@ import {
 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { Link } from "@reach/router";
-import classNames from "classnames";
 import { Erc20 } from "elf-contracts/types/Erc20";
 import { t } from "ttag";
 
@@ -23,10 +21,10 @@ import { FormGroupLabel } from "efi-ui/base/FormGroupLabel/FormGroupLabel";
 import { LabeledProgressBar } from "efi-ui/base/LabeledProgressBar/LabeledProgressBar";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { wethContract } from "efi/crypto/TokenContracts";
-import { Pool } from "efi/pools/Pool";
+import { Market } from "efi/markets/Market";
 
 interface MarketsTableProps {
-  markets: Pool[];
+  markets: Market[];
   className?: string;
 }
 
@@ -148,7 +146,7 @@ export const MarketsTableRow: FC<MarketsTableRowProps> = () => {
       <td>
         <Link className={tw("flex", "space-x-2")} to="0xDEADBEEF">
           <LabeledText bold text="ETH" label={t`Ether`} />
-          <Icon className={Classes.TEXT_MUTED} icon={IconNames.EXCHANGE} />
+          {"-"}
           <LabeledText bold text="fyETH" label={t`Fixed Yield Ether`} />
         </Link>
       </td>
@@ -159,12 +157,9 @@ export const MarketsTableRow: FC<MarketsTableRowProps> = () => {
       <td>{"January 1, 2021"}</td>
 
       <td>
-        <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
-          Running
-        </span>
         <LabeledProgressBar
           progressValue={0.75}
-          label={t`3 days, 6 hours, 32 minutes left`}
+          helperText={t`3 days, 6 hours, 32 minutes left`}
         />
       </td>
     </tr>

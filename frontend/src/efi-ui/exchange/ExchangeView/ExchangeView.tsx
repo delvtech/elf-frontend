@@ -1,32 +1,20 @@
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 
-import { Card, Classes, H2, Tab, Tabs } from "@blueprintjs/core";
+import { Card, Classes, H2 } from "@blueprintjs/core";
+import { Web3Provider } from "@ethersproject/providers";
 import { RouteComponentProps } from "@reach/router";
+import { useWeb3React } from "@web3-react/core";
 import classNames from "classnames";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { MarketFilterOptions } from "efi-ui/markets/MarketFilterOptions/MarketFilterOptions";
 import { MarketsTable } from "efi-ui/markets/MarketsTable/MarketsTable";
-import { ElfStrategyHighRisk } from "efi/pools/highRisk";
-import { ElfStrategyLowRisk } from "efi/pools/lowRisk";
-import { ElfStrategyMediumRisk } from "efi/pools/mediumRisk";
-import { Pool } from "efi/pools/Pool";
 import { WalletConnectionCard } from "efi-ui/wallets/WalletConnectionCard/WalletConnectionCard";
-import { useWeb3React } from "@web3-react/core";
-import { Web3Provider } from "@ethersproject/providers";
 import { getConnectorName } from "efi/wallets/connectors";
+import { stubbedMarkets } from "efi/markets/stubbedMarkets";
 
 interface ExchangeViewProps extends RouteComponentProps {}
-
-type ExchangeTabs = "markets" | "tranches";
-
-// TODO: change this to a list of Markets
-const availableMarkets: Pool[] = [
-  ElfStrategyLowRisk,
-  ElfStrategyMediumRisk,
-  ElfStrategyHighRisk,
-];
 
 export const ExchangeView: FC<ExchangeViewProps> = () => {
   const {
@@ -36,9 +24,8 @@ export const ExchangeView: FC<ExchangeViewProps> = () => {
     connector,
     library,
   } = useWeb3React<Web3Provider>();
-  const [selectedTabId, setSelectedTabId] = useState<ExchangeTabs>("markets");
-
   const connectorName = getConnectorName(connector, library);
+  const availableMarkets = getMarkets();
 
   return (
     <div
@@ -80,38 +67,19 @@ export const ExchangeView: FC<ExchangeViewProps> = () => {
             <MarketFilterOptions />
           </div>
           <div className={tw("flex", "flex-1")}>
-            <Tabs
-              onChange={setSelectedTabId as any}
-              selectedTabId={selectedTabId}
-            >
-              <Tab
-                id="markets"
-                title={<span className="h2">{t`Markets`}</span>}
-                panel={
-                  <Card className={tw("p-10", "flex", "flex-1")}>
-                    <MarketsTable
-                      className={tw("w-full")}
-                      markets={availableMarkets}
-                    />
-                  </Card>
-                }
+            <Card className={tw("p-10", "flex", "flex-1")}>
+              <MarketsTable
+                className={tw("w-full")}
+                markets={availableMarkets}
               />
-              <Tab
-                id="tranches"
-                title={<span className="h2">{t`Tranches`}</span>}
-                panel={
-                  <Card className={tw("p-10", "flex", "flex-1")}>
-                    <MarketsTable
-                      className={tw("w-full")}
-                      markets={availableMarkets}
-                    />
-                  </Card>
-                }
-              />
-            </Tabs>
+            </Card>
           </div>
         </div>
       </div>
     </div>
   );
+};
+
+const getMarkets = () => {
+  return stubbedMarkets;
 };

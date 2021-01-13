@@ -19,7 +19,7 @@ export const MarketFilterOptions: FC<MarketFilterOptionsProps> = () => {
   return (
     <div className={tw("space-y-6")}>
       <div className={tw("flex", "justify-between")}>
-        <span className="h2">{`Filter`}</span>
+        <span className="h4">{`Filter`}</span>
         <Button minimal intent={Intent.PRIMARY}>{t`Reset`}</Button>
       </div>
       <FormGroup labelFor="text-input">
