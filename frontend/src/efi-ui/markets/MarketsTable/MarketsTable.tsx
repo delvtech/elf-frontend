@@ -42,10 +42,6 @@ const TABLE_HEADERS: MarketsTableHeaderProps[] = [
   },
   { label: t`Mint Date` },
   { label: t`Tranche State` },
-  {
-    label: t`Wallet Approval`,
-    tooltip: t`Wallet approval is required before a pool can invest your funds`,
-  },
 ];
 
 export const MarketsTable: FC<MarketsTableProps> = ({ markets, className }) => {
@@ -170,12 +166,6 @@ export const MarketsTableRow: FC<MarketsTableRowProps> = () => {
           progressValue={0.75}
           label={t`3 days, 6 hours, 32 minutes left`}
         />
-      </td>
-
-      <td>
-        <div className={tw("flex", "space-x-2")}>
-          <Button outlined>{t`Approve Staking`}</Button>
-        </div>
       </td>
     </tr>
   );
