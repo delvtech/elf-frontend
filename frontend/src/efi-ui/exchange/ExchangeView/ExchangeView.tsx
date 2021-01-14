@@ -1,30 +1,20 @@
 import React, { FC } from "react";
 
 import { Card, Classes, H2 } from "@blueprintjs/core";
+import { Web3Provider } from "@ethersproject/providers";
 import { RouteComponentProps } from "@reach/router";
+import { useWeb3React } from "@web3-react/core";
 import classNames from "classnames";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { MarketFilterOptions } from "efi-ui/markets/MarketFilterOptions/MarketFilterOptions";
 import { MarketsTable } from "efi-ui/markets/MarketsTable/MarketsTable";
-import { ElfStrategyHighRisk } from "efi/pools/highRisk";
-import { ElfStrategyLowRisk } from "efi/pools/lowRisk";
-import { ElfStrategyMediumRisk } from "efi/pools/mediumRisk";
-import { Pool } from "efi/pools/Pool";
 import { WalletConnectionCard } from "efi-ui/wallets/WalletConnectionCard/WalletConnectionCard";
-import { useWeb3React } from "@web3-react/core";
-import { Web3Provider } from "@ethersproject/providers";
 import { getConnectorName } from "efi/wallets/connectors";
+import { stubbedMarkets } from "efi/markets/stubbedMarkets";
 
 interface ExchangeViewProps extends RouteComponentProps {}
-
-// TODO: change this to a list of Markets
-const availableMarkets: Pool[] = [
-  ElfStrategyLowRisk,
-  ElfStrategyMediumRisk,
-  ElfStrategyHighRisk,
-];
 
 export const ExchangeView: FC<ExchangeViewProps> = () => {
   const {
@@ -34,8 +24,9 @@ export const ExchangeView: FC<ExchangeViewProps> = () => {
     connector,
     library,
   } = useWeb3React<Web3Provider>();
-
   const connectorName = getConnectorName(connector, library);
+  const availableMarkets = getMarkets();
+
   return (
     <div
       className={tw("flex", "p-12", "h-full", "space-x-12", "overflow-scroll")}
@@ -87,4 +78,8 @@ export const ExchangeView: FC<ExchangeViewProps> = () => {
       </div>
     </div>
   );
+};
+
+const getMarkets = () => {
+  return stubbedMarkets;
 };

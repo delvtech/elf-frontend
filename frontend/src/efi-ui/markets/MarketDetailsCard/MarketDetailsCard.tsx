@@ -1,19 +1,14 @@
-import React, { FC, useCallback, useState } from "react";
-import { useInterval } from "react-use";
+import React, { FC, useCallback } from "react";
 
 import { Button, Card, Intent, NonIdealState, Tag } from "@blueprintjs/core";
+import { IconNames } from "@blueprintjs/icons";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { Timer } from "efi-ui/base/Timer/Timer";
 import { useCryptoDrawer } from "efi-ui/crypto/CryptoDrawer/useCryptoDrawer/useCryptoDrawer";
 import { useElfContractAssetSymbols } from "efi-ui/pools/hooks/useElfContract";
-import {
-  ONE_DAY_IN_MILLISECONDS,
-  ONE_HOUR_IN_MILLISECONDS,
-  ONE_MINUTE_IN_MILLISECONDS,
-} from "efi/base/time";
 import { Pool } from "efi/pools/Pool";
-import { IconNames } from "@blueprintjs/icons";
 
 interface MarketDetailsCardProps {
   pool: Pool;
@@ -133,32 +128,5 @@ export const MarketDetailsCard: FC<MarketDetailsCardProps> = ({ pool }) => {
         </div>
       </div>
     </Card>
-  );
-};
-
-interface TimerProps {
-  /**
-   * end date in unix ms timestamp
-   */
-  endTime: number;
-}
-const Timer: FC<TimerProps> = (props) => {
-  const { endTime } = props;
-  const [timerValue, setTimerValue] = useState(endTime - Date.now());
-  useInterval(() => {
-    setTimerValue(endTime - Date.now());
-  }, 1000);
-  const days = Math.floor(timerValue / ONE_DAY_IN_MILLISECONDS);
-  const hours = Math.floor(timerValue / ONE_HOUR_IN_MILLISECONDS);
-  const minutes = Math.floor(timerValue / ONE_MINUTE_IN_MILLISECONDS);
-  const seconds = Math.floor(timerValue / 1000);
-
-  const hoursLeft = hours - days * 24;
-  const minutesLeft = minutes - hours * 60;
-  const secondsLeft = seconds - minutes * 60;
-  return (
-    <span>
-      {t`${days} days, ${hoursLeft}, hours, ${minutesLeft} minutes, ${secondsLeft} seconds`}
-    </span>
   );
 };

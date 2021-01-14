@@ -24,3 +24,35 @@ code {
   height: 100%;
   width: 100%;
 }
+
+/* blueprintjs header styles without line-height.  This allows us to match header styles where we
+can't use header tags. */
+.h1 {
+  font-size: 36px;
+  font-weight: 600px;
+}
+
+.h2 {
+  font-size: 28px;
+  font-weight: 600px;
+}
+
+.h3 {
+  font-size: 22px;
+  font-weight: 600px;
+}
+
+.h4 {
+  font-size: 18px;
+  font-weight: 600px;
+}
+
+.h5 {
+  font-size: 16px;
+  font-weight: 600px;
+}
+
+.h6 {
+  font-size: 14px;
+  font-weight: 600px;
+}
