@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 
 import {
   Alignment,
@@ -13,15 +13,15 @@ import {
 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { Link } from "@reach/router";
-import { Erc20 } from "elf-contracts/types/Erc20";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { FormGroupLabel } from "efi-ui/base/FormGroupLabel/FormGroupLabel";
 import { LabeledProgressBar } from "efi-ui/base/LabeledProgressBar/LabeledProgressBar";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { wethContract } from "efi/crypto/TokenContracts";
 import { Market } from "efi/markets/Market";
+import { useInterval } from "react-use";
+import { getTimeLeft } from "efi/base/time";
 
 interface MarketsTableProps {
   markets: Market[];
@@ -100,14 +100,8 @@ export const MarketsTable: FC<MarketsTableProps> = ({ markets, className }) => {
           </tr>
         </thead>
         <tbody className={Classes.TEXT_LARGE}>
-          {markets.map((pool, i) => {
-            return (
-              <MarketsTableRow
-                key={i}
-                poolContract={wethContract}
-                poolId={pool.id}
-              />
-            );
+          {markets.map((market, i) => {
+            return <MarketsTableRow key={i} market={market} />;
           })}
         </tbody>
       </HTMLTable>
@@ -136,31 +130,51 @@ const MarketsTableHeader: FC<MarketsTableHeaderProps> = ({
 };
 
 interface MarketsTableRowProps {
-  poolContract: Erc20;
-  poolId: string;
+  market: Market;
 }
-export const MarketsTableRow: FC<MarketsTableRowProps> = () => {
+export const MarketsTableRow: FC<MarketsTableRowProps> = ({ market }) => {
+  const maturityDate = new Date(market.maturityDate);
+  const startDate = new Date(market.startDate);
+  const baseAsset = market.assets[0];
+  const yieldAsset = market.assets[1];
+
+  const progress =
+    (Date.now() - market.startDate) / (market.maturityDate - market.startDate);
+  const [timerValue, setTimerValue] = useState(
+    market.maturityDate - Date.now()
+  );
+  useInterval(() => {
+    setTimerValue(market.maturityDate - Date.now());
+  }, 1000);
+  const [daysLeft, hoursLeft, minutesLeft] = getTimeLeft(timerValue);
+  const time = t`${daysLeft} days, ${hoursLeft}, hours, ${minutesLeft} minutes`;
+
   return (
     <tr>
-      <td>{t`January 15, 2021`}</td>
+      <td>{maturityDate.toLocaleDateString()}</td>
       <td>
         <Link className={tw("flex", "space-x-2")} to="0xDEADBEEF">
-          <LabeledText bold text="ETH" label={t`Ether`} />
+          <LabeledText bold text={baseAsset.symbol} label={baseAsset.name} />
           {"-"}
-          <LabeledText bold text="fyETH" label={t`Fixed Yield Ether`} />
+          <LabeledText bold text={yieldAsset.symbol} label={yieldAsset.name} />
         </Link>
       </td>
 
-      <td>$123,456,789</td>
+      <td>${market.totalSupply.toLocaleString()}</td>
       <td>2.13%</td>
 
-      <td>{"January 1, 2021"}</td>
+      <td>{startDate.toLocaleDateString()}</td>
 
       <td>
-        <LabeledProgressBar
-          progressValue={0.75}
-          helperText={t`3 days, 6 hours, 32 minutes left`}
-        />
+        {market.state === "running" ? (
+          <LabeledProgressBar
+            progressValue={progress}
+            label={t`running`}
+            helperText={time}
+          />
+        ) : (
+          market.state
+        )}
       </td>
     </tr>
   );

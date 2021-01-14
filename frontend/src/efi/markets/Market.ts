@@ -1,5 +1,3 @@
-import { Contract } from "ethers";
-
 export interface Market {
   /**
    * address of the market contract
@@ -30,9 +28,14 @@ export interface Market {
   description?: string;
 
   /**
-   * The assets to trade in the market
+   * The fiat sum of the assets in the market.
    */
-  assets: Contract[];
+  totalSupply: number;
+
+  /**
+   * The assets addresses to trade in the market, should be [baseAsset, yieldAsset]
+   */
+  assets: { name: string; symbol: string }[];
 
   /**
    *  The type of yield bearing asset in the market.
@@ -42,12 +45,12 @@ export interface Market {
   /**
    * When the locked asset is redeemable.  Value is a unix timestamp in milliseconds.
    */
-  maturityDate: number | string;
+  maturityDate: number;
 
   /**
    * When the trance started.  Value is a unix timestamp in milliseconds.
    */
-  startDate: number | string;
+  startDate: number;
 
   state: TrancheState;
 }
