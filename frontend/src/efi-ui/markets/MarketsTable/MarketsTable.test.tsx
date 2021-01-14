@@ -2,19 +2,8 @@ import React from "react";
 
 import { renderWithClient } from "efi-ui/base/testing";
 import { MarketsTable } from "efi-ui/markets/MarketsTable/MarketsTable";
-import { Pool } from "efi/pools/Pool";
+import { stubbedMarkets } from "efi/markets/stubbedMarkets";
 import { createQueryClient } from "efi/queryClient";
-
-const elfPool: Pool = {
-  id: "0xDEADBEEF",
-  name: "Elf Pool",
-  description: "Elf Pool for exchanging FYTs",
-  stakingAsset: "ETH",
-  strategyAsset: "DAI",
-  heldAssets: ["yDAI", "yETH"],
-};
-
-const MARKETS = [elfPool, elfPool, elfPool];
 
 test("should render an empty list", async () => {
   const queryClient = createQueryClient();
@@ -30,7 +19,7 @@ test("should render a list", () => {
   const queryClient = createQueryClient();
   const { getByText } = renderWithClient(
     queryClient,
-    <MarketsTable markets={MARKETS} />
+    <MarketsTable markets={stubbedMarkets} />
   );
 
   expect(getByText("Assets")).toBeVisible();
@@ -38,5 +27,4 @@ test("should render a list", () => {
   expect(getByText("Pool ROI")).toBeVisible();
   expect(getByText("Mint Date")).toBeVisible();
   expect(getByText("Tranche State")).toBeVisible();
-  expect(getByText("Wallet Approval")).toBeVisible();
 });
