@@ -5,10 +5,10 @@ import { IconNames } from "@blueprintjs/icons";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { Timer } from "efi-ui/base/Timer/Timer";
 import { useCryptoDrawer } from "efi-ui/crypto/CryptoDrawer/useCryptoDrawer/useCryptoDrawer";
 import { useElfContractAssetSymbols } from "efi-ui/pools/hooks/useElfContract";
 import { Pool } from "efi/pools/Pool";
-import { Timer } from "efi-ui/base/Timer/Timer";
 
 interface MarketDetailsCardProps {
   pool: Pool;
