@@ -124,7 +124,7 @@
   },
   "devDependencies": {
     "@testing-library/dom": "^7.29.4",
-    "@testing-library/react-hooks": "^4.0.1",
+    "@testing-library/react-hooks": "^5.0.0",
     "@typechain/ethers-v5": "^2.0.0",
     "dependency-cruiser": "^9.21.4",
     "eslint-config-prettier": "^7.1.0",
