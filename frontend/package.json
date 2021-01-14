@@ -49,6 +49,7 @@
     "@web3-react/walletlink-connector": "^6.1.6",
     "classnames": "^2.2.6",
     "d3-array": "^2.9.1",
+    "ethereum-waffle": "^3.2.1",
     "ethers": "^5.0.26",
     "fuzzaldrin-plus": "^0.6.0",
     "graphql": "^15.4.0",
