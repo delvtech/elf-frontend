@@ -21,6 +21,8 @@ interface LabeledTextProps {
    * Louder styling for the text
    */
   bold?: boolean;
+
+  className?: string;
 }
 
 export const LabeledText: FC<LabeledTextProps> = ({
@@ -28,9 +30,15 @@ export const LabeledText: FC<LabeledTextProps> = ({
   label,
   subLabel,
   bold = false,
+  className,
 }) => {
   return (
-    <div className={tw("flex", "flex-col", "justify-center", "space-y-1")}>
+    <div
+      className={classNames(
+        tw("flex", "flex-col", "justify-center", "space-y-1"),
+        className
+      )}
+    >
       <span className={tw({ "font-semibold": bold })}>{text}</span>
       <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
         {label}
