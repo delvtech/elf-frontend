@@ -7,6 +7,7 @@ import React, { FunctionComponent, useCallback } from "react";
 
 import { getAxisColor } from "efi-ui/charts/colors";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
+import { GridColumns, GridRows } from "@visx/grid";
 
 interface TimeData {
   timeMs: number;
@@ -24,6 +25,7 @@ interface AreaChartProps {
   xScale: AxisScale<number>;
   yScale: AxisScale<number>;
   width: number;
+  height: number;
   yMax: number;
   margin: { top: number; right: number; bottom: number; left: number };
   hideBottomAxis?: boolean;
@@ -39,6 +41,7 @@ export const AreaChart: FunctionComponent<AreaChartProps> = ({
   getYValue,
   gradientColor,
   width,
+  height,
   yMax,
   margin,
   xScale,
@@ -84,6 +87,22 @@ export const AreaChart: FunctionComponent<AreaChartProps> = ({
 
   return (
     <Group left={left || margin.left} top={top || margin.top}>
+      <GridRows
+        scale={yScale}
+        width={width}
+        height={height}
+        stroke="#e0e0e0"
+        strokeDasharray="1,3"
+        strokeOpacity={0.2}
+      />
+      <GridColumns
+        scale={xScale}
+        width={width}
+        height={height - margin.top - margin.bottom}
+        stroke="#e0e0e0"
+        strokeDasharray="1,3"
+        strokeOpacity={0.2}
+      />
       <LinearGradient
         id="gradient"
         from={gradientColor}

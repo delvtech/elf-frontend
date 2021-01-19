@@ -12,7 +12,6 @@ import { MarketDetailsCard } from "efi-ui/markets/MarketDetailsCard/MarketDetail
 import { WalletConnectionCard } from "efi-ui/wallets/WalletConnectionCard/WalletConnectionCard";
 import { ElfStrategyLowRisk } from "efi/pools/lowRisk";
 import { getConnectorName } from "efi/wallets/connectors";
-import { MarketActionsCard } from "efi-ui/markets/MarketActionsCard/MarketActionsCard";
 
 interface MarketViewProps extends RouteComponentProps {}
 
@@ -31,18 +30,18 @@ export const MarketView: FC<MarketViewProps> = () => {
       className={tw("flex", "p-12", "h-full", "space-x-12", "overflow-scroll")}
     >
       {/* Main content */}
-      <div className={tw("flex", "flex-col", "flex-1", "space-y-12")}>
+      <div className={tw("flex", "flex-col", "flex-1", "space-y-8")}>
         {/* page title */}
         <div className={tw("flex", "justify-between")}>
           <div className={tw("flex", "flex-col", "justify-start")}>
-            <H2 className={tw("mb-4")}>{t`Element Market`}</H2>
+            <H2 className={tw("mb-4")}>{t`ETH - fyETH Market`}</H2>
             <span
               className={classNames(
                 Classes.RUNNING_TEXT,
                 Classes.TEXT_MUTED,
                 tw("text-base")
               )}
-            >{t`Provide liquidity for this market, or trade for what you want.`}</span>
+            >{t`Trade for either asset or provide liquidity for this market.`}</span>
           </div>
           <WalletConnectionCard
             active={active}
@@ -51,12 +50,8 @@ export const MarketView: FC<MarketViewProps> = () => {
             connectorName={connectorName}
           />
         </div>
-
-        <div className={tw("flex", "justify-between", "space-x-12")}>
+        <div className={tw("flex", "flex-col", "justify-between")}>
           <MarketDetailsCard pool={ElfStrategyLowRisk} />
-          <div className={tw("w-500")}>
-            <MarketActionsCard pool={ElfStrategyLowRisk} />
-          </div>
         </div>
       </div>
     </div>

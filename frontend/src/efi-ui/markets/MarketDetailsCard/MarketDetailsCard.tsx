@@ -1,132 +1,309 @@
-import React, { FC, useCallback } from "react";
+import React, { FC, useState } from "react";
+import { useInterval } from "react-use";
 
-import { Button, Card, Intent, NonIdealState, Tag } from "@blueprintjs/core";
-import { IconNames } from "@blueprintjs/icons";
+import { Button, Card, Classes, Intent, Tag } from "@blueprintjs/core";
+import classNames from "classnames";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { Timer } from "efi-ui/base/Timer/Timer";
-import { useCryptoDrawer } from "efi-ui/crypto/CryptoDrawer/useCryptoDrawer/useCryptoDrawer";
-import { useElfContractAssetSymbols } from "efi-ui/pools/hooks/useElfContract";
+import { LabeledProgressBar } from "efi-ui/base/LabeledProgressBar/LabeledProgressBar";
+import BrushChart from "efi-ui/charts/BrushChart/BrushChart";
+import { MarketActionsCard } from "efi-ui/markets/MarketActionsCard/MarketActionsCard";
+import { getTimeLeft } from "efi/base/time";
+import { Market } from "efi/markets/Market";
+import { stubbedMarkets } from "efi/markets/stubbedMarkets";
+import { ElfStrategyLowRisk } from "efi/pools/lowRisk";
 import { Pool } from "efi/pools/Pool";
 
 interface MarketDetailsCardProps {
   pool: Pool;
 }
 
-const END_DATE = 1610760418863;
+const timeData = [
+  { timeMs: Date.parse("2021-01-12"), value: 1077.800674325 },
+  { timeMs: Date.parse("2021-01-13"), value: 1156.5184414717 },
+  { timeMs: Date.parse("2021-01-14"), value: 1238.2550033254 },
+  { timeMs: Date.parse("2021-01-15"), value: 1183.2555122763 },
+  { timeMs: Date.parse("2021-01-16"), value: 1184.195903343 },
+  { timeMs: Date.parse("2021-01-17"), value: 1221.2200249181 },
+  { timeMs: Date.parse("2021-01-18"), value: 1257.0474852058 },
+];
 
 export const MarketDetailsCard: FC<MarketDetailsCardProps> = ({ pool }) => {
-  const { data: strategyAssetSymbols } = useElfContractAssetSymbols();
-
-  const { openCryptoDrawer } = useCryptoDrawer();
-  const clickStakingAsset = useCallback(() => {
-    openCryptoDrawer();
-  }, [openCryptoDrawer]);
-
-  const endDate = new Date(END_DATE);
-
   return (
-    <Card className={tw("flex", "flex-col", "w-full", "transition-all")}>
-      <div className={tw("flex", "mb-8", "space-x-8", "w-full")}>
-        <div className={tw("flex", "flex-1")}>
-          <div className={tw("flex", "flex-col", "space-y-8")}>
-            {/* Staking Asset */}
-            <div className={tw("flex", "flex-col", "space-y-3")}>
-              <div>
-                <b className={tw("text-xl")}>{t`Token Pair`}</b>{" "}
-                <Tag
-                  onClick={clickStakingAsset}
-                  minimal
-                  intent={Intent.PRIMARY}
-                  interactive
-                  large
-                >
-                  ETH
-                </Tag>{" "}
-                <Tag
-                  onClick={clickStakingAsset}
-                  minimal
-                  intent={Intent.PRIMARY}
-                  interactive
-                  large
-                >
-                  ETH-FYT-2020-1-1
-                </Tag>
-              </div>
-            </div>
-
-            {/* Held Assets Tags*/}
-            <div className={tw("flex", "flex-col", "space-y-3")}>
-              <span> {t`Investment strategies for locked assets`}</span>
-              <div className={tw("flex", "space-x-4")}>
-                {strategyAssetSymbols?.map((assetName) => {
-                  return (
-                    <Tag
-                      minimal
-                      intent={Intent.PRIMARY}
-                      interactive
-                      large
-                      key={assetName}
-                    >
-                      {assetName}
-                    </Tag>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Total Liquidity*/}
-            <div className={tw("flex", "space-x-4")}>
-              <div className={tw("flex", "flex-col", "space-y-4")}>
-                <span>{t`Total Liquidity`}</span>
-                <div className={tw("space-x-4")}>$123,456,789</div>
-              </div>
-            </div>
-
-            {/* Volume (24hr)*/}
-            <div className={tw("flex", "space-x-4")}>
-              <div className={tw("flex", "flex-col", "space-y-4")}>
-                <span>{t`Volume (24hr)`}</span>
-                <div className={tw("space-x-4")}>$1,456,789</div>
-              </div>
-            </div>
-
-            {/* Fees (24hr)*/}
-            <div className={tw("flex", "space-x-4")}>
-              <div className={tw("flex", "flex-col", "space-y-4")}>
-                <span>{t`Fees (24hr)`}</span>
-                <div className={tw("space-x-4")}>$1,456</div>
-              </div>
-            </div>
+    <div className={tw("flex", "mb-8", "space-x-4", "w-full", "items-stretch")}>
+      <div className={tw("flex", "flex-1")}>
+        <div className={tw("flex", "flex-col", "space-y-8", "w-full")}>
+          <div className={tw("flex", "space-x-12")}>
+            <MarketSummary />
+            <FixedYieldSummary />
+            <TokenSummary />
           </div>
-        </div>
-
-        <div className={tw("flex", "flex-1")}>
-          <div className={tw("flex", "flex-col", "space-y-8")}>
-            <div className={tw("flex", "flex-col", "space-y-4")}>
-              <span>{t`Maturation date for locked asset`}</span>
-              <div className={tw("space-x-4")}>
-                <Tag minimal intent={Intent.PRIMARY} interactive large>
-                  {endDate.toLocaleDateString()}
-                </Tag>
-                <Tag minimal intent={Intent.PRIMARY} interactive large>
-                  <Timer endTime={END_DATE} />
-                </Tag>
-              </div>
-            </div>
-            <Card className={tw("flex", "flex-1")}>
-              <NonIdealState
-                icon={IconNames.CHART}
-                description={t`Graphs are under construction`}
-                action={
-                  <Button outlined disabled>{t`Graph coming soon`}</Button>
-                }
-              />
-            </Card>
+          <div className={tw("flex", "space-x-12")}>
+            <MarketHistory />
+            <MarketActionsCard pool={ElfStrategyLowRisk} />
           </div>
         </div>
       </div>
-    </Card>
+    </div>
+  );
+};
+
+const MarketSummary: FC<{}> = () => {
+  return (
+    <div className={tw("flex-1")}>
+      <div className="mb-2">{t`Market Summary`}</div>
+      <Card>
+        <div className={tw("flex", "flex-col", "space-y-6")}>
+          <div className={tw("flex", "space-x-4", "justify-between")}>
+            <div className={tw("flex", "flex-col")}>
+              <span
+                className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
+              >{t`Total Liquidity`}</span>
+              <div className={classNames("h3", tw("space-x-4"))}>
+                $123,456,789
+              </div>
+            </div>
+            <div className={tw("flex", "self-end")}>
+              <Tag minimal intent={Intent.SUCCESS}>
+                +.16%
+              </Tag>
+            </div>
+          </div>
+          {/* Volume (24hr)*/}
+          <div className={tw("flex", "space-x-4", "justify-between")}>
+            <div className={tw("flex", "flex-col")}>
+              <span
+                className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
+              >{t`Volume (24hr)`}</span>
+              <div className={classNames("h3", tw("space-x-4"))}>
+                $1,456,789
+              </div>
+            </div>
+            <div className={tw("flex", "self-end")}>
+              <Tag minimal intent={Intent.DANGER}>
+                -.16%
+              </Tag>
+            </div>
+          </div>
+          {/* Fees (24hr)*/}
+          <div className={tw("flex", "space-x-4", "justify-between")}>
+            <div className={tw("flex", "flex-col")}>
+              <span
+                className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
+              >{t`Fees (24hr)`}</span>
+              <div className={classNames("h3", tw("space-x-4"))}>$1,456</div>
+            </div>
+            <div className={tw("flex", "self-end")}>
+              <Tag minimal intent={Intent.SUCCESS}>
+                +.16%
+              </Tag>
+            </div>
+          </div>
+        </div>
+      </Card>
+    </div>
+  );
+};
+
+const FixedYieldSummary: FC<{}> = () => {
+  return (
+    <div className={tw("flex-1")}>
+      <div className="mb-2">{t`Yield Summary`}</div>
+      <Card>
+        <div className={tw("flex", "flex-col", "space-y-6")}>
+          <div className={tw("flex", "space-x-4", "justify-between")}>
+            <div className={tw("flex", "flex-col")}>
+              <span
+                className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
+              >{t`ROI (tranche)`}</span>
+              <div className={classNames("h3", tw("space-x-4"))}>2.13%</div>
+            </div>
+            <div className={tw("flex", "self-end")}>
+              <Tag minimal intent={Intent.SUCCESS}>
+                +.16%
+              </Tag>
+            </div>
+          </div>
+          {/* Volume (24hr)*/}
+          <div className={tw("flex", "space-x-4", "justify-between")}>
+            <div className={tw("flex", "flex-col")}>
+              <span
+                className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
+              >{t`ROI (annual)`}</span>
+              <div className={classNames("h3", tw("space-x-4"))}>10.27%</div>
+            </div>
+            <div className={tw("flex", "self-end")}>
+              <Tag minimal intent={Intent.DANGER}>
+                -.16%
+              </Tag>
+            </div>
+          </div>
+          <div className={tw("flex", "space-x-4", "justify-between")}>
+            <div className={tw("flex", "flex-col")}>
+              <span
+                className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
+              >{t`Maturity date`}</span>
+              <div className={classNames("h3", tw("space-x-4", "flex"))}>
+                July 1st, 2020
+              </div>
+            </div>
+            <div className={tw("flex", "self-end")}>
+              <TimeLeft market={stubbedMarkets[0]} />
+            </div>
+          </div>
+        </div>
+      </Card>
+    </div>
+  );
+};
+
+const MarketHistory: FC<{}> = () => {
+  return (
+    <div className={tw("flex", "flex-1", "h-500")}>
+      <div className={tw("flex", "flex-col", "w-full")}>
+        <div className={tw("mb-2", "flex", "space-x-4")}>
+          <a href="/">{t`Market Charts`}</a>
+          <div>{t`Yield Charts`}</div>
+        </div>
+        <Card className={tw("flex", "flex-1", "relative")}>
+          <div
+            className={tw(
+              "absolute",
+              "w-full",
+              "flex",
+              "justify-between",
+              "pr-10"
+            )}
+          >
+            <div className={tw("flex", "space-x-4")}>
+              <Button
+                active
+                minimal
+                outlined
+                intent={Intent.PRIMARY}
+              >{t`Liquidity`}</Button>
+              <Button
+                minimal
+                outlined
+                intent={Intent.PRIMARY}
+              >{t`Volume`}</Button>
+            </div>
+            <div className={tw("flex", "space-x-4")}>
+              <Button
+                active
+                minimal
+                outlined
+                intent={Intent.PRIMARY}
+              >{t`Week`}</Button>
+              <Button
+                minimal
+                outlined
+                intent={Intent.PRIMARY}
+              >{t`Month`}</Button>
+              <Button minimal outlined intent={Intent.PRIMARY}>{t`All`}</Button>
+            </div>
+          </div>
+          <div className={tw("w-full", "h-full", "pt-4")}>
+            <BrushChart
+              data={timeData}
+              getXValue={({ timeMs }) => timeMs}
+              getYValue={({ value }) => value}
+              compact
+              isDarkMode
+            />
+          </div>
+        </Card>
+      </div>
+    </div>
+  );
+};
+
+export const TimeLeft: FC<{ market: Market }> = ({ market }) => {
+  const progress =
+    (Date.now() - market.startDate) / (market.maturityDate - market.startDate);
+  const [timerValue, setTimerValue] = useState(
+    market.maturityDate - Date.now()
+  );
+  useInterval(() => {
+    setTimerValue(market.maturityDate - Date.now());
+  }, 1000);
+  const [daysLeft, hoursLeft, minutesLeft] = getTimeLeft(timerValue);
+  const time = t`${daysLeft} days, ${hoursLeft}, hours, ${minutesLeft} minutes`;
+
+  return <LabeledProgressBar progressValue={progress} helperText={time} />;
+};
+
+const TokenSummary: FC<{}> = () => {
+  return (
+    <div className={tw("flex-1")}>
+      <div className="mb-2">{t`Tokens`}</div>
+      <div className={tw("flex", "flex-col", "space-x-4")}>
+        <Card className={tw("flex", "space-x-4")}>
+          <div className={tw("space-y-6", "flex-1")}>
+            <div
+              className={tw("flex", "flex-col", "justify-center", "space-y-1")}
+            >
+              <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
+                {t`Token`}
+              </span>
+              <span className={tw("text-lg")}>{"Ether"}</span>
+            </div>
+            <div
+              className={tw("flex", "flex-col", "justify-center", "space-y-1")}
+            >
+              <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
+                {t`Price`}
+              </span>
+              <span className={tw("text-lg")}>{"$1,234"}</span>
+            </div>
+            <div
+              className={tw("flex", "flex-col", "justify-center", "space-y-1")}
+            >
+              <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
+                {t`Quantity`}
+              </span>
+              <div className={tw("flex", "content-center", "space-x-2")}>
+                <span className={tw("text-lg")}>{"61,334"}</span>
+                <Tag minimal intent={Intent.SUCCESS}>
+                  +.16%
+                </Tag>
+              </div>
+            </div>
+          </div>
+          <div className={tw("space-y-6", "flex-1")}>
+            <div
+              className={tw("flex", "flex-col", "justify-center", "space-y-1")}
+            >
+              <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
+                {t`Token`}
+              </span>
+              <span className={tw("text-lg")}>{"fyEther"}</span>
+            </div>
+            <div
+              className={tw("flex", "flex-col", "justify-center", "space-y-1")}
+            >
+              <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
+                {t`Price`}
+              </span>
+              <span className={tw("text-lg")}>{"$1,234"}</span>
+            </div>
+            <div
+              className={tw("flex", "flex-col", "justify-center", "space-y-1")}
+            >
+              <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
+                {t`Quantity`}
+              </span>
+              <div className={tw("flex", "content-center", "space-x-2")}>
+                <span className={tw("text-lg")}>{"61,334"}</span>
+                <Tag minimal intent={Intent.SUCCESS}>
+                  +.16%
+                </Tag>
+              </div>
+            </div>
+          </div>
+        </Card>
+      </div>
+    </div>
   );
 };
