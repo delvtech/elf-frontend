@@ -4,42 +4,44 @@ import { screen } from "@testing-library/dom";
 import userEvent from "@testing-library/user-event";
 
 import { renderWithClient } from "efi-ui/base/testing";
-import { PortfolioViewTitle } from "efi-ui/portfolio/PortfolioView/PortfolioViewTitle";
 import { createQueryClient } from "efi/queryClient";
+import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 
-test("should render with the wallet address visible", async () => {
+test("should render normally", async () => {
   const queryClient = createQueryClient();
   const { getByText } = await renderWithClient(
     queryClient,
-    <PortfolioViewTitle
+    <ViewTitle
       account="0xdeadbeef"
       chainId={555}
       active={false}
       library={undefined}
       connector={undefined}
+      title="sample title"
+      subtitle="sample subtitle"
     />
   );
 
-  expect(getByText("Portfolio")).toBeVisible();
-  expect(getByText(/0xdeadbeef/)).toBeVisible();
+  expect(getByText("sample title")).toBeVisible();
+  expect(getByText("sample subtitle")).toBeVisible();
 });
 
 test("should render with option to connect wallet if no account is present", async () => {
   const queryClient = createQueryClient();
-  const { getByText, getByRole } = await renderWithClient(
+  const { getByRole } = await renderWithClient(
     queryClient,
-    <PortfolioViewTitle
+    <ViewTitle
       account={null}
       chainId={555}
       active={false}
       library={undefined}
       connector={undefined}
+      title="sample title"
+      subtitle="sample subtitle"
     />
   );
 
-  expect(getByText("Portfolio")).toBeVisible();
-
-  const button = getByRole("button", { name: /Connect a wallet to begin/i });
+  const button = getByRole("button", { name: /Connect wallet to begin/i });
 
   userEvent.click(button);
 

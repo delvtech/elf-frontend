@@ -26,6 +26,9 @@ export function useActiveTab(): Navigation {
     case Navigation.EXCHANGE: {
       return Navigation.EXCHANGE;
     }
+    case Navigation.INVEST: {
+      return Navigation.INVEST;
+    }
     case Navigation.MINT: {
       return Navigation.MINT;
     }

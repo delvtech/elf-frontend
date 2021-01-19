@@ -11,8 +11,9 @@ import tw from "efi-tailwindcss-classnames";
 import { useChangeTab } from "efi-ui/navigation/hooks/useChangeTab";
 import { Navigation } from "efi-ui/navigation/navigation";
 
-import { PortfolioViewTitle } from "./PortfolioViewTitle";
 import { FYTTable } from "efi-ui/portfolio/FYTTable/FYTTable";
+import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
+import { PortfolioViewSubtitle } from "efi-ui/portfolio/PortfolioView/PortfolioViewSubtitle";
 
 interface PortfolioViewProps extends RouteComponentProps {}
 export const PortfolioView: FC<PortfolioViewProps> = () => {
@@ -36,7 +37,9 @@ export const PortfolioView: FC<PortfolioViewProps> = () => {
     >
       {/* Main content */}
       <div className={tw("flex", "flex-col", "flex-1", "space-y-8")}>
-        <PortfolioViewTitle
+        <ViewTitle
+          title={t`Portfolio`}
+          subtitle={<PortfolioViewSubtitle account={account} />}
           account={account}
           active={active}
           chainId={chainId}

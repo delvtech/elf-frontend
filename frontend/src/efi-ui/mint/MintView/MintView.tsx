@@ -8,9 +8,9 @@ import classNames from "classnames";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { MintViewTitle } from "efi-ui/mint/MintViewTitle/MintViewTitle";
 
 import { ChooseBaseAssetStep } from "../ChooseBaseAssetStep/ChooseBaseAssetStep";
+import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 
 interface MintViewProps extends RouteComponentProps {}
 
@@ -88,7 +88,10 @@ export const MintView: FC<MintViewProps> = () => {
       )}
     >
       {/* page title */}
-      <MintViewTitle
+      <ViewTitle
+        title={t`Mint Yield Tokens`}
+        subtitle={t`A concise description of Minting makes it clear to the user why FYTs and YCs are useful to them.`}
+        beta
         account={account}
         active={active}
         chainId={chainId}

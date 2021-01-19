@@ -11,7 +11,7 @@ import { SMALL_BREAKPOINT } from "efi-ui/base/mediaBreakpoints";
 import { useCryptoDrawer } from "efi-ui/crypto/CryptoDrawer/useCryptoDrawer/useCryptoDrawer";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import { SkeletonText } from "efi-ui/skeleton/SkeletonText/SkeletonText";
+import { SkeletonText } from "efi-ui/base/skeleton/SkeletonText/SkeletonText";
 
 interface CryptoDrawerProps {}
 
