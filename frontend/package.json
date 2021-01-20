@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@blueprintjs/core": "^3.36.0",
+    "@blueprintjs/core": "^3.37.0",
     "@blueprintjs/icons": "^3.24.0",
     "@blueprintjs/select": "^3.15.1",
     "@ethersproject/abi": "^5.0.10",
