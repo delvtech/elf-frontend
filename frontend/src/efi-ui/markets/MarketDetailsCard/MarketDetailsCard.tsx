@@ -1,7 +1,15 @@
 import React, { FC, useState } from "react";
 import { useInterval } from "react-use";
 
-import { Button, Card, Classes, Intent, Tag } from "@blueprintjs/core";
+import {
+  Button,
+  Card,
+  Classes,
+  Colors,
+  Icon,
+  Intent,
+  Tag,
+} from "@blueprintjs/core";
 import classNames from "classnames";
 import { t } from "ttag";
 
@@ -66,7 +74,8 @@ const MarketSummary: FC<{}> = () => {
             </div>
             <div className={tw("flex", "self-end")}>
               <Tag minimal intent={Intent.SUCCESS}>
-                +.16%
+                .16%
+                <Icon icon={"caret-up"} />
               </Tag>
             </div>
           </div>
@@ -82,7 +91,8 @@ const MarketSummary: FC<{}> = () => {
             </div>
             <div className={tw("flex", "self-end")}>
               <Tag minimal intent={Intent.DANGER}>
-                -.16%
+                .16%
+                <Icon icon={"caret-down"} />
               </Tag>
             </div>
           </div>
@@ -96,7 +106,8 @@ const MarketSummary: FC<{}> = () => {
             </div>
             <div className={tw("flex", "self-end")}>
               <Tag minimal intent={Intent.SUCCESS}>
-                +.16%
+                .16%
+                <Icon icon={"caret-up"} />
               </Tag>
             </div>
           </div>
@@ -121,7 +132,8 @@ const FixedYieldSummary: FC<{}> = () => {
             </div>
             <div className={tw("flex", "self-end")}>
               <Tag minimal intent={Intent.SUCCESS}>
-                +.16%
+                .16%
+                <Icon icon={"caret-up"} />
               </Tag>
             </div>
           </div>
@@ -135,7 +147,8 @@ const FixedYieldSummary: FC<{}> = () => {
             </div>
             <div className={tw("flex", "self-end")}>
               <Tag minimal intent={Intent.DANGER}>
-                -.16%
+                .16%
+                <Icon icon={"caret-down"} />
               </Tag>
             </div>
           </div>
@@ -163,8 +176,8 @@ const MarketHistory: FC<{}> = () => {
     <div className={tw("flex", "flex-1", "h-500")}>
       <div className={tw("flex", "flex-col", "w-full")}>
         <div className={tw("mb-2", "flex", "space-x-4")}>
-          <a href="/">{t`Market Charts`}</a>
-          <div>{t`Yield Charts`}</div>
+          <button style={{ color: Colors.BLUE5 }}>{t`Market Charts`}</button>
+          <button>{t`Yield Charts`}</button>
         </div>
         <Card className={tw("flex", "flex-1", "relative")}>
           <div
@@ -239,7 +252,7 @@ const TokenSummary: FC<{}> = () => {
     <div className={tw("flex-1")}>
       <div className="mb-2">{t`Tokens`}</div>
       <div className={tw("flex", "flex-col", "space-x-4")}>
-        <Card className={tw("flex", "space-x-4")}>
+        <Card className={tw("flex", "space-x-8")}>
           <div className={tw("space-y-6", "flex-1")}>
             <div
               className={tw("flex", "flex-col", "justify-center", "space-y-1")}
@@ -255,7 +268,13 @@ const TokenSummary: FC<{}> = () => {
               <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
                 {t`Price`}
               </span>
-              <span className={tw("text-lg")}>{"$1,234"}</span>
+              <div className={tw("flex", "justify-between")}>
+                <span className={tw("text-lg")}>{"$1,234"}</span>
+                <Tag minimal intent={Intent.SUCCESS}>
+                  .16%
+                  <Icon icon={"caret-up"} />
+                </Tag>
+              </div>
             </div>
             <div
               className={tw("flex", "flex-col", "justify-center", "space-y-1")}
@@ -263,10 +282,11 @@ const TokenSummary: FC<{}> = () => {
               <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
                 {t`Quantity`}
               </span>
-              <div className={tw("flex", "content-center", "space-x-2")}>
+              <div className={tw("flex", "justify-between")}>
                 <span className={tw("text-lg")}>{"61,334"}</span>
                 <Tag minimal intent={Intent.SUCCESS}>
-                  +.16%
+                  .16%
+                  <Icon icon={"caret-up"} />
                 </Tag>
               </div>
             </div>
@@ -286,7 +306,13 @@ const TokenSummary: FC<{}> = () => {
               <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
                 {t`Price`}
               </span>
-              <span className={tw("text-lg")}>{"$1,234"}</span>
+              <div className={tw("flex", "justify-between")}>
+                <span className={tw("text-lg")}>{"$1,234"}</span>
+                <Tag minimal intent={Intent.SUCCESS}>
+                  .16%
+                  <Icon icon={"caret-up"} />
+                </Tag>
+              </div>
             </div>
             <div
               className={tw("flex", "flex-col", "justify-center", "space-y-1")}
@@ -294,10 +320,11 @@ const TokenSummary: FC<{}> = () => {
               <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
                 {t`Quantity`}
               </span>
-              <div className={tw("flex", "content-center", "space-x-2")}>
+              <div className={tw("flex", "justify-between")}>
                 <span className={tw("text-lg")}>{"61,334"}</span>
                 <Tag minimal intent={Intent.SUCCESS}>
-                  +.16%
+                  .16%
+                  <Icon icon={"caret-up"} />
                 </Tag>
               </div>
             </div>

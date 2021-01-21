@@ -2,12 +2,13 @@ import { AxisBottom, AxisLeft, AxisScale } from "@visx/axis";
 import { curveMonotoneX } from "@visx/curve";
 import { LinearGradient } from "@visx/gradient";
 import { Group } from "@visx/group";
-import { AreaClosed } from "@visx/shape";
+import { AreaClosed, LinePath } from "@visx/shape";
 import React, { FunctionComponent, useCallback } from "react";
 
 import { getAxisColor } from "efi-ui/charts/colors";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { GridColumns, GridRows } from "@visx/grid";
+import { Colors } from "@blueprintjs/core";
 
 interface TimeData {
   timeMs: number;
@@ -110,12 +111,20 @@ export const AreaChart: FunctionComponent<AreaChartProps> = ({
         to={gradientColor}
         toOpacity={0.2}
       />
+      <LinePath
+        data={data}
+        curve={curveMonotoneX}
+        x={setXScale}
+        y={setYScale}
+        stroke={"white"}
+        strokeWidth={5}
+        strokeOpacity={0.8}
+      />
       <AreaClosed<TimeData>
         data={data}
         x={setXScale}
         y={setYScale}
         yScale={yScale}
-        strokeWidth={1}
         stroke="url(#gradient)"
         fill="url(#gradient)"
         curve={curveMonotoneX}
