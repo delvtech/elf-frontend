@@ -21,9 +21,7 @@ test("should render information about the market", async () => {
     <MarketDetailsCard pool={elfPool} />
   );
 
-  expect(getByText("Token Pair")).toBeVisible();
   expect(getByText("Total Liquidity")).toBeVisible();
   expect(getByText("Volume (24hr)")).toBeVisible();
   expect(getByText("Fees (24hr)")).toBeVisible();
-  expect(getByText("Maturation date for locked asset")).toBeVisible();
 });
