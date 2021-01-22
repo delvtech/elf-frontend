@@ -8,5 +8,8 @@ test("should render the market view", async () => {
   const queryClient = createQueryClient();
   const { getByText } = await renderWithClient(queryClient, <MarketView />);
 
-  expect(getByText("Element Market")).toBeVisible();
+  expect(getByText("Market Summary")).toBeVisible();
+  expect(getByText("Yield Summary")).toBeVisible();
+  expect(getByText("Tokens")).toBeVisible();
+  expect(getByText("Market Charts")).toBeVisible();
 });

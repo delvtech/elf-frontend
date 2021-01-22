@@ -21,6 +21,6 @@ test("should render two tabs", async () => {
     <MarketActionsCard pool={elfPool} />
   );
 
-  expect(getByRole("tab", { name: "Trade" })).toBeVisible();
-  expect(getByRole("tab", { name: "Stake" })).toBeVisible();
+  expect(getByRole("button", { name: "trade" })).toBeVisible();
+  expect(getByRole("button", { name: "stake" })).toBeVisible();
 });

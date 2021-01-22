@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 
-import { Card, Classes, Colors, Intent } from "@blueprintjs/core";
+import { Card, Colors, Intent } from "@blueprintjs/core";
 import { BigNumber } from "ethers";
 import { t } from "ttag";
 
@@ -17,8 +17,11 @@ export const MarketActionsCard: FC<MarketActionsCardProps> = ({ pool }) => {
   return (
     <div className={tw("flex", "flex-col", "flex-1", "h-500", "w-3/10")}>
       <div className={tw("mb-2", "space-x-4")}>
-        <button style={{ color: Colors.BLUE5 }}>{t`Trade`}</button>
-        <button>{t`Stake`}</button>
+        <button
+          aria-label="trade"
+          style={{ color: Colors.BLUE5 }}
+        >{t`Trade`}</button>
+        <button aria-label="stake">{t`Stake`}</button>
       </div>
       <Card
         className={tw("flex", "flex-col", "flex-1", "w-full", "transition-all")}
