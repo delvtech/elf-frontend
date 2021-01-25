@@ -113,7 +113,8 @@ module.exports = {
         pathNot: `(${[
           "\\.(spec|test)\\.(js|mjs|cjs|ts|tsx|ls|coffee|litcoffee|coffee\\.md)$",
           // test utils aren't tests themselves, but should be allowed to import devDependencies
-          "testing\\.(ts|tsx)",
+          "src/efi/testing/",
+          "src/efi-ui/testing/",
         ].join("|")})`,
       },
       to: {
