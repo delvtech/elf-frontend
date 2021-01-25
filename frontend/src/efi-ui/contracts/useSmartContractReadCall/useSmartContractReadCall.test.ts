@@ -1,7 +1,7 @@
 import { Contract } from "ethers";
 import { QueryObserverResult } from "react-query";
 
-import { renderHookWithClient } from "efi-ui/base/testing";
+import { renderHookWithClient } from "efi-ui/testing/renderHookWithClient";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { createQueryClient } from "efi/queryClient";
 

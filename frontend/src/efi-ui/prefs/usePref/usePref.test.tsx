@@ -2,7 +2,8 @@ import { act } from "@testing-library/react-hooks";
 import userEvent from "@testing-library/user-event";
 import React, { FC, Fragment } from "react";
 
-import { renderHookWithClient, renderWithClient } from "efi-ui/base/testing";
+import { renderHookWithClient } from "efi-ui/testing/renderHookWithClient";
+import { renderWithClient } from "efi-ui/testing/renderWithClient";
 import { usePref } from "efi-ui/prefs/usePref/usePref";
 import efiLocalStorage from "efi/base/localStorage";
 import { makePrefEnvelope } from "efi/prefs/prefEnvelope";

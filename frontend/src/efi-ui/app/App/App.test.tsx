@@ -4,7 +4,7 @@ import React from "react";
 
 import App from "efi-ui/app/App/App";
 
-import { renderWithAppProviders } from "efi-ui/app/renderWithAppProviders";
+import { renderWithAppProviders } from "efi-ui/testing/renderWithAppProviders";
 
 test("full app rendering/navigating", async () => {
   const {

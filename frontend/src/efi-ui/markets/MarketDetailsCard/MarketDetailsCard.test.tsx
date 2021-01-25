@@ -1,6 +1,6 @@
 import React from "react";
 
-import { renderWithClient } from "efi-ui/base/testing";
+import { renderWithClient } from "efi-ui/testing/renderWithClient";
 import { Pool } from "efi/pools/Pool";
 import { createQueryClient } from "efi/queryClient";
 import { MarketDetailsCard } from "efi-ui/markets/MarketDetailsCard/MarketDetailsCard";
