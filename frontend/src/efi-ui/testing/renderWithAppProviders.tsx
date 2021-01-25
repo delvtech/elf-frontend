@@ -23,6 +23,11 @@ interface RenderResultWithProviderOptions extends RenderResult {
   queryClient: QueryClient;
 }
 
+/**
+ * Testing utility to render a component with all of our app's providers.
+ * @param { ReactNode } ui the UI to test.
+ * @param { ProviderOptions } options options to customize the providers that wrap the component.
+ */
 export function renderWithAppProviders(
   ui: ReactNode,
   options: Partial<ProviderOptions> = {}
@@ -37,7 +42,9 @@ export function renderWithAppProviders(
     ...render(
       <Web3ReactProvider getLibrary={getEthereumProviderLibrary}>
         <QueryClientProvider client={queryClient}>
-          <LocationProvider history={history}>{ui}</LocationProvider>
+          <React.StrictMode>
+            <LocationProvider history={history}>{ui}</LocationProvider>
+          </React.StrictMode>
         </QueryClientProvider>
       </Web3ReactProvider>
     ),
