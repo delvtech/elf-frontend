@@ -11,22 +11,21 @@ import { Web3ReactProvider } from "@web3-react/core";
 
 import { getEthereumProviderLibrary } from "efi/wallets/providers";
 
-const defaultQueryClient = new QueryClient();
-
 interface ProviderOptions {
   route: string;
   queryClient: QueryClient;
 }
 
-const defaultOptions: ProviderOptions = {
+const makeDefaultOptions = (): ProviderOptions => ({
   route: "/",
-  queryClient: defaultQueryClient,
-};
+  queryClient: new QueryClient(),
+});
 export function renderWithAppProviders(
   // unit under test
   uut: ReactNode,
   options?: Partial<ProviderOptions>
 ) {
+  const defaultOptions = makeDefaultOptions();
   const { route, queryClient } = { ...defaultOptions, ...options };
   const history = createHistory(createMemorySource(route));
   return {
