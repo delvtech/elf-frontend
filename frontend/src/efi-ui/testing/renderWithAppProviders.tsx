@@ -7,7 +7,7 @@ import {
   LocationProvider,
   History,
 } from "@reach/router";
-import { render } from "@testing-library/react";
+import { render, RenderResult } from "@testing-library/react";
 import { Web3ReactProvider } from "@web3-react/core";
 
 import { getEthereumProviderLibrary } from "efi/wallets/providers";
@@ -18,10 +18,15 @@ interface ProviderOptions {
   queryClient: QueryClient;
 }
 
+interface RenderResultWithProviderOptions extends RenderResult {
+  history: History;
+  queryClient: QueryClient;
+}
+
 export function renderWithAppProviders(
   ui: ReactNode,
   options: Partial<ProviderOptions> = {}
-) {
+): RenderResultWithProviderOptions {
   const {
     route = "/",
     queryClient = new QueryClient(),
