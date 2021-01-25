@@ -1,4 +1,5 @@
-import { AnchorButton, Button, Tooltip } from "@blueprintjs/core";
+import { AnchorButton, Button } from "@blueprintjs/core";
+import { Tooltip2 } from "@blueprintjs/popover2";
 import React, { FC } from "react";
 import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
@@ -54,7 +55,7 @@ export const FYTTableRow: FC<FYTTableRowProps> = () => {
             "space-x-2"
           )}
         >
-          <Tooltip
+          <Tooltip2
             inheritDarkTheme={false}
             content={t`This asset can be claimed after it has reached maturity.`}
           >
@@ -70,7 +71,7 @@ export const FYTTableRow: FC<FYTTableRowProps> = () => {
             >
               {t`Claim`}
             </AnchorButton>
-          </Tooltip>
+          </Tooltip2>
           <Button outlined>{t`Sell`}</Button>
           <Button outlined>{t`Stake`}</Button>
         </div>
