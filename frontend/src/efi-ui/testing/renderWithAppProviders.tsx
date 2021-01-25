@@ -5,6 +5,7 @@ import {
   createHistory,
   createMemorySource,
   LocationProvider,
+  History,
 } from "@reach/router";
 import { render } from "@testing-library/react";
 import { Web3ReactProvider } from "@web3-react/core";
@@ -13,32 +14,29 @@ import { getEthereumProviderLibrary } from "efi/wallets/providers";
 
 interface ProviderOptions {
   route: string;
+  history: History;
   queryClient: QueryClient;
 }
 
-const makeDefaultOptions = (): ProviderOptions => ({
-  route: "/",
-  queryClient: new QueryClient(),
-});
 export function renderWithAppProviders(
-  // unit under test
-  uut: ReactNode,
-  options?: Partial<ProviderOptions>
+  ui: ReactNode,
+  options: Partial<ProviderOptions> = {}
 ) {
-  const defaultOptions = makeDefaultOptions();
-  const { route, queryClient } = { ...defaultOptions, ...options };
-  const history = createHistory(createMemorySource(route));
+  const {
+    route = "/",
+    queryClient = new QueryClient(),
+    history = createHistory(createMemorySource(route)),
+  } = options;
+
   return {
     ...render(
       <Web3ReactProvider getLibrary={getEthereumProviderLibrary}>
         <QueryClientProvider client={queryClient}>
-          <LocationProvider history={history}>{uut}</LocationProvider>
+          <LocationProvider history={history}>{ui}</LocationProvider>
         </QueryClientProvider>
       </Web3ReactProvider>
     ),
-    // adding `history` to the returned utilities to allow us
-    // to reference it in our tests (just try to avoid using
-    // this to test implementation details).
     history,
+    queryClient,
   };
 }
