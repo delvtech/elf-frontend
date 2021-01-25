@@ -22,7 +22,7 @@ test("full app rendering/navigating", async () => {
   );
   await navigate("/invest");
   expect(container.innerHTML).toMatch(
-    "Buy and sell Fixed Yield Tokens and Yield Coupons."
+    "Fixed Yield assets are redeemable one-to-one with their base asset once they mature."
   );
   await navigate("/exchange");
   expect(container.innerHTML).toMatch(
