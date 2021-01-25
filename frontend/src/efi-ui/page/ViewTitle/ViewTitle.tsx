@@ -43,7 +43,9 @@ export const ViewTitle: FC<ViewTitleProps> = ({
   const connectorName = getConnectorName(connector, library);
   return (
     <div className={tw("flex", "justify-between", "w-full")}>
-      <div className={tw("flex", "flex-col", "justify-start", "flex-1")}>
+      <div
+        className={tw("flex", "flex-col", "justify-start", "flex-1", "mr-12")}
+      >
         <H2 className={tw("mb-4")}>
           {title}
           {!beta ? null : (

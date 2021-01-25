@@ -1,0 +1,19 @@
+.investmentAmount :global(.bp3-input-group) {
+  width: 100%;
+}
+
+.investmentAmount input {
+  box-shadow: none;
+  text-align: right;
+}
+
+.investmentAmount :global(.bp3-input-action) {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.remainingYield :global(span.bp3-popover-target) {
+  display: flex;
+  align-items: center;
+}

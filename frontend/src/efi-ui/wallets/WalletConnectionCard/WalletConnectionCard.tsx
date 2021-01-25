@@ -45,7 +45,7 @@ export const WalletConnectionCard: FC<WalletConnectionCardProps> = ({
         interactive
         elevation={!active ? Elevation.TWO : undefined}
         onClick={openWalletDialog}
-        style={getCardStyle(chainId)}
+        style={getCardStyle(chainId, isDarkMode)}
       >
         {!active ? (
           <ConnectToBegin
@@ -140,10 +140,16 @@ const ConnectToBegin: FC<ConnectToBeginProps> = ({
   );
 };
 
-function getCardStyle(chainId: number | undefined): React.CSSProperties {
-  return chainId !== undefined &&
-    isMainnet(chainId) &&
-    process.env.NODE_ENV !== "production"
-    ? { backgroundColor: Colors.RED1 }
-    : {};
+function getCardStyle(
+  chainId: number | undefined,
+  isDarkMode: boolean
+): React.CSSProperties {
+  const mainnetDanger =
+    chainId && isMainnet(chainId) && process.env.NODE_ENV !== "production";
+
+  if (mainnetDanger) {
+    return { backgroundColor: isDarkMode ? Colors.RED1 : Colors.ORANGE5 };
+  }
+
+  return {};
 }

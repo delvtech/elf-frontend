@@ -1,6 +1,6 @@
 import { Classes } from "@blueprintjs/core";
 import classNames from "classnames";
-import React, { FC } from "react";
+import React, { FC, ReactNode } from "react";
 
 import tw from "efi-tailwindcss-classnames";
 
@@ -8,12 +8,12 @@ interface LabeledTextProps {
   /**
    * The main text the user needs to see
    */
-  text: string;
+  text: ReactNode;
 
   /**
    * A label to render alongside the text that's more subtle
    */
-  label: string;
+  label: ReactNode;
 
   subLabel?: string;
 
