@@ -1,6 +1,6 @@
 import React from "react";
 
-import { renderWithClient } from "efi-ui/base/testing";
+import { renderWithClient } from "efi-ui/testing/renderWithClient";
 import { MarketView } from "efi-ui/markets/MarketView/MarketView";
 import { createQueryClient } from "efi/queryClient";
 

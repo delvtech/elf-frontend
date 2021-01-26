@@ -3,7 +3,7 @@ import React from "react";
 import { screen } from "@testing-library/dom";
 import userEvent from "@testing-library/user-event";
 
-import { renderWithClient } from "efi-ui/base/testing";
+import { renderWithClient } from "efi-ui/testing/renderWithClient";
 import { createQueryClient } from "efi/queryClient";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 

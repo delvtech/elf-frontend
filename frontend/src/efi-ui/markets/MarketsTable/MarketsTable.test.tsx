@@ -1,6 +1,6 @@
 import React from "react";
 
-import { renderWithClient } from "efi-ui/base/testing";
+import { renderWithClient } from "efi-ui/testing/renderWithClient";
 import { MarketsTable } from "efi-ui/markets/MarketsTable/MarketsTable";
 import { stubbedMarkets } from "efi/markets/stubbedMarkets";
 import { createQueryClient } from "efi/queryClient";
