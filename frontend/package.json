@@ -60,7 +60,7 @@
     "ethereum-waffle": "^3.2.2",
     "ethers": "^5.0.26",
     "fuzzaldrin-plus": "^0.6.0",
-    "graphql": "^15.4.0",
+    "graphql": "^15.5.0",
     "graphql-request": "^3.4.0",
     "lodash.groupby": "^4.6.0",
     "lodash.isequal": "^4.5.0",
