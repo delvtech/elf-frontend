@@ -13,8 +13,8 @@ interface FYTTableProps {}
 const tableHeaders = [
   t`Asset`,
   t`Quantity`,
-  t`Current value`,
-  t`Yield rate`,
+  t`Current exit value`,
+  t`Yield rate entered`,
   t`Maturation date`,
   t`Actions`,
 ];

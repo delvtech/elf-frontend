@@ -27,6 +27,7 @@ export const MarketView: FC<MarketViewProps> = () => {
   const connectorName = getConnectorName(connector, library);
   return (
     <div
+      data-testid="market-view"
       className={tw("flex", "p-12", "h-full", "space-x-12", "overflow-scroll")}
     >
       {/* Main content */}

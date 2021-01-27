@@ -78,6 +78,7 @@ export const MintView: FC<MintViewProps> = () => {
 
   return (
     <div
+      data-testid="mint-view"
       className={tw(
         "flex",
         "flex-col",

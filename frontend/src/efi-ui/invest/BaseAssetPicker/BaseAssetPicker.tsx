@@ -1,4 +1,4 @@
-import React, { FC, SVGProps } from "react";
+import React, { FC } from "react";
 
 import { Classes, H4, Icon } from "@blueprintjs/core";
 import { IconName, IconNames } from "@blueprintjs/icons";
@@ -7,14 +7,8 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import classNames from "classnames";
-import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
-export interface BaseAsset {
-  id: string;
-  name: string;
-  symbol: CryptoSymbol;
-  fiatPrice: string;
-  assetIcon: FC<SVGProps<SVGSVGElement> & { title?: string }>;
-}
+import { BaseAsset } from "efi-ui/invest/types/BaseAsset";
+
 interface BaseAssetPickerProps {
   className?: string;
   baseAssets: BaseAsset[];

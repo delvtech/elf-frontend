@@ -6,9 +6,10 @@ import App from "efi-ui/app/App/App";
 
 import { renderWithAppProviders } from "efi-ui/testing/renderWithAppProviders";
 
-test("full app rendering/navigating", async () => {
+test.only("full app rendering/navigating", async () => {
   const {
     container,
+    getByTestId,
     history: { navigate },
   } = renderWithAppProviders(<App />);
   const appContainer = container;
@@ -17,21 +18,16 @@ test("full app rendering/navigating", async () => {
   // with reach-router we don't need to simulate a click event, we can just transition
   // to the page using the navigate function returned from the history object.
   await navigate("/portfolio");
-  expect(container.innerHTML).toMatch(
-    "View your balances and interest earnings."
-  );
+  expect(getByTestId("portfolio-view")).toBeVisible();
+
   await navigate("/invest");
-  expect(container.innerHTML).toMatch(
-    "Fixed Yield assets are redeemable one-to-one with their base asset once they mature."
-  );
+  expect(getByTestId("invest-view")).toBeVisible();
+
   await navigate("/exchange");
-  expect(container.innerHTML).toMatch(
-    "Provide liquidity for this market, or trade for what you want."
-  );
+  expect(getByTestId("exchange-view")).toBeVisible();
+
   await navigate("/mint");
-  expect(container.innerHTML).toMatch(
-    "A concise description of Minting makes it clear to the user why FYTs and YCs are useful to them."
-  );
+  expect(getByTestId("mint-view")).toBeVisible();
 });
 
 test("landing on a bad page", () => {

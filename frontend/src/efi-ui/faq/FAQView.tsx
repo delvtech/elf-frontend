@@ -22,7 +22,7 @@ const sectionClassName = tw("mb-8", "pb-4", "border-b", "w-full");
 
 export const FAQView: FC<FAQViewProps> = () => {
   return (
-    <div className={faqViewClassName}>
+    <div data-testid="faq-view" className={faqViewClassName}>
       <div className={sectionClassName}>
         <H2>{t`What is Element Finance?`}</H2>
         <p>

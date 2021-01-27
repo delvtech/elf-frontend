@@ -1,20 +1,18 @@
-import React, { FC, useCallback, useMemo, useState } from "react";
+import React, { FC, useState } from "react";
 
 import { Button, Callout, Card, Intent } from "@blueprintjs/core";
-import groupBy from "lodash.groupby";
-import mapValues from "lodash.mapvalues";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import {
-  BaseAsset,
-  BaseAssetPicker,
-} from "efi-ui/invest/InvestView/BaseAssetPicker";
+import { BaseAssetPicker } from "efi-ui/invest/BaseAssetPicker/BaseAssetPicker";
+import { useActiveBaseAsset } from "efi-ui/invest/hooks/useActiveBaseAsset";
+import { useActiveYieldPosition } from "efi-ui/invest/hooks/useActiveYieldPosition";
 import {
   YieldPosition,
   YieldPositionPicker,
 } from "efi-ui/invest/InvestView/YieldPositionPicker";
+import { BaseAsset } from "efi-ui/invest/types/BaseAsset";
 
 import { InvestmentAmountInput } from "./InvestmentAmountInput";
 
@@ -29,11 +27,10 @@ export const InvestCard: FC<InvestCardProps> = ({
   yieldPositions,
 }) => {
   const {
-    activeBaseAssetId,
-    activeBaseAssetSymbol,
-    activeBaseAssetBalance,
+    activeBaseAsset: { id: activeBaseAssetId, symbol: activeBaseAssetSymbol },
     setActiveBaseAsset,
   } = useActiveBaseAsset(baseAssets);
+  const activeBaseAssetBalance = 12.34;
 
   const {
     activeYieldPosition,
@@ -123,59 +120,3 @@ export const InvestCard: FC<InvestCardProps> = ({
     </Card>
   );
 };
-
-function useActiveBaseAsset(baseAssets: BaseAsset[]) {
-  const [activeBaseAsset, setActiveBaseAsset] = useState(baseAssets[0]);
-  const {
-    id: activeBaseAssetId,
-    symbol: activeBaseAssetSymbol,
-    assetIcon: activeBaseAssetIcon,
-  } = activeBaseAsset;
-
-  const activeBaseAssetBalance = 12.34; // TODO: get this from token balance hooks
-  return {
-    activeBaseAssetId,
-    activeBaseAssetSymbol,
-    activeBaseAssetBalance,
-    activeBaseAssetIcon,
-    setActiveBaseAsset,
-  };
-}
-
-function useActiveYieldPosition(
-  yieldPositions: YieldPosition[],
-  activeBaseAssetSymbol: string
-) {
-  const yieldPositionsByBaseAsset: Record<
-    string, // baseAssetSymbol
-    YieldPosition[]
-  > = useMemo(() => groupBy(yieldPositions, "baseAssetSymbol"), [
-    yieldPositions,
-  ]);
-
-  const [activeYieldPositionByBaseAsset, setYieldPositionsState] = useState(
-    mapValues(
-      yieldPositionsByBaseAsset,
-      ([firstYieldPosition]) => firstYieldPosition.id
-    )
-  );
-
-  const setActiveYieldPosition = useCallback(
-    (yieldPositionId: string) => {
-      setYieldPositionsState((prevState) => ({
-        ...prevState,
-        [activeBaseAssetSymbol]: yieldPositionId,
-      }));
-    },
-    [activeBaseAssetSymbol]
-  );
-
-  const activeYieldPositionId =
-    activeYieldPositionByBaseAsset[activeBaseAssetSymbol];
-
-  const activeYieldPosition = yieldPositionsByBaseAsset[
-    activeBaseAssetSymbol
-  ].find(({ id }) => id === activeYieldPositionId) as YieldPosition;
-
-  return { activeYieldPosition, setActiveYieldPosition };
-}

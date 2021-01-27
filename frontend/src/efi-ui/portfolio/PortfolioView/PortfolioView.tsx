@@ -33,6 +33,7 @@ export const PortfolioView: FC<PortfolioViewProps> = () => {
 
   return (
     <div
+      data-testid="portfolio-view"
       className={tw("flex", "p-12", "h-full", "space-x-12", "overflow-scroll")}
     >
       {/* Main content */}

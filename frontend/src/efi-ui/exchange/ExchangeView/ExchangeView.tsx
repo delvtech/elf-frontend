@@ -29,6 +29,7 @@ export const ExchangeView: FC<ExchangeViewProps> = () => {
 
   return (
     <div
+      data-testid="exchange-view"
       className={tw("flex", "p-12", "h-full", "space-x-12", "overflow-scroll")}
     >
       {/* Main content */}
