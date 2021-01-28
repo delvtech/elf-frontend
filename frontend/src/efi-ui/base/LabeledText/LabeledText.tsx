@@ -26,6 +26,8 @@ interface LabeledTextProps {
   bold?: boolean;
 
   className?: string;
+
+  textClassName?: string;
 }
 
 export const LabeledText: FC<LabeledTextProps> = ({
@@ -34,6 +36,7 @@ export const LabeledText: FC<LabeledTextProps> = ({
   subLabel,
   bold = false,
   className,
+  textClassName,
   icon,
   large,
 }) => {
@@ -46,7 +49,12 @@ export const LabeledText: FC<LabeledTextProps> = ({
           className
         )}
       >
-        <span className={tw({ "font-semibold": bold, "text-lg": large })}>
+        <span
+          className={classNames(
+            tw({ "font-semibold": bold, "text-lg": large }),
+            textClassName
+          )}
+        >
           {text}
         </span>
         <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>

@@ -8,8 +8,11 @@ import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 export const EthIcon: FC<SVGProps<SVGSVGElement> & { title?: string }> = ({
   height,
   width,
+  fill: fillFromProps,
 }) => {
   const { isDarkMode } = useDarkMode();
   const fill = isDarkMode ? Colors.GRAY5 : Colors.DARK_GRAY5;
-  return <EthSVGIcon height={height} width={width} fill={fill} />;
+  return (
+    <EthSVGIcon height={height} width={width} fill={fillFromProps || fill} />
+  );
 };

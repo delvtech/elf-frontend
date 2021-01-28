@@ -13,9 +13,9 @@ import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { BaseAsset } from "efi-ui/invest/types/BaseAsset";
 import { YieldPosition } from "efi-ui/invest/InvestView/YieldPositionPicker";
 import { CryptoName } from "efi/crypto/CryptoName";
-import { Colors, Icon } from "@blueprintjs/core";
-import { IconName, IconNames } from "@blueprintjs/icons";
-import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
+import { GasPriceWidget } from "efi-ui/ethereum/GasPriceWidget/GasPriceWidget";
+import { EthereumPriceWidget } from "efi-ui/ethereum/EthereumPriceWidget/EthereumPriceWidget";
+import { EthereumBalanceWidget } from "efi-ui/wallets/EthereumBalanceWidget/EthereumBalanceWidget";
 
 const baseAssets: BaseAsset[] = [
   {
@@ -27,6 +27,7 @@ const baseAssets: BaseAsset[] = [
   },
   {
     id: "base-asset-usdc",
+    // contract: usdcContract,
     name: CryptoName.USDC,
     symbol: "USDC",
     assetIcon: UsdcIcon,
@@ -64,27 +65,6 @@ export const InvestView: FC<InvestViewProps> = () => {
     library,
   } = useWeb3React<Web3Provider>();
 
-  const widgets = [
-    {
-      id: "wallet-balance",
-      icon: IconNames.BANK_ACCOUNT as IconName,
-      value: "12.34 ETH",
-      label: t`in this wallet`,
-    },
-    {
-      id: "price",
-      icon: IconNames.DOLLAR as IconName,
-      value: "$1,434.25 USD",
-      label: t`ETH price`,
-    },
-    {
-      id: "gas-price",
-      icon: IconNames.OIL_FIELD as IconName,
-      value: "80 gwei",
-      label: t`gas price`,
-    },
-  ];
-
   return (
     <div
       data-testid="invest-view"
@@ -115,7 +95,7 @@ export const InvestView: FC<InvestViewProps> = () => {
           "flex-col",
           "flex-1",
           "space-y-12",
-          "pt-16",
+          "pt-12",
           "items-center"
         )}
       >
@@ -123,19 +103,12 @@ export const InvestView: FC<InvestViewProps> = () => {
           className={tw("flex", "flex-col", "space-y-12")}
           style={{ width: 640 }}
         >
-          <div
-            className={tw("flex", "flex-1", "justify-between", "items-center")}
-          >
-            {widgets.map(({ icon, label, value }) => {
-              return (
-                <LabeledText
-                  large
-                  text={value}
-                  label={label}
-                  icon={<Icon icon={icon} iconSize={48} color={Colors.GRAY1} />}
-                />
-              );
-            })}
+          <div className={tw("grid", "grid-cols-3")}>
+            {account && (
+              <EthereumBalanceWidget library={library} account={account} />
+            )}
+            <EthereumPriceWidget />
+            <GasPriceWidget />
           </div>
           <InvestCard baseAssets={baseAssets} yieldPositions={yieldPositions} />
         </div>
