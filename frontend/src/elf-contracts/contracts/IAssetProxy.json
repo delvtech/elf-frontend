@@ -7,16 +7,34 @@
     "type": "function"
   },
   {
-    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "name": "underlying",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "vault",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },

@@ -82,19 +82,12 @@ export class YearnVault extends Contract {
   interface: YearnVaultInterface;
 
   functions: {
-    balanceOf(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<{
-      0: BigNumber;
-    }>;
+    balanceOf(arg0: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
     "balanceOf(address)"(
       arg0: string,
       overrides?: CallOverrides
-    ): Promise<{
-      0: BigNumber;
-    }>;
+    ): Promise<[BigNumber]>;
 
     deposit(
       arg0: BigNumberish,
@@ -106,17 +99,9 @@ export class YearnVault extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    getPricePerFullShare(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: BigNumber;
-    }>;
+    getPricePerFullShare(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    "getPricePerFullShare()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: BigNumber;
-    }>;
+    "getPricePerFullShare()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     transfer(
       arg0: string,

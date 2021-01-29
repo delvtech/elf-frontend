@@ -1,7 +1,11 @@
 [
   {
     "inputs": [
-      { "internalType": "address", "name": "_governance", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "_governance",
+        "type": "address"
+      }
     ],
     "name": "changeGovernance",
     "outputs": [],
@@ -19,7 +23,11 @@
     "inputs": [],
     "name": "elf",
     "outputs": [
-      { "internalType": "contract Elf", "name": "", "type": "address" }
+      {
+        "internalType": "contract Elf",
+        "name": "",
+        "type": "address"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
@@ -28,7 +36,11 @@
     "inputs": [],
     "name": "factory",
     "outputs": [
-      { "internalType": "contract ElfFactory", "name": "", "type": "address" }
+      {
+        "internalType": "contract ElfFactory",
+        "name": "",
+        "type": "address"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
@@ -44,7 +56,11 @@
     "inputs": [],
     "name": "usdc",
     "outputs": [
-      { "internalType": "contract AToken", "name": "", "type": "address" }
+      {
+        "internalType": "contract AToken",
+        "name": "",
+        "type": "address"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
@@ -53,7 +69,11 @@
     "inputs": [],
     "name": "weth",
     "outputs": [
-      { "internalType": "contract WETH", "name": "", "type": "address" }
+      {
+        "internalType": "contract WETH",
+        "name": "",
+        "type": "address"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
@@ -62,7 +82,11 @@
     "inputs": [],
     "name": "yusdc",
     "outputs": [
-      { "internalType": "contract AYVault", "name": "", "type": "address" }
+      {
+        "internalType": "contract AYVault",
+        "name": "",
+        "type": "address"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
