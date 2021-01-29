@@ -1,4 +1,5 @@
 import { Elf } from "elf-contracts/types/Elf";
+import { Elf__factory } from "elf-contracts/types/factories/Elf__factory";
 import {
   BigNumber,
   ContractFunction,
@@ -12,7 +13,6 @@ import { ONE_ETHER } from "efi/crypto/ethereum";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 
 import { ContractMethodArgs, ContractMethodName } from "./types";
-import { ElfFactory } from "elf-contracts/types/ElfFactory";
 
 interface ElfStubs {
   functions: {
@@ -23,7 +23,7 @@ interface ElfStubs {
 
 type ElfWithStubs = Elf & ElfStubs;
 
-export const elfContract = ElfFactory.connect(
+export const elfContract = Elf__factory.connect(
   ContractAddresses.ELF,
   jsonRpcProvider
 ) as ElfWithStubs;
