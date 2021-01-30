@@ -1,4 +1,7 @@
-import { MOCK_TRANCHE_ADDRESSES } from "efi/contracts/mockAddresses";
+import {
+  MOCK_TRANCHE_ADDRESSES,
+  MOCK_TRANCHE_FACTORY_ADDRESS,
+} from "efi/contracts/mockAddresses";
 import { ONE_ETHER } from "efi/crypto/ethereum";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 
@@ -15,7 +18,7 @@ test("should create a tranche factory contract", async () => {
     jsonRpcProvider
   );
 
-  expect(trancheFactoryContract.address).toEqual(MOCK_TRANCHE_ADDRESSES[0]);
+  expect(trancheFactoryContract.address).toEqual(MOCK_TRANCHE_FACTORY_ADDRESS);
   const events = await trancheFactoryContract.queryFilter();
   expect(events.length).toEqual(3);
 });
