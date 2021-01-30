@@ -7,7 +7,7 @@ import { jt, t } from "ttag";
 
 import { ReactComponent as UsdcIcon } from "efi-static-assets/logos/svg/USDC.svg";
 import tw from "efi-tailwindcss-classnames";
-import { EthIcon } from "efi-ui/crypto/EthIcon";
+import { EthIcon } from "efi-ui/ethereum/EthIcon";
 import { InvestCard } from "efi-ui/invest/InvestView/InvestCard";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { BaseAsset } from "efi-ui/invest/types/BaseAsset";

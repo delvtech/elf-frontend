@@ -5,7 +5,7 @@ import { Tab, Tabs } from "@blueprintjs/core";
 import { ReactComponent as UsdcIcon } from "efi-static-assets/logos/svg/USDC.svg";
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { EthIcon } from "efi-ui/crypto/EthIcon";
+import { EthIcon } from "efi-ui/ethereum/EthIcon";
 import { NextStepCallout } from "efi-ui/mint/ChooseBaseAssetStep/NextStepCallout";
 
 import { BaseAssetCard, BaseAssetCardProps } from "./BaseAssetCard";

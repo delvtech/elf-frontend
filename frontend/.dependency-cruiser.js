@@ -164,6 +164,17 @@ module.exports = {
       },
     },
     {
+      name: "efi-not-to-graveyard",
+      comment: "Importing from graveyard/ is prohibited",
+      severity: "error",
+      from: {
+        pathNot: "efi-ui/graveyard",
+      },
+      to: {
+        path: "efi-ui/graveyard",
+      },
+    },
+    {
       name: "efi-not-to-ui",
       comment: "Importing from ui/ is prohibited outside of the ui/ directory",
       severity: "error",

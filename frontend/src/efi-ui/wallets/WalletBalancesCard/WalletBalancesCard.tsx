@@ -9,9 +9,9 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { useEthBalance } from "efi-ui/coins/ether/hooks/useEthBalance/useEthBalance";
-import { useEthFiatBalance } from "efi-ui/coins/ether/hooks/useEthBalance/useEthFiatBalance";
-import { useEthPrice } from "efi-ui/coins/ether/hooks/useEthBalance/useEthPrice";
+import { useEthBalance } from "efi-ui/wallets/hooks/useEthBalance/useEthBalance";
+import { useEthFiatBalance } from "efi-ui/wallets/hooks/useEthFiatBalance/useEthFiatBalance";
+import { useEthPrice } from "efi-ui/ethereum/hooks/useEthPrice";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";

@@ -5,8 +5,8 @@ import React, { FC } from "react";
 
 import tw from "efi-tailwindcss-classnames";
 import { Navigation } from "efi-ui/navigation/navigation";
-import { PoolBreadcrumb } from "efi-ui/pools/PoolBreadCrumb/PoolBreadcrumb";
-import { PoolLockedCard } from "efi-ui/pools/PoolLockedCard.tsx/PoolLockedCard";
+import { PoolBreadcrumb } from "efi-ui/graveyard/pools/PoolBreadCrumb/PoolBreadcrumb";
+import { PoolLockedCard } from "efi-ui/graveyard/pools/PoolLockedCard.tsx/PoolLockedCard";
 import WalletSummaryPane from "efi-ui/wallets/WalletSummaryPane/WalletSummaryPane";
 import { ElfStrategyHighRisk } from "efi/pools/highRisk";
 import { ElfStrategyLowRisk } from "efi/pools/lowRisk";

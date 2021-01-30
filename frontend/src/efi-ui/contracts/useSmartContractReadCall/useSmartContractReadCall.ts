@@ -21,7 +21,7 @@ export function useSmartContractReadCall<
   TMethodName extends ContractMethodName<TContract>,
   TReturnType extends Unpacked<ContractReturnType<TContract, TMethodName>>
 >(
-  contract: TContract,
+  contract: TContract | undefined,
   methodName: TMethodName,
   options?: UseSmartContractReadCallOptions<TContract, TMethodName>
 ): QueryObserverResult<TReturnType> {
@@ -35,14 +35,16 @@ export function useSmartContractReadCall<
 
   const queryFn = async (): Promise<TReturnType> => {
     const finalArgs = callArgs || [];
-    const result = await contract.functions[methodName as string](...finalArgs);
+    const result = await contract?.functions[methodName as string](
+      ...finalArgs
+    );
     return result;
   };
 
   const queryResult = useQuery<TReturnType>({
     queryKey,
     queryFn,
-    enabled,
+    enabled: !!contract && enabled,
   });
 
   return queryResult;
@@ -52,9 +54,9 @@ function makeSmartContractReadCallQueryKey<
   TContract extends Contract,
   TMethodName extends ContractMethodName<TContract>
 >(
-  contract: TContract,
+  contract: TContract | undefined,
   methodName: TMethodName,
   callArgs: Parameters<TContract["functions"][TMethodName]> | undefined
 ) {
-  return [["contractCall", contract.address], { methodName, callArgs }];
+  return [["contractCall", contract?.address], { methodName, callArgs }];
 }

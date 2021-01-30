@@ -10,8 +10,8 @@ import { useEffect } from "react";
 import { Money } from "ts-money";
 import { t } from "ttag";
 
-import { useEthBalance } from "efi-ui/coins/ether/hooks/useEthBalance/useEthBalance";
-import { useEthPrice } from "efi-ui/coins/ether/hooks/useEthBalance/useEthPrice";
+import { useEthBalance } from "efi-ui/wallets/hooks/useEthBalance/useEthBalance";
+import { useEthPrice } from "efi-ui/ethereum/hooks/useEthPrice";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import {
   AppToaster,

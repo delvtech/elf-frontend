@@ -4,8 +4,8 @@ import React, { FC, useMemo } from "react";
 import tw from "efi-tailwindcss-classnames";
 import BrushChart, { TimeData } from "efi-ui/charts/BrushChart/BrushChart";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import { useTokenData } from "efi-ui/pulse/hook/useTokenData/useTokenData";
-import { WalletBalancesPieChart } from "efi-ui/wallets/WalletBalancesPieChart/WalletBalancesPieChart";
+import { useTokenData } from "efi-ui/graveyard/pulse/hook/useTokenData/useTokenData";
+import { WalletBalancesPieChart } from "efi-ui/graveyard/WalletBalancesPieChart/WalletBalancesPieChart";
 import { THIRTY_DAYS_IN_SECONDS } from "efi/base/time";
 import { UNI_CONTRACT_ADDRESS_MAINNET } from "efi/crypto/TokenContractAddresses";
 

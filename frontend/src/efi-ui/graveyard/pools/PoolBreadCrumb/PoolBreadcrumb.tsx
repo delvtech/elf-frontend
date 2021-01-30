@@ -2,7 +2,6 @@ import { Breadcrumbs, IBreadcrumbProps } from "@blueprintjs/core";
 import React, { FC, useMemo } from "react";
 import { t } from "ttag";
 
-import tw from "efi-tailwindcss-classnames";
 import { Pool } from "efi/pools/Pool";
 
 interface PoolBreadcrumbProps {

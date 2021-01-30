@@ -16,8 +16,8 @@ import {
   useElfContractDepositEth,
   useElfContractWithdraw,
   useElfContractWithdrawEth,
-} from "efi-ui/pools/hooks/useElfContract";
-import { StakingAssetSelect } from "efi-ui/pools/StakingAssetSelect/StakingAssetSelect";
+} from "efi-ui/graveyard/pools/hooks/useElfContract";
+import { StakingAssetSelect } from "efi-ui/graveyard/pools/StakingAssetSelect/StakingAssetSelect";
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
 import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
 import { useTokenTotalSupply } from "efi-ui/token/hooks/useTokenTotalSupply";

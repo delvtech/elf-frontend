@@ -7,6 +7,20 @@ import { createQueryClient } from "efi/queryClient";
 
 const SAMPLE_READ_CONTRACT_CALL_RESULT = { 0: "sample contract name" };
 
+test("does not run when contract doesn't exist", async () => {
+  const mockNameFn = jest.fn(async () => SAMPLE_READ_CONTRACT_CALL_RESULT);
+
+  const queryClient = createQueryClient();
+
+  const undefinedContract = undefined;
+  const { result } = renderHookWithClient(queryClient, () =>
+    useSmartContractReadCall(undefinedContract, "name")
+  );
+
+  // not called, no data
+  expect(mockNameFn).toBeCalledTimes(0);
+  expect(result.current.data).toEqual(undefined);
+});
 test("provides data from smart contract read methods", async () => {
   const mockNameFn = jest.fn(async () => SAMPLE_READ_CONTRACT_CALL_RESULT);
 
@@ -23,6 +37,8 @@ test("provides data from smart contract read methods", async () => {
     )
   );
 
+  // called but hasn't resolved yet
+  expect(mockNameFn).toBeCalledTimes(1);
   expect(result.current.data).toEqual(undefined);
 
   await waitForNextUpdate();

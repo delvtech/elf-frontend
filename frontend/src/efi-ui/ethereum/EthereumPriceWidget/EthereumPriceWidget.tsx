@@ -5,7 +5,7 @@ import classNames from "classnames";
 import { t } from "ttag";
 
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { useEthPrice } from "efi-ui/coins/ether/hooks/useEthBalance/useEthPrice";
+import { useEthPrice } from "efi-ui/ethereum/hooks/useEthPrice";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { IconNames } from "@blueprintjs/icons";
 import { Currencies } from "ts-money";

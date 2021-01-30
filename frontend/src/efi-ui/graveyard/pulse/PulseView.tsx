@@ -4,7 +4,7 @@ import React, { FC, useState } from "react";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { PortfolioDashboard } from "efi-ui/pulse/PortfolioDashboard/PortfolioDashbord";
+import { PortfolioDashboard } from "efi-ui/graveyard/pulse/PortfolioDashboard/PortfolioDashbord";
 
 interface PulseViewProps extends RouteComponentProps {}
 

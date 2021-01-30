@@ -2,8 +2,8 @@ import { Web3Provider } from "@ethersproject/providers";
 import { Money } from "ts-money";
 
 import { ComputedQueryResult } from "efi-ui/base/ComputedQueryResult";
-import { useEthBalance } from "efi-ui/coins/ether/hooks/useEthBalance/useEthBalance";
-import { useEthPrice } from "efi-ui/coins/ether/hooks/useEthBalance/useEthPrice";
+import { useEthBalance } from "efi-ui/wallets/hooks/useEthBalance/useEthBalance";
+import { useEthPrice } from "efi-ui/ethereum/hooks/useEthPrice";
 import { useConvertToFiat } from "efi-ui/money/hooks/useConvertToFiat";
 import { NUM_ETH_DECIMALS } from "efi/crypto/ethereum";
 

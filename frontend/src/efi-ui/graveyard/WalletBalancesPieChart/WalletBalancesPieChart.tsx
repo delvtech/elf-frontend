@@ -2,7 +2,7 @@ import { formatEther } from "ethers/lib/utils";
 import React, { FC } from "react";
 
 import { PieChart, PieData } from "efi-ui/charts/PieChart/PieChart";
-import { useElfContractBalance } from "efi-ui/pools/hooks/useElfContract";
+import { useElfContractBalance } from "efi-ui/graveyard/pools/hooks/useElfContract";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { getQueryCombinedStatus } from "efi-ui/query/getQueryCombinedStatus";
 import { useWallet } from "efi-ui/wallets/hooks/useWallet";

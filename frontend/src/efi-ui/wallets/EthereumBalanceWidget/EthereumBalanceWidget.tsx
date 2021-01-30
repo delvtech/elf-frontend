@@ -6,7 +6,7 @@ import classNames from "classnames";
 import { t } from "ttag";
 
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { useEthBalance } from "efi-ui/coins/ether/hooks/useEthBalance/useEthBalance";
+import { useEthBalance } from "efi-ui/wallets/hooks/useEthBalance/useEthBalance";
 import { IconNames } from "@blueprintjs/icons";
 import { formatEth } from "efi/coins/ether/formatEth";
 

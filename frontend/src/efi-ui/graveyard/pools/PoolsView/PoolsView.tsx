@@ -7,7 +7,7 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { ButtonToggleFormGroup } from "efi-ui/base/ButtonToggleFormGroup/ButtonToggleFormGroup";
 import { SearchFormGroup } from "efi-ui/base/SearchFormGroup/SearchFormGroup";
-import { PoolPreviewTable } from "efi-ui/pools/PoolPreviewTable/PoolPreviewTable";
+import { PoolPreviewTable } from "efi-ui/graveyard/pools/PoolPreviewTable/PoolPreviewTable";
 import WalletSummaryPane from "efi-ui/wallets/WalletSummaryPane/WalletSummaryPane";
 import { ElfStrategyHighRisk } from "efi/pools/highRisk";
 import { ElfStrategyLowRisk } from "efi/pools/lowRisk";
