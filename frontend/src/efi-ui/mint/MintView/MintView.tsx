@@ -30,6 +30,7 @@ export const MintView: FC<MintViewProps> = () => {
     library,
   } = useWeb3React<Web3Provider>();
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [investmentAmount, setInvestmentAmount] = useState(0);
 
   const [currentStepIndex] = useState(0);
