@@ -56,63 +56,56 @@ export class ElfFactory extends Contract {
   interface: ElfFactoryInterface;
 
   functions: {
-    isPool(
-      p: string,
-      overrides?: CallOverrides
-    ): Promise<{
-      0: boolean;
-    }>;
+    isPool(_p: string, overrides?: CallOverrides): Promise<[boolean]>;
 
     "isPool(address)"(
-      p: string,
+      _p: string,
       overrides?: CallOverrides
-    ): Promise<{
-      0: boolean;
-    }>;
+    ): Promise<[boolean]>;
 
     newPool(
-      token: string,
-      proxy: string,
+      _token: string,
+      _proxy: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     "newPool(address,address)"(
-      token: string,
-      proxy: string,
+      _token: string,
+      _proxy: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
   };
 
-  isPool(p: string, overrides?: CallOverrides): Promise<boolean>;
+  isPool(_p: string, overrides?: CallOverrides): Promise<boolean>;
 
-  "isPool(address)"(p: string, overrides?: CallOverrides): Promise<boolean>;
+  "isPool(address)"(_p: string, overrides?: CallOverrides): Promise<boolean>;
 
   newPool(
-    token: string,
-    proxy: string,
+    _token: string,
+    _proxy: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   "newPool(address,address)"(
-    token: string,
-    proxy: string,
+    _token: string,
+    _proxy: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    isPool(p: string, overrides?: CallOverrides): Promise<boolean>;
+    isPool(_p: string, overrides?: CallOverrides): Promise<boolean>;
 
-    "isPool(address)"(p: string, overrides?: CallOverrides): Promise<boolean>;
+    "isPool(address)"(_p: string, overrides?: CallOverrides): Promise<boolean>;
 
     newPool(
-      token: string,
-      proxy: string,
+      _token: string,
+      _proxy: string,
       overrides?: CallOverrides
     ): Promise<string>;
 
     "newPool(address,address)"(
-      token: string,
-      proxy: string,
+      _token: string,
+      _proxy: string,
       overrides?: CallOverrides
     ): Promise<string>;
   };
@@ -122,40 +115,46 @@ export class ElfFactory extends Contract {
   };
 
   estimateGas: {
-    isPool(p: string, overrides?: CallOverrides): Promise<BigNumber>;
+    isPool(_p: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    "isPool(address)"(p: string, overrides?: CallOverrides): Promise<BigNumber>;
+    "isPool(address)"(
+      _p: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     newPool(
-      token: string,
-      proxy: string,
+      _token: string,
+      _proxy: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     "newPool(address,address)"(
-      token: string,
-      proxy: string,
+      _token: string,
+      _proxy: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    isPool(p: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    isPool(
+      _p: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     "isPool(address)"(
-      p: string,
+      _p: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     newPool(
-      token: string,
-      proxy: string,
+      _token: string,
+      _proxy: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     "newPool(address,address)"(
-      token: string,
-      proxy: string,
+      _token: string,
+      _proxy: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
   };

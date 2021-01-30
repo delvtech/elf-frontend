@@ -26,7 +26,6 @@ interface YVaultAssetProxyInterface extends ethers.utils.Interface {
     "deposit()": FunctionFragment;
     "governance()": FunctionFragment;
     "pool()": FunctionFragment;
-    "secondary()": FunctionFragment;
     "setGovernance(address)": FunctionFragment;
     "setPool(address)": FunctionFragment;
     "token()": FunctionFragment;
@@ -42,7 +41,6 @@ interface YVaultAssetProxyInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "pool", values?: undefined): string;
-  encodeFunctionData(functionFragment: "secondary", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "setGovernance",
     values: [string]
@@ -60,7 +58,6 @@ interface YVaultAssetProxyInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "governance", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "pool", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "secondary", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "setGovernance",
     data: BytesLike
@@ -96,41 +93,13 @@ export class YVaultAssetProxy extends Contract {
 
     "deposit()"(overrides?: Overrides): Promise<ContractTransaction>;
 
-    governance(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    governance(overrides?: CallOverrides): Promise<[string]>;
 
-    "governance()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    "governance()"(overrides?: CallOverrides): Promise<[string]>;
 
-    pool(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    pool(overrides?: CallOverrides): Promise<[string]>;
 
-    "pool()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
-
-    secondary(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
-
-    "secondary()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    "pool()"(overrides?: CallOverrides): Promise<[string]>;
 
     setGovernance(
       _governance: string,
@@ -149,43 +118,23 @@ export class YVaultAssetProxy extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    token(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    token(overrides?: CallOverrides): Promise<[string]>;
 
-    "token()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    "token()"(overrides?: CallOverrides): Promise<[string]>;
 
     underlying(
-      amount: BigNumberish,
+      _amount: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<{
-      0: BigNumber;
-    }>;
+    ): Promise<[BigNumber]>;
 
     "underlying(uint256)"(
-      amount: BigNumberish,
+      _amount: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<{
-      0: BigNumber;
-    }>;
+    ): Promise<[BigNumber]>;
 
-    vault(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    vault(overrides?: CallOverrides): Promise<[string]>;
 
-    "vault()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    "vault()"(overrides?: CallOverrides): Promise<[string]>;
 
     withdraw(overrides?: Overrides): Promise<ContractTransaction>;
 
@@ -207,10 +156,6 @@ export class YVaultAssetProxy extends Contract {
   pool(overrides?: CallOverrides): Promise<string>;
 
   "pool()"(overrides?: CallOverrides): Promise<string>;
-
-  secondary(overrides?: CallOverrides): Promise<string>;
-
-  "secondary()"(overrides?: CallOverrides): Promise<string>;
 
   setGovernance(
     _governance: string,
@@ -234,12 +179,12 @@ export class YVaultAssetProxy extends Contract {
   "token()"(overrides?: CallOverrides): Promise<string>;
 
   underlying(
-    amount: BigNumberish,
+    _amount: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
   "underlying(uint256)"(
-    amount: BigNumberish,
+    _amount: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
@@ -268,10 +213,6 @@ export class YVaultAssetProxy extends Contract {
 
     "pool()"(overrides?: CallOverrides): Promise<string>;
 
-    secondary(overrides?: CallOverrides): Promise<string>;
-
-    "secondary()"(overrides?: CallOverrides): Promise<string>;
-
     setGovernance(
       _governance: string,
       overrides?: CallOverrides
@@ -291,12 +232,12 @@ export class YVaultAssetProxy extends Contract {
     "token()"(overrides?: CallOverrides): Promise<string>;
 
     underlying(
-      amount: BigNumberish,
+      _amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     "underlying(uint256)"(
-      amount: BigNumberish,
+      _amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -328,10 +269,6 @@ export class YVaultAssetProxy extends Contract {
 
     "pool()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-    secondary(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "secondary()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     setGovernance(
       _governance: string,
       overrides?: Overrides
@@ -354,12 +291,12 @@ export class YVaultAssetProxy extends Contract {
     "token()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     underlying(
-      amount: BigNumberish,
+      _amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     "underlying(uint256)"(
-      amount: BigNumberish,
+      _amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -389,10 +326,6 @@ export class YVaultAssetProxy extends Contract {
 
     "pool()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    secondary(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "secondary()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     setGovernance(
       _governance: string,
       overrides?: Overrides
@@ -418,12 +351,12 @@ export class YVaultAssetProxy extends Contract {
     "token()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     underlying(
-      amount: BigNumberish,
+      _amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     "underlying(uint256)"(
-      amount: BigNumberish,
+      _amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

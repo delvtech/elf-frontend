@@ -72,27 +72,39 @@ interface YVaultAssetProxyTestInterface extends ethers.utils.Interface {
   ): Result;
 
   events: {
-    "eventListener(address,bool)": EventFragment;
+    "log(string)": EventFragment;
+    "log_address(address)": EventFragment;
+    "log_bytes(bytes)": EventFragment;
     "log_bytes32(bytes32)": EventFragment;
-    "log_named_address(bytes32,address)": EventFragment;
-    "log_named_bytes32(bytes32,bytes32)": EventFragment;
-    "log_named_decimal_int(bytes32,int256,uint256)": EventFragment;
-    "log_named_decimal_uint(bytes32,uint256,uint256)": EventFragment;
-    "log_named_int(bytes32,int256)": EventFragment;
-    "log_named_string(bytes32,string)": EventFragment;
-    "log_named_uint(bytes32,uint256)": EventFragment;
+    "log_int(int256)": EventFragment;
+    "log_named_address(string,address)": EventFragment;
+    "log_named_bytes(string,bytes)": EventFragment;
+    "log_named_bytes32(string,bytes32)": EventFragment;
+    "log_named_decimal_int(string,int256,uint256)": EventFragment;
+    "log_named_decimal_uint(string,uint256,uint256)": EventFragment;
+    "log_named_int(string,int256)": EventFragment;
+    "log_named_string(string,string)": EventFragment;
+    "log_named_uint(string,uint256)": EventFragment;
+    "log_string(string)": EventFragment;
+    "log_uint(uint256)": EventFragment;
     "logs(bytes)": EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "eventListener"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "log"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "log_address"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "log_bytes"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "log_bytes32"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "log_int"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "log_named_address"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "log_named_bytes"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "log_named_bytes32"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "log_named_decimal_int"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "log_named_decimal_uint"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "log_named_int"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "log_named_string"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "log_named_uint"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "log_string"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "log_uint"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "logs"): EventFragment;
 }
 
@@ -110,29 +122,13 @@ export class YVaultAssetProxyTest extends Contract {
   interface: YVaultAssetProxyTestInterface;
 
   functions: {
-    IS_TEST(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: boolean;
-    }>;
+    IS_TEST(overrides?: CallOverrides): Promise<[boolean]>;
 
-    "IS_TEST()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: boolean;
-    }>;
+    "IS_TEST()"(overrides?: CallOverrides): Promise<[boolean]>;
 
-    failed(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: boolean;
-    }>;
+    failed(overrides?: CallOverrides): Promise<[boolean]>;
 
-    "failed()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: boolean;
-    }>;
+    "failed()"(overrides?: CallOverrides): Promise<[boolean]>;
 
     setUp(overrides?: Overrides): Promise<ContractTransaction>;
 
@@ -214,11 +210,19 @@ export class YVaultAssetProxyTest extends Contract {
   };
 
   filters: {
-    eventListener(target: null, exact: null): EventFilter;
+    log(undefined: null): EventFilter;
+
+    log_address(undefined: null): EventFilter;
+
+    log_bytes(undefined: null): EventFilter;
 
     log_bytes32(undefined: null): EventFilter;
 
+    log_int(undefined: null): EventFilter;
+
     log_named_address(key: null, val: null): EventFilter;
+
+    log_named_bytes(key: null, val: null): EventFilter;
 
     log_named_bytes32(key: null, val: null): EventFilter;
 
@@ -231,6 +235,10 @@ export class YVaultAssetProxyTest extends Contract {
     log_named_string(key: null, val: null): EventFilter;
 
     log_named_uint(key: null, val: null): EventFilter;
+
+    log_string(undefined: null): EventFilter;
+
+    log_uint(undefined: null): EventFilter;
 
     logs(undefined: null): EventFilter;
   };

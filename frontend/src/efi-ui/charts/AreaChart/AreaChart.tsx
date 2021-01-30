@@ -8,7 +8,6 @@ import React, { FunctionComponent, useCallback } from "react";
 import { getAxisColor } from "efi-ui/charts/colors";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { GridColumns, GridRows } from "@visx/grid";
-import { Colors } from "@blueprintjs/core";
 
 interface TimeData {
   timeMs: number;

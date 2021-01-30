@@ -22,10 +22,12 @@ import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 
 interface ElfInterface extends ethers.utils.Interface {
   functions: {
+    "DOMAIN_SEPARATOR()": FunctionFragment;
     "allowance(address,address)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balance()": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
+    "balanceOfUnderlying(address)": FunctionFragment;
     "balanceUnderlying()": FunctionFragment;
     "decimals()": FunctionFragment;
     "decreaseAllowance(address,uint256)": FunctionFragment;
@@ -34,6 +36,8 @@ interface ElfInterface extends ethers.utils.Interface {
     "governance()": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
     "name()": FunctionFragment;
+    "nonces(address)": FunctionFragment;
+    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)": FunctionFragment;
     "proxy()": FunctionFragment;
     "setGovernance(address)": FunctionFragment;
     "symbol()": FunctionFragment;
@@ -46,6 +50,10 @@ interface ElfInterface extends ethers.utils.Interface {
   };
 
   encodeFunctionData(
+    functionFragment: "DOMAIN_SEPARATOR",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "allowance",
     values: [string, string]
   ): string;
@@ -55,6 +63,10 @@ interface ElfInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "balance", values?: undefined): string;
   encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "balanceOfUnderlying",
+    values: [string]
+  ): string;
   encodeFunctionData(
     functionFragment: "balanceUnderlying",
     values?: undefined
@@ -81,6 +93,19 @@ interface ElfInterface extends ethers.utils.Interface {
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
+  encodeFunctionData(functionFragment: "nonces", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "permit",
+    values: [
+      string,
+      string,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BytesLike,
+      BytesLike
+    ]
+  ): string;
   encodeFunctionData(functionFragment: "proxy", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "setGovernance",
@@ -106,10 +131,18 @@ interface ElfInterface extends ethers.utils.Interface {
     values: [string, BigNumberish]
   ): string;
 
+  decodeFunctionResult(
+    functionFragment: "DOMAIN_SEPARATOR",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balance", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "balanceOfUnderlying",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "balanceUnderlying",
     data: BytesLike
@@ -130,6 +163,8 @@ interface ElfInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "nonces", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "permit", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "proxy", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "setGovernance",
@@ -172,21 +207,21 @@ export class Elf extends Contract {
   interface: ElfInterface;
 
   functions: {
+    DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<[string]>;
+
+    "DOMAIN_SEPARATOR()"(overrides?: CallOverrides): Promise<[string]>;
+
     allowance(
       owner: string,
       spender: string,
       overrides?: CallOverrides
-    ): Promise<{
-      0: BigNumber;
-    }>;
+    ): Promise<[BigNumber]>;
 
     "allowance(address,address)"(
       owner: string,
       spender: string,
       overrides?: CallOverrides
-    ): Promise<{
-      0: BigNumber;
-    }>;
+    ): Promise<[BigNumber]>;
 
     approve(
       spender: string,
@@ -200,55 +235,34 @@ export class Elf extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    balance(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: BigNumber;
-    }>;
+    balance(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    "balance()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: BigNumber;
-    }>;
+    "balance()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    balanceOf(
-      account: string,
-      overrides?: CallOverrides
-    ): Promise<{
-      0: BigNumber;
-    }>;
+    balanceOf(account: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
     "balanceOf(address)"(
       account: string,
       overrides?: CallOverrides
-    ): Promise<{
-      0: BigNumber;
-    }>;
+    ): Promise<[BigNumber]>;
 
-    balanceUnderlying(
+    balanceOfUnderlying(
+      _who: string,
       overrides?: CallOverrides
-    ): Promise<{
-      0: BigNumber;
-    }>;
+    ): Promise<[BigNumber]>;
 
-    "balanceUnderlying()"(
+    "balanceOfUnderlying(address)"(
+      _who: string,
       overrides?: CallOverrides
-    ): Promise<{
-      0: BigNumber;
-    }>;
+    ): Promise<[BigNumber]>;
 
-    decimals(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: number;
-    }>;
+    balanceUnderlying(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    "decimals()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: number;
-    }>;
+    "balanceUnderlying()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    decimals(overrides?: CallOverrides): Promise<[number]>;
+
+    "decimals()"(overrides?: CallOverrides): Promise<[number]>;
 
     decreaseAllowance(
       spender: string,
@@ -263,42 +277,30 @@ export class Elf extends Contract {
     ): Promise<ContractTransaction>;
 
     deposit(
-      sender: string,
-      amount: BigNumberish,
+      _sender: string,
+      _amount: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     "deposit(address,uint256)"(
-      sender: string,
-      amount: BigNumberish,
+      _sender: string,
+      _amount: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     getSharesToUnderlying(
-      shares: BigNumberish,
+      _shares: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<{
-      0: BigNumber;
-    }>;
+    ): Promise<[BigNumber]>;
 
     "getSharesToUnderlying(uint256)"(
-      shares: BigNumberish,
+      _shares: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<{
-      0: BigNumber;
-    }>;
+    ): Promise<[BigNumber]>;
 
-    governance(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    governance(overrides?: CallOverrides): Promise<[string]>;
 
-    "governance()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    "governance()"(overrides?: CallOverrides): Promise<[string]>;
 
     increaseAllowance(
       spender: string,
@@ -312,29 +314,42 @@ export class Elf extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    name(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    name(overrides?: CallOverrides): Promise<[string]>;
 
-    "name()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    "name()"(overrides?: CallOverrides): Promise<[string]>;
 
-    proxy(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    nonces(owner: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    "proxy()"(
+    "nonces(address)"(
+      owner: string,
       overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    ): Promise<[BigNumber]>;
+
+    permit(
+      owner: string,
+      spender: string,
+      value: BigNumberish,
+      deadline: BigNumberish,
+      v: BigNumberish,
+      r: BytesLike,
+      s: BytesLike,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
+      owner: string,
+      spender: string,
+      value: BigNumberish,
+      deadline: BigNumberish,
+      v: BigNumberish,
+      r: BytesLike,
+      s: BytesLike,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    proxy(overrides?: CallOverrides): Promise<[string]>;
+
+    "proxy()"(overrides?: CallOverrides): Promise<[string]>;
 
     setGovernance(
       _governance: string,
@@ -346,41 +361,17 @@ export class Elf extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    symbol(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    symbol(overrides?: CallOverrides): Promise<[string]>;
 
-    "symbol()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    "symbol()"(overrides?: CallOverrides): Promise<[string]>;
 
-    token(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    token(overrides?: CallOverrides): Promise<[string]>;
 
-    "token()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    "token()"(overrides?: CallOverrides): Promise<[string]>;
 
-    totalSupply(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: BigNumber;
-    }>;
+    totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    "totalSupply()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: BigNumber;
-    }>;
+    "totalSupply()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     transfer(
       recipient: string,
@@ -408,30 +399,26 @@ export class Elf extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    vault(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    vault(overrides?: CallOverrides): Promise<[string]>;
 
-    "vault()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    "vault()"(overrides?: CallOverrides): Promise<[string]>;
 
     withdraw(
-      sender: string,
-      shares: BigNumberish,
+      _sender: string,
+      _shares: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     "withdraw(address,uint256)"(
-      sender: string,
-      shares: BigNumberish,
+      _sender: string,
+      _shares: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
   };
+
+  DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<string>;
+
+  "DOMAIN_SEPARATOR()"(overrides?: CallOverrides): Promise<string>;
 
   allowance(
     owner: string,
@@ -468,6 +455,16 @@ export class Elf extends Contract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  balanceOfUnderlying(
+    _who: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  "balanceOfUnderlying(address)"(
+    _who: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   balanceUnderlying(overrides?: CallOverrides): Promise<BigNumber>;
 
   "balanceUnderlying()"(overrides?: CallOverrides): Promise<BigNumber>;
@@ -489,24 +486,24 @@ export class Elf extends Contract {
   ): Promise<ContractTransaction>;
 
   deposit(
-    sender: string,
-    amount: BigNumberish,
+    _sender: string,
+    _amount: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   "deposit(address,uint256)"(
-    sender: string,
-    amount: BigNumberish,
+    _sender: string,
+    _amount: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   getSharesToUnderlying(
-    shares: BigNumberish,
+    _shares: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
   "getSharesToUnderlying(uint256)"(
-    shares: BigNumberish,
+    _shares: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
@@ -529,6 +526,35 @@ export class Elf extends Contract {
   name(overrides?: CallOverrides): Promise<string>;
 
   "name()"(overrides?: CallOverrides): Promise<string>;
+
+  nonces(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+  "nonces(address)"(
+    owner: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  permit(
+    owner: string,
+    spender: string,
+    value: BigNumberish,
+    deadline: BigNumberish,
+    v: BigNumberish,
+    r: BytesLike,
+    s: BytesLike,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
+    owner: string,
+    spender: string,
+    value: BigNumberish,
+    deadline: BigNumberish,
+    v: BigNumberish,
+    r: BytesLike,
+    s: BytesLike,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
 
   proxy(overrides?: CallOverrides): Promise<string>;
 
@@ -587,18 +613,22 @@ export class Elf extends Contract {
   "vault()"(overrides?: CallOverrides): Promise<string>;
 
   withdraw(
-    sender: string,
-    shares: BigNumberish,
+    _sender: string,
+    _shares: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   "withdraw(address,uint256)"(
-    sender: string,
-    shares: BigNumberish,
+    _sender: string,
+    _shares: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   callStatic: {
+    DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<string>;
+
+    "DOMAIN_SEPARATOR()"(overrides?: CallOverrides): Promise<string>;
+
     allowance(
       owner: string,
       spender: string,
@@ -634,6 +664,16 @@ export class Elf extends Contract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    balanceOfUnderlying(
+      _who: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "balanceOfUnderlying(address)"(
+      _who: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     balanceUnderlying(overrides?: CallOverrides): Promise<BigNumber>;
 
     "balanceUnderlying()"(overrides?: CallOverrides): Promise<BigNumber>;
@@ -655,24 +695,24 @@ export class Elf extends Contract {
     ): Promise<boolean>;
 
     deposit(
-      sender: string,
-      amount: BigNumberish,
+      _sender: string,
+      _amount: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<void>;
+    ): Promise<BigNumber>;
 
     "deposit(address,uint256)"(
-      sender: string,
-      amount: BigNumberish,
+      _sender: string,
+      _amount: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<void>;
+    ): Promise<BigNumber>;
 
     getSharesToUnderlying(
-      shares: BigNumberish,
+      _shares: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     "getSharesToUnderlying(uint256)"(
-      shares: BigNumberish,
+      _shares: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -695,6 +735,35 @@ export class Elf extends Contract {
     name(overrides?: CallOverrides): Promise<string>;
 
     "name()"(overrides?: CallOverrides): Promise<string>;
+
+    nonces(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    "nonces(address)"(
+      owner: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    permit(
+      owner: string,
+      spender: string,
+      value: BigNumberish,
+      deadline: BigNumberish,
+      v: BigNumberish,
+      r: BytesLike,
+      s: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
+      owner: string,
+      spender: string,
+      value: BigNumberish,
+      deadline: BigNumberish,
+      v: BigNumberish,
+      r: BytesLike,
+      s: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     proxy(overrides?: CallOverrides): Promise<string>;
 
@@ -753,16 +822,16 @@ export class Elf extends Contract {
     "vault()"(overrides?: CallOverrides): Promise<string>;
 
     withdraw(
-      sender: string,
-      shares: BigNumberish,
+      _sender: string,
+      _shares: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<void>;
+    ): Promise<BigNumber>;
 
     "withdraw(address,uint256)"(
-      sender: string,
-      shares: BigNumberish,
+      _sender: string,
+      _shares: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<void>;
+    ): Promise<BigNumber>;
   };
 
   filters: {
@@ -776,6 +845,10 @@ export class Elf extends Contract {
   };
 
   estimateGas: {
+    DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "DOMAIN_SEPARATOR()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     allowance(
       owner: string,
       spender: string,
@@ -811,6 +884,16 @@ export class Elf extends Contract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    balanceOfUnderlying(
+      _who: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "balanceOfUnderlying(address)"(
+      _who: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     balanceUnderlying(overrides?: CallOverrides): Promise<BigNumber>;
 
     "balanceUnderlying()"(overrides?: CallOverrides): Promise<BigNumber>;
@@ -832,24 +915,24 @@ export class Elf extends Contract {
     ): Promise<BigNumber>;
 
     deposit(
-      sender: string,
-      amount: BigNumberish,
+      _sender: string,
+      _amount: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     "deposit(address,uint256)"(
-      sender: string,
-      amount: BigNumberish,
+      _sender: string,
+      _amount: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     getSharesToUnderlying(
-      shares: BigNumberish,
+      _shares: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     "getSharesToUnderlying(uint256)"(
-      shares: BigNumberish,
+      _shares: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -872,6 +955,35 @@ export class Elf extends Contract {
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
     "name()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    nonces(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    "nonces(address)"(
+      owner: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    permit(
+      owner: string,
+      spender: string,
+      value: BigNumberish,
+      deadline: BigNumberish,
+      v: BigNumberish,
+      r: BytesLike,
+      s: BytesLike,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
+      owner: string,
+      spender: string,
+      value: BigNumberish,
+      deadline: BigNumberish,
+      v: BigNumberish,
+      r: BytesLike,
+      s: BytesLike,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
 
     proxy(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -930,19 +1042,25 @@ export class Elf extends Contract {
     "vault()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     withdraw(
-      sender: string,
-      shares: BigNumberish,
+      _sender: string,
+      _shares: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     "withdraw(address,uint256)"(
-      sender: string,
-      shares: BigNumberish,
+      _sender: string,
+      _shares: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
+    DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "DOMAIN_SEPARATOR()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     allowance(
       owner: string,
       spender: string,
@@ -981,6 +1099,16 @@ export class Elf extends Contract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    balanceOfUnderlying(
+      _who: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "balanceOfUnderlying(address)"(
+      _who: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     balanceUnderlying(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     "balanceUnderlying()"(
@@ -1004,24 +1132,24 @@ export class Elf extends Contract {
     ): Promise<PopulatedTransaction>;
 
     deposit(
-      sender: string,
-      amount: BigNumberish,
+      _sender: string,
+      _amount: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     "deposit(address,uint256)"(
-      sender: string,
-      amount: BigNumberish,
+      _sender: string,
+      _amount: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     getSharesToUnderlying(
-      shares: BigNumberish,
+      _shares: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     "getSharesToUnderlying(uint256)"(
-      shares: BigNumberish,
+      _shares: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1044,6 +1172,38 @@ export class Elf extends Contract {
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     "name()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    nonces(
+      owner: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "nonces(address)"(
+      owner: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    permit(
+      owner: string,
+      spender: string,
+      value: BigNumberish,
+      deadline: BigNumberish,
+      v: BigNumberish,
+      r: BytesLike,
+      s: BytesLike,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
+      owner: string,
+      spender: string,
+      value: BigNumberish,
+      deadline: BigNumberish,
+      v: BigNumberish,
+      r: BytesLike,
+      s: BytesLike,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
 
     proxy(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -1102,14 +1262,14 @@ export class Elf extends Contract {
     "vault()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     withdraw(
-      sender: string,
-      shares: BigNumberish,
+      _sender: string,
+      _shares: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     "withdraw(address,uint256)"(
-      sender: string,
-      shares: BigNumberish,
+      _sender: string,
+      _shares: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
   };

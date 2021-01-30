@@ -65,28 +65,16 @@ export class IAssetProxy extends Contract {
     underlying(
       arg0: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<{
-      0: BigNumber;
-    }>;
+    ): Promise<[BigNumber]>;
 
     "underlying(uint256)"(
       arg0: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<{
-      0: BigNumber;
-    }>;
+    ): Promise<[BigNumber]>;
 
-    vault(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    vault(overrides?: CallOverrides): Promise<[string]>;
 
-    "vault()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    "vault()"(overrides?: CallOverrides): Promise<[string]>;
 
     withdraw(overrides?: Overrides): Promise<ContractTransaction>;
 

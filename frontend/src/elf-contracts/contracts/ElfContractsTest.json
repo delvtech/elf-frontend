@@ -4,18 +4,38 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "address",
-        "name": "target",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "bool",
-        "name": "exact",
-        "type": "bool"
+        "internalType": "string",
+        "name": "",
+        "type": "string"
       }
     ],
-    "name": "eventListener",
+    "name": "log",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "log_address",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "bytes",
+        "name": "",
+        "type": "bytes"
+      }
+    ],
+    "name": "log_bytes",
     "type": "event"
   },
   {
@@ -36,9 +56,22 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "bytes32",
+        "internalType": "int256",
+        "name": "",
+        "type": "int256"
+      }
+    ],
+    "name": "log_int",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "string",
         "name": "key",
-        "type": "bytes32"
+        "type": "string"
       },
       {
         "indexed": false,
@@ -55,9 +88,28 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "bytes32",
+        "internalType": "string",
         "name": "key",
-        "type": "bytes32"
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes",
+        "name": "val",
+        "type": "bytes"
+      }
+    ],
+    "name": "log_named_bytes",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "key",
+        "type": "string"
       },
       {
         "indexed": false,
@@ -74,9 +126,9 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "bytes32",
+        "internalType": "string",
         "name": "key",
-        "type": "bytes32"
+        "type": "string"
       },
       {
         "indexed": false,
@@ -99,9 +151,9 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "bytes32",
+        "internalType": "string",
         "name": "key",
-        "type": "bytes32"
+        "type": "string"
       },
       {
         "indexed": false,
@@ -124,9 +176,9 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "bytes32",
+        "internalType": "string",
         "name": "key",
-        "type": "bytes32"
+        "type": "string"
       },
       {
         "indexed": false,
@@ -143,9 +195,9 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "bytes32",
+        "internalType": "string",
         "name": "key",
-        "type": "bytes32"
+        "type": "string"
       },
       {
         "indexed": false,
@@ -162,9 +214,9 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "bytes32",
+        "internalType": "string",
         "name": "key",
-        "type": "bytes32"
+        "type": "string"
       },
       {
         "indexed": false,
@@ -179,7 +231,38 @@
   {
     "anonymous": false,
     "inputs": [
-      { "indexed": false, "internalType": "bytes", "name": "", "type": "bytes" }
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "name": "log_string",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "log_uint",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "bytes",
+        "name": "",
+        "type": "bytes"
+      }
     ],
     "name": "logs",
     "type": "event"
@@ -187,15 +270,12 @@
   {
     "inputs": [],
     "name": "IS_TEST",
-    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "_elfDeploy",
     "outputs": [
-      { "internalType": "contract ElfDeploy", "name": "", "type": "address" }
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
@@ -204,7 +284,24 @@
     "inputs": [],
     "name": "elf",
     "outputs": [
-      { "internalType": "contract Elf", "name": "", "type": "address" }
+      {
+        "internalType": "contract Elf",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "factory",
+    "outputs": [
+      {
+        "internalType": "contract ElfFactory",
+        "name": "",
+        "type": "address"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
@@ -212,7 +309,13 @@
   {
     "inputs": [],
     "name": "failed",
-    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
@@ -220,7 +323,11 @@
     "inputs": [],
     "name": "hevm",
     "outputs": [
-      { "internalType": "contract Hevm", "name": "", "type": "address" }
+      {
+        "internalType": "contract Hevm",
+        "name": "",
+        "type": "address"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
@@ -228,13 +335,6 @@
   {
     "inputs": [],
     "name": "setUp",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "testFail_setGovernance",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -262,16 +362,13 @@
   },
   {
     "inputs": [],
-    "name": "test_setGovernance",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "usdc",
     "outputs": [
-      { "internalType": "contract AToken", "name": "", "type": "address" }
+      {
+        "internalType": "contract IERC20",
+        "name": "",
+        "type": "address"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
@@ -280,7 +377,11 @@
     "inputs": [],
     "name": "user1",
     "outputs": [
-      { "internalType": "contract User", "name": "", "type": "address" }
+      {
+        "internalType": "contract User",
+        "name": "",
+        "type": "address"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
@@ -289,7 +390,11 @@
     "inputs": [],
     "name": "user2",
     "outputs": [
-      { "internalType": "contract User", "name": "", "type": "address" }
+      {
+        "internalType": "contract User",
+        "name": "",
+        "type": "address"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
@@ -298,7 +403,11 @@
     "inputs": [],
     "name": "user3",
     "outputs": [
-      { "internalType": "contract User", "name": "", "type": "address" }
+      {
+        "internalType": "contract User",
+        "name": "",
+        "type": "address"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
@@ -307,7 +416,11 @@
     "inputs": [],
     "name": "weth",
     "outputs": [
-      { "internalType": "contract WETH", "name": "", "type": "address" }
+      {
+        "internalType": "contract WETH",
+        "name": "",
+        "type": "address"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
@@ -316,7 +429,11 @@
     "inputs": [],
     "name": "yusdc",
     "outputs": [
-      { "internalType": "contract AYVault", "name": "", "type": "address" }
+      {
+        "internalType": "contract YearnVault",
+        "name": "",
+        "type": "address"
+      }
     ],
     "stateMutability": "view",
     "type": "function"

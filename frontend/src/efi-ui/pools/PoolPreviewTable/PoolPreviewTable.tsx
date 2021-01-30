@@ -1,7 +1,7 @@
 import { Alignment, Classes, HTMLTable, Switch } from "@blueprintjs/core";
 import { useNavigate } from "@reach/router";
 import classNames from "classnames";
-import { Erc20 } from "elf-contracts/types/Erc20";
+import { ERC20 } from "elf-contracts/types/ERC20";
 import React, { FC, useCallback } from "react";
 import { t } from "ttag";
 
@@ -95,7 +95,7 @@ const PoolPreviewTableHeader: FC<PoolPreviewTableHeaderProps> = ({
 };
 
 interface PoolPreviewTableRowProps {
-  poolContract: Erc20;
+  poolContract: ERC20;
   poolId: string;
 }
 

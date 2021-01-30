@@ -1,11 +1,11 @@
-import { Erc20 } from "elf-contracts/types/Erc20";
+import { ERC20 } from "elf-contracts/types/ERC20";
 
 import { getCoinGeckoId } from "efi-coingecko";
 import { ComputedQueryResult } from "efi-ui/base/ComputedQueryResult";
 import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
 import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
 
-export function useTokenPrice<TContract extends Erc20>(
+export function useTokenPrice<TContract extends ERC20>(
   contract: TContract,
   currencyDenomination = "usd"
 ): ComputedQueryResult<number> {

@@ -24,8 +24,8 @@ interface UserInterface extends ethers.utils.Interface {
   functions: {
     "approve(address,address)": FunctionFragment;
     "call_deposit(address,uint256)": FunctionFragment;
-    "call_transfer(address,address,uint256)": FunctionFragment;
-    "call_withdraw(address,uint256)": FunctionFragment;
+    "call_withdraw_fyt(address,uint256)": FunctionFragment;
+    "call_withdraw_yc(address,uint256)": FunctionFragment;
   };
 
   encodeFunctionData(
@@ -37,11 +37,11 @@ interface UserInterface extends ethers.utils.Interface {
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "call_transfer",
-    values: [string, string, BigNumberish]
+    functionFragment: "call_withdraw_fyt",
+    values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "call_withdraw",
+    functionFragment: "call_withdraw_yc",
     values: [string, BigNumberish]
   ): string;
 
@@ -51,11 +51,11 @@ interface UserInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "call_transfer",
+    functionFragment: "call_withdraw_fyt",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "call_withdraw",
+    functionFragment: "call_withdraw_yc",
     data: BytesLike
   ): Result;
 
@@ -78,13 +78,13 @@ export class User extends Contract {
   functions: {
     approve(
       _token: string,
-      _guy: string,
+      _spender: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     "approve(address,address)"(
       _token: string,
-      _guy: string,
+      _spender: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
@@ -100,27 +100,25 @@ export class User extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    call_transfer(
-      _obj: string,
-      _guy: string,
-      _amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "call_transfer(address,address,uint256)"(
-      _obj: string,
-      _guy: string,
-      _amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    call_withdraw(
+    call_withdraw_fyt(
       _obj: string,
       _amount: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "call_withdraw(address,uint256)"(
+    "call_withdraw_fyt(address,uint256)"(
+      _obj: string,
+      _amount: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    call_withdraw_yc(
+      _obj: string,
+      _amount: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "call_withdraw_yc(address,uint256)"(
       _obj: string,
       _amount: BigNumberish,
       overrides?: Overrides
@@ -129,13 +127,13 @@ export class User extends Contract {
 
   approve(
     _token: string,
-    _guy: string,
+    _spender: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   "approve(address,address)"(
     _token: string,
-    _guy: string,
+    _spender: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -151,27 +149,25 @@ export class User extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  call_transfer(
-    _obj: string,
-    _guy: string,
-    _amount: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "call_transfer(address,address,uint256)"(
-    _obj: string,
-    _guy: string,
-    _amount: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  call_withdraw(
+  call_withdraw_fyt(
     _obj: string,
     _amount: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "call_withdraw(address,uint256)"(
+  "call_withdraw_fyt(address,uint256)"(
+    _obj: string,
+    _amount: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  call_withdraw_yc(
+    _obj: string,
+    _amount: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "call_withdraw_yc(address,uint256)"(
     _obj: string,
     _amount: BigNumberish,
     overrides?: Overrides
@@ -180,13 +176,13 @@ export class User extends Contract {
   callStatic: {
     approve(
       _token: string,
-      _guy: string,
+      _spender: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
     "approve(address,address)"(
       _token: string,
-      _guy: string,
+      _spender: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -202,27 +198,25 @@ export class User extends Contract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    call_transfer(
-      _obj: string,
-      _guy: string,
-      _amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "call_transfer(address,address,uint256)"(
-      _obj: string,
-      _guy: string,
-      _amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    call_withdraw(
+    call_withdraw_fyt(
       _obj: string,
       _amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "call_withdraw(address,uint256)"(
+    "call_withdraw_fyt(address,uint256)"(
+      _obj: string,
+      _amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    call_withdraw_yc(
+      _obj: string,
+      _amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "call_withdraw_yc(address,uint256)"(
       _obj: string,
       _amount: BigNumberish,
       overrides?: CallOverrides
@@ -234,13 +228,13 @@ export class User extends Contract {
   estimateGas: {
     approve(
       _token: string,
-      _guy: string,
+      _spender: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     "approve(address,address)"(
       _token: string,
-      _guy: string,
+      _spender: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
@@ -256,27 +250,25 @@ export class User extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    call_transfer(
-      _obj: string,
-      _guy: string,
-      _amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "call_transfer(address,address,uint256)"(
-      _obj: string,
-      _guy: string,
-      _amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    call_withdraw(
+    call_withdraw_fyt(
       _obj: string,
       _amount: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    "call_withdraw(address,uint256)"(
+    "call_withdraw_fyt(address,uint256)"(
+      _obj: string,
+      _amount: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    call_withdraw_yc(
+      _obj: string,
+      _amount: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "call_withdraw_yc(address,uint256)"(
       _obj: string,
       _amount: BigNumberish,
       overrides?: Overrides
@@ -286,13 +278,13 @@ export class User extends Contract {
   populateTransaction: {
     approve(
       _token: string,
-      _guy: string,
+      _spender: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     "approve(address,address)"(
       _token: string,
-      _guy: string,
+      _spender: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
@@ -308,27 +300,25 @@ export class User extends Contract {
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    call_transfer(
-      _obj: string,
-      _guy: string,
-      _amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "call_transfer(address,address,uint256)"(
-      _obj: string,
-      _guy: string,
-      _amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    call_withdraw(
+    call_withdraw_fyt(
       _obj: string,
       _amount: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "call_withdraw(address,uint256)"(
+    "call_withdraw_fyt(address,uint256)"(
+      _obj: string,
+      _amount: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    call_withdraw_yc(
+      _obj: string,
+      _amount: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "call_withdraw_yc(address,uint256)"(
       _obj: string,
       _amount: BigNumberish,
       overrides?: Overrides

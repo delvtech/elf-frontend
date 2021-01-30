@@ -1,6 +1,5 @@
-import erc20abi from "elf-contracts/contracts/ERC20.json";
-import { Erc20 } from "elf-contracts/types/Erc20";
-import { Contract } from "ethers";
+import { ERC20 } from "elf-contracts/types/ERC20";
+import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
 
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 
@@ -10,22 +9,20 @@ import {
 } from "./TokenContractAddresses";
 import { TokenContractSymbols } from "./TokenContractSymbols";
 
-export const wethContract = new Contract(
+export const wethContract = ERC20__factory.connect(
   wethAddress,
-  erc20abi,
   jsonRpcProvider
-) as Erc20;
+);
 
-export const usdcContract = new Contract(
+export const usdcContract = ERC20__factory.connect(
   USDC_CONTRACT_ADDRESS_MAINNET,
-  erc20abi,
   jsonRpcProvider
-) as Erc20;
+);
 
 /**
  * Lookup table for ERC20 tokens
  */
-export const TokenContracts: Record<TokenContractSymbols, Erc20> = {
+export const TokenContracts: Record<TokenContractSymbols, ERC20> = {
   WETH: wethContract,
   USDC: usdcContract,
 };

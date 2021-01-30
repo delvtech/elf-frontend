@@ -93,81 +93,33 @@ export class ElfDeploy extends Contract {
 
     "config()"(overrides?: Overrides): Promise<ContractTransaction>;
 
-    elf(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    elf(overrides?: CallOverrides): Promise<[string]>;
 
-    "elf()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    "elf()"(overrides?: CallOverrides): Promise<[string]>;
 
-    factory(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    factory(overrides?: CallOverrides): Promise<[string]>;
 
-    "factory()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    "factory()"(overrides?: CallOverrides): Promise<[string]>;
 
     init(overrides?: Overrides): Promise<ContractTransaction>;
 
     "init()"(overrides?: Overrides): Promise<ContractTransaction>;
 
-    usdc(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    usdc(overrides?: CallOverrides): Promise<[string]>;
 
-    "usdc()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    "usdc()"(overrides?: CallOverrides): Promise<[string]>;
 
-    weth(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    weth(overrides?: CallOverrides): Promise<[string]>;
 
-    "weth()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    "weth()"(overrides?: CallOverrides): Promise<[string]>;
 
-    yusdc(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    yusdc(overrides?: CallOverrides): Promise<[string]>;
 
-    "yusdc()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    "yusdc()"(overrides?: CallOverrides): Promise<[string]>;
 
-    yusdcAsset(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    yusdcAsset(overrides?: CallOverrides): Promise<[string]>;
 
-    "yusdcAsset()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    "yusdcAsset()"(overrides?: CallOverrides): Promise<[string]>;
   };
 
   changeGovernance(

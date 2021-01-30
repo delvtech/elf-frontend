@@ -1,8 +1,7 @@
-import elfAbi from "elf-contracts/contracts/Elf.json";
 import { Elf } from "elf-contracts/types/Elf";
+import { Elf__factory } from "elf-contracts/types/factories/Elf__factory";
 import {
   BigNumber,
-  Contract,
   ContractFunction,
   ContractTransaction,
   Signer,
@@ -17,33 +16,26 @@ import { ContractMethodArgs, ContractMethodName } from "./types";
 
 interface ElfStubs {
   functions: {
-    assetBalances(): Promise<{
-      0: BigNumber[];
-    }>;
-    assetSymbols(): Promise<{
-      0: string[];
-    }>;
+    assetBalances(): Promise<[BigNumber[]]>;
+    assetSymbols(): Promise<[string[]]>;
   };
 }
 
 type ElfWithStubs = Elf & ElfStubs;
 
-export const elfContract = new Contract(
+export const elfContract = Elf__factory.connect(
   ContractAddresses.ELF,
-  elfAbi,
   jsonRpcProvider
 ) as ElfWithStubs;
 
 // stub out call to get asset symbols
-elfContract.functions.assetSymbols = async (): Promise<{
-  0: CryptoSymbol[];
-}> => ({
-  0: ["yDAI", "yTUSD", "yUSDC", "yUSDT"],
-});
+elfContract.functions.assetSymbols = async (): Promise<[CryptoSymbol[]]> => [
+  ["yDAI", "yTUSD", "yUSDC", "yUSDT"],
+];
 // stub out call to get asset balances
-elfContract.functions.assetBalances = async () => ({
-  0: [BigNumber.from(100), BigNumber.from(200), BigNumber.from(100)],
-});
+elfContract.functions.assetBalances = async () => [
+  [BigNumber.from(100), BigNumber.from(200), BigNumber.from(100)],
+];
 
 export async function fetchContractAssetSymbols(): Promise<string[]> {
   const result = await elfContract.functions.assetSymbols();

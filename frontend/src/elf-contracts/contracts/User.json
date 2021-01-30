@@ -1,8 +1,16 @@
 [
   {
     "inputs": [
-      { "internalType": "address", "name": "_token", "type": "address" },
-      { "internalType": "address", "name": "_guy", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_spender",
+        "type": "address"
+      }
     ],
     "name": "approve",
     "outputs": [],
@@ -11,8 +19,16 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "_obj", "type": "address" },
-      { "internalType": "uint256", "name": "_amount", "type": "uint256" }
+      {
+        "internalType": "contract Tranche",
+        "name": "_obj",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      }
     ],
     "name": "call_deposit",
     "outputs": [],
@@ -21,24 +37,38 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "_obj", "type": "address" },
-      { "internalType": "address", "name": "_guy", "type": "address" },
-      { "internalType": "uint256", "name": "_amount", "type": "uint256" }
+      {
+        "internalType": "contract Tranche",
+        "name": "_obj",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      }
     ],
-    "name": "call_transfer",
+    "name": "call_withdraw_fyt",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "_obj", "type": "address" },
-      { "internalType": "uint256", "name": "_amount", "type": "uint256" }
+      {
+        "internalType": "contract Tranche",
+        "name": "_obj",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      }
     ],
-    "name": "call_withdraw",
+    "name": "call_withdraw_yc",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
-  },
-  { "stateMutability": "payable", "type": "receive" }
+  }
 ]

@@ -23,16 +23,14 @@ import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 interface ElfContractsTestInterface extends ethers.utils.Interface {
   functions: {
     "IS_TEST()": FunctionFragment;
-    "_elfDeploy()": FunctionFragment;
     "elf()": FunctionFragment;
+    "factory()": FunctionFragment;
     "failed()": FunctionFragment;
     "hevm()": FunctionFragment;
     "setUp()": FunctionFragment;
-    "testFail_setGovernance()": FunctionFragment;
     "test_balance()": FunctionFragment;
     "test_balanceUnderlying()": FunctionFragment;
     "test_depositAndWithdraw()": FunctionFragment;
-    "test_setGovernance()": FunctionFragment;
     "usdc()": FunctionFragment;
     "user1()": FunctionFragment;
     "user2()": FunctionFragment;
@@ -43,18 +41,11 @@ interface ElfContractsTestInterface extends ethers.utils.Interface {
   };
 
   encodeFunctionData(functionFragment: "IS_TEST", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "_elfDeploy",
-    values?: undefined
-  ): string;
   encodeFunctionData(functionFragment: "elf", values?: undefined): string;
+  encodeFunctionData(functionFragment: "factory", values?: undefined): string;
   encodeFunctionData(functionFragment: "failed", values?: undefined): string;
   encodeFunctionData(functionFragment: "hevm", values?: undefined): string;
   encodeFunctionData(functionFragment: "setUp", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "testFail_setGovernance",
-    values?: undefined
-  ): string;
   encodeFunctionData(
     functionFragment: "test_balance",
     values?: undefined
@@ -65,10 +56,6 @@ interface ElfContractsTestInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "test_depositAndWithdraw",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "test_setGovernance",
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "usdc", values?: undefined): string;
@@ -83,15 +70,11 @@ interface ElfContractsTestInterface extends ethers.utils.Interface {
   ): string;
 
   decodeFunctionResult(functionFragment: "IS_TEST", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "_elfDeploy", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "elf", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "factory", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "failed", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "hevm", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "setUp", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "testFail_setGovernance",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "test_balance",
     data: BytesLike
@@ -104,10 +87,6 @@ interface ElfContractsTestInterface extends ethers.utils.Interface {
     functionFragment: "test_depositAndWithdraw",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "test_setGovernance",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "usdc", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "user1", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "user2", data: BytesLike): Result;
@@ -117,27 +96,39 @@ interface ElfContractsTestInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "yusdcAsset", data: BytesLike): Result;
 
   events: {
-    "eventListener(address,bool)": EventFragment;
+    "log(string)": EventFragment;
+    "log_address(address)": EventFragment;
+    "log_bytes(bytes)": EventFragment;
     "log_bytes32(bytes32)": EventFragment;
-    "log_named_address(bytes32,address)": EventFragment;
-    "log_named_bytes32(bytes32,bytes32)": EventFragment;
-    "log_named_decimal_int(bytes32,int256,uint256)": EventFragment;
-    "log_named_decimal_uint(bytes32,uint256,uint256)": EventFragment;
-    "log_named_int(bytes32,int256)": EventFragment;
-    "log_named_string(bytes32,string)": EventFragment;
-    "log_named_uint(bytes32,uint256)": EventFragment;
+    "log_int(int256)": EventFragment;
+    "log_named_address(string,address)": EventFragment;
+    "log_named_bytes(string,bytes)": EventFragment;
+    "log_named_bytes32(string,bytes32)": EventFragment;
+    "log_named_decimal_int(string,int256,uint256)": EventFragment;
+    "log_named_decimal_uint(string,uint256,uint256)": EventFragment;
+    "log_named_int(string,int256)": EventFragment;
+    "log_named_string(string,string)": EventFragment;
+    "log_named_uint(string,uint256)": EventFragment;
+    "log_string(string)": EventFragment;
+    "log_uint(uint256)": EventFragment;
     "logs(bytes)": EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "eventListener"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "log"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "log_address"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "log_bytes"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "log_bytes32"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "log_int"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "log_named_address"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "log_named_bytes"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "log_named_bytes32"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "log_named_decimal_int"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "log_named_decimal_uint"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "log_named_int"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "log_named_string"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "log_named_uint"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "log_string"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "log_uint"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "logs"): EventFragment;
 }
 
@@ -155,75 +146,29 @@ export class ElfContractsTest extends Contract {
   interface: ElfContractsTestInterface;
 
   functions: {
-    IS_TEST(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: boolean;
-    }>;
+    IS_TEST(overrides?: CallOverrides): Promise<[boolean]>;
 
-    "IS_TEST()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: boolean;
-    }>;
+    "IS_TEST()"(overrides?: CallOverrides): Promise<[boolean]>;
 
-    _elfDeploy(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    elf(overrides?: CallOverrides): Promise<[string]>;
 
-    "_elfDeploy()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    "elf()"(overrides?: CallOverrides): Promise<[string]>;
 
-    elf(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    factory(overrides?: CallOverrides): Promise<[string]>;
 
-    "elf()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    "factory()"(overrides?: CallOverrides): Promise<[string]>;
 
-    failed(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: boolean;
-    }>;
+    failed(overrides?: CallOverrides): Promise<[boolean]>;
 
-    "failed()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: boolean;
-    }>;
+    "failed()"(overrides?: CallOverrides): Promise<[boolean]>;
 
-    hevm(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    hevm(overrides?: CallOverrides): Promise<[string]>;
 
-    "hevm()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    "hevm()"(overrides?: CallOverrides): Promise<[string]>;
 
     setUp(overrides?: Overrides): Promise<ContractTransaction>;
 
     "setUp()"(overrides?: Overrides): Promise<ContractTransaction>;
-
-    testFail_setGovernance(overrides?: Overrides): Promise<ContractTransaction>;
-
-    "testFail_setGovernance()"(
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
 
     test_balance(overrides?: Overrides): Promise<ContractTransaction>;
 
@@ -243,106 +188,46 @@ export class ElfContractsTest extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    test_setGovernance(overrides?: Overrides): Promise<ContractTransaction>;
+    usdc(overrides?: CallOverrides): Promise<[string]>;
 
-    "test_setGovernance()"(overrides?: Overrides): Promise<ContractTransaction>;
+    "usdc()"(overrides?: CallOverrides): Promise<[string]>;
 
-    usdc(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    user1(overrides?: CallOverrides): Promise<[string]>;
 
-    "usdc()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    "user1()"(overrides?: CallOverrides): Promise<[string]>;
 
-    user1(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    user2(overrides?: CallOverrides): Promise<[string]>;
 
-    "user1()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    "user2()"(overrides?: CallOverrides): Promise<[string]>;
 
-    user2(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    user3(overrides?: CallOverrides): Promise<[string]>;
 
-    "user2()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    "user3()"(overrides?: CallOverrides): Promise<[string]>;
 
-    user3(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    weth(overrides?: CallOverrides): Promise<[string]>;
 
-    "user3()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    "weth()"(overrides?: CallOverrides): Promise<[string]>;
 
-    weth(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    yusdc(overrides?: CallOverrides): Promise<[string]>;
 
-    "weth()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    "yusdc()"(overrides?: CallOverrides): Promise<[string]>;
 
-    yusdc(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    yusdcAsset(overrides?: CallOverrides): Promise<[string]>;
 
-    "yusdc()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
-
-    yusdcAsset(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
-
-    "yusdcAsset()"(
-      overrides?: CallOverrides
-    ): Promise<{
-      0: string;
-    }>;
+    "yusdcAsset()"(overrides?: CallOverrides): Promise<[string]>;
   };
 
   IS_TEST(overrides?: CallOverrides): Promise<boolean>;
 
   "IS_TEST()"(overrides?: CallOverrides): Promise<boolean>;
 
-  _elfDeploy(overrides?: CallOverrides): Promise<string>;
-
-  "_elfDeploy()"(overrides?: CallOverrides): Promise<string>;
-
   elf(overrides?: CallOverrides): Promise<string>;
 
   "elf()"(overrides?: CallOverrides): Promise<string>;
+
+  factory(overrides?: CallOverrides): Promise<string>;
+
+  "factory()"(overrides?: CallOverrides): Promise<string>;
 
   failed(overrides?: CallOverrides): Promise<boolean>;
 
@@ -355,12 +240,6 @@ export class ElfContractsTest extends Contract {
   setUp(overrides?: Overrides): Promise<ContractTransaction>;
 
   "setUp()"(overrides?: Overrides): Promise<ContractTransaction>;
-
-  testFail_setGovernance(overrides?: Overrides): Promise<ContractTransaction>;
-
-  "testFail_setGovernance()"(
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
 
   test_balance(overrides?: Overrides): Promise<ContractTransaction>;
 
@@ -377,10 +256,6 @@ export class ElfContractsTest extends Contract {
   "test_depositAndWithdraw()"(
     overrides?: Overrides
   ): Promise<ContractTransaction>;
-
-  test_setGovernance(overrides?: Overrides): Promise<ContractTransaction>;
-
-  "test_setGovernance()"(overrides?: Overrides): Promise<ContractTransaction>;
 
   usdc(overrides?: CallOverrides): Promise<string>;
 
@@ -415,13 +290,13 @@ export class ElfContractsTest extends Contract {
 
     "IS_TEST()"(overrides?: CallOverrides): Promise<boolean>;
 
-    _elfDeploy(overrides?: CallOverrides): Promise<string>;
-
-    "_elfDeploy()"(overrides?: CallOverrides): Promise<string>;
-
     elf(overrides?: CallOverrides): Promise<string>;
 
     "elf()"(overrides?: CallOverrides): Promise<string>;
+
+    factory(overrides?: CallOverrides): Promise<string>;
+
+    "factory()"(overrides?: CallOverrides): Promise<string>;
 
     failed(overrides?: CallOverrides): Promise<boolean>;
 
@@ -435,10 +310,6 @@ export class ElfContractsTest extends Contract {
 
     "setUp()"(overrides?: CallOverrides): Promise<void>;
 
-    testFail_setGovernance(overrides?: CallOverrides): Promise<void>;
-
-    "testFail_setGovernance()"(overrides?: CallOverrides): Promise<void>;
-
     test_balance(overrides?: CallOverrides): Promise<void>;
 
     "test_balance()"(overrides?: CallOverrides): Promise<void>;
@@ -450,10 +321,6 @@ export class ElfContractsTest extends Contract {
     test_depositAndWithdraw(overrides?: CallOverrides): Promise<void>;
 
     "test_depositAndWithdraw()"(overrides?: CallOverrides): Promise<void>;
-
-    test_setGovernance(overrides?: CallOverrides): Promise<void>;
-
-    "test_setGovernance()"(overrides?: CallOverrides): Promise<void>;
 
     usdc(overrides?: CallOverrides): Promise<string>;
 
@@ -485,11 +352,19 @@ export class ElfContractsTest extends Contract {
   };
 
   filters: {
-    eventListener(target: null, exact: null): EventFilter;
+    log(undefined: null): EventFilter;
+
+    log_address(undefined: null): EventFilter;
+
+    log_bytes(undefined: null): EventFilter;
 
     log_bytes32(undefined: null): EventFilter;
 
+    log_int(undefined: null): EventFilter;
+
     log_named_address(key: null, val: null): EventFilter;
+
+    log_named_bytes(key: null, val: null): EventFilter;
 
     log_named_bytes32(key: null, val: null): EventFilter;
 
@@ -503,6 +378,10 @@ export class ElfContractsTest extends Contract {
 
     log_named_uint(key: null, val: null): EventFilter;
 
+    log_string(undefined: null): EventFilter;
+
+    log_uint(undefined: null): EventFilter;
+
     logs(undefined: null): EventFilter;
   };
 
@@ -511,13 +390,13 @@ export class ElfContractsTest extends Contract {
 
     "IS_TEST()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-    _elfDeploy(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "_elfDeploy()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     elf(overrides?: CallOverrides): Promise<BigNumber>;
 
     "elf()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    factory(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "factory()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     failed(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -531,10 +410,6 @@ export class ElfContractsTest extends Contract {
 
     "setUp()"(overrides?: Overrides): Promise<BigNumber>;
 
-    testFail_setGovernance(overrides?: Overrides): Promise<BigNumber>;
-
-    "testFail_setGovernance()"(overrides?: Overrides): Promise<BigNumber>;
-
     test_balance(overrides?: Overrides): Promise<BigNumber>;
 
     "test_balance()"(overrides?: Overrides): Promise<BigNumber>;
@@ -546,10 +421,6 @@ export class ElfContractsTest extends Contract {
     test_depositAndWithdraw(overrides?: Overrides): Promise<BigNumber>;
 
     "test_depositAndWithdraw()"(overrides?: Overrides): Promise<BigNumber>;
-
-    test_setGovernance(overrides?: Overrides): Promise<BigNumber>;
-
-    "test_setGovernance()"(overrides?: Overrides): Promise<BigNumber>;
 
     usdc(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -585,13 +456,13 @@ export class ElfContractsTest extends Contract {
 
     "IS_TEST()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    _elfDeploy(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "_elfDeploy()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     elf(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     "elf()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    factory(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "factory()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     failed(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -604,14 +475,6 @@ export class ElfContractsTest extends Contract {
     setUp(overrides?: Overrides): Promise<PopulatedTransaction>;
 
     "setUp()"(overrides?: Overrides): Promise<PopulatedTransaction>;
-
-    testFail_setGovernance(
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "testFail_setGovernance()"(
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
 
     test_balance(overrides?: Overrides): Promise<PopulatedTransaction>;
 
@@ -630,12 +493,6 @@ export class ElfContractsTest extends Contract {
     ): Promise<PopulatedTransaction>;
 
     "test_depositAndWithdraw()"(
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    test_setGovernance(overrides?: Overrides): Promise<PopulatedTransaction>;
-
-    "test_setGovernance()"(
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
