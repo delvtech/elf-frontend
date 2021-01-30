@@ -1,5 +1,5 @@
+import { ERC20 } from "elf-contracts/types/ERC20";
 import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
-import { Contract } from "ethers";
 
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 
@@ -22,7 +22,7 @@ export const usdcContract = ERC20__factory.connect(
 /**
  * Lookup table for ERC20 tokens
  */
-export const TokenContracts: Record<TokenContractSymbols, Contract> = {
+export const TokenContracts: Record<TokenContractSymbols, ERC20> = {
   WETH: wethContract,
   USDC: usdcContract,
 };
