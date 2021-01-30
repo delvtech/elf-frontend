@@ -18,7 +18,7 @@ export const MAX_ALLOWANCE = BigNumber.from(
  */
 export async function postApprove(
   signer: Signer,
-  assetContract: Erc20,
+  assetContract: ERC20,
   poolAddress: string,
   amount: BigNumber
 ): Promise<ContractTransaction | undefined> {
@@ -36,7 +36,7 @@ export async function postApprove(
 }
 
 export async function fetchTokenAllowance(
-  tokenContract: Erc20,
+  tokenContract: ERC20,
   ownerAddress: string,
   spenderAddress: string
 ): Promise<BigNumber | undefined> {

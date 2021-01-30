@@ -15,7 +15,7 @@ import { IconNames } from "@blueprintjs/icons";
 
 interface AssetBalanceWidgetProps {
   account: string | null | undefined;
-  tokenContract: Erc20;
+  tokenContract: ERC20;
 }
 
 export const AssetBalanceWidget: FC<AssetBalanceWidgetProps> = ({

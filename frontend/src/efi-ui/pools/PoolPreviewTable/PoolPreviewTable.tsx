@@ -95,7 +95,7 @@ const PoolPreviewTableHeader: FC<PoolPreviewTableHeaderProps> = ({
 };
 
 interface PoolPreviewTableRowProps {
-  poolContract: Erc20;
+  poolContract: ERC20;
   poolId: string;
 }
 

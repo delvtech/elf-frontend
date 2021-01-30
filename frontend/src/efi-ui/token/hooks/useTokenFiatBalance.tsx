@@ -8,7 +8,7 @@ import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
 
 export function useTokenFiatBalance(
-  tokenContract: Erc20,
+  tokenContract: ERC20,
   account: string | null | undefined,
   currencyCode: string
 ): ComputedQueryResult<Money> {
