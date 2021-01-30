@@ -2,7 +2,7 @@ import { Card, Classes, HTMLTable } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
 import classNames from "classnames";
-import { Erc20 } from "elf-contracts/types/Erc20";
+import { ERC20 } from "elf-contracts/types/ERC20";
 import React, { FC } from "react";
 import { Money } from "ts-money";
 import { t } from "ttag";

@@ -1,4 +1,4 @@
-import { Erc20 } from "elf-contracts/types/Erc20";
+import { ERC20 } from "elf-contracts/types/ERC20";
 import { Money } from "ts-money";
 
 import { ComputedQueryResult } from "efi-ui/base/ComputedQueryResult";

@@ -5,7 +5,7 @@ import classNames from "classnames";
 import { t } from "ttag";
 
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { Erc20 } from "elf-contracts/types/Erc20";
+import { ERC20 } from "elf-contracts/types/ERC20";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";

@@ -1,4 +1,4 @@
-import { Erc20 } from "elf-contracts/types/Erc20";
+import { ERC20 } from "elf-contracts/types/ERC20";
 
 import { getCoinGeckoId } from "efi-coingecko";
 import { ComputedQueryResult } from "efi-ui/base/ComputedQueryResult";
