@@ -5,7 +5,6 @@ import { LocationProvider, Router } from "@reach/router";
 import classNames from "classnames";
 
 import { tw } from "efi-tailwindcss-classnames";
-import { CryptoDrawer } from "efi-ui/crypto/CryptoDrawer/CryptoDrawer";
 import { ExchangeView } from "efi-ui/exchange/ExchangeView/ExchangeView";
 import { FAQView } from "efi-ui/faq/FAQView";
 import { HomeView } from "efi-ui/home/HomeView";
@@ -68,7 +67,6 @@ const App: FC<AppProps> = () => {
           <FAQView path={Navigation.FAQ} />
         </Router>
       </div>
-      <CryptoDrawer />
 
       {/* Safe to render unconditionally as it does not render in production
       builds by default */}

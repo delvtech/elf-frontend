@@ -4,14 +4,14 @@ import React, { FC, useMemo } from "react";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { CryptoAssetInfo } from "efi/crypto/CryptoAssetInfo";
+import { CryptoAssetInfoOld } from "efi/graveyard/CryptoAssetInfo";
 
 export const itemHeaderClassName = classNames(
   Classes.TEXT_SMALL,
   tw("font-bold")
 );
 export const CryptoAssetSuggestItem: FC<{
-  cryptoAsset: CryptoAssetInfo;
+  cryptoAsset: CryptoAssetInfoOld;
 }> = ({ cryptoAsset: { symbol, name } }) => {
   // TODO: Use real data not stubs
   const sections = useMemo(

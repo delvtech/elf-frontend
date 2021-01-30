@@ -2,19 +2,19 @@ import { HTMLInputProps, IInputGroupProps } from "@blueprintjs/core";
 import { useCallback, useMemo } from "react";
 
 import { useBoolean } from "efi-ui/base/hooks/useBoolean/useBoolean";
-import { CryptoAssetInfo } from "efi/crypto/CryptoAssetInfo";
+import { CryptoAssetInfoOld } from "efi/graveyard/CryptoAssetInfo";
 
 interface CryptoAssetOmnibar {
   isOmnibarOpen: boolean;
   openOmnibar: () => void;
   closeOmnibar: () => void;
   omnibarInputProps: IInputGroupProps & HTMLInputProps;
-  onItemSelect: (cryptoAsset: CryptoAssetInfo) => void;
+  onItemSelect: (cryptoAsset: CryptoAssetInfoOld) => void;
 }
 
 export function useCryptoAssetOmnibar(
   omnibarPlaceholder: string,
-  onSelect: (cryptoAsset: CryptoAssetInfo) => void
+  onSelect: (cryptoAsset: CryptoAssetInfoOld) => void
 ): CryptoAssetOmnibar {
   const {
     value: isOmnibarOpen,
@@ -30,7 +30,7 @@ export function useCryptoAssetOmnibar(
   }, [omnibarPlaceholder]);
 
   const onItemSelect = useCallback(
-    (cryptoAsset: CryptoAssetInfo) => {
+    (cryptoAsset: CryptoAssetInfoOld) => {
       onSelect(cryptoAsset);
       closeOmnibar();
     },

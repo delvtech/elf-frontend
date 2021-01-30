@@ -1,34 +1,17 @@
-import { useQuery } from "react-query";
-
+import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
+import { t } from "ttag";
 import {
-  CoinGeckoCryptoId,
-  CoinGeckoCryptoIdsOld,
-  fetchCryptoSymbolOld,
-} from "efi/crypto/coingecko";
-import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
+  CryptoAsset,
+  CryptoAssetType,
+  findTokenContract,
+} from "efi/crypto/CryptoAsset";
 
-export function useCryptoSymbol(cryptoSymbol: CryptoSymbol) {
-  const enabled = !!CoinGeckoCryptoIdsOld[cryptoSymbol];
+export function useCryptoSymbol(asset: CryptoAsset) {
+  const tokenContract = findTokenContract(asset);
+  const [tokenSymbol] = useTokenSymbol(tokenContract);
+  if (asset.type === CryptoAssetType.ERC20) {
+    return tokenSymbol || t`ERC20`;
+  }
 
-  return useQuery(
-    makeCryptoSymbolQueryKey(cryptoSymbol),
-    async () => {
-      const price = await fetchCryptoSymbolOld(
-        // safe to cast because this query is only enabled when it exists
-        CoinGeckoCryptoIdsOld[cryptoSymbol] as CoinGeckoCryptoId
-      );
-      return price;
-    },
-    { enabled }
-  );
-}
-
-interface CryptoSymbolVariables {
-  cryptoSymbol: CryptoSymbol;
-}
-
-export function makeCryptoSymbolQueryKey(
-  cryptoSymbol: CryptoSymbol
-): [string, CryptoSymbolVariables] {
-  return ["crypto-symbol", { cryptoSymbol }];
+  return "ETH";
 }

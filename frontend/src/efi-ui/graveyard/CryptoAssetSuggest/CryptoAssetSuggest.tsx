@@ -6,19 +6,19 @@ import React, { FC, Fragment } from "react";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { EFI_SUPPORTED_CRYPTO_ASSETS } from "efi-ui/crypto/cryptoAssets";
+import { EFI_SUPPORTED_CRYPTO_ASSETS } from "efi-ui/graveyard/cryptoAssets";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import { CryptoAssetInfo } from "efi/crypto/CryptoAssetInfo";
+import { CryptoAssetInfoOld } from "efi/graveyard/CryptoAssetInfo";
 
 import { CryptoAssetSuggestItem } from "./CryptoAssetSuggestItem";
 import { useCryptoAssetOmnibar } from "./useCryptoAssetOmnibar";
 import { useCryptoAssetTagInput } from "./useCryptoAssetTagInput";
 
 interface CryptoAssetSuggestProps {
-  onSelect: (cryptoAsset: CryptoAssetInfo) => void;
-  onRemove: (cryptoAsset: CryptoAssetInfo) => void;
-  activeCryptoAsset?: CryptoAssetInfo;
-  cryptoAssets?: CryptoAssetInfo[];
+  onSelect: (cryptoAsset: CryptoAssetInfoOld) => void;
+  onRemove: (cryptoAsset: CryptoAssetInfoOld) => void;
+  activeCryptoAsset?: CryptoAssetInfoOld;
+  cryptoAssets?: CryptoAssetInfoOld[];
   className?: string;
   placeholder?: string;
   omnibarPlaceholder?: string;
@@ -76,7 +76,7 @@ export const CryptoAssetSuggest: FC<CryptoAssetSuggestProps> = ({
         inputProps={tagInputProps}
         onRemove={onRemoveTag}
       />
-      <Omnibar<CryptoAssetInfo>
+      <Omnibar<CryptoAssetInfoOld>
         isOpen={isOmnibarOpen}
         inputProps={omnibarInputProps}
         overlayProps={overlayProps}
@@ -91,7 +91,7 @@ export const CryptoAssetSuggest: FC<CryptoAssetSuggestProps> = ({
   );
 };
 
-const itemRenderer: ItemRenderer<CryptoAssetInfo> = (
+const itemRenderer: ItemRenderer<CryptoAssetInfoOld> = (
   item,
   { handleClick, modifiers: { active, disabled, matchesPredicate } }
 ) => {
@@ -126,7 +126,7 @@ const itemRenderer: ItemRenderer<CryptoAssetInfo> = (
   );
 };
 
-const itemListPredicate: ItemListPredicate<CryptoAssetInfo> = (
+const itemListPredicate: ItemListPredicate<CryptoAssetInfoOld> = (
   query,
   items
 ) => {

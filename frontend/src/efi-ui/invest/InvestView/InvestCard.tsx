@@ -6,31 +6,39 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { BaseAssetPicker } from "efi-ui/invest/BaseAssetPicker/BaseAssetPicker";
-import { useActiveBaseAsset } from "efi-ui/invest/hooks/useActiveBaseAsset";
 import { useActiveYieldPosition } from "efi-ui/invest/hooks/useActiveYieldPosition";
 import {
   YieldPosition,
   YieldPositionPicker,
 } from "efi-ui/invest/InvestView/YieldPositionPicker";
-import { BaseAsset } from "efi-ui/invest/types/BaseAsset";
 
 import { InvestmentAmountInput } from "./InvestmentAmountInput";
+import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
+import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
+import { useCryptoBalance } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
+import { Web3Provider } from "@ethersproject/providers";
 
 export interface InvestCardProps {
-  baseAssets: BaseAsset[];
+  library: Web3Provider | undefined;
+  account: string | null | undefined;
+  baseAssets: CryptoAssetWithIcon[];
 
   yieldPositions: YieldPosition[];
 }
 
 export const InvestCard: FC<InvestCardProps> = ({
+  library,
+  account,
   baseAssets,
   yieldPositions,
 }) => {
-  const {
-    activeBaseAsset: { id: activeBaseAssetId, symbol: activeBaseAssetSymbol },
-    setActiveBaseAsset,
-  } = useActiveBaseAsset(baseAssets);
-  const activeBaseAssetBalance = 12.34;
+  const [activeBaseAsset, setActiveBaseAsset] = useState(baseAssets[0]);
+  const activeBaseAssetSymbol = useCryptoSymbol(activeBaseAsset);
+  const activeBaseAssetBalance = useCryptoBalance(
+    library,
+    account,
+    activeBaseAsset
+  );
 
   const {
     activeYieldPosition,
@@ -63,7 +71,7 @@ export const InvestCard: FC<InvestCardProps> = ({
           baseAssetPicker={
             <BaseAssetPicker
               baseAssets={baseAssets}
-              activeBaseAssetId={activeBaseAssetId}
+              activeBaseAsset={activeBaseAsset}
               onBaseAssetChange={setActiveBaseAsset}
             />
           }

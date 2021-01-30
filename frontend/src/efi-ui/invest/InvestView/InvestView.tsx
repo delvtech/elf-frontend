@@ -5,35 +5,14 @@ import { RouteComponentProps } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
 import { jt, t } from "ttag";
 
-import { ReactComponent as UsdcIcon } from "efi-static-assets/logos/svg/USDC.svg";
 import tw from "efi-tailwindcss-classnames";
-import { EthIcon } from "efi-ui/ethereum/EthIcon";
-import { InvestCard } from "efi-ui/invest/InvestView/InvestCard";
-import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
-import { BaseAsset } from "efi-ui/invest/types/BaseAsset";
-import { YieldPosition } from "efi-ui/invest/InvestView/YieldPositionPicker";
-import { CryptoName } from "efi/crypto/CryptoName";
-import { GasPriceWidget } from "efi-ui/ethereum/GasPriceWidget/GasPriceWidget";
 import { EthereumPriceWidget } from "efi-ui/ethereum/EthereumPriceWidget/EthereumPriceWidget";
+import { GasPriceWidget } from "efi-ui/ethereum/GasPriceWidget/GasPriceWidget";
+import { baseAssets } from "efi-ui/invest/baseAssets";
+import { InvestCard } from "efi-ui/invest/InvestView/InvestCard";
+import { YieldPosition } from "efi-ui/invest/InvestView/YieldPositionPicker";
+import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { EthereumBalanceWidget } from "efi-ui/wallets/EthereumBalanceWidget/EthereumBalanceWidget";
-
-const baseAssets: BaseAsset[] = [
-  {
-    id: "base-asset-eth",
-    name: CryptoName.ETH,
-    symbol: "ETH",
-    assetIcon: EthIcon,
-    fiatPrice: "$1,000.00",
-  },
-  {
-    id: "base-asset-usdc",
-    // contract: usdcContract,
-    name: CryptoName.USDC,
-    symbol: "USDC",
-    assetIcon: UsdcIcon,
-    fiatPrice: "$1.00",
-  },
-];
 
 const yieldPositions: YieldPosition[] = [
   {
@@ -110,7 +89,12 @@ export const InvestView: FC<InvestViewProps> = () => {
             <EthereumPriceWidget />
             <GasPriceWidget />
           </div>
-          <InvestCard baseAssets={baseAssets} yieldPositions={yieldPositions} />
+          <InvestCard
+            library={library}
+            account={account}
+            baseAssets={baseAssets}
+            yieldPositions={yieldPositions}
+          />
         </div>
       </div>
     </div>

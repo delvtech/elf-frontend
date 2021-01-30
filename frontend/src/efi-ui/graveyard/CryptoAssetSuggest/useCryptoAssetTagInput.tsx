@@ -7,7 +7,7 @@ import {
 import React, { ReactNode, useCallback, useMemo } from "react";
 
 import tw from "efi-tailwindcss-classnames";
-import { CryptoAssetInfo } from "efi/crypto/CryptoAssetInfo";
+import { CryptoAssetInfoOld } from "efi/graveyard/CryptoAssetInfo";
 
 interface CryptoAssetTagInput {
   tagInputProps: IInputGroupProps & HTMLInputProps;
@@ -19,9 +19,9 @@ interface CryptoAssetTagInput {
 export function useCryptoAssetTagInput(
   openOmnibar: () => void,
   initialPlaceholder: string,
-  cryptoAssets: CryptoAssetInfo[],
-  onRemove: (cryptoAsset: CryptoAssetInfo) => void,
-  activeCryptoAsset: CryptoAssetInfo | undefined
+  cryptoAssets: CryptoAssetInfoOld[],
+  onRemove: (cryptoAsset: CryptoAssetInfoOld) => void,
+  activeCryptoAsset: CryptoAssetInfoOld | undefined
 ): CryptoAssetTagInput {
   const onTagInputKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -45,8 +45,8 @@ export function useCryptoAssetTagInput(
     return props;
   }, [activeCryptoAsset, initialPlaceholder, openOmnibar, onTagInputKeyDown]);
 
-  const cryptoAssetsByName: Record<string, CryptoAssetInfo> = useMemo(() => {
-    const result: Record<string, CryptoAssetInfo> = {};
+  const cryptoAssetsByName: Record<string, CryptoAssetInfoOld> = useMemo(() => {
+    const result: Record<string, CryptoAssetInfoOld> = {};
     cryptoAssets.forEach((cryptoAsset) => {
       result[cryptoAsset.name] = cryptoAsset;
     });

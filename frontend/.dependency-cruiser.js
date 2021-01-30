@@ -171,7 +171,7 @@ module.exports = {
         pathNot: "efi-ui/graveyard",
       },
       to: {
-        path: "efi-ui/graveyard",
+        path: `(${["efi-ui/graveyard", "efi/graveyard"].join("|")})`,
       },
     },
     {

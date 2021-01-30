@@ -5,8 +5,8 @@ import React, { FC, useCallback, useState } from "react";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { CryptoAssetSuggest } from "efi-ui/crypto/CryptoAssetSuggest/CryptoAssetSuggest";
-import { CryptoAssetInfo } from "efi/crypto/CryptoAssetInfo";
+import { CryptoAssetSuggest } from "efi-ui/graveyard/CryptoAssetSuggest/CryptoAssetSuggest";
+import { CryptoAssetInfoOld } from "efi/graveyard/CryptoAssetInfo";
 
 interface SimpleCryptoAssetFilterProps {
   className?: string;
@@ -14,11 +14,11 @@ interface SimpleCryptoAssetFilterProps {
 export const SimpleCryptoAssetFilter: FC<SimpleCryptoAssetFilterProps> = ({
   className,
 }) => {
-  const [baseAsset, setBaseAsset] = useState<CryptoAssetInfo | undefined>();
+  const [baseAsset, setBaseAsset] = useState<CryptoAssetInfoOld | undefined>();
   const onRemoveBaseAsset = useCallback(() => setBaseAsset(undefined), []);
 
   const [desiredAsset, setDesiredAsset] = useState<
-    CryptoAssetInfo | undefined
+    CryptoAssetInfoOld | undefined
   >();
   const onRemoveDesiredAsset = useCallback(
     () => setDesiredAsset(undefined),

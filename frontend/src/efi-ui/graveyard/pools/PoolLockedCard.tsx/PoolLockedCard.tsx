@@ -6,7 +6,7 @@ import { useInterval } from "react-use";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { useCryptoDrawer } from "efi-ui/crypto/CryptoDrawer/useCryptoDrawer/useCryptoDrawer";
+import { useCryptoDrawer } from "efi-ui/graveyard/CryptoDrawer/useCryptoDrawer/useCryptoDrawer";
 import { TransactionForm } from "efi-ui/crypto/TransactionForm/TransactionForm";
 import {
   useElfContractApproveDeposit,

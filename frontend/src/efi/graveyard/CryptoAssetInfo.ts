@@ -1,6 +1,9 @@
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 
-export interface CryptoAssetInfo {
+/**
+ * @deprecated Use CryptoAsset instead
+ */
+export interface CryptoAssetInfoOld {
   /**
    * The full name of the currency, eg: "Ethereum".
    */
