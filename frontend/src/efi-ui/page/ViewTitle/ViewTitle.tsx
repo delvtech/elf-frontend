@@ -63,7 +63,7 @@ export const ViewTitle: FC<ViewTitleProps> = ({
 
       <div className={tw("flex")}>
         <WalletConnectionCard
-          className={tw("flex")}
+          className={tw("flex", "w-400")}
           account={account}
           active={active}
           chainId={chainId}

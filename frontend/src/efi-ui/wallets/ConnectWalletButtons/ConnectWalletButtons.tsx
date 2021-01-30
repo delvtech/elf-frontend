@@ -23,7 +23,15 @@ const iconStyle: CSSProperties = {
   width: 24,
 };
 
-export const ConnectWalletButtons: FC<{ onClick?: () => void }> = ({
+interface ConnectWalletButtonsProps {
+  fill?: boolean;
+  vertical?: boolean;
+  onClick?: () => void;
+}
+
+export const ConnectWalletButtons: FC<ConnectWalletButtonsProps> = ({
+  fill,
+  vertical,
   onClick,
 }) => {
   const { active, activate, deactivate } = useWeb3React<Web3Provider>();
@@ -77,30 +85,42 @@ export const ConnectWalletButtons: FC<{ onClick?: () => void }> = ({
 
   return (
     <div
-      className={tw("flex", "h-full", "w-full", "flex-wrap", "justify-center")}
+      data-testid="connect-wallet-buttons"
+      className={tw(
+        "flex",
+        { "flex-col": vertical, "flex-wrap": !vertical },
+        "h-full",
+        "w-full",
+        "justify-center"
+      )}
     >
       <ConnectWalletButton
+        fill={fill}
         icon={<MetamaskIcon style={iconStyle} />}
         name="Metamask"
         onClick={connectToMetaMask}
       />
       <ConnectWalletButton
+        fill={fill}
         icon={<WalletConnectIcon style={iconStyle} />}
         name="WalletConnect"
         onClick={connectToWalletConnect}
       />
       <ConnectWalletButton
+        fill={fill}
         iconClassName={tw("rounded", "overflow-hidden")}
         icon={<CoinbaseWalletIcon style={iconStyle} />}
         name="Coinbase"
         onClick={connectToWalletLink}
       />
       <ConnectWalletButton
+        fill={fill}
         icon={<TorusIcon style={iconStyle} />}
         name="Torus"
         onClick={connectToTorus}
       />
       <ConnectWalletButton
+        fill={fill}
         icon={
           <div className={tw("bg-white", "rounded", "p-1")}>
             <LedgerIcon style={iconStyle} />
@@ -110,6 +130,7 @@ export const ConnectWalletButtons: FC<{ onClick?: () => void }> = ({
         onClick={connectToLedger}
       />
       <ConnectWalletButton
+        fill={fill}
         icon={<FortmaticIcon style={iconStyle} />}
         name="Fortmatic"
         onClick={connectToFortmatic}

@@ -45,5 +45,5 @@ test("should render with option to connect wallet if no account is present", asy
 
   userEvent.click(button);
 
-  expect(screen.getByTestId("connect-wallet-dialog")).toBeVisible();
+  expect(screen.getByTestId("connect-wallet-buttons")).toBeVisible();
 });

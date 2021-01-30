@@ -1,4 +1,4 @@
-import React, { FC, Fragment, useCallback, useState } from "react";
+import React, { FC, useCallback, useState } from "react";
 
 import { Card, Classes, Colors, Elevation, Icon, Tag } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
@@ -12,7 +12,8 @@ import { isMainnet } from "efi/crypto/ethereum";
 import { formatChainName } from "efi/crypto/formatChainName";
 import { formatWalletAddress } from "efi/wallets/formatWalletAddress";
 
-import { ConnectWalletDialog } from "../ConnectWalletDialog/ConnectWalletDialog";
+import { Popover2 } from "@blueprintjs/popover2";
+import { ConnectWalletButtons } from "efi-ui/wallets/ConnectWalletButtons/ConnectWalletButtons";
 
 interface WalletConnectionCardProps {
   chainId: number | undefined;
@@ -39,7 +40,16 @@ export const WalletConnectionCard: FC<WalletConnectionCardProps> = ({
   const connectorMessage = connectorName ?? t`No wallet connection`;
 
   return (
-    <Fragment>
+    <Popover2
+      minimal
+      isOpen={isWalletDialogOpen}
+      onClose={closeWalletDialog}
+      content={
+        <div className={tw("w-400")}>
+          <ConnectWalletButtons fill vertical onClick={closeWalletDialog} />
+        </div>
+      }
+    >
       <Card
         className={classNames(tw("h-20", "flex", "items-center"), className)}
         interactive
@@ -54,55 +64,16 @@ export const WalletConnectionCard: FC<WalletConnectionCardProps> = ({
             connectorMessage={connectorMessage}
           />
         ) : (
-          <div
-            className={tw(
-              "flex",
-              "w-full",
-              "items-center",
-              "space-x-10",
-              "justify-between"
-            )}
-          >
-            <div
-              className={classNames(tw("flex", "space-x-4", "items-center"))}
-            >
-              <WalletJazzicon />
-
-              {/* button for a11y, this allows users to TAB through our UI */}
-              <button className={Classes.BUTTON_TEXT}>
-                <div className={tw("flex", "flex-col")}>
-                  <div
-                    className={tw("flex", "items-center", "justify-between")}
-                  >
-                    <span className={classNames(Classes.TEXT_LARGE)}>
-                      {account ? formatWalletAddress(account) : null}
-                    </span>
-                  </div>
-                  <div
-                    className={tw("flex", "items-center", "justify-between")}
-                  >
-                    <span className={classNames(Classes.TEXT_MUTED)}>
-                      {formatChainName(active, chainId)}
-                    </span>
-                  </div>
-                </div>
-              </button>
-            </div>
-            <Tag
-              minimal
-              large
-              icon={<Icon icon={IconNames.DOT} color={connectionStatusColor} />}
-            >
-              {connectorMessage}
-            </Tag>
-          </div>
+          <WalletConnectionSummary
+            account={account}
+            active={active}
+            chainId={chainId}
+            connectionStatusColor={connectionStatusColor}
+            connectorMessage={connectorMessage}
+          />
         )}
       </Card>
-      <ConnectWalletDialog
-        isOpen={isWalletDialogOpen}
-        onClose={closeWalletDialog}
-      />
-    </Fragment>
+    </Popover2>
   );
 };
 
@@ -122,7 +93,6 @@ const ConnectToBegin: FC<ConnectToBeginProps> = ({
       <button
         className={classNames(
           Classes.BUTTON_TEXT,
-          Classes.TEXT_LARGE,
           tw("flex-1", "justify-center", "items-center", "flex", "mr-5")
         )}
         style={{ color: isDarkMode ? Colors.BLUE5 : Colors.BLUE2 }}
@@ -133,6 +103,60 @@ const ConnectToBegin: FC<ConnectToBeginProps> = ({
         minimal
         large
         icon={<Icon icon={IconNames.DOT} color={statusColor} />}
+      >
+        {connectorMessage}
+      </Tag>
+    </div>
+  );
+};
+
+interface WalletSummaryProps {
+  account: string | null | undefined;
+  active: boolean;
+  chainId: number | undefined;
+  connectionStatusColor: string;
+  connectorMessage: string;
+}
+
+const WalletConnectionSummary: FC<WalletSummaryProps> = ({
+  account,
+  active,
+  chainId,
+  connectionStatusColor,
+  connectorMessage,
+}) => {
+  return (
+    <div
+      className={tw(
+        "flex",
+        "w-full",
+        "items-center",
+        "space-x-10",
+        "justify-between"
+      )}
+    >
+      <div className={classNames(tw("flex", "space-x-4", "items-center"))}>
+        <WalletJazzicon />
+
+        <button className={Classes.BUTTON_TEXT}>
+          <div className={tw("flex", "flex-col")}>
+            <div className={tw("flex", "items-center", "justify-between")}>
+              <span className={classNames(Classes.TEXT_LARGE)}>
+                {account ? formatWalletAddress(account) : null}
+              </span>
+            </div>
+            <div className={tw("flex", "items-center", "justify-between")}>
+              <span className={classNames(Classes.TEXT_MUTED)}>
+                {formatChainName(active, chainId)}
+              </span>
+            </div>
+          </div>
+        </button>
+      </div>
+      <Tag
+        minimal
+        large
+        icon={<Icon icon={IconNames.DOT} color={connectionStatusColor} />}
       >
         {connectorMessage}
       </Tag>

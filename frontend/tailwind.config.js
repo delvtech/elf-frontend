@@ -31,8 +31,9 @@ module.exports = {
     },
     spacing: {
       "3/10": "30%",
-      "300": "300px",
-      "500": "500px",
+      300: "300px",
+      400: "400px",
+      500: "500px",
       ...defaultTheme.spacing,
     },
 
