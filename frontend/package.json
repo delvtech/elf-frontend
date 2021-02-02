@@ -8,7 +8,7 @@
     "@blueprintjs/popover2": "^0.2.0",
     "@blueprintjs/select": "^3.15.4",
     "@ethersproject/abi": "^5.0.11",
-    "@ethersproject/bytes": "^5.0.9",
+    "@ethersproject/bytes": "^5.0.10",
     "@ethersproject/contracts": "^5.0.9",
     "@ethersproject/hash": "^5.0.11",
     "@ethersproject/providers": "^5.0.20",
