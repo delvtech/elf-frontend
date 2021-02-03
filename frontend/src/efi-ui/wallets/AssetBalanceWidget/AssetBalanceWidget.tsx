@@ -12,6 +12,7 @@ import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
 import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
 import { getQueryCombinedLoadingState } from "efi-ui/query/getQueryCombinedLoadingState";
 import { IconNames } from "@blueprintjs/icons";
+import tw from "efi-tailwindcss-classnames";
 
 interface AssetBalanceWidgetProps {
   account: string | null | undefined;
@@ -50,6 +51,7 @@ export const AssetBalanceWidget: FC<AssetBalanceWidgetProps> = ({
       icon={
         <Icon
           icon={IconNames.BANK_ACCOUNT}
+          className={tw("pr-4")}
           iconSize={48}
           color={Colors.GRAY1}
         />

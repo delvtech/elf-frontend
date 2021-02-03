@@ -9,6 +9,7 @@ import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useEthBalance } from "efi-ui/wallets/hooks/useEthBalance/useEthBalance";
 import { IconNames } from "@blueprintjs/icons";
 import { formatEth } from "efi/coins/ether/formatEth";
+import tw from "efi-tailwindcss-classnames";
 
 interface EthereumBalanceWidgetProps {
   library: Web3Provider | undefined;
@@ -35,6 +36,7 @@ export const EthereumBalanceWidget: FC<EthereumBalanceWidgetProps> = ({
           icon={IconNames.BANK_ACCOUNT}
           iconSize={48}
           color={Colors.GRAY1}
+          className={tw("pr-4")}
         />
       }
     />

@@ -82,7 +82,13 @@ export const InvestView: FC<InvestViewProps> = () => {
           className={tw("flex", "flex-col", "space-y-12")}
           style={{ width: 640 }}
         >
-          <div className={tw("grid", "grid-cols-3")}>
+          <div
+            className={tw("flex", {
+              "justify-between": !!account,
+              "space-x-8": !account,
+              "justify-end": !account,
+            })}
+          >
             {account && (
               <EthereumBalanceWidget library={library} account={account} />
             )}
@@ -92,6 +98,9 @@ export const InvestView: FC<InvestViewProps> = () => {
           <InvestCard
             library={library}
             account={account}
+            walletConnectionActive={active}
+            chainId={chainId}
+            connector={connector}
             baseAssets={baseAssets}
             yieldPositions={yieldPositions}
           />

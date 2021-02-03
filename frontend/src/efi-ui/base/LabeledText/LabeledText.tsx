@@ -27,6 +27,7 @@ interface LabeledTextProps {
 
   className?: string;
 
+  iconClassName?: string;
   textClassName?: string;
 }
 
@@ -37,12 +38,13 @@ export const LabeledText: FC<LabeledTextProps> = ({
   bold = false,
   className,
   textClassName,
+  iconClassName,
   icon,
   large,
 }) => {
   return (
-    <div className={tw("flex", "space-x-4", "items-center", "justify-end")}>
-      {icon}
+    <div className={tw("flex", "items-center")}>
+      <div className={iconClassName}>{icon}</div>
       <div
         className={classNames(
           tw("flex", "flex-col", "justify-center", "space-y-1"),

@@ -1,6 +1,6 @@
 import React, { FC, useCallback, useState } from "react";
 
-import { Card, Classes, Colors, Elevation, Icon, Tag } from "@blueprintjs/core";
+import { Card, Classes, Colors, Icon, Tag } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import classNames from "classnames";
 import { t } from "ttag";
@@ -52,8 +52,6 @@ export const WalletConnectionCard: FC<WalletConnectionCardProps> = ({
     >
       <Card
         className={classNames(tw("h-20", "flex", "items-center"), className)}
-        interactive
-        elevation={!active ? Elevation.TWO : undefined}
         onClick={openWalletDialog}
         style={getCardStyle(chainId, isDarkMode)}
       >
