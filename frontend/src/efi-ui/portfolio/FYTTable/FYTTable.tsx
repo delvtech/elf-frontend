@@ -14,7 +14,7 @@ const tableHeaders = [
   t`Asset`,
   t`Quantity`,
   t`Current exit value`,
-  t`Yield rate entered`,
+  t`Yield remaining`,
   t`Maturation date`,
   t`Actions`,
 ];

@@ -1,7 +1,6 @@
-import React, { FC, Fragment } from "react";
+import React, { FC, Fragment, useCallback } from "react";
 
-import { Button, Card, H3, NonIdealState } from "@blueprintjs/core";
-import { IconNames } from "@blueprintjs/icons";
+import { Card, H3 } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { RouteComponentProps } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
@@ -10,10 +9,13 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { useChangeTab } from "efi-ui/navigation/hooks/useChangeTab";
 import { Navigation } from "efi-ui/navigation/navigation";
-
-import { FYTTable } from "efi-ui/portfolio/FYTTable/FYTTable";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
+import { FYTTable } from "efi-ui/portfolio/FYTTable/FYTTable";
 import { PortfolioViewSubtitle } from "efi-ui/portfolio/PortfolioView/PortfolioViewSubtitle";
+
+import { NoFYTsInWalletNonIdealState } from "../../wallets/NoFYTsInWalletNonIdealState/NoFYTsInWalletNonIdealState";
+import { NoWalletConnectedNonIdealState } from "../../wallets/NoWalletConnectedNonIdealState/NoWalletConnectedNonIdealState";
+import { NoYCsInWalletNonIdealState } from "../../wallets/NoYCsInWalletNonIdealState/NoYCsInWalletNonIdealState";
 
 interface PortfolioViewProps extends RouteComponentProps {}
 export const PortfolioView: FC<PortfolioViewProps> = () => {
@@ -26,10 +28,11 @@ export const PortfolioView: FC<PortfolioViewProps> = () => {
   } = useWeb3React<Web3Provider>();
 
   const changeTab = useChangeTab();
+  const goToMint = useCallback(() => changeTab(Navigation.MINT), [changeTab]);
 
   // TODO: Stubbed values
   const hasFYTsInWallet = !!account;
-  const hasYCsInWallet = !!account;
+  const hasYCsInWallet = !account;
 
   return (
     <div
@@ -72,7 +75,7 @@ export const PortfolioView: FC<PortfolioViewProps> = () => {
                   {hasFYTsInWallet ? (
                     <FYTTable />
                   ) : (
-                    <NoFYTsInWalletNonIdealState changeTab={changeTab} />
+                    <NoFYTsInWalletNonIdealState onGoToMint={goToMint} />
                   )}
                 </Card>
               </div>
@@ -92,7 +95,7 @@ export const PortfolioView: FC<PortfolioViewProps> = () => {
                   {hasYCsInWallet ? (
                     <FYTTable />
                   ) : (
-                    <NoYCsInWalletNonIdealState changeTab={changeTab} />
+                    <NoYCsInWalletNonIdealState onGoToMint={goToMint} />
                   )}
                 </Card>
               </div>
@@ -101,83 +104,5 @@ export const PortfolioView: FC<PortfolioViewProps> = () => {
         </div>
       </div>
     </div>
-  );
-};
-
-const NoFYTsInWalletNonIdealState: FC<{
-  changeTab: (tabId: Navigation) => void;
-}> = ({ changeTab }) => {
-  return (
-    <NonIdealState
-      icon={IconNames.BANK_ACCOUNT}
-      description={t`This wallet does not contain any Fixed Yield Tokens.`}
-      action={
-        <Button
-          outlined
-          large
-          onClick={() => {
-            changeTab(Navigation.MINT);
-          }}
-        >{t`Go to Mint`}</Button>
-      }
-    />
-  );
-};
-
-const NoYCsInWalletNonIdealState: FC<{
-  changeTab: (tabId: Navigation) => void;
-}> = ({ changeTab }) => {
-  return (
-    <NonIdealState
-      icon={IconNames.BANK_ACCOUNT}
-      description={t`This wallet does not contain any Yield Coupons.`}
-      action={
-        <Button
-          outlined
-          large
-          onClick={() => {
-            changeTab(Navigation.MINT);
-          }}
-        >{t`Go to Mint`}</Button>
-      }
-    />
-  );
-};
-
-const NoWalletConnectedNonIdealState: FC<{}> = () => {
-  const description = (
-    <div
-      className={tw(
-        "md:text-left",
-        "flex",
-        "flex-col",
-        "justify-center",
-        "items-center",
-        "gap-y-5"
-      )}
-    >
-      <span>{t`Connecting your wallet lets Element.fi do a few things:`}</span>
-      <ul className={tw("w-9/12", "list-disc", "text-left")}>
-        <li className={tw("mb-3")}>
-          {t`View and display your crypto balances`}
-        </li>
-        <li>{t`Initialize Ethereum transactions on your behalf`}</li>
-      </ul>
-    </div>
-  );
-
-  return (
-    <NonIdealState
-      icon={IconNames.SEND_TO_GRAPH}
-      title={t`No wallet connected`}
-      description={description}
-      action={
-        <Button
-          outlined
-          large
-          onClick={() => {}}
-        >{t`Connect wallet to begin`}</Button>
-      }
-    />
   );
 };
