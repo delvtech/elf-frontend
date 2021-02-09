@@ -58,7 +58,7 @@
     "d3-array": "^2.11.0",
     "d3-time-format": "^3.0.0",
     "ethereum-waffle": "^3.2.2",
-    "ethers": "^5.0.29",
+    "ethers": "^5.0.30",
     "fuzzaldrin-plus": "^0.6.0",
     "graphql": "^15.5.0",
     "graphql-request": "^3.4.0",
