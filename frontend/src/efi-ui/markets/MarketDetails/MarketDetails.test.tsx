@@ -1,24 +1,18 @@
 import React from "react";
 
 import { renderWithClient } from "efi-ui/testing/renderWithClient";
-import { Pool } from "efi/pools/Pool";
 import { createQueryClient } from "efi/queryClient";
-import { MarketDetailsCard } from "efi-ui/markets/MarketDetailsCard/MarketDetailsCard";
+import { MarketDetails } from "efi-ui/markets/MarketDetails/MarketDetails";
+import { stubbedMarkets } from "efi/markets/stubbedMarkets";
+import { Market } from "efi/markets/Market";
 
-const elfPool: Pool = {
-  id: "0xDEADBEEF",
-  name: "Elf Pool",
-  description: "Elf Pool for exchanging FYTs",
-  stakingAsset: "ETH",
-  strategyAsset: "DAI",
-  heldAssets: ["yDAI", "yETH"],
-};
+const market: Market = stubbedMarkets[0];
 
 test("should render information about the market", async () => {
   const queryClient = createQueryClient();
   const { getByText } = await renderWithClient(
     queryClient,
-    <MarketDetailsCard pool={elfPool} />
+    <MarketDetails market={market} />
   );
 
   expect(getByText("Total Liquidity")).toBeVisible();
