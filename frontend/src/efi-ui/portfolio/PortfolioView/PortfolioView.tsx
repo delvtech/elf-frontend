@@ -1,6 +1,6 @@
 import React, { FC, ReactNode, useCallback, useState } from "react";
 
-import { Card, Tab, Tabs } from "@blueprintjs/core";
+import { Tab, Tabs } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { RouteComponentProps } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
@@ -8,17 +8,14 @@ import classNames from "classnames";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { useNavigation } from "efi-ui/navigation/hooks/useNavigation";
-import { Navigation } from "efi-ui/navigation/navigation";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
-import { FYTTable } from "efi-ui/portfolio/FYTTable/FYTTable";
+import { FYTPortfolio } from "efi-ui/portfolio/FYTPortfolio/FYTPortfolio";
+import { LiquidityPositionPortfolio } from "efi-ui/portfolio/LiquidityPositionPortfolio/LiquidityPositionPortfolio";
 import { PortfolioAssetLabel } from "efi-ui/portfolio/PortfolioView/PortfolioAssetLabel";
 import { PortfolioBalanceSummaryCard } from "efi-ui/portfolio/PortfolioView/PortfolioBalanceSummaryCard";
 import { PortfolioViewSubtitle } from "efi-ui/portfolio/PortfolioView/PortfolioViewSubtitle";
 import styles from "efi-ui/portfolio/PortfolioView/styles.module.css";
-import { NoFYTsInWalletNonIdealState } from "efi-ui/wallets/NoFYTsInWalletNonIdealState/NoFYTsInWalletNonIdealState";
-import { NoWalletConnectedNonIdealState } from "efi-ui/wallets/NoWalletConnectedNonIdealState/NoWalletConnectedNonIdealState";
-import { NoYCsInWalletNonIdealState } from "efi-ui/wallets/NoYCsInWalletNonIdealState/NoYCsInWalletNonIdealState";
+import { YCPortfolio } from "efi-ui/portfolio/YCPortfolio/YCPortfolio";
 
 interface PortfolioViewProps extends RouteComponentProps {}
 
@@ -36,35 +33,21 @@ export const PortfolioView: FC<PortfolioViewProps> = () => {
     connector,
     library,
   } = useWeb3React<Web3Provider>();
-  const { changeTab } = useNavigation();
-  const goToMint = useCallback(() => changeTab(Navigation.MINT), [changeTab]);
   const portfolioTabs: PortfolioTab[] = [
     {
       id: "fixed-yield-tokens",
       name: t`Fixed Yield Tokens`,
-      contentRenderer: () => (
-        <Card className={tw("flex-1", "p-8")}>
-          <FYTTable account={account} />
-        </Card>
-      ),
+      contentRenderer: () => <FYTPortfolio account={account} />,
     },
     {
       id: "yield-coupons",
       name: t`Yield Coupons`,
-      contentRenderer: () => (
-        <Card className={tw("flex-1", "p-10")}>
-          <NoYCsInWalletNonIdealState onGoToMint={goToMint} />
-        </Card>
-      ),
+      contentRenderer: () => <YCPortfolio account={account} />,
     },
     {
       id: "liquidity-positions",
       name: t`Liquidity positions`,
-      contentRenderer: () => (
-        <Card className={tw("flex-1", "p-10")}>
-          <NoFYTsInWalletNonIdealState onGoToMint={goToMint} />
-        </Card>
-      ),
+      contentRenderer: () => <LiquidityPositionPortfolio account={account} />,
     },
   ];
 
@@ -101,54 +84,48 @@ export const PortfolioView: FC<PortfolioViewProps> = () => {
         />
 
         <div className={tw("flex", "w-full", "h-full", "space-x-10")}>
-          {!account ? (
-            <Card className={tw("flex", "flex-1", "p-10")}>
-              <NoWalletConnectedNonIdealState />
-            </Card>
-          ) : (
-            <div className={tw("flex", "flex-col", "w-full")}>
-              <span className={classNames("h4", tw("mb-4"))}>{t`Assets`}</span>
-              <div className={tw("flex", "space-x-10", "h-full", "w-full")}>
-                {/* Left hand side */}
-                <div className={tw("flex", "flex-col", "space-y-4", "w-400")}>
-                  <div className={tw("flex", "flex-1")}>
-                    <div
-                      className={tw(
-                        "flex",
-                        "flex-col",
-                        "space-y-10",
-                        "flex-1",
-                        "justify-between"
-                      )}
+          <div className={tw("flex", "flex-col", "w-full")}>
+            <span className={classNames("h4", tw("mb-4"))}>{t`Assets`}</span>
+            <div className={tw("flex", "space-x-10", "h-full", "w-full")}>
+              {/* Left hand side */}
+              <div className={tw("flex", "flex-col", "space-y-4", "w-400")}>
+                <div className={tw("flex", "flex-1")}>
+                  <div
+                    className={tw(
+                      "flex",
+                      "flex-col",
+                      "space-y-10",
+                      "flex-1",
+                      "justify-between"
+                    )}
+                  >
+                    <Tabs
+                      vertical
+                      large
+                      className={classNames(tw("w-full"), styles.assetTabs)}
+                      id="portfolio-tabs"
+                      onChange={onChangeTab}
+                      selectedTabId={activePortfolioTabId}
                     >
-                      <Tabs
-                        vertical
-                        large
-                        className={classNames(tw("w-full"), styles.assetTabs)}
-                        id="portfolio-tabs"
-                        onChange={onChangeTab}
-                        selectedTabId={activePortfolioTabId}
-                      >
-                        {portfolioTabs.map(({ id, name }) => (
-                          <Tab key={id} id={id} className={tw("w-full")}>
-                            <PortfolioAssetLabel id={id} name={name} />
-                          </Tab>
-                        ))}
-                      </Tabs>
-                    </div>
-                  </div>
-
-                  <div className={tw("space-y-4")}>
-                    <span className="h4">{t`Balance summary`}</span>
-                    <PortfolioBalanceSummaryCard />
+                      {portfolioTabs.map(({ id, name }) => (
+                        <Tab key={id} id={id} className={tw("w-full")}>
+                          <PortfolioAssetLabel id={id} name={name} />
+                        </Tab>
+                      ))}
+                    </Tabs>
                   </div>
                 </div>
-                <div className={tw("flex", "flex-1", "w-full")}>
-                  {activeTabContent}
+
+                <div className={tw("space-y-4")}>
+                  <span className="h4">{t`Balance summary`}</span>
+                  <PortfolioBalanceSummaryCard />
                 </div>
               </div>
+              <div className={tw("flex", "flex-1", "w-full")}>
+                {activeTabContent}
+              </div>
             </div>
-          )}
+          </div>
         </div>
       </div>
     </div>

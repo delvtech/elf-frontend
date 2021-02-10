@@ -12,9 +12,9 @@ import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 
 import styles from "efi-ui/base/table.module.css";
 
-interface FYTTableRowProps {}
+interface YCTableRowProps {}
 
-export const FYTTableRow: FC<FYTTableRowProps> = () => {
+export const YCTableRow: FC<YCTableRowProps> = () => {
   const { isDarkMode } = useDarkMode();
 
   const tableRowClassName = isDarkMode ? styles.tableRowDark : styles.tableRow;
@@ -35,27 +35,41 @@ export const FYTTableRow: FC<FYTTableRowProps> = () => {
     <div
       className={classNames(
         tableRowClassName,
-        tw("grid", "grid-cols-6", "w-full", "p-4")
+        tw("grid", "grid-cols-8", "w-full", "p-4")
       )}
     >
       {/* Asset */}
       <div>
         <LabeledText
-          text={t`Fixed Yield Ether`}
+          text={t`Yield Coupon Ether`}
           label={jt`via ${tableRowLink}`}
         />
       </div>
       {/* Quantity */}
       <div>
-        <LabeledText text={t`100 fyETH`} label="" />
+        <LabeledText text={t`100 ycETH`} label="" />
       </div>
 
-      {/* Current value */}
+      {/* Current exit value */}
       <div>
-        <LabeledText text={t`98.01893 ETH`} label={t`98,105.23 USD`} />
+        <LabeledText text={t`8.01893 ETH`} label={t`8,105.23 USD`} />
       </div>
 
-      {/* Yield rate*/}
+      {/* Current acc. value */}
+      <div>
+        <LabeledText text={t`1.013 ETH`} label={t`1,105.23 USD`} />
+      </div>
+
+      {/* Yield rate YC */}
+      <div>
+        <LabeledText
+          text={t`0.32% daily`}
+          label={t`4.21% monthly`}
+          subLabel={t`12.21% yearly`}
+        />
+      </div>
+
+      {/* Yield rate Underlying */}
       <div>
         <LabeledText
           text={t`0.32% daily`}

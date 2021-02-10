@@ -1,21 +1,23 @@
-import React, { FC } from "react";
+import React, { FC, useCallback } from "react";
+
 import { Button, NonIdealState } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { t } from "ttag";
 
-interface NoFYTsInWalletNonIdealStateProps {
-  onGoToMint: () => void;
-}
+import { useNavigation } from "efi-ui/navigation/hooks/useTab";
+import { Navigation } from "efi-ui/navigation/navigation";
 
-export const NoFYTsInWalletNonIdealState: FC<NoFYTsInWalletNonIdealStateProps> = ({
-  onGoToMint,
-}) => {
+interface NoFYTsInWalletNonIdealStateProps {}
+
+export const NoFYTsInWalletNonIdealState: FC<NoFYTsInWalletNonIdealStateProps> = () => {
+  const { changeTab } = useNavigation();
+  const goToMint = useCallback(() => changeTab(Navigation.MINT), [changeTab]);
   return (
     <NonIdealState
       icon={IconNames.BANK_ACCOUNT}
       description={t`This wallet does not contain any Fixed Yield Tokens.`}
       action={
-        <Button outlined large onClick={onGoToMint}>{t`Go to Mint`}</Button>
+        <Button outlined large onClick={goToMint}>{t`Go to Mint`}</Button>
       }
     />
   );

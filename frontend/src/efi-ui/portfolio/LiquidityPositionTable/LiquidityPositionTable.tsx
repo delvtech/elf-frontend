@@ -3,27 +3,26 @@ import React, { FC } from "react";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { FYTTableRow } from "efi-ui/portfolio/FYTTable/FYTTableRow";
+import { LiquidityPositionTableRow } from "efi-ui/portfolio/LiquidityPositionTable/LiquidityPositionTableRow";
 
-interface FYTTableProps {
+interface LiquidityPositionTableProps {
   account: string | null | undefined;
 }
 
 const tableHeaders = [
-  t`Asset`,
+  t`Pool name`,
   t`Quantity`,
-  t`Current exit value`,
-  t`Yield remaining`,
-  t`Maturation date`,
+  t`Total fees earned`,
+  t`Share of pool`,
   t`Quick actions`,
 ];
 
-export const FYTTable: FC<FYTTableProps> = () => {
+export const LiquidityPositionTable: FC<LiquidityPositionTableProps> = () => {
   return (
     <div data-testid="fyt-table" className={tw("flex", "flex-col", "w-full")}>
       {/* Table header */}
       <div
-        className={tw("grid", "grid-cols-6", "px-6", "pb-3", "mb-2", "w-full")}
+        className={tw("grid", "grid-cols-5", "px-6", "pb-3", "mb-2", "w-full")}
       >
         {tableHeaders.map((label) => (
           <span key={label}>{label}</span>
@@ -31,7 +30,7 @@ export const FYTTable: FC<FYTTableProps> = () => {
       </div>
 
       {/* Table row */}
-      <FYTTableRow />
+      <LiquidityPositionTableRow />
     </div>
   );
 };
