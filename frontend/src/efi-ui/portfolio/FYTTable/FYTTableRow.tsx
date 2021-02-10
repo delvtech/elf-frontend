@@ -1,81 +1,101 @@
-import { AnchorButton, Button } from "@blueprintjs/core";
-import { Tooltip2 } from "@blueprintjs/popover2";
 import React, { FC } from "react";
-import { t } from "ttag";
+
+import { AnchorButton, Button, Icon } from "@blueprintjs/core";
+import { IconNames } from "@blueprintjs/icons";
+import { Tooltip2 } from "@blueprintjs/popover2";
+import classNames from "classnames";
+import { jt, t } from "ttag";
+
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { LabeledProgressBar } from "../../base/LabeledProgressBar/LabeledProgressBar";
+import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 
 import styles from "./FYTTableRow.module.css";
-interface FYTTableRowProps {}
-export const FYTTableRow: FC<FYTTableRowProps> = () => {
-  return (
-    <tr className={styles.tableRow}>
-      {/* Asset */}
-      <td>
-        <LabeledText text="fyETH" label={t`Fixed Yield Ether`} />
-      </td>
 
+interface FYTTableRowProps {}
+
+export const FYTTableRow: FC<FYTTableRowProps> = () => {
+  const { isDarkMode } = useDarkMode();
+
+  const tableRowClassName = isDarkMode ? styles.tableRowDark : styles.tableRow;
+
+  const tableRowLink = (
+    <a
+      key="table-row-link"
+      href="https://etherscan.io/token/0xe1237aa7f535b0cc33fd973d66cbf830354d16c7"
+    >
+      {t`yEth Vault`}{" "}
+      <sup>
+        <Icon icon={IconNames.SHARE} iconSize={8} />
+      </sup>
+    </a>
+  );
+
+  return (
+    <div
+      className={classNames(
+        tableRowClassName,
+        tw("grid", "grid-cols-6", "w-full", "p-4")
+      )}
+    >
+      {/* Asset */}
+      <div>
+        <LabeledText
+          text={t`Fixed Yield Ether`}
+          label={jt`via ${tableRowLink}`}
+        />
+      </div>
       {/* Quantity */}
-      <td>
-        <div className={tw("flex", "h-full", "w-full")}>{t`100 fyETH`}</div>
-      </td>
+      <div>
+        <LabeledText text={t`100 fyETH`} label="" />
+      </div>
 
       {/* Current value */}
-      <td>
+      <div>
         <LabeledText text={t`98.01893 ETH`} label={t`98,105.23 USD`} />
-      </td>
+      </div>
 
       {/* Yield rate*/}
-      <td>
+      <div>
         <LabeledText
           text={t`0.32% daily`}
           label={t`4.21% monthly`}
           subLabel={t`12.21% yearly`}
         />
-      </td>
+      </div>
 
       {/* Maturation date */}
-      <td>
-        <LabeledProgressBar
-          label={t` January 15, 2021`}
-          progressValue={0.75}
-          helperText={t`3 days, 6 hours, 32 minutes left`}
+      <div>
+        <LabeledText
+          text={t` January 15, 2021`}
+          label={t`3 days, 6 hours left `}
         />
-      </td>
+      </div>
 
       {/* Quick Actions */}
-      <td>
-        <div
-          className={tw(
-            "flex",
-            "h-full",
-            "w-full",
-            "items-center",
-            "space-x-2"
-          )}
+      <div className={tw("flex", "flex-col", "h-full", "w-full", "space-y-2")}>
+        <Button outlined>{t`Sell`}</Button>
+        <Button outlined>{t`Stake`}</Button>
+        <Tooltip2
+          inheritDarkTheme={false}
+          content={t`This asset can be claimed after it has reached maturity.`}
         >
-          <Tooltip2
-            inheritDarkTheme={false}
-            content={t`This asset can be claimed after it has reached maturity.`}
+          <AnchorButton
+            fill
+            outlined
+            disabled={
+              /*
+               * See Blueprint docs, we have to use an AnchorButton for a11y
+               * when putting a tooltip on a disabled button
+               */
+              true
+            }
           >
-            <AnchorButton
-              outlined
-              disabled={
-                /*
-                 * See Blueprint docs, we have to use an AnchorButton for a11y
-                 * when putting a tooltip on a disabled button
-                 */
-                true
-              }
-            >
-              {t`Claim`}
-            </AnchorButton>
-          </Tooltip2>
-          <Button outlined>{t`Sell`}</Button>
-          <Button outlined>{t`Stake`}</Button>
-        </div>
-      </td>
-    </tr>
+            {t`Claim`}
+          </AnchorButton>
+        </Tooltip2>
+        <Button outlined>{t`Go to market`}</Button>
+      </div>
+    </div>
   );
 };

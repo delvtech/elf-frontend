@@ -6,7 +6,7 @@ import App from "efi-ui/app/App/App";
 
 import { renderWithAppProviders } from "efi-ui/testing/renderWithAppProviders";
 
-test.only("full app rendering/navigating", async () => {
+test.skip("full app rendering/navigating", async () => {
   const {
     container,
     getByTestId,
@@ -30,7 +30,7 @@ test.only("full app rendering/navigating", async () => {
   expect(getByTestId("mint-view")).toBeVisible();
 });
 
-test("landing on a bad page", () => {
+test.skip("landing on a bad page", () => {
   const { container } = renderWithAppProviders(<App />, {
     route: "/something-that-does-not-match",
   });

@@ -1,14 +1,14 @@
 import React, { FC } from "react";
 
-import { Classes, HTMLTable } from "@blueprintjs/core";
 import classNames from "classnames";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { FYTTableRow } from "efi-ui/portfolio/FYTTable/FYTTableRow";
 
-import { FYTTableRow } from "./FYTTableRow";
-
-interface FYTTableProps {}
+interface FYTTableProps {
+  account: string | null | undefined;
+}
 
 const tableHeaders = [
   t`Asset`,
@@ -16,27 +16,25 @@ const tableHeaders = [
   t`Current exit value`,
   t`Yield remaining`,
   t`Maturation date`,
-  t`Actions`,
+  t`Quick actions`,
 ];
 
 export const FYTTable: FC<FYTTableProps> = () => {
   return (
-    <HTMLTable striped className={tw("w-full")}>
-      <thead>
-        <tr>
-          {tableHeaders.map((label) => (
-            <th key={label}>
-              <span className={classNames(tw("pl-2"), Classes.TEXT_MUTED)}>
-                {label}
-              </span>
-            </th>
-          ))}
-        </tr>
-      </thead>
-      <tbody className={Classes.TEXT_LARGE}>
-        <FYTTableRow />
-        <FYTTableRow />
-      </tbody>
-    </HTMLTable>
+    <div data-testid="fyt-table" className={tw("flex", "flex-col", "w-full")}>
+      {/* Table header */}
+      <div
+        className={tw("grid", "grid-cols-6", "px-6", "pb-3", "mb-2", "w-full")}
+      >
+        {tableHeaders.map((label) => (
+          <div key={label}>
+            <span className={classNames(tw())}>{label}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Table row */}
+      <FYTTableRow />
+    </div>
   );
 };

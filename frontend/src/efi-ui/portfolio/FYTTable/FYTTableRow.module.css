@@ -1,13 +1,7 @@
-.tableRow td:first-child {
-  padding-left: 1.25rem;
-  padding-right: 1.25rem;
-  padding-top: 1.25rem;
-  padding-bottom: 1.25rem;
+.tableRow:nth-child(even) {
+  background: var(--bp3-striped-table-row-color);
 }
 
-.tableRow td:not(:first-child) {
-  padding-left: 1.25rem;
-  padding-right: 1.25rem;
-  padding-top: 1.25rem;
-  padding-bottom: 1.25rem;
+.tableRowDark:nth-child(even) {
+  background: var(--bp3-striped-table-row-dark-color);
 }

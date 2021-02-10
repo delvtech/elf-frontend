@@ -40,6 +40,9 @@
    */
   --bp3-dark-navbar-font-color: #f5f8fa;
 
+  --bp3-striped-table-row-color: rgba(191, 204, 214, 0.15);
+  --bp3-striped-table-row-dark-color: rgba(92, 112, 128, 0.15);
+
   /*
    * Taken from Blueprint, these are intent colors used to stylize text and border. In order, the
    * colors are equivalent to:

@@ -18,7 +18,7 @@ interface LabeledTextProps {
 
   large?: boolean;
 
-  subLabel?: string;
+  subLabel?: ReactNode;
 
   /**
    * Louder styling for the text
@@ -40,7 +40,7 @@ export const LabeledText: FC<LabeledTextProps> = ({
   textClassName,
   iconClassName,
   icon,
-  large,
+  large = false,
 }) => {
   return (
     <div className={tw("flex", "items-center")}>
