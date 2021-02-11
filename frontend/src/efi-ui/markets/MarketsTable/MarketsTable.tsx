@@ -22,9 +22,11 @@ import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { Market } from "efi/markets/Market";
 import { useInterval } from "react-use";
 import { getTimeLeft } from "efi/base/time";
+import { BPool } from "elf-contracts/types/BPool";
 
 interface MarketsTableProps {
   markets: Market[];
+  marketContracts: BPool[];
   className?: string;
 }
 
