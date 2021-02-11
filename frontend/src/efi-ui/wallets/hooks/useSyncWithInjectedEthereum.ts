@@ -23,11 +23,6 @@ export function useSyncWithInjectedEthereum() {
       return;
     }
 
-    // MetaMask: MetaMask will soon stop reloading pages on network change.
-    // For more information, see: https://docs.metamask.io/guide/ethereum-provider.html#ethereum-autorefreshonnetworkchange
-    // Set 'ethereum.autoRefreshOnNetworkChange' to 'false' to silence this warning.
-    ethereum.autoRefreshOnNetworkChange = false;
-
     const handleChainChanged = (chainId: ChainId) => {
       console.warn("chainChanged", chainId);
       activate(injectedConnector);
