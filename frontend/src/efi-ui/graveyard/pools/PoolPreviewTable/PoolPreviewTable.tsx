@@ -14,7 +14,7 @@ import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
 import { useTokenTotalSupply } from "efi-ui/token/hooks/useTokenTotalSupply";
 import { formatEth } from "efi/coins/ether/formatEth";
 import { elfContract } from "efi/contracts/Elf";
-import { Pool } from "efi/pools/Pool";
+import { Pool } from "efi/graveyard/pools/Pool";
 
 interface PoolPreviewTableProps {
   pools: Pool[];

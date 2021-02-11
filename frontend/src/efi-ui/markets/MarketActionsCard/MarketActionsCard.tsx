@@ -7,13 +7,13 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { TradePanel } from "efi-ui/crypto/TradePanel/TradePanel";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
-import { Pool } from "efi/pools/Pool";
+import { Market } from "efi/markets/Market";
 
 interface MarketActionsCardProps {
-  pool: Pool;
+  market: Market;
 }
 
-export const MarketActionsCard: FC<MarketActionsCardProps> = ({ pool }) => {
+export const MarketActionsCard: FC<MarketActionsCardProps> = ({ market }) => {
   return (
     <div className={tw("flex", "flex-col", "flex-1", "h-500", "w-3/10")}>
       <div className={tw("mb-2", "space-x-4")}>

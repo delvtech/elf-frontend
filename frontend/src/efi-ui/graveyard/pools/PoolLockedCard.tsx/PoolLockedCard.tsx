@@ -40,7 +40,7 @@ import { formatEthBalance } from "efi/crypto/formatEthBalance";
 import { StakingAssets } from "efi/crypto/stakingAssets";
 import { TokenBalance } from "efi/crypto/TokenBalance";
 import { TokenContractSymbols } from "efi/crypto/TokenContractSymbols";
-import { Pool } from "efi/pools/Pool";
+import { Pool } from "efi/graveyard/pools/Pool";
 
 interface PoolLockedCardProps {
   pool: Pool;
