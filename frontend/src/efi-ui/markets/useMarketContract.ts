@@ -9,19 +9,18 @@ import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 /**
  * returns a new instance of the market contract.
  * @param { string } marketAddress the contract address of the market.
+ * @param { Signer | Provider } signerOrProvider optionally pass a signer if transactions need to be
+ * signed.  a default provider is supplied to allow read operations.
  */
 export const useMarketContract = (
   marketAddress: string,
   signerOrProvider?: Signer | Provider
 ) => {
-  const marketContract = useMemo(
-    () =>
-      BPool__factory.connect(
-        marketAddress,
+  const signer = signerOrProvider ?? jsonRpcProvider;
 
-        signerOrProvider ?? jsonRpcProvider
-      ),
-    [marketAddress, signerOrProvider]
+  const marketContract = useMemo(
+    () => BPool__factory.connect(marketAddress, signer),
+    [marketAddress, signer]
   );
 
   return marketContract;
