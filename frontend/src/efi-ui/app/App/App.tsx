@@ -1,13 +1,12 @@
 import React, { FC, Fragment } from "react";
 import { ReactQueryDevtools } from "react-query/devtools";
 
-import { LocationProvider, Router } from "@reach/router";
+import { LocationProvider, Redirect, Router } from "@reach/router";
 import classNames from "classnames";
 
 import { tw } from "efi-tailwindcss-classnames";
 import { ExchangeView } from "efi-ui/exchange/ExchangeView/ExchangeView";
 import { FAQView } from "efi-ui/faq/FAQView";
-import { HomeView } from "efi-ui/home/HomeView";
 import { InvestView } from "efi-ui/invest/InvestView/InvestView";
 import { MarketView } from "efi-ui/markets/MarketView/MarketView";
 import { MintView } from "efi-ui/mint/MintView/MintView";
@@ -53,11 +52,7 @@ const App: FC<AppProps> = () => {
         </LocationProvider>
 
         <Router className={contentClassName}>
-          <HomeView path="/" />
-
-          {/* <PulseView path={Navigation.PULSE} />
-          <PoolsView path={Navigation.POOLS} />
-          <PoolView path={`${Navigation.POOLS}/:poolId`} /> */}
+          <Redirect noThrow from="/" to={Navigation.INVEST} />
 
           <PortfolioView path={Navigation.PORTFOLIO} />
           <InvestView path={Navigation.INVEST} />
