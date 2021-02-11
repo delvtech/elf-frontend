@@ -1,10 +1,11 @@
+import { QueryObserverResult } from "react-query";
+
 import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
 import { BigNumber } from "ethers";
-import { QueryObserverResult } from "react-query";
 
+import { useTokenBalanceOld } from "efi-ui/graveyard/useTokenBalanceOld/useTokenBalanceOld";
 import { useEthBalance } from "efi-ui/wallets/hooks/useEthBalance/useEthBalance";
-import { useTokenBalanceOld } from "efi-ui/token/hooks/useTokenBalanceOld/useTokenBalanceOld";
 import { TokenBalance } from "efi/crypto/TokenBalance";
 
 export interface WalletBalances {

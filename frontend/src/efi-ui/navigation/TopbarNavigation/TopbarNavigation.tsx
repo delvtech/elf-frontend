@@ -1,22 +1,20 @@
+import React, { FC } from "react";
+
 import {
   Alignment,
   AnchorButton,
-  Button,
   Navbar,
   NavbarGroup,
   NavbarHeading,
-  Popover,
   Tab,
   Tabs,
 } from "@blueprintjs/core";
 import classNames from "classnames";
-import React, { FC } from "react";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { Navigation } from "efi-ui/navigation/navigation";
 import { PrefsMenuButton } from "efi-ui/prefs/PrefsMenuButton/PrefsMenuButton";
-import WalletSummary from "efi-ui/wallets/WalletSummary/WalletSummary";
 
 import styles from "./TopbarNavigation.module.css";
 
@@ -49,12 +47,6 @@ export const TopbarNavigation: FC<TopbarNavigationProps> = ({
               <strong>Element.fi</strong>
             </AnchorButton>
           </NavbarHeading>
-        </NavbarGroup>
-
-        <NavbarGroup className={tw("flex-1", "justify-center")}>
-          <Popover minimal content={<WalletSummary />}>
-            <Button minimal outlined text="Wallet" />
-          </Popover>
         </NavbarGroup>
 
         <NavbarGroup align={Alignment.RIGHT}>

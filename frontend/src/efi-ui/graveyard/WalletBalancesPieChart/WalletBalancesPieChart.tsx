@@ -5,8 +5,8 @@ import { PieChart, PieData } from "efi-ui/charts/PieChart/PieChart";
 import { useElfContractBalance } from "efi-ui/graveyard/pools/hooks/useElfContract";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { getQueryCombinedStatus } from "efi-ui/query/getQueryCombinedStatus";
-import { useWallet } from "efi-ui/wallets/hooks/useWallet";
-import { useWalletBalances } from "efi-ui/wallets/hooks/useWalletBalance";
+import { useWallet } from "efi-ui/graveyard/useWallet";
+import { useWalletBalances } from "efi-ui/graveyard/useWalletBalance";
 import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
 
 interface WalletBalancesPieChartProps {}

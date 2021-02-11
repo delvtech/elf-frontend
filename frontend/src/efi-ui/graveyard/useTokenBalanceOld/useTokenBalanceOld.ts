@@ -1,8 +1,8 @@
 import { BigNumber } from "ethers";
 
 import { ComputedQueryResult } from "efi-ui/base/ComputedQueryResult";
-import { useTokenBalanceOfOld } from "efi-ui/token/hooks/useTokenBalanceOfOld";
-import { useTokenDecimalsOld } from "efi-ui/token/hooks/useTokenDecimalsOld";
+import { useTokenBalanceOfOld } from "efi-ui/graveyard/useTokenBalanceOfOld";
+import { useTokenDecimalsOld } from "efi-ui/graveyard/useTokenDecimalsOld";
 import { TokenBalance } from "efi/crypto/TokenBalance";
 import { TokenContractSymbols } from "efi/crypto/TokenContractSymbols";
 
