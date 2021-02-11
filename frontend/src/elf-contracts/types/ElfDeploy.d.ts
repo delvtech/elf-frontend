@@ -24,13 +24,16 @@ interface ElfDeployInterface extends ethers.utils.Interface {
   functions: {
     "changeGovernance(address)": FunctionFragment;
     "config()": FunctionFragment;
-    "elf()": FunctionFragment;
+    "elfUsdc()": FunctionFragment;
+    "elfWeth()": FunctionFragment;
     "factory()": FunctionFragment;
     "init()": FunctionFragment;
     "usdc()": FunctionFragment;
     "weth()": FunctionFragment;
     "yusdc()": FunctionFragment;
     "yusdcAsset()": FunctionFragment;
+    "yweth()": FunctionFragment;
+    "ywethAsset()": FunctionFragment;
   };
 
   encodeFunctionData(
@@ -38,7 +41,8 @@ interface ElfDeployInterface extends ethers.utils.Interface {
     values: [string]
   ): string;
   encodeFunctionData(functionFragment: "config", values?: undefined): string;
-  encodeFunctionData(functionFragment: "elf", values?: undefined): string;
+  encodeFunctionData(functionFragment: "elfUsdc", values?: undefined): string;
+  encodeFunctionData(functionFragment: "elfWeth", values?: undefined): string;
   encodeFunctionData(functionFragment: "factory", values?: undefined): string;
   encodeFunctionData(functionFragment: "init", values?: undefined): string;
   encodeFunctionData(functionFragment: "usdc", values?: undefined): string;
@@ -48,19 +52,27 @@ interface ElfDeployInterface extends ethers.utils.Interface {
     functionFragment: "yusdcAsset",
     values?: undefined
   ): string;
+  encodeFunctionData(functionFragment: "yweth", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "ywethAsset",
+    values?: undefined
+  ): string;
 
   decodeFunctionResult(
     functionFragment: "changeGovernance",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "config", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "elf", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "elfUsdc", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "elfWeth", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "factory", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "init", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "usdc", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "weth", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "yusdc", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "yusdcAsset", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "yweth", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "ywethAsset", data: BytesLike): Result;
 
   events: {};
 }
@@ -93,9 +105,13 @@ export class ElfDeploy extends Contract {
 
     "config()"(overrides?: Overrides): Promise<ContractTransaction>;
 
-    elf(overrides?: CallOverrides): Promise<[string]>;
+    elfUsdc(overrides?: CallOverrides): Promise<[string]>;
 
-    "elf()"(overrides?: CallOverrides): Promise<[string]>;
+    "elfUsdc()"(overrides?: CallOverrides): Promise<[string]>;
+
+    elfWeth(overrides?: CallOverrides): Promise<[string]>;
+
+    "elfWeth()"(overrides?: CallOverrides): Promise<[string]>;
 
     factory(overrides?: CallOverrides): Promise<[string]>;
 
@@ -120,6 +136,14 @@ export class ElfDeploy extends Contract {
     yusdcAsset(overrides?: CallOverrides): Promise<[string]>;
 
     "yusdcAsset()"(overrides?: CallOverrides): Promise<[string]>;
+
+    yweth(overrides?: CallOverrides): Promise<[string]>;
+
+    "yweth()"(overrides?: CallOverrides): Promise<[string]>;
+
+    ywethAsset(overrides?: CallOverrides): Promise<[string]>;
+
+    "ywethAsset()"(overrides?: CallOverrides): Promise<[string]>;
   };
 
   changeGovernance(
@@ -136,9 +160,13 @@ export class ElfDeploy extends Contract {
 
   "config()"(overrides?: Overrides): Promise<ContractTransaction>;
 
-  elf(overrides?: CallOverrides): Promise<string>;
+  elfUsdc(overrides?: CallOverrides): Promise<string>;
 
-  "elf()"(overrides?: CallOverrides): Promise<string>;
+  "elfUsdc()"(overrides?: CallOverrides): Promise<string>;
+
+  elfWeth(overrides?: CallOverrides): Promise<string>;
+
+  "elfWeth()"(overrides?: CallOverrides): Promise<string>;
 
   factory(overrides?: CallOverrides): Promise<string>;
 
@@ -164,6 +192,14 @@ export class ElfDeploy extends Contract {
 
   "yusdcAsset()"(overrides?: CallOverrides): Promise<string>;
 
+  yweth(overrides?: CallOverrides): Promise<string>;
+
+  "yweth()"(overrides?: CallOverrides): Promise<string>;
+
+  ywethAsset(overrides?: CallOverrides): Promise<string>;
+
+  "ywethAsset()"(overrides?: CallOverrides): Promise<string>;
+
   callStatic: {
     changeGovernance(
       _governance: string,
@@ -179,9 +215,13 @@ export class ElfDeploy extends Contract {
 
     "config()"(overrides?: CallOverrides): Promise<void>;
 
-    elf(overrides?: CallOverrides): Promise<string>;
+    elfUsdc(overrides?: CallOverrides): Promise<string>;
 
-    "elf()"(overrides?: CallOverrides): Promise<string>;
+    "elfUsdc()"(overrides?: CallOverrides): Promise<string>;
+
+    elfWeth(overrides?: CallOverrides): Promise<string>;
+
+    "elfWeth()"(overrides?: CallOverrides): Promise<string>;
 
     factory(overrides?: CallOverrides): Promise<string>;
 
@@ -206,6 +246,14 @@ export class ElfDeploy extends Contract {
     yusdcAsset(overrides?: CallOverrides): Promise<string>;
 
     "yusdcAsset()"(overrides?: CallOverrides): Promise<string>;
+
+    yweth(overrides?: CallOverrides): Promise<string>;
+
+    "yweth()"(overrides?: CallOverrides): Promise<string>;
+
+    ywethAsset(overrides?: CallOverrides): Promise<string>;
+
+    "ywethAsset()"(overrides?: CallOverrides): Promise<string>;
   };
 
   filters: {};
@@ -225,9 +273,13 @@ export class ElfDeploy extends Contract {
 
     "config()"(overrides?: Overrides): Promise<BigNumber>;
 
-    elf(overrides?: CallOverrides): Promise<BigNumber>;
+    elfUsdc(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "elf()"(overrides?: CallOverrides): Promise<BigNumber>;
+    "elfUsdc()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    elfWeth(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "elfWeth()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     factory(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -252,6 +304,14 @@ export class ElfDeploy extends Contract {
     yusdcAsset(overrides?: CallOverrides): Promise<BigNumber>;
 
     "yusdcAsset()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    yweth(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "yweth()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    ywethAsset(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "ywethAsset()"(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -269,9 +329,13 @@ export class ElfDeploy extends Contract {
 
     "config()"(overrides?: Overrides): Promise<PopulatedTransaction>;
 
-    elf(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    elfUsdc(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "elf()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    "elfUsdc()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    elfWeth(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "elfWeth()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     factory(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -296,5 +360,13 @@ export class ElfDeploy extends Contract {
     yusdcAsset(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     "yusdcAsset()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    yweth(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "yweth()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    ywethAsset(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "ywethAsset()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }
