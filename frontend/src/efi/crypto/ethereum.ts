@@ -6,7 +6,7 @@ import { parseUnits } from "ethers/lib/utils";
 export enum ChainId {
   MAINNET = 1,
   KOVAN = 42,
-  LOCAL = 99,
+  LOCAL = 31337,
 }
 
 export const ChainNames: Record<ChainId, string> = {
