@@ -1,6 +1,6 @@
 import { t } from "ttag";
 
-import { Pool } from "efi/pools/Pool";
+import { Pool } from "efi/graveyard/pools/Pool";
 
 const ELF_STRATEGY_LOW_RISK = "ELF_STRATEGY_LOW_RISK";
 

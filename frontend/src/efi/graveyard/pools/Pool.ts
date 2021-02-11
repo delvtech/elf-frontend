@@ -1,6 +1,6 @@
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 
-import { StakingAssets } from "../crypto/stakingAssets";
+import { StakingAssets } from "../../crypto/stakingAssets";
 
 export interface Pool {
   /**
