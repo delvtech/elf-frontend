@@ -37,7 +37,7 @@ const FALLBACK_CONTRACTS = Object.freeze<ContractJson>({
 // correctly, so we use a require() statement here.
 let ContractAddresses: ContractJson;
 try {
-  ContractAddresses = require("contracts.json");
+  ContractAddresses = require("addresses.json");
 } catch {
   ContractAddresses = FALLBACK_CONTRACTS;
 }

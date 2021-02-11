@@ -259,7 +259,7 @@ function useAllowance(
   const allowanceResult = useTokenAllowance(
     tokenSymbol,
     account,
-    ContractAddresses.ELF
+    ContractAddresses.elfUsdcAddress
   );
 
   return [allowanceResult.data, allowanceResult];

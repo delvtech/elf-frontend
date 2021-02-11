@@ -24,7 +24,7 @@ interface ElfStubs {
 type ElfWithStubs = Elf & ElfStubs;
 
 export const elfContract = Elf__factory.connect(
-  ContractAddresses.ELF,
+  ContractAddresses.elfUsdcAddress,
   jsonRpcProvider
 ) as ElfWithStubs;
 
