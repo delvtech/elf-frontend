@@ -20,7 +20,6 @@ import { MarketActionsCard } from "efi-ui/markets/MarketActionsCard/MarketAction
 import { getTimeLeft } from "efi/base/time";
 import { Market } from "efi/markets/Market";
 import { stubbedMarkets } from "efi/markets/stubbedMarkets";
-import { ElfStrategyLowRisk } from "efi/graveyard/pools/lowRisk";
 
 interface MarketDetailsProps {
   market: Market;
@@ -48,7 +47,7 @@ export const MarketDetails: FC<MarketDetailsProps> = ({ market }) => {
           </div>
           <div className={tw("flex", "space-x-12")}>
             <MarketHistory />
-            <MarketActionsCard pool={ElfStrategyLowRisk} />
+            <MarketActionsCard market={stubbedMarkets[0]} />
           </div>
         </div>
       </div>
