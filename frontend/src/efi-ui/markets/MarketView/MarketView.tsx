@@ -8,10 +8,10 @@ import classNames from "classnames";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { MarketDetailsCard } from "efi-ui/markets/MarketDetailsCard/MarketDetailsCard";
+import { MarketDetails } from "efi-ui/markets/MarketDetails/MarketDetails";
 import { WalletConnectionCard } from "efi-ui/wallets/WalletConnectionCard/WalletConnectionCard";
-import { ElfStrategyLowRisk } from "efi/pools/lowRisk";
 import { getConnectorName } from "efi/wallets/connectors";
+import { stubbedMarkets } from "efi/markets/stubbedMarkets";
 
 interface MarketViewProps extends RouteComponentProps {}
 
@@ -52,7 +52,7 @@ export const MarketView: FC<MarketViewProps> = () => {
           />
         </div>
         <div className={tw("flex", "flex-col", "justify-between")}>
-          <MarketDetailsCard pool={ElfStrategyLowRisk} />
+          <MarketDetails market={stubbedMarkets[0]} />
         </div>
       </div>
     </div>

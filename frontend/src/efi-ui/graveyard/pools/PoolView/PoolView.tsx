@@ -8,9 +8,9 @@ import { Navigation } from "efi-ui/navigation/navigation";
 import { PoolBreadcrumb } from "efi-ui/graveyard/pools/PoolBreadCrumb/PoolBreadcrumb";
 import { PoolLockedCard } from "efi-ui/graveyard/pools/PoolLockedCard.tsx/PoolLockedCard";
 import WalletSummaryPane from "efi-ui/wallets/WalletSummaryPane/WalletSummaryPane";
-import { ElfStrategyHighRisk } from "efi/pools/highRisk";
-import { ElfStrategyLowRisk } from "efi/pools/lowRisk";
-import { ElfStrategyMediumRisk } from "efi/pools/mediumRisk";
+import { ElfStrategyHighRisk } from "efi/graveyard/pools/highRisk";
+import { ElfStrategyLowRisk } from "efi/graveyard/pools/lowRisk";
+import { ElfStrategyMediumRisk } from "efi/graveyard/pools/mediumRisk";
 
 import { PoolNotFoundCard } from "../PoolNotFoundCard/PoolNotFoundCard";
 

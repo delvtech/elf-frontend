@@ -20,11 +20,9 @@ import { MarketActionsCard } from "efi-ui/markets/MarketActionsCard/MarketAction
 import { getTimeLeft } from "efi/base/time";
 import { Market } from "efi/markets/Market";
 import { stubbedMarkets } from "efi/markets/stubbedMarkets";
-import { ElfStrategyLowRisk } from "efi/pools/lowRisk";
-import { Pool } from "efi/pools/Pool";
 
-interface MarketDetailsCardProps {
-  pool: Pool;
+interface MarketDetailsProps {
+  market: Market;
 }
 
 const timeData = [
@@ -37,7 +35,7 @@ const timeData = [
   { timeMs: Date.parse("2021-01-18"), value: 1257.0474852058 },
 ];
 
-export const MarketDetailsCard: FC<MarketDetailsCardProps> = ({ pool }) => {
+export const MarketDetails: FC<MarketDetailsProps> = ({ market }) => {
   return (
     <div className={tw("flex", "mb-8", "space-x-4", "w-full", "items-stretch")}>
       <div className={tw("flex", "flex-1")}>
@@ -49,7 +47,7 @@ export const MarketDetailsCard: FC<MarketDetailsCardProps> = ({ pool }) => {
           </div>
           <div className={tw("flex", "space-x-12")}>
             <MarketHistory />
-            <MarketActionsCard pool={ElfStrategyLowRisk} />
+            <MarketActionsCard market={stubbedMarkets[0]} />
           </div>
         </div>
       </div>

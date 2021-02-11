@@ -168,7 +168,7 @@ module.exports = {
       comment: "Importing from graveyard/ is prohibited",
       severity: "error",
       from: {
-        pathNot: "efi-ui/graveyard",
+        pathNot: `(${["efi-ui/graveyard", "efi/graveyard"].join("|")})`,
       },
       to: {
         path: `(${["efi-ui/graveyard", "efi/graveyard"].join("|")})`,

@@ -9,9 +9,9 @@ import { ButtonToggleFormGroup } from "efi-ui/base/ButtonToggleFormGroup/ButtonT
 import { SearchFormGroup } from "efi-ui/base/SearchFormGroup/SearchFormGroup";
 import { PoolPreviewTable } from "efi-ui/graveyard/pools/PoolPreviewTable/PoolPreviewTable";
 import WalletSummaryPane from "efi-ui/wallets/WalletSummaryPane/WalletSummaryPane";
-import { ElfStrategyHighRisk } from "efi/pools/highRisk";
-import { ElfStrategyLowRisk } from "efi/pools/lowRisk";
-import { ElfStrategyMediumRisk } from "efi/pools/mediumRisk";
+import { ElfStrategyHighRisk } from "efi/graveyard/pools/highRisk";
+import { ElfStrategyLowRisk } from "efi/graveyard/pools/lowRisk";
+import { ElfStrategyMediumRisk } from "efi/graveyard/pools/mediumRisk";
 
 interface PoolsViewProps extends RouteComponentProps {}
 

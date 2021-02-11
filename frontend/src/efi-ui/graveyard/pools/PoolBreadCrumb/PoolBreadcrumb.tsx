@@ -2,7 +2,7 @@ import { Breadcrumbs, IBreadcrumbProps } from "@blueprintjs/core";
 import React, { FC, useMemo } from "react";
 import { t } from "ttag";
 
-import { Pool } from "efi/pools/Pool";
+import { Pool } from "efi/graveyard/pools/Pool";
 
 interface PoolBreadcrumbProps {
   availablePools: Pool[];
