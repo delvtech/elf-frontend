@@ -1,7 +1,9 @@
 rm -rf src/elf-contracts/types/**/*
 
+source "$PWD/.env"
+
 # TODO: get the elf-deploy location from an environment variable
-cp -r ~/src/elf-deploy/src/types/. src/elf-contracts/types/
+cp -r "$TYPECHAIN_DIR/." src/elf-contracts/types/
 
 # Remove the index.ts file since typechain doesn't generate properly, and it's
 # breaking CRA's tsconfig.json hard rule for --isolatedModules
