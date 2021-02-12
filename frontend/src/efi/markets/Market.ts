@@ -30,12 +30,12 @@ export interface Market {
   /**
    * The fiat sum of the assets in the market.
    */
-  totalSupply: number;
+  totalSupply?: string;
 
   /**
    * The assets addresses to trade in the market, should be [baseAsset, yieldAsset]
    */
-  assets: { name: string; symbol: string }[];
+  assets: { name: string | undefined; symbol: string | undefined }[];
 
   /**
    *  The type of yield bearing asset in the market.

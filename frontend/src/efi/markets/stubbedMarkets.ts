@@ -17,7 +17,7 @@ export const stubbedMarkets: Market[] = [
     id: "eth-fyeth-2020-2-1",
     name: "ETH - fyETH",
     description: "Automated market to trade ETH with fixed yield ETH",
-    totalSupply: 123456789,
+    totalSupply: "123456789",
     assets: [
       { name: "Ether", symbol: "ETH" },
       { name: "Fixed Yield Ether", symbol: "fyETH" },
@@ -33,7 +33,7 @@ export const stubbedMarkets: Market[] = [
     id: "eth-yceth-2020-2-1",
     name: "ETH - ycETH",
     description: "Automated market to trade ETH with ETH yield coupons",
-    totalSupply: 123456789,
+    totalSupply: "123456789",
     assets: [
       { name: "Ether", symbol: "ETH" },
       { name: "Ether Yield Coupon", symbol: "ycETH" },
@@ -49,7 +49,7 @@ export const stubbedMarkets: Market[] = [
     id: "eth-fyeth-2020-2-1",
     name: "ETH - fyETH",
     description: "Automated market to trade ETH with fixed yield ETH",
-    totalSupply: 123456789,
+    totalSupply: "123456789",
     assets: [
       { name: "Ether", symbol: "ETH" },
       { name: "Fixed Yield Ether", symbol: "fyETH" },
@@ -65,7 +65,7 @@ export const stubbedMarkets: Market[] = [
     id: "eth-yceth-2020-2-1",
     name: "ETH - ycETH",
     description: "Automated market to trade ETH with ETH yield coupons",
-    totalSupply: 123456789,
+    totalSupply: "123456789",
     assets: [
       { name: "Ether", symbol: "ETH" },
       { name: "Fixed Yield Ether", symbol: "fyETH" },
@@ -81,7 +81,7 @@ export const stubbedMarkets: Market[] = [
     id: "eth-fyeth-2020-2-1",
     name: "ETH - fyETH",
     description: "Automated market to trade ETH with fixed yield ETH",
-    totalSupply: 123456789,
+    totalSupply: "123456789",
     assets: [
       { name: "Ether", symbol: "ETH" },
       { name: "Fixed Yield Ether", symbol: "fyETH" },
@@ -97,7 +97,7 @@ export const stubbedMarkets: Market[] = [
     id: "eth-yceth-2020-2-1",
     name: "ETH - ycETH",
     description: "Automated market to trade ETH with ETH yield coupons",
-    totalSupply: 123456789,
+    totalSupply: "123456789",
     assets: [
       { name: "Ether", symbol: "ETH" },
       { name: "Ether Yield Coupon", symbol: "ycETH" },
@@ -113,7 +113,7 @@ export const stubbedMarkets: Market[] = [
     id: "eth-fyeth-2020-2-1",
     name: "ETH - fyETH",
     description: "Automated market to trade ETH with fixed yield ETH",
-    totalSupply: 123456789,
+    totalSupply: "123456789",
     assets: [
       { name: "Ether", symbol: "ETH" },
       { name: "Fixed Yield Ether", symbol: "fyETH" },
@@ -129,7 +129,7 @@ export const stubbedMarkets: Market[] = [
     id: "eth-yceth-2020-2-1",
     name: "ETH - ycETH",
     description: "Automated market to trade ETH with ETH yield coupons",
-    totalSupply: 123456789,
+    totalSupply: "123456789",
     assets: [
       { name: "Ether", symbol: "ETH" },
       { name: "Ether Yield Coupon", symbol: "ycETH" },
@@ -145,7 +145,7 @@ export const stubbedMarkets: Market[] = [
     id: "usdc-fyeth-2020-2-1",
     name: "USDC - fyUSDC",
     description: "Automated market to trade USDC with fixed yield USDC",
-    totalSupply: 123456789,
+    totalSupply: "123456789",
     assets: [
       { name: "USDC", symbol: "USDC" },
       { name: "Fixed Yield USDC", symbol: "fyUSDC" },
@@ -161,7 +161,7 @@ export const stubbedMarkets: Market[] = [
     id: "usdc-yceth-2020-2-1",
     name: "USDC - ycUSDC",
     description: "Automated market to trade USDC with USDC yield coupons",
-    totalSupply: 123456789,
+    totalSupply: "123456789",
     assets: [
       { name: "USDC", symbol: "USDC" },
       { name: "USDC Yield Coupon", symbol: "ycUSDC" },
@@ -177,7 +177,7 @@ export const stubbedMarkets: Market[] = [
     id: "usdc-fyeth-2020-2-1",
     name: "USDC - fyUSDC",
     description: "Automated market to trade USDC with fixed yield USDC",
-    totalSupply: 123456789,
+    totalSupply: "123456789",
     assets: [
       { name: "USDC", symbol: "USDC" },
       { name: "Fixed Yield USDC", symbol: "fyUSDC" },
@@ -193,7 +193,7 @@ export const stubbedMarkets: Market[] = [
     id: "usdc-yceth-2020-2-1",
     name: "USDC - ycUSDC",
     description: "Automated market to trade USDC with USDC yield coupons",
-    totalSupply: 123456789,
+    totalSupply: "123456789",
     assets: [
       { name: "USDC", symbol: "USDC" },
       { name: "Fixed Yield USDC", symbol: "fyUSDC" },
@@ -209,7 +209,7 @@ export const stubbedMarkets: Market[] = [
     id: "usdc-fyeth-2020-2-1",
     name: "USDC - fyUSDC",
     description: "Automated market to trade USDC with fixed yield USDC",
-    totalSupply: 123456789,
+    totalSupply: "123456789",
     assets: [
       { name: "USDC", symbol: "USDC" },
       { name: "Fixed Yield USDC", symbol: "fyUSDC" },
@@ -225,7 +225,7 @@ export const stubbedMarkets: Market[] = [
     id: "usdc-yceth-2020-2-1",
     name: "USDC - ycUSDC",
     description: "Automated market to trade USDC with USDC yield coupons",
-    totalSupply: 123456789,
+    totalSupply: "123456789",
     assets: [
       { name: "USDC", symbol: "USDC" },
       { name: "USDC Yield Coupon", symbol: "ycUSDC" },
@@ -241,7 +241,7 @@ export const stubbedMarkets: Market[] = [
     id: "usdc-fyeth-2020-2-1",
     name: "USDC - fyUSDC",
     description: "Automated market to trade USDC with fixed yield USDC",
-    totalSupply: 123456789,
+    totalSupply: "123456789",
     assets: [
       { name: "USDC", symbol: "USDC" },
       { name: "Fixed Yield USDC", symbol: "fyUSDC" },
@@ -257,7 +257,7 @@ export const stubbedMarkets: Market[] = [
     id: "usdc-yceth-2020-2-1",
     name: "USDC - ycUSDC",
     description: "Automated market to trade USDC with USDC yield coupons",
-    totalSupply: 123456789,
+    totalSupply: "123456789",
     assets: [
       { name: "USDC", symbol: "USDC" },
       { name: "USDC Yield Coupon", symbol: "ycUSDC" },
