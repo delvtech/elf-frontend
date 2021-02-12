@@ -23,7 +23,7 @@ import {
 import { postApprove } from "efi/contracts/token";
 import { StakingTokens } from "efi/crypto/stakingAssets";
 import { TokenBalance } from "efi/crypto/TokenBalance";
-import { TokenContracts } from "efi/crypto/TokenContracts";
+import { TokenContracts } from "efi/graveyard/TokenContracts.1";
 
 const contractAssetSymbolsKey = ["contract", "elf", "assetSymbols"];
 export function useElfContractAssetSymbols() {

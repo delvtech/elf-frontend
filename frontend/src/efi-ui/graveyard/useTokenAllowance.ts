@@ -2,7 +2,7 @@ import { BigNumber } from "ethers";
 import { QueryKey, QueryObserverResult, useQuery } from "react-query";
 
 import { fetchTokenAllowance } from "efi/contracts/token";
-import { TokenContracts } from "efi/crypto/TokenContracts";
+import { TokenContracts } from "efi/graveyard/TokenContracts.1";
 import { TokenContractSymbols } from "efi/crypto/TokenContractSymbols";
 
 /**

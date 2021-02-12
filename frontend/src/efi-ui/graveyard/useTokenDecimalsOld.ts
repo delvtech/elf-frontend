@@ -1,7 +1,7 @@
 import { QueryKey, QueryObserverResult, useQuery } from "react-query";
 
 import { fetchTokenDecimals } from "efi/crypto/fetchTokenDecimals";
-import { TokenContracts } from "efi/crypto/TokenContracts";
+import { TokenContracts } from "efi/graveyard/TokenContracts.1";
 import { TokenContractSymbols } from "efi/crypto/TokenContractSymbols";
 
 /**
