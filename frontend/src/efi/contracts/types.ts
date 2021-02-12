@@ -1,9 +1,13 @@
 import { Contract } from "ethers";
 
+export type ContractCall<
+  TContract extends Contract,
+  TMethodName extends ContractMethodName<TContract>
+> = TContract[TMethodName];
 /**
  * Gets a type for the specific contract call
  */
-export type ContractCall<
+export type ContractFunctionCall<
   TContract extends Contract,
   TMethodName extends ContractMethodName<TContract>
 > = TContract["functions"][TMethodName];
@@ -29,4 +33,4 @@ export type ContractReturnType<
 export type ContractMethodArgs<
   TContract extends Contract,
   TMethodName extends ContractMethodName<TContract>
-> = Parameters<ContractCall<TContract, TMethodName>>;
+> = Parameters<ContractFunctionCall<TContract, TMethodName>>;
