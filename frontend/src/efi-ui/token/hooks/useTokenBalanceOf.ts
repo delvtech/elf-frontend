@@ -13,5 +13,5 @@ export function useTokenBalanceOf(
     enabled: !!address,
   });
 
-  return [result.data?.[0], [result]];
+  return [result.data, [result]];
 }

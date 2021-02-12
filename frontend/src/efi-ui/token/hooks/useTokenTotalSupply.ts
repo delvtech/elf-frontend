@@ -8,5 +8,5 @@ export function useTokenTotalSupply<TContract extends ERC20>(
   contract: TContract
 ): ComputedQueryResult<BigNumber> {
   const result = useSmartContractReadCall(contract, "totalSupply");
-  return [result.data?.[0], [result]];
+  return [result.data, [result]];
 }

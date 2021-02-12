@@ -7,5 +7,5 @@ export function useTokenDecimals(
   contract: ERC20 | undefined
 ): ComputedQueryResult<number> {
   const result = useSmartContractReadCall(contract, "decimals");
-  return [result.data?.[0], [result]];
+  return [result.data, [result]];
 }
