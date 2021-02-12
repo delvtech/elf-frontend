@@ -24,7 +24,6 @@ import { useInterval } from "react-use";
 import { getTimeLeft } from "efi/base/time";
 import { BPool } from "elf-contracts/types/BPool";
 import { useMarketDetails } from "efi-ui/markets/useMarketDetails";
-import { stubbedMarkets } from "efi/markets/stubbedMarkets";
 
 interface MarketsTableProps {
   markets: Market[];
@@ -187,7 +186,7 @@ export const MarketsTableRow: FC<MarketsTableRowProps> = ({
     <tr>
       <td>{maturityDate.toLocaleDateString()}</td>
       <td>
-        <Link className={tw("flex", "space-x-2")} to="0xDEADBEEF">
+        <Link className={tw("flex", "space-x-2")} to={marketContract.address}>
           <LabeledText bold text={baseAsset.symbol} label={baseAsset.name} />
           {"-"}
           <LabeledText bold text={yieldAsset.symbol} label={yieldAsset.name} />
