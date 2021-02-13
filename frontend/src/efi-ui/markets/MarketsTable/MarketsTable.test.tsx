@@ -9,7 +9,7 @@ test("should render an empty list", async () => {
   const queryClient = createQueryClient();
   const { getByText } = await renderWithClient(
     queryClient,
-    <MarketsTable markets={[]} />
+    <MarketsTable marketContracts={[]} markets={[]} />
   );
 
   return getByText("no markets found");
@@ -19,7 +19,7 @@ test("should render a list", () => {
   const queryClient = createQueryClient();
   const { getByText } = renderWithClient(
     queryClient,
-    <MarketsTable markets={stubbedMarkets} />
+    <MarketsTable marketContracts={[]} markets={stubbedMarkets} />
   );
 
   expect(getByText("Assets")).toBeVisible();
