@@ -17,6 +17,7 @@ test("should render an empty list", async () => {
 
 test("should render a list", () => {
   const queryClient = createQueryClient();
+
   const { getByText } = renderWithClient(
     queryClient,
     <MarketsTable marketContracts={[]} markets={stubbedMarkets} />

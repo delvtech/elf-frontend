@@ -1,9 +1,10 @@
-import { useERC20Contract } from "efi-ui/contracts/useERC20Contract";
-import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { QueryObserverResult } from "react-query";
 
 import { BPool } from "elf-contracts/types/BPool";
+import { t } from "ttag";
 
+import { useERC20Contract } from "efi-ui/contracts/useERC20Contract";
+import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { getQueryCombinedSuccessState } from "efi-ui/query/getQueryCombinedSuccessState";
 import { ONE_WEEK_IN_MILLISECONDS } from "efi/base/time";
 import { formatEth } from "efi/coins/ether/formatEth";
@@ -13,9 +14,9 @@ import { Market } from "efi/markets/Market";
  * returns details about a market.
  * @param { BPool } marketContract
  */
-export const useMarketDetails = (
+export function useMarketDetails(
   marketContract: BPool
-): [Market | undefined, QueryObserverResult[]] => {
+): [Market | undefined, QueryObserverResult[]] {
   const marketAddress = marketContract.address;
 
   const nameResult = useSmartContractReadCall(marketContract, "name");
@@ -77,7 +78,7 @@ export const useMarketDetails = (
   const { data: yieldAssetSymbol } = yieldAssetSymbolResult;
   const id = `${baseAssetSymbol}-${yieldAssetName}-2020-6-1`.toLowerCase();
   const name = `${baseAssetName} - ${yieldAssetName} AMM`;
-  const description = `An automated market for ${baseAssetName} and ${yieldAssetName}`;
+  const description = t`An automated market for ${baseAssetName} and ${yieldAssetName}`;
 
   const market: Market = {
     contractAddress: marketAddress,
@@ -103,4 +104,4 @@ export const useMarketDetails = (
     state: "running",
   };
   return [market, results];
-};
+}

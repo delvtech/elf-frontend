@@ -110,7 +110,7 @@ export const MarketsTable: FC<MarketsTableProps> = ({
           {marketContracts.map((marketContract, i) => {
             return (
               <MarketsTableRow
-                key={i}
+                key={marketContract.address}
                 marketContract={marketContract}
                 market={markets[i]}
               />
@@ -143,19 +143,13 @@ const MarketsTableHeader: FC<MarketsTableHeaderProps> = ({
 };
 
 interface MarketsTableRowProps {
-  market: Market;
   marketContract: BPool;
 }
 export const MarketsTableRow: FC<MarketsTableRowProps> = ({
-  market,
   marketContract,
 }) => {
   const [timerValue, setTimerValue] = useState(Date.now());
   const [marketDetails] = useMarketDetails(marketContract);
-  // TODO: make progress helper fn
-  const progress =
-    (Date.now() - market.startDate) / (market.maturityDate - market.startDate);
-
   // TODO: make timer helper fn
   useInterval(() => {
     if (!marketDetails) {
@@ -172,6 +166,11 @@ export const MarketsTableRow: FC<MarketsTableRowProps> = ({
       </tr>
     );
   }
+
+  // TODO: make progress helper fn
+  const progress =
+    (Date.now() - marketDetails.startDate) /
+    (marketDetails.maturityDate - marketDetails.startDate);
 
   const { totalSupply } = marketDetails;
   const startDate = new Date(marketDetails?.startDate);

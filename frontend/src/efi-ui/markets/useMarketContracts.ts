@@ -6,7 +6,7 @@ import { BPool__factory } from "elf-contracts/types/factories/BPool__factory";
 import ContractAddresses from "efi/contracts/contractsJson";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 
-export const useMarketContracts = () => {
+export function useMarketContracts() {
   const queryKey = "market-contracts";
   const queryFn = fetchMarketContractAddresses;
 
@@ -23,9 +23,9 @@ export const useMarketContracts = () => {
     BPool__factory.connect(address, jsonRpcProvider)
   );
   return bPoolContracts;
-};
+}
 
-const fetchMarketContractAddresses = async () => {
+function fetchMarketContractAddresses() {
   const { elementAddress, bFactoryAddress } = ContractAddresses;
   const bFactoryContract = BFactory__factory.connect(
     bFactoryAddress,
@@ -33,4 +33,4 @@ const fetchMarketContractAddresses = async () => {
   );
   const filter = bFactoryContract.filters.LOG_NEW_POOL(elementAddress, null);
   return bFactoryContract.queryFilter(filter);
-};
+}
