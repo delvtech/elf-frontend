@@ -7,5 +7,5 @@ export function useTokenSymbol<TContract extends ERC20>(
   contract: TContract | undefined
 ): ComputedQueryResult<string> {
   const result = useSmartContractReadCall(contract, "symbol");
-  return [result.data?.[0], [result]];
+  return [result.data, [result]];
 }

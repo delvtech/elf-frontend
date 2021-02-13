@@ -7,7 +7,7 @@ import { Signer } from "ethers";
 // instantiate if it exists, otherwise return the cached instance.
 export function getERC20Contract(
   address: string,
-  signerOrProvider: Signer | Provider
+  signerOrProvider?: Signer | Provider
 ) {
   const signer = signerOrProvider ?? jsonRpcProvider;
   return ERC20__factory.connect(address, signer);

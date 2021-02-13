@@ -93,7 +93,7 @@ export const PoolCard: FC<PoolCardProps> = ({ pool }) => {
   }, [openCryptoDrawer]);
 
   // TODO: refactor elfTotalSupply to be a TokenBalance
-  const totalSupply = elfTotalSupply && formatEther(elfTotalSupply?.[0]);
+  const totalSupply = elfTotalSupply && formatEther(elfTotalSupply);
 
   return (
     <Card className={tw("flex", "flex-col", "w-full", "transition-all")}>
@@ -259,7 +259,7 @@ function useAllowance(
   const allowanceResult = useTokenAllowance(
     tokenSymbol,
     account,
-    ContractAddresses.ELF
+    ContractAddresses.elfUsdcAddress
   );
 
   return [allowanceResult.data, allowanceResult];

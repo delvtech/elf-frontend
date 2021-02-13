@@ -31,10 +31,7 @@ test("provides data from smart contract read methods", async () => {
     waitForNextUpdate,
     rerender,
   } = renderHookWithClient(queryClient, () =>
-    useSmartContractReadCall(
-      ({ functions: { name: mockNameFn } } as any) as Contract,
-      "name"
-    )
+    useSmartContractReadCall(({ name: mockNameFn } as any) as Contract, "name")
   );
 
   // called but hasn't resolved yet
@@ -55,16 +52,12 @@ test("passes arguments to smart contract read methods", async () => {
   const mockFn = jest.fn(async (a: string, b: string) => [a, b].join(" "));
 
   const queryClient = createQueryClient();
-  const {
-    result,
-    waitForNextUpdate,
-    rerender,
-  } = renderHookWithClient(queryClient, () =>
-    useSmartContractReadCall(
-      ({ functions: { name: mockFn } } as any) as Contract,
-      "name",
-      { callArgs: ["firstarg", "secondArg"] }
-    )
+  const { result, waitForNextUpdate, rerender } = renderHookWithClient(
+    queryClient,
+    () =>
+      useSmartContractReadCall(({ name: mockFn } as any) as Contract, "name", {
+        callArgs: ["firstarg", "secondArg"],
+      })
   );
 
   expect(result.current.data).toEqual(undefined);
@@ -91,11 +84,10 @@ test("properly handles enabled option", async () => {
   >(
     queryClient,
     ({ enabled }) =>
-      useSmartContractReadCall(
-        ({ functions: { name: mockFn } } as any) as Contract,
-        "name",
-        { callArgs: ["firstarg", "secondArg"], enabled }
-      ),
+      useSmartContractReadCall(({ name: mockFn } as any) as Contract, "name", {
+        callArgs: ["firstarg", "secondArg"],
+        enabled,
+      }),
     { initialProps: { enabled: false } }
   );
 

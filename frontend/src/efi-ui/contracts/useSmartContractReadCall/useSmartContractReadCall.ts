@@ -35,9 +35,7 @@ export function useSmartContractReadCall<
 
   const queryFn = async (): Promise<TReturnType> => {
     const finalArgs = callArgs || [];
-    const result = await contract?.functions[methodName as string](
-      ...finalArgs
-    );
+    const result = await contract?.[methodName as string](...finalArgs);
     return result;
   };
 

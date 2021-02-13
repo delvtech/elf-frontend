@@ -7,5 +7,5 @@ export function useTokenName(
   contract: ERC20 | undefined
 ): ComputedQueryResult<string> {
   const result = useSmartContractReadCall(contract, "name");
-  return [result.data?.[0], [result]];
+  return [result.data, [result]];
 }

@@ -139,7 +139,12 @@ export function useElfContractApproveDeposit() {
       if (!signer) {
         return;
       }
-      return postApprove(signer, contract, ContractAddresses.ELF, amount);
+      return postApprove(
+        signer,
+        contract,
+        ContractAddresses.elfUsdcAddress,
+        amount
+      );
     },
     {
       onSuccess: (transaction, { account }) => {

@@ -22,9 +22,12 @@ import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { Market } from "efi/markets/Market";
 import { useInterval } from "react-use";
 import { getTimeLeft } from "efi/base/time";
+import { BPool } from "elf-contracts/types/BPool";
+import { useMarketDetails } from "efi-ui/markets/useMarketDetails";
 
 interface MarketsTableProps {
   markets: Market[];
+  marketContracts: BPool[];
   className?: string;
 }
 
@@ -42,7 +45,11 @@ const TABLE_HEADERS: MarketsTableHeaderProps[] = [
   { label: t`Tranche State` },
 ];
 
-export const MarketsTable: FC<MarketsTableProps> = ({ markets, className }) => {
+export const MarketsTable: FC<MarketsTableProps> = ({
+  markets,
+  marketContracts,
+  className,
+}) => {
   if (!markets.length) {
     return <span>{t`no markets found`}</span>;
   }
@@ -100,8 +107,13 @@ export const MarketsTable: FC<MarketsTableProps> = ({ markets, className }) => {
           </tr>
         </thead>
         <tbody className={Classes.TEXT_LARGE}>
-          {markets.map((market, i) => {
-            return <MarketsTableRow key={i} market={market} />;
+          {marketContracts.map((marketContract, i) => {
+            return (
+              <MarketsTableRow
+                key={marketContract.address}
+                marketContract={marketContract}
+              />
+            );
           })}
         </tbody>
       </HTMLTable>
@@ -130,22 +142,41 @@ const MarketsTableHeader: FC<MarketsTableHeaderProps> = ({
 };
 
 interface MarketsTableRowProps {
-  market: Market;
+  marketContract: BPool;
 }
-export const MarketsTableRow: FC<MarketsTableRowProps> = ({ market }) => {
-  const maturityDate = new Date(market.maturityDate);
-  const startDate = new Date(market.startDate);
-  const baseAsset = market.assets[0];
-  const yieldAsset = market.assets[1];
-
-  const progress =
-    (Date.now() - market.startDate) / (market.maturityDate - market.startDate);
-  const [timerValue, setTimerValue] = useState(
-    market.maturityDate - Date.now()
-  );
+export const MarketsTableRow: FC<MarketsTableRowProps> = ({
+  marketContract,
+}) => {
+  const [timerValue, setTimerValue] = useState(Date.now());
+  const [marketDetails] = useMarketDetails(marketContract);
+  // TODO: make timer helper fn
   useInterval(() => {
-    setTimerValue(market.maturityDate - Date.now());
+    if (!marketDetails) {
+      return;
+    }
+    setTimerValue(marketDetails.maturityDate - Date.now());
   }, 1000);
+
+  // TODO: make this better
+  if (!marketDetails) {
+    return (
+      <tr>
+        <td>loading</td>
+      </tr>
+    );
+  }
+
+  // TODO: make progress helper fn
+  const progress =
+    (Date.now() - marketDetails.startDate) /
+    (marketDetails.maturityDate - marketDetails.startDate);
+
+  const { totalSupply } = marketDetails;
+  const startDate = new Date(marketDetails?.startDate);
+  const maturityDate = new Date(marketDetails?.maturityDate);
+  const baseAsset = marketDetails.assets[0];
+  const yieldAsset = marketDetails.assets[1];
+
   const [daysLeft, hoursLeft, minutesLeft] = getTimeLeft(timerValue);
   const time = t`${daysLeft} days, ${hoursLeft}, hours, ${minutesLeft} minutes`;
 
@@ -153,27 +184,27 @@ export const MarketsTableRow: FC<MarketsTableRowProps> = ({ market }) => {
     <tr>
       <td>{maturityDate.toLocaleDateString()}</td>
       <td>
-        <Link className={tw("flex", "space-x-2")} to="0xDEADBEEF">
+        <Link className={tw("flex", "space-x-2")} to={marketContract.address}>
           <LabeledText bold text={baseAsset.symbol} label={baseAsset.name} />
           {"-"}
           <LabeledText bold text={yieldAsset.symbol} label={yieldAsset.name} />
         </Link>
       </td>
 
-      <td>${market.totalSupply.toLocaleString()}</td>
+      <td>${totalSupply?.toLocaleString()}</td>
       <td>2.13%</td>
 
       <td>{startDate.toLocaleDateString()}</td>
 
       <td>
-        {market.state === "running" ? (
+        {marketDetails.state === "running" ? (
           <LabeledProgressBar
             progressValue={progress}
             label={t`running`}
             helperText={time}
           />
         ) : (
-          market.state
+          marketDetails.state
         )}
       </td>
     </tr>

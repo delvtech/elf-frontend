@@ -11,8 +11,9 @@ import tw from "efi-tailwindcss-classnames";
 import { MarketFilterOptions } from "efi-ui/markets/MarketFilterOptions/MarketFilterOptions";
 import { MarketsTable } from "efi-ui/markets/MarketsTable/MarketsTable";
 import { WalletConnectionCard } from "efi-ui/wallets/WalletConnectionCard/WalletConnectionCard";
-import { getConnectorName } from "efi/wallets/connectors";
 import { stubbedMarkets } from "efi/markets/stubbedMarkets";
+import { getConnectorName } from "efi/wallets/connectors";
+import { useMarketContracts } from "efi-ui/markets/useMarketContracts";
 
 interface ExchangeViewProps extends RouteComponentProps {}
 
@@ -25,7 +26,7 @@ export const ExchangeView: FC<ExchangeViewProps> = () => {
     library,
   } = useWeb3React<Web3Provider>();
   const connectorName = getConnectorName(connector, library);
-  const availableMarkets = getMarkets();
+  const marketContracts = useMarketContracts();
 
   return (
     <div
@@ -71,7 +72,8 @@ export const ExchangeView: FC<ExchangeViewProps> = () => {
             <Card className={tw("p-10", "flex", "flex-1")}>
               <MarketsTable
                 className={tw("w-full")}
-                markets={availableMarkets}
+                marketContracts={marketContracts}
+                markets={stubbedMarkets}
               />
             </Card>
           </div>
@@ -79,8 +81,4 @@ export const ExchangeView: FC<ExchangeViewProps> = () => {
       </div>
     </div>
   );
-};
-
-const getMarkets = () => {
-  return stubbedMarkets;
 };
