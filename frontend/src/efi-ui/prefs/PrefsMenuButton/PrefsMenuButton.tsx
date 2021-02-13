@@ -1,26 +1,27 @@
-import { Button, Icon, Popover } from "@blueprintjs/core";
+import { Button, Icon } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import React, { FC, Fragment } from "react";
 
 import tw from "efi-tailwindcss-classnames";
 import { PrefsMenu } from "efi-ui/prefs/PrefsMenu/PrefsMenu";
+import { Popover2 } from "@blueprintjs/popover2";
 
 interface PrefsMenuButtonProps {}
 export const PrefsMenuButton: FC<PrefsMenuButtonProps> = () => {
   return (
     <Fragment>
       {/* Mobile */}
-      <Popover content={<PrefsMenu />}>
+      <Popover2 content={<PrefsMenu />}>
         <Button
           outlined
           minimal
           icon={<Icon icon={IconNames.SETTINGS} iconSize={14} />}
           className={tw("lg:hidden")}
         />
-      </Popover>
+      </Popover2>
 
       {/* Desktop */}
-      <Popover content={<PrefsMenu />}>
+      <Popover2 content={<PrefsMenu />}>
         <Button
           outlined
           minimal
@@ -28,7 +29,7 @@ export const PrefsMenuButton: FC<PrefsMenuButtonProps> = () => {
           icon={IconNames.SETTINGS}
           className={tw("hidden", "lg:flex")}
         />
-      </Popover>
+      </Popover2>
     </Fragment>
   );
 };

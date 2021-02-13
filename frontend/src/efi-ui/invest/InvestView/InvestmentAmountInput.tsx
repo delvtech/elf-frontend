@@ -1,14 +1,16 @@
 import { ChangeEvent, FC, ReactElement, useCallback } from "react";
-import { InputGroup, Tag } from "@blueprintjs/core";
-import { t } from "ttag";
-import tw from "efi-tailwindcss-classnames";
-import classNames from "classnames";
 
+import { InputGroup, Tag } from "@blueprintjs/core";
+import classNames from "classnames";
+import { t } from "ttag";
+
+import tw from "efi-tailwindcss-classnames";
 import styles from "efi-ui/invest/InvestView/styles.module.css";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 
 const ANY_NUMBER_REGEX = /^\d*\.?\d*$/;
 interface InvestmentAmountInputProps {
+  showMaxButton: boolean;
   assetBalance: number;
   value: string | undefined;
   onValueChange: (newValue: string) => void;
@@ -22,38 +24,59 @@ interface InvestmentAmountInputProps {
 export const InvestmentAmountInput: FC<InvestmentAmountInputProps> = ({
   className,
   value,
+  showMaxButton,
   placeholder,
   assetBalance,
   onValueChange,
   baseAssetPicker,
 }) => {
   const { isDarkMode } = useDarkMode();
+
   const setMaxAmount = useCallback(() => {
     onValueChange(`${assetBalance}`);
   }, [assetBalance, onValueChange]);
 
+  const maxButtonElement = showMaxButton ? (
+    <div className={tw("px-4")}>
+      <Tag minimal interactive onClick={setMaxAmount}>{t`MAX`}</Tag>
+    </div>
+  ) : undefined;
+
+  const onChange = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      if (!event.target.value.match(ANY_NUMBER_REGEX)) {
+        return;
+      }
+      onValueChange(event.target.value);
+    },
+    [onValueChange]
+  );
+
+  // We want InputGroup to be a controlled component, but passing `undefined` is
+  // how you express an uncontrolled component. Having this change between
+  // uncontrolled and controlled causes bugginess and big warnings in the
+  // console, so we use empty string here to keep everything controlled.
+  const inputValue = value === undefined ? "" : value;
+
   return (
     <InputGroup
       placeholder={placeholder}
-      style={{ height: "100%", width: "100%", fontSize: 26 }}
+      style={{
+        height: "100%",
+        width: "100%",
+        fontSize: 26,
+      }}
       className={classNames(
+        tw("w-full"),
         styles.investmentAmount,
         { [styles.investmentAmountLightMode]: !isDarkMode },
         className
       )}
-      value={value}
+      value={inputValue}
       large
       leftElement={baseAssetPicker}
-      rightElement={
-        <div className={tw("px-4")}>
-          <Tag minimal interactive onClick={setMaxAmount}>{t`MAX`}</Tag>
-        </div>
-      }
-      onChange={(event: ChangeEvent<HTMLInputElement>) => {
-        if (event.target.value.match(ANY_NUMBER_REGEX)) {
-          onValueChange(event.target.value);
-        }
-      }}
+      rightElement={maxButtonElement}
+      onChange={onChange}
     />
   );
 };

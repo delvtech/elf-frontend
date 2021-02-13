@@ -56,9 +56,9 @@ export const InvestCard: FC<InvestCardProps> = ({
   } = useActiveYieldPosition(yieldPositions, activeBaseAssetSymbol);
 
   // investment amount
-  const [investmentAmount, setInvestmentAmount] = useState<string | undefined>(
-    undefined
-  );
+  const [investmentAmount, setInvestmentAmount] = useState<
+    string | undefined
+  >();
 
   const investmentAmountAsNumber = +(investmentAmount || 0);
   const costPerInvestmentToken =
@@ -79,6 +79,7 @@ export const InvestCard: FC<InvestCardProps> = ({
           )}
         >
           <InvestmentAmountInput
+            showMaxButton={!!account}
             baseAssetPicker={
               <BaseAssetPicker
                 baseAssets={baseAssets}

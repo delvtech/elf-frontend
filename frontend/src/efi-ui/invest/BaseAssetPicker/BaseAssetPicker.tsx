@@ -35,6 +35,7 @@ export const BaseAssetPicker: FC<BaseAssetPickerProps> = ({
       filterable={false}
       itemRenderer={(baseAsset, { handleClick }) => (
         <BaseAssetButton
+          key={baseAsset.id}
           fill
           minimal
           onClick={handleClick}
