@@ -112,7 +112,6 @@ export const MarketsTable: FC<MarketsTableProps> = ({
               <MarketsTableRow
                 key={marketContract.address}
                 marketContract={marketContract}
-                market={markets[i]}
               />
             );
           })}
@@ -198,14 +197,14 @@ export const MarketsTableRow: FC<MarketsTableRowProps> = ({
       <td>{startDate.toLocaleDateString()}</td>
 
       <td>
-        {market.state === "running" ? (
+        {marketDetails.state === "running" ? (
           <LabeledProgressBar
             progressValue={progress}
             label={t`running`}
             helperText={time}
           />
         ) : (
-          market.state
+          marketDetails.state
         )}
       </td>
     </tr>
