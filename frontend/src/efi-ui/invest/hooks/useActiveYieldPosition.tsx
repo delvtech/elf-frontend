@@ -35,12 +35,26 @@ export function useActiveYieldPosition(
     [activeBaseAssetSymbol]
   );
 
+  const activeYieldPosition = getActiveYieldPosition(
+    activeYieldPositionByBaseAsset,
+    activeBaseAssetSymbol,
+    yieldPositionsByBaseAsset
+  );
+
+  return { activeYieldPosition, setActiveYieldPosition };
+}
+
+function getActiveYieldPosition(
+  activeYieldPositionIdByBaseAsset: Record<string, string>,
+  activeBaseAssetSymbol: string,
+  yieldPositionsByBaseAsset: Record<string, YieldPosition[]>
+) {
   const activeYieldPositionId =
-    activeYieldPositionByBaseAsset[activeBaseAssetSymbol];
+    activeYieldPositionIdByBaseAsset[activeBaseAssetSymbol];
 
   const activeYieldPosition = yieldPositionsByBaseAsset[
     activeBaseAssetSymbol
   ].find(({ id }) => id === activeYieldPositionId) as YieldPosition;
 
-  return { activeYieldPosition, setActiveYieldPosition };
+  return activeYieldPosition;
 }

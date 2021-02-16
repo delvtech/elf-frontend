@@ -4,24 +4,18 @@ import { Web3Provider } from "@ethersproject/providers";
 import { RouteComponentProps } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
 import classNames from "classnames";
-import { Money } from "ts-money";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
-import { FYTPortfolio } from "efi-ui/portfolio/FYTPortfolio/FYTPortfolio";
-import { LiquidityPositionPortfolio } from "efi-ui/portfolio/LiquidityPositionPortfolio/LiquidityPositionPortfolio";
 import {
   PortfolioTab,
   PortfolioTabs,
 } from "efi-ui/portfolio/PortfolioTabs/PortfolioTabs";
 import { PortfolioBalanceSummaryCard } from "efi-ui/portfolio/PortfolioView/PortfolioBalanceSummaryCard";
 import { PortfolioViewSubtitle } from "efi-ui/portfolio/PortfolioView/PortfolioViewSubtitle";
-import { YCPortfolio } from "efi-ui/portfolio/YCPortfolio/YCPortfolio";
-import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 
-import { useNumUniqueFYTsInWallet } from "../hooks/useNumUniqueFYTsInWallet";
-import { useTotalFYTFiatBalance } from "../hooks/useTotalFYTFiatBalance";
+import { usePortfolioTabs } from "../PortfolioTabs/usePortfolioTabs";
 
 interface PortfolioViewProps extends RouteComponentProps {}
 
@@ -107,41 +101,3 @@ export const PortfolioView: FC<PortfolioViewProps> = () => {
     </div>
   );
 };
-
-function usePortfolioTabs(account: string | null | undefined): PortfolioTab[] {
-  const { currency } = useCurrencyPref();
-  const { numFYTsInWallet, totalFiatValue: totalFYTFiatValue } = useFYTTab(
-    account
-  );
-
-  return [
-    {
-      id: "fixed-yield-tokens",
-      name: t`Fixed Yield Tokens`,
-      quantity: numFYTsInWallet,
-      totalFiatValue: totalFYTFiatValue,
-      contentRenderer: () => <FYTPortfolio account={account} />,
-    },
-    {
-      id: "yield-coupons",
-      name: t`Yield Coupons`,
-      quantity: 0,
-      totalFiatValue: Money.fromDecimal(0.0, currency),
-      contentRenderer: () => <YCPortfolio account={account} />,
-    },
-    {
-      id: "liquidity-positions",
-      name: t`Liquidity positions`,
-      quantity: 0,
-      totalFiatValue: Money.fromDecimal(0.0, currency),
-      contentRenderer: () => <LiquidityPositionPortfolio account={account} />,
-    },
-  ];
-}
-
-function useFYTTab(account: string | null | undefined) {
-  const numFYTsInWallet = useNumUniqueFYTsInWallet(account);
-  const totalFiatValue = useTotalFYTFiatBalance(account);
-
-  return { numFYTsInWallet, totalFiatValue };
-}

@@ -1,18 +1,21 @@
 import { usePairedAssetFiatPrice } from "efi-ui/markets/usePairedAssetFiatPrice";
-import { useFYTBalance } from "efi-ui/tranche/useFYTBalance";
+import { useTrancheBalance } from "efi-ui/tranche/useFYTBalance";
 
-export function useFYTFiatBalance(
+export function useTrancheFiatBalance(
   account: string | null | undefined,
   trancheAddress: string | undefined,
   bPoolAddress: string | undefined,
   baseAssetAddress: string | undefined
 ) {
-  const fytBalance = useFYTBalance(account, trancheAddress);
-  const fytFiatPrice = usePairedAssetFiatPrice(bPoolAddress, baseAssetAddress);
+  const trancheBalance = useTrancheBalance(account, trancheAddress);
+  const trancheFiatPrice = usePairedAssetFiatPrice(
+    bPoolAddress,
+    baseAssetAddress
+  );
 
   let fiatBalance;
-  if (fytFiatPrice) {
-    fiatBalance = fytFiatPrice.multiply(fytBalance);
+  if (trancheFiatPrice) {
+    fiatBalance = trancheFiatPrice.multiply(trancheBalance);
   }
 
   return fiatBalance;

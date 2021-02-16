@@ -13,7 +13,7 @@ export interface PortfolioTab {
   name: string;
   quantity: number;
 
-  totalFiatValue: Money | undefined;
+  totalFiatBalance: Money | undefined;
   contentRenderer: (tab: PortfolioTab) => ReactNode;
 }
 
@@ -36,16 +36,18 @@ export const PortfolioTabs: FC<PortfolioTabsProps> = ({
       onChange={onChangeTab}
       selectedTabId={activePortfolioTabId}
     >
-      {portfolioTabs.map(({ id, name, quantity, totalFiatValue }) => (
-        <Tab key={id} id={id} className={tw("w-full")}>
-          <PortfolioAssetLabel
-            id={id}
-            name={name}
-            quantity={quantity}
-            totalFiatValue={totalFiatValue}
-          />
-        </Tab>
-      ))}
+      {portfolioTabs.map(
+        ({ id, name, quantity, totalFiatBalance: totalFiatValue }) => (
+          <Tab key={id} id={id} className={tw("w-full")}>
+            <PortfolioAssetLabel
+              id={id}
+              name={name}
+              quantity={quantity}
+              totalFiatValue={totalFiatValue}
+            />
+          </Tab>
+        )
+      )}
     </Tabs>
   );
 };

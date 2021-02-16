@@ -14,6 +14,12 @@ import { YieldPosition } from "efi-ui/invest/InvestView/YieldPositionPicker";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { EthereumBalanceWidget } from "efi-ui/wallets/EthereumBalanceWidget/EthereumBalanceWidget";
 
+// 1. from tranche get maturation date (unlockTimestamp) and name
+// 2. from tranche get elf address
+// 3. from elf get token (this is your base asset)
+// 4. from elf get vault
+// 5. from vault get apy
+
 const yieldPositions: YieldPosition[] = [
   {
     id: "yield-position-usdc",
