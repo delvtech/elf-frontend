@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from "react";
+import React, { FC } from "react";
 
 import { Intent, Tag } from "@blueprintjs/core";
 import { t } from "ttag";
@@ -6,9 +6,19 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 
-export const PortfolioAssetLabel: FC<PortfolioAssetLabelProps> = ({ name }) => {
-  // TODO: get this from props
-  const numAssets = useMemo(() => Math.round(Math.random() * 2), []);
+interface PortfolioAssetLabelProps {
+  id: string;
+  name: string;
+  quantity: number;
+
+  totalFiatValue: number;
+}
+
+export const PortfolioAssetLabel: FC<PortfolioAssetLabelProps> = ({
+  quantity,
+  name,
+  totalFiatValue,
+}) => {
   return (
     <div
       className={tw(
@@ -22,21 +32,17 @@ export const PortfolioAssetLabel: FC<PortfolioAssetLabelProps> = ({ name }) => {
     >
       <LabeledText
         text={name}
-        label={numAssets ? "$50,281.09" : "$0.00"}
+        label={quantity ? "$50,281.09" : "$0.00"}
         className={tw("leading-none", "space-y-2")}
       />
       <Tag
         minimal
-        round={!!numAssets}
-        large={!!numAssets}
-        intent={!numAssets ? Intent.WARNING : Intent.NONE}
+        round={!!quantity}
+        large={!!quantity}
+        intent={!quantity ? Intent.WARNING : Intent.NONE}
       >
-        {!!numAssets ? numAssets : t`Learn more`}
+        {quantity ? quantity : t`Learn more`}
       </Tag>
     </div>
   );
 };
-interface PortfolioAssetLabelProps {
-  id: string;
-  name: string;
-}

@@ -1,6 +1,5 @@
-import React, { FC, ReactNode, useCallback, useState } from "react";
+import React, { FC, useCallback, useState } from "react";
 
-import { Tab, Tabs } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { RouteComponentProps } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
@@ -11,19 +10,17 @@ import tw from "efi-tailwindcss-classnames";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { FYTPortfolio } from "efi-ui/portfolio/FYTPortfolio/FYTPortfolio";
 import { LiquidityPositionPortfolio } from "efi-ui/portfolio/LiquidityPositionPortfolio/LiquidityPositionPortfolio";
-import { PortfolioAssetLabel } from "efi-ui/portfolio/PortfolioView/PortfolioAssetLabel";
 import { PortfolioBalanceSummaryCard } from "efi-ui/portfolio/PortfolioView/PortfolioBalanceSummaryCard";
+import {
+  PortfolioTab,
+  PortfolioTabs,
+} from "efi-ui/portfolio/PortfolioTabs/PortfolioTabs";
 import { PortfolioViewSubtitle } from "efi-ui/portfolio/PortfolioView/PortfolioViewSubtitle";
-import styles from "efi-ui/portfolio/PortfolioView/styles.module.css";
 import { YCPortfolio } from "efi-ui/portfolio/YCPortfolio/YCPortfolio";
+import { useTotalFYTFiatBalance } from "../hooks/useTotalFYTFiatBalance";
+import { useNumUniqueFYTsInWallet } from "../hooks/useNumUniqueFYTsInWallet";
 
 interface PortfolioViewProps extends RouteComponentProps {}
-
-interface PortfolioTab {
-  id: string;
-  name: string;
-  contentRenderer: (tab: PortfolioTab) => ReactNode;
-}
 
 export const PortfolioView: FC<PortfolioViewProps> = () => {
   const {
@@ -33,23 +30,8 @@ export const PortfolioView: FC<PortfolioViewProps> = () => {
     connector,
     library,
   } = useWeb3React<Web3Provider>();
-  const portfolioTabs: PortfolioTab[] = [
-    {
-      id: "fixed-yield-tokens",
-      name: t`Fixed Yield Tokens`,
-      contentRenderer: () => <FYTPortfolio account={account} />,
-    },
-    {
-      id: "yield-coupons",
-      name: t`Yield Coupons`,
-      contentRenderer: () => <YCPortfolio account={account} />,
-    },
-    {
-      id: "liquidity-positions",
-      name: t`Liquidity positions`,
-      contentRenderer: () => <LiquidityPositionPortfolio account={account} />,
-    },
-  ];
+
+  const portfolioTabs: PortfolioTab[] = usePortfolioTabs(account);
 
   const [activePortfolioTabId, setActivePortfolioTab] = useState(
     portfolioTabs[0].id
@@ -99,20 +81,11 @@ export const PortfolioView: FC<PortfolioViewProps> = () => {
                       "justify-between"
                     )}
                   >
-                    <Tabs
-                      vertical
-                      large
-                      className={classNames(tw("w-full"), styles.assetTabs)}
-                      id="portfolio-tabs"
-                      onChange={onChangeTab}
-                      selectedTabId={activePortfolioTabId}
-                    >
-                      {portfolioTabs.map(({ id, name }) => (
-                        <Tab key={id} id={id} className={tw("w-full")}>
-                          <PortfolioAssetLabel id={id} name={name} />
-                        </Tab>
-                      ))}
-                    </Tabs>
+                    <PortfolioTabs
+                      onChangeTab={onChangeTab}
+                      activePortfolioTabId={activePortfolioTabId}
+                      portfolioTabs={portfolioTabs}
+                    />
                   </div>
                 </div>
 
@@ -131,3 +104,40 @@ export const PortfolioView: FC<PortfolioViewProps> = () => {
     </div>
   );
 };
+
+function usePortfolioTabs(account: string | null | undefined): PortfolioTab[] {
+  const { numFYTsInWallet, totalFiatValue: totalFYTFiatValue } = useFYTTab(
+    account
+  );
+
+  return [
+    {
+      id: "fixed-yield-tokens",
+      name: t`Fixed Yield Tokens`,
+      quantity: numFYTsInWallet,
+      totalFiatValue: totalFYTFiatValue,
+      contentRenderer: () => <FYTPortfolio account={account} />,
+    },
+    {
+      id: "yield-coupons",
+      name: t`Yield Coupons`,
+      quantity: 0,
+      totalFiatValue: 0.0,
+      contentRenderer: () => <YCPortfolio account={account} />,
+    },
+    {
+      id: "liquidity-positions",
+      name: t`Liquidity positions`,
+      quantity: 0,
+      totalFiatValue: 0.0,
+      contentRenderer: () => <LiquidityPositionPortfolio account={account} />,
+    },
+  ];
+}
+
+function useFYTTab(account: string | null | undefined) {
+  const numFYTsInWallet = useNumUniqueFYTsInWallet(account);
+  const totalFiatValue = useTotalFYTFiatBalance(account);
+
+  return { numFYTsInWallet, totalFiatValue };
+}

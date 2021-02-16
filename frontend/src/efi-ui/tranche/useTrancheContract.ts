@@ -10,11 +10,15 @@ import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
  * returns a new instance of the market contract.
  * @param { string } marketAddress the contract address of the market.
  */
-export const useTrancheContract = (
-  address: string,
+export function useTrancheContract(
+  address: string | undefined,
   signerOrProvider?: Signer | Provider
-) => {
+) {
   const trancheContract = useMemo(() => {
+    if (!address) {
+      return undefined;
+    }
+
     const contract = Tranche__factory.connect(
       address,
       signerOrProvider ?? jsonRpcProvider
@@ -23,4 +27,4 @@ export const useTrancheContract = (
   }, [address, signerOrProvider]);
 
   return trancheContract;
-};
+}
