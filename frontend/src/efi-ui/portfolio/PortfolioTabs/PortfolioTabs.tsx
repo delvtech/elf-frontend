@@ -2,6 +2,7 @@ import React, { FC, ReactNode } from "react";
 
 import { Tab, Tabs } from "@blueprintjs/core";
 import classNames from "classnames";
+import { Money } from "ts-money";
 
 import tw from "efi-tailwindcss-classnames";
 import { PortfolioAssetLabel } from "efi-ui/portfolio/PortfolioView/PortfolioAssetLabel";
@@ -12,7 +13,7 @@ export interface PortfolioTab {
   name: string;
   quantity: number;
 
-  totalFiatValue: number;
+  totalFiatValue: Money | undefined;
   contentRenderer: (tab: PortfolioTab) => ReactNode;
 }
 

@@ -1,3 +1,5 @@
+import { Currency, Money } from "ts-money";
+
 import coinsJSON from "efi-coingecko/coins.json";
 
 /**
@@ -27,10 +29,11 @@ export function getCoinGeckoId(symbol: string | undefined) {
 }
 export async function fetchCoinGeckoPrice(
   coinGeckoId: string,
-  currencyDenomination = "usd"
-): Promise<number> {
+  currency: Currency
+): Promise<Money> {
+  const currencyCode = currency.code.toLowerCase();
   const result = await fetch(
-    `https://api.coingecko.com/api/v3/simple/price?ids=${coinGeckoId}&vs_currencies=${currencyDenomination}`
+    `https://api.coingecko.com/api/v3/simple/price?ids=${coinGeckoId}&vs_currencies=${currencyCode}`
   );
 
   // Result looks like:
@@ -40,7 +43,13 @@ export async function fetchCoinGeckoPrice(
     Record<string, number>
   >;
 
-  const price = resultJSON[coinGeckoId][currencyDenomination];
+  const price = resultJSON[coinGeckoId][currencyCode];
 
-  return price;
+  return Money.fromDecimal(
+    price,
+    currency,
+    // Money.fromDecimal will throw if price has more decimals than the currency
+    // allows unless you pass a rounding function
+    Math.round
+  );
 }

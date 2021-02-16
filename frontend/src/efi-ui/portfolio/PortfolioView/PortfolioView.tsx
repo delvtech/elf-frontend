@@ -4,21 +4,24 @@ import { Web3Provider } from "@ethersproject/providers";
 import { RouteComponentProps } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
 import classNames from "classnames";
+import { Money } from "ts-money";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { FYTPortfolio } from "efi-ui/portfolio/FYTPortfolio/FYTPortfolio";
 import { LiquidityPositionPortfolio } from "efi-ui/portfolio/LiquidityPositionPortfolio/LiquidityPositionPortfolio";
-import { PortfolioBalanceSummaryCard } from "efi-ui/portfolio/PortfolioView/PortfolioBalanceSummaryCard";
 import {
   PortfolioTab,
   PortfolioTabs,
 } from "efi-ui/portfolio/PortfolioTabs/PortfolioTabs";
+import { PortfolioBalanceSummaryCard } from "efi-ui/portfolio/PortfolioView/PortfolioBalanceSummaryCard";
 import { PortfolioViewSubtitle } from "efi-ui/portfolio/PortfolioView/PortfolioViewSubtitle";
 import { YCPortfolio } from "efi-ui/portfolio/YCPortfolio/YCPortfolio";
-import { useTotalFYTFiatBalance } from "../hooks/useTotalFYTFiatBalance";
+import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
+
 import { useNumUniqueFYTsInWallet } from "../hooks/useNumUniqueFYTsInWallet";
+import { useTotalFYTFiatBalance } from "../hooks/useTotalFYTFiatBalance";
 
 interface PortfolioViewProps extends RouteComponentProps {}
 
@@ -106,6 +109,7 @@ export const PortfolioView: FC<PortfolioViewProps> = () => {
 };
 
 function usePortfolioTabs(account: string | null | undefined): PortfolioTab[] {
+  const { currency } = useCurrencyPref();
   const { numFYTsInWallet, totalFiatValue: totalFYTFiatValue } = useFYTTab(
     account
   );
@@ -122,14 +126,14 @@ function usePortfolioTabs(account: string | null | undefined): PortfolioTab[] {
       id: "yield-coupons",
       name: t`Yield Coupons`,
       quantity: 0,
-      totalFiatValue: 0.0,
+      totalFiatValue: Money.fromDecimal(0.0, currency),
       contentRenderer: () => <YCPortfolio account={account} />,
     },
     {
       id: "liquidity-positions",
       name: t`Liquidity positions`,
       quantity: 0,
-      totalFiatValue: 0.0,
+      totalFiatValue: Money.fromDecimal(0.0, currency),
       contentRenderer: () => <LiquidityPositionPortfolio account={account} />,
     },
   ];

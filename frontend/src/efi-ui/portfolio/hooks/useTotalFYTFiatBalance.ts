@@ -1,7 +1,11 @@
+import { Currency, Money } from "ts-money";
+
 import { useFYTFiatBalance } from "efi-ui/markets/useFYTFiatBalance";
 import ContractAddresses from "efi/contracts/contractsJson";
+import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 
 export function useTotalFYTFiatBalance(account: string | null | undefined) {
+  const { currency } = useCurrencyPref();
   const fytWethFiatBalance = useFYTFiatBalance(
     account,
     ContractAddresses.trancheWethAddress,
@@ -18,30 +22,32 @@ export function useTotalFYTFiatBalance(account: string | null | undefined) {
 
   const totalFiatBalance = calculateTotalFiatBalance(
     fytWethFiatBalance,
-    fyUsdcFiatBalance
+    fyUsdcFiatBalance,
+    currency
   );
 
   return totalFiatBalance;
 }
 
 function calculateTotalFiatBalance(
-  fytWethFiatBalance: number | undefined,
-  fyUsdcFiatBalance: number | undefined
-) {
-  const fytsWithBalance: number[] = [];
-
-  [fytWethFiatBalance, fyUsdcFiatBalance].forEach((balance) => {
-    if (balance === undefined) {
-      return;
-    }
-    if (balance > 0) {
-      fytsWithBalance.push(balance);
-    }
+  fytWethFiatBalance: Money | undefined,
+  fyUsdcFiatBalance: Money | undefined,
+  currency: Currency
+): Money | undefined {
+  const fytsWithBalance: Money[] = [
+    fytWethFiatBalance,
+    fyUsdcFiatBalance,
+  ].filter((balance): balance is Money => {
+    return balance !== undefined;
   });
 
-  const totalFiatValue = fytsWithBalance.reduce(
-    (balance, sum) => (balance || 0) + sum,
-    0
-  );
-  return totalFiatValue;
+  if (!fytsWithBalance.length) {
+    return undefined;
+  }
+
+  const totalFiatBalance = fytsWithBalance.reduce((balance, total) => {
+    return total.add(balance);
+  }, Money.fromDecimal(0, currency));
+
+  return totalFiatBalance;
 }

@@ -1,17 +1,19 @@
 import { useQuery } from "react-query";
 
+import { Currencies, Currency, Money } from "ts-money";
+
 import { fetchCoinGeckoPrice } from "efi-coingecko";
 
 export function useCoinGeckoPrice(
   coinGeckoId: string | undefined,
-  currencyDenomination = "usd"
+  currency = Currencies.USD
 ) {
-  return useQuery<number>({
-    queryKey: makeCoinGeckoPriceQueryKey(coinGeckoId, currencyDenomination),
+  return useQuery<Money>({
+    queryKey: makeCoinGeckoPriceQueryKey(coinGeckoId, currency),
     queryFn: async () => {
       const price = await fetchCoinGeckoPrice(
         coinGeckoId as string, // safe to cast because queryFn is only called when config.enabled is true
-        currencyDenomination.toLowerCase()
+        currency
       );
       return price;
     },
@@ -21,15 +23,15 @@ export function useCoinGeckoPrice(
 
 interface CoinGeckoPriceVariables {
   coinGeckoId: string | undefined;
-  currencyDenomination: string;
+  currencyCode: string;
 }
 
 function makeCoinGeckoPriceQueryKey(
   coinGeckoId: string | undefined,
-  currencyDenomination: string
+  currency: Currency
 ): [string[], CoinGeckoPriceVariables] {
   return [
     ["coingecko", "/simple/price"],
-    { coinGeckoId, currencyDenomination },
+    { coinGeckoId, currencyCode: currency.code },
   ];
 }

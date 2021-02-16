@@ -4,7 +4,7 @@ import { useWeb3React } from "@web3-react/core";
 import classNames from "classnames";
 import { ERC20 } from "elf-contracts/types/ERC20";
 import React, { FC } from "react";
-import { Money } from "ts-money";
+import { Currency, Money } from "ts-money";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -42,7 +42,7 @@ export const WalletBalancesCard: FC<WalletBalancesCardProps> = () => {
 
   // Ether price
   const { data: ethPrice, isLoading: isEthPriceLoading } = useEthPrice(
-    currency.code
+    currency
   );
 
   // Ether balance
@@ -51,11 +51,11 @@ export const WalletBalancesCard: FC<WalletBalancesCardProps> = () => {
   const formattedEthBalance = formatEth(ethBalance);
 
   // Ether balance in Fiat
-  const [ethFiatBalance] = useEthFiatBalance(library, account, currency.code);
+  const [ethFiatBalance] = useEthFiatBalance(library, account, currency);
   const formattedEthFiatBalance = formatMoney(ethFiatBalance);
 
   // Total Wallet balance
-  const totalBalance = useTotalBalance(library, account, currency.code);
+  const totalBalance = useTotalBalance(library, account, currency);
   const formattedTotalBalance = formatMoney(totalBalance);
 
   return (
@@ -129,7 +129,7 @@ const TokenBalanceTableRow: FC<TokenBalanceTableRowProps> = ({
   // Token Price
   const [tokenPrice, tokenPriceLoadingStates] = useTokenPrice(
     tokenContract,
-    currency.code
+    currency
   );
   const isTokenPriceLoading = tokenPriceLoadingStates.some(
     ({ isLoading }) => isLoading
@@ -141,11 +141,7 @@ const TokenBalanceTableRow: FC<TokenBalanceTableRowProps> = ({
   const formattedTokenBalance = formatCurrency(tokenBalance, tokenDecimals);
 
   // Fiat Balance
-  const [fiatBalance] = useTokenFiatBalance(
-    tokenContract,
-    account,
-    currency.code
-  );
+  const [fiatBalance] = useTokenFiatBalance(tokenContract, account, currency);
 
   const formattedFiatBalance = formatMoney(fiatBalance);
 
@@ -173,20 +169,20 @@ const TokenBalanceTableRow: FC<TokenBalanceTableRowProps> = ({
 function useTotalBalance(
   library: Web3Provider | undefined,
   account: string | null | undefined,
-  currencyCode: string
+  currency: Currency
 ) {
   // Ether balance in Fiat
-  const [ethFiatBalance] = useEthFiatBalance(library, account, currencyCode);
+  const [ethFiatBalance] = useEthFiatBalance(library, account, currency);
 
   // Weth balance in Fiat
   const [wethFiatBalance] = useTokenFiatBalance(
     wethContract,
     account,
-    currencyCode
+    currency
   );
 
-  const ethFiat = ethFiatBalance || new Money(0, currencyCode);
-  const wethFiat = wethFiatBalance || new Money(0, currencyCode);
+  const ethFiat = ethFiatBalance || new Money(0, currency);
+  const wethFiat = wethFiatBalance || new Money(0, currency);
 
   const totalBalance = ethFiat.add(wethFiat);
 

@@ -1,6 +1,7 @@
 import React, { FC } from "react";
 
 import { Intent, Tag } from "@blueprintjs/core";
+import { Money } from "ts-money";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -11,7 +12,7 @@ interface PortfolioAssetLabelProps {
   name: string;
   quantity: number;
 
-  totalFiatValue: number;
+  totalFiatValue: Money | undefined;
 }
 
 export const PortfolioAssetLabel: FC<PortfolioAssetLabelProps> = ({

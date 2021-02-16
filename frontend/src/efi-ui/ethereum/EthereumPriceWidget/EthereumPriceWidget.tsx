@@ -14,7 +14,7 @@ interface EthereumPriceWidgetProps {}
 
 export const EthereumPriceWidget: FC<EthereumPriceWidgetProps> = () => {
   const { currency } = useCurrencyPref();
-  const { isLoading, data: ethPrice } = useEthPrice(currency.code);
+  const { isLoading, data: ethPrice } = useEthPrice(currency);
 
   const icon =
     currency.code === Currencies.USD.code ? IconNames.DOLLAR : IconNames.EURO;

@@ -1,5 +1,5 @@
 import { ERC20 } from "elf-contracts/types/ERC20";
-import { Money } from "ts-money";
+import { Currency, Money } from "ts-money";
 
 import { ComputedQueryResult } from "efi-ui/base/ComputedQueryResult";
 import { useConvertToFiat } from "efi-ui/money/hooks/useConvertToFiat";
@@ -10,12 +10,12 @@ import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
 export function useTokenFiatBalance(
   tokenContract: ERC20,
   account: string | null | undefined,
-  currencyCode: string
+  currency: Currency
 ): ComputedQueryResult<Money> {
   // Token Price (per base unit, eg: per ETH)
   const [tokenPrice, tokenPriceQueryResults] = useTokenPrice(
     tokenContract,
-    currencyCode
+    currency
   );
 
   // Token Balance (in fractional unit, eg: wei)
@@ -30,12 +30,7 @@ export function useTokenFiatBalance(
   );
 
   // Fiat Balance
-  const fiatBalance = useConvertToFiat(
-    tokenPrice,
-    tokenBalance,
-    tokenDecimals,
-    currencyCode
-  );
+  const fiatBalance = useConvertToFiat(tokenPrice, tokenBalance, tokenDecimals);
 
   return [
     fiatBalance,

@@ -13,20 +13,15 @@ import { Money } from "ts-money";
  * @param {number} cryptoDecimals the number of decimals to convert the fractional unit value to
  */
 export function convertToFiatBalance(
-  fiatValue: number,
-  fiatCode: string,
+  fiatValue: Money,
   cryptoFractionalValue: BigNumber,
   cryptoDecimals: number
 ): Money {
-  // Money.fromDecimal will throw if fiatValue has more decimals than the currency allows unless you
-  // pass a rounding function
-  const cryptoPrice = Money.fromDecimal(fiatValue, fiatCode, Math.round);
-
   // formatUnits will always create a string that can be converted to a number without overflow problems
   const cryptoBalance = Number(
     formatUnits(cryptoFractionalValue, cryptoDecimals)
   );
 
   // Now we can safely multiply the crypto price by the balance to get the fiat balance
-  return cryptoPrice.multiply(cryptoBalance, Math.round);
+  return fiatValue.multiply(cryptoBalance, Math.round);
 }

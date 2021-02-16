@@ -1,5 +1,7 @@
-import { BigNumber } from "ethers";
 import { useMemo } from "react";
+
+import { BigNumber } from "ethers";
+import { Money } from "ts-money";
 
 import { convertToFiatBalance } from "efi/money/convertToFiatBalance";
 
@@ -8,16 +10,15 @@ import { convertToFiatBalance } from "efi/money/convertToFiatBalance";
  */
 
 export function useConvertToFiat(
-  fiatPrice: number | undefined,
+  fiatPrice: Money | undefined,
   balance: BigNumber | undefined,
-  decimals: number | undefined,
-  currencyCode: string
+  decimals: number | undefined
 ) {
   return useMemo(() => {
     if (!fiatPrice || !balance || !decimals) {
       return;
     }
 
-    return convertToFiatBalance(fiatPrice, currencyCode, balance, decimals);
-  }, [balance, currencyCode, decimals, fiatPrice]);
+    return convertToFiatBalance(fiatPrice, balance, decimals);
+  }, [balance, decimals, fiatPrice]);
 }

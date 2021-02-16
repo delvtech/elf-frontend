@@ -12,7 +12,7 @@ export function useFYTFiatBalance(
 
   let fiatBalance;
   if (fytFiatPrice) {
-    fiatBalance = fytBalance * fytFiatPrice;
+    fiatBalance = fytFiatPrice.multiply(fytBalance);
   }
 
   return fiatBalance;
