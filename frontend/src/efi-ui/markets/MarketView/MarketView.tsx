@@ -26,10 +26,9 @@ export const MarketView: FC<MarketViewProps> = (props) => {
     connector,
     library,
   } = useWeb3React<Web3Provider>();
-
   const connectorName = getConnectorName(connector, library);
-
   const marketContract = useMarketContract(marketId);
+
   return (
     <div
       data-testid="market-view"
@@ -57,7 +56,10 @@ export const MarketView: FC<MarketViewProps> = (props) => {
           />
         </div>
         <div className={tw("flex", "flex-col", "justify-between")}>
-          <MarketDetails marketContract={marketContract} />
+          <MarketDetails
+            accountAddress={account}
+            marketContract={marketContract}
+          />
         </div>
       </div>
     </div>

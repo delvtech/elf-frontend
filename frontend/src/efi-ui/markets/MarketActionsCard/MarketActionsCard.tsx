@@ -10,6 +10,7 @@ import { CryptoSymbolOld } from "efi/crypto/CryptoSymbol";
 import { Market } from "efi/markets/Market";
 
 interface MarketActionsCardProps {
+  accountAddress: string;
   market: Market;
 }
 
@@ -34,6 +35,8 @@ export const MarketActionsCard: FC<MarketActionsCardProps> = ({ market }) => {
       >
         {action === "trade" && (
           <TradePanel
+            accountAddress={accountAddress}
+            market={market}
             inputLabel={"Trade"}
             buttonLabel={"Trade"}
             buttonIntent={Intent.PRIMARY}
@@ -52,6 +55,7 @@ export const MarketActionsCard: FC<MarketActionsCardProps> = ({ market }) => {
         )}
         {action === "stake" && (
           <TradePanel
+            accountAddress={accountAddress}
             inputLabel={"Stake"}
             buttonLabel={"Stake"}
             buttonIntent={Intent.PRIMARY}

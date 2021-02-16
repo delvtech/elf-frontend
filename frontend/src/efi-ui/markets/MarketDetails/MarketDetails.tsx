@@ -9,13 +9,16 @@ import { MarketHistory } from "efi-ui/markets/MarketHistory/MarketHistory";
 import { MarketSummary } from "efi-ui/markets/MarketSummary/MarketSummary";
 import { TokenSummary } from "efi-ui/markets/TokenSummary/TokenSummary";
 import { useMarketDetails } from "efi-ui/markets/useMarketDetails";
-import { stubbedMarkets } from "efi/markets/stubbedMarkets";
 
 interface MarketDetailsProps {
+  accountAddress: string | null | undefined;
   marketContract: BPool | undefined;
 }
 
-export const MarketDetails: FC<MarketDetailsProps> = ({ marketContract }) => {
+export const MarketDetails: FC<MarketDetailsProps> = ({
+  accountAddress,
+  marketContract,
+}) => {
   const [marketDetails] = useMarketDetails(marketContract);
 
   // TODO: I'm undecided right now if I should be passing down the contracts to the subcomponents
@@ -44,7 +47,10 @@ export const MarketDetails: FC<MarketDetailsProps> = ({ marketContract }) => {
           </div>
           <div className={tw("flex", "space-x-12")}>
             <MarketHistory />
-            <MarketActionsCard market={stubbedMarkets[0]} />
+            <MarketActionsCard
+              accountAddress={accountAddress}
+              market={marketDetails}
+            />
           </div>
         </div>
       </div>
