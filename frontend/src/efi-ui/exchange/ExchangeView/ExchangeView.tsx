@@ -10,10 +10,10 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { MarketFilterOptions } from "efi-ui/markets/MarketFilterOptions/MarketFilterOptions";
 import { MarketsTable } from "efi-ui/markets/MarketsTable/MarketsTable";
+import { useMarketContracts } from "efi-ui/markets/useMarketContracts";
 import { WalletConnectionCard } from "efi-ui/wallets/WalletConnectionCard/WalletConnectionCard";
 import { stubbedMarkets } from "efi/markets/stubbedMarkets";
 import { getConnectorName } from "efi/wallets/connectors";
-import { useMarketContracts } from "efi-ui/markets/useMarketContracts";
 
 interface ExchangeViewProps extends RouteComponentProps {}
 

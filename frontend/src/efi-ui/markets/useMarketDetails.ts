@@ -15,9 +15,9 @@ import { Market } from "efi/markets/Market";
  * @param { BPool } marketContract
  */
 export function useMarketDetails(
-  marketContract: BPool
+  marketContract: BPool | undefined
 ): [Market | undefined, QueryObserverResult[]] {
-  const marketAddress = marketContract.address;
+  const marketAddress = marketContract?.address;
 
   const nameResult = useSmartContractReadCall(marketContract, "name");
   const totalSupplyResult = useSmartContractReadCall(
@@ -88,8 +88,16 @@ export function useMarketDetails(
     description,
     totalSupply,
     assets: [
-      { name: baseAssetName, symbol: baseAssetSymbol },
-      { name: yieldAssetName, symbol: yieldAssetSymbol },
+      {
+        name: baseAssetName,
+        symbol: baseAssetSymbol,
+        address: baseAssetContract?.address,
+      },
+      {
+        name: yieldAssetName,
+        symbol: yieldAssetSymbol,
+        address: yieldAssetContract?.address,
+      },
     ],
 
     yieldAssetType: "FYT",

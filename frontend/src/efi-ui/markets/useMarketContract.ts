@@ -13,15 +13,17 @@ import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
  * signed.  a default provider is supplied to allow read operations.
  */
 export const useMarketContract = (
-  marketAddress: string,
+  marketAddress: string | undefined,
   signerOrProvider?: Signer | Provider
 ) => {
   const signer = signerOrProvider ?? jsonRpcProvider;
 
-  const marketContract = useMemo(
-    () => BPool__factory.connect(marketAddress, signer),
-    [marketAddress, signer]
-  );
+  const marketContract = useMemo(() => {
+    if (!marketAddress) {
+      return undefined;
+    }
+    return BPool__factory.connect(marketAddress, signer);
+  }, [marketAddress, signer]);
 
   return marketContract;
 };

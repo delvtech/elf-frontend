@@ -11,11 +11,14 @@ import tw from "efi-tailwindcss-classnames";
 import { MarketDetails } from "efi-ui/markets/MarketDetails/MarketDetails";
 import { WalletConnectionCard } from "efi-ui/wallets/WalletConnectionCard/WalletConnectionCard";
 import { getConnectorName } from "efi/wallets/connectors";
-import { stubbedMarkets } from "efi/markets/stubbedMarkets";
+import { useMarketContract } from "efi-ui/markets/useMarketContract";
 
-interface MarketViewProps extends RouteComponentProps {}
+interface MarketViewProps extends RouteComponentProps {
+  marketId?: string;
+}
 
-export const MarketView: FC<MarketViewProps> = () => {
+export const MarketView: FC<MarketViewProps> = (props) => {
+  const { marketId } = props;
   const {
     active,
     account,
@@ -25,6 +28,8 @@ export const MarketView: FC<MarketViewProps> = () => {
   } = useWeb3React<Web3Provider>();
 
   const connectorName = getConnectorName(connector, library);
+
+  const marketContract = useMarketContract(marketId);
   return (
     <div
       data-testid="market-view"
@@ -52,7 +57,7 @@ export const MarketView: FC<MarketViewProps> = () => {
           />
         </div>
         <div className={tw("flex", "flex-col", "justify-between")}>
-          <MarketDetails market={stubbedMarkets[0]} />
+          <MarketDetails marketContract={marketContract} />
         </div>
       </div>
     </div>

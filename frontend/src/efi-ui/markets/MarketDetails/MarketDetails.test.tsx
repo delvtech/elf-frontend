@@ -1,18 +1,20 @@
 import React from "react";
 
+import { MarketDetails } from "efi-ui/markets/MarketDetails/MarketDetails";
 import { renderWithClient } from "efi-ui/testing/renderWithClient";
 import { createQueryClient } from "efi/queryClient";
-import { MarketDetails } from "efi-ui/markets/MarketDetails/MarketDetails";
-import { stubbedMarkets } from "efi/markets/stubbedMarkets";
-import { Market } from "efi/markets/Market";
 
-const market: Market = stubbedMarkets[0];
-
+// TODO: add a contract and to extensive testing once we have the fixtures and hardhat added to the
+// repo
 test("should render information about the market", async () => {
+  // const [elementSigner] = new MockProvider().getWallets();
+  // const BPOOL_ADDRESS = "0x1234123412341234123412341234123412341234";
+  // const marketContract = BPool__factory.connect(BPOOL_ADDRESS, elementSigner);
+
   const queryClient = createQueryClient();
   const { getByText } = await renderWithClient(
     queryClient,
-    <MarketDetails market={market} />
+    <MarketDetails marketContract={undefined} />
   );
 
   expect(getByText("Total Liquidity")).toBeVisible();

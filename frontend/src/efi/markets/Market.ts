@@ -35,7 +35,7 @@ export interface Market {
   /**
    * The assets addresses to trade in the market, should be [baseAsset, yieldAsset]
    */
-  assets: { name: string | undefined; symbol: string | undefined }[];
+  assets: MarketAsset[];
 
   /**
    *  The type of yield bearing asset in the market.
@@ -53,6 +53,12 @@ export interface Market {
   startDate: number;
 
   state: TrancheState;
+}
+
+export interface MarketAsset {
+  name: string | undefined;
+  symbol: string | undefined;
+  address: string | undefined;
 }
 export type TrancheState = "queued" | "running" | "closed";
 
