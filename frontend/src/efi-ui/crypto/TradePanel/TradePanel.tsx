@@ -16,6 +16,7 @@ import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
 import { CryptoName } from "efi/crypto/CryptoName";
 import { CryptoSymbolOld } from "efi/crypto/CryptoSymbol";
 import { TokenBalance } from "efi/crypto/TokenBalance";
+import { IconNames } from "@blueprintjs/icons";
 
 interface TradePanelProps {
   formDisabled?: boolean;
@@ -53,6 +54,8 @@ export const TradePanel: FC<TradePanelProps> = ({
   const [stringValue, onChange, setValue] = useNumericInput(
     numericInputOptions
   );
+  const switchAssets = useCallback(() => {}, []);
+
   const value = stringValue
     ? parseUnits(stringValue, tradeCryptoBalance?.decimals)
     : undefined;
@@ -134,6 +137,17 @@ export const TradePanel: FC<TradePanelProps> = ({
           >{`${balance} ${tradeCryptoSymbol}`}</span>
         </div>
       </div>
+
+      <Button
+        icon={IconNames.ARROWS_VERTICAL}
+        onClick={switchAssets}
+        minimal
+        outlined
+        large
+        intent={buttonIntent}
+      >
+        {t`Switch`}
+      </Button>
 
       {/* Receive Asset */}
       <div className={tw("flex", "justify-between", "items-center")}>
