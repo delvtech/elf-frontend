@@ -1,4 +1,4 @@
-import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
+import { CryptoSymbolOld } from "efi/crypto/CryptoSymbol";
 
 /**
  * @deprecated Use CryptoAsset instead
@@ -12,7 +12,7 @@ export interface CryptoAssetInfoOld {
   /**
    * The trading symbol of the currency, eg:  "Eth".
    */
-  symbol: CryptoSymbol;
+  symbol: CryptoSymbolOld;
 
   /**
    * The image to use as the logo.

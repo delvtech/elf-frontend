@@ -5,13 +5,13 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
-import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
+import { CryptoSymbolOld } from "efi/crypto/CryptoSymbol";
 import { TokenBalance } from "efi/crypto/TokenBalance";
 
 interface ConfirmWithdrawButtonProps {
   buttonLabel: string;
   amountToWithdraw: BigNumber;
-  cryptoSymbol: CryptoSymbol;
+  cryptoSymbol: CryptoSymbolOld;
   cryptoBalance: TokenBalance | undefined;
   withdrawPending: boolean;
   onConfirmWithdraw: (amount: BigNumber) => void;

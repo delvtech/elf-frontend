@@ -1,9 +1,9 @@
-import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
+import { CryptoSymbolOld } from "efi/crypto/CryptoSymbol";
 
 /**
  * The names of all crypto assets supported in Element.
  */
-export const CryptoName: Record<CryptoSymbol, string> = {
+export const CryptoName: Record<CryptoSymbolOld, string> = {
   ETH: "Ethereum",
 
   /**

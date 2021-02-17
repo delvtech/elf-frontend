@@ -5,12 +5,12 @@ import React, { FC, useCallback } from "react";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
+import { CryptoSymbolOld } from "efi/crypto/CryptoSymbol";
 
 interface ConfirmDepositButtonProps {
   buttonLabel: string;
   amountToDeposit: BigNumber;
-  cryptoSymbol: CryptoSymbol;
+  cryptoSymbol: CryptoSymbolOld;
   cryptoBalance: BigNumber | undefined;
   depositPending: boolean;
   onConfirmDeposit: (amount: BigNumber) => void;

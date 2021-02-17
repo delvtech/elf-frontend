@@ -14,7 +14,7 @@ import styles from "efi-ui/crypto/TradePanel/TradePanel.module.css";
 
 import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
 import { CryptoName } from "efi/crypto/CryptoName";
-import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
+import { CryptoSymbolOld } from "efi/crypto/CryptoSymbol";
 import { TokenBalance } from "efi/crypto/TokenBalance";
 
 interface TradePanelProps {
@@ -23,9 +23,9 @@ interface TradePanelProps {
   inputLabel: string;
   buttonLabel: string;
   buttonIntent?: Intent;
-  tradeCryptoSymbol: CryptoSymbol;
+  tradeCryptoSymbol: CryptoSymbolOld;
   tradeCryptoBalance: TokenBalance | undefined;
-  receiveCryptoSymbol: CryptoSymbol;
+  receiveCryptoSymbol: CryptoSymbolOld;
   receiveCryptoBalance: TokenBalance | undefined;
   onTransaction: (amount: BigNumber) => void;
 }
@@ -114,8 +114,8 @@ export const TradePanel: FC<TradePanelProps> = ({
               ) : (
                 <img
                   className={tw("h-5", "w-5")}
-                  src={CryptoIcon[tradeCryptoSymbol as CryptoSymbol]}
-                  alt={CryptoName[tradeCryptoSymbol as CryptoSymbol]}
+                  src={CryptoIcon[tradeCryptoSymbol as CryptoSymbolOld]}
+                  alt={CryptoName[tradeCryptoSymbol as CryptoSymbolOld]}
                 />
               )}
             </div>
@@ -159,8 +159,8 @@ export const TradePanel: FC<TradePanelProps> = ({
               ) : (
                 <img
                   className={tw("h-5", "w-5")}
-                  src={CryptoIcon[receiveCryptoSymbol as CryptoSymbol]}
-                  alt={CryptoName[receiveCryptoSymbol as CryptoSymbol]}
+                  src={CryptoIcon[receiveCryptoSymbol as CryptoSymbolOld]}
+                  alt={CryptoName[receiveCryptoSymbol as CryptoSymbolOld]}
                 />
               )}
             </div>

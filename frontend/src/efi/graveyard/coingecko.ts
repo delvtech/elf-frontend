@@ -1,6 +1,6 @@
 import { Currencies } from "ts-money";
 
-import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
+import { CryptoSymbolOld } from "efi/crypto/CryptoSymbol";
 
 /**
  * Supported crypto ids
@@ -11,7 +11,7 @@ export type CoinGeckoCryptoId = "ethereum" | "dai" | "yearn-finance" | "weth";
  * Crosswalk for looking up CoinGecko ids given an efi CryptoSymbol value.
  */
 export const CoinGeckoCryptoIdsOld: Record<
-  CryptoSymbol,
+  CryptoSymbolOld,
   CoinGeckoCryptoId | undefined
 > = {
   USDC: undefined,

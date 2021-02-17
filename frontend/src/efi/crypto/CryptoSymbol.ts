@@ -1,7 +1,9 @@
 /**
  * The names of all crypto assets supported in Element.
+ *
+ * @deprecated use CryptoSymbol insterad
  */
-export type CryptoSymbol =
+export type CryptoSymbolOld =
   | "USDC"
   | "DAI"
   | "ELF-L"
@@ -16,3 +18,5 @@ export type CryptoSymbol =
   | "yUSDC"
   | "yUSDT"
   | "yETH";
+
+export type CryptoSymbol = "USDC" | "ETH" | "WETH";

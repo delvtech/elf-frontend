@@ -6,7 +6,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { TradePanel } from "efi-ui/crypto/TradePanel/TradePanel";
-import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
+import { CryptoSymbolOld } from "efi/crypto/CryptoSymbol";
 import { Market } from "efi/markets/Market";
 
 interface MarketActionsCardProps {
@@ -35,7 +35,7 @@ export const MarketActionsCard: FC<MarketActionsCardProps> = ({ market }) => {
             value: BigNumber.from(5000000000),
             decimals: BigNumber.from(9),
           }}
-          receiveCryptoSymbol={"fyETH" as CryptoSymbol}
+          receiveCryptoSymbol={"fyETH" as CryptoSymbolOld}
           receiveCryptoBalance={{
             value: BigNumber.from(0),
             decimals: BigNumber.from(9),

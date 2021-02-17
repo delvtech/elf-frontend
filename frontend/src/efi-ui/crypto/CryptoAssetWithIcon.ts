@@ -1,7 +1,6 @@
-import { FC, SVGProps } from "react";
-
+import { AssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 
 export type CryptoAssetWithIcon = CryptoAsset & {
-  assetIcon: FC<SVGProps<SVGSVGElement> & { title?: string }>;
+  assetIcon: AssetIcon;
 };

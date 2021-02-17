@@ -8,7 +8,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
+import { CryptoSymbolOld } from "efi/crypto/CryptoSymbol";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 
 export interface YieldPosition {
@@ -17,7 +17,7 @@ export interface YieldPosition {
   symbol: string;
   apy: number;
   maturity: string;
-  baseAssetSymbol: CryptoSymbol;
+  baseAssetSymbol: CryptoSymbolOld;
 }
 interface YieldPositionPickerProps {
   yieldPositions: YieldPosition[];

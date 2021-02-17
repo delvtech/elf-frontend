@@ -8,11 +8,11 @@ import { jt, t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { EthereumPriceWidget } from "efi-ui/ethereum/EthereumPriceWidget/EthereumPriceWidget";
 import { GasPriceWidget } from "efi-ui/ethereum/GasPriceWidget/GasPriceWidget";
-import { baseAssets } from "efi-ui/invest/baseAssets";
 import { InvestCard } from "efi-ui/invest/InvestView/InvestCard";
 import { YieldPosition } from "efi-ui/invest/InvestView/YieldPositionPicker";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { EthereumBalanceWidget } from "efi-ui/wallets/EthereumBalanceWidget/EthereumBalanceWidget";
+import { useBaseAssets } from "efi-ui/invest/hooks/useBaseAssets";
 
 // 1. from tranche get maturation date (unlockTimestamp) and name
 // 2. from tranche get elf address
@@ -49,6 +49,8 @@ export const InvestView: FC<InvestViewProps> = () => {
     connector,
     library,
   } = useWeb3React<Web3Provider>();
+
+  const baseAssets = useBaseAssets();
 
   return (
     <div

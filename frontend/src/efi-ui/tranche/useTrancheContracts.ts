@@ -4,7 +4,6 @@ import { Signer } from "ethers";
 
 import { useTrancheContract } from "efi-ui/tranche/useTrancheContract";
 import ContractAddresses from "efi/contracts/contractsJson";
-import { useQueries } from "react-query";
 
 export function useTrancheContracts(signerOrProvider?: Signer | Provider) {
   const { trancheUsdcAddress, trancheWethAddress } = ContractAddresses;

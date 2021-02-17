@@ -1,6 +1,6 @@
-import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
+import { CryptoSymbolOld } from "efi/crypto/CryptoSymbol";
 
 /**
  * List of tokens we have contract interfaces for.
  */
-export type TokenContractSymbols = Extract<CryptoSymbol, "WETH" | "USDC">;
+export type TokenContractSymbols = Extract<CryptoSymbolOld, "WETH" | "USDC">;

@@ -8,7 +8,7 @@ import {
 } from "ethers";
 
 import ContractAddresses from "efi/contracts/contractsJson";
-import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
+import { CryptoSymbolOld } from "efi/crypto/CryptoSymbol";
 import { ONE_ETHER } from "efi/crypto/ethereum";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 
@@ -29,7 +29,7 @@ export const elfContract = Elf__factory.connect(
 ) as ElfWithStubs;
 
 // stub out call to get asset symbols
-elfContract.functions.assetSymbols = async (): Promise<[CryptoSymbol[]]> => [
+elfContract.functions.assetSymbols = async (): Promise<[CryptoSymbolOld[]]> => [
   ["yDAI", "yTUSD", "yUSDC", "yUSDT"],
 ];
 // stub out call to get asset balances

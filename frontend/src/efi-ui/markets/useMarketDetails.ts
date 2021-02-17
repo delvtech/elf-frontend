@@ -3,7 +3,7 @@ import { QueryObserverResult } from "react-query";
 import { BPool } from "elf-contracts/types/BPool";
 import { t } from "ttag";
 
-import { useERC20Contract } from "efi-ui/contracts/useERC20Contract";
+import { useERC20Contract } from "efi-ui/contracts/useERC20Contract/useERC20Contract";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { getQueryCombinedSuccessState } from "efi-ui/query/getQueryCombinedSuccessState";
 import { ONE_WEEK_IN_MILLISECONDS } from "efi/base/time";

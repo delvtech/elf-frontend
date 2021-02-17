@@ -3,7 +3,7 @@ import { QueryObserverResult } from "react-query";
 import { ERC20 } from "elf-contracts/types/ERC20";
 import { BigNumber } from "ethers";
 
-import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCalls";
+import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
 import { renderHookWithClient } from "efi-ui/testing/renderHookWithClient";
 import { createQueryClient } from "efi/queryClient";
 

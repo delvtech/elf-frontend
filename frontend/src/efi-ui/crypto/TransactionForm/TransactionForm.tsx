@@ -13,7 +13,7 @@ import { CryptoIcon } from "efi-ui/crypto/CryptoIcon";
 import styles from "efi-ui/crypto/TransactionForm/TransactionForm.module.css";
 import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
 import { CryptoName } from "efi/crypto/CryptoName";
-import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
+import { CryptoSymbolOld } from "efi/crypto/CryptoSymbol";
 import { TokenBalance } from "efi/crypto/TokenBalance";
 
 interface TransactionFormProps {
@@ -22,7 +22,7 @@ interface TransactionFormProps {
   inputLabel: string;
   buttonLabel: string;
   buttonIntent?: Intent;
-  cryptoSymbol: CryptoSymbol;
+  cryptoSymbol: CryptoSymbolOld;
   cryptoBalance: TokenBalance | undefined;
   onTransaction: (amount: BigNumber) => void;
 }
@@ -108,8 +108,8 @@ export const TransactionForm: FC<TransactionFormProps> = ({
               ) : (
                 <img
                   className={tw("h-5", "w-5")}
-                  src={CryptoIcon[cryptoSymbol as CryptoSymbol]}
-                  alt={CryptoName[cryptoSymbol as CryptoSymbol]}
+                  src={CryptoIcon[cryptoSymbol as CryptoSymbolOld]}
+                  alt={CryptoName[cryptoSymbol as CryptoSymbolOld]}
                 />
               )}
             </div>

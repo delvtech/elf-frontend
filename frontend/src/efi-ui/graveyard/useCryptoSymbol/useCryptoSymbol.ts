@@ -5,9 +5,9 @@ import {
   CoinGeckoCryptoIdsOld,
   fetchCryptoSymbolOld,
 } from "efi/graveyard/coingecko";
-import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
+import { CryptoSymbolOld } from "efi/crypto/CryptoSymbol";
 
-export function useCryptoSymbol(cryptoSymbol: CryptoSymbol) {
+export function useCryptoSymbol(cryptoSymbol: CryptoSymbolOld) {
   const enabled = !!CoinGeckoCryptoIdsOld[cryptoSymbol];
 
   return useQuery(
@@ -24,11 +24,11 @@ export function useCryptoSymbol(cryptoSymbol: CryptoSymbol) {
 }
 
 interface CryptoSymbolVariables {
-  cryptoSymbol: CryptoSymbol;
+  cryptoSymbol: CryptoSymbolOld;
 }
 
 export function makeCryptoSymbolQueryKey(
-  cryptoSymbol: CryptoSymbol
+  cryptoSymbol: CryptoSymbolOld
 ): [string, CryptoSymbolVariables] {
   return ["crypto-symbol", { cryptoSymbol }];
 }

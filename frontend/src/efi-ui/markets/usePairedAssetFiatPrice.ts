@@ -2,7 +2,7 @@ import { Money } from "ts-money";
 
 import { CoinGeckoIds } from "efi-coingecko";
 import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
-import { useERC20Contract } from "efi-ui/contracts/useERC20Contract";
+import { useERC20Contract } from "efi-ui/contracts/useERC20Contract/useERC20Contract";
 import { usePairedAssetPrice } from "efi-ui/markets/usePairedAssetPrice";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
