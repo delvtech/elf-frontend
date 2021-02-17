@@ -10,12 +10,15 @@ import { CryptoSymbolOld } from "efi/crypto/CryptoSymbol";
 import { Market } from "efi/markets/Market";
 
 interface MarketActionsCardProps {
-  accountAddress: string;
-  market: Market;
+  accountAddress: string | null | undefined;
+  market: Market | undefined;
 }
 
 type MarketAction = "trade" | "stake";
-export const MarketActionsCard: FC<MarketActionsCardProps> = ({ market }) => {
+export const MarketActionsCard: FC<MarketActionsCardProps> = ({
+  accountAddress,
+  market,
+}) => {
   const [action, setActionUI] = useState<MarketAction>("trade");
   const showTradeUI = useCallback(() => setActionUI("trade"), []);
   const showStakeUI = useCallback(() => setActionUI("stake"), []);
@@ -56,6 +59,7 @@ export const MarketActionsCard: FC<MarketActionsCardProps> = ({ market }) => {
         {action === "stake" && (
           <TradePanel
             accountAddress={accountAddress}
+            market={market}
             inputLabel={"Stake"}
             buttonLabel={"Stake"}
             buttonIntent={Intent.PRIMARY}

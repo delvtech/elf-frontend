@@ -12,13 +12,19 @@ import {
 import { CryptoIcon } from "efi-ui/crypto/CryptoIcon";
 import styles from "efi-ui/crypto/TradePanel/TradePanel.module.css";
 
-import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
 import { CryptoName } from "efi/crypto/CryptoName";
 import { CryptoSymbolOld } from "efi/crypto/CryptoSymbol";
 import { TokenBalance } from "efi/crypto/TokenBalance";
 import { IconNames } from "@blueprintjs/icons";
+import { Market, MarketAsset } from "efi/markets/Market";
+import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
+import { useERC20Contract } from "efi-ui/contracts/useERC20Contract";
+import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
+import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
 
 interface TradePanelProps {
+  accountAddress: string | null | undefined;
+  market: Market | undefined;
   formDisabled?: boolean;
   submitDisabled?: boolean;
   inputLabel: string;
@@ -43,29 +49,56 @@ export const TradePanel: FC<TradePanelProps> = ({
   formDisabled = false,
   submitDisabled = false,
   inputLabel,
-  tradeCryptoSymbol,
-  tradeCryptoBalance,
-  receiveCryptoSymbol,
-  receiveCryptoBalance,
   buttonLabel,
   buttonIntent = Intent.PRIMARY,
   onTransaction,
+  market,
+  accountAddress,
 }) => {
+  let baseAsset: MarketAsset = {} as MarketAsset;
+  let yieldAsset: MarketAsset = {} as MarketAsset;
+  if (market) {
+    const { assets } = market;
+    baseAsset = assets[0];
+    yieldAsset = assets[1];
+  }
+
+  const baseAssetContract = useERC20Contract(baseAsset.address);
+  const yieldAssetContract = useERC20Contract(yieldAsset.address);
+
+  const baseAssetBalance = useTokenBalance(baseAssetContract, accountAddress);
+  const [baseAssetDecimals] = useTokenDecimals(baseAssetContract);
+  const [baseAssetBalanceOf] = useTokenBalanceOf(
+    baseAssetContract,
+    accountAddress
+  );
+  const yieldAssetBalance = useTokenBalance(yieldAssetContract, accountAddress);
+  const [yieldAssetBalanceOf] = useTokenBalanceOf(
+    yieldAssetContract,
+    accountAddress
+  );
+  const [yieldAssetDecimals] = useTokenDecimals(yieldAssetContract);
+
+  const tradeCryptoBalance = baseAssetBalanceOf;
+  const tradeCryptoDisplayBalance = baseAssetBalance;
+  const tradeCryptoSymbol = baseAsset.symbol;
+  const tradeCryptoDecimals = baseAssetDecimals;
+
+  const receiveCryptoBalance = yieldAssetBalanceOf;
+  const receiveCryptoDisplayBalance = yieldAssetBalance;
+  const receiveCryptoSymbol = yieldAsset.symbol;
+  const receiveCryptoDecimals = yieldAssetDecimals;
+
   const [stringValue, onChange, setValue] = useNumericInput(
     numericInputOptions
   );
   const switchAssets = useCallback(() => {}, []);
 
   const value = stringValue
-    ? parseUnits(stringValue, tradeCryptoBalance?.decimals)
+    ? parseUnits(stringValue, tradeCryptoDecimals)
     : undefined;
   const validValue =
-    value && tradeCryptoBalance ? value.lte(tradeCryptoBalance.value) : true;
-
-  const balance = formatCurrency(
-    tradeCryptoBalance?.value,
-    tradeCryptoBalance?.decimals.toNumber()
-  );
+    value && tradeCryptoBalance ? value.lte(tradeCryptoBalance) : true;
 
   const onClick = useCallback(async () => {
     if (validValue && onTransaction) {
@@ -80,7 +113,9 @@ export const TradePanel: FC<TradePanelProps> = ({
   }, [onChange, onTransaction, validValue, value]);
 
   const setMaxValue = useCallback(() => {
-    setValue(formatEther(tradeCryptoBalance?.value as BigNumber));
+    if (tradeCryptoBalance) {
+      setValue(formatEther(tradeCryptoBalance));
+    }
   }, [tradeCryptoBalance, setValue]);
 
   return (
@@ -112,7 +147,8 @@ export const TradePanel: FC<TradePanelProps> = ({
           }
           leftElement={
             <div className={tw("px-2")}>
-              {tradeCryptoSymbol === ("ELF" as any) ? (
+              {tradeCryptoSymbol === ("ELF" as any) ||
+              !CryptoIcon[tradeCryptoSymbol as CryptoSymbol] ? (
                 "✨"
               ) : (
                 <img
@@ -134,7 +170,7 @@ export const TradePanel: FC<TradePanelProps> = ({
             className={tw("text-xs", "text-right", {
               "text-danger": !validValue,
             })}
-          >{`${balance} ${tradeCryptoSymbol}`}</span>
+          >{`${tradeCryptoDisplayBalance} ${tradeCryptoSymbol}`}</span>
         </div>
       </div>
 
@@ -142,12 +178,9 @@ export const TradePanel: FC<TradePanelProps> = ({
         icon={IconNames.ARROWS_VERTICAL}
         onClick={switchAssets}
         minimal
-        outlined
         large
         intent={buttonIntent}
-      >
-        {t`Switch`}
-      </Button>
+      ></Button>
 
       {/* Receive Asset */}
       <div className={tw("flex", "justify-between", "items-center")}>
@@ -168,7 +201,8 @@ export const TradePanel: FC<TradePanelProps> = ({
           }
           leftElement={
             <div className={tw("px-2")}>
-              {receiveCryptoSymbol === ("ELF" as any) ? (
+              {receiveCryptoSymbol === ("ELF" as any) ||
+              !CryptoIcon[receiveCryptoSymbol as CryptoSymbol] ? (
                 "✨"
               ) : (
                 <img
@@ -190,7 +224,7 @@ export const TradePanel: FC<TradePanelProps> = ({
             className={tw("text-xs", "text-right", {
               "text-danger": !validValue,
             })}
-          >{`${balance} ${receiveCryptoSymbol}`}</span>
+          >{`${receiveCryptoDisplayBalance} ${receiveCryptoSymbol}`}</span>
         </div>
       </div>
       <Button
