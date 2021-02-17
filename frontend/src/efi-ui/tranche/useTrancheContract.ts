@@ -6,10 +6,6 @@ import { Signer } from "ethers";
 
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 
-/**
- * returns a new instance of the market contract.
- * @param { string } marketAddress the contract address of the market.
- */
 export function useTrancheContract(
   address: string | undefined,
   signerOrProvider?: Signer | Provider

@@ -1,5 +1,6 @@
+import { QueryObserverResult, useQuery, UseQueryOptions } from "react-query";
+
 import { Contract } from "ethers";
-import { QueryObserverResult, useQuery } from "react-query";
 
 import { Unpacked } from "efi/base/Unpacked";
 import {
@@ -8,7 +9,7 @@ import {
   ContractReturnType,
 } from "efi/contracts/types";
 
-interface UseSmartContractReadCallOptions<
+export interface UseSmartContractReadCallOptions<
   TContract extends Contract,
   TMethodName extends ContractMethodName<TContract>
 > {
@@ -25,6 +26,26 @@ export function useSmartContractReadCall<
   methodName: TMethodName,
   options?: UseSmartContractReadCallOptions<TContract, TMethodName>
 ): QueryObserverResult<TReturnType> {
+  const queryOptions = makeSmartContractReadCallUseQueryOptions<
+    TContract,
+    TMethodName,
+    TReturnType
+  >(contract, methodName, options);
+
+  const queryResult = useQuery(queryOptions);
+
+  return queryResult;
+}
+
+export function makeSmartContractReadCallUseQueryOptions<
+  TContract extends Contract,
+  TMethodName extends ContractMethodName<TContract>,
+  TReturnType extends Unpacked<ContractReturnType<TContract, TMethodName>>
+>(
+  contract: TContract | undefined,
+  methodName: TMethodName,
+  options?: UseSmartContractReadCallOptions<TContract, TMethodName>
+): UseQueryOptions<TReturnType> {
   const { enabled = true, callArgs } = options || {};
 
   const queryKey = makeSmartContractReadCallQueryKey<TContract, TMethodName>(
@@ -39,16 +60,14 @@ export function useSmartContractReadCall<
     return result;
   };
 
-  const queryResult = useQuery<TReturnType>({
+  return {
     queryKey,
     queryFn,
     enabled: !!contract && enabled,
-  });
-
-  return queryResult;
+  };
 }
 
-function makeSmartContractReadCallQueryKey<
+export function makeSmartContractReadCallQueryKey<
   TContract extends Contract,
   TMethodName extends ContractMethodName<TContract>
 >(
