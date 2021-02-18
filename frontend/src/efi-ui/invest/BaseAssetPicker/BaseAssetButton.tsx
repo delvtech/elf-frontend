@@ -34,11 +34,15 @@ export const BaseAssetButton: FC<BaseAssetButtonProps> = ({
   return (
     <button
       onClick={onClick}
-      className={classNames(Classes.BUTTON, {
-        [Classes.MINIMAL]: minimal,
-        [Classes.OUTLINED]: outlined,
-        [Classes.FILL]: fill,
-      })}
+      className={classNames(
+        Classes.BUTTON,
+        {
+          [Classes.MINIMAL]: minimal,
+          [Classes.OUTLINED]: outlined,
+          [Classes.FILL]: fill,
+        },
+        tw("flex", "justify-start")
+      )}
     >
       <AssetLabel
         icon={AssetIcon}

@@ -7,6 +7,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
+import styles from "efi-ui/invest/BaseAssetPicker/styles.module.css";
 
 import { BaseAssetButton } from "./BaseAssetButton";
 
@@ -29,8 +30,11 @@ export const BaseAssetPicker: FC<BaseAssetPickerProps> = ({
 
   return (
     <Select
-      className={classNames(tw("w-64", "flex-shrink-0"), className)}
-      popoverProps={{ minimal: true, targetClassName: tw("w-full") }}
+      className={classNames(tw("flex-shrink-0"), className)}
+      popoverProps={{
+        minimal: true,
+        popoverClassName: classNames(styles.baseAssetPicker),
+      }}
       items={baseAssets}
       filterable={false}
       itemRenderer={(baseAsset, { handleClick }) => (

@@ -4,6 +4,7 @@ import daiLogo from "efi-static-assets/logos/DAI-logo.png";
 import efiLogo from "efi-static-assets/logos/efi-logo.svg";
 import ethLogo from "efi-static-assets/logos/ETH-logo.png";
 import { ReactComponent as UsdcIcon } from "efi-static-assets/logos/svg/USDC.svg";
+import { ReactComponent as WethIcon } from "efi-static-assets/logos/svg/WETH.svg";
 import tusdLogo from "efi-static-assets/logos/TUSD-logo.png";
 import usdcLogo from "efi-static-assets/logos/USDC-logo.png";
 import usdtLogo from "efi-static-assets/logos/USDT-logo.png";
@@ -26,9 +27,7 @@ export type AssetIcon = FC<
 export const CryptoIconSvg: Record<CryptoSymbol, AssetIcon> = {
   ETH: EthIcon,
   USDC: UsdcIcon,
-
-  // stubbed ReactComponents until we've chosen svgs
-  WETH: EthIcon,
+  WETH: WethIcon,
 };
 
 export const CryptoIcon: Record<CryptoSymbolOld, string> = {

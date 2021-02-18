@@ -1,8 +1,8 @@
-import { useElfContracts } from "efi-ui/contracts/useElfContracts/useElfContracts";
 import { useERC20Contracts } from "efi-ui/contracts/useERC20Contracts/useERC20Contracts";
 import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
 import { useTrancheContracts } from "efi-ui/tranche/useTrancheContracts";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
+import { useElfContractsFromTranches } from "./useElfContractsFromTranches";
 
 /**
  * Gets a list of all the tranche contracts.
@@ -10,12 +10,10 @@ import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 export function useBaseAssetContracts() {
   const trancheContracts = useTrancheContracts(jsonRpcProvider);
 
-  // The elf contract assigned to the tranche tells us the base asset
-  const elfAddressesResult = useSmartContractReadCalls(trancheContracts, "elf");
-  const elfAddresses = elfAddressesResult.map((result) => result.data);
+  // The elf contract from the tranche tells us the base asset
+  const elfContracts = useElfContractsFromTranches(trancheContracts);
 
   // The token is the address to the base asset
-  const elfContracts = useElfContracts(elfAddresses, jsonRpcProvider);
   const baseAssetAddressesResult = useSmartContractReadCalls(
     elfContracts,
     "token"
@@ -24,9 +22,11 @@ export function useBaseAssetContracts() {
     (result) => result.data
   );
 
+  // All base assets are known to be ERC20s
   const baseAssetContracts = useERC20Contracts(
     baseAssetAddresses,
     jsonRpcProvider
   );
+
   return baseAssetContracts;
 }
