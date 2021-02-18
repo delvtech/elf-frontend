@@ -1,7 +1,9 @@
+import React, { FC, useCallback, useEffect } from "react";
+
 import { Button, InputGroup, Intent, Tag } from "@blueprintjs/core";
+import { IconNames } from "@blueprintjs/icons";
 import { BigNumber } from "ethers";
-import { formatEther, parseUnits } from "ethers/lib/utils";
-import React, { FC, useCallback } from "react";
+import { formatEther, parseEther, parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -11,13 +13,21 @@ import {
 } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { CryptoIcon } from "efi-ui/crypto/CryptoIcon";
 import styles from "efi-ui/crypto/TradePanel/TradePanel.module.css";
-
-import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
+import { useMarketContract } from "efi-ui/markets/useMarketContract";
+import { usePairedAssetPrice } from "efi-ui/markets/usePairedAssetPrice";
+import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
+import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
+import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { CryptoName } from "efi/crypto/CryptoName";
 import { CryptoSymbolOld } from "efi/crypto/CryptoSymbol";
 import { TokenBalance } from "efi/crypto/TokenBalance";
+import { Market, MarketAsset } from "efi/markets/Market";
+import { useCalcOutGivenIn } from "efi-ui/balancer/useCalcOutGivenIn";
+import { useERC20Contract } from "efi-ui/contracts/useERC20Contract/useERC20Contract";
 
 interface TradePanelProps {
+  accountAddress: string | null | undefined;
+  market: Market | undefined;
   formDisabled?: boolean;
   submitDisabled?: boolean;
   inputLabel: string;
@@ -42,43 +52,100 @@ export const TradePanel: FC<TradePanelProps> = ({
   formDisabled = false,
   submitDisabled = false,
   inputLabel,
-  tradeCryptoSymbol,
-  tradeCryptoBalance,
-  receiveCryptoSymbol,
-  receiveCryptoBalance,
   buttonLabel,
   buttonIntent = Intent.PRIMARY,
   onTransaction,
+  market,
+  accountAddress,
 }) => {
-  const [stringValue, onChange, setValue] = useNumericInput(
+  let baseAsset: MarketAsset = {} as MarketAsset;
+  let yieldAsset: MarketAsset = {} as MarketAsset;
+  if (market) {
+    const { assets } = market;
+    baseAsset = assets[0];
+    yieldAsset = assets[1];
+  }
+
+  // TODO: pass this in directly
+  const marketContract = useMarketContract(market?.contractAddress);
+
+  const baseAssetContract = useERC20Contract(baseAsset.address);
+  const baseAssetBalance = useTokenBalance(baseAssetContract, accountAddress);
+  const [baseAssetDecimals] = useTokenDecimals(baseAssetContract);
+  const [baseAssetBalanceOf] = useTokenBalanceOf(
+    baseAssetContract,
+    accountAddress
+  );
+
+  const yieldAssetContract = useERC20Contract(yieldAsset.address);
+  const yieldAssetBalance = useTokenBalance(yieldAssetContract, accountAddress);
+  const [yieldAssetBalanceOf] = useTokenBalanceOf(
+    yieldAssetContract,
+    accountAddress
+  );
+  const [yieldAssetDecimals] = useTokenDecimals(yieldAssetContract);
+
+  const { data: spotPrice } = usePairedAssetPrice(
+    marketContract?.address,
+    baseAsset.address
+  );
+
+  let price;
+  if (spotPrice) {
+    price = 1 / +formatEther(spotPrice);
+  }
+
+  const tradeCryptoBalance = baseAssetBalanceOf;
+  const tradeCryptoDisplayBalance = baseAssetBalance;
+  const tradeCryptoSymbol = baseAsset.symbol;
+  const tradeCryptoDecimals = baseAssetDecimals;
+
+  const receiveCryptoBalance = yieldAssetBalanceOf;
+  const receiveCryptoDisplayBalance = yieldAssetBalance;
+  const receiveCryptoSymbol = yieldAsset.symbol;
+  const receiveCryptoDecimals = yieldAssetDecimals;
+
+  const [stringValueIn, onChangeIn, setValueIn] = useNumericInput(
     numericInputOptions
   );
-  const value = stringValue
-    ? parseUnits(stringValue, tradeCryptoBalance?.decimals)
-    : undefined;
-  const validValue =
-    value && tradeCryptoBalance ? value.lte(tradeCryptoBalance.value) : true;
-
-  const balance = formatCurrency(
-    tradeCryptoBalance?.value,
-    tradeCryptoBalance?.decimals.toNumber()
+  const [stringValueOut, onChangeOut, setValueOut] = useNumericInput(
+    numericInputOptions
   );
 
-  const onClick = useCallback(async () => {
+  const amountIn = stringValueIn ? parseEther(stringValueIn) : undefined;
+  const { data: calcValueOut } = useCalcOutGivenIn(
+    amountIn,
+    baseAssetContract,
+    yieldAssetContract,
+    marketContract
+  );
+  useUpdateOutWhenInChanges(calcValueOut, setValueOut, stringValueIn);
+
+  const switchAssets = useCallback(() => {}, []);
+
+  const valueIn = stringValueIn
+    ? parseUnits(stringValueIn, tradeCryptoDecimals)
+    : undefined;
+  const validValue =
+    valueIn && tradeCryptoBalance ? valueIn.lte(tradeCryptoBalance) : true;
+
+  const submitTransaction = useCallback(async () => {
     if (validValue && onTransaction) {
-      if (!value) {
+      if (!valueIn) {
         return;
       }
-      await onTransaction(value);
+      await onTransaction(valueIn);
       // TODO: Hack to reset the value of the Numeric Input. This should instead
       // call onResetValue or something from userNumericInput instead.
-      onChange({ target: { value: "" } } as any);
+      onChangeIn({ target: { value: "" } } as any);
     }
-  }, [onChange, onTransaction, validValue, value]);
+  }, [onChangeIn, onTransaction, validValue, valueIn]);
 
   const setMaxValue = useCallback(() => {
-    setValue(formatEther(tradeCryptoBalance?.value as BigNumber));
-  }, [tradeCryptoBalance, setValue]);
+    if (tradeCryptoBalance) {
+      setValueIn(formatEther(tradeCryptoBalance));
+    }
+  }, [tradeCryptoBalance, setValueIn]);
 
   return (
     <div className={tw("flex", "flex-col", "space-y-5")}>
@@ -97,8 +164,8 @@ export const TradePanel: FC<TradePanelProps> = ({
       <div className={tw("flex", "flex-col", "space-y-2")}>
         <InputGroup
           disabled={formDisabled}
-          onChange={onChange}
-          value={stringValue}
+          onChange={onChangeIn}
+          value={stringValueIn}
           className={styles.depositInput}
           large
           intent={validValue ? undefined : Intent.DANGER}
@@ -109,7 +176,8 @@ export const TradePanel: FC<TradePanelProps> = ({
           }
           leftElement={
             <div className={tw("px-2")}>
-              {tradeCryptoSymbol === ("ELF" as any) ? (
+              {tradeCryptoSymbol === ("ELF" as any) ||
+              !CryptoIcon[tradeCryptoSymbol as CryptoSymbolOld] ? (
                 "✨"
               ) : (
                 <img
@@ -131,9 +199,17 @@ export const TradePanel: FC<TradePanelProps> = ({
             className={tw("text-xs", "text-right", {
               "text-danger": !validValue,
             })}
-          >{`${balance} ${tradeCryptoSymbol}`}</span>
+          >{`${tradeCryptoDisplayBalance} ${tradeCryptoSymbol}`}</span>
         </div>
       </div>
+
+      <Button
+        icon={IconNames.ARROWS_VERTICAL}
+        onClick={switchAssets}
+        minimal
+        large
+        intent={buttonIntent}
+      ></Button>
 
       {/* Receive Asset */}
       <div className={tw("flex", "justify-between", "items-center")}>
@@ -142,8 +218,8 @@ export const TradePanel: FC<TradePanelProps> = ({
       <div className={tw("flex", "flex-col", "space-y-2")}>
         <InputGroup
           disabled={formDisabled}
-          onChange={onChange}
-          value={stringValue}
+          onChange={onChangeOut}
+          value={stringValueOut}
           className={styles.depositInput}
           large
           intent={validValue ? undefined : Intent.DANGER}
@@ -154,7 +230,8 @@ export const TradePanel: FC<TradePanelProps> = ({
           }
           leftElement={
             <div className={tw("px-2")}>
-              {receiveCryptoSymbol === ("ELF" as any) ? (
+              {receiveCryptoSymbol === ("ELF" as any) ||
+              !CryptoIcon[receiveCryptoSymbol as CryptoSymbolOld] ? (
                 "✨"
               ) : (
                 <img
@@ -176,12 +253,12 @@ export const TradePanel: FC<TradePanelProps> = ({
             className={tw("text-xs", "text-right", {
               "text-danger": !validValue,
             })}
-          >{`${balance} ${receiveCryptoSymbol}`}</span>
+          >{`${receiveCryptoDisplayBalance} ${receiveCryptoSymbol}`}</span>
         </div>
       </div>
       <Button
-        disabled={!value || !validValue || submitDisabled || formDisabled}
-        onClick={onClick}
+        disabled={!valueIn || !validValue || submitDisabled || formDisabled}
+        onClick={submitTransaction}
         minimal
         outlined
         large
@@ -192,3 +269,16 @@ export const TradePanel: FC<TradePanelProps> = ({
     </div>
   );
 };
+function useUpdateOutWhenInChanges(
+  calcValueOut: BigNumber | undefined,
+  setValueOut: (value: string) => void,
+  stringValueIn: string | undefined
+) {
+  useEffect(() => {
+    if (calcValueOut) {
+      setValueOut(formatEther(calcValueOut));
+    } else {
+      setValueOut("");
+    }
+  }, [calcValueOut, setValueOut, stringValueIn]);
+}
