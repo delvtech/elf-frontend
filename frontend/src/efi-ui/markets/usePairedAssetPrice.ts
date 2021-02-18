@@ -32,11 +32,12 @@ export function usePairedAssetPrice(
     pairedAssetAddress
   );
 
-  const price = useSmartContractReadCall(marketContract, "getSpotPrice", {
+  const queryResult = useSmartContractReadCall(marketContract, "getSpotPrice", {
     callArgs: spotPriceCallArgs,
+    enabled: !!spotPriceCallArgs,
   });
 
-  return price;
+  return queryResult;
 }
 
 function getSpotPriceCallArgs(
