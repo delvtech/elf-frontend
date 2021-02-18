@@ -1,7 +1,9 @@
+import React, { FC, useCallback } from "react";
+
 import { Button, InputGroup, Intent, Tag } from "@blueprintjs/core";
+import { IconNames } from "@blueprintjs/icons";
 import { BigNumber } from "ethers";
 import { formatEther, parseUnits } from "ethers/lib/utils";
-import React, { FC, useCallback } from "react";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -9,18 +11,18 @@ import {
   NumericInputOptions,
   useNumericInput,
 } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
+import { useERC20Contract } from "efi-ui/contracts/useERC20Contract";
 import { CryptoIcon } from "efi-ui/crypto/CryptoIcon";
 import styles from "efi-ui/crypto/TradePanel/TradePanel.module.css";
-
+import { useMarketContract } from "efi-ui/markets/useMarketContract";
+import { usePairedAssetPrice } from "efi-ui/markets/usePairedAssetPrice";
+import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
+import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
+import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { CryptoName } from "efi/crypto/CryptoName";
 import { CryptoSymbolOld } from "efi/crypto/CryptoSymbol";
 import { TokenBalance } from "efi/crypto/TokenBalance";
-import { IconNames } from "@blueprintjs/icons";
 import { Market, MarketAsset } from "efi/markets/Market";
-import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
-import { useERC20Contract } from "efi-ui/contracts/useERC20Contract";
-import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
-import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
 
 interface TradePanelProps {
   accountAddress: string | null | undefined;
@@ -63,21 +65,33 @@ export const TradePanel: FC<TradePanelProps> = ({
     yieldAsset = assets[1];
   }
 
-  const baseAssetContract = useERC20Contract(baseAsset.address);
-  const yieldAssetContract = useERC20Contract(yieldAsset.address);
+  const marketContract = useMarketContract(market?.contractAddress);
 
+  const baseAssetContract = useERC20Contract(baseAsset.address);
   const baseAssetBalance = useTokenBalance(baseAssetContract, accountAddress);
   const [baseAssetDecimals] = useTokenDecimals(baseAssetContract);
   const [baseAssetBalanceOf] = useTokenBalanceOf(
     baseAssetContract,
     accountAddress
   );
+
+  const yieldAssetContract = useERC20Contract(yieldAsset.address);
   const yieldAssetBalance = useTokenBalance(yieldAssetContract, accountAddress);
   const [yieldAssetBalanceOf] = useTokenBalanceOf(
     yieldAssetContract,
     accountAddress
   );
   const [yieldAssetDecimals] = useTokenDecimals(yieldAssetContract);
+
+  const { data: spotPrice } = usePairedAssetPrice(
+    marketContract?.address,
+    baseAsset.address
+  );
+
+  let price;
+  if (spotPrice) {
+    price = 1 / +formatEther(spotPrice);
+  }
 
   const tradeCryptoBalance = baseAssetBalanceOf;
   const tradeCryptoDisplayBalance = baseAssetBalance;
