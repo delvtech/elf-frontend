@@ -11,7 +11,6 @@ import {
   NumericInputOptions,
   useNumericInput,
 } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
-import { useERC20Contract } from "efi-ui/contracts/useERC20Contract";
 import { CryptoIcon } from "efi-ui/crypto/CryptoIcon";
 import styles from "efi-ui/crypto/TradePanel/TradePanel.module.css";
 import { useMarketContract } from "efi-ui/markets/useMarketContract";
@@ -24,6 +23,7 @@ import { CryptoSymbolOld } from "efi/crypto/CryptoSymbol";
 import { TokenBalance } from "efi/crypto/TokenBalance";
 import { Market, MarketAsset } from "efi/markets/Market";
 import { useCalcOutGivenIn } from "efi-ui/balancer/useCalcOutGivenIn";
+import { useERC20Contract } from "efi-ui/contracts/useERC20Contract/useERC20Contract";
 
 interface TradePanelProps {
   accountAddress: string | null | undefined;
@@ -177,7 +177,7 @@ export const TradePanel: FC<TradePanelProps> = ({
           leftElement={
             <div className={tw("px-2")}>
               {tradeCryptoSymbol === ("ELF" as any) ||
-              !CryptoIcon[tradeCryptoSymbol as CryptoSymbol] ? (
+              !CryptoIcon[tradeCryptoSymbol as CryptoSymbolOld] ? (
                 "✨"
               ) : (
                 <img
@@ -231,7 +231,7 @@ export const TradePanel: FC<TradePanelProps> = ({
           leftElement={
             <div className={tw("px-2")}>
               {receiveCryptoSymbol === ("ELF" as any) ||
-              !CryptoIcon[receiveCryptoSymbol as CryptoSymbol] ? (
+              !CryptoIcon[receiveCryptoSymbol as CryptoSymbolOld] ? (
                 "✨"
               ) : (
                 <img
