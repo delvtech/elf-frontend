@@ -1,9 +1,9 @@
-import React, { FC, useCallback } from "react";
+import React, { FC, useCallback, useEffect } from "react";
 
 import { Button, InputGroup, Intent, Tag } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { BigNumber } from "ethers";
-import { formatEther, parseUnits } from "ethers/lib/utils";
+import { formatEther, parseEther, parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -23,6 +23,7 @@ import { CryptoName } from "efi/crypto/CryptoName";
 import { CryptoSymbolOld } from "efi/crypto/CryptoSymbol";
 import { TokenBalance } from "efi/crypto/TokenBalance";
 import { Market, MarketAsset } from "efi/markets/Market";
+import { useCalcOutGivenIn } from "efi-ui/balancer/useCalcOutGivenIn";
 
 interface TradePanelProps {
   accountAddress: string | null | undefined;
@@ -65,6 +66,7 @@ export const TradePanel: FC<TradePanelProps> = ({
     yieldAsset = assets[1];
   }
 
+  // TODO: pass this in directly
   const marketContract = useMarketContract(market?.contractAddress);
 
   const baseAssetContract = useERC20Contract(baseAsset.address);
@@ -103,34 +105,47 @@ export const TradePanel: FC<TradePanelProps> = ({
   const receiveCryptoSymbol = yieldAsset.symbol;
   const receiveCryptoDecimals = yieldAssetDecimals;
 
-  const [stringValue, onChange, setValue] = useNumericInput(
+  const [stringValueIn, onChangeIn, setValueIn] = useNumericInput(
     numericInputOptions
   );
+  const [stringValueOut, onChangeOut, setValueOut] = useNumericInput(
+    numericInputOptions
+  );
+
+  const amountIn = stringValueIn ? parseEther(stringValueIn) : undefined;
+  const { data: calcValueOut } = useCalcOutGivenIn(
+    amountIn,
+    baseAssetContract,
+    yieldAssetContract,
+    marketContract
+  );
+  useUpdateOutWhenInChanges(calcValueOut, setValueOut, stringValueIn);
+
   const switchAssets = useCallback(() => {}, []);
 
-  const value = stringValue
-    ? parseUnits(stringValue, tradeCryptoDecimals)
+  const valueIn = stringValueIn
+    ? parseUnits(stringValueIn, tradeCryptoDecimals)
     : undefined;
   const validValue =
-    value && tradeCryptoBalance ? value.lte(tradeCryptoBalance) : true;
+    valueIn && tradeCryptoBalance ? valueIn.lte(tradeCryptoBalance) : true;
 
-  const onClick = useCallback(async () => {
+  const submitTransaction = useCallback(async () => {
     if (validValue && onTransaction) {
-      if (!value) {
+      if (!valueIn) {
         return;
       }
-      await onTransaction(value);
+      await onTransaction(valueIn);
       // TODO: Hack to reset the value of the Numeric Input. This should instead
       // call onResetValue or something from userNumericInput instead.
-      onChange({ target: { value: "" } } as any);
+      onChangeIn({ target: { value: "" } } as any);
     }
-  }, [onChange, onTransaction, validValue, value]);
+  }, [onChangeIn, onTransaction, validValue, valueIn]);
 
   const setMaxValue = useCallback(() => {
     if (tradeCryptoBalance) {
-      setValue(formatEther(tradeCryptoBalance));
+      setValueIn(formatEther(tradeCryptoBalance));
     }
-  }, [tradeCryptoBalance, setValue]);
+  }, [tradeCryptoBalance, setValueIn]);
 
   return (
     <div className={tw("flex", "flex-col", "space-y-5")}>
@@ -149,8 +164,8 @@ export const TradePanel: FC<TradePanelProps> = ({
       <div className={tw("flex", "flex-col", "space-y-2")}>
         <InputGroup
           disabled={formDisabled}
-          onChange={onChange}
-          value={stringValue}
+          onChange={onChangeIn}
+          value={stringValueIn}
           className={styles.depositInput}
           large
           intent={validValue ? undefined : Intent.DANGER}
@@ -203,8 +218,8 @@ export const TradePanel: FC<TradePanelProps> = ({
       <div className={tw("flex", "flex-col", "space-y-2")}>
         <InputGroup
           disabled={formDisabled}
-          onChange={onChange}
-          value={stringValue}
+          onChange={onChangeOut}
+          value={stringValueOut}
           className={styles.depositInput}
           large
           intent={validValue ? undefined : Intent.DANGER}
@@ -242,8 +257,8 @@ export const TradePanel: FC<TradePanelProps> = ({
         </div>
       </div>
       <Button
-        disabled={!value || !validValue || submitDisabled || formDisabled}
-        onClick={onClick}
+        disabled={!valueIn || !validValue || submitDisabled || formDisabled}
+        onClick={submitTransaction}
         minimal
         outlined
         large
@@ -254,3 +269,16 @@ export const TradePanel: FC<TradePanelProps> = ({
     </div>
   );
 };
+function useUpdateOutWhenInChanges(
+  calcValueOut: BigNumber | undefined,
+  setValueOut: (value: string) => void,
+  stringValueIn: string | undefined
+) {
+  useEffect(() => {
+    if (calcValueOut) {
+      setValueOut(formatEther(calcValueOut));
+    } else {
+      setValueOut("");
+    }
+  }, [calcValueOut, setValueOut, stringValueIn]);
+}
