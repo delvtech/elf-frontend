@@ -2,6 +2,7 @@ import React, { FC, Fragment, useState } from "react";
 
 import { Button, Callout, Card, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
+import { AbstractConnector } from "@web3-react/abstract-connector";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -11,14 +12,11 @@ import { useCryptoBalance } from "efi-ui/crypto/hooks/useCryptoBalance/useCrypto
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { BaseAssetPicker } from "efi-ui/invest/BaseAssetPicker/BaseAssetPicker";
 import { BuyFYTConfirmationDrawer } from "efi-ui/invest/BuyFYTConfirmationDrawer/BuyFYTConfirmationDrawer";
-import { useActiveYieldPosition } from "efi-ui/invest/hooks/useActiveYieldPosition";
-import {
-  YieldPosition,
-  YieldPositionPicker,
-} from "efi-ui/invest/InvestView/YieldPositionPicker";
+import { useActiveTrancheInfo } from "efi-ui/invest/hooks/useActiveTrancheInfo";
+import { TranchePicker } from "efi-ui/invest/TranchePicker/TranchePicker";
+import { TrancheInfo } from "efi-ui/tranche/TrancheInfo";
 
 import { InvestmentAmountInput } from "./InvestmentAmountInput";
-import { AbstractConnector } from "@web3-react/abstract-connector";
 
 export interface InvestCardProps {
   library: Web3Provider | undefined;
@@ -29,7 +27,7 @@ export interface InvestCardProps {
   connector: AbstractConnector | undefined;
   baseAssets: CryptoAssetWithIcon[];
 
-  yieldPositions: YieldPosition[];
+  trancheInfos: TrancheInfo[];
 }
 
 export const InvestCard: FC<InvestCardProps> = ({
@@ -39,7 +37,7 @@ export const InvestCard: FC<InvestCardProps> = ({
   chainId,
   connector,
   walletConnectionActive,
-  yieldPositions,
+  trancheInfos,
 }) => {
   const [isBuyFYTConfirmationDrawerOpen, setDrawerOpen] = useState(false);
   const [activeBaseAsset, setActiveBaseAsset] = useState(baseAssets[0]);
@@ -50,10 +48,10 @@ export const InvestCard: FC<InvestCardProps> = ({
     activeBaseAsset
   );
 
-  const {
-    activeYieldPosition,
-    setActiveYieldPosition,
-  } = useActiveYieldPosition(yieldPositions, activeBaseAssetSymbol);
+  const { activeTrancheInfo, setActiveTrancheInfo } = useActiveTrancheInfo(
+    trancheInfos,
+    activeBaseAssetSymbol
+  );
 
   // investment amount
   const [investmentAmount, setInvestmentAmount] = useState<
@@ -63,7 +61,7 @@ export const InvestCard: FC<InvestCardProps> = ({
   const investmentAmountAsNumber = +(investmentAmount || 0);
   const costPerInvestmentToken =
     investmentAmountAsNumber +
-    investmentAmountAsNumber * (activeYieldPosition.apy / 100);
+    investmentAmountAsNumber * (activeTrancheInfo.apy / 100);
 
   return (
     <Fragment>
@@ -95,10 +93,10 @@ export const InvestCard: FC<InvestCardProps> = ({
         </div>
 
         <div className={tw("flex", "space-x-10")}>
-          <YieldPositionPicker
-            yieldPositions={yieldPositions}
-            onYieldPositionChange={({ id }) => setActiveYieldPosition(id)}
-            activeYieldPositionId={activeYieldPosition.id}
+          <TranchePicker
+            trancheInfos={trancheInfos}
+            onTrancheInfoChange={({ id }) => setActiveTrancheInfo(id)}
+            activeTrancheInfoId={activeTrancheInfo.id}
           />
           <Button
             large
@@ -120,7 +118,7 @@ export const InvestCard: FC<InvestCardProps> = ({
                 className={tw("flex", "space-x-4", "items-center", "text-lg")}
               >
                 <LabeledText
-                  text={t`${activeYieldPosition.apy - 2}%`}
+                  text={t`${activeTrancheInfo.apy - 2}%`}
                   label={
                     <div className={tw("flex", "justify-center")}>
                       <span>{t`Estimated yield`}</span>
@@ -150,7 +148,7 @@ export const InvestCard: FC<InvestCardProps> = ({
         title={t`Transaction summary`}
         baseAsset={activeBaseAsset}
         baseAssetQuantity={investmentAmountAsNumber}
-        yieldPosition={activeYieldPosition}
+        trancheInfo={activeTrancheInfo}
         isOpen={isBuyFYTConfirmationDrawerOpen}
         onClose={() => setDrawerOpen(false)}
       />

@@ -9,7 +9,7 @@ import tw from "efi-tailwindcss-classnames";
 import { EthereumPriceWidget } from "efi-ui/ethereum/EthereumPriceWidget/EthereumPriceWidget";
 import { GasPriceWidget } from "efi-ui/ethereum/GasPriceWidget/GasPriceWidget";
 import { InvestCard } from "efi-ui/invest/InvestView/InvestCard";
-import { YieldPosition } from "efi-ui/invest/InvestView/YieldPositionPicker";
+import { TrancheInfo } from "efi-ui/tranche/TrancheInfo";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { EthereumBalanceWidget } from "efi-ui/wallets/EthereumBalanceWidget/EthereumBalanceWidget";
 import { useBaseAssets } from "efi-ui/invest/hooks/useBaseAssets";
@@ -20,9 +20,9 @@ import { useBaseAssets } from "efi-ui/invest/hooks/useBaseAssets";
 // 4. from elf get vault (this is your yield position)
 // 5. from vault get apy
 
-const yieldPositions: YieldPosition[] = [
+const trancheInfos: TrancheInfo[] = [
   {
-    id: "yield-position-usdc",
+    id: "tranche-info-usdc",
     name: "Fixed Rate USDC",
     symbol: "fyUSDC",
     apy: 10.98,
@@ -30,7 +30,7 @@ const yieldPositions: YieldPosition[] = [
     baseAssetSymbol: "USDC",
   },
   {
-    id: "yield-position-eth",
+    id: "tranche-info-eth",
     name: "Fixed Rate Ethereum",
     maturity: "Feb 15, 2021",
     apy: 3.13,
@@ -110,7 +110,7 @@ export const InvestView: FC<InvestViewProps> = () => {
             chainId={chainId}
             connector={connector}
             baseAssets={baseAssets}
-            yieldPositions={yieldPositions}
+            trancheInfos={trancheInfos}
           />
         </div>
       </div>

@@ -9,7 +9,7 @@ import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { useCryptoName } from "efi-ui/crypto/hooks/useCryptoName/useCryptoName";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
-import { YieldPosition } from "efi-ui/invest/InvestView/YieldPositionPicker";
+import { TrancheInfo } from "efi-ui/tranche/TrancheInfo";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { WalletConnectionCard } from "efi-ui/wallets/WalletConnectionCard/WalletConnectionCard";
 import { AbstractConnector } from "@web3-react/abstract-connector";
@@ -27,7 +27,7 @@ interface BuyFYTConfirmationDrawerProps {
   baseAssetQuantity: number;
   baseAsset: CryptoAssetWithIcon;
 
-  yieldPosition: YieldPosition;
+  trancheInfo: TrancheInfo;
   isOpen: boolean;
   onClose: () => void;
 }
@@ -40,11 +40,11 @@ export const BuyFYTConfirmationDrawer: FC<BuyFYTConfirmationDrawerProps> = ({
   account,
   baseAsset: { assetIcon: AssetIcon },
   baseAsset,
-  yieldPosition: {
-    apy: yieldPositionApy,
-    symbol: yieldPositionSymbol,
-    name: yieldPositionName,
-    maturity: yieldPositionMaturity,
+  trancheInfo: {
+    apy: trancheAPY,
+    symbol: trancheSymbol,
+    name: trancheName,
+    maturity: trancheMaturity,
   },
   baseAssetQuantity,
   title,
@@ -58,7 +58,7 @@ export const BuyFYTConfirmationDrawer: FC<BuyFYTConfirmationDrawerProps> = ({
   const connectorName = getConnectorName(connector, library);
 
   const redeemableQuantity =
-    baseAssetQuantity + baseAssetQuantity * (yieldPositionApy / 100);
+    baseAssetQuantity + baseAssetQuantity * (trancheAPY / 100);
 
   return (
     <Drawer
@@ -106,7 +106,7 @@ export const BuyFYTConfirmationDrawer: FC<BuyFYTConfirmationDrawerProps> = ({
           <div className={tw("flex", "flex-col", "space-y-10")}>
             <span
               className={tw("text-lg")}
-            >{t`Will accumulate yield until ${yieldPositionMaturity}:`}</span>
+            >{t`Will accumulate yield until ${trancheMaturity}:`}</span>
 
             <div className={tw("grid", "w-full", "grid-cols-2", "ml-8")}>
               <div

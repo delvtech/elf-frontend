@@ -2,71 +2,14 @@ import React, { FC } from "react";
 
 import { Classes, Colors, Icon, Tag } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
-import { Select } from "@blueprintjs/select";
 import classNames from "classnames";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { CryptoSymbolOld } from "efi/crypto/CryptoSymbol";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 
-export interface YieldPosition {
-  id: string;
-  name: string;
-  symbol: string;
-  apy: number;
-  maturity: string;
-  baseAssetSymbol: CryptoSymbolOld;
-}
-interface YieldPositionPickerProps {
-  yieldPositions: YieldPosition[];
-  activeYieldPositionId: string;
-  onYieldPositionChange: (newYieldPosition: YieldPosition) => void;
-}
-export const YieldPositionPicker: FC<YieldPositionPickerProps> = ({
-  yieldPositions,
-  onYieldPositionChange,
-  activeYieldPositionId,
-}) => {
-  const {
-    apy: activeYieldPositionAPY,
-    maturity: activeYieldPositionMaturity,
-    symbol: activeYieldPositionSymbol,
-    name: activeYieldPositionName,
-  } = yieldPositions.find(
-    ({ id }) => activeYieldPositionId === id
-  ) as YieldPosition;
-
-  return (
-    <Select
-      disabled
-      popoverProps={{ minimal: true, targetClassName: tw("w-full") }}
-      items={yieldPositions}
-      filterable={false}
-      className={tw("w-full", "col-span-2")}
-      itemRenderer={({ name, apy, symbol, maturity }, { handleClick }) => (
-        <YieldPositionButton
-          name={name}
-          apy={apy}
-          symbol={symbol}
-          maturity={maturity}
-          onClick={handleClick}
-        />
-      )}
-      onItemSelect={onYieldPositionChange}
-    >
-      <YieldPositionButton
-        name={activeYieldPositionName}
-        symbol={activeYieldPositionSymbol}
-        apy={activeYieldPositionAPY}
-        maturity={activeYieldPositionMaturity}
-      />
-    </Select>
-  );
-};
-
-interface YieldPositionButtonProps {
+interface TrancheInfoButtonProps {
   apy: number;
   maturity: string;
   symbol: string;
@@ -74,7 +17,7 @@ interface YieldPositionButtonProps {
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-const YieldPositionButton: FC<YieldPositionButtonProps> = ({
+export const TrancheInfoButton: FC<TrancheInfoButtonProps> = ({
   apy,
   maturity,
   name,

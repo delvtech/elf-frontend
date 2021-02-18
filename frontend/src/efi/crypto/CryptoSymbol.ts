@@ -1,7 +1,7 @@
 /**
  * The names of all crypto assets supported in Element.
  *
- * @deprecated use CryptoSymbol insterad
+ * @deprecated use CryptoSymbol instead
  */
 export type CryptoSymbolOld =
   | "USDC"
