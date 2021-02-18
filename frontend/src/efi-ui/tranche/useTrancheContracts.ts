@@ -5,6 +5,7 @@ import { Signer } from "ethers";
 import { useTrancheContract } from "efi-ui/tranche/useTrancheContract";
 import ContractAddresses from "efi/contracts/contractsJson";
 
+// TODO: convert this to filtering the TrancheFactory for tranches deployed by elementAddress
 export function useTrancheContracts(signerOrProvider?: Signer | Provider) {
   const { trancheUsdcAddress, trancheWethAddress } = ContractAddresses;
 
