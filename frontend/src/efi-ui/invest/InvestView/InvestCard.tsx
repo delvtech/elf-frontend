@@ -3,6 +3,7 @@ import React, { FC, Fragment, useState } from "react";
 import { Button, Callout, Card, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
+import { Tranche } from "elf-contracts/types/Tranche";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -11,10 +12,8 @@ import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { useCryptoBalance } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { BaseAssetPicker } from "efi-ui/invest/BaseAssetPicker/BaseAssetPicker";
-import { BuyFYTConfirmationDrawer } from "efi-ui/invest/BuyFYTConfirmationDrawer/BuyFYTConfirmationDrawer";
-import { useActiveTrancheInfo } from "efi-ui/invest/hooks/useActiveTrancheInfo";
+import { useActiveTranche } from "efi-ui/invest/hooks/useActiveTranche";
 import { TranchePicker } from "efi-ui/invest/TranchePicker/TranchePicker";
-import { TrancheInfo } from "efi-ui/tranche/TrancheInfo";
 
 import { InvestmentAmountInput } from "./InvestmentAmountInput";
 
@@ -27,7 +26,7 @@ export interface InvestCardProps {
   connector: AbstractConnector | undefined;
   baseAssets: CryptoAssetWithIcon[];
 
-  trancheInfos: TrancheInfo[];
+  tranchesByBaseAsset: Record<string, Tranche[]>;
 }
 
 export const InvestCard: FC<InvestCardProps> = ({
@@ -37,9 +36,11 @@ export const InvestCard: FC<InvestCardProps> = ({
   chainId,
   connector,
   walletConnectionActive,
-  trancheInfos,
+  tranchesByBaseAsset,
 }) => {
-  const [isBuyFYTConfirmationDrawerOpen, setDrawerOpen] = useState(false);
+  // TODO:
+  // const [isBuyFYTConfirmationDrawerOpen, setDrawerOpen] = useState(false);
+
   const [activeBaseAsset, setActiveBaseAsset] = useState(baseAssets[0]);
   const activeBaseAssetSymbol = useCryptoSymbol(activeBaseAsset);
   const activeBaseAssetBalance = useCryptoBalance(
@@ -48,10 +49,11 @@ export const InvestCard: FC<InvestCardProps> = ({
     activeBaseAsset
   );
 
-  const { activeTrancheInfo, setActiveTrancheInfo } = useActiveTrancheInfo(
-    trancheInfos,
-    activeBaseAssetSymbol
-  );
+  const {
+    activeTrancheIndex,
+    availableTranches,
+    setActiveTranche,
+  } = useActiveTranche(tranchesByBaseAsset, activeBaseAsset);
 
   // investment amount
   const [investmentAmount, setInvestmentAmount] = useState<
@@ -59,9 +61,10 @@ export const InvestCard: FC<InvestCardProps> = ({
   >();
 
   const investmentAmountAsNumber = +(investmentAmount || 0);
+  // TODO: stub out apy for now
+  const stubbedApy = 4.13;
   const costPerInvestmentToken =
-    investmentAmountAsNumber +
-    investmentAmountAsNumber * (activeTrancheInfo.apy / 100);
+    investmentAmountAsNumber + investmentAmountAsNumber * (stubbedApy / 100);
 
   return (
     <Fragment>
@@ -94,16 +97,16 @@ export const InvestCard: FC<InvestCardProps> = ({
 
         <div className={tw("flex", "space-x-10")}>
           <TranchePicker
-            trancheInfos={trancheInfos}
-            onTrancheInfoChange={({ id }) => setActiveTrancheInfo(id)}
-            activeTrancheInfoId={activeTrancheInfo.id}
+            onTrancheChange={setActiveTranche}
+            tranches={availableTranches}
+            activeTrancheIndex={activeTrancheIndex}
           />
           <Button
             large
             outlined
             intent={Intent.PRIMARY}
             className={tw("w-1/3")}
-            onClick={() => setDrawerOpen(true)}
+            // onClick={() => setDrawerOpen(true)}
           >
             <div className={tw("p-4", "text-lg")}>{t`Buy`}</div>
           </Button>
@@ -118,7 +121,7 @@ export const InvestCard: FC<InvestCardProps> = ({
                 className={tw("flex", "space-x-4", "items-center", "text-lg")}
               >
                 <LabeledText
-                  text={t`${activeTrancheInfo.apy - 2}%`}
+                  text={t`${stubbedApy - 2}%`}
                   label={
                     <div className={tw("flex", "justify-center")}>
                       <span>{t`Estimated yield`}</span>
@@ -139,6 +142,7 @@ export const InvestCard: FC<InvestCardProps> = ({
         )}
       </Card>
 
+      {/* TODO:
       <BuyFYTConfirmationDrawer
         account={account}
         library={library}
@@ -151,7 +155,7 @@ export const InvestCard: FC<InvestCardProps> = ({
         trancheInfo={activeTrancheInfo}
         isOpen={isBuyFYTConfirmationDrawerOpen}
         onClose={() => setDrawerOpen(false)}
-      />
+      /> */}
     </Fragment>
   );
 };

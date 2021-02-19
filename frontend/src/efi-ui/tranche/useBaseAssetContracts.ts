@@ -1,6 +1,8 @@
+import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
+
 import { useElfContracts } from "efi-ui/contracts/useElfContracts/useElfContracts";
-import { useERC20Contracts } from "efi-ui/contracts/useERC20Contracts/useERC20Contracts";
 import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
+import { useSmartContractsFromFactory } from "efi-ui/contracts/useSmartContractsFromFactory/useSmartContractsFromFactory";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 
 /**
@@ -20,8 +22,9 @@ export function useBaseAssetContracts() {
   );
 
   // All base assets are known to be ERC20s
-  const baseAssetContracts = useERC20Contracts(
+  const baseAssetContracts = useSmartContractsFromFactory(
     baseAssetAddresses,
+    ERC20__factory.connect,
     jsonRpcProvider
   );
 

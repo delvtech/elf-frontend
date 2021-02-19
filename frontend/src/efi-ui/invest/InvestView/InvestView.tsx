@@ -9,35 +9,16 @@ import tw from "efi-tailwindcss-classnames";
 import { EthereumPriceWidget } from "efi-ui/ethereum/EthereumPriceWidget/EthereumPriceWidget";
 import { GasPriceWidget } from "efi-ui/ethereum/GasPriceWidget/GasPriceWidget";
 import { InvestCard } from "efi-ui/invest/InvestView/InvestCard";
-import { TrancheInfo } from "efi-ui/tranche/TrancheInfo";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { EthereumBalanceWidget } from "efi-ui/wallets/EthereumBalanceWidget/EthereumBalanceWidget";
 import { useBaseAssets } from "efi-ui/invest/hooks/useBaseAssets";
+import { useTranchesByBaseAsset } from "efi-ui/invest/hooks/useTranchesByBaseAsset";
 
 // 1. from tranche get maturation date (unlockTimestamp) and name
 // 2. from tranche get elf address
 // 3. from elf get token (this is your base asset)
 // 4. from elf get vault (this is your yield position)
 // 5. from vault get apy
-
-const trancheInfos: TrancheInfo[] = [
-  {
-    id: "tranche-info-usdc",
-    name: "Fixed Rate USDC",
-    symbol: "fyUSDC",
-    apy: 10.98,
-    maturity: "Feb 15, 2021",
-    baseAssetSymbol: "USDC",
-  },
-  {
-    id: "tranche-info-eth",
-    name: "Fixed Rate Ethereum",
-    maturity: "Feb 15, 2021",
-    apy: 3.13,
-    baseAssetSymbol: "ETH",
-    symbol: "fyETH",
-  },
-];
 
 interface InvestViewProps extends RouteComponentProps {}
 
@@ -51,6 +32,7 @@ export const InvestView: FC<InvestViewProps> = () => {
   } = useWeb3React<Web3Provider>();
 
   const baseAssets = useBaseAssets();
+  const tranchesByBaseAsset = useTranchesByBaseAsset();
 
   return (
     <div
@@ -110,7 +92,7 @@ export const InvestView: FC<InvestViewProps> = () => {
             chainId={chainId}
             connector={connector}
             baseAssets={baseAssets}
-            trancheInfos={trancheInfos}
+            tranchesByBaseAsset={tranchesByBaseAsset}
           />
         </div>
       </div>
