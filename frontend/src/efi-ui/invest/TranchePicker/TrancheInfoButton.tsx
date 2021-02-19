@@ -3,12 +3,14 @@ import React, { FC } from "react";
 import { Classes, Colors, Icon, Tag } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import classNames from "classnames";
+import { BigNumber } from "ethers";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { TrancheInfo } from "efi-ui/invest/TranchePicker/TrancheInfo";
+import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
+import { timeFormat } from "d3-time-format";
 
 interface TrancheInfoButtonProps extends TrancheInfo {
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
@@ -21,8 +23,7 @@ export const TrancheInfoButton: FC<TrancheInfoButtonProps> = ({
   onClick,
 }) => {
   const { isDarkMode } = useDarkMode();
-  // TODO: format this
-  const redeemableDate = unlockTimestamp?.toString();
+  const redeemableDate = formatUnlockTimestamp(unlockTimestamp);
 
   return (
     <button
@@ -76,3 +77,9 @@ export const TrancheInfoButton: FC<TrancheInfoButtonProps> = ({
     </button>
   );
 };
+
+function formatUnlockTimestamp(unlockTimestamp: BigNumber | undefined) {
+  const unlockTimestampMS = +(unlockTimestamp?.toString() || 0) * 1000;
+  const redeemableDate = new Date(unlockTimestampMS);
+  return timeFormat("%B %d, %Y")(redeemableDate);
+}
