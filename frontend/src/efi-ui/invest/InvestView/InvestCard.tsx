@@ -12,6 +12,7 @@ import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { useCryptoBalance } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { BaseAssetPicker } from "efi-ui/invest/BaseAssetPicker/BaseAssetPicker";
+import { BuyFYTConfirmationDrawer } from "efi-ui/invest/BuyFYTConfirmationDrawer/BuyFYTConfirmationDrawer";
 import { useActiveTranche } from "efi-ui/invest/hooks/useActiveTranche";
 import { TranchePicker } from "efi-ui/invest/TranchePicker/TranchePicker";
 
@@ -38,8 +39,7 @@ export const InvestCard: FC<InvestCardProps> = ({
   walletConnectionActive,
   tranchesByBaseAsset,
 }) => {
-  // TODO:
-  // const [isBuyFYTConfirmationDrawerOpen, setDrawerOpen] = useState(false);
+  const [isDrawerOpen, setDrawerOpen] = useState(false);
 
   const [activeBaseAsset, setActiveBaseAsset] = useState(baseAssets[0]);
   const activeBaseAssetSymbol = useCryptoSymbol(activeBaseAsset);
@@ -51,6 +51,7 @@ export const InvestCard: FC<InvestCardProps> = ({
 
   const {
     activeTrancheIndex,
+    activeTranche,
     availableTranches,
     setActiveTranche,
   } = useActiveTranche(tranchesByBaseAsset, activeBaseAsset);
@@ -106,7 +107,7 @@ export const InvestCard: FC<InvestCardProps> = ({
             outlined
             intent={Intent.PRIMARY}
             className={tw("w-1/3")}
-            // onClick={() => setDrawerOpen(true)}
+            onClick={() => setDrawerOpen(true)}
           >
             <div className={tw("p-4", "text-lg")}>{t`Buy`}</div>
           </Button>
@@ -142,7 +143,6 @@ export const InvestCard: FC<InvestCardProps> = ({
         )}
       </Card>
 
-      {/* TODO:
       <BuyFYTConfirmationDrawer
         account={account}
         library={library}
@@ -152,10 +152,10 @@ export const InvestCard: FC<InvestCardProps> = ({
         title={t`Transaction summary`}
         baseAsset={activeBaseAsset}
         baseAssetQuantity={investmentAmountAsNumber}
-        trancheInfo={activeTrancheInfo}
-        isOpen={isBuyFYTConfirmationDrawerOpen}
+        tranche={activeTranche}
+        isOpen={isDrawerOpen}
         onClose={() => setDrawerOpen(false)}
-      /> */}
+      />
     </Fragment>
   );
 };

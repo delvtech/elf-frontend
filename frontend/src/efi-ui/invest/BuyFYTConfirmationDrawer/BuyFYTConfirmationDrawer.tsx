@@ -1,6 +1,13 @@
 import React, { FC, ReactNode } from "react";
 
-import { Button, Callout, Divider, Drawer, Intent } from "@blueprintjs/core";
+import {
+  Button,
+  Callout,
+  Classes,
+  Divider,
+  Drawer,
+  Intent,
+} from "@blueprintjs/core";
 import classNames from "classnames";
 import { t } from "ttag";
 
@@ -9,12 +16,14 @@ import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { useCryptoName } from "efi-ui/crypto/hooks/useCryptoName/useCryptoName";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
-import { TrancheInfo } from "efi-ui/tranche/TrancheInfo";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { WalletConnectionCard } from "efi-ui/wallets/WalletConnectionCard/WalletConnectionCard";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { Web3Provider } from "@ethersproject/providers";
 import { getConnectorName } from "efi/wallets/connectors";
+import { Tranche } from "elf-contracts/types/Tranche";
+import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
+import { formatUnlockTimestamp } from "efi/tranche/formatUnlockTimestamp";
 
 interface BuyFYTConfirmationDrawerProps {
   chainId: number | undefined;
@@ -27,7 +36,7 @@ interface BuyFYTConfirmationDrawerProps {
   baseAssetQuantity: number;
   baseAsset: CryptoAssetWithIcon;
 
-  trancheInfo: TrancheInfo;
+  tranche: Tranche | undefined;
   isOpen: boolean;
   onClose: () => void;
 }
@@ -40,12 +49,7 @@ export const BuyFYTConfirmationDrawer: FC<BuyFYTConfirmationDrawerProps> = ({
   account,
   baseAsset: { assetIcon: AssetIcon },
   baseAsset,
-  trancheInfo: {
-    apy: trancheAPY,
-    symbol: trancheSymbol,
-    name: trancheName,
-    maturity: trancheMaturity,
-  },
+  tranche,
   baseAssetQuantity,
   title,
   isOpen,
@@ -54,11 +58,17 @@ export const BuyFYTConfirmationDrawer: FC<BuyFYTConfirmationDrawerProps> = ({
   const { darkModeClassName } = useDarkMode();
   const baseAssetName = useCryptoName(baseAsset);
   const baseAssetSymbol = useCryptoSymbol(baseAsset);
+  const { data: trancheUnlockTimestamp } = useSmartContractReadCall(
+    tranche,
+    "unlockTimestamp"
+  );
+  const unlockTimeStampLabel = formatUnlockTimestamp(trancheUnlockTimestamp);
 
   const connectorName = getConnectorName(connector, library);
 
+  const stubbedAPY = 4.12;
   const redeemableQuantity =
-    baseAssetQuantity + baseAssetQuantity * (trancheAPY / 100);
+    baseAssetQuantity + baseAssetQuantity * (stubbedAPY / 100);
 
   return (
     <Drawer
@@ -105,8 +115,8 @@ export const BuyFYTConfirmationDrawer: FC<BuyFYTConfirmationDrawerProps> = ({
           </div>
           <div className={tw("flex", "flex-col", "space-y-10")}>
             <span
-              className={tw("text-lg")}
-            >{t`Will accumulate yield until ${trancheMaturity}:`}</span>
+              className={classNames(tw("text-lg"), Classes.RUNNING_TEXT)}
+            >{t`Will be redeemable on ${unlockTimeStampLabel} for:`}</span>
 
             <div className={tw("grid", "w-full", "grid-cols-2", "ml-8")}>
               <div
@@ -129,7 +139,7 @@ export const BuyFYTConfirmationDrawer: FC<BuyFYTConfirmationDrawerProps> = ({
 
         <Callout
           intent={Intent.PRIMARY}
-          title={t`Note:`}
+          title={t`Note`}
           icon={null}
           className={tw("p-4")}
         >
