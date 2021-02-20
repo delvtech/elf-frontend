@@ -1,12 +1,13 @@
 import { useQuery } from "react-query";
 
+import { BPool } from "elf-contracts/types/BPool";
 import { BFactory__factory } from "elf-contracts/types/factories/BFactory__factory";
 import { BPool__factory } from "elf-contracts/types/factories/BPool__factory";
 
 import ContractAddresses from "efi/contracts/contractsJson";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 
-export function useMarketContracts() {
+export function useMarketContracts(): BPool[] {
   const queryKey = "market-contracts";
   const queryFn = fetchMarketContractAddresses;
 
