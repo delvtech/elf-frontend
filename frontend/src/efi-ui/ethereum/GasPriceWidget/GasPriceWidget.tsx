@@ -14,7 +14,7 @@ interface GasPriceWidgetProps {}
 export const GasPriceWidget: FC<GasPriceWidgetProps> = () => {
   const { data: gasPrice, isLoading } = useGasPrice();
 
-  const text = isLoading ? t`loading` : t`${gasPrice?.fast} gwei`;
+  const text = isLoading ? t`loading` : t`${gasPrice?.fast?.toFixed(0)} gwei`;
 
   return (
     <LabeledText

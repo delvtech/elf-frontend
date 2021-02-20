@@ -1,5 +1,6 @@
 import React from "react";
 
+import { Provider } from "@ethersproject/providers";
 import { Money } from "ts-money";
 import { t } from "ttag";
 
@@ -12,11 +13,13 @@ import { YCPortfolio } from "efi-ui/portfolio/YCPortfolio/YCPortfolio";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 
 export function usePortfolioTabs(
-  account: string | null | undefined
+  account: string | null | undefined,
+  provider?: Provider
 ): PortfolioTab[] {
   const { currency } = useCurrencyPref();
   const { tranchesWithBalance, totalFiatBalanceAllTranches } = useFYTTab(
-    account
+    account,
+    provider
   );
 
   return [
@@ -44,8 +47,11 @@ export function usePortfolioTabs(
   ];
 }
 
-export function useFYTTab(account: string | null | undefined) {
-  const tranchesWithBalance = useTranchesWithBalance(account);
+export function useFYTTab(
+  account: string | null | undefined,
+  provider?: Provider
+) {
+  const tranchesWithBalance = useTranchesWithBalance(account, provider);
   const totalFiatBalanceAllTranches = useFiatBalanceAllTranches(account);
 
   return { tranchesWithBalance, totalFiatBalanceAllTranches };

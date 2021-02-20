@@ -9,7 +9,8 @@ import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { TrancheInfo } from "efi-ui/invest/TranchePicker/TrancheInfo";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import { formatUnlockTimestamp } from "../../../efi/tranche/formatUnlockTimestamp";
+import { formatAbbreviatedDate } from "efi/base/dates";
+import { convertUnlockTimestampToDate } from "efi/tranche/convertUnlockTimestampToDate";
 
 interface TrancheInfoButtonProps extends TrancheInfo {
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
@@ -19,10 +20,15 @@ export const TrancheInfoButton: FC<TrancheInfoButtonProps> = ({
   apy,
   unlockTimestamp,
   name,
+  symbol,
+  vaultName,
   onClick,
 }) => {
   const { isDarkMode } = useDarkMode();
-  const redeemableDate = formatUnlockTimestamp(unlockTimestamp);
+  const unlockDate = convertUnlockTimestampToDate(unlockTimestamp);
+  const redeemableDate = unlockDate
+    ? formatAbbreviatedDate(unlockDate)
+    : t`Loading unlock date...`;
 
   return (
     <button
@@ -66,9 +72,9 @@ export const TrancheInfoButton: FC<TrancheInfoButtonProps> = ({
             </Tag>
           </div>
           <LabeledText
-            className={tw("text-lg")}
-            text={name}
-            label={t`Redeemable on ${redeemableDate}`}
+            large
+            text={t`Earn yield until ${redeemableDate}`}
+            label={t`${symbol} - ${name} - ${vaultName}`}
           />
         </div>
         <Icon icon={IconNames.CARET_DOWN} />

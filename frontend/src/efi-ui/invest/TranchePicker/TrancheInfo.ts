@@ -7,6 +7,8 @@ export interface TrancheInfo {
   name: string | undefined;
   unlockTimestamp: BigNumber | undefined;
 
+  vaultName: string | undefined;
+
   // TODO
   apy: number | undefined;
 }

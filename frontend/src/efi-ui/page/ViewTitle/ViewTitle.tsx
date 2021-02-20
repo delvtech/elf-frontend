@@ -1,10 +1,9 @@
 import React, { FC, Fragment, ReactNode } from "react";
 
-import { Classes, H2, Tag } from "@blueprintjs/core";
+import { Classes, H2 } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import classNames from "classnames";
-import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { WalletConnectionCard } from "efi-ui/wallets/WalletConnectionCard/WalletConnectionCard";
@@ -21,7 +20,7 @@ interface ViewTitleProps {
   /**
    * Whether or not to show the beta tag
    */
-  beta?: boolean;
+  titleTag?: ReactNode;
 }
 
 const subtitleClassName = classNames(
@@ -38,7 +37,7 @@ export const ViewTitle: FC<ViewTitleProps> = ({
   library,
   title,
   subtitle,
-  beta,
+  titleTag,
 }) => {
   const connectorName = getConnectorName(connector, library);
   return (
@@ -48,12 +47,10 @@ export const ViewTitle: FC<ViewTitleProps> = ({
       >
         <H2 className={tw("mb-4")}>
           {title}
-          {!beta ? null : (
+          {!titleTag ? null : (
             <Fragment>
               {" "}
-              <sup>
-                <Tag>{t`beta`}</Tag>
-              </sup>
+              <sup>{titleTag}</sup>
             </Fragment>
           )}
         </H2>

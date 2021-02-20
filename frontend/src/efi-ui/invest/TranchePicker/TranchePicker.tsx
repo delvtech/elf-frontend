@@ -1,6 +1,8 @@
 import React, { FC, useCallback } from "react";
 
 import { Select } from "@blueprintjs/select";
+import { Elf__factory } from "elf-contracts/types/factories/Elf__factory";
+import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { BigNumber } from "ethers";
 import zipWith from "lodash.zipwith";
@@ -8,6 +10,7 @@ import zipWith from "lodash.zipwith";
 import tw from "efi-tailwindcss-classnames";
 import { getQueriesData } from "efi-ui/base/queryResults";
 import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
+import { useSmartContractsFromFactory } from "efi-ui/contracts/useSmartContractsFromFactory/useSmartContractsFromFactory";
 
 import { TrancheInfo } from "./TrancheInfo";
 import { TrancheInfoButton } from "./TrancheInfoButton";
@@ -28,6 +31,17 @@ export const TranchePicker: FC<TranchePickerProps> = ({
     tranches,
     "unlockTimestamp"
   );
+  const elfAddressResults = useSmartContractReadCalls(tranches, "elf");
+  const elfContracts = useSmartContractsFromFactory(
+    getQueriesData(elfAddressResults),
+    Elf__factory.connect
+  );
+  const vaultAddressResults = useSmartContractReadCalls(elfContracts, "vault");
+  const vaultContracts = useSmartContractsFromFactory(
+    getQueriesData(vaultAddressResults),
+    ERC20__factory.connect
+  );
+  const vaultNameResults = useSmartContractReadCalls(vaultContracts, "name");
 
   const onTrancheInfoChange = useCallback(
     (trancheInfo: TrancheInfo) => {
@@ -42,7 +56,8 @@ export const TranchePicker: FC<TranchePickerProps> = ({
     getQueriesData(trancheNameResults),
     getQueriesData(trancheUnlockTimestampResults),
     // TODO: stub out apy for now
-    tranches.map(() => 4.13)
+    tranches.map(() => 4.13),
+    getQueriesData(vaultNameResults)
   );
 
   // TODO: Show a loading or disabled state of some kind
@@ -60,10 +75,11 @@ export const TranchePicker: FC<TranchePickerProps> = ({
       filterable={false}
       className={tw("w-full", "col-span-2")}
       itemRenderer={(
-        { name, tranche, apy, symbol, unlockTimestamp },
+        { name, tranche, apy, symbol, unlockTimestamp, vaultName },
         { handleClick }
       ) => (
         <TrancheInfoButton
+          vaultName={vaultName}
           tranche={tranche}
           name={name}
           apy={apy}
@@ -78,6 +94,7 @@ export const TranchePicker: FC<TranchePickerProps> = ({
         tranche={activeTrancheInfo.tranche}
         name={activeTrancheInfo.name}
         symbol={activeTrancheInfo.symbol}
+        vaultName={activeTrancheInfo.vaultName}
         apy={activeTrancheInfo.apy}
         unlockTimestamp={activeTrancheInfo.unlockTimestamp}
       />
@@ -89,20 +106,24 @@ function makeTrancheInfos(
   trancheSymbols: (string | undefined)[],
   trancheNames: (string | undefined)[],
   trancheUnlockTimestamps: (BigNumber | undefined)[],
-  trancheAPYs: (number | undefined)[]
+  trancheAPYs: (number | undefined)[],
+  vaultNames: (string | undefined)[]
 ): TrancheInfo[] {
-  return zipWith(
+  // have to use any until zipWith definition supports more than 5 inputs
+  return zipWith<any, TrancheInfo>(
     tranches,
     trancheSymbols,
     trancheNames,
     trancheUnlockTimestamps,
     trancheAPYs,
-    (tranche, symbol, name, unlockTimestamp, apy) => ({
+    vaultNames,
+    (tranche, symbol, name, unlockTimestamp, apy, vaultName) => ({
       tranche,
       symbol,
       name,
       unlockTimestamp,
       apy,
+      vaultName,
     })
   );
 }

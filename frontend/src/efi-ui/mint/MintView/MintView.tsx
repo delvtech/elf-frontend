@@ -93,7 +93,6 @@ export const MintView: FC<MintViewProps> = () => {
       <ViewTitle
         title={t`Mint Yield Tokens`}
         subtitle={t`A concise description of Minting makes it clear to the user why FYTs and YCs are useful to them.`}
-        beta
         account={account}
         active={active}
         chainId={chainId}

@@ -13,6 +13,7 @@ import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { EthereumBalanceWidget } from "efi-ui/wallets/EthereumBalanceWidget/EthereumBalanceWidget";
 import { useBaseAssets } from "efi-ui/invest/hooks/useBaseAssets";
 import { useTranchesByBaseAsset } from "efi-ui/invest/hooks/useTranchesByBaseAsset";
+import { Intent, Tag } from "@blueprintjs/core";
 
 // 1. from tranche get maturation date (unlockTimestamp) and name
 // 2. from tranche get elf address
@@ -49,6 +50,7 @@ export const InvestView: FC<InvestViewProps> = () => {
       {/* page title */}
       <ViewTitle
         title={t`Invest`}
+        titleTag={<Tag minimal intent={Intent.WARNING}>{t`alpha`}</Tag>}
         subtitle={<InvestViewSubtitle />}
         account={account}
         active={active}
@@ -70,7 +72,7 @@ export const InvestView: FC<InvestViewProps> = () => {
       >
         <div
           className={tw("flex", "flex-col", "space-y-12")}
-          style={{ width: 640 }}
+          style={{ width: 672 }}
         >
           <div
             className={tw("flex", {

@@ -1,31 +1,34 @@
+import { Provider } from "@ethersproject/providers";
 import { BigNumber } from "ethers";
 
-import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
-import { useTrancheContract } from "efi-ui/tranche/useTrancheContract";
-import ContractAddresses from "efi/contracts/contractsJson";
-import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
+import { getQueriesData } from "efi-ui/base/queryResults";
+import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
+import { useTrancheContracts } from "efi-ui/tranche/useTrancheContracts";
+import zip from "lodash.zip";
+import { Tranche } from "elf-contracts/types/Tranche";
 
-export function useTranchesWithBalance(account: string | null | undefined) {
-  const wethTrancheContract = useTrancheContract(
-    ContractAddresses.trancheWethAddress,
-    jsonRpcProvider
-  );
-  const [wethTrancheBalance] = useTokenBalanceOf(wethTrancheContract, account);
+export function useTranchesWithBalance(
+  account: string | null | undefined,
+  provider?: Provider
+) {
+  const tranches = useTrancheContracts(provider);
 
-  const usdcTrancheContract = useTrancheContract(
-    ContractAddresses.trancheUsdcAddress,
-    jsonRpcProvider
+  const tokenBalanceOfResults = useSmartContractReadCalls(
+    tranches,
+    "balanceOf",
+    { callArgs: [account as string], enabled: !!account }
   );
-  const [usdcTrancheBalance] = useTokenBalanceOf(usdcTrancheContract, account);
 
-  const tranchesWithBalance = [wethTrancheBalance, usdcTrancheBalance].filter(
-    (balance): balance is BigNumber => {
-      if (!balance) {
-        return false;
-      }
-      return balance.gt(0);
-    }
+  const loadedData = zip(
+    tranches,
+    getQueriesData(tokenBalanceOfResults)
+  ).filter((values): values is [Tranche, BigNumber] =>
+    values.every((value) => !!value)
   );
+
+  const tranchesWithBalance = loadedData
+    .filter(([tranche, balanceOf]) => balanceOf.gt(0))
+    .map(([tranche]) => tranche);
 
   return tranchesWithBalance;
 }
