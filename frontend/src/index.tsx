@@ -2,6 +2,7 @@
 
 import "./stylesheets";
 import "./index.css";
+import "efi/base/consoleEther";
 // end our CSS
 
 import { Web3ReactProvider } from "@web3-react/core";
