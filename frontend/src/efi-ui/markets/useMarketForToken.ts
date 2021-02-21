@@ -25,7 +25,9 @@ export function useMarketForToken(
       findTokenAddress(finalTokens, tokenContract)
     );
 
-  return result?.[0];
+  const tokenForMarket = result?.[0];
+
+  return tokenForMarket;
 }
 
 function findTokenAddress(
