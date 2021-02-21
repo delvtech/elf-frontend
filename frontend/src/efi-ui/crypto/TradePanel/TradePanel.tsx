@@ -2,30 +2,37 @@ import React, { FC, useCallback, useEffect } from "react";
 
 import { Button, InputGroup, Intent, Tag } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
-import { BigNumber } from "ethers";
+import { BPool } from "elf-contracts/types/BPool";
+import { ERC20 } from "elf-contracts/types/ERC20";
+import { BigNumber, Contract, Signer } from "ethers";
 import { formatEther, parseEther, parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { useCalcOutGivenIn } from "efi-ui/balancer/useCalcOutGivenIn";
+import { swapExactAmountIn } from "efi-balancer/swapExactAmountIn";
 import {
   NumericInputOptions,
   useNumericInput,
 } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
+import { useERC20Contract } from "efi-ui/contracts/useERC20Contract/useERC20Contract";
 import { CryptoIcon } from "efi-ui/crypto/CryptoIcon";
 import styles from "efi-ui/crypto/TradePanel/TradePanel.module.css";
-import { useMarketContract } from "efi-ui/markets/useMarketContract";
 import { usePairedAssetPrice } from "efi-ui/markets/usePairedAssetPrice";
 import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
+import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
+import { MAX_ALLOWANCE } from "efi/contracts/token";
 import { CryptoName } from "efi/crypto/CryptoName";
 import { CryptoSymbolOld } from "efi/crypto/CryptoSymbol";
 import { TokenBalance } from "efi/crypto/TokenBalance";
 import { Market, MarketAsset } from "efi/markets/Market";
-import { useCalcOutGivenIn } from "efi-ui/balancer/useCalcOutGivenIn";
-import { useERC20Contract } from "efi-ui/contracts/useERC20Contract/useERC20Contract";
+import { DEFAULT_SLIPPAGE } from "efi/markets/slippage";
 
 interface TradePanelProps {
+  signer: Signer | undefined;
+  marketContractWithSigner: BPool | undefined;
   accountAddress: string | null | undefined;
   market: Market | undefined;
   formDisabled?: boolean;
@@ -49,6 +56,7 @@ const numericInputOptions: NumericInputOptions = {
 };
 
 export const TradePanel: FC<TradePanelProps> = ({
+  signer,
   formDisabled = false,
   submitDisabled = false,
   inputLabel,
@@ -56,6 +64,7 @@ export const TradePanel: FC<TradePanelProps> = ({
   buttonIntent = Intent.PRIMARY,
   onTransaction,
   market,
+  marketContractWithSigner,
   accountAddress,
 }) => {
   let baseAsset: MarketAsset = {} as MarketAsset;
@@ -65,45 +74,31 @@ export const TradePanel: FC<TradePanelProps> = ({
     baseAsset = assets[0];
     yieldAsset = assets[1];
   }
-
   // TODO: pass this in directly
-  const marketContract = useMarketContract(market?.contractAddress);
-
   const baseAssetContract = useERC20Contract(baseAsset.address);
-  const baseAssetBalance = useTokenBalance(baseAssetContract, accountAddress);
-  const [baseAssetDecimals] = useTokenDecimals(baseAssetContract);
-  const [baseAssetBalanceOf] = useTokenBalanceOf(
-    baseAssetContract,
-    accountAddress
-  );
-
   const yieldAssetContract = useERC20Contract(yieldAsset.address);
-  const yieldAssetBalance = useTokenBalance(yieldAssetContract, accountAddress);
-  const [yieldAssetBalanceOf] = useTokenBalanceOf(
-    yieldAssetContract,
-    accountAddress
-  );
-  const [yieldAssetDecimals] = useTokenDecimals(yieldAssetContract);
 
   const { data: spotPrice } = usePairedAssetPrice(
-    marketContract?.address,
+    marketContractWithSigner?.address,
     baseAsset.address
   );
 
-  let price;
-  if (spotPrice) {
-    price = 1 / +formatEther(spotPrice);
-  }
+  const tradeContract = baseAssetContract;
+  const receiveContract = yieldAssetContract;
 
-  const tradeCryptoBalance = baseAssetBalanceOf;
-  const tradeCryptoDisplayBalance = baseAssetBalance;
-  const tradeCryptoSymbol = baseAsset.symbol;
-  const tradeCryptoDecimals = baseAssetDecimals;
+  const [tradeCryptoSymbol] = useTokenSymbol(tradeContract);
+  const [tradeCryptoDecimals] = useTokenDecimals(tradeContract);
+  const [tradeCryptoBalance] = useTokenBalanceOf(tradeContract, accountAddress);
+  const tradeCryptoDisplayBalance = useTokenBalance(
+    tradeContract,
+    accountAddress
+  );
 
-  const receiveCryptoBalance = yieldAssetBalanceOf;
-  const receiveCryptoDisplayBalance = yieldAssetBalance;
-  const receiveCryptoSymbol = yieldAsset.symbol;
-  const receiveCryptoDecimals = yieldAssetDecimals;
+  const [receiveCryptoSymbol] = useTokenSymbol(receiveContract);
+  const receiveCryptoDisplayBalance = useTokenBalance(
+    receiveContract,
+    accountAddress
+  );
 
   const [stringValueIn, onChangeIn, setValueIn] = useNumericInput(
     numericInputOptions
@@ -117,7 +112,7 @@ export const TradePanel: FC<TradePanelProps> = ({
     amountIn,
     baseAssetContract,
     yieldAssetContract,
-    marketContract
+    marketContractWithSigner
   );
   useUpdateOutWhenInChanges(calcValueOut, setValueOut, stringValueIn);
 
@@ -129,17 +124,64 @@ export const TradePanel: FC<TradePanelProps> = ({
   const validValue =
     valueIn && tradeCryptoBalance ? valueIn.lte(tradeCryptoBalance) : true;
 
+  // TODO: clean this up!  undefineds are ridiculous here, I"m thinking I'll make a skeleton
+  // component until things are loaded which most times they will be already.
   const submitTransaction = useCallback(async () => {
     if (validValue && onTransaction) {
-      if (!valueIn) {
+      if (
+        !accountAddress ||
+        !signer ||
+        !valueIn ||
+        !stringValueIn ||
+        !tradeContract ||
+        !receiveContract ||
+        !marketContractWithSigner ||
+        !baseAssetContract ||
+        !tradeCryptoBalance ||
+        !amountIn
+      ) {
         return;
       }
+      const approval = await baseAssetContract.allowance(
+        accountAddress,
+        marketContractWithSigner.address
+      );
+
+      // TODO: hook this up to its own button
+      if (!approval.gte(tradeCryptoBalance)) {
+        await getApproval(tradeContract, marketContractWithSigner, signer);
+        return;
+      }
+
+      await swapExactAmountIn(
+        parseEther(stringValueIn),
+        spotPrice,
+        DEFAULT_SLIPPAGE,
+        tradeContract.connect(signer),
+        receiveContract,
+        marketContractWithSigner
+      );
       await onTransaction(valueIn);
       // TODO: Hack to reset the value of the Numeric Input. This should instead
       // call onResetValue or something from userNumericInput instead.
       onChangeIn({ target: { value: "" } } as any);
     }
-  }, [onChangeIn, onTransaction, validValue, valueIn]);
+  }, [
+    accountAddress,
+    amountIn,
+    baseAssetContract,
+    marketContractWithSigner,
+    onChangeIn,
+    onTransaction,
+    receiveContract,
+    signer,
+    spotPrice,
+    stringValueIn,
+    tradeContract,
+    tradeCryptoBalance,
+    validValue,
+    valueIn,
+  ]);
 
   const setMaxValue = useCallback(() => {
     if (tradeCryptoBalance) {
@@ -281,4 +323,17 @@ function useUpdateOutWhenInChanges(
       setValueOut("");
     }
   }, [calcValueOut, setValueOut, stringValueIn]);
+}
+
+// TODO:  use useMutation for this and share it.  will do this in a follow-up PR
+async function getApproval<F extends ERC20, T extends Contract>(
+  tokensFromContract: F,
+  tokensToContract: T,
+  signer: Signer
+) {
+  const txReceipt = await tokensFromContract
+    .connect(signer)
+    .approve(tokensToContract.address, MAX_ALLOWANCE);
+  await txReceipt.wait(1);
+  return txReceipt;
 }

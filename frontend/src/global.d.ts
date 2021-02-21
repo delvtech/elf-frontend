@@ -9,4 +9,9 @@ interface Window {
    * web3react context object.  placed on global for easier debugging
    */
   __web3React: any;
+
+  /**
+   * helper console function to deal with BigNumbers
+   */
+  consoleEther: (name: string, value: BigNumber | undefined) => void;
 }

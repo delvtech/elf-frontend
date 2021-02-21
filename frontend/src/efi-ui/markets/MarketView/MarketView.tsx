@@ -12,6 +12,7 @@ import { MarketDetails } from "efi-ui/markets/MarketDetails/MarketDetails";
 import { WalletConnectionCard } from "efi-ui/wallets/WalletConnectionCard/WalletConnectionCard";
 import { getConnectorName } from "efi/wallets/connectors";
 import { useMarketContract } from "efi-ui/markets/useMarketContract";
+import { Signer } from "ethers";
 
 interface MarketViewProps extends RouteComponentProps {
   marketId?: string;
@@ -26,8 +27,9 @@ export const MarketView: FC<MarketViewProps> = (props) => {
     connector,
     library,
   } = useWeb3React<Web3Provider>();
+  const signer = account ? (library?.getSigner(account) as Signer) : undefined;
   const connectorName = getConnectorName(connector, library);
-  const marketContract = useMarketContract(marketId);
+  const marketContract = useMarketContract(marketId, signer);
 
   return (
     <div
@@ -57,6 +59,7 @@ export const MarketView: FC<MarketViewProps> = (props) => {
         </div>
         <div className={tw("flex", "flex-col", "justify-between")}>
           <MarketDetails
+            signer={signer}
             accountAddress={account}
             marketContract={marketContract}
           />

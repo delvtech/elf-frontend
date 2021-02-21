@@ -1,23 +1,28 @@
 import React, { FC, useCallback, useState } from "react";
 
 import { Card, Colors, Intent } from "@blueprintjs/core";
-import { BigNumber } from "ethers";
+import { BigNumber, Signer } from "ethers";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { TradePanel } from "efi-ui/crypto/TradePanel/TradePanel";
 import { CryptoSymbolOld } from "efi/crypto/CryptoSymbol";
 import { Market } from "efi/markets/Market";
+import { BPool } from "elf-contracts/types/BPool";
 
 interface MarketActionsCardProps {
+  signer: Signer | undefined;
   accountAddress: string | null | undefined;
   market: Market | undefined;
+  marketContract: BPool | undefined;
 }
 
 type MarketAction = "trade" | "stake";
 export const MarketActionsCard: FC<MarketActionsCardProps> = ({
+  signer,
   accountAddress,
   market,
+  marketContract,
 }) => {
   const [action, setActionUI] = useState<MarketAction>("trade");
   const showTradeUI = useCallback(() => setActionUI("trade"), []);
@@ -38,8 +43,10 @@ export const MarketActionsCard: FC<MarketActionsCardProps> = ({
       >
         {action === "trade" && (
           <TradePanel
+            signer={signer}
             accountAddress={accountAddress}
             market={market}
+            marketContractWithSigner={marketContract}
             inputLabel={"Trade"}
             buttonLabel={"Trade"}
             buttonIntent={Intent.PRIMARY}
@@ -58,8 +65,10 @@ export const MarketActionsCard: FC<MarketActionsCardProps> = ({
         )}
         {action === "stake" && (
           <TradePanel
+            signer={signer}
             accountAddress={accountAddress}
             market={market}
+            marketContractWithSigner={marketContract}
             inputLabel={"Stake"}
             buttonLabel={"Stake"}
             buttonIntent={Intent.PRIMARY}
