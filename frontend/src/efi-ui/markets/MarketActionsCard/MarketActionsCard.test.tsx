@@ -1,13 +1,10 @@
 import React from "react";
 
-import { renderWithClient } from "efi-ui/testing/renderWithClient";
 import { MarketActionsCard } from "efi-ui/markets/MarketActionsCard/MarketActionsCard";
-import { createQueryClient } from "efi/queryClient";
-import { stubbedMarkets } from "efi/markets/stubbedMarkets";
+import { renderWithClient } from "efi-ui/testing/renderWithClient";
 import ContractAddresses from "efi/contracts/contractsJson";
-import { MockProvider } from "ethereum-waffle";
-import { BPool__factory } from "elf-contracts/types/factories/BPool__factory";
-import { Signer } from "ethers";
+import { stubbedMarkets } from "efi/markets/stubbedMarkets";
+import { createQueryClient } from "efi/queryClient";
 
 test.only("should render two tabs", async () => {
   const queryClient = createQueryClient();
