@@ -7,25 +7,72 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { TrancheInfo } from "efi-ui/invest/TranchePicker/TrancheInfo";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { formatAbbreviatedDate } from "efi/base/dates";
 import { convertUnlockTimestampToDate } from "efi/tranche/convertUnlockTimestampToDate";
+import { Tranche } from "elf-contracts/types/Tranche";
+import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
+import { getQueryData } from "efi-ui/base/queryResults";
+import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
+import { Elf__factory } from "elf-contracts/types/factories/Elf__factory";
+import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
+import { useMarketSpotPrice } from "efi-ui/markets/useMarketSpotPrice";
+import { useMarketForToken } from "efi-ui/markets/useMarketForToken";
+import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
+import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
+import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
 
-interface TrancheInfoButtonProps extends TrancheInfo {
+interface TrancheInfoButtonProps {
+  tranche: Tranche | undefined;
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 export const TrancheInfoButton: FC<TrancheInfoButtonProps> = ({
-  apy,
-  unlockTimestamp,
-  name,
-  symbol,
-  vaultName,
+  tranche,
   onClick,
 }) => {
   const { isDarkMode } = useDarkMode();
-  const unlockDate = convertUnlockTimestampToDate(unlockTimestamp);
+  const symbolResult = useSmartContractReadCall(tranche, "symbol");
+  const decimalsResult = useSmartContractReadCall(tranche, "decimals");
+  const nameResult = useSmartContractReadCall(tranche, "name");
+  const unlockTimestampResult = useSmartContractReadCall(
+    tranche,
+    "unlockTimestamp"
+  );
+  const elfAddressResult = useSmartContractReadCall(tranche, "elf");
+  const elfContract = useSmartContractFromFactory(
+    getQueryData(elfAddressResult),
+    Elf__factory.connect
+  );
+  const vaultAddressResult = useSmartContractReadCall(elfContract, "vault");
+  const vaultContract = useSmartContractFromFactory(
+    getQueryData(vaultAddressResult),
+    ERC20__factory.connect
+  );
+  const vaultNameResult = useSmartContractReadCall(vaultContract, "name");
+
+  const symbol = getQueryData(symbolResult);
+  const name = getQueryData(nameResult);
+  const decimals = getQueryData(decimalsResult);
+  const vaultName = getQueryData(vaultNameResult);
+  const unlockDate = convertUnlockTimestampToDate(
+    getQueryData(unlockTimestampResult)
+  );
+
+  const marketContract = useMarketForToken(tranche, jsonRpcProvider);
+  const tranchePriceResult = useMarketSpotPrice(marketContract, tranche);
+  const tranchePriceBigNumber = getQueryData(tranchePriceResult);
+  const tranchePrice = +formatCurrency(tranchePriceBigNumber, decimals);
+
+  let apy = "-";
+  if (tranchePrice && unlockDate) {
+    apy = calculateTrancheAPY(
+      tranchePrice,
+      Date.now(),
+      unlockDate.getTime()
+    ).toFixed(0);
+  }
+
   const redeemableDate = unlockDate
     ? formatAbbreviatedDate(unlockDate)
     : t`Loading unlock date...`;
