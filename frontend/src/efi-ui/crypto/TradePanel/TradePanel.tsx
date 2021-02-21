@@ -10,7 +10,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { useCalcOutGivenIn } from "efi-ui/balancer/useCalcOutGivenIn";
-import { swapExactAmountIn } from "efi-ui/balancer/useSwapExactAmountIn";
+import { swapExactAmountIn } from "efi-balancer/swapExactAmountIn";
 import {
   NumericInputOptions,
   useNumericInput,
