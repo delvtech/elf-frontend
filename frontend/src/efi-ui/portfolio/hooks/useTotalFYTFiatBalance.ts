@@ -9,7 +9,7 @@ export function useFiatBalanceAllTranches(account: string | null | undefined) {
   const wethTrancheFiatBalance = useTrancheFiatBalance(
     account,
     ContractAddresses.trancheWethAddress,
-    ContractAddresses.bPoolWethAddress,
+    ContractAddresses.marketWethFYTAddress,
     ContractAddresses.wethAddress
   );
 
