@@ -67,9 +67,6 @@ export const TradePanel: FC<TradePanelProps> = ({
   assetContracts,
 }) => {
   const [assetsSwapped, setAssetsSwapped] = useState(false);
-  const swapAssets = useCallback(() => {
-    setAssetsSwapped(!assetsSwapped);
-  }, [assetsSwapped]);
 
   let tradeContract = assetContracts?.[0];
   let receiveContract = assetContracts?.[1];
@@ -119,6 +116,11 @@ export const TradePanel: FC<TradePanelProps> = ({
     : undefined;
   const validValue =
     valueIn && tradeCryptoBalance ? valueIn.lte(tradeCryptoBalance) : true;
+
+  const swapAssets = useCallback(() => {
+    setValueIn(stringValueOut || "");
+    setAssetsSwapped(!assetsSwapped);
+  }, [assetsSwapped, setValueIn, stringValueOut]);
 
   // TODO: clean this up!  undefineds are ridiculous here, I"m thinking I'll make a skeleton
   // component until things are loaded which most times they will be already.
