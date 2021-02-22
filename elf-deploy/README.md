@@ -21,13 +21,13 @@ $ npm ci
 Compile the contracts
 
 ```bash
-$ npx hardhat compile
+$ npm run build
 ```
 
 Run the Hardhat Runtime Environment
 
 ```bash
-$ npx hardhat node
+$ npm start
 ```
 
 (This makes a local testnet at http://localhost:8545/ and chain id 31337)
@@ -35,7 +35,7 @@ $ npx hardhat node
 Deploy the contracts
 
 ```bash
-$ npx hardhat run src/scripts/main.ts --network localhost --no-compile
+$ npm run deploy-contracts
 ```
 
 Now all the contracts are loaded to the local testnet!

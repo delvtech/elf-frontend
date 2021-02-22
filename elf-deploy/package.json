@@ -1,4 +1,9 @@
 {
+  "scripts": {
+    "start": "npx hardhat node",
+    "build": "npx hardhat compile",
+    "deploy-contracts": "npx hardhat run src/scripts/main.ts --network localhost --no-compile"
+  },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.1",
     "@nomiclabs/hardhat-waffle": "^2.0.1",
