@@ -6,9 +6,10 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { TradePanel } from "efi-ui/trade/TradePanel/TradePanel";
-import { CryptoSymbolOld } from "efi/crypto/CryptoSymbol";
+import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { Market } from "efi/markets/Market";
 import { BPool } from "elf-contracts/types/BPool";
+import { ERC20 } from "elf-contracts/types/ERC20";
 
 interface MarketActionsCardProps {
   signer: Signer | undefined;
@@ -24,6 +25,14 @@ export const MarketActionsCard: FC<MarketActionsCardProps> = ({
   market,
   marketContract,
 }) => {
+  const baseAssetContract = market?.assets[0]?.contract;
+  const yieldAssetContract = market?.assets[1]?.contract;
+
+  let assetContracts: [ERC20, ERC20] | undefined;
+  if (baseAssetContract && yieldAssetContract) {
+    assetContracts = [baseAssetContract, yieldAssetContract];
+  }
+
   const [action, setActionUI] = useState<MarketAction>("trade");
   const showTradeUI = useCallback(() => setActionUI("trade"), []);
   const showStakeUI = useCallback(() => setActionUI("stake"), []);
@@ -43,6 +52,7 @@ export const MarketActionsCard: FC<MarketActionsCardProps> = ({
       >
         {action === "trade" && (
           <TradePanel
+            assetContracts={assetContracts}
             signer={signer}
             accountAddress={accountAddress}
             market={market}
@@ -55,7 +65,7 @@ export const MarketActionsCard: FC<MarketActionsCardProps> = ({
               value: BigNumber.from(5000000000),
               decimals: BigNumber.from(9),
             }}
-            receiveCryptoSymbol={"fyETH" as CryptoSymbolOld}
+            receiveCryptoSymbol={"fyETH" as CryptoSymbol}
             receiveCryptoBalance={{
               value: BigNumber.from(0),
               decimals: BigNumber.from(9),
@@ -65,6 +75,7 @@ export const MarketActionsCard: FC<MarketActionsCardProps> = ({
         )}
         {action === "stake" && (
           <TradePanel
+            assetContracts={assetContracts}
             signer={signer}
             accountAddress={accountAddress}
             market={market}
@@ -77,7 +88,7 @@ export const MarketActionsCard: FC<MarketActionsCardProps> = ({
               value: BigNumber.from(5000000000),
               decimals: BigNumber.from(9),
             }}
-            receiveCryptoSymbol={"fyETH" as CryptoSymbolOld}
+            receiveCryptoSymbol={"fyETH" as CryptoSymbol}
             receiveCryptoBalance={{
               value: BigNumber.from(0),
               decimals: BigNumber.from(9),

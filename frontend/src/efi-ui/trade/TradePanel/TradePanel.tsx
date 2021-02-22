@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect } from "react";
+import React, { FC, useCallback, useEffect, useState } from "react";
 
 import { Button, Intent } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
@@ -15,7 +15,6 @@ import {
   NumericInputOptions,
   useNumericInput,
 } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
-import { useERC20Contract } from "efi-ui/contracts/useERC20Contract/useERC20Contract";
 import { usePairedAssetPrice } from "efi-ui/markets/usePairedAssetPrice";
 import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
@@ -23,9 +22,9 @@ import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
 import { TradeInput } from "efi-ui/trade/TradeInput/TradeInput";
 import { MAX_ALLOWANCE } from "efi/contracts/token";
-import { CryptoSymbol, CryptoSymbolOld } from "efi/crypto/CryptoSymbol";
+import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { TokenBalance } from "efi/crypto/TokenBalance";
-import { Market, MarketAsset } from "efi/markets/Market";
+import { Market } from "efi/markets/Market";
 import { DEFAULT_SLIPPAGE } from "efi/markets/slippage";
 
 interface TradePanelProps {
@@ -38,10 +37,11 @@ interface TradePanelProps {
   inputLabel: string;
   buttonLabel: string;
   buttonIntent?: Intent;
-  tradeCryptoSymbol: CryptoSymbolOld;
+  tradeCryptoSymbol: CryptoSymbol;
   tradeCryptoBalance: TokenBalance | undefined;
-  receiveCryptoSymbol: CryptoSymbolOld;
+  receiveCryptoSymbol: CryptoSymbol;
   receiveCryptoBalance: TokenBalance | undefined;
+  assetContracts: [ERC20, ERC20] | undefined;
   onTransaction: (amount: BigNumber) => void;
 }
 
@@ -64,25 +64,25 @@ export const TradePanel: FC<TradePanelProps> = ({
   market,
   marketContractWithSigner,
   accountAddress,
+  assetContracts,
 }) => {
-  let baseAsset: MarketAsset = {} as MarketAsset;
-  let yieldAsset: MarketAsset = {} as MarketAsset;
-  if (market) {
-    const { assets } = market;
-    baseAsset = assets[0];
-    yieldAsset = assets[1];
+  const [assetsSwapped, setAssetsSwapped] = useState(false);
+  const swapAssets = useCallback(() => {
+    setAssetsSwapped(!assetsSwapped);
+  }, [assetsSwapped]);
+
+  let tradeContract = assetContracts?.[0];
+  let receiveContract = assetContracts?.[1];
+
+  if (assetsSwapped) {
+    tradeContract = assetContracts?.[1];
+    receiveContract = assetContracts?.[0];
   }
-  // TODO: pass this in directly
-  const baseAssetContract = useERC20Contract(baseAsset.address);
-  const yieldAssetContract = useERC20Contract(yieldAsset.address);
 
   const { data: spotPrice } = usePairedAssetPrice(
     marketContractWithSigner?.address,
-    baseAsset.address
+    tradeContract?.address
   );
-
-  const tradeContract = baseAssetContract;
-  const receiveContract = yieldAssetContract;
 
   const [tradeCryptoSymbol] = useTokenSymbol(tradeContract);
   const [tradeCryptoDecimals] = useTokenDecimals(tradeContract);
@@ -108,13 +108,11 @@ export const TradePanel: FC<TradePanelProps> = ({
   const amountIn = stringValueIn ? parseEther(stringValueIn) : undefined;
   const { data: calcValueOut } = useCalcOutGivenIn(
     amountIn,
-    baseAssetContract,
-    yieldAssetContract,
+    tradeContract,
+    receiveContract,
     marketContractWithSigner
   );
   useUpdateOutWhenInChanges(calcValueOut, setValueOut, stringValueIn);
-
-  const switchAssets = useCallback(() => {}, []);
 
   const valueIn = stringValueIn
     ? parseUnits(stringValueIn, tradeCryptoDecimals)
@@ -134,13 +132,13 @@ export const TradePanel: FC<TradePanelProps> = ({
         !tradeContract ||
         !receiveContract ||
         !marketContractWithSigner ||
-        !baseAssetContract ||
+        !tradeContract ||
         !tradeCryptoBalance ||
         !amountIn
       ) {
         return;
       }
-      const approval = await baseAssetContract.allowance(
+      const approval = await tradeContract.allowance(
         accountAddress,
         marketContractWithSigner.address
       );
@@ -167,7 +165,6 @@ export const TradePanel: FC<TradePanelProps> = ({
   }, [
     accountAddress,
     amountIn,
-    baseAssetContract,
     marketContractWithSigner,
     onChangeIn,
     onTransaction,
@@ -212,7 +209,7 @@ export const TradePanel: FC<TradePanelProps> = ({
 
       <Button
         icon={IconNames.ARROWS_VERTICAL}
-        onClick={switchAssets}
+        onClick={swapAssets}
         minimal
         large
         intent={buttonIntent}
