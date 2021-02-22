@@ -92,11 +92,13 @@ export function useMarketDetails(
         name: baseAssetName,
         symbol: baseAssetSymbol,
         address: baseAssetContract?.address,
+        contract: baseAssetContract,
       },
       {
         name: yieldAssetName,
         symbol: yieldAssetSymbol,
         address: yieldAssetContract?.address,
+        contract: yieldAssetContract,
       },
     ],
 

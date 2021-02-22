@@ -1,3 +1,5 @@
+import { ERC20 } from "elf-contracts/types/ERC20";
+
 export interface Market {
   /**
    * address of the market contract
@@ -59,6 +61,7 @@ export interface MarketAsset {
   name: string | undefined;
   symbol: string | undefined;
   address: string | undefined;
+  contract: ERC20 | undefined;
 }
 export type TrancheState = "queued" | "running" | "closed";
 
