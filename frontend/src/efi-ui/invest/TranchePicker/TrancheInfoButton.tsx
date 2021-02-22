@@ -9,7 +9,6 @@ import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { formatAbbreviatedDate } from "efi/base/dates";
-import { convertUnlockTimestampToDate } from "efi/tranche/convertUnlockTimestampToDate";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { getQueryData } from "efi-ui/base/queryResults";
@@ -21,6 +20,7 @@ import { useMarketForToken } from "efi-ui/markets/useMarketForToken";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
 import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
+import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 
 interface TrancheInfoButtonProps {
   tranche: Tranche | undefined;
@@ -55,7 +55,7 @@ export const TrancheInfoButton: FC<TrancheInfoButtonProps> = ({
   const name = getQueryData(nameResult);
   const decimals = getQueryData(decimalsResult);
   const vaultName = getQueryData(vaultNameResult);
-  const unlockDate = convertUnlockTimestampToDate(
+  const unlockDate = convertEpochSecondsToDate(
     getQueryData(unlockTimestampResult)
   );
 
