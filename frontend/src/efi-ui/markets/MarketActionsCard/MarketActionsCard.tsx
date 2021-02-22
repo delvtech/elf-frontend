@@ -5,7 +5,7 @@ import { BigNumber, Signer } from "ethers";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { TradePanel } from "efi-ui/crypto/TradePanel/TradePanel";
+import { TradePanel } from "efi-ui/trade/TradePanel/TradePanel";
 import { CryptoSymbolOld } from "efi/crypto/CryptoSymbol";
 import { Market } from "efi/markets/Market";
 import { BPool } from "elf-contracts/types/BPool";
