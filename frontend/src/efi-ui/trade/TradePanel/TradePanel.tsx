@@ -1,6 +1,6 @@
 import React, { FC, useCallback, useEffect } from "react";
 
-import { Button, InputGroup, Intent, Tag } from "@blueprintjs/core";
+import { Button, Intent } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { BPool } from "elf-contracts/types/BPool";
 import { ERC20 } from "elf-contracts/types/ERC20";
@@ -8,24 +8,22 @@ import { BigNumber, Contract, Signer } from "ethers";
 import { formatEther, parseEther, parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
+import { swapExactAmountIn } from "efi-balancer/swapExactAmountIn";
 import tw from "efi-tailwindcss-classnames";
 import { useCalcOutGivenIn } from "efi-ui/balancer/useCalcOutGivenIn";
-import { swapExactAmountIn } from "efi-balancer/swapExactAmountIn";
 import {
   NumericInputOptions,
   useNumericInput,
 } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { useERC20Contract } from "efi-ui/contracts/useERC20Contract/useERC20Contract";
-import { CryptoIcon } from "efi-ui/crypto/CryptoIcon";
-import styles from "efi-ui/crypto/TradePanel/TradePanel.module.css";
 import { usePairedAssetPrice } from "efi-ui/markets/usePairedAssetPrice";
 import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
+import { TradeInput } from "efi-ui/trade/TradeInput/TradeInput";
 import { MAX_ALLOWANCE } from "efi/contracts/token";
-import { CryptoName } from "efi/crypto/CryptoName";
-import { CryptoSymbolOld } from "efi/crypto/CryptoSymbol";
+import { CryptoSymbol, CryptoSymbolOld } from "efi/crypto/CryptoSymbol";
 import { TokenBalance } from "efi/crypto/TokenBalance";
 import { Market, MarketAsset } from "efi/markets/Market";
 import { DEFAULT_SLIPPAGE } from "efi/markets/slippage";
@@ -203,47 +201,14 @@ export const TradePanel: FC<TradePanelProps> = ({
           intent={Intent.SUCCESS}
         >{t`MAX`}</Button>
       </div>
-      <div className={tw("flex", "flex-col", "space-y-2")}>
-        <InputGroup
-          disabled={formDisabled}
-          onChange={onChangeIn}
-          value={stringValueIn}
-          className={styles.depositInput}
-          large
-          intent={validValue ? undefined : Intent.DANGER}
-          rightElement={
-            <Tag large minimal>
-              <span>{tradeCryptoSymbol}</span>
-            </Tag>
-          }
-          leftElement={
-            <div className={tw("px-2")}>
-              {tradeCryptoSymbol === ("ELF" as any) ||
-              !CryptoIcon[tradeCryptoSymbol as CryptoSymbolOld] ? (
-                "✨"
-              ) : (
-                <img
-                  className={tw("h-5", "w-5")}
-                  src={CryptoIcon[tradeCryptoSymbol as CryptoSymbolOld]}
-                  alt={CryptoName[tradeCryptoSymbol as CryptoSymbolOld]}
-                />
-              )}
-            </div>
-          }
-        />
-        <div className={tw("flex", "justify-between")}>
-          <span
-            className={tw("text-xs", "text-right", {
-              "text-danger": !validValue,
-            })}
-          >{t`Balance:`}</span>
-          <span
-            className={tw("text-xs", "text-right", {
-              "text-danger": !validValue,
-            })}
-          >{`${tradeCryptoDisplayBalance} ${tradeCryptoSymbol}`}</span>
-        </div>
-      </div>
+      <TradeInput
+        cryptoDisplayBalance={tradeCryptoDisplayBalance}
+        cryptoSymbol={tradeCryptoSymbol as CryptoSymbol}
+        disabled={formDisabled}
+        onChange={onChangeIn}
+        value={stringValueIn}
+        validValue={validValue}
+      />
 
       <Button
         icon={IconNames.ARROWS_VERTICAL}
@@ -257,47 +222,14 @@ export const TradePanel: FC<TradePanelProps> = ({
       <div className={tw("flex", "justify-between", "items-center")}>
         <span>{t`For`}</span>
       </div>
-      <div className={tw("flex", "flex-col", "space-y-2")}>
-        <InputGroup
-          disabled={formDisabled}
-          onChange={onChangeOut}
-          value={stringValueOut}
-          className={styles.depositInput}
-          large
-          intent={validValue ? undefined : Intent.DANGER}
-          rightElement={
-            <Tag large minimal>
-              <span>{receiveCryptoSymbol}</span>
-            </Tag>
-          }
-          leftElement={
-            <div className={tw("px-2")}>
-              {receiveCryptoSymbol === ("ELF" as any) ||
-              !CryptoIcon[receiveCryptoSymbol as CryptoSymbolOld] ? (
-                "✨"
-              ) : (
-                <img
-                  className={tw("h-5", "w-5")}
-                  src={CryptoIcon[receiveCryptoSymbol as CryptoSymbolOld]}
-                  alt={CryptoName[receiveCryptoSymbol as CryptoSymbolOld]}
-                />
-              )}
-            </div>
-          }
-        />
-        <div className={tw("flex", "justify-between")}>
-          <span
-            className={tw("text-xs", "text-right", {
-              "text-danger": !validValue,
-            })}
-          >{t`Balance:`}</span>
-          <span
-            className={tw("text-xs", "text-right", {
-              "text-danger": !validValue,
-            })}
-          >{`${receiveCryptoDisplayBalance} ${receiveCryptoSymbol}`}</span>
-        </div>
-      </div>
+      <TradeInput
+        cryptoDisplayBalance={receiveCryptoDisplayBalance}
+        cryptoSymbol={receiveCryptoSymbol as CryptoSymbol}
+        disabled={formDisabled}
+        onChange={onChangeOut}
+        value={stringValueOut}
+        validValue={validValue}
+      />
       <Button
         disabled={!valueIn || !validValue || submitDisabled || formDisabled}
         onClick={submitTransaction}
