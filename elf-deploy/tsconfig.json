@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "strict": true,
+    "outDir": "./build/",
+    "paths": {
+      "types": ["./src/types"],
+      "types/*": ["./src/types/*"],
+      "scripts": ["./src/scripts"],
+      "scripts/*": ["./src/scripts/*"],
+      "test": ["./src/test"],
+      "test/*": ["./src/test/*"],
+      "contracts": ["./src/contracts"],
+      "contracts/*": ["./src/contracts/*"],
+    },
+  },
+  "include": ["./src/**/*", "./hardhat.config.ts"],
+  "exclude": ["./frontend/**/*"],
+  "files": ["./src/**/*", "./hardhat.config.ts"]
+}
