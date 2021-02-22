@@ -147,7 +147,7 @@
     "@typechain/ethers-v5": "^5.0.0",
     "@types/d3-time-format": "^3.0.0",
     "dependency-cruiser": "^9.23.1",
-    "eslint-config-prettier": "^7.2.0",
+    "eslint-config-prettier": "^8.0.0",
     "eslint-plugin-jest": "^24.1.5",
     "eslint-plugin-prettier": "^3.3.1",
     "husky": "^4.3.8",
