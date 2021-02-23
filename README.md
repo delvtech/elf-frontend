@@ -11,6 +11,12 @@ npm start
 npm run deploy-contracts
 ```
 
+From the project top-level directory, run the following commands:
+
+```bash
+npm run copy-contracts
+```
+
 From the frontend directory, run the following commands:
 
 Run
