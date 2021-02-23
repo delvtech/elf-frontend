@@ -1,5 +1,6 @@
 import { QueryObserverResult } from "react-query";
 
+import { formatEther } from "@ethersproject/units";
 import { BPool } from "elf-contracts/types/BPool";
 import { t } from "ttag";
 
@@ -53,6 +54,8 @@ export function useMarketDetails(
     yieldAssetContract,
     "symbol"
   );
+
+  const swapFeeResult = useSmartContractReadCall(marketContract, "getSwapFee");
   const results = [
     nameResult,
     totalSupplyResult,
@@ -61,6 +64,7 @@ export function useMarketDetails(
     yieldAssetNameResult,
     baseAssetSymbolResult,
     yieldAssetSymbolResult,
+    swapFeeResult,
   ];
 
   if (
@@ -76,6 +80,8 @@ export function useMarketDetails(
   const { data: baseAssetSymbol } = baseAssetSymbolResult;
   const { data: yieldAssetName } = yieldAssetNameResult;
   const { data: yieldAssetSymbol } = yieldAssetSymbolResult;
+  const { data: swapFeeBigNumber } = swapFeeResult;
+  const swapFee = swapFeeBigNumber && +formatEther(swapFeeBigNumber);
   const id = `${baseAssetSymbol}-${yieldAssetName}-2020-6-1`.toLowerCase();
   const name = `${baseAssetName} - ${yieldAssetName} AMM`;
   const description = t`An automated market for ${baseAssetName} and ${yieldAssetName}`;
@@ -87,16 +93,19 @@ export function useMarketDetails(
     name,
     description,
     totalSupply,
+    swapFee,
     assets: [
       {
         name: baseAssetName,
         symbol: baseAssetSymbol,
         address: baseAssetContract?.address,
+        contract: baseAssetContract,
       },
       {
         name: yieldAssetName,
         symbol: yieldAssetSymbol,
         address: yieldAssetContract?.address,
+        contract: yieldAssetContract,
       },
     ],
 

@@ -12,7 +12,6 @@ import { MarketFilterOptions } from "efi-ui/markets/MarketFilterOptions/MarketFi
 import { MarketsTable } from "efi-ui/markets/MarketsTable/MarketsTable";
 import { useMarketContracts } from "efi-ui/markets/useMarketContracts";
 import { WalletConnectionCard } from "efi-ui/wallets/WalletConnectionCard/WalletConnectionCard";
-import { stubbedMarkets } from "efi/markets/stubbedMarkets";
 import { getConnectorName } from "efi/wallets/connectors";
 
 interface ExchangeViewProps extends RouteComponentProps {}
@@ -73,7 +72,6 @@ export const ExchangeView: FC<ExchangeViewProps> = () => {
               <MarketsTable
                 className={tw("w-full")}
                 marketContracts={marketContracts}
-                markets={stubbedMarkets}
               />
             </Card>
           </div>
