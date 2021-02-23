@@ -1,0 +1,9 @@
+{
+  "name": "efi-frontend",
+  "homepage": "https://github.com/element-fi/efi-frontend#readme",
+  "description": "The frontend for Element.fi",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "copy-contracts": "sh ./scripts/copy-contracts.sh"
+  }
+}

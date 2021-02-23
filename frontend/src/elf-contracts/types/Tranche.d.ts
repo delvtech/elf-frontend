@@ -31,6 +31,7 @@ interface TrancheInterface extends ethers.utils.Interface {
     "deposit(uint256)": FunctionFragment;
     "elf()": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
+    "lockDuration()": FunctionFragment;
     "name()": FunctionFragment;
     "nonces(address)": FunctionFragment;
     "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)": FunctionFragment;
@@ -70,6 +71,10 @@ interface TrancheInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "increaseAllowance",
     values: [string, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "lockDuration",
+    values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(functionFragment: "nonces", values: [string]): string;
@@ -128,6 +133,10 @@ interface TrancheInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "elf", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "increaseAllowance",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "lockDuration",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
@@ -253,6 +262,10 @@ export class Tranche extends Contract {
       addedValue: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
+
+    lockDuration(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "lockDuration()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     name(overrides?: CallOverrides): Promise<[string]>;
 
@@ -427,6 +440,10 @@ export class Tranche extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
+  lockDuration(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "lockDuration()"(overrides?: CallOverrides): Promise<BigNumber>;
+
   name(overrides?: CallOverrides): Promise<string>;
 
   "name()"(overrides?: CallOverrides): Promise<string>;
@@ -599,6 +616,10 @@ export class Tranche extends Contract {
       addedValue: BigNumberish,
       overrides?: CallOverrides
     ): Promise<boolean>;
+
+    lockDuration(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "lockDuration()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     name(overrides?: CallOverrides): Promise<string>;
 
@@ -781,6 +802,10 @@ export class Tranche extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
+    lockDuration(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "lockDuration()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
     "name()"(overrides?: CallOverrides): Promise<BigNumber>;
@@ -959,6 +984,10 @@ export class Tranche extends Contract {
       addedValue: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
+
+    lockDuration(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "lockDuration()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
