@@ -176,6 +176,15 @@ export const TradePanel: FC<TradePanelProps> = ({
     }
   }, [tradeCryptoBalance, setValueIn]);
 
+  const submitButtonText = getButtonText(buttonLabel, approved, signer);
+  const submitButtonDisabled =
+    formDisabled ||
+    submitDisabled ||
+    !validValue ||
+    !stringValueIn ||
+    !stringValueOut ||
+    !approved ||
+    !signer;
   return (
     <div className={tw("flex", "flex-col", "space-y-5")}>
       {/* Trade Asset */}
@@ -220,14 +229,14 @@ export const TradePanel: FC<TradePanelProps> = ({
         validValue={validValue}
       />
       <Button
-        disabled={!valueIn || !validValue || submitDisabled || formDisabled}
+        disabled={submitButtonDisabled}
         onClick={submitTransaction}
         minimal
         outlined
         large
         intent={buttonIntent}
       >
-        {approved ? buttonLabel : "Approve Market"}
+        {submitButtonText}
       </Button>
     </div>
   );
@@ -417,4 +426,20 @@ const useMarketTokenInfo = (
     tokenOutMarketBalance,
     tokenInMarketBalance,
   };
+};
+
+const getButtonText = (
+  buttonLabel: string,
+  approved: boolean,
+  signer: Signer | undefined
+) => {
+  if (!signer) {
+    return t`Connect Wallet`;
+  }
+
+  if (!approved) {
+    return `Approve Market`;
+  }
+
+  return buttonLabel;
 };
