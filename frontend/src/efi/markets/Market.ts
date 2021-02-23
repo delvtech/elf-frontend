@@ -55,6 +55,7 @@ export interface Market {
   startDate: number;
 
   state: TrancheState;
+  swapFee?: number;
 }
 
 export interface MarketAsset {

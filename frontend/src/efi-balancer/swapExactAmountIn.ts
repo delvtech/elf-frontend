@@ -11,7 +11,9 @@ export const swapExactAmountIn = async <
   ContractOut extends ERC20
 >(
   amountIn: BigNumber | undefined,
+  /* the spot price of the out token wrt to the in token */
   spotPrice: BigNumber | undefined,
+  spotPriceAfter: BigNumber | undefined,
   /* number from 0 - 1, i.e. 0.001 for 0.1% slippage */
   slippage: number,
   tokenContractIn: ContractIn,
@@ -28,6 +30,7 @@ export const swapExactAmountIn = async <
 
   if (amountIn && spotPrice) {
     amountOut = +formatEther(amountIn) / +formatEther(spotPrice);
+
     // multiply by 1 - slippage percent, i.e. 1 - 0.1% = .999
     const slippageDown = 1 - slippage;
     const _minAmountOut = amountOut * slippageDown;
@@ -36,7 +39,14 @@ export const swapExactAmountIn = async <
     // multiply by 1 + slippage percent, i.e. 1 + 0.1% = 1.001
     const slippageUp = 1 + slippage;
     const _maxPrice = +formatEther(spotPrice) * slippageUp;
+
     maxPrice = parseEther(_maxPrice.toString());
+  }
+
+  // TODO: we need to handle this error.  We should disable the trade button with a warning that
+  // there would be too much slippage.
+  if (maxPrice && spotPriceAfter && spotPriceAfter.gt(maxPrice)) {
+    console.error("Too much slippage, cant execute transaction");
   }
 
   const callArgs = [

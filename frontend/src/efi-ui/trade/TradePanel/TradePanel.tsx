@@ -15,6 +15,7 @@ import {
   NumericInputOptions,
   useNumericInput,
 } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
+import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { usePairedAssetPrice } from "efi-ui/markets/usePairedAssetPrice";
 import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
@@ -22,16 +23,15 @@ import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
 import { TradeInput } from "efi-ui/trade/TradeInput/TradeInput";
 import { MAX_ALLOWANCE } from "efi/contracts/token";
+import { ContractMethodArgs } from "efi/contracts/types";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { TokenBalance } from "efi/crypto/TokenBalance";
-import { Market } from "efi/markets/Market";
 import { DEFAULT_SLIPPAGE } from "efi/markets/slippage";
 
 interface TradePanelProps {
   signer: Signer | undefined;
   marketContractWithSigner: BPool | undefined;
   accountAddress: string | null | undefined;
-  market: Market | undefined;
   formDisabled?: boolean;
   submitDisabled?: boolean;
   inputLabel: string;
@@ -61,7 +61,6 @@ export const TradePanel: FC<TradePanelProps> = ({
   buttonLabel,
   buttonIntent = Intent.PRIMARY,
   onTransaction,
-  market,
   marketContractWithSigner,
   accountAddress,
   assetContracts,
@@ -78,7 +77,12 @@ export const TradePanel: FC<TradePanelProps> = ({
 
   const { data: spotPrice } = usePairedAssetPrice(
     marketContractWithSigner?.address,
-    tradeContract?.address
+    receiveContract?.address
+  );
+
+  const { data: swapFee } = useSmartContractReadCall(
+    marketContractWithSigner,
+    "getSwapFee"
   );
 
   const [tradeCryptoSymbol] = useTokenSymbol(tradeContract);
@@ -90,6 +94,10 @@ export const TradePanel: FC<TradePanelProps> = ({
   );
 
   const [receiveCryptoSymbol] = useTokenSymbol(receiveContract);
+  const [receiveCryptoBalance] = useTokenBalanceOf(
+    receiveContract,
+    accountAddress
+  );
   const receiveCryptoDisplayBalance = useTokenBalance(
     receiveContract,
     accountAddress
@@ -109,6 +117,7 @@ export const TradePanel: FC<TradePanelProps> = ({
     receiveContract,
     marketContractWithSigner
   );
+
   useUpdateOutWhenInChanges(calcValueOut, setValueOut, stringValueIn);
 
   const valueIn = stringValueIn
@@ -122,63 +131,44 @@ export const TradePanel: FC<TradePanelProps> = ({
     setAssetsSwapped(!assetsSwapped);
   }, [assetsSwapped, setValueIn, stringValueOut]);
 
+  // TODO: make a useTokenApproval or useTokenApproved hook
+  const callArgs: ContractMethodArgs<ERC20, "allowance"> = [
+    accountAddress ?? "",
+    marketContractWithSigner?.address ?? "",
+  ];
+  const { data: approval } = useSmartContractReadCall(
+    tradeContract,
+    "allowance",
+    {
+      callArgs,
+    }
+  );
+  const approved =
+    stringValueIn && approval
+      ? approval.gte(parseUnits(stringValueIn, tradeCryptoDecimals))
+      : false;
+
   // TODO: clean this up!  undefineds are ridiculous here, I"m thinking I'll make a skeleton
   // component until things are loaded which most times they will be already.
-  const submitTransaction = useCallback(async () => {
-    if (validValue && onTransaction) {
-      if (
-        !accountAddress ||
-        !signer ||
-        !valueIn ||
-        !stringValueIn ||
-        !tradeContract ||
-        !receiveContract ||
-        !marketContractWithSigner ||
-        !tradeContract ||
-        !tradeCryptoBalance ||
-        !amountIn
-      ) {
-        return;
-      }
-      const approval = await tradeContract.allowance(
-        accountAddress,
-        marketContractWithSigner.address
-      );
-
-      // TODO: hook this up to its own button
-      if (!approval.gte(tradeCryptoBalance)) {
-        await getApproval(tradeContract, marketContractWithSigner, signer);
-        return;
-      }
-
-      await swapExactAmountIn(
-        parseEther(stringValueIn),
-        spotPrice,
-        DEFAULT_SLIPPAGE,
-        tradeContract.connect(signer),
-        receiveContract,
-        marketContractWithSigner
-      );
-      await onTransaction(valueIn);
-      // TODO: Hack to reset the value of the Numeric Input. This should instead
-      // call onResetValue or something from userNumericInput instead.
-      onChangeIn({ target: { value: "" } } as any);
-    }
-  }, [
-    accountAddress,
-    amountIn,
-    marketContractWithSigner,
-    onChangeIn,
+  const submitTransaction = useSubmitTransaction(
+    validValue,
     onTransaction,
-    receiveContract,
+    accountAddress,
     signer,
-    spotPrice,
+    valueIn,
     stringValueIn,
     tradeContract,
+    receiveContract,
+    marketContractWithSigner,
     tradeCryptoBalance,
-    validValue,
-    valueIn,
-  ]);
+    receiveCryptoBalance,
+    amountIn,
+    swapFee,
+    stringValueOut,
+    approved,
+    spotPrice,
+    onChangeIn
+  );
 
   const setMaxValue = useCallback(() => {
     if (tradeCryptoBalance) {
@@ -237,11 +227,125 @@ export const TradePanel: FC<TradePanelProps> = ({
         large
         intent={buttonIntent}
       >
-        {buttonLabel}
+        {approved ? buttonLabel : "Approve Market"}
       </Button>
     </div>
   );
 };
+function useSubmitTransaction(
+  validValue: boolean,
+  onTransaction: (amount: BigNumber) => void,
+  accountAddress: string | null | undefined,
+  signer: Signer | undefined,
+  valueIn: BigNumber | undefined,
+  stringValueIn: string | undefined,
+  tradeContract: ERC20 | undefined,
+  receiveContract: ERC20 | undefined,
+  marketContractWithSigner: BPool | undefined,
+  tradeCryptoBalance: BigNumber | undefined,
+  receiveCryptoBalance: BigNumber | undefined,
+  amountIn: BigNumber | undefined,
+  swapFee: BigNumber | undefined,
+  stringValueOut: string | undefined,
+  approved: boolean,
+  spotPrice: BigNumber | undefined,
+  onChangeIn: (event: React.ChangeEvent<HTMLInputElement>) => void
+) {
+  const {
+    weightOfTokenIn,
+    weightOfTokenOut,
+    tokenOutMarketBalance,
+    tokenInMarketBalance,
+  } = useMarketTokenInfo(
+    marketContractWithSigner,
+    tradeContract?.address,
+    receiveContract?.address
+  );
+
+  return useCallback(async () => {
+    if (validValue && onTransaction) {
+      if (
+        !accountAddress ||
+        !signer ||
+        !valueIn ||
+        !stringValueIn ||
+        !tradeContract ||
+        !receiveContract ||
+        !marketContractWithSigner ||
+        !tradeContract ||
+        !tradeCryptoBalance ||
+        !receiveCryptoBalance ||
+        !amountIn ||
+        !weightOfTokenIn ||
+        !weightOfTokenOut ||
+        !swapFee ||
+        !tokenInMarketBalance ||
+        !tokenOutMarketBalance ||
+        !stringValueOut
+      ) {
+        return;
+      }
+      if (!Number.isFinite(Number(stringValueOut))) {
+        return;
+      }
+      // TODO: hook this up to its own button
+      if (!approved) {
+        await getApproval(tradeContract, marketContractWithSigner, signer);
+        return;
+      }
+
+      const tokenBalanceInAfterSwap = tokenInMarketBalance.add(amountIn);
+
+      const valueOut = parseEther(stringValueOut);
+      const tokenBalanceOutAfterSwap = tokenOutMarketBalance.sub(valueOut);
+
+      const spotPriceAfter = await marketContractWithSigner.calcSpotPrice(
+        tokenBalanceInAfterSwap,
+        weightOfTokenIn,
+        tokenBalanceOutAfterSwap,
+        weightOfTokenOut,
+        swapFee
+      );
+
+      await swapExactAmountIn(
+        parseEther(stringValueIn),
+        spotPrice,
+        spotPriceAfter,
+        DEFAULT_SLIPPAGE,
+        tradeContract.connect(signer),
+        receiveContract,
+        marketContractWithSigner
+      );
+      await onTransaction(valueIn);
+      // TODO: Hack to reset the value of the Numeric Input. This should instead
+      // call onResetValue or something from userNumericInput instead.
+      onChangeIn({ target: { value: "" } } as any);
+    }
+  }, [
+    accountAddress,
+    amountIn,
+    approved,
+    marketContractWithSigner,
+    onChangeIn,
+    onTransaction,
+    receiveContract,
+    receiveCryptoBalance,
+    signer,
+    spotPrice,
+    stringValueIn,
+    stringValueOut,
+    swapFee,
+    tokenInMarketBalance,
+    tokenOutMarketBalance,
+    tradeContract,
+    tradeCryptoBalance,
+    validValue,
+    valueIn,
+    weightOfTokenIn,
+    weightOfTokenOut,
+  ]);
+}
+
 function useUpdateOutWhenInChanges(
   calcValueOut: BigNumber | undefined,
   setValueOut: (value: string) => void,
@@ -268,3 +372,49 @@ async function getApproval<F extends ERC20, T extends Contract>(
   await txReceipt.wait(1);
   return txReceipt;
 }
+
+const useMarketTokenInfo = (
+  marketContract: BPool | undefined,
+  tokenInAddress: string | undefined,
+  tokenOutAddress: string | undefined
+) => {
+  const { data: weightOfTokenIn } = useSmartContractReadCall(
+    marketContract,
+    "getDenormalizedWeight",
+    {
+      callArgs: [tokenInAddress as string],
+      enabled: !!tokenInAddress,
+    }
+  );
+  const { data: weightOfTokenOut } = useSmartContractReadCall(
+    marketContract,
+    "getDenormalizedWeight",
+    {
+      callArgs: [tokenOutAddress as string],
+      enabled: !!tokenOutAddress,
+    }
+  );
+  const { data: tokenOutMarketBalance } = useSmartContractReadCall(
+    marketContract,
+    "getBalance",
+    {
+      callArgs: [tokenOutAddress as string],
+      enabled: !!tokenOutAddress,
+    }
+  );
+  const { data: tokenInMarketBalance } = useSmartContractReadCall(
+    marketContract,
+    "getBalance",
+    {
+      callArgs: [tokenInAddress as string],
+      enabled: !!tokenInAddress,
+    }
+  );
+
+  return {
+    weightOfTokenIn,
+    weightOfTokenOut,
+    tokenOutMarketBalance,
+    tokenInMarketBalance,
+  };
+};
