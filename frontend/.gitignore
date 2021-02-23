@@ -31,4 +31,4 @@ tailwind.output.css
 .eslintcache
 
 src/elf-contracts/types
-src/contracts.json
+src/addresses.json
