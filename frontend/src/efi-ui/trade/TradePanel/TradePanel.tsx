@@ -98,9 +98,9 @@ export const TradePanel: FC<TradePanelProps> = ({
     accountAddress
   );
 
-  const [stringValueIn, onChangeIn, setValueIn] = useNumericInput(
-    numericInputOptions
-  );
+  const [stringValueIn, onChangeIn, setValueIn] = useNumericInput({
+    ...numericInputOptions,
+  });
   const [stringValueOut, onChangeOut, setValueOut] = useNumericInput(
     numericInputOptions
   );
@@ -122,9 +122,9 @@ export const TradePanel: FC<TradePanelProps> = ({
     valueIn && tradeCryptoBalance ? valueIn.lte(tradeCryptoBalance) : true;
 
   const swapAssets = useCallback(() => {
-    setValueIn(stringValueOut || "");
+    setValueIn("");
     setAssetsSwapped(!assetsSwapped);
-  }, [assetsSwapped, setValueIn, stringValueOut]);
+  }, [assetsSwapped, setValueIn]);
 
   // TODO: make a useTokenApproval or useTokenApproved hook
   const callArgs: ContractMethodArgs<ERC20, "allowance"> = [
