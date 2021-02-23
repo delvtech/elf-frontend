@@ -1,12 +1,11 @@
 import React, { FC, useCallback, useState } from "react";
 
 import { Card, Colors, Intent } from "@blueprintjs/core";
-import { BigNumber, Signer } from "ethers";
+import { Signer } from "ethers";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { TradePanel } from "efi-ui/trade/TradePanel/TradePanel";
-import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { Market } from "efi/markets/Market";
 import { BPool } from "elf-contracts/types/BPool";
 import { ERC20 } from "elf-contracts/types/ERC20";
@@ -52,45 +51,25 @@ export const MarketActionsCard: FC<MarketActionsCardProps> = ({
       >
         {action === "trade" && (
           <TradePanel
-            assetContracts={assetContracts}
             signer={signer}
             accountAddress={accountAddress}
-            marketContractWithSigner={marketContract}
+            marketContract={marketContract}
+            assetContracts={assetContracts}
             inputLabel={"Trade"}
             buttonLabel={"Trade"}
             buttonIntent={Intent.PRIMARY}
-            tradeCryptoSymbol={"ETH"}
-            tradeCryptoBalance={{
-              value: BigNumber.from(5000000000),
-              decimals: BigNumber.from(9),
-            }}
-            receiveCryptoSymbol={"fyETH" as CryptoSymbol}
-            receiveCryptoBalance={{
-              value: BigNumber.from(0),
-              decimals: BigNumber.from(9),
-            }}
             onTransaction={() => {}}
           />
         )}
         {action === "stake" && (
           <TradePanel
-            assetContracts={assetContracts}
             signer={signer}
             accountAddress={accountAddress}
-            marketContractWithSigner={marketContract}
+            marketContract={marketContract}
+            assetContracts={assetContracts}
             inputLabel={"Stake"}
             buttonLabel={"Stake"}
             buttonIntent={Intent.PRIMARY}
-            tradeCryptoSymbol={"ETH"}
-            tradeCryptoBalance={{
-              value: BigNumber.from(5000000000),
-              decimals: BigNumber.from(9),
-            }}
-            receiveCryptoSymbol={"fyETH" as CryptoSymbol}
-            receiveCryptoBalance={{
-              value: BigNumber.from(0),
-              decimals: BigNumber.from(9),
-            }}
             onTransaction={() => {}}
           />
         )}

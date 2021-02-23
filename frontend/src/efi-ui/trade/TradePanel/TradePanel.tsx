@@ -25,22 +25,17 @@ import { TradeInput } from "efi-ui/trade/TradeInput/TradeInput";
 import { MAX_ALLOWANCE } from "efi/contracts/token";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
-import { TokenBalance } from "efi/crypto/TokenBalance";
 import { DEFAULT_SLIPPAGE } from "efi/markets/slippage";
 
 interface TradePanelProps {
   signer: Signer | undefined;
-  marketContractWithSigner: BPool | undefined;
+  marketContract: BPool | undefined;
   accountAddress: string | null | undefined;
   formDisabled?: boolean;
   submitDisabled?: boolean;
   inputLabel: string;
   buttonLabel: string;
   buttonIntent?: Intent;
-  tradeCryptoSymbol: CryptoSymbol;
-  tradeCryptoBalance: TokenBalance | undefined;
-  receiveCryptoSymbol: CryptoSymbol;
-  receiveCryptoBalance: TokenBalance | undefined;
   assetContracts: [ERC20, ERC20] | undefined;
   onTransaction: (amount: BigNumber) => void;
 }
@@ -61,7 +56,7 @@ export const TradePanel: FC<TradePanelProps> = ({
   buttonLabel,
   buttonIntent = Intent.PRIMARY,
   onTransaction,
-  marketContractWithSigner,
+  marketContract,
   accountAddress,
   assetContracts,
 }) => {
@@ -76,12 +71,12 @@ export const TradePanel: FC<TradePanelProps> = ({
   }
 
   const { data: spotPrice } = usePairedAssetPrice(
-    marketContractWithSigner?.address,
+    marketContract?.address,
     receiveContract?.address
   );
 
   const { data: swapFee } = useSmartContractReadCall(
-    marketContractWithSigner,
+    marketContract,
     "getSwapFee"
   );
 
@@ -115,7 +110,7 @@ export const TradePanel: FC<TradePanelProps> = ({
     amountIn,
     tradeContract,
     receiveContract,
-    marketContractWithSigner
+    marketContract
   );
 
   useUpdateOutWhenInChanges(calcValueOut, setValueOut, stringValueIn);
@@ -134,7 +129,7 @@ export const TradePanel: FC<TradePanelProps> = ({
   // TODO: make a useTokenApproval or useTokenApproved hook
   const callArgs: ContractMethodArgs<ERC20, "allowance"> = [
     accountAddress ?? "",
-    marketContractWithSigner?.address ?? "",
+    marketContract?.address ?? "",
   ];
   const { data: approval } = useSmartContractReadCall(
     tradeContract,
@@ -159,7 +154,7 @@ export const TradePanel: FC<TradePanelProps> = ({
     stringValueIn,
     tradeContract,
     receiveContract,
-    marketContractWithSigner,
+    marketContract,
     tradeCryptoBalance,
     receiveCryptoBalance,
     amountIn,
