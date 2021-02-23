@@ -19,14 +19,12 @@ import tw from "efi-tailwindcss-classnames";
 import { FormGroupLabel } from "efi-ui/base/FormGroupLabel/FormGroupLabel";
 import { LabeledProgressBar } from "efi-ui/base/LabeledProgressBar/LabeledProgressBar";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { Market } from "efi/markets/Market";
 import { useInterval } from "react-use";
 import { getTimeLeft } from "efi/base/time";
 import { BPool } from "elf-contracts/types/BPool";
 import { useMarketDetails } from "efi-ui/markets/useMarketDetails";
 
 interface MarketsTableProps {
-  markets: Market[];
   marketContracts: BPool[];
   className?: string;
 }
@@ -46,11 +44,10 @@ const TABLE_HEADERS: MarketsTableHeaderProps[] = [
 ];
 
 export const MarketsTable: FC<MarketsTableProps> = ({
-  markets,
   marketContracts,
   className,
 }) => {
-  if (!markets.length) {
+  if (!marketContracts.length) {
     return <span>{t`no markets found`}</span>;
   }
   return (
@@ -107,7 +104,7 @@ export const MarketsTable: FC<MarketsTableProps> = ({
           </tr>
         </thead>
         <tbody className={Classes.TEXT_LARGE}>
-          {marketContracts.map((marketContract, i) => {
+          {marketContracts.map((marketContract) => {
             return (
               <MarketsTableRow
                 key={marketContract.address}
