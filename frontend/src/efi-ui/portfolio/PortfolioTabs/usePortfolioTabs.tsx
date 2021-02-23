@@ -11,24 +11,25 @@ import { LiquidityPositionPortfolio } from "efi-ui/portfolio/LiquidityPositionPo
 import { PortfolioTab } from "efi-ui/portfolio/PortfolioTabs/PortfolioTabs";
 import { YCPortfolio } from "efi-ui/portfolio/YCPortfolio/YCPortfolio";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
+import { Tranche } from "elf-contracts/types";
 
 export function usePortfolioTabs(
   account: string | null | undefined,
+  tranches: Tranche[],
   provider?: Provider
 ): PortfolioTab[] {
   const { currency } = useCurrencyPref();
-  const { tranchesWithBalance, totalFiatBalanceAllTranches } = useFYTTab(
-    account,
-    provider
-  );
+  const { totalFiatBalanceAllTranches } = useFYTTab(account, provider);
 
   return [
     {
       id: "fixed-yield-tokens",
       name: t`Fixed Yield Tokens`,
-      quantity: tranchesWithBalance.length,
+      quantity: tranches.length,
       totalFiatBalance: totalFiatBalanceAllTranches,
-      contentRenderer: () => <FYTPortfolio account={account} />,
+      contentRenderer: () => (
+        <FYTPortfolio account={account} tranches={tranches} />
+      ),
     },
     {
       id: "yield-coupons",

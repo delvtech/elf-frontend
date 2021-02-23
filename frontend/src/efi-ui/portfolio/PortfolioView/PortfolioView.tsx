@@ -16,6 +16,7 @@ import { PortfolioBalanceSummaryCard } from "efi-ui/portfolio/PortfolioView/Port
 import { PortfolioViewSubtitle } from "efi-ui/portfolio/PortfolioView/PortfolioViewSubtitle";
 
 import { usePortfolioTabs } from "../PortfolioTabs/usePortfolioTabs";
+import { useTranchesWithBalance } from "efi-ui/portfolio/hooks/useTranchesWithBalance";
 
 interface PortfolioViewProps extends RouteComponentProps {}
 
@@ -28,7 +29,12 @@ export const PortfolioView: FC<PortfolioViewProps> = () => {
     library,
   } = useWeb3React<Web3Provider>();
 
-  const portfolioTabs: PortfolioTab[] = usePortfolioTabs(account);
+  const tranchesWithBalance = useTranchesWithBalance(account);
+
+  const portfolioTabs: PortfolioTab[] = usePortfolioTabs(
+    account,
+    tranchesWithBalance
+  );
 
   const [activePortfolioTabId, setActivePortfolioTab] = useState(
     portfolioTabs[0].id
