@@ -4,6 +4,6 @@
   "description": "The frontend for Element.fi",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "link-contracts": "sh ./scrips/link-contracts.sh"
+    "copy-contracts": "sh ./scripts/copy-contracts.sh"
   }
 }
