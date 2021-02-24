@@ -10,7 +10,7 @@ import {
 
 export function showTransactionSuccessfulToast(
   transaction: ContractTransaction
-) {
+): void {
   AppToaster.show({
     ...makeSuccessToast(t`View transaction on etherscan`),
     intent: Intent.PRIMARY,
@@ -22,7 +22,7 @@ export function showTransactionSuccessfulToast(
   });
 }
 
-export function showTransactionFailedToast() {
+export function showTransactionFailedToast(): void {
   AppToaster.show({
     ...makeErrorToast(t`Transaction failed`),
     intent: Intent.DANGER,

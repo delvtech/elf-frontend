@@ -3,6 +3,7 @@ import { BigNumber } from "ethers";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { ERC20 } from "elf-contracts/types/ERC20";
+import { QueryObserverResult } from "react-query";
 
 export const useCalcInGivenOut = <
   ContractIn extends ERC20,
@@ -12,7 +13,7 @@ export const useCalcInGivenOut = <
   tokenContractIn: ContractIn | undefined,
   tokenContractOut: ContractOut | undefined,
   poolContract: BPool | undefined
-) => {
+): QueryObserverResult<BigNumber> => {
   const tokenAddressIn = tokenContractIn?.address;
   const tokenAddressOut = tokenContractOut?.address;
 

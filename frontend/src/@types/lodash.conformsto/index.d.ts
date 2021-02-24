@@ -1,3 +1,6 @@
 declare module "lodash.conformsto" {
-  export = (object: object, source: object) => boolean;
+  export = (
+    object: Record<string, unknown>,
+    source: Record<string, unknown>
+  ): boolean => boolean;
 }

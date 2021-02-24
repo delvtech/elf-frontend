@@ -11,7 +11,7 @@ const event3 = {} as NewTranche;
 export type NewTranche = Event;
 
 export class TrancheFactory__factory {
-  static connect = (address: string, provider: Provider) => {
+  static connect = (address: string, provider: Provider): TrancheFactory => {
     return new TrancheFactory(address);
   };
 }
@@ -21,11 +21,11 @@ export class TrancheFactory {
   constructor(address: string) {
     this.address = address;
   }
-  queryFilter = async () => [event1, event2, event3];
+  queryFilter = async (): Promise<Event[]> => [event1, event2, event3];
 }
 
 export class Tranche__factory {
-  static connect = (address: string, provider: Provider) => {
+  static connect = (address: string, provider: Provider): Tranche => {
     return new Tranche(address);
   };
 }
@@ -54,7 +54,7 @@ export class Tranche {
 }
 
 export class ERC20__factory {
-  static connect = (address: string, provider: Provider) => {
+  static connect = (address: string, provider: Provider): ERC20 => {
     return new ERC20(address);
   };
 }
