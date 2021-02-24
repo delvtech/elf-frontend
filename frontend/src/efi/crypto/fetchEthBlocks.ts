@@ -59,7 +59,7 @@ export async function fetchEthBlocks(
 function getBlockSets(
   startBlockNumber: number,
   endBlockNumber: number,
-  numbBlocks: number = 1000
+  numbBlocks = 1000
 ): number[][] {
   const numBlocks = endBlockNumber - startBlockNumber;
   const stepSize = Math.round(numBlocks / numbBlocks);

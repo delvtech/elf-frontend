@@ -2,7 +2,7 @@ import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
 import { useEffect } from "react";
-import { useQuery } from "react-query";
+import { QueryObserverResult, useQuery } from "react-query";
 import { usePrevious } from "react-use";
 import { t } from "ttag";
 
@@ -29,7 +29,10 @@ export enum WalletConnectionStatus {
   CONNECTED = "connected",
 }
 
-export function useWalletConnectionStatus() {
+export function useWalletConnectionStatus(): [
+  WalletConnectionStatus | undefined,
+  QueryObserverResult<WalletConnectionStatus>
+] {
   const { active } = useWeb3React<Web3Provider>();
 
   const result = useQuery<WalletConnectionStatus>({

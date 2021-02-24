@@ -25,7 +25,7 @@ const query = gql`
   }
 `;
 
-export async function fetchMarketData() {
+export async function fetchMarketData(): Promise<any> {
   const data = await request(
     "https://api.thegraph.com/subgraphs/name/graphprotocol/compound-v2",
     query
