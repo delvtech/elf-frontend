@@ -11,38 +11,39 @@ import { LiquidityPositionPortfolio } from "efi-ui/portfolio/LiquidityPositionPo
 import { PortfolioTab } from "efi-ui/portfolio/PortfolioTabs/PortfolioTabs";
 import { YCPortfolio } from "efi-ui/portfolio/YCPortfolio/YCPortfolio";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
-import { Tranche } from "elf-contracts/types";
 
 export function usePortfolioTabs(
   account: string | null | undefined,
-  tranches: Tranche[],
   provider?: Provider
 ): PortfolioTab[] {
   const { currency } = useCurrencyPref();
-  const { totalFiatBalanceAllTranches } = useFYTTab(account, provider);
+  const { tranchesWithBalance, totalFiatBalanceAllTranches } = useFYTTab(
+    account,
+    provider
+  );
 
   return [
     {
       id: "fixed-yield-tokens",
       name: t`Fixed Yield Tokens`,
-      quantity: tranches.length,
-      totalFiatBalance: totalFiatBalanceAllTranches,
+      quantity: tranchesWithBalance.length,
+      totalFiatValue: totalFiatBalanceAllTranches,
       contentRenderer: () => (
-        <FYTPortfolio account={account} tranches={tranches} />
+        <FYTPortfolio account={account} tranches={tranchesWithBalance} />
       ),
     },
     {
       id: "yield-coupons",
       name: t`Yield Coupons`,
       quantity: 0,
-      totalFiatBalance: Money.fromDecimal(0.0, currency),
+      totalFiatValue: Money.fromDecimal(0.0, currency),
       contentRenderer: () => <YCPortfolio account={account} />,
     },
     {
       id: "liquidity-positions",
       name: t`Liquidity positions`,
       quantity: 0,
-      totalFiatBalance: Money.fromDecimal(0.0, currency),
+      totalFiatValue: Money.fromDecimal(0.0, currency),
       contentRenderer: () => <LiquidityPositionPortfolio account={account} />,
     },
   ];
