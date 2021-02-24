@@ -19,6 +19,12 @@ import { formatAbbreviatedDate } from "efi/base/dates";
 import { formatDuration, intervalToDuration } from "date-fns";
 import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
 import { getQueryData } from "efi-ui/base/queryResults";
+import { useMarketForToken } from "efi-ui/markets/useMarketForToken";
+import { useMarketSpotPrice } from "efi-ui/markets/useMarketSpotPrice";
+import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
+import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
+import { getCoinGeckoId } from "efi-coingecko";
+import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 
 interface FYTTableRowProps {
   account: string | null | undefined;
@@ -27,12 +33,17 @@ interface FYTTableRowProps {
 
 export const FYTTableRow: FC<FYTTableRowProps> = ({ account, tranche }) => {
   const { isDarkMode } = useDarkMode();
+  const { currency } = useCurrencyPref();
   const { data: trancheSymbol } = useSmartContractReadCall(tranche, "symbol");
   const { data: unlockTimestamp } = useSmartContractReadCall(
     tranche,
     "unlockTimestamp"
   );
   const { data: trancheName } = useSmartContractReadCall(tranche, "name");
+  const { data: trancheDecimals } = useSmartContractReadCall(
+    tranche,
+    "decimals"
+  );
   const trancheBalance = useTokenBalance(tranche, account);
 
   const elfAddressResult = useSmartContractReadCall(tranche, "elf");
@@ -46,6 +57,39 @@ export const FYTTableRow: FC<FYTTableRowProps> = ({ account, tranche }) => {
     ERC20__factory.connect
   );
   const { data: vaultName } = useSmartContractReadCall(vaultContract, "name");
+  const market = useMarketForToken(tranche);
+  const trancheSpotPriceResult = useMarketSpotPrice(market, tranche);
+  const finalTokensResult = useSmartContractReadCall(market, "getFinalTokens");
+
+  const finalTokenAddresses = getQueryData(finalTokensResult) || [];
+  const baseAssetAddress = finalTokenAddresses.find(
+    (address) => address !== tranche?.address
+  );
+  const baseAsset = useSmartContractFromFactory(
+    baseAssetAddress,
+    ERC20__factory.connect
+  );
+  const { data: baseAssetSymbol } = useSmartContractReadCall(
+    baseAsset,
+    "symbol"
+  );
+
+  const tranchePriceBigNumber = getQueryData(trancheSpotPriceResult);
+  const tranchePriceInBaseAsset = +formatCurrency(
+    tranchePriceBigNumber,
+    trancheDecimals
+  );
+  const exitValue = trancheBalance * tranchePriceInBaseAsset;
+  const { data: baseAssetCoinGeckoPrice } = useCoinGeckoPrice(
+    getCoinGeckoId(baseAssetSymbol)
+  );
+
+  let fiatPrice;
+  if (tranchePriceInBaseAsset && baseAssetCoinGeckoPrice) {
+    fiatPrice = `${currency.symbol}${baseAssetCoinGeckoPrice.multiply(
+      exitValue
+    )}`;
+  }
 
   const tableRowLink = getTableRowLink(vaultContract?.address, vaultName);
   const maturationDate = convertEpochSecondsToDate(unlockTimestamp);
@@ -74,7 +118,10 @@ export const FYTTableRow: FC<FYTTableRowProps> = ({ account, tranche }) => {
 
       {/* Current value */}
       <div>
-        <LabeledText text={t`98.01893 ETH`} label={t`98,105.23 USD`} />
+        <LabeledText
+          text={t`${exitValue.toFixed(6)} ${baseAssetSymbol}`}
+          label={t`${fiatPrice} USD`}
+        />
       </div>
 
       {/* Yield rate*/}
