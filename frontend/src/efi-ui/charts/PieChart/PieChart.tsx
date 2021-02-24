@@ -197,6 +197,7 @@ function AnimatedPie<Datum>({
   const transitions = useTransition<PieArcDatum<Datum>, AnimatedStyles>(
     arcs,
     getKey,
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore react-spring doesn't like this overload
     {
       from: animate ? fromLeaveTransition : enterUpdateTransition,

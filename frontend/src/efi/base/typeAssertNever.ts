@@ -19,4 +19,4 @@
  * This function differs from assertNever in that it won't actually throw an error if the code is reached.
  * @param checkNever variable that should be equal to never by the time this function is reached.
  */
-export function typeAassertNever(checkNever: never) {}
+export function typeAassertNever(checkNever: never): void {}

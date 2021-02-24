@@ -5,6 +5,7 @@ import { BPool__factory } from "elf-contracts/types/factories/BPool__factory";
 import { Signer } from "ethers";
 
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
+import { BPool } from "elf-contracts/types";
 
 /**
  * returns a new instance of the market contract.
@@ -12,10 +13,10 @@ import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
  * @param { Signer | Provider } signerOrProvider optionally pass a signer if transactions need to be
  * signed.  a default provider is supplied to allow read operations.
  */
-export const useMarketContract = (
+export function useMarketContract(
   marketAddress: string | undefined,
   signerOrProvider?: Signer | Provider
-) => {
+): BPool | undefined {
   const signer = signerOrProvider ?? jsonRpcProvider;
 
   const marketContract = useMemo(() => {
@@ -26,4 +27,4 @@ export const useMarketContract = (
   }, [marketAddress, signer]);
 
   return marketContract;
-};
+}

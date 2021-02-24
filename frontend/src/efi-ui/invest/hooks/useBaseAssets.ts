@@ -15,7 +15,7 @@ const ethBaseAsset: CryptoAssetWithIcon = {
   assetIcon: EthIcon,
 };
 
-export function useBaseAssets() {
+export function useBaseAssets(): CryptoAssetWithIcon[] {
   const baseAssetContracts = useBaseAssetContracts();
 
   const baseAssetSymbolsResult = useSmartContractReadCalls(

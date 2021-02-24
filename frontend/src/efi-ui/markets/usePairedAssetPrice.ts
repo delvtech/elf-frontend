@@ -6,6 +6,8 @@ import { ContractMethodArgs } from "efi/contracts/types";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 
 import { usePairedAssetAddress } from "./usePairedAssetAddress";
+import { QueryObserverResult } from "react-query";
+import { BigNumber } from "ethers";
 
 /**
  * Returns the price of the paired asset in terms of it's base asset. Useful
@@ -19,7 +21,7 @@ import { usePairedAssetAddress } from "./usePairedAssetAddress";
 export function usePairedAssetPrice(
   bPoolAddress: string | undefined,
   baseAssetAddress: string | undefined
-) {
+): QueryObserverResult<BigNumber> {
   const marketContract = useMarketContract(bPoolAddress, jsonRpcProvider);
 
   const pairedAssetAddress = usePairedAssetAddress(

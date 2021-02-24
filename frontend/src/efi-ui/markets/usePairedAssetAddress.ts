@@ -14,7 +14,7 @@ import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadC
 export function usePairedAssetAddress(
   marketContract: BPool | undefined,
   baseAssetAddress: string | undefined
-) {
+): string | undefined {
   const { data: finalTokens } = useSmartContractReadCall(
     marketContract,
     "getFinalTokens"

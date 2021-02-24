@@ -1,6 +1,6 @@
 import { gql } from "graphql-request";
 
-export function getEthBlocksQuery(blockNumbers: number[]) {
+export function getEthBlocksQuery(blockNumbers: number[]): string {
   let blockQueries = "";
   blockNumbers.forEach((blockNumber) => {
     blockQueries += gql`n${blockNumber}: blocks(
@@ -27,7 +27,7 @@ export function getEthBlocksQuery(blockNumbers: number[]) {
 export function getFirstAndLastBlockInTimeRangeQuery(
   startTime: number,
   endTime: number
-) {
+): string {
   return gql`
       query blocks {
         start: blocks(

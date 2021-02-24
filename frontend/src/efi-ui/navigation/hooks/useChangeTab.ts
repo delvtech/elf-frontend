@@ -3,7 +3,9 @@ import { useCallback } from "react";
 
 import { Navigation } from "efi-ui/navigation/navigation";
 
-export function useChangeTab() {
+type ChangeTabFn = (tabId: Navigation) => void;
+
+export function useChangeTab(): ChangeTabFn {
   const navigate = useNavigate();
   return useCallback(
     (tabId: Navigation) => {

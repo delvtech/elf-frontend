@@ -4,7 +4,7 @@ import React, { FC } from "react";
 import { useBoolean } from "efi-ui/base/hooks/useBoolean/useBoolean";
 
 test("Default value is set correctly", () => {
-  const SampleComponent: FC<{}> = () => {
+  const SampleComponent: FC<unknown> = () => {
     const { value } = useBoolean(true);
     return <div>{value.toString()}</div>;
   };
@@ -15,7 +15,7 @@ test("Default value is set correctly", () => {
 });
 
 test("Value can be set true", () => {
-  const SampleComponent: FC<{}> = () => {
+  const SampleComponent: FC<unknown> = () => {
     const { value, setTrue } = useBoolean();
     return <button onClick={setTrue}>{value.toString()}</button>;
   };
@@ -31,7 +31,7 @@ test("Value can be set true", () => {
 });
 
 test("Value can be set false", () => {
-  const SampleComponent: FC<{}> = () => {
+  const SampleComponent: FC<unknown> = () => {
     const { value, setFalse } = useBoolean(true);
     return <button onClick={setFalse}>{value.toString()}</button>;
   };

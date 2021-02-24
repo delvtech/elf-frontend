@@ -4,7 +4,9 @@ import { useTrancheFiatBalance } from "efi-ui/markets/useFYTFiatBalance";
 import ContractAddresses from "efi/contracts/contractsJson";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 
-export function useFiatBalanceAllTranches(account: string | null | undefined) {
+export function useFiatBalanceAllTranches(
+  account: string | null | undefined
+): Money | undefined {
   const { currency } = useCurrencyPref();
   const wethTrancheFiatBalance = useTrancheFiatBalance(
     account,

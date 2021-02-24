@@ -13,7 +13,7 @@ export function useConvertToFiat(
   fiatPrice: Money | undefined,
   balance: BigNumber | undefined,
   decimals: number | undefined
-) {
+): Money | undefined {
   return useMemo(() => {
     if (!fiatPrice || !balance || !decimals) {
       return;

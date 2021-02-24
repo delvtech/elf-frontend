@@ -1,8 +1,12 @@
-import { render } from "@testing-library/react";
 import React, { ReactElement } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 
-export function renderWithClient(client: QueryClient, ui: ReactElement) {
+import { render, RenderResult } from "@testing-library/react";
+
+export function renderWithClient(
+  client: QueryClient,
+  ui: ReactElement
+): RenderResult {
   return render(
     <QueryClientProvider client={client}>{ui}</QueryClientProvider>
   );

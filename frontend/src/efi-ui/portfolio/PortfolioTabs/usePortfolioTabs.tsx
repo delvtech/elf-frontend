@@ -49,10 +49,7 @@ export function usePortfolioTabs(
   ];
 }
 
-export function useFYTTab(
-  account: string | null | undefined,
-  provider?: Provider
-) {
+function useFYTTab(account: string | null | undefined, provider?: Provider) {
   const tranchesWithBalance = useTranchesWithBalance(account, provider);
   const totalFiatBalanceAllTranches = useFiatBalanceAllTranches(account);
 

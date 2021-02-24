@@ -14,7 +14,7 @@
  *     );
  *   };
  */
-export function encodeSVG(svg: SVGElement) {
+export function encodeSVG(svg: SVGElement): string {
   const html = svg.outerHTML;
   const blob = new Blob([html], { type: "image/svg+xml" });
   const url = URL.createObjectURL(blob);
