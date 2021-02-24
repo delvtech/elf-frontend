@@ -5,7 +5,7 @@ export function consoleEther(
   name: string,
   value: BigNumber | undefined,
   units = 18
-) {
+): void {
   if (!value) {
     return;
   }

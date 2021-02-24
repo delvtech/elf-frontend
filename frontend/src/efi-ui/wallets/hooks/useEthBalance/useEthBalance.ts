@@ -1,12 +1,13 @@
 import { Web3Provider } from "@ethersproject/providers";
-import { useQuery } from "react-query";
+import { QueryObserverResult, useQuery } from "react-query";
 
 import { fetchEthBalance } from "efi/coins/ether/fetchEthBalance";
+import { BigNumber } from "ethers";
 
 export function useEthBalance(
   library: Web3Provider | undefined,
   account: string | null | undefined
-) {
+): QueryObserverResult<BigNumber | undefined> {
   const walletBalanceKey = makeEtherBalanceQueryKey(library, account);
   const etherBalanceResult = useQuery(walletBalanceKey, async () => {
     if (library && account) {

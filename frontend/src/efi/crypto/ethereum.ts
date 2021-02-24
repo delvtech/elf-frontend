@@ -21,7 +21,7 @@ export const DEFAULT_CHAIN_IDS: ChainId[] = [
   ChainId.LOCAL,
 ];
 
-export function isMainnet(chainId: number) {
+export function isMainnet(chainId: number): boolean {
   return chainId === ChainId.MAINNET;
 }
 

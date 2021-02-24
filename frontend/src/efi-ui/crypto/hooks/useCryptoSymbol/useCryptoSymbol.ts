@@ -6,7 +6,7 @@ import {
   findTokenContract,
 } from "efi/crypto/CryptoAsset";
 
-export function useCryptoSymbol(asset: CryptoAsset) {
+export function useCryptoSymbol(asset: CryptoAsset): string {
   const tokenContract = findTokenContract(asset);
   const [tokenSymbol] = useTokenSymbol(tokenContract);
   if (asset.type === CryptoAssetType.ERC20) {

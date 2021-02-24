@@ -21,7 +21,7 @@ interface Erc20CryptoAsset extends BaseCryptoAsset {
 
 export type CryptoAsset = EthereumCryptoAsset | Erc20CryptoAsset;
 
-export function findTokenContract(cryptoAsset: CryptoAsset) {
+export function findTokenContract(cryptoAsset: CryptoAsset): ERC20 | undefined {
   let tokenContract: ERC20 | undefined;
   if (cryptoAsset.type === CryptoAssetType.ERC20) {
     tokenContract = cryptoAsset.tokenContract;

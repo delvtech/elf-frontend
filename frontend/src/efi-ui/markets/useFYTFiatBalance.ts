@@ -1,12 +1,13 @@
 import { usePairedAssetFiatPrice } from "efi-ui/markets/usePairedAssetFiatPrice";
 import { useTrancheBalance } from "efi-ui/tranche/useFYTBalance";
+import { Money } from "ts-money";
 
 export function useTrancheFiatBalance(
   account: string | null | undefined,
   trancheAddress: string | undefined,
   bPoolAddress: string | undefined,
   baseAssetAddress: string | undefined
-) {
+): Money | undefined {
   const trancheBalance = useTrancheBalance(account, trancheAddress);
   const trancheFiatPrice = usePairedAssetFiatPrice(
     bPoolAddress,

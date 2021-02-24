@@ -13,7 +13,7 @@ import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadC
 export function useTokenBalance(
   tokenContract: ERC20 | undefined,
   account: string | null | undefined
-) {
+): number {
   const { data: tokenBalanceOf } = useSmartContractReadCall(
     tokenContract,
     "balanceOf",

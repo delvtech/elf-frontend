@@ -10,7 +10,7 @@ import { Tranche } from "elf-contracts/types/Tranche";
 export function useTranchesWithBalance(
   account: string | null | undefined,
   provider?: Provider
-) {
+): Tranche[] {
   const tranches = useTrancheContracts(provider);
 
   const tokenBalanceOfResults = useSmartContractReadCalls(

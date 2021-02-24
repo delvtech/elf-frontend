@@ -4,11 +4,12 @@ import { useElfContracts } from "efi-ui/contracts/useElfContracts/useElfContract
 import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
 import { useSmartContractsFromFactory } from "efi-ui/contracts/useSmartContractsFromFactory/useSmartContractsFromFactory";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
+import { ERC20 } from "elf-contracts/types";
 
 /**
  * Gets a list of all the tranche contracts.
  */
-export function useBaseAssetContracts() {
+export function useBaseAssetContracts(): (ERC20 | undefined)[] {
   // The elf contracts contain the base asset
   const elfContracts = useElfContracts(jsonRpcProvider);
 

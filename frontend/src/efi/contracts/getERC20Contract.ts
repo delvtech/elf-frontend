@@ -1,5 +1,6 @@
 import { Provider } from "@ethersproject/providers";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
+import { ERC20 } from "elf-contracts/types";
 import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
 import { Signer } from "ethers";
 
@@ -8,7 +9,7 @@ import { Signer } from "ethers";
 export function getERC20Contract(
   address: string,
   signerOrProvider?: Signer | Provider
-) {
+): ERC20 {
   const signer = signerOrProvider ?? jsonRpcProvider;
   return ERC20__factory.connect(address, signer);
 }

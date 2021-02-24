@@ -13,7 +13,7 @@ import { injectedConnector } from "efi/wallets/connectors";
  * This effect keeps the app's Web3 context in sync w/ window.ethereum (if it
  * exists).
  */
-export function useSyncWithInjectedEthereum() {
+export function useSyncWithInjectedEthereum(): void {
   const { active, error, activate, deactivate } = useWeb3React<Web3Provider>();
 
   useEffect(() => {
@@ -28,7 +28,7 @@ export function useSyncWithInjectedEthereum() {
       activate(injectedConnector);
     };
 
-    const handleAccountsChanged = (accounts: any) => {
+    const handleAccountsChanged = (accounts: any): void => {
       console.warn("accountsChanged", accounts);
       if (accounts.length > 0) {
         activate(injectedConnector);
