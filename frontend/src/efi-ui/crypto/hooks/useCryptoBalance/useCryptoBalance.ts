@@ -14,7 +14,7 @@ export function useCryptoBalance(
   library: Web3Provider | undefined,
   account: string | null | undefined,
   asset: CryptoAsset
-) {
+): number {
   const { data: ethBalance } = useEthBalance(library, account);
 
   const tokenContract = findTokenContract(asset);

@@ -16,7 +16,9 @@ const timeData = [
   { timeMs: Date.parse("2021-01-18"), value: 1257.0474852058 },
 ];
 
-export const MarketHistory: FC<{}> = () => {
+interface MarketHistoryProps {}
+
+export const MarketHistory: FC<MarketHistoryProps> = () => {
   return (
     <div className={tw("flex", "flex-1", "h-500")}>
       <div className={tw("flex", "flex-col", "w-full")}>

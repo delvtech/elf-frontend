@@ -8,7 +8,9 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { Navigation } from "efi-ui/navigation/navigation";
 
-export const PoolNotFoundCard: FC<{}> = () => {
+interface PoolNotFoundCardProps {}
+
+export const PoolNotFoundCard: FC<PoolNotFoundCardProps> = () => {
   return (
     <Card>
       <NonIdealState

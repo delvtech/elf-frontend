@@ -6,7 +6,9 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import classNames from "classnames";
 
-export const PortfolioBalanceSummaryCard: FC<{}> = () => {
+interface PortfolioBalanceSummaryCardProps {}
+
+export const PortfolioBalanceSummaryCard: FC<PortfolioBalanceSummaryCardProps> = () => {
   return (
     <Card className={tw("p-8", "space-y-4")}>
       {[

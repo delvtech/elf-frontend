@@ -5,7 +5,7 @@ export async function fetchGasPrice(): Promise<EtherChainGasPriceResult> {
 
   return resultJSON;
 }
-interface EtherChainGasPriceResult {
+export interface EtherChainGasPriceResult {
   /**
    * Result are in gwei
    */

@@ -1,10 +1,13 @@
-import { useQuery } from "react-query";
-import { fetchGasPrice } from "efi-etherchain/fetchGasPrice";
+import { QueryObserverResult, useQuery } from "react-query";
+import {
+  EtherChainGasPriceResult,
+  fetchGasPrice,
+} from "efi-etherchain/fetchGasPrice";
 
-export const useGasPrice = () => {
+export function useGasPrice(): QueryObserverResult<EtherChainGasPriceResult> {
   return useQuery({
     queryKey: "ethereum-gas-price",
     queryFn: () => fetchGasPrice(),
     refetchInterval: 5000,
   });
-};
+}

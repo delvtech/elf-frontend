@@ -3,7 +3,9 @@ import React, { FC } from "react";
 import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 
-export const NextStepCallout: FC<{}> = () => {
+interface NextStepCalloutProps {}
+
+export const NextStepCallout: FC<NextStepCalloutProps> = () => {
   return (
     <Callout icon={null} intent={Intent.PRIMARY}>
       <div className={tw("p-6")}>

@@ -5,7 +5,9 @@ import { jt, t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 
-export const NoWalletConnectedCallout: FC<{}> = () => {
+interface NoWalletConnectedCalloutProps {}
+
+export const NoWalletConnectedCallout: FC<NoWalletConnectedCalloutProps> = () => {
   const connectYourWalletLink = (
     <a key="connect-your-wallet-link" href="/">{t`connect your wallet`}</a>
   );

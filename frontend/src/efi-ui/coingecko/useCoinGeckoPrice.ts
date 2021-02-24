@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { QueryObserverResult, useQuery } from "react-query";
 
 import { Currencies, Currency, Money } from "ts-money";
 
@@ -7,7 +7,7 @@ import { fetchCoinGeckoPrice } from "efi-coingecko";
 export function useCoinGeckoPrice(
   coinGeckoId: string | undefined,
   currency = Currencies.USD
-) {
+): QueryObserverResult<Money> {
   return useQuery<Money>({
     queryKey: makeCoinGeckoPriceQueryKey(coinGeckoId, currency),
     queryFn: async () => {

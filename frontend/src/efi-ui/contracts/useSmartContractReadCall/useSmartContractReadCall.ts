@@ -67,7 +67,7 @@ export function makeSmartContractReadCallUseQueryOptions<
   };
 }
 
-export function makeSmartContractReadCallQueryKey<
+function makeSmartContractReadCallQueryKey<
   TContract extends Contract,
   TMethodName extends ContractMethodName<TContract>
 >(
