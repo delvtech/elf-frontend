@@ -16,7 +16,7 @@ import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
-import { getTimeLeft } from "efi/base/time";
+import { formatDuration, intervalToDuration } from "date-fns";
 
 interface FYTTableRowProps {
   account: string | null | undefined;
@@ -34,13 +34,7 @@ export const FYTTableRow: FC<FYTTableRowProps> = ({ account, tranche }) => {
   const trancheBalance = useTokenBalance(tranche, account);
   const maturationDate = convertEpochSecondsToDate(unlockTimestamp);
 
-  let timeLeft: string | undefined;
-  if (maturationDate) {
-    const [days, hours, minutes] = getTimeLeft(
-      maturationDate.getTime() - Date.now()
-    );
-    timeLeft = t`${days} days, ${hours}, hours, ${minutes} minutes`;
-  }
+  const timeLeft = getTimeLeft(maturationDate);
 
   const tableRowClassName = isDarkMode ? styles.tableRowDark : styles.tableRow;
 
@@ -124,3 +118,20 @@ export const FYTTableRow: FC<FYTTableRowProps> = ({ account, tranche }) => {
     </div>
   );
 };
+function getTimeLeft(maturationDate: Date | undefined) {
+  if (!maturationDate) {
+    return;
+  }
+
+  const duration = intervalToDuration({
+    start: Date.now(),
+    end: maturationDate.getTime(),
+  });
+
+  const timeLeft = t`${formatDuration(duration, {
+    delimiter: ", ",
+    format: ["years", "months", "days"],
+  })} left`;
+
+  return timeLeft;
+}
