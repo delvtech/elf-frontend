@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, ReactNode } from "react";
 
 import { AnchorButton, Button, Icon } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
@@ -11,12 +11,14 @@ import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 
 import styles from "efi-ui/base/table.module.css";
-import { Tranche } from "elf-contracts/types";
+import { Elf__factory, ERC20__factory, Tranche } from "elf-contracts/types";
 import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
 import { formatDuration, intervalToDuration } from "date-fns";
+import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
+import { getQueryData } from "efi-ui/base/queryResults";
 
 interface FYTTableRowProps {
   account: string | null | undefined;
@@ -32,23 +34,24 @@ export const FYTTableRow: FC<FYTTableRowProps> = ({ account, tranche }) => {
   );
   const { data: trancheName } = useSmartContractReadCall(tranche, "name");
   const trancheBalance = useTokenBalance(tranche, account);
-  const maturationDate = convertEpochSecondsToDate(unlockTimestamp);
 
+  const elfAddressResult = useSmartContractReadCall(tranche, "elf");
+  const elfContract = useSmartContractFromFactory(
+    getQueryData(elfAddressResult),
+    Elf__factory.connect
+  );
+  const vaultAddressResult = useSmartContractReadCall(elfContract, "vault");
+  const vaultContract = useSmartContractFromFactory(
+    getQueryData(vaultAddressResult),
+    ERC20__factory.connect
+  );
+  const { data: vaultName } = useSmartContractReadCall(vaultContract, "name");
+
+  const tableRowLink = getTableRowLink(vaultContract?.address, vaultName);
+  const maturationDate = convertEpochSecondsToDate(unlockTimestamp);
   const timeLeft = getTimeLeft(maturationDate);
 
   const tableRowClassName = isDarkMode ? styles.tableRowDark : styles.tableRow;
-
-  const tableRowLink = (
-    <a
-      key="table-row-link"
-      href="https://etherscan.io/token/0xe1237aa7f535b0cc33fd973d66cbf830354d16c7"
-    >
-      {t`yEth Vault`}{" "}
-      <sup>
-        <Icon icon={IconNames.SHARE} iconSize={8} />
-      </sup>
-    </a>
-  );
 
   return (
     <div
@@ -118,6 +121,7 @@ export const FYTTableRow: FC<FYTTableRowProps> = ({ account, tranche }) => {
     </div>
   );
 };
+
 function getTimeLeft(maturationDate: Date | undefined) {
   if (!maturationDate) {
     return;
@@ -134,4 +138,22 @@ function getTimeLeft(maturationDate: Date | undefined) {
   })} left`;
 
   return timeLeft;
+}
+
+function getTableRowLink(
+  vaultAddress: string | undefined,
+  vaultName: string | undefined
+): ReactNode {
+  if (!vaultAddress || !vaultName) {
+    return null;
+  }
+
+  return (
+    <a key="table-row-link" href={`https://etherscan.io/token/${vaultAddress}`}>
+      {vaultName}{" "}
+      <sup>
+        <Icon icon={IconNames.SHARE} iconSize={8} />
+      </sup>
+    </a>
+  );
 }
