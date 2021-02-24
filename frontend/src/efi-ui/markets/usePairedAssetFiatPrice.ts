@@ -1,6 +1,6 @@
 import { Money } from "ts-money";
 
-import { CoinGeckoIds } from "efi-coingecko";
+import { CoinGeckoIds, getCoinGeckoId } from "efi-coingecko";
 import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
 import { useERC20Contract } from "efi-ui/contracts/useERC20Contract/useERC20Contract";
 import { usePairedAssetPrice } from "efi-ui/markets/usePairedAssetPrice";
@@ -32,9 +32,7 @@ export function usePairedAssetFiatPrice(
     baseAssetDecimals
   );
 
-  const baseAssetCoinGeckoId = baseAssetSymbol
-    ? CoinGeckoIds[baseAssetSymbol.toLowerCase()]
-    : undefined;
+  const baseAssetCoinGeckoId = getCoinGeckoId(baseAssetSymbol);
 
   // 1 WETH = 1500.23
   const { data: baseAssetCoinGeckoPrice } = useCoinGeckoPrice(

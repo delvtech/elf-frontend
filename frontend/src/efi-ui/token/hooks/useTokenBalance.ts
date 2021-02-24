@@ -1,8 +1,7 @@
 import { ERC20 } from "elf-contracts/types/ERC20";
 
-import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
-import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
+import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 
 /**
  * Gets the token balance formatted to its proper decimals.
@@ -15,9 +14,19 @@ export function useTokenBalance(
   tokenContract: ERC20 | undefined,
   account: string | null | undefined
 ) {
-  const [tokenBalance] = useTokenBalanceOf(tokenContract, account);
-  const [tokenDecimals] = useTokenDecimals(tokenContract);
+  const { data: tokenBalanceOf } = useSmartContractReadCall(
+    tokenContract,
+    "balanceOf",
+    {
+      callArgs: [account as string], // safe to cast because `enabled` is set
+      enabled: !!account,
+    }
+  );
+  const { data: tokenDecimals } = useSmartContractReadCall(
+    tokenContract,
+    "decimals"
+  );
 
-  const balance = +formatCurrency(tokenBalance, tokenDecimals);
+  const balance = +formatCurrency(tokenBalanceOf, tokenDecimals);
   return balance;
 }

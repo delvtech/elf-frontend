@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, ReactNode } from "react";
 
 import { AnchorButton, Button, Icon } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
@@ -11,12 +11,20 @@ import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 
 import styles from "efi-ui/base/table.module.css";
-import { Tranche } from "elf-contracts/types";
+import { Elf__factory, ERC20__factory, Tranche } from "elf-contracts/types";
 import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
-import { getTimeLeft } from "efi/base/time";
+import { formatDuration, intervalToDuration } from "date-fns";
+import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
+import { getQueryData } from "efi-ui/base/queryResults";
+import { useMarketForToken } from "efi-ui/markets/useMarketForToken";
+import { useMarketSpotPrice } from "efi-ui/markets/useMarketSpotPrice";
+import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
+import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
+import { getCoinGeckoId } from "efi-coingecko";
+import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 
 interface FYTTableRowProps {
   account: string | null | undefined;
@@ -25,36 +33,69 @@ interface FYTTableRowProps {
 
 export const FYTTableRow: FC<FYTTableRowProps> = ({ account, tranche }) => {
   const { isDarkMode } = useDarkMode();
+  const { currency } = useCurrencyPref();
   const { data: trancheSymbol } = useSmartContractReadCall(tranche, "symbol");
   const { data: unlockTimestamp } = useSmartContractReadCall(
     tranche,
     "unlockTimestamp"
   );
   const { data: trancheName } = useSmartContractReadCall(tranche, "name");
+  const { data: trancheDecimals } = useSmartContractReadCall(
+    tranche,
+    "decimals"
+  );
   const trancheBalance = useTokenBalance(tranche, account);
-  const maturationDate = convertEpochSecondsToDate(unlockTimestamp);
 
-  let timeLeft: string | undefined;
-  if (maturationDate) {
-    const [days, hours, minutes] = getTimeLeft(
-      maturationDate.getTime() - Date.now()
-    );
-    timeLeft = t`${days} days, ${hours}, hours, ${minutes} minutes`;
+  const elfAddressResult = useSmartContractReadCall(tranche, "elf");
+  const elfContract = useSmartContractFromFactory(
+    getQueryData(elfAddressResult),
+    Elf__factory.connect
+  );
+  const vaultAddressResult = useSmartContractReadCall(elfContract, "vault");
+  const vaultContract = useSmartContractFromFactory(
+    getQueryData(vaultAddressResult),
+    ERC20__factory.connect
+  );
+  const { data: vaultName } = useSmartContractReadCall(vaultContract, "name");
+  const market = useMarketForToken(tranche);
+  const trancheSpotPriceResult = useMarketSpotPrice(market, tranche);
+  const finalTokensResult = useSmartContractReadCall(market, "getFinalTokens");
+
+  const finalTokenAddresses = getQueryData(finalTokensResult) || [];
+  const baseAssetAddress = finalTokenAddresses.find(
+    (address) => address !== tranche?.address
+  );
+  const baseAsset = useSmartContractFromFactory(
+    baseAssetAddress,
+    ERC20__factory.connect
+  );
+  const { data: baseAssetSymbol } = useSmartContractReadCall(
+    baseAsset,
+    "symbol"
+  );
+
+  const tranchePriceBigNumber = getQueryData(trancheSpotPriceResult);
+  const tranchePriceInBaseAsset = +formatCurrency(
+    tranchePriceBigNumber,
+    trancheDecimals
+  );
+  const exitValue = trancheBalance * tranchePriceInBaseAsset;
+  const { data: baseAssetCoinGeckoPrice } = useCoinGeckoPrice(
+    getCoinGeckoId(baseAssetSymbol)
+  );
+
+  let fiatPrice;
+  if (tranchePriceInBaseAsset && baseAssetCoinGeckoPrice) {
+    fiatPrice = `${currency.symbol}${baseAssetCoinGeckoPrice.multiply(
+      exitValue
+    )}`;
   }
 
-  const tableRowClassName = isDarkMode ? styles.tableRowDark : styles.tableRow;
+  const tableRowLink = getTableRowLink(vaultContract?.address, vaultName);
+  const maturationDate = convertEpochSecondsToDate(unlockTimestamp);
+  const timeLeft = getTimeLeft(maturationDate);
 
-  const tableRowLink = (
-    <a
-      key="table-row-link"
-      href="https://etherscan.io/token/0xe1237aa7f535b0cc33fd973d66cbf830354d16c7"
-    >
-      {t`yEth Vault`}{" "}
-      <sup>
-        <Icon icon={IconNames.SHARE} iconSize={8} />
-      </sup>
-    </a>
-  );
+  const tableRowClassName = isDarkMode ? styles.tableRowDark : styles.tableRow;
 
   return (
     <div
@@ -77,7 +118,10 @@ export const FYTTableRow: FC<FYTTableRowProps> = ({ account, tranche }) => {
 
       {/* Current value */}
       <div>
-        <LabeledText text={t`98.01893 ETH`} label={t`98,105.23 USD`} />
+        <LabeledText
+          text={t`${exitValue.toFixed(6)} ${baseAssetSymbol}`}
+          label={t`${fiatPrice} USD`}
+        />
       </div>
 
       {/* Yield rate*/}
@@ -124,3 +168,39 @@ export const FYTTableRow: FC<FYTTableRowProps> = ({ account, tranche }) => {
     </div>
   );
 };
+
+function getTimeLeft(maturationDate: Date | undefined) {
+  if (!maturationDate) {
+    return;
+  }
+
+  const duration = intervalToDuration({
+    start: Date.now(),
+    end: maturationDate.getTime(),
+  });
+
+  const timeLeft = t`${formatDuration(duration, {
+    delimiter: ", ",
+    format: ["years", "months", "days"],
+  })} left`;
+
+  return timeLeft;
+}
+
+function getTableRowLink(
+  vaultAddress: string | undefined,
+  vaultName: string | undefined
+): ReactNode {
+  if (!vaultAddress || !vaultName) {
+    return null;
+  }
+
+  return (
+    <a key="table-row-link" href={`https://etherscan.io/token/${vaultAddress}`}>
+      {vaultName}{" "}
+      <sup>
+        <Icon icon={IconNames.SHARE} iconSize={8} />
+      </sup>
+    </a>
+  );
+}
