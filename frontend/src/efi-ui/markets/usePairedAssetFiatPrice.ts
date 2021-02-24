@@ -33,7 +33,6 @@ export function usePairedAssetFiatPrice(
   );
 
   const baseAssetCoinGeckoId = getCoinGeckoId(baseAssetSymbol);
-  console.log("baseAssetCoinGeckoId", baseAssetCoinGeckoId);
 
   // 1 WETH = 1500.23
   const { data: baseAssetCoinGeckoPrice } = useCoinGeckoPrice(
