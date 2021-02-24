@@ -11,11 +11,36 @@ import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 
 import styles from "efi-ui/base/table.module.css";
+import { Tranche } from "elf-contracts/types";
+import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
+import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
+import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
+import { formatAbbreviatedDate } from "efi/base/dates";
+import { getTimeLeft } from "efi/base/time";
 
-interface FYTTableRowProps {}
+interface FYTTableRowProps {
+  account: string | null | undefined;
+  tranche: Tranche;
+}
 
-export const FYTTableRow: FC<FYTTableRowProps> = () => {
+export const FYTTableRow: FC<FYTTableRowProps> = ({ account, tranche }) => {
   const { isDarkMode } = useDarkMode();
+  const { data: trancheSymbol } = useSmartContractReadCall(tranche, "symbol");
+  const { data: unlockTimestamp } = useSmartContractReadCall(
+    tranche,
+    "unlockTimestamp"
+  );
+  const { data: trancheName } = useSmartContractReadCall(tranche, "name");
+  const trancheBalance = useTokenBalance(tranche, account);
+  const maturationDate = convertEpochSecondsToDate(unlockTimestamp);
+
+  let timeLeft: string | undefined;
+  if (maturationDate) {
+    const [days, hours, minutes] = getTimeLeft(
+      maturationDate.getTime() - Date.now()
+    );
+    timeLeft = t`${days} days, ${hours}, hours, ${minutes} minutes`;
+  }
 
   const tableRowClassName = isDarkMode ? styles.tableRowDark : styles.tableRow;
 
@@ -40,14 +65,14 @@ export const FYTTableRow: FC<FYTTableRowProps> = () => {
     >
       {/* Asset */}
       <div>
-        <LabeledText
-          text={t`Fixed Yield Ether`}
-          label={jt`via ${tableRowLink}`}
-        />
+        <LabeledText text={trancheName} label={jt`via ${tableRowLink}`} />
       </div>
       {/* Quantity */}
       <div>
-        <LabeledText text={t`100 fyETH`} label="" />
+        <LabeledText
+          text={t`${trancheBalance.toFixed(6)} ${trancheSymbol}`}
+          label=""
+        />
       </div>
 
       {/* Current value */}
@@ -67,8 +92,8 @@ export const FYTTableRow: FC<FYTTableRowProps> = () => {
       {/* Maturation date */}
       <div>
         <LabeledText
-          text={t` January 15, 2021`}
-          label={t`3 days, 6 hours left `}
+          text={maturationDate && formatAbbreviatedDate(maturationDate)}
+          label={timeLeft}
         />
       </div>
 

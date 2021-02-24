@@ -20,7 +20,7 @@ const tableHeaders = [
   t`Quick actions`,
 ];
 
-export const FYTTable: FC<FYTTableProps> = ({ tranches }) => {
+export const FYTTable: FC<FYTTableProps> = ({ account, tranches }) => {
   return (
     <div data-testid="fyt-table" className={tw("flex", "flex-col", "w-full")}>
       {/* Table header */}
@@ -33,7 +33,13 @@ export const FYTTable: FC<FYTTableProps> = ({ tranches }) => {
       </div>
 
       {/* Table row */}
-      <FYTTableRow />
+      {tranches.map((tranche) => (
+        <FYTTableRow
+          key={tranche.address}
+          account={account}
+          tranche={tranche}
+        />
+      ))}
     </div>
   );
 };
