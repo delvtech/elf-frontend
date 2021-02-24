@@ -14,14 +14,12 @@ interface FYTPortfolioProps {
 }
 
 export const FYTPortfolio: FC<FYTPortfolioProps> = ({ account, tranches }) => {
-  // TODO: check user's wallet for FYTs
-  const hasFYTs = true;
+  const hasFYTs = tranches.length;
 
   let nonIdealStateContent = null;
   if (!account) {
     nonIdealStateContent = <NoWalletConnectedNonIdealState />;
-  }
-  if (!hasFYTs) {
+  } else if (!hasFYTs) {
     nonIdealStateContent = <NoFYTsInWalletNonIdealState />;
   }
 
