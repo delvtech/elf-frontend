@@ -21,8 +21,10 @@ export const injectedConnector = new InjectedConnector({
 
 // Patch chainChanged 0xNaN causing app to crash when switching from the mainnet
 // to localnet. See: https://github.com/NoahZinsmeister/web3-react/issues/73
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-ignore
 const originalChainIdChangeHandler = injectedConnector.handleChainChanged;
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-ignore
 injectedConnector.handleChainChanged = (chainId: string | number) => {
   // preserve the existing console log from the

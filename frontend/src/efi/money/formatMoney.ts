@@ -6,7 +6,7 @@ import { Money } from "ts-money";
  */
 export function formatMoney(
   money: Money | undefined,
-  defaultValue: string = "0.00"
+  defaultValue = "0.00"
 ): string {
   if (!money) {
     return defaultValue;
