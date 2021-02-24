@@ -1,4 +1,4 @@
-export async function fetchGasPrice() {
+export async function fetchGasPrice(): Promise<EtherChainGasPriceResult> {
   const result = await fetch("https://www.etherchain.org/api/gasPriceOracle");
 
   const resultJSON = (await result.json()) as EtherChainGasPriceResult;

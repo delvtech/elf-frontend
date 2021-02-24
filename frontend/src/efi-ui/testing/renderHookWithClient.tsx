@@ -1,4 +1,8 @@
-import { renderHook, RenderHookOptions } from "@testing-library/react-hooks";
+import {
+  renderHook,
+  RenderHookOptions,
+  RenderHookResult,
+} from "@testing-library/react-hooks";
 import React, { FC } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 
@@ -6,7 +10,7 @@ export function renderHookWithClient<P, R>(
   client: QueryClient,
   hook: (props: P) => R,
   renderOptions?: Pick<RenderHookOptions<P>, "initialProps">
-) {
+): RenderHookResult<P, R> {
   const QueryClientWrapper: FC<P> = ({ children }) => (
     <QueryClientProvider client={client}>{children}</QueryClientProvider>
   );

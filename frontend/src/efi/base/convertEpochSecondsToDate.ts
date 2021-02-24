@@ -1,6 +1,8 @@
 import { BigNumber } from "ethers";
 
-export function convertEpochSecondsToDate(seconds: BigNumber | undefined) {
+export function convertEpochSecondsToDate(
+  seconds: BigNumber | undefined
+): Date | undefined {
   if (!seconds) {
     return undefined;
   }

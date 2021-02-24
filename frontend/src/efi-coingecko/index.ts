@@ -20,7 +20,7 @@ export const CoinGeckoIds: {
   {}
 );
 
-export function getCoinGeckoId(symbol: string | undefined) {
+export function getCoinGeckoId(symbol: string | undefined): string | undefined {
   if (!symbol) {
     return;
   }

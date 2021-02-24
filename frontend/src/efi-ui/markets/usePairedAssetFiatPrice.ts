@@ -1,6 +1,6 @@
 import { Money } from "ts-money";
 
-import { CoinGeckoIds, getCoinGeckoId } from "efi-coingecko";
+import { getCoinGeckoId } from "efi-coingecko";
 import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
 import { useERC20Contract } from "efi-ui/contracts/useERC20Contract/useERC20Contract";
 import { usePairedAssetPrice } from "efi-ui/markets/usePairedAssetPrice";

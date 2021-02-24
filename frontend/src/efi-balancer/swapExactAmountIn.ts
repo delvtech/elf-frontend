@@ -1,6 +1,6 @@
 import { BPool } from "elf-contracts/types/BPool";
 import { ERC20 } from "elf-contracts/types/ERC20";
-import { BigNumber } from "ethers";
+import { BigNumber, ContractTransaction } from "ethers";
 import { formatEther, parseEther } from "ethers/lib/utils";
 
 import { ContractMethodArgs } from "efi/contracts/types";
@@ -20,7 +20,7 @@ export const swapExactAmountIn = async <
   tokenContractOut: ContractOut,
   /* must be signed */
   poolContract: BPool
-) => {
+): Promise<ContractTransaction | undefined> => {
   const tokenAddressIn = tokenContractIn?.address;
   const tokenAddressOut = tokenContractOut?.address;
 

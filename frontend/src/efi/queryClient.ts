@@ -7,7 +7,7 @@ import { MutationCache, QueryCache, QueryClient } from "react-query";
  */
 export const efiQueryClient = createQueryClient();
 
-export function createQueryClient() {
+export function createQueryClient(): QueryClient {
   const queryCache = new QueryCache();
   const mutationCache = new MutationCache();
 
