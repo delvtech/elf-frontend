@@ -42,6 +42,7 @@
     "prefer-template": "error",
     "no-unused-vars": "off",
     "import/no-unused-modules": "warn",
+    "@typescript-eslint/explicit-module-boundary-types": "error", // exported functions must have return types
     "no-restricted-syntax": [
       "error",
       {
