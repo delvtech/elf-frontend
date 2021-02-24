@@ -4,9 +4,11 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { FYTTableRow } from "efi-ui/portfolio/FYTTable/FYTTableRow";
+import { Tranche } from "elf-contracts/types";
 
 interface FYTTableProps {
   account: string | null | undefined;
+  tranches: Tranche[];
 }
 
 const tableHeaders = [
@@ -18,7 +20,7 @@ const tableHeaders = [
   t`Quick actions`,
 ];
 
-export const FYTTable: FC<FYTTableProps> = () => {
+export const FYTTable: FC<FYTTableProps> = ({ account, tranches }) => {
   return (
     <div data-testid="fyt-table" className={tw("flex", "flex-col", "w-full")}>
       {/* Table header */}
@@ -31,7 +33,13 @@ export const FYTTable: FC<FYTTableProps> = () => {
       </div>
 
       {/* Table row */}
-      <FYTTableRow />
+      {tranches.map((tranche) => (
+        <FYTTableRow
+          key={tranche.address}
+          account={account}
+          tranche={tranche}
+        />
+      ))}
     </div>
   );
 };

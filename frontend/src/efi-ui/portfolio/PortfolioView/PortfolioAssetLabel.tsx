@@ -6,6 +6,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
+import { formatMoney } from "efi/money/formatMoney";
 
 interface PortfolioAssetLabelProps {
   id: string;
@@ -33,7 +34,7 @@ export const PortfolioAssetLabel: FC<PortfolioAssetLabelProps> = ({
     >
       <LabeledText
         text={name}
-        label={quantity ? "$50,281.09" : "$0.00"}
+        label={quantity ? formatMoney(totalFiatValue) : "$0.00"}
         className={tw("leading-none", "space-y-2")}
       />
       <Tag

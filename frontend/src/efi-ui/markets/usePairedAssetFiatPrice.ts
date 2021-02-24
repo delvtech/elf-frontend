@@ -33,7 +33,7 @@ export function usePairedAssetFiatPrice(
   );
 
   const baseAssetCoinGeckoId = baseAssetSymbol
-    ? CoinGeckoIds[baseAssetSymbol]
+    ? CoinGeckoIds[baseAssetSymbol.toLowerCase()]
     : undefined;
 
   // 1 WETH = 1500.23

@@ -178,7 +178,6 @@ export const TradePanel: FC<TradePanelProps> = ({
     !validValue ||
     !stringValueIn ||
     !stringValueOut ||
-    !approved ||
     !signer;
   return (
     <div className={tw("flex", "flex-col", "space-y-5")}>

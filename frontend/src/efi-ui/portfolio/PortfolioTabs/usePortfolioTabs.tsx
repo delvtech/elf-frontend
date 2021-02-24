@@ -27,21 +27,23 @@ export function usePortfolioTabs(
       id: "fixed-yield-tokens",
       name: t`Fixed Yield Tokens`,
       quantity: tranchesWithBalance.length,
-      totalFiatBalance: totalFiatBalanceAllTranches,
-      contentRenderer: () => <FYTPortfolio account={account} />,
+      totalFiatValue: totalFiatBalanceAllTranches,
+      contentRenderer: () => (
+        <FYTPortfolio account={account} tranches={tranchesWithBalance} />
+      ),
     },
     {
       id: "yield-coupons",
       name: t`Yield Coupons`,
       quantity: 0,
-      totalFiatBalance: Money.fromDecimal(0.0, currency),
+      totalFiatValue: Money.fromDecimal(0.0, currency),
       contentRenderer: () => <YCPortfolio account={account} />,
     },
     {
       id: "liquidity-positions",
       name: t`Liquidity positions`,
       quantity: 0,
-      totalFiatBalance: Money.fromDecimal(0.0, currency),
+      totalFiatValue: Money.fromDecimal(0.0, currency),
       contentRenderer: () => <LiquidityPositionPortfolio account={account} />,
     },
   ];
