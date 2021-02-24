@@ -8,7 +8,7 @@ test("should render a table", () => {
   const queryClient = createQueryClient();
   const { getByTestId } = renderWithClient(
     queryClient,
-    <FYTTable account={null} />
+    <FYTTable tranches={[]} account={null} />
   );
   expect(getByTestId("fyt-table")).toBeVisible();
 });
