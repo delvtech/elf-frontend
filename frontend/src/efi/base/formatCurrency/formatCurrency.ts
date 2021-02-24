@@ -5,7 +5,7 @@ export function formatCurrency(
   fractionalValue: BigNumber | undefined,
   decimals: number | undefined,
   defaultValue = "0"
-) {
+): string {
   if (fractionalValue === undefined || decimals === undefined) {
     return defaultValue;
   }
