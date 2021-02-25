@@ -235,13 +235,19 @@ async function setupElfTrancheAndMarkets(
     marketFYTContract,
     (baseAssetContract as unknown) as ERC20,
     trancheContract,
-    { yieldAssetBalance: "9500" }
+
+    {
+      // seed with more FYTs so they are worth less than the base asset, ie:
+      // being sold at a discount
+      yieldAssetBalance: "10000",
+      baseAssetBalance: "9500",
+    }
   );
 
   // check spot price
   const spotPriceFYT = await marketFYTContract.getSpotPrice(
-    baseAssetContract.address,
-    trancheContract.address
+    baseAssetContract.address, // it will cost me this much of this token
+    trancheContract.address // if i want one of these tokens
   );
   console.log("spotPrice FYT", formatUnits(spotPriceFYT));
 
