@@ -11,13 +11,15 @@ interface NoFYTsInWalletNonIdealStateProps {}
 
 export const NoFYTsInWalletNonIdealState: FC<NoFYTsInWalletNonIdealStateProps> = () => {
   const { changeTab } = useNavigation();
-  const goToMint = useCallback(() => changeTab(Navigation.MINT), [changeTab]);
+  const goToInvest = useCallback(() => changeTab(Navigation.INVEST), [
+    changeTab,
+  ]);
   return (
     <NonIdealState
       icon={IconNames.BANK_ACCOUNT}
       description={t`This wallet does not contain any Fixed Yield Tokens.`}
       action={
-        <Button outlined large onClick={goToMint}>{t`Go to Mint`}</Button>
+        <Button outlined large onClick={goToInvest}>{t`Go to Invest`}</Button>
       }
     />
   );
