@@ -95,8 +95,9 @@ export const InvestCard: FC<InvestCardProps> = ({
   // investment amount
   const [amountIn, setAmountIn] = useState<string | undefined>();
   const amountInAsNumber = +(amountIn || 0);
+  const amountOut = amountInAsNumber / tranchePrice;
 
-  const costPerInvestmentToken =
+  const costPerTokenIn =
     amountInAsNumber + amountInAsNumber * (trancheAPY / 100);
 
   return (
@@ -166,9 +167,7 @@ export const InvestCard: FC<InvestCardProps> = ({
                 className={tw("flex", "space-x-4", "items-center", "text-lg")}
               >
                 <LabeledText
-                  text={`${costPerInvestmentToken.toFixed(
-                    6
-                  )} ${activeBaseAssetSymbol}`}
+                  text={`${amountOut.toFixed(6)} ${activeBaseAssetSymbol}`}
                   label={"Redeemable at maturity"}
                 />
               </div>
