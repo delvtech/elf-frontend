@@ -7,6 +7,7 @@ import "./interfaces/IElf.sol";
 import "./libraries/Address.sol";
 import "./libraries/SafeERC20.sol";
 import "./libraries/ERC20Permit.sol";
+import "./libraries/DateString.sol";
 
 import "./assets/YC.sol";
 
@@ -24,7 +25,7 @@ contract Tranche is ERC20Permit {
     // The timestamp when FYTs and YCs can be redeemed.
     uint256 public unlockTimestamp;
 
-    // The timestamp when FYTs and YCs can be redeemed.
+    // The lock duration (seconds)
     uint256 public immutable lockDuration;
 
     /**
@@ -32,13 +33,18 @@ contract Tranche is ERC20Permit {
     @param _lockDuration The lock duration (seconds).
      */
     constructor(address _elfContract, uint256 _lockDuration)
-        ERC20("Fixed Yield Token", "FYT")
-        ERC20Permit("Fixed Yield Token")
+        ERC20("Fixed Yield Token ", "FYT:")
+        ERC20Permit("Fixed Yield Token ")
     {
-        yc = new YC(address(this));
         elf = IElf(_elfContract);
+        string memory elfSymbol = elf.symbol();
         unlockTimestamp = block.timestamp + _lockDuration;
         lockDuration = _lockDuration;
+        yc = new YC(address(this), elfSymbol, unlockTimestamp);
+
+        // Write the elfSymbol and expiration time to name and symbol
+        DateString.encodeAndWriteTimestamp(elfSymbol, unlockTimestamp, _name);
+        DateString.encodeAndWriteTimestamp(elfSymbol, unlockTimestamp, _symbol);
     }
 
     /**
@@ -52,8 +58,8 @@ contract Tranche is ERC20Permit {
     function deposit(uint256 _shares) external returns (uint256) {
         require(block.timestamp < unlockTimestamp, "expired");
 
-        uint256 depositValue =
-            elf.getSharesToUnderlying(_shares) - _interestOwed(_shares);
+        uint256 depositValue = elf.getSharesToUnderlying(_shares) -
+            _interestOwed(_shares);
         _valueSupplied = _valueSupplied + depositValue;
 
         elf.transferFrom(msg.sender, address(this), _shares);
@@ -88,8 +94,8 @@ contract Tranche is ERC20Permit {
      */
     function withdrawYc(uint256 _amount) external returns (uint256) {
         require(block.timestamp >= unlockTimestamp, "not expired yet");
-        uint256 underlyingOwed =
-            (_currentInterest() * _amount) / yc.totalSupply();
+        uint256 underlyingOwed = (_currentInterest() * _amount) /
+            yc.totalSupply();
         yc.burn(msg.sender, _amount);
         uint256 elfAmount = _underlyingToElf(underlyingOwed);
         elf.transfer(msg.sender, _underlyingToElf(underlyingOwed));
@@ -97,8 +103,8 @@ contract Tranche is ERC20Permit {
     }
 
     /**
-    @notice Helper. Get the total interest accrued by the locked tokens
-            at any given time.
+    @notice Helper. Get the total interest accrued by the locked tokens 
+            at any given time. 
      */
     function _currentInterest() internal view returns (uint256) {
         uint256 underlyingValueLocked = _underlyingValueLocked();
@@ -118,7 +124,7 @@ contract Tranche is ERC20Permit {
     }
 
     /**
-    @notice Helper. Get the ELF value of a given number of underlying tokens.
+    @notice Helper. Get the ELF value of a given number of underlying tokens. 
      */
     function _underlyingToElf(uint256 _amount) internal view returns (uint256) {
         if (_underlyingValueLocked() == 0) {
@@ -130,7 +136,7 @@ contract Tranche is ERC20Permit {
     }
 
     /**
-    @notice Helper. Get the interest owed on a given number of shares deposited.
+    @notice Helper. Get the interest owed on a given number of shares deposited. 
     */
     function _interestOwed(uint256 _shares) internal view returns (uint256) {
         if (_underlyingValueLocked() == 0) {
