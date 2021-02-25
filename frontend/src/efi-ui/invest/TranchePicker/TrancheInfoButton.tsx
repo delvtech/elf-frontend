@@ -12,9 +12,6 @@ import { formatAbbreviatedDate } from "efi/base/dates";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { getQueryData } from "efi-ui/base/queryResults";
-import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
-import { Elf__factory } from "elf-contracts/types/factories/Elf__factory";
-import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
 import { useMarketSpotPrice } from "efi-ui/markets/useMarketSpotPrice";
 import { useMarketForToken } from "efi-ui/markets/useMarketForToken";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
@@ -34,27 +31,13 @@ export const TrancheInfoButton: FC<TrancheInfoButtonProps> = ({
   const { isDarkMode } = useDarkMode();
   const symbolResult = useSmartContractReadCall(tranche, "symbol");
   const decimalsResult = useSmartContractReadCall(tranche, "decimals");
-  const nameResult = useSmartContractReadCall(tranche, "name");
   const unlockTimestampResult = useSmartContractReadCall(
     tranche,
     "unlockTimestamp"
   );
-  const elfAddressResult = useSmartContractReadCall(tranche, "elf");
-  const elfContract = useSmartContractFromFactory(
-    getQueryData(elfAddressResult),
-    Elf__factory.connect
-  );
-  const vaultAddressResult = useSmartContractReadCall(elfContract, "vault");
-  const vaultContract = useSmartContractFromFactory(
-    getQueryData(vaultAddressResult),
-    ERC20__factory.connect
-  );
-  const vaultNameResult = useSmartContractReadCall(vaultContract, "name");
 
   const symbol = getQueryData(symbolResult);
-  const name = getQueryData(nameResult);
   const decimals = getQueryData(decimalsResult);
-  const vaultName = getQueryData(vaultNameResult);
   const unlockDate = convertEpochSecondsToDate(
     getQueryData(unlockTimestampResult)
   );
@@ -121,7 +104,7 @@ export const TrancheInfoButton: FC<TrancheInfoButtonProps> = ({
           <LabeledText
             large
             text={t`Earn yield until ${redeemableDate}`}
-            label={t`${symbol} - ${name} - ${vaultName}`}
+            label={t`${symbol}`}
           />
         </div>
         <Icon icon={IconNames.CARET_DOWN} />
