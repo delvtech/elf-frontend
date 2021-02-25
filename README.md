@@ -5,6 +5,7 @@ The frontend for Element.fi
 From the elf-deploy directory, run the following commands:
 
 ```bash
+npm run load-contracts
 npm ci 
 npm run build
 npm start
