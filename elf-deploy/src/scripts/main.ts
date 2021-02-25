@@ -91,7 +91,7 @@ async function main() {
     elementSigner,
     bFactoryContract,
     elementAddress,
-    "Elemnent USDC yearn vault",
+    "Element USDC yearn vault",
     "ELF-USDC-YVAULT"
   );
 
