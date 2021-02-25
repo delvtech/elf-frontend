@@ -17,6 +17,14 @@ import { useActiveTranche } from "efi-ui/invest/hooks/useActiveTranche";
 import { TranchePicker } from "efi-ui/invest/TranchePicker/TranchePicker";
 
 import { InvestmentAmountInput } from "./InvestmentAmountInput";
+import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
+import { useMarketForToken } from "efi-ui/markets/useMarketForToken";
+import { useMarketSpotPrice } from "efi-ui/markets/useMarketSpotPrice";
+import { getQueryData } from "efi-ui/base/queryResults";
+import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
+import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
+import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
+import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
 
 export interface InvestCardProps {
   library: Web3Provider | undefined;
@@ -56,16 +64,40 @@ export const InvestCard: FC<InvestCardProps> = ({
     setActiveTranche,
   } = useActiveTranche(tranchesByBaseAsset, activeBaseAsset);
 
-  // investment amount
-  const [investmentAmount, setInvestmentAmount] = useState<
-    string | undefined
-  >();
+  const unlockTimestampResult = useSmartContractReadCall(
+    activeTranche,
+    "unlockTimestamp"
+  );
+  const unlockDate = convertEpochSecondsToDate(
+    getQueryData(unlockTimestampResult)
+  );
+  const trancheDecimalsResult = useSmartContractReadCall(
+    activeTranche,
+    "decimals"
+  );
+  const marketContract = useMarketForToken(activeTranche, jsonRpcProvider);
+  const tranchePriceResult = useMarketSpotPrice(marketContract, activeTranche);
+  const tranchePriceBigNumber = getQueryData(tranchePriceResult);
+  const tranchePrice = +formatCurrency(
+    tranchePriceBigNumber,
+    getQueryData(trancheDecimalsResult)
+  );
 
-  const investmentAmountAsNumber = +(investmentAmount || 0);
-  // TODO: stub out apy for now
-  const stubbedApy = 4.13;
+  let trancheAPY = 0;
+  if (tranchePrice && unlockDate) {
+    trancheAPY = calculateTrancheAPY(
+      tranchePrice,
+      Date.now(),
+      unlockDate.getTime()
+    );
+  }
+
+  // investment amount
+  const [amountIn, setAmountIn] = useState<string | undefined>();
+  const amountInAsNumber = +(amountIn || 0);
+
   const costPerInvestmentToken =
-    investmentAmountAsNumber + investmentAmountAsNumber * (stubbedApy / 100);
+    amountInAsNumber + amountInAsNumber * (trancheAPY / 100);
 
   return (
     <Fragment>
@@ -90,8 +122,8 @@ export const InvestCard: FC<InvestCardProps> = ({
               />
             }
             placeholder="0.00"
-            value={investmentAmount}
-            onValueChange={setInvestmentAmount}
+            value={amountIn}
+            onValueChange={setAmountIn}
             assetBalance={activeBaseAssetBalance}
           />
         </div>
@@ -113,7 +145,7 @@ export const InvestCard: FC<InvestCardProps> = ({
           </Button>
         </div>
 
-        {!!investmentAmount && (
+        {!!amountIn && (
           <Callout icon={null} intent={Intent.SUCCESS} className={tw("p-6")}>
             <div
               className={tw("flex", "w-full", "space-x-4", "justify-between")}
@@ -122,7 +154,7 @@ export const InvestCard: FC<InvestCardProps> = ({
                 className={tw("flex", "space-x-4", "items-center", "text-lg")}
               >
                 <LabeledText
-                  text={t`${stubbedApy - 2}%`}
+                  text={t`${(trancheAPY - 2).toFixed(2)}%`}
                   label={
                     <div className={tw("flex", "justify-center")}>
                       <span>{t`Estimated yield`}</span>
@@ -134,7 +166,9 @@ export const InvestCard: FC<InvestCardProps> = ({
                 className={tw("flex", "space-x-4", "items-center", "text-lg")}
               >
                 <LabeledText
-                  text={`${costPerInvestmentToken} ${activeBaseAssetSymbol}`}
+                  text={`${costPerInvestmentToken.toFixed(
+                    6
+                  )} ${activeBaseAssetSymbol}`}
                   label={"Redeemable at maturity"}
                 />
               </div>
@@ -151,7 +185,7 @@ export const InvestCard: FC<InvestCardProps> = ({
         connector={connector}
         title={t`Transaction summary`}
         baseAsset={activeBaseAsset}
-        baseAssetQuantity={investmentAmountAsNumber}
+        baseAssetQuantity={amountInAsNumber}
         tranche={activeTranche}
         isOpen={isDrawerOpen}
         onClose={() => setDrawerOpen(false)}
