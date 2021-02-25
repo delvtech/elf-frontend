@@ -25,6 +25,14 @@ import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
+import { useCalcOutGivenIn } from "efi-ui/balancer/useCalcOutGivenIn";
+import { BigNumber } from "ethers";
+import { formatUnits, parseUnits } from "@ethersproject/units";
+import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
+import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
+import ContractAddresses from "efi/contracts/contractsJson";
+import { ERC20, WETH, WETH__factory } from "elf-contracts/types";
+import { CryptoAssetType } from "efi/crypto/CryptoAsset";
 
 export interface InvestCardProps {
   library: Web3Provider | undefined;
@@ -48,9 +56,11 @@ export const InvestCard: FC<InvestCardProps> = ({
   tranchesByBaseAsset,
 }) => {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
+  const [amountIn, setAmountIn] = useState<string | undefined>();
 
   const [activeBaseAsset, setActiveBaseAsset] = useState(baseAssets[0]);
   const activeBaseAssetSymbol = useCryptoSymbol(activeBaseAsset);
+  const activeBaseAssetDecimals = useCryptoDecimals(activeBaseAsset);
   const activeBaseAssetBalance = useCryptoBalance(
     library,
     account,
@@ -68,37 +78,44 @@ export const InvestCard: FC<InvestCardProps> = ({
     activeTranche,
     "unlockTimestamp"
   );
-  const unlockDate = convertEpochSecondsToDate(
-    getQueryData(unlockTimestampResult)
-  );
   const trancheDecimalsResult = useSmartContractReadCall(
     activeTranche,
     "decimals"
   );
   const marketContract = useMarketForToken(activeTranche, jsonRpcProvider);
   const tranchePriceResult = useMarketSpotPrice(marketContract, activeTranche);
+
+  const wethContract = useSmartContractFromFactory(
+    ContractAddresses.wethAddress,
+    WETH__factory.connect
+  );
+  let inputTokenContract: WETH | ERC20 | undefined = wethContract;
+  if (activeBaseAsset.type === CryptoAssetType.ERC20) {
+    inputTokenContract = activeBaseAsset.tokenContract;
+  }
+
+  const amountInAsBigNumber = amountIn
+    ? parseUnits(amountIn, activeBaseAssetDecimals)
+    : undefined;
+
+  const { data: amountOut } = useCalcOutGivenIn(
+    amountInAsBigNumber,
+    inputTokenContract,
+    activeTranche,
+    marketContract
+  );
+
   const tranchePriceBigNumber = getQueryData(tranchePriceResult);
   const tranchePrice = +formatCurrency(
     tranchePriceBigNumber,
     getQueryData(trancheDecimalsResult)
   );
 
-  let trancheAPY = 0;
-  if (tranchePrice && unlockDate) {
-    trancheAPY = calculateTrancheAPY(
-      tranchePrice,
-      Date.now(),
-      unlockDate.getTime()
-    );
-  }
-
-  // investment amount
-  const [amountIn, setAmountIn] = useState<string | undefined>();
+  const trancheAPY = formatTrancheAPY(
+    getQueryData(unlockTimestampResult),
+    tranchePrice
+  );
   const amountInAsNumber = +(amountIn || 0);
-  const amountOut = amountInAsNumber / tranchePrice;
-
-  const costPerTokenIn =
-    amountInAsNumber + amountInAsNumber * (trancheAPY / 100);
 
   return (
     <Fragment>
@@ -155,7 +172,7 @@ export const InvestCard: FC<InvestCardProps> = ({
                 className={tw("flex", "space-x-4", "items-center", "text-lg")}
               >
                 <LabeledText
-                  text={t`${(trancheAPY - 2).toFixed(2)}%`}
+                  text={t`${trancheAPY.toFixed(2)}%`}
                   label={
                     <div className={tw("flex", "justify-center")}>
                       <span>{t`Estimated yield`}</span>
@@ -167,7 +184,10 @@ export const InvestCard: FC<InvestCardProps> = ({
                 className={tw("flex", "space-x-4", "items-center", "text-lg")}
               >
                 <LabeledText
-                  text={`${amountOut.toFixed(6)} ${activeBaseAssetSymbol}`}
+                  text={`${(+formatUnits(
+                    amountOut || 0,
+                    activeBaseAssetDecimals
+                  )).toFixed(6)} ${activeBaseAssetSymbol}`}
                   label={"Redeemable at maturity"}
                 />
               </div>
@@ -192,3 +212,19 @@ export const InvestCard: FC<InvestCardProps> = ({
     </Fragment>
   );
 };
+
+function formatTrancheAPY(
+  unlockTimestamp: BigNumber | undefined,
+  tranchePrice: number
+): number {
+  let trancheAPY = 0;
+  const unlockDate = convertEpochSecondsToDate(unlockTimestamp);
+  if (tranchePrice && unlockDate) {
+    trancheAPY = calculateTrancheAPY(
+      tranchePrice,
+      Date.now(),
+      unlockDate.getTime()
+    );
+  }
+  return trancheAPY;
+}
