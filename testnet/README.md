@@ -7,7 +7,7 @@ The purpose of this repo is automate the setup of a local testnet to run the elf
 ### Get the contracts
 
 ```bash
-$ sh scripts/load-elf-contracts.sh
+$ npm run load-contracts
 ```
 
 ### Run the hardhat local testnet
