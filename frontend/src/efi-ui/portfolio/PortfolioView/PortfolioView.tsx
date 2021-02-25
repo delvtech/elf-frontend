@@ -64,11 +64,39 @@ export const PortfolioView: FC<PortfolioViewProps> = () => {
 
         <div className={tw("flex", "w-full", "h-full", "space-x-10")}>
           <div className={tw("flex", "flex-col", "w-full")}>
-            <span className={classNames("h4", tw("mb-4"))}>{t`Assets`}</span>
-            <div className={tw("flex", "space-x-10", "h-full", "w-full")}>
+            <span
+              className={classNames("h4", tw("hidden", "lg:inline", "lg:mb-4"))}
+            >{t`Assets`}</span>
+            <div
+              className={tw(
+                "h-full",
+                "w-full",
+                "flex",
+                "flex-col",
+                "space-y-10",
+
+                "lg:flex-row",
+                "lg:space-y-0",
+                "lg:space-x-10"
+              )}
+            >
               {/* Left hand side */}
-              <div className={tw("flex", "flex-col", "space-y-4", "w-400")}>
-                <div className={tw("flex", "flex-1")}>
+              <div
+                className={tw(
+                  "flex",
+                  "lg:flex-col",
+                  "space-x-10",
+                  "lg:space-x-0",
+                  "lg:space-y-4",
+                  "lg:w-400"
+                )}
+              >
+                <div
+                  className={tw("flex", "flex-col", "lg:flex-row", "flex-1")}
+                >
+                  <span
+                    className={classNames("h4", tw("lg:hidden", "mb-4"))}
+                  >{t`Assets`}</span>
                   <div
                     className={tw(
                       "flex",
