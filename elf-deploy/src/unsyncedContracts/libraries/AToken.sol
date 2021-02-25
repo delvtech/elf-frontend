@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.0;
 
-import "../interfaces/IERC20.sol";
+import "../../contracts/interfaces/IERC20.sol";
 
-import "../libraries/ERC20.sol";
-import "../libraries/Address.sol";
-import "../libraries/SafeERC20.sol";
+import "../../contracts/libraries/ERC20.sol";
+import "../../contracts/libraries/Address.sol";
+import "../../contracts/libraries/SafeERC20.sol";
 
 contract AToken is ERC20 {
     using SafeERC20 for IERC20;
