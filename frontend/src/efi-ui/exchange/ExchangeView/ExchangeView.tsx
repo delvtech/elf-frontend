@@ -10,7 +10,6 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { MarketFilterOptions } from "efi-ui/markets/MarketFilterOptions/MarketFilterOptions";
 import { MarketsTable } from "efi-ui/markets/MarketsTable/MarketsTable";
-import { useMarketContracts } from "efi-ui/markets/useMarketContracts";
 import { WalletConnectionCard } from "efi-ui/wallets/WalletConnectionCard/WalletConnectionCard";
 import { getConnectorName } from "efi/wallets/connectors";
 
@@ -25,8 +24,6 @@ export const ExchangeView: FC<ExchangeViewProps> = () => {
     library,
   } = useWeb3React<Web3Provider>();
   const connectorName = getConnectorName(connector, library);
-  const marketContracts = useMarketContracts();
-
   return (
     <div
       data-testid="exchange-view"
@@ -69,10 +66,7 @@ export const ExchangeView: FC<ExchangeViewProps> = () => {
           </div>
           <div className={tw("flex", "flex-1")}>
             <Card className={tw("p-10", "flex", "flex-1")}>
-              <MarketsTable
-                className={tw("w-full")}
-                marketContracts={marketContracts}
-              />
+              <MarketsTable className={tw("w-full")} />
             </Card>
           </div>
         </div>
