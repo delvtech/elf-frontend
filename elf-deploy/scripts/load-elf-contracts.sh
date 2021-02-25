@@ -14,4 +14,5 @@ fi
 # contracts and I think elf-contracts is using AToken.  I also added all the balancer V1 stuff and
 # now elf-contracts has balancer V2 stuff in it.  I need to wait for some PRs to land in
 # elf-contracts before I can sync up.
-# cp -R elf-contracts/src/ src/contracts/element/
+
+cp -R elf-contracts/contracts/ src/
