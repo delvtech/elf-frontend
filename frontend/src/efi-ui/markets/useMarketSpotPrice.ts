@@ -19,7 +19,7 @@ export function useMarketSpotPrice(
   const spotPriceResult = useSmartContractReadCall(market, "getSpotPrice", {
     enabled: !!priceOfThisToken && !!InThisToken,
     // safe to cast since query is disabled until these exist
-    callArgs: [priceOfThisToken?.address, InThisToken] as [string, string],
+    callArgs: [InThisToken, priceOfThisToken?.address] as [string, string],
   });
 
   return spotPriceResult;
