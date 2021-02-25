@@ -1,6 +1,8 @@
+import { BPool } from "elf-contracts/types";
 import { ERC20 } from "elf-contracts/types/ERC20";
 
 export interface Market {
+  contract?: BPool;
   /**
    * address of the market contract
    */
@@ -9,7 +11,7 @@ export interface Market {
   /**
    * Contract address for the tranche contract
    */
-  trancheContractAddress: string;
+  trancheContractAddress?: string;
 
   /**
    * Unique identifier for the market:
