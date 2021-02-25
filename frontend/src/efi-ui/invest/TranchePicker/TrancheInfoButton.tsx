@@ -70,7 +70,7 @@ export const TrancheInfoButton: FC<TrancheInfoButtonProps> = ({
       tranchePrice,
       Date.now(),
       unlockDate.getTime()
-    ).toFixed(0);
+    ).toFixed(2);
   }
 
   const redeemableDate = unlockDate

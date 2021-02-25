@@ -25,6 +25,7 @@ import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
 import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
 import { getCoinGeckoId } from "efi-coingecko";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
+import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
 
 interface FYTTableRowProps {
   account: string | null | undefined;
@@ -86,14 +87,23 @@ export const FYTTableRow: FC<FYTTableRowProps> = ({ account, tranche }) => {
 
   let fiatPrice;
   if (tranchePriceInBaseAsset && baseAssetCoinGeckoPrice) {
-    fiatPrice = `${currency.symbol}${baseAssetCoinGeckoPrice.multiply(
-      exitValue
-    )}`;
+    fiatPrice = `${currency.symbol}${baseAssetCoinGeckoPrice
+      .multiply(exitValue)
+      .toDecimal()
+      .toLocaleString()}`;
   }
 
   const tableRowLink = getTableRowLink(vaultContract?.address, vaultName);
   const maturationDate = convertEpochSecondsToDate(unlockTimestamp);
   const timeLeft = getTimeLeft(maturationDate);
+  let trancheAPY = 0;
+  if (maturationDate) {
+    trancheAPY = calculateTrancheAPY(
+      +formatCurrency(tranchePriceBigNumber, trancheDecimals),
+      Date.now(),
+      maturationDate?.getTime()
+    );
+  }
 
   const tableRowClassName = isDarkMode ? styles.tableRowDark : styles.tableRow;
 
@@ -127,9 +137,9 @@ export const FYTTableRow: FC<FYTTableRowProps> = ({ account, tranche }) => {
       {/* Yield rate*/}
       <div>
         <LabeledText
-          text={t`0.32% daily`}
-          label={t`4.21% monthly`}
-          subLabel={t`12.21% yearly`}
+          text={t`${(trancheAPY / 365).toFixed(2)}% daily`}
+          label={t`${(trancheAPY / 12).toFixed(2)}% monthly`}
+          subLabel={t`${trancheAPY.toFixed(2)}% yearly`}
         />
       </div>
 
