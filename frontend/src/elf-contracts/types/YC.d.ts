@@ -36,6 +36,7 @@ interface YCInterface extends ethers.utils.Interface {
     "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)": FunctionFragment;
     "symbol()": FunctionFragment;
     "totalSupply()": FunctionFragment;
+    "tranche()": FunctionFragment;
     "transfer(address,uint256)": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
   };
@@ -89,6 +90,7 @@ interface YCInterface extends ethers.utils.Interface {
     functionFragment: "totalSupply",
     values?: undefined
   ): string;
+  encodeFunctionData(functionFragment: "tranche", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "transfer",
     values: [string, BigNumberish]
@@ -124,6 +126,7 @@ interface YCInterface extends ethers.utils.Interface {
     functionFragment: "totalSupply",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "tranche", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "transfer", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "transferFrom",
@@ -281,6 +284,10 @@ export class YC extends Contract {
 
     "totalSupply()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    tranche(overrides?: CallOverrides): Promise<[string]>;
+
+    "tranche()"(overrides?: CallOverrides): Promise<[string]>;
+
     transfer(
       recipient: string,
       amount: BigNumberish,
@@ -436,6 +443,10 @@ export class YC extends Contract {
 
   "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
 
+  tranche(overrides?: CallOverrides): Promise<string>;
+
+  "tranche()"(overrides?: CallOverrides): Promise<string>;
+
   transfer(
     recipient: string,
     amount: BigNumberish,
@@ -590,6 +601,10 @@ export class YC extends Contract {
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
     "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    tranche(overrides?: CallOverrides): Promise<string>;
+
+    "tranche()"(overrides?: CallOverrides): Promise<string>;
 
     transfer(
       recipient: string,
@@ -757,6 +772,10 @@ export class YC extends Contract {
 
     "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
 
+    tranche(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "tranche()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     transfer(
       recipient: string,
       amount: BigNumberish,
@@ -920,6 +939,10 @@ export class YC extends Contract {
     totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     "totalSupply()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    tranche(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "tranche()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     transfer(
       recipient: string,
