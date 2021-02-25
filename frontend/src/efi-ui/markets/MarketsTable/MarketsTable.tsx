@@ -1,4 +1,5 @@
 import React, { FC, useState } from "react";
+import { useInterval } from "react-use";
 
 import {
   Alignment,
@@ -19,13 +20,13 @@ import tw from "efi-tailwindcss-classnames";
 import { FormGroupLabel } from "efi-ui/base/FormGroupLabel/FormGroupLabel";
 import { LabeledProgressBar } from "efi-ui/base/LabeledProgressBar/LabeledProgressBar";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { useInterval } from "react-use";
 import { getTimeLeft } from "efi/base/time";
-import { BPool } from "elf-contracts/types/BPool";
-import { useMarketDetails } from "efi-ui/markets/useMarketDetails";
+import { Market } from "efi/markets/Market";
+import { useMarketContracts } from "efi-ui/markets/useMarketContracts";
+import { useMarkets } from "efi-ui/markets/useMarkets";
+import { QueryStatus } from "react-query";
 
 interface MarketsTableProps {
-  marketContracts: BPool[];
   className?: string;
 }
 
@@ -43,11 +44,11 @@ const TABLE_HEADERS: MarketsTableHeaderProps[] = [
   { label: t`Tranche State` },
 ];
 
-export const MarketsTable: FC<MarketsTableProps> = ({
-  marketContracts,
-  className,
-}) => {
-  if (!marketContracts.length) {
+export const MarketsTable: FC<MarketsTableProps> = ({ className }) => {
+  const marketContracts = useMarketContracts();
+  const marketResults = useMarkets(marketContracts);
+
+  if (!marketResults.length) {
     return <span>{t`no markets found`}</span>;
   }
   return (
@@ -104,11 +105,12 @@ export const MarketsTable: FC<MarketsTableProps> = ({
           </tr>
         </thead>
         <tbody className={Classes.TEXT_LARGE}>
-          {marketContracts.map((marketContract) => {
+          {marketResults.map(([market, status], index) => {
             return (
               <MarketsTableRow
-                key={marketContract.address}
-                marketContract={marketContract}
+                key={market?.contractAddress || index}
+                market={market}
+                marketStatus={status}
               />
             );
           })}
@@ -139,23 +141,24 @@ const MarketsTableHeader: FC<MarketsTableHeaderProps> = ({
 };
 
 interface MarketsTableRowProps {
-  marketContract: BPool;
+  market: Market | undefined;
+  marketStatus: QueryStatus;
 }
 export const MarketsTableRow: FC<MarketsTableRowProps> = ({
-  marketContract,
+  market,
+  marketStatus,
 }) => {
   const [timerValue, setTimerValue] = useState(Date.now());
-  const [marketDetails] = useMarketDetails(marketContract);
   // TODO: make timer helper fn
   useInterval(() => {
-    if (!marketDetails) {
+    if (!market) {
       return;
     }
-    setTimerValue(marketDetails.maturityDate - Date.now());
+    setTimerValue(market.maturityDate - Date.now());
   }, 1000);
 
   // TODO: make this better
-  if (!marketDetails) {
+  if (!market && marketStatus === "loading") {
     return (
       <tr>
         <td>loading</td>
@@ -163,16 +166,19 @@ export const MarketsTableRow: FC<MarketsTableRowProps> = ({
     );
   }
 
+  if (!market) {
+    return null;
+  }
+
   // TODO: make progress helper fn
   const progress =
-    (Date.now() - marketDetails.startDate) /
-    (marketDetails.maturityDate - marketDetails.startDate);
+    (Date.now() - market.startDate) / (market.maturityDate - market.startDate);
 
-  const { totalSupply } = marketDetails;
-  const startDate = new Date(marketDetails?.startDate);
-  const maturityDate = new Date(marketDetails?.maturityDate);
-  const baseAsset = marketDetails.assets[0];
-  const yieldAsset = marketDetails.assets[1];
+  const { totalSupply } = market;
+  const startDate = new Date(market?.startDate);
+  const maturityDate = new Date(market?.maturityDate);
+  const baseAsset = market.assets[0];
+  const yieldAsset = market.assets[1];
 
   const [daysLeft, hoursLeft, minutesLeft] = getTimeLeft(timerValue);
   const time = t`${daysLeft} days, ${hoursLeft}, hours, ${minutesLeft} minutes`;
@@ -181,7 +187,7 @@ export const MarketsTableRow: FC<MarketsTableRowProps> = ({
     <tr>
       <td>{maturityDate.toLocaleDateString()}</td>
       <td>
-        <Link className={tw("flex", "space-x-2")} to={marketContract.address}>
+        <Link className={tw("flex", "space-x-2")} to={market.contractAddress}>
           <LabeledText bold text={baseAsset.symbol} label={baseAsset.name} />
           {"-"}
           <LabeledText bold text={yieldAsset.symbol} label={yieldAsset.name} />
@@ -194,14 +200,14 @@ export const MarketsTableRow: FC<MarketsTableRowProps> = ({
       <td>{startDate.toLocaleDateString()}</td>
 
       <td>
-        {marketDetails.state === "running" ? (
+        {market.state === "running" ? (
           <LabeledProgressBar
             progressValue={progress}
             label={t`running`}
             helperText={time}
           />
         ) : (
-          marketDetails.state
+          market.state
         )}
       </td>
     </tr>
