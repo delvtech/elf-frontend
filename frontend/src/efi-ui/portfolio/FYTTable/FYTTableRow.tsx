@@ -26,6 +26,7 @@ import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
 import { getCoinGeckoId } from "efi-coingecko";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
+import { navigate } from "@reach/router";
 
 interface FYTTableRowProps {
   account: string | null | undefined;
@@ -40,7 +41,6 @@ export const FYTTableRow: FC<FYTTableRowProps> = ({ account, tranche }) => {
     tranche,
     "unlockTimestamp"
   );
-  const { data: trancheName } = useSmartContractReadCall(tranche, "name");
   const { data: trancheDecimals } = useSmartContractReadCall(
     tranche,
     "decimals"
@@ -116,14 +116,11 @@ export const FYTTableRow: FC<FYTTableRowProps> = ({ account, tranche }) => {
     >
       {/* Asset */}
       <div>
-        <LabeledText text={trancheName} label={jt`via ${tableRowLink}`} />
+        <LabeledText text={trancheSymbol} label={jt`via ${tableRowLink}`} />
       </div>
       {/* Quantity */}
       <div>
-        <LabeledText
-          text={t`${trancheBalance.toFixed(6)} ${trancheSymbol}`}
-          label=""
-        />
+        <LabeledText text={t`${trancheBalance.toFixed(6)}`} label="" />
       </div>
 
       {/* Current value */}
@@ -173,7 +170,10 @@ export const FYTTableRow: FC<FYTTableRowProps> = ({ account, tranche }) => {
             {t`Claim`}
           </AnchorButton>
         </Tooltip2>
-        <Button outlined>{t`Go to market`}</Button>
+        <AnchorButton
+          onClick={() => navigate(`exchange/${tranche.address}`)}
+          outlined
+        >{t`Go to market`}</AnchorButton>
       </div>
     </div>
   );
