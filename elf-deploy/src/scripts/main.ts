@@ -61,7 +61,9 @@ async function main() {
     wethContract,
     elementSigner,
     bFactoryContract,
-    elementAddress
+    elementAddress,
+    "Elemnent WETH yearn vault",
+    "ELF-WETH-YVAULT"
   );
 
   /**
@@ -88,7 +90,9 @@ async function main() {
     usdcContract,
     elementSigner,
     bFactoryContract,
-    elementAddress
+    elementAddress,
+    "Elemnent USDC yearn vault",
+    "ELF-USDC-YVAULT"
   );
 
   /**
@@ -180,9 +184,13 @@ async function setupElfTrancheAndMarkets(
   baseAssetContract: WETH | USDC,
   elementSigner: Signer,
   bFactoryContract: BFactory,
-  elementAddress: string
+  elementAddress: string,
+  elfName: string,
+  elfSymbol: string
 ) {
   const elfContract = await deployElf(
+    elfName,
+    elfSymbol,
     elfFactoryContract,
     baseAssetContract,
     elementSigner
