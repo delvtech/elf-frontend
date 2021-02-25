@@ -2,6 +2,7 @@
   "scripts": {
     "start": "npx hardhat node",
     "build": "npx hardhat compile",
+    "load-contracts": "sh scripts/load-elf-contracts.sh",
     "deploy-contracts": "npx hardhat run src/scripts/main.ts --network localhost --no-compile"
   },
   "devDependencies": {
