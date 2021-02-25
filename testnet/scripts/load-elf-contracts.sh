@@ -11,7 +11,7 @@ fi
 
 # blow away old-contracts
 rm -rf src/contracts
-mkdir -f src/contracts
+mkdir src/contracts
 
 # TODO: copy the contracts to the src folder so hardhat will pick up on them.
 # A coupl of things are out of sync so I need to get those fixed first.  I made WETH and USDC
@@ -19,7 +19,10 @@ mkdir -f src/contracts
 # now elf-contracts has balancer V2 stuff in it.  I need to wait for some PRs to land in
 # elf-contracts before I can sync up.
 
+echo "Copying latest contracts..."
 cp -R elf-contracts/contracts/ src/contracts
 
 # remove test contracts, these are used only for elf-contracts tests
 rm -rf src/contracts/test
+
+echo "Done!"
