@@ -16,3 +16,6 @@ fi
 # elf-contracts before I can sync up.
 
 cp -R elf-contracts/contracts/ src/
+
+# remove test contracts, these are used only for elf-contracts tests
+rm -rf src/contracts/test
