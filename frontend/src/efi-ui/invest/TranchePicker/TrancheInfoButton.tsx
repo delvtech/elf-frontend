@@ -104,7 +104,7 @@ export const TrancheInfoButton: FC<TrancheInfoButtonProps> = ({
           <LabeledText
             large
             text={t`Earn yield until ${redeemableDate}`}
-            label={t`${symbol}`}
+            label={symbol}
           />
         </div>
         <Icon icon={IconNames.CARET_DOWN} />
