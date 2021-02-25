@@ -20,33 +20,26 @@ import { BytesLike } from "@ethersproject/bytes";
 import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 
-interface IElfInterface extends ethers.utils.Interface {
+interface ElfStubInterface extends ethers.utils.Interface {
   functions: {
-    "DOMAIN_SEPARATOR()": FunctionFragment;
     "allowance(address,address)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
-    "balance()": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
     "balanceOfUnderlying(address)": FunctionFragment;
     "decimals()": FunctionFragment;
-    "deposit(address,uint256)": FunctionFragment;
-    "getAllocator()": FunctionFragment;
+    "decreaseAllowance(address,uint256)": FunctionFragment;
     "getSharesToUnderlying(uint256)": FunctionFragment;
-    "nonces(address)": FunctionFragment;
-    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)": FunctionFragment;
-    "setAllocator(address)": FunctionFragment;
-    "setGovernance(address)": FunctionFragment;
+    "increaseAllowance(address,uint256)": FunctionFragment;
+    "mint(address,uint256)": FunctionFragment;
+    "name()": FunctionFragment;
+    "setSharesToUnderlying(uint256)": FunctionFragment;
     "symbol()": FunctionFragment;
     "totalSupply()": FunctionFragment;
     "transfer(address,uint256)": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
-    "withdraw(address,uint256)": FunctionFragment;
+    "underlyingUnitValue()": FunctionFragment;
   };
 
-  encodeFunctionData(
-    functionFragment: "DOMAIN_SEPARATOR",
-    values?: undefined
-  ): string;
   encodeFunctionData(
     functionFragment: "allowance",
     values: [string, string]
@@ -55,7 +48,6 @@ interface IElfInterface extends ethers.utils.Interface {
     functionFragment: "approve",
     values: [string, BigNumberish]
   ): string;
-  encodeFunctionData(functionFragment: "balance", values?: undefined): string;
   encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
   encodeFunctionData(
     functionFragment: "balanceOfUnderlying",
@@ -63,37 +55,25 @@ interface IElfInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "decimals", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "deposit",
+    functionFragment: "decreaseAllowance",
     values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getAllocator",
-    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "getSharesToUnderlying",
     values: [BigNumberish]
   ): string;
-  encodeFunctionData(functionFragment: "nonces", values: [string]): string;
   encodeFunctionData(
-    functionFragment: "permit",
-    values: [
-      string,
-      string,
-      BigNumberish,
-      BigNumberish,
-      BigNumberish,
-      BytesLike,
-      BytesLike
-    ]
+    functionFragment: "increaseAllowance",
+    values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "setAllocator",
-    values: [string]
+    functionFragment: "mint",
+    values: [string, BigNumberish]
   ): string;
+  encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "setGovernance",
-    values: [string]
+    functionFragment: "setSharesToUnderlying",
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
   encodeFunctionData(
@@ -109,40 +89,34 @@ interface IElfInterface extends ethers.utils.Interface {
     values: [string, string, BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "withdraw",
-    values: [string, BigNumberish]
+    functionFragment: "underlyingUnitValue",
+    values?: undefined
   ): string;
 
-  decodeFunctionResult(
-    functionFragment: "DOMAIN_SEPARATOR",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "balance", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "balanceOfUnderlying",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "decimals", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "getAllocator",
+    functionFragment: "decreaseAllowance",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "getSharesToUnderlying",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "nonces", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "permit", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "setAllocator",
+    functionFragment: "increaseAllowance",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "setGovernance",
+    functionFragment: "setSharesToUnderlying",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
@@ -155,7 +129,10 @@ interface IElfInterface extends ethers.utils.Interface {
     functionFragment: "transferFrom",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "underlyingUnitValue",
+    data: BytesLike
+  ): Result;
 
   events: {
     "Approval(address,address,uint256)": EventFragment;
@@ -166,7 +143,7 @@ interface IElfInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
 }
 
-export class IElf extends Contract {
+export class ElfStub extends Contract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -177,13 +154,9 @@ export class IElf extends Contract {
   removeAllListeners(eventName: EventFilter | string): this;
   removeListener(eventName: any, listener: Listener): this;
 
-  interface: IElfInterface;
+  interface: ElfStubInterface;
 
   functions: {
-    DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<[string]>;
-
-    "DOMAIN_SEPARATOR()"(overrides?: CallOverrides): Promise<[string]>;
-
     allowance(
       owner: string,
       spender: string,
@@ -208,10 +181,6 @@ export class IElf extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    balance(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    "balance()"(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     balanceOf(account: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
     "balanceOf(address)"(
@@ -233,78 +202,63 @@ export class IElf extends Contract {
 
     "decimals()"(overrides?: CallOverrides): Promise<[number]>;
 
-    deposit(
-      sender: string,
-      amount: BigNumberish,
+    decreaseAllowance(
+      spender: string,
+      subtractedValue: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "deposit(address,uint256)"(
-      sender: string,
-      amount: BigNumberish,
+    "decreaseAllowance(address,uint256)"(
+      spender: string,
+      subtractedValue: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
-
-    getAllocator(overrides?: CallOverrides): Promise<[string]>;
-
-    "getAllocator()"(overrides?: CallOverrides): Promise<[string]>;
 
     getSharesToUnderlying(
-      shares: BigNumberish,
+      _shares: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
     "getSharesToUnderlying(uint256)"(
-      shares: BigNumberish,
+      _shares: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
-    nonces(owner: string, overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    "nonces(address)"(
-      owner: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    permit(
-      owner: string,
+    increaseAllowance(
       spender: string,
-      value: BigNumberish,
-      deadline: BigNumberish,
-      v: BigNumberish,
-      r: BytesLike,
-      s: BytesLike,
+      addedValue: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
-      owner: string,
+    "increaseAllowance(address,uint256)"(
       spender: string,
-      value: BigNumberish,
-      deadline: BigNumberish,
-      v: BigNumberish,
-      r: BytesLike,
-      s: BytesLike,
+      addedValue: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    setAllocator(
-      _allocator: string,
+    mint(
+      _account: string,
+      _amount: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "setAllocator(address)"(
-      _allocator: string,
+    "mint(address,uint256)"(
+      _account: string,
+      _amount: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    setGovernance(
-      _governance: string,
+    name(overrides?: CallOverrides): Promise<[string]>;
+
+    "name()"(overrides?: CallOverrides): Promise<[string]>;
+
+    setSharesToUnderlying(
+      _value: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "setGovernance(address)"(
-      _governance: string,
+    "setSharesToUnderlying(uint256)"(
+      _value: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
@@ -342,22 +296,10 @@ export class IElf extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    withdraw(
-      sender: string,
-      _shares: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
+    underlyingUnitValue(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    "withdraw(address,uint256)"(
-      sender: string,
-      _shares: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
+    "underlyingUnitValue()"(overrides?: CallOverrides): Promise<[BigNumber]>;
   };
-
-  DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<string>;
-
-  "DOMAIN_SEPARATOR()"(overrides?: CallOverrides): Promise<string>;
 
   allowance(
     owner: string,
@@ -383,10 +325,6 @@ export class IElf extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  balance(overrides?: CallOverrides): Promise<BigNumber>;
-
-  "balance()"(overrides?: CallOverrides): Promise<BigNumber>;
-
   balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
   "balanceOf(address)"(
@@ -408,78 +346,63 @@ export class IElf extends Contract {
 
   "decimals()"(overrides?: CallOverrides): Promise<number>;
 
-  deposit(
-    sender: string,
-    amount: BigNumberish,
+  decreaseAllowance(
+    spender: string,
+    subtractedValue: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "deposit(address,uint256)"(
-    sender: string,
-    amount: BigNumberish,
+  "decreaseAllowance(address,uint256)"(
+    spender: string,
+    subtractedValue: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
-
-  getAllocator(overrides?: CallOverrides): Promise<string>;
-
-  "getAllocator()"(overrides?: CallOverrides): Promise<string>;
 
   getSharesToUnderlying(
-    shares: BigNumberish,
+    _shares: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
   "getSharesToUnderlying(uint256)"(
-    shares: BigNumberish,
+    _shares: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  nonces(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
-
-  "nonces(address)"(
-    owner: string,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  permit(
-    owner: string,
+  increaseAllowance(
     spender: string,
-    value: BigNumberish,
-    deadline: BigNumberish,
-    v: BigNumberish,
-    r: BytesLike,
-    s: BytesLike,
+    addedValue: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
-    owner: string,
+  "increaseAllowance(address,uint256)"(
     spender: string,
-    value: BigNumberish,
-    deadline: BigNumberish,
-    v: BigNumberish,
-    r: BytesLike,
-    s: BytesLike,
+    addedValue: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  setAllocator(
-    _allocator: string,
+  mint(
+    _account: string,
+    _amount: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "setAllocator(address)"(
-    _allocator: string,
+  "mint(address,uint256)"(
+    _account: string,
+    _amount: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  setGovernance(
-    _governance: string,
+  name(overrides?: CallOverrides): Promise<string>;
+
+  "name()"(overrides?: CallOverrides): Promise<string>;
+
+  setSharesToUnderlying(
+    _value: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "setGovernance(address)"(
-    _governance: string,
+  "setSharesToUnderlying(uint256)"(
+    _value: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -517,23 +440,11 @@ export class IElf extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  withdraw(
-    sender: string,
-    _shares: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
+  underlyingUnitValue(overrides?: CallOverrides): Promise<BigNumber>;
 
-  "withdraw(address,uint256)"(
-    sender: string,
-    _shares: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
+  "underlyingUnitValue()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   callStatic: {
-    DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<string>;
-
-    "DOMAIN_SEPARATOR()"(overrides?: CallOverrides): Promise<string>;
-
     allowance(
       owner: string,
       spender: string,
@@ -558,10 +469,6 @@ export class IElf extends Contract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    balance(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "balance()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     "balanceOf(address)"(
@@ -583,75 +490,63 @@ export class IElf extends Contract {
 
     "decimals()"(overrides?: CallOverrides): Promise<number>;
 
-    deposit(
-      sender: string,
-      amount: BigNumberish,
+    decreaseAllowance(
+      spender: string,
+      subtractedValue: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<boolean>;
 
-    "deposit(address,uint256)"(
-      sender: string,
-      amount: BigNumberish,
+    "decreaseAllowance(address,uint256)"(
+      spender: string,
+      subtractedValue: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    getAllocator(overrides?: CallOverrides): Promise<string>;
-
-    "getAllocator()"(overrides?: CallOverrides): Promise<string>;
+    ): Promise<boolean>;
 
     getSharesToUnderlying(
-      shares: BigNumberish,
+      _shares: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     "getSharesToUnderlying(uint256)"(
-      shares: BigNumberish,
+      _shares: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    nonces(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
-
-    "nonces(address)"(
-      owner: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    permit(
-      owner: string,
+    increaseAllowance(
       spender: string,
-      value: BigNumberish,
-      deadline: BigNumberish,
-      v: BigNumberish,
-      r: BytesLike,
-      s: BytesLike,
+      addedValue: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<void>;
+    ): Promise<boolean>;
 
-    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
-      owner: string,
+    "increaseAllowance(address,uint256)"(
       spender: string,
-      value: BigNumberish,
-      deadline: BigNumberish,
-      v: BigNumberish,
-      r: BytesLike,
-      s: BytesLike,
+      addedValue: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    mint(
+      _account: string,
+      _amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    setAllocator(_allocator: string, overrides?: CallOverrides): Promise<void>;
-
-    "setAllocator(address)"(
-      _allocator: string,
+    "mint(address,uint256)"(
+      _account: string,
+      _amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    setGovernance(
-      _governance: string,
+    name(overrides?: CallOverrides): Promise<string>;
+
+    "name()"(overrides?: CallOverrides): Promise<string>;
+
+    setSharesToUnderlying(
+      _value: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "setGovernance(address)"(
-      _governance: string,
+    "setSharesToUnderlying(uint256)"(
+      _value: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -689,17 +584,9 @@ export class IElf extends Contract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    withdraw(
-      sender: string,
-      _shares: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    underlyingUnitValue(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "withdraw(address,uint256)"(
-      sender: string,
-      _shares: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    "underlyingUnitValue()"(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   filters: {
@@ -713,10 +600,6 @@ export class IElf extends Contract {
   };
 
   estimateGas: {
-    DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "DOMAIN_SEPARATOR()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     allowance(
       owner: string,
       spender: string,
@@ -741,10 +624,6 @@ export class IElf extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    balance(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "balance()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     "balanceOf(address)"(
@@ -766,75 +645,63 @@ export class IElf extends Contract {
 
     "decimals()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-    deposit(
-      sender: string,
-      amount: BigNumberish,
+    decreaseAllowance(
+      spender: string,
+      subtractedValue: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    "deposit(address,uint256)"(
-      sender: string,
-      amount: BigNumberish,
+    "decreaseAllowance(address,uint256)"(
+      spender: string,
+      subtractedValue: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
-
-    getAllocator(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "getAllocator()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     getSharesToUnderlying(
-      shares: BigNumberish,
+      _shares: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     "getSharesToUnderlying(uint256)"(
-      shares: BigNumberish,
+      _shares: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    nonces(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
-
-    "nonces(address)"(
-      owner: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    permit(
-      owner: string,
+    increaseAllowance(
       spender: string,
-      value: BigNumberish,
-      deadline: BigNumberish,
-      v: BigNumberish,
-      r: BytesLike,
-      s: BytesLike,
+      addedValue: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
-      owner: string,
+    "increaseAllowance(address,uint256)"(
       spender: string,
-      value: BigNumberish,
-      deadline: BigNumberish,
-      v: BigNumberish,
-      r: BytesLike,
-      s: BytesLike,
+      addedValue: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    setAllocator(_allocator: string, overrides?: Overrides): Promise<BigNumber>;
-
-    "setAllocator(address)"(
-      _allocator: string,
+    mint(
+      _account: string,
+      _amount: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    setGovernance(
-      _governance: string,
+    "mint(address,uint256)"(
+      _account: string,
+      _amount: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    "setGovernance(address)"(
-      _governance: string,
+    name(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "name()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    setSharesToUnderlying(
+      _value: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "setSharesToUnderlying(uint256)"(
+      _value: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
@@ -872,26 +739,12 @@ export class IElf extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    withdraw(
-      sender: string,
-      _shares: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
+    underlyingUnitValue(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "withdraw(address,uint256)"(
-      sender: string,
-      _shares: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
+    "underlyingUnitValue()"(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "DOMAIN_SEPARATOR()"(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     allowance(
       owner: string,
       spender: string,
@@ -915,10 +768,6 @@ export class IElf extends Contract {
       amount: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
-
-    balance(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "balance()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     balanceOf(
       account: string,
@@ -944,81 +793,63 @@ export class IElf extends Contract {
 
     "decimals()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    deposit(
-      sender: string,
-      amount: BigNumberish,
+    decreaseAllowance(
+      spender: string,
+      subtractedValue: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "deposit(address,uint256)"(
-      sender: string,
-      amount: BigNumberish,
+    "decreaseAllowance(address,uint256)"(
+      spender: string,
+      subtractedValue: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
-
-    getAllocator(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "getAllocator()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getSharesToUnderlying(
-      shares: BigNumberish,
+      _shares: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     "getSharesToUnderlying(uint256)"(
-      shares: BigNumberish,
+      _shares: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    nonces(
-      owner: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "nonces(address)"(
-      owner: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    permit(
-      owner: string,
+    increaseAllowance(
       spender: string,
-      value: BigNumberish,
-      deadline: BigNumberish,
-      v: BigNumberish,
-      r: BytesLike,
-      s: BytesLike,
+      addedValue: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
-      owner: string,
+    "increaseAllowance(address,uint256)"(
       spender: string,
-      value: BigNumberish,
-      deadline: BigNumberish,
-      v: BigNumberish,
-      r: BytesLike,
-      s: BytesLike,
+      addedValue: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    setAllocator(
-      _allocator: string,
+    mint(
+      _account: string,
+      _amount: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "setAllocator(address)"(
-      _allocator: string,
+    "mint(address,uint256)"(
+      _account: string,
+      _amount: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    setGovernance(
-      _governance: string,
+    name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "name()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    setSharesToUnderlying(
+      _value: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "setGovernance(address)"(
-      _governance: string,
+    "setSharesToUnderlying(uint256)"(
+      _value: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
@@ -1056,16 +887,12 @@ export class IElf extends Contract {
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    withdraw(
-      sender: string,
-      _shares: BigNumberish,
-      overrides?: Overrides
+    underlyingUnitValue(
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    "withdraw(address,uint256)"(
-      sender: string,
-      _shares: BigNumberish,
-      overrides?: Overrides
+    "underlyingUnitValue()"(
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
   };
 }

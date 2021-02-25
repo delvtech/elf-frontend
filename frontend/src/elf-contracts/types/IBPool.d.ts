@@ -25,10 +25,12 @@ interface IBPoolInterface extends ethers.utils.Interface {
     "allowance(address,address)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
+    "decimals()": FunctionFragment;
     "exitswapExternAmountOut(address,uint256,uint256)": FunctionFragment;
     "exitswapPoolAmountIn(address,uint256,uint256)": FunctionFragment;
     "joinswapExternAmountIn(address,uint256,uint256)": FunctionFragment;
     "joinswapPoolAmountOut(address,uint256,uint256)": FunctionFragment;
+    "symbol()": FunctionFragment;
     "totalSupply()": FunctionFragment;
     "transfer(address,uint256)": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
@@ -43,6 +45,7 @@ interface IBPoolInterface extends ethers.utils.Interface {
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
+  encodeFunctionData(functionFragment: "decimals", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "exitswapExternAmountOut",
     values: [string, BigNumberish, BigNumberish]
@@ -59,6 +62,7 @@ interface IBPoolInterface extends ethers.utils.Interface {
     functionFragment: "joinswapPoolAmountOut",
     values: [string, BigNumberish, BigNumberish]
   ): string;
+  encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "totalSupply",
     values?: undefined
@@ -75,6 +79,7 @@ interface IBPoolInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "decimals", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "exitswapExternAmountOut",
     data: BytesLike
@@ -91,6 +96,7 @@ interface IBPoolInterface extends ethers.utils.Interface {
     functionFragment: "joinswapPoolAmountOut",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "totalSupply",
     data: BytesLike
@@ -155,6 +161,10 @@ export class IBPool extends Contract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
+    decimals(overrides?: CallOverrides): Promise<[number]>;
+
+    "decimals()"(overrides?: CallOverrides): Promise<[number]>;
+
     exitswapExternAmountOut(
       tokenOut: string,
       tokenAmountOut: BigNumberish,
@@ -210,6 +220,10 @@ export class IBPool extends Contract {
       maxAmountIn: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
+
+    symbol(overrides?: CallOverrides): Promise<[string]>;
+
+    "symbol()"(overrides?: CallOverrides): Promise<[string]>;
 
     totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -273,6 +287,10 @@ export class IBPool extends Contract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  decimals(overrides?: CallOverrides): Promise<number>;
+
+  "decimals()"(overrides?: CallOverrides): Promise<number>;
+
   exitswapExternAmountOut(
     tokenOut: string,
     tokenAmountOut: BigNumberish,
@@ -328,6 +346,10 @@ export class IBPool extends Contract {
     maxAmountIn: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
+
+  symbol(overrides?: CallOverrides): Promise<string>;
+
+  "symbol()"(overrides?: CallOverrides): Promise<string>;
 
   totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -391,6 +413,10 @@ export class IBPool extends Contract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    decimals(overrides?: CallOverrides): Promise<number>;
+
+    "decimals()"(overrides?: CallOverrides): Promise<number>;
+
     exitswapExternAmountOut(
       tokenOut: string,
       tokenAmountOut: BigNumberish,
@@ -446,6 +472,10 @@ export class IBPool extends Contract {
       maxAmountIn: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    symbol(overrides?: CallOverrides): Promise<string>;
+
+    "symbol()"(overrides?: CallOverrides): Promise<string>;
 
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -520,6 +550,10 @@ export class IBPool extends Contract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    decimals(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "decimals()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     exitswapExternAmountOut(
       tokenOut: string,
       tokenAmountOut: BigNumberish,
@@ -575,6 +609,10 @@ export class IBPool extends Contract {
       maxAmountIn: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
+
+    symbol(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "symbol()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -642,6 +680,10 @@ export class IBPool extends Contract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    decimals(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "decimals()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     exitswapExternAmountOut(
       tokenOut: string,
       tokenAmountOut: BigNumberish,
@@ -697,6 +739,10 @@ export class IBPool extends Contract {
       maxAmountIn: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
+
+    symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "symbol()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 

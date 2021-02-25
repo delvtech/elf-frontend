@@ -9,6 +9,8 @@ import {
 } from "../types";
 
 export async function deployElf<T extends ERC20>(
+  name: string,
+  symbol: string,
   elfFactoryContract: ElfFactory,
   baseAssetContract: T,
   signer: Signer
@@ -26,7 +28,9 @@ export async function deployElf<T extends ERC20>(
 
   await elfFactoryContract.newPool(
     baseAssetContract.address,
-    assetProxyContract.address
+    assetProxyContract.address,
+    name,
+    symbol
   );
 
   const elfContract = await getLastDeployedElf(elfFactoryContract, signer);

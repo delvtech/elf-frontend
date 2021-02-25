@@ -23,13 +23,13 @@ import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 interface ElfFactoryInterface extends ethers.utils.Interface {
   functions: {
     "isPool(address)": FunctionFragment;
-    "newPool(address,address)": FunctionFragment;
+    "newPool(address,address,string,string)": FunctionFragment;
   };
 
   encodeFunctionData(functionFragment: "isPool", values: [string]): string;
   encodeFunctionData(
     functionFragment: "newPool",
-    values: [string, string]
+    values: [string, string, string, string]
   ): string;
 
   decodeFunctionResult(functionFragment: "isPool", data: BytesLike): Result;
@@ -66,12 +66,16 @@ export class ElfFactory extends Contract {
     newPool(
       _token: string,
       _proxy: string,
+      _name: string,
+      _symbol: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "newPool(address,address)"(
+    "newPool(address,address,string,string)"(
       _token: string,
       _proxy: string,
+      _name: string,
+      _symbol: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
   };
@@ -83,12 +87,16 @@ export class ElfFactory extends Contract {
   newPool(
     _token: string,
     _proxy: string,
+    _name: string,
+    _symbol: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "newPool(address,address)"(
+  "newPool(address,address,string,string)"(
     _token: string,
     _proxy: string,
+    _name: string,
+    _symbol: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -100,12 +108,16 @@ export class ElfFactory extends Contract {
     newPool(
       _token: string,
       _proxy: string,
+      _name: string,
+      _symbol: string,
       overrides?: CallOverrides
     ): Promise<string>;
 
-    "newPool(address,address)"(
+    "newPool(address,address,string,string)"(
       _token: string,
       _proxy: string,
+      _name: string,
+      _symbol: string,
       overrides?: CallOverrides
     ): Promise<string>;
   };
@@ -125,12 +137,16 @@ export class ElfFactory extends Contract {
     newPool(
       _token: string,
       _proxy: string,
+      _name: string,
+      _symbol: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    "newPool(address,address)"(
+    "newPool(address,address,string,string)"(
       _token: string,
       _proxy: string,
+      _name: string,
+      _symbol: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
   };
@@ -149,12 +165,16 @@ export class ElfFactory extends Contract {
     newPool(
       _token: string,
       _proxy: string,
+      _name: string,
+      _symbol: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "newPool(address,address)"(
+    "newPool(address,address,string,string)"(
       _token: string,
       _proxy: string,
+      _name: string,
+      _symbol: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
   };

@@ -33,13 +33,11 @@ interface ElfInterface extends ethers.utils.Interface {
     "decreaseAllowance(address,uint256)": FunctionFragment;
     "deposit(address,uint256)": FunctionFragment;
     "getSharesToUnderlying(uint256)": FunctionFragment;
-    "governance()": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
     "name()": FunctionFragment;
     "nonces(address)": FunctionFragment;
     "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)": FunctionFragment;
     "proxy()": FunctionFragment;
-    "setGovernance(address)": FunctionFragment;
     "symbol()": FunctionFragment;
     "token()": FunctionFragment;
     "totalSupply()": FunctionFragment;
@@ -85,10 +83,6 @@ interface ElfInterface extends ethers.utils.Interface {
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "governance",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "increaseAllowance",
     values: [string, BigNumberish]
   ): string;
@@ -107,10 +101,6 @@ interface ElfInterface extends ethers.utils.Interface {
     ]
   ): string;
   encodeFunctionData(functionFragment: "proxy", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "setGovernance",
-    values: [string]
-  ): string;
   encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
   encodeFunctionData(functionFragment: "token", values?: undefined): string;
   encodeFunctionData(
@@ -157,7 +147,6 @@ interface ElfInterface extends ethers.utils.Interface {
     functionFragment: "getSharesToUnderlying",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "governance", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "increaseAllowance",
     data: BytesLike
@@ -166,10 +155,6 @@ interface ElfInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "nonces", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "permit", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "proxy", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "setGovernance",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "token", data: BytesLike): Result;
   decodeFunctionResult(
@@ -298,10 +283,6 @@ export class Elf extends Contract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
-    governance(overrides?: CallOverrides): Promise<[string]>;
-
-    "governance()"(overrides?: CallOverrides): Promise<[string]>;
-
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
@@ -350,16 +331,6 @@ export class Elf extends Contract {
     proxy(overrides?: CallOverrides): Promise<[string]>;
 
     "proxy()"(overrides?: CallOverrides): Promise<[string]>;
-
-    setGovernance(
-      _governance: string,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "setGovernance(address)"(
-      _governance: string,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
 
     symbol(overrides?: CallOverrides): Promise<[string]>;
 
@@ -507,10 +478,6 @@ export class Elf extends Contract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  governance(overrides?: CallOverrides): Promise<string>;
-
-  "governance()"(overrides?: CallOverrides): Promise<string>;
-
   increaseAllowance(
     spender: string,
     addedValue: BigNumberish,
@@ -559,16 +526,6 @@ export class Elf extends Contract {
   proxy(overrides?: CallOverrides): Promise<string>;
 
   "proxy()"(overrides?: CallOverrides): Promise<string>;
-
-  setGovernance(
-    _governance: string,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "setGovernance(address)"(
-    _governance: string,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
 
   symbol(overrides?: CallOverrides): Promise<string>;
 
@@ -716,10 +673,6 @@ export class Elf extends Contract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    governance(overrides?: CallOverrides): Promise<string>;
-
-    "governance()"(overrides?: CallOverrides): Promise<string>;
-
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
@@ -768,16 +721,6 @@ export class Elf extends Contract {
     proxy(overrides?: CallOverrides): Promise<string>;
 
     "proxy()"(overrides?: CallOverrides): Promise<string>;
-
-    setGovernance(
-      _governance: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "setGovernance(address)"(
-      _governance: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
 
     symbol(overrides?: CallOverrides): Promise<string>;
 
@@ -936,10 +879,6 @@ export class Elf extends Contract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    governance(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "governance()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
@@ -988,16 +927,6 @@ export class Elf extends Contract {
     proxy(overrides?: CallOverrides): Promise<BigNumber>;
 
     "proxy()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    setGovernance(
-      _governance: string,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "setGovernance(address)"(
-      _governance: string,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
 
     symbol(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1153,10 +1082,6 @@ export class Elf extends Contract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    governance(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "governance()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
@@ -1208,16 +1133,6 @@ export class Elf extends Contract {
     proxy(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     "proxy()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    setGovernance(
-      _governance: string,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "setGovernance(address)"(
-      _governance: string,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
 
     symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
