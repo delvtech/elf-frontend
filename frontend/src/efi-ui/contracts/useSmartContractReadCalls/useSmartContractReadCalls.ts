@@ -10,6 +10,7 @@ import {
 } from "efi/contracts/types";
 import zip from "lodash.zip";
 import { makeSmartContractReadCallUseQueryOptions } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
+import isPlainObject from "lodash.isplainobject";
 
 export interface UseSmartContractReadCallsOptions<
   TContract extends Contract,
@@ -47,15 +48,25 @@ export function useSmartContractReadCalls<
 >(
   contracts: (TContract | undefined)[],
   methodName: TMethodName,
-  options?: (
+  options?:
+    | (UseSmartContractReadCallsOptions<TContract, TMethodName> | undefined)[]
+    | UseSmartContractReadCallsOptions<TContract, TMethodName>
+): QueryObserverResult<TReturnType>[] {
+  let optionsArray: (
     | UseSmartContractReadCallsOptions<TContract, TMethodName>
     | undefined
-  )[]
-): QueryObserverResult<TReturnType>[] {
-  const queryOptions = zip(
-    contracts,
-    options || []
-  ).map(([contract, options]) =>
+  )[] = [];
+
+  if (!options || isPlainObject(options)) {
+    optionsArray = contracts.map(() => options) as (
+      | UseSmartContractReadCallsOptions<TContract, TMethodName>
+      | undefined
+    )[];
+  } else if (options && Array.isArray(options)) {
+    optionsArray = options;
+  }
+
+  const queryOptions = zip(contracts, optionsArray).map(([contract, options]) =>
     makeSmartContractReadCallUseQueryOptions<
       TContract,
       TMethodName,
