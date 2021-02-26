@@ -35,7 +35,7 @@ export const YCTableRow: FC<YCTableRowProps> = () => {
     <div
       className={classNames(
         tableRowClassName,
-        tw("grid", "grid-cols-8", "w-full", "p-4")
+        tw("grid", "grid-cols-8", "w-full", "gap-2", "p-4")
       )}
     >
       {/* Asset */}

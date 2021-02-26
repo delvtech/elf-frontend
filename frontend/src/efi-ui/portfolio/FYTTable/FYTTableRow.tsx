@@ -111,7 +111,7 @@ export const FYTTableRow: FC<FYTTableRowProps> = ({ account, tranche }) => {
     <div
       className={classNames(
         tableRowClassName,
-        tw("grid", "grid-cols-6", "w-full", "p-4")
+        tw("grid", "grid-cols-6", "gap-2", "w-full", "p-4")
       )}
     >
       {/* Asset */}
