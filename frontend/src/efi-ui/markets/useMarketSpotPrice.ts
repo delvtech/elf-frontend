@@ -1,10 +1,11 @@
+import { QueryObserverResult } from "react-query";
+
 import { BPool } from "elf-contracts/types/BPool";
 import { ERC20 } from "elf-contracts/types/ERC20";
+import { BigNumber } from "ethers";
 
 import { getQueryData } from "efi-ui/base/queryResults";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { QueryObserverResult } from "react-query";
-import { BigNumber } from "ethers";
 
 export function useMarketSpotPrice(
   market: BPool | undefined,
@@ -12,14 +13,14 @@ export function useMarketSpotPrice(
 ): QueryObserverResult<BigNumber> {
   const marketTokensResult = useSmartContractReadCall(market, "getFinalTokens");
   const marketTokenAddresses = getQueryData(marketTokensResult) || [];
-  const InThisToken = marketTokenAddresses.find(
+  const inThisToken = marketTokenAddresses.find(
     (address) => address !== priceOfThisToken?.address
   );
 
   const spotPriceResult = useSmartContractReadCall(market, "getSpotPrice", {
-    enabled: !!priceOfThisToken && !!InThisToken,
+    enabled: !!priceOfThisToken && !!inThisToken,
     // safe to cast since query is disabled until these exist
-    callArgs: [InThisToken, priceOfThisToken?.address] as [string, string],
+    callArgs: [inThisToken, priceOfThisToken?.address] as [string, string],
   });
 
   return spotPriceResult;
