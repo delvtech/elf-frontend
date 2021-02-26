@@ -5,7 +5,7 @@ import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractRead
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { AssetIcon, CryptoIconSvg } from "efi-ui/crypto/CryptoIcon";
 import { EthIcon } from "efi-ui/ethereum/EthIcon";
-import { useBaseAssetContracts } from "efi-ui/tranche/useBaseAssetContracts";
+import { useBaseAssetContracts } from "efi-ui/invest/hooks/useBaseAssetContracts";
 import { CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 
