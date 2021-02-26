@@ -1,5 +1,6 @@
 import React, { FC } from "react";
 
+import { YC } from "elf-contracts/types";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -7,6 +8,7 @@ import { YCTableRow } from "efi-ui/portfolio/YCTable/YCTableRow";
 
 interface YCTableProps {
   account: string | null | undefined;
+  yieldCoupons: YC[];
 }
 
 const tableHeaders = [
