@@ -44,7 +44,7 @@ export const TradeInput: FC<TradeInputProps> = ({
         }
         leftElement={
           <div className={tw("px-2")}>
-            {cryptoSymbol === ("ELF" as any) ||
+            {cryptoSymbol === ("ELF" as CryptoSymbol) ||
             !CryptoIcon[cryptoSymbol as CryptoSymbol] ? (
               "✨"
             ) : (
