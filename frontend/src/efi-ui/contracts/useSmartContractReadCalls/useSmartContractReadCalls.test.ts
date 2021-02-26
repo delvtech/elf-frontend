@@ -77,9 +77,14 @@ test("passes arguments to smart contract read methods", async () => {
   const { result, waitForNextUpdate, rerender } = renderHookWithClient(
     queryClient,
     () =>
-      useSmartContractReadCalls([contract1, contract2], "balanceOf", {
-        callArgs: [stubAddress],
-      })
+      useSmartContractReadCalls([contract1, contract2], "balanceOf", [
+        {
+          callArgs: [stubAddress],
+        },
+        {
+          callArgs: [stubAddress],
+        },
+      ])
   );
 
   // called but hasn't resolved yet
@@ -123,9 +128,12 @@ test("properly handles enabled option", async () => {
   >(
     queryClient,
     ({ enabled }) =>
-      useSmartContractReadCalls([contract1, contract2], "name", {
-        enabled,
-      }),
+      useSmartContractReadCalls([contract1, contract2], "name", [
+        {
+          enabled,
+        },
+        undefined,
+      ]),
     { initialProps: { enabled: false } }
   );
 
@@ -133,7 +141,7 @@ test("properly handles enabled option", async () => {
   expect(result.current[0].data).toEqual(undefined);
   expect(result.current[1].data).toEqual(undefined);
   expect(mockFn1).toBeCalledTimes(0);
-  expect(mockFn2).toBeCalledTimes(0);
+  expect(mockFn2).toBeCalledTimes(1);
 
   rerender({ enabled: true });
   await waitForNextUpdate();
