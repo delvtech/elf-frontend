@@ -17,6 +17,22 @@ import { useActiveTranche } from "efi-ui/invest/hooks/useActiveTranche";
 import { TranchePicker } from "efi-ui/invest/TranchePicker/TranchePicker";
 
 import { InvestmentAmountInput } from "./InvestmentAmountInput";
+import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
+import { useMarketForToken } from "efi-ui/markets/useMarketForToken";
+import { useMarketSpotPrice } from "efi-ui/markets/useMarketSpotPrice";
+import { getQueryData } from "efi-ui/base/queryResults";
+import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
+import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
+import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
+import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
+import { useCalcOutGivenIn } from "efi-ui/balancer/useCalcOutGivenIn";
+import { BigNumber } from "ethers";
+import { formatUnits, parseUnits } from "@ethersproject/units";
+import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
+import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
+import ContractAddresses from "efi/contracts/contractsJson";
+import { ERC20, WETH, WETH__factory } from "elf-contracts/types";
+import { CryptoAssetType } from "efi/crypto/CryptoAsset";
 
 export interface InvestCardProps {
   library: Web3Provider | undefined;
@@ -40,9 +56,11 @@ export const InvestCard: FC<InvestCardProps> = ({
   tranchesByBaseAsset,
 }) => {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
+  const [amountIn, setAmountIn] = useState<string | undefined>();
 
   const [activeBaseAsset, setActiveBaseAsset] = useState(baseAssets[0]);
   const activeBaseAssetSymbol = useCryptoSymbol(activeBaseAsset);
+  const activeBaseAssetDecimals = useCryptoDecimals(activeBaseAsset);
   const activeBaseAssetBalance = useCryptoBalance(
     library,
     account,
@@ -56,16 +74,48 @@ export const InvestCard: FC<InvestCardProps> = ({
     setActiveTranche,
   } = useActiveTranche(tranchesByBaseAsset, activeBaseAsset);
 
-  // investment amount
-  const [investmentAmount, setInvestmentAmount] = useState<
-    string | undefined
-  >();
+  const unlockTimestampResult = useSmartContractReadCall(
+    activeTranche,
+    "unlockTimestamp"
+  );
+  const trancheDecimalsResult = useSmartContractReadCall(
+    activeTranche,
+    "decimals"
+  );
+  const marketContract = useMarketForToken(activeTranche, jsonRpcProvider);
+  const tranchePriceResult = useMarketSpotPrice(marketContract, activeTranche);
 
-  const investmentAmountAsNumber = +(investmentAmount || 0);
-  // TODO: stub out apy for now
-  const stubbedApy = 4.13;
-  const costPerInvestmentToken =
-    investmentAmountAsNumber + investmentAmountAsNumber * (stubbedApy / 100);
+  const wethContract = useSmartContractFromFactory(
+    ContractAddresses.wethAddress,
+    WETH__factory.connect
+  );
+  let inputTokenContract: WETH | ERC20 | undefined = wethContract;
+  if (activeBaseAsset.type === CryptoAssetType.ERC20) {
+    inputTokenContract = activeBaseAsset.tokenContract;
+  }
+
+  const amountInAsBigNumber = amountIn
+    ? parseUnits(amountIn, activeBaseAssetDecimals)
+    : undefined;
+
+  const { data: amountOut } = useCalcOutGivenIn(
+    amountInAsBigNumber,
+    inputTokenContract,
+    activeTranche,
+    marketContract
+  );
+
+  const tranchePriceBigNumber = getQueryData(tranchePriceResult);
+  const tranchePrice = +formatCurrency(
+    tranchePriceBigNumber,
+    getQueryData(trancheDecimalsResult)
+  );
+
+  const trancheAPY = formatTrancheAPY(
+    getQueryData(unlockTimestampResult),
+    tranchePrice
+  );
+  const amountInAsNumber = +(amountIn || 0);
 
   return (
     <Fragment>
@@ -90,8 +140,8 @@ export const InvestCard: FC<InvestCardProps> = ({
               />
             }
             placeholder="0.00"
-            value={investmentAmount}
-            onValueChange={setInvestmentAmount}
+            value={amountIn}
+            onValueChange={setAmountIn}
             assetBalance={activeBaseAssetBalance}
           />
         </div>
@@ -113,7 +163,7 @@ export const InvestCard: FC<InvestCardProps> = ({
           </Button>
         </div>
 
-        {!!investmentAmount && (
+        {!!amountIn && (
           <Callout icon={null} intent={Intent.SUCCESS} className={tw("p-6")}>
             <div
               className={tw("flex", "w-full", "space-x-4", "justify-between")}
@@ -122,7 +172,7 @@ export const InvestCard: FC<InvestCardProps> = ({
                 className={tw("flex", "space-x-4", "items-center", "text-lg")}
               >
                 <LabeledText
-                  text={t`${stubbedApy - 2}%`}
+                  text={t`${trancheAPY.toFixed(2)}%`}
                   label={
                     <div className={tw("flex", "justify-center")}>
                       <span>{t`Estimated yield`}</span>
@@ -134,7 +184,10 @@ export const InvestCard: FC<InvestCardProps> = ({
                 className={tw("flex", "space-x-4", "items-center", "text-lg")}
               >
                 <LabeledText
-                  text={`${costPerInvestmentToken} ${activeBaseAssetSymbol}`}
+                  text={`${(+formatUnits(
+                    amountOut || 0,
+                    activeBaseAssetDecimals
+                  )).toFixed(6)} ${activeBaseAssetSymbol}`}
                   label={"Redeemable at maturity"}
                 />
               </div>
@@ -151,7 +204,7 @@ export const InvestCard: FC<InvestCardProps> = ({
         connector={connector}
         title={t`Transaction summary`}
         baseAsset={activeBaseAsset}
-        baseAssetQuantity={investmentAmountAsNumber}
+        baseAssetQuantity={amountInAsNumber}
         tranche={activeTranche}
         isOpen={isDrawerOpen}
         onClose={() => setDrawerOpen(false)}
@@ -159,3 +212,19 @@ export const InvestCard: FC<InvestCardProps> = ({
     </Fragment>
   );
 };
+
+function formatTrancheAPY(
+  unlockTimestamp: BigNumber | undefined,
+  tranchePrice: number
+): number {
+  let trancheAPY = 0;
+  const unlockDate = convertEpochSecondsToDate(unlockTimestamp);
+  if (tranchePrice && unlockDate) {
+    trancheAPY = calculateTrancheAPY(
+      tranchePrice,
+      Date.now(),
+      unlockDate.getTime()
+    );
+  }
+  return trancheAPY;
+}

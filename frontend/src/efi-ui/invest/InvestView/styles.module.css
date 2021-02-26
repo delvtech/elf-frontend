@@ -6,8 +6,8 @@
   box-shadow: none;
   text-align: right;
 
-  /* equivalent to tw('pr-4'); */
-  padding-right: 1rem;
+  /* equivalent to tw('pr-5'); */
+  padding-right: 1.25rem;
 }
 
 .investmentAmount :global(.bp3-input-action) {

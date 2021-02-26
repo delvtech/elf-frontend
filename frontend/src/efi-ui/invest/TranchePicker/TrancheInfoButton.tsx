@@ -47,9 +47,9 @@ export const TrancheInfoButton: FC<TrancheInfoButtonProps> = ({
   const tranchePriceBigNumber = getQueryData(tranchePriceResult);
   const tranchePrice = +formatCurrency(tranchePriceBigNumber, decimals);
 
-  let apy = "-";
+  let trancheAPY = "-";
   if (tranchePrice && unlockDate) {
-    apy = calculateTrancheAPY(
+    trancheAPY = calculateTrancheAPY(
       tranchePrice,
       Date.now(),
       unlockDate.getTime()
@@ -90,7 +90,9 @@ export const TrancheInfoButton: FC<TrancheInfoButtonProps> = ({
               )
             )}
           >
-            <span className={tw("text-lg", "text-center")}>{t`${apy}%`}</span>
+            <span
+              className={tw("text-lg", "text-center")}
+            >{t`${trancheAPY}%`}</span>
             <Tag
               minimal
               style={{

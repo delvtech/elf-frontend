@@ -1,6 +1,6 @@
 import React, { FC, ReactNode } from "react";
 
-import { AnchorButton, Button, Icon } from "@blueprintjs/core";
+import { AnchorButton, Button, Card, H3, H4, Icon } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { Tooltip2 } from "@blueprintjs/popover2";
 import classNames from "classnames";
@@ -28,15 +28,17 @@ import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
 import { navigate } from "@reach/router";
 
-interface FYTTableRowProps {
+interface FYTCardProps {
   account: string | null | undefined;
   tranche: Tranche;
 }
 
-export const FYTTableRow: FC<FYTTableRowProps> = ({ account, tranche }) => {
+export const FYTCard: FC<FYTCardProps> = ({ account, tranche }) => {
   const { isDarkMode } = useDarkMode();
   const { currency } = useCurrencyPref();
   const { data: trancheSymbol } = useSmartContractReadCall(tranche, "symbol");
+  const { data: trancheName } = useSmartContractReadCall(tranche, "name");
+  console.log("trancheName", trancheName);
   const { data: unlockTimestamp } = useSmartContractReadCall(
     tranche,
     "unlockTimestamp"
@@ -108,26 +110,29 @@ export const FYTTableRow: FC<FYTTableRowProps> = ({ account, tranche }) => {
   const tableRowClassName = isDarkMode ? styles.tableRowDark : styles.tableRow;
 
   return (
-    <div
-      className={classNames(
-        tableRowClassName,
-        tw("grid", "grid-cols-6", "gap-2", "w-full", "p-4")
-      )}
-    >
+    <Card className={tw("p-8", "flex", "flex-col", "space-y-4")}>
       {/* Asset */}
       <div>
+        <LabeledText
+          large
+          label={t`Total: ${trancheBalance.toFixed(6)} FYT`}
+          text={<H4 className={tw("mb-2")}>{trancheSymbol}</H4>}
+        />
+      </div>
+      {/* <div>
         <LabeledText text={trancheSymbol} label={jt`via ${tableRowLink}`} />
-      </div>
+      </div> */}
       {/* Quantity */}
-      <div>
+      {/* <div>
         <LabeledText text={t`${trancheBalance.toFixed(6)}`} label="" />
-      </div>
+      </div> */}
 
       {/* Current value */}
       <div>
         <LabeledText
           text={t`${exitValue.toFixed(6)} ${baseAssetSymbol}`}
           label={t`${fiatPrice} USD`}
+          subLabel={t`Current value`}
         />
       </div>
 
@@ -150,14 +155,15 @@ export const FYTTableRow: FC<FYTTableRowProps> = ({ account, tranche }) => {
 
       {/* Quick Actions */}
       <div className={tw("flex", "flex-col", "h-full", "w-full", "space-y-2")}>
-        <Button outlined>{t`Sell`}</Button>
-        <Button outlined>{t`Stake`}</Button>
+        <Button large outlined>{t`Sell`}</Button>
+        <Button large outlined>{t`Stake`}</Button>
         <Tooltip2
           inheritDarkTheme={false}
           content={t`This asset can be claimed after it has reached maturity.`}
         >
           <AnchorButton
             fill
+            large
             outlined
             disabled={
               /*
@@ -171,11 +177,12 @@ export const FYTTableRow: FC<FYTTableRowProps> = ({ account, tranche }) => {
           </AnchorButton>
         </Tooltip2>
         <AnchorButton
-          onClick={() => navigate(`exchange/${market?.address}`)}
+          large
+          onClick={() => navigate(`exchange/${tranche.address}`)}
           outlined
         >{t`Go to market`}</AnchorButton>
       </div>
-    </div>
+    </Card>
   );
 };
 
