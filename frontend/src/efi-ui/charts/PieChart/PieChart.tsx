@@ -3,7 +3,7 @@ import { LinearGradient } from "@visx/gradient";
 import { Group } from "@visx/group";
 import { scaleOrdinal } from "@visx/scale";
 import Pie, { PieArcDatum, ProvidedProps } from "@visx/shape/lib/shapes/Pie";
-import React, { Fragment, useCallback, useState } from "react";
+import React, { Fragment, RefObject, useCallback, useState } from "react";
 import { animated, interpolate, useTransition } from "react-spring";
 import { useMeasure } from "react-use";
 
@@ -80,6 +80,8 @@ export const PieChart: React.FunctionComponent<PieProps> = (props) => {
   } = props;
 
   const [ref, dimensions] = useMeasure();
+  const refObject = (ref as unknown) as RefObject<HTMLDivElement>;
+
   const width = props.width ?? dimensions.width ?? 0;
   const height = props.height ?? dimensions.height ?? 0;
 
@@ -122,7 +124,7 @@ export const PieChart: React.FunctionComponent<PieProps> = (props) => {
   const donutThickness = 50;
 
   return (
-    <div className={tw("flex", "h-full", "w-full")} ref={ref as any}>
+    <div className={tw("flex", "h-full", "w-full")} ref={refObject}>
       <svg width={width} height={height}>
         {background && (
           <Fragment>
@@ -166,17 +168,25 @@ export const PieChart: React.FunctionComponent<PieProps> = (props) => {
 // react-spring transition definitions
 type AnimatedStyles = { startAngle: number; endAngle: number; opacity: number };
 
-const fromLeaveTransition = ({ endAngle }: PieArcDatum<any>) => ({
-  // enter from 360° if end angle is > 180°
-  startAngle: endAngle > Math.PI ? 2 * Math.PI : 0,
-  endAngle: endAngle > Math.PI ? 2 * Math.PI : 0,
-  opacity: 0,
-});
-const enterUpdateTransition = ({ startAngle, endAngle }: PieArcDatum<any>) => ({
+function fromLeaveTransition<Datum>({ endAngle }: PieArcDatum<Datum>) {
+  return {
+    // enter from 360° if end angle is > 180°
+    startAngle: endAngle > Math.PI ? 2 * Math.PI : 0,
+    endAngle: endAngle > Math.PI ? 2 * Math.PI : 0,
+    opacity: 0,
+  };
+}
+
+function enterUpdateTransition<Datum>({
   startAngle,
   endAngle,
-  opacity: 1,
-});
+}: PieArcDatum<Datum>) {
+  return {
+    startAngle,
+    endAngle,
+    opacity: 1,
+  };
+}
 
 type AnimatedPieProps<Datum> = ProvidedProps<Datum> & {
   animate?: boolean;
