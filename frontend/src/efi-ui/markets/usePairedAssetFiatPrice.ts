@@ -12,6 +12,8 @@ import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 /**
  * Returns the price of the FYT in terms of fiat. This is based on the fiat
  * price of the given base asset.
+ *
+ * @deprecated
  */
 export function usePairedAssetFiatPrice(
   bPoolAddress: string | undefined,
