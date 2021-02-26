@@ -24,8 +24,14 @@ test("provides data from smart contract read methods", async () => {
   const mockFn1 = jest.fn(async () => stubContractName1);
   const mockFn2 = jest.fn(async () => stubContractName2);
 
-  const contract1 = ({ address: "0xContract1", name: mockFn1 } as any) as ERC20;
-  const contract2 = ({ address: "0xContract2", name: mockFn2 } as any) as ERC20;
+  const contract1 = ({
+    address: "0xContract1",
+    name: mockFn1,
+  } as unknown) as ERC20;
+  const contract2 = ({
+    address: "0xContract2",
+    name: mockFn2,
+  } as unknown) as ERC20;
 
   const queryClient = createQueryClient();
   const {
@@ -57,7 +63,7 @@ test("provides data from smart contract read methods", async () => {
   expect(mockFn2).toBeCalledTimes(1);
 });
 
-test("passes arguments to smart contract read methods", async () => {
+test("passes single arguments object to all smart contract read methods", async () => {
   const stubAddress = "0xWalletAddress";
   const stubBalanceOf1 = [BigNumber.from(10)];
   const stubBalanceOf2 = [BigNumber.from(90)];
@@ -67,11 +73,58 @@ test("passes arguments to smart contract read methods", async () => {
   const contract1 = ({
     address: "0xContract1",
     balanceOf: mockFn1,
-  } as any) as ERC20;
+  } as unknown) as ERC20;
   const contract2 = ({
     address: "0xContract2",
     balanceOf: mockFn2,
-  } as any) as ERC20;
+  } as unknown) as ERC20;
+
+  const queryClient = createQueryClient();
+  const { result, waitForNextUpdate, rerender } = renderHookWithClient(
+    queryClient,
+    () =>
+      useSmartContractReadCalls([contract1, contract2], "balanceOf", {
+        callArgs: [stubAddress],
+      })
+  );
+
+  // called but hasn't resolved yet
+  expect(mockFn1).toBeCalledTimes(1);
+  expect(mockFn2).toBeCalledTimes(1);
+  expect(result.current[0].data).toEqual(undefined);
+  expect(result.current[1].data).toEqual(undefined);
+
+  await waitForNextUpdate();
+
+  // now we get the values
+  expect(mockFn1).toBeCalledTimes(1);
+  expect(mockFn1).toBeCalledWith(stubAddress);
+  expect(mockFn2).toBeCalledTimes(1);
+  expect(mockFn2).toBeCalledWith(stubAddress);
+  expect(result.current[0].data).toEqual(stubBalanceOf1);
+  expect(result.current[1].data).toEqual(stubBalanceOf2);
+
+  rerender();
+
+  // triggering re-renders doesn't result in unnecessary refetches
+  expect(mockFn1).toBeCalledTimes(1);
+  expect(mockFn2).toBeCalledTimes(1);
+});
+test("passes arguments object list to smart contract read methods", async () => {
+  const stubAddress = "0xWalletAddress";
+  const stubBalanceOf1 = [BigNumber.from(10)];
+  const stubBalanceOf2 = [BigNumber.from(90)];
+  const mockFn1 = jest.fn(async (account: string) => stubBalanceOf1);
+  const mockFn2 = jest.fn(async (account: string) => stubBalanceOf2);
+
+  const contract1 = ({
+    address: "0xContract1",
+    balanceOf: mockFn1,
+  } as unknown) as ERC20;
+  const contract2 = ({
+    address: "0xContract2",
+    balanceOf: mockFn2,
+  } as unknown) as ERC20;
 
   const queryClient = createQueryClient();
   const { result, waitForNextUpdate, rerender } = renderHookWithClient(
@@ -116,8 +169,14 @@ test("properly handles enabled option", async () => {
   const mockFn1 = jest.fn(async () => stubContractName1);
   const mockFn2 = jest.fn(async () => stubContractName2);
 
-  const contract1 = ({ address: "0xContract1", name: mockFn1 } as any) as ERC20;
-  const contract2 = ({ address: "0xContract2", name: mockFn2 } as any) as ERC20;
+  const contract1 = ({
+    address: "0xContract1",
+    name: mockFn1,
+  } as unknown) as ERC20;
+  const contract2 = ({
+    address: "0xContract2",
+    name: mockFn2,
+  } as unknown) as ERC20;
 
   const queryClient = createQueryClient();
   const { result, waitForNextUpdate, rerender } = renderHookWithClient<
