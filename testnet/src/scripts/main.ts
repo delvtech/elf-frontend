@@ -273,7 +273,11 @@ async function setupElfTrancheAndMarkets(
     marketYCContract,
     (baseAssetContract as unknown) as ERC20,
     ycContract,
-    { yieldAssetBalance: "5000" }
+    {
+      // seed with 10x more YCs so the price reflects a reasonable yield
+      baseAssetBalance: "1000",
+      yieldAssetBalance: "10000",
+    }
   );
 
   // check spot price
