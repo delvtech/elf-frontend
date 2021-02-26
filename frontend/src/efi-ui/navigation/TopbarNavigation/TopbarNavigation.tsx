@@ -21,7 +21,6 @@ import styles from "./TopbarNavigation.module.css";
 interface TopbarNavigationProps {
   deactivate: () => void;
   isDarkMode: boolean;
-  onDarkModeChange: (event: any) => void;
   activeTab: Navigation;
   changeTab: (tabId: Navigation) => void;
 }
