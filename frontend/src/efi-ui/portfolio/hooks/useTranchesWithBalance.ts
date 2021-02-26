@@ -2,7 +2,10 @@ import { Provider } from "@ethersproject/providers";
 import { BigNumber } from "ethers";
 
 import { getQueriesData } from "efi-ui/base/queryResults";
-import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
+import {
+  useSmartContractReadCalls,
+  UseSmartContractReadCallsOptions,
+} from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
 import { useTrancheContracts } from "efi-ui/tranche/useTrancheContracts";
 import zip from "lodash.zip";
 import { Tranche } from "elf-contracts/types/Tranche";
@@ -13,10 +16,18 @@ export function useTranchesWithBalance(
 ): Tranche[] {
   const tranches = useTrancheContracts(provider);
 
+  const balanceOfArgs: UseSmartContractReadCallsOptions<
+    Tranche,
+    "balanceOf"
+  >[] = tranches.map(() => ({
+    callArgs: [account as string],
+    enabled: !!account,
+  }));
+
   const tokenBalanceOfResults = useSmartContractReadCalls(
     tranches,
     "balanceOf",
-    { callArgs: [account as string], enabled: !!account }
+    balanceOfArgs
   );
 
   const loadedData = zip(

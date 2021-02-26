@@ -13,7 +13,10 @@ import { YCPortfolio } from "efi-ui/portfolio/YCPortfolio/YCPortfolio";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useYCsWithBalance } from "efi-ui/yieldcoupon/useYCsWithBalance/useYCsWithBalance";
 import { YC } from "elf-contracts/types";
-import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
+import {
+  useSmartContractReadCalls,
+  UseSmartContractReadCallsOptions,
+} from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
 import { getQueriesData } from "efi-ui/base/queryResults";
 import zip from "lodash.zip";
 import { formatUnits } from "ethers/lib/utils";
@@ -77,10 +80,18 @@ function useFiatBalanceAllYCs(
   account: string | null | undefined,
   yieldCoupons: YC[]
 ) {
+  const balanceOfCallArgs: UseSmartContractReadCallsOptions<
+    YC,
+    "balanceOf"
+  >[] = yieldCoupons.map(() => ({
+    enabled: !!account,
+    callArgs: [account as string],
+  }));
+
   const ycBalanceOfResults = useSmartContractReadCalls(
     yieldCoupons,
     "balanceOf",
-    { enabled: !!account, callArgs: [account as string] }
+    balanceOfCallArgs
   );
   const ycDecimalResults = useSmartContractReadCalls(yieldCoupons, "decimals");
   const markets = useMarketsForTokens(yieldCoupons);

@@ -2,15 +2,16 @@ import { QueryObserverResult, useQueries, UseQueryOptions } from "react-query";
 
 import { Contract } from "ethers";
 
-import { makeSmartContractReadCallUseQueryOptions } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { Unpacked } from "efi/base/Unpacked";
 import {
   ContractMethodArgs,
   ContractMethodName,
   ContractReturnType,
 } from "efi/contracts/types";
+import zip from "lodash.zip";
+import { makeSmartContractReadCallUseQueryOptions } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 
-interface UseSmartContractReadCallsOptions<
+export interface UseSmartContractReadCallsOptions<
   TContract extends Contract,
   TMethodName extends ContractMethodName<TContract>
 > {
@@ -28,6 +29,16 @@ interface UseSmartContractReadCallsOptions<
  *   contracts,
  *   "symbol"
  * );
+ *
+ * Example with call args:
+ *
+ * const [
+ *   { data: wethMarket },
+ *   { data: usdcMarket },
+ * ] = useSmartContractReadCalls(contracts, "getSpotPrice", [
+ *   { callArgs: ["0xSomeToken"] },
+ *   { callArgs: ["0xAnotherToken"] },
+ * ]);
  */
 export function useSmartContractReadCalls<
   TContract extends Contract,
@@ -36,9 +47,15 @@ export function useSmartContractReadCalls<
 >(
   contracts: (TContract | undefined)[],
   methodName: TMethodName,
-  options?: UseSmartContractReadCallsOptions<TContract, TMethodName>
+  options?: (
+    | UseSmartContractReadCallsOptions<TContract, TMethodName>
+    | undefined
+  )[]
 ): QueryObserverResult<TReturnType>[] {
-  const queryOptions = contracts.map((contract) =>
+  const queryOptions = zip(
+    contracts,
+    options || []
+  ).map(([contract, options]) =>
     makeSmartContractReadCallUseQueryOptions<
       TContract,
       TMethodName,
