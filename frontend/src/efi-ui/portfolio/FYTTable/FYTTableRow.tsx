@@ -16,7 +16,6 @@ import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
-import { formatDuration, intervalToDuration } from "date-fns";
 import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
 import { getQueryData } from "efi-ui/base/queryResults";
 import { useMarketForToken } from "efi-ui/markets/useMarketForToken";
