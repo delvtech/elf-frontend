@@ -14,16 +14,20 @@ import {
 import { jt, t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { useCalcOutGivenIn } from "efi-ui/balancer/useCalcOutGivenIn";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
+import { getQueryData } from "efi-ui/base/queryResults";
 import styles from "efi-ui/base/table.module.css";
-import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
 import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
+import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
+import { useMarketForToken } from "efi-ui/markets/useMarketForToken";
+import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
+import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
 import { getTimeLeft2 } from "efi/base/time";
-import { getQueryData } from "efi-ui/base/queryResults";
+import { useMarketPairedToken } from "efi-ui/markets/useMarketPairedToken";
+import { formatUnits } from "ethers/lib/utils";
 
 interface YCTableRowProps {
   account: string | null | undefined;
@@ -34,6 +38,11 @@ export const YCTableRow: FC<YCTableRowProps> = ({ account, yieldCoupon }) => {
   const { isDarkMode } = useDarkMode();
 
   const { data: ycSymbol } = useSmartContractReadCall(yieldCoupon, "symbol");
+  const { data: ycBalanceOf } = useSmartContractReadCall(
+    yieldCoupon,
+    "balanceOf",
+    { enabled: !!account, callArgs: [account as string] }
+  );
   const ycBalance = useTokenBalance(yieldCoupon, account);
 
   // The tranche contains the unlockTimestamp
@@ -45,8 +54,27 @@ export const YCTableRow: FC<YCTableRowProps> = ({ account, yieldCoupon }) => {
   const vaultContract = useVaultForTranche(tranche);
   const { data: vaultName } = useSmartContractReadCall(vaultContract, "name");
 
+  const market = useMarketForToken(yieldCoupon);
+
+  const baseAsset = useMarketPairedToken(market, yieldCoupon);
+  const { data: baseAssetSymbol } = useSmartContractReadCall(
+    baseAsset,
+    "symbol"
+  );
+  const { data: baseAssetDecimals } = useSmartContractReadCall(
+    baseAsset,
+    "decimals"
+  );
+  const { data: exitValue } = useCalcOutGivenIn(
+    ycBalanceOf,
+    yieldCoupon,
+    baseAsset,
+    market
+  );
+
   const tableRowClassName = isDarkMode ? styles.tableRowDark : styles.tableRow;
 
+  const currentExitValue = +formatUnits(exitValue || 0, baseAssetDecimals);
   const maturationDate = convertEpochSecondsToDate(unlockTimestamp);
   const timeLeft = getTimeLeft2(maturationDate);
   const tableRowLink = getTableRowLink(vaultContract?.address, vaultName);
@@ -69,7 +97,10 @@ export const YCTableRow: FC<YCTableRowProps> = ({ account, yieldCoupon }) => {
 
       {/* Current exit value */}
       <div>
-        <LabeledText text={t`8.01893 ETH`} label={t`8,105.23 USD`} />
+        <LabeledText
+          text={t`${currentExitValue.toFixed(6)} ${baseAssetSymbol}`}
+          label={t`8,105.23 USD`}
+        />
       </div>
 
       {/* Current acc. value */}
