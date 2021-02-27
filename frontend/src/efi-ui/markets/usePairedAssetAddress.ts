@@ -10,6 +10,8 @@ import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadC
  * const pairedAsset = usePairedAsset(fyEthToWethMarket, WETH_ADDRESS);
  * // Result: `pairedAsset` is the fyETH token address
  *
+ * @deprecated use useMarketPairedToken instead
+ *
  */
 export function usePairedAssetAddress(
   marketContract: BPool | undefined,
