@@ -1,4 +1,10 @@
-import React, { FC, useCallback, useEffect, useState } from "react";
+import React, {
+  ChangeEvent,
+  FC,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 
 import { Button, Intent } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
@@ -322,7 +328,7 @@ function useSubmitTransaction(
       await onTransaction(valueIn);
       // TODO: Hack to reset the value of the Numeric Input. This should instead
       // call onResetValue or something from userNumericInput instead.
-      onChangeIn({ target: { value: "" } } as any);
+      onChangeIn({ target: { value: "" } } as ChangeEvent<HTMLInputElement>);
     }
   }, [
     accountAddress,

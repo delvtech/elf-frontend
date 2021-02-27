@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useMemo, useState } from "react";
+import React, { FC, RefObject, useCallback, useMemo, useState } from "react";
 import { useMeasure } from "react-use";
 
 import { Brush } from "@visx/brush";
@@ -15,6 +15,7 @@ import {
   withTooltip,
 } from "@visx/tooltip";
 import { bisector, extent, max } from "d3-array";
+import { timeFormat } from "d3-time-format";
 
 import tw from "efi-tailwindcss-classnames";
 import AreaChart from "efi-ui/charts/AreaChart/AreaChart";
@@ -23,7 +24,6 @@ import {
   getAccentColor,
   getGradientBackgroundColors,
 } from "efi-ui/charts/colors";
-import { timeFormat } from "d3-time-format";
 
 // Initialize some variables
 const brushMargin = { top: 10, bottom: 15, left: 50, right: 20 };
@@ -44,7 +44,11 @@ export interface TimeData {
 interface BrushChartProps {
   // TODO: either generalize this further or make this a TimeDataBrushChart
   data: TimeData[];
+  // TODO: make BrushChartProps generic like AreaChartProps<T = TimeData> and assign T to datum.
+  // spent a little time with this and got into the weeds.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getXValue: (datum: any) => Date;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getYValue: (datum: any) => number;
   isDarkMode?: boolean;
   margin?: { top: number; right: number; bottom: number; left: number };
@@ -76,6 +80,7 @@ export const BrushChart: FC<BrushChartProps> = withTooltip<
     tooltipLeft = 0,
   }) => {
     const [ref, dimensions] = useMeasure();
+    const refObject = (ref as unknown) as RefObject<HTMLDivElement>;
     const { width = 0, height = 0 } = dimensions;
     const [filteredData, setFilteredData] = useState(data);
 
@@ -197,7 +202,7 @@ export const BrushChart: FC<BrushChartProps> = withTooltip<
       [dateScale, data, getXValue, showTooltip, valueScale, getYValue]
     );
     return (
-      <div className={tw("flex", "w-full", "h-full")} ref={ref as any}>
+      <div className={tw("flex", "w-full", "h-full")} ref={refObject}>
         <svg width={width} height={height}>
           {background && (
             <LinearGradient

@@ -31,14 +31,14 @@ export function useMarkets(
     "getSwapFee"
   );
 
-  const baseAssetContracts = tokensResults.map((result) => {
+  const baseAssetContracts = tokensResults.map<ERC20 | undefined>((result) => {
     const { data: tokensData } = result;
     const tokens = tokensData ?? [undefined, undefined];
     const baseAssetAddress = tokens[0];
     const baseAssetContract = getERC20Contract(baseAssetAddress);
     return baseAssetContract;
   });
-  const yieldAssetContracts = tokensResults.map((result) => {
+  const yieldAssetContracts = tokensResults.map<ERC20 | undefined>((result) => {
     const { data: tokensData } = result;
     const tokens = tokensData ?? [undefined, undefined];
     const yieldAssetAddress = tokens[1];
@@ -67,7 +67,7 @@ export function useMarkets(
     "symbol"
   );
 
-  const zippedMarketInfo = zip<any>(
+  const zippedMarketInfo = zip<MarketInfoTypes>(
     marketContracts,
     baseAssetContracts,
     yieldAssetContracts,
@@ -194,3 +194,5 @@ type MarketInfo = [
   QueryObserverResult<string>, // baseAssetSymbolResult
   QueryObserverResult<string> // yieldAssetSymbolResults
 ];
+
+type MarketInfoTypes = MarketInfo[number];

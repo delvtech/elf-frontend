@@ -1,7 +1,8 @@
+import React, { ChangeEvent, FC, useCallback } from "react";
+
 import { Button, InputGroup, Intent, Tag } from "@blueprintjs/core";
 import { BigNumber } from "ethers";
 import { formatEther, parseUnits } from "ethers/lib/utils";
-import React, { FC, useCallback } from "react";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -13,7 +14,7 @@ import { CryptoIcon } from "efi-ui/crypto/CryptoIcon";
 import styles from "efi-ui/crypto/TransactionForm/TransactionForm.module.css";
 import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
 import { CryptoName } from "efi/crypto/CryptoName";
-import { CryptoSymbolOld } from "efi/crypto/CryptoSymbol";
+import { CryptoSymbol, CryptoSymbolOld } from "efi/crypto/CryptoSymbol";
 import { TokenBalance } from "efi/crypto/TokenBalance";
 
 interface TransactionFormProps {
@@ -67,7 +68,7 @@ export const TransactionForm: FC<TransactionFormProps> = ({
       await onTransaction(value);
       // TODO: Hack to reset the value of the Numeric Input. This should instead
       // call onResetValue or something from userNumericInput instead.
-      onChange({ target: { value: "" } } as any);
+      onChange({ target: { value: "" } } as ChangeEvent<HTMLInputElement>);
     }
   }, [onChange, onTransaction, validValue, value]);
 
@@ -103,7 +104,7 @@ export const TransactionForm: FC<TransactionFormProps> = ({
           }
           leftElement={
             <div className={tw("px-2")}>
-              {cryptoSymbol === ("ELF" as any) ? (
+              {cryptoSymbol === ("ELF" as CryptoSymbol) ? (
                 "✨"
               ) : (
                 <img

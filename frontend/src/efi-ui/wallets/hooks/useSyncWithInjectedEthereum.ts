@@ -28,7 +28,7 @@ export function useSyncWithInjectedEthereum(): void {
       activate(injectedConnector);
     };
 
-    const handleAccountsChanged = (accounts: any): void => {
+    const handleAccountsChanged = (accounts: string[]): void => {
       console.warn("accountsChanged", accounts);
       if (accounts.length > 0) {
         activate(injectedConnector);

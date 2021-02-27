@@ -14,7 +14,6 @@ interface SidebarNavigationProps {
   isDarkMode: boolean;
   changeTab: (tabId: Navigation) => void;
   activeTab: Navigation;
-  onDarkModeChange: (event: any) => void;
 }
 
 const tabTitleClassName = tw("flex", "flex-col", "items-center", "p-8");

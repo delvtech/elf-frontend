@@ -19,7 +19,12 @@ interface AreaChartProps {
    * data for the AreaChart
    */
   data: TimeData[];
+
+  // TODO: make AreaChartProps generic like AreaChartProps<T = TimeData> and assign T to datum.
+  // spent a little time with this and got into the weeds.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getXValue: (datum: any) => Date;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getYValue: (datum: any) => number;
   gradientColor: string;
   xScale: AxisScale<number>;
