@@ -7,6 +7,7 @@ import classNames from "classnames";
 import {
   Elf__factory,
   ERC20__factory,
+  Tranche,
   Tranche__factory,
   YC,
 } from "elf-contracts/types";
@@ -32,38 +33,22 @@ interface YCTableRowProps {
 export const YCTableRow: FC<YCTableRowProps> = ({ account, yieldCoupon }) => {
   const { isDarkMode } = useDarkMode();
 
-  const tableRowClassName = isDarkMode ? styles.tableRowDark : styles.tableRow;
-
   const { data: ycSymbol } = useSmartContractReadCall(yieldCoupon, "symbol");
   const ycBalance = useTokenBalance(yieldCoupon, account);
 
   // The tranche contains the unlockTimestamp
-  const { data: trancheAddress } = useSmartContractReadCall(
-    yieldCoupon,
-    "tranche"
-  );
-  const tranche = useSmartContractFromFactory(
-    trancheAddress,
-    Tranche__factory.connect
-  );
-  const elfAddressResult = useSmartContractReadCall(tranche, "elf");
-  const elfContract = useSmartContractFromFactory(
-    getQueryData(elfAddressResult),
-    Elf__factory.connect
-  );
-  const vaultAddressResult = useSmartContractReadCall(elfContract, "vault");
-  const vaultContract = useSmartContractFromFactory(
-    getQueryData(vaultAddressResult),
-    ERC20__factory.connect
-  );
-  const { data: vaultName } = useSmartContractReadCall(vaultContract, "name");
+  const tranche = useTrancheForYieldCoupon(yieldCoupon);
   const { data: unlockTimestamp } = useSmartContractReadCall(
     tranche,
     "unlockTimestamp"
   );
+  const vaultContract = useVaultForTranche(tranche);
+  const { data: vaultName } = useSmartContractReadCall(vaultContract, "name");
+
+  const tableRowClassName = isDarkMode ? styles.tableRowDark : styles.tableRow;
+
   const maturationDate = convertEpochSecondsToDate(unlockTimestamp);
   const timeLeft = getTimeLeft2(maturationDate);
-
   const tableRowLink = getTableRowLink(vaultContract?.address, vaultName);
 
   return (
@@ -145,6 +130,32 @@ export const YCTableRow: FC<YCTableRowProps> = ({ account, yieldCoupon }) => {
     </div>
   );
 };
+
+function useVaultForTranche(tranche: Tranche | undefined) {
+  const elfAddressResult = useSmartContractReadCall(tranche, "elf");
+  const elfContract = useSmartContractFromFactory(
+    getQueryData(elfAddressResult),
+    Elf__factory.connect
+  );
+  const vaultAddressResult = useSmartContractReadCall(elfContract, "vault");
+  const vaultContract = useSmartContractFromFactory(
+    getQueryData(vaultAddressResult),
+    ERC20__factory.connect
+  );
+  return vaultContract;
+}
+
+function useTrancheForYieldCoupon(yieldCoupon: YC) {
+  const { data: trancheAddress } = useSmartContractReadCall(
+    yieldCoupon,
+    "tranche"
+  );
+  const tranche = useSmartContractFromFactory(
+    trancheAddress,
+    Tranche__factory.connect
+  );
+  return tranche;
+}
 
 function getTableRowLink(
   vaultAddress: string | undefined,
