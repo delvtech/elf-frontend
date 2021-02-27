@@ -28,6 +28,10 @@ import { formatAbbreviatedDate } from "efi/base/dates";
 import { getTimeLeft2 } from "efi/base/time";
 import { useMarketPairedToken } from "efi-ui/markets/useMarketPairedToken";
 import { formatUnits } from "ethers/lib/utils";
+import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
+import { getCoinGeckoId } from "efi-coingecko";
+import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
+import { formatMoney } from "efi/money/formatMoney";
 
 interface YCTableRowProps {
   account: string | null | undefined;
@@ -36,6 +40,7 @@ interface YCTableRowProps {
 
 export const YCTableRow: FC<YCTableRowProps> = ({ account, yieldCoupon }) => {
   const { isDarkMode } = useDarkMode();
+  const { currency } = useCurrencyPref();
 
   const { data: ycSymbol } = useSmartContractReadCall(yieldCoupon, "symbol");
   const { data: ycBalanceOf } = useSmartContractReadCall(
@@ -61,6 +66,10 @@ export const YCTableRow: FC<YCTableRowProps> = ({ account, yieldCoupon }) => {
     baseAsset,
     "symbol"
   );
+  const { data: baseAssetFiatPrice } = useCoinGeckoPrice(
+    getCoinGeckoId(baseAssetSymbol),
+    currency
+  );
   const { data: baseAssetDecimals } = useSmartContractReadCall(
     baseAsset,
     "decimals"
@@ -75,6 +84,9 @@ export const YCTableRow: FC<YCTableRowProps> = ({ account, yieldCoupon }) => {
   const tableRowClassName = isDarkMode ? styles.tableRowDark : styles.tableRow;
 
   const currentExitValue = +formatUnits(exitValue || 0, baseAssetDecimals);
+  const currentExitValueFiat = formatMoney(
+    baseAssetFiatPrice?.multiply(currentExitValue)
+  );
   const maturationDate = convertEpochSecondsToDate(unlockTimestamp);
   const timeLeft = getTimeLeft2(maturationDate);
   const tableRowLink = getTableRowLink(vaultContract?.address, vaultName);
@@ -99,7 +111,7 @@ export const YCTableRow: FC<YCTableRowProps> = ({ account, yieldCoupon }) => {
       <div>
         <LabeledText
           text={t`${currentExitValue.toFixed(6)} ${baseAssetSymbol}`}
-          label={t`8,105.23 USD`}
+          label={t`${currency.symbol}${currentExitValueFiat}`}
         />
       </div>
 
