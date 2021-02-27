@@ -22,7 +22,7 @@ const tableHeaders = [
   t`Quick actions`,
 ];
 
-export const YCTable: FC<YCTableProps> = () => {
+export const YCTable: FC<YCTableProps> = ({ account, yieldCoupons }) => {
   return (
     <div data-testid="fyt-table" className={tw("flex", "flex-col", "w-full")}>
       {/* Table header */}
@@ -35,7 +35,13 @@ export const YCTable: FC<YCTableProps> = () => {
       </div>
 
       {/* Table row */}
-      <YCTableRow />
+      {yieldCoupons.map((yieldCoupon) => (
+        <YCTableRow
+          key={yieldCoupon.address}
+          account={account}
+          yieldCoupon={yieldCoupon}
+        />
+      ))}
     </div>
   );
 };
