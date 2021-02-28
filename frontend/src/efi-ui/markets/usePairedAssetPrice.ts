@@ -17,6 +17,8 @@ import { BigNumber } from "ethers";
  *
  * const priceInWeth = usePairedAssetPrice(FYETH_TO_WETH_MARKET_ADDRESS, WETH_ADDRESS);
  * // Result:  0.983222232
+ *
+ * @deprecated use useMarketSpotPrice
  */
 export function usePairedAssetPrice(
   bPoolAddress: string | undefined,

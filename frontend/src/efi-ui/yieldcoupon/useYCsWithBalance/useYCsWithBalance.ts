@@ -20,23 +20,21 @@ export function useYCsWithBalance(
     YC__factory.connect
   );
 
-  // const ycBalanceResults = useSmartContractReadCalls(ycContracts, "balanceOf", {
-  //   callArgs: [account as string],
-  //   enabled: !!account,
-  // });
+  const ycBalanceResults = useSmartContractReadCalls(ycContracts, "balanceOf", {
+    callArgs: [account as string],
+    enabled: !!account,
+  });
 
-  // const loadedData = zip(
-  //   ycContracts,
-  //   getQueriesData(ycBalanceResults)
-  // ).filter((values): values is [YC, BigNumber] =>
-  //   values.every((value) => !!value)
-  // );
+  const loadedData = zip(
+    ycContracts,
+    getQueriesData(ycBalanceResults)
+  ).filter((values): values is [YC, BigNumber] =>
+    values.every((value) => !!value)
+  );
 
-  // const ycsWithBalance = loadedData
-  //   .filter(([yc, balanceOf]) => balanceOf.gt(0))
-  //   .map(([yc]) => yc);
+  const ycsWithBalance = loadedData
+    .filter(([yc, balanceOf]) => balanceOf.gt(0))
+    .map(([yc]) => yc);
 
-  // return ycsWithBalance;
-
-  return [];
+  return ycsWithBalance;
 }

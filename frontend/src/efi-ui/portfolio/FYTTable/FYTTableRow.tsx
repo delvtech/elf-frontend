@@ -16,7 +16,6 @@ import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
-import { formatDuration, intervalToDuration } from "date-fns";
 import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
 import { getQueryData } from "efi-ui/base/queryResults";
 import { useMarketForToken } from "efi-ui/markets/useMarketForToken";
@@ -27,6 +26,7 @@ import { getCoinGeckoId } from "efi-coingecko";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
 import { navigate } from "@reach/router";
+import { getTimeLeft2 } from "efi/base/time";
 
 interface FYTTableRowProps {
   account: string | null | undefined;
@@ -95,7 +95,7 @@ export const FYTTableRow: FC<FYTTableRowProps> = ({ account, tranche }) => {
 
   const tableRowLink = getTableRowLink(vaultContract?.address, vaultName);
   const maturationDate = convertEpochSecondsToDate(unlockTimestamp);
-  const timeLeft = getTimeLeft(maturationDate);
+  const timeLeft = getTimeLeft2(maturationDate);
   let trancheAPY = 0;
   if (maturationDate) {
     trancheAPY = calculateTrancheAPY(
@@ -144,7 +144,7 @@ export const FYTTableRow: FC<FYTTableRowProps> = ({ account, tranche }) => {
       <div>
         <LabeledText
           text={maturationDate && formatAbbreviatedDate(maturationDate)}
-          label={timeLeft}
+          label={t`in ${timeLeft}`}
         />
       </div>
 
@@ -178,24 +178,6 @@ export const FYTTableRow: FC<FYTTableRowProps> = ({ account, tranche }) => {
     </div>
   );
 };
-
-function getTimeLeft(maturationDate: Date | undefined) {
-  if (!maturationDate) {
-    return;
-  }
-
-  const duration = intervalToDuration({
-    start: Date.now(),
-    end: maturationDate.getTime(),
-  });
-
-  const timeLeft = t`${formatDuration(duration, {
-    delimiter: ", ",
-    format: ["years", "months", "days"],
-  })} left`;
-
-  return timeLeft;
-}
 
 function getTableRowLink(
   vaultAddress: string | undefined,

@@ -12,15 +12,7 @@ import { PortfolioTab } from "efi-ui/portfolio/PortfolioTabs/PortfolioTabs";
 import { YCPortfolio } from "efi-ui/portfolio/YCPortfolio/YCPortfolio";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useYCsWithBalance } from "efi-ui/yieldcoupon/useYCsWithBalance/useYCsWithBalance";
-import { YC } from "elf-contracts/types";
-import {
-  useSmartContractReadCalls,
-  UseSmartContractReadCallsOptions,
-} from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
-import { getQueriesData } from "efi-ui/base/queryResults";
-import zip from "lodash.zip";
-import { formatUnits } from "ethers/lib/utils";
-import { useMarketsForTokens } from "efi-ui/markets/useMarketsForTokens";
+import { useYieldCouponsTotalFiatBalance } from "./useYieldCouponsTotalFiatBalance";
 
 export function usePortfolioTabs(
   account: string | null | undefined,
@@ -31,7 +23,10 @@ export function usePortfolioTabs(
     account,
     provider
   );
-  const { ycsWithBalance } = useYCTab(account, provider);
+  const { ycsWithBalance, totalFiatBalanceAllYCs } = useYCTab(
+    account,
+    provider
+  );
 
   return [
     {
@@ -47,7 +42,7 @@ export function usePortfolioTabs(
       id: "yield-coupons",
       name: t`Yield Coupons`,
       quantity: ycsWithBalance.length,
-      totalFiatValue: Money.fromDecimal(0.0, currency),
+      totalFiatValue: totalFiatBalanceAllYCs,
       contentRenderer: () => (
         <YCPortfolio account={account} yieldCoupons={ycsWithBalance} />
       ),
@@ -71,37 +66,10 @@ function useFYTTab(account: string | null | undefined, provider?: Provider) {
 
 function useYCTab(account: string | null | undefined, provider?: Provider) {
   const ycsWithBalance = useYCsWithBalance(account, provider);
-  const totalFiatBalanceAllYCs = useFiatBalanceAllYCs(account, ycsWithBalance);
+  const totalFiatBalanceAllYCs = useYieldCouponsTotalFiatBalance(
+    account,
+    ycsWithBalance
+  );
 
   return { ycsWithBalance, totalFiatBalanceAllYCs };
-}
-
-function useFiatBalanceAllYCs(
-  account: string | null | undefined,
-  yieldCoupons: YC[]
-) {
-  const balanceOfCallArgs: UseSmartContractReadCallsOptions<
-    YC,
-    "balanceOf"
-  >[] = yieldCoupons.map(() => ({
-    enabled: !!account,
-    callArgs: [account as string],
-  }));
-
-  const ycBalanceOfResults = useSmartContractReadCalls(
-    yieldCoupons,
-    "balanceOf",
-    balanceOfCallArgs
-  );
-  const ycDecimalResults = useSmartContractReadCalls(yieldCoupons, "decimals");
-  const markets = useMarketsForTokens(yieldCoupons);
-
-  const ycBalances = zip(
-    getQueriesData(ycBalanceOfResults),
-    getQueriesData(ycDecimalResults),
-    markets
-  ).map(([balanceOf, decimals]) => formatUnits(balanceOf || 0, decimals || 0));
-
-  // TODO
-  return [];
 }

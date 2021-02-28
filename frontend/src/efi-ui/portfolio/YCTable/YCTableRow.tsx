@@ -1,35 +1,95 @@
-import React, { FC } from "react";
+import React, { FC, ReactNode } from "react";
 
 import { AnchorButton, Button, Icon } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { Tooltip2 } from "@blueprintjs/popover2";
 import classNames from "classnames";
+import {
+  Elf__factory,
+  ERC20__factory,
+  Tranche,
+  Tranche__factory,
+  YC,
+} from "elf-contracts/types";
 import { jt, t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { useCalcOutGivenIn } from "efi-ui/balancer/useCalcOutGivenIn";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-
+import { getQueryData } from "efi-ui/base/queryResults";
 import styles from "efi-ui/base/table.module.css";
+import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
+import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
+import { useMarketForToken } from "efi-ui/markets/useMarketForToken";
+import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
+import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
+import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
+import { formatAbbreviatedDate } from "efi/base/dates";
+import { getTimeLeft2 } from "efi/base/time";
+import { useMarketPairedToken } from "efi-ui/markets/useMarketPairedToken";
+import { formatUnits } from "ethers/lib/utils";
+import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
+import { getCoinGeckoId } from "efi-coingecko";
+import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
+import { formatMoney } from "efi/money/formatMoney";
 
-interface YCTableRowProps {}
+interface YCTableRowProps {
+  account: string | null | undefined;
+  yieldCoupon: YC;
+}
 
-export const YCTableRow: FC<YCTableRowProps> = () => {
+export const YCTableRow: FC<YCTableRowProps> = ({ account, yieldCoupon }) => {
   const { isDarkMode } = useDarkMode();
+  const { currency } = useCurrencyPref();
+
+  const { data: ycSymbol } = useSmartContractReadCall(yieldCoupon, "symbol");
+  const { data: ycBalanceOf } = useSmartContractReadCall(
+    yieldCoupon,
+    "balanceOf",
+    { enabled: !!account, callArgs: [account as string] }
+  );
+  const ycBalance = useTokenBalance(yieldCoupon, account);
+
+  // The tranche contains the unlockTimestamp
+  const tranche = useTrancheForYieldCoupon(yieldCoupon);
+  const { data: unlockTimestamp } = useSmartContractReadCall(
+    tranche,
+    "unlockTimestamp"
+  );
+  const vaultContract = useVaultForTranche(tranche);
+  const { data: vaultName } = useSmartContractReadCall(vaultContract, "name");
+
+  const market = useMarketForToken(yieldCoupon);
+
+  const baseAsset = useMarketPairedToken(market, yieldCoupon);
+  const { data: baseAssetSymbol } = useSmartContractReadCall(
+    baseAsset,
+    "symbol"
+  );
+  const { data: baseAssetFiatPrice } = useCoinGeckoPrice(
+    getCoinGeckoId(baseAssetSymbol),
+    currency
+  );
+  const { data: baseAssetDecimals } = useSmartContractReadCall(
+    baseAsset,
+    "decimals"
+  );
+  const { data: exitValue } = useCalcOutGivenIn(
+    ycBalanceOf,
+    yieldCoupon,
+    baseAsset,
+    market
+  );
 
   const tableRowClassName = isDarkMode ? styles.tableRowDark : styles.tableRow;
 
-  const tableRowLink = (
-    <a
-      key="table-row-link"
-      href="https://etherscan.io/token/0xe1237aa7f535b0cc33fd973d66cbf830354d16c7"
-    >
-      {t`yEth Vault`}{" "}
-      <sup>
-        <Icon icon={IconNames.SHARE} iconSize={8} />
-      </sup>
-    </a>
+  const currentExitValue = +formatUnits(exitValue || 0, baseAssetDecimals);
+  const currentExitValueFiat = formatMoney(
+    baseAssetFiatPrice?.multiply(currentExitValue)
   );
+  const maturationDate = convertEpochSecondsToDate(unlockTimestamp);
+  const timeLeft = getTimeLeft2(maturationDate);
+  const tableRowLink = getTableRowLink(vaultContract?.address, vaultName);
 
   return (
     <div
@@ -40,19 +100,19 @@ export const YCTableRow: FC<YCTableRowProps> = () => {
     >
       {/* Asset */}
       <div>
-        <LabeledText
-          text={t`Yield Coupon Ether`}
-          label={jt`via ${tableRowLink}`}
-        />
+        <LabeledText text={ycSymbol} label={jt`via ${tableRowLink}`} />
       </div>
       {/* Quantity */}
       <div>
-        <LabeledText text={t`100 ycETH`} label="" />
+        <LabeledText text={ycBalance.toFixed(6)} label="" />
       </div>
 
       {/* Current exit value */}
       <div>
-        <LabeledText text={t`8.01893 ETH`} label={t`8,105.23 USD`} />
+        <LabeledText
+          text={t`${currentExitValue.toFixed(6)} ${baseAssetSymbol}`}
+          label={t`${currency.symbol}${currentExitValueFiat}`}
+        />
       </div>
 
       {/* Current acc. value */}
@@ -81,8 +141,8 @@ export const YCTableRow: FC<YCTableRowProps> = () => {
       {/* Maturation date */}
       <div>
         <LabeledText
-          text={t` January 15, 2021`}
-          label={t`3 days, 6 hours left `}
+          text={maturationDate && formatAbbreviatedDate(maturationDate)}
+          label={t`in ${timeLeft}`}
         />
       </div>
 
@@ -113,3 +173,47 @@ export const YCTableRow: FC<YCTableRowProps> = () => {
     </div>
   );
 };
+
+function useVaultForTranche(tranche: Tranche | undefined) {
+  const elfAddressResult = useSmartContractReadCall(tranche, "elf");
+  const elfContract = useSmartContractFromFactory(
+    getQueryData(elfAddressResult),
+    Elf__factory.connect
+  );
+  const vaultAddressResult = useSmartContractReadCall(elfContract, "vault");
+  const vaultContract = useSmartContractFromFactory(
+    getQueryData(vaultAddressResult),
+    ERC20__factory.connect
+  );
+  return vaultContract;
+}
+
+function useTrancheForYieldCoupon(yieldCoupon: YC) {
+  const { data: trancheAddress } = useSmartContractReadCall(
+    yieldCoupon,
+    "tranche"
+  );
+  const tranche = useSmartContractFromFactory(
+    trancheAddress,
+    Tranche__factory.connect
+  );
+  return tranche;
+}
+
+function getTableRowLink(
+  vaultAddress: string | undefined,
+  vaultName: string | undefined
+): ReactNode {
+  if (!vaultAddress || !vaultName) {
+    return null;
+  }
+
+  return (
+    <a key="table-row-link" href={`https://etherscan.io/token/${vaultAddress}`}>
+      {vaultName}{" "}
+      <sup>
+        <Icon icon={IconNames.SHARE} iconSize={8} />
+      </sup>
+    </a>
+  );
+}
