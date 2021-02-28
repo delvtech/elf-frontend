@@ -27,8 +27,7 @@ interface ITrancheInterface extends ethers.utils.Interface {
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
     "decimals()": FunctionFragment;
-    "deposit(uint256)": FunctionFragment;
-    "getYC()": FunctionFragment;
+    "deposit(uint256,address)": FunctionFragment;
     "nonces(address)": FunctionFragment;
     "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)": FunctionFragment;
     "symbol()": FunctionFragment;
@@ -37,6 +36,7 @@ interface ITrancheInterface extends ethers.utils.Interface {
     "transferFrom(address,address,uint256)": FunctionFragment;
     "withdrawFyt(uint256)": FunctionFragment;
     "withdrawYc(uint256)": FunctionFragment;
+    "yc()": FunctionFragment;
   };
 
   encodeFunctionData(
@@ -55,9 +55,8 @@ interface ITrancheInterface extends ethers.utils.Interface {
   encodeFunctionData(functionFragment: "decimals", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "deposit",
-    values: [BigNumberish]
+    values: [BigNumberish, string]
   ): string;
-  encodeFunctionData(functionFragment: "getYC", values?: undefined): string;
   encodeFunctionData(functionFragment: "nonces", values: [string]): string;
   encodeFunctionData(
     functionFragment: "permit",
@@ -92,6 +91,7 @@ interface ITrancheInterface extends ethers.utils.Interface {
     functionFragment: "withdrawYc",
     values: [BigNumberish]
   ): string;
+  encodeFunctionData(functionFragment: "yc", values?: undefined): string;
 
   decodeFunctionResult(
     functionFragment: "DOMAIN_SEPARATOR",
@@ -102,7 +102,6 @@ interface ITrancheInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "decimals", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "getYC", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "nonces", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "permit", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
@@ -120,6 +119,7 @@ interface ITrancheInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "withdrawYc", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "yc", data: BytesLike): Result;
 
   events: {
     "Approval(address,address,uint256)": EventFragment;
@@ -185,17 +185,15 @@ export class ITranche extends Contract {
 
     deposit(
       _shares: BigNumberish,
+      destination: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "deposit(uint256)"(
+    "deposit(uint256,address)"(
       _shares: BigNumberish,
+      destination: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
-
-    getYC(overrides?: CallOverrides): Promise<[string]>;
-
-    "getYC()"(overrides?: CallOverrides): Promise<[string]>;
 
     nonces(owner: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -279,6 +277,10 @@ export class ITranche extends Contract {
       _amount: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
+
+    yc(overrides?: CallOverrides): Promise<[string]>;
+
+    "yc()"(overrides?: CallOverrides): Promise<[string]>;
   };
 
   DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<string>;
@@ -322,17 +324,15 @@ export class ITranche extends Contract {
 
   deposit(
     _shares: BigNumberish,
+    destination: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "deposit(uint256)"(
+  "deposit(uint256,address)"(
     _shares: BigNumberish,
+    destination: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
-
-  getYC(overrides?: CallOverrides): Promise<string>;
-
-  "getYC()"(overrides?: CallOverrides): Promise<string>;
 
   nonces(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -417,6 +417,10 @@ export class ITranche extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
+  yc(overrides?: CallOverrides): Promise<string>;
+
+  "yc()"(overrides?: CallOverrides): Promise<string>;
+
   callStatic: {
     DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<string>;
 
@@ -459,17 +463,15 @@ export class ITranche extends Contract {
 
     deposit(
       _shares: BigNumberish,
+      destination: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    "deposit(uint256)"(
+    "deposit(uint256,address)"(
       _shares: BigNumberish,
+      destination: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
-
-    getYC(overrides?: CallOverrides): Promise<string>;
-
-    "getYC()"(overrides?: CallOverrides): Promise<string>;
 
     nonces(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -553,6 +555,10 @@ export class ITranche extends Contract {
       _amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    yc(overrides?: CallOverrides): Promise<string>;
+
+    "yc()"(overrides?: CallOverrides): Promise<string>;
   };
 
   filters: {
@@ -605,16 +611,17 @@ export class ITranche extends Contract {
 
     "decimals()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-    deposit(_shares: BigNumberish, overrides?: Overrides): Promise<BigNumber>;
-
-    "deposit(uint256)"(
+    deposit(
       _shares: BigNumberish,
+      destination: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    getYC(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "getYC()"(overrides?: CallOverrides): Promise<BigNumber>;
+    "deposit(uint256,address)"(
+      _shares: BigNumberish,
+      destination: string,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
 
     nonces(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -698,6 +705,10 @@ export class ITranche extends Contract {
       _amount: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
+
+    yc(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "yc()"(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -747,17 +758,15 @@ export class ITranche extends Contract {
 
     deposit(
       _shares: BigNumberish,
+      destination: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "deposit(uint256)"(
+    "deposit(uint256,address)"(
       _shares: BigNumberish,
+      destination: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
-
-    getYC(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "getYC()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     nonces(
       owner: string,
@@ -844,5 +853,9 @@ export class ITranche extends Contract {
       _amount: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
+
+    yc(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "yc()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }
