@@ -1,15 +1,17 @@
-import { Money } from "ts-money";
-import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { YC } from "elf-contracts/types";
-import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
-import { getQueriesData } from "efi-ui/base/queryResults";
-import zip from "lodash.zip";
 import { formatUnits } from "ethers/lib/utils";
+import zip from "lodash.zip";
+import { Money } from "ts-money";
+
+import { getCoinGeckoId } from "efi-coingecko";
+import { getQueriesData } from "efi-ui/base/queryResults";
+import { useCoinGeckoPrices } from "efi-ui/coingecko/useCoinGeckoPrices";
+import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
+import { useMarketPairedTokens } from "efi-ui/markets/useMarketPairedTokens";
 import { useMarketsForTokens } from "efi-ui/markets/useMarketsForTokens";
 import { useMarketSpotPrices } from "efi-ui/markets/useMarketSpotPrices";
-import { useMarketPairedTokens } from "efi-ui/markets/useMarketPairedTokens";
-import { getCoinGeckoId } from "efi-coingecko";
-import { useCoinGeckoPrices } from "efi-ui/coingecko/useCoinGeckoPrices";
+import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
+import { NUM_ETH_DECIMALS } from "efi/crypto/ethereum";
 
 export function useYieldCouponsTotalFiatBalance(
   account: string | null | undefined,
@@ -51,13 +53,17 @@ export function useYieldCouponsTotalFiatBalance(
   const ycPrices: string[] = zip(
     getQueriesData(spotPriceResults),
     getQueriesData(pairedTokenDecimalResults)
-  ).map(([spotPrice, decimals]) => formatUnits(spotPrice || 0, decimals || 0));
+  ).map(([spotPrice, decimals]) =>
+    formatUnits(spotPrice || 0, decimals || NUM_ETH_DECIMALS)
+  );
 
   // the formatted quantity of YCs, eg: "42.2028211"
   const ycBalances: string[] = zip(
     getQueriesData(ycBalanceOfResults),
     getQueriesData(ycDecimalResults)
-  ).map(([balanceOf, decimals]) => formatUnits(balanceOf || 0, decimals || 0));
+  ).map(([balanceOf, decimals]) =>
+    formatUnits(balanceOf || 0, decimals || NUM_ETH_DECIMALS)
+  );
 
   const fiatBalances = zip(
     ycPrices,
