@@ -47,7 +47,7 @@ export const LabeledText: FC<LabeledTextProps> = ({
       {icon && <div className={iconClassName}>{icon}</div>}
       <div
         className={classNames(
-          tw("flex", "flex-col", "justify-center", "space-y-1"),
+          tw("flex", "flex-col", "justify-center"),
           className
         )}
       >

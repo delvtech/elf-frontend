@@ -1,12 +1,10 @@
 import React, { FC } from "react";
 
-import { Card } from "@blueprintjs/core";
-
 import tw from "efi-tailwindcss-classnames";
-import { FYTTable } from "efi-ui/portfolio/FYTTable/FYTTable";
 import { NoFYTsInWalletNonIdealState } from "efi-ui/wallets/NoFYTsInWalletNonIdealState/NoFYTsInWalletNonIdealState";
 import { NoWalletConnectedNonIdealState } from "efi-ui/wallets/NoWalletConnectedNonIdealState/NoWalletConnectedNonIdealState";
 import { Tranche } from "elf-contracts/types";
+import { FYTCard } from "efi-ui/portfolio/FYTTable/FYTCard";
 
 interface FYTPortfolioProps {
   account: string | null | undefined;
@@ -24,10 +22,24 @@ export const FYTPortfolio: FC<FYTPortfolioProps> = ({ account, tranches }) => {
   }
 
   return (
-    <Card className={tw("flex-1", "p-8")}>
-      {nonIdealStateContent || (
-        <FYTTable account={account} tranches={tranches} />
+    <div className={tw("flex", "space-x-8", "flex-1", "pl-2")}>
+      {nonIdealStateContent ? (
+        <div
+          className={tw(
+            "flex",
+            "flex-1",
+            "justify-center",
+            "mt-48",
+            "items-center"
+          )}
+        >
+          {nonIdealStateContent}
+        </div>
+      ) : (
+        tranches.map((tranche) => [
+          <FYTCard key={tranche.address} account={account} tranche={tranche} />,
+        ])
       )}
-    </Card>
+    </div>
   );
 };
