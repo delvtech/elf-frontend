@@ -2,9 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export type { AccessControl } from "./AccessControl";
-export type { ERC20 } from "./ERC20";
 export type { ERC20Burnable } from "./ERC20Burnable";
-export type { IERC20 } from "./IERC20";
 export type { IAssetProxy } from "./IAssetProxy";
 export type { YC } from "./YC";
 export type { YVaultAssetProxy } from "./YVaultAssetProxy";
@@ -86,9 +84,7 @@ export type { USDC } from "./USDC";
 export type { WETH } from "./WETH";
 
 export { AccessControl__factory } from "./factories/AccessControl__factory";
-export { ERC20__factory } from "./factories/ERC20__factory";
 export { ERC20Burnable__factory } from "./factories/ERC20Burnable__factory";
-export { IERC20__factory } from "./factories/IERC20__factory";
 export { IAssetProxy__factory } from "./factories/IAssetProxy__factory";
 export { YC__factory } from "./factories/YC__factory";
 export { YVaultAssetProxy__factory } from "./factories/YVaultAssetProxy__factory";
