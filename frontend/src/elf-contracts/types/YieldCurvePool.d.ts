@@ -37,11 +37,11 @@ interface YieldCurvePoolInterface extends ethers.utils.Interface {
     "governance()": FunctionFragment;
     "increaseApproval(address,uint256)": FunctionFragment;
     "name()": FunctionFragment;
-    "onExitPool(bytes32,address,address,uint256[],uint256[],uint256,bytes)": FunctionFragment;
-    "onJoinPool(bytes32,address,address,uint256[],uint256[],uint256,bytes)": FunctionFragment;
+    "onExitPool(bytes32,address,address,uint256[],uint256,uint256,bytes)": FunctionFragment;
+    "onJoinPool(bytes32,address,address,uint256[],uint256,uint256,bytes)": FunctionFragment;
+    "onSwapGivenIn(tuple,uint256,uint256)": FunctionFragment;
+    "onSwapGivenOut(tuple,uint256,uint256)": FunctionFragment;
     "percentFee()": FunctionFragment;
-    "quoteInGivenOut(tuple,uint256,uint256)": FunctionFragment;
-    "quoteOutGivenIn(tuple,uint256,uint256)": FunctionFragment;
     "solveTradeInvariant(uint256,uint256,uint256,bool)": FunctionFragment;
     "symbol()": FunctionFragment;
     "totalSupply()": FunctionFragment;
@@ -49,7 +49,7 @@ interface YieldCurvePoolInterface extends ethers.utils.Interface {
     "transferFrom(address,address,uint256)": FunctionFragment;
     "underlying()": FunctionFragment;
     "underlyingDecimals()": FunctionFragment;
-    "unit_seconds()": FunctionFragment;
+    "unitSeconds()": FunctionFragment;
   };
 
   encodeFunctionData(
@@ -98,7 +98,7 @@ interface YieldCurvePoolInterface extends ethers.utils.Interface {
       string,
       string,
       BigNumberish[],
-      BigNumberish[],
+      BigNumberish,
       BigNumberish,
       BytesLike
     ]
@@ -110,39 +110,20 @@ interface YieldCurvePoolInterface extends ethers.utils.Interface {
       string,
       string,
       BigNumberish[],
-      BigNumberish[],
+      BigNumberish,
       BigNumberish,
       BytesLike
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "percentFee",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "quoteInGivenOut",
-    values: [
-      {
-        tokenIn: string;
-        tokenOut: string;
-        amountOut: BigNumberish;
-        poolId: BytesLike;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      BigNumberish,
-      BigNumberish
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "quoteOutGivenIn",
+    functionFragment: "onSwapGivenIn",
     values: [
       {
         tokenIn: string;
         tokenOut: string;
         amountIn: BigNumberish;
         poolId: BytesLike;
+        latestBlockNumberUsed: BigNumberish;
         from: string;
         to: string;
         userData: BytesLike;
@@ -150,6 +131,27 @@ interface YieldCurvePoolInterface extends ethers.utils.Interface {
       BigNumberish,
       BigNumberish
     ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "onSwapGivenOut",
+    values: [
+      {
+        tokenIn: string;
+        tokenOut: string;
+        amountOut: BigNumberish;
+        poolId: BytesLike;
+        latestBlockNumberUsed: BigNumberish;
+        from: string;
+        to: string;
+        userData: BytesLike;
+      },
+      BigNumberish,
+      BigNumberish
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "percentFee",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "solveTradeInvariant",
@@ -177,7 +179,7 @@ interface YieldCurvePoolInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "unit_seconds",
+    functionFragment: "unitSeconds",
     values?: undefined
   ): string;
 
@@ -210,15 +212,15 @@ interface YieldCurvePoolInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "onExitPool", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "onJoinPool", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "onSwapGivenIn",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "onSwapGivenOut",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "percentFee", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "quoteInGivenOut",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "quoteOutGivenIn",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "solveTradeInvariant",
     data: BytesLike
@@ -239,7 +241,7 @@ interface YieldCurvePoolInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "unit_seconds",
+    functionFragment: "unitSeconds",
     data: BytesLike
   ): Result;
 
@@ -366,108 +368,112 @@ export class YieldCurvePool extends Contract {
       arg1: string,
       recipient: string,
       currentBalances: BigNumberish[],
-      minAmountsOut: BigNumberish[],
+      arg4: BigNumberish,
       protocolSwapFee: BigNumberish,
-      arg6: BytesLike,
+      userData: BytesLike,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "onExitPool(bytes32,address,address,uint256[],uint256[],uint256,bytes)"(
+    "onExitPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
       arg0: BytesLike,
       arg1: string,
       recipient: string,
       currentBalances: BigNumberish[],
-      minAmountsOut: BigNumberish[],
+      arg4: BigNumberish,
       protocolSwapFee: BigNumberish,
-      arg6: BytesLike,
+      userData: BytesLike,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     onJoinPool(
-      arg0: BytesLike,
-      arg1: string,
+      poolId: BytesLike,
+      sender: string,
       recipient: string,
       currentBalances: BigNumberish[],
-      maxAmountsIn: BigNumberish[],
+      arg4: BigNumberish,
       protocolSwapFee: BigNumberish,
-      arg6: BytesLike,
+      userData: BytesLike,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "onJoinPool(bytes32,address,address,uint256[],uint256[],uint256,bytes)"(
-      arg0: BytesLike,
-      arg1: string,
+    "onJoinPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
+      poolId: BytesLike,
+      sender: string,
       recipient: string,
       currentBalances: BigNumberish[],
-      maxAmountsIn: BigNumberish[],
+      arg4: BigNumberish,
       protocolSwapFee: BigNumberish,
-      arg6: BytesLike,
+      userData: BytesLike,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    onSwapGivenIn(
+      request: {
+        tokenIn: string;
+        tokenOut: string;
+        amountIn: BigNumberish;
+        poolId: BytesLike;
+        latestBlockNumberUsed: BigNumberish;
+        from: string;
+        to: string;
+        userData: BytesLike;
+      },
+      currentBalanceTokenIn: BigNumberish,
+      currentBalanceTokenOut: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "onSwapGivenIn(tuple,uint256,uint256)"(
+      request: {
+        tokenIn: string;
+        tokenOut: string;
+        amountIn: BigNumberish;
+        poolId: BytesLike;
+        latestBlockNumberUsed: BigNumberish;
+        from: string;
+        to: string;
+        userData: BytesLike;
+      },
+      currentBalanceTokenIn: BigNumberish,
+      currentBalanceTokenOut: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    onSwapGivenOut(
+      request: {
+        tokenIn: string;
+        tokenOut: string;
+        amountOut: BigNumberish;
+        poolId: BytesLike;
+        latestBlockNumberUsed: BigNumberish;
+        from: string;
+        to: string;
+        userData: BytesLike;
+      },
+      currentBalanceTokenIn: BigNumberish,
+      currentBalanceTokenOut: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "onSwapGivenOut(tuple,uint256,uint256)"(
+      request: {
+        tokenIn: string;
+        tokenOut: string;
+        amountOut: BigNumberish;
+        poolId: BytesLike;
+        latestBlockNumberUsed: BigNumberish;
+        from: string;
+        to: string;
+        userData: BytesLike;
+      },
+      currentBalanceTokenIn: BigNumberish,
+      currentBalanceTokenOut: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     percentFee(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     "percentFee()"(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    quoteInGivenOut(
-      request: {
-        tokenIn: string;
-        tokenOut: string;
-        amountOut: BigNumberish;
-        poolId: BytesLike;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      currentBalanceTokenIn: BigNumberish,
-      currentBalanceTokenOut: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "quoteInGivenOut(tuple,uint256,uint256)"(
-      request: {
-        tokenIn: string;
-        tokenOut: string;
-        amountOut: BigNumberish;
-        poolId: BytesLike;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      currentBalanceTokenIn: BigNumberish,
-      currentBalanceTokenOut: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    quoteOutGivenIn(
-      request: {
-        tokenIn: string;
-        tokenOut: string;
-        amountIn: BigNumberish;
-        poolId: BytesLike;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      currentBalanceTokenIn: BigNumberish,
-      currentBalanceTokenOut: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "quoteOutGivenIn(tuple,uint256,uint256)"(
-      request: {
-        tokenIn: string;
-        tokenOut: string;
-        amountIn: BigNumberish;
-        poolId: BytesLike;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      currentBalanceTokenIn: BigNumberish,
-      currentBalanceTokenOut: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
 
     solveTradeInvariant(
       amountX: BigNumberish,
@@ -527,9 +533,9 @@ export class YieldCurvePool extends Contract {
 
     "underlyingDecimals()"(overrides?: CallOverrides): Promise<[number]>;
 
-    unit_seconds(overrides?: CallOverrides): Promise<[BigNumber]>;
+    unitSeconds(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    "unit_seconds()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+    "unitSeconds()"(overrides?: CallOverrides): Promise<[BigNumber]>;
   };
 
   allowance(
@@ -632,108 +638,112 @@ export class YieldCurvePool extends Contract {
     arg1: string,
     recipient: string,
     currentBalances: BigNumberish[],
-    minAmountsOut: BigNumberish[],
+    arg4: BigNumberish,
     protocolSwapFee: BigNumberish,
-    arg6: BytesLike,
+    userData: BytesLike,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "onExitPool(bytes32,address,address,uint256[],uint256[],uint256,bytes)"(
+  "onExitPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
     arg0: BytesLike,
     arg1: string,
     recipient: string,
     currentBalances: BigNumberish[],
-    minAmountsOut: BigNumberish[],
+    arg4: BigNumberish,
     protocolSwapFee: BigNumberish,
-    arg6: BytesLike,
+    userData: BytesLike,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   onJoinPool(
-    arg0: BytesLike,
-    arg1: string,
+    poolId: BytesLike,
+    sender: string,
     recipient: string,
     currentBalances: BigNumberish[],
-    maxAmountsIn: BigNumberish[],
+    arg4: BigNumberish,
     protocolSwapFee: BigNumberish,
-    arg6: BytesLike,
+    userData: BytesLike,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "onJoinPool(bytes32,address,address,uint256[],uint256[],uint256,bytes)"(
-    arg0: BytesLike,
-    arg1: string,
+  "onJoinPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
+    poolId: BytesLike,
+    sender: string,
     recipient: string,
     currentBalances: BigNumberish[],
-    maxAmountsIn: BigNumberish[],
+    arg4: BigNumberish,
     protocolSwapFee: BigNumberish,
-    arg6: BytesLike,
+    userData: BytesLike,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  onSwapGivenIn(
+    request: {
+      tokenIn: string;
+      tokenOut: string;
+      amountIn: BigNumberish;
+      poolId: BytesLike;
+      latestBlockNumberUsed: BigNumberish;
+      from: string;
+      to: string;
+      userData: BytesLike;
+    },
+    currentBalanceTokenIn: BigNumberish,
+    currentBalanceTokenOut: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "onSwapGivenIn(tuple,uint256,uint256)"(
+    request: {
+      tokenIn: string;
+      tokenOut: string;
+      amountIn: BigNumberish;
+      poolId: BytesLike;
+      latestBlockNumberUsed: BigNumberish;
+      from: string;
+      to: string;
+      userData: BytesLike;
+    },
+    currentBalanceTokenIn: BigNumberish,
+    currentBalanceTokenOut: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  onSwapGivenOut(
+    request: {
+      tokenIn: string;
+      tokenOut: string;
+      amountOut: BigNumberish;
+      poolId: BytesLike;
+      latestBlockNumberUsed: BigNumberish;
+      from: string;
+      to: string;
+      userData: BytesLike;
+    },
+    currentBalanceTokenIn: BigNumberish,
+    currentBalanceTokenOut: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "onSwapGivenOut(tuple,uint256,uint256)"(
+    request: {
+      tokenIn: string;
+      tokenOut: string;
+      amountOut: BigNumberish;
+      poolId: BytesLike;
+      latestBlockNumberUsed: BigNumberish;
+      from: string;
+      to: string;
+      userData: BytesLike;
+    },
+    currentBalanceTokenIn: BigNumberish,
+    currentBalanceTokenOut: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   percentFee(overrides?: CallOverrides): Promise<BigNumber>;
 
   "percentFee()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-  quoteInGivenOut(
-    request: {
-      tokenIn: string;
-      tokenOut: string;
-      amountOut: BigNumberish;
-      poolId: BytesLike;
-      from: string;
-      to: string;
-      userData: BytesLike;
-    },
-    currentBalanceTokenIn: BigNumberish,
-    currentBalanceTokenOut: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "quoteInGivenOut(tuple,uint256,uint256)"(
-    request: {
-      tokenIn: string;
-      tokenOut: string;
-      amountOut: BigNumberish;
-      poolId: BytesLike;
-      from: string;
-      to: string;
-      userData: BytesLike;
-    },
-    currentBalanceTokenIn: BigNumberish,
-    currentBalanceTokenOut: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  quoteOutGivenIn(
-    request: {
-      tokenIn: string;
-      tokenOut: string;
-      amountIn: BigNumberish;
-      poolId: BytesLike;
-      from: string;
-      to: string;
-      userData: BytesLike;
-    },
-    currentBalanceTokenIn: BigNumberish,
-    currentBalanceTokenOut: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "quoteOutGivenIn(tuple,uint256,uint256)"(
-    request: {
-      tokenIn: string;
-      tokenOut: string;
-      amountIn: BigNumberish;
-      poolId: BytesLike;
-      from: string;
-      to: string;
-      userData: BytesLike;
-    },
-    currentBalanceTokenIn: BigNumberish,
-    currentBalanceTokenOut: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
 
   solveTradeInvariant(
     amountX: BigNumberish,
@@ -793,9 +803,9 @@ export class YieldCurvePool extends Contract {
 
   "underlyingDecimals()"(overrides?: CallOverrides): Promise<number>;
 
-  unit_seconds(overrides?: CallOverrides): Promise<BigNumber>;
+  unitSeconds(overrides?: CallOverrides): Promise<BigNumber>;
 
-  "unit_seconds()"(overrides?: CallOverrides): Promise<BigNumber>;
+  "unitSeconds()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   callStatic: {
     allowance(
@@ -898,9 +908,9 @@ export class YieldCurvePool extends Contract {
       arg1: string,
       recipient: string,
       currentBalances: BigNumberish[],
-      minAmountsOut: BigNumberish[],
+      arg4: BigNumberish,
       protocolSwapFee: BigNumberish,
-      arg6: BytesLike,
+      userData: BytesLike,
       overrides?: CallOverrides
     ): Promise<
       [BigNumber[], BigNumber[]] & {
@@ -909,14 +919,14 @@ export class YieldCurvePool extends Contract {
       }
     >;
 
-    "onExitPool(bytes32,address,address,uint256[],uint256[],uint256,bytes)"(
+    "onExitPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
       arg0: BytesLike,
       arg1: string,
       recipient: string,
       currentBalances: BigNumberish[],
-      minAmountsOut: BigNumberish[],
+      arg4: BigNumberish,
       protocolSwapFee: BigNumberish,
-      arg6: BytesLike,
+      userData: BytesLike,
       overrides?: CallOverrides
     ): Promise<
       [BigNumber[], BigNumber[]] & {
@@ -926,13 +936,13 @@ export class YieldCurvePool extends Contract {
     >;
 
     onJoinPool(
-      arg0: BytesLike,
-      arg1: string,
+      poolId: BytesLike,
+      sender: string,
       recipient: string,
       currentBalances: BigNumberish[],
-      maxAmountsIn: BigNumberish[],
+      arg4: BigNumberish,
       protocolSwapFee: BigNumberish,
-      arg6: BytesLike,
+      userData: BytesLike,
       overrides?: CallOverrides
     ): Promise<
       [BigNumber[], BigNumber[]] & {
@@ -941,14 +951,14 @@ export class YieldCurvePool extends Contract {
       }
     >;
 
-    "onJoinPool(bytes32,address,address,uint256[],uint256[],uint256,bytes)"(
-      arg0: BytesLike,
-      arg1: string,
+    "onJoinPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
+      poolId: BytesLike,
+      sender: string,
       recipient: string,
       currentBalances: BigNumberish[],
-      maxAmountsIn: BigNumberish[],
+      arg4: BigNumberish,
       protocolSwapFee: BigNumberish,
-      arg6: BytesLike,
+      userData: BytesLike,
       overrides?: CallOverrides
     ): Promise<
       [BigNumber[], BigNumber[]] & {
@@ -956,70 +966,74 @@ export class YieldCurvePool extends Contract {
         dueProtocolFeeAmounts: BigNumber[];
       }
     >;
+
+    onSwapGivenIn(
+      request: {
+        tokenIn: string;
+        tokenOut: string;
+        amountIn: BigNumberish;
+        poolId: BytesLike;
+        latestBlockNumberUsed: BigNumberish;
+        from: string;
+        to: string;
+        userData: BytesLike;
+      },
+      currentBalanceTokenIn: BigNumberish,
+      currentBalanceTokenOut: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "onSwapGivenIn(tuple,uint256,uint256)"(
+      request: {
+        tokenIn: string;
+        tokenOut: string;
+        amountIn: BigNumberish;
+        poolId: BytesLike;
+        latestBlockNumberUsed: BigNumberish;
+        from: string;
+        to: string;
+        userData: BytesLike;
+      },
+      currentBalanceTokenIn: BigNumberish,
+      currentBalanceTokenOut: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    onSwapGivenOut(
+      request: {
+        tokenIn: string;
+        tokenOut: string;
+        amountOut: BigNumberish;
+        poolId: BytesLike;
+        latestBlockNumberUsed: BigNumberish;
+        from: string;
+        to: string;
+        userData: BytesLike;
+      },
+      currentBalanceTokenIn: BigNumberish,
+      currentBalanceTokenOut: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "onSwapGivenOut(tuple,uint256,uint256)"(
+      request: {
+        tokenIn: string;
+        tokenOut: string;
+        amountOut: BigNumberish;
+        poolId: BytesLike;
+        latestBlockNumberUsed: BigNumberish;
+        from: string;
+        to: string;
+        userData: BytesLike;
+      },
+      currentBalanceTokenIn: BigNumberish,
+      currentBalanceTokenOut: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     percentFee(overrides?: CallOverrides): Promise<BigNumber>;
 
     "percentFee()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    quoteInGivenOut(
-      request: {
-        tokenIn: string;
-        tokenOut: string;
-        amountOut: BigNumberish;
-        poolId: BytesLike;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      currentBalanceTokenIn: BigNumberish,
-      currentBalanceTokenOut: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "quoteInGivenOut(tuple,uint256,uint256)"(
-      request: {
-        tokenIn: string;
-        tokenOut: string;
-        amountOut: BigNumberish;
-        poolId: BytesLike;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      currentBalanceTokenIn: BigNumberish,
-      currentBalanceTokenOut: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    quoteOutGivenIn(
-      request: {
-        tokenIn: string;
-        tokenOut: string;
-        amountIn: BigNumberish;
-        poolId: BytesLike;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      currentBalanceTokenIn: BigNumberish,
-      currentBalanceTokenOut: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "quoteOutGivenIn(tuple,uint256,uint256)"(
-      request: {
-        tokenIn: string;
-        tokenOut: string;
-        amountIn: BigNumberish;
-        poolId: BytesLike;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      currentBalanceTokenIn: BigNumberish,
-      currentBalanceTokenOut: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
 
     solveTradeInvariant(
       amountX: BigNumberish,
@@ -1079,9 +1093,9 @@ export class YieldCurvePool extends Contract {
 
     "underlyingDecimals()"(overrides?: CallOverrides): Promise<number>;
 
-    unit_seconds(overrides?: CallOverrides): Promise<BigNumber>;
+    unitSeconds(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "unit_seconds()"(overrides?: CallOverrides): Promise<BigNumber>;
+    "unitSeconds()"(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   filters: {
@@ -1195,108 +1209,112 @@ export class YieldCurvePool extends Contract {
       arg1: string,
       recipient: string,
       currentBalances: BigNumberish[],
-      minAmountsOut: BigNumberish[],
+      arg4: BigNumberish,
       protocolSwapFee: BigNumberish,
-      arg6: BytesLike,
+      userData: BytesLike,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    "onExitPool(bytes32,address,address,uint256[],uint256[],uint256,bytes)"(
+    "onExitPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
       arg0: BytesLike,
       arg1: string,
       recipient: string,
       currentBalances: BigNumberish[],
-      minAmountsOut: BigNumberish[],
+      arg4: BigNumberish,
       protocolSwapFee: BigNumberish,
-      arg6: BytesLike,
+      userData: BytesLike,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     onJoinPool(
-      arg0: BytesLike,
-      arg1: string,
+      poolId: BytesLike,
+      sender: string,
       recipient: string,
       currentBalances: BigNumberish[],
-      maxAmountsIn: BigNumberish[],
+      arg4: BigNumberish,
       protocolSwapFee: BigNumberish,
-      arg6: BytesLike,
+      userData: BytesLike,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    "onJoinPool(bytes32,address,address,uint256[],uint256[],uint256,bytes)"(
-      arg0: BytesLike,
-      arg1: string,
+    "onJoinPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
+      poolId: BytesLike,
+      sender: string,
       recipient: string,
       currentBalances: BigNumberish[],
-      maxAmountsIn: BigNumberish[],
+      arg4: BigNumberish,
       protocolSwapFee: BigNumberish,
-      arg6: BytesLike,
+      userData: BytesLike,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    onSwapGivenIn(
+      request: {
+        tokenIn: string;
+        tokenOut: string;
+        amountIn: BigNumberish;
+        poolId: BytesLike;
+        latestBlockNumberUsed: BigNumberish;
+        from: string;
+        to: string;
+        userData: BytesLike;
+      },
+      currentBalanceTokenIn: BigNumberish,
+      currentBalanceTokenOut: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "onSwapGivenIn(tuple,uint256,uint256)"(
+      request: {
+        tokenIn: string;
+        tokenOut: string;
+        amountIn: BigNumberish;
+        poolId: BytesLike;
+        latestBlockNumberUsed: BigNumberish;
+        from: string;
+        to: string;
+        userData: BytesLike;
+      },
+      currentBalanceTokenIn: BigNumberish,
+      currentBalanceTokenOut: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    onSwapGivenOut(
+      request: {
+        tokenIn: string;
+        tokenOut: string;
+        amountOut: BigNumberish;
+        poolId: BytesLike;
+        latestBlockNumberUsed: BigNumberish;
+        from: string;
+        to: string;
+        userData: BytesLike;
+      },
+      currentBalanceTokenIn: BigNumberish,
+      currentBalanceTokenOut: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "onSwapGivenOut(tuple,uint256,uint256)"(
+      request: {
+        tokenIn: string;
+        tokenOut: string;
+        amountOut: BigNumberish;
+        poolId: BytesLike;
+        latestBlockNumberUsed: BigNumberish;
+        from: string;
+        to: string;
+        userData: BytesLike;
+      },
+      currentBalanceTokenIn: BigNumberish,
+      currentBalanceTokenOut: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     percentFee(overrides?: CallOverrides): Promise<BigNumber>;
 
     "percentFee()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    quoteInGivenOut(
-      request: {
-        tokenIn: string;
-        tokenOut: string;
-        amountOut: BigNumberish;
-        poolId: BytesLike;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      currentBalanceTokenIn: BigNumberish,
-      currentBalanceTokenOut: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "quoteInGivenOut(tuple,uint256,uint256)"(
-      request: {
-        tokenIn: string;
-        tokenOut: string;
-        amountOut: BigNumberish;
-        poolId: BytesLike;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      currentBalanceTokenIn: BigNumberish,
-      currentBalanceTokenOut: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    quoteOutGivenIn(
-      request: {
-        tokenIn: string;
-        tokenOut: string;
-        amountIn: BigNumberish;
-        poolId: BytesLike;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      currentBalanceTokenIn: BigNumberish,
-      currentBalanceTokenOut: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "quoteOutGivenIn(tuple,uint256,uint256)"(
-      request: {
-        tokenIn: string;
-        tokenOut: string;
-        amountIn: BigNumberish;
-        poolId: BytesLike;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      currentBalanceTokenIn: BigNumberish,
-      currentBalanceTokenOut: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
 
     solveTradeInvariant(
       amountX: BigNumberish,
@@ -1356,9 +1374,9 @@ export class YieldCurvePool extends Contract {
 
     "underlyingDecimals()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-    unit_seconds(overrides?: CallOverrides): Promise<BigNumber>;
+    unitSeconds(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "unit_seconds()"(overrides?: CallOverrides): Promise<BigNumber>;
+    "unitSeconds()"(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -1467,108 +1485,112 @@ export class YieldCurvePool extends Contract {
       arg1: string,
       recipient: string,
       currentBalances: BigNumberish[],
-      minAmountsOut: BigNumberish[],
+      arg4: BigNumberish,
       protocolSwapFee: BigNumberish,
-      arg6: BytesLike,
+      userData: BytesLike,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "onExitPool(bytes32,address,address,uint256[],uint256[],uint256,bytes)"(
+    "onExitPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
       arg0: BytesLike,
       arg1: string,
       recipient: string,
       currentBalances: BigNumberish[],
-      minAmountsOut: BigNumberish[],
+      arg4: BigNumberish,
       protocolSwapFee: BigNumberish,
-      arg6: BytesLike,
+      userData: BytesLike,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     onJoinPool(
-      arg0: BytesLike,
-      arg1: string,
+      poolId: BytesLike,
+      sender: string,
       recipient: string,
       currentBalances: BigNumberish[],
-      maxAmountsIn: BigNumberish[],
+      arg4: BigNumberish,
       protocolSwapFee: BigNumberish,
-      arg6: BytesLike,
+      userData: BytesLike,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "onJoinPool(bytes32,address,address,uint256[],uint256[],uint256,bytes)"(
-      arg0: BytesLike,
-      arg1: string,
+    "onJoinPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
+      poolId: BytesLike,
+      sender: string,
       recipient: string,
       currentBalances: BigNumberish[],
-      maxAmountsIn: BigNumberish[],
+      arg4: BigNumberish,
       protocolSwapFee: BigNumberish,
-      arg6: BytesLike,
+      userData: BytesLike,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    onSwapGivenIn(
+      request: {
+        tokenIn: string;
+        tokenOut: string;
+        amountIn: BigNumberish;
+        poolId: BytesLike;
+        latestBlockNumberUsed: BigNumberish;
+        from: string;
+        to: string;
+        userData: BytesLike;
+      },
+      currentBalanceTokenIn: BigNumberish,
+      currentBalanceTokenOut: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "onSwapGivenIn(tuple,uint256,uint256)"(
+      request: {
+        tokenIn: string;
+        tokenOut: string;
+        amountIn: BigNumberish;
+        poolId: BytesLike;
+        latestBlockNumberUsed: BigNumberish;
+        from: string;
+        to: string;
+        userData: BytesLike;
+      },
+      currentBalanceTokenIn: BigNumberish,
+      currentBalanceTokenOut: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    onSwapGivenOut(
+      request: {
+        tokenIn: string;
+        tokenOut: string;
+        amountOut: BigNumberish;
+        poolId: BytesLike;
+        latestBlockNumberUsed: BigNumberish;
+        from: string;
+        to: string;
+        userData: BytesLike;
+      },
+      currentBalanceTokenIn: BigNumberish,
+      currentBalanceTokenOut: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "onSwapGivenOut(tuple,uint256,uint256)"(
+      request: {
+        tokenIn: string;
+        tokenOut: string;
+        amountOut: BigNumberish;
+        poolId: BytesLike;
+        latestBlockNumberUsed: BigNumberish;
+        from: string;
+        to: string;
+        userData: BytesLike;
+      },
+      currentBalanceTokenIn: BigNumberish,
+      currentBalanceTokenOut: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     percentFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     "percentFee()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    quoteInGivenOut(
-      request: {
-        tokenIn: string;
-        tokenOut: string;
-        amountOut: BigNumberish;
-        poolId: BytesLike;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      currentBalanceTokenIn: BigNumberish,
-      currentBalanceTokenOut: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "quoteInGivenOut(tuple,uint256,uint256)"(
-      request: {
-        tokenIn: string;
-        tokenOut: string;
-        amountOut: BigNumberish;
-        poolId: BytesLike;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      currentBalanceTokenIn: BigNumberish,
-      currentBalanceTokenOut: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    quoteOutGivenIn(
-      request: {
-        tokenIn: string;
-        tokenOut: string;
-        amountIn: BigNumberish;
-        poolId: BytesLike;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      currentBalanceTokenIn: BigNumberish,
-      currentBalanceTokenOut: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "quoteOutGivenIn(tuple,uint256,uint256)"(
-      request: {
-        tokenIn: string;
-        tokenOut: string;
-        amountIn: BigNumberish;
-        poolId: BytesLike;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      currentBalanceTokenIn: BigNumberish,
-      currentBalanceTokenOut: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
 
     solveTradeInvariant(
       amountX: BigNumberish,
@@ -1632,8 +1654,8 @@ export class YieldCurvePool extends Contract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    unit_seconds(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    unitSeconds(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "unit_seconds()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    "unitSeconds()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }

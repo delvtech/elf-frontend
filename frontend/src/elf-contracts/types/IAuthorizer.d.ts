@@ -21,54 +21,15 @@ import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 
 interface IAuthorizerInterface extends ethers.utils.Interface {
   functions: {
-    "canChangeAuthorizer(address)": FunctionFragment;
-    "canSetProtocolFlashLoanFee(address)": FunctionFragment;
-    "canSetProtocolSwapFee(address)": FunctionFragment;
-    "canSetProtocolWithdrawFee(address)": FunctionFragment;
-    "canWithdrawProtocolFees(address,address)": FunctionFragment;
+    "hasRole(bytes32,address)": FunctionFragment;
   };
 
   encodeFunctionData(
-    functionFragment: "canChangeAuthorizer",
-    values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "canSetProtocolFlashLoanFee",
-    values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "canSetProtocolSwapFee",
-    values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "canSetProtocolWithdrawFee",
-    values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "canWithdrawProtocolFees",
-    values: [string, string]
+    functionFragment: "hasRole",
+    values: [BytesLike, string]
   ): string;
 
-  decodeFunctionResult(
-    functionFragment: "canChangeAuthorizer",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "canSetProtocolFlashLoanFee",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "canSetProtocolSwapFee",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "canSetProtocolWithdrawFee",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "canWithdrawProtocolFees",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "hasRole", data: BytesLike): Result;
 
   events: {};
 }
@@ -87,161 +48,41 @@ export class IAuthorizer extends Contract {
   interface: IAuthorizerInterface;
 
   functions: {
-    canChangeAuthorizer(
+    hasRole(
+      role: BytesLike,
       account: string,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
-    "canChangeAuthorizer(address)"(
+    "hasRole(bytes32,address)"(
+      role: BytesLike,
       account: string,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
-
-    canSetProtocolFlashLoanFee(
-      account: string,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
-
-    "canSetProtocolFlashLoanFee(address)"(
-      account: string,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
-
-    canSetProtocolSwapFee(
-      account: string,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
-
-    "canSetProtocolSwapFee(address)"(
-      account: string,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
-
-    canSetProtocolWithdrawFee(
-      account: string,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
-
-    "canSetProtocolWithdrawFee(address)"(
-      account: string,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
-
-    canWithdrawProtocolFees(
-      account: string,
-      token: string,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
-
-    "canWithdrawProtocolFees(address,address)"(
-      account: string,
-      token: string,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
   };
 
-  canChangeAuthorizer(
+  hasRole(
+    role: BytesLike,
     account: string,
     overrides?: CallOverrides
   ): Promise<boolean>;
 
-  "canChangeAuthorizer(address)"(
+  "hasRole(bytes32,address)"(
+    role: BytesLike,
     account: string,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
-
-  canSetProtocolFlashLoanFee(
-    account: string,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
-
-  "canSetProtocolFlashLoanFee(address)"(
-    account: string,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
-
-  canSetProtocolSwapFee(
-    account: string,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
-
-  "canSetProtocolSwapFee(address)"(
-    account: string,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
-
-  canSetProtocolWithdrawFee(
-    account: string,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
-
-  "canSetProtocolWithdrawFee(address)"(
-    account: string,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
-
-  canWithdrawProtocolFees(
-    account: string,
-    token: string,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
-
-  "canWithdrawProtocolFees(address,address)"(
-    account: string,
-    token: string,
     overrides?: CallOverrides
   ): Promise<boolean>;
 
   callStatic: {
-    canChangeAuthorizer(
+    hasRole(
+      role: BytesLike,
       account: string,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    "canChangeAuthorizer(address)"(
+    "hasRole(bytes32,address)"(
+      role: BytesLike,
       account: string,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    canSetProtocolFlashLoanFee(
-      account: string,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    "canSetProtocolFlashLoanFee(address)"(
-      account: string,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    canSetProtocolSwapFee(
-      account: string,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    "canSetProtocolSwapFee(address)"(
-      account: string,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    canSetProtocolWithdrawFee(
-      account: string,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    "canSetProtocolWithdrawFee(address)"(
-      account: string,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    canWithdrawProtocolFees(
-      account: string,
-      token: string,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    "canWithdrawProtocolFees(address,address)"(
-      account: string,
-      token: string,
       overrides?: CallOverrides
     ): Promise<boolean>;
   };
@@ -249,109 +90,29 @@ export class IAuthorizer extends Contract {
   filters: {};
 
   estimateGas: {
-    canChangeAuthorizer(
+    hasRole(
+      role: BytesLike,
       account: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    "canChangeAuthorizer(address)"(
+    "hasRole(bytes32,address)"(
+      role: BytesLike,
       account: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    canSetProtocolFlashLoanFee(
-      account: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "canSetProtocolFlashLoanFee(address)"(
-      account: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    canSetProtocolSwapFee(
-      account: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "canSetProtocolSwapFee(address)"(
-      account: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    canSetProtocolWithdrawFee(
-      account: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "canSetProtocolWithdrawFee(address)"(
-      account: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    canWithdrawProtocolFees(
-      account: string,
-      token: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "canWithdrawProtocolFees(address,address)"(
-      account: string,
-      token: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    canChangeAuthorizer(
+    hasRole(
+      role: BytesLike,
       account: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    "canChangeAuthorizer(address)"(
+    "hasRole(bytes32,address)"(
+      role: BytesLike,
       account: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    canSetProtocolFlashLoanFee(
-      account: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "canSetProtocolFlashLoanFee(address)"(
-      account: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    canSetProtocolSwapFee(
-      account: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "canSetProtocolSwapFee(address)"(
-      account: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    canSetProtocolWithdrawFee(
-      account: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "canSetProtocolWithdrawFee(address)"(
-      account: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    canWithdrawProtocolFees(
-      account: string,
-      token: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "canWithdrawProtocolFees(address,address)"(
-      account: string,
-      token: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
   };

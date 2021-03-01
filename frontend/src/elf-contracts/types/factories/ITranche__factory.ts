@@ -167,6 +167,11 @@ const _abi = [
         name: "_shares",
         type: "uint256",
       },
+      {
+        internalType: "address",
+        name: "destination",
+        type: "address",
+      },
     ],
     name: "deposit",
     outputs: [
@@ -177,19 +182,6 @@ const _abi = [
       },
     ],
     stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "getYC",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
     type: "function",
   },
   {
@@ -369,6 +361,19 @@ const _abi = [
       },
     ],
     stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "yc",
+    outputs: [
+      {
+        internalType: "contract IYC",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
 ];

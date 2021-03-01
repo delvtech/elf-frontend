@@ -28,7 +28,7 @@ interface TrancheInterface extends ethers.utils.Interface {
     "balanceOf(address)": FunctionFragment;
     "decimals()": FunctionFragment;
     "decreaseAllowance(address,uint256)": FunctionFragment;
-    "deposit(uint256)": FunctionFragment;
+    "deposit(uint256,address)": FunctionFragment;
     "elf()": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
     "lockDuration()": FunctionFragment;
@@ -65,7 +65,7 @@ interface TrancheInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "deposit",
-    values: [BigNumberish]
+    values: [BigNumberish, string]
   ): string;
   encodeFunctionData(functionFragment: "elf", values?: undefined): string;
   encodeFunctionData(
@@ -239,11 +239,13 @@ export class Tranche extends Contract {
 
     deposit(
       _shares: BigNumberish,
+      destination: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "deposit(uint256)"(
+    "deposit(uint256,address)"(
       _shares: BigNumberish,
+      destination: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
@@ -416,11 +418,13 @@ export class Tranche extends Contract {
 
   deposit(
     _shares: BigNumberish,
+    destination: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "deposit(uint256)"(
+  "deposit(uint256,address)"(
     _shares: BigNumberish,
+    destination: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -593,11 +597,13 @@ export class Tranche extends Contract {
 
     deposit(
       _shares: BigNumberish,
+      destination: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    "deposit(uint256)"(
+    "deposit(uint256,address)"(
       _shares: BigNumberish,
+      destination: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -779,10 +785,15 @@ export class Tranche extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    deposit(_shares: BigNumberish, overrides?: Overrides): Promise<BigNumber>;
-
-    "deposit(uint256)"(
+    deposit(
       _shares: BigNumberish,
+      destination: string,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "deposit(uint256,address)"(
+      _shares: BigNumberish,
+      destination: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
@@ -961,11 +972,13 @@ export class Tranche extends Contract {
 
     deposit(
       _shares: BigNumberish,
+      destination: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "deposit(uint256)"(
+    "deposit(uint256,address)"(
       _shares: BigNumberish,
+      destination: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
