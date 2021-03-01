@@ -62,7 +62,7 @@
     "d3-array": "^2.11.0",
     "d3-time-format": "^3.0.0",
     "date-fns": "^2.17.0",
-    "ethereum-waffle": "^3.2.2",
+    "ethereum-waffle": "^3.3.0",
     "ethers": "^5.0.31",
     "fuzzaldrin-plus": "^0.6.0",
     "graphql": "^15.5.0",
