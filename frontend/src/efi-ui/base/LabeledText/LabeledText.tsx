@@ -16,6 +16,12 @@ interface LabeledTextProps {
    */
   label: ReactNode;
 
+  /**
+   * Whether to apply muted text color to the label. This is useful when
+   * rendering on top of backgrounds that with low contrast like Callouts.
+   */
+  muted?: boolean;
+
   large?: boolean;
 
   subLabel?: ReactNode;
@@ -36,6 +42,7 @@ export const LabeledText: FC<LabeledTextProps> = ({
   label,
   subLabel,
   bold = false,
+  muted = true,
   className,
   textClassName,
   iconClassName,
@@ -47,7 +54,7 @@ export const LabeledText: FC<LabeledTextProps> = ({
       {icon && <div className={iconClassName}>{icon}</div>}
       <div
         className={classNames(
-          tw("flex", "flex-col", "justify-center", "space-y-1"),
+          tw("flex", "flex-col", "justify-center"),
           className
         )}
       >
@@ -59,7 +66,9 @@ export const LabeledText: FC<LabeledTextProps> = ({
         >
           {text}
         </span>
-        <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
+        <span
+          className={classNames({ [Classes.TEXT_MUTED]: muted }, tw("text-sm"))}
+        >
           {label}
         </span>
         {!!subLabel && (

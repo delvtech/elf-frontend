@@ -30,6 +30,9 @@ export const CryptoIconSvg: Record<CryptoSymbol, AssetIcon> = {
   WETH: WethIcon,
 };
 
+/**
+ * @deprecated use CryptoIconSvg instead
+ */
 export const CryptoIcon: Record<CryptoSymbolOld, string> = {
   DAI: daiLogo,
   yDAI: daiLogo,
