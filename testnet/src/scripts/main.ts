@@ -52,7 +52,7 @@ async function main() {
   );
 
   /**
-   * remove these consoles when USDC price verified in frontend
+   * remove these consoles when USDC price verified in frontend.  having problems with decimals currently
    */
   const wethMarketBalance = await marketWethFYTContract.getBalance(
     wethContract.address
@@ -81,7 +81,7 @@ async function main() {
   );
 
   /**
-   * remove these consoles when USDC price verified in frontend
+   * remove these consoles when USDC price verified in frontend.  having problems with decimals currently
    */
   const usdcMarketBalance = await marketUsdcFYTContract.getBalance(
     usdcContract.address
