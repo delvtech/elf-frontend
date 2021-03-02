@@ -1,3 +1,4 @@
+import abi from "ethereumjs-abi";
 import {
   formatEther,
   formatUnits,
@@ -5,16 +6,23 @@ import {
   parseUnits,
 } from "ethers/lib/utils";
 import fs from "fs";
+import { setupElfTrancheAndMarkets } from "scripts/setupElfTrancheAndMarkets";
 
 import { deployBalancerFactory } from "./balancerFactory";
+import { deployBalancerVault } from "./balancerV2Vault";
 import { deployBaseAssets } from "./baseAssets";
+import { deployYieldPool } from "./deployYieldPool";
 import { deployElfFactory } from "./elfFactory";
 import { getSigner, SIGNER } from "./getSigner";
-import { setupElfTrancheAndMarkets } from "./setupElfTrancheAndMarkets";
+import { initializeYieldPool } from "./initializeYieldPool";
 import { deployUserProxy } from "./userProxy";
+
+// TODO figure out actual max number
+const MAX_ALLOWANCE = parseEther("1000000");
 
 async function main() {
   const elementSigner = await getSigner(SIGNER.ELEMENT);
+  const balancerSigner = await getSigner(SIGNER.ELEMENT);
   const elementAddress = await elementSigner.getAddress();
   const userSigner = await getSigner(SIGNER.USER);
   const userAddress = await userSigner.getAddress();
@@ -52,7 +60,7 @@ async function main() {
   );
 
   /**
-   * remove these consoles when USDC price verified in frontend.  having problems with decimals currently
+   * remove these consoles when USDC price verified in frontend
    */
   const wethMarketBalance = await marketWethFYTContract.getBalance(
     wethContract.address
@@ -81,7 +89,7 @@ async function main() {
   );
 
   /**
-   * remove these consoles when USDC price verified in frontend.  having problems with decimals currently
+   * remove these consoles when USDC price verified in frontend
    */
   const usdcMarketBalance = await marketUsdcFYTContract.getBalance(
     usdcContract.address
@@ -118,9 +126,25 @@ async function main() {
   console.log(formatEther(wethBalance), "WETH");
   console.log(formatUnits(usdcBalance, 6), "USDC");
 
+  const vaultContract = await deployBalancerVault(balancerSigner);
+  const { poolId, poolContract } = await deployYieldPool(
+    elementSigner,
+    vaultContract,
+    wethContract,
+    trancheWethContract
+  );
+
+  await initializeYieldPool(
+    poolId,
+    elementSigner,
+    vaultContract,
+    wethContract,
+    trancheWethContract
+  );
+
   const addresses = JSON.stringify(
     {
-      // signer addresses
+      // signer addressesk
       elementAddress,
       userAddress,
 
