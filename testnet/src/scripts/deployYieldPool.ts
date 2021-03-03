@@ -1,0 +1,50 @@
+import { Signer } from "ethers";
+import { parseEther } from "ethers/lib/utils";
+import { ERC20, USDC, Vault, WETH } from "types";
+
+import { THIRTY_DAYS_IN_SECONDS } from "../time";
+import { YieldCurvePool__factory } from "../types/factories/YieldCurvePool__factory";
+
+export async function deployYieldPool(
+  elementSigner: Signer,
+  vaultContract: Vault,
+  baseAssetContract: WETH | USDC,
+  yieldAssetContract: ERC20
+) {
+  const elementAddress = await elementSigner.getAddress();
+  const yieldPoolDeployer = new YieldCurvePool__factory(elementSigner);
+
+  const dateInMilliseconds = Date.now();
+  const dateInSeconds = dateInMilliseconds / 1000;
+  const expiration = Math.round(dateInSeconds + THIRTY_DAYS_IN_SECONDS);
+  const duration = THIRTY_DAYS_IN_SECONDS;
+  const swapFee = parseEther(".003");
+
+  // console.log("weth address", wethContract.address);
+  // console.log("tranche address", trancheWethContract.address);
+  // console.log("expiration", expiration);
+  // console.log("duration", duration);
+  // console.log("vault address", vaultContract.address);
+  // console.log("element address", elementAddress);
+  // console.log("swapFee", swapFee.toString(), swapFee);
+
+  const poolContract = await yieldPoolDeployer.deploy(
+    baseAssetContract.address,
+    yieldAssetContract.address,
+    expiration,
+    duration,
+    vaultContract.address,
+    swapFee,
+    elementAddress,
+    "ELEMENT-BASE-YIELD-MARKET",
+    "WETH-fyWETH"
+  );
+
+  // grab last poolId from last event
+  const newPools = vaultContract.filters.PoolCreated(null);
+  const results = await vaultContract.queryFilter(newPools);
+  const poolIds: string[] = results.map((result) => result.args?.poolId);
+  const poolId = poolIds[poolIds.length - 1];
+
+  return { poolId, poolContract };
+}

@@ -4,6 +4,7 @@ import hre from "hardhat";
 export enum SIGNER {
   ELEMENT,
   USER,
+  BALANCER,
 }
 
 export async function getSigner(signer: SIGNER): Promise<Signer> {
