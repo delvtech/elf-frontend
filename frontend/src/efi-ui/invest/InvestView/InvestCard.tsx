@@ -156,6 +156,7 @@ export const InvestCard: FC<InvestCardProps> = ({
             outlined
             intent={Intent.PRIMARY}
             className={tw("w-1/3")}
+            disabled={!amountIn}
             onClick={() => setDrawerOpen(true)}
           >
             <div className={tw("p-4", "text-lg")}>{t`Buy`}</div>
