@@ -23,8 +23,9 @@ const MAX_ALLOWANCE = parseEther("1000000");
 async function main() {
   const elementSigner = await getSigner(SIGNER.ELEMENT);
   const balancerSigner = await getSigner(SIGNER.ELEMENT);
-  const elementAddress = await elementSigner.getAddress();
   const userSigner = await getSigner(SIGNER.USER);
+  const elementAddress = await elementSigner.getAddress();
+  const balancerAddress = await balancerSigner.getAddress();
   const userAddress = await userSigner.getAddress();
 
   // deploy base assets, give element address some extra tokens
@@ -144,9 +145,13 @@ async function main() {
 
   const addresses = JSON.stringify(
     {
-      // signer addressesk
+      // signer addresses
       elementAddress,
+      balancerAddress,
       userAddress,
+
+      // balancer
+      balancerVaultAddress: vaultContract.address,
 
       // user proxy
       userProxyContractAddress: userProxyContract.address,
