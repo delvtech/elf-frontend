@@ -182,7 +182,7 @@ export const BuyFYTConfirmationDrawer: FC<BuyFYTConfirmationDrawerProps> = ({
           >
             <div
               className={"pt-1"}
-            >{t`You'll need to approve Element to spend your ${baseAssetSymbol}.`}</div>
+            >{t`Element uses Balancer Pools for trading. You'll need to grant Balancer approval to spend your ${baseAssetSymbol} in order to swap for FYTs.`}</div>
           </Callout>
         ) : null}
         <div className={tw("flex", "space-x-2")}>
