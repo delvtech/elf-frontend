@@ -42,6 +42,9 @@ interface TradePanelProps {
   inputLabel: string;
   buttonLabel: string;
   buttonIntent?: Intent;
+  /**
+   * [baseAsset, yieldAsset]
+   */
   assetContracts: [ERC20, ERC20] | undefined;
   onTransaction: (amount: BigNumber) => void;
 }

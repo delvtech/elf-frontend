@@ -67,13 +67,19 @@ export function makeSmartContractReadCallUseQueryOptions<
   };
 }
 
-function makeSmartContractReadCallQueryKey<
+export function makeSmartContractReadCallQueryKey<
   TContract extends Contract,
   TMethodName extends ContractMethodName<TContract>
 >(
   contract: TContract | undefined,
   methodName: TMethodName,
   callArgs: Parameters<TContract["functions"][TMethodName]> | undefined
-) {
+): [
+  [string, string | undefined],
+  {
+    methodName: TMethodName;
+    callArgs: Parameters<TContract["functions"][TMethodName]> | undefined;
+  }
+] {
   return [["contractCall", contract?.address], { methodName, callArgs }];
 }

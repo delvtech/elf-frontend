@@ -24,15 +24,7 @@ export const FYTPortfolio: FC<FYTPortfolioProps> = ({ account, tranches }) => {
   return (
     <div className={tw("flex", "space-x-8", "flex-1", "pl-2")}>
       {nonIdealStateContent ? (
-        <div
-          className={tw(
-            "flex",
-            "flex-1",
-            "justify-center",
-            "mt-48",
-            "items-center"
-          )}
-        >
+        <div className={tw("flex", "flex-1", "justify-center", "items-center")}>
           {nonIdealStateContent}
         </div>
       ) : (
