@@ -6,7 +6,7 @@ import {
   parseUnits,
 } from "ethers/lib/utils";
 import fs from "fs";
-import { setupElfTrancheAndMarkets } from "scripts/setupElfTrancheAndMarkets";
+import { setupElfTrancheAndMarkets } from "./setupElfTrancheAndMarkets";
 
 import { deployBalancerFactory } from "./balancerFactory";
 import { deployBalancerVault } from "./balancerV2Vault";
