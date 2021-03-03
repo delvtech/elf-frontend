@@ -1,4 +1,3 @@
-import abi from "ethereumjs-abi";
 import {
   formatEther,
   formatUnits,
@@ -16,9 +15,6 @@ import { deployElfFactory } from "./elfFactory";
 import { getSigner, SIGNER } from "./getSigner";
 import { initializeYieldPool } from "./initializeYieldPool";
 import { deployUserProxy } from "./userProxy";
-
-// TODO figure out actual max number
-const MAX_ALLOWANCE = parseEther("1000000");
 
 async function main() {
   const elementSigner = await getSigner(SIGNER.ELEMENT);
@@ -128,6 +124,8 @@ async function main() {
   console.log(formatUnits(usdcBalance, 6), "USDC");
 
   const vaultContract = await deployBalancerVault(balancerSigner);
+  await vaultContract.changeRelayerAllowance(elementAddress, true);
+
   const { poolId, poolContract } = await deployYieldPool(
     elementSigner,
     vaultContract,
