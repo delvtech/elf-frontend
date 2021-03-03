@@ -115,7 +115,6 @@ export const InvestCard: FC<InvestCardProps> = ({
     getQueryData(unlockTimestampResult),
     tranchePrice
   );
-  const amountInAsNumber = +(amountIn || 0);
 
   return (
     <Fragment>
@@ -200,11 +199,11 @@ export const InvestCard: FC<InvestCardProps> = ({
         account={account}
         library={library}
         chainId={chainId}
+        market={marketContract}
         walletConnectionActive={walletConnectionActive}
         connector={connector}
-        title={t`Transaction summary`}
         baseAsset={activeBaseAsset}
-        baseAssetQuantity={amountInAsNumber}
+        amount={amountInAsBigNumber}
         tranche={activeTranche}
         isOpen={isDrawerOpen}
         onClose={() => setDrawerOpen(false)}
