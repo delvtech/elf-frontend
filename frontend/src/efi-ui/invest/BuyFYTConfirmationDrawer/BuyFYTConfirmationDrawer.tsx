@@ -1,4 +1,5 @@
 import React, { FC, useCallback } from "react";
+import { useQueryClient } from "react-query";
 
 import {
   Button,
@@ -8,16 +9,20 @@ import {
   Drawer,
   Intent,
 } from "@blueprintjs/core";
+import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import classNames from "classnames";
 import { BPool, ERC20 } from "elf-contracts/types";
 import { Tranche } from "elf-contracts/types/Tranche";
+import { BigNumber, Signer } from "ethers";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
+import { matchSmartContractReadCallQuery } from "efi-ui/contracts/matchSmartContractReadCallQuery/matchSmartContractReadCallQuery";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
+import { useSmartContractTransaction } from "efi-ui/contracts/useSmartContractTransaction/useSmartContractTransaction";
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { useCryptoName } from "efi-ui/crypto/hooks/useCryptoName/useCryptoName";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
@@ -25,15 +30,11 @@ import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { WalletConnectionCard } from "efi-ui/wallets/WalletConnectionCard/WalletConnectionCard";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatFullDate } from "efi/base/dates";
+import { MAX_ALLOWANCE } from "efi/contracts/token";
+import { CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { getConnectorName } from "efi/wallets/connectors";
 
-import { BigNumber, Signer } from "ethers";
-import { useSmartContractTransaction } from "efi-ui/contracts/useSmartContractTransaction/useSmartContractTransaction";
-import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
-import { MAX_ALLOWANCE } from "efi/contracts/token";
-import { useQueryClient } from "react-query";
-import { matchSmartContractReadCallQuery } from "efi-ui/contracts/matchSmartContractReadCallQuery/matchSmartContractReadCallQuery";
-import { IconNames } from "@blueprintjs/icons";
+import { isApprovalRequiredForTransactions } from "../../crypto/isApprovalRequiredForTransactions";
 
 interface BuyFYTConfirmationDrawerProps {
   chainId: number | undefined;
@@ -249,13 +250,4 @@ function useOnApproveClick(
     }
   }, [approve, market]);
   return onApproveClick;
-}
-
-function isApprovalRequiredForTransactions(baseAsset: CryptoAsset) {
-  if (baseAsset.type === CryptoAssetType.ERC20) {
-    return true;
-  }
-
-  // Ethereum and ERC20-Permits don't need approval
-  return false;
 }
