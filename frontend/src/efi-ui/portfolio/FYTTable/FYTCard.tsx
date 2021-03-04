@@ -6,9 +6,11 @@ import {
   ButtonGroup,
   Callout,
   Card,
+  Colors,
   Icon,
   Intent,
   ProgressBar,
+  Tag,
 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { Tooltip2 } from "@blueprintjs/popover2";
@@ -146,7 +148,18 @@ export const FYTCard: FC<FYTCardProps> = ({ account, tranche }) => {
                 {trancheSymbol}
               </a>
             </span>
-            <div className={tw("flex", "w-full")}>
+            <div className={tw("flex", "w-full", "items-center")}>
+              <div>
+                <Tag
+                  large
+                  round
+                  className={tw("font-semibold")}
+                  style={{
+                    backgroundColor: Colors.GREEN5,
+                    color: "var(--bp3-dark-bg-color)",
+                  }}
+                >{t`Fixed rate`}</Tag>
+              </div>
               <div className={tw("flex", "flex-1", "space-x-6", "justify-end")}>
                 <LabeledText
                   textClassName={tw("text-base")}
