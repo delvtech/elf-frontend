@@ -1,0 +1,130 @@
+import { BytesLike } from "@ethersproject/bytes";
+import { BigNumberish, Signer } from "ethers";
+import { parseUnits } from "ethers/lib/utils";
+import { ERC20, Tranche, USDC, Vault, WETH } from "types";
+
+import { ONE_DAY_IN_SECONDS } from "../time";
+import { initializeYieldPool } from "./initializeYieldPool";
+import { mintTrancheAssets } from "./mintTrancheAssets";
+
+// TODO: add options for the tranche and balancer pools
+export async function setupFYTMarket(
+  elementSigner: Signer,
+  balancerVaultContract: Vault,
+  poolId: string,
+  baseAssetContract: WETH | USDC,
+  trancheContract: Tranche
+) {
+  const sender = await elementSigner.getAddress();
+
+  // put base asset into market
+  await initializeYieldPool(
+    poolId,
+    elementSigner,
+    balancerVaultContract,
+    baseAssetContract,
+    trancheContract,
+    "20000"
+  );
+
+  // mint some tranche assets
+  await mintTrancheAssets(
+    elementSigner,
+    baseAssetContract,
+    trancheContract,
+    "20000"
+  );
+
+  // trade some tranche assets for some base assets
+  const swapReceipt = await batchSwapIn(
+    baseAssetContract,
+    trancheContract,
+    poolId,
+    sender,
+    balancerVaultContract,
+    "13000"
+  );
+
+  // // TODO: figure out how to decode this data and return the deltas array
+  // const deltas = ethers.utils.defaultAbiCoder.decode(
+  //   ["int256", "int256"],
+  //   ethers.utils.hexDataSlice(swapReceipt.data, 256)
+  // ) as BigNumber[];
+  // console.log("swapReceipt.data.length", swapReceipt.data.length);
+  // console.log("deltas", deltas);
+
+  return swapReceipt;
+}
+
+interface SwapIn {
+  poolId: BytesLike;
+  tokenInIndex: number;
+  tokenOutIndex: number;
+  amountIn: BigNumberish;
+  userData: BytesLike;
+}
+interface FundManagement {
+  sender: string;
+  fromInternalBalance: boolean;
+  recipient: string;
+  toInternalBalance: boolean;
+}
+
+async function batchSwapIn(
+  tokenOutContract: ERC20,
+  tokenInContract: ERC20,
+  poolId: string,
+  sender: string,
+  balancerVaultContract: Vault,
+  swapInAmount: string
+) {
+  const tokens: string[] = [tokenOutContract.address, tokenInContract.address];
+  const tokenInDecimals = await tokenInContract.decimals();
+  const amountIn = parseUnits(swapInAmount, tokenInDecimals);
+  // have to set this to something
+  const userData: BytesLike = poolId;
+
+  // the series of swaps to perform, only one in this case.
+  const swaps: SwapIn[] = [
+    {
+      poolId,
+      // indicies from 'tokens', puttin FYTs in, getting base asset out.
+      tokenInIndex: 1,
+      tokenOutIndex: 0,
+      amountIn,
+      userData,
+    },
+  ];
+
+  // trading with ourselves.  internal balance means internal to balancer.  we don't have anything
+  // in there to start, but we'll keep whatever base assets we get from swapping in the balancer vault.
+  const funds: FundManagement = {
+    sender,
+    fromInternalBalance: false,
+    recipient: sender,
+    toInternalBalance: true,
+  };
+
+  // the user is sending this one, so the delta will be negative, so just set a limit of zero.
+  const limitTokenIn = 0;
+
+  // performing a SwapIn, so we can specifiy exactly how much in and set the limit to that.
+  const limitTokenOut = amountIn;
+
+  // order must be the same as 'tokens'
+  const limits: BigNumberish[] = [limitTokenIn, limitTokenOut];
+
+  // set a large deadline for now, it was being buggy.  time is in seconds.  must be an integer.
+  const deadline = Math.round(Date.now() / 1000) + ONE_DAY_IN_SECONDS;
+
+  const swapReceipt = await balancerVaultContract.batchSwapGivenIn(
+    swaps,
+    tokens,
+    funds,
+    limits,
+    deadline
+  );
+
+  await swapReceipt.wait(1);
+  return swapReceipt;
+}
