@@ -10,5 +10,5 @@ export async function deployYearnVaultAssetProxy(
   symbol: string
 ) {
   const deployer = new YVaultAssetProxy__factory(signer);
-  return await deployer.deploy(yUnderlying, underlying);
+  return await deployer.deploy(yUnderlying, underlying, name, symbol);
 }
