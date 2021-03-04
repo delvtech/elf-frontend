@@ -1,3 +1,4 @@
+import { SIX_MONTHS_IN_SECONDS } from "./../time";
 import {
   formatEther,
   formatUnits,
@@ -5,15 +6,16 @@ import {
   parseUnits,
 } from "ethers/lib/utils";
 import fs from "fs";
-import { setupElfTrancheAndMarkets } from "./setupElfTrancheAndMarkets";
+import { YVaultAssetProxy } from "types";
 
-import { deployBalancerFactory } from "./balancerFactory";
 import { deployBalancerVault } from "./balancerV2Vault";
 import { deployBaseAssets } from "./baseAssets";
 import { deployYieldPool } from "./deployYieldPool";
-import { deployElfFactory } from "./elfFactory";
+import { deployYearnVault } from "./deployYVault";
+import { deployYearnVaultAssetProxy } from "./deployYVaultAssetProxy";
 import { getSigner, SIGNER } from "./getSigner";
-import { initializeYieldPool } from "./initializeYieldPool";
+import { setupFYTMarket } from "./setupFYTMarket";
+import { deployTranche } from "./tranche";
 import { deployUserProxy } from "./userProxy";
 
 async function main() {
@@ -24,8 +26,10 @@ async function main() {
   const balancerAddress = await balancerSigner.getAddress();
   const userAddress = await userSigner.getAddress();
 
-  // deploy base assets, give element address some extra tokens
+  // deploy base assets
   const [wethContract, usdcContract] = await deployBaseAssets(elementSigner);
+
+  // give element address some extra tokens
   const e_mintWethTx = await wethContract.mint(
     elementAddress,
     parseEther("1000000")
@@ -36,74 +40,6 @@ async function main() {
     parseUnits("1000000", 6)
   );
   await e_mintUsdcTx.wait(1);
-
-  // deploy elf, tranches and markets
-  const elfFactoryContract = await deployElfFactory(elementSigner);
-  const bFactoryContract = await deployBalancerFactory(elementSigner);
-
-  const {
-    elfContract: elfWethContract,
-    trancheContract: trancheWethContract,
-    marketFYTContract: marketWethFYTContract,
-    marketYCContract: marketWethYCContract,
-  } = await setupElfTrancheAndMarkets(
-    elfFactoryContract,
-    wethContract,
-    elementSigner,
-    bFactoryContract,
-    elementAddress,
-    "Elemnent WETH yearn vault",
-    "ELF-WETH-YVAULT"
-  );
-
-  /**
-   * remove these consoles when USDC price verified in frontend
-   */
-  const wethMarketBalance = await marketWethFYTContract.getBalance(
-    wethContract.address
-  );
-  console.log("wethMarketBalance", formatEther(wethMarketBalance));
-
-  const fyWethMarketBalance = await marketWethFYTContract.getBalance(
-    trancheWethContract.address
-  );
-  console.log("fyWethMarketBalance", formatEther(fyWethMarketBalance));
-  /************************************************************** */
-
-  const {
-    elfContract: elfUsdcContract,
-    trancheContract: trancheUsdcContract,
-    marketFYTContract: marketUsdcFYTContract,
-    marketYCContract: marketUsdcYCContract,
-  } = await setupElfTrancheAndMarkets(
-    elfFactoryContract,
-    usdcContract,
-    elementSigner,
-    bFactoryContract,
-    elementAddress,
-    "Element USDC yearn vault",
-    "ELF-USDC-YVAULT"
-  );
-
-  /**
-   * remove these consoles when USDC price verified in frontend
-   */
-  const usdcMarketBalance = await marketUsdcFYTContract.getBalance(
-    usdcContract.address
-  );
-  console.log("usdcMarketBalance", formatUnits(usdcMarketBalance, 6));
-
-  const fyUsdcMarketBalance = await marketUsdcFYTContract.getBalance(
-    trancheUsdcContract.address
-  );
-  console.log("fyUsdcMarketBalance", formatUnits(fyUsdcMarketBalance, 6));
-  /************************************************************** */
-
-  // deploy user proxy
-  const userProxyContract = await deployUserProxy(
-    elementSigner,
-    wethContract.address
-  );
 
   // supply user with WETH and USDC
   const mintWethTx = await wethContract.mint(
@@ -117,28 +53,55 @@ async function main() {
   );
   await mintUsdcTx.wait(1);
 
-  const wethBalance = await wethContract.balanceOf(userAddress);
-  const usdcBalance = await usdcContract.balanceOf(userAddress);
-  console.log("user1 supplied with");
-  console.log(formatEther(wethBalance), "WETH");
-  console.log(formatUnits(usdcBalance, 6), "USDC");
-
+  // deploy main balancer vault
   const vaultContract = await deployBalancerVault(balancerSigner);
   await vaultContract.changeRelayerAllowance(elementAddress, true);
 
+  // deploy elf
+  const yWeth = await deployYearnVault(elementSigner, wethContract.address);
+  const elfContract: YVaultAssetProxy = await deployYearnVaultAssetProxy(
+    elementSigner,
+    yWeth.address,
+    wethContract.address,
+    "eyWETH",
+    "eyWETH"
+  );
+
+  // deploy a tranche
+  const trancheContract = await deployTranche(
+    elementSigner,
+    elfContract,
+    SIX_MONTHS_IN_SECONDS
+  );
+
+  // deploy an FYT market
   const { poolId, poolContract } = await deployYieldPool(
     elementSigner,
     vaultContract,
     wethContract,
-    trancheWethContract
+    trancheContract
   );
 
-  await initializeYieldPool(
-    poolId,
+  // setup markets with initial liquidity
+  await setupFYTMarket(
     elementSigner,
     vaultContract,
+    poolId,
     wethContract,
-    trancheWethContract
+    trancheContract
+  );
+
+  const { tokens, balances } = await vaultContract.getPoolTokens(poolId);
+  console.log("tokens", tokens);
+  console.log(
+    "balances",
+    balances.map((b) => formatUnits(b))
+  );
+
+  // deploy user proxy
+  const userProxyContract = await deployUserProxy(
+    elementSigner,
+    wethContract.address
   );
 
   const addresses = JSON.stringify(
@@ -151,27 +114,21 @@ async function main() {
       // balancer
       balancerVaultAddress: vaultContract.address,
 
+      // elf asset proxy
+      yearnVaultAssetProxyAddress: elfContract.address,
+
+      // market addresses and ids
+      marketFyWethAddress: poolContract.address,
+      marketFyWethId: poolId,
+
       // user proxy
       userProxyContractAddress: userProxyContract.address,
 
-      // factories
-      elfFactoryAddress: elfFactoryContract.address,
-      bFactoryAddress: bFactoryContract.address,
-
       // weth addresses
       wethAddress: wethContract.address,
-      elfWethAddress: elfWethContract.address,
-      trancheWethAddress: trancheWethContract.address,
-      marketWethFYTAddress: marketWethFYTContract.address,
-      marketWethYCAddress: marketWethYCContract.address,
 
       //usdc addresses
       usdcAddress: usdcContract.address,
-      elfUsdcAddress: elfUsdcContract.address,
-      trancheUsdcAddress: trancheUsdcContract.address,
-      bPoolUsdcAddress: marketUsdcFYTContract.address,
-      marketUsdcFYTAddress: marketUsdcFYTContract.address,
-      marketUsdcYCAddress: marketUsdcYCContract.address,
     },
     null,
     2
