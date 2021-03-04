@@ -114,16 +114,3 @@ export async function postWithdrawEth(
 ): Promise<undefined> {
   return undefined;
 }
-
-export async function postWithdraw(
-  signer: Signer | undefined,
-  amount: BigNumber
-): Promise<ContractTransaction | undefined> {
-  if (!signer) {
-    return undefined;
-  }
-  const elfWithSigner = elfContract.connect(signer);
-  const address = await signer.getAddress();
-  const elfResult = await elfWithSigner.functions.withdraw(address, amount);
-  return elfResult;
-}

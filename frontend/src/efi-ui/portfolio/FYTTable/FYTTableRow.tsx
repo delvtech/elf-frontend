@@ -11,7 +11,11 @@ import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 
 import styles from "efi-ui/base/table.module.css";
-import { Elf__factory, ERC20__factory, Tranche } from "elf-contracts/types";
+import {
+  ERC20__factory,
+  Tranche,
+  YVaultAssetProxy__factory,
+} from "elf-contracts/types";
 import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
@@ -50,7 +54,7 @@ export const FYTTableRow: FC<FYTTableRowProps> = ({ account, tranche }) => {
   const elfAddressResult = useSmartContractReadCall(tranche, "elf");
   const elfContract = useSmartContractFromFactory(
     getQueryData(elfAddressResult),
-    Elf__factory.connect
+    YVaultAssetProxy__factory.connect
   );
   const vaultAddressResult = useSmartContractReadCall(elfContract, "vault");
   const vaultContract = useSmartContractFromFactory(
