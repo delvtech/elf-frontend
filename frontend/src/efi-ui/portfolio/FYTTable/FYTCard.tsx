@@ -38,6 +38,7 @@ import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
 import { navigate } from "@reach/router";
 import { CryptoIconSvg } from "efi-ui/crypto/CryptoIcon";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
+import { formatMoney } from "efi/money/formatMoney";
 
 interface FYTCardProps {
   account: string | null | undefined;
@@ -98,10 +99,7 @@ export const FYTCard: FC<FYTCardProps> = ({ account, tranche }) => {
 
   let fiatPrice;
   if (tranchePriceInBaseAsset && baseAssetCoinGeckoPrice) {
-    fiatPrice = `${currency.symbol}${baseAssetCoinGeckoPrice
-      .multiply(exitValue)
-      .toDecimal()
-      .toLocaleString()}`;
+    fiatPrice = formatMoney(baseAssetCoinGeckoPrice.multiply(exitValue));
   }
 
   const iconKey = baseAssetSymbol?.toUpperCase() as CryptoSymbol;
@@ -215,7 +213,7 @@ export const FYTCard: FC<FYTCardProps> = ({ account, tranche }) => {
               text={
                 <span>{t`${exitValue.toFixed(6)} ${baseAssetSymbol}`}</span>
               }
-              label={fiatPrice}
+              label={`${currency.symbol}${fiatPrice}`}
             />
           </Callout>
         </div>
