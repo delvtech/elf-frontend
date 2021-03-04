@@ -14,20 +14,12 @@ import {
 import { IconNames } from "@blueprintjs/icons";
 import { Tooltip2 } from "@blueprintjs/popover2";
 import classNames from "classnames";
-import {
-  Elf__factory,
-  ERC20__factory,
-  Tranche,
-  Tranche__factory,
-  YC,
-} from "elf-contracts/types";
+import { YC } from "elf-contracts/types";
 import { jt, t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { useCalcOutGivenIn } from "efi-ui/balancer/useCalcOutGivenIn";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { getQueryData } from "efi-ui/base/queryResults";
-import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useMarketForToken } from "efi-ui/markets/useMarketForToken";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
@@ -43,6 +35,8 @@ import { formatMoney } from "efi/money/formatMoney";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { CryptoIconSvg } from "efi-ui/crypto/CryptoIcon";
 import { navigate } from "@reach/router";
+import { useTrancheForYieldCoupon } from "./useTrancheForYieldCoupon";
+import { useVaultForTranche } from "./useVaultForTranche";
 
 interface YCCardProps {
   account: string | null | undefined;
@@ -250,32 +244,6 @@ export const YCCard: FC<YCCardProps> = ({ account, yieldCoupon }) => {
     </div>
   );
 };
-
-function useVaultForTranche(tranche: Tranche | undefined) {
-  const elfAddressResult = useSmartContractReadCall(tranche, "elf");
-  const elfContract = useSmartContractFromFactory(
-    getQueryData(elfAddressResult),
-    Elf__factory.connect
-  );
-  const vaultAddressResult = useSmartContractReadCall(elfContract, "vault");
-  const vaultContract = useSmartContractFromFactory(
-    getQueryData(vaultAddressResult),
-    ERC20__factory.connect
-  );
-  return vaultContract;
-}
-
-function useTrancheForYieldCoupon(yieldCoupon: YC) {
-  const { data: trancheAddress } = useSmartContractReadCall(
-    yieldCoupon,
-    "tranche"
-  );
-  const tranche = useSmartContractFromFactory(
-    trancheAddress,
-    Tranche__factory.connect
-  );
-  return tranche;
-}
 
 function getTableRowLink(
   vaultAddress: string | undefined,
