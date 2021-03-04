@@ -22,53 +22,163 @@ import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 
 interface YVaultAssetProxyInterface extends ethers.utils.Interface {
   functions: {
-    "approve()": FunctionFragment;
-    "deposit()": FunctionFragment;
-    "governance()": FunctionFragment;
-    "pool()": FunctionFragment;
-    "setGovernance(address)": FunctionFragment;
-    "setPool(address)": FunctionFragment;
+    "DOMAIN_SEPARATOR()": FunctionFragment;
+    "allowance(address,address)": FunctionFragment;
+    "approve(address,uint256)": FunctionFragment;
+    "balanceOf(address)": FunctionFragment;
+    "balanceOfUnderlying(address)": FunctionFragment;
+    "decimals()": FunctionFragment;
+    "decreaseAllowance(address,uint256)": FunctionFragment;
+    "deposit(address,uint256)": FunctionFragment;
+    "getSharesToUnderlying(uint256)": FunctionFragment;
+    "increaseAllowance(address,uint256)": FunctionFragment;
+    "name()": FunctionFragment;
+    "nonces(address)": FunctionFragment;
+    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)": FunctionFragment;
+    "prefundedDeposit(address)": FunctionFragment;
+    "symbol()": FunctionFragment;
     "token()": FunctionFragment;
-    "underlying(uint256)": FunctionFragment;
+    "transfer(address,uint256)": FunctionFragment;
+    "transferFrom(address,address,uint256)": FunctionFragment;
     "vault()": FunctionFragment;
-    "withdraw()": FunctionFragment;
+    "vaultDecimals()": FunctionFragment;
+    "withdraw(address,uint256,uint256)": FunctionFragment;
+    "withdrawUnderlying(address,uint256,uint256)": FunctionFragment;
   };
 
-  encodeFunctionData(functionFragment: "approve", values?: undefined): string;
-  encodeFunctionData(functionFragment: "deposit", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "governance",
+    functionFragment: "DOMAIN_SEPARATOR",
     values?: undefined
   ): string;
-  encodeFunctionData(functionFragment: "pool", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "setGovernance",
+    functionFragment: "allowance",
+    values: [string, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "approve",
+    values: [string, BigNumberish]
+  ): string;
+  encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "balanceOfUnderlying",
     values: [string]
   ): string;
-  encodeFunctionData(functionFragment: "setPool", values: [string]): string;
-  encodeFunctionData(functionFragment: "token", values?: undefined): string;
+  encodeFunctionData(functionFragment: "decimals", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "underlying",
+    functionFragment: "decreaseAllowance",
+    values: [string, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "deposit",
+    values: [string, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getSharesToUnderlying",
     values: [BigNumberish]
   ): string;
+  encodeFunctionData(
+    functionFragment: "increaseAllowance",
+    values: [string, BigNumberish]
+  ): string;
+  encodeFunctionData(functionFragment: "name", values?: undefined): string;
+  encodeFunctionData(functionFragment: "nonces", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "permit",
+    values: [
+      string,
+      string,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BytesLike,
+      BytesLike
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "prefundedDeposit",
+    values: [string]
+  ): string;
+  encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
+  encodeFunctionData(functionFragment: "token", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "transfer",
+    values: [string, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "transferFrom",
+    values: [string, string, BigNumberish]
+  ): string;
   encodeFunctionData(functionFragment: "vault", values?: undefined): string;
-  encodeFunctionData(functionFragment: "withdraw", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "vaultDecimals",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "withdraw",
+    values: [string, BigNumberish, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "withdrawUnderlying",
+    values: [string, BigNumberish, BigNumberish]
+  ): string;
 
-  decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "governance", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "pool", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "setGovernance",
+    functionFragment: "DOMAIN_SEPARATOR",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "setPool", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "balanceOfUnderlying",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "decimals", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "decreaseAllowance",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "getSharesToUnderlying",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "increaseAllowance",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "nonces", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "permit", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "prefundedDeposit",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "token", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "underlying", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "transfer", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "transferFrom",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "vault", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "vaultDecimals",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "withdrawUnderlying",
+    data: BytesLike
+  ): Result;
 
-  events: {};
+  events: {
+    "Approval(address,address,uint256)": EventFragment;
+    "Transfer(address,address,uint256)": EventFragment;
+  };
+
+  getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
 }
 
 export class YVaultAssetProxy extends Contract {
@@ -85,287 +195,1048 @@ export class YVaultAssetProxy extends Contract {
   interface: YVaultAssetProxyInterface;
 
   functions: {
-    approve(overrides?: Overrides): Promise<ContractTransaction>;
+    DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<[string]>;
+
+    "DOMAIN_SEPARATOR()"(overrides?: CallOverrides): Promise<[string]>;
+
+    allowance(
+      owner: string,
+      spender: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    "allowance(address,address)"(
+      owner: string,
+      spender: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    "approve(address,uint256)"(
+      spender: string,
+      amount: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
 
     "approve()"(overrides?: Overrides): Promise<ContractTransaction>;
 
-    deposit(overrides?: Overrides): Promise<ContractTransaction>;
+    balanceOf(account: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    "deposit()"(overrides?: Overrides): Promise<ContractTransaction>;
+    "balanceOf(address)"(
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
-    governance(overrides?: CallOverrides): Promise<[string]>;
+    balanceOfUnderlying(
+      _who: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
-    "governance()"(overrides?: CallOverrides): Promise<[string]>;
+    "balanceOfUnderlying(address)"(
+      _who: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
-    pool(overrides?: CallOverrides): Promise<[string]>;
+    decimals(overrides?: CallOverrides): Promise<[number]>;
 
-    "pool()"(overrides?: CallOverrides): Promise<[string]>;
+    "decimals()"(overrides?: CallOverrides): Promise<[number]>;
 
-    setGovernance(
-      _governance: string,
+    decreaseAllowance(
+      spender: string,
+      subtractedValue: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "setGovernance(address)"(
-      _governance: string,
+    "decreaseAllowance(address,uint256)"(
+      spender: string,
+      subtractedValue: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    setPool(_pool: string, overrides?: Overrides): Promise<ContractTransaction>;
-
-    "setPool(address)"(
-      _pool: string,
+    deposit(
+      _destination: string,
+      _amount: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
+
+    "deposit(address,uint256)"(
+      _destination: string,
+      _amount: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    getSharesToUnderlying(
+      _shares: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    "getSharesToUnderlying(uint256)"(
+      _shares: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    increaseAllowance(
+      spender: string,
+      addedValue: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "increaseAllowance(address,uint256)"(
+      spender: string,
+      addedValue: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    name(overrides?: CallOverrides): Promise<[string]>;
+
+    "name()"(overrides?: CallOverrides): Promise<[string]>;
+
+    nonces(owner: string, overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "nonces(address)"(
+      owner: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    permit(
+      owner: string,
+      spender: string,
+      value: BigNumberish,
+      deadline: BigNumberish,
+      v: BigNumberish,
+      r: BytesLike,
+      s: BytesLike,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
+      owner: string,
+      spender: string,
+      value: BigNumberish,
+      deadline: BigNumberish,
+      v: BigNumberish,
+      r: BytesLike,
+      s: BytesLike,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    prefundedDeposit(
+      _destination: string,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "prefundedDeposit(address)"(
+      _destination: string,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    symbol(overrides?: CallOverrides): Promise<[string]>;
+
+    "symbol()"(overrides?: CallOverrides): Promise<[string]>;
 
     token(overrides?: CallOverrides): Promise<[string]>;
 
     "token()"(overrides?: CallOverrides): Promise<[string]>;
 
-    underlying(
-      _amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+    transfer(
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
 
-    "underlying(uint256)"(
-      _amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+    "transfer(address,uint256)"(
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    transferFrom(
+      sender: string,
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "transferFrom(address,address,uint256)"(
+      sender: string,
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
 
     vault(overrides?: CallOverrides): Promise<[string]>;
 
     "vault()"(overrides?: CallOverrides): Promise<[string]>;
 
-    withdraw(overrides?: Overrides): Promise<ContractTransaction>;
+    vaultDecimals(overrides?: CallOverrides): Promise<[number]>;
 
-    "withdraw()"(overrides?: Overrides): Promise<ContractTransaction>;
+    "vaultDecimals()"(overrides?: CallOverrides): Promise<[number]>;
+
+    withdraw(
+      _destination: string,
+      _shares: BigNumberish,
+      _minUnderlying: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "withdraw(address,uint256,uint256)"(
+      _destination: string,
+      _shares: BigNumberish,
+      _minUnderlying: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    withdrawUnderlying(
+      _destination: string,
+      _amount: BigNumberish,
+      _minUnderlying: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "withdrawUnderlying(address,uint256,uint256)"(
+      _destination: string,
+      _amount: BigNumberish,
+      _minUnderlying: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
   };
 
-  approve(overrides?: Overrides): Promise<ContractTransaction>;
+  DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<string>;
+
+  "DOMAIN_SEPARATOR()"(overrides?: CallOverrides): Promise<string>;
+
+  allowance(
+    owner: string,
+    spender: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  "allowance(address,address)"(
+    owner: string,
+    spender: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  "approve(address,uint256)"(
+    spender: string,
+    amount: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
 
   "approve()"(overrides?: Overrides): Promise<ContractTransaction>;
 
-  deposit(overrides?: Overrides): Promise<ContractTransaction>;
+  balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-  "deposit()"(overrides?: Overrides): Promise<ContractTransaction>;
+  "balanceOf(address)"(
+    account: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
-  governance(overrides?: CallOverrides): Promise<string>;
+  balanceOfUnderlying(
+    _who: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
-  "governance()"(overrides?: CallOverrides): Promise<string>;
+  "balanceOfUnderlying(address)"(
+    _who: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
-  pool(overrides?: CallOverrides): Promise<string>;
+  decimals(overrides?: CallOverrides): Promise<number>;
 
-  "pool()"(overrides?: CallOverrides): Promise<string>;
+  "decimals()"(overrides?: CallOverrides): Promise<number>;
 
-  setGovernance(
-    _governance: string,
+  decreaseAllowance(
+    spender: string,
+    subtractedValue: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "setGovernance(address)"(
-    _governance: string,
+  "decreaseAllowance(address,uint256)"(
+    spender: string,
+    subtractedValue: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  setPool(_pool: string, overrides?: Overrides): Promise<ContractTransaction>;
-
-  "setPool(address)"(
-    _pool: string,
+  deposit(
+    _destination: string,
+    _amount: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
+
+  "deposit(address,uint256)"(
+    _destination: string,
+    _amount: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  getSharesToUnderlying(
+    _shares: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  "getSharesToUnderlying(uint256)"(
+    _shares: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  increaseAllowance(
+    spender: string,
+    addedValue: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "increaseAllowance(address,uint256)"(
+    spender: string,
+    addedValue: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  name(overrides?: CallOverrides): Promise<string>;
+
+  "name()"(overrides?: CallOverrides): Promise<string>;
+
+  nonces(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+  "nonces(address)"(
+    owner: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  permit(
+    owner: string,
+    spender: string,
+    value: BigNumberish,
+    deadline: BigNumberish,
+    v: BigNumberish,
+    r: BytesLike,
+    s: BytesLike,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
+    owner: string,
+    spender: string,
+    value: BigNumberish,
+    deadline: BigNumberish,
+    v: BigNumberish,
+    r: BytesLike,
+    s: BytesLike,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  prefundedDeposit(
+    _destination: string,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "prefundedDeposit(address)"(
+    _destination: string,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  symbol(overrides?: CallOverrides): Promise<string>;
+
+  "symbol()"(overrides?: CallOverrides): Promise<string>;
 
   token(overrides?: CallOverrides): Promise<string>;
 
   "token()"(overrides?: CallOverrides): Promise<string>;
 
-  underlying(
-    _amount: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  transfer(
+    recipient: string,
+    amount: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
 
-  "underlying(uint256)"(
-    _amount: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  "transfer(address,uint256)"(
+    recipient: string,
+    amount: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  transferFrom(
+    sender: string,
+    recipient: string,
+    amount: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "transferFrom(address,address,uint256)"(
+    sender: string,
+    recipient: string,
+    amount: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
 
   vault(overrides?: CallOverrides): Promise<string>;
 
   "vault()"(overrides?: CallOverrides): Promise<string>;
 
-  withdraw(overrides?: Overrides): Promise<ContractTransaction>;
+  vaultDecimals(overrides?: CallOverrides): Promise<number>;
 
-  "withdraw()"(overrides?: Overrides): Promise<ContractTransaction>;
+  "vaultDecimals()"(overrides?: CallOverrides): Promise<number>;
+
+  withdraw(
+    _destination: string,
+    _shares: BigNumberish,
+    _minUnderlying: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "withdraw(address,uint256,uint256)"(
+    _destination: string,
+    _shares: BigNumberish,
+    _minUnderlying: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  withdrawUnderlying(
+    _destination: string,
+    _amount: BigNumberish,
+    _minUnderlying: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "withdrawUnderlying(address,uint256,uint256)"(
+    _destination: string,
+    _amount: BigNumberish,
+    _minUnderlying: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
 
   callStatic: {
-    approve(overrides?: CallOverrides): Promise<void>;
+    DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<string>;
+
+    "DOMAIN_SEPARATOR()"(overrides?: CallOverrides): Promise<string>;
+
+    allowance(
+      owner: string,
+      spender: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "allowance(address,address)"(
+      owner: string,
+      spender: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "approve(address,uint256)"(
+      spender: string,
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
 
     "approve()"(overrides?: CallOverrides): Promise<void>;
 
-    deposit(overrides?: CallOverrides): Promise<void>;
+    balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    "deposit()"(overrides?: CallOverrides): Promise<void>;
+    "balanceOf(address)"(
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
-    governance(overrides?: CallOverrides): Promise<string>;
+    balanceOfUnderlying(
+      _who: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
-    "governance()"(overrides?: CallOverrides): Promise<string>;
+    "balanceOfUnderlying(address)"(
+      _who: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
-    pool(overrides?: CallOverrides): Promise<string>;
+    decimals(overrides?: CallOverrides): Promise<number>;
 
-    "pool()"(overrides?: CallOverrides): Promise<string>;
+    "decimals()"(overrides?: CallOverrides): Promise<number>;
 
-    setGovernance(
-      _governance: string,
+    decreaseAllowance(
+      spender: string,
+      subtractedValue: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    "decreaseAllowance(address,uint256)"(
+      spender: string,
+      subtractedValue: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    deposit(
+      _destination: string,
+      _amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "deposit(address,uint256)"(
+      _destination: string,
+      _amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getSharesToUnderlying(
+      _shares: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "getSharesToUnderlying(uint256)"(
+      _shares: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    increaseAllowance(
+      spender: string,
+      addedValue: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    "increaseAllowance(address,uint256)"(
+      spender: string,
+      addedValue: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    name(overrides?: CallOverrides): Promise<string>;
+
+    "name()"(overrides?: CallOverrides): Promise<string>;
+
+    nonces(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    "nonces(address)"(
+      owner: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    permit(
+      owner: string,
+      spender: string,
+      value: BigNumberish,
+      deadline: BigNumberish,
+      v: BigNumberish,
+      r: BytesLike,
+      s: BytesLike,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "setGovernance(address)"(
-      _governance: string,
+    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
+      owner: string,
+      spender: string,
+      value: BigNumberish,
+      deadline: BigNumberish,
+      v: BigNumberish,
+      r: BytesLike,
+      s: BytesLike,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    setPool(_pool: string, overrides?: CallOverrides): Promise<void>;
+    prefundedDeposit(
+      _destination: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber, BigNumber, BigNumber]>;
 
-    "setPool(address)"(_pool: string, overrides?: CallOverrides): Promise<void>;
+    "prefundedDeposit(address)"(
+      _destination: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber, BigNumber, BigNumber]>;
+
+    symbol(overrides?: CallOverrides): Promise<string>;
+
+    "symbol()"(overrides?: CallOverrides): Promise<string>;
 
     token(overrides?: CallOverrides): Promise<string>;
 
     "token()"(overrides?: CallOverrides): Promise<string>;
 
-    underlying(
-      _amount: BigNumberish,
+    transfer(
+      recipient: string,
+      amount: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<boolean>;
 
-    "underlying(uint256)"(
-      _amount: BigNumberish,
+    "transfer(address,uint256)"(
+      recipient: string,
+      amount: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<boolean>;
+
+    transferFrom(
+      sender: string,
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    "transferFrom(address,address,uint256)"(
+      sender: string,
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
 
     vault(overrides?: CallOverrides): Promise<string>;
 
     "vault()"(overrides?: CallOverrides): Promise<string>;
 
-    withdraw(overrides?: CallOverrides): Promise<void>;
+    vaultDecimals(overrides?: CallOverrides): Promise<number>;
 
-    "withdraw()"(overrides?: CallOverrides): Promise<void>;
+    "vaultDecimals()"(overrides?: CallOverrides): Promise<number>;
+
+    withdraw(
+      _destination: string,
+      _shares: BigNumberish,
+      _minUnderlying: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "withdraw(address,uint256,uint256)"(
+      _destination: string,
+      _shares: BigNumberish,
+      _minUnderlying: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    withdrawUnderlying(
+      _destination: string,
+      _amount: BigNumberish,
+      _minUnderlying: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "withdrawUnderlying(address,uint256,uint256)"(
+      _destination: string,
+      _amount: BigNumberish,
+      _minUnderlying: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
   };
 
-  filters: {};
+  filters: {
+    Approval(
+      owner: string | null,
+      spender: string | null,
+      value: null
+    ): EventFilter;
+
+    Transfer(from: string | null, to: string | null, value: null): EventFilter;
+  };
 
   estimateGas: {
-    approve(overrides?: Overrides): Promise<BigNumber>;
+    DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "DOMAIN_SEPARATOR()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    allowance(
+      owner: string,
+      spender: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "allowance(address,address)"(
+      owner: string,
+      spender: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "approve(address,uint256)"(
+      spender: string,
+      amount: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
 
     "approve()"(overrides?: Overrides): Promise<BigNumber>;
 
-    deposit(overrides?: Overrides): Promise<BigNumber>;
+    balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    "deposit()"(overrides?: Overrides): Promise<BigNumber>;
+    "balanceOf(address)"(
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
-    governance(overrides?: CallOverrides): Promise<BigNumber>;
+    balanceOfUnderlying(
+      _who: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
-    "governance()"(overrides?: CallOverrides): Promise<BigNumber>;
+    "balanceOfUnderlying(address)"(
+      _who: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
-    pool(overrides?: CallOverrides): Promise<BigNumber>;
+    decimals(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "pool()"(overrides?: CallOverrides): Promise<BigNumber>;
+    "decimals()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-    setGovernance(
-      _governance: string,
+    decreaseAllowance(
+      spender: string,
+      subtractedValue: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    "setGovernance(address)"(
-      _governance: string,
+    "decreaseAllowance(address,uint256)"(
+      spender: string,
+      subtractedValue: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    setPool(_pool: string, overrides?: Overrides): Promise<BigNumber>;
-
-    "setPool(address)"(
-      _pool: string,
+    deposit(
+      _destination: string,
+      _amount: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
+
+    "deposit(address,uint256)"(
+      _destination: string,
+      _amount: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    getSharesToUnderlying(
+      _shares: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "getSharesToUnderlying(uint256)"(
+      _shares: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    increaseAllowance(
+      spender: string,
+      addedValue: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "increaseAllowance(address,uint256)"(
+      spender: string,
+      addedValue: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    name(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "name()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    nonces(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    "nonces(address)"(
+      owner: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    permit(
+      owner: string,
+      spender: string,
+      value: BigNumberish,
+      deadline: BigNumberish,
+      v: BigNumberish,
+      r: BytesLike,
+      s: BytesLike,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
+      owner: string,
+      spender: string,
+      value: BigNumberish,
+      deadline: BigNumberish,
+      v: BigNumberish,
+      r: BytesLike,
+      s: BytesLike,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    prefundedDeposit(
+      _destination: string,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "prefundedDeposit(address)"(
+      _destination: string,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    symbol(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "symbol()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     token(overrides?: CallOverrides): Promise<BigNumber>;
 
     "token()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-    underlying(
-      _amount: BigNumberish,
-      overrides?: CallOverrides
+    transfer(
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
-    "underlying(uint256)"(
-      _amount: BigNumberish,
-      overrides?: CallOverrides
+    "transfer(address,uint256)"(
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    transferFrom(
+      sender: string,
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "transferFrom(address,address,uint256)"(
+      sender: string,
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     vault(overrides?: CallOverrides): Promise<BigNumber>;
 
     "vault()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-    withdraw(overrides?: Overrides): Promise<BigNumber>;
+    vaultDecimals(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "withdraw()"(overrides?: Overrides): Promise<BigNumber>;
+    "vaultDecimals()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    withdraw(
+      _destination: string,
+      _shares: BigNumberish,
+      _minUnderlying: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "withdraw(address,uint256,uint256)"(
+      _destination: string,
+      _shares: BigNumberish,
+      _minUnderlying: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    withdrawUnderlying(
+      _destination: string,
+      _amount: BigNumberish,
+      _minUnderlying: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "withdrawUnderlying(address,uint256,uint256)"(
+      _destination: string,
+      _amount: BigNumberish,
+      _minUnderlying: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    approve(overrides?: Overrides): Promise<PopulatedTransaction>;
+    DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "DOMAIN_SEPARATOR()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    allowance(
+      owner: string,
+      spender: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "allowance(address,address)"(
+      owner: string,
+      spender: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "approve(address,uint256)"(
+      spender: string,
+      amount: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
 
     "approve()"(overrides?: Overrides): Promise<PopulatedTransaction>;
 
-    deposit(overrides?: Overrides): Promise<PopulatedTransaction>;
+    balanceOf(
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
-    "deposit()"(overrides?: Overrides): Promise<PopulatedTransaction>;
+    "balanceOf(address)"(
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
-    governance(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    balanceOfUnderlying(
+      _who: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
-    "governance()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    "balanceOfUnderlying(address)"(
+      _who: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
-    pool(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    decimals(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "pool()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    "decimals()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    setGovernance(
-      _governance: string,
+    decreaseAllowance(
+      spender: string,
+      subtractedValue: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "setGovernance(address)"(
-      _governance: string,
+    "decreaseAllowance(address,uint256)"(
+      spender: string,
+      subtractedValue: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    setPool(
-      _pool: string,
+    deposit(
+      _destination: string,
+      _amount: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "setPool(address)"(
-      _pool: string,
+    "deposit(address,uint256)"(
+      _destination: string,
+      _amount: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
+
+    getSharesToUnderlying(
+      _shares: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "getSharesToUnderlying(uint256)"(
+      _shares: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    increaseAllowance(
+      spender: string,
+      addedValue: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "increaseAllowance(address,uint256)"(
+      spender: string,
+      addedValue: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "name()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    nonces(
+      owner: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "nonces(address)"(
+      owner: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    permit(
+      owner: string,
+      spender: string,
+      value: BigNumberish,
+      deadline: BigNumberish,
+      v: BigNumberish,
+      r: BytesLike,
+      s: BytesLike,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
+      owner: string,
+      spender: string,
+      value: BigNumberish,
+      deadline: BigNumberish,
+      v: BigNumberish,
+      r: BytesLike,
+      s: BytesLike,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    prefundedDeposit(
+      _destination: string,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "prefundedDeposit(address)"(
+      _destination: string,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "symbol()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     token(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     "token()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    underlying(
-      _amount: BigNumberish,
-      overrides?: CallOverrides
+    transfer(
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "underlying(uint256)"(
-      _amount: BigNumberish,
-      overrides?: CallOverrides
+    "transfer(address,uint256)"(
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    transferFrom(
+      sender: string,
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "transferFrom(address,address,uint256)"(
+      sender: string,
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     vault(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     "vault()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    withdraw(overrides?: Overrides): Promise<PopulatedTransaction>;
+    vaultDecimals(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "withdraw()"(overrides?: Overrides): Promise<PopulatedTransaction>;
+    "vaultDecimals()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    withdraw(
+      _destination: string,
+      _shares: BigNumberish,
+      _minUnderlying: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "withdraw(address,uint256,uint256)"(
+      _destination: string,
+      _shares: BigNumberish,
+      _minUnderlying: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    withdrawUnderlying(
+      _destination: string,
+      _amount: BigNumberish,
+      _minUnderlying: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "withdrawUnderlying(address,uint256,uint256)"(
+      _destination: string,
+      _amount: BigNumberish,
+      _minUnderlying: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
   };
 }

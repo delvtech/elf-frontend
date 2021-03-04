@@ -1,8 +1,8 @@
 import {
-  Elf__factory,
   ERC20,
   ERC20__factory,
   Tranche,
+  YVaultAssetProxy__factory,
 } from "elf-contracts/types";
 import { getQueryData } from "efi-ui/base/queryResults";
 import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
@@ -14,7 +14,7 @@ export function useVaultForTranche(
   const elfAddressResult = useSmartContractReadCall(tranche, "elf");
   const elfContract = useSmartContractFromFactory(
     getQueryData(elfAddressResult),
-    Elf__factory.connect
+    YVaultAssetProxy__factory.connect
   );
   const vaultAddressResult = useSmartContractReadCall(elfContract, "vault");
   const vaultContract = useSmartContractFromFactory(

@@ -5,11 +5,11 @@ import { IconNames } from "@blueprintjs/icons";
 import { Tooltip2 } from "@blueprintjs/popover2";
 import classNames from "classnames";
 import {
-  Elf__factory,
   ERC20__factory,
   Tranche,
   Tranche__factory,
   YC,
+  YVaultAssetProxy__factory,
 } from "elf-contracts/types";
 import { jt, t } from "ttag";
 
@@ -178,7 +178,7 @@ function useVaultForTranche(tranche: Tranche | undefined) {
   const elfAddressResult = useSmartContractReadCall(tranche, "elf");
   const elfContract = useSmartContractFromFactory(
     getQueryData(elfAddressResult),
-    Elf__factory.connect
+    YVaultAssetProxy__factory.connect
   );
   const vaultAddressResult = useSmartContractReadCall(elfContract, "vault");
   const vaultContract = useSmartContractFromFactory(

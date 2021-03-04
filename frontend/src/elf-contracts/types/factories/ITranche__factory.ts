@@ -247,6 +247,25 @@ const _abi = [
     type: "function",
   },
   {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_destination",
+        type: "address",
+      },
+    ],
+    name: "prefundedDeposit",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
     inputs: [],
     name: "symbol",
     outputs: [
@@ -254,19 +273,6 @@ const _abi = [
         internalType: "string",
         name: "",
         type: "string",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "totalSupply",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
       },
     ],
     stateMutability: "view",
@@ -332,6 +338,11 @@ const _abi = [
         name: "_amount",
         type: "uint256",
       },
+      {
+        internalType: "address",
+        name: "_destination",
+        type: "address",
+      },
     ],
     name: "withdrawFyt",
     outputs: [
@@ -350,6 +361,11 @@ const _abi = [
         internalType: "uint256",
         name: "_amount",
         type: "uint256",
+      },
+      {
+        internalType: "address",
+        name: "_destination",
+        type: "address",
       },
     ],
     name: "withdrawYc",
