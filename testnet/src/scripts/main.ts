@@ -62,7 +62,7 @@ async function main() {
   const yWeth = await deployYearnVault(elementSigner, wethContract.address);
 
   // deploy yearn vault asset proxy
-  const yearnVaultAssetProxy: YVaultAssetProxy = await deployYearnVaultAssetProxy(
+  const wethYearnVaultAssetProxy: YVaultAssetProxy = await deployYearnVaultAssetProxy(
     elementSigner,
     yWeth.address,
     wethContract.address,
@@ -71,9 +71,9 @@ async function main() {
   );
 
   // deploy a tranche
-  const trancheContract = await deployTranche(
+  const wethTrancheContract = await deployTranche(
     elementSigner,
-    yearnVaultAssetProxy,
+    wethYearnVaultAssetProxy,
     SIX_MONTHS_IN_SECONDS
   );
 
@@ -82,7 +82,7 @@ async function main() {
     elementSigner,
     balancerVaultContract,
     wethContract,
-    trancheContract
+    wethTrancheContract
   );
 
   // seed market with initial yield asset
@@ -91,7 +91,7 @@ async function main() {
     balancerVaultContract,
     poolId,
     wethContract,
-    trancheContract
+    wethTrancheContract
   );
 
   const { tokens, balances } = await balancerVaultContract.getPoolTokens(
@@ -120,7 +120,7 @@ async function main() {
       balancerVaultAddress: balancerVaultContract.address,
 
       // elf asset proxy
-      yearnVaultAssetProxyAddress: yearnVaultAssetProxy.address,
+      yearnVaultAssetProxyAddress: wethYearnVaultAssetProxy.address,
 
       // market addresses and ids
       marketFyWethAddress: poolContract.address,
@@ -131,6 +131,7 @@ async function main() {
 
       // weth addresses
       wethAddress: wethContract.address,
+      wethTrancheAddress: wethTrancheContract.address,
 
       //usdc addresses
       usdcAddress: usdcContract.address,
