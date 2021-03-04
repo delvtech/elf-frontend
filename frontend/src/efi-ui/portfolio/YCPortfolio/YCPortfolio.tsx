@@ -7,6 +7,7 @@ import { NoWalletConnectedNonIdealState } from "efi-ui/wallets/NoWalletConnected
 import { NoYCsInWalletNonIdealState } from "efi-ui/wallets/NoYCsInWalletNonIdealState/NoYCsInWalletNonIdealState";
 import { YCTable } from "efi-ui/portfolio/YCTable/YCTable";
 import { YC } from "elf-contracts/types";
+import { YCCard } from "efi-ui/portfolio/YCTable/YCCard";
 
 interface YCPortfolioProps {
   account: string | null | undefined;
@@ -28,10 +29,20 @@ export const YCPortfolio: FC<YCPortfolioProps> = ({
   }
 
   return (
-    <Card className={tw("flex-1", "p-8")}>
-      {nonIdealStateContent || (
-        <YCTable yieldCoupons={yieldCoupons} account={account} />
+    <div className={tw("flex", "space-x-8", "flex-1", "pl-2")}>
+      {nonIdealStateContent ? (
+        <div className={tw("flex", "flex-1", "justify-center", "items-center")}>
+          {nonIdealStateContent}
+        </div>
+      ) : (
+        yieldCoupons.map((yieldCoupon) => [
+          <YCCard
+            key={yieldCoupon.address}
+            account={account}
+            yieldCoupon={yieldCoupon}
+          />,
+        ])
       )}
-    </Card>
+    </div>
   );
 };
