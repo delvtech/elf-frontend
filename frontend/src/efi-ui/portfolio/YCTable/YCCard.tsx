@@ -14,34 +14,39 @@ import {
 import { IconNames } from "@blueprintjs/icons";
 import { Tooltip2 } from "@blueprintjs/popover2";
 import classNames from "classnames";
+import {
+  Elf__factory,
+  ERC20__factory,
+  Tranche,
+  Tranche__factory,
+  YC,
+} from "elf-contracts/types";
 import { jt, t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { useCalcOutGivenIn } from "efi-ui/balancer/useCalcOutGivenIn";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-
-import { Elf__factory, ERC20__factory, Tranche } from "elf-contracts/types";
-import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
-import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
-import { formatDuration, intervalToDuration } from "date-fns";
-import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
 import { getQueryData } from "efi-ui/base/queryResults";
+import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
+import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useMarketForToken } from "efi-ui/markets/useMarketForToken";
-import { useMarketSpotPrice } from "efi-ui/markets/useMarketSpotPrice";
-import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
+import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
+import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
+import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
+import { getTimeLeft2 } from "efi/base/time";
+import { useMarketPairedToken } from "efi-ui/markets/useMarketPairedToken";
+import { formatUnits } from "ethers/lib/utils";
 import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
 import { getCoinGeckoId } from "efi-coingecko";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
-import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
-import { navigate } from "@reach/router";
-import { CryptoIconSvg } from "efi-ui/crypto/CryptoIcon";
-import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { formatMoney } from "efi/money/formatMoney";
+import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
+import { CryptoIconSvg } from "efi-ui/crypto/CryptoIcon";
+import { navigate } from "@reach/router";
 
-interface FYTCardProps {
+interface YCCardProps {
   account: string | null | undefined;
-  tranche: Tranche;
+  yieldCoupon: YC;
 }
 
 const calloutClassName = tw(
@@ -53,68 +58,58 @@ const calloutClassName = tw(
   "items-center",
   "justify-center"
 );
-export const FYTCard: FC<FYTCardProps> = ({ account, tranche }) => {
+
+export const YCCard: FC<YCCardProps> = ({ account, yieldCoupon }) => {
   const { isDarkMode } = useDarkMode();
   const { currency } = useCurrencyPref();
-  const { data: trancheSymbol } = useSmartContractReadCall(tranche, "symbol");
+
+  const { data: ycSymbol } = useSmartContractReadCall(yieldCoupon, "symbol");
+  const { data: ycBalanceOf } = useSmartContractReadCall(
+    yieldCoupon,
+    "balanceOf",
+    { enabled: !!account, callArgs: [account as string] }
+  );
+  const ycBalance = useTokenBalance(yieldCoupon, account);
+
+  // The tranche contains the unlockTimestamp
+  const tranche = useTrancheForYieldCoupon(yieldCoupon);
   const { data: unlockTimestamp } = useSmartContractReadCall(
     tranche,
     "unlockTimestamp"
   );
-  const { data: trancheDecimals } = useSmartContractReadCall(
-    tranche,
-    "decimals"
-  );
-  const trancheBalance = useTokenBalance(tranche, account);
-
   const vaultContract = useVaultForTranche(tranche);
   const { data: vaultName } = useSmartContractReadCall(vaultContract, "name");
-  const market = useMarketForToken(tranche);
-  const trancheSpotPriceResult = useMarketSpotPrice(market, tranche);
-  const finalTokensResult = useSmartContractReadCall(market, "getFinalTokens");
 
-  const finalTokenAddresses = getQueryData(finalTokensResult) || [];
-  const baseAssetAddress = finalTokenAddresses.find(
-    (address) => address !== tranche?.address
-  );
-  const baseAsset = useSmartContractFromFactory(
-    baseAssetAddress,
-    ERC20__factory.connect
-  );
+  const market = useMarketForToken(yieldCoupon);
+
+  const baseAsset = useMarketPairedToken(market, yieldCoupon);
   const { data: baseAssetSymbol } = useSmartContractReadCall(
     baseAsset,
     "symbol"
   );
-
-  const tranchePriceBigNumber = getQueryData(trancheSpotPriceResult);
-  const tranchePriceInBaseAsset = +formatCurrency(
-    tranchePriceBigNumber,
-    trancheDecimals
+  const { data: baseAssetFiatPrice } = useCoinGeckoPrice(
+    getCoinGeckoId(baseAssetSymbol),
+    currency
   );
-  const exitValue = trancheBalance * tranchePriceInBaseAsset;
-  const { data: baseAssetCoinGeckoPrice } = useCoinGeckoPrice(
-    getCoinGeckoId(baseAssetSymbol)
+  const { data: baseAssetDecimals } = useSmartContractReadCall(
+    baseAsset,
+    "decimals"
   );
-
-  let fiatPrice;
-  if (tranchePriceInBaseAsset && baseAssetCoinGeckoPrice) {
-    fiatPrice = formatMoney(baseAssetCoinGeckoPrice.multiply(exitValue));
-  }
+  const { data: exitValueBigNumber } = useCalcOutGivenIn(
+    ycBalanceOf,
+    yieldCoupon,
+    baseAsset,
+    market
+  );
 
   const iconKey = baseAssetSymbol?.toUpperCase() as CryptoSymbol;
   const BaseAssetIcon = iconKey ? CryptoIconSvg[iconKey] : () => null;
 
-  const tableRowLink = getTableRowLink(vaultContract?.address, vaultName);
+  const exitValue = +formatUnits(exitValueBigNumber || 0, baseAssetDecimals);
+  const exitValueFiat = formatMoney(baseAssetFiatPrice?.multiply(exitValue));
   const maturationDate = convertEpochSecondsToDate(unlockTimestamp);
-  const timeLeft = getTimeLeft(maturationDate);
-  let trancheAPY = 0;
-  if (maturationDate) {
-    trancheAPY = calculateTrancheAPY(
-      +formatCurrency(tranchePriceBigNumber, trancheDecimals),
-      Date.now(),
-      maturationDate?.getTime()
-    );
-  }
+  const timeLeft = getTimeLeft2(maturationDate);
+  const tableRowLink = getTableRowLink(vaultContract?.address, vaultName);
 
   return (
     <div>
@@ -138,11 +133,11 @@ export const FYTCard: FC<FYTCardProps> = ({ account, tranche }) => {
             <span className={tw("text-xl", "font-semibold", "tracking-wide")}>
               <a
                 title={t`View tranche on etherscan`}
-                href={`https://etherscan.io/address/${tranche.address}`}
+                href={`https://etherscan.io/address/${yieldCoupon.address}`}
                 target="_blank"
                 rel="noreferrer noopener"
               >
-                {trancheSymbol}
+                {ycSymbol}
               </a>
             </span>
             <div
@@ -154,25 +149,21 @@ export const FYTCard: FC<FYTCardProps> = ({ account, tranche }) => {
                 "space-x-8"
               )}
             >
-              <Tag large minimal>{t`Fixed rate`}</Tag>
+              <div>
+                <Tag large minimal>{t`Variable rate`}</Tag>
+              </div>
               <div className={tw("flex", "space-x-6", "justify-end")}>
                 <LabeledText
                   bold
                   textClassName={tw("text-base")}
-                  text={`${trancheAPY.toFixed(2)}%`}
-                  label={t`yearly`}
+                  text={`${(5 / 365).toFixed(2)}%`}
+                  label={t`ELV APY`}
                 />
                 <LabeledText
                   bold
                   textClassName={tw("text-base")}
-                  text={`${(trancheAPY / 12).toFixed(2)}%`}
-                  label={t`monthly`}
-                />
-                <LabeledText
-                  bold
-                  textClassName={tw("text-base")}
-                  text={`${(trancheAPY / 365).toFixed(2)}%`}
-                  label={t`daily`}
+                  text={`${(5).toFixed(2)}%`}
+                  label={t`Position APY`}
                 />
               </div>
             </div>
@@ -187,7 +178,6 @@ export const FYTCard: FC<FYTCardProps> = ({ account, tranche }) => {
             </div>
             <ProgressBar stripes={false} animate={false} value={0.5} />
           </div>
-
           <Callout className={calloutClassName}>
             <span
               className={classNames(tw("text-base", "mb-0"))}
@@ -197,8 +187,8 @@ export const FYTCard: FC<FYTCardProps> = ({ account, tranche }) => {
               className={tw("flex", "justify-center", "items-center")}
               bold
               textClassName={tw("text-2xl")}
-              text={`${trancheBalance.toFixed(6)} FYT`}
-              label={t`1 FYT = 1 ${baseAssetSymbol} at maturity`}
+              text={`${ycBalance.toFixed(6)} YC`}
+              label={t`1 YC = yield on 1 ${baseAssetSymbol} at maturity`}
             />
           </Callout>
           <Callout icon={null} className={calloutClassName}>
@@ -213,11 +203,10 @@ export const FYTCard: FC<FYTCardProps> = ({ account, tranche }) => {
               text={
                 <span>{t`${exitValue.toFixed(6)} ${baseAssetSymbol}`}</span>
               }
-              label={`${currency.symbol}${fiatPrice}`}
+              label={`${currency.symbol}${exitValueFiat}`}
             />
           </Callout>
         </div>
-
         {/* Quick Actions */}
         <ButtonGroup className={tw("space-x-6")}>
           <Tooltip2
@@ -254,7 +243,7 @@ export const FYTCard: FC<FYTCardProps> = ({ account, tranche }) => {
         </ButtonGroup>
         <div className={tw("flex", "justify-center")}>
           <span>
-            {jt`Fixed yield is backed by ${baseAssetSymbol} deposited in ${tableRowLink}`}
+            {jt`Yield accrued on ${baseAssetSymbol} deposited in ${tableRowLink}`}
           </span>
         </div>
       </Card>
@@ -262,7 +251,7 @@ export const FYTCard: FC<FYTCardProps> = ({ account, tranche }) => {
   );
 };
 
-function useVaultForTranche(tranche: Tranche) {
+function useVaultForTranche(tranche: Tranche | undefined) {
   const elfAddressResult = useSmartContractReadCall(tranche, "elf");
   const elfContract = useSmartContractFromFactory(
     getQueryData(elfAddressResult),
@@ -276,22 +265,16 @@ function useVaultForTranche(tranche: Tranche) {
   return vaultContract;
 }
 
-function getTimeLeft(maturationDate: Date | undefined) {
-  if (!maturationDate) {
-    return;
-  }
-
-  const duration = intervalToDuration({
-    start: Date.now(),
-    end: maturationDate.getTime(),
-  });
-
-  const timeLeft = t`${formatDuration(duration, {
-    delimiter: ", ",
-    format: ["years", "months", "days"],
-  })}`;
-
-  return timeLeft;
+function useTrancheForYieldCoupon(yieldCoupon: YC) {
+  const { data: trancheAddress } = useSmartContractReadCall(
+    yieldCoupon,
+    "tranche"
+  );
+  const tranche = useSmartContractFromFactory(
+    trancheAddress,
+    Tranche__factory.connect
+  );
+  return tranche;
 }
 
 function getTableRowLink(
