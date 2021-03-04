@@ -3,7 +3,7 @@ import { BigNumberish } from "ethers";
 import { parseUnits } from "ethers/lib/utils";
 import { Tranche, USDC, Vault, WETH } from "types";
 
-import { ONE_DAY_IN_SECONDS } from "../../../frontend/src/efi/base/time";
+import { ONE_DAY_IN_SECONDS } from "../time";
 
 interface SwapIn {
   poolId: BytesLike;
