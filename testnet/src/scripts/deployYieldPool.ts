@@ -1,4 +1,3 @@
-import { hre } from "hardhat";
 import { Signer } from "ethers";
 import { parseEther } from "ethers/lib/utils";
 import { ERC20, USDC, Vault, WETH } from "types";
