@@ -54,12 +54,15 @@ async function main() {
   await mintUsdcTx.wait(1);
 
   // deploy main balancer vault
-  const vaultContract = await deployBalancerVault(balancerSigner);
-  await vaultContract.changeRelayerAllowance(elementAddress, true);
+  const balancerVaultContract = await deployBalancerVault(balancerSigner);
+  // register element with balancer so we can deploy pools
+  await balancerVaultContract.changeRelayerAllowance(elementAddress, true);
 
-  // deploy elf
+  // deploy stubbed yearn vault
   const yWeth = await deployYearnVault(elementSigner, wethContract.address);
-  const elfContract: YVaultAssetProxy = await deployYearnVaultAssetProxy(
+
+  // deploy yearn vault asset proxy
+  const yearnVaultAssetProxy: YVaultAssetProxy = await deployYearnVaultAssetProxy(
     elementSigner,
     yWeth.address,
     wethContract.address,
@@ -70,28 +73,30 @@ async function main() {
   // deploy a tranche
   const trancheContract = await deployTranche(
     elementSigner,
-    elfContract,
+    yearnVaultAssetProxy,
     SIX_MONTHS_IN_SECONDS
   );
 
-  // deploy an FYT market
+  // deploy an FYT market, seed with base asset
   const { poolId, poolContract } = await deployYieldPool(
     elementSigner,
-    vaultContract,
+    balancerVaultContract,
     wethContract,
     trancheContract
   );
 
-  // setup markets with initial liquidity
+  // seed market with initial yield asset
   await setupFYTMarket(
     elementSigner,
-    vaultContract,
+    balancerVaultContract,
     poolId,
     wethContract,
     trancheContract
   );
 
-  const { tokens, balances } = await vaultContract.getPoolTokens(poolId);
+  const { tokens, balances } = await balancerVaultContract.getPoolTokens(
+    poolId
+  );
   console.log("tokens", tokens);
   console.log(
     "balances",
@@ -112,10 +117,10 @@ async function main() {
       userAddress,
 
       // balancer
-      balancerVaultAddress: vaultContract.address,
+      balancerVaultAddress: balancerVaultContract.address,
 
       // elf asset proxy
-      yearnVaultAssetProxyAddress: elfContract.address,
+      yearnVaultAssetProxyAddress: yearnVaultAssetProxy.address,
 
       // market addresses and ids
       marketFyWethAddress: poolContract.address,

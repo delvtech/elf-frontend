@@ -1,3 +1,4 @@
+import { hre } from "hardhat";
 import { Signer } from "ethers";
 import { parseEther } from "ethers/lib/utils";
 import { ERC20, USDC, Vault, WETH } from "types";
@@ -19,14 +20,6 @@ export async function deployYieldPool(
   const expiration = Math.round(dateInSeconds + THIRTY_DAYS_IN_SECONDS);
   const duration = THIRTY_DAYS_IN_SECONDS;
   const swapFee = parseEther(".003");
-
-  // console.log("weth address", wethContract.address);
-  // console.log("tranche address", trancheWethContract.address);
-  // console.log("expiration", expiration);
-  // console.log("duration", duration);
-  // console.log("vault address", vaultContract.address);
-  // console.log("element address", elementAddress);
-  // console.log("swapFee", swapFee.toString(), swapFee);
 
   const poolContract = await yieldPoolDeployer.deploy(
     baseAssetContract.address,

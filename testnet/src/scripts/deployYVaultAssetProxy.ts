@@ -4,11 +4,16 @@ import { YVaultAssetProxy__factory } from "../types/factories/YVaultAssetProxy__
 
 export async function deployYearnVaultAssetProxy(
   signer: Signer,
-  yUnderlying: string,
-  underlying: string,
+  yearnVaultAddress: string,
+  baseAssetAddress: string,
   name: string,
   symbol: string
 ) {
   const deployer = new YVaultAssetProxy__factory(signer);
-  return await deployer.deploy(yUnderlying, underlying, name, symbol);
+  return await deployer.deploy(
+    yearnVaultAddress,
+    baseAssetAddress,
+    name,
+    symbol
+  );
 }

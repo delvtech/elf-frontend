@@ -5,6 +5,16 @@ import { Tranche, USDC, Vault, WETH } from "types";
 
 import { MAX_ALLOWANCE } from "../maxAllowance";
 
+/**
+ * Stakes an initial amount of base asset into the YieldPool
+ *
+ * @param poolId
+ * @param elementSigner
+ * @param vaultContract
+ * @param baseAssetContract
+ * @param trancheContract
+ * @param amountIn
+ */
 export async function initializeYieldPool(
   poolId: string,
   elementSigner: Signer,
@@ -14,8 +24,9 @@ export async function initializeYieldPool(
   amountIn: string
 ) {
   const elementAddress = await elementSigner.getAddress();
-  let [tokens] = await vaultContract.getPoolTokens(poolId);
+  let { tokens } = await vaultContract.getPoolTokens(poolId);
 
+  // we can only initialize the pool with base asset, the yield asset is ignored.
   const maxAmountsIn = [parseEther(amountIn), parseEther(amountIn)];
   const amounts = maxAmountsIn.map((amt) => amt.toHexString());
 

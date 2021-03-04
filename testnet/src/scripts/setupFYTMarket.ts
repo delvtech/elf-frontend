@@ -17,6 +17,7 @@ export async function setupFYTMarket(
 ) {
   const sender = await elementSigner.getAddress();
 
+  // put base asset into market
   await initializeYieldPool(
     poolId,
     elementSigner,
@@ -26,6 +27,7 @@ export async function setupFYTMarket(
     "20000"
   );
 
+  // mint some tranche assets
   await mintTrancheAssets(
     elementSigner,
     baseAssetContract,
@@ -33,6 +35,7 @@ export async function setupFYTMarket(
     "20000"
   );
 
+  // trade some tranche assets for some base assets
   const swapReceipt = await batchSwapIn(
     baseAssetContract,
     trancheContract,
