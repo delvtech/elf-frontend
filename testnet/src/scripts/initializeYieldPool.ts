@@ -1,7 +1,6 @@
 import abi from "ethereumjs-abi";
 import { Signer } from "ethers";
 import { parseEther } from "ethers/lib/utils";
-import hre from "hardhat";
 import { Tranche, USDC, Vault, WETH } from "types";
 
 import { MAX_ALLOWANCE } from "../maxAllowance";
@@ -11,13 +10,13 @@ export async function initializeYieldPool(
   elementSigner: Signer,
   vaultContract: Vault,
   baseAssetContract: WETH | USDC,
-  trancheContract: Tranche
+  trancheContract: Tranche,
+  amountIn: string
 ) {
   const elementAddress = await elementSigner.getAddress();
   let [tokens] = await vaultContract.getPoolTokens(poolId);
 
-  // TODO: make amounts configurable
-  const maxAmountsIn = [parseEther("20000"), parseEther("20000")];
+  const maxAmountsIn = [parseEther(amountIn), parseEther(amountIn)];
   const amounts = maxAmountsIn.map((amt) => amt.toHexString());
 
   // Whether or not to use balances held in balancer.  Since The Vault has nothing, set this to false.
