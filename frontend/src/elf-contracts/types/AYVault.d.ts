@@ -27,17 +27,17 @@ interface AYVaultInterface extends ethers.utils.Interface {
     "balanceOf(address)": FunctionFragment;
     "decimals()": FunctionFragment;
     "decreaseAllowance(address,uint256)": FunctionFragment;
-    "deposit(uint256)": FunctionFragment;
-    "getPricePerFullShare()": FunctionFragment;
+    "deposit(uint256,address)": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
     "name()": FunctionFragment;
+    "pricePerShare()": FunctionFragment;
     "symbol()": FunctionFragment;
     "token()": FunctionFragment;
     "totalSupply()": FunctionFragment;
     "transfer(address,uint256)": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
     "updateShares()": FunctionFragment;
-    "withdraw(uint256)": FunctionFragment;
+    "withdraw(uint256,address,uint256)": FunctionFragment;
   };
 
   encodeFunctionData(
@@ -56,17 +56,17 @@ interface AYVaultInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "deposit",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getPricePerFullShare",
-    values?: undefined
+    values: [BigNumberish, string]
   ): string;
   encodeFunctionData(
     functionFragment: "increaseAllowance",
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "pricePerShare",
+    values?: undefined
+  ): string;
   encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
   encodeFunctionData(functionFragment: "token", values?: undefined): string;
   encodeFunctionData(
@@ -87,7 +87,7 @@ interface AYVaultInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "withdraw",
-    values: [BigNumberish]
+    values: [BigNumberish, string, BigNumberish]
   ): string;
 
   decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
@@ -100,14 +100,14 @@ interface AYVaultInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "getPricePerFullShare",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "increaseAllowance",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "pricePerShare",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "token", data: BytesLike): Result;
   decodeFunctionResult(
@@ -197,17 +197,15 @@ export class AYVault extends Contract {
 
     deposit(
       _amount: BigNumberish,
+      destination: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "deposit(uint256)"(
+    "deposit(uint256,address)"(
       _amount: BigNumberish,
+      destination: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
-
-    getPricePerFullShare(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    "getPricePerFullShare()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     increaseAllowance(
       spender: string,
@@ -224,6 +222,10 @@ export class AYVault extends Contract {
     name(overrides?: CallOverrides): Promise<[string]>;
 
     "name()"(overrides?: CallOverrides): Promise<[string]>;
+
+    pricePerShare(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "pricePerShare()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     symbol(overrides?: CallOverrides): Promise<[string]>;
 
@@ -269,11 +271,15 @@ export class AYVault extends Contract {
 
     withdraw(
       _shares: BigNumberish,
+      destination: string,
+      maxLoss: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "withdraw(uint256)"(
+    "withdraw(uint256,address,uint256)"(
       _shares: BigNumberish,
+      destination: string,
+      maxLoss: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
   };
@@ -327,17 +333,15 @@ export class AYVault extends Contract {
 
   deposit(
     _amount: BigNumberish,
+    destination: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "deposit(uint256)"(
+  "deposit(uint256,address)"(
     _amount: BigNumberish,
+    destination: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
-
-  getPricePerFullShare(overrides?: CallOverrides): Promise<BigNumber>;
-
-  "getPricePerFullShare()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   increaseAllowance(
     spender: string,
@@ -354,6 +358,10 @@ export class AYVault extends Contract {
   name(overrides?: CallOverrides): Promise<string>;
 
   "name()"(overrides?: CallOverrides): Promise<string>;
+
+  pricePerShare(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "pricePerShare()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   symbol(overrides?: CallOverrides): Promise<string>;
 
@@ -399,11 +407,15 @@ export class AYVault extends Contract {
 
   withdraw(
     _shares: BigNumberish,
+    destination: string,
+    maxLoss: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "withdraw(uint256)"(
+  "withdraw(uint256,address,uint256)"(
     _shares: BigNumberish,
+    destination: string,
+    maxLoss: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -455,16 +467,17 @@ export class AYVault extends Contract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    deposit(_amount: BigNumberish, overrides?: CallOverrides): Promise<void>;
-
-    "deposit(uint256)"(
+    deposit(
       _amount: BigNumberish,
+      destination: string,
       overrides?: CallOverrides
-    ): Promise<void>;
+    ): Promise<BigNumber>;
 
-    getPricePerFullShare(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "getPricePerFullShare()"(overrides?: CallOverrides): Promise<BigNumber>;
+    "deposit(uint256,address)"(
+      _amount: BigNumberish,
+      destination: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     increaseAllowance(
       spender: string,
@@ -481,6 +494,10 @@ export class AYVault extends Contract {
     name(overrides?: CallOverrides): Promise<string>;
 
     "name()"(overrides?: CallOverrides): Promise<string>;
+
+    pricePerShare(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "pricePerShare()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     symbol(overrides?: CallOverrides): Promise<string>;
 
@@ -524,12 +541,19 @@ export class AYVault extends Contract {
 
     "updateShares()"(overrides?: CallOverrides): Promise<void>;
 
-    withdraw(_shares: BigNumberish, overrides?: CallOverrides): Promise<void>;
-
-    "withdraw(uint256)"(
+    withdraw(
       _shares: BigNumberish,
+      destination: string,
+      maxLoss: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<void>;
+    ): Promise<BigNumber>;
+
+    "withdraw(uint256,address,uint256)"(
+      _shares: BigNumberish,
+      destination: string,
+      maxLoss: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
   };
 
   filters: {
@@ -590,16 +614,17 @@ export class AYVault extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    deposit(_amount: BigNumberish, overrides?: Overrides): Promise<BigNumber>;
-
-    "deposit(uint256)"(
+    deposit(
       _amount: BigNumberish,
+      destination: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    getPricePerFullShare(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "getPricePerFullShare()"(overrides?: CallOverrides): Promise<BigNumber>;
+    "deposit(uint256,address)"(
+      _amount: BigNumberish,
+      destination: string,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
 
     increaseAllowance(
       spender: string,
@@ -616,6 +641,10 @@ export class AYVault extends Contract {
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
     "name()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    pricePerShare(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "pricePerShare()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     symbol(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -659,10 +688,17 @@ export class AYVault extends Contract {
 
     "updateShares()"(overrides?: Overrides): Promise<BigNumber>;
 
-    withdraw(_shares: BigNumberish, overrides?: Overrides): Promise<BigNumber>;
-
-    "withdraw(uint256)"(
+    withdraw(
       _shares: BigNumberish,
+      destination: string,
+      maxLoss: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "withdraw(uint256,address,uint256)"(
+      _shares: BigNumberish,
+      destination: string,
+      maxLoss: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
   };
@@ -720,20 +756,14 @@ export class AYVault extends Contract {
 
     deposit(
       _amount: BigNumberish,
+      destination: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "deposit(uint256)"(
+    "deposit(uint256,address)"(
       _amount: BigNumberish,
+      destination: string,
       overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    getPricePerFullShare(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "getPricePerFullShare()"(
-      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     increaseAllowance(
@@ -751,6 +781,10 @@ export class AYVault extends Contract {
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     "name()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    pricePerShare(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "pricePerShare()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -796,11 +830,15 @@ export class AYVault extends Contract {
 
     withdraw(
       _shares: BigNumberish,
+      destination: string,
+      maxLoss: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "withdraw(uint256)"(
+    "withdraw(uint256,address,uint256)"(
       _shares: BigNumberish,
+      destination: string,
+      maxLoss: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
   };

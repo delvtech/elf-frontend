@@ -23,8 +23,6 @@ import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 
 interface UserProxyInterface extends ethers.utils.Interface {
   functions: {
-    "allowElf(address,address)": FunctionFragment;
-    "allowTranche(address,uint256)": FunctionFragment;
     "authorize(address)": FunctionFragment;
     "authorized(address)": FunctionFragment;
     "deauthorize(address)": FunctionFragment;
@@ -33,20 +31,10 @@ interface UserProxyInterface extends ethers.utils.Interface {
     "mint(uint256,address,uint256,address)": FunctionFragment;
     "mintPermit(uint256,address,uint256,address,uint8,bytes32,bytes32)": FunctionFragment;
     "owner()": FunctionFragment;
-    "redeemFYT(uint256,uint256,address,address,uint8,bytes32,bytes32)": FunctionFragment;
-    "redeemYC(uint256,uint256,address,address,uint8,bytes32,bytes32)": FunctionFragment;
     "setIsFrozen(bool)": FunctionFragment;
     "weth()": FunctionFragment;
   };
 
-  encodeFunctionData(
-    functionFragment: "allowElf",
-    values: [string, string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "allowTranche",
-    values: [string, BigNumberish]
-  ): string;
   encodeFunctionData(functionFragment: "authorize", values: [string]): string;
   encodeFunctionData(functionFragment: "authorized", values: [string]): string;
   encodeFunctionData(functionFragment: "deauthorize", values: [string]): string;
@@ -73,40 +61,11 @@ interface UserProxyInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "redeemFYT",
-    values: [
-      BigNumberish,
-      BigNumberish,
-      string,
-      string,
-      BigNumberish,
-      BytesLike,
-      BytesLike
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "redeemYC",
-    values: [
-      BigNumberish,
-      BigNumberish,
-      string,
-      string,
-      BigNumberish,
-      BytesLike,
-      BytesLike
-    ]
-  ): string;
-  encodeFunctionData(
     functionFragment: "setIsFrozen",
     values: [boolean]
   ): string;
   encodeFunctionData(functionFragment: "weth", values?: undefined): string;
 
-  decodeFunctionResult(functionFragment: "allowElf", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "allowTranche",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "authorize", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "authorized", data: BytesLike): Result;
   decodeFunctionResult(
@@ -121,8 +80,6 @@ interface UserProxyInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "mintPermit", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "redeemFYT", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "redeemYC", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "setIsFrozen",
     data: BytesLike
@@ -146,30 +103,6 @@ export class UserProxy extends Contract {
   interface: UserProxyInterface;
 
   functions: {
-    allowElf(
-      underlying: string,
-      assetProxy: string,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "allowElf(address,address)"(
-      underlying: string,
-      assetProxy: string,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    allowTranche(
-      assetProxy: string,
-      expiration: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "allowTranche(address,uint256)"(
-      assetProxy: string,
-      expiration: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
     authorize(who: string, overrides?: Overrides): Promise<ContractTransaction>;
 
     "authorize(address)"(
@@ -212,7 +145,7 @@ export class UserProxy extends Contract {
       amount: BigNumberish,
       underlying: string,
       expiration: BigNumberish,
-      assetProxy: string,
+      elf: string,
       overrides?: PayableOverrides
     ): Promise<ContractTransaction>;
 
@@ -220,7 +153,7 @@ export class UserProxy extends Contract {
       amount: BigNumberish,
       underlying: string,
       expiration: BigNumberish,
-      assetProxy: string,
+      elf: string,
       overrides?: PayableOverrides
     ): Promise<ContractTransaction>;
 
@@ -228,7 +161,7 @@ export class UserProxy extends Contract {
       amount: BigNumberish,
       underlying: string,
       expiration: BigNumberish,
-      assetProxy: string,
+      elf: string,
       v: BigNumberish,
       r: BytesLike,
       s: BytesLike,
@@ -239,7 +172,7 @@ export class UserProxy extends Contract {
       amount: BigNumberish,
       underlying: string,
       expiration: BigNumberish,
-      assetProxy: string,
+      elf: string,
       v: BigNumberish,
       r: BytesLike,
       s: BytesLike,
@@ -249,50 +182,6 @@ export class UserProxy extends Contract {
     owner(overrides?: CallOverrides): Promise<[string]>;
 
     "owner()"(overrides?: CallOverrides): Promise<[string]>;
-
-    redeemFYT(
-      amount: BigNumberish,
-      expiration: BigNumberish,
-      assetProxy: string,
-      underlying: string,
-      v: BigNumberish,
-      r: BytesLike,
-      s: BytesLike,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "redeemFYT(uint256,uint256,address,address,uint8,bytes32,bytes32)"(
-      amount: BigNumberish,
-      expiration: BigNumberish,
-      assetProxy: string,
-      underlying: string,
-      v: BigNumberish,
-      r: BytesLike,
-      s: BytesLike,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    redeemYC(
-      amount: BigNumberish,
-      expiration: BigNumberish,
-      assetProxy: string,
-      underlying: string,
-      v: BigNumberish,
-      r: BytesLike,
-      s: BytesLike,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "redeemYC(uint256,uint256,address,address,uint8,bytes32,bytes32)"(
-      amount: BigNumberish,
-      expiration: BigNumberish,
-      assetProxy: string,
-      underlying: string,
-      v: BigNumberish,
-      r: BytesLike,
-      s: BytesLike,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
 
     setIsFrozen(
       newState: boolean,
@@ -308,30 +197,6 @@ export class UserProxy extends Contract {
 
     "weth()"(overrides?: CallOverrides): Promise<[string]>;
   };
-
-  allowElf(
-    underlying: string,
-    assetProxy: string,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "allowElf(address,address)"(
-    underlying: string,
-    assetProxy: string,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  allowTranche(
-    assetProxy: string,
-    expiration: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "allowTranche(address,uint256)"(
-    assetProxy: string,
-    expiration: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
 
   authorize(who: string, overrides?: Overrides): Promise<ContractTransaction>;
 
@@ -372,7 +237,7 @@ export class UserProxy extends Contract {
     amount: BigNumberish,
     underlying: string,
     expiration: BigNumberish,
-    assetProxy: string,
+    elf: string,
     overrides?: PayableOverrides
   ): Promise<ContractTransaction>;
 
@@ -380,7 +245,7 @@ export class UserProxy extends Contract {
     amount: BigNumberish,
     underlying: string,
     expiration: BigNumberish,
-    assetProxy: string,
+    elf: string,
     overrides?: PayableOverrides
   ): Promise<ContractTransaction>;
 
@@ -388,7 +253,7 @@ export class UserProxy extends Contract {
     amount: BigNumberish,
     underlying: string,
     expiration: BigNumberish,
-    assetProxy: string,
+    elf: string,
     v: BigNumberish,
     r: BytesLike,
     s: BytesLike,
@@ -399,7 +264,7 @@ export class UserProxy extends Contract {
     amount: BigNumberish,
     underlying: string,
     expiration: BigNumberish,
-    assetProxy: string,
+    elf: string,
     v: BigNumberish,
     r: BytesLike,
     s: BytesLike,
@@ -409,50 +274,6 @@ export class UserProxy extends Contract {
   owner(overrides?: CallOverrides): Promise<string>;
 
   "owner()"(overrides?: CallOverrides): Promise<string>;
-
-  redeemFYT(
-    amount: BigNumberish,
-    expiration: BigNumberish,
-    assetProxy: string,
-    underlying: string,
-    v: BigNumberish,
-    r: BytesLike,
-    s: BytesLike,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "redeemFYT(uint256,uint256,address,address,uint8,bytes32,bytes32)"(
-    amount: BigNumberish,
-    expiration: BigNumberish,
-    assetProxy: string,
-    underlying: string,
-    v: BigNumberish,
-    r: BytesLike,
-    s: BytesLike,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  redeemYC(
-    amount: BigNumberish,
-    expiration: BigNumberish,
-    assetProxy: string,
-    underlying: string,
-    v: BigNumberish,
-    r: BytesLike,
-    s: BytesLike,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "redeemYC(uint256,uint256,address,address,uint8,bytes32,bytes32)"(
-    amount: BigNumberish,
-    expiration: BigNumberish,
-    assetProxy: string,
-    underlying: string,
-    v: BigNumberish,
-    r: BytesLike,
-    s: BytesLike,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
 
   setIsFrozen(
     newState: boolean,
@@ -469,30 +290,6 @@ export class UserProxy extends Contract {
   "weth()"(overrides?: CallOverrides): Promise<string>;
 
   callStatic: {
-    allowElf(
-      underlying: string,
-      assetProxy: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "allowElf(address,address)"(
-      underlying: string,
-      assetProxy: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    allowTranche(
-      assetProxy: string,
-      expiration: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "allowTranche(address,uint256)"(
-      assetProxy: string,
-      expiration: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     authorize(who: string, overrides?: CallOverrides): Promise<void>;
 
     "authorize(address)"(who: string, overrides?: CallOverrides): Promise<void>;
@@ -526,7 +323,7 @@ export class UserProxy extends Contract {
       amount: BigNumberish,
       underlying: string,
       expiration: BigNumberish,
-      assetProxy: string,
+      elf: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -534,7 +331,7 @@ export class UserProxy extends Contract {
       amount: BigNumberish,
       underlying: string,
       expiration: BigNumberish,
-      assetProxy: string,
+      elf: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -542,7 +339,7 @@ export class UserProxy extends Contract {
       amount: BigNumberish,
       underlying: string,
       expiration: BigNumberish,
-      assetProxy: string,
+      elf: string,
       v: BigNumberish,
       r: BytesLike,
       s: BytesLike,
@@ -553,7 +350,7 @@ export class UserProxy extends Contract {
       amount: BigNumberish,
       underlying: string,
       expiration: BigNumberish,
-      assetProxy: string,
+      elf: string,
       v: BigNumberish,
       r: BytesLike,
       s: BytesLike,
@@ -563,50 +360,6 @@ export class UserProxy extends Contract {
     owner(overrides?: CallOverrides): Promise<string>;
 
     "owner()"(overrides?: CallOverrides): Promise<string>;
-
-    redeemFYT(
-      amount: BigNumberish,
-      expiration: BigNumberish,
-      assetProxy: string,
-      underlying: string,
-      v: BigNumberish,
-      r: BytesLike,
-      s: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "redeemFYT(uint256,uint256,address,address,uint8,bytes32,bytes32)"(
-      amount: BigNumberish,
-      expiration: BigNumberish,
-      assetProxy: string,
-      underlying: string,
-      v: BigNumberish,
-      r: BytesLike,
-      s: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    redeemYC(
-      amount: BigNumberish,
-      expiration: BigNumberish,
-      assetProxy: string,
-      underlying: string,
-      v: BigNumberish,
-      r: BytesLike,
-      s: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "redeemYC(uint256,uint256,address,address,uint8,bytes32,bytes32)"(
-      amount: BigNumberish,
-      expiration: BigNumberish,
-      assetProxy: string,
-      underlying: string,
-      v: BigNumberish,
-      r: BytesLike,
-      s: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<void>;
 
     setIsFrozen(newState: boolean, overrides?: CallOverrides): Promise<void>;
 
@@ -623,30 +376,6 @@ export class UserProxy extends Contract {
   filters: {};
 
   estimateGas: {
-    allowElf(
-      underlying: string,
-      assetProxy: string,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "allowElf(address,address)"(
-      underlying: string,
-      assetProxy: string,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    allowTranche(
-      assetProxy: string,
-      expiration: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "allowTranche(address,uint256)"(
-      assetProxy: string,
-      expiration: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
     authorize(who: string, overrides?: Overrides): Promise<BigNumber>;
 
     "authorize(address)"(
@@ -683,7 +412,7 @@ export class UserProxy extends Contract {
       amount: BigNumberish,
       underlying: string,
       expiration: BigNumberish,
-      assetProxy: string,
+      elf: string,
       overrides?: PayableOverrides
     ): Promise<BigNumber>;
 
@@ -691,7 +420,7 @@ export class UserProxy extends Contract {
       amount: BigNumberish,
       underlying: string,
       expiration: BigNumberish,
-      assetProxy: string,
+      elf: string,
       overrides?: PayableOverrides
     ): Promise<BigNumber>;
 
@@ -699,7 +428,7 @@ export class UserProxy extends Contract {
       amount: BigNumberish,
       underlying: string,
       expiration: BigNumberish,
-      assetProxy: string,
+      elf: string,
       v: BigNumberish,
       r: BytesLike,
       s: BytesLike,
@@ -710,7 +439,7 @@ export class UserProxy extends Contract {
       amount: BigNumberish,
       underlying: string,
       expiration: BigNumberish,
-      assetProxy: string,
+      elf: string,
       v: BigNumberish,
       r: BytesLike,
       s: BytesLike,
@@ -720,50 +449,6 @@ export class UserProxy extends Contract {
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
     "owner()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    redeemFYT(
-      amount: BigNumberish,
-      expiration: BigNumberish,
-      assetProxy: string,
-      underlying: string,
-      v: BigNumberish,
-      r: BytesLike,
-      s: BytesLike,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "redeemFYT(uint256,uint256,address,address,uint8,bytes32,bytes32)"(
-      amount: BigNumberish,
-      expiration: BigNumberish,
-      assetProxy: string,
-      underlying: string,
-      v: BigNumberish,
-      r: BytesLike,
-      s: BytesLike,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    redeemYC(
-      amount: BigNumberish,
-      expiration: BigNumberish,
-      assetProxy: string,
-      underlying: string,
-      v: BigNumberish,
-      r: BytesLike,
-      s: BytesLike,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "redeemYC(uint256,uint256,address,address,uint8,bytes32,bytes32)"(
-      amount: BigNumberish,
-      expiration: BigNumberish,
-      assetProxy: string,
-      underlying: string,
-      v: BigNumberish,
-      r: BytesLike,
-      s: BytesLike,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
 
     setIsFrozen(newState: boolean, overrides?: Overrides): Promise<BigNumber>;
 
@@ -778,30 +463,6 @@ export class UserProxy extends Contract {
   };
 
   populateTransaction: {
-    allowElf(
-      underlying: string,
-      assetProxy: string,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "allowElf(address,address)"(
-      underlying: string,
-      assetProxy: string,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    allowTranche(
-      assetProxy: string,
-      expiration: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "allowTranche(address,uint256)"(
-      assetProxy: string,
-      expiration: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
     authorize(
       who: string,
       overrides?: Overrides
@@ -850,7 +511,7 @@ export class UserProxy extends Contract {
       amount: BigNumberish,
       underlying: string,
       expiration: BigNumberish,
-      assetProxy: string,
+      elf: string,
       overrides?: PayableOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -858,7 +519,7 @@ export class UserProxy extends Contract {
       amount: BigNumberish,
       underlying: string,
       expiration: BigNumberish,
-      assetProxy: string,
+      elf: string,
       overrides?: PayableOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -866,7 +527,7 @@ export class UserProxy extends Contract {
       amount: BigNumberish,
       underlying: string,
       expiration: BigNumberish,
-      assetProxy: string,
+      elf: string,
       v: BigNumberish,
       r: BytesLike,
       s: BytesLike,
@@ -877,7 +538,7 @@ export class UserProxy extends Contract {
       amount: BigNumberish,
       underlying: string,
       expiration: BigNumberish,
-      assetProxy: string,
+      elf: string,
       v: BigNumberish,
       r: BytesLike,
       s: BytesLike,
@@ -887,50 +548,6 @@ export class UserProxy extends Contract {
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     "owner()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    redeemFYT(
-      amount: BigNumberish,
-      expiration: BigNumberish,
-      assetProxy: string,
-      underlying: string,
-      v: BigNumberish,
-      r: BytesLike,
-      s: BytesLike,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "redeemFYT(uint256,uint256,address,address,uint8,bytes32,bytes32)"(
-      amount: BigNumberish,
-      expiration: BigNumberish,
-      assetProxy: string,
-      underlying: string,
-      v: BigNumberish,
-      r: BytesLike,
-      s: BytesLike,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    redeemYC(
-      amount: BigNumberish,
-      expiration: BigNumberish,
-      assetProxy: string,
-      underlying: string,
-      v: BigNumberish,
-      r: BytesLike,
-      s: BytesLike,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "redeemYC(uint256,uint256,address,address,uint8,bytes32,bytes32)"(
-      amount: BigNumberish,
-      expiration: BigNumberish,
-      assetProxy: string,
-      underlying: string,
-      v: BigNumberish,
-      r: BytesLike,
-      s: BytesLike,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
 
     setIsFrozen(
       newState: boolean,

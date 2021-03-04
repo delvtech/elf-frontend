@@ -30,12 +30,12 @@ interface ITrancheInterface extends ethers.utils.Interface {
     "deposit(uint256,address)": FunctionFragment;
     "nonces(address)": FunctionFragment;
     "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)": FunctionFragment;
+    "prefundedDeposit(address)": FunctionFragment;
     "symbol()": FunctionFragment;
-    "totalSupply()": FunctionFragment;
     "transfer(address,uint256)": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
-    "withdrawFyt(uint256)": FunctionFragment;
-    "withdrawYc(uint256)": FunctionFragment;
+    "withdrawFyt(uint256,address)": FunctionFragment;
+    "withdrawYc(uint256,address)": FunctionFragment;
     "yc()": FunctionFragment;
   };
 
@@ -70,11 +70,11 @@ interface ITrancheInterface extends ethers.utils.Interface {
       BytesLike
     ]
   ): string;
-  encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "totalSupply",
-    values?: undefined
+    functionFragment: "prefundedDeposit",
+    values: [string]
   ): string;
+  encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "transfer",
     values: [string, BigNumberish]
@@ -85,11 +85,11 @@ interface ITrancheInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "withdrawFyt",
-    values: [BigNumberish]
+    values: [BigNumberish, string]
   ): string;
   encodeFunctionData(
     functionFragment: "withdrawYc",
-    values: [BigNumberish]
+    values: [BigNumberish, string]
   ): string;
   encodeFunctionData(functionFragment: "yc", values?: undefined): string;
 
@@ -104,11 +104,11 @@ interface ITrancheInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "nonces", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "permit", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "totalSupply",
+    functionFragment: "prefundedDeposit",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "transfer", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "transferFrom",
@@ -224,13 +224,19 @@ export class ITranche extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
+    prefundedDeposit(
+      _destination: string,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "prefundedDeposit(address)"(
+      _destination: string,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
     symbol(overrides?: CallOverrides): Promise<[string]>;
 
     "symbol()"(overrides?: CallOverrides): Promise<[string]>;
-
-    totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    "totalSupply()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     transfer(
       recipient: string,
@@ -260,21 +266,25 @@ export class ITranche extends Contract {
 
     withdrawFyt(
       _amount: BigNumberish,
+      _destination: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "withdrawFyt(uint256)"(
+    "withdrawFyt(uint256,address)"(
       _amount: BigNumberish,
+      _destination: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     withdrawYc(
       _amount: BigNumberish,
+      _destination: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "withdrawYc(uint256)"(
+    "withdrawYc(uint256,address)"(
       _amount: BigNumberish,
+      _destination: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
@@ -363,13 +373,19 @@ export class ITranche extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
+  prefundedDeposit(
+    _destination: string,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "prefundedDeposit(address)"(
+    _destination: string,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
   symbol(overrides?: CallOverrides): Promise<string>;
 
   "symbol()"(overrides?: CallOverrides): Promise<string>;
-
-  totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
-
-  "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   transfer(
     recipient: string,
@@ -399,21 +415,25 @@ export class ITranche extends Contract {
 
   withdrawFyt(
     _amount: BigNumberish,
+    _destination: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "withdrawFyt(uint256)"(
+  "withdrawFyt(uint256,address)"(
     _amount: BigNumberish,
+    _destination: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   withdrawYc(
     _amount: BigNumberish,
+    _destination: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "withdrawYc(uint256)"(
+  "withdrawYc(uint256,address)"(
     _amount: BigNumberish,
+    _destination: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -502,13 +522,19 @@ export class ITranche extends Contract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    prefundedDeposit(
+      _destination: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "prefundedDeposit(address)"(
+      _destination: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     symbol(overrides?: CallOverrides): Promise<string>;
 
     "symbol()"(overrides?: CallOverrides): Promise<string>;
-
-    totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     transfer(
       recipient: string,
@@ -538,21 +564,25 @@ export class ITranche extends Contract {
 
     withdrawFyt(
       _amount: BigNumberish,
+      _destination: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    "withdrawFyt(uint256)"(
+    "withdrawFyt(uint256,address)"(
       _amount: BigNumberish,
+      _destination: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     withdrawYc(
       _amount: BigNumberish,
+      _destination: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    "withdrawYc(uint256)"(
+    "withdrawYc(uint256,address)"(
       _amount: BigNumberish,
+      _destination: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -652,13 +682,19 @@ export class ITranche extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
+    prefundedDeposit(
+      _destination: string,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "prefundedDeposit(address)"(
+      _destination: string,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
     symbol(overrides?: CallOverrides): Promise<BigNumber>;
 
     "symbol()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     transfer(
       recipient: string,
@@ -688,21 +724,25 @@ export class ITranche extends Contract {
 
     withdrawFyt(
       _amount: BigNumberish,
+      _destination: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    "withdrawFyt(uint256)"(
+    "withdrawFyt(uint256,address)"(
       _amount: BigNumberish,
+      _destination: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     withdrawYc(
       _amount: BigNumberish,
+      _destination: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    "withdrawYc(uint256)"(
+    "withdrawYc(uint256,address)"(
       _amount: BigNumberish,
+      _destination: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
@@ -800,13 +840,19 @@ export class ITranche extends Contract {
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
+    prefundedDeposit(
+      _destination: string,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "prefundedDeposit(address)"(
+      _destination: string,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
     symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     "symbol()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "totalSupply()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     transfer(
       recipient: string,
@@ -836,21 +882,25 @@ export class ITranche extends Contract {
 
     withdrawFyt(
       _amount: BigNumberish,
+      _destination: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "withdrawFyt(uint256)"(
+    "withdrawFyt(uint256,address)"(
       _amount: BigNumberish,
+      _destination: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     withdrawYc(
       _amount: BigNumberish,
+      _destination: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "withdrawYc(uint256)"(
+    "withdrawYc(uint256,address)"(
       _amount: BigNumberish,
+      _destination: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 

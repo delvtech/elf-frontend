@@ -126,19 +126,6 @@ const _abi = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "balance",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
     inputs: [
       {
         internalType: "address",
@@ -211,19 +198,6 @@ const _abi = [
       },
     ],
     stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "getAllocator",
-    outputs: [
-      {
-        internalType: "address payable",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
     type: "function",
   },
   {
@@ -310,26 +284,29 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: "address payable",
-        name: "_allocator",
-        type: "address",
-      },
-    ],
-    name: "setAllocator",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
         internalType: "address",
-        name: "_governance",
+        name: "_destination",
         type: "address",
       },
     ],
-    name: "setGovernance",
-    outputs: [],
+    name: "prefundedDeposit",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
     stateMutability: "nonpayable",
     type: "function",
   },
@@ -348,12 +325,12 @@ const _abi = [
   },
   {
     inputs: [],
-    name: "totalSupply",
+    name: "token",
     outputs: [
       {
-        internalType: "uint256",
+        internalType: "contract IERC20",
         name: "",
-        type: "uint256",
+        type: "address",
       },
     ],
     stateMutability: "view",
@@ -424,8 +401,42 @@ const _abi = [
         name: "_shares",
         type: "uint256",
       },
+      {
+        internalType: "uint256",
+        name: "_minUnderlying",
+        type: "uint256",
+      },
     ],
     name: "withdraw",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_destination",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "_amount",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_minUnderlying",
+        type: "uint256",
+      },
+    ],
+    name: "withdrawUnderlying",
     outputs: [
       {
         internalType: "uint256",
