@@ -1,6 +1,6 @@
 import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
 
-import { useElfContracts } from "efi-ui/contracts/useElfContracts/useElfContracts";
+import { useYVaultAssetProxyContracts } from "efi-ui/contracts/useYVaultAssetProxyContracts/useYVaultAssetProxyContracts";
 import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
 import { useSmartContractsFromFactory } from "efi-ui/contracts/useSmartContractsFromFactory/useSmartContractsFromFactory";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
@@ -11,7 +11,7 @@ import { ERC20 } from "elf-contracts/types";
  */
 export function useBaseAssetContracts(): (ERC20 | undefined)[] {
   // The elf contracts contain the base asset
-  const elfContracts = useElfContracts(jsonRpcProvider);
+  const elfContracts = useYVaultAssetProxyContracts(jsonRpcProvider);
 
   // The token is the address to the base asset
   const baseAssetAddressesResult = useSmartContractReadCalls(
