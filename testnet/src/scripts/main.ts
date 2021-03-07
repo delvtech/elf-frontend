@@ -1,19 +1,14 @@
-import { parseEther, parseUnits } from "ethers/lib/utils";
 import fs from "fs";
-import { YVaultAssetProxy } from "types/YVaultAssetProxy";
 
-import { SIX_MONTHS_IN_SECONDS } from "../time";
+import { YVaultAssetProxy } from "../types/YVaultAssetProxy";
 import { deployBalancerVault } from "./balancerV2Vault";
 import { deployBaseAssets } from "./baseAssets";
+import { deployTrancheAndMarket } from "./deployTrancheAndMarket";
 import { deployWeightedPoolFactory } from "./deployWeightedPoolFactory";
-import { deployYieldPool } from "./deployYieldPool";
 import { deployYearnVault } from "./deployYVault";
 import { deployYearnVaultAssetProxy } from "./deployYVaultAssetProxy";
 import { getSigner, SIGNER } from "./getSigner";
 import { mintTokensForAddress } from "./mintTokensForAddress";
-import { setupFYTMarket } from "./setupFYTMarket";
-import { setupYCMarket } from "./setupYCMarket";
-import { deployTranche } from "./tranche";
 import { deployUserProxy } from "./userProxy";
 
 async function main() {
@@ -59,39 +54,17 @@ async function main() {
     "eyWETH"
   );
 
-  // deploy a tranche
-  const wethTrancheContract = await deployTranche(
+  const {
+    trancheContract: wethTrancheContract,
+    fytPoolContract: wethFytPoolContract,
+    fytPoolId: wethFytPoolId,
+    ycPoolContract: wethYcPoolContract,
+    ycPoolId: wethYcPoolId,
+  } = await deployTrancheAndMarket(
     elementSigner,
     wethYearnVaultAssetProxy,
-    SIX_MONTHS_IN_SECONDS
-  );
-
-  // deploy an FYT market, seed with base asset
-  const { poolId, poolContract } = await deployYieldPool(
-    elementSigner,
-    balancerVaultContract,
     wethContract,
-    wethTrancheContract
-  );
-
-  // seed market with initial yield asset
-  await setupFYTMarket(
-    elementSigner,
     balancerVaultContract,
-    poolId,
-    wethContract,
-    wethTrancheContract
-  );
-
-  // now setup a yc market
-  const {
-    poolId: ycPoolId,
-    poolContract: ycPoolContract,
-  } = await setupYCMarket(
-    elementSigner,
-    wethTrancheContract,
-    balancerVaultContract,
-    wethContract,
     weightedPoolFactory
   );
 
@@ -119,10 +92,10 @@ async function main() {
       wethTrancheAddress: wethTrancheContract.address,
 
       // market addresses and ids
-      marketFyWethAddress: poolContract.address,
-      marketFyWethId: poolId,
-      marketYcWethAddress: ycPoolContract.address,
-      marketYcWethId: ycPoolId,
+      marketFyWethAddress: wethFytPoolContract.address,
+      marketFyWethId: wethFytPoolId,
+      marketYcWethAddress: wethYcPoolContract.address,
+      marketYcWethId: wethYcPoolId,
 
       // user proxy
       userProxyContractAddress: userProxyContract.address,
