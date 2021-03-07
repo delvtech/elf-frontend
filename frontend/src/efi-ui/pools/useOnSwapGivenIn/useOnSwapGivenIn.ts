@@ -13,7 +13,8 @@ import { makeOnSwapGivenInCallArgs } from "./makeOnSwapGivenInCallArgs";
 
 export function useOnSwapGivenIn(
   pool: PoolContract | undefined,
-  priceOfThisToken: ERC20 | undefined
+  tokenIn: ERC20 | undefined,
+  amount: BigNumber | undefined
 ): QueryObserverResult<BigNumber> {
   const poolTokensResults = usePoolTokens(pool);
   const poolIdResult = useSmartContractReadCall(pool, "getPoolId");
@@ -21,15 +22,16 @@ export function useOnSwapGivenIn(
 
   const { balances = [] } = getQueryData(poolTokensResults) || {};
 
-  const inThisToken = usePoolPairedToken(pool, priceOfThisToken);
+  const tokenOut = usePoolPairedToken(pool, tokenIn);
   const onSwapGivenInResult = useSmartContractReadCall(pool, "onSwapGivenIn", {
-    enabled: [poolId, priceOfThisToken, inThisToken, balances.length].every(
+    enabled: [poolId, tokenIn, amount, tokenOut, balances.length].every(
       (v) => !!v
     ),
     callArgs: makeOnSwapGivenInCallArgs(
       poolId as string,
-      priceOfThisToken as ERC20,
-      inThisToken as ERC20,
+      tokenIn as ERC20,
+      amount as BigNumber,
+      tokenOut as ERC20,
       balances
     ),
   });

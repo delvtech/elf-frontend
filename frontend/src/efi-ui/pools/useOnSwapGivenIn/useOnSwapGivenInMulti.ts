@@ -13,35 +13,35 @@ import { PoolContract } from "efi/pools/PoolContract";
 
 export function useOnSwapGivenInMulti(
   pools: (PoolContract | undefined)[],
-  priceOfTheseTokens: (ERC20 | undefined)[]
+  tokensIn: (ERC20 | undefined)[],
+  amounts: (BigNumber | undefined)[]
 ): QueryObserverResult<BigNumber>[] {
   const poolIdResults = useSmartContractReadCalls(pools, "getPoolId");
   const poolTokensResults = usePoolTokensMulti(pools);
-  const inTheseTokens = usePoolPairedTokenMulti(pools, priceOfTheseTokens);
+  const tokensOut = usePoolPairedTokenMulti(pools, tokensIn);
 
   const poolIds = getQueriesData(poolIdResults);
   const poolTokens = getQueriesData(poolTokensResults) || [];
 
   const zipped = zip(
     poolIds,
-    priceOfTheseTokens,
-    inTheseTokens,
+    tokensIn,
+    amounts,
+    tokensOut,
     poolTokens.map((poolToken) => poolToken?.balances)
   );
 
   const onSwapGivenInArgs = zipped.map(
-    ([poolId, priceOfThisToken, inThisToken, balances]) => {
+    ([poolId, tokenIn, amount, tokenOut, balances]) => {
       return {
-        enabled: [
-          poolId,
-          priceOfThisToken,
-          inTheseTokens,
-          balances?.length,
-        ].every((v) => !!v),
+        enabled: [poolId, tokenIn, amount, tokensOut, balances?.length].every(
+          (v) => !!v
+        ),
         callArgs: makeOnSwapGivenInCallArgs(
           poolId as string,
-          priceOfThisToken as ERC20,
-          inThisToken as ERC20,
+          tokenIn as ERC20,
+          amount as BigNumber,
+          tokenOut as ERC20,
           balances as BigNumber[]
         ),
       };

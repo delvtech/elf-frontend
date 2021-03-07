@@ -5,16 +5,17 @@ import { StaticContractMethodArgs } from "efi/contracts/types";
 
 export function makeOnSwapGivenInCallArgs(
   poolId: string,
-  priceOfThisToken: ERC20,
-  inThisToken: ERC20,
+  tokenIn: ERC20,
+  amount: BigNumber,
+  tokenOut: ERC20,
   balances: BigNumber[]
 ): StaticContractMethodArgs<YieldCurvePool, "onSwapGivenIn"> {
   return [
     {
       poolId,
-      amountIn: 1,
-      tokenIn: priceOfThisToken.address,
-      tokenOut: inThisToken.address,
+      amountIn: amount,
+      tokenIn: tokenIn.address,
+      tokenOut: tokenOut.address,
 
       // TODO: figure these args out
       from: "",
