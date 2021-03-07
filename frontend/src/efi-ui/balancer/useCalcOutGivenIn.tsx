@@ -5,7 +5,10 @@ import { ContractMethodArgs } from "efi/contracts/types";
 import { ERC20 } from "elf-contracts/types/ERC20";
 import { QueryObserverResult } from "react-query";
 
-export const useCalcOutGivenIn = <
+/**
+ * @deprecated BPool is deprecated. Use useOnSwapGivenIn instead.
+ */
+export function useCalcOutGivenIn<
   ContractIn extends ERC20,
   ContractOut extends ERC20
 >(
@@ -13,7 +16,7 @@ export const useCalcOutGivenIn = <
   tokenContractIn: ContractIn | undefined,
   tokenContractOut: ContractOut | undefined,
   poolContract: BPool | undefined
-): QueryObserverResult<BigNumber> => {
+): QueryObserverResult<BigNumber> {
   const tokenAddressIn = tokenContractIn?.address;
   const tokenAddressOut = tokenContractOut?.address;
 
@@ -71,4 +74,4 @@ export const useCalcOutGivenIn = <
   );
 
   return calcOutResult;
-};
+}
