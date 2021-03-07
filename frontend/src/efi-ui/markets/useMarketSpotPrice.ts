@@ -7,6 +7,10 @@ import { BigNumber } from "ethers";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useMarketPairedToken } from "efi-ui/markets/useMarketPairedToken";
 
+/**
+ * @deprecated BPools are deprecated. Use useOnSwapGivenIn instead to price one
+ * of the tokens in the pool.
+ */
 export function useMarketSpotPrice(
   market: BPool | undefined,
   priceOfThisToken: ERC20 | undefined

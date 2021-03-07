@@ -5,6 +5,9 @@ import { getQueriesData } from "efi-ui/base/queryResults";
 import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
 import { useSmartContractsFromFactory } from "efi-ui/contracts/useSmartContractsFromFactory/useSmartContractsFromFactory";
 
+/**
+ * @deprecated BPools are deprecated. Use usePoolPairedTokenMulti instead.
+ */
 export function useMarketPairedTokens(
   markets: (BPool | undefined)[],
   marketTokens: (ERC20 | undefined)[]
