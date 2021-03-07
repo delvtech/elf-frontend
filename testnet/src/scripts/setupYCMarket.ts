@@ -10,9 +10,11 @@ import { MAX_ALLOWANCE } from "../maxAllowance";
 import { YC__factory } from "../types/factories/YC__factory";
 import { deployWeightedPool } from "./deployWeightedPool";
 
+// JoinKind from WeightedPool.sol
 enum JoinKind {
   INIT,
   ALL_TOKENS_IN_FOR_EXACT_BPT_OUT,
+  TOKEN_IN_FOR_EXACT_BPT_OUT,
 }
 
 export async function setupYCMarket(
@@ -51,6 +53,8 @@ export async function setupYCMarket(
     ]
   );
 
+  // the amounts to put in.  they are 'max' because pools will figure out the exact ratio's required
+  // for the pool's weight requirements.
   const maxAmountsIn = [parseEther("100000"), parseEther("10000")];
 
   const joinTxReceipt = await balancerVaultContract.joinPool(

@@ -60,7 +60,7 @@ export async function batchSwapIn(
   // performing a SwapIn, so we can specifiy exactly how much in and set the limit to that.
   const limitTokenOut = amountIn;
 
-  // order must be the same as 'tokens'
+  // limits of how much of each token is allowed to be traded.  order must be the same as 'tokens'
   const limits: BigNumberish[] = [limitTokenIn, limitTokenOut];
 
   // set a large deadline for now, it was being buggy.  time is in seconds.  must be an integer.
