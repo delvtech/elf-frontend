@@ -124,14 +124,17 @@ async function main() {
 
       // balancer
       balancerVaultAddress: balancerVaultContract.address,
+      marketYcFactory: weightedPoolFactory.address,
 
-      // elf asset proxy
+      // asset proxy
       yearnVaultAssetProxyAddress: wethYearnVaultAssetProxy.address,
+
+      // tranche contracts
+      wethTrancheAddress: wethTrancheContract.address,
 
       // market addresses and ids
       marketFyWethAddress: poolContract.address,
       marketFyWethId: poolId,
-      marketYcFactory: weightedPoolFactory.address,
       marketYcWethAddress: ycPoolContract.address,
       marketYcWethId: ycPoolId,
 
@@ -140,7 +143,6 @@ async function main() {
 
       // weth addresses
       wethAddress: wethContract.address,
-      wethTrancheAddress: wethTrancheContract.address,
 
       //usdc addresses
       usdcAddress: usdcContract.address,
