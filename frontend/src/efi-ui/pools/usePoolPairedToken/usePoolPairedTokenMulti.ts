@@ -1,6 +1,6 @@
 import { ERC20__factory } from "elf-contracts/types";
 import { ERC20 } from "elf-contracts/types/ERC20";
-import { zip } from "lodash";
+import zip from "lodash.zip";
 
 import { getQueriesData } from "efi-ui/base/queryResults";
 import { useSmartContractsFromFactory } from "efi-ui/contracts/useSmartContractsFromFactory/useSmartContractsFromFactory";
