@@ -8,6 +8,10 @@ import zip from "lodash.zip";
 import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
 import { useMarketPairedTokens } from "efi-ui/markets/useMarketPairedTokens";
 
+/**
+ * @deprecated BPools are deprecated. Use useOnSwapGivenInMulti instead to
+ * price the given tokens in a list of pools.
+ */
 export function useMarketSpotPrices(
   markets: (BPool | undefined)[],
   priceOfTheseTokens: (ERC20 | undefined)[]
