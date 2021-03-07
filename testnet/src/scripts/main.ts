@@ -10,6 +10,7 @@ import { deployYieldPool } from "./deployYieldPool";
 import { deployYearnVault } from "./deployYVault";
 import { deployYearnVaultAssetProxy } from "./deployYVaultAssetProxy";
 import { getSigner, SIGNER } from "./getSigner";
+import { mintTokensForAddress } from "./mintTokensForAddress";
 import { setupFYTMarket } from "./setupFYTMarket";
 import { setupYCMarket } from "./setupYCMarket";
 import { deployTranche } from "./tranche";
@@ -26,34 +27,25 @@ async function main() {
   // deploy base assets
   const [wethContract, usdcContract] = await deployBaseAssets(elementSigner);
 
-  // give element address some extra tokens
-  const e_mintWethTx = await wethContract.mint(
-    elementAddress,
-    parseEther("1000000")
-  );
-  await e_mintWethTx.wait(1);
-  const e_mintUsdcTx = await usdcContract.mint(
-    elementAddress,
-    parseUnits("1000000", 6)
-  );
-  await e_mintUsdcTx.wait(1);
+  // supply element with WETH and USDC
+  await mintTokensForAddress(elementAddress, {
+    tokens: [wethContract, usdcContract],
+  });
 
   // supply user with WETH and USDC
-  const mintWethTx = await wethContract.mint(
-    userAddress,
-    parseEther("1000000")
-  );
-  await mintWethTx.wait(1);
-  const mintUsdcTx = await usdcContract.mint(
-    userAddress,
-    parseUnits("1000000", 6)
-  );
-  await mintUsdcTx.wait(1);
+  await mintTokensForAddress(userAddress, {
+    tokens: [wethContract, usdcContract],
+  });
 
   // deploy main balancer vault
   const balancerVaultContract = await deployBalancerVault(balancerSigner);
   // register element with balancer so we can deploy pools
   await balancerVaultContract.changeRelayerAllowance(elementAddress, true);
+  // deploy the yc market factory
+  const weightedPoolFactory = await deployWeightedPoolFactory(
+    elementSigner,
+    balancerVaultContract
+  );
 
   // deploy stubbed yearn vault
   const yWeth = await deployYearnVault(elementSigner, wethContract.address);
@@ -89,12 +81,6 @@ async function main() {
     poolId,
     wethContract,
     wethTrancheContract
-  );
-
-  // deploy the yc market factory
-  const weightedPoolFactory = await deployWeightedPoolFactory(
-    elementSigner,
-    balancerVaultContract
   );
 
   // now setup a yc market
