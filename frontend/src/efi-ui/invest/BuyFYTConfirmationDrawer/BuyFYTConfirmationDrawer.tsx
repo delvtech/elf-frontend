@@ -35,6 +35,7 @@ import { CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { getConnectorName } from "efi/wallets/connectors";
 
 import { isApprovalRequiredForTransactions } from "../../crypto/isApprovalRequiredForTransactions";
+import { PoolContract } from "efi/pools/PoolContract";
 
 interface BuyFYTConfirmationDrawerProps {
   chainId: number | undefined;
@@ -42,7 +43,11 @@ interface BuyFYTConfirmationDrawerProps {
   walletConnectionActive: boolean;
   connector: AbstractConnector | undefined;
   library: Web3Provider | undefined;
-  market: BPool | undefined;
+  /**
+   * @deprecated use pool instead
+   */
+  market?: BPool | undefined;
+  pool: PoolContract | undefined;
 
   amount: BigNumber | undefined;
   baseAsset: CryptoAssetWithIcon;
