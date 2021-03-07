@@ -31,7 +31,10 @@ test("provides data from smart contract read methods", async () => {
     waitForNextUpdate,
     rerender,
   } = renderHookWithClient(queryClient, () =>
-    useSmartContractReadCall(({ name: mockNameFn } as any) as Contract, "name")
+    useSmartContractReadCall(
+      ({ callStatic: { name: mockNameFn } } as unknown) as Contract,
+      "name"
+    )
   );
 
   // called but hasn't resolved yet
@@ -55,9 +58,13 @@ test("passes arguments to smart contract read methods", async () => {
   const { result, waitForNextUpdate, rerender } = renderHookWithClient(
     queryClient,
     () =>
-      useSmartContractReadCall(({ name: mockFn } as any) as Contract, "name", {
-        callArgs: ["firstarg", "secondArg"],
-      })
+      useSmartContractReadCall(
+        ({ callStatic: { name: mockFn } } as unknown) as Contract,
+        "name",
+        {
+          callArgs: ["firstarg", "secondArg"],
+        }
+      )
   );
 
   expect(result.current.data).toEqual(undefined);
@@ -84,10 +91,14 @@ test("properly handles enabled option", async () => {
   >(
     queryClient,
     ({ enabled }) =>
-      useSmartContractReadCall(({ name: mockFn } as any) as Contract, "name", {
-        callArgs: ["firstarg", "secondArg"],
-        enabled,
-      }),
+      useSmartContractReadCall(
+        ({ callStatic: { name: mockFn } } as unknown) as Contract,
+        "name",
+        {
+          callArgs: ["firstarg", "secondArg"],
+          enabled,
+        }
+      ),
     { initialProps: { enabled: false } }
   );
 

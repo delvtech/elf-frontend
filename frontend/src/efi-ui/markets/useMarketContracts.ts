@@ -31,10 +31,15 @@ export function useMarketContracts(
   return bPoolContracts;
 }
 
+const FAKE_BFACTORY_ADDRES_FOR_IMMEDIATE_REFACTOR = "xxx";
 function fetchMarketContractAddresses(signerOrProvider?: Signer | Provider) {
   const signer = signerOrProvider ?? jsonRpcProvider;
-  const { elementAddress, bFactoryAddress } = ContractAddresses;
-  const bFactoryContract = BFactory__factory.connect(bFactoryAddress, signer);
+  const { elementAddress } = ContractAddresses;
+
+  const bFactoryContract = BFactory__factory.connect(
+    FAKE_BFACTORY_ADDRES_FOR_IMMEDIATE_REFACTOR,
+    signer
+  );
   const filter = bFactoryContract.filters.LOG_NEW_POOL(elementAddress, null);
   return bFactoryContract.queryFilter(filter);
 }
