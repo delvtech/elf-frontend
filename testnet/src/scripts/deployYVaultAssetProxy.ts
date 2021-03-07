@@ -1,6 +1,8 @@
 import { Signer } from "ethers";
 
-import { YVaultAssetProxy__factory } from "../types/factories/YVaultAssetProxy__factory";
+import {
+  YVaultAssetProxy__factory,
+} from "../types/factories/YVaultAssetProxy__factory";
 
 export async function deployYearnVaultAssetProxy(
   signer: Signer,

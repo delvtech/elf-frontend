@@ -7,17 +7,18 @@
     "strict": true,
     "outDir": "./build/",
     "paths": {
+      // reintroduce these once we figure out how to get hardhat to recognize aliased paths.
       "types": ["./src/types"],
       "types/*": ["./src/types/*"],
-      "scripts": ["./src/scripts"],
-      "scripts/*": ["./src/scripts/*"],
-      "test": ["./src/test"],
-      "test/*": ["./src/test/*"],
-      "contracts": ["./src/contracts"],
-      "contracts/*": ["./src/contracts/*"],
+      // "scripts": ["./src/scripts"],
+      // "scripts/*": ["./src/scripts/*"],
+      // "test": ["./src/test"],
+      // "test/*": ["./src/test/*"],
+      // "contracts": ["./src/contracts"],
+      // "contracts/*": ["./src/contracts/*"],
     },
   },
   "include": ["./src/**/*", "./hardhat.config.ts"],
-  "exclude": ["./frontend/**/*"],
+  "exclude": ["../frontend/**/*"],
   "files": ["./src/**/*", "./hardhat.config.ts"]
 }

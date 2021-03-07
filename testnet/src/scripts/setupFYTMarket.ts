@@ -1,5 +1,8 @@
 import { Signer } from "ethers";
-import { Tranche, USDC, Vault, WETH } from "types";
+import { Tranche } from "types/Tranche";
+import { USDC } from "types/USDC";
+import { Vault } from "types/Vault";
+import { WETH } from "types/WETH";
 
 import { batchSwapIn } from "./batchSwapIn";
 import { initializeYieldPool } from "./initializeYieldPool";

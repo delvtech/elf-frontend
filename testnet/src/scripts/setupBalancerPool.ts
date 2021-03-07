@@ -1,5 +1,6 @@
 import { parseEther, parseUnits } from "ethers/lib/utils";
-import { BPool, ERC20 } from "types";
+import { BPool } from "types/BPool";
+import { ERC20 } from "types/ERC20";
 
 interface PoolOptions {
   /**
@@ -67,7 +68,6 @@ export async function setupBalancerPool<B extends ERC20, Y extends ERC20>(
     parseEther(options.baseAssetWeight)
   );
 
-  const yieldAssetDecimals = await yieldAssetContract.decimals();
   await bPoolContract.bind(
     yieldAssetContract.address,
     parseUnits(options.yieldAssetBalance, baseAssetDecimals.toString()),

@@ -1,7 +1,10 @@
 import abi from "ethereumjs-abi";
 import { Signer } from "ethers";
 import { parseEther } from "ethers/lib/utils";
-import { Tranche, USDC, Vault, WETH } from "types";
+import { Tranche } from "types/Tranche";
+import { USDC } from "types/USDC";
+import { Vault } from "types/Vault";
+import { WETH } from "types/WETH";
 
 import { MAX_ALLOWANCE } from "../maxAllowance";
 
