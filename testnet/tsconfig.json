@@ -8,8 +8,8 @@
     "outDir": "./build/",
     "paths": {
       // reintroduce these once we figure out how to get hardhat to recognize aliased paths.
-      // "types": ["./src/types"],
-      // "types/*": ["./src/types/*"],
+      "types": ["./src/types"],
+      "types/*": ["./src/types/*"],
       // "scripts": ["./src/scripts"],
       // "scripts/*": ["./src/scripts/*"],
       // "test": ["./src/test"],

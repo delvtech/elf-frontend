@@ -1,6 +1,6 @@
 import { parseEther, parseUnits } from "ethers/lib/utils";
 import fs from "fs";
-import { YVaultAssetProxy } from "types";
+import { YVaultAssetProxy } from "types/YVaultAssetProxy";
 
 import { SIX_MONTHS_IN_SECONDS } from "../time";
 import { deployBalancerVault } from "./balancerV2Vault";

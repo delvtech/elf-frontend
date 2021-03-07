@@ -1,9 +1,14 @@
 import { Signer } from "ethers";
 import { parseEther } from "ethers/lib/utils";
-import { ERC20, USDC, Vault, WETH } from "types";
+import { ERC20 } from "types/ERC20";
+import { USDC } from "types/USDC";
+import { Vault } from "types/Vault";
+import { WETH } from "types/WETH";
 
 import { THIRTY_DAYS_IN_SECONDS } from "../time";
-import { YieldCurvePool__factory } from "../types/factories/YieldCurvePool__factory";
+import {
+  YieldCurvePool__factory,
+} from "../types/factories/YieldCurvePool__factory";
 
 export async function deployYieldPool(
   elementSigner: Signer,

@@ -1,7 +1,9 @@
 import { Signer } from "ethers";
+import { Vault } from "types/Vault";
 
-import { Vault } from "../types";
-import { WeightedPoolFactory__factory } from "../types/factories/WeightedPoolFactory__factory";
+import {
+  WeightedPoolFactory__factory,
+} from "../types/factories/WeightedPoolFactory__factory";
 
 export async function deployWeightedPoolFactory(
   signer: Signer,

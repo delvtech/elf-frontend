@@ -1,7 +1,7 @@
 import { Signer } from "ethers";
-import hre from "hardhat";
-import { BFactory } from "types";
-import { BPool__factory } from "../types";
+import { BFactory } from "types/BFactory";
+
+import { BPool__factory } from "../types/factories/BPool__factory";
 
 export async function deployBalancerPool(
   bFactoryContract: BFactory,
