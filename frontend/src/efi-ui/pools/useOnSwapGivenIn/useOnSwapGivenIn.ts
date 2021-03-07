@@ -22,7 +22,7 @@ export function useOnSwapGivenIn(
   const { balances = [] } = getQueryData(poolTokensResults) || {};
 
   const inThisToken = usePoolPairedToken(pool, priceOfThisToken);
-  const spotPriceResult = useSmartContractReadCall(pool, "onSwapGivenIn", {
+  const onSwapGivenInResult = useSmartContractReadCall(pool, "onSwapGivenIn", {
     enabled: [poolId, priceOfThisToken, inThisToken, balances.length].every(
       (v) => !!v
     ),
@@ -34,5 +34,5 @@ export function useOnSwapGivenIn(
     ),
   });
 
-  return spotPriceResult;
+  return onSwapGivenInResult;
 }
