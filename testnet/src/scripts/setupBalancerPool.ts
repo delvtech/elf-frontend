@@ -68,7 +68,6 @@ export async function setupBalancerPool<B extends ERC20, Y extends ERC20>(
     parseEther(options.baseAssetWeight)
   );
 
-  const yieldAssetDecimals = await yieldAssetContract.decimals();
   await bPoolContract.bind(
     yieldAssetContract.address,
     parseUnits(options.yieldAssetBalance, baseAssetDecimals.toString()),
