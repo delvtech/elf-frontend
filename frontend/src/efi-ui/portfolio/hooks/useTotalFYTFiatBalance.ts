@@ -10,21 +10,25 @@ export function useFiatBalanceAllTranches(
   const { currency } = useCurrencyPref();
   const wethTrancheFiatBalance = useTrancheFiatBalance(
     account,
-    ContractAddresses.trancheWethAddress,
-    ContractAddresses.marketWethFYTAddress,
+    ContractAddresses.wethTrancheAddress,
+    ContractAddresses.marketFyWethAddress,
     ContractAddresses.wethAddress
   );
 
-  const usdcTrancheFiatBalance = useTrancheFiatBalance(
-    account,
-    ContractAddresses.trancheUsdcAddress,
-    ContractAddresses.bPoolUsdcAddress,
-    ContractAddresses.usdcAddress
-  );
+  // TODO: Uncomment this once the usdc contracts are deployed to the testnet
+  // const usdcTrancheFiatBalance = useTrancheFiatBalance(
+  //   account,
+  //   ContractAddresses.trancheUsdcAddress,
+  //   ContractAddresses.bPoolUsdcAddress,
+  //   ContractAddresses.usdcAddress
+  // );
 
   const totalFiatBalance = calculateTotalFiatBalance(
-    wethTrancheFiatBalance,
-    usdcTrancheFiatBalance,
+    [
+      wethTrancheFiatBalance,
+      // TODO: Uncomment this once the usdc contracts are deployed to the testnet
+      // usdcTrancheFiatBalance,
+    ],
     currency
   );
 
@@ -32,16 +36,14 @@ export function useFiatBalanceAllTranches(
 }
 
 function calculateTotalFiatBalance(
-  wethTrancheFiatBalance: Money | undefined,
-  usdcTrancheFiatBalance: Money | undefined,
+  fiatBalances: (Money | undefined)[],
   currency: Currency
 ): Money | undefined {
-  const tranchesWithBalance: Money[] = [
-    wethTrancheFiatBalance,
-    usdcTrancheFiatBalance,
-  ].filter((balance): balance is Money => {
-    return balance !== undefined;
-  });
+  const tranchesWithBalance: Money[] = fiatBalances.filter(
+    (balance): balance is Money => {
+      return balance !== undefined;
+    }
+  );
 
   if (!tranchesWithBalance.length) {
     return undefined;

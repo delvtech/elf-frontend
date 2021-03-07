@@ -9,20 +9,24 @@ import ContractAddresses from "efi/contracts/contractsJson";
 export function useTrancheContracts(
   signerOrProvider?: Signer | Provider
 ): Tranche[] {
-  const { trancheUsdcAddress, trancheWethAddress } = ContractAddresses;
+  const { wethTrancheAddress } = ContractAddresses;
 
   const wethTrancheContract = useTrancheContract(
-    trancheWethAddress,
-    signerOrProvider
-  );
-  const usdcTrancheContract = useTrancheContract(
-    trancheUsdcAddress,
+    wethTrancheAddress,
     signerOrProvider
   );
 
-  const trancheContracts = [wethTrancheContract, usdcTrancheContract].filter(
-    (tranche): tranche is Tranche => !!tranche
-  );
+  // TODO: Uncomment this when the usdc contract is deployed to the testnet
+  // const usdcTrancheContract = useTrancheContract(
+  //   trancheUsdcAddress,
+  //   signerOrProvider
+  // );
+
+  const trancheContracts = [
+    wethTrancheContract,
+    // TODO: Uncomment this when the usdc contract is deployed to the testnet
+    //  usdcTrancheContract
+  ].filter((tranche): tranche is Tranche => !!tranche);
 
   return trancheContracts;
 }
