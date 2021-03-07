@@ -6,6 +6,9 @@ import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadC
 import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
 import { ERC20__factory } from "elf-contracts/types";
 
+/**
+ * @deprecated use usePoolPairedToken instead
+ */
 export function useMarketPairedToken(
   market: BPool | undefined,
   marketToken: ERC20 | undefined
