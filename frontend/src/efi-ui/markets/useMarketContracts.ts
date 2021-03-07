@@ -9,6 +9,9 @@ import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 import { Signer } from "ethers";
 import { Provider } from "@ethersproject/providers";
 
+/**
+ * @deprecated BPools are deprecated. use useAllPools instead.
+ */
 export function useMarketContracts(
   signerOrProvider?: Signer | Provider
 ): BPool[] {
