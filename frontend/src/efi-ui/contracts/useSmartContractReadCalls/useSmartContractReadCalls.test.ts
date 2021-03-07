@@ -26,11 +26,15 @@ test("provides data from smart contract read methods", async () => {
 
   const contract1 = ({
     address: "0xContract1",
-    name: mockFn1,
+    callStatic: {
+      name: mockFn1,
+    },
   } as unknown) as ERC20;
   const contract2 = ({
     address: "0xContract2",
-    name: mockFn2,
+    callStatic: {
+      name: mockFn2,
+    },
   } as unknown) as ERC20;
 
   const queryClient = createQueryClient();
@@ -72,11 +76,15 @@ test("passes single arguments object to all smart contract read methods", async 
 
   const contract1 = ({
     address: "0xContract1",
-    balanceOf: mockFn1,
+    callStatic: {
+      balanceOf: mockFn1,
+    },
   } as unknown) as ERC20;
   const contract2 = ({
     address: "0xContract2",
-    balanceOf: mockFn2,
+    callStatic: {
+      balanceOf: mockFn2,
+    },
   } as unknown) as ERC20;
 
   const queryClient = createQueryClient();
@@ -119,11 +127,15 @@ test("passes arguments object list to smart contract read methods", async () => 
 
   const contract1 = ({
     address: "0xContract1",
-    balanceOf: mockFn1,
+    callStatic: {
+      balanceOf: mockFn1,
+    },
   } as unknown) as ERC20;
   const contract2 = ({
     address: "0xContract2",
-    balanceOf: mockFn2,
+    callStatic: {
+      balanceOf: mockFn2,
+    },
   } as unknown) as ERC20;
 
   const queryClient = createQueryClient();
@@ -171,11 +183,15 @@ test("properly handles enabled option", async () => {
 
   const contract1 = ({
     address: "0xContract1",
-    name: mockFn1,
+    callStatic: {
+      name: mockFn1,
+    },
   } as unknown) as ERC20;
   const contract2 = ({
     address: "0xContract2",
-    name: mockFn2,
+    callStatic: {
+      name: mockFn2,
+    },
   } as unknown) as ERC20;
 
   const queryClient = createQueryClient();
