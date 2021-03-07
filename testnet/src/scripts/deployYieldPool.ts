@@ -6,35 +6,42 @@ import { Vault } from "types/Vault";
 import { WETH } from "types/WETH";
 
 import { THIRTY_DAYS_IN_SECONDS } from "../time";
-import {
-  YieldCurvePool__factory,
-} from "../types/factories/YieldCurvePool__factory";
+import { YieldCurvePool__factory } from "../types/factories/YieldCurvePool__factory";
+
+const defaultOptions = {
+  swapFee: ".003",
+  duration: THIRTY_DAYS_IN_SECONDS,
+};
 
 export async function deployYieldPool(
   elementSigner: Signer,
   vaultContract: Vault,
   baseAssetContract: WETH | USDC,
-  yieldAssetContract: ERC20
+  yieldAssetContract: ERC20,
+  options?: {
+    swapFee: string;
+    durationInSeconds: number;
+  }
 ) {
+  const { swapFee, durationInSeconds } = { ...defaultOptions, ...options };
   const elementAddress = await elementSigner.getAddress();
+  const baseAssetSymbol = await baseAssetContract.symbol();
   const yieldPoolDeployer = new YieldCurvePool__factory(elementSigner);
 
   const dateInMilliseconds = Date.now();
   const dateInSeconds = dateInMilliseconds / 1000;
-  const expiration = Math.round(dateInSeconds + THIRTY_DAYS_IN_SECONDS);
-  const duration = THIRTY_DAYS_IN_SECONDS;
-  const swapFee = parseEther(".003");
+  const expiration = Math.round(dateInSeconds + durationInSeconds);
 
   const poolContract = await yieldPoolDeployer.deploy(
     baseAssetContract.address,
     yieldAssetContract.address,
     expiration,
-    duration,
+    durationInSeconds,
     vaultContract.address,
-    swapFee,
+    parseEther(swapFee),
     elementAddress,
-    "ELEMENT-BASE-YIELD-MARKET",
-    "WETH-fyWETH"
+    `Element ${baseAssetSymbol}- fy${baseAssetSymbol}`,
+    `${baseAssetSymbol}-fy${baseAssetSymbol}`
   );
 
   // grab last poolId from last event

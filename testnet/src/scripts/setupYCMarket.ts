@@ -1,5 +1,5 @@
 import { Signer } from "ethers";
-import { defaultAbiCoder, parseEther } from "ethers/lib/utils";
+import { defaultAbiCoder, parseEther, parseUnits } from "ethers/lib/utils";
 import { Tranche } from "types/Tranche";
 import { USDC } from "types/USDC";
 import { Vault } from "types/Vault";
@@ -25,6 +25,10 @@ export async function setupYCMarket(
   poolFactory: WeightedPoolFactory
 ) {
   const signerAddress = await signer.getAddress();
+  const baseAssetSymbol = await baseAssetContract.symbol();
+  const baseAssetDecimals = await baseAssetContract.decimals();
+  const parseToken = (value: string) => parseUnits(value, baseAssetDecimals);
+
   // deploy an yc market
   const ycAddress = await trancheContract.yc();
   const ycContract = YC__factory.connect(ycAddress, signer);
@@ -35,8 +39,8 @@ export async function setupYCMarket(
     signer,
     balancerVaultContract,
     poolFactory,
-    "Weth - ycWeth Pool",
-    "ycWeth:WETH",
+    `Element ${baseAssetSymbol}- yc${baseAssetSymbol}`,
+    `${baseAssetSymbol}-yc${baseAssetSymbol}`,
     ycMarketTokens,
     weights,
     "0.003"
@@ -49,13 +53,13 @@ export async function setupYCMarket(
     ["uint8", "uint256[]"],
     [
       JoinKind.INIT,
-      [parseEther("1000").toHexString(), parseEther("10000").toHexString()],
+      [parseToken("1000").toHexString(), parseToken("10000").toHexString()],
     ]
   );
 
   // the amounts to put in.  they are 'max' because pools will figure out the exact ratio's required
   // for the pool's weight requirements.
-  const maxAmountsIn = [parseEther("100000"), parseEther("10000")];
+  const maxAmountsIn = [parseToken("100000"), parseToken("10000")];
 
   const joinTxReceipt = await balancerVaultContract.joinPool(
     poolId,
