@@ -12,6 +12,8 @@ import { BPool } from "elf-contracts/types";
  * @param { string } marketAddress the contract address of the market.
  * @param { Signer | Provider } signerOrProvider optionally pass a signer if transactions need to be
  * signed.  a default provider is supplied to allow read operations.
+ *
+ * @deprecated BPools are deprecated.
  */
 export function useMarketContract(
   marketAddress: string | undefined,

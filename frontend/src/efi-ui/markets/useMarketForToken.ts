@@ -8,6 +8,9 @@ import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractRead
 import { useMarketContracts } from "efi-ui/markets/useMarketContracts";
 import { ERC20 } from "elf-contracts/types/ERC20";
 
+/**
+ * @deprecated BPool is deprecated. use usePoolForToken instead.
+ */
 export function useMarketForToken(
   tokenContract: ERC20 | undefined,
   signerOrProvider?: Signer | Provider
