@@ -1,20 +1,17 @@
-import { SIX_MONTHS_IN_SECONDS } from "./../time";
-import {
-  formatEther,
-  formatUnits,
-  parseEther,
-  parseUnits,
-} from "ethers/lib/utils";
+import { parseEther, parseUnits } from "ethers/lib/utils";
 import fs from "fs";
 import { YVaultAssetProxy } from "types";
 
+import { SIX_MONTHS_IN_SECONDS } from "../time";
 import { deployBalancerVault } from "./balancerV2Vault";
 import { deployBaseAssets } from "./baseAssets";
+import { deployWeightedPoolFactory } from "./deployWeightedPoolFactory";
 import { deployYieldPool } from "./deployYieldPool";
 import { deployYearnVault } from "./deployYVault";
 import { deployYearnVaultAssetProxy } from "./deployYVaultAssetProxy";
 import { getSigner, SIGNER } from "./getSigner";
 import { setupFYTMarket } from "./setupFYTMarket";
+import { setupYCMarket } from "./setupYCMarket";
 import { deployTranche } from "./tranche";
 import { deployUserProxy } from "./userProxy";
 
@@ -94,13 +91,22 @@ async function main() {
     wethTrancheContract
   );
 
-  const { tokens, balances } = await balancerVaultContract.getPoolTokens(
-    poolId
+  // deploy the yc market factory
+  const weightedPoolFactory = await deployWeightedPoolFactory(
+    elementSigner,
+    balancerVaultContract
   );
-  console.log("tokens", tokens);
-  console.log(
-    "balances",
-    balances.map((b) => formatUnits(b))
+
+  // now setup a yc market
+  const {
+    poolId: ycPoolId,
+    poolContract: ycPoolContract,
+  } = await setupYCMarket(
+    elementSigner,
+    wethTrancheContract,
+    balancerVaultContract,
+    wethContract,
+    weightedPoolFactory
   );
 
   // deploy user proxy
@@ -125,6 +131,9 @@ async function main() {
       // market addresses and ids
       marketFyWethAddress: poolContract.address,
       marketFyWethId: poolId,
+      marketYcFactory: weightedPoolFactory.address,
+      marketYcWethAddress: ycPoolContract.address,
+      marketYcWethId: ycPoolId,
 
       // user proxy
       userProxyContractAddress: userProxyContract.address,
