@@ -1,5 +1,10 @@
 import { Contract } from "ethers";
 
+export type StaticContractCall<
+  TContract extends Contract,
+  TMethodName extends ContractMethodName<TContract>
+> = TContract["callStatic"][TMethodName];
+
 export type ContractCall<
   TContract extends Contract,
   TMethodName extends ContractMethodName<TContract>
@@ -27,6 +32,11 @@ export type ContractReturnType<
   TMethodName extends ContractMethodName<TContract>
 > = ReturnType<ContractCall<TContract, TMethodName>>;
 
+export type StaticContractReturnType<
+  TContract extends Contract,
+  TMethodName extends ContractMethodName<TContract>
+> = ReturnType<StaticContractCall<TContract, TMethodName>>;
+
 /**
  * Gets a type for the call arguments of a given contract and method name
  */
@@ -34,3 +44,8 @@ export type ContractMethodArgs<
   TContract extends Contract,
   TMethodName extends ContractMethodName<TContract>
 > = Parameters<ContractFunctionCall<TContract, TMethodName>>;
+
+export type StaticContractMethodArgs<
+  TContract extends Contract,
+  TMethodName extends ContractMethodName<TContract>
+> = Parameters<StaticContractCall<TContract, TMethodName>>;

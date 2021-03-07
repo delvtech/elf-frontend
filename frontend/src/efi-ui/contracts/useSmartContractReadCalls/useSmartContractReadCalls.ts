@@ -6,7 +6,7 @@ import { Unpacked } from "efi/base/Unpacked";
 import {
   ContractMethodArgs,
   ContractMethodName,
-  ContractReturnType,
+  StaticContractReturnType,
 } from "efi/contracts/types";
 import zip from "lodash.zip";
 import { makeSmartContractReadCallUseQueryOptions } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
@@ -44,7 +44,7 @@ export interface UseSmartContractReadCallsOptions<
 export function useSmartContractReadCalls<
   TContract extends Contract,
   TMethodName extends ContractMethodName<TContract>,
-  TReturnType extends Unpacked<ContractReturnType<TContract, TMethodName>>
+  TReturnType extends Unpacked<StaticContractReturnType<TContract, TMethodName>>
 >(
   contracts: (TContract | undefined)[],
   methodName: TMethodName,

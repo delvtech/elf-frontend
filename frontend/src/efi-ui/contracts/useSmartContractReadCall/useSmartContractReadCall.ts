@@ -6,7 +6,7 @@ import { Unpacked } from "efi/base/Unpacked";
 import {
   ContractMethodArgs,
   ContractMethodName,
-  ContractReturnType,
+  StaticContractReturnType,
 } from "efi/contracts/types";
 
 export interface UseSmartContractReadCallOptions<
@@ -20,7 +20,7 @@ export interface UseSmartContractReadCallOptions<
 export function useSmartContractReadCall<
   TContract extends Contract,
   TMethodName extends ContractMethodName<TContract>,
-  TReturnType extends Unpacked<ContractReturnType<TContract, TMethodName>>
+  TReturnType extends Unpacked<StaticContractReturnType<TContract, TMethodName>>
 >(
   contract: TContract | undefined,
   methodName: TMethodName,
@@ -40,7 +40,7 @@ export function useSmartContractReadCall<
 export function makeSmartContractReadCallUseQueryOptions<
   TContract extends Contract,
   TMethodName extends ContractMethodName<TContract>,
-  TReturnType extends Unpacked<ContractReturnType<TContract, TMethodName>>
+  TReturnType extends Unpacked<StaticContractReturnType<TContract, TMethodName>>
 >(
   contract: TContract | undefined,
   methodName: TMethodName,
@@ -56,7 +56,10 @@ export function makeSmartContractReadCallUseQueryOptions<
 
   const queryFn = async (): Promise<TReturnType> => {
     const finalArgs = callArgs || [];
-    const result = await contract?.[methodName as string](...finalArgs);
+    // Read calls are by definition static, so we make sure to call the static method explicitly
+    const result = await contract?.callStatic?.[methodName as string](
+      ...finalArgs
+    );
     return result;
   };
 
