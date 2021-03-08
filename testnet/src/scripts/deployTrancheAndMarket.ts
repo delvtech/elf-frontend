@@ -3,7 +3,7 @@ import { USDC } from "types/USDC";
 import { Vault } from "types/Vault";
 import { WETH } from "types/WETH";
 
-import { SIX_MONTHS_IN_SECONDS, THIRTY_DAYS_IN_SECONDS } from "../time";
+import { THIRTY_DAYS_IN_SECONDS } from "../time";
 import { WeightedPoolFactory } from "../types/WeightedPoolFactory";
 import { YVaultAssetProxy } from "../types/YVaultAssetProxy";
 import { deployYieldPool } from "./deployYieldPool";
@@ -13,7 +13,7 @@ import { deployTranche } from "./tranche";
 
 const defaultOptions = {
   swapFee: ".003",
-  duration: THIRTY_DAYS_IN_SECONDS,
+  durationInSeconds: THIRTY_DAYS_IN_SECONDS,
 };
 
 export async function deployTrancheAndMarket(
@@ -22,12 +22,24 @@ export async function deployTrancheAndMarket(
   baseAssetContract: WETH | USDC,
   balancerVaultContract: Vault,
   weightedPoolFactory: WeightedPoolFactory,
-  options?: {
-    swapFee: string;
-    durationInSeconds: number;
+  options: {
+    swapFee?: string;
+    durationInSeconds?: number;
+    baseAssetIn: string;
+    yieldAssetIn: string;
+    mintAmount: string;
   }
 ) {
-  const { durationInSeconds } = { ...defaultOptions, ...options };
+  const {
+    swapFee,
+    durationInSeconds,
+    baseAssetIn,
+    yieldAssetIn,
+    mintAmount,
+  } = {
+    ...defaultOptions,
+    ...options,
+  };
 
   // deploy a tranche
   const trancheContract = await deployTranche(
@@ -45,7 +57,7 @@ export async function deployTrancheAndMarket(
     balancerVaultContract,
     baseAssetContract,
     trancheContract,
-    options
+    { swapFee, durationInSeconds }
   );
 
   // seed market with initial yield asset
@@ -54,7 +66,8 @@ export async function deployTrancheAndMarket(
     balancerVaultContract,
     fytPoolId,
     baseAssetContract,
-    trancheContract
+    trancheContract,
+    { mintAmount, baseAssetIn, yieldAssetIn }
   );
 
   // now setup a yc market

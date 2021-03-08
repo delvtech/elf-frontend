@@ -10,7 +10,7 @@ import { YieldCurvePool__factory } from "../types/factories/YieldCurvePool__fact
 
 const defaultOptions = {
   swapFee: ".003",
-  duration: THIRTY_DAYS_IN_SECONDS,
+  durationInSeconds: THIRTY_DAYS_IN_SECONDS,
 };
 
 export async function deployYieldPool(
