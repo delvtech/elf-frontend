@@ -12,12 +12,13 @@ import { formatAbbreviatedDate } from "efi/base/dates";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { getQueryData } from "efi-ui/base/queryResults";
-import { useMarketSpotPrice } from "efi-ui/markets/useMarketSpotPrice";
-import { useMarketForToken } from "efi-ui/markets/useMarketForToken";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
 import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
+import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
+import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
+import { BigNumber } from "ethers";
 
 interface TrancheInfoButtonProps {
   tranche: Tranche | undefined;
@@ -42,8 +43,12 @@ export const TrancheInfoButton: FC<TrancheInfoButtonProps> = ({
     getQueryData(unlockTimestampResult)
   );
 
-  const marketContract = useMarketForToken(tranche, jsonRpcProvider);
-  const tranchePriceResult = useMarketSpotPrice(marketContract, tranche);
+  const poolContract = usePoolForToken(tranche, jsonRpcProvider);
+  const tranchePriceResult = useOnSwapGivenIn(
+    poolContract,
+    tranche,
+    BigNumber.from(1)
+  );
   const tranchePriceBigNumber = getQueryData(tranchePriceResult);
   const tranchePrice = +formatCurrency(tranchePriceBigNumber, decimals);
 
