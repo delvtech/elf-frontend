@@ -79,7 +79,7 @@ async function main() {
     usdcContract,
     balancerVaultContract,
     weightedPoolFactory,
-    { mintAmount: "200000", baseAssetIn: "200000", yieldAssetIn: "200000" }
+    { mintAmount: "20000", baseAssetIn: "20000", yieldAssetIn: "13000" }
   );
 
   // deploy user proxy

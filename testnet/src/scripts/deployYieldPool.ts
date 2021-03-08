@@ -40,7 +40,7 @@ export async function deployYieldPool(
     vaultContract.address,
     parseEther(swapFee),
     elementAddress,
-    `Element ${baseAssetSymbol}- fy${baseAssetSymbol}`,
+    `Element ${baseAssetSymbol} - fy${baseAssetSymbol}`,
     `${baseAssetSymbol}-fy${baseAssetSymbol}`
   );
 

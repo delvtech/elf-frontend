@@ -1,12 +1,9 @@
 import { Signer } from "ethers";
-import { formatUnits } from "ethers/lib/utils";
 import { Tranche } from "types/Tranche";
 import { USDC } from "types/USDC";
 import { Vault } from "types/Vault";
 import { WETH } from "types/WETH";
 
-import { ERC20__factory } from "../types/factories/ERC20__factory";
-import { YC__factory } from "../types/factories/YC__factory";
 import { batchSwapIn } from "./batchSwapIn";
 import { initializeYieldPool } from "./initializeYieldPool";
 import { mintTrancheAssets } from "./mintTrancheAssets";
@@ -40,10 +37,6 @@ export async function setupFYTMarket(
     trancheContract,
     baseAssetIn
   );
-  const fytDecimals = await trancheContract.decimals();
-  const yc = await trancheContract.yc();
-  const ycContract = YC__factory.connect(yc, elementSigner);
-  const ycDecimals = await ycContract.decimals();
 
   // trade some tranche assets for some base assets
   const swapReceipt = await batchSwapIn(

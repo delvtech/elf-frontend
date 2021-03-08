@@ -39,7 +39,7 @@ export async function setupYCMarket(
     signer,
     balancerVaultContract,
     poolFactory,
-    `Element ${baseAssetSymbol}- yc${baseAssetSymbol}`,
+    `Element ${baseAssetSymbol} - yc${baseAssetSymbol}`,
     `${baseAssetSymbol}-yc${baseAssetSymbol}`,
     ycMarketTokens,
     weights,
