@@ -18,14 +18,11 @@ import { TranchePicker } from "efi-ui/invest/TranchePicker/TranchePicker";
 
 import { InvestmentAmountInput } from "./InvestmentAmountInput";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
-import { useMarketForToken } from "efi-ui/markets/useMarketForToken";
-import { useMarketSpotPrice } from "efi-ui/markets/useMarketSpotPrice";
 import { getQueryData } from "efi-ui/base/queryResults";
 import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
-import { useCalcOutGivenIn } from "efi-ui/balancer/useCalcOutGivenIn";
 import { BigNumber } from "ethers";
 import { formatUnits, parseUnits } from "@ethersproject/units";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
@@ -33,6 +30,8 @@ import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFr
 import ContractAddresses from "efi/contracts/contractsJson";
 import { ERC20, WETH, WETH__factory } from "elf-contracts/types";
 import { CryptoAssetType } from "efi/crypto/CryptoAsset";
+import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
+import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
 
 export interface InvestCardProps {
   library: Web3Provider | undefined;
@@ -82,8 +81,12 @@ export const InvestCard: FC<InvestCardProps> = ({
     activeTranche,
     "decimals"
   );
-  const marketContract = useMarketForToken(activeTranche, jsonRpcProvider);
-  const tranchePriceResult = useMarketSpotPrice(marketContract, activeTranche);
+  const poolContract = usePoolForToken(activeTranche, jsonRpcProvider);
+  const tranchePriceResult = useOnSwapGivenIn(
+    poolContract,
+    activeTranche,
+    BigNumber.from(1)
+  );
 
   const wethContract = useSmartContractFromFactory(
     ContractAddresses.wethAddress,
@@ -98,11 +101,10 @@ export const InvestCard: FC<InvestCardProps> = ({
     ? parseUnits(amountIn, activeBaseAssetDecimals)
     : undefined;
 
-  const { data: amountOut } = useCalcOutGivenIn(
-    amountInAsBigNumber,
+  const { data: amountOut } = useOnSwapGivenIn(
+    poolContract,
     inputTokenContract,
-    activeTranche,
-    marketContract
+    amountInAsBigNumber
   );
 
   const tranchePriceBigNumber = getQueryData(tranchePriceResult);
@@ -200,7 +202,7 @@ export const InvestCard: FC<InvestCardProps> = ({
         account={account}
         library={library}
         chainId={chainId}
-        market={marketContract}
+        pool={poolContract}
         walletConnectionActive={walletConnectionActive}
         connector={connector}
         baseAsset={activeBaseAsset}
