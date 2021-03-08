@@ -17,7 +17,11 @@ contract AYVault is ERC20 {
     address public token;
     uint256 internal _supply;
 
-    constructor(address _token) ERC20("a ytoken", "yToken") {
+    constructor(
+        address _token,
+        string memory name,
+        string memory symbol
+    ) ERC20(name, symbol) {
         token = _token;
     }
 
