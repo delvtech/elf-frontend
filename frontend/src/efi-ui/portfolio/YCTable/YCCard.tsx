@@ -13,30 +13,31 @@ import {
 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { Tooltip2 } from "@blueprintjs/popover2";
+import { navigate } from "@reach/router";
 import classNames from "classnames";
 import { YC } from "elf-contracts/types";
+import { formatUnits } from "ethers/lib/utils";
 import { jt, t } from "ttag";
 
+import { getCoinGeckoId } from "efi-coingecko";
 import tw from "efi-tailwindcss-classnames";
 import { useCalcOutGivenIn } from "efi-ui/balancer/useCalcOutGivenIn";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
+import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
+import { CryptoIconSvg } from "efi-ui/crypto/CryptoIcon";
 import { useMarketForToken } from "efi-ui/markets/useMarketForToken";
+import { useMarketPairedToken } from "efi-ui/markets/useMarketPairedToken";
+import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { getTimeLeft2 } from "efi/base/time";
-import { useMarketPairedToken } from "efi-ui/markets/useMarketPairedToken";
-import { formatUnits } from "ethers/lib/utils";
-import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
-import { getCoinGeckoId } from "efi-coingecko";
-import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
-import { formatMoney } from "efi/money/formatMoney";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
-import { CryptoIconSvg } from "efi-ui/crypto/CryptoIcon";
-import { navigate } from "@reach/router";
+import { formatMoney } from "efi/money/formatMoney";
+
 import { useTrancheForYieldCoupon } from "./useTrancheForYieldCoupon";
-import { useVaultForTranche } from "./useVaultForTranche";
+import { useUnderlyingVaultForTranche } from "./useUnderlyingVaultForTranche";
 
 interface YCCardProps {
   account: string | null | undefined;
@@ -71,7 +72,7 @@ export const YCCard: FC<YCCardProps> = ({ account, yieldCoupon }) => {
     tranche,
     "unlockTimestamp"
   );
-  const vaultContract = useVaultForTranche(tranche);
+  const vaultContract = useUnderlyingVaultForTranche(tranche);
   const { data: vaultName } = useSmartContractReadCall(vaultContract, "name");
 
   const market = useMarketForToken(yieldCoupon);
