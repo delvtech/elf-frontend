@@ -34,15 +34,15 @@ export function useOnSwapGivenInMulti(
   const onSwapGivenInArgs = zipped.map(
     ([poolId, tokenIn, amount, tokenOut, balances]) => {
       return {
-        enabled: [poolId, tokenIn, amount, tokensOut, balances?.length].every(
+        enabled: [poolId, tokenIn, amount, tokenOut, balances?.length].every(
           (v) => !!v
         ),
         callArgs: makeOnSwapGivenInCallArgs(
-          poolId as string,
-          tokenIn as ERC20,
-          amount as BigNumber,
-          tokenOut as ERC20,
-          balances as BigNumber[]
+          poolId,
+          tokenIn,
+          amount,
+          tokenOut,
+          balances
         ),
       };
     }

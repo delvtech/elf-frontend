@@ -28,10 +28,10 @@ export function useOnSwapGivenIn(
       (v) => !!v
     ),
     callArgs: makeOnSwapGivenInCallArgs(
-      poolId as string,
-      tokenIn as ERC20,
-      amount as BigNumber,
-      tokenOut as ERC20,
+      poolId,
+      tokenIn,
+      amount,
+      tokenOut,
       balances
     ),
   });
