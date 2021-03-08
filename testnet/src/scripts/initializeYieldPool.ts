@@ -1,6 +1,6 @@
 import abi from "ethereumjs-abi";
 import { Signer } from "ethers";
-import { parseEther } from "ethers/lib/utils";
+import { parseEther, parseUnits } from "ethers/lib/utils";
 import { Tranche } from "types/Tranche";
 import { USDC } from "types/USDC";
 import { Vault } from "types/Vault";
@@ -29,6 +29,11 @@ export async function initializeYieldPool(
   const elementAddress = await elementSigner.getAddress();
   let { tokens } = await vaultContract.getPoolTokens(poolId);
 
+  const baseAssetDecimals = await baseAssetContract.decimals();
+
+  // const parseToken = (value: string) => parseUnits(value, baseAssetDecimals);
+  // TODO: double check if these should be normalized to Ether or not.  I think balancer wants
+  // everything in 18 decimal format so leaving this as parseEther.  If not, then we'll have to use parseToken
   // we can only initialize the pool with base asset, the yield asset is ignored.
   const maxAmountsIn = [parseEther(amountIn), parseEther(amountIn)];
   const amounts = maxAmountsIn.map((amt) => amt.toHexString());

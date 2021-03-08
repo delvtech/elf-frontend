@@ -14,8 +14,10 @@ export async function setupFYTMarket(
   balancerVaultContract: Vault,
   poolId: string,
   baseAssetContract: WETH | USDC,
-  trancheContract: Tranche
+  trancheContract: Tranche,
+  options: { mintAmount: string; baseAssetIn: string; yieldAssetIn: string }
 ) {
+  const { baseAssetIn, yieldAssetIn } = options;
   const sender = await elementSigner.getAddress();
 
   // put base asset into market
@@ -25,7 +27,7 @@ export async function setupFYTMarket(
     balancerVaultContract,
     baseAssetContract,
     trancheContract,
-    "20000"
+    baseAssetIn
   );
 
   // mint some tranche assets
@@ -33,18 +35,19 @@ export async function setupFYTMarket(
     elementSigner,
     baseAssetContract,
     trancheContract,
-    "20000"
+    baseAssetIn
   );
 
   // trade some tranche assets for some base assets
   const swapReceipt = await batchSwapIn(
-    baseAssetContract,
     trancheContract,
+    baseAssetContract,
     poolId,
     sender,
     balancerVaultContract,
-    "13000"
+    yieldAssetIn
   );
 
+  await swapReceipt.wait(1);
   return swapReceipt;
 }

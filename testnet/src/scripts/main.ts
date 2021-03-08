@@ -1,18 +1,12 @@
-import { parseEther, parseUnits } from "ethers/lib/utils";
 import fs from "fs";
-import { YVaultAssetProxy } from "types/YVaultAssetProxy";
 
-import { SIX_MONTHS_IN_SECONDS } from "../time";
 import { deployBalancerVault } from "./balancerV2Vault";
 import { deployBaseAssets } from "./baseAssets";
+import { deployTrancheAndMarket } from "./deployTrancheAndMarket";
+import { deployVaultsAndProxys } from "./deployVaultsAndProxys";
 import { deployWeightedPoolFactory } from "./deployWeightedPoolFactory";
-import { deployYieldPool } from "./deployYieldPool";
-import { deployYearnVault } from "./deployYVault";
-import { deployYearnVaultAssetProxy } from "./deployYVaultAssetProxy";
 import { getSigner, SIGNER } from "./getSigner";
-import { setupFYTMarket } from "./setupFYTMarket";
-import { setupYCMarket } from "./setupYCMarket";
-import { deployTranche } from "./tranche";
+import { mintTokensForAddress } from "./mintTokensForAddress";
 import { deployUserProxy } from "./userProxy";
 
 async function main() {
@@ -26,87 +20,66 @@ async function main() {
   // deploy base assets
   const [wethContract, usdcContract] = await deployBaseAssets(elementSigner);
 
-  // give element address some extra tokens
-  const e_mintWethTx = await wethContract.mint(
-    elementAddress,
-    parseEther("1000000")
-  );
-  await e_mintWethTx.wait(1);
-  const e_mintUsdcTx = await usdcContract.mint(
-    elementAddress,
-    parseUnits("1000000", 6)
-  );
-  await e_mintUsdcTx.wait(1);
+  // supply element with WETH and USDC
+  await mintTokensForAddress(elementAddress, {
+    tokens: [wethContract, usdcContract],
+  });
 
   // supply user with WETH and USDC
-  const mintWethTx = await wethContract.mint(
-    userAddress,
-    parseEther("1000000")
-  );
-  await mintWethTx.wait(1);
-  const mintUsdcTx = await usdcContract.mint(
-    userAddress,
-    parseUnits("1000000", 6)
-  );
-  await mintUsdcTx.wait(1);
+  await mintTokensForAddress(userAddress, {
+    tokens: [wethContract, usdcContract],
+  });
 
   // deploy main balancer vault
   const balancerVaultContract = await deployBalancerVault(balancerSigner);
   // register element with balancer so we can deploy pools
   await balancerVaultContract.changeRelayerAllowance(elementAddress, true);
-
-  // deploy stubbed yearn vault
-  const yWeth = await deployYearnVault(elementSigner, wethContract.address);
-
-  // deploy yearn vault asset proxy
-  const wethYearnVaultAssetProxy: YVaultAssetProxy = await deployYearnVaultAssetProxy(
-    elementSigner,
-    yWeth.address,
-    wethContract.address,
-    "eyWETH",
-    "eyWETH"
-  );
-
-  // deploy a tranche
-  const wethTrancheContract = await deployTranche(
-    elementSigner,
-    wethYearnVaultAssetProxy,
-    SIX_MONTHS_IN_SECONDS
-  );
-
-  // deploy an FYT market, seed with base asset
-  const { poolId, poolContract } = await deployYieldPool(
-    elementSigner,
-    balancerVaultContract,
-    wethContract,
-    wethTrancheContract
-  );
-
-  // seed market with initial yield asset
-  await setupFYTMarket(
-    elementSigner,
-    balancerVaultContract,
-    poolId,
-    wethContract,
-    wethTrancheContract
-  );
-
   // deploy the yc market factory
   const weightedPoolFactory = await deployWeightedPoolFactory(
     elementSigner,
     balancerVaultContract
   );
+  await balancerVaultContract.changeRelayerAllowance(
+    weightedPoolFactory.address,
+    true
+  );
 
-  // now setup a yc market
   const {
-    poolId: ycPoolId,
-    poolContract: ycPoolContract,
-  } = await setupYCMarket(
+    yWeth,
+    wethYearnVaultAssetProxy,
+    yUsdc,
+    usdcYearnVaultAssetProxy,
+  } = await deployVaultsAndProxys(elementSigner, wethContract, usdcContract);
+
+  const {
+    trancheContract: wethTrancheContract,
+    fytPoolContract: wethFytPoolContract,
+    fytPoolId: wethFytPoolId,
+    ycPoolContract: wethYcPoolContract,
+    ycPoolId: wethYcPoolId,
+  } = await deployTrancheAndMarket(
     elementSigner,
-    wethTrancheContract,
-    balancerVaultContract,
+    wethYearnVaultAssetProxy,
     wethContract,
-    weightedPoolFactory
+    balancerVaultContract,
+    weightedPoolFactory,
+    { mintAmount: "20000", baseAssetIn: "20000", yieldAssetIn: "13000" }
+  );
+
+  // TODO: fix this.  somehow I can't trade less yield assets than there are base assets!
+  const {
+    trancheContract: usdcTrancheContract,
+    fytPoolContract: usdcFytPoolContract,
+    fytPoolId: usdcFytPoolId,
+    ycPoolContract: usdcYcPoolContract,
+    ycPoolId: usdcYcPoolId,
+  } = await deployTrancheAndMarket(
+    elementSigner,
+    usdcYearnVaultAssetProxy,
+    usdcContract,
+    balancerVaultContract,
+    weightedPoolFactory,
+    { mintAmount: "20000", baseAssetIn: "20000", yieldAssetIn: "13000" }
   );
 
   // deploy user proxy
@@ -126,17 +99,28 @@ async function main() {
       balancerVaultAddress: balancerVaultContract.address,
       marketYcFactory: weightedPoolFactory.address,
 
-      // asset proxy
-      yearnVaultAssetProxyAddress: wethYearnVaultAssetProxy.address,
+      // yearn vaults
+      wethYearnVaultAddress: yWeth.address,
+      usdcYearnVaultAddress: yUsdc.address,
+
+      // asset proxys
+      wethYearnVaultAssetProxyAddress: wethYearnVaultAssetProxy.address,
+      usdcYearnVaultAssetProxyAddress: usdcYearnVaultAssetProxy.address,
 
       // tranche contracts
       wethTrancheAddress: wethTrancheContract.address,
+      usdcTrancheAddress: usdcTrancheContract.address,
 
       // market addresses and ids
-      marketFyWethAddress: poolContract.address,
-      marketFyWethId: poolId,
-      marketYcWethAddress: ycPoolContract.address,
-      marketYcWethId: ycPoolId,
+      marketFyWethAddress: wethFytPoolContract.address,
+      marketFyWethId: wethFytPoolId,
+      marketYcWethAddress: wethYcPoolContract.address,
+      marketYcWethId: wethYcPoolId,
+
+      marketFyUsdcAddress: usdcFytPoolContract.address,
+      marketFyUsdcId: usdcFytPoolId,
+      marketYcUsdcAddress: usdcYcPoolContract.address,
+      marketYcUsdcId: usdcYcPoolId,
 
       // user proxy
       userProxyContractAddress: userProxyContract.address,

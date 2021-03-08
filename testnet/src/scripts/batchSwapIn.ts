@@ -21,14 +21,14 @@ interface FundManagement {
 }
 
 export async function batchSwapIn(
-  tokenOutContract: ERC20,
   tokenInContract: ERC20,
+  tokenOutContract: ERC20,
   poolId: string,
   sender: string,
   balancerVaultContract: Vault,
   swapInAmount: string
 ) {
-  const tokens: string[] = [tokenOutContract.address, tokenInContract.address];
+  const tokens: string[] = [tokenInContract.address, tokenOutContract.address];
   const tokenInDecimals = await tokenInContract.decimals();
   const amountIn = parseUnits(swapInAmount, tokenInDecimals);
   // have to set this to something
@@ -39,8 +39,8 @@ export async function batchSwapIn(
     {
       poolId,
       // indicies from 'tokens', puttin FYTs in, getting base asset out.
-      tokenInIndex: 1,
-      tokenOutIndex: 0,
+      tokenInIndex: 0,
+      tokenOutIndex: 1,
       amountIn,
       userData,
     },
@@ -52,11 +52,11 @@ export async function batchSwapIn(
     sender,
     fromInternalBalance: false,
     recipient: sender,
-    toInternalBalance: true,
+    toInternalBalance: false,
   };
 
   // the user is sending this one, so the delta will be negative, so just set a limit of zero.
-  const limitTokenIn = 0;
+  const limitTokenIn = amountIn;
 
   // performing a SwapIn, so we can specifiy exactly how much in and set the limit to that.
   const limitTokenOut = amountIn;
