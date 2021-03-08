@@ -1,12 +1,10 @@
 import fs from "fs";
 
-import { YVaultAssetProxy } from "../types/YVaultAssetProxy";
 import { deployBalancerVault } from "./balancerV2Vault";
 import { deployBaseAssets } from "./baseAssets";
 import { deployTrancheAndMarket } from "./deployTrancheAndMarket";
+import { deployVaultsAndProxys } from "./deployVaultsAndProxys";
 import { deployWeightedPoolFactory } from "./deployWeightedPoolFactory";
-import { deployYearnVault } from "./deployYVault";
-import { deployYearnVaultAssetProxy } from "./deployYVaultAssetProxy";
 import { getSigner, SIGNER } from "./getSigner";
 import { mintTokensForAddress } from "./mintTokensForAddress";
 import { deployUserProxy } from "./userProxy";
@@ -41,18 +39,17 @@ async function main() {
     elementSigner,
     balancerVaultContract
   );
-
-  // deploy stubbed yearn vault
-  const yWeth = await deployYearnVault(elementSigner, wethContract.address);
-
-  // deploy yearn vault asset proxy
-  const wethYearnVaultAssetProxy: YVaultAssetProxy = await deployYearnVaultAssetProxy(
-    elementSigner,
-    yWeth.address,
-    wethContract.address,
-    "eyWETH",
-    "eyWETH"
+  await balancerVaultContract.changeRelayerAllowance(
+    weightedPoolFactory.address,
+    true
   );
+
+  const {
+    yWeth,
+    wethYearnVaultAssetProxy,
+    yUsdc,
+    usdcYearnVaultAssetProxy,
+  } = await deployVaultsAndProxys(elementSigner, wethContract, usdcContract);
 
   const {
     trancheContract: wethTrancheContract,
@@ -65,7 +62,24 @@ async function main() {
     wethYearnVaultAssetProxy,
     wethContract,
     balancerVaultContract,
-    weightedPoolFactory
+    weightedPoolFactory,
+    { mintAmount: "20000", baseAssetIn: "20000", yieldAssetIn: "13000" }
+  );
+
+  // TODO: fix this.  somehow I can't trade less yield assets than there are base assets!
+  const {
+    trancheContract: usdcTrancheContract,
+    fytPoolContract: usdcFytPoolContract,
+    fytPoolId: usdcFytPoolId,
+    ycPoolContract: usdcYcPoolContract,
+    ycPoolId: usdcYcPoolId,
+  } = await deployTrancheAndMarket(
+    elementSigner,
+    usdcYearnVaultAssetProxy,
+    usdcContract,
+    balancerVaultContract,
+    weightedPoolFactory,
+    { mintAmount: "200000", baseAssetIn: "200000", yieldAssetIn: "200000" }
   );
 
   // deploy user proxy
@@ -85,17 +99,28 @@ async function main() {
       balancerVaultAddress: balancerVaultContract.address,
       marketYcFactory: weightedPoolFactory.address,
 
-      // asset proxy
-      yearnVaultAssetProxyAddress: wethYearnVaultAssetProxy.address,
+      // yearn vaults
+      wethYearnVaultAddress: yWeth.address,
+      usdcYearnVaultAddress: yUsdc.address,
+
+      // asset proxys
+      wethYearnVaultAssetProxyAddress: wethYearnVaultAssetProxy.address,
+      usdcYearnVaultAssetProxyAddress: usdcYearnVaultAssetProxy.address,
 
       // tranche contracts
       wethTrancheAddress: wethTrancheContract.address,
+      usdcTrancheAddress: usdcTrancheContract.address,
 
       // market addresses and ids
       marketFyWethAddress: wethFytPoolContract.address,
       marketFyWethId: wethFytPoolId,
       marketYcWethAddress: wethYcPoolContract.address,
       marketYcWethId: wethYcPoolId,
+
+      marketFyUsdcAddress: usdcFytPoolContract.address,
+      marketFyUsdcId: usdcFytPoolId,
+      marketYcUsdcAddress: usdcYcPoolContract.address,
+      marketYcUsdcId: usdcYcPoolId,
 
       // user proxy
       userProxyContractAddress: userProxyContract.address,
