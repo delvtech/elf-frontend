@@ -1,14 +1,14 @@
 import { Currency, Money } from "ts-money";
 
-import { useTrancheFiatBalance } from "efi-ui/markets/useFYTFiatBalance";
-import ContractAddresses from "efi/contracts/contractsJson";
+import { useTrancheFiatBalanceOld } from "efi-ui/markets/useFYTFiatBalance";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
+import ContractAddresses from "efi/contracts/contractsJson";
 
 export function useFiatBalanceAllTranches(
   account: string | null | undefined
 ): Money | undefined {
   const { currency } = useCurrencyPref();
-  const wethTrancheFiatBalance = useTrancheFiatBalance(
+  const wethTrancheFiatBalance = useTrancheFiatBalanceOld(
     account,
     ContractAddresses.wethTrancheAddress,
     ContractAddresses.marketFyWethAddress,
