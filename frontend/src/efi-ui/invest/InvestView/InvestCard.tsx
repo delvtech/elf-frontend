@@ -2,36 +2,36 @@ import React, { FC, Fragment, useState } from "react";
 
 import { Button, Callout, Card, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
+import { formatUnits, parseUnits } from "@ethersproject/units";
 import { AbstractConnector } from "@web3-react/abstract-connector";
+import { ERC20, WETH, WETH__factory } from "elf-contracts/types";
 import { Tranche } from "elf-contracts/types/Tranche";
+import { BigNumber } from "ethers";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
+import { getQueryData } from "efi-ui/base/queryResults";
+import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
+import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { useCryptoBalance } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
+import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { BaseAssetPicker } from "efi-ui/invest/BaseAssetPicker/BaseAssetPicker";
 import { BuyFYTConfirmationDrawer } from "efi-ui/invest/BuyFYTConfirmationDrawer/BuyFYTConfirmationDrawer";
 import { useActiveTranche } from "efi-ui/invest/hooks/useActiveTranche";
 import { TranchePicker } from "efi-ui/invest/TranchePicker/TranchePicker";
+import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
+import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
+import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
+import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
+import ContractAddresses from "efi/contracts/contractsJson";
+import { CryptoAssetType } from "efi/crypto/CryptoAsset";
+import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
+import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
 
 import { InvestmentAmountInput } from "./InvestmentAmountInput";
-import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
-import { getQueryData } from "efi-ui/base/queryResults";
-import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
-import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
-import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
-import { BigNumber } from "ethers";
-import { formatUnits, parseUnits } from "@ethersproject/units";
-import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
-import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
-import ContractAddresses from "efi/contracts/contractsJson";
-import { ERC20, WETH, WETH__factory } from "elf-contracts/types";
-import { CryptoAssetType } from "efi/crypto/CryptoAsset";
-import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
-import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
 
 export interface InvestCardProps {
   library: Web3Provider | undefined;

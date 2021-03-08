@@ -13,7 +13,7 @@ import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import classNames from "classnames";
-import { BPool, ERC20 } from "elf-contracts/types";
+import { ERC20 } from "elf-contracts/types";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { BigNumber, Signer } from "ethers";
 import { t } from "ttag";
@@ -36,6 +36,7 @@ import { getConnectorName } from "efi/wallets/connectors";
 
 import { isApprovalRequiredForTransactions } from "../../crypto/isApprovalRequiredForTransactions";
 import { PoolContract } from "efi/pools/PoolContract";
+import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 
 interface BuyFYTConfirmationDrawerProps {
   chainId: number | undefined;
@@ -43,10 +44,6 @@ interface BuyFYTConfirmationDrawerProps {
   walletConnectionActive: boolean;
   connector: AbstractConnector | undefined;
   library: Web3Provider | undefined;
-  /**
-   * @deprecated use pool instead
-   */
-  market?: BPool | undefined;
   pool: PoolContract | undefined;
 
   amount: BigNumber | undefined;
@@ -65,24 +62,18 @@ export const BuyFYTConfirmationDrawer: FC<BuyFYTConfirmationDrawerProps> = ({
   account,
   baseAsset: { assetIcon: AssetIcon },
   baseAsset,
-  market,
   tranche,
   amount,
   isOpen,
   onClose,
 }) => {
+  const signer = account ? (library?.getSigner(account) as Signer) : undefined;
+
   let baseAssetContract: ERC20 | undefined;
   if (baseAsset.type === CryptoAssetType.ERC20) {
     baseAssetContract = baseAsset.tokenContract;
   }
-
-  const signer = account ? (library?.getSigner(account) as Signer) : undefined;
-  const onApproveClick = useOnApproveClick(
-    baseAssetContract,
-    signer,
-    account,
-    market
-  );
+  const onApproveClick = useOnApproveClick(baseAssetContract, signer, account);
 
   const { isDarkMode, darkModeClassName } = useDarkMode();
   const baseAssetName = useCryptoName(baseAsset);
@@ -92,12 +83,13 @@ export const BuyFYTConfirmationDrawer: FC<BuyFYTConfirmationDrawerProps> = ({
     "unlockTimestamp"
   );
 
+  const balancerVault = useBalancerVault();
   const {
     data: marketAllowance,
     isLoading: isMarketAllowanceLoading,
   } = useSmartContractReadCall(baseAssetContract, "allowance", {
-    enabled: !!account && !!market?.address,
-    callArgs: [account as string, market?.address as string],
+    enabled: !!account && !!balancerVault?.address,
+    callArgs: [account as string, balancerVault?.address as string],
   });
 
   const connectorName = getConnectorName(connector, library);
@@ -224,10 +216,10 @@ export const BuyFYTConfirmationDrawer: FC<BuyFYTConfirmationDrawerProps> = ({
 function useOnApproveClick(
   baseAssetContract: ERC20 | undefined,
   signer: Signer | undefined,
-  account: string | null | undefined,
-  market: BPool | undefined
+  account: string | null | undefined
 ) {
   const queryClient = useQueryClient();
+  const balancerVault = useBalancerVault();
   const { mutate: approve } = useSmartContractTransaction(
     baseAssetContract,
     "approve",
@@ -240,7 +232,7 @@ function useOnApproveClick(
               query,
               baseAssetContract,
               "allowance",
-              [account as string, market?.address as string]
+              [account as string, balancerVault?.address as string]
             );
             return match;
           },
@@ -250,9 +242,9 @@ function useOnApproveClick(
   );
 
   const onApproveClick = useCallback(() => {
-    if (market) {
-      approve([market.address, MAX_ALLOWANCE]);
+    if (balancerVault) {
+      approve([balancerVault.address, MAX_ALLOWANCE]);
     }
-  }, [approve, market]);
+  }, [approve, balancerVault]);
   return onApproveClick;
 }
