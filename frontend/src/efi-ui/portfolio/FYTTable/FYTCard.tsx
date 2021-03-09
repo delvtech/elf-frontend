@@ -31,8 +31,6 @@ import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatDuration, intervalToDuration } from "date-fns";
 import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
 import { getQueryData } from "efi-ui/base/queryResults";
-import { useMarketForToken } from "efi-ui/markets/useMarketForToken";
-import { useMarketSpotPrice } from "efi-ui/markets/useMarketSpotPrice";
 import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
 import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
 import { getCoinGeckoId } from "efi-coingecko";
@@ -42,6 +40,10 @@ import { navigate } from "@reach/router";
 import { CryptoIconSvg } from "efi-ui/crypto/CryptoIcon";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { formatMoney } from "efi/money/formatMoney";
+import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
+import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
+import { BigNumber } from "ethers";
+import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 
 interface FYTCardProps {
   account: string | null | undefined;
@@ -73,18 +75,14 @@ export const FYTCard: FC<FYTCardProps> = ({ account, tranche }) => {
 
   const vaultContract = useVaultForTranche(tranche);
   const { data: vaultName } = useSmartContractReadCall(vaultContract, "name");
-  const market = useMarketForToken(tranche);
-  const trancheSpotPriceResult = useMarketSpotPrice(market, tranche);
-  const finalTokensResult = useSmartContractReadCall(market, "getFinalTokens");
+  const pool = usePoolForToken(tranche);
+  const trancheSpotPriceResult = useOnSwapGivenIn(
+    pool,
+    tranche,
+    BigNumber.from(1)
+  );
+  const baseAsset = usePoolPairedToken(pool, tranche);
 
-  const finalTokenAddresses = getQueryData(finalTokensResult) || [];
-  const baseAssetAddress = finalTokenAddresses.find(
-    (address) => address !== tranche?.address
-  );
-  const baseAsset = useSmartContractFromFactory(
-    baseAssetAddress,
-    ERC20__factory.connect
-  );
   const { data: baseAssetSymbol } = useSmartContractReadCall(
     baseAsset,
     "symbol"
@@ -250,7 +248,7 @@ export const FYTCard: FC<FYTCardProps> = ({ account, tranche }) => {
           </Button>
           <AnchorButton
             intent={Intent.PRIMARY}
-            onClick={() => navigate(`exchange/${market?.address}`)}
+            onClick={() => navigate(`exchange/${pool?.address}`)}
             minimal
           >
             <div className={tw("p-2", "text-base")}>{t`Go to market`}</div>
