@@ -2,9 +2,7 @@ import { Signer } from "ethers";
 import { parseEther } from "ethers/lib/utils";
 
 import { ERC20 } from "src/types/ERC20";
-import {
-  YieldCurvePool__factory,
-} from "src/types/factories/YieldCurvePool__factory";
+import { YieldCurvePool__factory } from "src/types/factories/YieldCurvePool__factory";
 import { USDC } from "src/types/USDC";
 import { Vault } from "src/types/Vault";
 import { WETH } from "src/types/WETH";
