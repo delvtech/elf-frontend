@@ -4,8 +4,8 @@ import { Vault } from "types/Vault";
 import { WETH } from "types/WETH";
 
 import { THIRTY_DAYS_IN_SECONDS } from "../time";
-import { WeightedPoolFactory } from "../types/WeightedPoolFactory";
-import { YVaultAssetProxy } from "../types/YVaultAssetProxy";
+import { WeightedPoolFactory } from "elf/types/WeightedPoolFactory";
+import { YVaultAssetProxy } from "elf/types/YVaultAssetProxy";
 import { deployYieldPool } from "./deployYieldPool";
 import { setupFYTMarket } from "./setupFYTMarket";
 import { setupYCMarket } from "./setupYCMarket";

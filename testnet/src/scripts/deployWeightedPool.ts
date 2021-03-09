@@ -5,7 +5,7 @@ import { WeightedPoolFactory } from "types/WeightedPoolFactory";
 
 import {
   WeightedPool__factory,
-} from "../types/factories/WeightedPool__factory";
+} from "elf/types/factories/WeightedPool__factory";
 
 export async function deployWeightedPool(
   signer: Signer,

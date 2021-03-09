@@ -6,7 +6,7 @@ import { Vault } from "types/Vault";
 import { WETH } from "types/WETH";
 
 import { THIRTY_DAYS_IN_SECONDS } from "../time";
-import { YieldCurvePool__factory } from "../types/factories/YieldCurvePool__factory";
+import { YieldCurvePool__factory } from "elf/types/factories/YieldCurvePool__factory";
 
 const defaultOptions = {
   swapFee: ".003",

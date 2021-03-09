@@ -7,7 +7,7 @@ import { WeightedPoolFactory } from "types/WeightedPoolFactory";
 import { WETH } from "types/WETH";
 
 import { MAX_ALLOWANCE } from "../maxAllowance";
-import { YC__factory } from "../types/factories/YC__factory";
+import { YC__factory } from "elf/types/factories/YC__factory";
 import { deployWeightedPool } from "./deployWeightedPool";
 
 // JoinKind from WeightedPool.sol

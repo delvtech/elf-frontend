@@ -3,7 +3,7 @@ import { Vault } from "types/Vault";
 
 import {
   WeightedPoolFactory__factory,
-} from "../types/factories/WeightedPoolFactory__factory";
+} from "elf/types/factories/WeightedPoolFactory__factory";
 
 export async function deployWeightedPoolFactory(
   signer: Signer,
