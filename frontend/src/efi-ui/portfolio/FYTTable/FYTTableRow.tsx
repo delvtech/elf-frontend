@@ -22,8 +22,6 @@ import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
 import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
 import { getQueryData } from "efi-ui/base/queryResults";
-import { useMarketForToken } from "efi-ui/markets/useMarketForToken";
-import { useMarketSpotPrice } from "efi-ui/markets/useMarketSpotPrice";
 import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
 import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
 import { getCoinGeckoId } from "efi-coingecko";
@@ -31,6 +29,10 @@ import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
 import { navigate } from "@reach/router";
 import { getTimeLeft2 } from "efi/base/time";
+import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
+import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
+import { BigNumber } from "ethers";
+import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 
 interface FYTTableRowProps {
   account: string | null | undefined;
@@ -62,18 +64,13 @@ export const FYTTableRow: FC<FYTTableRowProps> = ({ account, tranche }) => {
     ERC20__factory.connect
   );
   const { data: vaultName } = useSmartContractReadCall(vaultContract, "name");
-  const market = useMarketForToken(tranche);
-  const trancheSpotPriceResult = useMarketSpotPrice(market, tranche);
-  const finalTokensResult = useSmartContractReadCall(market, "getFinalTokens");
-
-  const finalTokenAddresses = getQueryData(finalTokensResult) || [];
-  const baseAssetAddress = finalTokenAddresses.find(
-    (address) => address !== tranche?.address
+  const pool = usePoolForToken(tranche);
+  const trancheSpotPriceResult = useOnSwapGivenIn(
+    pool,
+    tranche,
+    BigNumber.from(1)
   );
-  const baseAsset = useSmartContractFromFactory(
-    baseAssetAddress,
-    ERC20__factory.connect
-  );
+  const baseAsset = usePoolPairedToken(pool, tranche);
   const { data: baseAssetSymbol } = useSmartContractReadCall(
     baseAsset,
     "symbol"
@@ -175,7 +172,7 @@ export const FYTTableRow: FC<FYTTableRowProps> = ({ account, tranche }) => {
           </AnchorButton>
         </Tooltip2>
         <AnchorButton
-          onClick={() => navigate(`exchange/${market?.address}`)}
+          onClick={() => navigate(`exchange/${pool?.address}`)}
           outlined
         >{t`Go to market`}</AnchorButton>
       </div>
