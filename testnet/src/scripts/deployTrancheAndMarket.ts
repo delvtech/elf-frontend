@@ -1,7 +1,7 @@
 import { Signer } from "ethers";
-import { USDC } from "types/USDC";
-import { Vault } from "types/Vault";
-import { WETH } from "types/WETH";
+import { USDC } from "elf/types/USDC";
+import { Vault } from "elf/types/Vault";
+import { WETH } from "elf/types/WETH";
 
 import { THIRTY_DAYS_IN_SECONDS } from "../time";
 import { WeightedPoolFactory } from "elf/types/WeightedPoolFactory";

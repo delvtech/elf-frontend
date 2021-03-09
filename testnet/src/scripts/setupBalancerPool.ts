@@ -1,6 +1,6 @@
 import { parseEther, parseUnits } from "ethers/lib/utils";
-import { BPool } from "types/BPool";
-import { ERC20 } from "types/ERC20";
+import { BPool } from "elf/types/BPool";
+import { ERC20 } from "elf/types/ERC20";
 
 interface PoolOptions {
   /**

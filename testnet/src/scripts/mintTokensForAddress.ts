@@ -1,6 +1,6 @@
 import { parseEther } from "ethers/lib/utils";
-import { USDC } from "types/USDC";
-import { WETH } from "types/WETH";
+import { USDC } from "elf/types/USDC";
+import { WETH } from "elf/types/WETH";
 
 const defaultOptions = {
   tokens: [],

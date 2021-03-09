@@ -1,10 +1,10 @@
 import { Signer } from "ethers";
 import { defaultAbiCoder, parseEther, parseUnits } from "ethers/lib/utils";
-import { Tranche } from "types/Tranche";
-import { USDC } from "types/USDC";
-import { Vault } from "types/Vault";
-import { WeightedPoolFactory } from "types/WeightedPoolFactory";
-import { WETH } from "types/WETH";
+import { Tranche } from "elf/types/Tranche";
+import { USDC } from "elf/types/USDC";
+import { Vault } from "elf/types/Vault";
+import { WeightedPoolFactory } from "elf/types/WeightedPoolFactory";
+import { WETH } from "elf/types/WETH";
 
 import { MAX_ALLOWANCE } from "../maxAllowance";
 import { YC__factory } from "elf/types/factories/YC__factory";

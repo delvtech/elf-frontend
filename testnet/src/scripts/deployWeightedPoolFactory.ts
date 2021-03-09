@@ -1,5 +1,5 @@
 import { Signer } from "ethers";
-import { Vault } from "types/Vault";
+import { Vault } from "elf/types/Vault";
 
 import {
   WeightedPoolFactory__factory,

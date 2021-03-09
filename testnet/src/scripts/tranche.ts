@@ -1,5 +1,5 @@
 import { Signer } from "ethers";
-import { YVaultAssetProxy } from "types/YVaultAssetProxy";
+import { YVaultAssetProxy } from "elf/types/YVaultAssetProxy";
 
 import { Tranche__factory } from "elf/types/factories/Tranche__factory";
 

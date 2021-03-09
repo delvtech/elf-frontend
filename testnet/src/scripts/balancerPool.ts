@@ -1,5 +1,5 @@
 import { Signer } from "ethers";
-import { BFactory } from "types/BFactory";
+import { BFactory } from "elf/types/BFactory";
 
 import { BPool__factory } from "elf/types/factories/BPool__factory";
 
