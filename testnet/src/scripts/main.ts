@@ -1,3 +1,4 @@
+import "module-alias/register";
 import fs from "fs";
 
 import { deployBalancerVault } from "./balancerV2Vault";
