@@ -7,7 +7,7 @@ import { USDC } from "src/types/USDC";
 import { Vault } from "src/types/Vault";
 import { WETH } from "src/types/WETH";
 
-import { THIRTY_DAYS_IN_SECONDS } from "../time";
+import { THIRTY_DAYS_IN_SECONDS } from "src/time";
 
 const defaultOptions = {
   swapFee: ".003",

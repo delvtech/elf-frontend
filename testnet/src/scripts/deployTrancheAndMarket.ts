@@ -6,7 +6,8 @@ import { WeightedPoolFactory } from "src/types/WeightedPoolFactory";
 import { WETH } from "src/types/WETH";
 import { YVaultAssetProxy } from "src/types/YVaultAssetProxy";
 
-import { THIRTY_DAYS_IN_SECONDS } from "../time";
+import { THIRTY_DAYS_IN_SECONDS } from "src/time";
+
 import { deployYieldPool } from "./deployYieldPool";
 import { setupFYTMarket } from "./setupFYTMarket";
 import { setupYCMarket } from "./setupYCMarket";
