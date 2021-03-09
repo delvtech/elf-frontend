@@ -6,7 +6,7 @@
     "deploy-contracts": "npx hardhat run src/scripts/main.ts --network localhost --no-compile"
   },
   "_moduleAliases": {
-    "elf": "./src"
+    "src": "./src"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.1",

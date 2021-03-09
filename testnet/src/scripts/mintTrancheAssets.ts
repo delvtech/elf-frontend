@@ -1,8 +1,8 @@
 import { Signer } from "ethers";
 import { parseUnits } from "ethers/lib/utils";
 
-import { ERC20 } from "elf/types/ERC20";
-import { Tranche } from "elf/types/Tranche";
+import { ERC20 } from "src/types/ERC20";
+import { Tranche } from "src/types/Tranche";
 
 import { MAX_ALLOWANCE } from "../maxAllowance";
 

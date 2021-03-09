@@ -1,8 +1,8 @@
 import { Signer } from "ethers";
 
-import { USDC } from "elf/types/USDC";
-import { WETH } from "elf/types/WETH";
-import { YVaultAssetProxy } from "elf/types/YVaultAssetProxy";
+import { USDC } from "src/types/USDC";
+import { WETH } from "src/types/WETH";
+import { YVaultAssetProxy } from "src/types/YVaultAssetProxy";
 
 import { deployYearnVault } from "./deployYVault";
 import { deployYearnVaultAssetProxy } from "./deployYVaultAssetProxy";

@@ -1,6 +1,6 @@
 import { Signer } from "ethers";
 
-import { AYVault__factory } from "elf/types/factories/AYVault__factory";
+import { AYVault__factory } from "src/types/factories/AYVault__factory";
 
 export async function deployYearnVault(
   signer: Signer,

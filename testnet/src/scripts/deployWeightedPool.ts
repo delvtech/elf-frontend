@@ -3,9 +3,9 @@ import { parseEther } from "ethers/lib/utils";
 
 import {
   WeightedPool__factory,
-} from "elf/types/factories/WeightedPool__factory";
-import { Vault } from "elf/types/Vault";
-import { WeightedPoolFactory } from "elf/types/WeightedPoolFactory";
+} from "src/types/factories/WeightedPool__factory";
+import { Vault } from "src/types/Vault";
+import { WeightedPoolFactory } from "src/types/WeightedPoolFactory";
 
 export async function deployWeightedPool(
   signer: Signer,

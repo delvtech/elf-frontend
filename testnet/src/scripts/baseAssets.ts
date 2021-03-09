@@ -1,9 +1,9 @@
 import { Signer } from "ethers";
 
-import { USDC__factory } from "elf/types/factories/USDC__factory";
-import { WETH__factory } from "elf/types/factories/WETH__factory";
-import { USDC } from "elf/types/USDC";
-import { WETH } from "elf/types/WETH";
+import { USDC__factory } from "src/types/factories/USDC__factory";
+import { WETH__factory } from "src/types/factories/WETH__factory";
+import { USDC } from "src/types/USDC";
+import { WETH } from "src/types/WETH";
 
 export async function deployBaseAssets(signer: Signer): Promise<[WETH, USDC]> {
   const signerAddress = await signer.getAddress();
