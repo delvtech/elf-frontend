@@ -11,26 +11,26 @@ import {
   YC,
   YVaultAssetProxy__factory,
 } from "elf-contracts/types";
+import { formatUnits } from "ethers/lib/utils";
 import { jt, t } from "ttag";
 
+import { getCoinGeckoId } from "efi-coingecko";
 import tw from "efi-tailwindcss-classnames";
-import { useCalcOutGivenIn } from "efi-ui/balancer/useCalcOutGivenIn";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { getQueryData } from "efi-ui/base/queryResults";
 import styles from "efi-ui/base/table.module.css";
+import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
 import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { useMarketForToken } from "efi-ui/markets/useMarketForToken";
+import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
+import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
+import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
+import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
 import { getTimeLeft2 } from "efi/base/time";
-import { useMarketPairedToken } from "efi-ui/markets/useMarketPairedToken";
-import { formatUnits } from "ethers/lib/utils";
-import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
-import { getCoinGeckoId } from "efi-coingecko";
-import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { formatMoney } from "efi/money/formatMoney";
 
 interface YCTableRowProps {
@@ -59,9 +59,9 @@ export const YCTableRow: FC<YCTableRowProps> = ({ account, yieldCoupon }) => {
   const vaultContract = useVaultForTranche(tranche);
   const { data: vaultName } = useSmartContractReadCall(vaultContract, "name");
 
-  const market = useMarketForToken(yieldCoupon);
+  const pool = usePoolForToken(yieldCoupon);
 
-  const baseAsset = useMarketPairedToken(market, yieldCoupon);
+  const baseAsset = usePoolPairedToken(pool, yieldCoupon);
   const { data: baseAssetSymbol } = useSmartContractReadCall(
     baseAsset,
     "symbol"
@@ -74,12 +74,7 @@ export const YCTableRow: FC<YCTableRowProps> = ({ account, yieldCoupon }) => {
     baseAsset,
     "decimals"
   );
-  const { data: exitValue } = useCalcOutGivenIn(
-    ycBalanceOf,
-    yieldCoupon,
-    baseAsset,
-    market
-  );
+  const { data: exitValue } = useOnSwapGivenIn(pool, yieldCoupon, ycBalanceOf);
 
   const tableRowClassName = isDarkMode ? styles.tableRowDark : styles.tableRow;
 
