@@ -21,13 +21,10 @@ import { jt, t } from "ttag";
 
 import { getCoinGeckoId } from "efi-coingecko";
 import tw from "efi-tailwindcss-classnames";
-import { useCalcOutGivenIn } from "efi-ui/balancer/useCalcOutGivenIn";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { CryptoIconSvg } from "efi-ui/crypto/CryptoIcon";
-import { useMarketForToken } from "efi-ui/markets/useMarketForToken";
-import { useMarketPairedToken } from "efi-ui/markets/useMarketPairedToken";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
@@ -38,6 +35,9 @@ import { formatMoney } from "efi/money/formatMoney";
 
 import { useTrancheForYieldCoupon } from "./useTrancheForYieldCoupon";
 import { useUnderlyingVaultForTranche } from "./useUnderlyingVaultForTranche";
+import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
+import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
+import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
 
 interface YCCardProps {
   account: string | null | undefined;
@@ -75,9 +75,9 @@ export const YCCard: FC<YCCardProps> = ({ account, yieldCoupon }) => {
   const vaultContract = useUnderlyingVaultForTranche(tranche);
   const { data: vaultName } = useSmartContractReadCall(vaultContract, "name");
 
-  const market = useMarketForToken(yieldCoupon);
+  const pool = usePoolForToken(yieldCoupon);
 
-  const baseAsset = useMarketPairedToken(market, yieldCoupon);
+  const baseAsset = usePoolPairedToken(pool, yieldCoupon);
   const { data: baseAssetSymbol } = useSmartContractReadCall(
     baseAsset,
     "symbol"
@@ -90,11 +90,10 @@ export const YCCard: FC<YCCardProps> = ({ account, yieldCoupon }) => {
     baseAsset,
     "decimals"
   );
-  const { data: exitValueBigNumber } = useCalcOutGivenIn(
-    ycBalanceOf,
+  const { data: exitValueBigNumber } = useOnSwapGivenIn(
+    pool,
     yieldCoupon,
-    baseAsset,
-    market
+    ycBalanceOf
   );
 
   const iconKey = baseAssetSymbol?.toUpperCase() as CryptoSymbol;
@@ -230,7 +229,7 @@ export const YCCard: FC<YCCardProps> = ({ account, yieldCoupon }) => {
           </Button>
           <AnchorButton
             intent={Intent.PRIMARY}
-            onClick={() => navigate(`exchange/${market?.address}`)}
+            onClick={() => navigate(`exchange/${pool?.address}`)}
             minimal
           >
             <div className={tw("p-2", "text-base")}>{t`Go to market`}</div>
