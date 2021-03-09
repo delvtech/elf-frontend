@@ -29,6 +29,14 @@
       "orderLevel": 10
     },
     {
+      "regex": "^elf.types",
+      "orderLevel": 39
+    },
+    {
+      "regex": "^elf",
+      "orderLevel": 40
+    },
+    {
       "regex": "^efi",
       "orderLevel": 40
     },
