@@ -29,11 +29,11 @@
       "orderLevel": 10
     },
     {
-      "regex": "^elf.types",
+      "regex": "^src.types",
       "orderLevel": 39
     },
     {
-      "regex": "^elf",
+      "regex": "^src",
       "orderLevel": 40
     },
     {

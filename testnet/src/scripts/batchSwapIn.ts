@@ -5,7 +5,7 @@ import { parseUnits } from "ethers/lib/utils";
 import { ERC20 } from "src/types/ERC20";
 import { Vault } from "src/types/Vault";
 
-import { ONE_DAY_IN_SECONDS } from "../time";
+import { ONE_DAY_IN_SECONDS } from "src/time";
 
 interface SwapIn {
   poolId: BytesLike;

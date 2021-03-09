@@ -1,9 +1,7 @@
 import { BigNumberish, Signer } from "ethers";
 import { parseEther } from "ethers/lib/utils";
 
-import {
-  WeightedPool__factory,
-} from "src/types/factories/WeightedPool__factory";
+import { WeightedPool__factory } from "src/types/factories/WeightedPool__factory";
 import { Vault } from "src/types/Vault";
 import { WeightedPoolFactory } from "src/types/WeightedPoolFactory";
 
