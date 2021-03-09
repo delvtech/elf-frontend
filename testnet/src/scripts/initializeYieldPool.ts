@@ -1,13 +1,11 @@
 import abi from "ethereumjs-abi";
 import { Signer } from "ethers";
-import { parseUnits } from "ethers/lib/utils";
-
+import { parseEther } from "ethers/lib/utils";
+import { MAX_ALLOWANCE } from "src/maxAllowance";
 import { Tranche } from "src/types/Tranche";
 import { USDC } from "src/types/USDC";
 import { Vault } from "src/types/Vault";
 import { WETH } from "src/types/WETH";
-
-import { MAX_ALLOWANCE } from "../maxAllowance";
 
 /**
  * Stakes an initial amount of base asset into the YieldPool
@@ -31,12 +29,13 @@ export async function initializeYieldPool(
   let { tokens } = await vaultContract.getPoolTokens(poolId);
 
   const baseAssetDecimals = await baseAssetContract.decimals();
+  console.log("baseAssetDecimals", baseAssetDecimals);
 
-  const parseToken = (value: string) => parseUnits(value, baseAssetDecimals);
+  // const parseToken = (value: string) => parseUnits(value, baseAssetDecimals);
   // TODO: double check if these should be normalized to Ether or not.  I think balancer wants
   // everything in 18 decimal format so leaving this as parseEther.  If not, then we'll have to use parseToken
   // we can only initialize the pool with base asset, the yield asset is ignored.
-  const maxAmountsIn = [parseToken(amountIn), parseToken(amountIn)];
+  const maxAmountsIn = [parseEther(amountIn), parseEther(amountIn)];
   const amounts = maxAmountsIn.map((amt) => amt.toHexString());
 
   // Whether or not to use balances held in balancer.  Since The Vault has nothing, set this to false.
