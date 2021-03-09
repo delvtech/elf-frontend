@@ -1,11 +1,12 @@
 import { Signer } from "ethers";
-import { USDC } from "types/USDC";
-import { Vault } from "types/Vault";
-import { WETH } from "types/WETH";
+
+import { USDC } from "src/types/USDC";
+import { Vault } from "src/types/Vault";
+import { WeightedPoolFactory } from "src/types/WeightedPoolFactory";
+import { WETH } from "src/types/WETH";
+import { YVaultAssetProxy } from "src/types/YVaultAssetProxy";
 
 import { THIRTY_DAYS_IN_SECONDS } from "../time";
-import { WeightedPoolFactory } from "../types/WeightedPoolFactory";
-import { YVaultAssetProxy } from "../types/YVaultAssetProxy";
 import { deployYieldPool } from "./deployYieldPool";
 import { setupFYTMarket } from "./setupFYTMarket";
 import { setupYCMarket } from "./setupYCMarket";

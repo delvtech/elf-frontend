@@ -1,12 +1,15 @@
 import { Signer } from "ethers";
 import { parseEther } from "ethers/lib/utils";
-import { ERC20 } from "types/ERC20";
-import { USDC } from "types/USDC";
-import { Vault } from "types/Vault";
-import { WETH } from "types/WETH";
+
+import { ERC20 } from "src/types/ERC20";
+import {
+  YieldCurvePool__factory,
+} from "src/types/factories/YieldCurvePool__factory";
+import { USDC } from "src/types/USDC";
+import { Vault } from "src/types/Vault";
+import { WETH } from "src/types/WETH";
 
 import { THIRTY_DAYS_IN_SECONDS } from "../time";
-import { YieldCurvePool__factory } from "../types/factories/YieldCurvePool__factory";
 
 const defaultOptions = {
   swapFee: ".003",

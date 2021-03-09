@@ -1,6 +1,6 @@
 import { Signer } from "ethers";
 
-import { Vault__factory } from "../types/factories/Vault__factory";
+import { Vault__factory } from "src/types/factories/Vault__factory";
 
 export async function deployBalancerVault(signer: Signer) {
   const signerAddress = await signer.getAddress();

@@ -1,7 +1,7 @@
 import { Signer } from "ethers";
-import { YVaultAssetProxy } from "types/YVaultAssetProxy";
 
-import { Tranche__factory } from "../types/factories/Tranche__factory";
+import { Tranche__factory } from "src/types/factories/Tranche__factory";
+import { YVaultAssetProxy } from "src/types/YVaultAssetProxy";
 
 export async function deployTranche(
   signer: Signer,
