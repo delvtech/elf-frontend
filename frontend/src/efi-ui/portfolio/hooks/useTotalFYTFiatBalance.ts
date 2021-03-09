@@ -1,27 +1,26 @@
+import { Tranche__factory } from "elf-contracts/types";
 import { Currency, Money } from "ts-money";
 
+import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
 import { useTrancheFiatBalance } from "efi-ui/markets/useFYTFiatBalance";
-import ContractAddresses from "efi/contracts/contractsJson";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
+import ContractAddresses from "efi/contracts/contractsJson";
 
 export function useFiatBalanceAllTranches(
   account: string | null | undefined
 ): Money | undefined {
   const { currency } = useCurrencyPref();
-  const wethTrancheFiatBalance = useTrancheFiatBalance(
-    account,
+
+  const wethTranche = useSmartContractFromFactory(
     ContractAddresses.wethTrancheAddress,
-    ContractAddresses.marketFyWethAddress,
-    ContractAddresses.wethAddress
+    Tranche__factory.connect
   );
 
-  // TODO: Uncomment this once the usdc contracts are deployed to the testnet
-  // const usdcTrancheFiatBalance = useTrancheFiatBalance(
-  //   account,
-  //   ContractAddresses.trancheUsdcAddress,
-  //   ContractAddresses.bPoolUsdcAddress,
-  //   ContractAddresses.usdcAddress
-  // );
+  const wethTrancheFiatBalance = useTrancheFiatBalance(
+    account,
+    wethTranche,
+    currency
+  );
 
   const totalFiatBalance = calculateTotalFiatBalance(
     [
