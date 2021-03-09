@@ -65,11 +65,7 @@ export function useTrancheFiatBalance(
   const priceResult = useCoinGeckoPrice(coinGeckoId, currency);
   const baseAssetCoinGeckoPrice = getQueryData(priceResult);
 
-  if (
-    baseAssetCoinGeckoPrice &&
-    totalValueInBaseAsset &&
-    totalValueInBaseAsset
-  ) {
+  if (baseAssetCoinGeckoPrice && totalValueInBaseAsset) {
     const trancheFiatBalance = baseAssetCoinGeckoPrice.multiply(
       +formatUnits(totalValueInBaseAsset, baseAssetDecimals)
     );

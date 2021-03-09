@@ -12,7 +12,8 @@ import { PortfolioTab } from "efi-ui/portfolio/PortfolioTabs/PortfolioTabs";
 import { YCPortfolio } from "efi-ui/portfolio/YCPortfolio/YCPortfolio";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useYCsWithBalance } from "efi-ui/yieldcoupon/useYCsWithBalance/useYCsWithBalance";
-import { useYieldCouponsTotalFiatBalance } from "./useYieldCouponsTotalFiatBalance";
+
+import { useFiatBalanceAllYieldCoupons } from "./useFiatBalanceAllYieldCoupons";
 
 export function usePortfolioTabs(
   account: string | null | undefined,
@@ -65,10 +66,12 @@ function useFYTTab(account: string | null | undefined, provider?: Provider) {
 }
 
 function useYCTab(account: string | null | undefined, provider?: Provider) {
+  const { currency } = useCurrencyPref();
   const ycsWithBalance = useYCsWithBalance(account, provider);
-  const totalFiatBalanceAllYCs = useYieldCouponsTotalFiatBalance(
+  const totalFiatBalanceAllYCs = useFiatBalanceAllYieldCoupons(
     account,
-    ycsWithBalance
+    ycsWithBalance,
+    currency
   );
 
   return { ycsWithBalance, totalFiatBalanceAllYCs };
