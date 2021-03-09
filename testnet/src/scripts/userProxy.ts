@@ -1,7 +1,7 @@
 import { Contract, Signer } from "ethers";
-import { UserProxy } from "elf/types/UserProxy";
 
 import { UserProxy__factory } from "elf/types/factories/UserProxy__factory";
+import { UserProxy } from "elf/types/UserProxy";
 
 export async function deployUserProxy<T extends Contract>(
   signer: Signer,

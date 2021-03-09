@@ -1,11 +1,11 @@
 import { BigNumberish, Signer } from "ethers";
 import { parseEther } from "ethers/lib/utils";
-import { Vault } from "elf/types/Vault";
-import { WeightedPoolFactory } from "elf/types/WeightedPoolFactory";
 
 import {
   WeightedPool__factory,
 } from "elf/types/factories/WeightedPool__factory";
+import { Vault } from "elf/types/Vault";
+import { WeightedPoolFactory } from "elf/types/WeightedPoolFactory";
 
 export async function deployWeightedPool(
   signer: Signer,

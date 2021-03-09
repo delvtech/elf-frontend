@@ -1,6 +1,7 @@
 import abi from "ethereumjs-abi";
 import { Signer } from "ethers";
-import { parseEther, parseUnits } from "ethers/lib/utils";
+import { parseUnits } from "ethers/lib/utils";
+
 import { Tranche } from "elf/types/Tranche";
 import { USDC } from "elf/types/USDC";
 import { Vault } from "elf/types/Vault";

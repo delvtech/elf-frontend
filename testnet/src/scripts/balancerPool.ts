@@ -1,6 +1,6 @@
 import { Signer } from "ethers";
-import { BFactory } from "elf/types/BFactory";
 
+import { BFactory } from "elf/types/BFactory";
 import { BPool__factory } from "elf/types/factories/BPool__factory";
 
 export async function deployBalancerPool(

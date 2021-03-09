@@ -1,5 +1,6 @@
 import { Signer } from "ethers";
-import { formatUnits, parseUnits } from "ethers/lib/utils";
+import { parseUnits } from "ethers/lib/utils";
+
 import { ERC20 } from "elf/types/ERC20";
 import { Tranche } from "elf/types/Tranche";
 

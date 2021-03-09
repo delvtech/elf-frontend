@@ -1,5 +1,7 @@
 import { Signer } from "ethers";
 import { defaultAbiCoder, parseEther, parseUnits } from "ethers/lib/utils";
+
+import { YC__factory } from "elf/types/factories/YC__factory";
 import { Tranche } from "elf/types/Tranche";
 import { USDC } from "elf/types/USDC";
 import { Vault } from "elf/types/Vault";
@@ -7,7 +9,6 @@ import { WeightedPoolFactory } from "elf/types/WeightedPoolFactory";
 import { WETH } from "elf/types/WETH";
 
 import { MAX_ALLOWANCE } from "../maxAllowance";
-import { YC__factory } from "elf/types/factories/YC__factory";
 import { deployWeightedPool } from "./deployWeightedPool";
 
 // JoinKind from WeightedPool.sol
