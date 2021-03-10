@@ -12,7 +12,7 @@ export function usePoolPairedToken(
   const poolTokensResult = usePoolTokens(pool);
 
   // Get the other token's address
-  const { tokens } = getQueryData(poolTokensResult) || {};
+  const [tokens] = getQueryData(poolTokensResult) || [];
   const pairedTokenAddress = tokens?.find(
     (address) => address !== poolToken?.address
   );

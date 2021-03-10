@@ -17,16 +17,17 @@ export function usePoolForTokenMulti(
 
   const zippedItems = zip(allPools, getQueriesData(poolTokensResults));
 
-  const markets = tokenContracts.map((tokenContract) => {
-    const [market] =
-      zippedItems.find(([market, finalTokens]) =>
-        findTokenAddress(finalTokens?.tokens, tokenContract)
-      ) || [];
+  const pools = tokenContracts.map((tokenContract) => {
+    const [pool] =
+      zippedItems.find(([market, finalTokens]) => {
+        const match = findTokenAddress(finalTokens?.[0], tokenContract);
+        return match;
+      }) || [];
 
-    return market;
+    return pool;
   });
 
-  return markets;
+  return pools;
 }
 
 function findTokenAddress(
