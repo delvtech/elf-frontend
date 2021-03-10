@@ -9,9 +9,9 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { MarketFilterOptions } from "efi-ui/markets/MarketFilterOptions/MarketFilterOptions";
-import { MarketsTable } from "efi-ui/markets/MarketsTable/MarketsTable";
 import { WalletConnectionCard } from "efi-ui/wallets/WalletConnectionCard/WalletConnectionCard";
 import { getConnectorName } from "efi/wallets/connectors";
+import { PoolsTable } from "efi-ui/pools/PoolsTable/PoolsTable";
 
 interface ExchangeViewProps extends RouteComponentProps {}
 
@@ -66,7 +66,7 @@ export const ExchangeView: FC<ExchangeViewProps> = () => {
           </div>
           <div className={tw("flex", "flex-1")}>
             <Card className={tw("p-10", "flex", "flex-1")}>
-              <MarketsTable className={tw("w-full")} />
+              <PoolsTable className={tw("w-full")} />
             </Card>
           </div>
         </div>

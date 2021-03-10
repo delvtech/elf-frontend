@@ -43,8 +43,10 @@ export interface UseSmartContractReadCallsOptions<
  */
 export function useSmartContractReadCalls<
   TContract extends Contract,
-  TMethodName extends ContractMethodName<TContract>,
-  TReturnType extends Unpacked<StaticContractReturnType<TContract, TMethodName>>
+  TMethodName extends ContractMethodName<TContract> = ContractMethodName<TContract>,
+  TReturnType extends Unpacked<
+    StaticContractReturnType<TContract, TMethodName>
+  > = Unpacked<StaticContractReturnType<TContract, TMethodName>>
 >(
   contracts: (TContract | undefined)[],
   methodName: TMethodName,

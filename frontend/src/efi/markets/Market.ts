@@ -1,6 +1,9 @@
 import { BPool } from "elf-contracts/types";
 import { ERC20 } from "elf-contracts/types/ERC20";
 
+/**
+ * @deprecated BPool is deprecated. Any alternative is possibly needed.
+ */
 export interface Market {
   contract?: BPool;
   /**

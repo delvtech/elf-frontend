@@ -17,8 +17,9 @@ import { getQueryCombinedStatus } from "efi-ui/query/getQueryCombinedStatus";
 /**
  * returns details about a market.
  * @param { BPool[] } marketContracts
+ * @deprecated BPool is deprecated. useMarketInfos instead
  */
-export function useMarkets(
+export function useMarketsOld(
   marketContracts: BPool[]
 ): [Market | undefined, QueryStatus][] {
   const nameResults = useSmartContractReadCalls(marketContracts, "name");
@@ -45,9 +46,6 @@ export function useMarkets(
     const yieldAssetContract = getERC20Contract(yieldAssetAddress);
     return yieldAssetContract;
   });
-
-  // if tranche contract addresses match up with the yield asset address, then the yield asset is an
-  // fyt.  if not, it is a yc
 
   const baseAssetNameResults = useSmartContractReadCalls(
     baseAssetContracts,
@@ -104,7 +102,7 @@ export function useMarkets(
     ) {
       return [undefined, status];
     }
-    const market: Market = getMarketFromResults(
+    const market: Market = getMarketFromResultsOld(
       marketContract,
       baseAssetContract,
       yieldAssetContract,
@@ -121,7 +119,11 @@ export function useMarkets(
 
   return markets;
 }
-function getMarketFromResults(
+
+/**
+ * @deprecated
+ */
+function getMarketFromResultsOld(
   marketContract: BPool,
   baseAssetContract: ERC20 | undefined,
   yieldAssetContract: ERC20 | undefined,
@@ -182,6 +184,9 @@ function getMarketFromResults(
   return market;
 }
 
+/**
+ * @deprecated BPool is deprecated. use PoolInfo instead
+ */
 type MarketInfo = [
   BPool, // market
   ERC20 | undefined, // base asset
@@ -195,4 +200,7 @@ type MarketInfo = [
   QueryObserverResult<string> // yieldAssetSymbolResults
 ];
 
+/**
+ * @deprecated BPool is deprecated. use PoolInfoTypes instead.
+ */
 type MarketInfoTypes = MarketInfo[number];

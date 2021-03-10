@@ -17,7 +17,7 @@ export function usePoolPairedTokenMulti(
 
   const pairedTokenAddresses = zip(poolTokens, allPoolTokens).map(
     ([thisToken, allTokens]) => {
-      const pairedTokenAddress = allTokens?.tokens.find(
+      const pairedTokenAddress = allTokens?.[0].find(
         (address) => address !== thisToken?.address
       );
       return pairedTokenAddress;

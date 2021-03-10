@@ -7,25 +7,29 @@ import {
   HTMLTable,
   Menu,
   MenuItem,
-  Popover,
-  Position,
   Tag,
 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
+import { Popover2 } from "@blueprintjs/popover2";
+import { WeightedPool, YC__factory, YieldCurvePool } from "elf-contracts/types";
+import zip from "lodash.zip";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { FormGroupLabel } from "efi-ui/base/FormGroupLabel/FormGroupLabel";
-import { useMarketContracts } from "efi-ui/markets/useMarketContracts";
-import { useMarketsOld } from "efi-ui/markets/useMarkets";
+import { getQueriesData } from "efi-ui/base/queryResults";
+import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
+import { useSmartContractsFromFactory } from "efi-ui/contracts/useSmartContractsFromFactory/useSmartContractsFromFactory";
+import { usePoolForTokenMulti } from "efi-ui/pools/usePoolForToken/usePoolForTokenMulti";
+import { useTrancheContracts } from "efi-ui/tranche/useTrancheContracts";
+import { TranchePoolTableRow } from "efi-ui/pools/PoolsTable/TranchePoolTableRow";
+import { YieldCouponPoolTableRow } from "efi-ui/pools/PoolsTable/YieldCouponPoolTableRow";
 
-import { MarketsTableRowOld } from "./MarketsTableRow";
-
-interface MarketsTableProps {
+interface PoolsTableProps {
   className?: string;
 }
 
-const TABLE_HEADERS: MarketsTableHeaderProps[] = [
+const TABLE_HEADERS: PoolsTableHeaderProps[] = [
   { label: t`Maturity Date` },
   { label: t`Assets` },
   {
@@ -39,21 +43,35 @@ const TABLE_HEADERS: MarketsTableHeaderProps[] = [
   { label: t`Tranche State` },
 ];
 
-/**
- * @deprecated BPools are deprecated. Use PoolsTable instead
- */
-export const MarketsTableOld: FC<MarketsTableProps> = ({ className }) => {
-  const marketContracts = useMarketContracts();
-  const marketResults = useMarketsOld(marketContracts);
+export const PoolsTable: FC<PoolsTableProps> = ({ className }) => {
+  const tranches = useTrancheContracts();
+  const tranchePools = usePoolForTokenMulti(tranches) as (
+    | YieldCurvePool
+    | undefined
+  )[];
 
-  if (!marketResults.length) {
+  const yieldCouponAddressResults = useSmartContractReadCalls(tranches, "yc");
+  const yieldCoupons = useSmartContractsFromFactory(
+    getQueriesData(yieldCouponAddressResults),
+    YC__factory.connect
+  );
+  const yieldCouponPools = usePoolForTokenMulti(yieldCoupons) as (
+    | WeightedPool
+    | undefined
+  )[];
+
+  if (!tranchePools.length && !yieldCouponPools.length) {
     return <span>{t`no markets found`}</span>;
   }
+
+  const tranchePoolItems = zip(tranchePools, tranches);
+  const yieldCouponPoolItems = zip(yieldCouponPools, yieldCoupons, tranches);
+
   return (
     <div className={tw("w-full")}>
       <div className={tw("flex", "justify-between")}>
         <div className={tw("flex", "space-x-4")}>
-          <Popover
+          <Popover2
             content={
               <Menu>
                 <MenuItem text={t`Name`} />
@@ -64,7 +82,7 @@ export const MarketsTableOld: FC<MarketsTableProps> = ({ className }) => {
                 <MenuItem text={t`ROI`} />
               </Menu>
             }
-            position={Position.BOTTOM_LEFT}
+            placement="bottom-end"
             minimal
           >
             <Button
@@ -72,11 +90,11 @@ export const MarketsTableOld: FC<MarketsTableProps> = ({ className }) => {
               outlined
               rightIcon={IconNames.DOUBLE_CARET_VERTICAL}
             >{t`Sort`}</Button>
-          </Popover>
+          </Popover2>
           <Tag minimal onRemove={() => {}}>{t`Maturity Date`}</Tag>
           <Tag minimal onRemove={() => {}}>{t`ROI`}</Tag>
         </div>
-        <Popover
+        <Popover2
           content={
             <Menu>
               {TABLE_HEADERS.map(({ label }) => (
@@ -84,7 +102,7 @@ export const MarketsTableOld: FC<MarketsTableProps> = ({ className }) => {
               ))}
             </Menu>
           }
-          position={Position.BOTTOM_RIGHT}
+          placement="bottom-end"
           minimal
         >
           <Button
@@ -92,23 +110,33 @@ export const MarketsTableOld: FC<MarketsTableProps> = ({ className }) => {
             outlined
             rightIcon={IconNames.CARET_DOWN}
           >{t`Columns`}</Button>
-        </Popover>
+        </Popover2>
       </div>
       <HTMLTable striped className={className} interactive>
         <thead>
           <tr>
             {TABLE_HEADERS.map(({ label, tooltip }) => (
-              <MarketsTableHeader key={label} label={label} tooltip={tooltip} />
+              <PoolsTableHeader key={label} label={label} tooltip={tooltip} />
             ))}
           </tr>
         </thead>
         <tbody className={Classes.TEXT_LARGE}>
-          {marketResults.map(([market, status], index) => {
+          {tranchePoolItems.map(([pool, tranche], index) => {
             return (
-              <MarketsTableRowOld
-                key={market?.contractAddress || index}
-                market={market}
-                marketStatus={status}
+              <TranchePoolTableRow
+                key={pool?.contractAddress || index}
+                pool={pool}
+                tranche={tranche}
+              />
+            );
+          })}
+          {yieldCouponPoolItems.map(([pool, yieldCoupon, tranche], index) => {
+            return (
+              <YieldCouponPoolTableRow
+                key={pool?.contractAddress || index}
+                tranche={tranche}
+                yieldCoupon={yieldCoupon}
+                pool={pool}
               />
             );
           })}
@@ -118,15 +146,12 @@ export const MarketsTableOld: FC<MarketsTableProps> = ({ className }) => {
   );
 };
 
-interface MarketsTableHeaderProps {
+interface PoolsTableHeaderProps {
   label: string;
   tooltip?: string;
 }
 
-const MarketsTableHeader: FC<MarketsTableHeaderProps> = ({
-  label,
-  tooltip,
-}) => {
+const PoolsTableHeader: FC<PoolsTableHeaderProps> = ({ label, tooltip }) => {
   return (
     <th key={label}>
       <FormGroupLabel
