@@ -5,21 +5,22 @@ import { Web3Provider } from "@ethersproject/providers";
 import { RouteComponentProps } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
 import classNames from "classnames";
+import { Signer } from "ethers";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { MarketDetails } from "efi-ui/markets/MarketDetails/MarketDetails";
+import { PoolDetails } from "efi-ui/markets/MarketDetails/PoolDetails";
+import { useAllPools } from "efi-ui/pools/useAllPools/useAllPools";
 import { WalletConnectionCard } from "efi-ui/wallets/WalletConnectionCard/WalletConnectionCard";
 import { getConnectorName } from "efi/wallets/connectors";
-import { useMarketContract } from "efi-ui/markets/useMarketContract";
-import { Signer } from "ethers";
+import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
+import { getQueryData } from "efi-ui/base/queryResults";
 
 interface MarketViewProps extends RouteComponentProps {
-  marketId?: string;
+  poolAddress?: string;
 }
 
-export const MarketView: FC<MarketViewProps> = (props) => {
-  const { marketId } = props;
+export const MarketView: FC<MarketViewProps> = ({ poolAddress }) => {
   const {
     active,
     account,
@@ -27,9 +28,15 @@ export const MarketView: FC<MarketViewProps> = (props) => {
     connector,
     library,
   } = useWeb3React<Web3Provider>();
+
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
+  const allPools = useAllPools(signer);
+
+  const pool = allPools.find((pool) => pool?.address === poolAddress);
+  const poolNameResult = useSmartContractReadCall(pool, "name");
+
+  const poolName = getQueryData(poolNameResult);
   const connectorName = getConnectorName(connector, library);
-  const marketContract = useMarketContract(marketId, signer);
 
   return (
     <div
@@ -41,7 +48,7 @@ export const MarketView: FC<MarketViewProps> = (props) => {
         {/* page title */}
         <div className={tw("flex", "justify-between")}>
           <div className={tw("flex", "flex-col", "justify-start")}>
-            <H2 className={tw("mb-4")}>{t`ETH - fyETH Market`}</H2>
+            <H2 className={tw("mb-4")}>{poolName}</H2>
             <span
               className={classNames(
                 Classes.RUNNING_TEXT,
@@ -58,11 +65,7 @@ export const MarketView: FC<MarketViewProps> = (props) => {
           />
         </div>
         <div className={tw("flex", "flex-col", "justify-between")}>
-          <MarketDetails
-            signer={signer}
-            accountAddress={account}
-            marketContract={marketContract}
-          />
+          <PoolDetails signer={signer} account={account} pool={pool} />
         </div>
       </div>
     </div>

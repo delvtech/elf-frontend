@@ -17,6 +17,9 @@ interface MarketDetailsProps {
   marketContract: BPool | undefined;
 }
 
+/**
+ * @deprecated BPool is deprecated. use PoolDetails instead.
+ */
 export const MarketDetails: FC<MarketDetailsProps> = ({
   signer,
   accountAddress,
@@ -46,7 +49,10 @@ export const MarketDetails: FC<MarketDetailsProps> = ({
               startDate={startDate}
               maturityDate={maturityDate}
             />
-            <TokenSummary baseAsset={baseAsset} yieldAsset={yieldAsset} />
+            <TokenSummary
+              tokenIn={baseAsset?.contract}
+              tokenOut={yieldAsset?.contract}
+            />
           </div>
           <div className={tw("flex", "space-x-12")}>
             <MarketHistory />
