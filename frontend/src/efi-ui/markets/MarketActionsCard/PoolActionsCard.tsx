@@ -1,40 +1,30 @@
 import React, { FC, useCallback, useState } from "react";
 
 import { Card, Colors, Intent } from "@blueprintjs/core";
+import { ERC20 } from "elf-contracts/types/ERC20";
 import { Signer } from "ethers";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { Market } from "efi/markets/Market";
-import { BPool } from "elf-contracts/types/BPool";
-import { ERC20 } from "elf-contracts/types/ERC20";
-import { TradePanelOld } from "efi-ui/trade/TradePanel/TradePanelOld";
+import { TradePanel } from "efi-ui/trade/TradePanel/TradePanel";
+import { PoolContract } from "efi/pools/PoolContract";
 
-interface MarketActionsCardProps {
+interface PoolActionsCardProps {
   signer: Signer | undefined;
-  accountAddress: string | null | undefined;
-  market: Market | undefined;
-  marketContract: BPool | undefined;
+  account: string | null | undefined;
+  pool: PoolContract | undefined;
+  tokenIn: ERC20 | undefined;
+  tokenOut: ERC20 | undefined;
 }
 
 type MarketAction = "trade" | "stake";
-/**
- * @deprecated BPool and Market are deprecated use PoolActionsCard instead
- */
-export const MarketActionsCard: FC<MarketActionsCardProps> = ({
+export const PoolActionsCard: FC<PoolActionsCardProps> = ({
   signer,
-  accountAddress,
-  market,
-  marketContract,
+  account,
+  tokenIn,
+  tokenOut,
+  pool,
 }) => {
-  const baseAssetContract = market?.assets[0]?.contract;
-  const yieldAssetContract = market?.assets[1]?.contract;
-
-  let assetContracts: [ERC20, ERC20] | undefined;
-  if (baseAssetContract && yieldAssetContract) {
-    assetContracts = [baseAssetContract, yieldAssetContract];
-  }
-
   const [action, setActionUI] = useState<MarketAction>("trade");
   const showTradeUI = useCallback(() => setActionUI("trade"), []);
   const showStakeUI = useCallback(() => setActionUI("stake"), []);
@@ -53,11 +43,12 @@ export const MarketActionsCard: FC<MarketActionsCardProps> = ({
         className={tw("flex", "flex-col", "flex-1", "w-full", "transition-all")}
       >
         {action === "trade" && (
-          <TradePanelOld
+          <TradePanel
             signer={signer}
-            accountAddress={accountAddress}
-            marketContract={marketContract}
-            assetContracts={assetContracts}
+            account={account}
+            pool={pool}
+            tokenIn={tokenIn}
+            tokenOut={tokenOut}
             inputLabel={"Trade"}
             buttonLabel={"Trade"}
             buttonIntent={Intent.PRIMARY}
@@ -65,11 +56,12 @@ export const MarketActionsCard: FC<MarketActionsCardProps> = ({
           />
         )}
         {action === "stake" && (
-          <TradePanelOld
+          <TradePanel
             signer={signer}
-            accountAddress={accountAddress}
-            marketContract={marketContract}
-            assetContracts={assetContracts}
+            account={account}
+            pool={pool}
+            tokenIn={tokenIn}
+            tokenOut={tokenOut}
             inputLabel={"Stake"}
             buttonLabel={"Stake"}
             buttonIntent={Intent.PRIMARY}
