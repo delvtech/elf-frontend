@@ -1,51 +1,36 @@
-import React, {
-  ChangeEvent,
-  FC,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 
 import { Button, Intent } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
-import { BPool } from "elf-contracts/types/BPool";
 import { ERC20 } from "elf-contracts/types/ERC20";
-import { BigNumber, Contract, Signer } from "ethers";
+import { BigNumber, Signer } from "ethers";
 import { formatEther, parseEther, parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
-import { swapExactAmountIn } from "efi-balancer/swapExactAmountIn";
 import tw from "efi-tailwindcss-classnames";
-import { useCalcOutGivenIn } from "efi-ui/balancer/useCalcOutGivenIn";
 import {
   NumericInputOptions,
   useNumericInput,
 } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { usePairedAssetPrice } from "efi-ui/markets/usePairedAssetPrice";
+import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
 import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
-import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
-import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
-import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
 import { TradeInput } from "efi-ui/trade/TradeInput/TradeInput";
-import { MAX_ALLOWANCE } from "efi/contracts/token";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
-import { DEFAULT_SLIPPAGE } from "efi/markets/slippage";
+import { PoolContract } from "efi/pools/PoolContract";
 
 interface TradePanelProps {
   signer: Signer | undefined;
-  marketContract: BPool | undefined;
-  accountAddress: string | null | undefined;
+  pool: PoolContract | undefined;
+  account: string | null | undefined;
   formDisabled?: boolean;
   submitDisabled?: boolean;
   inputLabel: string;
   buttonLabel: string;
   buttonIntent?: Intent;
-  /**
-   * [baseAsset, yieldAsset]
-   */
-  assetContracts: [ERC20, ERC20] | undefined;
+  tokenIn: ERC20 | undefined;
+  tokenOut: ERC20 | undefined;
   onTransaction: (amount: BigNumber) => void;
 }
 
@@ -65,120 +50,78 @@ export const TradePanel: FC<TradePanelProps> = ({
   buttonLabel,
   buttonIntent = Intent.PRIMARY,
   onTransaction,
-  marketContract,
-  accountAddress,
-  assetContracts,
+  pool,
+  account,
+  tokenIn: tokenInFromProps,
+  tokenOut: tokenOutFromProps,
 }) => {
-  const [assetsSwapped, setAssetsSwapped] = useState(false);
+  const [isReversed, setReversed] = useState(false);
 
-  let tradeContract = assetContracts?.[0];
-  let receiveContract = assetContracts?.[1];
-
-  if (assetsSwapped) {
-    tradeContract = assetContracts?.[1];
-    receiveContract = assetContracts?.[0];
+  let tokenIn = tokenInFromProps;
+  let tokenOut = tokenOutFromProps;
+  if (isReversed) {
+    tokenIn = tokenOutFromProps;
+    tokenOut = tokenInFromProps;
   }
 
-  const { data: spotPrice } = usePairedAssetPrice(
-    marketContract?.address,
-    receiveContract?.address
+  const { data: tokenInSymbol } = useSmartContractReadCall(tokenIn, "symbol");
+  const { data: tokenInDecimals } = useSmartContractReadCall(
+    tokenIn,
+    "decimals"
   );
+  const { data: tokenInBalanceOf } = useSmartContractReadCall(
+    tokenIn,
+    "balanceOf",
+    { enabled: !!account, callArgs: [account as string] }
+  );
+  const tokenInDisplayBalance = useTokenBalance(tokenIn, account);
 
-  const { data: swapFee } = useSmartContractReadCall(
-    marketContract,
-    "getSwapFee"
-  );
+  const { data: tokenOutSymbol } = useSmartContractReadCall(tokenOut, "symbol");
+  const tokenOutDisplayBalance = useTokenBalance(tokenOut, account);
 
-  const [tradeCryptoSymbol] = useTokenSymbol(tradeContract);
-  const [tradeCryptoDecimals] = useTokenDecimals(tradeContract);
-  const [tradeCryptoBalance] = useTokenBalanceOf(tradeContract, accountAddress);
-  const tradeCryptoDisplayBalance = useTokenBalance(
-    tradeContract,
-    accountAddress
+  const [stringValueIn, onChangeIn, setValueIn] = useNumericInput(
+    numericInputOptions
   );
-
-  const [receiveCryptoSymbol] = useTokenSymbol(receiveContract);
-  const [receiveCryptoBalance] = useTokenBalanceOf(
-    receiveContract,
-    accountAddress
-  );
-  const receiveCryptoDisplayBalance = useTokenBalance(
-    receiveContract,
-    accountAddress
-  );
-
-  const [stringValueIn, onChangeIn, setValueIn] = useNumericInput({
-    ...numericInputOptions,
-  });
   const [stringValueOut, onChangeOut, setValueOut] = useNumericInput(
     numericInputOptions
   );
 
   const amountIn = stringValueIn ? parseEther(stringValueIn) : undefined;
-  const { data: calcValueOut } = useCalcOutGivenIn(
-    amountIn,
-    tradeContract,
-    receiveContract,
-    marketContract
-  );
+  const { data: calcValueOut } = useOnSwapGivenIn(pool, tokenIn, amountIn);
 
   useUpdateOutWhenInChanges(calcValueOut, setValueOut, stringValueIn);
 
   const valueIn = stringValueIn
-    ? parseUnits(stringValueIn, tradeCryptoDecimals)
+    ? parseUnits(stringValueIn, tokenInDecimals)
     : undefined;
   const validValue =
-    valueIn && tradeCryptoBalance ? valueIn.lte(tradeCryptoBalance) : true;
+    valueIn && tokenInBalanceOf ? valueIn.lte(tokenInBalanceOf) : true;
 
   const swapAssets = useCallback(() => {
     setValueIn("");
-    setAssetsSwapped(!assetsSwapped);
-  }, [assetsSwapped, setValueIn]);
+    setReversed(!isReversed);
+  }, [isReversed, setValueIn]);
 
   // TODO: make a useTokenApproval or useTokenApproved hook
   const callArgs: ContractMethodArgs<ERC20, "allowance"> = [
-    accountAddress ?? "",
-    marketContract?.address ?? "",
+    account ?? "",
+    pool?.address ?? "",
   ];
-  const { data: approval } = useSmartContractReadCall(
-    tradeContract,
-    "allowance",
-    {
-      callArgs,
-    }
-  );
+  const { data: approval } = useSmartContractReadCall(tokenIn, "allowance", {
+    callArgs,
+  });
   const approved =
     stringValueIn && approval
-      ? approval.gte(parseUnits(stringValueIn, tradeCryptoDecimals))
+      ? approval.gte(parseUnits(stringValueIn, tokenInDecimals))
       : false;
 
-  // TODO: clean this up!  undefineds are ridiculous here, I"m thinking I'll make a skeleton
-  // component until things are loaded which most times they will be already.
-  const submitTransaction = useSubmitTransaction(
-    validValue,
-    onTransaction,
-    accountAddress,
-    signer,
-    valueIn,
-    stringValueIn,
-    tradeContract,
-    receiveContract,
-    marketContract,
-    tradeCryptoBalance,
-    receiveCryptoBalance,
-    amountIn,
-    swapFee,
-    stringValueOut,
-    approved,
-    spotPrice,
-    onChangeIn
-  );
+  const submitTransaction = useCallback(() => {}, []);
 
   const setMaxValue = useCallback(() => {
-    if (tradeCryptoBalance) {
-      setValueIn(formatEther(tradeCryptoBalance));
+    if (tokenInBalanceOf) {
+      setValueIn(formatEther(tokenInBalanceOf));
     }
-  }, [tradeCryptoBalance, setValueIn]);
+  }, [tokenInBalanceOf, setValueIn]);
 
   const submitButtonText = getButtonText(buttonLabel, approved, signer);
   const submitButtonDisabled =
@@ -203,8 +146,8 @@ export const TradePanel: FC<TradePanelProps> = ({
         >{t`MAX`}</Button>
       </div>
       <TradeInput
-        cryptoDisplayBalance={tradeCryptoDisplayBalance}
-        cryptoSymbol={tradeCryptoSymbol as CryptoSymbol}
+        cryptoDisplayBalance={tokenInDisplayBalance}
+        cryptoSymbol={tokenInSymbol as CryptoSymbol}
         disabled={formDisabled}
         onChange={onChangeIn}
         value={stringValueIn}
@@ -224,8 +167,8 @@ export const TradePanel: FC<TradePanelProps> = ({
         <span>{t`For`}</span>
       </div>
       <TradeInput
-        cryptoDisplayBalance={receiveCryptoDisplayBalance}
-        cryptoSymbol={receiveCryptoSymbol as CryptoSymbol}
+        cryptoDisplayBalance={tokenOutDisplayBalance}
+        cryptoSymbol={tokenOutSymbol as CryptoSymbol}
         disabled={formDisabled}
         onChange={onChangeOut}
         value={stringValueOut}
@@ -244,119 +187,6 @@ export const TradePanel: FC<TradePanelProps> = ({
     </div>
   );
 };
-function useSubmitTransaction(
-  validValue: boolean,
-  onTransaction: (amount: BigNumber) => void,
-  accountAddress: string | null | undefined,
-  signer: Signer | undefined,
-  valueIn: BigNumber | undefined,
-  stringValueIn: string | undefined,
-  tradeContract: ERC20 | undefined,
-  receiveContract: ERC20 | undefined,
-  marketContractWithSigner: BPool | undefined,
-  tradeCryptoBalance: BigNumber | undefined,
-  receiveCryptoBalance: BigNumber | undefined,
-  amountIn: BigNumber | undefined,
-  swapFee: BigNumber | undefined,
-  stringValueOut: string | undefined,
-  approved: boolean,
-  spotPrice: BigNumber | undefined,
-  onChangeIn: (event: React.ChangeEvent<HTMLInputElement>) => void
-) {
-  const {
-    weightOfTokenIn,
-    weightOfTokenOut,
-    tokenOutMarketBalance,
-    tokenInMarketBalance,
-  } = useMarketTokenInfo(
-    marketContractWithSigner,
-    tradeContract?.address,
-    receiveContract?.address
-  );
-
-  return useCallback(async () => {
-    if (validValue && onTransaction) {
-      if (
-        !accountAddress ||
-        !signer ||
-        !valueIn ||
-        !stringValueIn ||
-        !tradeContract ||
-        !receiveContract ||
-        !marketContractWithSigner ||
-        !tradeContract ||
-        !tradeCryptoBalance ||
-        !receiveCryptoBalance ||
-        !amountIn ||
-        !weightOfTokenIn ||
-        !weightOfTokenOut ||
-        !swapFee ||
-        !tokenInMarketBalance ||
-        !tokenOutMarketBalance ||
-        !stringValueOut
-      ) {
-        return;
-      }
-      if (!Number.isFinite(Number(stringValueOut))) {
-        return;
-      }
-      // TODO: hook this up to its own button
-      if (!approved) {
-        await getApproval(tradeContract, marketContractWithSigner, signer);
-        return;
-      }
-
-      const tokenBalanceInAfterSwap = tokenInMarketBalance.add(amountIn);
-
-      const valueOut = parseEther(stringValueOut);
-      const tokenBalanceOutAfterSwap = tokenOutMarketBalance.sub(valueOut);
-
-      const spotPriceAfter = await marketContractWithSigner.calcSpotPrice(
-        tokenBalanceInAfterSwap,
-        weightOfTokenIn,
-        tokenBalanceOutAfterSwap,
-        weightOfTokenOut,
-        swapFee
-      );
-
-      await swapExactAmountIn(
-        parseEther(stringValueIn),
-        spotPrice,
-        spotPriceAfter,
-        DEFAULT_SLIPPAGE,
-        tradeContract.connect(signer),
-        receiveContract,
-        marketContractWithSigner
-      );
-      await onTransaction(valueIn);
-      // TODO: Hack to reset the value of the Numeric Input. This should instead
-      // call onResetValue or something from userNumericInput instead.
-      onChangeIn({ target: { value: "" } } as ChangeEvent<HTMLInputElement>);
-    }
-  }, [
-    accountAddress,
-    amountIn,
-    approved,
-    marketContractWithSigner,
-    onChangeIn,
-    onTransaction,
-    receiveContract,
-    receiveCryptoBalance,
-    signer,
-    spotPrice,
-    stringValueIn,
-    stringValueOut,
-    swapFee,
-    tokenInMarketBalance,
-    tokenOutMarketBalance,
-    tradeContract,
-    tradeCryptoBalance,
-    validValue,
-    valueIn,
-    weightOfTokenIn,
-    weightOfTokenOut,
-  ]);
-}
 
 function useUpdateOutWhenInChanges(
   calcValueOut: BigNumber | undefined,
@@ -372,70 +202,11 @@ function useUpdateOutWhenInChanges(
   }, [calcValueOut, setValueOut, stringValueIn]);
 }
 
-// TODO:  use useMutation for this and share it.  will do this in a follow-up PR
-async function getApproval<F extends ERC20, T extends Contract>(
-  tokensFromContract: F,
-  tokensToContract: T,
-  signer: Signer
-) {
-  const txReceipt = await tokensFromContract
-    .connect(signer)
-    .approve(tokensToContract.address, MAX_ALLOWANCE);
-  await txReceipt.wait(1);
-  return txReceipt;
-}
-
-const useMarketTokenInfo = (
-  marketContract: BPool | undefined,
-  tokenInAddress: string | undefined,
-  tokenOutAddress: string | undefined
-) => {
-  const { data: weightOfTokenIn } = useSmartContractReadCall(
-    marketContract,
-    "getDenormalizedWeight",
-    {
-      callArgs: [tokenInAddress as string],
-      enabled: !!tokenInAddress,
-    }
-  );
-  const { data: weightOfTokenOut } = useSmartContractReadCall(
-    marketContract,
-    "getDenormalizedWeight",
-    {
-      callArgs: [tokenOutAddress as string],
-      enabled: !!tokenOutAddress,
-    }
-  );
-  const { data: tokenOutMarketBalance } = useSmartContractReadCall(
-    marketContract,
-    "getBalance",
-    {
-      callArgs: [tokenOutAddress as string],
-      enabled: !!tokenOutAddress,
-    }
-  );
-  const { data: tokenInMarketBalance } = useSmartContractReadCall(
-    marketContract,
-    "getBalance",
-    {
-      callArgs: [tokenInAddress as string],
-      enabled: !!tokenInAddress,
-    }
-  );
-
-  return {
-    weightOfTokenIn,
-    weightOfTokenOut,
-    tokenOutMarketBalance,
-    tokenInMarketBalance,
-  };
-};
-
-const getButtonText = (
+function getButtonText(
   buttonLabel: string,
   approved: boolean,
   signer: Signer | undefined
-) => {
+) {
   if (!signer) {
     return t`Connect Wallet`;
   }
@@ -445,4 +216,4 @@ const getButtonText = (
   }
 
   return buttonLabel;
-};
+}

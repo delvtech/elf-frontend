@@ -57,7 +57,7 @@ const App: FC<AppProps> = () => {
           <PortfolioView path={Navigation.PORTFOLIO} />
           <InvestView path={Navigation.INVEST} />
           <ExchangeView path={Navigation.EXCHANGE} />
-          <MarketView path={`${Navigation.EXCHANGE}/:marketId`} />
+          <MarketView path={`${Navigation.EXCHANGE}/:poolAddress`} />
           <MintView path={Navigation.MINT} />
           <FAQView path={Navigation.FAQ} />
         </Router>

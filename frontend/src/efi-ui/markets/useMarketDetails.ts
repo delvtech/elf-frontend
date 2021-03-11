@@ -14,6 +14,7 @@ import { Market } from "efi/markets/Market";
 /**
  * returns details about a market.
  * @param { BPool } marketContract
+ * @deprecated BPool is deprecated.
  */
 export function useMarketDetails(
   marketContract: BPool | undefined
