@@ -79,7 +79,6 @@ export const YCTableRow: FC<YCTableRowProps> = ({
     "decimals"
   );
   const { data: exitValue } = useOnSwapGivenIn(
-    library,
     pool,
     account,
     yieldCoupon,

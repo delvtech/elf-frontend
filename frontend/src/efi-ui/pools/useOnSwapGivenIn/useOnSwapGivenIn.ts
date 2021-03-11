@@ -10,11 +10,9 @@ import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { PoolContract } from "efi/pools/PoolContract";
 
 import { makeOnSwapGivenInCallArgs } from "./makeOnSwapGivenInCallArgs";
-import { Web3Provider } from "@ethersproject/providers";
 import { useLatestBlockNumber } from "efi-ui/ethereum/hooks/useLatestBlockNumber";
 
 export function useOnSwapGivenIn(
-  library: Web3Provider | undefined,
   pool: PoolContract | undefined,
   account: string | null | undefined,
   tokenIn: ERC20 | undefined,
@@ -23,7 +21,7 @@ export function useOnSwapGivenIn(
   const poolTokensResults = usePoolTokens(pool);
   const poolIdResult = useSmartContractReadCall(pool, "getPoolId");
   const poolId = getQueryData(poolIdResult);
-  const latestBlockNumberResult = useLatestBlockNumber(library);
+  const latestBlockNumberResult = useLatestBlockNumber();
   const latestBlockNumber = getQueryData(latestBlockNumberResult);
 
   const balances = getQueryData(poolTokensResults)?.[1] || [];

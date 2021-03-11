@@ -70,7 +70,6 @@ export const FYTTableRow: FC<FYTTableRowProps> = ({
   const { data: vaultName } = useSmartContractReadCall(vaultContract, "name");
   const pool = usePoolForToken(tranche);
   const trancheSpotPriceResult = useOnSwapGivenIn(
-    library,
     pool,
     account,
     tranche,

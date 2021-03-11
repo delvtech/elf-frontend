@@ -76,7 +76,6 @@ export const FYTCard: FC<FYTCardProps> = ({ library, account, tranche }) => {
   const { data: vaultName } = useSmartContractReadCall(vaultContract, "name");
   const pool = usePoolForToken(tranche);
   const trancheSpotPriceResult = useOnSwapGivenIn(
-    library,
     pool,
     account,
     tranche,

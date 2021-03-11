@@ -91,7 +91,6 @@ export const TradePanel: FC<TradePanelProps> = ({
 
   const amountIn = stringValueIn ? parseEther(stringValueIn) : undefined;
   const { data: calcValueOut } = useOnSwapGivenIn(
-    library,
     pool,
     account,
     tokenIn,
