@@ -5,16 +5,18 @@ import classNames from "classnames";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { MarketAsset } from "efi/markets/Market";
+import { ERC20 } from "elf-contracts/types";
+import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
+import { getQueryData } from "efi-ui/base/queryResults";
 
 interface TokenSummaryProps {
-  baseAsset: MarketAsset | undefined;
-  yieldAsset: MarketAsset | undefined;
+  tokenIn: ERC20 | undefined;
+  tokenOut: ERC20 | undefined;
 }
 
-// TODO: handle loading states
-export const TokenSummary: FC<TokenSummaryProps> = (props) => {
-  const { baseAsset, yieldAsset } = props;
+export const TokenSummary: FC<TokenSummaryProps> = ({ tokenIn, tokenOut }) => {
+  const tokenInNameResult = useSmartContractReadCall(tokenIn, "name");
+  const tokenOutNameResult = useSmartContractReadCall(tokenOut, "name");
   return (
     <div className={tw("flex-1")}>
       <div className="mb-2">{t`Tokens`}</div>
@@ -27,7 +29,9 @@ export const TokenSummary: FC<TokenSummaryProps> = (props) => {
               <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
                 {t`Token`}
               </span>
-              <span className={tw("text-lg")}>{baseAsset?.name}</span>
+              <span className={tw("text-lg")}>
+                {getQueryData(tokenInNameResult)}
+              </span>
             </div>
             <div
               className={tw("flex", "flex-col", "justify-center", "space-y-1")}
@@ -65,7 +69,9 @@ export const TokenSummary: FC<TokenSummaryProps> = (props) => {
               <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
                 {t`Token`}
               </span>
-              <span className={tw("text-lg")}>{yieldAsset?.name}</span>
+              <span className={tw("text-lg")}>
+                {getQueryData(tokenOutNameResult)}
+              </span>
             </div>
             <div
               className={tw("flex", "flex-col", "justify-center", "space-y-1")}
