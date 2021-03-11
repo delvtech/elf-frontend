@@ -41,8 +41,10 @@ import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { formatMoney } from "efi/money/formatMoney";
 import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
+import { Web3Provider } from "@ethersproject/providers";
 
 interface FYTCardProps {
+  library: Web3Provider | undefined;
   account: string | null | undefined;
   tranche: Tranche;
 }
@@ -56,7 +58,7 @@ const calloutClassName = tw(
   "items-center",
   "justify-center"
 );
-export const FYTCard: FC<FYTCardProps> = ({ account, tranche }) => {
+export const FYTCard: FC<FYTCardProps> = ({ library, account, tranche }) => {
   const { isDarkMode } = useDarkMode();
   const { currency } = useCurrencyPref();
   const { data: trancheSymbol } = useSmartContractReadCall(tranche, "symbol");
@@ -74,7 +76,9 @@ export const FYTCard: FC<FYTCardProps> = ({ account, tranche }) => {
   const { data: vaultName } = useSmartContractReadCall(vaultContract, "name");
   const pool = usePoolForToken(tranche);
   const trancheSpotPriceResult = useOnSwapGivenIn(
+    library,
     pool,
+    account,
     tranche,
     BigNumber.from(1)
   );

@@ -19,13 +19,20 @@ import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
 import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
 import { BigNumber } from "ethers";
+import { Web3Provider } from "@ethersproject/providers";
+import { parseEther } from "@ethersproject/units";
+import { ONE_ETHER } from "efi/crypto/ethereum";
 
 interface TrancheInfoButtonProps {
+  library: Web3Provider | undefined;
+  account: string | null | undefined;
   tranche: Tranche | undefined;
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 export const TrancheInfoButton: FC<TrancheInfoButtonProps> = ({
+  library,
+  account,
   tranche,
   onClick,
 }) => {
@@ -45,11 +52,14 @@ export const TrancheInfoButton: FC<TrancheInfoButtonProps> = ({
 
   const poolContract = usePoolForToken(tranche, jsonRpcProvider);
   const tranchePriceResult = useOnSwapGivenIn(
+    library,
     poolContract,
+    account,
     tranche,
-    BigNumber.from(1)
+    ONE_ETHER // TODO: make this 1 of the tranche asset instead
   );
   const tranchePriceBigNumber = getQueryData(tranchePriceResult);
+  console.log("tranchePriceBigNumber", tranchePriceBigNumber);
   const tranchePrice = +formatCurrency(tranchePriceBigNumber, decimals);
 
   let trancheAPY = "-";

@@ -6,13 +6,19 @@ import tw from "efi-tailwindcss-classnames";
 import { FYTCard } from "efi-ui/portfolio/FYTTable/FYTCard";
 import { NoFYTsInWalletNonIdealState } from "efi-ui/wallets/NoFYTsInWalletNonIdealState/NoFYTsInWalletNonIdealState";
 import { NoWalletConnectedNonIdealState } from "efi-ui/wallets/NoWalletConnectedNonIdealState/NoWalletConnectedNonIdealState";
+import { Web3Provider } from "@ethersproject/providers";
 
 interface FYTPortfolioProps {
+  library: Web3Provider | undefined;
   account: string | null | undefined;
   tranches: Tranche[];
 }
 
-export const FYTPortfolio: FC<FYTPortfolioProps> = ({ account, tranches }) => {
+export const FYTPortfolio: FC<FYTPortfolioProps> = ({
+  library,
+  account,
+  tranches,
+}) => {
   const hasFYTs = tranches.length;
 
   let nonIdealStateContent = null;
@@ -30,7 +36,12 @@ export const FYTPortfolio: FC<FYTPortfolioProps> = ({ account, tranches }) => {
         </div>
       ) : (
         tranches.map((tranche) => [
-          <FYTCard key={tranche.address} account={account} tranche={tranche} />,
+          <FYTCard
+            library={library}
+            key={tranche.address}
+            account={account}
+            tranche={tranche}
+          />,
         ])
       )}
     </div>

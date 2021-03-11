@@ -15,12 +15,6 @@ import { useBaseAssets } from "efi-ui/invest/hooks/useBaseAssets";
 import { useTranchesByBaseAsset } from "efi-ui/invest/hooks/useTranchesByBaseAsset";
 import { Intent, Tag } from "@blueprintjs/core";
 
-// 1. from tranche get maturation date (unlockTimestamp) and name
-// 2. from tranche get elf address
-// 3. from elf get token (this is your base asset)
-// 4. from elf get vault (this is your yield position)
-// 5. from vault get apy
-
 interface InvestViewProps extends RouteComponentProps {}
 
 export const InvestView: FC<InvestViewProps> = () => {

@@ -6,31 +6,39 @@ import { StaticContractMethodArgs } from "efi/contracts/types";
 
 export function makeOnSwapGivenInCallArgs(
   poolId: string | undefined,
+  account: string | null | undefined,
   tokenIn: ERC20 | undefined,
   amount: BigNumber | undefined,
   tokenOut: ERC20 | undefined,
-  balances: BigNumber[] | undefined
+  balances: BigNumber[] | undefined,
+  latestBlockNumber: number | undefined
 ): StaticContractMethodArgs<YieldCurvePool, "onSwapGivenIn"> | undefined {
-  const isEnabled = [poolId, tokenIn, amount, tokenOut, balances?.length].every(
-    (v) => !!v
-  );
-  if (!isEnabled) {
+  if (
+    !account ||
+    !poolId ||
+    !tokenIn ||
+    !amount ||
+    !tokenOut ||
+    !balances?.length ||
+    !latestBlockNumber
+  ) {
     return undefined;
   }
-  return [
+  const callArgs: StaticContractMethodArgs<YieldCurvePool, "onSwapGivenIn"> = [
     {
-      poolId: poolId as string,
-      amountIn: amount as BigNumber,
-      tokenIn: tokenIn?.address as string,
-      tokenOut: tokenOut?.address as string,
+      poolId: poolId,
+      amountIn: amount,
+      tokenIn: tokenIn?.address,
+      tokenOut: tokenOut?.address,
 
-      // TODO: figure these args out
-      from: "",
-      to: "",
-      latestBlockNumberUsed: 0,
-      userData: "",
+      from: account,
+      to: account,
+      latestBlockNumberUsed: latestBlockNumber,
+      userData: poolId,
     },
-    balances?.[0] as BigNumber,
-    balances?.[1] as BigNumber,
+    balances?.[0],
+    balances?.[1],
   ];
+
+  return callArgs;
 }

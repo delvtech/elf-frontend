@@ -30,13 +30,19 @@ import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
 import { getTimeLeft2 } from "efi/base/time";
 import { formatMoney } from "efi/money/formatMoney";
+import { Web3Provider } from "@ethersproject/providers";
 
 interface YCTableRowProps {
+  library: Web3Provider | undefined;
   account: string | null | undefined;
   yieldCoupon: YC;
 }
 
-export const YCTableRow: FC<YCTableRowProps> = ({ account, yieldCoupon }) => {
+export const YCTableRow: FC<YCTableRowProps> = ({
+  library,
+  account,
+  yieldCoupon,
+}) => {
   const { isDarkMode } = useDarkMode();
   const { currency } = useCurrencyPref();
 
@@ -72,7 +78,13 @@ export const YCTableRow: FC<YCTableRowProps> = ({ account, yieldCoupon }) => {
     baseAsset,
     "decimals"
   );
-  const { data: exitValue } = useOnSwapGivenIn(pool, yieldCoupon, ycBalanceOf);
+  const { data: exitValue } = useOnSwapGivenIn(
+    library,
+    pool,
+    account,
+    yieldCoupon,
+    ycBalanceOf
+  );
 
   const tableRowClassName = isDarkMode ? styles.tableRowDark : styles.tableRow;
 

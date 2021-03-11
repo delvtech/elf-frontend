@@ -8,8 +8,10 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { TradePanel } from "efi-ui/trade/TradePanel/TradePanel";
 import { PoolContract } from "efi/pools/PoolContract";
+import { Web3Provider } from "@ethersproject/providers";
 
 interface PoolActionsCardProps {
+  library: Web3Provider | undefined;
   signer: Signer | undefined;
   account: string | null | undefined;
   pool: PoolContract | undefined;
@@ -19,6 +21,7 @@ interface PoolActionsCardProps {
 
 type MarketAction = "trade" | "stake";
 export const PoolActionsCard: FC<PoolActionsCardProps> = ({
+  library,
   signer,
   account,
   tokenIn,
@@ -44,6 +47,7 @@ export const PoolActionsCard: FC<PoolActionsCardProps> = ({
       >
         {action === "trade" && (
           <TradePanel
+            library={library}
             signer={signer}
             account={account}
             pool={pool}
@@ -57,6 +61,7 @@ export const PoolActionsCard: FC<PoolActionsCardProps> = ({
         )}
         {action === "stake" && (
           <TradePanel
+            library={library}
             signer={signer}
             account={account}
             pool={pool}

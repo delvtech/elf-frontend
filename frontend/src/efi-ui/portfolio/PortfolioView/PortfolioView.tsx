@@ -28,7 +28,7 @@ export const PortfolioView: FC<PortfolioViewProps> = () => {
     library,
   } = useWeb3React<Web3Provider>();
 
-  const portfolioTabs: PortfolioTab[] = usePortfolioTabs(account);
+  const portfolioTabs: PortfolioTab[] = usePortfolioTabs(library, account);
 
   const [activePortfolioTabId, setActivePortfolioTab] = useState(
     portfolioTabs[0].id

@@ -6,14 +6,19 @@ import { Tranche } from "elf-contracts/types/Tranche";
 import tw from "efi-tailwindcss-classnames";
 
 import { TrancheInfoButton } from "./TrancheInfoButton";
+import { Web3Provider } from "@ethersproject/providers";
 
 interface TranchePickerProps {
+  library: Web3Provider | undefined;
+  account: string | null | undefined;
   tranches: Tranche[];
   activeTrancheIndex: number | undefined;
   onTrancheChange: (newTranche: Tranche) => void;
 }
 export const TranchePicker: FC<TranchePickerProps> = ({
   tranches,
+  account,
+  library,
   onTrancheChange,
   activeTrancheIndex,
 }) => {
@@ -32,11 +37,20 @@ export const TranchePicker: FC<TranchePickerProps> = ({
       filterable={false}
       className={tw("w-full", "col-span-2")}
       itemRenderer={(tranche, { handleClick }) => (
-        <TrancheInfoButton tranche={tranche} onClick={handleClick} />
+        <TrancheInfoButton
+          library={library}
+          account={account}
+          tranche={tranche}
+          onClick={handleClick}
+        />
       )}
       onItemSelect={onTrancheChange}
     >
-      <TrancheInfoButton tranche={activeTranche} />
+      <TrancheInfoButton
+        library={library}
+        account={account}
+        tranche={activeTranche}
+      />
     </Select>
   );
 };

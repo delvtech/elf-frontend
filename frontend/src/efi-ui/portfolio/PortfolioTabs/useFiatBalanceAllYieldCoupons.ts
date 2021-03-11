@@ -10,8 +10,10 @@ import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractRead
 import { useOnSwapGivenInMulti } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenInMulti";
 import { usePoolForTokenMulti } from "efi-ui/pools/usePoolForToken/usePoolForTokenMulti";
 import { usePoolPairedTokenMulti } from "efi-ui/pools/usePoolPairedToken/usePoolPairedTokenMulti";
+import { Web3Provider } from "@ethersproject/providers";
 
 export function useFiatBalanceAllYieldCoupons(
+  library: Web3Provider | undefined,
   account: string | null | undefined,
   yieldCoupons: YC[],
   currency: Currency
@@ -44,6 +46,8 @@ export function useFiatBalanceAllYieldCoupons(
 
   // Total value in base asset of each yield coupon
   const totalValueInBaseAssetResults = useOnSwapGivenInMulti(
+    library,
+    account,
     markets,
     yieldCoupons,
     getQueriesData(ycBalanceOfResults)

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Provider } from "@ethersproject/providers";
+import { Provider, Web3Provider } from "@ethersproject/providers";
 import { Money } from "ts-money";
 import { t } from "ttag";
 
@@ -16,15 +16,18 @@ import { useYCsWithBalance } from "efi-ui/yieldcoupon/useYCsWithBalance/useYCsWi
 import { useFiatBalanceAllYieldCoupons } from "./useFiatBalanceAllYieldCoupons";
 
 export function usePortfolioTabs(
+  library: Web3Provider | undefined,
   account: string | null | undefined,
   provider?: Provider
 ): PortfolioTab[] {
   const { currency } = useCurrencyPref();
   const { tranchesWithBalance, totalFiatBalanceAllTranches } = useFYTTab(
+    library,
     account,
     provider
   );
   const { ycsWithBalance, totalFiatBalanceAllYCs } = useYCTab(
+    library,
     account,
     provider
   );
@@ -36,7 +39,11 @@ export function usePortfolioTabs(
       quantity: tranchesWithBalance.length,
       totalFiatValue: totalFiatBalanceAllTranches,
       contentRenderer: () => (
-        <FYTPortfolio account={account} tranches={tranchesWithBalance} />
+        <FYTPortfolio
+          library={library}
+          account={account}
+          tranches={tranchesWithBalance}
+        />
       ),
     },
     {
@@ -45,7 +52,11 @@ export function usePortfolioTabs(
       quantity: ycsWithBalance.length,
       totalFiatValue: totalFiatBalanceAllYCs,
       contentRenderer: () => (
-        <YCPortfolio account={account} yieldCoupons={ycsWithBalance} />
+        <YCPortfolio
+          library={library}
+          account={account}
+          yieldCoupons={ycsWithBalance}
+        />
       ),
     },
     {
@@ -58,17 +69,29 @@ export function usePortfolioTabs(
   ];
 }
 
-function useFYTTab(account: string | null | undefined, provider?: Provider) {
+function useFYTTab(
+  library: Web3Provider | undefined,
+  account: string | null | undefined,
+  provider?: Provider
+) {
   const tranchesWithBalance = useTranchesWithBalance(account, provider);
-  const totalFiatBalanceAllTranches = useFiatBalanceAllTranches(account);
+  const totalFiatBalanceAllTranches = useFiatBalanceAllTranches(
+    library,
+    account
+  );
 
   return { tranchesWithBalance, totalFiatBalanceAllTranches };
 }
 
-function useYCTab(account: string | null | undefined, provider?: Provider) {
+function useYCTab(
+  library: Web3Provider | undefined,
+  account: string | null | undefined,
+  provider?: Provider
+) {
   const { currency } = useCurrencyPref();
   const ycsWithBalance = useYCsWithBalance(account, provider);
   const totalFiatBalanceAllYCs = useFiatBalanceAllYieldCoupons(
+    library,
     account,
     ycsWithBalance,
     currency

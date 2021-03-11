@@ -15,14 +15,17 @@ import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { formatEth } from "efi/coins/ether/formatEth";
 import { PoolContract } from "efi/pools/PoolContract";
 import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
+import { Web3Provider } from "@ethersproject/providers";
 
 interface PoolDetailsProps {
+  library: Web3Provider | undefined;
   signer: Signer | undefined;
   account: string | null | undefined;
   pool: PoolContract | undefined;
 }
 
 export const PoolDetails: FC<PoolDetailsProps> = ({
+  library,
   signer,
   account,
   pool,
@@ -48,6 +51,7 @@ export const PoolDetails: FC<PoolDetailsProps> = ({
           <div className={tw("flex", "space-x-12")}>
             <MarketHistory />
             <PoolActionsCard
+              library={library}
               signer={signer}
               account={account}
               pool={pool}
