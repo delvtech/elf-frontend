@@ -3,13 +3,25 @@ interface ContractJson {
   balancerAddress: string;
   userAddress: string;
   balancerVaultAddress: string;
-  yearnVaultAssetProxyAddress: string;
   marketFyWethAddress: string;
   marketFyWethId: string;
   userProxyContractAddress: string;
   wethAddress: string;
   wethTrancheAddress: string;
   usdcAddress: string;
+
+  marketYcFactory: string;
+  wethYearnVaultAddress: string;
+  usdcYearnVaultAddress: string;
+  wethYearnVaultAssetProxyAddress: string;
+  usdcYearnVaultAssetProxyAddress: string;
+  usdcTrancheAddress: string;
+  marketYcWethAddress: string;
+  marketYcWethId: string;
+  marketFyUsdcAddress: string;
+  marketFyUsdcId: string;
+  marketYcUsdcAddress: string;
+  marketYcUsdcId: string;
 }
 
 // TODO: Are there defaults here we want to use? Should we warn when they are
@@ -19,13 +31,27 @@ const FALLBACK_CONTRACTS = Object.freeze<ContractJson>({
   balancerAddress: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
   userAddress: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
   balancerVaultAddress: "0x0165878A594ca255338adfa4d48449f69242Eb8F",
-  yearnVaultAssetProxyAddress: "0x8A791620dd6260079BF849Dc5567aDC3F2FdC318",
-  marketFyWethAddress: "0xB7f8BC63BbcaD18155201308C8f3540b07f84F5e",
+  marketYcFactory: "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6",
+  wethYearnVaultAddress: "0x610178dA211FEF7D417bC0e6FeD39F05609AD788",
+  usdcYearnVaultAddress: "0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0",
+  wethYearnVaultAssetProxyAddress: "0xB7f8BC63BbcaD18155201308C8f3540b07f84F5e",
+  usdcYearnVaultAssetProxyAddress: "0x0DCd1Bf9A1b36cE34237eEaFef220932846BCD82",
+  wethTrancheAddress: "0x9A676e781A523b5d0C0e43731313A708CB607508",
+  usdcTrancheAddress: "0x4A679253410272dd5232B3Ff7cF5dbB88f295319",
+  marketFyWethAddress: "0x0B306BF915C4d645ff596e518fAf3F9669b97016",
   marketFyWethId:
-    "0xb7f8bc63bbcad18155201308c8f3540b07f84f5e000100000000000000000000",
-  userProxyContractAddress: "0x68B1D87F95878fE05B998F19b66F4baba5De1aed",
+    "0x0b306bf915c4d645ff596e518faf3f9669b97016000100000000000000000000",
+  marketYcWethAddress: "0x2F4FcDD7F548d621cDbdd51da987cc1560976f33",
+  marketYcWethId:
+    "0x2f4fcdd7f548d621cdbdd51da987cc1560976f33000200000000000000000001",
+  marketFyUsdcAddress: "0x7a2088a1bFc9d81c55368AE168C2C02570cB814F",
+  marketFyUsdcId:
+    "0x7a2088a1bfc9d81c55368ae168c2c02570cb814f000100000000000000000002",
+  marketYcUsdcAddress: "0x9D90E2bb6dA19E392fA117C687409590788d463A",
+  marketYcUsdcId:
+    "0x9d90e2bb6da19e392fa117c687409590788d463a000200000000000000000003",
+  userProxyContractAddress: "0x851356ae760d987E095750cCeb3bC6014560891C",
   wethAddress: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-  wethTrancheAddress: "0x610178dA211FEF7D417bC0e6FeD39F05609AD788",
   usdcAddress: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
 });
 
