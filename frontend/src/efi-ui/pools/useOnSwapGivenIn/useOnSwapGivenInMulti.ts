@@ -12,6 +12,7 @@ import { usePoolTokensMulti } from "efi-ui/pools/usePoolTokens/usePoolTokensMult
 import { PoolContract } from "efi/pools/PoolContract";
 
 export function useOnSwapGivenInMulti(
+  account: string | null | undefined,
   pools: (PoolContract | undefined)[],
   tokensIn: (ERC20 | undefined)[],
   amounts: (BigNumber | undefined)[]
@@ -39,6 +40,7 @@ export function useOnSwapGivenInMulti(
         ),
         callArgs: makeOnSwapGivenInCallArgs(
           poolId,
+          account,
           tokenIn,
           amount,
           tokenOut,

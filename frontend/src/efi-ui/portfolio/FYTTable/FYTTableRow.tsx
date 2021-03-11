@@ -65,6 +65,7 @@ export const FYTTableRow: FC<FYTTableRowProps> = ({ account, tranche }) => {
   const pool = usePoolForToken(tranche);
   const trancheSpotPriceResult = useOnSwapGivenIn(
     pool,
+    account,
     tranche,
     BigNumber.from(1)
   );

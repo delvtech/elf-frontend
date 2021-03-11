@@ -13,6 +13,7 @@ import { makeOnSwapGivenInCallArgs } from "./makeOnSwapGivenInCallArgs";
 
 export function useOnSwapGivenIn(
   pool: PoolContract | undefined,
+  account: string | null | undefined,
   tokenIn: ERC20 | undefined,
   amount: BigNumber | undefined
 ): QueryObserverResult<BigNumber> {
@@ -29,6 +30,7 @@ export function useOnSwapGivenIn(
     ),
     callArgs: makeOnSwapGivenInCallArgs(
       poolId,
+      account,
       tokenIn,
       amount,
       tokenOut,

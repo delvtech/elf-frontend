@@ -21,11 +21,13 @@ import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn
 import { BigNumber } from "ethers";
 
 interface TrancheInfoButtonProps {
+  account: string | null | undefined;
   tranche: Tranche | undefined;
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 export const TrancheInfoButton: FC<TrancheInfoButtonProps> = ({
+  account,
   tranche,
   onClick,
 }) => {
@@ -46,6 +48,7 @@ export const TrancheInfoButton: FC<TrancheInfoButtonProps> = ({
   const poolContract = usePoolForToken(tranche, jsonRpcProvider);
   const tranchePriceResult = useOnSwapGivenIn(
     poolContract,
+    account,
     tranche,
     BigNumber.from(1)
   );

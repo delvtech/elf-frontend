@@ -8,12 +8,14 @@ import tw from "efi-tailwindcss-classnames";
 import { TrancheInfoButton } from "./TrancheInfoButton";
 
 interface TranchePickerProps {
+  account: string | null | undefined;
   tranches: Tranche[];
   activeTrancheIndex: number | undefined;
   onTrancheChange: (newTranche: Tranche) => void;
 }
 export const TranchePicker: FC<TranchePickerProps> = ({
   tranches,
+  account,
   onTrancheChange,
   activeTrancheIndex,
 }) => {
@@ -32,11 +34,15 @@ export const TranchePicker: FC<TranchePickerProps> = ({
       filterable={false}
       className={tw("w-full", "col-span-2")}
       itemRenderer={(tranche, { handleClick }) => (
-        <TrancheInfoButton tranche={tranche} onClick={handleClick} />
+        <TrancheInfoButton
+          account={account}
+          tranche={tranche}
+          onClick={handleClick}
+        />
       )}
       onItemSelect={onTrancheChange}
     >
-      <TrancheInfoButton tranche={activeTranche} />
+      <TrancheInfoButton account={account} tranche={activeTranche} />
     </Select>
   );
 };

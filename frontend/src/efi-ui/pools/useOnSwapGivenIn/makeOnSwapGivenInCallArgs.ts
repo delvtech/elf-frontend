@@ -6,6 +6,7 @@ import { StaticContractMethodArgs } from "efi/contracts/types";
 
 export function makeOnSwapGivenInCallArgs(
   poolId: string | undefined,
+  account: string | null | undefined,
   tokenIn: ERC20 | undefined,
   amount: BigNumber | undefined,
   tokenOut: ERC20 | undefined,
@@ -25,8 +26,8 @@ export function makeOnSwapGivenInCallArgs(
       tokenOut: tokenOut?.address as string,
 
       // TODO: figure these args out
-      from: "",
-      to: "",
+      from: account as string,
+      to: account as string,
       latestBlockNumberUsed: 0,
       userData: "",
     },
