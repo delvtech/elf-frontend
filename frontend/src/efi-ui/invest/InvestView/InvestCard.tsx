@@ -85,9 +85,7 @@ export const InvestCard: FC<InvestCardProps> = ({
   );
   const poolContract = usePoolForToken(activeTranche, jsonRpcProvider);
   const tranchePriceResult = useOnSwapGivenIn(
-    library,
     poolContract,
-    account,
     activeTranche,
     BigNumber.from(1)
   );
@@ -106,9 +104,7 @@ export const InvestCard: FC<InvestCardProps> = ({
     : undefined;
 
   const { data: amountOut } = useOnSwapGivenIn(
-    library,
     poolContract,
-    account,
     inputTokenContract,
     amountInAsBigNumber
   );

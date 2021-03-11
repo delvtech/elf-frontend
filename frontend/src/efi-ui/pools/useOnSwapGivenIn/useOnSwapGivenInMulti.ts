@@ -10,12 +10,9 @@ import { makeOnSwapGivenInCallArgs } from "efi-ui/pools/useOnSwapGivenIn/makeOnS
 import { usePoolPairedTokenMulti } from "efi-ui/pools/usePoolPairedToken/usePoolPairedTokenMulti";
 import { usePoolTokensMulti } from "efi-ui/pools/usePoolTokens/usePoolTokensMulti";
 import { PoolContract } from "efi/pools/PoolContract";
-import { Web3Provider } from "@ethersproject/providers";
 import { useLatestBlockNumber } from "efi-ui/ethereum/hooks/useLatestBlockNumber";
 
 export function useOnSwapGivenInMulti(
-  library: Web3Provider | undefined,
-  account: string | null | undefined,
   pools: (PoolContract | undefined)[],
   tokensIn: (ERC20 | undefined)[],
   amounts: (BigNumber | undefined)[]
@@ -23,12 +20,13 @@ export function useOnSwapGivenInMulti(
   const poolIdResults = useSmartContractReadCalls(pools, "getPoolId");
   const poolTokensResults = usePoolTokensMulti(pools);
   const tokensOut = usePoolPairedTokenMulti(pools, tokensIn);
-  const { data: latestBlockNumber } = useLatestBlockNumber(library);
+  const { data: latestBlockNumber } = useLatestBlockNumber();
 
   const poolIds = getQueriesData(poolIdResults);
   const poolTokens = getQueriesData(poolTokensResults) || [];
 
-  const zipped = zip(
+  const zipped = zip<any>(
+    pools,
     poolIds,
     tokensIn,
     amounts,
@@ -37,14 +35,14 @@ export function useOnSwapGivenInMulti(
   );
 
   const onSwapGivenInArgs = zipped.map(
-    ([poolId, tokenIn, amount, tokenOut, balances]) => {
+    ([pool, poolId, tokenIn, amount, tokenOut, balances]) => {
       return {
         enabled: [poolId, tokenIn, amount, tokenOut, balances?.length].every(
           (v) => !!v
         ),
         callArgs: makeOnSwapGivenInCallArgs(
           poolId,
-          account,
+          pool?.address,
           tokenIn,
           amount,
           tokenOut,

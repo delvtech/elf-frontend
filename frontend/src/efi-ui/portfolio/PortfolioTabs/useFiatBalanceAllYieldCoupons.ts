@@ -46,8 +46,6 @@ export function useFiatBalanceAllYieldCoupons(
 
   // Total value in base asset of each yield coupon
   const totalValueInBaseAssetResults = useOnSwapGivenInMulti(
-    library,
-    account,
     markets,
     yieldCoupons,
     getQueriesData(ycBalanceOfResults)

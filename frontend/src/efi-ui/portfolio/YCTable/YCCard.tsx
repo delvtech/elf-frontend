@@ -93,9 +93,7 @@ export const YCCard: FC<YCCardProps> = ({ library, account, yieldCoupon }) => {
     "decimals"
   );
   const { data: exitValueBigNumber } = useOnSwapGivenIn(
-    library,
     pool,
-    account,
     yieldCoupon,
     ycBalanceOf
   );

@@ -78,13 +78,7 @@ export const YCTableRow: FC<YCTableRowProps> = ({
     baseAsset,
     "decimals"
   );
-  const { data: exitValue } = useOnSwapGivenIn(
-    library,
-    pool,
-    account,
-    yieldCoupon,
-    ycBalanceOf
-  );
+  const { data: exitValue } = useOnSwapGivenIn(pool, yieldCoupon, ycBalanceOf);
 
   const tableRowClassName = isDarkMode ? styles.tableRowDark : styles.tableRow;
 
