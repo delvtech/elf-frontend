@@ -11,6 +11,7 @@ import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn
 import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { useTrancheBalanceOld } from "efi-ui/tranche/useFYTBalance";
+import { Web3Provider } from "@ethersproject/providers";
 
 /**
  * @deprecated BPool is deprecated. use useTrancheFiatBalance instead
@@ -36,6 +37,7 @@ export function useTrancheFiatBalanceOld(
 }
 
 export function useTrancheFiatBalance(
+  library: Web3Provider | undefined,
   account: string | null | undefined,
   tranche: Tranche | undefined,
   currency: Currency
@@ -51,6 +53,7 @@ export function useTrancheFiatBalance(
     "decimals"
   );
   const baseAssetTotalValueResult = useOnSwapGivenIn(
+    library,
     pool,
     account,
     tranche,

@@ -31,13 +31,19 @@ import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPaire
 import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
 import { YVaultAssetProxy__factory } from "elf-contracts/types/factories/YVaultAssetProxy__factory";
 import { Tranche } from "elf-contracts/types/Tranche";
+import { Web3Provider } from "@ethersproject/providers";
 
 interface FYTTableRowProps {
+  library: Web3Provider | undefined;
   account: string | null | undefined;
   tranche: Tranche;
 }
 
-export const FYTTableRow: FC<FYTTableRowProps> = ({ account, tranche }) => {
+export const FYTTableRow: FC<FYTTableRowProps> = ({
+  library,
+  account,
+  tranche,
+}) => {
   const { isDarkMode } = useDarkMode();
   const { currency } = useCurrencyPref();
   const { data: trancheSymbol } = useSmartContractReadCall(tranche, "symbol");
@@ -64,6 +70,7 @@ export const FYTTableRow: FC<FYTTableRowProps> = ({ account, tranche }) => {
   const { data: vaultName } = useSmartContractReadCall(vaultContract, "name");
   const pool = usePoolForToken(tranche);
   const trancheSpotPriceResult = useOnSwapGivenIn(
+    library,
     pool,
     account,
     tranche,

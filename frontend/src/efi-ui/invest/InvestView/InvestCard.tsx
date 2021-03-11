@@ -85,6 +85,7 @@ export const InvestCard: FC<InvestCardProps> = ({
   );
   const poolContract = usePoolForToken(activeTranche, jsonRpcProvider);
   const tranchePriceResult = useOnSwapGivenIn(
+    library,
     poolContract,
     account,
     activeTranche,
@@ -105,6 +106,7 @@ export const InvestCard: FC<InvestCardProps> = ({
     : undefined;
 
   const { data: amountOut } = useOnSwapGivenIn(
+    library,
     poolContract,
     account,
     inputTokenContract,
@@ -153,6 +155,7 @@ export const InvestCard: FC<InvestCardProps> = ({
 
         <div className={tw("flex", "space-x-10")}>
           <TranchePicker
+            library={library}
             account={account}
             onTrancheChange={setActiveTranche}
             tranches={availableTranches}

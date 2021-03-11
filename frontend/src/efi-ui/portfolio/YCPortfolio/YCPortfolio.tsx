@@ -1,5 +1,6 @@
 import React, { FC } from "react";
 
+import { Web3Provider } from "@ethersproject/providers";
 import { YC } from "elf-contracts/types/YC";
 
 import tw from "efi-tailwindcss-classnames";
@@ -8,11 +9,13 @@ import { NoWalletConnectedNonIdealState } from "efi-ui/wallets/NoWalletConnected
 import { NoYCsInWalletNonIdealState } from "efi-ui/wallets/NoYCsInWalletNonIdealState/NoYCsInWalletNonIdealState";
 
 interface YCPortfolioProps {
+  library: Web3Provider | undefined;
   account: string | null | undefined;
   yieldCoupons: YC[];
 }
 
 export const YCPortfolio: FC<YCPortfolioProps> = ({
+  library,
   account,
   yieldCoupons,
 }) => {
@@ -36,6 +39,7 @@ export const YCPortfolio: FC<YCPortfolioProps> = ({
         yieldCoupons.map((yieldCoupon) => [
           <YCCard
             key={yieldCoupon.address}
+            library={library}
             account={account}
             yieldCoupon={yieldCoupon}
           />,

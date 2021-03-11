@@ -17,9 +17,7 @@ export function usePoolForToken(
   const poolTokensResults = usePoolTokensMulti(allPools);
 
   const poolTokens = getQueriesData(poolTokensResults);
-  const poolTokenAddresses = poolTokens.map(
-    (finalTokens) => finalTokens?.tokens
-  );
+  const poolTokenAddresses = poolTokens.map((finalTokens) => finalTokens?.[0]);
 
   const zipped = zip(allPools, poolTokenAddresses);
   const poolForTokenZippedItem = zipped.find(([pool, finalTokens]) =>

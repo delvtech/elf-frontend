@@ -13,6 +13,7 @@ import {
 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { Tooltip2 } from "@blueprintjs/popover2";
+import { Web3Provider } from "@ethersproject/providers";
 import { navigate } from "@reach/router";
 import classNames from "classnames";
 import { YC } from "elf-contracts/types/YC";
@@ -40,6 +41,7 @@ import { useTrancheForYieldCoupon } from "./useTrancheForYieldCoupon";
 import { useUnderlyingVaultForTranche } from "./useUnderlyingVaultForTranche";
 
 interface YCCardProps {
+  library: Web3Provider | undefined;
   account: string | null | undefined;
   yieldCoupon: YC;
 }
@@ -54,7 +56,7 @@ const calloutClassName = tw(
   "justify-center"
 );
 
-export const YCCard: FC<YCCardProps> = ({ account, yieldCoupon }) => {
+export const YCCard: FC<YCCardProps> = ({ library, account, yieldCoupon }) => {
   const { isDarkMode } = useDarkMode();
   const { currency } = useCurrencyPref();
 
@@ -91,6 +93,7 @@ export const YCCard: FC<YCCardProps> = ({ account, yieldCoupon }) => {
     "decimals"
   );
   const { data: exitValueBigNumber } = useOnSwapGivenIn(
+    library,
     pool,
     account,
     yieldCoupon,

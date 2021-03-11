@@ -19,8 +19,10 @@ import { TradeInput } from "efi-ui/trade/TradeInput/TradeInput";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { PoolContract } from "efi/pools/PoolContract";
+import { Web3Provider } from "@ethersproject/providers";
 
 interface TradePanelProps {
+  library: Web3Provider | undefined;
   signer: Signer | undefined;
   pool: PoolContract | undefined;
   account: string | null | undefined;
@@ -43,6 +45,7 @@ const numericInputOptions: NumericInputOptions = {
 };
 
 export const TradePanel: FC<TradePanelProps> = ({
+  library,
   signer,
   formDisabled = false,
   submitDisabled = false,
@@ -88,6 +91,7 @@ export const TradePanel: FC<TradePanelProps> = ({
 
   const amountIn = stringValueIn ? parseEther(stringValueIn) : undefined;
   const { data: calcValueOut } = useOnSwapGivenIn(
+    library,
     pool,
     account,
     tokenIn,

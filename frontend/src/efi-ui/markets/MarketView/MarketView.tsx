@@ -65,7 +65,12 @@ export const MarketView: FC<MarketViewProps> = ({ poolAddress }) => {
           />
         </div>
         <div className={tw("flex", "flex-col", "justify-between")}>
-          <PoolDetails signer={signer} account={account} pool={pool} />
+          <PoolDetails
+            library={library}
+            signer={signer}
+            account={account}
+            pool={pool}
+          />
         </div>
       </div>
     </div>

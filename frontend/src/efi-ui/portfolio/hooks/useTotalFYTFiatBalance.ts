@@ -5,8 +5,10 @@ import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFr
 import { useTrancheFiatBalance } from "efi-ui/markets/useFYTFiatBalance";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import ContractAddresses from "efi/contracts/contractsJson";
+import { Web3Provider } from "@ethersproject/providers";
 
 export function useFiatBalanceAllTranches(
+  library: Web3Provider | undefined,
   account: string | null | undefined
 ): Money | undefined {
   const { currency } = useCurrencyPref();
@@ -17,6 +19,7 @@ export function useFiatBalanceAllTranches(
   );
 
   const wethTrancheFiatBalance = useTrancheFiatBalance(
+    library,
     account,
     wethTranche,
     currency
