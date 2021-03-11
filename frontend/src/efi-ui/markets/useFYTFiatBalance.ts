@@ -54,7 +54,6 @@ export function useTrancheFiatBalance(
   );
   const baseAssetTotalValueResult = useOnSwapGivenIn(
     pool,
-    account,
     tranche,
     getQueryData(trancheBalance)
   );

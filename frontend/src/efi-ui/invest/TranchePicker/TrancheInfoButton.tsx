@@ -51,7 +51,6 @@ export const TrancheInfoButton: FC<TrancheInfoButtonProps> = ({
   const poolContract = usePoolForToken(tranche, jsonRpcProvider);
   const tranchePriceResult = useOnSwapGivenIn(
     poolContract,
-    account,
     tranche,
     ONE_ETHER // TODO: make this 1 of the tranche asset instead
   );

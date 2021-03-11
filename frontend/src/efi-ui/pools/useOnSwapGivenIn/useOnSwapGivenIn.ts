@@ -14,7 +14,6 @@ import { useLatestBlockNumber } from "efi-ui/ethereum/hooks/useLatestBlockNumber
 
 export function useOnSwapGivenIn(
   pool: PoolContract | undefined,
-  account: string | null | undefined,
   tokenIn: ERC20 | undefined,
   amount: BigNumber | undefined
 ): QueryObserverResult<BigNumber> {
@@ -38,7 +37,7 @@ export function useOnSwapGivenIn(
     ].every((v) => !!v),
     callArgs: makeOnSwapGivenInCallArgs(
       poolId,
-      account,
+      pool?.address,
       tokenIn,
       amount,
       tokenOut,

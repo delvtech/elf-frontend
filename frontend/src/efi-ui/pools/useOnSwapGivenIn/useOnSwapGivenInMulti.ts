@@ -13,7 +13,6 @@ import { PoolContract } from "efi/pools/PoolContract";
 import { useLatestBlockNumber } from "efi-ui/ethereum/hooks/useLatestBlockNumber";
 
 export function useOnSwapGivenInMulti(
-  account: string | null | undefined,
   pools: (PoolContract | undefined)[],
   tokensIn: (ERC20 | undefined)[],
   amounts: (BigNumber | undefined)[]
@@ -26,7 +25,8 @@ export function useOnSwapGivenInMulti(
   const poolIds = getQueriesData(poolIdResults);
   const poolTokens = getQueriesData(poolTokensResults) || [];
 
-  const zipped = zip(
+  const zipped = zip<any>(
+    pools,
     poolIds,
     tokensIn,
     amounts,
@@ -35,14 +35,14 @@ export function useOnSwapGivenInMulti(
   );
 
   const onSwapGivenInArgs = zipped.map(
-    ([poolId, tokenIn, amount, tokenOut, balances]) => {
+    ([pool, poolId, tokenIn, amount, tokenOut, balances]) => {
       return {
         enabled: [poolId, tokenIn, amount, tokenOut, balances?.length].every(
           (v) => !!v
         ),
         callArgs: makeOnSwapGivenInCallArgs(
           poolId,
-          account,
+          pool?.address,
           tokenIn,
           amount,
           tokenOut,

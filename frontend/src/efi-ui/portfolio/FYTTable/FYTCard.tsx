@@ -77,7 +77,6 @@ export const FYTCard: FC<FYTCardProps> = ({ library, account, tranche }) => {
   const pool = usePoolForToken(tranche);
   const trancheSpotPriceResult = useOnSwapGivenIn(
     pool,
-    account,
     tranche,
     BigNumber.from(1)
   );
