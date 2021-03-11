@@ -9,7 +9,7 @@ export function useYVaultAssetProxyContracts(
   provider?: Provider
 ): (YVaultAssetProxy | undefined)[] {
   const wethYVaultAssetProxyContract = useSmartContractFromFactory(
-    ContractAddresses.yearnVaultAssetProxyAddress,
+    ContractAddresses.wethYearnVaultAssetProxyAddress,
     YVaultAssetProxy__factory.connect,
     provider
   );
