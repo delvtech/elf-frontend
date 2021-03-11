@@ -1,9 +1,10 @@
 import { ERC20 } from "elf-contracts/types/ERC20";
+import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
+
 import { getQueryData } from "efi-ui/base/queryResults";
 import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
-import { ERC20__factory } from "elf-contracts/types";
-import { PoolContract } from "efi/pools/PoolContract";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
+import { PoolContract } from "efi/pools/PoolContract";
 
 export function usePoolPairedToken(
   pool: PoolContract | undefined,

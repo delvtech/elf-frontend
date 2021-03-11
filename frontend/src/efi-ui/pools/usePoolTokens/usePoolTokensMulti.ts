@@ -1,9 +1,11 @@
-import { Vault } from "elf-contracts/types";
+import { Vault } from "elf-contracts/types/Vault";
+
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { getQueriesData } from "efi-ui/base/queryResults";
+import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { PoolContract } from "efi/pools/PoolContract";
-import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
+
 import { UsePoolTokensQueryResult } from "./UsePoolTokensQueryResult";
 
 export function usePoolTokensMulti(

@@ -1,6 +1,7 @@
-import { YieldCurvePool } from "elf-contracts/types";
 import { ERC20 } from "elf-contracts/types/ERC20";
+import { YieldCurvePool } from "elf-contracts/types/YieldCurvePool";
 import { BigNumber } from "ethers";
+
 import { StaticContractMethodArgs } from "efi/contracts/types";
 
 export function makeOnSwapGivenInCallArgs(

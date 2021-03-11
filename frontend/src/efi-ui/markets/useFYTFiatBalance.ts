@@ -1,5 +1,5 @@
 import { formatUnits } from "@ethersproject/units";
-import { Tranche } from "elf-contracts/types";
+import { Tranche } from "elf-contracts/types/Tranche";
 import { Currency, Money } from "ts-money";
 
 import { getCoinGeckoId } from "efi-coingecko";

@@ -13,7 +13,6 @@ import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import classNames from "classnames";
-import { ERC20 } from "elf-contracts/types";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { BigNumber, Signer } from "ethers";
 import { t } from "ttag";
@@ -37,6 +36,7 @@ import { getConnectorName } from "efi/wallets/connectors";
 import { isApprovalRequiredForTransactions } from "../../crypto/isApprovalRequiredForTransactions";
 import { PoolContract } from "efi/pools/PoolContract";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
+import { ERC20 } from "elf-contracts/types/ERC20";
 
 interface BuyFYTConfirmationDrawerProps {
   chainId: number | undefined;

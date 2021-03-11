@@ -1,4 +1,4 @@
-import { BPool } from "elf-contracts/types";
+import { BPool } from "elf-contracts/types/BPool";
 import { ERC20 } from "elf-contracts/types/ERC20";
 
 /**

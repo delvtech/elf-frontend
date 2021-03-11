@@ -1,13 +1,11 @@
 import React, { FC } from "react";
 
-import { Card } from "@blueprintjs/core";
+import { YC } from "elf-contracts/types/YC";
 
 import tw from "efi-tailwindcss-classnames";
+import { YCCard } from "efi-ui/portfolio/YCTable/YCCard";
 import { NoWalletConnectedNonIdealState } from "efi-ui/wallets/NoWalletConnectedNonIdealState/NoWalletConnectedNonIdealState";
 import { NoYCsInWalletNonIdealState } from "efi-ui/wallets/NoYCsInWalletNonIdealState/NoYCsInWalletNonIdealState";
-import { YCTable } from "efi-ui/portfolio/YCTable/YCTable";
-import { YC } from "elf-contracts/types";
-import { YCCard } from "efi-ui/portfolio/YCTable/YCCard";
 
 interface YCPortfolioProps {
   account: string | null | undefined;

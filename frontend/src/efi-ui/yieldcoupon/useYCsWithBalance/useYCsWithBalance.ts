@@ -1,5 +1,6 @@
 import { Provider } from "@ethersproject/providers";
-import { YC, YC__factory } from "elf-contracts/types";
+import { YC__factory } from "elf-contracts/types/factories/YC__factory";
+import { YC } from "elf-contracts/types/YC";
 import { BigNumber } from "ethers";
 import zip from "lodash.zip";
 

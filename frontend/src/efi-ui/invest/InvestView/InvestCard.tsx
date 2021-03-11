@@ -4,8 +4,10 @@ import { Button, Callout, Card, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { formatUnits, parseUnits } from "@ethersproject/units";
 import { AbstractConnector } from "@web3-react/abstract-connector";
-import { ERC20, WETH, WETH__factory } from "elf-contracts/types";
+import { ERC20 } from "elf-contracts/types/ERC20";
+import { WETH__factory } from "elf-contracts/types/factories/WETH__factory";
 import { Tranche } from "elf-contracts/types/Tranche";
+import { WETH } from "elf-contracts/types/WETH";
 import { BigNumber } from "ethers";
 import { t } from "ttag";
 

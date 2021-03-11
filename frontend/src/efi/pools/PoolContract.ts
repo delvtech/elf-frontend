@@ -1,4 +1,5 @@
-import { WeightedPool, YieldCurvePool } from "elf-contracts/types";
+import { WeightedPool } from "elf-contracts/types/WeightedPool";
+import { YieldCurvePool } from "elf-contracts/types/YieldCurvePool";
 
 /**
  * FYTs are YieldCurvePool

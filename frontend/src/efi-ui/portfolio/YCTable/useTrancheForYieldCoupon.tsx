@@ -1,4 +1,7 @@
-import { Tranche, Tranche__factory, YC } from "elf-contracts/types";
+import { Tranche__factory } from "elf-contracts/types/factories/Tranche__factory";
+import { Tranche } from "elf-contracts/types/Tranche";
+import { YC } from "elf-contracts/types/YC";
+
 import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 

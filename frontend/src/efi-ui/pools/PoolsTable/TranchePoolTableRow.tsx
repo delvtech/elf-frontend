@@ -1,16 +1,17 @@
 import { FC } from "react";
 
 import { Link } from "@reach/router";
+import { Tranche } from "elf-contracts/types/Tranche";
+import { YieldCurvePool } from "elf-contracts/types/YieldCurvePool";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledProgressBar } from "efi-ui/base/LabeledProgressBar/LabeledProgressBar";
-import { getTimeLeft2 } from "efi/base/time";
-import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { getQueryData } from "efi-ui/base/queryResults";
-import { Tranche, YieldCurvePool } from "elf-contracts/types";
+import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
+import { getTimeLeft2 } from "efi/base/time";
 
 interface TranchePoolTableRowProps {
   pool: YieldCurvePool | undefined;

@@ -13,37 +13,34 @@ import {
 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { Tooltip2 } from "@blueprintjs/popover2";
+import { navigate } from "@reach/router";
 import classNames from "classnames";
+import { formatDuration, intervalToDuration } from "date-fns";
+import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
+import { YVaultAssetProxy__factory } from "elf-contracts/types/factories/YVaultAssetProxy__factory";
+import { Tranche } from "elf-contracts/types/Tranche";
+import { BigNumber } from "ethers";
 import { jt, t } from "ttag";
 
+import { getCoinGeckoId } from "efi-coingecko";
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-
-import {
-  ERC20__factory,
-  Tranche,
-  YVaultAssetProxy__factory,
-} from "elf-contracts/types";
-import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
-import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
-import { formatDuration, intervalToDuration } from "date-fns";
-import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
 import { getQueryData } from "efi-ui/base/queryResults";
-import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
 import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
-import { getCoinGeckoId } from "efi-coingecko";
-import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
-import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
-import { navigate } from "@reach/router";
+import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
+import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { CryptoIconSvg } from "efi-ui/crypto/CryptoIcon";
+import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
+import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
+import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
+import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
+import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
+import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
+import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
+import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { formatMoney } from "efi/money/formatMoney";
-import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
-import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
-import { BigNumber } from "ethers";
-import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
+import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
 
 interface FYTCardProps {
   account: string | null | undefined;

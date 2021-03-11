@@ -1,10 +1,10 @@
+import { ERC20 } from "elf-contracts/types/ERC20";
 import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
 
-import { useYVaultAssetProxyContracts } from "efi-ui/contracts/useYVaultAssetProxyContracts/useYVaultAssetProxyContracts";
 import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
 import { useSmartContractsFromFactory } from "efi-ui/contracts/useSmartContractsFromFactory/useSmartContractsFromFactory";
+import { useYVaultAssetProxyContracts } from "efi-ui/contracts/useYVaultAssetProxyContracts/useYVaultAssetProxyContracts";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
-import { ERC20 } from "elf-contracts/types";
 
 /**
  * Gets a list of all the tranche contracts.
