@@ -1,6 +1,5 @@
 import React, { FC } from "react";
 
-import { ERC20__factory } from "elf-contracts/types";
 import { Signer } from "ethers";
 
 import tw from "efi-tailwindcss-classnames";
@@ -15,6 +14,7 @@ import { TokenSummary } from "efi-ui/markets/TokenSummary/TokenSummary";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { formatEth } from "efi/coins/ether/formatEth";
 import { PoolContract } from "efi/pools/PoolContract";
+import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
 
 interface PoolDetailsProps {
   signer: Signer | undefined;

@@ -1,8 +1,9 @@
 import { Provider } from "@ethersproject/providers";
-import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
-import { ERC20 } from "elf-contracts/types";
+import { ERC20 } from "elf-contracts/types/ERC20";
 import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
 import { Signer } from "ethers";
+
+import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 
 const erc20Cache: Record<string, ERC20> = {};
 export function getERC20Contract(

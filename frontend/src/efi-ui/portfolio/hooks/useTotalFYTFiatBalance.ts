@@ -1,4 +1,4 @@
-import { Tranche__factory } from "elf-contracts/types";
+import { Tranche__factory } from "elf-contracts/types/factories/Tranche__factory";
 import { Currency, Money } from "ts-money";
 
 import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";

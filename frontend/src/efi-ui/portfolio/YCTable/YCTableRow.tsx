@@ -4,13 +4,11 @@ import { AnchorButton, Button, Icon } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { Tooltip2 } from "@blueprintjs/popover2";
 import classNames from "classnames";
-import {
-  ERC20__factory,
-  Tranche,
-  Tranche__factory,
-  YC,
-  YVaultAssetProxy__factory,
-} from "elf-contracts/types";
+import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
+import { Tranche__factory } from "elf-contracts/types/factories/Tranche__factory";
+import { YVaultAssetProxy__factory } from "elf-contracts/types/factories/YVaultAssetProxy__factory";
+import { Tranche } from "elf-contracts/types/Tranche";
+import { YC } from "elf-contracts/types/YC";
 import { formatUnits } from "ethers/lib/utils";
 import { jt, t } from "ttag";
 

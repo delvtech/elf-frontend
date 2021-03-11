@@ -1,4 +1,4 @@
-import { Vault } from "elf-contracts/types";
+import { Vault } from "elf-contracts/types/Vault";
 
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { getQueryData } from "efi-ui/base/queryResults";

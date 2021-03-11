@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 
-import { YC } from "elf-contracts/types";
+import { YC } from "elf-contracts/types/YC";
 
 import tw from "efi-tailwindcss-classnames";
 import { YCCard } from "efi-ui/portfolio/YCTable/YCCard";

@@ -1,11 +1,9 @@
 import { Provider } from "@ethersproject/providers";
+import { YVaultAssetProxy__factory } from "elf-contracts/types/factories/YVaultAssetProxy__factory";
+import { YVaultAssetProxy } from "elf-contracts/types/YVaultAssetProxy";
 
-import ContractAddresses from "efi/contracts/contractsJson";
-import {
-  YVaultAssetProxy,
-  YVaultAssetProxy__factory,
-} from "elf-contracts/types";
 import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
+import ContractAddresses from "efi/contracts/contractsJson";
 
 export function useYVaultAssetProxyContracts(
   provider?: Provider

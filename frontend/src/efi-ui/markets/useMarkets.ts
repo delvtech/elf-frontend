@@ -1,18 +1,18 @@
 import { QueryObserverResult, QueryStatus } from "react-query";
 
 import { formatEther } from "@ethersproject/units";
-import { ERC20 } from "elf-contracts/types";
 import { BPool } from "elf-contracts/types/BPool";
+import { ERC20 } from "elf-contracts/types/ERC20";
 import { BigNumber } from "ethers";
 import zip from "lodash.zip";
 import { t } from "ttag";
 
 import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
+import { getQueryCombinedStatus } from "efi-ui/query/getQueryCombinedStatus";
 import { getQueryCombinedSuccessState } from "efi-ui/query/getQueryCombinedSuccessState";
 import { ONE_WEEK_IN_MILLISECONDS } from "efi/base/time";
 import { getERC20Contract } from "efi/contracts/getERC20Contract";
 import { Market } from "efi/markets/Market";
-import { getQueryCombinedStatus } from "efi-ui/query/getQueryCombinedStatus";
 
 /**
  * returns details about a market.

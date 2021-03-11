@@ -11,11 +11,6 @@ import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 
 import styles from "efi-ui/base/table.module.css";
-import {
-  ERC20__factory,
-  Tranche,
-  YVaultAssetProxy__factory,
-} from "elf-contracts/types";
 import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
@@ -33,6 +28,9 @@ import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
 import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
 import { BigNumber } from "ethers";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
+import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
+import { YVaultAssetProxy__factory } from "elf-contracts/types/factories/YVaultAssetProxy__factory";
+import { Tranche } from "elf-contracts/types/Tranche";
 
 interface FYTTableRowProps {
   account: string | null | undefined;

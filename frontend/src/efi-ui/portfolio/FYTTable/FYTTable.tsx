@@ -1,7 +1,8 @@
 import React, { FC } from "react";
 
+import { Tranche } from "elf-contracts/types/Tranche";
+
 import tw from "efi-tailwindcss-classnames";
-import { Tranche } from "elf-contracts/types";
 import { FYTCard } from "efi-ui/portfolio/FYTTable/FYTCard";
 
 interface FYTTableProps {

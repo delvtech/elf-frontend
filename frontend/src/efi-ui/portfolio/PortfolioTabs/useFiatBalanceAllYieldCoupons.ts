@@ -1,4 +1,4 @@
-import { YC } from "elf-contracts/types";
+import { YC } from "elf-contracts/types/YC";
 import { formatUnits } from "ethers/lib/utils";
 import zip from "lodash.zip";
 import { Currency, Money } from "ts-money";

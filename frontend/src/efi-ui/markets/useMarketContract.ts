@@ -1,11 +1,11 @@
 import { useMemo } from "react";
 
 import { Provider } from "@ethersproject/providers";
+import { BPool } from "elf-contracts/types/BPool";
 import { BPool__factory } from "elf-contracts/types/factories/BPool__factory";
 import { Signer } from "ethers";
 
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
-import { BPool } from "elf-contracts/types";
 
 /**
  * returns a new instance of the market contract.

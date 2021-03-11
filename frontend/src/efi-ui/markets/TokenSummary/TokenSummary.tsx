@@ -5,9 +5,9 @@ import classNames from "classnames";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { ERC20 } from "elf-contracts/types";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { getQueryData } from "efi-ui/base/queryResults";
+import { ERC20 } from "elf-contracts/types/ERC20";
 
 interface TokenSummaryProps {
   tokenIn: ERC20 | undefined;

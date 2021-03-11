@@ -15,7 +15,7 @@ import { IconNames } from "@blueprintjs/icons";
 import { Tooltip2 } from "@blueprintjs/popover2";
 import { navigate } from "@reach/router";
 import classNames from "classnames";
-import { YC } from "elf-contracts/types";
+import { YC } from "elf-contracts/types/YC";
 import { formatUnits } from "ethers/lib/utils";
 import { jt, t } from "ttag";
 
@@ -25,6 +25,9 @@ import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { CryptoIconSvg } from "efi-ui/crypto/CryptoIcon";
+import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
+import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
+import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
@@ -35,9 +38,6 @@ import { formatMoney } from "efi/money/formatMoney";
 
 import { useTrancheForYieldCoupon } from "./useTrancheForYieldCoupon";
 import { useUnderlyingVaultForTranche } from "./useUnderlyingVaultForTranche";
-import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
-import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
-import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
 
 interface YCCardProps {
   account: string | null | undefined;

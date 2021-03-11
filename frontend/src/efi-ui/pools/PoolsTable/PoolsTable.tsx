@@ -11,7 +11,9 @@ import {
 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { Popover2 } from "@blueprintjs/popover2";
-import { WeightedPool, YC__factory, YieldCurvePool } from "elf-contracts/types";
+import { YC__factory } from "elf-contracts/types/factories/YC__factory";
+import { WeightedPool } from "elf-contracts/types/WeightedPool";
+import { YieldCurvePool } from "elf-contracts/types/YieldCurvePool";
 import zip from "lodash.zip";
 import { t } from "ttag";
 
@@ -20,10 +22,10 @@ import { FormGroupLabel } from "efi-ui/base/FormGroupLabel/FormGroupLabel";
 import { getQueriesData } from "efi-ui/base/queryResults";
 import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
 import { useSmartContractsFromFactory } from "efi-ui/contracts/useSmartContractsFromFactory/useSmartContractsFromFactory";
-import { usePoolForTokenMulti } from "efi-ui/pools/usePoolForToken/usePoolForTokenMulti";
-import { useTrancheContracts } from "efi-ui/tranche/useTrancheContracts";
 import { TranchePoolTableRow } from "efi-ui/pools/PoolsTable/TranchePoolTableRow";
 import { YieldCouponPoolTableRow } from "efi-ui/pools/PoolsTable/YieldCouponPoolTableRow";
+import { usePoolForTokenMulti } from "efi-ui/pools/usePoolForToken/usePoolForTokenMulti";
+import { useTrancheContracts } from "efi-ui/tranche/useTrancheContracts";
 
 interface PoolsTableProps {
   className?: string;

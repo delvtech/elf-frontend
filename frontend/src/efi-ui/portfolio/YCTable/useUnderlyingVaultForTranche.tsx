@@ -1,9 +1,8 @@
-import {
-  ERC20,
-  ERC20__factory,
-  Tranche,
-  YVaultAssetProxy__factory,
-} from "elf-contracts/types";
+import { ERC20 } from "elf-contracts/types/ERC20";
+import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
+import { YVaultAssetProxy__factory } from "elf-contracts/types/factories/YVaultAssetProxy__factory";
+import { Tranche } from "elf-contracts/types/Tranche";
+
 import { getQueryData } from "efi-ui/base/queryResults";
 import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
