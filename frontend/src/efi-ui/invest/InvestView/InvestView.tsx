@@ -25,7 +25,6 @@ export const InvestView: FC<InvestViewProps> = () => {
     connector,
     library,
   } = useWeb3React<Web3Provider>();
-  console.log("account", account);
 
   const baseAssets = useBaseAssets();
   const tranchesByBaseAsset = useTranchesByBaseAsset();
