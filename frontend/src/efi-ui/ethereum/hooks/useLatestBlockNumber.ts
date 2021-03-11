@@ -11,5 +11,7 @@ export function useLatestBlockNumber(
     queryKey: "ethereum-latest-block",
     queryFn: () => library?.getBlockNumber(),
     enabled: !!library,
+    // Never cache this as block number increases every 15 seconds
+    cacheTime: 0,
   });
 }
