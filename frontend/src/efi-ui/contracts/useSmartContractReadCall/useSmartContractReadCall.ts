@@ -66,6 +66,11 @@ export function makeSmartContractReadCallUseQueryOptions<
   return {
     queryKey,
     queryFn,
+    onError: () => {
+      console.error(
+        `Error calling ${methodName} on contract: ${contract?.address}`
+      );
+    },
     enabled: !!contract && enabled,
   };
 }
