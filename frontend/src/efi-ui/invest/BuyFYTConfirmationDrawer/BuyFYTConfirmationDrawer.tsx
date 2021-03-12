@@ -14,7 +14,7 @@ import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import classNames from "classnames";
 import { Tranche } from "elf-contracts/types/Tranche";
-import { BigNumber, Signer } from "ethers";
+import { Signer } from "ethers";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -37,6 +37,9 @@ import { isApprovalRequiredForTransactions } from "../../crypto/isApprovalRequir
 import { PoolContract } from "efi/pools/PoolContract";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { ERC20 } from "elf-contracts/types/ERC20";
+import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
+import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
+import { formatUnits, parseUnits } from "@ethersproject/units";
 
 interface BuyFYTConfirmationDrawerProps {
   chainId: number | undefined;
@@ -46,7 +49,7 @@ interface BuyFYTConfirmationDrawerProps {
   library: Web3Provider | undefined;
   pool: PoolContract | undefined;
 
-  amount: BigNumber | undefined;
+  amount: string | undefined;
   baseAsset: CryptoAssetWithIcon;
 
   tranche: Tranche | undefined;
@@ -66,6 +69,7 @@ export const BuyFYTConfirmationDrawer: FC<BuyFYTConfirmationDrawerProps> = ({
   amount,
   isOpen,
   onClose,
+  pool,
 }) => {
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
 
@@ -78,6 +82,7 @@ export const BuyFYTConfirmationDrawer: FC<BuyFYTConfirmationDrawerProps> = ({
   const { isDarkMode, darkModeClassName } = useDarkMode();
   const baseAssetName = useCryptoName(baseAsset);
   const baseAssetSymbol = useCryptoSymbol(baseAsset);
+  const baseAssetDecimals = useCryptoDecimals(baseAsset);
   const { data: trancheUnlockTimestamp } = useSmartContractReadCall(
     tranche,
     "unlockTimestamp"
@@ -92,6 +97,11 @@ export const BuyFYTConfirmationDrawer: FC<BuyFYTConfirmationDrawerProps> = ({
     callArgs: [account as string, balancerVault?.address as string],
   });
 
+  const { data: amountOut } = useOnSwapGivenIn(
+    pool,
+    baseAssetContract,
+    parseUnits(amount || "0", baseAssetDecimals)
+  );
   const connectorName = getConnectorName(connector, library);
 
   const unlockTimeStampDate = convertEpochSecondsToDate(trancheUnlockTimestamp);
@@ -99,12 +109,12 @@ export const BuyFYTConfirmationDrawer: FC<BuyFYTConfirmationDrawerProps> = ({
     ? formatFullDate(unlockTimeStampDate)
     : undefined;
 
-  const hasApproval = amount && marketAllowance?.gte(amount);
+  const hasApproval = !!amount && marketAllowance?.gte(amount);
   const requiresApproval = isApprovalRequiredForTransactions(baseAsset);
   const showApprovalCallout =
     account && !isMarketAllowanceLoading && requiresApproval && !hasApproval;
 
-  const redeemableQuantity = 444;
+  const redeemableQuantity = +formatUnits(amountOut || 0, baseAssetDecimals);
 
   return (
     <Drawer
@@ -126,7 +136,16 @@ export const BuyFYTConfirmationDrawer: FC<BuyFYTConfirmationDrawerProps> = ({
         account={account}
         chainId={chainId}
       />
-      <div className={tw("flex", "flex-col", "flex-1", "p-10", "space-y-10")}>
+      <div
+        className={tw(
+          "flex",
+          "flex-col",
+          "flex-1",
+          "p-10",
+          "space-y-10",
+          "justify-end"
+        )}
+      >
         <div className={tw("flex", "flex-col", "space-y-16")}>
           <div className={tw("flex", "flex-col", "space-y-10")}>
             <span

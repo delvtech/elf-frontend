@@ -83,9 +83,9 @@ export const InvestCard: FC<InvestCardProps> = ({
     activeTranche,
     "decimals"
   );
-  const poolContract = usePoolForToken(activeTranche, jsonRpcProvider);
+  const pool = usePoolForToken(activeTranche, jsonRpcProvider);
   const tranchePriceResult = useOnSwapGivenIn(
-    poolContract,
+    pool,
     activeTranche,
     BigNumber.from(1)
   );
@@ -94,9 +94,9 @@ export const InvestCard: FC<InvestCardProps> = ({
     ContractAddresses.wethAddress,
     WETH__factory.connect
   );
-  let inputTokenContract: WETH | ERC20 | undefined = wethContract;
+  let inputToken: WETH | ERC20 | undefined = wethContract;
   if (activeBaseAsset.type === CryptoAssetType.ERC20) {
-    inputTokenContract = activeBaseAsset.tokenContract;
+    inputToken = activeBaseAsset.tokenContract;
   }
 
   const amountInAsBigNumber = amountIn
@@ -104,8 +104,8 @@ export const InvestCard: FC<InvestCardProps> = ({
     : undefined;
 
   const { data: amountOut } = useOnSwapGivenIn(
-    poolContract,
-    inputTokenContract,
+    pool,
+    inputToken,
     amountInAsBigNumber
   );
 
@@ -206,11 +206,11 @@ export const InvestCard: FC<InvestCardProps> = ({
         account={account}
         library={library}
         chainId={chainId}
-        pool={poolContract}
+        pool={pool}
         walletConnectionActive={walletConnectionActive}
         connector={connector}
         baseAsset={activeBaseAsset}
-        amount={amountInAsBigNumber}
+        amount={amountIn}
         tranche={activeTranche}
         isOpen={isDrawerOpen}
         onClose={() => setDrawerOpen(false)}
