@@ -15,6 +15,7 @@ import { useLatestBlockNumber } from "efi-ui/ethereum/hooks/useLatestBlockNumber
 export function useOnSwapGivenIn(
   pool: PoolContract | undefined,
   tokenIn: ERC20 | undefined,
+  // TODO: Make this a string instead, eg: "2.1234"
   amount: BigNumber | undefined
 ): QueryObserverResult<BigNumber> {
   const poolTokensResults = usePoolTokens(pool);
@@ -29,6 +30,7 @@ export function useOnSwapGivenIn(
   const onSwapGivenInResult = useSmartContractReadCall(pool, "onSwapGivenIn", {
     enabled: [
       poolId,
+      pool?.address,
       tokenIn,
       amount,
       tokenOut,
