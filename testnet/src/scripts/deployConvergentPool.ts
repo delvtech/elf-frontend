@@ -14,7 +14,7 @@ const defaultOptions = {
   durationInSeconds: THIRTY_DAYS_IN_SECONDS,
 };
 
-export async function deployYieldPool(
+export async function deployConvergentPool(
   elementSigner: Signer,
   vaultContract: Vault,
   baseAssetContract: WETH | USDC,
