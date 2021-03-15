@@ -6,7 +6,8 @@ import "normalize.css/normalize.css";
 import "tailwindcss/dist/base.css";
 
 // custom fonts
-import "@fontsource/open-sans";
+import "@fontsource/rubik";
+import "@fontsource/inter";
 // end custom fonts
 
 // Third party libraries
