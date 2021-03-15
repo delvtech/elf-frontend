@@ -20,7 +20,7 @@ mkdir src/contracts
 # elf-contracts before I can sync up.
 
 echo "Copying latest contracts..."
-cp -R elf-contracts/contracts/ src/contracts/
+cp -R elf-contracts/contracts/ src/
 
 # remove test contracts, these are used only for elf-contracts tests
 rm -rf src/contracts/test
