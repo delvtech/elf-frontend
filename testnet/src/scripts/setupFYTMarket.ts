@@ -1,4 +1,5 @@
 import { Signer } from "ethers";
+import { ERC20 } from "src/types/ERC20";
 
 import { Tranche } from "src/types/Tranche";
 import { USDC } from "src/types/USDC";
@@ -34,7 +35,7 @@ export async function setupFYTMarket(
   // mint some tranche assets
   await mintTrancheAssets(
     elementSigner,
-    baseAssetContract,
+    (baseAssetContract as unknown) as ERC20,
     trancheContract,
     baseAssetIn
   );
@@ -42,7 +43,7 @@ export async function setupFYTMarket(
   // trade some tranche assets for some base assets
   const swapReceipt = await batchSwapIn(
     trancheContract,
-    baseAssetContract,
+    (baseAssetContract as unknown) as ERC20,
     poolId,
     sender,
     balancerVaultContract,
