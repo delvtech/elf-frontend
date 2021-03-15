@@ -1,10 +1,12 @@
+import React, { FC } from "react";
+
 import { Classes, Icon, Tab, Tabs } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import classNames from "classnames";
-import React, { FC } from "react";
 import { t } from "ttag";
-import { ReactComponent as ElementLogoMark } from "efi-static-assets/logos/svg/element-logo-mark.svg";
 
+import { ReactComponent as ElementLogoMarkDark } from "efi-static-assets/logos/svg/logo-vertical--dark.svg";
+import { ReactComponent as ElementLogoMark } from "efi-static-assets/logos/svg/logo-vertical--light.svg";
 import tw from "efi-tailwindcss-classnames";
 import { Navigation } from "efi-ui/navigation/navigation";
 import { PrefsMenuButton } from "efi-ui/prefs/PrefsMenuButton/PrefsMenuButton";
@@ -35,11 +37,15 @@ export const SidebarNavigation: FC<SidebarNavigationProps> = ({
         Classes.ELEVATION_2,
         styles.sideBar,
         { [styles.sideBarDark]: isDarkMode },
-        tw("hidden", "w-56", "lg:flex", "flex-col", "h-full")
+        tw("hidden", "w-48", "lg:flex", "flex-col", "h-full")
       )}
     >
-      <div className={tw("flex", "justify-center", "pt-6", "pb-10", "px-6")}>
-        <ElementLogoMark width={128} />
+      <div className={tw("flex", "justify-center", "pt-8", "pb-16", "px-6")}>
+        {isDarkMode ? (
+          <ElementLogoMarkDark width={128} />
+        ) : (
+          <ElementLogoMark width={128} />
+        )}
       </div>
       <div
         className={tw("flex", "flex-col", "h-full", "justify-between", "pb-8")}
