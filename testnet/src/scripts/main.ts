@@ -10,6 +10,9 @@ import { deployWeightedPoolFactory } from "./deployWeightedPoolFactory";
 import { getSigner, SIGNER } from "./getSigner";
 import { mintTokensForAddress } from "./mintTokensForAddress";
 import { deployUserProxy } from "./userProxy";
+import { deployInterestTokenFactory } from "src/scripts/deployInterestTokenFactory";
+import { deployTrancheFactory } from "src/scripts/deployTrancheFactory";
+import { deployConvergentPoolFactory } from "src/scripts/deployConvergetPoolFactory";
 
 async function main() {
   const elementSigner = await getSigner(SIGNER.ELEMENT);
@@ -36,14 +39,20 @@ async function main() {
   const balancerVaultContract = await deployBalancerVault(balancerSigner);
   // register element with balancer so we can deploy pools
   await balancerVaultContract.changeRelayerAllowance(elementAddress, true);
-  // deploy the yc market factory
+
+  // deploy factories
   const weightedPoolFactory = await deployWeightedPoolFactory(
     elementSigner,
     balancerVaultContract
   );
-  await balancerVaultContract.changeRelayerAllowance(
-    weightedPoolFactory.address,
-    true
+  const convergentPoolFactory = await deployConvergentPoolFactory(
+    elementSigner,
+    balancerVaultContract
+  );
+  const interestTokenFactory = await deployInterestTokenFactory(elementSigner);
+  const trancheFactory = await deployTrancheFactory(
+    elementSigner,
+    interestTokenFactory
   );
 
   const {
