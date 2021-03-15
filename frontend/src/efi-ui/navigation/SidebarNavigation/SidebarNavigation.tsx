@@ -3,6 +3,7 @@ import { IconNames } from "@blueprintjs/icons";
 import classNames from "classnames";
 import React, { FC } from "react";
 import { t } from "ttag";
+import { ReactComponent as ElementLogoMark } from "efi-static-assets/logos/svg/element-logo-mark.svg";
 
 import tw from "efi-tailwindcss-classnames";
 import { Navigation } from "efi-ui/navigation/navigation";
@@ -16,7 +17,13 @@ interface SidebarNavigationProps {
   activeTab: Navigation;
 }
 
-const tabTitleClassName = tw("flex", "flex-col", "items-center", "p-8");
+const tabTitleClassName = tw(
+  "flex",
+  "space-x-6",
+  "items-center",
+  "px-6",
+  "py-8"
+);
 export const SidebarNavigation: FC<SidebarNavigationProps> = ({
   isDarkMode,
   changeTab,
@@ -28,15 +35,11 @@ export const SidebarNavigation: FC<SidebarNavigationProps> = ({
         Classes.ELEVATION_2,
         styles.sideBar,
         { [styles.sideBarDark]: isDarkMode },
-        tw("hidden", "w-32", "lg:flex", "flex-col", "h-full", "pt-10")
+        tw("hidden", "w-56", "lg:flex", "flex-col", "h-full")
       )}
     >
-      <div className={tw("flex", "flex-col", "mb-20")}>
-        {/* Logo */}
-        <div className={tw("flex", "flex-col", "space-y-1")}>
-          <span className={tw("text-center", "text-lg")}>Element</span>
-          <span className={tw("text-center", "text-lg")}>Finance</span>
-        </div>
+      <div className={tw("flex", "justify-center", "pt-6", "pb-10", "px-6")}>
+        <ElementLogoMark width={128} />
       </div>
       <div
         className={tw("flex", "flex-col", "h-full", "justify-between", "pb-8")}
