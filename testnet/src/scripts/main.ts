@@ -70,14 +70,15 @@ async function main() {
     ycPoolId: wethYcPoolId,
   } = await deployTrancheAndMarket(
     elementSigner,
+    trancheFactory,
     wethYearnVaultAssetProxy,
     wethContract,
     balancerVaultContract,
+    convergentPoolFactory,
     weightedPoolFactory,
     { mintAmount: "20000", baseAssetIn: "20000", yieldAssetIn: "13000" }
   );
 
-  // TODO: fix this.  somehow I can't trade less yield assets than there are base assets!
   const {
     trancheContract: usdcTrancheContract,
     fytPoolContract: usdcFytPoolContract,
@@ -86,9 +87,11 @@ async function main() {
     ycPoolId: usdcYcPoolId,
   } = await deployTrancheAndMarket(
     elementSigner,
+    trancheFactory,
     usdcYearnVaultAssetProxy,
     usdcContract,
     balancerVaultContract,
+    convergentPoolFactory,
     weightedPoolFactory,
     { mintAmount: "20000", baseAssetIn: "20000", yieldAssetIn: "13000" }
   );

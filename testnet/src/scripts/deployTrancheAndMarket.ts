@@ -1,5 +1,6 @@
 import { Signer } from "ethers";
 
+import { TrancheFactory } from "src/types/TrancheFactory";
 import { USDC } from "src/types/USDC";
 import { Vault } from "src/types/Vault";
 import { WeightedPoolFactory } from "src/types/WeightedPoolFactory";
@@ -8,10 +9,11 @@ import { YVaultAssetProxy } from "src/types/YVaultAssetProxy";
 
 import { THIRTY_DAYS_IN_SECONDS } from "src/time";
 
-import { deployYieldPool } from "./deployYieldPool";
 import { setupFYTMarket } from "./setupFYTMarket";
 import { setupYCMarket } from "./setupYCMarket";
-import { deployTranche } from "./tranche";
+import { deployTranche } from "./deployTranche";
+import { deployConvergentPool } from "src/scripts/deployConvergentPool";
+import { ConvergentPoolFactory } from "src/types/ConvergentPoolFactory";
 
 const defaultOptions = {
   swapFee: ".003",
@@ -20,9 +22,11 @@ const defaultOptions = {
 
 export async function deployTrancheAndMarket(
   signer: Signer,
+  trancheFactory: TrancheFactory,
   yearnVaultAssetProxy: YVaultAssetProxy,
   baseAssetContract: WETH | USDC,
   balancerVaultContract: Vault,
+  convergentPoolFactory: ConvergentPoolFactory,
   weightedPoolFactory: WeightedPoolFactory,
   options: {
     swapFee?: string;
@@ -43,19 +47,23 @@ export async function deployTrancheAndMarket(
     ...options,
   };
 
+  const expiration = durationInSeconds + Math.round(Date.now() / 1000);
+
   // deploy a tranche
   const trancheContract = await deployTranche(
     signer,
+    trancheFactory,
     yearnVaultAssetProxy,
-    durationInSeconds
+    expiration
   );
 
   // deploy an FYT market, seed with base asset
   const {
     poolId: fytPoolId,
     poolContract: fytPoolContract,
-  } = await deployYieldPool(
+  } = await deployConvergentPool(
     signer,
+    convergentPoolFactory,
     balancerVaultContract,
     baseAssetContract,
     trancheContract,

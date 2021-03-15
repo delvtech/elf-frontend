@@ -1,7 +1,9 @@
 import { Signer } from "ethers";
 import { parseEther } from "ethers/lib/utils";
 
+import { ConvergentPoolFactory } from "src/types/ConvergentPoolFactory";
 import { ERC20 } from "src/types/ERC20";
+import { ConvergentCurvePool__factory } from "src/types/factories/ConvergentCurvePool__factory";
 import { YieldCurvePool__factory } from "src/types/factories/YieldCurvePool__factory";
 import { USDC } from "src/types/USDC";
 import { Vault } from "src/types/Vault";
@@ -15,8 +17,9 @@ const defaultOptions = {
 };
 
 export async function deployConvergentPool(
-  elementSigner: Signer,
-  vaultContract: Vault,
+  signer: Signer,
+  convergentPoolFactory: ConvergentPoolFactory,
+  balancerVaultContract: Vault,
   baseAssetContract: WETH | USDC,
   yieldAssetContract: ERC20,
   options?: {
@@ -25,31 +28,34 @@ export async function deployConvergentPool(
   }
 ) {
   const { swapFee, durationInSeconds } = { ...defaultOptions, ...options };
-  const elementAddress = await elementSigner.getAddress();
   const baseAssetSymbol = await baseAssetContract.symbol();
-  const yieldPoolDeployer = new YieldCurvePool__factory(elementSigner);
 
   const dateInMilliseconds = Date.now();
   const dateInSeconds = dateInMilliseconds / 1000;
   const expiration = Math.round(dateInSeconds + durationInSeconds);
 
-  const poolContract = await yieldPoolDeployer.deploy(
+  const createTx = await convergentPoolFactory.create(
     baseAssetContract.address,
     yieldAssetContract.address,
     expiration,
     durationInSeconds,
-    vaultContract.address,
     parseEther(swapFee),
-    elementAddress,
     `Element ${baseAssetSymbol} - fy${baseAssetSymbol}`,
     `${baseAssetSymbol}-fy${baseAssetSymbol}`
   );
+  await createTx.wait(1);
 
   // grab last poolId from last event
-  const newPools = vaultContract.filters.PoolCreated(null);
-  const results = await vaultContract.queryFilter(newPools);
+  const newPools = balancerVaultContract.filters.PoolCreated(null);
+  const results = await balancerVaultContract.queryFilter(newPools);
   const poolIds: string[] = results.map((result) => result.args?.poolId);
   const poolId = poolIds[poolIds.length - 1];
+
+  const [poolAddress] = await balancerVaultContract.getPool(poolId);
+  const poolContract = ConvergentCurvePool__factory.connect(
+    poolAddress,
+    signer
+  );
 
   return { poolId, poolContract };
 }
