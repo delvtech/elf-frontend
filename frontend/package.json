@@ -42,7 +42,7 @@
     "@visx/curve": "^1.6.1",
     "@visx/event": "^1.6.1",
     "@visx/gradient": "^1.6.1",
-    "@visx/grid": "^1.6.1",
+    "@visx/grid": "^1.7.0",
     "@visx/group": "^1.6.1",
     "@visx/mock-data": "^1.6.1",
     "@visx/pattern": "^1.6.1",
