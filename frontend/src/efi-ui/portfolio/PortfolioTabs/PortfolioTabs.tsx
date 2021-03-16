@@ -1,12 +1,10 @@
 import React, { FC, ReactNode } from "react";
 
 import { Tab, Tabs } from "@blueprintjs/core";
-import classNames from "classnames";
 import { Money } from "ts-money";
 
 import tw from "efi-tailwindcss-classnames";
 import { PortfolioAssetLabel } from "efi-ui/portfolio/PortfolioView/PortfolioAssetLabel";
-import styles from "efi-ui/portfolio/PortfolioView/styles.module.css";
 
 export interface PortfolioTab {
   id: string;

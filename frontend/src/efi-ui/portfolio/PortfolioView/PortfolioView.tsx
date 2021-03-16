@@ -1,19 +1,17 @@
-import React, { FC, useCallback, useState } from "react";
+import { FC, useCallback, useState } from "react";
 
+import { Classes, H2 } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { RouteComponentProps } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
-import classNames from "classnames";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import {
   PortfolioTab,
   PortfolioTabs,
 } from "efi-ui/portfolio/PortfolioTabs/PortfolioTabs";
-import { PortfolioBalanceSummaryCard } from "efi-ui/portfolio/PortfolioView/PortfolioBalanceSummaryCard";
-import { PortfolioViewSubtitle } from "efi-ui/portfolio/PortfolioView/PortfolioViewSubtitle";
+import { formatWalletAddress } from "efi/wallets/formatWalletAddress";
 
 import { usePortfolioTabs } from "../PortfolioTabs/usePortfolioTabs";
 
@@ -46,16 +44,26 @@ export const PortfolioView: FC<PortfolioViewProps> = () => {
     >
       {/* Main content */}
       <div className={tw("flex", "flex-col", "flex-1", "space-y-12")}>
-        <ViewTitle
-          title={t`Portfolio`}
-          subtitle={<PortfolioViewSubtitle account={account} />}
-        />
+        <div className={tw("flex", "flex-col", "w-full", "space-y-12")}>
+          <div>
+            <H2>
+              {t`Portfolio `}{" "}
+              {account ? (
+                <span className={Classes.TEXT_MUTED}>{`(${formatWalletAddress(
+                  account
+                )})`}</span>
+              ) : null}
+            </H2>
+          </div>
+          <PortfolioTabs
+            onChangeTab={onChangeTab}
+            activePortfolioTabId={activePortfolioTabId}
+            portfolioTabs={portfolioTabs}
+          />
+        </div>
 
         <div className={tw("flex", "w-full", "h-full", "space-x-10")}>
           <div className={tw("flex", "flex-col", "w-full")}>
-            <span
-              className={classNames("h4", tw("hidden", "lg:inline", "lg:mb-4"))}
-            >{t`Assets`}</span>
             <div
               className={tw(
                 "h-full",
@@ -63,51 +71,11 @@ export const PortfolioView: FC<PortfolioViewProps> = () => {
                 "flex",
                 "flex-col",
                 "space-y-10",
-
                 "lg:flex-row",
                 "lg:space-y-0",
                 "lg:space-x-10"
               )}
             >
-              {/* Left hand side */}
-              <div
-                className={tw(
-                  "flex",
-                  "lg:flex-col",
-                  "space-x-10",
-                  "lg:space-x-0",
-                  "lg:space-y-4",
-                  "lg:w-400"
-                )}
-              >
-                <div
-                  className={tw("flex", "flex-col", "lg:flex-row", "flex-1")}
-                >
-                  <span
-                    className={classNames("h4", tw("lg:hidden", "mb-4"))}
-                  >{t`Assets`}</span>
-                  <div
-                    className={tw(
-                      "flex",
-                      "flex-col",
-                      "space-y-10",
-                      "flex-1",
-                      "justify-between"
-                    )}
-                  >
-                    <PortfolioTabs
-                      onChangeTab={onChangeTab}
-                      activePortfolioTabId={activePortfolioTabId}
-                      portfolioTabs={portfolioTabs}
-                    />
-                  </div>
-                </div>
-
-                <div className={tw("space-y-4")}>
-                  <span className="h4">{t`Balance summary`}</span>
-                  <PortfolioBalanceSummaryCard />
-                </div>
-              </div>
               <div className={tw("flex", "flex-1", "w-full")}>
                 {activeTabContent}
               </div>
