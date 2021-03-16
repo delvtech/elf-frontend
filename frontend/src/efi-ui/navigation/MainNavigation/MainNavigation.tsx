@@ -27,6 +27,10 @@ export const MainNavigation: FC<MainNavigationProps> = () => {
       {/* Mobile/Tablet */}
       {
         <TopbarNavigation
+          account={account}
+          active={active}
+          chainId={chainId}
+          connectorName={getConnectorName(connector, library)}
           deactivate={deactivate}
           isDarkMode={isDarkMode}
           activeTab={activeTab}
