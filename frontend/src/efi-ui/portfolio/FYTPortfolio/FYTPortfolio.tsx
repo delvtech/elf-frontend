@@ -29,7 +29,16 @@ export const FYTPortfolio: FC<FYTPortfolioProps> = ({
   }
 
   return (
-    <div className={tw("flex", "space-x-8", "flex-1", "pl-2")}>
+    <div
+      className={tw(
+        "flex",
+        "space-x-8",
+        "flex-1",
+        "pl-2",
+        "justify-center",
+        "items-center"
+      )}
+    >
       {nonIdealStateContent ? (
         <div className={tw("flex", "flex-1", "justify-center", "items-center")}>
           {nonIdealStateContent}

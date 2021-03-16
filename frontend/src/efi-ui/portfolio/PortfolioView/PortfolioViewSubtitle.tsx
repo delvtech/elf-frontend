@@ -39,9 +39,7 @@ export const PortfolioViewSubtitle: FC<PortfolioViewSubtitleProps> = ({
 
     // TODO: make it easy to copy the address to the clipboard here..
     return (
-      <span className={subtitleClassName}>
-        {jt`Wallet address: ${walletEtherscanLink}`}
-      </span>
+      <span className={subtitleClassName}>{jt`${walletEtherscanLink}`}</span>
     );
   }
 

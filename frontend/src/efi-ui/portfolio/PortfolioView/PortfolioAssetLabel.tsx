@@ -41,6 +41,7 @@ export const PortfolioAssetLabel: FC<PortfolioAssetLabelProps> = ({
         className={tw("leading-none", "space-y-2")}
       />
       <Tag
+        className={tw("hidden", "lg:block")}
         minimal
         round={!!quantity}
         large={!!quantity}

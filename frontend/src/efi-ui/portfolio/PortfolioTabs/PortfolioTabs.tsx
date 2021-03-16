@@ -1,12 +1,10 @@
 import React, { FC, ReactNode } from "react";
 
 import { Tab, Tabs } from "@blueprintjs/core";
-import classNames from "classnames";
 import { Money } from "ts-money";
 
 import tw from "efi-tailwindcss-classnames";
 import { PortfolioAssetLabel } from "efi-ui/portfolio/PortfolioView/PortfolioAssetLabel";
-import styles from "efi-ui/portfolio/PortfolioView/styles.module.css";
 
 export interface PortfolioTab {
   id: string;
@@ -30,14 +28,13 @@ export const PortfolioTabs: FC<PortfolioTabsProps> = ({
   return (
     <Tabs
       id="portfolio-tabs"
-      vertical
       large
-      className={classNames(tw("w-full"), styles.assetTabs)}
+      className={tw("flex", "justify-center")}
       onChange={onChangeTab}
       selectedTabId={activePortfolioTabId}
     >
       {portfolioTabs.map(({ id, name, quantity, totalFiatValue }) => (
-        <Tab key={id} id={id} className={tw("w-full")}>
+        <Tab key={id} id={id}>
           <PortfolioAssetLabel
             id={id}
             name={name}

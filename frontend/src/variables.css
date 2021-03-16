@@ -20,11 +20,11 @@
   --bp3-dark-bg-color: #202b33;
 
   /*
-   * Taken from Blueprint, this is the color of the light mode app background.
-   * If using the blueprint Colors module, this is equivalent to
-   * Colors.LIGHT_GRAY5.
+   * Taken from Corwin's figma designs, this is the color of the light mode app
+   * background. see:
+   * https://www.figma.com/file/J4rZluhfmorIjgFRlwSTdT/Element-Finance-Brand-Identity?node-id=284%3A155
    */
-  --bp3-bg-color: #f5f8fa;
+  --bp3-bg-color: #f4f5f5;
 
   /*
    * Taken from Blueprint, this is the color of the dark mode Navbar component.
