@@ -1,15 +1,14 @@
-import { Web3Provider } from "@ethersproject/providers";
 import jazzicon from "@metamask/jazzicon";
-import { useWeb3React } from "@web3-react/core";
 import React, { FC, useEffect, useRef } from "react";
 
 import { getMetamaskJazziconSeed } from "efi-ui/wallets/icons";
 
-interface WalletJazziconProps {}
+interface WalletJazziconProps {
+  account: string | null | undefined;
+}
 
 const JAZZICON_DIAMETER_PIXELS = 48;
-export const WalletJazzicon: FC<WalletJazziconProps> = () => {
-  const { account } = useWeb3React<Web3Provider>();
+export const WalletJazzicon: FC<WalletJazziconProps> = ({ account }) => {
   const jazziconRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
