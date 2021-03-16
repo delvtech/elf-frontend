@@ -45,7 +45,7 @@
     "@visx/gradient": "^1.7.0",
     "@visx/grid": "^1.7.0",
     "@visx/group": "^1.7.0",
-    "@visx/mock-data": "^1.6.1",
+    "@visx/mock-data": "^1.7.0",
     "@visx/pattern": "^1.6.1",
     "@visx/responsive": "^1.7.0",
     "@visx/scale": "^1.7.0",
