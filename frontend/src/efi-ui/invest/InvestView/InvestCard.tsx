@@ -23,7 +23,10 @@ import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSy
 import { BaseAssetPicker } from "efi-ui/invest/BaseAssetPicker/BaseAssetPicker";
 import { BuyFYTConfirmationDrawer } from "efi-ui/invest/BuyFYTConfirmationDrawer/BuyFYTConfirmationDrawer";
 import { useActiveTranche } from "efi-ui/invest/hooks/useActiveTranche";
-import { TranchePicker } from "efi-ui/invest/TranchePicker/TranchePicker";
+import {
+  TranchePicker,
+  TranchePickerOld,
+} from "efi-ui/invest/TranchePicker/TranchePicker";
 import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
 import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
@@ -148,15 +151,35 @@ export const InvestCard: FC<InvestCardProps> = ({
             assetBalance={activeBaseAssetBalance}
           />
         </div>
+        <div
+          className={tw(
+            "flex",
+            "space-x-1",
+            "h-24",
+            "border",
+            "rounded",
+            "border-gray-500"
+          )}
+        >
+          <InvestmentAmountInput
+            showMaxButton={!!account}
+            baseAssetPicker={
+              <TranchePicker
+                library={library}
+                account={account}
+                onTrancheChange={setActiveTranche}
+                tranches={availableTranches}
+                activeTrancheIndex={activeTrancheIndex}
+              />
+            }
+            placeholder="0.00"
+            value={amountIn}
+            onValueChange={setAmountIn}
+            assetBalance={activeBaseAssetBalance}
+          />
+        </div>
 
         <div className={tw("flex", "space-x-10")}>
-          <TranchePicker
-            library={library}
-            account={account}
-            onTrancheChange={setActiveTranche}
-            tranches={availableTranches}
-            activeTrancheIndex={activeTrancheIndex}
-          />
           <Button
             large
             outlined

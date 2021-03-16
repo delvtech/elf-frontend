@@ -1,12 +1,10 @@
 import React, { FC } from "react";
-
-import { Classes, Colors, Icon, Tag } from "@blueprintjs/core";
+import { Button, Classes, Colors, Icon, Tag } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
 import classNames from "classnames";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { t } from "ttag";
-
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { getQueryData } from "efi-ui/base/queryResults";
@@ -21,14 +19,7 @@ import { ONE_ETHER } from "efi/crypto/ethereum";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
 
-interface TrancheInfoButtonProps {
-  library: Web3Provider | undefined;
-  account: string | null | undefined;
-  tranche: Tranche | undefined;
-  onClick?: (event: React.MouseEvent<HTMLElement>) => void;
-}
-
-export const TrancheInfoButtonOld: FC<TrancheInfoButtonProps> = ({
+export const TrancheButton: FC<TrancheButtonProps> = ({
   library,
   account,
   tranche,
@@ -75,8 +66,9 @@ export const TrancheInfoButtonOld: FC<TrancheInfoButtonProps> = ({
       onClick={onClick}
       className={classNames(
         Classes.BUTTON,
-        Classes.OUTLINED,
-        tw("w-full", "p-4", "justify-between")
+        Classes.FILL,
+        Classes.MINIMAL,
+        tw("flex", "justify-start", "h-full")
       )}
     >
       <div
@@ -85,7 +77,8 @@ export const TrancheInfoButtonOld: FC<TrancheInfoButtonProps> = ({
           "justify-between",
           "items-center",
           "space-x-4",
-          "flex-1"
+          "flex-1",
+          "p-2"
         )}
       >
         <div className={tw("flex", "items-center", "space-x-4")}>
@@ -124,3 +117,9 @@ export const TrancheInfoButtonOld: FC<TrancheInfoButtonProps> = ({
     </button>
   );
 };
+interface TrancheButtonProps {
+  library: Web3Provider | undefined;
+  account: string | null | undefined;
+  tranche: Tranche | undefined;
+  onClick?: (event: React.MouseEvent<HTMLElement>) => void;
+}
