@@ -1,9 +1,12 @@
+import React, { FC } from "react";
+
 import { Classes, Icon, Tab, Tabs } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import classNames from "classnames";
-import React, { FC } from "react";
 import { t } from "ttag";
 
+import logoDark from "efi-static-assets/logos/svg/logo-vertical--dark.svg";
+import logo from "efi-static-assets/logos/svg/logo-vertical--light.svg";
 import tw from "efi-tailwindcss-classnames";
 import { Navigation } from "efi-ui/navigation/navigation";
 import { PrefsMenuButton } from "efi-ui/prefs/PrefsMenuButton/PrefsMenuButton";
@@ -16,7 +19,13 @@ interface SidebarNavigationProps {
   activeTab: Navigation;
 }
 
-const tabTitleClassName = tw("flex", "flex-col", "items-center", "p-8");
+const tabTitleClassName = tw(
+  "flex",
+  "space-x-6",
+  "items-center",
+  "px-6",
+  "py-8"
+);
 export const SidebarNavigation: FC<SidebarNavigationProps> = ({
   isDarkMode,
   changeTab,
@@ -28,15 +37,11 @@ export const SidebarNavigation: FC<SidebarNavigationProps> = ({
         Classes.ELEVATION_2,
         styles.sideBar,
         { [styles.sideBarDark]: isDarkMode },
-        tw("hidden", "w-32", "lg:flex", "flex-col", "h-full", "pt-10")
+        tw("hidden", "w-48", "lg:flex", "flex-col", "h-full")
       )}
     >
-      <div className={tw("flex", "flex-col", "mb-20")}>
-        {/* Logo */}
-        <div className={tw("flex", "flex-col", "space-y-1")}>
-          <span className={tw("text-center", "text-lg")}>Element</span>
-          <span className={tw("text-center", "text-lg")}>Finance</span>
-        </div>
+      <div className={tw("flex", "justify-center", "pt-8", "pb-16", "px-6")}>
+        <img src={isDarkMode ? logoDark : logo} alt={t`Element Finance`} />
       </div>
       <div
         className={tw("flex", "flex-col", "h-full", "justify-between", "pb-8")}

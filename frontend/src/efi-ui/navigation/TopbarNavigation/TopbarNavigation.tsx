@@ -1,20 +1,15 @@
 import React, { FC } from "react";
 
-import {
-  Alignment,
-  AnchorButton,
-  Navbar,
-  NavbarGroup,
-  NavbarHeading,
-  Tab,
-  Tabs,
-} from "@blueprintjs/core";
+import { Navbar, NavbarGroup, Tab, Tabs } from "@blueprintjs/core";
 import classNames from "classnames";
 import { t } from "ttag";
 
+import logoDark from "efi-static-assets/logos/svg/logo--dark.svg";
+import logo from "efi-static-assets/logos/svg/logo--light.svg";
 import tw from "efi-tailwindcss-classnames";
 import { Navigation } from "efi-ui/navigation/navigation";
 import { PrefsMenuButton } from "efi-ui/prefs/PrefsMenuButton/PrefsMenuButton";
+import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 
 import styles from "./TopbarNavigation.module.css";
 
@@ -28,45 +23,35 @@ export const TopbarNavigation: FC<TopbarNavigationProps> = ({
   activeTab,
   changeTab,
 }) => {
+  const { isDarkMode } = useDarkMode();
   return (
-    <div
-      className={tw(
-        "lg:hidden",
-        "flex",
-        "flex-col",
-        "flex-shrink-0",
-        "h-24",
-        "justify-end"
-      )}
-    >
-      <Navbar fixedToTop className={tw("flex")}>
+    <div className={tw("lg:hidden", "h-16")}>
+      <Navbar fixedToTop className={tw("flex", "justify-between")}>
         <NavbarGroup>
-          <NavbarHeading>
-            <AnchorButton minimal outlined>
-              <strong>Element.fi</strong>
-            </AnchorButton>
-          </NavbarHeading>
+          <img
+            className={tw("h-8")}
+            src={isDarkMode ? logoDark : logo}
+            alt={t`Element Finance`}
+          />
         </NavbarGroup>
-
-        <NavbarGroup align={Alignment.RIGHT}>
+        <NavbarGroup>
+          <Tabs
+            id="primary-nav-mobile"
+            className={classNames(styles.smTabs)}
+            selectedTabId={activeTab}
+            onChange={changeTab}
+          >
+            <Tab id={Navigation.PORTFOLIO} title={t`Portfolio`} />
+            <Tab id={Navigation.INVEST} title={t`Invest`} />
+            <Tab id={Navigation.EXCHANGE} title={t`Exchange`} />
+            <Tab id={Navigation.MINT} title={t`Mint`} />
+            <Tab id={Navigation.FAQ} title={t`Resources`} />
+          </Tabs>
+        </NavbarGroup>
+        <NavbarGroup>
           <PrefsMenuButton />
         </NavbarGroup>
       </Navbar>
-
-      <div className={tw("lg:hidden", "flex", "w-full", "px-4", "justify-end")}>
-        <Tabs
-          id="primary-nav-mobile"
-          className={classNames(styles.smTabs)}
-          selectedTabId={activeTab}
-          onChange={changeTab}
-        >
-          <Tab id={Navigation.PORTFOLIO} title={t`Portfolio`} />
-          <Tab id={Navigation.INVEST} title={t`Invest`} />
-          <Tab id={Navigation.EXCHANGE} title={t`Exchange`} />
-          <Tab id={Navigation.MINT} title={t`Mint`} />
-          <Tab id={Navigation.FAQ} title={t`Resources`} />
-        </Tabs>
-      </div>
     </div>
   );
 };

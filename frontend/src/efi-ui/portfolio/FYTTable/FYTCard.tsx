@@ -42,6 +42,7 @@ import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { formatMoney } from "efi/money/formatMoney";
 import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
 import { Web3Provider } from "@ethersproject/providers";
+import { ONE_ETHER } from "efi/crypto/ethereum";
 
 interface FYTCardProps {
   library: Web3Provider | undefined;
@@ -75,11 +76,7 @@ export const FYTCard: FC<FYTCardProps> = ({ library, account, tranche }) => {
   const vaultContract = useVaultForTranche(tranche);
   const { data: vaultName } = useSmartContractReadCall(vaultContract, "name");
   const pool = usePoolForToken(tranche);
-  const trancheSpotPriceResult = useOnSwapGivenIn(
-    pool,
-    tranche,
-    BigNumber.from(1)
-  );
+  const trancheSpotPriceResult = useOnSwapGivenIn(pool, tranche, ONE_ETHER);
   const baseAsset = usePoolPairedToken(pool, tranche);
 
   const { data: baseAssetSymbol } = useSmartContractReadCall(

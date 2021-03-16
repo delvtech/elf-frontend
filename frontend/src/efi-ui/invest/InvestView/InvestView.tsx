@@ -1,19 +1,16 @@
 import React, { FC, Fragment } from "react";
 
+import { Intent, Tag } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { RouteComponentProps } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
 import { jt, t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { EthereumPriceWidget } from "efi-ui/ethereum/EthereumPriceWidget/EthereumPriceWidget";
-import { GasPriceWidget } from "efi-ui/ethereum/GasPriceWidget/GasPriceWidget";
-import { InvestCard } from "efi-ui/invest/InvestView/InvestCard";
-import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
-import { EthereumBalanceWidget } from "efi-ui/wallets/EthereumBalanceWidget/EthereumBalanceWidget";
 import { useBaseAssets } from "efi-ui/invest/hooks/useBaseAssets";
 import { useTranchesByBaseAsset } from "efi-ui/invest/hooks/useTranchesByBaseAsset";
-import { Intent, Tag } from "@blueprintjs/core";
+import { InvestCard } from "efi-ui/invest/InvestView/InvestCard";
+import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 
 interface InvestViewProps extends RouteComponentProps {}
 
@@ -61,26 +58,14 @@ export const InvestView: FC<InvestViewProps> = () => {
           "flex-1",
           "space-y-12",
           "pt-12",
-          "items-center"
+          "items-center",
+          "justify-center"
         )}
       >
         <div
           className={tw("flex", "flex-col", "space-y-12")}
           style={{ width: 672 }}
         >
-          <div
-            className={tw("flex", {
-              "justify-between": !!account,
-              "space-x-8": !account,
-              "justify-end": !account,
-            })}
-          >
-            {account && (
-              <EthereumBalanceWidget library={library} account={account} />
-            )}
-            <EthereumPriceWidget />
-            <GasPriceWidget />
-          </div>
           <InvestCard
             library={library}
             account={account}
