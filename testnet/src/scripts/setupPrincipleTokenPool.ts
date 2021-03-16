@@ -10,7 +10,7 @@ import { batchSwapIn } from "./batchSwapIn";
 import { initializeConvergentPool } from "./initializeConvergentPool";
 import { mintTrancheAssets } from "./mintTrancheAssets";
 
-export async function setupFYTMarket(
+export async function setupPrincipleTokenPool(
   signer: Signer,
   balancerVaultContract: Vault,
   poolId: string,
@@ -19,8 +19,6 @@ export async function setupFYTMarket(
   options: { mintAmount: string; baseAssetIn: string; yieldAssetIn: string }
 ) {
   const { baseAssetIn, yieldAssetIn } = options;
-  console.log("yieldAssetIn", yieldAssetIn);
-  console.log("baseAssetIn", baseAssetIn);
   const sender = await signer.getAddress();
 
   // put base asset into market

@@ -27,9 +27,7 @@ export async function initializeConvergentPool(
 ) {
   const elementAddress = await signer.getAddress();
   let { tokens } = await vaultContract.getPoolTokens(poolId);
-  console.log("tokens", tokens);
 
-  console.log("amountIn", amountIn);
   // [baseAsset, yieldAsset] Max amount for each asset to join the pool with. note that the yield
   // asset amount doesn't matter for the first joinPool action for convergent pools since the
   // initial join only allows base asset.  this has something to do with the way we keep track of

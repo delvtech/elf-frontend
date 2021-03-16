@@ -9,7 +9,7 @@ import { YVaultAssetProxy } from "src/types/YVaultAssetProxy";
 
 import { THIRTY_DAYS_IN_SECONDS } from "src/time";
 
-import { setupFYTMarket } from "./setupFYTMarket";
+import { setupPrincipleTokenPool } from "./setupPrincipleTokenPool";
 import { setupYCMarket } from "./setupYCMarket";
 import { deployTranche } from "./deployTranche";
 import { deployConvergentPool } from "src/scripts/deployConvergentPool";
@@ -71,7 +71,7 @@ export async function deployTrancheAndMarket(
   );
 
   // seed market with initial yield asset
-  await setupFYTMarket(
+  await setupPrincipleTokenPool(
     signer,
     balancerVaultContract,
     fytPoolId,
