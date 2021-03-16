@@ -9,21 +9,12 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { MarketFilterOptions } from "efi-ui/markets/MarketFilterOptions/MarketFilterOptions";
-import { WalletConnectionCard } from "efi-ui/wallets/WalletConnectionCard/WalletConnectionCard";
-import { getConnectorName } from "efi/wallets/connectors";
+import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { PoolsTable } from "efi-ui/pools/PoolsTable/PoolsTable";
 
 interface ExchangeViewProps extends RouteComponentProps {}
 
 export const ExchangeView: FC<ExchangeViewProps> = () => {
-  const {
-    active,
-    account,
-    chainId,
-    connector,
-    library,
-  } = useWeb3React<Web3Provider>();
-  const connectorName = getConnectorName(connector, library);
   return (
     <div
       data-testid="exchange-view"
@@ -32,24 +23,10 @@ export const ExchangeView: FC<ExchangeViewProps> = () => {
       {/* Main content */}
       <div className={tw("flex", "flex-col", "flex-1", "space-y-12")}>
         {/* page title */}
-        <div className={tw("flex", "justify-between")}>
-          <div className={tw("flex", "flex-col", "justify-start")}>
-            <H2 className={tw("mb-4")}>{t`Element Exchange`}</H2>
-            <span
-              className={classNames(
-                Classes.RUNNING_TEXT,
-                Classes.TEXT_MUTED,
-                tw("text-base")
-              )}
-            >{t`Provide liquidity for this market, or trade for what you want.`}</span>
-          </div>
-          <WalletConnectionCard
-            active={active}
-            account={account}
-            chainId={chainId}
-            connectorName={connectorName}
-          />
-        </div>
+        <ViewTitle
+          title={t`Element Exchange`}
+          subtitle={t`Provide liquidity for this market, or trade for what you want.`}
+        />
 
         <div className={tw("flex", "space-x-12")}>
           {/* Right hand side */}
