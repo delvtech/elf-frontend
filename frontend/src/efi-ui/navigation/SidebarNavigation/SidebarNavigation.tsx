@@ -5,8 +5,8 @@ import { IconNames } from "@blueprintjs/icons";
 import classNames from "classnames";
 import { t } from "ttag";
 
-import { ReactComponent as LogoDark } from "efi-static-assets/logos/svg/logo-vertical--dark.svg";
-import { ReactComponent as Logo } from "efi-static-assets/logos/svg/logo-vertical--light.svg";
+import logoDark from "efi-static-assets/logos/svg/logo-vertical--dark.svg";
+import logo from "efi-static-assets/logos/svg/logo-vertical--light.svg";
 import tw from "efi-tailwindcss-classnames";
 import { Navigation } from "efi-ui/navigation/navigation";
 import { PrefsMenuButton } from "efi-ui/prefs/PrefsMenuButton/PrefsMenuButton";
@@ -41,7 +41,7 @@ export const SidebarNavigation: FC<SidebarNavigationProps> = ({
       )}
     >
       <div className={tw("flex", "justify-center", "pt-8", "pb-16", "px-6")}>
-        {isDarkMode ? <LogoDark width={128} /> : <Logo width={128} />}
+        <img src={isDarkMode ? logoDark : logo} alt={t`Element Finance`} />
       </div>
       <div
         className={tw("flex", "flex-col", "h-full", "justify-between", "pb-8")}

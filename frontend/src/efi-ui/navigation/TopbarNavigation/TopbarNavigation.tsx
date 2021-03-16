@@ -1,24 +1,17 @@
 import React, { FC } from "react";
 
-import {
-  Alignment,
-  Navbar,
-  NavbarGroup,
-  NavbarHeading,
-  Tab,
-  Tabs,
-} from "@blueprintjs/core";
+import { Navbar, NavbarGroup, Tab, Tabs } from "@blueprintjs/core";
 import classNames from "classnames";
 import { t } from "ttag";
 
-import { ReactComponent as ElementLogoMarkDark } from "efi-static-assets/logos/svg/logo--dark.svg";
-import { ReactComponent as ElementLogoMark } from "efi-static-assets/logos/svg/logo--light.svg";
+import logoDark from "efi-static-assets/logos/svg/logo--dark.svg";
+import logo from "efi-static-assets/logos/svg/logo--light.svg";
 import tw from "efi-tailwindcss-classnames";
 import { Navigation } from "efi-ui/navigation/navigation";
 import { PrefsMenuButton } from "efi-ui/prefs/PrefsMenuButton/PrefsMenuButton";
+import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 
 import styles from "./TopbarNavigation.module.css";
-import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 
 interface TopbarNavigationProps {
   deactivate: () => void;
@@ -33,15 +26,15 @@ export const TopbarNavigation: FC<TopbarNavigationProps> = ({
   const { isDarkMode } = useDarkMode();
   return (
     <div className={tw("lg:hidden", "h-16")}>
-      <Navbar fixedToTop>
+      <Navbar fixedToTop className={tw("flex", "justify-between")}>
         <NavbarGroup>
-          <NavbarHeading>
-            {isDarkMode ? (
-              <ElementLogoMarkDark height={32} />
-            ) : (
-              <ElementLogoMark height={32} />
-            )}
-          </NavbarHeading>
+          <img
+            className={tw("h-8")}
+            src={isDarkMode ? logoDark : logo}
+            alt={t`Element Finance`}
+          />
+        </NavbarGroup>
+        <NavbarGroup>
           <Tabs
             id="primary-nav-mobile"
             className={classNames(styles.smTabs)}
@@ -55,7 +48,7 @@ export const TopbarNavigation: FC<TopbarNavigationProps> = ({
             <Tab id={Navigation.FAQ} title={t`Resources`} />
           </Tabs>
         </NavbarGroup>
-        <NavbarGroup align={Alignment.RIGHT}>
+        <NavbarGroup>
           <PrefsMenuButton />
         </NavbarGroup>
       </Navbar>
