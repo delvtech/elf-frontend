@@ -20,11 +20,13 @@ export async function deployWeightedPool(
     symbol,
     tokens,
     weights,
-    parseEther(swapFee)
+    parseEther(swapFee),
+    0,
+    0
   );
   await createTx.wait(1);
 
-  const filter = vaultContract.filters.PoolCreated(null);
+  const filter = vaultContract.filters.PoolRegistered(null);
   const results = await vaultContract.queryFilter(filter);
   const poolId = results[results.length - 1]?.args?.poolId;
   const [poolAddress] = await vaultContract.getPool(poolId);

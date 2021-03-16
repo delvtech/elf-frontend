@@ -46,7 +46,7 @@ export async function deployConvergentPool(
   await createTx.wait(1);
 
   // grab last poolId from last event
-  const newPools = balancerVaultContract.filters.PoolCreated(null);
+  const newPools = balancerVaultContract.filters.PoolRegistered(null);
   const results = await balancerVaultContract.queryFilter(newPools);
   const poolIds: string[] = results.map((result) => result.args?.poolId);
   const poolId = poolIds[poolIds.length - 1];
@@ -56,6 +56,12 @@ export async function deployConvergentPool(
     poolAddress,
     signer
   );
+  const decimals = await poolContract.decimals();
+  const udecimals = await poolContract.underlyingDecimals();
+  const bdecimals = await poolContract.bondDecimals();
+  console.log("decimals", decimals);
+  console.log("udecimals", udecimals);
+  console.log("bdecimals", bdecimals);
 
   return { poolId, poolContract };
 }

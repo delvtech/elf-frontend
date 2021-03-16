@@ -1,6 +1,7 @@
 import { Signer } from "ethers";
 import { defaultAbiCoder, parseEther, parseUnits } from "ethers/lib/utils";
 import { MAX_ALLOWANCE } from "src/maxAllowance";
+import { InterestToken__factory } from "src/types/factories/InterestToken__factory";
 
 import { YC__factory } from "src/types/factories/YC__factory";
 import { Tranche } from "src/types/Tranche";
@@ -18,7 +19,7 @@ enum JoinKind {
   TOKEN_IN_FOR_EXACT_BPT_OUT,
 }
 
-export async function setupYCMarket(
+export async function setupInterestTokenPool(
   signer: Signer,
   trancheContract: Tranche,
   balancerVaultContract: Vault,
@@ -30,11 +31,16 @@ export async function setupYCMarket(
   const baseAssetDecimals = await baseAssetContract.decimals();
   const parseToken = (value: string) => parseUnits(value, baseAssetDecimals);
 
-  // deploy an yc market
-  const ycAddress = await trancheContract.yc();
-  const ycContract = YC__factory.connect(ycAddress, signer);
-  const ycMarketTokens = [baseAssetContract.address, ycAddress];
-  const weights = [parseEther("1"), parseEther("10")];
+  // deploy an interest token pool
+  const interestTokenAddress = await trancheContract.interestToken();
+  console.log("interestTokenAddress", interestTokenAddress);
+  const interestTokenContract = InterestToken__factory.connect(
+    interestTokenAddress,
+    signer
+  );
+  const poolTokens = [interestTokenAddress, baseAssetContract.address];
+  console.log("poolTokens", poolTokens);
+  const weights = [parseEther("10"), parseEther("1")];
 
   const { poolId, poolContract } = await deployWeightedPool(
     signer,
@@ -42,12 +48,15 @@ export async function setupYCMarket(
     poolFactory,
     `Element ${baseAssetSymbol} - yc${baseAssetSymbol}`,
     `${baseAssetSymbol}-yc${baseAssetSymbol}`,
-    ycMarketTokens,
+    poolTokens,
     weights,
     "0.003"
   );
 
-  await ycContract.approve(balancerVaultContract.address, MAX_ALLOWANCE);
+  await interestTokenContract.approve(
+    balancerVaultContract.address,
+    MAX_ALLOWANCE
+  );
 
   // this encodes the joinKind and the amountsIn.
   const userData = defaultAbiCoder.encode(
@@ -66,7 +75,7 @@ export async function setupYCMarket(
     poolId,
     signerAddress,
     signerAddress,
-    ycMarketTokens,
+    poolTokens,
     maxAmountsIn,
     false,
     userData

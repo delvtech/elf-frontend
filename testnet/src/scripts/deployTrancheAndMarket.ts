@@ -10,7 +10,7 @@ import { YVaultAssetProxy } from "src/types/YVaultAssetProxy";
 import { THIRTY_DAYS_IN_SECONDS } from "src/time";
 
 import { setupPrincipleTokenPool } from "./setupPrincipleTokenPool";
-import { setupYCMarket } from "./setupYCMarket";
+import { setupInterestTokenPool } from "./setupInterestTokenPool";
 import { deployTranche } from "./deployTranche";
 import { deployConvergentPool } from "src/scripts/deployConvergentPool";
 import { ConvergentPoolFactory } from "src/types/ConvergentPoolFactory";
@@ -84,7 +84,7 @@ export async function deployTrancheAndMarket(
   const {
     poolId: ycPoolId,
     poolContract: ycPoolContract,
-  } = await setupYCMarket(
+  } = await setupInterestTokenPool(
     signer,
     trancheContract,
     balancerVaultContract,
