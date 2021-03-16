@@ -30,14 +30,13 @@ export const PortfolioTabs: FC<PortfolioTabsProps> = ({
   return (
     <Tabs
       id="portfolio-tabs"
-      vertical
       large
-      className={classNames(tw("w-full"), styles.assetTabs)}
+      className={tw("flex", "justify-center")}
       onChange={onChangeTab}
       selectedTabId={activePortfolioTabId}
     >
       {portfolioTabs.map(({ id, name, quantity, totalFiatValue }) => (
-        <Tab key={id} id={id} className={tw("w-full")}>
+        <Tab key={id} id={id}>
           <PortfolioAssetLabel
             id={id}
             name={name}
