@@ -43,11 +43,6 @@ export const InvestView: FC<InvestViewProps> = () => {
         title={t`Invest`}
         titleTag={<Tag minimal intent={Intent.WARNING}>{t`alpha`}</Tag>}
         subtitle={<InvestViewSubtitle />}
-        account={account}
-        active={active}
-        chainId={chainId}
-        connector={connector}
-        library={library}
       />
 
       {/* Main content */}

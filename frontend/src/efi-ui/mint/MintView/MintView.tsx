@@ -22,13 +22,7 @@ interface MintingStep {
 }
 
 export const MintView: FC<MintViewProps> = () => {
-  const {
-    account,
-    active,
-    chainId,
-    connector,
-    library,
-  } = useWeb3React<Web3Provider>();
+  const { account } = useWeb3React<Web3Provider>();
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [investmentAmount, setInvestmentAmount] = useState(0);
@@ -93,11 +87,6 @@ export const MintView: FC<MintViewProps> = () => {
       <ViewTitle
         title={t`Mint Yield Tokens`}
         subtitle={t`A concise description of Minting makes it clear to the user why FYTs and YCs are useful to them.`}
-        account={account}
-        active={active}
-        chainId={chainId}
-        connector={connector}
-        library={library}
       />
 
       {/* Main content */}

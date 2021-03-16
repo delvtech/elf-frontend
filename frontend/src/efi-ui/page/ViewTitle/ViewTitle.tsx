@@ -1,20 +1,11 @@
 import React, { FC, Fragment, ReactNode } from "react";
 
 import { Classes, H2 } from "@blueprintjs/core";
-import { Web3Provider } from "@ethersproject/providers";
-import { AbstractConnector } from "@web3-react/abstract-connector";
 import classNames from "classnames";
 
 import tw from "efi-tailwindcss-classnames";
-import { WalletConnectionCard } from "efi-ui/wallets/WalletConnectionCard/WalletConnectionCard";
-import { getConnectorName } from "efi/wallets/connectors";
 
 interface ViewTitleProps {
-  account: string | null | undefined;
-  active: boolean;
-  chainId: number | undefined;
-  connector: AbstractConnector | undefined;
-  library: Web3Provider | undefined;
   title: ReactNode;
   subtitle: ReactNode;
   /**
@@ -30,16 +21,10 @@ const subtitleClassName = classNames(
 );
 
 export const ViewTitle: FC<ViewTitleProps> = ({
-  account,
-  active,
-  chainId,
-  connector,
-  library,
   title,
   subtitle,
   titleTag,
 }) => {
-  const connectorName = getConnectorName(connector, library);
   return (
     <div className={tw("flex", "justify-between", "w-full")}>
       <div
@@ -56,16 +41,6 @@ export const ViewTitle: FC<ViewTitleProps> = ({
         </H2>
 
         <span className={subtitleClassName}>{subtitle}</span>
-      </div>
-
-      <div className={tw("flex")}>
-        <WalletConnectionCard
-          className={tw("flex", "w-400")}
-          account={account}
-          active={active}
-          chainId={chainId}
-          connectorName={connectorName}
-        />
       </div>
     </div>
   );

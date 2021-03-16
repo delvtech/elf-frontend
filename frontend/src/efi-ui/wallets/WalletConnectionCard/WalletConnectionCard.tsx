@@ -134,7 +134,7 @@ const WalletConnectionSummary: FC<WalletSummaryProps> = ({
       )}
     >
       <div className={classNames(tw("flex", "space-x-4", "items-center"))}>
-        <WalletJazzicon />
+        <WalletJazzicon account={account} />
 
         <button className={Classes.BUTTON_TEXT}>
           <div className={tw("flex", "flex-col")}>

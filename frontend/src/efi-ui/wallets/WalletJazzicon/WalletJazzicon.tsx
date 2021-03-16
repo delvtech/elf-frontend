@@ -1,15 +1,16 @@
-import { Web3Provider } from "@ethersproject/providers";
-import jazzicon from "@metamask/jazzicon";
-import { useWeb3React } from "@web3-react/core";
 import React, { FC, useEffect, useRef } from "react";
+
+import jazzicon from "@metamask/jazzicon";
 
 import { getMetamaskJazziconSeed } from "efi-ui/wallets/icons";
 
-interface WalletJazziconProps {}
+interface WalletJazziconProps {
+  account: string | null | undefined;
+  size?: number;
+}
 
 const JAZZICON_DIAMETER_PIXELS = 48;
-export const WalletJazzicon: FC<WalletJazziconProps> = () => {
-  const { account } = useWeb3React<Web3Provider>();
+export const WalletJazzicon: FC<WalletJazziconProps> = ({ account, size }) => {
   const jazziconRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -18,7 +19,7 @@ export const WalletJazzicon: FC<WalletJazziconProps> = () => {
     }
 
     const seed = getMetamaskJazziconSeed(account);
-    const jazziconElement = jazzicon(JAZZICON_DIAMETER_PIXELS, seed);
+    const jazziconElement = jazzicon(size || JAZZICON_DIAMETER_PIXELS, seed);
 
     const jazziconRefElement = jazziconRef.current;
     if (jazziconRefElement) {
@@ -33,7 +34,7 @@ export const WalletJazzicon: FC<WalletJazziconProps> = () => {
         });
       }
     };
-  }, [account]);
+  }, [account, size]);
 
   return <div ref={jazziconRef} />;
 };

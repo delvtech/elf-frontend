@@ -20,13 +20,7 @@ import { usePortfolioTabs } from "../PortfolioTabs/usePortfolioTabs";
 interface PortfolioViewProps extends RouteComponentProps {}
 
 export const PortfolioView: FC<PortfolioViewProps> = () => {
-  const {
-    account,
-    active,
-    chainId,
-    connector,
-    library,
-  } = useWeb3React<Web3Provider>();
+  const { account, library } = useWeb3React<Web3Provider>();
 
   const portfolioTabs: PortfolioTab[] = usePortfolioTabs(library, account);
 
@@ -55,11 +49,6 @@ export const PortfolioView: FC<PortfolioViewProps> = () => {
         <ViewTitle
           title={t`Portfolio`}
           subtitle={<PortfolioViewSubtitle account={account} />}
-          account={account}
-          active={active}
-          chainId={chainId}
-          connector={connector}
-          library={library}
         />
 
         <div className={tw("flex", "w-full", "h-full", "space-x-10")}>
