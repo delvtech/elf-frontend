@@ -8,33 +8,33 @@ import { Vault } from "src/types/Vault";
 import { WETH } from "src/types/WETH";
 
 /**
- * Stakes an initial amount of base asset into the YieldPool
+ * Stakes an initial amount of base asset into the ConvergentCurvePool
  *
  * @param poolId
- * @param elementSigner
+ * @param signer
  * @param vaultContract
  * @param baseAssetContract
  * @param trancheContract
  * @param amountIn
  */
-export async function initializeYieldPool(
+export async function initializeConvergentPool(
   poolId: string,
-  elementSigner: Signer,
+  signer: Signer,
   vaultContract: Vault,
   baseAssetContract: WETH | USDC,
   trancheContract: Tranche,
   amountIn: string
 ) {
-  const elementAddress = await elementSigner.getAddress();
+  const elementAddress = await signer.getAddress();
   let { tokens } = await vaultContract.getPoolTokens(poolId);
+  console.log("tokens", tokens);
 
-  const baseAssetDecimals = await baseAssetContract.decimals();
-  console.log("baseAssetDecimals", baseAssetDecimals);
-
-  // const parseToken = (value: string) => parseUnits(value, baseAssetDecimals);
-  // TODO: double check if these should be normalized to Ether or not.  I think balancer wants
-  // everything in 18 decimal format so leaving this as parseEther.  If not, then we'll have to use parseToken
-  // we can only initialize the pool with base asset, the yield asset is ignored.
+  console.log("amountIn", amountIn);
+  // [baseAsset, yieldAsset] Max amount for each asset to join the pool with. note that the yield
+  // asset amount doesn't matter for the first joinPool action for convergent pools since the
+  // initial join only allows base asset.  this has something to do with the way we keep track of
+  // the yield asset price based off of swaps.  to initialize the pool with yield asset we need to
+  // follow up the joinPool by swapping in some yield asset for some base asset.
   const maxAmountsIn = [parseEther(amountIn), parseEther(amountIn)];
   const amounts = maxAmountsIn.map((amt) => amt.toHexString());
 

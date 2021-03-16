@@ -1,4 +1,5 @@
 import { Signer } from "ethers";
+import { parseEther } from "ethers/lib/utils";
 
 import { ConvergentPoolFactory__factory } from "src/types/factories/ConvergentPoolFactory__factory";
 import { Vault } from "src/types/Vault";
@@ -16,6 +17,12 @@ export async function deployConvergentPoolFactory(
     signerAddress
   );
   await convergentPoolFactoryContract.deployed();
+
+  // set the fee to 0.1%
+  const setFeeTx = await convergentPoolFactoryContract.setGovFee(
+    parseEther("0.01")
+  );
+  await setFeeTx.wait(1);
 
   return convergentPoolFactoryContract;
 }

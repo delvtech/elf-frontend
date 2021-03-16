@@ -7,12 +7,11 @@ import { Vault } from "src/types/Vault";
 import { WETH } from "src/types/WETH";
 
 import { batchSwapIn } from "./batchSwapIn";
-import { initializeYieldPool } from "./initializeYieldPool";
+import { initializeConvergentPool } from "./initializeConvergentPool";
 import { mintTrancheAssets } from "./mintTrancheAssets";
 
-// TODO: add options for the tranche and balancer pools
 export async function setupFYTMarket(
-  elementSigner: Signer,
+  signer: Signer,
   balancerVaultContract: Vault,
   poolId: string,
   baseAssetContract: WETH | USDC,
@@ -20,12 +19,14 @@ export async function setupFYTMarket(
   options: { mintAmount: string; baseAssetIn: string; yieldAssetIn: string }
 ) {
   const { baseAssetIn, yieldAssetIn } = options;
-  const sender = await elementSigner.getAddress();
+  console.log("yieldAssetIn", yieldAssetIn);
+  console.log("baseAssetIn", baseAssetIn);
+  const sender = await signer.getAddress();
 
   // put base asset into market
-  await initializeYieldPool(
+  await initializeConvergentPool(
     poolId,
-    elementSigner,
+    signer,
     balancerVaultContract,
     baseAssetContract,
     trancheContract,
@@ -34,8 +35,8 @@ export async function setupFYTMarket(
 
   // mint some tranche assets
   await mintTrancheAssets(
-    elementSigner,
-    (baseAssetContract as unknown) as ERC20,
+    signer,
+    baseAssetContract,
     trancheContract,
     baseAssetIn
   );

@@ -1,21 +1,33 @@
 import { Signer } from "ethers";
 import { parseUnits } from "ethers/lib/utils";
+import { YVaultAssetProxy__factory } from "src/types/factories/YVaultAssetProxy__factory";
 
-import { ERC20 } from "src/types/ERC20";
 import { Tranche } from "src/types/Tranche";
+import { USDC } from "src/types/USDC";
+import { WETH } from "src/types/WETH";
 
 import { MAX_ALLOWANCE } from "../maxAllowance";
 
 export async function mintTrancheAssets(
   signer: Signer,
-  baseAssetContract: ERC20,
+  baseAssetContract: WETH | USDC,
   trancheContract: Tranche,
   baseAssetAmountIn: string
 ) {
   const signerAddress = await signer.getAddress();
 
-  // allow tranche contract to take user's base asset tokens
+  // allow tranche contract to take signers's base asset tokens
   await baseAssetContract.approve(trancheContract.address, MAX_ALLOWANCE);
+
+  const wrappedPositionAddress = await trancheContract.position();
+  const wrappedPositionContract = YVaultAssetProxy__factory.connect(
+    wrappedPositionAddress,
+    signer
+  );
+  await baseAssetContract.approve(
+    wrappedPositionContract.address,
+    MAX_ALLOWANCE
+  );
 
   const baseAssetDecimals = await baseAssetContract.decimals();
   const baseAssetDeposit = parseUnits(baseAssetAmountIn, baseAssetDecimals);

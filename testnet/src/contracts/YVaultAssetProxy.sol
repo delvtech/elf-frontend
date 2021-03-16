@@ -91,8 +91,8 @@ contract YVaultAssetProxy is WrappedPosition {
         // First we withdraw the proportion of shares tokens belonging to the caller
         uint256 freedUnderlying = vault.withdraw(userShares, address(this), 0);
         // We calculate the amount of underlying to send
-        uint256 userUnderlying = (localUnderlying * _amount) /
-            localReserveSupply;
+        uint256 userUnderlying =
+            (localUnderlying * _amount) / localReserveSupply;
         // We send the redemption underlying to the caller
         // Note 'token' is an immutable from shares
         token.transfer(msg.sender, freedUnderlying + userUnderlying);
@@ -166,11 +166,8 @@ contract YVaultAssetProxy is WrappedPosition {
         }
         // If we don't have enough local reserves we do the actual withdraw
         // Withdraws shares from the vault with max loss 0.01%
-        uint256 amountReceived = vault.withdraw(
-            _shares + localShares,
-            address(this),
-            1
-        );
+        uint256 amountReceived =
+            vault.withdraw(_shares + localShares, address(this), 1);
         _setReserves(amountReceived - needed, 0);
         // Transfer the underlying to the destination 'token' is an immutable in WrappedPosition
         token.transfer(_destination, needed);
@@ -183,8 +180,8 @@ contract YVaultAssetProxy is WrappedPosition {
     /// @return Value of shares in underlying token
     function _underlying(uint256 _amount)
         internal
-        override
         view
+        override
         returns (uint256)
     {
         uint256 yearnTotalSupply = vault.totalSupply();

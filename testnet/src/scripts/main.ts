@@ -99,7 +99,8 @@ async function main() {
   // deploy user proxy
   const userProxyContract = await deployUserProxy(
     elementSigner,
-    wethContract.address
+    wethContract,
+    trancheFactory
   );
 
   const addresses = JSON.stringify(
