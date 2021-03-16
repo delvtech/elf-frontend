@@ -1,6 +1,13 @@
 import React, { FC, Fragment, useState } from "react";
 
-import { Button, Callout, Card, Intent } from "@blueprintjs/core";
+import {
+  Button,
+  Callout,
+  Card,
+  Classes,
+  Icon,
+  Intent,
+} from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { formatUnits, parseUnits } from "@ethersproject/units";
 import { AbstractConnector } from "@web3-react/abstract-connector";
@@ -23,10 +30,7 @@ import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSy
 import { BaseAssetPicker } from "efi-ui/invest/BaseAssetPicker/BaseAssetPicker";
 import { BuyFYTConfirmationDrawer } from "efi-ui/invest/BuyFYTConfirmationDrawer/BuyFYTConfirmationDrawer";
 import { useActiveTranche } from "efi-ui/invest/hooks/useActiveTranche";
-import {
-  TranchePicker,
-  TranchePickerOld,
-} from "efi-ui/invest/TranchePicker/TranchePicker";
+import { TranchePicker } from "efi-ui/invest/TranchePicker/TranchePicker";
 import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
 import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
@@ -37,6 +41,8 @@ import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
 
 import { InvestmentAmountInput } from "./InvestmentAmountInput";
+import { IconNames } from "@blueprintjs/icons";
+import classNames from "classnames";
 
 export interface InvestCardProps {
   library: Web3Provider | undefined;
@@ -125,58 +131,68 @@ export const InvestCard: FC<InvestCardProps> = ({
 
   return (
     <Fragment>
-      <Card className={tw("flex", "flex-col", "p-10", "space-y-10", "flex-1")}>
-        <div
-          className={tw(
-            "flex",
-            "space-x-1",
-            "h-24",
-            "border",
-            "rounded",
-            "border-gray-500"
-          )}
-        >
-          <InvestmentAmountInput
-            showMaxButton={!!account}
-            baseAssetPicker={
-              <BaseAssetPicker
-                baseAssets={baseAssets}
-                activeBaseAsset={activeBaseAsset}
-                onBaseAssetChange={setActiveBaseAsset}
-              />
-            }
-            placeholder="0.00"
-            value={amountIn}
-            onValueChange={setAmountIn}
-            assetBalance={activeBaseAssetBalance}
-          />
+      <Card className={tw("flex", "flex-col", "p-10", "flex-1", "space-y-12")}>
+        <div className={tw("flex", "flex-col", "space-y-3")}>
+          <span
+            className={classNames(tw("text-base"), Classes.TEXT_MUTED)}
+          >{t`Spend`}</span>
+          <div
+            className={tw(
+              "flex",
+              "space-x-1",
+              "h-24",
+              "border",
+              "rounded",
+              "border-gray-500"
+            )}
+          >
+            <InvestmentAmountInput
+              showMaxButton={!!account}
+              baseAssetPicker={
+                <BaseAssetPicker
+                  baseAssets={baseAssets}
+                  activeBaseAsset={activeBaseAsset}
+                  onBaseAssetChange={setActiveBaseAsset}
+                />
+              }
+              placeholder="0.00"
+              value={amountIn}
+              onValueChange={setAmountIn}
+              assetBalance={activeBaseAssetBalance}
+            />
+          </div>
         </div>
-        <div
-          className={tw(
-            "flex",
-            "space-x-1",
-            "h-24",
-            "border",
-            "rounded",
-            "border-gray-500"
-          )}
-        >
-          <InvestmentAmountInput
-            showMaxButton={!!account}
-            baseAssetPicker={
-              <TranchePicker
-                library={library}
-                account={account}
-                onTrancheChange={setActiveTranche}
-                tranches={availableTranches}
-                activeTrancheIndex={activeTrancheIndex}
-              />
-            }
-            placeholder="0.00"
-            value={amountIn}
-            onValueChange={setAmountIn}
-            assetBalance={activeBaseAssetBalance}
-          />
+        <div className={tw("flex", "flex-col", "space-y-3")}>
+          <span
+            className={classNames(tw("text-base"), Classes.TEXT_MUTED)}
+          >{t`Receive`}</span>
+          <div
+            className={tw(
+              "flex",
+              "space-x-1",
+              "h-24",
+              "border",
+              "rounded",
+              "border-gray-500"
+            )}
+          >
+            <InvestmentAmountInput
+              showMaxButton={!!account}
+              baseAssetPicker={
+                <TranchePicker
+                  library={library}
+                  account={account}
+                  onTrancheChange={setActiveTranche}
+                  tranches={availableTranches}
+                  activeTrancheIndex={activeTrancheIndex}
+                />
+              }
+              placeholder="0.00"
+              value={amountIn}
+              onValueChange={setAmountIn}
+              assetBalance={activeBaseAssetBalance}
+            />
+          </div>
         </div>
 
         <div className={tw("flex", "space-x-10")}>

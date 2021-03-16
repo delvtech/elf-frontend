@@ -17,7 +17,7 @@ export const formatAbbreviatedDate = timeFormat("%b %d, %Y");
 /**
  * Formats a Date object, eg: "Jan 30"
  */
-export const formatAbbreviatedDateWithoutYear = timeFormat("%b %d");
+export const formatAbbreviatedMonthAndDay = timeFormat("%b %d");
 
 /**
  * Formats a Date object, eg: "2021"

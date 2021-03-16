@@ -16,8 +16,6 @@ import { Tooltip2 } from "@blueprintjs/popover2";
 import { navigate } from "@reach/router";
 import classNames from "classnames";
 import { formatDuration, intervalToDuration } from "date-fns";
-import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
-import { YVaultAssetProxy__factory } from "elf-contracts/types/factories/YVaultAssetProxy__factory";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { BigNumber } from "ethers";
 import { jt, t } from "ttag";
@@ -27,7 +25,6 @@ import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { getQueryData } from "efi-ui/base/queryResults";
 import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
-import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { CryptoIconSvg } from "efi-ui/crypto/CryptoIcon";
 import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
@@ -43,6 +40,7 @@ import { formatMoney } from "efi/money/formatMoney";
 import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
 import { Web3Provider } from "@ethersproject/providers";
 import { ONE_ETHER } from "efi/crypto/ethereum";
+import { usePositionForTranche } from "../../tranche/usePositionForTranche";
 
 interface FYTCardProps {
   library: Web3Provider | undefined;
@@ -73,7 +71,7 @@ export const FYTCard: FC<FYTCardProps> = ({ library, account, tranche }) => {
   );
   const trancheBalance = useTokenBalance(tranche, account);
 
-  const vaultContract = useVaultForTranche(tranche);
+  const vaultContract = usePositionForTranche(tranche);
   const { data: vaultName } = useSmartContractReadCall(vaultContract, "name");
   const pool = usePoolForToken(tranche);
   const trancheSpotPriceResult = useOnSwapGivenIn(pool, tranche, ONE_ETHER);
@@ -259,20 +257,6 @@ export const FYTCard: FC<FYTCardProps> = ({ library, account, tranche }) => {
     </div>
   );
 };
-
-function useVaultForTranche(tranche: Tranche) {
-  const elfAddressResult = useSmartContractReadCall(tranche, "elf");
-  const elfContract = useSmartContractFromFactory(
-    getQueryData(elfAddressResult),
-    YVaultAssetProxy__factory.connect
-  );
-  const vaultAddressResult = useSmartContractReadCall(elfContract, "vault");
-  const vaultContract = useSmartContractFromFactory(
-    getQueryData(vaultAddressResult),
-    ERC20__factory.connect
-  );
-  return vaultContract;
-}
 
 function getTimeLeft(maturationDate: Date | undefined) {
   if (!maturationDate) {

@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { Button, Classes, Colors, Icon, Tag } from "@blueprintjs/core";
+import { Classes, Colors, Icon, Tag } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
 import classNames from "classnames";
@@ -13,11 +13,16 @@ import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn
 import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
-import { formatAbbreviatedDate } from "efi/base/dates";
+import {
+  formatAbbreviatedDate,
+  formatAbbreviatedMonthAndDay,
+} from "efi/base/dates";
 import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
 import { ONE_ETHER } from "efi/crypto/ethereum";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
+import { usePositionForTranche } from "efi-ui/tranche/usePositionForTranche";
+import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 
 export const TrancheButton: FC<TrancheButtonProps> = ({
   library,
@@ -33,15 +38,23 @@ export const TrancheButton: FC<TrancheButtonProps> = ({
     "unlockTimestamp"
   );
 
+  const position = usePositionForTranche(tranche);
+  const { data: positionName } = useSmartContractReadCall(position, "name");
+
   const symbol = getQueryData(symbolResult);
   const decimals = getQueryData(decimalsResult);
   const unlockDate = convertEpochSecondsToDate(
     getQueryData(unlockTimestampResult)
   );
 
-  const poolContract = usePoolForToken(tranche, jsonRpcProvider);
+  const pool = usePoolForToken(tranche, jsonRpcProvider);
+  const baseAssetToken = usePoolPairedToken(pool, tranche);
+  const { data: baseAssetName } = useSmartContractReadCall(
+    baseAssetToken,
+    "symbol"
+  );
   const tranchePriceResult = useOnSwapGivenIn(
-    poolContract,
+    pool,
     tranche,
     ONE_ETHER // TODO: make this 1 of the tranche asset instead
   );
@@ -57,8 +70,12 @@ export const TrancheButton: FC<TrancheButtonProps> = ({
     ).toFixed(2);
   }
 
-  const redeemableDate = unlockDate
+  const formattedDate = unlockDate
     ? formatAbbreviatedDate(unlockDate)
+    : t`Loading unlock date...`;
+
+  const formattedMonthAndDay = unlockDate
+    ? formatAbbreviatedMonthAndDay(unlockDate)
     : t`Loading unlock date...`;
 
   return (
@@ -84,32 +101,21 @@ export const TrancheButton: FC<TrancheButtonProps> = ({
         <div className={tw("flex", "items-center", "space-x-4")}>
           <div
             className={classNames(
-              tw(
-                "flex",
-                "flex-col",
-                "space-y-2",
-                "items-center",
-                "justify-center"
-              )
+              tw("flex", "flex-col", "items-center", "justify-center")
             )}
           >
-            <span
-              className={tw("text-lg", "text-center")}
-            >{t`${trancheAPY}%`}</span>
+            <span className={classNames("h4", tw("text-center"))}>
+              {formattedDate}
+            </span>
             <Tag
-              minimal
-              style={{
-                backgroundColor: isDarkMode ? Colors.COBALT3 : Colors.COBALT4,
-                color: Colors.WHITE,
-              }}
-            >
-              <div>{"Fixed APY"}</div>
-            </Tag>
+              fill
+              className={tw("text-center")}
+            >{t`${trancheAPY}% APY`}</Tag>
           </div>
           <LabeledText
             large
-            text={t`Earn yield until ${redeemableDate}`}
-            label={symbol}
+            text={`${baseAssetName} Principal Token`}
+            label={positionName}
           />
         </div>
         <Icon icon={IconNames.CARET_DOWN} />
