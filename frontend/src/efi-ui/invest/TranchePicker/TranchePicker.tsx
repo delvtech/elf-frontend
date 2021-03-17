@@ -1,12 +1,12 @@
 import React, { FC } from "react";
 
 import { Select } from "@blueprintjs/select";
+import { Web3Provider } from "@ethersproject/providers";
 import { Tranche } from "elf-contracts/types/Tranche";
 
 import tw from "efi-tailwindcss-classnames";
 
-import { TrancheInfoButton } from "./TrancheInfoButton";
-import { Web3Provider } from "@ethersproject/providers";
+import { TrancheButton } from "./TrancheButton";
 
 interface TranchePickerProps {
   library: Web3Provider | undefined;
@@ -15,6 +15,7 @@ interface TranchePickerProps {
   activeTrancheIndex: number | undefined;
   onTrancheChange: (newTranche: Tranche) => void;
 }
+
 export const TranchePicker: FC<TranchePickerProps> = ({
   tranches,
   account,
@@ -37,7 +38,7 @@ export const TranchePicker: FC<TranchePickerProps> = ({
       filterable={false}
       className={tw("w-full", "col-span-2")}
       itemRenderer={(tranche, { handleClick }) => (
-        <TrancheInfoButton
+        <TrancheButton
           library={library}
           account={account}
           tranche={tranche}
@@ -46,7 +47,7 @@ export const TranchePicker: FC<TranchePickerProps> = ({
       )}
       onItemSelect={onTrancheChange}
     >
-      <TrancheInfoButton
+      <TrancheButton
         library={library}
         account={account}
         tranche={activeTranche}

@@ -1,11 +1,12 @@
 import React, { FC } from "react";
 
-import { Classes, H4, Icon } from "@blueprintjs/core";
+import { Classes, Icon } from "@blueprintjs/core";
 import { IconName } from "@blueprintjs/icons";
 import classNames from "classnames";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { useCryptoName } from "efi-ui/crypto/hooks/useCryptoName/useCryptoName";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
@@ -70,11 +71,17 @@ const AssetLabel: FC<AssetLabelProps> = ({
   return (
     <div className={tw("p-4", "justify-between")}>
       <div className={tw("flex", "items-center", "space-x-4", "flex-1")}>
-        <AssetIcon height={50} width={50} />
-        <div className={tw("flex", "flex-col", "space-y-1")}>
-          <H4 className={tw("m-0")}>{t`${assetName}`}</H4>
-          <span className={Classes.TEXT_LARGE}>{assetSymbol}</span>
-        </div>
+        <LabeledText
+          icon={<AssetIcon height={50} width={50} />}
+          iconClassName={tw("mr-4")}
+          large
+          text={
+            <span className={classNames("h4", tw("text-center"))}>
+              {t`${assetName}`}
+            </span>
+          }
+          label={<span className={tw("text-sm")}>{assetSymbol}</span>}
+        />
       </div>
     </div>
   );
