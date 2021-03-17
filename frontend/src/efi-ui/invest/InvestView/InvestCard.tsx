@@ -6,6 +6,7 @@ import {
   Card,
   Classes,
   Colors,
+  Icon,
   Intent,
 } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
@@ -42,6 +43,7 @@ import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 
 import { InvestmentAmountInput } from "./InvestmentAmountInput";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
+import { IconNames } from "@blueprintjs/icons";
 
 export interface InvestCardProps {
   library: Web3Provider | undefined;
@@ -142,7 +144,7 @@ export const InvestCard: FC<InvestCardProps> = ({
 
   return (
     <Fragment>
-      <Card className={tw("flex", "flex-col", "p-10", "flex-1", "space-y-12")}>
+      <Card className={tw("flex", "flex-col", "p-10", "flex-1")}>
         <div className={tw("flex", "flex-col", "space-y-2")}>
           <div className={tw("flex", "justify-between")}>
             <span
@@ -181,6 +183,9 @@ export const InvestCard: FC<InvestCardProps> = ({
               assetBalance={activeBaseAssetBalance}
             />
           </div>
+        </div>
+        <div className={tw("text-center", "my-6")}>
+          <Icon icon={IconNames.ARROW_DOWN} />
         </div>
         <div className={tw("flex", "flex-col", "space-y-2")}>
           <div className={tw("flex", "justify-between")}>
@@ -222,7 +227,7 @@ export const InvestCard: FC<InvestCardProps> = ({
           </div>
         </div>
 
-        <div className={tw("flex", "space-x-10", "h-24")}>
+        <div className={tw("flex", "space-x-10", "h-24", "mt-10")}>
           <Callout className={calloutClassName}>
             <LabeledText
               muted={false}
