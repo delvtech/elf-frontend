@@ -6,7 +6,6 @@ import {
   Card,
   Classes,
   Colors,
-  Icon,
   Intent,
 } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
@@ -35,6 +34,7 @@ import { useActiveTranche } from "efi-ui/invest/hooks/useActiveTranche";
 import { TranchePicker } from "efi-ui/invest/TranchePicker/TranchePicker";
 import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
 import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
+import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
 import ContractAddresses from "efi/contracts/contractsJson";
 import { CryptoAssetType } from "efi/crypto/CryptoAsset";
@@ -42,8 +42,6 @@ import { ONE_ETHER } from "efi/crypto/ethereum";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 
 import { InvestmentAmountInput } from "./InvestmentAmountInput";
-import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import { IconNames } from "@blueprintjs/icons";
 
 export interface InvestCardProps {
   library: Web3Provider | undefined;
@@ -103,6 +101,7 @@ export const InvestCard: FC<InvestCardProps> = ({
   const pool = usePoolForToken(activeTranche, jsonRpcProvider);
   const tranchePriceResult = useOnSwapGivenIn(pool, activeTranche, ONE_ETHER);
 
+  // use weth when the base asset is eth
   const wethContract = useSmartContractFromFactory(
     ContractAddresses.wethAddress,
     WETH__factory.connect
@@ -111,6 +110,10 @@ export const InvestCard: FC<InvestCardProps> = ({
   if (activeBaseAsset.type === CryptoAssetType.ERC20) {
     inputToken = activeBaseAsset.tokenContract;
   }
+  const { data: inputTokenSymbol } = useSmartContractReadCall(
+    inputToken,
+    "symbol"
+  );
 
   const amountInAsBigNumber = amountIn
     ? parseUnits(amountIn, activeBaseAssetDecimals)
@@ -141,6 +144,9 @@ export const InvestCard: FC<InvestCardProps> = ({
     tranchePriceBigNumber,
     getQueryData(trancheDecimalsResult)
   );
+
+  const roundedTranchePrice = tranchePrice.toFixed(4);
+  const marketRateLabel = t`1 ${inputTokenSymbol} Principal Token = ${roundedTranchePrice} ${activeBaseAssetSymbol}`;
 
   return (
     <Fragment>
@@ -189,11 +195,9 @@ export const InvestCard: FC<InvestCardProps> = ({
             <span
               className={classNames(tw("text-base"), Classes.TEXT_MUTED)}
             >{t`To`}</span>
-            <span
-              className={classNames(tw("text-base"), Classes.TEXT_MUTED)}
-            >{t`1 ${activeBaseAssetSymbol} Principal Token = ${tranchePrice.toFixed(
-              4
-            )} ${activeBaseAssetSymbol}`}</span>
+            <span className={classNames(tw("text-base"), Classes.TEXT_MUTED)}>
+              {marketRateLabel}
+            </span>
           </div>
           <div
             className={tw(
