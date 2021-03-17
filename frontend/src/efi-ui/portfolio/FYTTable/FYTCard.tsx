@@ -13,11 +13,11 @@ import {
 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { Tooltip2 } from "@blueprintjs/popover2";
+import { Web3Provider } from "@ethersproject/providers";
 import { navigate } from "@reach/router";
 import classNames from "classnames";
 import { formatDuration, intervalToDuration } from "date-fns";
 import { Tranche } from "elf-contracts/types/Tranche";
-import { BigNumber } from "ethers";
 import { jt, t } from "ttag";
 
 import { getCoinGeckoId } from "efi-coingecko";
@@ -33,14 +33,13 @@ import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPaire
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
+import { usePositionForTranche } from "efi-ui/tranche/usePositionForTranche";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
+import { ONE_ETHER } from "efi/crypto/ethereum";
 import { formatMoney } from "efi/money/formatMoney";
 import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
-import { Web3Provider } from "@ethersproject/providers";
-import { ONE_ETHER } from "efi/crypto/ethereum";
-import { usePositionForTranche } from "../../tranche/usePositionForTranche";
 
 interface FYTCardProps {
   library: Web3Provider | undefined;
