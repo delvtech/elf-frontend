@@ -1,16 +1,17 @@
-import React, { FC, Fragment, useState } from "react";
+import React, { FC, Fragment, useEffect, useState } from "react";
 
 import {
   Button,
   Callout,
   Card,
   Classes,
-  Icon,
+  Colors,
   Intent,
 } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { formatUnits, parseUnits } from "@ethersproject/units";
 import { AbstractConnector } from "@web3-react/abstract-connector";
+import classNames from "classnames";
 import { ERC20 } from "elf-contracts/types/ERC20";
 import { WETH__factory } from "elf-contracts/types/factories/WETH__factory";
 import { Tranche } from "elf-contracts/types/Tranche";
@@ -33,16 +34,14 @@ import { useActiveTranche } from "efi-ui/invest/hooks/useActiveTranche";
 import { TranchePicker } from "efi-ui/invest/TranchePicker/TranchePicker";
 import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
 import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
-import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
 import ContractAddresses from "efi/contracts/contractsJson";
 import { CryptoAssetType } from "efi/crypto/CryptoAsset";
+import { ONE_ETHER } from "efi/crypto/ethereum";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
-import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
 
 import { InvestmentAmountInput } from "./InvestmentAmountInput";
-import { IconNames } from "@blueprintjs/icons";
-import classNames from "classnames";
+import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 
 export interface InvestCardProps {
   library: Web3Provider | undefined;
@@ -56,6 +55,15 @@ export interface InvestCardProps {
   tranchesByBaseAsset: Record<string, Tranche[]>;
 }
 
+const calloutClassName = tw(
+  "flex",
+  "flex-col",
+  "flex-1",
+  "h-full",
+  "p-8",
+  "items-center",
+  "justify-center"
+);
 export const InvestCard: FC<InvestCardProps> = ({
   library,
   account,
@@ -65,8 +73,10 @@ export const InvestCard: FC<InvestCardProps> = ({
   walletConnectionActive,
   tranchesByBaseAsset,
 }) => {
+  const { isDarkMode } = useDarkMode();
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const [amountIn, setAmountIn] = useState<string | undefined>();
+  const [amountOut, setAmountOut] = useState<string | undefined>();
 
   const [activeBaseAsset, setActiveBaseAsset] = useState(baseAssets[0]);
   const activeBaseAssetSymbol = useCryptoSymbol(activeBaseAsset);
@@ -84,20 +94,12 @@ export const InvestCard: FC<InvestCardProps> = ({
     setActiveTranche,
   } = useActiveTranche(tranchesByBaseAsset, activeBaseAsset);
 
-  const unlockTimestampResult = useSmartContractReadCall(
-    activeTranche,
-    "unlockTimestamp"
-  );
   const trancheDecimalsResult = useSmartContractReadCall(
     activeTranche,
     "decimals"
   );
   const pool = usePoolForToken(activeTranche, jsonRpcProvider);
-  const tranchePriceResult = useOnSwapGivenIn(
-    pool,
-    activeTranche,
-    BigNumber.from(1)
-  );
+  const tranchePriceResult = useOnSwapGivenIn(pool, activeTranche, ONE_ETHER);
 
   const wethContract = useSmartContractFromFactory(
     ContractAddresses.wethAddress,
@@ -112,11 +114,25 @@ export const InvestCard: FC<InvestCardProps> = ({
     ? parseUnits(amountIn, activeBaseAssetDecimals)
     : undefined;
 
-  const { data: amountOut } = useOnSwapGivenIn(
+  const { data: swapAmountOut } = useOnSwapGivenIn(
     pool,
     inputToken,
     amountInAsBigNumber
   );
+
+  // sync the amount in and amount out
+  useUpdateAmountOut(swapAmountOut, setAmountOut, activeBaseAssetDecimals);
+
+  let totalYield = 0;
+  if (swapAmountOut) {
+    const yieldAsBigNumber = swapAmountOut.sub(amountInAsBigNumber || 0);
+    totalYield = +formatUnits(yieldAsBigNumber, activeBaseAssetDecimals);
+  }
+
+  let percentYield = 0;
+  if (amountIn) {
+    percentYield = (totalYield / +amountIn) * 100;
+  }
 
   const tranchePriceBigNumber = getQueryData(tranchePriceResult);
   const tranchePrice = +formatCurrency(
@@ -124,18 +140,22 @@ export const InvestCard: FC<InvestCardProps> = ({
     getQueryData(trancheDecimalsResult)
   );
 
-  const trancheAPY = formatTrancheAPY(
-    getQueryData(unlockTimestampResult),
-    tranchePrice
-  );
-
   return (
     <Fragment>
       <Card className={tw("flex", "flex-col", "p-10", "flex-1", "space-y-12")}>
-        <div className={tw("flex", "flex-col", "space-y-3")}>
-          <span
-            className={classNames(tw("text-base"), Classes.TEXT_MUTED)}
-          >{t`Spend`}</span>
+        <div className={tw("flex", "flex-col", "space-y-2")}>
+          <div className={tw("flex", "justify-between")}>
+            <span
+              className={classNames(tw("text-base"), Classes.TEXT_MUTED)}
+            >{t`From`}</span>
+            {!!account && (
+              <span
+                className={classNames(tw("text-base"), Classes.TEXT_MUTED)}
+              >{t`Balance: ${activeBaseAssetBalance.toFixed(
+                4
+              )} ${activeBaseAssetSymbol}`}</span>
+            )}
+          </div>
           <div
             className={tw(
               "flex",
@@ -162,10 +182,17 @@ export const InvestCard: FC<InvestCardProps> = ({
             />
           </div>
         </div>
-        <div className={tw("flex", "flex-col", "space-y-3")}>
-          <span
-            className={classNames(tw("text-base"), Classes.TEXT_MUTED)}
-          >{t`Receive`}</span>
+        <div className={tw("flex", "flex-col", "space-y-2")}>
+          <div className={tw("flex", "justify-between")}>
+            <span
+              className={classNames(tw("text-base"), Classes.TEXT_MUTED)}
+            >{t`To`}</span>
+            <span
+              className={classNames(tw("text-base"), Classes.TEXT_MUTED)}
+            >{t`1 ${activeBaseAssetSymbol} Principal Token = ${tranchePrice.toFixed(
+              4
+            )} ${activeBaseAssetSymbol}`}</span>
+          </div>
           <div
             className={tw(
               "flex",
@@ -177,7 +204,7 @@ export const InvestCard: FC<InvestCardProps> = ({
             )}
           >
             <InvestmentAmountInput
-              showMaxButton={!!account}
+              showMaxButton={false}
               baseAssetPicker={
                 <TranchePicker
                   library={library}
@@ -188,57 +215,54 @@ export const InvestCard: FC<InvestCardProps> = ({
                 />
               }
               placeholder="0.00"
-              value={amountIn}
-              onValueChange={setAmountIn}
+              value={amountOut}
+              onValueChange={setAmountOut}
               assetBalance={activeBaseAssetBalance}
             />
           </div>
         </div>
 
-        <div className={tw("flex", "space-x-10")}>
+        <div className={tw("flex", "space-x-10", "h-24")}>
+          <Callout className={calloutClassName}>
+            <LabeledText
+              muted={false}
+              bold
+              className={tw(
+                "flex",
+                "justify-center",
+                "flex-col-reverse",
+                "items-center"
+              )}
+              text={
+                !amountIn ? (
+                  t`Enter an amount`
+                ) : (
+                  <Fragment>
+                    <span>
+                      {`${totalYield.toFixed(4)} ${activeBaseAssetSymbol}`}
+                    </span>{" "}
+                    <span
+                      style={{
+                        color: isDarkMode ? Colors.GREEN5 : Colors.GREEN3,
+                      }}
+                    >{`(+${percentYield.toFixed(2)}%)`}</span>
+                  </Fragment>
+                )
+              }
+              label={t`Yield at term`}
+            />
+          </Callout>
           <Button
             large
             outlined
             intent={Intent.PRIMARY}
-            className={tw("w-1/3")}
+            className={tw("flex-1")}
             disabled={!amountIn}
             onClick={() => setDrawerOpen(true)}
           >
             <div className={tw("p-4", "text-lg")}>{t`Buy`}</div>
           </Button>
         </div>
-
-        {!!amountIn && (
-          <Callout icon={null} intent={Intent.SUCCESS} className={tw("p-6")}>
-            <div
-              className={tw("flex", "w-full", "space-x-4", "justify-between")}
-            >
-              <div
-                className={tw("flex", "space-x-4", "items-center", "text-lg")}
-              >
-                <LabeledText
-                  text={t`${trancheAPY.toFixed(2)}%`}
-                  label={
-                    <div className={tw("flex", "justify-center")}>
-                      <span>{t`Estimated yield`}</span>
-                    </div>
-                  }
-                />
-              </div>
-              <div
-                className={tw("flex", "space-x-4", "items-center", "text-lg")}
-              >
-                <LabeledText
-                  text={`${(+formatUnits(
-                    amountOut || 0,
-                    activeBaseAssetDecimals
-                  )).toFixed(6)} ${activeBaseAssetSymbol}`}
-                  label={"Redeemable at maturity"}
-                />
-              </div>
-            </div>
-          </Callout>
-        )}
       </Card>
 
       <BuyFYTConfirmationDrawer
@@ -258,18 +282,23 @@ export const InvestCard: FC<InvestCardProps> = ({
   );
 };
 
-function formatTrancheAPY(
-  unlockTimestamp: BigNumber | undefined,
-  tranchePrice: number
-): number {
-  let trancheAPY = 0;
-  const unlockDate = convertEpochSecondsToDate(unlockTimestamp);
-  if (tranchePrice && unlockDate) {
-    trancheAPY = calculateTrancheAPY(
-      tranchePrice,
-      Date.now(),
-      unlockDate.getTime()
+function useUpdateAmountOut(
+  swapAmountOut: BigNumber | undefined,
+  setAmountOut: React.Dispatch<React.SetStateAction<string | undefined>>,
+  activeBaseAssetDecimals: number
+) {
+  useEffect(() => {
+    if (!swapAmountOut) {
+      setAmountOut(undefined);
+      return;
+    }
+
+    const newAmountAsNumber = +formatUnits(
+      swapAmountOut,
+      activeBaseAssetDecimals
     );
-  }
-  return trancheAPY;
+    const newAmountOut = newAmountAsNumber.toFixed(4);
+
+    setAmountOut(newAmountOut);
+  }, [activeBaseAssetDecimals, setAmountOut, swapAmountOut]);
 }

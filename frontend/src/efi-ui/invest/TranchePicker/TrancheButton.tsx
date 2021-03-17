@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { Classes, Colors, Icon, Tag } from "@blueprintjs/core";
+import { Classes, Icon, Intent, Tag } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
 import classNames from "classnames";
@@ -11,12 +11,8 @@ import { getQueryData } from "efi-ui/base/queryResults";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
 import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
-import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
-import {
-  formatAbbreviatedDate,
-  formatAbbreviatedMonthAndDay,
-} from "efi/base/dates";
+import { formatAbbreviatedDate } from "efi/base/dates";
 import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
 import { ONE_ETHER } from "efi/crypto/ethereum";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
@@ -30,8 +26,6 @@ export const TrancheButton: FC<TrancheButtonProps> = ({
   tranche,
   onClick,
 }) => {
-  const { isDarkMode } = useDarkMode();
-  const symbolResult = useSmartContractReadCall(tranche, "symbol");
   const decimalsResult = useSmartContractReadCall(tranche, "decimals");
   const unlockTimestampResult = useSmartContractReadCall(
     tranche,
@@ -41,7 +35,6 @@ export const TrancheButton: FC<TrancheButtonProps> = ({
   const position = usePositionForTranche(tranche);
   const { data: positionName } = useSmartContractReadCall(position, "name");
 
-  const symbol = getQueryData(symbolResult);
   const decimals = getQueryData(decimalsResult);
   const unlockDate = convertEpochSecondsToDate(
     getQueryData(unlockTimestampResult)
@@ -74,10 +67,6 @@ export const TrancheButton: FC<TrancheButtonProps> = ({
     ? formatAbbreviatedDate(unlockDate)
     : t`Loading unlock date...`;
 
-  const formattedMonthAndDay = unlockDate
-    ? formatAbbreviatedMonthAndDay(unlockDate)
-    : t`Loading unlock date...`;
-
   return (
     <button
       onClick={onClick}
@@ -99,23 +88,28 @@ export const TrancheButton: FC<TrancheButtonProps> = ({
         )}
       >
         <div className={tw("flex", "items-center", "space-x-4")}>
-          <div
-            className={classNames(
-              tw("flex", "flex-col", "items-center", "justify-center")
-            )}
-          >
-            <span className={classNames("h4", tw("text-center"))}>
-              {formattedDate}
-            </span>
-            <Tag
-              fill
-              className={tw("text-center")}
-            >{t`${trancheAPY}% APY`}</Tag>
-          </div>
           <LabeledText
             large
+            icon={
+              <div
+                className={tw(
+                  "flex",
+                  "flex-col",
+                  "items-center",
+                  "justify-center",
+                  "mr-4"
+                )}
+              >
+                <span className={classNames("h4", tw("text-center"))}>
+                  {t`${trancheAPY}% APY`}
+                </span>
+                <Tag intent={Intent.PRIMARY} fill className={tw("text-center")}>
+                  {formattedDate}
+                </Tag>
+              </div>
+            }
             text={`${baseAssetName} Principal Token`}
-            label={positionName}
+            label={t`via ${positionName}`}
           />
         </div>
         <Icon icon={IconNames.CARET_DOWN} />
