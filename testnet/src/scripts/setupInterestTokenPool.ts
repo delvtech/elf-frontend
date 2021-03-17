@@ -3,7 +3,6 @@ import { defaultAbiCoder, parseEther, parseUnits } from "ethers/lib/utils";
 import { MAX_ALLOWANCE } from "src/maxAllowance";
 import { InterestToken__factory } from "src/types/factories/InterestToken__factory";
 
-import { YC__factory } from "src/types/factories/YC__factory";
 import { Tranche } from "src/types/Tranche";
 import { USDC } from "src/types/USDC";
 import { Vault } from "src/types/Vault";
