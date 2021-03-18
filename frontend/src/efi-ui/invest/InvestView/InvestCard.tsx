@@ -239,6 +239,7 @@ export const InvestCard: FC<InvestCardProps> = ({
                 "flex-col-reverse",
                 "items-center"
               )}
+              textClassName={tw("text-base")}
               text={
                 !amountIn ? (
                   t`Enter an amount`

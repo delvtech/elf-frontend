@@ -2,3 +2,11 @@
   display: flex;
   height: 100%;
 }
+
+.inputColor :global(.bp3-input:disabled) {
+  color: #182026;
+}
+
+.inputColorDark :global(.bp3-input:disabled) {
+  color: white;
+}

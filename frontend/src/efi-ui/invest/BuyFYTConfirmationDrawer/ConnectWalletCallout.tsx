@@ -6,7 +6,7 @@ import { ConnectWalletButtons } from "efi-ui/wallets/ConnectWalletButtons/Connec
 
 export const ConnectWalletCallout: FC<unknown> = () => {
   return (
-    <Callout className={tw("p-4")}>
+    <Callout className={tw("p-8")}>
       <div className={tw("flex", "flex-col", "space-y-4", "items-center")}>
         <span className="h4">{t`Connect your wallet to continue`}</span>
         <ConnectWalletButtons />

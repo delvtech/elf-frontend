@@ -33,8 +33,10 @@ import { PoolContract } from "efi/pools/PoolContract";
 import { isApprovalRequiredForTransactions } from "efi-ui/crypto/isApprovalRequiredForTransactions";
 import { TransactionDetailsCallout } from "./TransactionDetailsCallout";
 import { WalletApprovalCallout } from "./WalletApprovalCallout";
-import { ConnectWalletCalloutWarning } from "./ConnectWalletCalloutWarning";
 import { ConnectWalletCallout } from "./ConnectWalletCallout";
+import { ONE_ETHER } from "efi/crypto/ethereum";
+import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
+import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 
 interface BuyFYTConfirmationDrawerProps {
   chainId: number | undefined;
@@ -66,23 +68,37 @@ export const BuyFYTConfirmationDrawer: FC<BuyFYTConfirmationDrawerProps> = ({
   onClose,
   pool,
 }) => {
+  const { isDarkMode, darkModeClassName } = useDarkMode();
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
 
+  // base asset calls
   let baseAssetContract: ERC20 | undefined;
   if (baseAsset.type === CryptoAssetType.ERC20) {
     baseAssetContract = baseAsset.tokenContract;
   }
   const onApproveClick = useOnApproveClick(baseAssetContract, signer, account);
-
-  const { isDarkMode, darkModeClassName } = useDarkMode();
   const baseAssetName = useCryptoName(baseAsset);
   const baseAssetSymbol = useCryptoSymbol(baseAsset);
   const baseAssetDecimals = useCryptoDecimals(baseAsset);
+
+  // tranche calls
+  const { data: trancheDecimals } = useSmartContractReadCall(
+    tranche,
+    "decimals"
+  );
   const { data: trancheUnlockTimestamp } = useSmartContractReadCall(
     tranche,
     "unlockTimestamp"
   );
+  const { data: tranchePriceBigNumber } = useOnSwapGivenIn(
+    pool,
+    tranche,
+    ONE_ETHER
+  );
+  const tranchePrice = +formatCurrency(tranchePriceBigNumber, trancheDecimals);
+  const roundedTranchePrice = tranchePrice.toFixed(4);
 
+  // vault calls
   const balancerVault = useBalancerVault();
   const {
     data: marketAllowance,
@@ -92,6 +108,7 @@ export const BuyFYTConfirmationDrawer: FC<BuyFYTConfirmationDrawerProps> = ({
     callArgs: [account as string, balancerVault?.address as string],
   });
 
+  // pool calls
   const amountAsBigNumber = parseUnits(amountIn || "0", baseAssetDecimals);
   const { data: amountOut } = useOnSwapGivenIn(
     pool,
@@ -116,7 +133,8 @@ export const BuyFYTConfirmationDrawer: FC<BuyFYTConfirmationDrawerProps> = ({
   const showApprovalCallout =
     account && !isMarketAllowanceLoading && requiresApproval && !hasApproval;
 
-  const amountOutFormatted = formatUnits(amountOut || 0, baseAssetDecimals);
+  const amountOutNumber = +formatUnits(amountOut || 0, baseAssetDecimals);
+  const amountOutFormatted = amountOutNumber.toFixed(4);
 
   const showWalletApprovalButton = account && requiresApproval;
   return (
@@ -127,14 +145,14 @@ export const BuyFYTConfirmationDrawer: FC<BuyFYTConfirmationDrawerProps> = ({
       style={!isDarkMode ? { background: "var(--bp3-bg-color)" } : {}}
       className={classNames(
         darkModeClassName,
-        tw("flex", "flex-col", "text-base", {
+        tw("flex", "flex-col", "text-base", "overflow-scroll", {
           "text-gray-700": !isDarkMode,
           "text-white": isDarkMode,
         })
       )}
     >
       {!account ? (
-        <div className={tw("p-4")}>
+        <div className={tw("p-10")}>
           <ConnectWalletCallout />
         </div>
       ) : null}
@@ -150,13 +168,32 @@ export const BuyFYTConfirmationDrawer: FC<BuyFYTConfirmationDrawerProps> = ({
         )}
       >
         <TransactionDetailsCallout
+          amountIn={amountIn}
           amountOut={amountOutFormatted}
           assetInIcon={AssetIcon}
+          assetInSymbol={baseAssetSymbol}
+          assetOutSymbol={`${baseAssetSymbol} Principal Token`}
           assetOutIcon={null}
-          amountIn={amountIn}
-        />
-
-        {!account ? <ConnectWalletCalloutWarning /> : null}
+        >
+          <div className={tw("flex", "flex-col", "space-y-6")}>
+            <LabeledText
+              muted={false}
+              text={<span>{t`Market rate`}</span>}
+              label={
+                <span
+                  className={tw("text-base")}
+                >{t`1 Principal Token = ${roundedTranchePrice} ${baseAssetSymbol}`}</span>
+              }
+            />
+            <LabeledText
+              muted={false}
+              text={<span>{t`Term date`}</span>}
+              label={
+                <span className={tw("text-base")}>{unlockTimeStampLabel}</span>
+              }
+            />
+          </div>
+        </TransactionDetailsCallout>
 
         {showApprovalCallout ? (
           <WalletApprovalCallout baseAssetSymbol={baseAssetSymbol} />

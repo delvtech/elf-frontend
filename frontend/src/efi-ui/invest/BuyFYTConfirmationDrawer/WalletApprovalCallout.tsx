@@ -18,7 +18,7 @@ export const WalletApprovalCallout: FC<WalletApprovalCalloutProps> = ({
     >
       <div
         className={"pt-1"}
-      >{t`Element uses Balancer Pools for trading. You'll need to grant Balancer approval to spend your ${baseAssetSymbol} in order to swap for FYTs.`}</div>
+      >{t`Element uses Balancer Pools for trading. You'll need to grant Balancer approval to spend your ${baseAssetSymbol} in order to swap for Principal Tokens.`}</div>
     </Callout>
   );
 };
