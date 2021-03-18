@@ -279,7 +279,7 @@ export const InvestCard: FC<InvestCardProps> = ({
         walletConnectionActive={walletConnectionActive}
         connector={connector}
         baseAsset={activeBaseAsset}
-        amount={amountIn}
+        amountIn={amountIn}
         tranche={activeTranche}
         isOpen={isDrawerOpen}
         onClose={() => setDrawerOpen(false)}
