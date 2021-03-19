@@ -80,7 +80,7 @@
     "react": "^16.14.0",
     "react-blockies": "^1.4.1",
     "react-dom": "^16.14.0",
-    "react-query": "^3.12.3",
+    "react-query": "^3.13.0",
     "react-render-markup": "^3.3.0",
     "react-scripts": "4.0.3",
     "react-spring": "^8.0.27",
