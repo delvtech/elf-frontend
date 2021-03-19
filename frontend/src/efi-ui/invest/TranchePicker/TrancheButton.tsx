@@ -20,12 +20,14 @@ import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
 import { usePositionForTranche } from "efi-ui/tranche/usePositionForTranche";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 
-export const TrancheButton: FC<TrancheButtonProps> = ({
-  library,
-  account,
-  tranche,
-  onClick,
-}) => {
+interface TrancheButtonProps {
+  library: Web3Provider | undefined;
+  account: string | null | undefined;
+  tranche: Tranche | undefined;
+  onClick?: (event: React.MouseEvent<HTMLElement>) => void;
+}
+
+export const TrancheButton: FC<TrancheButtonProps> = ({ tranche, onClick }) => {
   const decimalsResult = useSmartContractReadCall(tranche, "decimals");
   const unlockTimestampResult = useSmartContractReadCall(
     tranche,
@@ -117,9 +119,3 @@ export const TrancheButton: FC<TrancheButtonProps> = ({
     </button>
   );
 };
-interface TrancheButtonProps {
-  library: Web3Provider | undefined;
-  account: string | null | undefined;
-  tranche: Tranche | undefined;
-  onClick?: (event: React.MouseEvent<HTMLElement>) => void;
-}
