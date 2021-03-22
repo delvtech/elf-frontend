@@ -4,30 +4,30 @@ import { BigNumber } from "ethers";
 
 import { StaticContractMethodArgs } from "efi/contracts/types";
 
-export function makeOnSwapGivenInCallArgs(
+export function makeOnSwapGivenOutCallArgs(
   poolId: string | undefined,
   account: string | null | undefined,
   tokenIn: ERC20 | undefined,
   amount: BigNumber | undefined,
   tokenOut: ERC20 | undefined,
-  balances: BigNumber[] | undefined,
+  poolTokenBalances: BigNumber[] | undefined,
   latestBlockNumber: number | undefined
-): StaticContractMethodArgs<YieldCurvePool, "onSwapGivenIn"> | undefined {
+): StaticContractMethodArgs<YieldCurvePool, "onSwapGivenOut"> | undefined {
   if (
     !account ||
     !poolId ||
     !tokenIn ||
     !amount ||
     !tokenOut ||
-    !balances?.length ||
+    !poolTokenBalances?.length ||
     !latestBlockNumber
   ) {
     return undefined;
   }
-  const callArgs: StaticContractMethodArgs<YieldCurvePool, "onSwapGivenIn"> = [
+  const callArgs: StaticContractMethodArgs<YieldCurvePool, "onSwapGivenOut"> = [
     {
       poolId: poolId,
-      amountIn: amount,
+      amountOut: amount,
       tokenIn: tokenIn?.address,
       tokenOut: tokenOut?.address,
 
@@ -36,8 +36,8 @@ export function makeOnSwapGivenInCallArgs(
       latestBlockNumberUsed: latestBlockNumber,
       userData: poolId,
     },
-    balances[0],
-    balances[1],
+    poolTokenBalances[0],
+    poolTokenBalances[1],
   ];
 
   return callArgs;

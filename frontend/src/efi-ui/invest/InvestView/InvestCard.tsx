@@ -1,4 +1,4 @@
-import React, { FC, Fragment, useEffect, useState } from "react";
+import React, { FC, Fragment, useCallback, useEffect, useState } from "react";
 
 import {
   Button,
@@ -42,6 +42,7 @@ import { ONE_ETHER } from "efi/crypto/ethereum";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 
 import { InvestmentAmountInput } from "./InvestmentAmountInput";
+import { useOnSwapGivenOut } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenOut";
 
 export interface InvestCardProps {
   library: Web3Provider | undefined;
@@ -54,6 +55,13 @@ export interface InvestCardProps {
 
   tranchesByBaseAsset: Record<string, Tranche[]>;
 }
+
+/**
+ * ActiveInput is used to prevent infinite calls to onSwapGivenIn and
+ * onSwapGivenOut because they are not idempotent and will change based on
+ * each other's latest result.
+ */
+type ActiveInput = "amountIn" | "amountOut";
 
 const calloutClassName = tw(
   "flex",
@@ -73,11 +81,24 @@ export const InvestCard: FC<InvestCardProps> = ({
   walletConnectionActive,
   tranchesByBaseAsset,
 }) => {
+  // prefs
   const { isDarkMode } = useDarkMode();
+
+  // local state
   const [isDrawerOpen, setDrawerOpen] = useState(false);
+  const [activeInput, setActiveInput] = useState<ActiveInput>("amountIn");
   const [amountIn, setAmountIn] = useState<string | undefined>();
   const [amountOut, setAmountOut] = useState<string | undefined>();
+  const onAmountInChange = useCallback((newAmountIn: string) => {
+    setActiveInput("amountIn");
+    setAmountIn(newAmountIn);
+  }, []);
+  const onAmountOutChange = useCallback((newAmountOut: string) => {
+    setActiveInput("amountOut");
+    setAmountOut(newAmountOut);
+  }, []);
 
+  // base asset
   const [activeBaseAsset, setActiveBaseAsset] = useState(baseAssets[0]);
   const activeBaseAssetSymbol = useCryptoSymbol(activeBaseAsset);
   const activeBaseAssetDecimals = useCryptoDecimals(activeBaseAsset);
@@ -87,14 +108,14 @@ export const InvestCard: FC<InvestCardProps> = ({
     activeBaseAsset
   );
 
+  // tranche
   const {
     activeTrancheIndex,
     activeTranche,
     availableTranches,
     setActiveTranche,
   } = useActiveTranche(tranchesByBaseAsset, activeBaseAsset);
-
-  const trancheDecimalsResult = useSmartContractReadCall(
+  const { data: trancheDecimals } = useSmartContractReadCall(
     activeTranche,
     "decimals"
   );
@@ -115,35 +136,58 @@ export const InvestCard: FC<InvestCardProps> = ({
     "symbol"
   );
 
+  // input calculations
   const amountInAsBigNumber = amountIn
     ? parseUnits(amountIn, activeBaseAssetDecimals)
     : undefined;
 
-  const { data: swapAmountOut } = useOnSwapGivenIn(
+  const amountOutAsBigNumber = amountOut
+    ? parseUnits(amountOut, trancheDecimals)
+    : undefined;
+
+  // the amount of tranche you get out
+  const { data: swapGivenIn } = useOnSwapGivenIn(
     pool,
     inputToken,
     amountInAsBigNumber
   );
 
-  // sync the amount in and amount out
-  useUpdateAmountOut(swapAmountOut, setAmountOut, activeBaseAssetDecimals);
+  // the amount of base asset you must put in
+  const { data: swapGivenOut } = useOnSwapGivenOut(
+    pool,
+    activeTranche,
+    amountOutAsBigNumber
+  );
 
-  let totalYield = 0;
-  if (swapAmountOut) {
-    const yieldAsBigNumber = swapAmountOut.sub(amountInAsBigNumber || 0);
-    totalYield = +formatUnits(yieldAsBigNumber, activeBaseAssetDecimals);
-  }
+  // Effects to sync inputs
+  // sync the inputs for amount in and out
+  // when we get a new result for the swapAmountOut, update the text input to reflect it
+  // when we get a new result for the swapAmountIn, update the text input to reflect it
+  useSyncWithActiveInput(
+    swapGivenIn ? formatUnits(swapGivenIn, activeBaseAssetDecimals) : undefined,
+    setAmountOut,
+    activeInput,
+    "amountOut"
+  );
+  useSyncWithActiveInput(
+    swapGivenOut
+      ? formatUnits(swapGivenOut, activeBaseAssetDecimals)
+      : undefined,
+    setAmountIn,
+    activeInput,
+    "amountIn"
+  );
 
-  let percentYield = 0;
-  if (amountIn) {
-    percentYield = (totalYield / +amountIn) * 100;
-  }
+  const totalYield = calculateTotalYield(
+    swapGivenIn,
+    amountInAsBigNumber,
+    activeBaseAssetDecimals
+  );
+
+  const percentYield = calculatePercentYield(amountIn, totalYield);
 
   const tranchePriceBigNumber = getQueryData(tranchePriceResult);
-  const tranchePrice = +formatCurrency(
-    tranchePriceBigNumber,
-    getQueryData(trancheDecimalsResult)
-  );
+  const tranchePrice = +formatCurrency(tranchePriceBigNumber, trancheDecimals);
 
   const roundedTranchePrice = tranchePrice.toFixed(4);
   const marketRateLabel = t`1 ${inputTokenSymbol} Principal Token = ${roundedTranchePrice} ${activeBaseAssetSymbol}`;
@@ -185,7 +229,7 @@ export const InvestCard: FC<InvestCardProps> = ({
               }
               placeholder="0.00"
               value={amountIn}
-              onValueChange={setAmountIn}
+              onValueChange={onAmountInChange}
               assetBalance={activeBaseAssetBalance}
             />
           </div>
@@ -222,7 +266,7 @@ export const InvestCard: FC<InvestCardProps> = ({
               }
               placeholder="0.00"
               value={amountOut}
-              onValueChange={setAmountOut}
+              onValueChange={onAmountOutChange}
               assetBalance={activeBaseAssetBalance}
             />
           </div>
@@ -289,23 +333,46 @@ export const InvestCard: FC<InvestCardProps> = ({
   );
 };
 
-function useUpdateAmountOut(
-  swapAmountOut: BigNumber | undefined,
-  setAmountOut: React.Dispatch<React.SetStateAction<string | undefined>>,
-  activeBaseAssetDecimals: number
+function calculatePercentYield(
+  amountIn: string | undefined,
+  totalYield: number
+) {
+  let percentYield = 0;
+  if (amountIn) {
+    percentYield = (totalYield / +amountIn) * 100;
+  }
+  return percentYield;
+}
+
+function calculateTotalYield(
+  amountOut: BigNumber | undefined,
+  amountIn: BigNumber | undefined,
+  decimalsAmountIn: number
+) {
+  let totalYield = 0;
+  if (amountOut) {
+    const yieldAsBigNumber = amountOut.sub(amountIn || 0);
+    totalYield = +formatUnits(yieldAsBigNumber, decimalsAmountIn);
+  }
+  return totalYield;
+}
+
+/**
+ * When the swap amount changes, we need to update the text input.
+ */
+function useSyncWithActiveInput(
+  newAmount: string | undefined,
+  setAmount: React.Dispatch<React.SetStateAction<string | undefined>>,
+  activeInput: "amountIn" | "amountOut",
+  syncWithInput: "amountIn" | "amountOut"
 ) {
   useEffect(() => {
-    if (!swapAmountOut) {
-      setAmountOut(undefined);
+    // don't update the active input out from under the user.
+    if (activeInput === syncWithInput) {
       return;
     }
 
-    const newAmountAsNumber = +formatUnits(
-      swapAmountOut,
-      activeBaseAssetDecimals
-    );
-    const newAmountOut = newAmountAsNumber.toFixed(4);
-
-    setAmountOut(newAmountOut);
-  }, [activeBaseAssetDecimals, setAmountOut, swapAmountOut]);
+    // Otherwise, if we have a new amount we'll set it
+    setAmount(newAmount);
+  }, [setAmount, newAmount, activeInput, syncWithInput]);
 }
