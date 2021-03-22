@@ -15,6 +15,7 @@
 pragma solidity ^0.7.0;
 pragma experimental ABIEncoderV2;
 
+import "hardhat/console.sol";
 import "@openzeppelin/contracts/utils/SafeCast.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
@@ -110,9 +111,14 @@ abstract contract PoolRegistry is
      *
      * Due to how Pool IDs are created, this is done with no storage accesses and costs little gas.
      */
-    function _getPoolSpecialization(bytes32 poolId) internal pure returns (PoolSpecialization) {
+    function _getPoolSpecialization(bytes32 poolId)
+        internal
+        pure
+        returns (PoolSpecialization)
+    {
         // | 20 bytes pool address | 2 bytes specialization setting | 10 bytes nonce |
-        return PoolSpecialization(uint256(poolId >> (10 * 8)) & (2**(2 * 8) - 1));
+        return
+            PoolSpecialization(uint256(poolId >> (10 * 8)) & (2**(2 * 8) - 1));
     }
 
     function registerPool(PoolSpecialization specialization)
@@ -123,7 +129,8 @@ abstract contract PoolRegistry is
         returns (bytes32)
     {
         // Use _totalPools as the Pool ID nonce. uint80 assumes there will never be more than than 2**80 Pools.
-        bytes32 poolId = _toPoolId(msg.sender, specialization, uint80(_poolNonce.current()));
+        bytes32 poolId =
+            _toPoolId(msg.sender, specialization, uint80(_poolNonce.current()));
         require(!_isPoolRegistered[poolId], "INVALID_POOL_ID"); // Should never happen
 
         _poolNonce.increment();
@@ -189,7 +196,10 @@ abstract contract PoolRegistry is
         IERC20[] calldata tokens,
         address[] calldata assetManagers
     ) external override nonReentrant noEmergencyPeriod onlyPool(poolId) {
-        InputHelpers.ensureInputLengthMatch(tokens.length, assetManagers.length);
+        InputHelpers.ensureInputLengthMatch(
+            tokens.length,
+            assetManagers.length
+        );
 
         PoolSpecialization specialization = _getPoolSpecialization(poolId);
         if (specialization == PoolSpecialization.TWO_TOKEN) {
@@ -246,21 +256,30 @@ abstract contract PoolRegistry is
         uint256[] memory maxAmountsIn,
         bool fromInternalBalance,
         bytes memory userData
-    ) external override nonReentrant noEmergencyPeriod withRegisteredPool(poolId) authenticateFor(sender) {
+    )
+        external
+        override
+        nonReentrant
+        noEmergencyPeriod
+        withRegisteredPool(poolId)
+        authenticateFor(sender)
+    {
         InputHelpers.ensureInputLengthMatch(tokens.length, maxAmountsIn.length);
 
-        bytes32[] memory balances = _validateTokensAndGetBalances(poolId, tokens);
+        bytes32[] memory balances =
+            _validateTokensAndGetBalances(poolId, tokens);
 
         // Call the `onJoinPool` hook to get the amounts to send to the Pool and to charge as protocol swap fees for
         // each token.
-        (uint256[] memory amountsIn, uint256[] memory dueProtocolFeeAmounts) = _callOnJoinPool(
-            poolId,
-            tokens,
-            balances,
-            sender,
-            recipient,
-            userData
-        );
+        (uint256[] memory amountsIn, uint256[] memory dueProtocolFeeAmounts) =
+            _callOnJoinPool(
+                poolId,
+                tokens,
+                balances,
+                sender,
+                recipient,
+                userData
+            );
 
         for (uint256 i = 0; i < tokens.length; ++i) {
             uint256 amountIn = amountsIn[i];
@@ -284,7 +303,13 @@ abstract contract PoolRegistry is
         // Update the Pool's balance - how this is done depends on the Pool specialization setting.
         PoolSpecialization specialization = _getPoolSpecialization(poolId);
         if (specialization == PoolSpecialization.TWO_TOKEN) {
-            _setTwoTokenPoolCashBalances(poolId, tokens[0], balances[0], tokens[1], balances[1]);
+            _setTwoTokenPoolCashBalances(
+                poolId,
+                tokens[0],
+                balances[0],
+                tokens[1],
+                balances[1]
+            );
         } else if (specialization == PoolSpecialization.MINIMAL_SWAP_INFO) {
             _setMinimalSwapInfoPoolBalances(poolId, tokens, balances);
         } else {
@@ -302,28 +327,40 @@ abstract contract PoolRegistry is
         uint256[] memory minAmountsOut,
         bool toInternalBalance,
         bytes memory userData
-    ) external override nonReentrant withRegisteredPool(poolId) authenticateFor(sender) {
-        InputHelpers.ensureInputLengthMatch(tokens.length, minAmountsOut.length);
+    )
+        external
+        override
+        nonReentrant
+        withRegisteredPool(poolId)
+        authenticateFor(sender)
+    {
+        InputHelpers.ensureInputLengthMatch(
+            tokens.length,
+            minAmountsOut.length
+        );
 
-        bytes32[] memory balances = _validateTokensAndGetBalances(poolId, tokens);
+        bytes32[] memory balances =
+            _validateTokensAndGetBalances(poolId, tokens);
 
         // Call the `onExitPool` hook to get the amounts to take from the Pool and to charge as protocol swap fees for
         // each token.
-        (uint256[] memory amountsOut, uint256[] memory dueProtocolFeeAmounts) = _callOnExitPool(
-            poolId,
-            tokens,
-            balances,
-            sender,
-            recipient,
-            userData
-        );
+        (uint256[] memory amountsOut, uint256[] memory dueProtocolFeeAmounts) =
+            _callOnExitPool(
+                poolId,
+                tokens,
+                balances,
+                sender,
+                recipient,
+                userData
+            );
 
         for (uint256 i = 0; i < tokens.length; ++i) {
             require(amountsOut[i] >= minAmountsOut[i], "EXIT_BELOW_MIN");
             uint256 amountOut = amountsOut[i];
 
             // Send tokens from the recipient - possibly to Internal Balance
-            uint256 withdrawFee = _sendTokens(tokens[i], amountOut, recipient, toInternalBalance);
+            uint256 withdrawFee =
+                _sendTokens(tokens[i], amountOut, recipient, toInternalBalance);
 
             uint256 feeToPay = dueProtocolFeeAmounts[i];
 
@@ -338,7 +375,13 @@ abstract contract PoolRegistry is
         // Update the Pool's balance - how this is done depends on the Pool specialization setting.
         PoolSpecialization specialization = _getPoolSpecialization(poolId);
         if (specialization == PoolSpecialization.TWO_TOKEN) {
-            _setTwoTokenPoolCashBalances(poolId, tokens[0], balances[0], tokens[1], balances[1]);
+            _setTwoTokenPoolCashBalances(
+                poolId,
+                tokens[0],
+                balances[0],
+                tokens[1],
+                balances[1]
+            );
         } else if (specialization == PoolSpecialization.MINIMAL_SWAP_INFO) {
             _setMinimalSwapInfoPoolBalances(poolId, tokens, balances);
         } else {
@@ -361,18 +404,27 @@ abstract contract PoolRegistry is
         address sender,
         bool fromInternalBalance
     ) internal {
+        console.log("_receiveTokens");
+        console.log("fromInternalBalance", fromInternalBalance);
         if (amount == 0) {
             return;
         }
 
         uint256 toReceive = amount;
+        console.log("toReceive", toReceive);
+        console.log("toReceive", toReceive / 1e18);
         if (fromInternalBalance) {
             uint256 currentInternalBalance = _getInternalBalance(sender, token);
+            console.log("currentInternalBalance", currentInternalBalance);
             uint256 toWithdraw = Math.min(currentInternalBalance, amount);
 
             // toWithdraw is by construction smaller or equal than currentInternalBalance and toReceive, so we don't
             // need checked arithmetic.
-            _setInternalBalance(sender, token, currentInternalBalance - toWithdraw);
+            _setInternalBalance(
+                sender,
+                token,
+                currentInternalBalance - toWithdraw
+            );
             toReceive -= toWithdraw;
         }
 
@@ -420,8 +472,15 @@ abstract contract PoolRegistry is
         address sender,
         address recipient,
         bytes memory userData
-    ) private returns (uint256[] memory amountsIn, uint256[] memory dueProtocolFeeAmounts) {
-        (uint256[] memory totalBalances, uint256 latestBlockNumberUsed) = balances.totalsAndMaxBlockNumber();
+    )
+        private
+        returns (
+            uint256[] memory amountsIn,
+            uint256[] memory dueProtocolFeeAmounts
+        )
+    {
+        (uint256[] memory totalBalances, uint256 latestBlockNumberUsed) =
+            balances.totalsAndMaxBlockNumber();
 
         address pool = _getPoolAddress(poolId);
         (amountsIn, dueProtocolFeeAmounts) = IBasePool(pool).onJoinPool(
@@ -434,7 +493,11 @@ abstract contract PoolRegistry is
             userData
         );
 
-        InputHelpers.ensureInputLengthMatch(tokens.length, amountsIn.length, dueProtocolFeeAmounts.length);
+        InputHelpers.ensureInputLengthMatch(
+            tokens.length,
+            amountsIn.length,
+            dueProtocolFeeAmounts.length
+        );
     }
 
     /**
@@ -448,8 +511,15 @@ abstract contract PoolRegistry is
         address sender,
         address recipient,
         bytes memory userData
-    ) private returns (uint256[] memory amountsOut, uint256[] memory dueProtocolFeeAmounts) {
-        (uint256[] memory totalBalances, uint256 latestBlockNumberUsed) = balances.totalsAndMaxBlockNumber();
+    )
+        private
+        returns (
+            uint256[] memory amountsOut,
+            uint256[] memory dueProtocolFeeAmounts
+        )
+    {
+        (uint256[] memory totalBalances, uint256 latestBlockNumberUsed) =
+            balances.totalsAndMaxBlockNumber();
 
         address pool = _getPoolAddress(poolId);
         (amountsOut, dueProtocolFeeAmounts) = IBasePool(pool).onExitPool(
@@ -462,7 +532,11 @@ abstract contract PoolRegistry is
             userData
         );
 
-        InputHelpers.ensureInputLengthMatch(tokens.length, amountsOut.length, dueProtocolFeeAmounts.length);
+        InputHelpers.ensureInputLengthMatch(
+            tokens.length,
+            amountsOut.length,
+            dueProtocolFeeAmounts.length
+        );
     }
 
     /**
@@ -471,13 +545,16 @@ abstract contract PoolRegistry is
      * `expectedTokens` must equal exactly the token array returned by `getPoolTokens`: both arrays must have the same
      * length, elements and order.
      */
-    function _validateTokensAndGetBalances(bytes32 poolId, IERC20[] memory expectedTokens)
-        internal
-        view
-        returns (bytes32[] memory)
-    {
-        (IERC20[] memory actualTokens, bytes32[] memory balances) = _getPoolTokens(poolId);
-        InputHelpers.ensureInputLengthMatch(actualTokens.length, expectedTokens.length);
+    function _validateTokensAndGetBalances(
+        bytes32 poolId,
+        IERC20[] memory expectedTokens
+    ) internal view returns (bytes32[] memory) {
+        (IERC20[] memory actualTokens, bytes32[] memory balances) =
+            _getPoolTokens(poolId);
+        InputHelpers.ensureInputLengthMatch(
+            actualTokens.length,
+            expectedTokens.length
+        );
 
         for (uint256 i = 0; i < actualTokens.length; ++i) {
             require(actualTokens[i] == expectedTokens[i], "TOKENS_MISMATCH");
@@ -505,12 +582,10 @@ abstract contract PoolRegistry is
         }
     }
 
-    function withdrawFromPoolBalance(bytes32 poolId, AssetManagerTransfer[] memory transfers)
-        external
-        override
-        nonReentrant
-        noEmergencyPeriod
-    {
+    function withdrawFromPoolBalance(
+        bytes32 poolId,
+        AssetManagerTransfer[] memory transfers
+    ) external override nonReentrant noEmergencyPeriod {
         _ensureRegisteredPool(poolId);
         PoolSpecialization specialization = _getPoolSpecialization(poolId);
 
@@ -528,16 +603,19 @@ abstract contract PoolRegistry is
             }
 
             token.safeTransfer(msg.sender, amount);
-            emit PoolBalanceChanged(poolId, msg.sender, token, amount.toInt256());
+            emit PoolBalanceChanged(
+                poolId,
+                msg.sender,
+                token,
+                amount.toInt256()
+            );
         }
     }
 
-    function depositToPoolBalance(bytes32 poolId, AssetManagerTransfer[] memory transfers)
-        external
-        override
-        nonReentrant
-        noEmergencyPeriod
-    {
+    function depositToPoolBalance(
+        bytes32 poolId,
+        AssetManagerTransfer[] memory transfers
+    ) external override nonReentrant noEmergencyPeriod {
         _ensureRegisteredPool(poolId);
         PoolSpecialization specialization = _getPoolSpecialization(poolId);
 
@@ -555,16 +633,19 @@ abstract contract PoolRegistry is
             }
 
             token.safeTransferFrom(msg.sender, address(this), amount);
-            emit PoolBalanceChanged(poolId, msg.sender, token, -(amount.toInt256()));
+            emit PoolBalanceChanged(
+                poolId,
+                msg.sender,
+                token,
+                -(amount.toInt256())
+            );
         }
     }
 
-    function updateManagedBalance(bytes32 poolId, AssetManagerTransfer[] memory transfers)
-        external
-        override
-        nonReentrant
-        noEmergencyPeriod
-    {
+    function updateManagedBalance(
+        bytes32 poolId,
+        AssetManagerTransfer[] memory transfers
+    ) external override nonReentrant noEmergencyPeriod {
         _ensureRegisteredPool(poolId);
         PoolSpecialization specialization = _getPoolSpecialization(poolId);
 
@@ -586,7 +667,11 @@ abstract contract PoolRegistry is
     /**
      * @dev Returns all of `poolId`'s registered tokens, along with their raw balances.
      */
-    function _getPoolTokens(bytes32 poolId) internal view returns (IERC20[] memory tokens, bytes32[] memory balances) {
+    function _getPoolTokens(bytes32 poolId)
+        internal
+        view
+        returns (IERC20[] memory tokens, bytes32[] memory balances)
+    {
         PoolSpecialization specialization = _getPoolSpecialization(poolId);
         if (specialization == PoolSpecialization.TWO_TOKEN) {
             return _getTwoTokenPoolTokens(poolId);
@@ -617,9 +702,15 @@ abstract contract PoolRegistry is
      * @dev Reverts unless `poolId` corresponds to a registered Pool, `token` is registered for that Pool, and the
      * caller is the Pool's Asset Manager for `token`.
      */
-    function _ensurePoolAssetManagerIsSender(bytes32 poolId, IERC20 token) private view {
+    function _ensurePoolAssetManagerIsSender(bytes32 poolId, IERC20 token)
+        private
+        view
+    {
         _ensureTokenRegistered(poolId, token);
-        require(_poolAssetManagers[poolId][token] == msg.sender, "SENDER_NOT_ASSET_MANAGER");
+        require(
+            _poolAssetManagers[poolId][token] == msg.sender,
+            "SENDER_NOT_ASSET_MANAGER"
+        );
     }
 
     /**
@@ -632,7 +723,11 @@ abstract contract PoolRegistry is
     /**
      * @dev Returns true if `token` is registered for `poolId`.
      */
-    function _isTokenRegistered(bytes32 poolId, IERC20 token) private view returns (bool) {
+    function _isTokenRegistered(bytes32 poolId, IERC20 token)
+        private
+        view
+        returns (bool)
+    {
         PoolSpecialization specialization = _getPoolSpecialization(poolId);
         if (specialization == PoolSpecialization.TWO_TOKEN) {
             return _isTwoTokenPoolTokenRegistered(poolId, token);
