@@ -62,6 +62,9 @@ async function main() {
     usdcYearnVaultAssetProxy,
   } = await deployVaultsAndProxys(elementSigner, wethContract, usdcContract);
 
+  console.log("****************");
+  console.log("WETH");
+  console.log("****************");
   const {
     trancheContract: wethTrancheContract,
     fytPoolContract: wethFytPoolContract,
@@ -79,6 +82,10 @@ async function main() {
     { mintAmount: "20000", baseAssetIn: "20000", yieldAssetIn: "13000" }
   );
 
+  console.log("");
+  console.log("****************");
+  console.log("USDC");
+  console.log("****************");
   const {
     trancheContract: usdcTrancheContract,
     fytPoolContract: usdcFytPoolContract,

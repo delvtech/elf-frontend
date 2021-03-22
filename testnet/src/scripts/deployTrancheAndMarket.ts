@@ -57,6 +57,7 @@ export async function deployTrancheAndMarket(
     expiration
   );
 
+  console.log("-deployConvergentPool");
   // deploy an FYT market, seed with base asset
   const {
     poolId: fytPoolId,
@@ -70,6 +71,7 @@ export async function deployTrancheAndMarket(
     { swapFee, durationInSeconds }
   );
 
+  console.log("-setupPrincipleTokenPool");
   // seed market with initial yield asset
   await setupPrincipleTokenPool(
     signer,
@@ -80,6 +82,7 @@ export async function deployTrancheAndMarket(
     { mintAmount, baseAssetIn, yieldAssetIn }
   );
 
+  console.log("-setupInterestTokenPool");
   // now setup a yc market
   const {
     poolId: ycPoolId,

@@ -1,5 +1,5 @@
 import abi from "ethereumjs-abi";
-import { Signer } from "ethers";
+import { BigNumber, Signer } from "ethers";
 import { formatEther, parseEther } from "ethers/lib/utils";
 
 import { Tranche } from "src/types/Tranche";
@@ -28,16 +28,28 @@ export async function initializeConvergentPool(
   amountIn: string
 ) {
   const signerAddress = await signer.getAddress();
+  // tokens in ascending order by address
   let { tokens } = await vaultContract.getPoolTokens(poolId);
+  console.log("baseAsset", baseAssetContract.address);
+  console.log("trancheAsset", trancheContract.address);
+  console.log("tokens", tokens);
 
-  // [baseAsset, yieldAsset] Max amount for each asset to join the pool with. note that the yield
-  // asset amount doesn't matter for the first joinPool action for convergent pools since the
-  // initial join only allows base asset.  this has something to do with the way we keep track of
-  // the yield asset price based off of swaps.  to initialize the pool with yield asset we need to
-  // follow up the joinPool by swapping in some yield asset for some base asset.
-  const maxAmountsIn = [parseEther(amountIn), parseEther("0")];
+  // Max amount for each asset to join the pool with. the initial join only allows base asset.  this
+  // has something to do with the way we keep track of the yield asset price based off of swaps.  to
+  // initialize the pool with yield asset we need to follow up the joinPool by swapping in some
+  // yield asset for some base asset.
+  let maxAmountsIn: BigNumber[];
+
+  // make sure match the order the balancer vault has the tokens in.
+  if (tokens[0] === baseAssetContract.address) {
+    maxAmountsIn = [parseEther(amountIn), parseEther(amountIn)];
+  } else {
+    maxAmountsIn = [parseEther(amountIn), parseEther(amountIn)];
+  }
+
   console.log("amountIn", amountIn);
   const amounts = maxAmountsIn.map((amt) => amt.toHexString());
+  maxAmountsIn.forEach((a) => console.log("maxAmount", formatEther(a)));
 
   // Whether or not to use balances held in balancer.  Since The Vault has nothing, set this to false.
   const fromInternalBalance = false;
@@ -64,5 +76,13 @@ export async function initializeConvergentPool(
     userData
   );
   await joinReceipt.wait(1);
+  const { tokens: tokensOut, balances } = await vaultContract.getPoolTokens(
+    poolId
+  );
+  console.log("tokensOut", tokensOut);
+  console.log(
+    "balances",
+    balances.map((bn) => formatEther(bn))
+  );
   return joinReceipt;
 }

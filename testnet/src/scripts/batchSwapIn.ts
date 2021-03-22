@@ -1,6 +1,6 @@
 import { BytesLike } from "@ethersproject/bytes";
-import { BigNumberish } from "ethers";
-import { parseUnits } from "ethers/lib/utils";
+import { BigNumber, BigNumberish } from "ethers";
+import { parseEther, parseUnits } from "ethers/lib/utils";
 
 import { ERC20 } from "src/types/ERC20";
 import { Vault } from "src/types/Vault";
@@ -29,9 +29,23 @@ export async function batchSwapIn(
   balancerVaultContract: Vault,
   swapInAmount: string
 ) {
-  const tokens: string[] = [tokenInContract.address, tokenOutContract.address];
-  const tokenInDecimals = await tokenInContract.decimals();
-  const amountIn = parseUnits(swapInAmount, tokenInDecimals);
+  const tokenInAddress = tokenInContract.address;
+  const tokenOutAddress = tokenOutContract.address;
+
+  const tokens: string[] = [tokenInAddress, tokenOutAddress].sort();
+  console.log("tokens", tokens);
+  const tokenInIndex = tokens.findIndex(
+    (address) => address === tokenInAddress
+  );
+  console.log("tokenInIndex", tokenInIndex);
+  const tokenOutIndex = tokens.findIndex(
+    (address) => address === tokenOutAddress
+  );
+  console.log("tokenOutIndex", tokenOutIndex);
+  // .map((a) => BigNumber.from(a))
+  // .sort((a, b) => a.lt(b) ? )
+  // .map((a) => a.toHexString());
+  const amountIn = parseEther(swapInAmount);
   // have to set this to something
   const userData: BytesLike = poolId;
 
@@ -40,8 +54,8 @@ export async function batchSwapIn(
     {
       poolId,
       // indicies from 'tokens', puttin FYTs in, getting base asset out.
-      tokenInIndex: 0,
-      tokenOutIndex: 1,
+      tokenInIndex,
+      tokenOutIndex,
       amountIn,
       userData,
     },

@@ -22,6 +22,7 @@ export async function setupPrincipleTokenPool(
   const sender = await signer.getAddress();
 
   // put base asset into market
+  console.log("--initializeConvergentPool");
   await initializeConvergentPool(
     poolId,
     signer,
@@ -32,6 +33,7 @@ export async function setupPrincipleTokenPool(
   );
 
   // mint some tranche assets
+  console.log("--mintTrancheAssets");
   await mintTrancheAssets(
     signer,
     baseAssetContract,
@@ -40,6 +42,7 @@ export async function setupPrincipleTokenPool(
   );
 
   // trade some tranche assets for some base assets
+  console.log("--batchSwapIn");
   const swapReceipt = await batchSwapIn(
     trancheContract,
     (baseAssetContract as unknown) as ERC20,

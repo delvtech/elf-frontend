@@ -1,4 +1,4 @@
-import { Signer } from "ethers";
+import { BigNumber, Signer } from "ethers";
 import { defaultAbiCoder, parseEther, parseUnits } from "ethers/lib/utils";
 import { MAX_ALLOWANCE } from "src/maxAllowance";
 import { InterestToken__factory } from "src/types/factories/InterestToken__factory";
@@ -37,9 +37,19 @@ export async function setupInterestTokenPool(
     interestTokenAddress,
     signer
   );
-  const poolTokens = [interestTokenAddress, baseAssetContract.address];
-  console.log("poolTokens", poolTokens);
-  const weights = [parseEther("10"), parseEther("1")];
+
+  const interestTokenValue = BigNumber.from(interestTokenAddress);
+  const baseAssetValue = BigNumber.from(baseAssetContract.address);
+
+  let poolTokens: string[];
+  let weights: BigNumber[];
+  if (interestTokenValue.lt(baseAssetValue)) {
+    poolTokens = [interestTokenAddress, baseAssetContract.address];
+    weights = [parseEther("10"), parseEther("1")];
+  } else {
+    poolTokens = [baseAssetContract.address, interestTokenAddress];
+    weights = [parseEther("1"), parseEther("10")];
+  }
 
   const { poolId, poolContract } = await deployWeightedPool(
     signer,
