@@ -36,8 +36,8 @@ export function makeOnSwapGivenOutCallArgs(
       latestBlockNumberUsed: latestBlockNumber,
       userData: poolId,
     },
-    poolTokenBalances?.[0],
-    poolTokenBalances?.[1],
+    poolTokenBalances[0],
+    poolTokenBalances[1],
   ];
 
   return callArgs;

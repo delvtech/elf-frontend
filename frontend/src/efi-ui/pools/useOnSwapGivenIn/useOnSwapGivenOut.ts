@@ -33,7 +33,7 @@ export function useOnSwapGivenOut(
     enabled: [
       poolId,
       pool?.address,
-      tokenOut,
+      tokenIn,
       amount,
       tokenOut,
       balances.length,

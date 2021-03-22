@@ -36,8 +36,8 @@ export function makeOnSwapGivenInCallArgs(
       latestBlockNumberUsed: latestBlockNumber,
       userData: poolId,
     },
-    balances?.[0],
-    balances?.[1],
+    balances[0],
+    balances[1],
   ];
 
   return callArgs;
