@@ -86,22 +86,22 @@ async function main() {
   console.log("****************");
   console.log("USDC");
   console.log("****************");
-  const {
-    trancheContract: usdcTrancheContract,
-    fytPoolContract: usdcFytPoolContract,
-    fytPoolId: usdcFytPoolId,
-    ycPoolContract: usdcYcPoolContract,
-    ycPoolId: usdcYcPoolId,
-  } = await deployTrancheAndMarket(
-    elementSigner,
-    trancheFactory,
-    usdcYearnVaultAssetProxy,
-    usdcContract,
-    balancerVaultContract,
-    convergentPoolFactory,
-    weightedPoolFactory,
-    { mintAmount: "20000", baseAssetIn: "20000", yieldAssetIn: "13000" }
-  );
+  // const {
+  //   trancheContract: usdcTrancheContract,
+  //   fytPoolContract: usdcFytPoolContract,
+  //   fytPoolId: usdcFytPoolId,
+  //   ycPoolContract: usdcYcPoolContract,
+  //   ycPoolId: usdcYcPoolId,
+  // } = await deployTrancheAndMarket(
+  //   elementSigner,
+  //   trancheFactory,
+  //   usdcYearnVaultAssetProxy,
+  //   usdcContract,
+  //   balancerVaultContract,
+  //   convergentPoolFactory,
+  //   weightedPoolFactory,
+  //   { mintAmount: "20000", baseAssetIn: "20000", yieldAssetIn: "13000" }
+  // );
 
   // deploy user proxy
   const userProxyContract = await deployUserProxy(
