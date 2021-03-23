@@ -128,7 +128,8 @@ export const BuyFYTConfirmationDrawer: FC<BuyFYTConfirmationDrawerProps> = ({
     ? formatFullDate(unlockTimeStampDate)
     : undefined;
 
-  const hasApproval = !!amountIn && marketAllowance?.gte(amountIn);
+  const hasApproval =
+    !!amountIn && marketAllowance?.gte(parseUnits(amountIn, baseAssetDecimals));
   const requiresApproval = isApprovalRequiredForTransactions(baseAsset);
   const showApprovalCallout =
     account && !isMarketAllowanceLoading && requiresApproval && !hasApproval;
