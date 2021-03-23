@@ -190,7 +190,7 @@ export const InvestCard: FC<InvestCardProps> = ({
   const tranchePrice = +formatCurrency(tranchePriceBigNumber, trancheDecimals);
 
   const roundedTranchePrice = tranchePrice.toFixed(4);
-  const marketRateLabel = t`1 ${inputTokenSymbol} Principal Token = ${roundedTranchePrice} ${activeBaseAssetSymbol}`;
+  const marketRateLabel = t`1 ${inputTokenSymbol} Principal Token ≈ ${roundedTranchePrice} ${activeBaseAssetSymbol}`;
 
   return (
     <Fragment>
@@ -363,8 +363,8 @@ function calculateTotalYield(
 function useSyncWithActiveInput(
   newAmount: string | undefined,
   setAmount: React.Dispatch<React.SetStateAction<string | undefined>>,
-  activeInput: "amountIn" | "amountOut",
-  syncWithInput: "amountIn" | "amountOut"
+  activeInput: ActiveInput,
+  syncWithInput: ActiveInput
 ) {
   useEffect(() => {
     // don't update the active input out from under the user.
@@ -372,7 +372,13 @@ function useSyncWithActiveInput(
       return;
     }
 
+    if (!newAmount) {
+      setAmount(undefined);
+      return;
+    }
+
     // Otherwise, if we have a new amount we'll set it
-    setAmount(newAmount);
+    const roundedAmount = (+newAmount).toFixed(4);
+    setAmount(roundedAmount);
   }, [setAmount, newAmount, activeInput, syncWithInput]);
 }
