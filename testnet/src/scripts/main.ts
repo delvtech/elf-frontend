@@ -131,7 +131,7 @@ async function main() {
 
       // tranche contracts
       wethTrancheAddress: wethTrancheContract.address,
-      usdcTrancheAddress: usdcTrancheContract.address,
+      // usdcTrancheAddress: usdcTrancheContract.address,
 
       // market addresses and ids
       marketFyWethAddress: wethFytPoolContract.address,
@@ -139,10 +139,10 @@ async function main() {
       marketYcWethAddress: wethYcPoolContract.address,
       marketYcWethId: wethYcPoolId,
 
-      marketFyUsdcAddress: usdcFytPoolContract.address,
-      marketFyUsdcId: usdcFytPoolId,
-      marketYcUsdcAddress: usdcYcPoolContract.address,
-      marketYcUsdcId: usdcYcPoolId,
+      // marketFyUsdcAddress: usdcFytPoolContract.address,
+      // marketFyUsdcId: usdcFytPoolId,
+      // marketYcUsdcAddress: usdcYcPoolContract.address,
+      // marketYcUsdcId: usdcYcPoolId,
 
       // user proxy
       userProxyContractAddress: userProxyContract.address,
