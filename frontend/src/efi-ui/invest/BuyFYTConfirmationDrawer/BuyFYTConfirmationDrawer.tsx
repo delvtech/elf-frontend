@@ -15,6 +15,7 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { useBatchSwapGivenIn } from "efi-ui/balancer/useBatchSwapGivenIn";
+import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { matchSmartContractReadCallQuery } from "efi-ui/contracts/matchSmartContractReadCallQuery/matchSmartContractReadCallQuery";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useSmartContractTransaction } from "efi-ui/contracts/useSmartContractTransaction/useSmartContractTransaction";
@@ -22,21 +23,20 @@ import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
 import { useCryptoName } from "efi-ui/crypto/hooks/useCryptoName/useCryptoName";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
+import { isApprovalRequiredForTransactions } from "efi-ui/crypto/isApprovalRequiredForTransactions";
+import { TransactionDetailsCallout } from "efi-ui/invest/BuyFYTConfirmationDrawer/TransactionDetailsCallout";
 import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatFullDate } from "efi/base/dates";
+import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
 import { MAX_ALLOWANCE } from "efi/contracts/token";
 import { CryptoAssetType } from "efi/crypto/CryptoAsset";
+import { ONE_ETHER } from "efi/crypto/ethereum";
 import { PoolContract } from "efi/pools/PoolContract";
 
-import { isApprovalRequiredForTransactions } from "efi-ui/crypto/isApprovalRequiredForTransactions";
-import { TransactionDetailsCallout } from "./TransactionDetailsCallout";
-import { WalletApprovalCallout } from "./WalletApprovalCallout";
 import { ConnectWalletCallout } from "./ConnectWalletCallout";
-import { ONE_ETHER } from "efi/crypto/ethereum";
-import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
-import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
+import { WalletApprovalCallout } from "./WalletApprovalCallout";
 
 interface BuyFYTConfirmationDrawerProps {
   chainId: number | undefined;
@@ -182,7 +182,7 @@ export const BuyFYTConfirmationDrawer: FC<BuyFYTConfirmationDrawerProps> = ({
               label={
                 <span
                   className={tw("text-base")}
-                >{t`1 Principal Token = ${roundedTranchePrice} ${baseAssetSymbol}`}</span>
+                >{t`1 Principal Token ≈ ${roundedTranchePrice} ${baseAssetSymbol}`}</span>
               }
             />
             <LabeledText
