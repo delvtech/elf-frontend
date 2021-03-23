@@ -36,7 +36,10 @@ async function main() {
   });
 
   // deploy main balancer vault
-  const balancerVaultContract = await deployBalancerVault(balancerSigner);
+  const balancerVaultContract = await deployBalancerVault(
+    balancerSigner,
+    wethContract
+  );
   // register element with balancer so we can deploy pools
   await balancerVaultContract.changeRelayerAllowance(elementAddress, true);
 
