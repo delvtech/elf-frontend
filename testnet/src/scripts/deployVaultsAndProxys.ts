@@ -23,7 +23,10 @@ export async function deployVaultsAndProxys(
     "WETH Yearn Vault",
     "yWETH"
   );
-  // prevents divide by zero error
+
+  // seed the yearn vault with an initial totalSupply.  wrapped positions calculate the base asset
+  // amount per share by assets * numShares / totalSupply which will return a divide by zero error
+  // if total supply is zero.
   await wethContract.approve(yWeth.address, MAX_ALLOWANCE);
   await yWeth.deposit(parseUnits("1000", 6), signerAddress);
 
@@ -43,7 +46,10 @@ export async function deployVaultsAndProxys(
     "USDC Yearn Vault",
     "yUSDC"
   );
-  // prevents divide by zero error
+
+  // seed the yearn vault with an initial totalSupply.  wrapped positions calculate the base asset
+  // amount per share by assets * numShares / totalSupply which will return a divide by zero error
+  // if total supply is zero.
   await usdcContract.approve(yUsdc.address, MAX_ALLOWANCE);
   await yUsdc.deposit(parseUnits("1000", 6), signerAddress);
 

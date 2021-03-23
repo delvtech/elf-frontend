@@ -10,7 +10,7 @@ import { batchSwapIn } from "./batchSwapIn";
 import { initializeConvergentPool } from "./initializeConvergentPool";
 import { mintTrancheAssets } from "./mintTrancheAssets";
 
-export async function setupPrincipleTokenPool(
+export async function setupPrincipalTokenPool(
   signer: Signer,
   balancerVaultContract: Vault,
   poolId: string,

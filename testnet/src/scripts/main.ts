@@ -12,7 +12,7 @@ import { mintTokensForAddress } from "./mintTokensForAddress";
 import { deployUserProxy } from "./userProxy";
 import { deployInterestTokenFactory } from "src/scripts/deployInterestTokenFactory";
 import { deployTrancheFactory } from "src/scripts/deployTrancheFactory";
-import { deployConvergentPoolFactory } from "src/scripts/deployConvergetPoolFactory";
+import { deployConvergentPoolFactory } from "src/scripts/deployConvergentPoolFactory";
 
 async function main() {
   const elementSigner = await getSigner(SIGNER.ELEMENT);

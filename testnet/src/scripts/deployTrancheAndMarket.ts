@@ -1,5 +1,6 @@
 import { Signer } from "ethers";
 
+import { ConvergentPoolFactory } from "src/types/ConvergentPoolFactory";
 import { TrancheFactory } from "src/types/TrancheFactory";
 import { USDC } from "src/types/USDC";
 import { Vault } from "src/types/Vault";
@@ -7,13 +8,12 @@ import { WeightedPoolFactory } from "src/types/WeightedPoolFactory";
 import { WETH } from "src/types/WETH";
 import { YVaultAssetProxy } from "src/types/YVaultAssetProxy";
 
+import { deployConvergentPool } from "src/scripts/deployConvergentPool";
+import { setupPrincipalTokenPool } from "src/scripts/setupPrincipalToken";
 import { THIRTY_DAYS_IN_SECONDS } from "src/time";
 
-import { setupPrincipleTokenPool } from "./setupPrincipleTokenPool";
-import { setupInterestTokenPool } from "./setupInterestTokenPool";
 import { deployTranche } from "./deployTranche";
-import { deployConvergentPool } from "src/scripts/deployConvergentPool";
-import { ConvergentPoolFactory } from "src/types/ConvergentPoolFactory";
+import { setupInterestTokenPool } from "./setupInterestTokenPool";
 
 const defaultOptions = {
   swapFee: ".003",
@@ -71,9 +71,9 @@ export async function deployTrancheAndMarket(
     { swapFee, durationInSeconds }
   );
 
-  console.log("-setupPrincipleTokenPool");
+  console.log("-setupPrincipalTokenPool");
   // seed market with initial yield asset
-  await setupPrincipleTokenPool(
+  await setupPrincipalTokenPool(
     signer,
     balancerVaultContract,
     fytPoolId,
