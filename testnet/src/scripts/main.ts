@@ -10,6 +10,9 @@ import { deployWeightedPoolFactory } from "./deployWeightedPoolFactory";
 import { getSigner, SIGNER } from "./getSigner";
 import { mintTokensForAddress } from "./mintTokensForAddress";
 import { deployUserProxy } from "./userProxy";
+import { deployInterestTokenFactory } from "src/scripts/deployInterestTokenFactory";
+import { deployTrancheFactory } from "src/scripts/deployTrancheFactory";
+import { deployConvergentPoolFactory } from "src/scripts/deployConvergentPoolFactory";
 
 async function main() {
   const elementSigner = await getSigner(SIGNER.ELEMENT);
@@ -36,14 +39,20 @@ async function main() {
   const balancerVaultContract = await deployBalancerVault(balancerSigner);
   // register element with balancer so we can deploy pools
   await balancerVaultContract.changeRelayerAllowance(elementAddress, true);
-  // deploy the yc market factory
+
+  // deploy factories
   const weightedPoolFactory = await deployWeightedPoolFactory(
     elementSigner,
     balancerVaultContract
   );
-  await balancerVaultContract.changeRelayerAllowance(
-    weightedPoolFactory.address,
-    true
+  const convergentPoolFactory = await deployConvergentPoolFactory(
+    elementSigner,
+    balancerVaultContract
+  );
+  const interestTokenFactory = await deployInterestTokenFactory(elementSigner);
+  const trancheFactory = await deployTrancheFactory(
+    elementSigner,
+    interestTokenFactory
   );
 
   const {
@@ -53,6 +62,9 @@ async function main() {
     usdcYearnVaultAssetProxy,
   } = await deployVaultsAndProxys(elementSigner, wethContract, usdcContract);
 
+  console.log("****************");
+  console.log("WETH");
+  console.log("****************");
   const {
     trancheContract: wethTrancheContract,
     fytPoolContract: wethFytPoolContract,
@@ -61,33 +73,41 @@ async function main() {
     ycPoolId: wethYcPoolId,
   } = await deployTrancheAndMarket(
     elementSigner,
+    trancheFactory,
     wethYearnVaultAssetProxy,
     wethContract,
     balancerVaultContract,
+    convergentPoolFactory,
     weightedPoolFactory,
     { mintAmount: "20000", baseAssetIn: "20000", yieldAssetIn: "13000" }
   );
 
-  // TODO: fix this.  somehow I can't trade less yield assets than there are base assets!
-  const {
-    trancheContract: usdcTrancheContract,
-    fytPoolContract: usdcFytPoolContract,
-    fytPoolId: usdcFytPoolId,
-    ycPoolContract: usdcYcPoolContract,
-    ycPoolId: usdcYcPoolId,
-  } = await deployTrancheAndMarket(
-    elementSigner,
-    usdcYearnVaultAssetProxy,
-    usdcContract,
-    balancerVaultContract,
-    weightedPoolFactory,
-    { mintAmount: "20000", baseAssetIn: "20000", yieldAssetIn: "13000" }
-  );
+  console.log("");
+  console.log("****************");
+  console.log("USDC");
+  console.log("****************");
+  // const {
+  //   trancheContract: usdcTrancheContract,
+  //   fytPoolContract: usdcFytPoolContract,
+  //   fytPoolId: usdcFytPoolId,
+  //   ycPoolContract: usdcYcPoolContract,
+  //   ycPoolId: usdcYcPoolId,
+  // } = await deployTrancheAndMarket(
+  //   elementSigner,
+  //   trancheFactory,
+  //   usdcYearnVaultAssetProxy,
+  //   usdcContract,
+  //   balancerVaultContract,
+  //   convergentPoolFactory,
+  //   weightedPoolFactory,
+  //   { mintAmount: "20000", baseAssetIn: "20000", yieldAssetIn: "13000" }
+  // );
 
   // deploy user proxy
   const userProxyContract = await deployUserProxy(
     elementSigner,
-    wethContract.address
+    wethContract,
+    trancheFactory
   );
 
   const addresses = JSON.stringify(
@@ -111,7 +131,7 @@ async function main() {
 
       // tranche contracts
       wethTrancheAddress: wethTrancheContract.address,
-      usdcTrancheAddress: usdcTrancheContract.address,
+      // usdcTrancheAddress: usdcTrancheContract.address,
 
       // market addresses and ids
       marketFyWethAddress: wethFytPoolContract.address,
@@ -119,10 +139,10 @@ async function main() {
       marketYcWethAddress: wethYcPoolContract.address,
       marketYcWethId: wethYcPoolId,
 
-      marketFyUsdcAddress: usdcFytPoolContract.address,
-      marketFyUsdcId: usdcFytPoolId,
-      marketYcUsdcAddress: usdcYcPoolContract.address,
-      marketYcUsdcId: usdcYcPoolId,
+      // marketFyUsdcAddress: usdcFytPoolContract.address,
+      // marketFyUsdcId: usdcFytPoolId,
+      // marketYcUsdcAddress: usdcYcPoolContract.address,
+      // marketYcUsdcId: usdcYcPoolId,
 
       // user proxy
       userProxyContractAddress: userProxyContract.address,

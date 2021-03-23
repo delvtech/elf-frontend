@@ -14,6 +14,10 @@ export async function deployWeightedPoolFactory(
   );
 
   await weightedPoolFactoryContract.deployed();
+  await balancerVaultContract.changeRelayerAllowance(
+    weightedPoolFactoryContract.address,
+    true
+  );
 
   return weightedPoolFactoryContract;
 }

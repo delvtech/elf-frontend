@@ -1,8 +1,11 @@
 import { Signer } from "ethers";
+import { parseUnits } from "ethers/lib/utils";
 
 import { USDC } from "src/types/USDC";
 import { WETH } from "src/types/WETH";
 import { YVaultAssetProxy } from "src/types/YVaultAssetProxy";
+
+import { MAX_ALLOWANCE } from "src/maxAllowance";
 
 import { deployYearnVault } from "./deployYVault";
 import { deployYearnVaultAssetProxy } from "./deployYVaultAssetProxy";
@@ -12,6 +15,7 @@ export async function deployVaultsAndProxys(
   wethContract: WETH,
   usdcContract: USDC
 ) {
+  const signerAddress = await signer.getAddress();
   // deploy stubbed yearn vault
   const yWeth = await deployYearnVault(
     signer,
@@ -19,6 +23,12 @@ export async function deployVaultsAndProxys(
     "WETH Yearn Vault",
     "yWETH"
   );
+
+  // seed the yearn vault with an initial totalSupply.  wrapped positions calculate the base asset
+  // amount per share by assets * numShares / totalSupply which will return a divide by zero error
+  // if total supply is zero.
+  await wethContract.approve(yWeth.address, MAX_ALLOWANCE);
+  await yWeth.deposit(parseUnits("1000", 6), signerAddress);
 
   // deploy yearn vault asset proxy
   const wethYearnVaultAssetProxy: YVaultAssetProxy = await deployYearnVaultAssetProxy(
@@ -36,6 +46,12 @@ export async function deployVaultsAndProxys(
     "USDC Yearn Vault",
     "yUSDC"
   );
+
+  // seed the yearn vault with an initial totalSupply.  wrapped positions calculate the base asset
+  // amount per share by assets * numShares / totalSupply which will return a divide by zero error
+  // if total supply is zero.
+  await usdcContract.approve(yUsdc.address, MAX_ALLOWANCE);
+  await yUsdc.deposit(parseUnits("1000", 6), signerAddress);
 
   // deploy yearn vault asset proxy
   const usdcYearnVaultAssetProxy: YVaultAssetProxy = await deployYearnVaultAssetProxy(

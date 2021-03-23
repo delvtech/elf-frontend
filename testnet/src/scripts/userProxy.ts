@@ -1,16 +1,26 @@
-import { Contract, Signer } from "ethers";
+import { Signer } from "ethers";
+import { solidityKeccak256 } from "ethers/lib/utils";
 
 import { UserProxy__factory } from "src/types/factories/UserProxy__factory";
+import { TrancheFactory } from "src/types/TrancheFactory";
 import { UserProxy } from "src/types/UserProxy";
+import { WETH } from "src/types/WETH";
 
-export async function deployUserProxy<T extends Contract>(
+// TODO: figure out how to alias the artifacts/ directory
+import trancheData from "../../artifacts/src/contracts/Tranche.sol/Tranche.json";
+
+export async function deployUserProxy(
   signer: Signer,
-  wethAddress: string
+  wethContract: WETH,
+  trancheFactory: TrancheFactory
 ): Promise<UserProxy> {
+  const bytecodeHash = solidityKeccak256(["bytes"], [trancheData.bytecode]);
   const UserProxyDeployer = new UserProxy__factory(signer);
-  const userProxyContract = (await UserProxyDeployer.deploy(
-    wethAddress
-  )) as UserProxy;
+  const userProxyContract = await UserProxyDeployer.deploy(
+    wethContract.address,
+    trancheFactory.address,
+    bytecodeHash
+  );
 
   return userProxyContract;
 }

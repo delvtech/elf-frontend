@@ -50,4 +50,6 @@
     }
   ],
   "solidity.compileUsingRemoteVersion": "v0.8.0+commit.c7dfd78e",
+  "solidity.enableLocalNodeCompiler": false,
+  "prettier.disableLanguages": ["sol"]
 }

@@ -6,16 +6,10 @@
     "moduleResolution": "node",
     "strict": true,
     "outDir": "./build/",
+    "resolveJsonModule": true,
     "paths": {
-      // reintroduce these once we figure out how to get hardhat to recognize aliased paths.
       "src": ["./src"],
       "src/*": ["./src/*"],
-      // "scripts": ["./src/scripts"],
-      // "scripts/*": ["./src/scripts/*"],
-      // "test": ["./src/test"],
-      // "test/*": ["./src/test/*"],
-      // "contracts": ["./src/contracts"],
-      // "contracts/*": ["./src/contracts/*"],
     },
   },
   "include": ["./src/**/*", "./hardhat.config.ts"],

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-pragma solidity ^0.8.0;
+pragma solidity >=0.7.0;
 
 contract Authorizable {
     // This contract allows a flexible authorization scheme
@@ -29,7 +29,7 @@ contract Authorizable {
     /// @dev Returns true if an address is authorized
     /// @param who the address to check
     /// @return true if authorized false if not
-    function isAuthorized(address who) public returns (bool) {
+    function isAuthorized(address who) public view returns (bool) {
         return authorized[who];
     }
 
@@ -43,6 +43,12 @@ contract Authorizable {
     /// @param who The address to remove authorization from
     function deauthorize(address who) external onlyOwner() {
         authorized[who] = false;
+    }
+
+    /// @dev Function to change owner
+    /// @param who The new owner address
+    function setOwner(address who) public onlyOwner() {
+        owner = who;
     }
 
     /// @dev Inheritable function which authorizes someone
