@@ -1,10 +1,7 @@
 import React, { FC } from "react";
 
-import { Card, Classes, H2 } from "@blueprintjs/core";
-import { Web3Provider } from "@ethersproject/providers";
+import { Card } from "@blueprintjs/core";
 import { RouteComponentProps } from "@reach/router";
-import { useWeb3React } from "@web3-react/core";
-import classNames from "classnames";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
