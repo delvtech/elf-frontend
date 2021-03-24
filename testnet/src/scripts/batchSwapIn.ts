@@ -31,6 +31,7 @@ export async function batchSwapIn(
 ) {
   const tokenInAddress = tokenInContract.address;
   const tokenOutAddress = tokenOutContract.address;
+  const tokenInDecimals = await tokenInContract.decimals();
 
   const tokens: string[] = [tokenInAddress, tokenOutAddress].sort();
   console.log("tokens", tokens);
@@ -45,7 +46,7 @@ export async function batchSwapIn(
   // .map((a) => BigNumber.from(a))
   // .sort((a, b) => a.lt(b) ? )
   // .map((a) => a.toHexString());
-  const amountIn = parseEther(swapInAmount);
+  const amountIn = parseUnits(swapInAmount, tokenInDecimals);
   // have to set this to something
   const userData: BytesLike = poolId;
 

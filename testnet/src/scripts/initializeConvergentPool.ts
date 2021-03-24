@@ -1,6 +1,11 @@
 import abi from "ethereumjs-abi";
 import { BigNumber, Signer } from "ethers";
-import { formatEther, parseEther } from "ethers/lib/utils";
+import {
+  formatEther,
+  formatUnits,
+  parseEther,
+  parseUnits,
+} from "ethers/lib/utils";
 
 import { Tranche } from "src/types/Tranche";
 import { USDC } from "src/types/USDC";
@@ -34,22 +39,27 @@ export async function initializeConvergentPool(
   console.log("trancheAsset", trancheContract.address);
   console.log("tokens", tokens);
 
+  const baseAssetDecimals = await baseAssetContract.decimals();
   // Max amount for each asset to join the pool with. the initial join only allows base asset.  this
   // has something to do with the way we keep track of the yield asset price based off of swaps.  to
   // initialize the pool with yield asset we need to follow up the joinPool by swapping in some
   // yield asset for some base asset.
   let maxAmountsIn: BigNumber[];
 
+  const parseToken = (value: string) => parseUnits(value, baseAssetDecimals);
+
   // make sure match the order the balancer vault has the tokens in.
   if (tokens[0] === baseAssetContract.address) {
-    maxAmountsIn = [parseEther(amountIn), parseEther(amountIn)];
+    maxAmountsIn = [parseToken(amountIn), parseToken(amountIn)];
   } else {
-    maxAmountsIn = [parseEther(amountIn), parseEther(amountIn)];
+    maxAmountsIn = [parseToken(amountIn), parseToken(amountIn)];
   }
 
   console.log("amountIn", amountIn);
   const amounts = maxAmountsIn.map((amt) => amt.toHexString());
-  maxAmountsIn.forEach((a) => console.log("maxAmount", formatEther(a)));
+  maxAmountsIn.forEach((a) =>
+    console.log("maxAmount", formatUnits(a, baseAssetDecimals))
+  );
 
   // Whether or not to use balances held in balancer.  Since The Vault has nothing, set this to false.
   const fromInternalBalance = false;
@@ -60,7 +70,7 @@ export async function initializeConvergentPool(
   const name = await baseAssetContract.name();
   const balance = await baseAssetContract.balanceOf(signerAddress);
   console.log("name", name);
-  console.log("balance", formatEther(balance));
+  console.log("balance", formatUnits(balance, baseAssetDecimals));
 
   // Balancer V2 vault allows userData as a way to pass props through to pool contracts.  In our
   // case we need to pass the maxAmountsIn.
@@ -82,7 +92,7 @@ export async function initializeConvergentPool(
   console.log("tokensOut", tokensOut);
   console.log(
     "balances",
-    balances.map((bn) => formatEther(bn))
+    balances.map((bn) => formatUnits(bn, baseAssetDecimals))
   );
   return joinReceipt;
 }

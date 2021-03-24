@@ -89,22 +89,22 @@ async function main() {
   console.log("****************");
   console.log("USDC");
   console.log("****************");
-  // const {
-  //   trancheContract: usdcTrancheContract,
-  //   fytPoolContract: usdcFytPoolContract,
-  //   fytPoolId: usdcFytPoolId,
-  //   ycPoolContract: usdcYcPoolContract,
-  //   ycPoolId: usdcYcPoolId,
-  // } = await deployTrancheAndMarket(
-  //   elementSigner,
-  //   trancheFactory,
-  //   usdcYearnVaultAssetProxy,
-  //   usdcContract,
-  //   balancerVaultContract,
-  //   convergentPoolFactory,
-  //   weightedPoolFactory,
-  //   { mintAmount: "20000", baseAssetIn: "20000", yieldAssetIn: "13000" }
-  // );
+  const {
+    trancheContract: usdcTrancheContract,
+    fytPoolContract: usdcFytPoolContract,
+    fytPoolId: usdcFytPoolId,
+    ycPoolContract: usdcYcPoolContract,
+    ycPoolId: usdcYcPoolId,
+  } = await deployTrancheAndMarket(
+    elementSigner,
+    trancheFactory,
+    usdcYearnVaultAssetProxy,
+    usdcContract,
+    balancerVaultContract,
+    convergentPoolFactory,
+    weightedPoolFactory,
+    { mintAmount: "20000", baseAssetIn: "20000", yieldAssetIn: "13000" }
+  );
 
   // deploy user proxy
   const userProxyContract = await deployUserProxy(
@@ -134,7 +134,7 @@ async function main() {
 
       // tranche contracts
       wethTrancheAddress: wethTrancheContract.address,
-      // usdcTrancheAddress: usdcTrancheContract.address,
+      usdcTrancheAddress: usdcTrancheContract.address,
 
       // market addresses and ids
       marketFyWethAddress: wethFytPoolContract.address,
@@ -142,10 +142,10 @@ async function main() {
       marketYcWethAddress: wethYcPoolContract.address,
       marketYcWethId: wethYcPoolId,
 
-      // marketFyUsdcAddress: usdcFytPoolContract.address,
-      // marketFyUsdcId: usdcFytPoolId,
-      // marketYcUsdcAddress: usdcYcPoolContract.address,
-      // marketYcUsdcId: usdcYcPoolId,
+      marketFyUsdcAddress: usdcFytPoolContract.address,
+      marketFyUsdcId: usdcFytPoolId,
+      marketYcUsdcAddress: usdcYcPoolContract.address,
+      marketYcUsdcId: usdcYcPoolId,
 
       // user proxy
       userProxyContractAddress: userProxyContract.address,
