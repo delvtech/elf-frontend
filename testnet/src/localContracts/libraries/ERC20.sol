@@ -9,17 +9,31 @@ abstract contract ERC20 is IERC20 {
     string public name;
     string public override symbol;
     uint8 public override decimals;
+    uint256 private _totalSupply;
 
-    mapping(address => uint256) public override balanceOf;
-    mapping(address => mapping(address => uint256)) public override allowance;
+    mapping(address => uint256) private _balances;
+    mapping(address => mapping(address => uint256)) private _allowances;
 
     constructor(string memory name_, string memory symbol_) {
         name = name_;
         symbol = symbol_;
         decimals = 18;
 
-        balanceOf[address(0)] = type(uint256).max;
-        balanceOf[address(this)] = type(uint256).max;
+        _balances[address(0)] = type(uint256).max;
+        _balances[address(this)] = type(uint256).max;
+    }
+
+    function allowance(address owner, address spender)
+        public
+        view
+        override
+        returns (uint256)
+    {
+        return _allowances[owner][spender];
+    }
+
+    function balanceOf(address account) public view override returns (uint256) {
+        return _balances[account];
     }
 
     // --- Token ---
@@ -32,31 +46,37 @@ abstract contract ERC20 is IERC20 {
         return transferFrom(msg.sender, recipient, amount);
     }
 
+    function totalSupply() public view returns (uint256) {
+        return _totalSupply;
+    }
+
     function transferFrom(
         address spender,
         address recipient,
         uint256 amount
     ) public virtual override returns (bool) {
-        uint256 balance = balanceOf[spender];
-        uint256 allowed = allowance[spender][msg.sender];
+        uint256 balance = _balances[spender];
+        uint256 allowed = _allowances[spender][msg.sender];
         require(balance >= amount, "ERC20: insufficient-balance");
         if (spender != msg.sender && allowed != type(uint256).max) {
             require(allowed >= amount, "ERC20: insufficient-allowance");
-            allowance[spender][msg.sender] = allowed - amount;
+            _allowances[spender][msg.sender] = allowed - amount;
         }
-        balanceOf[spender] = balance - amount;
-        balanceOf[recipient] = balanceOf[recipient] + amount;
+        _balances[spender] = balance - amount;
+        _balances[recipient] = _balances[recipient] + amount;
         emit Transfer(spender, recipient, amount);
         return true;
     }
 
     function _mint(address account, uint256 amount) internal virtual {
-        balanceOf[account] = balanceOf[account] + amount;
+        _totalSupply = _totalSupply + amount;
+        _balances[account] = _balances[account] + amount;
         emit Transfer(address(0), account, amount);
     }
 
     function _burn(address account, uint256 amount) internal virtual {
-        balanceOf[account] = balanceOf[account] - amount;
+        _totalSupply = _totalSupply - amount;
+        _balances[account] = _balances[account] - amount;
         emit Transfer(account, address(0), amount);
     }
 
@@ -66,7 +86,7 @@ abstract contract ERC20 is IERC20 {
         override
         returns (bool)
     {
-        allowance[msg.sender][account] = amount;
+        _allowances[msg.sender][account] = amount;
         emit Approval(msg.sender, account, amount);
         return true;
     }
