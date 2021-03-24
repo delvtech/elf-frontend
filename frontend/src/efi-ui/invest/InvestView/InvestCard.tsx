@@ -43,6 +43,7 @@ import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 
 import { InvestmentAmountInput } from "./InvestmentAmountInput";
 import { useOnSwapGivenOut } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenOut";
+import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 
 export interface InvestCardProps {
   library: Web3Provider | undefined;
@@ -119,8 +120,12 @@ export const InvestCard: FC<InvestCardProps> = ({
     activeTranche,
     "decimals"
   );
-  const pool = usePoolForToken(activeTranche, jsonRpcProvider);
-  const tranchePriceResult = useOnSwapGivenIn(pool, activeTranche, ONE_ETHER);
+  const pool = usePoolForToken(activeTranche as ERC20Shim, jsonRpcProvider);
+  const tranchePriceResult = useOnSwapGivenIn(
+    pool,
+    activeTranche as ERC20Shim,
+    ONE_ETHER
+  );
 
   // use weth when the base asset is eth
   const wethContract = useSmartContractFromFactory(
@@ -155,7 +160,7 @@ export const InvestCard: FC<InvestCardProps> = ({
   // the amount of base asset you must put in
   const { data: swapGivenOut } = useOnSwapGivenOut(
     pool,
-    activeTranche,
+    activeTranche as ERC20Shim,
     amountOutAsBigNumber
   );
 

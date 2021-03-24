@@ -11,6 +11,7 @@ import { PoolContract } from "efi/pools/PoolContract";
 
 import { makeOnSwapGivenInCallArgs } from "./makeOnSwapGivenInCallArgs";
 import { useLatestBlockNumber } from "efi-ui/ethereum/hooks/useLatestBlockNumber";
+import { Tranche } from "elf-contracts/types/Tranche";
 
 export function useOnSwapGivenIn(
   pool: PoolContract | undefined,
