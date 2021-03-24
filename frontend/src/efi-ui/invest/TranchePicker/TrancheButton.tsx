@@ -19,7 +19,7 @@ import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
-import { useUnderlyingVaultForTranche } from "efi-ui/portfolio/YCTable/useUnderlyingVaultForTranche";
+import { useUnderlyingVaultForTranche } from "efi-ui/tranche/useUnderlyingVaultForTranche";
 
 interface TrancheButtonProps {
   library: Web3Provider | undefined;

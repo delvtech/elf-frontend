@@ -40,7 +40,7 @@ import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { ONE_ETHER } from "efi/crypto/ethereum";
 import { formatMoney } from "efi/money/formatMoney";
 import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
-import { useUnderlyingVaultForTranche } from "efi-ui/portfolio/YCTable/useUnderlyingVaultForTranche";
+import { useUnderlyingVaultForTranche } from "efi-ui/tranche/useUnderlyingVaultForTranche";
 
 interface FYTCardProps {
   library: Web3Provider | undefined;

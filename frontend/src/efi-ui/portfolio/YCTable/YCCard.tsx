@@ -38,7 +38,7 @@ import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { formatMoney } from "efi/money/formatMoney";
 
 import { useTrancheForInterestToken } from "./useTrancheForYieldCoupon";
-import { useUnderlyingVaultForTranche } from "./useUnderlyingVaultForTranche";
+import { useUnderlyingVaultForTranche } from "../../tranche/useUnderlyingVaultForTranche";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 
 interface YCCardProps {
