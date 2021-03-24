@@ -14,6 +14,7 @@ import {
   Contract,
   ContractTransaction,
   Overrides,
+  PayableOverrides,
   CallOverrides,
 } from "@ethersproject/contracts";
 import { BytesLike } from "@ethersproject/bytes";
@@ -46,6 +47,7 @@ interface IVaultInterface extends ethers.utils.Interface {
     "registerTokens(bytes32,address[],address[])": FunctionFragment;
     "setProtocolFees(uint256,uint256,uint256)": FunctionFragment;
     "transferInternalBalance(tuple[])": FunctionFragment;
+    "transferToExternalBalance(tuple[])": FunctionFragment;
     "updateManagedBalance(bytes32,tuple[])": FunctionFragment;
     "withdrawCollectedFees(address[],uint256[],address)": FunctionFragment;
     "withdrawFromInternalBalance(tuple[])": FunctionFragment;
@@ -106,7 +108,7 @@ interface IVaultInterface extends ethers.utils.Interface {
     functionFragment: "depositToInternalBalance",
     values: [
       {
-        token: string;
+        asset: string;
         amount: BigNumberish;
         sender: string;
         recipient: string;
@@ -226,6 +228,17 @@ interface IVaultInterface extends ethers.utils.Interface {
     ]
   ): string;
   encodeFunctionData(
+    functionFragment: "transferToExternalBalance",
+    values: [
+      {
+        token: string;
+        amount: BigNumberish;
+        sender: string;
+        recipient: string;
+      }[]
+    ]
+  ): string;
+  encodeFunctionData(
     functionFragment: "updateManagedBalance",
     values: [BytesLike, { token: string; amount: BigNumberish }[]]
   ): string;
@@ -237,7 +250,7 @@ interface IVaultInterface extends ethers.utils.Interface {
     functionFragment: "withdrawFromInternalBalance",
     values: [
       {
-        token: string;
+        asset: string;
         amount: BigNumberish;
         sender: string;
         recipient: string;
@@ -334,6 +347,10 @@ interface IVaultInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "transferToExternalBalance",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "updateManagedBalance",
     data: BytesLike
   ): Result;
@@ -351,11 +368,11 @@ interface IVaultInterface extends ethers.utils.Interface {
   ): Result;
 
   events: {
-    "InternalBalanceChanged(address,address,uint256)": EventFragment;
+    "InternalBalanceChanged(address,address,int256)": EventFragment;
     "PoolBalanceChanged(bytes32,address,address,int256)": EventFragment;
-    "PoolCreated(bytes32)": EventFragment;
-    "PoolExited(bytes32,address,uint256[],uint256[])": EventFragment;
-    "PoolJoined(bytes32,address,uint256[],uint256[])": EventFragment;
+    "PoolExited(bytes32,address,address[],uint256[],uint256[])": EventFragment;
+    "PoolJoined(bytes32,address,address[],uint256[],uint256[])": EventFragment;
+    "PoolRegistered(bytes32)": EventFragment;
     "Swap(bytes32,address,address,uint256,uint256)": EventFragment;
     "TokensDeregistered(bytes32,address[])": EventFragment;
     "TokensRegistered(bytes32,address[],address[])": EventFragment;
@@ -363,9 +380,9 @@ interface IVaultInterface extends ethers.utils.Interface {
 
   getEvent(nameOrSignatureOrTopic: "InternalBalanceChanged"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "PoolBalanceChanged"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "PoolCreated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "PoolExited"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "PoolJoined"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "PoolRegistered"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Swap"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "TokensDeregistered"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "TokensRegistered"): EventFragment;
@@ -393,7 +410,7 @@ export class IVault extends Contract {
         amountIn: BigNumberish;
         userData: BytesLike;
       }[],
-      tokens: string[],
+      assets: string[],
       funds: {
         sender: string;
         fromInternalBalance: boolean;
@@ -402,7 +419,7 @@ export class IVault extends Contract {
       },
       limits: BigNumberish[],
       deadline: BigNumberish,
-      overrides?: Overrides
+      overrides?: PayableOverrides
     ): Promise<ContractTransaction>;
 
     "batchSwapGivenIn(tuple[],address[],tuple,int256[],uint256)"(
@@ -413,7 +430,7 @@ export class IVault extends Contract {
         amountIn: BigNumberish;
         userData: BytesLike;
       }[],
-      tokens: string[],
+      assets: string[],
       funds: {
         sender: string;
         fromInternalBalance: boolean;
@@ -422,7 +439,7 @@ export class IVault extends Contract {
       },
       limits: BigNumberish[],
       deadline: BigNumberish,
-      overrides?: Overrides
+      overrides?: PayableOverrides
     ): Promise<ContractTransaction>;
 
     batchSwapGivenOut(
@@ -433,7 +450,7 @@ export class IVault extends Contract {
         amountOut: BigNumberish;
         userData: BytesLike;
       }[],
-      tokens: string[],
+      assets: string[],
       funds: {
         sender: string;
         fromInternalBalance: boolean;
@@ -442,7 +459,7 @@ export class IVault extends Contract {
       },
       limits: BigNumberish[],
       deadline: BigNumberish,
-      overrides?: Overrides
+      overrides?: PayableOverrides
     ): Promise<ContractTransaction>;
 
     "batchSwapGivenOut(tuple[],address[],tuple,int256[],uint256)"(
@@ -453,7 +470,7 @@ export class IVault extends Contract {
         amountOut: BigNumberish;
         userData: BytesLike;
       }[],
-      tokens: string[],
+      assets: string[],
       funds: {
         sender: string;
         fromInternalBalance: boolean;
@@ -462,7 +479,7 @@ export class IVault extends Contract {
       },
       limits: BigNumberish[],
       deadline: BigNumberish,
-      overrides?: Overrides
+      overrides?: PayableOverrides
     ): Promise<ContractTransaction>;
 
     changeAuthorizer(
@@ -489,22 +506,22 @@ export class IVault extends Contract {
 
     depositToInternalBalance(
       transfers: {
-        token: string;
+        asset: string;
         amount: BigNumberish;
         sender: string;
         recipient: string;
       }[],
-      overrides?: Overrides
+      overrides?: PayableOverrides
     ): Promise<ContractTransaction>;
 
     "depositToInternalBalance(tuple[])"(
       transfers: {
-        token: string;
+        asset: string;
         amount: BigNumberish;
         sender: string;
         recipient: string;
       }[],
-      overrides?: Overrides
+      overrides?: PayableOverrides
     ): Promise<ContractTransaction>;
 
     depositToPoolBalance(
@@ -535,7 +552,7 @@ export class IVault extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      tokens: string[],
+      assets: string[],
       minAmountsOut: BigNumberish[],
       toInternalBalance: boolean,
       userData: BytesLike,
@@ -546,7 +563,7 @@ export class IVault extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      tokens: string[],
+      assets: string[],
       minAmountsOut: BigNumberish[],
       toInternalBalance: boolean,
       userData: BytesLike,
@@ -693,22 +710,22 @@ export class IVault extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      tokens: string[],
+      assets: string[],
       maxAmountsIn: BigNumberish[],
       fromInternalBalance: boolean,
       userData: BytesLike,
-      overrides?: Overrides
+      overrides?: PayableOverrides
     ): Promise<ContractTransaction>;
 
     "joinPool(bytes32,address,address,address[],uint256[],bool,bytes)"(
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      tokens: string[],
+      assets: string[],
       maxAmountsIn: BigNumberish[],
       fromInternalBalance: boolean,
       userData: BytesLike,
-      overrides?: Overrides
+      overrides?: PayableOverrides
     ): Promise<ContractTransaction>;
 
     queryBatchSwap(
@@ -720,7 +737,7 @@ export class IVault extends Contract {
         amount: BigNumberish;
         userData: BytesLike;
       }[],
-      tokens: string[],
+      assets: string[],
       funds: {
         sender: string;
         fromInternalBalance: boolean;
@@ -739,7 +756,7 @@ export class IVault extends Contract {
         amount: BigNumberish;
         userData: BytesLike;
       }[],
-      tokens: string[],
+      assets: string[],
       funds: {
         sender: string;
         fromInternalBalance: boolean;
@@ -807,6 +824,26 @@ export class IVault extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
+    transferToExternalBalance(
+      transfers: {
+        token: string;
+        amount: BigNumberish;
+        sender: string;
+        recipient: string;
+      }[],
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "transferToExternalBalance(tuple[])"(
+      transfers: {
+        token: string;
+        amount: BigNumberish;
+        sender: string;
+        recipient: string;
+      }[],
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
     updateManagedBalance(
       poolId: BytesLike,
       transfers: { token: string; amount: BigNumberish }[],
@@ -835,7 +872,7 @@ export class IVault extends Contract {
 
     withdrawFromInternalBalance(
       transfers: {
-        token: string;
+        asset: string;
         amount: BigNumberish;
         sender: string;
         recipient: string;
@@ -845,7 +882,7 @@ export class IVault extends Contract {
 
     "withdrawFromInternalBalance(tuple[])"(
       transfers: {
-        token: string;
+        asset: string;
         amount: BigNumberish;
         sender: string;
         recipient: string;
@@ -874,7 +911,7 @@ export class IVault extends Contract {
       amountIn: BigNumberish;
       userData: BytesLike;
     }[],
-    tokens: string[],
+    assets: string[],
     funds: {
       sender: string;
       fromInternalBalance: boolean;
@@ -883,7 +920,7 @@ export class IVault extends Contract {
     },
     limits: BigNumberish[],
     deadline: BigNumberish,
-    overrides?: Overrides
+    overrides?: PayableOverrides
   ): Promise<ContractTransaction>;
 
   "batchSwapGivenIn(tuple[],address[],tuple,int256[],uint256)"(
@@ -894,7 +931,7 @@ export class IVault extends Contract {
       amountIn: BigNumberish;
       userData: BytesLike;
     }[],
-    tokens: string[],
+    assets: string[],
     funds: {
       sender: string;
       fromInternalBalance: boolean;
@@ -903,7 +940,7 @@ export class IVault extends Contract {
     },
     limits: BigNumberish[],
     deadline: BigNumberish,
-    overrides?: Overrides
+    overrides?: PayableOverrides
   ): Promise<ContractTransaction>;
 
   batchSwapGivenOut(
@@ -914,7 +951,7 @@ export class IVault extends Contract {
       amountOut: BigNumberish;
       userData: BytesLike;
     }[],
-    tokens: string[],
+    assets: string[],
     funds: {
       sender: string;
       fromInternalBalance: boolean;
@@ -923,7 +960,7 @@ export class IVault extends Contract {
     },
     limits: BigNumberish[],
     deadline: BigNumberish,
-    overrides?: Overrides
+    overrides?: PayableOverrides
   ): Promise<ContractTransaction>;
 
   "batchSwapGivenOut(tuple[],address[],tuple,int256[],uint256)"(
@@ -934,7 +971,7 @@ export class IVault extends Contract {
       amountOut: BigNumberish;
       userData: BytesLike;
     }[],
-    tokens: string[],
+    assets: string[],
     funds: {
       sender: string;
       fromInternalBalance: boolean;
@@ -943,7 +980,7 @@ export class IVault extends Contract {
     },
     limits: BigNumberish[],
     deadline: BigNumberish,
-    overrides?: Overrides
+    overrides?: PayableOverrides
   ): Promise<ContractTransaction>;
 
   changeAuthorizer(
@@ -970,22 +1007,22 @@ export class IVault extends Contract {
 
   depositToInternalBalance(
     transfers: {
-      token: string;
+      asset: string;
       amount: BigNumberish;
       sender: string;
       recipient: string;
     }[],
-    overrides?: Overrides
+    overrides?: PayableOverrides
   ): Promise<ContractTransaction>;
 
   "depositToInternalBalance(tuple[])"(
     transfers: {
-      token: string;
+      asset: string;
       amount: BigNumberish;
       sender: string;
       recipient: string;
     }[],
-    overrides?: Overrides
+    overrides?: PayableOverrides
   ): Promise<ContractTransaction>;
 
   depositToPoolBalance(
@@ -1016,7 +1053,7 @@ export class IVault extends Contract {
     poolId: BytesLike,
     sender: string,
     recipient: string,
-    tokens: string[],
+    assets: string[],
     minAmountsOut: BigNumberish[],
     toInternalBalance: boolean,
     userData: BytesLike,
@@ -1027,7 +1064,7 @@ export class IVault extends Contract {
     poolId: BytesLike,
     sender: string,
     recipient: string,
-    tokens: string[],
+    assets: string[],
     minAmountsOut: BigNumberish[],
     toInternalBalance: boolean,
     userData: BytesLike,
@@ -1174,22 +1211,22 @@ export class IVault extends Contract {
     poolId: BytesLike,
     sender: string,
     recipient: string,
-    tokens: string[],
+    assets: string[],
     maxAmountsIn: BigNumberish[],
     fromInternalBalance: boolean,
     userData: BytesLike,
-    overrides?: Overrides
+    overrides?: PayableOverrides
   ): Promise<ContractTransaction>;
 
   "joinPool(bytes32,address,address,address[],uint256[],bool,bytes)"(
     poolId: BytesLike,
     sender: string,
     recipient: string,
-    tokens: string[],
+    assets: string[],
     maxAmountsIn: BigNumberish[],
     fromInternalBalance: boolean,
     userData: BytesLike,
-    overrides?: Overrides
+    overrides?: PayableOverrides
   ): Promise<ContractTransaction>;
 
   queryBatchSwap(
@@ -1201,7 +1238,7 @@ export class IVault extends Contract {
       amount: BigNumberish;
       userData: BytesLike;
     }[],
-    tokens: string[],
+    assets: string[],
     funds: {
       sender: string;
       fromInternalBalance: boolean;
@@ -1220,7 +1257,7 @@ export class IVault extends Contract {
       amount: BigNumberish;
       userData: BytesLike;
     }[],
-    tokens: string[],
+    assets: string[],
     funds: {
       sender: string;
       fromInternalBalance: boolean;
@@ -1288,6 +1325,26 @@ export class IVault extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
+  transferToExternalBalance(
+    transfers: {
+      token: string;
+      amount: BigNumberish;
+      sender: string;
+      recipient: string;
+    }[],
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "transferToExternalBalance(tuple[])"(
+    transfers: {
+      token: string;
+      amount: BigNumberish;
+      sender: string;
+      recipient: string;
+    }[],
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
   updateManagedBalance(
     poolId: BytesLike,
     transfers: { token: string; amount: BigNumberish }[],
@@ -1316,7 +1373,7 @@ export class IVault extends Contract {
 
   withdrawFromInternalBalance(
     transfers: {
-      token: string;
+      asset: string;
       amount: BigNumberish;
       sender: string;
       recipient: string;
@@ -1326,7 +1383,7 @@ export class IVault extends Contract {
 
   "withdrawFromInternalBalance(tuple[])"(
     transfers: {
-      token: string;
+      asset: string;
       amount: BigNumberish;
       sender: string;
       recipient: string;
@@ -1355,7 +1412,7 @@ export class IVault extends Contract {
         amountIn: BigNumberish;
         userData: BytesLike;
       }[],
-      tokens: string[],
+      assets: string[],
       funds: {
         sender: string;
         fromInternalBalance: boolean;
@@ -1375,7 +1432,7 @@ export class IVault extends Contract {
         amountIn: BigNumberish;
         userData: BytesLike;
       }[],
-      tokens: string[],
+      assets: string[],
       funds: {
         sender: string;
         fromInternalBalance: boolean;
@@ -1395,7 +1452,7 @@ export class IVault extends Contract {
         amountOut: BigNumberish;
         userData: BytesLike;
       }[],
-      tokens: string[],
+      assets: string[],
       funds: {
         sender: string;
         fromInternalBalance: boolean;
@@ -1415,7 +1472,7 @@ export class IVault extends Contract {
         amountOut: BigNumberish;
         userData: BytesLike;
       }[],
-      tokens: string[],
+      assets: string[],
       funds: {
         sender: string;
         fromInternalBalance: boolean;
@@ -1451,7 +1508,7 @@ export class IVault extends Contract {
 
     depositToInternalBalance(
       transfers: {
-        token: string;
+        asset: string;
         amount: BigNumberish;
         sender: string;
         recipient: string;
@@ -1461,7 +1518,7 @@ export class IVault extends Contract {
 
     "depositToInternalBalance(tuple[])"(
       transfers: {
-        token: string;
+        asset: string;
         amount: BigNumberish;
         sender: string;
         recipient: string;
@@ -1497,7 +1554,7 @@ export class IVault extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      tokens: string[],
+      assets: string[],
       minAmountsOut: BigNumberish[],
       toInternalBalance: boolean,
       userData: BytesLike,
@@ -1508,7 +1565,7 @@ export class IVault extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      tokens: string[],
+      assets: string[],
       minAmountsOut: BigNumberish[],
       toInternalBalance: boolean,
       userData: BytesLike,
@@ -1655,7 +1712,7 @@ export class IVault extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      tokens: string[],
+      assets: string[],
       maxAmountsIn: BigNumberish[],
       fromInternalBalance: boolean,
       userData: BytesLike,
@@ -1666,7 +1723,7 @@ export class IVault extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      tokens: string[],
+      assets: string[],
       maxAmountsIn: BigNumberish[],
       fromInternalBalance: boolean,
       userData: BytesLike,
@@ -1682,7 +1739,7 @@ export class IVault extends Contract {
         amount: BigNumberish;
         userData: BytesLike;
       }[],
-      tokens: string[],
+      assets: string[],
       funds: {
         sender: string;
         fromInternalBalance: boolean;
@@ -1701,7 +1758,7 @@ export class IVault extends Contract {
         amount: BigNumberish;
         userData: BytesLike;
       }[],
-      tokens: string[],
+      assets: string[],
       funds: {
         sender: string;
         fromInternalBalance: boolean;
@@ -1769,6 +1826,26 @@ export class IVault extends Contract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    transferToExternalBalance(
+      transfers: {
+        token: string;
+        amount: BigNumberish;
+        sender: string;
+        recipient: string;
+      }[],
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "transferToExternalBalance(tuple[])"(
+      transfers: {
+        token: string;
+        amount: BigNumberish;
+        sender: string;
+        recipient: string;
+      }[],
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     updateManagedBalance(
       poolId: BytesLike,
       transfers: { token: string; amount: BigNumberish }[],
@@ -1797,7 +1874,7 @@ export class IVault extends Contract {
 
     withdrawFromInternalBalance(
       transfers: {
-        token: string;
+        asset: string;
         amount: BigNumberish;
         sender: string;
         recipient: string;
@@ -1807,7 +1884,7 @@ export class IVault extends Contract {
 
     "withdrawFromInternalBalance(tuple[])"(
       transfers: {
-        token: string;
+        asset: string;
         amount: BigNumberish;
         sender: string;
         recipient: string;
@@ -1832,7 +1909,7 @@ export class IVault extends Contract {
     InternalBalanceChanged(
       user: string | null,
       token: string | null,
-      balance: null
+      delta: null
     ): EventFilter;
 
     PoolBalanceChanged(
@@ -1842,11 +1919,10 @@ export class IVault extends Contract {
       amount: null
     ): EventFilter;
 
-    PoolCreated(poolId: null): EventFilter;
-
     PoolExited(
       poolId: BytesLike | null,
       liquidityProvider: string | null,
+      tokens: null,
       amountsOut: null,
       protocolFees: null
     ): EventFilter;
@@ -1854,9 +1930,12 @@ export class IVault extends Contract {
     PoolJoined(
       poolId: BytesLike | null,
       liquidityProvider: string | null,
+      tokens: null,
       amountsIn: null,
       protocolFees: null
     ): EventFilter;
+
+    PoolRegistered(poolId: null): EventFilter;
 
     Swap(
       poolId: BytesLike | null,
@@ -1884,7 +1963,7 @@ export class IVault extends Contract {
         amountIn: BigNumberish;
         userData: BytesLike;
       }[],
-      tokens: string[],
+      assets: string[],
       funds: {
         sender: string;
         fromInternalBalance: boolean;
@@ -1893,7 +1972,7 @@ export class IVault extends Contract {
       },
       limits: BigNumberish[],
       deadline: BigNumberish,
-      overrides?: Overrides
+      overrides?: PayableOverrides
     ): Promise<BigNumber>;
 
     "batchSwapGivenIn(tuple[],address[],tuple,int256[],uint256)"(
@@ -1904,7 +1983,7 @@ export class IVault extends Contract {
         amountIn: BigNumberish;
         userData: BytesLike;
       }[],
-      tokens: string[],
+      assets: string[],
       funds: {
         sender: string;
         fromInternalBalance: boolean;
@@ -1913,7 +1992,7 @@ export class IVault extends Contract {
       },
       limits: BigNumberish[],
       deadline: BigNumberish,
-      overrides?: Overrides
+      overrides?: PayableOverrides
     ): Promise<BigNumber>;
 
     batchSwapGivenOut(
@@ -1924,7 +2003,7 @@ export class IVault extends Contract {
         amountOut: BigNumberish;
         userData: BytesLike;
       }[],
-      tokens: string[],
+      assets: string[],
       funds: {
         sender: string;
         fromInternalBalance: boolean;
@@ -1933,7 +2012,7 @@ export class IVault extends Contract {
       },
       limits: BigNumberish[],
       deadline: BigNumberish,
-      overrides?: Overrides
+      overrides?: PayableOverrides
     ): Promise<BigNumber>;
 
     "batchSwapGivenOut(tuple[],address[],tuple,int256[],uint256)"(
@@ -1944,7 +2023,7 @@ export class IVault extends Contract {
         amountOut: BigNumberish;
         userData: BytesLike;
       }[],
-      tokens: string[],
+      assets: string[],
       funds: {
         sender: string;
         fromInternalBalance: boolean;
@@ -1953,7 +2032,7 @@ export class IVault extends Contract {
       },
       limits: BigNumberish[],
       deadline: BigNumberish,
-      overrides?: Overrides
+      overrides?: PayableOverrides
     ): Promise<BigNumber>;
 
     changeAuthorizer(
@@ -1980,22 +2059,22 @@ export class IVault extends Contract {
 
     depositToInternalBalance(
       transfers: {
-        token: string;
+        asset: string;
         amount: BigNumberish;
         sender: string;
         recipient: string;
       }[],
-      overrides?: Overrides
+      overrides?: PayableOverrides
     ): Promise<BigNumber>;
 
     "depositToInternalBalance(tuple[])"(
       transfers: {
-        token: string;
+        asset: string;
         amount: BigNumberish;
         sender: string;
         recipient: string;
       }[],
-      overrides?: Overrides
+      overrides?: PayableOverrides
     ): Promise<BigNumber>;
 
     depositToPoolBalance(
@@ -2026,7 +2105,7 @@ export class IVault extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      tokens: string[],
+      assets: string[],
       minAmountsOut: BigNumberish[],
       toInternalBalance: boolean,
       userData: BytesLike,
@@ -2037,7 +2116,7 @@ export class IVault extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      tokens: string[],
+      assets: string[],
       minAmountsOut: BigNumberish[],
       toInternalBalance: boolean,
       userData: BytesLike,
@@ -2147,22 +2226,22 @@ export class IVault extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      tokens: string[],
+      assets: string[],
       maxAmountsIn: BigNumberish[],
       fromInternalBalance: boolean,
       userData: BytesLike,
-      overrides?: Overrides
+      overrides?: PayableOverrides
     ): Promise<BigNumber>;
 
     "joinPool(bytes32,address,address,address[],uint256[],bool,bytes)"(
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      tokens: string[],
+      assets: string[],
       maxAmountsIn: BigNumberish[],
       fromInternalBalance: boolean,
       userData: BytesLike,
-      overrides?: Overrides
+      overrides?: PayableOverrides
     ): Promise<BigNumber>;
 
     queryBatchSwap(
@@ -2174,7 +2253,7 @@ export class IVault extends Contract {
         amount: BigNumberish;
         userData: BytesLike;
       }[],
-      tokens: string[],
+      assets: string[],
       funds: {
         sender: string;
         fromInternalBalance: boolean;
@@ -2193,7 +2272,7 @@ export class IVault extends Contract {
         amount: BigNumberish;
         userData: BytesLike;
       }[],
-      tokens: string[],
+      assets: string[],
       funds: {
         sender: string;
         fromInternalBalance: boolean;
@@ -2261,6 +2340,26 @@ export class IVault extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
+    transferToExternalBalance(
+      transfers: {
+        token: string;
+        amount: BigNumberish;
+        sender: string;
+        recipient: string;
+      }[],
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "transferToExternalBalance(tuple[])"(
+      transfers: {
+        token: string;
+        amount: BigNumberish;
+        sender: string;
+        recipient: string;
+      }[],
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
     updateManagedBalance(
       poolId: BytesLike,
       transfers: { token: string; amount: BigNumberish }[],
@@ -2289,7 +2388,7 @@ export class IVault extends Contract {
 
     withdrawFromInternalBalance(
       transfers: {
-        token: string;
+        asset: string;
         amount: BigNumberish;
         sender: string;
         recipient: string;
@@ -2299,7 +2398,7 @@ export class IVault extends Contract {
 
     "withdrawFromInternalBalance(tuple[])"(
       transfers: {
-        token: string;
+        asset: string;
         amount: BigNumberish;
         sender: string;
         recipient: string;
@@ -2329,7 +2428,7 @@ export class IVault extends Contract {
         amountIn: BigNumberish;
         userData: BytesLike;
       }[],
-      tokens: string[],
+      assets: string[],
       funds: {
         sender: string;
         fromInternalBalance: boolean;
@@ -2338,7 +2437,7 @@ export class IVault extends Contract {
       },
       limits: BigNumberish[],
       deadline: BigNumberish,
-      overrides?: Overrides
+      overrides?: PayableOverrides
     ): Promise<PopulatedTransaction>;
 
     "batchSwapGivenIn(tuple[],address[],tuple,int256[],uint256)"(
@@ -2349,7 +2448,7 @@ export class IVault extends Contract {
         amountIn: BigNumberish;
         userData: BytesLike;
       }[],
-      tokens: string[],
+      assets: string[],
       funds: {
         sender: string;
         fromInternalBalance: boolean;
@@ -2358,7 +2457,7 @@ export class IVault extends Contract {
       },
       limits: BigNumberish[],
       deadline: BigNumberish,
-      overrides?: Overrides
+      overrides?: PayableOverrides
     ): Promise<PopulatedTransaction>;
 
     batchSwapGivenOut(
@@ -2369,7 +2468,7 @@ export class IVault extends Contract {
         amountOut: BigNumberish;
         userData: BytesLike;
       }[],
-      tokens: string[],
+      assets: string[],
       funds: {
         sender: string;
         fromInternalBalance: boolean;
@@ -2378,7 +2477,7 @@ export class IVault extends Contract {
       },
       limits: BigNumberish[],
       deadline: BigNumberish,
-      overrides?: Overrides
+      overrides?: PayableOverrides
     ): Promise<PopulatedTransaction>;
 
     "batchSwapGivenOut(tuple[],address[],tuple,int256[],uint256)"(
@@ -2389,7 +2488,7 @@ export class IVault extends Contract {
         amountOut: BigNumberish;
         userData: BytesLike;
       }[],
-      tokens: string[],
+      assets: string[],
       funds: {
         sender: string;
         fromInternalBalance: boolean;
@@ -2398,7 +2497,7 @@ export class IVault extends Contract {
       },
       limits: BigNumberish[],
       deadline: BigNumberish,
-      overrides?: Overrides
+      overrides?: PayableOverrides
     ): Promise<PopulatedTransaction>;
 
     changeAuthorizer(
@@ -2425,22 +2524,22 @@ export class IVault extends Contract {
 
     depositToInternalBalance(
       transfers: {
-        token: string;
+        asset: string;
         amount: BigNumberish;
         sender: string;
         recipient: string;
       }[],
-      overrides?: Overrides
+      overrides?: PayableOverrides
     ): Promise<PopulatedTransaction>;
 
     "depositToInternalBalance(tuple[])"(
       transfers: {
-        token: string;
+        asset: string;
         amount: BigNumberish;
         sender: string;
         recipient: string;
       }[],
-      overrides?: Overrides
+      overrides?: PayableOverrides
     ): Promise<PopulatedTransaction>;
 
     depositToPoolBalance(
@@ -2471,7 +2570,7 @@ export class IVault extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      tokens: string[],
+      assets: string[],
       minAmountsOut: BigNumberish[],
       toInternalBalance: boolean,
       userData: BytesLike,
@@ -2482,7 +2581,7 @@ export class IVault extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      tokens: string[],
+      assets: string[],
       minAmountsOut: BigNumberish[],
       toInternalBalance: boolean,
       userData: BytesLike,
@@ -2597,22 +2696,22 @@ export class IVault extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      tokens: string[],
+      assets: string[],
       maxAmountsIn: BigNumberish[],
       fromInternalBalance: boolean,
       userData: BytesLike,
-      overrides?: Overrides
+      overrides?: PayableOverrides
     ): Promise<PopulatedTransaction>;
 
     "joinPool(bytes32,address,address,address[],uint256[],bool,bytes)"(
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      tokens: string[],
+      assets: string[],
       maxAmountsIn: BigNumberish[],
       fromInternalBalance: boolean,
       userData: BytesLike,
-      overrides?: Overrides
+      overrides?: PayableOverrides
     ): Promise<PopulatedTransaction>;
 
     queryBatchSwap(
@@ -2624,7 +2723,7 @@ export class IVault extends Contract {
         amount: BigNumberish;
         userData: BytesLike;
       }[],
-      tokens: string[],
+      assets: string[],
       funds: {
         sender: string;
         fromInternalBalance: boolean;
@@ -2643,7 +2742,7 @@ export class IVault extends Contract {
         amount: BigNumberish;
         userData: BytesLike;
       }[],
-      tokens: string[],
+      assets: string[],
       funds: {
         sender: string;
         fromInternalBalance: boolean;
@@ -2711,6 +2810,26 @@ export class IVault extends Contract {
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
+    transferToExternalBalance(
+      transfers: {
+        token: string;
+        amount: BigNumberish;
+        sender: string;
+        recipient: string;
+      }[],
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "transferToExternalBalance(tuple[])"(
+      transfers: {
+        token: string;
+        amount: BigNumberish;
+        sender: string;
+        recipient: string;
+      }[],
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
     updateManagedBalance(
       poolId: BytesLike,
       transfers: { token: string; amount: BigNumberish }[],
@@ -2739,7 +2858,7 @@ export class IVault extends Contract {
 
     withdrawFromInternalBalance(
       transfers: {
-        token: string;
+        asset: string;
         amount: BigNumberish;
         sender: string;
         recipient: string;
@@ -2749,7 +2868,7 @@ export class IVault extends Contract {
 
     "withdrawFromInternalBalance(tuple[])"(
       transfers: {
-        token: string;
+        asset: string;
         amount: BigNumberish;
         sender: string;
         recipient: string;

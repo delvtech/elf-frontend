@@ -27,7 +27,7 @@ const _abi = [
         type: "address",
       },
     ],
-    name: "PoolCreated",
+    name: "PoolRegistered",
     type: "event",
   },
   {

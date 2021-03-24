@@ -24,6 +24,7 @@ interface MockPoolInterface extends ethers.utils.Interface {
   functions: {
     "deregisterTokens(address[])": FunctionFragment;
     "getPoolId()": FunctionFragment;
+    "getRate()": FunctionFragment;
     "getVault()": FunctionFragment;
     "onExitPool(bytes32,address,address,uint256[],uint256,uint256,bytes)": FunctionFragment;
     "onJoinPool(bytes32,address,address,uint256[],uint256,uint256,bytes)": FunctionFragment;
@@ -38,6 +39,7 @@ interface MockPoolInterface extends ethers.utils.Interface {
     values: [string[]]
   ): string;
   encodeFunctionData(functionFragment: "getPoolId", values?: undefined): string;
+  encodeFunctionData(functionFragment: "getRate", values?: undefined): string;
   encodeFunctionData(functionFragment: "getVault", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "onExitPool",
@@ -111,6 +113,7 @@ interface MockPoolInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "getPoolId", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "getRate", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getVault", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "onExitPool", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "onJoinPool", data: BytesLike): Result;
@@ -167,6 +170,10 @@ export class MockPool extends Contract {
     getPoolId(overrides?: CallOverrides): Promise<[string]>;
 
     "getPoolId()"(overrides?: CallOverrides): Promise<[string]>;
+
+    getRate(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "getRate()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     getVault(overrides?: CallOverrides): Promise<[string]>;
 
@@ -319,6 +326,10 @@ export class MockPool extends Contract {
 
   "getPoolId()"(overrides?: CallOverrides): Promise<string>;
 
+  getRate(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "getRate()"(overrides?: CallOverrides): Promise<BigNumber>;
+
   getVault(overrides?: CallOverrides): Promise<string>;
 
   "getVault()"(overrides?: CallOverrides): Promise<string>;
@@ -469,6 +480,10 @@ export class MockPool extends Contract {
     getPoolId(overrides?: CallOverrides): Promise<string>;
 
     "getPoolId()"(overrides?: CallOverrides): Promise<string>;
+
+    getRate(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "getRate()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     getVault(overrides?: CallOverrides): Promise<string>;
 
@@ -664,6 +679,10 @@ export class MockPool extends Contract {
 
     "getPoolId()"(overrides?: CallOverrides): Promise<BigNumber>;
 
+    getRate(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "getRate()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     getVault(overrides?: CallOverrides): Promise<BigNumber>;
 
     "getVault()"(overrides?: CallOverrides): Promise<BigNumber>;
@@ -815,6 +834,10 @@ export class MockPool extends Contract {
     getPoolId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     "getPoolId()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    getRate(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "getRate()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getVault(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 

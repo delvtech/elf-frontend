@@ -27,7 +27,10 @@ interface BaseMinimalSwapInfoPoolInterface extends ethers.utils.Interface {
     "balanceOf(address)": FunctionFragment;
     "decimals()": FunctionFragment;
     "decreaseApproval(address,uint256)": FunctionFragment;
+    "getAuthorizer()": FunctionFragment;
+    "getEmergencyPeriod()": FunctionFragment;
     "getPoolId()": FunctionFragment;
+    "getRate()": FunctionFragment;
     "getSwapFee()": FunctionFragment;
     "getVault()": FunctionFragment;
     "increaseApproval(address,uint256)": FunctionFragment;
@@ -36,6 +39,10 @@ interface BaseMinimalSwapInfoPoolInterface extends ethers.utils.Interface {
     "onJoinPool(bytes32,address,address,uint256[],uint256,uint256,bytes)": FunctionFragment;
     "onSwapGivenIn(tuple,uint256,uint256)": FunctionFragment;
     "onSwapGivenOut(tuple,uint256,uint256)": FunctionFragment;
+    "queryExit(bytes32,address,address,uint256[],uint256,uint256,bytes)": FunctionFragment;
+    "queryJoin(bytes32,address,address,uint256[],uint256,uint256,bytes)": FunctionFragment;
+    "setEmergencyPeriod(bool)": FunctionFragment;
+    "setSwapFee(uint256)": FunctionFragment;
     "symbol()": FunctionFragment;
     "totalSupply()": FunctionFragment;
     "transfer(address,uint256)": FunctionFragment;
@@ -56,7 +63,16 @@ interface BaseMinimalSwapInfoPoolInterface extends ethers.utils.Interface {
     functionFragment: "decreaseApproval",
     values: [string, BigNumberish]
   ): string;
+  encodeFunctionData(
+    functionFragment: "getAuthorizer",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getEmergencyPeriod",
+    values?: undefined
+  ): string;
   encodeFunctionData(functionFragment: "getPoolId", values?: undefined): string;
+  encodeFunctionData(functionFragment: "getRate", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "getSwapFee",
     values?: undefined
@@ -125,6 +141,38 @@ interface BaseMinimalSwapInfoPoolInterface extends ethers.utils.Interface {
       BigNumberish
     ]
   ): string;
+  encodeFunctionData(
+    functionFragment: "queryExit",
+    values: [
+      BytesLike,
+      string,
+      string,
+      BigNumberish[],
+      BigNumberish,
+      BigNumberish,
+      BytesLike
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "queryJoin",
+    values: [
+      BytesLike,
+      string,
+      string,
+      BigNumberish[],
+      BigNumberish,
+      BigNumberish,
+      BytesLike
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setEmergencyPeriod",
+    values: [boolean]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setSwapFee",
+    values: [BigNumberish]
+  ): string;
   encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "totalSupply",
@@ -147,7 +195,16 @@ interface BaseMinimalSwapInfoPoolInterface extends ethers.utils.Interface {
     functionFragment: "decreaseApproval",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "getAuthorizer",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getEmergencyPeriod",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "getPoolId", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "getRate", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getSwapFee", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getVault", data: BytesLike): Result;
   decodeFunctionResult(
@@ -165,6 +222,13 @@ interface BaseMinimalSwapInfoPoolInterface extends ethers.utils.Interface {
     functionFragment: "onSwapGivenOut",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "queryExit", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "queryJoin", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "setEmergencyPeriod",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "setSwapFee", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "totalSupply",
@@ -178,10 +242,12 @@ interface BaseMinimalSwapInfoPoolInterface extends ethers.utils.Interface {
 
   events: {
     "Approval(address,address,uint256)": EventFragment;
+    "EmergencyPeriodChanged(bool)": EventFragment;
     "Transfer(address,address,uint256)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "EmergencyPeriodChanged"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
 }
 
@@ -246,9 +312,37 @@ export class BaseMinimalSwapInfoPool extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
+    getAuthorizer(overrides?: CallOverrides): Promise<[string]>;
+
+    "getAuthorizer()"(overrides?: CallOverrides): Promise<[string]>;
+
+    getEmergencyPeriod(
+      overrides?: CallOverrides
+    ): Promise<
+      [boolean, BigNumber, BigNumber] & {
+        active: boolean;
+        endDate: BigNumber;
+        checkEndDate: BigNumber;
+      }
+    >;
+
+    "getEmergencyPeriod()"(
+      overrides?: CallOverrides
+    ): Promise<
+      [boolean, BigNumber, BigNumber] & {
+        active: boolean;
+        endDate: BigNumber;
+        checkEndDate: BigNumber;
+      }
+    >;
+
     getPoolId(overrides?: CallOverrides): Promise<[string]>;
 
     "getPoolId()"(overrides?: CallOverrides): Promise<[string]>;
+
+    getRate(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "getRate()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     getSwapFee(overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -382,6 +476,70 @@ export class BaseMinimalSwapInfoPool extends Contract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
+    queryExit(
+      poolId: BytesLike,
+      sender: string,
+      recipient: string,
+      currentBalances: BigNumberish[],
+      latestBlockNumberUsed: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
+      userData: BytesLike,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "queryExit(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
+      poolId: BytesLike,
+      sender: string,
+      recipient: string,
+      currentBalances: BigNumberish[],
+      latestBlockNumberUsed: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
+      userData: BytesLike,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    queryJoin(
+      poolId: BytesLike,
+      sender: string,
+      recipient: string,
+      currentBalances: BigNumberish[],
+      latestBlockNumberUsed: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
+      userData: BytesLike,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "queryJoin(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
+      poolId: BytesLike,
+      sender: string,
+      recipient: string,
+      currentBalances: BigNumberish[],
+      latestBlockNumberUsed: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
+      userData: BytesLike,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    setEmergencyPeriod(
+      active: boolean,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "setEmergencyPeriod(bool)"(
+      active: boolean,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    setSwapFee(
+      swapFee: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "setSwapFee(uint256)"(
+      swapFee: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
     symbol(overrides?: CallOverrides): Promise<[string]>;
 
     "symbol()"(overrides?: CallOverrides): Promise<[string]>;
@@ -464,9 +622,37 @@ export class BaseMinimalSwapInfoPool extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
+  getAuthorizer(overrides?: CallOverrides): Promise<string>;
+
+  "getAuthorizer()"(overrides?: CallOverrides): Promise<string>;
+
+  getEmergencyPeriod(
+    overrides?: CallOverrides
+  ): Promise<
+    [boolean, BigNumber, BigNumber] & {
+      active: boolean;
+      endDate: BigNumber;
+      checkEndDate: BigNumber;
+    }
+  >;
+
+  "getEmergencyPeriod()"(
+    overrides?: CallOverrides
+  ): Promise<
+    [boolean, BigNumber, BigNumber] & {
+      active: boolean;
+      endDate: BigNumber;
+      checkEndDate: BigNumber;
+    }
+  >;
+
   getPoolId(overrides?: CallOverrides): Promise<string>;
 
   "getPoolId()"(overrides?: CallOverrides): Promise<string>;
+
+  getRate(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "getRate()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   getSwapFee(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -600,6 +786,70 @@ export class BaseMinimalSwapInfoPool extends Contract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  queryExit(
+    poolId: BytesLike,
+    sender: string,
+    recipient: string,
+    currentBalances: BigNumberish[],
+    latestBlockNumberUsed: BigNumberish,
+    protocolSwapFeePercentage: BigNumberish,
+    userData: BytesLike,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "queryExit(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
+    poolId: BytesLike,
+    sender: string,
+    recipient: string,
+    currentBalances: BigNumberish[],
+    latestBlockNumberUsed: BigNumberish,
+    protocolSwapFeePercentage: BigNumberish,
+    userData: BytesLike,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  queryJoin(
+    poolId: BytesLike,
+    sender: string,
+    recipient: string,
+    currentBalances: BigNumberish[],
+    latestBlockNumberUsed: BigNumberish,
+    protocolSwapFeePercentage: BigNumberish,
+    userData: BytesLike,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "queryJoin(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
+    poolId: BytesLike,
+    sender: string,
+    recipient: string,
+    currentBalances: BigNumberish[],
+    latestBlockNumberUsed: BigNumberish,
+    protocolSwapFeePercentage: BigNumberish,
+    userData: BytesLike,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  setEmergencyPeriod(
+    active: boolean,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "setEmergencyPeriod(bool)"(
+    active: boolean,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  setSwapFee(
+    swapFee: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "setSwapFee(uint256)"(
+    swapFee: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
   symbol(overrides?: CallOverrides): Promise<string>;
 
   "symbol()"(overrides?: CallOverrides): Promise<string>;
@@ -682,9 +932,37 @@ export class BaseMinimalSwapInfoPool extends Contract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    getAuthorizer(overrides?: CallOverrides): Promise<string>;
+
+    "getAuthorizer()"(overrides?: CallOverrides): Promise<string>;
+
+    getEmergencyPeriod(
+      overrides?: CallOverrides
+    ): Promise<
+      [boolean, BigNumber, BigNumber] & {
+        active: boolean;
+        endDate: BigNumber;
+        checkEndDate: BigNumber;
+      }
+    >;
+
+    "getEmergencyPeriod()"(
+      overrides?: CallOverrides
+    ): Promise<
+      [boolean, BigNumber, BigNumber] & {
+        active: boolean;
+        endDate: BigNumber;
+        checkEndDate: BigNumber;
+      }
+    >;
+
     getPoolId(overrides?: CallOverrides): Promise<string>;
 
     "getPoolId()"(overrides?: CallOverrides): Promise<string>;
+
+    getRate(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "getRate()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     getSwapFee(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -818,6 +1096,75 @@ export class BaseMinimalSwapInfoPool extends Contract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    queryExit(
+      poolId: BytesLike,
+      sender: string,
+      recipient: string,
+      currentBalances: BigNumberish[],
+      latestBlockNumberUsed: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
+      userData: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber[]] & { bptIn: BigNumber; amountsOut: BigNumber[] }
+    >;
+
+    "queryExit(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
+      poolId: BytesLike,
+      sender: string,
+      recipient: string,
+      currentBalances: BigNumberish[],
+      latestBlockNumberUsed: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
+      userData: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber[]] & { bptIn: BigNumber; amountsOut: BigNumber[] }
+    >;
+
+    queryJoin(
+      poolId: BytesLike,
+      sender: string,
+      recipient: string,
+      currentBalances: BigNumberish[],
+      latestBlockNumberUsed: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
+      userData: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber[]] & { bptOut: BigNumber; amountsIn: BigNumber[] }
+    >;
+
+    "queryJoin(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
+      poolId: BytesLike,
+      sender: string,
+      recipient: string,
+      currentBalances: BigNumberish[],
+      latestBlockNumberUsed: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
+      userData: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber[]] & { bptOut: BigNumber; amountsIn: BigNumber[] }
+    >;
+
+    setEmergencyPeriod(
+      active: boolean,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "setEmergencyPeriod(bool)"(
+      active: boolean,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    setSwapFee(swapFee: BigNumberish, overrides?: CallOverrides): Promise<void>;
+
+    "setSwapFee(uint256)"(
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     symbol(overrides?: CallOverrides): Promise<string>;
 
     "symbol()"(overrides?: CallOverrides): Promise<string>;
@@ -859,6 +1206,8 @@ export class BaseMinimalSwapInfoPool extends Contract {
       spender: string | null,
       value: null
     ): EventFilter;
+
+    EmergencyPeriodChanged(active: null): EventFilter;
 
     Transfer(from: string | null, to: string | null, value: null): EventFilter;
   };
@@ -911,9 +1260,21 @@ export class BaseMinimalSwapInfoPool extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
+    getAuthorizer(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "getAuthorizer()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getEmergencyPeriod(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "getEmergencyPeriod()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     getPoolId(overrides?: CallOverrides): Promise<BigNumber>;
 
     "getPoolId()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getRate(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "getRate()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     getSwapFee(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1047,6 +1408,70 @@ export class BaseMinimalSwapInfoPool extends Contract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    queryExit(
+      poolId: BytesLike,
+      sender: string,
+      recipient: string,
+      currentBalances: BigNumberish[],
+      latestBlockNumberUsed: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
+      userData: BytesLike,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "queryExit(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
+      poolId: BytesLike,
+      sender: string,
+      recipient: string,
+      currentBalances: BigNumberish[],
+      latestBlockNumberUsed: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
+      userData: BytesLike,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    queryJoin(
+      poolId: BytesLike,
+      sender: string,
+      recipient: string,
+      currentBalances: BigNumberish[],
+      latestBlockNumberUsed: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
+      userData: BytesLike,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "queryJoin(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
+      poolId: BytesLike,
+      sender: string,
+      recipient: string,
+      currentBalances: BigNumberish[],
+      latestBlockNumberUsed: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
+      userData: BytesLike,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    setEmergencyPeriod(
+      active: boolean,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "setEmergencyPeriod(bool)"(
+      active: boolean,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    setSwapFee(
+      swapFee: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "setSwapFee(uint256)"(
+      swapFee: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
     symbol(overrides?: CallOverrides): Promise<BigNumber>;
 
     "symbol()"(overrides?: CallOverrides): Promise<BigNumber>;
@@ -1133,9 +1558,25 @@ export class BaseMinimalSwapInfoPool extends Contract {
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
+    getAuthorizer(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "getAuthorizer()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    getEmergencyPeriod(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "getEmergencyPeriod()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     getPoolId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     "getPoolId()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    getRate(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "getRate()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getSwapFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -1267,6 +1708,70 @@ export class BaseMinimalSwapInfoPool extends Contract {
       currentBalanceTokenIn: BigNumberish,
       currentBalanceTokenOut: BigNumberish,
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    queryExit(
+      poolId: BytesLike,
+      sender: string,
+      recipient: string,
+      currentBalances: BigNumberish[],
+      latestBlockNumberUsed: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
+      userData: BytesLike,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "queryExit(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
+      poolId: BytesLike,
+      sender: string,
+      recipient: string,
+      currentBalances: BigNumberish[],
+      latestBlockNumberUsed: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
+      userData: BytesLike,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    queryJoin(
+      poolId: BytesLike,
+      sender: string,
+      recipient: string,
+      currentBalances: BigNumberish[],
+      latestBlockNumberUsed: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
+      userData: BytesLike,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "queryJoin(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
+      poolId: BytesLike,
+      sender: string,
+      recipient: string,
+      currentBalances: BigNumberish[],
+      latestBlockNumberUsed: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
+      userData: BytesLike,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    setEmergencyPeriod(
+      active: boolean,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "setEmergencyPeriod(bool)"(
+      active: boolean,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    setSwapFee(
+      swapFee: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "setSwapFee(uint256)"(
+      swapFee: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;

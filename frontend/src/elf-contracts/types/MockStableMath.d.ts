@@ -21,18 +21,58 @@ import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 
 interface MockStableMathInterface extends ethers.utils.Interface {
   functions: {
+    "bptInForExactTokensOut(uint256,uint256[],uint256[],uint256,uint256)": FunctionFragment;
     "calculateDueTokenProtocolSwapFee(uint256,uint256[],uint256,uint256,uint256)": FunctionFragment;
+    "exactBPTInForTokenOut(uint256,uint256[],uint256,uint256,uint256,uint256)": FunctionFragment;
+    "exactBPTInForTokensOut(uint256[],uint256,uint256)": FunctionFragment;
+    "exactTokensInForBPTOut(uint256,uint256[],uint256[],uint256,uint256)": FunctionFragment;
     "inGivenOut(uint256,uint256[],uint256,uint256,uint256)": FunctionFragment;
     "invariant(uint256,uint256[])": FunctionFragment;
     "outGivenIn(uint256,uint256[],uint256,uint256,uint256)": FunctionFragment;
+    "tokenInForExactBPTOut(uint256,uint256[],uint256,uint256,uint256,uint256)": FunctionFragment;
   };
 
+  encodeFunctionData(
+    functionFragment: "bptInForExactTokensOut",
+    values: [
+      BigNumberish,
+      BigNumberish[],
+      BigNumberish[],
+      BigNumberish,
+      BigNumberish
+    ]
+  ): string;
   encodeFunctionData(
     functionFragment: "calculateDueTokenProtocolSwapFee",
     values: [
       BigNumberish,
       BigNumberish[],
       BigNumberish,
+      BigNumberish,
+      BigNumberish
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "exactBPTInForTokenOut",
+    values: [
+      BigNumberish,
+      BigNumberish[],
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "exactBPTInForTokensOut",
+    values: [BigNumberish[], BigNumberish, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "exactTokensInForBPTOut",
+    values: [
+      BigNumberish,
+      BigNumberish[],
+      BigNumberish[],
       BigNumberish,
       BigNumberish
     ]
@@ -61,14 +101,45 @@ interface MockStableMathInterface extends ethers.utils.Interface {
       BigNumberish
     ]
   ): string;
+  encodeFunctionData(
+    functionFragment: "tokenInForExactBPTOut",
+    values: [
+      BigNumberish,
+      BigNumberish[],
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish
+    ]
+  ): string;
 
   decodeFunctionResult(
+    functionFragment: "bptInForExactTokensOut",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "calculateDueTokenProtocolSwapFee",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "exactBPTInForTokenOut",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "exactBPTInForTokensOut",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "exactTokensInForBPTOut",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "inGivenOut", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "invariant", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "outGivenIn", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "tokenInForExactBPTOut",
+    data: BytesLike
+  ): Result;
 
   events: {};
 }
@@ -87,6 +158,24 @@ export class MockStableMath extends Contract {
   interface: MockStableMathInterface;
 
   functions: {
+    bptInForExactTokensOut(
+      amp: BigNumberish,
+      balances: BigNumberish[],
+      amountsOut: BigNumberish[],
+      bptTotalSupply: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    "bptInForExactTokensOut(uint256,uint256[],uint256[],uint256,uint256)"(
+      amp: BigNumberish,
+      balances: BigNumberish[],
+      amountsOut: BigNumberish[],
+      bptTotalSupply: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
     calculateDueTokenProtocolSwapFee(
       amp: BigNumberish,
       balances: BigNumberish[],
@@ -102,6 +191,58 @@ export class MockStableMath extends Contract {
       lastInvariant: BigNumberish,
       tokenIndex: BigNumberish,
       protocolSwapFeePercentage: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    exactBPTInForTokenOut(
+      amp: BigNumberish,
+      balances: BigNumberish[],
+      tokenIndex: BigNumberish,
+      bptAmountIn: BigNumberish,
+      bptTotalSupply: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    "exactBPTInForTokenOut(uint256,uint256[],uint256,uint256,uint256,uint256)"(
+      amp: BigNumberish,
+      balances: BigNumberish[],
+      tokenIndex: BigNumberish,
+      bptAmountIn: BigNumberish,
+      bptTotalSupply: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    exactBPTInForTokensOut(
+      balances: BigNumberish[],
+      bptAmountIn: BigNumberish,
+      bptTotalSupply: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber[]]>;
+
+    "exactBPTInForTokensOut(uint256[],uint256,uint256)"(
+      balances: BigNumberish[],
+      bptAmountIn: BigNumberish,
+      bptTotalSupply: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber[]]>;
+
+    exactTokensInForBPTOut(
+      amp: BigNumberish,
+      balances: BigNumberish[],
+      amountsIn: BigNumberish[],
+      bptTotalSupply: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    "exactTokensInForBPTOut(uint256,uint256[],uint256[],uint256,uint256)"(
+      amp: BigNumberish,
+      balances: BigNumberish[],
+      amountsIn: BigNumberish[],
+      bptTotalSupply: BigNumberish,
+      swapFee: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
@@ -152,7 +293,45 @@ export class MockStableMath extends Contract {
       tokenAmountIn: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
+
+    tokenInForExactBPTOut(
+      amp: BigNumberish,
+      balances: BigNumberish[],
+      tokenIndex: BigNumberish,
+      bptAmountOut: BigNumberish,
+      bptTotalSupply: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    "tokenInForExactBPTOut(uint256,uint256[],uint256,uint256,uint256,uint256)"(
+      amp: BigNumberish,
+      balances: BigNumberish[],
+      tokenIndex: BigNumberish,
+      bptAmountOut: BigNumberish,
+      bptTotalSupply: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
   };
+
+  bptInForExactTokensOut(
+    amp: BigNumberish,
+    balances: BigNumberish[],
+    amountsOut: BigNumberish[],
+    bptTotalSupply: BigNumberish,
+    swapFee: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  "bptInForExactTokensOut(uint256,uint256[],uint256[],uint256,uint256)"(
+    amp: BigNumberish,
+    balances: BigNumberish[],
+    amountsOut: BigNumberish[],
+    bptTotalSupply: BigNumberish,
+    swapFee: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   calculateDueTokenProtocolSwapFee(
     amp: BigNumberish,
@@ -169,6 +348,58 @@ export class MockStableMath extends Contract {
     lastInvariant: BigNumberish,
     tokenIndex: BigNumberish,
     protocolSwapFeePercentage: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  exactBPTInForTokenOut(
+    amp: BigNumberish,
+    balances: BigNumberish[],
+    tokenIndex: BigNumberish,
+    bptAmountIn: BigNumberish,
+    bptTotalSupply: BigNumberish,
+    swapFee: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  "exactBPTInForTokenOut(uint256,uint256[],uint256,uint256,uint256,uint256)"(
+    amp: BigNumberish,
+    balances: BigNumberish[],
+    tokenIndex: BigNumberish,
+    bptAmountIn: BigNumberish,
+    bptTotalSupply: BigNumberish,
+    swapFee: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  exactBPTInForTokensOut(
+    balances: BigNumberish[],
+    bptAmountIn: BigNumberish,
+    bptTotalSupply: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber[]>;
+
+  "exactBPTInForTokensOut(uint256[],uint256,uint256)"(
+    balances: BigNumberish[],
+    bptAmountIn: BigNumberish,
+    bptTotalSupply: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber[]>;
+
+  exactTokensInForBPTOut(
+    amp: BigNumberish,
+    balances: BigNumberish[],
+    amountsIn: BigNumberish[],
+    bptTotalSupply: BigNumberish,
+    swapFee: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  "exactTokensInForBPTOut(uint256,uint256[],uint256[],uint256,uint256)"(
+    amp: BigNumberish,
+    balances: BigNumberish[],
+    amountsIn: BigNumberish[],
+    bptTotalSupply: BigNumberish,
+    swapFee: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
@@ -220,7 +451,45 @@ export class MockStableMath extends Contract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  tokenInForExactBPTOut(
+    amp: BigNumberish,
+    balances: BigNumberish[],
+    tokenIndex: BigNumberish,
+    bptAmountOut: BigNumberish,
+    bptTotalSupply: BigNumberish,
+    swapFee: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  "tokenInForExactBPTOut(uint256,uint256[],uint256,uint256,uint256,uint256)"(
+    amp: BigNumberish,
+    balances: BigNumberish[],
+    tokenIndex: BigNumberish,
+    bptAmountOut: BigNumberish,
+    bptTotalSupply: BigNumberish,
+    swapFee: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   callStatic: {
+    bptInForExactTokensOut(
+      amp: BigNumberish,
+      balances: BigNumberish[],
+      amountsOut: BigNumberish[],
+      bptTotalSupply: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "bptInForExactTokensOut(uint256,uint256[],uint256[],uint256,uint256)"(
+      amp: BigNumberish,
+      balances: BigNumberish[],
+      amountsOut: BigNumberish[],
+      bptTotalSupply: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     calculateDueTokenProtocolSwapFee(
       amp: BigNumberish,
       balances: BigNumberish[],
@@ -236,6 +505,58 @@ export class MockStableMath extends Contract {
       lastInvariant: BigNumberish,
       tokenIndex: BigNumberish,
       protocolSwapFeePercentage: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    exactBPTInForTokenOut(
+      amp: BigNumberish,
+      balances: BigNumberish[],
+      tokenIndex: BigNumberish,
+      bptAmountIn: BigNumberish,
+      bptTotalSupply: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "exactBPTInForTokenOut(uint256,uint256[],uint256,uint256,uint256,uint256)"(
+      amp: BigNumberish,
+      balances: BigNumberish[],
+      tokenIndex: BigNumberish,
+      bptAmountIn: BigNumberish,
+      bptTotalSupply: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    exactBPTInForTokensOut(
+      balances: BigNumberish[],
+      bptAmountIn: BigNumberish,
+      bptTotalSupply: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber[]>;
+
+    "exactBPTInForTokensOut(uint256[],uint256,uint256)"(
+      balances: BigNumberish[],
+      bptAmountIn: BigNumberish,
+      bptTotalSupply: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber[]>;
+
+    exactTokensInForBPTOut(
+      amp: BigNumberish,
+      balances: BigNumberish[],
+      amountsIn: BigNumberish[],
+      bptTotalSupply: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "exactTokensInForBPTOut(uint256,uint256[],uint256[],uint256,uint256)"(
+      amp: BigNumberish,
+      balances: BigNumberish[],
+      amountsIn: BigNumberish[],
+      bptTotalSupply: BigNumberish,
+      swapFee: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -284,6 +605,26 @@ export class MockStableMath extends Contract {
       tokenIndexIn: BigNumberish,
       tokenIndexOut: BigNumberish,
       tokenAmountIn: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    tokenInForExactBPTOut(
+      amp: BigNumberish,
+      balances: BigNumberish[],
+      tokenIndex: BigNumberish,
+      bptAmountOut: BigNumberish,
+      bptTotalSupply: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "tokenInForExactBPTOut(uint256,uint256[],uint256,uint256,uint256,uint256)"(
+      amp: BigNumberish,
+      balances: BigNumberish[],
+      tokenIndex: BigNumberish,
+      bptAmountOut: BigNumberish,
+      bptTotalSupply: BigNumberish,
+      swapFee: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
   };
@@ -291,6 +632,24 @@ export class MockStableMath extends Contract {
   filters: {};
 
   estimateGas: {
+    bptInForExactTokensOut(
+      amp: BigNumberish,
+      balances: BigNumberish[],
+      amountsOut: BigNumberish[],
+      bptTotalSupply: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "bptInForExactTokensOut(uint256,uint256[],uint256[],uint256,uint256)"(
+      amp: BigNumberish,
+      balances: BigNumberish[],
+      amountsOut: BigNumberish[],
+      bptTotalSupply: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     calculateDueTokenProtocolSwapFee(
       amp: BigNumberish,
       balances: BigNumberish[],
@@ -306,6 +665,58 @@ export class MockStableMath extends Contract {
       lastInvariant: BigNumberish,
       tokenIndex: BigNumberish,
       protocolSwapFeePercentage: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    exactBPTInForTokenOut(
+      amp: BigNumberish,
+      balances: BigNumberish[],
+      tokenIndex: BigNumberish,
+      bptAmountIn: BigNumberish,
+      bptTotalSupply: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "exactBPTInForTokenOut(uint256,uint256[],uint256,uint256,uint256,uint256)"(
+      amp: BigNumberish,
+      balances: BigNumberish[],
+      tokenIndex: BigNumberish,
+      bptAmountIn: BigNumberish,
+      bptTotalSupply: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    exactBPTInForTokensOut(
+      balances: BigNumberish[],
+      bptAmountIn: BigNumberish,
+      bptTotalSupply: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "exactBPTInForTokensOut(uint256[],uint256,uint256)"(
+      balances: BigNumberish[],
+      bptAmountIn: BigNumberish,
+      bptTotalSupply: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    exactTokensInForBPTOut(
+      amp: BigNumberish,
+      balances: BigNumberish[],
+      amountsIn: BigNumberish[],
+      bptTotalSupply: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "exactTokensInForBPTOut(uint256,uint256[],uint256[],uint256,uint256)"(
+      amp: BigNumberish,
+      balances: BigNumberish[],
+      amountsIn: BigNumberish[],
+      bptTotalSupply: BigNumberish,
+      swapFee: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -354,11 +765,49 @@ export class MockStableMath extends Contract {
       tokenIndexIn: BigNumberish,
       tokenIndexOut: BigNumberish,
       tokenAmountIn: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    tokenInForExactBPTOut(
+      amp: BigNumberish,
+      balances: BigNumberish[],
+      tokenIndex: BigNumberish,
+      bptAmountOut: BigNumberish,
+      bptTotalSupply: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "tokenInForExactBPTOut(uint256,uint256[],uint256,uint256,uint256,uint256)"(
+      amp: BigNumberish,
+      balances: BigNumberish[],
+      tokenIndex: BigNumberish,
+      bptAmountOut: BigNumberish,
+      bptTotalSupply: BigNumberish,
+      swapFee: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
+    bptInForExactTokensOut(
+      amp: BigNumberish,
+      balances: BigNumberish[],
+      amountsOut: BigNumberish[],
+      bptTotalSupply: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "bptInForExactTokensOut(uint256,uint256[],uint256[],uint256,uint256)"(
+      amp: BigNumberish,
+      balances: BigNumberish[],
+      amountsOut: BigNumberish[],
+      bptTotalSupply: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     calculateDueTokenProtocolSwapFee(
       amp: BigNumberish,
       balances: BigNumberish[],
@@ -374,6 +823,58 @@ export class MockStableMath extends Contract {
       lastInvariant: BigNumberish,
       tokenIndex: BigNumberish,
       protocolSwapFeePercentage: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    exactBPTInForTokenOut(
+      amp: BigNumberish,
+      balances: BigNumberish[],
+      tokenIndex: BigNumberish,
+      bptAmountIn: BigNumberish,
+      bptTotalSupply: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "exactBPTInForTokenOut(uint256,uint256[],uint256,uint256,uint256,uint256)"(
+      amp: BigNumberish,
+      balances: BigNumberish[],
+      tokenIndex: BigNumberish,
+      bptAmountIn: BigNumberish,
+      bptTotalSupply: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    exactBPTInForTokensOut(
+      balances: BigNumberish[],
+      bptAmountIn: BigNumberish,
+      bptTotalSupply: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "exactBPTInForTokensOut(uint256[],uint256,uint256)"(
+      balances: BigNumberish[],
+      bptAmountIn: BigNumberish,
+      bptTotalSupply: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    exactTokensInForBPTOut(
+      amp: BigNumberish,
+      balances: BigNumberish[],
+      amountsIn: BigNumberish[],
+      bptTotalSupply: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "exactTokensInForBPTOut(uint256,uint256[],uint256[],uint256,uint256)"(
+      amp: BigNumberish,
+      balances: BigNumberish[],
+      amountsIn: BigNumberish[],
+      bptTotalSupply: BigNumberish,
+      swapFee: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -422,6 +923,26 @@ export class MockStableMath extends Contract {
       tokenIndexIn: BigNumberish,
       tokenIndexOut: BigNumberish,
       tokenAmountIn: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    tokenInForExactBPTOut(
+      amp: BigNumberish,
+      balances: BigNumberish[],
+      tokenIndex: BigNumberish,
+      bptAmountOut: BigNumberish,
+      bptTotalSupply: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "tokenInForExactBPTOut(uint256,uint256[],uint256,uint256,uint256,uint256)"(
+      amp: BigNumberish,
+      balances: BigNumberish[],
+      tokenIndex: BigNumberish,
+      bptAmountOut: BigNumberish,
+      bptTotalSupply: BigNumberish,
+      swapFee: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
   };

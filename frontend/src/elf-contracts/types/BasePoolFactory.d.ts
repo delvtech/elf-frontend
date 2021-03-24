@@ -29,10 +29,10 @@ interface BasePoolFactoryInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "vault", data: BytesLike): Result;
 
   events: {
-    "PoolCreated(address)": EventFragment;
+    "PoolRegistered(address)": EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "PoolCreated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "PoolRegistered"): EventFragment;
 }
 
 export class BasePoolFactory extends Contract {
@@ -65,7 +65,7 @@ export class BasePoolFactory extends Contract {
   };
 
   filters: {
-    PoolCreated(pool: string | null): EventFilter;
+    PoolRegistered(pool: string | null): EventFilter;
   };
 
   estimateGas: {

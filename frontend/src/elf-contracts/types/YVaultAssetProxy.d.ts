@@ -23,19 +23,24 @@ import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 interface YVaultAssetProxyInterface extends ethers.utils.Interface {
   functions: {
     "DOMAIN_SEPARATOR()": FunctionFragment;
+    "PERMIT_TYPEHASH()": FunctionFragment;
     "allowance(address,address)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
     "balanceOfUnderlying(address)": FunctionFragment;
     "decimals()": FunctionFragment;
-    "decreaseAllowance(address,uint256)": FunctionFragment;
     "deposit(address,uint256)": FunctionFragment;
     "getSharesToUnderlying(uint256)": FunctionFragment;
-    "increaseAllowance(address,uint256)": FunctionFragment;
     "name()": FunctionFragment;
     "nonces(address)": FunctionFragment;
     "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)": FunctionFragment;
     "prefundedDeposit(address)": FunctionFragment;
+    "reserveBalances(address)": FunctionFragment;
+    "reserveDeposit(uint256)": FunctionFragment;
+    "reserveShares()": FunctionFragment;
+    "reserveSupply()": FunctionFragment;
+    "reserveUnderlying()": FunctionFragment;
+    "reserveWithdraw(uint256)": FunctionFragment;
     "symbol()": FunctionFragment;
     "token()": FunctionFragment;
     "transfer(address,uint256)": FunctionFragment;
@@ -48,6 +53,10 @@ interface YVaultAssetProxyInterface extends ethers.utils.Interface {
 
   encodeFunctionData(
     functionFragment: "DOMAIN_SEPARATOR",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "PERMIT_TYPEHASH",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -65,20 +74,12 @@ interface YVaultAssetProxyInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "decimals", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "decreaseAllowance",
-    values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(
     functionFragment: "deposit",
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "getSharesToUnderlying",
     values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "increaseAllowance",
-    values: [string, BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(functionFragment: "nonces", values: [string]): string;
@@ -97,6 +98,30 @@ interface YVaultAssetProxyInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "prefundedDeposit",
     values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "reserveBalances",
+    values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "reserveDeposit",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "reserveShares",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "reserveSupply",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "reserveUnderlying",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "reserveWithdraw",
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
   encodeFunctionData(functionFragment: "token", values?: undefined): string;
@@ -126,6 +151,10 @@ interface YVaultAssetProxyInterface extends ethers.utils.Interface {
     functionFragment: "DOMAIN_SEPARATOR",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "PERMIT_TYPEHASH",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
@@ -134,17 +163,9 @@ interface YVaultAssetProxyInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "decimals", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "decreaseAllowance",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getSharesToUnderlying",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "increaseAllowance",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
@@ -152,6 +173,30 @@ interface YVaultAssetProxyInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "permit", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "prefundedDeposit",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "reserveBalances",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "reserveDeposit",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "reserveShares",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "reserveSupply",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "reserveUnderlying",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "reserveWithdraw",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
@@ -199,30 +244,34 @@ export class YVaultAssetProxy extends Contract {
 
     "DOMAIN_SEPARATOR()"(overrides?: CallOverrides): Promise<[string]>;
 
+    PERMIT_TYPEHASH(overrides?: CallOverrides): Promise<[string]>;
+
+    "PERMIT_TYPEHASH()"(overrides?: CallOverrides): Promise<[string]>;
+
     allowance(
-      owner: string,
-      spender: string,
+      arg0: string,
+      arg1: string,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
     "allowance(address,address)"(
-      owner: string,
-      spender: string,
+      arg0: string,
+      arg1: string,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
     "approve(address,uint256)"(
-      spender: string,
+      account: string,
       amount: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     "approve()"(overrides?: Overrides): Promise<ContractTransaction>;
 
-    balanceOf(account: string, overrides?: CallOverrides): Promise<[BigNumber]>;
+    balanceOf(arg0: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
     "balanceOf(address)"(
-      account: string,
+      arg0: string,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
@@ -239,18 +288,6 @@ export class YVaultAssetProxy extends Contract {
     decimals(overrides?: CallOverrides): Promise<[number]>;
 
     "decimals()"(overrides?: CallOverrides): Promise<[number]>;
-
-    decreaseAllowance(
-      spender: string,
-      subtractedValue: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "decreaseAllowance(address,uint256)"(
-      spender: string,
-      subtractedValue: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
 
     deposit(
       _destination: string,
@@ -274,26 +311,14 @@ export class YVaultAssetProxy extends Contract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
-    increaseAllowance(
-      spender: string,
-      addedValue: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "increaseAllowance(address,uint256)"(
-      spender: string,
-      addedValue: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
     name(overrides?: CallOverrides): Promise<[string]>;
 
     "name()"(overrides?: CallOverrides): Promise<[string]>;
 
-    nonces(owner: string, overrides?: CallOverrides): Promise<[BigNumber]>;
+    nonces(arg0: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
     "nonces(address)"(
-      owner: string,
+      arg0: string,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
@@ -329,6 +354,48 @@ export class YVaultAssetProxy extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
+    reserveBalances(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    "reserveBalances(address)"(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    reserveDeposit(
+      _amount: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "reserveDeposit(uint256)"(
+      _amount: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    reserveShares(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "reserveShares()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    reserveSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "reserveSupply()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    reserveUnderlying(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "reserveUnderlying()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    reserveWithdraw(
+      _amount: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "reserveWithdraw(uint256)"(
+      _amount: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
     symbol(overrides?: CallOverrides): Promise<[string]>;
 
     "symbol()"(overrides?: CallOverrides): Promise<[string]>;
@@ -350,14 +417,14 @@ export class YVaultAssetProxy extends Contract {
     ): Promise<ContractTransaction>;
 
     transferFrom(
-      sender: string,
+      spender: string,
       recipient: string,
       amount: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     "transferFrom(address,address,uint256)"(
-      sender: string,
+      spender: string,
       recipient: string,
       amount: BigNumberish,
       overrides?: Overrides
@@ -404,30 +471,34 @@ export class YVaultAssetProxy extends Contract {
 
   "DOMAIN_SEPARATOR()"(overrides?: CallOverrides): Promise<string>;
 
+  PERMIT_TYPEHASH(overrides?: CallOverrides): Promise<string>;
+
+  "PERMIT_TYPEHASH()"(overrides?: CallOverrides): Promise<string>;
+
   allowance(
-    owner: string,
-    spender: string,
+    arg0: string,
+    arg1: string,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
   "allowance(address,address)"(
-    owner: string,
-    spender: string,
+    arg0: string,
+    arg1: string,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
   "approve(address,uint256)"(
-    spender: string,
+    account: string,
     amount: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   "approve()"(overrides?: Overrides): Promise<ContractTransaction>;
 
-  balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
+  balanceOf(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
   "balanceOf(address)"(
-    account: string,
+    arg0: string,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
@@ -444,18 +515,6 @@ export class YVaultAssetProxy extends Contract {
   decimals(overrides?: CallOverrides): Promise<number>;
 
   "decimals()"(overrides?: CallOverrides): Promise<number>;
-
-  decreaseAllowance(
-    spender: string,
-    subtractedValue: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "decreaseAllowance(address,uint256)"(
-    spender: string,
-    subtractedValue: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
 
   deposit(
     _destination: string,
@@ -479,26 +538,14 @@ export class YVaultAssetProxy extends Contract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  increaseAllowance(
-    spender: string,
-    addedValue: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "increaseAllowance(address,uint256)"(
-    spender: string,
-    addedValue: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
   name(overrides?: CallOverrides): Promise<string>;
 
   "name()"(overrides?: CallOverrides): Promise<string>;
 
-  nonces(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
+  nonces(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
   "nonces(address)"(
-    owner: string,
+    arg0: string,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
@@ -534,6 +581,45 @@ export class YVaultAssetProxy extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
+  reserveBalances(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+  "reserveBalances(address)"(
+    arg0: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  reserveDeposit(
+    _amount: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "reserveDeposit(uint256)"(
+    _amount: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  reserveShares(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "reserveShares()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+  reserveSupply(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "reserveSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+  reserveUnderlying(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "reserveUnderlying()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+  reserveWithdraw(
+    _amount: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "reserveWithdraw(uint256)"(
+    _amount: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
   symbol(overrides?: CallOverrides): Promise<string>;
 
   "symbol()"(overrides?: CallOverrides): Promise<string>;
@@ -555,14 +641,14 @@ export class YVaultAssetProxy extends Contract {
   ): Promise<ContractTransaction>;
 
   transferFrom(
-    sender: string,
+    spender: string,
     recipient: string,
     amount: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   "transferFrom(address,address,uint256)"(
-    sender: string,
+    spender: string,
     recipient: string,
     amount: BigNumberish,
     overrides?: Overrides
@@ -609,30 +695,34 @@ export class YVaultAssetProxy extends Contract {
 
     "DOMAIN_SEPARATOR()"(overrides?: CallOverrides): Promise<string>;
 
+    PERMIT_TYPEHASH(overrides?: CallOverrides): Promise<string>;
+
+    "PERMIT_TYPEHASH()"(overrides?: CallOverrides): Promise<string>;
+
     allowance(
-      owner: string,
-      spender: string,
+      arg0: string,
+      arg1: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     "allowance(address,address)"(
-      owner: string,
-      spender: string,
+      arg0: string,
+      arg1: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     "approve(address,uint256)"(
-      spender: string,
+      account: string,
       amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
     "approve()"(overrides?: CallOverrides): Promise<void>;
 
-    balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
+    balanceOf(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     "balanceOf(address)"(
-      account: string,
+      arg0: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -649,18 +739,6 @@ export class YVaultAssetProxy extends Contract {
     decimals(overrides?: CallOverrides): Promise<number>;
 
     "decimals()"(overrides?: CallOverrides): Promise<number>;
-
-    decreaseAllowance(
-      spender: string,
-      subtractedValue: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    "decreaseAllowance(address,uint256)"(
-      spender: string,
-      subtractedValue: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
 
     deposit(
       _destination: string,
@@ -684,26 +762,14 @@ export class YVaultAssetProxy extends Contract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    increaseAllowance(
-      spender: string,
-      addedValue: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    "increaseAllowance(address,uint256)"(
-      spender: string,
-      addedValue: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
     name(overrides?: CallOverrides): Promise<string>;
 
     "name()"(overrides?: CallOverrides): Promise<string>;
 
-    nonces(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
+    nonces(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     "nonces(address)"(
-      owner: string,
+      arg0: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -739,6 +805,48 @@ export class YVaultAssetProxy extends Contract {
       overrides?: CallOverrides
     ): Promise<[BigNumber, BigNumber, BigNumber]>;
 
+    reserveBalances(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "reserveBalances(address)"(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    reserveDeposit(
+      _amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "reserveDeposit(uint256)"(
+      _amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    reserveShares(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "reserveShares()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    reserveSupply(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "reserveSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    reserveUnderlying(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "reserveUnderlying()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    reserveWithdraw(
+      _amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "reserveWithdraw(uint256)"(
+      _amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     symbol(overrides?: CallOverrides): Promise<string>;
 
     "symbol()"(overrides?: CallOverrides): Promise<string>;
@@ -760,14 +868,14 @@ export class YVaultAssetProxy extends Contract {
     ): Promise<boolean>;
 
     transferFrom(
-      sender: string,
+      spender: string,
       recipient: string,
       amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
     "transferFrom(address,address,uint256)"(
-      sender: string,
+      spender: string,
       recipient: string,
       amount: BigNumberish,
       overrides?: CallOverrides
@@ -825,30 +933,34 @@ export class YVaultAssetProxy extends Contract {
 
     "DOMAIN_SEPARATOR()"(overrides?: CallOverrides): Promise<BigNumber>;
 
+    PERMIT_TYPEHASH(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "PERMIT_TYPEHASH()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     allowance(
-      owner: string,
-      spender: string,
+      arg0: string,
+      arg1: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     "allowance(address,address)"(
-      owner: string,
-      spender: string,
+      arg0: string,
+      arg1: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     "approve(address,uint256)"(
-      spender: string,
+      account: string,
       amount: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     "approve()"(overrides?: Overrides): Promise<BigNumber>;
 
-    balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
+    balanceOf(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     "balanceOf(address)"(
-      account: string,
+      arg0: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -865,18 +977,6 @@ export class YVaultAssetProxy extends Contract {
     decimals(overrides?: CallOverrides): Promise<BigNumber>;
 
     "decimals()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    decreaseAllowance(
-      spender: string,
-      subtractedValue: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "decreaseAllowance(address,uint256)"(
-      spender: string,
-      subtractedValue: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
 
     deposit(
       _destination: string,
@@ -900,26 +1000,14 @@ export class YVaultAssetProxy extends Contract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    increaseAllowance(
-      spender: string,
-      addedValue: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "increaseAllowance(address,uint256)"(
-      spender: string,
-      addedValue: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
     "name()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-    nonces(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
+    nonces(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     "nonces(address)"(
-      owner: string,
+      arg0: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -955,6 +1043,48 @@ export class YVaultAssetProxy extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
+    reserveBalances(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "reserveBalances(address)"(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    reserveDeposit(
+      _amount: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "reserveDeposit(uint256)"(
+      _amount: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    reserveShares(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "reserveShares()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    reserveSupply(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "reserveSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    reserveUnderlying(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "reserveUnderlying()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    reserveWithdraw(
+      _amount: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "reserveWithdraw(uint256)"(
+      _amount: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
     symbol(overrides?: CallOverrides): Promise<BigNumber>;
 
     "symbol()"(overrides?: CallOverrides): Promise<BigNumber>;
@@ -976,14 +1106,14 @@ export class YVaultAssetProxy extends Contract {
     ): Promise<BigNumber>;
 
     transferFrom(
-      sender: string,
+      spender: string,
       recipient: string,
       amount: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     "transferFrom(address,address,uint256)"(
-      sender: string,
+      spender: string,
       recipient: string,
       amount: BigNumberish,
       overrides?: Overrides
@@ -1033,20 +1163,26 @@ export class YVaultAssetProxy extends Contract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    PERMIT_TYPEHASH(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "PERMIT_TYPEHASH()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     allowance(
-      owner: string,
-      spender: string,
+      arg0: string,
+      arg1: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     "allowance(address,address)"(
-      owner: string,
-      spender: string,
+      arg0: string,
+      arg1: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     "approve(address,uint256)"(
-      spender: string,
+      account: string,
       amount: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
@@ -1054,12 +1190,12 @@ export class YVaultAssetProxy extends Contract {
     "approve()"(overrides?: Overrides): Promise<PopulatedTransaction>;
 
     balanceOf(
-      account: string,
+      arg0: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     "balanceOf(address)"(
-      account: string,
+      arg0: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1076,18 +1212,6 @@ export class YVaultAssetProxy extends Contract {
     decimals(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     "decimals()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    decreaseAllowance(
-      spender: string,
-      subtractedValue: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "decreaseAllowance(address,uint256)"(
-      spender: string,
-      subtractedValue: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
 
     deposit(
       _destination: string,
@@ -1111,29 +1235,17 @@ export class YVaultAssetProxy extends Contract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    increaseAllowance(
-      spender: string,
-      addedValue: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "increaseAllowance(address,uint256)"(
-      spender: string,
-      addedValue: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     "name()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     nonces(
-      owner: string,
+      arg0: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     "nonces(address)"(
-      owner: string,
+      arg0: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1169,6 +1281,50 @@ export class YVaultAssetProxy extends Contract {
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
+    reserveBalances(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "reserveBalances(address)"(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    reserveDeposit(
+      _amount: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "reserveDeposit(uint256)"(
+      _amount: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    reserveShares(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "reserveShares()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    reserveSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "reserveSupply()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    reserveUnderlying(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "reserveUnderlying()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    reserveWithdraw(
+      _amount: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "reserveWithdraw(uint256)"(
+      _amount: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
     symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     "symbol()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -1190,14 +1346,14 @@ export class YVaultAssetProxy extends Contract {
     ): Promise<PopulatedTransaction>;
 
     transferFrom(
-      sender: string,
+      spender: string,
       recipient: string,
       amount: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     "transferFrom(address,address,uint256)"(
-      sender: string,
+      spender: string,
       recipient: string,
       amount: BigNumberish,
       overrides?: Overrides

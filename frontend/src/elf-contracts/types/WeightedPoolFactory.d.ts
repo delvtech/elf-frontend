@@ -22,13 +22,21 @@ import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 
 interface WeightedPoolFactoryInterface extends ethers.utils.Interface {
   functions: {
-    "create(string,string,address[],uint256[],uint256)": FunctionFragment;
+    "create(string,string,address[],uint256[],uint256,uint256,uint256)": FunctionFragment;
     "vault()": FunctionFragment;
   };
 
   encodeFunctionData(
     functionFragment: "create",
-    values: [string, string, string[], BigNumberish[], BigNumberish]
+    values: [
+      string,
+      string,
+      string[],
+      BigNumberish[],
+      BigNumberish,
+      BigNumberish,
+      BigNumberish
+    ]
   ): string;
   encodeFunctionData(functionFragment: "vault", values?: undefined): string;
 
@@ -36,10 +44,10 @@ interface WeightedPoolFactoryInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "vault", data: BytesLike): Result;
 
   events: {
-    "PoolCreated(address)": EventFragment;
+    "PoolRegistered(address)": EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "PoolCreated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "PoolRegistered"): EventFragment;
 }
 
 export class WeightedPoolFactory extends Contract {
@@ -62,15 +70,19 @@ export class WeightedPoolFactory extends Contract {
       tokens: string[],
       weights: BigNumberish[],
       swapFee: BigNumberish,
+      emergencyPeriod: BigNumberish,
+      emergencyPeriodCheckExtension: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "create(string,string,address[],uint256[],uint256)"(
+    "create(string,string,address[],uint256[],uint256,uint256,uint256)"(
       name: string,
       symbol: string,
       tokens: string[],
       weights: BigNumberish[],
       swapFee: BigNumberish,
+      emergencyPeriod: BigNumberish,
+      emergencyPeriodCheckExtension: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
@@ -85,15 +97,19 @@ export class WeightedPoolFactory extends Contract {
     tokens: string[],
     weights: BigNumberish[],
     swapFee: BigNumberish,
+    emergencyPeriod: BigNumberish,
+    emergencyPeriodCheckExtension: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "create(string,string,address[],uint256[],uint256)"(
+  "create(string,string,address[],uint256[],uint256,uint256,uint256)"(
     name: string,
     symbol: string,
     tokens: string[],
     weights: BigNumberish[],
     swapFee: BigNumberish,
+    emergencyPeriod: BigNumberish,
+    emergencyPeriodCheckExtension: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -108,15 +124,19 @@ export class WeightedPoolFactory extends Contract {
       tokens: string[],
       weights: BigNumberish[],
       swapFee: BigNumberish,
+      emergencyPeriod: BigNumberish,
+      emergencyPeriodCheckExtension: BigNumberish,
       overrides?: CallOverrides
     ): Promise<string>;
 
-    "create(string,string,address[],uint256[],uint256)"(
+    "create(string,string,address[],uint256[],uint256,uint256,uint256)"(
       name: string,
       symbol: string,
       tokens: string[],
       weights: BigNumberish[],
       swapFee: BigNumberish,
+      emergencyPeriod: BigNumberish,
+      emergencyPeriodCheckExtension: BigNumberish,
       overrides?: CallOverrides
     ): Promise<string>;
 
@@ -126,7 +146,7 @@ export class WeightedPoolFactory extends Contract {
   };
 
   filters: {
-    PoolCreated(pool: string | null): EventFilter;
+    PoolRegistered(pool: string | null): EventFilter;
   };
 
   estimateGas: {
@@ -136,15 +156,19 @@ export class WeightedPoolFactory extends Contract {
       tokens: string[],
       weights: BigNumberish[],
       swapFee: BigNumberish,
+      emergencyPeriod: BigNumberish,
+      emergencyPeriodCheckExtension: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    "create(string,string,address[],uint256[],uint256)"(
+    "create(string,string,address[],uint256[],uint256,uint256,uint256)"(
       name: string,
       symbol: string,
       tokens: string[],
       weights: BigNumberish[],
       swapFee: BigNumberish,
+      emergencyPeriod: BigNumberish,
+      emergencyPeriodCheckExtension: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
@@ -160,15 +184,19 @@ export class WeightedPoolFactory extends Contract {
       tokens: string[],
       weights: BigNumberish[],
       swapFee: BigNumberish,
+      emergencyPeriod: BigNumberish,
+      emergencyPeriodCheckExtension: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "create(string,string,address[],uint256[],uint256)"(
+    "create(string,string,address[],uint256[],uint256,uint256,uint256)"(
       name: string,
       symbol: string,
       tokens: string[],
       weights: BigNumberish[],
       swapFee: BigNumberish,
+      emergencyPeriod: BigNumberish,
+      emergencyPeriodCheckExtension: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 

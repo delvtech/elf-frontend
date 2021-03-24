@@ -21,6 +21,19 @@ const _abi = [
     anonymous: false,
     inputs: [
       {
+        indexed: false,
+        internalType: "bool",
+        name: "active",
+        type: "bool",
+      },
+    ],
+    name: "EmergencyPeriodChanged",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
         indexed: true,
         internalType: "address",
         name: "user",
@@ -34,9 +47,9 @@ const _abi = [
       },
       {
         indexed: false,
-        internalType: "uint256",
-        name: "balance",
-        type: "uint256",
+        internalType: "int256",
+        name: "delta",
+        type: "int256",
       },
     ],
     name: "InternalBalanceChanged",
@@ -77,19 +90,6 @@ const _abi = [
     anonymous: false,
     inputs: [
       {
-        indexed: false,
-        internalType: "bytes32",
-        name: "poolId",
-        type: "bytes32",
-      },
-    ],
-    name: "PoolCreated",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
         indexed: true,
         internalType: "bytes32",
         name: "poolId",
@@ -100,6 +100,12 @@ const _abi = [
         internalType: "address",
         name: "liquidityProvider",
         type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "contract IERC20[]",
+        name: "tokens",
+        type: "address[]",
       },
       {
         indexed: false,
@@ -134,6 +140,12 @@ const _abi = [
       },
       {
         indexed: false,
+        internalType: "contract IERC20[]",
+        name: "tokens",
+        type: "address[]",
+      },
+      {
+        indexed: false,
         internalType: "uint256[]",
         name: "amountsIn",
         type: "uint256[]",
@@ -146,6 +158,19 @@ const _abi = [
       },
     ],
     name: "PoolJoined",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "bytes32",
+        name: "poolId",
+        type: "bytes32",
+      },
+    ],
+    name: "PoolRegistered",
     type: "event",
   },
   {
@@ -264,8 +289,8 @@ const _abi = [
         type: "tuple[]",
       },
       {
-        internalType: "contract IERC20[]",
-        name: "tokens",
+        internalType: "contract IAsset[]",
+        name: "assets",
         type: "address[]",
       },
       {
@@ -281,7 +306,7 @@ const _abi = [
             type: "bool",
           },
           {
-            internalType: "address",
+            internalType: "address payable",
             name: "recipient",
             type: "address",
           },
@@ -314,7 +339,7 @@ const _abi = [
         type: "int256[]",
       },
     ],
-    stateMutability: "nonpayable",
+    stateMutability: "payable",
     type: "function",
   },
   {
@@ -352,8 +377,8 @@ const _abi = [
         type: "tuple[]",
       },
       {
-        internalType: "contract IERC20[]",
-        name: "tokens",
+        internalType: "contract IAsset[]",
+        name: "assets",
         type: "address[]",
       },
       {
@@ -369,7 +394,7 @@ const _abi = [
             type: "bool",
           },
           {
-            internalType: "address",
+            internalType: "address payable",
             name: "recipient",
             type: "address",
           },
@@ -402,7 +427,7 @@ const _abi = [
         type: "int256[]",
       },
     ],
-    stateMutability: "nonpayable",
+    stateMutability: "payable",
     type: "function",
   },
   {
@@ -441,8 +466,8 @@ const _abi = [
       {
         components: [
           {
-            internalType: "contract IERC20",
-            name: "token",
+            internalType: "contract IAsset",
+            name: "asset",
             type: "address",
           },
           {
@@ -456,19 +481,19 @@ const _abi = [
             type: "address",
           },
           {
-            internalType: "address",
+            internalType: "address payable",
             name: "recipient",
             type: "address",
           },
         ],
-        internalType: "struct IVault.BalanceTransfer[]",
+        internalType: "struct IVault.AssetBalanceTransfer[]",
         name: "transfers",
         type: "tuple[]",
       },
     ],
     name: "depositToInternalBalance",
     outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "payable",
     type: "function",
   },
   {
@@ -532,13 +557,13 @@ const _abi = [
         type: "address",
       },
       {
-        internalType: "address",
+        internalType: "address payable",
         name: "recipient",
         type: "address",
       },
       {
-        internalType: "contract IERC20[]",
-        name: "tokens",
+        internalType: "contract IAsset[]",
+        name: "assets",
         type: "address[]",
       },
       {
@@ -617,6 +642,29 @@ const _abi = [
         internalType: "uint256[]",
         name: "",
         type: "uint256[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getEmergencyPeriod",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "active",
+        type: "bool",
+      },
+      {
+        internalType: "uint256",
+        name: "endDate",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "checkEndDate",
+        type: "uint256",
       },
     ],
     stateMutability: "view",
@@ -822,8 +870,8 @@ const _abi = [
         type: "address",
       },
       {
-        internalType: "contract IERC20[]",
-        name: "tokens",
+        internalType: "contract IAsset[]",
+        name: "assets",
         type: "address[]",
       },
       {
@@ -844,7 +892,7 @@ const _abi = [
     ],
     name: "joinPool",
     outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "payable",
     type: "function",
   },
   {
@@ -887,8 +935,8 @@ const _abi = [
         type: "tuple[]",
       },
       {
-        internalType: "contract IERC20[]",
-        name: "tokens",
+        internalType: "contract IAsset[]",
+        name: "assets",
         type: "address[]",
       },
       {
@@ -904,7 +952,7 @@ const _abi = [
             type: "bool",
           },
           {
-            internalType: "address",
+            internalType: "address payable",
             name: "recipient",
             type: "address",
           },
@@ -923,7 +971,7 @@ const _abi = [
     outputs: [
       {
         internalType: "int256[]",
-        name: "tokenDeltas",
+        name: "assetDeltas",
         type: "int256[]",
       },
     ],
@@ -1015,17 +1063,52 @@ const _abi = [
             type: "address",
           },
           {
-            internalType: "address",
+            internalType: "address payable",
             name: "recipient",
             type: "address",
           },
         ],
-        internalType: "struct IVault.BalanceTransfer[]",
+        internalType: "struct IVault.TokenBalanceTransfer[]",
         name: "transfers",
         type: "tuple[]",
       },
     ],
     name: "transferInternalBalance",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        components: [
+          {
+            internalType: "contract IERC20",
+            name: "token",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "amount",
+            type: "uint256",
+          },
+          {
+            internalType: "address",
+            name: "sender",
+            type: "address",
+          },
+          {
+            internalType: "address payable",
+            name: "recipient",
+            type: "address",
+          },
+        ],
+        internalType: "struct IVault.TokenBalanceTransfer[]",
+        name: "transfers",
+        type: "tuple[]",
+      },
+    ],
+    name: "transferToExternalBalance",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -1088,8 +1171,8 @@ const _abi = [
       {
         components: [
           {
-            internalType: "contract IERC20",
-            name: "token",
+            internalType: "contract IAsset",
+            name: "asset",
             type: "address",
           },
           {
@@ -1103,12 +1186,12 @@ const _abi = [
             type: "address",
           },
           {
-            internalType: "address",
+            internalType: "address payable",
             name: "recipient",
             type: "address",
           },
         ],
-        internalType: "struct IVault.BalanceTransfer[]",
+        internalType: "struct IVault.AssetBalanceTransfer[]",
         name: "transfers",
         type: "tuple[]",
       },
@@ -1147,5 +1230,9 @@ const _abi = [
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
+  },
+  {
+    stateMutability: "payable",
+    type: "receive",
   },
 ];

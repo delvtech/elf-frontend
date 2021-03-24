@@ -14,6 +14,7 @@ import {
   Contract,
   ContractTransaction,
   Overrides,
+  PayableOverrides,
   CallOverrides,
 } from "@ethersproject/contracts";
 import { BytesLike } from "@ethersproject/bytes";
@@ -33,6 +34,7 @@ interface PoolRegistryInterface extends ethers.utils.Interface {
     "flashLoan(address,address[],uint256[],bytes)": FunctionFragment;
     "getAuthorizer()": FunctionFragment;
     "getCollectedFees(address[])": FunctionFragment;
+    "getEmergencyPeriod()": FunctionFragment;
     "getInternalBalance(address,address[])": FunctionFragment;
     "getPool(bytes32)": FunctionFragment;
     "getPoolAssetManagers(bytes32,address[])": FunctionFragment;
@@ -46,6 +48,7 @@ interface PoolRegistryInterface extends ethers.utils.Interface {
     "registerTokens(bytes32,address[],address[])": FunctionFragment;
     "setProtocolFees(uint256,uint256,uint256)": FunctionFragment;
     "transferInternalBalance(tuple[])": FunctionFragment;
+    "transferToExternalBalance(tuple[])": FunctionFragment;
     "updateManagedBalance(bytes32,tuple[])": FunctionFragment;
     "withdrawCollectedFees(address[],uint256[],address)": FunctionFragment;
     "withdrawFromInternalBalance(tuple[])": FunctionFragment;
@@ -106,7 +109,7 @@ interface PoolRegistryInterface extends ethers.utils.Interface {
     functionFragment: "depositToInternalBalance",
     values: [
       {
-        token: string;
+        asset: string;
         amount: BigNumberish;
         sender: string;
         recipient: string;
@@ -144,6 +147,10 @@ interface PoolRegistryInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "getCollectedFees",
     values: [string[]]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getEmergencyPeriod",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "getInternalBalance",
@@ -226,6 +233,17 @@ interface PoolRegistryInterface extends ethers.utils.Interface {
     ]
   ): string;
   encodeFunctionData(
+    functionFragment: "transferToExternalBalance",
+    values: [
+      {
+        token: string;
+        amount: BigNumberish;
+        sender: string;
+        recipient: string;
+      }[]
+    ]
+  ): string;
+  encodeFunctionData(
     functionFragment: "updateManagedBalance",
     values: [BytesLike, { token: string; amount: BigNumberish }[]]
   ): string;
@@ -237,7 +255,7 @@ interface PoolRegistryInterface extends ethers.utils.Interface {
     functionFragment: "withdrawFromInternalBalance",
     values: [
       {
-        token: string;
+        asset: string;
         amount: BigNumberish;
         sender: string;
         recipient: string;
@@ -288,6 +306,10 @@ interface PoolRegistryInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "getEmergencyPeriod",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "getInternalBalance",
     data: BytesLike
   ): Result;
@@ -334,6 +356,10 @@ interface PoolRegistryInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "transferToExternalBalance",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "updateManagedBalance",
     data: BytesLike
   ): Result;
@@ -351,21 +377,23 @@ interface PoolRegistryInterface extends ethers.utils.Interface {
   ): Result;
 
   events: {
-    "InternalBalanceChanged(address,address,uint256)": EventFragment;
+    "EmergencyPeriodChanged(bool)": EventFragment;
+    "InternalBalanceChanged(address,address,int256)": EventFragment;
     "PoolBalanceChanged(bytes32,address,address,int256)": EventFragment;
-    "PoolCreated(bytes32)": EventFragment;
-    "PoolExited(bytes32,address,uint256[],uint256[])": EventFragment;
-    "PoolJoined(bytes32,address,uint256[],uint256[])": EventFragment;
+    "PoolExited(bytes32,address,address[],uint256[],uint256[])": EventFragment;
+    "PoolJoined(bytes32,address,address[],uint256[],uint256[])": EventFragment;
+    "PoolRegistered(bytes32)": EventFragment;
     "Swap(bytes32,address,address,uint256,uint256)": EventFragment;
     "TokensDeregistered(bytes32,address[])": EventFragment;
     "TokensRegistered(bytes32,address[],address[])": EventFragment;
   };
 
+  getEvent(nameOrSignatureOrTopic: "EmergencyPeriodChanged"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "InternalBalanceChanged"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "PoolBalanceChanged"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "PoolCreated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "PoolExited"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "PoolJoined"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "PoolRegistered"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Swap"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "TokensDeregistered"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "TokensRegistered"): EventFragment;
@@ -393,7 +421,7 @@ export class PoolRegistry extends Contract {
         amountIn: BigNumberish;
         userData: BytesLike;
       }[],
-      tokens: string[],
+      assets: string[],
       funds: {
         sender: string;
         fromInternalBalance: boolean;
@@ -402,7 +430,7 @@ export class PoolRegistry extends Contract {
       },
       limits: BigNumberish[],
       deadline: BigNumberish,
-      overrides?: Overrides
+      overrides?: PayableOverrides
     ): Promise<ContractTransaction>;
 
     "batchSwapGivenIn(tuple[],address[],tuple,int256[],uint256)"(
@@ -413,7 +441,7 @@ export class PoolRegistry extends Contract {
         amountIn: BigNumberish;
         userData: BytesLike;
       }[],
-      tokens: string[],
+      assets: string[],
       funds: {
         sender: string;
         fromInternalBalance: boolean;
@@ -422,7 +450,7 @@ export class PoolRegistry extends Contract {
       },
       limits: BigNumberish[],
       deadline: BigNumberish,
-      overrides?: Overrides
+      overrides?: PayableOverrides
     ): Promise<ContractTransaction>;
 
     batchSwapGivenOut(
@@ -433,7 +461,7 @@ export class PoolRegistry extends Contract {
         amountOut: BigNumberish;
         userData: BytesLike;
       }[],
-      tokens: string[],
+      assets: string[],
       funds: {
         sender: string;
         fromInternalBalance: boolean;
@@ -442,7 +470,7 @@ export class PoolRegistry extends Contract {
       },
       limits: BigNumberish[],
       deadline: BigNumberish,
-      overrides?: Overrides
+      overrides?: PayableOverrides
     ): Promise<ContractTransaction>;
 
     "batchSwapGivenOut(tuple[],address[],tuple,int256[],uint256)"(
@@ -453,7 +481,7 @@ export class PoolRegistry extends Contract {
         amountOut: BigNumberish;
         userData: BytesLike;
       }[],
-      tokens: string[],
+      assets: string[],
       funds: {
         sender: string;
         fromInternalBalance: boolean;
@@ -462,7 +490,7 @@ export class PoolRegistry extends Contract {
       },
       limits: BigNumberish[],
       deadline: BigNumberish,
-      overrides?: Overrides
+      overrides?: PayableOverrides
     ): Promise<ContractTransaction>;
 
     changeAuthorizer(
@@ -489,22 +517,22 @@ export class PoolRegistry extends Contract {
 
     depositToInternalBalance(
       transfers: {
-        token: string;
+        asset: string;
         amount: BigNumberish;
         sender: string;
         recipient: string;
       }[],
-      overrides?: Overrides
+      overrides?: PayableOverrides
     ): Promise<ContractTransaction>;
 
     "depositToInternalBalance(tuple[])"(
       transfers: {
-        token: string;
+        asset: string;
         amount: BigNumberish;
         sender: string;
         recipient: string;
       }[],
-      overrides?: Overrides
+      overrides?: PayableOverrides
     ): Promise<ContractTransaction>;
 
     depositToPoolBalance(
@@ -535,7 +563,7 @@ export class PoolRegistry extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      tokens: string[],
+      assets: string[],
       minAmountsOut: BigNumberish[],
       toInternalBalance: boolean,
       userData: BytesLike,
@@ -546,7 +574,7 @@ export class PoolRegistry extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      tokens: string[],
+      assets: string[],
       minAmountsOut: BigNumberish[],
       toInternalBalance: boolean,
       userData: BytesLike,
@@ -582,6 +610,26 @@ export class PoolRegistry extends Contract {
       tokens: string[],
       overrides?: CallOverrides
     ): Promise<[BigNumber[]]>;
+
+    getEmergencyPeriod(
+      overrides?: CallOverrides
+    ): Promise<
+      [boolean, BigNumber, BigNumber] & {
+        active: boolean;
+        endDate: BigNumber;
+        checkEndDate: BigNumber;
+      }
+    >;
+
+    "getEmergencyPeriod()"(
+      overrides?: CallOverrides
+    ): Promise<
+      [boolean, BigNumber, BigNumber] & {
+        active: boolean;
+        endDate: BigNumber;
+        checkEndDate: BigNumber;
+      }
+    >;
 
     getInternalBalance(
       user: string,
@@ -693,22 +741,22 @@ export class PoolRegistry extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      tokens: string[],
+      assets: string[],
       maxAmountsIn: BigNumberish[],
       fromInternalBalance: boolean,
       userData: BytesLike,
-      overrides?: Overrides
+      overrides?: PayableOverrides
     ): Promise<ContractTransaction>;
 
     "joinPool(bytes32,address,address,address[],uint256[],bool,bytes)"(
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      tokens: string[],
+      assets: string[],
       maxAmountsIn: BigNumberish[],
       fromInternalBalance: boolean,
       userData: BytesLike,
-      overrides?: Overrides
+      overrides?: PayableOverrides
     ): Promise<ContractTransaction>;
 
     queryBatchSwap(
@@ -720,7 +768,7 @@ export class PoolRegistry extends Contract {
         amount: BigNumberish;
         userData: BytesLike;
       }[],
-      tokens: string[],
+      assets: string[],
       funds: {
         sender: string;
         fromInternalBalance: boolean;
@@ -739,7 +787,7 @@ export class PoolRegistry extends Contract {
         amount: BigNumberish;
         userData: BytesLike;
       }[],
-      tokens: string[],
+      assets: string[],
       funds: {
         sender: string;
         fromInternalBalance: boolean;
@@ -807,6 +855,26 @@ export class PoolRegistry extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
+    transferToExternalBalance(
+      transfers: {
+        token: string;
+        amount: BigNumberish;
+        sender: string;
+        recipient: string;
+      }[],
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "transferToExternalBalance(tuple[])"(
+      transfers: {
+        token: string;
+        amount: BigNumberish;
+        sender: string;
+        recipient: string;
+      }[],
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
     updateManagedBalance(
       poolId: BytesLike,
       transfers: { token: string; amount: BigNumberish }[],
@@ -835,7 +903,7 @@ export class PoolRegistry extends Contract {
 
     withdrawFromInternalBalance(
       transfers: {
-        token: string;
+        asset: string;
         amount: BigNumberish;
         sender: string;
         recipient: string;
@@ -845,7 +913,7 @@ export class PoolRegistry extends Contract {
 
     "withdrawFromInternalBalance(tuple[])"(
       transfers: {
-        token: string;
+        asset: string;
         amount: BigNumberish;
         sender: string;
         recipient: string;
@@ -874,7 +942,7 @@ export class PoolRegistry extends Contract {
       amountIn: BigNumberish;
       userData: BytesLike;
     }[],
-    tokens: string[],
+    assets: string[],
     funds: {
       sender: string;
       fromInternalBalance: boolean;
@@ -883,7 +951,7 @@ export class PoolRegistry extends Contract {
     },
     limits: BigNumberish[],
     deadline: BigNumberish,
-    overrides?: Overrides
+    overrides?: PayableOverrides
   ): Promise<ContractTransaction>;
 
   "batchSwapGivenIn(tuple[],address[],tuple,int256[],uint256)"(
@@ -894,7 +962,7 @@ export class PoolRegistry extends Contract {
       amountIn: BigNumberish;
       userData: BytesLike;
     }[],
-    tokens: string[],
+    assets: string[],
     funds: {
       sender: string;
       fromInternalBalance: boolean;
@@ -903,7 +971,7 @@ export class PoolRegistry extends Contract {
     },
     limits: BigNumberish[],
     deadline: BigNumberish,
-    overrides?: Overrides
+    overrides?: PayableOverrides
   ): Promise<ContractTransaction>;
 
   batchSwapGivenOut(
@@ -914,7 +982,7 @@ export class PoolRegistry extends Contract {
       amountOut: BigNumberish;
       userData: BytesLike;
     }[],
-    tokens: string[],
+    assets: string[],
     funds: {
       sender: string;
       fromInternalBalance: boolean;
@@ -923,7 +991,7 @@ export class PoolRegistry extends Contract {
     },
     limits: BigNumberish[],
     deadline: BigNumberish,
-    overrides?: Overrides
+    overrides?: PayableOverrides
   ): Promise<ContractTransaction>;
 
   "batchSwapGivenOut(tuple[],address[],tuple,int256[],uint256)"(
@@ -934,7 +1002,7 @@ export class PoolRegistry extends Contract {
       amountOut: BigNumberish;
       userData: BytesLike;
     }[],
-    tokens: string[],
+    assets: string[],
     funds: {
       sender: string;
       fromInternalBalance: boolean;
@@ -943,7 +1011,7 @@ export class PoolRegistry extends Contract {
     },
     limits: BigNumberish[],
     deadline: BigNumberish,
-    overrides?: Overrides
+    overrides?: PayableOverrides
   ): Promise<ContractTransaction>;
 
   changeAuthorizer(
@@ -970,22 +1038,22 @@ export class PoolRegistry extends Contract {
 
   depositToInternalBalance(
     transfers: {
-      token: string;
+      asset: string;
       amount: BigNumberish;
       sender: string;
       recipient: string;
     }[],
-    overrides?: Overrides
+    overrides?: PayableOverrides
   ): Promise<ContractTransaction>;
 
   "depositToInternalBalance(tuple[])"(
     transfers: {
-      token: string;
+      asset: string;
       amount: BigNumberish;
       sender: string;
       recipient: string;
     }[],
-    overrides?: Overrides
+    overrides?: PayableOverrides
   ): Promise<ContractTransaction>;
 
   depositToPoolBalance(
@@ -1016,7 +1084,7 @@ export class PoolRegistry extends Contract {
     poolId: BytesLike,
     sender: string,
     recipient: string,
-    tokens: string[],
+    assets: string[],
     minAmountsOut: BigNumberish[],
     toInternalBalance: boolean,
     userData: BytesLike,
@@ -1027,7 +1095,7 @@ export class PoolRegistry extends Contract {
     poolId: BytesLike,
     sender: string,
     recipient: string,
-    tokens: string[],
+    assets: string[],
     minAmountsOut: BigNumberish[],
     toInternalBalance: boolean,
     userData: BytesLike,
@@ -1063,6 +1131,26 @@ export class PoolRegistry extends Contract {
     tokens: string[],
     overrides?: CallOverrides
   ): Promise<BigNumber[]>;
+
+  getEmergencyPeriod(
+    overrides?: CallOverrides
+  ): Promise<
+    [boolean, BigNumber, BigNumber] & {
+      active: boolean;
+      endDate: BigNumber;
+      checkEndDate: BigNumber;
+    }
+  >;
+
+  "getEmergencyPeriod()"(
+    overrides?: CallOverrides
+  ): Promise<
+    [boolean, BigNumber, BigNumber] & {
+      active: boolean;
+      endDate: BigNumber;
+      checkEndDate: BigNumber;
+    }
+  >;
 
   getInternalBalance(
     user: string,
@@ -1174,22 +1262,22 @@ export class PoolRegistry extends Contract {
     poolId: BytesLike,
     sender: string,
     recipient: string,
-    tokens: string[],
+    assets: string[],
     maxAmountsIn: BigNumberish[],
     fromInternalBalance: boolean,
     userData: BytesLike,
-    overrides?: Overrides
+    overrides?: PayableOverrides
   ): Promise<ContractTransaction>;
 
   "joinPool(bytes32,address,address,address[],uint256[],bool,bytes)"(
     poolId: BytesLike,
     sender: string,
     recipient: string,
-    tokens: string[],
+    assets: string[],
     maxAmountsIn: BigNumberish[],
     fromInternalBalance: boolean,
     userData: BytesLike,
-    overrides?: Overrides
+    overrides?: PayableOverrides
   ): Promise<ContractTransaction>;
 
   queryBatchSwap(
@@ -1201,7 +1289,7 @@ export class PoolRegistry extends Contract {
       amount: BigNumberish;
       userData: BytesLike;
     }[],
-    tokens: string[],
+    assets: string[],
     funds: {
       sender: string;
       fromInternalBalance: boolean;
@@ -1220,7 +1308,7 @@ export class PoolRegistry extends Contract {
       amount: BigNumberish;
       userData: BytesLike;
     }[],
-    tokens: string[],
+    assets: string[],
     funds: {
       sender: string;
       fromInternalBalance: boolean;
@@ -1288,6 +1376,26 @@ export class PoolRegistry extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
+  transferToExternalBalance(
+    transfers: {
+      token: string;
+      amount: BigNumberish;
+      sender: string;
+      recipient: string;
+    }[],
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "transferToExternalBalance(tuple[])"(
+    transfers: {
+      token: string;
+      amount: BigNumberish;
+      sender: string;
+      recipient: string;
+    }[],
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
   updateManagedBalance(
     poolId: BytesLike,
     transfers: { token: string; amount: BigNumberish }[],
@@ -1316,7 +1424,7 @@ export class PoolRegistry extends Contract {
 
   withdrawFromInternalBalance(
     transfers: {
-      token: string;
+      asset: string;
       amount: BigNumberish;
       sender: string;
       recipient: string;
@@ -1326,7 +1434,7 @@ export class PoolRegistry extends Contract {
 
   "withdrawFromInternalBalance(tuple[])"(
     transfers: {
-      token: string;
+      asset: string;
       amount: BigNumberish;
       sender: string;
       recipient: string;
@@ -1355,7 +1463,7 @@ export class PoolRegistry extends Contract {
         amountIn: BigNumberish;
         userData: BytesLike;
       }[],
-      tokens: string[],
+      assets: string[],
       funds: {
         sender: string;
         fromInternalBalance: boolean;
@@ -1375,7 +1483,7 @@ export class PoolRegistry extends Contract {
         amountIn: BigNumberish;
         userData: BytesLike;
       }[],
-      tokens: string[],
+      assets: string[],
       funds: {
         sender: string;
         fromInternalBalance: boolean;
@@ -1395,7 +1503,7 @@ export class PoolRegistry extends Contract {
         amountOut: BigNumberish;
         userData: BytesLike;
       }[],
-      tokens: string[],
+      assets: string[],
       funds: {
         sender: string;
         fromInternalBalance: boolean;
@@ -1415,7 +1523,7 @@ export class PoolRegistry extends Contract {
         amountOut: BigNumberish;
         userData: BytesLike;
       }[],
-      tokens: string[],
+      assets: string[],
       funds: {
         sender: string;
         fromInternalBalance: boolean;
@@ -1451,7 +1559,7 @@ export class PoolRegistry extends Contract {
 
     depositToInternalBalance(
       transfers: {
-        token: string;
+        asset: string;
         amount: BigNumberish;
         sender: string;
         recipient: string;
@@ -1461,7 +1569,7 @@ export class PoolRegistry extends Contract {
 
     "depositToInternalBalance(tuple[])"(
       transfers: {
-        token: string;
+        asset: string;
         amount: BigNumberish;
         sender: string;
         recipient: string;
@@ -1497,7 +1605,7 @@ export class PoolRegistry extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      tokens: string[],
+      assets: string[],
       minAmountsOut: BigNumberish[],
       toInternalBalance: boolean,
       userData: BytesLike,
@@ -1508,7 +1616,7 @@ export class PoolRegistry extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      tokens: string[],
+      assets: string[],
       minAmountsOut: BigNumberish[],
       toInternalBalance: boolean,
       userData: BytesLike,
@@ -1544,6 +1652,26 @@ export class PoolRegistry extends Contract {
       tokens: string[],
       overrides?: CallOverrides
     ): Promise<BigNumber[]>;
+
+    getEmergencyPeriod(
+      overrides?: CallOverrides
+    ): Promise<
+      [boolean, BigNumber, BigNumber] & {
+        active: boolean;
+        endDate: BigNumber;
+        checkEndDate: BigNumber;
+      }
+    >;
+
+    "getEmergencyPeriod()"(
+      overrides?: CallOverrides
+    ): Promise<
+      [boolean, BigNumber, BigNumber] & {
+        active: boolean;
+        endDate: BigNumber;
+        checkEndDate: BigNumber;
+      }
+    >;
 
     getInternalBalance(
       user: string,
@@ -1655,7 +1783,7 @@ export class PoolRegistry extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      tokens: string[],
+      assets: string[],
       maxAmountsIn: BigNumberish[],
       fromInternalBalance: boolean,
       userData: BytesLike,
@@ -1666,7 +1794,7 @@ export class PoolRegistry extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      tokens: string[],
+      assets: string[],
       maxAmountsIn: BigNumberish[],
       fromInternalBalance: boolean,
       userData: BytesLike,
@@ -1682,7 +1810,7 @@ export class PoolRegistry extends Contract {
         amount: BigNumberish;
         userData: BytesLike;
       }[],
-      tokens: string[],
+      assets: string[],
       funds: {
         sender: string;
         fromInternalBalance: boolean;
@@ -1701,7 +1829,7 @@ export class PoolRegistry extends Contract {
         amount: BigNumberish;
         userData: BytesLike;
       }[],
-      tokens: string[],
+      assets: string[],
       funds: {
         sender: string;
         fromInternalBalance: boolean;
@@ -1769,6 +1897,26 @@ export class PoolRegistry extends Contract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    transferToExternalBalance(
+      transfers: {
+        token: string;
+        amount: BigNumberish;
+        sender: string;
+        recipient: string;
+      }[],
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "transferToExternalBalance(tuple[])"(
+      transfers: {
+        token: string;
+        amount: BigNumberish;
+        sender: string;
+        recipient: string;
+      }[],
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     updateManagedBalance(
       poolId: BytesLike,
       transfers: { token: string; amount: BigNumberish }[],
@@ -1797,7 +1945,7 @@ export class PoolRegistry extends Contract {
 
     withdrawFromInternalBalance(
       transfers: {
-        token: string;
+        asset: string;
         amount: BigNumberish;
         sender: string;
         recipient: string;
@@ -1807,7 +1955,7 @@ export class PoolRegistry extends Contract {
 
     "withdrawFromInternalBalance(tuple[])"(
       transfers: {
-        token: string;
+        asset: string;
         amount: BigNumberish;
         sender: string;
         recipient: string;
@@ -1829,10 +1977,12 @@ export class PoolRegistry extends Contract {
   };
 
   filters: {
+    EmergencyPeriodChanged(active: null): EventFilter;
+
     InternalBalanceChanged(
       user: string | null,
       token: string | null,
-      balance: null
+      delta: null
     ): EventFilter;
 
     PoolBalanceChanged(
@@ -1842,11 +1992,10 @@ export class PoolRegistry extends Contract {
       amount: null
     ): EventFilter;
 
-    PoolCreated(poolId: null): EventFilter;
-
     PoolExited(
       poolId: BytesLike | null,
       liquidityProvider: string | null,
+      tokens: null,
       amountsOut: null,
       protocolFees: null
     ): EventFilter;
@@ -1854,9 +2003,12 @@ export class PoolRegistry extends Contract {
     PoolJoined(
       poolId: BytesLike | null,
       liquidityProvider: string | null,
+      tokens: null,
       amountsIn: null,
       protocolFees: null
     ): EventFilter;
+
+    PoolRegistered(poolId: null): EventFilter;
 
     Swap(
       poolId: BytesLike | null,
@@ -1884,7 +2036,7 @@ export class PoolRegistry extends Contract {
         amountIn: BigNumberish;
         userData: BytesLike;
       }[],
-      tokens: string[],
+      assets: string[],
       funds: {
         sender: string;
         fromInternalBalance: boolean;
@@ -1893,7 +2045,7 @@ export class PoolRegistry extends Contract {
       },
       limits: BigNumberish[],
       deadline: BigNumberish,
-      overrides?: Overrides
+      overrides?: PayableOverrides
     ): Promise<BigNumber>;
 
     "batchSwapGivenIn(tuple[],address[],tuple,int256[],uint256)"(
@@ -1904,7 +2056,7 @@ export class PoolRegistry extends Contract {
         amountIn: BigNumberish;
         userData: BytesLike;
       }[],
-      tokens: string[],
+      assets: string[],
       funds: {
         sender: string;
         fromInternalBalance: boolean;
@@ -1913,7 +2065,7 @@ export class PoolRegistry extends Contract {
       },
       limits: BigNumberish[],
       deadline: BigNumberish,
-      overrides?: Overrides
+      overrides?: PayableOverrides
     ): Promise<BigNumber>;
 
     batchSwapGivenOut(
@@ -1924,7 +2076,7 @@ export class PoolRegistry extends Contract {
         amountOut: BigNumberish;
         userData: BytesLike;
       }[],
-      tokens: string[],
+      assets: string[],
       funds: {
         sender: string;
         fromInternalBalance: boolean;
@@ -1933,7 +2085,7 @@ export class PoolRegistry extends Contract {
       },
       limits: BigNumberish[],
       deadline: BigNumberish,
-      overrides?: Overrides
+      overrides?: PayableOverrides
     ): Promise<BigNumber>;
 
     "batchSwapGivenOut(tuple[],address[],tuple,int256[],uint256)"(
@@ -1944,7 +2096,7 @@ export class PoolRegistry extends Contract {
         amountOut: BigNumberish;
         userData: BytesLike;
       }[],
-      tokens: string[],
+      assets: string[],
       funds: {
         sender: string;
         fromInternalBalance: boolean;
@@ -1953,7 +2105,7 @@ export class PoolRegistry extends Contract {
       },
       limits: BigNumberish[],
       deadline: BigNumberish,
-      overrides?: Overrides
+      overrides?: PayableOverrides
     ): Promise<BigNumber>;
 
     changeAuthorizer(
@@ -1980,22 +2132,22 @@ export class PoolRegistry extends Contract {
 
     depositToInternalBalance(
       transfers: {
-        token: string;
+        asset: string;
         amount: BigNumberish;
         sender: string;
         recipient: string;
       }[],
-      overrides?: Overrides
+      overrides?: PayableOverrides
     ): Promise<BigNumber>;
 
     "depositToInternalBalance(tuple[])"(
       transfers: {
-        token: string;
+        asset: string;
         amount: BigNumberish;
         sender: string;
         recipient: string;
       }[],
-      overrides?: Overrides
+      overrides?: PayableOverrides
     ): Promise<BigNumber>;
 
     depositToPoolBalance(
@@ -2026,7 +2178,7 @@ export class PoolRegistry extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      tokens: string[],
+      assets: string[],
       minAmountsOut: BigNumberish[],
       toInternalBalance: boolean,
       userData: BytesLike,
@@ -2037,7 +2189,7 @@ export class PoolRegistry extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      tokens: string[],
+      assets: string[],
       minAmountsOut: BigNumberish[],
       toInternalBalance: boolean,
       userData: BytesLike,
@@ -2073,6 +2225,10 @@ export class PoolRegistry extends Contract {
       tokens: string[],
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    getEmergencyPeriod(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "getEmergencyPeriod()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     getInternalBalance(
       user: string,
@@ -2147,22 +2303,22 @@ export class PoolRegistry extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      tokens: string[],
+      assets: string[],
       maxAmountsIn: BigNumberish[],
       fromInternalBalance: boolean,
       userData: BytesLike,
-      overrides?: Overrides
+      overrides?: PayableOverrides
     ): Promise<BigNumber>;
 
     "joinPool(bytes32,address,address,address[],uint256[],bool,bytes)"(
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      tokens: string[],
+      assets: string[],
       maxAmountsIn: BigNumberish[],
       fromInternalBalance: boolean,
       userData: BytesLike,
-      overrides?: Overrides
+      overrides?: PayableOverrides
     ): Promise<BigNumber>;
 
     queryBatchSwap(
@@ -2174,7 +2330,7 @@ export class PoolRegistry extends Contract {
         amount: BigNumberish;
         userData: BytesLike;
       }[],
-      tokens: string[],
+      assets: string[],
       funds: {
         sender: string;
         fromInternalBalance: boolean;
@@ -2193,7 +2349,7 @@ export class PoolRegistry extends Contract {
         amount: BigNumberish;
         userData: BytesLike;
       }[],
-      tokens: string[],
+      assets: string[],
       funds: {
         sender: string;
         fromInternalBalance: boolean;
@@ -2261,6 +2417,26 @@ export class PoolRegistry extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
+    transferToExternalBalance(
+      transfers: {
+        token: string;
+        amount: BigNumberish;
+        sender: string;
+        recipient: string;
+      }[],
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "transferToExternalBalance(tuple[])"(
+      transfers: {
+        token: string;
+        amount: BigNumberish;
+        sender: string;
+        recipient: string;
+      }[],
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
     updateManagedBalance(
       poolId: BytesLike,
       transfers: { token: string; amount: BigNumberish }[],
@@ -2289,7 +2465,7 @@ export class PoolRegistry extends Contract {
 
     withdrawFromInternalBalance(
       transfers: {
-        token: string;
+        asset: string;
         amount: BigNumberish;
         sender: string;
         recipient: string;
@@ -2299,7 +2475,7 @@ export class PoolRegistry extends Contract {
 
     "withdrawFromInternalBalance(tuple[])"(
       transfers: {
-        token: string;
+        asset: string;
         amount: BigNumberish;
         sender: string;
         recipient: string;
@@ -2329,7 +2505,7 @@ export class PoolRegistry extends Contract {
         amountIn: BigNumberish;
         userData: BytesLike;
       }[],
-      tokens: string[],
+      assets: string[],
       funds: {
         sender: string;
         fromInternalBalance: boolean;
@@ -2338,7 +2514,7 @@ export class PoolRegistry extends Contract {
       },
       limits: BigNumberish[],
       deadline: BigNumberish,
-      overrides?: Overrides
+      overrides?: PayableOverrides
     ): Promise<PopulatedTransaction>;
 
     "batchSwapGivenIn(tuple[],address[],tuple,int256[],uint256)"(
@@ -2349,7 +2525,7 @@ export class PoolRegistry extends Contract {
         amountIn: BigNumberish;
         userData: BytesLike;
       }[],
-      tokens: string[],
+      assets: string[],
       funds: {
         sender: string;
         fromInternalBalance: boolean;
@@ -2358,7 +2534,7 @@ export class PoolRegistry extends Contract {
       },
       limits: BigNumberish[],
       deadline: BigNumberish,
-      overrides?: Overrides
+      overrides?: PayableOverrides
     ): Promise<PopulatedTransaction>;
 
     batchSwapGivenOut(
@@ -2369,7 +2545,7 @@ export class PoolRegistry extends Contract {
         amountOut: BigNumberish;
         userData: BytesLike;
       }[],
-      tokens: string[],
+      assets: string[],
       funds: {
         sender: string;
         fromInternalBalance: boolean;
@@ -2378,7 +2554,7 @@ export class PoolRegistry extends Contract {
       },
       limits: BigNumberish[],
       deadline: BigNumberish,
-      overrides?: Overrides
+      overrides?: PayableOverrides
     ): Promise<PopulatedTransaction>;
 
     "batchSwapGivenOut(tuple[],address[],tuple,int256[],uint256)"(
@@ -2389,7 +2565,7 @@ export class PoolRegistry extends Contract {
         amountOut: BigNumberish;
         userData: BytesLike;
       }[],
-      tokens: string[],
+      assets: string[],
       funds: {
         sender: string;
         fromInternalBalance: boolean;
@@ -2398,7 +2574,7 @@ export class PoolRegistry extends Contract {
       },
       limits: BigNumberish[],
       deadline: BigNumberish,
-      overrides?: Overrides
+      overrides?: PayableOverrides
     ): Promise<PopulatedTransaction>;
 
     changeAuthorizer(
@@ -2425,22 +2601,22 @@ export class PoolRegistry extends Contract {
 
     depositToInternalBalance(
       transfers: {
-        token: string;
+        asset: string;
         amount: BigNumberish;
         sender: string;
         recipient: string;
       }[],
-      overrides?: Overrides
+      overrides?: PayableOverrides
     ): Promise<PopulatedTransaction>;
 
     "depositToInternalBalance(tuple[])"(
       transfers: {
-        token: string;
+        asset: string;
         amount: BigNumberish;
         sender: string;
         recipient: string;
       }[],
-      overrides?: Overrides
+      overrides?: PayableOverrides
     ): Promise<PopulatedTransaction>;
 
     depositToPoolBalance(
@@ -2471,7 +2647,7 @@ export class PoolRegistry extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      tokens: string[],
+      assets: string[],
       minAmountsOut: BigNumberish[],
       toInternalBalance: boolean,
       userData: BytesLike,
@@ -2482,7 +2658,7 @@ export class PoolRegistry extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      tokens: string[],
+      assets: string[],
       minAmountsOut: BigNumberish[],
       toInternalBalance: boolean,
       userData: BytesLike,
@@ -2516,6 +2692,14 @@ export class PoolRegistry extends Contract {
 
     "getCollectedFees(address[])"(
       tokens: string[],
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getEmergencyPeriod(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "getEmergencyPeriod()"(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -2597,22 +2781,22 @@ export class PoolRegistry extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      tokens: string[],
+      assets: string[],
       maxAmountsIn: BigNumberish[],
       fromInternalBalance: boolean,
       userData: BytesLike,
-      overrides?: Overrides
+      overrides?: PayableOverrides
     ): Promise<PopulatedTransaction>;
 
     "joinPool(bytes32,address,address,address[],uint256[],bool,bytes)"(
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      tokens: string[],
+      assets: string[],
       maxAmountsIn: BigNumberish[],
       fromInternalBalance: boolean,
       userData: BytesLike,
-      overrides?: Overrides
+      overrides?: PayableOverrides
     ): Promise<PopulatedTransaction>;
 
     queryBatchSwap(
@@ -2624,7 +2808,7 @@ export class PoolRegistry extends Contract {
         amount: BigNumberish;
         userData: BytesLike;
       }[],
-      tokens: string[],
+      assets: string[],
       funds: {
         sender: string;
         fromInternalBalance: boolean;
@@ -2643,7 +2827,7 @@ export class PoolRegistry extends Contract {
         amount: BigNumberish;
         userData: BytesLike;
       }[],
-      tokens: string[],
+      assets: string[],
       funds: {
         sender: string;
         fromInternalBalance: boolean;
@@ -2711,6 +2895,26 @@ export class PoolRegistry extends Contract {
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
+    transferToExternalBalance(
+      transfers: {
+        token: string;
+        amount: BigNumberish;
+        sender: string;
+        recipient: string;
+      }[],
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "transferToExternalBalance(tuple[])"(
+      transfers: {
+        token: string;
+        amount: BigNumberish;
+        sender: string;
+        recipient: string;
+      }[],
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
     updateManagedBalance(
       poolId: BytesLike,
       transfers: { token: string; amount: BigNumberish }[],
@@ -2739,7 +2943,7 @@ export class PoolRegistry extends Contract {
 
     withdrawFromInternalBalance(
       transfers: {
-        token: string;
+        asset: string;
         amount: BigNumberish;
         sender: string;
         recipient: string;
@@ -2749,7 +2953,7 @@ export class PoolRegistry extends Contract {
 
     "withdrawFromInternalBalance(tuple[])"(
       transfers: {
-        token: string;
+        asset: string;
         amount: BigNumberish;
         sender: string;
         recipient: string;

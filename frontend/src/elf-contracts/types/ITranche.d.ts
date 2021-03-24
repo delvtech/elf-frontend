@@ -28,15 +28,15 @@ interface ITrancheInterface extends ethers.utils.Interface {
     "balanceOf(address)": FunctionFragment;
     "decimals()": FunctionFragment;
     "deposit(uint256,address)": FunctionFragment;
+    "interestToken()": FunctionFragment;
     "nonces(address)": FunctionFragment;
     "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)": FunctionFragment;
     "prefundedDeposit(address)": FunctionFragment;
     "symbol()": FunctionFragment;
     "transfer(address,uint256)": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
-    "withdrawFyt(uint256,address)": FunctionFragment;
-    "withdrawYc(uint256,address)": FunctionFragment;
-    "yc()": FunctionFragment;
+    "withdrawInterest(uint256,address)": FunctionFragment;
+    "withdrawPrincipal(uint256,address)": FunctionFragment;
   };
 
   encodeFunctionData(
@@ -56,6 +56,10 @@ interface ITrancheInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "deposit",
     values: [BigNumberish, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "interestToken",
+    values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "nonces", values: [string]): string;
   encodeFunctionData(
@@ -84,14 +88,13 @@ interface ITrancheInterface extends ethers.utils.Interface {
     values: [string, string, BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "withdrawFyt",
+    functionFragment: "withdrawInterest",
     values: [BigNumberish, string]
   ): string;
   encodeFunctionData(
-    functionFragment: "withdrawYc",
+    functionFragment: "withdrawPrincipal",
     values: [BigNumberish, string]
   ): string;
-  encodeFunctionData(functionFragment: "yc", values?: undefined): string;
 
   decodeFunctionResult(
     functionFragment: "DOMAIN_SEPARATOR",
@@ -102,6 +105,10 @@ interface ITrancheInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "decimals", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "interestToken",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "nonces", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "permit", data: BytesLike): Result;
   decodeFunctionResult(
@@ -115,11 +122,13 @@ interface ITrancheInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "withdrawFyt",
+    functionFragment: "withdrawInterest",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "withdrawYc", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "yc", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "withdrawPrincipal",
+    data: BytesLike
+  ): Result;
 
   events: {
     "Approval(address,address,uint256)": EventFragment;
@@ -195,6 +204,10 @@ export class ITranche extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
+    interestToken(overrides?: CallOverrides): Promise<[string]>;
+
+    "interestToken()"(overrides?: CallOverrides): Promise<[string]>;
+
     nonces(owner: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
     "nonces(address)"(
@@ -264,33 +277,29 @@ export class ITranche extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    withdrawFyt(
+    withdrawInterest(
       _amount: BigNumberish,
       _destination: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "withdrawFyt(uint256,address)"(
+    "withdrawInterest(uint256,address)"(
       _amount: BigNumberish,
       _destination: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    withdrawYc(
+    withdrawPrincipal(
       _amount: BigNumberish,
       _destination: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "withdrawYc(uint256,address)"(
+    "withdrawPrincipal(uint256,address)"(
       _amount: BigNumberish,
       _destination: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
-
-    yc(overrides?: CallOverrides): Promise<[string]>;
-
-    "yc()"(overrides?: CallOverrides): Promise<[string]>;
   };
 
   DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<string>;
@@ -343,6 +352,10 @@ export class ITranche extends Contract {
     destination: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
+
+  interestToken(overrides?: CallOverrides): Promise<string>;
+
+  "interestToken()"(overrides?: CallOverrides): Promise<string>;
 
   nonces(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -413,33 +426,29 @@ export class ITranche extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  withdrawFyt(
+  withdrawInterest(
     _amount: BigNumberish,
     _destination: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "withdrawFyt(uint256,address)"(
+  "withdrawInterest(uint256,address)"(
     _amount: BigNumberish,
     _destination: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  withdrawYc(
+  withdrawPrincipal(
     _amount: BigNumberish,
     _destination: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "withdrawYc(uint256,address)"(
+  "withdrawPrincipal(uint256,address)"(
     _amount: BigNumberish,
     _destination: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
-
-  yc(overrides?: CallOverrides): Promise<string>;
-
-  "yc()"(overrides?: CallOverrides): Promise<string>;
 
   callStatic: {
     DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<string>;
@@ -492,6 +501,10 @@ export class ITranche extends Contract {
       destination: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    interestToken(overrides?: CallOverrides): Promise<string>;
+
+    "interestToken()"(overrides?: CallOverrides): Promise<string>;
 
     nonces(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -562,33 +575,29 @@ export class ITranche extends Contract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    withdrawFyt(
+    withdrawInterest(
       _amount: BigNumberish,
       _destination: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    "withdrawFyt(uint256,address)"(
+    "withdrawInterest(uint256,address)"(
       _amount: BigNumberish,
       _destination: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    withdrawYc(
+    withdrawPrincipal(
       _amount: BigNumberish,
       _destination: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    "withdrawYc(uint256,address)"(
+    "withdrawPrincipal(uint256,address)"(
       _amount: BigNumberish,
       _destination: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
-
-    yc(overrides?: CallOverrides): Promise<string>;
-
-    "yc()"(overrides?: CallOverrides): Promise<string>;
   };
 
   filters: {
@@ -652,6 +661,10 @@ export class ITranche extends Contract {
       destination: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
+
+    interestToken(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "interestToken()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     nonces(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -722,33 +735,29 @@ export class ITranche extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    withdrawFyt(
+    withdrawInterest(
       _amount: BigNumberish,
       _destination: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    "withdrawFyt(uint256,address)"(
+    "withdrawInterest(uint256,address)"(
       _amount: BigNumberish,
       _destination: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    withdrawYc(
+    withdrawPrincipal(
       _amount: BigNumberish,
       _destination: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    "withdrawYc(uint256,address)"(
+    "withdrawPrincipal(uint256,address)"(
       _amount: BigNumberish,
       _destination: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
-
-    yc(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "yc()"(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -807,6 +816,10 @@ export class ITranche extends Contract {
       destination: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
+
+    interestToken(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "interestToken()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     nonces(
       owner: string,
@@ -880,32 +893,28 @@ export class ITranche extends Contract {
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    withdrawFyt(
+    withdrawInterest(
       _amount: BigNumberish,
       _destination: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "withdrawFyt(uint256,address)"(
+    "withdrawInterest(uint256,address)"(
       _amount: BigNumberish,
       _destination: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    withdrawYc(
+    withdrawPrincipal(
       _amount: BigNumberish,
       _destination: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "withdrawYc(uint256,address)"(
+    "withdrawPrincipal(uint256,address)"(
       _amount: BigNumberish,
       _destination: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
-
-    yc(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "yc()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }
