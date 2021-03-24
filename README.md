@@ -2,7 +2,7 @@ The frontend for Element.fi
 
 ## How to run locally
 
-From the elf-deploy directory, run the following commands:
+From the testnet directory, run the following commands:
 
 ```bash
 npm run load-contracts
