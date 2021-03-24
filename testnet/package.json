@@ -1,7 +1,7 @@
 {
   "scripts": {
     "start": "npx hardhat node",
-    "build": "npx hardhat compile && rm src/types/index.ts",
+    "build": "rm -rf src/types && npx hardhat compile && rm src/types/index.ts",
     "load-contracts": "sh scripts/load-elf-contracts.sh",
     "deploy-contracts": "npx hardhat run src/scripts/main.ts --network localhost --no-compile"
   },
