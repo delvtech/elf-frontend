@@ -1,6 +1,6 @@
 import { Provider } from "@ethersproject/providers";
-import { YC__factory } from "elf-contracts/types/factories/YC__factory";
-import { YC } from "elf-contracts/types/YC";
+import { InterestToken__factory } from "elf-contracts/types/factories/InterestToken__factory";
+import { InterestToken } from "elf-contracts/types/InterestToken";
 import { BigNumber } from "ethers";
 import zip from "lodash.zip";
 
@@ -9,33 +9,40 @@ import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractRead
 import { useSmartContractsFromFactory } from "efi-ui/contracts/useSmartContractsFromFactory/useSmartContractsFromFactory";
 import { useTrancheContracts } from "efi-ui/tranche/useTrancheContracts";
 
-export function useYCsWithBalance(
+export function useInterestTokensWithBalance(
   account: string | null | undefined,
   provider?: Provider
-): YC[] {
-  // YCs are sourced from the Tranche contracts
+): InterestToken[] {
+  // InterestTokens are sourced from the Tranche contracts
   const tranches = useTrancheContracts(provider);
-  const ycAddressResults = useSmartContractReadCalls(tranches, "yc");
-  const ycContracts = useSmartContractsFromFactory(
-    getQueriesData(ycAddressResults),
-    YC__factory.connect
+  const interestTokenAddressResults = useSmartContractReadCalls(
+    tranches,
+    "interestToken"
+  );
+  const interestTokenContracts = useSmartContractsFromFactory(
+    getQueriesData(interestTokenAddressResults),
+    InterestToken__factory.connect
   );
 
-  const ycBalanceResults = useSmartContractReadCalls(ycContracts, "balanceOf", {
-    callArgs: [account as string],
-    enabled: !!account,
-  });
+  const interestTokenBalanceResults = useSmartContractReadCalls(
+    interestTokenContracts,
+    "balanceOf",
+    {
+      callArgs: [account as string],
+      enabled: !!account,
+    }
+  );
 
   const loadedData = zip(
-    ycContracts,
-    getQueriesData(ycBalanceResults)
-  ).filter((values): values is [YC, BigNumber] =>
+    interestTokenContracts,
+    getQueriesData(interestTokenBalanceResults)
+  ).filter((values): values is [InterestToken, BigNumber] =>
     values.every((value) => !!value)
   );
 
-  const ycsWithBalance = loadedData
-    .filter(([yc, balanceOf]) => balanceOf.gt(0))
-    .map(([yc]) => yc);
+  const interestTokensWithBalance = loadedData
+    .filter(([interestToken, balanceOf]) => balanceOf.gt(0))
+    .map(([interestToken]) => interestToken);
 
-  return ycsWithBalance;
+  return interestTokensWithBalance;
 }

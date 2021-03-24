@@ -1,22 +1,22 @@
+import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
 import { WeightedPool } from "elf-contracts/types/WeightedPool";
-import { YieldCurvePool } from "elf-contracts/types/YieldCurvePool";
 
 /**
  * FYTs are YieldCurvePool
  * YCs are WeightedPool
  */
-export type PoolContract = YieldCurvePool | WeightedPool;
+export type PoolContract = ConvergentCurvePool | WeightedPool;
 
-export function isYieldCurvePool(
+export function isConvergentCurvePool(
   pool: PoolContract | undefined
-): pool is YieldCurvePool {
+): pool is ConvergentCurvePool {
   if (!pool) {
     return false;
   }
 
-  // YieldCurvePool has a property called `percentFee` instead of `getSwapFee`
+  // ConvergentCurvePool has a property called `percentFee` instead of `getSwapFee`
   // TODO: is there a better way to identify the type of pool we've got?
-  return !!(pool as YieldCurvePool).callStatic.percentFee;
+  return !!(pool as ConvergentCurvePool).callStatic.percentFee;
 }
 
 export function isWeightedPool(

@@ -11,7 +11,7 @@ import { LiquidityPositionPortfolio } from "efi-ui/portfolio/LiquidityPositionPo
 import { PortfolioTab } from "efi-ui/portfolio/PortfolioTabs/PortfolioTabs";
 import { YCPortfolio } from "efi-ui/portfolio/YCPortfolio/YCPortfolio";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
-import { useYCsWithBalance } from "efi-ui/yieldcoupon/useYCsWithBalance/useYCsWithBalance";
+import { useInterestTokensWithBalance } from "efi-ui/yieldcoupon/useYCsWithBalance/useYCsWithBalance";
 
 import { useFiatBalanceAllYieldCoupons } from "./useFiatBalanceAllYieldCoupons";
 
@@ -89,7 +89,7 @@ function useYCTab(
   provider?: Provider
 ) {
   const { currency } = useCurrencyPref();
-  const ycsWithBalance = useYCsWithBalance(account, provider);
+  const ycsWithBalance = useInterestTokensWithBalance(account, provider);
   const totalFiatBalanceAllYCs = useFiatBalanceAllYieldCoupons(
     library,
     account,

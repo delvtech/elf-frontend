@@ -1,9 +1,9 @@
-import { BPool } from "elf-contracts/types/BPool";
 import { ERC20 } from "elf-contracts/types/ERC20";
 import { BigNumber, ContractTransaction } from "ethers";
 import { formatEther, parseEther } from "ethers/lib/utils";
 
 import { ContractMethodArgs } from "efi/contracts/types";
+import { PoolContract } from "efi/pools/PoolContract";
 
 // TODO: make this a hook by converting to use useMutation?
 export const swapExactAmountIn = async <
@@ -19,7 +19,7 @@ export const swapExactAmountIn = async <
   tokenContractIn: ContractIn,
   tokenContractOut: ContractOut,
   /* must be signed */
-  poolContract: BPool
+  poolContract: PoolContract
 ): Promise<ContractTransaction | undefined> => {
   const tokenAddressIn = tokenContractIn?.address;
   const tokenAddressOut = tokenContractOut?.address;
@@ -55,7 +55,7 @@ export const swapExactAmountIn = async <
     tokenAddressOut,
     minAmountOut,
     maxPrice,
-  ] as ContractMethodArgs<BPool, "swapExactAmountIn">;
+  ] as ContractMethodArgs<PoolContract, "swapExactAmountIn">;
 
   if (!poolContract) {
     return;
