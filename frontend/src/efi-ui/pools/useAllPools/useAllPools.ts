@@ -1,5 +1,5 @@
 import { Provider } from "@ethersproject/providers";
-import { YieldCurvePool__factory } from "elf-contracts/types/factories/YieldCurvePool__factory";
+import { ConvergentCurvePool__factory } from "elf-contracts/types/factories/ConvergentCurvePool__factory";
 import { Signer } from "ethers";
 
 import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
@@ -11,7 +11,7 @@ export function useAllPools(
 ): (PoolContract | undefined)[] {
   const fyWethPool = useSmartContractFromFactory(
     ContractAddresses.marketFyWethAddress,
-    YieldCurvePool__factory.connect,
+    ConvergentCurvePool__factory.connect,
     signerOrProvider
   );
 

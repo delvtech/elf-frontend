@@ -16,7 +16,7 @@ import { Tooltip2 } from "@blueprintjs/popover2";
 import { Web3Provider } from "@ethersproject/providers";
 import { navigate } from "@reach/router";
 import classNames from "classnames";
-import { YC } from "elf-contracts/types/YC";
+import { InterestToken } from "elf-contracts/types/InterestToken";
 import { formatUnits } from "ethers/lib/utils";
 import { jt, t } from "ttag";
 
@@ -37,13 +37,14 @@ import { getTimeLeft2 } from "efi/base/time";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { formatMoney } from "efi/money/formatMoney";
 
-import { useTrancheForYieldCoupon } from "./useTrancheForYieldCoupon";
+import { useTrancheForInterestToken } from "./useTrancheForYieldCoupon";
 import { useUnderlyingVaultForTranche } from "./useUnderlyingVaultForTranche";
+import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 
 interface YCCardProps {
   library: Web3Provider | undefined;
   account: string | null | undefined;
-  yieldCoupon: YC;
+  interestToken: InterestToken;
 }
 
 const calloutClassName = tw(
@@ -56,20 +57,27 @@ const calloutClassName = tw(
   "justify-center"
 );
 
-export const YCCard: FC<YCCardProps> = ({ library, account, yieldCoupon }) => {
+export const YCCard: FC<YCCardProps> = ({
+  library,
+  account,
+  interestToken,
+}) => {
   const { isDarkMode } = useDarkMode();
   const { currency } = useCurrencyPref();
 
-  const { data: ycSymbol } = useSmartContractReadCall(yieldCoupon, "symbol");
+  const { data: ycSymbol } = useSmartContractReadCall(interestToken, "symbol");
   const { data: ycBalanceOf } = useSmartContractReadCall(
-    yieldCoupon,
+    interestToken,
     "balanceOf",
     { enabled: !!account, callArgs: [account as string] }
   );
-  const ycBalance = useTokenBalance(yieldCoupon, account);
+  const ycBalance = useTokenBalance(
+    (interestToken as unknown) as ERC20Shim,
+    account
+  );
 
   // The tranche contains the unlockTimestamp
-  const tranche = useTrancheForYieldCoupon(yieldCoupon);
+  const tranche = useTrancheForInterestToken(interestToken);
   const { data: unlockTimestamp } = useSmartContractReadCall(
     tranche,
     "unlockTimestamp"
@@ -77,9 +85,12 @@ export const YCCard: FC<YCCardProps> = ({ library, account, yieldCoupon }) => {
   const vaultContract = useUnderlyingVaultForTranche(tranche);
   const { data: vaultName } = useSmartContractReadCall(vaultContract, "name");
 
-  const pool = usePoolForToken(yieldCoupon);
+  const pool = usePoolForToken((interestToken as unknown) as ERC20Shim);
 
-  const baseAsset = usePoolPairedToken(pool, yieldCoupon);
+  const baseAsset = usePoolPairedToken(
+    pool,
+    (interestToken as unknown) as ERC20Shim
+  );
   const { data: baseAssetSymbol } = useSmartContractReadCall(
     baseAsset,
     "symbol"
@@ -94,7 +105,7 @@ export const YCCard: FC<YCCardProps> = ({ library, account, yieldCoupon }) => {
   );
   const { data: exitValueBigNumber } = useOnSwapGivenIn(
     pool,
-    yieldCoupon,
+    (interestToken as unknown) as ERC20Shim,
     ycBalanceOf
   );
 
@@ -129,7 +140,7 @@ export const YCCard: FC<YCCardProps> = ({ library, account, yieldCoupon }) => {
             <span className={tw("text-xl", "font-semibold", "tracking-wide")}>
               <a
                 title={t`View tranche on etherscan`}
-                href={`https://etherscan.io/address/${yieldCoupon.address}`}
+                href={`https://etherscan.io/address/${interestToken.address}`}
                 target="_blank"
                 rel="noreferrer noopener"
               >

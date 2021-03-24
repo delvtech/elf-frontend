@@ -1,25 +1,25 @@
 import React, { FC } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
-import { YC } from "elf-contracts/types/YC";
 
 import tw from "efi-tailwindcss-classnames";
 import { YCCard } from "efi-ui/portfolio/YCTable/YCCard";
 import { NoWalletConnectedNonIdealState } from "efi-ui/wallets/NoWalletConnectedNonIdealState/NoWalletConnectedNonIdealState";
 import { NoYCsInWalletNonIdealState } from "efi-ui/wallets/NoYCsInWalletNonIdealState/NoYCsInWalletNonIdealState";
+import { InterestToken } from "elf-contracts/types/InterestToken";
 
 interface YCPortfolioProps {
   library: Web3Provider | undefined;
   account: string | null | undefined;
-  yieldCoupons: YC[];
+  interestTokens: InterestToken[];
 }
 
 export const YCPortfolio: FC<YCPortfolioProps> = ({
   library,
   account,
-  yieldCoupons,
+  interestTokens,
 }) => {
-  const hasYCs = yieldCoupons.length;
+  const hasYCs = interestTokens.length;
 
   let nonIdealStateContent = null;
   if (!account) {
@@ -36,12 +36,12 @@ export const YCPortfolio: FC<YCPortfolioProps> = ({
           {nonIdealStateContent}
         </div>
       ) : (
-        yieldCoupons.map((yieldCoupon) => [
+        interestTokens.map((yieldCoupon) => [
           <YCCard
             key={yieldCoupon.address}
             library={library}
             account={account}
-            yieldCoupon={yieldCoupon}
+            interestToken={yieldCoupon}
           />,
         ])
       )}

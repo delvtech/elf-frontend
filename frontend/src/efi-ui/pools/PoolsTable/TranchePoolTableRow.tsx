@@ -1,20 +1,21 @@
 import { FC } from "react";
 
 import { Link } from "@reach/router";
+import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
 import { Tranche } from "elf-contracts/types/Tranche";
-import { YieldCurvePool } from "elf-contracts/types/YieldCurvePool";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledProgressBar } from "efi-ui/base/LabeledProgressBar/LabeledProgressBar";
 import { getQueryData } from "efi-ui/base/queryResults";
+import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { getTimeLeft2 } from "efi/base/time";
 
 interface TranchePoolTableRowProps {
-  pool: YieldCurvePool | undefined;
+  pool: ConvergentCurvePool | undefined;
 
   tranche: Tranche | undefined;
 }
@@ -25,7 +26,7 @@ export const TranchePoolTableRow: FC<TranchePoolTableRowProps> = ({
 }) => {
   const poolNameResult = useSmartContractReadCall(pool, "name");
   const totalSupplyResult = useSmartContractReadCall(pool, "totalSupply");
-  const baseAsset = usePoolPairedToken(pool, tranche);
+  const baseAsset = usePoolPairedToken(pool, tranche as ERC20Shim);
   const unlockTimestampResult = useSmartContractReadCall(
     tranche,
     "unlockTimestamp"

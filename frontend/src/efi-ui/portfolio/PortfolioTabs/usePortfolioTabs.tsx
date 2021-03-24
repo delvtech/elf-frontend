@@ -55,7 +55,7 @@ export function usePortfolioTabs(
         <YCPortfolio
           library={library}
           account={account}
-          yieldCoupons={ycsWithBalance}
+          interestTokens={ycsWithBalance}
         />
       ),
     },

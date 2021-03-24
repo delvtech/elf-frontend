@@ -1,8 +1,8 @@
 import { ERC20 } from "elf-contracts/types/ERC20";
-import { YieldCurvePool } from "elf-contracts/types/YieldCurvePool";
 import { BigNumber } from "ethers";
 
 import { StaticContractMethodArgs } from "efi/contracts/types";
+import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
 
 export function makeOnSwapGivenOutCallArgs(
   poolId: string | undefined,
@@ -12,7 +12,7 @@ export function makeOnSwapGivenOutCallArgs(
   tokenOut: ERC20 | undefined,
   poolTokenBalances: BigNumber[] | undefined,
   latestBlockNumber: number | undefined
-): StaticContractMethodArgs<YieldCurvePool, "onSwapGivenOut"> | undefined {
+): StaticContractMethodArgs<ConvergentCurvePool, "onSwapGivenOut"> | undefined {
   if (
     !account ||
     !poolId ||
@@ -24,7 +24,10 @@ export function makeOnSwapGivenOutCallArgs(
   ) {
     return undefined;
   }
-  const callArgs: StaticContractMethodArgs<YieldCurvePool, "onSwapGivenOut"> = [
+  const callArgs: StaticContractMethodArgs<
+    ConvergentCurvePool,
+    "onSwapGivenOut"
+  > = [
     {
       poolId: poolId,
       amountOut: amount,

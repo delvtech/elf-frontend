@@ -1,28 +1,26 @@
-import React, { FC, ReactNode } from "react";
+import { FC, ReactNode } from "react";
 
 import { AnchorButton, Button, Icon } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { Tooltip2 } from "@blueprintjs/popover2";
+import { Web3Provider } from "@ethersproject/providers";
 import classNames from "classnames";
-import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
-import { Tranche__factory } from "elf-contracts/types/factories/Tranche__factory";
-import { YVaultAssetProxy__factory } from "elf-contracts/types/factories/YVaultAssetProxy__factory";
-import { Tranche } from "elf-contracts/types/Tranche";
-import { YC } from "elf-contracts/types/YC";
+import { InterestToken } from "elf-contracts/types/InterestToken";
 import { formatUnits } from "ethers/lib/utils";
 import { jt, t } from "ttag";
 
 import { getCoinGeckoId } from "efi-coingecko";
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { getQueryData } from "efi-ui/base/queryResults";
 import styles from "efi-ui/base/table.module.css";
 import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
-import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
+import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
 import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
+import { useTrancheForInterestToken } from "efi-ui/portfolio/YCTable/useTrancheForYieldCoupon";
+import { useUnderlyingVaultForTranche } from "efi-ui/portfolio/YCTable/useUnderlyingVaultForTranche";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
@@ -30,42 +28,47 @@ import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
 import { getTimeLeft2 } from "efi/base/time";
 import { formatMoney } from "efi/money/formatMoney";
-import { Web3Provider } from "@ethersproject/providers";
 
 interface YCTableRowProps {
   library: Web3Provider | undefined;
   account: string | null | undefined;
-  yieldCoupon: YC;
+  interestToken: InterestToken;
 }
 
 export const YCTableRow: FC<YCTableRowProps> = ({
   library,
   account,
-  yieldCoupon,
+  interestToken,
 }) => {
   const { isDarkMode } = useDarkMode();
   const { currency } = useCurrencyPref();
 
-  const { data: ycSymbol } = useSmartContractReadCall(yieldCoupon, "symbol");
+  const { data: ycSymbol } = useSmartContractReadCall(interestToken, "symbol");
   const { data: ycBalanceOf } = useSmartContractReadCall(
-    yieldCoupon,
+    interestToken,
     "balanceOf",
     { enabled: !!account, callArgs: [account as string] }
   );
-  const ycBalance = useTokenBalance(yieldCoupon, account);
+  const ycBalance = useTokenBalance(
+    (interestToken as unknown) as ERC20Shim,
+    account
+  );
 
   // The tranche contains the unlockTimestamp
-  const tranche = useTrancheForYieldCoupon(yieldCoupon);
+  const tranche = useTrancheForInterestToken(interestToken);
   const { data: unlockTimestamp } = useSmartContractReadCall(
     tranche,
     "unlockTimestamp"
   );
-  const vaultContract = useVaultForTranche(tranche);
+  const vaultContract = useUnderlyingVaultForTranche(tranche);
   const { data: vaultName } = useSmartContractReadCall(vaultContract, "name");
 
-  const pool = usePoolForToken(yieldCoupon);
+  const pool = usePoolForToken((interestToken as unknown) as ERC20Shim);
 
-  const baseAsset = usePoolPairedToken(pool, yieldCoupon);
+  const baseAsset = usePoolPairedToken(
+    pool,
+    (interestToken as unknown) as ERC20Shim
+  );
   const { data: baseAssetSymbol } = useSmartContractReadCall(
     baseAsset,
     "symbol"
@@ -78,7 +81,11 @@ export const YCTableRow: FC<YCTableRowProps> = ({
     baseAsset,
     "decimals"
   );
-  const { data: exitValue } = useOnSwapGivenIn(pool, yieldCoupon, ycBalanceOf);
+  const { data: exitValue } = useOnSwapGivenIn(
+    pool,
+    (interestToken as unknown) as ERC20Shim,
+    ycBalanceOf
+  );
 
   const tableRowClassName = isDarkMode ? styles.tableRowDark : styles.tableRow;
 
@@ -172,32 +179,6 @@ export const YCTableRow: FC<YCTableRowProps> = ({
     </div>
   );
 };
-
-function useVaultForTranche(tranche: Tranche | undefined) {
-  const elfAddressResult = useSmartContractReadCall(tranche, "elf");
-  const elfContract = useSmartContractFromFactory(
-    getQueryData(elfAddressResult),
-    YVaultAssetProxy__factory.connect
-  );
-  const vaultAddressResult = useSmartContractReadCall(elfContract, "vault");
-  const vaultContract = useSmartContractFromFactory(
-    getQueryData(vaultAddressResult),
-    ERC20__factory.connect
-  );
-  return vaultContract;
-}
-
-function useTrancheForYieldCoupon(yieldCoupon: YC) {
-  const { data: trancheAddress } = useSmartContractReadCall(
-    yieldCoupon,
-    "tranche"
-  );
-  const tranche = useSmartContractFromFactory(
-    trancheAddress,
-    Tranche__factory.connect
-  );
-  return tranche;
-}
 
 function getTableRowLink(
   vaultAddress: string | undefined,

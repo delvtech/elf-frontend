@@ -32,6 +32,7 @@ import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
 import { YVaultAssetProxy__factory } from "elf-contracts/types/factories/YVaultAssetProxy__factory";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { Web3Provider } from "@ethersproject/providers";
+import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 
 interface FYTTableRowProps {
   library: Web3Provider | undefined;
@@ -55,26 +56,35 @@ export const FYTTableRow: FC<FYTTableRowProps> = ({
     tranche,
     "decimals"
   );
-  const trancheBalance = useTokenBalance(tranche, account);
+  const trancheBalance = useTokenBalance(
+    (tranche as unknown) as ERC20Shim,
+    account
+  );
 
-  const elfAddressResult = useSmartContractReadCall(tranche, "elf");
-  const elfContract = useSmartContractFromFactory(
-    getQueryData(elfAddressResult),
+  const { data: yVaultAssetProxyAddress } = useSmartContractReadCall(
+    tranche,
+    "position"
+  );
+  const yVaultAssetProxy = useSmartContractFromFactory(
+    yVaultAssetProxyAddress,
     YVaultAssetProxy__factory.connect
   );
-  const vaultAddressResult = useSmartContractReadCall(elfContract, "vault");
+  const vaultAddressResult = useSmartContractReadCall(
+    yVaultAssetProxy,
+    "vault"
+  );
   const vaultContract = useSmartContractFromFactory(
     getQueryData(vaultAddressResult),
     ERC20__factory.connect
   );
   const { data: vaultName } = useSmartContractReadCall(vaultContract, "name");
-  const pool = usePoolForToken(tranche);
+  const pool = usePoolForToken((tranche as unknown) as ERC20Shim);
   const trancheSpotPriceResult = useOnSwapGivenIn(
     pool,
-    tranche,
+    (tranche as unknown) as ERC20Shim,
     BigNumber.from(1)
   );
-  const baseAsset = usePoolPairedToken(pool, tranche);
+  const baseAsset = usePoolPairedToken(pool, (tranche as unknown) as ERC20Shim);
   const { data: baseAssetSymbol } = useSmartContractReadCall(
     baseAsset,
     "symbol"

@@ -25,6 +25,7 @@ import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { getQueryData } from "efi-ui/base/queryResults";
 import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
+import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { CryptoIconSvg } from "efi-ui/crypto/CryptoIcon";
 import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
@@ -33,13 +34,13 @@ import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPaire
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
-import { usePositionForTranche } from "efi-ui/tranche/usePositionForTranche";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { ONE_ETHER } from "efi/crypto/ethereum";
 import { formatMoney } from "efi/money/formatMoney";
 import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
+import { useUnderlyingVaultForTranche } from "efi-ui/portfolio/YCTable/useUnderlyingVaultForTranche";
 
 interface FYTCardProps {
   library: Web3Provider | undefined;
@@ -68,13 +69,20 @@ export const FYTCard: FC<FYTCardProps> = ({ library, account, tranche }) => {
     tranche,
     "decimals"
   );
-  const trancheBalance = useTokenBalance(tranche, account);
+  const trancheBalance = useTokenBalance(
+    (tranche as unknown) as ERC20Shim,
+    account
+  );
 
-  const vaultContract = usePositionForTranche(tranche);
+  const vaultContract = useUnderlyingVaultForTranche(tranche);
   const { data: vaultName } = useSmartContractReadCall(vaultContract, "name");
-  const pool = usePoolForToken(tranche);
-  const trancheSpotPriceResult = useOnSwapGivenIn(pool, tranche, ONE_ETHER);
-  const baseAsset = usePoolPairedToken(pool, tranche);
+  const pool = usePoolForToken((tranche as unknown) as ERC20Shim);
+  const trancheSpotPriceResult = useOnSwapGivenIn(
+    pool,
+    (tranche as unknown) as ERC20Shim,
+    ONE_ETHER
+  );
+  const baseAsset = usePoolPairedToken(pool, (tranche as unknown) as ERC20Shim);
 
   const { data: baseAssetSymbol } = useSmartContractReadCall(
     baseAsset,

@@ -2,10 +2,16 @@ import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
 import { WeightedPool } from "elf-contracts/types/WeightedPool";
 
 /**
- * FYTs are YieldCurvePool
- * YCs are WeightedPool
+ * Principal token pools have a custom curve that changes as the two assets
+ * converge.
  */
-export type PoolContract = ConvergentCurvePool | WeightedPool;
+type PrincipalTokenPool = ConvergentCurvePool;
+
+/**
+ * Interest token pools use standard weighted pools provided by Balancer V2.
+ */
+type InterestTokenPool = WeightedPool;
+export type PoolContract = PrincipalTokenPool | InterestTokenPool;
 
 export function isConvergentCurvePool(
   pool: PoolContract | undefined

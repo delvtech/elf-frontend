@@ -143,7 +143,7 @@ export const PoolsTable: FC<PoolsTableProps> = ({ className }) => {
               <YieldCouponPoolTableRow
                 key={pool?.contractAddress || index}
                 tranche={tranche}
-                yieldCoupon={yieldCoupon}
+                interestToken={yieldCoupon}
                 pool={pool}
               />
             );

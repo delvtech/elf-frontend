@@ -10,8 +10,7 @@ import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadC
 export function useUnderlyingVaultForTranche(
   tranche: Tranche | undefined
 ): ERC20 | undefined {
-  // This property is still called "elf", but it points to the VaultAssetProxy
-  const vaultAssetProxyAddress = useSmartContractReadCall(tranche, "elf");
+  const vaultAssetProxyAddress = useSmartContractReadCall(tranche, "position");
 
   const yVaultAssetProxy = useSmartContractFromFactory(
     getQueryData(vaultAssetProxyAddress),
