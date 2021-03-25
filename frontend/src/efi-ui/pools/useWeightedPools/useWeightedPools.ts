@@ -10,7 +10,7 @@ import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 import { WeightedPool } from "elf-contracts/types/WeightedPool";
 
 export function useWeightedPools(
-  signerOrProvider: Signer | Provider | undefined
+  signerOrProvider?: Signer | Provider
 ): (WeightedPool | undefined)[] {
   const { weightedPoolFactoryAddress } = ContractAddresses;
 

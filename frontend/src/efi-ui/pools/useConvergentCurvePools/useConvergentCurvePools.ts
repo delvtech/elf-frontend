@@ -11,7 +11,7 @@ import ContractAddresses from "efi/contracts/contractsJson";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 
 export function useConvergentCurvePools(
-  signerOrProvider: Signer | Provider | undefined
+  signerOrProvider?: Signer | Provider
 ): (ConvergentCurvePool | undefined)[] {
   const { convergentPoolFactoryAddress } = ContractAddresses;
 
