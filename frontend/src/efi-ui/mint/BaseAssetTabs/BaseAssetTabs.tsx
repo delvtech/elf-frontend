@@ -8,8 +8,8 @@ import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { EthIcon } from "efi-ui/ethereum/EthIcon";
 import { NextStepCallout } from "efi-ui/mint/ChooseBaseAssetStep/NextStepCallout";
 
-import { MintCard, MintCardProps } from "../MintCard/MintCard";
 import { NoWalletConnectedCallout } from "../ChooseBaseAssetStep/NoWalletConnectedCallout";
+import { MintCard, MintCardProps } from "../MintCard/MintCard";
 
 interface BaseAssetTabsProps {
   account: string | null | undefined;
@@ -59,10 +59,8 @@ export const BaseAssetTabs: FC<BaseAssetTabsProps> = ({
       style={{ width: 968 }}
     >
       <Tabs
-        vertical
         large
         id="base-asset-tabs"
-        className={tw("w-full")}
         onChange={(tabId: string) => {
           setActiveBaseAssetId(tabId);
         }}
@@ -100,7 +98,6 @@ export const BaseAssetTabs: FC<BaseAssetTabsProps> = ({
                     />
                   </div>
                 }
-                panelClassName={tw("flex-1")}
                 panel={
                   <MintCard
                     id={id}
