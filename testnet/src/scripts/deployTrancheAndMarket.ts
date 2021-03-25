@@ -14,6 +14,7 @@ import { THIRTY_DAYS_IN_SECONDS } from "src/time";
 
 import { deployTranche } from "./deployTranche";
 import { setupInterestTokenPool } from "./setupInterestTokenPool";
+import { ERC20 } from "src/types/ERC20";
 
 const defaultOptions = {
   swapFee: ".003",
@@ -67,7 +68,7 @@ export async function deployTrancheAndMarket(
     convergentPoolFactory,
     balancerVaultContract,
     baseAssetContract,
-    trancheContract,
+    (trancheContract as unknown) as ERC20,
     { swapFee, durationInSeconds }
   );
 
