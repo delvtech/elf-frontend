@@ -45,7 +45,7 @@ export const MarketFilterOptions: FC<MarketFilterOptionsProps> = () => {
       </FormGroup>
       <FormGroup label={t`Asset Types`} labelFor="asset-radios">
         <Switch labelElement={t`Fixed Yield Tokens`} />
-        <Switch labelElement={t`Yield Coupons`} />
+        <Switch labelElement={t`Interest Tokens`} />
       </FormGroup>
       <FormGroup label={t`Currencies`} labelFor="currency-radios">
         <Switch labelElement={t`WETH`} />

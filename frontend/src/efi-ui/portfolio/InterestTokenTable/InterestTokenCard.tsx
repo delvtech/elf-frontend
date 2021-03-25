@@ -24,6 +24,7 @@ import { getCoinGeckoId } from "efi-coingecko";
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
+import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { CryptoIconSvg } from "efi-ui/crypto/CryptoIcon";
 import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
@@ -32,16 +33,15 @@ import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPaire
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
+import { useTrancheForInterestToken } from "efi-ui/tranche/useTrancheForInterestToken";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { getTimeLeft2 } from "efi/base/time";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { formatMoney } from "efi/money/formatMoney";
 
 import { useUnderlyingVaultForTranche } from "../../tranche/useUnderlyingVaultForTranche";
-import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
-import { useTrancheForInterestToken } from "efi-ui/tranche/useTrancheForInterestToken";
 
-interface YCCardProps {
+interface InterestTokenCardProps {
   library: Web3Provider | undefined;
   account: string | null | undefined;
   interestToken: InterestToken;
@@ -57,7 +57,7 @@ const calloutClassName = tw(
   "justify-center"
 );
 
-export const YCCard: FC<YCCardProps> = ({
+export const InterestTokenCard: FC<InterestTokenCardProps> = ({
   library,
   account,
   interestToken,
@@ -65,13 +65,19 @@ export const YCCard: FC<YCCardProps> = ({
   const { isDarkMode } = useDarkMode();
   const { currency } = useCurrencyPref();
 
-  const { data: ycSymbol } = useSmartContractReadCall(interestToken, "symbol");
-  const { data: ycBalanceOf } = useSmartContractReadCall(
+  const { data: interestTokenSymbol } = useSmartContractReadCall(
+    interestToken,
+    "symbol"
+  );
+  const { data: interestTokenBalanceOf } = useSmartContractReadCall(
     interestToken,
     "balanceOf",
-    { enabled: !!account, callArgs: [account as string] }
+    {
+      enabled: !!account,
+      callArgs: [account as string],
+    }
   );
-  const ycBalance = useTokenBalance(
+  const interestTokenBalance = useTokenBalance(
     (interestToken as unknown) as ERC20Shim,
     account
   );
@@ -106,7 +112,7 @@ export const YCCard: FC<YCCardProps> = ({
   const { data: exitValueBigNumber } = useOnSwapGivenIn(
     pool,
     (interestToken as unknown) as ERC20Shim,
-    ycBalanceOf
+    interestTokenBalanceOf
   );
 
   const iconKey = baseAssetSymbol?.toUpperCase() as CryptoSymbol;
@@ -144,7 +150,7 @@ export const YCCard: FC<YCCardProps> = ({
                 target="_blank"
                 rel="noreferrer noopener"
               >
-                {ycSymbol}
+                {interestTokenSymbol}
               </a>
             </span>
             <div
@@ -194,8 +200,8 @@ export const YCCard: FC<YCCardProps> = ({
               className={tw("flex", "justify-center", "items-center")}
               bold
               textClassName={tw("text-2xl")}
-              text={`${ycBalance.toFixed(6)} YC`}
-              label={t`1 YC = yield on 1 ${baseAssetSymbol} at maturity`}
+              text={`${interestTokenBalance.toFixed(6)} Interest Token`}
+              label={t`1 Interest Token = yield on 1 ${baseAssetSymbol} at maturity`}
             />
           </Callout>
           <Callout icon={null} className={calloutClassName}>

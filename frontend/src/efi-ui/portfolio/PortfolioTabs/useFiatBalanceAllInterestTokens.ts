@@ -13,13 +13,13 @@ import { Web3Provider } from "@ethersproject/providers";
 import { InterestToken } from "elf-contracts/types/InterestToken";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 
-export function useFiatBalanceAllYieldCoupons(
+export function useFiatBalanceAllInterestTokens(
   library: Web3Provider | undefined,
   account: string | null | undefined,
   interestTokens: InterestToken[],
   currency: Currency
 ): Money {
-  // YCs should be paired against a token we can lookup in Coingecko for fiat price
+  // Interest Tokenss should be paired against a token we can lookup in Coingecko for fiat price
   const markets = usePoolForTokenMulti(
     (interestTokens as unknown) as ERC20Shim[]
   );
@@ -40,8 +40,8 @@ export function useFiatBalanceAllYieldCoupons(
     currency
   );
 
-  // Get the user's balance of all the yield coupons
-  const ycBalanceOfResults = useSmartContractReadCalls(
+  // Get the user's balance of all the interest tokens
+  const interestTokenBalanceOfResults = useSmartContractReadCalls(
     interestTokens,
     "balanceOf",
     {
@@ -50,11 +50,11 @@ export function useFiatBalanceAllYieldCoupons(
     }
   );
 
-  // Total value in base asset of each yield coupon
+  // Total value in base asset of each interest token
   const totalValueInBaseAssetResults = useOnSwapGivenInMulti(
     markets,
     (interestTokens as unknown) as ERC20Shim[],
-    getQueriesData(ycBalanceOfResults)
+    getQueriesData(interestTokenBalanceOfResults)
   );
 
   const baseAssetDecimalsResult = useSmartContractReadCalls(

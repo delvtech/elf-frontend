@@ -19,23 +19,23 @@ import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadC
 import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
 import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
-import { useTrancheForInterestToken } from "efi-ui/tranche/useTrancheForInterestToken";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
+import { useTrancheForInterestToken } from "efi-ui/tranche/useTrancheForInterestToken";
 import { useUnderlyingVaultForTranche } from "efi-ui/tranche/useUnderlyingVaultForTranche";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
 import { getTimeLeft2 } from "efi/base/time";
 import { formatMoney } from "efi/money/formatMoney";
 
-interface YCTableRowProps {
+interface InterestTokenTableRowProps {
   library: Web3Provider | undefined;
   account: string | null | undefined;
   interestToken: InterestToken;
 }
 
-export const YCTableRow: FC<YCTableRowProps> = ({
+export const InterestTokenTableRow: FC<InterestTokenTableRowProps> = ({
   library,
   account,
   interestToken,
@@ -43,13 +43,19 @@ export const YCTableRow: FC<YCTableRowProps> = ({
   const { isDarkMode } = useDarkMode();
   const { currency } = useCurrencyPref();
 
-  const { data: ycSymbol } = useSmartContractReadCall(interestToken, "symbol");
-  const { data: ycBalanceOf } = useSmartContractReadCall(
+  const { data: interestTokenSymbol } = useSmartContractReadCall(
+    interestToken,
+    "symbol"
+  );
+  const { data: interestTokenBalanceOf } = useSmartContractReadCall(
     interestToken,
     "balanceOf",
-    { enabled: !!account, callArgs: [account as string] }
+    {
+      enabled: !!account,
+      callArgs: [account as string],
+    }
   );
-  const ycBalance = useTokenBalance(
+  const interestTokenBalance = useTokenBalance(
     (interestToken as unknown) as ERC20Shim,
     account
   );
@@ -84,7 +90,7 @@ export const YCTableRow: FC<YCTableRowProps> = ({
   const { data: exitValue } = useOnSwapGivenIn(
     pool,
     (interestToken as unknown) as ERC20Shim,
-    ycBalanceOf
+    interestTokenBalanceOf
   );
 
   const tableRowClassName = isDarkMode ? styles.tableRowDark : styles.tableRow;
@@ -106,11 +112,14 @@ export const YCTableRow: FC<YCTableRowProps> = ({
     >
       {/* Asset */}
       <div>
-        <LabeledText text={ycSymbol} label={jt`via ${tableRowLink}`} />
+        <LabeledText
+          text={interestTokenSymbol}
+          label={jt`via ${tableRowLink}`}
+        />
       </div>
       {/* Quantity */}
       <div>
-        <LabeledText text={ycBalance.toFixed(6)} label="" />
+        <LabeledText text={interestTokenBalance.toFixed(6)} label="" />
       </div>
 
       {/* Current exit value */}
@@ -126,7 +135,7 @@ export const YCTableRow: FC<YCTableRowProps> = ({
         <LabeledText text={t`1.013 ETH`} label={t`1,105.23 USD`} />
       </div>
 
-      {/* Yield rate YC */}
+      {/* Yield rate Interest Token */}
       <div>
         <LabeledText
           text={t`0.32% daily`}

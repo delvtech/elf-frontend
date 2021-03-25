@@ -7,15 +7,15 @@ import { t } from "ttag";
 import { useNavigation } from "efi-ui/navigation/hooks/useTab";
 import { Navigation } from "efi-ui/navigation/navigation";
 
-interface NoYCsInWalletNonIdealStateProps {}
+interface NoITsInWalletNonIdealStateProps {}
 
-export const NoYCsInWalletNonIdealState: FC<NoYCsInWalletNonIdealStateProps> = () => {
+export const NoInterestTokensInWalletNonIdealState: FC<NoITsInWalletNonIdealStateProps> = () => {
   const { changeTab } = useNavigation();
   const goToMint = useCallback(() => changeTab(Navigation.MINT), [changeTab]);
   return (
     <NonIdealState
       icon={IconNames.BANK_ACCOUNT}
-      description={t`This wallet does not contain any Yield Coupons.`}
+      description={t`This wallet does not contain any Interest Tokens.`}
       action={
         <Button outlined large onClick={goToMint}>{t`Go to Mint`}</Button>
       }

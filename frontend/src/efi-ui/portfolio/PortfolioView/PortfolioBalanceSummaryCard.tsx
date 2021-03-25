@@ -13,7 +13,7 @@ export const PortfolioBalanceSummaryCard: FC<PortfolioBalanceSummaryCardProps> =
     <Card className={tw("p-8", "space-y-4")}>
       {[
         { label: t`Fixed yield tokens (FYTs)`, value: "$50,201.09" },
-        { label: t`Yield coupons (YCs)`, value: "$0.00" },
+        { label: t`Interest Tokens (ITs)`, value: "$0.00" },
         { label: t`Liquidity positions`, value: "$0.00" },
         {
           label: t`Element token`,
