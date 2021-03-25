@@ -8,7 +8,7 @@ import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { EthIcon } from "efi-ui/ethereum/EthIcon";
 import { NextStepCallout } from "efi-ui/mint/ChooseBaseAssetStep/NextStepCallout";
 
-import { BaseAssetCard, BaseAssetCardProps } from "./BaseAssetCard";
+import { MintCard, MintCardProps } from "../MintCard/MintCard";
 import { NoWalletConnectedCallout } from "./NoWalletConnectedCallout";
 
 interface ChooseBaseAssetStepProps {
@@ -16,7 +16,7 @@ interface ChooseBaseAssetStepProps {
   onInvestmentAmountChange: (amount: number) => void;
 }
 
-const baseAssetInfos: Omit<BaseAssetCardProps, "onInvestmentAmountChange">[] = [
+const baseAssetInfos: Omit<MintCardProps, "onInvestmentAmountChange">[] = [
   {
     id: "base-asset-eth",
     assetIcon: EthIcon,
@@ -102,7 +102,7 @@ export const ChooseBaseAssetStep: FC<ChooseBaseAssetStepProps> = ({
                 }
                 panelClassName={tw("flex-1")}
                 panel={
-                  <BaseAssetCard
+                  <MintCard
                     id={id}
                     assetName={assetName}
                     assetIcon={AssetIcon}

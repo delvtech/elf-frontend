@@ -7,10 +7,10 @@ import tw from "efi-tailwindcss-classnames";
 
 import styles from "efi-ui/mint/ChooseBaseAssetStep/styles.module.css";
 
-import { YieldPositionPicker } from "./YieldPositionPicker";
+import { YieldPositionPicker } from "../ChooseBaseAssetStep/YieldPositionPicker";
 import classNames from "classnames";
 
-export interface BaseAssetCardProps {
+export interface MintCardProps {
   id: string;
   assetIcon: FC<SVGProps<SVGSVGElement> & { title?: string }>;
 
@@ -24,7 +24,7 @@ export interface BaseAssetCardProps {
   onInvestmentAmountChange: (amount: number) => void;
 }
 
-export const BaseAssetCard: FC<BaseAssetCardProps> = ({
+export const MintCard: FC<MintCardProps> = ({
   assetName,
   assetIcon: AssetIcon,
   assetSymbol,
