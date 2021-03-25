@@ -15,7 +15,7 @@ import { getTimeLeft2 } from "efi/base/time";
 import { InterestToken } from "elf-contracts/types/InterestToken";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 
-interface YieldCouponPoolTableRowProps {
+interface InterestTokenPoolTableRowProps {
   pool: WeightedPool | undefined;
 
   tranche: Tranche | undefined;
@@ -23,7 +23,7 @@ interface YieldCouponPoolTableRowProps {
   interestToken: InterestToken | undefined;
 }
 
-export const YieldCouponPoolTableRow: FC<YieldCouponPoolTableRowProps> = ({
+export const InterestTokenPoolTableRow: FC<InterestTokenPoolTableRowProps> = ({
   pool,
   tranche,
   interestToken,

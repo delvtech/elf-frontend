@@ -24,7 +24,7 @@ import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
 import { useSmartContractsFromFactory } from "efi-ui/contracts/useSmartContractsFromFactory/useSmartContractsFromFactory";
 import { TranchePoolTableRow } from "efi-ui/pools/PoolsTable/TranchePoolTableRow";
-import { YieldCouponPoolTableRow } from "efi-ui/pools/PoolsTable/YieldCouponPoolTableRow";
+import { InterestTokenPoolTableRow } from "efi-ui/pools/PoolsTable/InterestTokenPoolTableRow";
 import { usePoolForTokenMulti } from "efi-ui/pools/usePoolForToken/usePoolForTokenMulti";
 import { useTrancheContracts } from "efi-ui/tranche/useTrancheContracts";
 
@@ -138,16 +138,18 @@ export const PoolsTable: FC<PoolsTableProps> = ({ className }) => {
               />
             );
           })}
-          {interestTokenPoolItems.map(([pool, yieldCoupon, tranche], index) => {
-            return (
-              <YieldCouponPoolTableRow
-                key={pool?.contractAddress || index}
-                tranche={tranche}
-                interestToken={yieldCoupon}
-                pool={pool}
-              />
-            );
-          })}
+          {interestTokenPoolItems.map(
+            ([pool, interestToken, tranche], index) => {
+              return (
+                <InterestTokenPoolTableRow
+                  key={pool?.contractAddress || index}
+                  tranche={tranche}
+                  interestToken={interestToken}
+                  pool={pool}
+                />
+              );
+            }
+          )}
         </tbody>
       </HTMLTable>
     </div>
