@@ -37,9 +37,9 @@ import { getTimeLeft2 } from "efi/base/time";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { formatMoney } from "efi/money/formatMoney";
 
-import { useTrancheForInterestToken } from "./useTrancheForYieldCoupon";
 import { useUnderlyingVaultForTranche } from "../../tranche/useUnderlyingVaultForTranche";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
+import { useTrancheForInterestToken } from "efi-ui/tranche/useTrancheForInterestToken";
 
 interface YCCardProps {
   library: Web3Provider | undefined;

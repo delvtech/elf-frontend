@@ -1,7 +1,6 @@
 import { FC } from "react";
 
 import { Link } from "@reach/router";
-import { Tranche } from "elf-contracts/types/Tranche";
 import { WeightedPool } from "elf-contracts/types/WeightedPool";
 import { t } from "ttag";
 
@@ -12,22 +11,20 @@ import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadC
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { getTimeLeft2 } from "efi/base/time";
-import { InterestToken } from "elf-contracts/types/InterestToken";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
+import { useTrancheForInterestToken } from "efi-ui/tranche/useTrancheForInterestToken";
+import { useInterestTokenForPool } from "efi-ui/pools/useInterestTokenForPool/useInterestTokenForPool";
 
-interface YieldCouponPoolTableRowProps {
+interface InterestTokenPoolTableRowProps {
   pool: WeightedPool | undefined;
-
-  tranche: Tranche | undefined;
-
-  interestToken: InterestToken | undefined;
 }
 
-export const YieldCouponPoolTableRow: FC<YieldCouponPoolTableRowProps> = ({
+export const InterestTokenPoolTableRow: FC<InterestTokenPoolTableRowProps> = ({
   pool,
-  tranche,
-  interestToken,
 }) => {
+  const interestToken = useInterestTokenForPool(pool);
+  const tranche = useTrancheForInterestToken(interestToken);
+
   const poolNameResult = useSmartContractReadCall(pool, "name");
   const totalSupplyResult = useSmartContractReadCall(pool, "totalSupply");
   const baseAsset = usePoolPairedToken(pool, tranche as ERC20Shim);

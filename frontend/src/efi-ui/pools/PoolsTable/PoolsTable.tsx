@@ -11,25 +11,20 @@ import {
 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { Popover2 } from "@blueprintjs/popover2";
-import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
-import { InterestToken__factory } from "elf-contracts/types/factories/InterestToken__factory";
-import { WeightedPool } from "elf-contracts/types/WeightedPool";
-import zip from "lodash.zip";
+import { Provider } from "@ethersproject/providers";
+import { Signer } from "ethers";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { FormGroupLabel } from "efi-ui/base/FormGroupLabel/FormGroupLabel";
-import { getQueriesData } from "efi-ui/base/queryResults";
-import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
-import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
-import { useSmartContractsFromFactory } from "efi-ui/contracts/useSmartContractsFromFactory/useSmartContractsFromFactory";
+import { InterestTokenPoolTableRow } from "efi-ui/pools/PoolsTable/InterestTokenPoolTableRow";
 import { TranchePoolTableRow } from "efi-ui/pools/PoolsTable/TranchePoolTableRow";
-import { YieldCouponPoolTableRow } from "efi-ui/pools/PoolsTable/YieldCouponPoolTableRow";
-import { usePoolForTokenMulti } from "efi-ui/pools/usePoolForToken/usePoolForTokenMulti";
-import { useTrancheContracts } from "efi-ui/tranche/useTrancheContracts";
+import { useConvergentCurvePools } from "efi-ui/pools/useConvergentCurvePools/useConvergentCurvePools";
+import { useWeightedPools } from "efi-ui/pools/useWeightedPools/useWeightedPools";
 
 interface PoolsTableProps {
   className?: string;
+  signerOrProvider?: Signer | Provider;
 }
 
 const TABLE_HEADERS: PoolsTableHeaderProps[] = [
@@ -46,34 +41,16 @@ const TABLE_HEADERS: PoolsTableHeaderProps[] = [
   { label: t`Tranche State` },
 ];
 
-export const PoolsTable: FC<PoolsTableProps> = ({ className }) => {
-  const tranches = useTrancheContracts();
-  const tranchePools = usePoolForTokenMulti(
-    (tranches as unknown) as ERC20Shim[]
-  ) as (ConvergentCurvePool | undefined)[];
+export const PoolsTable: FC<PoolsTableProps> = ({
+  className,
+  signerOrProvider,
+}) => {
+  const principalTokenPools = useConvergentCurvePools(signerOrProvider);
+  const interestTokenPools = useWeightedPools(signerOrProvider);
 
-  const interestTokenAddressResults = useSmartContractReadCalls(
-    tranches,
-    "interestToken"
-  );
-  const interestTokens = useSmartContractsFromFactory(
-    getQueriesData(interestTokenAddressResults),
-    InterestToken__factory.connect
-  );
-  const interestTokenPools = usePoolForTokenMulti(
-    (interestTokens as unknown) as ERC20Shim[]
-  ) as (WeightedPool | undefined)[];
-
-  if (!tranchePools.length && !interestTokenPools.length) {
+  if (!principalTokenPools.length && !interestTokenPools.length) {
     return <span>{t`no markets found`}</span>;
   }
-
-  const tranchePoolItems = zip(tranchePools, tranches);
-  const interestTokenPoolItems = zip(
-    interestTokenPools,
-    interestTokens,
-    tranches
-  );
 
   return (
     <div className={tw("w-full")}>
@@ -129,21 +106,18 @@ export const PoolsTable: FC<PoolsTableProps> = ({ className }) => {
           </tr>
         </thead>
         <tbody className={Classes.TEXT_LARGE}>
-          {tranchePoolItems.map(([pool, tranche], index) => {
+          {principalTokenPools.map((pool, index) => {
             return (
               <TranchePoolTableRow
                 key={pool?.contractAddress || index}
                 pool={pool}
-                tranche={tranche}
               />
             );
           })}
-          {interestTokenPoolItems.map(([pool, yieldCoupon, tranche], index) => {
+          {interestTokenPools.map((pool, index) => {
             return (
-              <YieldCouponPoolTableRow
+              <InterestTokenPoolTableRow
                 key={pool?.contractAddress || index}
-                tranche={tranche}
-                interestToken={yieldCoupon}
                 pool={pool}
               />
             );
