@@ -1,6 +1,6 @@
-import React, { FC, ReactNode, useMemo, useState } from "react";
+import { FC, ReactNode, useMemo, useState } from "react";
 
-import { Breadcrumbs, Classes, IBreadcrumbProps } from "@blueprintjs/core";
+import { Classes } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { RouteComponentProps } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
@@ -59,16 +59,6 @@ export const MintView: FC<MintViewProps> = () => {
     [account]
   );
 
-  const breadcrumbItems = useMemo<IBreadcrumbProps[]>(
-    () =>
-      mintingSteps.map(({ title }, index) => ({
-        text: title,
-        current: currentStepIndex === index,
-        className: tw("text-xl"),
-      })),
-    [currentStepIndex, mintingSteps]
-  );
-
   const currentStep = mintingSteps[currentStepIndex];
 
   return (
@@ -101,12 +91,6 @@ export const MintView: FC<MintViewProps> = () => {
             "justify-center"
           )}
         >
-          <div className={tw("flex", "flex-col", "space-y-10", "items-center")}>
-            <Breadcrumbs
-              minVisibleItems={mintingSteps.length}
-              items={breadcrumbItems}
-            />
-          </div>
           <span
             className={classNames(
               Classes.RUNNING_TEXT,
