@@ -1,7 +1,10 @@
 import React, { FC } from "react";
 
 import { Card } from "@blueprintjs/core";
+import { Web3Provider } from "@ethersproject/providers";
 import { RouteComponentProps } from "@reach/router";
+import { useWeb3React } from "@web3-react/core";
+import { Signer } from "ethers";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -12,6 +15,10 @@ import { PoolsTable } from "efi-ui/pools/PoolsTable/PoolsTable";
 interface ExchangeViewProps extends RouteComponentProps {}
 
 export const ExchangeView: FC<ExchangeViewProps> = () => {
+  const { library, account } = useWeb3React<Web3Provider>();
+
+  const signer = account ? (library?.getSigner(account) as Signer) : undefined;
+
   return (
     <div
       data-testid="exchange-view"
@@ -40,7 +47,7 @@ export const ExchangeView: FC<ExchangeViewProps> = () => {
           </div>
           <div className={tw("flex", "flex-1")}>
             <Card className={tw("p-10", "flex", "flex-1")}>
-              <PoolsTable className={tw("w-full")} />
+              <PoolsTable signerOrProvider={signer} className={tw("w-full")} />
             </Card>
           </div>
         </div>

@@ -11,9 +11,11 @@ import {
 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { Popover2 } from "@blueprintjs/popover2";
+import { Provider } from "@ethersproject/providers";
 import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
 import { InterestToken__factory } from "elf-contracts/types/factories/InterestToken__factory";
 import { WeightedPool } from "elf-contracts/types/WeightedPool";
+import { Signer } from "ethers";
 import zip from "lodash.zip";
 import { t } from "ttag";
 
@@ -30,6 +32,7 @@ import { useTrancheContracts } from "efi-ui/tranche/useTrancheContracts";
 
 interface PoolsTableProps {
   className?: string;
+  signerOrProvider?: Signer | Provider;
 }
 
 const TABLE_HEADERS: PoolsTableHeaderProps[] = [
@@ -46,8 +49,11 @@ const TABLE_HEADERS: PoolsTableHeaderProps[] = [
   { label: t`Tranche State` },
 ];
 
-export const PoolsTable: FC<PoolsTableProps> = ({ className }) => {
-  const tranches = useTrancheContracts();
+export const PoolsTable: FC<PoolsTableProps> = ({
+  className,
+  signerOrProvider,
+}) => {
+  const tranches = useTrancheContracts(signerOrProvider);
   const tranchePools = usePoolForTokenMulti(
     (tranches as unknown) as ERC20Shim[]
   ) as (ConvergentCurvePool | undefined)[];

@@ -2,31 +2,54 @@ import { Provider } from "@ethersproject/providers";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { Signer } from "ethers";
 
-import { useTrancheContract } from "efi-ui/tranche/useTrancheContract";
 import ContractAddresses from "efi/contracts/contractsJson";
+import { TrancheFactory__factory } from "elf-contracts/types/factories/TrancheFactory__factory";
+import { TrancheFactory } from "elf-contracts/types/TrancheFactory";
+import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
+import { useQuery } from "react-query";
+import { Tranche__factory } from "elf-contracts/types/factories/Tranche__factory";
 
-// TODO: convert this to filtering the TrancheFactory for tranches deployed by elementAddress
+type TrancheFilterOptions = Parameters<
+  TrancheFactory["filters"]["TrancheCreated"]
+>;
 export function useTrancheContracts(
-  signerOrProvider?: Signer | Provider
+  signerOrProvider: Signer | Provider | undefined,
+  filterOptions: TrancheFilterOptions = [null, null, null]
 ): Tranche[] {
-  const { wethTrancheAddress } = ContractAddresses;
+  const { trancheFactoryAddress } = ContractAddresses;
 
-  const wethTrancheContract = useTrancheContract(
-    wethTrancheAddress,
-    signerOrProvider
+  const trancheFactoryContract = TrancheFactory__factory.connect(
+    trancheFactoryAddress,
+    signerOrProvider ?? jsonRpcProvider
   );
 
-  // TODO: Uncomment this when the usdc contract is deployed to the testnet
-  // const usdcTrancheContract = useTrancheContract(
-  //   trancheUsdcAddress,
-  //   signerOrProvider
-  // );
+  const filterQuery = trancheFactoryContract.filters.TrancheCreated(
+    ...filterOptions
+  );
 
-  const trancheContracts = [
-    wethTrancheContract,
-    // TODO: Uncomment this when the usdc contract is deployed to the testnet
-    //  usdcTrancheContract
-  ].filter((tranche): tranche is Tranche => !!tranche);
+  const eventsQueryResult = useQuery({
+    queryKey: [
+      ["trancheFactory", "queryFilter", "TrancheCreated"],
+      { filterOptions },
+    ],
+    queryFn: async () => {
+      const events = await trancheFactoryContract.queryFilter(filterQuery);
+      return events;
+    },
+  });
+
+  const { data: events } = eventsQueryResult;
+
+  if (!events) {
+    return [];
+  }
+
+  const trancheContracts: Tranche[] = events.map((event) =>
+    Tranche__factory.connect(
+      event.args?.trancheAddress,
+      signerOrProvider ?? jsonRpcProvider
+    )
+  );
 
   return trancheContracts;
 }
