@@ -47,12 +47,14 @@ export const InterestTokenTableRow: FC<InterestTokenTableRowProps> = ({
     interestToken,
     "symbol"
   );
-  const {
-    data: interestTokenBalanceOf,
-  } = useSmartContractReadCall(interestToken, "balanceOf", {
-    enabled: !!account,
-    callArgs: [account as string],
-  });
+  const { data: interestTokenBalanceOf } = useSmartContractReadCall(
+    interestToken,
+    "balanceOf",
+    {
+      enabled: !!account,
+      callArgs: [account as string],
+    }
+  );
   const interestTokenBalance = useTokenBalance(
     (interestToken as unknown) as ERC20Shim,
     account
