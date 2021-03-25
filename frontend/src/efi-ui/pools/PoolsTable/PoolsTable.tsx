@@ -23,8 +23,8 @@ import { getQueriesData } from "efi-ui/base/queryResults";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
 import { useSmartContractsFromFactory } from "efi-ui/contracts/useSmartContractsFromFactory/useSmartContractsFromFactory";
-import { TranchePoolTableRow } from "efi-ui/pools/PoolsTable/TranchePoolTableRow";
 import { InterestTokenPoolTableRow } from "efi-ui/pools/PoolsTable/InterestTokenPoolTableRow";
+import { TranchePoolTableRow } from "efi-ui/pools/PoolsTable/TranchePoolTableRow";
 import { usePoolForTokenMulti } from "efi-ui/pools/usePoolForToken/usePoolForTokenMulti";
 import { useTrancheContracts } from "efi-ui/tranche/useTrancheContracts";
 

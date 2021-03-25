@@ -133,10 +133,14 @@ async function main() {
       usdcYearnVaultAssetProxyAddress: usdcYearnVaultAssetProxy.address,
 
       // tranche contracts
+      trancheFactoryAddress: trancheFactory.address,
+      interestTokenFactoryAddress: interestTokenFactory.address,
       wethTrancheAddress: wethTrancheContract.address,
       usdcTrancheAddress: usdcTrancheContract.address,
 
       // market addresses and ids
+      weightedPoolFactoryAddress: weightedPoolFactory.address,
+      convergentPoolFactoryAddress: convergentPoolFactory.address,
       marketFyWethAddress: wethFytPoolContract.address,
       marketFyWethId: wethFytPoolId,
       marketYcWethAddress: wethYcPoolContract.address,
