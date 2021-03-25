@@ -3,30 +3,30 @@ import React, { FC } from "react";
 import { Web3Provider } from "@ethersproject/providers";
 
 import tw from "efi-tailwindcss-classnames";
-import { YCCard } from "efi-ui/portfolio/YCTable/YCCard";
+import { InterestTokenCard } from "efi-ui/portfolio/InterestTokenTable/InterestTokenCard";
 import { NoWalletConnectedNonIdealState } from "efi-ui/wallets/NoWalletConnectedNonIdealState/NoWalletConnectedNonIdealState";
-import { NoYCsInWalletNonIdealState } from "efi-ui/wallets/NoYCsInWalletNonIdealState/NoYCsInWalletNonIdealState";
+import { NoInterestTokenssInWalletNonIdealState } from "efi-ui/wallets/NoInterestTokenssInWalletNonIdealState/NoInterestTokensInWalletNonIdealState";
 import { InterestToken } from "elf-contracts/types/InterestToken";
 
-interface YCPortfolioProps {
+interface InterestTokenPortfolioProps {
   library: Web3Provider | undefined;
   account: string | null | undefined;
   interestTokens: InterestToken[];
 }
 
-export const YCPortfolio: FC<YCPortfolioProps> = ({
+export const InterestTokenPortfolio: FC<InterestTokenPortfolioProps> = ({
   library,
   account,
   interestTokens,
 }) => {
-  const hasYCs = interestTokens.length;
+  const hasInterestTokens = interestTokens.length;
 
   let nonIdealStateContent = null;
   if (!account) {
     nonIdealStateContent = <NoWalletConnectedNonIdealState />;
   }
-  if (!hasYCs) {
-    nonIdealStateContent = <NoYCsInWalletNonIdealState />;
+  if (!hasInterestTokens) {
+    nonIdealStateContent = <NoInterestTokenssInWalletNonIdealState />;
   }
 
   return (
@@ -37,7 +37,7 @@ export const YCPortfolio: FC<YCPortfolioProps> = ({
         </div>
       ) : (
         interestTokens.map((yieldCoupon) => [
-          <YCCard
+          <InterestTokenCard
             key={yieldCoupon.address}
             library={library}
             account={account}

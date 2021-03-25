@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 
 import tw from "efi-tailwindcss-classnames";
-import { YCCard } from "efi-ui/portfolio/YCTable/YCCard";
+import { InterestTokenCard } from "efi-ui/portfolio/InterestTokenTable/InterestTokenCard";
 import { Web3Provider } from "@ethersproject/providers";
 import { InterestToken } from "elf-contracts/types/InterestToken";
 
@@ -30,7 +30,7 @@ export const YCTable: FC<YCTableProps> = ({
   return (
     <div data-testid="yc-table" className={tw("flex", "flex-col", "w-full")}>
       {interestTokens.map((yieldCoupon) => (
-        <YCCard
+        <InterestTokenCard
           key={yieldCoupon.address}
           library={library}
           account={account}

@@ -7,9 +7,9 @@ import { t } from "ttag";
 import { useNavigation } from "efi-ui/navigation/hooks/useTab";
 import { Navigation } from "efi-ui/navigation/navigation";
 
-interface NoYCsInWalletNonIdealStateProps {}
+interface NoITsInWalletNonIdealStateProps {}
 
-export const NoYCsInWalletNonIdealState: FC<NoYCsInWalletNonIdealStateProps> = () => {
+export const NoInterestTokenssInWalletNonIdealState: FC<NoITsInWalletNonIdealStateProps> = () => {
   const { changeTab } = useNavigation();
   const goToMint = useCallback(() => changeTab(Navigation.MINT), [changeTab]);
   return (

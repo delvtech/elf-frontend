@@ -9,9 +9,9 @@ import { useFiatBalanceAllTranches } from "efi-ui/portfolio/hooks/useTotalFYTFia
 import { useTranchesWithBalance } from "efi-ui/portfolio/hooks/useTranchesWithBalance";
 import { LiquidityPositionPortfolio } from "efi-ui/portfolio/LiquidityPositionPortfolio/LiquidityPositionPortfolio";
 import { PortfolioTab } from "efi-ui/portfolio/PortfolioTabs/PortfolioTabs";
-import { YCPortfolio } from "efi-ui/portfolio/YCPortfolio/YCPortfolio";
+import { InterestTokenPortfolio } from "efi-ui/portfolio/InterestTokenPortfolio/InterestTokenPortfolio";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
-import { useInterestTokensWithBalance } from "efi-ui/yieldcoupon/useYCsWithBalance/useYCsWithBalance";
+import { useInterestTokensWithBalance } from "efi-ui/interestToken/useInterestTokensWithBalance/useInterestTokensWithBalance";
 
 import { useFiatBalanceAllYieldCoupons } from "./useFiatBalanceAllYieldCoupons";
 
@@ -52,7 +52,7 @@ export function usePortfolioTabs(
       quantity: ycsWithBalance.length,
       totalFiatValue: totalFiatBalanceAllYCs,
       contentRenderer: () => (
-        <YCPortfolio
+        <InterestTokenPortfolio
           library={library}
           account={account}
           interestTokens={ycsWithBalance}
