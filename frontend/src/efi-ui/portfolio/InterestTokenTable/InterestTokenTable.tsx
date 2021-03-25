@@ -5,7 +5,7 @@ import { InterestTokenCard } from "efi-ui/portfolio/InterestTokenTable/InterestT
 import { Web3Provider } from "@ethersproject/providers";
 import { InterestToken } from "elf-contracts/types/InterestToken";
 
-interface YCTableProps {
+interface InterestTokenTableProps {
   library: Web3Provider | undefined;
   account: string | null | undefined;
   interestTokens: InterestToken[];
@@ -16,25 +16,28 @@ interface YCTableProps {
 //   t`Quantity`,
 //   t`Current exit value`,
 //   t`Current acc. value`,
-//   t`Yield rate (YC)`,
+//   t`Yield rate (InterestToken)`,
 //   t`Yield rate (Underlying)`,
 //   t`Maturation date`,
 //   t`Quick actions`,
 // ];
 
-export const YCTable: FC<YCTableProps> = ({
+export const InterestTokenTable: FC<InterestTokenTableProps> = ({
   library,
   account,
   interestTokens,
 }) => {
   return (
-    <div data-testid="yc-table" className={tw("flex", "flex-col", "w-full")}>
-      {interestTokens.map((yieldCoupon) => (
+    <div
+      data-testid="interesttoken-table"
+      className={tw("flex", "flex-col", "w-full")}
+    >
+      {interestTokens.map((interestToken) => (
         <InterestTokenCard
-          key={yieldCoupon.address}
+          key={interestToken.address}
           library={library}
           account={account}
-          interestToken={yieldCoupon}
+          interestToken={interestToken}
         />
       ))}
     </div>

@@ -13,7 +13,7 @@ import { InterestTokenPortfolio } from "efi-ui/portfolio/InterestTokenPortfolio/
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useInterestTokensWithBalance } from "efi-ui/interestToken/useInterestTokensWithBalance/useInterestTokensWithBalance";
 
-import { useFiatBalanceAllYieldCoupons } from "./useFiatBalanceAllYieldCoupons";
+import { useFiatBalanceAllInterestTokens } from "./useFiatBalanceAllInterestTokens";
 
 export function usePortfolioTabs(
   library: Web3Provider | undefined,
@@ -26,11 +26,10 @@ export function usePortfolioTabs(
     account,
     provider
   );
-  const { ycsWithBalance, totalFiatBalanceAllYCs } = useYCTab(
-    library,
-    account,
-    provider
-  );
+  const {
+    interestTokensWithBalance,
+    totalFiatBalanceAllInterestTokens,
+  } = useInterestTokenTab(library, account, provider);
 
   return [
     {
@@ -47,15 +46,15 @@ export function usePortfolioTabs(
       ),
     },
     {
-      id: "yield-coupons",
-      name: t`Yield Coupons`,
-      quantity: ycsWithBalance.length,
-      totalFiatValue: totalFiatBalanceAllYCs,
+      id: "interest-tokens",
+      name: t`Interest Tokens`,
+      quantity: interestTokensWithBalance.length,
+      totalFiatValue: totalFiatBalanceAllInterestTokens,
       contentRenderer: () => (
         <InterestTokenPortfolio
           library={library}
           account={account}
-          interestTokens={ycsWithBalance}
+          interestTokens={interestTokensWithBalance}
         />
       ),
     },
@@ -83,19 +82,22 @@ function useFYTTab(
   return { tranchesWithBalance, totalFiatBalanceAllTranches };
 }
 
-function useYCTab(
+function useInterestTokenTab(
   library: Web3Provider | undefined,
   account: string | null | undefined,
   provider?: Provider
 ) {
   const { currency } = useCurrencyPref();
-  const ycsWithBalance = useInterestTokensWithBalance(account, provider);
-  const totalFiatBalanceAllYCs = useFiatBalanceAllYieldCoupons(
+  const interestTokensWithBalance = useInterestTokensWithBalance(
+    account,
+    provider
+  );
+  const totalFiatBalanceAllInterestTokens = useFiatBalanceAllInterestTokens(
     library,
     account,
-    ycsWithBalance,
+    interestTokensWithBalance,
     currency
   );
 
-  return { ycsWithBalance, totalFiatBalanceAllYCs };
+  return { interestTokensWithBalance, totalFiatBalanceAllInterestTokens };
 }

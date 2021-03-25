@@ -36,12 +36,12 @@ export const InterestTokenPortfolio: FC<InterestTokenPortfolioProps> = ({
           {nonIdealStateContent}
         </div>
       ) : (
-        interestTokens.map((yieldCoupon) => [
+        interestTokens.map((interestToken) => [
           <InterestTokenCard
-            key={yieldCoupon.address}
+            key={interestToken.address}
             library={library}
             account={account}
-            interestToken={yieldCoupon}
+            interestToken={interestToken}
           />,
         ])
       )}

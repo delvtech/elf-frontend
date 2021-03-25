@@ -15,7 +15,7 @@ export const NoInterestTokenssInWalletNonIdealState: FC<NoITsInWalletNonIdealSta
   return (
     <NonIdealState
       icon={IconNames.BANK_ACCOUNT}
-      description={t`This wallet does not contain any Yield Coupons.`}
+      description={t`This wallet does not contain any Interest Tokens.`}
       action={
         <Button outlined large onClick={goToMint}>{t`Go to Mint`}</Button>
       }
