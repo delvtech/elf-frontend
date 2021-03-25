@@ -9,7 +9,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 
-import { ChooseBaseAssetStep } from "../ChooseBaseAssetStep/ChooseBaseAssetStep";
+import { BaseAssetTabs } from "../BaseAssetTabs/BaseAssetTabs";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 
 interface MintViewProps extends RouteComponentProps {}
@@ -34,7 +34,7 @@ export const MintView: FC<MintViewProps> = () => {
         title: t`Choose a base asset`,
         description: t`To begin minting yield tokens, pick a base asset and yield position from the options below:`,
         content: (
-          <ChooseBaseAssetStep
+          <BaseAssetTabs
             account={account}
             onInvestmentAmountChange={setInvestmentAmount}
           />

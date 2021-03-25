@@ -9,9 +9,9 @@ import { EthIcon } from "efi-ui/ethereum/EthIcon";
 import { NextStepCallout } from "efi-ui/mint/ChooseBaseAssetStep/NextStepCallout";
 
 import { MintCard, MintCardProps } from "../MintCard/MintCard";
-import { NoWalletConnectedCallout } from "./NoWalletConnectedCallout";
+import { NoWalletConnectedCallout } from "../ChooseBaseAssetStep/NoWalletConnectedCallout";
 
-interface ChooseBaseAssetStepProps {
+interface BaseAssetTabsProps {
   account: string | null | undefined;
   onInvestmentAmountChange: (amount: number) => void;
 }
@@ -43,7 +43,7 @@ const baseAssetInfos: Omit<MintCardProps, "onInvestmentAmountChange">[] = [
   },
 ];
 
-export const ChooseBaseAssetStep: FC<ChooseBaseAssetStepProps> = ({
+export const BaseAssetTabs: FC<BaseAssetTabsProps> = ({
   account,
   onInvestmentAmountChange,
 }) => {
