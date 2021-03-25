@@ -33,10 +33,10 @@ interface MockPoolFactoryInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "vault", data: BytesLike): Result;
 
   events: {
-    "PoolCreated(address)": EventFragment;
+    "PoolRegistered(address)": EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "PoolCreated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "PoolRegistered"): EventFragment;
 }
 
 export class MockPoolFactory extends Contract {
@@ -81,7 +81,7 @@ export class MockPoolFactory extends Contract {
   };
 
   filters: {
-    PoolCreated(pool: string | null): EventFilter;
+    PoolRegistered(pool: string | null): EventFilter;
   };
 
   estimateGas: {

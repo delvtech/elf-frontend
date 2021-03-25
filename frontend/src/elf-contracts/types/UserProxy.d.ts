@@ -26,18 +26,21 @@ interface UserProxyInterface extends ethers.utils.Interface {
     "authorize(address)": FunctionFragment;
     "authorized(address)": FunctionFragment;
     "deauthorize(address)": FunctionFragment;
+    "deprecate()": FunctionFragment;
     "isAuthorized(address)": FunctionFragment;
     "isFrozen()": FunctionFragment;
     "mint(uint256,address,uint256,address)": FunctionFragment;
     "mintPermit(uint256,address,uint256,address,uint8,bytes32,bytes32)": FunctionFragment;
     "owner()": FunctionFragment;
     "setIsFrozen(bool)": FunctionFragment;
+    "setOwner(address)": FunctionFragment;
     "weth()": FunctionFragment;
   };
 
   encodeFunctionData(functionFragment: "authorize", values: [string]): string;
   encodeFunctionData(functionFragment: "authorized", values: [string]): string;
   encodeFunctionData(functionFragment: "deauthorize", values: [string]): string;
+  encodeFunctionData(functionFragment: "deprecate", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "isAuthorized",
     values: [string]
@@ -64,6 +67,7 @@ interface UserProxyInterface extends ethers.utils.Interface {
     functionFragment: "setIsFrozen",
     values: [boolean]
   ): string;
+  encodeFunctionData(functionFragment: "setOwner", values: [string]): string;
   encodeFunctionData(functionFragment: "weth", values?: undefined): string;
 
   decodeFunctionResult(functionFragment: "authorize", data: BytesLike): Result;
@@ -72,6 +76,7 @@ interface UserProxyInterface extends ethers.utils.Interface {
     functionFragment: "deauthorize",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "deprecate", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "isAuthorized",
     data: BytesLike
@@ -84,6 +89,7 @@ interface UserProxyInterface extends ethers.utils.Interface {
     functionFragment: "setIsFrozen",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "setOwner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "weth", data: BytesLike): Result;
 
   events: {};
@@ -127,55 +133,56 @@ export class UserProxy extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    isAuthorized(
-      who: string,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
+    deprecate(overrides?: Overrides): Promise<ContractTransaction>;
+
+    "deprecate()"(overrides?: Overrides): Promise<ContractTransaction>;
+
+    isAuthorized(who: string, overrides?: CallOverrides): Promise<[boolean]>;
 
     "isAuthorized(address)"(
       who: string,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
 
     isFrozen(overrides?: CallOverrides): Promise<[boolean]>;
 
     "isFrozen()"(overrides?: CallOverrides): Promise<[boolean]>;
 
     mint(
-      amount: BigNumberish,
-      underlying: string,
-      expiration: BigNumberish,
-      elf: string,
+      _amount: BigNumberish,
+      _underlying: string,
+      _expiration: BigNumberish,
+      _position: string,
       overrides?: PayableOverrides
     ): Promise<ContractTransaction>;
 
     "mint(uint256,address,uint256,address)"(
-      amount: BigNumberish,
-      underlying: string,
-      expiration: BigNumberish,
-      elf: string,
+      _amount: BigNumberish,
+      _underlying: string,
+      _expiration: BigNumberish,
+      _position: string,
       overrides?: PayableOverrides
     ): Promise<ContractTransaction>;
 
     mintPermit(
-      amount: BigNumberish,
-      underlying: string,
-      expiration: BigNumberish,
-      elf: string,
-      v: BigNumberish,
-      r: BytesLike,
-      s: BytesLike,
+      _amount: BigNumberish,
+      _underlying: string,
+      _expiration: BigNumberish,
+      _position: string,
+      _v: BigNumberish,
+      _r: BytesLike,
+      _s: BytesLike,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     "mintPermit(uint256,address,uint256,address,uint8,bytes32,bytes32)"(
-      amount: BigNumberish,
-      underlying: string,
-      expiration: BigNumberish,
-      elf: string,
-      v: BigNumberish,
-      r: BytesLike,
-      s: BytesLike,
+      _amount: BigNumberish,
+      _underlying: string,
+      _expiration: BigNumberish,
+      _position: string,
+      _v: BigNumberish,
+      _r: BytesLike,
+      _s: BytesLike,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
@@ -184,12 +191,19 @@ export class UserProxy extends Contract {
     "owner()"(overrides?: CallOverrides): Promise<[string]>;
 
     setIsFrozen(
-      newState: boolean,
+      _newState: boolean,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     "setIsFrozen(bool)"(
-      newState: boolean,
+      _newState: boolean,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    setOwner(who: string, overrides?: Overrides): Promise<ContractTransaction>;
+
+    "setOwner(address)"(
+      who: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
@@ -219,55 +233,56 @@ export class UserProxy extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  isAuthorized(
-    who: string,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
+  deprecate(overrides?: Overrides): Promise<ContractTransaction>;
+
+  "deprecate()"(overrides?: Overrides): Promise<ContractTransaction>;
+
+  isAuthorized(who: string, overrides?: CallOverrides): Promise<boolean>;
 
   "isAuthorized(address)"(
     who: string,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
+    overrides?: CallOverrides
+  ): Promise<boolean>;
 
   isFrozen(overrides?: CallOverrides): Promise<boolean>;
 
   "isFrozen()"(overrides?: CallOverrides): Promise<boolean>;
 
   mint(
-    amount: BigNumberish,
-    underlying: string,
-    expiration: BigNumberish,
-    elf: string,
+    _amount: BigNumberish,
+    _underlying: string,
+    _expiration: BigNumberish,
+    _position: string,
     overrides?: PayableOverrides
   ): Promise<ContractTransaction>;
 
   "mint(uint256,address,uint256,address)"(
-    amount: BigNumberish,
-    underlying: string,
-    expiration: BigNumberish,
-    elf: string,
+    _amount: BigNumberish,
+    _underlying: string,
+    _expiration: BigNumberish,
+    _position: string,
     overrides?: PayableOverrides
   ): Promise<ContractTransaction>;
 
   mintPermit(
-    amount: BigNumberish,
-    underlying: string,
-    expiration: BigNumberish,
-    elf: string,
-    v: BigNumberish,
-    r: BytesLike,
-    s: BytesLike,
+    _amount: BigNumberish,
+    _underlying: string,
+    _expiration: BigNumberish,
+    _position: string,
+    _v: BigNumberish,
+    _r: BytesLike,
+    _s: BytesLike,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   "mintPermit(uint256,address,uint256,address,uint8,bytes32,bytes32)"(
-    amount: BigNumberish,
-    underlying: string,
-    expiration: BigNumberish,
-    elf: string,
-    v: BigNumberish,
-    r: BytesLike,
-    s: BytesLike,
+    _amount: BigNumberish,
+    _underlying: string,
+    _expiration: BigNumberish,
+    _position: string,
+    _v: BigNumberish,
+    _r: BytesLike,
+    _s: BytesLike,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -276,12 +291,19 @@ export class UserProxy extends Contract {
   "owner()"(overrides?: CallOverrides): Promise<string>;
 
   setIsFrozen(
-    newState: boolean,
+    _newState: boolean,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   "setIsFrozen(bool)"(
-    newState: boolean,
+    _newState: boolean,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  setOwner(who: string, overrides?: Overrides): Promise<ContractTransaction>;
+
+  "setOwner(address)"(
+    who: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -308,6 +330,10 @@ export class UserProxy extends Contract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    deprecate(overrides?: CallOverrides): Promise<void>;
+
+    "deprecate()"(overrides?: CallOverrides): Promise<void>;
+
     isAuthorized(who: string, overrides?: CallOverrides): Promise<boolean>;
 
     "isAuthorized(address)"(
@@ -320,40 +346,40 @@ export class UserProxy extends Contract {
     "isFrozen()"(overrides?: CallOverrides): Promise<boolean>;
 
     mint(
-      amount: BigNumberish,
-      underlying: string,
-      expiration: BigNumberish,
-      elf: string,
+      _amount: BigNumberish,
+      _underlying: string,
+      _expiration: BigNumberish,
+      _position: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
     "mint(uint256,address,uint256,address)"(
-      amount: BigNumberish,
-      underlying: string,
-      expiration: BigNumberish,
-      elf: string,
+      _amount: BigNumberish,
+      _underlying: string,
+      _expiration: BigNumberish,
+      _position: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
     mintPermit(
-      amount: BigNumberish,
-      underlying: string,
-      expiration: BigNumberish,
-      elf: string,
-      v: BigNumberish,
-      r: BytesLike,
-      s: BytesLike,
+      _amount: BigNumberish,
+      _underlying: string,
+      _expiration: BigNumberish,
+      _position: string,
+      _v: BigNumberish,
+      _r: BytesLike,
+      _s: BytesLike,
       overrides?: CallOverrides
     ): Promise<void>;
 
     "mintPermit(uint256,address,uint256,address,uint8,bytes32,bytes32)"(
-      amount: BigNumberish,
-      underlying: string,
-      expiration: BigNumberish,
-      elf: string,
-      v: BigNumberish,
-      r: BytesLike,
-      s: BytesLike,
+      _amount: BigNumberish,
+      _underlying: string,
+      _expiration: BigNumberish,
+      _position: string,
+      _v: BigNumberish,
+      _r: BytesLike,
+      _s: BytesLike,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -361,12 +387,16 @@ export class UserProxy extends Contract {
 
     "owner()"(overrides?: CallOverrides): Promise<string>;
 
-    setIsFrozen(newState: boolean, overrides?: CallOverrides): Promise<void>;
+    setIsFrozen(_newState: boolean, overrides?: CallOverrides): Promise<void>;
 
     "setIsFrozen(bool)"(
-      newState: boolean,
+      _newState: boolean,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    setOwner(who: string, overrides?: CallOverrides): Promise<void>;
+
+    "setOwner(address)"(who: string, overrides?: CallOverrides): Promise<void>;
 
     weth(overrides?: CallOverrides): Promise<string>;
 
@@ -397,11 +427,15 @@ export class UserProxy extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    isAuthorized(who: string, overrides?: Overrides): Promise<BigNumber>;
+    deprecate(overrides?: Overrides): Promise<BigNumber>;
+
+    "deprecate()"(overrides?: Overrides): Promise<BigNumber>;
+
+    isAuthorized(who: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     "isAuthorized(address)"(
       who: string,
-      overrides?: Overrides
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     isFrozen(overrides?: CallOverrides): Promise<BigNumber>;
@@ -409,40 +443,40 @@ export class UserProxy extends Contract {
     "isFrozen()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     mint(
-      amount: BigNumberish,
-      underlying: string,
-      expiration: BigNumberish,
-      elf: string,
+      _amount: BigNumberish,
+      _underlying: string,
+      _expiration: BigNumberish,
+      _position: string,
       overrides?: PayableOverrides
     ): Promise<BigNumber>;
 
     "mint(uint256,address,uint256,address)"(
-      amount: BigNumberish,
-      underlying: string,
-      expiration: BigNumberish,
-      elf: string,
+      _amount: BigNumberish,
+      _underlying: string,
+      _expiration: BigNumberish,
+      _position: string,
       overrides?: PayableOverrides
     ): Promise<BigNumber>;
 
     mintPermit(
-      amount: BigNumberish,
-      underlying: string,
-      expiration: BigNumberish,
-      elf: string,
-      v: BigNumberish,
-      r: BytesLike,
-      s: BytesLike,
+      _amount: BigNumberish,
+      _underlying: string,
+      _expiration: BigNumberish,
+      _position: string,
+      _v: BigNumberish,
+      _r: BytesLike,
+      _s: BytesLike,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     "mintPermit(uint256,address,uint256,address,uint8,bytes32,bytes32)"(
-      amount: BigNumberish,
-      underlying: string,
-      expiration: BigNumberish,
-      elf: string,
-      v: BigNumberish,
-      r: BytesLike,
-      s: BytesLike,
+      _amount: BigNumberish,
+      _underlying: string,
+      _expiration: BigNumberish,
+      _position: string,
+      _v: BigNumberish,
+      _r: BytesLike,
+      _s: BytesLike,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
@@ -450,12 +484,16 @@ export class UserProxy extends Contract {
 
     "owner()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-    setIsFrozen(newState: boolean, overrides?: Overrides): Promise<BigNumber>;
+    setIsFrozen(_newState: boolean, overrides?: Overrides): Promise<BigNumber>;
 
     "setIsFrozen(bool)"(
-      newState: boolean,
+      _newState: boolean,
       overrides?: Overrides
     ): Promise<BigNumber>;
+
+    setOwner(who: string, overrides?: Overrides): Promise<BigNumber>;
+
+    "setOwner(address)"(who: string, overrides?: Overrides): Promise<BigNumber>;
 
     weth(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -493,14 +531,18 @@ export class UserProxy extends Contract {
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
+    deprecate(overrides?: Overrides): Promise<PopulatedTransaction>;
+
+    "deprecate()"(overrides?: Overrides): Promise<PopulatedTransaction>;
+
     isAuthorized(
       who: string,
-      overrides?: Overrides
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     "isAuthorized(address)"(
       who: string,
-      overrides?: Overrides
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     isFrozen(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -508,40 +550,40 @@ export class UserProxy extends Contract {
     "isFrozen()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     mint(
-      amount: BigNumberish,
-      underlying: string,
-      expiration: BigNumberish,
-      elf: string,
+      _amount: BigNumberish,
+      _underlying: string,
+      _expiration: BigNumberish,
+      _position: string,
       overrides?: PayableOverrides
     ): Promise<PopulatedTransaction>;
 
     "mint(uint256,address,uint256,address)"(
-      amount: BigNumberish,
-      underlying: string,
-      expiration: BigNumberish,
-      elf: string,
+      _amount: BigNumberish,
+      _underlying: string,
+      _expiration: BigNumberish,
+      _position: string,
       overrides?: PayableOverrides
     ): Promise<PopulatedTransaction>;
 
     mintPermit(
-      amount: BigNumberish,
-      underlying: string,
-      expiration: BigNumberish,
-      elf: string,
-      v: BigNumberish,
-      r: BytesLike,
-      s: BytesLike,
+      _amount: BigNumberish,
+      _underlying: string,
+      _expiration: BigNumberish,
+      _position: string,
+      _v: BigNumberish,
+      _r: BytesLike,
+      _s: BytesLike,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     "mintPermit(uint256,address,uint256,address,uint8,bytes32,bytes32)"(
-      amount: BigNumberish,
-      underlying: string,
-      expiration: BigNumberish,
-      elf: string,
-      v: BigNumberish,
-      r: BytesLike,
-      s: BytesLike,
+      _amount: BigNumberish,
+      _underlying: string,
+      _expiration: BigNumberish,
+      _position: string,
+      _v: BigNumberish,
+      _r: BytesLike,
+      _s: BytesLike,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
@@ -550,12 +592,19 @@ export class UserProxy extends Contract {
     "owner()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     setIsFrozen(
-      newState: boolean,
+      _newState: boolean,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     "setIsFrozen(bool)"(
-      newState: boolean,
+      _newState: boolean,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    setOwner(who: string, overrides?: Overrides): Promise<PopulatedTransaction>;
+
+    "setOwner(address)"(
+      who: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 

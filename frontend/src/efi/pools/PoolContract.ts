@@ -1,22 +1,28 @@
+import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
 import { WeightedPool } from "elf-contracts/types/WeightedPool";
-import { YieldCurvePool } from "elf-contracts/types/YieldCurvePool";
 
 /**
- * FYTs are YieldCurvePool
- * YCs are WeightedPool
+ * Principal token pools have a custom curve that changes as the two assets
+ * converge.
  */
-export type PoolContract = YieldCurvePool | WeightedPool;
+type PrincipalTokenPool = ConvergentCurvePool;
 
-export function isYieldCurvePool(
+/**
+ * Interest token pools use standard weighted pools provided by Balancer V2.
+ */
+type InterestTokenPool = WeightedPool;
+export type PoolContract = PrincipalTokenPool | InterestTokenPool;
+
+export function isConvergentCurvePool(
   pool: PoolContract | undefined
-): pool is YieldCurvePool {
+): pool is ConvergentCurvePool {
   if (!pool) {
     return false;
   }
 
-  // YieldCurvePool has a property called `percentFee` instead of `getSwapFee`
+  // ConvergentCurvePool has a property called `percentFee` instead of `getSwapFee`
   // TODO: is there a better way to identify the type of pool we've got?
-  return !!(pool as YieldCurvePool).callStatic.percentFee;
+  return !!(pool as ConvergentCurvePool).callStatic.percentFee;
 }
 
 export function isWeightedPool(

@@ -90,7 +90,7 @@ export const BuyFYTConfirmationDrawer: FC<BuyFYTConfirmationDrawerProps> = ({
   );
   const { data: tranchePriceBigNumber } = useOnSwapGivenIn(
     pool,
-    tranche,
+    tranche as ERC20 | undefined,
     ONE_ETHER
   );
   const tranchePrice = +formatCurrency(tranchePriceBigNumber, trancheDecimals);

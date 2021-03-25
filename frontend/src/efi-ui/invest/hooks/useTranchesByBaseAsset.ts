@@ -1,5 +1,4 @@
 import { Provider } from "@ethersproject/providers";
-import { Elf__factory } from "elf-contracts/types/factories/Elf__factory";
 import { Tranche } from "elf-contracts/types/Tranche";
 import zip from "lodash.zip";
 
@@ -9,19 +8,23 @@ import { useTrancheContracts } from "efi-ui/tranche/useTrancheContracts";
 import groupBy from "lodash.groupby";
 import mapValues from "lodash.mapvalues";
 import { getQueriesData } from "efi-ui/base/queryResults";
+import { YVaultAssetProxy__factory } from "elf-contracts/types/factories/YVaultAssetProxy__factory";
 
 export function useTranchesByBaseAsset(
   provider?: Provider
 ): Record<string, Tranche[]> {
   const trancheContracts = useTrancheContracts(provider);
-  const elfAddressResults = useSmartContractReadCalls(trancheContracts, "elf");
-  const elfContracts = useSmartContractsFromFactory(
-    getQueriesData(elfAddressResults),
-    Elf__factory.connect,
+  const assetProxyAddress = useSmartContractReadCalls(
+    trancheContracts,
+    "position"
+  );
+  const assetProxyContracts = useSmartContractsFromFactory(
+    getQueriesData(assetProxyAddress),
+    YVaultAssetProxy__factory.connect,
     provider
   );
   const baseAssetAddressResults = useSmartContractReadCalls(
-    elfContracts,
+    assetProxyContracts,
     "token"
   );
 

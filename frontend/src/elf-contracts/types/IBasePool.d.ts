@@ -22,14 +22,12 @@ import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 
 interface IBasePoolInterface extends ethers.utils.Interface {
   functions: {
-    "getPoolId()": FunctionFragment;
-    "getVault()": FunctionFragment;
+    "getRate()": FunctionFragment;
     "onExitPool(bytes32,address,address,uint256[],uint256,uint256,bytes)": FunctionFragment;
     "onJoinPool(bytes32,address,address,uint256[],uint256,uint256,bytes)": FunctionFragment;
   };
 
-  encodeFunctionData(functionFragment: "getPoolId", values?: undefined): string;
-  encodeFunctionData(functionFragment: "getVault", values?: undefined): string;
+  encodeFunctionData(functionFragment: "getRate", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "onExitPool",
     values: [
@@ -55,8 +53,7 @@ interface IBasePoolInterface extends ethers.utils.Interface {
     ]
   ): string;
 
-  decodeFunctionResult(functionFragment: "getPoolId", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "getVault", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "getRate", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "onExitPool", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "onJoinPool", data: BytesLike): Result;
 
@@ -77,13 +74,9 @@ export class IBasePool extends Contract {
   interface: IBasePoolInterface;
 
   functions: {
-    getPoolId(overrides?: CallOverrides): Promise<[string]>;
+    getRate(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    "getPoolId()"(overrides?: CallOverrides): Promise<[string]>;
-
-    getVault(overrides?: CallOverrides): Promise<[string]>;
-
-    "getVault()"(overrides?: CallOverrides): Promise<[string]>;
+    "getRate()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     onExitPool(
       poolId: BytesLike,
@@ -130,13 +123,9 @@ export class IBasePool extends Contract {
     ): Promise<ContractTransaction>;
   };
 
-  getPoolId(overrides?: CallOverrides): Promise<string>;
+  getRate(overrides?: CallOverrides): Promise<BigNumber>;
 
-  "getPoolId()"(overrides?: CallOverrides): Promise<string>;
-
-  getVault(overrides?: CallOverrides): Promise<string>;
-
-  "getVault()"(overrides?: CallOverrides): Promise<string>;
+  "getRate()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   onExitPool(
     poolId: BytesLike,
@@ -183,13 +172,9 @@ export class IBasePool extends Contract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    getPoolId(overrides?: CallOverrides): Promise<string>;
+    getRate(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "getPoolId()"(overrides?: CallOverrides): Promise<string>;
-
-    getVault(overrides?: CallOverrides): Promise<string>;
-
-    "getVault()"(overrides?: CallOverrides): Promise<string>;
+    "getRate()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     onExitPool(
       poolId: BytesLike,
@@ -259,13 +244,9 @@ export class IBasePool extends Contract {
   filters: {};
 
   estimateGas: {
-    getPoolId(overrides?: CallOverrides): Promise<BigNumber>;
+    getRate(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "getPoolId()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    getVault(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "getVault()"(overrides?: CallOverrides): Promise<BigNumber>;
+    "getRate()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     onExitPool(
       poolId: BytesLike,
@@ -313,13 +294,9 @@ export class IBasePool extends Contract {
   };
 
   populateTransaction: {
-    getPoolId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    getRate(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "getPoolId()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    getVault(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "getVault()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    "getRate()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     onExitPool(
       poolId: BytesLike,

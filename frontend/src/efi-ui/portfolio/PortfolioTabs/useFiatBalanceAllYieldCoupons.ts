@@ -1,4 +1,3 @@
-import { YC } from "elf-contracts/types/YC";
 import { formatUnits } from "ethers/lib/utils";
 import zip from "lodash.zip";
 import { Currency, Money } from "ts-money";
@@ -11,16 +10,23 @@ import { useOnSwapGivenInMulti } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGi
 import { usePoolForTokenMulti } from "efi-ui/pools/usePoolForToken/usePoolForTokenMulti";
 import { usePoolPairedTokenMulti } from "efi-ui/pools/usePoolPairedToken/usePoolPairedTokenMulti";
 import { Web3Provider } from "@ethersproject/providers";
+import { InterestToken } from "elf-contracts/types/InterestToken";
+import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 
 export function useFiatBalanceAllYieldCoupons(
   library: Web3Provider | undefined,
   account: string | null | undefined,
-  yieldCoupons: YC[],
+  interestTokens: InterestToken[],
   currency: Currency
 ): Money {
   // YCs should be paired against a token we can lookup in Coingecko for fiat price
-  const markets = usePoolForTokenMulti(yieldCoupons);
-  const baseAssetTokens = usePoolPairedTokenMulti(markets, yieldCoupons);
+  const markets = usePoolForTokenMulti(
+    (interestTokens as unknown) as ERC20Shim[]
+  );
+  const baseAssetTokens = usePoolPairedTokenMulti(
+    markets,
+    (interestTokens as unknown) as ERC20Shim[]
+  );
   const baseAssetTokenSymbolResults = useSmartContractReadCalls(
     baseAssetTokens,
     "symbol"
@@ -36,7 +42,7 @@ export function useFiatBalanceAllYieldCoupons(
 
   // Get the user's balance of all the yield coupons
   const ycBalanceOfResults = useSmartContractReadCalls(
-    yieldCoupons,
+    interestTokens,
     "balanceOf",
     {
       enabled: !!account,
@@ -47,7 +53,7 @@ export function useFiatBalanceAllYieldCoupons(
   // Total value in base asset of each yield coupon
   const totalValueInBaseAssetResults = useOnSwapGivenInMulti(
     markets,
-    yieldCoupons,
+    (interestTokens as unknown) as ERC20Shim[],
     getQueriesData(ycBalanceOfResults)
   );
 

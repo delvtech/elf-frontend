@@ -11,15 +11,16 @@ import {
 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { Popover2 } from "@blueprintjs/popover2";
-import { YC__factory } from "elf-contracts/types/factories/YC__factory";
+import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
+import { InterestToken__factory } from "elf-contracts/types/factories/InterestToken__factory";
 import { WeightedPool } from "elf-contracts/types/WeightedPool";
-import { YieldCurvePool } from "elf-contracts/types/YieldCurvePool";
 import zip from "lodash.zip";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { FormGroupLabel } from "efi-ui/base/FormGroupLabel/FormGroupLabel";
 import { getQueriesData } from "efi-ui/base/queryResults";
+import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
 import { useSmartContractsFromFactory } from "efi-ui/contracts/useSmartContractsFromFactory/useSmartContractsFromFactory";
 import { TranchePoolTableRow } from "efi-ui/pools/PoolsTable/TranchePoolTableRow";
@@ -47,27 +48,32 @@ const TABLE_HEADERS: PoolsTableHeaderProps[] = [
 
 export const PoolsTable: FC<PoolsTableProps> = ({ className }) => {
   const tranches = useTrancheContracts();
-  const tranchePools = usePoolForTokenMulti(tranches) as (
-    | YieldCurvePool
-    | undefined
-  )[];
+  const tranchePools = usePoolForTokenMulti(
+    (tranches as unknown) as ERC20Shim[]
+  ) as (ConvergentCurvePool | undefined)[];
 
-  const yieldCouponAddressResults = useSmartContractReadCalls(tranches, "yc");
-  const yieldCoupons = useSmartContractsFromFactory(
-    getQueriesData(yieldCouponAddressResults),
-    YC__factory.connect
+  const interestTokenAddressResults = useSmartContractReadCalls(
+    tranches,
+    "interestToken"
   );
-  const yieldCouponPools = usePoolForTokenMulti(yieldCoupons) as (
-    | WeightedPool
-    | undefined
-  )[];
+  const interestTokens = useSmartContractsFromFactory(
+    getQueriesData(interestTokenAddressResults),
+    InterestToken__factory.connect
+  );
+  const interestTokenPools = usePoolForTokenMulti(
+    (interestTokens as unknown) as ERC20Shim[]
+  ) as (WeightedPool | undefined)[];
 
-  if (!tranchePools.length && !yieldCouponPools.length) {
+  if (!tranchePools.length && !interestTokenPools.length) {
     return <span>{t`no markets found`}</span>;
   }
 
   const tranchePoolItems = zip(tranchePools, tranches);
-  const yieldCouponPoolItems = zip(yieldCouponPools, yieldCoupons, tranches);
+  const interestTokenPoolItems = zip(
+    interestTokenPools,
+    interestTokens,
+    tranches
+  );
 
   return (
     <div className={tw("w-full")}>
@@ -132,12 +138,12 @@ export const PoolsTable: FC<PoolsTableProps> = ({ className }) => {
               />
             );
           })}
-          {yieldCouponPoolItems.map(([pool, yieldCoupon, tranche], index) => {
+          {interestTokenPoolItems.map(([pool, yieldCoupon, tranche], index) => {
             return (
               <YieldCouponPoolTableRow
                 key={pool?.contractAddress || index}
                 tranche={tranche}
-                yieldCoupon={yieldCoupon}
+                interestToken={yieldCoupon}
                 pool={pool}
               />
             );

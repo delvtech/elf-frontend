@@ -27,6 +27,7 @@ interface AuthorizableInterface extends ethers.utils.Interface {
     "deauthorize(address)": FunctionFragment;
     "isAuthorized(address)": FunctionFragment;
     "owner()": FunctionFragment;
+    "setOwner(address)": FunctionFragment;
   };
 
   encodeFunctionData(functionFragment: "authorize", values: [string]): string;
@@ -37,6 +38,7 @@ interface AuthorizableInterface extends ethers.utils.Interface {
     values: [string]
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
+  encodeFunctionData(functionFragment: "setOwner", values: [string]): string;
 
   decodeFunctionResult(functionFragment: "authorize", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "authorized", data: BytesLike): Result;
@@ -49,6 +51,7 @@ interface AuthorizableInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "setOwner", data: BytesLike): Result;
 
   events: {};
 }
@@ -91,19 +94,23 @@ export class Authorizable extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    isAuthorized(
-      who: string,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
+    isAuthorized(who: string, overrides?: CallOverrides): Promise<[boolean]>;
 
     "isAuthorized(address)"(
       who: string,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
     "owner()"(overrides?: CallOverrides): Promise<[string]>;
+
+    setOwner(who: string, overrides?: Overrides): Promise<ContractTransaction>;
+
+    "setOwner(address)"(
+      who: string,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
   };
 
   authorize(who: string, overrides?: Overrides): Promise<ContractTransaction>;
@@ -127,19 +134,23 @@ export class Authorizable extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  isAuthorized(
-    who: string,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
+  isAuthorized(who: string, overrides?: CallOverrides): Promise<boolean>;
 
   "isAuthorized(address)"(
     who: string,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
+    overrides?: CallOverrides
+  ): Promise<boolean>;
 
   owner(overrides?: CallOverrides): Promise<string>;
 
   "owner()"(overrides?: CallOverrides): Promise<string>;
+
+  setOwner(who: string, overrides?: Overrides): Promise<ContractTransaction>;
+
+  "setOwner(address)"(
+    who: string,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
 
   callStatic: {
     authorize(who: string, overrides?: CallOverrides): Promise<void>;
@@ -170,6 +181,10 @@ export class Authorizable extends Contract {
     owner(overrides?: CallOverrides): Promise<string>;
 
     "owner()"(overrides?: CallOverrides): Promise<string>;
+
+    setOwner(who: string, overrides?: CallOverrides): Promise<void>;
+
+    "setOwner(address)"(who: string, overrides?: CallOverrides): Promise<void>;
   };
 
   filters: {};
@@ -196,16 +211,20 @@ export class Authorizable extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    isAuthorized(who: string, overrides?: Overrides): Promise<BigNumber>;
+    isAuthorized(who: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     "isAuthorized(address)"(
       who: string,
-      overrides?: Overrides
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
     "owner()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    setOwner(who: string, overrides?: Overrides): Promise<BigNumber>;
+
+    "setOwner(address)"(who: string, overrides?: Overrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -241,16 +260,23 @@ export class Authorizable extends Contract {
 
     isAuthorized(
       who: string,
-      overrides?: Overrides
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     "isAuthorized(address)"(
       who: string,
-      overrides?: Overrides
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     "owner()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    setOwner(who: string, overrides?: Overrides): Promise<PopulatedTransaction>;
+
+    "setOwner(address)"(
+      who: string,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
   };
 }

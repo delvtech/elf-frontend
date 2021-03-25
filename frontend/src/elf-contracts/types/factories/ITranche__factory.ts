@@ -185,6 +185,19 @@ const _abi = [
     type: "function",
   },
   {
+    inputs: [],
+    name: "interestToken",
+    outputs: [
+      {
+        internalType: "contract IInterestToken",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [
       {
         internalType: "address",
@@ -344,7 +357,7 @@ const _abi = [
         type: "address",
       },
     ],
-    name: "withdrawFyt",
+    name: "withdrawInterest",
     outputs: [
       {
         internalType: "uint256",
@@ -368,7 +381,7 @@ const _abi = [
         type: "address",
       },
     ],
-    name: "withdrawYc",
+    name: "withdrawPrincipal",
     outputs: [
       {
         internalType: "uint256",
@@ -377,19 +390,6 @@ const _abi = [
       },
     ],
     stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "yc",
-    outputs: [
-      {
-        internalType: "contract IYC",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
     type: "function",
   },
 ];

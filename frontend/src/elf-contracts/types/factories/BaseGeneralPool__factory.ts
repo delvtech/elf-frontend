@@ -46,6 +46,19 @@ const _abi = [
     anonymous: false,
     inputs: [
       {
+        indexed: false,
+        internalType: "bool",
+        name: "active",
+        type: "bool",
+      },
+    ],
+    name: "EmergencyPeriodChanged",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
         indexed: true,
         internalType: "address",
         name: "from",
@@ -173,12 +186,61 @@ const _abi = [
   },
   {
     inputs: [],
+    name: "getAuthorizer",
+    outputs: [
+      {
+        internalType: "contract IAuthorizer",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getEmergencyPeriod",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "active",
+        type: "bool",
+      },
+      {
+        internalType: "uint256",
+        name: "endDate",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "checkEndDate",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
     name: "getPoolId",
     outputs: [
       {
         internalType: "bytes32",
         name: "",
         type: "bytes32",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getRate",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
       },
     ],
     stateMutability: "view",
@@ -505,6 +567,140 @@ const _abi = [
       },
     ],
     stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bytes32",
+        name: "poolId",
+        type: "bytes32",
+      },
+      {
+        internalType: "address",
+        name: "sender",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "recipient",
+        type: "address",
+      },
+      {
+        internalType: "uint256[]",
+        name: "currentBalances",
+        type: "uint256[]",
+      },
+      {
+        internalType: "uint256",
+        name: "latestBlockNumberUsed",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "protocolSwapFeePercentage",
+        type: "uint256",
+      },
+      {
+        internalType: "bytes",
+        name: "userData",
+        type: "bytes",
+      },
+    ],
+    name: "queryExit",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "bptIn",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256[]",
+        name: "amountsOut",
+        type: "uint256[]",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bytes32",
+        name: "poolId",
+        type: "bytes32",
+      },
+      {
+        internalType: "address",
+        name: "sender",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "recipient",
+        type: "address",
+      },
+      {
+        internalType: "uint256[]",
+        name: "currentBalances",
+        type: "uint256[]",
+      },
+      {
+        internalType: "uint256",
+        name: "latestBlockNumberUsed",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "protocolSwapFeePercentage",
+        type: "uint256",
+      },
+      {
+        internalType: "bytes",
+        name: "userData",
+        type: "bytes",
+      },
+    ],
+    name: "queryJoin",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "bptOut",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256[]",
+        name: "amountsIn",
+        type: "uint256[]",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bool",
+        name: "active",
+        type: "bool",
+      },
+    ],
+    name: "setEmergencyPeriod",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "swapFee",
+        type: "uint256",
+      },
+    ],
+    name: "setSwapFee",
+    outputs: [],
+    stateMutability: "nonpayable",
     type: "function",
   },
   {

@@ -19,25 +19,12 @@ export class IBasePool__factory {
 const _abi = [
   {
     inputs: [],
-    name: "getPoolId",
+    name: "getRate",
     outputs: [
       {
-        internalType: "bytes32",
+        internalType: "uint256",
         name: "",
-        type: "bytes32",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "getVault",
-    outputs: [
-      {
-        internalType: "contract IVault",
-        name: "",
-        type: "address",
+        type: "uint256",
       },
     ],
     stateMutability: "view",

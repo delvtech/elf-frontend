@@ -27,6 +27,8 @@ interface AuthorizerInterface extends ethers.utils.Interface {
     "getRoleMember(bytes32,uint256)": FunctionFragment;
     "getRoleMemberCount(bytes32)": FunctionFragment;
     "grantRole(bytes32,address)": FunctionFragment;
+    "grantRoles(bytes32[],address)": FunctionFragment;
+    "grantRolesToMany(bytes32[],address[])": FunctionFragment;
     "hasRole(bytes32,address)": FunctionFragment;
     "renounceRole(bytes32,address)": FunctionFragment;
     "revokeRole(bytes32,address)": FunctionFragment;
@@ -51,6 +53,14 @@ interface AuthorizerInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "grantRole",
     values: [BytesLike, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "grantRoles",
+    values: [BytesLike[], string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "grantRolesToMany",
+    values: [BytesLike[], string[]]
   ): string;
   encodeFunctionData(
     functionFragment: "hasRole",
@@ -82,6 +92,11 @@ interface AuthorizerInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "grantRole", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "grantRoles", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "grantRolesToMany",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "hasRole", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "renounceRole",
@@ -156,6 +171,30 @@ export class Authorizer extends Contract {
     "grantRole(bytes32,address)"(
       role: BytesLike,
       account: string,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    grantRoles(
+      roles: BytesLike[],
+      account: string,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "grantRoles(bytes32[],address)"(
+      roles: BytesLike[],
+      account: string,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    grantRolesToMany(
+      roles: BytesLike[],
+      accounts: string[],
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "grantRolesToMany(bytes32[],address[])"(
+      roles: BytesLike[],
+      accounts: string[],
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
@@ -241,6 +280,30 @@ export class Authorizer extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
+  grantRoles(
+    roles: BytesLike[],
+    account: string,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "grantRoles(bytes32[],address)"(
+    roles: BytesLike[],
+    account: string,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  grantRolesToMany(
+    roles: BytesLike[],
+    accounts: string[],
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "grantRolesToMany(bytes32[],address[])"(
+    roles: BytesLike[],
+    accounts: string[],
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
   hasRole(
     role: BytesLike,
     account: string,
@@ -320,6 +383,30 @@ export class Authorizer extends Contract {
     "grantRole(bytes32,address)"(
       role: BytesLike,
       account: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    grantRoles(
+      roles: BytesLike[],
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "grantRoles(bytes32[],address)"(
+      roles: BytesLike[],
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    grantRolesToMany(
+      roles: BytesLike[],
+      accounts: string[],
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "grantRolesToMany(bytes32[],address[])"(
+      roles: BytesLike[],
+      accounts: string[],
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -429,6 +516,30 @@ export class Authorizer extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
+    grantRoles(
+      roles: BytesLike[],
+      account: string,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "grantRoles(bytes32[],address)"(
+      roles: BytesLike[],
+      account: string,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    grantRolesToMany(
+      roles: BytesLike[],
+      accounts: string[],
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "grantRolesToMany(bytes32[],address[])"(
+      roles: BytesLike[],
+      accounts: string[],
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
     hasRole(
       role: BytesLike,
       account: string,
@@ -516,6 +627,30 @@ export class Authorizer extends Contract {
     "grantRole(bytes32,address)"(
       role: BytesLike,
       account: string,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    grantRoles(
+      roles: BytesLike[],
+      account: string,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "grantRoles(bytes32[],address)"(
+      roles: BytesLike[],
+      account: string,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    grantRolesToMany(
+      roles: BytesLike[],
+      accounts: string[],
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "grantRolesToMany(bytes32[],address[])"(
+      roles: BytesLike[],
+      accounts: string[],
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 

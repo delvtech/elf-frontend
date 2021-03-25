@@ -7,12 +7,12 @@ import "./interfaces/ITranche.sol";
 import "./interfaces/ITrancheFactory.sol";
 import "./interfaces/IInterestToken.sol";
 
-import "./libraries/ERC20.sol";
+import "./libraries/ERC20Permit.sol";
 import "./libraries/DateString.sol";
 
 /// @author Element Finance
 /// @title Tranche
-contract Tranche is ERC20, ITranche {
+contract Tranche is ERC20Permit, ITranche {
     IInterestToken public immutable override interestToken;
     IWrappedPosition public immutable position;
     IERC20 public immutable underlying;
@@ -30,7 +30,7 @@ contract Tranche is ERC20, ITranche {
     uint256 internal constant _SLIPPAGE_BP = 1e13;
 
     /// @notice Constructs this contract
-    constructor() ERC20("Element Principal Token", "ELF:") {
+    constructor() ERC20Permit("Element Principal Token", "ELF:") {
         // Assume the caller is the Tranche factory.
         ITrancheFactory trancheFactory = ITrancheFactory(msg.sender);
         (
@@ -61,7 +61,7 @@ contract Tranche is ERC20, ITranche {
     }
 
     /**
-    @notice Deposit wrapped position tokens and receive interest and Principal ERC20 tokens.
+    @notice Deposit wrapped position tokens and receive interest and Principal ERC20Permit tokens.
             If interest has already been accrued by the wrapped position
             tokens held in this contract, the number of Principal tokens minted is
             reduced in order to pay for the accrued interest.

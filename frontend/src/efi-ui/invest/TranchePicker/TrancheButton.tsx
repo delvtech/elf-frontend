@@ -17,8 +17,9 @@ import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
 import { ONE_ETHER } from "efi/crypto/ethereum";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
-import { usePositionForTranche } from "efi-ui/tranche/usePositionForTranche";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
+import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
+import { useUnderlyingVaultForTranche } from "efi-ui/tranche/useUnderlyingVaultForTranche";
 
 interface TrancheButtonProps {
   library: Web3Provider | undefined;
@@ -34,7 +35,7 @@ export const TrancheButton: FC<TrancheButtonProps> = ({ tranche, onClick }) => {
     "unlockTimestamp"
   );
 
-  const position = usePositionForTranche(tranche);
+  const position = useUnderlyingVaultForTranche(tranche);
   const { data: positionName } = useSmartContractReadCall(position, "name");
 
   const decimals = getQueryData(decimalsResult);
@@ -42,15 +43,15 @@ export const TrancheButton: FC<TrancheButtonProps> = ({ tranche, onClick }) => {
     getQueryData(unlockTimestampResult)
   );
 
-  const pool = usePoolForToken(tranche, jsonRpcProvider);
-  const baseAssetToken = usePoolPairedToken(pool, tranche);
+  const pool = usePoolForToken(tranche as ERC20Shim, jsonRpcProvider);
+  const baseAssetToken = usePoolPairedToken(pool, tranche as ERC20Shim);
   const { data: baseAssetName } = useSmartContractReadCall(
     baseAssetToken,
     "symbol"
   );
   const tranchePriceResult = useOnSwapGivenIn(
     pool,
-    tranche,
+    tranche as ERC20Shim,
     ONE_ETHER // TODO: make this 1 of the tranche asset instead
   );
   const tranchePriceBigNumber = getQueryData(tranchePriceResult);
