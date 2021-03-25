@@ -19,7 +19,7 @@ import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadC
 import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
 import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
-import { useTrancheForInterestToken } from "efi-ui/portfolio/YCTable/useTrancheForInterestToken";
+import { useTrancheForInterestToken } from "efi-ui/tranche/useTrancheForInterestToken";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";

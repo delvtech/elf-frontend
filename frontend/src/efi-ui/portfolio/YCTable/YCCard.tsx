@@ -39,7 +39,7 @@ import { formatMoney } from "efi/money/formatMoney";
 
 import { useUnderlyingVaultForTranche } from "../../tranche/useUnderlyingVaultForTranche";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
-import { useTrancheForInterestToken } from "efi-ui/portfolio/YCTable/useTrancheForInterestToken";
+import { useTrancheForInterestToken } from "efi-ui/tranche/useTrancheForInterestToken";
 
 interface YCCardProps {
   library: Web3Provider | undefined;

@@ -12,7 +12,7 @@ import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPaire
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { getTimeLeft2 } from "efi/base/time";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
-import { useTrancheForInterestToken } from "efi-ui/portfolio/YCTable/useTrancheForInterestToken";
+import { useTrancheForInterestToken } from "efi-ui/tranche/useTrancheForInterestToken";
 import { useInterestTokenForPool } from "efi-ui/pools/useInterestTokenForPool/useInterestTokenForPool";
 
 interface InterestTokenPoolTableRowProps {
