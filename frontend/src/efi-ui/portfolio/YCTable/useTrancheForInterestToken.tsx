@@ -6,7 +6,7 @@ import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadC
 import { InterestToken } from "elf-contracts/types/InterestToken";
 
 export function useTrancheForInterestToken(
-  interestToken: InterestToken
+  interestToken: InterestToken | undefined
 ): Tranche | undefined {
   const { data: trancheAddress } = useSmartContractReadCall(
     interestToken,

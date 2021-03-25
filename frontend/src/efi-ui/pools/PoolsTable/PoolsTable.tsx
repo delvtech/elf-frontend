@@ -12,23 +12,15 @@ import {
 import { IconNames } from "@blueprintjs/icons";
 import { Popover2 } from "@blueprintjs/popover2";
 import { Provider } from "@ethersproject/providers";
-import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
-import { InterestToken__factory } from "elf-contracts/types/factories/InterestToken__factory";
-import { WeightedPool } from "elf-contracts/types/WeightedPool";
 import { Signer } from "ethers";
-import zip from "lodash.zip";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { FormGroupLabel } from "efi-ui/base/FormGroupLabel/FormGroupLabel";
-import { getQueriesData } from "efi-ui/base/queryResults";
-import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
-import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
-import { useSmartContractsFromFactory } from "efi-ui/contracts/useSmartContractsFromFactory/useSmartContractsFromFactory";
 import { InterestTokenPoolTableRow } from "efi-ui/pools/PoolsTable/InterestTokenPoolTableRow";
 import { TranchePoolTableRow } from "efi-ui/pools/PoolsTable/TranchePoolTableRow";
-import { usePoolForTokenMulti } from "efi-ui/pools/usePoolForToken/usePoolForTokenMulti";
-import { useTrancheContracts } from "efi-ui/tranche/useTrancheContracts";
+import { useConvergentCurvePools } from "efi-ui/pools/useConvergentCurvePools/useConvergentCurvePools";
+import { useWeightedPools } from "efi-ui/pools/useWeightedPools/useWeightedPools";
 
 interface PoolsTableProps {
   className?: string;
@@ -53,33 +45,12 @@ export const PoolsTable: FC<PoolsTableProps> = ({
   className,
   signerOrProvider,
 }) => {
-  const tranches = useTrancheContracts(signerOrProvider);
-  const tranchePools = usePoolForTokenMulti(
-    (tranches as unknown) as ERC20Shim[]
-  ) as (ConvergentCurvePool | undefined)[];
+  const principalTokenPools = useConvergentCurvePools(signerOrProvider);
+  const interestTokenPools = useWeightedPools(signerOrProvider);
 
-  const interestTokenAddressResults = useSmartContractReadCalls(
-    tranches,
-    "interestToken"
-  );
-  const interestTokens = useSmartContractsFromFactory(
-    getQueriesData(interestTokenAddressResults),
-    InterestToken__factory.connect
-  );
-  const interestTokenPools = usePoolForTokenMulti(
-    (interestTokens as unknown) as ERC20Shim[]
-  ) as (WeightedPool | undefined)[];
-
-  if (!tranchePools.length && !interestTokenPools.length) {
+  if (!principalTokenPools.length && !interestTokenPools.length) {
     return <span>{t`no markets found`}</span>;
   }
-
-  const tranchePoolItems = zip(tranchePools, tranches);
-  const interestTokenPoolItems = zip(
-    interestTokenPools,
-    interestTokens,
-    tranches
-  );
 
   return (
     <div className={tw("w-full")}>
@@ -135,27 +106,22 @@ export const PoolsTable: FC<PoolsTableProps> = ({
           </tr>
         </thead>
         <tbody className={Classes.TEXT_LARGE}>
-          {tranchePoolItems.map(([pool, tranche], index) => {
+          {principalTokenPools.map((pool, index) => {
             return (
               <TranchePoolTableRow
                 key={pool?.contractAddress || index}
                 pool={pool}
-                tranche={tranche}
               />
             );
           })}
-          {interestTokenPoolItems.map(
-            ([pool, interestToken, tranche], index) => {
-              return (
-                <InterestTokenPoolTableRow
-                  key={pool?.contractAddress || index}
-                  tranche={tranche}
-                  interestToken={interestToken}
-                  pool={pool}
-                />
-              );
-            }
-          )}
+          {interestTokenPools.map((pool, index) => {
+            return (
+              <InterestTokenPoolTableRow
+                key={pool?.contractAddress || index}
+                pool={pool}
+              />
+            );
+          })}
         </tbody>
       </HTMLTable>
     </div>

@@ -6,12 +6,12 @@ import { WeightedPoolFactory__factory } from "elf-contracts/types/factories/Weig
 import { Signer } from "ethers";
 
 import ContractAddresses from "efi/contracts/contractsJson";
-import { PoolContract } from "efi/pools/PoolContract";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
+import { WeightedPool } from "elf-contracts/types/WeightedPool";
 
 export function useWeightedPools(
   signerOrProvider: Signer | Provider | undefined
-): (PoolContract | undefined)[] {
+): (WeightedPool | undefined)[] {
   const { weightedPoolFactoryAddress } = ContractAddresses;
 
   const weightedPoolFactory = WeightedPoolFactory__factory.connect(
@@ -31,7 +31,7 @@ export function useWeightedPools(
   const { data: weightedEvents } = weightedQueryResult;
 
   const weightedPoolContracts =
-    weightedEvents?.map<PoolContract>((event) =>
+    weightedEvents?.map<WeightedPool>((event) =>
       WeightedPool__factory.connect(
         event.args?.pool,
         signerOrProvider ?? jsonRpcProvider
