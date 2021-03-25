@@ -9,7 +9,7 @@ import { Navigation } from "efi-ui/navigation/navigation";
 
 interface NoITsInWalletNonIdealStateProps {}
 
-export const NoInterestTokenssInWalletNonIdealState: FC<NoITsInWalletNonIdealStateProps> = () => {
+export const NoInterestTokensInWalletNonIdealState: FC<NoITsInWalletNonIdealStateProps> = () => {
   const { changeTab } = useNavigation();
   const goToMint = useCallback(() => changeTab(Navigation.MINT), [changeTab]);
   return (

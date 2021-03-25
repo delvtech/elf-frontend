@@ -5,7 +5,7 @@ import { Web3Provider } from "@ethersproject/providers";
 import tw from "efi-tailwindcss-classnames";
 import { InterestTokenCard } from "efi-ui/portfolio/InterestTokenTable/InterestTokenCard";
 import { NoWalletConnectedNonIdealState } from "efi-ui/wallets/NoWalletConnectedNonIdealState/NoWalletConnectedNonIdealState";
-import { NoInterestTokenssInWalletNonIdealState } from "efi-ui/wallets/NoInterestTokenssInWalletNonIdealState/NoInterestTokensInWalletNonIdealState";
+import { NoInterestTokensInWalletNonIdealState } from "efi-ui/wallets/NoInterestTokenssInWalletNonIdealState/NoInterestTokensInWalletNonIdealState";
 import { InterestToken } from "elf-contracts/types/InterestToken";
 
 interface InterestTokenPortfolioProps {
@@ -26,7 +26,7 @@ export const InterestTokenPortfolio: FC<InterestTokenPortfolioProps> = ({
     nonIdealStateContent = <NoWalletConnectedNonIdealState />;
   }
   if (!hasInterestTokens) {
-    nonIdealStateContent = <NoInterestTokenssInWalletNonIdealState />;
+    nonIdealStateContent = <NoInterestTokensInWalletNonIdealState />;
   }
 
   return (
