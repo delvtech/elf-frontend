@@ -1,31 +1,20 @@
 import { Provider } from "@ethersproject/providers";
 import { Tranche } from "elf-contracts/types/Tranche";
-import zip from "lodash.zip";
-
-import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
-import { useSmartContractsFromFactory } from "efi-ui/contracts/useSmartContractsFromFactory/useSmartContractsFromFactory";
-import { useTrancheContracts } from "efi-ui/tranche/useTrancheContracts";
 import groupBy from "lodash.groupby";
 import mapValues from "lodash.mapvalues";
+import zip from "lodash.zip";
+
 import { getQueriesData } from "efi-ui/base/queryResults";
-import { YVaultAssetProxy__factory } from "elf-contracts/types/factories/YVaultAssetProxy__factory";
+import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
+import { useTrancheContracts } from "efi-ui/tranche/useTrancheContracts";
 
 export function useTranchesByBaseAsset(
   provider?: Provider
 ): Record<string, Tranche[]> {
   const trancheContracts = useTrancheContracts(provider);
-  const assetProxyAddress = useSmartContractReadCalls(
-    trancheContracts,
-    "position"
-  );
-  const assetProxyContracts = useSmartContractsFromFactory(
-    getQueriesData(assetProxyAddress),
-    YVaultAssetProxy__factory.connect,
-    provider
-  );
   const baseAssetAddressResults = useSmartContractReadCalls(
-    assetProxyContracts,
-    "token"
+    trancheContracts,
+    "underlying"
   );
 
   const zipped = zip(trancheContracts, getQueriesData(baseAssetAddressResults));
