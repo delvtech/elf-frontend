@@ -44,7 +44,7 @@ export async function setupPrincipalTokenPool(
   // trade some tranche assets for some base assets
   console.log("--batchSwapIn");
   const swapReceipt = await batchSwapIn(
-    trancheContract,
+    (trancheContract as unknown) as ERC20,
     (baseAssetContract as unknown) as ERC20,
     poolId,
     sender,
