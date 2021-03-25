@@ -7,24 +7,24 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
-import styles from "efi-ui/invest/BaseAssetPicker/styles.module.css";
+import styles from "efi-ui/crypto/CryptoAssetPicker/styles.module.css";
 
-import { BaseAssetButton } from "./BaseAssetButton";
+import { CryptoAssetButton } from "./CryptoAssetButton";
 
-interface BaseAssetPickerProps {
+interface CryptoAssetPickerProps {
   className?: string;
-  baseAssets: CryptoAssetWithIcon[];
-  activeBaseAsset: CryptoAssetWithIcon;
-  onBaseAssetChange: (newBaseAsset: CryptoAssetWithIcon) => void;
+  cryptoAssets: CryptoAssetWithIcon[];
+  activeCryptoAsset: CryptoAssetWithIcon;
+  onCryptoAssetChange: (newCryptoAsset: CryptoAssetWithIcon) => void;
 }
-export const BaseAssetPicker: FC<BaseAssetPickerProps> = ({
+export const CryptoAssetPicker: FC<CryptoAssetPickerProps> = ({
   className,
-  baseAssets,
-  onBaseAssetChange,
-  activeBaseAsset,
+  cryptoAssets,
+  onCryptoAssetChange,
+  activeCryptoAsset,
 }) => {
   // This should never happen, and is only here for typesafety
-  if (!activeBaseAsset) {
+  if (!activeCryptoAsset) {
     return <span>{t`Could not find any base assets`}</span>;
   }
 
@@ -35,22 +35,22 @@ export const BaseAssetPicker: FC<BaseAssetPickerProps> = ({
         minimal: true,
         popoverClassName: classNames(styles.baseAssetPicker),
       }}
-      items={baseAssets}
+      items={cryptoAssets}
       filterable={false}
       itemRenderer={(baseAsset, { handleClick }) => (
-        <BaseAssetButton
+        <CryptoAssetButton
           key={baseAsset.id}
           fill
           minimal
           onClick={handleClick}
-          baseAsset={baseAsset}
+          cryptoAsset={baseAsset}
         />
       )}
-      onItemSelect={onBaseAssetChange}
+      onItemSelect={onCryptoAssetChange}
     >
-      <BaseAssetButton
+      <CryptoAssetButton
         minimal
-        baseAsset={activeBaseAsset}
+        cryptoAsset={activeCryptoAsset}
         rightIcon={IconNames.CARET_DOWN}
       />
     </Select>

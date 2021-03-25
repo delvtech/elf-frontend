@@ -28,7 +28,7 @@ import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { useCryptoBalance } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
-import { BaseAssetPicker } from "efi-ui/invest/BaseAssetPicker/BaseAssetPicker";
+import { CryptoAssetPicker } from "efi-ui/crypto/CryptoAssetPicker/CryptoAssetPicker";
 import { BuyFYTConfirmationDrawer } from "efi-ui/invest/BuyFYTConfirmationDrawer/BuyFYTConfirmationDrawer";
 import { useActiveTranche } from "efi-ui/invest/hooks/useActiveTranche";
 import { TranchePicker } from "efi-ui/invest/TranchePicker/TranchePicker";
@@ -226,10 +226,10 @@ export const InvestCard: FC<InvestCardProps> = ({
             <InvestmentAmountInput
               showMaxButton={!!account}
               baseAssetPicker={
-                <BaseAssetPicker
-                  baseAssets={baseAssets}
-                  activeBaseAsset={activeBaseAsset}
-                  onBaseAssetChange={setActiveBaseAsset}
+                <CryptoAssetPicker
+                  cryptoAssets={baseAssets}
+                  activeCryptoAsset={activeBaseAsset}
+                  onCryptoAssetChange={setActiveBaseAsset}
                 />
               }
               placeholder="0.00"
