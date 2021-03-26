@@ -1,11 +1,14 @@
-import { BigNumber } from "ethers";
+import { BigNumber, BigNumberish } from "ethers";
+import { isBigNumberish } from "@ethersproject/bignumber/lib/bignumber";
 
 export function convertEpochSecondsToDate(
-  seconds: BigNumber | undefined
+  seconds: BigNumberish | undefined
 ): Date | undefined {
-  if (!seconds) {
+  if (!seconds || !isBigNumberish(seconds)) {
     return undefined;
   }
-  const epochMilliseconds = +seconds.toString() * 1000;
+  const secondsBigNumber = BigNumber.from(seconds);
+
+  const epochMilliseconds = +secondsBigNumber.toString() * 1000;
   return new Date(epochMilliseconds);
 }
