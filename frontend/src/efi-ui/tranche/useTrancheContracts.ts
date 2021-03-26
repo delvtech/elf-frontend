@@ -13,7 +13,7 @@ type TrancheFilterOptions = Parameters<
   TrancheFactory["filters"]["TrancheCreated"]
 >;
 export function useTrancheContracts(
-  signerOrProvider: Signer | Provider | undefined,
+  signerOrProvider?: Signer | Provider | undefined,
   filterOptions: TrancheFilterOptions = [null, null, null]
 ): Tranche[] {
   const { trancheFactoryAddress } = ContractAddresses;
