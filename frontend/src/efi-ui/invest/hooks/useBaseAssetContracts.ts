@@ -10,7 +10,6 @@ import { getQueriesData } from "efi-ui/base/queryResults";
  * Gets a list of all the base asset contracts.
  */
 export function useBaseAssetContracts(): (ERC20 | undefined)[] {
-  // The elf contracts contain the base asset
   const tranches = useTrancheContracts();
 
   // The token is the address to the base asset
