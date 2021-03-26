@@ -74,5 +74,8 @@ try {
   ContractAddresses = FALLBACK_CONTRACTS;
 }
 
+export const KNOWN_ERC20_TOKENS = [ContractAddresses.wethAddress];
+export const KNOWN_ERC20PERMIT_TOKENS = [ContractAddresses.usdcAddress];
+
 // Re-export so auto-import Just Works, and we don't need to remember the above fun fact.
 export default ContractAddresses;
