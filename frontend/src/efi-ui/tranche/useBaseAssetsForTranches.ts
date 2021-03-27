@@ -13,7 +13,7 @@ import ContractAddresses, {
 } from "efi/contracts/contractsJson";
 import { CryptoAssetType } from "efi/crypto/CryptoAsset";
 
-export function useBaseAssetForTranche(
+export function useBaseAssetsForTranches(
   tranches: (Tranche | undefined)[]
 ): (CryptoAssetWithIcon | undefined)[] {
   const underlyingResults = useSmartContractReadCalls(tranches, "underlying");
