@@ -5,7 +5,6 @@ import mapValues from "lodash.mapvalues";
 
 import { hasSameKeys } from "efi/base/hasSameKeys";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
-import { getCryptoAddress } from "efi/crypto/getCryptoAddress";
 
 interface ActiveTrancheInfo {
   activeTranche: Tranche | undefined;
@@ -16,33 +15,41 @@ interface ActiveTrancheInfo {
 
 export function useActiveTranche(
   tranchesByBaseAsset: Record<string, Tranche[]>,
-  activeBaseAsset: CryptoAsset
+  activeBaseAsset: CryptoAsset | undefined
 ): ActiveTrancheInfo {
   const {
     activeTrancheIndexes,
     setActiveTrancheIndexes,
   } = useActiveTrancheIndexes(tranchesByBaseAsset);
 
-  const baseAssetAddress = getCryptoAddress(activeBaseAsset);
   const availableTranches = useMemo(
-    () => tranchesByBaseAsset[baseAssetAddress] || [],
-    [baseAssetAddress, tranchesByBaseAsset]
+    () => (activeBaseAsset?.id ? tranchesByBaseAsset[activeBaseAsset.id] : []),
+    [activeBaseAsset?.id, tranchesByBaseAsset]
   );
+
   const setActiveTranche = useCallback(
     (tranche: Tranche) => {
       setActiveTrancheIndexes((prevActiveTranches) => {
+        if (!activeBaseAsset?.id) {
+          return prevActiveTranches;
+        }
         const trancheIndex = findTrancheIndex(availableTranches, tranche);
         return {
           ...prevActiveTranches,
-          [baseAssetAddress]: trancheIndex,
+          [activeBaseAsset.id]: trancheIndex,
         };
       });
     },
-    [availableTranches, baseAssetAddress, setActiveTrancheIndexes]
+    [activeBaseAsset?.id, availableTranches, setActiveTrancheIndexes]
   );
 
-  const activeTrancheIndex = activeTrancheIndexes[baseAssetAddress];
-  const activeTranche = availableTranches[activeTrancheIndex];
+  const activeTrancheIndex = activeBaseAsset?.id
+    ? activeTrancheIndexes[activeBaseAsset?.id]
+    : undefined;
+
+  const activeTranche = activeTrancheIndex
+    ? availableTranches[activeTrancheIndex]
+    : undefined;
 
   return {
     activeTranche,
