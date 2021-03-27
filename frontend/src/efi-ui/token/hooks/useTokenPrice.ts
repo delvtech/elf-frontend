@@ -7,11 +7,10 @@ import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
 import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
 
 export function useTokenPrice<TContract extends ERC20>(
-  contract: TContract,
+  contract: TContract | undefined,
   currency: Currency
 ): ComputedQueryResult<Money> {
   const [tokenSymbol, tokenSymbolLoadingStates] = useTokenSymbol(contract);
-
   const priceResult = useCoinGeckoPrice(getCoinGeckoId(tokenSymbol), currency);
 
   return [priceResult.data, [...tokenSymbolLoadingStates, priceResult]];
