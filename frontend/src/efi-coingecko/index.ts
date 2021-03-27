@@ -16,7 +16,7 @@ import coinsJSON from "efi-coingecko/coins.json";
 export const CoinGeckoIds: {
   [symbol: string]: string;
 } = coinsJSON.reduce(
-  (memo, value) => ({ ...memo, [value.symbol]: value.symbol }),
+  (memo, value) => ({ ...memo, [value.symbol]: value.id }),
   {}
 );
 
