@@ -1,4 +1,3 @@
-import { useTokenName } from "efi-ui/token/hooks/useTokenName";
 import { CryptoName } from "efi/crypto/CryptoName";
 import { t } from "ttag";
 import {
@@ -6,10 +5,11 @@ import {
   CryptoAssetType,
   findTokenContract,
 } from "efi/crypto/CryptoAsset";
+import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 
 export function useCryptoName(asset: CryptoAsset): string {
   const tokenContract = findTokenContract(asset);
-  const [tokenName] = useTokenName(tokenContract);
+  const { data: tokenName } = useSmartContractReadCall(tokenContract, "name");
   if (asset.type === CryptoAssetType.ERC20) {
     return tokenName || t`ERC20 Token`;
   }
