@@ -54,7 +54,7 @@ export const MintView: FC<MintViewProps> = () => {
             account={account}
             onInvestmentAmountChange={setInvestmentAmount}
           />
-          <MintCard
+          {/* <MintCard
             id={id}
             assetName={assetName}
             assetIcon={AssetIcon}
@@ -64,7 +64,7 @@ export const MintView: FC<MintViewProps> = () => {
             walletBalanceFiat={walletBalanceFiat}
             yieldPositions={yieldPositions}
             onInvestmentAmountChange={onInvestmentAmountChange}
-          />
+          /> */}
         </div>
       </div>
     </div>
