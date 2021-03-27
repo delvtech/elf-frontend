@@ -13,18 +13,22 @@ import { CryptoAssetButton } from "./CryptoAssetButton";
 
 interface CryptoAssetPickerProps {
   className?: string;
-  cryptoAssets: CryptoAssetWithIcon[];
-  activeCryptoAsset: CryptoAssetWithIcon;
+  cryptoAssets: (CryptoAssetWithIcon | undefined)[];
+  activeCryptoAsset: CryptoAssetWithIcon | undefined;
   onCryptoAssetChange: (newCryptoAsset: CryptoAssetWithIcon) => void;
 }
+
 export const CryptoAssetPicker: FC<CryptoAssetPickerProps> = ({
   className,
   cryptoAssets,
   onCryptoAssetChange,
   activeCryptoAsset,
 }) => {
-  // This should never happen, and is only here for typesafety
-  if (!activeCryptoAsset) {
+  const availableCryptoAssets = cryptoAssets.filter(
+    (cryptoAsset): cryptoAsset is CryptoAssetWithIcon => !!cryptoAsset
+  );
+
+  if (!activeCryptoAsset || !availableCryptoAssets.length) {
     return <span>{t`Could not find any base assets`}</span>;
   }
 
@@ -35,7 +39,7 @@ export const CryptoAssetPicker: FC<CryptoAssetPickerProps> = ({
         minimal: true,
         popoverClassName: classNames(styles.baseAssetPicker),
       }}
-      items={cryptoAssets}
+      items={availableCryptoAssets}
       filterable={false}
       itemRenderer={(baseAsset, { handleClick }) => (
         <CryptoAssetButton
