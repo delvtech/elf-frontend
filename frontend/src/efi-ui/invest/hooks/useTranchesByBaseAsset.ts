@@ -1,32 +1,25 @@
-import { Provider } from "@ethersproject/providers";
 import { Tranche } from "elf-contracts/types/Tranche";
 import groupBy from "lodash.groupby";
 import mapValues from "lodash.mapvalues";
 import zip from "lodash.zip";
 
-import { getQueriesData } from "efi-ui/base/queryResults";
-import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
-import { useTrancheContracts } from "efi-ui/tranche/useTrancheContracts";
+import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 
 export function useTranchesByBaseAsset(
-  provider?: Provider
+  tranches: (Tranche | undefined)[],
+  baseAssets: (CryptoAssetWithIcon | undefined)[]
 ): Record<string, Tranche[]> {
-  const trancheContracts = useTrancheContracts(provider);
-  const baseAssetAddressResults = useSmartContractReadCalls(
-    trancheContracts,
-    "underlying"
-  );
-
-  const zipped = zip(trancheContracts, getQueriesData(baseAssetAddressResults));
+  const zipped = zip(tranches, baseAssets);
 
   // remove any zipped entries that don't have groupable data yet
-  const filtered = zipped.filter((entry): entry is [Tranche, string] =>
-    entry.every((value) => !!value)
-  );
+  const filtered = zipped.filter((entry): entry is [
+    Tranche,
+    CryptoAssetWithIcon
+  ] => entry.every((value) => !!value));
 
   const entriesByBaseAsset = groupBy(
     filtered,
-    ([tranche, baseAssetAddresses]) => baseAssetAddresses
+    ([tranche, cryptoAsset]) => cryptoAsset.id
   );
 
   // We only care about the tranches now, not the entire entry

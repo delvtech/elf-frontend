@@ -7,10 +7,11 @@ import { useWeb3React } from "@web3-react/core";
 import { jt, t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { useBaseAssets } from "efi-ui/invest/hooks/useBaseAssets";
 import { useTranchesByBaseAsset } from "efi-ui/invest/hooks/useTranchesByBaseAsset";
 import { InvestCard } from "efi-ui/invest/InvestView/InvestCard";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
+import { useTrancheContracts } from "efi-ui/tranche/useTrancheContracts";
+import { useBaseAssetsForTranches } from "efi-ui/tranche/useBaseAssetsForTranches";
 
 interface InvestViewProps extends RouteComponentProps {}
 
@@ -23,8 +24,12 @@ export const InvestView: FC<InvestViewProps> = () => {
     library,
   } = useWeb3React<Web3Provider>();
 
-  const baseAssets = useBaseAssets();
-  const tranchesByBaseAsset = useTranchesByBaseAsset();
+  const allTranches = useTrancheContracts();
+  const knownBaseAssets = useBaseAssetsForTranches(allTranches);
+  const tranchesByBaseAsset = useTranchesByBaseAsset(
+    allTranches,
+    knownBaseAssets
+  );
 
   return (
     <div
@@ -67,7 +72,7 @@ export const InvestView: FC<InvestViewProps> = () => {
             walletConnectionActive={active}
             chainId={chainId}
             connector={connector}
-            baseAssets={baseAssets}
+            baseAssets={knownBaseAssets}
             tranchesByBaseAsset={tranchesByBaseAsset}
           />
         </div>

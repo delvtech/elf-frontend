@@ -12,10 +12,7 @@ import { Web3Provider } from "@ethersproject/providers";
 import { formatUnits, parseUnits } from "@ethersproject/units";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import classNames from "classnames";
-import { ERC20 } from "elf-contracts/types/ERC20";
-import { WETH__factory } from "elf-contracts/types/factories/WETH__factory";
 import { Tranche } from "elf-contracts/types/Tranche";
-import { WETH } from "elf-contracts/types/WETH";
 import { BigNumber } from "ethers";
 import { t } from "ttag";
 
@@ -28,7 +25,7 @@ import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { useCryptoBalance } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
-import { BaseAssetPicker } from "efi-ui/invest/BaseAssetPicker/BaseAssetPicker";
+import { CryptoAssetPicker } from "efi-ui/crypto/CryptoAssetPicker/CryptoAssetPicker";
 import { BuyFYTConfirmationDrawer } from "efi-ui/invest/BuyFYTConfirmationDrawer/BuyFYTConfirmationDrawer";
 import { useActiveTranche } from "efi-ui/invest/hooks/useActiveTranche";
 import { TranchePicker } from "efi-ui/invest/TranchePicker/TranchePicker";
@@ -37,13 +34,16 @@ import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
 import ContractAddresses from "efi/contracts/contractsJson";
-import { CryptoAssetType } from "efi/crypto/CryptoAsset";
+import { CryptoAssetType, findTokenContract } from "efi/crypto/CryptoAsset";
 import { ONE_ETHER } from "efi/crypto/ethereum";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 
 import { InvestmentAmountInput } from "./InvestmentAmountInput";
 import { useOnSwapGivenOut } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenOut";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
+import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
+import { ERC20Permit } from "elf-contracts/types/ERC20Permit";
+import { ERC20 } from "elf-contracts/types/ERC20";
 
 export interface InvestCardProps {
   library: Web3Provider | undefined;
@@ -52,7 +52,7 @@ export interface InvestCardProps {
   chainId: number | undefined;
   walletConnectionActive: boolean;
   connector: AbstractConnector | undefined;
-  baseAssets: CryptoAssetWithIcon[];
+  baseAssets: (CryptoAssetWithIcon | undefined)[];
 
   tranchesByBaseAsset: Record<string, Tranche[]>;
 }
@@ -128,18 +128,7 @@ export const InvestCard: FC<InvestCardProps> = ({
   );
 
   // use weth when the base asset is eth
-  const wethContract = useSmartContractFromFactory(
-    ContractAddresses.wethAddress,
-    WETH__factory.connect
-  );
-  let inputToken: WETH | ERC20 | undefined = wethContract;
-  if (activeBaseAsset.type === CryptoAssetType.ERC20) {
-    inputToken = activeBaseAsset.tokenContract;
-  }
-  const { data: inputTokenSymbol } = useSmartContractReadCall(
-    inputToken,
-    "symbol"
-  );
+  const inputTokenSymbol = useCryptoSymbol(activeBaseAsset);
 
   // input calculations
   const amountInAsBigNumber = amountIn
@@ -151,6 +140,21 @@ export const InvestCard: FC<InvestCardProps> = ({
     : undefined;
 
   // the amount of tranche you get out
+  // TODO: we don't want to use eth for this, change this to queryBatchSwap
+  // instead so eth is supported.
+  let inputToken: ERC20 | ERC20Permit | undefined;
+  const wethContract = useSmartContractFromFactory(
+    ContractAddresses.wethAddress,
+    ERC20__factory.connect
+  );
+  if (!activeBaseAsset) {
+    inputToken = undefined;
+  } else if (activeBaseAsset?.type === CryptoAssetType.ETHEREUM) {
+    inputToken = wethContract;
+  } else {
+    inputToken = findTokenContract(activeBaseAsset);
+  }
+
   const { data: swapGivenIn } = useOnSwapGivenIn(
     pool,
     inputToken,
@@ -226,10 +230,10 @@ export const InvestCard: FC<InvestCardProps> = ({
             <InvestmentAmountInput
               showMaxButton={!!account}
               baseAssetPicker={
-                <BaseAssetPicker
-                  baseAssets={baseAssets}
-                  activeBaseAsset={activeBaseAsset}
-                  onBaseAssetChange={setActiveBaseAsset}
+                <CryptoAssetPicker
+                  cryptoAssets={baseAssets}
+                  activeCryptoAsset={activeBaseAsset}
+                  onCryptoAssetChange={setActiveBaseAsset}
                 />
               }
               placeholder="0.00"
@@ -321,19 +325,21 @@ export const InvestCard: FC<InvestCardProps> = ({
         </div>
       </Card>
 
-      <BuyFYTConfirmationDrawer
-        account={account}
-        library={library}
-        chainId={chainId}
-        pool={pool}
-        walletConnectionActive={walletConnectionActive}
-        connector={connector}
-        baseAsset={activeBaseAsset}
-        amountIn={amountIn}
-        tranche={activeTranche}
-        isOpen={isDrawerOpen}
-        onClose={() => setDrawerOpen(false)}
-      />
+      {!activeBaseAsset ? null : (
+        <BuyFYTConfirmationDrawer
+          account={account}
+          library={library}
+          chainId={chainId}
+          pool={pool}
+          walletConnectionActive={walletConnectionActive}
+          connector={connector}
+          baseAsset={activeBaseAsset}
+          amountIn={amountIn}
+          tranche={activeTranche}
+          isOpen={isDrawerOpen}
+          onClose={() => setDrawerOpen(false)}
+        />
+      )}
     </Fragment>
   );
 };

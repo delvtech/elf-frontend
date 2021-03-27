@@ -8,15 +8,15 @@ import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { EthIcon } from "efi-ui/ethereum/EthIcon";
 import { NextStepCallout } from "efi-ui/mint/ChooseBaseAssetStep/NextStepCallout";
 
-import { BaseAssetCard, BaseAssetCardProps } from "./BaseAssetCard";
-import { NoWalletConnectedCallout } from "./NoWalletConnectedCallout";
+import { NoWalletConnectedCallout } from "../ChooseBaseAssetStep/NoWalletConnectedCallout";
+import { MintCard, MintCardProps } from "../MintCard/MintCard";
 
-interface ChooseBaseAssetStepProps {
+interface BaseAssetTabsProps {
   account: string | null | undefined;
   onInvestmentAmountChange: (amount: number) => void;
 }
 
-const baseAssetInfos: Omit<BaseAssetCardProps, "onInvestmentAmountChange">[] = [
+const baseAssetInfos: Omit<MintCardProps, "onInvestmentAmountChange">[] = [
   {
     id: "base-asset-eth",
     assetIcon: EthIcon,
@@ -43,7 +43,7 @@ const baseAssetInfos: Omit<BaseAssetCardProps, "onInvestmentAmountChange">[] = [
   },
 ];
 
-export const ChooseBaseAssetStep: FC<ChooseBaseAssetStepProps> = ({
+export const BaseAssetTabs: FC<BaseAssetTabsProps> = ({
   account,
   onInvestmentAmountChange,
 }) => {
@@ -59,10 +59,8 @@ export const ChooseBaseAssetStep: FC<ChooseBaseAssetStepProps> = ({
       style={{ width: 968 }}
     >
       <Tabs
-        vertical
         large
         id="base-asset-tabs"
-        className={tw("w-full")}
         onChange={(tabId: string) => {
           setActiveBaseAssetId(tabId);
         }}
@@ -100,9 +98,8 @@ export const ChooseBaseAssetStep: FC<ChooseBaseAssetStepProps> = ({
                     />
                   </div>
                 }
-                panelClassName={tw("flex-1")}
                 panel={
-                  <BaseAssetCard
+                  <MintCard
                     id={id}
                     assetName={assetName}
                     assetIcon={AssetIcon}

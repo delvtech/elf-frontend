@@ -30,6 +30,16 @@ export const CryptoIconSvg: Record<CryptoSymbol, AssetIcon> = {
   WETH: WethIcon,
 };
 
+export function findAssetIcon(
+  symbol: string | undefined
+): AssetIcon | undefined {
+  if (!symbol) {
+    return undefined;
+  }
+  const iconKey = symbol.toUpperCase() as CryptoSymbol;
+  return CryptoIconSvg[iconKey];
+}
+
 /**
  * @deprecated use CryptoIconSvg instead
  */

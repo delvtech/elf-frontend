@@ -1,6 +1,6 @@
 import React, { FC, ReactNode, useMemo, useState } from "react";
 
-import { Breadcrumbs, Classes, IBreadcrumbProps } from "@blueprintjs/core";
+import { Classes } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { RouteComponentProps } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
@@ -9,67 +9,16 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 
-import { ChooseBaseAssetStep } from "../ChooseBaseAssetStep/ChooseBaseAssetStep";
+import { BaseAssetTabs } from "../BaseAssetTabs/BaseAssetTabs";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
+import { MintCard } from "efi-ui/mint/MintCard/MintCard";
 
 interface MintViewProps extends RouteComponentProps {}
-
-interface MintingStep {
-  title: string;
-  description: string;
-
-  content: ReactNode;
-}
 
 export const MintView: FC<MintViewProps> = () => {
   const { account } = useWeb3React<Web3Provider>();
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [investmentAmount, setInvestmentAmount] = useState(0);
-
-  const [currentStepIndex] = useState(0);
-  const mintingSteps: MintingStep[] = useMemo(
-    (): MintingStep[] => [
-      {
-        title: t`Choose a base asset`,
-        description: t`To begin minting yield tokens, pick a base asset and yield position from the options below:`,
-        content: (
-          <ChooseBaseAssetStep
-            account={account}
-            onInvestmentAmountChange={setInvestmentAmount}
-          />
-        ),
-      },
-      {
-        title: t`Set an amount`,
-        description: t`To begin minting yield tokens, pick a base asset from the following options:`,
-        content: null,
-      },
-      {
-        title: t`Set time to maturity`,
-        description: t`When do you want your yield tokens to mature?`,
-        content: null,
-      },
-      {
-        title: t`Confirmation`,
-        description: "",
-        content: null,
-      },
-    ],
-    [account]
-  );
-
-  const breadcrumbItems = useMemo<IBreadcrumbProps[]>(
-    () =>
-      mintingSteps.map(({ title }, index) => ({
-        text: title,
-        current: currentStepIndex === index,
-        className: tw("text-xl"),
-      })),
-    [currentStepIndex, mintingSteps]
-  );
-
-  const currentStep = mintingSteps[currentStepIndex];
 
   return (
     <div
@@ -101,22 +50,21 @@ export const MintView: FC<MintViewProps> = () => {
             "justify-center"
           )}
         >
-          <div className={tw("flex", "flex-col", "space-y-10", "items-center")}>
-            <Breadcrumbs
-              minVisibleItems={mintingSteps.length}
-              items={breadcrumbItems}
-            />
-          </div>
-          <span
-            className={classNames(
-              Classes.RUNNING_TEXT,
-              Classes.TEXT_MUTED,
-              tw("text-base")
-            )}
-          >
-            {currentStep.description}
-          </span>
-          {currentStep.content}
+          <BaseAssetTabs
+            account={account}
+            onInvestmentAmountChange={setInvestmentAmount}
+          />
+          {/* <MintCard
+            id={id}
+            assetName={assetName}
+            assetIcon={AssetIcon}
+            assetSymbol={assetSymbol}
+            assetPrice={assetPrice}
+            walletBalance={walletBalance}
+            walletBalanceFiat={walletBalanceFiat}
+            yieldPositions={yieldPositions}
+            onInvestmentAmountChange={onInvestmentAmountChange}
+          /> */}
         </div>
       </div>
     </div>

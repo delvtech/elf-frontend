@@ -11,26 +11,26 @@ import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { useCryptoName } from "efi-ui/crypto/hooks/useCryptoName/useCryptoName";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 
-interface BaseAssetButtonProps {
+interface CryptoAssetButtonProps {
   outlined?: boolean;
   fill?: boolean;
   minimal?: boolean;
-  baseAsset: CryptoAssetWithIcon;
+  cryptoAsset: CryptoAssetWithIcon;
   rightIcon?: IconName;
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-export const BaseAssetButton: FC<BaseAssetButtonProps> = ({
+export const CryptoAssetButton: FC<CryptoAssetButtonProps> = ({
   fill,
   minimal,
   outlined,
-  baseAsset,
-  baseAsset: { assetIcon: AssetIcon },
+  cryptoAsset,
+  cryptoAsset: { assetIcon: AssetIcon },
   rightIcon,
   onClick,
 }) => {
-  const assetName = useCryptoName(baseAsset);
-  const assetSymbol = useCryptoSymbol(baseAsset);
+  const assetName = useCryptoName(cryptoAsset);
+  const assetSymbol = useCryptoSymbol(cryptoAsset);
 
   return (
     <button

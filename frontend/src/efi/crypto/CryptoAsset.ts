@@ -1,8 +1,10 @@
 import { ERC20 } from "elf-contracts/types/ERC20";
+import { ERC20Permit } from "elf-contracts/types/ERC20Permit";
 
 export enum CryptoAssetType {
   ETHEREUM = "ethereuem",
   ERC20 = "erc20",
+  ERC20PERMIT = "erc20permit",
 }
 
 export interface BaseCryptoAsset {
@@ -10,21 +12,31 @@ export interface BaseCryptoAsset {
   type: CryptoAssetType;
 }
 
-interface EthereumCryptoAsset extends BaseCryptoAsset {
+export interface EthereumCryptoAsset extends BaseCryptoAsset {
   type: CryptoAssetType.ETHEREUM;
 }
 
-interface Erc20CryptoAsset extends BaseCryptoAsset {
+export interface Erc20CryptoAsset extends BaseCryptoAsset {
   type: CryptoAssetType.ERC20;
   tokenContract: ERC20;
 }
+export interface Erc20PermitCryptoAsset extends BaseCryptoAsset {
+  type: CryptoAssetType.ERC20PERMIT;
+  tokenContract: ERC20Permit;
+}
 
-export type CryptoAsset = EthereumCryptoAsset | Erc20CryptoAsset;
+export type CryptoAsset =
+  | EthereumCryptoAsset
+  | Erc20CryptoAsset
+  | Erc20PermitCryptoAsset;
 
-export function findTokenContract(cryptoAsset: CryptoAsset): ERC20 | undefined {
-  let tokenContract: ERC20 | undefined;
+export function findTokenContract(
+  cryptoAsset: CryptoAsset
+): ERC20 | ERC20Permit | undefined {
   if (cryptoAsset.type === CryptoAssetType.ERC20) {
-    tokenContract = cryptoAsset.tokenContract;
+    return cryptoAsset.tokenContract;
   }
-  return tokenContract;
+  if (cryptoAsset.type === CryptoAssetType.ERC20PERMIT) {
+    return cryptoAsset.tokenContract;
+  }
 }
