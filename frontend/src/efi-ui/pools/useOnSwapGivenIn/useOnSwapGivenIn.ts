@@ -11,11 +11,11 @@ import { PoolContract } from "efi/pools/PoolContract";
 
 import { makeOnSwapGivenInCallArgs } from "./makeOnSwapGivenInCallArgs";
 import { useLatestBlockNumber } from "efi-ui/ethereum/hooks/useLatestBlockNumber";
-import { Tranche } from "elf-contracts/types/Tranche";
+import { ERC20Permit } from "elf-contracts/types/ERC20Permit";
 
 export function useOnSwapGivenIn(
   pool: PoolContract | undefined,
-  tokenIn: ERC20 | undefined,
+  tokenIn: ERC20 | ERC20Permit | undefined,
   // TODO: Make this a string instead, eg: "2.1234"
   amount: BigNumber | undefined
 ): QueryObserverResult<BigNumber> {
@@ -32,18 +32,18 @@ export function useOnSwapGivenIn(
     enabled: [
       poolId,
       pool?.address,
-      tokenIn,
+      tokenIn?.address,
       amount,
-      tokenOut,
+      tokenOut?.address,
       balances.length,
       latestBlockNumber,
     ].every((v) => !!v),
     callArgs: makeOnSwapGivenInCallArgs(
       poolId,
       pool?.address,
-      tokenIn,
+      tokenIn?.address,
       amount,
-      tokenOut,
+      tokenOut?.address,
       balances,
       latestBlockNumber
     ),
