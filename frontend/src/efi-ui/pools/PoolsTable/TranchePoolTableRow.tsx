@@ -51,6 +51,14 @@ export const TranchePoolTableRow: FC<TranchePoolTableRowProps> = ({ pool }) => {
     return null;
   }
 
+  const currentTime = Date.now();
+  const endTime = maturityDate?.getTime() ?? 0;
+  const startTime = startDate?.getTime() ?? 0;
+  // bind progress value between 0 and 1
+  const progressValue = Math.max(
+    0,
+    Math.min(1, (currentTime - startTime) / (endTime - startTime))
+  );
   const timeLeft = getTimeLeft2(maturityDate);
 
   return (
@@ -69,7 +77,7 @@ export const TranchePoolTableRow: FC<TranchePoolTableRowProps> = ({ pool }) => {
 
       <td>
         <LabeledProgressBar
-          progressValue={0.5}
+          progressValue={progressValue}
           label={t`running`}
           helperText={timeLeft}
         />
