@@ -5,10 +5,12 @@ import { getQueryData } from "efi-ui/base/queryResults";
 import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { PoolContract } from "efi/pools/PoolContract";
+import { ERC20Permit } from "elf-contracts/types/ERC20Permit";
 
+// TODO: This should also return ERC20Permit when it makes sense
 export function usePoolPairedToken(
   pool: PoolContract | undefined,
-  poolToken: ERC20 | undefined
+  poolToken: ERC20 | ERC20Permit | undefined
 ): ERC20 | undefined {
   const poolTokensResult = usePoolTokens(pool);
 
