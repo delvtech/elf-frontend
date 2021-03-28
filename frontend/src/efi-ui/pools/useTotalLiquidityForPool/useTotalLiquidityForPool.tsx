@@ -54,6 +54,7 @@ export function useTotalLiquidityForPool(
     : undefined;
   const [yieldAssetDecimals] = useTokenDecimals(yieldAssetContract);
 
+  // TODO: refactor this to its own hook
   /**************************
    * Laxy spot price technique until we get a better method.  Right now just calculates how much out
    * asset for '1' of the in asset.  A future optimisation might be to do '$1' worth of the in asset
