@@ -8,6 +8,7 @@ import { TrancheFactory } from "elf-contracts/types/TrancheFactory";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 import { useQuery } from "react-query";
 import { Tranche__factory } from "elf-contracts/types/factories/Tranche__factory";
+import { useSmartContractsFromFactory } from "efi-ui/contracts/useSmartContractsFromFactory/useSmartContractsFromFactory";
 
 type TrancheFilterOptions = Parameters<
   TrancheFactory["filters"]["TrancheCreated"]
@@ -40,16 +41,25 @@ export function useTrancheContracts(
 
   const { data: events } = eventsQueryResult;
 
-  if (!events) {
+  const trancheAddresses =
+    (events?.map((event) => event.args?.trancheAddress) as (
+      | string
+      | undefined
+    )[]) || [];
+
+  const trancheContracts = useSmartContractsFromFactory(
+    trancheAddresses,
+    Tranche__factory.connect,
+    signerOrProvider
+  );
+
+  const validTranches = trancheContracts.filter(
+    (contract): contract is Tranche => !!contract
+  );
+
+  if (!validTranches.length) {
     return [];
   }
 
-  const trancheContracts: Tranche[] = events.map((event) =>
-    Tranche__factory.connect(
-      event.args?.trancheAddress,
-      signerOrProvider ?? jsonRpcProvider
-    )
-  );
-
-  return trancheContracts;
+  return validTranches;
 }
