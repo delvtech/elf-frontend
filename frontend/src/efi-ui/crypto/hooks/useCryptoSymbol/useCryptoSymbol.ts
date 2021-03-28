@@ -5,6 +5,7 @@ import {
   findTokenContract,
 } from "efi/crypto/CryptoAsset";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
+import { assertNever } from "efi/base/assertNever";
 
 export function useCryptoSymbol(asset: CryptoAsset | undefined): string {
   const tokenContract = asset ? findTokenContract(asset) : undefined;
@@ -12,9 +13,21 @@ export function useCryptoSymbol(asset: CryptoAsset | undefined): string {
     tokenContract,
     "symbol"
   );
-  if (asset?.type === CryptoAssetType.ERC20) {
-    return tokenSymbol || t`ERC20`;
+
+  if (!asset) {
+    return "Unknown token";
   }
 
-  return "ETH";
+  const assetType = asset.type;
+  switch (assetType) {
+    case CryptoAssetType.ERC20:
+      return tokenSymbol || t`ERC20`;
+    case CryptoAssetType.ERC20PERMIT:
+      return tokenSymbol || t`ERC20Permit`;
+    case CryptoAssetType.ETHEREUM:
+      return "ETH";
+    default:
+      assertNever(assetType);
+      return "Unknown token";
+  }
 }
