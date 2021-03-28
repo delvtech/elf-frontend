@@ -57,9 +57,7 @@ export function useTrancheContracts(
     (contract): contract is Tranche => !!contract
   );
 
-  console.log("validTranches", validTranches);
   if (!validTranches.length) {
-    console.log("baling!");
     return [];
   }
 
