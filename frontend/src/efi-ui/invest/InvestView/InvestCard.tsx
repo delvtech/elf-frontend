@@ -100,7 +100,17 @@ export const InvestCard: FC<InvestCardProps> = ({
   }, []);
 
   // base asset
-  const [activeBaseAsset, setActiveBaseAsset] = useState(baseAssets[0]);
+  const [activeBaseAsset, setActiveBaseAsset] = useState<
+    CryptoAssetWithIcon | undefined
+  >();
+  // The list of base assets will be empty while the data loads, so we want to
+  // set the default after it's been populated
+  useSetDefaultActiveBaseAsset(
+    activeBaseAsset,
+    setActiveBaseAsset,
+    baseAssets[0]
+  );
+
   const activeBaseAssetSymbol = useCryptoSymbol(activeBaseAsset);
   const activeBaseAssetDecimals = useCryptoDecimals(activeBaseAsset);
   const activeBaseAssetBalance = useCryptoBalance(
@@ -343,6 +353,20 @@ export const InvestCard: FC<InvestCardProps> = ({
     </Fragment>
   );
 };
+
+function useSetDefaultActiveBaseAsset(
+  activeBaseAsset: CryptoAssetWithIcon | undefined,
+  setActiveBaseAsset: React.Dispatch<
+    React.SetStateAction<CryptoAssetWithIcon | undefined>
+  >,
+  defaultBaseAsset: CryptoAssetWithIcon | undefined
+) {
+  useEffect(() => {
+    if (activeBaseAsset === undefined) {
+      setActiveBaseAsset(defaultBaseAsset);
+    }
+  }, [activeBaseAsset, defaultBaseAsset, setActiveBaseAsset]);
+}
 
 function calculatePercentYield(
   amountIn: string | undefined,
