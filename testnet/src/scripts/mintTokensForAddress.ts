@@ -1,4 +1,4 @@
-import { parseEther } from "ethers/lib/utils";
+import { parseUnits } from "ethers/lib/utils";
 
 import { USDC } from "src/types/USDC";
 import { WETH } from "src/types/WETH";
@@ -22,9 +22,10 @@ export async function mintTokensForAddress(
 
   const transactions = await Promise.all(
     tokens.map(async (tokenContract, i) => {
+      const decimals = await tokenContract.decimals();
       const txReceipt = await tokenContract.mint(
         elementAddress,
-        parseEther(amounts[i])
+        parseUnits(amounts[i], decimals)
       );
       await txReceipt.wait(1);
     })
