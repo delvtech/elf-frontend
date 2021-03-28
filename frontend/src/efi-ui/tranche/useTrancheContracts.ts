@@ -39,13 +39,14 @@ export function useTrancheContracts(
     },
   });
 
-  const { data: events } = eventsQueryResult;
+  const { data: events = [] } = eventsQueryResult;
 
-  const trancheAddresses =
-    (events?.map((event) => event.args?.trancheAddress) as (
-      | string
-      | undefined
-    )[]) || [];
+  const trancheAddresses = Array.isArray(events)
+    ? (events?.map((event) => event.args?.trancheAddress) as (
+        | string
+        | undefined
+      )[])
+    : [];
 
   const trancheContracts = useSmartContractsFromFactory(
     trancheAddresses,

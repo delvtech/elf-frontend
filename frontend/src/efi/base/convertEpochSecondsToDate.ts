@@ -1,11 +1,15 @@
-import { BigNumber } from "ethers";
+import { isBigNumberish } from "efi/base/isBigNumberish";
+import { BigNumber, BigNumberish } from "ethers";
 
+// TODO: this really should just take a number, not a BigNumber
 export function convertEpochSecondsToDate(
-  seconds: BigNumber | undefined
+  seconds: BigNumberish | undefined
 ): Date | undefined {
-  if (!seconds) {
+  if (!seconds || !isBigNumberish(seconds)) {
     return undefined;
   }
-  const epochMilliseconds = +seconds.toString() * 1000;
+  const secondsBigNumber = BigNumber.from(seconds);
+
+  const epochMilliseconds = +secondsBigNumber.toString() * 1000;
   return new Date(epochMilliseconds);
 }

@@ -20,7 +20,7 @@ export function useWeightedPools(
   );
 
   const weightedQueryResult = useQuery({
-    queryKey: [["convergentPoolFactory", "queryFilter", "PoolRegistered"]],
+    queryKey: [["weightedPoolFactory", "queryFilter", "PoolRegistered"]],
     queryFn: async () => {
       const filterQuery = weightedPoolFactory.filters.PoolRegistered(null);
       const events = await weightedPoolFactory.queryFilter(filterQuery);
