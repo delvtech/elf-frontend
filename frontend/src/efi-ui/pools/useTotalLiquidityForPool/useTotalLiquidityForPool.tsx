@@ -1,23 +1,24 @@
 import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
-import { Vault__factory } from "elf-contracts/types/factories/Vault__factory";
 import { Currencies, Money } from "ts-money";
 
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useConvertToFiat } from "efi-ui/money/hooks/useConvertToFiat";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
-import ContractAddresses from "efi/contracts/contractsJson";
 import { PoolContract } from "efi/pools/PoolContract";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
 import { formatUnits, parseUnits } from "@ethersproject/units";
 import { BigNumber } from "ethers";
+import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
+import { KNOWN_BASE_ASSETS } from "efi/contracts/contractsJson";
+import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 
 export function useTotalLiquidityForPool(
   pool: PoolContract | undefined
 ): Money | undefined {
-  const { balancerVaultAddress } = ContractAddresses;
-  const vault = Vault__factory.connect(balancerVaultAddress, jsonRpcProvider);
+  const vault = useBalancerVault();
+  const { currency } = useCurrencyPref();
   const { data: poolId } = useSmartContractReadCall(pool, "getPoolId");
   const { data: poolTokens } = useSmartContractReadCall(
     vault,
@@ -27,9 +28,7 @@ export function useTotalLiquidityForPool(
   const [tokens, balances] = poolTokens ?? [undefined, undefined];
 
   const baseAssetIndex: number =
-    tokens?.findIndex((address) =>
-      baseAssetAddressWhitelist.includes(address)
-    ) ?? 0;
+    tokens?.findIndex((address) => KNOWN_BASE_ASSETS.includes(address)) ?? 0;
   const baseAssetAddress = tokens?.[baseAssetIndex];
   const baseAssetBalance = balances?.[baseAssetIndex];
 
@@ -71,20 +70,15 @@ export function useTotalLiquidityForPool(
     +formatUnits(amountOut, yieldAssetDecimals);
   const yieldAssetPrice = Money.fromDecimal(
     +yieldAssetRatio * (baseAssetPrice?.toDecimal() || 1),
-    Currencies.USD,
+    currency,
     Math.round
   );
   /***************************** */
 
   const yieldAssetFiatBalance =
     useConvertToFiat(yieldAssetPrice, yieldAssetBalance, yieldAssetDecimals) ||
-    Money.fromInteger(0, Currencies.USD.code);
+    Money.fromInteger(0, currency.code);
 
   const totalBalance = baseAssetFiatBalance?.add(yieldAssetFiatBalance);
   return totalBalance;
 }
-// TODO: formalize this
-const baseAssetAddressWhitelist = [
-  ContractAddresses.wethAddress,
-  ContractAddresses.usdcAddress,
-];

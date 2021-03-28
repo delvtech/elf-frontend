@@ -77,5 +77,10 @@ try {
 export const KNOWN_ERC20_TOKENS = [ContractAddresses.wethAddress];
 export const KNOWN_ERC20PERMIT_TOKENS = [ContractAddresses.usdcAddress];
 
+export const KNOWN_BASE_ASSETS = [
+  ...KNOWN_ERC20_TOKENS,
+  ...KNOWN_ERC20PERMIT_TOKENS,
+];
+
 // Re-export so auto-import Just Works, and we don't need to remember the above fun fact.
 export default ContractAddresses;

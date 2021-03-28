@@ -33,8 +33,7 @@ export const InterestTokenPoolTableRow: FC<InterestTokenPoolTableRowProps> = ({
   const baseAsset = usePoolPairedToken(pool, tranche as ERC20Shim);
   const unlockTimestampResult = useSmartContractReadCall(
     tranche,
-    "unlockTimestamp",
-    { enabled: !!tranche }
+    "unlockTimestamp"
   );
   const maturityDate = convertEpochSecondsToDate(
     getQueryData(unlockTimestampResult)

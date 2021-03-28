@@ -7,12 +7,12 @@ import { Signer } from "ethers";
 import ContractAddresses from "efi/contracts/contractsJson";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 
+const { trancheFactoryAddress } = ContractAddresses;
+
 export function useTrancheCreatedAt(
   tranche: Tranche | undefined,
   signerOrProvider?: Signer | Provider
 ): QueryObserverResult<number> {
-  const { trancheFactoryAddress } = ContractAddresses;
-
   const trancheFactoryContract = TrancheFactory__factory.connect(
     trancheFactoryAddress,
     signerOrProvider ?? jsonRpcProvider
