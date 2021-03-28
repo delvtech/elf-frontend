@@ -1,9 +1,11 @@
 import { QueryObserverResult, useQuery } from "react-query";
-import { Provider } from "@ethersproject/abstract-provider";
+
+import { Provider } from "@ethersproject/providers";
 import { TrancheFactory__factory } from "elf-contracts/types/factories/TrancheFactory__factory";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { TrancheFactory } from "elf-contracts/types/TrancheFactory";
 import { Signer } from "ethers";
+
 import ContractAddresses from "efi/contracts/contractsJson";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 
