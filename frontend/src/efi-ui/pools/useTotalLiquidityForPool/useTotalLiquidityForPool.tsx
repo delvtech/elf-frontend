@@ -9,6 +9,9 @@ import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
 import ContractAddresses from "efi/contracts/contractsJson";
 import { PoolContract } from "efi/pools/PoolContract";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
+import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
+import { formatUnits, parseUnits } from "@ethersproject/units";
+import { BigNumber } from "ethers";
 
 export function useTotalLiquidityForPool(
   pool: PoolContract | undefined
@@ -23,7 +26,7 @@ export function useTotalLiquidityForPool(
   );
   const [tokens, balances] = poolTokens ?? [undefined, undefined];
 
-  const baseAssetIndex =
+  const baseAssetIndex: number =
     tokens?.findIndex((address) =>
       baseAssetAddressWhitelist.includes(address)
     ) ?? 0;
@@ -37,13 +40,47 @@ export function useTotalLiquidityForPool(
   const [baseAssetDecimals] = useTokenDecimals(baseAssetContract);
 
   // Base Asset Fiat Balance
-  const fiatBalance = useConvertToFiat(
+  const baseAssetFiatBalance = useConvertToFiat(
     baseAssetPrice,
     baseAssetBalance,
     baseAssetDecimals
   );
 
-  return fiatBalance;
+  const yieldAssetIndex = baseAssetIndex === 0 ? 1 : 0;
+  const yieldAssetAddress = tokens?.[yieldAssetIndex];
+  const yieldAssetBalance = balances?.[yieldAssetIndex];
+  const yieldAssetContract = yieldAssetAddress
+    ? ERC20__factory.connect(yieldAssetAddress, jsonRpcProvider)
+    : undefined;
+  const [yieldAssetDecimals] = useTokenDecimals(yieldAssetContract);
+
+  /**************************
+   * Laxy spot price technique until we get a better method.  Right now just calculates how much out
+   * asset for '1' of the in asset.  A future optimisation might be to do '$1' worth of the in asset
+   * to minimize slippage in the value.
+   **************************/
+  const amountIn = parseUnits("1", baseAssetDecimals);
+  const { data: amountOut = BigNumber.from(1) } = useOnSwapGivenIn(
+    pool,
+    baseAssetContract,
+    amountIn
+  );
+  const yieldAssetRatio =
+    +formatUnits(amountIn, baseAssetDecimals) /
+    +formatUnits(amountOut, yieldAssetDecimals);
+  const yieldAssetPrice = Money.fromDecimal(
+    +yieldAssetRatio * (baseAssetPrice?.toDecimal() || 1),
+    Currencies.USD,
+    Math.round
+  );
+  /***************************** */
+
+  const yieldAssetFiatBalance =
+    useConvertToFiat(yieldAssetPrice, yieldAssetBalance, yieldAssetDecimals) ||
+    Money.fromInteger(0, Currencies.USD.code);
+
+  const totalBalance = baseAssetFiatBalance?.add(yieldAssetFiatBalance);
+  return totalBalance;
 }
 // TODO: formalize this
 const baseAssetAddressWhitelist = [
