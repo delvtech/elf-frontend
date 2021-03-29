@@ -12,6 +12,7 @@ import { matchSmartContractReadCallQuery } from "efi-ui/contracts/matchSmartCont
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useSmartContractTransaction } from "efi-ui/contracts/useSmartContractTransaction/useSmartContractTransaction";
 import { MAX_ALLOWANCE } from "efi/contracts/token";
+import { useAllowance } from "./useAllowance";
 
 interface ERC20ApproveButtonProps {
   account: string | null | undefined;
@@ -90,15 +91,4 @@ function useOnApproveClick(
     }
   }, [approve, spender]);
   return onApproveClick;
-}
-
-function useAllowance(
-  contract: ERC20 | undefined,
-  owner: string | null | undefined,
-  spender: string | null | undefined
-) {
-  return useSmartContractReadCall(contract, "allowance", {
-    enabled: !!owner && !!spender,
-    callArgs: [owner as string, spender as string],
-  });
 }

@@ -1,8 +1,6 @@
-import React, { FC, useCallback } from "react";
-import { useQueryClient } from "react-query";
+import React, { FC } from "react";
 
 import { Button, Drawer, Intent } from "@blueprintjs/core";
-import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
 import { formatUnits, parseUnits } from "@ethersproject/units";
 import { AbstractConnector } from "@web3-react/abstract-connector";
@@ -16,26 +14,25 @@ import tw from "efi-tailwindcss-classnames";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { useBatchSwapGivenIn } from "efi-ui/balancer/useBatchSwapGivenIn";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { matchSmartContractReadCallQuery } from "efi-ui/contracts/matchSmartContractReadCallQuery/matchSmartContractReadCallQuery";
+import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { useSmartContractTransaction } from "efi-ui/contracts/useSmartContractTransaction/useSmartContractTransaction";
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
-import { isApprovalRequiredForTransactions } from "efi-ui/crypto/isApprovalRequiredForTransactions";
 import { TransactionDetailsCallout } from "efi-ui/invest/BuyFYTConfirmationDrawer/TransactionDetailsCallout";
 import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatFullDate } from "efi/base/dates";
 import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
-import { MAX_ALLOWANCE } from "efi/contracts/token";
-import { CryptoAssetType } from "efi/crypto/CryptoAsset";
+import { isERC20Permit } from "efi/contracts/isERC20Permit";
+import { findTokenContract } from "efi/crypto/CryptoAsset";
 import { PoolContract } from "efi/pools/PoolContract";
 
 import { ConnectWalletCallout } from "./ConnectWalletCallout";
+import { ERC20ApproveButton } from "./ERC20ApproveButton";
 import { WalletApprovalCallout } from "./WalletApprovalCallout";
-import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
+import { useAllowance } from "efi-ui/invest/BuyFYTConfirmationDrawer/useAllowance";
 
 interface BuyFYTConfirmationDrawerProps {
   chainId: number | undefined;
@@ -71,11 +68,7 @@ export const BuyFYTConfirmationDrawer: FC<BuyFYTConfirmationDrawerProps> = ({
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
 
   // base asset calls
-  let baseAssetContract: ERC20 | undefined;
-  if (baseAsset.type === CryptoAssetType.ERC20) {
-    baseAssetContract = baseAsset.tokenContract;
-  }
-  const onApproveClick = useOnApproveClick(baseAssetContract, signer, account);
+  const baseAssetContract = findTokenContract(baseAsset);
   const baseAssetSymbol = useCryptoSymbol(baseAsset);
   const baseAssetDecimals = useCryptoDecimals(baseAsset);
 
@@ -98,13 +91,11 @@ export const BuyFYTConfirmationDrawer: FC<BuyFYTConfirmationDrawerProps> = ({
 
   // vault calls
   const balancerVault = useBalancerVault();
-  const {
-    data: marketAllowance,
-    isLoading: isMarketAllowanceLoading,
-  } = useSmartContractReadCall(baseAssetContract, "allowance", {
-    enabled: !!account && !!balancerVault?.address,
-    callArgs: [account as string, balancerVault?.address as string],
-  });
+  const { data: marketAllowance } = useAllowance(
+    baseAssetContract as ERC20,
+    account,
+    balancerVault?.address
+  );
 
   // pool calls
   const amountAsBigNumber = parseUnits(amountIn || "0", baseAssetDecimals);
@@ -128,14 +119,10 @@ export const BuyFYTConfirmationDrawer: FC<BuyFYTConfirmationDrawerProps> = ({
 
   const hasApproval =
     !!amountIn && marketAllowance?.gte(parseUnits(amountIn, baseAssetDecimals));
-  const requiresApproval = isApprovalRequiredForTransactions(baseAsset);
-  const showApprovalCallout =
-    account && !isMarketAllowanceLoading && requiresApproval && !hasApproval;
 
   const amountOutNumber = +formatUnits(amountOut || 0, baseAssetDecimals);
   const amountOutFormatted = amountOutNumber.toFixed(4);
 
-  const showWalletApprovalButton = account && requiresApproval;
   return (
     <Drawer
       isOpen={isOpen}
@@ -194,25 +181,22 @@ export const BuyFYTConfirmationDrawer: FC<BuyFYTConfirmationDrawerProps> = ({
           </div>
         </TransactionDetailsCallout>
 
-        {showApprovalCallout ? (
-          <WalletApprovalCallout baseAssetSymbol={baseAssetSymbol} />
+        {account && !isERC20Permit(baseAssetContract) ? (
+          <WalletApprovalCallout
+            account={account}
+            contract={baseAssetContract}
+            approvalAmount={amountAsBigNumber}
+          />
         ) : null}
 
         <div className={tw("flex", "space-x-2")}>
-          {showWalletApprovalButton ? (
-            <Button
-              fill
-              large
-              outlined
-              icon={hasApproval ? IconNames.TICK : null}
-              disabled={hasApproval}
-              intent={hasApproval ? Intent.SUCCESS : Intent.PRIMARY}
-              onClick={onApproveClick}
-            >
-              {hasApproval
-                ? t`${baseAssetSymbol} approved`
-                : t`Approve ${baseAssetSymbol}`}
-            </Button>
+          {account && !isERC20Permit(baseAssetContract) ? (
+            <ERC20ApproveButton
+              account={account}
+              approvalAmount={amountAsBigNumber}
+              contract={baseAssetContract}
+              signer={signer}
+            />
           ) : null}
           <Button
             fill
@@ -227,39 +211,3 @@ export const BuyFYTConfirmationDrawer: FC<BuyFYTConfirmationDrawerProps> = ({
     </Drawer>
   );
 };
-
-function useOnApproveClick(
-  baseAssetContract: ERC20 | undefined,
-  signer: Signer | undefined,
-  account: string | null | undefined
-) {
-  const queryClient = useQueryClient();
-  const balancerVault = useBalancerVault();
-  const { mutate: approve } = useSmartContractTransaction(
-    baseAssetContract,
-    "approve",
-    signer,
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries({
-          predicate: (query) => {
-            const match = matchSmartContractReadCallQuery(
-              query,
-              baseAssetContract,
-              "allowance",
-              [account as string, balancerVault?.address as string]
-            );
-            return match;
-          },
-        });
-      },
-    }
-  );
-
-  const onApproveClick = useCallback(() => {
-    if (balancerVault) {
-      approve([balancerVault.address, MAX_ALLOWANCE]);
-    }
-  }, [approve, balancerVault]);
-  return onApproveClick;
-}
