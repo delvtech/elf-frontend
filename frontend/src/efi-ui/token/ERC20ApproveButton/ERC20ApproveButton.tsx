@@ -7,41 +7,33 @@ import { ERC20 } from "elf-contracts/types/ERC20";
 import { BigNumber, Signer } from "ethers";
 import { t } from "ttag";
 
-import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { matchSmartContractReadCallQuery } from "efi-ui/contracts/matchSmartContractReadCallQuery/matchSmartContractReadCallQuery";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useSmartContractTransaction } from "efi-ui/contracts/useSmartContractTransaction/useSmartContractTransaction";
+import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
 import { MAX_ALLOWANCE } from "efi/contracts/token";
-import { useAllowance } from "./useAllowance";
 
 interface ERC20ApproveButtonProps {
-  account: string | null | undefined;
+  owner: string | null | undefined;
+  spender: string | null | undefined;
   contract: ERC20 | undefined;
   approvalAmount: BigNumber | undefined;
   signer: Signer | undefined;
 }
 export const ERC20ApproveButton: FC<ERC20ApproveButtonProps> = ({
-  account,
+  owner,
+  spender,
   contract,
   approvalAmount,
   signer,
 }) => {
   const { data: assetSymbol } = useSmartContractReadCall(contract, "symbol");
-  const balancerVault = useBalancerVault();
-  const { data: marketAllowance } = useAllowance(
-    contract,
-    account,
-    balancerVault?.address
-  );
+  const { data: marketAllowance } = useTokenAllowance(contract, owner, spender);
 
-  const onApproveClick = useOnApproveClick(
-    contract,
-    signer,
-    account,
-    balancerVault?.address
-  );
+  const onApproveClick = useOnApproveClick(contract, signer, owner, spender);
 
   const hasApproval = !!approvalAmount && marketAllowance?.gte(approvalAmount);
+
   return (
     <Button
       fill

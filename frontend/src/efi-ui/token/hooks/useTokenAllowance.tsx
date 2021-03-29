@@ -3,7 +3,7 @@ import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadC
 import { QueryObserverResult } from "react-query";
 import { BigNumber } from "ethers";
 
-export function useAllowance(
+export function useTokenAllowance(
   contract: ERC20 | undefined,
   owner: string | null | undefined,
   spender: string | null | undefined

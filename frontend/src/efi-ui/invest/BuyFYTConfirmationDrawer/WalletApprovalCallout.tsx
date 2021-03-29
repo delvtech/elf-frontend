@@ -7,7 +7,7 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { useAllowance } from "efi-ui/invest/BuyFYTConfirmationDrawer/useAllowance";
+import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
 import { BigNumber } from "ethers";
 
 interface WalletApprovalCalloutProps {
@@ -24,11 +24,10 @@ export const WalletApprovalCallout: FC<WalletApprovalCalloutProps> = ({
   const { data: assetSymbol } = useSmartContractReadCall(contract, "symbol");
 
   const balancerVault = useBalancerVault();
-  const { data: marketAllowance, isLoading: isAllowanceLoading } = useAllowance(
-    contract,
-    account,
-    balancerVault?.address
-  );
+  const {
+    data: marketAllowance,
+    isLoading: isAllowanceLoading,
+  } = useTokenAllowance(contract, account, balancerVault?.address);
 
   const hasApproval = !!approvalAmount && marketAllowance?.gte(approvalAmount);
   const showCallout = account && !isAllowanceLoading && !hasApproval;

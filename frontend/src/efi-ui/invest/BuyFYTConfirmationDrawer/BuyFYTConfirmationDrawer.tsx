@@ -22,17 +22,17 @@ import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSy
 import { TransactionDetailsCallout } from "efi-ui/invest/BuyFYTConfirmationDrawer/TransactionDetailsCallout";
 import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
+import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatFullDate } from "efi/base/dates";
 import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
 import { isERC20Permit } from "efi/contracts/isERC20Permit";
-import { findTokenContract } from "efi/crypto/CryptoAsset";
+import { CryptoAssetType, findTokenContract } from "efi/crypto/CryptoAsset";
 import { PoolContract } from "efi/pools/PoolContract";
 
+import { ERC20ApproveButton } from "../../token/ERC20ApproveButton/ERC20ApproveButton";
 import { ConnectWalletCallout } from "./ConnectWalletCallout";
-import { ERC20ApproveButton } from "./ERC20ApproveButton";
 import { WalletApprovalCallout } from "./WalletApprovalCallout";
-import { useAllowance } from "efi-ui/invest/BuyFYTConfirmationDrawer/useAllowance";
 
 interface BuyFYTConfirmationDrawerProps {
   chainId: number | undefined;
@@ -91,7 +91,7 @@ export const BuyFYTConfirmationDrawer: FC<BuyFYTConfirmationDrawerProps> = ({
 
   // vault calls
   const balancerVault = useBalancerVault();
-  const { data: marketAllowance } = useAllowance(
+  const { data: marketAllowance } = useTokenAllowance(
     baseAssetContract as ERC20,
     account,
     balancerVault?.address
@@ -104,6 +104,7 @@ export const BuyFYTConfirmationDrawer: FC<BuyFYTConfirmationDrawerProps> = ({
     baseAssetContract,
     amountAsBigNumber
   );
+
   const onTransaction = useBatchSwapGivenIn(
     account,
     signer,
@@ -181,23 +182,37 @@ export const BuyFYTConfirmationDrawer: FC<BuyFYTConfirmationDrawerProps> = ({
           </div>
         </TransactionDetailsCallout>
 
-        {account && !isERC20Permit(baseAssetContract) ? (
-          <WalletApprovalCallout
-            account={account}
-            contract={baseAssetContract}
-            approvalAmount={amountAsBigNumber}
-          />
-        ) : null}
+        {
+          // we can't pull this out to a new variable because typescript can't
+          // narrow the type of baseAssetContract when referencing a variable
+          account &&
+          baseAsset.type !== CryptoAssetType.ETHEREUM &&
+          !isERC20Permit(baseAssetContract) ? (
+            <WalletApprovalCallout
+              account={account}
+              contract={baseAssetContract}
+              approvalAmount={amountAsBigNumber}
+            />
+          ) : null
+        }
 
         <div className={tw("flex", "space-x-2")}>
-          {account && !isERC20Permit(baseAssetContract) ? (
-            <ERC20ApproveButton
-              account={account}
-              approvalAmount={amountAsBigNumber}
-              contract={baseAssetContract}
-              signer={signer}
-            />
-          ) : null}
+          {
+            // we can't pull this out to a new variable because typescript can't
+            // narrow the type of baseAssetContract when referencing a variable
+            account &&
+            baseAsset.type !== CryptoAssetType.ETHEREUM &&
+            !isERC20Permit(baseAssetContract) ? (
+              <ERC20ApproveButton
+                owner={account}
+                spender={balancerVault?.address}
+                approvalAmount={amountAsBigNumber}
+                contract={baseAssetContract}
+                signer={signer}
+              />
+            ) : null
+          }
+
           <Button
             fill
             disabled={!hasApproval}
