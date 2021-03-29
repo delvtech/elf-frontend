@@ -47,9 +47,10 @@ export function useActiveTranche(
     ? activeTrancheIndexes[activeBaseAsset?.id]
     : undefined;
 
-  const activeTranche = activeTrancheIndex
-    ? availableTranches[activeTrancheIndex]
-    : undefined;
+  const activeTranche =
+    activeTrancheIndex !== undefined
+      ? availableTranches[activeTrancheIndex]
+      : undefined;
 
   return {
     activeTranche,
