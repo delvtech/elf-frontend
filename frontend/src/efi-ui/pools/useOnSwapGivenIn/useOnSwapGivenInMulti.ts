@@ -24,7 +24,7 @@ export function useOnSwapGivenInMulti(
 
   const poolIds = getQueriesData(poolIdResults);
   const poolTokens = getQueriesData(poolTokensResults) || [];
-  const poolBalances = poolTokens.map((poolToken) => poolToken?.balances);
+  const poolBalances = poolTokens.map((poolToken) => poolToken?.[1]);
 
   const zipped = zip(
     pools,

@@ -19,7 +19,6 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { getQueryData } from "efi-ui/base/queryResults";
-import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { useCryptoBalance } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
@@ -33,17 +32,14 @@ import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn
 import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
-import ContractAddresses from "efi/contracts/contractsJson";
 import { CryptoAssetType, findTokenContract } from "efi/crypto/CryptoAsset";
-import { ONE_ETHER } from "efi/crypto/ethereum";
+import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 
 import { InvestmentAmountInput } from "./InvestmentAmountInput";
-import { useOnSwapGivenOut } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenOut";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
-import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
-import { ERC20Permit } from "elf-contracts/types/ERC20Permit";
-import { ERC20 } from "elf-contracts/types/ERC20";
+import { useQueryBatchSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
+import { SwapKind } from "efi-ui/balancer/SwapKind";
 
 export interface InvestCardProps {
   library: Web3Provider | undefined;
@@ -100,7 +96,17 @@ export const InvestCard: FC<InvestCardProps> = ({
   }, []);
 
   // base asset
-  const [activeBaseAsset, setActiveBaseAsset] = useState(baseAssets[0]);
+  const [activeBaseAsset, setActiveBaseAsset] = useState<
+    CryptoAssetWithIcon | undefined
+  >();
+  // The list of base assets will be empty while the data loads, so we want to
+  // set the default after it's been populated
+  useSetDefaultActiveBaseAsset(
+    activeBaseAsset,
+    setActiveBaseAsset,
+    baseAssets[0]
+  );
+
   const activeBaseAssetSymbol = useCryptoSymbol(activeBaseAsset);
   const activeBaseAssetDecimals = useCryptoDecimals(activeBaseAsset);
   const activeBaseAssetBalance = useCryptoBalance(
@@ -120,14 +126,16 @@ export const InvestCard: FC<InvestCardProps> = ({
     activeTranche,
     "decimals"
   );
+
+  // the tranche's pool
   const pool = usePoolForToken(activeTranche as ERC20Shim, jsonRpcProvider);
+
   const tranchePriceResult = useOnSwapGivenIn(
     pool,
     activeTranche as ERC20Shim,
-    ONE_ETHER
+    parseUnits("1", trancheDecimals)
   );
 
-  // use weth when the base asset is eth
   const inputTokenSymbol = useCryptoSymbol(activeBaseAsset);
 
   // input calculations
@@ -140,31 +148,36 @@ export const InvestCard: FC<InvestCardProps> = ({
     : undefined;
 
   // the amount of tranche you get out
-  // TODO: we don't want to use eth for this, change this to queryBatchSwap
-  // instead so eth is supported.
-  let inputToken: ERC20 | ERC20Permit | undefined;
-  const wethContract = useSmartContractFromFactory(
-    ContractAddresses.wethAddress,
-    ERC20__factory.connect
-  );
+  let tokenInAddress: string | undefined;
   if (!activeBaseAsset) {
-    inputToken = undefined;
+    tokenInAddress = undefined;
   } else if (activeBaseAsset?.type === CryptoAssetType.ETHEREUM) {
-    inputToken = wethContract;
+    tokenInAddress = BALANCER_ETH_SENTINEL;
   } else {
-    inputToken = findTokenContract(activeBaseAsset);
+    const tokenContract = findTokenContract(activeBaseAsset);
+    tokenInAddress = tokenContract?.address;
   }
 
-  const { data: swapGivenIn } = useOnSwapGivenIn(
+  const tokenOutAddress = activeTranche?.address;
+  const {
+    data: [unusedTokenInFromBatchSwapIn, tokenOutFromBatchSwapIn] = [
+      undefined,
+      undefined,
+    ],
+  } = useQueryBatchSwap(
+    SwapKind.GIVEN_IN,
     pool,
-    inputToken,
+    tokenInAddress,
+    tokenOutAddress,
     amountInAsBigNumber
   );
 
   // the amount of base asset you must put in
-  const { data: swapGivenOut } = useOnSwapGivenOut(
+  const { data: [tokenInFromBatchSwapOut] = [] } = useQueryBatchSwap(
+    SwapKind.GIVEN_OUT,
     pool,
-    activeTranche as ERC20Shim,
+    tokenInAddress,
+    tokenOutAddress,
     amountOutAsBigNumber
   );
 
@@ -173,14 +186,16 @@ export const InvestCard: FC<InvestCardProps> = ({
   // when we get a new result for the swapAmountOut, update the text input to reflect it
   // when we get a new result for the swapAmountIn, update the text input to reflect it
   useSyncWithActiveInput(
-    swapGivenIn ? formatUnits(swapGivenIn, activeBaseAssetDecimals) : undefined,
+    tokenOutFromBatchSwapIn
+      ? formatUnits(tokenOutFromBatchSwapIn.abs(), activeBaseAssetDecimals)
+      : undefined,
     setAmountOut,
     activeInput,
     "amountOut"
   );
   useSyncWithActiveInput(
-    swapGivenOut
-      ? formatUnits(swapGivenOut, activeBaseAssetDecimals)
+    tokenInFromBatchSwapOut
+      ? formatUnits(tokenInFromBatchSwapOut, activeBaseAssetDecimals)
       : undefined,
     setAmountIn,
     activeInput,
@@ -188,7 +203,7 @@ export const InvestCard: FC<InvestCardProps> = ({
   );
 
   const totalYield = calculateTotalYield(
-    swapGivenIn,
+    tokenOutFromBatchSwapIn?.abs(),
     amountInAsBigNumber,
     activeBaseAssetDecimals
   );
@@ -343,6 +358,20 @@ export const InvestCard: FC<InvestCardProps> = ({
     </Fragment>
   );
 };
+
+function useSetDefaultActiveBaseAsset(
+  activeBaseAsset: CryptoAssetWithIcon | undefined,
+  setActiveBaseAsset: React.Dispatch<
+    React.SetStateAction<CryptoAssetWithIcon | undefined>
+  >,
+  defaultBaseAsset: CryptoAssetWithIcon | undefined
+) {
+  useEffect(() => {
+    if (activeBaseAsset === undefined) {
+      setActiveBaseAsset(defaultBaseAsset);
+    }
+  }, [activeBaseAsset, defaultBaseAsset, setActiveBaseAsset]);
+}
 
 function calculatePercentYield(
   amountIn: string | undefined,

@@ -31,11 +31,11 @@ import { formatFullDate } from "efi/base/dates";
 import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
 import { MAX_ALLOWANCE } from "efi/contracts/token";
 import { CryptoAssetType } from "efi/crypto/CryptoAsset";
-import { ONE_ETHER } from "efi/crypto/ethereum";
 import { PoolContract } from "efi/pools/PoolContract";
 
 import { ConnectWalletCallout } from "./ConnectWalletCallout";
 import { WalletApprovalCallout } from "./WalletApprovalCallout";
+import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 
 interface BuyFYTConfirmationDrawerProps {
   chainId: number | undefined;
@@ -90,8 +90,8 @@ export const BuyFYTConfirmationDrawer: FC<BuyFYTConfirmationDrawerProps> = ({
   );
   const { data: tranchePriceBigNumber } = useOnSwapGivenIn(
     pool,
-    tranche as ERC20 | undefined,
-    ONE_ETHER
+    tranche as ERC20Shim,
+    parseUnits("1", trancheDecimals)
   );
   const tranchePrice = +formatCurrency(tranchePriceBigNumber, trancheDecimals);
   const roundedTranchePrice = tranchePrice.toFixed(4);

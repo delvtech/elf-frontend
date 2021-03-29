@@ -30,8 +30,10 @@ export function useTrancheContracts(
 
   const eventsQueryResult = useQuery({
     queryKey: [
-      ["trancheFactory", "queryFilter", "TrancheCreated"],
-      { filterOptions },
+      "trancheFactory",
+      "queryFilter",
+      "TrancheCreated",
+      filterOptions,
     ],
     queryFn: async () => {
       const events = await trancheFactoryContract.queryFilter(filterQuery);
@@ -41,12 +43,12 @@ export function useTrancheContracts(
 
   const { data: events = [] } = eventsQueryResult;
 
-  const trancheAddresses = Array.isArray(events)
-    ? (events?.map((event) => event.args?.trancheAddress) as (
-        | string
-        | undefined
-      )[])
-    : [];
+  const trancheAddresses =
+    (events?.map(
+      (event) =>
+        // The first arg is the trancheAddress
+        event.args?.[0]
+    ) as (string | undefined)[]) || [];
 
   const trancheContracts = useSmartContractsFromFactory(
     trancheAddresses,

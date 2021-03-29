@@ -8,6 +8,7 @@ import {
 } from "efi/crypto/CryptoAsset";
 import { useEthBalance } from "efi-ui/wallets/hooks/useEthBalance/useEthBalance";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
+import { assertNever } from "efi/base/assertNever";
 
 export function useCryptoBalance(
   library: Web3Provider | undefined,
@@ -30,10 +31,22 @@ export function useCryptoBalance(
     "decimals"
   );
 
-  let balance: number = +formatEth(ethBalance);
-  if (asset?.type === CryptoAssetType.ERC20) {
-    balance = +formatCurrency(tokenBalance, tokenDecimals);
+  if (!asset) {
+    return 0;
   }
 
-  return balance;
+  const ethBalanceNumber = +formatEth(ethBalance);
+  const tokenBalanceNumber = +formatCurrency(tokenBalance, tokenDecimals);
+
+  const assetType = asset?.type;
+  switch (assetType) {
+    case CryptoAssetType.ERC20:
+    case CryptoAssetType.ERC20PERMIT:
+      return tokenBalanceNumber;
+    case CryptoAssetType.ETHEREUM:
+      return ethBalanceNumber;
+    default:
+      assertNever(assetType);
+      return 0;
+  }
 }

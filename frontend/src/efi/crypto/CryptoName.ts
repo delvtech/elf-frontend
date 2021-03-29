@@ -2,6 +2,7 @@ import { CryptoSymbolOld } from "efi/crypto/CryptoSymbol";
 
 /**
  * The names of all crypto assets supported in Element.
+ * @deprecated Get the name of the token from it's contract instead.
  */
 export const CryptoName: Record<CryptoSymbolOld, string> = {
   ETH: "Ethereum",
