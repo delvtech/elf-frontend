@@ -28,4 +28,4 @@ export function isMainnet(chainId: number): boolean {
 export const NUM_ETH_DECIMALS = 18;
 export const ONE_ETHER = parseUnits("1", NUM_ETH_DECIMALS);
 
-export const ETH_ZERO_ADDRESS = "0";
+export const ETH_ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
