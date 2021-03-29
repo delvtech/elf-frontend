@@ -33,7 +33,7 @@ import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
 import { CryptoAssetType, findTokenContract } from "efi/crypto/CryptoAsset";
-import { ETH_ZERO_ADDRESS } from "efi/crypto/ethereum";
+import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 
 import { InvestmentAmountInput } from "./InvestmentAmountInput";
@@ -152,7 +152,7 @@ export const InvestCard: FC<InvestCardProps> = ({
   if (!activeBaseAsset) {
     tokenInAddress = undefined;
   } else if (activeBaseAsset?.type === CryptoAssetType.ETHEREUM) {
-    tokenInAddress = ETH_ZERO_ADDRESS;
+    tokenInAddress = BALANCER_ETH_SENTINEL;
   } else {
     const tokenContract = findTokenContract(activeBaseAsset);
     tokenInAddress = tokenContract?.address;
