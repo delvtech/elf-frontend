@@ -38,7 +38,7 @@ export function makeQueryBatchSwapCallArgs(
       amount,
       tokenInIndex,
       tokenOutIndex,
-      userData: ETH_ZERO_ADDRESS,
+      userData: poolId,
     },
   ];
 
