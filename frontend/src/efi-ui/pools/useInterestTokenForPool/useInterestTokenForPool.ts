@@ -14,7 +14,7 @@ export function useInterestTokenForPool(
   signerOrProvider?: Signer | Provider
 ): InterestToken | undefined {
   const poolTokensResult = usePoolTokens(pool);
-  const poolTokens = poolTokensResult.data?.tokens?.filter(Boolean) || [];
+  const poolTokens = poolTokensResult.data?.[0]?.filter(Boolean) || [];
   const tranches = useTrancheContracts(signerOrProvider);
   const interestTokenAddressResults = useSmartContractReadCalls(
     tranches,

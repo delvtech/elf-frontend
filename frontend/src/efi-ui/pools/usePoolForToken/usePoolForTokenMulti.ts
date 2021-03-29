@@ -20,7 +20,7 @@ export function usePoolForTokenMulti(
   const pools = tokenContracts.map((tokenContract) => {
     const [pool] =
       zippedItems.find(([market, finalTokens]) => {
-        const match = findTokenAddress(finalTokens?.tokens, tokenContract);
+        const match = findTokenAddress(finalTokens?.[0], tokenContract);
         return match;
       }) || [];
 
