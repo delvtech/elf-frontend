@@ -2,16 +2,18 @@ import React, { FC } from "react";
 
 import { Card, Classes, Icon, Intent, Tag } from "@blueprintjs/core";
 import classNames from "classnames";
+import { Money } from "ts-money";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { formatMoney } from "efi/money/formatMoney";
 
 interface MarketSummaryProps {
-  totalSupply: string | undefined;
+  totalLiquidity: Money | undefined;
 }
 
 export const MarketSummary: FC<MarketSummaryProps> = (props) => {
-  const { totalSupply } = props;
+  const { totalLiquidity } = props;
   return (
     <div className={tw("flex-1")}>
       <div className="mb-2">{t`Market Summary`}</div>
@@ -23,7 +25,7 @@ export const MarketSummary: FC<MarketSummaryProps> = (props) => {
                 className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
               >{t`Total Liquidity`}</span>
               <div className={classNames("h3", tw("space-x-4"))}>
-                {totalSupply}
+                {formatMoney(totalLiquidity)}
               </div>
             </div>
             <div className={tw("flex", "self-end")}>
