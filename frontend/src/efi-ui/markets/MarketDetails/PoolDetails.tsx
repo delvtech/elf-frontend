@@ -15,6 +15,9 @@ import { TokenSummary } from "efi-ui/markets/TokenSummary/TokenSummary";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useTotalLiquidityForPool } from "efi-ui/pools/useTotalLiquidityForPool/useTotalLiquidityForPool";
 import { PoolContract } from "efi/pools/PoolContract";
+import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForPool";
+import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
+import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
 
 interface PoolDetailsProps {
   library: Web3Provider | undefined;
@@ -36,6 +39,15 @@ export const PoolDetails: FC<PoolDetailsProps> = ({
     ERC20__factory.connect
   );
   const totalLiquidity = useTotalLiquidityForPool(pool);
+  const tranche = useTrancheForPool(pool);
+  const { data: startDateInUnixSeconds } = useTrancheCreatedAt(tranche);
+  const { data: maturityDateInUnixSeconds } = useSmartContractReadCall(
+    tranche,
+    "unlockTimestamp"
+  );
+
+  const startDate = (startDateInUnixSeconds || 0) * 1000;
+  const maturityDate = (maturityDateInUnixSeconds?.toNumber() || 0) * 1000;
 
   return (
     <div className={tw("flex", "mb-8", "space-x-4", "w-full", "items-stretch")}>
@@ -43,7 +55,10 @@ export const PoolDetails: FC<PoolDetailsProps> = ({
         <div className={tw("flex", "flex-col", "space-y-8", "w-full")}>
           <div className={tw("flex", "space-x-12")}>
             <MarketSummary totalLiquidity={totalLiquidity} />
-            <FixedYieldSummary startDate={0} maturityDate={0} />
+            <FixedYieldSummary
+              startDate={startDate}
+              maturityDate={maturityDate}
+            />
             <TokenSummary tokenIn={tokenIn} tokenOut={tokenOut} />
           </div>
           <div className={tw("flex", "space-x-12")}>
