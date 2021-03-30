@@ -35,7 +35,7 @@ export function useTotalLiquidityForPool(
   const baseAssetContract = baseAssetAddress
     ? ERC20__factory.connect(baseAssetAddress, jsonRpcProvider)
     : undefined;
-  const [baseAssetPrice] = useTokenPrice(baseAssetContract, Currencies.USD);
+  const [baseAssetPrice] = useTokenPrice(baseAssetContract, currency);
   const [baseAssetDecimals] = useTokenDecimals(baseAssetContract);
 
   // Base Asset Fiat Balance

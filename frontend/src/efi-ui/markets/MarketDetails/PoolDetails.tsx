@@ -59,7 +59,7 @@ export const PoolDetails: FC<PoolDetailsProps> = ({
               startDate={startDate}
               maturityDate={maturityDate}
             />
-            <TokenSummary tokenIn={tokenIn} tokenOut={tokenOut} />
+            <TokenSummary pool={pool} tokenIn={tokenIn} tokenOut={tokenOut} />
           </div>
           <div className={tw("flex", "space-x-12")}>
             <MarketHistory />
