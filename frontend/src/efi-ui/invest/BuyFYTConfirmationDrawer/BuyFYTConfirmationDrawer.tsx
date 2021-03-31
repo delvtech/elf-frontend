@@ -11,8 +11,10 @@ import { BigNumber, Signer } from "ethers";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { SwapKind } from "efi-ui/balancer/SwapKind";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { useBatchSwapGivenIn } from "efi-ui/balancer/useBatchSwapGivenIn/useBatchSwapGivenIn";
+import { useQueryBatchSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
@@ -22,7 +24,9 @@ import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSy
 import { TransactionDetailsCallout } from "efi-ui/invest/BuyFYTConfirmationDrawer/TransactionDetailsCallout";
 import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
+import { ERC20ApproveButton } from "efi-ui/token/ERC20ApproveButton/ERC20ApproveButton";
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
+import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatFullDate } from "efi/base/dates";
 import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
@@ -34,12 +38,8 @@ import {
 } from "efi/crypto/CryptoAsset";
 import { PoolContract } from "efi/pools/PoolContract";
 
-import { ERC20ApproveButton } from "../../token/ERC20ApproveButton/ERC20ApproveButton";
 import { ConnectWalletCallout } from "./ConnectWalletCallout";
 import { WalletApprovalCallout } from "./WalletApprovalCallout";
-import { BALANCER_ETH_SENTINEL } from "efi/balancer";
-import { useQueryBatchSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
-import { SwapKind } from "efi-ui/balancer/SwapKind";
 
 interface BuyFYTConfirmationDrawerProps {
   chainId: number | undefined;
