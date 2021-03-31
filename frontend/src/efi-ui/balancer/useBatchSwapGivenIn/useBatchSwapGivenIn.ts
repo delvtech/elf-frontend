@@ -12,6 +12,12 @@ import { ContractMethodArgs } from "efi/contracts/types";
 import { PoolContract } from "efi/pools/PoolContract";
 import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 
+/**
+ * Hook wrapper for the Balancer Vault's batchSwapGivenIn method.
+ *
+ * Note: This hook takes token addresses as arguments because the Balancer
+ * Vault supports eth via a sentinel token address, see: BALANCER_ETH_SENTINAL
+ */
 export function useBatchSwapGivenIn(
   account: string | null | undefined,
   signer: Signer | undefined,
