@@ -27,7 +27,7 @@ import { InvestmentAmountInput } from "./InvestmentAmountInput";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useQueryBatchSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
 import { SwapKind } from "efi-ui/balancer/SwapKind";
-import { useTokenSpotPrice } from "efi-ui/pools/useTotalLiquidityForPool/useTokenSpotPrice";
+import { useTokenSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { PrincipalDiscountPreview } from "./PrincipalDiscountPreview";
 
 export interface InvestCardProps {

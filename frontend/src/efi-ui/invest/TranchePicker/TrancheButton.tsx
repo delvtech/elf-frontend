@@ -9,17 +9,15 @@ import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { getQueryData } from "efi-ui/base/queryResults";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
 import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
-import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
-import { ONE_ETHER } from "efi/crypto/ethereum";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useUnderlyingVaultForTranche } from "efi-ui/tranche/useUnderlyingVaultForTranche";
+import { useTokenSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 
 interface TrancheButtonProps {
   library: Web3Provider | undefined;
@@ -29,7 +27,6 @@ interface TrancheButtonProps {
 }
 
 export const TrancheButton: FC<TrancheButtonProps> = ({ tranche, onClick }) => {
-  const decimalsResult = useSmartContractReadCall(tranche, "decimals");
   const unlockTimestampResult = useSmartContractReadCall(
     tranche,
     "unlockTimestamp"
@@ -38,7 +35,6 @@ export const TrancheButton: FC<TrancheButtonProps> = ({ tranche, onClick }) => {
   const position = useUnderlyingVaultForTranche(tranche);
   const { data: positionName } = useSmartContractReadCall(position, "name");
 
-  const decimals = getQueryData(decimalsResult);
   const unlockDate = convertEpochSecondsToDate(
     getQueryData(unlockTimestampResult)
   );
@@ -49,13 +45,7 @@ export const TrancheButton: FC<TrancheButtonProps> = ({ tranche, onClick }) => {
     baseAssetToken,
     "symbol"
   );
-  const tranchePriceResult = useOnSwapGivenIn(
-    pool,
-    tranche as ERC20Shim,
-    ONE_ETHER // TODO: make this 1 of the tranche asset instead
-  );
-  const tranchePriceBigNumber = getQueryData(tranchePriceResult);
-  const tranchePrice = +formatCurrency(tranchePriceBigNumber, decimals);
+  const tranchePrice = useTokenSpotPrice(pool, tranche as ERC20Shim);
 
   let trancheAPY = "-";
   if (tranchePrice && unlockDate) {
