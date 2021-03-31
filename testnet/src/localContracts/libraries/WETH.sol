@@ -9,6 +9,10 @@ contract WETH is ERC20 {
         mint(sender, 1000000000000000000000000000000000000000);
     }
 
+    function deposit() public payable {
+        _mint(msg.sender, msg.value);
+    }
+
     function mint(address account, uint256 amount) public {
         _mint(account, amount);
     }

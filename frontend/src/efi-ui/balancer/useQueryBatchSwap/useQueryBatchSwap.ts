@@ -33,7 +33,7 @@ export function useQueryBatchSwap(
     balancerVault,
     "queryBatchSwap",
     {
-      enabled: [poolId, tokenInAddress, amount, tokenOutAddress].every(
+      enabled: [poolId, tokenInAddress, amount?.gt(0), tokenOutAddress].every(
         (v) => !!v
       ),
       callArgs: makeQueryBatchSwapCallArgs(

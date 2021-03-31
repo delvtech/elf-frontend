@@ -1,14 +1,40 @@
 import React, { FC } from "react";
+
 import { Callout, Intent } from "@blueprintjs/core";
+import { ERC20 } from "elf-contracts/types/ERC20";
 import { t } from "ttag";
+
 import tw from "efi-tailwindcss-classnames";
+import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
+import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
+import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
+import { BigNumber } from "ethers";
 
 interface WalletApprovalCalloutProps {
-  baseAssetSymbol: string | undefined;
+  account: string | null | undefined;
+  contract: ERC20 | undefined;
+
+  approvalAmount: BigNumber | undefined;
 }
 export const WalletApprovalCallout: FC<WalletApprovalCalloutProps> = ({
-  baseAssetSymbol,
+  account,
+  approvalAmount,
+  contract,
 }) => {
+  const { data: assetSymbol } = useSmartContractReadCall(contract, "symbol");
+
+  const balancerVault = useBalancerVault();
+  const {
+    data: marketAllowance,
+    isLoading: isAllowanceLoading,
+  } = useTokenAllowance(contract, account, balancerVault?.address);
+
+  const hasApproval = !!approvalAmount && marketAllowance?.gte(approvalAmount);
+  const showCallout = account && !isAllowanceLoading && !hasApproval;
+  if (!showCallout) {
+    return null;
+  }
+
   return (
     <Callout
       intent={Intent.WARNING}
@@ -18,7 +44,7 @@ export const WalletApprovalCallout: FC<WalletApprovalCalloutProps> = ({
     >
       <div
         className={"pt-1"}
-      >{t`Element uses Balancer Pools for trading. You'll need to grant Balancer approval to spend your ${baseAssetSymbol} in order to swap for Principal Tokens.`}</div>
+      >{t`Element uses Balancer Pools for trading. You'll need to grant Balancer approval to spend your ${assetSymbol} in order to swap for Principal Tokens.`}</div>
     </Callout>
   );
 };

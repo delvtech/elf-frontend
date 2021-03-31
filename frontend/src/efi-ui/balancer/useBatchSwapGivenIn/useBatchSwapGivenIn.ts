@@ -1,31 +1,35 @@
 import { useCallback } from "react";
 
-import { ERC20 } from "elf-contracts/types/ERC20";
 import { Vault } from "elf-contracts/types/Vault";
-import { BigNumber, Signer } from "ethers";
+import { BigNumber, PayableOverrides, Signer } from "ethers";
 
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { getQueryData } from "efi-ui/base/queryResults";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useSmartContractTransaction } from "efi-ui/contracts/useSmartContractTransaction/useSmartContractTransaction";
-import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { PoolContract } from "efi/pools/PoolContract";
+import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 
+/**
+ * Hook wrapper for the Balancer Vault's batchSwapGivenIn method.
+ *
+ * Note: This hook takes token addresses as arguments because the Balancer
+ * Vault supports eth via a sentinel token address, see: BALANCER_ETH_SENTINAL
+ */
 export function useBatchSwapGivenIn(
   account: string | null | undefined,
   signer: Signer | undefined,
   pool: PoolContract | undefined,
-  tokenIn: ERC20 | undefined,
-  // TODO: Make this a string instead, eg: "2.1234"
-  amount: BigNumber | undefined
+  tokenInAddress: string | undefined,
+  tokenOutAddress: string | undefined,
+  amountIn: BigNumber | undefined
 ): () => void {
   const balancerVault = useBalancerVault();
   const poolIdResult = useSmartContractReadCall(pool, "getPoolId");
   const poolId = getQueryData(poolIdResult);
 
-  const tokenOut = usePoolPairedToken(pool, tokenIn);
   const { mutate: batchSwapGivenIn } = useSmartContractTransaction(
     balancerVault,
     "batchSwapGivenIn",
@@ -36,14 +40,21 @@ export function useBatchSwapGivenIn(
     const callArgs = makeBatchSwapGivenInCallArgs(
       account,
       poolId,
-      tokenIn,
-      tokenOut,
-      amount
+      tokenInAddress,
+      tokenOutAddress,
+      amountIn
     );
     if (callArgs) {
       batchSwapGivenIn(callArgs);
     }
-  }, [account, amount, batchSwapGivenIn, poolId, tokenIn, tokenOut]);
+  }, [
+    account,
+    amountIn,
+    batchSwapGivenIn,
+    poolId,
+    tokenInAddress,
+    tokenOutAddress,
+  ]);
 
   return onSwapGivenInTransaction;
 }
@@ -51,24 +62,30 @@ export function useBatchSwapGivenIn(
 function makeBatchSwapGivenInCallArgs(
   account: string | null | undefined,
   poolId: string | undefined,
-  tokenIn: ERC20 | undefined,
-  tokenOut: ERC20 | undefined,
+  tokenInAddress: string | undefined,
+  tokenOutAddress: string | undefined,
   amountIn: BigNumber | undefined
 ): ContractMethodArgs<Vault, "batchSwapGivenIn"> | undefined {
-  if (!account || !poolId || !tokenIn || !tokenOut || !amountIn) {
+  if (!account || !poolId || !tokenInAddress || !tokenOutAddress || !amountIn) {
     return;
   }
 
-  const tokens = [tokenIn.address, tokenOut.address];
-  const userData = poolId;
+  // batchSwapGivenIn requires that the assets be sorted
+  const assets = [tokenInAddress, tokenOutAddress].sort();
+  const tokenInIndex = assets.findIndex(
+    (address) => address === tokenInAddress
+  );
+  const tokenOutIndex = assets.findIndex(
+    (address) => address === tokenOutAddress
+  );
+
   const swaps = [
     {
       poolId,
-      // indicies from 'tokens', puttin FYTs in, getting base asset out.
-      tokenInIndex: 0,
-      tokenOutIndex: 1,
+      tokenInIndex,
+      tokenOutIndex,
       amountIn,
-      userData,
+      userData: poolId,
     },
   ];
 
@@ -87,18 +104,31 @@ function makeBatchSwapGivenInCallArgs(
   const limitTokenOut = amountIn;
 
   // limits of how much of each token is allowed to be traded.  order must be the same as 'tokens'
-  const limits = [limitTokenIn, limitTokenOut];
+  const limits = assets.map((tokenAddress, index) => {
+    if (index === tokenInIndex) {
+      return limitTokenIn;
+    }
+    if (index === tokenOutIndex) {
+      return limitTokenOut;
+    }
+    // this should never happen but is here for completeness
+    return undefined;
+  }) as BigNumber[];
 
   // set a large deadline for now, it was being buggy.  time is in seconds.  must be an integer.
   const deadline = Math.round(Date.now() / 1000) + ONE_DAY_IN_SECONDS;
 
   const callArgs: ContractMethodArgs<Vault, "batchSwapGivenIn"> = [
     swaps,
-    tokens,
+    assets,
     funds,
     limits,
     deadline,
   ];
+  if (tokenInAddress === BALANCER_ETH_SENTINEL) {
+    const overrides: PayableOverrides = { value: amountIn };
+    callArgs.push(overrides);
+  }
 
   return callArgs;
 }

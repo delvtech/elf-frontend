@@ -14,6 +14,7 @@ import {
   Contract,
   ContractTransaction,
   Overrides,
+  PayableOverrides,
   CallOverrides,
 } from "@ethersproject/contracts";
 import { BytesLike } from "@ethersproject/bytes";
@@ -26,6 +27,7 @@ interface WETHInterface extends ethers.utils.Interface {
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
     "decimals()": FunctionFragment;
+    "deposit()": FunctionFragment;
     "mint(address,uint256)": FunctionFragment;
     "name()": FunctionFragment;
     "symbol()": FunctionFragment;
@@ -44,6 +46,7 @@ interface WETHInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
   encodeFunctionData(functionFragment: "decimals", values?: undefined): string;
+  encodeFunctionData(functionFragment: "deposit", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "mint",
     values: [string, BigNumberish]
@@ -67,6 +70,7 @@ interface WETHInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "decimals", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
@@ -137,6 +141,10 @@ export class WETH extends Contract {
     decimals(overrides?: CallOverrides): Promise<[number]>;
 
     "decimals()"(overrides?: CallOverrides): Promise<[number]>;
+
+    deposit(overrides?: PayableOverrides): Promise<ContractTransaction>;
+
+    "deposit()"(overrides?: PayableOverrides): Promise<ContractTransaction>;
 
     mint(
       account: string,
@@ -224,6 +232,10 @@ export class WETH extends Contract {
 
   "decimals()"(overrides?: CallOverrides): Promise<number>;
 
+  deposit(overrides?: PayableOverrides): Promise<ContractTransaction>;
+
+  "deposit()"(overrides?: PayableOverrides): Promise<ContractTransaction>;
+
   mint(
     account: string,
     amount: BigNumberish,
@@ -309,6 +321,10 @@ export class WETH extends Contract {
     decimals(overrides?: CallOverrides): Promise<number>;
 
     "decimals()"(overrides?: CallOverrides): Promise<number>;
+
+    deposit(overrides?: CallOverrides): Promise<void>;
+
+    "deposit()"(overrides?: CallOverrides): Promise<void>;
 
     mint(
       account: string,
@@ -407,6 +423,10 @@ export class WETH extends Contract {
 
     "decimals()"(overrides?: CallOverrides): Promise<BigNumber>;
 
+    deposit(overrides?: PayableOverrides): Promise<BigNumber>;
+
+    "deposit()"(overrides?: PayableOverrides): Promise<BigNumber>;
+
     mint(
       account: string,
       amount: BigNumberish,
@@ -496,6 +516,10 @@ export class WETH extends Contract {
     decimals(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     "decimals()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    deposit(overrides?: PayableOverrides): Promise<PopulatedTransaction>;
+
+    "deposit()"(overrides?: PayableOverrides): Promise<PopulatedTransaction>;
 
     mint(
       account: string,
