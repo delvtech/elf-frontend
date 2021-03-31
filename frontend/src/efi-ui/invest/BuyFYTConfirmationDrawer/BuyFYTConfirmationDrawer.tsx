@@ -29,7 +29,6 @@ import { ERC20ApproveButton } from "efi-ui/token/ERC20ApproveButton/ERC20Approve
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatFullDate } from "efi/base/dates";
-import { isERC20Permit } from "efi/contracts/isERC20Permit";
 import {
   CryptoAsset,
   CryptoAssetType,
@@ -200,12 +199,10 @@ export const BuyFYTConfirmationDrawer: FC<BuyFYTConfirmationDrawerProps> = ({
         {
           // we can't pull this out to a new variable because typescript can't
           // narrow the type of baseAssetContract when referencing a variable
-          account &&
-          baseAsset.type !== CryptoAssetType.ETHEREUM &&
-          !isERC20Permit(baseAssetContract) ? (
+          account && baseAsset.type !== CryptoAssetType.ETHEREUM ? (
             <WalletApprovalCallout
               account={account}
-              contract={baseAssetContract}
+              contract={baseAssetContract as ERC20Shim}
               approvalAmount={amountAsBigNumber}
             />
           ) : null
@@ -215,14 +212,12 @@ export const BuyFYTConfirmationDrawer: FC<BuyFYTConfirmationDrawerProps> = ({
           {
             // we can't pull this out to a new variable because typescript can't
             // narrow the type of baseAssetContract when referencing a variable
-            account &&
-            baseAsset.type !== CryptoAssetType.ETHEREUM &&
-            !isERC20Permit(baseAssetContract) ? (
+            account && baseAsset.type !== CryptoAssetType.ETHEREUM ? (
               <ERC20ApproveButton
                 owner={account}
                 spender={balancerVault?.address}
                 approvalAmount={amountAsBigNumber}
-                contract={baseAssetContract}
+                contract={baseAssetContract as ERC20Shim}
                 signer={signer}
               />
             ) : null
