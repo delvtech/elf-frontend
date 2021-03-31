@@ -22,7 +22,9 @@ import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { TransactionDetailsCallout } from "efi-ui/invest/BuyFYTConfirmationDrawer/TransactionDetailsCallout";
+import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
+import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
 import { ERC20ApproveButton } from "efi-ui/token/ERC20ApproveButton/ERC20ApproveButton";
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
 import { BALANCER_ETH_SENTINEL } from "efi/balancer";
@@ -38,7 +40,6 @@ import { PoolContract } from "efi/pools/PoolContract";
 
 import { ConnectWalletCallout } from "./ConnectWalletCallout";
 import { WalletApprovalCallout } from "./WalletApprovalCallout";
-import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 
 interface BuyFYTConfirmationDrawerProps {
   chainId: number | undefined;
@@ -236,26 +237,6 @@ export const BuyFYTConfirmationDrawer: FC<BuyFYTConfirmationDrawerProps> = ({
     </Drawer>
   );
 };
-
-/**
- * Disambiguates the crypto asset to get a suitable token address for the
- * Balancer Vault.
- */
-function getTokenAddressForBalancer(baseAsset: CryptoAsset | undefined) {
-  if (!baseAsset) {
-    return;
-  }
-
-  switch (baseAsset.type) {
-    case CryptoAssetType.ETHEREUM:
-      return BALANCER_ETH_SENTINEL;
-    case CryptoAssetType.ERC20:
-    case CryptoAssetType.ERC20PERMIT:
-      return baseAsset.tokenContract.address;
-    default:
-      return undefined;
-  }
-}
 
 function getConfirmButtonDisabled(
   account: string | null | undefined,

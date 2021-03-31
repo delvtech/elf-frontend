@@ -29,6 +29,7 @@ import { useQueryBatchSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBat
 import { SwapKind } from "efi-ui/balancer/SwapKind";
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { PrincipalDiscountPreview } from "./PrincipalDiscountPreview";
+import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
 
 export interface InvestCardProps {
   library: Web3Provider | undefined;
@@ -111,9 +112,7 @@ export const InvestCard: FC<InvestCardProps> = ({
 
   // the tranche's pool
   const pool = usePoolForToken(activeTranche as ERC20Shim, jsonRpcProvider);
-
   const tranchePrice = usePoolSpotPrice(pool, activeTranche as ERC20Shim);
-
   const inputTokenSymbol = useCryptoSymbol(activeBaseAsset);
 
   // input calculations
@@ -125,38 +124,34 @@ export const InvestCard: FC<InvestCardProps> = ({
     ? parseUnits(amountOut, trancheDecimals)
     : undefined;
 
-  // the amount of tranche you get out
-  let tokenInAddress: string | undefined;
-  if (!activeBaseAsset) {
-    tokenInAddress = undefined;
-  } else if (activeBaseAsset?.type === CryptoAssetType.ETHEREUM) {
-    tokenInAddress = BALANCER_ETH_SENTINEL;
-  } else {
-    const tokenContract = findTokenContract(activeBaseAsset);
-    tokenInAddress = tokenContract?.address;
-  }
+  const tokenInAddress = getTokenAddressForBalancer(activeBaseAsset);
 
   const tokenOutAddress = activeTranche?.address;
-  const {
-    data: [unusedTokenInFromBatchSwapIn, tokenOutFromBatchSwapIn] = [],
-  } = useQueryBatchSwap(
+  const sortedAssets = [tokenInAddress, tokenOutAddress].sort();
+  const tokenInIndex = sortedAssets.findIndex(
+    (address) => address === tokenInAddress
+  );
+  const tokenOutIndex = sortedAssets.findIndex(
+    (address) => address === tokenOutAddress
+  );
+  const { data: queryBatchSwapInTokens = [] } = useQueryBatchSwap(
     SwapKind.GIVEN_IN,
     pool,
     tokenInAddress,
     tokenOutAddress,
     amountInAsBigNumber
   );
+  const tokenOutFromBatchSwapIn = queryBatchSwapInTokens[tokenOutIndex];
 
   // the amount of base asset you must put in
-  const {
-    data: [tokenInFromBatchSwapOut, unusedTokenOutFromBatchSwapOut] = [],
-  } = useQueryBatchSwap(
+  const { data: queryBatchSwapOutTokens = [] } = useQueryBatchSwap(
     SwapKind.GIVEN_OUT,
     pool,
     tokenInAddress,
     tokenOutAddress,
     amountOutAsBigNumber
   );
+  const tokenInFromBatchSwapOut = queryBatchSwapOutTokens[tokenInIndex];
 
   // Effects to sync inputs
   // sync the the amount out input
