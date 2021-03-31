@@ -6,18 +6,18 @@ import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
  * Balancer Vault.
  */
 export function getTokenAddressForBalancer(
-  baseAsset: CryptoAsset | undefined
+  cryptoAsset: CryptoAsset | undefined
 ): string | undefined {
-  if (!baseAsset) {
+  if (!cryptoAsset) {
     return;
   }
 
-  switch (baseAsset.type) {
+  switch (cryptoAsset.type) {
     case CryptoAssetType.ETHEREUM:
       return BALANCER_ETH_SENTINEL;
     case CryptoAssetType.ERC20:
     case CryptoAssetType.ERC20PERMIT:
-      return baseAsset.tokenContract.address;
+      return cryptoAsset.tokenContract.address;
     default:
       return undefined;
   }

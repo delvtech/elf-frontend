@@ -9,25 +9,26 @@ import { Tranche } from "elf-contracts/types/Tranche";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { SwapKind } from "efi-ui/balancer/SwapKind";
+import { parseQueryBatchSwapResult } from "efi-ui/balancer/useQueryBatchSwap/parseQueryBatchSwapResult";
+import { useQueryBatchSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
+import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
+import { CryptoAssetPicker } from "efi-ui/crypto/CryptoAssetPicker/CryptoAssetPicker";
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { useCryptoBalance } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
-import { CryptoAssetPicker } from "efi-ui/crypto/CryptoAssetPicker/CryptoAssetPicker";
 import { BuyFYTConfirmationDrawer } from "efi-ui/invest/BuyFYTConfirmationDrawer/BuyFYTConfirmationDrawer";
 import { useActiveTranche } from "efi-ui/invest/hooks/useActiveTranche";
 import { TranchePicker } from "efi-ui/invest/TranchePicker/TranchePicker";
 import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
+import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
+import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 
 import { InvestmentAmountInput } from "./InvestmentAmountInput";
-import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
-import { useQueryBatchSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
-import { SwapKind } from "efi-ui/balancer/SwapKind";
-import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { PrincipalDiscountPreview } from "./PrincipalDiscountPreview";
-import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
 
 export interface InvestCardProps {
   library: Web3Provider | undefined;
@@ -123,33 +124,33 @@ export const InvestCard: FC<InvestCardProps> = ({
     : undefined;
 
   const tokenInAddress = getTokenAddressForBalancer(activeBaseAsset);
-
   const tokenOutAddress = activeTranche?.address;
-  const sortedAssets = [tokenInAddress, tokenOutAddress].sort();
-  const tokenInIndex = sortedAssets.findIndex(
-    (address) => address === tokenInAddress
-  );
-  const tokenOutIndex = sortedAssets.findIndex(
-    (address) => address === tokenOutAddress
-  );
-  const { data: queryBatchSwapInTokens = [] } = useQueryBatchSwap(
+  const { data: queryBatchSwapInTokens } = useQueryBatchSwap(
     SwapKind.GIVEN_IN,
     pool,
     tokenInAddress,
     tokenOutAddress,
     amountInAsBigNumber
   );
-  const tokenOutFromBatchSwapIn = queryBatchSwapInTokens[tokenOutIndex];
+  const { tokenOut: tokenOutFromBatchSwapIn } = parseQueryBatchSwapResult(
+    tokenInAddress,
+    tokenOutAddress,
+    queryBatchSwapInTokens
+  );
 
   // the amount of base asset you must put in
-  const { data: queryBatchSwapOutTokens = [] } = useQueryBatchSwap(
+  const { data: queryBatchSwapOutTokens } = useQueryBatchSwap(
     SwapKind.GIVEN_OUT,
     pool,
     tokenInAddress,
     tokenOutAddress,
     amountOutAsBigNumber
   );
-  const tokenInFromBatchSwapOut = queryBatchSwapOutTokens[tokenInIndex];
+  const { tokenIn: tokenInFromBatchSwapOut } = parseQueryBatchSwapResult(
+    tokenInAddress,
+    tokenOutAddress,
+    queryBatchSwapOutTokens
+  );
 
   // Effects to sync inputs
   // sync the the amount out input

@@ -39,6 +39,7 @@ import { PoolContract } from "efi/pools/PoolContract";
 
 import { ConnectWalletCallout } from "./ConnectWalletCallout";
 import { WalletApprovalCallout } from "./WalletApprovalCallout";
+import { parseQueryBatchSwapResult } from "efi-ui/balancer/useQueryBatchSwap/parseQueryBatchSwapResult";
 
 interface BuyFYTConfirmationDrawerProps {
   chainId: number | undefined;
@@ -97,14 +98,18 @@ export const BuyFYTConfirmationDrawer: FC<BuyFYTConfirmationDrawerProps> = ({
   // pool calls
   const amountAsBigNumber = parseUnits(amountIn || "0", baseAssetDecimals);
   const tokenInAddress = getTokenAddressForBalancer(baseAsset);
-  const {
-    data: [unusedAmountIn, amountOut] = [undefined, undefined],
-  } = useQueryBatchSwap(
+  const tokenOutAddress = tranche?.address;
+  const { data: queryBatchSwapInResult = [] } = useQueryBatchSwap(
     SwapKind.GIVEN_IN,
     pool,
     tokenInAddress,
-    tranche?.address,
+    tokenOutAddress,
     amountAsBigNumber
+  );
+  const { tokenOut: amountOut } = parseQueryBatchSwapResult(
+    tokenInAddress,
+    tokenOutAddress,
+    queryBatchSwapInResult
   );
 
   const onTransaction = useBatchSwapGivenIn(
