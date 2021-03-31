@@ -1,31 +1,25 @@
+import { formatUnits, parseUnits } from "@ethersproject/units";
 import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
-import { Currencies, Money } from "ts-money";
+import { BigNumber } from "ethers";
+import { Money } from "ts-money";
 
-import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useConvertToFiat } from "efi-ui/money/hooks/useConvertToFiat";
+import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
+import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
+import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
+import { KNOWN_BASE_ASSETS } from "efi/contracts/contractsJson";
 import { PoolContract } from "efi/pools/PoolContract";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
-import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
-import { formatUnits, parseUnits } from "@ethersproject/units";
-import { BigNumber } from "ethers";
-import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
-import { KNOWN_BASE_ASSETS } from "efi/contracts/contractsJson";
-import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 
 export function useTotalLiquidityForPool(
   pool: PoolContract | undefined
 ): Money | undefined {
-  const vault = useBalancerVault();
   const { currency } = useCurrencyPref();
-  const { data: poolId } = useSmartContractReadCall(pool, "getPoolId");
-  const { data: poolTokens } = useSmartContractReadCall(
-    vault,
-    "getPoolTokens",
-    { callArgs: [poolId as string], enabled: !!poolId }
+  const { data: [tokens, balances] = [undefined, undefined] } = usePoolTokens(
+    pool
   );
-  const [tokens, balances] = poolTokens ?? [undefined, undefined];
 
   const baseAssetIndex: number =
     tokens?.findIndex((address) => KNOWN_BASE_ASSETS.includes(address)) ?? 0;

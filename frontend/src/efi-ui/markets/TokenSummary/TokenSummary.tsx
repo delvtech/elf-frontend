@@ -10,18 +10,16 @@ import { Money } from "ts-money";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
-import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
+import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
+import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
 import { KNOWN_BASE_ASSETS } from "efi/contracts/contractsJson";
+import { formatMoney } from "efi/money/formatMoney";
 import { PoolContract } from "efi/pools/PoolContract";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
-import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
-import { formatMoney } from "efi/money/formatMoney";
-import { formatEthBalance } from "efi/crypto/formatEthBalance";
 
 interface TokenSummaryProps {
   pool: PoolContract | undefined;
@@ -43,7 +41,7 @@ export const TokenSummary: FC<TokenSummaryProps> = ({
     yieldAssetBalance,
     yieldAssetDecimals,
     yieldAssetPrice,
-  } = useTokenSummary(pool);
+  } = useTokensSummary(pool);
 
   return (
     <div className={tw("flex-1")}>
@@ -144,7 +142,7 @@ export const TokenSummary: FC<TokenSummaryProps> = ({
   );
 };
 
-interface TokenSummary {
+interface TokensSummary {
   baseAssetContract: ERC20 | undefined;
   baseAssetSymbol: string | undefined;
   baseAssetBalance: BigNumber | undefined;
@@ -157,16 +155,11 @@ interface TokenSummary {
   yieldAssetPrice: Money | undefined;
 }
 
-function useTokenSummary(pool: PoolContract | undefined): TokenSummary {
-  const vault = useBalancerVault();
+function useTokensSummary(pool: PoolContract | undefined): TokensSummary {
   const { currency } = useCurrencyPref();
-  const { data: poolId } = useSmartContractReadCall(pool, "getPoolId");
-  const { data: poolTokens } = useSmartContractReadCall(
-    vault,
-    "getPoolTokens",
-    { callArgs: [poolId as string], enabled: !!poolId }
+  const { data: [tokens, balances] = [undefined, undefined] } = usePoolTokens(
+    pool
   );
-  const [tokens, balances] = poolTokens ?? [undefined, undefined];
 
   const baseAssetIndex: number =
     tokens?.findIndex((address) => KNOWN_BASE_ASSETS.includes(address)) ?? 0;

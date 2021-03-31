@@ -7,7 +7,7 @@ import { isAddress } from "ethers/lib/utils";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useTrancheContracts } from "efi-ui/tranche/useTrancheContracts";
-import { PoolContract } from "efi/pools/PoolContract";
+import { isConvergentCurvePool, PoolContract } from "efi/pools/PoolContract";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 import { InterestToken__factory } from "elf-contracts/types/factories/InterestToken__factory";
 import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
@@ -19,19 +19,20 @@ export function useTrancheForPool(
   signerOrProvider?: Signer | Provider
 ): Tranche | undefined {
   // if the pool is a ConvergentCurvePool, then we can just look up the tranche address directly.
-  // the 'bond' is the prinicpal token address, which is the same adddress as the tranche.
+  // the 'bond' is the principal token address, which is the same adddress as the tranche.
   const tranches = useTrancheContracts(signerOrProvider ?? jsonRpcProvider);
   const {
     data: trancheAddressFromPrincipalTokenAddress,
-  } = useSmartContractReadCall(pool as ConvergentCurvePool, "bond");
+  } = useSmartContractReadCall(pool as ConvergentCurvePool, "bond", {
+    enabled: isConvergentCurvePool(pool),
+  });
 
   // if the pool is a WeightedPool then we'll, find an interest token associated with it. then we
   // just have to look up the tranche address
   const { data: tokenInfo } = usePoolTokens(pool);
   const [tokens] = tokenInfo || [];
-  const interestTokenAddresses = useInterestTokens(tranches).map(
-    (c) => c.address
-  );
+  const interestTokens = useInterestTokens(tranches);
+  const interestTokenAddresses = interestTokens.map((c) => c.address);
   const interestTokenAddress = interestTokenAddresses.find((address) =>
     tokens?.includes(address)
   );
