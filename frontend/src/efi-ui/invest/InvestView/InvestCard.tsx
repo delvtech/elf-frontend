@@ -96,15 +96,10 @@ export const InvestCard: FC<InvestCardProps> = ({
   }, []);
 
   // base asset
-  const [activeBaseAsset, setActiveBaseAsset] = useState<
-    CryptoAssetWithIcon | undefined
-  >();
-  // The list of base assets will be empty while the data loads, so we want to
-  // set the default after it's been populated
-  useSetDefaultActiveBaseAsset(
-    activeBaseAsset,
-    setActiveBaseAsset,
-    baseAssets[0]
+  const { activeBaseAsset, setActiveBaseAsset } = useActiveBaseAsset(
+    baseAssets,
+    setAmountIn,
+    setAmountOut
   );
 
   const activeBaseAssetSymbol = useCryptoSymbol(activeBaseAsset);
@@ -361,9 +356,7 @@ export const InvestCard: FC<InvestCardProps> = ({
 
 function useSetDefaultActiveBaseAsset(
   activeBaseAsset: CryptoAssetWithIcon | undefined,
-  setActiveBaseAsset: React.Dispatch<
-    React.SetStateAction<CryptoAssetWithIcon | undefined>
-  >,
+  setActiveBaseAsset: (baseAsset: CryptoAssetWithIcon | undefined) => void,
   defaultBaseAsset: CryptoAssetWithIcon | undefined
 ) {
   useEffect(() => {
@@ -421,4 +414,31 @@ function useSyncWithActiveInput(
     const roundedAmount = (+newAmount).toFixed(4);
     setAmount(roundedAmount);
   }, [setAmount, newAmount, activeInput, syncWithInput]);
+}
+
+function useActiveBaseAsset(
+  allBaseAssets: (CryptoAssetWithIcon | undefined)[],
+  setAmountIn: (amount: string | undefined) => void,
+  setAmountOut: (amount: string | undefined) => void
+) {
+  const [activeBaseAsset, setActiveBaseAssetState] = useState<
+    CryptoAssetWithIcon | undefined
+  >();
+  const setActiveBaseAsset = useCallback(
+    (baseAsset: CryptoAssetWithIcon | undefined) => {
+      setActiveBaseAssetState(baseAsset);
+      // clear the inputs when the base asset changes
+      setAmountIn(undefined);
+      setAmountOut(undefined);
+    },
+    [setAmountIn, setAmountOut]
+  );
+  // The list of base assets will be empty while the data loads, so we want to
+  // set the default after it's been populated
+  useSetDefaultActiveBaseAsset(
+    activeBaseAsset,
+    setActiveBaseAsset,
+    allBaseAssets[0]
+  );
+  return { activeBaseAsset, setActiveBaseAsset };
 }
