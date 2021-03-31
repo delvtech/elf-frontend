@@ -155,10 +155,7 @@ export const InvestCard: FC<InvestCardProps> = ({
 
   const tokenOutAddress = activeTranche?.address;
   const {
-    data: [unusedTokenInFromBatchSwapIn, tokenOutFromBatchSwapIn] = [
-      undefined,
-      undefined,
-    ],
+    data: [unusedTokenInFromBatchSwapIn, tokenOutFromBatchSwapIn] = [],
   } = useQueryBatchSwap(
     SwapKind.GIVEN_IN,
     pool,
