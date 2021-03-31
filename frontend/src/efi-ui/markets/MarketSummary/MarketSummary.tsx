@@ -10,10 +10,13 @@ import { formatMoney } from "efi/money/formatMoney";
 
 interface MarketSummaryProps {
   totalLiquidity: Money | undefined;
+  tradeVolume: Money | undefined;
+  swapVolume: Money | undefined;
 }
 
 export const MarketSummary: FC<MarketSummaryProps> = (props) => {
-  const { totalLiquidity } = props;
+  const { totalLiquidity, tradeVolume, swapVolume } = props;
+
   return (
     <div className={tw("flex-1")}>
       <div className="mb-2">{t`Market Summary`}</div>
@@ -42,7 +45,7 @@ export const MarketSummary: FC<MarketSummaryProps> = (props) => {
                 className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
               >{t`Volume (24hr)`}</span>
               <div className={classNames("h3", tw("space-x-4"))}>
-                $1,456,789
+                {formatMoney(tradeVolume)}
               </div>
             </div>
             <div className={tw("flex", "self-end")}>
@@ -58,7 +61,9 @@ export const MarketSummary: FC<MarketSummaryProps> = (props) => {
               <span
                 className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
               >{t`Fees (24hr)`}</span>
-              <div className={classNames("h3", tw("space-x-4"))}>$1,456</div>
+              <div className={classNames("h3", tw("space-x-4"))}>
+                {formatMoney(swapVolume)}
+              </div>
             </div>
             <div className={tw("flex", "self-end")}>
               <Tag minimal intent={Intent.SUCCESS}>
