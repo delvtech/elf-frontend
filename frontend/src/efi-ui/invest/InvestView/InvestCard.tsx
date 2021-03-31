@@ -19,8 +19,6 @@ import { BuyFYTConfirmationDrawer } from "efi-ui/invest/BuyFYTConfirmationDrawer
 import { useActiveTranche } from "efi-ui/invest/hooks/useActiveTranche";
 import { TranchePicker } from "efi-ui/invest/TranchePicker/TranchePicker";
 import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
-import { CryptoAssetType, findTokenContract } from "efi/crypto/CryptoAsset";
-import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 
 import { InvestmentAmountInput } from "./InvestmentAmountInput";

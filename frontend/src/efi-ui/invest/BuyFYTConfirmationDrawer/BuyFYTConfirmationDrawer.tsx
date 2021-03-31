@@ -27,7 +27,6 @@ import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
 import { ERC20ApproveButton } from "efi-ui/token/ERC20ApproveButton/ERC20ApproveButton";
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
-import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatFullDate } from "efi/base/dates";
 import { isERC20Permit } from "efi/contracts/isERC20Permit";
