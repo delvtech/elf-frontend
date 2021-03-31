@@ -7,12 +7,12 @@ import { AbstractConnector } from "@web3-react/abstract-connector";
 import classNames from "classnames";
 import { ERC20 } from "elf-contracts/types/ERC20";
 import { Tranche } from "elf-contracts/types/Tranche";
-import { Signer } from "ethers";
+import { BigNumber, Signer } from "ethers";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
-import { useBatchSwapGivenIn } from "efi-ui/balancer/useBatchSwapGivenIn";
+import { useBatchSwapGivenIn } from "efi-ui/balancer/useBatchSwapGivenIn/useBatchSwapGivenIn";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
@@ -27,12 +27,19 @@ import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatFullDate } from "efi/base/dates";
 import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
 import { isERC20Permit } from "efi/contracts/isERC20Permit";
-import { CryptoAssetType, findTokenContract } from "efi/crypto/CryptoAsset";
+import {
+  CryptoAsset,
+  CryptoAssetType,
+  findTokenContract,
+} from "efi/crypto/CryptoAsset";
 import { PoolContract } from "efi/pools/PoolContract";
 
 import { ERC20ApproveButton } from "../../token/ERC20ApproveButton/ERC20ApproveButton";
 import { ConnectWalletCallout } from "./ConnectWalletCallout";
 import { WalletApprovalCallout } from "./WalletApprovalCallout";
+import { BALANCER_ETH_SENTINEL } from "efi/balancer";
+import { useQueryBatchSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
+import { SwapKind } from "efi-ui/balancer/SwapKind";
 
 interface BuyFYTConfirmationDrawerProps {
   chainId: number | undefined;
@@ -99,9 +106,14 @@ export const BuyFYTConfirmationDrawer: FC<BuyFYTConfirmationDrawerProps> = ({
 
   // pool calls
   const amountAsBigNumber = parseUnits(amountIn || "0", baseAssetDecimals);
-  const { data: amountOut } = useOnSwapGivenIn(
+  const tokenInAddress = getTokenAddressForBalancer(baseAsset);
+  const {
+    data: [unusedAmountIn, amountOut] = [undefined, undefined],
+  } = useQueryBatchSwap(
+    SwapKind.GIVEN_IN,
     pool,
-    baseAssetContract,
+    tokenInAddress,
+    tranche?.address,
     amountAsBigNumber
   );
 
@@ -109,7 +121,8 @@ export const BuyFYTConfirmationDrawer: FC<BuyFYTConfirmationDrawerProps> = ({
     account,
     signer,
     pool,
-    baseAssetContract,
+    tokenInAddress,
+    tranche?.address,
     amountAsBigNumber
   );
 
@@ -118,11 +131,18 @@ export const BuyFYTConfirmationDrawer: FC<BuyFYTConfirmationDrawerProps> = ({
     ? formatFullDate(unlockTimeStampDate)
     : undefined;
 
-  const hasApproval =
-    !!amountIn && marketAllowance?.gte(parseUnits(amountIn, baseAssetDecimals));
-
-  const amountOutNumber = +formatUnits(amountOut || 0, baseAssetDecimals);
+  const amountOutNumber = +formatUnits(
+    amountOut?.abs() || 0,
+    baseAssetDecimals
+  );
   const amountOutFormatted = amountOutNumber.toFixed(4);
+
+  const confirmButtonDisabled = getConfirmButtonDisabled(
+    account,
+    baseAsset,
+    amountAsBigNumber,
+    marketAllowance
+  );
 
   return (
     <Drawer
@@ -215,8 +235,8 @@ export const BuyFYTConfirmationDrawer: FC<BuyFYTConfirmationDrawerProps> = ({
 
           <Button
             fill
-            disabled={!hasApproval}
-            intent={hasApproval ? Intent.PRIMARY : Intent.NONE}
+            disabled={confirmButtonDisabled}
+            intent={Intent.PRIMARY}
             large
             outlined
             onClick={onTransaction}
@@ -226,3 +246,51 @@ export const BuyFYTConfirmationDrawer: FC<BuyFYTConfirmationDrawerProps> = ({
     </Drawer>
   );
 };
+
+/**
+ * Disambiguates the crypto asset to get a suitable token address for the
+ * Balancer Vault.
+ */
+function getTokenAddressForBalancer(baseAsset: CryptoAsset | undefined) {
+  if (!baseAsset) {
+    return;
+  }
+
+  switch (baseAsset.type) {
+    case CryptoAssetType.ETHEREUM:
+      return BALANCER_ETH_SENTINEL;
+    case CryptoAssetType.ERC20:
+    case CryptoAssetType.ERC20PERMIT:
+      return baseAsset.tokenContract.address;
+    default:
+      return undefined;
+  }
+}
+
+function getConfirmButtonDisabled(
+  account: string | null | undefined,
+  baseAsset: CryptoAsset,
+  amountIn: BigNumber | undefined,
+  marketAllowance: BigNumber | undefined
+) {
+  // must be connected to click this button
+  if (!account) {
+    return true;
+  }
+
+  // disabled when no amount is entered
+  if (!amountIn) {
+    return true;
+  }
+
+  // disabled if it's an erc20 w/out enough allowance
+  if (baseAsset.type === CryptoAssetType.ERC20) {
+    const hasEnoughAllowance = marketAllowance?.lt(amountIn);
+    if (!hasEnoughAllowance) {
+      return true;
+    }
+  }
+
+  // otherwise the button should not be disabled
+  return false;
+}
