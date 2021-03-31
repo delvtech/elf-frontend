@@ -17,7 +17,9 @@ import { getEthereumProviderLibrary } from "efi/wallets/providers";
 
 import { efiQueryClient } from "./efi/queryClient";
 import versionJson from "./version.output.json";
-import ContractAddresses from "efi/contracts/contractsJson";
+import ContractAddresses, {
+  lookupAddressKey,
+} from "efi/contracts/contractsJson";
 
 logAppVersion();
 
@@ -25,6 +27,7 @@ if (process.env.NODE_ENV === "development") {
   prefixDocumentTitle("(D)");
 }
 window.addresses = ContractAddresses as any;
+window.lookupAddressKey = lookupAddressKey;
 
 ReactDOM.render(
   <Web3ReactProvider getLibrary={getEthereumProviderLibrary}>

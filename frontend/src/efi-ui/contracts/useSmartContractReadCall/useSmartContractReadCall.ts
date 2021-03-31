@@ -8,6 +8,7 @@ import {
   ContractMethodName,
   StaticContractReturnType,
 } from "efi/contracts/types";
+import { lookupAddressKey } from "efi/contracts/contractsJson";
 
 export interface UseSmartContractReadCallOptions<
   TContract extends Contract,
@@ -67,8 +68,9 @@ export function makeSmartContractReadCallUseQueryOptions<
     queryKey,
     queryFn,
     onError: () => {
+      const addressesJsonKey = lookupAddressKey(contract?.address);
       console.error(
-        `Error calling ${methodName} on contract: ${contract?.address} with arguments:`,
+        `Error calling ${methodName} on ${addressesJsonKey}: ${contract?.address} with arguments:`,
         callArgs
       );
     },
