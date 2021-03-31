@@ -22,5 +22,7 @@ export function formatMoney(
     maximumFractionDigits: fractionDigits,
   });
 
-  return formatted;
+  const currencyInfo = money.getCurrencyInfo();
+
+  return `${currencyInfo.symbol}${formatted}`;
 }
