@@ -12,7 +12,7 @@ import { PoolContract } from "efi/pools/PoolContract";
  * asset for '1' of the in asset.  A future optimisation might be to do '$1' worth of the in asset
  * to minimize slippage in the value.
  **************************/
-export function useTokenSpotPrice(
+export function usePoolSpotPrice(
   pool: PoolContract | undefined,
   priceOfThisToken: ERC20 | undefined
 ): number {

@@ -27,7 +27,7 @@ import { InvestmentAmountInput } from "./InvestmentAmountInput";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useQueryBatchSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
 import { SwapKind } from "efi-ui/balancer/SwapKind";
-import { useTokenSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
+import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { PrincipalDiscountPreview } from "./PrincipalDiscountPreview";
 
 export interface InvestCardProps {
@@ -112,7 +112,7 @@ export const InvestCard: FC<InvestCardProps> = ({
   // the tranche's pool
   const pool = usePoolForToken(activeTranche as ERC20Shim, jsonRpcProvider);
 
-  const tranchePrice = useTokenSpotPrice(pool, activeTranche as ERC20Shim);
+  const tranchePrice = usePoolSpotPrice(pool, activeTranche as ERC20Shim);
 
   const inputTokenSymbol = useCryptoSymbol(activeBaseAsset);
 

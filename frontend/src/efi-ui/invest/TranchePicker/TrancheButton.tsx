@@ -17,7 +17,7 @@ import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useUnderlyingVaultForTranche } from "efi-ui/tranche/useUnderlyingVaultForTranche";
-import { useTokenSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
+import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 
 interface TrancheButtonProps {
   library: Web3Provider | undefined;
@@ -45,7 +45,7 @@ export const TrancheButton: FC<TrancheButtonProps> = ({ tranche, onClick }) => {
     baseAssetToken,
     "symbol"
   );
-  const tranchePrice = useTokenSpotPrice(pool, tranche as ERC20Shim);
+  const tranchePrice = usePoolSpotPrice(pool, tranche as ERC20Shim);
 
   let trancheAPY = "-";
   if (tranchePrice && unlockDate) {

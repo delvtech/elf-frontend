@@ -22,14 +22,12 @@ import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { TransactionDetailsCallout } from "efi-ui/invest/BuyFYTConfirmationDrawer/TransactionDetailsCallout";
-import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { ERC20ApproveButton } from "efi-ui/token/ERC20ApproveButton/ERC20ApproveButton";
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
 import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatFullDate } from "efi/base/dates";
-import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
 import { isERC20Permit } from "efi/contracts/isERC20Permit";
 import {
   CryptoAsset,
@@ -40,6 +38,7 @@ import { PoolContract } from "efi/pools/PoolContract";
 
 import { ConnectWalletCallout } from "./ConnectWalletCallout";
 import { WalletApprovalCallout } from "./WalletApprovalCallout";
+import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 
 interface BuyFYTConfirmationDrawerProps {
   chainId: number | undefined;
@@ -80,20 +79,11 @@ export const BuyFYTConfirmationDrawer: FC<BuyFYTConfirmationDrawerProps> = ({
   const baseAssetDecimals = useCryptoDecimals(baseAsset);
 
   // tranche calls
-  const { data: trancheDecimals } = useSmartContractReadCall(
-    tranche,
-    "decimals"
-  );
   const { data: trancheUnlockTimestamp } = useSmartContractReadCall(
     tranche,
     "unlockTimestamp"
   );
-  const { data: tranchePriceBigNumber } = useOnSwapGivenIn(
-    pool,
-    tranche as ERC20Shim,
-    parseUnits("1", trancheDecimals)
-  );
-  const tranchePrice = +formatCurrency(tranchePriceBigNumber, trancheDecimals);
+  const tranchePrice = usePoolSpotPrice(pool, tranche as ERC20Shim);
   const roundedTranchePrice = tranchePrice.toFixed(4);
 
   // vault calls
