@@ -1,3 +1,10 @@
+// Import statements in TS are statically checked, and will throw compile-time
+// errors if the file doesn't exist. Require statements on the other hand are
+// dynamic and will throw an error at runtime. For tools like eslint and
+// dependency-cruiser, we don't need to run the app, but we need TS to compile
+// correctly, so we use a require() statement here.
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const ContractAddresses: ContractJson = require("addresses.json");
 interface ContractJson {
   elementAddress: string;
   balancerAddress: string;
@@ -27,51 +34,17 @@ interface ContractJson {
   usdcAddress: string;
 }
 
-// TODO: Are there defaults here we want to use? Should we warn when they are
-// being used? ie: "Missing contracts.json, falling back to xyz"
-const FALLBACK_CONTRACTS = Object.freeze<ContractJson>({
-  elementAddress: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-  balancerAddress: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-  userAddress: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
-  balancerVaultAddress: "0x0165878A594ca255338adfa4d48449f69242Eb8F",
-  marketYcFactory: "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6",
-  wethYearnVaultAddress: "0x9A676e781A523b5d0C0e43731313A708CB607508",
-  usdcYearnVaultAddress: "0x68B1D87F95878fE05B998F19b66F4baba5De1aed",
-  wethYearnVaultAssetProxyAddress: "0x9A9f2CCfdE556A7E9Ff0848998Aa4a0CFD8863AE",
-  usdcYearnVaultAssetProxyAddress: "0x59b670e9fA9D0A427751Af201D676719a970857b",
-  trancheFactoryAddress: "0x0DCd1Bf9A1b36cE34237eEaFef220932846BCD82",
-  interestTokenFactoryAddress: "0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0",
-  wethTrancheAddress: "0x99ce73b1160F6E4F28fe37Af11C7eb77dAD75acB",
-  usdcTrancheAddress: "0x5bFBB72Cc16e15Ea5d90a22fF1a54eC4a55ec7f4",
-  weightedPoolFactoryAddress: "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6",
-  convergentPoolFactoryAddress: "0x610178dA211FEF7D417bC0e6FeD39F05609AD788",
-  marketFyWethAddress: "0x6F1216D1BFe15c98520CA1434FC1d9D57AC95321",
-  marketFyWethId:
-    "0x6f1216d1bfe15c98520ca1434fc1d9d57ac95321000200000000000000000000",
-  marketYcWethAddress: "0x94099942864EA81cCF197E9D71ac53310b1468D8",
-  marketYcWethId:
-    "0x94099942864ea81ccf197e9d71ac53310b1468d8000200000000000000000001",
-  marketFyUsdcAddress: "0xdAD42D43ecE0f6e8da8c2BCbC6A25FF6b3922C58",
-  marketFyUsdcId:
-    "0xdad42d43ece0f6e8da8c2bcbc6a25ff6b3922c58000200000000000000000002",
-  marketYcUsdcAddress: "0x06B1D212B8da92b83AF328De5eef4E211Da02097",
-  marketYcUsdcId:
-    "0x06b1d212b8da92b83af328de5eef4e211da02097000200000000000000000003",
-  userProxyContractAddress: "0x5eb3Bc0a489C5A8288765d2336659EbCA68FCd00",
-  wethAddress: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-  usdcAddress: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
-});
-
-// Import statements in TS are statically checked, and will throw compile-time
-// errors if the file doesn't exist. Require statements on the other hand are
-// dynamic and will throw an error at runtime. For tools like eslint and
-// dependency-cruiser, we don't need to run the app, but we need TS to compile
-// correctly, so we use a require() statement here.
-let ContractAddresses: ContractJson;
-try {
-  ContractAddresses = require("addresses.json");
-} catch {
-  ContractAddresses = FALLBACK_CONTRACTS;
+/**
+ * Helpful debugging tool for making sure a contract is from our contracts json
+ */
+export function lookupAddressKey(
+  address: string | undefined
+): string | undefined {
+  const [addressesJsonKey] =
+    Object.entries(ContractAddresses).find(
+      ([key, value]) => value === address
+    ) || [];
+  return addressesJsonKey;
 }
 
 export const KNOWN_ERC20_TOKENS = [ContractAddresses.wethAddress];
@@ -82,5 +55,4 @@ export const KNOWN_BASE_ASSETS = [
   ...KNOWN_ERC20PERMIT_TOKENS,
 ];
 
-// Re-export so auto-import Just Works, and we don't need to remember the above fun fact.
 export default ContractAddresses;

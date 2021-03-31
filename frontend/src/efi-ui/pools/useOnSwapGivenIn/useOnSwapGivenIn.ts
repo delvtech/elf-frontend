@@ -33,7 +33,7 @@ export function useOnSwapGivenIn(
       poolId,
       pool?.address,
       tokenIn?.address,
-      amount,
+      amount?.gt(0),
       tokenOut?.address,
       balances.length,
       latestBlockNumber,

@@ -16,7 +16,7 @@ export function makeOnSwapGivenInCallArgs(
     !account ||
     !poolId ||
     !tokenInAddress ||
-    !amount ||
+    !amount?.gt(0) ||
     !tokenOutAddress ||
     !balances?.length ||
     !latestBlockNumber

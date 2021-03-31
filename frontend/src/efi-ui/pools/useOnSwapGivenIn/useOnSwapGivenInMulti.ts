@@ -41,7 +41,7 @@ export function useOnSwapGivenInMulti(
         enabled: [
           poolId,
           tokenIn?.address,
-          amount,
+          amount?.gt(0),
           tokenOut?.address,
           balances?.length,
         ].every((v) => !!v),

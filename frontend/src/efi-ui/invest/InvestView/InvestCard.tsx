@@ -1,24 +1,14 @@
 import React, { FC, Fragment, useCallback, useEffect, useState } from "react";
 
-import {
-  Button,
-  Callout,
-  Card,
-  Classes,
-  Colors,
-  Intent,
-} from "@blueprintjs/core";
+import { Button, Card, Classes, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { formatUnits, parseUnits } from "@ethersproject/units";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import classNames from "classnames";
 import { Tranche } from "elf-contracts/types/Tranche";
-import { BigNumber } from "ethers";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { getQueryData } from "efi-ui/base/queryResults";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { useCryptoBalance } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
@@ -28,18 +18,16 @@ import { CryptoAssetPicker } from "efi-ui/crypto/CryptoAssetPicker/CryptoAssetPi
 import { BuyFYTConfirmationDrawer } from "efi-ui/invest/BuyFYTConfirmationDrawer/BuyFYTConfirmationDrawer";
 import { useActiveTranche } from "efi-ui/invest/hooks/useActiveTranche";
 import { TranchePicker } from "efi-ui/invest/TranchePicker/TranchePicker";
-import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
 import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
-import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
-import { CryptoAssetType, findTokenContract } from "efi/crypto/CryptoAsset";
-import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 
 import { InvestmentAmountInput } from "./InvestmentAmountInput";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useQueryBatchSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
 import { SwapKind } from "efi-ui/balancer/SwapKind";
+import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
+import { PrincipalDiscountPreview } from "./PrincipalDiscountPreview";
+import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
 
 export interface InvestCardProps {
   library: Web3Provider | undefined;
@@ -60,7 +48,7 @@ export interface InvestCardProps {
  */
 type ActiveInput = "amountIn" | "amountOut";
 
-const calloutClassName = tw(
+export const calloutClassName = tw(
   "flex",
   "flex-col",
   "flex-1",
@@ -69,6 +57,7 @@ const calloutClassName = tw(
   "items-center",
   "justify-center"
 );
+
 export const InvestCard: FC<InvestCardProps> = ({
   library,
   account,
@@ -78,9 +67,6 @@ export const InvestCard: FC<InvestCardProps> = ({
   walletConnectionActive,
   tranchesByBaseAsset,
 }) => {
-  // prefs
-  const { isDarkMode } = useDarkMode();
-
   // local state
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const [activeInput, setActiveInput] = useState<ActiveInput>("amountIn");
@@ -124,13 +110,7 @@ export const InvestCard: FC<InvestCardProps> = ({
 
   // the tranche's pool
   const pool = usePoolForToken(activeTranche as ERC20Shim, jsonRpcProvider);
-
-  const tranchePriceResult = useOnSwapGivenIn(
-    pool,
-    activeTranche as ERC20Shim,
-    parseUnits("1", trancheDecimals)
-  );
-
+  const tranchePrice = usePoolSpotPrice(pool, activeTranche as ERC20Shim);
   const inputTokenSymbol = useCryptoSymbol(activeBaseAsset);
 
   // input calculations
@@ -142,52 +122,46 @@ export const InvestCard: FC<InvestCardProps> = ({
     ? parseUnits(amountOut, trancheDecimals)
     : undefined;
 
-  // the amount of tranche you get out
-  let tokenInAddress: string | undefined;
-  if (!activeBaseAsset) {
-    tokenInAddress = undefined;
-  } else if (activeBaseAsset?.type === CryptoAssetType.ETHEREUM) {
-    tokenInAddress = BALANCER_ETH_SENTINEL;
-  } else {
-    const tokenContract = findTokenContract(activeBaseAsset);
-    tokenInAddress = tokenContract?.address;
-  }
+  const tokenInAddress = getTokenAddressForBalancer(activeBaseAsset);
 
   const tokenOutAddress = activeTranche?.address;
-  const {
-    data: [unusedTokenInFromBatchSwapIn, tokenOutFromBatchSwapIn] = [
-      undefined,
-      undefined,
-    ],
-  } = useQueryBatchSwap(
+  const sortedAssets = [tokenInAddress, tokenOutAddress].sort();
+  const tokenInIndex = sortedAssets.findIndex(
+    (address) => address === tokenInAddress
+  );
+  const tokenOutIndex = sortedAssets.findIndex(
+    (address) => address === tokenOutAddress
+  );
+  const { data: queryBatchSwapInTokens = [] } = useQueryBatchSwap(
     SwapKind.GIVEN_IN,
     pool,
     tokenInAddress,
     tokenOutAddress,
     amountInAsBigNumber
   );
+  const tokenOutFromBatchSwapIn = queryBatchSwapInTokens[tokenOutIndex];
 
   // the amount of base asset you must put in
-  const { data: [tokenInFromBatchSwapOut] = [] } = useQueryBatchSwap(
+  const { data: queryBatchSwapOutTokens = [] } = useQueryBatchSwap(
     SwapKind.GIVEN_OUT,
     pool,
     tokenInAddress,
     tokenOutAddress,
     amountOutAsBigNumber
   );
+  const tokenInFromBatchSwapOut = queryBatchSwapOutTokens[tokenInIndex];
 
   // Effects to sync inputs
-  // sync the inputs for amount in and out
-  // when we get a new result for the swapAmountOut, update the text input to reflect it
-  // when we get a new result for the swapAmountIn, update the text input to reflect it
+  // sync the the amount out input
   useSyncWithActiveInput(
     tokenOutFromBatchSwapIn
-      ? formatUnits(tokenOutFromBatchSwapIn.abs(), activeBaseAssetDecimals)
+      ? formatUnits(tokenOutFromBatchSwapIn.abs(), trancheDecimals)
       : undefined,
     setAmountOut,
     activeInput,
     "amountOut"
   );
+  // sync the the amount in input
   useSyncWithActiveInput(
     tokenInFromBatchSwapOut
       ? formatUnits(tokenInFromBatchSwapOut, activeBaseAssetDecimals)
@@ -196,17 +170,6 @@ export const InvestCard: FC<InvestCardProps> = ({
     activeInput,
     "amountIn"
   );
-
-  const totalYield = calculateTotalYield(
-    tokenOutFromBatchSwapIn?.abs(),
-    amountInAsBigNumber,
-    activeBaseAssetDecimals
-  );
-
-  const percentYield = calculatePercentYield(amountIn, totalYield);
-
-  const tranchePriceBigNumber = getQueryData(tranchePriceResult);
-  const tranchePrice = +formatCurrency(tranchePriceBigNumber, trancheDecimals);
 
   const roundedTranchePrice = tranchePrice.toFixed(4);
   const marketRateLabel = t`1 ${inputTokenSymbol} Principal Token ≈ ${roundedTranchePrice} ${activeBaseAssetSymbol}`;
@@ -292,36 +255,12 @@ export const InvestCard: FC<InvestCardProps> = ({
         </div>
 
         <div className={tw("flex", "space-x-10", "h-24", "mt-10")}>
-          <Callout className={calloutClassName}>
-            <LabeledText
-              muted={false}
-              bold
-              className={tw(
-                "flex",
-                "justify-center",
-                "flex-col-reverse",
-                "items-center"
-              )}
-              textClassName={tw("text-base")}
-              text={
-                !amountIn ? (
-                  t`Enter an amount`
-                ) : (
-                  <Fragment>
-                    <span>
-                      {`${totalYield.toFixed(4)} ${activeBaseAssetSymbol}`}
-                    </span>{" "}
-                    <span
-                      style={{
-                        color: isDarkMode ? Colors.GREEN5 : Colors.GREEN3,
-                      }}
-                    >{`(+${percentYield.toFixed(2)}%)`}</span>
-                  </Fragment>
-                )
-              }
-              label={t`Yield at term`}
-            />
-          </Callout>
+          <PrincipalDiscountPreview
+            amountIn={amountInAsBigNumber}
+            baseAssetSymbol={activeBaseAssetSymbol}
+            amountOut={amountOutAsBigNumber}
+            baseAssetDecimals={activeBaseAssetDecimals}
+          />
           <Button
             large
             outlined
@@ -364,30 +303,6 @@ function useSetDefaultActiveBaseAsset(
       setActiveBaseAsset(defaultBaseAsset);
     }
   }, [activeBaseAsset, defaultBaseAsset, setActiveBaseAsset]);
-}
-
-function calculatePercentYield(
-  amountIn: string | undefined,
-  totalYield: number
-) {
-  let percentYield = 0;
-  if (amountIn) {
-    percentYield = (totalYield / +amountIn) * 100;
-  }
-  return percentYield;
-}
-
-function calculateTotalYield(
-  amountOut: BigNumber | undefined,
-  amountIn: BigNumber | undefined,
-  decimalsAmountIn: number
-) {
-  let totalYield = 0;
-  if (amountOut) {
-    const yieldAsBigNumber = amountOut.sub(amountIn || 0);
-    totalYield = +formatUnits(yieldAsBigNumber, decimalsAmountIn);
-  }
-  return totalYield;
 }
 
 /**

@@ -1,0 +1,98 @@
+import React, { FC, Fragment } from "react";
+import { Callout, Colors } from "@blueprintjs/core";
+import { t } from "ttag";
+import tw from "efi-tailwindcss-classnames";
+import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
+import { calloutClassName } from "./InvestCard";
+import { BigNumber } from "ethers";
+import { formatUnits } from "@ethersproject/units";
+import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
+
+interface PrincipalDiscountPreviewProps {
+  amountIn: BigNumber | undefined;
+  amountOut: BigNumber | undefined;
+  baseAssetSymbol: string | undefined;
+  baseAssetDecimals: number | undefined;
+}
+
+export const PrincipalDiscountPreview: FC<PrincipalDiscountPreviewProps> = ({
+  amountIn,
+  amountOut,
+  baseAssetSymbol,
+  baseAssetDecimals,
+}) => {
+  const { isDarkMode } = useDarkMode();
+  const totalYield = calculateTotalYield(
+    amountOut,
+    amountIn,
+    baseAssetDecimals
+  );
+
+  const percentYield = calculatePercentYield(
+    amountIn,
+    baseAssetDecimals,
+    totalYield
+  );
+  return (
+    <Callout className={calloutClassName}>
+      <LabeledText
+        muted={false}
+        bold
+        className={tw(
+          "flex",
+          "justify-center",
+          "flex-col-reverse",
+          "items-center"
+        )}
+        textClassName={tw("text-base")}
+        text={
+          !amountIn ? (
+            t`Enter an amount`
+          ) : (
+            <Fragment>
+              <span>{`${totalYield.toFixed(4)} ${baseAssetSymbol}`}</span>{" "}
+              <span
+                style={{
+                  color: isDarkMode ? Colors.GREEN5 : Colors.GREEN3,
+                }}
+              >{`(+${percentYield?.toFixed(2)}%)`}</span>
+            </Fragment>
+          )
+        }
+        label={t`Yield at term`}
+      />
+    </Callout>
+  );
+};
+
+/**
+ * Because Principal tokens converges to the full value of the base asset,
+ * calculating total yield is simply the difference between what you got out
+ * for what you put in.
+ */
+function calculateTotalYield(
+  amountOut: BigNumber | undefined,
+  amountIn: BigNumber | undefined,
+  decimalsAmountIn: number | undefined
+) {
+  let totalYield = 0;
+  if (amountOut) {
+    const yieldAsBigNumber = amountOut.sub(amountIn || 0);
+    totalYield = +formatUnits(yieldAsBigNumber, decimalsAmountIn);
+  }
+  return totalYield;
+}
+
+function calculatePercentYield(
+  amountIn: BigNumber | undefined,
+  tokenInDecimals: number | undefined,
+  totalYield: number
+): number | undefined {
+  if (!amountIn || !tokenInDecimals) {
+    return;
+  }
+
+  const amountInAsNumber = +formatUnits(amountIn, tokenInDecimals);
+  const percentYield = (totalYield / amountInAsNumber) * 100;
+  return percentYield;
+}

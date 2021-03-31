@@ -14,7 +14,7 @@ import { SwapKind } from "efi-ui/balancer/SwapKind";
  * Useful for previewing a swap in the balancer V2 vault.
  *
  * NOTE: This should *not* be used to check spot price since batch swaps can
- * incur additional fees and costs. To check spot price, use useOnSwapGivenIn
+ * incur additional fees and costs. To check spot price, use usePoolSpotPrice
  * instead.
  */
 export function useQueryBatchSwap(

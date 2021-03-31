@@ -11,6 +11,15 @@ interface Window {
   __web3React: any;
 
   /**
+   * addresses.json
+   */
+  addresses: Record<string, string>;
+  /**
+   * helper function to lookup the addresses.json key of a given address
+   */
+  lookupAddressKey: (address: string | undefined) => string | undefined;
+
+  /**
    * helper console function to deal with BigNumbers
    */
   consoleEther: (name: string, value: BigNumber | undefined) => void;
