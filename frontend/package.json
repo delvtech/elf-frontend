@@ -158,7 +158,7 @@
     "lint-staged": "^10.5.4",
     "prettier": "^2.2.1",
     "react-test-renderer": "^17.0.2",
-    "ttag-cli": "^1.9.1",
+    "ttag-cli": "^1.9.2",
     "typechain": "^4.0.3"
   }
 }
