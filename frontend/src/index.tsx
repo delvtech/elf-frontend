@@ -3,6 +3,7 @@
 import "./stylesheets";
 import "./index.css";
 import "efi/debug/consoleEther";
+import "efi/contracts/contractsJson";
 // end our CSS
 
 import { Web3ReactProvider } from "@web3-react/core";
@@ -16,12 +17,14 @@ import { getEthereumProviderLibrary } from "efi/wallets/providers";
 
 import { efiQueryClient } from "./efi/queryClient";
 import versionJson from "./version.output.json";
+import ContractAddresses from "efi/contracts/contractsJson";
 
 logAppVersion();
 
 if (process.env.NODE_ENV === "development") {
   prefixDocumentTitle("(D)");
 }
+window.addresses = ContractAddresses as any;
 
 ReactDOM.render(
   <Web3ReactProvider getLibrary={getEthereumProviderLibrary}>

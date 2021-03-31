@@ -11,6 +11,11 @@ interface Window {
   __web3React: any;
 
   /**
+   * addresses.json
+   */
+  addresses: Record<string, string>;
+
+  /**
    * helper console function to deal with BigNumbers
    */
   consoleEther: (name: string, value: BigNumber | undefined) => void;
