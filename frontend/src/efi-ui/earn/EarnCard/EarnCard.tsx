@@ -19,7 +19,7 @@ import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { useCryptoBalance } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
-import { BuyFYTConfirmationDrawer } from "efi-ui/earn/BuyPrincipalConfirmationDrawer/BuyPrincipalTokenConfirmationDrawer";
+import { TransactionConfirmationDrawer } from "efi-ui/earn/TransactionConfirmationDrawer/TransactionConfirmationDrawer";
 import { PrincipalDiscountPreview } from "efi-ui/earn/EarnCard/PrincipalDiscountPreview";
 import { EarnInput } from "efi-ui/earn/EarnInput/EarnInput";
 import { useActiveTranche } from "efi-ui/earn/hooks/useActiveTranche";
@@ -266,7 +266,7 @@ export const EarnCard: FC<EarnCardProps> = ({
       </Card>
 
       {!activeBaseAsset ? null : (
-        <BuyFYTConfirmationDrawer
+        <TransactionConfirmationDrawer
           account={account}
           library={library}
           chainId={chainId}

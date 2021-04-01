@@ -11,7 +11,7 @@ import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 
 import styles from "./styles.module.css";
 
-interface TransactionDetailsCalloutProps {
+interface TransactionDetailsPreviewProps {
   assetInIcon: AssetIcon;
   assetInSymbol: string | undefined;
   assetOutSymbol: string | undefined;
@@ -19,7 +19,7 @@ interface TransactionDetailsCalloutProps {
   amountOut: string | undefined;
   assetOutIcon: AssetIcon | null;
 }
-export const TransactionDetailsCallout: FC<TransactionDetailsCalloutProps> = ({
+export const TransactionDetailsPreview: FC<TransactionDetailsPreviewProps> = ({
   assetInIcon: AssetInIcon,
   assetOutIcon: AssetOutIcon,
   amountIn,

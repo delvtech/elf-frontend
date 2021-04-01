@@ -22,7 +22,7 @@ import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadC
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
-import { TransactionDetailsCallout } from "efi-ui/earn/BuyPrincipalConfirmationDrawer/TransactionDetailsCallout";
+import { TransactionDetailsPreview } from "efi-ui/earn/TransactionDetailsPreview/TransactionDetailsCallout";
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
@@ -40,7 +40,7 @@ import { PoolContract } from "efi/pools/PoolContract";
 import { ConnectWalletCallout } from "./ConnectWalletCallout";
 import { WalletApprovalCallout } from "./WalletApprovalCallout";
 
-interface BuyFYTConfirmationDrawerProps {
+interface TransactionConfirmationDrawerProps {
   chainId: number | undefined;
   account: string | null | undefined;
   walletConnectionActive: boolean;
@@ -56,7 +56,10 @@ interface BuyFYTConfirmationDrawerProps {
   onClose: () => void;
 }
 
-export const BuyFYTConfirmationDrawer: FC<BuyFYTConfirmationDrawerProps> = ({
+/**
+ * Generalize this further to handle any transaction confirmation
+ */
+export const TransactionConfirmationDrawer: FC<TransactionConfirmationDrawerProps> = ({
   connector,
   walletConnectionActive,
   library,
@@ -168,7 +171,7 @@ export const BuyFYTConfirmationDrawer: FC<BuyFYTConfirmationDrawerProps> = ({
           "justify-end"
         )}
       >
-        <TransactionDetailsCallout
+        <TransactionDetailsPreview
           amountIn={amountIn}
           amountOut={amountOutFormatted}
           assetInIcon={AssetIcon}
@@ -194,7 +197,7 @@ export const BuyFYTConfirmationDrawer: FC<BuyFYTConfirmationDrawerProps> = ({
               }
             />
           </div>
-        </TransactionDetailsCallout>
+        </TransactionDetailsPreview>
 
         {
           // we can't pull this out to a new variable because typescript can't
