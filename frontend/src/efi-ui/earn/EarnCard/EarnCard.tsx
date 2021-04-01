@@ -1,6 +1,6 @@
 import React, { FC, Fragment, useCallback, useEffect, useState } from "react";
 
-import { Button, Card, Classes, Intent } from "@blueprintjs/core";
+import { Button, Card, Classes, Elevation, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { formatUnits, parseUnits } from "@ethersproject/units";
 import { AbstractConnector } from "@web3-react/abstract-connector";
@@ -19,15 +19,16 @@ import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { useCryptoBalance } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
-import { BuyFYTConfirmationDrawer } from "efi-ui/earn/BuyPrincipalConfirmationDrawer/BuyPrincipalTokenConfirmationDrawer";
 import { PrincipalDiscountPreview } from "efi-ui/earn/EarnCard/PrincipalDiscountPreview";
 import { EarnInput } from "efi-ui/earn/EarnInput/EarnInput";
 import { useActiveTranche } from "efi-ui/earn/hooks/useActiveTranche";
 import { TranchePicker } from "efi-ui/earn/TranchePicker/TranchePicker";
+import { TransactionConfirmationDrawer } from "efi-ui/earn/TransactionConfirmationDrawer/TransactionConfirmationDrawer";
 import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
-import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
+import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
+import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
 
 export interface EarnCardProps {
   library: Web3Provider | undefined;
@@ -100,7 +101,13 @@ export const EarnCard: FC<EarnCardProps> = ({
 
   // the tranche's pool
   const pool = usePoolForToken(activeTranche as ERC20Shim, jsonRpcProvider);
-  const tranchePrice = usePoolSpotPrice(pool, activeTranche as ERC20Shim);
+  const baseAssetPoolToken = usePoolPairedToken(
+    pool,
+    activeTranche as ERC20Shim
+  );
+  const {
+    spotPriceBaseAssetForOneToken: amountOfEthForOneTranche,
+  } = usePoolTokenPrices(pool, baseAssetPoolToken);
   const inputTokenSymbol = useCryptoSymbol(activeBaseAsset);
 
   // input calculations
@@ -161,12 +168,15 @@ export const EarnCard: FC<EarnCardProps> = ({
     "amountIn"
   );
 
-  const roundedTranchePrice = tranchePrice.toFixed(4);
+  const roundedTranchePrice = amountOfEthForOneTranche?.toFixed(4);
   const marketRateLabel = t`1 ${inputTokenSymbol} Principal Token ≈ ${roundedTranchePrice} ${activeBaseAssetSymbol}`;
 
   return (
     <Fragment>
-      <Card className={tw("flex", "flex-col", "p-10", "flex-1", "space-y-10")}>
+      <Card
+        elevation={isDrawerOpen ? Elevation.ZERO : Elevation.TWO}
+        className={tw("flex", "flex-col", "p-10", "flex-1", "space-y-10")}
+      >
         <div className={tw("flex", "flex-col", "space-y-2")}>
           <div className={tw("flex", "justify-between")}>
             <span
@@ -192,7 +202,7 @@ export const EarnCard: FC<EarnCardProps> = ({
           >
             <EarnInput
               showMaxButton={!!account}
-              baseAssetPicker={
+              assetPicker={
                 <CryptoAssetPicker
                   cryptoAssets={baseAssets}
                   activeCryptoAsset={activeBaseAsset}
@@ -227,7 +237,7 @@ export const EarnCard: FC<EarnCardProps> = ({
           >
             <EarnInput
               showMaxButton={false}
-              baseAssetPicker={
+              assetPicker={
                 <TranchePicker
                   library={library}
                   account={account}
@@ -266,7 +276,7 @@ export const EarnCard: FC<EarnCardProps> = ({
       </Card>
 
       {!activeBaseAsset ? null : (
-        <BuyFYTConfirmationDrawer
+        <TransactionConfirmationDrawer
           account={account}
           library={library}
           chainId={chainId}

@@ -22,8 +22,7 @@ import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadC
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
-import { TransactionDetailsCallout } from "efi-ui/earn/BuyPrincipalConfirmationDrawer/TransactionDetailsCallout";
-import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
+import { TransactionDetailsPreview } from "efi-ui/earn/TransactionDetailsPreview/TransactionDetailsCallout";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
 import { ERC20ApproveButton } from "efi-ui/token/ERC20ApproveButton/ERC20ApproveButton";
@@ -35,12 +34,17 @@ import {
   CryptoAssetType,
   findTokenContract,
 } from "efi/crypto/CryptoAsset";
+import { calculateSlippage } from "efi/pools/calculateSlippage";
 import { PoolContract } from "efi/pools/PoolContract";
 
 import { ConnectWalletCallout } from "./ConnectWalletCallout";
 import { WalletApprovalCallout } from "./WalletApprovalCallout";
+import { formatPercent } from "efi/base/formatPercent";
+import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
+import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
+import { calculatePurchasePrice } from "efi/pools/calculatePurchasePrice";
 
-interface BuyFYTConfirmationDrawerProps {
+interface TransactionConfirmationDrawerProps {
   chainId: number | undefined;
   account: string | null | undefined;
   walletConnectionActive: boolean;
@@ -56,7 +60,10 @@ interface BuyFYTConfirmationDrawerProps {
   onClose: () => void;
 }
 
-export const BuyFYTConfirmationDrawer: FC<BuyFYTConfirmationDrawerProps> = ({
+/**
+ * Generalize this further to handle any transaction confirmation
+ */
+export const TransactionConfirmationDrawer: FC<TransactionConfirmationDrawerProps> = ({
   connector,
   walletConnectionActive,
   library,
@@ -83,8 +90,13 @@ export const BuyFYTConfirmationDrawer: FC<BuyFYTConfirmationDrawerProps> = ({
     tranche,
     "unlockTimestamp"
   );
-  const tranchePrice = usePoolSpotPrice(pool, tranche as ERC20Shim);
-  const roundedTranchePrice = tranchePrice.toFixed(4);
+  const baseAssetPoolToken = usePoolPairedToken(pool, tranche as ERC20Shim);
+  const {
+    spotPriceBaseAssetForOneToken,
+    spotPriceTokenForOneBaseAsset,
+  } = usePoolTokenPrices(pool, baseAssetPoolToken);
+
+  const roundedTranchePrice = spotPriceBaseAssetForOneToken?.toFixed(4);
 
   // vault calls
   const balancerVault = useBalancerVault();
@@ -138,6 +150,16 @@ export const BuyFYTConfirmationDrawer: FC<BuyFYTConfirmationDrawerProps> = ({
     marketAllowance
   );
 
+  const amountInNumber = +(amountIn || 0);
+  const purchasePrice = calculatePurchasePrice(amountInNumber, amountOutNumber);
+  const priceSlippageAndTradingFee = calculateSlippage(
+    spotPriceTokenForOneBaseAsset || 0,
+    purchasePrice
+  );
+  const formattedSlippageAndTradingFee = formatPercent(
+    priceSlippageAndTradingFee
+  );
+
   return (
     <Drawer
       isOpen={isOpen}
@@ -168,7 +190,7 @@ export const BuyFYTConfirmationDrawer: FC<BuyFYTConfirmationDrawerProps> = ({
           "justify-end"
         )}
       >
-        <TransactionDetailsCallout
+        <TransactionDetailsPreview
           amountIn={amountIn}
           amountOut={amountOutFormatted}
           assetInIcon={AssetIcon}
@@ -178,6 +200,7 @@ export const BuyFYTConfirmationDrawer: FC<BuyFYTConfirmationDrawerProps> = ({
         >
           <div className={tw("flex", "flex-col", "space-y-6")}>
             <LabeledText
+              bold
               muted={false}
               text={<span>{t`Market rate`}</span>}
               label={
@@ -188,13 +211,24 @@ export const BuyFYTConfirmationDrawer: FC<BuyFYTConfirmationDrawerProps> = ({
             />
             <LabeledText
               muted={false}
+              bold
+              text={<span>{t`Price slippage + trading fees`}</span>}
+              label={
+                <span className={tw("text-base")}>
+                  {formattedSlippageAndTradingFee}
+                </span>
+              }
+            />
+            <LabeledText
+              bold
+              muted={false}
               text={<span>{t`Term date`}</span>}
               label={
                 <span className={tw("text-base")}>{unlockTimeStampLabel}</span>
               }
             />
           </div>
-        </TransactionDetailsCallout>
+        </TransactionDetailsPreview>
 
         {
           // we can't pull this out to a new variable because typescript can't

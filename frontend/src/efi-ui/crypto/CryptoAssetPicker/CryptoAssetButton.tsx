@@ -76,7 +76,7 @@ const AssetLabel: FC<AssetLabelProps> = ({
           iconClassName={tw("mr-4")}
           large
           text={
-            <span className={classNames("h4", tw("text-center"))}>
+            <span className={tw("text-lg", "text-center")}>
               {t`${assetName}`}
             </span>
           }
