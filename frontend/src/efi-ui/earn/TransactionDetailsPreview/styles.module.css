@@ -4,9 +4,11 @@
 }
 
 .inputColor :global(.bp3-input:disabled) {
+  background-color: var(--bp3-callout-background);
   color: #182026;
 }
 
 .inputColorDark :global(.bp3-input:disabled) {
+  background-color: var(--bp3-callout-background);
   color: white;
 }
