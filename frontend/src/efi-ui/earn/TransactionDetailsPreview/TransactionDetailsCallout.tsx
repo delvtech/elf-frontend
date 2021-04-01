@@ -1,7 +1,6 @@
 import React, { FC } from "react";
 
-import { Callout, Divider, Icon, InputGroup, Tag } from "@blueprintjs/core";
-import { IconNames } from "@blueprintjs/icons";
+import { Callout, Divider, InputGroup, Tag } from "@blueprintjs/core";
 import classNames from "classnames";
 import { t } from "ttag";
 
@@ -35,39 +34,62 @@ export const TransactionDetailsPreview: FC<TransactionDetailsPreviewProps> = ({
         className={classNames("h4", tw("text-center"))}
       >{t`Confirm Transaction`}</span>
       <div className={tw("flex", "flex-col", "space-y-4", "items-center")}>
-        <InputGroup
-          large
-          fill
-          disabled
-          className={classNames(styles.inputWithIcon, {
-            [styles.inputColor]: !isDarkMode,
-            [styles.inputColorDark]: isDarkMode,
-          })}
-          leftElement={
-            <div className={tw("flex", "items-center", "px-2")}>
-              {AssetInIcon ? <AssetInIcon height={18} width={18} /> : null}
-            </div>
-          }
-          value={amountIn}
-          rightElement={<Tag minimal>{assetInSymbol}</Tag>}
-        />
-        <Icon icon={IconNames.ARROW_DOWN} />
-        <InputGroup
-          large
-          fill
-          disabled
-          className={classNames(styles.inputWithIcon, {
-            [styles.inputColor]: !isDarkMode,
-            [styles.inputColorDark]: isDarkMode,
-          })}
-          leftElement={
-            <div className={tw("flex", "items-center", "px-2")}>
-              {AssetOutIcon ? <AssetOutIcon height={18} width={18} /> : null}
-            </div>
-          }
-          value={amountOut}
-          rightElement={<Tag minimal>{assetOutSymbol}</Tag>}
-        />
+        <div
+          className={tw(
+            "grid",
+            "grid-cols-6",
+            "place-items-stretch",
+            "w-full",
+            "items-center",
+            "gap-2"
+          )}
+        >
+          <span className={tw("text-base")}>{t`From`}</span>
+          <InputGroup
+            large
+            fill
+            disabled
+            className={classNames(tw("col-span-5"), styles.inputWithIcon, {
+              [styles.inputColor]: !isDarkMode,
+              [styles.inputColorDark]: isDarkMode,
+            })}
+            leftElement={
+              <div className={tw("flex", "items-center", "px-2")}>
+                {AssetInIcon ? <AssetInIcon height={18} width={18} /> : null}
+              </div>
+            }
+            value={amountIn}
+            rightElement={<Tag minimal>{assetInSymbol}</Tag>}
+          />
+        </div>
+        <div
+          className={tw(
+            "grid",
+            "grid-cols-6",
+            "place-items-stretch",
+            "w-full",
+            "items-center",
+            "gap-2"
+          )}
+        >
+          <span className={tw("text-base")}>{t`To`}</span>
+          <InputGroup
+            large
+            fill
+            disabled
+            className={classNames(tw("col-span-5"), styles.inputWithIcon, {
+              [styles.inputColor]: !isDarkMode,
+              [styles.inputColorDark]: isDarkMode,
+            })}
+            leftElement={
+              <div className={tw("flex", "items-center", "px-2")}>
+                {AssetOutIcon ? <AssetOutIcon height={18} width={18} /> : null}
+              </div>
+            }
+            value={amountOut}
+            rightElement={<Tag minimal>{assetOutSymbol}</Tag>}
+          />
+        </div>
       </div>
       <Divider />
       {children}
