@@ -25,9 +25,10 @@ import { useActiveTranche } from "efi-ui/earn/hooks/useActiveTranche";
 import { TranchePicker } from "efi-ui/earn/TranchePicker/TranchePicker";
 import { TransactionConfirmationDrawer } from "efi-ui/earn/TransactionConfirmationDrawer/TransactionConfirmationDrawer";
 import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
-import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
+import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
+import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
 
 export interface EarnCardProps {
   library: Web3Provider | undefined;
@@ -100,7 +101,13 @@ export const EarnCard: FC<EarnCardProps> = ({
 
   // the tranche's pool
   const pool = usePoolForToken(activeTranche as ERC20Shim, jsonRpcProvider);
-  const tranchePrice = usePoolSpotPrice(pool, activeTranche as ERC20Shim);
+  const baseAssetPoolToken = usePoolPairedToken(
+    pool,
+    activeTranche as ERC20Shim
+  );
+  const {
+    amountOfBaseAssetForOneToken: amountOfEthForOneTranche,
+  } = usePoolTokenPrices(pool, baseAssetPoolToken);
   const inputTokenSymbol = useCryptoSymbol(activeBaseAsset);
 
   // input calculations
@@ -161,7 +168,7 @@ export const EarnCard: FC<EarnCardProps> = ({
     "amountIn"
   );
 
-  const roundedTranchePrice = tranchePrice.toFixed(4);
+  const roundedTranchePrice = amountOfEthForOneTranche?.toFixed(4);
   const marketRateLabel = t`1 ${inputTokenSymbol} Principal Token ≈ ${roundedTranchePrice} ${activeBaseAssetSymbol}`;
 
   return (

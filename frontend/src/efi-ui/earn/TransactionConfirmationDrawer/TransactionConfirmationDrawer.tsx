@@ -23,7 +23,6 @@ import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { TransactionDetailsPreview } from "efi-ui/earn/TransactionDetailsPreview/TransactionDetailsCallout";
-import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
 import { ERC20ApproveButton } from "efi-ui/token/ERC20ApproveButton/ERC20ApproveButton";
@@ -41,6 +40,8 @@ import { PoolContract } from "efi/pools/PoolContract";
 import { ConnectWalletCallout } from "./ConnectWalletCallout";
 import { WalletApprovalCallout } from "./WalletApprovalCallout";
 import { formatPercent } from "efi/base/formatPercent";
+import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
+import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
 
 interface TransactionConfirmationDrawerProps {
   chainId: number | undefined;
@@ -88,8 +89,13 @@ export const TransactionConfirmationDrawer: FC<TransactionConfirmationDrawerProp
     tranche,
     "unlockTimestamp"
   );
-  const tranchePrice = usePoolSpotPrice(pool, tranche as ERC20Shim);
-  const roundedTranchePrice = tranchePrice.toFixed(4);
+  const baseAssetPoolToken = usePoolPairedToken(pool, tranche as ERC20Shim);
+  const {
+    amountOfBaseAssetForOneToken: amountOfEthForOneTranche,
+    amountOfTokenForOneBaseAsset: amountOfTrancheForOneEth,
+  } = usePoolTokenPrices(pool, baseAssetPoolToken);
+
+  const roundedTranchePrice = amountOfEthForOneTranche?.toFixed(4);
 
   // vault calls
   const balancerVault = useBalancerVault();
@@ -145,7 +151,7 @@ export const TransactionConfirmationDrawer: FC<TransactionConfirmationDrawerProp
 
   const amountInNumber = +(amountIn || 0);
   const priceSlippageAndTradingFee = calculateSlippage(
-    tranchePrice,
+    amountOfTrancheForOneEth || 0,
     amountInNumber,
     amountOutNumber
   );
