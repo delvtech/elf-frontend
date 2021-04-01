@@ -14,6 +14,7 @@ import tw from "efi-tailwindcss-classnames";
 import { SwapKind } from "efi-ui/balancer/SwapKind";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { useBatchSwapGivenIn } from "efi-ui/balancer/useBatchSwapGivenIn/useBatchSwapGivenIn";
+import { parseQueryBatchSwapResult } from "efi-ui/balancer/useQueryBatchSwap/parseQueryBatchSwapResult";
 import { useQueryBatchSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
@@ -21,7 +22,7 @@ import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadC
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
-import { TransactionDetailsCallout } from "efi-ui/invest/BuyPrincipalConfirmationDrawer/TransactionDetailsCallout";
+import { TransactionDetailsCallout } from "efi-ui/earn/BuyPrincipalConfirmationDrawer/TransactionDetailsCallout";
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
@@ -38,7 +39,6 @@ import { PoolContract } from "efi/pools/PoolContract";
 
 import { ConnectWalletCallout } from "./ConnectWalletCallout";
 import { WalletApprovalCallout } from "./WalletApprovalCallout";
-import { parseQueryBatchSwapResult } from "efi-ui/balancer/useQueryBatchSwap/parseQueryBatchSwapResult";
 
 interface BuyFYTConfirmationDrawerProps {
   chainId: number | undefined;

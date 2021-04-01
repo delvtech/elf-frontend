@@ -5,9 +5,9 @@ import { Web3Provider } from "@ethersproject/providers";
 import { Tranche } from "elf-contracts/types/Tranche";
 
 import tw from "efi-tailwindcss-classnames";
+import { CryptoAsset } from "efi/crypto/CryptoAsset";
 
 import { TrancheButton } from "./TrancheButton";
-import { CryptoAsset } from "efi/crypto/CryptoAsset";
 
 interface TranchePickerProps {
   library: Web3Provider | undefined;

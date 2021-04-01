@@ -5,7 +5,7 @@ export enum Navigation {
 
   MINT = "mint",
   POOLS = "pools",
-  INVEST = "invest",
+  EARN = "earn",
   FAQ = "faq",
   EXCHANGE = "exchange",
 }

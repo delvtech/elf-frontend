@@ -1,11 +1,12 @@
 import React, { FC, Fragment } from "react";
+
 import { Callout, Colors } from "@blueprintjs/core";
+import { formatUnits } from "@ethersproject/units";
+import { BigNumber } from "ethers";
 import { t } from "ttag";
+
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { calloutClassName } from "./InvestCard";
-import { BigNumber } from "ethers";
-import { formatUnits } from "@ethersproject/units";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 
 interface PrincipalDiscountPreviewProps {
@@ -14,6 +15,15 @@ interface PrincipalDiscountPreviewProps {
   baseAssetSymbol: string | undefined;
   baseAssetDecimals: number | undefined;
 }
+const calloutClassName = tw(
+  "flex",
+  "flex-col",
+  "flex-1",
+  "h-full",
+  "p-8",
+  "items-center",
+  "justify-center"
+);
 
 export const PrincipalDiscountPreview: FC<PrincipalDiscountPreviewProps> = ({
   amountIn,

@@ -19,18 +19,17 @@ import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { useCryptoBalance } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
-import { BuyFYTConfirmationDrawer } from "efi-ui/invest/BuyPrincipalConfirmationDrawer/BuyPrincipalTokenConfirmationDrawer";
-import { useActiveTranche } from "efi-ui/invest/hooks/useActiveTranche";
-import { TranchePicker } from "efi-ui/invest/TranchePicker/TranchePicker";
+import { BuyFYTConfirmationDrawer } from "efi-ui/earn/BuyPrincipalConfirmationDrawer/BuyPrincipalTokenConfirmationDrawer";
+import { PrincipalDiscountPreview } from "efi-ui/earn/EarnCard/PrincipalDiscountPreview";
+import { EarnInput } from "efi-ui/earn/EarnInput/EarnInput";
+import { useActiveTranche } from "efi-ui/earn/hooks/useActiveTranche";
+import { TranchePicker } from "efi-ui/earn/TranchePicker/TranchePicker";
 import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 
-import { InvestmentAmountInput } from "./InvestmentAmountInput";
-import { PrincipalDiscountPreview } from "./PrincipalDiscountPreview";
-
-export interface InvestCardProps {
+export interface EarnCardProps {
   library: Web3Provider | undefined;
   account: string | null | undefined;
 
@@ -49,17 +48,7 @@ export interface InvestCardProps {
  */
 type ActiveInput = "amountIn" | "amountOut";
 
-export const calloutClassName = tw(
-  "flex",
-  "flex-col",
-  "flex-1",
-  "h-full",
-  "p-8",
-  "items-center",
-  "justify-center"
-);
-
-export const InvestCard: FC<InvestCardProps> = ({
+export const EarnCard: FC<EarnCardProps> = ({
   library,
   account,
   baseAssets,
@@ -201,7 +190,7 @@ export const InvestCard: FC<InvestCardProps> = ({
               "border-gray-500"
             )}
           >
-            <InvestmentAmountInput
+            <EarnInput
               showMaxButton={!!account}
               baseAssetPicker={
                 <CryptoAssetPicker
@@ -236,7 +225,7 @@ export const InvestCard: FC<InvestCardProps> = ({
               "border-gray-500"
             )}
           >
-            <InvestmentAmountInput
+            <EarnInput
               showMaxButton={false}
               baseAssetPicker={
                 <TranchePicker
