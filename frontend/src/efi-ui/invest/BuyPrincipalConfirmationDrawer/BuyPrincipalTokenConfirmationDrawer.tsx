@@ -21,7 +21,7 @@ import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadC
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
-import { TransactionDetailsCallout } from "efi-ui/invest/BuyFYTConfirmationDrawer/TransactionDetailsCallout";
+import { TransactionDetailsCallout } from "efi-ui/invest/BuyPrincipalConfirmationDrawer/TransactionDetailsCallout";
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";

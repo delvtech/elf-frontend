@@ -19,7 +19,7 @@ import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { useCryptoBalance } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
-import { BuyFYTConfirmationDrawer } from "efi-ui/invest/BuyFYTConfirmationDrawer/BuyFYTConfirmationDrawer";
+import { BuyFYTConfirmationDrawer } from "efi-ui/invest/BuyPrincipalConfirmationDrawer/BuyPrincipalTokenConfirmationDrawer";
 import { useActiveTranche } from "efi-ui/invest/hooks/useActiveTranche";
 import { TranchePicker } from "efi-ui/invest/TranchePicker/TranchePicker";
 import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
