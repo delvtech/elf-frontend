@@ -61,7 +61,7 @@ contract Tranche is ERC20Permit, ITranche {
     }
 
     /**
-    @notice Deposit wrapped position tokens and receive interest and Principal ERC20Permit tokens.
+    @notice Deposit wrapped position tokens and receive interest and Principal ERC20 tokens.
             If interest has already been accrued by the wrapped position
             tokens held in this contract, the number of Principal tokens minted is
             reduced in order to pay for the accrued interest.
@@ -143,7 +143,7 @@ contract Tranche is ERC20Permit, ITranche {
     @return The number of underlying tokens released
     @dev This method will return 1 underlying for 1 principal except when interest
          is negative, in that case liquidity might run out and some principal token may
-         not be redeemable. 
+         not be redeemable.
          Also note: Redemption has the possibility of at most _SLIPPAGE_BP
          numerical error on each redemption so each principal token may occasionally redeem
          for less than 1 unit of underlying. Max loss defaults to 0.1 BP ie 0.001% loss
