@@ -1,6 +1,6 @@
 import React, { FC, Fragment, useCallback, useEffect, useState } from "react";
 
-import { Button, Card, Classes, Intent } from "@blueprintjs/core";
+import { Button, Card, Classes, Elevation, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { formatUnits, parseUnits } from "@ethersproject/units";
 import { AbstractConnector } from "@web3-react/abstract-connector";
@@ -166,7 +166,10 @@ export const EarnCard: FC<EarnCardProps> = ({
 
   return (
     <Fragment>
-      <Card className={tw("flex", "flex-col", "p-10", "flex-1", "space-y-10")}>
+      <Card
+        elevation={isDrawerOpen ? Elevation.ZERO : Elevation.TWO}
+        className={tw("flex", "flex-col", "p-10", "flex-1", "space-y-10")}
+      >
         <div className={tw("flex", "flex-col", "space-y-2")}>
           <div className={tw("flex", "justify-between")}>
             <span
