@@ -20,7 +20,7 @@ export function useSwaps(
   const { data: poolId } = useSmartContractReadCall(pool, "getPoolId");
   const balancerVault = useBalancerVault();
   const eventsQueryResult = useQuery({
-    queryKey: [["balancerVault", "queryFilter", "Swap"]],
+    queryKey: [["balancerVault", "queryFilter", "Swap"], { poolId }],
     queryFn: async () => {
       if (!balancerVault || !poolId) {
         return;
