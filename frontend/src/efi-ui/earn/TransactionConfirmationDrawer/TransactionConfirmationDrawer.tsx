@@ -168,14 +168,22 @@ export const TransactionConfirmationDrawer: FC<TransactionConfirmationDrawerProp
       style={!isDarkMode ? { background: "var(--bp3-bg-color)" } : {}}
       className={classNames(
         darkModeClassName,
-        tw("flex", "flex-col", "text-base", "overflow-scroll", {
-          "text-gray-700": !isDarkMode,
-          "text-white": isDarkMode,
-        })
+        tw(
+          "flex",
+          "flex-col",
+          "justify-between",
+          "text-base",
+          "overflow-scroll",
+          "py-10",
+          {
+            "text-gray-700": !isDarkMode,
+            "text-white": isDarkMode,
+          }
+        )
       )}
     >
       {!account ? (
-        <div className={tw("p-10")}>
+        <div className={tw("px-10")}>
           <ConnectWalletCallout />
         </div>
       ) : null}
@@ -185,7 +193,7 @@ export const TransactionConfirmationDrawer: FC<TransactionConfirmationDrawerProp
           "flex",
           "flex-col",
           "flex-1",
-          "p-10",
+          "px-10",
           "space-y-10",
           "justify-end"
         )}
