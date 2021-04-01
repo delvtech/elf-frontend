@@ -19,11 +19,11 @@ import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { useCryptoBalance } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
-import { TransactionConfirmationDrawer } from "efi-ui/earn/TransactionConfirmationDrawer/TransactionConfirmationDrawer";
 import { PrincipalDiscountPreview } from "efi-ui/earn/EarnCard/PrincipalDiscountPreview";
 import { EarnInput } from "efi-ui/earn/EarnInput/EarnInput";
 import { useActiveTranche } from "efi-ui/earn/hooks/useActiveTranche";
 import { TranchePicker } from "efi-ui/earn/TranchePicker/TranchePicker";
+import { TransactionConfirmationDrawer } from "efi-ui/earn/TransactionConfirmationDrawer/TransactionConfirmationDrawer";
 import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
@@ -195,7 +195,7 @@ export const EarnCard: FC<EarnCardProps> = ({
           >
             <EarnInput
               showMaxButton={!!account}
-              baseAssetPicker={
+              assetPicker={
                 <CryptoAssetPicker
                   cryptoAssets={baseAssets}
                   activeCryptoAsset={activeBaseAsset}
@@ -230,7 +230,7 @@ export const EarnCard: FC<EarnCardProps> = ({
           >
             <EarnInput
               showMaxButton={false}
-              baseAssetPicker={
+              assetPicker={
                 <TranchePicker
                   library={library}
                   account={account}

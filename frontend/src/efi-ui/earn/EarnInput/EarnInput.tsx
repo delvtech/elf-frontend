@@ -18,7 +18,7 @@ interface EarnInputProps {
 
   placeholder?: string;
 
-  baseAssetPicker: ReactElement;
+  assetPicker: ReactElement;
 }
 
 export const EarnInput: FC<EarnInputProps> = ({
@@ -28,7 +28,7 @@ export const EarnInput: FC<EarnInputProps> = ({
   placeholder,
   assetBalance,
   onValueChange,
-  baseAssetPicker,
+  assetPicker,
 }) => {
   const { isDarkMode } = useDarkMode();
 
@@ -74,7 +74,7 @@ export const EarnInput: FC<EarnInputProps> = ({
       )}
       value={inputValue}
       large
-      leftElement={baseAssetPicker}
+      leftElement={assetPicker}
       rightElement={maxButtonElement}
       onChange={onChange}
     />
