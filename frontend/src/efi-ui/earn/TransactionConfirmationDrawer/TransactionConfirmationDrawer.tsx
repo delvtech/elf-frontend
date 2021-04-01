@@ -42,6 +42,7 @@ import { WalletApprovalCallout } from "./WalletApprovalCallout";
 import { formatPercent } from "efi/base/formatPercent";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
+import { calculatePurchasePrice } from "efi/pools/calculatePurchasePrice";
 
 interface TransactionConfirmationDrawerProps {
   chainId: number | undefined;
@@ -150,9 +151,10 @@ export const TransactionConfirmationDrawer: FC<TransactionConfirmationDrawerProp
   );
 
   const amountInNumber = +(amountIn || 0);
+  const purchasePrice = calculatePurchasePrice(amountInNumber, amountOutNumber);
   const priceSlippageAndTradingFee = calculateSlippage(
     spotPriceTokenForOneBaseAsset || 0,
-    amountOutNumber / amountInNumber
+    purchasePrice
   );
   const formattedSlippageAndTradingFee = formatPercent(
     priceSlippageAndTradingFee
