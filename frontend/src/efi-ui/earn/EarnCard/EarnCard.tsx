@@ -106,7 +106,7 @@ export const EarnCard: FC<EarnCardProps> = ({
     activeTranche as ERC20Shim
   );
   const {
-    amountOfBaseAssetForOneToken: amountOfEthForOneTranche,
+    spotPriceBaseAssetForOneToken: amountOfEthForOneTranche,
   } = usePoolTokenPrices(pool, baseAssetPoolToken);
   const inputTokenSymbol = useCryptoSymbol(activeBaseAsset);
 

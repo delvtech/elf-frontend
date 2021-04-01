@@ -91,11 +91,11 @@ export const TransactionConfirmationDrawer: FC<TransactionConfirmationDrawerProp
   );
   const baseAssetPoolToken = usePoolPairedToken(pool, tranche as ERC20Shim);
   const {
-    amountOfBaseAssetForOneToken: amountOfEthForOneTranche,
-    amountOfTokenForOneBaseAsset: amountOfTrancheForOneEth,
+    spotPriceBaseAssetForOneToken,
+    spotPriceTokenForOneBaseAsset,
   } = usePoolTokenPrices(pool, baseAssetPoolToken);
 
-  const roundedTranchePrice = amountOfEthForOneTranche?.toFixed(4);
+  const roundedTranchePrice = spotPriceBaseAssetForOneToken?.toFixed(4);
 
   // vault calls
   const balancerVault = useBalancerVault();
@@ -151,9 +151,8 @@ export const TransactionConfirmationDrawer: FC<TransactionConfirmationDrawerProp
 
   const amountInNumber = +(amountIn || 0);
   const priceSlippageAndTradingFee = calculateSlippage(
-    amountOfTrancheForOneEth || 0,
-    amountInNumber,
-    amountOutNumber
+    spotPriceTokenForOneBaseAsset || 0,
+    amountOutNumber / amountInNumber
   );
   const formattedSlippageAndTradingFee = formatPercent(
     priceSlippageAndTradingFee
