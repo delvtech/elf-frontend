@@ -35,10 +35,12 @@ import {
   CryptoAssetType,
   findTokenContract,
 } from "efi/crypto/CryptoAsset";
+import { calculateSlippage } from "efi/pools/calculateSlippage";
 import { PoolContract } from "efi/pools/PoolContract";
 
 import { ConnectWalletCallout } from "./ConnectWalletCallout";
 import { WalletApprovalCallout } from "./WalletApprovalCallout";
+import { formatPercent } from "efi/base/formatPercent";
 
 interface TransactionConfirmationDrawerProps {
   chainId: number | undefined;
@@ -141,6 +143,16 @@ export const TransactionConfirmationDrawer: FC<TransactionConfirmationDrawerProp
     marketAllowance
   );
 
+  const amountInNumber = +(amountIn || 0);
+  const priceSlippageAndTradingFee = calculateSlippage(
+    tranchePrice,
+    amountInNumber,
+    amountOutNumber
+  );
+  const formattedSlippageAndTradingFee = formatPercent(
+    priceSlippageAndTradingFee
+  );
+
   return (
     <Drawer
       isOpen={isOpen}
@@ -181,6 +193,7 @@ export const TransactionConfirmationDrawer: FC<TransactionConfirmationDrawerProp
         >
           <div className={tw("flex", "flex-col", "space-y-6")}>
             <LabeledText
+              bold
               muted={false}
               text={<span>{t`Market rate`}</span>}
               label={
@@ -190,6 +203,17 @@ export const TransactionConfirmationDrawer: FC<TransactionConfirmationDrawerProp
               }
             />
             <LabeledText
+              muted={false}
+              bold
+              text={<span>{t`Price slippage + trading fees`}</span>}
+              label={
+                <span className={tw("text-base")}>
+                  {formattedSlippageAndTradingFee}
+                </span>
+              }
+            />
+            <LabeledText
+              bold
               muted={false}
               text={<span>{t`Term date`}</span>}
               label={

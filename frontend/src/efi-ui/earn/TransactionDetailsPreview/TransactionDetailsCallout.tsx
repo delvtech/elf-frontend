@@ -44,7 +44,7 @@ export const TransactionDetailsPreview: FC<TransactionDetailsPreviewProps> = ({
             "gap-2"
           )}
         >
-          <span className={tw("text-base")}>{t`From`}</span>
+          <span className={tw("text-sm", "font-semibold")}>{t`From`}</span>
           <InputGroup
             large
             fill
@@ -72,7 +72,7 @@ export const TransactionDetailsPreview: FC<TransactionDetailsPreviewProps> = ({
             "gap-2"
           )}
         >
-          <span className={tw("text-base")}>{t`To`}</span>
+          <span className={tw("text-sm", "font-semibold")}>{t`To`}</span>
           <InputGroup
             large
             fill
