@@ -20,8 +20,8 @@ test.skip("full app rendering/navigating", async () => {
   await navigate("/portfolio");
   expect(getByTestId("portfolio-view")).toBeVisible();
 
-  await navigate("/invest");
-  expect(getByTestId("invest-view")).toBeVisible();
+  await navigate("/earn");
+  expect(getByTestId("earn-view")).toBeVisible();
 
   await navigate("/exchange");
   expect(getByTestId("exchange-view")).toBeVisible();

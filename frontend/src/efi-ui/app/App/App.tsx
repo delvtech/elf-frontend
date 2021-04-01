@@ -7,7 +7,7 @@ import classNames from "classnames";
 import { tw } from "efi-tailwindcss-classnames";
 import { ExchangeView } from "efi-ui/exchange/ExchangeView/ExchangeView";
 import { FAQView } from "efi-ui/faq/FAQView";
-import { InvestView } from "efi-ui/invest/InvestView/InvestView";
+import { EarnView } from "efi-ui/earn/EarnView/EarnView";
 import { MarketView } from "efi-ui/markets/MarketView/MarketView";
 import { MintView } from "efi-ui/mint/MintView/MintView";
 import { MainNavigation } from "efi-ui/navigation/MainNavigation/MainNavigation";
@@ -52,10 +52,10 @@ const App: FC<AppProps> = () => {
         </LocationProvider>
 
         <Router className={contentClassName}>
-          <Redirect noThrow from="/" to={Navigation.INVEST} />
+          <Redirect noThrow from="/" to={Navigation.EARN} />
 
           <PortfolioView path={Navigation.PORTFOLIO} />
-          <InvestView path={Navigation.INVEST} />
+          <EarnView path={Navigation.EARN} />
           <ExchangeView path={Navigation.EXCHANGE} />
           <MarketView path={`${Navigation.EXCHANGE}/:poolAddress`} />
           <MintView path={Navigation.MINT} />

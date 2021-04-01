@@ -5,11 +5,11 @@ import classNames from "classnames";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import styles from "efi-ui/invest/InvestView/styles.module.css";
+import styles from "efi-ui/earn/EarnInput/EarnInput.module.css";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 
 const ANY_NUMBER_REGEX = /^\d*\.?\d*$/;
-interface InvestmentAmountInputProps {
+interface EarnInputProps {
   showMaxButton: boolean;
   assetBalance: number;
   value: string | undefined;
@@ -21,7 +21,7 @@ interface InvestmentAmountInputProps {
   baseAssetPicker: ReactElement;
 }
 
-export const InvestmentAmountInput: FC<InvestmentAmountInputProps> = ({
+export const EarnInput: FC<EarnInputProps> = ({
   className,
   value,
   showMaxButton,

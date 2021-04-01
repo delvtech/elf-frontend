@@ -1,32 +1,40 @@
 import React, { FC } from "react";
+
 import { Classes, Icon, Intent, Tag } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
 import classNames from "classnames";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { t } from "ttag";
+
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { getQueryData } from "efi-ui/base/queryResults";
+import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
+import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
+import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
+import { useUnderlyingVaultForTranche } from "efi-ui/tranche/useUnderlyingVaultForTranche";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
+import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
-import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
-import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
-import { useUnderlyingVaultForTranche } from "efi-ui/tranche/useUnderlyingVaultForTranche";
-import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 
 interface TrancheButtonProps {
   library: Web3Provider | undefined;
   account: string | null | undefined;
   tranche: Tranche | undefined;
+  baseAsset: CryptoAsset | undefined;
   onClick?: (event: React.MouseEvent<HTMLElement>) => void;
 }
 
-export const TrancheButton: FC<TrancheButtonProps> = ({ tranche, onClick }) => {
+export const TrancheButton: FC<TrancheButtonProps> = ({
+  baseAsset,
+  tranche,
+  onClick,
+}) => {
   const unlockTimestampResult = useSmartContractReadCall(
     tranche,
     "unlockTimestamp"
@@ -40,11 +48,7 @@ export const TrancheButton: FC<TrancheButtonProps> = ({ tranche, onClick }) => {
   );
 
   const pool = usePoolForToken(tranche as ERC20Shim, jsonRpcProvider);
-  const baseAssetToken = usePoolPairedToken(pool, tranche as ERC20Shim);
-  const { data: baseAssetName } = useSmartContractReadCall(
-    baseAssetToken,
-    "symbol"
-  );
+  const baseAssetSymbol = useCryptoSymbol(baseAsset);
   const tranchePrice = usePoolSpotPrice(pool, tranche as ERC20Shim);
 
   let trancheAPY = "-";
@@ -101,7 +105,7 @@ export const TrancheButton: FC<TrancheButtonProps> = ({ tranche, onClick }) => {
                 </Tag>
               </div>
             }
-            text={`${baseAssetName} Principal Token`}
+            text={`${baseAssetSymbol} Principal Token`}
             label={t`via ${positionName}`}
           />
         </div>

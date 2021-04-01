@@ -78,11 +78,11 @@ export const SidebarNavigation: FC<SidebarNavigationProps> = ({
             }
           />
           <Tab
-            id={Navigation.INVEST}
+            id={Navigation.EARN}
             title={
               <div className={tabTitleClassName}>
                 <Icon icon={IconNames.PERCENTAGE} iconSize={Icon.SIZE_LARGE} />
-                <span>{t`Invest`}</span>
+                <span>{t`Earn`}</span>
               </div>
             }
           />

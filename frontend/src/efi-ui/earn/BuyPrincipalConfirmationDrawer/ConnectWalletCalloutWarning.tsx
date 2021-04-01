@@ -1,6 +1,8 @@
 import React, { FC } from "react";
+
 import { Callout, Intent } from "@blueprintjs/core";
 import { t } from "ttag";
+
 import tw from "efi-tailwindcss-classnames";
 
 export const ConnectWalletCalloutWarning: FC<unknown> = () => {

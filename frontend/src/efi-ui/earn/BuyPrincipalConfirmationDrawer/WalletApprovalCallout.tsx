@@ -2,13 +2,13 @@ import React, { FC } from "react";
 
 import { Callout, Intent } from "@blueprintjs/core";
 import { ERC20 } from "elf-contracts/types/ERC20";
+import { BigNumber } from "ethers";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
-import { BigNumber } from "ethers";
 
 interface WalletApprovalCalloutProps {
   account: string | null | undefined;
