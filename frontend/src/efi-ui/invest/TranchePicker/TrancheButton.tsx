@@ -14,19 +14,25 @@ import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
-import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useUnderlyingVaultForTranche } from "efi-ui/tranche/useUnderlyingVaultForTranche";
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
+import { CryptoAsset } from "efi/crypto/CryptoAsset";
+import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 
 interface TrancheButtonProps {
   library: Web3Provider | undefined;
   account: string | null | undefined;
   tranche: Tranche | undefined;
+  baseAsset: CryptoAsset | undefined;
   onClick?: (event: React.MouseEvent<HTMLElement>) => void;
 }
 
-export const TrancheButton: FC<TrancheButtonProps> = ({ tranche, onClick }) => {
+export const TrancheButton: FC<TrancheButtonProps> = ({
+  baseAsset,
+  tranche,
+  onClick,
+}) => {
   const unlockTimestampResult = useSmartContractReadCall(
     tranche,
     "unlockTimestamp"
@@ -40,11 +46,7 @@ export const TrancheButton: FC<TrancheButtonProps> = ({ tranche, onClick }) => {
   );
 
   const pool = usePoolForToken(tranche as ERC20Shim, jsonRpcProvider);
-  const baseAssetToken = usePoolPairedToken(pool, tranche as ERC20Shim);
-  const { data: baseAssetName } = useSmartContractReadCall(
-    baseAssetToken,
-    "symbol"
-  );
+  const baseAssetSymbol = useCryptoSymbol(baseAsset);
   const tranchePrice = usePoolSpotPrice(pool, tranche as ERC20Shim);
 
   let trancheAPY = "-";
@@ -101,7 +103,7 @@ export const TrancheButton: FC<TrancheButtonProps> = ({ tranche, onClick }) => {
                 </Tag>
               </div>
             }
-            text={`${baseAssetName} Principal Token`}
+            text={`${baseAssetSymbol} Principal Token`}
             label={t`via ${positionName}`}
           />
         </div>

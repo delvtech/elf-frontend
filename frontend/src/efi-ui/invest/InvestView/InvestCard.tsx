@@ -243,6 +243,7 @@ export const InvestCard: FC<InvestCardProps> = ({
                   library={library}
                   account={account}
                   onTrancheChange={setActiveTranche}
+                  baseAsset={activeBaseAsset}
                   tranches={availableTranches}
                   activeTrancheIndex={activeTrancheIndex}
                 />

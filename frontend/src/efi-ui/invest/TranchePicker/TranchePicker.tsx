@@ -7,16 +7,19 @@ import { Tranche } from "elf-contracts/types/Tranche";
 import tw from "efi-tailwindcss-classnames";
 
 import { TrancheButton } from "./TrancheButton";
+import { CryptoAsset } from "efi/crypto/CryptoAsset";
 
 interface TranchePickerProps {
   library: Web3Provider | undefined;
   account: string | null | undefined;
+  baseAsset: CryptoAsset | undefined;
   tranches: Tranche[];
   activeTrancheIndex: number | undefined;
   onTrancheChange: (newTranche: Tranche) => void;
 }
 
 export const TranchePicker: FC<TranchePickerProps> = ({
+  baseAsset,
   tranches,
   account,
   library,
@@ -39,6 +42,7 @@ export const TranchePicker: FC<TranchePickerProps> = ({
       className={tw("w-full", "col-span-2")}
       itemRenderer={(tranche, { handleClick }) => (
         <TrancheButton
+          baseAsset={baseAsset}
           library={library}
           account={account}
           tranche={tranche}
@@ -48,6 +52,7 @@ export const TranchePicker: FC<TranchePickerProps> = ({
       onItemSelect={onTrancheChange}
     >
       <TrancheButton
+        baseAsset={baseAsset}
         library={library}
         account={account}
         tranche={activeTranche}
