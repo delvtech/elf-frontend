@@ -42,7 +42,7 @@ import { formatMoney } from "efi/money/formatMoney";
 import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
 import { useUnderlyingVaultForTranche } from "efi-ui/tranche/useUnderlyingVaultForTranche";
 
-interface FYTCardProps {
+interface PrincipalTokenCardProps {
   library: Web3Provider | undefined;
   account: string | null | undefined;
   tranche: Tranche;
@@ -57,7 +57,11 @@ const calloutClassName = tw(
   "items-center",
   "justify-center"
 );
-export const FYTCard: FC<FYTCardProps> = ({ library, account, tranche }) => {
+export const PrincipalTokenCard: FC<PrincipalTokenCardProps> = ({
+  library,
+  account,
+  tranche,
+}) => {
   const { isDarkMode } = useDarkMode();
   const { currency } = useCurrencyPref();
   const { data: trancheSymbol } = useSmartContractReadCall(tranche, "symbol");
@@ -200,8 +204,8 @@ export const FYTCard: FC<FYTCardProps> = ({ library, account, tranche }) => {
               className={tw("flex", "justify-center", "items-center")}
               bold
               textClassName={tw("text-2xl")}
-              text={`${trancheBalance.toFixed(6)} FYT`}
-              label={t`1 FYT = 1 ${baseAssetSymbol} at maturity`}
+              text={`${trancheBalance.toFixed(6)} pt${baseAssetSymbol}`}
+              label={t`1 Principal Token = 1 ${baseAssetSymbol} at maturity`}
             />
           </Callout>
           <Callout icon={null} className={calloutClassName}>

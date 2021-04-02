@@ -1,6 +1,6 @@
 import React from "react";
 
-import { FYTTable } from "efi-ui/portfolio/FYTTable/FYTTable";
+import { FYTTable } from "efi-ui/portfolio/PrincipalTokenTable/FYTTable";
 import { renderWithClient } from "efi-ui/testing/renderWithClient";
 import { createQueryClient } from "efi/queryClient";
 
