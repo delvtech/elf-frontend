@@ -70,7 +70,7 @@ export const TransactionConfirmationDrawer: FC<TransactionConfirmationDrawerProp
     balancerVault?.address
   );
 
-  // pool calls
+  const confirmButtonLabel = getConfirmButtonLabel(account);
   const confirmButtonDisabled = getConfirmButtonDisabled(
     account,
     assetIn,
@@ -149,13 +149,22 @@ export const TransactionConfirmationDrawer: FC<TransactionConfirmationDrawerProp
             large
             outlined
             onClick={onConfirmTransaction}
-          >{t`Confirm transaction`}</Button>
+          >
+            {confirmButtonLabel}
+          </Button>
         </div>
       </div>
     </Drawer>
   );
 };
 
+function getConfirmButtonLabel(account: string | null | undefined) {
+  if (!account) {
+    return t`Connect your wallet to continue`;
+  }
+
+  return t`Confirm transaction`;
+}
 function getConfirmButtonDisabled(
   account: string | null | undefined,
   baseAsset: CryptoAsset | undefined,
@@ -177,9 +186,15 @@ function getConfirmButtonDisabled(
     return true;
   }
 
-  // disabled if it's an erc20 w/out enough allowance
-  if (baseAsset.type === CryptoAssetType.ERC20) {
-    const hasEnoughAllowance = marketAllowance?.lt(amountIn);
+  // disabled if it's an erc20 or erc20permits w/out enough allowance.
+  // NOTE: we have to use approvals for erc20permits because balancer does not
+  // support that
+  if (
+    [CryptoAssetType.ERC20, CryptoAssetType.ERC20PERMIT].includes(
+      baseAsset.type
+    )
+  ) {
+    const hasEnoughAllowance = marketAllowance?.gte(amountIn);
     if (!hasEnoughAllowance) {
       return true;
     }
