@@ -1,6 +1,6 @@
-import { AssetIcon } from "efi-ui/crypto/CryptoIcon";
+import { SvgIcon } from "efi-ui/base/SvgIcon";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 
 export type CryptoAssetWithIcon = CryptoAsset & {
-  assetIcon: AssetIcon;
+  assetIcon: SvgIcon;
 };

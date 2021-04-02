@@ -19,6 +19,7 @@ interface ERC20ApproveButtonProps {
   contract: ERC20 | undefined;
   approvalAmount: BigNumber | undefined;
   signer: Signer | undefined;
+  className?: string;
 }
 export const ERC20ApproveButton: FC<ERC20ApproveButtonProps> = ({
   owner,
@@ -26,6 +27,7 @@ export const ERC20ApproveButton: FC<ERC20ApproveButtonProps> = ({
   contract,
   approvalAmount,
   signer,
+  className,
 }) => {
   const { data: assetSymbol } = useSmartContractReadCall(contract, "symbol");
   const { data: marketAllowance } = useTokenAllowance(contract, owner, spender);
@@ -39,6 +41,7 @@ export const ERC20ApproveButton: FC<ERC20ApproveButtonProps> = ({
       fill
       large
       outlined
+      className={className}
       icon={hasApproval ? IconNames.TICK : null}
       disabled={hasApproval}
       intent={hasApproval ? Intent.SUCCESS : Intent.PRIMARY}

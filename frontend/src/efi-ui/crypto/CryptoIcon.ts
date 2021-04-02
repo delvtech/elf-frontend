@@ -1,5 +1,3 @@
-import { FC, SVGProps } from "react";
-
 import daiLogo from "efi-static-assets/logos/DAI-logo.png";
 import efiLogo from "efi-static-assets/logos/efi-logo.svg";
 import ethLogo from "efi-static-assets/logos/ETH-logo.png";
@@ -12,27 +10,20 @@ import wethLogo from "efi-static-assets/logos/WETH-logo.png";
 import yfiLogo from "efi-static-assets/logos/YFI-logo.png";
 import { EthIcon } from "efi-ui/ethereum/EthIcon";
 import { CryptoSymbol, CryptoSymbolOld } from "efi/crypto/CryptoSymbol";
-
-export type AssetIcon = FC<
-  SVGProps<SVGSVGElement> & {
-    title?: string | undefined;
-  }
->;
+import { SvgIcon } from "efi-ui/base/SvgIcon";
 
 /**
  * Lookup object to get the svg icon for a given symbol. NOTE: all keys are in
  * uppercase, so consumers might need to format in order to get the correct
  * icon.
  */
-export const CryptoIconSvg: Record<CryptoSymbol, AssetIcon> = {
+export const CryptoIconSvg: Record<CryptoSymbol, SvgIcon> = {
   ETH: EthIcon,
   USDC: UsdcIcon,
   WETH: WethIcon,
 };
 
-export function findAssetIcon(
-  symbol: string | undefined
-): AssetIcon | undefined {
+export function findAssetIcon(symbol: string | undefined): SvgIcon | undefined {
   if (!symbol) {
     return undefined;
   }

@@ -5,18 +5,18 @@ import classNames from "classnames";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { AssetIcon } from "efi-ui/crypto/CryptoIcon";
+import { SvgIcon } from "efi-ui/base/SvgIcon";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 
 import styles from "./styles.module.css";
 
 interface TransactionDetailsPreviewProps {
-  assetInIcon: AssetIcon;
+  assetInIcon: SvgIcon;
   assetInSymbol: string | undefined;
   assetOutSymbol: string | undefined;
   amountIn: string | undefined;
   amountOut: string | undefined;
-  assetOutIcon: AssetIcon | null;
+  assetOutIcon: SvgIcon | null;
 }
 export const TransactionDetailsPreview: FC<TransactionDetailsPreviewProps> = ({
   assetInIcon: AssetInIcon,
