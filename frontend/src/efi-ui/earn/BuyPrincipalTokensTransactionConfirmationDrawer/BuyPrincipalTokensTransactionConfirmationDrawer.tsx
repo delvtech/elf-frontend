@@ -126,7 +126,6 @@ export const BuyPrincipalTokensTransactionConfirmationDrawer: FC<BuyPrincipalTra
       chainId={chainId}
       connector={connector}
       library={library}
-      pool={pool}
       onConfirmTransaction={onConfirmBuyPrincipalTokens}
       transactionDetails={
         <TransactionDetailsPreview

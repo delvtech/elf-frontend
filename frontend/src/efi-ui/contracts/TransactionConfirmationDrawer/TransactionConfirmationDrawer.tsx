@@ -20,41 +20,35 @@ import {
   CryptoAssetType,
   findTokenContract,
 } from "efi/crypto/CryptoAsset";
-import { PoolContract } from "efi/pools/PoolContract";
 
 import { ConnectWalletCallout } from "./ConnectWalletCallout";
 import { WalletApprovalCallout } from "./WalletApprovalCallout";
 interface TransactionConfirmationDrawerProps {
-  isOpen: boolean;
-  chainId: number | undefined;
   account: string | null | undefined;
-  walletConnectionActive: boolean;
-  connector: AbstractConnector | undefined;
-  library: Web3Provider | undefined;
-  pool: PoolContract | undefined;
   amountIn: BigNumber | undefined;
   assetIn: CryptoAssetWithIcon | undefined;
-
-  /**
-   * Can be overridden when necessary, otherwise defaults to the underlying crypto symbol
-   */
-  transactionDetails?: ReactElement | null;
-  onConfirmTransaction: () => void;
+  chainId: number | undefined;
+  connector: AbstractConnector | undefined;
+  isOpen: boolean;
+  library: Web3Provider | undefined;
   onClose: () => void;
+  onConfirmTransaction: () => void;
+  transactionDetails?: ReactElement | null;
+  walletConnectionActive: boolean;
 }
 
 export const TransactionConfirmationDrawer: FC<TransactionConfirmationDrawerProps> = ({
-  connector,
-  walletConnectionActive,
-  library,
-  chainId,
   account,
-  assetIn,
   amountIn,
+  assetIn,
+  chainId,
+  connector,
   isOpen,
+  library,
   onClose,
   onConfirmTransaction,
   transactionDetails,
+  walletConnectionActive,
 }) => {
   const { isDarkMode, darkModeClassName } = useDarkMode();
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
