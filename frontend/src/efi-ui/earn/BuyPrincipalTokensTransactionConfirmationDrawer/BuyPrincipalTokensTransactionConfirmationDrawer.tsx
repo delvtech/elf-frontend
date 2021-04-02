@@ -1,7 +1,6 @@
 import React, { FC } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
-import { formatUnits, parseUnits } from "@ethersproject/units";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { Signer } from "ethers";
@@ -26,6 +25,7 @@ import { calculateSlippage } from "efi/pools/calculateSlippage";
 import { PoolContract } from "efi/pools/PoolContract";
 
 import { PrincipalTokenTransactionDetails } from "./PrincipalTokenTransactionDetails";
+import { formatUnits, parseUnits } from "ethers/lib/utils";
 
 interface BuyPrincipalTransactionConfirmationDrawerProps {
   chainId: number | undefined;

@@ -1,5 +1,5 @@
-import { commify, formatEther } from "@ethersproject/units";
 import { BigNumber } from "ethers";
+import { commify, formatEther } from "ethers/lib/utils";
 
 // Show eth in the format of xxxxxx.12345 place values after the decimal
 export function formatEthBalance(ethBalance: BigNumber | number): string {

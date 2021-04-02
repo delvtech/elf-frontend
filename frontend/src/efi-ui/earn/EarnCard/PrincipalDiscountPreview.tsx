@@ -1,13 +1,13 @@
 import React, { FC, Fragment } from "react";
 
 import { Callout, Colors } from "@blueprintjs/core";
-import { formatUnits } from "@ethersproject/units";
 import { BigNumber } from "ethers";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
+import { formatUnits } from "ethers/lib/utils";
 
 interface PrincipalDiscountPreviewProps {
   amountIn: BigNumber | undefined;

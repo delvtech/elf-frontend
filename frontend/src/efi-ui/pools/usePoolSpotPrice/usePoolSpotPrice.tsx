@@ -1,4 +1,3 @@
-import { formatUnits, parseUnits } from "@ethersproject/units";
 import { ERC20 } from "elf-contracts/types/ERC20";
 import { BigNumber } from "ethers";
 
@@ -6,6 +5,7 @@ import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadC
 import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { PoolContract } from "efi/pools/PoolContract";
+import { formatUnits, parseUnits } from "ethers/lib/utils";
 
 /**
  * Lazy spot price technique until we get a better method.  Right now just calculates how much out

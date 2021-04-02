@@ -1,4 +1,3 @@
-import { formatUnits, parseUnits } from "@ethersproject/units";
 import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
 import { BigNumber } from "ethers";
 import { Money } from "ts-money";
@@ -12,6 +11,7 @@ import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
 import { KNOWN_BASE_ASSETS } from "efi/contracts/contractsJson";
 import { PoolContract } from "efi/pools/PoolContract";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
+import { formatUnits, parseUnits } from "ethers/lib/utils";
 
 export function useTotalLiquidityForPool(
   pool: PoolContract | undefined

@@ -1,4 +1,3 @@
-import { formatUnits } from "@ethersproject/units";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { Currency, Money } from "ts-money";
 
@@ -11,6 +10,7 @@ import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { Web3Provider } from "@ethersproject/providers";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
+import { formatUnits } from "ethers/lib/utils";
 
 /**
  * @deprecated BPool is deprecated. use useTrancheFiatBalance instead

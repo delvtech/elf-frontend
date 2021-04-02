@@ -1,5 +1,5 @@
-import { formatEther } from "@ethersproject/units";
 import { BigNumber } from "ethers";
+import { formatEther } from "ethers/lib/utils";
 
 export function formatEth(
   wei: BigNumber | undefined,
