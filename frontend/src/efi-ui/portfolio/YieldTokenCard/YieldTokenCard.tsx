@@ -26,22 +26,23 @@ import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { CryptoIconSvg } from "efi-ui/crypto/CryptoIcon";
+import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
 import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
-import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
 import { useTrancheForInterestToken } from "efi-ui/tranche/useTrancheForInterestToken";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { getTimeLeft2 } from "efi/base/time";
-import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { formatMoney } from "efi/money/formatMoney";
 
 import { useUnderlyingVaultForTranche } from "../../tranche/useUnderlyingVaultForTranche";
+import { useBaseAssetForTranche } from "efi-ui/tranche/useBaseAssetForTranche";
+import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
+import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
 
-interface InterestTokenCardProps {
+interface YieldTokenCardProps {
   library: Web3Provider | undefined;
   account: string | null | undefined;
   interestToken: InterestToken;
@@ -57,7 +58,7 @@ const calloutClassName = tw(
   "justify-center"
 );
 
-export const InterestTokenCard: FC<InterestTokenCardProps> = ({
+export const YieldTokenCard: FC<YieldTokenCardProps> = ({
   library,
   account,
   interestToken,
@@ -93,30 +94,20 @@ export const InterestTokenCard: FC<InterestTokenCardProps> = ({
 
   const pool = usePoolForToken((interestToken as unknown) as ERC20Shim);
 
-  const baseAsset = usePoolPairedToken(
-    pool,
-    (interestToken as unknown) as ERC20Shim
-  );
-  const { data: baseAssetSymbol } = useSmartContractReadCall(
-    baseAsset,
-    "symbol"
-  );
+  const baseAsset = useBaseAssetForTranche(tranche);
+  const baseAssetSymbol = useCryptoSymbol(baseAsset);
   const { data: baseAssetFiatPrice } = useCoinGeckoPrice(
     getCoinGeckoId(baseAssetSymbol),
     currency
   );
-  const { data: baseAssetDecimals } = useSmartContractReadCall(
-    baseAsset,
-    "decimals"
-  );
+  const baseAssetDecimals = useCryptoDecimals(baseAsset);
   const { data: exitValueBigNumber } = useOnSwapGivenIn(
     pool,
     (interestToken as unknown) as ERC20Shim,
     interestTokenBalanceOf
   );
 
-  const iconKey = baseAssetSymbol?.toUpperCase() as CryptoSymbol;
-  const BaseAssetIcon = iconKey ? CryptoIconSvg[iconKey] : () => null;
+  const BaseAssetIcon = findAssetIcon(baseAssetSymbol);
 
   const exitValue = +formatUnits(exitValueBigNumber || 0, baseAssetDecimals);
   const exitValueFiat = formatMoney(baseAssetFiatPrice?.multiply(exitValue));
@@ -136,12 +127,14 @@ export const InterestTokenCard: FC<InterestTokenCardProps> = ({
         )}
       >
         <div className={tw("flex", "space-x-4")}>
-          <BaseAssetIcon
-            className={tw("flex-shrink-0")}
-            title={baseAssetSymbol}
-            height={72}
-            width={72}
-          />
+          {BaseAssetIcon ? (
+            <BaseAssetIcon
+              className={tw("flex-shrink-0")}
+              title={baseAssetSymbol}
+              height={72}
+              width={72}
+            />
+          ) : null}
           <div className={tw("flex", "flex-col", "space-y-2")}>
             <span className={tw("text-xl", "font-semibold", "tracking-wide")}>
               <a

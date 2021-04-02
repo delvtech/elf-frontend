@@ -27,20 +27,20 @@ import { getQueryData } from "efi-ui/base/queryResults";
 import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { CryptoIconSvg } from "efi-ui/crypto/CryptoIcon";
+import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
 import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
-import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
-import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { ONE_ETHER } from "efi/crypto/ethereum";
 import { formatMoney } from "efi/money/formatMoney";
 import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
 import { useUnderlyingVaultForTranche } from "efi-ui/tranche/useUnderlyingVaultForTranche";
+import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
+import { useBaseAssetForTranche } from "efi-ui/tranche/useBaseAssetForTranche";
 
 interface PrincipalTokenCardProps {
   library: Web3Provider | undefined;
@@ -64,6 +64,8 @@ export const PrincipalTokenCard: FC<PrincipalTokenCardProps> = ({
 }) => {
   const { isDarkMode } = useDarkMode();
   const { currency } = useCurrencyPref();
+  const baseAsset = useBaseAssetForTranche(tranche);
+
   const { data: trancheSymbol } = useSmartContractReadCall(tranche, "symbol");
   const { data: unlockTimestamp } = useSmartContractReadCall(
     tranche,
@@ -86,12 +88,7 @@ export const PrincipalTokenCard: FC<PrincipalTokenCardProps> = ({
     (tranche as unknown) as ERC20Shim,
     ONE_ETHER
   );
-  const baseAsset = usePoolPairedToken(pool, (tranche as unknown) as ERC20Shim);
-
-  const { data: baseAssetSymbol } = useSmartContractReadCall(
-    baseAsset,
-    "symbol"
-  );
+  const baseAssetSymbol = useCryptoSymbol(baseAsset);
 
   const tranchePriceBigNumber = getQueryData(trancheSpotPriceResult);
   const tranchePriceInBaseAsset = +formatCurrency(
@@ -108,8 +105,7 @@ export const PrincipalTokenCard: FC<PrincipalTokenCardProps> = ({
     fiatPrice = formatMoney(baseAssetCoinGeckoPrice.multiply(exitValue));
   }
 
-  const iconKey = baseAssetSymbol?.toUpperCase() as CryptoSymbol;
-  const BaseAssetIcon = iconKey ? CryptoIconSvg[iconKey] : () => null;
+  const BaseAssetIcon = findAssetIcon(baseAssetSymbol);
 
   const tableRowLink = getTableRowLink(vaultContract?.address, vaultName);
   const maturationDate = convertEpochSecondsToDate(unlockTimestamp);
@@ -135,12 +131,14 @@ export const PrincipalTokenCard: FC<PrincipalTokenCardProps> = ({
         )}
       >
         <div className={tw("flex", "space-x-4")}>
-          <BaseAssetIcon
-            className={tw("flex-shrink-0")}
-            title={baseAssetSymbol}
-            height={72}
-            width={72}
-          />
+          {BaseAssetIcon ? (
+            <BaseAssetIcon
+              className={tw("flex-shrink-0")}
+              title={baseAssetSymbol}
+              height={72}
+              width={72}
+            />
+          ) : null}
           <div className={tw("flex", "flex-col", "space-y-2")}>
             <span className={tw("text-xl", "font-semibold", "tracking-wide")}>
               <a
@@ -149,7 +147,7 @@ export const PrincipalTokenCard: FC<PrincipalTokenCardProps> = ({
                 target="_blank"
                 rel="noreferrer noopener"
               >
-                {trancheSymbol}
+                {trancheSymbol || null}
               </a>
             </span>
             <div

@@ -1,5 +1,4 @@
 import React from "react";
-
 import { Provider, Web3Provider } from "@ethersproject/providers";
 import { Money } from "ts-money";
 import { t } from "ttag";
@@ -25,6 +24,7 @@ export function usePortfolioTabs(
     tranchesWithBalance,
     totalFiatBalanceAllTranches,
   } = usePrincipalTokenTab(library, account, provider);
+
   const {
     yieldTokensWithBalance,
     totalFiatBalanceAllYieldTokens,

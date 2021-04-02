@@ -3,10 +3,10 @@ import React, { FC } from "react";
 import { Tranche } from "elf-contracts/types/Tranche";
 
 import tw from "efi-tailwindcss-classnames";
-import { PrincipalTokenCard } from "efi-ui/portfolio/PrincipalTokenCard/PrincipalTokenCard";
 import { NoFYTsInWalletNonIdealState } from "efi-ui/wallets/NoFYTsInWalletNonIdealState/NoFYTsInWalletNonIdealState";
 import { NoWalletConnectedNonIdealState } from "efi-ui/wallets/NoWalletConnectedNonIdealState/NoWalletConnectedNonIdealState";
 import { Web3Provider } from "@ethersproject/providers";
+import { PrincipalTokenCard } from "efi-ui/portfolio/PrincipalTokenCard/PrincipalTokenCard";
 
 interface PrincipalTokenPortfolioProps {
   library: Web3Provider | undefined;

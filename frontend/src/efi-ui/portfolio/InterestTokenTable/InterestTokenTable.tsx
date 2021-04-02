@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 
 import tw from "efi-tailwindcss-classnames";
-import { InterestTokenCard } from "efi-ui/portfolio/InterestTokenTable/InterestTokenCard";
+import { YieldTokenCard } from "efi-ui/portfolio/YieldTokenCard/YieldTokenCard";
 import { Web3Provider } from "@ethersproject/providers";
 import { InterestToken } from "elf-contracts/types/InterestToken";
 
@@ -33,7 +33,7 @@ export const InterestTokenTable: FC<InterestTokenTableProps> = ({
       className={tw("flex", "flex-col", "w-full")}
     >
       {interestTokens.map((interestToken) => (
-        <InterestTokenCard
+        <YieldTokenCard
           key={interestToken.address}
           library={library}
           account={account}
