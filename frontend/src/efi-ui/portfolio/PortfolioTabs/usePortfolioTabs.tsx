@@ -1,17 +1,16 @@
 import React from "react";
-
 import { Provider, Web3Provider } from "@ethersproject/providers";
 import { Money } from "ts-money";
 import { t } from "ttag";
 
-import { FYTPortfolio } from "efi-ui/portfolio/FYTPortfolio/FYTPortfolio";
-import { useFiatBalanceAllTranches } from "efi-ui/portfolio/hooks/useTotalFYTFiatBalance";
+import { useInterestTokensWithBalance } from "efi-ui/interestToken/useInterestTokensWithBalance/useInterestTokensWithBalance";
+import { useFiatBalanceAllTranches } from "efi-ui/portfolio/hooks/useTotalPrincipalTokenFiatBalance";
 import { useTranchesWithBalance } from "efi-ui/portfolio/hooks/useTranchesWithBalance";
+import { InterestTokenPortfolio } from "efi-ui/portfolio/InterestTokenPortfolio/InterestTokenPortfolio";
 import { LiquidityPositionPortfolio } from "efi-ui/portfolio/LiquidityPositionPortfolio/LiquidityPositionPortfolio";
 import { PortfolioTab } from "efi-ui/portfolio/PortfolioTabs/PortfolioTabs";
-import { InterestTokenPortfolio } from "efi-ui/portfolio/InterestTokenPortfolio/InterestTokenPortfolio";
+import { PrincipalTokenPortfolio } from "efi-ui/portfolio/PrincipalTokenPortfolio/PrincipalTokenPortfolio";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
-import { useInterestTokensWithBalance } from "efi-ui/interestToken/useInterestTokensWithBalance/useInterestTokensWithBalance";
 
 import { useFiatBalanceAllInterestTokens } from "./useFiatBalanceAllInterestTokens";
 
@@ -21,24 +20,24 @@ export function usePortfolioTabs(
   provider?: Provider
 ): PortfolioTab[] {
   const { currency } = useCurrencyPref();
-  const { tranchesWithBalance, totalFiatBalanceAllTranches } = useFYTTab(
-    library,
-    account,
-    provider
-  );
   const {
-    interestTokensWithBalance,
-    totalFiatBalanceAllInterestTokens,
-  } = useInterestTokenTab(library, account, provider);
+    tranchesWithBalance,
+    totalFiatBalanceAllTranches,
+  } = usePrincipalTokenTab(library, account, provider);
+
+  const {
+    yieldTokensWithBalance,
+    totalFiatBalanceAllYieldTokens,
+  } = useYieldTokenTab(library, account, provider);
 
   return [
     {
-      id: "fixed-yield-tokens",
-      name: t`Fixed Yield Tokens`,
+      id: "principal-tokens",
+      name: t`Principal Tokens`,
       quantity: tranchesWithBalance.length,
       totalFiatValue: totalFiatBalanceAllTranches,
       contentRenderer: () => (
-        <FYTPortfolio
+        <PrincipalTokenPortfolio
           library={library}
           account={account}
           tranches={tranchesWithBalance}
@@ -46,15 +45,15 @@ export function usePortfolioTabs(
       ),
     },
     {
-      id: "interest-tokens",
-      name: t`Interest Tokens`,
-      quantity: interestTokensWithBalance.length,
-      totalFiatValue: totalFiatBalanceAllInterestTokens,
+      id: "yield-tokens",
+      name: t`Yield Tokens`,
+      quantity: yieldTokensWithBalance.length,
+      totalFiatValue: totalFiatBalanceAllYieldTokens,
       contentRenderer: () => (
         <InterestTokenPortfolio
           library={library}
           account={account}
-          interestTokens={interestTokensWithBalance}
+          interestTokens={yieldTokensWithBalance}
         />
       ),
     },
@@ -68,7 +67,7 @@ export function usePortfolioTabs(
   ];
 }
 
-function useFYTTab(
+function usePrincipalTokenTab(
   library: Web3Provider | undefined,
   account: string | null | undefined,
   provider?: Provider
@@ -82,22 +81,25 @@ function useFYTTab(
   return { tranchesWithBalance, totalFiatBalanceAllTranches };
 }
 
-function useInterestTokenTab(
+function useYieldTokenTab(
   library: Web3Provider | undefined,
   account: string | null | undefined,
   provider?: Provider
 ) {
   const { currency } = useCurrencyPref();
-  const interestTokensWithBalance = useInterestTokensWithBalance(
+  const yieldTokensWithBalance = useInterestTokensWithBalance(
     account,
     provider
   );
-  const totalFiatBalanceAllInterestTokens = useFiatBalanceAllInterestTokens(
+  const totalFiatBalanceAllYieldTokens = useFiatBalanceAllInterestTokens(
     library,
     account,
-    interestTokensWithBalance,
+    yieldTokensWithBalance,
     currency
   );
 
-  return { interestTokensWithBalance, totalFiatBalanceAllInterestTokens };
+  return {
+    yieldTokensWithBalance,
+    totalFiatBalanceAllYieldTokens,
+  };
 }

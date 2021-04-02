@@ -3,18 +3,18 @@ import React, { FC } from "react";
 import { Tranche } from "elf-contracts/types/Tranche";
 
 import tw from "efi-tailwindcss-classnames";
-import { FYTCard } from "efi-ui/portfolio/FYTTable/FYTCard";
 import { NoFYTsInWalletNonIdealState } from "efi-ui/wallets/NoFYTsInWalletNonIdealState/NoFYTsInWalletNonIdealState";
 import { NoWalletConnectedNonIdealState } from "efi-ui/wallets/NoWalletConnectedNonIdealState/NoWalletConnectedNonIdealState";
 import { Web3Provider } from "@ethersproject/providers";
+import { PrincipalTokenCard } from "efi-ui/portfolio/PrincipalTokenCard/PrincipalTokenCard";
 
-interface FYTPortfolioProps {
+interface PrincipalTokenPortfolioProps {
   library: Web3Provider | undefined;
   account: string | null | undefined;
   tranches: Tranche[];
 }
 
-export const FYTPortfolio: FC<FYTPortfolioProps> = ({
+export const PrincipalTokenPortfolio: FC<PrincipalTokenPortfolioProps> = ({
   library,
   account,
   tranches,
@@ -45,7 +45,7 @@ export const FYTPortfolio: FC<FYTPortfolioProps> = ({
         </div>
       ) : (
         tranches.map((tranche) => [
-          <FYTCard
+          <PrincipalTokenCard
             library={library}
             key={tranche.address}
             account={account}

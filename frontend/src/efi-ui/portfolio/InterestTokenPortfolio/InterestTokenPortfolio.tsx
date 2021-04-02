@@ -3,7 +3,7 @@ import React, { FC } from "react";
 import { Web3Provider } from "@ethersproject/providers";
 
 import tw from "efi-tailwindcss-classnames";
-import { InterestTokenCard } from "efi-ui/portfolio/InterestTokenTable/InterestTokenCard";
+import { YieldTokenCard } from "efi-ui/portfolio/YieldTokenCard/YieldTokenCard";
 import { NoWalletConnectedNonIdealState } from "efi-ui/wallets/NoWalletConnectedNonIdealState/NoWalletConnectedNonIdealState";
 import { NoInterestTokensInWalletNonIdealState } from "efi-ui/wallets/NoInterestTokenssInWalletNonIdealState/NoInterestTokensInWalletNonIdealState";
 import { InterestToken } from "elf-contracts/types/InterestToken";
@@ -37,7 +37,7 @@ export const InterestTokenPortfolio: FC<InterestTokenPortfolioProps> = ({
         </div>
       ) : (
         interestTokens.map((interestToken) => [
-          <InterestTokenCard
+          <YieldTokenCard
             key={interestToken.address}
             library={library}
             account={account}
