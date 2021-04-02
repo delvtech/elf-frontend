@@ -1,4 +1,6 @@
 import { Signer } from "ethers";
+import { printSpotPriceForPool } from "src/scripts/printSpotPriceForPool";
+import { printTokenInfoForPool } from "src/scripts/printTokenInfoForPool";
 
 import { ERC20 } from "src/types/ERC20";
 import { Tranche } from "src/types/Tranche";
@@ -48,6 +50,10 @@ export async function setupPrincipalTokenPool(
     balancerVaultContract,
     yieldAssetIn
   );
+
+  await printSpotPriceForPool(balancerVaultContract, poolId, signer);
+  await printTokenInfoForPool(balancerVaultContract, poolId, signer);
+  console.log("");
 
   await swapReceipt.wait(1);
   return swapReceipt;

@@ -60,8 +60,6 @@ export async function initializeConvergentPool(
   // Allow balancer pool to take user's fyt and base tokens
   await baseAssetContract.approve(vaultContract.address, MAX_ALLOWANCE);
   await trancheContract.approve(vaultContract.address, MAX_ALLOWANCE);
-  const name = await baseAssetContract.name();
-  const balance = await baseAssetContract.balanceOf(signerAddress);
 
   // Balancer V2 vault allows userData as a way to pass props through to pool contracts.  In our
   // case we need to pass the maxAmountsIn.
