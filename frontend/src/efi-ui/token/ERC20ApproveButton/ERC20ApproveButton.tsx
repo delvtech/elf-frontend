@@ -44,7 +44,7 @@ export const ERC20ApproveButton: FC<ERC20ApproveButtonProps> = ({
       className={className}
       icon={hasApproval ? IconNames.TICK : null}
       disabled={hasApproval}
-      intent={hasApproval ? Intent.SUCCESS : Intent.PRIMARY}
+      intent={hasApproval ? Intent.SUCCESS : Intent.WARNING}
       onClick={onApproveClick}
     >
       {hasApproval ? t`${assetSymbol} approved` : t`Approve ${assetSymbol}`}
