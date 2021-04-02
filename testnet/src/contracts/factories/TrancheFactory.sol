@@ -14,7 +14,7 @@ contract TrancheFactory {
     event TrancheCreated(
         address indexed trancheAddress,
         address indexed wpAddress,
-        uint256 indexed duration
+        uint256 indexed expiration
     );
 
     IInterestTokenFactory internal _interestTokenFactory;
@@ -72,15 +72,12 @@ contract TrancheFactory {
         );
 
         Tranche tranche = new Tranche{ salt: salt }();
-        emit TrancheCreated(
-            address(tranche),
-            _wpAddress,
-            _expiration - block.timestamp
-        );
+        emit TrancheCreated(address(tranche), _wpAddress, _expiration);
         require(
             address(tranche) == predictedAddress,
             "CREATE2 address mismatch"
         );
+
         // set back to 0-value for some gas savings
         delete _tempWpAddress;
         delete _tempExpiration;
@@ -97,6 +94,7 @@ contract TrancheFactory {
     /// @return Wrapped Position contract address, expiration timestamp, and interest token contract
     function getData()
         external
+        view
         returns (
             address,
             uint256,

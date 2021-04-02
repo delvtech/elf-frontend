@@ -35,9 +35,6 @@ export async function initializeConvergentPool(
   const signerAddress = await signer.getAddress();
   // tokens in ascending order by address
   let { tokens } = await vaultContract.getPoolTokens(poolId);
-  console.log("baseAsset", baseAssetContract.address);
-  console.log("trancheAsset", trancheContract.address);
-  console.log("tokens", tokens);
 
   const baseAssetDecimals = await baseAssetContract.decimals();
   // Max amount for each asset to join the pool with. the initial join only allows base asset.  this
@@ -55,11 +52,7 @@ export async function initializeConvergentPool(
     maxAmountsIn = [parseToken(amountIn), parseToken(amountIn)];
   }
 
-  console.log("amountIn", amountIn);
   const amounts = maxAmountsIn.map((amt) => amt.toHexString());
-  maxAmountsIn.forEach((a) =>
-    console.log("maxAmount", formatUnits(a, baseAssetDecimals))
-  );
 
   // Whether or not to use balances held in balancer.  Since The Vault has nothing, set this to false.
   const fromInternalBalance = false;
@@ -69,8 +62,6 @@ export async function initializeConvergentPool(
   await trancheContract.approve(vaultContract.address, MAX_ALLOWANCE);
   const name = await baseAssetContract.name();
   const balance = await baseAssetContract.balanceOf(signerAddress);
-  console.log("name", name);
-  console.log("balance", formatUnits(balance, baseAssetDecimals));
 
   // Balancer V2 vault allows userData as a way to pass props through to pool contracts.  In our
   // case we need to pass the maxAmountsIn.
@@ -86,13 +77,5 @@ export async function initializeConvergentPool(
     userData
   );
   await joinReceipt.wait(1);
-  const { tokens: tokensOut, balances } = await vaultContract.getPoolTokens(
-    poolId
-  );
-  console.log("tokensOut", tokensOut);
-  console.log(
-    "balances",
-    balances.map((bn) => formatUnits(bn, baseAssetDecimals))
-  );
   return joinReceipt;
 }

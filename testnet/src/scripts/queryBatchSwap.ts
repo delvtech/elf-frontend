@@ -1,19 +1,16 @@
-import { BytesLike } from "@ethersproject/bytes";
-import { BigNumber, BigNumberish } from "ethers";
-import { parseEther, parseUnits } from "ethers/lib/utils";
-
+import { BigNumberish } from "ethers";
+import { BytesLike, parseUnits } from "ethers/lib/utils";
 import { ERC20 } from "src/types/ERC20";
 import { Vault } from "src/types/Vault";
 
-import { ONE_DAY_IN_SECONDS } from "src/time";
-
-interface SwapIn {
+interface Swap {
   poolId: BytesLike;
   tokenInIndex: number;
   tokenOutIndex: number;
-  amountIn: BigNumberish;
+  amount: BigNumberish;
   userData: BytesLike;
 }
+
 interface FundManagement {
   sender: string;
   fromInternalBalance: boolean;
@@ -21,7 +18,7 @@ interface FundManagement {
   toInternalBalance: boolean;
 }
 
-export async function batchSwapIn(
+export async function queryBatchSwap(
   tokenInContract: ERC20,
   tokenOutContract: ERC20,
   poolId: string,
@@ -40,18 +37,18 @@ export async function batchSwapIn(
   const tokenOutIndex = tokens.findIndex(
     (address) => address === tokenOutAddress
   );
-  const amountIn = parseUnits(swapInAmount, tokenInDecimals);
+  const amount = parseUnits(swapInAmount, tokenInDecimals);
   // have to set this to something
   const userData: BytesLike = poolId;
 
   // the series of swaps to perform, only one in this case.
-  const swaps: SwapIn[] = [
+  const swaps: Swap[] = [
     {
       poolId,
       // indicies from 'tokens', puttin FYTs in, getting base asset out.
       tokenInIndex,
       tokenOutIndex,
-      amountIn,
+      amount,
       userData,
     },
   ];
@@ -65,26 +62,16 @@ export async function batchSwapIn(
     toInternalBalance: false,
   };
 
-  // the user is sending this one, so the delta will be negative, so just set a limit of zero.
-  const limitTokenIn = amountIn;
-
-  // performing a SwapIn, so we can specifiy exactly how much in and set the limit to that.
-  const limitTokenOut = amountIn;
-
-  // limits of how much of each token is allowed to be traded.  order must be the same as 'tokens'
-  const limits: BigNumberish[] = [limitTokenIn, limitTokenOut];
-
-  // set a large deadline for now, it was being buggy.  time is in seconds.  must be an integer.
-  const deadline = Math.round(Date.now() / 1000) + ONE_DAY_IN_SECONDS;
-
-  const swapReceipt = await balancerVaultContract.batchSwapGivenIn(
+  const swapReceipt = await balancerVaultContract.callStatic.queryBatchSwap(
+    SwapKind.GIVEN_IN,
     swaps,
     tokens,
-    funds,
-    limits,
-    deadline
+    funds
   );
 
-  await swapReceipt.wait(1);
   return swapReceipt;
+}
+enum SwapKind {
+  GIVEN_IN,
+  GIVEN_OUT,
 }

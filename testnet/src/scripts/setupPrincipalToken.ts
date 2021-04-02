@@ -1,6 +1,6 @@
 import { Signer } from "ethers";
-import { ERC20 } from "src/types/ERC20";
 
+import { ERC20 } from "src/types/ERC20";
 import { Tranche } from "src/types/Tranche";
 import { USDC } from "src/types/USDC";
 import { Vault } from "src/types/Vault";
@@ -22,7 +22,6 @@ export async function setupPrincipalTokenPool(
   const sender = await signer.getAddress();
 
   // put base asset into market
-  console.log("--initializeConvergentPool");
   await initializeConvergentPool(
     poolId,
     signer,
@@ -33,7 +32,6 @@ export async function setupPrincipalTokenPool(
   );
 
   // mint some tranche assets
-  console.log("--mintTrancheAssets");
   await mintTrancheAssets(
     signer,
     baseAssetContract,
@@ -42,7 +40,6 @@ export async function setupPrincipalTokenPool(
   );
 
   // trade some tranche assets for some base assets
-  console.log("--batchSwapIn");
   const swapReceipt = await batchSwapIn(
     (trancheContract as unknown) as ERC20,
     (baseAssetContract as unknown) as ERC20,
