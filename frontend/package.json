@@ -98,7 +98,6 @@
     "build:tailwindcss-classnames": "tailwindcss-classnames --config tailwind.config.js -o src/efi-tailwindcss-classnames/index.ts",
     "build:version-json": "bash ./scripts/build-version-json.sh",
     "build:coingecko-json": "bash ./scripts/build-coingecko-json.sh",
-    "build:typechain": "bash ./scripts/build-contract-types.sh",
     "eject": "react-scripts eject",
     "lint": "tsc --noEmit && eslint src/**/*.ts{,x}",
     "lint:fix": "tsc --noEmit && eslint --fix src/**/*.ts{,x}",
