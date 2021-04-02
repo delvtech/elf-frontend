@@ -34,18 +34,12 @@ export async function batchSwapIn(
   const tokenInDecimals = await tokenInContract.decimals();
 
   const tokens: string[] = [tokenInAddress, tokenOutAddress].sort();
-  console.log("tokens", tokens);
   const tokenInIndex = tokens.findIndex(
     (address) => address === tokenInAddress
   );
-  console.log("tokenInIndex", tokenInIndex);
   const tokenOutIndex = tokens.findIndex(
     (address) => address === tokenOutAddress
   );
-  console.log("tokenOutIndex", tokenOutIndex);
-  // .map((a) => BigNumber.from(a))
-  // .sort((a, b) => a.lt(b) ? )
-  // .map((a) => a.toHexString());
   const amountIn = parseUnits(swapInAmount, tokenInDecimals);
   // have to set this to something
   const userData: BytesLike = poolId;

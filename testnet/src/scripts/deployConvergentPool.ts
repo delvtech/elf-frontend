@@ -8,11 +8,11 @@ import { USDC } from "src/types/USDC";
 import { Vault } from "src/types/Vault";
 import { WETH } from "src/types/WETH";
 
-import { THIRTY_DAYS_IN_SECONDS } from "src/time";
+import { ONE_YEAR_IN_SECONDS } from "src/time";
 
 const defaultOptions = {
   swapFee: ".003",
-  durationInSeconds: THIRTY_DAYS_IN_SECONDS,
+  durationInSeconds: ONE_YEAR_IN_SECONDS,
 };
 
 export async function deployConvergentPool(
@@ -58,9 +58,6 @@ export async function deployConvergentPool(
   const decimals = await poolContract.decimals();
   const udecimals = await poolContract.underlyingDecimals();
   const bdecimals = await poolContract.bondDecimals();
-  console.log("decimals", decimals);
-  console.log("udecimals", udecimals);
-  console.log("bdecimals", bdecimals);
 
   return { poolId, poolContract };
 }
