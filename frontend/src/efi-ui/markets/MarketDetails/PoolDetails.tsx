@@ -1,7 +1,6 @@
 import React, { FC } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
-import { formatEther } from "@ethersproject/units";
 import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
 import { Signer } from "ethers";
 
@@ -21,6 +20,7 @@ import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForP
 import { useVolume } from "efi-ui/pools/useVolume/useVolume";
 import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
 import { PoolContract } from "efi/pools/PoolContract";
+import { formatEther } from "ethers/lib/utils";
 
 interface PoolDetailsProps {
   library: Web3Provider | undefined;

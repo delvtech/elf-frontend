@@ -2,7 +2,6 @@ import React, { FC, Fragment, useCallback, useEffect, useState } from "react";
 
 import { Button, Card, Classes, Elevation, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
-import { formatUnits, parseUnits } from "@ethersproject/units";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import classNames from "classnames";
 import { Tranche } from "elf-contracts/types/Tranche";
@@ -29,6 +28,7 @@ import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
 import { BuyPrincipalTokensTransactionConfirmationDrawer } from "efi-ui/earn/BuyPrincipalTokensTransactionConfirmationDrawer/BuyPrincipalTokensTransactionConfirmationDrawer";
+import { formatUnits, parseUnits } from "ethers/lib/utils";
 
 export interface EarnCardProps {
   library: Web3Provider | undefined;

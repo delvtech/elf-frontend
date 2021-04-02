@@ -1,7 +1,6 @@
 import React, { FC } from "react";
 
 import { Card, Classes, Icon, Intent, Tag } from "@blueprintjs/core";
-import { formatUnits, parseUnits } from "@ethersproject/units";
 import classNames from "classnames";
 import { ERC20 } from "elf-contracts/types/ERC20";
 import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
@@ -20,6 +19,7 @@ import { KNOWN_BASE_ASSETS } from "efi/contracts/contractsJson";
 import { formatMoney } from "efi/money/formatMoney";
 import { PoolContract } from "efi/pools/PoolContract";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
+import { formatUnits, parseUnits } from "ethers/lib/utils";
 
 interface TokenSummaryProps {
   pool: PoolContract | undefined;
