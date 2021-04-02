@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 
-import { Callout, Divider, InputGroup, Tag } from "@blueprintjs/core";
+import { Callout, Divider, InputGroup } from "@blueprintjs/core";
 import classNames from "classnames";
 import { t } from "ttag";
 
@@ -59,7 +59,11 @@ export const TransactionDetailsPreview: FC<TransactionDetailsPreviewProps> = ({
               </div>
             }
             value={amountIn}
-            rightElement={<Tag minimal>{assetInSymbol}</Tag>}
+            rightElement={
+              <div className={tw("flex", "items-center", "px-3")}>
+                {assetInSymbol}
+              </div>
+            }
           />
         </div>
         <div
@@ -87,7 +91,11 @@ export const TransactionDetailsPreview: FC<TransactionDetailsPreviewProps> = ({
               </div>
             }
             value={amountOut}
-            rightElement={<Tag minimal>{assetOutSymbol}</Tag>}
+            rightElement={
+              <div className={tw("flex", "items-center", "px-3")}>
+                {assetOutSymbol}
+              </div>
+            }
           />
         </div>
       </div>
