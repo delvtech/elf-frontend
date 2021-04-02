@@ -10,7 +10,7 @@ import { YVaultAssetProxy } from "src/types/YVaultAssetProxy";
 
 import { deployConvergentPool } from "src/scripts/deployConvergentPool";
 import { setupPrincipalTokenPool } from "src/scripts/setupPrincipalToken";
-import { ONE_YEAR_IN_SECONDS, THIRTY_DAYS_IN_SECONDS } from "src/time";
+import { SIX_MONTHS_IN_SECONDS } from "src/time";
 
 import { deployTranche } from "./deployTranche";
 import { setupInterestTokenPool } from "./setupInterestTokenPool";
@@ -18,7 +18,7 @@ import { ERC20 } from "src/types/ERC20";
 
 const defaultOptions = {
   swapFee: ".003",
-  durationInSeconds: ONE_YEAR_IN_SECONDS,
+  durationInSeconds: SIX_MONTHS_IN_SECONDS,
 };
 
 export async function deployTrancheAndMarket(

@@ -8,11 +8,12 @@ import { USDC } from "src/types/USDC";
 import { Vault } from "src/types/Vault";
 import { WETH } from "src/types/WETH";
 
-import { ONE_YEAR_IN_SECONDS } from "src/time";
+import { ONE_YEAR_IN_SECONDS, SIX_MONTHS_IN_SECONDS } from "src/time";
 
 const defaultOptions = {
   swapFee: ".003",
-  durationInSeconds: ONE_YEAR_IN_SECONDS,
+  durationInSeconds: SIX_MONTHS_IN_SECONDS,
+  tParam: ONE_YEAR_IN_SECONDS,
 };
 
 export async function deployConvergentPool(
@@ -22,12 +23,17 @@ export async function deployConvergentPool(
   baseAssetContract: WETH | USDC,
   yieldAssetContract: ERC20,
   options?: {
-    swapFee: string;
-    durationInSeconds: number;
+    swapFee?: string;
+    durationInSeconds?: number;
+    tParam?: number;
   }
 ) {
   const { swapFee, durationInSeconds } = { ...defaultOptions, ...options };
   const baseAssetSymbol = await baseAssetContract.symbol();
+
+  // hardcoding this for now until i understand how to tweak this in combination with seed token
+  // amounts to get desired yield asset price
+  const tParam = Math.round(ONE_YEAR_IN_SECONDS * 10);
 
   const dateInMilliseconds = Date.now();
   const dateInSeconds = dateInMilliseconds / 1000;
@@ -37,7 +43,7 @@ export async function deployConvergentPool(
     baseAssetContract.address,
     yieldAssetContract.address,
     expiration,
-    durationInSeconds,
+    tParam,
     parseEther(swapFee),
     `Element ${baseAssetSymbol} - fy${baseAssetSymbol}`,
     `${baseAssetSymbol}-fy${baseAssetSymbol}`

@@ -81,7 +81,7 @@ async function main() {
     balancerVaultContract,
     convergentPoolFactory,
     weightedPoolFactory,
-    { mintAmount: "20000", baseAssetIn: "20000", yieldAssetIn: "5000" }
+    { mintAmount: "20000", baseAssetIn: "20000", yieldAssetIn: "10000" }
   );
 
   const {
@@ -101,7 +101,7 @@ async function main() {
     {
       mintAmount: "20000000",
       baseAssetIn: "20000000",
-      yieldAssetIn: "5000000",
+      yieldAssetIn: "10000000",
     }
   );
 
