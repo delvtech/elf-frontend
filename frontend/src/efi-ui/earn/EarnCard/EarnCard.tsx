@@ -23,12 +23,12 @@ import { PrincipalDiscountPreview } from "efi-ui/earn/EarnCard/PrincipalDiscount
 import { EarnInput } from "efi-ui/earn/EarnInput/EarnInput";
 import { useActiveTranche } from "efi-ui/earn/hooks/useActiveTranche";
 import { TranchePicker } from "efi-ui/earn/TranchePicker/TranchePicker";
-import { TransactionConfirmationDrawer } from "efi-ui/earn/TransactionConfirmationDrawer/TransactionConfirmationDrawer";
 import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
 import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
+import { BuyPrincipalTokensTransactionConfirmationDrawer } from "efi-ui/earn/BuyPrincipalTokensTransactionConfirmationDrawer/BuyPrincipalTokensTransactionConfirmationDrawer";
 
 export interface EarnCardProps {
   library: Web3Provider | undefined;
@@ -276,16 +276,16 @@ export const EarnCard: FC<EarnCardProps> = ({
       </Card>
 
       {!activeBaseAsset ? null : (
-        <TransactionConfirmationDrawer
+        <BuyPrincipalTokensTransactionConfirmationDrawer
+          baseAsset={activeBaseAsset}
+          tranche={activeTranche}
           account={account}
           library={library}
           chainId={chainId}
           pool={pool}
           walletConnectionActive={walletConnectionActive}
           connector={connector}
-          baseAsset={activeBaseAsset}
           amountIn={amountIn}
-          tranche={activeTranche}
           isOpen={isDrawerOpen}
           onClose={() => setDrawerOpen(false)}
         />

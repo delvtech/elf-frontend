@@ -31,12 +31,12 @@ export type CryptoAsset =
   | Erc20PermitCryptoAsset;
 
 export function findTokenContract(
-  cryptoAsset: CryptoAsset
+  cryptoAsset: CryptoAsset | undefined
 ): ERC20 | ERC20Permit | undefined {
-  if (cryptoAsset.type === CryptoAssetType.ERC20) {
+  if (cryptoAsset?.type === CryptoAssetType.ERC20) {
     return cryptoAsset.tokenContract;
   }
-  if (cryptoAsset.type === CryptoAssetType.ERC20PERMIT) {
+  if (cryptoAsset?.type === CryptoAssetType.ERC20PERMIT) {
     return cryptoAsset.tokenContract;
   }
 }
