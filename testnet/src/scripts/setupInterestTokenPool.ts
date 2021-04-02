@@ -23,8 +23,10 @@ export async function setupInterestTokenPool(
   trancheContract: Tranche,
   balancerVaultContract: Vault,
   baseAssetContract: WETH | USDC,
-  poolFactory: WeightedPoolFactory
+  poolFactory: WeightedPoolFactory,
+  options: { baseAssetIn: string; yieldAssetIn: string }
 ) {
+  const { baseAssetIn, yieldAssetIn } = options;
   const signerAddress = await signer.getAddress();
   const baseAssetSymbol = await baseAssetContract.symbol();
   const baseAssetDecimals = await baseAssetContract.decimals();
@@ -32,7 +34,6 @@ export async function setupInterestTokenPool(
 
   // deploy an interest token pool
   const interestTokenAddress = await trancheContract.interestToken();
-  console.log("interestTokenAddress", interestTokenAddress);
   const interestTokenContract = InterestToken__factory.connect(
     interestTokenAddress,
     signer
@@ -41,14 +42,18 @@ export async function setupInterestTokenPool(
   const interestTokenValue = BigNumber.from(interestTokenAddress);
   const baseAssetValue = BigNumber.from(baseAssetContract.address);
 
-  let poolTokens: string[];
-  let weights: BigNumber[];
+  let poolTokens = [baseAssetContract.address, interestTokenAddress];
+  let weights = [parseEther("20"), parseEther("1")];
+  let maxAmountsIn = [parseToken(baseAssetIn), parseToken(yieldAssetIn)];
+  let amounts = [
+    parseToken(baseAssetIn).toHexString(),
+    parseToken(yieldAssetIn).toHexString(),
+  ];
   if (interestTokenValue.lt(baseAssetValue)) {
-    poolTokens = [interestTokenAddress, baseAssetContract.address];
-    weights = [parseEther("10"), parseEther("1")];
-  } else {
-    poolTokens = [baseAssetContract.address, interestTokenAddress];
-    weights = [parseEther("1"), parseEther("10")];
+    poolTokens = poolTokens.reverse();
+    weights = weights.reverse();
+    maxAmountsIn = maxAmountsIn.reverse();
+    amounts = amounts.reverse();
   }
 
   const { poolId, poolContract } = await deployWeightedPool(
@@ -70,15 +75,11 @@ export async function setupInterestTokenPool(
   // this encodes the joinKind and the amountsIn.
   const userData = defaultAbiCoder.encode(
     ["uint8", "uint256[]"],
-    [
-      JoinKind.INIT,
-      [parseToken("1000").toHexString(), parseToken("10000").toHexString()],
-    ]
+    [JoinKind.INIT, amounts]
   );
 
   // the amounts to put in.  they are 'max' because pools will figure out the exact ratio's required
   // for the pool's weight requirements.
-  const maxAmountsIn = [parseToken("100000"), parseToken("10000")];
 
   const joinTxReceipt = await balancerVaultContract.joinPool(
     poolId,

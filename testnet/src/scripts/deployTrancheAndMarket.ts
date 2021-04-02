@@ -10,7 +10,7 @@ import { YVaultAssetProxy } from "src/types/YVaultAssetProxy";
 
 import { deployConvergentPool } from "src/scripts/deployConvergentPool";
 import { setupPrincipalTokenPool } from "src/scripts/setupPrincipalToken";
-import { THIRTY_DAYS_IN_SECONDS } from "src/time";
+import { ONE_YEAR_IN_SECONDS, THIRTY_DAYS_IN_SECONDS } from "src/time";
 
 import { deployTranche } from "./deployTranche";
 import { setupInterestTokenPool } from "./setupInterestTokenPool";
@@ -18,7 +18,7 @@ import { ERC20 } from "src/types/ERC20";
 
 const defaultOptions = {
   swapFee: ".003",
-  durationInSeconds: THIRTY_DAYS_IN_SECONDS,
+  durationInSeconds: ONE_YEAR_IN_SECONDS,
 };
 
 export async function deployTrancheAndMarket(
@@ -58,7 +58,6 @@ export async function deployTrancheAndMarket(
     expiration
   );
 
-  console.log("-deployConvergentPool");
   // deploy an FYT market, seed with base asset
   const {
     poolId: fytPoolId,
@@ -72,7 +71,6 @@ export async function deployTrancheAndMarket(
     { swapFee, durationInSeconds }
   );
 
-  console.log("-setupPrincipalTokenPool");
   // seed market with initial yield asset
   await setupPrincipalTokenPool(
     signer,
@@ -83,7 +81,6 @@ export async function deployTrancheAndMarket(
     { mintAmount, baseAssetIn, yieldAssetIn }
   );
 
-  console.log("-setupInterestTokenPool");
   // now setup a yc market
   const {
     poolId: ycPoolId,
@@ -93,7 +90,8 @@ export async function deployTrancheAndMarket(
     trancheContract,
     balancerVaultContract,
     baseAssetContract,
-    weightedPoolFactory
+    weightedPoolFactory,
+    { baseAssetIn, yieldAssetIn: baseAssetIn }
   );
 
   return {

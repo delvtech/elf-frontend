@@ -28,11 +28,13 @@ async function main() {
   // supply element with WETH and USDC
   await mintTokensForAddress(elementAddress, {
     tokens: [wethContract, usdcContract],
+    amounts: "100000000000",
   });
 
   // supply user with WETH and USDC
   await mintTokensForAddress(userAddress, {
     tokens: [wethContract, usdcContract],
+    amounts: "100000000000",
   });
 
   // deploy main balancer vault
@@ -65,9 +67,6 @@ async function main() {
     usdcYearnVaultAssetProxy,
   } = await deployVaultsAndProxys(elementSigner, wethContract, usdcContract);
 
-  console.log("****************");
-  console.log("WETH");
-  console.log("****************");
   const {
     trancheContract: wethTrancheContract,
     fytPoolContract: wethFytPoolContract,
@@ -82,13 +81,9 @@ async function main() {
     balancerVaultContract,
     convergentPoolFactory,
     weightedPoolFactory,
-    { mintAmount: "20000", baseAssetIn: "20000", yieldAssetIn: "13000" }
+    { mintAmount: "20000", baseAssetIn: "20000", yieldAssetIn: "5000" }
   );
 
-  console.log("");
-  console.log("****************");
-  console.log("USDC");
-  console.log("****************");
   const {
     trancheContract: usdcTrancheContract,
     fytPoolContract: usdcFytPoolContract,
@@ -103,7 +98,11 @@ async function main() {
     balancerVaultContract,
     convergentPoolFactory,
     weightedPoolFactory,
-    { mintAmount: "20000", baseAssetIn: "20000", yieldAssetIn: "13000" }
+    {
+      mintAmount: "20000000",
+      baseAssetIn: "20000000",
+      yieldAssetIn: "5000000",
+    }
   );
 
   // deploy user proxy
