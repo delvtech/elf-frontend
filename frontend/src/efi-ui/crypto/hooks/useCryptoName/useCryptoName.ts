@@ -8,9 +8,12 @@ import {
   findTokenContract,
 } from "efi/crypto/CryptoAsset";
 
-export function useCryptoName(asset: CryptoAsset): string {
+export function useCryptoName(asset: CryptoAsset | undefined): string {
   const tokenContract = findTokenContract(asset);
   const { data: tokenName } = useSmartContractReadCall(tokenContract, "name");
+  if (!asset) {
+    return "Unknown token";
+  }
 
   const assetType = asset.type;
   switch (assetType) {

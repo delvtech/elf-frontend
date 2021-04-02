@@ -30,7 +30,6 @@ import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadC
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
 import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
-import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
@@ -41,6 +40,8 @@ import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
 import { useUnderlyingVaultForTranche } from "efi-ui/tranche/useUnderlyingVaultForTranche";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { useBaseAssetForTranche } from "efi-ui/tranche/useBaseAssetForTranche";
+import { useCryptoName } from "efi-ui/crypto/hooks/useCryptoName/useCryptoName";
+import { formatAbbreviatedDate } from "efi/base/dates";
 
 interface PrincipalTokenCardProps {
   library: Web3Provider | undefined;
@@ -63,14 +64,17 @@ export const PrincipalTokenCard: FC<PrincipalTokenCardProps> = ({
   tranche,
 }) => {
   const { isDarkMode } = useDarkMode();
-  const { currency } = useCurrencyPref();
   const baseAsset = useBaseAssetForTranche(tranche);
 
-  const { data: trancheSymbol } = useSmartContractReadCall(tranche, "symbol");
   const { data: unlockTimestamp } = useSmartContractReadCall(
     tranche,
     "unlockTimestamp"
   );
+  const unlockDate = convertEpochSecondsToDate(unlockTimestamp);
+  const formattedDate = unlockDate
+    ? formatAbbreviatedDate(unlockDate)
+    : t`Loading unlock date...`;
+
   const { data: trancheDecimals } = useSmartContractReadCall(
     tranche,
     "decimals"
@@ -89,6 +93,7 @@ export const PrincipalTokenCard: FC<PrincipalTokenCardProps> = ({
     ONE_ETHER
   );
   const baseAssetSymbol = useCryptoSymbol(baseAsset);
+  const baseAssetName = useCryptoName(baseAsset);
 
   const tranchePriceBigNumber = getQueryData(trancheSpotPriceResult);
   const tranchePriceInBaseAsset = +formatCurrency(
@@ -124,7 +129,7 @@ export const PrincipalTokenCard: FC<PrincipalTokenCardProps> = ({
       <Card
         style={{ width: 512 }}
         className={classNames(
-          tw("p-8", "flex", "flex-col", "space-y-8", "text-base", {
+          tw("p-8", "flex", "flex-col", "space-y-5", "text-base", {
             "text-gray-700": !isDarkMode,
             "text-white": isDarkMode,
           })
@@ -140,14 +145,14 @@ export const PrincipalTokenCard: FC<PrincipalTokenCardProps> = ({
             />
           ) : null}
           <div className={tw("flex", "flex-col", "space-y-2")}>
-            <span className={tw("text-xl", "font-semibold", "tracking-wide")}>
+            <span className={tw("text-2xl", "font-semibold")}>
               <a
                 title={t`View tranche on etherscan`}
                 href={`https://etherscan.io/address/${tranche.address}`}
                 target="_blank"
                 rel="noreferrer noopener"
               >
-                {trancheSymbol || null}
+                {t`${baseAssetName} Principal Token` || null}
               </a>
             </span>
             <div
@@ -159,7 +164,14 @@ export const PrincipalTokenCard: FC<PrincipalTokenCardProps> = ({
                 "space-x-8"
               )}
             >
-              <Tag large minimal>{t`Fixed rate`}</Tag>
+              <Tag
+                large
+                intent={Intent.PRIMARY}
+                fill
+                className={tw("text-center")}
+              >
+                {formattedDate}
+              </Tag>
               <div className={tw("flex", "space-x-6", "justify-end")}>
                 <LabeledText
                   bold
@@ -218,7 +230,7 @@ export const PrincipalTokenCard: FC<PrincipalTokenCardProps> = ({
               text={
                 <span>{t`${exitValue.toFixed(6)} ${baseAssetSymbol}`}</span>
               }
-              label={`${currency.symbol}${fiatPrice}`}
+              label={fiatPrice}
             />
           </Callout>
         </div>

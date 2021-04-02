@@ -120,7 +120,7 @@ export const YieldTokenCard: FC<YieldTokenCardProps> = ({
       <Card
         style={{ width: 512 }}
         className={classNames(
-          tw("p-8", "flex", "flex-col", "space-y-8", "text-base", {
+          tw("p-8", "flex", "flex-col", "space-y-5", "text-base", {
             "text-gray-700": !isDarkMode,
             "text-white": isDarkMode,
           })
