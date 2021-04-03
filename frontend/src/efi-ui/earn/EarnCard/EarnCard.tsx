@@ -27,7 +27,7 @@ import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalan
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
-import { BuyPrincipalTokensTransactionConfirmationDrawer } from "efi-ui/earn/BuyPrincipalTokensTransactionConfirmationDrawer/BuyPrincipalTokensTransactionConfirmationDrawer";
+import { BuyPrincipalTokensTransactionConfirmationDrawer } from "efi-ui/tranche/BuyPrincipalTokensTransactionConfirmationDrawer/BuyPrincipalTokensTransactionConfirmationDrawer";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
 
 export interface EarnCardProps {
