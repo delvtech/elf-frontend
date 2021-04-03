@@ -24,7 +24,7 @@ import { calculatePurchasePrice } from "efi/pools/calculatePurchasePrice";
 import { calculateSlippage } from "efi/pools/calculateSlippage";
 import { PoolContract } from "efi/pools/PoolContract";
 
-import { PrincipalTokenTransactionDetails } from "../PrincipalTokenTransactionDetails/PrincipalTokenTransactionDetails";
+import { PrincipalTokenTransactionDetails } from "./PrincipalTokenTransactionDetails";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
 
 interface BuyPrincipalTransactionConfirmationDrawerProps {
