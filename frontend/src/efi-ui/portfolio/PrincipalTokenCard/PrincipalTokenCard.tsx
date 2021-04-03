@@ -270,7 +270,7 @@ export const PrincipalTokenCard: FC<PrincipalTokenCardProps> = ({
             account={account}
             tranche={tranche}
             pool={pool}
-            amountIn={trancheBalance.toString()}
+            sellAmount={trancheBalance.toString()}
             baseAsset={baseAsset}
             walletConnectionActive={walletConnectionActive}
           />

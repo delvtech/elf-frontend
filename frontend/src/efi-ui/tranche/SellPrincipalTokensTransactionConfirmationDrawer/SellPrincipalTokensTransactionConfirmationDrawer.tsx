@@ -6,10 +6,7 @@ import { Tranche } from "elf-contracts/types/Tranche";
 import { Signer } from "ethers";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
 
-import { SwapKind } from "efi-ui/balancer/SwapKind";
 import { useBatchSwapGivenIn } from "efi-ui/balancer/useBatchSwapGivenIn/useBatchSwapGivenIn";
-import { parseQueryBatchSwapResult } from "efi-ui/balancer/useQueryBatchSwap/parseQueryBatchSwapResult";
-import { useQueryBatchSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { TransactionConfirmationDrawer } from "efi-ui/contracts/TransactionConfirmationDrawer/TransactionConfirmationDrawer";
 import { TransactionDetailsPreview } from "efi-ui/contracts/TransactionDetailsPreview/TransactionDetailsCallout";
@@ -25,6 +22,7 @@ import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { calculatePurchasePrice } from "efi/pools/calculatePurchasePrice";
 import { calculateSlippage } from "efi/pools/calculateSlippage";
 import { PoolContract } from "efi/pools/PoolContract";
+import { useBalancerTransactionInputs } from "efi-ui/balancer/useBalancerTransactionInputs";
 
 interface SellPrincipalTransactionConfirmationDrawerProps {
   chainId: number | undefined;
@@ -33,17 +31,13 @@ interface SellPrincipalTransactionConfirmationDrawerProps {
   connector: AbstractConnector | undefined;
   library: Web3Provider | undefined;
   pool: PoolContract | undefined;
-
-  amountIn: string | undefined;
   baseAsset: CryptoAssetWithIcon;
-
   tranche: Tranche | undefined;
   isOpen: boolean;
-
   onClose: () => void;
 }
 
-export const SellPrincipalTokensTransactionConfirmationDrawer: FC<SellPrincipalTransactionConfirmationDrawerProps> = ({
+export const SellPrincipalTokensTransactionDrawer: FC<SellPrincipalTransactionConfirmationDrawerProps> = ({
   connector,
   walletConnectionActive,
   library,
@@ -52,7 +46,6 @@ export const SellPrincipalTokensTransactionConfirmationDrawer: FC<SellPrincipalT
   baseAsset: { assetIcon: AssetIcon },
   baseAsset,
   tranche,
-  amountIn,
   isOpen,
   onClose,
   pool,
@@ -68,30 +61,37 @@ export const SellPrincipalTokensTransactionConfirmationDrawer: FC<SellPrincipalT
     tranche,
     "unlockTimestamp"
   );
+  const { data: trancheDecimals } = useSmartContractReadCall(
+    tranche,
+    "decimals"
+  );
   const unlockTimeStampDate = convertEpochSecondsToDate(trancheUnlockTimestamp);
 
+  // This might be weth in the case of eth, but that's okay for spot price
   const baseAssetPoolToken = usePoolPairedToken(pool, tranche as ERC20Shim);
   const {
     spotPriceBaseAssetForOneToken,
     spotPriceTokenForOneBaseAsset,
   } = usePoolTokenPrices(pool, baseAssetPoolToken);
 
-  // pool calls
-  const amountInAsBigNumber = parseUnits(amountIn || "0", baseAssetDecimals);
-  const baseAssetBalancerAddress = getTokenAddressForBalancer(baseAsset);
   const trancheAddress = tranche?.address;
-  const { data: queryBatchSwapInResult = [] } = useQueryBatchSwap(
-    SwapKind.GIVEN_IN,
+  const baseAssetBalancerAddress = getTokenAddressForBalancer(baseAsset);
+  const {
+    amountIn,
+    amountOut,
+    onAmountInChange,
+    onAmountOutChange,
+  } = useBalancerTransactionInputs(
     pool,
     trancheAddress,
+    trancheDecimals,
     baseAssetBalancerAddress,
-    amountInAsBigNumber
+    baseAssetDecimals
   );
-  const { tokenOut: amountOut } = parseQueryBatchSwapResult(
-    baseAssetBalancerAddress,
-    trancheAddress,
-    queryBatchSwapInResult
-  );
+
+  // pool calls
+  const amountInAsBigNumber = parseUnits(amountIn || "0", baseAssetDecimals);
+  const amountOutAsBigNumber = parseUnits(amountOut || "0", trancheDecimals);
 
   const onConfirmSellPrincipalTokens = useBatchSwapGivenIn(
     account,
@@ -103,7 +103,7 @@ export const SellPrincipalTokensTransactionConfirmationDrawer: FC<SellPrincipalT
   );
 
   const amountOutNumber = +formatUnits(
-    amountOut?.abs() || 0,
+    amountOutAsBigNumber?.abs() || 0,
     baseAssetDecimals
   );
   const amountOutFormatted = amountOutNumber.toFixed(4);

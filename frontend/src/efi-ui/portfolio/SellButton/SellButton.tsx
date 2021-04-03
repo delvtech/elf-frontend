@@ -4,7 +4,7 @@ import { Button, Intent } from "@blueprintjs/core";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { SellPrincipalTokensTransactionConfirmationDrawer } from "efi-ui/tranche/SellPrincipalTokensTransactionConfirmationDrawer/SellPrincipalTokensTransactionConfirmationDrawer";
+import { SellPrincipalTokensTransactionDrawer } from "efi-ui/tranche/SellPrincipalTokensTransactionConfirmationDrawer/SellPrincipalTokensTransactionConfirmationDrawer";
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { Web3Provider } from "@ethersproject/providers";
@@ -19,7 +19,7 @@ interface SellButtonProps {
   library: Web3Provider | undefined;
   pool: PoolContract | undefined;
 
-  amountIn: string | undefined;
+  sellAmount: string | undefined;
 
   tranche: Tranche | undefined;
   baseAsset: CryptoAssetWithIcon | undefined;
@@ -33,7 +33,7 @@ export const SellButton: FC<SellButtonProps> = ({
   connector,
   library,
   pool,
-  amountIn,
+  sellAmount,
   walletConnectionActive,
 }) => {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
@@ -49,11 +49,10 @@ export const SellButton: FC<SellButtonProps> = ({
         <div className={tw("p-2", "text-base")}>{t`Sell`}</div>
       </Button>
       {!baseAsset ? null : (
-        <SellPrincipalTokensTransactionConfirmationDrawer
+        <SellPrincipalTokensTransactionDrawer
           isOpen={isDrawerOpen}
           tranche={tranche}
           account={account}
-          amountIn={amountIn}
           baseAsset={baseAsset}
           chainId={chainId}
           connector={connector}
