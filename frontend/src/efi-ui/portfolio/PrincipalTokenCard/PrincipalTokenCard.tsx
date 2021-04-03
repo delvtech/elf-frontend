@@ -129,7 +129,7 @@ export const PrincipalTokenCard: FC<PrincipalTokenCardProps> = ({
       <Card
         style={{ width: 512 }}
         className={classNames(
-          tw("p-8", "flex", "flex-col", "space-y-5", "text-base", {
+          tw("p-8", "flex", "flex-col", "m-4", "space-y-5", "text-base", {
             "text-gray-700": !isDarkMode,
             "text-white": isDarkMode,
           })
