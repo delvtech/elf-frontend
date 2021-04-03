@@ -1,5 +1,7 @@
 import React from "react";
+
 import { Provider, Web3Provider } from "@ethersproject/providers";
+import { AbstractConnector } from "@web3-react/abstract-connector";
 import { Money } from "ts-money";
 import { t } from "ttag";
 
@@ -15,7 +17,10 @@ import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useFiatBalanceAllInterestTokens } from "./useFiatBalanceAllInterestTokens";
 
 export function usePortfolioTabs(
+  chainId: number | undefined,
   library: Web3Provider | undefined,
+  connector: AbstractConnector | undefined,
+  walletConnectionActive: boolean,
   account: string | null | undefined,
   provider?: Provider
 ): PortfolioTab[] {
@@ -38,7 +43,10 @@ export function usePortfolioTabs(
       totalFiatValue: totalFiatBalanceAllTranches,
       contentRenderer: () => (
         <PrincipalTokenPortfolio
+          chainId={chainId}
           library={library}
+          connector={connector}
+          walletConnectionActive={walletConnectionActive}
           account={account}
           tranches={tranchesWithBalance}
         />

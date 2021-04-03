@@ -42,9 +42,14 @@ import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSy
 import { useBaseAssetForTranche } from "efi-ui/tranche/useBaseAssetForTranche";
 import { useCryptoName } from "efi-ui/crypto/hooks/useCryptoName/useCryptoName";
 import { formatAbbreviatedDate } from "efi/base/dates";
+import { SellButton } from "efi-ui/portfolio/SellButton/SellButton";
+import { AbstractConnector } from "@web3-react/abstract-connector";
 
 interface PrincipalTokenCardProps {
+  chainId: number | undefined;
   library: Web3Provider | undefined;
+  connector: AbstractConnector | undefined;
+  walletConnectionActive: boolean;
   account: string | null | undefined;
   tranche: Tranche;
 }
@@ -59,8 +64,11 @@ const calloutClassName = tw(
   "justify-center"
 );
 export const PrincipalTokenCard: FC<PrincipalTokenCardProps> = ({
+  chainId,
+  walletConnectionActive,
   library,
   account,
+  connector,
   tranche,
 }) => {
   const { isDarkMode } = useDarkMode();
@@ -255,9 +263,17 @@ export const PrincipalTokenCard: FC<PrincipalTokenCardProps> = ({
               <div className={tw("p-2", "text-base")}>{t`Claim`}</div>
             </AnchorButton>
           </Tooltip2>
-          <Button fill minimal intent={Intent.PRIMARY}>
-            <div className={tw("p-2", "text-base")}>{t`Sell`}</div>
-          </Button>
+          <SellButton
+            library={library}
+            connector={connector}
+            chainId={chainId}
+            account={account}
+            tranche={tranche}
+            pool={pool}
+            amountIn={trancheBalance.toString()}
+            baseAsset={baseAsset}
+            walletConnectionActive={walletConnectionActive}
+          />
           <Button fill minimal intent={Intent.PRIMARY}>
             <div className={tw("p-2", "text-base")}>{t`Stake`}</div>
           </Button>

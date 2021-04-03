@@ -1,9 +1,10 @@
-import React, { FC } from "react";
+import { FC } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { Signer } from "ethers";
+import { formatUnits, parseUnits } from "ethers/lib/utils";
 
 import { SwapKind } from "efi-ui/balancer/SwapKind";
 import { useBatchSwapGivenIn } from "efi-ui/balancer/useBatchSwapGivenIn/useBatchSwapGivenIn";
@@ -19,15 +20,13 @@ import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSy
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
 import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
+import { PrincipalTokenTransactionDetails } from "efi-ui/tranche/PrincipalTokenTransactionDetails/PrincipalTokenTransactionDetails";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { calculatePurchasePrice } from "efi/pools/calculatePurchasePrice";
 import { calculateSlippage } from "efi/pools/calculateSlippage";
 import { PoolContract } from "efi/pools/PoolContract";
 
-import { PrincipalTokenTransactionDetails } from "./PrincipalTokenTransactionDetails";
-import { formatUnits, parseUnits } from "ethers/lib/utils";
-
-interface BuyPrincipalTransactionConfirmationDrawerProps {
+interface SellPrincipalTransactionConfirmationDrawerProps {
   chainId: number | undefined;
   account: string | null | undefined;
   walletConnectionActive: boolean;
@@ -44,7 +43,7 @@ interface BuyPrincipalTransactionConfirmationDrawerProps {
   onClose: () => void;
 }
 
-export const BuyPrincipalTokensTransactionConfirmationDrawer: FC<BuyPrincipalTransactionConfirmationDrawerProps> = ({
+export const SellPrincipalTokensTransactionConfirmationDrawer: FC<SellPrincipalTransactionConfirmationDrawerProps> = ({
   connector,
   walletConnectionActive,
   library,
@@ -79,26 +78,26 @@ export const BuyPrincipalTokensTransactionConfirmationDrawer: FC<BuyPrincipalTra
 
   // pool calls
   const amountInAsBigNumber = parseUnits(amountIn || "0", baseAssetDecimals);
-  const tokenInAddress = getTokenAddressForBalancer(baseAsset);
-  const tokenOutAddress = tranche?.address;
+  const baseAssetBalancerAddress = getTokenAddressForBalancer(baseAsset);
+  const trancheAddress = tranche?.address;
   const { data: queryBatchSwapInResult = [] } = useQueryBatchSwap(
     SwapKind.GIVEN_IN,
     pool,
-    tokenInAddress,
-    tokenOutAddress,
+    trancheAddress,
+    baseAssetBalancerAddress,
     amountInAsBigNumber
   );
   const { tokenOut: amountOut } = parseQueryBatchSwapResult(
-    tokenInAddress,
-    tokenOutAddress,
+    baseAssetBalancerAddress,
+    trancheAddress,
     queryBatchSwapInResult
   );
 
-  const onConfirmBuyPrincipalTokens = useBatchSwapGivenIn(
+  const onConfirmSellPrincipalTokens = useBatchSwapGivenIn(
     account,
     signer,
     pool,
-    tokenInAddress,
+    baseAssetBalancerAddress,
     tranche?.address,
     amountInAsBigNumber
   );
@@ -126,7 +125,7 @@ export const BuyPrincipalTokensTransactionConfirmationDrawer: FC<BuyPrincipalTra
       chainId={chainId}
       connector={connector}
       library={library}
-      onConfirmTransaction={onConfirmBuyPrincipalTokens}
+      onConfirmTransaction={onConfirmSellPrincipalTokens}
       transactionDetails={
         <TransactionDetailsPreview
           amountIn={amountIn}
