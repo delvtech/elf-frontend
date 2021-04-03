@@ -1,18 +1,9 @@
 import { useQuery } from "react-query";
 
-import { BigNumber } from "ethers";
-
+import { SwapEvent } from "efi-ui/balancer/SwapEvent";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { PoolContract } from "efi/pools/PoolContract";
-
-export type SwapEvent = [
-  poolId: string,
-  tokenIn: string,
-  tokenOut: string,
-  amountIn: BigNumber,
-  amountOut: BigNumber
-];
 
 export function useSwaps(
   pool: PoolContract | undefined
