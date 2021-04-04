@@ -9,8 +9,10 @@ import { WeightedPoolFactory__factory } from "src/types/factories/WeightedPoolFa
 import { WETH__factory } from "src/types/factories/WETH__factory";
 
 import addresses from "src/addresses.json";
+import { UserProxy__factory } from "src/types/factories/UserProxy__factory";
+import { Signer } from "@ethersproject/abstract-signer";
 
-export function getContracts(hre: HardhatRuntimeEnvironment) {
+export function getContracts(hre: HardhatRuntimeEnvironment, signer?: Signer) {
   const {
     balancerVaultAddress,
     wethAddress,
@@ -19,34 +21,39 @@ export function getContracts(hre: HardhatRuntimeEnvironment) {
     weightedPoolFactoryAddress,
     wethTrancheAddress,
     marketFyWethAddress,
+    userProxyContractAddress,
   } = addresses;
   const provider = hre.ethers.provider;
   const balancerVaultContract = Vault__factory.connect(
     balancerVaultAddress,
-    provider
+    signer ?? provider
   );
-  const wethContract = WETH__factory.connect(wethAddress, provider);
-  const usdcContract = USDC__factory.connect(usdcAddress, provider);
+  const wethContract = WETH__factory.connect(wethAddress, signer ?? provider);
+  const usdcContract = USDC__factory.connect(usdcAddress, signer ?? provider);
 
   const convergentPoolFactory = ConvergentPoolFactory__factory.connect(
     convergentPoolFactoryAddress,
-    provider
+    signer ?? provider
   );
   const weightedPoolFactory = WeightedPoolFactory__factory.connect(
     weightedPoolFactoryAddress,
-    provider
+    signer ?? provider
   );
 
   const wethTrancheContract = Tranche__factory.connect(
     wethTrancheAddress,
-    provider
+    signer ?? provider
   );
 
   const marketFyWethContract = ConvergentCurvePool__factory.connect(
     marketFyWethAddress,
-    provider
+    signer ?? provider
   );
 
+  const userProxyContract = UserProxy__factory.connect(
+    userProxyContractAddress,
+    signer ?? provider
+  );
   return {
     balancerVaultContract,
     wethContract,
@@ -55,5 +62,6 @@ export function getContracts(hre: HardhatRuntimeEnvironment) {
     weightedPoolFactory,
     wethTrancheContract,
     marketFyWethContract,
+    userProxyContract,
   };
 }

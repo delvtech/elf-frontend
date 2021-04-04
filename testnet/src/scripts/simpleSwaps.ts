@@ -1,8 +1,6 @@
 import { parseEther } from "ethers/lib/utils";
 import hre from "hardhat";
-import { HardhatRuntimeEnvironment } from "hardhat/types";
 
-// import hre from "hardhat";
 import { ERC20 } from "src/types/ERC20";
 
 import { MAX_ALLOWANCE } from "src/maxAllowance";
@@ -11,45 +9,73 @@ import { getContracts } from "src/scripts/getContracts";
 import { getSigner, SIGNER } from "src/scripts/getSigner";
 
 async function simpleSwaps() {
+  const trader1 = await getSigner(SIGNER.TRADER1, hre);
   const {
     balancerVaultContract,
     wethContract,
     wethTrancheContract,
     marketFyWethContract,
-  } = getContracts(hre);
+    userProxyContract,
+  } = getContracts(hre, trader1);
 
-  // do some trades
-  const trader1 = await getSigner(SIGNER.TRADER1, hre);
   const trader1Address = await trader1.getAddress();
-  const bVaultTrader1 = balancerVaultContract.connect(trader1);
 
-  const wethTrader1 = wethContract.connect(trader1);
-  const wethTrancheTrader1 = wethTrancheContract.connect(trader1);
-  await wethTrader1.approve(balancerVaultContract.address, MAX_ALLOWANCE);
-  await wethTrancheTrader1.approve(
+  await wethContract.approve(balancerVaultContract.address, MAX_ALLOWANCE);
+  await wethTrancheContract.approve(
     balancerVaultContract.address,
     MAX_ALLOWANCE
   );
 
-  await wethTrader1.mint(trader1Address, parseEther("10000"));
-  const wethFytPoolId = await marketFyWethContract.connect(trader1).getPoolId();
+  await wethContract.mint(trader1Address, parseEther("10000000"));
+  const wethFytPoolId = await marketFyWethContract.getPoolId();
 
-  const numSwaps = 4;
-  let count = 0;
-  while (count < numSwaps) {
-    console.log("swap ", count);
-    await batchSwapIn(
-      wethTrader1,
-      (wethTrancheTrader1 as unknown) as ERC20,
-      wethFytPoolId,
-      trader1Address,
-      bVaultTrader1,
-      "100"
-    );
+  await wethContract.approve(userProxyContract.address, MAX_ALLOWANCE);
+  const expiration = await wethTrancheContract.unlockTimestamp();
+  const position = await wethTrancheContract.position();
+  await userProxyContract.mint(
+    parseEther("10000"),
+    wethContract.address,
+    expiration,
+    position,
+    []
+  );
 
-    count += 1;
+  const numBatches = 100;
+  let batchCount = 0;
+  while (batchCount < numBatches) {
+    const numSwaps = 5;
+    let swapCount = 0;
+    const swaps = [];
+    while (swapCount < numSwaps) {
+      swaps.push(
+        batchSwapIn(
+          wethContract,
+          (wethTrancheContract as unknown) as ERC20,
+          wethFytPoolId,
+          trader1Address,
+          balancerVaultContract,
+          "1",
+          18
+        )
+      );
+      swaps.push(
+        batchSwapIn(
+          (wethTrancheContract as unknown) as ERC20,
+          wethContract,
+          wethFytPoolId,
+          trader1Address,
+          balancerVaultContract,
+          "1",
+          18
+        )
+      );
+
+      swapCount += 1;
+    }
+
+    await Promise.all(swaps);
+    batchCount += 1;
   }
-  console.log("count", count);
 }
 
 simpleSwaps()
