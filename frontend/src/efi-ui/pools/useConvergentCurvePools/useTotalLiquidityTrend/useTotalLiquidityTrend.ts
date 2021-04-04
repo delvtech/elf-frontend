@@ -1,10 +1,11 @@
-import { formatEther } from "@ethersproject/units";
+import { formatEther, formatUnits } from "@ethersproject/units";
 
 import { getQueryData } from "efi-ui/base/queryResults";
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 import { useLiquidityDeltasForPool } from "efi-ui/pools/useLiquidityDeltasForPool/useLiquidityDeltasForPool";
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
+import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
 import { PoolContract } from "efi/pools/PoolContract";
 
@@ -23,6 +24,8 @@ export function useTotalLiquidityTrend(
   const tokenBalances = getQueryData(poolTokensResult)?.[1];
   const tokenDeltas = useLiquidityDeltasForPool(pool, fromTime);
   const baseAsset = useBaseAssetForPool(pool);
+  // assumes that yield asset and base asset have the same decimals
+  const [tokenDecimals] = useTokenDecimals(baseAsset);
   const spotPrice = usePoolSpotPrice(pool, baseAsset);
 
   let overallBalance = 0;
@@ -33,14 +36,15 @@ export function useTotalLiquidityTrend(
     !tokenBalances ||
     !tokenDeltas ||
     !baseAsset ||
+    !tokenDecimals ||
     !spotPrice
   ) {
     return undefined;
   }
 
   tokenAddresses.forEach((address, index) => {
-    const balance = +formatEther(tokenBalances[index]);
-    const delta = +formatEther(tokenDeltas[index]);
+    const balance = +formatUnits(tokenBalances[index], tokenDecimals);
+    const delta = +formatUnits(tokenDeltas[index], tokenDecimals);
     if (address === baseAsset?.address) {
       overallBalance += balance;
       overallDelta += delta;
