@@ -7,9 +7,13 @@ import { NoFYTsInWalletNonIdealState } from "efi-ui/wallets/NoFYTsInWalletNonIde
 import { NoWalletConnectedNonIdealState } from "efi-ui/wallets/NoWalletConnectedNonIdealState/NoWalletConnectedNonIdealState";
 import { Web3Provider } from "@ethersproject/providers";
 import { PrincipalTokenCard } from "efi-ui/portfolio/PrincipalTokenCard/PrincipalTokenCard";
+import { AbstractConnector } from "@web3-react/abstract-connector";
 
 interface PrincipalTokenPortfolioProps {
+  chainId: number | undefined;
   library: Web3Provider | undefined;
+  connector: AbstractConnector | undefined;
+  walletConnectionActive: boolean;
   account: string | null | undefined;
   tranches: Tranche[];
 }
@@ -17,6 +21,9 @@ interface PrincipalTokenPortfolioProps {
 export const PrincipalTokenPortfolio: FC<PrincipalTokenPortfolioProps> = ({
   library,
   account,
+  connector,
+  walletConnectionActive,
+  chainId,
   tranches,
 }) => {
   const hasFYTs = tranches.length;
@@ -32,9 +39,9 @@ export const PrincipalTokenPortfolio: FC<PrincipalTokenPortfolioProps> = ({
     <div
       className={tw(
         "flex",
-        "space-x-8",
         "flex-1",
         "pl-2",
+        "flex-wrap",
         "justify-center",
         "items-center"
       )}
@@ -46,8 +53,11 @@ export const PrincipalTokenPortfolio: FC<PrincipalTokenPortfolioProps> = ({
       ) : (
         tranches.map((tranche) => [
           <PrincipalTokenCard
-            library={library}
             key={tranche.address}
+            chainId={chainId}
+            library={library}
+            connector={connector}
+            walletConnectionActive={walletConnectionActive}
             account={account}
             tranche={tranche}
           />,

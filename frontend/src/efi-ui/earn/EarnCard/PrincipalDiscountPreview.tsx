@@ -54,7 +54,8 @@ export const PrincipalDiscountPreview: FC<PrincipalDiscountPreviewProps> = ({
           "flex-col-reverse",
           "items-center"
         )}
-        textClassName={tw("text-base")}
+        label={t`Yield at term`}
+        textClassName={tw("text-lg")}
         text={
           !amountIn ? (
             t`Enter an amount`
@@ -69,7 +70,6 @@ export const PrincipalDiscountPreview: FC<PrincipalDiscountPreviewProps> = ({
             </Fragment>
           )
         }
-        label={t`Yield at term`}
       />
     </Callout>
   );

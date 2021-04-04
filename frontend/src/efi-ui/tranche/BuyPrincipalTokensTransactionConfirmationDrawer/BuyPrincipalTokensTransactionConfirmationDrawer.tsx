@@ -10,8 +10,7 @@ import { useBatchSwapGivenIn } from "efi-ui/balancer/useBatchSwapGivenIn/useBatc
 import { parseQueryBatchSwapResult } from "efi-ui/balancer/useQueryBatchSwap/parseQueryBatchSwapResult";
 import { useQueryBatchSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
-import { TransactionConfirmationDrawer } from "efi-ui/contracts/TransactionConfirmationDrawer/TransactionConfirmationDrawer";
-import { TransactionDetailsPreview } from "efi-ui/contracts/TransactionDetailsPreview/TransactionDetailsCallout";
+import { TransactionDrawer } from "efi-ui/contracts/TransactionDrawer/TransactionDrawer";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
@@ -24,8 +23,9 @@ import { calculatePurchasePrice } from "efi/pools/calculatePurchasePrice";
 import { calculateSlippage } from "efi/pools/calculateSlippage";
 import { PoolContract } from "efi/pools/PoolContract";
 
-import { PrincipalTokenTransactionDetails } from "./PrincipalTokenTransactionDetails";
+import { PrincipalTokenTransactionDetails } from "../PrincipalTokenTransactionDetails/PrincipalTokenTransactionDetails";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
+import { TransactionDetailsForm } from "efi-ui/contracts/TransactionDetailsPreview/TransactionDetailsForm";
 
 interface BuyPrincipalTransactionConfirmationDrawerProps {
   chainId: number | undefined;
@@ -116,11 +116,12 @@ export const BuyPrincipalTokensTransactionConfirmationDrawer: FC<BuyPrincipalTra
   );
 
   return (
-    <TransactionConfirmationDrawer
+    <TransactionDrawer
       isOpen={isOpen}
       onClose={onClose}
       account={account}
       assetIn={baseAsset}
+      assetInIcon={baseAsset.assetIcon}
       walletConnectionActive={walletConnectionActive}
       amountIn={amountInAsBigNumber}
       chainId={chainId}
@@ -128,7 +129,7 @@ export const BuyPrincipalTokensTransactionConfirmationDrawer: FC<BuyPrincipalTra
       library={library}
       onConfirmTransaction={onConfirmBuyPrincipalTokens}
       transactionDetails={
-        <TransactionDetailsPreview
+        <TransactionDetailsForm
           amountIn={amountIn}
           amountOut={amountOutFormatted}
           assetInIcon={AssetIcon}
@@ -142,7 +143,7 @@ export const BuyPrincipalTokensTransactionConfirmationDrawer: FC<BuyPrincipalTra
             unlockTimeStamp={unlockTimeStampDate}
             priceSlippageAndTradingFee={priceSlippageAndTradingFee}
           />
-        </TransactionDetailsPreview>
+        </TransactionDetailsForm>
       }
     />
   );

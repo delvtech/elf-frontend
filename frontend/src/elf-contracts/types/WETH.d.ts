@@ -34,6 +34,7 @@ interface WETHInterface extends ethers.utils.Interface {
     "totalSupply()": FunctionFragment;
     "transfer(address,uint256)": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
+    "withdraw(uint256)": FunctionFragment;
   };
 
   encodeFunctionData(
@@ -65,6 +66,10 @@ interface WETHInterface extends ethers.utils.Interface {
     functionFragment: "transferFrom",
     values: [string, string, BigNumberish]
   ): string;
+  encodeFunctionData(
+    functionFragment: "withdraw",
+    values: [BigNumberish]
+  ): string;
 
   decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
@@ -83,6 +88,7 @@ interface WETHInterface extends ethers.utils.Interface {
     functionFragment: "transferFrom",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
 
   events: {
     "Approval(address,address,uint256)": EventFragment;
@@ -195,6 +201,16 @@ export class WETH extends Contract {
       amount: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
+
+    withdraw(
+      amount: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "withdraw(uint256)"(
+      amount: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
   };
 
   allowance(
@@ -282,6 +298,16 @@ export class WETH extends Contract {
   "transferFrom(address,address,uint256)"(
     spender: string,
     recipient: string,
+    amount: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  withdraw(
+    amount: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "withdraw(uint256)"(
     amount: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
@@ -375,6 +401,13 @@ export class WETH extends Contract {
       amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<boolean>;
+
+    withdraw(amount: BigNumberish, overrides?: CallOverrides): Promise<void>;
+
+    "withdraw(uint256)"(
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
   };
 
   filters: {
@@ -476,6 +509,13 @@ export class WETH extends Contract {
       amount: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
+
+    withdraw(amount: BigNumberish, overrides?: Overrides): Promise<BigNumber>;
+
+    "withdraw(uint256)"(
+      amount: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -567,6 +607,16 @@ export class WETH extends Contract {
     "transferFrom(address,address,uint256)"(
       spender: string,
       recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    withdraw(
+      amount: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "withdraw(uint256)"(
       amount: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;

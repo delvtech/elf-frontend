@@ -5,12 +5,10 @@ import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import classNames from "classnames";
 import { Tranche } from "elf-contracts/types/Tranche";
+import { parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { SwapKind } from "efi-ui/balancer/SwapKind";
-import { parseQueryBatchSwapResult } from "efi-ui/balancer/useQueryBatchSwap/parseQueryBatchSwapResult";
-import { useQueryBatchSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { CryptoAssetPicker } from "efi-ui/crypto/CryptoAssetPicker/CryptoAssetPicker";
@@ -23,31 +21,22 @@ import { EarnInput } from "efi-ui/earn/EarnInput/EarnInput";
 import { useActiveTranche } from "efi-ui/earn/hooks/useActiveTranche";
 import { TranchePicker } from "efi-ui/earn/TranchePicker/TranchePicker";
 import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
-import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
-import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
-import { BuyPrincipalTokensTransactionConfirmationDrawer } from "efi-ui/earn/BuyPrincipalTokensTransactionConfirmationDrawer/BuyPrincipalTokensTransactionConfirmationDrawer";
-import { formatUnits, parseUnits } from "ethers/lib/utils";
+import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
+import { BuyPrincipalTokensTransactionConfirmationDrawer } from "efi-ui/tranche/BuyPrincipalTokensTransactionConfirmationDrawer/BuyPrincipalTokensTransactionConfirmationDrawer";
+import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
+import { useBalancerTransactionInputs } from "efi-ui/balancer/useBalancerTransactionInputs";
 
 export interface EarnCardProps {
   library: Web3Provider | undefined;
   account: string | null | undefined;
-
   chainId: number | undefined;
   walletConnectionActive: boolean;
   connector: AbstractConnector | undefined;
   baseAssets: (CryptoAssetWithIcon | undefined)[];
-
   tranchesByBaseAsset: Record<string, Tranche[]>;
 }
-
-/**
- * ActiveInput is used to prevent infinite calls to onSwapGivenIn and
- * onSwapGivenOut because they are not idempotent and will change based on
- * each other's latest result.
- */
-type ActiveInput = "amountIn" | "amountOut";
 
 export const EarnCard: FC<EarnCardProps> = ({
   library,
@@ -60,32 +49,12 @@ export const EarnCard: FC<EarnCardProps> = ({
 }) => {
   // local state
   const [isDrawerOpen, setDrawerOpen] = useState(false);
-  const [activeInput, setActiveInput] = useState<ActiveInput>("amountIn");
-  const [amountIn, setAmountIn] = useState<string | undefined>();
-  const [amountOut, setAmountOut] = useState<string | undefined>();
-  const onAmountInChange = useCallback((newAmountIn: string) => {
-    setActiveInput("amountIn");
-    setAmountIn(newAmountIn);
-  }, []);
-  const onAmountOutChange = useCallback((newAmountOut: string) => {
-    setActiveInput("amountOut");
-    setAmountOut(newAmountOut);
-  }, []);
 
   // base asset
   const { activeBaseAsset, setActiveBaseAsset } = useActiveBaseAsset(
-    baseAssets,
-    setAmountIn,
-    setAmountOut
+    baseAssets
   );
-
-  const activeBaseAssetSymbol = useCryptoSymbol(activeBaseAsset);
-  const activeBaseAssetDecimals = useCryptoDecimals(activeBaseAsset);
-  const activeBaseAssetBalance = useCryptoBalance(
-    library,
-    account,
-    activeBaseAsset
-  );
+  const tokenInAddress = getTokenAddressForBalancer(activeBaseAsset);
 
   // tranche
   const {
@@ -98,9 +67,31 @@ export const EarnCard: FC<EarnCardProps> = ({
     activeTranche,
     "decimals"
   );
+  const activeBaseAssetSymbol = useCryptoSymbol(activeBaseAsset);
+  const activeBaseAssetDecimals = useCryptoDecimals(activeBaseAsset);
+  const activeBaseAssetBalance = useCryptoBalance(
+    library,
+    account,
+    activeBaseAsset
+  );
+  const tokenOutAddress = activeTranche?.address;
+
+  const pool = usePoolForToken(activeTranche as ERC20Shim, jsonRpcProvider);
+
+  const {
+    amountIn,
+    amountOut,
+    onAmountOutChange,
+    onAmountInChange,
+  } = useBalancerTransactionInputs(
+    pool,
+    tokenInAddress,
+    activeBaseAssetDecimals,
+    tokenOutAddress,
+    trancheDecimals
+  );
 
   // the tranche's pool
-  const pool = usePoolForToken(activeTranche as ERC20Shim, jsonRpcProvider);
   const baseAssetPoolToken = usePoolPairedToken(
     pool,
     activeTranche as ERC20Shim
@@ -118,55 +109,6 @@ export const EarnCard: FC<EarnCardProps> = ({
   const amountOutAsBigNumber = amountOut
     ? parseUnits(amountOut, trancheDecimals)
     : undefined;
-
-  const tokenInAddress = getTokenAddressForBalancer(activeBaseAsset);
-  const tokenOutAddress = activeTranche?.address;
-  const { data: queryBatchSwapInTokens } = useQueryBatchSwap(
-    SwapKind.GIVEN_IN,
-    pool,
-    tokenInAddress,
-    tokenOutAddress,
-    amountInAsBigNumber
-  );
-  const { tokenOut: tokenOutFromBatchSwapIn } = parseQueryBatchSwapResult(
-    tokenInAddress,
-    tokenOutAddress,
-    queryBatchSwapInTokens
-  );
-
-  // the amount of base asset you must put in
-  const { data: queryBatchSwapOutTokens } = useQueryBatchSwap(
-    SwapKind.GIVEN_OUT,
-    pool,
-    tokenInAddress,
-    tokenOutAddress,
-    amountOutAsBigNumber
-  );
-  const { tokenIn: tokenInFromBatchSwapOut } = parseQueryBatchSwapResult(
-    tokenInAddress,
-    tokenOutAddress,
-    queryBatchSwapOutTokens
-  );
-
-  // Effects to sync inputs
-  // sync the the amount out input
-  useSyncWithActiveInput(
-    tokenOutFromBatchSwapIn
-      ? formatUnits(tokenOutFromBatchSwapIn.abs(), trancheDecimals)
-      : undefined,
-    setAmountOut,
-    activeInput,
-    "amountOut"
-  );
-  // sync the the amount in input
-  useSyncWithActiveInput(
-    tokenInFromBatchSwapOut
-      ? formatUnits(tokenInFromBatchSwapOut, activeBaseAssetDecimals)
-      : undefined,
-    setAmountIn,
-    activeInput,
-    "amountIn"
-  );
 
   const roundedTranchePrice = amountOfEthForOneTranche?.toFixed(4);
   const marketRateLabel = t`1 ${inputTokenSymbol} Principal Token ≈ ${roundedTranchePrice} ${activeBaseAssetSymbol}`;
@@ -306,36 +248,8 @@ function useSetDefaultActiveBaseAsset(
   }, [activeBaseAsset, defaultBaseAsset, setActiveBaseAsset]);
 }
 
-/**
- * When the swap amount changes, we need to update the text input.
- */
-function useSyncWithActiveInput(
-  newAmount: string | undefined,
-  setAmount: React.Dispatch<React.SetStateAction<string | undefined>>,
-  activeInput: ActiveInput,
-  syncWithInput: ActiveInput
-) {
-  useEffect(() => {
-    // don't update the active input out from under the user.
-    if (activeInput === syncWithInput) {
-      return;
-    }
-
-    if (!newAmount) {
-      setAmount(undefined);
-      return;
-    }
-
-    // Otherwise, if we have a new amount we'll set it
-    const roundedAmount = (+newAmount).toFixed(4);
-    setAmount(roundedAmount);
-  }, [setAmount, newAmount, activeInput, syncWithInput]);
-}
-
 function useActiveBaseAsset(
-  allBaseAssets: (CryptoAssetWithIcon | undefined)[],
-  setAmountIn: (amount: string | undefined) => void,
-  setAmountOut: (amount: string | undefined) => void
+  allBaseAssets: (CryptoAssetWithIcon | undefined)[]
 ) {
   const [activeBaseAsset, setActiveBaseAssetState] = useState<
     CryptoAssetWithIcon | undefined
@@ -343,11 +257,8 @@ function useActiveBaseAsset(
   const setActiveBaseAsset = useCallback(
     (baseAsset: CryptoAssetWithIcon | undefined) => {
       setActiveBaseAssetState(baseAsset);
-      // clear the inputs when the base asset changes
-      setAmountIn(undefined);
-      setAmountOut(undefined);
     },
-    [setAmountIn, setAmountOut]
+    []
   );
   // The list of base assets will be empty while the data loads, so we want to
   // set the default after it's been populated

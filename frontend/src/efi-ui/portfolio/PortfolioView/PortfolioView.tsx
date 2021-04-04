@@ -18,9 +18,21 @@ import { usePortfolioTabs } from "../PortfolioTabs/usePortfolioTabs";
 interface PortfolioViewProps extends RouteComponentProps {}
 
 export const PortfolioView: FC<PortfolioViewProps> = () => {
-  const { account, library } = useWeb3React<Web3Provider>();
+  const {
+    account,
+    library,
+    active,
+    chainId,
+    connector,
+  } = useWeb3React<Web3Provider>();
 
-  const portfolioTabs: PortfolioTab[] = usePortfolioTabs(library, account);
+  const portfolioTabs: PortfolioTab[] = usePortfolioTabs(
+    chainId,
+    library,
+    connector,
+    active,
+    account
+  );
 
   const [activePortfolioTabId, setActivePortfolioTab] = useState(
     portfolioTabs[0].id

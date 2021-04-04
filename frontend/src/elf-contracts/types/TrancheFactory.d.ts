@@ -84,9 +84,11 @@ export class TrancheFactory extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    getData(overrides?: Overrides): Promise<ContractTransaction>;
+    getData(overrides?: CallOverrides): Promise<[string, BigNumber, string]>;
 
-    "getData()"(overrides?: Overrides): Promise<ContractTransaction>;
+    "getData()"(
+      overrides?: CallOverrides
+    ): Promise<[string, BigNumber, string]>;
   };
 
   TRANCHE_CREATION_HASH(overrides?: CallOverrides): Promise<string>;
@@ -105,9 +107,9 @@ export class TrancheFactory extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  getData(overrides?: Overrides): Promise<ContractTransaction>;
+  getData(overrides?: CallOverrides): Promise<[string, BigNumber, string]>;
 
-  "getData()"(overrides?: Overrides): Promise<ContractTransaction>;
+  "getData()"(overrides?: CallOverrides): Promise<[string, BigNumber, string]>;
 
   callStatic: {
     TRANCHE_CREATION_HASH(overrides?: CallOverrides): Promise<string>;
@@ -137,7 +139,7 @@ export class TrancheFactory extends Contract {
     TrancheCreated(
       trancheAddress: string | null,
       wpAddress: string | null,
-      duration: BigNumberish | null
+      expiration: BigNumberish | null
     ): EventFilter;
   };
 
@@ -158,9 +160,9 @@ export class TrancheFactory extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    getData(overrides?: Overrides): Promise<BigNumber>;
+    getData(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "getData()"(overrides?: Overrides): Promise<BigNumber>;
+    "getData()"(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -184,8 +186,8 @@ export class TrancheFactory extends Contract {
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    getData(overrides?: Overrides): Promise<PopulatedTransaction>;
+    getData(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "getData()"(overrides?: Overrides): Promise<PopulatedTransaction>;
+    "getData()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }
