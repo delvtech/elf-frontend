@@ -1,9 +1,8 @@
 import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
-import { BigNumber } from "ethers";
 import { Money } from "ts-money";
 
 import { useConvertToFiat } from "efi-ui/money/hooks/useConvertToFiat";
-import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
+import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
@@ -11,7 +10,6 @@ import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
 import { KNOWN_BASE_ASSETS } from "efi/contracts/contractsJson";
 import { PoolContract } from "efi/pools/PoolContract";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
-import { formatUnits, parseUnits } from "ethers/lib/utils";
 
 export function useTotalLiquidityForPool(
   pool: PoolContract | undefined
@@ -47,27 +45,12 @@ export function useTotalLiquidityForPool(
     : undefined;
   const [yieldAssetDecimals] = useTokenDecimals(yieldAssetContract);
 
-  // TODO: refactor this to its own hook
-  /**************************
-   * Laxy spot price technique until we get a better method.  Right now just calculates how much out
-   * asset for '1' of the in asset.  A future optimisation might be to do '$1' worth of the in asset
-   * to minimize slippage in the value.
-   **************************/
-  const amountIn = parseUnits("1", baseAssetDecimals);
-  const { data: amountOut = BigNumber.from(1) } = useOnSwapGivenIn(
-    pool,
-    baseAssetContract,
-    amountIn
-  );
-  const yieldAssetRatio =
-    +formatUnits(amountIn, baseAssetDecimals) /
-    +formatUnits(amountOut, yieldAssetDecimals);
+  const spotPrice = usePoolSpotPrice(pool, baseAssetContract);
   const yieldAssetPrice = Money.fromDecimal(
-    +yieldAssetRatio * (baseAssetPrice?.toDecimal() || 1),
+    spotPrice * (baseAssetPrice?.toDecimal() || 1),
     currency,
     Math.round
   );
-  /***************************** */
 
   const yieldAssetFiatBalance =
     useConvertToFiat(yieldAssetPrice, yieldAssetBalance, yieldAssetDecimals) ||

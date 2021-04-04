@@ -21,6 +21,7 @@ import { useVolume } from "efi-ui/pools/useVolume/useVolume";
 import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
 import { PoolContract } from "efi/pools/PoolContract";
 import { formatEther } from "ethers/lib/utils";
+import { useTotalLiquidityTrend } from "efi-ui/pools/useConvergentCurvePools/useTotalLiquidityTrend/useTotalLiquidityTrend";
 
 interface PoolDetailsProps {
   library: Web3Provider | undefined;
@@ -42,6 +43,8 @@ export const PoolDetails: FC<PoolDetailsProps> = ({
     ERC20__factory.connect
   );
   const totalLiquidity = useTotalLiquidityForPool(pool);
+  const liquidityTrend = useTotalLiquidityTrend(pool);
+
   const tranche = useTrancheForPool(pool);
   const { data: startDateInUnixSeconds } = useTrancheCreatedAt(tranche);
   const { data: maturityDateInUnixSeconds } = useSmartContractReadCall(
@@ -66,6 +69,7 @@ export const PoolDetails: FC<PoolDetailsProps> = ({
               tradeVolume={volume}
               swapVolume={swapVolume}
               totalLiquidity={totalLiquidity}
+              liquidityTrend={liquidityTrend}
             />
             <FixedYieldSummary
               startDate={startDate}
