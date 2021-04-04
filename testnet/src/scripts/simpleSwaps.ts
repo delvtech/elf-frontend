@@ -43,7 +43,7 @@ async function simpleSwaps() {
   const numBatches = 100;
   let batchCount = 0;
   while (batchCount < numBatches) {
-    const numSwaps = 5;
+    const numSwaps = 2;
     let swapCount = 0;
     const swaps = [];
     while (swapCount < numSwaps) {
@@ -71,9 +71,9 @@ async function simpleSwaps() {
       );
 
       swapCount += 1;
+      await Promise.all(swaps);
     }
 
-    await Promise.all(swaps);
     batchCount += 1;
   }
 }
