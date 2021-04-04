@@ -1,13 +1,19 @@
 import { Signer } from "ethers";
-import hre from "hardhat";
+import { HardhatRuntimeEnvironment } from "hardhat/types";
 
 export enum SIGNER {
   ELEMENT,
   USER,
   BALANCER,
+
+  TRADER1,
+  TRADER2,
 }
 
-export async function getSigner(signer: SIGNER): Promise<Signer> {
+export async function getSigner(
+  signer: SIGNER,
+  hre: HardhatRuntimeEnvironment
+): Promise<Signer> {
   const signers = await hre.ethers.getSigners();
   return signers[signer];
 }
