@@ -124,7 +124,7 @@ export const SellPrincipalTokensTransactionDrawer: FC<SellPrincipalTransactionDr
   // how you express an uncontrolled component. Having this change between
   // uncontrolled and controlled causes bugginess and big warnings in the
   // console, so we use empty string here to keep everything controlled.
-  const safeAmountIn = amountIn === undefined ? "" : amountIn;
+  const safeAmountIn = amountIn ?? "";
 
   return (
     <TransactionDrawer
