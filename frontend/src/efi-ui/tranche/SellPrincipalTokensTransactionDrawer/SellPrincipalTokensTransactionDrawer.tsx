@@ -11,7 +11,7 @@ import { useBalancerTransactionInputs } from "efi-ui/balancer/useBalancerTransac
 import { useBatchSwapGivenIn } from "efi-ui/balancer/useBatchSwapGivenIn/useBatchSwapGivenIn";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { TransactionDetailsForm } from "efi-ui/contracts/TransactionDetailsPreview/TransactionDetailsForm";
-import { TransactionDrawer } from "efi-ui/contracts/TransactionDrawer/TransactionConfirmationDrawer";
+import { TransactionDrawer } from "efi-ui/contracts/TransactionDrawer/TransactionDrawer";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
@@ -24,6 +24,9 @@ import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { calculatePurchasePrice } from "efi/pools/calculatePurchasePrice";
 import { calculateSlippage } from "efi/pools/calculateSlippage";
 import { PoolContract } from "efi/pools/PoolContract";
+import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
+import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
+import { ERC20 } from "elf-contracts/types/ERC20";
 
 interface SellPrincipalTransactionDrawerProps {
   chainId: number | undefined;
@@ -58,6 +61,7 @@ export const SellPrincipalTokensTransactionDrawer: FC<SellPrincipalTransactionDr
   const baseAssetDecimals = useCryptoDecimals(baseAsset);
 
   // tranche calls
+  const { data: trancheSymbol } = useSmartContractReadCall(tranche, "symbol");
   const { data: trancheUnlockTimestamp } = useSmartContractReadCall(
     tranche,
     "unlockTimestamp"
@@ -116,6 +120,8 @@ export const SellPrincipalTokensTransactionDrawer: FC<SellPrincipalTransactionDr
     spotPriceTokenForOneBaseAsset
   );
 
+  const assetIn = makeCryptoAsset(tranche as ERC20Shim);
+
   // We want InputGroup to be a controlled component, but passing `undefined` is
   // how you express an uncontrolled component. Having this change between
   // uncontrolled and controlled causes bugginess and big warnings in the
@@ -127,7 +133,9 @@ export const SellPrincipalTokensTransactionDrawer: FC<SellPrincipalTransactionDr
       isOpen={isOpen}
       onClose={onClose}
       account={account}
-      assetIn={baseAsset}
+      assetIn={assetIn}
+      assetInIcon={undefined}
+      assetInSymbol={`pt${baseAssetSymbol}`}
       walletConnectionActive={walletConnectionActive}
       amountIn={amountInAsBigNumber}
       chainId={chainId}
@@ -170,4 +178,18 @@ function getPriceSlippageAndTradingFee(
     purchasePrice
   );
   return priceSlippageAndTradingFee;
+}
+
+function makeCryptoAsset(token: ERC20 | undefined) {
+  if (!token) {
+    return;
+  }
+
+  const assetIn: CryptoAsset = {
+    id: token?.address,
+    type: CryptoAssetType.ERC20,
+    tokenContract: token,
+  };
+
+  return assetIn;
 }

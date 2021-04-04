@@ -18,6 +18,12 @@ interface ERC20ApproveButtonProps {
   spender: string | null | undefined;
   contract: ERC20 | undefined;
   approvalAmount: BigNumber | undefined;
+
+  /**
+   * If provided this will be used as the token symbol. This is useful for
+   * avoiding large tranche symbols from breaking layout.
+   */
+  tokenSymbol?: string;
   signer: Signer | undefined;
   className?: string;
 }
@@ -26,10 +32,12 @@ export const ERC20ApproveButton: FC<ERC20ApproveButtonProps> = ({
   spender,
   contract,
   approvalAmount,
+  tokenSymbol: tokenSymbolFromProps,
   signer,
   className,
 }) => {
-  const { data: assetSymbol } = useSmartContractReadCall(contract, "symbol");
+  const { data: symbol } = useSmartContractReadCall(contract, "symbol");
+  const assetSymbol = tokenSymbolFromProps || symbol;
   const { data: marketAllowance } = useTokenAllowance(contract, owner, spender);
 
   const onApproveClick = useOnApproveClick(contract, signer, owner, spender);

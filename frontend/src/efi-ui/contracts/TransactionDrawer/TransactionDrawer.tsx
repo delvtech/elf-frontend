@@ -11,7 +11,6 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
-import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { ERC20ApproveButton } from "efi-ui/token/ERC20ApproveButton/ERC20ApproveButton";
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
@@ -23,10 +22,13 @@ import {
 
 import { ConnectWalletCallout } from "./ConnectWalletCallout";
 import { WalletApprovalCallout } from "./WalletApprovalCallout";
+import { SvgIcon } from "efi-ui/base/SvgIcon";
 interface TransactionDrawerProps {
   account: string | null | undefined;
   amountIn: BigNumber | undefined;
-  assetIn: CryptoAssetWithIcon | undefined;
+  assetIn: CryptoAsset | undefined;
+  assetInIcon: SvgIcon | undefined;
+  assetInSymbol?: string;
   chainId: number | undefined;
   connector: AbstractConnector | undefined;
   isOpen: boolean;
@@ -40,6 +42,8 @@ interface TransactionDrawerProps {
 export const TransactionDrawer: FC<TransactionDrawerProps> = ({
   account,
   amountIn,
+  assetInIcon,
+  assetInSymbol,
   assetIn,
   chainId,
   connector,
@@ -114,6 +118,7 @@ export const TransactionDrawer: FC<TransactionDrawerProps> = ({
             <WalletApprovalCallout
               account={account}
               contract={baseAssetContract as ERC20Shim}
+              tokenSymbol={assetInSymbol}
               approvalAmount={amountIn}
             />
           ) : null
@@ -130,6 +135,7 @@ export const TransactionDrawer: FC<TransactionDrawerProps> = ({
                 spender={balancerVault?.address}
                 approvalAmount={amountIn}
                 contract={baseAssetContract as ERC20Shim}
+                tokenSymbol={assetInSymbol}
                 signer={signer}
               />
             ) : null

@@ -13,6 +13,7 @@ import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
 interface WalletApprovalCalloutProps {
   account: string | null | undefined;
   contract: ERC20 | undefined;
+  tokenSymbol?: string;
 
   approvalAmount: BigNumber | undefined;
 }
@@ -20,8 +21,10 @@ export const WalletApprovalCallout: FC<WalletApprovalCalloutProps> = ({
   account,
   approvalAmount,
   contract,
+  tokenSymbol: tokenSymbolFromProps,
 }) => {
-  const { data: assetSymbol } = useSmartContractReadCall(contract, "symbol");
+  const { data: symbol } = useSmartContractReadCall(contract, "symbol");
+  const assetSymbol = tokenSymbolFromProps || symbol;
 
   const balancerVault = useBalancerVault();
   const {
@@ -44,7 +47,7 @@ export const WalletApprovalCallout: FC<WalletApprovalCalloutProps> = ({
     >
       <div
         className={"pt-1"}
-      >{t`Element uses Balancer Pools for trading. You'll need to grant Balancer approval to spend your ${assetSymbol} in order to swap for Principal Tokens.`}</div>
+      >{t`Element uses Balancer Pools for trading. You'll need to grant Balancer approval to spend your ${assetSymbol} in order to perform this transaction.`}</div>
     </Callout>
   );
 };
