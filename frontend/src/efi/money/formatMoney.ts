@@ -2,6 +2,7 @@ import { Money } from "ts-money";
 
 /**
  * Helper to convert a Money object to a human readable string
+ * ex: $1.23
  * @param {Money} money value to be formatted
  */
 export function formatMoney(
@@ -9,7 +10,7 @@ export function formatMoney(
   defaultValue = "0.00"
 ): string {
   if (!money) {
-    return defaultValue;
+    return `$${defaultValue}`;
   }
 
   const fractionDigits = money.getCurrencyInfo().decimal_digits;
