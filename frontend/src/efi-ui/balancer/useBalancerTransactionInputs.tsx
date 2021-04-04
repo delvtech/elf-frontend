@@ -18,8 +18,8 @@ type ActiveInput = "amountIn" | "amountOut";
 interface UseBalancerTransactionInputs {
   amountIn: string | undefined;
   amountOut: string | undefined;
-  onAmountInChange: (amountIn: string) => void;
-  onAmountOutChange: (amountIn: string) => void;
+  onAmountInChange: (amountIn: string | undefined) => void;
+  onAmountOutChange: (amountIn: string | undefined) => void;
 }
 
 export function useBalancerTransactionInputs(
@@ -35,7 +35,7 @@ export function useBalancerTransactionInputs(
   const amountInAsBigNumber = amountIn
     ? parseUnits(amountIn, tokenInDecimals)
     : undefined;
-  const onAmountInChange = useCallback((newAmountIn: string) => {
+  const onAmountInChange = useCallback((newAmountIn: string | undefined) => {
     setActiveInput("amountIn");
     setAmountIn(newAmountIn);
   }, []);
@@ -44,7 +44,7 @@ export function useBalancerTransactionInputs(
   const amountOutAsBigNumber = amountOut
     ? parseUnits(amountOut, tokenOutDecimals)
     : undefined;
-  const onAmountOutChange = useCallback((newAmountOut: string) => {
+  const onAmountOutChange = useCallback((newAmountOut: string | undefined) => {
     setActiveInput("amountOut");
     setAmountOut(newAmountOut);
   }, []);

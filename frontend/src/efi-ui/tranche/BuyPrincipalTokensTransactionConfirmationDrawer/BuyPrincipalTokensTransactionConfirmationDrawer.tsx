@@ -11,7 +11,6 @@ import { parseQueryBatchSwapResult } from "efi-ui/balancer/useQueryBatchSwap/par
 import { useQueryBatchSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { TransactionConfirmationDrawer } from "efi-ui/contracts/TransactionConfirmationDrawer/TransactionConfirmationDrawer";
-import { TransactionDetailsPreview } from "efi-ui/contracts/TransactionDetailsPreview/TransactionDetailsCallout";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
@@ -26,6 +25,7 @@ import { PoolContract } from "efi/pools/PoolContract";
 
 import { PrincipalTokenTransactionDetails } from "../PrincipalTokenTransactionDetails/PrincipalTokenTransactionDetails";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
+import { TransactionDetailsForm } from "efi-ui/contracts/TransactionDetailsPreview/TransactionDetailsForm";
 
 interface BuyPrincipalTransactionConfirmationDrawerProps {
   chainId: number | undefined;
@@ -128,7 +128,7 @@ export const BuyPrincipalTokensTransactionConfirmationDrawer: FC<BuyPrincipalTra
       library={library}
       onConfirmTransaction={onConfirmBuyPrincipalTokens}
       transactionDetails={
-        <TransactionDetailsPreview
+        <TransactionDetailsForm
           amountIn={amountIn}
           amountOut={amountOutFormatted}
           assetInIcon={AssetIcon}
@@ -142,7 +142,7 @@ export const BuyPrincipalTokensTransactionConfirmationDrawer: FC<BuyPrincipalTra
             unlockTimeStamp={unlockTimeStampDate}
             priceSlippageAndTradingFee={priceSlippageAndTradingFee}
           />
-        </TransactionDetailsPreview>
+        </TransactionDetailsForm>
       }
     />
   );

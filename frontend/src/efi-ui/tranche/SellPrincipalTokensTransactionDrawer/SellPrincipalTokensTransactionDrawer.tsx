@@ -1,4 +1,4 @@
-import { FC } from "react";
+import React, { FC } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
@@ -9,7 +9,6 @@ import { formatUnits, parseUnits } from "ethers/lib/utils";
 import { useBatchSwapGivenIn } from "efi-ui/balancer/useBatchSwapGivenIn/useBatchSwapGivenIn";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { TransactionConfirmationDrawer } from "efi-ui/contracts/TransactionConfirmationDrawer/TransactionConfirmationDrawer";
-import { TransactionDetailsPreview } from "efi-ui/contracts/TransactionDetailsPreview/TransactionDetailsCallout";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
@@ -23,8 +22,9 @@ import { calculatePurchasePrice } from "efi/pools/calculatePurchasePrice";
 import { calculateSlippage } from "efi/pools/calculateSlippage";
 import { PoolContract } from "efi/pools/PoolContract";
 import { useBalancerTransactionInputs } from "efi-ui/balancer/useBalancerTransactionInputs";
+import { TransactionDetailsForm } from "efi-ui/contracts/TransactionDetailsPreview/TransactionDetailsForm";
 
-interface SellPrincipalTransactionConfirmationDrawerProps {
+interface SellPrincipalTransactionDrawerProps {
   chainId: number | undefined;
   account: string | null | undefined;
   walletConnectionActive: boolean;
@@ -37,7 +37,7 @@ interface SellPrincipalTransactionConfirmationDrawerProps {
   onClose: () => void;
 }
 
-export const SellPrincipalTokensTransactionDrawer: FC<SellPrincipalTransactionConfirmationDrawerProps> = ({
+export const SellPrincipalTokensTransactionDrawer: FC<SellPrincipalTransactionDrawerProps> = ({
   connector,
   walletConnectionActive,
   library,
@@ -114,6 +114,12 @@ export const SellPrincipalTokensTransactionDrawer: FC<SellPrincipalTransactionCo
     spotPriceTokenForOneBaseAsset
   );
 
+  // We want InputGroup to be a controlled component, but passing `undefined` is
+  // how you express an uncontrolled component. Having this change between
+  // uncontrolled and controlled causes bugginess and big warnings in the
+  // console, so we use empty string here to keep everything controlled.
+  const safeAmountIn = amountIn === undefined ? "" : amountIn;
+
   return (
     <TransactionConfirmationDrawer
       isOpen={isOpen}
@@ -127,13 +133,15 @@ export const SellPrincipalTokensTransactionDrawer: FC<SellPrincipalTransactionCo
       library={library}
       onConfirmTransaction={onConfirmSellPrincipalTokens}
       transactionDetails={
-        <TransactionDetailsPreview
-          amountIn={amountIn}
+        <TransactionDetailsForm
+          amountIn={safeAmountIn}
           amountOut={amountOutFormatted}
-          assetInIcon={AssetIcon}
-          assetInSymbol={baseAssetSymbol}
-          assetOutSymbol={`${baseAssetSymbol} Principal Token`}
-          assetOutIcon={null}
+          onAmountInChange={onAmountInChange}
+          onAmountOutChange={onAmountOutChange}
+          assetInIcon={null}
+          assetInSymbol={`${baseAssetSymbol} Principal Token`}
+          assetOutIcon={AssetIcon}
+          assetOutSymbol={baseAssetSymbol}
         >
           <PrincipalTokenTransactionDetails
             spotPriceBaseAssetForOneToken={spotPriceBaseAssetForOneToken}
@@ -141,7 +149,7 @@ export const SellPrincipalTokensTransactionDrawer: FC<SellPrincipalTransactionCo
             unlockTimeStamp={unlockTimeStampDate}
             priceSlippageAndTradingFee={priceSlippageAndTradingFee}
           />
-        </TransactionDetailsPreview>
+        </TransactionDetailsForm>
       }
     />
   );

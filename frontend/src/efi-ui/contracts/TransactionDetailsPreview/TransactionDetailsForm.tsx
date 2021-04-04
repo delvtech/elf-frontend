@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { ChangeEvent, FC, useCallback } from "react";
 
 import { Callout, Divider, InputGroup } from "@blueprintjs/core";
 import classNames from "classnames";
@@ -9,25 +9,56 @@ import { SvgIcon } from "efi-ui/base/SvgIcon";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 
 import styles from "./styles.module.css";
+import { ANY_NUMBER_REGEX } from "efi/base/numbers";
 
-interface TransactionDetailsPreviewProps {
-  assetInIcon: SvgIcon;
+interface TransactionDetailsFormProps {
+  assetInIcon: SvgIcon | null;
   assetInSymbol: string | undefined;
   assetOutSymbol: string | undefined;
   amountIn: string | undefined;
   amountOut: string | undefined;
+  /**
+   * If provided, this will make the input interactive, otherwise it will be
+   * disabled and read-only
+   */
+  onAmountInChange?: (amoutOut: string | undefined) => void;
+  /**
+   * If provided, this will make the input interactive, otherwise it will be
+   * disabled and read-only
+   */
+  onAmountOutChange?: (amoutOut: string | undefined) => void;
   assetOutIcon: SvgIcon | null;
 }
-export const TransactionDetailsPreview: FC<TransactionDetailsPreviewProps> = ({
+export const TransactionDetailsForm: FC<TransactionDetailsFormProps> = ({
   assetInIcon: AssetInIcon,
   assetOutIcon: AssetOutIcon,
   amountIn,
   amountOut,
   assetInSymbol,
   assetOutSymbol,
+  onAmountInChange: onAmountInChangeFromProps,
+  onAmountOutChange: onAmountOutChangeFromProps,
   children,
 }) => {
   const { isDarkMode } = useDarkMode();
+  const onAmountInChange = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      if (!event.target.value.match(ANY_NUMBER_REGEX)) {
+        return;
+      }
+      onAmountInChangeFromProps?.(event.target.value);
+    },
+    [onAmountInChangeFromProps]
+  );
+  const onAmountOutChange = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      if (!event.target.value.match(ANY_NUMBER_REGEX)) {
+        return;
+      }
+      onAmountOutChangeFromProps?.(event.target.value);
+    },
+    [onAmountOutChangeFromProps]
+  );
   return (
     <Callout className={tw("flex", "flex-col", "p-8", "space-y-6")}>
       <span
@@ -48,7 +79,8 @@ export const TransactionDetailsPreview: FC<TransactionDetailsPreviewProps> = ({
           <InputGroup
             large
             fill
-            disabled
+            disabled={!onAmountInChangeFromProps}
+            onChange={onAmountInChange}
             className={classNames(tw("col-span-5"), styles.inputWithIcon, {
               [styles.inputColor]: !isDarkMode,
               [styles.inputColorDark]: isDarkMode,
@@ -80,7 +112,8 @@ export const TransactionDetailsPreview: FC<TransactionDetailsPreviewProps> = ({
           <InputGroup
             large
             fill
-            disabled
+            disabled={!onAmountOutChangeFromProps}
+            onChange={onAmountOutChange}
             className={classNames(tw("col-span-5"), styles.inputWithIcon, {
               [styles.inputColor]: !isDarkMode,
               [styles.inputColorDark]: isDarkMode,

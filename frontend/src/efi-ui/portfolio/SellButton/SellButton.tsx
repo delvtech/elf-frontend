@@ -1,14 +1,14 @@
 import React, { FC, Fragment, useState } from "react";
 
 import { Button, Intent } from "@blueprintjs/core";
+import { Web3Provider } from "@ethersproject/providers";
+import { AbstractConnector } from "@web3-react/abstract-connector";
+import { Tranche } from "elf-contracts/types/Tranche";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { SellPrincipalTokensTransactionDrawer } from "efi-ui/tranche/SellPrincipalTokensTransactionConfirmationDrawer/SellPrincipalTokensTransactionConfirmationDrawer";
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
-import { Tranche } from "elf-contracts/types/Tranche";
-import { Web3Provider } from "@ethersproject/providers";
-import { AbstractConnector } from "@web3-react/abstract-connector";
+import { SellPrincipalTokensTransactionDrawer } from "efi-ui/tranche/SellPrincipalTokensTransactionDrawer/SellPrincipalTokensTransactionDrawer";
 import { PoolContract } from "efi/pools/PoolContract";
 
 interface SellButtonProps {
