@@ -5,16 +5,17 @@ import { getCoinGeckoId } from "efi-coingecko";
 import { getQueryData } from "efi-ui/base/queryResults";
 import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
 import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
-import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { Web3Provider } from "@ethersproject/providers";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { formatUnits } from "ethers/lib/utils";
-
-/**
- * @deprecated BPool is deprecated. use useTrancheFiatBalance instead
- */
+import { useQueryBatchSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
+import { SwapKind } from "efi-ui/balancer/SwapKind";
+import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
+import { useBaseAssetForTranche } from "efi-ui/tranche/useBaseAssetForTranche";
+import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
+import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
+import { parseQueryBatchSwapResult } from "efi-ui/balancer/useQueryBatchSwap/parseQueryBatchSwapResult";
 
 export function useTrancheFiatBalance(
   library: Web3Provider | undefined,
@@ -27,29 +28,31 @@ export function useTrancheFiatBalance(
     callArgs: [account as string],
   });
   const pool = usePoolForToken(tranche as ERC20Shim);
-  const baseAssetToken = usePoolPairedToken(pool, tranche as ERC20Shim);
-  const { data: baseAssetDecimals } = useSmartContractReadCall(
-    baseAssetToken,
-    "decimals"
-  );
-  const baseAssetTotalValueResult = useOnSwapGivenIn(
+  const baseAsset = useBaseAssetForTranche(tranche);
+  const baseAssetBalancerAddress = getTokenAddressForBalancer(baseAsset);
+  const baseAssetDecimals = useCryptoDecimals(baseAsset);
+  const trancheAddress = tranche?.address;
+  const { data: queryBatchSwapResult } = useQueryBatchSwap(
+    SwapKind.GIVEN_IN,
     pool,
-    tranche as ERC20Shim,
+    trancheAddress,
+    baseAssetBalancerAddress,
     getQueryData(trancheBalance)
   );
-  const totalValueInBaseAsset = getQueryData(baseAssetTotalValueResult);
-
-  const baseAssetSymbolResult = useSmartContractReadCall(
-    baseAssetToken,
-    "symbol"
+  const { tokenOut: totalValueInBaseAsset } = parseQueryBatchSwapResult(
+    trancheAddress,
+    baseAssetBalancerAddress,
+    queryBatchSwapResult
   );
-  const coinGeckoId = getCoinGeckoId(getQueryData(baseAssetSymbolResult));
+
+  const baseAssetSymbol = useCryptoSymbol(baseAsset);
+  const coinGeckoId = getCoinGeckoId(baseAssetSymbol);
   const priceResult = useCoinGeckoPrice(coinGeckoId, currency);
   const baseAssetCoinGeckoPrice = getQueryData(priceResult);
 
   if (baseAssetCoinGeckoPrice && totalValueInBaseAsset) {
     const trancheFiatBalance = baseAssetCoinGeckoPrice.multiply(
-      +formatUnits(totalValueInBaseAsset, baseAssetDecimals)
+      +formatUnits(totalValueInBaseAsset.abs(), baseAssetDecimals)
     );
     return trancheFiatBalance;
   }
