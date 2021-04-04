@@ -1,4 +1,4 @@
-import { formatEther, formatUnits } from "@ethersproject/units";
+import { formatUnits } from "@ethersproject/units";
 
 import { getQueryData } from "efi-ui/base/queryResults";
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
