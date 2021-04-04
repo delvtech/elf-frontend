@@ -5,10 +5,13 @@ import { AbstractConnector } from "@web3-react/abstract-connector";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { Signer } from "ethers";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
+import { t } from "ttag";
 
+import { useBalancerTransactionInputs } from "efi-ui/balancer/useBalancerTransactionInputs";
 import { useBatchSwapGivenIn } from "efi-ui/balancer/useBatchSwapGivenIn/useBatchSwapGivenIn";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
-import { TransactionConfirmationDrawer } from "efi-ui/contracts/TransactionConfirmationDrawer/TransactionConfirmationDrawer";
+import { TransactionDetailsForm } from "efi-ui/contracts/TransactionDetailsPreview/TransactionDetailsForm";
+import { TransactionDrawer } from "efi-ui/contracts/TransactionDrawer/TransactionConfirmationDrawer";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
@@ -21,8 +24,6 @@ import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { calculatePurchasePrice } from "efi/pools/calculatePurchasePrice";
 import { calculateSlippage } from "efi/pools/calculateSlippage";
 import { PoolContract } from "efi/pools/PoolContract";
-import { useBalancerTransactionInputs } from "efi-ui/balancer/useBalancerTransactionInputs";
-import { TransactionDetailsForm } from "efi-ui/contracts/TransactionDetailsPreview/TransactionDetailsForm";
 
 interface SellPrincipalTransactionDrawerProps {
   chainId: number | undefined;
@@ -97,8 +98,8 @@ export const SellPrincipalTokensTransactionDrawer: FC<SellPrincipalTransactionDr
     account,
     signer,
     pool,
-    baseAssetBalancerAddress,
     tranche?.address,
+    baseAssetBalancerAddress,
     amountInAsBigNumber
   );
 
@@ -106,7 +107,8 @@ export const SellPrincipalTokensTransactionDrawer: FC<SellPrincipalTransactionDr
     amountOutAsBigNumber?.abs() || 0,
     baseAssetDecimals
   );
-  const amountOutFormatted = amountOutNumber.toFixed(4);
+  const amountOutFormatted =
+    amountOutNumber === 0 ? "" : amountOutNumber.toFixed(4);
 
   const priceSlippageAndTradingFee = getPriceSlippageAndTradingFee(
     +(amountIn || 0),
@@ -121,7 +123,7 @@ export const SellPrincipalTokensTransactionDrawer: FC<SellPrincipalTransactionDr
   const safeAmountIn = amountIn === undefined ? "" : amountIn;
 
   return (
-    <TransactionConfirmationDrawer
+    <TransactionDrawer
       isOpen={isOpen}
       onClose={onClose}
       account={account}
@@ -138,6 +140,7 @@ export const SellPrincipalTokensTransactionDrawer: FC<SellPrincipalTransactionDr
           amountOut={amountOutFormatted}
           onAmountInChange={onAmountInChange}
           onAmountOutChange={onAmountOutChange}
+          heading={t`Sell ${baseAssetSymbol} Principal Tokens`}
           assetInIcon={null}
           assetInSymbol={`${baseAssetSymbol} Principal Token`}
           assetOutIcon={AssetIcon}
@@ -154,6 +157,7 @@ export const SellPrincipalTokensTransactionDrawer: FC<SellPrincipalTransactionDr
     />
   );
 };
+
 function getPriceSlippageAndTradingFee(
   amountIn: number,
   amountOutNumber: number,

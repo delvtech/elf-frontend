@@ -23,7 +23,7 @@ import {
 
 import { ConnectWalletCallout } from "./ConnectWalletCallout";
 import { WalletApprovalCallout } from "./WalletApprovalCallout";
-interface TransactionConfirmationDrawerProps {
+interface TransactionDrawerProps {
   account: string | null | undefined;
   amountIn: BigNumber | undefined;
   assetIn: CryptoAssetWithIcon | undefined;
@@ -37,7 +37,7 @@ interface TransactionConfirmationDrawerProps {
   walletConnectionActive: boolean;
 }
 
-export const TransactionConfirmationDrawer: FC<TransactionConfirmationDrawerProps> = ({
+export const TransactionDrawer: FC<TransactionDrawerProps> = ({
   account,
   amountIn,
   assetIn,

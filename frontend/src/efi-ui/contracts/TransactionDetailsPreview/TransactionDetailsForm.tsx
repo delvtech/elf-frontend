@@ -17,6 +17,9 @@ interface TransactionDetailsFormProps {
   assetOutSymbol: string | undefined;
   amountIn: string | undefined;
   amountOut: string | undefined;
+
+  heading?: string;
+
   /**
    * If provided, this will make the input interactive, otherwise it will be
    * disabled and read-only
@@ -36,6 +39,7 @@ export const TransactionDetailsForm: FC<TransactionDetailsFormProps> = ({
   amountOut,
   assetInSymbol,
   assetOutSymbol,
+  heading = t`Confirm Transaction`,
   onAmountInChange: onAmountInChangeFromProps,
   onAmountOutChange: onAmountOutChangeFromProps,
   children,
@@ -61,9 +65,7 @@ export const TransactionDetailsForm: FC<TransactionDetailsFormProps> = ({
   );
   return (
     <Callout className={tw("flex", "flex-col", "p-8", "space-y-6")}>
-      <span
-        className={classNames("h4", tw("text-center"))}
-      >{t`Confirm Transaction`}</span>
+      <span className={classNames("h4", tw("text-center"))}>{heading}</span>
       <div className={tw("flex", "flex-col", "space-y-4", "items-center")}>
         <div
           className={tw(
