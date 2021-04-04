@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
 
-import { SwapEvent } from "efi-ui/balancer/SwapEvent";
+import { SwapEvent } from "efi-balancer/SwapEvent";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { PoolContract } from "efi/pools/PoolContract";
