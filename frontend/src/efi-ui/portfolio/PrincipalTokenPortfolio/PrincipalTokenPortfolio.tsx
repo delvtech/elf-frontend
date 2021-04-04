@@ -40,7 +40,6 @@ export const PrincipalTokenPortfolio: FC<PrincipalTokenPortfolioProps> = ({
       className={tw(
         "flex",
         "flex-1",
-        "pl-2",
         "flex-wrap",
         "justify-center",
         "items-center"
