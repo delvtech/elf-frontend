@@ -26,12 +26,14 @@ type PoolExitedArguments = [
 ];
 
 /**
- * Returns the amount of liquidity added or removed for each token in a time period.
+ * Returns the amount of liquidity added or removed for each token in a time
+ * period.
  * @param pool contract of the pool to query.
  * @param fromTime time in seconds to query back to from now.
- * @returns {Array<BigNumber>} an array of deltas for each token in the pool over the time period.
+ * @returns {Array<BigNumber>} an array of deltas for each token in the pool
+ * over the time period. values in ascending token address order.
  */
-export function useLiquidityDeltasForPool(
+export function useTokenDeltasForPool(
   pool: PoolContract | undefined,
   fromTime: number = ONE_DAY_IN_SECONDS
 ): BigNumber[] | undefined {
@@ -120,5 +122,6 @@ export function useLiquidityDeltasForPool(
     return amountIn.sub(amountOut);
   });
 
+  // values ordered by ascending token address
   return tokenDeltas;
 }

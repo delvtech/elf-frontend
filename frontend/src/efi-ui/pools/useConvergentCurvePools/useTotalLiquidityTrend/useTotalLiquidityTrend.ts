@@ -2,7 +2,7 @@ import { formatUnits } from "@ethersproject/units";
 
 import { getQueryData } from "efi-ui/base/queryResults";
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
-import { useLiquidityDeltasForPool } from "efi-ui/pools/useLiquidityDeltasForPool/useLiquidityDeltasForPool";
+import { useTokenDeltasForPool } from "efi-ui/pools/useTokenDeltasForPool/useTokenDeltasForPool";
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
@@ -22,7 +22,7 @@ export function useTotalLiquidityTrend(
   const poolTokensResult = usePoolTokens(pool);
   const tokenAddresses = getQueryData(poolTokensResult)?.[0];
   const tokenBalances = getQueryData(poolTokensResult)?.[1];
-  const tokenDeltas = useLiquidityDeltasForPool(pool, fromTime);
+  const tokenDeltas = useTokenDeltasForPool(pool, fromTime);
   const baseAsset = useBaseAssetForPool(pool);
   // assumes that yield asset and base asset have the same decimals
   const [tokenDecimals] = useTokenDecimals(baseAsset);
