@@ -9,7 +9,6 @@ import { MAX_ALLOWANCE } from "src/maxAllowance";
 import { batchSwapIn } from "src/scripts/batchSwapIn";
 import { getContracts } from "src/scripts/getContracts";
 import { getSigner, SIGNER } from "src/scripts/getSigner";
-import { ERC20__factory } from "src/types/factories/ERC20__factory";
 
 async function simpleSwaps() {
   const {
@@ -35,41 +34,22 @@ async function simpleSwaps() {
   await wethTrader1.mint(trader1Address, parseEther("10000"));
   const wethFytPoolId = await marketFyWethContract.connect(trader1).getPoolId();
 
-  await batchSwapIn(
-    wethTrader1,
-    (wethTrancheTrader1 as unknown) as ERC20,
-    wethFytPoolId,
-    trader1Address,
-    bVaultTrader1,
-    "100"
-  );
-  // console.log("doin a swap 2");
-  await batchSwapIn(
-    wethTrader1,
-    (wethTrancheTrader1 as unknown) as ERC20,
-    wethFytPoolId,
-    trader1Address,
-    bVaultTrader1,
-    "100"
-  );
-  // console.log("doin a swap 3");
-  await batchSwapIn(
-    wethTrader1,
-    (wethTrancheTrader1 as unknown) as ERC20,
-    wethFytPoolId,
-    trader1Address,
-    bVaultTrader1,
-    "100"
-  );
-  // console.log("doin a swap 4");
-  await batchSwapIn(
-    (wethTrancheTrader1 as unknown) as ERC20,
-    wethTrader1,
-    wethFytPoolId,
-    trader1Address,
-    bVaultTrader1,
-    "100"
-  );
+  const numSwaps = 4;
+  let count = 0;
+  while (count < numSwaps) {
+    console.log("swap ", count);
+    await batchSwapIn(
+      wethTrader1,
+      (wethTrancheTrader1 as unknown) as ERC20,
+      wethFytPoolId,
+      trader1Address,
+      bVaultTrader1,
+      "100"
+    );
+
+    count += 1;
+  }
+  console.log("count", count);
 }
 
 simpleSwaps()
