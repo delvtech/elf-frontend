@@ -16,4 +16,10 @@ contract WETH is ERC20 {
     function mint(address account, uint256 amount) public {
         _mint(account, amount);
     }
+
+    function withdraw(uint256 amount) public {
+        require(balanceOf(msg.sender) >= amount);
+        _burn(msg.sender, amount);
+        payable(msg.sender).transfer(amount);
+    }
 }
