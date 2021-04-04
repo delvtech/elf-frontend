@@ -5,14 +5,18 @@
 import { Contract, Signer } from "ethers";
 import { Provider } from "@ethersproject/providers";
 
-import type { ERC20WithSupply } from "../ERC20WithSupply";
+import type { ERC20PermitWithSupply } from "../ERC20PermitWithSupply";
 
-export class ERC20WithSupply__factory {
+export class ERC20PermitWithSupply__factory {
   static connect(
     address: string,
     signerOrProvider: Signer | Provider
-  ): ERC20WithSupply {
-    return new Contract(address, _abi, signerOrProvider) as ERC20WithSupply;
+  ): ERC20PermitWithSupply {
+    return new Contract(
+      address,
+      _abi,
+      signerOrProvider
+    ) as ERC20PermitWithSupply;
   }
 }
 

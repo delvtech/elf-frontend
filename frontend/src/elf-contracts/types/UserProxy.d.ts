@@ -29,8 +29,7 @@ interface UserProxyInterface extends ethers.utils.Interface {
     "deprecate()": FunctionFragment;
     "isAuthorized(address)": FunctionFragment;
     "isFrozen()": FunctionFragment;
-    "mint(uint256,address,uint256,address)": FunctionFragment;
-    "mintPermit(uint256,address,uint256,address,uint8,bytes32,bytes32)": FunctionFragment;
+    "mint(uint256,address,uint256,address,tuple[])": FunctionFragment;
     "owner()": FunctionFragment;
     "setIsFrozen(bool)": FunctionFragment;
     "setOwner(address)": FunctionFragment;
@@ -48,18 +47,20 @@ interface UserProxyInterface extends ethers.utils.Interface {
   encodeFunctionData(functionFragment: "isFrozen", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "mint",
-    values: [BigNumberish, string, BigNumberish, string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "mintPermit",
     values: [
       BigNumberish,
       string,
       BigNumberish,
       string,
-      BigNumberish,
-      BytesLike,
-      BytesLike
+      {
+        tokenContract: string;
+        who: string;
+        amount: BigNumberish;
+        expiration: BigNumberish;
+        r: BytesLike;
+        s: BytesLike;
+        v: BigNumberish;
+      }[]
     ]
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
@@ -83,7 +84,6 @@ interface UserProxyInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "isFrozen", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "mintPermit", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "setIsFrozen",
@@ -153,37 +153,33 @@ export class UserProxy extends Contract {
       _underlying: string,
       _expiration: BigNumberish,
       _position: string,
+      _permitCallData: {
+        tokenContract: string;
+        who: string;
+        amount: BigNumberish;
+        expiration: BigNumberish;
+        r: BytesLike;
+        s: BytesLike;
+        v: BigNumberish;
+      }[],
       overrides?: PayableOverrides
     ): Promise<ContractTransaction>;
 
-    "mint(uint256,address,uint256,address)"(
+    "mint(uint256,address,uint256,address,tuple[])"(
       _amount: BigNumberish,
       _underlying: string,
       _expiration: BigNumberish,
       _position: string,
+      _permitCallData: {
+        tokenContract: string;
+        who: string;
+        amount: BigNumberish;
+        expiration: BigNumberish;
+        r: BytesLike;
+        s: BytesLike;
+        v: BigNumberish;
+      }[],
       overrides?: PayableOverrides
-    ): Promise<ContractTransaction>;
-
-    mintPermit(
-      _amount: BigNumberish,
-      _underlying: string,
-      _expiration: BigNumberish,
-      _position: string,
-      _v: BigNumberish,
-      _r: BytesLike,
-      _s: BytesLike,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "mintPermit(uint256,address,uint256,address,uint8,bytes32,bytes32)"(
-      _amount: BigNumberish,
-      _underlying: string,
-      _expiration: BigNumberish,
-      _position: string,
-      _v: BigNumberish,
-      _r: BytesLike,
-      _s: BytesLike,
-      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
@@ -253,37 +249,33 @@ export class UserProxy extends Contract {
     _underlying: string,
     _expiration: BigNumberish,
     _position: string,
+    _permitCallData: {
+      tokenContract: string;
+      who: string;
+      amount: BigNumberish;
+      expiration: BigNumberish;
+      r: BytesLike;
+      s: BytesLike;
+      v: BigNumberish;
+    }[],
     overrides?: PayableOverrides
   ): Promise<ContractTransaction>;
 
-  "mint(uint256,address,uint256,address)"(
+  "mint(uint256,address,uint256,address,tuple[])"(
     _amount: BigNumberish,
     _underlying: string,
     _expiration: BigNumberish,
     _position: string,
+    _permitCallData: {
+      tokenContract: string;
+      who: string;
+      amount: BigNumberish;
+      expiration: BigNumberish;
+      r: BytesLike;
+      s: BytesLike;
+      v: BigNumberish;
+    }[],
     overrides?: PayableOverrides
-  ): Promise<ContractTransaction>;
-
-  mintPermit(
-    _amount: BigNumberish,
-    _underlying: string,
-    _expiration: BigNumberish,
-    _position: string,
-    _v: BigNumberish,
-    _r: BytesLike,
-    _s: BytesLike,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "mintPermit(uint256,address,uint256,address,uint8,bytes32,bytes32)"(
-    _amount: BigNumberish,
-    _underlying: string,
-    _expiration: BigNumberish,
-    _position: string,
-    _v: BigNumberish,
-    _r: BytesLike,
-    _s: BytesLike,
-    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   owner(overrides?: CallOverrides): Promise<string>;
@@ -350,36 +342,32 @@ export class UserProxy extends Contract {
       _underlying: string,
       _expiration: BigNumberish,
       _position: string,
+      _permitCallData: {
+        tokenContract: string;
+        who: string;
+        amount: BigNumberish;
+        expiration: BigNumberish;
+        r: BytesLike;
+        s: BytesLike;
+        v: BigNumberish;
+      }[],
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "mint(uint256,address,uint256,address)"(
+    "mint(uint256,address,uint256,address,tuple[])"(
       _amount: BigNumberish,
       _underlying: string,
       _expiration: BigNumberish,
       _position: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    mintPermit(
-      _amount: BigNumberish,
-      _underlying: string,
-      _expiration: BigNumberish,
-      _position: string,
-      _v: BigNumberish,
-      _r: BytesLike,
-      _s: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "mintPermit(uint256,address,uint256,address,uint8,bytes32,bytes32)"(
-      _amount: BigNumberish,
-      _underlying: string,
-      _expiration: BigNumberish,
-      _position: string,
-      _v: BigNumberish,
-      _r: BytesLike,
-      _s: BytesLike,
+      _permitCallData: {
+        tokenContract: string;
+        who: string;
+        amount: BigNumberish;
+        expiration: BigNumberish;
+        r: BytesLike;
+        s: BytesLike;
+        v: BigNumberish;
+      }[],
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -447,37 +435,33 @@ export class UserProxy extends Contract {
       _underlying: string,
       _expiration: BigNumberish,
       _position: string,
+      _permitCallData: {
+        tokenContract: string;
+        who: string;
+        amount: BigNumberish;
+        expiration: BigNumberish;
+        r: BytesLike;
+        s: BytesLike;
+        v: BigNumberish;
+      }[],
       overrides?: PayableOverrides
     ): Promise<BigNumber>;
 
-    "mint(uint256,address,uint256,address)"(
+    "mint(uint256,address,uint256,address,tuple[])"(
       _amount: BigNumberish,
       _underlying: string,
       _expiration: BigNumberish,
       _position: string,
+      _permitCallData: {
+        tokenContract: string;
+        who: string;
+        amount: BigNumberish;
+        expiration: BigNumberish;
+        r: BytesLike;
+        s: BytesLike;
+        v: BigNumberish;
+      }[],
       overrides?: PayableOverrides
-    ): Promise<BigNumber>;
-
-    mintPermit(
-      _amount: BigNumberish,
-      _underlying: string,
-      _expiration: BigNumberish,
-      _position: string,
-      _v: BigNumberish,
-      _r: BytesLike,
-      _s: BytesLike,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "mintPermit(uint256,address,uint256,address,uint8,bytes32,bytes32)"(
-      _amount: BigNumberish,
-      _underlying: string,
-      _expiration: BigNumberish,
-      _position: string,
-      _v: BigNumberish,
-      _r: BytesLike,
-      _s: BytesLike,
-      overrides?: Overrides
     ): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
@@ -554,37 +538,33 @@ export class UserProxy extends Contract {
       _underlying: string,
       _expiration: BigNumberish,
       _position: string,
+      _permitCallData: {
+        tokenContract: string;
+        who: string;
+        amount: BigNumberish;
+        expiration: BigNumberish;
+        r: BytesLike;
+        s: BytesLike;
+        v: BigNumberish;
+      }[],
       overrides?: PayableOverrides
     ): Promise<PopulatedTransaction>;
 
-    "mint(uint256,address,uint256,address)"(
+    "mint(uint256,address,uint256,address,tuple[])"(
       _amount: BigNumberish,
       _underlying: string,
       _expiration: BigNumberish,
       _position: string,
+      _permitCallData: {
+        tokenContract: string;
+        who: string;
+        amount: BigNumberish;
+        expiration: BigNumberish;
+        r: BytesLike;
+        s: BytesLike;
+        v: BigNumberish;
+      }[],
       overrides?: PayableOverrides
-    ): Promise<PopulatedTransaction>;
-
-    mintPermit(
-      _amount: BigNumberish,
-      _underlying: string,
-      _expiration: BigNumberish,
-      _position: string,
-      _v: BigNumberish,
-      _r: BytesLike,
-      _s: BytesLike,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "mintPermit(uint256,address,uint256,address,uint8,bytes32,bytes32)"(
-      _amount: BigNumberish,
-      _underlying: string,
-      _expiration: BigNumberish,
-      _position: string,
-      _v: BigNumberish,
-      _r: BytesLike,
-      _s: BytesLike,
-      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
