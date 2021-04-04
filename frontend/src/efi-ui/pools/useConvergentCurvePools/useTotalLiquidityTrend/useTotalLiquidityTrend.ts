@@ -1,10 +1,10 @@
-import { formatUnits } from "@ethersproject/units";
+import { formatUnits } from "ethers/lib/utils";
 
 import { getQueryData } from "efi-ui/base/queryResults";
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
-import { useTokenDeltasForPool } from "efi-ui/pools/useTokenDeltasForPool/useTokenDeltasForPool";
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
+import { useTokenDeltasForPool } from "efi-ui/pools/useTokenDeltasForPool/useTokenDeltasForPool";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
 import { PoolContract } from "efi/pools/PoolContract";
