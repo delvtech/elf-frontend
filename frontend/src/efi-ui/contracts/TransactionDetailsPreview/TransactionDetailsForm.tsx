@@ -81,6 +81,7 @@ export const TransactionDetailsForm: FC<TransactionDetailsFormProps> = ({
           <InputGroup
             large
             fill
+            placeholder="0.00"
             disabled={!onAmountInChangeFromProps}
             onChange={onAmountInChange}
             className={classNames(tw("col-span-5"), styles.inputWithIcon, {
@@ -126,6 +127,7 @@ export const TransactionDetailsForm: FC<TransactionDetailsFormProps> = ({
               </div>
             }
             value={amountOut}
+            placeholder="0.00"
             rightElement={
               <div className={tw("flex", "items-center", "px-3")}>
                 {assetOutSymbol}

@@ -24,7 +24,6 @@ import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { calculatePurchasePrice } from "efi/pools/calculatePurchasePrice";
 import { calculateSlippage } from "efi/pools/calculateSlippage";
 import { PoolContract } from "efi/pools/PoolContract";
-import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { ERC20 } from "elf-contracts/types/ERC20";
 
@@ -61,7 +60,6 @@ export const SellPrincipalTokensTransactionDrawer: FC<SellPrincipalTransactionDr
   const baseAssetDecimals = useCryptoDecimals(baseAsset);
 
   // tranche calls
-  const { data: trancheSymbol } = useSmartContractReadCall(tranche, "symbol");
   const { data: trancheUnlockTimestamp } = useSmartContractReadCall(
     tranche,
     "unlockTimestamp"
@@ -148,7 +146,7 @@ export const SellPrincipalTokensTransactionDrawer: FC<SellPrincipalTransactionDr
           amountOut={amountOutFormatted}
           onAmountInChange={onAmountInChange}
           onAmountOutChange={onAmountOutChange}
-          heading={t`Sell ${baseAssetSymbol} Principal Tokens`}
+          heading={t`Enter an amount to sell`}
           assetInIcon={null}
           assetInSymbol={`${baseAssetSymbol} Principal Token`}
           assetOutIcon={AssetIcon}
