@@ -13,6 +13,10 @@ import { formatUnits, parseUnits } from "ethers/lib/utils";
  * to minimize slippage in the value.
  *
  * NOTE: When using this with a tranche pool, pass the base asset as the underlying token.
+ * returns ratio = yield / base, therefore to convert between base and yield assets:
+ *
+ * base = yield / ratio
+ * yield = base * ratio
  */
 export function usePoolSpotPrice(
   pool: PoolContract | undefined,
