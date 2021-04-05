@@ -1,6 +1,11 @@
 import "module-alias/register";
 
 import fs from "fs";
+import hre from "hardhat";
+
+import { deployConvergentPoolFactory } from "src/scripts/deployConvergentPoolFactory";
+import { deployInterestTokenFactory } from "src/scripts/deployInterestTokenFactory";
+import { deployTrancheFactory } from "src/scripts/deployTrancheFactory";
 
 import { deployBalancerVault } from "./balancerV2Vault";
 import { deployBaseAssets } from "./baseAssets";
@@ -10,14 +15,11 @@ import { deployWeightedPoolFactory } from "./deployWeightedPoolFactory";
 import { getSigner, SIGNER } from "./getSigner";
 import { mintTokensForAddress } from "./mintTokensForAddress";
 import { deployUserProxy } from "./userProxy";
-import { deployInterestTokenFactory } from "src/scripts/deployInterestTokenFactory";
-import { deployTrancheFactory } from "src/scripts/deployTrancheFactory";
-import { deployConvergentPoolFactory } from "src/scripts/deployConvergentPoolFactory";
 
 async function main() {
-  const elementSigner = await getSigner(SIGNER.ELEMENT);
-  const balancerSigner = await getSigner(SIGNER.ELEMENT);
-  const userSigner = await getSigner(SIGNER.USER);
+  const elementSigner = await getSigner(SIGNER.ELEMENT, hre);
+  const balancerSigner = await getSigner(SIGNER.ELEMENT, hre);
+  const userSigner = await getSigner(SIGNER.USER, hre);
   const elementAddress = await elementSigner.getAddress();
   const balancerAddress = await balancerSigner.getAddress();
   const userAddress = await userSigner.getAddress();
@@ -164,6 +166,7 @@ async function main() {
   );
   console.log("addresses", addresses);
   fs.writeFileSync("./addresses.json", addresses);
+  fs.writeFileSync("./src/addresses.json", addresses);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

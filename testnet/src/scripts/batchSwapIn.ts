@@ -1,5 +1,5 @@
 import { BytesLike } from "@ethersproject/bytes";
-import { BigNumber, BigNumberish } from "ethers";
+import { BigNumber, BigNumberish, PayableOverrides } from "ethers";
 import { parseEther, parseUnits } from "ethers/lib/utils";
 
 import { ERC20 } from "src/types/ERC20";
@@ -27,11 +27,16 @@ export async function batchSwapIn(
   poolId: string,
   sender: string,
   balancerVaultContract: Vault,
-  swapInAmount: string
+  swapInAmount: string,
+  decimals?: number
 ) {
   const tokenInAddress = tokenInContract.address;
   const tokenOutAddress = tokenOutContract.address;
-  const tokenInDecimals = await tokenInContract.decimals();
+
+  let tokenInDecimals = decimals;
+  if (!decimals) {
+    tokenInDecimals = await tokenInContract.decimals();
+  }
 
   const tokens: string[] = [tokenInAddress, tokenOutAddress].sort();
   const tokenInIndex = tokens.findIndex(

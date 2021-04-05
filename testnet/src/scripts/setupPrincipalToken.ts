@@ -53,7 +53,6 @@ export async function setupPrincipalTokenPool(
 
   await printSpotPriceForPool(balancerVaultContract, poolId, signer);
   await printTokenInfoForPool(balancerVaultContract, poolId, signer);
-  console.log("");
 
   await swapReceipt.wait(1);
   return swapReceipt;
