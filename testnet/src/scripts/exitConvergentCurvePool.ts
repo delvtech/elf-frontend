@@ -51,7 +51,7 @@ export async function exitConvergentCurvePool(
 
   // Balancer V2 vault allows userData as a way to pass props through to pool contracts.  In our
   // case we need to pass the maxAmountsIn.
-  const userData = abi.rawEncode(["uint256", "uint256"], amounts);
+  const userData = abi.rawEncode(["uint256[]"], [amounts]);
 
   const joinReceipt = await vaultContract.exitPool(
     poolId,

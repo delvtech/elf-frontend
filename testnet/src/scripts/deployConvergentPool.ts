@@ -61,9 +61,6 @@ export async function deployConvergentPool(
     poolAddress,
     signer
   );
-  const decimals = await poolContract.decimals();
-  const udecimals = await poolContract.underlyingDecimals();
-  const bdecimals = await poolContract.bondDecimals();
 
   return { poolId, poolContract };
 }
