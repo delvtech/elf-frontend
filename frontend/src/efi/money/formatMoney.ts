@@ -9,6 +9,7 @@ export function formatMoney(
   money: Money | undefined,
   defaultValue = "0.00"
 ): string {
+  // TODO: Make this return undefined
   if (!money) {
     return `$${defaultValue}`;
   }

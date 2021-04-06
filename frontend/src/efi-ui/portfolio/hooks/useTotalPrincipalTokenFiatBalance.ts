@@ -24,7 +24,6 @@ export function useFiatBalanceAllTranches(
     wethTranche,
     currency
   );
-  console.log("wethTrancheFiatBalance", wethTrancheFiatBalance);
 
   const totalFiatBalance = calculateTotalFiatBalance(
     [
