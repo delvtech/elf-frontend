@@ -7,7 +7,6 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { formatMoney } from "efi/money/formatMoney";
-import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 
 interface PortfolioAssetLabelProps {
   id: string;
@@ -22,8 +21,7 @@ export const PortfolioAssetLabel: FC<PortfolioAssetLabelProps> = ({
   name,
   totalFiatValue,
 }) => {
-  const { currency } = useCurrencyPref();
-  const quantityLabel = `${currency.symbol}${formatMoney(totalFiatValue)}`;
+  const quantityLabel = formatMoney(totalFiatValue);
   return (
     <div
       className={tw(

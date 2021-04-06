@@ -10,7 +10,16 @@ export function usePoolTokenPrices(
   pool: PoolContract | undefined,
   baseAssetToken: ERC20 | undefined
 ): PoolTokenPrices {
+  // spot price will be zero while we wait for it to load, maybe change this
+  // behavior in usePoolSpotPrice to return undefined instead?
   const spotPriceTokenForOneBaseAsset = usePoolSpotPrice(pool, baseAssetToken);
+  if (spotPriceTokenForOneBaseAsset === 0) {
+    return {
+      spotPriceBaseAssetForOneToken: undefined,
+      spotPriceTokenForOneBaseAsset: undefined,
+    };
+  }
+
   const spotPriceBaseAssetForOneToken = 1 / spotPriceTokenForOneBaseAsset;
 
   return {
