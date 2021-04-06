@@ -55,7 +55,7 @@ export const YieldTokenPreview: FC<YieldTokenPreviewProps> = ({
           "flex-col-reverse",
           "items-center"
         )}
-        label={t`Yield Tokens`}
+        label={<span className={tw("text-base")}>{t`Yield Tokens`}</span>}
         textClassName={tw("text-lg")}
         text={
           !amountIn ? (

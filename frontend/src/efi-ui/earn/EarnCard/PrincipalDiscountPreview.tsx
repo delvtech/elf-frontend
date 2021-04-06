@@ -54,7 +54,7 @@ export const PrincipalDiscountPreview: FC<PrincipalDiscountPreviewProps> = ({
           "flex-col-reverse",
           "items-center"
         )}
-        label={t`Yield at term`}
+        label={<span className={tw("text-base")}>{t`Yield at term`}</span>}
         textClassName={tw("text-lg")}
         text={
           !amountIn ? (

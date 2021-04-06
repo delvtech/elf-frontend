@@ -54,7 +54,7 @@ export const PrincipalTokenPreview: FC<PrincipalTokenPreviewProps> = ({
           "flex-col-reverse",
           "items-center"
         )}
-        label={t`Principal Tokens`}
+        label={<span className={tw("text-base")}>{t`Principal Tokens`}</span>}
         textClassName={tw("text-lg")}
         text={
           !amountIn ? (
