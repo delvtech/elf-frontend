@@ -24,6 +24,7 @@ interface TestVaultInterface extends ethers.utils.Interface {
   functions: {
     "pool()": FunctionFragment;
     "registerPool(uint8)": FunctionFragment;
+    "registerTokens(bytes32,address[],address[])": FunctionFragment;
     "setPool(address)": FunctionFragment;
   };
 
@@ -32,11 +33,19 @@ interface TestVaultInterface extends ethers.utils.Interface {
     functionFragment: "registerPool",
     values: [BigNumberish]
   ): string;
+  encodeFunctionData(
+    functionFragment: "registerTokens",
+    values: [BytesLike, string[], string[]]
+  ): string;
   encodeFunctionData(functionFragment: "setPool", values: [string]): string;
 
   decodeFunctionResult(functionFragment: "pool", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "registerPool",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "registerTokens",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "setPool", data: BytesLike): Result;
@@ -64,13 +73,27 @@ export class TestVault extends Contract {
 
     registerPool(
       arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
 
     "registerPool(uint8)"(
       arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    registerTokens(
+      arg0: BytesLike,
+      arg1: string[],
+      arg2: string[],
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "registerTokens(bytes32,address[],address[])"(
+      arg0: BytesLike,
+      arg1: string[],
+      arg2: string[],
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
 
     setPool(_pool: string, overrides?: Overrides): Promise<ContractTransaction>;
 
@@ -84,12 +107,29 @@ export class TestVault extends Contract {
 
   "pool()"(overrides?: CallOverrides): Promise<string>;
 
-  registerPool(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
+  registerPool(
+    arg0: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
 
   "registerPool(uint8)"(
     arg0: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<string>;
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  registerTokens(
+    arg0: BytesLike,
+    arg1: string[],
+    arg2: string[],
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "registerTokens(bytes32,address[],address[])"(
+    arg0: BytesLike,
+    arg1: string[],
+    arg2: string[],
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
 
   setPool(_pool: string, overrides?: Overrides): Promise<ContractTransaction>;
 
@@ -113,6 +153,20 @@ export class TestVault extends Contract {
       overrides?: CallOverrides
     ): Promise<string>;
 
+    registerTokens(
+      arg0: BytesLike,
+      arg1: string[],
+      arg2: string[],
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "registerTokens(bytes32,address[],address[])"(
+      arg0: BytesLike,
+      arg1: string[],
+      arg2: string[],
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     setPool(_pool: string, overrides?: CallOverrides): Promise<void>;
 
     "setPool(address)"(_pool: string, overrides?: CallOverrides): Promise<void>;
@@ -125,14 +179,25 @@ export class TestVault extends Contract {
 
     "pool()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-    registerPool(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    registerPool(arg0: BigNumberish, overrides?: Overrides): Promise<BigNumber>;
 
     "registerPool(uint8)"(
       arg0: BigNumberish,
-      overrides?: CallOverrides
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    registerTokens(
+      arg0: BytesLike,
+      arg1: string[],
+      arg2: string[],
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "registerTokens(bytes32,address[],address[])"(
+      arg0: BytesLike,
+      arg1: string[],
+      arg2: string[],
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     setPool(_pool: string, overrides?: Overrides): Promise<BigNumber>;
@@ -150,12 +215,26 @@ export class TestVault extends Contract {
 
     registerPool(
       arg0: BigNumberish,
-      overrides?: CallOverrides
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     "registerPool(uint8)"(
       arg0: BigNumberish,
-      overrides?: CallOverrides
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    registerTokens(
+      arg0: BytesLike,
+      arg1: string[],
+      arg2: string[],
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "registerTokens(bytes32,address[],address[])"(
+      arg0: BytesLike,
+      arg1: string[],
+      arg2: string[],
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     setPool(
