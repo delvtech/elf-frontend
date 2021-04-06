@@ -86,6 +86,22 @@ async function main() {
     { mintAmount: "20000", baseAssetIn: "20000", yieldAssetIn: "10000" }
   );
 
+  await deployTrancheAndMarket(
+    elementSigner,
+    trancheFactory,
+    wethYearnVaultAssetProxy,
+    wethContract,
+    balancerVaultContract,
+    convergentPoolFactory,
+    weightedPoolFactory,
+    {
+      mintAmount: "20000",
+      baseAssetIn: "20000",
+      yieldAssetIn: "13000",
+      durationInSeconds: 120,
+    }
+  );
+
   const {
     trancheContract: usdcTrancheContract,
     fytPoolContract: usdcFytPoolContract,
