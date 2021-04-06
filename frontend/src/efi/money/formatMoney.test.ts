@@ -3,7 +3,11 @@ import { Currencies, Money } from "ts-money";
 import { formatMoney } from "efi/money/formatMoney";
 
 test("should format undefined balance correctly", () => {
-  expect(formatMoney(undefined)).toEqual("$0.00");
+  expect(formatMoney(undefined)).toEqual(undefined);
+});
+
+test("should format to default value correctly", () => {
+  expect(formatMoney(undefined, new Money(0, Currencies.USD))).toEqual("$0.00");
 });
 
 test("should format zero balance correctly", () => {
