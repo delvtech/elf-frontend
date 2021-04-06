@@ -1,4 +1,4 @@
-import { FC, Fragment } from "react";
+import React, { FC, Fragment } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
 import { RouteComponentProps } from "@reach/router";
@@ -12,6 +12,7 @@ import { MintCard } from "efi-ui/mint/MintCard/MintCard";
 import { useTrancheContracts } from "efi-ui/tranche/useTrancheContracts";
 import { useBaseAssetsForTranches } from "efi-ui/tranche/useBaseAssetsForTranches";
 import { useTranchesByBaseAsset } from "efi-ui/earn/hooks/useTranchesByBaseAsset";
+import { Intent, Tag } from "@blueprintjs/core";
 
 interface MintViewProps extends RouteComponentProps {}
 
@@ -60,8 +61,9 @@ export const MintView: FC<MintViewProps> = () => {
         >
           {/* page title */}
           <ViewTitle
-            title={t`Earn fixed yield by buying at a discount.`}
-            subtitle={<MintViewSubtitle />}
+            title={t`Stay liquid with Principal and Yield Tokens`}
+            titleTag={<Tag minimal intent={Intent.WARNING}>{t`alpha`}</Tag>}
+            subtitle={<EarnViewSubtitle />}
           />
           <MintCard
             library={library}
@@ -78,7 +80,7 @@ export const MintView: FC<MintViewProps> = () => {
   );
 };
 
-const MintViewSubtitle: FC = () => {
+const EarnViewSubtitle: FC = () => {
   const mintingLink = (
     <a key="minting-link" href={"/"}>
       {t`Read more about Minting.`}
@@ -86,6 +88,6 @@ const MintViewSubtitle: FC = () => {
   );
 
   return (
-    <Fragment>{jt`Principal tokens are redeemable one-to-one with their base asset once they have reached their maturity date. ${mintingLink}`}</Fragment>
+    <Fragment>{jt`Deposit into a high-interest DeFi yield position and receive Principal and Yield tokens which can be traded at any time. ${mintingLink}`}</Fragment>
   );
 };

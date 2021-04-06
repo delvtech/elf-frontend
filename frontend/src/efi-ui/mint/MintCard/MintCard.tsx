@@ -123,6 +123,44 @@ export const MintCard: FC<MintCardProps> = ({
           <div className={tw("flex", "justify-between")}>
             <span
               className={classNames(tw("text-base"), Classes.TEXT_MUTED)}
+            >{t`To`}</span>
+            <span className={classNames(tw("text-base"), Classes.TEXT_MUTED)}>
+              {marketRateLabel}
+            </span>
+          </div>
+          <div
+            className={tw(
+              "flex",
+              "space-x-1",
+              "h-24",
+              "border",
+              "rounded",
+              "border-gray-500"
+            )}
+          >
+            <EarnInput
+              showMaxButton={false}
+              assetPicker={
+                <TranchePicker
+                  library={library}
+                  account={account}
+                  onTrancheChange={setActiveTranche}
+                  baseAsset={activeBaseAsset}
+                  tranches={availableTranches}
+                  activeTrancheIndex={activeTrancheIndex}
+                />
+              }
+              placeholder="0.00"
+              value={amountOut}
+              onValueChange={onAmountOutChange}
+              assetBalance={activeBaseAssetBalance}
+            />
+          </div>
+        </div>
+        <div className={tw("flex", "flex-col", "space-y-2")}>
+          <div className={tw("flex", "justify-between")}>
+            <span
+              className={classNames(tw("text-base"), Classes.TEXT_MUTED)}
             >{t`From`}</span>
             {!!account && (
               <span
@@ -154,44 +192,6 @@ export const MintCard: FC<MintCardProps> = ({
               placeholder="0.00"
               value={amountIn}
               onValueChange={onAmountInChange}
-              assetBalance={activeBaseAssetBalance}
-            />
-          </div>
-        </div>
-        <div className={tw("flex", "flex-col", "space-y-2")}>
-          <div className={tw("flex", "justify-between")}>
-            <span
-              className={classNames(tw("text-base"), Classes.TEXT_MUTED)}
-            >{t`To`}</span>
-            <span className={classNames(tw("text-base"), Classes.TEXT_MUTED)}>
-              {marketRateLabel}
-            </span>
-          </div>
-          <div
-            className={tw(
-              "flex",
-              "space-x-1",
-              "h-24",
-              "border",
-              "rounded",
-              "border-gray-500"
-            )}
-          >
-            <EarnInput
-              showMaxButton={false}
-              assetPicker={
-                <TranchePicker
-                  library={library}
-                  account={account}
-                  onTrancheChange={setActiveTranche}
-                  baseAsset={activeBaseAsset}
-                  tranches={availableTranches}
-                  activeTrancheIndex={activeTrancheIndex}
-                />
-              }
-              placeholder="0.00"
-              value={amountOut}
-              onValueChange={onAmountOutChange}
               assetBalance={activeBaseAssetBalance}
             />
           </div>
