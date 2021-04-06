@@ -8,7 +8,7 @@ import { tw } from "efi-tailwindcss-classnames";
 import { ExchangeView } from "efi-ui/exchange/ExchangeView/ExchangeView";
 import { FAQView } from "efi-ui/faq/FAQView";
 import { EarnView } from "efi-ui/earn/EarnView/EarnView";
-import { MarketView } from "efi-ui/markets/MarketView/MarketView";
+import { PoolView } from "efi-ui/pools/PoolView/PoolView";
 import { MintView } from "efi-ui/mint/MintView/MintView";
 import { MainNavigation } from "efi-ui/navigation/MainNavigation/MainNavigation";
 import { Navigation } from "efi-ui/navigation/navigation";
@@ -57,7 +57,7 @@ const App: FC<AppProps> = () => {
           <PortfolioView path={Navigation.PORTFOLIO} />
           <EarnView path={Navigation.EARN} />
           <ExchangeView path={Navigation.EXCHANGE} />
-          <MarketView path={`${Navigation.EXCHANGE}/:poolAddress`} />
+          <PoolView path={`${Navigation.EXCHANGE}/:poolAddress`} />
           <MintView path={Navigation.MINT} />
           <FAQView path={Navigation.FAQ} />
         </Router>

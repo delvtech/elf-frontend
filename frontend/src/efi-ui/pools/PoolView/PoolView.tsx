@@ -16,11 +16,11 @@ import { getConnectorName } from "efi/wallets/connectors";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { getQueryData } from "efi-ui/base/queryResults";
 
-interface MarketViewProps extends RouteComponentProps {
+interface PoolViewProps extends RouteComponentProps {
   poolAddress?: string;
 }
 
-export const MarketView: FC<MarketViewProps> = ({ poolAddress }) => {
+export const PoolView: FC<PoolViewProps> = ({ poolAddress }) => {
   const {
     active,
     account,
@@ -40,7 +40,7 @@ export const MarketView: FC<MarketViewProps> = ({ poolAddress }) => {
 
   return (
     <div
-      data-testid="market-view"
+      data-testid="pool-view"
       className={tw("flex", "p-12", "h-full", "space-x-12", "overflow-scroll")}
     >
       {/* Main content */}
@@ -55,7 +55,7 @@ export const MarketView: FC<MarketViewProps> = ({ poolAddress }) => {
                 Classes.TEXT_MUTED,
                 tw("text-base")
               )}
-            >{t`Trade for either asset or provide liquidity for this market.`}</span>
+            >{t`Trade for either asset or provide liquidity for this pool.`}</span>
           </div>
           <WalletConnectionCard
             active={active}
