@@ -22,6 +22,8 @@ import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 
 interface TestConvergentCurvePoolInterface extends ethers.utils.Interface {
   functions: {
+    "EPSILON()": FunctionFragment;
+    "FEE_BOUND()": FunctionFragment;
     "allowance(address,address)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "assignTradeFee(uint256,uint256,address,bool)": FunctionFragment;
@@ -67,6 +69,8 @@ interface TestConvergentCurvePoolInterface extends ethers.utils.Interface {
     "unitSeconds()": FunctionFragment;
   };
 
+  encodeFunctionData(functionFragment: "EPSILON", values?: undefined): string;
+  encodeFunctionData(functionFragment: "FEE_BOUND", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "allowance",
     values: [string, string]
@@ -284,6 +288,8 @@ interface TestConvergentCurvePoolInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
 
+  decodeFunctionResult(functionFragment: "EPSILON", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "FEE_BOUND", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(
@@ -410,6 +416,14 @@ export class TestConvergentCurvePool extends Contract {
   interface: TestConvergentCurvePoolInterface;
 
   functions: {
+    EPSILON(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "EPSILON()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    FEE_BOUND(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "FEE_BOUND()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     allowance(
       owner: string,
       spender: string,
@@ -891,6 +905,14 @@ export class TestConvergentCurvePool extends Contract {
 
     "unitSeconds()"(overrides?: CallOverrides): Promise<[BigNumber]>;
   };
+
+  EPSILON(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "EPSILON()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+  FEE_BOUND(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "FEE_BOUND()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   allowance(
     owner: string,
@@ -1374,6 +1396,14 @@ export class TestConvergentCurvePool extends Contract {
   "unitSeconds()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   callStatic: {
+    EPSILON(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "EPSILON()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    FEE_BOUND(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "FEE_BOUND()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     allowance(
       owner: string,
       spender: string,
@@ -1889,6 +1919,14 @@ export class TestConvergentCurvePool extends Contract {
   };
 
   estimateGas: {
+    EPSILON(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "EPSILON()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    FEE_BOUND(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "FEE_BOUND()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     allowance(
       owner: string,
       spender: string,
@@ -2372,6 +2410,14 @@ export class TestConvergentCurvePool extends Contract {
   };
 
   populateTransaction: {
+    EPSILON(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "EPSILON()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    FEE_BOUND(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "FEE_BOUND()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     allowance(
       owner: string,
       spender: string,
