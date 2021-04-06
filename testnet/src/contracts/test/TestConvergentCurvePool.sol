@@ -50,7 +50,7 @@ contract TestConvergentCurvePool is ConvergentCurvePool {
             source
         );
         // We use this to return because returndata from state changing tx isn't easily accessible.
-        emit UIntReturn(outputs[underlyingIndex]);
+        emit UIntReturn(outputs[baseIndex]);
         emit UIntReturn(outputs[bondIndex]);
     }
 
@@ -68,7 +68,7 @@ contract TestConvergentCurvePool is ConvergentCurvePool {
             recipient
         );
         // We use this to return because returndata from state changing tx isn't easily accessible.
-        emit UIntReturn(amountsIn[underlyingIndex]);
+        emit UIntReturn(amountsIn[baseIndex]);
         emit UIntReturn(amountsIn[bondIndex]);
     }
 
@@ -218,7 +218,7 @@ contract TestConvergentCurvePool is ConvergentCurvePool {
         uint256 amount,
         uint8 decimalsBefore,
         uint8 decimalsAfter
-    ) public view returns (uint256) {
+    ) public pure returns (uint256) {
         return _normalize(amount, decimalsBefore, decimalsAfter);
     }
 }
