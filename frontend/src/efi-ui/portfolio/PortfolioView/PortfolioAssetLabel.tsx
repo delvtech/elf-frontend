@@ -12,8 +12,7 @@ interface PortfolioAssetLabelProps {
   id: string;
   name: string;
   quantity: number;
-
-  totalFiatValue: Money | undefined;
+  totalFiatValue: Money;
 }
 
 export const PortfolioAssetLabel: FC<PortfolioAssetLabelProps> = ({

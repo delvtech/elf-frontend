@@ -11,7 +11,7 @@ export interface PortfolioTab {
   name: string;
   quantity: number;
 
-  totalFiatValue: Money | undefined;
+  totalFiatValue: Money;
   contentRenderer: (tab: PortfolioTab) => ReactNode;
 }
 

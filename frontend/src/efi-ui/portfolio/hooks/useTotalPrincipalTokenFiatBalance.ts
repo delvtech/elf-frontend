@@ -10,7 +10,7 @@ import { Web3Provider } from "@ethersproject/providers";
 export function useFiatBalanceAllTranches(
   library: Web3Provider | undefined,
   account: string | null | undefined
-): Money | undefined {
+): Money {
   const { currency } = useCurrencyPref();
 
   const wethTranche = useSmartContractFromFactory(
@@ -34,7 +34,7 @@ export function useFiatBalanceAllTranches(
     currency
   );
 
-  return totalFiatBalance;
+  return totalFiatBalance ?? new Money(0, currency);
 }
 
 function calculateTotalFiatBalance(
