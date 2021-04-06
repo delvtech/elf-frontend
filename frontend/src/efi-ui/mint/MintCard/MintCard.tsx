@@ -27,6 +27,8 @@ import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolToken
 import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
 import { BuyPrincipalTokensTransactionConfirmationDrawer } from "efi-ui/tranche/BuyPrincipalTokensTransactionConfirmationDrawer/BuyPrincipalTokensTransactionConfirmationDrawer";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
+import { PrincipalTokenPreview } from "efi-ui/mint/MintCard/PrincipalTokenPreview";
+import { YieldTokenPreview } from "efi-ui/mint/MintCard/YieldTokenPreview";
 
 export interface MintCardProps {
   library: Web3Provider | undefined;
@@ -123,7 +125,7 @@ export const MintCard: FC<MintCardProps> = ({
           <div className={tw("flex", "justify-between")}>
             <span
               className={classNames(tw("text-base"), Classes.TEXT_MUTED)}
-            >{t`To`}</span>
+            >{t`Term and Vault`}</span>
             <span className={classNames(tw("text-base"), Classes.TEXT_MUTED)}>
               {marketRateLabel}
             </span>
@@ -161,7 +163,7 @@ export const MintCard: FC<MintCardProps> = ({
           <div className={tw("flex", "justify-between")}>
             <span
               className={classNames(tw("text-base"), Classes.TEXT_MUTED)}
-            >{t`From`}</span>
+            >{t`Deposit`}</span>
             {!!account && (
               <span
                 className={classNames(tw("text-base"), Classes.TEXT_MUTED)}
@@ -198,23 +200,29 @@ export const MintCard: FC<MintCardProps> = ({
         </div>
 
         <div className={tw("flex", "space-x-10", "h-24", "mt-10")}>
-          <PrincipalDiscountPreview
+          <PrincipalTokenPreview
             amountIn={amountInAsBigNumber}
             baseAssetSymbol={activeBaseAssetSymbol}
             amountOut={amountOutAsBigNumber}
             baseAssetDecimals={activeBaseAssetDecimals}
           />
-          <Button
-            large
-            outlined
-            intent={Intent.PRIMARY}
-            className={tw("flex-1")}
-            disabled={!amountIn}
-            onClick={() => setDrawerOpen(true)}
-          >
-            <div className={tw("p-4", "text-lg")}>{t`Buy`}</div>
-          </Button>
+          <YieldTokenPreview
+            amountIn={amountInAsBigNumber}
+            baseAssetSymbol={activeBaseAssetSymbol}
+            amountOut={amountOutAsBigNumber}
+            baseAssetDecimals={activeBaseAssetDecimals}
+          />
         </div>
+        <Button
+          large
+          outlined
+          intent={Intent.PRIMARY}
+          className={tw("flex-1")}
+          disabled={!amountIn}
+          onClick={() => setDrawerOpen(true)}
+        >
+          <div className={tw("p-4", "text-lg")}>{t`Mint`}</div>
+        </Button>
       </Card>
 
       {!activeBaseAsset ? null : (
