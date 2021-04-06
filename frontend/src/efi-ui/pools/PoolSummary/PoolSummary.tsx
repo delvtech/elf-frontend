@@ -9,14 +9,14 @@ import tw from "efi-tailwindcss-classnames";
 import { formatMoney } from "efi/money/formatMoney";
 import { formatPercent } from "efi/base/formatPercent";
 
-interface MarketSummaryProps {
+interface PoolSummaryProps {
   totalLiquidity: Money | undefined;
   liquidityTrend: number | undefined;
   tradeVolume: Money | undefined;
   swapVolume: Money | undefined;
 }
 
-export const MarketSummary: FC<MarketSummaryProps> = (props) => {
+export const PoolSummary: FC<PoolSummaryProps> = (props) => {
   const { totalLiquidity, liquidityTrend, tradeVolume, swapVolume } = props;
 
   return (

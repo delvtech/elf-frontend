@@ -11,7 +11,7 @@ import { useSmartContractsFromFactory } from "efi-ui/contracts/useSmartContracts
 import { FixedYieldSummary } from "efi-ui/markets/FixedYieldSummary/FixedYieldSummary";
 import { PoolActionsCard } from "efi-ui/markets/MarketActionsCard/PoolActionsCard";
 import { MarketHistory } from "efi-ui/markets/MarketHistory/MarketHistory";
-import { MarketSummary } from "efi-ui/markets/MarketSummary/MarketSummary";
+import { PoolSummary } from "efi-ui/pools/PoolSummary/PoolSummary";
 import { TokenSummary } from "efi-ui/markets/TokenSummary/TokenSummary";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useSwapFee } from "efi-ui/pools/useSwapFee/useSwapFee";
@@ -65,7 +65,7 @@ export const PoolDetails: FC<PoolDetailsProps> = ({
       <div className={tw("flex", "flex-1")}>
         <div className={tw("flex", "flex-col", "space-y-8", "w-full")}>
           <div className={tw("flex", "space-x-12")}>
-            <MarketSummary
+            <PoolSummary
               tradeVolume={volume}
               swapVolume={swapVolume}
               totalLiquidity={totalLiquidity}

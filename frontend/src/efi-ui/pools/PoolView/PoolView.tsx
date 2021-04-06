@@ -9,7 +9,7 @@ import { Signer } from "ethers";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { PoolDetails } from "efi-ui/markets/MarketDetails/PoolDetails";
+import { PoolDetails } from "efi-ui/pools/PoolDetails/PoolDetails";
 import { useAllPools } from "efi-ui/pools/useAllPools/useAllPools";
 import { WalletConnectionCard } from "efi-ui/wallets/WalletConnectionCard/WalletConnectionCard";
 import { getConnectorName } from "efi/wallets/connectors";
