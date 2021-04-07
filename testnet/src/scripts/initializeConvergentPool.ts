@@ -65,14 +65,18 @@ export async function initializeConvergentPool(
   // case we need to pass the maxAmountsIn.
   const userData = abi.rawEncode(["uint256[]"], [amounts]);
 
+  const joinRequest = {
+    assets: tokens,
+    maxAmountsIn,
+    userData,
+    fromInternalBalance,
+  };
+
   const joinReceipt = await vaultContract.joinPool(
     poolId,
     signerAddress,
     signerAddress,
-    tokens,
-    maxAmountsIn,
-    fromInternalBalance,
-    userData
+    joinRequest
   );
   await joinReceipt.wait(1);
   return joinReceipt;

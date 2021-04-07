@@ -52,8 +52,7 @@ async function simpleJoins() {
     balancerVaultContract,
     tokens,
     wethDecimals,
-    "1000",
-    "100"
+    "1000"
   );
 
   const numBatches = 100;
@@ -71,8 +70,7 @@ async function simpleJoins() {
             balancerVaultContract,
             tokens,
             wethDecimals,
-            "100",
-            "10"
+            "100"
           )
         );
         joins.push(
@@ -82,8 +80,7 @@ async function simpleJoins() {
             balancerVaultContract,
             tokens,
             wethDecimals,
-            "100",
-            "10"
+            "100"
           )
         );
 

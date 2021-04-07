@@ -80,15 +80,18 @@ export async function setupInterestTokenPool(
 
   // the amounts to put in.  they are 'max' because pools will figure out the exact ratio's required
   // for the pool's weight requirements.
+  const joinRequest = {
+    assets: poolTokens,
+    maxAmountsIn,
+    userData,
+    fromInternalBalance: false,
+  };
 
   const joinTxReceipt = await balancerVaultContract.joinPool(
     poolId,
     signerAddress,
     signerAddress,
-    poolTokens,
-    maxAmountsIn,
-    false,
-    userData
+    joinRequest
   );
 
   await joinTxReceipt.wait(1);

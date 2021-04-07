@@ -23,15 +23,13 @@ export async function joinConvergentCurvePool(
   vaultContract: Vault,
   tokens: string[],
   baseAssetDecimals: number,
-  maxAmountIn: string,
-  amountIn: string
+  maxAmountIn: string
 ) {
   const signerAddress = await signer.getAddress();
   const parseToken = (value: string) => parseUnits(value, baseAssetDecimals);
 
   // just do same amounts for each, balancer will figure out how much of each you need.
   const maxAmountsIn = [parseToken(maxAmountIn), parseToken(maxAmountIn)];
-  const amountsIn = [parseToken(amountIn), parseToken(amountIn)];
   const amounts = maxAmountsIn.map((amt) => amt.toHexString());
 
   // Whether or not to use balances held in balancer.  Since The Vault has nothing, set this to false.
@@ -46,14 +44,17 @@ export async function joinConvergentCurvePool(
   const userData = abi.rawEncode(["uint256[]"], [amounts]);
 
   console.log("aboot to join");
+  const joinRequest = {
+    assets: tokens,
+    maxAmountsIn,
+    userData,
+    fromInternalBalance,
+  };
   const joinReceipt = await vaultContract.joinPool(
     poolId,
     signerAddress,
     signerAddress,
-    tokens,
-    maxAmountsIn,
-    fromInternalBalance,
-    userData
+    joinRequest
   );
   await joinReceipt.wait(1);
   return joinReceipt;
