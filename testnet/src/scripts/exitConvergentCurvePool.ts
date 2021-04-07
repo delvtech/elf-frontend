@@ -23,8 +23,7 @@ export async function exitConvergentCurvePool(
   vaultContract: Vault,
   tokens: string[],
   baseAssetDecimals: number,
-  maxAmountIn: string,
-  amountIn: string
+  minAmountOut: string
 ) {
   const signerAddress = await signer.getAddress();
   // tokens in ascending order by address
@@ -39,11 +38,11 @@ export async function exitConvergentCurvePool(
   const parseToken = (value: string) => parseUnits(value, baseAssetDecimals);
 
   // just do same amounts for each, balancer will figure out how much of each you need.
-  const maxAmountsIn = [parseToken(maxAmountIn), parseToken(maxAmountIn)];
-  const amounts = maxAmountsIn.map((amt) => amt.toHexString());
+  const minAmountsOut = [parseToken(minAmountOut), parseToken(minAmountOut)];
+  const amounts = minAmountsOut.map((amt) => amt.toHexString());
 
   // Whether or not to use balances held in balancer.  Since The Vault has nothing, set this to false.
-  const fromInternalBalance = false;
+  const toInternalBalance = false;
 
   // Allow balancer pool to take user's fyt and base tokens
   // await baseAssetContract.approve(vaultContract.address, MAX_ALLOWANCE);
@@ -53,14 +52,18 @@ export async function exitConvergentCurvePool(
   // case we need to pass the maxAmountsIn.
   const userData = abi.rawEncode(["uint256[]"], [amounts]);
 
+  const exitRequest = {
+    assets: tokens,
+    minAmountsOut,
+    userData,
+    toInternalBalance,
+  };
+
   const joinReceipt = await vaultContract.exitPool(
     poolId,
     signerAddress,
     signerAddress,
-    tokens,
-    maxAmountsIn,
-    fromInternalBalance,
-    userData
+    exitRequest
   );
   await joinReceipt.wait(1);
   return joinReceipt;
