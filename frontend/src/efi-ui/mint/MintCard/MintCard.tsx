@@ -17,18 +17,17 @@ import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { useCryptoBalance } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
-import { PrincipalDiscountPreview } from "efi-ui/earn/EarnCard/PrincipalDiscountPreview";
 import { EarnInput } from "efi-ui/earn/EarnInput/EarnInput";
 import { useActiveTranche } from "efi-ui/earn/hooks/useActiveTranche";
-import { TranchePicker } from "efi-ui/earn/TranchePicker/TranchePicker";
+import { PrincipalTokenPreview } from "efi-ui/mint/MintCard/PrincipalTokenPreview";
+import { YieldTokenPreview } from "efi-ui/mint/MintCard/YieldTokenPreview";
+import { MintTermPicker } from "efi-ui/mint/MintTermPicker/MintTermPicker";
 import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
 import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
 import { BuyPrincipalTokensTransactionConfirmationDrawer } from "efi-ui/tranche/BuyPrincipalTokensTransactionConfirmationDrawer/BuyPrincipalTokensTransactionConfirmationDrawer";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
-import { PrincipalTokenPreview } from "efi-ui/mint/MintCard/PrincipalTokenPreview";
-import { YieldTokenPreview } from "efi-ui/mint/MintCard/YieldTokenPreview";
 
 export interface MintCardProps {
   library: Web3Provider | undefined;
@@ -143,7 +142,7 @@ export const MintCard: FC<MintCardProps> = ({
             <EarnInput
               showMaxButton={false}
               assetPicker={
-                <TranchePicker
+                <MintTermPicker
                   library={library}
                   account={account}
                   onTrancheChange={setActiveTranche}

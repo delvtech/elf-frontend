@@ -19,7 +19,7 @@ import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSy
 import { PrincipalDiscountPreview } from "efi-ui/earn/EarnCard/PrincipalDiscountPreview";
 import { EarnInput } from "efi-ui/earn/EarnInput/EarnInput";
 import { useActiveTranche } from "efi-ui/earn/hooks/useActiveTranche";
-import { TranchePicker } from "efi-ui/earn/TranchePicker/TranchePicker";
+import { EarnTermPicker } from "efi-ui/earn/EarnTermPicker/EarnTermPicker";
 import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
@@ -180,7 +180,7 @@ export const EarnCard: FC<EarnCardProps> = ({
             <EarnInput
               showMaxButton={false}
               assetPicker={
-                <TranchePicker
+                <EarnTermPicker
                   library={library}
                   account={account}
                   onTrancheChange={setActiveTranche}
