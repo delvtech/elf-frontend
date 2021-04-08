@@ -21,7 +21,7 @@ import { BytesLike } from "@ethersproject/bytes";
 import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 
-interface FeesInterface extends ethers.utils.Interface {
+interface PoolAssetsInterface extends ethers.utils.Interface {
   functions: {
     "WETH()": FunctionFragment;
     "batchSwapGivenIn(tuple[],address[],tuple,int256[],uint256)": FunctionFragment;
@@ -373,7 +373,7 @@ interface FeesInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "TokensRegistered"): EventFragment;
 }
 
-export class Fees extends Contract {
+export class PoolAssets extends Contract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -384,7 +384,7 @@ export class Fees extends Contract {
   removeAllListeners(eventName: EventFilter | string): this;
   removeListener(eventName: any, listener: Listener): this;
 
-  interface: FeesInterface;
+  interface: PoolAssetsInterface;
 
   functions: {
     WETH(overrides?: CallOverrides): Promise<[string]>;
@@ -595,13 +595,13 @@ export class Fees extends Contract {
       user: string,
       tokens: string[],
       overrides?: CallOverrides
-    ): Promise<[BigNumber[]]>;
+    ): Promise<[BigNumber[]] & { balances: BigNumber[] }>;
 
     "getInternalBalance(address,address[])"(
       user: string,
       tokens: string[],
       overrides?: CallOverrides
-    ): Promise<[BigNumber[]]>;
+    ): Promise<[BigNumber[]] & { balances: BigNumber[] }>;
 
     getPool(
       poolId: BytesLike,

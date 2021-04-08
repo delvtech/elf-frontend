@@ -147,6 +147,11 @@ const _abi = [
       {
         components: [
           {
+            internalType: "enum IVault.SwapKind",
+            name: "kind",
+            type: "uint8",
+          },
+          {
             internalType: "contract IERC20",
             name: "tokenIn",
             type: "address",
@@ -158,7 +163,7 @@ const _abi = [
           },
           {
             internalType: "uint256",
-            name: "amountIn",
+            name: "amount",
             type: "uint256",
           },
           {
@@ -187,7 +192,7 @@ const _abi = [
             type: "bytes",
           },
         ],
-        internalType: "struct IPoolSwapStructs.SwapRequestGivenIn",
+        internalType: "struct IPoolSwapStructs.SwapRequest",
         name: "swapRequest",
         type: "tuple",
       },
@@ -202,82 +207,11 @@ const _abi = [
         type: "uint256",
       },
     ],
-    name: "onSwapGivenIn",
+    name: "onSwap",
     outputs: [
       {
         internalType: "uint256",
-        name: "amountOut",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        components: [
-          {
-            internalType: "contract IERC20",
-            name: "tokenIn",
-            type: "address",
-          },
-          {
-            internalType: "contract IERC20",
-            name: "tokenOut",
-            type: "address",
-          },
-          {
-            internalType: "uint256",
-            name: "amountOut",
-            type: "uint256",
-          },
-          {
-            internalType: "bytes32",
-            name: "poolId",
-            type: "bytes32",
-          },
-          {
-            internalType: "uint256",
-            name: "latestBlockNumberUsed",
-            type: "uint256",
-          },
-          {
-            internalType: "address",
-            name: "from",
-            type: "address",
-          },
-          {
-            internalType: "address",
-            name: "to",
-            type: "address",
-          },
-          {
-            internalType: "bytes",
-            name: "userData",
-            type: "bytes",
-          },
-        ],
-        internalType: "struct IPoolSwapStructs.SwapRequestGivenOut",
-        name: "swapRequest",
-        type: "tuple",
-      },
-      {
-        internalType: "uint256",
-        name: "currentBalanceTokenIn",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "currentBalanceTokenOut",
-        type: "uint256",
-      },
-    ],
-    name: "onSwapGivenOut",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "amountIn",
+        name: "amount",
         type: "uint256",
       },
     ],

@@ -23,18 +23,12 @@ import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 
 interface MockAssetTransfersHandlerInterface extends ethers.utils.Interface {
   functions: {
-    "calculateProtocolWithdrawFeeAmount(uint256)": FunctionFragment;
     "depositToInternalBalance(address,address,uint256)": FunctionFragment;
     "getInternalBalance(address,address)": FunctionFragment;
     "receiveAsset(address,uint256,address,bool)": FunctionFragment;
-    "sendAsset(address,uint256,address,bool,bool)": FunctionFragment;
-    "setProtocolWithdrawFeePercentage(uint256)": FunctionFragment;
+    "sendAsset(address,uint256,address,bool)": FunctionFragment;
   };
 
-  encodeFunctionData(
-    functionFragment: "calculateProtocolWithdrawFeeAmount",
-    values: [BigNumberish]
-  ): string;
   encodeFunctionData(
     functionFragment: "depositToInternalBalance",
     values: [string, string, BigNumberish]
@@ -49,17 +43,9 @@ interface MockAssetTransfersHandlerInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "sendAsset",
-    values: [string, BigNumberish, string, boolean, boolean]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setProtocolWithdrawFeePercentage",
-    values: [BigNumberish]
+    values: [string, BigNumberish, string, boolean]
   ): string;
 
-  decodeFunctionResult(
-    functionFragment: "calculateProtocolWithdrawFeeAmount",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "depositToInternalBalance",
     data: BytesLike
@@ -73,10 +59,6 @@ interface MockAssetTransfersHandlerInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "sendAsset", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "setProtocolWithdrawFeePercentage",
-    data: BytesLike
-  ): Result;
 
   events: {};
 }
@@ -95,16 +77,6 @@ export class MockAssetTransfersHandler extends Contract {
   interface: MockAssetTransfersHandlerInterface;
 
   functions: {
-    calculateProtocolWithdrawFeeAmount(
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    "calculateProtocolWithdrawFeeAmount(uint256)"(
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
     depositToInternalBalance(
       account: string,
       token: string,
@@ -152,39 +124,17 @@ export class MockAssetTransfersHandler extends Contract {
       amount: BigNumberish,
       recipient: string,
       toInternalBalance: boolean,
-      trackExempt: boolean,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "sendAsset(address,uint256,address,bool,bool)"(
+    "sendAsset(address,uint256,address,bool)"(
       asset: string,
       amount: BigNumberish,
       recipient: string,
       toInternalBalance: boolean,
-      trackExempt: boolean,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    setProtocolWithdrawFeePercentage(
-      fee: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "setProtocolWithdrawFeePercentage(uint256)"(
-      fee: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
   };
-
-  calculateProtocolWithdrawFeeAmount(
-    amount: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  "calculateProtocolWithdrawFeeAmount(uint256)"(
-    amount: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
 
   depositToInternalBalance(
     account: string,
@@ -233,40 +183,18 @@ export class MockAssetTransfersHandler extends Contract {
     amount: BigNumberish,
     recipient: string,
     toInternalBalance: boolean,
-    trackExempt: boolean,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "sendAsset(address,uint256,address,bool,bool)"(
+  "sendAsset(address,uint256,address,bool)"(
     asset: string,
     amount: BigNumberish,
     recipient: string,
     toInternalBalance: boolean,
-    trackExempt: boolean,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  setProtocolWithdrawFeePercentage(
-    fee: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "setProtocolWithdrawFeePercentage(uint256)"(
-    fee: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    calculateProtocolWithdrawFeeAmount(
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "calculateProtocolWithdrawFeeAmount(uint256)"(
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     depositToInternalBalance(
       account: string,
       token: string,
@@ -314,26 +242,14 @@ export class MockAssetTransfersHandler extends Contract {
       amount: BigNumberish,
       recipient: string,
       toInternalBalance: boolean,
-      trackExempt: boolean,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "sendAsset(address,uint256,address,bool,bool)"(
+    "sendAsset(address,uint256,address,bool)"(
       asset: string,
       amount: BigNumberish,
       recipient: string,
       toInternalBalance: boolean,
-      trackExempt: boolean,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    setProtocolWithdrawFeePercentage(
-      fee: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "setProtocolWithdrawFeePercentage(uint256)"(
-      fee: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
   };
@@ -341,16 +257,6 @@ export class MockAssetTransfersHandler extends Contract {
   filters: {};
 
   estimateGas: {
-    calculateProtocolWithdrawFeeAmount(
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "calculateProtocolWithdrawFeeAmount(uint256)"(
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     depositToInternalBalance(
       account: string,
       token: string,
@@ -398,41 +304,19 @@ export class MockAssetTransfersHandler extends Contract {
       amount: BigNumberish,
       recipient: string,
       toInternalBalance: boolean,
-      trackExempt: boolean,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    "sendAsset(address,uint256,address,bool,bool)"(
+    "sendAsset(address,uint256,address,bool)"(
       asset: string,
       amount: BigNumberish,
       recipient: string,
       toInternalBalance: boolean,
-      trackExempt: boolean,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    setProtocolWithdrawFeePercentage(
-      fee: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "setProtocolWithdrawFeePercentage(uint256)"(
-      fee: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    calculateProtocolWithdrawFeeAmount(
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "calculateProtocolWithdrawFeeAmount(uint256)"(
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     depositToInternalBalance(
       account: string,
       token: string,
@@ -480,26 +364,14 @@ export class MockAssetTransfersHandler extends Contract {
       amount: BigNumberish,
       recipient: string,
       toInternalBalance: boolean,
-      trackExempt: boolean,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "sendAsset(address,uint256,address,bool,bool)"(
+    "sendAsset(address,uint256,address,bool)"(
       asset: string,
       amount: BigNumberish,
       recipient: string,
       toInternalBalance: boolean,
-      trackExempt: boolean,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    setProtocolWithdrawFeePercentage(
-      fee: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "setProtocolWithdrawFeePercentage(uint256)"(
-      fee: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
   };

@@ -5,14 +5,14 @@
 import { Contract, Signer } from "ethers";
 import { Provider } from "@ethersproject/providers";
 
-import type { FlashLoanProvider } from "../FlashLoanProvider";
+import type { PoolAssets } from "../PoolAssets";
 
-export class FlashLoanProvider__factory {
+export class PoolAssets__factory {
   static connect(
     address: string,
     signerOrProvider: Signer | Provider
-  ): FlashLoanProvider {
-    return new Contract(address, _abi, signerOrProvider) as FlashLoanProvider;
+  ): PoolAssets {
+    return new Contract(address, _abi, signerOrProvider) as PoolAssets;
   }
 }
 
@@ -621,7 +621,7 @@ const _abi = [
     outputs: [
       {
         internalType: "uint256[]",
-        name: "",
+        name: "balances",
         type: "uint256[]",
       },
     ],
@@ -1154,5 +1154,9 @@ const _abi = [
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
+  },
+  {
+    stateMutability: "payable",
+    type: "receive",
   },
 ];

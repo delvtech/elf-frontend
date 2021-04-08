@@ -97,12 +97,10 @@ interface MockVaultInterface extends ethers.utils.Interface {
   ): Result;
 
   events: {
-    "PoolExited(uint256[],uint256[])": EventFragment;
-    "PoolJoined(uint256[],uint256[])": EventFragment;
+    "PoolBalanceChanged(bool,uint256[],uint256[])": EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "PoolExited"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "PoolJoined"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "PoolBalanceChanged"): EventFragment;
 }
 
 export class MockVault extends Contract {
@@ -378,9 +376,11 @@ export class MockVault extends Contract {
   };
 
   filters: {
-    PoolExited(amountsOut: null, dueProtocolFeeAmounts: null): EventFilter;
-
-    PoolJoined(amountsIn: null, dueProtocolFeeAmounts: null): EventFilter;
+    PoolBalanceChanged(
+      positive: null,
+      amounts: null,
+      dueProtocolFeeAmounts: null
+    ): EventFilter;
   };
 
   estimateGas: {

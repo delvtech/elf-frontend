@@ -25,8 +25,7 @@ interface IGeneralPoolInterface extends ethers.utils.Interface {
     "getRate()": FunctionFragment;
     "onExitPool(bytes32,address,address,uint256[],uint256,uint256,bytes)": FunctionFragment;
     "onJoinPool(bytes32,address,address,uint256[],uint256,uint256,bytes)": FunctionFragment;
-    "onSwapGivenIn(tuple,uint256[],uint256,uint256)": FunctionFragment;
-    "onSwapGivenOut(tuple,uint256[],uint256,uint256)": FunctionFragment;
+    "onSwap(tuple,uint256[],uint256,uint256)": FunctionFragment;
   };
 
   encodeFunctionData(functionFragment: "getRate", values?: undefined): string;
@@ -55,30 +54,13 @@ interface IGeneralPoolInterface extends ethers.utils.Interface {
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "onSwapGivenIn",
+    functionFragment: "onSwap",
     values: [
       {
+        kind: BigNumberish;
         tokenIn: string;
         tokenOut: string;
-        amountIn: BigNumberish;
-        poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      BigNumberish[],
-      BigNumberish,
-      BigNumberish
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "onSwapGivenOut",
-    values: [
-      {
-        tokenIn: string;
-        tokenOut: string;
-        amountOut: BigNumberish;
+        amount: BigNumberish;
         poolId: BytesLike;
         latestBlockNumberUsed: BigNumberish;
         from: string;
@@ -94,14 +76,7 @@ interface IGeneralPoolInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "getRate", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "onExitPool", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "onJoinPool", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "onSwapGivenIn",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "onSwapGivenOut",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "onSwap", data: BytesLike): Result;
 
   events: {};
 }
@@ -168,11 +143,12 @@ export class IGeneralPool extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    onSwapGivenIn(
+    onSwap(
       swapRequest: {
+        kind: BigNumberish;
         tokenIn: string;
         tokenOut: string;
-        amountIn: BigNumberish;
+        amount: BigNumberish;
         poolId: BytesLike;
         latestBlockNumberUsed: BigNumberish;
         from: string;
@@ -185,45 +161,12 @@ export class IGeneralPool extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "onSwapGivenIn(tuple,uint256[],uint256,uint256)"(
+    "onSwap(tuple,uint256[],uint256,uint256)"(
       swapRequest: {
+        kind: BigNumberish;
         tokenIn: string;
         tokenOut: string;
-        amountIn: BigNumberish;
-        poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      balances: BigNumberish[],
-      indexIn: BigNumberish,
-      indexOut: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    onSwapGivenOut(
-      swapRequest: {
-        tokenIn: string;
-        tokenOut: string;
-        amountOut: BigNumberish;
-        poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      balances: BigNumberish[],
-      indexIn: BigNumberish,
-      indexOut: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "onSwapGivenOut(tuple,uint256[],uint256,uint256)"(
-      swapRequest: {
-        tokenIn: string;
-        tokenOut: string;
-        amountOut: BigNumberish;
+        amount: BigNumberish;
         poolId: BytesLike;
         latestBlockNumberUsed: BigNumberish;
         from: string;
@@ -285,11 +228,12 @@ export class IGeneralPool extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  onSwapGivenIn(
+  onSwap(
     swapRequest: {
+      kind: BigNumberish;
       tokenIn: string;
       tokenOut: string;
-      amountIn: BigNumberish;
+      amount: BigNumberish;
       poolId: BytesLike;
       latestBlockNumberUsed: BigNumberish;
       from: string;
@@ -302,45 +246,12 @@ export class IGeneralPool extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "onSwapGivenIn(tuple,uint256[],uint256,uint256)"(
+  "onSwap(tuple,uint256[],uint256,uint256)"(
     swapRequest: {
+      kind: BigNumberish;
       tokenIn: string;
       tokenOut: string;
-      amountIn: BigNumberish;
-      poolId: BytesLike;
-      latestBlockNumberUsed: BigNumberish;
-      from: string;
-      to: string;
-      userData: BytesLike;
-    },
-    balances: BigNumberish[],
-    indexIn: BigNumberish,
-    indexOut: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  onSwapGivenOut(
-    swapRequest: {
-      tokenIn: string;
-      tokenOut: string;
-      amountOut: BigNumberish;
-      poolId: BytesLike;
-      latestBlockNumberUsed: BigNumberish;
-      from: string;
-      to: string;
-      userData: BytesLike;
-    },
-    balances: BigNumberish[],
-    indexIn: BigNumberish,
-    indexOut: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "onSwapGivenOut(tuple,uint256[],uint256,uint256)"(
-    swapRequest: {
-      tokenIn: string;
-      tokenOut: string;
-      amountOut: BigNumberish;
+      amount: BigNumberish;
       poolId: BytesLike;
       latestBlockNumberUsed: BigNumberish;
       from: string;
@@ -422,11 +333,12 @@ export class IGeneralPool extends Contract {
       }
     >;
 
-    onSwapGivenIn(
+    onSwap(
       swapRequest: {
+        kind: BigNumberish;
         tokenIn: string;
         tokenOut: string;
-        amountIn: BigNumberish;
+        amount: BigNumberish;
         poolId: BytesLike;
         latestBlockNumberUsed: BigNumberish;
         from: string;
@@ -439,45 +351,12 @@ export class IGeneralPool extends Contract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    "onSwapGivenIn(tuple,uint256[],uint256,uint256)"(
+    "onSwap(tuple,uint256[],uint256,uint256)"(
       swapRequest: {
+        kind: BigNumberish;
         tokenIn: string;
         tokenOut: string;
-        amountIn: BigNumberish;
-        poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      balances: BigNumberish[],
-      indexIn: BigNumberish,
-      indexOut: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    onSwapGivenOut(
-      swapRequest: {
-        tokenIn: string;
-        tokenOut: string;
-        amountOut: BigNumberish;
-        poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      balances: BigNumberish[],
-      indexIn: BigNumberish,
-      indexOut: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "onSwapGivenOut(tuple,uint256[],uint256,uint256)"(
-      swapRequest: {
-        tokenIn: string;
-        tokenOut: string;
-        amountOut: BigNumberish;
+        amount: BigNumberish;
         poolId: BytesLike;
         latestBlockNumberUsed: BigNumberish;
         from: string;
@@ -542,11 +421,12 @@ export class IGeneralPool extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    onSwapGivenIn(
+    onSwap(
       swapRequest: {
+        kind: BigNumberish;
         tokenIn: string;
         tokenOut: string;
-        amountIn: BigNumberish;
+        amount: BigNumberish;
         poolId: BytesLike;
         latestBlockNumberUsed: BigNumberish;
         from: string;
@@ -559,45 +439,12 @@ export class IGeneralPool extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    "onSwapGivenIn(tuple,uint256[],uint256,uint256)"(
+    "onSwap(tuple,uint256[],uint256,uint256)"(
       swapRequest: {
+        kind: BigNumberish;
         tokenIn: string;
         tokenOut: string;
-        amountIn: BigNumberish;
-        poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      balances: BigNumberish[],
-      indexIn: BigNumberish,
-      indexOut: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    onSwapGivenOut(
-      swapRequest: {
-        tokenIn: string;
-        tokenOut: string;
-        amountOut: BigNumberish;
-        poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      balances: BigNumberish[],
-      indexIn: BigNumberish,
-      indexOut: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "onSwapGivenOut(tuple,uint256[],uint256,uint256)"(
-      swapRequest: {
-        tokenIn: string;
-        tokenOut: string;
-        amountOut: BigNumberish;
+        amount: BigNumberish;
         poolId: BytesLike;
         latestBlockNumberUsed: BigNumberish;
         from: string;
@@ -660,11 +507,12 @@ export class IGeneralPool extends Contract {
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    onSwapGivenIn(
+    onSwap(
       swapRequest: {
+        kind: BigNumberish;
         tokenIn: string;
         tokenOut: string;
-        amountIn: BigNumberish;
+        amount: BigNumberish;
         poolId: BytesLike;
         latestBlockNumberUsed: BigNumberish;
         from: string;
@@ -677,45 +525,12 @@ export class IGeneralPool extends Contract {
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "onSwapGivenIn(tuple,uint256[],uint256,uint256)"(
+    "onSwap(tuple,uint256[],uint256,uint256)"(
       swapRequest: {
+        kind: BigNumberish;
         tokenIn: string;
         tokenOut: string;
-        amountIn: BigNumberish;
-        poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      balances: BigNumberish[],
-      indexIn: BigNumberish,
-      indexOut: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    onSwapGivenOut(
-      swapRequest: {
-        tokenIn: string;
-        tokenOut: string;
-        amountOut: BigNumberish;
-        poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      balances: BigNumberish[],
-      indexIn: BigNumberish,
-      indexOut: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "onSwapGivenOut(tuple,uint256[],uint256,uint256)"(
-      swapRequest: {
-        tokenIn: string;
-        tokenOut: string;
-        amountOut: BigNumberish;
+        amount: BigNumberish;
         poolId: BytesLike;
         latestBlockNumberUsed: BigNumberish;
         from: string;

@@ -199,11 +199,13 @@ interface BasePoolInterface extends ethers.utils.Interface {
   events: {
     "Approval(address,address,uint256)": EventFragment;
     "EmergencyPeriodChanged(bool)": EventFragment;
+    "SwapFeeChanged(uint256)": EventFragment;
     "Transfer(address,address,uint256)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "EmergencyPeriodChanged"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "SwapFeeChanged"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
 }
 
@@ -972,6 +974,8 @@ export class BasePool extends Contract {
     ): EventFilter;
 
     EmergencyPeriodChanged(active: null): EventFilter;
+
+    SwapFeeChanged(swapFee: null): EventFilter;
 
     Transfer(from: string | null, to: string | null, value: null): EventFilter;
   };
