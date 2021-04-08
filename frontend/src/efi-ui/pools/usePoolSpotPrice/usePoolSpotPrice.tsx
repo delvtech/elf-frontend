@@ -1,11 +1,12 @@
 import { ERC20 } from "elf-contracts/types/ERC20";
-import { BigNumber } from "ethers";
+import { formatUnits, parseUnits } from "ethers/lib/utils";
 
+import { SwapKind } from "efi-ui/balancer/SwapKind";
+import { parseQueryBatchSwapResult } from "efi-ui/balancer/useQueryBatchSwap/parseQueryBatchSwapResult";
+import { useQueryBatchSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { PoolContract } from "efi/pools/PoolContract";
-import { formatUnits, parseUnits } from "ethers/lib/utils";
 
 /**
  * Lazy spot price technique until we get a better method.  Right now just calculates how much out
@@ -13,40 +14,52 @@ import { formatUnits, parseUnits } from "ethers/lib/utils";
  * to minimize slippage in the value.
  *
  * NOTE: When using this with a tranche pool, pass the base asset as the underlying token.
- * returns ratio = yield / base, therefore to convert between base and yield assets:
+ * returns spotPrice = yield / base, therefore to convert between base and yield assets:
  *
- * base = yield / ratio
- * yield = base * ratio
+ * base = yield / spotPrice
+ * yield = base * spotPrice
  */
 export function usePoolSpotPrice(
   pool: PoolContract | undefined,
   underlyingToken: ERC20 | undefined
-): number {
+): number | undefined {
   const { data: decimals } = useSmartContractReadCall(
     underlyingToken,
     "decimals"
   );
 
-  const tokenOut = usePoolPairedToken(pool, underlyingToken);
+  const yieldToken = usePoolPairedToken(pool, underlyingToken);
   const { data: tokenOutDecimals } = useSmartContractReadCall(
-    tokenOut,
+    yieldToken,
     "decimals"
   );
   const amountIn = parseUnits("0.01", decimals);
-  const { data: amountOut = BigNumber.from(1) } = useOnSwapGivenIn(
+  const { data: batchSwaps } = useQueryBatchSwap(
+    SwapKind.GIVEN_IN,
     pool,
-    underlyingToken,
+    underlyingToken?.address,
+    yieldToken?.address,
     amountIn
   );
 
-  // can't give a meaningful spot price until we have the decimals
-  if (!decimals || !tokenOutDecimals) {
-    return 0;
+  if (!batchSwaps) {
+    return undefined;
   }
 
-  const yieldAssetRatio =
+  const { tokenOut: amountOut } = parseQueryBatchSwapResult(
+    underlyingToken?.address,
+    yieldToken?.address,
+    batchSwaps
+  );
+
+  // can't give a meaningful spot price until we have the decimals
+  if (!amountOut || !decimals || !tokenOutDecimals) {
+    return undefined;
+  }
+
+  const spotPrice =
     +formatUnits(amountOut, tokenOutDecimals) /
     +formatUnits(amountIn, decimals);
 
-  return yieldAssetRatio;
+  return Math.abs(spotPrice);
 }
