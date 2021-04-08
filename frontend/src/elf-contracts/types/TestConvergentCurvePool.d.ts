@@ -49,15 +49,13 @@ interface TestConvergentCurvePoolInterface extends ethers.utils.Interface {
     "normalize(uint256,uint8,uint8)": FunctionFragment;
     "onExitPool(bytes32,address,address,uint256[],uint256,uint256,bytes)": FunctionFragment;
     "onJoinPool(bytes32,address,address,uint256[],uint256,uint256,bytes)": FunctionFragment;
-    "onSwapGivenIn(tuple,uint256,uint256)": FunctionFragment;
-    "onSwapGivenOut(tuple,uint256,uint256)": FunctionFragment;
+    "onSwap(tuple,uint256,uint256)": FunctionFragment;
     "percentFee()": FunctionFragment;
     "percentFeeGov()": FunctionFragment;
-    "quoteInGivenOutSimulation(tuple,uint256,uint256,uint256,uint256,uint256)": FunctionFragment;
-    "quoteOutGivenInSimulation(tuple,uint256,uint256,uint256,uint256,uint256)": FunctionFragment;
     "setFees(uint128,uint128)": FunctionFragment;
     "setLPBalance(address,uint256)": FunctionFragment;
     "solveTradeInvariant(uint256,uint256,uint256,bool)": FunctionFragment;
+    "swapSimulation(tuple,uint256,uint256,uint256,uint256,uint256)": FunctionFragment;
     "symbol()": FunctionFragment;
     "time()": FunctionFragment;
     "tokenToFixed(uint256,address)": FunctionFragment;
@@ -164,29 +162,13 @@ interface TestConvergentCurvePoolInterface extends ethers.utils.Interface {
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "onSwapGivenIn",
+    functionFragment: "onSwap",
     values: [
       {
+        kind: BigNumberish;
         tokenIn: string;
         tokenOut: string;
-        amountIn: BigNumberish;
-        poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      BigNumberish,
-      BigNumberish
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "onSwapGivenOut",
-    values: [
-      {
-        tokenIn: string;
-        tokenOut: string;
-        amountOut: BigNumberish;
+        amount: BigNumberish;
         poolId: BytesLike;
         latestBlockNumberUsed: BigNumberish;
         from: string;
@@ -206,46 +188,6 @@ interface TestConvergentCurvePoolInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "quoteInGivenOutSimulation",
-    values: [
-      {
-        tokenIn: string;
-        tokenOut: string;
-        amountOut: BigNumberish;
-        poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      BigNumberish,
-      BigNumberish,
-      BigNumberish,
-      BigNumberish,
-      BigNumberish
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "quoteOutGivenInSimulation",
-    values: [
-      {
-        tokenIn: string;
-        tokenOut: string;
-        amountIn: BigNumberish;
-        poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      BigNumberish,
-      BigNumberish,
-      BigNumberish,
-      BigNumberish,
-      BigNumberish
-    ]
-  ): string;
-  encodeFunctionData(
     functionFragment: "setFees",
     values: [BigNumberish, BigNumberish]
   ): string;
@@ -256,6 +198,27 @@ interface TestConvergentCurvePoolInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "solveTradeInvariant",
     values: [BigNumberish, BigNumberish, BigNumberish, boolean]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "swapSimulation",
+    values: [
+      {
+        kind: BigNumberish;
+        tokenIn: string;
+        tokenOut: string;
+        amount: BigNumberish;
+        poolId: BytesLike;
+        latestBlockNumberUsed: BigNumberish;
+        from: string;
+        to: string;
+        userData: BytesLike;
+      },
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish
+    ]
   ): string;
   encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
   encodeFunctionData(functionFragment: "time", values?: undefined): string;
@@ -336,25 +299,10 @@ interface TestConvergentCurvePoolInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "normalize", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "onExitPool", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "onJoinPool", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "onSwapGivenIn",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "onSwapGivenOut",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "onSwap", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "percentFee", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "percentFeeGov",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "quoteInGivenOutSimulation",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "quoteOutGivenInSimulation",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "setFees", data: BytesLike): Result;
@@ -364,6 +312,10 @@ interface TestConvergentCurvePoolInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "solveTradeInvariant",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "swapSimulation",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
@@ -655,11 +607,12 @@ export class TestConvergentCurvePool extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    onSwapGivenIn(
-      request: {
+    onSwap(
+      swapRequest: {
+        kind: BigNumberish;
         tokenIn: string;
         tokenOut: string;
-        amountIn: BigNumberish;
+        amount: BigNumberish;
         poolId: BytesLike;
         latestBlockNumberUsed: BigNumberish;
         from: string;
@@ -671,43 +624,12 @@ export class TestConvergentCurvePool extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "onSwapGivenIn(tuple,uint256,uint256)"(
-      request: {
+    "onSwap(tuple,uint256,uint256)"(
+      swapRequest: {
+        kind: BigNumberish;
         tokenIn: string;
         tokenOut: string;
-        amountIn: BigNumberish;
-        poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      currentBalanceTokenIn: BigNumberish,
-      currentBalanceTokenOut: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    onSwapGivenOut(
-      request: {
-        tokenIn: string;
-        tokenOut: string;
-        amountOut: BigNumberish;
-        poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      currentBalanceTokenIn: BigNumberish,
-      currentBalanceTokenOut: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "onSwapGivenOut(tuple,uint256,uint256)"(
-      request: {
-        tokenIn: string;
-        tokenOut: string;
-        amountOut: BigNumberish;
+        amount: BigNumberish;
         poolId: BytesLike;
         latestBlockNumberUsed: BigNumberish;
         from: string;
@@ -726,82 +648,6 @@ export class TestConvergentCurvePool extends Contract {
     percentFeeGov(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     "percentFeeGov()"(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    quoteInGivenOutSimulation(
-      request: {
-        tokenIn: string;
-        tokenOut: string;
-        amountOut: BigNumberish;
-        poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      currentBalanceTokenIn: BigNumberish,
-      currentBalanceTokenOut: BigNumberish,
-      _time: BigNumberish,
-      expectedPrice: BigNumberish,
-      totalSupply: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "quoteInGivenOutSimulation(tuple,uint256,uint256,uint256,uint256,uint256)"(
-      request: {
-        tokenIn: string;
-        tokenOut: string;
-        amountOut: BigNumberish;
-        poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      currentBalanceTokenIn: BigNumberish,
-      currentBalanceTokenOut: BigNumberish,
-      _time: BigNumberish,
-      expectedPrice: BigNumberish,
-      totalSupply: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    quoteOutGivenInSimulation(
-      request: {
-        tokenIn: string;
-        tokenOut: string;
-        amountIn: BigNumberish;
-        poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      currentBalanceTokenIn: BigNumberish,
-      currentBalanceTokenOut: BigNumberish,
-      _time: BigNumberish,
-      expectedPrice: BigNumberish,
-      totalSupply: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "quoteOutGivenInSimulation(tuple,uint256,uint256,uint256,uint256,uint256)"(
-      request: {
-        tokenIn: string;
-        tokenOut: string;
-        amountIn: BigNumberish;
-        poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      currentBalanceTokenIn: BigNumberish,
-      currentBalanceTokenOut: BigNumberish,
-      _time: BigNumberish,
-      expectedPrice: BigNumberish,
-      totalSupply: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
 
     setFees(
       amountUnderlying: BigNumberish,
@@ -842,6 +688,46 @@ export class TestConvergentCurvePool extends Contract {
       out: boolean,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
+
+    swapSimulation(
+      request: {
+        kind: BigNumberish;
+        tokenIn: string;
+        tokenOut: string;
+        amount: BigNumberish;
+        poolId: BytesLike;
+        latestBlockNumberUsed: BigNumberish;
+        from: string;
+        to: string;
+        userData: BytesLike;
+      },
+      currentBalanceTokenIn: BigNumberish,
+      currentBalanceTokenOut: BigNumberish,
+      _time: BigNumberish,
+      expectedPrice: BigNumberish,
+      totalSupply: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "swapSimulation(tuple,uint256,uint256,uint256,uint256,uint256)"(
+      request: {
+        kind: BigNumberish;
+        tokenIn: string;
+        tokenOut: string;
+        amount: BigNumberish;
+        poolId: BytesLike;
+        latestBlockNumberUsed: BigNumberish;
+        from: string;
+        to: string;
+        userData: BytesLike;
+      },
+      currentBalanceTokenIn: BigNumberish,
+      currentBalanceTokenOut: BigNumberish,
+      _time: BigNumberish,
+      expectedPrice: BigNumberish,
+      totalSupply: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
 
     symbol(overrides?: CallOverrides): Promise<[string]>;
 
@@ -1145,11 +1031,12 @@ export class TestConvergentCurvePool extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  onSwapGivenIn(
-    request: {
+  onSwap(
+    swapRequest: {
+      kind: BigNumberish;
       tokenIn: string;
       tokenOut: string;
-      amountIn: BigNumberish;
+      amount: BigNumberish;
       poolId: BytesLike;
       latestBlockNumberUsed: BigNumberish;
       from: string;
@@ -1161,43 +1048,12 @@ export class TestConvergentCurvePool extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "onSwapGivenIn(tuple,uint256,uint256)"(
-    request: {
+  "onSwap(tuple,uint256,uint256)"(
+    swapRequest: {
+      kind: BigNumberish;
       tokenIn: string;
       tokenOut: string;
-      amountIn: BigNumberish;
-      poolId: BytesLike;
-      latestBlockNumberUsed: BigNumberish;
-      from: string;
-      to: string;
-      userData: BytesLike;
-    },
-    currentBalanceTokenIn: BigNumberish,
-    currentBalanceTokenOut: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  onSwapGivenOut(
-    request: {
-      tokenIn: string;
-      tokenOut: string;
-      amountOut: BigNumberish;
-      poolId: BytesLike;
-      latestBlockNumberUsed: BigNumberish;
-      from: string;
-      to: string;
-      userData: BytesLike;
-    },
-    currentBalanceTokenIn: BigNumberish,
-    currentBalanceTokenOut: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "onSwapGivenOut(tuple,uint256,uint256)"(
-    request: {
-      tokenIn: string;
-      tokenOut: string;
-      amountOut: BigNumberish;
+      amount: BigNumberish;
       poolId: BytesLike;
       latestBlockNumberUsed: BigNumberish;
       from: string;
@@ -1216,82 +1072,6 @@ export class TestConvergentCurvePool extends Contract {
   percentFeeGov(overrides?: CallOverrides): Promise<BigNumber>;
 
   "percentFeeGov()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-  quoteInGivenOutSimulation(
-    request: {
-      tokenIn: string;
-      tokenOut: string;
-      amountOut: BigNumberish;
-      poolId: BytesLike;
-      latestBlockNumberUsed: BigNumberish;
-      from: string;
-      to: string;
-      userData: BytesLike;
-    },
-    currentBalanceTokenIn: BigNumberish,
-    currentBalanceTokenOut: BigNumberish,
-    _time: BigNumberish,
-    expectedPrice: BigNumberish,
-    totalSupply: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "quoteInGivenOutSimulation(tuple,uint256,uint256,uint256,uint256,uint256)"(
-    request: {
-      tokenIn: string;
-      tokenOut: string;
-      amountOut: BigNumberish;
-      poolId: BytesLike;
-      latestBlockNumberUsed: BigNumberish;
-      from: string;
-      to: string;
-      userData: BytesLike;
-    },
-    currentBalanceTokenIn: BigNumberish,
-    currentBalanceTokenOut: BigNumberish,
-    _time: BigNumberish,
-    expectedPrice: BigNumberish,
-    totalSupply: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  quoteOutGivenInSimulation(
-    request: {
-      tokenIn: string;
-      tokenOut: string;
-      amountIn: BigNumberish;
-      poolId: BytesLike;
-      latestBlockNumberUsed: BigNumberish;
-      from: string;
-      to: string;
-      userData: BytesLike;
-    },
-    currentBalanceTokenIn: BigNumberish,
-    currentBalanceTokenOut: BigNumberish,
-    _time: BigNumberish,
-    expectedPrice: BigNumberish,
-    totalSupply: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "quoteOutGivenInSimulation(tuple,uint256,uint256,uint256,uint256,uint256)"(
-    request: {
-      tokenIn: string;
-      tokenOut: string;
-      amountIn: BigNumberish;
-      poolId: BytesLike;
-      latestBlockNumberUsed: BigNumberish;
-      from: string;
-      to: string;
-      userData: BytesLike;
-    },
-    currentBalanceTokenIn: BigNumberish,
-    currentBalanceTokenOut: BigNumberish,
-    _time: BigNumberish,
-    expectedPrice: BigNumberish,
-    totalSupply: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
 
   setFees(
     amountUnderlying: BigNumberish,
@@ -1332,6 +1112,46 @@ export class TestConvergentCurvePool extends Contract {
     out: boolean,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
+
+  swapSimulation(
+    request: {
+      kind: BigNumberish;
+      tokenIn: string;
+      tokenOut: string;
+      amount: BigNumberish;
+      poolId: BytesLike;
+      latestBlockNumberUsed: BigNumberish;
+      from: string;
+      to: string;
+      userData: BytesLike;
+    },
+    currentBalanceTokenIn: BigNumberish,
+    currentBalanceTokenOut: BigNumberish,
+    _time: BigNumberish,
+    expectedPrice: BigNumberish,
+    totalSupply: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "swapSimulation(tuple,uint256,uint256,uint256,uint256,uint256)"(
+    request: {
+      kind: BigNumberish;
+      tokenIn: string;
+      tokenOut: string;
+      amount: BigNumberish;
+      poolId: BytesLike;
+      latestBlockNumberUsed: BigNumberish;
+      from: string;
+      to: string;
+      userData: BytesLike;
+    },
+    currentBalanceTokenIn: BigNumberish,
+    currentBalanceTokenOut: BigNumberish,
+    _time: BigNumberish,
+    expectedPrice: BigNumberish,
+    totalSupply: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
 
   symbol(overrides?: CallOverrides): Promise<string>;
 
@@ -1655,11 +1475,12 @@ export class TestConvergentCurvePool extends Contract {
       }
     >;
 
-    onSwapGivenIn(
-      request: {
+    onSwap(
+      swapRequest: {
+        kind: BigNumberish;
         tokenIn: string;
         tokenOut: string;
-        amountIn: BigNumberish;
+        amount: BigNumberish;
         poolId: BytesLike;
         latestBlockNumberUsed: BigNumberish;
         from: string;
@@ -1671,43 +1492,12 @@ export class TestConvergentCurvePool extends Contract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    "onSwapGivenIn(tuple,uint256,uint256)"(
-      request: {
+    "onSwap(tuple,uint256,uint256)"(
+      swapRequest: {
+        kind: BigNumberish;
         tokenIn: string;
         tokenOut: string;
-        amountIn: BigNumberish;
-        poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      currentBalanceTokenIn: BigNumberish,
-      currentBalanceTokenOut: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    onSwapGivenOut(
-      request: {
-        tokenIn: string;
-        tokenOut: string;
-        amountOut: BigNumberish;
-        poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      currentBalanceTokenIn: BigNumberish,
-      currentBalanceTokenOut: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "onSwapGivenOut(tuple,uint256,uint256)"(
-      request: {
-        tokenIn: string;
-        tokenOut: string;
-        amountOut: BigNumberish;
+        amount: BigNumberish;
         poolId: BytesLike;
         latestBlockNumberUsed: BigNumberish;
         from: string;
@@ -1726,82 +1516,6 @@ export class TestConvergentCurvePool extends Contract {
     percentFeeGov(overrides?: CallOverrides): Promise<BigNumber>;
 
     "percentFeeGov()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    quoteInGivenOutSimulation(
-      request: {
-        tokenIn: string;
-        tokenOut: string;
-        amountOut: BigNumberish;
-        poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      currentBalanceTokenIn: BigNumberish,
-      currentBalanceTokenOut: BigNumberish,
-      _time: BigNumberish,
-      expectedPrice: BigNumberish,
-      totalSupply: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "quoteInGivenOutSimulation(tuple,uint256,uint256,uint256,uint256,uint256)"(
-      request: {
-        tokenIn: string;
-        tokenOut: string;
-        amountOut: BigNumberish;
-        poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      currentBalanceTokenIn: BigNumberish,
-      currentBalanceTokenOut: BigNumberish,
-      _time: BigNumberish,
-      expectedPrice: BigNumberish,
-      totalSupply: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    quoteOutGivenInSimulation(
-      request: {
-        tokenIn: string;
-        tokenOut: string;
-        amountIn: BigNumberish;
-        poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      currentBalanceTokenIn: BigNumberish,
-      currentBalanceTokenOut: BigNumberish,
-      _time: BigNumberish,
-      expectedPrice: BigNumberish,
-      totalSupply: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "quoteOutGivenInSimulation(tuple,uint256,uint256,uint256,uint256,uint256)"(
-      request: {
-        tokenIn: string;
-        tokenOut: string;
-        amountIn: BigNumberish;
-        poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      currentBalanceTokenIn: BigNumberish,
-      currentBalanceTokenOut: BigNumberish,
-      _time: BigNumberish,
-      expectedPrice: BigNumberish,
-      totalSupply: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
 
     setFees(
       amountUnderlying: BigNumberish,
@@ -1840,6 +1554,46 @@ export class TestConvergentCurvePool extends Contract {
       reserveX: BigNumberish,
       reserveY: BigNumberish,
       out: boolean,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    swapSimulation(
+      request: {
+        kind: BigNumberish;
+        tokenIn: string;
+        tokenOut: string;
+        amount: BigNumberish;
+        poolId: BytesLike;
+        latestBlockNumberUsed: BigNumberish;
+        from: string;
+        to: string;
+        userData: BytesLike;
+      },
+      currentBalanceTokenIn: BigNumberish,
+      currentBalanceTokenOut: BigNumberish,
+      _time: BigNumberish,
+      expectedPrice: BigNumberish,
+      totalSupply: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "swapSimulation(tuple,uint256,uint256,uint256,uint256,uint256)"(
+      request: {
+        kind: BigNumberish;
+        tokenIn: string;
+        tokenOut: string;
+        amount: BigNumberish;
+        poolId: BytesLike;
+        latestBlockNumberUsed: BigNumberish;
+        from: string;
+        to: string;
+        userData: BytesLike;
+      },
+      currentBalanceTokenIn: BigNumberish,
+      currentBalanceTokenOut: BigNumberish,
+      _time: BigNumberish,
+      expectedPrice: BigNumberish,
+      totalSupply: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -2158,11 +1912,12 @@ export class TestConvergentCurvePool extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    onSwapGivenIn(
-      request: {
+    onSwap(
+      swapRequest: {
+        kind: BigNumberish;
         tokenIn: string;
         tokenOut: string;
-        amountIn: BigNumberish;
+        amount: BigNumberish;
         poolId: BytesLike;
         latestBlockNumberUsed: BigNumberish;
         from: string;
@@ -2174,43 +1929,12 @@ export class TestConvergentCurvePool extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    "onSwapGivenIn(tuple,uint256,uint256)"(
-      request: {
+    "onSwap(tuple,uint256,uint256)"(
+      swapRequest: {
+        kind: BigNumberish;
         tokenIn: string;
         tokenOut: string;
-        amountIn: BigNumberish;
-        poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      currentBalanceTokenIn: BigNumberish,
-      currentBalanceTokenOut: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    onSwapGivenOut(
-      request: {
-        tokenIn: string;
-        tokenOut: string;
-        amountOut: BigNumberish;
-        poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      currentBalanceTokenIn: BigNumberish,
-      currentBalanceTokenOut: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "onSwapGivenOut(tuple,uint256,uint256)"(
-      request: {
-        tokenIn: string;
-        tokenOut: string;
-        amountOut: BigNumberish;
+        amount: BigNumberish;
         poolId: BytesLike;
         latestBlockNumberUsed: BigNumberish;
         from: string;
@@ -2229,82 +1953,6 @@ export class TestConvergentCurvePool extends Contract {
     percentFeeGov(overrides?: CallOverrides): Promise<BigNumber>;
 
     "percentFeeGov()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    quoteInGivenOutSimulation(
-      request: {
-        tokenIn: string;
-        tokenOut: string;
-        amountOut: BigNumberish;
-        poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      currentBalanceTokenIn: BigNumberish,
-      currentBalanceTokenOut: BigNumberish,
-      _time: BigNumberish,
-      expectedPrice: BigNumberish,
-      totalSupply: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "quoteInGivenOutSimulation(tuple,uint256,uint256,uint256,uint256,uint256)"(
-      request: {
-        tokenIn: string;
-        tokenOut: string;
-        amountOut: BigNumberish;
-        poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      currentBalanceTokenIn: BigNumberish,
-      currentBalanceTokenOut: BigNumberish,
-      _time: BigNumberish,
-      expectedPrice: BigNumberish,
-      totalSupply: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    quoteOutGivenInSimulation(
-      request: {
-        tokenIn: string;
-        tokenOut: string;
-        amountIn: BigNumberish;
-        poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      currentBalanceTokenIn: BigNumberish,
-      currentBalanceTokenOut: BigNumberish,
-      _time: BigNumberish,
-      expectedPrice: BigNumberish,
-      totalSupply: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "quoteOutGivenInSimulation(tuple,uint256,uint256,uint256,uint256,uint256)"(
-      request: {
-        tokenIn: string;
-        tokenOut: string;
-        amountIn: BigNumberish;
-        poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      currentBalanceTokenIn: BigNumberish,
-      currentBalanceTokenOut: BigNumberish,
-      _time: BigNumberish,
-      expectedPrice: BigNumberish,
-      totalSupply: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
 
     setFees(
       amountUnderlying: BigNumberish,
@@ -2344,6 +1992,46 @@ export class TestConvergentCurvePool extends Contract {
       reserveY: BigNumberish,
       out: boolean,
       overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    swapSimulation(
+      request: {
+        kind: BigNumberish;
+        tokenIn: string;
+        tokenOut: string;
+        amount: BigNumberish;
+        poolId: BytesLike;
+        latestBlockNumberUsed: BigNumberish;
+        from: string;
+        to: string;
+        userData: BytesLike;
+      },
+      currentBalanceTokenIn: BigNumberish,
+      currentBalanceTokenOut: BigNumberish,
+      _time: BigNumberish,
+      expectedPrice: BigNumberish,
+      totalSupply: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "swapSimulation(tuple,uint256,uint256,uint256,uint256,uint256)"(
+      request: {
+        kind: BigNumberish;
+        tokenIn: string;
+        tokenOut: string;
+        amount: BigNumberish;
+        poolId: BytesLike;
+        latestBlockNumberUsed: BigNumberish;
+        from: string;
+        to: string;
+        userData: BytesLike;
+      },
+      currentBalanceTokenIn: BigNumberish,
+      currentBalanceTokenOut: BigNumberish,
+      _time: BigNumberish,
+      expectedPrice: BigNumberish,
+      totalSupply: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     symbol(overrides?: CallOverrides): Promise<BigNumber>;
@@ -2656,11 +2344,12 @@ export class TestConvergentCurvePool extends Contract {
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    onSwapGivenIn(
-      request: {
+    onSwap(
+      swapRequest: {
+        kind: BigNumberish;
         tokenIn: string;
         tokenOut: string;
-        amountIn: BigNumberish;
+        amount: BigNumberish;
         poolId: BytesLike;
         latestBlockNumberUsed: BigNumberish;
         from: string;
@@ -2672,43 +2361,12 @@ export class TestConvergentCurvePool extends Contract {
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "onSwapGivenIn(tuple,uint256,uint256)"(
-      request: {
+    "onSwap(tuple,uint256,uint256)"(
+      swapRequest: {
+        kind: BigNumberish;
         tokenIn: string;
         tokenOut: string;
-        amountIn: BigNumberish;
-        poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      currentBalanceTokenIn: BigNumberish,
-      currentBalanceTokenOut: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    onSwapGivenOut(
-      request: {
-        tokenIn: string;
-        tokenOut: string;
-        amountOut: BigNumberish;
-        poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      currentBalanceTokenIn: BigNumberish,
-      currentBalanceTokenOut: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "onSwapGivenOut(tuple,uint256,uint256)"(
-      request: {
-        tokenIn: string;
-        tokenOut: string;
-        amountOut: BigNumberish;
+        amount: BigNumberish;
         poolId: BytesLike;
         latestBlockNumberUsed: BigNumberish;
         from: string;
@@ -2727,82 +2385,6 @@ export class TestConvergentCurvePool extends Contract {
     percentFeeGov(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     "percentFeeGov()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    quoteInGivenOutSimulation(
-      request: {
-        tokenIn: string;
-        tokenOut: string;
-        amountOut: BigNumberish;
-        poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      currentBalanceTokenIn: BigNumberish,
-      currentBalanceTokenOut: BigNumberish,
-      _time: BigNumberish,
-      expectedPrice: BigNumberish,
-      totalSupply: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "quoteInGivenOutSimulation(tuple,uint256,uint256,uint256,uint256,uint256)"(
-      request: {
-        tokenIn: string;
-        tokenOut: string;
-        amountOut: BigNumberish;
-        poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      currentBalanceTokenIn: BigNumberish,
-      currentBalanceTokenOut: BigNumberish,
-      _time: BigNumberish,
-      expectedPrice: BigNumberish,
-      totalSupply: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    quoteOutGivenInSimulation(
-      request: {
-        tokenIn: string;
-        tokenOut: string;
-        amountIn: BigNumberish;
-        poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      currentBalanceTokenIn: BigNumberish,
-      currentBalanceTokenOut: BigNumberish,
-      _time: BigNumberish,
-      expectedPrice: BigNumberish,
-      totalSupply: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "quoteOutGivenInSimulation(tuple,uint256,uint256,uint256,uint256,uint256)"(
-      request: {
-        tokenIn: string;
-        tokenOut: string;
-        amountIn: BigNumberish;
-        poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      currentBalanceTokenIn: BigNumberish,
-      currentBalanceTokenOut: BigNumberish,
-      _time: BigNumberish,
-      expectedPrice: BigNumberish,
-      totalSupply: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
 
     setFees(
       amountUnderlying: BigNumberish,
@@ -2842,6 +2424,46 @@ export class TestConvergentCurvePool extends Contract {
       reserveY: BigNumberish,
       out: boolean,
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    swapSimulation(
+      request: {
+        kind: BigNumberish;
+        tokenIn: string;
+        tokenOut: string;
+        amount: BigNumberish;
+        poolId: BytesLike;
+        latestBlockNumberUsed: BigNumberish;
+        from: string;
+        to: string;
+        userData: BytesLike;
+      },
+      currentBalanceTokenIn: BigNumberish,
+      currentBalanceTokenOut: BigNumberish,
+      _time: BigNumberish,
+      expectedPrice: BigNumberish,
+      totalSupply: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "swapSimulation(tuple,uint256,uint256,uint256,uint256,uint256)"(
+      request: {
+        kind: BigNumberish;
+        tokenIn: string;
+        tokenOut: string;
+        amount: BigNumberish;
+        poolId: BytesLike;
+        latestBlockNumberUsed: BigNumberish;
+        from: string;
+        to: string;
+        userData: BytesLike;
+      },
+      currentBalanceTokenIn: BigNumberish,
+      currentBalanceTokenOut: BigNumberish,
+      _time: BigNumberish,
+      expectedPrice: BigNumberish,
+      totalSupply: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;

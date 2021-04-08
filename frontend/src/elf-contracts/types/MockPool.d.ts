@@ -28,8 +28,7 @@ interface MockPoolInterface extends ethers.utils.Interface {
     "getVault()": FunctionFragment;
     "onExitPool(bytes32,address,address,uint256[],uint256,uint256,bytes)": FunctionFragment;
     "onJoinPool(bytes32,address,address,uint256[],uint256,uint256,bytes)": FunctionFragment;
-    "onSwapGivenIn(tuple,uint256,uint256)": FunctionFragment;
-    "onSwapGivenOut(tuple,uint256,uint256)": FunctionFragment;
+    "onSwap(tuple,uint256[],uint256,uint256)": FunctionFragment;
     "registerTokens(address[],address[])": FunctionFragment;
     "setMultiplier(uint256)": FunctionFragment;
   };
@@ -66,35 +65,20 @@ interface MockPoolInterface extends ethers.utils.Interface {
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "onSwapGivenIn",
+    functionFragment: "onSwap",
     values: [
       {
+        kind: BigNumberish;
         tokenIn: string;
         tokenOut: string;
-        amountIn: BigNumberish;
+        amount: BigNumberish;
         poolId: BytesLike;
         latestBlockNumberUsed: BigNumberish;
         from: string;
         to: string;
         userData: BytesLike;
       },
-      BigNumberish,
-      BigNumberish
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "onSwapGivenOut",
-    values: [
-      {
-        tokenIn: string;
-        tokenOut: string;
-        amountOut: BigNumberish;
-        poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
+      BigNumberish[],
       BigNumberish,
       BigNumberish
     ]
@@ -117,14 +101,7 @@ interface MockPoolInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "getVault", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "onExitPool", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "onJoinPool", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "onSwapGivenIn",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "onSwapGivenOut",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "onSwap", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "registerTokens",
     data: BytesLike
@@ -223,27 +200,12 @@ export class MockPool extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "onSwapGivenIn(tuple,uint256,uint256)"(
+    "onSwap(tuple,uint256[],uint256,uint256)"(
       swapRequest: {
+        kind: BigNumberish;
         tokenIn: string;
         tokenOut: string;
-        amountIn: BigNumberish;
-        poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      arg1: BigNumberish,
-      arg2: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    "onSwapGivenIn(tuple,uint256[],uint256,uint256)"(
-      swapRequest: {
-        tokenIn: string;
-        tokenOut: string;
-        amountIn: BigNumberish;
+        amount: BigNumberish;
         poolId: BytesLike;
         latestBlockNumberUsed: BigNumberish;
         from: string;
@@ -254,13 +216,14 @@ export class MockPool extends Contract {
       arg2: BigNumberish,
       arg3: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+    ): Promise<[BigNumber] & { amount: BigNumber }>;
 
-    "onSwapGivenOut(tuple,uint256,uint256)"(
+    "onSwap(tuple,uint256,uint256)"(
       swapRequest: {
+        kind: BigNumberish;
         tokenIn: string;
         tokenOut: string;
-        amountOut: BigNumberish;
+        amount: BigNumberish;
         poolId: BytesLike;
         latestBlockNumberUsed: BigNumberish;
         from: string;
@@ -269,23 +232,6 @@ export class MockPool extends Contract {
       },
       arg1: BigNumberish,
       arg2: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    "onSwapGivenOut(tuple,uint256[],uint256,uint256)"(
-      swapRequest: {
-        tokenIn: string;
-        tokenOut: string;
-        amountOut: BigNumberish;
-        poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      arg1: BigNumberish[],
-      arg2: BigNumberish,
-      arg3: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
@@ -378,27 +324,12 @@ export class MockPool extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "onSwapGivenIn(tuple,uint256,uint256)"(
+  "onSwap(tuple,uint256[],uint256,uint256)"(
     swapRequest: {
+      kind: BigNumberish;
       tokenIn: string;
       tokenOut: string;
-      amountIn: BigNumberish;
-      poolId: BytesLike;
-      latestBlockNumberUsed: BigNumberish;
-      from: string;
-      to: string;
-      userData: BytesLike;
-    },
-    arg1: BigNumberish,
-    arg2: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  "onSwapGivenIn(tuple,uint256[],uint256,uint256)"(
-    swapRequest: {
-      tokenIn: string;
-      tokenOut: string;
-      amountIn: BigNumberish;
+      amount: BigNumberish;
       poolId: BytesLike;
       latestBlockNumberUsed: BigNumberish;
       from: string;
@@ -411,11 +342,12 @@ export class MockPool extends Contract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  "onSwapGivenOut(tuple,uint256,uint256)"(
+  "onSwap(tuple,uint256,uint256)"(
     swapRequest: {
+      kind: BigNumberish;
       tokenIn: string;
       tokenOut: string;
-      amountOut: BigNumberish;
+      amount: BigNumberish;
       poolId: BytesLike;
       latestBlockNumberUsed: BigNumberish;
       from: string;
@@ -424,23 +356,6 @@ export class MockPool extends Contract {
     },
     arg1: BigNumberish,
     arg2: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  "onSwapGivenOut(tuple,uint256[],uint256,uint256)"(
-    swapRequest: {
-      tokenIn: string;
-      tokenOut: string;
-      amountOut: BigNumberish;
-      poolId: BytesLike;
-      latestBlockNumberUsed: BigNumberish;
-      from: string;
-      to: string;
-      userData: BytesLike;
-    },
-    arg1: BigNumberish[],
-    arg2: BigNumberish,
-    arg3: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
@@ -553,27 +468,12 @@ export class MockPool extends Contract {
       }
     >;
 
-    "onSwapGivenIn(tuple,uint256,uint256)"(
+    "onSwap(tuple,uint256[],uint256,uint256)"(
       swapRequest: {
+        kind: BigNumberish;
         tokenIn: string;
         tokenOut: string;
-        amountIn: BigNumberish;
-        poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      arg1: BigNumberish,
-      arg2: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "onSwapGivenIn(tuple,uint256[],uint256,uint256)"(
-      swapRequest: {
-        tokenIn: string;
-        tokenOut: string;
-        amountIn: BigNumberish;
+        amount: BigNumberish;
         poolId: BytesLike;
         latestBlockNumberUsed: BigNumberish;
         from: string;
@@ -586,11 +486,12 @@ export class MockPool extends Contract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    "onSwapGivenOut(tuple,uint256,uint256)"(
+    "onSwap(tuple,uint256,uint256)"(
       swapRequest: {
+        kind: BigNumberish;
         tokenIn: string;
         tokenOut: string;
-        amountOut: BigNumberish;
+        amount: BigNumberish;
         poolId: BytesLike;
         latestBlockNumberUsed: BigNumberish;
         from: string;
@@ -599,23 +500,6 @@ export class MockPool extends Contract {
       },
       arg1: BigNumberish,
       arg2: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "onSwapGivenOut(tuple,uint256[],uint256,uint256)"(
-      swapRequest: {
-        tokenIn: string;
-        tokenOut: string;
-        amountOut: BigNumberish;
-        poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      arg1: BigNumberish[],
-      arg2: BigNumberish,
-      arg3: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -731,27 +615,12 @@ export class MockPool extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    "onSwapGivenIn(tuple,uint256,uint256)"(
+    "onSwap(tuple,uint256[],uint256,uint256)"(
       swapRequest: {
+        kind: BigNumberish;
         tokenIn: string;
         tokenOut: string;
-        amountIn: BigNumberish;
-        poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      arg1: BigNumberish,
-      arg2: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "onSwapGivenIn(tuple,uint256[],uint256,uint256)"(
-      swapRequest: {
-        tokenIn: string;
-        tokenOut: string;
-        amountIn: BigNumberish;
+        amount: BigNumberish;
         poolId: BytesLike;
         latestBlockNumberUsed: BigNumberish;
         from: string;
@@ -764,11 +633,12 @@ export class MockPool extends Contract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    "onSwapGivenOut(tuple,uint256,uint256)"(
+    "onSwap(tuple,uint256,uint256)"(
       swapRequest: {
+        kind: BigNumberish;
         tokenIn: string;
         tokenOut: string;
-        amountOut: BigNumberish;
+        amount: BigNumberish;
         poolId: BytesLike;
         latestBlockNumberUsed: BigNumberish;
         from: string;
@@ -777,23 +647,6 @@ export class MockPool extends Contract {
       },
       arg1: BigNumberish,
       arg2: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "onSwapGivenOut(tuple,uint256[],uint256,uint256)"(
-      swapRequest: {
-        tokenIn: string;
-        tokenOut: string;
-        amountOut: BigNumberish;
-        poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      arg1: BigNumberish[],
-      arg2: BigNumberish,
-      arg3: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -887,27 +740,12 @@ export class MockPool extends Contract {
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "onSwapGivenIn(tuple,uint256,uint256)"(
+    "onSwap(tuple,uint256[],uint256,uint256)"(
       swapRequest: {
+        kind: BigNumberish;
         tokenIn: string;
         tokenOut: string;
-        amountIn: BigNumberish;
-        poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      arg1: BigNumberish,
-      arg2: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "onSwapGivenIn(tuple,uint256[],uint256,uint256)"(
-      swapRequest: {
-        tokenIn: string;
-        tokenOut: string;
-        amountIn: BigNumberish;
+        amount: BigNumberish;
         poolId: BytesLike;
         latestBlockNumberUsed: BigNumberish;
         from: string;
@@ -920,11 +758,12 @@ export class MockPool extends Contract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    "onSwapGivenOut(tuple,uint256,uint256)"(
+    "onSwap(tuple,uint256,uint256)"(
       swapRequest: {
+        kind: BigNumberish;
         tokenIn: string;
         tokenOut: string;
-        amountOut: BigNumberish;
+        amount: BigNumberish;
         poolId: BytesLike;
         latestBlockNumberUsed: BigNumberish;
         from: string;
@@ -933,23 +772,6 @@ export class MockPool extends Contract {
       },
       arg1: BigNumberish,
       arg2: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "onSwapGivenOut(tuple,uint256[],uint256,uint256)"(
-      swapRequest: {
-        tokenIn: string;
-        tokenOut: string;
-        amountOut: BigNumberish;
-        poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      arg1: BigNumberish[],
-      arg2: BigNumberish,
-      arg3: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

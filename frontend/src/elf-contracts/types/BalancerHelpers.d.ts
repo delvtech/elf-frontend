@@ -22,8 +22,8 @@ import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 
 interface BalancerHelpersInterface extends ethers.utils.Interface {
   functions: {
-    "queryExit(bytes32,address,address,address[],uint256[],bool,bytes)": FunctionFragment;
-    "queryJoin(bytes32,address,address,address[],uint256[],bool,bytes)": FunctionFragment;
+    "queryExit(bytes32,address,address,tuple)": FunctionFragment;
+    "queryJoin(bytes32,address,address,tuple)": FunctionFragment;
     "vault()": FunctionFragment;
   };
 
@@ -33,10 +33,12 @@ interface BalancerHelpersInterface extends ethers.utils.Interface {
       BytesLike,
       string,
       string,
-      string[],
-      BigNumberish[],
-      boolean,
-      BytesLike
+      {
+        assets: string[];
+        minAmountsOut: BigNumberish[];
+        userData: BytesLike;
+        toInternalBalance: boolean;
+      }
     ]
   ): string;
   encodeFunctionData(
@@ -45,10 +47,12 @@ interface BalancerHelpersInterface extends ethers.utils.Interface {
       BytesLike,
       string,
       string,
-      string[],
-      BigNumberish[],
-      boolean,
-      BytesLike
+      {
+        assets: string[];
+        maxAmountsIn: BigNumberish[];
+        userData: BytesLike;
+        fromInternalBalance: boolean;
+      }
     ]
   ): string;
   encodeFunctionData(functionFragment: "vault", values?: undefined): string;
@@ -78,21 +82,25 @@ export class BalancerHelpers extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      tokens: string[],
-      arg4: BigNumberish[],
-      toInternalBalance: boolean,
-      userData: BytesLike,
+      request: {
+        assets: string[];
+        minAmountsOut: BigNumberish[];
+        userData: BytesLike;
+        toInternalBalance: boolean;
+      },
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "queryExit(bytes32,address,address,address[],uint256[],bool,bytes)"(
+    "queryExit(bytes32,address,address,tuple)"(
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      tokens: string[],
-      arg4: BigNumberish[],
-      toInternalBalance: boolean,
-      userData: BytesLike,
+      request: {
+        assets: string[];
+        minAmountsOut: BigNumberish[];
+        userData: BytesLike;
+        toInternalBalance: boolean;
+      },
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
@@ -100,21 +108,25 @@ export class BalancerHelpers extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      tokens: string[],
-      arg4: BigNumberish[],
-      arg5: boolean,
-      userData: BytesLike,
+      request: {
+        assets: string[];
+        maxAmountsIn: BigNumberish[];
+        userData: BytesLike;
+        fromInternalBalance: boolean;
+      },
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "queryJoin(bytes32,address,address,address[],uint256[],bool,bytes)"(
+    "queryJoin(bytes32,address,address,tuple)"(
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      tokens: string[],
-      arg4: BigNumberish[],
-      arg5: boolean,
-      userData: BytesLike,
+      request: {
+        assets: string[];
+        maxAmountsIn: BigNumberish[];
+        userData: BytesLike;
+        fromInternalBalance: boolean;
+      },
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
@@ -127,21 +139,25 @@ export class BalancerHelpers extends Contract {
     poolId: BytesLike,
     sender: string,
     recipient: string,
-    tokens: string[],
-    arg4: BigNumberish[],
-    toInternalBalance: boolean,
-    userData: BytesLike,
+    request: {
+      assets: string[];
+      minAmountsOut: BigNumberish[];
+      userData: BytesLike;
+      toInternalBalance: boolean;
+    },
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "queryExit(bytes32,address,address,address[],uint256[],bool,bytes)"(
+  "queryExit(bytes32,address,address,tuple)"(
     poolId: BytesLike,
     sender: string,
     recipient: string,
-    tokens: string[],
-    arg4: BigNumberish[],
-    toInternalBalance: boolean,
-    userData: BytesLike,
+    request: {
+      assets: string[];
+      minAmountsOut: BigNumberish[];
+      userData: BytesLike;
+      toInternalBalance: boolean;
+    },
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -149,21 +165,25 @@ export class BalancerHelpers extends Contract {
     poolId: BytesLike,
     sender: string,
     recipient: string,
-    tokens: string[],
-    arg4: BigNumberish[],
-    arg5: boolean,
-    userData: BytesLike,
+    request: {
+      assets: string[];
+      maxAmountsIn: BigNumberish[];
+      userData: BytesLike;
+      fromInternalBalance: boolean;
+    },
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "queryJoin(bytes32,address,address,address[],uint256[],bool,bytes)"(
+  "queryJoin(bytes32,address,address,tuple)"(
     poolId: BytesLike,
     sender: string,
     recipient: string,
-    tokens: string[],
-    arg4: BigNumberish[],
-    arg5: boolean,
-    userData: BytesLike,
+    request: {
+      assets: string[];
+      maxAmountsIn: BigNumberish[];
+      userData: BytesLike;
+      fromInternalBalance: boolean;
+    },
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -176,23 +196,27 @@ export class BalancerHelpers extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      tokens: string[],
-      arg4: BigNumberish[],
-      toInternalBalance: boolean,
-      userData: BytesLike,
+      request: {
+        assets: string[];
+        minAmountsOut: BigNumberish[];
+        userData: BytesLike;
+        toInternalBalance: boolean;
+      },
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, BigNumber[]] & { bptIn: BigNumber; amountsOut: BigNumber[] }
     >;
 
-    "queryExit(bytes32,address,address,address[],uint256[],bool,bytes)"(
+    "queryExit(bytes32,address,address,tuple)"(
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      tokens: string[],
-      arg4: BigNumberish[],
-      toInternalBalance: boolean,
-      userData: BytesLike,
+      request: {
+        assets: string[];
+        minAmountsOut: BigNumberish[];
+        userData: BytesLike;
+        toInternalBalance: boolean;
+      },
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, BigNumber[]] & { bptIn: BigNumber; amountsOut: BigNumber[] }
@@ -202,23 +226,27 @@ export class BalancerHelpers extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      tokens: string[],
-      arg4: BigNumberish[],
-      arg5: boolean,
-      userData: BytesLike,
+      request: {
+        assets: string[];
+        maxAmountsIn: BigNumberish[];
+        userData: BytesLike;
+        fromInternalBalance: boolean;
+      },
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, BigNumber[]] & { bptOut: BigNumber; amountsIn: BigNumber[] }
     >;
 
-    "queryJoin(bytes32,address,address,address[],uint256[],bool,bytes)"(
+    "queryJoin(bytes32,address,address,tuple)"(
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      tokens: string[],
-      arg4: BigNumberish[],
-      arg5: boolean,
-      userData: BytesLike,
+      request: {
+        assets: string[];
+        maxAmountsIn: BigNumberish[];
+        userData: BytesLike;
+        fromInternalBalance: boolean;
+      },
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, BigNumber[]] & { bptOut: BigNumber; amountsIn: BigNumber[] }
@@ -236,21 +264,25 @@ export class BalancerHelpers extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      tokens: string[],
-      arg4: BigNumberish[],
-      toInternalBalance: boolean,
-      userData: BytesLike,
+      request: {
+        assets: string[];
+        minAmountsOut: BigNumberish[];
+        userData: BytesLike;
+        toInternalBalance: boolean;
+      },
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    "queryExit(bytes32,address,address,address[],uint256[],bool,bytes)"(
+    "queryExit(bytes32,address,address,tuple)"(
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      tokens: string[],
-      arg4: BigNumberish[],
-      toInternalBalance: boolean,
-      userData: BytesLike,
+      request: {
+        assets: string[];
+        minAmountsOut: BigNumberish[];
+        userData: BytesLike;
+        toInternalBalance: boolean;
+      },
       overrides?: Overrides
     ): Promise<BigNumber>;
 
@@ -258,21 +290,25 @@ export class BalancerHelpers extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      tokens: string[],
-      arg4: BigNumberish[],
-      arg5: boolean,
-      userData: BytesLike,
+      request: {
+        assets: string[];
+        maxAmountsIn: BigNumberish[];
+        userData: BytesLike;
+        fromInternalBalance: boolean;
+      },
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    "queryJoin(bytes32,address,address,address[],uint256[],bool,bytes)"(
+    "queryJoin(bytes32,address,address,tuple)"(
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      tokens: string[],
-      arg4: BigNumberish[],
-      arg5: boolean,
-      userData: BytesLike,
+      request: {
+        assets: string[];
+        maxAmountsIn: BigNumberish[];
+        userData: BytesLike;
+        fromInternalBalance: boolean;
+      },
       overrides?: Overrides
     ): Promise<BigNumber>;
 
@@ -286,21 +322,25 @@ export class BalancerHelpers extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      tokens: string[],
-      arg4: BigNumberish[],
-      toInternalBalance: boolean,
-      userData: BytesLike,
+      request: {
+        assets: string[];
+        minAmountsOut: BigNumberish[];
+        userData: BytesLike;
+        toInternalBalance: boolean;
+      },
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "queryExit(bytes32,address,address,address[],uint256[],bool,bytes)"(
+    "queryExit(bytes32,address,address,tuple)"(
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      tokens: string[],
-      arg4: BigNumberish[],
-      toInternalBalance: boolean,
-      userData: BytesLike,
+      request: {
+        assets: string[];
+        minAmountsOut: BigNumberish[];
+        userData: BytesLike;
+        toInternalBalance: boolean;
+      },
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
@@ -308,21 +348,25 @@ export class BalancerHelpers extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      tokens: string[],
-      arg4: BigNumberish[],
-      arg5: boolean,
-      userData: BytesLike,
+      request: {
+        assets: string[];
+        maxAmountsIn: BigNumberish[];
+        userData: BytesLike;
+        fromInternalBalance: boolean;
+      },
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "queryJoin(bytes32,address,address,address[],uint256[],bool,bytes)"(
+    "queryJoin(bytes32,address,address,tuple)"(
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      tokens: string[],
-      arg4: BigNumberish[],
-      arg5: boolean,
-      userData: BytesLike,
+      request: {
+        assets: string[];
+        maxAmountsIn: BigNumberish[];
+        userData: BytesLike;
+        fromInternalBalance: boolean;
+      },
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 

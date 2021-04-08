@@ -23,39 +23,36 @@ import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 
 interface VaultInterface extends ethers.utils.Interface {
   functions: {
+    "WETH()": FunctionFragment;
     "batchSwapGivenIn(tuple[],address[],tuple,int256[],uint256)": FunctionFragment;
     "batchSwapGivenOut(tuple[],address[],tuple,int256[],uint256)": FunctionFragment;
     "changeAuthorizer(address)": FunctionFragment;
     "changeRelayerAllowance(address,bool)": FunctionFragment;
     "depositToInternalBalance(tuple[])": FunctionFragment;
-    "depositToPoolBalance(bytes32,tuple[])": FunctionFragment;
     "deregisterTokens(bytes32,address[])": FunctionFragment;
-    "exitPool(bytes32,address,address,address[],uint256[],bool,bytes)": FunctionFragment;
+    "exitPool(bytes32,address,address,tuple)": FunctionFragment;
     "flashLoan(address,address[],uint256[],bytes)": FunctionFragment;
     "getAuthorizer()": FunctionFragment;
-    "getCollectedFees(address[])": FunctionFragment;
     "getEmergencyPeriod()": FunctionFragment;
     "getInternalBalance(address,address[])": FunctionFragment;
     "getPool(bytes32)": FunctionFragment;
-    "getPoolAssetManagers(bytes32,address[])": FunctionFragment;
     "getPoolTokenInfo(bytes32,address)": FunctionFragment;
     "getPoolTokens(bytes32)": FunctionFragment;
-    "getProtocolFees()": FunctionFragment;
+    "getProtocolFeesCollector()": FunctionFragment;
     "hasAllowedRelayer(address,address)": FunctionFragment;
-    "joinPool(bytes32,address,address,address[],uint256[],bool,bytes)": FunctionFragment;
+    "joinPool(bytes32,address,address,tuple)": FunctionFragment;
+    "managePoolBalance(bytes32,uint8,tuple[])": FunctionFragment;
     "queryBatchSwap(uint8,tuple[],address[],tuple)": FunctionFragment;
     "registerPool(uint8)": FunctionFragment;
     "registerTokens(bytes32,address[],address[])": FunctionFragment;
     "setEmergencyPeriod(bool)": FunctionFragment;
-    "setProtocolFees(uint256,uint256,uint256)": FunctionFragment;
+    "swap(tuple,tuple,uint256,uint256)": FunctionFragment;
     "transferInternalBalance(tuple[])": FunctionFragment;
     "transferToExternalBalance(tuple[])": FunctionFragment;
-    "updateManagedBalance(bytes32,tuple[])": FunctionFragment;
-    "withdrawCollectedFees(address[],uint256[],address)": FunctionFragment;
     "withdrawFromInternalBalance(tuple[])": FunctionFragment;
-    "withdrawFromPoolBalance(bytes32,tuple[])": FunctionFragment;
   };
 
+  encodeFunctionData(functionFragment: "WETH", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "batchSwapGivenIn",
     values: [
@@ -118,10 +115,6 @@ interface VaultInterface extends ethers.utils.Interface {
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "depositToPoolBalance",
-    values: [BytesLike, { token: string; amount: BigNumberish }[]]
-  ): string;
-  encodeFunctionData(
     functionFragment: "deregisterTokens",
     values: [BytesLike, string[]]
   ): string;
@@ -131,10 +124,12 @@ interface VaultInterface extends ethers.utils.Interface {
       BytesLike,
       string,
       string,
-      string[],
-      BigNumberish[],
-      boolean,
-      BytesLike
+      {
+        assets: string[];
+        minAmountsOut: BigNumberish[];
+        userData: BytesLike;
+        toInternalBalance: boolean;
+      }
     ]
   ): string;
   encodeFunctionData(
@@ -146,10 +141,6 @@ interface VaultInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "getCollectedFees",
-    values: [string[]]
-  ): string;
-  encodeFunctionData(
     functionFragment: "getEmergencyPeriod",
     values?: undefined
   ): string;
@@ -159,10 +150,6 @@ interface VaultInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "getPool", values: [BytesLike]): string;
   encodeFunctionData(
-    functionFragment: "getPoolAssetManagers",
-    values: [BytesLike, string[]]
-  ): string;
-  encodeFunctionData(
     functionFragment: "getPoolTokenInfo",
     values: [BytesLike, string]
   ): string;
@@ -171,7 +158,7 @@ interface VaultInterface extends ethers.utils.Interface {
     values: [BytesLike]
   ): string;
   encodeFunctionData(
-    functionFragment: "getProtocolFees",
+    functionFragment: "getProtocolFeesCollector",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -184,11 +171,17 @@ interface VaultInterface extends ethers.utils.Interface {
       BytesLike,
       string,
       string,
-      string[],
-      BigNumberish[],
-      boolean,
-      BytesLike
+      {
+        assets: string[];
+        maxAmountsIn: BigNumberish[];
+        userData: BytesLike;
+        fromInternalBalance: boolean;
+      }
     ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "managePoolBalance",
+    values: [BytesLike, BigNumberish, { token: string; amount: BigNumberish }[]]
   ): string;
   encodeFunctionData(
     functionFragment: "queryBatchSwap",
@@ -223,8 +216,25 @@ interface VaultInterface extends ethers.utils.Interface {
     values: [boolean]
   ): string;
   encodeFunctionData(
-    functionFragment: "setProtocolFees",
-    values: [BigNumberish, BigNumberish, BigNumberish]
+    functionFragment: "swap",
+    values: [
+      {
+        poolId: BytesLike;
+        kind: BigNumberish;
+        assetIn: string;
+        assetOut: string;
+        amount: BigNumberish;
+        userData: BytesLike;
+      },
+      {
+        sender: string;
+        fromInternalBalance: boolean;
+        recipient: string;
+        toInternalBalance: boolean;
+      },
+      BigNumberish,
+      BigNumberish
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "transferInternalBalance",
@@ -249,14 +259,6 @@ interface VaultInterface extends ethers.utils.Interface {
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "updateManagedBalance",
-    values: [BytesLike, { token: string; amount: BigNumberish }[]]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "withdrawCollectedFees",
-    values: [string[], BigNumberish[], string]
-  ): string;
-  encodeFunctionData(
     functionFragment: "withdrawFromInternalBalance",
     values: [
       {
@@ -267,11 +269,8 @@ interface VaultInterface extends ethers.utils.Interface {
       }[]
     ]
   ): string;
-  encodeFunctionData(
-    functionFragment: "withdrawFromPoolBalance",
-    values: [BytesLike, { token: string; amount: BigNumberish }[]]
-  ): string;
 
+  decodeFunctionResult(functionFragment: "WETH", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "batchSwapGivenIn",
     data: BytesLike
@@ -293,10 +292,6 @@ interface VaultInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "depositToPoolBalance",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "deregisterTokens",
     data: BytesLike
   ): Result;
@@ -304,10 +299,6 @@ interface VaultInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "flashLoan", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getAuthorizer",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getCollectedFees",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -320,10 +311,6 @@ interface VaultInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "getPool", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "getPoolAssetManagers",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "getPoolTokenInfo",
     data: BytesLike
   ): Result;
@@ -332,7 +319,7 @@ interface VaultInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getProtocolFees",
+    functionFragment: "getProtocolFeesCollector",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -340,6 +327,10 @@ interface VaultInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "joinPool", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "managePoolBalance",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "queryBatchSwap",
     data: BytesLike
@@ -356,10 +347,7 @@ interface VaultInterface extends ethers.utils.Interface {
     functionFragment: "setEmergencyPeriod",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "setProtocolFees",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "swap", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "transferInternalBalance",
     data: BytesLike
@@ -369,28 +357,15 @@ interface VaultInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "updateManagedBalance",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "withdrawCollectedFees",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "withdrawFromInternalBalance",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "withdrawFromPoolBalance",
     data: BytesLike
   ): Result;
 
   events: {
     "EmergencyPeriodChanged(bool)": EventFragment;
     "InternalBalanceChanged(address,address,int256)": EventFragment;
-    "PoolBalanceChanged(bytes32,address,address,int256)": EventFragment;
-    "PoolExited(bytes32,address,address[],uint256[],uint256[])": EventFragment;
-    "PoolJoined(bytes32,address,address[],uint256[],uint256[])": EventFragment;
+    "PoolBalanceChanged(bytes32,address,address[],int256[],uint256[])": EventFragment;
+    "PoolBalanceManaged(bytes32,address,address,int256)": EventFragment;
     "PoolRegistered(bytes32)": EventFragment;
     "Swap(bytes32,address,address,uint256,uint256)": EventFragment;
     "TokensDeregistered(bytes32,address[])": EventFragment;
@@ -400,8 +375,7 @@ interface VaultInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "EmergencyPeriodChanged"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "InternalBalanceChanged"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "PoolBalanceChanged"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "PoolExited"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "PoolJoined"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "PoolBalanceManaged"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "PoolRegistered"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Swap"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "TokensDeregistered"): EventFragment;
@@ -422,6 +396,10 @@ export class Vault extends Contract {
   interface: VaultInterface;
 
   functions: {
+    WETH(overrides?: CallOverrides): Promise<[string]>;
+
+    "WETH()"(overrides?: CallOverrides): Promise<[string]>;
+
     batchSwapGivenIn(
       swaps: {
         poolId: BytesLike;
@@ -544,18 +522,6 @@ export class Vault extends Contract {
       overrides?: PayableOverrides
     ): Promise<ContractTransaction>;
 
-    depositToPoolBalance(
-      poolId: BytesLike,
-      transfers: { token: string; amount: BigNumberish }[],
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "depositToPoolBalance(bytes32,tuple[])"(
-      poolId: BytesLike,
-      transfers: { token: string; amount: BigNumberish }[],
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
     deregisterTokens(
       poolId: BytesLike,
       tokens: string[],
@@ -572,21 +538,25 @@ export class Vault extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      assets: string[],
-      minAmountsOut: BigNumberish[],
-      toInternalBalance: boolean,
-      userData: BytesLike,
+      request: {
+        assets: string[];
+        minAmountsOut: BigNumberish[];
+        userData: BytesLike;
+        toInternalBalance: boolean;
+      },
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "exitPool(bytes32,address,address,address[],uint256[],bool,bytes)"(
+    "exitPool(bytes32,address,address,tuple)"(
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      assets: string[],
-      minAmountsOut: BigNumberish[],
-      toInternalBalance: boolean,
-      userData: BytesLike,
+      request: {
+        assets: string[];
+        minAmountsOut: BigNumberish[];
+        userData: BytesLike;
+        toInternalBalance: boolean;
+      },
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
@@ -609,16 +579,6 @@ export class Vault extends Contract {
     getAuthorizer(overrides?: CallOverrides): Promise<[string]>;
 
     "getAuthorizer()"(overrides?: CallOverrides): Promise<[string]>;
-
-    getCollectedFees(
-      tokens: string[],
-      overrides?: CallOverrides
-    ): Promise<[BigNumber[]]>;
-
-    "getCollectedFees(address[])"(
-      tokens: string[],
-      overrides?: CallOverrides
-    ): Promise<[BigNumber[]]>;
 
     getEmergencyPeriod(
       overrides?: CallOverrides
@@ -662,18 +622,6 @@ export class Vault extends Contract {
       overrides?: CallOverrides
     ): Promise<[string, number]>;
 
-    getPoolAssetManagers(
-      poolId: BytesLike,
-      tokens: string[],
-      overrides?: CallOverrides
-    ): Promise<[string[]] & { assetManagers: string[] }>;
-
-    "getPoolAssetManagers(bytes32,address[])"(
-      poolId: BytesLike,
-      tokens: string[],
-      overrides?: CallOverrides
-    ): Promise<[string[]] & { assetManagers: string[] }>;
-
     getPoolTokenInfo(
       poolId: BytesLike,
       token: string,
@@ -714,25 +662,9 @@ export class Vault extends Contract {
       [string[], BigNumber[]] & { tokens: string[]; balances: BigNumber[] }
     >;
 
-    getProtocolFees(
-      overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber, BigNumber] & {
-        swapFee: BigNumber;
-        withdrawFee: BigNumber;
-        flashLoanFee: BigNumber;
-      }
-    >;
+    getProtocolFeesCollector(overrides?: CallOverrides): Promise<[string]>;
 
-    "getProtocolFees()"(
-      overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber, BigNumber] & {
-        swapFee: BigNumber;
-        withdrawFee: BigNumber;
-        flashLoanFee: BigNumber;
-      }
-    >;
+    "getProtocolFeesCollector()"(overrides?: CallOverrides): Promise<[string]>;
 
     hasAllowedRelayer(
       user: string,
@@ -750,22 +682,40 @@ export class Vault extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      assets: string[],
-      maxAmountsIn: BigNumberish[],
-      fromInternalBalance: boolean,
-      userData: BytesLike,
+      request: {
+        assets: string[];
+        maxAmountsIn: BigNumberish[];
+        userData: BytesLike;
+        fromInternalBalance: boolean;
+      },
       overrides?: PayableOverrides
     ): Promise<ContractTransaction>;
 
-    "joinPool(bytes32,address,address,address[],uint256[],bool,bytes)"(
+    "joinPool(bytes32,address,address,tuple)"(
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      assets: string[],
-      maxAmountsIn: BigNumberish[],
-      fromInternalBalance: boolean,
-      userData: BytesLike,
+      request: {
+        assets: string[];
+        maxAmountsIn: BigNumberish[];
+        userData: BytesLike;
+        fromInternalBalance: boolean;
+      },
       overrides?: PayableOverrides
+    ): Promise<ContractTransaction>;
+
+    managePoolBalance(
+      poolId: BytesLike,
+      kind: BigNumberish,
+      transfers: { token: string; amount: BigNumberish }[],
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "managePoolBalance(bytes32,uint8,tuple[])"(
+      poolId: BytesLike,
+      kind: BigNumberish,
+      transfers: { token: string; amount: BigNumberish }[],
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     queryBatchSwap(
@@ -840,18 +790,44 @@ export class Vault extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    setProtocolFees(
-      newSwapFee: BigNumberish,
-      newWithdrawFee: BigNumberish,
-      newFlashLoanFee: BigNumberish,
-      overrides?: Overrides
+    swap(
+      request: {
+        poolId: BytesLike;
+        kind: BigNumberish;
+        assetIn: string;
+        assetOut: string;
+        amount: BigNumberish;
+        userData: BytesLike;
+      },
+      funds: {
+        sender: string;
+        fromInternalBalance: boolean;
+        recipient: string;
+        toInternalBalance: boolean;
+      },
+      limit: BigNumberish,
+      deadline: BigNumberish,
+      overrides?: PayableOverrides
     ): Promise<ContractTransaction>;
 
-    "setProtocolFees(uint256,uint256,uint256)"(
-      newSwapFee: BigNumberish,
-      newWithdrawFee: BigNumberish,
-      newFlashLoanFee: BigNumberish,
-      overrides?: Overrides
+    "swap(tuple,tuple,uint256,uint256)"(
+      request: {
+        poolId: BytesLike;
+        kind: BigNumberish;
+        assetIn: string;
+        assetOut: string;
+        amount: BigNumberish;
+        userData: BytesLike;
+      },
+      funds: {
+        sender: string;
+        fromInternalBalance: boolean;
+        recipient: string;
+        toInternalBalance: boolean;
+      },
+      limit: BigNumberish,
+      deadline: BigNumberish,
+      overrides?: PayableOverrides
     ): Promise<ContractTransaction>;
 
     transferInternalBalance(
@@ -894,32 +870,6 @@ export class Vault extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    updateManagedBalance(
-      poolId: BytesLike,
-      transfers: { token: string; amount: BigNumberish }[],
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "updateManagedBalance(bytes32,tuple[])"(
-      poolId: BytesLike,
-      transfers: { token: string; amount: BigNumberish }[],
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    withdrawCollectedFees(
-      tokens: string[],
-      amounts: BigNumberish[],
-      recipient: string,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "withdrawCollectedFees(address[],uint256[],address)"(
-      tokens: string[],
-      amounts: BigNumberish[],
-      recipient: string,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
     withdrawFromInternalBalance(
       transfers: {
         asset: string;
@@ -939,19 +889,11 @@ export class Vault extends Contract {
       }[],
       overrides?: Overrides
     ): Promise<ContractTransaction>;
-
-    withdrawFromPoolBalance(
-      poolId: BytesLike,
-      transfers: { token: string; amount: BigNumberish }[],
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "withdrawFromPoolBalance(bytes32,tuple[])"(
-      poolId: BytesLike,
-      transfers: { token: string; amount: BigNumberish }[],
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
   };
+
+  WETH(overrides?: CallOverrides): Promise<string>;
+
+  "WETH()"(overrides?: CallOverrides): Promise<string>;
 
   batchSwapGivenIn(
     swaps: {
@@ -1075,18 +1017,6 @@ export class Vault extends Contract {
     overrides?: PayableOverrides
   ): Promise<ContractTransaction>;
 
-  depositToPoolBalance(
-    poolId: BytesLike,
-    transfers: { token: string; amount: BigNumberish }[],
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "depositToPoolBalance(bytes32,tuple[])"(
-    poolId: BytesLike,
-    transfers: { token: string; amount: BigNumberish }[],
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
   deregisterTokens(
     poolId: BytesLike,
     tokens: string[],
@@ -1103,21 +1033,25 @@ export class Vault extends Contract {
     poolId: BytesLike,
     sender: string,
     recipient: string,
-    assets: string[],
-    minAmountsOut: BigNumberish[],
-    toInternalBalance: boolean,
-    userData: BytesLike,
+    request: {
+      assets: string[];
+      minAmountsOut: BigNumberish[];
+      userData: BytesLike;
+      toInternalBalance: boolean;
+    },
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "exitPool(bytes32,address,address,address[],uint256[],bool,bytes)"(
+  "exitPool(bytes32,address,address,tuple)"(
     poolId: BytesLike,
     sender: string,
     recipient: string,
-    assets: string[],
-    minAmountsOut: BigNumberish[],
-    toInternalBalance: boolean,
-    userData: BytesLike,
+    request: {
+      assets: string[];
+      minAmountsOut: BigNumberish[];
+      userData: BytesLike;
+      toInternalBalance: boolean;
+    },
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -1140,16 +1074,6 @@ export class Vault extends Contract {
   getAuthorizer(overrides?: CallOverrides): Promise<string>;
 
   "getAuthorizer()"(overrides?: CallOverrides): Promise<string>;
-
-  getCollectedFees(
-    tokens: string[],
-    overrides?: CallOverrides
-  ): Promise<BigNumber[]>;
-
-  "getCollectedFees(address[])"(
-    tokens: string[],
-    overrides?: CallOverrides
-  ): Promise<BigNumber[]>;
 
   getEmergencyPeriod(
     overrides?: CallOverrides
@@ -1193,18 +1117,6 @@ export class Vault extends Contract {
     overrides?: CallOverrides
   ): Promise<[string, number]>;
 
-  getPoolAssetManagers(
-    poolId: BytesLike,
-    tokens: string[],
-    overrides?: CallOverrides
-  ): Promise<string[]>;
-
-  "getPoolAssetManagers(bytes32,address[])"(
-    poolId: BytesLike,
-    tokens: string[],
-    overrides?: CallOverrides
-  ): Promise<string[]>;
-
   getPoolTokenInfo(
     poolId: BytesLike,
     token: string,
@@ -1245,25 +1157,9 @@ export class Vault extends Contract {
     [string[], BigNumber[]] & { tokens: string[]; balances: BigNumber[] }
   >;
 
-  getProtocolFees(
-    overrides?: CallOverrides
-  ): Promise<
-    [BigNumber, BigNumber, BigNumber] & {
-      swapFee: BigNumber;
-      withdrawFee: BigNumber;
-      flashLoanFee: BigNumber;
-    }
-  >;
+  getProtocolFeesCollector(overrides?: CallOverrides): Promise<string>;
 
-  "getProtocolFees()"(
-    overrides?: CallOverrides
-  ): Promise<
-    [BigNumber, BigNumber, BigNumber] & {
-      swapFee: BigNumber;
-      withdrawFee: BigNumber;
-      flashLoanFee: BigNumber;
-    }
-  >;
+  "getProtocolFeesCollector()"(overrides?: CallOverrides): Promise<string>;
 
   hasAllowedRelayer(
     user: string,
@@ -1281,22 +1177,40 @@ export class Vault extends Contract {
     poolId: BytesLike,
     sender: string,
     recipient: string,
-    assets: string[],
-    maxAmountsIn: BigNumberish[],
-    fromInternalBalance: boolean,
-    userData: BytesLike,
+    request: {
+      assets: string[];
+      maxAmountsIn: BigNumberish[];
+      userData: BytesLike;
+      fromInternalBalance: boolean;
+    },
     overrides?: PayableOverrides
   ): Promise<ContractTransaction>;
 
-  "joinPool(bytes32,address,address,address[],uint256[],bool,bytes)"(
+  "joinPool(bytes32,address,address,tuple)"(
     poolId: BytesLike,
     sender: string,
     recipient: string,
-    assets: string[],
-    maxAmountsIn: BigNumberish[],
-    fromInternalBalance: boolean,
-    userData: BytesLike,
+    request: {
+      assets: string[];
+      maxAmountsIn: BigNumberish[];
+      userData: BytesLike;
+      fromInternalBalance: boolean;
+    },
     overrides?: PayableOverrides
+  ): Promise<ContractTransaction>;
+
+  managePoolBalance(
+    poolId: BytesLike,
+    kind: BigNumberish,
+    transfers: { token: string; amount: BigNumberish }[],
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "managePoolBalance(bytes32,uint8,tuple[])"(
+    poolId: BytesLike,
+    kind: BigNumberish,
+    transfers: { token: string; amount: BigNumberish }[],
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   queryBatchSwap(
@@ -1371,18 +1285,44 @@ export class Vault extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  setProtocolFees(
-    newSwapFee: BigNumberish,
-    newWithdrawFee: BigNumberish,
-    newFlashLoanFee: BigNumberish,
-    overrides?: Overrides
+  swap(
+    request: {
+      poolId: BytesLike;
+      kind: BigNumberish;
+      assetIn: string;
+      assetOut: string;
+      amount: BigNumberish;
+      userData: BytesLike;
+    },
+    funds: {
+      sender: string;
+      fromInternalBalance: boolean;
+      recipient: string;
+      toInternalBalance: boolean;
+    },
+    limit: BigNumberish,
+    deadline: BigNumberish,
+    overrides?: PayableOverrides
   ): Promise<ContractTransaction>;
 
-  "setProtocolFees(uint256,uint256,uint256)"(
-    newSwapFee: BigNumberish,
-    newWithdrawFee: BigNumberish,
-    newFlashLoanFee: BigNumberish,
-    overrides?: Overrides
+  "swap(tuple,tuple,uint256,uint256)"(
+    request: {
+      poolId: BytesLike;
+      kind: BigNumberish;
+      assetIn: string;
+      assetOut: string;
+      amount: BigNumberish;
+      userData: BytesLike;
+    },
+    funds: {
+      sender: string;
+      fromInternalBalance: boolean;
+      recipient: string;
+      toInternalBalance: boolean;
+    },
+    limit: BigNumberish,
+    deadline: BigNumberish,
+    overrides?: PayableOverrides
   ): Promise<ContractTransaction>;
 
   transferInternalBalance(
@@ -1425,32 +1365,6 @@ export class Vault extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  updateManagedBalance(
-    poolId: BytesLike,
-    transfers: { token: string; amount: BigNumberish }[],
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "updateManagedBalance(bytes32,tuple[])"(
-    poolId: BytesLike,
-    transfers: { token: string; amount: BigNumberish }[],
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  withdrawCollectedFees(
-    tokens: string[],
-    amounts: BigNumberish[],
-    recipient: string,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "withdrawCollectedFees(address[],uint256[],address)"(
-    tokens: string[],
-    amounts: BigNumberish[],
-    recipient: string,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
   withdrawFromInternalBalance(
     transfers: {
       asset: string;
@@ -1471,19 +1385,11 @@ export class Vault extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  withdrawFromPoolBalance(
-    poolId: BytesLike,
-    transfers: { token: string; amount: BigNumberish }[],
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "withdrawFromPoolBalance(bytes32,tuple[])"(
-    poolId: BytesLike,
-    transfers: { token: string; amount: BigNumberish }[],
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
   callStatic: {
+    WETH(overrides?: CallOverrides): Promise<string>;
+
+    "WETH()"(overrides?: CallOverrides): Promise<string>;
+
     batchSwapGivenIn(
       swaps: {
         poolId: BytesLike;
@@ -1606,18 +1512,6 @@ export class Vault extends Contract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    depositToPoolBalance(
-      poolId: BytesLike,
-      transfers: { token: string; amount: BigNumberish }[],
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "depositToPoolBalance(bytes32,tuple[])"(
-      poolId: BytesLike,
-      transfers: { token: string; amount: BigNumberish }[],
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     deregisterTokens(
       poolId: BytesLike,
       tokens: string[],
@@ -1634,21 +1528,25 @@ export class Vault extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      assets: string[],
-      minAmountsOut: BigNumberish[],
-      toInternalBalance: boolean,
-      userData: BytesLike,
+      request: {
+        assets: string[];
+        minAmountsOut: BigNumberish[];
+        userData: BytesLike;
+        toInternalBalance: boolean;
+      },
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "exitPool(bytes32,address,address,address[],uint256[],bool,bytes)"(
+    "exitPool(bytes32,address,address,tuple)"(
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      assets: string[],
-      minAmountsOut: BigNumberish[],
-      toInternalBalance: boolean,
-      userData: BytesLike,
+      request: {
+        assets: string[];
+        minAmountsOut: BigNumberish[];
+        userData: BytesLike;
+        toInternalBalance: boolean;
+      },
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1671,16 +1569,6 @@ export class Vault extends Contract {
     getAuthorizer(overrides?: CallOverrides): Promise<string>;
 
     "getAuthorizer()"(overrides?: CallOverrides): Promise<string>;
-
-    getCollectedFees(
-      tokens: string[],
-      overrides?: CallOverrides
-    ): Promise<BigNumber[]>;
-
-    "getCollectedFees(address[])"(
-      tokens: string[],
-      overrides?: CallOverrides
-    ): Promise<BigNumber[]>;
 
     getEmergencyPeriod(
       overrides?: CallOverrides
@@ -1724,18 +1612,6 @@ export class Vault extends Contract {
       overrides?: CallOverrides
     ): Promise<[string, number]>;
 
-    getPoolAssetManagers(
-      poolId: BytesLike,
-      tokens: string[],
-      overrides?: CallOverrides
-    ): Promise<string[]>;
-
-    "getPoolAssetManagers(bytes32,address[])"(
-      poolId: BytesLike,
-      tokens: string[],
-      overrides?: CallOverrides
-    ): Promise<string[]>;
-
     getPoolTokenInfo(
       poolId: BytesLike,
       token: string,
@@ -1776,25 +1652,9 @@ export class Vault extends Contract {
       [string[], BigNumber[]] & { tokens: string[]; balances: BigNumber[] }
     >;
 
-    getProtocolFees(
-      overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber, BigNumber] & {
-        swapFee: BigNumber;
-        withdrawFee: BigNumber;
-        flashLoanFee: BigNumber;
-      }
-    >;
+    getProtocolFeesCollector(overrides?: CallOverrides): Promise<string>;
 
-    "getProtocolFees()"(
-      overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber, BigNumber] & {
-        swapFee: BigNumber;
-        withdrawFee: BigNumber;
-        flashLoanFee: BigNumber;
-      }
-    >;
+    "getProtocolFeesCollector()"(overrides?: CallOverrides): Promise<string>;
 
     hasAllowedRelayer(
       user: string,
@@ -1812,21 +1672,39 @@ export class Vault extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      assets: string[],
-      maxAmountsIn: BigNumberish[],
-      fromInternalBalance: boolean,
-      userData: BytesLike,
+      request: {
+        assets: string[];
+        maxAmountsIn: BigNumberish[];
+        userData: BytesLike;
+        fromInternalBalance: boolean;
+      },
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "joinPool(bytes32,address,address,address[],uint256[],bool,bytes)"(
+    "joinPool(bytes32,address,address,tuple)"(
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      assets: string[],
-      maxAmountsIn: BigNumberish[],
-      fromInternalBalance: boolean,
-      userData: BytesLike,
+      request: {
+        assets: string[];
+        maxAmountsIn: BigNumberish[];
+        userData: BytesLike;
+        fromInternalBalance: boolean;
+      },
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    managePoolBalance(
+      poolId: BytesLike,
+      kind: BigNumberish,
+      transfers: { token: string; amount: BigNumberish }[],
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "managePoolBalance(bytes32,uint8,tuple[])"(
+      poolId: BytesLike,
+      kind: BigNumberish,
+      transfers: { token: string; amount: BigNumberish }[],
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1902,19 +1780,45 @@ export class Vault extends Contract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    setProtocolFees(
-      newSwapFee: BigNumberish,
-      newWithdrawFee: BigNumberish,
-      newFlashLoanFee: BigNumberish,
+    swap(
+      request: {
+        poolId: BytesLike;
+        kind: BigNumberish;
+        assetIn: string;
+        assetOut: string;
+        amount: BigNumberish;
+        userData: BytesLike;
+      },
+      funds: {
+        sender: string;
+        fromInternalBalance: boolean;
+        recipient: string;
+        toInternalBalance: boolean;
+      },
+      limit: BigNumberish,
+      deadline: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<void>;
+    ): Promise<BigNumber>;
 
-    "setProtocolFees(uint256,uint256,uint256)"(
-      newSwapFee: BigNumberish,
-      newWithdrawFee: BigNumberish,
-      newFlashLoanFee: BigNumberish,
+    "swap(tuple,tuple,uint256,uint256)"(
+      request: {
+        poolId: BytesLike;
+        kind: BigNumberish;
+        assetIn: string;
+        assetOut: string;
+        amount: BigNumberish;
+        userData: BytesLike;
+      },
+      funds: {
+        sender: string;
+        fromInternalBalance: boolean;
+        recipient: string;
+        toInternalBalance: boolean;
+      },
+      limit: BigNumberish,
+      deadline: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<void>;
+    ): Promise<BigNumber>;
 
     transferInternalBalance(
       transfers: {
@@ -1956,32 +1860,6 @@ export class Vault extends Contract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    updateManagedBalance(
-      poolId: BytesLike,
-      transfers: { token: string; amount: BigNumberish }[],
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "updateManagedBalance(bytes32,tuple[])"(
-      poolId: BytesLike,
-      transfers: { token: string; amount: BigNumberish }[],
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    withdrawCollectedFees(
-      tokens: string[],
-      amounts: BigNumberish[],
-      recipient: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "withdrawCollectedFees(address[],uint256[],address)"(
-      tokens: string[],
-      amounts: BigNumberish[],
-      recipient: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     withdrawFromInternalBalance(
       transfers: {
         asset: string;
@@ -2001,18 +1879,6 @@ export class Vault extends Contract {
       }[],
       overrides?: CallOverrides
     ): Promise<void>;
-
-    withdrawFromPoolBalance(
-      poolId: BytesLike,
-      transfers: { token: string; amount: BigNumberish }[],
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "withdrawFromPoolBalance(bytes32,tuple[])"(
-      poolId: BytesLike,
-      transfers: { token: string; amount: BigNumberish }[],
-      overrides?: CallOverrides
-    ): Promise<void>;
   };
 
   filters: {
@@ -2026,25 +1892,17 @@ export class Vault extends Contract {
 
     PoolBalanceChanged(
       poolId: BytesLike | null,
+      liquidityProvider: string | null,
+      tokens: null,
+      amounts: null,
+      protocolFees: null
+    ): EventFilter;
+
+    PoolBalanceManaged(
+      poolId: BytesLike | null,
       assetManager: string | null,
       token: string | null,
       amount: null
-    ): EventFilter;
-
-    PoolExited(
-      poolId: BytesLike | null,
-      liquidityProvider: string | null,
-      tokens: null,
-      amountsOut: null,
-      protocolFees: null
-    ): EventFilter;
-
-    PoolJoined(
-      poolId: BytesLike | null,
-      liquidityProvider: string | null,
-      tokens: null,
-      amountsIn: null,
-      protocolFees: null
     ): EventFilter;
 
     PoolRegistered(poolId: null): EventFilter;
@@ -2067,6 +1925,10 @@ export class Vault extends Contract {
   };
 
   estimateGas: {
+    WETH(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "WETH()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     batchSwapGivenIn(
       swaps: {
         poolId: BytesLike;
@@ -2189,18 +2051,6 @@ export class Vault extends Contract {
       overrides?: PayableOverrides
     ): Promise<BigNumber>;
 
-    depositToPoolBalance(
-      poolId: BytesLike,
-      transfers: { token: string; amount: BigNumberish }[],
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "depositToPoolBalance(bytes32,tuple[])"(
-      poolId: BytesLike,
-      transfers: { token: string; amount: BigNumberish }[],
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
     deregisterTokens(
       poolId: BytesLike,
       tokens: string[],
@@ -2217,21 +2067,25 @@ export class Vault extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      assets: string[],
-      minAmountsOut: BigNumberish[],
-      toInternalBalance: boolean,
-      userData: BytesLike,
+      request: {
+        assets: string[];
+        minAmountsOut: BigNumberish[];
+        userData: BytesLike;
+        toInternalBalance: boolean;
+      },
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    "exitPool(bytes32,address,address,address[],uint256[],bool,bytes)"(
+    "exitPool(bytes32,address,address,tuple)"(
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      assets: string[],
-      minAmountsOut: BigNumberish[],
-      toInternalBalance: boolean,
-      userData: BytesLike,
+      request: {
+        assets: string[];
+        minAmountsOut: BigNumberish[];
+        userData: BytesLike;
+        toInternalBalance: boolean;
+      },
       overrides?: Overrides
     ): Promise<BigNumber>;
 
@@ -2254,16 +2108,6 @@ export class Vault extends Contract {
     getAuthorizer(overrides?: CallOverrides): Promise<BigNumber>;
 
     "getAuthorizer()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    getCollectedFees(
-      tokens: string[],
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "getCollectedFees(address[])"(
-      tokens: string[],
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
 
     getEmergencyPeriod(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -2288,18 +2132,6 @@ export class Vault extends Contract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getPoolAssetManagers(
-      poolId: BytesLike,
-      tokens: string[],
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "getPoolAssetManagers(bytes32,address[])"(
-      poolId: BytesLike,
-      tokens: string[],
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     getPoolTokenInfo(
       poolId: BytesLike,
       token: string,
@@ -2322,9 +2154,9 @@ export class Vault extends Contract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getProtocolFees(overrides?: CallOverrides): Promise<BigNumber>;
+    getProtocolFeesCollector(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "getProtocolFees()"(overrides?: CallOverrides): Promise<BigNumber>;
+    "getProtocolFeesCollector()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     hasAllowedRelayer(
       user: string,
@@ -2342,22 +2174,40 @@ export class Vault extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      assets: string[],
-      maxAmountsIn: BigNumberish[],
-      fromInternalBalance: boolean,
-      userData: BytesLike,
+      request: {
+        assets: string[];
+        maxAmountsIn: BigNumberish[];
+        userData: BytesLike;
+        fromInternalBalance: boolean;
+      },
       overrides?: PayableOverrides
     ): Promise<BigNumber>;
 
-    "joinPool(bytes32,address,address,address[],uint256[],bool,bytes)"(
+    "joinPool(bytes32,address,address,tuple)"(
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      assets: string[],
-      maxAmountsIn: BigNumberish[],
-      fromInternalBalance: boolean,
-      userData: BytesLike,
+      request: {
+        assets: string[];
+        maxAmountsIn: BigNumberish[];
+        userData: BytesLike;
+        fromInternalBalance: boolean;
+      },
       overrides?: PayableOverrides
+    ): Promise<BigNumber>;
+
+    managePoolBalance(
+      poolId: BytesLike,
+      kind: BigNumberish,
+      transfers: { token: string; amount: BigNumberish }[],
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "managePoolBalance(bytes32,uint8,tuple[])"(
+      poolId: BytesLike,
+      kind: BigNumberish,
+      transfers: { token: string; amount: BigNumberish }[],
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     queryBatchSwap(
@@ -2432,18 +2282,44 @@ export class Vault extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    setProtocolFees(
-      newSwapFee: BigNumberish,
-      newWithdrawFee: BigNumberish,
-      newFlashLoanFee: BigNumberish,
-      overrides?: Overrides
+    swap(
+      request: {
+        poolId: BytesLike;
+        kind: BigNumberish;
+        assetIn: string;
+        assetOut: string;
+        amount: BigNumberish;
+        userData: BytesLike;
+      },
+      funds: {
+        sender: string;
+        fromInternalBalance: boolean;
+        recipient: string;
+        toInternalBalance: boolean;
+      },
+      limit: BigNumberish,
+      deadline: BigNumberish,
+      overrides?: PayableOverrides
     ): Promise<BigNumber>;
 
-    "setProtocolFees(uint256,uint256,uint256)"(
-      newSwapFee: BigNumberish,
-      newWithdrawFee: BigNumberish,
-      newFlashLoanFee: BigNumberish,
-      overrides?: Overrides
+    "swap(tuple,tuple,uint256,uint256)"(
+      request: {
+        poolId: BytesLike;
+        kind: BigNumberish;
+        assetIn: string;
+        assetOut: string;
+        amount: BigNumberish;
+        userData: BytesLike;
+      },
+      funds: {
+        sender: string;
+        fromInternalBalance: boolean;
+        recipient: string;
+        toInternalBalance: boolean;
+      },
+      limit: BigNumberish,
+      deadline: BigNumberish,
+      overrides?: PayableOverrides
     ): Promise<BigNumber>;
 
     transferInternalBalance(
@@ -2486,32 +2362,6 @@ export class Vault extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    updateManagedBalance(
-      poolId: BytesLike,
-      transfers: { token: string; amount: BigNumberish }[],
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "updateManagedBalance(bytes32,tuple[])"(
-      poolId: BytesLike,
-      transfers: { token: string; amount: BigNumberish }[],
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    withdrawCollectedFees(
-      tokens: string[],
-      amounts: BigNumberish[],
-      recipient: string,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "withdrawCollectedFees(address[],uint256[],address)"(
-      tokens: string[],
-      amounts: BigNumberish[],
-      recipient: string,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
     withdrawFromInternalBalance(
       transfers: {
         asset: string;
@@ -2531,21 +2381,13 @@ export class Vault extends Contract {
       }[],
       overrides?: Overrides
     ): Promise<BigNumber>;
-
-    withdrawFromPoolBalance(
-      poolId: BytesLike,
-      transfers: { token: string; amount: BigNumberish }[],
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "withdrawFromPoolBalance(bytes32,tuple[])"(
-      poolId: BytesLike,
-      transfers: { token: string; amount: BigNumberish }[],
-      overrides?: Overrides
-    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
+    WETH(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "WETH()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     batchSwapGivenIn(
       swaps: {
         poolId: BytesLike;
@@ -2668,18 +2510,6 @@ export class Vault extends Contract {
       overrides?: PayableOverrides
     ): Promise<PopulatedTransaction>;
 
-    depositToPoolBalance(
-      poolId: BytesLike,
-      transfers: { token: string; amount: BigNumberish }[],
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "depositToPoolBalance(bytes32,tuple[])"(
-      poolId: BytesLike,
-      transfers: { token: string; amount: BigNumberish }[],
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
     deregisterTokens(
       poolId: BytesLike,
       tokens: string[],
@@ -2696,21 +2526,25 @@ export class Vault extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      assets: string[],
-      minAmountsOut: BigNumberish[],
-      toInternalBalance: boolean,
-      userData: BytesLike,
+      request: {
+        assets: string[];
+        minAmountsOut: BigNumberish[];
+        userData: BytesLike;
+        toInternalBalance: boolean;
+      },
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "exitPool(bytes32,address,address,address[],uint256[],bool,bytes)"(
+    "exitPool(bytes32,address,address,tuple)"(
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      assets: string[],
-      minAmountsOut: BigNumberish[],
-      toInternalBalance: boolean,
-      userData: BytesLike,
+      request: {
+        assets: string[];
+        minAmountsOut: BigNumberish[];
+        userData: BytesLike;
+        toInternalBalance: boolean;
+      },
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
@@ -2733,16 +2567,6 @@ export class Vault extends Contract {
     getAuthorizer(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     "getAuthorizer()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    getCollectedFees(
-      tokens: string[],
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "getCollectedFees(address[])"(
-      tokens: string[],
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
 
     getEmergencyPeriod(
       overrides?: CallOverrides
@@ -2774,18 +2598,6 @@ export class Vault extends Contract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    getPoolAssetManagers(
-      poolId: BytesLike,
-      tokens: string[],
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "getPoolAssetManagers(bytes32,address[])"(
-      poolId: BytesLike,
-      tokens: string[],
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     getPoolTokenInfo(
       poolId: BytesLike,
       token: string,
@@ -2808,9 +2620,11 @@ export class Vault extends Contract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    getProtocolFees(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    getProtocolFeesCollector(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
-    "getProtocolFees()"(
+    "getProtocolFeesCollector()"(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -2830,22 +2644,40 @@ export class Vault extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      assets: string[],
-      maxAmountsIn: BigNumberish[],
-      fromInternalBalance: boolean,
-      userData: BytesLike,
+      request: {
+        assets: string[];
+        maxAmountsIn: BigNumberish[];
+        userData: BytesLike;
+        fromInternalBalance: boolean;
+      },
       overrides?: PayableOverrides
     ): Promise<PopulatedTransaction>;
 
-    "joinPool(bytes32,address,address,address[],uint256[],bool,bytes)"(
+    "joinPool(bytes32,address,address,tuple)"(
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      assets: string[],
-      maxAmountsIn: BigNumberish[],
-      fromInternalBalance: boolean,
-      userData: BytesLike,
+      request: {
+        assets: string[];
+        maxAmountsIn: BigNumberish[];
+        userData: BytesLike;
+        fromInternalBalance: boolean;
+      },
       overrides?: PayableOverrides
+    ): Promise<PopulatedTransaction>;
+
+    managePoolBalance(
+      poolId: BytesLike,
+      kind: BigNumberish,
+      transfers: { token: string; amount: BigNumberish }[],
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "managePoolBalance(bytes32,uint8,tuple[])"(
+      poolId: BytesLike,
+      kind: BigNumberish,
+      transfers: { token: string; amount: BigNumberish }[],
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     queryBatchSwap(
@@ -2920,18 +2752,44 @@ export class Vault extends Contract {
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    setProtocolFees(
-      newSwapFee: BigNumberish,
-      newWithdrawFee: BigNumberish,
-      newFlashLoanFee: BigNumberish,
-      overrides?: Overrides
+    swap(
+      request: {
+        poolId: BytesLike;
+        kind: BigNumberish;
+        assetIn: string;
+        assetOut: string;
+        amount: BigNumberish;
+        userData: BytesLike;
+      },
+      funds: {
+        sender: string;
+        fromInternalBalance: boolean;
+        recipient: string;
+        toInternalBalance: boolean;
+      },
+      limit: BigNumberish,
+      deadline: BigNumberish,
+      overrides?: PayableOverrides
     ): Promise<PopulatedTransaction>;
 
-    "setProtocolFees(uint256,uint256,uint256)"(
-      newSwapFee: BigNumberish,
-      newWithdrawFee: BigNumberish,
-      newFlashLoanFee: BigNumberish,
-      overrides?: Overrides
+    "swap(tuple,tuple,uint256,uint256)"(
+      request: {
+        poolId: BytesLike;
+        kind: BigNumberish;
+        assetIn: string;
+        assetOut: string;
+        amount: BigNumberish;
+        userData: BytesLike;
+      },
+      funds: {
+        sender: string;
+        fromInternalBalance: boolean;
+        recipient: string;
+        toInternalBalance: boolean;
+      },
+      limit: BigNumberish,
+      deadline: BigNumberish,
+      overrides?: PayableOverrides
     ): Promise<PopulatedTransaction>;
 
     transferInternalBalance(
@@ -2974,32 +2832,6 @@ export class Vault extends Contract {
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    updateManagedBalance(
-      poolId: BytesLike,
-      transfers: { token: string; amount: BigNumberish }[],
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "updateManagedBalance(bytes32,tuple[])"(
-      poolId: BytesLike,
-      transfers: { token: string; amount: BigNumberish }[],
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    withdrawCollectedFees(
-      tokens: string[],
-      amounts: BigNumberish[],
-      recipient: string,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "withdrawCollectedFees(address[],uint256[],address)"(
-      tokens: string[],
-      amounts: BigNumberish[],
-      recipient: string,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
     withdrawFromInternalBalance(
       transfers: {
         asset: string;
@@ -3017,18 +2849,6 @@ export class Vault extends Contract {
         sender: string;
         recipient: string;
       }[],
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    withdrawFromPoolBalance(
-      poolId: BytesLike,
-      transfers: { token: string; amount: BigNumberish }[],
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "withdrawFromPoolBalance(bytes32,tuple[])"(
-      poolId: BytesLike,
-      transfers: { token: string; amount: BigNumberish }[],
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
   };

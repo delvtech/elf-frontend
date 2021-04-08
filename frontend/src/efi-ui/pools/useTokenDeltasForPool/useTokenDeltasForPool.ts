@@ -51,7 +51,7 @@ export function useTokenDeltasForPool(
         return;
       }
 
-      const filterQuery = balancerVault.filters.PoolJoined(
+      const filterQuery = balancerVault.filters.PoolBalanceChanged(
         poolId,
         null,
         null,
@@ -78,7 +78,7 @@ export function useTokenDeltasForPool(
         return;
       }
 
-      const filterQuery = balancerVault.filters.PoolExited(
+      const filterQuery = balancerVault.filters.PoolBalanceChanged(
         poolId,
         null,
         null,

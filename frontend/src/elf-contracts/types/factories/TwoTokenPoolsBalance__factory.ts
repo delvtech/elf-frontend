@@ -5,14 +5,18 @@
 import { Contract, Signer } from "ethers";
 import { Provider } from "@ethersproject/providers";
 
-import type { FlashLoanProvider } from "../FlashLoanProvider";
+import type { TwoTokenPoolsBalance } from "../TwoTokenPoolsBalance";
 
-export class FlashLoanProvider__factory {
+export class TwoTokenPoolsBalance__factory {
   static connect(
     address: string,
     signerOrProvider: Signer | Provider
-  ): FlashLoanProvider {
-    return new Contract(address, _abi, signerOrProvider) as FlashLoanProvider;
+  ): TwoTokenPoolsBalance {
+    return new Contract(
+      address,
+      _abi,
+      signerOrProvider
+    ) as TwoTokenPoolsBalance;
   }
 }
 

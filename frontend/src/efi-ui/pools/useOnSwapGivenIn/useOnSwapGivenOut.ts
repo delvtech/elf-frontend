@@ -29,7 +29,7 @@ export function useOnSwapGivenOut(
 
   const balances = getQueryData(poolTokensResults)?.[1] || [];
 
-  const onSwapGivenInResult = useSmartContractReadCall(pool, "onSwapGivenOut", {
+  const onSwapGivenInResult = useSmartContractReadCall(pool, "onSwap", {
     enabled: [
       poolId,
       pool?.address,
