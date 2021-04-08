@@ -3,6 +3,8 @@ import { BigNumber } from "ethers";
 
 import { StaticContractMethodArgs } from "efi/contracts/types";
 import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
+import { PoolSwapRequest } from "efi-ui/balancer/PoolSwapRequest";
+import { SwapKind } from "efi-ui/balancer/SwapKind";
 
 export function makeOnSwapGivenOutCallArgs(
   poolId: string | undefined,
@@ -11,8 +13,8 @@ export function makeOnSwapGivenOutCallArgs(
   amount: BigNumber | undefined,
   tokenOut: ERC20 | undefined,
   poolTokenBalances: BigNumber[] | undefined,
-  latestBlockNumber: number | undefined
-): StaticContractMethodArgs<ConvergentCurvePool, "onSwapGivenOut"> | undefined {
+  latestBlockNumberUsed: number | undefined
+): StaticContractMethodArgs<ConvergentCurvePool, "onSwap"> | undefined {
   if (
     !account ||
     !poolId ||
@@ -20,25 +22,23 @@ export function makeOnSwapGivenOutCallArgs(
     !amount ||
     !tokenOut ||
     !poolTokenBalances?.length ||
-    !latestBlockNumber
+    !latestBlockNumberUsed
   ) {
     return undefined;
   }
-  const callArgs: StaticContractMethodArgs<
-    ConvergentCurvePool,
-    "onSwapGivenOut"
-  > = [
-    {
-      poolId: poolId,
-      amountOut: amount,
-      tokenIn: tokenIn?.address,
-      tokenOut: tokenOut?.address,
-
-      from: account,
-      to: account,
-      latestBlockNumberUsed: latestBlockNumber,
-      userData: poolId,
-    },
+  const swapRequest: PoolSwapRequest = {
+    kind: SwapKind.GIVEN_OUT,
+    tokenIn: tokenIn.address,
+    tokenOut: tokenOut.address,
+    amount,
+    poolId,
+    latestBlockNumberUsed,
+    from: account,
+    to: account,
+    userData: "0x",
+  };
+  const callArgs: StaticContractMethodArgs<ConvergentCurvePool, "onSwap"> = [
+    swapRequest,
     poolTokenBalances[0],
     poolTokenBalances[1],
   ];

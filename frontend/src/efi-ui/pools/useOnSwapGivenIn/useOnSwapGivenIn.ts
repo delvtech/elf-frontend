@@ -28,7 +28,7 @@ export function useOnSwapGivenIn(
   const balances = getQueryData(poolTokensResults)?.[1] || [];
 
   const tokenOut = usePoolPairedToken(pool, tokenIn);
-  const onSwapGivenInResult = useSmartContractReadCall(pool, "onSwapGivenIn", {
+  const onSwapGivenInResult = useSmartContractReadCall(pool, "onSwap", {
     enabled: [
       poolId,
       pool?.address,

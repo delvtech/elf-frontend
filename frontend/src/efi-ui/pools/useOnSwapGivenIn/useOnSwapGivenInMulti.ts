@@ -60,7 +60,7 @@ export function useOnSwapGivenInMulti(
 
   const onSwapGivenInResults = useSmartContractReadCalls(
     pools,
-    "onSwapGivenIn",
+    "onSwap",
     onSwapGivenInArgs
   );
 
