@@ -55,6 +55,7 @@ export const InterestTokenPoolTableRow: FC<InterestTokenPoolTableRowProps> = ({
     0,
     Math.min(1, (currentTime - startTime) / (endTime - startTime))
   );
+  const progressLabel = progressValue === 1 ? t`closed` : `running`;
   const timeLeft = getTimeLeft2(maturityDate);
 
   return (
@@ -74,7 +75,7 @@ export const InterestTokenPoolTableRow: FC<InterestTokenPoolTableRowProps> = ({
       <td>
         <LabeledProgressBar
           progressValue={progressValue}
-          label={t`running`}
+          label={progressLabel}
           helperText={timeLeft}
         />
       </td>
