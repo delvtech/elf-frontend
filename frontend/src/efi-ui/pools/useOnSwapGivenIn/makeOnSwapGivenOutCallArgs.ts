@@ -5,6 +5,7 @@ import { StaticContractMethodArgs } from "efi/contracts/types";
 import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
 import { PoolSwapRequest } from "efi-ui/balancer/PoolSwapRequest";
 import { SwapKind } from "efi-ui/balancer/SwapKind";
+import { EMPTY_BYTES_LIKE } from "efi/base/bytes";
 
 export function makeOnSwapGivenOutCallArgs(
   poolId: string | undefined,
@@ -35,7 +36,7 @@ export function makeOnSwapGivenOutCallArgs(
     latestBlockNumberUsed,
     from: account,
     to: account,
-    userData: "0x",
+    userData: EMPTY_BYTES_LIKE,
   };
   const callArgs: StaticContractMethodArgs<ConvergentCurvePool, "onSwap"> = [
     swapRequest,

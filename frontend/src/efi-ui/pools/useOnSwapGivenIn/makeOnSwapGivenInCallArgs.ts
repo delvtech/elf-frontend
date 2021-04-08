@@ -1,23 +1,11 @@
 import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
 import { BigNumber } from "ethers";
 
-import { StaticContractMethodArgs } from "efi/contracts/types";
-import { SwapKind } from "efi-ui/balancer/SwapKind";
 import { PoolSwapRequest } from "efi-ui/balancer/PoolSwapRequest";
+import { SwapKind } from "efi-ui/balancer/SwapKind";
+import { EMPTY_BYTES_LIKE } from "efi/base/bytes";
+import { StaticContractMethodArgs } from "efi/contracts/types";
 
-// swapRequest: {
-//   kind: BigNumberish;
-//   tokenIn: string;
-//   tokenOut: string;
-//   amount: BigNumberish;
-//   poolId: BytesLike;
-//   latestBlockNumberUsed: BigNumberish;
-//   from: string;
-//   to: string;
-//   userData: BytesLike;
-// },
-// currentBalanceTokenIn: BigNumberish,
-// currentBalanceTokenOut: BigNumberish,
 export function makeOnSwapGivenInCallArgs(
   poolId: string | undefined,
   account: string | null | undefined,
@@ -47,7 +35,7 @@ export function makeOnSwapGivenInCallArgs(
     latestBlockNumberUsed,
     from: account,
     to: account,
-    userData: "0x",
+    userData: EMPTY_BYTES_LIKE,
   };
   const callArgs: StaticContractMethodArgs<ConvergentCurvePool, "onSwap"> = [
     swapRequest,
