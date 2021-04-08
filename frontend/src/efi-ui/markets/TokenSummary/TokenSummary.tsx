@@ -5,11 +5,12 @@ import classNames from "classnames";
 import { ERC20 } from "elf-contracts/types/ERC20";
 import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
 import { BigNumber } from "ethers";
+import { formatUnits } from "ethers/lib/utils";
 import { Money } from "ts-money";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
+import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
@@ -19,7 +20,6 @@ import { KNOWN_BASE_ASSETS } from "efi/contracts/contractsJson";
 import { formatMoney } from "efi/money/formatMoney";
 import { PoolContract } from "efi/pools/PoolContract";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
-import { formatUnits, parseUnits } from "ethers/lib/utils";
 
 interface TokenSummaryProps {
   pool: PoolContract | undefined;
@@ -182,28 +182,8 @@ function useTokensSummary(pool: PoolContract | undefined): TokensSummary {
   const [yieldAssetSymbol] = useTokenSymbol(yieldAssetContract);
   const [yieldAssetDecimals] = useTokenDecimals(yieldAssetContract);
 
-  // TODO: refactor this to its own hook
-  /**************************
-   * Lazy spot price technique until we get a better method.  Right now just calculates how much out
-   * asset for '1' of the in asset.  A future optimisation might be to do '$1' worth of the in asset
-   * to minimize slippage in the value.
-   **************************/
-  const amountIn = parseUnits("1", baseAssetDecimals);
-  const { data: amountOut = BigNumber.from(1) } = useOnSwapGivenIn(
-    pool,
-    baseAssetContract,
-    amountIn
-  );
-  /***************************** */
-
-  const yieldAssetRatio =
-    +formatUnits(amountIn, baseAssetDecimals) /
-    +formatUnits(amountOut, yieldAssetDecimals);
-  const yieldAssetPrice = Money.fromDecimal(
-    +yieldAssetRatio * (baseAssetPrice?.toDecimal() || 1),
-    currency,
-    Math.round
-  );
+  const spotPrice = usePoolSpotPrice(pool, baseAssetContract);
+  const yieldAssetPrice = baseAssetPrice?.divide(spotPrice ?? 0, Math.round);
 
   return {
     baseAssetContract,

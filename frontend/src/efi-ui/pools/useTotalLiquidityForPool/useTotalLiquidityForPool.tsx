@@ -10,6 +10,7 @@ import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
 import { KNOWN_BASE_ASSETS } from "efi/contracts/contractsJson";
 import { PoolContract } from "efi/pools/PoolContract";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
+import { convertToFiatBalance } from "efi/money/convertToFiatBalance";
 
 export function useTotalLiquidityForPool(
   pool: PoolContract | undefined
@@ -46,6 +47,15 @@ export function useTotalLiquidityForPool(
   const [yieldAssetDecimals] = useTokenDecimals(yieldAssetContract);
 
   const spotPrice = usePoolSpotPrice(pool, baseAssetContract);
+
+  if (
+    spotPrice === undefined ||
+    yieldAssetBalance === undefined ||
+    yieldAssetDecimals === undefined
+  ) {
+    return undefined;
+  }
+
   const yieldAssetPrice = Money.fromDecimal(
     spotPrice * (baseAssetPrice?.toDecimal() || 1),
     currency,
@@ -53,8 +63,11 @@ export function useTotalLiquidityForPool(
   );
 
   const yieldAssetFiatBalance =
-    useConvertToFiat(yieldAssetPrice, yieldAssetBalance, yieldAssetDecimals) ||
-    Money.fromInteger(0, currency.code);
+    convertToFiatBalance(
+      yieldAssetPrice,
+      yieldAssetBalance,
+      yieldAssetDecimals
+    ) || Money.fromInteger(0, currency.code);
 
   const totalBalance = baseAssetFiatBalance?.add(yieldAssetFiatBalance);
   return totalBalance;

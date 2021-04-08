@@ -13,7 +13,7 @@ export function usePoolTokenPrices(
   // spot price will be zero while we wait for it to load, maybe change this
   // behavior in usePoolSpotPrice to return undefined instead?
   const spotPriceTokenForOneBaseAsset = usePoolSpotPrice(pool, baseAssetToken);
-  if (spotPriceTokenForOneBaseAsset === 0) {
+  if (!spotPriceTokenForOneBaseAsset) {
     return {
       spotPriceBaseAssetForOneToken: undefined,
       spotPriceTokenForOneBaseAsset: undefined,
