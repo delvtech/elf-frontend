@@ -13,11 +13,18 @@ interface PoolSummaryProps {
   totalLiquidity: Money | undefined;
   liquidityTrend: number | undefined;
   tradeVolume: Money | undefined;
+  volumeTrend: number | undefined;
   swapVolume: Money | undefined;
 }
 
 export const PoolSummary: FC<PoolSummaryProps> = (props) => {
-  const { totalLiquidity, liquidityTrend, tradeVolume, swapVolume } = props;
+  const {
+    totalLiquidity,
+    liquidityTrend,
+    tradeVolume,
+    volumeTrend,
+    swapVolume,
+  } = props;
 
   return (
     <div className={tw("flex-1")}>
@@ -52,7 +59,7 @@ export const PoolSummary: FC<PoolSummaryProps> = (props) => {
             </div>
             <div className={tw("flex", "self-end")}>
               <Tag minimal intent={Intent.DANGER}>
-                .16%
+                {formatPercent(volumeTrend || 0)}
                 <Icon icon={"caret-down"} />
               </Tag>
             </div>

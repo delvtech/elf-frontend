@@ -86,35 +86,34 @@ export function useTokenDeltasForPool(
         null
       );
 
-      const events = await balancerVault.queryFilter(filterQuery);
+      const events = await balancerVault.queryFilter(
+        filterQuery,
+        fromBlockNumber
+      );
       return events;
     },
-    enabled: !!balancerVault && !!poolId,
+    enabled: !!balancerVault && !!poolId && !!fromBlockNumber,
   });
 
   // [token0, token1]
   const totalAmountsIn = [BigNumber.from(0), BigNumber.from(0)];
   const totalAmountsOut = [BigNumber.from(0), BigNumber.from(0)];
 
-  if (joinEvents.length) {
-    joinEvents.forEach((event) => {
-      const joinEvent = event?.args as PoolJoinedArguments;
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const [poolId, sender, assets, amountsIn] = joinEvent;
-      totalAmountsIn[0] = totalAmountsIn[0].add(amountsIn[0]);
-      totalAmountsIn[1] = totalAmountsIn[1].add(amountsIn[1]);
-    });
-  }
+  joinEvents.forEach((event) => {
+    const joinEvent = event?.args as PoolJoinedArguments;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [poolId, sender, assets, amountsIn] = joinEvent;
+    totalAmountsIn[0] = totalAmountsIn[0].add(amountsIn[0]);
+    totalAmountsIn[1] = totalAmountsIn[1].add(amountsIn[1]);
+  });
 
-  if (exitEvents.length) {
-    exitEvents.forEach((event) => {
-      const exitEvent = event?.args as PoolExitedArguments;
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const [poolId, sender, assets, amountsOut] = exitEvent;
-      totalAmountsOut[0] = totalAmountsOut[0].add(amountsOut[0]);
-      totalAmountsOut[1] = totalAmountsOut[1].add(amountsOut[1]);
-    });
-  }
+  exitEvents.forEach((event) => {
+    const exitEvent = event?.args as PoolExitedArguments;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [poolId, sender, assets, amountsOut] = exitEvent;
+    totalAmountsOut[0] = totalAmountsOut[0].add(amountsOut[0]);
+    totalAmountsOut[1] = totalAmountsOut[1].add(amountsOut[1]);
+  });
 
   const tokenDeltas = zip(totalAmountsIn, totalAmountsOut).map((amounts) => {
     const amountIn = amounts[0];
