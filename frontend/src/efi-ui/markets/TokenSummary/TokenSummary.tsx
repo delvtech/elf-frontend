@@ -183,7 +183,14 @@ function useTokensSummary(pool: PoolContract | undefined): TokensSummary {
   const [yieldAssetDecimals] = useTokenDecimals(yieldAssetContract);
 
   const spotPrice = usePoolSpotPrice(pool, baseAssetContract);
-  const yieldAssetPrice = baseAssetPrice?.divide(spotPrice ?? 0, Math.round);
+  const yieldAssetPrice =
+    baseAssetPrice && spotPrice
+      ? Money.fromDecimal(
+          baseAssetPrice.toDecimal() / spotPrice,
+          currency,
+          Math.round
+        )
+      : undefined;
 
   return {
     baseAssetContract,
