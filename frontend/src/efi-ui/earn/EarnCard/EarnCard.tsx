@@ -1,4 +1,10 @@
-import React, { FC, Fragment, useCallback, useEffect, useState } from "react";
+import React, {
+  Fragment,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 
 import { Button, Card, Classes, Elevation, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
@@ -38,7 +44,7 @@ export interface EarnCardProps {
   tranchesByBaseAsset: Record<string, Tranche[]>;
 }
 
-export const EarnCard: FC<EarnCardProps> = ({
+export function EarnCard({
   library,
   account,
   baseAssets,
@@ -46,7 +52,7 @@ export const EarnCard: FC<EarnCardProps> = ({
   connector,
   walletConnectionActive,
   tranchesByBaseAsset,
-}) => {
+}: EarnCardProps): ReactElement {
   // local state
   const [isDrawerOpen, setDrawerOpen] = useState(false);
 
@@ -234,7 +240,7 @@ export const EarnCard: FC<EarnCardProps> = ({
       )}
     </Fragment>
   );
-};
+}
 
 function useSetDefaultActiveBaseAsset(
   activeBaseAsset: CryptoAssetWithIcon | undefined,
