@@ -12,7 +12,6 @@ import ContractAddresses, {
   KNOWN_ERC20PERMIT_TOKENS,
 } from "efi/contracts/contractsJson";
 import { CryptoAssetType } from "efi/crypto/CryptoAsset";
-import { uniqBy } from "lodash";
 import { ERC20 } from "elf-contracts/types/ERC20";
 import { ERC20Permit } from "elf-contracts/types/ERC20Permit";
 

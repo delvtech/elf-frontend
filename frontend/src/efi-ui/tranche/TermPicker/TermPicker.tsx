@@ -1,4 +1,4 @@
-import React, { FC, ReactElement } from "react";
+import React, { ReactElement } from "react";
 
 import { Select } from "@blueprintjs/select";
 import { Web3Provider } from "@ethersproject/providers";
@@ -6,7 +6,6 @@ import { Tranche } from "elf-contracts/types/Tranche";
 
 import tw from "efi-tailwindcss-classnames";
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
-import { CryptoAsset } from "efi/crypto/CryptoAsset";
 
 import { TermButton } from "./TermButton";
 
