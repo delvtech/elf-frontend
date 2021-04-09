@@ -5,13 +5,12 @@ import { Tranche } from "elf-contracts/types/Tranche";
 
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { TermPicker } from "efi-ui/tranche/TermPicker/TermPicker";
-import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { VaultTermButtonLabel } from "efi-ui/tranche/TermPicker/VaultTermButtonLabel";
 
 interface MintTermPickerProps {
   library: Web3Provider | undefined;
   account: string | null | undefined;
-  baseAsset: CryptoAsset | undefined;
+  baseAsset: CryptoAssetWithIcon | undefined;
   tranches: Tranche[];
   activeTrancheIndex: number | undefined;
   onTrancheChange: (newTranche: Tranche) => void;

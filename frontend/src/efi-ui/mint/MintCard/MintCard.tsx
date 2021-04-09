@@ -139,22 +139,13 @@ export const MintCard: FC<MintCardProps> = ({
               "border-gray-500"
             )}
           >
-            <EarnInput
-              showMaxButton={false}
-              assetPicker={
-                <MintTermPicker
-                  library={library}
-                  account={account}
-                  onTrancheChange={setActiveTranche}
-                  baseAsset={activeBaseAsset}
-                  tranches={availableTranches}
-                  activeTrancheIndex={activeTrancheIndex}
-                />
-              }
-              placeholder="0.00"
-              value={amountOut}
-              onValueChange={onAmountOutChange}
-              assetBalance={activeBaseAssetBalance}
+            <MintTermPicker
+              library={library}
+              account={account}
+              onTrancheChange={setActiveTranche}
+              baseAsset={activeBaseAsset}
+              tranches={availableTranches}
+              activeTrancheIndex={activeTrancheIndex}
             />
           </div>
         </div>
