@@ -1,4 +1,10 @@
-import React, { FC, Fragment, useCallback, useEffect, useState } from "react";
+import React, {
+  Fragment,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 
 import { Button, Card, Classes, Elevation, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
@@ -39,7 +45,7 @@ export interface MintCardProps {
   tranchesByBaseAsset: Record<string, Tranche[]>;
 }
 
-export const MintCard: FC<MintCardProps> = ({
+export function MintCard({
   library,
   account,
   baseAssets,
@@ -47,7 +53,7 @@ export const MintCard: FC<MintCardProps> = ({
   connector,
   walletConnectionActive,
   tranchesByBaseAsset,
-}) => {
+}: MintCardProps): ReactElement {
   // local state
   const [isDrawerOpen, setDrawerOpen] = useState(false);
 
@@ -232,7 +238,7 @@ export const MintCard: FC<MintCardProps> = ({
       )}
     </Fragment>
   );
-};
+}
 
 function useSetDefaultActiveBaseAsset(
   activeBaseAsset: CryptoAssetWithIcon | undefined,
