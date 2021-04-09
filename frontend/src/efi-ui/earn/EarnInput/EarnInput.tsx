@@ -62,7 +62,7 @@ export const EarnInput: FC<EarnInputProps> = ({
     <InputGroup
       placeholder={placeholder}
       style={{
-        height: "100%",
+        height: "94px",
         width: "100%",
         fontSize: 26,
       }}
