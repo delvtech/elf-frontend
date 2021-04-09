@@ -10,7 +10,8 @@ import { EarnCard } from "efi-ui/earn/EarnCard/EarnCard";
 import { useTranchesByBaseAsset } from "efi-ui/earn/hooks/useTranchesByBaseAsset";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { useBaseAssetsForTranches } from "efi-ui/tranche/useBaseAssetsForTranches";
-import { useTrancheContracts } from "efi-ui/tranche/useTrancheContracts";
+import { uniqBy } from "lodash";
+import { useOpenTranches } from "../../tranche/useOpenTranches";
 
 interface EarnViewProps extends RouteComponentProps {}
 
@@ -23,12 +24,15 @@ export const EarnView: FC<EarnViewProps> = () => {
     library,
   } = useWeb3React<Web3Provider>();
 
-  const allTranches = useTrancheContracts();
-  const knownBaseAssets = useBaseAssetsForTranches(allTranches);
+  const openTranches = useOpenTranches();
+
+  const allBaseAssets = useBaseAssetsForTranches(openTranches);
   const tranchesByBaseAsset = useTranchesByBaseAsset(
-    allTranches,
-    knownBaseAssets
+    openTranches,
+    allBaseAssets
   );
+
+  const uniqueBaseAssets = uniqBy(allBaseAssets, (v) => v?.id);
 
   return (
     <div
@@ -69,7 +73,7 @@ export const EarnView: FC<EarnViewProps> = () => {
             walletConnectionActive={active}
             chainId={chainId}
             connector={connector}
-            baseAssets={knownBaseAssets}
+            baseAssets={uniqueBaseAssets}
             tranchesByBaseAsset={tranchesByBaseAsset}
           />
         </div>

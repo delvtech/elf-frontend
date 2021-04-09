@@ -21,18 +21,13 @@ export function useBaseAssetsForTranches(
 ): (CryptoAssetWithIcon | undefined)[] {
   const underlyingResults = useSmartContractReadCalls(tranches, "underlying");
   const underlying = getQueriesData(underlyingResults);
-  let uniqueUnderlying = underlying;
-  if (underlying) {
-    // De-dupe as there might be many tranches for a single base asset
-    uniqueUnderlying = uniqBy(underlying, (v) => v);
-  }
 
   const erc20Contracts = useSmartContractsFromFactory(
-    uniqueUnderlying,
+    underlying,
     ERC20__factory.connect
   );
   const erc20PermitContracts = useSmartContractsFromFactory(
-    uniqueUnderlying,
+    underlying,
     ERC20Permit__factory.connect
   );
   const erc20SymbolResults = useSmartContractReadCalls(
@@ -48,7 +43,7 @@ export function useBaseAssetsForTranches(
   const erc20PermitSymbols = getQueriesData(erc20PermitSymbolResults);
 
   const assets = makeAssets(
-    uniqueUnderlying,
+    underlying,
     erc20Contracts,
     erc20Symbols,
     erc20PermitContracts,
