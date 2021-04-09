@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, ReactElement } from "react";
 
 import { IconNames } from "@blueprintjs/icons";
 import { Select } from "@blueprintjs/select";
@@ -18,12 +18,12 @@ interface CryptoAssetPickerProps {
   onCryptoAssetChange: (newCryptoAsset: CryptoAssetWithIcon) => void;
 }
 
-export const CryptoAssetPicker: FC<CryptoAssetPickerProps> = ({
+export function CryptoAssetPicker({
   className,
   cryptoAssets,
   onCryptoAssetChange,
   activeCryptoAsset,
-}) => {
+}: CryptoAssetPickerProps): ReactElement {
   const availableCryptoAssets = cryptoAssets.filter(
     (cryptoAsset): cryptoAsset is CryptoAssetWithIcon => !!cryptoAsset
   );
@@ -59,4 +59,4 @@ export const CryptoAssetPicker: FC<CryptoAssetPickerProps> = ({
       />
     </Select>
   );
-};
+}

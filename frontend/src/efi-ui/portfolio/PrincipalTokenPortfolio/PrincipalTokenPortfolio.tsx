@@ -3,7 +3,7 @@ import React, { FC } from "react";
 import { Tranche } from "elf-contracts/types/Tranche";
 
 import tw from "efi-tailwindcss-classnames";
-import { NoFYTsInWalletNonIdealState } from "efi-ui/wallets/NoFYTsInWalletNonIdealState/NoFYTsInWalletNonIdealState";
+import { NoPrincipalTokensInWalletNonIdealState } from "efi-ui/wallets/NoPrincipalTokensInWalletNonIdealState/NoPrincipalTokensInWalletNonIdealState";
 import { NoWalletConnectedNonIdealState } from "efi-ui/wallets/NoWalletConnectedNonIdealState/NoWalletConnectedNonIdealState";
 import { Web3Provider } from "@ethersproject/providers";
 import { PrincipalTokenCard } from "efi-ui/portfolio/PrincipalTokenCard/PrincipalTokenCard";
@@ -32,7 +32,7 @@ export const PrincipalTokenPortfolio: FC<PrincipalTokenPortfolioProps> = ({
   if (!account) {
     nonIdealStateContent = <NoWalletConnectedNonIdealState />;
   } else if (!hasFYTs) {
-    nonIdealStateContent = <NoFYTsInWalletNonIdealState />;
+    nonIdealStateContent = <NoPrincipalTokensInWalletNonIdealState />;
   }
 
   return (

@@ -9,7 +9,7 @@ import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { formatUnits } from "ethers/lib/utils";
 
-interface PrincipalDiscountPreviewProps {
+interface PrincipalTokenPreviewProps {
   amountIn: BigNumber | undefined;
   amountOut: BigNumber | undefined;
   baseAssetSymbol: string | undefined;
@@ -25,7 +25,7 @@ const calloutClassName = tw(
   "justify-center"
 );
 
-export const PrincipalDiscountPreview: FC<PrincipalDiscountPreviewProps> = ({
+export const PrincipalTokenPreview: FC<PrincipalTokenPreviewProps> = ({
   amountIn,
   amountOut,
   baseAssetSymbol,
@@ -54,7 +54,7 @@ export const PrincipalDiscountPreview: FC<PrincipalDiscountPreviewProps> = ({
           "flex-col-reverse",
           "items-center"
         )}
-        label={<span className={tw("text-base")}>{t`Yield at term`}</span>}
+        label={<span className={tw("text-base")}>{t`Principal Tokens`}</span>}
         textClassName={tw("text-lg")}
         text={
           !amountIn ? (

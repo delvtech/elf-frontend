@@ -1,4 +1,10 @@
-import React, { FC, Fragment, useCallback, useEffect, useState } from "react";
+import React, {
+  Fragment,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 
 import { Button, Card, Classes, Elevation, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
@@ -19,7 +25,7 @@ import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSy
 import { PrincipalDiscountPreview } from "efi-ui/earn/EarnCard/PrincipalDiscountPreview";
 import { EarnInput } from "efi-ui/earn/EarnInput/EarnInput";
 import { useActiveTranche } from "efi-ui/earn/hooks/useActiveTranche";
-import { TranchePicker } from "efi-ui/earn/TranchePicker/TranchePicker";
+import { EarnTermPicker } from "efi-ui/earn/EarnTermPicker/EarnTermPicker";
 import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
@@ -38,7 +44,7 @@ export interface EarnCardProps {
   tranchesByBaseAsset: Record<string, Tranche[]>;
 }
 
-export const EarnCard: FC<EarnCardProps> = ({
+export function EarnCard({
   library,
   account,
   baseAssets,
@@ -46,7 +52,7 @@ export const EarnCard: FC<EarnCardProps> = ({
   connector,
   walletConnectionActive,
   tranchesByBaseAsset,
-}) => {
+}: EarnCardProps): ReactElement {
   // local state
   const [isDrawerOpen, setDrawerOpen] = useState(false);
 
@@ -180,7 +186,7 @@ export const EarnCard: FC<EarnCardProps> = ({
             <EarnInput
               showMaxButton={false}
               assetPicker={
-                <TranchePicker
+                <EarnTermPicker
                   library={library}
                   account={account}
                   onTrancheChange={setActiveTranche}
@@ -234,7 +240,7 @@ export const EarnCard: FC<EarnCardProps> = ({
       )}
     </Fragment>
   );
-};
+}
 
 function useSetDefaultActiveBaseAsset(
   activeBaseAsset: CryptoAssetWithIcon | undefined,

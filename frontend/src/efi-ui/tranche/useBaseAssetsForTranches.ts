@@ -12,23 +12,26 @@ import ContractAddresses, {
   KNOWN_ERC20PERMIT_TOKENS,
 } from "efi/contracts/contractsJson";
 import { CryptoAssetType } from "efi/crypto/CryptoAsset";
+import { ERC20 } from "elf-contracts/types/ERC20";
+import { ERC20Permit } from "elf-contracts/types/ERC20Permit";
 
 export function useBaseAssetsForTranches(
   tranches: (Tranche | undefined)[]
 ): (CryptoAssetWithIcon | undefined)[] {
   const underlyingResults = useSmartContractReadCalls(tranches, "underlying");
   const underlying = getQueriesData(underlyingResults);
+
   const erc20Contracts = useSmartContractsFromFactory(
     underlying,
     ERC20__factory.connect
   );
-  const erc20SymbolResults = useSmartContractReadCalls(
-    erc20Contracts,
-    "symbol"
-  );
   const erc20PermitContracts = useSmartContractsFromFactory(
     underlying,
     ERC20Permit__factory.connect
+  );
+  const erc20SymbolResults = useSmartContractReadCalls(
+    erc20Contracts,
+    "symbol"
   );
   const erc20PermitSymbolResults = useSmartContractReadCalls(
     erc20PermitContracts,
@@ -38,7 +41,24 @@ export function useBaseAssetsForTranches(
   const erc20Symbols = getQueriesData(erc20SymbolResults);
   const erc20PermitSymbols = getQueriesData(erc20PermitSymbolResults);
 
-  const assets = underlying.map((underlyingAddress, underlyingIndex) => {
+  const assets = makeAssets(
+    underlying,
+    erc20Contracts,
+    erc20Symbols,
+    erc20PermitContracts,
+    erc20PermitSymbols
+  );
+  return assets;
+}
+
+function makeAssets(
+  underlying: (string | undefined)[],
+  erc20Contracts: (ERC20 | undefined)[],
+  erc20Symbols: (string | undefined)[],
+  erc20PermitContracts: (ERC20Permit | undefined)[],
+  erc20PermitSymbols: (string | undefined)[]
+) {
+  return underlying.map((underlyingAddress, underlyingIndex) => {
     if (!underlyingAddress) {
       return undefined;
     }
@@ -84,7 +104,6 @@ export function useBaseAssetsForTranches(
 
     return undefined;
   });
-  return assets;
 }
 
 function makeEthereumCryptoAsset() {

@@ -1,12 +1,12 @@
 import React, { FC } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
+import { InterestToken } from "elf-contracts/types/InterestToken";
 
 import tw from "efi-tailwindcss-classnames";
 import { YieldTokenCard } from "efi-ui/portfolio/YieldTokenCard/YieldTokenCard";
 import { NoWalletConnectedNonIdealState } from "efi-ui/wallets/NoWalletConnectedNonIdealState/NoWalletConnectedNonIdealState";
-import { NoInterestTokensInWalletNonIdealState } from "efi-ui/wallets/NoInterestTokenssInWalletNonIdealState/NoInterestTokensInWalletNonIdealState";
-import { InterestToken } from "elf-contracts/types/InterestToken";
+import { NoYieldTokensInWalletNonIdealState } from "efi-ui/wallets/NoYieldTokensInWalletNonIdealState/NoYieldTokensInWalletNonIdealState";
 
 interface InterestTokenPortfolioProps {
   library: Web3Provider | undefined;
@@ -26,7 +26,7 @@ export const InterestTokenPortfolio: FC<InterestTokenPortfolioProps> = ({
     nonIdealStateContent = <NoWalletConnectedNonIdealState />;
   }
   if (!hasInterestTokens) {
-    nonIdealStateContent = <NoInterestTokensInWalletNonIdealState />;
+    nonIdealStateContent = <NoYieldTokensInWalletNonIdealState />;
   }
 
   return (

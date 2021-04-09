@@ -1,8 +1,6 @@
-import React, { FC } from "react";
+import { ReactElement } from "react";
 
-import { Classes, Icon, Intent, Tag } from "@blueprintjs/core";
-import { IconNames } from "@blueprintjs/icons";
-import { Web3Provider } from "@ethersproject/providers";
+import { Intent, Tag } from "@blueprintjs/core";
 import classNames from "classnames";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { t } from "ttag";
@@ -22,19 +20,19 @@ import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
 
-interface TrancheButtonProps {
-  library: Web3Provider | undefined;
-  account: string | null | undefined;
+interface VaultTermButtonLabelProps {
   tranche: Tranche | undefined;
   baseAsset: CryptoAsset | undefined;
-  onClick?: (event: React.MouseEvent<HTMLElement>) => void;
 }
 
-export const TrancheButton: FC<TrancheButtonProps> = ({
+/**
+ * A Principal token centric display label for a tranche. This label emphasizes
+ * principal token metrics rather than the underlying vault's metrics.
+ */
+export function VaultTermButtonLabel({
   baseAsset,
   tranche,
-  onClick,
-}) => {
+}: VaultTermButtonLabelProps): ReactElement {
   const unlockTimestampResult = useSmartContractReadCall(
     tranche,
     "unlockTimestamp"
@@ -65,52 +63,30 @@ export const TrancheButton: FC<TrancheButtonProps> = ({
     : t`Loading unlock date...`;
 
   return (
-    <button
-      onClick={onClick}
-      className={classNames(
-        Classes.BUTTON,
-        Classes.FILL,
-        Classes.MINIMAL,
-        tw("flex", "justify-start", "h-full")
-      )}
-    >
-      <div
-        className={tw(
-          "flex",
-          "justify-between",
-          "items-center",
-          "space-x-4",
-          "flex-1",
-          "p-2"
-        )}
-      >
-        <div className={tw("flex", "items-center", "space-x-4")}>
-          <LabeledText
-            large
-            icon={
-              <div
-                className={tw(
-                  "flex",
-                  "flex-col",
-                  "items-center",
-                  "justify-center",
-                  "mr-4"
-                )}
-              >
-                <span className={classNames("h4", tw("text-center"))}>
-                  {t`${trancheAPY}% APY`}
-                </span>
-                <Tag intent={Intent.PRIMARY} fill className={tw("text-center")}>
-                  {formattedDate}
-                </Tag>
-              </div>
-            }
-            text={`${baseAssetSymbol} Principal Token`}
-            label={t`via ${positionName}`}
-          />
-        </div>
-        <Icon icon={IconNames.CARET_DOWN} />
-      </div>
-    </button>
+    <div className={tw("flex", "items-center", "space-x-4")}>
+      <LabeledText
+        large
+        icon={
+          <div
+            className={tw(
+              "flex",
+              "flex-col",
+              "items-center",
+              "justify-center",
+              "mr-4"
+            )}
+          >
+            <span className={classNames("h4", tw("text-center"))}>
+              {t`${trancheAPY}% APY`}
+            </span>
+            <Tag intent={Intent.PRIMARY} fill className={tw("text-center")}>
+              {formattedDate}
+            </Tag>
+          </div>
+        }
+        text={`${baseAssetSymbol} Principal Token`}
+        label={t`via ${positionName}`}
+      />
+    </div>
   );
-};
+}
