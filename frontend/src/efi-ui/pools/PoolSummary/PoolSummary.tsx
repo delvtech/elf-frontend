@@ -28,7 +28,7 @@ export const PoolSummary: FC<PoolSummaryProps> = (props) => {
 
   return (
     <div className={tw("flex-1")}>
-      <div className="mb-2">{t`Market Summary`}</div>
+      <div className="mb-2">{t`Pool Summary`}</div>
       <Card>
         <div className={tw("flex", "flex-col", "space-y-6")}>
           <div className={tw("flex", "space-x-4", "justify-between")}>
