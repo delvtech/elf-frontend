@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, ReactElement } from "react";
 
 import { Select } from "@blueprintjs/select";
 import { Web3Provider } from "@ethersproject/providers";
@@ -13,7 +13,7 @@ import { TermButton } from "./TermButton";
 interface TermPickerProps {
   library: Web3Provider | undefined;
   account: string | null | undefined;
-  baseAsset: CryptoAsset | undefined;
+  baseAsset: CryptoAssetWithIcon | undefined;
   tranches: Tranche[];
   activeTrancheIndex: number | undefined;
   onTrancheChange: (newTranche: Tranche) => void;
@@ -23,10 +23,7 @@ interface TermPickerProps {
   ) => JSX.Element;
 }
 
-/**
- * A simple component for
- */
-export const TermPicker: FC<TermPickerProps> = ({
+export function TermPicker({
   baseAsset,
   tranches,
   account,
@@ -34,7 +31,7 @@ export const TermPicker: FC<TermPickerProps> = ({
   onTrancheChange,
   activeTrancheIndex,
   buttonLabelRenderer,
-}) => {
+}: TermPickerProps): ReactElement | null {
   // TODO: Show a loading or disabled state of some kind
   if (!tranches.length || activeTrancheIndex === undefined) {
     return null;
@@ -44,13 +41,17 @@ export const TermPicker: FC<TermPickerProps> = ({
 
   return (
     <Select
-      disabled
-      popoverProps={{ minimal: true, targetClassName: tw("w-full") }}
+      disabled={tranches.length < 2}
+      popoverProps={{
+        minimal: true,
+        targetClassName: tw("w-full"),
+        portalClassName: tw("w-64"),
+      }}
       items={tranches}
       filterable={false}
-      className={tw("w-full", "col-span-2")}
       itemRenderer={(tranche, { handleClick }) => (
         <TermButton
+          showCaret={false}
           library={library}
           account={account}
           tranche={tranche}
@@ -68,4 +69,4 @@ export const TermPicker: FC<TermPickerProps> = ({
       />
     </Select>
   );
-};
+}

@@ -15,6 +15,10 @@ interface TrancheButtonProps {
   account: string | null | undefined;
   tranche: Tranche | undefined;
   onClick?: (event: React.MouseEvent<HTMLElement>) => void;
+  /**
+   * If true will show the dropdown caret, defaults to true
+   */
+  showCaret?: boolean;
   buttonLabelRenderer: (
     tranche: Tranche | undefined,
     baseAsset: CryptoAssetWithIcon | undefined
@@ -24,6 +28,7 @@ interface TrancheButtonProps {
 export function TermButton({
   tranche,
   buttonLabelRenderer,
+  showCaret = true,
   onClick,
 }: TrancheButtonProps): JSX.Element {
   const baseAsset = useBaseAssetForTranche(tranche);
@@ -34,8 +39,9 @@ export function TermButton({
         Classes.BUTTON,
         Classes.FILL,
         Classes.MINIMAL,
-        tw("flex", "justify-start", "h-full")
+        tw("flex", "justify-start", "w-64")
       )}
+      style={{ height: "82px" }}
     >
       <div
         className={tw(
@@ -48,7 +54,7 @@ export function TermButton({
         )}
       >
         {buttonLabelRenderer(tranche, baseAsset)}
-        <Icon icon={IconNames.CARET_DOWN} />
+        {showCaret ? <Icon icon={IconNames.CARET_DOWN} /> : null}
       </div>
     </button>
   );
