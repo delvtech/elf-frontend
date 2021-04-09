@@ -3,6 +3,7 @@ import React, { FC, Fragment } from "react";
 import { Web3Provider } from "@ethersproject/providers";
 import { RouteComponentProps } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
+import uniqBy from "lodash.uniqby";
 import { jt, t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -10,8 +11,7 @@ import { EarnCard } from "efi-ui/earn/EarnCard/EarnCard";
 import { useTranchesByBaseAsset } from "efi-ui/earn/hooks/useTranchesByBaseAsset";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { useBaseAssetsForTranches } from "efi-ui/tranche/useBaseAssetsForTranches";
-import { uniqBy } from "lodash";
-import { useOpenTranches } from "../../tranche/useOpenTranches";
+import { useOpenTranches } from "efi-ui/tranche/useOpenTranches";
 
 interface EarnViewProps extends RouteComponentProps {}
 
