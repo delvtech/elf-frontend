@@ -1,6 +1,5 @@
 import { useQuery } from "react-query";
 
-import { zip } from "d3-array";
 import { BigNumber } from "ethers";
 
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
@@ -9,19 +8,11 @@ import { ONE_DAY_IN_SECONDS } from "efi/base/time";
 import { PoolContract } from "efi/pools/PoolContract";
 import { usePreviousBlockNumber } from "efi-ui/ethereum/usePreviousBlockNumber/usePreviousBlockNumber";
 
-type PoolJoinedArguments = [
+type PoolBalanceChangedArguments = [
   poolId: string,
   sender: string,
   assets: string[],
-  amountsIn: BigNumber[],
-  dueProtocolFeeAmounts: BigNumber[]
-];
-
-type PoolExitedArguments = [
-  poolId: string,
-  sender: string,
-  assets: string[],
-  amountsOut: BigNumber[],
+  amounts: BigNumber[],
   dueProtocolFeeAmounts: BigNumber[]
 ];
 
@@ -41,36 +32,9 @@ export function useTokenDeltasForPool(
   const balancerVault = useBalancerVault();
   const { data: fromBlockNumber } = usePreviousBlockNumber(fromTime);
 
-  const { data: joinEvents = [] } = useQuery({
+  const { data: changeEvents = [] } = useQuery({
     queryKey: [
-      ["balancerVault", "queryFilter", "PoolJoined"],
-      { poolId, fromBlockNumber },
-    ],
-    queryFn: async () => {
-      if (!balancerVault || !poolId) {
-        return;
-      }
-
-      const filterQuery = balancerVault.filters.PoolBalanceChanged(
-        poolId,
-        null,
-        null,
-        null,
-        null
-      );
-
-      const events = await balancerVault.queryFilter(
-        filterQuery,
-        fromBlockNumber
-      );
-      return events;
-    },
-    enabled: !!balancerVault && !!poolId && !!fromBlockNumber,
-  });
-
-  const { data: exitEvents = [] } = useQuery({
-    queryKey: [
-      ["balancerVault", "queryFilter", "PoolExited"],
+      ["balancerVault", "queryFilter", "PoolBalanceChanged"],
       { poolId, fromBlockNumber },
     ],
     queryFn: async () => {
@@ -96,31 +60,28 @@ export function useTokenDeltasForPool(
   });
 
   // [token0, token1]
-  const totalAmountsIn = [BigNumber.from(0), BigNumber.from(0)];
-  const totalAmountsOut = [BigNumber.from(0), BigNumber.from(0)];
+  const totalDeltaPerToken = [BigNumber.from(0), BigNumber.from(0)];
 
-  joinEvents.forEach((event) => {
-    const joinEvent = event?.args as PoolJoinedArguments;
+  changeEvents.forEach((event) => {
+    const changeEvent = event?.args as PoolBalanceChangedArguments;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [poolId, sender, assets, amountsIn] = joinEvent;
-    totalAmountsIn[0] = totalAmountsIn[0].add(amountsIn[0]);
-    totalAmountsIn[1] = totalAmountsIn[1].add(amountsIn[1]);
+    const [poolId, sender, assets, amounts] = changeEvent;
+    totalDeltaPerToken[0] = totalDeltaPerToken[0].add(amounts[0]);
+    totalDeltaPerToken[1] = totalDeltaPerToken[1].add(amounts[1]);
   });
 
-  exitEvents.forEach((event) => {
-    const exitEvent = event?.args as PoolExitedArguments;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [poolId, sender, assets, amountsOut] = exitEvent;
-    totalAmountsOut[0] = totalAmountsOut[0].add(amountsOut[0]);
-    totalAmountsOut[1] = totalAmountsOut[1].add(amountsOut[1]);
-  });
+  // const events = changeEvents.map((event) => {
+  //   const changeEvent = event?.args as PoolBalanceChangedArguments;
+  //   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  //   const [poolId, sender, assets, amounts] = changeEvent;
+  //   return [formatEther(amounts[0]), formatEther(amounts[1])];
+  // });
+  // events.forEach((e) => console.log(e));
 
-  const tokenDeltas = zip(totalAmountsIn, totalAmountsOut).map((amounts) => {
-    const amountIn = amounts[0];
-    const amountOut = amounts[1];
-    return amountIn.sub(amountOut);
-  });
-
-  // values ordered by ascending token address
-  return tokenDeltas;
+  // console.log(
+  //   "totalChangePerToken",
+  //   totalChangePerToken.map((bn) => formatEther(bn))
+  // );
+  // console.log("");
+  return totalDeltaPerToken;
 }

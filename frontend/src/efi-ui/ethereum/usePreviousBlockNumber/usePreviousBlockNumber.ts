@@ -1,10 +1,13 @@
 import { QueryObserverResult, useQuery } from "react-query";
 
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
+import { ONE_DAY_IN_SECONDS } from "efi/base/time";
 
 // TODO: get a better source for this.  I picked this up from https://etherscan.io/chart/blocktime
-// const AVG_MINE_RATE_SECONDS = 13.1;
-const AVG_MINE_RATE_SECONDS = 130;
+const PRODUCTION = process.env.NODE_ENV === "production";
+// the average for this entire year is about 13.1s / block.  For local development though we just
+// use 10 blocks to represent one day.
+const AVG_MINE_RATE_SECONDS = PRODUCTION ? 13.1 : ONE_DAY_IN_SECONDS / 10;
 export function usePreviousBlockNumber(
   secondsAgo: number | undefined
 ): QueryObserverResult<number> {
