@@ -1,3 +1,5 @@
+import { Web3Provider } from "@ethersproject/providers";
+import { InterestToken } from "elf-contracts/types/InterestToken";
 import { formatUnits } from "ethers/lib/utils";
 import zip from "lodash.zip";
 import { Currency, Money } from "ts-money";
@@ -5,27 +7,23 @@ import { Currency, Money } from "ts-money";
 import { getCoinGeckoId } from "efi-coingecko";
 import { getQueriesData } from "efi-ui/base/queryResults";
 import { useCoinGeckoPrices } from "efi-ui/coingecko/useCoinGeckoPrices";
+import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
 import { useOnSwapGivenInMulti } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenInMulti";
 import { usePoolForTokenMulti } from "efi-ui/pools/usePoolForToken/usePoolForTokenMulti";
 import { usePoolPairedTokenMulti } from "efi-ui/pools/usePoolPairedToken/usePoolPairedTokenMulti";
-import { Web3Provider } from "@ethersproject/providers";
-import { InterestToken } from "elf-contracts/types/InterestToken";
-import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 
-export function useFiatBalanceAllInterestTokens(
+export function useFiatBalanceAllYieldTokens(
   library: Web3Provider | undefined,
   account: string | null | undefined,
-  interestTokens: InterestToken[],
+  yieldTokens: InterestToken[],
   currency: Currency
 ): Money {
-  // Interest Tokenss should be paired against a token we can lookup in Coingecko for fiat price
-  const markets = usePoolForTokenMulti(
-    (interestTokens as unknown) as ERC20Shim[]
-  );
+  // Yield Tokens should be paired against a token we can lookup in Coingecko for fiat price
+  const pools = usePoolForTokenMulti((yieldTokens as unknown) as ERC20Shim[]);
   const baseAssetTokens = usePoolPairedTokenMulti(
-    markets,
-    (interestTokens as unknown) as ERC20Shim[]
+    pools,
+    (yieldTokens as unknown) as ERC20Shim[]
   );
   const baseAssetTokenSymbolResults = useSmartContractReadCalls(
     baseAssetTokens,
@@ -34,6 +32,7 @@ export function useFiatBalanceAllInterestTokens(
   const baseAssetCoinGeckoIds = getQueriesData(
     baseAssetTokenSymbolResults
   ).map((tokenSymbol) => getCoinGeckoId(tokenSymbol));
+
   // The price of 1 paired token in Fiat, eg: $1,400.23 if token is Weth
   const baseAssetCoinGeckoPriceResults = useCoinGeckoPrices(
     baseAssetCoinGeckoIds,
@@ -41,8 +40,8 @@ export function useFiatBalanceAllInterestTokens(
   );
 
   // Get the user's balance of all the interest tokens
-  const interestTokenBalanceOfResults = useSmartContractReadCalls(
-    interestTokens,
+  const yieldTokenBalanceOfResults = useSmartContractReadCalls(
+    yieldTokens,
     "balanceOf",
     {
       enabled: !!account,
@@ -52,9 +51,9 @@ export function useFiatBalanceAllInterestTokens(
 
   // Total value in base asset of each interest token
   const totalValueInBaseAssetResults = useOnSwapGivenInMulti(
-    markets,
-    (interestTokens as unknown) as ERC20Shim[],
-    getQueriesData(interestTokenBalanceOfResults)
+    pools,
+    (yieldTokens as unknown) as ERC20Shim[],
+    getQueriesData(yieldTokenBalanceOfResults)
   );
 
   const baseAssetDecimalsResult = useSmartContractReadCalls(
@@ -67,7 +66,7 @@ export function useFiatBalanceAllInterestTokens(
     getQueriesData(totalValueInBaseAssetResults),
     getQueriesData(baseAssetDecimalsResult)
   ).map(([price, balanceOf, decimals]): Money | undefined => {
-    const formattedBalance = +formatUnits(+(balanceOf || 0), decimals);
+    const formattedBalance = +formatUnits(balanceOf || 0, decimals);
     return price?.multiply(formattedBalance);
   });
 

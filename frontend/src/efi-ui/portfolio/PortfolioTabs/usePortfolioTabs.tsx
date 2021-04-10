@@ -7,14 +7,13 @@ import { t } from "ttag";
 
 import { useYieldTokensWithBalance } from "efi-ui/interestToken/useYieldTokensWithBalance/useYieldTokensWithBalance";
 import { useFiatBalanceAllPrincipalTokens } from "efi-ui/portfolio/hooks/useFiatBalanceAllPrincipalTokens";
+import { useFiatBalanceAllYieldTokens } from "efi-ui/portfolio/hooks/useFiatBalanceAllYieldTokens";
 import { useTranchesWithBalance } from "efi-ui/portfolio/hooks/useTranchesWithBalance";
 import { InterestTokenPortfolio } from "efi-ui/portfolio/InterestTokenPortfolio/InterestTokenPortfolio";
 import { LiquidityPositionPortfolio } from "efi-ui/portfolio/LiquidityPositionPortfolio/LiquidityPositionPortfolio";
 import { PortfolioTab } from "efi-ui/portfolio/PortfolioTabs/PortfolioTabs";
 import { PrincipalTokenPortfolio } from "efi-ui/portfolio/PrincipalTokenPortfolio/PrincipalTokenPortfolio";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
-
-import { useFiatBalanceAllInterestTokens } from "../hooks/useFiatBalanceAllYieldTokens";
 
 export function usePortfolioTabs(
   chainId: number | undefined,
@@ -96,7 +95,7 @@ function useYieldTokenTab(
 ) {
   const { currency } = useCurrencyPref();
   const yieldTokensWithBalance = useYieldTokensWithBalance(account, provider);
-  const totalFiatBalanceAllYieldTokens = useFiatBalanceAllInterestTokens(
+  const totalFiatBalanceAllYieldTokens = useFiatBalanceAllYieldTokens(
     library,
     account,
     yieldTokensWithBalance,
