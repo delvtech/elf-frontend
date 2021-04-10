@@ -41,7 +41,7 @@ export const PoolSummary: FC<PoolSummaryProps> = (props) => {
               </div>
             </div>
             <div className={tw("flex", "self-end")}>
-              <TrendIndicator trend={liquidityTrend} />
+              <TrendIndicator value={liquidityTrend} />
             </div>
           </div>
           {/* Volume (24hr)*/}
@@ -55,7 +55,7 @@ export const PoolSummary: FC<PoolSummaryProps> = (props) => {
               </div>
             </div>
             <div className={tw("flex", "self-end")}>
-              <TrendIndicator trend={volumeTrend} />
+              <TrendIndicator value={volumeTrend} />
             </div>
           </div>
           {/* Fees (24hr)*/}
@@ -69,7 +69,7 @@ export const PoolSummary: FC<PoolSummaryProps> = (props) => {
               </div>
             </div>
             <div className={tw("flex", "self-end")}>
-              <TrendIndicator trend={0.0016} />
+              <TrendIndicator value={0.0016} />
             </div>
           </div>
         </div>

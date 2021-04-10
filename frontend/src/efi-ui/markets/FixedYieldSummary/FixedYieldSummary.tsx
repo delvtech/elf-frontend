@@ -31,7 +31,7 @@ export const FixedYieldSummary: FC<FixedYieldSummaryProps> = (props) => {
               <div className={classNames("h3", tw("space-x-4"))}>2.13%</div>
             </div>
             <div className={tw("flex", "self-end")}>
-              <TrendIndicator trend={0.0016} />
+              <TrendIndicator value={0.0016} />
             </div>
           </div>
           {/* Volume (24hr)*/}
@@ -43,7 +43,7 @@ export const FixedYieldSummary: FC<FixedYieldSummaryProps> = (props) => {
               <div className={classNames("h3", tw("space-x-4"))}>10.27%</div>
             </div>
             <div className={tw("flex", "self-end")}>
-              <TrendIndicator trend={0.0016} />
+              <TrendIndicator value={0.0016} />
             </div>
           </div>
           <div className={tw("flex", "space-x-4", "justify-between")}>

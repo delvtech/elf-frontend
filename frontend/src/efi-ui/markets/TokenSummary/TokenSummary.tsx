@@ -62,7 +62,7 @@ export const TokenSummary: FC<TokenSummaryProps> = ({ pool }) => {
                 <span className={tw("text-lg")}>
                   {formatMoney(baseAssetPrice)}
                 </span>
-                <TrendIndicator trend={0.0016} />
+                <TrendIndicator value={0.0016} />
               </div>
             </div>
             <div
@@ -77,7 +77,7 @@ export const TokenSummary: FC<TokenSummaryProps> = ({ pool }) => {
                     formatUnits(baseAssetBalance || 0, baseAssetDecimals)
                   ).toFixed(2)}
                 </span>
-                <TrendIndicator trend={0.0016} />
+                <TrendIndicator value={0.0016} />
               </div>
             </div>
           </div>
@@ -100,7 +100,7 @@ export const TokenSummary: FC<TokenSummaryProps> = ({ pool }) => {
                 <span className={tw("text-lg")}>
                   {formatMoney(yieldAssetPrice)}
                 </span>
-                <TrendIndicator trend={0.0016} />
+                <TrendIndicator value={0.0016} />
               </div>
             </div>
             <div
@@ -115,7 +115,7 @@ export const TokenSummary: FC<TokenSummaryProps> = ({ pool }) => {
                     formatUnits(yieldAssetBalance || 0, yieldAssetDecimals)
                   ).toFixed(2)}
                 </span>
-                <TrendIndicator trend={0.0016} />
+                <TrendIndicator value={0.0016} />
               </div>
             </div>
           </div>
