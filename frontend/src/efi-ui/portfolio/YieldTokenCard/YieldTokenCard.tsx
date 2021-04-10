@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from "react";
+import React, { ReactElement, ReactNode } from "react";
 
 import {
   AnchorButton,
@@ -58,11 +58,11 @@ const calloutClassName = tw(
   "justify-center"
 );
 
-export const YieldTokenCard: FC<YieldTokenCardProps> = ({
+export function YieldTokenCard({
   library,
   account,
   interestToken,
-}) => {
+}: YieldTokenCardProps): ReactElement {
   const { isDarkMode } = useDarkMode();
   const { currency } = useCurrencyPref();
 
@@ -255,7 +255,7 @@ export const YieldTokenCard: FC<YieldTokenCardProps> = ({
       </Card>
     </div>
   );
-};
+}
 
 function getTableRowLink(
   vaultAddress: string | undefined,
