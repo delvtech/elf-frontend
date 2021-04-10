@@ -22,6 +22,7 @@ import {
 
 import { ConnectWalletCallout } from "./ConnectWalletCallout";
 import { WalletApprovalCallout } from "./WalletApprovalCallout";
+import { formatUnits } from "ethers/lib/utils";
 
 interface TransactionDrawerProps {
   account: string | null | undefined;

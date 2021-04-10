@@ -57,19 +57,19 @@ function makeMintCallArgs(
     trancheUnlockTimestamp,
     positionAddress,
     [],
-
-    ethValueOverride,
   ];
+  if (ethValueOverride) {
+    callArgs.push(ethValueOverride);
+  }
 
   return callArgs;
 }
 function getMintOverrides(
   baseAssetAddress: string,
   amount: BigNumber
-): CallOverrides {
+): CallOverrides | undefined {
   // Don't send any eth in this transaction if the base asset is a different token.
-  const value =
-    baseAssetAddress === USER_PROXY_ETH_SENTINEL ? amount : BigNumber.from(0);
-
-  return { value };
+  if (baseAssetAddress === USER_PROXY_ETH_SENTINEL) {
+    return { value: amount };
+  }
 }
