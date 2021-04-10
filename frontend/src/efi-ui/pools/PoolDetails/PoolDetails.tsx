@@ -23,6 +23,7 @@ import { formatEther } from "ethers/lib/utils";
 import { useTotalLiquidityTrend } from "efi-ui/pools/useTotalLiquidityTrend/useTotalLiquidityTrend";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
 import { useVolumeForPool } from "efi-ui/pools/useVolumeForPool/useVolumeForPool";
+import { useFeeVolumeForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
 
 interface PoolDetailsProps {
   library: Web3Provider | undefined;
@@ -57,23 +58,28 @@ export const PoolDetails: FC<PoolDetailsProps> = ({
   const maturityDate = (maturityDateInUnixSeconds?.toNumber() || 0) * 1000;
 
   const volume24hr = useVolumeForPool(pool, ONE_DAY_IN_SECONDS);
-  console.log("volume24hr", volume24hr);
   // the volume from 48hrs ago to 24hrs ago
   const volumePrevious24hr = useVolumeForPool(
     pool,
     ONE_DAY_IN_SECONDS * 2,
     ONE_DAY_IN_SECONDS
   );
-  console.log("volumePrevious24hr", volumePrevious24hr);
 
   const newVolume = volume24hr?.toDecimal() ?? 0;
   const oldVolume = volumePrevious24hr?.toDecimal() ?? 0;
 
   const volumeTrend = (newVolume - oldVolume) / oldVolume;
 
-  const swapFee = useSwapFee(pool);
-  const swapFeeDecimal = +formatEther(swapFee || 0);
-  const swapVolume = volume24hr?.multiply(swapFeeDecimal);
+  const feeVolume24hr = useFeeVolumeForPool(pool, ONE_DAY_IN_SECONDS);
+  const feeVolumePrevious24hr = useFeeVolumeForPool(
+    pool,
+    ONE_DAY_IN_SECONDS * 2,
+    ONE_DAY_IN_SECONDS
+  );
+
+  const newFeeVolume = feeVolume24hr?.toDecimal() ?? 0;
+  const oldFeeVolume = feeVolumePrevious24hr?.toDecimal() ?? 0;
+  const feeVolumeTrend = (newFeeVolume - oldFeeVolume) / oldFeeVolume;
 
   return (
     <div className={tw("flex", "mb-8", "space-x-4", "w-full", "items-stretch")}>
@@ -81,11 +87,12 @@ export const PoolDetails: FC<PoolDetailsProps> = ({
         <div className={tw("flex", "flex-col", "space-y-8", "w-full")}>
           <div className={tw("flex", "space-x-12")}>
             <PoolSummary
-              tradeVolume={volume24hr}
-              swapVolume={swapVolume}
-              totalLiquidity={totalLiquidity}
-              volumeTrend={volumeTrend}
+              liquidity={totalLiquidity}
               liquidityTrend={liquidityTrend}
+              volume={volume24hr}
+              volumeTrend={volumeTrend}
+              feeVolume={feeVolume24hr}
+              feeVolumeTrend={feeVolumeTrend}
             />
             <FixedYieldSummary
               startDate={startDate}
