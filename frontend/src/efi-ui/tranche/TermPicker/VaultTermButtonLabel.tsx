@@ -19,6 +19,8 @@ import { formatAbbreviatedDate } from "efi/base/dates";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
+import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
+import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 
 interface VaultTermButtonLabelProps {
   tranche: Tranche | undefined;
@@ -33,6 +35,17 @@ export function VaultTermButtonLabel({
   baseAsset,
   tranche,
 }: VaultTermButtonLabelProps): ReactElement {
+  const pool = usePoolForToken(tranche as ERC20Shim, jsonRpcProvider);
+  const baseAssetPoolToken = usePoolPairedToken(pool, tranche as ERC20Shim);
+  const {
+    spotPriceBaseAssetForOneToken: amountOfBaseAssetForOneTranche,
+  } = usePoolTokenPrices(pool, baseAssetPoolToken);
+
+  const baseAssetSymbol = useCryptoSymbol(baseAsset);
+  const inputTokenSymbol = useCryptoSymbol(baseAsset);
+  const roundedTranchePrice = amountOfBaseAssetForOneTranche?.toFixed(4);
+  const principalTokenMarketRateLabel = t`1 ${inputTokenSymbol} Principal Token ≈ ${roundedTranchePrice} ${baseAssetSymbol}`;
+
   const unlockTimestampResult = useSmartContractReadCall(
     tranche,
     "unlockTimestamp"
@@ -45,8 +58,6 @@ export function VaultTermButtonLabel({
     getQueryData(unlockTimestampResult)
   );
 
-  const pool = usePoolForToken(tranche as ERC20Shim, jsonRpcProvider);
-  const baseAssetSymbol = useCryptoSymbol(baseAsset);
   const tranchePrice = usePoolSpotPrice(pool, tranche as ERC20Shim);
 
   let trancheAPY = "-";
@@ -73,7 +84,8 @@ export function VaultTermButtonLabel({
               "flex-col",
               "items-center",
               "justify-center",
-              "mr-4"
+              "mr-4",
+              "space-y-1"
             )}
           >
             <span className={classNames("h4", tw("text-center"))}>
@@ -84,8 +96,9 @@ export function VaultTermButtonLabel({
             </Tag>
           </div>
         }
-        text={`${baseAssetSymbol} Principal Token`}
-        label={t`via ${positionName}`}
+        text={positionName}
+        label={principalTokenMarketRateLabel}
+        subLabel={principalTokenMarketRateLabel}
       />
     </div>
   );

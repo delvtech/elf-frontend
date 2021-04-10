@@ -8,6 +8,8 @@ import tw from "efi-tailwindcss-classnames";
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 
 import { TermButton } from "./TermButton";
+import styles from "./TermPicker.module.css";
+import classNames from "classnames";
 
 interface TermPickerProps {
   library: Web3Provider | undefined;
@@ -43,7 +45,9 @@ export function TermPicker({
       disabled={tranches.length < 2}
       popoverProps={{
         minimal: true,
-        targetClassName: tw("w-full"),
+        className: tw("w-full"),
+        targetClassName: classNames(styles.fullHeight, tw("w-full", "h-full")),
+        popoverClassName: tw("w-full", "h-full"),
         portalClassName: tw("w-64"),
       }}
       items={tranches}
