@@ -9,10 +9,10 @@ import { useYieldTokensWithBalance } from "efi-ui/interestToken/useYieldTokensWi
 import { useFiatBalanceAllPrincipalTokens } from "efi-ui/portfolio/hooks/useFiatBalanceAllPrincipalTokens";
 import { useFiatBalanceAllYieldTokens } from "efi-ui/portfolio/hooks/useFiatBalanceAllYieldTokens";
 import { useTranchesWithBalance } from "efi-ui/portfolio/hooks/useTranchesWithBalance";
-import { InterestTokenPortfolio } from "efi-ui/portfolio/InterestTokenPortfolio/InterestTokenPortfolio";
 import { LiquidityPositionPortfolio } from "efi-ui/portfolio/LiquidityPositionPortfolio/LiquidityPositionPortfolio";
 import { PortfolioTab } from "efi-ui/portfolio/PortfolioTabs/PortfolioTabs";
 import { PrincipalTokenPortfolio } from "efi-ui/portfolio/PrincipalTokenPortfolio/PrincipalTokenPortfolio";
+import { YieldTokenPortfolio } from "efi-ui/portfolio/YieldTokenPortfolio/YieldTokenPortfolio";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 
 export function usePortfolioTabs(
@@ -57,10 +57,10 @@ export function usePortfolioTabs(
       quantity: yieldTokensWithBalance.length,
       totalFiatValue: totalFiatBalanceAllYieldTokens,
       contentRenderer: () => (
-        <InterestTokenPortfolio
+        <YieldTokenPortfolio
           library={library}
           account={account}
-          interestTokens={yieldTokensWithBalance}
+          yieldTokens={yieldTokensWithBalance}
         />
       ),
     },
