@@ -220,7 +220,6 @@ export function MintCard({
           account={account}
           library={library}
           chainId={chainId}
-          pool={pool}
           walletConnectionActive={walletConnectionActive}
           connector={connector}
           amountIn={amountInString}

@@ -1,4 +1,4 @@
-import React, { FC, ReactElement } from "react";
+import React, { ReactElement } from "react";
 
 import { Button, Drawer, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
@@ -39,7 +39,7 @@ interface TransactionDrawerProps {
   walletConnectionActive: boolean;
 }
 
-export const TransactionDrawer: FC<TransactionDrawerProps> = ({
+export function TransactionDrawer({
   account,
   amountIn,
   assetInIcon,
@@ -53,7 +53,7 @@ export const TransactionDrawer: FC<TransactionDrawerProps> = ({
   onConfirmTransaction,
   transactionDetails,
   walletConnectionActive,
-}) => {
+}: TransactionDrawerProps): ReactElement {
   const { isDarkMode, darkModeClassName } = useDarkMode();
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
 
@@ -156,7 +156,7 @@ export const TransactionDrawer: FC<TransactionDrawerProps> = ({
       </div>
     </Drawer>
   );
-};
+}
 
 function getConfirmButtonLabel(account: string | null | undefined) {
   if (!account) {

@@ -3,35 +3,25 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { formatFullDate } from "efi/base/dates";
-import { formatPercent } from "efi/base/formatPercent";
 
 /**
  * Generalize this further to handle any transaction confirmation
  */
 interface MintTransactionDetailsProps {
-  spotPriceBaseAssetForOneToken: number | undefined;
   baseAssetSymbol: string | undefined;
-
-  priceSlippageAndTradingFee: number | undefined;
-
-  unlockTimeStamp: Date | undefined;
+  numPrincipalTokens: number | undefined;
+  numYieldTokens: number | undefined;
+  unlockTimestamp: Date | undefined;
 }
 export function MintTransactionDetails({
   baseAssetSymbol,
-  priceSlippageAndTradingFee,
-  spotPriceBaseAssetForOneToken,
-  unlockTimeStamp,
+  numPrincipalTokens,
+  numYieldTokens,
+  unlockTimestamp,
 }: MintTransactionDetailsProps): ReactElement {
-  const roundedTranchePrice = spotPriceBaseAssetForOneToken?.toFixed(4);
-
-  const unlockTimeStampLabel = unlockTimeStamp
-    ? formatFullDate(unlockTimeStamp)
+  const unlockTimeStampLabel = unlockTimestamp
+    ? formatFullDate(unlockTimestamp)
     : undefined;
-
-  const formattedSlippageAndTradingFee = formatPercent(
-    priceSlippageAndTradingFee || 0
-  );
-
   return (
     <div className={tw("flex", "flex-col", "space-y-6", "items-center")}>
       <LabeledText
@@ -40,9 +30,9 @@ export function MintTransactionDetails({
         className={tw("items-center")}
         text={<span>{t`Principal Tokens you receive`}</span>}
         label={
-          <span
-            className={tw("text-base")}
-          >{t`1 Principal Token ≈ ${roundedTranchePrice} ${baseAssetSymbol}`}</span>
+          <span className={tw("text-base")}>{t`${numPrincipalTokens?.toFixed(
+            4
+          )} pt${baseAssetSymbol}`}</span>
         }
       />
       <LabeledText
@@ -52,7 +42,7 @@ export function MintTransactionDetails({
         text={<span>{t`Yield Tokens you receive`}</span>}
         label={
           <span className={tw("text-base")}>
-            {formattedSlippageAndTradingFee}
+            {t`${numYieldTokens?.toFixed(4)} yt${baseAssetSymbol}`}
           </span>
         }
       />
