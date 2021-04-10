@@ -14,14 +14,15 @@ interface WalletApprovalCalloutProps {
   account: string | null | undefined;
   contract: ERC20 | undefined;
   tokenSymbol?: string;
-
   approvalAmount: BigNumber | undefined;
+  messageRenderer: (assetSymbol: string) => string;
 }
 export const WalletApprovalCallout: FC<WalletApprovalCalloutProps> = ({
   account,
   approvalAmount,
   contract,
   tokenSymbol: tokenSymbolFromProps,
+  messageRenderer,
 }) => {
   const { data: symbol } = useSmartContractReadCall(contract, "symbol");
   const assetSymbol = tokenSymbolFromProps || symbol;
@@ -34,9 +35,11 @@ export const WalletApprovalCallout: FC<WalletApprovalCalloutProps> = ({
 
   const hasApproval = !!approvalAmount && marketAllowance?.gte(approvalAmount);
   const showCallout = account && !isAllowanceLoading && !hasApproval;
-  if (!showCallout) {
+  if (!showCallout || !assetSymbol) {
     return null;
   }
+
+  const message = messageRenderer(assetSymbol);
 
   return (
     <Callout
@@ -45,9 +48,7 @@ export const WalletApprovalCallout: FC<WalletApprovalCalloutProps> = ({
       icon={null}
       className={tw("p-4")}
     >
-      <div
-        className={"pt-1"}
-      >{t`Element uses Balancer Pools for trading. You'll need to grant Balancer approval to spend your ${assetSymbol} in order to perform this transaction.`}</div>
+      <div className={"pt-1"}>{message}</div>
     </Callout>
   );
 };

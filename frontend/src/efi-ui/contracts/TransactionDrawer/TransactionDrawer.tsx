@@ -37,6 +37,7 @@ interface TransactionDrawerProps {
   onConfirmTransaction: () => void;
   transactionDetails?: ReactElement | null;
   walletConnectionActive: boolean;
+  walletApprovalMessageRenderer: (assetSymbol: string) => string;
 }
 
 export function TransactionDrawer({
@@ -53,6 +54,7 @@ export function TransactionDrawer({
   onConfirmTransaction,
   transactionDetails,
   walletConnectionActive,
+  walletApprovalMessageRenderer,
 }: TransactionDrawerProps): ReactElement {
   const { isDarkMode, darkModeClassName } = useDarkMode();
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
@@ -116,6 +118,7 @@ export function TransactionDrawer({
           // narrow the type of baseAssetContract when referencing a variable
           account && assetIn?.type !== CryptoAssetType.ETHEREUM ? (
             <WalletApprovalCallout
+              messageRenderer={walletApprovalMessageRenderer}
               account={account}
               contract={baseAssetContract as ERC20Shim}
               tokenSymbol={assetInSymbol}

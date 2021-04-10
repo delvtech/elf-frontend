@@ -17,6 +17,7 @@ import { useMintTransaction } from "efi-ui/mint/hooks/useMintTransaction";
 import { MintTransactionDetails } from "efi-ui/mint/MintTransactionDetails/MintTransactionDetails";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { useMintPreview } from "efi-ui/mint/hooks/useMintPreview";
+import { getUserProxyApprovalMessage } from "efi-ui/mint/userProxyApprovalMessage";
 
 interface MintTransactionConfirmationDrawerProps {
   chainId: number | undefined;
@@ -91,6 +92,7 @@ export function MintTransactionConfirmationDrawer({
       assetIn={baseAsset}
       assetInIcon={baseAsset.assetIcon}
       walletConnectionActive={walletConnectionActive}
+      walletApprovalMessageRenderer={getUserProxyApprovalMessage}
       amountIn={amountInAsBigNumber}
       chainId={chainId}
       connector={connector}
