@@ -1,11 +1,12 @@
 import React, { FC } from "react";
 
-import { Card, Classes, Icon, Intent, Tag } from "@blueprintjs/core";
+import { Card, Classes } from "@blueprintjs/core";
 import classNames from "classnames";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
+import { TrendIndicator } from "efi-ui/base/TrendIndicator/TrendIndicator";
 
 interface FixedYieldSummaryProps {
   maturityDate: number | undefined;
@@ -30,10 +31,7 @@ export const FixedYieldSummary: FC<FixedYieldSummaryProps> = (props) => {
               <div className={classNames("h3", tw("space-x-4"))}>2.13%</div>
             </div>
             <div className={tw("flex", "self-end")}>
-              <Tag minimal intent={Intent.SUCCESS}>
-                .16%
-                <Icon icon={"caret-up"} />
-              </Tag>
+              <TrendIndicator trend={0.0016} />
             </div>
           </div>
           {/* Volume (24hr)*/}
@@ -45,10 +43,7 @@ export const FixedYieldSummary: FC<FixedYieldSummaryProps> = (props) => {
               <div className={classNames("h3", tw("space-x-4"))}>10.27%</div>
             </div>
             <div className={tw("flex", "self-end")}>
-              <Tag minimal intent={Intent.DANGER}>
-                .16%
-                <Icon icon={"caret-down"} />
-              </Tag>
+              <TrendIndicator trend={0.0016} />
             </div>
           </div>
           <div className={tw("flex", "space-x-4", "justify-between")}>

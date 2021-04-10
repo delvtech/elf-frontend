@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 
-import { Card, Classes, Icon, Intent, Tag } from "@blueprintjs/core";
+import { Card, Classes } from "@blueprintjs/core";
 import classNames from "classnames";
 import { ERC20 } from "elf-contracts/types/ERC20";
 import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
@@ -10,6 +10,7 @@ import { Money } from "ts-money";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { TrendIndicator } from "efi-ui/base/TrendIndicator/TrendIndicator";
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
@@ -61,10 +62,7 @@ export const TokenSummary: FC<TokenSummaryProps> = ({ pool }) => {
                 <span className={tw("text-lg")}>
                   {formatMoney(baseAssetPrice)}
                 </span>
-                <Tag minimal intent={Intent.SUCCESS}>
-                  .16%
-                  <Icon icon={"caret-up"} />
-                </Tag>
+                <TrendIndicator trend={0.0016} />
               </div>
             </div>
             <div
@@ -79,10 +77,7 @@ export const TokenSummary: FC<TokenSummaryProps> = ({ pool }) => {
                     formatUnits(baseAssetBalance || 0, baseAssetDecimals)
                   ).toFixed(2)}
                 </span>
-                <Tag minimal intent={Intent.SUCCESS}>
-                  .16%
-                  <Icon icon={"caret-up"} />
-                </Tag>
+                <TrendIndicator trend={0.0016} />
               </div>
             </div>
           </div>
@@ -105,10 +100,7 @@ export const TokenSummary: FC<TokenSummaryProps> = ({ pool }) => {
                 <span className={tw("text-lg")}>
                   {formatMoney(yieldAssetPrice)}
                 </span>
-                <Tag minimal intent={Intent.SUCCESS}>
-                  .16%
-                  <Icon icon={"caret-up"} />
-                </Tag>
+                <TrendIndicator trend={0.0016} />
               </div>
             </div>
             <div
@@ -123,10 +115,7 @@ export const TokenSummary: FC<TokenSummaryProps> = ({ pool }) => {
                     formatUnits(yieldAssetBalance || 0, yieldAssetDecimals)
                   ).toFixed(2)}
                 </span>
-                <Tag minimal intent={Intent.SUCCESS}>
-                  .16%
-                  <Icon icon={"caret-up"} />
-                </Tag>
+                <TrendIndicator trend={0.0016} />
               </div>
             </div>
           </div>

@@ -1,13 +1,13 @@
 import React, { FC } from "react";
 
-import { Card, Classes, Icon, Intent, Tag } from "@blueprintjs/core";
+import { Card, Classes } from "@blueprintjs/core";
 import classNames from "classnames";
 import { Money } from "ts-money";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { TrendIndicator } from "efi-ui/base/TrendIndicator/TrendIndicator";
 import { formatMoney } from "efi/money/formatMoney";
-import { formatPercent } from "efi/base/formatPercent";
 
 interface PoolSummaryProps {
   totalLiquidity: Money | undefined;
@@ -41,10 +41,7 @@ export const PoolSummary: FC<PoolSummaryProps> = (props) => {
               </div>
             </div>
             <div className={tw("flex", "self-end")}>
-              <Tag minimal intent={Intent.SUCCESS}>
-                {formatPercent(liquidityTrend || 0)}
-                <Icon icon={"caret-up"} />
-              </Tag>
+              <TrendIndicator trend={liquidityTrend} />
             </div>
           </div>
           {/* Volume (24hr)*/}
@@ -58,10 +55,7 @@ export const PoolSummary: FC<PoolSummaryProps> = (props) => {
               </div>
             </div>
             <div className={tw("flex", "self-end")}>
-              <Tag minimal intent={Intent.DANGER}>
-                {formatPercent(volumeTrend || 0)}
-                <Icon icon={"caret-down"} />
-              </Tag>
+              <TrendIndicator trend={volumeTrend} />
             </div>
           </div>
           {/* Fees (24hr)*/}
@@ -75,10 +69,7 @@ export const PoolSummary: FC<PoolSummaryProps> = (props) => {
               </div>
             </div>
             <div className={tw("flex", "self-end")}>
-              <Tag minimal intent={Intent.SUCCESS}>
-                .16%
-                <Icon icon={"caret-up"} />
-              </Tag>
+              <TrendIndicator trend={0.0016} />
             </div>
           </div>
         </div>
