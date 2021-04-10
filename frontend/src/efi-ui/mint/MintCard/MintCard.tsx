@@ -1,15 +1,20 @@
-import React, { FC, Fragment, useCallback, useEffect, useState } from "react";
+import React, {
+  Fragment,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 
 import { Button, Card, Classes, Elevation, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import classNames from "classnames";
 import { Tranche } from "elf-contracts/types/Tranche";
-import { parseUnits } from "ethers/lib/utils";
+import { formatUnits, parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { useBalancerTransactionInputs } from "efi-ui/balancer/useBalancerTransactionInputs";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { CryptoAssetPicker } from "efi-ui/crypto/CryptoAssetPicker/CryptoAssetPicker";
@@ -25,9 +30,9 @@ import { MintTermPicker } from "efi-ui/mint/MintTermPicker/MintTermPicker";
 import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
-import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
-import { BuyPrincipalTokensTransactionConfirmationDrawer } from "efi-ui/tranche/BuyPrincipalTokensTransactionConfirmationDrawer/BuyPrincipalTokensTransactionConfirmationDrawer";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
+import { useMintPreview } from "efi-ui/mint/hooks/useMintPreview";
+import { MintTransactionConfirmationDrawer } from "efi-ui/mint/MintTransactionConfirmationDrawer/MintTransactionConfirmationDrawer";
 
 export interface MintCardProps {
   library: Web3Provider | undefined;
@@ -39,7 +44,7 @@ export interface MintCardProps {
   tranchesByBaseAsset: Record<string, Tranche[]>;
 }
 
-export const MintCard: FC<MintCardProps> = ({
+export function MintCard({
   library,
   account,
   baseAssets,
@@ -47,26 +52,15 @@ export const MintCard: FC<MintCardProps> = ({
   connector,
   walletConnectionActive,
   tranchesByBaseAsset,
-}) => {
+}: MintCardProps): ReactElement {
   // local state
   const [isDrawerOpen, setDrawerOpen] = useState(false);
+  const [amountInString, setAmountIn] = useState<string | undefined>(undefined);
+  const amountIn = +(amountInString || 0);
 
-  // base asset
+  // active base asset
   const { activeBaseAsset, setActiveBaseAsset } = useActiveBaseAsset(
     baseAssets
-  );
-  const tokenInAddress = getTokenAddressForBalancer(activeBaseAsset);
-
-  // tranche
-  const {
-    activeTrancheIndex,
-    activeTranche,
-    availableTranches,
-    setActiveTranche,
-  } = useActiveTranche(tranchesByBaseAsset, activeBaseAsset);
-  const { data: trancheDecimals } = useSmartContractReadCall(
-    activeTranche,
-    "decimals"
   );
   const activeBaseAssetSymbol = useCryptoSymbol(activeBaseAsset);
   const activeBaseAssetDecimals = useCryptoDecimals(activeBaseAsset);
@@ -75,44 +69,50 @@ export const MintCard: FC<MintCardProps> = ({
     account,
     activeBaseAsset
   );
-  const tokenOutAddress = activeTranche?.address;
 
-  const pool = usePoolForToken(activeTranche as ERC20Shim, jsonRpcProvider);
-
+  // active tranche
   const {
-    amountIn,
-    amountOut,
-    onAmountOutChange,
-    onAmountInChange,
-  } = useBalancerTransactionInputs(
-    pool,
-    tokenInAddress,
-    activeBaseAssetDecimals,
-    tokenOutAddress,
-    trancheDecimals
-  );
+    activeTrancheIndex,
+    activeTranche,
+    availableTranches,
+    setActiveTranche,
+  } = useActiveTranche(tranchesByBaseAsset, activeBaseAsset);
 
-  // the tranche's pool
-  const baseAssetPoolToken = usePoolPairedToken(
+  const { data: mintPreview } = useMintPreview(
+    activeBaseAsset,
+    activeTranche,
+    amountIn
+  );
+  const { data: trancheDecimals } = useSmartContractReadCall(
+    activeTranche,
+    "decimals"
+  );
+  const numPrincipalTokensOut = mintPreview
+    ? +formatUnits(mintPreview, trancheDecimals)
+    : undefined;
+
+  // active pool
+  const pool = usePoolForToken(activeTranche as ERC20Shim, jsonRpcProvider);
+  const poolBaseAssetToken = usePoolPairedToken(
     pool,
     activeTranche as ERC20Shim
   );
   const {
-    spotPriceBaseAssetForOneToken: amountOfEthForOneTranche,
-  } = usePoolTokenPrices(pool, baseAssetPoolToken);
-  const inputTokenSymbol = useCryptoSymbol(activeBaseAsset);
+    spotPriceBaseAssetForOneToken: spotPriceBaseAssetForOnePrincipalToken,
+  } = usePoolTokenPrices(pool, poolBaseAssetToken);
 
   // input calculations
   const amountInAsBigNumber = amountIn
-    ? parseUnits(amountIn, activeBaseAssetDecimals)
+    ? parseUnits(amountInString || "0", activeBaseAssetDecimals)
     : undefined;
 
-  const amountOutAsBigNumber = amountOut
-    ? parseUnits(amountOut, trancheDecimals)
-    : undefined;
+  const formattedPrincipalTokenPrice = spotPriceBaseAssetForOnePrincipalToken?.toFixed(
+    4
+  );
 
-  const roundedTranchePrice = amountOfEthForOneTranche?.toFixed(4);
-  const marketRateLabel = t`1 ${inputTokenSymbol} Principal Token ≈ ${roundedTranchePrice} ${activeBaseAssetSymbol}`;
+  // TODO: Figure out where to lay these out
+  const ptMarketRateLabel = t`Principal Token ≈ ${formattedPrincipalTokenPrice} ${activeBaseAssetSymbol}`;
+  const ytMarketRateLabel = t`Yield Token ≈ ${formattedPrincipalTokenPrice} ${activeBaseAssetSymbol}`;
 
   return (
     <Fragment>
@@ -120,35 +120,6 @@ export const MintCard: FC<MintCardProps> = ({
         elevation={isDrawerOpen ? Elevation.ZERO : Elevation.TWO}
         className={tw("flex", "flex-col", "p-10", "flex-1", "space-y-10")}
       >
-        <div className={tw("flex", "flex-col", "space-y-2")}>
-          <div className={tw("flex", "justify-between")}>
-            <span
-              className={classNames(tw("text-base"), Classes.TEXT_MUTED)}
-            >{t`Term and Vault`}</span>
-            <span className={classNames(tw("text-base"), Classes.TEXT_MUTED)}>
-              {marketRateLabel}
-            </span>
-          </div>
-          <div
-            className={tw(
-              "flex",
-              "space-x-1",
-              "h-24",
-              "border",
-              "rounded",
-              "border-gray-500"
-            )}
-          >
-            <MintTermPicker
-              library={library}
-              account={account}
-              onTrancheChange={setActiveTranche}
-              baseAsset={activeBaseAsset}
-              tranches={availableTranches}
-              activeTrancheIndex={activeTrancheIndex}
-            />
-          </div>
-        </div>
         <div className={tw("flex", "flex-col", "space-y-2")}>
           <div className={tw("flex", "justify-between")}>
             <span
@@ -182,24 +153,55 @@ export const MintCard: FC<MintCardProps> = ({
                 />
               }
               placeholder="0.00"
-              value={amountIn}
-              onValueChange={onAmountInChange}
+              value={amountInString}
+              onValueChange={setAmountIn}
               assetBalance={activeBaseAssetBalance}
+            />
+          </div>
+        </div>
+        <div className={tw("flex", "flex-col", "space-y-2")}>
+          <div className={tw("flex", "justify-between")}>
+            <span
+              className={classNames(tw("text-base"), Classes.TEXT_MUTED)}
+            >{t`Term and Vault`}</span>
+            <div className={classNames(tw("flex", "flex-col", "space-x-1"))}>
+              <span className={classNames(tw("text-base"), Classes.TEXT_MUTED)}>
+                {ptMarketRateLabel}
+              </span>
+              <span className={classNames(tw("text-base"), Classes.TEXT_MUTED)}>
+                {ytMarketRateLabel}
+              </span>
+            </div>
+          </div>
+          <div
+            className={tw(
+              "flex",
+              "space-x-1",
+              "h-24",
+              "border",
+              "rounded",
+              "border-gray-500"
+            )}
+          >
+            <MintTermPicker
+              library={library}
+              account={account}
+              onTrancheChange={setActiveTranche}
+              baseAsset={activeBaseAsset}
+              tranches={availableTranches}
+              activeTrancheIndex={activeTrancheIndex}
             />
           </div>
         </div>
 
         <div className={tw("flex", "space-x-10", "h-24", "mt-10")}>
           <PrincipalTokenPreview
-            amountIn={amountInAsBigNumber}
+            amount={numPrincipalTokensOut}
             baseAssetSymbol={activeBaseAssetSymbol}
-            amountOut={amountOutAsBigNumber}
-            baseAssetDecimals={activeBaseAssetDecimals}
           />
           <YieldTokenPreview
-            amountIn={amountInAsBigNumber}
+            amount={amountIn}
             baseAssetSymbol={activeBaseAssetSymbol}
-            amountOut={amountOutAsBigNumber}
             baseAssetDecimals={activeBaseAssetDecimals}
           />
         </div>
@@ -216,7 +218,7 @@ export const MintCard: FC<MintCardProps> = ({
       </Card>
 
       {!activeBaseAsset ? null : (
-        <BuyPrincipalTokensTransactionConfirmationDrawer
+        <MintTransactionConfirmationDrawer
           baseAsset={activeBaseAsset}
           tranche={activeTranche}
           account={account}
@@ -225,14 +227,14 @@ export const MintCard: FC<MintCardProps> = ({
           pool={pool}
           walletConnectionActive={walletConnectionActive}
           connector={connector}
-          amountIn={amountIn}
+          amountIn={amountInString}
           isOpen={isDrawerOpen}
           onClose={() => setDrawerOpen(false)}
         />
       )}
     </Fragment>
   );
-};
+}
 
 function useSetDefaultActiveBaseAsset(
   activeBaseAsset: CryptoAssetWithIcon | undefined,

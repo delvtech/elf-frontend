@@ -6,6 +6,11 @@ import { Tranche } from "elf-contracts/types/Tranche";
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { TermPicker } from "efi-ui/tranche/TermPicker/TermPicker";
 import { VaultTermButtonLabel } from "efi-ui/tranche/TermPicker/VaultTermButtonLabel";
+import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
+import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
+import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
+import { t } from "ttag/types";
+import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
 
 interface MintTermPickerProps {
   library: Web3Provider | undefined;

@@ -39,9 +39,8 @@ export function TermButton({
         Classes.BUTTON,
         Classes.FILL,
         Classes.MINIMAL,
-        tw("flex", "justify-start", "w-64")
+        tw("flex", "justify-start", "w-64", "h-full")
       )}
-      style={{ height: "82px" }}
     >
       <div
         className={tw(
