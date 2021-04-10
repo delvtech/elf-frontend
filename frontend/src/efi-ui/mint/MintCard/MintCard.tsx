@@ -30,10 +30,9 @@ import { MintTermPicker } from "efi-ui/mint/MintTermPicker/MintTermPicker";
 import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
-import { BuyPrincipalTokensTransactionConfirmationDrawer } from "efi-ui/tranche/BuyPrincipalTokensTransactionConfirmationDrawer/BuyPrincipalTokensTransactionConfirmationDrawer";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 import { useMintPreview } from "efi-ui/mint/hooks/useMintPreview";
-import { BigNumber } from "ethers";
+import { MintTransactionConfirmationDrawer } from "efi-ui/mint/MintTransactionConfirmationDrawer/MintTransactionConfirmationDrawer";
 
 export interface MintCardProps {
   library: Web3Provider | undefined;
@@ -219,7 +218,7 @@ export function MintCard({
       </Card>
 
       {!activeBaseAsset ? null : (
-        <BuyPrincipalTokensTransactionConfirmationDrawer
+        <MintTransactionConfirmationDrawer
           baseAsset={activeBaseAsset}
           tranche={activeTranche}
           account={account}
