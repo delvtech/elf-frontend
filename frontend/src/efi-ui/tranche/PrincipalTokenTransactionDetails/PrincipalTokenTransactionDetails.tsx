@@ -33,10 +33,11 @@ export const PrincipalTokenTransactionDetails: FC<PrincipalTokenTransactionDetai
   );
 
   return (
-    <div className={tw("flex", "flex-col", "space-y-6")}>
+    <div className={tw("flex", "flex-col", "space-y-6", "items-center")}>
       <LabeledText
         bold
         muted={false}
+        className={tw("items-center")}
         text={<span>{t`Market rate`}</span>}
         label={
           <span
@@ -48,6 +49,7 @@ export const PrincipalTokenTransactionDetails: FC<PrincipalTokenTransactionDetai
         muted={false}
         bold
         text={<span>{t`Price slippage + trading fees`}</span>}
+        className={tw("items-center")}
         label={
           <span className={tw("text-base")}>
             {formattedSlippageAndTradingFee}
@@ -57,6 +59,7 @@ export const PrincipalTokenTransactionDetails: FC<PrincipalTokenTransactionDetai
       <LabeledText
         bold
         muted={false}
+        className={tw("items-center")}
         text={<span>{t`Term date`}</span>}
         label={<span className={tw("text-base")}>{unlockTimeStampLabel}</span>}
       />

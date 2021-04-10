@@ -1,4 +1,4 @@
-import React, { FC, ReactElement } from "react";
+import { ReactElement } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
@@ -7,10 +7,6 @@ import { Signer } from "ethers";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
-import { SwapKind } from "efi-ui/balancer/SwapKind";
-import { parseQueryBatchSwapResult } from "efi-ui/balancer/useQueryBatchSwap/parseQueryBatchSwapResult";
-import { useQueryBatchSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
-import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { TransactionDetailsForm } from "efi-ui/contracts/TransactionDetailsPreview/TransactionDetailsForm";
 import { TransactionDrawer } from "efi-ui/contracts/TransactionDrawer/TransactionDrawer";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
@@ -19,13 +15,9 @@ import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryp
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { useMintTransaction } from "efi-ui/mint/hooks/useMintTransaction";
 import { MintTransactionDetails } from "efi-ui/mint/MintTransactionDetails/MintTransactionDetails";
-import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
-import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
-import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
-import { calculatePurchasePrice } from "efi/pools/calculatePurchasePrice";
-import { calculateSlippage } from "efi/pools/calculateSlippage";
-import { PoolContract } from "efi/pools/PoolContract";
+import { useMintPreview } from "efi-ui/mint/hooks/useMintPreview";
+import { getUserProxyApprovalMessage } from "efi-ui/mint/userProxyApprovalMessage";
 
 interface MintTransactionConfirmationDrawerProps {
   chainId: number | undefined;
@@ -33,7 +25,6 @@ interface MintTransactionConfirmationDrawerProps {
   walletConnectionActive: boolean;
   connector: AbstractConnector | undefined;
   library: Web3Provider | undefined;
-  pool: PoolContract | undefined;
 
   amountIn: string | undefined;
   baseAsset: CryptoAssetWithIcon;
@@ -56,7 +47,6 @@ export function MintTransactionConfirmationDrawer({
   amountIn,
   isOpen,
   onClose,
-  pool,
 }: MintTransactionConfirmationDrawerProps): ReactElement {
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
 
@@ -71,45 +61,27 @@ export function MintTransactionConfirmationDrawer({
   );
   const unlockTimeStampDate = convertEpochSecondsToDate(trancheUnlockTimestamp);
 
-  const baseAssetPoolToken = usePoolPairedToken(pool, tranche as ERC20Shim);
-  const {
-    spotPriceBaseAssetForOneToken,
-    spotPriceTokenForOneBaseAsset,
-  } = usePoolTokenPrices(pool, baseAssetPoolToken);
-
-  // pool calls
   const amountInAsBigNumber = parseUnits(amountIn || "0", baseAssetDecimals);
-  const tokenInAddress = getTokenAddressForBalancer(baseAsset);
-  const tokenOutAddress = tranche?.address;
-  const { data: queryBatchSwapInResult = [] } = useQueryBatchSwap(
-    SwapKind.GIVEN_IN,
-    pool,
-    tokenInAddress,
-    tokenOutAddress,
-    amountInAsBigNumber
+  const amountInAsNumber = +(amountIn || 0);
+  const { data: mintPreview } = useMintPreview(
+    baseAsset,
+    tranche,
+    amountInAsNumber
   );
-  const { tokenOut: amountOut } = parseQueryBatchSwapResult(
-    tokenInAddress,
-    tokenOutAddress,
-    queryBatchSwapInResult
+  const { data: trancheDecimals } = useSmartContractReadCall(
+    tranche,
+    "decimals"
   );
+
+  const numPrincipalTokens = mintPreview
+    ? +formatUnits(mintPreview, trancheDecimals)
+    : undefined;
 
   const onMintTransaction = useMintTransaction(
     signer,
     baseAsset,
     tranche,
-    +(amountIn || 0)
-  );
-
-  const amountOutNumber = +formatUnits(
-    amountOut?.abs() || 0,
-    baseAssetDecimals
-  );
-
-  const priceSlippageAndTradingFee = getPriceSlippageAndTradingFee(
-    +(amountIn || 0),
-    amountOutNumber,
-    spotPriceTokenForOneBaseAsset
+    amountInAsNumber
   );
 
   return (
@@ -120,6 +92,7 @@ export function MintTransactionConfirmationDrawer({
       assetIn={baseAsset}
       assetInIcon={baseAsset.assetIcon}
       walletConnectionActive={walletConnectionActive}
+      walletApprovalMessageRenderer={getUserProxyApprovalMessage}
       amountIn={amountInAsBigNumber}
       chainId={chainId}
       connector={connector}
@@ -127,34 +100,22 @@ export function MintTransactionConfirmationDrawer({
       onConfirmTransaction={onMintTransaction}
       transactionDetails={
         <TransactionDetailsForm
-          amountIn={amountIn}
+          amountIn={amountInAsNumber.toFixed(4)}
           heading={t`Mint Preview`}
           assetInIcon={AssetIcon}
+          amountInLabel={t`Deposit`}
           assetInSymbol={baseAssetSymbol}
           assetOutSymbol={`${baseAssetSymbol} Principal Token`}
           assetOutIcon={null}
         >
           <MintTransactionDetails
-            spotPriceBaseAssetForOneToken={spotPriceBaseAssetForOneToken}
             baseAssetSymbol={baseAssetSymbol}
-            unlockTimeStamp={unlockTimeStampDate}
-            priceSlippageAndTradingFee={priceSlippageAndTradingFee}
+            unlockTimestamp={unlockTimeStampDate}
+            numPrincipalTokens={numPrincipalTokens}
+            numYieldTokens={amountInAsNumber}
           />
         </TransactionDetailsForm>
       }
     />
   );
-}
-function getPriceSlippageAndTradingFee(
-  amountIn: number,
-  amountOutNumber: number,
-  spotPriceTokenForOneBaseAsset: number | undefined
-) {
-  const amountInNumber = +(amountIn || 0);
-  const purchasePrice = calculatePurchasePrice(amountInNumber, amountOutNumber);
-  const priceSlippageAndTradingFee = calculateSlippage(
-    spotPriceTokenForOneBaseAsset || 0,
-    purchasePrice
-  );
-  return priceSlippageAndTradingFee;
 }

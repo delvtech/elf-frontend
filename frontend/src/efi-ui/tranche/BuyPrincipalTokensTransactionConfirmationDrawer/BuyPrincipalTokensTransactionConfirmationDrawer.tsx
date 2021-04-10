@@ -26,6 +26,7 @@ import { PoolContract } from "efi/pools/PoolContract";
 import { PrincipalTokenTransactionDetails } from "../PrincipalTokenTransactionDetails/PrincipalTokenTransactionDetails";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
 import { TransactionDetailsForm } from "efi-ui/contracts/TransactionDetailsPreview/TransactionDetailsForm";
+import { getBalancerApprovalMessage } from "efi-ui/balancer/balancerApprovalMessage";
 
 interface BuyPrincipalTransactionConfirmationDrawerProps {
   chainId: number | undefined;
@@ -128,6 +129,7 @@ export const BuyPrincipalTokensTransactionConfirmationDrawer: FC<BuyPrincipalTra
       connector={connector}
       library={library}
       onConfirmTransaction={onConfirmBuyPrincipalTokens}
+      walletApprovalMessageRenderer={getBalancerApprovalMessage}
       transactionDetails={
         <TransactionDetailsForm
           amountIn={amountIn}

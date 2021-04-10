@@ -1,4 +1,4 @@
-import React, { FC, ReactElement } from "react";
+import React, { ReactElement } from "react";
 
 import { Button, Drawer, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
@@ -37,9 +37,10 @@ interface TransactionDrawerProps {
   onConfirmTransaction: () => void;
   transactionDetails?: ReactElement | null;
   walletConnectionActive: boolean;
+  walletApprovalMessageRenderer: (assetSymbol: string) => string;
 }
 
-export const TransactionDrawer: FC<TransactionDrawerProps> = ({
+export function TransactionDrawer({
   account,
   amountIn,
   assetInIcon,
@@ -53,7 +54,8 @@ export const TransactionDrawer: FC<TransactionDrawerProps> = ({
   onConfirmTransaction,
   transactionDetails,
   walletConnectionActive,
-}) => {
+  walletApprovalMessageRenderer,
+}: TransactionDrawerProps): ReactElement {
   const { isDarkMode, darkModeClassName } = useDarkMode();
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
 
@@ -116,6 +118,7 @@ export const TransactionDrawer: FC<TransactionDrawerProps> = ({
           // narrow the type of baseAssetContract when referencing a variable
           account && assetIn?.type !== CryptoAssetType.ETHEREUM ? (
             <WalletApprovalCallout
+              messageRenderer={walletApprovalMessageRenderer}
               account={account}
               contract={baseAssetContract as ERC20Shim}
               tokenSymbol={assetInSymbol}
@@ -156,7 +159,7 @@ export const TransactionDrawer: FC<TransactionDrawerProps> = ({
       </div>
     </Drawer>
   );
-};
+}
 
 function getConfirmButtonLabel(account: string | null | undefined) {
   if (!account) {

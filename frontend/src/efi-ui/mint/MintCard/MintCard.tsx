@@ -11,7 +11,7 @@ import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import classNames from "classnames";
 import { Tranche } from "elf-contracts/types/Tranche";
-import { formatUnits, parseUnits } from "ethers/lib/utils";
+import { formatUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -102,10 +102,6 @@ export function MintCard({
   } = usePoolTokenPrices(pool, poolBaseAssetToken);
 
   // input calculations
-  const amountInAsBigNumber = amountIn
-    ? parseUnits(amountInString || "0", activeBaseAssetDecimals)
-    : undefined;
-
   const formattedPrincipalTokenPrice = spotPriceBaseAssetForOnePrincipalToken?.toFixed(
     4
   );
@@ -224,7 +220,6 @@ export function MintCard({
           account={account}
           library={library}
           chainId={chainId}
-          pool={pool}
           walletConnectionActive={walletConnectionActive}
           connector={connector}
           amountIn={amountInString}

@@ -26,6 +26,7 @@ import { calculateSlippage } from "efi/pools/calculateSlippage";
 import { PoolContract } from "efi/pools/PoolContract";
 import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { ERC20 } from "elf-contracts/types/ERC20";
+import { getBalancerApprovalMessage } from "efi-ui/balancer/balancerApprovalMessage";
 
 interface SellPrincipalTransactionDrawerProps {
   chainId: number | undefined;
@@ -135,6 +136,7 @@ export const SellPrincipalTokensTransactionDrawer: FC<SellPrincipalTransactionDr
       assetInIcon={undefined}
       assetInSymbol={`pt${baseAssetSymbol}`}
       walletConnectionActive={walletConnectionActive}
+      walletApprovalMessageRenderer={getBalancerApprovalMessage}
       amountIn={amountInAsBigNumber}
       chainId={chainId}
       connector={connector}
