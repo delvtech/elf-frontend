@@ -1,9 +1,9 @@
 import { QueryObserverResult } from "react-query";
 
-import { parseUnits } from "@ethersproject/units";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { UserProxy } from "elf-contracts/types/UserProxy";
 import { BigNumber, CallOverrides } from "ethers";
+import { parseUnits } from "ethers/lib/utils";
 
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
