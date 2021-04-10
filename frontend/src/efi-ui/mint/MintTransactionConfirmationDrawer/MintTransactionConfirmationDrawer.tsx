@@ -1,4 +1,4 @@
-import React, { FC, ReactElement } from "react";
+import React, { ReactElement } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
@@ -130,6 +130,7 @@ export function MintTransactionConfirmationDrawer({
           amountIn={amountIn}
           heading={t`Mint Preview`}
           assetInIcon={AssetIcon}
+          amountInLabel={t`Total`}
           assetInSymbol={baseAssetSymbol}
           assetOutSymbol={`${baseAssetSymbol} Principal Token`}
           assetOutIcon={null}

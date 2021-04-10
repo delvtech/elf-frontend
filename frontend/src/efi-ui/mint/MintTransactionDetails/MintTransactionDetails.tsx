@@ -33,11 +33,12 @@ export function MintTransactionDetails({
   );
 
   return (
-    <div className={tw("flex", "flex-col", "space-y-6")}>
+    <div className={tw("flex", "flex-col", "space-y-6", "items-center")}>
       <LabeledText
         bold
         muted={false}
-        text={<span>{t`Market rate`}</span>}
+        className={tw("items-center")}
+        text={<span>{t`Principal Tokens you receive`}</span>}
         label={
           <span
             className={tw("text-base")}
@@ -47,7 +48,8 @@ export function MintTransactionDetails({
       <LabeledText
         muted={false}
         bold
-        text={<span>{t`Price slippage + trading fees`}</span>}
+        className={tw("items-center")}
+        text={<span>{t`Yield Tokens you receive`}</span>}
         label={
           <span className={tw("text-base")}>
             {formattedSlippageAndTradingFee}
@@ -58,6 +60,7 @@ export function MintTransactionDetails({
         bold
         muted={false}
         text={<span>{t`Term date`}</span>}
+        className={tw("items-center")}
         label={<span className={tw("text-base")}>{unlockTimeStampLabel}</span>}
       />
     </div>

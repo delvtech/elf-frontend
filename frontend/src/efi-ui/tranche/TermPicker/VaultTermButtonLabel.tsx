@@ -96,7 +96,7 @@ export function VaultTermButtonLabel({
             </Tag>
           </div>
         }
-        text={positionName}
+        text={t`${positionName}`}
         label={principalTokenMarketRateLabel}
         subLabel={principalTokenMarketRateLabel}
       />
