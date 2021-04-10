@@ -12,8 +12,10 @@ export function TrendIndicator({ value }: TrendIndicatorProps): ReactElement {
   let intent: Intent;
   let icon: IconName;
 
-  // cover zero and undefined case
-  if (!value || !Number.isFinite(value)) {
+  // if the value would be formatted to '0.00%', then format the
+  const valueIsZero = value && value > -0.0005 && value < 0.0005;
+
+  if (!value || valueIsZero || !Number.isFinite(value)) {
     intent = Intent.WARNING;
     icon = IconNames.SMALL_MINUS;
   } else {

@@ -57,12 +57,14 @@ export const PoolDetails: FC<PoolDetailsProps> = ({
   const maturityDate = (maturityDateInUnixSeconds?.toNumber() || 0) * 1000;
 
   const volume24hr = useVolumeForPool(pool, ONE_DAY_IN_SECONDS);
+  console.log("volume24hr", volume24hr);
   // the volume from 48hrs ago to 24hrs ago
   const volumePrevious24hr = useVolumeForPool(
     pool,
     ONE_DAY_IN_SECONDS * 2,
     ONE_DAY_IN_SECONDS
   );
+  console.log("volumePrevious24hr", volumePrevious24hr);
 
   const newVolume = volume24hr?.toDecimal() ?? 0;
   const oldVolume = volumePrevious24hr?.toDecimal() ?? 0;
