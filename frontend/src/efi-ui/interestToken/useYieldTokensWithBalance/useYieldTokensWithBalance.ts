@@ -9,7 +9,7 @@ import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractRead
 import { useSmartContractsFromFactory } from "efi-ui/contracts/useSmartContractsFromFactory/useSmartContractsFromFactory";
 import { useTrancheContracts } from "efi-ui/tranche/useTrancheContracts";
 
-export function useInterestTokensWithBalance(
+export function useYieldTokensWithBalance(
   account: string | null | undefined,
   provider?: Provider
 ): InterestToken[] {
