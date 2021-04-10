@@ -4,17 +4,21 @@ import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { Signer } from "ethers";
+import { formatUnits, parseUnits } from "ethers/lib/utils";
+import { t } from "ttag";
 
 import { SwapKind } from "efi-ui/balancer/SwapKind";
-import { useBatchSwapGivenIn } from "efi-ui/balancer/useBatchSwapGivenIn/useBatchSwapGivenIn";
 import { parseQueryBatchSwapResult } from "efi-ui/balancer/useQueryBatchSwap/parseQueryBatchSwapResult";
 import { useQueryBatchSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
+import { TransactionDetailsForm } from "efi-ui/contracts/TransactionDetailsPreview/TransactionDetailsForm";
 import { TransactionDrawer } from "efi-ui/contracts/TransactionDrawer/TransactionDrawer";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
+import { useMintTransaction } from "efi-ui/mint/hooks/useMintTransaction";
+import { MintTransactionDetails } from "efi-ui/mint/MintTransactionDetails/MintTransactionDetails";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
 import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
@@ -22,10 +26,6 @@ import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { calculatePurchasePrice } from "efi/pools/calculatePurchasePrice";
 import { calculateSlippage } from "efi/pools/calculateSlippage";
 import { PoolContract } from "efi/pools/PoolContract";
-
-import { formatUnits, parseUnits } from "ethers/lib/utils";
-import { TransactionDetailsForm } from "efi-ui/contracts/TransactionDetailsPreview/TransactionDetailsForm";
-import { MintTransactionDetails } from "efi-ui/mint/MintTransactionDetails/MintTransactionDetails";
 
 interface MintTransactionConfirmationDrawerProps {
   chainId: number | undefined;
@@ -94,20 +94,17 @@ export function MintTransactionConfirmationDrawer({
     queryBatchSwapInResult
   );
 
-  const onConfirmBuyPrincipalTokens = useBatchSwapGivenIn(
-    account,
+  const onMintTransaction = useMintTransaction(
     signer,
-    pool,
-    tokenInAddress,
-    tranche?.address,
-    amountInAsBigNumber
+    baseAsset,
+    tranche,
+    +(amountIn || 0)
   );
 
   const amountOutNumber = +formatUnits(
     amountOut?.abs() || 0,
     baseAssetDecimals
   );
-  const amountOutFormatted = amountOutNumber.toFixed(4);
 
   const priceSlippageAndTradingFee = getPriceSlippageAndTradingFee(
     +(amountIn || 0),
@@ -127,10 +124,11 @@ export function MintTransactionConfirmationDrawer({
       chainId={chainId}
       connector={connector}
       library={library}
-      onConfirmTransaction={onConfirmBuyPrincipalTokens}
+      onConfirmTransaction={onMintTransaction}
       transactionDetails={
         <TransactionDetailsForm
           amountIn={amountIn}
+          heading={t`Mint Preview`}
           assetInIcon={AssetIcon}
           assetInSymbol={baseAssetSymbol}
           assetOutSymbol={`${baseAssetSymbol} Principal Token`}

@@ -22,7 +22,9 @@ interface TransactionDetailsFormProps {
   assetInSymbol: string | undefined;
   assetOutSymbol: string | undefined;
   amountIn: string | undefined;
+  amountInLabel?: string;
   amountOut?: string;
+  amountOutLabel?: string;
   heading?: string;
 
   /**
@@ -42,7 +44,9 @@ export function TransactionDetailsForm({
   assetInIcon: AssetInIcon,
   assetOutIcon: AssetOutIcon,
   amountIn,
+  amountInLabel = t`To`,
   amountOut,
+  amountOutLabel = t`From`,
   assetInSymbol,
   assetOutSymbol,
   heading = t`Confirm Transaction`,
@@ -83,7 +87,9 @@ export function TransactionDetailsForm({
             "gap-2"
           )}
         >
-          <span className={tw("text-sm", "font-semibold")}>{t`From`}</span>
+          <span className={tw("text-sm", "font-semibold")}>
+            {amountInLabel}
+          </span>
           <InputGroup
             large
             fill
@@ -118,7 +124,9 @@ export function TransactionDetailsForm({
               "gap-2"
             )}
           >
-            <span className={tw("text-sm", "font-semibold")}>{t`To`}</span>
+            <span className={tw("text-sm", "font-semibold")}>
+              {amountOutLabel}
+            </span>
             <InputGroup
               large
               fill
