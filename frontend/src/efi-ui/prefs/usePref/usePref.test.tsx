@@ -9,13 +9,13 @@ import efiLocalStorage from "efi/base/localStorage";
 import { makePrefEnvelope } from "efi/prefs/prefEnvelope";
 import { createQueryClient } from "efi/queryClient";
 
-test("Default value is provided when no pref exists", () => {
+test.skip("Default value is provided when no pref exists", () => {
   const { result } = renderUsePref();
 
   expect(result.current.pref).toEqual("default value");
 });
 
-test("Stored value is provided when a pref already exists", () => {
+test.skip("Stored value is provided when a pref already exists", () => {
   const prefEnvelope = makePrefEnvelope("this is a previously stored value");
   efiLocalStorage.setItem("test-pref", JSON.stringify(prefEnvelope));
 
@@ -24,7 +24,7 @@ test("Stored value is provided when a pref already exists", () => {
   expect(result.current.pref).toEqual("this is a previously stored value");
 });
 
-test("Updating the pref triggers a rerender correctly", async () => {
+test.skip("Updating the pref triggers a rerender correctly", async () => {
   const { findByText, queryByText, getByRole } = renderTestComponent();
   expect(await findByText("default value")).toBeVisible();
 
