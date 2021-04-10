@@ -1,4 +1,10 @@
-import React, { ChangeEvent, FC, useCallback } from "react";
+import React, {
+  ChangeEvent,
+  FC,
+  ReactElement,
+  ReactNode,
+  useCallback,
+} from "react";
 
 import { Callout, Divider, InputGroup } from "@blueprintjs/core";
 import classNames from "classnames";
@@ -16,8 +22,7 @@ interface TransactionDetailsFormProps {
   assetInSymbol: string | undefined;
   assetOutSymbol: string | undefined;
   amountIn: string | undefined;
-  amountOut: string | undefined;
-
+  amountOut?: string;
   heading?: string;
 
   /**
@@ -31,8 +36,9 @@ interface TransactionDetailsFormProps {
    */
   onAmountOutChange?: (amoutOut: string | undefined) => void;
   assetOutIcon: SvgIcon | null;
+  children?: ReactElement;
 }
-export const TransactionDetailsForm: FC<TransactionDetailsFormProps> = ({
+export function TransactionDetailsForm({
   assetInIcon: AssetInIcon,
   assetOutIcon: AssetOutIcon,
   amountIn,
@@ -43,7 +49,7 @@ export const TransactionDetailsForm: FC<TransactionDetailsFormProps> = ({
   onAmountInChange: onAmountInChangeFromProps,
   onAmountOutChange: onAmountOutChangeFromProps,
   children,
-}) => {
+}: TransactionDetailsFormProps): ReactElement {
   const { isDarkMode } = useDarkMode();
   const onAmountInChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
@@ -101,43 +107,47 @@ export const TransactionDetailsForm: FC<TransactionDetailsFormProps> = ({
             }
           />
         </div>
-        <div
-          className={tw(
-            "grid",
-            "grid-cols-6",
-            "place-items-stretch",
-            "w-full",
-            "items-center",
-            "gap-2"
-          )}
-        >
-          <span className={tw("text-sm", "font-semibold")}>{t`To`}</span>
-          <InputGroup
-            large
-            fill
-            disabled={!onAmountOutChangeFromProps}
-            onChange={onAmountOutChange}
-            className={classNames(tw("col-span-5"), styles.inputWithIcon, {
-              [styles.inputColor]: !isDarkMode,
-              [styles.inputColorDark]: isDarkMode,
-            })}
-            leftElement={
-              <div className={tw("flex", "items-center", "px-2")}>
-                {AssetOutIcon ? <AssetOutIcon height={18} width={18} /> : null}
-              </div>
-            }
-            value={amountOut}
-            placeholder="0.00"
-            rightElement={
-              <div className={tw("flex", "items-center", "px-3")}>
-                {assetOutSymbol}
-              </div>
-            }
-          />
-        </div>
+        {amountOut === undefined ? null : (
+          <div
+            className={tw(
+              "grid",
+              "grid-cols-6",
+              "place-items-stretch",
+              "w-full",
+              "items-center",
+              "gap-2"
+            )}
+          >
+            <span className={tw("text-sm", "font-semibold")}>{t`To`}</span>
+            <InputGroup
+              large
+              fill
+              disabled={!onAmountOutChangeFromProps}
+              onChange={onAmountOutChange}
+              className={classNames(tw("col-span-5"), styles.inputWithIcon, {
+                [styles.inputColor]: !isDarkMode,
+                [styles.inputColorDark]: isDarkMode,
+              })}
+              leftElement={
+                <div className={tw("flex", "items-center", "px-2")}>
+                  {AssetOutIcon ? (
+                    <AssetOutIcon height={18} width={18} />
+                  ) : null}
+                </div>
+              }
+              value={amountOut}
+              placeholder="0.00"
+              rightElement={
+                <div className={tw("flex", "items-center", "px-3")}>
+                  {assetOutSymbol}
+                </div>
+              }
+            />
+          </div>
+        )}
       </div>
       <Divider />
       {children}
     </Callout>
   );
-};
+}

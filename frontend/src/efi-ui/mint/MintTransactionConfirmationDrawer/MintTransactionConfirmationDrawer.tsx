@@ -131,7 +131,6 @@ export function MintTransactionConfirmationDrawer({
       transactionDetails={
         <TransactionDetailsForm
           amountIn={amountIn}
-          amountOut={amountOutFormatted}
           assetInIcon={AssetIcon}
           assetInSymbol={baseAssetSymbol}
           assetOutSymbol={`${baseAssetSymbol} Principal Token`}
