@@ -3,15 +3,25 @@ import { useQuery } from "react-query";
 import { SwapEvent } from "efi-balancer/SwapEvent";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
+import { usePreviousBlockNumber } from "efi-ui/ethereum/usePreviousBlockNumber/usePreviousBlockNumber";
+import { ONE_DAY_IN_SECONDS } from "efi/base/time";
 import { PoolContract } from "efi/pools/PoolContract";
 
 export function useSwaps(
-  pool: PoolContract | undefined
+  pool: PoolContract | undefined,
+  fromTime: number = ONE_DAY_IN_SECONDS,
+  toTime?: number
 ): SwapEvent[] | undefined {
   const { data: poolId } = useSmartContractReadCall(pool, "getPoolId");
   const balancerVault = useBalancerVault();
-  const eventsQueryResult = useQuery({
-    queryKey: [["balancerVault", "queryFilter", "Swap"], { poolId }],
+  const { data: fromBlockNumber } = usePreviousBlockNumber(fromTime);
+  const { data: toBlockNumber } = usePreviousBlockNumber(toTime);
+
+  const { data: events = [] } = useQuery({
+    queryKey: [
+      ["balancerVault", "queryFilter", "Swap"],
+      { poolId, fromBlockNumber },
+    ],
     queryFn: async () => {
       if (!balancerVault || !poolId) {
         return;
@@ -25,15 +35,17 @@ export function useSwaps(
         null
       );
 
-      const events = await balancerVault.queryFilter(filterQuery);
+      const events = await balancerVault.queryFilter(
+        filterQuery,
+        fromBlockNumber,
+        toBlockNumber
+      );
       return events;
     },
-    enabled: !!balancerVault && !!poolId,
+    enabled: !!balancerVault && !!poolId && !!fromBlockNumber,
   });
 
-  const { data: events = [] } = eventsQueryResult;
-
-  const swaps = events
+  const swaps: SwapEvent[] = events
     .map((event) => {
       const { args } = event;
       if (!args) {
@@ -50,5 +62,6 @@ export function useSwaps(
       const [poolId, tokenIn, tokenOut, amountIn, amountOut] = swap;
       return !!poolId && !!tokenIn && !!tokenOut && !!amountIn && !!amountOut;
     });
+
   return swaps;
 }

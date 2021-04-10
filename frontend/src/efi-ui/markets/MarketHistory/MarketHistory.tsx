@@ -23,7 +23,7 @@ export const MarketHistory: FC<MarketHistoryProps> = () => {
     <div className={tw("flex", "flex-1", "h-500")}>
       <div className={tw("flex", "flex-col", "w-full")}>
         <div className={tw("mb-2", "flex", "space-x-4")}>
-          <button style={{ color: Colors.BLUE5 }}>{t`Market Charts`}</button>
+          <button style={{ color: Colors.BLUE5 }}>{t`Pool Charts`}</button>
           <button>{t`Yield Charts`}</button>
         </div>
         <Card className={tw("flex", "flex-1", "relative")}>

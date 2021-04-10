@@ -23,15 +23,9 @@ import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 
 interface TokenSummaryProps {
   pool: PoolContract | undefined;
-  tokenIn: ERC20 | undefined;
-  tokenOut: ERC20 | undefined;
 }
 
-export const TokenSummary: FC<TokenSummaryProps> = ({
-  pool,
-  tokenIn,
-  tokenOut,
-}) => {
+export const TokenSummary: FC<TokenSummaryProps> = ({ pool }) => {
   const {
     baseAssetSymbol,
     baseAssetBalance,

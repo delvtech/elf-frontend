@@ -28,9 +28,6 @@ export function useTotalLiquidityTrend(
   const [tokenDecimals] = useTokenDecimals(baseAsset);
   const spotPrice = usePoolSpotPrice(pool, baseAsset);
 
-  let overallBalance = 0;
-  let overallDelta = 0;
-
   if (
     !tokenAddresses ||
     !tokenBalances ||
@@ -42,14 +39,19 @@ export function useTotalLiquidityTrend(
     return undefined;
   }
 
+  // balance of both tokens added up, normalized to base asset
+  let overallBalance = 0;
+  // delta of both tokens added up, for the given time period, normalized to base asset
+  let overallDelta = 0;
   tokenAddresses.forEach((address, index) => {
     const balance = +formatUnits(tokenBalances[index], tokenDecimals);
     const delta = +formatUnits(tokenDeltas[index], tokenDecimals);
+    // if base asset, just add numbers to total
     if (address === baseAsset?.address) {
       overallBalance += balance;
       overallDelta += delta;
     } else {
-      // normalize numbers to base asset
+      // if yield asset, normalize numbers to base asset
       overallBalance += balance / spotPrice;
       overallDelta += delta / spotPrice;
     }
