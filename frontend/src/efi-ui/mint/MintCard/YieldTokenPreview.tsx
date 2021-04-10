@@ -1,17 +1,18 @@
 import React, { FC, Fragment } from "react";
 
-import { Callout, Colors } from "@blueprintjs/core";
+import { Callout } from "@blueprintjs/core";
 import { BigNumber } from "ethers";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { formatUnits } from "ethers/lib/utils";
 
 interface YieldTokenPreviewProps {
-  amountIn: BigNumber | undefined;
-  amountOut: BigNumber | undefined;
+  /**
+   * The number of yield tokens to display
+   */
+  amount: number | undefined;
   baseAssetSymbol: string | undefined;
   baseAssetDecimals: number | undefined;
 }
@@ -27,23 +28,9 @@ const calloutClassName = tw(
 );
 
 export const YieldTokenPreview: FC<YieldTokenPreviewProps> = ({
-  amountIn,
-  amountOut,
+  amount,
   baseAssetSymbol,
-  baseAssetDecimals,
 }) => {
-  const { isDarkMode } = useDarkMode();
-  const totalYield = calculateTotalYield(
-    amountOut,
-    amountIn,
-    baseAssetDecimals
-  );
-
-  const percentYield = calculatePercentYield(
-    amountIn,
-    baseAssetDecimals,
-    totalYield
-  );
   return (
     <Callout className={calloutClassName}>
       <LabeledText
@@ -58,17 +45,10 @@ export const YieldTokenPreview: FC<YieldTokenPreviewProps> = ({
         label={<span className={tw("text-base")}>{t`Yield Tokens`}</span>}
         textClassName={tw("text-lg")}
         text={
-          !amountIn ? (
+          !amount ? (
             t`Enter an amount`
           ) : (
-            <Fragment>
-              <span>{`${totalYield.toFixed(4)} ${baseAssetSymbol}`}</span>{" "}
-              <span
-                style={{
-                  color: isDarkMode ? Colors.GREEN5 : Colors.GREEN3,
-                }}
-              >{`(+${percentYield?.toFixed(2)}%)`}</span>
-            </Fragment>
+            <span>{`${amount.toFixed(4)} yt${baseAssetSymbol}`}</span>
           )
         }
       />

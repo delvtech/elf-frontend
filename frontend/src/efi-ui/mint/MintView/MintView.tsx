@@ -87,6 +87,6 @@ const EarnViewSubtitle: FC = () => {
   );
 
   return (
-    <Fragment>{jt`Deposit into a high-interest DeFi yield position and receive Principal and Yield tokens that can be traded at any time. ${mintingLink}`}</Fragment>
+    <Fragment>{jt`Mint into a high-interest DeFi yield position and receive Principal and Yield tokens that can be traded at any time. ${mintingLink}`}</Fragment>
   );
 };
