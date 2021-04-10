@@ -4,12 +4,16 @@ import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { Signer } from "ethers";
+import { formatUnits, parseUnits } from "ethers/lib/utils";
 
+import { getBalancerApprovalMessage } from "efi-ui/balancer/balancerApprovalMessage";
 import { SwapKind } from "efi-ui/balancer/SwapKind";
+import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { useBatchSwapGivenIn } from "efi-ui/balancer/useBatchSwapGivenIn/useBatchSwapGivenIn";
 import { parseQueryBatchSwapResult } from "efi-ui/balancer/useQueryBatchSwap/parseQueryBatchSwapResult";
 import { useQueryBatchSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
+import { TransactionDetailsForm } from "efi-ui/contracts/TransactionDetailsPreview/TransactionDetailsForm";
 import { TransactionDrawer } from "efi-ui/contracts/TransactionDrawer/TransactionDrawer";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
@@ -24,9 +28,6 @@ import { calculateSlippage } from "efi/pools/calculateSlippage";
 import { PoolContract } from "efi/pools/PoolContract";
 
 import { PrincipalTokenTransactionDetails } from "../PrincipalTokenTransactionDetails/PrincipalTokenTransactionDetails";
-import { formatUnits, parseUnits } from "ethers/lib/utils";
-import { TransactionDetailsForm } from "efi-ui/contracts/TransactionDetailsPreview/TransactionDetailsForm";
-import { getBalancerApprovalMessage } from "efi-ui/balancer/balancerApprovalMessage";
 
 interface BuyPrincipalTransactionConfirmationDrawerProps {
   chainId: number | undefined;
@@ -60,6 +61,7 @@ export const BuyPrincipalTokensTransactionConfirmationDrawer: FC<BuyPrincipalTra
   pool,
 }) => {
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
+  const balancerVault = useBalancerVault();
 
   // base asset calls
   const baseAssetSymbol = useCryptoSymbol(baseAsset);
@@ -118,6 +120,7 @@ export const BuyPrincipalTokensTransactionConfirmationDrawer: FC<BuyPrincipalTra
 
   return (
     <TransactionDrawer
+      approvalSpenderAddress={balancerVault?.address}
       isOpen={isOpen}
       onClose={onClose}
       account={account}

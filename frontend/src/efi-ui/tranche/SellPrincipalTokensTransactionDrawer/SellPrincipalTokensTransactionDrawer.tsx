@@ -27,6 +27,7 @@ import { PoolContract } from "efi/pools/PoolContract";
 import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { ERC20 } from "elf-contracts/types/ERC20";
 import { getBalancerApprovalMessage } from "efi-ui/balancer/balancerApprovalMessage";
+import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 
 interface SellPrincipalTransactionDrawerProps {
   chainId: number | undefined;
@@ -55,6 +56,7 @@ export const SellPrincipalTokensTransactionDrawer: FC<SellPrincipalTransactionDr
   pool,
 }) => {
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
+  const balancerVault = useBalancerVault();
 
   // base asset calls
   const baseAssetSymbol = useCryptoSymbol(baseAsset);
@@ -129,6 +131,7 @@ export const SellPrincipalTokensTransactionDrawer: FC<SellPrincipalTransactionDr
 
   return (
     <TransactionDrawer
+      approvalSpenderAddress={balancerVault?.address}
       isOpen={isOpen}
       onClose={onClose}
       account={account}

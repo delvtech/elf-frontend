@@ -9,7 +9,7 @@ import { BigNumber, Signer } from "ethers";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
+import { SvgIcon } from "efi-ui/base/SvgIcon";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { ERC20ApproveButton } from "efi-ui/token/ERC20ApproveButton/ERC20ApproveButton";
@@ -22,7 +22,7 @@ import {
 
 import { ConnectWalletCallout } from "./ConnectWalletCallout";
 import { WalletApprovalCallout } from "./WalletApprovalCallout";
-import { SvgIcon } from "efi-ui/base/SvgIcon";
+
 interface TransactionDrawerProps {
   account: string | null | undefined;
   amountIn: BigNumber | undefined;
@@ -38,6 +38,7 @@ interface TransactionDrawerProps {
   transactionDetails?: ReactElement | null;
   walletConnectionActive: boolean;
   walletApprovalMessageRenderer: (assetSymbol: string) => string;
+  approvalSpenderAddress: string | undefined;
 }
 
 export function TransactionDrawer({
@@ -54,6 +55,7 @@ export function TransactionDrawer({
   onConfirmTransaction,
   transactionDetails,
   walletConnectionActive,
+  approvalSpenderAddress,
   walletApprovalMessageRenderer,
 }: TransactionDrawerProps): ReactElement {
   const { isDarkMode, darkModeClassName } = useDarkMode();
@@ -62,12 +64,10 @@ export function TransactionDrawer({
   // base asset calls
   const baseAssetContract = findTokenContract(assetIn);
 
-  // vault calls
-  const balancerVault = useBalancerVault();
-  const { data: marketAllowance } = useTokenAllowance(
+  const { data: allowance } = useTokenAllowance(
     baseAssetContract as ERC20,
     account,
-    balancerVault?.address
+    approvalSpenderAddress
   );
 
   const confirmButtonLabel = getConfirmButtonLabel(account);
@@ -75,7 +75,7 @@ export function TransactionDrawer({
     account,
     assetIn,
     amountIn,
-    marketAllowance
+    allowance
   );
 
   return (
@@ -135,7 +135,7 @@ export function TransactionDrawer({
               <ERC20ApproveButton
                 className={tw("h-16")}
                 owner={account}
-                spender={balancerVault?.address}
+                spender={approvalSpenderAddress}
                 approvalAmount={amountIn}
                 contract={baseAssetContract as ERC20Shim}
                 tokenSymbol={assetInSymbol}
