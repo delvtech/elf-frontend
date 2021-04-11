@@ -1,7 +1,6 @@
 import { ReactElement } from "react";
 
 import { Intent, Tag } from "@blueprintjs/core";
-import classNames from "classnames";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { t } from "ttag";
 
