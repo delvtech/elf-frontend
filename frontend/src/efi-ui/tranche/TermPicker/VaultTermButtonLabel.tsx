@@ -8,11 +8,13 @@ import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { getQueryData } from "efi-ui/base/queryResults";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { useUnderlyingVaultForTranche } from "efi-ui/tranche/useUnderlyingVaultForTranche";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
-import { CryptoAsset } from "efi/crypto/CryptoAsset";
+import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
+import { formatPercent } from "efi/base/formatPercent";
+import { Currencies, Money } from "ts-money";
+import { formatMoney } from "efi/money/formatMoney";
 
 interface VaultTermButtonLabelProps {
   tranche: Tranche | undefined;
@@ -32,20 +34,19 @@ export function VaultTermButtonLabel({
     "unlockTimestamp"
   );
 
-  const underlyingVault = useUnderlyingVaultForTranche(tranche);
-  const { data: vaultName } = useSmartContractReadCall(underlyingVault, "name");
-  const { data: vaultSymbol } = useSmartContractReadCall(
-    underlyingVault,
-    "symbol"
-  );
-  const [yearnVault] = useYearnVault(vaultSymbol);
+  let vaultSymbol: string | undefined;
+  if (baseAsset?.type === CryptoAssetType.ETHEREUM) {
+    vaultSymbol = "yvWETH";
+  }
+
+  const { data: yearnVault } = useYearnVault(vaultSymbol);
+  const { name: vaultName } = yearnVault || {};
+  const postedAPY = formatPercent(yearnVault?.apy?.recommended || 0);
+  const formattedTVL = formatTVL(yearnVault?.tvl?.value);
 
   const unlockDate = convertEpochSecondsToDate(
     getQueryData(unlockTimestampResult)
   );
-
-  // TODO: Replace this with the posted APY on the vault
-  const postedAPY = "-";
 
   const formattedDate = unlockDate
     ? formatAbbreviatedDate(unlockDate)
@@ -79,9 +80,17 @@ export function VaultTermButtonLabel({
           </div>
         }
         large
-        text={vaultName}
-        label={vaultSymbol}
+        text={t`Yearn ${vaultName}`}
+        label={
+          <span className={tw("text-base")}>{t`TVL: ${formattedTVL}`}</span>
+        }
       />
     </div>
   );
+}
+function formatTVL(tvl: string | undefined) {
+  const nearestCent = Math.round(+(tvl || 0)) * 100;
+  const tvlMoney = new Money(nearestCent, Currencies.USD);
+  const formattedTVL = formatMoney(tvlMoney, { wholeAmounts: true });
+  return formattedTVL;
 }
