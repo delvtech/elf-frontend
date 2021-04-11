@@ -33,8 +33,7 @@ export function useVolumeForPool(
   let volume = BigNumber.from(0);
   if (swapEvents?.length && baseAsset) {
     swapEvents.forEach((swapEvent) => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const [poolId, tokenIn, tokenOut, amountIn, amountOut] = swapEvent;
+      const [, tokenIn, , amountIn, amountOut] = swapEvent;
       // only count base asset so we don't double count volume.
       const amount = baseAsset.address === tokenIn ? amountIn : amountOut;
       volume = volume.add(amount);

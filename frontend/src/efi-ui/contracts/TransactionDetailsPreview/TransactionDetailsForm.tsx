@@ -1,10 +1,4 @@
-import React, {
-  ChangeEvent,
-  FC,
-  ReactElement,
-  ReactNode,
-  useCallback,
-} from "react";
+import React, { ChangeEvent, ReactElement, useCallback } from "react";
 
 import { Callout, Divider, InputGroup } from "@blueprintjs/core";
 import classNames from "classnames";
@@ -13,9 +7,9 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { SvgIcon } from "efi-ui/base/SvgIcon";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
+import { ANY_NUMBER_REGEX } from "efi/base/numbers";
 
 import styles from "./styles.module.css";
-import { ANY_NUMBER_REGEX } from "efi/base/numbers";
 
 interface TransactionDetailsFormProps {
   assetInIcon: SvgIcon | null;

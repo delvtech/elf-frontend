@@ -10,20 +10,22 @@ import { TrendIndicator } from "efi-ui/base/TrendIndicator/TrendIndicator";
 import { formatMoney } from "efi/money/formatMoney";
 
 interface PoolSummaryProps {
-  totalLiquidity: Money | undefined;
+  liquidity: Money | undefined;
   liquidityTrend: number | undefined;
-  tradeVolume: Money | undefined;
+  volume: Money | undefined;
   volumeTrend: number | undefined;
-  swapVolume: Money | undefined;
+  feeVolume: Money | undefined;
+  feeVolumeTrend: number | undefined;
 }
 
 export const PoolSummary: FC<PoolSummaryProps> = (props) => {
   const {
-    totalLiquidity,
+    liquidity,
     liquidityTrend,
-    tradeVolume,
+    volume,
     volumeTrend,
-    swapVolume,
+    feeVolume,
+    feeVolumeTrend,
   } = props;
 
   return (
@@ -37,7 +39,7 @@ export const PoolSummary: FC<PoolSummaryProps> = (props) => {
                 className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
               >{t`Total Liquidity`}</span>
               <div className={classNames("h3", tw("space-x-4"))}>
-                {formatMoney(totalLiquidity)}
+                {formatMoney(liquidity)}
               </div>
             </div>
             <div className={tw("flex", "self-end")}>
@@ -51,7 +53,7 @@ export const PoolSummary: FC<PoolSummaryProps> = (props) => {
                 className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
               >{t`Volume (24hr)`}</span>
               <div className={classNames("h3", tw("space-x-4"))}>
-                {formatMoney(tradeVolume)}
+                {formatMoney(volume)}
               </div>
             </div>
             <div className={tw("flex", "self-end")}>
@@ -65,11 +67,11 @@ export const PoolSummary: FC<PoolSummaryProps> = (props) => {
                 className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
               >{t`Fees (24hr)`}</span>
               <div className={classNames("h3", tw("space-x-4"))}>
-                {formatMoney(swapVolume)}
+                {formatMoney(feeVolume)}
               </div>
             </div>
             <div className={tw("flex", "self-end")}>
-              <TrendIndicator value={0.0016} />
+              <TrendIndicator value={feeVolumeTrend} />
             </div>
           </div>
         </div>

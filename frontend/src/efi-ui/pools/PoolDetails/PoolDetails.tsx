@@ -11,18 +11,17 @@ import { useSmartContractsFromFactory } from "efi-ui/contracts/useSmartContracts
 import { FixedYieldSummary } from "efi-ui/markets/FixedYieldSummary/FixedYieldSummary";
 import { PoolActionsCard } from "efi-ui/markets/MarketActionsCard/PoolActionsCard";
 import { MarketHistory } from "efi-ui/markets/MarketHistory/MarketHistory";
-import { PoolSummary } from "efi-ui/pools/PoolSummary/PoolSummary";
 import { TokenSummary } from "efi-ui/markets/TokenSummary/TokenSummary";
+import { PoolSummary } from "efi-ui/pools/PoolSummary/PoolSummary";
+import { useFeeVolumeForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
-import { useSwapFee } from "efi-ui/pools/useSwapFee/useSwapFee";
 import { useTotalLiquidityForPool } from "efi-ui/pools/useTotalLiquidityForPool/useTotalLiquidityForPool";
-import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForPool";
-import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
-import { PoolContract } from "efi/pools/PoolContract";
-import { formatEther } from "ethers/lib/utils";
 import { useTotalLiquidityTrend } from "efi-ui/pools/useTotalLiquidityTrend/useTotalLiquidityTrend";
-import { ONE_DAY_IN_SECONDS } from "efi/base/time";
+import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForPool";
 import { useVolumeForPool } from "efi-ui/pools/useVolumeForPool/useVolumeForPool";
+import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
+import { ONE_DAY_IN_SECONDS } from "efi/base/time";
+import { PoolContract } from "efi/pools/PoolContract";
 
 interface PoolDetailsProps {
   library: Web3Provider | undefined;
@@ -65,13 +64,35 @@ export const PoolDetails: FC<PoolDetailsProps> = ({
   );
 
   const newVolume = volume24hr?.toDecimal() ?? 0;
-  const oldVolume = volumePrevious24hr?.toDecimal() ?? 0;
+  const oldVolume = volumePrevious24hr?.toDecimal();
 
-  const volumeTrend = (newVolume - oldVolume) / oldVolume;
+  let volumeTrend;
+  if (oldVolume === undefined) {
+    volumeTrend = undefined;
+  } else if (oldVolume === 0 || newVolume === 0) {
+    volumeTrend = 0;
+  } else {
+    volumeTrend = (newVolume - oldVolume) / oldVolume;
+  }
 
-  const swapFee = useSwapFee(pool);
-  const swapFeeDecimal = +formatEther(swapFee || 0);
-  const swapVolume = volume24hr?.multiply(swapFeeDecimal);
+  const feeVolume24hr = useFeeVolumeForPool(pool, ONE_DAY_IN_SECONDS);
+  const feeVolumePrevious24hr = useFeeVolumeForPool(
+    pool,
+    ONE_DAY_IN_SECONDS * 2,
+    ONE_DAY_IN_SECONDS
+  );
+
+  const newFeeVolume = feeVolume24hr?.toDecimal() ?? 0;
+  const oldFeeVolume = feeVolumePrevious24hr?.toDecimal() ?? 0;
+
+  let feeVolumeTrend;
+  if (oldFeeVolume === undefined) {
+    feeVolumeTrend = undefined;
+  } else if (oldFeeVolume === 0 || newFeeVolume === 0) {
+    feeVolumeTrend = 0;
+  } else {
+    feeVolumeTrend = (newFeeVolume - oldFeeVolume) / oldFeeVolume;
+  }
 
   return (
     <div className={tw("flex", "mb-8", "space-x-4", "w-full", "items-stretch")}>
@@ -79,11 +100,12 @@ export const PoolDetails: FC<PoolDetailsProps> = ({
         <div className={tw("flex", "flex-col", "space-y-8", "w-full")}>
           <div className={tw("flex", "space-x-12")}>
             <PoolSummary
-              tradeVolume={volume24hr}
-              swapVolume={swapVolume}
-              totalLiquidity={totalLiquidity}
-              volumeTrend={volumeTrend}
+              liquidity={totalLiquidity}
               liquidityTrend={liquidityTrend}
+              volume={volume24hr}
+              volumeTrend={volumeTrend}
+              feeVolume={feeVolume24hr}
+              feeVolumeTrend={feeVolumeTrend}
             />
             <FixedYieldSummary
               startDate={startDate}
