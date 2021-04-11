@@ -50,7 +50,9 @@ export const TokenSummary: FC<TokenSummaryProps> = ({ pool }) => {
               <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
                 {t`Token`}
               </span>
-              <span className={tw("text-lg")}>{baseAssetSymbol}</span>
+              <span className={tw("text-lg", "truncate")}>
+                {baseAssetSymbol}
+              </span>
             </div>
             <div
               className={tw("flex", "flex-col", "justify-center", "space-y-1")}
@@ -88,7 +90,9 @@ export const TokenSummary: FC<TokenSummaryProps> = ({ pool }) => {
               <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
                 {t`Token`}
               </span>
-              <span className={tw("text-lg")}>{yieldAssetSymbol}</span>
+              <span className={tw("text-lg", "overflow-hidden", "truncate")}>
+                {yieldAssetSymbol}
+              </span>
             </div>
             <div
               className={tw("flex", "flex-col", "justify-center", "space-y-1")}
