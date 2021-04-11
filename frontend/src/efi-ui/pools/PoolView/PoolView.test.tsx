@@ -9,7 +9,7 @@ test("should render the pool view", async () => {
   const { getByText } = await renderWithClient(queryClient, <PoolView />);
 
   expect(getByText("Pool Summary")).toBeVisible();
-  expect(getByText("Yield Summary")).toBeVisible();
+  expect(getByText("Vault and Term Summary")).toBeVisible();
   expect(getByText("Tokens")).toBeVisible();
   expect(getByText("Pool Charts")).toBeVisible();
 });
