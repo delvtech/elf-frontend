@@ -1,4 +1,4 @@
-import React, {
+import {
   Fragment,
   ReactElement,
   useCallback,
@@ -15,7 +15,6 @@ import { formatUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { CryptoAssetPicker } from "efi-ui/crypto/CryptoAssetPicker/CryptoAssetPicker";
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
@@ -27,10 +26,6 @@ import { useActiveTranche } from "efi-ui/earn/hooks/useActiveTranche";
 import { PrincipalTokenPreview } from "efi-ui/mint/MintCard/PrincipalTokenPreview";
 import { YieldTokenPreview } from "efi-ui/mint/MintCard/YieldTokenPreview";
 import { MintTermPicker } from "efi-ui/mint/MintTermPicker/MintTermPicker";
-import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
-import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
-import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
-import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 import { useMintPreview } from "efi-ui/mint/hooks/useMintPreview";
 import { MintTransactionConfirmationDrawer } from "efi-ui/mint/MintTransactionConfirmationDrawer/MintTransactionConfirmationDrawer";
 
@@ -78,37 +73,11 @@ export function MintCard({
     setActiveTranche,
   } = useActiveTranche(tranchesByBaseAsset, activeBaseAsset);
 
-  const { data: mintPreview } = useMintPreview(
+  const { numPrincipalTokensOut, numYieldTokensOut } = useActiveMintPreview(
     activeBaseAsset,
     activeTranche,
     amountIn
   );
-  const { data: trancheDecimals } = useSmartContractReadCall(
-    activeTranche,
-    "decimals"
-  );
-  const numPrincipalTokensOut = mintPreview
-    ? +formatUnits(mintPreview, trancheDecimals)
-    : undefined;
-
-  // active pool
-  const pool = usePoolForToken(activeTranche as ERC20Shim, jsonRpcProvider);
-  const poolBaseAssetToken = usePoolPairedToken(
-    pool,
-    activeTranche as ERC20Shim
-  );
-  const {
-    spotPriceBaseAssetForOneToken: spotPriceBaseAssetForOnePrincipalToken,
-  } = usePoolTokenPrices(pool, poolBaseAssetToken);
-
-  // input calculations
-  const formattedPrincipalTokenPrice = spotPriceBaseAssetForOnePrincipalToken?.toFixed(
-    4
-  );
-
-  // TODO: Figure out where to lay these out
-  const ptMarketRateLabel = t`Principal Token ≈ ${formattedPrincipalTokenPrice} ${activeBaseAssetSymbol}`;
-  const ytMarketRateLabel = t`Yield Token ≈ ${formattedPrincipalTokenPrice} ${activeBaseAssetSymbol}`;
 
   return (
     <Fragment>
@@ -188,7 +157,7 @@ export function MintCard({
             baseAssetSymbol={activeBaseAssetSymbol}
           />
           <YieldTokenPreview
-            amount={amountIn}
+            amount={numYieldTokensOut}
             baseAssetSymbol={activeBaseAssetSymbol}
             baseAssetDecimals={activeBaseAssetDecimals}
           />
@@ -221,6 +190,32 @@ export function MintCard({
       )}
     </Fragment>
   );
+}
+
+function useActiveMintPreview(
+  activeBaseAsset: CryptoAssetWithIcon | undefined,
+  activeTranche: Tranche | undefined,
+  amountIn: number
+) {
+  const { data: mintPreview } = useMintPreview(
+    activeBaseAsset,
+    activeTranche,
+    amountIn
+  );
+  const { data: trancheDecimals } = useSmartContractReadCall(
+    activeTranche,
+    "decimals"
+  );
+
+  const numPrincipalTokensOut = mintPreview
+    ? +formatUnits(mintPreview, trancheDecimals)
+    : undefined;
+
+  // You will always receive the same amount of yield tokens as the amount of
+  // base asset you put in
+  const numYieldTokensOut = amountIn;
+
+  return { numPrincipalTokensOut, numYieldTokensOut };
 }
 
 function useSetDefaultActiveBaseAsset(
