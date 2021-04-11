@@ -11,19 +11,17 @@ import { useSmartContractsFromFactory } from "efi-ui/contracts/useSmartContracts
 import { FixedYieldSummary } from "efi-ui/markets/FixedYieldSummary/FixedYieldSummary";
 import { PoolActionsCard } from "efi-ui/markets/MarketActionsCard/PoolActionsCard";
 import { MarketHistory } from "efi-ui/markets/MarketHistory/MarketHistory";
-import { PoolSummary } from "efi-ui/pools/PoolSummary/PoolSummary";
 import { TokenSummary } from "efi-ui/markets/TokenSummary/TokenSummary";
-import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
-import { useSwapFee } from "efi-ui/pools/useSwapFee/useSwapFee";
-import { useTotalLiquidityForPool } from "efi-ui/pools/useTotalLiquidityForPool/useTotalLiquidityForPool";
-import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForPool";
-import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
-import { PoolContract } from "efi/pools/PoolContract";
-import { formatEther } from "ethers/lib/utils";
-import { useTotalLiquidityTrend } from "efi-ui/pools/useTotalLiquidityTrend/useTotalLiquidityTrend";
-import { ONE_DAY_IN_SECONDS } from "efi/base/time";
-import { useVolumeForPool } from "efi-ui/pools/useVolumeForPool/useVolumeForPool";
+import { PoolSummary } from "efi-ui/pools/PoolSummary/PoolSummary";
 import { useFeeVolumeForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
+import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
+import { useTotalLiquidityForPool } from "efi-ui/pools/useTotalLiquidityForPool/useTotalLiquidityForPool";
+import { useTotalLiquidityTrend } from "efi-ui/pools/useTotalLiquidityTrend/useTotalLiquidityTrend";
+import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForPool";
+import { useVolumeForPool } from "efi-ui/pools/useVolumeForPool/useVolumeForPool";
+import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
+import { ONE_DAY_IN_SECONDS } from "efi/base/time";
+import { PoolContract } from "efi/pools/PoolContract";
 
 interface PoolDetailsProps {
   library: Web3Provider | undefined;

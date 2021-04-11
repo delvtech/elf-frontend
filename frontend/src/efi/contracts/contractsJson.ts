@@ -5,7 +5,7 @@
 // correctly, so we use a require() statement here.
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const ContractAddresses: ContractJson = require("addresses.json");
-interface ContractJson {
+export interface ContractJson {
   elementAddress: string;
   balancerAddress: string;
   userAddress: string;

@@ -1,4 +1,4 @@
-import React, { FC, ReactElement } from "react";
+import React, { ReactElement } from "react";
 
 import { IconNames } from "@blueprintjs/icons";
 import { Select } from "@blueprintjs/select";

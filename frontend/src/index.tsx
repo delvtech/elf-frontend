@@ -26,7 +26,7 @@ logAppVersion();
 if (process.env.NODE_ENV === "development") {
   prefixDocumentTitle("(D)");
 }
-window.addresses = ContractAddresses as any;
+window.addresses = ContractAddresses;
 window.lookupAddressKey = lookupAddressKey;
 
 ReactDOM.render(
