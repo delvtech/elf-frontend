@@ -18,7 +18,7 @@ export function useYearnAPY(
     enabled: !!vaultSymbol,
   });
 
-  return [queryResult.data, queryResult];
+  return [queryResult.data, [queryResult]];
 }
 
 interface YearnAPYVariables {

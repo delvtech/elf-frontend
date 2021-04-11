@@ -7,6 +7,7 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
 import { TrendIndicator } from "efi-ui/base/TrendIndicator/TrendIndicator";
+import { useYearnAPY } from "efi-ui/yearn/useYearnAPY";
 
 interface FixedYieldSummaryProps {
   maturityDate: number | undefined;
@@ -17,6 +18,9 @@ interface FixedYieldSummaryProps {
 export const FixedYieldSummary: FC<FixedYieldSummaryProps> = (props) => {
   const { maturityDate = 0, startDate = 0 } = props;
   const maturityDateString = new Date(maturityDate).toLocaleDateString();
+  // hardcode for now, will make this dynamic after updating testnet
+  const [apyInfo] = useYearnAPY("yWETH");
+  console.log("apyInfo", apyInfo);
 
   return (
     <div className={tw("flex-1")}>
