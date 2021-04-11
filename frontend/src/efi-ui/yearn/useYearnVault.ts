@@ -1,19 +1,19 @@
 import { useQuery } from "react-query";
 
 import { ComputedQueryResult } from "efi-ui/base/ComputedQueryResult";
-import { fetchYearnAPYs, YearnAPYResult } from "efi-yearn/fetchYearnAPY";
+import { fetchYearnVaults, YearnVaultResult } from "efi-yearn/fetchYearnVaults";
 
 // TODO: use address when we go live on mainnet
-export function useYearnAPY(
+export function useYearnVault(
   vaultSymbol: string | undefined
-): ComputedQueryResult<YearnAPYResult> {
-  const queryResult = useQuery<YearnAPYResult>({
+): ComputedQueryResult<YearnVaultResult> {
+  const queryResult = useQuery<YearnVaultResult>({
     queryKey: makeYearnAPYQueryKey(vaultSymbol),
     queryFn: async () => {
-      const result = await fetchYearnAPYs();
+      const result = await fetchYearnVaults();
       return result.find(
-        (result) => result.vaultSymbol === vaultSymbol
-      ) as YearnAPYResult;
+        (result) => result.symbol === vaultSymbol && result.endorsed
+      ) as YearnVaultResult;
     },
     enabled: !!vaultSymbol,
   });
@@ -28,5 +28,5 @@ interface YearnAPYVariables {
 function makeYearnAPYQueryKey(
   vaultSymbol: string | undefined
 ): [string[], YearnAPYVariables] {
-  return [["yearn", "/vaults/apy"], { vaultSymbol }];
+  return [["yearn", "/vaults/all"], { vaultSymbol }];
 }

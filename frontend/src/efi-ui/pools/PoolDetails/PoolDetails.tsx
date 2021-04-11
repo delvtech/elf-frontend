@@ -8,7 +8,7 @@ import tw from "efi-tailwindcss-classnames";
 import { getQueryData } from "efi-ui/base/queryResults";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useSmartContractsFromFactory } from "efi-ui/contracts/useSmartContractsFromFactory/useSmartContractsFromFactory";
-import { FixedYieldSummary } from "efi-ui/markets/FixedYieldSummary/FixedYieldSummary";
+import { VaultSummary } from "efi-ui/markets/VaultSummary/VaultSummary";
 import { PoolActionsCard } from "efi-ui/markets/MarketActionsCard/PoolActionsCard";
 import { MarketHistory } from "efi-ui/markets/MarketHistory/MarketHistory";
 import { PoolSummary } from "efi-ui/pools/PoolSummary/PoolSummary";
@@ -85,10 +85,7 @@ export const PoolDetails: FC<PoolDetailsProps> = ({
               volumeTrend={volumeTrend}
               liquidityTrend={liquidityTrend}
             />
-            <FixedYieldSummary
-              startDate={startDate}
-              maturityDate={maturityDate}
-            />
+            <VaultSummary startDate={startDate} maturityDate={maturityDate} />
             <TokenSummary pool={pool} />
           </div>
           <div className={tw("flex", "space-x-12")}>
