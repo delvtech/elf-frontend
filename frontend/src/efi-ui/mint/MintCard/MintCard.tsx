@@ -160,14 +160,6 @@ export function MintCard({
             <span
               className={classNames(tw("text-base"), Classes.TEXT_MUTED)}
             >{t`Term and Vault`}</span>
-            <div className={classNames(tw("flex", "flex-col", "space-x-1"))}>
-              <span className={classNames(tw("text-base"), Classes.TEXT_MUTED)}>
-                {ptMarketRateLabel}
-              </span>
-              <span className={classNames(tw("text-base"), Classes.TEXT_MUTED)}>
-                {ytMarketRateLabel}
-              </span>
-            </div>
           </div>
           <div
             className={tw(

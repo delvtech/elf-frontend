@@ -65,8 +65,8 @@ export function usePortfolioTabs(
       ),
     },
     {
-      id: "liquidity-positions",
-      name: t`Liquidity positions`,
+      id: "staked-positions",
+      name: t`Staked positions`,
       quantity: 0,
       totalFiatValue: Money.fromDecimal(0.0, currency),
       contentRenderer: () => <LiquidityPositionPortfolio account={account} />,

@@ -45,7 +45,7 @@ export function PrincipalTokenPreview({
           !amount ? (
             t`Enter an amount`
           ) : (
-            <span>{`${amount.toFixed(4)} ${baseAssetSymbol}`}</span>
+            <span>{`${amount.toFixed(4)} pt${baseAssetSymbol}`}</span>
           )
         }
       />
