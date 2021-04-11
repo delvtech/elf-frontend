@@ -23,6 +23,7 @@ import { PoolContract } from "efi/pools/PoolContract";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 import { useTokenDeltasForPool } from "efi-ui/pools/useTokenDeltasForPool/useTokenDeltasForPool";
 import { useTokenHistoricalPrice } from "efi-ui/token/hooks/useTokenHistoricalPrice";
+import { useSwaps } from "efi-ui/pools/useSwaps/useSwaps";
 
 interface TokenSummaryProps {
   pool: PoolContract | undefined;
@@ -38,9 +39,10 @@ export const TokenSummary: FC<TokenSummaryProps> = ({ pool }) => {
     baseAssetPriceTrend,
     yieldAssetSymbol,
     yieldAssetBalance,
+    yieldAssetBalanceTrend,
     yieldAssetDecimals,
     yieldAssetPrice,
-    yieldAssetBalanceTrend,
+    yieldAssetPriceTrend,
   } = useTokensSummary(pool);
 
   return (
@@ -109,7 +111,7 @@ export const TokenSummary: FC<TokenSummaryProps> = ({ pool }) => {
                 <span className={tw("text-lg")}>
                   {formatMoney(yieldAssetPrice)}
                 </span>
-                {/* <TrendIndicator value={0.0016} /> */}
+                <TrendIndicator value={yieldAssetPriceTrend} />
               </div>
             </div>
             <div
@@ -148,6 +150,7 @@ interface TokensSummary {
   yieldAssetBalanceTrend: number | undefined;
   yieldAssetDecimals: number | undefined;
   yieldAssetPrice: Money | undefined;
+  yieldAssetPriceTrend: number | undefined;
 }
 
 function useTokensSummary(pool: PoolContract | undefined): TokensSummary {
@@ -184,6 +187,8 @@ function useTokensSummary(pool: PoolContract | undefined): TokensSummary {
   const [yieldAssetDecimals] = useTokenDecimals(yieldAssetContract);
 
   const spotPrice = usePoolSpotPrice(pool, baseAssetContract);
+  const swaps = useSwaps(pool);
+
   const yieldAssetPrice =
     baseAssetPrice && spotPrice
       ? Money.fromDecimal(
@@ -202,6 +207,24 @@ function useTokensSummary(pool: PoolContract | undefined): TokensSummary {
     baseAssetPriceTrend =
       (baseAssetPrice.toDecimal() - baseAssetPriceYesterday.toDecimal()) /
       baseAssetPriceYesterday.toDecimal();
+  }
+
+  let yieldAssetPriceTrend;
+  if (swaps?.length && spotPrice && baseAssetPriceYesterday && baseAssetPrice) {
+    const swapOneDayAgo = swaps[0];
+    const [, tokenIn, , amountIn, amountOut] = swapOneDayAgo;
+    const baseAmount = tokenIn === baseAssetAddress ? amountIn : amountOut;
+    const yieldAmount = tokenIn === yieldAssetAddress ? amountIn : amountOut;
+    const oldSpotPrice = Math.abs(
+      +formatUnits(yieldAmount, baseAssetDecimals) /
+        +formatUnits(baseAmount, baseAssetDecimals)
+    );
+    // this calculation is pretty iffy.  baseAssetPriceYesterday probably does not line up with
+    // oldSpotPrice very well.
+    // TOOD: find better historical data for ETH and other base assets.
+    const oldYieldPrice = oldSpotPrice * baseAssetPriceYesterday.toDecimal();
+    const newYieldPrice = spotPrice * baseAssetPrice.toDecimal();
+    yieldAssetPriceTrend = (newYieldPrice - oldYieldPrice) / oldYieldPrice;
   }
 
   let baseAssetBalanceTrend;
@@ -248,5 +271,6 @@ function useTokensSummary(pool: PoolContract | undefined): TokensSummary {
     yieldAssetBalanceTrend,
     yieldAssetDecimals,
     yieldAssetPrice,
+    yieldAssetPriceTrend,
   };
 }
