@@ -1,26 +1,29 @@
+import { useQuery } from "react-query";
+
+import { Event } from "@ethersproject/contracts";
+import { ERC20 } from "elf-contracts/types/ERC20";
+import { BigNumber } from "ethers";
 import { formatEther, formatUnits } from "ethers/lib/utils";
 import { Money } from "ts-money";
 
+import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
+import { getQueryData } from "efi-ui/base/queryResults";
+import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
+import { usePreviousBlockNumber } from "efi-ui/ethereum/usePreviousBlockNumber/usePreviousBlockNumber";
+import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
+import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
+import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useSwapFee } from "efi-ui/pools/useSwapFee/useSwapFee";
 import { useVolumeForPool } from "efi-ui/pools/useVolumeForPool/useVolumeForPool";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
+import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
+import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
 import {
   isConvergentCurvePool,
   isWeightedPool,
   PoolContract,
 } from "efi/pools/PoolContract";
-import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
-import { usePreviousBlockNumber } from "efi-ui/ethereum/usePreviousBlockNumber/usePreviousBlockNumber";
-import { useQuery } from "react-query";
-import { BigNumber } from "ethers";
-import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
-import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
-import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
-import { getQueryData } from "efi-ui/base/queryResults";
-import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
-import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
 
 /**
  * Returns the fiat volume for a pool in a given time range
@@ -115,6 +118,33 @@ function useFeeVolumeForConvergentCurvePool(
     return undefined;
   }
 
+  const totalFees = calculateTotalFees(
+    tokens,
+    baseAssetContract,
+    changeEvents,
+    baseAssetDecimals,
+    baseAssetFiatPrice,
+    spotPrice
+  );
+
+  return totalFees;
+}
+
+type PoolBalanceChangedArguments = [
+  poolId: string,
+  sender: string,
+  assets: string[],
+  amounts: BigNumber[],
+  dueProtocolFeeAmounts: BigNumber[]
+];
+function calculateTotalFees(
+  tokens: string[],
+  baseAssetContract: ERC20,
+  changeEvents: Event[],
+  baseAssetDecimals: number | undefined,
+  baseAssetFiatPrice: Money,
+  spotPrice: number
+) {
   const baseAssetIndex = tokens.findIndex(
     (address) => address === baseAssetContract?.address
   );
@@ -124,8 +154,7 @@ function useFeeVolumeForConvergentCurvePool(
 
   changeEvents.forEach((event) => {
     const changeEvent = event?.args as PoolBalanceChangedArguments;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [_, __, assets, amounts, dueProtocolFeeAmounts] = changeEvent;
+    const [, , , , dueProtocolFeeAmounts] = changeEvent;
     totalFeesPerToken[0] = totalFeesPerToken[0].add(dueProtocolFeeAmounts[0]);
     totalFeesPerToken[1] = totalFeesPerToken[1].add(dueProtocolFeeAmounts[1]);
   });
@@ -143,14 +172,5 @@ function useFeeVolumeForConvergentCurvePool(
     baseAssetFees + yieldAssetFees / spotPrice,
     Math.round
   );
-
   return totalFees;
 }
-
-type PoolBalanceChangedArguments = [
-  poolId: string,
-  sender: string,
-  assets: string[],
-  amounts: BigNumber[],
-  dueProtocolFeeAmounts: BigNumber[]
-];

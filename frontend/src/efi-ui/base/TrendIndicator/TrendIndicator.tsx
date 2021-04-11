@@ -12,7 +12,7 @@ export function TrendIndicator({ value }: TrendIndicatorProps): ReactElement {
   let intent: Intent;
   let icon: IconName;
 
-  // if the value would be formatted to '0.00%', then format the
+  // if the value would be formatted to '0.00%', then format the indicator to reflect this.
   const valueIsZero = value && value > -0.0005 && value < 0.0005;
 
   if (!value || valueIsZero || !Number.isFinite(value)) {
