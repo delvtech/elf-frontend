@@ -21,11 +21,11 @@ export interface YearnVaultResult {
       netApy: number;
       performanceFee: number;
     };
-    composite: false;
+    composite: boolean;
     recommended: number;
   };
   address: string;
-  endorsed: true;
+  endorsed: boolean;
   strategies: {
     name: string;
     address: string;
@@ -55,7 +55,7 @@ export interface YearnVaultResult {
     decimals: number;
   };
   decimals: number;
-  emergencyShutdown: false;
+  emergencyShutdown: boolean;
   tags: string[];
   type: string;
 }

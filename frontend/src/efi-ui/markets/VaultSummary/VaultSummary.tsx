@@ -6,7 +6,6 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
-import { TrendIndicator } from "efi-ui/base/TrendIndicator/TrendIndicator";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { formatPercent } from "efi/base/formatPercent";
 
@@ -21,7 +20,6 @@ export const VaultSummary: FC<VaultSummaryProps> = (props) => {
   const maturityDateString = new Date(maturityDate).toLocaleDateString();
   // hardcode for now, will make this dynamic after updating testnet
   const [vaultInfo] = useYearnVault("yvWETH");
-  console.log("vaultInfo", vaultInfo);
   const { name, type } = vaultInfo || {};
   const apy = vaultInfo?.apy?.recommended;
 
@@ -55,7 +53,7 @@ export const VaultSummary: FC<VaultSummaryProps> = (props) => {
             <div className={tw("flex", "flex-col")}>
               <span
                 className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
-              >{t`Term Maturity date`}</span>
+              >{t`Term date`}</span>
               <div className={classNames("h3", tw("space-x-4", "flex"))}>
                 {maturityDateString}
               </div>
