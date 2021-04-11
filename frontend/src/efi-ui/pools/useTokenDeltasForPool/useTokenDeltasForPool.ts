@@ -70,18 +70,5 @@ export function useTokenDeltasForPool(
     totalDeltaPerToken[1] = totalDeltaPerToken[1].add(amounts[1]);
   });
 
-  // const events = changeEvents.map((event) => {
-  //   const changeEvent = event?.args as PoolBalanceChangedArguments;
-  //   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  //   const [poolId, sender, assets, amounts] = changeEvent;
-  //   return [formatEther(amounts[0]), formatEther(amounts[1])];
-  // });
-  // events.forEach((e) => console.log(e));
-
-  // console.log(
-  //   "totalChangePerToken",
-  //   totalChangePerToken.map((bn) => formatEther(bn))
-  // );
-  // console.log("");
   return totalDeltaPerToken;
 }
