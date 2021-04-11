@@ -19,7 +19,7 @@ export const VaultSummary: FC<VaultSummaryProps> = (props) => {
   const { maturityDate = 0, startDate = 0 } = props;
   const maturityDateString = new Date(maturityDate).toLocaleDateString();
   // hardcode for now, will make this dynamic after updating testnet
-  const [vaultInfo] = useYearnVault("yvWETH");
+  const { data: vaultInfo } = useYearnVault("yvWETH");
   const { name, type } = vaultInfo || {};
   const apy = vaultInfo?.apy?.recommended;
 

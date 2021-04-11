@@ -12,6 +12,7 @@ import { useUnderlyingVaultForTranche } from "efi-ui/tranche/useUnderlyingVaultF
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
+import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 
 interface VaultTermButtonLabelProps {
   tranche: Tranche | undefined;
@@ -31,9 +32,13 @@ export function VaultTermButtonLabel({
     "unlockTimestamp"
   );
 
-  const position = useUnderlyingVaultForTranche(tranche);
-  const { data: positionName } = useSmartContractReadCall(position, "name");
-  const { data: positionSymbol } = useSmartContractReadCall(position, "symbol");
+  const underlyingVault = useUnderlyingVaultForTranche(tranche);
+  const { data: vaultName } = useSmartContractReadCall(underlyingVault, "name");
+  const { data: vaultSymbol } = useSmartContractReadCall(
+    underlyingVault,
+    "symbol"
+  );
+  const [yearnVault] = useYearnVault(vaultSymbol);
 
   const unlockDate = convertEpochSecondsToDate(
     getQueryData(unlockTimestampResult)
@@ -74,8 +79,8 @@ export function VaultTermButtonLabel({
           </div>
         }
         large
-        text={positionName}
-        label={positionSymbol}
+        text={vaultName}
+        label={vaultSymbol}
       />
     </div>
   );
