@@ -2,6 +2,7 @@ import React, { ReactElement } from "react";
 
 import { Icon, Intent, Tag } from "@blueprintjs/core";
 import { IconName, IconNames } from "@blueprintjs/icons";
+import { t } from "ttag";
 
 import { formatPercent } from "efi/base/formatPercent";
 
@@ -11,21 +12,28 @@ interface TrendIndicatorProps {
 export function TrendIndicator({ value }: TrendIndicatorProps): ReactElement {
   let intent: Intent;
   let icon: IconName;
+  let label: string;
 
   // if the value would be formatted to '0.00%', then format the indicator to reflect this.
-  const valueIsZero = value && value > -0.0005 && value < 0.0005;
+  const valueIsNearZero = !!value && !Math.round(value * 10000);
 
-  if (!value || valueIsZero || !Number.isFinite(value)) {
+  if (value === undefined || !Number.isFinite(value)) {
     intent = Intent.WARNING;
     icon = IconNames.SMALL_MINUS;
+    label = t`n/a`;
+  } else if (value === 0 || valueIsNearZero) {
+    intent = Intent.WARNING;
+    icon = IconNames.SMALL_MINUS;
+    label = formatPercent(0);
   } else {
-    intent = value > 0 ? Intent.SUCCESS : Intent.DANGER;
-    icon = value > 0 ? IconNames.CARET_UP : IconNames.CARET_DOWN;
+    intent = value >= 0 ? Intent.SUCCESS : Intent.DANGER;
+    icon = value >= 0 ? IconNames.CARET_UP : IconNames.CARET_DOWN;
+    label = formatPercent(value);
   }
 
   return (
     <Tag minimal intent={intent}>
-      {formatPercent(value || 0)}
+      {label}
       <Icon icon={icon} />
     </Tag>
   );
