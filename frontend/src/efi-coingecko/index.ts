@@ -1,5 +1,6 @@
 import { Currency, Money } from "ts-money";
 
+import { format, subDays } from "date-fns";
 import coinsJSON from "efi-coingecko/coins.json";
 
 /**
@@ -44,6 +45,32 @@ export async function fetchCoinGeckoPrice(
   >;
 
   const price = resultJSON[coinGeckoId][currencyCode];
+
+  return Money.fromDecimal(
+    price,
+    currency,
+    // Money.fromDecimal will throw if price has more decimals than the currency
+    // allows unless you pass a rounding function
+    Math.round
+  );
+}
+
+export async function fetchCoinGeckoHistoricalPrice(
+  coinGeckoId: string,
+  currency: Currency,
+  daysAgo = 1
+): Promise<Money> {
+  const dateString = format(subDays(new Date(), daysAgo), "dd-MM-yyyy");
+  console.log("dateString", dateString);
+  const currencyCode = currency.code.toLowerCase();
+  const result = await fetch(
+    `https://api.coingecko.com/api/v3/coins/${coinGeckoId}/history?date=${dateString}`
+  );
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const resultJSON = (await result.json()) as any;
+
+  const price = resultJSON["market_data"]["current_price"][currencyCode];
 
   return Money.fromDecimal(
     price,
