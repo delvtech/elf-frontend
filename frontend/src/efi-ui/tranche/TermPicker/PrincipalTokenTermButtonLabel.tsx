@@ -63,7 +63,7 @@ export function PrincipalTokenTermButtonLabel({
     : t`Loading unlock date...`;
 
   return (
-    <div className={tw("flex", "items-center", "space-x-4")}>
+    <div className={tw("flex", "items-center", "h-full", "space-x-4")}>
       <LabeledText
         large
         icon={
@@ -76,10 +76,15 @@ export function PrincipalTokenTermButtonLabel({
               "mr-4"
             )}
           >
-            <span className={classNames("h4", tw("text-center"))}>
+            <span className={tw("text-lg", "text-center")}>
               {t`${trancheAPY}% APY`}
             </span>
-            <Tag intent={Intent.PRIMARY} fill className={tw("text-center")}>
+            <Tag
+              large
+              intent={Intent.PRIMARY}
+              fill
+              className={tw("text-center")}
+            >
               {formattedDate}
             </Tag>
           </div>

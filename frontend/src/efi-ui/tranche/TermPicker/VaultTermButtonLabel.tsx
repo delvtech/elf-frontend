@@ -88,10 +88,15 @@ export function VaultTermButtonLabel({
               "space-y-1"
             )}
           >
-            <span className={classNames("h4", tw("text-center"))}>
+            <span className={tw("text-center", "text-lg")}>
               {t`${trancheAPY}% APY`}
             </span>
-            <Tag intent={Intent.PRIMARY} fill className={tw("text-center")}>
+            <Tag
+              intent={Intent.PRIMARY}
+              large
+              fill
+              className={tw("text-center")}
+            >
               {formattedDate}
             </Tag>
           </div>
