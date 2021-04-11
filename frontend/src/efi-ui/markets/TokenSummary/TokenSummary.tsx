@@ -109,7 +109,7 @@ export const TokenSummary: FC<TokenSummaryProps> = ({ pool }) => {
                 <span className={tw("text-lg")}>
                   {formatMoney(yieldAssetPrice)}
                 </span>
-                <TrendIndicator value={0.0016} />
+                {/* <TrendIndicator value={0.0016} /> */}
               </div>
             </div>
             <div
