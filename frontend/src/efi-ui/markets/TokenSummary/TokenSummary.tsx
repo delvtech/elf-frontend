@@ -21,6 +21,7 @@ import { KNOWN_BASE_ASSETS } from "efi/contracts/contractsJson";
 import { formatMoney } from "efi/money/formatMoney";
 import { PoolContract } from "efi/pools/PoolContract";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
+import { useTokenDeltasForPool } from "efi-ui/pools/useTokenDeltasForPool/useTokenDeltasForPool";
 
 interface TokenSummaryProps {
   pool: PoolContract | undefined;
@@ -32,10 +33,12 @@ export const TokenSummary: FC<TokenSummaryProps> = ({ pool }) => {
     baseAssetBalance,
     baseAssetDecimals,
     baseAssetPrice,
+    baseAssetTrend,
     yieldAssetSymbol,
     yieldAssetBalance,
     yieldAssetDecimals,
     yieldAssetPrice,
+    yieldAssetTrend,
   } = useTokensSummary(pool);
 
   return (
@@ -79,7 +82,7 @@ export const TokenSummary: FC<TokenSummaryProps> = ({ pool }) => {
                     formatUnits(baseAssetBalance || 0, baseAssetDecimals)
                   ).toFixed(2)}
                 </span>
-                <TrendIndicator value={0.0016} />
+                <TrendIndicator value={baseAssetTrend} />
               </div>
             </div>
           </div>
@@ -119,7 +122,7 @@ export const TokenSummary: FC<TokenSummaryProps> = ({ pool }) => {
                     formatUnits(yieldAssetBalance || 0, yieldAssetDecimals)
                   ).toFixed(2)}
                 </span>
-                <TrendIndicator value={0.0016} />
+                <TrendIndicator value={yieldAssetTrend} />
               </div>
             </div>
           </div>
@@ -135,11 +138,13 @@ interface TokensSummary {
   baseAssetBalance: BigNumber | undefined;
   baseAssetDecimals: number | undefined;
   baseAssetPrice: Money | undefined;
+  baseAssetTrend: number | undefined;
   yieldAssetContract: ERC20 | undefined;
   yieldAssetSymbol: string | undefined;
   yieldAssetBalance: BigNumber | undefined;
   yieldAssetDecimals: number | undefined;
   yieldAssetPrice: Money | undefined;
+  yieldAssetTrend: number | undefined;
 }
 
 function useTokensSummary(pool: PoolContract | undefined): TokensSummary {
@@ -179,16 +184,52 @@ function useTokensSummary(pool: PoolContract | undefined): TokensSummary {
         )
       : undefined;
 
+  const token24hrDeltas = useTokenDeltasForPool(pool);
+  const baseAssetDelta = token24hrDeltas?.[baseAssetIndex];
+  const yieldAssetDelta = token24hrDeltas?.[yieldAssetIndex];
+
+  let baseAssetTrend;
+  let yieldAssetTrend;
+  if (
+    baseAssetDelta &&
+    yieldAssetDelta &&
+    baseAssetBalance &&
+    yieldAssetBalance &&
+    baseAssetDecimals
+  ) {
+    const baseAssetBalanceValue = +formatUnits(
+      baseAssetBalance,
+      baseAssetDecimals
+    );
+    const baseAssetDeltaValue = +formatUnits(baseAssetDelta, baseAssetDecimals);
+    const yieldAssetBalanceValue = +formatUnits(
+      yieldAssetBalance,
+      baseAssetDecimals
+    );
+    const yieldAssetDeltaValue = +formatUnits(
+      yieldAssetDelta,
+      baseAssetDecimals
+    );
+
+    baseAssetTrend =
+      1 - (baseAssetBalanceValue + baseAssetDeltaValue) / baseAssetBalanceValue;
+    yieldAssetTrend =
+      1 -
+      (yieldAssetBalanceValue + yieldAssetDeltaValue) / yieldAssetBalanceValue;
+  }
+
   return {
     baseAssetContract,
     baseAssetSymbol,
     baseAssetBalance,
     baseAssetDecimals,
     baseAssetPrice,
+    baseAssetTrend,
     yieldAssetContract,
     yieldAssetSymbol,
     yieldAssetBalance,
     yieldAssetDecimals,
     yieldAssetPrice,
+    yieldAssetTrend,
   };
 }
