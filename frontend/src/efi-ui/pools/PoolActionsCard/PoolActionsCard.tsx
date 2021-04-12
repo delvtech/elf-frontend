@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useState } from "react";
+import React, { ReactElement, useCallback, useState } from "react";
 
 import { Card, Colors, Intent } from "@blueprintjs/core";
 import { ERC20 } from "elf-contracts/types/ERC20";
@@ -20,14 +20,8 @@ interface PoolActionsCardProps {
 }
 
 type MarketAction = "trade" | "stake";
-export const PoolActionsCard: FC<PoolActionsCardProps> = ({
-  library,
-  signer,
-  account,
-  tokenIn,
-  tokenOut,
-  pool,
-}) => {
+export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
+  const { library, signer, account, tokenIn, tokenOut, pool } = props;
   const [action, setActionUI] = useState<MarketAction>("trade");
   const showTradeUI = useCallback(() => setActionUI("trade"), []);
   const showStakeUI = useCallback(() => setActionUI("stake"), []);
@@ -76,4 +70,4 @@ export const PoolActionsCard: FC<PoolActionsCardProps> = ({
       </Card>
     </div>
   );
-};
+}
