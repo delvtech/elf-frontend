@@ -61,7 +61,7 @@
     "classnames": "^2.3.1",
     "d3-array": "^2.12.1",
     "d3-time-format": "^3.0.0",
-    "date-fns": "^2.20.0",
+    "date-fns": "^2.20.1",
     "ethereum-waffle": "^3.3.0",
     "ethers": "^5.0.32",
     "fuzzaldrin-plus": "^0.6.0",
