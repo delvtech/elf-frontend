@@ -21,6 +21,9 @@ import { KNOWN_BASE_ASSETS } from "efi/contracts/contractsJson";
 import { formatMoney } from "efi/money/formatMoney";
 import { PoolContract } from "efi/pools/PoolContract";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
+import { useTokenDeltasForPool } from "efi-ui/pools/useTokenDeltasForPool/useTokenDeltasForPool";
+import { useTokenHistoricalPrice } from "efi-ui/token/hooks/useTokenHistoricalPrice";
+import { useSwaps } from "efi-ui/pools/useSwaps/useSwaps";
 
 interface TokenSummaryProps {
   pool: PoolContract | undefined;
@@ -30,12 +33,16 @@ export const TokenSummary: FC<TokenSummaryProps> = ({ pool }) => {
   const {
     baseAssetSymbol,
     baseAssetBalance,
+    baseAssetBalanceTrend,
     baseAssetDecimals,
     baseAssetPrice,
+    baseAssetPriceTrend,
     yieldAssetSymbol,
     yieldAssetBalance,
+    yieldAssetBalanceTrend,
     yieldAssetDecimals,
     yieldAssetPrice,
+    yieldAssetPriceTrend,
   } = useTokensSummary(pool);
 
   return (
@@ -50,7 +57,9 @@ export const TokenSummary: FC<TokenSummaryProps> = ({ pool }) => {
               <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
                 {t`Token`}
               </span>
-              <span className={tw("text-lg")}>{baseAssetSymbol}</span>
+              <span className={tw("text-lg", "truncate")}>
+                {baseAssetSymbol}
+              </span>
             </div>
             <div
               className={tw("flex", "flex-col", "justify-center", "space-y-1")}
@@ -62,7 +71,7 @@ export const TokenSummary: FC<TokenSummaryProps> = ({ pool }) => {
                 <span className={tw("text-lg")}>
                   {formatMoney(baseAssetPrice)}
                 </span>
-                <TrendIndicator value={0.0016} />
+                <TrendIndicator value={baseAssetPriceTrend} />
               </div>
             </div>
             <div
@@ -77,7 +86,7 @@ export const TokenSummary: FC<TokenSummaryProps> = ({ pool }) => {
                     formatUnits(baseAssetBalance || 0, baseAssetDecimals)
                   ).toFixed(2)}
                 </span>
-                <TrendIndicator value={0.0016} />
+                <TrendIndicator value={baseAssetBalanceTrend} />
               </div>
             </div>
           </div>
@@ -88,7 +97,9 @@ export const TokenSummary: FC<TokenSummaryProps> = ({ pool }) => {
               <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
                 {t`Token`}
               </span>
-              <span className={tw("text-lg")}>{yieldAssetSymbol}</span>
+              <span className={tw("text-lg", "overflow-hidden", "truncate")}>
+                {yieldAssetSymbol}
+              </span>
             </div>
             <div
               className={tw("flex", "flex-col", "justify-center", "space-y-1")}
@@ -100,7 +111,7 @@ export const TokenSummary: FC<TokenSummaryProps> = ({ pool }) => {
                 <span className={tw("text-lg")}>
                   {formatMoney(yieldAssetPrice)}
                 </span>
-                <TrendIndicator value={0.0016} />
+                <TrendIndicator value={yieldAssetPriceTrend} />
               </div>
             </div>
             <div
@@ -115,7 +126,7 @@ export const TokenSummary: FC<TokenSummaryProps> = ({ pool }) => {
                     formatUnits(yieldAssetBalance || 0, yieldAssetDecimals)
                   ).toFixed(2)}
                 </span>
-                <TrendIndicator value={0.0016} />
+                <TrendIndicator value={yieldAssetBalanceTrend} />
               </div>
             </div>
           </div>
@@ -129,13 +140,17 @@ interface TokensSummary {
   baseAssetContract: ERC20 | undefined;
   baseAssetSymbol: string | undefined;
   baseAssetBalance: BigNumber | undefined;
+  baseAssetBalanceTrend: number | undefined;
   baseAssetDecimals: number | undefined;
   baseAssetPrice: Money | undefined;
+  baseAssetPriceTrend: number | undefined;
   yieldAssetContract: ERC20 | undefined;
   yieldAssetSymbol: string | undefined;
   yieldAssetBalance: BigNumber | undefined;
+  yieldAssetBalanceTrend: number | undefined;
   yieldAssetDecimals: number | undefined;
   yieldAssetPrice: Money | undefined;
+  yieldAssetPriceTrend: number | undefined;
 }
 
 function useTokensSummary(pool: PoolContract | undefined): TokensSummary {
@@ -154,6 +169,12 @@ function useTokensSummary(pool: PoolContract | undefined): TokensSummary {
     : undefined;
   const [baseAssetSymbol] = useTokenSymbol(baseAssetContract);
   const [baseAssetPrice] = useTokenPrice(baseAssetContract, currency);
+  const [baseAssetPriceYesterday] = useTokenHistoricalPrice(
+    baseAssetContract,
+    currency,
+    1
+  );
+
   const [baseAssetDecimals] = useTokenDecimals(baseAssetContract);
 
   const yieldAssetIndex = baseAssetIndex === 0 ? 1 : 0;
@@ -166,6 +187,8 @@ function useTokensSummary(pool: PoolContract | undefined): TokensSummary {
   const [yieldAssetDecimals] = useTokenDecimals(yieldAssetContract);
 
   const spotPrice = usePoolSpotPrice(pool, baseAssetContract);
+  const swaps = useSwaps(pool);
+
   const yieldAssetPrice =
     baseAssetPrice && spotPrice
       ? Money.fromDecimal(
@@ -175,16 +198,79 @@ function useTokensSummary(pool: PoolContract | undefined): TokensSummary {
         )
       : undefined;
 
+  const token24hrDeltas = useTokenDeltasForPool(pool);
+  const baseAssetDelta = token24hrDeltas?.[baseAssetIndex];
+  const yieldAssetDelta = token24hrDeltas?.[yieldAssetIndex];
+
+  let baseAssetPriceTrend;
+  if (baseAssetPrice && baseAssetPriceYesterday) {
+    baseAssetPriceTrend =
+      (baseAssetPrice.toDecimal() - baseAssetPriceYesterday.toDecimal()) /
+      baseAssetPriceYesterday.toDecimal();
+  }
+
+  let yieldAssetPriceTrend;
+  if (swaps?.length && spotPrice && baseAssetPriceYesterday && baseAssetPrice) {
+    const swapOneDayAgo = swaps[0];
+    const [, tokenIn, , amountIn, amountOut] = swapOneDayAgo;
+    const baseAmount = tokenIn === baseAssetAddress ? amountIn : amountOut;
+    const yieldAmount = tokenIn === yieldAssetAddress ? amountIn : amountOut;
+    const oldSpotPrice = Math.abs(
+      +formatUnits(yieldAmount, baseAssetDecimals) /
+        +formatUnits(baseAmount, baseAssetDecimals)
+    );
+    // this calculation is pretty iffy.  baseAssetPriceYesterday probably does not line up with
+    // oldSpotPrice very well.
+    // TOOD: find better historical data for ETH and other base assets.
+    const oldYieldPrice = oldSpotPrice * baseAssetPriceYesterday.toDecimal();
+    const newYieldPrice = spotPrice * baseAssetPrice.toDecimal();
+    yieldAssetPriceTrend = (newYieldPrice - oldYieldPrice) / oldYieldPrice;
+  }
+
+  let baseAssetBalanceTrend;
+  let yieldAssetBalanceTrend;
+  if (
+    baseAssetDelta &&
+    yieldAssetDelta &&
+    baseAssetBalance &&
+    yieldAssetBalance &&
+    baseAssetDecimals
+  ) {
+    const baseAssetBalanceValue = +formatUnits(
+      baseAssetBalance,
+      baseAssetDecimals
+    );
+    const baseAssetDeltaValue = +formatUnits(baseAssetDelta, baseAssetDecimals);
+    const yieldAssetBalanceValue = +formatUnits(
+      yieldAssetBalance,
+      baseAssetDecimals
+    );
+    const yieldAssetDeltaValue = +formatUnits(
+      yieldAssetDelta,
+      baseAssetDecimals
+    );
+
+    baseAssetBalanceTrend =
+      1 - (baseAssetBalanceValue + baseAssetDeltaValue) / baseAssetBalanceValue;
+    yieldAssetBalanceTrend =
+      1 -
+      (yieldAssetBalanceValue + yieldAssetDeltaValue) / yieldAssetBalanceValue;
+  }
+
   return {
     baseAssetContract,
     baseAssetSymbol,
     baseAssetBalance,
+    baseAssetBalanceTrend,
     baseAssetDecimals,
     baseAssetPrice,
+    baseAssetPriceTrend,
     yieldAssetContract,
     yieldAssetSymbol,
     yieldAssetBalance,
+    yieldAssetBalanceTrend,
     yieldAssetDecimals,
     yieldAssetPrice,
+    yieldAssetPriceTrend,
   };
 }
