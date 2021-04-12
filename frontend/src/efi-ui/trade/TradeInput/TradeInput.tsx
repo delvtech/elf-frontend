@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { ReactElement } from "react";
 
 import { InputGroup, Intent, Tag } from "@blueprintjs/core";
 import { t } from "ttag";
@@ -20,14 +20,15 @@ interface TradeInputProps {
   validValue: boolean;
 }
 
-export const TradeInput: FC<TradeInputProps> = ({
-  cryptoDisplayBalance,
-  cryptoSymbol,
-  disabled,
-  onChange,
-  value = "",
-  validValue,
-}) => {
+export function TradeInput(props: TradeInputProps): ReactElement {
+  const {
+    cryptoDisplayBalance,
+    cryptoSymbol,
+    disabled,
+    onChange,
+    value = "",
+    validValue,
+  } = props;
   return (
     <div className={tw("flex", "flex-col", "space-y-2")}>
       <InputGroup
@@ -71,4 +72,4 @@ export const TradeInput: FC<TradeInputProps> = ({
       </div>
     </div>
   );
-};
+}

@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useState } from "react";
+import { ReactElement, useCallback, useEffect, useState } from "react";
 
 import { Button, Intent } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
@@ -44,20 +44,19 @@ const numericInputOptions: NumericInputOptions = {
   maxPrecision: 18,
 };
 
-export const TradePanel: FC<TradePanelProps> = ({
-  library,
-  signer,
-  formDisabled = false,
-  submitDisabled = false,
-  inputLabel,
-  buttonLabel,
-  buttonIntent = Intent.PRIMARY,
-  onTransaction,
-  pool,
-  account,
-  tokenIn: tokenInFromProps,
-  tokenOut: tokenOutFromProps,
-}) => {
+export function TradePanel(props: TradePanelProps): ReactElement {
+  const {
+    signer,
+    formDisabled = false,
+    submitDisabled = false,
+    inputLabel,
+    buttonLabel,
+    buttonIntent = Intent.PRIMARY,
+    pool,
+    account,
+    tokenIn: tokenInFromProps,
+    tokenOut: tokenOutFromProps,
+  } = props;
   const [isReversed, setReversed] = useState(false);
 
   let tokenIn = tokenInFromProps;
@@ -189,7 +188,7 @@ export const TradePanel: FC<TradePanelProps> = ({
       </Button>
     </div>
   );
-};
+}
 
 function useUpdateOutWhenInChanges(
   calcValueOut: BigNumber | undefined,
