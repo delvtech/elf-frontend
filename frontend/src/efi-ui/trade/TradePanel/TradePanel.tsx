@@ -21,6 +21,7 @@ import { ContractMethodArgs } from "efi/contracts/types";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { PoolContract } from "efi/pools/PoolContract";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
+import { validateTradeValues } from "efi/trade/validateTradeValues";
 
 interface TradePanelProps {
   library: Web3Provider | undefined;
@@ -186,29 +187,6 @@ export function TradePanel(props: TradePanelProps): ReactElement {
       </Button>
     </div>
   );
-}
-
-function validateTradeValues(
-  amountIn: string | undefined,
-  tokenInBalanceOf: BigNumber | undefined,
-  tokenInDecimals: number | undefined,
-  tokenInPoolBalance: BigNumber,
-  amountOut: string | undefined,
-  tokenOutPoolBalance: BigNumber
-) {
-  // input value must be lower than the user's balance and the pool's balance of that token
-  const isValidTokenInValue =
-    amountIn && tokenInBalanceOf
-      ? parseUnits(amountIn ?? 0, tokenInDecimals).lte(tokenInBalanceOf) &&
-        parseUnits(amountIn ?? 0, tokenInDecimals).lte(tokenInPoolBalance)
-      : true;
-
-  // output value must be lower than the pool's balance of that token
-  const isValidTokenOutValue =
-    amountOut && tokenOutPoolBalance
-      ? parseUnits(amountOut ?? 0, tokenInDecimals).lte(tokenOutPoolBalance)
-      : true;
-  return { isValidTokenInValue, isValidTokenOutValue };
 }
 
 function getSubmitButtonText(
