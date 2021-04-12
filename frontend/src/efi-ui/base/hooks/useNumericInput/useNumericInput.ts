@@ -32,7 +32,7 @@ export const useNumericInput = (
   (event: ChangeEvent<HTMLInputElement>) => void,
   (value: string) => void
 ] => {
-  const { min, max, maxPrecision: precision } = options;
+  const { min, max, maxPrecision } = options;
   const [stringValue, setStringValue] = useState<string | undefined>();
 
   const onChange = useCallback(
@@ -65,16 +65,16 @@ export const useNumericInput = (
         }
       }
 
-      if ("precision" in options && isIntegerNumber(precision)) {
+      if ("maxPrecision" in options && isIntegerNumber(maxPrecision)) {
         const placesAfterDecimal = getPlacesAfterDecimal(inputString);
-        if (placesAfterDecimal > precision) {
+        if (placesAfterDecimal >= maxPrecision) {
           return;
         }
       }
 
       setStringValue(inputString);
     },
-    [max, min, options, precision]
+    [max, maxPrecision, min, options]
   );
 
   return [stringValue, onChange, setStringValue];
