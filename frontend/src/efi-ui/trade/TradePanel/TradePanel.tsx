@@ -20,6 +20,7 @@ import { TradeInput } from "efi-ui/trade/TradeInput/TradeInput";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { PoolContract } from "efi/pools/PoolContract";
+import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 
 interface TradePanelProps {
   library: Web3Provider | undefined;
@@ -75,10 +76,12 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     tokenInDecimals,
     tokenInBalanceOf,
     tokenInDisplayBalance,
+    tokenInPoolBalance,
 
     tokenOutSymbol,
     tokenOutDisplayBalance,
-  } = useTokenInfo(tokenIn, tokenOut, account);
+    tokenOutPoolBalance,
+  } = useTokenInfo(pool, tokenIn, tokenOut, account);
 
   const {
     amountIn,
@@ -88,10 +91,14 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     setValueIn,
   } = useUpdateInputs(pool, tokenIn, tokenOut, tokenInDecimals);
 
-  const validValue =
-    amountIn && tokenInBalanceOf
-      ? parseUnits(amountIn ?? 0, tokenInDecimals).lte(tokenInBalanceOf)
-      : true;
+  const { isValidTokenInValue, isValidTokenOutValue } = validateTradeValues(
+    amountIn,
+    tokenInBalanceOf,
+    tokenInDecimals,
+    tokenInPoolBalance,
+    amountOut,
+    tokenOutPoolBalance
+  );
 
   // TODO: make a useTokenApproval or useTokenApproved hook
   const callArgs: ContractMethodArgs<ERC20, "allowance"> = [
@@ -118,10 +125,12 @@ export function TradePanel(props: TradePanelProps): ReactElement {
   const submitButtonDisabled =
     formDisabled ||
     submitDisabled ||
-    !validValue ||
+    !isValidTokenInValue ||
+    !isValidTokenOutValue ||
     !amountIn ||
     !amountOut ||
     !signer;
+
   return (
     <div className={tw("flex", "flex-col", "space-y-5")}>
       {/* Trade Asset */}
@@ -142,7 +151,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
         disabled={formDisabled}
         onChange={onChangeIn}
         value={amountIn}
-        validValue={validValue}
+        validValue={isValidTokenInValue}
       />
 
       <Button
@@ -163,7 +172,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
         disabled={formDisabled}
         onChange={onChangeOut}
         value={amountOut}
-        validValue={validValue}
+        validValue={isValidTokenOutValue}
       />
       <Button
         disabled={submitButtonDisabled}
@@ -177,6 +186,29 @@ export function TradePanel(props: TradePanelProps): ReactElement {
       </Button>
     </div>
   );
+}
+
+function validateTradeValues(
+  amountIn: string | undefined,
+  tokenInBalanceOf: BigNumber | undefined,
+  tokenInDecimals: number | undefined,
+  tokenInPoolBalance: BigNumber,
+  amountOut: string | undefined,
+  tokenOutPoolBalance: BigNumber
+) {
+  // input value must be lower than the user's balance and the pool's balance of that token
+  const isValidTokenInValue =
+    amountIn && tokenInBalanceOf
+      ? parseUnits(amountIn ?? 0, tokenInDecimals).lte(tokenInBalanceOf) &&
+        parseUnits(amountIn ?? 0, tokenInDecimals).lte(tokenInPoolBalance)
+      : true;
+
+  // output value must be lower than the pool's balance of that token
+  const isValidTokenOutValue =
+    amountOut && tokenOutPoolBalance
+      ? parseUnits(amountOut ?? 0, tokenInDecimals).lte(tokenOutPoolBalance)
+      : true;
+  return { isValidTokenInValue, isValidTokenOutValue };
 }
 
 function getSubmitButtonText(
@@ -196,10 +228,18 @@ function getSubmitButtonText(
 }
 
 function useTokenInfo(
+  pool: PoolContract | undefined,
   tokenIn: ERC20 | undefined,
   tokenOut: ERC20 | undefined,
   account: string | null | undefined
 ) {
+  const { data: [tokens, balances] = [] } = usePoolTokens(pool);
+  const tokenInIndex =
+    tokens?.findIndex((token) => token === tokenIn?.address) || 0;
+  const tokenOutIndex = tokenInIndex ? 0 : 1;
+  const tokenInPoolBalance = balances?.[tokenInIndex] || BigNumber.from(0);
+  const tokenOutPoolBalance = balances?.[tokenOutIndex] || BigNumber.from(0);
+
   const { data: tokenInSymbol } = useSmartContractReadCall(tokenIn, "symbol");
   const { data: tokenInDecimals } = useSmartContractReadCall(
     tokenIn,
@@ -219,9 +259,11 @@ function useTokenInfo(
     tokenInDecimals,
     tokenInBalanceOf,
     tokenInDisplayBalance,
+    tokenInPoolBalance,
 
     tokenOutSymbol,
     tokenOutDisplayBalance,
+    tokenOutPoolBalance,
   };
 }
 
