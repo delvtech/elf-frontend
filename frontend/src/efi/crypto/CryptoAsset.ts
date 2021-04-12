@@ -2,7 +2,7 @@ import { ERC20 } from "elf-contracts/types/ERC20";
 import { ERC20Permit } from "elf-contracts/types/ERC20Permit";
 
 export enum CryptoAssetType {
-  ETHEREUM = "ethereuem",
+  ETHEREUM = "ethereum",
   ERC20 = "erc20",
   ERC20PERMIT = "erc20permit",
 }

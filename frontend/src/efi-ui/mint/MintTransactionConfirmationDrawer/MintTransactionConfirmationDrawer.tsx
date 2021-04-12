@@ -18,6 +18,8 @@ import { MintTransactionDetails } from "efi-ui/mint/MintTransactionDetails/MintT
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { useMintPreview } from "efi-ui/mint/hooks/useMintPreview";
 import { getUserProxyApprovalMessage } from "efi-ui/mint/userProxyApprovalMessage";
+import { UserProxy } from "elf-contracts/types/UserProxy";
+import { useUserProxy } from "efi-ui/mint/hooks/userProxy";
 
 interface MintTransactionConfirmationDrawerProps {
   chainId: number | undefined;
@@ -49,6 +51,7 @@ export function MintTransactionConfirmationDrawer({
   onClose,
 }: MintTransactionConfirmationDrawerProps): ReactElement {
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
+  const userProxy = useUserProxy();
 
   // base asset calls
   const baseAssetSymbol = useCryptoSymbol(baseAsset);
@@ -86,6 +89,7 @@ export function MintTransactionConfirmationDrawer({
 
   return (
     <TransactionDrawer
+      approvalSpenderAddress={userProxy?.address}
       isOpen={isOpen}
       onClose={onClose}
       account={account}

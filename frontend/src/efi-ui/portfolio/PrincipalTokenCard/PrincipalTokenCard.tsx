@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from "react";
+import React, { ReactElement, ReactNode } from "react";
 
 import {
   AnchorButton,
@@ -61,14 +61,14 @@ const calloutClassName = tw(
   "items-center",
   "justify-center"
 );
-export const PrincipalTokenCard: FC<PrincipalTokenCardProps> = ({
+export function PrincipalTokenCard({
   chainId,
   walletConnectionActive,
   library,
   account,
   connector,
   tranche,
-}) => {
+}: PrincipalTokenCardProps): ReactElement {
   const { isDarkMode } = useDarkMode();
   const baseAsset = useBaseAssetForTranche(tranche);
 
@@ -278,7 +278,7 @@ export const PrincipalTokenCard: FC<PrincipalTokenCardProps> = ({
       </div>
     </Card>
   );
-};
+}
 
 function getTimeLeft(maturationDate: Date | undefined) {
   if (!maturationDate) {

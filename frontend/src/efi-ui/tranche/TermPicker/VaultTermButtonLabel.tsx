@@ -1,26 +1,20 @@
 import { ReactElement } from "react";
 
 import { Intent, Tag } from "@blueprintjs/core";
-import classNames from "classnames";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { getQueryData } from "efi-ui/base/queryResults";
-import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
-import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
-import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
-import { useUnderlyingVaultForTranche } from "efi-ui/tranche/useUnderlyingVaultForTranche";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
-import { CryptoAsset } from "efi/crypto/CryptoAsset";
-import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
-import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
-import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
-import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
+import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
+import { useYearnVault } from "efi-ui/yearn/useYearnVault";
+import { formatPercent } from "efi/base/formatPercent";
+import { Currencies, Money } from "ts-money";
+import { formatMoney } from "efi/money/formatMoney";
 
 interface VaultTermButtonLabelProps {
   tranche: Tranche | undefined;
@@ -35,39 +29,24 @@ export function VaultTermButtonLabel({
   baseAsset,
   tranche,
 }: VaultTermButtonLabelProps): ReactElement {
-  const pool = usePoolForToken(tranche as ERC20Shim, jsonRpcProvider);
-  const baseAssetPoolToken = usePoolPairedToken(pool, tranche as ERC20Shim);
-  const {
-    spotPriceBaseAssetForOneToken: amountOfBaseAssetForOneTranche,
-  } = usePoolTokenPrices(pool, baseAssetPoolToken);
-
-  const baseAssetSymbol = useCryptoSymbol(baseAsset);
-  const inputTokenSymbol = useCryptoSymbol(baseAsset);
-  const roundedTranchePrice = amountOfBaseAssetForOneTranche?.toFixed(4);
-  const principalTokenMarketRateLabel = t`1 ${inputTokenSymbol} Principal Token ≈ ${roundedTranchePrice} ${baseAssetSymbol}`;
-
   const unlockTimestampResult = useSmartContractReadCall(
     tranche,
     "unlockTimestamp"
   );
 
-  const position = useUnderlyingVaultForTranche(tranche);
-  const { data: positionName } = useSmartContractReadCall(position, "name");
+  let vaultSymbol: string | undefined;
+  if (baseAsset?.type === CryptoAssetType.ETHEREUM) {
+    vaultSymbol = "yvWETH";
+  }
+
+  const { data: yearnVault } = useYearnVault(vaultSymbol);
+  const { name: vaultName } = yearnVault || {};
+  const postedAPY = formatPercent(yearnVault?.apy?.recommended || 0);
+  const formattedTVL = formatTVL(yearnVault?.tvl?.value);
 
   const unlockDate = convertEpochSecondsToDate(
     getQueryData(unlockTimestampResult)
   );
-
-  const tranchePrice = usePoolSpotPrice(pool, tranche as ERC20Shim);
-
-  let trancheAPY = "-";
-  if (tranchePrice && unlockDate) {
-    trancheAPY = calculateTrancheAPY(
-      tranchePrice,
-      Date.now(),
-      unlockDate.getTime()
-    ).toFixed(2);
-  }
 
   const formattedDate = unlockDate
     ? formatAbbreviatedDate(unlockDate)
@@ -76,7 +55,6 @@ export function VaultTermButtonLabel({
   return (
     <div className={tw("flex", "items-center", "space-x-4")}>
       <LabeledText
-        large
         icon={
           <div
             className={tw(
@@ -88,18 +66,31 @@ export function VaultTermButtonLabel({
               "space-y-1"
             )}
           >
-            <span className={classNames("h4", tw("text-center"))}>
-              {t`${trancheAPY}% APY`}
+            <span className={tw("text-center", "text-lg")}>
+              {t`${postedAPY}% APY`}
             </span>
-            <Tag intent={Intent.PRIMARY} fill className={tw("text-center")}>
+            <Tag
+              intent={Intent.PRIMARY}
+              large
+              fill
+              className={tw("text-center")}
+            >
               {formattedDate}
             </Tag>
           </div>
         }
-        text={t`${positionName}`}
-        label={principalTokenMarketRateLabel}
-        subLabel={principalTokenMarketRateLabel}
+        large
+        text={t`Yearn ${vaultName}`}
+        label={
+          <span className={tw("text-base")}>{t`TVL: ${formattedTVL}`}</span>
+        }
       />
     </div>
   );
+}
+function formatTVL(tvl: string | undefined) {
+  const nearestCent = Math.round(+(tvl || 0)) * 100;
+  const tvlMoney = new Money(nearestCent, Currencies.USD);
+  const formattedTVL = formatMoney(tvlMoney, { wholeAmounts: true });
+  return formattedTVL;
 }

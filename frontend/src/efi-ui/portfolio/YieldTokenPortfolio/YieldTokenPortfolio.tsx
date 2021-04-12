@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { ReactElement } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
 import { InterestToken } from "elf-contracts/types/InterestToken";
@@ -8,18 +8,18 @@ import { YieldTokenCard } from "efi-ui/portfolio/YieldTokenCard/YieldTokenCard";
 import { NoWalletConnectedNonIdealState } from "efi-ui/wallets/NoWalletConnectedNonIdealState/NoWalletConnectedNonIdealState";
 import { NoYieldTokensInWalletNonIdealState } from "efi-ui/wallets/NoYieldTokensInWalletNonIdealState/NoYieldTokensInWalletNonIdealState";
 
-interface InterestTokenPortfolioProps {
+interface YieldTokenPortfolioProps {
   library: Web3Provider | undefined;
   account: string | null | undefined;
-  interestTokens: InterestToken[];
+  yieldTokens: InterestToken[];
 }
 
-export const InterestTokenPortfolio: FC<InterestTokenPortfolioProps> = ({
+export function YieldTokenPortfolio({
   library,
   account,
-  interestTokens,
-}) => {
-  const hasInterestTokens = interestTokens.length;
+  yieldTokens,
+}: YieldTokenPortfolioProps): ReactElement {
+  const hasInterestTokens = yieldTokens.length;
 
   let nonIdealStateContent = null;
   if (!account) {
@@ -30,13 +30,21 @@ export const InterestTokenPortfolio: FC<InterestTokenPortfolioProps> = ({
   }
 
   return (
-    <div className={tw("flex", "space-x-8", "flex-1", "pl-2")}>
+    <div
+      className={tw(
+        "flex",
+        "flex-1",
+        "flex-wrap",
+        "justify-center",
+        "items-center"
+      )}
+    >
       {nonIdealStateContent ? (
         <div className={tw("flex", "flex-1", "justify-center", "items-center")}>
           {nonIdealStateContent}
         </div>
       ) : (
-        interestTokens.map((interestToken) => [
+        yieldTokens.map((interestToken) => [
           <YieldTokenCard
             key={interestToken.address}
             library={library}
@@ -47,4 +55,4 @@ export const InterestTokenPortfolio: FC<InterestTokenPortfolioProps> = ({
       )}
     </div>
   );
-};
+}

@@ -5,16 +5,15 @@ import { AbstractConnector } from "@web3-react/abstract-connector";
 import { Money } from "ts-money";
 import { t } from "ttag";
 
-import { useInterestTokensWithBalance } from "efi-ui/interestToken/useInterestTokensWithBalance/useInterestTokensWithBalance";
-import { useFiatBalanceAllTranches } from "efi-ui/portfolio/hooks/useTotalPrincipalTokenFiatBalance";
+import { useYieldTokensWithBalance } from "efi-ui/interestToken/useYieldTokensWithBalance/useYieldTokensWithBalance";
+import { useFiatBalanceAllPrincipalTokens } from "efi-ui/portfolio/hooks/useFiatBalanceAllPrincipalTokens";
+import { useFiatBalanceAllYieldTokens } from "efi-ui/portfolio/hooks/useFiatBalanceAllYieldTokens";
 import { useTranchesWithBalance } from "efi-ui/portfolio/hooks/useTranchesWithBalance";
-import { InterestTokenPortfolio } from "efi-ui/portfolio/InterestTokenPortfolio/InterestTokenPortfolio";
 import { LiquidityPositionPortfolio } from "efi-ui/portfolio/LiquidityPositionPortfolio/LiquidityPositionPortfolio";
 import { PortfolioTab } from "efi-ui/portfolio/PortfolioTabs/PortfolioTabs";
 import { PrincipalTokenPortfolio } from "efi-ui/portfolio/PrincipalTokenPortfolio/PrincipalTokenPortfolio";
+import { YieldTokenPortfolio } from "efi-ui/portfolio/YieldTokenPortfolio/YieldTokenPortfolio";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
-
-import { useFiatBalanceAllInterestTokens } from "./useFiatBalanceAllInterestTokens";
 
 export function usePortfolioTabs(
   chainId: number | undefined,
@@ -58,16 +57,16 @@ export function usePortfolioTabs(
       quantity: yieldTokensWithBalance.length,
       totalFiatValue: totalFiatBalanceAllYieldTokens,
       contentRenderer: () => (
-        <InterestTokenPortfolio
+        <YieldTokenPortfolio
           library={library}
           account={account}
-          interestTokens={yieldTokensWithBalance}
+          yieldTokens={yieldTokensWithBalance}
         />
       ),
     },
     {
-      id: "liquidity-positions",
-      name: t`Liquidity positions`,
+      id: "staked-positions",
+      name: t`Staked positions`,
       quantity: 0,
       totalFiatValue: Money.fromDecimal(0.0, currency),
       contentRenderer: () => <LiquidityPositionPortfolio account={account} />,
@@ -81,7 +80,7 @@ function usePrincipalTokenTab(
   provider?: Provider
 ) {
   const tranchesWithBalance = useTranchesWithBalance(account, provider);
-  const totalFiatBalanceAllTranches = useFiatBalanceAllTranches(
+  const totalFiatBalanceAllTranches = useFiatBalanceAllPrincipalTokens(
     library,
     account
   );
@@ -95,11 +94,8 @@ function useYieldTokenTab(
   provider?: Provider
 ) {
   const { currency } = useCurrencyPref();
-  const yieldTokensWithBalance = useInterestTokensWithBalance(
-    account,
-    provider
-  );
-  const totalFiatBalanceAllYieldTokens = useFiatBalanceAllInterestTokens(
+  const yieldTokensWithBalance = useYieldTokensWithBalance(account, provider);
+  const totalFiatBalanceAllYieldTokens = useFiatBalanceAllYieldTokens(
     library,
     account,
     yieldTokensWithBalance,

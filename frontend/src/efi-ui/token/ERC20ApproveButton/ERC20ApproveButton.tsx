@@ -38,11 +38,11 @@ export const ERC20ApproveButton: FC<ERC20ApproveButtonProps> = ({
 }) => {
   const { data: symbol } = useSmartContractReadCall(contract, "symbol");
   const assetSymbol = tokenSymbolFromProps || symbol;
-  const { data: marketAllowance } = useTokenAllowance(contract, owner, spender);
+  const { data: allowance } = useTokenAllowance(contract, owner, spender);
 
   const onApproveClick = useOnApproveClick(contract, signer, owner, spender);
 
-  const hasApproval = !!approvalAmount && marketAllowance?.gte(approvalAmount);
+  const hasApproval = !!approvalAmount && allowance?.gte(approvalAmount);
 
   return (
     <Button
