@@ -67,7 +67,7 @@ export function VaultTermButtonLabel({
             )}
           >
             <span className={tw("text-center", "text-lg")}>
-              {t`${postedAPY}% APY`}
+              {t`${postedAPY} APY`}
             </span>
             <Tag
               intent={Intent.PRIMARY}
