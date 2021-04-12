@@ -9,7 +9,7 @@ import { getQueryData } from "efi-ui/base/queryResults";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useSmartContractsFromFactory } from "efi-ui/contracts/useSmartContractsFromFactory/useSmartContractsFromFactory";
 import { VaultSummary } from "efi-ui/markets/VaultSummary/VaultSummary";
-import { PoolActionsCard } from "efi-ui/markets/MarketActionsCard/PoolActionsCard";
+import { PoolActionsCard } from "efi-ui/pools/PoolActionsCard/PoolActionsCard";
 import { MarketHistory } from "efi-ui/markets/MarketHistory/MarketHistory";
 import { TokenSummary } from "efi-ui/markets/TokenSummary/TokenSummary";
 import { PoolSummary } from "efi-ui/pools/PoolSummary/PoolSummary";
