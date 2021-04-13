@@ -13,7 +13,7 @@ import { Tranche } from "elf-contracts/types/Tranche";
 export function useTranchesWithBalance(
   account: string | null | undefined,
   provider?: Provider
-): Tranche[] {
+): { tranche: Tranche; balanceOf: BigNumber }[] {
   const tranches = useTrancheContracts(provider);
 
   const balanceOfArgs: UseSmartContractReadCallsOptions<
@@ -39,7 +39,7 @@ export function useTranchesWithBalance(
 
   const tranchesWithBalance = loadedData
     .filter(([tranche, balanceOf]) => balanceOf.gt(0))
-    .map(([tranche]) => tranche);
+    .map(([tranche, balanceOf]) => ({ tranche, balanceOf }));
 
   return tranchesWithBalance;
 }
