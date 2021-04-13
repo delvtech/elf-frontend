@@ -1,17 +1,15 @@
 import React, { ReactElement } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
-import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
 import { Signer } from "ethers";
 
 import tw from "efi-tailwindcss-classnames";
 import { getQueryData } from "efi-ui/base/queryResults";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { useSmartContractsFromFactory } from "efi-ui/contracts/useSmartContractsFromFactory/useSmartContractsFromFactory";
-import { VaultSummary } from "efi-ui/markets/VaultSummary/VaultSummary";
-import { PoolActionsCard } from "efi-ui/pools/PoolActionsCard/PoolActionsCard";
 import { MarketHistory } from "efi-ui/markets/MarketHistory/MarketHistory";
 import { TokenSummary } from "efi-ui/markets/TokenSummary/TokenSummary";
+import { VaultSummary } from "efi-ui/markets/VaultSummary/VaultSummary";
+import { PoolActionsCard } from "efi-ui/pools/PoolActionsCard/PoolActionsCard";
 import { PoolSummary } from "efi-ui/pools/PoolSummary/PoolSummary";
 import { useFeeVolumeForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
@@ -21,6 +19,7 @@ import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForP
 import { useVolumeForPool } from "efi-ui/pools/useVolumeForPool/useVolumeForPool";
 import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
+import { getBaseAndYieldTokensForPool } from "efi/pools/getBaseAndYieldtokensForPool";
 import { PoolContract } from "efi/pools/PoolContract";
 
 interface PoolDetailsProps {
@@ -38,10 +37,11 @@ export function PoolDetails({
 }: PoolDetailsProps): ReactElement {
   const poolTokensResult = usePoolTokens(pool);
   const tokenAddresses = getQueryData(poolTokensResult)?.[0] || [];
-  const [tokenIn, tokenOut] = useSmartContractsFromFactory(
-    tokenAddresses,
-    ERC20__factory.connect
-  );
+
+  const {
+    baseAssetContract,
+    yieldAssetContract,
+  } = getBaseAndYieldTokensForPool(tokenAddresses);
 
   const totalLiquidity = useTotalLiquidityForPool(pool);
   const liquidityTrend = useTotalLiquidityTrend(pool);
@@ -82,8 +82,8 @@ export function PoolDetails({
               signer={signer}
               account={account}
               pool={pool}
-              tokenIn={tokenIn}
-              tokenOut={tokenOut}
+              tokenIn={baseAssetContract}
+              tokenOut={yieldAssetContract}
             />
           </div>
         </div>
