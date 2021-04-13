@@ -60,17 +60,10 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     tokenOut: tokenOutFromProps,
   } = props;
 
-  const [isReversed, setReversed] = useState(false);
-  const swapAssets = useCallback(() => {
-    setReversed(!isReversed);
-  }, [isReversed]);
-
-  let tokenIn = tokenInFromProps;
-  let tokenOut = tokenOutFromProps;
-  if (isReversed) {
-    tokenIn = tokenOutFromProps;
-    tokenOut = tokenInFromProps;
-  }
+  const { tokenIn, tokenOut, swapAssets } = useReversableTokens(
+    tokenInFromProps,
+    tokenOutFromProps
+  );
 
   const {
     tokenInSymbol,
@@ -101,28 +94,25 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     tokenOutPoolBalance
   );
 
-  // TODO: make a useTokenApproval or useTokenApproved hook
-  const callArgs: ContractMethodArgs<ERC20, "allowance"> = [
-    account ?? "",
-    pool?.address ?? "",
-  ];
-  const { data: allowance } = useSmartContractReadCall(tokenIn, "allowance", {
-    callArgs,
-  });
-  const approved =
-    amountIn && allowance
-      ? allowance.gte(parseUnits(amountOut || "0", tokenInDecimals))
-      : false;
+  const approved = useTokenApproval(
+    account,
+    pool,
+    tokenIn,
+    amountIn,
+    amountOut,
+    tokenInDecimals
+  );
 
   const submitTransaction = useCallback(() => {}, []);
 
-  const setMaxValue = useCallback(() => {
-    if (tokenInBalanceOf) {
-      setValueIn(formatUnits(tokenInBalanceOf, tokenInDecimals));
-    }
-  }, [tokenInBalanceOf, setValueIn, tokenInDecimals]);
+  const setMaxValue = useSetMaxValue(
+    tokenInBalanceOf,
+    setValueIn,
+    tokenInDecimals
+  );
 
   const submitButtonText = getSubmitButtonText(buttonLabel, approved, signer);
+
   const submitButtonDisabled =
     formDisabled ||
     submitDisabled ||
@@ -187,6 +177,58 @@ export function TradePanel(props: TradePanelProps): ReactElement {
       </Button>
     </div>
   );
+}
+
+function useSetMaxValue(
+  tokenInBalanceOf: BigNumber | undefined,
+  setValueIn: (value: string) => void,
+  tokenInDecimals: number | undefined
+) {
+  return useCallback(() => {
+    if (tokenInBalanceOf) {
+      setValueIn(formatUnits(tokenInBalanceOf, tokenInDecimals));
+    }
+  }, [tokenInBalanceOf, setValueIn, tokenInDecimals]);
+}
+
+function useReversableTokens(
+  tokenInFromProps: ERC20 | undefined,
+  tokenOutFromProps: ERC20 | undefined
+) {
+  const [isReversed, setReversed] = useState(false);
+  const swapAssets = useCallback(() => {
+    setReversed(!isReversed);
+  }, [isReversed]);
+
+  let tokenIn = tokenInFromProps;
+  let tokenOut = tokenOutFromProps;
+  if (isReversed) {
+    tokenIn = tokenOutFromProps;
+    tokenOut = tokenInFromProps;
+  }
+  return { tokenIn, tokenOut, swapAssets };
+}
+
+function useTokenApproval(
+  account: string | null | undefined,
+  pool: PoolContract | undefined,
+  tokenIn: ERC20 | undefined,
+  amountIn: string | undefined,
+  amountOut: string | undefined,
+  tokenInDecimals: number | undefined
+) {
+  const callArgs: ContractMethodArgs<ERC20, "allowance"> = [
+    account ?? "",
+    pool?.address ?? "",
+  ];
+  const { data: allowance } = useSmartContractReadCall(tokenIn, "allowance", {
+    callArgs,
+  });
+  const approved =
+    amountIn && allowance
+      ? allowance.gte(parseUnits(amountOut || "0", tokenInDecimals))
+      : false;
+  return approved;
 }
 
 function getSubmitButtonText(
