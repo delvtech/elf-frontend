@@ -42,6 +42,7 @@ export function PoolDetails({
     tokenAddresses,
     ERC20__factory.connect
   );
+
   const totalLiquidity = useTotalLiquidityForPool(pool);
   const liquidityTrend = useTotalLiquidityTrend(pool);
 

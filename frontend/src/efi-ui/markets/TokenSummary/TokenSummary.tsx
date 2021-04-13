@@ -3,7 +3,6 @@ import React, { ReactElement } from "react";
 import { Card, Classes } from "@blueprintjs/core";
 import classNames from "classnames";
 import { ERC20 } from "elf-contracts/types/ERC20";
-import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
 import { BigNumber } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
 import { Money } from "ts-money";
@@ -13,17 +12,16 @@ import tw from "efi-tailwindcss-classnames";
 import { TrendIndicator } from "efi-ui/base/TrendIndicator/TrendIndicator";
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
+import { useSwaps } from "efi-ui/pools/useSwaps/useSwaps";
+import { useTokenDeltasForPool } from "efi-ui/pools/useTokenDeltasForPool/useTokenDeltasForPool";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
+import { useTokenHistoricalPrice } from "efi-ui/token/hooks/useTokenHistoricalPrice";
 import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
 import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
-import { KNOWN_BASE_ASSETS } from "efi/contracts/contractsJson";
 import { formatMoney } from "efi/money/formatMoney";
 import { PoolContract } from "efi/pools/PoolContract";
-import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
-import { useTokenDeltasForPool } from "efi-ui/pools/useTokenDeltasForPool/useTokenDeltasForPool";
-import { useTokenHistoricalPrice } from "efi-ui/token/hooks/useTokenHistoricalPrice";
-import { useSwaps } from "efi-ui/pools/useSwaps/useSwaps";
+import { getBaseAndYieldTokensForPool } from "efi/pools/getBaseAndYieldtokensForPool";
 
 interface TokenSummaryProps {
   pool: PoolContract | undefined;
@@ -159,14 +157,17 @@ function useTokensSummary(pool: PoolContract | undefined): TokensSummary {
     pool
   );
 
-  const baseAssetIndex: number =
-    tokens?.findIndex((address) => KNOWN_BASE_ASSETS.includes(address)) ?? 0;
-  const baseAssetAddress = tokens?.[baseAssetIndex];
+  const {
+    baseAssetIndex,
+    yieldAssetIndex,
+    baseAssetAddress,
+    yieldAssetAddress,
+    baseAssetContract,
+    yieldAssetContract,
+  } = getBaseAndYieldTokensForPool(tokens);
+
   const baseAssetBalance = balances?.[baseAssetIndex];
 
-  const baseAssetContract = baseAssetAddress
-    ? ERC20__factory.connect(baseAssetAddress, jsonRpcProvider)
-    : undefined;
   const [baseAssetSymbol] = useTokenSymbol(baseAssetContract);
   const [baseAssetPrice] = useTokenPrice(baseAssetContract, currency);
   const [baseAssetPriceYesterday] = useTokenHistoricalPrice(
@@ -177,12 +178,7 @@ function useTokensSummary(pool: PoolContract | undefined): TokensSummary {
 
   const [baseAssetDecimals] = useTokenDecimals(baseAssetContract);
 
-  const yieldAssetIndex = baseAssetIndex === 0 ? 1 : 0;
-  const yieldAssetAddress = tokens?.[yieldAssetIndex];
   const yieldAssetBalance = balances?.[yieldAssetIndex];
-  const yieldAssetContract = yieldAssetAddress
-    ? ERC20__factory.connect(yieldAssetAddress, jsonRpcProvider)
-    : undefined;
   const [yieldAssetSymbol] = useTokenSymbol(yieldAssetContract);
   const [yieldAssetDecimals] = useTokenDecimals(yieldAssetContract);
 
