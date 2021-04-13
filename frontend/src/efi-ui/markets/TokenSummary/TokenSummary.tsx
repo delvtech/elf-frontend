@@ -21,7 +21,7 @@ import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
 import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
 import { formatMoney } from "efi/money/formatMoney";
 import { PoolContract } from "efi/pools/PoolContract";
-import { getBaseAndYieldTokensForPool } from "efi/pools/getBaseAndYieldtokensForPool";
+import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 
 interface TokenSummaryProps {
   pool: PoolContract | undefined;
@@ -160,11 +160,9 @@ function useTokensSummary(pool: PoolContract | undefined): TokensSummary {
   const {
     baseAssetIndex,
     yieldAssetIndex,
-    baseAssetAddress,
-    yieldAssetAddress,
     baseAssetContract,
     yieldAssetContract,
-  } = getBaseAndYieldTokensForPool(tokens);
+  } = parseSortedTokensForPool(tokens);
 
   const baseAssetBalance = balances?.[baseAssetIndex];
 
@@ -209,8 +207,10 @@ function useTokensSummary(pool: PoolContract | undefined): TokensSummary {
   if (swaps?.length && spotPrice && baseAssetPriceYesterday && baseAssetPrice) {
     const swapOneDayAgo = swaps[0];
     const [, tokenIn, , amountIn, amountOut] = swapOneDayAgo;
-    const baseAmount = tokenIn === baseAssetAddress ? amountIn : amountOut;
-    const yieldAmount = tokenIn === yieldAssetAddress ? amountIn : amountOut;
+    const baseAmount =
+      tokenIn === baseAssetContract?.address ? amountIn : amountOut;
+    const yieldAmount =
+      tokenIn === yieldAssetContract?.address ? amountIn : amountOut;
     const oldSpotPrice = Math.abs(
       +formatUnits(yieldAmount, baseAssetDecimals) /
         +formatUnits(baseAmount, baseAssetDecimals)

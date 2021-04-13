@@ -19,7 +19,7 @@ import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForP
 import { useVolumeForPool } from "efi-ui/pools/useVolumeForPool/useVolumeForPool";
 import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
-import { getBaseAndYieldTokensForPool } from "efi/pools/getBaseAndYieldtokensForPool";
+import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { PoolContract } from "efi/pools/PoolContract";
 
 interface PoolDetailsProps {
@@ -38,10 +38,9 @@ export function PoolDetails({
   const poolTokensResult = usePoolTokens(pool);
   const tokenAddresses = getQueryData(poolTokensResult)?.[0] || [];
 
-  const {
-    baseAssetContract,
-    yieldAssetContract,
-  } = getBaseAndYieldTokensForPool(tokenAddresses);
+  const { baseAssetContract, yieldAssetContract } = parseSortedTokensForPool(
+    tokenAddresses
+  );
 
   const totalLiquidity = useTotalLiquidityForPool(pool);
   const liquidityTrend = useTotalLiquidityTrend(pool);

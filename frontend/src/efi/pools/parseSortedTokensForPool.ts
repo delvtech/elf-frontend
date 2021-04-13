@@ -4,19 +4,17 @@ import { KNOWN_BASE_ASSETS } from "efi/contracts/contractsJson";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 import { ERC20 } from "elf-contracts/types/ERC20";
 
-interface BaseAndYieldTokensForPool {
-  baseAssetAddress: string | undefined;
+interface ParsedTokens {
   baseAssetContract: ERC20 | undefined;
   baseAssetIndex: number;
-  yieldAssetAddress: string | undefined;
   yieldAssetContract: ERC20 | undefined;
   yieldAssetIndex: number;
 }
 // tokens and token related values are returned as arrrays that are sorted alphanumerically by token
 // addresses.  this returns the index of the 'base asset' and 'yield asset' values of those arrays.
-export function getBaseAndYieldTokensForPool(
+export function parseSortedTokensForPool(
   tokens: string[] | undefined
-): BaseAndYieldTokensForPool {
+): ParsedTokens {
   const baseAssetIndex: number =
     tokens?.findIndex((address) => KNOWN_BASE_ASSETS.includes(address)) ?? 0;
   const yieldAssetIndex = baseAssetIndex === 0 ? 1 : 0;
@@ -33,10 +31,8 @@ export function getBaseAndYieldTokensForPool(
     : undefined;
 
   return {
-    baseAssetAddress,
     baseAssetContract,
     baseAssetIndex,
-    yieldAssetAddress,
     yieldAssetContract,
     yieldAssetIndex,
   };
