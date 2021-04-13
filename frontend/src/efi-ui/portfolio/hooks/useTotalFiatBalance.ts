@@ -13,39 +13,47 @@ import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useCryptoDecimalsMulti } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimalsMulti";
 import { useCryptoSymbolMulti } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbolMulti";
 import { usePoolForTokenMulti } from "efi-ui/pools/usePoolForToken/usePoolForTokenMulti";
-import { useTranchesWithBalance } from "efi-ui/portfolio/hooks/useTranchesWithBalance";
+import { useTokensWithBalance } from "efi-ui/token/hooks/useTokensWithBalance";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
-import { useBaseAssetsForTranches } from "efi-ui/tranche/useBaseAssetsForTranches";
+import { useBaseAssetForPools } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPoolMulti";
+import { InterestToken } from "elf-contracts/types/InterestToken";
+import { Tranche } from "elf-contracts/types/Tranche";
 
-export function useFiatBalanceAllPrincipalTokens(
+export function useTotalFiatBalance(
   library: Web3Provider | undefined,
-  account: string | null | undefined
+  account: string | null | undefined,
+  trancheOrYieldToken: (Tranche | undefined)[] | (InterestToken | undefined)[]
 ): Money {
   const { currency } = useCurrencyPref();
 
-  // Get the tranches we're going to sum over
-  const tranchesWithBalance = useTranchesWithBalance(account);
-  const tranches = tranchesWithBalance.map(({ tranche }) => tranche);
-  const balanceOfs = tranchesWithBalance.map(({ balanceOf }) => balanceOf);
+  // Get the balances we're going to sum over
+  const tokensWithBalanceResults = useTokensWithBalance(
+    account,
+    trancheOrYieldToken as ERC20Shim[]
+  );
+  const tokensWithBalance = tokensWithBalanceResults.map(({ token }) => token);
+  const balanceOfs = tokensWithBalanceResults.map(({ balanceOf }) => balanceOf);
 
-  // See how much base asset we get if we dump all the user's tranche tokens
-  // into their respective pools
-  const pools = usePoolForTokenMulti((tranches as unknown) as ERC20Shim[]);
-  const baseAssets = useBaseAssetsForTranches(tranches);
+  // See how much base asset we get for each token if we dump into their
+  // respective pools
+  const pools = usePoolForTokenMulti(tokensWithBalance);
+  const baseAssets = useBaseAssetForPools(pools);
   const baseAssetBalancerAddresses = baseAssets.map((baseAsset) =>
     getTokenAddressForBalancer(baseAsset)
   );
-  const trancheAddresses = tranches.map((tranche) => tranche?.address);
+  const trancheOrYieldTokenAddresses = tokensWithBalance.map(
+    (trancheOrYieldToken) => trancheOrYieldToken?.address
+  );
   const queryBatchSwapResults = useQueryBatchSwapMulti(
     SwapKind.GIVEN_IN,
     pools,
-    trancheAddresses,
+    trancheOrYieldTokenAddresses,
     baseAssetBalancerAddresses,
     balanceOfs
   );
   const parsedBatchSwapResults = zip(
-    trancheAddresses,
+    trancheOrYieldTokenAddresses,
     baseAssetBalancerAddresses,
     getQueriesData(queryBatchSwapResults)
   ).map(([tokenInAddress, tokenOutAddress, batchSwaps]) => {
@@ -55,7 +63,7 @@ export function useFiatBalanceAllPrincipalTokens(
       batchSwaps
     );
   });
-  const amountOutForTrancheBalance = parsedBatchSwapResults.map(
+  const amountOutForTrancheOrYieldTokenBalance = parsedBatchSwapResults.map(
     ({ tokenOut }) => tokenOut
   );
 
@@ -67,25 +75,22 @@ export function useFiatBalanceAllPrincipalTokens(
   const baseAssetDecimals = useCryptoDecimalsMulti(baseAssets);
   const priceResults = useCoinGeckoPrices(coinGeckoIds, currency);
   const baseAssetCoinGeckoPrices = getQueriesData(priceResults);
-  const trancheFiatBalances = zip(
-    amountOutForTrancheBalance,
+  const fiatBalances = zip(
+    amountOutForTrancheOrYieldTokenBalance,
     baseAssetCoinGeckoPrices,
     baseAssetDecimals
   ).map(([valueInBaseAsset, baseAssetCoinGeckoPrice, decimals]) => {
     if (baseAssetCoinGeckoPrice && valueInBaseAsset) {
-      const trancheFiatBalance = baseAssetCoinGeckoPrice.multiply(
+      const fiatBalance = baseAssetCoinGeckoPrice.multiply(
         +formatUnits(valueInBaseAsset.abs(), decimals)
       );
-      return trancheFiatBalance;
+      return fiatBalance;
     }
     return undefined;
   });
 
   // Add up all the fiat balances together to produce the final sum
-  const totalFiatBalance = calculateTotalFiatBalance(
-    trancheFiatBalances,
-    currency
-  );
+  const totalFiatBalance = calculateTotalFiatBalance(fiatBalances, currency);
 
   return totalFiatBalance ?? new Money(0, currency);
 }
