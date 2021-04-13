@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { ReactElement } from "react";
 
 import { Card, Classes } from "@blueprintjs/core";
 import classNames from "classnames";
@@ -29,7 +29,7 @@ interface TokenSummaryProps {
   pool: PoolContract | undefined;
 }
 
-export const TokenSummary: FC<TokenSummaryProps> = ({ pool }) => {
+export function TokenSummary({ pool }: TokenSummaryProps): ReactElement {
   const {
     baseAssetSymbol,
     baseAssetBalance,
@@ -134,7 +134,7 @@ export const TokenSummary: FC<TokenSummaryProps> = ({ pool }) => {
       </div>
     </div>
   );
-};
+}
 
 interface TokensSummary {
   baseAssetContract: ERC20 | undefined;

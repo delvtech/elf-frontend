@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { ReactElement } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
 import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
@@ -30,12 +30,12 @@ interface PoolDetailsProps {
   pool: PoolContract | undefined;
 }
 
-export const PoolDetails: FC<PoolDetailsProps> = ({
+export function PoolDetails({
   library,
   signer,
   account,
   pool,
-}) => {
+}: PoolDetailsProps): ReactElement {
   const poolTokensResult = usePoolTokens(pool);
   const tokenAddresses = getQueryData(poolTokensResult)?.[0] || [];
   const [tokenIn, tokenOut] = useSmartContractsFromFactory(
@@ -125,4 +125,4 @@ export const PoolDetails: FC<PoolDetailsProps> = ({
       </div>
     </div>
   );
-};
+}

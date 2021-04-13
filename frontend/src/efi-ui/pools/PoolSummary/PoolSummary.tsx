@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { ReactElement } from "react";
 
 import { Card, Classes } from "@blueprintjs/core";
 import classNames from "classnames";
@@ -18,7 +18,7 @@ interface PoolSummaryProps {
   feeVolumeTrend: number | undefined;
 }
 
-export const PoolSummary: FC<PoolSummaryProps> = (props) => {
+export function PoolSummary(props: PoolSummaryProps): ReactElement {
   const {
     liquidity,
     liquidityTrend,
@@ -78,4 +78,4 @@ export const PoolSummary: FC<PoolSummaryProps> = (props) => {
       </Card>
     </div>
   );
-};
+}
