@@ -55,30 +55,8 @@ export function PoolDetails({
   const startDate = (startDateInUnixSeconds || 0) * 1000;
   const maturityDate = (maturityDateInUnixSeconds?.toNumber() || 0) * 1000;
 
-  const volume24hr = useVolumeForPool(pool, ONE_DAY_IN_SECONDS);
-  // the volume from 48hrs ago to 24hrs ago
-  const volumePrevious24hr = useVolumeForPool(
-    pool,
-    ONE_DAY_IN_SECONDS * 2,
-    ONE_DAY_IN_SECONDS
-  );
-
-  const volumeTrend = getTrend(
-    volumePrevious24hr?.toDecimal(),
-    volume24hr?.toDecimal()
-  );
-
-  const feeVolume24hr = useFeeVolumeForPool(pool, ONE_DAY_IN_SECONDS);
-  const feeVolumePrevious24hr = useFeeVolumeForPool(
-    pool,
-    ONE_DAY_IN_SECONDS * 2,
-    ONE_DAY_IN_SECONDS
-  );
-
-  const feeVolumeTrend = getTrend(
-    feeVolumePrevious24hr?.toDecimal(),
-    feeVolume24hr?.toDecimal()
-  );
+  const { volume24hr, volumeTrend } = useVolumeTrend(pool);
+  const { feeVolume24hr, feeVolumeTrend } = useFeeVolumeTrend(pool);
 
   return (
     <div className={tw("flex", "mb-8", "space-x-4", "w-full", "items-stretch")}>
@@ -111,6 +89,37 @@ export function PoolDetails({
       </div>
     </div>
   );
+}
+
+function useFeeVolumeTrend(pool: PoolContract | undefined) {
+  const feeVolume24hr = useFeeVolumeForPool(pool, ONE_DAY_IN_SECONDS);
+  const feeVolumePrevious24hr = useFeeVolumeForPool(
+    pool,
+    ONE_DAY_IN_SECONDS * 2,
+    ONE_DAY_IN_SECONDS
+  );
+
+  const feeVolumeTrend = getTrend(
+    feeVolumePrevious24hr?.toDecimal(),
+    feeVolume24hr?.toDecimal()
+  );
+  return { feeVolume24hr, feeVolumeTrend };
+}
+
+function useVolumeTrend(pool: PoolContract | undefined) {
+  const volume24hr = useVolumeForPool(pool, ONE_DAY_IN_SECONDS);
+  // the volume from 48hrs ago to 24hrs ago
+  const volumePrevious24hr = useVolumeForPool(
+    pool,
+    ONE_DAY_IN_SECONDS * 2,
+    ONE_DAY_IN_SECONDS
+  );
+
+  const volumeTrend = getTrend(
+    volumePrevious24hr?.toDecimal(),
+    volume24hr?.toDecimal()
+  );
+  return { volume24hr, volumeTrend };
 }
 
 function getTrend(
