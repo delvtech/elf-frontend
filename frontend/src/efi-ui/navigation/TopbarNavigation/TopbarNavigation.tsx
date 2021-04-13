@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import { FC, useState } from "react";
 
 import {
   Button,
@@ -19,7 +19,7 @@ import logo from "efi-static-assets/logos/svg/logo--light.svg";
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { Navigation } from "efi-ui/navigation/navigation";
-import { PrefsMenuButton } from "efi-ui/prefs/PrefsMenuButton/PrefsMenuButton";
+import { DarkModeSwitch } from "efi-ui/prefs/DarkModeSwitch/DarkModeSwitch";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
 import { WalletJazzicon } from "efi-ui/wallets/WalletJazzicon/WalletJazzicon";
@@ -128,7 +128,7 @@ export const TopbarNavigation: FC<TopbarNavigationProps> = ({
           </Button>
         </NavbarGroup>
         <NavbarGroup>
-          <PrefsMenuButton />
+          <DarkModeSwitch />
         </NavbarGroup>
       </Navbar>
     </div>
