@@ -1,4 +1,4 @@
-import React, { FC, ReactElement } from "react";
+import React, { ReactElement } from "react";
 
 import { Card, Classes } from "@blueprintjs/core";
 import classNames from "classnames";

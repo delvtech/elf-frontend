@@ -13,13 +13,12 @@ import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadC
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
-import { useMintTransaction } from "efi-ui/mint/hooks/useMintTransaction";
-import { MintTransactionDetails } from "efi-ui/mint/MintTransactionDetails/MintTransactionDetails";
-import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { useMintPreview } from "efi-ui/mint/hooks/useMintPreview";
-import { getUserProxyApprovalMessage } from "efi-ui/mint/userProxyApprovalMessage";
-import { UserProxy } from "elf-contracts/types/UserProxy";
+import { useMintTransaction } from "efi-ui/mint/hooks/useMintTransaction";
 import { useUserProxy } from "efi-ui/mint/hooks/userProxy";
+import { MintTransactionDetails } from "efi-ui/mint/MintTransactionDetails/MintTransactionDetails";
+import { getUserProxyApprovalMessage } from "efi-ui/mint/userProxyApprovalMessage";
+import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 
 interface MintTransactionConfirmationDrawerProps {
   chainId: number | undefined;
