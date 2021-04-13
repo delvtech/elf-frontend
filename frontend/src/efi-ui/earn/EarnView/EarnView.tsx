@@ -12,6 +12,7 @@ import { useTranchesByBaseAsset } from "efi-ui/earn/hooks/useTranchesByBaseAsset
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { useBaseAssetsForTranches } from "efi-ui/tranche/useBaseAssetsForTranches";
 import { useOpenTranches } from "efi-ui/tranche/useOpenTranches";
+import { Helmet } from "react-helmet";
 
 interface EarnViewProps extends RouteComponentProps {}
 
@@ -35,50 +36,55 @@ export const EarnView: FC<EarnViewProps> = () => {
   const uniqueBaseAssets = uniqBy(allBaseAssets, (v) => v?.id);
 
   return (
-    <div
-      data-testid="earn-view"
-      className={tw(
-        "flex",
-        "flex-col",
-        "p-12",
-        "h-full",
-        "space-y-12",
-        "overflow-scroll"
-      )}
-    >
-      {/* Main content */}
+    <Fragment>
+      <Helmet>
+        <title>{t`Earn fixed yield`}</title>
+      </Helmet>
       <div
+        data-testid="earn-view"
         className={tw(
           "flex",
           "flex-col",
-          "flex-1",
+          "p-12",
+          "h-full",
           "space-y-12",
-          "pt-12",
-          "items-center",
-          "justify-center"
+          "overflow-scroll"
         )}
       >
+        {/* Main content */}
         <div
-          className={tw("flex", "flex-col", "space-y-12", "text-center")}
-          style={{ width: 672 }}
+          className={tw(
+            "flex",
+            "flex-col",
+            "flex-1",
+            "space-y-12",
+            "pt-12",
+            "items-center",
+            "justify-center"
+          )}
         >
-          {/* page title */}
-          <ViewTitle
-            title={t`Earn fixed yield by buying at a discount.`}
-            subtitle={<EarnViewSubtitle />}
-          />
-          <EarnCard
-            library={library}
-            account={account}
-            walletConnectionActive={active}
-            chainId={chainId}
-            connector={connector}
-            baseAssets={uniqueBaseAssets}
-            tranchesByBaseAsset={tranchesByBaseAsset}
-          />
+          <div
+            className={tw("flex", "flex-col", "space-y-12", "text-center")}
+            style={{ width: 672 }}
+          >
+            {/* page title */}
+            <ViewTitle
+              title={t`Earn fixed yield by buying at a discount.`}
+              subtitle={<EarnViewSubtitle />}
+            />
+            <EarnCard
+              library={library}
+              account={account}
+              walletConnectionActive={active}
+              chainId={chainId}
+              connector={connector}
+              baseAssets={uniqueBaseAssets}
+              tranchesByBaseAsset={tranchesByBaseAsset}
+            />
+          </div>
         </div>
       </div>
-    </div>
+    </Fragment>
   );
 };
 

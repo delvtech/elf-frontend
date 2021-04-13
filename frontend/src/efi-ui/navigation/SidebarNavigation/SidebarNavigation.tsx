@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import React, { FC, useState } from "react";
 
 import { Classes, Icon, Tab, Tabs } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
@@ -9,7 +9,7 @@ import logoDark from "efi-static-assets/logos/svg/logo-vertical--dark.svg";
 import logo from "efi-static-assets/logos/svg/logo-vertical--light.svg";
 import tw from "efi-tailwindcss-classnames";
 import { Navigation } from "efi-ui/navigation/navigation";
-import { PrefsMenuButton } from "efi-ui/prefs/PrefsMenuButton/PrefsMenuButton";
+import { DarkModeSwitch } from "efi-ui/prefs/DarkModeSwitch/DarkModeSwitch";
 
 import { ConnectWalletButton } from "./ConnectWalletButton";
 import styles from "./SidebarNavigation.module.css";
@@ -134,7 +134,7 @@ export const SidebarNavigation: FC<SidebarNavigationProps> = ({
             "space-y-4"
           )}
         >
-          <PrefsMenuButton />
+          <DarkModeSwitch />
         </div>
       </div>
     </div>
