@@ -1,12 +1,12 @@
-import React, { FC, Fragment } from "react";
+import React, { FC } from "react";
 
 import { Callout } from "@blueprintjs/core";
 import { BigNumber } from "ethers";
+import { formatUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { formatUnits } from "ethers/lib/utils";
 
 interface YieldTokenPreviewProps {
   /**

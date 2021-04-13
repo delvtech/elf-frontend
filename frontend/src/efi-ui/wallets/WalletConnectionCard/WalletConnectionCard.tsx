@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useState } from "react";
+import React, { FC, ReactElement, useCallback, useState } from "react";
 
 import { Card, Classes, Colors, Icon, Tag } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
@@ -24,13 +24,13 @@ interface WalletConnectionCardProps {
   className?: string;
 }
 
-export const WalletConnectionCard: FC<WalletConnectionCardProps> = ({
+export function WalletConnectionCard({
   chainId,
   account,
   active,
   connectorName,
   className,
-}) => {
+}: WalletConnectionCardProps): ReactElement {
   const { isDarkMode } = useDarkMode();
   const [isWalletDialogOpen, setWalletDialogOpen] = useState(false);
   const openWalletDialog = useCallback(() => setWalletDialogOpen(true), []);
@@ -73,14 +73,13 @@ export const WalletConnectionCard: FC<WalletConnectionCardProps> = ({
       </Card>
     </Popover2>
   );
-};
+}
 
 interface ConnectToBeginProps {
   isDarkMode: boolean;
   statusColor: string;
   connectorMessage: string;
 }
-
 const ConnectToBegin: FC<ConnectToBeginProps> = ({
   isDarkMode,
   statusColor,
@@ -115,7 +114,6 @@ interface WalletSummaryProps {
   connectionStatusColor: string;
   connectorMessage: string;
 }
-
 const WalletConnectionSummary: FC<WalletSummaryProps> = ({
   account,
   active,

@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { ReactElement } from "react";
 
 import { Button, Card, Colors, Intent } from "@blueprintjs/core";
 import { t } from "ttag";
@@ -16,9 +16,9 @@ const timeData = [
   { timeMs: Date.parse("2021-01-18"), value: 1257.0474852058 },
 ];
 
-interface MarketHistoryProps {}
+// interface MarketHistoryProps {}
 
-export const MarketHistory: FC<MarketHistoryProps> = () => {
+export function MarketHistory(): ReactElement {
   return (
     <div className={tw("flex", "flex-1", "h-500")}>
       <div className={tw("flex", "flex-col", "w-full")}>
@@ -77,4 +77,4 @@ export const MarketHistory: FC<MarketHistoryProps> = () => {
       </div>
     </div>
   );
-};
+}

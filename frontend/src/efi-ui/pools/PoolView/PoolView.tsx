@@ -1,4 +1,4 @@
-import React, { FC, Fragment } from "react";
+import React, { Fragment, ReactElement } from "react";
 import { Helmet } from "react-helmet";
 
 import { Classes, H2 } from "@blueprintjs/core";
@@ -21,7 +21,7 @@ interface PoolViewProps extends RouteComponentProps {
   poolAddress?: string;
 }
 
-export const PoolView: FC<PoolViewProps> = ({ poolAddress }) => {
+export function PoolView({ poolAddress }: PoolViewProps): ReactElement {
   const {
     active,
     account,
@@ -87,4 +87,4 @@ export const PoolView: FC<PoolViewProps> = ({ poolAddress }) => {
       </div>
     </Fragment>
   );
-};
+}

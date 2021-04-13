@@ -61,7 +61,6 @@ export async function fetchCoinGeckoHistoricalPrice(
   daysAgo = 1
 ): Promise<Money> {
   const dateString = format(subDays(new Date(), daysAgo), "dd-MM-yyyy");
-  console.log("dateString", dateString);
   const currencyCode = currency.code.toLowerCase();
   const result = await fetch(
     `https://api.coingecko.com/api/v3/coins/${coinGeckoId}/history?date=${dateString}`

@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { ReactElement } from "react";
 
 import { Card, Classes } from "@blueprintjs/core";
 import classNames from "classnames";
@@ -15,7 +15,7 @@ interface VaultSummaryProps {
 }
 
 // TODO: add loading states
-export const VaultSummary: FC<VaultSummaryProps> = (props) => {
+export function VaultSummary(props: VaultSummaryProps): ReactElement {
   const { maturityDate = 0, startDate = 0 } = props;
   const maturityDateString = new Date(maturityDate).toLocaleDateString();
   // hardcode for now, will make this dynamic after updating testnet
@@ -66,4 +66,4 @@ export const VaultSummary: FC<VaultSummaryProps> = (props) => {
       </Card>
     </div>
   );
-};
+}
