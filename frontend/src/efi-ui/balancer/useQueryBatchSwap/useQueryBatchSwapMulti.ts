@@ -38,8 +38,10 @@ export function useQueryBatchSwapMulti(
         amount,
         tokenOutAddress
       );
+      // must check undefined as `kind` is an enum of 0 or 1
+      const enabled = !!callArgs?.every((v) => v !== undefined);
       return {
-        enabled: !!callArgs?.every((v) => !!v),
+        enabled,
         callArgs,
       };
     }
