@@ -63,17 +63,10 @@ export function PoolDetails({
     ONE_DAY_IN_SECONDS
   );
 
-  const newVolume = volume24hr?.toDecimal() ?? 0;
-  const oldVolume = volumePrevious24hr?.toDecimal();
-
-  let volumeTrend;
-  if (oldVolume === undefined) {
-    volumeTrend = undefined;
-  } else if (oldVolume === 0 || newVolume === 0) {
-    volumeTrend = 0;
-  } else {
-    volumeTrend = (newVolume - oldVolume) / oldVolume;
-  }
+  const volumeTrend = getTrend(
+    volumePrevious24hr?.toDecimal(),
+    volume24hr?.toDecimal()
+  );
 
   const feeVolume24hr = useFeeVolumeForPool(pool, ONE_DAY_IN_SECONDS);
   const feeVolumePrevious24hr = useFeeVolumeForPool(
@@ -82,17 +75,10 @@ export function PoolDetails({
     ONE_DAY_IN_SECONDS
   );
 
-  const newFeeVolume = feeVolume24hr?.toDecimal() ?? 0;
-  const oldFeeVolume = feeVolumePrevious24hr?.toDecimal() ?? 0;
-
-  let feeVolumeTrend;
-  if (oldFeeVolume === undefined) {
-    feeVolumeTrend = undefined;
-  } else if (oldFeeVolume === 0 || newFeeVolume === 0) {
-    feeVolumeTrend = 0;
-  } else {
-    feeVolumeTrend = (newFeeVolume - oldFeeVolume) / oldFeeVolume;
-  }
+  const feeVolumeTrend = getTrend(
+    feeVolumePrevious24hr?.toDecimal(),
+    feeVolume24hr?.toDecimal()
+  );
 
   return (
     <div className={tw("flex", "mb-8", "space-x-4", "w-full", "items-stretch")}>
@@ -125,4 +111,21 @@ export function PoolDetails({
       </div>
     </div>
   );
+}
+
+function getTrend(
+  oldValue: number | undefined,
+  newValue: number | undefined
+): number | undefined {
+  if (oldValue === undefined || newValue === undefined) {
+    return undefined;
+  }
+
+  if (oldValue === 0 || newValue === 0) {
+    return 0;
+  }
+
+  const trend = (newValue - oldValue) / oldValue;
+
+  return trend;
 }
