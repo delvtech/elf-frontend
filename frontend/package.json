@@ -147,7 +147,7 @@
     "@testing-library/react-hooks": "^5.1.1",
     "@typechain/ethers-v5": "^6.0.5",
     "@types/d3-time-format": "^3.0.0",
-    "dependency-cruiser": "^9.25.0",
+    "dependency-cruiser": "^9.25.1",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-jest": "^24.3.5",
     "eslint-plugin-prettier": "^3.3.1",
