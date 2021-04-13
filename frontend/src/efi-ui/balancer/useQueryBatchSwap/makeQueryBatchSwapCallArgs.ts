@@ -24,7 +24,7 @@ export function makeQueryBatchSwapCallArgs(
   amount: BigNumber | undefined,
   tokenOutAddress: string | undefined
 ): StaticContractMethodArgs<Vault, "queryBatchSwap"> | undefined {
-  if (!poolId || !amount || !tokenInAddress || !tokenOutAddress) {
+  if (!poolId || !amount?.gt(0) || !tokenInAddress || !tokenOutAddress) {
     return undefined;
   }
 
