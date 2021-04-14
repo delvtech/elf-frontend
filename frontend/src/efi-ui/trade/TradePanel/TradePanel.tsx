@@ -16,16 +16,16 @@ import {
 } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { CryptoAssetWithMetadata } from "efi-ui/crypto/CryptoAssetWithMetadata";
-import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
+import { useCryptoAssetWithMetadata } from "efi-ui/crypto/hooks/useCryptoAssetWithMetadata/useCryptAssetWithMetadata";
+import { useCryptoBalance } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { TradeInput } from "efi-ui/trade/TradeInput/TradeInput";
+import { formatBalance } from "efi/base/formatBalance";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { PoolContract } from "efi/pools/PoolContract";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
 
 import { useTokenPoolBalance } from "../../pools/useTokenPoolBalance/useTokenPoolBalance";
-import { formatBalance } from "efi/base/formatBalance";
-import { useCryptoAssetWithMetadata } from "efi-ui/crypto/hooks/useCryptoAssetWithMetadata/useCryptAssetWithMetadata";
 
 interface TradePanelProps {
   library: Web3Provider | undefined;
@@ -60,6 +60,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     buttonIntent = Intent.PRIMARY,
     pool,
     account,
+    library,
     tokenIn: tokenInFromProps,
     tokenOut: tokenOutFromProps,
   } = props;
@@ -75,13 +76,13 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     balanceOf: tokenInBalanceOf,
     displayBalance: tokenInDisplayBalance,
     poolBalance: tokenInPoolBalance,
-  } = useTokenInfoForTradeInput(pool, tokenIn, account);
+  } = useTokenInfoForTradeInput(pool, tokenIn, account, library);
 
   const {
     symbol: tokenOutSymbol,
     decimals: tokenOutDisplayBalance,
     poolBalance: tokenOutPoolBalance,
-  } = useTokenInfoForTradeInput(pool, tokenIn, account);
+  } = useTokenInfoForTradeInput(pool, tokenIn, account, library);
 
   const {
     amountIn,
@@ -257,12 +258,12 @@ function getSubmitButtonText(
 function useTokenInfoForTradeInput(
   pool: PoolContract | undefined,
   tokenContract: ERC20 | undefined,
-  account: string | null | undefined
+  account: string | null | undefined,
+  library: Web3Provider | undefined
 ) {
-  const { symbol, decimals, balanceOf } = useCryptoAssetWithMetadata(
-    tokenContract?.address,
-    account
-  ) as CryptoAssetWithMetadata;
+  const asset = useCryptoAssetWithMetadata(tokenContract?.address, account);
+  const { decimals, symbol } = asset as CryptoAssetWithMetadata;
+  const balanceOf = useCryptoBalance(library, account, asset);
   const poolBalance = useTokenPoolBalance(pool, tokenContract);
   const displayBalance = formatBalance(balanceOf, decimals);
 
