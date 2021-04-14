@@ -1,7 +1,7 @@
-import { FC } from "react";
+import { ReactElement } from "react";
 
 import { Link } from "@reach/router";
-import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
+import { WeightedPool } from "elf-contracts/types/WeightedPool";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -9,19 +9,24 @@ import { LabeledProgressBar } from "efi-ui/base/LabeledProgressBar/LabeledProgre
 import { getQueryData } from "efi-ui/base/queryResults";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
+import { useInterestTokenForPool } from "efi-ui/pools/useInterestTokenForPool/useInterestTokenForPool";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
-import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForPool";
+import { useTotalLiquidityForPool } from "efi-ui/pools/useTotalLiquidityForPool/useTotalLiquidityForPool";
 import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
+import { useTrancheForInterestToken } from "efi-ui/tranche/useTrancheForInterestToken";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { getTimeLeft2 } from "efi/base/time";
-import { useTotalLiquidityForPool } from "../useTotalLiquidityForPool/useTotalLiquidityForPool";
 
-interface TranchePoolTableRowProps {
-  pool: ConvergentCurvePool | undefined;
+interface InterestTokenPoolCardProps {
+  pool: WeightedPool | undefined;
 }
 
-export const TranchePoolTableRow: FC<TranchePoolTableRowProps> = ({ pool }) => {
-  const tranche = useTrancheForPool(pool);
+export function InterestTokenPoolCard({
+  pool,
+}: InterestTokenPoolCardProps): ReactElement | null {
+  const interestToken = useInterestTokenForPool(pool);
+  const tranche = useTrancheForInterestToken(interestToken);
+
   const liquidity = useTotalLiquidityForPool(pool);
   const trancheCreatedAtResult = useTrancheCreatedAt(tranche);
   const poolNameResult = useSmartContractReadCall(pool, "name");
@@ -76,4 +81,4 @@ export const TranchePoolTableRow: FC<TranchePoolTableRowProps> = ({ pool }) => {
       </td>
     </tr>
   );
-};
+}

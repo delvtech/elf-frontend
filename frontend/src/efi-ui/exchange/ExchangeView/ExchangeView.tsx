@@ -1,6 +1,6 @@
-import React, { FC } from "react";
+import React, { Fragment, ReactElement } from "react";
+import { Helmet } from "react-helmet";
 
-import { Card } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { RouteComponentProps } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
@@ -10,12 +10,10 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { PoolsTable } from "efi-ui/pools/PoolsTable/PoolsTable";
-import { Fragment } from "react";
-import { Helmet } from "react-helmet";
 
 interface ExchangeViewProps extends RouteComponentProps {}
 
-export const ExchangeView: FC<ExchangeViewProps> = () => {
+export function ExchangeView(props: ExchangeViewProps): ReactElement {
   const { library, account } = useWeb3React<Web3Provider>();
 
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
@@ -44,12 +42,10 @@ export const ExchangeView: FC<ExchangeViewProps> = () => {
           />
 
           <div className={tw("flex", "flex-1")}>
-            <Card className={tw("p-10", "flex", "flex-1")}>
-              <PoolsTable signerOrProvider={signer} className={tw("w-full")} />
-            </Card>
+            <PoolsTable signerOrProvider={signer} className={tw("w-full")} />
           </div>
         </div>
       </div>
     </Fragment>
   );
-};
+}
