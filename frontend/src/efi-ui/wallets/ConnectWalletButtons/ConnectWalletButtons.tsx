@@ -1,4 +1,4 @@
-import { CSSProperties, ReactElement, useCallback } from "react";
+import React, { CSSProperties, ReactElement, useCallback } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
@@ -6,25 +6,23 @@ import { useWeb3React } from "@web3-react/core";
 import { ReactComponent as MetamaskIcon } from "efi-static-assets/logos/metamask.svg";
 import { ReactComponent as WalletConnectIcon } from "efi-static-assets/logos/walletConnectIcon.svg";
 import tw from "efi-tailwindcss-classnames";
-import { ConnectWalletButton } from "efi-ui/wallets/ConnectWalletButton/ConnectWalletButton";
 import {
   injectedConnector,
   walletConnectConnector,
 } from "efi/wallets/connectors";
+import { Button, ButtonGroup } from "@blueprintjs/core";
 
 const iconStyle: CSSProperties = {
-  height: 24,
-  width: 24,
+  height: 48,
+  width: 48,
 };
 
 interface ConnectWalletButtonsProps {
-  fill?: boolean;
   vertical?: boolean;
   onClick?: () => void;
 }
 
 export function ConnectWalletButtons({
-  fill,
   vertical,
   onClick,
 }: ConnectWalletButtonsProps): ReactElement {
@@ -59,18 +57,24 @@ export function ConnectWalletButtons({
         "justify-center"
       )}
     >
-      <ConnectWalletButton
-        fill={fill}
-        icon={<MetamaskIcon style={iconStyle} />}
-        name="Metamask"
-        onClick={connectToMetaMask}
-      />
-      <ConnectWalletButton
-        fill={fill}
-        icon={<WalletConnectIcon style={iconStyle} />}
-        name="WalletConnect"
-        onClick={connectToWalletConnect}
-      />
+      <ButtonGroup fill>
+        <Button
+          minimal
+          className={tw("p-12", "w-1/2", "flex-col", "space-y-3")}
+          onClick={connectToMetaMask}
+          icon={<MetamaskIcon style={iconStyle} />}
+        >
+          <span className={tw("text-base")}>MetaMask</span>
+        </Button>
+        <Button
+          minimal
+          className={tw("p-12", "w-1/2", "flex-col", "space-y-3")}
+          onClick={connectToWalletConnect}
+          icon={<WalletConnectIcon style={iconStyle} />}
+        >
+          <span className={tw("text-base")}>WalletConnect</span>
+        </Button>
+      </ButtonGroup>
     </div>
   );
 }

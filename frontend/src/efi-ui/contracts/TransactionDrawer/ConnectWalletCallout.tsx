@@ -5,12 +5,15 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { ConnectWalletButtons } from "efi-ui/wallets/ConnectWalletButtons/ConnectWalletButtons";
+import classNames from "classnames";
 
 export const ConnectWalletCallout: FC<unknown> = () => {
   return (
-    <Callout className={tw("p-8")}>
-      <div className={tw("flex", "flex-col", "space-y-4", "items-center")}>
-        <span className="h4">{t`Connect your wallet to continue`}</span>
+    <Callout className={tw("p-0")}>
+      <div className={tw("flex", "flex-col", "items-center")}>
+        <span
+          className={classNames("h4", tw("py-6"))}
+        >{t`Connect your wallet to continue`}</span>
         <ConnectWalletButtons />
       </div>
     </Callout>
