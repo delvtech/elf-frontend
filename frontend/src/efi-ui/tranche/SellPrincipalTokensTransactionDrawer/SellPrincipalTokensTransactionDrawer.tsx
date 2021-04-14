@@ -10,7 +10,7 @@ import { t } from "ttag";
 import { useBalancerTransactionInputs } from "efi-ui/balancer/useBalancerTransactionInputs";
 import { useBatchSwapGivenIn } from "efi-ui/balancer/useBatchSwapGivenIn/useBatchSwapGivenIn";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
-import { TransactionDetailsForm } from "efi-ui/contracts/TransactionDetailsPreview/TransactionDetailsForm";
+import { SwapDetailsForm } from "efi-ui/swaps/TransactionDetailsPreview/SwapDetailsForm";
 import { TransactionDrawer } from "efi-ui/contracts/TransactionDrawer/TransactionDrawer";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
@@ -146,7 +146,7 @@ export const SellPrincipalTokensTransactionDrawer: FC<SellPrincipalTransactionDr
       library={library}
       onConfirmTransaction={onConfirmSellPrincipalTokens}
       transactionDetails={
-        <TransactionDetailsForm
+        <SwapDetailsForm
           amountIn={safeAmountIn}
           amountOut={amountOutFormatted}
           onAmountInChange={onAmountInChange}
@@ -163,7 +163,7 @@ export const SellPrincipalTokensTransactionDrawer: FC<SellPrincipalTransactionDr
             unlockTimeStamp={unlockTimeStampDate}
             priceSlippageAndTradingFee={priceSlippageAndTradingFee}
           />
-        </TransactionDetailsForm>
+        </SwapDetailsForm>
       }
     />
   );

@@ -7,7 +7,7 @@ import { Signer } from "ethers";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
-import { TransactionDetailsForm } from "efi-ui/contracts/TransactionDetailsPreview/TransactionDetailsForm";
+import { SwapDetailsForm } from "efi-ui/swaps/TransactionDetailsPreview/SwapDetailsForm";
 import { TransactionDrawer } from "efi-ui/contracts/TransactionDrawer/TransactionDrawer";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
@@ -102,7 +102,7 @@ export function MintTransactionConfirmationDrawer({
       library={library}
       onConfirmTransaction={onMintTransaction}
       transactionDetails={
-        <TransactionDetailsForm
+        <SwapDetailsForm
           amountIn={amountInAsNumber.toFixed(4)}
           heading={t`Mint Preview`}
           assetInIcon={AssetIcon}
@@ -117,7 +117,7 @@ export function MintTransactionConfirmationDrawer({
             numPrincipalTokens={numPrincipalTokens}
             numYieldTokens={amountInAsNumber}
           />
-        </TransactionDetailsForm>
+        </SwapDetailsForm>
       }
     />
   );

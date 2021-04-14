@@ -11,7 +11,7 @@ import { ANY_NUMBER_REGEX } from "efi/base/numbers";
 
 import styles from "./styles.module.css";
 
-interface TransactionDetailsFormProps {
+interface SwapDetailsFormProps {
   assetInIcon: SvgIcon | null;
   assetInSymbol: string | undefined;
   assetOutSymbol: string | undefined;
@@ -34,7 +34,7 @@ interface TransactionDetailsFormProps {
   assetOutIcon: SvgIcon | null;
   children?: ReactElement;
 }
-export function TransactionDetailsForm({
+export function SwapDetailsForm({
   assetInIcon: AssetInIcon,
   assetOutIcon: AssetOutIcon,
   amountIn,
@@ -47,7 +47,7 @@ export function TransactionDetailsForm({
   onAmountInChange: onAmountInChangeFromProps,
   onAmountOutChange: onAmountOutChangeFromProps,
   children,
-}: TransactionDetailsFormProps): ReactElement {
+}: SwapDetailsFormProps): ReactElement {
   const { isDarkMode } = useDarkMode();
   const onAmountInChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
