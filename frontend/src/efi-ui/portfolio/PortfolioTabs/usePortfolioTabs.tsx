@@ -2,18 +2,21 @@ import React from "react";
 
 import { Provider, Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
+import { InterestToken } from "elf-contracts/types/InterestToken";
+import { Tranche } from "elf-contracts/types/Tranche";
 import { Money } from "ts-money";
 import { t } from "ttag";
 
-import { useYieldTokensWithBalance } from "efi-ui/interestToken/useYieldTokensWithBalance/useYieldTokensWithBalance";
-import { useFiatBalanceAllPrincipalTokens } from "efi-ui/portfolio/hooks/useFiatBalanceAllPrincipalTokens";
-import { useFiatBalanceAllYieldTokens } from "efi-ui/portfolio/hooks/useFiatBalanceAllYieldTokens";
-import { useTranchesWithBalance } from "efi-ui/portfolio/hooks/useTranchesWithBalance";
+import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
+import { useInterestTokens } from "efi-ui/interestToken/useInterestTokens/useInterestTokens";
+import { useTotalFiatBalance } from "efi-ui/portfolio/hooks/useTotalFiatBalance";
 import { LiquidityPositionPortfolio } from "efi-ui/portfolio/LiquidityPositionPortfolio/LiquidityPositionPortfolio";
 import { PortfolioTab } from "efi-ui/portfolio/PortfolioTabs/PortfolioTabs";
 import { PrincipalTokenPortfolio } from "efi-ui/portfolio/PrincipalTokenPortfolio/PrincipalTokenPortfolio";
 import { YieldTokenPortfolio } from "efi-ui/portfolio/YieldTokenPortfolio/YieldTokenPortfolio";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
+import { useTokensWithBalance } from "efi-ui/token/hooks/useTokensWithBalance";
+import { useTrancheContracts } from "efi-ui/tranche/useTrancheContracts";
 
 export function usePortfolioTabs(
   chainId: number | undefined,
@@ -79,10 +82,21 @@ function usePrincipalTokenTab(
   account: string | null | undefined,
   provider?: Provider
 ) {
-  const tranchesWithBalance = useTranchesWithBalance(account, provider);
-  const totalFiatBalanceAllTranches = useFiatBalanceAllPrincipalTokens(
+  const trancheContracts = useTrancheContracts();
+  const tranchesWithBalanceResults = useTokensWithBalance(
+    account,
+    (trancheContracts as unknown) as ERC20Shim[],
+    provider
+  );
+
+  const tranchesWithBalance = tranchesWithBalanceResults.map(
+    ({ token }) => (token as unknown) as Tranche
+  );
+
+  const totalFiatBalanceAllTranches = useTotalFiatBalance(
     library,
-    account
+    account,
+    tranchesWithBalance
   );
 
   return { tranchesWithBalance, totalFiatBalanceAllTranches };
@@ -93,13 +107,23 @@ function useYieldTokenTab(
   account: string | null | undefined,
   provider?: Provider
 ) {
-  const { currency } = useCurrencyPref();
-  const yieldTokensWithBalance = useYieldTokensWithBalance(account, provider);
-  const totalFiatBalanceAllYieldTokens = useFiatBalanceAllYieldTokens(
+  const trancheContracts = useTrancheContracts();
+  const yieldTokens = useInterestTokens(trancheContracts);
+
+  const yieldTokensWithBalanceResults = useTokensWithBalance(
+    account,
+    (yieldTokens as unknown) as ERC20Shim[],
+    provider
+  );
+
+  const yieldTokensWithBalance = yieldTokensWithBalanceResults.map(
+    ({ token }) => (token as unknown) as InterestToken
+  );
+
+  const totalFiatBalanceAllYieldTokens = useTotalFiatBalance(
     library,
     account,
-    yieldTokensWithBalance,
-    currency
+    yieldTokensWithBalance
   );
 
   return {

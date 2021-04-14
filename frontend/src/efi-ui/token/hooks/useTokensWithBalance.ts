@@ -1,45 +1,44 @@
 import { Provider } from "@ethersproject/providers";
+import { ERC20 } from "elf-contracts/types/ERC20";
+import { ERC20Permit } from "elf-contracts/types/ERC20Permit";
 import { BigNumber } from "ethers";
+import zip from "lodash.zip";
 
 import { getQueriesData } from "efi-ui/base/queryResults";
 import {
   useSmartContractReadCalls,
   UseSmartContractReadCallsOptions,
 } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
-import { useTrancheContracts } from "efi-ui/tranche/useTrancheContracts";
-import zip from "lodash.zip";
-import { Tranche } from "elf-contracts/types/Tranche";
 
-export function useTranchesWithBalance(
+export function useTokensWithBalance<TContract extends ERC20>(
   account: string | null | undefined,
+  tokens: (TContract | undefined)[],
   provider?: Provider
-): Tranche[] {
-  const tranches = useTrancheContracts(provider);
-
+): { token: TContract; balanceOf: BigNumber }[] {
   const balanceOfArgs: UseSmartContractReadCallsOptions<
-    Tranche,
+    ERC20 | ERC20Permit,
     "balanceOf"
-  >[] = tranches.map(() => ({
+  >[] = tokens.map(() => ({
     callArgs: [account as string],
     enabled: !!account,
   }));
 
   const tokenBalanceOfResults = useSmartContractReadCalls(
-    tranches,
+    tokens,
     "balanceOf",
     balanceOfArgs
   );
 
   const loadedData = zip(
-    tranches,
+    tokens,
     getQueriesData(tokenBalanceOfResults)
-  ).filter((values): values is [Tranche, BigNumber] =>
+  ).filter((values): values is [TContract, BigNumber] =>
     values.every((value) => !!value)
   );
 
-  const tranchesWithBalance = loadedData
-    .filter(([tranche, balanceOf]) => balanceOf.gt(0))
-    .map(([tranche]) => tranche);
+  const tokensWithBalance = loadedData
+    .filter(([, balanceOf]) => balanceOf.gt(0))
+    .map(([token, balanceOf]) => ({ token, balanceOf }));
 
-  return tranchesWithBalance;
+  return tokensWithBalance;
 }
