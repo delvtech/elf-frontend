@@ -2,7 +2,6 @@ import React, { ReactElement, ReactNode } from "react";
 
 import {
   AnchorButton,
-  Button,
   ButtonGroup,
   Callout,
   Card,
