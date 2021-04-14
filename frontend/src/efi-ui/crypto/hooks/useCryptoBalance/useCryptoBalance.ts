@@ -1,23 +1,24 @@
-import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
 import { Web3Provider } from "@ethersproject/providers";
-import { formatEth } from "efi/coins/ether/formatEth";
+import { BigNumber } from "ethers";
+
+import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
+import { useEthBalance } from "efi-ui/wallets/hooks/useEthBalance/useEthBalance";
+import { assertNever } from "efi/base/assertNever";
 import {
   CryptoAsset,
   CryptoAssetType,
   findTokenContract,
 } from "efi/crypto/CryptoAsset";
-import { useEthBalance } from "efi-ui/wallets/hooks/useEthBalance/useEthBalance";
-import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { assertNever } from "efi/base/assertNever";
 
 export function useCryptoBalance(
   library: Web3Provider | undefined,
   account: string | null | undefined,
   asset: CryptoAsset | undefined
-): number {
+): BigNumber | undefined {
   const { data: ethBalance } = useEthBalance(library, account);
 
-  const tokenContract = asset ? findTokenContract(asset) : undefined;
+  const tokenContract = findTokenContract(asset);
+
   const { data: tokenBalance } = useSmartContractReadCall(
     tokenContract,
     "balanceOf",
@@ -26,27 +27,21 @@ export function useCryptoBalance(
       enabled: !!account,
     }
   );
-  const { data: tokenDecimals } = useSmartContractReadCall(
-    tokenContract,
-    "decimals"
-  );
 
   if (!asset) {
-    return 0;
+    return;
   }
 
-  const ethBalanceNumber = +formatEth(ethBalance);
-  const tokenBalanceNumber = +formatCurrency(tokenBalance, tokenDecimals);
+  const { type } = asset;
 
-  const assetType = asset?.type;
-  switch (assetType) {
+  switch (type) {
     case CryptoAssetType.ERC20:
     case CryptoAssetType.ERC20PERMIT:
-      return tokenBalanceNumber;
+      return tokenBalance;
     case CryptoAssetType.ETHEREUM:
-      return ethBalanceNumber;
+      return ethBalance;
     default:
-      assertNever(assetType);
-      return 0;
+      assertNever(type);
+      return undefined;
   }
 }
