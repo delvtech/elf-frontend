@@ -45,6 +45,7 @@ export function useCryptoAssetForToken(
       id: "ethereum",
       type: CryptoAssetType.ETHEREUM,
       assetIcon: CryptoIconSvg.ETH,
+      tokenContract: undefined,
     };
     return cryptoAsset;
   }

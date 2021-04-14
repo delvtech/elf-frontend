@@ -1,3 +1,4 @@
+import { assertNever } from "efi/base/assertNever";
 import { ERC20 } from "elf-contracts/types/ERC20";
 import { ERC20Permit } from "elf-contracts/types/ERC20Permit";
 
@@ -14,6 +15,7 @@ export interface BaseCryptoAsset {
 
 export interface EthereumCryptoAsset extends BaseCryptoAsset {
   type: CryptoAssetType.ETHEREUM;
+  tokenContract: undefined;
 }
 
 export interface Erc20CryptoAsset extends BaseCryptoAsset {
@@ -33,10 +35,18 @@ export type CryptoAsset =
 export function findTokenContract(
   cryptoAsset: CryptoAsset | undefined
 ): ERC20 | ERC20Permit | undefined {
-  if (cryptoAsset?.type === CryptoAssetType.ERC20) {
-    return cryptoAsset.tokenContract;
+  if (!cryptoAsset) {
+    return;
   }
-  if (cryptoAsset?.type === CryptoAssetType.ERC20PERMIT) {
-    return cryptoAsset.tokenContract;
+  const { type, tokenContract } = cryptoAsset;
+
+  switch (type) {
+    case CryptoAssetType.ERC20:
+    case CryptoAssetType.ERC20PERMIT:
+      return tokenContract;
+    case CryptoAssetType.ETHEREUM:
+      return;
+    default:
+      assertNever(type);
   }
 }

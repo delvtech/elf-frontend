@@ -23,11 +23,12 @@ import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryp
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { EarnInput } from "efi-ui/earn/EarnInput/EarnInput";
 import { useActiveTranche } from "efi-ui/earn/hooks/useActiveTranche";
+import { useMintPreview } from "efi-ui/mint/hooks/useMintPreview";
 import { PrincipalTokenPreview } from "efi-ui/mint/MintCard/PrincipalTokenPreview";
 import { YieldTokenPreview } from "efi-ui/mint/MintCard/YieldTokenPreview";
 import { MintTermPicker } from "efi-ui/mint/MintTermPicker/MintTermPicker";
-import { useMintPreview } from "efi-ui/mint/hooks/useMintPreview";
 import { MintTransactionConfirmationDrawer } from "efi-ui/mint/MintTransactionConfirmationDrawer/MintTransactionConfirmationDrawer";
+import { formatBalance } from "efi/base/formatBalance";
 
 export interface MintCardProps {
   library: Web3Provider | undefined;
@@ -64,6 +65,10 @@ export function MintCard({
     account,
     activeBaseAsset
   );
+  const activeBaseAssetDisplayBalance = formatBalance(
+    activeBaseAssetBalance,
+    activeBaseAssetDecimals
+  );
 
   // active tranche
   const {
@@ -93,9 +98,7 @@ export function MintCard({
             {!!account && (
               <span
                 className={classNames(tw("text-base"), Classes.TEXT_MUTED)}
-              >{t`Balance: ${activeBaseAssetBalance.toFixed(
-                4
-              )} ${activeBaseAssetSymbol}`}</span>
+              >{t`Balance: ${activeBaseAssetDisplayBalance} ${activeBaseAssetSymbol}`}</span>
             )}
           </div>
           <div
@@ -120,7 +123,7 @@ export function MintCard({
               placeholder="0.00"
               value={amountInString}
               onValueChange={setAmountIn}
-              assetBalance={activeBaseAssetBalance}
+              assetBalance={+activeBaseAssetDisplayBalance}
             />
           </div>
         </div>

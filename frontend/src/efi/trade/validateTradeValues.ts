@@ -5,13 +5,13 @@ export function validateTradeValues(
   amountIn: string | undefined,
   tokenInBalanceOf: BigNumber | undefined,
   tokenInDecimals: number | undefined,
-  tokenInPoolBalance: BigNumber,
+  tokenInPoolBalance: BigNumber | undefined,
   amountOut: string | undefined,
-  tokenOutPoolBalance: BigNumber
+  tokenOutPoolBalance: BigNumber | undefined
 ): { isValidTokenInValue: boolean; isValidTokenOutValue: boolean } {
   // input value must be lower than the user's balance and the pool's balance of that token
   const isValidTokenInValue =
-    amountIn && tokenInBalanceOf
+    amountIn && tokenInBalanceOf && tokenInPoolBalance
       ? parseUnits(amountIn ?? 0, tokenInDecimals).lte(tokenInBalanceOf) &&
         parseUnits(amountIn ?? 0, tokenInDecimals).lte(tokenInPoolBalance)
       : true;
