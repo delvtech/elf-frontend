@@ -197,7 +197,7 @@ function useActiveMintPreview(
   activeTranche: Tranche | undefined,
   amountIn: number
 ) {
-  const { data: mintPreview } = useMintPreview(
+  const { data: [ptPreview] = [] } = useMintPreview(
     activeBaseAsset,
     activeTranche,
     amountIn
@@ -207,8 +207,8 @@ function useActiveMintPreview(
     "decimals"
   );
 
-  const numPrincipalTokensOut = mintPreview
-    ? +formatUnits(mintPreview, trancheDecimals)
+  const numPrincipalTokensOut = ptPreview
+    ? +formatUnits(ptPreview, trancheDecimals)
     : undefined;
 
   // You will always receive the same amount of yield tokens as the amount of

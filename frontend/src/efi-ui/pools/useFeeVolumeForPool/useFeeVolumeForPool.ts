@@ -1,12 +1,10 @@
 import { useQuery } from "react-query";
 
 import { Event } from "@ethersproject/contracts";
-import { ERC20 } from "elf-contracts/types/ERC20";
 import { BigNumber } from "ethers";
 import { formatEther, formatUnits } from "ethers/lib/utils";
 import { Money } from "ts-money";
 
-import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { getQueryData } from "efi-ui/base/queryResults";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { usePreviousBlockNumber } from "efi-ui/ethereum/usePreviousBlockNumber/usePreviousBlockNumber";
@@ -68,31 +66,24 @@ function useFeeVolumeForConvergentCurvePool(
   const baseAssetContract = useBaseAssetForPool(pool);
   const [baseAssetDecimals] = useTokenDecimals(baseAssetContract);
   const poolTokensResult = usePoolTokens(pool);
-  const balancerVault = useBalancerVault();
   const { data: fromBlockNumber } = usePreviousBlockNumber(fromTime);
   const { data: toBlockNumber } = usePreviousBlockNumber(toTime);
   const [baseAssetFiatPrice] = useTokenPrice(baseAssetContract, currency);
   const spotPrice = usePoolSpotPrice(pool, baseAssetContract);
 
-  const { data: changeEvents = [] } = useQuery({
+  const { data: feeEvents = [] } = useQuery({
     queryKey: [
-      ["balancerVault", "queryFilter", "PoolBalanceChanged"],
+      ["ConvergentCurvePool", "queryFilter", "FeeCollection"],
       { poolId, fromBlockNumber, toBlockNumber },
     ],
     queryFn: async () => {
-      if (!balancerVault || !poolId) {
+      if (!pool || !poolId || !isConvergentCurvePool(pool)) {
         return;
       }
 
-      const filterQuery = balancerVault.filters.PoolBalanceChanged(
-        poolId,
-        null,
-        null,
-        null,
-        null
-      );
+      const filterQuery = pool.filters.FeeCollection(null, null, null, null);
 
-      const events = await balancerVault.queryFilter(
+      const events = await pool.queryFilter(
         filterQuery,
         fromBlockNumber,
         toBlockNumber
@@ -100,17 +91,14 @@ function useFeeVolumeForConvergentCurvePool(
       return events;
     },
     enabled:
-      !!balancerVault &&
-      !!poolId &&
-      !!fromBlockNumber &&
-      isConvergentCurvePool(pool),
+      !!pool && !!poolId && !!fromBlockNumber && isConvergentCurvePool(pool),
   });
 
   const tokens = getQueryData(poolTokensResult)?.[0];
 
   if (
     !tokens ||
-    !changeEvents ||
+    !feeEvents ||
     !baseAssetContract ||
     !spotPrice ||
     !baseAssetFiatPrice
@@ -119,9 +107,7 @@ function useFeeVolumeForConvergentCurvePool(
   }
 
   const totalFees = calculateTotalFees(
-    tokens,
-    baseAssetContract,
-    changeEvents,
+    feeEvents,
     baseAssetDecimals,
     baseAssetFiatPrice,
     spotPrice
@@ -131,42 +117,29 @@ function useFeeVolumeForConvergentCurvePool(
 }
 
 type PoolBalanceChangedArguments = [
-  poolId: string,
-  sender: string,
-  assets: string[],
-  amounts: BigNumber[],
-  dueProtocolFeeAmounts: BigNumber[]
+  collectedBase: BigNumber,
+  collectedBond: BigNumber,
+  remainingBase: BigNumber,
+  remainingBond: BigNumber
 ];
 function calculateTotalFees(
-  tokens: string[],
-  baseAssetContract: ERC20,
-  changeEvents: Event[],
+  feeEvents: Event[],
   baseAssetDecimals: number | undefined,
   baseAssetFiatPrice: Money,
   spotPrice: number
 ) {
-  const baseAssetIndex = tokens.findIndex(
-    (address) => address === baseAssetContract?.address
-  );
-  const yieldAssetIndex = baseAssetIndex ? 0 : 1;
+  let totalFeesBase = BigNumber.from(0);
+  let totalFeesBond = BigNumber.from(0);
 
-  const totalFeesPerToken = [BigNumber.from(0), BigNumber.from(0)];
-
-  changeEvents.forEach((event) => {
-    const changeEvent = event?.args as PoolBalanceChangedArguments;
-    const [, , , , dueProtocolFeeAmounts] = changeEvent;
-    totalFeesPerToken[0] = totalFeesPerToken[0].add(dueProtocolFeeAmounts[0]);
-    totalFeesPerToken[1] = totalFeesPerToken[1].add(dueProtocolFeeAmounts[1]);
+  feeEvents.forEach((event) => {
+    const feeEvent = event?.args as PoolBalanceChangedArguments;
+    const [collectedBase, collectedBond] = feeEvent;
+    totalFeesBase = totalFeesBase.add(collectedBase);
+    totalFeesBond = totalFeesBond.add(collectedBond);
   });
 
-  const baseAssetFees = +formatUnits(
-    totalFeesPerToken[baseAssetIndex],
-    baseAssetDecimals
-  );
-  const yieldAssetFees = +formatUnits(
-    totalFeesPerToken[yieldAssetIndex],
-    baseAssetDecimals
-  );
+  const baseAssetFees = +formatUnits(totalFeesBase, baseAssetDecimals);
+  const yieldAssetFees = +formatUnits(totalFeesBond, baseAssetDecimals);
 
   const totalFees = baseAssetFiatPrice.multiply(
     baseAssetFees + yieldAssetFees / spotPrice,

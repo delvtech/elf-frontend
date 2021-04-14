@@ -397,7 +397,7 @@ export class TestUserProxy extends Contract {
         v: BigNumberish;
       }[],
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<[BigNumber, BigNumber]>;
 
     "mint(uint256,address,uint256,address,tuple[])"(
       _amount: BigNumberish,
@@ -414,7 +414,7 @@ export class TestUserProxy extends Contract {
         v: BigNumberish;
       }[],
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<[BigNumber, BigNumber]>;
 
     owner(overrides?: CallOverrides): Promise<string>;
 

@@ -6,9 +6,9 @@ import { parseUnits } from "ethers/lib/utils";
 
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
+import { useMintCallArgs } from "efi-ui/mint/hooks/useMintCallArgs";
 import { useUserProxy } from "efi-ui/mint/hooks/userProxy";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
-import { useMintCallArgs } from "efi-ui/mint/hooks/useMintCallArgs";
 
 /**
  * Returns the number of Principal Tokens you'd get for minting into a tranche.
@@ -20,7 +20,7 @@ export function useMintPreview(
   baseAsset: CryptoAsset | undefined,
   tranche: Tranche | undefined,
   amountIn: number | undefined
-): QueryObserverResult<BigNumber> {
+): QueryObserverResult<[BigNumber, BigNumber]> {
   const userProxy = useUserProxy();
   const baseAssetDecimals = useCryptoDecimals(baseAsset);
   const amountInBigNumber = parseUnits(
