@@ -20,12 +20,12 @@ import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForTok
 import { useCryptoBalance } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
-import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { TradeInput } from "efi-ui/trade/TradeInput/TradeInput";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { PoolContract } from "efi/pools/PoolContract";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
+import { useTokenPoolBalance } from "../../pools/useTokenPoolBalance/useTokenPoolBalance";
 
 interface TradePanelProps {
   library: Web3Provider | undefined;
@@ -270,19 +270,6 @@ function useTokenInfoForTradeInput(
     displayBalance,
     poolBalance,
   };
-}
-
-// TODO: move somewhere shared
-function useTokenPoolBalance(
-  pool: PoolContract | undefined,
-  tokenContract: ERC20 | undefined
-): BigNumber | undefined {
-  const { data: [tokens, balances] = [] } = usePoolTokens(pool);
-  const index =
-    tokens?.findIndex((token) => token === tokenContract?.address) ?? -1;
-
-  const poolBalance = balances?.[index];
-  return poolBalance;
 }
 
 // TODO: move somewhere shared
