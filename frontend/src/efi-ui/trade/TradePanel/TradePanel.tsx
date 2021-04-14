@@ -3,9 +3,10 @@ import { ReactElement, useCallback, useEffect, useState } from "react";
 import { Button, Intent } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
+import { useWeb3React } from "@web3-react/core";
 import { ERC20 } from "elf-contracts/types/ERC20";
 import { BigNumber, Signer } from "ethers";
-import { formatUnits, parseUnits } from "ethers/lib/utils";
+import { formatEther, formatUnits, parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -15,12 +16,13 @@ import {
   useNumericInput,
 } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
+import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { TradeInput } from "efi-ui/trade/TradeInput/TradeInput";
+import { useEthBalance } from "efi-ui/wallets/hooks/useEthBalance/useEthBalance";
+import ContractAddresses from "efi/contracts/contractsJson";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { PoolContract } from "efi/pools/PoolContract";
-import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
 
 interface TradePanelProps {
@@ -60,17 +62,10 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     tokenOut: tokenOutFromProps,
   } = props;
 
-  const [isReversed, setReversed] = useState(false);
-  const swapAssets = useCallback(() => {
-    setReversed(!isReversed);
-  }, [isReversed]);
-
-  let tokenIn = tokenInFromProps;
-  let tokenOut = tokenOutFromProps;
-  if (isReversed) {
-    tokenIn = tokenOutFromProps;
-    tokenOut = tokenInFromProps;
-  }
+  const { tokenIn, tokenOut, swapAssets } = useReversableTokens(
+    tokenInFromProps,
+    tokenOutFromProps
+  );
 
   const {
     tokenInSymbol,
@@ -82,7 +77,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     tokenOutSymbol,
     tokenOutDisplayBalance,
     tokenOutPoolBalance,
-  } = useTokenInfo(pool, tokenIn, tokenOut, account);
+  } = useTokenInfoForTradeInputs(pool, tokenIn, tokenOut, account);
 
   const {
     amountIn,
@@ -101,28 +96,25 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     tokenOutPoolBalance
   );
 
-  // TODO: make a useTokenApproval or useTokenApproved hook
-  const callArgs: ContractMethodArgs<ERC20, "allowance"> = [
-    account ?? "",
-    pool?.address ?? "",
-  ];
-  const { data: allowance } = useSmartContractReadCall(tokenIn, "allowance", {
-    callArgs,
-  });
-  const approved =
-    amountIn && allowance
-      ? allowance.gte(parseUnits(amountOut || "0", tokenInDecimals))
-      : false;
+  const approved = useTokenApproval(
+    account,
+    pool,
+    tokenIn,
+    amountIn,
+    amountOut,
+    tokenInDecimals
+  );
 
   const submitTransaction = useCallback(() => {}, []);
 
-  const setMaxValue = useCallback(() => {
-    if (tokenInBalanceOf) {
-      setValueIn(formatUnits(tokenInBalanceOf, tokenInDecimals));
-    }
-  }, [tokenInBalanceOf, setValueIn, tokenInDecimals]);
+  const setMaxValue = useSetMaxValue(
+    tokenInBalanceOf,
+    setValueIn,
+    tokenInDecimals
+  );
 
   const submitButtonText = getSubmitButtonText(buttonLabel, approved, signer);
+
   const submitButtonDisabled =
     formDisabled ||
     submitDisabled ||
@@ -147,7 +139,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
         >{t`MAX`}</Button>
       </div>
       <TradeInput
-        cryptoDisplayBalance={tokenInDisplayBalance}
+        cryptoDisplayBalance={tokenInDisplayBalance || ""}
         cryptoSymbol={tokenInSymbol as CryptoSymbol}
         disabled={formDisabled}
         onChange={onChangeIn}
@@ -168,7 +160,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
         <span>{t`For`}</span>
       </div>
       <TradeInput
-        cryptoDisplayBalance={tokenOutDisplayBalance}
+        cryptoDisplayBalance={tokenOutDisplayBalance || ""}
         cryptoSymbol={tokenOutSymbol as CryptoSymbol}
         disabled={formDisabled}
         onChange={onChangeOut}
@@ -189,6 +181,58 @@ export function TradePanel(props: TradePanelProps): ReactElement {
   );
 }
 
+function useSetMaxValue(
+  tokenInBalanceOf: BigNumber | undefined,
+  setValueIn: (value: string) => void,
+  tokenInDecimals: number | undefined
+) {
+  return useCallback(() => {
+    if (tokenInBalanceOf) {
+      setValueIn(formatUnits(tokenInBalanceOf, tokenInDecimals));
+    }
+  }, [tokenInBalanceOf, setValueIn, tokenInDecimals]);
+}
+
+function useReversableTokens(
+  tokenInFromProps: ERC20 | undefined,
+  tokenOutFromProps: ERC20 | undefined
+) {
+  const [isReversed, setReversed] = useState(false);
+  const swapAssets = useCallback(() => {
+    setReversed(!isReversed);
+  }, [isReversed]);
+
+  let tokenIn = tokenInFromProps;
+  let tokenOut = tokenOutFromProps;
+  if (isReversed) {
+    tokenIn = tokenOutFromProps;
+    tokenOut = tokenInFromProps;
+  }
+  return { tokenIn, tokenOut, swapAssets };
+}
+
+function useTokenApproval(
+  account: string | null | undefined,
+  pool: PoolContract | undefined,
+  tokenIn: ERC20 | undefined,
+  amountIn: string | undefined,
+  amountOut: string | undefined,
+  tokenInDecimals: number | undefined
+) {
+  const callArgs: ContractMethodArgs<ERC20, "allowance"> = [
+    account ?? "",
+    pool?.address ?? "",
+  ];
+  const { data: allowance } = useSmartContractReadCall(tokenIn, "allowance", {
+    callArgs,
+  });
+  const approved =
+    amountIn && allowance
+      ? allowance.gte(parseUnits(amountOut || "0", tokenInDecimals))
+      : false;
+  return approved;
+}
+
 function getSubmitButtonText(
   buttonLabel: string,
   approved: boolean,
@@ -205,11 +249,12 @@ function getSubmitButtonText(
   return buttonLabel;
 }
 
-function useTokenInfo(
+function useTokenInfoForTradeInputs(
   pool: PoolContract | undefined,
   tokenIn: ERC20 | undefined,
   tokenOut: ERC20 | undefined,
-  account: string | null | undefined
+  account: string | null | undefined,
+  useEth = true
 ) {
   const { data: [tokens, balances] = [] } = usePoolTokens(pool);
   const tokenInIndex =
@@ -218,19 +263,21 @@ function useTokenInfo(
   const tokenInPoolBalance = balances?.[tokenInIndex] || BigNumber.from(0);
   const tokenOutPoolBalance = balances?.[tokenOutIndex] || BigNumber.from(0);
 
-  const { data: tokenInSymbol } = useSmartContractReadCall(tokenIn, "symbol");
-  const { data: tokenInDecimals } = useSmartContractReadCall(
-    tokenIn,
-    "decimals"
-  );
-  const { data: tokenInBalanceOf } = useSmartContractReadCall(
-    tokenIn,
-    "balanceOf",
-    { enabled: !!account, callArgs: [account as string] }
-  );
-  const tokenInDisplayBalance = useTokenBalance(tokenIn, account);
-  const { data: tokenOutSymbol } = useSmartContractReadCall(tokenOut, "symbol");
-  const tokenOutDisplayBalance = useTokenBalance(tokenOut, account);
+  const {
+    tokenSymbol: tokenInSymbol,
+    tokenDecimals: tokenInDecimals,
+    tokenBalanceOf: tokenInBalanceOf,
+  } = useTokenData(tokenIn, account, useEth);
+  const tokenInDisplayBalance =
+    tokenInBalanceOf && formatUnits(tokenInBalanceOf, tokenInDecimals);
+
+  const {
+    tokenSymbol: tokenOutSymbol,
+    tokenDecimals: tokenOutDecimals,
+    tokenBalanceOf: tokenOutBalanceOf,
+  } = useTokenData(tokenOut, account, useEth);
+  const tokenOutDisplayBalance =
+    tokenOutBalanceOf && formatUnits(tokenOutBalanceOf, tokenOutDecimals);
 
   return {
     tokenInSymbol,
@@ -240,8 +287,51 @@ function useTokenInfo(
     tokenInPoolBalance,
 
     tokenOutSymbol,
+    tokenOutDecimals,
+    tokenOutBalanceOf,
     tokenOutDisplayBalance,
     tokenOutPoolBalance,
+  };
+}
+function useTokenData(
+  tokenContract: ERC20 | undefined,
+  account: string | null | undefined,
+  useEth = true
+) {
+  const { data: tokenSymbol } = useSmartContractReadCall(
+    tokenContract,
+    "symbol",
+    { enabled: !useEth }
+  );
+  const { data: tokenDecimals } = useSmartContractReadCall(
+    tokenContract,
+    "decimals",
+    { enabled: !useEth }
+  );
+
+  const { data: tokenBalanceOf } = useSmartContractReadCall(
+    tokenContract,
+    "balanceOf",
+    { enabled: !!account && !useEth, callArgs: [account as string] }
+  );
+
+  const { library } = useWeb3React<Web3Provider>();
+  const { data: ethBalance } = useEthBalance(library, account);
+
+  if (useEth && tokenContract?.address === ContractAddresses.wethAddress) {
+    return {
+      tokenSymbol: "ETH",
+      tokenDecimals: 18,
+      tokenBalanceOf: ethBalance,
+      tokenDisplayBalance: formatEther(ethBalance ?? 0),
+    };
+  }
+
+  return {
+    tokenSymbol,
+    tokenDecimals,
+    tokenBalanceOf,
+    tokenDisplayBalance: formatUnits(tokenBalanceOf ?? 0),
   };
 }
 

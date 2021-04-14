@@ -1,6 +1,7 @@
 import React, { ReactElement, useCallback, useState } from "react";
 
 import { Card, Colors, Intent } from "@blueprintjs/core";
+import { Web3Provider } from "@ethersproject/providers";
 import { ERC20 } from "elf-contracts/types/ERC20";
 import { Signer } from "ethers";
 import { t } from "ttag";
@@ -8,7 +9,6 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { TradePanel } from "efi-ui/trade/TradePanel/TradePanel";
 import { PoolContract } from "efi/pools/PoolContract";
-import { Web3Provider } from "@ethersproject/providers";
 
 interface PoolActionsCardProps {
   library: Web3Provider | undefined;
