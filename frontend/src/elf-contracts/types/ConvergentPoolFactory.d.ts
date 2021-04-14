@@ -95,9 +95,11 @@ interface ConvergentPoolFactoryInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "vault", data: BytesLike): Result;
 
   events: {
+    "PoolCreated(address,address)": EventFragment;
     "PoolRegistered(address)": EventFragment;
   };
 
+  getEvent(nameOrSignatureOrTopic: "PoolCreated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "PoolRegistered"): EventFragment;
 }
 
@@ -380,6 +382,8 @@ export class ConvergentPoolFactory extends Contract {
   };
 
   filters: {
+    PoolCreated(pool: string | null, bondToken: string | null): EventFilter;
+
     PoolRegistered(pool: string | null): EventFilter;
   };
 

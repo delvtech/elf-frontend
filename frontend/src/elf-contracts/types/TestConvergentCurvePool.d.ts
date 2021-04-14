@@ -345,11 +345,13 @@ interface TestConvergentCurvePoolInterface extends ethers.utils.Interface {
 
   events: {
     "Approval(address,address,uint256)": EventFragment;
+    "FeeCollection(uint256,uint256,uint256,uint256)": EventFragment;
     "Transfer(address,address,uint256)": EventFragment;
     "UIntReturn(uint256)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "FeeCollection"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "UIntReturn"): EventFragment;
 }
@@ -1665,6 +1667,13 @@ export class TestConvergentCurvePool extends Contract {
       owner: string | null,
       spender: string | null,
       value: null
+    ): EventFilter;
+
+    FeeCollection(
+      collectedBase: null,
+      collectedBond: null,
+      remainingBase: null,
+      remainingBond: null
     ): EventFilter;
 
     Transfer(from: string | null, to: string | null, value: null): EventFilter;

@@ -35,7 +35,11 @@ interface InterestTokenFactoryInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
 
-  events: {};
+  events: {
+    "InterestTokenCreated(address,address)": EventFragment;
+  };
+
+  getEvent(nameOrSignatureOrTopic: "InterestTokenCreated"): EventFragment;
 }
 
 export class InterestTokenFactory extends Contract {
@@ -103,7 +107,12 @@ export class InterestTokenFactory extends Contract {
     ): Promise<string>;
   };
 
-  filters: {};
+  filters: {
+    InterestTokenCreated(
+      token: string | null,
+      tranche: string | null
+    ): EventFilter;
+  };
 
   estimateGas: {
     deployInterestToken(

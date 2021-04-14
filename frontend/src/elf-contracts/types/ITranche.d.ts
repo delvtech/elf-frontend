@@ -28,6 +28,7 @@ interface ITrancheInterface extends ethers.utils.Interface {
     "balanceOf(address)": FunctionFragment;
     "decimals()": FunctionFragment;
     "deposit(uint256,address)": FunctionFragment;
+    "interestSupply()": FunctionFragment;
     "interestToken()": FunctionFragment;
     "nonces(address)": FunctionFragment;
     "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)": FunctionFragment;
@@ -56,6 +57,10 @@ interface ITrancheInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "deposit",
     values: [BigNumberish, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "interestSupply",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "interestToken",
@@ -105,6 +110,10 @@ interface ITrancheInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "decimals", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "interestSupply",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "interestToken",
     data: BytesLike
@@ -203,6 +212,10 @@ export class ITranche extends Contract {
       destination: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
+
+    interestSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "interestSupply()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     interestToken(overrides?: CallOverrides): Promise<[string]>;
 
@@ -353,6 +366,10 @@ export class ITranche extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
+  interestSupply(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "interestSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
+
   interestToken(overrides?: CallOverrides): Promise<string>;
 
   "interestToken()"(overrides?: CallOverrides): Promise<string>;
@@ -494,13 +511,17 @@ export class ITranche extends Contract {
       _shares: BigNumberish,
       destination: string,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<[BigNumber, BigNumber]>;
 
     "deposit(uint256,address)"(
       _shares: BigNumberish,
       destination: string,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<[BigNumber, BigNumber]>;
+
+    interestSupply(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "interestSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     interestToken(overrides?: CallOverrides): Promise<string>;
 
@@ -538,12 +559,12 @@ export class ITranche extends Contract {
     prefundedDeposit(
       _destination: string,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<[BigNumber, BigNumber]>;
 
     "prefundedDeposit(address)"(
       _destination: string,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<[BigNumber, BigNumber]>;
 
     symbol(overrides?: CallOverrides): Promise<string>;
 
@@ -661,6 +682,10 @@ export class ITranche extends Contract {
       destination: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
+
+    interestSupply(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "interestSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     interestToken(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -815,6 +840,12 @@ export class ITranche extends Contract {
       _shares: BigNumberish,
       destination: string,
       overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    interestSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "interestSupply()"(
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     interestToken(overrides?: CallOverrides): Promise<PopulatedTransaction>;
