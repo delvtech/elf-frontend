@@ -16,9 +16,7 @@ const timeData = [
   { timeMs: Date.parse("2021-01-18"), value: 1257.0474852058 },
 ];
 
-// interface MarketHistoryProps {}
-
-export function MarketHistory(): ReactElement {
+export function PoolCharts(): ReactElement {
   return (
     <div className={tw("flex", "flex-1", "h-500")}>
       <div className={tw("flex", "flex-col", "w-full")}>
