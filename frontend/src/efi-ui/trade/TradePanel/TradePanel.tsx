@@ -3,7 +3,6 @@ import { ReactElement, useCallback, useEffect, useState } from "react";
 import { Button, Intent } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
-import { useWeb3React } from "@web3-react/core";
 import { ERC20 } from "elf-contracts/types/ERC20";
 import { BigNumber, Signer } from "ethers";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
@@ -16,16 +15,16 @@ import {
   useNumericInput,
 } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
+import { CryptoAssetWithMetadata } from "efi-ui/crypto/CryptoAssetWithMetadata";
 import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
-import { useCryptoBalance } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
-import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
-import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { TradeInput } from "efi-ui/trade/TradeInput/TradeInput";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { PoolContract } from "efi/pools/PoolContract";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
+
 import { useTokenPoolBalance } from "../../pools/useTokenPoolBalance/useTokenPoolBalance";
+import { formatBalance } from "efi/base/formatBalance";
 
 interface TradePanelProps {
   library: Web3Provider | undefined;
@@ -259,9 +258,12 @@ function useTokenInfoForTradeInput(
   tokenContract: ERC20 | undefined,
   account: string | null | undefined
 ) {
+  const { symbol, decimals, balanceOf } = useCryptoAssetForToken(
+    tokenContract?.address,
+    account
+  ) as CryptoAssetWithMetadata;
   const poolBalance = useTokenPoolBalance(pool, tokenContract);
-  const { symbol, decimals, balanceOf } = useCryptoInfo(tokenContract, account);
-  const displayBalance = balanceOf && formatUnits(balanceOf, decimals);
+  const displayBalance = formatBalance(balanceOf, decimals);
 
   return {
     symbol,
@@ -269,25 +271,6 @@ function useTokenInfoForTradeInput(
     balanceOf,
     displayBalance,
     poolBalance,
-  };
-}
-
-// TODO: move somewhere shared
-function useCryptoInfo(
-  tokenContract: ERC20 | undefined,
-  account: string | null | undefined
-) {
-  const { library } = useWeb3React<Web3Provider>();
-
-  const asset = useCryptoAssetForToken(tokenContract?.address);
-  const symbol = useCryptoSymbol(asset);
-  const decimals = useCryptoDecimals(asset);
-  const balanceOf = useCryptoBalance(library, account, asset);
-  return {
-    asset,
-    symbol,
-    decimals,
-    balanceOf,
   };
 }
 
