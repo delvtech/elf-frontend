@@ -2,7 +2,6 @@ import { ReactElement } from "react";
 
 import { Card, Elevation } from "@blueprintjs/core";
 import { Link } from "@reach/router";
-import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -16,12 +15,13 @@ import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForP
 import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { getTimeLeft2 } from "efi/base/time";
+import { formatMoney } from "efi/money/formatMoney";
+import { PoolContract } from "efi/pools/PoolContract";
 
 import { useTotalLiquidityForPool } from "../useTotalLiquidityForPool/useTotalLiquidityForPool";
-import { formatMoney } from "efi/money/formatMoney";
 
 interface PrincipalPoolCardProps {
-  pool: ConvergentCurvePool | undefined;
+  pool: PoolContract | undefined;
 }
 
 const cellClassName = tw("flex", "mr-4", "items-center", "overflow-hidden");

@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import { Fragment, ReactElement } from "react";
 
 import { Provider } from "@ethersproject/providers";
 import { Signer } from "ethers";
@@ -27,19 +27,24 @@ export function PoolsTable({
 
   return (
     <div className={tw("w-full", "space-y-2")}>
-      {principalTokenPools.map((pool, index) => {
-        return (
-          <PrincipalPoolCard key={pool?.contractAddress || index} pool={pool} />
-        );
-      })}
-      {/* {interestTokenPools.map((pool, index) => {
-        return (
-          <InterestTokenPoolCard
-            key={pool?.contractAddress || index}
-            pool={pool}
-          />
-        );
-      })} */}
+      <Fragment>
+        {principalTokenPools.map((pool, index) => {
+          return (
+            <PrincipalPoolCard
+              key={pool?.contractAddress || index}
+              pool={pool}
+            />
+          );
+        })}
+        {interestTokenPools.map((pool, index) => {
+          return (
+            <PrincipalPoolCard
+              key={pool?.contractAddress || index}
+              pool={pool}
+            />
+          );
+        })}
+      </Fragment>
     </div>
   );
 }
