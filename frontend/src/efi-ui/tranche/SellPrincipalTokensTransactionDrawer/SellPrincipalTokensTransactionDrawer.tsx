@@ -10,7 +10,7 @@ import { t } from "ttag";
 import { useBalancerTransactionInputs } from "efi-ui/balancer/useBalancerTransactionInputs";
 import { useBatchSwapGivenIn } from "efi-ui/balancer/useBatchSwapGivenIn/useBatchSwapGivenIn";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
-import { SwapDetailsForm } from "efi-ui/swaps/TransactionDetailsPreview/SwapDetailsForm";
+import { SwapDetailsForm } from "efi-ui/swaps/SwapDetailsPreview/SwapDetailsForm";
 import { TransactionDrawer } from "efi-ui/contracts/TransactionDrawer/TransactionDrawer";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";

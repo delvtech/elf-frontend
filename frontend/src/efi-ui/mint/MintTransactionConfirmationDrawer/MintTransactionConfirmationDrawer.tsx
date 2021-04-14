@@ -7,7 +7,7 @@ import { Signer } from "ethers";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
-import { SwapDetailsForm } from "efi-ui/swaps/TransactionDetailsPreview/SwapDetailsForm";
+import { SwapDetailsForm } from "efi-ui/swaps/SwapDetailsPreview/SwapDetailsForm";
 import { TransactionDrawer } from "efi-ui/contracts/TransactionDrawer/TransactionDrawer";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";

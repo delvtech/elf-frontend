@@ -13,7 +13,7 @@ import { useBatchSwapGivenIn } from "efi-ui/balancer/useBatchSwapGivenIn/useBatc
 import { parseQueryBatchSwapResult } from "efi-ui/balancer/useQueryBatchSwap/parseQueryBatchSwapResult";
 import { useQueryBatchSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
-import { SwapDetailsForm } from "efi-ui/swaps/TransactionDetailsPreview/SwapDetailsForm";
+import { SwapDetailsForm } from "efi-ui/swaps/SwapDetailsPreview/SwapDetailsForm";
 import { TransactionDrawer } from "efi-ui/contracts/TransactionDrawer/TransactionDrawer";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
