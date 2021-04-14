@@ -8,7 +8,6 @@ import { Signer } from "ethers";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { MarketFilterOptions } from "efi-ui/markets/MarketFilterOptions/MarketFilterOptions";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { PoolsTable } from "efi-ui/pools/PoolsTable/PoolsTable";
 import { Fragment } from "react";
@@ -44,27 +43,10 @@ export const ExchangeView: FC<ExchangeViewProps> = () => {
             subtitle={t`Provide liquidity for this market, or trade for what you want.`}
           />
 
-          <div className={tw("flex", "space-x-12")}>
-            {/* Right hand side */}
-            <div
-              className={tw(
-                "hidden",
-                "lg:block",
-                "h-full",
-                "flex-shrink-0",
-                "w-64"
-              )}
-            >
-              <MarketFilterOptions />
-            </div>
-            <div className={tw("flex", "flex-1")}>
-              <Card className={tw("p-10", "flex", "flex-1")}>
-                <PoolsTable
-                  signerOrProvider={signer}
-                  className={tw("w-full")}
-                />
-              </Card>
-            </div>
+          <div className={tw("flex", "flex-1")}>
+            <Card className={tw("p-10", "flex", "flex-1")}>
+              <PoolsTable signerOrProvider={signer} className={tw("w-full")} />
+            </Card>
           </div>
         </div>
       </div>

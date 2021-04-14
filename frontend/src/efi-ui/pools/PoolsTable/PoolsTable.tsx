@@ -1,16 +1,6 @@
-import React, { FC } from "react";
+import { FC } from "react";
 
-import {
-  Alignment,
-  Button,
-  Classes,
-  HTMLTable,
-  Menu,
-  MenuItem,
-  Tag,
-} from "@blueprintjs/core";
-import { IconNames } from "@blueprintjs/icons";
-import { Popover2 } from "@blueprintjs/popover2";
+import { Alignment, Classes, HTMLTable } from "@blueprintjs/core";
 import { Provider } from "@ethersproject/providers";
 import { Signer } from "ethers";
 import { t } from "ttag";
@@ -54,49 +44,6 @@ export const PoolsTable: FC<PoolsTableProps> = ({
 
   return (
     <div className={tw("w-full")}>
-      <div className={tw("flex", "justify-between")}>
-        <div className={tw("flex", "space-x-4")}>
-          <Popover2
-            content={
-              <Menu>
-                <MenuItem text={t`Name`} />
-                <MenuItem text={t`Asset Type`} />
-                <MenuItem text={t`Mint Date`} />
-                <MenuItem text={t`Maturity Date`} />
-                <MenuItem text={t`Time left`} />
-                <MenuItem text={t`ROI`} />
-              </Menu>
-            }
-            placement="bottom-end"
-            minimal
-          >
-            <Button
-              minimal
-              outlined
-              rightIcon={IconNames.DOUBLE_CARET_VERTICAL}
-            >{t`Sort`}</Button>
-          </Popover2>
-          <Tag minimal onRemove={() => {}}>{t`Maturity Date`}</Tag>
-          <Tag minimal onRemove={() => {}}>{t`ROI`}</Tag>
-        </div>
-        <Popover2
-          content={
-            <Menu>
-              {TABLE_HEADERS.map(({ label }) => (
-                <MenuItem key={label} text={label} icon={IconNames.PIN} />
-              ))}
-            </Menu>
-          }
-          placement="bottom-end"
-          minimal
-        >
-          <Button
-            minimal
-            outlined
-            rightIcon={IconNames.CARET_DOWN}
-          >{t`Columns`}</Button>
-        </Popover2>
-      </div>
       <HTMLTable striped className={className} interactive>
         <thead>
           <tr>
