@@ -23,6 +23,7 @@ export function LabeledProgressBar({
       className={tw(
         "flex",
         "h-full",
+        "w-full",
         "flex-col",
         "justify-center",
         "space-y-2"

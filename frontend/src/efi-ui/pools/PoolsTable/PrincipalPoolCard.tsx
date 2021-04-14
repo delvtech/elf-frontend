@@ -1,11 +1,13 @@
 import { ReactElement } from "react";
 
+import { Card, Elevation } from "@blueprintjs/core";
 import { Link } from "@reach/router";
 import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledProgressBar } from "efi-ui/base/LabeledProgressBar/LabeledProgressBar";
+import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { getQueryData } from "efi-ui/base/queryResults";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
@@ -16,10 +18,13 @@ import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { getTimeLeft2 } from "efi/base/time";
 
 import { useTotalLiquidityForPool } from "../useTotalLiquidityForPool/useTotalLiquidityForPool";
+import { formatMoney } from "efi/money/formatMoney";
 
 interface PrincipalPoolCardProps {
   pool: ConvergentCurvePool | undefined;
 }
+
+const cellClassName = tw("flex", "mr-4", "items-center", "overflow-hidden");
 
 export function PrincipalPoolCard({
   pool,
@@ -57,26 +62,48 @@ export function PrincipalPoolCard({
   const timeLeft = getTimeLeft2(maturityDate);
 
   return (
-    <tr>
-      <td>{maturityDate?.toLocaleDateString()}</td>
-      <td>
-        <Link className={tw("flex", "space-x-2")} to={pool?.address || ""}>
-          {getQueryData(poolNameResult)}
-        </Link>
-      </td>
+    <Card
+      elevation={Elevation.TWO}
+      className={tw("grid", "grid-cols-3", "lg:grid-cols-5", "w-full", "grid")}
+    >
+      <div className={cellClassName}>
+        <LabeledText
+          large
+          text={
+            <Link className={tw("flex", "space-x-2")} to={pool?.address || ""}>
+              {getQueryData(poolNameResult)}
+            </Link>
+          }
+          label={`tokens`}
+        />
+      </div>
 
-      <td>${liquidity?.toDecimal()?.toLocaleString()}</td>
-      <td>2.13%</td>
-
-      <td>{startDate?.toLocaleDateString()}</td>
-
-      <td>
+      <div className={tw(cellClassName, "hidden", "lg:flex")}>
+        <LabeledText large text={formatMoney(liquidity)} label={`liquidity`} />
+      </div>
+      <div className={tw(cellClassName, "hidden", "lg:flex")}>
+        <LabeledText large text={formatMoney(liquidity)} label={`ROI`} />
+      </div>
+      <div className={tw(cellClassName, "flex-wrap")}>
+        <LabeledText
+          className={tw("mr-4")}
+          large
+          text={maturityDate?.toLocaleDateString()}
+          label={`start date`}
+        />
+        <LabeledText
+          large
+          text={startDate?.toLocaleDateString()}
+          label={`end date`}
+        />
+      </div>
+      <div className={cellClassName}>
         <LabeledProgressBar
-          progressValue={progressValue}
           label={progressLabel}
+          progressValue={progressValue}
           helperText={timeLeft}
         />
-      </td>
-    </tr>
+      </div>
+    </Card>
   );
 }

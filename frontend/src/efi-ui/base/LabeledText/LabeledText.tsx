@@ -1,6 +1,7 @@
+import React, { ReactElement, ReactNode } from "react";
+
 import { Classes } from "@blueprintjs/core";
 import classNames from "classnames";
-import React, { FC, ReactNode } from "react";
 
 import tw from "efi-tailwindcss-classnames";
 
@@ -37,7 +38,7 @@ interface LabeledTextProps {
   textClassName?: string;
 }
 
-export const LabeledText: FC<LabeledTextProps> = ({
+export function LabeledText({
   text,
   label,
   subLabel,
@@ -48,7 +49,7 @@ export const LabeledText: FC<LabeledTextProps> = ({
   iconClassName,
   icon,
   large = false,
-}) => {
+}: LabeledTextProps): ReactElement {
   return (
     <div className={tw("flex", "items-center")}>
       {icon && <div className={iconClassName}>{icon}</div>}
@@ -79,4 +80,4 @@ export const LabeledText: FC<LabeledTextProps> = ({
       </div>
     </div>
   );
-};
+}
