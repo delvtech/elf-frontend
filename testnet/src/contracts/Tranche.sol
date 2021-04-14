@@ -23,7 +23,7 @@ contract Tranche is ERC20Permit, ITranche {
     // NOTE - we use smaller sizes so that they can be one storage slot
     uint128 public valueSupplied;
     // The total supply of interest tokens
-    uint128 public interestSupply;
+    uint128 public override interestSupply;
     // The timestamp when tokens can be redeemed.
     uint256 public immutable unlockTimestamp;
     // The amount of slippage allowed on the Principal token redemption [0.1 basis points]
@@ -60,6 +60,12 @@ contract Tranche is ERC20Permit, ITranche {
         DateString.encodeAndWriteTimestamp(strategySymbol, expiration, symbol);
     }
 
+    /// @notice An aliasing of the getter for valueSupplied to improve ERC20 compatibility
+    /// @return The number of principal tokens which exist.
+    function totalSupply() external view returns (uint256) {
+        return uint256(valueSupplied);
+    }
+
     /**
     @notice Deposit wrapped position tokens and receive interest and Principal ERC20 tokens.
             If interest has already been accrued by the wrapped position
@@ -67,12 +73,12 @@ contract Tranche is ERC20Permit, ITranche {
             reduced in order to pay for the accrued interest.
     @param _amount The amount of underlying to deposit
     @param _destination The address to mint to
-    @return The amount of principal tokens minted after earned interest discount
+    @return The amount of principal and yield token minted as (pt, yt)
      */
     function deposit(uint256 _amount, address _destination)
         external
         override
-        returns (uint256)
+        returns (uint256, uint256)
     {
         // Transfer the underlying to be wrapped into the position
         underlying.transferFrom(msg.sender, address(position), _amount);
@@ -86,10 +92,11 @@ contract Tranche is ERC20Permit, ITranche {
     ///         only be called when a transfer has already been made to
     ///         the wrapped position contract of the underlying
     /// @param _destination The address to mint to
+    /// @return the amount of principal and yield token minted as (pt, yt)
     function prefundedDeposit(address _destination)
         public
         override
-        returns (uint256)
+        returns (uint256, uint256)
     {
         // We check that this it is possible to deposit
         require(block.timestamp < unlockTimestamp, "expired");
@@ -132,8 +139,8 @@ contract Tranche is ERC20Permit, ITranche {
         interestToken.mint(_destination, usedUnderlying);
         // We mint principal token discounted by the accumulated interest.
         _mint(_destination, adjustedAmount);
-        // We return the number of principal token because it may be useful.
-        return adjustedAmount;
+        // We return the number of principal token and yield token
+        return (adjustedAmount, usedUnderlying);
     }
 
     /**
