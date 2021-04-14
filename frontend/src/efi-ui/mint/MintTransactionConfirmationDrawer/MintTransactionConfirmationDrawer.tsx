@@ -65,7 +65,7 @@ export function MintTransactionConfirmationDrawer({
 
   const amountInAsBigNumber = parseUnits(amountIn || "0", baseAssetDecimals);
   const amountInAsNumber = +(amountIn || 0);
-  const { data: mintPreview } = useMintPreview(
+  const { data: [ptPreview] = [] } = useMintPreview(
     baseAsset,
     tranche,
     amountInAsNumber
@@ -75,8 +75,8 @@ export function MintTransactionConfirmationDrawer({
     "decimals"
   );
 
-  const numPrincipalTokens = mintPreview
-    ? +formatUnits(mintPreview, trancheDecimals)
+  const numPrincipalTokens = ptPreview
+    ? +formatUnits(ptPreview, trancheDecimals)
     : undefined;
 
   const onMintTransaction = useMintTransaction(
