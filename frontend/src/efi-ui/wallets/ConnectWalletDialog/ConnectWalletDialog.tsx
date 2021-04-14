@@ -1,37 +1,41 @@
-import React, { FC } from "react";
+import React, { ReactElement } from "react";
 
-import { Dialog } from "@blueprintjs/core";
+import { Callout, Dialog } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import classNames from "classnames";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { ConnectWalletButtons } from "efi-ui/wallets/ConnectWalletButtons/ConnectWalletButtons";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
+import { ConnectWalletButtons } from "efi-ui/wallets/ConnectWalletButtons/ConnectWalletButtons";
 
 interface ConnectWalletDialogProps {
   isOpen: boolean;
   onClose: () => void;
 }
-export const ConnectWalletDialog: FC<ConnectWalletDialogProps> = ({
+export function ConnectWalletDialog({
   isOpen,
   onClose,
-}) => {
+}: ConnectWalletDialogProps): ReactElement {
   const { darkModeClassName } = useDarkMode();
   return (
     <Dialog
       className={classNames(darkModeClassName, tw("pb-0"))}
       isOpen={isOpen}
       icon={IconNames.SEND_TO_GRAPH}
-      title={<span className={tw("text-base")}>{t`Connect wallet`}</span>}
       onClose={onClose}
     >
       <div
-        className={tw("flex", "w-full", "h-full", "p-12")}
+        className={tw("flex", "flex-col", "w-full", "h-full")}
         data-testid="connect-wallet-dialog"
       >
-        <ConnectWalletButtons onClick={onClose} />
+        <span
+          className={tw("text-center", "text-base", "py-6")}
+        >{t`Select a wallet provider`}</span>
+        <Callout className={tw("p-0")}>
+          <ConnectWalletButtons onClick={onClose} />
+        </Callout>
       </div>
     </Dialog>
   );
-};
+}

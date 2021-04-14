@@ -46,7 +46,7 @@ export function WalletConnectionCard({
       onClose={closeWalletDialog}
       content={
         <div className={tw("w-400")}>
-          <ConnectWalletButtons fill vertical onClick={closeWalletDialog} />
+          <ConnectWalletButtons vertical onClick={closeWalletDialog} />
         </div>
       }
     >
