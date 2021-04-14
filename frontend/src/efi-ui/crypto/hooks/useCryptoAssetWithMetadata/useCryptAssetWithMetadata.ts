@@ -3,21 +3,23 @@ import { ERC20Permit__factory } from "elf-contracts/types/factories/ERC20Permit_
 
 import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
+import { CryptoAssetWithMetadata } from "efi-ui/crypto/CryptoAssetWithMetadata";
 import { CryptoIconSvg, findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import ContractAddresses, {
   KNOWN_ERC20_TOKENS,
   KNOWN_ERC20PERMIT_TOKENS,
 } from "efi/contracts/contractsJson";
 import { CryptoAssetType } from "efi/crypto/CryptoAsset";
+import { NUM_ETH_DECIMALS } from "efi/crypto/ethereum";
 
 /**
  * Turns a token into its CryptoAsset equivalent.
  * NOTE: This will turn a WETH address into an Ethereum CryptoAsset.
  */
-export function useCryptoAssetForToken(
-  tokenAddress: string | undefined
-): CryptoAssetWithIcon | undefined {
+export function useCryptoAssetWithMetadata(
+  tokenAddress: string | undefined,
+  account?: string | null
+): CryptoAssetWithMetadata | undefined {
   const erc20Contract = useSmartContractFromFactory(
     tokenAddress,
     ERC20__factory.connect
@@ -27,7 +29,20 @@ export function useCryptoAssetForToken(
     ERC20Permit__factory.connect
   );
 
+  const { data: name } = useSmartContractReadCall(erc20Contract, "name");
   const { data: symbol } = useSmartContractReadCall(erc20Contract, "symbol");
+  const { data: decimals } = useSmartContractReadCall(
+    erc20Contract,
+    "decimals"
+  );
+  const { data: balanceOf } = useSmartContractReadCall(
+    erc20Contract,
+    "balanceOf",
+    {
+      callArgs: [account as string],
+      enabled: !!account,
+    }
+  );
 
   if (!tokenAddress) {
     return;
@@ -35,10 +50,14 @@ export function useCryptoAssetForToken(
 
   // Turn weth into eth because it is special
   if (tokenAddress === ContractAddresses.wethAddress) {
-    const cryptoAsset: CryptoAssetWithIcon = {
+    const cryptoAsset: CryptoAssetWithMetadata = {
       id: "ethereum",
       type: CryptoAssetType.ETHEREUM,
       tokenContract: undefined,
+      name: "Ethereum",
+      symbol: "ETH",
+      decimals: NUM_ETH_DECIMALS,
+      balanceOf,
       assetIcon: CryptoIconSvg.ETH,
     };
     return cryptoAsset;
@@ -47,10 +66,14 @@ export function useCryptoAssetForToken(
   // If it's a known erc20, make it so
   const assetIcon = findAssetIcon(symbol);
   if (erc20Contract && assetIcon && KNOWN_ERC20_TOKENS.includes(tokenAddress)) {
-    const cryptoAsset: CryptoAssetWithIcon = {
+    const cryptoAsset: CryptoAssetWithMetadata = {
       id: tokenAddress,
       type: CryptoAssetType.ERC20,
       tokenContract: erc20Contract,
+      name,
+      symbol,
+      decimals,
+      balanceOf,
       assetIcon,
     };
     return cryptoAsset;
@@ -61,13 +84,16 @@ export function useCryptoAssetForToken(
     assetIcon &&
     KNOWN_ERC20PERMIT_TOKENS.includes(tokenAddress)
   ) {
-    const cryptoAsset: CryptoAssetWithIcon = {
+    const cryptoAsset: CryptoAssetWithMetadata = {
       id: tokenAddress,
       type: CryptoAssetType.ERC20PERMIT,
       tokenContract: erc20PermitContract,
+      name,
+      symbol,
+      decimals,
+      balanceOf,
       assetIcon,
     };
-
     return cryptoAsset;
   }
 }

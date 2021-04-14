@@ -25,6 +25,7 @@ import { validateTradeValues } from "efi/trade/validateTradeValues";
 
 import { useTokenPoolBalance } from "../../pools/useTokenPoolBalance/useTokenPoolBalance";
 import { formatBalance } from "efi/base/formatBalance";
+import { useCryptoAssetWithMetadata } from "efi-ui/crypto/hooks/useCryptoAssetWithMetadata/useCryptAssetWithMetadata";
 
 interface TradePanelProps {
   library: Web3Provider | undefined;
@@ -258,7 +259,7 @@ function useTokenInfoForTradeInput(
   tokenContract: ERC20 | undefined,
   account: string | null | undefined
 ) {
-  const { symbol, decimals, balanceOf } = useCryptoAssetForToken(
+  const { symbol, decimals, balanceOf } = useCryptoAssetWithMetadata(
     tokenContract?.address,
     account
   ) as CryptoAssetWithMetadata;
