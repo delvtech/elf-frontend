@@ -6,7 +6,7 @@ import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
 import { ERC20 } from "elf-contracts/types/ERC20";
 import { BigNumber, Signer } from "ethers";
-import { formatEther, formatUnits, parseUnits } from "ethers/lib/utils";
+import { formatUnits, parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -16,10 +16,12 @@ import {
   useNumericInput,
 } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
+import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
+import { useCryptoBalance } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
+import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
+import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { TradeInput } from "efi-ui/trade/TradeInput/TradeInput";
-import { useEthBalance } from "efi-ui/wallets/hooks/useEthBalance/useEthBalance";
-import ContractAddresses from "efi/contracts/contractsJson";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { PoolContract } from "efi/pools/PoolContract";
@@ -68,16 +70,18 @@ export function TradePanel(props: TradePanelProps): ReactElement {
   );
 
   const {
-    tokenInSymbol,
-    tokenInDecimals,
-    tokenInBalanceOf,
-    tokenInDisplayBalance,
-    tokenInPoolBalance,
+    symbol: tokenInSymbol,
+    decimals: tokenInDecimals,
+    balanceOf: tokenInBalanceOf,
+    displayBalance: tokenInDisplayBalance,
+    poolBalance: tokenInPoolBalance,
+  } = useTokenInfoForTradeInput(pool, tokenIn, account);
 
-    tokenOutSymbol,
-    tokenOutDisplayBalance,
-    tokenOutPoolBalance,
-  } = useTokenInfoForTradeInputs(pool, tokenIn, tokenOut, account);
+  const {
+    symbol: tokenOutSymbol,
+    decimals: tokenOutDisplayBalance,
+    poolBalance: tokenOutPoolBalance,
+  } = useTokenInfoForTradeInput(pool, tokenIn, account);
 
   const {
     amountIn,
@@ -211,6 +215,7 @@ function useReversableTokens(
   return { tokenIn, tokenOut, swapAssets };
 }
 
+// TODO: clean this up, I don't know what we need amountOut in here
 function useTokenApproval(
   account: string | null | undefined,
   pool: PoolContract | undefined,
@@ -249,89 +254,53 @@ function getSubmitButtonText(
   return buttonLabel;
 }
 
-function useTokenInfoForTradeInputs(
+function useTokenInfoForTradeInput(
   pool: PoolContract | undefined,
-  tokenIn: ERC20 | undefined,
-  tokenOut: ERC20 | undefined,
-  account: string | null | undefined,
-  useEth = true
+  tokenContract: ERC20 | undefined,
+  account: string | null | undefined
 ) {
-  const { data: [tokens, balances] = [] } = usePoolTokens(pool);
-  const tokenInIndex =
-    tokens?.findIndex((token) => token === tokenIn?.address) || 0;
-  const tokenOutIndex = tokenInIndex ? 0 : 1;
-  const tokenInPoolBalance = balances?.[tokenInIndex] || BigNumber.from(0);
-  const tokenOutPoolBalance = balances?.[tokenOutIndex] || BigNumber.from(0);
-
-  const {
-    tokenSymbol: tokenInSymbol,
-    tokenDecimals: tokenInDecimals,
-    tokenBalanceOf: tokenInBalanceOf,
-  } = useTokenData(tokenIn, account, useEth);
-  const tokenInDisplayBalance =
-    tokenInBalanceOf && formatUnits(tokenInBalanceOf, tokenInDecimals);
-
-  const {
-    tokenSymbol: tokenOutSymbol,
-    tokenDecimals: tokenOutDecimals,
-    tokenBalanceOf: tokenOutBalanceOf,
-  } = useTokenData(tokenOut, account, useEth);
-  const tokenOutDisplayBalance =
-    tokenOutBalanceOf && formatUnits(tokenOutBalanceOf, tokenOutDecimals);
+  const poolBalance = useTokenPoolBalance(pool, tokenContract);
+  const { symbol, decimals, balanceOf } = useCryptoInfo(tokenContract, account);
+  const displayBalance = balanceOf && formatUnits(balanceOf, decimals);
 
   return {
-    tokenInSymbol,
-    tokenInDecimals,
-    tokenInBalanceOf,
-    tokenInDisplayBalance,
-    tokenInPoolBalance,
-
-    tokenOutSymbol,
-    tokenOutDecimals,
-    tokenOutBalanceOf,
-    tokenOutDisplayBalance,
-    tokenOutPoolBalance,
+    symbol,
+    decimals,
+    balanceOf,
+    displayBalance,
+    poolBalance,
   };
 }
-function useTokenData(
+
+// TODO: move somewhere shared
+function useTokenPoolBalance(
+  pool: PoolContract | undefined,
+  tokenContract: ERC20 | undefined
+): BigNumber | undefined {
+  const { data: [tokens, balances] = [] } = usePoolTokens(pool);
+  const index =
+    tokens?.findIndex((token) => token === tokenContract?.address) ?? -1;
+
+  const poolBalance = balances?.[index];
+  return poolBalance;
+}
+
+// TODO: move somewhere shared
+function useCryptoInfo(
   tokenContract: ERC20 | undefined,
-  account: string | null | undefined,
-  useEth = true
+  account: string | null | undefined
 ) {
-  const { data: tokenSymbol } = useSmartContractReadCall(
-    tokenContract,
-    "symbol",
-    { enabled: !useEth }
-  );
-  const { data: tokenDecimals } = useSmartContractReadCall(
-    tokenContract,
-    "decimals",
-    { enabled: !useEth }
-  );
-
-  const { data: tokenBalanceOf } = useSmartContractReadCall(
-    tokenContract,
-    "balanceOf",
-    { enabled: !!account && !useEth, callArgs: [account as string] }
-  );
-
   const { library } = useWeb3React<Web3Provider>();
-  const { data: ethBalance } = useEthBalance(library, account);
 
-  if (useEth && tokenContract?.address === ContractAddresses.wethAddress) {
-    return {
-      tokenSymbol: "ETH",
-      tokenDecimals: 18,
-      tokenBalanceOf: ethBalance,
-      tokenDisplayBalance: formatEther(ethBalance ?? 0),
-    };
-  }
-
+  const asset = useCryptoAssetForToken(tokenContract?.address);
+  const symbol = useCryptoSymbol(asset);
+  const decimals = useCryptoDecimals(asset);
+  const balanceOf = useCryptoBalance(library, account, asset);
   return {
-    tokenSymbol,
-    tokenDecimals,
-    tokenBalanceOf,
-    tokenDisplayBalance: formatUnits(tokenBalanceOf ?? 0),
+    asset,
+    symbol,
+    decimals,
+    balanceOf,
   };
 }
 
