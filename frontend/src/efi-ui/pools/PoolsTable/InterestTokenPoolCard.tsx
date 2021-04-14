@@ -17,13 +17,13 @@ import { useTrancheForInterestToken } from "efi-ui/tranche/useTrancheForInterest
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { getTimeLeft2 } from "efi/base/time";
 
-interface InterestTokenPoolTableRowProps {
+interface InterestTokenPoolCardProps {
   pool: WeightedPool | undefined;
 }
 
-export function InterestTokenPoolTableRow({
+export function InterestTokenPoolCard({
   pool,
-}: InterestTokenPoolTableRowProps): ReactElement | null {
+}: InterestTokenPoolCardProps): ReactElement | null {
   const interestToken = useInterestTokenForPool(pool);
   const tranche = useTrancheForInterestToken(interestToken);
 

@@ -7,8 +7,8 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { FormGroupLabel } from "efi-ui/base/FormGroupLabel/FormGroupLabel";
-import { InterestTokenPoolTableRow } from "efi-ui/pools/PoolsTable/InterestTokenPoolTableRow";
-import { TranchePoolTableRow } from "efi-ui/pools/PoolsTable/TranchePoolTableRow";
+import { InterestTokenPoolCard } from "efi-ui/pools/PoolsTable/InterestTokenPoolCard";
+import { PrincipalPoolCard } from "efi-ui/pools/PoolsTable/PrincipalPoolCard";
 import { useConvergentCurvePools } from "efi-ui/pools/useConvergentCurvePools/useConvergentCurvePools";
 import { useWeightedPools } from "efi-ui/pools/useWeightedPools/useWeightedPools";
 
@@ -55,7 +55,7 @@ export function PoolsTable({
         <tbody className={Classes.TEXT_LARGE}>
           {principalTokenPools.map((pool, index) => {
             return (
-              <TranchePoolTableRow
+              <PrincipalPoolCard
                 key={pool?.contractAddress || index}
                 pool={pool}
               />
@@ -63,7 +63,7 @@ export function PoolsTable({
           })}
           {interestTokenPools.map((pool, index) => {
             return (
-              <InterestTokenPoolTableRow
+              <InterestTokenPoolCard
                 key={pool?.contractAddress || index}
                 pool={pool}
               />

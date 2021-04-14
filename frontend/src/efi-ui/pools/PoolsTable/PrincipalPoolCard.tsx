@@ -17,13 +17,13 @@ import { getTimeLeft2 } from "efi/base/time";
 
 import { useTotalLiquidityForPool } from "../useTotalLiquidityForPool/useTotalLiquidityForPool";
 
-interface TranchePoolTableRowProps {
+interface PrincipalPoolCardProps {
   pool: ConvergentCurvePool | undefined;
 }
 
-export function TranchePoolTableRow({
+export function PrincipalPoolCard({
   pool,
-}: TranchePoolTableRowProps): ReactElement | null {
+}: PrincipalPoolCardProps): ReactElement | null {
   const tranche = useTrancheForPool(pool);
   const liquidity = useTotalLiquidityForPool(pool);
   const trancheCreatedAtResult = useTrancheCreatedAt(tranche);
