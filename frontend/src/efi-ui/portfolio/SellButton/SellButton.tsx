@@ -1,4 +1,4 @@
-import React, { FC, Fragment, useState } from "react";
+import React, { Fragment, ReactElement, useState } from "react";
 
 import { Button, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
@@ -25,7 +25,7 @@ interface SellButtonProps {
   baseAsset: CryptoAssetWithIcon | undefined;
 }
 
-export const SellButton: FC<SellButtonProps> = ({
+export function SellButton({
   baseAsset,
   tranche,
   account,
@@ -35,7 +35,7 @@ export const SellButton: FC<SellButtonProps> = ({
   pool,
   sellAmount,
   walletConnectionActive,
-}) => {
+}: SellButtonProps): ReactElement {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
 
   return (
@@ -64,4 +64,4 @@ export const SellButton: FC<SellButtonProps> = ({
       )}
     </Fragment>
   );
-};
+}
