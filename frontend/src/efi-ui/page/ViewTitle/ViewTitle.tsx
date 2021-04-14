@@ -1,4 +1,4 @@
-import React, { FC, Fragment, ReactNode } from "react";
+import React, { Fragment, ReactElement, ReactNode } from "react";
 
 import { Classes, H2 } from "@blueprintjs/core";
 import classNames from "classnames";
@@ -20,11 +20,11 @@ const subtitleClassName = classNames(
   tw("text-base")
 );
 
-export const ViewTitle: FC<ViewTitleProps> = ({
+export function ViewTitle({
   title,
   subtitle,
   titleTag,
-}) => {
+}: ViewTitleProps): ReactElement {
   return (
     <div className={tw("flex", "justify-between", "w-full")}>
       <div className={tw("flex", "flex-col", "justify-start", "flex-1")}>
@@ -42,4 +42,4 @@ export const ViewTitle: FC<ViewTitleProps> = ({
       </div>
     </div>
   );
-};
+}

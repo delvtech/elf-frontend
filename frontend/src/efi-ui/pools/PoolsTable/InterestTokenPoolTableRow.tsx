@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { ReactElement } from "react";
 
 import { Link } from "@reach/router";
 import { WeightedPool } from "elf-contracts/types/WeightedPool";
@@ -21,9 +21,9 @@ interface InterestTokenPoolTableRowProps {
   pool: WeightedPool | undefined;
 }
 
-export const InterestTokenPoolTableRow: FC<InterestTokenPoolTableRowProps> = ({
+export function InterestTokenPoolTableRow({
   pool,
-}) => {
+}: InterestTokenPoolTableRowProps): ReactElement | null {
   const interestToken = useInterestTokenForPool(pool);
   const tranche = useTrancheForInterestToken(interestToken);
 
@@ -81,4 +81,4 @@ export const InterestTokenPoolTableRow: FC<InterestTokenPoolTableRowProps> = ({
       </td>
     </tr>
   );
-};
+}

@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { ReactElement } from "react";
 
 import { Link } from "@reach/router";
 import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
@@ -14,13 +14,16 @@ import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForP
 import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { getTimeLeft2 } from "efi/base/time";
+
 import { useTotalLiquidityForPool } from "../useTotalLiquidityForPool/useTotalLiquidityForPool";
 
 interface TranchePoolTableRowProps {
   pool: ConvergentCurvePool | undefined;
 }
 
-export const TranchePoolTableRow: FC<TranchePoolTableRowProps> = ({ pool }) => {
+export function TranchePoolTableRow({
+  pool,
+}: TranchePoolTableRowProps): ReactElement | null {
   const tranche = useTrancheForPool(pool);
   const liquidity = useTotalLiquidityForPool(pool);
   const trancheCreatedAtResult = useTrancheCreatedAt(tranche);
@@ -76,4 +79,4 @@ export const TranchePoolTableRow: FC<TranchePoolTableRowProps> = ({ pool }) => {
       </td>
     </tr>
   );
-};
+}

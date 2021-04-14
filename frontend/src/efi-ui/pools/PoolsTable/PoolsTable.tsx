@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { ReactElement } from "react";
 
 import { Alignment, Classes, HTMLTable } from "@blueprintjs/core";
 import { Provider } from "@ethersproject/providers";
@@ -31,10 +31,10 @@ const TABLE_HEADERS: PoolsTableHeaderProps[] = [
   { label: t`Tranche State` },
 ];
 
-export const PoolsTable: FC<PoolsTableProps> = ({
+export function PoolsTable({
   className,
   signerOrProvider,
-}) => {
+}: PoolsTableProps): ReactElement {
   const principalTokenPools = useConvergentCurvePools(signerOrProvider);
   const interestTokenPools = useWeightedPools(signerOrProvider);
 
@@ -73,14 +73,14 @@ export const PoolsTable: FC<PoolsTableProps> = ({
       </HTMLTable>
     </div>
   );
-};
+}
 
 interface PoolsTableHeaderProps {
   label: string;
   tooltip?: string;
 }
 
-const PoolsTableHeader: FC<PoolsTableHeaderProps> = ({ label, tooltip }) => {
+function PoolsTableHeader({ label, tooltip }: PoolsTableHeaderProps) {
   return (
     <th key={label}>
       <FormGroupLabel
@@ -90,4 +90,4 @@ const PoolsTableHeader: FC<PoolsTableHeaderProps> = ({ label, tooltip }) => {
       />
     </th>
   );
-};
+}

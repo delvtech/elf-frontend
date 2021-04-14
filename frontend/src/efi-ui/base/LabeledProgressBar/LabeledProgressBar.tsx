@@ -1,6 +1,8 @@
+import React, { ReactElement } from "react";
+
 import { Classes, Intent, ProgressBar } from "@blueprintjs/core";
 import classNames from "classnames";
-import React, { FC } from "react";
+
 import tw from "efi-tailwindcss-classnames";
 
 interface LabeledProgressBarProps {
@@ -10,12 +12,12 @@ interface LabeledProgressBarProps {
   helperText?: string;
   intent?: Intent;
 }
-export const LabeledProgressBar: FC<LabeledProgressBarProps> = ({
+export function LabeledProgressBar({
   helperText,
   intent,
   label,
   progressValue,
-}) => {
+}: LabeledProgressBarProps): ReactElement {
   return (
     <div
       className={tw(
@@ -40,4 +42,4 @@ export const LabeledProgressBar: FC<LabeledProgressBarProps> = ({
       )}
     </div>
   );
-};
+}
