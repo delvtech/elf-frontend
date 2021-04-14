@@ -8,7 +8,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
-import { SellPrincipalTokensTransactionDrawer } from "efi-ui/tranche/SellPrincipalTokensTransactionDrawer/SellPrincipalTokensTransactionDrawer";
+import { SellPrincipalTokensTransactionDrawer } from "efi-ui/swaps/SellPrincipalTokensTransactionDrawer/SellPrincipalTokensTransactionDrawer";
 import { PoolContract } from "efi/pools/PoolContract";
 
 interface SellButtonProps {

@@ -1,4 +1,4 @@
-import React, { FC, ReactElement } from "react";
+import React, { FC } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
@@ -19,7 +19,7 @@ import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSy
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
 import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
-import { PrincipalTokenTransactionDetails } from "efi-ui/tranche/PrincipalTokenTransactionDetails/PrincipalTokenTransactionDetails";
+import { PrincipalTokenTransactionDetails } from "efi-ui/swaps/PrincipalTokenTransactionDetails/PrincipalTokenTransactionDetails";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { calculatePurchasePrice } from "efi/pools/calculatePurchasePrice";
 import { calculateSlippage } from "efi/pools/calculateSlippage";
@@ -29,7 +29,7 @@ import { ERC20 } from "elf-contracts/types/ERC20";
 import { getBalancerApprovalMessage } from "efi-ui/balancer/balancerApprovalMessage";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 
-interface StakePrincipalTokensTransactionDrawerProps {
+interface SellPrincipalTransactionDrawerProps {
   chainId: number | undefined;
   account: string | null | undefined;
   walletConnectionActive: boolean;
@@ -42,7 +42,7 @@ interface StakePrincipalTokensTransactionDrawerProps {
   onClose: () => void;
 }
 
-export function StakePrincipalTokensTransactionDrawer({
+export const SellPrincipalTokensTransactionDrawer: FC<SellPrincipalTransactionDrawerProps> = ({
   connector,
   walletConnectionActive,
   library,
@@ -54,7 +54,7 @@ export function StakePrincipalTokensTransactionDrawer({
   isOpen,
   onClose,
   pool,
-}: StakePrincipalTokensTransactionDrawerProps): ReactElement {
+}) => {
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
   const balancerVault = useBalancerVault();
 
@@ -167,7 +167,7 @@ export function StakePrincipalTokensTransactionDrawer({
       }
     />
   );
-}
+};
 
 function getPriceSlippageAndTradingFee(
   amountIn: number,

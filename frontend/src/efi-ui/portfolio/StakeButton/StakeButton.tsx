@@ -8,7 +8,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
-import { StakePrincipalTokensTransactionDrawer } from "efi-ui/tranche/StakePrincipalTokensTransactionDrawer/StakePrincipalTokensTransactionDrawer";
+import { StakePrincipalTokensTransactionDrawer } from "efi-ui/swaps/StakePrincipalTokensTransactionDrawer/StakePrincipalTokensTransactionDrawer";
 import { PoolContract } from "efi/pools/PoolContract";
 
 interface StakeButtonProps {
