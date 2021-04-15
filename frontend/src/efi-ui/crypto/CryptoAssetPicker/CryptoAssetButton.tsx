@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { ReactElement } from "react";
 
 import { Classes, Icon } from "@blueprintjs/core";
 import { IconName } from "@blueprintjs/icons";
@@ -20,7 +20,7 @@ interface CryptoAssetButtonProps {
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-export const CryptoAssetButton: FC<CryptoAssetButtonProps> = ({
+export function CryptoAssetButton({
   fill,
   minimal,
   outlined,
@@ -28,7 +28,7 @@ export const CryptoAssetButton: FC<CryptoAssetButtonProps> = ({
   cryptoAsset: { assetIcon: AssetIcon },
   rightIcon,
   onClick,
-}) => {
+}: CryptoAssetButtonProps): ReactElement {
   const assetName = useCryptoName(cryptoAsset);
   const assetSymbol = useCryptoSymbol(cryptoAsset);
 
@@ -53,7 +53,7 @@ export const CryptoAssetButton: FC<CryptoAssetButtonProps> = ({
       {rightIcon && <Icon icon={rightIcon} className={tw("pr-4")} />}
     </button>
   );
-};
+}
 interface AssetLabelProps {
   icon: React.FC<
     React.SVGProps<SVGSVGElement> & {
@@ -63,11 +63,11 @@ interface AssetLabelProps {
   assetName: string;
   assetSymbol: string;
 }
-const AssetLabel: FC<AssetLabelProps> = ({
+function AssetLabel({
   icon: AssetIcon,
   assetName,
   assetSymbol,
-}) => {
+}: AssetLabelProps): ReactElement {
   return (
     <div className={tw("p-4", "justify-between")}>
       <div className={tw("flex", "items-center", "space-x-4", "flex-1")}>
@@ -85,4 +85,4 @@ const AssetLabel: FC<AssetLabelProps> = ({
       </div>
     </div>
   );
-};
+}
