@@ -1,33 +1,33 @@
 import React, { ReactElement } from "react";
 
+import { Button, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
+import { ERC20 } from "elf-contracts/types/ERC20";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { BigNumber, Signer } from "ethers";
+import { parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
+import tw from "efi-tailwindcss-classnames";
+import { getBalancerApprovalMessage } from "efi-ui/balancer/balancerApprovalMessage";
+import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
+import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
+import { WalletApprovalCallout } from "efi-ui/contracts/TransactionDrawer/WalletApprovalCallout";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
+import { StakeForm } from "efi-ui/pools/StakeForm/StakeForm";
+import { useJoinPool } from "efi-ui/pools/useJoinPool/useJoinPool";
 import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
-import { PoolContract } from "efi/pools/PoolContract";
+import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
+import { WalletDrawer } from "efi-ui/wallets/WalletDrawer/WalletDrawer";
 import {
   CryptoAsset,
   CryptoAssetType,
   findTokenContract,
 } from "efi/crypto/CryptoAsset";
-import { ERC20 } from "elf-contracts/types/ERC20";
-import { WalletDrawer } from "efi-ui/wallets/WalletDrawer/WalletDrawer";
-import { StakeForm } from "efi-ui/pools/StakeForm/StakeForm";
-import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
-import tw from "efi-tailwindcss-classnames";
-import { WalletApprovalCallout } from "efi-ui/contracts/TransactionDrawer/WalletApprovalCallout";
-import { parseUnits } from "@ethersproject/units";
-import { getBalancerApprovalMessage } from "efi-ui/balancer/balancerApprovalMessage";
-import { Button, Intent } from "@blueprintjs/core";
-import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
-import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
-import { useJoinPool } from "efi-ui/pools/useJoinPool/useJoinPool";
+import { PoolContract } from "efi/pools/PoolContract";
 
 interface StakePrincipalTokensTransactionDrawerProps {
   account: string | null | undefined;
