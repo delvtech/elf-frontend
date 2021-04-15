@@ -15,8 +15,7 @@ import {
   useNumericInput,
 } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { CryptoAssetWithMetadata } from "efi-ui/crypto/CryptoAssetWithMetadata";
-import { useCryptoAssetWithMetadata } from "efi-ui/crypto/hooks/useCryptoAssetWithMetadata/useCryptAssetWithMetadata";
+import { useCryptoAssetMetadata } from "efi-ui/crypto/hooks/useCryptoAssetMetadata/useCryptAssetMetadata";
 import { useCryptoBalance } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { TradeInput } from "efi-ui/trade/TradeInput/TradeInput";
 import { formatBalance } from "efi/base/formatBalance";
@@ -26,6 +25,7 @@ import { PoolContract } from "efi/pools/PoolContract";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
 
 import { useTokenPoolBalance } from "../../pools/useTokenPoolBalance/useTokenPoolBalance";
+import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
 
 interface TradePanelProps {
   library: Web3Provider | undefined;
@@ -261,13 +261,14 @@ function useTokenInfoForTradeInput(
   account: string | null | undefined,
   library: Web3Provider | undefined
 ) {
-  const asset = useCryptoAssetWithMetadata(tokenContract?.address);
-  const { decimals, symbol } = asset as CryptoAssetWithMetadata;
+  const asset = useCryptoAssetForToken(tokenContract?.address);
+  const { decimals, symbol } = useCryptoAssetMetadata(asset);
   const balanceOf = useCryptoBalance(library, account, asset);
   const poolBalance = useTokenPoolBalance(pool, tokenContract);
   const displayBalance = formatBalance(balanceOf, decimals);
 
   return {
+    asset,
     symbol,
     decimals,
     balanceOf,

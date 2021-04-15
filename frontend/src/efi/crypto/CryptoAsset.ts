@@ -37,15 +37,24 @@ export function findTokenContract(
   if (!cryptoAsset) {
     return;
   }
-  const { type, tokenContract } = cryptoAsset;
+  const { type } = cryptoAsset;
 
   switch (type) {
-    case CryptoAssetType.ERC20:
-    case CryptoAssetType.ERC20PERMIT:
-      return tokenContract;
     case CryptoAssetType.ETHEREUM:
       return;
+    case CryptoAssetType.ERC20:
+    case CryptoAssetType.ERC20PERMIT:
+      if (isERC20Asset(cryptoAsset)) {
+        return cryptoAsset.tokenContract;
+      }
+      break;
     default:
       assertNever(type);
   }
+}
+
+function isERC20Asset(
+  cryptoAsset: CryptoAsset
+): cryptoAsset is Erc20CryptoAsset {
+  return cryptoAsset.type === CryptoAssetType.ERC20;
 }

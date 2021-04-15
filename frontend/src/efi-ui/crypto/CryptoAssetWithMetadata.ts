@@ -1,9 +1,8 @@
 import { SvgIcon } from "efi-ui/base/SvgIcon";
-import { CryptoAsset } from "efi/crypto/CryptoAsset";
 
-export type CryptoAssetWithMetadata = CryptoAsset & {
+export interface CryptoAssetMetadata {
   name: string | undefined;
   symbol: string | undefined;
   decimals: number | undefined;
-  assetIcon: SvgIcon;
-};
+  icon: SvgIcon | undefined;
+}
