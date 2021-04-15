@@ -75,7 +75,7 @@ export function PoolDetails({
             <TokenSummary pool={pool} />
           </div>
           <div className={tw("flex", "space-x-12")}>
-            <PoolCharts />
+            <PoolCharts pool={pool} />
             <PoolActionsCard
               library={library}
               signer={signer}
