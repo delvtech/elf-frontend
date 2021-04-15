@@ -46,7 +46,7 @@ export const TransactionForm: FC<TransactionFormProps> = ({
   buttonIntent = Intent.PRIMARY,
   onTransaction,
 }) => {
-  const [stringValue, onChange, setValue] = useNumericInput(
+  const { stringValue, onChange, setValue } = useNumericInput(
     numericInputOptions
   );
   const value = stringValue
