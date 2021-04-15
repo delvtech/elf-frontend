@@ -30,7 +30,7 @@ import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
 import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
-import { BuyPrincipalTokensTransactionConfirmationDrawer } from "efi-ui/tranche/BuyPrincipalTokensTransactionConfirmationDrawer/BuyPrincipalTokensTransactionConfirmationDrawer";
+import { BuyPrincipalTokensTransactionConfirmationDrawer } from "efi-ui/swaps/BuyPrincipalTokensTransactionConfirmationDrawer/BuyPrincipalTokensTransactionConfirmationDrawer";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 import { useBalancerTransactionInputs } from "efi-ui/balancer/useBalancerTransactionInputs";
 import { formatBalance } from "efi/base/formatBalance";

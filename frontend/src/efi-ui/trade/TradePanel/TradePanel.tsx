@@ -298,10 +298,15 @@ function useUpdateInputs(
   );
 
   // useNumericInput ensures valid numeric inputs from the user
-  const [stringValueIn, onChangeIn, setValueIn] = useNumericInput(
-    numericInputOptions
-  );
-  const [stringValueOut, onChangeOut] = useNumericInput(numericInputOptions);
+  const {
+    stringValue: stringValueIn,
+    onChange: onChangeIn,
+    setValue: setValueIn,
+  } = useNumericInput(numericInputOptions);
+  const {
+    stringValue: stringValueOut,
+    onChange: onChangeOut,
+  } = useNumericInput(numericInputOptions);
 
   useEffect(() => {
     onAmountInChange(stringValueIn);

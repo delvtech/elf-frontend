@@ -1,19 +1,17 @@
 import React, { FC, ReactElement, useCallback, useState } from "react";
 
-import { Card, Classes, Colors, Icon, Tag } from "@blueprintjs/core";
+import { Callout, Card, Classes, Colors, Icon, Tag } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import classNames from "classnames";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import { WalletJazzicon } from "efi-ui/wallets/WalletJazzicon/WalletJazzicon";
 import { isMainnet } from "efi/crypto/ethereum";
-import { formatChainName } from "efi/crypto/formatChainName";
-import { formatWalletAddress } from "efi/wallets/formatWalletAddress";
 
 import { Popover2 } from "@blueprintjs/popover2";
 import { ConnectWalletButtons } from "efi-ui/wallets/ConnectWalletButtons/ConnectWalletButtons";
+import { WalletConnectionSummary } from "./WalletConnectionSummary";
 
 interface WalletConnectionCardProps {
   chainId: number | undefined;
@@ -50,8 +48,8 @@ export function WalletConnectionCard({
         </div>
       }
     >
-      <Card
-        className={classNames(tw("h-20", "flex", "items-center"), className)}
+      <Callout
+        className={classNames(tw("flex", "items-center"), className)}
         onClick={openWalletDialog}
         style={getCardStyle(chainId, isDarkMode)}
       >
@@ -70,7 +68,7 @@ export function WalletConnectionCard({
             connectorMessage={connectorMessage}
           />
         )}
-      </Card>
+      </Callout>
     </Popover2>
   );
 }
@@ -100,59 +98,6 @@ const ConnectToBegin: FC<ConnectToBeginProps> = ({
         minimal
         large
         icon={<Icon icon={IconNames.DOT} color={statusColor} />}
-      >
-        {connectorMessage}
-      </Tag>
-    </div>
-  );
-};
-
-interface WalletSummaryProps {
-  account: string | null | undefined;
-  active: boolean;
-  chainId: number | undefined;
-  connectionStatusColor: string;
-  connectorMessage: string;
-}
-const WalletConnectionSummary: FC<WalletSummaryProps> = ({
-  account,
-  active,
-  chainId,
-  connectionStatusColor,
-  connectorMessage,
-}) => {
-  return (
-    <div
-      className={tw(
-        "flex",
-        "w-full",
-        "items-center",
-        "space-x-10",
-        "justify-between"
-      )}
-    >
-      <div className={classNames(tw("flex", "space-x-4", "items-center"))}>
-        <WalletJazzicon account={account} />
-
-        <button className={Classes.BUTTON_TEXT}>
-          <div className={tw("flex", "flex-col")}>
-            <div className={tw("flex", "items-center", "justify-between")}>
-              <span className={classNames(Classes.TEXT_LARGE)}>
-                {account ? formatWalletAddress(account) : null}
-              </span>
-            </div>
-            <div className={tw("flex", "items-center", "justify-between")}>
-              <span className={classNames(Classes.TEXT_MUTED)}>
-                {formatChainName(active, chainId)}
-              </span>
-            </div>
-          </div>
-        </button>
-      </div>
-      <Tag
-        minimal
-        large
-        icon={<Icon icon={IconNames.DOT} color={connectionStatusColor} />}
       >
         {connectorMessage}
       </Tag>

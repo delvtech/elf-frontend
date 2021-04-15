@@ -8,10 +8,10 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
-import { SellPrincipalTokensTransactionDrawer } from "efi-ui/swaps/SellPrincipalTokensTransactionDrawer/SellPrincipalTokensTransactionDrawer";
+import { StakePrincipalTokensTransactionDrawer } from "efi-ui/pools/StakePrincipalTokensTransactionDrawer/StakePrincipalTokensTransactionDrawer";
 import { PoolContract } from "efi/pools/PoolContract";
 
-interface SellButtonProps {
+interface StakeButtonProps {
   chainId: number | undefined;
   account: string | null | undefined;
   walletConnectionActive: boolean;
@@ -25,7 +25,7 @@ interface SellButtonProps {
   baseAsset: CryptoAssetWithIcon | undefined;
 }
 
-export function SellButton({
+export function StakeButton({
   baseAsset,
   tranche,
   account,
@@ -35,7 +35,7 @@ export function SellButton({
   pool,
   sellAmount,
   walletConnectionActive,
-}: SellButtonProps): ReactElement {
+}: StakeButtonProps): ReactElement {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
 
   return (
@@ -46,20 +46,17 @@ export function SellButton({
         intent={Intent.PRIMARY}
         onClick={() => setDrawerOpen(true)}
       >
-        <div className={tw("p-2", "text-base")}>{t`Sell`}</div>
+        <div className={tw("p-2", "text-base")}>{t`Stake`}</div>
       </Button>
       {!baseAsset ? null : (
-        <SellPrincipalTokensTransactionDrawer
+        <StakePrincipalTokensTransactionDrawer
           isOpen={isDrawerOpen}
           tranche={tranche}
           account={account}
           baseAsset={baseAsset}
-          chainId={chainId}
-          connector={connector}
           library={library}
           onClose={() => setDrawerOpen(false)}
           pool={pool}
-          walletConnectionActive={walletConnectionActive}
         />
       )}
     </Fragment>

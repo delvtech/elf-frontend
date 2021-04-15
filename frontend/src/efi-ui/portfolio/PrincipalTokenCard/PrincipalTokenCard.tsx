@@ -2,7 +2,6 @@ import React, { ReactElement, ReactNode } from "react";
 
 import {
   AnchorButton,
-  Button,
   ButtonGroup,
   Callout,
   Card,
@@ -15,6 +14,7 @@ import { IconNames } from "@blueprintjs/icons";
 import { Tooltip2 } from "@blueprintjs/popover2";
 import { Web3Provider } from "@ethersproject/providers";
 import { navigate } from "@reach/router";
+import { AbstractConnector } from "@web3-react/abstract-connector";
 import classNames from "classnames";
 import { formatDuration, intervalToDuration } from "date-fns";
 import { Tranche } from "elf-contracts/types/Tranche";
@@ -27,21 +27,21 @@ import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
+import { useCryptoName } from "efi-ui/crypto/hooks/useCryptoName/useCryptoName";
+import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
+import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
+import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
+import { SellButton } from "efi-ui/portfolio/SellButton/SellButton";
+import { StakeButton } from "efi-ui/portfolio/StakeButton/StakeButton";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
+import { useBaseAssetForTranche } from "efi-ui/tranche/useBaseAssetForTranche";
+import { useUnderlyingVaultForTranche } from "efi-ui/tranche/useUnderlyingVaultForTranche";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
+import { formatAbbreviatedDate } from "efi/base/dates";
 import { formatMoney } from "efi/money/formatMoney";
 import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
-import { useUnderlyingVaultForTranche } from "efi-ui/tranche/useUnderlyingVaultForTranche";
-import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
-import { useBaseAssetForTranche } from "efi-ui/tranche/useBaseAssetForTranche";
-import { useCryptoName } from "efi-ui/crypto/hooks/useCryptoName/useCryptoName";
-import { formatAbbreviatedDate } from "efi/base/dates";
-import { SellButton } from "efi-ui/portfolio/SellButton/SellButton";
-import { AbstractConnector } from "@web3-react/abstract-connector";
-import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
-import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 
 interface PrincipalTokenCardProps {
   chainId: number | undefined;
@@ -260,9 +260,17 @@ export function PrincipalTokenCard({
           baseAsset={baseAsset}
           walletConnectionActive={walletConnectionActive}
         />
-        <Button fill minimal intent={Intent.PRIMARY}>
-          <div className={tw("p-2", "text-base")}>{t`Stake`}</div>
-        </Button>
+        <StakeButton
+          library={library}
+          connector={connector}
+          chainId={chainId}
+          account={account}
+          tranche={tranche}
+          pool={pool}
+          sellAmount={trancheBalance.toString()}
+          baseAsset={baseAsset}
+          walletConnectionActive={walletConnectionActive}
+        />
         <AnchorButton
           intent={Intent.PRIMARY}
           onClick={() => navigate(`exchange/${pool?.address}`)}

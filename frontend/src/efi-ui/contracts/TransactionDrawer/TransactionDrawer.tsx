@@ -1,9 +1,8 @@
 import React, { ReactElement } from "react";
 
-import { Button, Drawer, Intent } from "@blueprintjs/core";
+import { Button, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
-import classNames from "classnames";
 import { ERC20 } from "elf-contracts/types/ERC20";
 import { BigNumber, Signer } from "ethers";
 import { t } from "ttag";
@@ -11,7 +10,6 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { SvgIcon } from "efi-ui/base/SvgIcon";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
-import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { ERC20ApproveButton } from "efi-ui/token/ERC20ApproveButton/ERC20ApproveButton";
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
 import {
@@ -20,8 +18,8 @@ import {
   findTokenContract,
 } from "efi/crypto/CryptoAsset";
 
-import { ConnectWalletCallout } from "./ConnectWalletCallout";
 import { WalletApprovalCallout } from "./WalletApprovalCallout";
+import { WalletDrawer } from "efi-ui/wallets/WalletDrawer/WalletDrawer";
 
 interface TransactionDrawerProps {
   account: string | null | undefined;
@@ -47,18 +45,14 @@ export function TransactionDrawer({
   assetInIcon,
   assetInSymbol,
   assetIn,
-  chainId,
-  connector,
   isOpen,
   library,
   onClose,
   onConfirmTransaction,
   transactionDetails,
-  walletConnectionActive,
   approvalSpenderAddress,
   walletApprovalMessageRenderer,
 }: TransactionDrawerProps): ReactElement {
-  const { isDarkMode, darkModeClassName } = useDarkMode();
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
 
   // base asset calls
@@ -78,30 +72,12 @@ export function TransactionDrawer({
     allowance
   );
 
-  return (
-    <Drawer
-      isOpen={isOpen}
-      onClose={onClose}
-      size={500}
-      style={!isDarkMode ? { background: "var(--bp3-bg-color)" } : {}}
-      className={classNames(
-        darkModeClassName,
-        tw(
-          "flex",
-          "flex-col",
-          "justify-between",
-          "text-base",
-          "overflow-scroll",
-          "p-10",
-          {
-            "text-gray-700": !isDarkMode,
-            "text-white": isDarkMode,
-          }
-        )
-      )}
-    >
-      {!account ? <ConnectWalletCallout /> : null}
+  const message = assetInSymbol
+    ? walletApprovalMessageRenderer(assetInSymbol)
+    : undefined;
 
+  return (
+    <WalletDrawer isOpen={isOpen} onClose={onClose}>
       <div
         className={tw(
           "flex",
@@ -116,12 +92,12 @@ export function TransactionDrawer({
         {
           // we can't pull this out to a new variable because typescript can't
           // narrow the type of baseAssetContract when referencing a variable
-          account && assetIn?.type !== CryptoAssetType.ETHEREUM ? (
+          account && message && assetIn?.type !== CryptoAssetType.ETHEREUM ? (
             <WalletApprovalCallout
-              messageRenderer={walletApprovalMessageRenderer}
+              message={message}
+              signer={signer}
               account={account}
-              contract={baseAssetContract as ERC20Shim}
-              tokenSymbol={assetInSymbol}
+              cryptoAsset={assetIn}
               approvalAmount={amountIn}
             />
           ) : null
@@ -157,7 +133,7 @@ export function TransactionDrawer({
           </Button>
         </div>
       </div>
-    </Drawer>
+    </WalletDrawer>
   );
 }
 

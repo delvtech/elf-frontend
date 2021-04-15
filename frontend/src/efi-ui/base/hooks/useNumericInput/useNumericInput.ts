@@ -1,5 +1,7 @@
 import { ChangeEvent, useCallback, useState } from "react";
 
+import { ANY_NUMBER_REGEX } from "efi/base/numbers";
+
 export interface NumericInputOptions {
   /**
    * If the user tries to enter a value lower than min, the change is ignored.
@@ -18,20 +20,18 @@ export interface NumericInputOptions {
   maxPrecision?: number;
 }
 
-const validDecimalNumber = /^-?[0-9]\d*\.?\d*$/;
+interface UseNumericInput {
+  stringValue: string | undefined;
+  onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  setValue: (value: string | undefined) => void;
+}
 
 /**
  * A hook to handle limiting the user's interaction with a numeric input.  This can be used on text
  * inputs as well to ensure that only numeric values are allowed.
  * @param options
  */
-export const useNumericInput = (
-  options: NumericInputOptions
-): [
-  string | undefined,
-  (event: ChangeEvent<HTMLInputElement>) => void,
-  (value: string) => void
-] => {
+export function useNumericInput(options: NumericInputOptions): UseNumericInput {
   const { min, max, maxPrecision } = options;
   const [stringValue, setStringValue] = useState<string | undefined>();
 
@@ -45,7 +45,7 @@ export const useNumericInput = (
         return;
       }
 
-      if (!validDecimalNumber.test(inputString)) {
+      if (!ANY_NUMBER_REGEX.test(inputString)) {
         return;
       }
 
@@ -77,8 +77,8 @@ export const useNumericInput = (
     [max, maxPrecision, min, options]
   );
 
-  return [stringValue, onChange, setStringValue];
-};
+  return { stringValue, onChange, setValue: setStringValue };
+}
 
 /**
  * Helper function to get the number of digits after the decimal.  Assumes a properly formatted
