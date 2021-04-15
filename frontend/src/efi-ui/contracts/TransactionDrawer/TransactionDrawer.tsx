@@ -72,6 +72,10 @@ export function TransactionDrawer({
     allowance
   );
 
+  const message = assetInSymbol
+    ? walletApprovalMessageRenderer(assetInSymbol)
+    : undefined;
+
   return (
     <WalletDrawer isOpen={isOpen} onClose={onClose}>
       <div
@@ -88,12 +92,12 @@ export function TransactionDrawer({
         {
           // we can't pull this out to a new variable because typescript can't
           // narrow the type of baseAssetContract when referencing a variable
-          account && assetIn?.type !== CryptoAssetType.ETHEREUM ? (
+          account && message && assetIn?.type !== CryptoAssetType.ETHEREUM ? (
             <WalletApprovalCallout
-              messageRenderer={walletApprovalMessageRenderer}
+              message={message}
+              signer={signer}
               account={account}
-              contract={baseAssetContract as ERC20Shim}
-              tokenSymbol={assetInSymbol}
+              cryptoAsset={assetIn}
               approvalAmount={amountIn}
             />
           ) : null

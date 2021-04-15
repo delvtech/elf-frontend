@@ -1,54 +1,75 @@
-import React, { FC } from "react";
+import React, { ReactElement } from "react";
 
-import { Callout, Intent } from "@blueprintjs/core";
-import { ERC20 } from "elf-contracts/types/ERC20";
-import { BigNumber } from "ethers";
+import { Button, Callout, Intent } from "@blueprintjs/core";
+import { BigNumber, Signer } from "ethers";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
-import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
+import {
+  CryptoAsset,
+  CryptoAssetType,
+  findTokenContract,
+} from "efi/crypto/CryptoAsset";
+import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
+import { useERC20Approve } from "efi-ui/token/hooks/useERC20Approve";
 
 interface WalletApprovalCalloutProps {
+  signer: Signer | undefined;
   account: string | null | undefined;
-  contract: ERC20 | undefined;
-  tokenSymbol?: string;
+  cryptoAsset: CryptoAsset | undefined;
   approvalAmount: BigNumber | undefined;
-  messageRenderer: (assetSymbol: string) => string;
+  message: string;
 }
-export const WalletApprovalCallout: FC<WalletApprovalCalloutProps> = ({
+export function WalletApprovalCallout({
   account,
+  signer,
+  message,
+  cryptoAsset,
   approvalAmount,
-  contract,
-  tokenSymbol: tokenSymbolFromProps,
-  messageRenderer,
-}) => {
-  const { data: symbol } = useSmartContractReadCall(contract, "symbol");
-  const assetSymbol = tokenSymbolFromProps || symbol;
-
+}: WalletApprovalCalloutProps): ReactElement | null {
   const balancerVault = useBalancerVault();
+  const cryptoAssetContract = findTokenContract(cryptoAsset);
   const {
     data: marketAllowance,
     isLoading: isAllowanceLoading,
-  } = useTokenAllowance(contract, account, balancerVault?.address);
+  } = useTokenAllowance(
+    cryptoAssetContract as ERC20Shim,
+    account,
+    balancerVault?.address
+  );
+
+  const onApproveClick = useERC20Approve(
+    cryptoAssetContract as ERC20Shim,
+    signer,
+    account,
+    balancerVault?.address
+  );
 
   const hasApproval = !!approvalAmount && marketAllowance?.gte(approvalAmount);
   const showCallout = account && !isAllowanceLoading && !hasApproval;
-  if (!showCallout || !assetSymbol) {
+  if (!showCallout || cryptoAsset?.type === CryptoAssetType.ETHEREUM) {
     return null;
   }
-
-  const message = messageRenderer(assetSymbol);
 
   return (
     <Callout
       intent={Intent.WARNING}
       title={t`Wallet approval required`}
       icon={null}
-      className={tw("p-4")}
+      className={tw("p-4", "space-y-4")}
     >
       <div className={"pt-1"}>{message}</div>
+      <Button
+        large
+        fill
+        outlined
+        intent={Intent.WARNING}
+        onClick={onApproveClick}
+      >
+        {t`Approve`}
+      </Button>
     </Callout>
   );
-};
+}
