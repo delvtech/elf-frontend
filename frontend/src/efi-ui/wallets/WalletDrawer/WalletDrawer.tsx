@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, ReactNode } from "react";
 
 import { Callout, Colors, Drawer } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
@@ -17,7 +17,7 @@ interface WalletDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   className?: string;
-  children?: ReactElement;
+  children?: ReactNode;
 }
 
 /**
