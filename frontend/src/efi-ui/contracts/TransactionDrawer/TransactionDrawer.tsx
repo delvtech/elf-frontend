@@ -1,9 +1,8 @@
 import React, { ReactElement } from "react";
 
-import { Button, Drawer, Intent } from "@blueprintjs/core";
+import { Button, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
-import classNames from "classnames";
 import { ERC20 } from "elf-contracts/types/ERC20";
 import { BigNumber, Signer } from "ethers";
 import { t } from "ttag";
@@ -20,8 +19,8 @@ import {
   findTokenContract,
 } from "efi/crypto/CryptoAsset";
 
-import { ConnectWalletCallout } from "./ConnectWalletCallout";
 import { WalletApprovalCallout } from "./WalletApprovalCallout";
+import { WalletDrawer } from "efi-ui/wallets/WalletDrawer/WalletDrawer";
 
 interface TransactionDrawerProps {
   account: string | null | undefined;
@@ -58,7 +57,6 @@ export function TransactionDrawer({
   approvalSpenderAddress,
   walletApprovalMessageRenderer,
 }: TransactionDrawerProps): ReactElement {
-  const { isDarkMode, darkModeClassName } = useDarkMode();
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
 
   // base asset calls
@@ -79,29 +77,7 @@ export function TransactionDrawer({
   );
 
   return (
-    <Drawer
-      isOpen={isOpen}
-      onClose={onClose}
-      size={500}
-      style={!isDarkMode ? { background: "var(--bp3-bg-color)" } : {}}
-      className={classNames(
-        darkModeClassName,
-        tw(
-          "flex",
-          "flex-col",
-          "justify-between",
-          "text-base",
-          "overflow-scroll",
-          "p-10",
-          {
-            "text-gray-700": !isDarkMode,
-            "text-white": isDarkMode,
-          }
-        )
-      )}
-    >
-      {!account ? <ConnectWalletCallout /> : null}
-
+    <WalletDrawer account={account} isOpen={isOpen} onClose={onClose}>
       <div
         className={tw(
           "flex",
@@ -157,7 +133,7 @@ export function TransactionDrawer({
           </Button>
         </div>
       </div>
-    </Drawer>
+    </WalletDrawer>
   );
 }
 
