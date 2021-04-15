@@ -33,6 +33,7 @@ import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalan
 import { BuyPrincipalTokensTransactionConfirmationDrawer } from "efi-ui/tranche/BuyPrincipalTokensTransactionConfirmationDrawer/BuyPrincipalTokensTransactionConfirmationDrawer";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 import { useBalancerTransactionInputs } from "efi-ui/balancer/useBalancerTransactionInputs";
+import { formatBalance } from "efi/base/formatBalance";
 
 export interface EarnCardProps {
   library: Web3Provider | undefined;
@@ -80,6 +81,11 @@ export function EarnCard({
     account,
     activeBaseAsset
   );
+  const activeBaseAssetDisplayBalance = formatBalance(
+    activeBaseAssetBalance,
+    activeBaseAssetDecimals
+  );
+
   const tokenOutAddress = activeTranche?.address;
 
   const pool = usePoolForToken(activeTranche as ERC20Shim, jsonRpcProvider);
@@ -133,9 +139,7 @@ export function EarnCard({
             {!!account && (
               <span
                 className={classNames(tw("text-base"), Classes.TEXT_MUTED)}
-              >{t`Balance: ${activeBaseAssetBalance.toFixed(
-                4
-              )} ${activeBaseAssetSymbol}`}</span>
+              >{t`Balance: ${activeBaseAssetDisplayBalance} ${activeBaseAssetSymbol}`}</span>
             )}
           </div>
           <div
@@ -160,7 +164,7 @@ export function EarnCard({
               placeholder="0.00"
               value={amountIn}
               onValueChange={onAmountInChange}
-              assetBalance={activeBaseAssetBalance}
+              assetBalance={+activeBaseAssetDisplayBalance}
             />
           </div>
         </div>
@@ -198,7 +202,7 @@ export function EarnCard({
               placeholder="0.00"
               value={amountOut}
               onValueChange={onAmountOutChange}
-              assetBalance={activeBaseAssetBalance}
+              assetBalance={+activeBaseAssetDisplayBalance}
             />
           </div>
         </div>

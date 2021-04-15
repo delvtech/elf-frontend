@@ -22,18 +22,12 @@ export function useCryptoAssetForToken(
     tokenAddress,
     ERC20__factory.connect
   );
-  const { data: erc20Symbol } = useSmartContractReadCall(
-    erc20Contract,
-    "symbol"
-  );
   const erc20PermitContract = useSmartContractFromFactory(
     tokenAddress,
     ERC20Permit__factory.connect
   );
-  const { data: erc20PermitSymbol } = useSmartContractReadCall(
-    erc20PermitContract,
-    "symbol"
-  );
+
+  const { data: symbol } = useSmartContractReadCall(erc20Contract, "symbol");
 
   if (!tokenAddress) {
     return;
@@ -50,30 +44,29 @@ export function useCryptoAssetForToken(
   }
 
   // If it's a known erc20, make it so
-  const erc20Icon = findAssetIcon(erc20Symbol);
-  if (erc20Contract && erc20Icon && KNOWN_ERC20_TOKENS.includes(tokenAddress)) {
+  const assetIcon = findAssetIcon(symbol);
+  if (erc20Contract && assetIcon && KNOWN_ERC20_TOKENS.includes(tokenAddress)) {
     const cryptoAsset: CryptoAssetWithIcon = {
       id: tokenAddress,
       type: CryptoAssetType.ERC20,
       tokenContract: erc20Contract,
-      assetIcon: erc20Icon,
+      assetIcon,
     };
     return cryptoAsset;
   }
 
-  // If it's a known erc20Permit, make it so
-  const erc20PermitIcon = findAssetIcon(erc20PermitSymbol);
   if (
     erc20PermitContract &&
-    erc20PermitIcon &&
+    assetIcon &&
     KNOWN_ERC20PERMIT_TOKENS.includes(tokenAddress)
   ) {
     const cryptoAsset: CryptoAssetWithIcon = {
       id: tokenAddress,
       type: CryptoAssetType.ERC20PERMIT,
       tokenContract: erc20PermitContract,
-      assetIcon: erc20PermitIcon,
+      assetIcon,
     };
+
     return cryptoAsset;
   }
 }
