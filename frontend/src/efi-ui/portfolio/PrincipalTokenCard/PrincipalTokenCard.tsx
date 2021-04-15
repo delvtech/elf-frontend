@@ -1,4 +1,4 @@
-import React, { ReactElement, ReactNode } from "react";
+import { ReactElement, ReactNode } from "react";
 
 import {
   AnchorButton,
@@ -11,7 +11,6 @@ import {
   Tag,
 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
-import { Tooltip2 } from "@blueprintjs/popover2";
 import { Web3Provider } from "@ethersproject/providers";
 import { navigate } from "@reach/router";
 import { AbstractConnector } from "@web3-react/abstract-connector";
@@ -42,6 +41,7 @@ import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
 import { formatMoney } from "efi/money/formatMoney";
 import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
+import { RedeemButton } from "efi-ui/portfolio/RedeemButton/RedeemButton";
 
 interface PrincipalTokenCardProps {
   chainId: number | undefined;
@@ -231,24 +231,17 @@ export function PrincipalTokenCard({
 
       {/* Quick Actions */}
       <ButtonGroup className={tw("space-x-6")}>
-        <Tooltip2
-          inheritDarkTheme={false}
-          content={t`This asset can be claimed after it has reached maturity.`}
-        >
-          <AnchorButton
-            fill
-            minimal
-            disabled={
-              /*
-               * See Blueprint docs, we have to use an AnchorButton for a11y
-               * when putting a tooltip on a disabled button
-               */
-              true
-            }
-          >
-            <div className={tw("p-2", "text-base")}>{t`Claim`}</div>
-          </AnchorButton>
-        </Tooltip2>
+        <RedeemButton
+          library={library}
+          connector={connector}
+          chainId={chainId}
+          account={account}
+          tranche={tranche}
+          pool={pool}
+          sellAmount={trancheBalance.toString()}
+          baseAsset={baseAsset}
+          walletConnectionActive={walletConnectionActive}
+        />
         <SellButton
           library={library}
           connector={connector}
