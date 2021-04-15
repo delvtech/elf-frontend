@@ -1,0 +1,149 @@
+import React, { ChangeEvent, ReactElement, useCallback } from "react";
+
+import { Callout, Divider, InputGroup } from "@blueprintjs/core";
+import classNames from "classnames";
+import { t } from "ttag";
+
+import tw from "efi-tailwindcss-classnames";
+import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
+
+import styles from "./styles.module.css";
+import { CryptoAsset } from "efi/crypto/CryptoAsset";
+import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
+import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
+
+interface StakeFormProps {
+  assetOne: CryptoAsset | undefined;
+  assetOneAmount: string | undefined;
+  assetTwo: CryptoAsset | undefined;
+  /**
+   * If set this will override the symbol lookup for assetTwo. This is useful
+   * when don't want to show a long principal or yield token symbol in the
+   * input
+   */
+  assetTwoSymbol?: string | undefined;
+  assetTwoAmount: string | undefined;
+  heading?: string;
+
+  /**
+   * If provided, this will make the input interactive, otherwise it will be
+   * disabled and read-only
+   */
+  onAssetOneAmountChange?: (amount: string | undefined) => void;
+  /**
+   * If provided, this will make the input interactive, otherwise it will be
+   * disabled and read-only
+   */
+  onAssetTwoAmountChange?: (amount: string | undefined) => void;
+  children?: ReactElement;
+}
+
+export function StakeForm({
+  assetOne,
+  assetTwo,
+  assetTwoSymbol: assetTwoSymbolFromProps,
+  assetOneAmount,
+  assetTwoAmount,
+  heading = t`Stake`,
+  onAssetOneAmountChange: onAssetOneAmountChangeFromProps,
+  onAssetTwoAmountChange: onAssetTwoAmountChangeFromProps,
+  children,
+}: StakeFormProps): ReactElement {
+  const { isDarkMode } = useDarkMode();
+  const assetOneSymbol = useCryptoSymbol(assetOne);
+  const AssetOneIcon = findAssetIcon(assetOneSymbol);
+  const onAssetOneAmountChange = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      onAssetOneAmountChangeFromProps?.(event.target.value);
+    },
+    [onAssetOneAmountChangeFromProps]
+  );
+
+  const assetTwoSymbol = useCryptoSymbol(assetTwo);
+  const AssetTwoIcon = findAssetIcon(assetTwoSymbol);
+  const assetTwoSymbolLabel = assetTwoSymbolFromProps || assetTwoSymbol;
+  const onAssetTwoAmountChange = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      onAssetTwoAmountChangeFromProps?.(event.target.value);
+    },
+    [onAssetTwoAmountChangeFromProps]
+  );
+
+  return (
+    <Callout className={tw("flex", "flex-col", "p-8", "space-y-6")}>
+      <span className={classNames("h4", tw("text-center"))}>{heading}</span>
+      <div className={tw("flex", "flex-col", "space-y-4", "items-center")}>
+        <div
+          className={tw(
+            "grid",
+            "grid-cols-8",
+            "place-items-stretch",
+            "w-full",
+            "items-center",
+            "gap-2"
+          )}
+        >
+          <span className={tw("text-base", "col-span-2")}>{t`Input #1`}</span>
+          <InputGroup
+            large
+            fill
+            placeholder="0.00"
+            disabled={!onAssetOneAmountChangeFromProps}
+            onChange={onAssetOneAmountChange}
+            className={classNames(tw("col-span-6"), styles.inputWithIcon, {
+              [styles.inputColor]: !isDarkMode,
+              [styles.inputColorDark]: isDarkMode,
+            })}
+            leftElement={
+              <div className={tw("flex", "items-center", "px-2")}>
+                {AssetOneIcon ? <AssetOneIcon height={18} width={18} /> : null}
+              </div>
+            }
+            value={assetOneAmount}
+            rightElement={
+              <div className={tw("flex", "items-center", "px-3")}>
+                {assetOneSymbol}
+              </div>
+            }
+          />
+        </div>
+        <div
+          className={tw(
+            "grid",
+            "grid-cols-8",
+            "place-items-stretch",
+            "w-full",
+            "items-center",
+            "gap-2"
+          )}
+        >
+          <span className={tw("text-base", "col-span-2")}>{t`Input #2`}</span>
+          <InputGroup
+            large
+            fill
+            disabled={!onAssetTwoAmountChangeFromProps}
+            onChange={onAssetTwoAmountChange}
+            className={classNames(tw("col-span-6"), styles.inputWithIcon, {
+              [styles.inputColor]: !isDarkMode,
+              [styles.inputColorDark]: isDarkMode,
+            })}
+            leftElement={
+              <div className={tw("flex", "items-center", "px-2")}>
+                {AssetTwoIcon ? <AssetTwoIcon height={18} width={18} /> : null}
+              </div>
+            }
+            value={assetTwoAmount}
+            placeholder="0.00"
+            rightElement={
+              <div className={tw("flex", "items-center", "px-3")}>
+                {assetTwoSymbolLabel}
+              </div>
+            }
+          />
+        </div>
+      </div>
+      <Divider />
+      {children}
+    </Callout>
+  );
+}
