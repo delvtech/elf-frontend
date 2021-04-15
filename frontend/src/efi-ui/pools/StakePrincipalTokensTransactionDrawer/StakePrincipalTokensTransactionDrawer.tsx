@@ -1,54 +1,47 @@
 import React, { ReactElement } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
-import { AbstractConnector } from "@web3-react/abstract-connector";
 import { Tranche } from "elf-contracts/types/Tranche";
-import { Signer } from "ethers";
-import { formatUnits, parseUnits } from "ethers/lib/utils";
+import { BigNumber, Signer } from "ethers";
 import { t } from "ttag";
 
-import { useBalancerTransactionInputs } from "efi-ui/balancer/useBalancerTransactionInputs";
-import { useBatchSwapGivenIn } from "efi-ui/balancer/useBatchSwapGivenIn/useBatchSwapGivenIn";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
-import { SwapDetailsForm } from "efi-ui/swaps/SwapDetailsPreview/SwapDetailsForm";
-import { TransactionDrawer } from "efi-ui/contracts/TransactionDrawer/TransactionDrawer";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
-import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
-import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
 import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
-import { PrincipalTokenTransactionDetails } from "efi-ui/swaps/PrincipalTokenTransactionDetails/PrincipalTokenTransactionDetails";
-import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
-import { calculatePurchasePrice } from "efi/pools/calculatePurchasePrice";
-import { calculateSlippage } from "efi/pools/calculateSlippage";
 import { PoolContract } from "efi/pools/PoolContract";
-import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
+import {
+  CryptoAsset,
+  CryptoAssetType,
+  findTokenContract,
+} from "efi/crypto/CryptoAsset";
 import { ERC20 } from "elf-contracts/types/ERC20";
+import { WalletDrawer } from "efi-ui/wallets/WalletDrawer/WalletDrawer";
+import { StakeForm } from "efi-ui/pools/StakeForm/StakeForm";
+import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
+import tw from "efi-tailwindcss-classnames";
+import { WalletApprovalCallout } from "efi-ui/contracts/TransactionDrawer/WalletApprovalCallout";
+import { parseUnits } from "@ethersproject/units";
 import { getBalancerApprovalMessage } from "efi-ui/balancer/balancerApprovalMessage";
+import { Button, Intent } from "@blueprintjs/core";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
+import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
+import { useJoinPool } from "efi-ui/pools/useJoinPool/useJoinPool";
 
 interface StakePrincipalTokensTransactionDrawerProps {
-  chainId: number | undefined;
   account: string | null | undefined;
-  walletConnectionActive: boolean;
-  connector: AbstractConnector | undefined;
   library: Web3Provider | undefined;
   pool: PoolContract | undefined;
-  baseAsset: CryptoAssetWithIcon;
+  baseAsset: CryptoAsset;
   tranche: Tranche | undefined;
   isOpen: boolean;
   onClose: () => void;
 }
 
 export function StakePrincipalTokensTransactionDrawer({
-  connector,
-  walletConnectionActive,
   library,
-  chainId,
   account,
-  baseAsset: { assetIcon: AssetIcon },
   baseAsset,
   tranche,
   isOpen,
@@ -60,127 +53,103 @@ export function StakePrincipalTokensTransactionDrawer({
 
   // base asset calls
   const baseAssetSymbol = useCryptoSymbol(baseAsset);
+  const { data: allowance } = useTokenAllowance(
+    findTokenContract(baseAsset) as ERC20Shim,
+    account,
+    balancerVault?.address
+  );
   const baseAssetDecimals = useCryptoDecimals(baseAsset);
+  const {
+    stringValue: baseAssetAmountString,
+    setValue: onBaseAssetAmountChange,
+  } = useNumericInput({
+    min: 0,
+    maxPrecision: baseAssetDecimals,
+  });
+  const baseAssetBalancerAddress = getTokenAddressForBalancer(baseAsset);
+  const baseAssetAmountBigNumber = baseAssetAmountString
+    ? parseUnits(baseAssetAmountString, baseAssetDecimals)
+    : undefined;
 
   // tranche calls
-  const { data: trancheUnlockTimestamp } = useSmartContractReadCall(
-    tranche,
-    "unlockTimestamp"
-  );
+  const trancheCryptoAsset = makeCryptoAsset(tranche as ERC20Shim);
   const { data: trancheDecimals } = useSmartContractReadCall(
     tranche,
     "decimals"
   );
-  const unlockTimeStampDate = convertEpochSecondsToDate(trancheUnlockTimestamp);
-
-  // This might be weth in the case of eth, but that's okay for spot price
-  const baseAssetPoolToken = usePoolPairedToken(pool, tranche as ERC20Shim);
   const {
-    spotPriceBaseAssetForOneToken,
-    spotPriceTokenForOneBaseAsset,
-  } = usePoolTokenPrices(pool, baseAssetPoolToken);
+    stringValue: trancheAmountString,
+    setValue: onTrancheAmountChange,
+  } = useNumericInput({
+    min: 0,
+    maxPrecision: trancheDecimals,
+  });
+  const trancheBalancerAddress = getTokenAddressForBalancer(baseAsset);
+  const trancheAmountBigNumber = trancheAmountString
+    ? parseUnits(trancheAmountString, baseAssetDecimals)
+    : undefined;
 
-  const trancheAddress = tranche?.address;
-  const baseAssetBalancerAddress = getTokenAddressForBalancer(baseAsset);
-  const {
-    amountIn,
-    amountOut,
-    onAmountInChange,
-    onAmountOutChange,
-  } = useBalancerTransactionInputs(
-    pool,
-    trancheAddress,
-    trancheDecimals,
-    baseAssetBalancerAddress,
-    baseAssetDecimals
-  );
+  const onStake = useJoinPool(signer, account, pool);
 
-  // pool calls
-  const amountInAsBigNumber = parseUnits(amountIn || "0", baseAssetDecimals);
-  const amountOutAsBigNumber = parseUnits(amountOut || "0", trancheDecimals);
-
-  const onConfirmSellPrincipalTokens = useBatchSwapGivenIn(
+  const confirmButtonLabel = getConfirmButtonLabel(account);
+  const confirmButtonDisabled = getConfirmButtonDisabled(
     account,
-    signer,
-    pool,
-    tranche?.address,
-    baseAssetBalancerAddress,
-    amountInAsBigNumber
+    baseAsset,
+    baseAssetAmountBigNumber,
+    allowance
   );
-
-  const amountOutNumber = +formatUnits(
-    amountOutAsBigNumber?.abs() || 0,
-    baseAssetDecimals
-  );
-  const amountOutFormatted =
-    amountOutNumber === 0 ? "" : amountOutNumber.toFixed(4);
-
-  const priceSlippageAndTradingFee = getPriceSlippageAndTradingFee(
-    +(amountIn || 0),
-    amountOutNumber,
-    spotPriceTokenForOneBaseAsset
-  );
-
-  const assetIn = makeCryptoAsset(tranche as ERC20Shim);
-
-  // We want InputGroup to be a controlled component, but passing `undefined` is
-  // how you express an uncontrolled component. Having this change between
-  // uncontrolled and controlled causes bugginess and big warnings in the
-  // console, so we use empty string here to keep everything controlled.
-  const safeAmountIn = amountIn ?? "";
 
   return (
-    <TransactionDrawer
-      approvalSpenderAddress={balancerVault?.address}
+    <WalletDrawer
       isOpen={isOpen}
       onClose={onClose}
-      account={account}
-      assetIn={assetIn}
-      assetInIcon={undefined}
-      assetInSymbol={`pt${baseAssetSymbol}`}
-      walletConnectionActive={walletConnectionActive}
-      walletApprovalMessageRenderer={getBalancerApprovalMessage}
-      amountIn={amountInAsBigNumber}
-      chainId={chainId}
-      connector={connector}
-      library={library}
-      onConfirmTransaction={onConfirmSellPrincipalTokens}
-      transactionDetails={
-        <SwapDetailsForm
-          amountIn={safeAmountIn}
-          amountOut={amountOutFormatted}
-          onAmountInChange={onAmountInChange}
-          onAmountOutChange={onAmountOutChange}
-          heading={t`Enter an amount to sell`}
-          assetInIcon={null}
-          assetInSymbol={`${baseAssetSymbol} Principal Token`}
-          assetOutIcon={AssetIcon}
-          assetOutSymbol={baseAssetSymbol}
-        >
-          <PrincipalTokenTransactionDetails
-            spotPriceBaseAssetForOneToken={spotPriceBaseAssetForOneToken}
-            baseAssetSymbol={baseAssetSymbol}
-            unlockTimeStamp={unlockTimeStampDate}
-            priceSlippageAndTradingFee={priceSlippageAndTradingFee}
+      className={tw("justify-between")}
+    >
+      <div className={tw("flex", "flex-col", "space-y-4")}>
+        <StakeForm
+          heading={t`Stake ${baseAssetSymbol} Principal Tokens`}
+          assetOne={baseAsset}
+          assetOneAmount={baseAssetAmountString}
+          onAssetOneAmountChange={onBaseAssetAmountChange}
+          assetTwo={trancheCryptoAsset}
+          assetTwoSymbol={t`${baseAssetSymbol} Principal Token`}
+          onAssetTwoAmountChange={onTrancheAmountChange}
+          assetTwoAmount={trancheAmountString}
+        />
+        {baseAsset.type === CryptoAssetType.ERC20 ||
+        baseAsset.type === CryptoAssetType.ERC20PERMIT ? (
+          <WalletApprovalCallout
+            account={account}
+            cryptoAsset={baseAsset}
+            approvalAmount={baseAssetAmountBigNumber}
+            signer={signer}
+            message={getBalancerApprovalMessage(baseAssetSymbol)}
           />
-        </SwapDetailsForm>
-      }
-    />
+        ) : null}
+        {trancheCryptoAsset?.type === CryptoAssetType.ERC20 ||
+        trancheCryptoAsset?.type === CryptoAssetType.ERC20PERMIT ? (
+          <WalletApprovalCallout
+            account={account}
+            cryptoAsset={trancheCryptoAsset}
+            approvalAmount={trancheAmountBigNumber}
+            signer={signer}
+            message={getBalancerApprovalMessage(t`pt${baseAssetSymbol}`)}
+          />
+        ) : null}
+        <Button
+          fill
+          disabled={confirmButtonDisabled}
+          intent={Intent.PRIMARY}
+          className={tw("h-16")}
+          large
+          outlined
+          onClick={onStake}
+        >
+          {confirmButtonLabel}
+        </Button>
+      </div>
+    </WalletDrawer>
   );
-}
-
-function getPriceSlippageAndTradingFee(
-  amountIn: number,
-  amountOutNumber: number,
-  spotPriceTokenForOneBaseAsset: number | undefined
-) {
-  const amountInNumber = +(amountIn || 0);
-  const purchasePrice = calculatePurchasePrice(amountInNumber, amountOutNumber);
-  const priceSlippageAndTradingFee = calculateSlippage(
-    spotPriceTokenForOneBaseAsset || 0,
-    purchasePrice
-  );
-  return priceSlippageAndTradingFee;
 }
 
 function makeCryptoAsset(token: ERC20 | undefined) {
@@ -195,4 +164,50 @@ function makeCryptoAsset(token: ERC20 | undefined) {
   };
 
   return assetIn;
+}
+function getConfirmButtonLabel(account: string | null | undefined) {
+  if (!account) {
+    return t`Connect your wallet to continue`;
+  }
+
+  return t`Confirm transaction`;
+}
+
+function getConfirmButtonDisabled(
+  account: string | null | undefined,
+  baseAsset: CryptoAsset | undefined,
+  amountIn: BigNumber | undefined,
+  marketAllowance: BigNumber | undefined
+) {
+  // can't confirm anything w/out a base asset
+  if (!baseAsset) {
+    return true;
+  }
+
+  // must be connected to click this button
+  if (!account) {
+    return true;
+  }
+
+  // disabled when no amount is entered
+  if (!amountIn) {
+    return true;
+  }
+
+  // disabled if it's an erc20 or erc20permits w/out enough allowance.
+  // NOTE: we have to use approvals for erc20permits because balancer does not
+  // support that
+  if (
+    [CryptoAssetType.ERC20, CryptoAssetType.ERC20PERMIT].includes(
+      baseAsset.type
+    )
+  ) {
+    const hasEnoughAllowance = marketAllowance?.gte(amountIn);
+    if (!hasEnoughAllowance) {
+      return true;
+    }
+  }
+
+  // otherwise the button should not be disabled
+  return false;
 }
