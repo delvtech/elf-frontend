@@ -261,7 +261,7 @@ function useTokenInfoForTradeInput(
   account: string | null | undefined,
   library: Web3Provider | undefined
 ) {
-  const asset = useCryptoAssetWithMetadata(tokenContract?.address, account);
+  const asset = useCryptoAssetWithMetadata(tokenContract?.address);
   const { decimals, symbol } = asset as CryptoAssetWithMetadata;
   const balanceOf = useCryptoBalance(library, account, asset);
   const poolBalance = useTokenPoolBalance(pool, tokenContract);

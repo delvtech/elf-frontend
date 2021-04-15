@@ -38,7 +38,6 @@ export function useCryptoAssetForToken(
     const cryptoAsset: CryptoAssetWithIcon = {
       id: "ethereum",
       type: CryptoAssetType.ETHEREUM,
-      tokenContract: undefined,
       assetIcon: CryptoIconSvg.ETH,
     };
     return cryptoAsset;

@@ -15,7 +15,6 @@ export interface BaseCryptoAsset {
 
 export interface EthereumCryptoAsset extends BaseCryptoAsset {
   type: CryptoAssetType.ETHEREUM;
-  tokenContract: undefined;
 }
 
 export interface Erc20CryptoAsset extends BaseCryptoAsset {

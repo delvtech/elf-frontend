@@ -17,8 +17,7 @@ import { NUM_ETH_DECIMALS } from "efi/crypto/ethereum";
  * NOTE: This will turn a WETH address into an Ethereum CryptoAsset.
  */
 export function useCryptoAssetWithMetadata(
-  tokenAddress: string | undefined,
-  account?: string | null
+  tokenAddress: string | undefined
 ): CryptoAssetWithMetadata | undefined {
   const erc20Contract = useSmartContractFromFactory(
     tokenAddress,
@@ -35,14 +34,6 @@ export function useCryptoAssetWithMetadata(
     erc20Contract,
     "decimals"
   );
-  const { data: balanceOf } = useSmartContractReadCall(
-    erc20Contract,
-    "balanceOf",
-    {
-      callArgs: [account as string],
-      enabled: !!account,
-    }
-  );
 
   if (!tokenAddress) {
     return;
@@ -53,11 +44,9 @@ export function useCryptoAssetWithMetadata(
     const cryptoAsset: CryptoAssetWithMetadata = {
       id: "ethereum",
       type: CryptoAssetType.ETHEREUM,
-      tokenContract: undefined,
       name: "Ethereum",
       symbol: "ETH",
       decimals: NUM_ETH_DECIMALS,
-      balanceOf,
       assetIcon: CryptoIconSvg.ETH,
     };
     return cryptoAsset;
@@ -73,7 +62,6 @@ export function useCryptoAssetWithMetadata(
       name,
       symbol,
       decimals,
-      balanceOf,
       assetIcon,
     };
     return cryptoAsset;
@@ -91,7 +79,6 @@ export function useCryptoAssetWithMetadata(
       name,
       symbol,
       decimals,
-      balanceOf,
       assetIcon,
     };
     return cryptoAsset;
