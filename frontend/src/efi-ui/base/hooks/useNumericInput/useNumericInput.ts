@@ -23,7 +23,7 @@ export interface NumericInputOptions {
 interface UseNumericInput {
   stringValue: string | undefined;
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
-  setValue: (value: string) => void;
+  setValue: (value: string | undefined) => void;
 }
 
 /**

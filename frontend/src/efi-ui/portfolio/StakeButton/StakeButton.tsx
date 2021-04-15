@@ -54,12 +54,9 @@ export function StakeButton({
           tranche={tranche}
           account={account}
           baseAsset={baseAsset}
-          chainId={chainId}
-          connector={connector}
           library={library}
           onClose={() => setDrawerOpen(false)}
           pool={pool}
-          walletConnectionActive={walletConnectionActive}
         />
       )}
     </Fragment>

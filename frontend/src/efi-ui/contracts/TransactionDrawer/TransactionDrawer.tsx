@@ -10,7 +10,6 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { SvgIcon } from "efi-ui/base/SvgIcon";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
-import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { ERC20ApproveButton } from "efi-ui/token/ERC20ApproveButton/ERC20ApproveButton";
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
 import {
@@ -46,14 +45,11 @@ export function TransactionDrawer({
   assetInIcon,
   assetInSymbol,
   assetIn,
-  chainId,
-  connector,
   isOpen,
   library,
   onClose,
   onConfirmTransaction,
   transactionDetails,
-  walletConnectionActive,
   approvalSpenderAddress,
   walletApprovalMessageRenderer,
 }: TransactionDrawerProps): ReactElement {
@@ -77,7 +73,7 @@ export function TransactionDrawer({
   );
 
   return (
-    <WalletDrawer account={account} isOpen={isOpen} onClose={onClose}>
+    <WalletDrawer isOpen={isOpen} onClose={onClose}>
       <div
         className={tw(
           "flex",
