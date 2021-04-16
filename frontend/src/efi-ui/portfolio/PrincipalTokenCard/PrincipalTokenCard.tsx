@@ -111,7 +111,7 @@ export function PrincipalTokenCard({
 
   const tableRowLink = getTableRowLink(vaultContract?.address, vaultName);
   const maturationDate = convertEpochSecondsToDate(unlockTimestamp);
-  const timeLeft = getTimeLeft(maturationDate);
+  const timeLeftLabel = getTimeLeftLabel(maturationDate);
   let trancheAPY = 0;
   if (maturationDate) {
     trancheAPY = calculateTrancheAPY(
@@ -193,11 +193,7 @@ export function PrincipalTokenCard({
       </div>
       <div className={tw("flex", "flex-col", "space-y-5", "items-center")}>
         <div className={tw("space-y-2", "w-full")}>
-          <div>
-            <span className={tw("text-base")}>
-              {t`Reaches maturity in`} <strong>{timeLeft}</strong>
-            </span>
-          </div>
+          <div>{timeLeftLabel}</div>
           <ProgressBar stripes={false} animate={false} value={0.5} />
         </div>
 
@@ -281,13 +277,42 @@ export function PrincipalTokenCard({
   );
 }
 
-function getTimeLeft(maturationDate: Date | undefined) {
-  if (!maturationDate) {
-    return;
+function getTimeLeftLabel(
+  maturationDate: Date | undefined
+): ReactElement | null {
+  const isMature = getIsMature(maturationDate);
+  if (isMature) {
+    return <span className={tw("text-base")}>{t`Ready to redeem`}</span>;
   }
 
+  if (!maturationDate) {
+    return null;
+  }
+
+  const timeLeft = getTimeLeft(maturationDate);
+  return (
+    <span className={tw("text-base")}>
+      {t`Reaches maturity in`} <strong>{timeLeft}</strong>
+    </span>
+  );
+}
+
+function getIsMature(maturationDate: Date | undefined): boolean {
+  if (!maturationDate) {
+    return false;
+  }
+  const now = Date.now();
+  if (now >= maturationDate.getTime()) {
+    return true;
+  }
+  return false;
+}
+
+function getTimeLeft(maturationDate: Date): string {
+  const now = Date.now();
+
   const duration = intervalToDuration({
-    start: Date.now(),
+    start: now,
     end: maturationDate.getTime(),
   });
 
@@ -302,7 +327,7 @@ function getTimeLeft(maturationDate: Date | undefined) {
 function getTableRowLink(
   vaultAddress: string | undefined,
   vaultName: string | undefined
-): ReactNode {
+): ReactElement | null {
   if (!vaultAddress || !vaultName) {
     return null;
   }
