@@ -72,7 +72,7 @@ export function RedeemButton({
         <Button
           fill
           minimal
-          intent={Intent.PRIMARY}
+          intent={Intent.SUCCESS}
           onClick={() => setDrawerOpen(true)}
         >
           <div className={tw("p-2", "text-base")}>{t`Redeem`}</div>

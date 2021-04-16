@@ -1,4 +1,4 @@
-import { ReactElement, ReactNode } from "react";
+import { ReactElement } from "react";
 
 import {
   AnchorButton,
@@ -7,7 +7,6 @@ import {
   Card,
   Icon,
   Intent,
-  ProgressBar,
   Tag,
 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
@@ -15,7 +14,7 @@ import { Web3Provider } from "@ethersproject/providers";
 import { navigate } from "@reach/router";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import classNames from "classnames";
-import { formatDuration, intervalToDuration } from "date-fns";
+import { formatDistance, formatDuration, intervalToDuration } from "date-fns";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { jt, t } from "ttag";
 
@@ -31,6 +30,7 @@ import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSy
 import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
+import { RedeemButton } from "efi-ui/portfolio/RedeemButton/RedeemButton";
 import { SellButton } from "efi-ui/portfolio/SellButton/SellButton";
 import { StakeButton } from "efi-ui/portfolio/StakeButton/StakeButton";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
@@ -41,7 +41,10 @@ import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
 import { formatMoney } from "efi/money/formatMoney";
 import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
-import { RedeemButton } from "efi-ui/portfolio/RedeemButton/RedeemButton";
+
+import { MaturityTimeBar } from "./MaturityTimeBar";
+import { getIsMature } from "../../../efi/tranche/getIsMature";
+import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
 
 interface PrincipalTokenCardProps {
   chainId: number | undefined;
@@ -61,6 +64,7 @@ const calloutClassName = tw(
   "items-center",
   "justify-center"
 );
+
 export function PrincipalTokenCard({
   chainId,
   walletConnectionActive,
@@ -72,11 +76,15 @@ export function PrincipalTokenCard({
   const { isDarkMode } = useDarkMode();
   const baseAsset = useBaseAssetForTranche(tranche);
 
+  const { data: trancheCreatedAt } = useTrancheCreatedAt(tranche);
   const { data: unlockTimestamp } = useSmartContractReadCall(
     tranche,
     "unlockTimestamp"
   );
   const unlockDate = convertEpochSecondsToDate(unlockTimestamp);
+  const createdAtDate = convertEpochSecondsToDate(trancheCreatedAt);
+  const progress = getProgress(createdAtDate, unlockDate);
+
   const formattedDate = unlockDate
     ? formatAbbreviatedDate(unlockDate)
     : t`Loading unlock date...`;
@@ -111,7 +119,9 @@ export function PrincipalTokenCard({
 
   const tableRowLink = getTableRowLink(vaultContract?.address, vaultName);
   const maturationDate = convertEpochSecondsToDate(unlockTimestamp);
-  const timeLeftLabel = getTimeLeftLabel(maturationDate);
+  const isMature = getIsMature(maturationDate);
+
+  const timeLeftLabel = getTimeLeftLabel(maturationDate, isDarkMode);
   let trancheAPY = 0;
   if (maturationDate) {
     trancheAPY = calculateTrancheAPY(
@@ -143,7 +153,7 @@ export function PrincipalTokenCard({
         <div className={tw("flex", "flex-col", "space-y-2")}>
           <span className={tw("text-2xl", "font-semibold")}>
             <a
-              title={t`View tranche on etherscan`}
+              title={t`View principal token on etherscan`}
               href={`https://etherscan.io/address/${tranche.address}`}
               target="_blank"
               rel="noreferrer noopener"
@@ -192,10 +202,11 @@ export function PrincipalTokenCard({
         </div>
       </div>
       <div className={tw("flex", "flex-col", "space-y-5", "items-center")}>
-        <div className={tw("space-y-2", "w-full")}>
-          <div>{timeLeftLabel}</div>
-          <ProgressBar stripes={false} animate={false} value={0.5} />
-        </div>
+        <MaturityTimeBar
+          progress={progress}
+          isMature={isMature}
+          timeLeftLabel={timeLeftLabel}
+        />
 
         <Callout className={calloutClassName}>
           <span
@@ -277,35 +288,57 @@ export function PrincipalTokenCard({
   );
 }
 
-function getTimeLeftLabel(
-  maturationDate: Date | undefined
-): ReactElement | null {
-  const isMature = getIsMature(maturationDate);
-  if (isMature) {
-    return <span className={tw("text-base")}>{t`Ready to redeem`}</span>;
+function getProgress(
+  createdAtDate: Date | undefined,
+  unlockDate: Date | undefined
+) {
+  if (!createdAtDate || !unlockDate) {
+    return 0;
   }
 
+  const createdAt = createdAtDate.getTime();
+  const unlockedAt = unlockDate.getTime();
+  const progress = (Date.now() - createdAt) / (unlockedAt - createdAt);
+  return progress;
+}
+
+function getTimeLeftLabel(
+  maturationDate: Date | undefined,
+  isDarkMode: boolean
+): ReactElement | null {
   if (!maturationDate) {
     return null;
+  }
+
+  const isMature = getIsMature(maturationDate);
+  if (isMature) {
+    const timeSinceMaturity = getTimeSinceMaturityLabel(maturationDate);
+    return (
+      <span
+        style={{
+          color: isDarkMode
+            ? "var(--bp3-intent-success-dark)"
+            : "var(--bp3-intent-success)",
+        }}
+        className={classNames(tw("text-base"))}
+      >
+        {t`Term reached `}
+        <strong>{timeSinceMaturity}</strong>
+      </span>
+    );
   }
 
   const timeLeft = getTimeLeft(maturationDate);
   return (
     <span className={tw("text-base")}>
-      {t`Reaches maturity in`} <strong>{timeLeft}</strong>
+      {t`Reaches term in`} <strong>{timeLeft}</strong>
     </span>
   );
 }
 
-function getIsMature(maturationDate: Date | undefined): boolean {
-  if (!maturationDate) {
-    return false;
-  }
+function getTimeSinceMaturityLabel(maturationDate: Date): string {
   const now = Date.now();
-  if (now >= maturationDate.getTime()) {
-    return true;
-  }
-  return false;
+  return formatDistance(maturationDate, now, { addSuffix: true });
 }
 
 function getTimeLeft(maturationDate: Date): string {
