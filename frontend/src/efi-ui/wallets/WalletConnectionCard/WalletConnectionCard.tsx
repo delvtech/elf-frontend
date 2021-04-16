@@ -1,6 +1,6 @@
 import React, { FC, ReactElement, useCallback, useState } from "react";
 
-import { Callout, Card, Classes, Colors, Icon, Tag } from "@blueprintjs/core";
+import { Callout, Classes, Colors, Icon, Tag } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import classNames from "classnames";
 import { t } from "ttag";
