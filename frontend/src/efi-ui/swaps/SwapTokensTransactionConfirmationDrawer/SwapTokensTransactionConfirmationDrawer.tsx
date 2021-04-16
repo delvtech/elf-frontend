@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { ReactElement } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
@@ -45,7 +45,7 @@ interface SwapTokensTransactionConfirmationDrawerProps {
   onClose: () => void;
 }
 
-export const SwapTokensTransactionConfirmationDrawer: FC<SwapTokensTransactionConfirmationDrawerProps> = ({
+export function SwapTokensTransactionConfirmationDrawer({
   connector,
   walletConnectionActive,
   library,
@@ -58,7 +58,7 @@ export const SwapTokensTransactionConfirmationDrawer: FC<SwapTokensTransactionCo
   isOpen,
   onClose,
   pool,
-}) => {
+}: SwapTokensTransactionConfirmationDrawerProps): ReactElement {
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
   const balancerVault = useBalancerVault();
 
@@ -151,7 +151,7 @@ export const SwapTokensTransactionConfirmationDrawer: FC<SwapTokensTransactionCo
       }
     />
   );
-};
+}
 function getPriceSlippageAndTradingFee(
   amountIn: number,
   amountOutNumber: number,
