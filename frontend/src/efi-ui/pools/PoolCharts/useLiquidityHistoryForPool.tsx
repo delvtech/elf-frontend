@@ -1,23 +1,25 @@
 import { useQuery } from "react-query";
+
 import { BigNumber } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
+
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { TimeData } from "efi-ui/charts/BrushChart/BrushChart";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
+import { useLatestBlockNumber } from "efi-ui/ethereum/hooks/useLatestBlockNumber";
 import {
   AVG_MINE_RATE_SECONDS,
   usePreviousBlockNumber,
 } from "efi-ui/ethereum/usePreviousBlockNumber/usePreviousBlockNumber";
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
+import { useTotalLiquidityForPool } from "efi-ui/pools/useTotalLiquidityForPool/useTotalLiquidityForPool";
+import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
+import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
 import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { PoolContract } from "efi/pools/PoolContract";
-import { useTotalLiquidityForPool } from "efi-ui/pools/useTotalLiquidityForPool/useTotalLiquidityForPool";
-import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
-import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
-import { useLatestBlockNumber } from "efi-ui/ethereum/hooks/useLatestBlockNumber";
 
 type PoolBalanceChangedArguments = [
   poolId: string,
@@ -133,7 +135,7 @@ export function useLiquidityHistoryForPool(
 
       // the actual liquidity in the pool right now (in base asset units)
       const currentLiquidity =
-        totalLiquidity?.toDecimal() / baseAssetPrice.toDecimal();
+        totalLiquidity.toDecimal() / baseAssetPrice.toDecimal();
 
       const liquidityOverTime: number[][] = [];
 

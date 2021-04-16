@@ -72,7 +72,6 @@ export default function Bars<D>({
   const setAxisLeftTickLabelProps = () => axisLeftTickLabelProps;
 
   return (
-    // <Group left={left || margin.left} top={top || margin.top}>
     <Group left={left || margin.left} top={top || margin.top}>
       <GridRows
         scale={yScale}
