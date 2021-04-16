@@ -4,10 +4,13 @@ import { Button, Card, Intent } from "@blueprintjs/core";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import BarChart from "efi-ui/charts/BarChart/BarChart";
 import BrushChart from "efi-ui/charts/BrushChart/BrushChart";
-import { PoolContract } from "efi/pools/PoolContract";
-import { useLiquidityHistoryForPool } from "./useLiquidityHistoryForPool";
 import { useVolumeHistoryForPool } from "efi-ui/pools/PoolCharts/useLiquidityVolumeHistoryForPool";
+import { PoolContract } from "efi/pools/PoolContract";
+
+import { useLiquidityHistoryForPool } from "./useLiquidityHistoryForPool";
+import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 
 const fillerData = [
   { timeMs: Date.parse("2021-01-12"), value: 1077.800674325 },
@@ -28,11 +31,14 @@ interface PoolChartsProps {
   pool: PoolContract | undefined;
 }
 export function PoolCharts({ pool }: PoolChartsProps): ReactElement {
+  const { isDarkMode } = useDarkMode();
   const liquidityData = useLiquidityHistoryForPool(pool);
+  // console.log("liquidityData", liquidityData);
   const volumeData = useVolumeHistoryForPool(pool);
-  console.log("volumeData", volumeData);
+  // console.log("volumeData", volumeData);
 
-  const [activeChart, setChart] = useState(ChartType.LIQUIDITY);
+  const [activeChart, setChart] = useState(ChartType.VOLUME);
+  // console.log("activeChart", activeChart);
   const showLiquidityChart = activeChart === ChartType.LIQUIDITY;
   const showVolumeChart = activeChart === ChartType.VOLUME;
 
@@ -77,14 +83,23 @@ export function PoolCharts({ pool }: PoolChartsProps): ReactElement {
               >{t`Day`}</Button>
             </div>
           </div>
-          <div className={tw("w-full", "h-full", "pt-4")}>
+          <div className={tw("w-full", "h-full", "pt-8")}>
             {showLiquidityChart ? (
               <BrushChart
                 data={liquidityData?.length ? liquidityData : fillerData}
                 getXValue={({ timeMs }) => timeMs}
                 getYValue={({ value }) => value}
                 compact
-                isDarkMode
+                isDarkMode={isDarkMode}
+              />
+            ) : null}
+            {showVolumeChart ? (
+              <BarChart
+                data={volumeData?.length ? volumeData : fillerData}
+                getXValue={({ timeMs }) => new Date(timeMs)}
+                getYValue={({ value }) => value}
+                // compact
+                isDarkMode={isDarkMode}
               />
             ) : null}
           </div>
