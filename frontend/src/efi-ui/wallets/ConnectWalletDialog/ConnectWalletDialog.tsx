@@ -24,6 +24,7 @@ export function ConnectWalletDialog({
       isOpen={isOpen}
       icon={IconNames.SEND_TO_GRAPH}
       onClose={onClose}
+      title={t`Connect wallet`}
     >
       <div
         className={tw("flex", "flex-col", "w-full", "h-full")}

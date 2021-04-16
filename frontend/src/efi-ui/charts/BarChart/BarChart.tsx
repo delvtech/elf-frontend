@@ -76,8 +76,8 @@ export const BarChart: FC<BarChartProps> = withTooltip<BarChartProps, TimeData>(
           <rect
             x={0}
             y={0}
-            width={width}
-            height={height}
+            width={Math.max(width, 0)}
+            height={Math.max(height, 0)}
             fill={`url(#${GRADIENT_ID})`}
             rx={4}
           />

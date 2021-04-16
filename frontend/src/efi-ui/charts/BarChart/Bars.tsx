@@ -14,7 +14,6 @@ interface BarsProps<D> {
   width: number;
   height: number;
   margin: { top: number; right: number; bottom: number; left: number };
-  events?: boolean;
   isDarkMode?: boolean;
   hideBottomAxis?: boolean;
   hideLeftAxis?: boolean;
@@ -35,7 +34,6 @@ export default function Bars<D>({
   isDarkMode = false,
   hideBottomAxis = false,
   hideLeftAxis = false,
-  events = false,
   top = 0,
   left = 0,
   xScale,
@@ -96,7 +94,7 @@ export default function Bars<D>({
         <AxisBottom
           top={yMax + margin.top + margin.bottom}
           scale={xScale}
-          numTicks={width > 520 ? 10 : 5}
+          numTicks={width > 520 ? 5 : 5}
           stroke={"white"}
           tickStroke={axisColor}
           tickLabelProps={setAxisBottomTickLabelProps}
@@ -123,7 +121,7 @@ export default function Bars<D>({
             x={barX}
             y={barY}
             width={2}
-            height={barHeight}
+            height={Math.max(barHeight, 0)}
             fill={barColor}
           />
         );
