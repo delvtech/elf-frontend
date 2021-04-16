@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useState } from "react";
 
 import { Button, Card, Intent } from "@blueprintjs/core";
 import { t } from "ttag";
@@ -7,22 +7,34 @@ import tw from "efi-tailwindcss-classnames";
 import BrushChart from "efi-ui/charts/BrushChart/BrushChart";
 import { PoolContract } from "efi/pools/PoolContract";
 import { useLiquidityHistoryForPool } from "./useLiquidityHistoryForPool";
+import { useVolumeHistoryForPool } from "efi-ui/pools/PoolCharts/useLiquidityVolumeHistoryForPool";
 
-// const timeData = [
-//   { timeMs: Date.parse("2021-01-12"), value: 1077.800674325 },
-//   { timeMs: Date.parse("2021-01-13"), value: 1156.5184414717 },
-//   { timeMs: Date.parse("2021-01-14"), value: 1238.2550033254 },
-//   { timeMs: Date.parse("2021-01-15"), value: 1183.2555122763 },
-//   { timeMs: Date.parse("2021-01-16"), value: 1184.195903343 },
-//   { timeMs: Date.parse("2021-01-17"), value: 1221.2200249181 },
-//   { timeMs: Date.parse("2021-01-18"), value: 1257.0474852058 },
-// ];
+const fillerData = [
+  { timeMs: Date.parse("2021-01-12"), value: 1077.800674325 },
+  { timeMs: Date.parse("2021-01-13"), value: 1156.5184414717 },
+  { timeMs: Date.parse("2021-01-14"), value: 1238.2550033254 },
+  { timeMs: Date.parse("2021-01-15"), value: 1183.2555122763 },
+  { timeMs: Date.parse("2021-01-16"), value: 1184.195903343 },
+  { timeMs: Date.parse("2021-01-17"), value: 1221.2200249181 },
+  { timeMs: Date.parse("2021-01-18"), value: 1257.0474852058 },
+];
+
+enum ChartType {
+  LIQUIDITY = "liquidity",
+  VOLUME = "volume",
+}
 
 interface PoolChartsProps {
   pool: PoolContract | undefined;
 }
 export function PoolCharts({ pool }: PoolChartsProps): ReactElement {
   const liquidityData = useLiquidityHistoryForPool(pool);
+  const volumeData = useVolumeHistoryForPool(pool);
+  console.log("volumeData", volumeData);
+
+  const [activeChart, setChart] = useState(ChartType.LIQUIDITY);
+  const showLiquidityChart = activeChart === ChartType.LIQUIDITY;
+  const showVolumeChart = activeChart === ChartType.VOLUME;
 
   return (
     <div className={tw("flex", "flex-1", "h-500")}>
@@ -42,12 +54,15 @@ export function PoolCharts({ pool }: PoolChartsProps): ReactElement {
           >
             <div className={tw("flex", "space-x-4")}>
               <Button
-                active
+                onClick={() => setChart(ChartType.LIQUIDITY)}
+                active={showLiquidityChart}
                 minimal
                 outlined
                 intent={Intent.PRIMARY}
               >{t`Liquidity`}</Button>
               <Button
+                onClick={() => setChart(ChartType.VOLUME)}
+                active={showVolumeChart}
                 minimal
                 outlined
                 intent={Intent.PRIMARY}
@@ -63,15 +78,15 @@ export function PoolCharts({ pool }: PoolChartsProps): ReactElement {
             </div>
           </div>
           <div className={tw("w-full", "h-full", "pt-4")}>
-            {liquidityData?.length && (
+            {showLiquidityChart ? (
               <BrushChart
-                data={liquidityData}
+                data={liquidityData?.length ? liquidityData : fillerData}
                 getXValue={({ timeMs }) => timeMs}
                 getYValue={({ value }) => value}
                 compact
                 isDarkMode
               />
-            )}
+            ) : null}
           </div>
         </Card>
       </div>
