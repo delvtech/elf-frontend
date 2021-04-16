@@ -47,9 +47,22 @@ export function WalletApprovalCallout({
     balancerVault?.address
   );
 
-  const hasApproval = !!approvalAmount && marketAllowance?.gte(approvalAmount);
-  const showCallout = account && !isAllowanceLoading && !hasApproval;
-  if (!showCallout || cryptoAsset?.type === CryptoAssetType.ETHEREUM) {
+  // Ethereum does not need approvals
+  if (cryptoAsset?.type === CryptoAssetType.ETHEREUM) {
+    return null;
+  }
+
+  // If the user isn't connected, there can be no approvals
+  if (!account) {
+    return null;
+  }
+
+  // Don't show if there is no amount
+  if (
+    !approvalAmount ||
+    isAllowanceLoading ||
+    marketAllowance?.gte(approvalAmount)
+  ) {
     return null;
   }
 
