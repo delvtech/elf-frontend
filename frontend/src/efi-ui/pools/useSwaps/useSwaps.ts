@@ -1,9 +1,13 @@
 import { useQuery } from "react-query";
 
-import { SwapEvent } from "efi-balancer/SwapEvent";
+import { SwapEventWithTimeStamp } from "efi-balancer/SwapEvent";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { usePreviousBlockNumber } from "efi-ui/ethereum/usePreviousBlockNumber/usePreviousBlockNumber";
+import { useLatestBlockNumber } from "efi-ui/ethereum/hooks/useLatestBlockNumber";
+import {
+  AVG_MINE_RATE_SECONDS,
+  usePreviousBlockNumber,
+} from "efi-ui/ethereum/usePreviousBlockNumber/usePreviousBlockNumber";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
 import { PoolContract } from "efi/pools/PoolContract";
 
@@ -11,11 +15,13 @@ export function useSwaps(
   pool: PoolContract | undefined,
   fromTime: number = ONE_DAY_IN_SECONDS,
   toTime?: number
-): SwapEvent[] | undefined {
+): SwapEventWithTimeStamp[] | undefined {
   const { data: poolId } = useSmartContractReadCall(pool, "getPoolId");
   const balancerVault = useBalancerVault();
   const { data: fromBlockNumber } = usePreviousBlockNumber(fromTime);
   const { data: toBlockNumber } = usePreviousBlockNumber(toTime);
+  const { data: lastestBlockNumber } = useLatestBlockNumber();
+  const nowInMs = Date.now();
 
   const { data: events = [] } = useQuery({
     queryKey: [
@@ -45,17 +51,27 @@ export function useSwaps(
     enabled: !!balancerVault && !!poolId && !!fromBlockNumber,
   });
 
-  const swaps: SwapEvent[] = events
+  if (!lastestBlockNumber) {
+    return [];
+  }
+
+  const swaps: SwapEventWithTimeStamp[] = events
     .map((event) => {
-      const { args } = event;
+      const { args, blockNumber } = event;
       if (!args) {
         return undefined;
       }
 
+      // estimating timestamp here by taking the current time and subtracting the mining rate
+      // multiplied by the number blocks mined:
+      const timeStamp =
+        nowInMs -
+        (lastestBlockNumber - blockNumber) * AVG_MINE_RATE_SECONDS * 1000;
+
       const [poolId, tokenIn, tokenOut, amountIn, amountOut] = args;
-      return [poolId, tokenIn, tokenOut, amountIn, amountOut];
+      return [poolId, tokenIn, tokenOut, amountIn, amountOut, timeStamp];
     })
-    .filter((swap): swap is SwapEvent => {
+    .filter((swap): swap is SwapEventWithTimeStamp => {
       if (!swap) {
         return false;
       }

@@ -65,7 +65,7 @@ export const BrushChart: FC<BrushChartProps> = withTooltip<
     getXValue,
     getYValue,
     compact = false,
-    isDarkMode,
+    isDarkMode = false,
     background = false,
     margin = {
       top: 20,
@@ -216,8 +216,8 @@ export const BrushChart: FC<BrushChartProps> = withTooltip<
           <rect
             x={0}
             y={0}
-            width={width}
-            height={height}
+            width={Math.max(width, 0)}
+            height={Math.max(height, 0)}
             fill={`url(#${GRADIENT_ID})`}
             rx={4}
           />
@@ -278,8 +278,8 @@ export const BrushChart: FC<BrushChartProps> = withTooltip<
           <Bar
             x={margin.left}
             y={margin.top}
-            width={innerWidth}
-            height={innerHeight}
+            width={Math.max(innerWidth, 0)}
+            height={Math.max(innerHeight, 0)}
             fill="transparent"
             rx={14}
             onTouchStart={handleTooltip}

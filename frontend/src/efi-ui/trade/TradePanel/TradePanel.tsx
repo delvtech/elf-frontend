@@ -224,12 +224,14 @@ function useTokenApproval(
   amountOut: string | undefined,
   tokenInDecimals: number | undefined
 ) {
+  // safe to cast callArgs since we don't enable the call unless they are defnied
   const callArgs: ContractMethodArgs<ERC20, "allowance"> = [
-    account ?? "",
-    pool?.address ?? "",
+    account as string,
+    pool?.address as string,
   ];
   const { data: allowance } = useSmartContractReadCall(tokenIn, "allowance", {
     callArgs,
+    enabled: !!pool?.address && !!account,
   });
   const approved =
     amountIn && allowance
