@@ -4,7 +4,10 @@ import { formatUnits } from "ethers/lib/utils";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { TimeData } from "efi-ui/charts/BrushChart/BrushChart";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { usePreviousBlockNumber } from "efi-ui/ethereum/usePreviousBlockNumber/usePreviousBlockNumber";
+import {
+  AVG_MINE_RATE_SECONDS,
+  usePreviousBlockNumber,
+} from "efi-ui/ethereum/usePreviousBlockNumber/usePreviousBlockNumber";
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
@@ -14,6 +17,7 @@ import { PoolContract } from "efi/pools/PoolContract";
 import { useTotalLiquidityForPool } from "efi-ui/pools/useTotalLiquidityForPool/useTotalLiquidityForPool";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
+import { useLatestBlockNumber } from "efi-ui/ethereum/hooks/useLatestBlockNumber";
 
 type PoolBalanceChangedArguments = [
   poolId: string,
@@ -50,6 +54,9 @@ export function useLiquidityHistoryForPool(
   const { currency } = useCurrencyPref();
   const [baseAssetPrice] = useTokenPrice(baseAssetContract, currency);
 
+  const { data: lastestBlockNumber } = useLatestBlockNumber();
+  const nowInMs = Date.now();
+
   // TODO: break this up into a query to grab the PoolBalanceChanged events, and another query to
   // get the timestamps
   const { data: liquidityEvents = [] } = useQuery({
@@ -63,7 +70,8 @@ export function useLiquidityHistoryForPool(
         !poolId ||
         !spotPrice ||
         !baseAssetPrice ||
-        !totalLiquidity
+        !totalLiquidity ||
+        !lastestBlockNumber
       ) {
         return;
       }
@@ -83,15 +91,6 @@ export function useLiquidityHistoryForPool(
         fromBlockNumber
       );
 
-      // the timestamps of all those events
-      const timestamps = await Promise.all(
-        events.map(async (event) => {
-          const block = await event?.getBlock();
-          const timestamp = block.timestamp;
-          return timestamp;
-        })
-      );
-
       // here we take those events, and combine the base and yield asset into a single delta value.
       // we combine that with the timestamp to get a time series of data: [baseAssetDelta,
       // timestamp]. however, to see changes in total liquidity over time. to do this we get the
@@ -106,6 +105,7 @@ export function useLiquidityHistoryForPool(
       // take 100 - 6 = 94 and work backwards
       const deltaEvents = events.map((event, index) => {
         const changeEvent = event?.args as PoolBalanceChangedArguments;
+        const { blockNumber } = event;
         const [, , , amounts] = changeEvent;
         const baseDelta = +formatUnits(
           amounts[baseAssetIndex],
@@ -118,9 +118,14 @@ export function useLiquidityHistoryForPool(
 
         // liquidity delta in base asset units
         const totalDelta = baseDelta + yieldDelta / spotPrice;
-        const timestamp = timestamps[index];
 
-        return [totalDelta, timestamp];
+        // estimating timestamp here by taking the current time and subtracting the mining rate
+        // multiplied by the number blocks mined:
+        const timeStamp =
+          nowInMs -
+          (lastestBlockNumber - blockNumber) * AVG_MINE_RATE_SECONDS * 1000;
+
+        return [totalDelta, timeStamp];
       });
 
       // reverse events so we start at now and work our way back in time
@@ -130,18 +135,19 @@ export function useLiquidityHistoryForPool(
       const currentLiquidity =
         totalLiquidity?.toDecimal() / baseAssetPrice.toDecimal();
 
-      const liquidityOverTime = deltaEvents.map((event, index) => {
+      const liquidityOverTime: number[][] = [];
+
+      deltaEvents.forEach((event, index) => {
         const [delta, timestamp] = event;
 
         // if we are at index 0, then the value at [index - 1] will be undefined, so we'll use the
         // currentLiquidity to start
         const previousLiquidity =
-          deltaEvents[index - 1]?.[0] ?? currentLiquidity;
+          liquidityOverTime[index - 1]?.[0] ?? currentLiquidity;
 
         // get total liquidity at each timestamp
         const liquidity = previousLiquidity - delta;
-
-        return [liquidity, timestamp];
+        liquidityOverTime.push([liquidity, timestamp]);
       });
 
       // now put back into correct order
@@ -149,7 +155,7 @@ export function useLiquidityHistoryForPool(
 
       return liquidityOverTime.map(([liquidity, timestampInSeconds]) => ({
         value: liquidity,
-        timeMs: timestampInSeconds * 1000,
+        timeMs: timestampInSeconds,
       }));
     },
     enabled:
@@ -158,7 +164,8 @@ export function useLiquidityHistoryForPool(
       !!fromBlockNumber &&
       !!spotPrice &&
       !!totalLiquidity &&
-      !!baseAssetPrice,
+      !!baseAssetPrice &&
+      !!lastestBlockNumber,
   });
 
   return liquidityEvents;
