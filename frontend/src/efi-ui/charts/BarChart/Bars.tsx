@@ -1,63 +1,52 @@
 import React, { ReactElement, useCallback } from "react";
 
 import { AxisBottom, AxisLeft, AxisScale } from "@visx/axis";
-import { curveMonotoneX } from "@visx/curve";
-import { LinearGradient } from "@visx/gradient";
 import { GridColumns, GridRows } from "@visx/grid";
 import { Group } from "@visx/group";
-import { AreaClosed, LinePath } from "@visx/shape";
+import { Bar } from "@visx/shape";
 
 import { getAxisColor } from "efi-ui/charts/colors";
-import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 
-interface TimeData {
-  timeMs: number;
-  value: number;
-}
-
-interface AreaChartProps {
-  /**
-   * data for the AreaChart
-   */
-  data: TimeData[];
-
-  // TODO: make AreaChartProps generic like AreaChartProps<T = TimeData> and assign T to datum.
-  // spent a little time with this and got into the weeds.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  getXValue: (datum: any) => Date;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  getYValue: (datum: any) => number;
-  gradientColor: string;
-  xScale: AxisScale<number>;
-  yScale: AxisScale<number>;
+// Initialize some variables
+const margin = { top: 10, bottom: 15, left: 50, right: 20 };
+interface BarsProps<D> {
+  data: D[];
   width: number;
   height: number;
-  yMax: number;
   margin: { top: number; right: number; bottom: number; left: number };
+  events?: boolean;
+  isDarkMode?: boolean;
   hideBottomAxis?: boolean;
   hideLeftAxis?: boolean;
   top?: number;
   left?: number;
-  children?: React.ReactNode;
+  getXValue: (value: D) => Date;
+  getYValue: (datum: D) => number;
+  xScale: AxisScale<number>;
+  yScale: AxisScale<number>;
 }
 
-export function AreaChart({
+export default function Bars<D>({
   data,
   getXValue,
   getYValue,
-  gradientColor,
   width,
   height,
-  yMax,
-  margin,
-  xScale,
-  yScale,
+  isDarkMode = false,
   hideBottomAxis = false,
   hideLeftAxis = false,
-  top,
-  left,
-  children,
-}: AreaChartProps): ReactElement | null {
+  events = false,
+  top = 0,
+  left = 0,
+  xScale,
+  yScale,
+}: BarsProps<D>): ReactElement | null {
+  // bounds
+  const yMax = height - margin.top - margin.bottom;
+
+  const axisColor = getAxisColor({ isDarkMode });
+  const barColor = axisColor;
+
   const setXScale = useCallback((d) => xScale(getXValue(d)) ?? 0, [
     getXValue,
     xScale,
@@ -67,13 +56,6 @@ export function AreaChart({
     yScale,
   ]);
 
-  const { isDarkMode } = useDarkMode();
-
-  if (width < 10) {
-    return null;
-  }
-
-  const axisColor = getAxisColor({ isDarkMode });
   const axisBottomTickLabelProps = {
     textAnchor: "middle" as const,
     fontSize: 10,
@@ -92,6 +74,7 @@ export function AreaChart({
   const setAxisLeftTickLabelProps = () => axisLeftTickLabelProps;
 
   return (
+    // <Group left={left || margin.left} top={top || margin.top}>
     <Group left={left || margin.left} top={top || margin.top}>
       <GridRows
         scale={yScale}
@@ -104,42 +87,17 @@ export function AreaChart({
       <GridColumns
         scale={xScale}
         width={width}
-        height={height - margin.top - margin.bottom}
+        height={height}
         stroke="#e0e0e0"
         strokeDasharray="1,3"
         strokeOpacity={0.2}
       />
-      <LinearGradient
-        id="gradient"
-        from={gradientColor}
-        fromOpacity={1}
-        to={gradientColor}
-        toOpacity={0.2}
-      />
-      <LinePath
-        data={data}
-        curve={curveMonotoneX}
-        x={setXScale}
-        y={setYScale}
-        stroke={"white"}
-        strokeWidth={5}
-        strokeOpacity={0.8}
-      />
-      <AreaClosed<TimeData>
-        data={data}
-        x={setXScale}
-        y={setYScale}
-        yScale={yScale}
-        stroke="url(#gradient)"
-        fill="url(#gradient)"
-        curve={curveMonotoneX}
-      />
       {!hideBottomAxis && (
         <AxisBottom
-          top={yMax}
+          top={yMax + margin.top + margin.bottom}
           scale={xScale}
           numTicks={width > 520 ? 10 : 5}
-          stroke={axisColor}
+          stroke={"white"}
           tickStroke={axisColor}
           tickLabelProps={setAxisBottomTickLabelProps}
         />
@@ -148,14 +106,28 @@ export function AreaChart({
         <AxisLeft
           scale={yScale}
           numTicks={width > 520 ? 5 : 2}
-          stroke={axisColor}
+          stroke={"white"}
           tickStroke={axisColor}
           tickLabelProps={setAxisLeftTickLabelProps}
         />
       )}
-      {children}
+      {data.map((d) => {
+        const xValue = getXValue(d);
+        // const barWidth = xScale.bandwidth();
+        const barHeight = yMax - (yScale(getYValue(d)) ?? 0);
+        const barX = setXScale(d);
+        const barY = setYScale(d) + margin.top + margin.bottom;
+        return (
+          <Bar
+            key={`bar-${xValue}`}
+            x={barX}
+            y={barY}
+            width={2}
+            height={barHeight}
+            fill={barColor}
+          />
+        );
+      })}
     </Group>
   );
 }
-
-export default AreaChart;

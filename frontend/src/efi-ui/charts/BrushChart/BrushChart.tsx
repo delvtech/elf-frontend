@@ -65,7 +65,7 @@ export const BrushChart: FC<BrushChartProps> = withTooltip<
     getXValue,
     getYValue,
     compact = false,
-    isDarkMode,
+    isDarkMode = false,
     background = false,
     margin = {
       top: 20,
