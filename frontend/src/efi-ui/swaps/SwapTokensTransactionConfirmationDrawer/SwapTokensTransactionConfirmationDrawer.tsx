@@ -14,16 +14,14 @@ import { parseQueryBatchSwapResult } from "efi-ui/balancer/useQueryBatchSwap/par
 import { useQueryBatchSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { TransactionDrawer } from "efi-ui/contracts/TransactionDrawer/TransactionDrawer";
-import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
 import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
-import { PrincipalTokenTransactionDetails } from "efi-ui/swaps/PrincipalTokenTransactionDetails/PrincipalTokenTransactionDetails";
 import { SwapDetailsForm } from "efi-ui/swaps/SwapDetailsPreview/SwapDetailsForm";
-import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
+import { SwapTokenDetails } from "efi-ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensDetails";
 import { calculatePurchasePrice } from "efi/pools/calculatePurchasePrice";
 import { calculateSlippage } from "efi/pools/calculateSlippage";
 import { PoolContract } from "efi/pools/PoolContract";
@@ -65,13 +63,6 @@ export function SwapTokensTransactionConfirmationDrawer({
   // base asset calls
   const baseAssetSymbol = useCryptoSymbol(baseAsset);
   const baseAssetDecimals = useCryptoDecimals(baseAsset);
-
-  // tranche calls
-  const { data: trancheUnlockTimestamp } = useSmartContractReadCall(
-    tranche,
-    "unlockTimestamp"
-  );
-  const unlockTimeStampDate = convertEpochSecondsToDate(trancheUnlockTimestamp);
 
   const baseAssetPoolToken = usePoolPairedToken(pool, tranche as ERC20Shim);
   const {
@@ -141,11 +132,10 @@ export function SwapTokensTransactionConfirmationDrawer({
           assetOutSymbol={`${baseAssetSymbol} Principal Token`}
           assetOutIcon={null}
         >
-          <PrincipalTokenTransactionDetails
-            spotPriceBaseAssetForOneToken={spotPriceBaseAssetForOneToken}
+          <SwapTokenDetails
             baseAssetSymbol={baseAssetSymbol}
-            unlockTimeStamp={unlockTimeStampDate}
             priceSlippageAndTradingFee={priceSlippageAndTradingFee}
+            spotPriceBaseAssetForOneToken={spotPriceBaseAssetForOneToken}
           />
         </SwapDetailsForm>
       }
