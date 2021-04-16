@@ -8,11 +8,11 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
-import { StakePrincipalTokensTransactionDrawer } from "efi-ui/pools/StakePrincipalTokensTransactionDrawer/StakePrincipalTokensTransactionDrawer";
 import { PoolContract } from "efi/pools/PoolContract";
 import { Tooltip2 } from "@blueprintjs/popover2";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
+import { RedeemPrincipalTokensDrawer } from "efi-ui/tranche/RedeemPrincipalTokensDrawer/RedeemPrincipalTokensDrawer";
 
 interface RedeemButtonProps {
   chainId: number | undefined;
@@ -79,7 +79,7 @@ export function RedeemButton({
         </Button>
       )}
       {!baseAsset ? null : (
-        <StakePrincipalTokensTransactionDrawer
+        <RedeemPrincipalTokensDrawer
           isOpen={isDrawerOpen}
           tranche={tranche}
           account={account}
