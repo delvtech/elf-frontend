@@ -19,7 +19,6 @@ import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryp
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { StakeForm } from "efi-ui/pools/StakeForm/StakeForm";
 import { useJoinPool } from "efi-ui/pools/useJoinPool/useJoinPool";
-import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
 import { WalletDrawer } from "efi-ui/wallets/WalletDrawer/WalletDrawer";
 import {
@@ -66,7 +65,6 @@ export function StakePrincipalTokensTransactionDrawer({
     min: 0,
     maxPrecision: baseAssetDecimals,
   });
-  const baseAssetBalancerAddress = getTokenAddressForBalancer(baseAsset);
   const baseAssetAmountBigNumber = baseAssetAmountString
     ? parseUnits(baseAssetAmountString, baseAssetDecimals)
     : undefined;
@@ -84,7 +82,6 @@ export function StakePrincipalTokensTransactionDrawer({
     min: 0,
     maxPrecision: trancheDecimals,
   });
-  const trancheBalancerAddress = getTokenAddressForBalancer(baseAsset);
   const trancheAmountBigNumber = trancheAmountString
     ? parseUnits(trancheAmountString, baseAssetDecimals)
     : undefined;
