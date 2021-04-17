@@ -12,7 +12,8 @@ import { ANY_NUMBER_REGEX } from "efi/base/numbers";
 import styles from "./styles.module.css";
 
 interface SwapDetailsFormProps {
-  assetInIcon: SvgIcon | null;
+  assetInIcon?: SvgIcon | null;
+  assetOutIcon?: SvgIcon | null;
   assetInSymbol: string | undefined;
   assetOutSymbol: string | undefined;
   amountIn: string | undefined;
@@ -31,7 +32,6 @@ interface SwapDetailsFormProps {
    * disabled and read-only
    */
   onAmountOutChange?: (amoutOut: string | undefined) => void;
-  assetOutIcon: SvgIcon | null;
   children?: ReactElement;
 }
 export function SwapDetailsForm({
