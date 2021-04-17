@@ -1,38 +1,29 @@
-import React, { ReactElement } from "react";
+import { ReactElement, useCallback } from "react";
 
 import { Button, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
-import { ERC20 } from "elf-contracts/types/ERC20";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { BigNumber, Signer } from "ethers";
 import { parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { getBalancerApprovalMessage } from "efi-ui/balancer/balancerApprovalMessage";
-import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
-import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
-import { WalletApprovalCallout } from "efi-ui/contracts/TransactionDrawer/WalletApprovalCallout";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
-import { StakeForm } from "efi-ui/pools/StakeForm/StakeForm";
-import { useJoinPool } from "efi-ui/pools/useJoinPool/useJoinPool";
-import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
-import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
+import { RedeemForm } from "efi-ui/tranche/RedeemForm/RedeemForm";
 import { WalletDrawer } from "efi-ui/wallets/WalletDrawer/WalletDrawer";
-import {
-  CryptoAsset,
-  CryptoAssetType,
-  findTokenContract,
-} from "efi/crypto/CryptoAsset";
-import { PoolContract } from "efi/pools/PoolContract";
+import { CryptoAsset } from "efi/crypto/CryptoAsset";
+import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
+import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
+import { formatFullDate } from "efi/base/dates";
+import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
+import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
+import { useWithdrawPrincipal } from "./useWithdrawPrincipal";
 
 interface RedeemPrincipalTokensDrawerProps {
   account: string | null | undefined;
   library: Web3Provider | undefined;
-  pool: PoolContract | undefined;
   baseAsset: CryptoAsset;
   tranche: Tranche | undefined;
   isOpen: boolean;
@@ -46,57 +37,50 @@ export function RedeemPrincipalTokensDrawer({
   tranche,
   isOpen,
   onClose,
-  pool,
 }: RedeemPrincipalTokensDrawerProps): ReactElement {
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
-  const balancerVault = useBalancerVault();
 
   // base asset calls
   const baseAssetSymbol = useCryptoSymbol(baseAsset);
-  const { data: allowance } = useTokenAllowance(
-    findTokenContract(baseAsset) as ERC20Shim,
-    account,
-    balancerVault?.address
-  );
-  const baseAssetDecimals = useCryptoDecimals(baseAsset);
-  const {
-    stringValue: baseAssetAmountString,
-    setValue: onBaseAssetAmountChange,
-  } = useNumericInput({
-    min: 0,
-    maxPrecision: baseAssetDecimals,
-  });
-  const baseAssetBalancerAddress = getTokenAddressForBalancer(baseAsset);
-  const baseAssetAmountBigNumber = baseAssetAmountString
-    ? parseUnits(baseAssetAmountString, baseAssetDecimals)
-    : undefined;
 
   // tranche calls
-  const trancheCryptoAsset = makeCryptoAsset(tranche as ERC20Shim);
-  const { data: trancheDecimals } = useSmartContractReadCall(
+  const [trancheDecimals] = useTokenDecimals(tranche);
+  const { data: trancheUnlockTimestamp } = useSmartContractReadCall(
     tranche,
-    "decimals"
+    "unlockTimestamp"
   );
+  const unlockTimestampDate = convertEpochSecondsToDate(trancheUnlockTimestamp);
+  const unlockTimestampLabel = unlockTimestampDate
+    ? formatFullDate(unlockTimestampDate)
+    : undefined;
+
   const {
     stringValue: trancheAmountString,
-    setValue: onTrancheAmountChange,
+    setValue: setTrancheAmountString,
   } = useNumericInput({
     min: 0,
     maxPrecision: trancheDecimals,
   });
-  const trancheBalancerAddress = getTokenAddressForBalancer(baseAsset);
-  const trancheAmountBigNumber = trancheAmountString
-    ? parseUnits(trancheAmountString, baseAssetDecimals)
-    : undefined;
-
-  const onStake = useJoinPool(signer, account, pool);
+  const accountTrancheBalance = useTokenBalance(tranche, account);
+  const onSetMaxAmount = useCallback(() => {
+    setTrancheAmountString(accountTrancheBalance.toString());
+  }, [accountTrancheBalance, setTrancheAmountString]);
 
   const confirmButtonLabel = getConfirmButtonLabel(account);
+  const trancheAmountBigNumber =
+    trancheAmountString && trancheDecimals
+      ? parseUnits(trancheAmountString, trancheDecimals)
+      : undefined;
   const confirmButtonDisabled = getConfirmButtonDisabled(
     account,
-    baseAsset,
-    baseAssetAmountBigNumber,
-    allowance
+    trancheAmountBigNumber
+  );
+
+  const withdrawPrincipal = useWithdrawPrincipal(
+    signer,
+    tranche,
+    account,
+    trancheAmountBigNumber
   );
 
   return (
@@ -106,36 +90,26 @@ export function RedeemPrincipalTokensDrawer({
       className={tw("justify-between")}
     >
       <div className={tw("flex", "flex-col", "space-y-4")}>
-        <StakeForm
-          heading={t`Stake ${baseAssetSymbol} Principal Tokens`}
-          assetOne={baseAsset}
-          assetOneAmount={baseAssetAmountString}
-          onAssetOneAmountChange={onBaseAssetAmountChange}
-          assetTwo={trancheCryptoAsset}
-          assetTwoSymbol={t`${baseAssetSymbol} Principal Token`}
-          onAssetTwoAmountChange={onTrancheAmountChange}
-          assetTwoAmount={trancheAmountString}
-        />
-        {baseAsset.type === CryptoAssetType.ERC20 ||
-        baseAsset.type === CryptoAssetType.ERC20PERMIT ? (
-          <WalletApprovalCallout
-            account={account}
-            cryptoAsset={baseAsset}
-            approvalAmount={baseAssetAmountBigNumber}
-            signer={signer}
-            message={getBalancerApprovalMessage(baseAssetSymbol)}
-          />
-        ) : null}
-        {trancheCryptoAsset?.type === CryptoAssetType.ERC20 ||
-        trancheCryptoAsset?.type === CryptoAssetType.ERC20PERMIT ? (
-          <WalletApprovalCallout
-            account={account}
-            cryptoAsset={trancheCryptoAsset}
-            approvalAmount={trancheAmountBigNumber}
-            signer={signer}
-            message={getBalancerApprovalMessage(t`pt${baseAssetSymbol}`)}
-          />
-        ) : null}
+        <RedeemForm
+          onSetMaxAmount={onSetMaxAmount}
+          heading={t`Redeem ${baseAssetSymbol} Principal Tokens`}
+          tranche={tranche}
+          amount={trancheAmountString}
+          assetSymbol={t`${baseAssetSymbol} Principal Token`}
+          onAmountChange={setTrancheAmountString}
+        >
+          <div className={tw("flex", "flex-col", "space-y-6", "items-center")}>
+            <LabeledText
+              bold
+              muted={false}
+              className={tw("items-center")}
+              text={<span>{t`Term date`}</span>}
+              label={
+                <span className={tw("text-base")}>{unlockTimestampLabel}</span>
+              }
+            />
+          </div>
+        </RedeemForm>
         <Button
           fill
           disabled={confirmButtonDisabled}
@@ -143,7 +117,7 @@ export function RedeemPrincipalTokensDrawer({
           className={tw("h-16")}
           large
           outlined
-          onClick={onStake}
+          onClick={withdrawPrincipal}
         >
           {confirmButtonLabel}
         </Button>
@@ -152,19 +126,6 @@ export function RedeemPrincipalTokensDrawer({
   );
 }
 
-function makeCryptoAsset(token: ERC20 | undefined) {
-  if (!token) {
-    return;
-  }
-
-  const assetIn: CryptoAsset = {
-    id: token?.address,
-    type: CryptoAssetType.ERC20,
-    tokenContract: token,
-  };
-
-  return assetIn;
-}
 function getConfirmButtonLabel(account: string | null | undefined) {
   if (!account) {
     return t`Connect your wallet to continue`;
@@ -175,15 +136,8 @@ function getConfirmButtonLabel(account: string | null | undefined) {
 
 function getConfirmButtonDisabled(
   account: string | null | undefined,
-  baseAsset: CryptoAsset | undefined,
-  amountIn: BigNumber | undefined,
-  marketAllowance: BigNumber | undefined
+  amountIn: BigNumber | undefined
 ) {
-  // can't confirm anything w/out a base asset
-  if (!baseAsset) {
-    return true;
-  }
-
   // must be connected to click this button
   if (!account) {
     return true;
@@ -192,20 +146,6 @@ function getConfirmButtonDisabled(
   // disabled when no amount is entered
   if (!amountIn) {
     return true;
-  }
-
-  // disabled if it's an erc20 or erc20permits w/out enough allowance.
-  // NOTE: we have to use approvals for erc20permits because balancer does not
-  // support that
-  if (
-    [CryptoAssetType.ERC20, CryptoAssetType.ERC20PERMIT].includes(
-      baseAsset.type
-    )
-  ) {
-    const hasEnoughAllowance = marketAllowance?.gte(amountIn);
-    if (!hasEnoughAllowance) {
-      return true;
-    }
   }
 
   // otherwise the button should not be disabled

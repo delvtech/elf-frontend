@@ -1,7 +1,6 @@
 import React, { ReactElement } from "react";
 
 import { Callout, Dialog } from "@blueprintjs/core";
-import { IconNames } from "@blueprintjs/icons";
 import classNames from "classnames";
 import { t } from "ttag";
 
@@ -22,9 +21,7 @@ export function ConnectWalletDialog({
     <Dialog
       className={classNames(darkModeClassName, tw("pb-0"))}
       isOpen={isOpen}
-      icon={IconNames.SEND_TO_GRAPH}
       onClose={onClose}
-      title={t`Connect wallet`}
     >
       <div
         className={tw("flex", "flex-col", "w-full", "h-full")}
