@@ -66,17 +66,15 @@ export function PortfolioView(props: PortfolioViewProps): ReactElement {
       >
         {/* Main content */}
         <div className={tw("flex", "flex-col", "flex-1", "space-y-12")}>
-          <div className={tw("flex", "flex-col", "w-full", "space-y-12")}>
-            <div>
-              <H2>
-                {t`Portfolio `}{" "}
-                {account ? (
-                  <span className={Classes.TEXT_MUTED}>{`(${formatWalletAddress(
-                    account
-                  )})`}</span>
-                ) : null}
-              </H2>
-            </div>
+          <div className={tw("flex", "flex-col", "w-full", "space-y-8")}>
+            <H2 className={tw("text-center")}>
+              {t`Portfolio `}{" "}
+              {account ? (
+                <span className={Classes.TEXT_MUTED}>{`(${formatWalletAddress(
+                  account
+                )})`}</span>
+              ) : null}
+            </H2>
             <PortfolioTabs
               onChangeTab={onChangeTab}
               activePortfolioTabId={activePortfolioTabId}
