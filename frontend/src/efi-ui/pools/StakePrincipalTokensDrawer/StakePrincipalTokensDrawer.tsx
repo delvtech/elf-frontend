@@ -28,7 +28,7 @@ import {
 } from "efi/crypto/CryptoAsset";
 import { PoolContract } from "efi/pools/PoolContract";
 
-interface StakePrincipalTokensTransactionDrawerProps {
+interface StakePrincipalTokensDrawerProps {
   account: string | null | undefined;
   library: Web3Provider | undefined;
   pool: PoolContract | undefined;
@@ -38,7 +38,7 @@ interface StakePrincipalTokensTransactionDrawerProps {
   onClose: () => void;
 }
 
-export function StakePrincipalTokensTransactionDrawer({
+export function StakePrincipalTokensDrawer({
   library,
   account,
   baseAsset,
@@ -46,7 +46,7 @@ export function StakePrincipalTokensTransactionDrawer({
   isOpen,
   onClose,
   pool,
-}: StakePrincipalTokensTransactionDrawerProps): ReactElement {
+}: StakePrincipalTokensDrawerProps): ReactElement {
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
   const balancerVault = useBalancerVault();
 
