@@ -80,6 +80,9 @@ export function PoolView({ poolAddress }: PoolViewProps): ReactElement {
               library={library}
               signer={signer}
               account={account}
+              chainId={chainId}
+              connector={connector}
+              walletActive={active}
               pool={pool}
             />
           </div>

@@ -2,6 +2,7 @@ import React, { ReactElement, useCallback, useState } from "react";
 
 import { Card, Colors, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
+import { AbstractConnector } from "@web3-react/abstract-connector";
 import { ERC20 } from "elf-contracts/types/ERC20";
 import { Signer } from "ethers";
 import { t } from "ttag";
@@ -14,6 +15,9 @@ interface PoolActionsCardProps {
   library: Web3Provider | undefined;
   signer: Signer | undefined;
   account: string | null | undefined;
+  chainId: number | undefined;
+  connector: AbstractConnector | undefined;
+  walletActive: boolean;
   pool: PoolContract | undefined;
   tokenIn: ERC20 | undefined;
   tokenOut: ERC20 | undefined;
@@ -21,7 +25,17 @@ interface PoolActionsCardProps {
 
 type MarketAction = "trade" | "stake";
 export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
-  const { library, signer, account, tokenIn, tokenOut, pool } = props;
+  const {
+    library,
+    signer,
+    account,
+    chainId,
+    connector,
+    walletActive,
+    tokenIn,
+    tokenOut,
+    pool,
+  } = props;
   const [action, setActionUI] = useState<MarketAction>("trade");
   const showTradeUI = useCallback(() => setActionUI("trade"), []);
   const showStakeUI = useCallback(() => setActionUI("stake"), []);
@@ -44,11 +58,14 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
             library={library}
             signer={signer}
             account={account}
+            chainId={chainId}
+            connector={connector}
+            walletActive={walletActive}
             pool={pool}
             tokenIn={tokenIn}
             tokenOut={tokenOut}
-            inputLabel={"Trade"}
-            buttonLabel={"Trade"}
+            inputLabel={t`Trade`}
+            buttonLabel={t`Trade`}
             buttonIntent={Intent.PRIMARY}
             onTransaction={() => {}}
           />
@@ -58,11 +75,14 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
             library={library}
             signer={signer}
             account={account}
+            chainId={chainId}
+            connector={connector}
+            walletActive={walletActive}
             pool={pool}
             tokenIn={tokenIn}
             tokenOut={tokenOut}
-            inputLabel={"Stake"}
-            buttonLabel={"Stake"}
+            inputLabel={t`Stake`}
+            buttonLabel={t`Stake`}
             buttonIntent={Intent.PRIMARY}
             onTransaction={() => {}}
           />

@@ -1,15 +1,16 @@
 import React, { ReactElement } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
+import { AbstractConnector } from "@web3-react/abstract-connector";
 import { Signer } from "ethers";
 
 import tw from "efi-tailwindcss-classnames";
 import { getQueryData } from "efi-ui/base/queryResults";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { PoolCharts } from "efi-ui/pools/PoolCharts/PoolCharts";
 import { TokenSummary } from "efi-ui/markets/TokenSummary/TokenSummary";
 import { VaultSummary } from "efi-ui/markets/VaultSummary/VaultSummary";
 import { PoolActionsCard } from "efi-ui/pools/PoolActionsCard/PoolActionsCard";
+import { PoolCharts } from "efi-ui/pools/PoolCharts/PoolCharts";
 import { PoolSummary } from "efi-ui/pools/PoolSummary/PoolSummary";
 import { useFeeVolumeForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
@@ -26,6 +27,9 @@ interface PoolDetailsProps {
   library: Web3Provider | undefined;
   signer: Signer | undefined;
   account: string | null | undefined;
+  chainId: number | undefined;
+  connector: AbstractConnector | undefined;
+  walletActive: boolean;
   pool: PoolContract | undefined;
 }
 
@@ -33,6 +37,9 @@ export function PoolDetails({
   library,
   signer,
   account,
+  chainId,
+  connector,
+  walletActive,
   pool,
 }: PoolDetailsProps): ReactElement {
   const poolTokensResult = usePoolTokens(pool);
@@ -80,6 +87,9 @@ export function PoolDetails({
               library={library}
               signer={signer}
               account={account}
+              chainId={chainId}
+              connector={connector}
+              walletActive={walletActive}
               pool={pool}
               tokenIn={baseAssetContract}
               tokenOut={yieldAssetContract}
