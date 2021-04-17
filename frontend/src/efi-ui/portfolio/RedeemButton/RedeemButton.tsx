@@ -86,7 +86,6 @@ export function RedeemButton({
           baseAsset={baseAsset}
           library={library}
           onClose={() => setDrawerOpen(false)}
-          pool={pool}
         />
       )}
     </Fragment>
