@@ -48,6 +48,7 @@ export function CryptoAssetPicker({
           minimal
           onClick={handleClick}
           cryptoAsset={baseAsset}
+          assetIcon={baseAsset.assetIcon}
         />
       )}
       onItemSelect={onCryptoAssetChange}
@@ -55,6 +56,7 @@ export function CryptoAssetPicker({
       <CryptoAssetButton
         minimal
         cryptoAsset={activeCryptoAsset}
+        assetIcon={activeCryptoAsset.assetIcon}
         rightIcon={IconNames.CARET_DOWN}
       />
     </Select>
