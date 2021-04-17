@@ -3,6 +3,7 @@ import { ReactElement, useCallback, useEffect, useState } from "react";
 import { Button, Intent } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
+import { AbstractConnector } from "@web3-react/abstract-connector";
 import { ERC20 } from "elf-contracts/types/ERC20";
 import { BigNumber, Signer } from "ethers";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
@@ -15,12 +16,19 @@ import {
   useNumericInput,
 } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
+import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
-import { useCryptoAssetMetadata } from "efi-ui/crypto/hooks/useCryptoAssetMetadata/useCryptAssetMetadata";
-import { useCryptoBalance } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
+import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { useTokenPoolBalance } from "efi-ui/pools/useTokenPoolBalance/useTokenPoolBalance";
+import { SwapTokensTransactionConfirmationDrawer } from "efi-ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensTransactionConfirmationDrawer";
+import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
+import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
+import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
 import { TradeInput } from "efi-ui/trade/TradeInput/TradeInput";
+import { useEthBalance } from "efi-ui/wallets/hooks/useEthBalance/useEthBalance";
+import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 import { formatBalance } from "efi/base/formatBalance";
+import ContractAddresses from "efi/contracts/contractsJson";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { PoolContract } from "efi/pools/PoolContract";
@@ -29,8 +37,11 @@ import { validateTradeValues } from "efi/trade/validateTradeValues";
 interface TradePanelProps {
   library: Web3Provider | undefined;
   signer: Signer | undefined;
-  pool: PoolContract | undefined;
   account: string | null | undefined;
+  chainId: number | undefined;
+  connector: AbstractConnector | undefined;
+  walletActive: boolean;
+  pool: PoolContract | undefined;
   formDisabled?: boolean;
   submitDisabled?: boolean;
   inputLabel: string;
@@ -51,15 +62,17 @@ const numericInputOptions: NumericInputOptions = {
 
 export function TradePanel(props: TradePanelProps): ReactElement {
   const {
-    signer,
+    account,
+    library,
+    chainId,
+    connector,
+    buttonLabel,
+    walletActive,
     formDisabled = false,
     submitDisabled = false,
     inputLabel,
-    buttonLabel,
     buttonIntent = Intent.PRIMARY,
     pool,
-    account,
-    library,
     tokenIn: tokenInFromProps,
     tokenOut: tokenOutFromProps,
   } = props;
@@ -69,7 +82,12 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     tokenOutFromProps
   );
 
+  const spotPrice = usePoolSpotPrice(pool, tokenIn);
+
   const {
+    asset: tokenInAsset,
+    address: tokenInAddress,
+    icon: tokenInIcon,
     symbol: tokenInSymbol,
     decimals: tokenInDecimals,
     balanceOf: tokenInBalanceOf,
@@ -78,10 +96,13 @@ export function TradePanel(props: TradePanelProps): ReactElement {
   } = useTokenInfoForTradeInput(pool, tokenIn, account, library);
 
   const {
+    address: tokenOutAddress,
+    icon: tokenOutIcon,
     symbol: tokenOutSymbol,
-    decimals: tokenOutDisplayBalance,
+    decimals: tokenOutDecimals,
+    displayBalance: tokenOutDisplayBalance,
     poolBalance: tokenOutPoolBalance,
-  } = useTokenInfoForTradeInput(pool, tokenIn, account, library);
+  } = useTokenInfoForTradeInput(pool, tokenOut, account, library);
 
   const {
     amountIn,
@@ -100,16 +121,10 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     tokenOutPoolBalance
   );
 
-  const approved = useTokenApproval(
-    account,
-    pool,
-    tokenIn,
-    amountIn,
-    amountOut,
-    tokenInDecimals
-  );
-
-  const submitTransaction = useCallback(() => {}, []);
+  const [isDrawerOpen, setDrawerOpen] = useState(false);
+  const submitTransaction = useCallback(() => {
+    setDrawerOpen(true);
+  }, []);
 
   const setMaxValue = useSetMaxValue(
     tokenInBalanceOf,
@@ -117,16 +132,13 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     tokenInDecimals
   );
 
-  const submitButtonText = getSubmitButtonText(buttonLabel, approved, signer);
-
   const submitButtonDisabled =
     formDisabled ||
     submitDisabled ||
     !isValidTokenInValue ||
     !isValidTokenOutValue ||
     !amountIn ||
-    !amountOut ||
-    !signer;
+    !amountOut;
 
   return (
     <div className={tw("flex", "flex-col", "space-y-5")}>
@@ -179,8 +191,29 @@ export function TradePanel(props: TradePanelProps): ReactElement {
         large
         intent={buttonIntent}
       >
-        {submitButtonText}
+        {buttonLabel}
       </Button>
+      <SwapTokensTransactionConfirmationDrawer
+        tokenInAddress={tokenInAddress}
+        tokenInSymbol={tokenInSymbol}
+        tokenInDecimals={tokenInDecimals}
+        tokenInAsset={tokenInAsset}
+        tokenInIcon={tokenInIcon}
+        tokenOutAddress={tokenOutAddress}
+        tokenOutSymbol={tokenOutSymbol}
+        tokenOutDecimals={tokenOutDecimals}
+        tokenOutIcon={tokenOutIcon}
+        account={account}
+        library={library}
+        chainId={chainId}
+        connector={connector}
+        pool={pool}
+        walletConnectionActive={walletActive}
+        amountIn={amountIn}
+        spotPrice={spotPrice}
+        isOpen={isDrawerOpen}
+        onClose={() => setDrawerOpen(false)}
+      />
     </div>
   );
 }
@@ -216,14 +249,13 @@ function useReversableTokens(
 }
 
 // TODO: clean this up, I don't know what we need amountOut in here
-function useTokenApproval(
+export function useTokenApproval(
   account: string | null | undefined,
   pool: PoolContract | undefined,
   tokenIn: ERC20 | undefined,
   amountIn: string | undefined,
-  amountOut: string | undefined,
   tokenInDecimals: number | undefined
-) {
+): boolean {
   // safe to cast callArgs since we don't enable the call unless they are defnied
   const callArgs: ContractMethodArgs<ERC20, "allowance"> = [
     account as string,
@@ -235,25 +267,9 @@ function useTokenApproval(
   });
   const approved =
     amountIn && allowance
-      ? allowance.gte(parseUnits(amountOut || "0", tokenInDecimals))
+      ? allowance.gte(parseUnits(amountIn || "0", tokenInDecimals))
       : false;
   return approved;
-}
-
-function getSubmitButtonText(
-  buttonLabel: string,
-  approved: boolean,
-  signer: Signer | undefined
-) {
-  if (!signer) {
-    return t`Connect Wallet`;
-  }
-
-  if (!approved) {
-    return `Approve Market`;
-  }
-
-  return buttonLabel;
 }
 
 function useTokenInfoForTradeInput(
@@ -262,14 +278,25 @@ function useTokenInfoForTradeInput(
   account: string | null | undefined,
   library: Web3Provider | undefined
 ) {
-  const asset = useCryptoAssetForToken(tokenContract?.address);
-  const { decimals, symbol } = useCryptoAssetMetadata(asset);
-  const balanceOf = useCryptoBalance(library, account, asset);
+  const isWETH = tokenContract?.address === ContractAddresses.wethAddress;
+  const { data: ethBalance } = useEthBalance(library, account);
+
+  // otherwise get values from token calls
   const poolBalance = useTokenPoolBalance(pool, tokenContract);
+  const [symbol] = useTokenSymbol(tokenContract);
+  const icon = findAssetIcon(symbol);
+  const [decimals] = useTokenDecimals(tokenContract);
+  const [tokenBalance] = useTokenBalanceOf(tokenContract, account);
+
+  const balanceOf = isWETH ? ethBalance : tokenBalance;
   const displayBalance = formatBalance(balanceOf, decimals);
+  const address = isWETH ? BALANCER_ETH_SENTINEL : tokenContract?.address;
+  const asset = useCryptoAssetForToken(tokenContract?.address);
 
   return {
     asset,
+    address,
+    icon,
     symbol,
     decimals,
     balanceOf,
