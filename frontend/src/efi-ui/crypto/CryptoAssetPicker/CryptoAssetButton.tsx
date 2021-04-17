@@ -7,15 +7,17 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
+import { SvgIcon } from "efi-ui/base/SvgIcon";
 import { useCryptoName } from "efi-ui/crypto/hooks/useCryptoName/useCryptoName";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
+import { CryptoAsset } from "efi/crypto/CryptoAsset";
 
 interface CryptoAssetButtonProps {
   outlined?: boolean;
   fill?: boolean;
   minimal?: boolean;
-  cryptoAsset: CryptoAssetWithIcon;
+  cryptoAsset: CryptoAsset;
+  assetIcon: SvgIcon | undefined;
   rightIcon?: IconName;
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
@@ -25,7 +27,7 @@ export function CryptoAssetButton({
   minimal,
   outlined,
   cryptoAsset,
-  cryptoAsset: { assetIcon: AssetIcon },
+  assetIcon,
   rightIcon,
   onClick,
 }: CryptoAssetButtonProps): ReactElement {
@@ -46,7 +48,7 @@ export function CryptoAssetButton({
       )}
     >
       <AssetLabel
-        icon={AssetIcon}
+        icon={assetIcon}
         assetName={assetName}
         assetSymbol={assetSymbol}
       />
@@ -55,11 +57,7 @@ export function CryptoAssetButton({
   );
 }
 interface AssetLabelProps {
-  icon: React.FC<
-    React.SVGProps<SVGSVGElement> & {
-      title?: string | undefined;
-    }
-  >;
+  icon: SvgIcon | undefined;
   assetName: string;
   assetSymbol: string;
 }
@@ -72,7 +70,7 @@ function AssetLabel({
     <div className={tw("p-4", "justify-between")}>
       <div className={tw("flex", "items-center", "space-x-4", "flex-1")}>
         <LabeledText
-          icon={<AssetIcon height={50} width={50} />}
+          icon={AssetIcon && <AssetIcon height={50} width={50} />}
           iconClassName={tw("mr-4")}
           large
           text={

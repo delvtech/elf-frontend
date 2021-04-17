@@ -22,6 +22,7 @@ export function useCryptoAssetForToken(
     tokenAddress,
     ERC20__factory.connect
   );
+
   const erc20PermitContract = useSmartContractFromFactory(
     tokenAddress,
     ERC20Permit__factory.connect
@@ -45,7 +46,7 @@ export function useCryptoAssetForToken(
 
   // If it's a known erc20, make it so
   const assetIcon = findAssetIcon(symbol);
-  if (erc20Contract && assetIcon && KNOWN_ERC20_TOKENS.includes(tokenAddress)) {
+  if (erc20Contract && KNOWN_ERC20_TOKENS.includes(tokenAddress)) {
     const cryptoAsset: CryptoAssetWithIcon = {
       id: tokenAddress,
       type: CryptoAssetType.ERC20,
