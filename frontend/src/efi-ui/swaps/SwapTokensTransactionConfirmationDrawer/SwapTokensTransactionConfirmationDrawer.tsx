@@ -2,7 +2,6 @@ import React, { ReactElement } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
-import { Tranche } from "elf-contracts/types/Tranche";
 import { Signer } from "ethers";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
 
@@ -12,19 +11,14 @@ import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { useBatchSwapGivenIn } from "efi-ui/balancer/useBatchSwapGivenIn/useBatchSwapGivenIn";
 import { parseQueryBatchSwapResult } from "efi-ui/balancer/useQueryBatchSwap/parseQueryBatchSwapResult";
 import { useQueryBatchSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
-import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
+import { SvgIcon } from "efi-ui/base/SvgIcon";
 import { TransactionDrawer } from "efi-ui/contracts/TransactionDrawer/TransactionDrawer";
-import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
-import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
-import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
-import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
-import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
-import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
 import { SwapDetailsForm } from "efi-ui/swaps/SwapDetailsPreview/SwapDetailsForm";
 import { SwapTokenDetails } from "efi-ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensDetails";
 import { calculatePurchasePrice } from "efi/pools/calculatePurchasePrice";
 import { calculateSlippage } from "efi/pools/calculateSlippage";
 import { PoolContract } from "efi/pools/PoolContract";
+import { CryptoAsset } from "efi/crypto/CryptoAsset";
 
 interface SwapTokensTransactionConfirmationDrawerProps {
   chainId: number | undefined;
@@ -35,9 +29,19 @@ interface SwapTokensTransactionConfirmationDrawerProps {
   pool: PoolContract | undefined;
 
   amountIn: string | undefined;
-  baseAsset: CryptoAssetWithIcon;
+  tokenInAsset: CryptoAsset | undefined;
+  tokenInAddress: string | undefined;
+  tokenInSymbol: string | undefined;
+  tokenInDecimals: number | undefined;
+  tokenInIcon: SvgIcon | undefined;
+  tokenOutAddress: string | undefined;
+  tokenOutSymbol: string | undefined;
+  tokenOutDecimals: number | undefined;
+  tokenOutIcon: SvgIcon | undefined;
 
-  tranche: Tranche | undefined;
+  // out/in
+  spotPrice: number | undefined;
+
   isOpen: boolean;
 
   onClose: () => void;
@@ -49,9 +53,16 @@ export function SwapTokensTransactionConfirmationDrawer({
   library,
   chainId,
   account,
-  baseAsset: { assetIcon: AssetIcon },
-  baseAsset,
-  tranche,
+  tokenInAsset,
+  tokenInAddress,
+  tokenInSymbol,
+  tokenInDecimals,
+  tokenInIcon,
+  tokenOutAddress,
+  tokenOutSymbol,
+  tokenOutDecimals,
+  tokenOutIcon,
+  spotPrice,
   amountIn,
   isOpen,
   onClose,
@@ -60,20 +71,8 @@ export function SwapTokensTransactionConfirmationDrawer({
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
   const balancerVault = useBalancerVault();
 
-  // base asset calls
-  const baseAssetSymbol = useCryptoSymbol(baseAsset);
-  const baseAssetDecimals = useCryptoDecimals(baseAsset);
-
-  const baseAssetPoolToken = usePoolPairedToken(pool, tranche as ERC20Shim);
-  const {
-    spotPriceBaseAssetForOneToken,
-    spotPriceTokenForOneBaseAsset,
-  } = usePoolTokenPrices(pool, baseAssetPoolToken);
-
   // pool calls
-  const amountInAsBigNumber = parseUnits(amountIn || "0", baseAssetDecimals);
-  const tokenInAddress = getTokenAddressForBalancer(baseAsset);
-  const tokenOutAddress = tranche?.address;
+  const amountInAsBigNumber = parseUnits(amountIn || "0", tokenInDecimals);
   const { data: queryBatchSwapInResult = [] } = useQueryBatchSwap(
     SwapKind.GIVEN_IN,
     pool,
@@ -92,20 +91,17 @@ export function SwapTokensTransactionConfirmationDrawer({
     signer,
     pool,
     tokenInAddress,
-    tranche?.address,
+    tokenOutAddress,
     amountInAsBigNumber
   );
 
-  const amountOutNumber = +formatUnits(
-    amountOut?.abs() || 0,
-    baseAssetDecimals
-  );
+  const amountOutNumber = +formatUnits(amountOut?.abs() || 0, tokenInDecimals);
   const amountOutFormatted = amountOutNumber.toFixed(4);
 
   const priceSlippageAndTradingFee = getPriceSlippageAndTradingFee(
     +(amountIn || 0),
     amountOutNumber,
-    spotPriceTokenForOneBaseAsset
+    1 / (spotPrice || 1)
   );
 
   return (
@@ -114,8 +110,8 @@ export function SwapTokensTransactionConfirmationDrawer({
       isOpen={isOpen}
       onClose={onClose}
       account={account}
-      assetIn={baseAsset}
-      assetInIcon={baseAsset.assetIcon}
+      assetIn={tokenInAsset}
+      assetInIcon={tokenInIcon}
       walletConnectionActive={walletConnectionActive}
       amountIn={amountInAsBigNumber}
       chainId={chainId}
@@ -127,15 +123,14 @@ export function SwapTokensTransactionConfirmationDrawer({
         <SwapDetailsForm
           amountIn={amountIn}
           amountOut={amountOutFormatted}
-          assetInIcon={AssetIcon}
-          assetInSymbol={baseAssetSymbol}
-          assetOutSymbol={`${baseAssetSymbol} Principal Token`}
-          assetOutIcon={null}
+          assetInIcon={tokenInIcon}
+          assetInSymbol={tokenInSymbol}
+          assetOutSymbol={`${tokenInSymbol} Principal Token`}
         >
           <SwapTokenDetails
-            baseAssetSymbol={baseAssetSymbol}
+            baseAssetSymbol={tokenInSymbol}
             priceSlippageAndTradingFee={priceSlippageAndTradingFee}
-            spotPriceBaseAssetForOneToken={spotPriceBaseAssetForOneToken}
+            spotPriceBaseAssetForOneToken={spotPrice}
           />
         </SwapDetailsForm>
       }
