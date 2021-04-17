@@ -314,14 +314,7 @@ function getTimeLeftLabel(
   if (isMature) {
     const timeSinceMaturity = getTimeSinceMaturityLabel(maturationDate);
     return (
-      <span
-        style={{
-          color: isDarkMode
-            ? "var(--bp3-intent-success-dark)"
-            : "var(--bp3-intent-success)",
-        }}
-        className={classNames(tw("text-base"))}
-      >
+      <span className={classNames(tw("text-base"))}>
         {t`Term reached `}
         <strong>{timeSinceMaturity}</strong>
       </span>
