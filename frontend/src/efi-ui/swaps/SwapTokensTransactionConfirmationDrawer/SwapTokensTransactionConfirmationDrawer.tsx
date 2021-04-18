@@ -86,7 +86,7 @@ export function SwapTokensTransactionConfirmationDrawer({
     queryBatchSwapInResult
   );
 
-  const onCongrimSwapTokens = useBatchSwapGivenIn(
+  const onConfirmSwapTokens = useBatchSwapGivenIn(
     account,
     signer,
     pool,
@@ -117,7 +117,7 @@ export function SwapTokensTransactionConfirmationDrawer({
       chainId={chainId}
       connector={connector}
       library={library}
-      onConfirmTransaction={onCongrimSwapTokens}
+      onConfirmTransaction={onConfirmSwapTokens}
       walletApprovalMessageRenderer={getBalancerApprovalMessage}
       transactionDetails={
         <SwapDetailsForm
