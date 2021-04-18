@@ -86,6 +86,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     displayBalance: tokenInDisplayBalance,
     poolBalance: tokenInPoolBalance,
   } = useTokenInfoForTradeInput(pool, tokenIn, account, library);
+
   const {
     address: tokenOutAddress,
     icon: tokenOutIcon,
@@ -290,7 +291,6 @@ function useTokenInfoForTradeInput(
   const displayBalance = formatBalance(balanceOf, decimals);
   const address = isWETH ? BALANCER_ETH_SENTINEL : tokenContract?.address;
   const asset = useCryptoAssetForToken(tokenContract?.address);
-
   return {
     asset,
     address,
