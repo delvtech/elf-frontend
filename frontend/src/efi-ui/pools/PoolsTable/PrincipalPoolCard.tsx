@@ -42,9 +42,7 @@ export function PrincipalPoolCard({
     getQueryData(unlockTimestampResult)
   );
 
-  const startDate = convertEpochSecondsToDate(
-    getQueryData(trancheCreatedAtResult)
-  );
+  const startDate = convertEpochSecondsToDate(trancheCreatedAtResult);
 
   if (!pool || !baseAsset) {
     return null;

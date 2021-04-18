@@ -1,37 +1,32 @@
-import { useQuery } from "react-query";
-
 import { Provider } from "@ethersproject/providers";
 import { WeightedPool__factory } from "elf-contracts/types/factories/WeightedPool__factory";
 import { WeightedPoolFactory__factory } from "elf-contracts/types/factories/WeightedPoolFactory__factory";
+import { WeightedPool } from "elf-contracts/types/WeightedPool";
 import { Signer } from "ethers";
 
+import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
+import { useSmartContractEvents } from "efi-ui/contracts/useSmartContractEvents/useSmartContractEvents";
 import ContractAddresses from "efi/contracts/contractsJson";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
-import { WeightedPool } from "elf-contracts/types/WeightedPool";
 
 export function useWeightedPools(
   signerOrProvider?: Signer | Provider
 ): (WeightedPool | undefined)[] {
   const { weightedPoolFactoryAddress } = ContractAddresses;
 
-  const weightedPoolFactory = WeightedPoolFactory__factory.connect(
+  const convergentPoolFactory = useSmartContractFromFactory(
     weightedPoolFactoryAddress,
-    signerOrProvider ?? jsonRpcProvider
+    WeightedPoolFactory__factory.connect
   );
 
-  const weightedQueryResult = useQuery({
-    queryKey: [["weightedPoolFactory", "queryFilter", "PoolRegistered"]],
-    queryFn: async () => {
-      const filterQuery = weightedPoolFactory.filters.PoolRegistered(null);
-      const events = await weightedPoolFactory.queryFilter(filterQuery);
-      return events;
-    },
-  });
-
-  const { data: weightedEvents } = weightedQueryResult;
+  const { data: events } = useSmartContractEvents(
+    convergentPoolFactory,
+    "PoolRegistered",
+    { callArgs: [null] }
+  );
 
   const weightedPoolContracts =
-    weightedEvents?.map<WeightedPool>((event) =>
+    events?.map<WeightedPool>((event) =>
       WeightedPool__factory.connect(
         event.args?.pool,
         signerOrProvider ?? jsonRpcProvider

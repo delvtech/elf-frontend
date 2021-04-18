@@ -1,14 +1,14 @@
 import { Provider } from "@ethersproject/providers";
+import { Tranche__factory } from "elf-contracts/types/factories/Tranche__factory";
+import { TrancheFactory__factory } from "elf-contracts/types/factories/TrancheFactory__factory";
 import { Tranche } from "elf-contracts/types/Tranche";
+import { TrancheFactory } from "elf-contracts/types/TrancheFactory";
 import { Signer } from "ethers";
 
-import ContractAddresses from "efi/contracts/contractsJson";
-import { TrancheFactory__factory } from "elf-contracts/types/factories/TrancheFactory__factory";
-import { TrancheFactory } from "elf-contracts/types/TrancheFactory";
-import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
-import { useQuery } from "react-query";
-import { Tranche__factory } from "elf-contracts/types/factories/Tranche__factory";
+import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
+import { useSmartContractEvents } from "efi-ui/contracts/useSmartContractEvents/useSmartContractEvents";
 import { useSmartContractsFromFactory } from "efi-ui/contracts/useSmartContractsFromFactory/useSmartContractsFromFactory";
+import ContractAddresses from "efi/contracts/contractsJson";
 
 type TrancheFilterOptions = Parameters<
   TrancheFactory["filters"]["TrancheCreated"]
@@ -19,29 +19,16 @@ export function useTrancheContracts(
 ): Tranche[] {
   const { trancheFactoryAddress } = ContractAddresses;
 
-  const trancheFactoryContract = TrancheFactory__factory.connect(
+  const trancheFactoryContract = useSmartContractFromFactory(
     trancheFactoryAddress,
-    signerOrProvider ?? jsonRpcProvider
+    TrancheFactory__factory.connect
   );
 
-  const filterQuery = trancheFactoryContract.filters.TrancheCreated(
-    ...filterOptions
+  const { data: events } = useSmartContractEvents(
+    trancheFactoryContract,
+    "TrancheCreated",
+    { callArgs: filterOptions }
   );
-
-  const eventsQueryResult = useQuery({
-    queryKey: [
-      "trancheFactory",
-      "queryFilter",
-      "TrancheCreated",
-      filterOptions,
-    ],
-    queryFn: async () => {
-      const events = await trancheFactoryContract.queryFilter(filterQuery);
-      return events;
-    },
-  });
-
-  const { data: events = [] } = eventsQueryResult;
 
   const trancheAddresses =
     (events?.map(

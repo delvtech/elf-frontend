@@ -1,5 +1,3 @@
-import { useQuery } from "react-query";
-
 import { SwapEventWithTimeStamp } from "efi-balancer/SwapEvent";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
@@ -10,6 +8,7 @@ import {
 } from "efi-ui/ethereum/usePreviousBlockNumber/usePreviousBlockNumber";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
 import { PoolContract } from "efi/pools/PoolContract";
+import { useSmartContractEvents } from "efi-ui/contracts/useSmartContractEvents/useSmartContractEvents";
 
 export function useSwaps(
   pool: PoolContract | undefined,
@@ -23,32 +22,11 @@ export function useSwaps(
   const { data: lastestBlockNumber } = useLatestBlockNumber();
   const nowInMs = Date.now();
 
-  const { data: events = [] } = useQuery({
-    queryKey: [
-      ["balancerVault", "queryFilter", "Swap"],
-      { poolId, fromBlockNumber },
-    ],
-    queryFn: async () => {
-      if (!balancerVault || !poolId) {
-        return;
-      }
-
-      const filterQuery = balancerVault.filters.Swap(
-        poolId,
-        null,
-        null,
-        null,
-        null
-      );
-
-      const events = await balancerVault.queryFilter(
-        filterQuery,
-        fromBlockNumber,
-        toBlockNumber
-      );
-      return events;
-    },
-    enabled: !!balancerVault && !!poolId && !!fromBlockNumber,
+  const { data: events = [] } = useSmartContractEvents(balancerVault, "Swap", {
+    callArgs: [poolId as string, null, null, null, null],
+    enabled: !!poolId && !!fromBlockNumber,
+    fromBlock: fromBlockNumber,
+    toBlock: toBlockNumber,
   });
 
   if (!lastestBlockNumber) {

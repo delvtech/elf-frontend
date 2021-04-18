@@ -1,0 +1,97 @@
+import { QueryObserverResult, useQuery, UseQueryOptions } from "react-query";
+
+import { Contract, Event } from "ethers";
+
+import { lookupAddressKey } from "efi/contracts/contractsJson";
+import { ContractFilterArgs, ContractFilterName } from "efi/contracts/types";
+
+export interface UseSmartContractEventsCallOptions<
+  TContract extends Contract,
+  TFilterName extends ContractFilterName<TContract>
+> {
+  callArgs?: ContractFilterArgs<TContract, TFilterName>;
+  enabled?: boolean;
+  fromBlock?: number;
+  toBlock?: number;
+}
+
+export function useSmartContractEvents<
+  TContract extends Contract,
+  TFilterName extends ContractFilterName<TContract>
+>(
+  contract: TContract | undefined,
+  filterName: TFilterName,
+  options?: UseSmartContractEventsCallOptions<TContract, TFilterName>
+): QueryObserverResult<Event[]> {
+  const queryOptions = makeSmartContractEventsUseQueryOptions<
+    TContract,
+    TFilterName
+  >(contract, filterName, options);
+
+  const queryResult = useQuery(queryOptions);
+
+  return queryResult;
+}
+
+export function makeSmartContractEventsUseQueryOptions<
+  TContract extends Contract,
+  TFilterName extends ContractFilterName<TContract>
+>(
+  contract: TContract | undefined,
+  filterName: TFilterName,
+  options?: UseSmartContractEventsCallOptions<TContract, TFilterName>
+): UseQueryOptions<Event[]> {
+  const { enabled = true, callArgs, fromBlock, toBlock } = options || {};
+
+  const queryKey = makeSmartContractEventsQueryKey<TContract, TFilterName>(
+    contract,
+    filterName,
+    callArgs
+  );
+
+  const queryFn = async (): Promise<Event[]> => {
+    // this function is not called until contract is defined, so safe to cast.
+    const finalContract = contract as TContract;
+
+    const finalArgs = callArgs || [];
+    const eventFilter = finalContract.filters[filterName as string](
+      ...finalArgs
+    );
+    const result = await finalContract.queryFilter(
+      eventFilter,
+      fromBlock,
+      toBlock
+    );
+    return result;
+  };
+
+  return {
+    queryKey,
+    queryFn,
+    onError: () => {
+      const addressesJsonKey = lookupAddressKey(contract?.address);
+      console.error(
+        `Error calling ${filterName} on ${addressesJsonKey}: ${contract?.address} with arguments:`,
+        callArgs
+      );
+    },
+    enabled: !!contract && enabled,
+  };
+}
+
+export function makeSmartContractEventsQueryKey<
+  TContract extends Contract,
+  TFilterName extends ContractFilterName<TContract>
+>(
+  contract: TContract | undefined,
+  filterName: TFilterName,
+  callArgs: Parameters<TContract["filters"][TFilterName]> | undefined
+): [
+  [string, string | undefined],
+  {
+    filterName: TFilterName;
+    callArgs: Parameters<TContract["filters"][TFilterName]> | undefined;
+  }
+] {
+  return [["contractQueryFilter", contract?.address], { filterName, callArgs }];
+}
