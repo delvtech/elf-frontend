@@ -52,14 +52,6 @@ interface TradePanelProps {
   onTransaction: (amount: BigNumber) => void;
 }
 
-const numericInputOptions: NumericInputOptions = {
-  min: 0,
-  /**
-   * limit precision to prevent BigNumber overflows
-   */
-  maxPrecision: 18,
-};
-
 export function TradePanel(props: TradePanelProps): ReactElement {
   const {
     account,
@@ -77,7 +69,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     tokenOut: tokenOutFromProps,
   } = props;
 
-  const { tokenIn, tokenOut, swapAssets } = useReversableTokens(
+  const { tokenIn, tokenOut, swapAssets, isReversed } = useReversableTokens(
     tokenInFromProps,
     tokenOutFromProps
   );
@@ -94,7 +86,6 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     displayBalance: tokenInDisplayBalance,
     poolBalance: tokenInPoolBalance,
   } = useTokenInfoForTradeInput(pool, tokenIn, account, library);
-
   const {
     address: tokenOutAddress,
     icon: tokenOutIcon,
@@ -110,7 +101,14 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     onChangeIn,
     onChangeOut,
     setValueIn,
+    setValueOut,
   } = useUpdateInputs(pool, tokenIn, tokenOut, tokenInDecimals);
+
+  // clear inputs when they switch.  we can improve this UX later to keep the previous values.
+  useEffect(() => {
+    setValueIn(undefined);
+    setValueOut(undefined);
+  }, [isReversed, setValueIn, setValueOut]);
 
   const { isValidTokenInValue, isValidTokenOutValue } = validateTradeValues(
     amountIn,
@@ -245,7 +243,7 @@ function useReversableTokens(
     tokenIn = tokenOutFromProps;
     tokenOut = tokenInFromProps;
   }
-  return { tokenIn, tokenOut, swapAssets };
+  return { tokenIn, tokenOut, swapAssets, isReversed };
 }
 
 // TODO: clean this up, I don't know what we need amountOut in here
@@ -326,6 +324,16 @@ function useUpdateInputs(
     tokenInDecimals
   );
 
+  // HACK: useNumericInput has trouble updating hooks when tokens are revsersed.  Declaring this
+  // object here forces updates.
+  const numericInputOptions: NumericInputOptions = {
+    min: 0,
+    /**
+     * limit precision to prevent BigNumber overflows
+     */
+    maxPrecision: 18,
+  };
+
   // useNumericInput ensures valid numeric inputs from the user
   const {
     stringValue: stringValueIn,
@@ -335,6 +343,7 @@ function useUpdateInputs(
   const {
     stringValue: stringValueOut,
     onChange: onChangeOut,
+    setValue: setValueOut,
   } = useNumericInput(numericInputOptions);
 
   useEffect(() => {
@@ -345,5 +354,12 @@ function useUpdateInputs(
     onAmountOutChange(stringValueOut);
   }, [onAmountOutChange, stringValueOut]);
 
-  return { amountIn, amountOut, onChangeIn, onChangeOut, setValueIn };
+  return {
+    amountIn,
+    amountOut,
+    onChangeIn,
+    onChangeOut,
+    setValueIn,
+    setValueOut,
+  };
 }
