@@ -53,7 +53,7 @@ export function PoolDetails({
   const liquidityTrend = useTotalLiquidityTrend(pool);
 
   const tranche = useTrancheForPool(pool);
-  const { data: startDateInUnixSeconds } = useTrancheCreatedAt(tranche);
+  const startDateInUnixSeconds = useTrancheCreatedAt(tranche);
   const { data: maturityDateInUnixSeconds } = useSmartContractReadCall(
     tranche,
     "unlockTimestamp"

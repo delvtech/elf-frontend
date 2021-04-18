@@ -76,7 +76,7 @@ export function PrincipalTokenCard({
   const { isDarkMode } = useDarkMode();
   const baseAsset = useBaseAssetForTranche(tranche);
 
-  const { data: trancheCreatedAt } = useTrancheCreatedAt(tranche);
+  const trancheCreatedAt = useTrancheCreatedAt(tranche);
   const { data: unlockTimestamp } = useSmartContractReadCall(
     tranche,
     "unlockTimestamp"
