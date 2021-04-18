@@ -5,6 +5,8 @@ import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFr
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { CryptoIconSvg, findAssetIcon } from "efi-ui/crypto/CryptoIcon";
+import { useInterestTokenContracts } from "efi-ui/interestToken/useInterestTokens/useInterestTokens";
+import { useTrancheContracts } from "efi-ui/tranche/useTrancheContracts";
 import ContractAddresses, {
   KNOWN_ERC20_TOKENS,
   KNOWN_ERC20PERMIT_TOKENS,
@@ -18,6 +20,13 @@ import { CryptoAssetType } from "efi/crypto/CryptoAsset";
 export function useCryptoAssetForToken(
   tokenAddress: string | undefined
 ): CryptoAssetWithIcon | undefined {
+  const trancheContracts = useTrancheContracts();
+  const interestTokenContracts = useInterestTokenContracts();
+  const elementTokenAddresses = [
+    ...trancheContracts,
+    ...interestTokenContracts,
+  ].map(({ address }) => address);
+
   const erc20Contract = useSmartContractFromFactory(
     tokenAddress,
     ERC20__factory.connect
@@ -56,11 +65,12 @@ export function useCryptoAssetForToken(
     return cryptoAsset;
   }
 
-  if (
-    erc20PermitContract &&
-    assetIcon &&
-    KNOWN_ERC20PERMIT_TOKENS.includes(tokenAddress)
-  ) {
+  const isERC20PermitAsset = [
+    ...elementTokenAddresses,
+    ...KNOWN_ERC20PERMIT_TOKENS,
+  ].includes(tokenAddress);
+
+  if (erc20PermitContract && isERC20PermitAsset) {
     const cryptoAsset: CryptoAssetWithIcon = {
       id: tokenAddress,
       type: CryptoAssetType.ERC20PERMIT,
