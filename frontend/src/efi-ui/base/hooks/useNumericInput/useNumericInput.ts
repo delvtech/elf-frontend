@@ -26,12 +26,22 @@ interface UseNumericInput {
   setValue: (value: string | undefined) => void;
 }
 
+const DEFAULT_NUMERIC_INPUT_OPTIONS: NumericInputOptions = {
+  /**
+   * Default to 0, as numeric inputs will rarely if ever accept negative inputs
+   * from the user
+   */
+  min: 0,
+};
+
 /**
  * A hook to handle limiting the user's interaction with a numeric input.  This can be used on text
  * inputs as well to ensure that only numeric values are allowed.
  * @param options
  */
-export function useNumericInput(options: NumericInputOptions): UseNumericInput {
+export function useNumericInput(
+  options = DEFAULT_NUMERIC_INPUT_OPTIONS
+): UseNumericInput {
   const { min, max, maxPrecision } = options;
   const [stringValue, setStringValue] = useState<string | undefined>();
 
