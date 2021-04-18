@@ -8,7 +8,7 @@ import { Money } from "ts-money";
 import { t } from "ttag";
 
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
-import { useInterestTokens } from "efi-ui/interestToken/useInterestTokens/useInterestTokens";
+import { useInterestTokenContracts } from "efi-ui/interestToken/useInterestTokens/useInterestTokens";
 import { useTotalFiatBalance } from "efi-ui/portfolio/hooks/useTotalFiatBalance";
 import { LiquidityPositionPortfolio } from "efi-ui/portfolio/LiquidityPositionPortfolio/LiquidityPositionPortfolio";
 import { PortfolioTab } from "efi-ui/portfolio/PortfolioTabs/PortfolioTabs";
@@ -107,8 +107,7 @@ function useYieldTokenTab(
   account: string | null | undefined,
   provider?: Provider
 ) {
-  const trancheContracts = useTrancheContracts();
-  const yieldTokens = useInterestTokens(trancheContracts);
+  const yieldTokens = useInterestTokenContracts();
 
   const yieldTokensWithBalanceResults = useTokensWithBalance(
     account,
