@@ -5,7 +5,7 @@ import { ConvergentPoolFactory__factory } from "elf-contracts/types/factories/Co
 import { Signer } from "ethers";
 
 import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
-import { useSmartContractQuery } from "efi-ui/contracts/useSmartContractQuery/useSmartContractQuery";
+import { useSmartContractEvents } from "efi-ui/contracts/useSmartContractEvents/useSmartContractEvents";
 import ContractAddresses from "efi/contracts/contractsJson";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 
@@ -19,7 +19,7 @@ export function useConvergentCurvePools(
     ConvergentPoolFactory__factory.connect
   );
 
-  const { data: events } = useSmartContractQuery(
+  const { data: events } = useSmartContractEvents(
     convergentPoolFactory,
     "PoolRegistered",
     { callArgs: [null] }

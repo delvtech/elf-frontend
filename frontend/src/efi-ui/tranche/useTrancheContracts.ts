@@ -6,7 +6,7 @@ import { TrancheFactory } from "elf-contracts/types/TrancheFactory";
 import { Signer } from "ethers";
 
 import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
-import { useSmartContractQuery } from "efi-ui/contracts/useSmartContractQuery/useSmartContractQuery";
+import { useSmartContractEvents } from "efi-ui/contracts/useSmartContractEvents/useSmartContractEvents";
 import { useSmartContractsFromFactory } from "efi-ui/contracts/useSmartContractsFromFactory/useSmartContractsFromFactory";
 import ContractAddresses from "efi/contracts/contractsJson";
 
@@ -24,7 +24,7 @@ export function useTrancheContracts(
     TrancheFactory__factory.connect
   );
 
-  const { data: events } = useSmartContractQuery(
+  const { data: events } = useSmartContractEvents(
     trancheFactoryContract,
     "TrancheCreated",
     { callArgs: filterOptions }

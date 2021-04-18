@@ -8,7 +8,7 @@ import {
 } from "efi-ui/ethereum/usePreviousBlockNumber/usePreviousBlockNumber";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
 import { PoolContract } from "efi/pools/PoolContract";
-import { useSmartContractQuery } from "efi-ui/contracts/useSmartContractQuery/useSmartContractQuery";
+import { useSmartContractEvents } from "efi-ui/contracts/useSmartContractEvents/useSmartContractEvents";
 
 export function useSwaps(
   pool: PoolContract | undefined,
@@ -22,7 +22,7 @@ export function useSwaps(
   const { data: lastestBlockNumber } = useLatestBlockNumber();
   const nowInMs = Date.now();
 
-  const { data: events = [] } = useSmartContractQuery(balancerVault, "Swap", {
+  const { data: events = [] } = useSmartContractEvents(balancerVault, "Swap", {
     callArgs: [poolId as string, null, null, null, null],
     enabled: !!poolId && !!fromBlockNumber,
     fromBlock: fromBlockNumber,
