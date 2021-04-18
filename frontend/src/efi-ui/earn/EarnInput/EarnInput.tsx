@@ -7,7 +7,7 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import styles from "efi-ui/earn/EarnInput/EarnInput.module.css";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import { ANY_NUMBER_REGEX } from "../../../efi/base/numbers";
+import { ANY_NUMBER_REGEX } from "efi/base/numbers";
 
 interface EarnInputProps {
   showMaxButton: boolean;
