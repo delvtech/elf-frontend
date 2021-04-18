@@ -10,7 +10,7 @@ import { formatUnits, parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { useBalancerTransactionInputs } from "efi-ui/balancer/useBalancerTransactionInputs";
+import { useQueryBatchSwapInputs } from "efi-ui/balancer/useQueryBatchSwapInputs";
 import {
   NumericInputOptions,
   useNumericInput,
@@ -316,7 +316,7 @@ function useUpdateInputs(
     amountOut,
     onAmountOutChange,
     onAmountInChange,
-  } = useBalancerTransactionInputs(
+  } = useQueryBatchSwapInputs(
     pool,
     tokenIn?.address,
     tokenInDecimals,
