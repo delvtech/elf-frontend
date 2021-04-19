@@ -7,7 +7,7 @@ interface PendingTransactionPref {
 
 const PENDING_TRANSACTION_PREF_ID = "pending-transaction";
 
-export function usePendingTransaction(): PendingTransactionPref {
+export function usePendingTransactionPref(): PendingTransactionPref {
   const { pref: transactionHash, setPref: setTransaction } = usePref<
     string | undefined
   >(PENDING_TRANSACTION_PREF_ID, undefined);
