@@ -80,18 +80,18 @@ export function StakeForm({
     [onAssetTwoAmountChangeFromProps]
   );
 
-  let assetOneValueLabel: string | undefined;
+  let assetOneValueLabel = "";
   if (activeInput === "principalTokenIn") {
-    assetOneValueLabel = assetOneAmount?.toString();
+    assetOneValueLabel = assetOneAmount?.toString() || "";
   } else {
-    assetOneValueLabel = assetOneAmount?.toFixed(4);
+    assetOneValueLabel = assetOneAmount?.toFixed(4) || "";
   }
 
-  let assetTwoValueLabel: string | undefined;
+  let assetTwoValueLabel = "";
   if (activeInput === "baseAssetIn") {
-    assetTwoValueLabel = assetTwoAmount?.toString();
+    assetTwoValueLabel = assetTwoAmount?.toString() || "";
   } else {
-    assetTwoValueLabel = assetTwoAmount?.toFixed(4);
+    assetTwoValueLabel = assetTwoAmount?.toFixed(4) || "";
   }
 
   return (

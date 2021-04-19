@@ -41,11 +41,13 @@ export function useConvergentCurvePoolStakeInputs(
     inputNumber: principalTokenInNumber,
     inputBigNumber: principalTokenInBigNumber,
     setInputValue: setPrincipalTokenIn,
+    clearInputValue: clearPrincipalTokenIn,
   } = useStakeInput(decimalsPrincipalToken);
   const {
     inputNumber: baseAssetInNumber,
     inputBigNumber: baseAssetInBigNumber,
     setInputValue: setBaseAssetIn,
+    clearInputValue: clearBaseAssetIn,
   } = useStakeInput(decimalsBaseAsset);
 
   const onPrincipalTokenInChange = useCallback(
@@ -64,18 +66,6 @@ export function useConvergentCurvePoolStakeInputs(
     [setBaseAssetIn]
   );
 
-  // The amount of the base asset you'll need when you change the amount of principal tokens in
-  useSyncBaseAssetPreview(
-    principalTokenInNumber,
-    decimalsPrincipalToken,
-    reservesPrincipalToken,
-    reservesBaseAsset,
-    decimalsBaseAsset,
-    totalSupply,
-    activeInput,
-    setBaseAssetIn
-  );
-
   useSyncPrincipalTokenPreview(
     baseAssetInNumber,
     decimalsBaseAsset,
@@ -84,7 +74,20 @@ export function useConvergentCurvePoolStakeInputs(
     decimalsPrincipalToken,
     totalSupply,
     activeInput,
-    setPrincipalTokenIn
+    setPrincipalTokenIn,
+    clearBaseAssetIn
+  );
+
+  useSyncBaseAssetPreview(
+    principalTokenInNumber,
+    decimalsPrincipalToken,
+    reservesPrincipalToken,
+    reservesBaseAsset,
+    decimalsBaseAsset,
+    totalSupply,
+    activeInput,
+    setBaseAssetIn,
+    clearPrincipalTokenIn
   );
 
   return {
@@ -106,7 +109,8 @@ function useSyncPrincipalTokenPreview(
   decimalsPrincipalToken: number | undefined,
   totalSupply: BigNumber | undefined,
   activeInput: ConvergentCurvePoolActiveInput,
-  setPrincipalTokenIn: (value: string | undefined) => void
+  setPrincipalTokenIn: (value: string | undefined) => void,
+  clearBaseAssetIn: () => void
 ) {
   const previewPrincipalTokenNeededGivenBaseAssetIn = usePrincipalTokenNeededGivenBaseAssetIn(
     baseAssetInNumber,
@@ -125,7 +129,8 @@ function useSyncPrincipalTokenPreview(
     principalTokensNeededGivenBaseAssetIn
       ? principalTokensNeededGivenBaseAssetIn.toString()
       : undefined,
-    setPrincipalTokenIn
+    setPrincipalTokenIn,
+    clearBaseAssetIn
   );
 }
 
@@ -137,7 +142,8 @@ function useSyncBaseAssetPreview(
   decimalsBaseAsset: number | undefined,
   totalSupply: BigNumber | undefined,
   activeInput: ConvergentCurvePoolActiveInput,
-  setBaseAssetIn: (value: string | undefined) => void
+  setBaseAssetIn: (value: string | undefined) => void,
+  clearPrincipalTokenIn: () => void
 ) {
   const previewBaseAssetNeededGivenPrincipalTokenIn = useBaseAssetNeededGivenPrincipalTokenIn(
     principalTokenInNumber,
@@ -156,7 +162,8 @@ function useSyncBaseAssetPreview(
     baseAssetNeededGivenPrincipalTokenIn
       ? baseAssetNeededGivenPrincipalTokenIn.toString()
       : undefined,
-    setBaseAssetIn
+    setBaseAssetIn,
+    clearPrincipalTokenIn
   );
 }
 
@@ -167,7 +174,8 @@ function useSyncWithActiveInput(
   syncedInput: ConvergentCurvePoolActiveInput,
   activeInput: ConvergentCurvePoolActiveInput,
   newAmount: string | undefined,
-  setAmount: (amount: string | undefined) => void
+  setAmount: (amount: string | undefined) => void,
+  clearActiveInput: () => void
 ) {
   useEffect(() => {
     // don't update the active input out from under the user.
@@ -177,12 +185,13 @@ function useSyncWithActiveInput(
 
     if (!newAmount) {
       setAmount(undefined);
+      clearActiveInput();
       return;
     }
 
     // Otherwise, if we have a new amount we'll set it
     setAmount((+newAmount).toFixed(4));
-  }, [setAmount, newAmount, activeInput, syncedInput]);
+  }, [setAmount, newAmount, activeInput, syncedInput, clearActiveInput]);
 }
 
 function useStakeInput(inputDecimals: number | undefined) {
@@ -191,6 +200,10 @@ function useStakeInput(inputDecimals: number | undefined) {
     stringValue: inputString,
     setValue: setInputValue,
   } = useNumericInput();
+
+  const clearInputValue = useCallback(() => {
+    setInputValue(undefined);
+  }, [setInputValue]);
 
   const inputBigNumber = inputString
     ? parseUnits(inputString, inputDecimals)
@@ -204,5 +217,6 @@ function useStakeInput(inputDecimals: number | undefined) {
     inputBigNumber,
     onInputChange,
     setInputValue,
+    clearInputValue,
   };
 }
