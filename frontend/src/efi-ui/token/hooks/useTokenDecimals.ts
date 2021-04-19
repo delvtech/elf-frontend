@@ -6,6 +6,8 @@ import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadC
 export function useTokenDecimals(
   contract: ERC20 | undefined
 ): ComputedQueryResult<number> {
-  const result = useSmartContractReadCall(contract, "decimals");
+  const result = useSmartContractReadCall(contract, "decimals", {
+    infiniteCache: true,
+  });
   return [result.data, [result]];
 }

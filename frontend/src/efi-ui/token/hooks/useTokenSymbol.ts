@@ -6,6 +6,8 @@ import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadC
 export function useTokenSymbol<TContract extends ERC20>(
   contract: TContract | undefined
 ): ComputedQueryResult<string> {
-  const result = useSmartContractReadCall(contract, "symbol");
+  const result = useSmartContractReadCall(contract, "symbol", {
+    infiniteCache: true,
+  });
   return [result.data, [result]];
 }
