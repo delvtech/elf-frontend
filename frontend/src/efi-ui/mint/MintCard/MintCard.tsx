@@ -15,7 +15,6 @@ import { formatUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { CryptoAssetPicker } from "efi-ui/crypto/CryptoAssetPicker/CryptoAssetPicker";
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { useCryptoBalance } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
@@ -29,6 +28,7 @@ import { YieldTokenPreview } from "efi-ui/mint/MintCard/YieldTokenPreview";
 import { MintTermPicker } from "efi-ui/mint/MintTermPicker/MintTermPicker";
 import { MintTransactionConfirmationDrawer } from "efi-ui/mint/MintTransactionConfirmationDrawer/MintTransactionConfirmationDrawer";
 import { formatBalance } from "efi/base/formatBalance";
+import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 
 export interface MintCardProps {
   library: Web3Provider | undefined;
@@ -205,10 +205,7 @@ function useActiveMintPreview(
     activeTranche,
     amountIn
   );
-  const { data: trancheDecimals } = useSmartContractReadCall(
-    activeTranche,
-    "decimals"
-  );
+  const { data: trancheDecimals } = useTokenDecimals(activeTranche);
 
   const numPrincipalTokensOut = ptPreview
     ? +formatUnits(ptPreview, trancheDecimals)

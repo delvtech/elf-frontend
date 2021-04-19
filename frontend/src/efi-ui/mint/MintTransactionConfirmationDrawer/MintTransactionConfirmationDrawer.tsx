@@ -19,6 +19,7 @@ import { useUserProxy } from "efi-ui/mint/hooks/userProxy";
 import { MintTransactionDetails } from "efi-ui/mint/MintTransactionDetails/MintTransactionDetails";
 import { getUserProxyApprovalMessage } from "efi-ui/mint/userProxyApprovalMessage";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
+import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 
 interface MintTransactionConfirmationDrawerProps {
   chainId: number | undefined;
@@ -70,10 +71,7 @@ export function MintTransactionConfirmationDrawer({
     tranche,
     amountInAsNumber
   );
-  const { data: trancheDecimals } = useSmartContractReadCall(
-    tranche,
-    "decimals"
-  );
+  const { data: trancheDecimals } = useTokenDecimals(tranche);
 
   const numPrincipalTokens = ptPreview
     ? +formatUnits(ptPreview, trancheDecimals)

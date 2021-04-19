@@ -3,18 +3,15 @@ import {
   CryptoAssetType,
   findTokenContract,
 } from "efi/crypto/CryptoAsset";
-import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { NUM_ETH_DECIMALS } from "efi/crypto/ethereum";
 import { assertNever } from "efi/base/assertNever";
+import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 
 export function useCryptoDecimals(
   asset: CryptoAsset | undefined
 ): number | undefined {
   const tokenContract = asset ? findTokenContract(asset) : undefined;
-  const { data: tokenDecimals } = useSmartContractReadCall(
-    tokenContract,
-    "decimals"
-  );
+  const { data: tokenDecimals } = useTokenDecimals(tokenContract);
 
   if (!asset) {
     return;

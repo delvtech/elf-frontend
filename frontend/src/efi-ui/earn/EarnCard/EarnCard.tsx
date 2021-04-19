@@ -16,7 +16,6 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
-import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { CryptoAssetPicker } from "efi-ui/crypto/CryptoAssetPicker/CryptoAssetPicker";
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { useCryptoBalance } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
@@ -34,6 +33,7 @@ import { BuyPrincipalTokensTransactionConfirmationDrawer } from "efi-ui/swaps/Bu
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 import { useQueryBatchSwapInputs } from "efi-ui/balancer/useQueryBatchSwapInputs";
 import { formatBalance } from "efi/base/formatBalance";
+import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 
 export interface EarnCardProps {
   library: Web3Provider | undefined;
@@ -70,10 +70,7 @@ export function EarnCard({
     availableTranches,
     setActiveTranche,
   } = useActiveTranche(tranchesByBaseAsset, activeBaseAsset);
-  const { data: trancheDecimals } = useSmartContractReadCall(
-    activeTranche,
-    "decimals"
-  );
+  const { data: trancheDecimals } = useTokenDecimals(activeTranche);
   const activeBaseAssetSymbol = useCryptoSymbol(activeBaseAsset);
   const activeBaseAssetDecimals = useCryptoDecimals(activeBaseAsset);
   const activeBaseAssetBalance = useCryptoBalance(
