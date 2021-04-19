@@ -6,18 +6,19 @@ import zip from "lodash.zip";
 
 import { getQueriesData } from "efi-ui/base/queryResults";
 import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
+import { useLatestBlockNumber } from "efi-ui/ethereum/hooks/useLatestBlockNumber";
 import { makeOnSwapGivenInCallArgs } from "efi-ui/pools/useOnSwapGivenIn/makeOnSwapGivenInCallArgs";
+import { usePoolIdMulti } from "efi-ui/pools/usePoolIdMulti";
 import { usePoolPairedTokenMulti } from "efi-ui/pools/usePoolPairedToken/usePoolPairedTokenMulti";
 import { usePoolTokensMulti } from "efi-ui/pools/usePoolTokens/usePoolTokensMulti";
 import { PoolContract } from "efi/pools/PoolContract";
-import { useLatestBlockNumber } from "efi-ui/ethereum/hooks/useLatestBlockNumber";
 
 export function useOnSwapGivenInMulti(
   pools: (PoolContract | undefined)[],
   tokensIn: (ERC20 | undefined)[],
   amounts: (BigNumber | undefined)[]
 ): QueryObserverResult<BigNumber>[] {
-  const poolIdResults = useSmartContractReadCalls(pools, "getPoolId");
+  const poolIdResults = usePoolIdMulti(pools);
   const poolTokensResults = usePoolTokensMulti(pools);
   const tokensOut = usePoolPairedTokenMulti(pools, tokensIn);
   const { data: latestBlockNumber } = useLatestBlockNumber();

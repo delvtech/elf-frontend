@@ -1,13 +1,14 @@
+import zip from "lodash.zip";
+
+import { getQueriesData } from "efi-ui/base/queryResults";
+import { useTokenDecimalsMulti } from "efi-ui/token/hooks/useTokenDecimalsMulti";
+import { assertNever } from "efi/base/assertNever";
 import {
   CryptoAsset,
   CryptoAssetType,
   findTokenContract,
 } from "efi/crypto/CryptoAsset";
 import { NUM_ETH_DECIMALS } from "efi/crypto/ethereum";
-import { assertNever } from "efi/base/assertNever";
-import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
-import zip from "lodash.zip";
-import { getQueriesData } from "efi-ui/base/queryResults";
 
 export function useCryptoDecimalsMulti(
   assets: (CryptoAsset | undefined)[]
@@ -15,7 +16,7 @@ export function useCryptoDecimalsMulti(
   const tokenContracts = assets.map((asset) =>
     asset ? findTokenContract(asset) : undefined
   );
-  const decimalsResults = useSmartContractReadCalls(tokenContracts, "decimals");
+  const decimalsResults = useTokenDecimalsMulti(tokenContracts);
 
   return zip(assets, getQueriesData(decimalsResults)).map(
     ([asset, decimals]) => {
