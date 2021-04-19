@@ -1,4 +1,5 @@
 import React, { FC, Fragment, useCallback, useState } from "react";
+import { Helmet } from "react-helmet";
 
 import { Classes, H2 } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
@@ -11,10 +12,8 @@ import {
   PortfolioTab,
   PortfolioTabs,
 } from "efi-ui/portfolio/PortfolioTabs/PortfolioTabs";
+import { usePortfolioTabs } from "efi-ui/portfolio/PortfolioTabs/usePortfolioTabs";
 import { formatWalletAddress } from "efi/wallets/formatWalletAddress";
-
-import { usePortfolioTabs } from "../PortfolioTabs/usePortfolioTabs";
-import { Helmet } from "react-helmet";
 
 interface PortfolioViewProps extends RouteComponentProps {}
 

@@ -13,7 +13,6 @@ import { useBatchSwapGivenIn } from "efi-ui/balancer/useBatchSwapGivenIn/useBatc
 import { parseQueryBatchSwapResult } from "efi-ui/balancer/useQueryBatchSwap/parseQueryBatchSwapResult";
 import { useQueryBatchSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
-import { SwapDetailsForm } from "efi-ui/swaps/SwapDetailsPreview/SwapDetailsForm";
 import { TransactionDrawer } from "efi-ui/contracts/TransactionDrawer/TransactionDrawer";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
@@ -22,12 +21,12 @@ import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSy
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
 import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
+import { PrincipalTokenTransactionDetails } from "efi-ui/swaps/PrincipalTokenTransactionDetails/PrincipalTokenTransactionDetails";
+import { SwapDetailsForm } from "efi-ui/swaps/SwapDetailsPreview/SwapDetailsForm";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { calculatePurchasePrice } from "efi/pools/calculatePurchasePrice";
 import { calculateSlippage } from "efi/pools/calculateSlippage";
 import { PoolContract } from "efi/pools/PoolContract";
-
-import { PrincipalTokenTransactionDetails } from "../PrincipalTokenTransactionDetails/PrincipalTokenTransactionDetails";
 
 interface BuyPrincipalTransactionConfirmationDrawerProps {
   chainId: number | undefined;

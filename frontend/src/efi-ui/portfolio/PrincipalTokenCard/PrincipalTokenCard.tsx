@@ -36,15 +36,15 @@ import { StakeButton } from "efi-ui/portfolio/StakeButton/StakeButton";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
 import { useBaseAssetForTranche } from "efi-ui/tranche/useBaseAssetForTranche";
+import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
 import { useUnderlyingVaultForTranche } from "efi-ui/tranche/useUnderlyingVaultForTranche";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
 import { formatMoney } from "efi/money/formatMoney";
 import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
+import { getIsMature } from "efi/tranche/getIsMature";
 
 import { MaturityTimeBar } from "./MaturityTimeBar";
-import { getIsMature } from "../../../efi/tranche/getIsMature";
-import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
 
 interface PrincipalTokenCardProps {
   chainId: number | undefined;

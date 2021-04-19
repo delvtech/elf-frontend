@@ -1,9 +1,10 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 
 import { Button, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { ERC20 } from "elf-contracts/types/ERC20";
+import { ERC20Permit } from "elf-contracts/types/ERC20Permit";
 import { BigNumber, Signer } from "ethers";
 import { t } from "ttag";
 
@@ -12,6 +13,7 @@ import { SvgIcon } from "efi-ui/base/SvgIcon";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { ERC20ApproveButton } from "efi-ui/token/ERC20ApproveButton/ERC20ApproveButton";
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
+import { WalletDrawer } from "efi-ui/wallets/WalletDrawer/WalletDrawer";
 import {
   CryptoAsset,
   CryptoAssetType,
@@ -19,7 +21,6 @@ import {
 } from "efi/crypto/CryptoAsset";
 
 import { WalletApprovalCallout } from "./WalletApprovalCallout";
-import { WalletDrawer } from "efi-ui/wallets/WalletDrawer/WalletDrawer";
 
 interface TransactionDrawerProps {
   account: string | null | undefined;
@@ -55,11 +56,10 @@ export function TransactionDrawer({
 }: TransactionDrawerProps): ReactElement {
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
 
-  // base asset calls
-  const baseAssetContract = findTokenContract(assetIn);
+  const assetInContract = useAssetSignedContract(assetIn, signer);
 
   const { data: allowance } = useTokenAllowance(
-    baseAssetContract as ERC20,
+    assetInContract as ERC20,
     account,
     approvalSpenderAddress
   );
@@ -113,7 +113,7 @@ export function TransactionDrawer({
                 owner={account}
                 spender={approvalSpenderAddress}
                 approvalAmount={amountIn}
-                contract={baseAssetContract as ERC20Shim}
+                contract={assetInContract as ERC20Shim}
                 tokenSymbol={assetInSymbol}
                 signer={signer}
               />
@@ -181,4 +181,19 @@ function getConfirmButtonDisabled(
 
   // otherwise the button should not be disabled
   return false;
+}
+
+function useAssetSignedContract(
+  asset: CryptoAsset | undefined,
+  signer: Signer | undefined
+): ERC20 | ERC20Permit | undefined {
+  const [assetContract, setAssetContract] = useState(findTokenContract(asset));
+  useEffect(() => {
+    if (signer && assetContract) {
+      const signedContract = assetContract.connect(signer);
+      setAssetContract(signedContract);
+    }
+  }, [assetContract, signer]);
+
+  return assetContract;
 }
