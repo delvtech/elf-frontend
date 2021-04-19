@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { ReactElement, useState } from "react";
 
 import {
   Button,
@@ -39,13 +39,13 @@ interface TopbarNavigationProps {
   activeTab: Navigation;
   changeTab: (tabId: Navigation) => void;
 }
-export const TopbarNavigation: FC<TopbarNavigationProps> = ({
+export function TopbarNavigation({
   activeTab,
   changeTab,
   account,
   active,
   chainId,
-}) => {
+}: TopbarNavigationProps): ReactElement {
   const { isDarkMode } = useDarkMode();
   const [isWalletDialogOpen, setWalletDialogOpen] = useState(false);
   const mainnetDanger =
@@ -133,4 +133,4 @@ export const TopbarNavigation: FC<TopbarNavigationProps> = ({
       </Navbar>
     </div>
   );
-};
+}

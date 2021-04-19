@@ -1,4 +1,4 @@
-import React, { FC, Fragment } from "react";
+import React, { Fragment, ReactElement } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
@@ -9,8 +9,7 @@ import { TopbarNavigation } from "efi-ui/navigation/TopbarNavigation/TopbarNavig
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { getConnectorName } from "efi/wallets/connectors";
 
-interface MainNavigationProps {}
-export const MainNavigation: FC<MainNavigationProps> = () => {
+export function MainNavigation(): ReactElement {
   const {
     deactivate,
     account,
@@ -52,4 +51,4 @@ export const MainNavigation: FC<MainNavigationProps> = () => {
       }
     </Fragment>
   );
-};
+}

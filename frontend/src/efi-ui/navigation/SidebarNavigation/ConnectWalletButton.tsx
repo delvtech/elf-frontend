@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { ReactElement } from "react";
 
 import { Button, Colors, Icon, Intent } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
@@ -8,9 +8,9 @@ import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
 import { WalletJazzicon } from "efi-ui/wallets/WalletJazzicon/WalletJazzicon";
+import { isMainnet } from "efi/crypto/ethereum";
 import { formatChainName } from "efi/crypto/formatChainName";
 import { formatWalletAddress } from "efi/wallets/formatWalletAddress";
-import { isMainnet } from "efi/crypto/ethereum";
 
 interface ConnectWalletButtonProps {
   isDialogOpen: boolean;
@@ -20,14 +20,14 @@ interface ConnectWalletButtonProps {
   active: boolean;
   chainId: number | undefined;
 }
-export const ConnectWalletButton: FC<ConnectWalletButtonProps> = ({
+export function ConnectWalletButton({
   chainId,
   account,
   active,
   isDialogOpen,
   onDialogOpen,
   onDialogClose,
-}) => {
+}: ConnectWalletButtonProps): ReactElement {
   const mainnetDanger =
     !!chainId && isMainnet(chainId) && process.env.NODE_ENV !== "production";
 
@@ -85,4 +85,4 @@ export const ConnectWalletButton: FC<ConnectWalletButtonProps> = ({
       <ConnectWalletDialog isOpen={isDialogOpen} onClose={onDialogClose} />
     </Button>
   );
-};
+}
