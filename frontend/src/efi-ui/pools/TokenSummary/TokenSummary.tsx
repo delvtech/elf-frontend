@@ -174,11 +174,11 @@ function useTokensSummary(pool: PoolContract | undefined): TokensSummary {
     1
   );
 
-  const [baseAssetDecimals] = useTokenDecimals(baseAssetContract);
+  const { data: baseAssetDecimals } = useTokenDecimals(baseAssetContract);
 
   const yieldAssetBalance = balances?.[yieldAssetIndex];
   const [yieldAssetSymbol] = useTokenSymbol(yieldAssetContract);
-  const [yieldAssetDecimals] = useTokenDecimals(yieldAssetContract);
+  const { data: yieldAssetDecimals } = useTokenDecimals(yieldAssetContract);
 
   const spotPrice = usePoolSpotPrice(pool, baseAssetContract);
   const swaps = useSwaps(pool);

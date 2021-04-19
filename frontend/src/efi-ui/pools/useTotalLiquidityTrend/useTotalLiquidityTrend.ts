@@ -25,7 +25,7 @@ export function useTotalLiquidityTrend(
   const tokenDeltas = useTokenDeltasForPool(pool, fromTime);
   const baseAsset = useBaseAssetForPool(pool);
   // assumes that yield asset and base asset have the same decimals
-  const [tokenDecimals] = useTokenDecimals(baseAsset);
+  const { data: tokenDecimals } = useTokenDecimals(baseAsset);
   const spotPrice = usePoolSpotPrice(pool, baseAsset);
 
   if (

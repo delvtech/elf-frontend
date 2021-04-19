@@ -29,7 +29,7 @@ export function useTotalLiquidityForPool(
     ? ERC20__factory.connect(baseAssetAddress, jsonRpcProvider)
     : undefined;
   const [baseAssetPrice] = useTokenPrice(baseAssetContract, currency);
-  const [baseAssetDecimals] = useTokenDecimals(baseAssetContract);
+  const { data: baseAssetDecimals } = useTokenDecimals(baseAssetContract);
 
   // Base Asset Fiat Balance
   const baseAssetFiatBalance = useConvertToFiat(
@@ -44,7 +44,7 @@ export function useTotalLiquidityForPool(
   const yieldAssetContract = yieldAssetAddress
     ? ERC20__factory.connect(yieldAssetAddress, jsonRpcProvider)
     : undefined;
-  const [yieldAssetDecimals] = useTokenDecimals(yieldAssetContract);
+  const { data: yieldAssetDecimals } = useTokenDecimals(yieldAssetContract);
 
   const spotPrice = usePoolSpotPrice(pool, baseAssetContract);
 

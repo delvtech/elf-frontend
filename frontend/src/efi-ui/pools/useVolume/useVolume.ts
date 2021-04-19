@@ -13,7 +13,7 @@ export function useVolume(pool: PoolContract | undefined): Money | undefined {
   const swaps = useSwaps(pool);
   const { currency } = useCurrencyPref();
   const baseAsset = useBaseAssetForPool(pool);
-  const [baseAssetDecimals] = useTokenDecimals(baseAsset);
+  const { data: baseAssetDecimals } = useTokenDecimals(baseAsset);
   const [baseAssetFiatPrice] = useTokenPrice(baseAsset, currency);
 
   let volume = BigNumber.from(0);

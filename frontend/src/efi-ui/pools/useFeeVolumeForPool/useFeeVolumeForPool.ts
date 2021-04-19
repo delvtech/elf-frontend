@@ -64,7 +64,7 @@ function useFeeVolumeForConvergentCurvePool(
   const { currency } = useCurrencyPref();
   const { data: poolId } = useSmartContractReadCall(pool, "getPoolId");
   const baseAssetContract = useBaseAssetForPool(pool);
-  const [baseAssetDecimals] = useTokenDecimals(baseAssetContract);
+  const { data: baseAssetDecimals } = useTokenDecimals(baseAssetContract);
   const poolTokensResult = usePoolTokens(pool);
   const { data: fromBlockNumber } = usePreviousBlockNumber(fromTime);
   const { data: toBlockNumber } = usePreviousBlockNumber(toTime);

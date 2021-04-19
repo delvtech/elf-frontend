@@ -8,11 +8,9 @@ import { SwapKind } from "efi-ui/balancer/SwapKind";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { makeQueryBatchSwapCallArgs } from "efi-ui/balancer/useQueryBatchSwap/makeQueryBatchSwapCallArgs";
 import { getQueriesData } from "efi-ui/base/queryResults";
-import {
-  useSmartContractReadCalls,
-  UseSmartContractReadCallsOptions,
-} from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
+import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
 import { PoolContract } from "efi/pools/PoolContract";
+import { UseSmartContractReadCallOptions } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 
 export function useQueryBatchSwapMulti(
   kind: SwapKind,
@@ -29,7 +27,7 @@ export function useQueryBatchSwapMulti(
   const zipped = zip(poolIds, tokenInAddresses, amounts, tokenOutAddresses);
   const readCallOptions = zipped.map(
     ([poolId, tokenInAddress, amount, tokenOutAddress]):
-      | UseSmartContractReadCallsOptions<Vault, "queryBatchSwap">
+      | UseSmartContractReadCallOptions<Vault, "queryBatchSwap">
       | undefined => {
       const callArgs = makeQueryBatchSwapCallArgs(
         kind,

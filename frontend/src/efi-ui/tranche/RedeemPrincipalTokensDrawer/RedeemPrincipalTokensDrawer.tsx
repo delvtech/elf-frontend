@@ -44,7 +44,7 @@ export function RedeemPrincipalTokensDrawer({
   const baseAssetSymbol = useCryptoSymbol(baseAsset);
 
   // tranche calls
-  const [trancheDecimals] = useTokenDecimals(tranche);
+  const { data: trancheDecimals } = useTokenDecimals(tranche);
   const { data: trancheUnlockTimestamp } = useSmartContractReadCall(
     tranche,
     "unlockTimestamp"

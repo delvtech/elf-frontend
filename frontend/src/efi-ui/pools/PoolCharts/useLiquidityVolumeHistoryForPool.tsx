@@ -26,7 +26,7 @@ export function useVolumeHistoryForPool(
   const swapEvents = useSwaps(pool, fromTime, toTime);
   const baseAsset = useBaseAssetForPool(pool);
   const { currency } = useCurrencyPref();
-  const [baseAssetDecimals] = useTokenDecimals(baseAsset);
+  const { data: baseAssetDecimals } = useTokenDecimals(baseAsset);
   const [baseAssetFiatPrice] = useTokenPrice(baseAsset, currency);
 
   if (swapEvents?.length && baseAsset && baseAssetFiatPrice) {
