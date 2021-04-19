@@ -8,7 +8,6 @@ import tw from "efi-tailwindcss-classnames";
 import { usePendingTransactionPref } from "efi-ui/prefs/usePendingTransactionPref/usePendingTransactionPref";
 import { TransactionPendingSummary } from "efi-ui/transactions/TransactionPendingCard/TransactionPendingSummary";
 import { ConnectWalletButtons } from "efi-ui/wallets/ConnectWalletButtons/ConnectWalletButtons";
-import { usePendingTransaction } from "efi-ui/transactions/usePendingTransaction/usePendingTransaction";
 
 interface TransactionPendingCardProps {
   chainId: number | undefined;
@@ -30,8 +29,7 @@ export function TransactionPendingCard({
   const openWalletDialog = useCallback(() => setWalletDialogOpen(true), []);
   const closeWalletDialog = useCallback(() => setWalletDialogOpen(false), []);
 
-  const transactionHash = usePendingTransaction();
-
+  const { transactionHash } = usePendingTransactionPref();
   if (!transactionHash || !active) {
     return null;
   }
@@ -51,12 +49,7 @@ export function TransactionPendingCard({
         className={classNames(tw("flex", "items-center"), className)}
         onClick={openWalletDialog}
       >
-        <TransactionPendingSummary
-          account={account}
-          transactionHash={transactionHash}
-          active={active}
-          chainId={chainId}
-        />
+        <TransactionPendingSummary account={account} />
       </Callout>
     </Popover2>
   );
