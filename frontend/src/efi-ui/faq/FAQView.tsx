@@ -2,6 +2,7 @@ import React, { Fragment, ReactElement } from "react";
 import { Helmet } from "react-helmet";
 
 import { H2, H3 } from "@blueprintjs/core";
+import { RouteComponentProps } from "@reach/router";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -19,7 +20,9 @@ const faqViewClassName = tw(
 
 const sectionClassName = tw("mb-8", "pb-4", "border-b", "w-full");
 
-export function FAQView(): ReactElement {
+interface EarnViewProps extends RouteComponentProps {}
+
+export function FAQView(props: EarnViewProps): ReactElement {
   return (
     <Fragment>
       <Helmet>

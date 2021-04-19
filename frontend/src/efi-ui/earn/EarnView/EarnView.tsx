@@ -2,6 +2,7 @@ import React, { FC, Fragment, ReactElement } from "react";
 import { Helmet } from "react-helmet";
 
 import { Web3Provider } from "@ethersproject/providers";
+import { RouteComponentProps } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
 import uniqBy from "lodash.uniqby";
 import { jt, t } from "ttag";
@@ -13,7 +14,8 @@ import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { useBaseAssetsForTranches } from "efi-ui/tranche/useBaseAssetsForTranches";
 import { useOpenTranches } from "efi-ui/tranche/useOpenTranches";
 
-export function EarnView(): ReactElement {
+interface EarnViewProps extends RouteComponentProps {}
+export function EarnView(props: EarnViewProps): ReactElement {
   const {
     account,
     active,
