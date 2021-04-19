@@ -1,8 +1,10 @@
+import { useCallback } from "react";
+
 import { Tranche } from "elf-contracts/types/Tranche";
 import { BigNumber, Signer } from "ethers";
-import { useSmartContractTransaction } from "efi-ui/contracts/useSmartContractTransaction/useSmartContractTransaction";
+
+import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
 import { ContractMethodArgs } from "efi/contracts/types";
-import { useCallback } from "react";
 
 export function useWithdrawPrincipal(
   signer: Signer | undefined,
@@ -15,7 +17,7 @@ export function useWithdrawPrincipal(
     amount
   );
 
-  const { mutate: withdrawPrincipal } = useSmartContractTransaction(
+  const { mutate: withdrawPrincipal } = useSmartContractTransactionPersisted(
     tranche,
     "withdrawPrincipal",
     signer

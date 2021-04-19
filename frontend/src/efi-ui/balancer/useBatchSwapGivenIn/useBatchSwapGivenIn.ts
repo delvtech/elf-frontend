@@ -6,11 +6,11 @@ import { BigNumber, PayableOverrides, Signer } from "ethers";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { getQueryData } from "efi-ui/base/queryResults";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { useSmartContractTransaction } from "efi-ui/contracts/useSmartContractTransaction/useSmartContractTransaction";
+import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
+import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { PoolContract } from "efi/pools/PoolContract";
-import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 
 /**
  * Hook wrapper for the Balancer Vault's batchSwapGivenIn method.
@@ -30,7 +30,7 @@ export function useBatchSwapGivenIn(
   const poolIdResult = useSmartContractReadCall(pool, "getPoolId");
   const poolId = getQueryData(poolIdResult);
 
-  const { mutate: batchSwapGivenIn } = useSmartContractTransaction(
+  const { mutate: batchSwapGivenIn } = useSmartContractTransactionPersisted(
     balancerVault,
     "batchSwapGivenIn",
     signer

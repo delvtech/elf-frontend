@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef } from "react";
+import React, { ReactElement, useEffect, useRef } from "react";
 
 import jazzicon from "@metamask/jazzicon";
 
@@ -10,7 +10,10 @@ interface WalletJazziconProps {
 }
 
 const JAZZICON_DIAMETER_PIXELS = 48;
-export const WalletJazzicon: FC<WalletJazziconProps> = ({ account, size }) => {
+export function WalletJazzicon({
+  account,
+  size,
+}: WalletJazziconProps): ReactElement {
   const jazziconRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -37,4 +40,4 @@ export const WalletJazzicon: FC<WalletJazziconProps> = ({ account, size }) => {
   }, [account, size]);
 
   return <div ref={jazziconRef} />;
-};
+}

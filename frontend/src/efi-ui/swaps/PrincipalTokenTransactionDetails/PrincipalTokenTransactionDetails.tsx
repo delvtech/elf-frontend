@@ -1,5 +1,7 @@
-import { FC } from "react";
+import { ReactElement } from "react";
+
 import { t } from "ttag";
+
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { formatFullDate } from "efi/base/dates";
@@ -16,12 +18,12 @@ interface PrincipalTokenTransactionDetailsProps {
 
   unlockTimeStamp: Date | undefined;
 }
-export const PrincipalTokenTransactionDetails: FC<PrincipalTokenTransactionDetailsProps> = ({
+export function PrincipalTokenTransactionDetails({
   baseAssetSymbol,
   priceSlippageAndTradingFee,
   spotPriceBaseAssetForOneToken,
   unlockTimeStamp,
-}) => {
+}: PrincipalTokenTransactionDetailsProps): ReactElement {
   const roundedTranchePrice = spotPriceBaseAssetForOneToken?.toFixed(4);
 
   const unlockTimeStampLabel = unlockTimeStamp
@@ -65,4 +67,4 @@ export const PrincipalTokenTransactionDetails: FC<PrincipalTokenTransactionDetai
       />
     </div>
   );
-};
+}

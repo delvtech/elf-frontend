@@ -14,8 +14,8 @@ import { getQueryData } from "efi-ui/base/queryResults";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { PoolDetails } from "efi-ui/pools/PoolDetails/PoolDetails";
 import { useAllPools } from "efi-ui/pools/useAllPools/useAllPools";
-import { WalletConnectionCard } from "efi-ui/wallets/WalletConnectionCard/WalletConnectionCard";
 import { getConnectorName } from "efi/wallets/connectors";
+import { TransactionPendingCard } from "efi-ui/transactions/TransactionPendingCard/TransactionPendingCard";
 
 interface PoolViewProps extends RouteComponentProps {
   poolAddress?: string;
@@ -68,7 +68,7 @@ export function PoolView({ poolAddress }: PoolViewProps): ReactElement {
                 )}
               >{t`Trade for either asset or provide liquidity for this pool.`}</span>
             </div>
-            <WalletConnectionCard
+            <TransactionPendingCard
               active={active}
               account={account}
               chainId={chainId}
