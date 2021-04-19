@@ -5,16 +5,18 @@ import classNames from "classnames";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-
-import styles from "./styles.module.css";
-import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
+import { ConvergentCurvePoolActiveInput } from "efi-ui/pools/useConvergentCurvePoolStakeInputs/useConvergentCurvePoolStakeInputs";
+import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
+import { CryptoAsset } from "efi/crypto/CryptoAsset";
+
+import styles from "./styles.module.css";
 
 interface StakeFormProps {
+  activeInput: ConvergentCurvePoolActiveInput;
   assetOne: CryptoAsset | undefined;
-  assetOneAmount: string | undefined;
+  assetOneAmount: number | undefined;
   assetTwo: CryptoAsset | undefined;
   /**
    * If set this will override the symbol lookup for assetTwo. This is useful
@@ -22,7 +24,13 @@ interface StakeFormProps {
    * input
    */
   assetTwoSymbol?: string | undefined;
-  assetTwoAmount: string | undefined;
+  /**
+   * If set this will override the symbol lookup for assetTwo. This is useful
+   * when don't want to show a long principal or yield token symbol in the
+   * input
+   */
+  assetOneSymbol?: string | undefined;
+  assetTwoAmount: number | undefined;
   heading?: string;
 
   /**
@@ -42,7 +50,9 @@ export function StakeForm({
   assetOne,
   assetTwo,
   assetTwoSymbol: assetTwoSymbolFromProps,
+  assetOneSymbol: assetOneSymbolFromProps,
   assetOneAmount,
+  activeInput,
   assetTwoAmount,
   heading = t`Stake`,
   onAssetOneAmountChange: onAssetOneAmountChangeFromProps,
@@ -51,6 +61,7 @@ export function StakeForm({
 }: StakeFormProps): ReactElement {
   const { isDarkMode } = useDarkMode();
   const assetOneSymbol = useCryptoSymbol(assetOne);
+  const assetOneSymbolLabel = assetOneSymbolFromProps || assetOneSymbol;
   const AssetOneIcon = findAssetIcon(assetOneSymbol);
   const onAssetOneAmountChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
@@ -68,6 +79,20 @@ export function StakeForm({
     },
     [onAssetTwoAmountChangeFromProps]
   );
+
+  let assetOneValueLabel: string | undefined;
+  if (activeInput === "principalTokenIn") {
+    assetOneValueLabel = assetOneAmount?.toString();
+  } else {
+    assetOneValueLabel = assetOneAmount?.toFixed(4);
+  }
+
+  let assetTwoValueLabel: string | undefined;
+  if (activeInput === "baseAssetIn") {
+    assetTwoValueLabel = assetTwoAmount?.toString();
+  } else {
+    assetTwoValueLabel = assetTwoAmount?.toFixed(4);
+  }
 
   return (
     <Callout className={tw("flex", "flex-col", "p-8", "space-y-6")}>
@@ -99,10 +124,10 @@ export function StakeForm({
                 {AssetOneIcon ? <AssetOneIcon height={18} width={18} /> : null}
               </div>
             }
-            value={assetOneAmount}
+            value={assetOneValueLabel}
             rightElement={
               <div className={tw("flex", "items-center", "px-3")}>
-                {assetOneSymbol}
+                {assetOneSymbolLabel}
               </div>
             }
           />
@@ -132,7 +157,7 @@ export function StakeForm({
                 {AssetTwoIcon ? <AssetTwoIcon height={18} width={18} /> : null}
               </div>
             }
-            value={assetTwoAmount}
+            value={assetTwoValueLabel}
             placeholder="0.00"
             rightElement={
               <div className={tw("flex", "items-center", "px-3")}>
