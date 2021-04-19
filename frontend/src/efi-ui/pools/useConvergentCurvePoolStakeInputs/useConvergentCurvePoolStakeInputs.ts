@@ -92,10 +92,6 @@ export function useConvergentCurvePoolStakeInputs(
     decimalsPrincipalToken,
     totalSupply
   );
-  console.log(
-    "previewPrincipalTokenNeededGivenBaseAssetIn",
-    previewPrincipalTokenNeededGivenBaseAssetIn
-  );
   const { otherNeeded: principalTokensNeededGivenBaseAssetIn } =
     previewPrincipalTokenNeededGivenBaseAssetIn || {};
   useSyncWithActiveInput(

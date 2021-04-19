@@ -1,17 +1,15 @@
-import React, { ReactElement } from "react";
+import { ReactElement } from "react";
 
 import { Button, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { ERC20 } from "elf-contracts/types/ERC20";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { BigNumber, Signer } from "ethers";
-import { parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { getBalancerApprovalMessage } from "efi-ui/balancer/balancerApprovalMessage";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
-import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { WalletApprovalCallout } from "efi-ui/transactions/TransactionDrawer/WalletApprovalCallout";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
@@ -27,6 +25,10 @@ import {
   findTokenContract,
 } from "efi/crypto/CryptoAsset";
 import { PoolContract } from "efi/pools/PoolContract";
+import { useConvergentCurvePoolStakeInputs } from "efi-ui/pools/useConvergentCurvePoolStakeInputs/useConvergentCurvePoolStakeInputs";
+import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
+import zipObject from "lodash.zipobject";
+import { findTokenAddressForPool } from "../../../efi/pools/findTokenAddressForPool";
 
 interface StakePrincipalTokensDrawerProps {
   account: string | null | undefined;
@@ -52,22 +54,13 @@ export function StakePrincipalTokensDrawer({
 
   // base asset calls
   const baseAssetSymbol = useCryptoSymbol(baseAsset);
+  const baseAssetAddress = findTokenAddressForPool(baseAsset);
   const { data: allowance } = useTokenAllowance(
     findTokenContract(baseAsset) as ERC20Shim,
     account,
     balancerVault?.address
   );
   const baseAssetDecimals = useCryptoDecimals(baseAsset);
-  const {
-    stringValue: baseAssetAmountString,
-    setValue: onBaseAssetAmountChange,
-  } = useNumericInput({
-    min: 0,
-    maxPrecision: baseAssetDecimals,
-  });
-  const baseAssetAmountBigNumber = baseAssetAmountString
-    ? parseUnits(baseAssetAmountString, baseAssetDecimals)
-    : undefined;
 
   // tranche calls
   const trancheCryptoAsset = makeCryptoAsset(tranche as ERC20Shim);
@@ -75,24 +68,40 @@ export function StakePrincipalTokensDrawer({
     tranche,
     "decimals"
   );
-  const {
-    stringValue: trancheAmountString,
-    setValue: onTrancheAmountChange,
-  } = useNumericInput({
-    min: 0,
-    maxPrecision: trancheDecimals,
-  });
-  const trancheAmountBigNumber = trancheAmountString
-    ? parseUnits(trancheAmountString, baseAssetDecimals)
+
+  // Pool calls
+  const onStake = useJoinPool(signer, account, pool);
+  const { data: totalSupply } = useSmartContractReadCall(pool, "totalSupply");
+  const { data: [tokens, tokenBalances] = [] } = usePoolTokens(pool);
+  const reservesByToken = getReservesByToken(tokens, tokenBalances);
+  const trancheReserves = tranche
+    ? reservesByToken?.[tranche.address]
+    : undefined;
+  const baseAssetReserves = baseAssetAddress
+    ? reservesByToken?.[baseAssetAddress]
     : undefined;
 
-  const onStake = useJoinPool(signer, account, pool);
+  const {
+    activeInput,
+    baseAssetIn,
+    baseAssetInBigNumber,
+    principalTokenIn,
+    principalTokenInBigNumber,
+    onBaseAssetInChange,
+    onPrincipalTokenInChange,
+  } = useConvergentCurvePoolStakeInputs(
+    baseAssetDecimals,
+    trancheDecimals,
+    baseAssetReserves,
+    trancheReserves,
+    totalSupply
+  );
 
   const confirmButtonLabel = getConfirmButtonLabel(account);
   const confirmButtonDisabled = getConfirmButtonDisabled(
     account,
     baseAsset,
-    baseAssetAmountBigNumber,
+    principalTokenInBigNumber,
     allowance
   );
 
@@ -104,21 +113,22 @@ export function StakePrincipalTokensDrawer({
     >
       <div className={tw("flex", "flex-col", "space-y-4")}>
         <StakeForm
+          activeInput={activeInput}
           heading={t`Stake ${baseAssetSymbol} Principal Tokens`}
-          assetOne={baseAsset}
-          assetOneAmount={baseAssetAmountString}
-          onAssetOneAmountChange={onBaseAssetAmountChange}
-          assetTwo={trancheCryptoAsset}
-          assetTwoSymbol={t`${baseAssetSymbol} Principal Token`}
-          onAssetTwoAmountChange={onTrancheAmountChange}
-          assetTwoAmount={trancheAmountString}
+          assetOne={trancheCryptoAsset}
+          assetOneAmount={principalTokenIn}
+          onAssetOneAmountChange={onPrincipalTokenInChange}
+          assetOneSymbol={t`${baseAssetSymbol} Principal Token`}
+          assetTwo={baseAsset}
+          onAssetTwoAmountChange={onBaseAssetInChange}
+          assetTwoAmount={baseAssetIn}
         />
         {baseAsset.type === CryptoAssetType.ERC20 ||
         baseAsset.type === CryptoAssetType.ERC20PERMIT ? (
           <WalletApprovalCallout
             account={account}
             cryptoAsset={baseAsset}
-            approvalAmount={baseAssetAmountBigNumber}
+            approvalAmount={baseAssetInBigNumber}
             signer={signer}
             message={getBalancerApprovalMessage(baseAssetSymbol)}
           />
@@ -128,7 +138,7 @@ export function StakePrincipalTokensDrawer({
           <WalletApprovalCallout
             account={account}
             cryptoAsset={trancheCryptoAsset}
-            approvalAmount={trancheAmountBigNumber}
+            approvalAmount={principalTokenInBigNumber}
             signer={signer}
             message={getBalancerApprovalMessage(t`pt${baseAssetSymbol}`)}
           />
@@ -147,6 +157,17 @@ export function StakePrincipalTokensDrawer({
       </div>
     </WalletDrawer>
   );
+}
+
+function getReservesByToken(
+  tokens: string[] | undefined,
+  tokenBalances: BigNumber[] | undefined
+): Record<string, BigNumber> | undefined {
+  if (!tokens || !tokenBalances) {
+    return;
+  }
+
+  return zipObject(tokens, tokenBalances);
 }
 
 function makeCryptoAsset(token: ERC20 | undefined) {
