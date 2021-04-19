@@ -11,7 +11,7 @@ import {
   useNumericInput,
 } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { CryptoIcon } from "efi-ui/crypto/CryptoIcon";
-import styles from "efi-ui/crypto/TransactionForm/TransactionForm.module.css";
+import styles from "efi-ui/trade/TransactionForm/TransactionForm.module.css";
 import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
 import { CryptoName } from "efi/crypto/CryptoName";
 import { CryptoSymbol, CryptoSymbolOld } from "efi/crypto/CryptoSymbol";
