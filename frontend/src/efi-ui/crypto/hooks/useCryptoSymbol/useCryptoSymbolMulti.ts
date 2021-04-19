@@ -1,13 +1,13 @@
 import zip from "lodash.zip";
 
 import { getQueriesData } from "efi-ui/base/queryResults";
-import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
 import { assertNever } from "efi/base/assertNever";
 import {
   CryptoAsset,
   CryptoAssetType,
   findTokenContract,
 } from "efi/crypto/CryptoAsset";
+import { useTokenSymbolMulti } from "efi-ui/token/hooks/useTokenSymbolMulti";
 
 export function useCryptoSymbolMulti(
   assets: (CryptoAsset | undefined)[]
@@ -15,10 +15,7 @@ export function useCryptoSymbolMulti(
   const tokenContracts = assets.map((asset) =>
     asset ? findTokenContract(asset) : undefined
   );
-  const tokenSymbolResults = useSmartContractReadCalls(
-    tokenContracts,
-    "symbol"
-  );
+  const tokenSymbolResults = useTokenSymbolMulti(tokenContracts);
 
   return zip(assets, getQueriesData(tokenSymbolResults)).map(
     ([asset, tokenSymbol]) => {
