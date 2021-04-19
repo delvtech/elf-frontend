@@ -1,27 +1,30 @@
 import React, { ReactElement } from "react";
-import { Classes, Icon, Tag } from "@blueprintjs/core";
-import { IconNames } from "@blueprintjs/icons";
+
+import { Classes } from "@blueprintjs/core";
 import classNames from "classnames";
+import { t } from "ttag";
+
 import tw from "efi-tailwindcss-classnames";
 import { WalletJazzicon } from "efi-ui/wallets/WalletJazzicon/WalletJazzicon";
-import { formatChainName } from "efi/crypto/formatChainName";
 import { formatWalletAddress } from "efi/wallets/formatWalletAddress";
 
 interface TransactionPendingSummaryProps {
   account: string | null | undefined;
   active: boolean;
   chainId: number | undefined;
-  connectionStatusColor: string;
-  connectorMessage: string;
+  transactionHash: string | undefined;
 }
 
 export function TransactionPendingSummary({
   account,
   active,
   chainId,
-  connectionStatusColor,
-  connectorMessage,
-}: TransactionPendingSummaryProps): ReactElement {
+  transactionHash,
+}: TransactionPendingSummaryProps): ReactElement | null {
+  if (!transactionHash) {
+    return null;
+  }
+
   return (
     <div
       className={tw(
@@ -38,23 +41,23 @@ export function TransactionPendingSummary({
         <div className={tw("flex", "flex-col")}>
           <div className={tw("flex", "items-center", "justify-between")}>
             <span className={classNames(Classes.TEXT_LARGE)}>
-              {account ? formatWalletAddress(account) : null}
+              <a
+                title={t`View transaction on etherscan`}
+                href={`https://etherscan.io/tx/${transactionHash}`}
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                {formatWalletAddress(transactionHash)}
+              </a>
             </span>
           </div>
           <div className={tw("flex", "items-center", "justify-between")}>
             <span className={classNames(Classes.TEXT_MUTED)}>
-              {formatChainName(active, chainId)}
+              {t`Transaction pending...`}
             </span>
           </div>
         </div>
       </div>
-      <Tag
-        minimal
-        large
-        icon={<Icon icon={IconNames.DOT} color={connectionStatusColor} />}
-      >
-        {connectorMessage}
-      </Tag>
     </div>
   );
 }

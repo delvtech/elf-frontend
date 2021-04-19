@@ -1,12 +1,10 @@
 import React, { ReactElement, useCallback, useState } from "react";
 
-import { Callout, Colors } from "@blueprintjs/core";
+import { Callout } from "@blueprintjs/core";
 import { Popover2 } from "@blueprintjs/popover2";
 import classNames from "classnames";
-import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { usePendingTransaction } from "efi-ui/prefs/usePendingTransaction/usePendingTransaction";
 import { TransactionPendingSummary } from "efi-ui/transactions/TransactionPendingCard/TransactionPendingSummary";
 import { ConnectWalletButtons } from "efi-ui/wallets/ConnectWalletButtons/ConnectWalletButtons";
@@ -26,15 +24,16 @@ export function TransactionPendingCard({
   active,
   connectorName,
   className,
-}: TransactionPendingCardProps): ReactElement {
+}: TransactionPendingCardProps): ReactElement | null {
   const [isWalletDialogOpen, setWalletDialogOpen] = useState(false);
   const openWalletDialog = useCallback(() => setWalletDialogOpen(true), []);
   const closeWalletDialog = useCallback(() => setWalletDialogOpen(false), []);
 
-  const connectionStatusColor = active ? Colors.GREEN4 : Colors.RED4;
-
   const { transactionHash } = usePendingTransaction();
-  const connectorMessage = t`pending`;
+
+  if (!transactionHash || !active) {
+    return null;
+  }
 
   return (
     <Popover2
@@ -51,15 +50,12 @@ export function TransactionPendingCard({
         className={classNames(tw("flex", "items-center"), className)}
         onClick={openWalletDialog}
       >
-        {!active || !transactionHash ? null : (
-          <TransactionPendingSummary
-            account={transactionHash}
-            active={active}
-            chainId={chainId}
-            connectionStatusColor={connectionStatusColor}
-            connectorMessage={connectorMessage}
-          />
-        )}
+        <TransactionPendingSummary
+          account={account}
+          transactionHash={transactionHash}
+          active={active}
+          chainId={chainId}
+        />
       </Callout>
     </Popover2>
   );
