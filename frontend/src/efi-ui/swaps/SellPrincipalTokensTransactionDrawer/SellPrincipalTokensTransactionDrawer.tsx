@@ -7,7 +7,7 @@ import { Signer } from "ethers";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
-import { useBalancerTransactionInputs } from "efi-ui/balancer/useQueryBatchSwapInputs";
+import { useQueryBatchSwapInputs } from "efi-ui/balancer/useQueryBatchSwapInputs";
 import { useBatchSwapGivenIn } from "efi-ui/balancer/useBatchSwapGivenIn/useBatchSwapGivenIn";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { SwapDetailsForm } from "efi-ui/swaps/SwapDetailsPreview/SwapDetailsForm";
@@ -87,7 +87,7 @@ export const SellPrincipalTokensTransactionDrawer: FC<SellPrincipalTransactionDr
     amountOut,
     onAmountInChange,
     onAmountOutChange,
-  } = useBalancerTransactionInputs(
+  } = useQueryBatchSwapInputs(
     pool,
     trancheAddress,
     trancheDecimals,
