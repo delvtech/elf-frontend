@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { ReactElement, useState } from "react";
 import { useInterval } from "react-use";
 
 import { t } from "ttag";
@@ -17,7 +17,7 @@ interface TimeLeftProps {
   maturityDate: number | undefined;
 }
 
-export const TimeLeft: FC<TimeLeftProps> = (props) => {
+export function TimeLeft(props: TimeLeftProps): ReactElement {
   const { startDate = 0, maturityDate = 0 } = props;
   const progress = (Date.now() - startDate) / (maturityDate - startDate);
   const [timerValue, setTimerValue] = useState(maturityDate - Date.now());
@@ -32,4 +32,4 @@ export const TimeLeft: FC<TimeLeftProps> = (props) => {
   }
 
   return <LabeledProgressBar progressValue={progress} helperText={time} />;
-};
+}
