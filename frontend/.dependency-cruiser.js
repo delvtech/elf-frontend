@@ -225,6 +225,18 @@ module.exports = {
     },
 
     {
+      name: "efi-not-outside-contracts",
+      comment: "Importing modules into useSmartContracts is prohibited",
+      severity: "error",
+      from: {
+        path: "efi-ui/contracts",
+      },
+      to: {
+        path: "efi-ui/(?!contracts)",
+        path: `(${["efi-ui/?!contracts", "efi-ui/?!testing"].join("|")})`,
+      },
+    },
+    {
       name: "efi-not-outside-ui-base",
       comment: "Importing modules outside of ui/base/ is prohibited",
       severity: "error",
