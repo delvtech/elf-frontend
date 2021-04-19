@@ -31,6 +31,7 @@ export function LabeledProgressBar({
     >
       <span>{label}</span>
       <ProgressBar
+        className={tw("flex-shrink-0")}
         intent={intent}
         animate={false}
         stripes={false}
