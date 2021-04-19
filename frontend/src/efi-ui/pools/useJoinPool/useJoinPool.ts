@@ -1,13 +1,15 @@
+import { useCallback } from "react";
+
+import { Vault } from "elf-contracts/types/Vault";
+import { Signer } from "ethers";
+
 import { JoinRequest } from "efi-balancer/JoinRequest";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { useSmartContractTransaction } from "efi-ui/contracts/useSmartContractTransaction/useSmartContractTransaction";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
+import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { PoolContract } from "efi/pools/PoolContract";
-import { Vault } from "elf-contracts/types/Vault";
-import { Signer } from "ethers";
-import { useCallback } from "react";
 
 export function useJoinPool(
   signer: Signer | undefined,
@@ -17,7 +19,7 @@ export function useJoinPool(
   const balancerVault = useBalancerVault();
   const { data: poolId } = useSmartContractReadCall(pool, "getPoolId");
   const { data: [poolTokens] = [] } = usePoolTokens(pool);
-  const { mutate: joinPool } = useSmartContractTransaction(
+  const { mutate: joinPool } = useSmartContractTransactionPersisted(
     balancerVault,
     "joinPool",
     signer

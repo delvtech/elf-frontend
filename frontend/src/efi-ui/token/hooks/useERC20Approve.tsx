@@ -1,9 +1,11 @@
 import { useCallback } from "react";
 import { useQueryClient } from "react-query";
+
 import { ERC20 } from "elf-contracts/types/ERC20";
 import { Signer } from "ethers";
+
 import { matchSmartContractReadCallQuery } from "efi-ui/contracts/matchSmartContractReadCallQuery/matchSmartContractReadCallQuery";
-import { useSmartContractTransaction } from "efi-ui/contracts/useSmartContractTransaction/useSmartContractTransaction";
+import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
 import { MAX_ALLOWANCE } from "efi/contracts/token";
 
 export function useERC20Approve(
@@ -13,7 +15,7 @@ export function useERC20Approve(
   spender: string | null | undefined
 ): () => void {
   const queryClient = useQueryClient();
-  const { mutate: approve } = useSmartContractTransaction(
+  const { mutate: approve } = useSmartContractTransactionPersisted(
     baseAssetContract,
     "approve",
     signer,
