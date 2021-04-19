@@ -30,6 +30,7 @@ export function ExchangeView(props: ExchangeViewProps): ReactElement {
           "p-12",
           "h-full",
           "space-x-12",
+          "items-center",
           "overflow-scroll"
         )}
       >
@@ -38,7 +39,8 @@ export function ExchangeView(props: ExchangeViewProps): ReactElement {
           {/* page title */}
           <ViewTitle
             title={t`Element Exchange`}
-            subtitle={t`Provide liquidity for this market, or trade for what you want.`}
+            subtitle={t`Swap your Principal or Interest tokens for their base asset, or provide liquidity by staking in Element pools.`}
+            className={tw("text-center")}
           />
 
           <div className={tw("flex", "flex-1")}>

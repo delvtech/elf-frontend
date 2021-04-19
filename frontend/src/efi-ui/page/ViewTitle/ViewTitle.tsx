@@ -12,6 +12,7 @@ interface ViewTitleProps {
    * Whether or not to show the beta tag
    */
   titleTag?: ReactNode;
+  className?: string;
 }
 
 const subtitleClassName = classNames(
@@ -23,10 +24,13 @@ const subtitleClassName = classNames(
 export function ViewTitle({
   title,
   subtitle,
+  className,
   titleTag,
 }: ViewTitleProps): ReactElement {
   return (
-    <div className={tw("flex", "justify-between", "w-full")}>
+    <div
+      className={classNames(tw("flex", "justify-between", "w-full"), className)}
+    >
       <div className={tw("flex", "flex-col", "justify-start", "flex-1")}>
         <H2 className={tw("mb-4")}>
           {title}
