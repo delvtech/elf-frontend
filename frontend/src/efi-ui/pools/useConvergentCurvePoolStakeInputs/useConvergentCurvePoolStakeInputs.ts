@@ -5,132 +5,216 @@ import { parseUnits } from "ethers/lib/utils";
 
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 
-import { calculateOtherForGivenIn } from "./calculateOtherForGivenIn";
+import { calculateBaseAssetNeededForPrincipalTokenIn } from "./calculateBaseAssetNeededForPrincipalTokenIn";
+import { calculatePrincipalTokenNeededForBaseAssetIn } from "./calculatePrincipalTokenNeededForBaseAssetIn";
 
 /**
  * ActiveInput is used to prevent infinite calls to onSwapGivenIn and
  * onSwapGivenOut because they are not idempotent and will change based on
  * each other's latest result.
  */
-type ActiveInput = "givenIn" | "otherAmount";
+export type ConvergentCurvePoolActiveInput = "baseAssetIn" | "principalTokenIn";
 
 interface UseConvergentCurvePoolStakeInputs {
-  givenIn: string | undefined;
-  otherAmount: string | undefined;
-  onGivenInChange: (amount: string | undefined) => void;
-  onOtherAmountChange: (amount: string | undefined) => void;
+  activeInput: ConvergentCurvePoolActiveInput;
+  principalTokenIn: number | undefined;
+  principalTokenInBigNumber: BigNumber | undefined;
+  baseAssetIn: number | undefined;
+  baseAssetInBigNumber: BigNumber | undefined;
+  onBaseAssetInChange: (amount: string | undefined) => void;
+  onPrincipalTokenInChange: (amount: string | undefined) => void;
 }
 
 export function useConvergentCurvePoolStakeInputs(
-  givenInDecimals: number | undefined,
-  otherDecimals: number | undefined,
-  givenInReserves: BigNumber | undefined,
-  otherReserves: BigNumber | undefined,
+  decimalsBaseAsset: number | undefined,
+  decimalsPrincipalToken: number | undefined,
+  reservesBaseAsset: BigNumber | undefined,
+  reservesPrincipalToken: BigNumber | undefined,
   totalSupply: BigNumber | undefined
 ): UseConvergentCurvePoolStakeInputs {
-  const [activeInput, setActiveInput] = useState<ActiveInput>("givenIn");
+  const [
+    activeInput,
+    setActiveInput,
+  ] = useState<ConvergentCurvePoolActiveInput>("principalTokenIn");
 
   const {
-    inputString: givenInString,
-    inputNumber: givenInNumber,
-    setInputValue: setGivenIn,
-  } = useStakeInput(givenInDecimals);
-  const onGivenInChange = useCallback(
+    inputNumber: principalTokenInNumber,
+    inputBigNumber: principalTokenInBigNumber,
+    setInputValue: setPrincipalTokenIn,
+  } = useStakeInput(decimalsPrincipalToken);
+  const onPrincipalTokenInChange = useCallback(
     (amount: string | undefined) => {
-      setActiveInput("givenIn");
-      setGivenIn(amount);
+      setActiveInput("principalTokenIn");
+      setPrincipalTokenIn(amount);
     },
-    [setGivenIn]
+    [setPrincipalTokenIn]
   );
 
-  const { inputString: otherString, setInputValue: setOther } = useStakeInput(
-    otherDecimals
-  );
-  const onOtherChange = useCallback(
+  const {
+    inputNumber: baseAssetInNumber,
+    inputBigNumber: baseAssetInBigNumber,
+    setInputValue: setBaseAssetIn,
+  } = useStakeInput(decimalsBaseAsset);
+  const onBaseAssetInChange = useCallback(
     (amount: string | undefined) => {
-      setActiveInput("givenIn");
-      setOther(amount);
+      setActiveInput("baseAssetIn");
+      setBaseAssetIn(amount);
     },
-    [setOther]
+    [setBaseAssetIn]
   );
 
-  // The amount of the second token you'll need when the first token changes
-  const otherAmount = useOtherAmountPreview(
-    givenInNumber,
-    givenInDecimals,
-    givenInReserves,
-    otherReserves,
-    otherDecimals,
+  // The amount of the base asset you'll need when you change the amount of principal tokens in
+  const previewBaseAssetNeededGivenPrincipalTokenIn = useBaseAssetNeededGivenPrincipalTokenIn(
+    principalTokenInNumber,
+    decimalsPrincipalToken,
+    reservesPrincipalToken,
+    reservesBaseAsset,
+    decimalsBaseAsset,
     totalSupply
   );
+  const { otherNeeded: baseAssetNeededGivenPrincipalTokenIn } =
+    previewBaseAssetNeededGivenPrincipalTokenIn || {};
 
-  // The amount of the first token you'll need when the second token changes
-  const givenInAmount = useOtherAmountPreview(
-    givenInNumber,
-    givenInDecimals,
-    givenInReserves,
-    otherReserves,
-    otherDecimals,
+  useSyncWithActiveInput(
+    "baseAssetIn",
+    activeInput,
+    baseAssetNeededGivenPrincipalTokenIn
+      ? baseAssetNeededGivenPrincipalTokenIn.toString()
+      : undefined,
+    setBaseAssetIn
+  );
+
+  const previewPrincipalTokenNeededGivenBaseAssetIn = usePrincipalTokenNeededGivenBaseAssetIn(
+    baseAssetInNumber,
+    decimalsBaseAsset,
+    reservesBaseAsset,
+    reservesPrincipalToken,
+    decimalsPrincipalToken,
     totalSupply
   );
-
-  // update the correct inputs when the user types
-  useSyncWithActiveInput(
-    otherAmount ? otherAmount.toString() : undefined,
-    setGivenIn,
-    activeInput,
-    "givenIn"
+  console.log(
+    "previewPrincipalTokenNeededGivenBaseAssetIn",
+    previewPrincipalTokenNeededGivenBaseAssetIn
   );
+  const { otherNeeded: principalTokensNeededGivenBaseAssetIn } =
+    previewPrincipalTokenNeededGivenBaseAssetIn || {};
   useSyncWithActiveInput(
-    givenInAmount ? givenInAmount.toString() : undefined,
-    setOther,
+    "principalTokenIn",
     activeInput,
-    "otherAmount"
+    principalTokensNeededGivenBaseAssetIn
+      ? principalTokensNeededGivenBaseAssetIn.toString()
+      : undefined,
+    setPrincipalTokenIn
   );
 
   return {
-    givenIn: givenInString,
-    otherAmount: otherString,
-    onGivenInChange: onGivenInChange,
-    onOtherAmountChange: onOtherChange,
+    activeInput,
+    baseAssetIn: baseAssetInNumber,
+    baseAssetInBigNumber: baseAssetInBigNumber,
+    principalTokenIn: principalTokenInNumber,
+    principalTokenInBigNumber: principalTokenInBigNumber,
+    onBaseAssetInChange,
+    onPrincipalTokenInChange,
   };
 }
 
-function useOtherAmountPreview(
-  givenInNumber: number | undefined,
-  givenInDecimals: number | undefined,
-  givenInReserves: BigNumber | undefined,
-  otherReserves: BigNumber | undefined,
-  otherDecimals: number | undefined,
+function useBaseAssetNeededGivenPrincipalTokenIn(
+  principalTokenInAmount: number | undefined,
+  decimalsPrincipalToken: number | undefined,
+  principalTokenReserves: BigNumber | undefined,
+  baseAssetReserves: BigNumber | undefined,
+  decimalsBaseAsset: number | undefined,
   totalSupply: BigNumber | undefined
 ) {
   return useMemo(() => {
     if (
-      !givenInNumber ||
-      !givenInDecimals ||
-      !givenInReserves ||
-      !otherReserves ||
-      !otherDecimals ||
+      principalTokenInAmount === undefined ||
+      !decimalsPrincipalToken ||
+      !principalTokenReserves ||
+      !baseAssetReserves ||
+      !decimalsBaseAsset ||
       !totalSupply
     ) {
       return;
     }
-    return calculateOtherForGivenIn(
-      givenInNumber,
-      givenInReserves,
-      otherReserves,
+    return calculateBaseAssetNeededForPrincipalTokenIn(
+      principalTokenInAmount,
+      principalTokenReserves,
+      baseAssetReserves,
       totalSupply,
-      givenInDecimals,
-      otherDecimals
+      decimalsPrincipalToken,
+      decimalsBaseAsset
     );
   }, [
-    givenInDecimals,
-    givenInNumber,
-    givenInReserves,
-    otherDecimals,
-    otherReserves,
+    decimalsPrincipalToken,
+    principalTokenInAmount,
+    principalTokenReserves,
+    decimalsBaseAsset,
+    baseAssetReserves,
     totalSupply,
   ]);
+}
+
+function usePrincipalTokenNeededGivenBaseAssetIn(
+  baseAssetTokenInAmount: number | undefined,
+  decimalsBaseAsset: number | undefined,
+  baseAssetReserves: BigNumber | undefined,
+  principalTokenReserves: BigNumber | undefined,
+  decimalsPrincipalToken: number | undefined,
+  totalSupply: BigNumber | undefined
+) {
+  return useMemo(() => {
+    if (
+      baseAssetTokenInAmount === undefined ||
+      !decimalsPrincipalToken ||
+      !principalTokenReserves ||
+      !baseAssetReserves ||
+      !decimalsBaseAsset ||
+      !totalSupply
+    ) {
+      return;
+    }
+    return calculatePrincipalTokenNeededForBaseAssetIn(
+      baseAssetTokenInAmount,
+      principalTokenReserves,
+      baseAssetReserves,
+      totalSupply,
+      decimalsPrincipalToken,
+      decimalsBaseAsset
+    );
+  }, [
+    decimalsPrincipalToken,
+    baseAssetTokenInAmount,
+    principalTokenReserves,
+    decimalsBaseAsset,
+    baseAssetReserves,
+    totalSupply,
+  ]);
+}
+
+/**
+ * When the swap amount changes, we need to update the text input.
+ */
+function useSyncWithActiveInput(
+  syncedInput: ConvergentCurvePoolActiveInput,
+  activeInput: ConvergentCurvePoolActiveInput,
+  newAmount: string | undefined,
+  setAmount: (amount: string | undefined) => void
+) {
+  useEffect(() => {
+    // don't update the active input out from under the user.
+    if (activeInput === syncedInput) {
+      return;
+    }
+
+    if (!newAmount) {
+      setAmount(undefined);
+      return;
+    }
+
+    // Otherwise, if we have a new amount we'll set it
+    setAmount((+newAmount).toFixed(4));
+  }, [setAmount, newAmount, activeInput, syncedInput]);
 }
 
 function useStakeInput(inputDecimals: number | undefined) {
@@ -153,29 +237,4 @@ function useStakeInput(inputDecimals: number | undefined) {
     onInputChange,
     setInputValue,
   };
-}
-
-/**
- * When the swap amount changes, we need to update the text input.
- */
-function useSyncWithActiveInput(
-  newAmount: string | undefined,
-  setAmount: (amount: string | undefined) => void,
-  activeInput: ActiveInput,
-  syncWithInput: ActiveInput
-) {
-  useEffect(() => {
-    // don't update the active input out from under the user.
-    if (activeInput === syncWithInput) {
-      return;
-    }
-
-    if (!newAmount) {
-      setAmount(undefined);
-      return;
-    }
-
-    // Otherwise, if we have a new amount we'll set it
-    setAmount(newAmount);
-  }, [setAmount, newAmount, activeInput, syncWithInput]);
 }
