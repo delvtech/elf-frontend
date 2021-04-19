@@ -39,17 +39,3 @@ export function calculateLPOutGivenIn(
   const givenInNeeded = givenInAmount;
   return { otherNeeded, givenInNeeded, lpOut };
 }
-
-// const y_reserves = 674971.6048091053;
-// const x_reserves = 252853.96590876798;
-// const total_supply = 888791.4151192267;
-// const yIn = 2;
-// const xIn = 99999999;
-// console.log(yIn, xIn);
-// const {
-//   otherNeeded: xNeeded,
-//   givenInNeeded: yNeeded,
-//   lpOut,
-// } = calculateLPOutGivenIn(yIn, xIn, x_reserves, y_reserves, total_supply);
-
-// console.log("result", yNeeded, xNeeded, lpOut);

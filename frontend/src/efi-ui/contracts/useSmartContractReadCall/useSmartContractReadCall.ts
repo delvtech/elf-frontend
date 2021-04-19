@@ -27,11 +27,11 @@ export function useSmartContractReadCall<
   methodName: TMethodName,
   options?: UseSmartContractReadCallOptions<TContract, TMethodName>
 ): QueryObserverResult<TReturnType> {
-  const queryOptions = makeSmartContractReadCallUseQueryOptions<
-    TContract,
-    TMethodName,
-    TReturnType
-  >(contract, methodName, options);
+  const queryOptions = makeSmartContractReadCallUseQueryOptions(
+    contract,
+    methodName,
+    options
+  );
 
   const queryResult = useQuery(queryOptions);
 

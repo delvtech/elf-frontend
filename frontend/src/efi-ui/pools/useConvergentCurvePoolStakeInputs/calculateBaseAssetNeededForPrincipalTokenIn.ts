@@ -1,7 +1,7 @@
 import { BigNumber } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
 
-import { BALANCER_POOL_TOTAL_SUPPLY_DECIMALS } from "efi-balancer/pools";
+import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
 import {
   calculateLPOutGivenIn,
   LPOutGivenTokenIn,
@@ -25,7 +25,7 @@ export function calculateBaseAssetNeededForPrincipalTokenIn(
   );
   const totalSupplyNumber = +formatUnits(
     totalSupply,
-    BALANCER_POOL_TOTAL_SUPPLY_DECIMALS
+    BALANCER_POOL_LP_TOKEN_DECIMALS
   );
 
   return calculateLPOutGivenIn(

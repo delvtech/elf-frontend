@@ -1,4 +1,4 @@
 /**
  * All balancer LP tokens are 18 decimals
  */
-export const BALANCER_POOL_TOTAL_SUPPLY_DECIMALS = 18;
+export const BALANCER_POOL_LP_TOKEN_DECIMALS = 18;
