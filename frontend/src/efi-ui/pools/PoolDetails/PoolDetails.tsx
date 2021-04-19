@@ -7,7 +7,7 @@ import { Signer } from "ethers";
 import tw from "efi-tailwindcss-classnames";
 import { getQueryData } from "efi-ui/base/queryResults";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { TokenSummary } from "efi-ui/markets/TokenSummary/TokenSummary";
+import { TokenSummary } from "efi-ui/pools/TokenSummary/TokenSummary";
 import { VaultSummary } from "efi-ui/markets/VaultSummary/VaultSummary";
 import { PoolActionsCard } from "efi-ui/pools/PoolActionsCard/PoolActionsCard";
 import { PoolCharts } from "efi-ui/pools/PoolCharts/PoolCharts";
