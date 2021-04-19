@@ -70,7 +70,6 @@ export function StakePrincipalTokensDrawer({
   );
 
   // Pool calls
-  const onStake = useJoinPool(signer, account, pool);
   const { data: totalSupply } = useSmartContractReadCall(pool, "totalSupply");
   const { data: [tokens, tokenBalances] = [] } = usePoolTokens(pool);
   const reservesByToken = getReservesByToken(tokens, tokenBalances);
@@ -96,6 +95,18 @@ export function StakePrincipalTokensDrawer({
     trancheReserves,
     totalSupply
   );
+
+  const maxAmountsIn =
+    principalTokenInBigNumber && baseAssetInBigNumber
+      ? tokens?.map((tokenAddress) => {
+          if (tokenAddress === tranche?.address) {
+            return principalTokenInBigNumber;
+          }
+          return baseAssetInBigNumber;
+        })
+      : undefined;
+
+  const onStake = useJoinPool(signer, account, pool, maxAmountsIn);
 
   const confirmButtonLabel = getConfirmButtonLabel(account);
   const confirmButtonDisabled = getConfirmButtonDisabled(

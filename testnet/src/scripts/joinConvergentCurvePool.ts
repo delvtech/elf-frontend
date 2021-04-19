@@ -41,6 +41,7 @@ export async function joinConvergentCurvePool(
 
   // Balancer V2 vault allows userData as a way to pass props through to pool contracts.  In our
   // case we need to pass the maxAmountsIn.
+  // TODO: switch to defaultAbiEncoder from ethers
   const userData = abi.rawEncode(["uint256[]"], [amounts]);
 
   console.log("aboot to join");
