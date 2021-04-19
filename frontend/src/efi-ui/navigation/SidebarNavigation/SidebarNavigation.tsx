@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { ReactElement, useState } from "react";
 
 import { Classes, Icon, Tab, Tabs } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
@@ -32,14 +32,14 @@ const tabTitleClassName = tw(
   "py-8"
 );
 
-export const SidebarNavigation: FC<SidebarNavigationProps> = ({
+export function SidebarNavigation({
   account,
   active,
   chainId,
   isDarkMode,
   changeTab,
   activeTab,
-}) => {
+}: SidebarNavigationProps): ReactElement {
   const [isWalletDialogOpen, setWalletDialogOpen] = useState(false);
 
   return (
@@ -139,4 +139,4 @@ export const SidebarNavigation: FC<SidebarNavigationProps> = ({
       </div>
     </div>
   );
-};
+}

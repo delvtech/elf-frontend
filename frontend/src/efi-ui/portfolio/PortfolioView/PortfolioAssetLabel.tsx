@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { ReactElement } from "react";
 
 import { Intent, Tag } from "@blueprintjs/core";
 import { Money } from "ts-money";
@@ -15,11 +15,11 @@ interface PortfolioAssetLabelProps {
   totalFiatValue: Money;
 }
 
-export const PortfolioAssetLabel: FC<PortfolioAssetLabelProps> = ({
+export function PortfolioAssetLabel({
   quantity,
   name,
   totalFiatValue,
-}) => {
+}: PortfolioAssetLabelProps): ReactElement {
   const quantityLabel = formatMoney(totalFiatValue);
   return (
     <div
@@ -48,4 +48,4 @@ export const PortfolioAssetLabel: FC<PortfolioAssetLabelProps> = ({
       </Tag>
     </div>
   );
-};
+}

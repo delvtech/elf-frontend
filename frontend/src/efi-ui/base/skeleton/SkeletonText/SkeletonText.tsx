@@ -1,6 +1,7 @@
+import React, { ReactElement } from "react";
+
 import { Classes } from "@blueprintjs/core";
 import classNames from "classnames";
-import React, { FC } from "react";
 
 import tw from "efi-tailwindcss-classnames";
 
@@ -11,7 +12,9 @@ interface SkeletonTextProps {
   text?: string;
 }
 
-export const SkeletonText: FC<SkeletonTextProps> = ({ text = loremIpsum }) => {
+export function SkeletonText({
+  text = loremIpsum,
+}: SkeletonTextProps): ReactElement {
   return (
     <div className={tw("flex", "flex-wrap", "overflow-hidden", "p-2")}>
       {text.split(" ").map((word, index) => (
@@ -24,4 +27,4 @@ export const SkeletonText: FC<SkeletonTextProps> = ({ text = loremIpsum }) => {
       ))}
     </div>
   );
-};
+}

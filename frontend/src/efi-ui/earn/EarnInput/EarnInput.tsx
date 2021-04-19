@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, ReactElement, useCallback } from "react";
+import { ChangeEvent, ReactElement, useCallback } from "react";
 
 import { InputGroup, Tag } from "@blueprintjs/core";
 import classNames from "classnames";
@@ -21,7 +21,7 @@ interface EarnInputProps {
   assetPicker: ReactElement;
 }
 
-export const EarnInput: FC<EarnInputProps> = ({
+export function EarnInput({
   className,
   value,
   showMaxButton,
@@ -29,7 +29,7 @@ export const EarnInput: FC<EarnInputProps> = ({
   assetBalance,
   onValueChange,
   assetPicker,
-}) => {
+}: EarnInputProps): ReactElement {
   const { isDarkMode } = useDarkMode();
 
   const setMaxAmount = useCallback(() => {
@@ -79,4 +79,4 @@ export const EarnInput: FC<EarnInputProps> = ({
       onChange={onChange}
     />
   );
-};
+}

@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { ReactElement } from "react";
 
 import {
   Button,
@@ -13,9 +13,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 
-interface MarketFilterOptionsProps {}
-
-export const MarketFilterOptions: FC<MarketFilterOptionsProps> = () => {
+export function MarketFilterOptions(): ReactElement {
   return (
     <div className={tw("space-y-6")}>
       <div className={tw("flex", "justify-between")}>
@@ -58,4 +56,4 @@ export const MarketFilterOptions: FC<MarketFilterOptionsProps> = () => {
       </FormGroup>
     </div>
   );
-};
+}

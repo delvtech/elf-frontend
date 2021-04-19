@@ -1,18 +1,16 @@
-import React, { FC } from "react";
+import React, { ReactElement } from "react";
 
 import { Classes, Colors, Icon } from "@blueprintjs/core";
+import { IconNames } from "@blueprintjs/icons";
 import classNames from "classnames";
+import { Currencies } from "ts-money";
 import { t } from "ttag";
 
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useEthPrice } from "efi-ui/ethereum/hooks/useEthPrice";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
-import { IconNames } from "@blueprintjs/icons";
-import { Currencies } from "ts-money";
 
-interface EthereumPriceWidgetProps {}
-
-export const EthereumPriceWidget: FC<EthereumPriceWidgetProps> = () => {
+export function EthereumPriceWidget(): ReactElement {
   const { currency } = useCurrencyPref();
   const { isLoading, data: ethPrice } = useEthPrice(currency);
 
@@ -29,4 +27,4 @@ export const EthereumPriceWidget: FC<EthereumPriceWidgetProps> = () => {
       icon={<Icon icon={icon} iconSize={48} color={Colors.GRAY1} />}
     />
   );
-};
+}

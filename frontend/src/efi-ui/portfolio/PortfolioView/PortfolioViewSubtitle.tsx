@@ -1,11 +1,13 @@
-import React, { FC, Fragment, useCallback, useState } from "react";
+import React, { Fragment, ReactElement, useCallback, useState } from "react";
+
 import { Classes, Colors } from "@blueprintjs/core";
 import classNames from "classnames";
 import { jt, t } from "ttag";
+
 import { makeEtherscanWalletAddressUrl } from "efi-etherscan/makeEtherscanWalletLink";
+import tw from "efi-tailwindcss-classnames";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
-import tw from "efi-tailwindcss-classnames";
 
 export interface PortfolioViewSubtitleProps {
   account: string | null | undefined;
@@ -17,9 +19,9 @@ export const subtitleClassName = classNames(
   tw("text-base")
 );
 
-export const PortfolioViewSubtitle: FC<PortfolioViewSubtitleProps> = ({
+export function PortfolioViewSubtitle({
   account,
-}) => {
+}: PortfolioViewSubtitleProps): ReactElement {
   const { isDarkMode } = useDarkMode();
   const [isDialogOpen, setDialogOpen] = useState(false);
   const openDialog = useCallback(() => setDialogOpen(true), []);
@@ -60,4 +62,4 @@ export const PortfolioViewSubtitle: FC<PortfolioViewSubtitleProps> = ({
       <ConnectWalletDialog isOpen={isDialogOpen} onClose={closeDialog} />
     </Fragment>
   );
-};
+}

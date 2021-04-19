@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from "react";
+import React, { ReactElement, ReactNode } from "react";
 
 import { Tab, Tabs } from "@blueprintjs/core";
 import { Money } from "ts-money";
@@ -20,11 +20,11 @@ interface PortfolioTabsProps {
   activePortfolioTabId: string;
   portfolioTabs: PortfolioTab[];
 }
-export const PortfolioTabs: FC<PortfolioTabsProps> = ({
+export function PortfolioTabs({
   onChangeTab,
   activePortfolioTabId,
   portfolioTabs,
-}) => {
+}: PortfolioTabsProps): ReactElement {
   return (
     <Tabs
       id="portfolio-tabs"
@@ -45,4 +45,4 @@ export const PortfolioTabs: FC<PortfolioTabsProps> = ({
       ))}
     </Tabs>
   );
-};
+}

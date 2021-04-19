@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { ReactElement } from "react";
 
 import { Card } from "@blueprintjs/core";
 
@@ -11,9 +11,9 @@ interface LiquidityPositionPortfolioProps {
   account: string | null | undefined;
 }
 
-export const LiquidityPositionPortfolio: FC<LiquidityPositionPortfolioProps> = ({
+export function LiquidityPositionPortfolio({
   account,
-}) => {
+}: LiquidityPositionPortfolioProps): ReactElement {
   // TODO: check user's wallet for LPs
   const hasLPs = true;
 
@@ -27,7 +27,7 @@ export const LiquidityPositionPortfolio: FC<LiquidityPositionPortfolioProps> = (
 
   return (
     <Card className={tw("flex-1", "p-8")}>
-      {nonIdealStateContent || <LiquidityPositionTable account={account} />}
+      {nonIdealStateContent || <LiquidityPositionTable />}
     </Card>
   );
-};
+}

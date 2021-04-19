@@ -1,6 +1,7 @@
+import React, { ChangeEvent, ReactElement, useCallback } from "react";
+
 import { Alignment, FormGroup, Icon, InputGroup } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
-import React, { ChangeEvent, FC, useCallback } from "react";
 
 import tw from "efi-tailwindcss-classnames";
 import { FormGroupLabel } from "efi-ui/base/FormGroupLabel/FormGroupLabel";
@@ -13,13 +14,13 @@ interface SearchFormGroupProps {
   onChange: (value: string) => void;
 }
 
-export const SearchFormGroup: FC<SearchFormGroupProps> = ({
+export function SearchFormGroup({
   label,
   tooltipContent,
   value,
   onChange,
   placeholder,
-}) => {
+}: SearchFormGroupProps): ReactElement {
   const onInputChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
       onChange(event.target.value);
@@ -49,4 +50,4 @@ export const SearchFormGroup: FC<SearchFormGroupProps> = ({
       ></InputGroup>
     </FormGroup>
   );
-};
+}

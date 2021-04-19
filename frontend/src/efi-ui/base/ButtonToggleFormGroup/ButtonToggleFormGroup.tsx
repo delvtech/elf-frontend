@@ -1,5 +1,6 @@
+import React, { ReactElement } from "react";
+
 import { Alignment, Button, FormGroup, Intent } from "@blueprintjs/core";
-import React, { FC } from "react";
 
 import tw from "efi-tailwindcss-classnames";
 import { FormGroupLabel } from "efi-ui/base/FormGroupLabel/FormGroupLabel";
@@ -17,13 +18,13 @@ interface ButtonToggleFormGroupButton {
   text: string;
 }
 
-export const ButtonToggleFormGroup: FC<ButtonToggleFormGroupProps> = ({
+export function ButtonToggleFormGroup({
   label,
   tooltipContent,
   buttons,
   selectedButtonId,
   onSelect,
-}) => {
+}: ButtonToggleFormGroupProps): ReactElement {
   return (
     <FormGroup
       className={tw("space-y-2")}
@@ -53,4 +54,4 @@ export const ButtonToggleFormGroup: FC<ButtonToggleFormGroupProps> = ({
       ))}
     </FormGroup>
   );
-};
+}

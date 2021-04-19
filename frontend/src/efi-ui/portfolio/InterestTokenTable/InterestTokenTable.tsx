@@ -1,9 +1,10 @@
-import React, { FC } from "react";
+import React, { ReactElement } from "react";
+
+import { Web3Provider } from "@ethersproject/providers";
+import { InterestToken } from "elf-contracts/types/InterestToken";
 
 import tw from "efi-tailwindcss-classnames";
 import { YieldTokenCard } from "efi-ui/portfolio/YieldTokenCard/YieldTokenCard";
-import { Web3Provider } from "@ethersproject/providers";
-import { InterestToken } from "elf-contracts/types/InterestToken";
 
 interface InterestTokenTableProps {
   library: Web3Provider | undefined;
@@ -11,22 +12,11 @@ interface InterestTokenTableProps {
   interestTokens: InterestToken[];
 }
 
-// const tableHeaders = [
-//   t`Asset`,
-//   t`Quantity`,
-//   t`Current exit value`,
-//   t`Current acc. value`,
-//   t`Yield rate (InterestToken)`,
-//   t`Yield rate (Underlying)`,
-//   t`Maturation date`,
-//   t`Quick actions`,
-// ];
-
-export const InterestTokenTable: FC<InterestTokenTableProps> = ({
+export function InterestTokenTable({
   library,
   account,
   interestTokens,
-}) => {
+}: InterestTokenTableProps): ReactElement {
   return (
     <div
       data-testid="interesttoken-table"
@@ -42,4 +32,4 @@ export const InterestTokenTable: FC<InterestTokenTableProps> = ({
       ))}
     </div>
   );
-};
+}

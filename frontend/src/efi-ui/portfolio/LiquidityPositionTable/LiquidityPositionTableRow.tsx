@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { ReactElement } from "react";
 
 import { AnchorButton, Button, Classes } from "@blueprintjs/core";
 import { Tooltip2 } from "@blueprintjs/popover2";
@@ -10,9 +10,7 @@ import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import styles from "efi-ui/base/table.module.css";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 
-interface LiquidityPositionTableRowProps {}
-
-export const LiquidityPositionTableRow: FC<LiquidityPositionTableRowProps> = () => {
+export function LiquidityPositionTableRow(): ReactElement {
   const { isDarkMode } = useDarkMode();
 
   const tableRowClassName = isDarkMode ? styles.tableRowDark : styles.tableRow;
@@ -71,4 +69,4 @@ export const LiquidityPositionTableRow: FC<LiquidityPositionTableRowProps> = () 
       </div>
     </div>
   );
-};
+}

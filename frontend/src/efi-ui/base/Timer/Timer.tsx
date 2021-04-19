@@ -1,8 +1,9 @@
-import { getTimeLeft } from "efi/base/time";
-import React, { FC, useState } from "react";
+import React, { ReactElement, useState } from "react";
 import { useInterval } from "react-use";
 
 import { t } from "ttag";
+
+import { getTimeLeft } from "efi/base/time";
 
 interface TimerProps {
   /**
@@ -11,7 +12,7 @@ interface TimerProps {
   endTime: number;
 }
 
-export const Timer: FC<TimerProps> = (props) => {
+export function Timer(props: TimerProps): ReactElement {
   const { endTime } = props;
   const [timerValue, setTimerValue] = useState(endTime - Date.now());
   useInterval(() => {
@@ -25,4 +26,4 @@ export const Timer: FC<TimerProps> = (props) => {
       {t`${daysLeft} days, ${hoursLeft}, hours, ${minutesLeft} minutes, ${secondsLeft} seconds`}
     </span>
   );
-};
+}

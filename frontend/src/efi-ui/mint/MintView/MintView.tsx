@@ -1,4 +1,5 @@
-import React, { FC, Fragment } from "react";
+import React, { FC, Fragment, ReactElement } from "react";
+import { Helmet } from "react-helmet";
 
 import { Intent, Tag } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
@@ -12,11 +13,10 @@ import { MintCard } from "efi-ui/mint/MintCard/MintCard";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { useBaseAssetsForTranches } from "efi-ui/tranche/useBaseAssetsForTranches";
 import { useOpenTranches } from "efi-ui/tranche/useOpenTranches";
-import { Helmet } from "react-helmet";
 
 interface MintViewProps extends RouteComponentProps {}
 
-export const MintView: FC<MintViewProps> = () => {
+export function MintView(props: MintViewProps): ReactElement {
   const {
     account,
     library,
@@ -83,7 +83,7 @@ export const MintView: FC<MintViewProps> = () => {
       </div>
     </Fragment>
   );
-};
+}
 
 const EarnViewSubtitle: FC = () => {
   const mintingLink = (

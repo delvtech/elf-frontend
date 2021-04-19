@@ -1,14 +1,12 @@
-import React, { FC } from "react";
+import React, { ReactElement } from "react";
 
 import { Card, Classes, Tag } from "@blueprintjs/core";
+import classNames from "classnames";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import classNames from "classnames";
 
-interface PortfolioBalanceSummaryCardProps {}
-
-export const PortfolioBalanceSummaryCard: FC<PortfolioBalanceSummaryCardProps> = () => {
+export function PortfolioBalanceSummaryCard(): ReactElement {
   return (
     <Card className={tw("p-8", "space-y-4")}>
       {[
@@ -42,4 +40,4 @@ export const PortfolioBalanceSummaryCard: FC<PortfolioBalanceSummaryCardProps> =
       </Tag>
     </Card>
   );
-};
+}
