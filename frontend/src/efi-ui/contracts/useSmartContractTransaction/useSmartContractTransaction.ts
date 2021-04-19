@@ -2,7 +2,7 @@ import { useMutation, UseMutationResult } from "react-query";
 
 import { Contract, ContractTransaction, Signer } from "ethers";
 
-import { usePendingTransactionPref } from "efi-ui/prefs/usePendingTransaction/usePendingTransaction";
+import { usePendingTransactionPref } from "efi-ui/prefs/usePendingTransactionPref/usePendingTransactionPref";
 import { ContractMethodArgs, ContractMethodName } from "efi/contracts/types";
 
 interface UseSmartContractTransactionOptions {

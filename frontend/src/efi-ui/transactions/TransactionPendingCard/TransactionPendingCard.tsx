@@ -5,9 +5,10 @@ import { Popover2 } from "@blueprintjs/popover2";
 import classNames from "classnames";
 
 import tw from "efi-tailwindcss-classnames";
-import { usePendingTransactionPref } from "efi-ui/prefs/usePendingTransaction/usePendingTransaction";
+import { usePendingTransactionPref } from "efi-ui/prefs/usePendingTransactionPref/usePendingTransactionPref";
 import { TransactionPendingSummary } from "efi-ui/transactions/TransactionPendingCard/TransactionPendingSummary";
 import { ConnectWalletButtons } from "efi-ui/wallets/ConnectWalletButtons/ConnectWalletButtons";
+import { usePendingTransaction } from "efi-ui/transactions/usePendingTransaction/usePendingTransaction";
 
 interface TransactionPendingCardProps {
   chainId: number | undefined;
@@ -29,7 +30,7 @@ export function TransactionPendingCard({
   const openWalletDialog = useCallback(() => setWalletDialogOpen(true), []);
   const closeWalletDialog = useCallback(() => setWalletDialogOpen(false), []);
 
-  const { transactionHash } = usePendingTransactionPref();
+  const transactionHash = usePendingTransaction();
 
   if (!transactionHash || !active) {
     return null;

@@ -2,7 +2,7 @@ import { usePref } from "efi-ui/prefs/usePref/usePref";
 
 interface PendingTransactionPref {
   transactionHash: string | undefined;
-  setTransaction: (transactionHash: string) => void;
+  setTransaction: (transactionHash: string | undefined) => void;
 }
 
 const PENDING_TRANSACTION_PREF_ID = "pending-transaction";
