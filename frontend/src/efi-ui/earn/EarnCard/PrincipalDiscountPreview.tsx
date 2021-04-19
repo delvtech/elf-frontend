@@ -1,13 +1,13 @@
-import React, { FC, Fragment } from "react";
+import React, { Fragment, ReactElement } from "react";
 
 import { Callout, Colors } from "@blueprintjs/core";
 import { BigNumber } from "ethers";
+import { formatUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import { formatUnits } from "ethers/lib/utils";
 
 interface PrincipalDiscountPreviewProps {
   amountIn: BigNumber | undefined;
@@ -25,12 +25,12 @@ const calloutClassName = tw(
   "justify-center"
 );
 
-export const PrincipalDiscountPreview: FC<PrincipalDiscountPreviewProps> = ({
+export function PrincipalDiscountPreview({
   amountIn,
   amountOut,
   baseAssetSymbol,
   baseAssetDecimals,
-}) => {
+}: PrincipalDiscountPreviewProps): ReactElement {
   const { isDarkMode } = useDarkMode();
   const totalYield = calculateTotalYield(
     amountOut,
@@ -73,7 +73,7 @@ export const PrincipalDiscountPreview: FC<PrincipalDiscountPreviewProps> = ({
       />
     </Callout>
   );
-};
+}
 
 /**
  * Because Principal tokens converges to the full value of the base asset,

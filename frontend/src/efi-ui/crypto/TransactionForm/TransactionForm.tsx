@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, useCallback } from "react";
+import React, { ChangeEvent, ReactElement, useCallback } from "react";
 
 import { Button, InputGroup, Intent, Tag } from "@blueprintjs/core";
 import { BigNumber } from "ethers";
@@ -36,7 +36,7 @@ const numericInputOptions: NumericInputOptions = {
   maxPrecision: 18,
 };
 
-export const TransactionForm: FC<TransactionFormProps> = ({
+export function TransactionForm({
   formDisabled = false,
   submitDisabled = false,
   inputLabel,
@@ -45,7 +45,7 @@ export const TransactionForm: FC<TransactionFormProps> = ({
   buttonLabel,
   buttonIntent = Intent.PRIMARY,
   onTransaction,
-}) => {
+}: TransactionFormProps): ReactElement {
   const { stringValue, onChange, setValue } = useNumericInput(
     numericInputOptions
   );
@@ -141,4 +141,4 @@ export const TransactionForm: FC<TransactionFormProps> = ({
       </Button>
     </div>
   );
-};
+}

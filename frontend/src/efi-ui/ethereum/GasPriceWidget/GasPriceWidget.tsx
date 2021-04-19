@@ -1,17 +1,15 @@
-import React, { FC } from "react";
-
-import { t } from "ttag";
+import React, { ReactElement } from "react";
 
 import { Classes, Colors, Icon } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
+import classNames from "classnames";
+import { t } from "ttag";
+
+import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useGasPrice } from "efi-ui/ethereum/hooks/useGasPrice";
-import classNames from "classnames";
-import tw from "efi-tailwindcss-classnames";
 
-interface GasPriceWidgetProps {}
-
-export const GasPriceWidget: FC<GasPriceWidgetProps> = () => {
+export function GasPriceWidget(): ReactElement {
   const { data: gasPrice, isLoading } = useGasPrice();
 
   const text = isLoading ? t`loading` : t`${gasPrice?.fast?.toFixed(0)} gwei`;
@@ -32,4 +30,4 @@ export const GasPriceWidget: FC<GasPriceWidgetProps> = () => {
       }
     />
   );
-};
+}

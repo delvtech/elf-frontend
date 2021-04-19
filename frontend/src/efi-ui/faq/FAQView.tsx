@@ -1,12 +1,10 @@
+import React, { Fragment, ReactElement } from "react";
+import { Helmet } from "react-helmet";
+
 import { H2, H3 } from "@blueprintjs/core";
-import { RouteComponentProps } from "@reach/router";
-import React, { FC, Fragment } from "react";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { Helmet } from "react-helmet";
-
-interface FAQViewProps extends RouteComponentProps {}
 
 const faqViewClassName = tw(
   "flex",
@@ -21,7 +19,7 @@ const faqViewClassName = tw(
 
 const sectionClassName = tw("mb-8", "pb-4", "border-b", "w-full");
 
-export const FAQView: FC<FAQViewProps> = () => {
+export function FAQView(): ReactElement {
   return (
     <Fragment>
       <Helmet>
@@ -94,4 +92,4 @@ export const FAQView: FC<FAQViewProps> = () => {
       </div>
     </Fragment>
   );
-};
+}
