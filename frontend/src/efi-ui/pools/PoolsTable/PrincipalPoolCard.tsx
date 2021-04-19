@@ -62,7 +62,14 @@ export function PrincipalPoolCard({
     <Card
       elevation={Elevation.TWO}
       interactive
-      className={tw("grid", "grid-cols-3", "lg:grid-cols-5", "w-full", "grid")}
+      className={tw(
+        "grid",
+        "grid-cols-3",
+        "lg:grid-cols-5",
+        "h-24",
+        "w-full",
+        "grid"
+      )}
     >
       <div className={cellClassName}>
         <LabeledText
