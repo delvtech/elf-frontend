@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useMemo, useState } from "react";
+import { ReactElement, useMemo } from "react";
 
 import { Button, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";

@@ -5,6 +5,7 @@ import { Web3Provider } from "@ethersproject/providers";
 import { ERC20 } from "elf-contracts/types/ERC20";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { BigNumber, Signer } from "ethers";
+import zipObject from "lodash.zipobject";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -16,7 +17,9 @@ import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadC
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { StakeForm } from "efi-ui/pools/StakeForm/StakeForm";
+import { useConvergentCurvePoolStakeInputs } from "efi-ui/pools/useConvergentCurvePoolStakeInputs/useConvergentCurvePoolStakeInputs";
 import { useJoinPool } from "efi-ui/pools/useJoinPool/useJoinPool";
+import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
 import { WalletDrawer } from "efi-ui/wallets/WalletDrawer/WalletDrawer";
 import {
@@ -24,11 +27,8 @@ import {
   CryptoAssetType,
   findTokenContract,
 } from "efi/crypto/CryptoAsset";
+import { findTokenAddressForPool } from "efi/pools/findTokenAddressForPool";
 import { PoolContract } from "efi/pools/PoolContract";
-import { useConvergentCurvePoolStakeInputs } from "efi-ui/pools/useConvergentCurvePoolStakeInputs/useConvergentCurvePoolStakeInputs";
-import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
-import zipObject from "lodash.zipobject";
-import { findTokenAddressForPool } from "../../../efi/pools/findTokenAddressForPool";
 
 interface StakePrincipalTokensDrawerProps {
   account: string | null | undefined;

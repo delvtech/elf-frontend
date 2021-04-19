@@ -1,12 +1,12 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { BigNumber } from "ethers";
 import { parseUnits } from "ethers/lib/utils";
 
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 
-import { calculateBaseAssetNeededForPrincipalTokenIn } from "./calculateBaseAssetNeededForPrincipalTokenIn";
-import { calculatePrincipalTokenNeededForBaseAssetIn } from "./calculatePrincipalTokenNeededForBaseAssetIn";
+import { usePrincipalTokenNeededGivenBaseAssetIn } from "./usePrincipalTokenNeededGivenBaseAssetIn";
+import { useBaseAssetNeededGivenPrincipalTokenIn } from "./useBaseAssetNeededGivenPrincipalTokenIn";
 
 /**
  * ActiveInput is used to prevent infinite calls to onSwapGivenIn and
@@ -42,6 +42,12 @@ export function useConvergentCurvePoolStakeInputs(
     inputBigNumber: principalTokenInBigNumber,
     setInputValue: setPrincipalTokenIn,
   } = useStakeInput(decimalsPrincipalToken);
+  const {
+    inputNumber: baseAssetInNumber,
+    inputBigNumber: baseAssetInBigNumber,
+    setInputValue: setBaseAssetIn,
+  } = useStakeInput(decimalsBaseAsset);
+
   const onPrincipalTokenInChange = useCallback(
     (amount: string | undefined) => {
       setActiveInput("principalTokenIn");
@@ -50,11 +56,6 @@ export function useConvergentCurvePoolStakeInputs(
     [setPrincipalTokenIn]
   );
 
-  const {
-    inputNumber: baseAssetInNumber,
-    inputBigNumber: baseAssetInBigNumber,
-    setInputValue: setBaseAssetIn,
-  } = useStakeInput(decimalsBaseAsset);
   const onBaseAssetInChange = useCallback(
     (amount: string | undefined) => {
       setActiveInput("baseAssetIn");
@@ -64,6 +65,80 @@ export function useConvergentCurvePoolStakeInputs(
   );
 
   // The amount of the base asset you'll need when you change the amount of principal tokens in
+  useSyncBaseAssetPreview(
+    principalTokenInNumber,
+    decimalsPrincipalToken,
+    reservesPrincipalToken,
+    reservesBaseAsset,
+    decimalsBaseAsset,
+    totalSupply,
+    activeInput,
+    setBaseAssetIn
+  );
+
+  useSyncPrincipalTokenPreview(
+    baseAssetInNumber,
+    decimalsBaseAsset,
+    reservesBaseAsset,
+    reservesPrincipalToken,
+    decimalsPrincipalToken,
+    totalSupply,
+    activeInput,
+    setPrincipalTokenIn
+  );
+
+  return {
+    activeInput,
+    baseAssetIn: baseAssetInNumber,
+    baseAssetInBigNumber: baseAssetInBigNumber,
+    principalTokenIn: principalTokenInNumber,
+    principalTokenInBigNumber: principalTokenInBigNumber,
+    onBaseAssetInChange,
+    onPrincipalTokenInChange,
+  };
+}
+
+function useSyncPrincipalTokenPreview(
+  baseAssetInNumber: number | undefined,
+  decimalsBaseAsset: number | undefined,
+  reservesBaseAsset: BigNumber | undefined,
+  reservesPrincipalToken: BigNumber | undefined,
+  decimalsPrincipalToken: number | undefined,
+  totalSupply: BigNumber | undefined,
+  activeInput: ConvergentCurvePoolActiveInput,
+  setPrincipalTokenIn: (value: string | undefined) => void
+) {
+  const previewPrincipalTokenNeededGivenBaseAssetIn = usePrincipalTokenNeededGivenBaseAssetIn(
+    baseAssetInNumber,
+    decimalsBaseAsset,
+    reservesBaseAsset,
+    reservesPrincipalToken,
+    decimalsPrincipalToken,
+    totalSupply
+  );
+  const { otherNeeded: principalTokensNeededGivenBaseAssetIn } =
+    previewPrincipalTokenNeededGivenBaseAssetIn || {};
+
+  useSyncWithActiveInput(
+    "principalTokenIn",
+    activeInput,
+    principalTokensNeededGivenBaseAssetIn
+      ? principalTokensNeededGivenBaseAssetIn.toString()
+      : undefined,
+    setPrincipalTokenIn
+  );
+}
+
+function useSyncBaseAssetPreview(
+  principalTokenInNumber: number | undefined,
+  decimalsPrincipalToken: number | undefined,
+  reservesPrincipalToken: BigNumber | undefined,
+  reservesBaseAsset: BigNumber | undefined,
+  decimalsBaseAsset: number | undefined,
+  totalSupply: BigNumber | undefined,
+  activeInput: ConvergentCurvePoolActiveInput,
+  setBaseAssetIn: (value: string | undefined) => void
+) {
   const previewBaseAssetNeededGivenPrincipalTokenIn = useBaseAssetNeededGivenPrincipalTokenIn(
     principalTokenInNumber,
     decimalsPrincipalToken,
@@ -83,109 +158,6 @@ export function useConvergentCurvePoolStakeInputs(
       : undefined,
     setBaseAssetIn
   );
-
-  const previewPrincipalTokenNeededGivenBaseAssetIn = usePrincipalTokenNeededGivenBaseAssetIn(
-    baseAssetInNumber,
-    decimalsBaseAsset,
-    reservesBaseAsset,
-    reservesPrincipalToken,
-    decimalsPrincipalToken,
-    totalSupply
-  );
-  const { otherNeeded: principalTokensNeededGivenBaseAssetIn } =
-    previewPrincipalTokenNeededGivenBaseAssetIn || {};
-  useSyncWithActiveInput(
-    "principalTokenIn",
-    activeInput,
-    principalTokensNeededGivenBaseAssetIn
-      ? principalTokensNeededGivenBaseAssetIn.toString()
-      : undefined,
-    setPrincipalTokenIn
-  );
-
-  return {
-    activeInput,
-    baseAssetIn: baseAssetInNumber,
-    baseAssetInBigNumber: baseAssetInBigNumber,
-    principalTokenIn: principalTokenInNumber,
-    principalTokenInBigNumber: principalTokenInBigNumber,
-    onBaseAssetInChange,
-    onPrincipalTokenInChange,
-  };
-}
-
-function useBaseAssetNeededGivenPrincipalTokenIn(
-  principalTokenInAmount: number | undefined,
-  decimalsPrincipalToken: number | undefined,
-  principalTokenReserves: BigNumber | undefined,
-  baseAssetReserves: BigNumber | undefined,
-  decimalsBaseAsset: number | undefined,
-  totalSupply: BigNumber | undefined
-) {
-  return useMemo(() => {
-    if (
-      principalTokenInAmount === undefined ||
-      !decimalsPrincipalToken ||
-      !principalTokenReserves ||
-      !baseAssetReserves ||
-      !decimalsBaseAsset ||
-      !totalSupply
-    ) {
-      return;
-    }
-    return calculateBaseAssetNeededForPrincipalTokenIn(
-      principalTokenInAmount,
-      principalTokenReserves,
-      baseAssetReserves,
-      totalSupply,
-      decimalsPrincipalToken,
-      decimalsBaseAsset
-    );
-  }, [
-    decimalsPrincipalToken,
-    principalTokenInAmount,
-    principalTokenReserves,
-    decimalsBaseAsset,
-    baseAssetReserves,
-    totalSupply,
-  ]);
-}
-
-function usePrincipalTokenNeededGivenBaseAssetIn(
-  baseAssetTokenInAmount: number | undefined,
-  decimalsBaseAsset: number | undefined,
-  baseAssetReserves: BigNumber | undefined,
-  principalTokenReserves: BigNumber | undefined,
-  decimalsPrincipalToken: number | undefined,
-  totalSupply: BigNumber | undefined
-) {
-  return useMemo(() => {
-    if (
-      baseAssetTokenInAmount === undefined ||
-      !decimalsPrincipalToken ||
-      !principalTokenReserves ||
-      !baseAssetReserves ||
-      !decimalsBaseAsset ||
-      !totalSupply
-    ) {
-      return;
-    }
-    return calculatePrincipalTokenNeededForBaseAssetIn(
-      baseAssetTokenInAmount,
-      principalTokenReserves,
-      baseAssetReserves,
-      totalSupply,
-      decimalsPrincipalToken,
-      decimalsBaseAsset
-    );
-  }, [
-    decimalsPrincipalToken,
-    baseAssetTokenInAmount,
-    principalTokenReserves,
-    decimalsBaseAsset,
-    baseAssetReserves,
-    totalSupply,
-  ]);
 }
 
 /**
