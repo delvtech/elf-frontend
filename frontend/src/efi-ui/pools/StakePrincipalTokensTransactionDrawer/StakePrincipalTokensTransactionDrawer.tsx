@@ -13,7 +13,7 @@ import { getBalancerApprovalMessage } from "efi-ui/balancer/balancerApprovalMess
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
-import { WalletApprovalCallout } from "efi-ui/contracts/TransactionDrawer/WalletApprovalCallout";
+import { WalletApprovalCallout } from "efi-ui/transactions/TransactionDrawer/WalletApprovalCallout";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
