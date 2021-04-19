@@ -43,7 +43,7 @@ export function RedeemForm({
   children,
 }: RedeemFormProps): ReactElement {
   const { isDarkMode } = useDarkMode();
-  const [assetSymbol] = useTokenSymbol(tranche);
+  const { data: assetSymbol } = useTokenSymbol(tranche);
   const assetSymbolLabel = assetSymbolFromProps || assetSymbol;
   const AssetOneIcon = findAssetIcon(assetSymbol);
   const onAssetOneAmountChange = useCallback(

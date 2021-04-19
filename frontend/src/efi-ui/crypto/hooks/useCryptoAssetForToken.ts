@@ -2,7 +2,6 @@ import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
 import { ERC20Permit__factory } from "elf-contracts/types/factories/ERC20Permit__factory";
 
 import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
-import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { CryptoIconSvg, findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { useInterestTokenContracts } from "efi-ui/interestToken/useInterestTokens/useInterestTokens";
@@ -12,6 +11,7 @@ import ContractAddresses, {
   KNOWN_ERC20PERMIT_TOKENS,
 } from "efi/contracts/contractsJson";
 import { CryptoAssetType } from "efi/crypto/CryptoAsset";
+import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
 
 /**
  * Turns a token into its CryptoAsset equivalent.
@@ -37,7 +37,7 @@ export function useCryptoAssetForToken(
     ERC20Permit__factory.connect
   );
 
-  const { data: symbol } = useSmartContractReadCall(erc20Contract, "symbol");
+  const { data: symbol } = useTokenSymbol(erc20Contract);
 
   if (!tokenAddress) {
     return;

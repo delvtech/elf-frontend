@@ -4,15 +4,12 @@ import {
   CryptoAssetType,
   findTokenContract,
 } from "efi/crypto/CryptoAsset";
-import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { assertNever } from "efi/base/assertNever";
+import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
 
 export function useCryptoSymbol(asset: CryptoAsset | undefined): string {
   const tokenContract = asset ? findTokenContract(asset) : undefined;
-  const { data: tokenSymbol } = useSmartContractReadCall(
-    tokenContract,
-    "symbol"
-  );
+  const { data: tokenSymbol } = useTokenSymbol(tokenContract);
 
   if (!asset) {
     return "Unknown token";

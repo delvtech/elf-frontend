@@ -27,7 +27,7 @@ export function useVolumeForPool(
   const swapEvents = useSwaps(pool, fromTime, toTime);
   const baseAsset = useBaseAssetForPool(pool);
   const { currency } = useCurrencyPref();
-  const [baseAssetDecimals] = useTokenDecimals(baseAsset);
+  const { data: baseAssetDecimals } = useTokenDecimals(baseAsset);
   const [baseAssetFiatPrice] = useTokenPrice(baseAsset, currency);
 
   let volume = BigNumber.from(0);

@@ -1,24 +1,18 @@
 import { QueryObserverResult, useQueries, UseQueryOptions } from "react-query";
 
 import { Contract } from "ethers";
+import isPlainObject from "lodash.isplainobject";
+import zip from "lodash.zip";
 
+import {
+  makeSmartContractReadCallUseQueryOptions,
+  UseSmartContractReadCallOptions,
+} from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { Unpacked } from "efi/base/Unpacked";
 import {
-  ContractMethodArgs,
   ContractMethodName,
   StaticContractReturnType,
 } from "efi/contracts/types";
-import zip from "lodash.zip";
-import { makeSmartContractReadCallUseQueryOptions } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import isPlainObject from "lodash.isplainobject";
-
-export interface UseSmartContractReadCallsOptions<
-  TContract extends Contract,
-  TMethodName extends ContractMethodName<TContract>
-> {
-  callArgs?: ContractMethodArgs<TContract, TMethodName>;
-  enabled?: boolean;
-}
 
 /**
  * A hook for calling the same method on a list of contracts.
@@ -51,17 +45,17 @@ export function useSmartContractReadCalls<
   contracts: (TContract | undefined)[],
   methodName: TMethodName,
   options?:
-    | (UseSmartContractReadCallsOptions<TContract, TMethodName> | undefined)[]
-    | UseSmartContractReadCallsOptions<TContract, TMethodName>
+    | (UseSmartContractReadCallOptions<TContract, TMethodName> | undefined)[]
+    | UseSmartContractReadCallOptions<TContract, TMethodName>
 ): QueryObserverResult<TReturnType>[] {
   let optionsArray: (
-    | UseSmartContractReadCallsOptions<TContract, TMethodName>
+    | UseSmartContractReadCallOptions<TContract, TMethodName>
     | undefined
   )[] = [];
 
   if (!options || isPlainObject(options)) {
     optionsArray = contracts.map(() => options) as (
-      | UseSmartContractReadCallsOptions<TContract, TMethodName>
+      | UseSmartContractReadCallOptions<TContract, TMethodName>
       | undefined
     )[];
   } else if (options && Array.isArray(options)) {
@@ -69,11 +63,7 @@ export function useSmartContractReadCalls<
   }
 
   const queryOptions = zip(contracts, optionsArray).map(([contract, options]) =>
-    makeSmartContractReadCallUseQueryOptions<
-      TContract,
-      TMethodName,
-      TReturnType
-    >(contract, methodName, options)
+    makeSmartContractReadCallUseQueryOptions(contract, methodName, options)
   );
 
   // Cast this to unkown when calling useQueries, because useQueries does not

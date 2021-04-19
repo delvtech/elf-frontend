@@ -5,17 +5,15 @@ import { BigNumber } from "ethers";
 import zip from "lodash.zip";
 
 import { getQueriesData } from "efi-ui/base/queryResults";
-import {
-  useSmartContractReadCalls,
-  UseSmartContractReadCallsOptions,
-} from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
+import { UseSmartContractReadCallOptions } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
+import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
 
 export function useTokensWithBalance<TContract extends ERC20>(
   account: string | null | undefined,
   tokens: (TContract | undefined)[],
   provider?: Provider
 ): { token: TContract; balanceOf: BigNumber }[] {
-  const balanceOfArgs: UseSmartContractReadCallsOptions<
+  const balanceOfArgs: UseSmartContractReadCallOptions<
     ERC20 | ERC20Permit,
     "balanceOf"
   >[] = tokens.map(() => ({

@@ -1,6 +1,6 @@
 import { t } from "ttag";
 
-import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
+import { useTokenName } from "efi-ui/token/hooks/useTokenName";
 import { assertNever } from "efi/base/assertNever";
 import {
   CryptoAsset,
@@ -10,7 +10,7 @@ import {
 
 export function useCryptoName(asset: CryptoAsset | undefined): string {
   const tokenContract = findTokenContract(asset);
-  const { data: tokenName } = useSmartContractReadCall(tokenContract, "name");
+  const { data: tokenName } = useTokenName(tokenContract);
   if (!asset) {
     return "Unknown token";
   }
