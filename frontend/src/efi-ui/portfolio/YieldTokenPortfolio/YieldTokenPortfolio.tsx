@@ -2,6 +2,7 @@ import React, { ReactElement } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
 import { InterestToken } from "elf-contracts/types/InterestToken";
+import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { YieldTokenCard } from "efi-ui/portfolio/YieldTokenCard/YieldTokenCard";
@@ -23,7 +24,11 @@ export function YieldTokenPortfolio({
 
   let nonIdealStateContent = null;
   if (!account) {
-    nonIdealStateContent = <NoWalletConnectedNonIdealState />;
+    nonIdealStateContent = (
+      <NoWalletConnectedNonIdealState
+        title={t`Connect your wallet to view your portfolio`}
+      />
+    );
   }
   if (!hasInterestTokens) {
     nonIdealStateContent = <NoYieldTokensInWalletNonIdealState />;

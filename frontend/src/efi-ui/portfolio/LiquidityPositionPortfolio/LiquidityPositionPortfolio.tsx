@@ -1,6 +1,7 @@
 import React, { ReactElement } from "react";
 
 import { Card } from "@blueprintjs/core";
+import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LiquidityPositionTable } from "efi-ui/portfolio/LiquidityPositionTable/LiquidityPositionTable";
@@ -19,7 +20,11 @@ export function LiquidityPositionPortfolio({
 
   let nonIdealStateContent = null;
   if (!account) {
-    nonIdealStateContent = <NoWalletConnectedNonIdealState />;
+    nonIdealStateContent = (
+      <NoWalletConnectedNonIdealState
+        title={t`Connect your wallet to view your portfolio`}
+      />
+    );
   }
   if (!hasLPs) {
     nonIdealStateContent = <NoLPsInWalletNonIdealState />;

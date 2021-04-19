@@ -25,9 +25,10 @@ export function PortfolioAssetLabel({
     <div
       className={tw(
         "flex",
-        "p-6",
+        "py-6",
+        "px-2",
         "w-full",
-        "space-x-16",
+        "space-x-8",
         "justify-between",
         "items-center"
       )}

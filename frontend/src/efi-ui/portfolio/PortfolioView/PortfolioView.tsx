@@ -61,44 +61,47 @@ export function PortfolioView(props: PortfolioViewProps): ReactElement {
           "p-12",
           "h-full",
           "space-x-12",
+          "items-center",
           "overflow-scroll"
         )}
       >
         {/* Main content */}
-        <div className={tw("flex", "flex-col", "flex-1", "space-y-12")}>
-          <div className={tw("flex", "flex-col", "w-full", "space-y-8")}>
-            <H2 className={tw("text-center")}>
-              {t`Portfolio `}{" "}
-              {account ? (
+        <div className={tw("flex", "flex-col", "flex-1", "items-center")}>
+          <div
+            className={tw("flex", "flex-col", "w-full", "space-y-2", "mb-6")}
+          >
+            {account ? (
+              <H2 className={tw("text-center")}>
+                {t`Portfolio `}{" "}
                 <span className={Classes.TEXT_MUTED}>{`(${formatWalletAddress(
                   account
                 )})`}</span>
-              ) : null}
-            </H2>
-            <PortfolioTabs
-              onChangeTab={onChangeTab}
-              activePortfolioTabId={activePortfolioTabId}
-              portfolioTabs={portfolioTabs}
-            />
+              </H2>
+            ) : null}
+            {account ? (
+              <PortfolioTabs
+                onChangeTab={onChangeTab}
+                activePortfolioTabId={activePortfolioTabId}
+                portfolioTabs={portfolioTabs}
+              />
+            ) : null}
           </div>
 
-          <div className={tw("flex", "w-full", "h-full", "space-x-10")}>
-            <div className={tw("flex", "flex-col", "w-full")}>
-              <div
-                className={tw(
-                  "h-full",
-                  "w-full",
-                  "flex",
-                  "flex-col",
-                  "space-y-10",
-                  "lg:flex-row",
-                  "lg:space-y-0",
-                  "lg:space-x-10"
-                )}
-              >
-                <div className={tw("flex", "flex-1", "w-full")}>
-                  {activeTabContent}
-                </div>
+          <div className={tw("flex", "w-full", "h-full")}>
+            <div
+              className={tw(
+                "h-full",
+                "w-full",
+                "flex",
+                "flex-col",
+                "space-y-10",
+                "lg:flex-row",
+                "lg:space-y-0",
+                "lg:space-x-10"
+              )}
+            >
+              <div className={tw("flex", "flex-1", "w-full")}>
+                {activeTabContent}
               </div>
             </div>
           </div>
