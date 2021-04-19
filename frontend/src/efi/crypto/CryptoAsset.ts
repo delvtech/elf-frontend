@@ -57,13 +57,13 @@ export function findTokenContract(
   }
 }
 
-function isERC20Asset(
+export function isERC20Asset(
   cryptoAsset: CryptoAsset
 ): cryptoAsset is Erc20CryptoAsset {
   return cryptoAsset.type === CryptoAssetType.ERC20;
 }
 
-function isERC20PermitAsset(
+export function isERC20PermitAsset(
   cryptoAsset: CryptoAsset
 ): cryptoAsset is Erc20PermitCryptoAsset {
   return cryptoAsset.type === CryptoAssetType.ERC20PERMIT;
