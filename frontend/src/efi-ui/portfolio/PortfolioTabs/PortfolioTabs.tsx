@@ -34,7 +34,7 @@ export function PortfolioTabs({
       selectedTabId={activePortfolioTabId}
     >
       {portfolioTabs.map(({ id, name, quantity, totalFiatValue }) => (
-        <Tab key={id} id={id}>
+        <Tab key={id} id={id} className={tw("lg:w-300")}>
           <PortfolioAssetLabel
             id={id}
             name={name}

@@ -3,6 +3,7 @@ import React, { ReactElement } from "react";
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { Tranche } from "elf-contracts/types/Tranche";
+import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { PrincipalTokenCard } from "efi-ui/portfolio/PrincipalTokenCard/PrincipalTokenCard";
@@ -30,36 +31,34 @@ export function PrincipalTokenPortfolio({
 
   let nonIdealStateContent = null;
   if (!account) {
-    nonIdealStateContent = <NoWalletConnectedNonIdealState />;
+    nonIdealStateContent = (
+      <NoWalletConnectedNonIdealState
+        title={t`Connect your wallet to view your portfolio`}
+      />
+    );
   } else if (!hasFYTs) {
     nonIdealStateContent = <NoPrincipalTokensInWalletNonIdealState />;
   }
 
   return (
-    <div
-      className={tw(
-        "flex",
-        "flex-1",
-        "flex-wrap",
-        "justify-center",
-        "items-center"
-      )}
-    >
+    <div className={tw("flex", "flex-1", "flex-wrap", "justify-center")}>
       {nonIdealStateContent ? (
         <div className={tw("flex", "flex-1", "justify-center", "items-center")}>
           {nonIdealStateContent}
         </div>
       ) : (
         tranches.map((tranche) => [
-          <PrincipalTokenCard
-            key={tranche.address}
-            chainId={chainId}
-            library={library}
-            connector={connector}
-            walletConnectionActive={walletConnectionActive}
-            account={account}
-            tranche={tranche}
-          />,
+          <div>
+            <PrincipalTokenCard
+              key={tranche.address}
+              chainId={chainId}
+              library={library}
+              connector={connector}
+              walletConnectionActive={walletConnectionActive}
+              account={account}
+              tranche={tranche}
+            />
+          </div>,
         ])
       )}
     </div>
