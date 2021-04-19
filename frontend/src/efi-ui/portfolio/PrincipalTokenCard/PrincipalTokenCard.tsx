@@ -263,13 +263,11 @@ export function PrincipalTokenCard({
         <StakeButton
           library={library}
           connector={connector}
-          chainId={chainId}
           account={account}
           tranche={tranche}
           pool={pool}
           sellAmount={trancheBalance.toString()}
           baseAsset={baseAsset}
-          walletConnectionActive={walletConnectionActive}
         />
         <AnchorButton
           intent={Intent.PRIMARY}
@@ -314,14 +312,7 @@ function getTimeLeftLabel(
   if (isMature) {
     const timeSinceMaturity = getTimeSinceMaturityLabel(maturationDate);
     return (
-      <span
-        style={{
-          color: isDarkMode
-            ? "var(--bp3-intent-success-dark)"
-            : "var(--bp3-intent-success)",
-        }}
-        className={classNames(tw("text-base"))}
-      >
+      <span className={classNames(tw("text-base"))}>
         {t`Term reached `}
         <strong>{timeSinceMaturity}</strong>
       </span>

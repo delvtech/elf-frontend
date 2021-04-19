@@ -2,6 +2,7 @@ import { Contract, ContractTransaction, Signer } from "ethers";
 
 import { useMutation, UseMutationResult } from "react-query";
 import { ContractMethodArgs, ContractMethodName } from "efi/contracts/types";
+import { lookupAddressKey } from "efi/contracts/contractsJson";
 
 interface UseSmartContractTransactionOptions {
   confirmations?: number;
@@ -34,6 +35,13 @@ export function useSmartContractTransaction<
       return connected[methodName](...args);
     },
     {
+      onError: (...callArgs) => {
+        const addressesJsonKey = lookupAddressKey(contract?.address);
+        console.error(
+          `Error calling ${methodName} on ${addressesJsonKey}: ${contract?.address} with arguments:`,
+          callArgs
+        );
+      },
       onSuccess: async (txReceipt) => {
         await txReceipt?.wait(confirmations);
         await onSuccess?.(txReceipt);

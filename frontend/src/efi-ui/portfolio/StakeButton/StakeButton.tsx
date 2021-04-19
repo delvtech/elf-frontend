@@ -8,13 +8,11 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
-import { StakePrincipalTokensTransactionDrawer } from "efi-ui/pools/StakePrincipalTokensTransactionDrawer/StakePrincipalTokensTransactionDrawer";
+import { StakePrincipalTokensDrawer } from "efi-ui/pools/StakePrincipalTokensDrawer/StakePrincipalTokensDrawer";
 import { PoolContract } from "efi/pools/PoolContract";
 
 interface StakeButtonProps {
-  chainId: number | undefined;
   account: string | null | undefined;
-  walletConnectionActive: boolean;
   connector: AbstractConnector | undefined;
   library: Web3Provider | undefined;
   pool: PoolContract | undefined;
@@ -29,12 +27,9 @@ export function StakeButton({
   baseAsset,
   tranche,
   account,
-  chainId,
   connector,
   library,
   pool,
-  sellAmount,
-  walletConnectionActive,
 }: StakeButtonProps): ReactElement {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
 
@@ -49,7 +44,7 @@ export function StakeButton({
         <div className={tw("p-2", "text-base")}>{t`Stake`}</div>
       </Button>
       {!baseAsset ? null : (
-        <StakePrincipalTokensTransactionDrawer
+        <StakePrincipalTokensDrawer
           isOpen={isDrawerOpen}
           tranche={tranche}
           account={account}

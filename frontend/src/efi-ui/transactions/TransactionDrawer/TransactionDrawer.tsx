@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useMemo } from "react";
 
 import { Button, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
@@ -187,13 +187,12 @@ function useAssetSignedContract(
   asset: CryptoAsset | undefined,
   signer: Signer | undefined
 ): ERC20 | ERC20Permit | undefined {
-  const [assetContract, setAssetContract] = useState(findTokenContract(asset));
-  useEffect(() => {
-    if (signer && assetContract) {
-      const signedContract = assetContract.connect(signer);
-      setAssetContract(signedContract);
+  const assetContract = useMemo(() => {
+    const tokenContract = findTokenContract(asset);
+    if (signer && tokenContract) {
+      return tokenContract.connect(signer);
     }
-  }, [assetContract, signer]);
+  }, [asset, signer]);
 
   return assetContract;
 }

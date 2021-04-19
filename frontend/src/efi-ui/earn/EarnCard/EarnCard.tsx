@@ -32,7 +32,7 @@ import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolToken
 import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
 import { BuyPrincipalTokensTransactionConfirmationDrawer } from "efi-ui/swaps/BuyPrincipalTokensTransactionConfirmationDrawer/BuyPrincipalTokensTransactionConfirmationDrawer";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
-import { useBalancerTransactionInputs } from "efi-ui/balancer/useBalancerTransactionInputs";
+import { useQueryBatchSwapInputs } from "efi-ui/balancer/useQueryBatchSwapInputs";
 import { formatBalance } from "efi/base/formatBalance";
 
 export interface EarnCardProps {
@@ -95,7 +95,7 @@ export function EarnCard({
     amountOut,
     onAmountOutChange,
     onAmountInChange,
-  } = useBalancerTransactionInputs(
+  } = useQueryBatchSwapInputs(
     pool,
     tokenInAddress,
     activeBaseAssetDecimals,

@@ -26,58 +26,87 @@ interface UseNumericInput {
   setValue: (value: string | undefined) => void;
 }
 
+const DEFAULT_NUMERIC_INPUT_OPTIONS: NumericInputOptions = {
+  /**
+   * Default to 0, as numeric inputs will rarely if ever accept negative inputs
+   * from the user
+   */
+  min: 0,
+};
+
 /**
  * A hook to handle limiting the user's interaction with a numeric input.  This can be used on text
  * inputs as well to ensure that only numeric values are allowed.
  * @param options
  */
-export function useNumericInput(options: NumericInputOptions): UseNumericInput {
-  const { min, max, maxPrecision } = options;
-  const [stringValue, setStringValue] = useState<string | undefined>();
+export function useNumericInput(
+  options = DEFAULT_NUMERIC_INPUT_OPTIONS
+): UseNumericInput {
+  const [stringValue, setStringValueState] = useState<string | undefined>();
+
+  const setValue = useCallback(
+    (inputString: string | undefined) => {
+      // clear the input
+      if (inputString === undefined || inputString === "") {
+        setStringValueState(undefined);
+        return;
+      }
+
+      // or validate and set it
+      if (validateInput(inputString, options)) {
+        setStringValueState(inputString);
+      }
+    },
+    [options]
+  );
 
   const onChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
       const inputString = event.target.value as string | undefined;
-      const inputValue = Number(inputString);
 
-      if (inputString === undefined || inputString === "") {
-        setStringValue(inputString);
-        return;
-      }
-
-      if (!ANY_NUMBER_REGEX.test(inputString)) {
-        return;
-      }
-
-      if (!Number.isFinite(inputValue)) {
-        return;
-      }
-
-      if ("min" in options && isFiniteNumber(min)) {
-        if (inputValue < min) {
-          return;
-        }
-      }
-
-      if ("max" in options && isFiniteNumber(max)) {
-        if (inputValue > max) {
-          return;
-        }
-      }
-
-      if ("maxPrecision" in options && isIntegerNumber(maxPrecision)) {
-        const placesAfterDecimal = getPlacesAfterDecimal(inputString);
-        if (placesAfterDecimal >= maxPrecision) {
-          return;
-        }
-      }
-
-      setStringValue(inputString);
+      // clear the input
+      setValue(inputString);
     },
-    [max, maxPrecision, min, options]
+    [setValue]
   );
 
-  return { stringValue, onChange, setValue: setStringValue };
+  return { stringValue, onChange, setValue };
+}
+
+function validateInput(
+  inputString: string,
+  options: NumericInputOptions
+): boolean {
+  const { min, max, maxPrecision } = options;
+  const inputValue = Number(inputString);
+  if (!ANY_NUMBER_REGEX.test(inputString)) {
+    return false;
+  }
+
+  if (!Number.isFinite(inputValue)) {
+    return false;
+  }
+
+  if ("min" in options && isFiniteNumber(min)) {
+    if (inputValue < min) {
+      return false;
+    }
+  }
+
+  if ("max" in options && isFiniteNumber(max)) {
+    if (inputValue > max) {
+      return false;
+    }
+  }
+
+  if ("maxPrecision" in options && isIntegerNumber(maxPrecision)) {
+    const placesAfterDecimal = getPlacesAfterDecimal(inputString);
+    if (placesAfterDecimal >= maxPrecision) {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 /**
