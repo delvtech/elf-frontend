@@ -9,6 +9,6 @@ export function useTrancheUnlockTimestampMulti(
   allTranches: Tranche[]
 ): QueryObserverResult<BigNumber>[] {
   return useSmartContractReadCalls(allTranches, "unlockTimestamp", {
-    infiniteCache: true,
+    staleTime: Infinity,
   });
 }

@@ -6,6 +6,6 @@ export function useTrancheUnderlyingMulti(
   tranches: (Tranche | undefined)[]
 ): QueryObserverResult<string>[] {
   return useSmartContractReadCalls(tranches, "underlying", {
-    infiniteCache: true,
+    staleTime: Infinity,
   });
 }

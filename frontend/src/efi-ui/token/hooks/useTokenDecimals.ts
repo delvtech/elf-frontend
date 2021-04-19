@@ -9,6 +9,6 @@ export function useTokenDecimals(
   contract: ERC20 | ERC20Permit | undefined
 ): QueryObserverResult<number> {
   return useSmartContractReadCall(contract, "decimals", {
-    infiniteCache: true,
+    staleTime: Infinity,
   });
 }

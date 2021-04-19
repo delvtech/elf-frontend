@@ -8,6 +8,6 @@ export function useTokenSymbol(
   contract: ERC20 | ERC20Permit | undefined
 ): QueryObserverResult<string> {
   return useSmartContractReadCall(contract, "symbol", {
-    infiniteCache: true,
+    staleTime: Infinity,
   });
 }

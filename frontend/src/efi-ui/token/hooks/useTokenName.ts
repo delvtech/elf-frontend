@@ -9,6 +9,6 @@ export function useTokenName(
   tokenContract: ERC20 | ERC20Permit | undefined
 ): QueryObserverResult<string> {
   return useSmartContractReadCall(tokenContract, "name", {
-    infiniteCache: true,
+    staleTime: Infinity,
   });
 }

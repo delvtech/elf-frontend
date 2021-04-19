@@ -7,6 +7,6 @@ export function useTokenSymbolMulti(
   tokenContracts: (ERC20 | ERC20Permit | undefined)[]
 ): QueryObserverResult<string>[] {
   return useSmartContractReadCalls(tokenContracts, "symbol", {
-    infiniteCache: true,
+    staleTime: Infinity,
   });
 }

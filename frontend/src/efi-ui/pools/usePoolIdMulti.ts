@@ -6,5 +6,5 @@ import { PoolContract } from "efi/pools/PoolContract";
 export function usePoolIdMulti(
   pools: (PoolContract | undefined)[]
 ): QueryObserverResult<string>[] {
-  return useSmartContractReadCalls(pools, "getPoolId", { infiniteCache: true });
+  return useSmartContractReadCalls(pools, "getPoolId", { staleTime: Infinity });
 }

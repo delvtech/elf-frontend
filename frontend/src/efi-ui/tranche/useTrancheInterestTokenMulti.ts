@@ -6,6 +6,6 @@ export function useTrancheInterestTokenMulti(
   tranches: (Tranche | undefined)[]
 ): QueryObserverResult<string>[] {
   return useSmartContractReadCalls(tranches, "interestToken", {
-    infiniteCache: true,
+    staleTime: Infinity,
   });
 }
