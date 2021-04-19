@@ -1,4 +1,4 @@
-import React, { FC, Fragment, useCallback, useState } from "react";
+import React, { Fragment, ReactElement, useCallback, useState } from "react";
 import { Helmet } from "react-helmet";
 
 import { Classes, H2 } from "@blueprintjs/core";
@@ -17,7 +17,7 @@ import { formatWalletAddress } from "efi/wallets/formatWalletAddress";
 
 interface PortfolioViewProps extends RouteComponentProps {}
 
-export const PortfolioView: FC<PortfolioViewProps> = () => {
+export function PortfolioView(props: PortfolioViewProps): ReactElement {
   const {
     account,
     library,
@@ -108,4 +108,4 @@ export const PortfolioView: FC<PortfolioViewProps> = () => {
       </div>
     </Fragment>
   );
-};
+}

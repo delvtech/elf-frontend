@@ -1,13 +1,9 @@
-import React, { FC } from "react";
+import React, { ReactElement } from "react";
 
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LiquidityPositionTableRow } from "efi-ui/portfolio/LiquidityPositionTable/LiquidityPositionTableRow";
-
-interface LiquidityPositionTableProps {
-  account: string | null | undefined;
-}
 
 const tableHeaders = [
   t`Pool name`,
@@ -17,7 +13,7 @@ const tableHeaders = [
   t`Quick actions`,
 ];
 
-export const LiquidityPositionTable: FC<LiquidityPositionTableProps> = () => {
+export function LiquidityPositionTable(): ReactElement {
   return (
     <div data-testid="fyt-table" className={tw("flex", "flex-col", "w-full")}>
       {/* Table header */}
@@ -33,4 +29,4 @@ export const LiquidityPositionTable: FC<LiquidityPositionTableProps> = () => {
       <LiquidityPositionTableRow />
     </div>
   );
-};
+}

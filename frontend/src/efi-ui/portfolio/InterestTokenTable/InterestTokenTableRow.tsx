@@ -1,4 +1,4 @@
-import { FC, ReactNode } from "react";
+import { ReactElement, ReactNode } from "react";
 
 import { AnchorButton, Button, Icon } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
@@ -35,11 +35,11 @@ interface InterestTokenTableRowProps {
   interestToken: InterestToken;
 }
 
-export const InterestTokenTableRow: FC<InterestTokenTableRowProps> = ({
+export function InterestTokenTableRow({
   library,
   account,
   interestToken,
-}) => {
+}: InterestTokenTableRowProps): ReactElement {
   const { isDarkMode } = useDarkMode();
   const { currency } = useCurrencyPref();
 
@@ -187,7 +187,7 @@ export const InterestTokenTableRow: FC<InterestTokenTableRowProps> = ({
       </div>
     </div>
   );
-};
+}
 
 function getTableRowLink(
   vaultAddress: string | undefined,

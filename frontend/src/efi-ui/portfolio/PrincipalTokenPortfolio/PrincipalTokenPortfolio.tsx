@@ -1,13 +1,13 @@
-import React, { FC } from "react";
+import React, { ReactElement } from "react";
 
+import { Web3Provider } from "@ethersproject/providers";
+import { AbstractConnector } from "@web3-react/abstract-connector";
 import { Tranche } from "elf-contracts/types/Tranche";
 
 import tw from "efi-tailwindcss-classnames";
+import { PrincipalTokenCard } from "efi-ui/portfolio/PrincipalTokenCard/PrincipalTokenCard";
 import { NoPrincipalTokensInWalletNonIdealState } from "efi-ui/wallets/NoPrincipalTokensInWalletNonIdealState/NoPrincipalTokensInWalletNonIdealState";
 import { NoWalletConnectedNonIdealState } from "efi-ui/wallets/NoWalletConnectedNonIdealState/NoWalletConnectedNonIdealState";
-import { Web3Provider } from "@ethersproject/providers";
-import { PrincipalTokenCard } from "efi-ui/portfolio/PrincipalTokenCard/PrincipalTokenCard";
-import { AbstractConnector } from "@web3-react/abstract-connector";
 
 interface PrincipalTokenPortfolioProps {
   chainId: number | undefined;
@@ -18,14 +18,14 @@ interface PrincipalTokenPortfolioProps {
   tranches: Tranche[];
 }
 
-export const PrincipalTokenPortfolio: FC<PrincipalTokenPortfolioProps> = ({
+export function PrincipalTokenPortfolio({
   library,
   account,
   connector,
   walletConnectionActive,
   chainId,
   tranches,
-}) => {
+}: PrincipalTokenPortfolioProps): ReactElement {
   const hasFYTs = tranches.length;
 
   let nonIdealStateContent = null;
@@ -64,4 +64,4 @@ export const PrincipalTokenPortfolio: FC<PrincipalTokenPortfolioProps> = ({
       )}
     </div>
   );
-};
+}
