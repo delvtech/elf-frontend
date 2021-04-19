@@ -1,8 +1,6 @@
-import { useMutation, UseMutationResult } from "react-query";
-
 import { Contract, ContractTransaction, Signer } from "ethers";
 
-import { usePendingTransactionPref } from "efi-ui/prefs/usePendingTransactionPref/usePendingTransactionPref";
+import { useMutation, UseMutationResult } from "react-query";
 import { ContractMethodArgs, ContractMethodName } from "efi/contracts/types";
 
 interface UseSmartContractTransactionOptions {
@@ -23,7 +21,6 @@ export function useSmartContractTransaction<
   ContractMethodArgs<TContract, TMethodName>
 > {
   const { confirmations = 1, onSuccess } = options;
-  const { setTransaction } = usePendingTransactionPref();
   return useMutation(
     async (args: ContractMethodArgs<TContract, TMethodName>) => {
       if (!signer || !contract) {
@@ -37,9 +34,7 @@ export function useSmartContractTransaction<
       return connected[methodName](...args);
     },
     {
-      onSuccess: async (txReceipt: ContractTransaction) => {
-        const { hash } = txReceipt;
-        setTransaction(hash);
+      onSuccess: async (txReceipt) => {
         await txReceipt?.wait(confirmations);
         await onSuccess?.(txReceipt);
       },
