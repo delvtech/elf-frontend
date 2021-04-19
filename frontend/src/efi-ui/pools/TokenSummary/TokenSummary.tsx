@@ -166,7 +166,7 @@ function useTokensSummary(pool: PoolContract | undefined): TokensSummary {
 
   const baseAssetBalance = balances?.[baseAssetIndex];
 
-  const [baseAssetSymbol] = useTokenSymbol(baseAssetContract);
+  const { data: baseAssetSymbol } = useTokenSymbol(baseAssetContract);
   const [baseAssetPrice] = useTokenPrice(baseAssetContract, currency);
   const [baseAssetPriceYesterday] = useTokenHistoricalPrice(
     baseAssetContract,
@@ -177,7 +177,7 @@ function useTokensSummary(pool: PoolContract | undefined): TokensSummary {
   const { data: baseAssetDecimals } = useTokenDecimals(baseAssetContract);
 
   const yieldAssetBalance = balances?.[yieldAssetIndex];
-  const [yieldAssetSymbol] = useTokenSymbol(yieldAssetContract);
+  const { data: yieldAssetSymbol } = useTokenSymbol(yieldAssetContract);
   const { data: yieldAssetDecimals } = useTokenDecimals(yieldAssetContract);
 
   const spotPrice = usePoolSpotPrice(pool, baseAssetContract);

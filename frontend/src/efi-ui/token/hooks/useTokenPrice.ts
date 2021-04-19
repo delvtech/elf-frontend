@@ -10,8 +10,11 @@ export function useTokenPrice<TContract extends ERC20>(
   contract: TContract | undefined,
   currency: Currency
 ): ComputedQueryResult<Money> {
-  const [tokenSymbol, tokenSymbolLoadingStates] = useTokenSymbol(contract);
-  const priceResult = useCoinGeckoPrice(getCoinGeckoId(tokenSymbol), currency);
+  const tokenSymbolResult = useTokenSymbol(contract);
+  const priceResult = useCoinGeckoPrice(
+    getCoinGeckoId(tokenSymbolResult.data),
+    currency
+  );
 
-  return [priceResult.data, [...tokenSymbolLoadingStates, priceResult]];
+  return [priceResult.data, [tokenSymbolResult, priceResult]];
 }

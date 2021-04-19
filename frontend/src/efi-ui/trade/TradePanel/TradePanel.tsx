@@ -282,7 +282,7 @@ function useTokenInfoForTradeInput(
 
   // otherwise get values from token calls
   const poolBalance = useTokenPoolBalance(pool, tokenContract);
-  const [symbol] = useTokenSymbol(tokenContract);
+  const { data: symbol } = useTokenSymbol(tokenContract);
   const icon = findAssetIcon(symbol);
   const { data: decimals } = useTokenDecimals(tokenContract);
   const [tokenBalance] = useTokenBalanceOf(tokenContract, account);

@@ -11,12 +11,12 @@ export function useTokenHistoricalPrice<TContract extends ERC20>(
   currency: Currency,
   daysAgo: number
 ): ComputedQueryResult<Money> {
-  const [tokenSymbol, tokenSymbolLoadingStates] = useTokenSymbol(contract);
+  const tokenSymbolResult = useTokenSymbol(contract);
   const priceResult = useCoinGeckoHistoricalPrice(
-    getCoinGeckoId(tokenSymbol),
+    getCoinGeckoId(tokenSymbolResult.data),
     currency,
     daysAgo
   );
 
-  return [priceResult.data, [...tokenSymbolLoadingStates, priceResult]];
+  return [priceResult.data, [tokenSymbolResult, priceResult]];
 }
