@@ -5,22 +5,18 @@ import classNames from "classnames";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { usePendingTransaction } from "efi-ui/transactions/usePendingTransaction/usePendingTransaction";
 import { WalletJazzicon } from "efi-ui/wallets/WalletJazzicon/WalletJazzicon";
 import { formatWalletAddress } from "efi/wallets/formatWalletAddress";
 
 interface TransactionPendingSummaryProps {
   account: string | null | undefined;
-  active: boolean;
-  chainId: number | undefined;
-  transactionHash: string | undefined;
 }
 
 export function TransactionPendingSummary({
   account,
-  active,
-  chainId,
-  transactionHash,
 }: TransactionPendingSummaryProps): ReactElement | null {
+  const transactionHash = usePendingTransaction();
   if (!transactionHash) {
     return null;
   }
