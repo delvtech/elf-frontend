@@ -43,6 +43,7 @@ export function useNumericInput(
   options = DEFAULT_NUMERIC_INPUT_OPTIONS
 ): UseNumericInput {
   const [stringValue, setStringValueState] = useState<string | undefined>();
+  const { min, max, maxPrecision } = options;
 
   const setValue = useCallback(
     (inputString: string | undefined) => {
@@ -53,11 +54,11 @@ export function useNumericInput(
       }
 
       // or validate and set it
-      if (validateInput(inputString, options)) {
+      if (validateInput(inputString, min, max, maxPrecision)) {
         setStringValueState(inputString);
       }
     },
-    [options]
+    [max, maxPrecision, min]
   );
 
   const onChange = useCallback(
@@ -70,36 +71,41 @@ export function useNumericInput(
     [setValue]
   );
 
-  return { stringValue, onChange, setValue };
+  return {
+    stringValue,
+    onChange,
+    setValue,
+  };
 }
 
 function validateInput(
   inputString: string,
-  options: NumericInputOptions
+  min: number | undefined,
+  max: number | undefined,
+  maxPrecision: number | undefined
 ): boolean {
-  const { min, max, maxPrecision } = options;
   const inputValue = Number(inputString);
   if (!ANY_NUMBER_REGEX.test(inputString)) {
     return false;
   }
 
-  if (!Number.isFinite(inputValue)) {
+  if (!isFiniteNumber(inputValue)) {
     return false;
   }
 
-  if ("min" in options && isFiniteNumber(min)) {
+  if (isFiniteNumber(min)) {
     if (inputValue < min) {
       return false;
     }
   }
 
-  if ("max" in options && isFiniteNumber(max)) {
+  if (isFiniteNumber(max)) {
     if (inputValue > max) {
       return false;
     }
   }
 
-  if ("maxPrecision" in options && isIntegerNumber(maxPrecision)) {
+  if (isIntegerNumber(maxPrecision)) {
     const placesAfterDecimal = getPlacesAfterDecimal(inputString);
     if (placesAfterDecimal >= maxPrecision) {
       return false;
