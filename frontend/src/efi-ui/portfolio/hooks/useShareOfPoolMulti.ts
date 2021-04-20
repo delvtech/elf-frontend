@@ -1,10 +1,11 @@
+import { formatUnits } from "ethers/lib/utils";
 import zip from "lodash.zip";
-import { getQueriesData } from "efi-ui/base/queryResults";
-import { PoolContract } from "efi/pools/PoolContract";
-import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
-import { formatUnits } from "@ethersproject/units";
+
 import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
+import { getQueriesData } from "efi-ui/base/queryResults";
+import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
 import { useTokenBalanceOfMulti } from "efi-ui/token/hooks/useTokenBalanceOf";
+import { PoolContract } from "efi/pools/PoolContract";
 
 /**
  * Calculates the amount of each pool the user owns.
