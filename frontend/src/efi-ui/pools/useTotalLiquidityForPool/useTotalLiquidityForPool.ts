@@ -1,7 +1,7 @@
 import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
 import { BigNumber } from "ethers";
-import { zipObject } from "lodash";
 import zip from "lodash.zip";
+import zipObject from "lodash.zipobject";
 import { Money } from "ts-money";
 
 import { getQueriesData } from "efi-ui/base/queryResults";
