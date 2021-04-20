@@ -34,7 +34,7 @@ import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { PoolContract } from "efi/pools/PoolContract";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
 
-interface TradePanelProps {
+interface StakingPanelProps {
   library: Web3Provider | undefined;
   signer: Signer | undefined;
   account: string | null | undefined;
@@ -52,7 +52,7 @@ interface TradePanelProps {
   onTransaction: (amount: BigNumber) => void;
 }
 
-export function TradePanel(props: TradePanelProps): ReactElement {
+export function StakingPanel(props: StakingPanelProps): ReactElement {
   const {
     account,
     library,
