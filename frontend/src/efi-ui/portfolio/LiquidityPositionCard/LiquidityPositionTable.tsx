@@ -3,7 +3,7 @@ import React, { ReactElement } from "react";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { LiquidityPositionTableRow } from "efi-ui/portfolio/LiquidityPositionTable/LiquidityPositionTableRow";
+import { LiquidityPositionTableRow } from "efi-ui/portfolio/LiquidityPositionCard/LiquidityPositionTableRow";
 
 const tableHeaders = [
   t`Pool name`,

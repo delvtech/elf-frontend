@@ -82,7 +82,17 @@ export function usePortfolioTabs(
         convergentCurvePoolsWithLPBalance.length +
         weightedPoolsWithLPBalance.length,
       totalFiatValue: totalLiquidityProvided,
-      contentRenderer: () => <LiquidityPositionPortfolio account={account} />,
+      contentRenderer: () => (
+        <LiquidityPositionPortfolio
+          chainId={chainId}
+          library={library}
+          connector={connector}
+          walletConnectionActive={walletConnectionActive}
+          principalTokenPools={convergentCurvePoolsWithLPBalance}
+          yieldTokenPools={weightedPoolsWithLPBalance}
+          account={account}
+        />
+      ),
     },
   ];
 }
