@@ -19,6 +19,7 @@ import { useTokensWithBalance } from "efi-ui/token/hooks/useTokensWithBalance";
 import { useTrancheContracts } from "efi-ui/tranche/useTrancheContracts";
 import { useConvergentCurvePoolsWithLPBalance } from "efi-ui/portfolio/hooks/useConvergentCurvePoolsWithLPBalance";
 import { useWeightedPoolsWithLPBalance } from "efi-ui/portfolio/hooks/useWeightedPoolsWithLPBalance";
+import { useTotalLiquidityProvidedMulti } from "efi-ui/portfolio/hooks/useTotalLiquidityProvidedMulti";
 
 export function usePortfolioTabs(
   chainId: number | undefined,
@@ -28,7 +29,6 @@ export function usePortfolioTabs(
   account: string | null | undefined,
   provider?: Provider
 ): PortfolioTab[] {
-  const { currency } = useCurrencyPref();
   const {
     tranchesWithBalance,
     totalFiatBalanceAllTranches,
@@ -42,7 +42,7 @@ export function usePortfolioTabs(
   const {
     convergentCurvePoolsWithLPBalance,
     weightedPoolsWithLPBalance,
-    // TODO: totalLiquidityProvided,
+    totalLiquidityProvided,
   } = useLPTokenTab(library, account, provider);
 
   return [
@@ -81,7 +81,7 @@ export function usePortfolioTabs(
       quantity:
         convergentCurvePoolsWithLPBalance.length +
         weightedPoolsWithLPBalance.length,
-      totalFiatValue: Money.fromDecimal(0.0, currency),
+      totalFiatValue: totalLiquidityProvided,
       contentRenderer: () => <LiquidityPositionPortfolio account={account} />,
     },
   ];
@@ -146,14 +146,33 @@ function useLPTokenTab(
   account: string | null | undefined,
   provider?: Provider
 ) {
+  const { currency } = useCurrencyPref();
   const convergentCurvePoolsWithLPBalance = useConvergentCurvePoolsWithLPBalance(
     account
   );
   const weightedPoolsWithLPBalance = useWeightedPoolsWithLPBalance(account);
 
+  const totalLiquidityConvergentCurvePools = useTotalLiquidityProvidedMulti(
+    convergentCurvePoolsWithLPBalance,
+    account
+  );
+  const totalLiquidityWeightedPools = useTotalLiquidityProvidedMulti(
+    weightedPoolsWithLPBalance,
+    account
+  );
+
+  const totalLiquidityProvided = [
+    ...totalLiquidityConvergentCurvePools,
+    ...totalLiquidityWeightedPools,
+  ]
+    .filter((v): v is Money => !!v)
+    .reduce((prevSum, currentValue) => {
+      return prevSum.add(currentValue);
+    }, Money.fromDecimal(0, currency.code));
+
   return {
     convergentCurvePoolsWithLPBalance,
     weightedPoolsWithLPBalance,
-    // TODO: totalFiatBalanceAllLPs,
+    totalLiquidityProvided,
   };
 }
