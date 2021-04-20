@@ -80,8 +80,6 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
             connector={connector}
             walletActive={walletActive}
             pool={pool}
-            tokenIn={tokenIn}
-            tokenOut={tokenOut}
             inputLabel={t`Stake`}
             buttonLabel={t`Stake`}
             buttonIntent={Intent.PRIMARY}

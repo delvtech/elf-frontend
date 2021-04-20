@@ -1,7 +1,6 @@
 import { ReactElement, useCallback, useEffect, useState } from "react";
 
 import { Button, Intent } from "@blueprintjs/core";
-import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { ERC20 } from "elf-contracts/types/ERC20";
@@ -33,6 +32,8 @@ import { ContractMethodArgs } from "efi/contracts/types";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { PoolContract } from "efi/pools/PoolContract";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
+import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
+import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 
 interface StakingPanelProps {
   library: Web3Provider | undefined;
@@ -47,8 +48,6 @@ interface StakingPanelProps {
   inputLabel: string;
   buttonLabel: string;
   buttonIntent?: Intent;
-  tokenIn: ERC20 | undefined;
-  tokenOut: ERC20 | undefined;
   onTransaction: (amount: BigNumber) => void;
 }
 
@@ -65,16 +64,16 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
     inputLabel,
     buttonIntent = Intent.PRIMARY,
     pool,
-    tokenIn: tokenInFromProps,
-    tokenOut: tokenOutFromProps,
   } = props;
 
-  const { tokenIn, tokenOut, swapAssets, isReversed } = useReversableTokens(
-    tokenInFromProps,
-    tokenOutFromProps
+  const { data: [tokens] = [] } = usePoolTokens(pool);
+  const { baseAssetContract, yieldAssetContract } = parseSortedTokensForPool(
+    tokens
   );
+  const tokenIn = baseAssetContract;
+  const tokenOut = yieldAssetContract;
 
-  const spotPrice = usePoolSpotPrice(pool, tokenIn);
+  const spotPrice = usePoolSpotPrice(pool, baseAssetContract);
 
   const {
     asset: tokenInAsset,
@@ -85,7 +84,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
     balanceOf: tokenInBalanceOf,
     displayBalance: tokenInDisplayBalance,
     poolBalance: tokenInPoolBalance,
-  } = useTokenInfoForTradeInput(pool, tokenIn, account, library);
+  } = useTokenInfoForTradeInput(pool, baseAssetContract, account, library);
 
   const {
     address: tokenOutAddress,
@@ -94,7 +93,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
     decimals: tokenOutDecimals,
     displayBalance: tokenOutDisplayBalance,
     poolBalance: tokenOutPoolBalance,
-  } = useTokenInfoForTradeInput(pool, tokenOut, account, library);
+  } = useTokenInfoForTradeInput(pool, yieldAssetContract, account, library);
 
   const {
     amountIn,
@@ -102,16 +101,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
     onChangeIn,
     onChangeOut,
     setValueIn,
-    setValueOut,
   } = useUpdateInputs(pool, tokenIn, tokenOut, tokenInDecimals);
-
-  // clear inputs when they switch.  we can improve this UX later to keep the previous values.
-  useEffect(() => {
-    setValueIn(undefined);
-    setValueOut(undefined);
-    // don't want to call this effect when the hooks update, only when isReversed updates
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isReversed]);
 
   const { isValidTokenInValue, isValidTokenOutValue } = validateTradeValues(
     amountIn,
@@ -163,14 +153,6 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
         value={amountIn}
         validValue={isValidTokenInValue}
       />
-
-      <Button
-        icon={IconNames.ARROWS_VERTICAL}
-        onClick={swapAssets}
-        minimal
-        large
-        intent={buttonIntent}
-      ></Button>
 
       {/* Receive Asset */}
       <div className={tw("flex", "justify-between", "items-center")}>
@@ -229,24 +211,6 @@ function useSetMaxValue(
       setValueIn(formatUnits(tokenInBalanceOf, tokenInDecimals));
     }
   }, [tokenInBalanceOf, setValueIn, tokenInDecimals]);
-}
-
-function useReversableTokens(
-  tokenInFromProps: ERC20 | undefined,
-  tokenOutFromProps: ERC20 | undefined
-) {
-  const [isReversed, setReversed] = useState(false);
-  const swapAssets = useCallback(() => {
-    setReversed(!isReversed);
-  }, [isReversed]);
-
-  let tokenIn = tokenInFromProps;
-  let tokenOut = tokenOutFromProps;
-  if (isReversed) {
-    tokenIn = tokenOutFromProps;
-    tokenOut = tokenInFromProps;
-  }
-  return { tokenIn, tokenOut, swapAssets, isReversed };
 }
 
 // TODO: clean this up, I don't know what we need amountOut in here
