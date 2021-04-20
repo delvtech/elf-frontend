@@ -89,23 +89,23 @@ function validateInput(
     return false;
   }
 
-  if (!Number.isFinite(inputValue)) {
+  if (!isFiniteNumber(inputValue)) {
     return false;
   }
 
-  if (Number.isFinite(min) && isFiniteNumber(min)) {
+  if (isFiniteNumber(min)) {
     if (inputValue < min) {
       return false;
     }
   }
 
-  if (Number.isFinite(max) && isFiniteNumber(max)) {
+  if (isFiniteNumber(max)) {
     if (inputValue > max) {
       return false;
     }
   }
 
-  if (Number.isFinite(maxPrecision) && isIntegerNumber(maxPrecision)) {
+  if (isIntegerNumber(maxPrecision)) {
     const placesAfterDecimal = getPlacesAfterDecimal(inputString);
     if (placesAfterDecimal >= maxPrecision) {
       return false;
