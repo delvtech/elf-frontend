@@ -98,12 +98,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
     onChangeIn,
     onChangeOut,
     setValueIn,
-  } = useUpdateInputs(
-    pool,
-    baseAssetContract,
-    yieldAssetContract,
-    baseAssetDecimals
-  );
+  } = useUpdateInputs();
 
   const { isValidTokenInValue, isValidTokenOutValue } = validateTradeValues(
     amountIn,
@@ -279,50 +274,31 @@ const numericInputOptions: NumericInputOptions = {
   maxPrecision: 18,
 };
 
-function useUpdateInputs(
-  pool: PoolContract | undefined,
-  tokenIn: ERC20 | undefined,
-  tokenOut: ERC20 | undefined,
-  tokenInDecimals: number | undefined
-) {
-  // Since updates to amountIn updates amountOut and vice versa, useBalancerTransactionInputs
-  // ensures we don't get infinite updates.
-  const {
-    amountIn,
-    amountOut,
-    onAmountOutChange,
-    onAmountInChange,
-  } = useQueryBatchSwapInputs(
-    pool,
-    tokenIn?.address,
-    tokenInDecimals,
-    tokenOut?.address,
-    tokenInDecimals
-  );
-
+function useUpdateInputs() {
   // useNumericInput ensures valid numeric inputs from the user
-  const {
-    stringValue: stringValueIn,
-    onChange: onChangeIn,
-    setValue: setValueIn,
-  } = useNumericInput(numericInputOptions);
+  const { stringValue: stringValueIn, setValue: setValueIn } = useNumericInput(
+    numericInputOptions
+  );
   const {
     stringValue: stringValueOut,
-    onChange: onChangeOut,
     setValue: setValueOut,
   } = useNumericInput(numericInputOptions);
 
-  useEffect(() => {
-    onAmountInChange(stringValueIn);
-  }, [onAmountInChange, stringValueIn]);
-
-  useEffect(() => {
-    onAmountOutChange(stringValueOut);
-  }, [onAmountOutChange, stringValueOut]);
-
+  const onChangeIn = useCallback(
+    (otherNeeded: number, lpOut: number) => {
+      setValueOut(`${otherNeeded}`);
+    },
+    [setValueOut]
+  );
+  const onChangeOut = useCallback(
+    (otherNeeded: number, lpOut: number) => {
+      setValueIn(`${otherNeeded}`);
+    },
+    [setValueIn]
+  );
   return {
-    amountIn,
-    amountOut,
+    amountIn: stringValueIn,
+    amountOut: stringValueOut,
     onChangeIn,
     onChangeOut,
     setValueIn,
