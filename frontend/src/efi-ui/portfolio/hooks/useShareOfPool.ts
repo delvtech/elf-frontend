@@ -16,7 +16,7 @@ import { PoolContract } from "efi/pools/PoolContract";
  * Calculates the amount of the pool the account owns.
  */
 export function useShareOfPool(
-  pool: PoolContract,
+  pool: PoolContract | undefined,
   account: string | null | undefined
 ): number | undefined {
   const { data: lpBalanceOf } = useTokenBalanceOf(pool, account);
