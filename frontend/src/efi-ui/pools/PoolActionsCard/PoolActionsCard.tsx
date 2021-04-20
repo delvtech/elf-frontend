@@ -1,15 +1,19 @@
 import React, { ReactElement, useCallback, useState } from "react";
 
-import { Card, Colors, Intent } from "@blueprintjs/core";
+import { Button, Card, Classes, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
+import classNames from "classnames";
 import { ERC20 } from "elf-contracts/types/ERC20";
 import { Signer } from "ethers";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { StakingPanel } from "efi-ui/pools/StakingPanel/StakingPanel";
 import { TradePanel } from "efi-ui/trade/TradePanel/TradePanel";
 import { PoolContract } from "efi/pools/PoolContract";
+
+import styles from "./PoolActionsCard.module.css";
 
 interface PoolActionsCardProps {
   library: Web3Provider | undefined;
@@ -42,13 +46,25 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
 
   return (
     <div className={tw("flex", "flex-col", "flex-1", "h-500", "w-3/10")}>
-      <div className={tw("mb-2", "space-x-4")}>
-        <button
+      <div>
+        <Button
+          small
+          minimal
           aria-label="trade"
           onClick={showTradeUI}
-          style={{ color: Colors.BLUE5 }}
-        >{t`Trade`}</button>
-        <button onClick={showStakeUI} aria-label="stake">{t`Stake`}</button>
+          className={classNames(styles.poolActionsButton, {
+            [Classes.INTENT_PRIMARY]: action === "trade",
+          })}
+        >{t`Trade`}</Button>
+        <Button
+          small
+          minimal
+          className={classNames(styles.poolActionsButton, {
+            [Classes.INTENT_PRIMARY]: action === "stake",
+          })}
+          onClick={showStakeUI}
+          aria-label="stake"
+        >{t`Stake`}</Button>
       </div>
       <Card
         className={tw("flex", "flex-col", "flex-1", "w-full", "transition-all")}
@@ -71,7 +87,7 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
           />
         )}
         {action === "stake" && (
-          <TradePanel
+          <StakingPanel
             library={library}
             signer={signer}
             account={account}
@@ -79,8 +95,6 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
             connector={connector}
             walletActive={walletActive}
             pool={pool}
-            tokenIn={tokenIn}
-            tokenOut={tokenOut}
             inputLabel={t`Stake`}
             buttonLabel={t`Stake`}
             buttonIntent={Intent.PRIMARY}

@@ -11,11 +11,11 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { getQueryData } from "efi-ui/base/queryResults";
-import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { PoolDetails } from "efi-ui/pools/PoolDetails/PoolDetails";
 import { useAllPools } from "efi-ui/pools/useAllPools/useAllPools";
-import { getConnectorName } from "efi/wallets/connectors";
+import { useTokenName } from "efi-ui/token/hooks/useTokenName";
 import { TransactionPendingCard } from "efi-ui/transactions/TransactionPendingCard/TransactionPendingCard";
+import { getConnectorName } from "efi/wallets/connectors";
 
 interface PoolViewProps extends RouteComponentProps {
   poolAddress?: string;
@@ -34,7 +34,7 @@ export function PoolView({ poolAddress }: PoolViewProps): ReactElement {
   const allPools = useAllPools(signer);
 
   const pool = allPools.find((pool) => pool?.address === poolAddress);
-  const poolNameResult = useSmartContractReadCall(pool, "name");
+  const poolNameResult = useTokenName(pool);
 
   const poolName = getQueryData(poolNameResult);
   const connectorName = getConnectorName(connector, library);
