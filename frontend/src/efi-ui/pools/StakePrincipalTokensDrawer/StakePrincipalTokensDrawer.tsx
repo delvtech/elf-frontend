@@ -29,6 +29,7 @@ import {
 } from "efi/crypto/CryptoAsset";
 import { findTokenAddressForPool } from "efi/pools/findTokenAddressForPool";
 import { PoolContract } from "efi/pools/PoolContract";
+import { formatUnits, parseUnits } from "@ethersproject/units";
 
 interface StakePrincipalTokensDrawerProps {
   account: string | null | undefined;
