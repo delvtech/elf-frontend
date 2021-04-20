@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from "react";
+import React, { FC, ReactElement, useCallback } from "react";
 
 import { Button, NonIdealState } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
@@ -7,11 +7,9 @@ import { t } from "ttag";
 import { useNavigation } from "efi-ui/navigation/hooks/useTab";
 import { Navigation } from "efi-ui/navigation/navigation";
 
-interface NoLPsInWalletNonIdealStateProps {}
-
-export const NoLPsInWalletNonIdealState: FC<NoLPsInWalletNonIdealStateProps> = () => {
+export function NoLPsInWalletNonIdealState(): ReactElement {
   const { changeTab } = useNavigation();
-  const goToMint = useCallback(() => changeTab(Navigation.EXCHANGE), [
+  const goToExchange = useCallback(() => changeTab(Navigation.EXCHANGE), [
     changeTab,
   ]);
   return (
@@ -19,8 +17,12 @@ export const NoLPsInWalletNonIdealState: FC<NoLPsInWalletNonIdealStateProps> = (
       icon={IconNames.BANK_ACCOUNT}
       description={t`This wallet does not contain any Liquidity Positions.`}
       action={
-        <Button outlined large onClick={goToMint}>{t`Go to Exchange`}</Button>
+        <Button
+          outlined
+          large
+          onClick={goToExchange}
+        >{t`Go to Exchange`}</Button>
       }
     />
   );
-};
+}
