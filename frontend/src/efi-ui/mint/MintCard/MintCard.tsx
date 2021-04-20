@@ -11,7 +11,6 @@ import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import classNames from "classnames";
 import { Tranche } from "elf-contracts/types/Tranche";
-import { formatUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -28,7 +27,6 @@ import { YieldTokenPreview } from "efi-ui/mint/MintCard/YieldTokenPreview";
 import { MintTermPicker } from "efi-ui/mint/MintTermPicker/MintTermPicker";
 import { MintTransactionConfirmationDrawer } from "efi-ui/mint/MintTransactionConfirmationDrawer/MintTransactionConfirmationDrawer";
 import { formatBalance } from "efi/base/formatBalance";
-import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 
 export interface MintCardProps {
   library: Web3Provider | undefined;
@@ -79,7 +77,6 @@ export function MintCard({
   } = useActiveTranche(tranchesByBaseAsset, activeBaseAsset);
 
   const { numPrincipalTokensOut, numYieldTokensOut } = useActiveMintPreview(
-    activeBaseAsset,
     activeTranche,
     amountIn
   );
@@ -196,20 +193,10 @@ export function MintCard({
 }
 
 function useActiveMintPreview(
-  activeBaseAsset: CryptoAssetWithIcon | undefined,
   activeTranche: Tranche | undefined,
   amountIn: number
 ) {
-  const { data: [ptPreview] = [] } = useMintPreview(
-    activeBaseAsset,
-    activeTranche,
-    amountIn
-  );
-  const { data: trancheDecimals } = useTokenDecimals(activeTranche);
-
-  const numPrincipalTokensOut = ptPreview
-    ? +formatUnits(ptPreview, trancheDecimals)
-    : undefined;
+  const numPrincipalTokensOut = useMintPreview(activeTranche, amountIn);
 
   // You will always receive the same amount of yield tokens as the amount of
   // base asset you put in
