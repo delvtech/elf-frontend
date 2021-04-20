@@ -38,6 +38,7 @@ export function StakingInput(props: StakingInputProps): ReactElement {
     otherTokenPoolReserves,
     totalSupply,
   } = props;
+
   const _onChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const userInputValue = event.target.value;
