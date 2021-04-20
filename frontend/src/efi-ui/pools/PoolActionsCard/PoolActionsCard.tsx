@@ -10,6 +10,7 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { TradePanel } from "efi-ui/trade/TradePanel/TradePanel";
 import { PoolContract } from "efi/pools/PoolContract";
+import { StakingPanel } from "efi-ui/pools/StakingPanel/StakingPanel";
 
 interface PoolActionsCardProps {
   library: Web3Provider | undefined;
@@ -71,7 +72,7 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
           />
         )}
         {action === "stake" && (
-          <TradePanel
+          <StakingPanel
             library={library}
             signer={signer}
             account={account}
