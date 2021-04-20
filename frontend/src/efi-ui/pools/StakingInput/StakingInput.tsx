@@ -1,4 +1,4 @@
-import React, { ReactElement, useCallback, useState } from "react";
+import React, { ReactElement, useCallback, useEffect, useState } from "react";
 
 import { InputGroup, Intent, Tag } from "@blueprintjs/core";
 import { t } from "ttag";
@@ -37,6 +37,9 @@ export function StakingInput(props: StakingInputProps): ReactElement {
     totalSupply,
   } = props;
   const [tokenValue, setTokenValue] = useState(value);
+  useEffect(() => {
+    setTokenValue(value);
+  }, [value]);
 
   const _onChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
