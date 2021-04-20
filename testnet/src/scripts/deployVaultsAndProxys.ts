@@ -20,6 +20,7 @@ export async function deployVaultsAndProxys(
   const yWeth = await deployYearnVault(
     signer,
     wethContract.address,
+    18,
     "WETH Yearn Vault",
     "yWETH"
   );
@@ -43,6 +44,7 @@ export async function deployVaultsAndProxys(
   const yUsdc = await deployYearnVault(
     signer,
     usdcContract.address,
+    6,
     "USDC Yearn Vault",
     "yUSDC"
   );
