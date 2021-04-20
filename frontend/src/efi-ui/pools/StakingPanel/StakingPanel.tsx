@@ -1,15 +1,14 @@
-import { ReactElement, useCallback, useEffect, useState } from "react";
+import { ReactElement, useCallback, useState } from "react";
 
 import { Button, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { ERC20 } from "elf-contracts/types/ERC20";
 import { BigNumber, Signer } from "ethers";
-import { formatUnits, parseUnits } from "ethers/lib/utils";
+import { formatEther, formatUnits, parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { useQueryBatchSwapInputs } from "efi-ui/balancer/useQueryBatchSwapInputs";
 import {
   NumericInputOptions,
   useNumericInput,
@@ -17,7 +16,9 @@ import {
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
+import { StakingInput } from "efi-ui/pools/StakingInput/StakingInput";
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
+import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useTokenPoolBalance } from "efi-ui/pools/useTokenPoolBalance/useTokenPoolBalance";
 import { SwapTokensTransactionConfirmationDrawer } from "efi-ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensTransactionConfirmationDrawer";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
@@ -29,11 +30,9 @@ import { formatBalance } from "efi/base/formatBalance";
 import ContractAddresses from "efi/contracts/contractsJson";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
+import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { PoolContract } from "efi/pools/PoolContract";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
-import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
-import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
-import { StakingInput } from "efi-ui/pools/StakingInput/StakingInput";
 
 interface StakingPanelProps {
   library: Web3Provider | undefined;
@@ -70,6 +69,9 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
   const { baseAssetContract, yieldAssetContract } = parseSortedTokensForPool(
     tokens
   );
+  // Pool calls
+  const { data: totalSupplyBN } = useSmartContractReadCall(pool, "totalSupply");
+  const totalSupply = +formatEther(totalSupplyBN ?? 0);
   const spotPrice = usePoolSpotPrice(pool, baseAssetContract);
 
   const {
@@ -80,7 +82,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
     decimals: baseAssetDecimals,
     balanceOf: baseAssetBalanceOf,
     displayBalance: baseAssetDisplayBalance,
-    poolBalance: baseAssetPoolPalance,
+    poolBalance: baseAssetPoolBalance,
   } = useTokenInfoForTradeInput(pool, baseAssetContract, account, library);
 
   const {
@@ -91,6 +93,16 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
     displayBalance: yieldAssetDisplayBalance,
     poolBalance: yieldAssetPoolBalance,
   } = useTokenInfoForTradeInput(pool, yieldAssetContract, account, library);
+
+  const baseAssetReserves = +formatUnits(
+    baseAssetPoolBalance ?? 0,
+    baseAssetDecimals
+  );
+
+  const yieldAssetReserves = +formatUnits(
+    yieldAssetPoolBalance ?? 0,
+    yieldAssetDecimals
+  );
 
   const {
     amountIn,
@@ -104,7 +116,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
     amountIn,
     baseAssetBalanceOf,
     baseAssetDecimals,
-    baseAssetPoolPalance,
+    baseAssetPoolBalance,
     amountOut,
     yieldAssetPoolBalance
   );
@@ -149,6 +161,9 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
         onChange={onChangeIn}
         value={amountIn}
         validValue={isValidTokenInValue}
+        tokenPoolReserves={baseAssetReserves}
+        otherTokenPoolReserves={yieldAssetReserves}
+        totalSupply={totalSupply}
       />
 
       {/* Receive Asset */}
@@ -162,6 +177,9 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
         onChange={onChangeOut}
         value={amountOut}
         validValue={isValidTokenOutValue}
+        tokenPoolReserves={yieldAssetReserves}
+        otherTokenPoolReserves={baseAssetReserves}
+        totalSupply={totalSupply}
       />
       <Button
         disabled={submitButtonDisabled}
