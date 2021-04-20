@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useCallback, useState } from "react";
 
 import { InputGroup, Intent, Tag } from "@blueprintjs/core";
 import { t } from "ttag";
@@ -9,15 +9,19 @@ import { CryptoName } from "efi/crypto/CryptoName";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 
 import styles from "./StakingInput.module.css";
+import { calculateLPOutGivenIn } from "efi/pools/calculateLPOutGivenIn";
 
 interface StakingInputProps {
   cryptoDisplayBalance: string | number;
   cryptoSymbol: CryptoSymbol;
 
   disabled: boolean;
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: (otherNeeded: number, lpOut: number) => void;
   value: string | undefined;
   validValue: boolean;
+  tokenPoolReserves: number | undefined;
+  otherTokenPoolReserves: number | undefined;
+  totalSupply: number | undefined;
 }
 
 export function StakingInput(props: StakingInputProps): ReactElement {
@@ -28,14 +32,36 @@ export function StakingInput(props: StakingInputProps): ReactElement {
     onChange,
     value = "",
     validValue,
+    tokenPoolReserves,
+    otherTokenPoolReserves,
+    totalSupply,
   } = props;
+  const [tokenValue, setTokenValue] = useState(value);
+
+  const _onChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const value = event.target.value;
+      setTokenValue(value);
+
+      const { otherNeeded, lpOut } = calculateLPOutGivenIn(
+        +value,
+        Number.MAX_SAFE_INTEGER,
+        tokenPoolReserves ?? 0,
+        otherTokenPoolReserves ?? 0,
+        totalSupply ?? 0
+      );
+
+      onChange(otherNeeded, lpOut);
+    },
+    [onChange, otherTokenPoolReserves, tokenPoolReserves, totalSupply]
+  );
 
   return (
     <div className={tw("flex", "flex-col", "space-y-2")}>
       <InputGroup
         disabled={disabled}
-        onChange={onChange}
-        value={value}
+        onChange={_onChange}
+        value={tokenValue}
         className={styles.tokenInput}
         large
         intent={validValue ? undefined : Intent.DANGER}
