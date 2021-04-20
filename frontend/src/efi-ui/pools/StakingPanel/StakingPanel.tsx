@@ -70,29 +70,26 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
   const { baseAssetContract, yieldAssetContract } = parseSortedTokensForPool(
     tokens
   );
-  const tokenIn = baseAssetContract;
-  const tokenOut = yieldAssetContract;
-
   const spotPrice = usePoolSpotPrice(pool, baseAssetContract);
 
   const {
-    asset: tokenInAsset,
-    address: tokenInAddress,
-    icon: tokenInIcon,
-    symbol: tokenInSymbol,
-    decimals: tokenInDecimals,
-    balanceOf: tokenInBalanceOf,
-    displayBalance: tokenInDisplayBalance,
-    poolBalance: tokenInPoolBalance,
+    asset: baseAsset,
+    address: baseAssetAddress,
+    icon: baseAssetIcon,
+    symbol: baseAssetSymbol,
+    decimals: baseAssetDecimals,
+    balanceOf: baseAssetBalanceOf,
+    displayBalance: baseAssetDisplayBalance,
+    poolBalance: baseAssetPoolPalance,
   } = useTokenInfoForTradeInput(pool, baseAssetContract, account, library);
 
   const {
-    address: tokenOutAddress,
-    icon: tokenOutIcon,
-    symbol: tokenOutSymbol,
-    decimals: tokenOutDecimals,
-    displayBalance: tokenOutDisplayBalance,
-    poolBalance: tokenOutPoolBalance,
+    address: yieldAssetAddress,
+    icon: yieldAssetIcon,
+    symbol: yieldAssetSymbol,
+    decimals: yieldAssetDecimals,
+    displayBalance: yieldAssetDisplayBalance,
+    poolBalance: yieldAssetPoolBalance,
   } = useTokenInfoForTradeInput(pool, yieldAssetContract, account, library);
 
   const {
@@ -101,15 +98,20 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
     onChangeIn,
     onChangeOut,
     setValueIn,
-  } = useUpdateInputs(pool, tokenIn, tokenOut, tokenInDecimals);
+  } = useUpdateInputs(
+    pool,
+    baseAssetContract,
+    yieldAssetContract,
+    baseAssetDecimals
+  );
 
   const { isValidTokenInValue, isValidTokenOutValue } = validateTradeValues(
     amountIn,
-    tokenInBalanceOf,
-    tokenInDecimals,
-    tokenInPoolBalance,
+    baseAssetBalanceOf,
+    baseAssetDecimals,
+    baseAssetPoolPalance,
     amountOut,
-    tokenOutPoolBalance
+    yieldAssetPoolBalance
   );
 
   const [isDrawerOpen, setDrawerOpen] = useState(false);
@@ -118,9 +120,9 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
   }, []);
 
   const setMaxValue = useSetMaxValue(
-    tokenInBalanceOf,
+    baseAssetBalanceOf,
     setValueIn,
-    tokenInDecimals
+    baseAssetDecimals
   );
 
   const submitButtonDisabled =
@@ -146,8 +148,8 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
         >{t`MAX`}</Button>
       </div>
       <TradeInput
-        cryptoDisplayBalance={tokenInDisplayBalance || ""}
-        cryptoSymbol={tokenInSymbol as CryptoSymbol}
+        cryptoDisplayBalance={baseAssetDisplayBalance || ""}
+        cryptoSymbol={baseAssetSymbol as CryptoSymbol}
         disabled={formDisabled}
         onChange={onChangeIn}
         value={amountIn}
@@ -156,11 +158,11 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
 
       {/* Receive Asset */}
       <div className={tw("flex", "justify-between", "items-center")}>
-        <span>{t`For`}</span>
+        <span>{t`And`}</span>
       </div>
       <TradeInput
-        cryptoDisplayBalance={tokenOutDisplayBalance || ""}
-        cryptoSymbol={tokenOutSymbol as CryptoSymbol}
+        cryptoDisplayBalance={yieldAssetDisplayBalance || ""}
+        cryptoSymbol={yieldAssetSymbol as CryptoSymbol}
         disabled={formDisabled}
         onChange={onChangeOut}
         value={amountOut}
@@ -177,15 +179,15 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
         {buttonLabel}
       </Button>
       <SwapTokensTransactionConfirmationDrawer
-        tokenInAddress={tokenInAddress}
-        tokenInSymbol={tokenInSymbol}
-        tokenInDecimals={tokenInDecimals}
-        tokenInAsset={tokenInAsset}
-        tokenInIcon={tokenInIcon}
-        tokenOutAddress={tokenOutAddress}
-        tokenOutSymbol={tokenOutSymbol}
-        tokenOutDecimals={tokenOutDecimals}
-        tokenOutIcon={tokenOutIcon}
+        tokenInAddress={baseAssetAddress}
+        tokenInSymbol={baseAssetSymbol}
+        tokenInDecimals={baseAssetDecimals}
+        tokenInAsset={baseAsset}
+        tokenInIcon={baseAssetIcon}
+        tokenOutAddress={yieldAssetAddress}
+        tokenOutSymbol={yieldAssetSymbol}
+        tokenOutDecimals={yieldAssetDecimals}
+        tokenOutIcon={yieldAssetIcon}
         account={account}
         library={library}
         chainId={chainId}
