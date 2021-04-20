@@ -48,9 +48,8 @@ export function PrincipalTokenPortfolio({
         </div>
       ) : (
         tranches.map((tranche) => [
-          <div>
+          <div key={tranche.address}>
             <PrincipalTokenCard
-              key={tranche.address}
               chainId={chainId}
               library={library}
               connector={connector}
