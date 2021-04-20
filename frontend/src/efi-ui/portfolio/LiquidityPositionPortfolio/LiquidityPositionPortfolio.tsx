@@ -7,7 +7,7 @@ import { WeightedPool } from "elf-contracts/types/WeightedPool";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { LiquidityPositionCard } from "efi-ui/portfolio/LiquidityPositionCard/LiquidityPositionCard";
+import { PrincipalTokenLPCard } from "efi-ui/portfolio/LiquidityPositionCard/PrincipalTokenLPCard";
 import { NoLPsInWalletNonIdealState } from "efi-ui/wallets/NoLPsInWalletNonIdealState/NoLPsInWalletNonIdealState";
 import { NoWalletConnectedNonIdealState } from "efi-ui/wallets/NoWalletConnectedNonIdealState/NoWalletConnectedNonIdealState";
 
@@ -53,11 +53,9 @@ export function LiquidityPositionPortfolio({
       ) : (
         principalTokenPools.map((pool) => [
           <div key={pool.address}>
-            <LiquidityPositionCard
-              chainId={chainId}
+            <PrincipalTokenLPCard
               library={library}
               connector={connector}
-              walletConnectionActive={walletConnectionActive}
               account={account}
               pool={pool}
             />
