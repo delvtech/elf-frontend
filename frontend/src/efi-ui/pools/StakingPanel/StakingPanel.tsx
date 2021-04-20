@@ -23,7 +23,6 @@ import { SwapTokensTransactionConfirmationDrawer } from "efi-ui/swaps/SwapTokens
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
-import { TradeInput } from "efi-ui/trade/TradeInput/TradeInput";
 import { useEthBalance } from "efi-ui/wallets/hooks/useEthBalance/useEthBalance";
 import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 import { formatBalance } from "efi/base/formatBalance";
@@ -34,6 +33,7 @@ import { PoolContract } from "efi/pools/PoolContract";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
+import { StakingInput } from "efi-ui/pools/StakingInput/StakingInput";
 
 interface StakingPanelProps {
   library: Web3Provider | undefined;
@@ -147,7 +147,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
           intent={Intent.SUCCESS}
         >{t`MAX`}</Button>
       </div>
-      <TradeInput
+      <StakingInput
         cryptoDisplayBalance={baseAssetDisplayBalance || ""}
         cryptoSymbol={baseAssetSymbol as CryptoSymbol}
         disabled={formDisabled}
@@ -160,7 +160,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
       <div className={tw("flex", "justify-between", "items-center")}>
         <span>{t`And`}</span>
       </div>
-      <TradeInput
+      <StakingInput
         cryptoDisplayBalance={yieldAssetDisplayBalance || ""}
         cryptoSymbol={yieldAssetSymbol as CryptoSymbol}
         disabled={formDisabled}

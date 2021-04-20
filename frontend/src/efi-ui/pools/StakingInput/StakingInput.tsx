@@ -8,9 +8,9 @@ import { CryptoIcon } from "efi-ui/crypto/CryptoIcon";
 import { CryptoName } from "efi/crypto/CryptoName";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 
-import styles from "./TradeInput.module.css";
+import styles from "./StakingInput.module.css";
 
-interface TradeInputProps {
+interface StakingInputProps {
   cryptoDisplayBalance: string | number;
   cryptoSymbol: CryptoSymbol;
 
@@ -20,7 +20,7 @@ interface TradeInputProps {
   validValue: boolean;
 }
 
-export function TradeInput(props: TradeInputProps): ReactElement {
+export function StakingInput(props: StakingInputProps): ReactElement {
   const {
     cryptoDisplayBalance,
     cryptoSymbol,
@@ -29,13 +29,14 @@ export function TradeInput(props: TradeInputProps): ReactElement {
     value = "",
     validValue,
   } = props;
+
   return (
     <div className={tw("flex", "flex-col", "space-y-2")}>
       <InputGroup
         disabled={disabled}
         onChange={onChange}
         value={value}
-        className={styles.depositInput}
+        className={styles.tokenInput}
         large
         intent={validValue ? undefined : Intent.DANGER}
         rightElement={
