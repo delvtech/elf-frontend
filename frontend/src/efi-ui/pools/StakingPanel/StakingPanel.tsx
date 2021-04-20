@@ -109,6 +109,8 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
     amountOut,
     onChangeIn,
     onChangeOut,
+    onChangeOutFromIn,
+    onChangeInFromOut,
     setValueIn,
   } = useUpdateInputs();
 
@@ -159,6 +161,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
         cryptoSymbol={baseAssetSymbol as CryptoSymbol}
         disabled={formDisabled}
         onChange={onChangeIn}
+        onChangeOther={onChangeOutFromIn}
         value={amountIn}
         validValue={isValidTokenInValue}
         tokenPoolReserves={baseAssetReserves}
@@ -175,6 +178,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
         cryptoSymbol={yieldAssetSymbol as CryptoSymbol}
         disabled={formDisabled}
         onChange={onChangeOut}
+        onChangeOther={onChangeInFromOut}
         value={amountOut}
         validValue={isValidTokenOutValue}
         tokenPoolReserves={yieldAssetReserves}
@@ -302,23 +306,33 @@ function useUpdateInputs() {
     setValue: setValueOut,
   } = useNumericInput(numericInputOptions);
 
-  const onChangeIn = useCallback(
+  const onChangeOutFromIn = useCallback(
     (otherNeeded: number, lpOut: number) => {
-      setValueOut(`${otherNeeded}`);
+      if (!otherNeeded) {
+        setValueOut(undefined);
+      } else {
+        setValueOut(`${otherNeeded}`);
+      }
     },
     [setValueOut]
   );
-  const onChangeOut = useCallback(
+  const onChangeInFromOut = useCallback(
     (otherNeeded: number, lpOut: number) => {
-      setValueIn(`${otherNeeded}`);
+      if (!otherNeeded) {
+        setValueIn(undefined);
+      } else {
+        setValueIn(`${otherNeeded}`);
+      }
     },
     [setValueIn]
   );
   return {
     amountIn: stringValueIn,
     amountOut: stringValueOut,
-    onChangeIn,
-    onChangeOut,
+    onChangeIn: setValueIn,
+    onChangeOut: setValueOut,
+    onChangeOutFromIn,
+    onChangeInFromOut,
     setValueIn,
     setValueOut,
   };

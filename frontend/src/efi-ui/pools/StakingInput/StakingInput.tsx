@@ -1,4 +1,4 @@
-import React, { ReactElement, useCallback, useEffect, useState } from "react";
+import React, { ReactElement, useCallback } from "react";
 
 import { InputGroup, Intent, Tag } from "@blueprintjs/core";
 import { t } from "ttag";
@@ -7,16 +7,17 @@ import tw from "efi-tailwindcss-classnames";
 import { CryptoIcon } from "efi-ui/crypto/CryptoIcon";
 import { CryptoName } from "efi/crypto/CryptoName";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
+import { calculateLPOutGivenIn } from "efi/pools/calculateLPOutGivenIn";
 
 import styles from "./StakingInput.module.css";
-import { calculateLPOutGivenIn } from "efi/pools/calculateLPOutGivenIn";
 
 interface StakingInputProps {
   cryptoDisplayBalance: string | number;
   cryptoSymbol: CryptoSymbol;
 
   disabled: boolean;
-  onChange: (otherNeeded: number, lpOut: number) => void;
+  onChangeOther: (otherNeeded: number, lpOut: number) => void;
+  onChange: (inputValue: string) => void;
   value: string | undefined;
   validValue: boolean;
   tokenPoolReserves: number | undefined;
@@ -30,33 +31,35 @@ export function StakingInput(props: StakingInputProps): ReactElement {
     cryptoSymbol,
     disabled,
     onChange,
+    onChangeOther,
     value = "",
     validValue,
     tokenPoolReserves,
     otherTokenPoolReserves,
     totalSupply,
   } = props;
-  const [tokenValue, setTokenValue] = useState(value);
-  useEffect(() => {
-    setTokenValue(value);
-  }, [value]);
-
   const _onChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      const value = event.target.value;
-      setTokenValue(value);
+      const userInputValue = event.target.value;
+      onChange(userInputValue);
 
       const { otherNeeded, lpOut } = calculateLPOutGivenIn(
-        +value,
+        +userInputValue,
         Number.MAX_SAFE_INTEGER,
         tokenPoolReserves ?? 0,
         otherTokenPoolReserves ?? 0,
         totalSupply ?? 0
       );
 
-      onChange(otherNeeded, lpOut);
+      onChangeOther(otherNeeded, lpOut);
     },
-    [onChange, otherTokenPoolReserves, tokenPoolReserves, totalSupply]
+    [
+      onChange,
+      onChangeOther,
+      otherTokenPoolReserves,
+      tokenPoolReserves,
+      totalSupply,
+    ]
   );
 
   return (
@@ -64,7 +67,7 @@ export function StakingInput(props: StakingInputProps): ReactElement {
       <InputGroup
         disabled={disabled}
         onChange={_onChange}
-        value={tokenValue}
+        value={value}
         className={styles.tokenInput}
         large
         intent={validValue ? undefined : Intent.DANGER}
