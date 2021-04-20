@@ -70,6 +70,7 @@ async function main() {
     usdcYearnVaultAssetProxy,
   } = await deployVaultsAndProxys(elementSigner, wethContract, usdcContract);
 
+  console.log("deploy first WETH tranche");
   const {
     trancheContract: wethTrancheContract,
     fytPoolContract: wethFytPoolContract,
@@ -87,8 +88,9 @@ async function main() {
     { mintAmount: "20000", baseAssetIn: "20000", yieldAssetIn: "10000" }
   );
 
+  console.log("deploy second WETH tranche");
   // second WETH tranche
-  deployTrancheAndMarket(
+  await deployTrancheAndMarket(
     elementSigner,
     trancheFactory,
     wethYearnVaultAssetProxy,
@@ -97,14 +99,15 @@ async function main() {
     convergentPoolFactory,
     weightedPoolFactory,
     {
-      mintAmount: "20000",
-      baseAssetIn: "20000",
-      yieldAssetIn: "10000",
+      mintAmount: "10000",
+      baseAssetIn: "10000",
+      yieldAssetIn: "5000",
       // ~ 3 months
       durationInSeconds: THIRTY_DAYS_IN_SECONDS * 3,
     }
   );
 
+  console.log("deploy expired WETH tranche");
   // expired WETH tranche
   await deployTrancheAndMarket(
     elementSigner,
@@ -115,13 +118,15 @@ async function main() {
     convergentPoolFactory,
     weightedPoolFactory,
     {
-      mintAmount: "20000",
-      baseAssetIn: "20000",
-      yieldAssetIn: "13000",
+      mintAmount: "20",
+      baseAssetIn: "20",
+      yieldAssetIn: "13",
       durationInSeconds: 120,
     }
   );
 
+  console.log("deploy USDC tranche");
+  // usdc tranche
   const {
     trancheContract: usdcTrancheContract,
     fytPoolContract: usdcFytPoolContract,
@@ -142,6 +147,8 @@ async function main() {
       yieldAssetIn: "10000000",
     }
   );
+  // add some interest to yUsdc
+  await yUsdc.updateShares();
 
   // deploy user proxy
   const userProxyContract = await deployUserProxy(
