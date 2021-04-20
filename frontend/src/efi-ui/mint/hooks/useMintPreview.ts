@@ -27,7 +27,7 @@ export function useMintPreview(
   const { data: wrappedPositionDecimals } = useTokenDecimals(
     (wrappedPosition as unknown) as ERC20
   );
-  const { data: vaultDecimals } = useTokenDecimals(vault);
+  const { data: vaultDecimals } = useTokenDecimals((vault as unknown) as ERC20);
 
   const { data: trancheValueSuppliedBN } = useSmartContractReadCall(
     tranche,
@@ -48,10 +48,10 @@ export function useMintPreview(
 
   // our stub doesn't have this yet so don't make the call so we don't bork trying to call a method
   // that doesn't exist
-  // const { data: vaultTotalAssetsBN } = useSmartContractReadCall(
-  //   vault,
-  //   "totalAssets"
-  // );
+  const { data: vaultTotalAssetsBN } = useSmartContractReadCall(
+    vault,
+    "totalAssets"
+  );
 
   const { data: vaultTotalSupplyBN } = useSmartContractReadCall(
     vault,
@@ -63,7 +63,7 @@ export function useMintPreview(
     !trancheValueSuppliedBN ||
     !trancheInterestSupplyBN ||
     !balanceBeforeBN ||
-    // !vaultTotalAssetsBN ||
+    !vaultTotalAssetsBN ||
     !vaultTotalSupplyBN ||
     !trancheDecimals ||
     !wrappedPositionDecimals
@@ -80,10 +80,8 @@ export function useMintPreview(
     trancheDecimals
   );
   const balanceBefore = +formatUnits(balanceBeforeBN, wrappedPositionDecimals);
-  // const vaultTotalAssets = +formatUnits(vaultTotalAssetsBN, vaultDecimals);
+  const vaultTotalAssets = +formatUnits(vaultTotalAssetsBN, vaultDecimals);
   const vaultTotalSupply = +formatUnits(vaultTotalSupplyBN, vaultDecimals);
-  // set assets to supply for now.
-  const vaultTotalAssets = vaultTotalSupply;
 
   const interestPerUnderlying =
     ((balanceBefore * vaultTotalAssets) / vaultTotalSupply -

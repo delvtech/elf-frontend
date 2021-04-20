@@ -1,6 +1,6 @@
-import { ERC20 } from "elf-contracts/types/ERC20";
-import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
+import { TestYVault__factory } from "elf-contracts/types/factories/TestYVault__factory";
 import { YVaultAssetProxy__factory } from "elf-contracts/types/factories/YVaultAssetProxy__factory";
+import { TestYVault } from "elf-contracts/types/TestYVault";
 import { Tranche } from "elf-contracts/types/Tranche";
 
 import { getQueryData } from "efi-ui/base/queryResults";
@@ -9,7 +9,7 @@ import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadC
 
 export function useUnderlyingVaultForTranche(
   tranche: Tranche | undefined
-): ERC20 | undefined {
+): TestYVault | undefined {
   const vaultAssetProxyAddress = useSmartContractReadCall(tranche, "position");
 
   const yVaultAssetProxy = useSmartContractFromFactory(
@@ -26,7 +26,7 @@ export function useUnderlyingVaultForTranche(
   );
   const vaultContract = useSmartContractFromFactory(
     getQueryData(vaultAddressResult),
-    ERC20__factory.connect
+    TestYVault__factory.connect
   );
   return vaultContract;
 }
