@@ -8,7 +8,7 @@ import { SwapKind } from "efi-ui/balancer/SwapKind";
 import { parseQueryBatchSwapResult } from "efi-ui/balancer/useQueryBatchSwap/parseQueryBatchSwapResult";
 import { useQueryBatchSwapMulti } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwapMulti";
 import { getQueriesData } from "efi-ui/base/queryResults";
-import { useCoinGeckoPrices } from "efi-ui/coingecko/useCoinGeckoPrices";
+import { useCoinGeckoPriceMulti } from "efi-ui/coingecko/useCoinGeckoPrices";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useCryptoDecimalsMulti } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimalsMulti";
 import { useCryptoSymbolMulti } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbolMulti";
@@ -73,7 +73,7 @@ export function useTotalFiatBalance(
     getCoinGeckoId(baseAssetSymbol)
   );
   const baseAssetDecimals = useCryptoDecimalsMulti(baseAssets);
-  const priceResults = useCoinGeckoPrices(coinGeckoIds, currency);
+  const priceResults = useCoinGeckoPriceMulti(coinGeckoIds, currency);
   const baseAssetCoinGeckoPrices = getQueriesData(priceResults);
   const fiatBalances = zip(
     amountOutForTrancheOrYieldTokenBalance,
