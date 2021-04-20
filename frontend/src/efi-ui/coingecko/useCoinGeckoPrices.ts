@@ -4,7 +4,7 @@ import { Currencies, Currency, Money } from "ts-money";
 
 import { fetchCoinGeckoPrice } from "efi-coingecko";
 
-export function useCoinGeckoPrices(
+export function useCoinGeckoPriceMulti(
   coinGeckoIds: (string | undefined)[],
   currency = Currencies.USD
 ): QueryObserverResult<Money>[] {

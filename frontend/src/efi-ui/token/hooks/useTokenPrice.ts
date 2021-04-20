@@ -5,6 +5,10 @@ import { getCoinGeckoId } from "efi-coingecko";
 import { ComputedQueryResult } from "efi-ui/base/ComputedQueryResult";
 import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
 import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
+import { QueryObserverResult } from "react-query";
+import { useCoinGeckoPriceMulti } from "efi-ui/coingecko/useCoinGeckoPrices";
+import { useTokenSymbolMulti } from "efi-ui/token/hooks/useTokenSymbolMulti";
+import { getQueriesData } from "efi-ui/base/queryResults";
 
 export function useTokenPrice<TContract extends ERC20>(
   contract: TContract | undefined,
@@ -17,4 +21,16 @@ export function useTokenPrice<TContract extends ERC20>(
   );
 
   return [priceResult.data, [tokenSymbolResult, priceResult]];
+}
+
+export function useTokenPriceMulti<TContract extends ERC20>(
+  tokens: (TContract | undefined)[],
+  currency: Currency
+): QueryObserverResult<Money>[] {
+  const tokenSymbolResult = useTokenSymbolMulti(tokens);
+  const coinGeckoIds = getQueriesData(tokenSymbolResult).map((symbol) =>
+    getCoinGeckoId(symbol)
+  );
+  const priceResult = useCoinGeckoPriceMulti(coinGeckoIds, currency);
+  return priceResult;
 }

@@ -17,6 +17,8 @@ import { YieldTokenPortfolio } from "efi-ui/portfolio/YieldTokenPortfolio/YieldT
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useTokensWithBalance } from "efi-ui/token/hooks/useTokensWithBalance";
 import { useTrancheContracts } from "efi-ui/tranche/useTrancheContracts";
+import { useConvergentCurvePoolsWithLPBalance } from "efi-ui/portfolio/hooks/useConvergentCurvePoolsWithLPBalance";
+import { useWeightedPoolsWithLPBalance } from "efi-ui/portfolio/hooks/useWeightedPoolsWithLPBalance";
 
 export function usePortfolioTabs(
   chainId: number | undefined,
@@ -36,6 +38,12 @@ export function usePortfolioTabs(
     yieldTokensWithBalance,
     totalFiatBalanceAllYieldTokens,
   } = useYieldTokenTab(library, account, provider);
+
+  const {
+    convergentCurvePoolsWithLPBalance,
+    weightedPoolsWithLPBalance,
+    // TODO: totalLiquidityProvided,
+  } = useLPTokenTab(library, account, provider);
 
   return [
     {
@@ -70,7 +78,9 @@ export function usePortfolioTabs(
     {
       id: "staked-positions",
       name: t`Staked positions`,
-      quantity: 0,
+      quantity:
+        convergentCurvePoolsWithLPBalance.length +
+        weightedPoolsWithLPBalance.length,
       totalFiatValue: Money.fromDecimal(0.0, currency),
       contentRenderer: () => <LiquidityPositionPortfolio account={account} />,
     },
@@ -128,5 +138,22 @@ function useYieldTokenTab(
   return {
     yieldTokensWithBalance,
     totalFiatBalanceAllYieldTokens,
+  };
+}
+
+function useLPTokenTab(
+  library: Web3Provider | undefined,
+  account: string | null | undefined,
+  provider?: Provider
+) {
+  const convergentCurvePoolsWithLPBalance = useConvergentCurvePoolsWithLPBalance(
+    account
+  );
+  const weightedPoolsWithLPBalance = useWeightedPoolsWithLPBalance(account);
+
+  return {
+    convergentCurvePoolsWithLPBalance,
+    weightedPoolsWithLPBalance,
+    // TODO: totalFiatBalanceAllLPs,
   };
 }

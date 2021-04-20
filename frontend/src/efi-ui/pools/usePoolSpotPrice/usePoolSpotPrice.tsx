@@ -7,6 +7,11 @@ import { useQueryBatchSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBat
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { PoolContract } from "efi/pools/PoolContract";
+import { useTokenDecimalsMulti } from "efi-ui/token/hooks/useTokenDecimalsMulti";
+import { getQueriesData } from "efi-ui/base/queryResults";
+import { usePoolPairedTokenMulti } from "efi-ui/pools/usePoolPairedToken/usePoolPairedTokenMulti";
+import { useQueryBatchSwapMulti } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwapMulti";
+import zip from "lodash.zip";
 
 /**
  * Lazy spot price technique until we get a better method.  Right now just calculates how much out
@@ -62,4 +67,85 @@ export function usePoolSpotPrice(
     +formatUnits(amountIn, decimals);
 
   return Math.abs(spotPrice);
+}
+
+export function usePoolSpotPriceMulti(
+  pools: (PoolContract | undefined)[],
+  baseAssetTokens: (ERC20 | undefined)[]
+): (number | undefined)[] {
+  const baseAssetDecimalsResult = useTokenDecimalsMulti(baseAssetTokens);
+  const baseAssetDecimals = getQueriesData(baseAssetDecimalsResult);
+
+  const principalOrYieldTokens = usePoolPairedTokenMulti(
+    pools,
+    baseAssetTokens
+  );
+  const principalOrYieldTokenDecimalsResult = useTokenDecimalsMulti(
+    principalOrYieldTokens
+  );
+  const principalOrYieldTokenDecimals = getQueriesData(
+    principalOrYieldTokenDecimalsResult
+  );
+
+  const baseAssetAmountIns = baseAssetDecimals.map((decimals) =>
+    parseUnits("0.01", decimals)
+  );
+  const baseAssetTokenAddresses = baseAssetTokens.map(
+    (token) => token?.address
+  );
+  const principalOrYieldTokenAddresses = principalOrYieldTokens.map(
+    (token) => token?.address
+  );
+  const queryBatchSwapResults = useQueryBatchSwapMulti(
+    SwapKind.GIVEN_IN,
+    pools,
+    baseAssetTokenAddresses,
+    principalOrYieldTokenAddresses,
+    baseAssetAmountIns
+  );
+  const queryBatchSwaps = getQueriesData(queryBatchSwapResults);
+
+  const spotPrices = zip(
+    baseAssetTokenAddresses,
+    principalOrYieldTokenAddresses,
+    queryBatchSwaps,
+    baseAssetDecimals,
+    principalOrYieldTokenDecimals,
+    baseAssetAmountIns
+  ).map(
+    ([
+      baseAssetAddress,
+      ptOrYtAddress,
+      queryBatchSwap,
+      baseAssetDecimal,
+      ptOrYtDecimal,
+      baseAssetAmountIn,
+    ]) => {
+      if (!queryBatchSwap) {
+        return undefined;
+      }
+
+      const { tokenOut: amountOut } = parseQueryBatchSwapResult(
+        baseAssetAddress,
+        ptOrYtAddress,
+        queryBatchSwap
+      );
+
+      if (
+        !baseAssetAmountIn ||
+        !amountOut ||
+        !baseAssetDecimals ||
+        !ptOrYtDecimal
+      ) {
+        return undefined;
+      }
+
+      const spotPrice =
+        +formatUnits(amountOut, ptOrYtDecimal) /
+        +formatUnits(baseAssetAmountIn, baseAssetDecimal);
+
+      return Math.abs(spotPrice);
+    }
+  );
+  return spotPrices;
 }
