@@ -109,7 +109,9 @@ export function TradePanel(props: TradePanelProps): ReactElement {
   useEffect(() => {
     setValueIn(undefined);
     setValueOut(undefined);
-  }, [isReversed, setValueIn, setValueOut]);
+    // don't want to call this effect when the hooks update, only when isReversed updates
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isReversed]);
 
   const { isValidTokenInValue, isValidTokenOutValue } = validateTradeValues(
     amountIn,
@@ -303,6 +305,14 @@ function useTokenInfoForTradeInput(
   };
 }
 
+const numericInputOptions: NumericInputOptions = {
+  min: 0,
+  /**
+   * limit precision to prevent BigNumber overflows
+   */
+  maxPrecision: 18,
+};
+
 function useUpdateInputs(
   pool: PoolContract | undefined,
   tokenIn: ERC20 | undefined,
@@ -323,16 +333,6 @@ function useUpdateInputs(
     tokenOut?.address,
     tokenInDecimals
   );
-
-  // HACK: useNumericInput has trouble updating hooks when tokens are revsersed.  Declaring this
-  // object here forces updates.
-  const numericInputOptions: NumericInputOptions = {
-    min: 0,
-    /**
-     * limit precision to prevent BigNumber overflows
-     */
-    maxPrecision: 18,
-  };
 
   // useNumericInput ensures valid numeric inputs from the user
   const {
