@@ -1,4 +1,7 @@
-import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
+import {
+  usePoolSpotPrice,
+  usePoolSpotPriceMulti,
+} from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { PoolContract } from "efi/pools/PoolContract";
 import { ERC20 } from "elf-contracts/types/ERC20";
 
@@ -26,4 +29,36 @@ export function usePoolTokenPrices(
     spotPriceBaseAssetForOneToken,
     spotPriceTokenForOneBaseAsset,
   };
+}
+
+export function usePoolTokenPricesMulti(
+  pools: (PoolContract | undefined)[],
+  baseAssetTokens: (ERC20 | undefined)[]
+): PoolTokenPrices[] {
+  // spot price will be zero while we wait for it to load, maybe change this
+  // behavior in usePoolSpotPrice to return undefined instead?
+  const spotPricesTokenForOneBaseAsset = usePoolSpotPriceMulti(
+    pools,
+    baseAssetTokens
+  );
+
+  const poolTokenPrices: PoolTokenPrices[] = spotPricesTokenForOneBaseAsset.map(
+    (spotPrice) => {
+      if (!spotPrice) {
+        return {
+          spotPriceBaseAssetForOneToken: undefined,
+          spotPriceTokenForOneBaseAsset: undefined,
+        };
+      }
+
+      const spotPriceBaseAssetForOneToken = 1 / spotPrice;
+
+      return {
+        spotPriceBaseAssetForOneToken,
+        spotPriceTokenForOneBaseAsset: spotPrice,
+      };
+    }
+  );
+
+  return poolTokenPrices;
 }
