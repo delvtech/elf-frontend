@@ -4,11 +4,9 @@ import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { Signer } from "ethers";
-import { formatUnits, parseUnits } from "ethers/lib/utils";
+import { parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
-import { SwapDetailsForm } from "efi-ui/swaps/SwapDetailsPreview/SwapDetailsForm";
-import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/TransactionDrawer";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
@@ -18,8 +16,9 @@ import { useMintTransaction } from "efi-ui/mint/hooks/useMintTransaction";
 import { useUserProxy } from "efi-ui/mint/hooks/userProxy";
 import { MintTransactionDetails } from "efi-ui/mint/MintTransactionDetails/MintTransactionDetails";
 import { getUserProxyApprovalMessage } from "efi-ui/mint/userProxyApprovalMessage";
+import { SwapDetailsForm } from "efi-ui/swaps/SwapDetailsPreview/SwapDetailsForm";
+import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/TransactionDrawer";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
-import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 
 interface MintTransactionConfirmationDrawerProps {
   chainId: number | undefined;
@@ -66,16 +65,7 @@ export function MintTransactionConfirmationDrawer({
 
   const amountInAsBigNumber = parseUnits(amountIn || "0", baseAssetDecimals);
   const amountInAsNumber = +(amountIn || 0);
-  const { data: [ptPreview] = [] } = useMintPreview(
-    baseAsset,
-    tranche,
-    amountInAsNumber
-  );
-  const { data: trancheDecimals } = useTokenDecimals(tranche);
-
-  const numPrincipalTokens = ptPreview
-    ? +formatUnits(ptPreview, trancheDecimals)
-    : undefined;
+  const numPrincipalTokens = useMintPreview(tranche, amountInAsNumber);
 
   const onMintTransaction = useMintTransaction(
     signer,
