@@ -16,8 +16,8 @@ interface StakingInputProps {
   cryptoSymbol: CryptoSymbol;
 
   disabled: boolean;
-  onChangeOther: (otherNeeded: number, lpOut: number) => void;
-  onChange: (inputValue: string) => void;
+  onCalculateLPOutGivenIn: (otherNeeded: number, lpOut: number) => void;
+  onChangeInputValue: (inputValue: string) => void;
   value: string | undefined;
   validValue: boolean;
   tokenPoolReserves: number | undefined;
@@ -30,8 +30,8 @@ export function StakingInput(props: StakingInputProps): ReactElement {
     cryptoDisplayBalance,
     cryptoSymbol,
     disabled,
-    onChange,
-    onChangeOther,
+    onChangeInputValue,
+    onCalculateLPOutGivenIn,
     value = "",
     validValue,
     tokenPoolReserves,
@@ -39,10 +39,10 @@ export function StakingInput(props: StakingInputProps): ReactElement {
     totalSupply,
   } = props;
 
-  const _onChange = useCallback(
+  const onChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const userInputValue = event.target.value;
-      onChange(userInputValue);
+      onChangeInputValue(userInputValue);
 
       const { otherNeeded, lpOut } = calculateLPOutGivenIn(
         +userInputValue,
@@ -52,11 +52,11 @@ export function StakingInput(props: StakingInputProps): ReactElement {
         totalSupply ?? 0
       );
 
-      onChangeOther(otherNeeded, lpOut);
+      onCalculateLPOutGivenIn(otherNeeded, lpOut);
     },
     [
-      onChange,
-      onChangeOther,
+      onChangeInputValue,
+      onCalculateLPOutGivenIn,
       otherTokenPoolReserves,
       tokenPoolReserves,
       totalSupply,
@@ -67,7 +67,7 @@ export function StakingInput(props: StakingInputProps): ReactElement {
     <div className={tw("flex", "flex-col", "space-y-2")}>
       <InputGroup
         disabled={disabled}
-        onChange={_onChange}
+        onChange={onChange}
         value={value}
         className={styles.tokenInput}
         large

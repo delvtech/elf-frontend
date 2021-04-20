@@ -160,8 +160,8 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
         cryptoDisplayBalance={baseAssetDisplayBalance || ""}
         cryptoSymbol={baseAssetSymbol as CryptoSymbol}
         disabled={formDisabled}
-        onChange={onChangeIn}
-        onChangeOther={onChangeOutFromIn}
+        onChangeInputValue={onChangeIn}
+        onCalculateLPOutGivenIn={onChangeOutFromIn}
         value={amountIn}
         validValue={isValidTokenInValue}
         tokenPoolReserves={baseAssetReserves}
@@ -177,8 +177,8 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
         cryptoDisplayBalance={yieldAssetDisplayBalance || ""}
         cryptoSymbol={yieldAssetSymbol as CryptoSymbol}
         disabled={formDisabled}
-        onChange={onChangeOut}
-        onChangeOther={onChangeInFromOut}
+        onChangeInputValue={onChangeOut}
+        onCalculateLPOutGivenIn={onChangeInFromOut}
         value={amountOut}
         validValue={isValidTokenOutValue}
         tokenPoolReserves={yieldAssetReserves}
