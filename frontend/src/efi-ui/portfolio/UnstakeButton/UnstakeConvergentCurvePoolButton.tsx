@@ -7,7 +7,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { PoolContract } from "efi/pools/PoolContract";
-import { useExitConvergentCurvePool } from "efi-ui/pools/useUnstake/useExitConverentCurvePool";
+import { useExitConvergentCurvePool } from "efi-ui/pools/useUnstake/useExitConvergentCurvePool";
 import { Signer } from "ethers";
 
 interface UnstakeConvergentCurvePoolButtonProps {

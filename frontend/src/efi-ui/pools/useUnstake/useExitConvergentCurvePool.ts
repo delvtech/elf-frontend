@@ -145,16 +145,24 @@ function getPoolTokenMinAmountsOut(
     poolTokenReserves[1],
     poolTokenDecimals[1]
   );
+
   const { xNeeded, yNeeded } = calculateTokensOutForLPIn(
     lpIn,
     +xReservesString,
     +yReservesString,
     totalSupplyNumber
   );
-
   const poolTokenMinAmountsOut = [
-    parseUnits(xNeeded.toFixed(poolTokenDecimals[0]), poolTokenDecimals[0]),
-    parseUnits(yNeeded.toFixed(poolTokenDecimals[1]), poolTokenDecimals[1]),
+    parseUnits(
+      // TODO: use fixed point math so that we don't create dust
+      (0.999 * xNeeded).toFixed(poolTokenDecimals[0]),
+      poolTokenDecimals[0]
+    ),
+    parseUnits(
+      // TODO: use fixed point math so that we don't create dust
+      (0.999 * yNeeded).toFixed(poolTokenDecimals[1]),
+      poolTokenDecimals[1]
+    ),
   ];
   return poolTokenMinAmountsOut;
 }
