@@ -69,7 +69,6 @@ const calloutClassName = tw(
 export function PrincipalTokenCard(
   props: PrincipalTokenCardProps
 ): ReactElement {
-  useWhyDidYouUpdate("ptcard", props);
   const {
     chainId,
     walletConnectionActive,
