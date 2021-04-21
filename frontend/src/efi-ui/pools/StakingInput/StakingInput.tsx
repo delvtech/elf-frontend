@@ -14,7 +14,7 @@ interface StakingInputProps {
   cryptoDisplayBalance: string | number;
   cryptoSymbol: CryptoSymbol;
   cryptoDecimals: number | undefined;
-  CryptoAssetIcon: SvgIcon | undefined;
+  cryptoAssetIcon: SvgIcon | undefined;
 
   disabled: boolean;
   onCalculateLPOutGivenIn: (otherNeeded: string, lpOut: number) => void;
@@ -31,7 +31,7 @@ export function StakingInput(props: StakingInputProps): ReactElement {
     cryptoDisplayBalance,
     cryptoSymbol,
     cryptoDecimals,
-    CryptoAssetIcon,
+    cryptoAssetIcon: CryptoAssetIcon,
     disabled,
     onChangeInputValue,
     onCalculateLPOutGivenIn,

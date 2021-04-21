@@ -32,7 +32,6 @@ import { ContractMethodArgs } from "efi/contracts/types";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { PoolContract } from "efi/pools/PoolContract";
-import { validateTradeValues } from "efi/trade/validateTradeValues";
 import { validateStakingValue } from "efi/staking/validateStakeValue";
 
 interface StakingPanelProps {
@@ -84,8 +83,9 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
     poolBalance: baseAssetPoolBalance,
   } = useTokenInfoForTradeInput(pool, baseAssetContract, account, library);
 
-  const { assetIcon: baseAssetIcon } =
-    useCryptoAssetForToken(baseAssetContract?.address) ?? {};
+  // use this hook to make sure we get the ETH icon if the base asset it WETH
+  const cryptoAsset = useCryptoAssetForToken(baseAssetContract?.address);
+  const baseAssetIcon = cryptoAsset?.assetIcon;
 
   const {
     asset: yieldAsset,
@@ -170,7 +170,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
         cryptoDisplayBalance={baseAssetDisplayBalance || ""}
         cryptoSymbol={baseAssetSymbol as CryptoSymbol}
         cryptoDecimals={baseAssetDecimals}
-        CryptoAssetIcon={baseAssetIcon}
+        cryptoAssetIcon={baseAssetIcon}
         disabled={formDisabled}
         onChangeInputValue={onChangeIn}
         onCalculateLPOutGivenIn={onChangeOutFromIn}
@@ -189,7 +189,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
         cryptoDisplayBalance={yieldAssetDisplayBalance || ""}
         cryptoSymbol={trancheAssetSymbol as CryptoSymbol}
         cryptoDecimals={baseAssetDecimals}
-        CryptoAssetIcon={baseAssetIcon}
+        cryptoAssetIcon={baseAssetIcon}
         disabled={formDisabled}
         onChangeInputValue={onChangeOut}
         onCalculateLPOutGivenIn={onChangeInFromOut}
