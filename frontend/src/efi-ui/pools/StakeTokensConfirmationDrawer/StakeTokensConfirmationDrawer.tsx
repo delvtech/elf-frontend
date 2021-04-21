@@ -20,6 +20,7 @@ import {
   findTokenContract,
 } from "efi/crypto/CryptoAsset";
 import { parseUnits } from "ethers/lib/utils";
+import { useTrancheContracts } from "efi-ui/tranche/useTrancheContracts";
 
 interface StakingConfirmationDrawerProps {
   account: string | null | undefined;
@@ -94,6 +95,24 @@ export function StakingConfirmationDrawer({
   const confirmButtonDisabled =
     !hasEnoughBaseAssetAllowance || !hasEnoughTrancheAssetAllowance;
 
+  const trancheContracts = useTrancheContracts();
+  const trancheAddresses = trancheContracts.map(({ address }) => address);
+
+  const trancheAssetContract = findTokenContract(trancheAsset);
+  const trancheAssetTokenType = trancheAddresses.includes(
+    trancheAssetContract?.address ?? ""
+  )
+    ? "principal"
+    : "yield";
+  const trancheAssetSymbol =
+    trancheAssetTokenType === "principal"
+      ? t`${baseAssetSymbol} Principal Token`
+      : t`${baseAssetSymbol} Yield Token`;
+  const trancheAssetSymbolLabel =
+    trancheAssetTokenType === "principal"
+      ? t`pt${baseAssetSymbol}`
+      : t`yt${baseAssetSymbol}`;
+
   return (
     <WalletDrawer
       isOpen={isOpen}
@@ -103,14 +122,14 @@ export function StakingConfirmationDrawer({
       <div className={tw("flex", "flex-col", "space-y-4")}>
         <StakeConfirmationForm
           assetOneSymbol={baseAssetSymbol}
-          assetTwoSymbol={t`${baseAssetSymbol} Principal Token`}
+          assetTwoSymbol={trancheAssetSymbol}
+          assetOneSymbolLabel={baseAssetSymbol}
+          assetTwoSymbolLabel={trancheAssetSymbolLabel}
           heading={t`Confirm Staking`}
           AssetOneIcon={baseAssetIcon}
           AssetTwoIcon={trancheAssetIcon}
-          assetOneValueLabel={"assetOneValueLabel"}
-          assetTwoValueLabel={"assetTwoValueLabel"}
-          assetOneSymbolLabel={"assetOneSymbolLabel"}
-          assetTwoSymbolLabel={"assetTwoSymbolLabel"}
+          assetOneValueLabel={baseAssetIn}
+          assetTwoValueLabel={trancheAssetIn}
         />
         {baseAsset?.type === CryptoAssetType.ERC20 ||
         baseAsset?.type === CryptoAssetType.ERC20PERMIT ? (
@@ -130,7 +149,7 @@ export function StakingConfirmationDrawer({
             cryptoAsset={trancheAsset}
             approvalAmount={trancheAssetInBigNumber}
             signer={signer}
-            message={getBalancerApprovalMessage(t`pt${baseAssetSymbol}`)}
+            message={getBalancerApprovalMessage(trancheAssetSymbol)}
           />
         ) : null}
         <Button

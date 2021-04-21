@@ -37,6 +37,8 @@ export function StakeConfirmationForm({
   heading = t`Stake`,
   AssetOneIcon,
   AssetTwoIcon,
+  assetOneSymbol,
+  assetTwoSymbol,
   assetOneValueLabel,
   assetTwoValueLabel,
   assetOneSymbolLabel,
@@ -48,72 +50,48 @@ export function StakeConfirmationForm({
     <Callout className={tw("flex", "flex-col", "p-8", "space-y-6")}>
       <span className={classNames("h4", tw("text-center"))}>{heading}</span>
       <div className={tw("flex", "flex-col", "space-y-4", "items-center")}>
-        <div
-          className={tw(
-            "grid",
-            "grid-cols-8",
-            "place-items-stretch",
-            "w-full",
-            "items-center",
-            "gap-2"
-          )}
-        >
-          <span className={tw("text-base", "col-span-2")}>{t`Input #1`}</span>
-          <InputGroup
-            large
-            fill
-            placeholder="0.00"
-            disabled
-            className={classNames(tw("col-span-6"), styles.inputWithIcon, {
-              [styles.inputColor]: !isDarkMode,
-              [styles.inputColorDark]: isDarkMode,
-            })}
-            leftElement={
-              <div className={tw("flex", "items-center", "px-2")}>
-                {AssetOneIcon ? <AssetOneIcon height={18} width={18} /> : null}
-              </div>
-            }
-            value={assetOneValueLabel}
-            rightElement={
-              <div className={tw("flex", "items-center", "px-3")}>
-                {assetOneSymbolLabel}
-              </div>
-            }
-          />
-        </div>
-        <div
-          className={tw(
-            "grid",
-            "grid-cols-8",
-            "place-items-stretch",
-            "w-full",
-            "items-center",
-            "gap-2"
-          )}
-        >
-          <span className={tw("text-base", "col-span-2")}>{t`Input #2`}</span>
-          <InputGroup
-            large
-            fill
-            disabled
-            className={classNames(tw("col-span-6"), styles.inputWithIcon, {
-              [styles.inputColor]: !isDarkMode,
-              [styles.inputColorDark]: isDarkMode,
-            })}
-            leftElement={
-              <div className={tw("flex", "items-center", "px-2")}>
-                {AssetTwoIcon ? <AssetTwoIcon height={18} width={18} /> : null}
-              </div>
-            }
-            value={assetTwoValueLabel}
-            placeholder="0.00"
-            rightElement={
-              <div className={tw("flex", "items-center", "px-3")}>
-                {assetTwoSymbolLabel}
-              </div>
-            }
-          />
-        </div>
+        <InputGroup
+          large
+          fill
+          placeholder="0.00"
+          disabled
+          className={classNames(tw("col-span-6"), styles.inputWithIcon, {
+            [styles.inputColor]: !isDarkMode,
+            [styles.inputColorDark]: isDarkMode,
+          })}
+          leftElement={
+            <div className={tw("flex", "items-center", "px-2")}>
+              {AssetOneIcon ? <AssetOneIcon height={18} width={18} /> : null}
+            </div>
+          }
+          value={assetOneValueLabel}
+          rightElement={
+            <div className={tw("flex", "items-center", "px-3")}>
+              {assetOneSymbolLabel}
+            </div>
+          }
+        />
+        <InputGroup
+          large
+          fill
+          disabled
+          className={classNames(tw("col-span-6"), styles.inputWithIcon, {
+            [styles.inputColor]: !isDarkMode,
+            [styles.inputColorDark]: isDarkMode,
+          })}
+          leftElement={
+            <div className={tw("flex", "items-center", "px-2")}>
+              {AssetOneIcon ? <AssetOneIcon height={18} width={18} /> : null}
+            </div>
+          }
+          value={assetTwoValueLabel}
+          placeholder="0.00"
+          rightElement={
+            <div className={tw("flex", "items-center", "px-3")}>
+              {assetTwoSymbolLabel}
+            </div>
+          }
+        />
       </div>
       <Divider />
       {children}
