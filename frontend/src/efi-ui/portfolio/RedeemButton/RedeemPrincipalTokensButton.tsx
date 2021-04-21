@@ -18,7 +18,7 @@ import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadC
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { RedeemPrincipalTokensDrawer } from "efi-ui/tranche/RedeemPrincipalTokensDrawer/RedeemPrincipalTokensDrawer";
 
-interface RedeemButtonProps {
+interface RedeemPrincipalTokensButtonProps {
   account: string | null | undefined;
   library: Web3Provider | undefined;
 
@@ -28,12 +28,12 @@ interface RedeemButtonProps {
   baseAsset: CryptoAssetWithIcon | undefined;
 }
 
-export function RedeemButton({
+export function RedeemPrincipalTokensButton({
   baseAsset,
   tranche,
   account,
   library,
-}: RedeemButtonProps): ReactElement {
+}: RedeemPrincipalTokensButtonProps): ReactElement {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const { data: unlockTimestamp } = useSmartContractReadCall(
     tranche,
