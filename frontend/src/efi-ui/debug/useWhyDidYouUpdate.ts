@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 
 export function useWhyDidYouUpdate(
   name: string,
-  props: Record<string, unknown>
+  props: Record<string, any>
 ): void {
   // Get a mutable ref object where we can store props ...
   // ... for comparison next time this hook runs.
