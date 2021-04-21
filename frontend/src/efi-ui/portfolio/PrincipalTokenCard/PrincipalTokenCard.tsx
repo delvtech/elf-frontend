@@ -26,7 +26,7 @@ import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSy
 import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
-import { RedeemButton } from "efi-ui/portfolio/RedeemButton/RedeemButton";
+import { RedeemPrincipalTokensButton } from "efi-ui/portfolio/RedeemButton/RedeemPrincipalTokensButton";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
 import { useBaseAssetForTranche } from "efi-ui/tranche/useBaseAssetForTranche";
@@ -225,11 +225,10 @@ export function PrincipalTokenCard(
 
       {/* Quick Actions */}
       <ButtonGroup className={tw("space-x-6")}>
-        <RedeemButton
+        <RedeemPrincipalTokensButton
           library={library}
           account={account}
           tranche={tranche}
-          sellAmount={trancheBalance.toString()}
           baseAsset={baseAsset}
         />
         <GoToMarketButton pool={pool} />

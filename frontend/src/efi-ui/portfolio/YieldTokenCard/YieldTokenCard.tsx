@@ -1,7 +1,6 @@
 import { ReactElement, ReactNode, useMemo } from "react";
 
 import {
-  AnchorButton,
   ButtonGroup,
   Callout,
   Card,
@@ -11,8 +10,8 @@ import {
   Tag,
 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
-import { Tooltip2 } from "@blueprintjs/popover2";
 import { Web3Provider } from "@ethersproject/providers";
+import { AbstractConnector } from "@web3-react/abstract-connector";
 import classNames from "classnames";
 import { InterestToken } from "elf-contracts/types/InterestToken";
 import { formatUnits } from "ethers/lib/utils";
@@ -29,23 +28,23 @@ import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryp
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
 import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
+import { calculateProgress } from "efi-ui/portfolio/PrincipalTokenCard/calculateProgress";
+import { GoToMarketButton } from "efi-ui/portfolio/PrincipalTokenCard/GoToMarketButton";
+import { MaturityTimeBar } from "efi-ui/portfolio/PrincipalTokenCard/MaturityTimeBar";
+import { RedeemYieldTokensButton } from "efi-ui/portfolio/RedeemButton/RedeemYieldTokensButton";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
 import { useBaseAssetForTranche } from "efi-ui/tranche/useBaseAssetForTranche";
+import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
 import { useTrancheForInterestToken } from "efi-ui/tranche/useTrancheForInterestToken";
 import { useUnderlyingVaultForTranche } from "efi-ui/tranche/useUnderlyingVaultForTranche";
-import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
-import { formatMoney } from "efi/money/formatMoney";
-import { formatAbbreviatedDate } from "efi/base/dates";
-import { MaturityTimeBar } from "efi-ui/portfolio/PrincipalTokenCard/MaturityTimeBar";
-import { calculateProgress } from "efi-ui/portfolio/PrincipalTokenCard/calculateProgress";
-import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
-import { CryptoAssetType } from "efi/crypto/CryptoAsset";
+import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
+import { formatAbbreviatedDate } from "efi/base/dates";
 import { formatPercent } from "efi/base/formatPercent";
-import { AbstractConnector } from "@web3-react/abstract-connector";
-import { GoToMarketButton } from "efi-ui/portfolio/PrincipalTokenCard/GoToMarketButton";
+import { CryptoAssetType } from "efi/crypto/CryptoAsset";
+import { formatMoney } from "efi/money/formatMoney";
 
 interface YieldTokenCardProps {
   library: Web3Provider | undefined;
@@ -68,6 +67,7 @@ const calloutClassName = tw(
 
 export function YieldTokenCard({
   account,
+  library,
   yieldToken,
 }: YieldTokenCardProps): ReactElement {
   const { isDarkMode } = useDarkMode();
@@ -236,25 +236,12 @@ export function YieldTokenCard({
         </div>
         {/* Quick Actions */}
         <ButtonGroup className={tw("space-x-6")}>
-          <Tooltip2
-            inheritDarkTheme={false}
-            className={tw("w-full")}
-            content={t`This asset can be claimed after it has reached maturity.`}
-          >
-            <AnchorButton
-              fill
-              minimal
-              disabled={
-                /*
-                 * See Blueprint docs, we have to use an AnchorButton for a11y
-                 * when putting a tooltip on a disabled button
-                 */
-                true
-              }
-            >
-              <div className={tw("p-2", "text-base")}>{t`Redeem`}</div>
-            </AnchorButton>
-          </Tooltip2>
+          <RedeemYieldTokensButton
+            account={account}
+            tranche={tranche}
+            library={library}
+            baseAsset={baseAsset}
+          />
           <GoToMarketButton pool={pool} />
         </ButtonGroup>
         <div className={tw("flex", "justify-center")}>
