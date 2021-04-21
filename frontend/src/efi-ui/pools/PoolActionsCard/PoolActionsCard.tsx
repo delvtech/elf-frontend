@@ -10,6 +10,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { StakingPanel } from "efi-ui/pools/StakingPanel/StakingPanel";
+import { UnStakePanel } from "efi-ui/pools/UnStakePanel/UnStakePanel";
 import { TradePanel } from "efi-ui/trade/TradePanel/TradePanel";
 import { PoolContract } from "efi/pools/PoolContract";
 
@@ -27,7 +28,7 @@ interface PoolActionsCardProps {
   tokenOut: ERC20 | undefined;
 }
 
-type MarketAction = "trade" | "stake";
+type MarketAction = "trade" | "stake" | "unstake";
 export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
   const {
     library,
@@ -43,6 +44,7 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
   const [action, setActionUI] = useState<MarketAction>("trade");
   const showTradeUI = useCallback(() => setActionUI("trade"), []);
   const showStakeUI = useCallback(() => setActionUI("stake"), []);
+  const showUnstakeUI = useCallback(() => setActionUI("unstake"), []);
 
   return (
     <div className={tw("flex", "flex-col", "flex-1", "h-500", "w-3/10")}>
@@ -65,6 +67,15 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
           onClick={showStakeUI}
           aria-label="stake"
         >{t`Stake`}</Button>
+        <Button
+          small
+          minimal
+          className={classNames(styles.poolActionsButton, {
+            [Classes.INTENT_PRIMARY]: action === "unstake",
+          })}
+          onClick={showUnstakeUI}
+          aria-label="unstake"
+        >{t`Unstake`}</Button>
       </div>
       <Card
         className={tw("flex", "flex-col", "flex-1", "w-full", "transition-all")}
@@ -99,6 +110,14 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
             buttonLabel={t`Stake`}
             buttonIntent={Intent.PRIMARY}
             onTransaction={() => {}}
+          />
+        )}
+        {action === "unstake" && (
+          <UnStakePanel
+            library={library}
+            account={account}
+            pool={pool}
+            connector={connector}
           />
         )}
       </Card>
