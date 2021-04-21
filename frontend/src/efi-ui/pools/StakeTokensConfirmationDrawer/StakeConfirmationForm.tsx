@@ -6,54 +6,34 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { SvgIcon } from "efi-ui/base/SvgIcon";
-import { ConvergentCurvePoolActiveInput } from "efi-ui/pools/useConvergentCurvePoolStakeInputs/useConvergentCurvePoolStakeInputs";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import { CryptoAsset } from "efi/crypto/CryptoAsset";
 
 import styles from "./styles.module.css";
 
 interface StakeConfirmationFormProps {
-  activeInput: ConvergentCurvePoolActiveInput;
-  assetOne: CryptoAsset | undefined;
-  assetOneAmount: number | undefined;
-  assetTwo: CryptoAsset | undefined;
-  /**
-   * If set this will override the symbol lookup for assetTwo. This is useful
-   * when don't want to show a long principal or yield token symbol in the
-   * input
-   */
-  assetTwoSymbol?: string | undefined;
+  heading?: string;
   /**
    * If set this will override the symbol lookup for assetTwo. This is useful
    * when don't want to show a long principal or yield token symbol in the
    * input
    */
   assetOneSymbol?: string | undefined;
-  assetTwoAmount: number | undefined;
+  /**
+   * If set this will override the symbol lookup for assetTwo. This is useful
+   * when don't want to show a long principal or yield token symbol in the
+   * input
+   */
+  assetTwoSymbol?: string | undefined;
   AssetOneIcon?: SvgIcon;
   AssetTwoIcon?: SvgIcon;
   assetOneValueLabel?: string | undefined;
   assetTwoValueLabel?: string | undefined;
   assetOneSymbolLabel?: string | undefined;
   assetTwoSymbolLabel?: string | undefined;
-  heading?: string;
-
-  /**
-   * If provided, this will make the input interactive, otherwise it will be
-   * disabled and read-only
-   */
-  onAssetOneAmountChange?: (amount: string | undefined) => void;
-  /**
-   * If provided, this will make the input interactive, otherwise it will be
-   * disabled and read-only
-   */
-  onAssetTwoAmountChange?: (amount: string | undefined) => void;
   children?: ReactElement;
 }
 
-export function StakeForm({
-  assetTwoSymbol: assetTwoSymbolFromProps,
-  assetOneSymbol: assetOneSymbolFromProps,
+export function StakeConfirmationForm({
   heading = t`Stake`,
   AssetOneIcon,
   AssetTwoIcon,
