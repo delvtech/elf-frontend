@@ -1,15 +1,7 @@
-import React, { ReactElement } from "react";
+import { ReactElement } from "react";
 
-import {
-  AnchorButton,
-  ButtonGroup,
-  Callout,
-  Card,
-  Intent,
-  Tag,
-} from "@blueprintjs/core";
+import { ButtonGroup, Callout, Card, Intent, Tag } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
-import { navigate } from "@reach/router";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import classNames from "classnames";
 import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
@@ -19,14 +11,13 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useShareOfPool } from "efi-ui/portfolio/hooks/useShareOfPool";
-import { UnstakeButton } from "efi-ui/portfolio/UnstakeButton/UnstakeButton";
+import { UnstakeConvergentCurvePoolButton } from "efi-ui/portfolio/UnstakeButton/UnstakeConvergentCurvePoolButton";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { useTokenName } from "efi-ui/token/hooks/useTokenName";
@@ -37,6 +28,8 @@ import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
 import zipObject from "lodash.zipobject";
 import { formatUnits } from "ethers/lib/utils";
+import { GoToMarketButton } from "efi-ui/portfolio/PrincipalTokenCard/GoToMarketButton";
+import { getSmartContractFromRegistry } from "efi-ui/contracts/SmartContractsRegistry";
 
 interface PrincipalTokenLPCardProps {
   library: Web3Provider | undefined;
@@ -186,20 +179,13 @@ export function PrincipalTokenLPCard({
 
       {/* Quick Actions */}
       <ButtonGroup className={tw("space-x-6")}>
-        <UnstakeButton
+        <UnstakeConvergentCurvePoolButton
           account={account}
           connector={connector}
           library={library}
           pool={pool}
         />
-        <AnchorButton
-          fill
-          intent={Intent.PRIMARY}
-          onClick={() => navigate(`exchange/${pool?.address}`)}
-          minimal
-        >
-          <div className={tw("p-2", "text-base")}>{t`Go to market`}</div>
-        </AnchorButton>
+        <GoToMarketButton pool={pool} />
       </ButtonGroup>
     </Card>
   );
@@ -245,7 +231,7 @@ function useTrancheForPool(pool: ConvergentCurvePool | undefined) {
     (address) => !KNOWN_BASE_ASSETS.includes(address)
   );
 
-  return useSmartContractFromFactory(
+  return getSmartContractFromRegistry(
     principalTokenAddress,
     Tranche__factory.connect
   );

@@ -9,7 +9,6 @@ import { ExitRequest } from "efi-balancer/ExitRequest";
 import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { getQueriesData } from "efi-ui/base/queryResults";
-import { useSmartContractFromFactoryMulti } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
@@ -20,8 +19,9 @@ import ContractAddresses from "efi/contracts/contractsJson";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { calculateTokensOutForLPIn } from "efi/pools/calculateTokensOutForLPIn";
 import { PoolContract } from "efi/pools/PoolContract";
+import { getSmartContractFromRegistryMulti } from "efi-ui/contracts/SmartContractsRegistry";
 
-export function useUnstake(
+export function useExitConvergentCurvePool(
   signer: Signer | undefined,
   account: string | null | undefined,
   pool: PoolContract | undefined
@@ -31,7 +31,7 @@ export function useUnstake(
   const {
     data: [poolTokens = [], poolTokenReserves = []] = [],
   } = usePoolTokens(pool);
-  const poolTokenContracts = useSmartContractFromFactoryMulti(
+  const poolTokenContracts = getSmartContractFromRegistryMulti(
     poolTokens,
     ERC20__factory.connect
   );

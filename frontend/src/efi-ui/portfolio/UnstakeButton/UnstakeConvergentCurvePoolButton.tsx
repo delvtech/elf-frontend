@@ -7,23 +7,23 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { PoolContract } from "efi/pools/PoolContract";
-import { useUnstake } from "efi-ui/pools/useUnstake/useUnstake";
+import { useExitConvergentCurvePool } from "efi-ui/pools/useUnstake/useExitConverentCurvePool";
 import { Signer } from "ethers";
 
-interface UnstakeButtonProps {
+interface UnstakeConvergentCurvePoolButtonProps {
   account: string | null | undefined;
   connector: AbstractConnector | undefined;
   library: Web3Provider | undefined;
   pool: PoolContract | undefined;
 }
 
-export function UnstakeButton({
+export function UnstakeConvergentCurvePoolButton({
   pool,
   library,
   account,
-}: UnstakeButtonProps): ReactElement {
+}: UnstakeConvergentCurvePoolButtonProps): ReactElement {
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
-  const exitPool = useUnstake(signer, account, pool);
+  const exitPool = useExitConvergentCurvePool(signer, account, pool);
 
   return (
     <Button fill minimal intent={Intent.PRIMARY} onClick={exitPool}>
