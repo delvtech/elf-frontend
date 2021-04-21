@@ -45,6 +45,7 @@ import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
 import { getIsMature } from "efi/tranche/getIsMature";
 
 import { MaturityTimeBar } from "./MaturityTimeBar";
+import { useWhyDidYouUpdate } from "efi-ui/debug/useWhyDidYouUpdate";
 
 interface PrincipalTokenCardProps {
   chainId: number | undefined;
@@ -65,14 +66,18 @@ const calloutClassName = tw(
   "justify-center"
 );
 
-export function PrincipalTokenCard({
-  chainId,
-  walletConnectionActive,
-  library,
-  account,
-  connector,
-  tranche,
-}: PrincipalTokenCardProps): ReactElement {
+export function PrincipalTokenCard(
+  props: PrincipalTokenCardProps
+): ReactElement {
+  useWhyDidYouUpdate("ptcard", props);
+  const {
+    chainId,
+    walletConnectionActive,
+    library,
+    account,
+    connector,
+    tranche,
+  } = props;
   const { isDarkMode } = useDarkMode();
   const baseAsset = useBaseAssetForTranche(tranche);
 

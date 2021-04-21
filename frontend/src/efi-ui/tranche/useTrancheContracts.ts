@@ -5,9 +5,11 @@ import { Tranche } from "elf-contracts/types/Tranche";
 import { TrancheFactory } from "elf-contracts/types/TrancheFactory";
 import { Signer } from "ethers";
 
-import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
+import {
+  useSmartContractFromFactory,
+  useSmartContractFromFactoryMulti,
+} from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
 import { useSmartContractEvents } from "efi-ui/contracts/useSmartContractEvents/useSmartContractEvents";
-import { useSmartContractsFromFactory } from "efi-ui/contracts/useSmartContractsFromFactory/useSmartContractsFromFactory";
 import ContractAddresses from "efi/contracts/contractsJson";
 
 type TrancheFilterOptions = Parameters<
@@ -37,7 +39,7 @@ export function useTrancheContracts(
         event.args?.[0]
     ) as (string | undefined)[]) || [];
 
-  const trancheContracts = useSmartContractsFromFactory(
+  const trancheContracts = useSmartContractFromFactoryMulti(
     trancheAddresses,
     Tranche__factory.connect,
     signerOrProvider

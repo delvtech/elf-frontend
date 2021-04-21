@@ -6,8 +6,10 @@ import { InterestTokenFactory } from "elf-contracts/types/InterestTokenFactory";
 import { Signer } from "ethers";
 
 import { useSmartContractEvents } from "efi-ui/contracts/useSmartContractEvents/useSmartContractEvents";
-import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
-import { useSmartContractsFromFactory } from "efi-ui/contracts/useSmartContractsFromFactory/useSmartContractsFromFactory";
+import {
+  useSmartContractFromFactory,
+  useSmartContractFromFactoryMulti,
+} from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
 import ContractAddresses from "efi/contracts/contractsJson";
 
 type InterestTokenCreatedFilterOptions = Parameters<
@@ -37,7 +39,7 @@ export function useInterestTokenContracts(
         event.args?.[0]
     ) as (string | undefined)[]) || [];
 
-  const interestTokenContracts = useSmartContractsFromFactory(
+  const interestTokenContracts = useSmartContractFromFactoryMulti(
     interestTokenAddresses,
     InterestToken__factory.connect,
     signerOrProvider

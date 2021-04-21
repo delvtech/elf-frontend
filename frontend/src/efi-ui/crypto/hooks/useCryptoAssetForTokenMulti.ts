@@ -3,7 +3,6 @@ import { ERC20Permit__factory } from "elf-contracts/types/factories/ERC20Permit_
 import zip from "lodash.zip";
 
 import { getQueriesData } from "efi-ui/base/queryResults";
-import { useSmartContractsFromFactory } from "efi-ui/contracts/useSmartContractsFromFactory/useSmartContractsFromFactory";
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { CryptoIconSvg, findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { useTokenSymbolMulti } from "efi-ui/token/hooks/useTokenSymbolMulti";
@@ -12,6 +11,7 @@ import ContractAddresses, {
   KNOWN_ERC20PERMIT_TOKENS,
 } from "efi/contracts/contractsJson";
 import { CryptoAssetType } from "efi/crypto/CryptoAsset";
+import { useSmartContractFromFactoryMulti } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
 
 /**
  * Turns a list of tokens into a list of CryptoAsset equivalents.
@@ -20,13 +20,13 @@ import { CryptoAssetType } from "efi/crypto/CryptoAsset";
 export function useCryptoAssetForTokenMulti(
   tokenAddresses: (string | undefined)[]
 ): (CryptoAssetWithIcon | undefined)[] {
-  const erc20Contracts = useSmartContractsFromFactory(
+  const erc20Contracts = useSmartContractFromFactoryMulti(
     tokenAddresses,
     ERC20__factory.connect
   );
   const erc20SymbolResults = useTokenSymbolMulti(erc20Contracts);
 
-  const erc20PermitContracts = useSmartContractsFromFactory(
+  const erc20PermitContracts = useSmartContractFromFactoryMulti(
     tokenAddresses,
     ERC20Permit__factory.connect
   );

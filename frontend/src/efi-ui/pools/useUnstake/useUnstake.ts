@@ -1,25 +1,25 @@
 import { useCallback } from "react";
 
+import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
 import { Vault } from "elf-contracts/types/Vault";
 import { BigNumber, Signer } from "ethers";
 import { defaultAbiCoder, formatUnits, parseUnits } from "ethers/lib/utils";
 
+import { ExitRequest } from "efi-balancer/ExitRequest";
+import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
+import { getQueriesData } from "efi-ui/base/queryResults";
+import { useSmartContractFromFactoryMulti } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
+import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
+import { useTokenDecimalsMulti } from "efi-ui/token/hooks/useTokenDecimalsMulti";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
 import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 import ContractAddresses from "efi/contracts/contractsJson";
 import { ContractMethodArgs } from "efi/contracts/types";
-import { PoolContract } from "efi/pools/PoolContract";
-import { ExitRequest } from "efi-balancer/ExitRequest";
-import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { calculateTokensOutForLPIn } from "efi/pools/calculateTokensOutForLPIn";
-import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
-import { useTokenDecimalsMulti } from "efi-ui/token/hooks/useTokenDecimalsMulti";
-import { useSmartContractsFromFactory } from "efi-ui/contracts/useSmartContractsFromFactory/useSmartContractsFromFactory";
-import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
-import { getQueriesData } from "efi-ui/base/queryResults";
+import { PoolContract } from "efi/pools/PoolContract";
 
 export function useUnstake(
   signer: Signer | undefined,
@@ -31,7 +31,7 @@ export function useUnstake(
   const {
     data: [poolTokens = [], poolTokenReserves = []] = [],
   } = usePoolTokens(pool);
-  const poolTokenContracts = useSmartContractsFromFactory(
+  const poolTokenContracts = useSmartContractFromFactoryMulti(
     poolTokens,
     ERC20__factory.connect
   );

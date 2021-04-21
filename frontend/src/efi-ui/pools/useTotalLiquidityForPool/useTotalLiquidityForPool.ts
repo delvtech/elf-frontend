@@ -5,7 +5,6 @@ import zipObject from "lodash.zipobject";
 import { Money } from "ts-money";
 
 import { getQueriesData } from "efi-ui/base/queryResults";
-import { useSmartContractsFromFactory } from "efi-ui/contracts/useSmartContractsFromFactory/useSmartContractsFromFactory";
 import { useConvertToFiat } from "efi-ui/money/hooks/useConvertToFiat";
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { usePoolTokenPricesMulti } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
@@ -22,6 +21,7 @@ import { KNOWN_BASE_ASSETS } from "efi/contracts/contractsJson";
 import { convertToFiatBalance } from "efi/money/convertToFiatBalance";
 import { PoolContract } from "efi/pools/PoolContract";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
+import { useSmartContractFromFactoryMulti } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
 
 export function useTotalLiquidityForPool(
   pool: PoolContract | undefined
@@ -101,7 +101,7 @@ export function useTotalLiquidityForPoolMulti(
   const baseAssetAddresses = poolTokensMulti.map(([tokenAddresses]) =>
     tokenAddresses.find((address) => KNOWN_BASE_ASSETS.includes(address))
   );
-  const baseAssetContracts = useSmartContractsFromFactory(
+  const baseAssetContracts = useSmartContractFromFactoryMulti(
     baseAssetAddresses,
     ERC20__factory.connect
   );
@@ -130,7 +130,7 @@ export function useTotalLiquidityForPoolMulti(
   const ptOrYtAddress = poolTokensMulti.map(([tokenAddresses]) =>
     tokenAddresses.find((address) => !KNOWN_BASE_ASSETS.includes(address))
   );
-  const ptOrYtToken = useSmartContractsFromFactory(
+  const ptOrYtToken = useSmartContractFromFactoryMulti(
     ptOrYtAddress,
     ERC20__factory.connect
   );
