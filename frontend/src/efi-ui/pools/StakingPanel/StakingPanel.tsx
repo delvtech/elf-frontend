@@ -169,6 +169,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
       <StakingInput
         cryptoDisplayBalance={baseAssetDisplayBalance || ""}
         cryptoSymbol={baseAssetSymbol as CryptoSymbol}
+        cryptoDecimals={baseAssetDecimals}
         CryptoAssetIcon={baseAssetIcon}
         disabled={formDisabled}
         onChangeInputValue={onChangeIn}
@@ -187,6 +188,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
       <StakingInput
         cryptoDisplayBalance={yieldAssetDisplayBalance || ""}
         cryptoSymbol={trancheAssetSymbol as CryptoSymbol}
+        cryptoDecimals={baseAssetDecimals}
         CryptoAssetIcon={baseAssetIcon}
         disabled={formDisabled}
         onChangeInputValue={onChangeOut}
@@ -315,7 +317,7 @@ function useUpdateInputs() {
   } = useNumericInput(numericInputOptions);
 
   const onChangeOutFromIn = useCallback(
-    (otherNeeded: number, lpOut: number) => {
+    (otherNeeded: string, lpOut: number) => {
       if (!otherNeeded) {
         setValueOut(undefined);
       } else {
@@ -325,7 +327,7 @@ function useUpdateInputs() {
     [setValueOut]
   );
   const onChangeInFromOut = useCallback(
-    (otherNeeded: number, lpOut: number) => {
+    (otherNeeded: string, lpOut: number) => {
       if (!otherNeeded) {
         setValueIn(undefined);
       } else {

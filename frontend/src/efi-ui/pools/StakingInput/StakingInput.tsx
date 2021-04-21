@@ -13,10 +13,11 @@ import { SvgIcon } from "efi-ui/base/SvgIcon";
 interface StakingInputProps {
   cryptoDisplayBalance: string | number;
   cryptoSymbol: CryptoSymbol;
+  cryptoDecimals: number | undefined;
   CryptoAssetIcon: SvgIcon | undefined;
 
   disabled: boolean;
-  onCalculateLPOutGivenIn: (otherNeeded: number, lpOut: number) => void;
+  onCalculateLPOutGivenIn: (otherNeeded: string, lpOut: number) => void;
   onChangeInputValue: (inputValue: string) => void;
   value: string | undefined;
   validValue: boolean;
@@ -29,6 +30,7 @@ export function StakingInput(props: StakingInputProps): ReactElement {
   const {
     cryptoDisplayBalance,
     cryptoSymbol,
+    cryptoDecimals,
     CryptoAssetIcon,
     disabled,
     onChangeInputValue,
@@ -53,14 +55,21 @@ export function StakingInput(props: StakingInputProps): ReactElement {
         totalSupply ?? 0
       );
 
-      onCalculateLPOutGivenIn(otherNeeded, lpOut);
+      // TODO:  JS can't handle 18 decimals.  need to use fixedpoint math for calculateLPOutGivenIn
+      // so we can go straight from BigNumber to string.
+      const decimals = Math.min(cryptoDecimals || 10, 10);
+      onCalculateLPOutGivenIn(
+        otherNeeded ? otherNeeded.toFixed(decimals).toString() : "",
+        lpOut
+      );
     },
     [
       onChangeInputValue,
-      onCalculateLPOutGivenIn,
-      otherTokenPoolReserves,
       tokenPoolReserves,
+      otherTokenPoolReserves,
       totalSupply,
+      onCalculateLPOutGivenIn,
+      cryptoDecimals,
     ]
   );
 
