@@ -5,8 +5,8 @@ import { BigNumber } from "ethers";
 import zip from "lodash.zip";
 
 import { getQueriesData } from "efi-ui/base/queryResults";
+import { useSmartContractFromFactoryMulti } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
 import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
-import { useSmartContractsFromFactory } from "efi-ui/contracts/useSmartContractsFromFactory/useSmartContractsFromFactory";
 import { useTrancheContracts } from "efi-ui/tranche/useTrancheContracts";
 import { useTrancheInterestTokenMulti } from "efi-ui/tranche/useTrancheInterestTokenMulti";
 
@@ -17,7 +17,7 @@ export function useYieldTokensWithBalance(
   // InterestTokens are sourced from the Tranche contracts
   const tranches = useTrancheContracts(provider);
   const interestTokenAddressResults = useTrancheInterestTokenMulti(tranches);
-  const interestTokenContracts = useSmartContractsFromFactory(
+  const interestTokenContracts = useSmartContractFromFactoryMulti(
     getQueriesData(interestTokenAddressResults),
     InterestToken__factory.connect
   );
