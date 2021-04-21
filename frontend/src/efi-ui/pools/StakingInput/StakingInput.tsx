@@ -20,7 +20,7 @@ interface StakingInputProps {
   cryptoAssetIcon: SvgIcon | undefined;
 
   disabled: boolean;
-  onCalculateLPOutGivenIn: (otherNeeded: string, lpOut: number) => void;
+  onCalculateLPOutGivenIn: (otherNeeded: string, lpOut: string) => void;
   onChangeInputValue: (inputValue: string) => void;
   value: string | undefined;
   validValue: boolean;
@@ -61,7 +61,7 @@ export function StakingInput(props: StakingInputProps): ReactElement {
       console.log("lpOut", lpOut);
 
       const {
-        otherNeeded: oNFixed,
+        otherNeeded: otherNeededFixed,
         lpOut: lpOutFixed,
       } = calculateLPOutGivenInFixed(
         userInputValue || "0",
@@ -72,15 +72,9 @@ export function StakingInput(props: StakingInputProps): ReactElement {
         totalSupply?.toString() || "0"
       );
       console.log("lpOutFixed", lpOutFixed);
-      console.log("oNFixed", oNFixed);
+      console.log("otherNeededFixed", otherNeededFixed);
 
-      // TODO:  JS can't handle 18 decimals.  need to use fixedpoint math for calculateLPOutGivenIn
-      // so we can go straight from BigNumber to string.
-      const decimals = Math.min(cryptoDecimals || 10, 10);
-      onCalculateLPOutGivenIn(
-        otherNeeded ? otherNeeded.toFixed(decimals).toString() : "",
-        lpOut
-      );
+      onCalculateLPOutGivenIn(otherNeededFixed, lpOutFixed);
     },
     [
       onChangeInputValue,
