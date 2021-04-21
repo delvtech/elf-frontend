@@ -1,4 +1,4 @@
-import React, { ReactElement, ReactNode } from "react";
+import { ReactElement, ReactNode, useMemo } from "react";
 
 import {
   AnchorButton,
@@ -6,9 +6,9 @@ import {
   ButtonGroup,
   Callout,
   Card,
+  Elevation,
   Icon,
   Intent,
-  ProgressBar,
   Tag,
 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
@@ -38,8 +38,11 @@ import { useBaseAssetForTranche } from "efi-ui/tranche/useBaseAssetForTranche";
 import { useTrancheForInterestToken } from "efi-ui/tranche/useTrancheForInterestToken";
 import { useUnderlyingVaultForTranche } from "efi-ui/tranche/useUnderlyingVaultForTranche";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
-import { getTimeLeft2 } from "efi/base/time";
 import { formatMoney } from "efi/money/formatMoney";
+import { formatAbbreviatedDate } from "efi/base/dates";
+import { MaturityTimeBar } from "efi-ui/portfolio/PrincipalTokenCard/MaturityTimeBar";
+import { calculateProgress } from "efi-ui/portfolio/PrincipalTokenCard/calculateProgress";
+import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
 
 interface YieldTokenCardProps {
   library: Web3Provider | undefined;
@@ -84,10 +87,19 @@ export function YieldTokenCard({
 
   // The tranche contains the unlockTimestamp
   const tranche = useTrancheForInterestToken(interestToken);
+  const trancheCreatedAt = useTrancheCreatedAt(tranche);
   const { data: unlockTimestamp } = useSmartContractReadCall(
     tranche,
     "unlockTimestamp"
   );
+  const unlockDate = useMemo(() => convertEpochSecondsToDate(unlockTimestamp), [
+    unlockTimestamp,
+  ]);
+  const createdAtDate = useMemo(
+    () => convertEpochSecondsToDate(trancheCreatedAt),
+    [trancheCreatedAt]
+  );
+
   const vaultContract = useUnderlyingVaultForTranche(tranche);
   const { data: vaultName } = useSmartContractReadCall(vaultContract, "name");
 
@@ -110,14 +122,17 @@ export function YieldTokenCard({
 
   const exitValue = +formatUnits(exitValueBigNumber || 0, baseAssetDecimals);
   const exitValueFiat = formatMoney(baseAssetFiatPrice?.multiply(exitValue));
-  const maturationDate = convertEpochSecondsToDate(unlockTimestamp);
-  const timeLeft = getTimeLeft2(maturationDate);
+  const formattedDate = unlockDate
+    ? formatAbbreviatedDate(unlockDate)
+    : t`Loading unlock date...`;
+  const progress = calculateProgress(createdAtDate, unlockDate);
   const tableRowLink = getTableRowLink(vaultContract?.address, vaultName);
 
   return (
     <div>
       <Card
         style={{ width: 512 }}
+        elevation={Elevation.TWO}
         className={classNames(
           tw("p-8", "flex", "flex-col", "m-4", "space-y-5", "text-base", {
             "text-gray-700": !isDarkMode,
@@ -135,14 +150,14 @@ export function YieldTokenCard({
             />
           ) : null}
           <div className={tw("flex", "flex-col", "space-y-2")}>
-            <span className={tw("text-xl", "font-semibold", "tracking-wide")}>
+            <span className={tw("text-2xl", "font-semibold")}>
               <a
                 title={t`View tranche on etherscan`}
                 href={`https://etherscan.io/address/${interestToken.address}`}
                 target="_blank"
                 rel="noreferrer noopener"
               >
-                {interestTokenSymbol}
+                {t`${baseAssetSymbol} Yield Token` || null}
               </a>
             </span>
             <div
@@ -155,7 +170,14 @@ export function YieldTokenCard({
               )}
             >
               <div>
-                <Tag large minimal>{t`Variable rate`}</Tag>
+                <Tag
+                  large
+                  intent={Intent.SUCCESS}
+                  fill
+                  className={tw("text-center")}
+                >
+                  {formattedDate}
+                </Tag>
               </div>
               <div className={tw("flex", "space-x-6", "justify-end")}>
                 <LabeledText
@@ -175,14 +197,7 @@ export function YieldTokenCard({
           </div>
         </div>
         <div className={tw("flex", "flex-col", "space-y-5", "items-center")}>
-          <div className={tw("space-y-2", "w-full")}>
-            <div>
-              <span className={tw("text-base")}>
-                {t`Reaches maturity in`} <strong>{timeLeft}</strong>
-              </span>
-            </div>
-            <ProgressBar stripes={false} animate={false} value={0.5} />
-          </div>
+          <MaturityTimeBar progress={progress} maturationDate={unlockDate} />
           <Callout className={calloutClassName}>
             <span
               className={classNames(tw("text-base", "mb-0"))}
@@ -192,8 +207,8 @@ export function YieldTokenCard({
               className={tw("flex", "justify-center", "items-center")}
               bold
               textClassName={tw("text-2xl")}
-              text={`${interestTokenBalance.toFixed(6)} Interest Token`}
-              label={t`1 Interest Token = yield on 1 ${baseAssetSymbol} at maturity`}
+              text={`${interestTokenBalance.toFixed(6)} yt${baseAssetSymbol}`}
+              label={t`1 Yield Token = yield on 1 ${baseAssetSymbol} at maturity`}
             />
           </Callout>
           <Callout icon={null} className={calloutClassName}>
@@ -208,7 +223,7 @@ export function YieldTokenCard({
               text={
                 <span>{t`${exitValue.toFixed(6)} ${baseAssetSymbol}`}</span>
               }
-              label={`${currency.symbol}${exitValueFiat}`}
+              label={exitValueFiat}
             />
           </Callout>
         </div>

@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import { ReactElement, useMemo } from "react";
 
 import {
   AnchorButton,
@@ -14,7 +14,6 @@ import { Web3Provider } from "@ethersproject/providers";
 import { navigate } from "@reach/router";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import classNames from "classnames";
-import { formatDistance, formatDuration, intervalToDuration } from "date-fns";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { jt, t } from "ttag";
 
@@ -25,7 +24,6 @@ import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
-import { useCryptoName } from "efi-ui/crypto/hooks/useCryptoName/useCryptoName";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
@@ -42,10 +40,9 @@ import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
 import { formatMoney } from "efi/money/formatMoney";
 import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
-import { getIsMature } from "efi/tranche/getIsMature";
 
+import { calculateProgress } from "./calculateProgress";
 import { MaturityTimeBar } from "./MaturityTimeBar";
-import { useWhyDidYouUpdate } from "efi-ui/debug/useWhyDidYouUpdate";
 
 interface PrincipalTokenCardProps {
   chainId: number | undefined;
@@ -87,7 +84,7 @@ export function PrincipalTokenCard(
   );
   const unlockDate = convertEpochSecondsToDate(unlockTimestamp);
   const createdAtDate = convertEpochSecondsToDate(trancheCreatedAt);
-  const progress = getProgress(createdAtDate, unlockDate);
+  const progress = calculateProgress(createdAtDate, unlockDate);
 
   const formattedDate = unlockDate
     ? formatAbbreviatedDate(unlockDate)
@@ -107,7 +104,6 @@ export function PrincipalTokenCard(
   } = usePoolTokenPrices(pool, baseAssetContract);
 
   const baseAssetSymbol = useCryptoSymbol(baseAsset);
-  const baseAssetName = useCryptoName(baseAsset);
 
   const exitValue = trancheBalance * tranchePriceInBaseAsset;
   const { data: baseAssetCoinGeckoPrice } = useCoinGeckoPrice(
@@ -122,10 +118,11 @@ export function PrincipalTokenCard(
   const BaseAssetIcon = findAssetIcon(baseAssetSymbol);
 
   const tableRowLink = getTableRowLink(vaultContract?.address, vaultName);
-  const maturationDate = convertEpochSecondsToDate(unlockTimestamp);
-  const isMature = getIsMature(maturationDate);
+  const maturationDate = useMemo(
+    () => convertEpochSecondsToDate(unlockTimestamp),
+    [unlockTimestamp]
+  );
 
-  const timeLeftLabel = getTimeLeftLabel(maturationDate, isDarkMode);
   let trancheAPY = 0;
   if (maturationDate) {
     trancheAPY = calculateTrancheAPY(
@@ -162,7 +159,7 @@ export function PrincipalTokenCard(
               target="_blank"
               rel="noreferrer noopener"
             >
-              {t`${baseAssetName} Principal Token` || null}
+              {t`${baseAssetSymbol} Principal Token` || null}
             </a>
           </span>
           <div
@@ -206,11 +203,7 @@ export function PrincipalTokenCard(
         </div>
       </div>
       <div className={tw("flex", "flex-col", "space-y-5", "items-center")}>
-        <MaturityTimeBar
-          progress={progress}
-          isMature={isMature}
-          timeLeftLabel={timeLeftLabel}
-        />
+        <MaturityTimeBar progress={progress} maturationDate={maturationDate} />
 
         <Callout className={calloutClassName}>
           <span
@@ -288,68 +281,6 @@ export function PrincipalTokenCard(
       </div>
     </Card>
   );
-}
-
-function getProgress(
-  createdAtDate: Date | undefined,
-  unlockDate: Date | undefined
-) {
-  if (!createdAtDate || !unlockDate) {
-    return 0;
-  }
-
-  const createdAt = createdAtDate.getTime();
-  const unlockedAt = unlockDate.getTime();
-  const progress = (Date.now() - createdAt) / (unlockedAt - createdAt);
-  return progress;
-}
-
-function getTimeLeftLabel(
-  maturationDate: Date | undefined,
-  isDarkMode: boolean
-): ReactElement | null {
-  if (!maturationDate) {
-    return null;
-  }
-
-  const isMature = getIsMature(maturationDate);
-  if (isMature) {
-    const timeSinceMaturity = getTimeSinceMaturityLabel(maturationDate);
-    return (
-      <span className={classNames(tw("text-base"))}>
-        {t`Term reached `}
-        <strong>{timeSinceMaturity}</strong>
-      </span>
-    );
-  }
-
-  const timeLeft = getTimeLeft(maturationDate);
-  return (
-    <span className={tw("text-base")}>
-      {t`Reaches term in`} <strong>{timeLeft}</strong>
-    </span>
-  );
-}
-
-function getTimeSinceMaturityLabel(maturationDate: Date): string {
-  const now = Date.now();
-  return formatDistance(maturationDate, now, { addSuffix: true });
-}
-
-function getTimeLeft(maturationDate: Date): string {
-  const now = Date.now();
-
-  const duration = intervalToDuration({
-    start: now,
-    end: maturationDate.getTime(),
-  });
-
-  const timeLeft = t`${formatDuration(duration, {
-    delimiter: ", ",
-    format: ["years", "months", "days"],
-  })}`;
-
-  return timeLeft;
 }
 
 function getTableRowLink(
