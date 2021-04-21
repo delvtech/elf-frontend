@@ -16,11 +16,10 @@ import {
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
+import { StakingConfirmationDrawer } from "efi-ui/pools/StakeTokensConfirmationDrawer/StakeTokensConfirmationDrawer";
 import { StakingInput } from "efi-ui/pools/StakingInput/StakingInput";
-import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useTokenPoolBalance } from "efi-ui/pools/useTokenPoolBalance/useTokenPoolBalance";
-import { SwapTokensTransactionConfirmationDrawer } from "efi-ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensTransactionConfirmationDrawer";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
@@ -54,10 +53,10 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
   const {
     account,
     library,
-    chainId,
-    connector,
+    // chainId,
+    // connector,
     buttonLabel,
-    walletActive,
+    // walletActive,
     formDisabled = false,
     submitDisabled = false,
     inputLabel,
@@ -72,12 +71,12 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
   // Pool calls
   const { data: totalSupplyBN } = useSmartContractReadCall(pool, "totalSupply");
   const totalSupply = +formatEther(totalSupplyBN ?? 0);
-  const spotPrice = usePoolSpotPrice(pool, baseAssetContract);
+  // const spotPrice = usePoolSpotPrice(pool, baseAssetContract);
 
   const {
     asset: baseAsset,
-    address: baseAssetAddress,
-    icon: baseAssetIcon,
+    // address: baseAssetAddress,
+    // icon: baseAssetIcon,
     symbol: baseAssetSymbol,
     decimals: baseAssetDecimals,
     balanceOf: baseAssetBalanceOf,
@@ -86,8 +85,9 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
   } = useTokenInfoForTradeInput(pool, baseAssetContract, account, library);
 
   const {
-    address: yieldAssetAddress,
-    icon: yieldAssetIcon,
+    asset: yieldAsset,
+    // address: yieldAssetAddress,
+    // icon: yieldAssetIcon,
     symbol: yieldAssetSymbol,
     decimals: yieldAssetDecimals,
     displayBalance: yieldAssetDisplayBalance,
@@ -195,26 +195,18 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
       >
         {buttonLabel}
       </Button>
-      <SwapTokensTransactionConfirmationDrawer
-        tokenInAddress={baseAssetAddress}
-        tokenInSymbol={baseAssetSymbol}
-        tokenInDecimals={baseAssetDecimals}
-        tokenInAsset={baseAsset}
-        tokenInIcon={baseAssetIcon}
-        tokenOutAddress={yieldAssetAddress}
-        tokenOutSymbol={yieldAssetSymbol}
-        tokenOutDecimals={yieldAssetDecimals}
-        tokenOutIcon={yieldAssetIcon}
-        account={account}
+      <StakingConfirmationDrawer
         library={library}
-        chainId={chainId}
-        connector={connector}
-        pool={pool}
-        walletConnectionActive={walletActive}
-        amountIn={amountIn}
-        spotPrice={spotPrice}
+        account={account}
+        baseAsset={baseAsset}
+        trancheAsset={yieldAsset}
+        baseAssetIn={amountIn}
+        trancheAssetIn={amountOut}
         isOpen={isDrawerOpen}
-        onClose={() => setDrawerOpen(false)}
+        onClose={() => {
+          setDrawerOpen(false);
+        }}
+        onStake={() => {}}
       />
     </div>
   );

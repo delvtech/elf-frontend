@@ -19,14 +19,15 @@ import {
   CryptoAssetType,
   findTokenContract,
 } from "efi/crypto/CryptoAsset";
+import { parseUnits } from "ethers/lib/utils";
 
 interface StakingConfirmationDrawerProps {
   account: string | null | undefined;
   library: Web3Provider | undefined;
-  baseAsset: CryptoAsset;
-  trancheAsset: CryptoAsset;
-  baseAssetIn: BigNumber | undefined;
-  trancheAssetIn: BigNumber | undefined;
+  baseAsset: CryptoAsset | undefined;
+  trancheAsset: CryptoAsset | undefined;
+  baseAssetIn: string | undefined;
+  trancheAssetIn: string | undefined;
   isOpen: boolean;
   onClose: () => void;
   onStake: () => void;
@@ -50,21 +51,48 @@ export function StakingConfirmationDrawer({
   const {
     symbol: baseAssetSymbol,
     icon: baseAssetIcon,
+    decimals: baseAssetDecimals,
   } = useCryptoAssetMetadata(baseAsset);
-  const { data: allowance } = useTokenAllowance(
+  const {
+    icon: trancheAssetIcon,
+    decimals: trancheAssetDecimals,
+  } = useCryptoAssetMetadata(trancheAsset);
+
+  const baseAssetInBigNumber = parseUnits(
+    baseAssetIn ?? "0",
+    baseAssetDecimals
+  );
+  const trancheAssetInBigNumber = parseUnits(
+    trancheAssetIn ?? "0",
+    trancheAssetDecimals
+  );
+
+  const confirmButtonLabel = getConfirmButtonLabel(account);
+  const { data: baseAssetAllowance } = useTokenAllowance(
     findTokenContract(baseAsset) as ERC20Shim,
     account,
     balancerVault?.address
   );
-  const { icon: trancheAssetIcon } = useCryptoAssetMetadata(trancheAsset);
+  const { data: trancheAssetAllowance } = useTokenAllowance(
+    findTokenContract(trancheAsset) as ERC20Shim,
+    account,
+    balancerVault?.address
+  );
 
-  const confirmButtonLabel = getConfirmButtonLabel(account);
-  const confirmButtonDisabled = getConfirmButtonDisabled(
+  const hasEnoughBaseAssetAllowance = getConfirmButtonDisabled(
     account,
     baseAsset,
-    trancheAssetIn,
-    allowance
+    baseAssetInBigNumber,
+    baseAssetAllowance
   );
+  const hasEnoughTrancheAssetAllowance = getConfirmButtonDisabled(
+    account,
+    trancheAsset,
+    trancheAssetInBigNumber,
+    trancheAssetAllowance
+  );
+  const confirmButtonDisabled =
+    !hasEnoughBaseAssetAllowance || !hasEnoughTrancheAssetAllowance;
 
   return (
     <WalletDrawer
@@ -84,12 +112,12 @@ export function StakingConfirmationDrawer({
           assetOneSymbolLabel={"assetOneSymbolLabel"}
           assetTwoSymbolLabel={"assetTwoSymbolLabel"}
         />
-        {baseAsset.type === CryptoAssetType.ERC20 ||
-        baseAsset.type === CryptoAssetType.ERC20PERMIT ? (
+        {baseAsset?.type === CryptoAssetType.ERC20 ||
+        baseAsset?.type === CryptoAssetType.ERC20PERMIT ? (
           <WalletApprovalCallout
             account={account}
             cryptoAsset={baseAsset}
-            approvalAmount={baseAssetIn}
+            approvalAmount={baseAssetInBigNumber}
             signer={signer}
             message={getBalancerApprovalMessage(baseAssetSymbol || "")}
           />
@@ -100,7 +128,7 @@ export function StakingConfirmationDrawer({
           <WalletApprovalCallout
             account={account}
             cryptoAsset={trancheAsset}
-            approvalAmount={trancheAssetIn}
+            approvalAmount={trancheAssetInBigNumber}
             signer={signer}
             message={getBalancerApprovalMessage(t`pt${baseAssetSymbol}`)}
           />
