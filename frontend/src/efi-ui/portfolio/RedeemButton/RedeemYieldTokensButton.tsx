@@ -7,18 +7,18 @@ import React, {
 } from "react";
 
 import { AnchorButton, Button, Intent } from "@blueprintjs/core";
+import { Tooltip2 } from "@blueprintjs/popover2";
 import { Web3Provider } from "@ethersproject/providers";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
-import { Tooltip2 } from "@blueprintjs/popover2";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
+import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
+import { RedeemYieldTokensDrawer } from "efi-ui/tranche/RedeemTokensDrawer/RedeemYieldTokensDrawer";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
-import { RedeemPrincipalTokensDrawer } from "efi-ui/tranche/RedeemTokensDrawer/RedeemPrincipalTokensDrawer";
 
-interface RedeemPrincipalTokensButtonProps {
+interface RedeemYieldTokensButtonProps {
   account: string | null | undefined;
   library: Web3Provider | undefined;
 
@@ -28,12 +28,12 @@ interface RedeemPrincipalTokensButtonProps {
   baseAsset: CryptoAssetWithIcon | undefined;
 }
 
-export function RedeemPrincipalTokensButton({
+export function RedeemYieldTokensButton({
   baseAsset,
   tranche,
   account,
   library,
-}: RedeemPrincipalTokensButtonProps): ReactElement {
+}: RedeemYieldTokensButtonProps): ReactElement {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const { data: unlockTimestamp } = useSmartContractReadCall(
     tranche,
@@ -77,7 +77,7 @@ export function RedeemPrincipalTokensButton({
         </Button>
       )}
       {!baseAsset ? null : (
-        <RedeemPrincipalTokensDrawer
+        <RedeemYieldTokensDrawer
           isOpen={isDrawerOpen}
           tranche={tranche}
           account={account}
