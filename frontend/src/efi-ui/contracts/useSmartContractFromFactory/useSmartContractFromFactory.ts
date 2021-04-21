@@ -1,5 +1,3 @@
-import { useMemo } from "react";
-
 import { Provider } from "@ethersproject/providers";
 import { Contract, Signer } from "ethers";
 
@@ -7,23 +5,27 @@ import { getSmartContractFromRegistry } from "efi-ui/contracts/SmartContractsReg
 import { FactoryConnectFn } from "efi/contracts/FactoryConnectFn";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 
+/**
+ * @deprecated hooks-based access for smart contracts is deprecated. Use
+ * getSmartContractFromRegistry instead.
+ */
 export function useSmartContractFromFactory<TReturnContract extends Contract>(
   address: string | undefined,
   factoryConnect: FactoryConnectFn<TReturnContract>,
   signerOrProvider?: Signer | Provider
 ): TReturnContract | undefined {
   const signer = signerOrProvider ?? jsonRpcProvider;
-  const contract = useMemo(() => {
-    return getSmartContractFromRegistry<TReturnContract>(
-      address,
-      factoryConnect,
-      signer
-    );
-  }, [address, factoryConnect, signer]);
-
-  return contract;
+  return getSmartContractFromRegistry<TReturnContract>(
+    address,
+    factoryConnect,
+    signer
+  );
 }
 
+/**
+ * @deprecated hooks-based access for smart contracts is deprecated. Use
+ * getSmartContractFromRegistryMulti instead.
+ */
 export function useSmartContractFromFactoryMulti<
   TReturnContract extends Contract
 >(
@@ -32,17 +34,11 @@ export function useSmartContractFromFactoryMulti<
   signerOrProvider?: Signer | Provider
 ): (TReturnContract | undefined)[] {
   const signer = signerOrProvider ?? jsonRpcProvider;
-  const contracts = useMemo(
-    () =>
-      addresses.map((address) =>
-        getSmartContractFromRegistry<TReturnContract>(
-          address,
-          factoryConnect,
-          signer
-        )
-      ),
-    [addresses, factoryConnect, signer]
+  return addresses.map((address) =>
+    getSmartContractFromRegistry<TReturnContract>(
+      address,
+      factoryConnect,
+      signer
+    )
   );
-
-  return contracts;
 }
