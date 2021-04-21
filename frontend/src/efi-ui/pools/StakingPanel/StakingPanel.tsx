@@ -73,7 +73,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
   );
   // Pool calls
   const { data: totalSupplyBN } = useSmartContractReadCall(pool, "totalSupply");
-  const totalSupply = +formatEther(totalSupplyBN ?? 0);
+  const totalSupply = formatEther(totalSupplyBN ?? 0);
   // const spotPrice = usePoolSpotPrice(pool, baseAssetContract);
 
   const {
@@ -101,12 +101,12 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
     label: trancheAssetSymbolLabel,
   } = useTrancheAssetSymbol(yieldAsset, baseAssetSymbol);
 
-  const baseAssetReserves = +formatUnits(
+  const baseAssetReserves = formatUnits(
     baseAssetPoolBalance ?? 0,
     baseAssetDecimals
   );
 
-  const yieldAssetReserves = +formatUnits(
+  const yieldAssetReserves = formatUnits(
     yieldAssetPoolBalance ?? 0,
     yieldAssetDecimals
   );

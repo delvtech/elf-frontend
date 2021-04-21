@@ -24,9 +24,9 @@ interface StakingInputProps {
   onChangeInputValue: (inputValue: string) => void;
   value: string | undefined;
   validValue: boolean;
-  tokenPoolReserves: number | undefined;
-  otherTokenPoolReserves: number | undefined;
-  totalSupply: number | undefined;
+  tokenPoolReserves: string | undefined;
+  otherTokenPoolReserves: string | undefined;
+  totalSupply: string | undefined;
 }
 
 export function StakingInput(props: StakingInputProps): ReactElement {
@@ -50,15 +50,15 @@ export function StakingInput(props: StakingInputProps): ReactElement {
       const userInputValue = event.target.value;
       onChangeInputValue(userInputValue);
 
-      const { otherNeeded, lpOut } = calculateLPOutGivenIn(
-        +userInputValue,
-        Number.MAX_SAFE_INTEGER,
-        tokenPoolReserves ?? 0,
-        otherTokenPoolReserves ?? 0,
-        totalSupply ?? 0
-      );
-      console.log("otherNeeded", otherNeeded);
-      console.log("lpOut", lpOut);
+      // const { otherNeeded, lpOut } = calculateLPOutGivenIn(
+      //   +userInputValue,
+      //   Number.MAX_SAFE_INTEGER,
+      //   tokenPoolReserves ?? 0,
+      //   otherTokenPoolReserves ?? 0,
+      //   totalSupply ?? 0
+      // );
+      // console.log("otherNeeded", otherNeeded);
+      // console.log("lpOut", lpOut);
 
       const {
         otherNeeded: otherNeededFixed,
