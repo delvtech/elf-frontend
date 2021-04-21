@@ -43,6 +43,9 @@ import { formatAbbreviatedDate } from "efi/base/dates";
 import { MaturityTimeBar } from "efi-ui/portfolio/PrincipalTokenCard/MaturityTimeBar";
 import { calculateProgress } from "efi-ui/portfolio/PrincipalTokenCard/calculateProgress";
 import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
+import { useYearnVault } from "efi-ui/yearn/useYearnVault";
+import { CryptoAssetType } from "efi/crypto/CryptoAsset";
+import { formatPercent } from "efi/base/formatPercent";
 
 interface YieldTokenCardProps {
   library: Web3Provider | undefined;
@@ -101,7 +104,6 @@ export function YieldTokenCard({
   );
 
   const vaultContract = useUnderlyingVaultForTranche(tranche);
-  const { data: vaultName } = useSmartContractReadCall(vaultContract, "name");
 
   const pool = usePoolForToken((interestToken as unknown) as ERC20Shim);
 
@@ -120,6 +122,19 @@ export function YieldTokenCard({
 
   const BaseAssetIcon = findAssetIcon(baseAssetSymbol);
 
+  // TODO: Proof of concept for now, this should be done w/ a lookup against a
+  // list of mainnet addresses
+  let vaultSymbol: string | undefined;
+  if (baseAsset?.type === CryptoAssetType.ETHEREUM) {
+    vaultSymbol = "yvWETH";
+  } else if (baseAsset?.type === CryptoAssetType.ERC20PERMIT) {
+    vaultSymbol = "yvUSDC";
+  }
+
+  const { data: yearnVault } = useYearnVault(vaultSymbol);
+  const { name: vaultName } = yearnVault || {};
+
+  const postedAPY = formatPercent(yearnVault?.apy?.recommended || 0);
   const exitValue = +formatUnits(exitValueBigNumber || 0, baseAssetDecimals);
   const exitValueFiat = formatMoney(baseAssetFiatPrice?.multiply(exitValue));
   const formattedDate = unlockDate
@@ -183,13 +198,7 @@ export function YieldTokenCard({
                 <LabeledText
                   bold
                   textClassName={tw("text-base")}
-                  text={`${(5 / 365).toFixed(2)}%`}
-                  label={t`ELV APY`}
-                />
-                <LabeledText
-                  bold
-                  textClassName={tw("text-base")}
-                  text={`${(5).toFixed(2)}%`}
+                  text={postedAPY}
                   label={t`Position APY`}
                 />
               </div>
