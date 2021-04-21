@@ -5,7 +5,10 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
-import { calculateLPOutGivenIn } from "efi/pools/calculateLPOutGivenIn";
+import {
+  calculateLPOutGivenIn,
+  calculateLPOutGivenInFixed,
+} from "efi/pools/calculateLPOutGivenIn";
 
 import styles from "./StakingInput.module.css";
 import { SvgIcon } from "efi-ui/base/SvgIcon";
@@ -54,6 +57,21 @@ export function StakingInput(props: StakingInputProps): ReactElement {
         otherTokenPoolReserves ?? 0,
         totalSupply ?? 0
       );
+      console.log("otherNeeded", otherNeeded);
+      console.log("lpOut", lpOut);
+
+      const {
+        otherNeeded: oNFixed,
+        lpOut: lpOutFixed,
+      } = calculateLPOutGivenInFixed(
+        userInputValue || "0",
+        Number.MAX_SAFE_INTEGER.toString(),
+        tokenPoolReserves?.toString() || "0",
+        otherTokenPoolReserves?.toString() || "0",
+        totalSupply?.toString() || "0"
+      );
+      console.log("lpOutFixed", lpOutFixed);
+      console.log("oNFixed", oNFixed);
 
       // TODO:  JS can't handle 18 decimals.  need to use fixedpoint math for calculateLPOutGivenIn
       // so we can go straight from BigNumber to string.
