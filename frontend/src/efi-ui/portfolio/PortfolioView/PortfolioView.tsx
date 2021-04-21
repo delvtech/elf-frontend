@@ -66,7 +66,9 @@ export function PortfolioView(props: PortfolioViewProps): ReactElement {
         )}
       >
         {/* Main content */}
-        <div className={tw("flex", "flex-col", "flex-1", "items-center")}>
+        <div
+          className={tw("flex", "flex-col", "h-full", "flex-1", "items-center")}
+        >
           <div
             className={tw("flex", "flex-col", "w-full", "space-y-2", "mb-6")}
           >

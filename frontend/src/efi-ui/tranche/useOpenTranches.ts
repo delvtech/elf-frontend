@@ -5,7 +5,7 @@ import { getQueriesData } from "efi-ui/base/queryResults";
 import { useTrancheContracts } from "efi-ui/tranche/useTrancheContracts";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { BigNumber } from "ethers";
-import { useTrancheUnlockTimestampMulti } from "./useTrancheUnlockTimestampMulti";
+import { useTrancheUnlockTimestampMulti } from "./useTrancheUnlockTimestamp";
 
 export function useOpenTranches(): Tranche[] {
   const allTranches = useTrancheContracts();

@@ -1,23 +1,36 @@
 import React, { ReactElement } from "react";
 
-import { Card } from "@blueprintjs/core";
+import { Web3Provider } from "@ethersproject/providers";
+import { AbstractConnector } from "@web3-react/abstract-connector";
+import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
+import { WeightedPool } from "elf-contracts/types/WeightedPool";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { LiquidityPositionTable } from "efi-ui/portfolio/LiquidityPositionTable/LiquidityPositionTable";
+import { PrincipalTokenLPCard } from "efi-ui/portfolio/LiquidityPositionCard/PrincipalTokenLPCard";
 import { NoLPsInWalletNonIdealState } from "efi-ui/wallets/NoLPsInWalletNonIdealState/NoLPsInWalletNonIdealState";
 import { NoWalletConnectedNonIdealState } from "efi-ui/wallets/NoWalletConnectedNonIdealState/NoWalletConnectedNonIdealState";
 
 interface LiquidityPositionPortfolioProps {
+  chainId: number | undefined;
+  library: Web3Provider | undefined;
+  connector: AbstractConnector | undefined;
+  walletConnectionActive: boolean;
   account: string | null | undefined;
+  principalTokenPools: ConvergentCurvePool[];
+  yieldTokenPools: WeightedPool[];
 }
 
 export function LiquidityPositionPortfolio({
+  chainId,
+  library,
+  connector,
+  walletConnectionActive,
   account,
+  principalTokenPools,
+  yieldTokenPools,
 }: LiquidityPositionPortfolioProps): ReactElement {
-  // TODO: check user's wallet for LPs
-  const hasLPs = true;
-
+  const hasLPs = principalTokenPools.length + yieldTokenPools.length > 0;
   let nonIdealStateContent = null;
   if (!account) {
     nonIdealStateContent = (
@@ -26,13 +39,29 @@ export function LiquidityPositionPortfolio({
       />
     );
   }
-  if (!hasLPs) {
+  // else if because the wallet connection non ideal state is higher priority
+  else if (!hasLPs) {
     nonIdealStateContent = <NoLPsInWalletNonIdealState />;
   }
 
   return (
-    <Card className={tw("flex-1", "p-8")}>
-      {nonIdealStateContent || <LiquidityPositionTable />}
-    </Card>
+    <div className={tw("flex", "flex-1", "flex-wrap", "justify-center")}>
+      {nonIdealStateContent ? (
+        <div className={tw("flex", "flex-1", "justify-center", "items-center")}>
+          {nonIdealStateContent}
+        </div>
+      ) : (
+        principalTokenPools.map((pool) => [
+          <div key={pool.address}>
+            <PrincipalTokenLPCard
+              library={library}
+              connector={connector}
+              account={account}
+              pool={pool}
+            />
+          </div>,
+        ])
+      )}
+    </div>
   );
 }

@@ -287,7 +287,7 @@ function useTokenInfoForTradeInput(
   const { data: symbol } = useTokenSymbol(tokenContract);
   const icon = findAssetIcon(symbol);
   const { data: decimals } = useTokenDecimals(tokenContract);
-  const [tokenBalance] = useTokenBalanceOf(tokenContract, account);
+  const { data: tokenBalance } = useTokenBalanceOf(tokenContract, account);
 
   const balanceOf = isWETH ? ethBalance : tokenBalance;
   const displayBalance = formatBalance(balanceOf, decimals);
