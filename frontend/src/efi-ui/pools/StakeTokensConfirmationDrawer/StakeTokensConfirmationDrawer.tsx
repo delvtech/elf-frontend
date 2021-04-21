@@ -74,7 +74,7 @@ export function StakingConfirmationDrawer({
   );
 
   const confirmButtonLabel = getConfirmButtonLabel(account);
-  const confirmButtonDisabled = !useHasTokenApprovals(
+  const hasTokenApprovals = useHasTokenApprovals(
     account,
     balancerVault?.address,
     baseAsset,
@@ -82,6 +82,9 @@ export function StakingConfirmationDrawer({
     baseAssetInBigNumber,
     trancheAssetInBigNumber
   );
+
+  // TODO: validate inputs as well
+  const confirmButtonDisabled = !hasTokenApprovals;
 
   return (
     <WalletDrawer
