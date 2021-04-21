@@ -57,6 +57,7 @@ export function calculateLPOutGivenInFixed(
   // xDecimals: number,
   yReserves: string,
   xReserves: string,
+  tokenDecimals: number,
   totalSupply: string // lp tokens
   // supplyDecimals: number
 ): LPOutGivenTokenInFixed {
@@ -101,8 +102,8 @@ export function calculateLPOutGivenInFixed(
   // Check if the pool is initialized
   if (_totalSupply.isZero()) {
     // When uninitialized we mint exactly the underlying input in LP tokens
-    const lpOut = xIn.toString();
-    const otherNeeded = xIn.toString();
+    const lpOut = _xIn.round(tokenDecimals).toString();
+    const otherNeeded = _xIn.round(tokenDecimals).toString();
     const givenInNeeded = "0";
     return { otherNeeded, givenInNeeded, lpOut };
   }
@@ -122,8 +123,8 @@ export function calculateLPOutGivenInFixed(
       _yReserves.divUnsafe(_xReserves)
     );
 
-    const otherNeeded = _otherNeeded.toString();
-    const givenInNeeded = _givenInNeeded.toString();
+    const otherNeeded = _otherNeeded.round(tokenDecimals).toString();
+    const givenInNeeded = _givenInNeeded.round(tokenDecimals).toString();
     const lpOut = _lpOut.toString();
     return { otherNeeded, givenInNeeded, lpOut };
   }
@@ -131,8 +132,8 @@ export function calculateLPOutGivenInFixed(
   // We calculate the percent increase in the reserves from contributing all of the bond
   const _lpOut = _otherNeeded.mulUnsafe(_totalSupply).divUnsafe(_yReserves);
 
-  const otherNeeded = _otherNeeded.toString();
-  const givenInNeeded = _yIn.toString();
+  const otherNeeded = _otherNeeded.round(tokenDecimals).toString();
+  const givenInNeeded = _yIn.round(tokenDecimals).toString();
   const lpOut = _lpOut.toString();
   return { otherNeeded, givenInNeeded, lpOut };
 }

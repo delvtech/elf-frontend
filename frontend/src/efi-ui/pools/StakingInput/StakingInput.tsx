@@ -68,6 +68,7 @@ export function StakingInput(props: StakingInputProps): ReactElement {
         Number.MAX_SAFE_INTEGER.toString(),
         tokenPoolReserves?.toString() || "0",
         otherTokenPoolReserves?.toString() || "0",
+        cryptoDecimals || 18,
         totalSupply?.toString() || "0"
       );
       console.log("lpOutFixed", lpOutFixed);
