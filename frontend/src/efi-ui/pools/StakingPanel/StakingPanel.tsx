@@ -32,6 +32,8 @@ import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { PoolContract } from "efi/pools/PoolContract";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
+import { CryptoAsset, findTokenContract } from "efi/crypto/CryptoAsset";
+import { useTrancheContracts } from "efi-ui/tranche/useTrancheContracts";
 
 interface StakingPanelProps {
   library: Web3Provider | undefined;
@@ -75,8 +77,6 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
 
   const {
     asset: baseAsset,
-    // address: baseAssetAddress,
-    // icon: baseAssetIcon,
     symbol: baseAssetSymbol,
     decimals: baseAssetDecimals,
     balanceOf: baseAssetBalanceOf,
@@ -84,15 +84,22 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
     poolBalance: baseAssetPoolBalance,
   } = useTokenInfoForTradeInput(pool, baseAssetContract, account, library);
 
+  const { assetIcon: baseAssetIcon } =
+    useCryptoAssetForToken(baseAssetContract?.address) ?? {};
+
   const {
     asset: yieldAsset,
-    // address: yieldAssetAddress,
-    // icon: yieldAssetIcon,
-    symbol: yieldAssetSymbol,
     decimals: yieldAssetDecimals,
     displayBalance: yieldAssetDisplayBalance,
     poolBalance: yieldAssetPoolBalance,
   } = useTokenInfoForTradeInput(pool, yieldAssetContract, account, library);
+
+  const { trancheAssetSymbol, trancheAssetSymbolLabel } = useTrancheAssetSymbol(
+    yieldAsset,
+    baseAssetSymbol
+  );
+  console.log("trancheAssetSymbol", trancheAssetSymbol);
+  console.log("trancheAssetSymbolLabel", trancheAssetSymbolLabel);
 
   const baseAssetReserves = +formatUnits(
     baseAssetPoolBalance ?? 0,
@@ -159,6 +166,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
       <StakingInput
         cryptoDisplayBalance={baseAssetDisplayBalance || ""}
         cryptoSymbol={baseAssetSymbol as CryptoSymbol}
+        CryptoAssetIcon={baseAssetIcon}
         disabled={formDisabled}
         onChangeInputValue={onChangeIn}
         onCalculateLPOutGivenIn={onChangeOutFromIn}
@@ -175,7 +183,8 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
       </div>
       <StakingInput
         cryptoDisplayBalance={yieldAssetDisplayBalance || ""}
-        cryptoSymbol={yieldAssetSymbol as CryptoSymbol}
+        cryptoSymbol={trancheAssetSymbol as CryptoSymbol}
+        CryptoAssetIcon={baseAssetIcon}
         disabled={formDisabled}
         onChangeInputValue={onChangeOut}
         onCalculateLPOutGivenIn={onChangeInFromOut}
@@ -200,6 +209,10 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
         account={account}
         baseAsset={baseAsset}
         trancheAsset={yieldAsset}
+        baseAssetSymbol={baseAssetSymbol}
+        baseAssetSymbolLabel={baseAssetSymbol}
+        trancheAssetSymbol={trancheAssetSymbol}
+        trancheAssetSymbolLabel={trancheAssetSymbolLabel}
         baseAssetIn={amountIn}
         trancheAssetIn={amountOut}
         isOpen={isDrawerOpen}
@@ -328,4 +341,28 @@ function useUpdateInputs() {
     setValueIn,
     setValueOut,
   };
+}
+
+function useTrancheAssetSymbol(
+  trancheAsset: CryptoAsset | undefined,
+  baseAssetSymbol: string | undefined
+) {
+  const trancheContracts = useTrancheContracts();
+  const trancheAddresses = trancheContracts.map(({ address }) => address);
+
+  const trancheAssetContract = findTokenContract(trancheAsset);
+  const trancheAssetTokenType = trancheAddresses.includes(
+    trancheAssetContract?.address ?? ""
+  )
+    ? "principal"
+    : "yield";
+  const trancheAssetSymbolLabel =
+    trancheAssetTokenType === "principal"
+      ? t`${baseAssetSymbol} Principal Token`
+      : t`${baseAssetSymbol} Yield Token`;
+  const trancheAssetSymbol =
+    trancheAssetTokenType === "principal"
+      ? t`pt${baseAssetSymbol}`
+      : t`yt${baseAssetSymbol}`;
+  return { trancheAssetSymbol, trancheAssetSymbolLabel };
 }

@@ -20,13 +20,16 @@ import {
   findTokenContract,
 } from "efi/crypto/CryptoAsset";
 import { parseUnits } from "ethers/lib/utils";
-import { useTrancheContracts } from "efi-ui/tranche/useTrancheContracts";
 
 interface StakingConfirmationDrawerProps {
   account: string | null | undefined;
   library: Web3Provider | undefined;
   baseAsset: CryptoAsset | undefined;
   trancheAsset: CryptoAsset | undefined;
+  baseAssetSymbol: string | undefined;
+  baseAssetSymbolLabel: string | undefined;
+  trancheAssetSymbol: string | undefined;
+  trancheAssetSymbolLabel: string | undefined;
   baseAssetIn: string | undefined;
   trancheAssetIn: string | undefined;
   isOpen: boolean;
@@ -39,6 +42,10 @@ export function StakingConfirmationDrawer({
   account,
   baseAsset,
   trancheAsset,
+  baseAssetSymbol,
+  baseAssetSymbolLabel,
+  trancheAssetSymbol,
+  trancheAssetSymbolLabel,
   baseAssetIn,
   trancheAssetIn,
   isOpen,
@@ -48,9 +55,7 @@ export function StakingConfirmationDrawer({
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
   const balancerVault = useBalancerVault();
 
-  // base asset calls
   const {
-    symbol: baseAssetSymbol,
     icon: baseAssetIcon,
     decimals: baseAssetDecimals,
   } = useCryptoAssetMetadata(baseAsset);
@@ -77,24 +82,6 @@ export function StakingConfirmationDrawer({
     baseAssetInBigNumber,
     trancheAssetInBigNumber
   );
-
-  const trancheContracts = useTrancheContracts();
-  const trancheAddresses = trancheContracts.map(({ address }) => address);
-
-  const trancheAssetContract = findTokenContract(trancheAsset);
-  const trancheAssetTokenType = trancheAddresses.includes(
-    trancheAssetContract?.address ?? ""
-  )
-    ? "principal"
-    : "yield";
-  const trancheAssetSymbol =
-    trancheAssetTokenType === "principal"
-      ? t`${baseAssetSymbol} Principal Token`
-      : t`${baseAssetSymbol} Yield Token`;
-  const trancheAssetSymbolLabel =
-    trancheAssetTokenType === "principal"
-      ? t`pt${baseAssetSymbol}`
-      : t`yt${baseAssetSymbol}`;
 
   return (
     <WalletDrawer
@@ -132,7 +119,7 @@ export function StakingConfirmationDrawer({
             cryptoAsset={trancheAsset}
             approvalAmount={trancheAssetInBigNumber}
             signer={signer}
-            message={getBalancerApprovalMessage(trancheAssetSymbol)}
+            message={getBalancerApprovalMessage(trancheAssetSymbolLabel || "")}
           />
         ) : null}
         <Button

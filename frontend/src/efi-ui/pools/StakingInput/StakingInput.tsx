@@ -4,16 +4,16 @@ import { InputGroup, Intent, Tag } from "@blueprintjs/core";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { CryptoIcon } from "efi-ui/crypto/CryptoIcon";
-import { CryptoName } from "efi/crypto/CryptoName";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { calculateLPOutGivenIn } from "efi/pools/calculateLPOutGivenIn";
 
 import styles from "./StakingInput.module.css";
+import { SvgIcon } from "efi-ui/base/SvgIcon";
 
 interface StakingInputProps {
   cryptoDisplayBalance: string | number;
   cryptoSymbol: CryptoSymbol;
+  CryptoAssetIcon: SvgIcon | undefined;
 
   disabled: boolean;
   onCalculateLPOutGivenIn: (otherNeeded: number, lpOut: number) => void;
@@ -29,6 +29,7 @@ export function StakingInput(props: StakingInputProps): ReactElement {
   const {
     cryptoDisplayBalance,
     cryptoSymbol,
+    CryptoAssetIcon,
     disabled,
     onChangeInputValue,
     onCalculateLPOutGivenIn,
@@ -78,17 +79,10 @@ export function StakingInput(props: StakingInputProps): ReactElement {
           </Tag>
         }
         leftElement={
-          <div className={tw("px-2")}>
-            {cryptoSymbol === ("ELF" as CryptoSymbol) ||
-            !CryptoIcon[cryptoSymbol as CryptoSymbol] ? (
-              "✨"
-            ) : (
-              <img
-                className={tw("h-5", "w-5")}
-                src={CryptoIcon[cryptoSymbol as CryptoSymbol]}
-                alt={CryptoName[cryptoSymbol as CryptoSymbol]}
-              />
-            )}
+          <div className={tw("flex", "items-center", "px-2")}>
+            {CryptoAssetIcon ? (
+              <CryptoAssetIcon height={18} width={18} />
+            ) : null}
           </div>
         }
       />

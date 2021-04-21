@@ -67,7 +67,7 @@ export function StakeConfirmationForm({
           value={assetOneValueLabel}
           rightElement={
             <div className={tw("flex", "items-center", "px-3")}>
-              {assetOneSymbolLabel}
+              {assetOneSymbol}
             </div>
           }
         />
@@ -88,7 +88,7 @@ export function StakeConfirmationForm({
           placeholder="0.00"
           rightElement={
             <div className={tw("flex", "items-center", "px-3")}>
-              {assetTwoSymbolLabel}
+              {assetTwoSymbol}
             </div>
           }
         />
