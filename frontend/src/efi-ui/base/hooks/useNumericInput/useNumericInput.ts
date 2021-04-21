@@ -107,7 +107,7 @@ function validateInput(
 
   if (isIntegerNumber(maxPrecision)) {
     const placesAfterDecimal = getPlacesAfterDecimal(inputString);
-    if (placesAfterDecimal >= maxPrecision) {
+    if (placesAfterDecimal > maxPrecision) {
       return false;
     }
   }
