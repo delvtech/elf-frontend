@@ -30,7 +30,7 @@ import {
 import { findTokenAddressForPool } from "efi/pools/findTokenAddressForPool";
 import { PoolContract } from "efi/pools/PoolContract";
 
-interface StakePrincipalTokensDrawerProps {
+interface StakingConfirmationDrawerProps {
   account: string | null | undefined;
   library: Web3Provider | undefined;
   pool: PoolContract | undefined;
@@ -40,7 +40,7 @@ interface StakePrincipalTokensDrawerProps {
   onClose: () => void;
 }
 
-export function StakePrincipalTokensDrawer({
+export function StakingConfirmationDrawer({
   library,
   account,
   baseAsset,
@@ -48,7 +48,7 @@ export function StakePrincipalTokensDrawer({
   isOpen,
   onClose,
   pool,
-}: StakePrincipalTokensDrawerProps): ReactElement {
+}: StakingConfirmationDrawerProps): ReactElement {
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
   const balancerVault = useBalancerVault();
 
