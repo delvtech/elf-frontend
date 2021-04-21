@@ -229,7 +229,6 @@ export function PrincipalTokenCard(
           library={library}
           account={account}
           tranche={tranche}
-          sellAmount={trancheBalance.toString()}
           baseAsset={baseAsset}
         />
         <GoToMarketButton pool={pool} />

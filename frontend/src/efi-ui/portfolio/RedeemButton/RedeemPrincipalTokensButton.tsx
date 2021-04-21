@@ -22,8 +22,6 @@ interface RedeemPrincipalTokensButtonProps {
   account: string | null | undefined;
   library: Web3Provider | undefined;
 
-  sellAmount: string | undefined;
-
   tranche: Tranche | undefined;
   baseAsset: CryptoAssetWithIcon | undefined;
 }
