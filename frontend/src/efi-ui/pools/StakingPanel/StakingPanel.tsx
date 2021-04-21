@@ -23,6 +23,7 @@ import { useTokenPoolBalance } from "efi-ui/pools/useTokenPoolBalance/useTokenPo
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
+import { useTrancheAssetSymbol } from "efi-ui/tranche/useTrancheAssetSymbol";
 import { useEthBalance } from "efi-ui/wallets/hooks/useEthBalance/useEthBalance";
 import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 import { formatBalance } from "efi/base/formatBalance";
@@ -32,8 +33,6 @@ import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { PoolContract } from "efi/pools/PoolContract";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
-import { CryptoAsset, findTokenContract } from "efi/crypto/CryptoAsset";
-import { useTrancheContracts } from "efi-ui/tranche/useTrancheContracts";
 
 interface StakingPanelProps {
   library: Web3Provider | undefined;
@@ -94,12 +93,10 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
     poolBalance: yieldAssetPoolBalance,
   } = useTokenInfoForTradeInput(pool, yieldAssetContract, account, library);
 
-  const { trancheAssetSymbol, trancheAssetSymbolLabel } = useTrancheAssetSymbol(
-    yieldAsset,
-    baseAssetSymbol
-  );
-  console.log("trancheAssetSymbol", trancheAssetSymbol);
-  console.log("trancheAssetSymbolLabel", trancheAssetSymbolLabel);
+  const {
+    symbol: trancheAssetSymbol,
+    label: trancheAssetSymbolLabel,
+  } = useTrancheAssetSymbol(yieldAsset, baseAssetSymbol);
 
   const baseAssetReserves = +formatUnits(
     baseAssetPoolBalance ?? 0,
@@ -341,28 +338,4 @@ function useUpdateInputs() {
     setValueIn,
     setValueOut,
   };
-}
-
-function useTrancheAssetSymbol(
-  trancheAsset: CryptoAsset | undefined,
-  baseAssetSymbol: string | undefined
-) {
-  const trancheContracts = useTrancheContracts();
-  const trancheAddresses = trancheContracts.map(({ address }) => address);
-
-  const trancheAssetContract = findTokenContract(trancheAsset);
-  const trancheAssetTokenType = trancheAddresses.includes(
-    trancheAssetContract?.address ?? ""
-  )
-    ? "principal"
-    : "yield";
-  const trancheAssetSymbolLabel =
-    trancheAssetTokenType === "principal"
-      ? t`${baseAssetSymbol} Principal Token`
-      : t`${baseAssetSymbol} Yield Token`;
-  const trancheAssetSymbol =
-    trancheAssetTokenType === "principal"
-      ? t`pt${baseAssetSymbol}`
-      : t`yt${baseAssetSymbol}`;
-  return { trancheAssetSymbol, trancheAssetSymbolLabel };
 }
