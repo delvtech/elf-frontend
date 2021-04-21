@@ -69,31 +69,14 @@ export function StakingConfirmationDrawer({
   );
 
   const confirmButtonLabel = getConfirmButtonLabel(account);
-  const { data: baseAssetAllowance } = useTokenAllowance(
-    findTokenContract(baseAsset) as ERC20Shim,
+  const confirmButtonDisabled = useHasTokenApprovals(
     account,
-    balancerVault?.address
-  );
-  const { data: trancheAssetAllowance } = useTokenAllowance(
-    findTokenContract(trancheAsset) as ERC20Shim,
-    account,
-    balancerVault?.address
-  );
-
-  const hasEnoughBaseAssetAllowance = getConfirmButtonDisabled(
-    account,
+    balancerVault?.address,
     baseAsset,
-    baseAssetInBigNumber,
-    baseAssetAllowance
-  );
-  const hasEnoughTrancheAssetAllowance = getConfirmButtonDisabled(
-    account,
     trancheAsset,
-    trancheAssetInBigNumber,
-    trancheAssetAllowance
+    baseAssetInBigNumber,
+    trancheAssetInBigNumber
   );
-  const confirmButtonDisabled =
-    !hasEnoughBaseAssetAllowance || !hasEnoughTrancheAssetAllowance;
 
   const trancheContracts = useTrancheContracts();
   const trancheAddresses = trancheContracts.map(({ address }) => address);
@@ -214,3 +197,37 @@ function getConfirmButtonDisabled(
   // otherwise the button should not be disabled
   return false;
 }
+
+const useHasTokenApprovals = (
+  ownerAddress: string | null | undefined,
+  spenderAddress: string | undefined,
+  baseAsset: CryptoAsset | undefined,
+  trancheAsset: CryptoAsset | undefined,
+  baseAssetIn: BigNumber | undefined,
+  trancheAssetIn: BigNumber | undefined
+) => {
+  const { data: baseAssetAllowance } = useTokenAllowance(
+    findTokenContract(baseAsset) as ERC20Shim,
+    ownerAddress,
+    spenderAddress
+  );
+  const { data: trancheAssetAllowance } = useTokenAllowance(
+    findTokenContract(trancheAsset) as ERC20Shim,
+    ownerAddress,
+    spenderAddress
+  );
+
+  const hasEnoughBaseAssetAllowance = getConfirmButtonDisabled(
+    ownerAddress,
+    baseAsset,
+    baseAssetIn,
+    baseAssetAllowance
+  );
+  const hasEnoughTrancheAssetAllowance = getConfirmButtonDisabled(
+    ownerAddress,
+    trancheAsset,
+    trancheAssetIn,
+    trancheAssetAllowance
+  );
+  return !hasEnoughBaseAssetAllowance || !hasEnoughTrancheAssetAllowance;
+};
