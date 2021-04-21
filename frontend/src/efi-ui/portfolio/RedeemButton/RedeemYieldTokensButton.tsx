@@ -22,8 +22,6 @@ interface RedeemYieldTokensButtonProps {
   account: string | null | undefined;
   library: Web3Provider | undefined;
 
-  sellAmount: string | undefined;
-
   tranche: Tranche | undefined;
   baseAsset: CryptoAssetWithIcon | undefined;
 }
@@ -42,7 +40,6 @@ export function RedeemYieldTokensButton({
   const unlockDate = useMemo(() => convertEpochSecondsToDate(unlockTimestamp), [
     unlockTimestamp,
   ]);
-
   const buttonDisabled = unlockDate && unlockDate.getTime() > Date.now();
 
   const openDrawer = useCallback(() => {

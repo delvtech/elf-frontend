@@ -9,16 +9,22 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
+import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
-import { RedeemForm } from "efi-ui/tranche/RedeemForm/RedeemForm";
-import { WalletDrawer } from "efi-ui/wallets/WalletDrawer/WalletDrawer";
-import { CryptoAsset } from "efi/crypto/CryptoAsset";
-import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
-import { formatFullDate } from "efi/base/dates";
 import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
+import { RedeemForm } from "efi-ui/tranche/RedeemForm/RedeemForm";
+import { useWithdrawInterest } from "efi-ui/tranche/RedeemTokensDrawer/useWithdrawInterest";
+import {
+  useInterestTokenForTranche,
+  useTrancheInterestTokenMulti,
+} from "efi-ui/tranche/useTrancheInterestTokenMulti";
+import { WalletDrawer } from "efi-ui/wallets/WalletDrawer/WalletDrawer";
+import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
+import { formatFullDate } from "efi/base/dates";
+import { CryptoAsset } from "efi/crypto/CryptoAsset";
+
 import { useWithdrawPrincipal } from "./useWithdrawPrincipal";
 
 interface RedeemYieldTokensDrawerProps {
@@ -54,33 +60,37 @@ export function RedeemYieldTokensDrawer({
     ? formatFullDate(unlockTimestampDate)
     : undefined;
 
+  const interestToken = useInterestTokenForTranche(tranche);
+  const { data: interestTokenDecimals } = useTokenDecimals(interestToken);
+
+  // input
   const {
-    stringValue: trancheAmountString,
-    setValue: setTrancheAmountString,
+    stringValue: interestTokenAmountString,
+    setValue: setInterestTokenAmountString,
   } = useNumericInput({
     min: 0,
-    maxPrecision: trancheDecimals,
+    maxPrecision: interestTokenDecimals,
   });
-  const accountTrancheBalance = useTokenBalance(tranche, account);
+  const accountInterestTokenBalance = useTokenBalance(interestToken, account);
   const onSetMaxAmount = useCallback(() => {
-    setTrancheAmountString(accountTrancheBalance.toString());
-  }, [accountTrancheBalance, setTrancheAmountString]);
+    setInterestTokenAmountString(accountInterestTokenBalance.toString());
+  }, [accountInterestTokenBalance, setInterestTokenAmountString]);
 
   const confirmButtonLabel = getConfirmButtonLabel(account);
-  const trancheAmountBigNumber =
-    trancheAmountString && trancheDecimals
-      ? parseUnits(trancheAmountString, trancheDecimals)
+  const interestTokenAmountBigNumber =
+    interestTokenAmountString && interestTokenDecimals
+      ? parseUnits(interestTokenAmountString, interestTokenDecimals)
       : undefined;
   const confirmButtonDisabled = getConfirmButtonDisabled(
     account,
-    trancheAmountBigNumber
+    interestTokenAmountBigNumber
   );
 
-  const withdrawPrincipal = useWithdrawPrincipal(
+  const withdrawInterest = useWithdrawInterest(
     signer,
     tranche,
     account,
-    trancheAmountBigNumber
+    interestTokenAmountBigNumber
   );
 
   return (
@@ -92,11 +102,11 @@ export function RedeemYieldTokensDrawer({
       <div className={tw("flex", "flex-col", "space-y-4")}>
         <RedeemForm
           onSetMaxAmount={onSetMaxAmount}
-          heading={t`Redeem ${baseAssetSymbol} Principal Tokens`}
+          heading={t`Redeem ${baseAssetSymbol} Yield Tokens`}
           tranche={tranche}
-          amount={trancheAmountString}
-          assetSymbol={t`${baseAssetSymbol} Principal Token`}
-          onAmountChange={setTrancheAmountString}
+          amount={interestTokenAmountString}
+          assetSymbol={t`${baseAssetSymbol} Yield Token`}
+          onAmountChange={setInterestTokenAmountString}
         >
           <div className={tw("flex", "flex-col", "space-y-6", "items-center")}>
             <LabeledText
@@ -117,7 +127,7 @@ export function RedeemYieldTokensDrawer({
           className={tw("h-16")}
           large
           outlined
-          onClick={withdrawPrincipal}
+          onClick={withdrawInterest}
         >
           {confirmButtonLabel}
         </Button>
