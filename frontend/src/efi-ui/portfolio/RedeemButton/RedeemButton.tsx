@@ -1,26 +1,26 @@
-import React, { Fragment, ReactElement, useState } from "react";
+import React, {
+  Fragment,
+  ReactElement,
+  useCallback,
+  useMemo,
+  useState,
+} from "react";
 
 import { AnchorButton, Button, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
-import { AbstractConnector } from "@web3-react/abstract-connector";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
-import { PoolContract } from "efi/pools/PoolContract";
 import { Tooltip2 } from "@blueprintjs/popover2";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { RedeemPrincipalTokensDrawer } from "efi-ui/tranche/RedeemPrincipalTokensDrawer/RedeemPrincipalTokensDrawer";
 
 interface RedeemButtonProps {
-  chainId: number | undefined;
   account: string | null | undefined;
-  walletConnectionActive: boolean;
-  connector: AbstractConnector | undefined;
   library: Web3Provider | undefined;
-  pool: PoolContract | undefined;
 
   sellAmount: string | undefined;
 
@@ -32,26 +32,29 @@ export function RedeemButton({
   baseAsset,
   tranche,
   account,
-  chainId,
-  connector,
   library,
-  pool,
-  walletConnectionActive,
 }: RedeemButtonProps): ReactElement {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const { data: unlockTimestamp } = useSmartContractReadCall(
     tranche,
     "unlockTimestamp"
   );
-  const unlockDate = convertEpochSecondsToDate(unlockTimestamp);
+  const unlockDate = useMemo(() => convertEpochSecondsToDate(unlockTimestamp), [
+    unlockTimestamp,
+  ]);
 
   const buttonDisabled = unlockDate && unlockDate.getTime() > Date.now();
+
+  const openDrawer = useCallback(() => {
+    setDrawerOpen(true);
+  }, []);
 
   return (
     <Fragment>
       {buttonDisabled ? (
         <Tooltip2
           inheritDarkTheme={false}
+          className={tw("w-full")}
           content={t`This asset can be claimed after it has reached maturity.`}
         >
           <AnchorButton
@@ -69,12 +72,7 @@ export function RedeemButton({
           </AnchorButton>
         </Tooltip2>
       ) : (
-        <Button
-          fill
-          minimal
-          intent={Intent.SUCCESS}
-          onClick={() => setDrawerOpen(true)}
-        >
+        <Button fill minimal intent={Intent.SUCCESS} onClick={openDrawer}>
           <div className={tw("p-2", "text-base")}>{t`Redeem`}</div>
         </Button>
       )}

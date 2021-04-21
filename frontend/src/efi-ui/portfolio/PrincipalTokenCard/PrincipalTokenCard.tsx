@@ -1,7 +1,6 @@
 import { ReactElement, useMemo } from "react";
 
 import {
-  AnchorButton,
   ButtonGroup,
   Callout,
   Card,
@@ -11,7 +10,6 @@ import {
 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
-import { navigate } from "@reach/router";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import classNames from "classnames";
 import { Tranche } from "elf-contracts/types/Tranche";
@@ -29,8 +27,6 @@ import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
 import { RedeemButton } from "efi-ui/portfolio/RedeemButton/RedeemButton";
-import { SellPrincipalTokensButton } from "efi-ui/portfolio/SellButton/SellPrincipalTokensButton";
-import { StakeButton } from "efi-ui/portfolio/StakeButton/StakeButton";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
 import { useBaseAssetForTranche } from "efi-ui/tranche/useBaseAssetForTranche";
@@ -43,6 +39,7 @@ import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
 
 import { calculateProgress } from "./calculateProgress";
 import { MaturityTimeBar } from "./MaturityTimeBar";
+import { GoToMarketButton } from "./GoToMarketButton";
 
 interface PrincipalTokenCardProps {
   chainId: number | undefined;
@@ -66,14 +63,7 @@ const calloutClassName = tw(
 export function PrincipalTokenCard(
   props: PrincipalTokenCardProps
 ): ReactElement {
-  const {
-    chainId,
-    walletConnectionActive,
-    library,
-    account,
-    connector,
-    tranche,
-  } = props;
+  const { library, account, tranche } = props;
   const { isDarkMode } = useDarkMode();
   const baseAsset = useBaseAssetForTranche(tranche);
 
@@ -237,42 +227,12 @@ export function PrincipalTokenCard(
       <ButtonGroup className={tw("space-x-6")}>
         <RedeemButton
           library={library}
-          connector={connector}
-          chainId={chainId}
           account={account}
           tranche={tranche}
-          pool={pool}
-          sellAmount={trancheBalance.toString()}
-          baseAsset={baseAsset}
-          walletConnectionActive={walletConnectionActive}
-        />
-        <SellPrincipalTokensButton
-          library={library}
-          connector={connector}
-          chainId={chainId}
-          account={account}
-          tranche={tranche}
-          pool={pool}
-          maxSellAmount={trancheBalance.toString()}
-          baseAsset={baseAsset}
-          walletConnectionActive={walletConnectionActive}
-        />
-        <StakeButton
-          library={library}
-          connector={connector}
-          account={account}
-          tranche={tranche}
-          pool={pool}
           sellAmount={trancheBalance.toString()}
           baseAsset={baseAsset}
         />
-        <AnchorButton
-          intent={Intent.PRIMARY}
-          onClick={() => navigate(`exchange/${pool?.address}`)}
-          minimal
-        >
-          <div className={tw("p-2", "text-base")}>{t`Go to market`}</div>
-        </AnchorButton>
+        <GoToMarketButton pool={pool} />
       </ButtonGroup>
       <div className={tw("flex", "justify-center")}>
         <span>
