@@ -16,14 +16,14 @@ import {
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
+import { StakingConfirmationDrawer } from "efi-ui/pools/StakeTokensConfirmationDrawer/StakeTokensConfirmationDrawer";
 import { StakingInput } from "efi-ui/pools/StakingInput/StakingInput";
-import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useTokenPoolBalance } from "efi-ui/pools/useTokenPoolBalance/useTokenPoolBalance";
-import { SwapTokensTransactionConfirmationDrawer } from "efi-ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensTransactionConfirmationDrawer";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
+import { useTrancheAssetSymbol } from "efi-ui/tranche/useTrancheAssetSymbol";
 import { useEthBalance } from "efi-ui/wallets/hooks/useEthBalance/useEthBalance";
 import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 import { formatBalance } from "efi/base/formatBalance";
@@ -32,7 +32,7 @@ import { ContractMethodArgs } from "efi/contracts/types";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { PoolContract } from "efi/pools/PoolContract";
-import { validateTradeValues } from "efi/trade/validateTradeValues";
+import { validateStakingValue } from "efi/staking/validateStakeValue";
 
 interface StakingPanelProps {
   library: Web3Provider | undefined;
@@ -54,10 +54,10 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
   const {
     account,
     library,
-    chainId,
-    connector,
+    // chainId,
+    // connector,
     buttonLabel,
-    walletActive,
+    // walletActive,
     formDisabled = false,
     submitDisabled = false,
     inputLabel,
@@ -72,12 +72,10 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
   // Pool calls
   const { data: totalSupplyBN } = useSmartContractReadCall(pool, "totalSupply");
   const totalSupply = +formatEther(totalSupplyBN ?? 0);
-  const spotPrice = usePoolSpotPrice(pool, baseAssetContract);
+  // const spotPrice = usePoolSpotPrice(pool, baseAssetContract);
 
   const {
     asset: baseAsset,
-    address: baseAssetAddress,
-    icon: baseAssetIcon,
     symbol: baseAssetSymbol,
     decimals: baseAssetDecimals,
     balanceOf: baseAssetBalanceOf,
@@ -85,14 +83,21 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
     poolBalance: baseAssetPoolBalance,
   } = useTokenInfoForTradeInput(pool, baseAssetContract, account, library);
 
+  // use this hook to make sure we get the ETH icon if the base asset it WETH
+  const cryptoAsset = useCryptoAssetForToken(baseAssetContract?.address);
+  const baseAssetIcon = cryptoAsset?.assetIcon;
+
   const {
-    address: yieldAssetAddress,
-    icon: yieldAssetIcon,
-    symbol: yieldAssetSymbol,
+    asset: yieldAsset,
     decimals: yieldAssetDecimals,
     displayBalance: yieldAssetDisplayBalance,
     poolBalance: yieldAssetPoolBalance,
   } = useTokenInfoForTradeInput(pool, yieldAssetContract, account, library);
+
+  const {
+    symbol: trancheAssetSymbol,
+    label: trancheAssetSymbolLabel,
+  } = useTrancheAssetSymbol(yieldAsset, baseAssetSymbol);
 
   const baseAssetReserves = +formatUnits(
     baseAssetPoolBalance ?? 0,
@@ -114,13 +119,18 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
     setValueIn,
   } = useUpdateInputs();
 
-  const { isValidTokenInValue, isValidTokenOutValue } = validateTradeValues(
+  const isValidBaseAssetValue = validateStakingValue(
     amountIn,
     baseAssetBalanceOf,
     baseAssetDecimals,
-    baseAssetPoolBalance,
+    baseAssetPoolBalance
+  );
+
+  const isValidTrancheAssetValue = validateStakingValue(
     amountOut,
-    yieldAssetPoolBalance
+    baseAssetBalanceOf,
+    baseAssetDecimals,
+    baseAssetPoolBalance
   );
 
   const [isDrawerOpen, setDrawerOpen] = useState(false);
@@ -137,8 +147,8 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
   const submitButtonDisabled =
     formDisabled ||
     submitDisabled ||
-    !isValidTokenInValue ||
-    !isValidTokenOutValue ||
+    !isValidBaseAssetValue ||
+    !isValidTrancheAssetValue ||
     !amountIn ||
     !amountOut;
 
@@ -159,11 +169,13 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
       <StakingInput
         cryptoDisplayBalance={baseAssetDisplayBalance || ""}
         cryptoSymbol={baseAssetSymbol as CryptoSymbol}
+        cryptoDecimals={baseAssetDecimals}
+        cryptoAssetIcon={baseAssetIcon}
         disabled={formDisabled}
         onChangeInputValue={onChangeIn}
         onCalculateLPOutGivenIn={onChangeOutFromIn}
         value={amountIn}
-        validValue={isValidTokenInValue}
+        validValue={isValidBaseAssetValue}
         tokenPoolReserves={baseAssetReserves}
         otherTokenPoolReserves={yieldAssetReserves}
         totalSupply={totalSupply}
@@ -175,12 +187,14 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
       </div>
       <StakingInput
         cryptoDisplayBalance={yieldAssetDisplayBalance || ""}
-        cryptoSymbol={yieldAssetSymbol as CryptoSymbol}
+        cryptoSymbol={trancheAssetSymbol as CryptoSymbol}
+        cryptoDecimals={baseAssetDecimals}
+        cryptoAssetIcon={baseAssetIcon}
         disabled={formDisabled}
         onChangeInputValue={onChangeOut}
         onCalculateLPOutGivenIn={onChangeInFromOut}
         value={amountOut}
-        validValue={isValidTokenOutValue}
+        validValue={isValidTrancheAssetValue}
         tokenPoolReserves={yieldAssetReserves}
         otherTokenPoolReserves={baseAssetReserves}
         totalSupply={totalSupply}
@@ -195,26 +209,22 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
       >
         {buttonLabel}
       </Button>
-      <SwapTokensTransactionConfirmationDrawer
-        tokenInAddress={baseAssetAddress}
-        tokenInSymbol={baseAssetSymbol}
-        tokenInDecimals={baseAssetDecimals}
-        tokenInAsset={baseAsset}
-        tokenInIcon={baseAssetIcon}
-        tokenOutAddress={yieldAssetAddress}
-        tokenOutSymbol={yieldAssetSymbol}
-        tokenOutDecimals={yieldAssetDecimals}
-        tokenOutIcon={yieldAssetIcon}
-        account={account}
+      <StakingConfirmationDrawer
         library={library}
-        chainId={chainId}
-        connector={connector}
-        pool={pool}
-        walletConnectionActive={walletActive}
-        amountIn={amountIn}
-        spotPrice={spotPrice}
+        account={account}
+        baseAsset={baseAsset}
+        trancheAsset={yieldAsset}
+        baseAssetSymbol={baseAssetSymbol}
+        baseAssetSymbolLabel={baseAssetSymbol}
+        trancheAssetSymbol={trancheAssetSymbol}
+        trancheAssetSymbolLabel={trancheAssetSymbolLabel}
+        baseAssetIn={amountIn}
+        trancheAssetIn={amountOut}
         isOpen={isDrawerOpen}
-        onClose={() => setDrawerOpen(false)}
+        onClose={() => {
+          setDrawerOpen(false);
+        }}
+        onStake={() => {}}
       />
     </div>
   );
@@ -307,7 +317,7 @@ function useUpdateInputs() {
   } = useNumericInput(numericInputOptions);
 
   const onChangeOutFromIn = useCallback(
-    (otherNeeded: number, lpOut: number) => {
+    (otherNeeded: string, lpOut: number) => {
       if (!otherNeeded) {
         setValueOut(undefined);
       } else {
@@ -317,7 +327,7 @@ function useUpdateInputs() {
     [setValueOut]
   );
   const onChangeInFromOut = useCallback(
-    (otherNeeded: number, lpOut: number) => {
+    (otherNeeded: string, lpOut: number) => {
       if (!otherNeeded) {
         setValueIn(undefined);
       } else {
