@@ -9,14 +9,12 @@ import {
   Tag,
 } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
-import { formatUnits } from "@ethersproject/units";
 import { navigate } from "@reach/router";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import classNames from "classnames";
 import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
 import { Tranche__factory } from "elf-contracts/types/factories/Tranche__factory";
 import { BigNumber } from "ethers";
-import { zipObject } from "lodash";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -37,6 +35,8 @@ import { formatPercent } from "efi/base/formatPercent";
 import { KNOWN_BASE_ASSETS } from "efi/contracts/contractsJson";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
+import zipObject from "lodash.zipobject";
+import { formatUnits } from "ethers/lib/utils";
 
 interface PrincipalTokenLPCardProps {
   library: Web3Provider | undefined;

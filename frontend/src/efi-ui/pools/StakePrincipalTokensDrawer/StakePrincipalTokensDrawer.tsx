@@ -12,7 +12,6 @@ import tw from "efi-tailwindcss-classnames";
 import { getBalancerApprovalMessage } from "efi-ui/balancer/balancerApprovalMessage";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
-import { WalletApprovalCallout } from "efi-ui/transactions/TransactionDrawer/WalletApprovalCallout";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
@@ -21,6 +20,7 @@ import { useConvergentCurvePoolStakeInputs } from "efi-ui/pools/useConvergentCur
 import { useJoinPool } from "efi-ui/pools/useJoinPool/useJoinPool";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
+import { WalletApprovalCallout } from "efi-ui/transactions/TransactionDrawer/WalletApprovalCallout";
 import { WalletDrawer } from "efi-ui/wallets/WalletDrawer/WalletDrawer";
 import {
   CryptoAsset,
@@ -29,7 +29,6 @@ import {
 } from "efi/crypto/CryptoAsset";
 import { findTokenAddressForPool } from "efi/pools/findTokenAddressForPool";
 import { PoolContract } from "efi/pools/PoolContract";
-import { formatUnits, parseUnits } from "@ethersproject/units";
 
 interface StakePrincipalTokensDrawerProps {
   account: string | null | undefined;
