@@ -46,11 +46,16 @@ import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { formatPercent } from "efi/base/formatPercent";
+import { SellYieldTokensButton } from "efi-ui/portfolio/SellButton/SellYieldTokensButton";
+import { AbstractConnector } from "@web3-react/abstract-connector";
 
 interface YieldTokenCardProps {
   library: Web3Provider | undefined;
   account: string | null | undefined;
-  interestToken: InterestToken;
+  chainId: number | undefined;
+  walletConnectionActive: boolean;
+  connector: AbstractConnector | undefined;
+  yieldToken: InterestToken;
 }
 
 const calloutClassName = tw(
@@ -66,30 +71,33 @@ const calloutClassName = tw(
 export function YieldTokenCard({
   library,
   account,
-  interestToken,
+  chainId,
+  connector,
+  walletConnectionActive,
+  yieldToken,
 }: YieldTokenCardProps): ReactElement {
   const { isDarkMode } = useDarkMode();
   const { currency } = useCurrencyPref();
 
-  const { data: interestTokenSymbol } = useSmartContractReadCall(
-    interestToken,
+  const { data: yieldTokenSymbol } = useSmartContractReadCall(
+    yieldToken,
     "symbol"
   );
-  const { data: interestTokenBalanceOf } = useSmartContractReadCall(
-    interestToken,
+  const { data: yieldTokenBalanceOf } = useSmartContractReadCall(
+    yieldToken,
     "balanceOf",
     {
       enabled: !!account,
       callArgs: [account as string],
     }
   );
-  const interestTokenBalance = useTokenBalance(
-    (interestToken as unknown) as ERC20Shim,
+  const yieldTokenBalance = useTokenBalance(
+    (yieldToken as unknown) as ERC20Shim,
     account
   );
 
   // The tranche contains the unlockTimestamp
-  const tranche = useTrancheForInterestToken(interestToken);
+  const tranche = useTrancheForInterestToken(yieldToken);
   const trancheCreatedAt = useTrancheCreatedAt(tranche);
   const { data: unlockTimestamp } = useSmartContractReadCall(
     tranche,
@@ -105,7 +113,7 @@ export function YieldTokenCard({
 
   const vaultContract = useUnderlyingVaultForTranche(tranche);
 
-  const pool = usePoolForToken((interestToken as unknown) as ERC20Shim);
+  const pool = usePoolForToken((yieldToken as unknown) as ERC20Shim);
 
   const baseAsset = useBaseAssetForTranche(tranche);
   const baseAssetSymbol = useCryptoSymbol(baseAsset);
@@ -116,8 +124,8 @@ export function YieldTokenCard({
   const baseAssetDecimals = useCryptoDecimals(baseAsset);
   const { data: exitValueBigNumber } = useOnSwapGivenIn(
     pool,
-    (interestToken as unknown) as ERC20Shim,
-    interestTokenBalanceOf
+    (yieldToken as unknown) as ERC20Shim,
+    yieldTokenBalanceOf
   );
 
   const BaseAssetIcon = findAssetIcon(baseAssetSymbol);
@@ -168,7 +176,7 @@ export function YieldTokenCard({
             <span className={tw("text-2xl", "font-semibold")}>
               <a
                 title={t`View tranche on etherscan`}
-                href={`https://etherscan.io/address/${interestToken.address}`}
+                href={`https://etherscan.io/address/${yieldToken.address}`}
                 target="_blank"
                 rel="noreferrer noopener"
               >
@@ -216,7 +224,7 @@ export function YieldTokenCard({
               className={tw("flex", "justify-center", "items-center")}
               bold
               textClassName={tw("text-2xl")}
-              text={`${interestTokenBalance.toFixed(6)} yt${baseAssetSymbol}`}
+              text={`${yieldTokenBalance.toFixed(6)} yt${baseAssetSymbol}`}
               label={t`1 Yield Token = yield on 1 ${baseAssetSymbol} at maturity`}
             />
           </Callout>
@@ -256,9 +264,17 @@ export function YieldTokenCard({
               <div className={tw("p-2", "text-base")}>{t`Claim`}</div>
             </AnchorButton>
           </Tooltip2>
-          <Button fill minimal intent={Intent.PRIMARY}>
-            <div className={tw("p-2", "text-base")}>{t`Sell`}</div>
-          </Button>
+          <SellYieldTokensButton
+            account={account}
+            chainId={chainId}
+            connector={connector}
+            library={library}
+            walletConnectionActive={walletConnectionActive}
+            pool={pool}
+            baseAsset={baseAsset}
+            maxSellAmount={yieldTokenBalance.toString()}
+            yieldToken={yieldToken}
+          />
           <Button fill minimal intent={Intent.PRIMARY}>
             <div className={tw("p-2", "text-base")}>{t`Stake`}</div>
           </Button>
