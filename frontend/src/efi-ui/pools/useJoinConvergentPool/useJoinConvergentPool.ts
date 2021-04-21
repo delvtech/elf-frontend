@@ -15,7 +15,7 @@ import ContractAddresses from "efi/contracts/contractsJson";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { PoolContract } from "efi/pools/PoolContract";
 
-export function useJoinPool(
+export function useJoinConvergentPool(
   signer: Signer | undefined,
   account: string | null | undefined,
   pool: PoolContract | undefined,

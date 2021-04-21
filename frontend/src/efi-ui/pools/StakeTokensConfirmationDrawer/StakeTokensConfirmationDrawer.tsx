@@ -74,7 +74,7 @@ export function StakingConfirmationDrawer({
   );
 
   const confirmButtonLabel = getConfirmButtonLabel(account);
-  const confirmButtonDisabled = useHasTokenApprovals(
+  const confirmButtonDisabled = !useHasTokenApprovals(
     account,
     balancerVault?.address,
     baseAsset,

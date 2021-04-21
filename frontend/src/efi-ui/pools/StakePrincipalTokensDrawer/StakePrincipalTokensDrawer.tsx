@@ -17,7 +17,7 @@ import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryp
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { StakeForm } from "efi-ui/pools/StakeForm/StakeForm";
 import { useConvergentCurvePoolStakeInputs } from "efi-ui/pools/useConvergentCurvePoolStakeInputs/useConvergentCurvePoolStakeInputs";
-import { useJoinPool } from "efi-ui/pools/useJoinPool/useJoinPool";
+import { useJoinConvergentPool } from "efi-ui/pools/useJoinConvergentPool/useJoinConvergentPool";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
 import { WalletApprovalCallout } from "efi-ui/transactions/TransactionDrawer/WalletApprovalCallout";
@@ -106,7 +106,7 @@ export function StakePrincipalTokensDrawer({
         })
       : undefined;
 
-  const onStake = useJoinPool(signer, account, pool, maxAmountsIn);
+  const onStake = useJoinConvergentPool(signer, account, pool, maxAmountsIn);
 
   const confirmButtonLabel = getConfirmButtonLabel(account);
   const confirmButtonDisabled = getConfirmButtonDisabled(
