@@ -2,7 +2,6 @@ import { ReactElement, ReactNode, useMemo } from "react";
 
 import {
   AnchorButton,
-  Button,
   ButtonGroup,
   Callout,
   Card,
@@ -14,7 +13,6 @@ import {
 import { IconNames } from "@blueprintjs/icons";
 import { Tooltip2 } from "@blueprintjs/popover2";
 import { Web3Provider } from "@ethersproject/providers";
-import { navigate } from "@reach/router";
 import classNames from "classnames";
 import { InterestToken } from "elf-contracts/types/InterestToken";
 import { formatUnits } from "ethers/lib/utils";
@@ -46,8 +44,8 @@ import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { formatPercent } from "efi/base/formatPercent";
-import { SellYieldTokensButton } from "efi-ui/portfolio/SellButton/SellYieldTokensButton";
 import { AbstractConnector } from "@web3-react/abstract-connector";
+import { GoToMarketButton } from "efi-ui/portfolio/PrincipalTokenCard/GoToMarketButton";
 
 interface YieldTokenCardProps {
   library: Web3Provider | undefined;
@@ -69,20 +67,12 @@ const calloutClassName = tw(
 );
 
 export function YieldTokenCard({
-  library,
   account,
-  chainId,
-  connector,
-  walletConnectionActive,
   yieldToken,
 }: YieldTokenCardProps): ReactElement {
   const { isDarkMode } = useDarkMode();
   const { currency } = useCurrencyPref();
 
-  const { data: yieldTokenSymbol } = useSmartContractReadCall(
-    yieldToken,
-    "symbol"
-  );
   const { data: yieldTokenBalanceOf } = useSmartContractReadCall(
     yieldToken,
     "balanceOf",
@@ -248,6 +238,7 @@ export function YieldTokenCard({
         <ButtonGroup className={tw("space-x-6")}>
           <Tooltip2
             inheritDarkTheme={false}
+            className={tw("w-full")}
             content={t`This asset can be claimed after it has reached maturity.`}
           >
             <AnchorButton
@@ -261,30 +252,10 @@ export function YieldTokenCard({
                 true
               }
             >
-              <div className={tw("p-2", "text-base")}>{t`Claim`}</div>
+              <div className={tw("p-2", "text-base")}>{t`Redeem`}</div>
             </AnchorButton>
           </Tooltip2>
-          <SellYieldTokensButton
-            account={account}
-            chainId={chainId}
-            connector={connector}
-            library={library}
-            walletConnectionActive={walletConnectionActive}
-            pool={pool}
-            baseAsset={baseAsset}
-            maxSellAmount={yieldTokenBalance.toString()}
-            yieldToken={yieldToken}
-          />
-          <Button fill minimal intent={Intent.PRIMARY}>
-            <div className={tw("p-2", "text-base")}>{t`Stake`}</div>
-          </Button>
-          <AnchorButton
-            intent={Intent.PRIMARY}
-            onClick={() => navigate(`exchange/${pool?.address}`)}
-            minimal
-          >
-            <div className={tw("p-2", "text-base")}>{t`Go to market`}</div>
-          </AnchorButton>
+          <GoToMarketButton pool={pool} />
         </ButtonGroup>
         <div className={tw("flex", "justify-center")}>
           <span>
