@@ -33,6 +33,7 @@ import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { PoolContract } from "efi/pools/PoolContract";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
+import { validateStakingValue } from "efi/staking/validateStakeValue";
 
 interface StakingPanelProps {
   library: Web3Provider | undefined;
@@ -118,13 +119,18 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
     setValueIn,
   } = useUpdateInputs();
 
-  const { isValidTokenInValue, isValidTokenOutValue } = validateTradeValues(
+  const isValidBaseAssetValue = validateStakingValue(
     amountIn,
     baseAssetBalanceOf,
     baseAssetDecimals,
-    baseAssetPoolBalance,
+    baseAssetPoolBalance
+  );
+
+  const isValidTrancheAssetValue = validateStakingValue(
     amountOut,
-    yieldAssetPoolBalance
+    baseAssetBalanceOf,
+    baseAssetDecimals,
+    baseAssetPoolBalance
   );
 
   const [isDrawerOpen, setDrawerOpen] = useState(false);
@@ -141,8 +147,8 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
   const submitButtonDisabled =
     formDisabled ||
     submitDisabled ||
-    !isValidTokenInValue ||
-    !isValidTokenOutValue ||
+    !isValidBaseAssetValue ||
+    !isValidTrancheAssetValue ||
     !amountIn ||
     !amountOut;
 
@@ -168,7 +174,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
         onChangeInputValue={onChangeIn}
         onCalculateLPOutGivenIn={onChangeOutFromIn}
         value={amountIn}
-        validValue={isValidTokenInValue}
+        validValue={isValidBaseAssetValue}
         tokenPoolReserves={baseAssetReserves}
         otherTokenPoolReserves={yieldAssetReserves}
         totalSupply={totalSupply}
@@ -186,7 +192,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
         onChangeInputValue={onChangeOut}
         onCalculateLPOutGivenIn={onChangeInFromOut}
         value={amountOut}
-        validValue={isValidTokenOutValue}
+        validValue={isValidTrancheAssetValue}
         tokenPoolReserves={yieldAssetReserves}
         otherTokenPoolReserves={baseAssetReserves}
         totalSupply={totalSupply}
