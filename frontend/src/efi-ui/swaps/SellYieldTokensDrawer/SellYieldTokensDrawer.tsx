@@ -28,8 +28,12 @@ import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { ERC20 } from "elf-contracts/types/ERC20";
 import { getBalancerApprovalMessage } from "efi-ui/balancer/balancerApprovalMessage";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
+import { InterestToken } from "elf-contracts/types/InterestToken";
+import { useTrancheForInterestToken } from "efi-ui/tranche/useTrancheForInterestToken";
+import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
+import { SellYieldTokenDetails } from "efi-ui/swaps/SellYieldTokensDrawer/SellYieldTokensDetails";
 
-interface SellPrincipalTransactionDrawerProps {
+interface SellYieldTokensDrawerProps {
   chainId: number | undefined;
   account: string | null | undefined;
   walletConnectionActive: boolean;
@@ -37,13 +41,13 @@ interface SellPrincipalTransactionDrawerProps {
   library: Web3Provider | undefined;
   pool: PoolContract | undefined;
   baseAsset: CryptoAssetWithIcon;
-  tranche: Tranche | undefined;
+  yieldToken: InterestToken | undefined;
   isOpen: boolean;
   onClose: () => void;
 }
 
-export function SellPrincipalTokensTransactionDrawer(
-  props: SellPrincipalTransactionDrawerProps
+export function SellYieldTokensDrawer(
+  props: SellYieldTokensDrawerProps
 ): ReactElement {
   const {
     connector,
@@ -53,7 +57,7 @@ export function SellPrincipalTokensTransactionDrawer(
     account,
     baseAsset: { assetIcon: AssetIcon },
     baseAsset,
-    tranche,
+    yieldToken,
     isOpen,
     onClose,
     pool,
@@ -62,8 +66,12 @@ export function SellPrincipalTokensTransactionDrawer(
   const balancerVault = useBalancerVault();
 
   // base asset calls
+  const tranche = useTrancheForInterestToken(yieldToken);
   const baseAssetSymbol = useCryptoSymbol(baseAsset);
   const baseAssetDecimals = useCryptoDecimals(baseAsset);
+
+  // yield token calls
+  const { data: yieldTokenDecimals } = useTokenDecimals(yieldToken);
 
   // tranche calls
   const { data: trancheUnlockTimestamp } = useSmartContractReadCall(
@@ -77,13 +85,13 @@ export function SellPrincipalTokensTransactionDrawer(
   const unlockTimeStampDate = convertEpochSecondsToDate(trancheUnlockTimestamp);
 
   // This might be weth in the case of eth, but that's okay for spot price
-  const baseAssetPoolToken = usePoolPairedToken(pool, tranche as ERC20Shim);
+  const baseAssetPoolToken = usePoolPairedToken(pool, yieldToken as ERC20Shim);
   const {
     spotPriceBaseAssetForOneToken,
     spotPriceTokenForOneBaseAsset,
   } = usePoolTokenPrices(pool, baseAssetPoolToken);
 
-  const trancheAddress = tranche?.address;
+  const yieldTokenAddress = yieldToken?.address;
   const baseAssetBalancerAddress = getTokenAddressForBalancer(baseAsset);
   const {
     amountIn,
@@ -92,7 +100,7 @@ export function SellPrincipalTokensTransactionDrawer(
     onAmountOutChange,
   } = useQueryBatchSwapInputs(
     pool,
-    trancheAddress,
+    yieldTokenAddress,
     trancheDecimals,
     baseAssetBalancerAddress,
     baseAssetDecimals
@@ -100,13 +108,13 @@ export function SellPrincipalTokensTransactionDrawer(
 
   // pool calls
   const amountInAsBigNumber = parseUnits(amountIn || "0", baseAssetDecimals);
-  const amountOutAsBigNumber = parseUnits(amountOut || "0", trancheDecimals);
+  const amountOutAsBigNumber = parseUnits(amountOut || "0", yieldTokenDecimals);
 
   const onConfirmSellPrincipalTokens = useBatchSwapGivenIn(
     account,
     signer,
     pool,
-    tranche?.address,
+    yieldToken?.address,
     baseAssetBalancerAddress,
     amountInAsBigNumber
   );
@@ -124,7 +132,8 @@ export function SellPrincipalTokensTransactionDrawer(
     spotPriceTokenForOneBaseAsset
   );
 
-  const assetIn = makeCryptoAsset(tranche as ERC20Shim);
+  const assetIn = makeCryptoAsset(yieldToken as ERC20Shim);
+  const assetInSymbol = `yt${baseAssetSymbol}`;
 
   // We want InputGroup to be a controlled component, but passing `undefined` is
   // how you express an uncontrolled component. Having this change between
@@ -140,7 +149,7 @@ export function SellPrincipalTokensTransactionDrawer(
       account={account}
       assetIn={assetIn}
       assetInIcon={undefined}
-      assetInSymbol={`pt${baseAssetSymbol}`}
+      assetInSymbol={assetInSymbol}
       walletConnectionActive={walletConnectionActive}
       walletApprovalMessageRenderer={getBalancerApprovalMessage}
       amountIn={amountInAsBigNumber}
@@ -156,11 +165,11 @@ export function SellPrincipalTokensTransactionDrawer(
           onAmountOutChange={onAmountOutChange}
           heading={t`Enter an amount to sell`}
           assetInIcon={null}
-          assetInSymbol={`${baseAssetSymbol} Principal Token`}
+          assetInSymbol={`${baseAssetSymbol} Yield Token`}
           assetOutIcon={AssetIcon}
           assetOutSymbol={baseAssetSymbol}
         >
-          <PrincipalTokenTransactionDetails
+          <SellYieldTokenDetails
             spotPriceBaseAssetForOneToken={spotPriceBaseAssetForOneToken}
             baseAssetSymbol={baseAssetSymbol}
             unlockTimeStamp={unlockTimeStampDate}

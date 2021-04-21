@@ -9,7 +9,10 @@ import { t } from "ttag";
 
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useInterestTokenContracts } from "efi-ui/interestToken/useInterestTokens/useInterestTokens";
+import { useConvergentCurvePoolsWithLPBalance } from "efi-ui/portfolio/hooks/useConvergentCurvePoolsWithLPBalance";
 import { useTotalFiatBalance } from "efi-ui/portfolio/hooks/useTotalFiatBalance";
+import { useTotalLiquidityProvidedMulti } from "efi-ui/portfolio/hooks/useTotalLiquidityProvidedMulti";
+import { useWeightedPoolsWithLPBalance } from "efi-ui/portfolio/hooks/useWeightedPoolsWithLPBalance";
 import { LiquidityPositionPortfolio } from "efi-ui/portfolio/LiquidityPositionPortfolio/LiquidityPositionPortfolio";
 import { PortfolioTab } from "efi-ui/portfolio/PortfolioTabs/PortfolioTabs";
 import { PrincipalTokenPortfolio } from "efi-ui/portfolio/PrincipalTokenPortfolio/PrincipalTokenPortfolio";
@@ -17,9 +20,6 @@ import { YieldTokenPortfolio } from "efi-ui/portfolio/YieldTokenPortfolio/YieldT
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useTokensWithBalance } from "efi-ui/token/hooks/useTokensWithBalance";
 import { useTrancheContracts } from "efi-ui/tranche/useTrancheContracts";
-import { useConvergentCurvePoolsWithLPBalance } from "efi-ui/portfolio/hooks/useConvergentCurvePoolsWithLPBalance";
-import { useWeightedPoolsWithLPBalance } from "efi-ui/portfolio/hooks/useWeightedPoolsWithLPBalance";
-import { useTotalLiquidityProvidedMulti } from "efi-ui/portfolio/hooks/useTotalLiquidityProvidedMulti";
 
 export function usePortfolioTabs(
   chainId: number | undefined,
@@ -69,8 +69,11 @@ export function usePortfolioTabs(
       totalFiatValue: totalFiatBalanceAllYieldTokens,
       contentRenderer: () => (
         <YieldTokenPortfolio
+          chainId={chainId}
           library={library}
+          connector={connector}
           account={account}
+          walletConnectionActive={walletConnectionActive}
           yieldTokens={yieldTokensWithBalance}
         />
       ),

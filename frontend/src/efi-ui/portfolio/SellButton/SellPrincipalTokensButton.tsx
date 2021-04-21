@@ -11,7 +11,7 @@ import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { SellPrincipalTokensTransactionDrawer } from "efi-ui/swaps/SellPrincipalTokensTransactionDrawer/SellPrincipalTokensTransactionDrawer";
 import { PoolContract } from "efi/pools/PoolContract";
 
-interface SellButtonProps {
+interface SellPrincipalTokensProps {
   chainId: number | undefined;
   account: string | null | undefined;
   walletConnectionActive: boolean;
@@ -19,13 +19,13 @@ interface SellButtonProps {
   library: Web3Provider | undefined;
   pool: PoolContract | undefined;
 
-  sellAmount: string | undefined;
+  maxSellAmount: string | undefined;
 
   tranche: Tranche | undefined;
   baseAsset: CryptoAssetWithIcon | undefined;
 }
 
-export function SellButton({
+export function SellPrincipalTokensButton({
   baseAsset,
   tranche,
   account,
@@ -33,9 +33,9 @@ export function SellButton({
   connector,
   library,
   pool,
-  sellAmount,
+  maxSellAmount,
   walletConnectionActive,
-}: SellButtonProps): ReactElement {
+}: SellPrincipalTokensProps): ReactElement {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
 
   return (

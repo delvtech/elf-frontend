@@ -29,7 +29,7 @@ import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
 import { RedeemButton } from "efi-ui/portfolio/RedeemButton/RedeemButton";
-import { SellButton } from "efi-ui/portfolio/SellButton/SellButton";
+import { SellPrincipalTokensButton } from "efi-ui/portfolio/SellButton/SellPrincipalTokensButton";
 import { StakeButton } from "efi-ui/portfolio/StakeButton/StakeButton";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
@@ -246,14 +246,14 @@ export function PrincipalTokenCard(
           baseAsset={baseAsset}
           walletConnectionActive={walletConnectionActive}
         />
-        <SellButton
+        <SellPrincipalTokensButton
           library={library}
           connector={connector}
           chainId={chainId}
           account={account}
           tranche={tranche}
           pool={pool}
-          sellAmount={trancheBalance.toString()}
+          maxSellAmount={trancheBalance.toString()}
           baseAsset={baseAsset}
           walletConnectionActive={walletConnectionActive}
         />

@@ -8,15 +8,22 @@ import tw from "efi-tailwindcss-classnames";
 import { YieldTokenCard } from "efi-ui/portfolio/YieldTokenCard/YieldTokenCard";
 import { NoWalletConnectedNonIdealState } from "efi-ui/wallets/NoWalletConnectedNonIdealState/NoWalletConnectedNonIdealState";
 import { NoYieldTokensInWalletNonIdealState } from "efi-ui/wallets/NoYieldTokensInWalletNonIdealState/NoYieldTokensInWalletNonIdealState";
+import { AbstractConnector } from "@web3-react/abstract-connector";
 
 interface YieldTokenPortfolioProps {
+  chainId: number | undefined;
   library: Web3Provider | undefined;
+  connector: AbstractConnector | undefined;
+  walletConnectionActive: boolean;
   account: string | null | undefined;
   yieldTokens: InterestToken[];
 }
 
 export function YieldTokenPortfolio({
   library,
+  chainId,
+  connector,
+  walletConnectionActive,
   account,
   yieldTokens,
 }: YieldTokenPortfolioProps): ReactElement {
@@ -51,10 +58,13 @@ export function YieldTokenPortfolio({
       ) : (
         yieldTokens.map((interestToken) => [
           <YieldTokenCard
-            key={interestToken.address}
+            chainId={chainId}
             library={library}
+            connector={connector}
+            walletConnectionActive={walletConnectionActive}
+            key={interestToken.address}
             account={account}
-            interestToken={interestToken}
+            yieldToken={interestToken}
           />,
         ])
       )}
