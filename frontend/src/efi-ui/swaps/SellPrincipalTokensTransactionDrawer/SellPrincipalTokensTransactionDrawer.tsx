@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { ReactElement } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
@@ -42,19 +42,22 @@ interface SellPrincipalTransactionDrawerProps {
   onClose: () => void;
 }
 
-export const SellPrincipalTokensTransactionDrawer: FC<SellPrincipalTransactionDrawerProps> = ({
-  connector,
-  walletConnectionActive,
-  library,
-  chainId,
-  account,
-  baseAsset: { assetIcon: AssetIcon },
-  baseAsset,
-  tranche,
-  isOpen,
-  onClose,
-  pool,
-}) => {
+export function SellPrincipalTokensTransactionDrawer(
+  props: SellPrincipalTransactionDrawerProps
+): ReactElement {
+  const {
+    connector,
+    walletConnectionActive,
+    library,
+    chainId,
+    account,
+    baseAsset: { assetIcon: AssetIcon },
+    baseAsset,
+    tranche,
+    isOpen,
+    onClose,
+    pool,
+  } = props;
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
   const balancerVault = useBalancerVault();
 
@@ -167,7 +170,7 @@ export const SellPrincipalTokensTransactionDrawer: FC<SellPrincipalTransactionDr
       }
     />
   );
-};
+}
 
 function getPriceSlippageAndTradingFee(
   amountIn: number,
