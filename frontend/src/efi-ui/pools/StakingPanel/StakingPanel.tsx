@@ -33,6 +33,7 @@ import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { PoolContract } from "efi/pools/PoolContract";
 import { validateStakingValue } from "efi/staking/validateStakeValue";
+import { useJoinConvergentPool } from "efi-ui/pools/useJoinConvergentPool/useJoinConvergentPool";
 
 interface StakingPanelProps {
   library: Web3Provider | undefined;
@@ -54,6 +55,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
   const {
     account,
     library,
+    signer,
     // chainId,
     // connector,
     buttonLabel,
@@ -152,6 +154,22 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
     !amountIn ||
     !amountOut;
 
+  const poolTokenMaxAmounts = [
+    parseUnits(amountIn || "0", baseAssetDecimals),
+    parseUnits(amountOut || "0", yieldAssetDecimals),
+  ];
+  const joinConvergentPool = useJoinConvergentPool(
+    signer,
+    account,
+    pool,
+    poolTokenMaxAmounts
+  );
+
+  // TODO: use differnt join types depending on pool type
+  const onStake = useCallback(() => {
+    joinConvergentPool();
+  }, [joinConvergentPool]);
+
   return (
     <div className={tw("flex", "flex-col", "space-y-5")}>
       {/* Trade Asset */}
@@ -224,7 +242,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
         onClose={() => {
           setDrawerOpen(false);
         }}
-        onStake={() => {}}
+        onStake={onStake}
       />
     </div>
   );
