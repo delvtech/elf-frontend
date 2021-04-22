@@ -4,11 +4,12 @@ import { InputGroup, Intent, Tag } from "@blueprintjs/core";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { SvgIcon } from "efi-ui/base/SvgIcon";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
-import { calculateLPOutGivenIn } from "efi/pools/calculateLPOutGivenIn";
+import { clipStringValueToDecimals } from "efi/math/fixedPoint";
+import { calculateLPOutGivenInFixed } from "efi/pools/calculateLPOutGivenIn";
 
 import styles from "./StakingInput.module.css";
-import { SvgIcon } from "efi-ui/base/SvgIcon";
 
 interface StakingInputProps {
   cryptoDisplayBalance: string | number;
@@ -17,13 +18,13 @@ interface StakingInputProps {
   cryptoAssetIcon: SvgIcon | undefined;
 
   disabled: boolean;
-  onCalculateLPOutGivenIn: (otherNeeded: string, lpOut: number) => void;
+  onCalculateLPOutGivenIn: (otherNeeded: string, lpOut: string) => void;
   onChangeInputValue: (inputValue: string) => void;
   value: string | undefined;
   validValue: boolean;
-  tokenPoolReserves: number | undefined;
-  otherTokenPoolReserves: number | undefined;
-  totalSupply: number | undefined;
+  tokenPoolReserves: string | undefined;
+  otherTokenPoolReserves: string | undefined;
+  totalSupply: string | undefined;
 }
 
 export function StakingInput(props: StakingInputProps): ReactElement {
@@ -45,31 +46,30 @@ export function StakingInput(props: StakingInputProps): ReactElement {
   const onChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const userInputValue = event.target.value;
-      onChangeInputValue(userInputValue);
+      const safeValue = clipStringValueToDecimals(
+        userInputValue,
+        cryptoDecimals || 18
+      );
+      onChangeInputValue(safeValue);
 
-      const { otherNeeded, lpOut } = calculateLPOutGivenIn(
-        +userInputValue,
-        Number.MAX_SAFE_INTEGER,
-        tokenPoolReserves ?? 0,
-        otherTokenPoolReserves ?? 0,
-        totalSupply ?? 0
+      const { otherNeeded, lpOut } = calculateLPOutGivenInFixed(
+        userInputValue || "0",
+        Number.MAX_SAFE_INTEGER.toString(),
+        tokenPoolReserves?.toString() || "0",
+        otherTokenPoolReserves?.toString() || "0",
+        cryptoDecimals || 18,
+        totalSupply?.toString() || "0"
       );
 
-      // TODO:  JS can't handle 18 decimals.  need to use fixedpoint math for calculateLPOutGivenIn
-      // so we can go straight from BigNumber to string.
-      const decimals = Math.min(cryptoDecimals || 10, 10);
-      onCalculateLPOutGivenIn(
-        otherNeeded ? otherNeeded.toFixed(decimals).toString() : "",
-        lpOut
-      );
+      onCalculateLPOutGivenIn(otherNeeded, lpOut);
     },
     [
+      cryptoDecimals,
       onChangeInputValue,
       tokenPoolReserves,
       otherTokenPoolReserves,
       totalSupply,
       onCalculateLPOutGivenIn,
-      cryptoDecimals,
     ]
   );
 

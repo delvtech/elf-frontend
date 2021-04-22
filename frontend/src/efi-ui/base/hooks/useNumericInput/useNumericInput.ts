@@ -1,6 +1,7 @@
 import { ChangeEvent, useCallback, useState } from "react";
 
 import { ANY_NUMBER_REGEX } from "efi/base/numbers";
+import { getPlacesAfterDecimal } from "efi/math/fixedPoint";
 
 export interface NumericInputOptions {
   /**
@@ -107,28 +108,12 @@ function validateInput(
 
   if (isIntegerNumber(maxPrecision)) {
     const placesAfterDecimal = getPlacesAfterDecimal(inputString);
-    if (placesAfterDecimal >= maxPrecision) {
+    if (placesAfterDecimal > maxPrecision) {
       return false;
     }
   }
 
   return true;
-}
-
-/**
- * Helper function to get the number of digits after the decimal.  Assumes a properly formatted
- * number with only numeric characters and 0 or 1 decimals
- *
- * @param stringValue a numeric string with or without a decimal i.e. 3.14 or 42.
- */
-function getPlacesAfterDecimal(stringValue: string): number {
-  const hasDecimal = stringValue.indexOf(".") !== -1;
-
-  if (hasDecimal) {
-    return stringValue.split(".")[1].length;
-  }
-
-  return 0;
 }
 
 /**

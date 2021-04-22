@@ -73,7 +73,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
   );
   // Pool calls
   const { data: totalSupplyBN } = useSmartContractReadCall(pool, "totalSupply");
-  const totalSupply = +formatEther(totalSupplyBN ?? 0);
+  const totalSupply = formatEther(totalSupplyBN ?? 0);
   // const spotPrice = usePoolSpotPrice(pool, baseAssetContract);
 
   const {
@@ -101,12 +101,12 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
     label: trancheAssetSymbolLabel,
   } = useTrancheAssetSymbol(yieldAsset, baseAssetSymbol);
 
-  const baseAssetReserves = +formatUnits(
+  const baseAssetReserves = formatUnits(
     baseAssetPoolBalance ?? 0,
     baseAssetDecimals
   );
 
-  const yieldAssetReserves = +formatUnits(
+  const yieldAssetReserves = formatUnits(
     yieldAssetPoolBalance ?? 0,
     yieldAssetDecimals
   );
@@ -119,7 +119,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
     onChangeOutFromIn,
     onChangeInFromOut,
     setValueIn,
-  } = useUpdateInputs();
+  } = useUpdateInputs({ maxPrecision: baseAssetDecimals });
 
   const isValidBaseAssetValue = validateStakingValue(
     amountIn,
@@ -324,7 +324,7 @@ const numericInputOptions: NumericInputOptions = {
   maxPrecision: 18,
 };
 
-function useUpdateInputs() {
+function useUpdateInputs(options: NumericInputOptions) {
   // useNumericInput ensures valid numeric inputs from the user
   const { stringValue: stringValueIn, setValue: setValueIn } = useNumericInput(
     numericInputOptions
@@ -335,21 +335,21 @@ function useUpdateInputs() {
   } = useNumericInput(numericInputOptions);
 
   const onChangeOutFromIn = useCallback(
-    (otherNeeded: string, lpOut: number) => {
+    (otherNeeded: string, lpOut: string) => {
       if (!otherNeeded) {
         setValueOut(undefined);
       } else {
-        setValueOut(`${otherNeeded}`);
+        setValueOut(otherNeeded);
       }
     },
     [setValueOut]
   );
   const onChangeInFromOut = useCallback(
-    (otherNeeded: string, lpOut: number) => {
+    (otherNeeded: string, lpOut: string) => {
       if (!otherNeeded) {
         setValueIn(undefined);
       } else {
-        setValueIn(`${otherNeeded}`);
+        setValueIn(otherNeeded);
       }
     },
     [setValueIn]
