@@ -1,13 +1,11 @@
-import React, { Fragment, ReactElement } from "react";
+import { Fragment, ReactElement } from "react";
 import { Helmet } from "react-helmet";
 
-import { Classes, H2 } from "@blueprintjs/core";
+import { H2 } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { RouteComponentProps } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
-import classNames from "classnames";
 import { Signer } from "ethers";
-import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { getQueryData } from "efi-ui/base/queryResults";
@@ -58,16 +56,7 @@ export function PoolView({ poolAddress }: PoolViewProps): ReactElement {
         <div className={tw("flex", "flex-col", "flex-1", "space-y-8")}>
           {/* page title */}
           <div className={tw("flex", "justify-between")}>
-            <div className={tw("flex", "flex-col", "justify-start")}>
-              <H2 className={tw("mb-4")}>{poolName}</H2>
-              <span
-                className={classNames(
-                  Classes.RUNNING_TEXT,
-                  Classes.TEXT_MUTED,
-                  tw("text-base")
-                )}
-              >{t`Trade for either asset or provide liquidity for this pool.`}</span>
-            </div>
+            <H2>{poolName}</H2>
             <TransactionPendingCard
               active={active}
               account={account}
