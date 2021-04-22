@@ -1,6 +1,7 @@
 import abi from "ethereumjs-abi";
 import { BigNumber, Signer } from "ethers";
 import {
+  defaultAbiCoder,
   formatEther,
   formatUnits,
   parseEther,
@@ -41,18 +42,10 @@ export async function initializeConvergentPool(
   // has something to do with the way we keep track of the yield asset price based off of swaps.  to
   // initialize the pool with yield asset we need to follow up the joinPool by swapping in some
   // yield asset for some base asset.
-  let maxAmountsIn: BigNumber[];
 
   const parseToken = (value: string) => parseUnits(value, baseAssetDecimals);
 
-  // make sure match the order the balancer vault has the tokens in.
-  if (tokens[0] === baseAssetContract.address) {
-    maxAmountsIn = [parseToken(amountIn), parseToken(amountIn)];
-  } else {
-    maxAmountsIn = [parseToken(amountIn), parseToken(amountIn)];
-  }
-
-  const amounts = maxAmountsIn.map((amt) => amt.toHexString());
+  const maxAmountsIn = [parseToken(amountIn), parseToken(amountIn)];
 
   // Whether or not to use balances held in balancer.  Since The Vault has nothing, set this to false.
   const fromInternalBalance = false;
@@ -63,7 +56,7 @@ export async function initializeConvergentPool(
 
   // Balancer V2 vault allows userData as a way to pass props through to pool contracts.  In our
   // case we need to pass the maxAmountsIn.
-  const userData = abi.rawEncode(["uint256[]"], [amounts]);
+  const userData = defaultAbiCoder.encode(["uint256[]"], [maxAmountsIn]);
 
   const joinRequest = {
     assets: tokens,
