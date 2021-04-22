@@ -1,4 +1,4 @@
-import React, { FC, ReactElement, useCallback } from "react";
+import React, { ReactElement, useCallback } from "react";
 
 import { Button, NonIdealState } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";

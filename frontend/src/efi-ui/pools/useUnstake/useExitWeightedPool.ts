@@ -17,7 +17,7 @@ import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSma
 import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 import ContractAddresses from "efi/contracts/contractsJson";
 import { ContractMethodArgs } from "efi/contracts/types";
-import { calculateTokensOutForLPIn } from "efi/pools/calculateTokensOutForLPIn";
+import { calculateTokensOutForLPInFixed } from "efi/pools/calculateTokensOutForLPIn";
 import { getSmartContractFromRegistryMulti } from "efi-ui/contracts/SmartContractsRegistry";
 import { WeightedPool } from "elf-contracts/types/WeightedPool";
 import { WeightedPoolExitKind } from "efi/pools/weightedPool";
@@ -95,14 +95,16 @@ function makeExitPoolCallArgs(
     return poolToken;
   });
 
+  // ok to cast since all inputs are checked above
+  // TODO: see if we can remove this, this is uses logic for exiting from a CCPool
   const poolTokenMinAmountsOut = getPoolTokenMinAmountsOut(
     lpBalanceOf,
     totalSupply,
     poolTokenReserves,
     poolTokenDecimals
-  );
+  ) as BigNumber[];
 
-  // weighted pools take a exit kind and amount of bpt token in the user dataV
+  // weighted pools take a exit kind and amount of bpt token in the user data
   const userData = defaultAbiCoder.encode(
     ["uint8", "uint256"],
     [WeightedPoolExitKind.EXACT_BPT_IN_FOR_TOKENS_OUT, lpBalanceOf]
@@ -125,16 +127,15 @@ function makeExitPoolCallArgs(
   return callArgs;
 }
 
-// TODO: Improve this with Fixed Point math as it currently creates "dust", ie: doesn't
-// quite let you withdraw everything.
+// TODO: see if we can remove this, this is uses logic for exiting from a CCPool
 function getPoolTokenMinAmountsOut(
   lpBalanceOf: BigNumber,
   totalSupply: BigNumber,
   poolTokenReserves: BigNumber[],
   poolTokenDecimals: (number | undefined)[]
 ) {
-  const lpIn = +formatUnits(lpBalanceOf, BALANCER_POOL_LP_TOKEN_DECIMALS);
-  const totalSupplyNumber = +formatUnits(
+  const lpIn = formatUnits(lpBalanceOf, BALANCER_POOL_LP_TOKEN_DECIMALS);
+  const totalSupplyString = formatUnits(
     totalSupply,
     BALANCER_POOL_LP_TOKEN_DECIMALS
   );
@@ -148,15 +149,21 @@ function getPoolTokenMinAmountsOut(
     poolTokenDecimals[1]
   );
 
-  const { xNeeded, yNeeded } = calculateTokensOutForLPIn(
+  const { xNeeded, yNeeded } = calculateTokensOutForLPInFixed(
     lpIn,
-    +xReservesString,
-    +yReservesString,
-    totalSupplyNumber
+    xReservesString,
+    yReservesString,
+    totalSupplyString,
+    poolTokenDecimals[0]
   );
+
+  if (!xNeeded || !yNeeded) {
+    return undefined;
+  }
+
   const poolTokenMinAmountsOut = [
-    parseUnits(xNeeded.toFixed(poolTokenDecimals[0]), poolTokenDecimals[0]),
-    parseUnits(yNeeded.toFixed(poolTokenDecimals[1]), poolTokenDecimals[1]),
+    parseUnits(xNeeded, poolTokenDecimals[0]),
+    parseUnits(yNeeded, poolTokenDecimals[1]),
   ];
   return poolTokenMinAmountsOut;
 }

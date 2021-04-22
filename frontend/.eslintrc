@@ -52,6 +52,10 @@
       {
         "selector": "CallExpression[callee.name='useConsole']",
         "message": "calling useConsole"
+      },
+      {
+        "selector": "CallExpression[callee.name='useWhyDidYouUpdate']",
+        "message": "calling useWhyDidYouUpdate"
       }
     ]
   }

@@ -16,16 +16,11 @@ import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { RedeemForm } from "efi-ui/tranche/RedeemForm/RedeemForm";
 import { useWithdrawInterest } from "efi-ui/tranche/RedeemTokensDrawer/useWithdrawInterest";
-import {
-  useInterestTokenForTranche,
-  useTrancheInterestTokenMulti,
-} from "efi-ui/tranche/useTrancheInterestTokenMulti";
+import { useInterestTokenForTranche } from "efi-ui/tranche/useTrancheInterestTokenMulti";
 import { WalletDrawer } from "efi-ui/wallets/WalletDrawer/WalletDrawer";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatFullDate } from "efi/base/dates";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
-
-import { useWithdrawPrincipal } from "./useWithdrawPrincipal";
 
 interface RedeemYieldTokensDrawerProps {
   account: string | null | undefined;
@@ -50,7 +45,6 @@ export function RedeemYieldTokensDrawer({
   const baseAssetSymbol = useCryptoSymbol(baseAsset);
 
   // tranche calls
-  const { data: trancheDecimals } = useTokenDecimals(tranche);
   const { data: trancheUnlockTimestamp } = useSmartContractReadCall(
     tranche,
     "unlockTimestamp"

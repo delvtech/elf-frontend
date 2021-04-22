@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 
+import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
 import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
 import { Vault } from "elf-contracts/types/Vault";
 import { BigNumber, Signer } from "ethers";
@@ -9,6 +10,7 @@ import { ExitRequest } from "efi-balancer/ExitRequest";
 import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { getQueriesData } from "efi-ui/base/queryResults";
+import { getSmartContractFromRegistryMulti } from "efi-ui/contracts/SmartContractsRegistry";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
@@ -17,9 +19,8 @@ import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSma
 import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 import ContractAddresses from "efi/contracts/contractsJson";
 import { ContractMethodArgs } from "efi/contracts/types";
-import { calculateTokensOutForLPIn } from "efi/pools/calculateTokensOutForLPIn";
-import { getSmartContractFromRegistryMulti } from "efi-ui/contracts/SmartContractsRegistry";
-import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
+import { calculateTokensOutForLPInFixed } from "efi/pools/calculateTokensOutForLPIn";
+import { clipStringValueToDecimals } from "efi/math/fixedPoint";
 
 export function useExitConvergentCurvePool(
   signer: Signer | undefined,
@@ -48,21 +49,30 @@ export function useExitConvergentCurvePool(
     signer
   );
 
-  const exitPoolCallArgs = makeExitPolCallArgs(
-    poolId,
-    account,
-    poolTokens,
-    poolTokenReserves,
-    poolTokenDecimals,
-    totalSupply,
-    lpBalanceOf
-  );
   const onExitPool = useCallback(() => {
+    const exitPoolCallArgs = makeExitPolCallArgs(
+      poolId,
+      account,
+      poolTokens,
+      poolTokenReserves,
+      poolTokenDecimals,
+      totalSupply,
+      lpBalanceOf
+    );
     if (!exitPoolCallArgs) {
       return;
     }
     exitPool(exitPoolCallArgs);
-  }, [exitPool, exitPoolCallArgs]);
+  }, [
+    account,
+    exitPool,
+    lpBalanceOf,
+    poolId,
+    poolTokenDecimals,
+    poolTokenReserves,
+    poolTokens,
+    totalSupply,
+  ]);
 
   return onExitPool;
 }
@@ -94,12 +104,13 @@ function makeExitPolCallArgs(
     return poolToken;
   });
 
+  // ok to cast since all input defined above
   const poolTokenMinAmountsOut = getPoolTokenMinAmountsOut(
     lpBalanceOf,
     totalSupply,
     poolTokenReserves,
     poolTokenDecimals
-  );
+  ) as BigNumber[];
 
   const userData = defaultAbiCoder.encode(
     ["uint256[]"],
@@ -123,16 +134,14 @@ function makeExitPolCallArgs(
   return callArgs;
 }
 
-// TODO: Improve this with Fixed Point math as it currently creates "dust", ie: doesn't
-// quite let you withdraw everything.
 function getPoolTokenMinAmountsOut(
   lpBalanceOf: BigNumber,
   totalSupply: BigNumber,
   poolTokenReserves: BigNumber[],
   poolTokenDecimals: (number | undefined)[]
 ) {
-  const lpIn = +formatUnits(lpBalanceOf, BALANCER_POOL_LP_TOKEN_DECIMALS);
-  const totalSupplyNumber = +formatUnits(
+  const lpIn = formatUnits(lpBalanceOf, BALANCER_POOL_LP_TOKEN_DECIMALS);
+  const totalSupplyString = formatUnits(
     totalSupply,
     BALANCER_POOL_LP_TOKEN_DECIMALS
   );
@@ -146,23 +155,32 @@ function getPoolTokenMinAmountsOut(
     poolTokenDecimals[1]
   );
 
-  const { xNeeded, yNeeded } = calculateTokensOutForLPIn(
+  const { xNeeded, yNeeded } = calculateTokensOutForLPInFixed(
     lpIn,
-    +xReservesString,
-    +yReservesString,
-    totalSupplyNumber
+    xReservesString,
+    yReservesString,
+    totalSupplyString,
+    poolTokenDecimals[0]
   );
+
+  if (!xNeeded || !yNeeded) {
+    return undefined;
+  }
+
+  // because ConvergentCurvePool doesn't let you specify exact BPT in, rather you have to specify
+  // min pool tokens out.  because of rounding errors in the contract itself, we can't calculate
+  // the exact tokens out.  therefore we chop off the last two decimals and leave very fine dust.
+  // like really fine. like more fine than playa dust.
   const poolTokenMinAmountsOut = [
     parseUnits(
-      // TODO: use fixed point math so that we don't create dust
-      (0.999 * xNeeded).toFixed(poolTokenDecimals[0]),
+      clipStringValueToDecimals(xNeeded, 16) as string,
       poolTokenDecimals[0]
     ),
     parseUnits(
-      // TODO: use fixed point math so that we don't create dust
-      (0.999 * yNeeded).toFixed(poolTokenDecimals[1]),
+      clipStringValueToDecimals(yNeeded, 16) as string,
       poolTokenDecimals[1]
     ),
   ];
+
   return poolTokenMinAmountsOut;
 }

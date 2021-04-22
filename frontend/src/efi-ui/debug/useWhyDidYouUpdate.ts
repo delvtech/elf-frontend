@@ -2,6 +2,9 @@ import { useEffect, useRef } from "react";
 
 export function useWhyDidYouUpdate(
   name: string,
+  // has to be 'any' instead of 'unknown' otherwise you force the caller to cast the value.  not worth
+  // it for this debug tool
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   props: Record<string, any>
 ): void {
   // Get a mutable ref object where we can store props ...
@@ -26,6 +29,7 @@ export function useWhyDidYouUpdate(
       });
       // If changesObj not empty then output to console
       if (Object.keys(changesObj).length) {
+        // eslint-disable-next-line no-console
         console.log("[why-did-you-update]", name, changesObj);
       }
     }

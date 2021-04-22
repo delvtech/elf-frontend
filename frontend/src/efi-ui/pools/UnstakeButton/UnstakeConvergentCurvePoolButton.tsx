@@ -3,12 +3,12 @@ import { ReactElement } from "react";
 import { Button, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
+import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
+import { Signer } from "ethers";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { useExitConvergentCurvePool } from "efi-ui/pools/useUnstake/useExitConvergentCurvePool";
-import { Signer } from "ethers";
-import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
 
 interface UnstakeConvergentCurvePoolButtonProps {
   account: string | null | undefined;
