@@ -5,10 +5,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
-import {
-  calculateLPOutGivenIn,
-  calculateLPOutGivenInFixed,
-} from "efi/pools/calculateLPOutGivenIn";
+import { calculateLPOutGivenInFixed } from "efi/pools/calculateLPOutGivenIn";
 
 import styles from "./StakingInput.module.css";
 import { SvgIcon } from "efi-ui/base/SvgIcon";

@@ -53,44 +53,17 @@ export interface LPOutGivenTokenInFixed {
 
 export function calculateLPOutGivenInFixed(
   yIn: string, // y value, bond
-  // yDecimals: number,
   xIn: string, // x value, base
-  // xDecimals: number,
   yReserves: string,
   xReserves: string,
   tokenDecimals: number,
-  totalSupply: string // lp tokens
-  // supplyDecimals: number
+  totalSupply: string // lp tokens, always 18 point decimal
 ): LPOutGivenTokenInFixed {
-  console.log("yIn", yIn);
-  console.log("xIn", xIn);
-  console.log("yReserves", yReserves);
-  console.log("xReserves", xReserves);
-  console.log("totalSupply", totalSupply);
-
-  // might need this for 6 point decimal things and then need to upscale
-  // const assetFormat = {
-  //   decimals: 18,
-  //   signed: false,
-  //   width: 256,
-  //   name: "asset",
-  //   _multiplier: "1",
-  // };
-
   const _yIn = getSafeFixedNumber(yIn);
   const _xIn = getSafeFixedNumber(xIn);
   const _xReserves = getSafeFixedNumber(xReserves);
   const _yReserves = getSafeFixedNumber(yReserves);
   const _totalSupply = getSafeFixedNumber(totalSupply);
-  console.log("_xIn", _xIn.toString());
-  console.log("_yIn", _yIn.toString());
-  console.log("_xReserves", _xReserves.toString());
-  console.log("_yReserves", _yReserves.toString());
-  console.log("_xIn < _yIn", _xIn < _yIn);
-  console.log("_xIn > _yIn", _xIn > _yIn);
-  console.log("_xReserves < _yReserves", _xReserves < _yReserves);
-  console.log("_xReserves > _yReserves", _xReserves > _yReserves);
-  console.log("_totalSupply", _totalSupply.toString());
 
   // Check if the pool is initialized
   if (_totalSupply.isZero()) {
@@ -103,7 +76,6 @@ export function calculateLPOutGivenInFixed(
 
   // calc the number of x needed for the y_in provided
   let _otherNeeded = _yReserves.divUnsafe(_xReserves).mulUnsafe(_yIn);
-  console.log("otherNeeded", _otherNeeded.toString());
   // if there isn't enough x_in provided
   if (_otherNeeded > _xIn) {
     const _lpOut = _xIn.mulUnsafe(_totalSupply).divUnsafe(_yReserves);
