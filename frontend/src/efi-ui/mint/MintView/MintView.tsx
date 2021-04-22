@@ -5,6 +5,7 @@ import { Intent, Tag } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { RouteComponentProps } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
+import uniqBy from "lodash.uniqby";
 import { jt, t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -25,11 +26,12 @@ export function MintView(props: MintViewProps): ReactElement {
     connector,
   } = useWeb3React<Web3Provider>();
   const openTranches = useOpenTranches();
-  const knownBaseAssets = useBaseAssetsForTranches(openTranches);
+  const allBaseAssets = useBaseAssetsForTranches(openTranches);
   const tranchesByBaseAsset = useTranchesByBaseAsset(
     openTranches,
-    knownBaseAssets
+    allBaseAssets
   );
+  const uniqueBaseAssets = uniqBy(allBaseAssets, (v) => v?.id);
 
   return (
     <Fragment>
@@ -75,7 +77,7 @@ export function MintView(props: MintViewProps): ReactElement {
               walletConnectionActive={active}
               chainId={chainId}
               connector={connector}
-              baseAssets={knownBaseAssets}
+              baseAssets={uniqueBaseAssets}
               tranchesByBaseAsset={tranchesByBaseAsset}
             />
           </div>
