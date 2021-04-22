@@ -5,7 +5,7 @@ import { AbstractConnector } from "@web3-react/abstract-connector";
 
 import tw from "efi-tailwindcss-classnames";
 import { PoolContract } from "efi/pools/PoolContract";
-import { UnstakeConvergentCurvePoolButton } from "efi-ui/portfolio/UnstakeButton/UnstakeConvergentCurvePoolButton";
+import { UnstakeConvergentCurvePoolButton } from "efi-ui/pools/UnstakeButton/UnstakeConvergentCurvePoolButton";
 import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
 
 interface UnStakePanelProps {
