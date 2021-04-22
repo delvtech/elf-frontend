@@ -14,16 +14,16 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { RedeemYieldTokensDrawer } from "efi-ui/tranche/RedeemTokensDrawer/RedeemYieldTokensDrawer";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
+import { CryptoAsset } from "efi/crypto/CryptoAsset";
 
 interface RedeemYieldTokensButtonProps {
   account: string | null | undefined;
   library: Web3Provider | undefined;
 
   tranche: Tranche | undefined;
-  baseAsset: CryptoAssetWithIcon | undefined;
+  baseAsset: CryptoAsset | undefined;
 }
 
 export function RedeemYieldTokensButton({

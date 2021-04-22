@@ -8,8 +8,12 @@ import { formatPercent } from "efi/base/formatPercent";
 
 interface TrendIndicatorProps {
   value: number | undefined;
+  hideWhenZero?: boolean;
 }
-export function TrendIndicator({ value }: TrendIndicatorProps): ReactElement {
+export function TrendIndicator({
+  value,
+  hideWhenZero = true,
+}: TrendIndicatorProps): ReactElement | null {
   let intent: Intent;
   let icon: IconName;
   let label: string;
@@ -18,10 +22,16 @@ export function TrendIndicator({ value }: TrendIndicatorProps): ReactElement {
   const valueIsNearZero = !!value && !Math.round(value * 10000);
 
   if (value === undefined || !Number.isFinite(value)) {
+    if (hideWhenZero) {
+      return null;
+    }
     intent = Intent.WARNING;
     icon = IconNames.SMALL_MINUS;
     label = t`n/a`;
   } else if (value === 0 || valueIsNearZero) {
+    if (hideWhenZero) {
+      return null;
+    }
     intent = Intent.WARNING;
     icon = IconNames.SMALL_MINUS;
     label = formatPercent(0);

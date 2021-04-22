@@ -6,6 +6,7 @@ import { Tranche } from "elf-contracts/types/Tranche";
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { TermPicker } from "efi-ui/tranche/TermPicker/TermPicker";
 import { VaultTermButtonLabel } from "efi-ui/tranche/TermPicker/VaultTermButtonLabel";
+import { CryptoAsset } from "efi/crypto/CryptoAsset";
 
 interface MintTermPickerProps {
   library: Web3Provider | undefined;
@@ -44,7 +45,7 @@ export function MintTermPicker({
 
 function buttonLabelRenderer(
   tranche: Tranche | undefined,
-  baseAsset: CryptoAssetWithIcon | undefined
+  baseAsset: CryptoAsset | undefined
 ) {
   return <VaultTermButtonLabel tranche={tranche} baseAsset={baseAsset} />;
 }

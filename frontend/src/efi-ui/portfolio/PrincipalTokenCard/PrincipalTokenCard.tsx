@@ -29,6 +29,7 @@ import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolToken
 import { RedeemPrincipalTokensButton } from "efi-ui/portfolio/RedeemButton/RedeemPrincipalTokensButton";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
+import { calculateProgress } from "efi-ui/tranche/calculateProgress";
 import { useBaseAssetForTranche } from "efi-ui/tranche/useBaseAssetForTranche";
 import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
 import { useUnderlyingVaultForTranche } from "efi-ui/tranche/useUnderlyingVaultForTranche";
@@ -37,9 +38,8 @@ import { formatAbbreviatedDate } from "efi/base/dates";
 import { formatMoney } from "efi/money/formatMoney";
 import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
 
-import { calculateProgress } from "./calculateProgress";
-import { MaturityTimeBar } from "./MaturityTimeBar";
 import { GoToMarketButton } from "./GoToMarketButton";
+import { MaturityTimeBar } from "./MaturityTimeBar";
 
 interface PrincipalTokenCardProps {
   chainId: number | undefined;

@@ -7,23 +7,23 @@ import React, {
 } from "react";
 
 import { AnchorButton, Button, Intent } from "@blueprintjs/core";
+import { Tooltip2 } from "@blueprintjs/popover2";
 import { Web3Provider } from "@ethersproject/providers";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
-import { Tooltip2 } from "@blueprintjs/popover2";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { RedeemPrincipalTokensDrawer } from "efi-ui/tranche/RedeemTokensDrawer/RedeemPrincipalTokensDrawer";
+import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
+import { CryptoAsset } from "efi/crypto/CryptoAsset";
 
 interface RedeemPrincipalTokensButtonProps {
   account: string | null | undefined;
   library: Web3Provider | undefined;
 
   tranche: Tranche | undefined;
-  baseAsset: CryptoAssetWithIcon | undefined;
+  baseAsset: CryptoAsset | undefined;
 }
 
 export function RedeemPrincipalTokensButton({

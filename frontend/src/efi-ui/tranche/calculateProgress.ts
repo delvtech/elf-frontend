@@ -15,7 +15,8 @@ export function calculateProgress(
   const currentTime = Date.now();
   const progressScale = scaleLinear<number>()
     .domain([startTime, endTime])
-    .range([0, 1]);
+    .range([0, 1])
+    .clamp(true); // clamp to range when input out of range
 
   const progressValue = progressScale(currentTime);
   return progressValue;

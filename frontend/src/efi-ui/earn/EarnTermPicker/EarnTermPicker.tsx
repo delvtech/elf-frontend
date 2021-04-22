@@ -3,14 +3,14 @@ import React, { ReactElement } from "react";
 import { Web3Provider } from "@ethersproject/providers";
 import { Tranche } from "elf-contracts/types/Tranche";
 
-import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { TermPicker } from "efi-ui/tranche/TermPicker/TermPicker";
 import { PrincipalTokenTermButtonLabel } from "efi-ui/tranche/TermPicker/PrincipalTokenTermButtonLabel";
+import { CryptoAsset } from "efi/crypto/CryptoAsset";
 
 interface EarnTermPickerProps {
   library: Web3Provider | undefined;
   account: string | null | undefined;
-  baseAsset: CryptoAssetWithIcon | undefined;
+  baseAsset: CryptoAsset | undefined;
   tranches: Tranche[];
   activeTrancheIndex: number | undefined;
   onTrancheChange: (newTranche: Tranche) => void;
@@ -44,7 +44,7 @@ export function EarnTermPicker({
 
 function buttonLabelRenderer(
   tranche: Tranche | undefined,
-  baseAsset: CryptoAssetWithIcon | undefined
+  baseAsset: CryptoAsset | undefined
 ) {
   return (
     <PrincipalTokenTermButtonLabel tranche={tranche} baseAsset={baseAsset} />

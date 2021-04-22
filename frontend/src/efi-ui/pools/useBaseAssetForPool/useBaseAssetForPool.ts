@@ -8,6 +8,7 @@ import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { KNOWN_BASE_ASSETS } from "efi/contracts/contractsJson";
 import { PoolContract } from "efi/pools/PoolContract";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
+import { getSmartContractFromRegistry } from "efi-ui/contracts/SmartContractsRegistry";
 
 export function useBaseAssetForPool(
   pool: PoolContract | undefined,
@@ -23,9 +24,11 @@ export function useBaseAssetForPool(
     return;
   }
 
-  const baseAssetContract = ERC20__factory.connect(
+  const baseAssetContract = getSmartContractFromRegistry(
     baseAssetAddress,
+    ERC20__factory.connect,
     signerOrProvider || jsonRpcProvider
   );
+
   return baseAssetContract;
 }
