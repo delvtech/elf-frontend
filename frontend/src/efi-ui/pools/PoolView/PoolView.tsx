@@ -58,16 +58,7 @@ export function PoolView({ poolAddress }: PoolViewProps): ReactElement {
         <div className={tw("flex", "flex-col", "flex-1", "space-y-8")}>
           {/* page title */}
           <div className={tw("flex", "justify-between")}>
-            <div className={tw("flex", "flex-col", "justify-start")}>
-              <H2 className={tw("mb-4")}>{poolName}</H2>
-              <span
-                className={classNames(
-                  Classes.RUNNING_TEXT,
-                  Classes.TEXT_MUTED,
-                  tw("text-base")
-                )}
-              >{t`Trade for either asset or provide liquidity for this pool.`}</span>
-            </div>
+            <H2>{poolName}</H2>
             <TransactionPendingCard
               active={active}
               account={account}

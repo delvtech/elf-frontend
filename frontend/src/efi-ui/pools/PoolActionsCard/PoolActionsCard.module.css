@@ -2,3 +2,8 @@
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
 }
+
+.smTabs :global(.bp3-tab-indicator-wrapper) {
+  /* don't show the tab indicator */
+  display: none;
+}
