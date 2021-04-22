@@ -60,20 +60,20 @@ export function UnstakeCard({
   const { data: trancheDecimals } = useTokenDecimals(tranche);
 
   // pool shares
-  const poolShares = useShareOfPool(pool, account);
-  const poolSharesLabel = getPoolSharesLabel(poolShares);
+  const shareOfPool = useShareOfPool(pool, account);
+  const shareOfPoolLabel = getShareOfPoolLabel(shareOfPool);
 
   // liquidity
   const { data: [addresses, poolBalances] = [] } = usePoolTokens(pool);
   const baseAssetLiquidity = calculatePoolShareLiquidity(
-    poolShares,
+    shareOfPool,
     addresses,
     poolBalances,
     baseAssetContract?.address,
     baseAssetDecimals
   );
   const principalTokenLiquidity = calculatePoolShareLiquidity(
-    poolShares,
+    shareOfPool,
     addresses,
     poolBalances,
     tranche?.address,
@@ -121,7 +121,7 @@ export function UnstakeCard({
           className={tw("flex", "justify-center", "items-center")}
           bold
           textClassName={tw("text-2xl")}
-          text={poolSharesLabel}
+          text={shareOfPoolLabel}
           label={""}
         />
       </Callout>
@@ -160,15 +160,15 @@ function calculatePoolShareLiquidity(
   return baseAssetLiquidity;
 }
 
-function getPoolSharesLabel(poolShares: number | undefined) {
-  if (!poolShares) {
+function getShareOfPoolLabel(shareOfPool: number | undefined) {
+  if (!shareOfPool) {
     return formatPercent(0, 0);
   }
-  if (poolShares === 1) {
-    return formatPercent(poolShares, 0);
+  if (shareOfPool === 1) {
+    return formatPercent(shareOfPool, 0);
   }
 
-  return formatPercent(poolShares, 2);
+  return formatPercent(shareOfPool, 2);
 }
 
 function useTrancheForPool(pool: ConvergentCurvePool | undefined) {
