@@ -21,7 +21,7 @@ import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAss
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useShareOfPool } from "efi-ui/portfolio/hooks/useShareOfPool";
 import { GoToMarketButton } from "efi-ui/portfolio/PrincipalTokenCard/GoToMarketButton";
-import { UnstakeWeightedPoolButton } from "efi-ui/portfolio/UnstakeButton/UnstakeWeightedPoolButton";
+import { UnstakeWeightedPoolButton } from "efi-ui/pools/UnstakeButton/UnstakeWeightedPoolButton";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { useTokenName } from "efi-ui/token/hooks/useTokenName";
