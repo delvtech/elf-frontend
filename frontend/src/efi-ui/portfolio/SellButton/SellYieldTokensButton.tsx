@@ -3,15 +3,13 @@ import React, { Fragment, ReactElement, useState } from "react";
 import { Button, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
-import { Tranche } from "elf-contracts/types/Tranche";
+import { InterestToken } from "elf-contracts/types/InterestToken";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
-import { SellPrincipalTokensTransactionDrawer } from "efi-ui/swaps/SellPrincipalTokensTransactionDrawer/SellPrincipalTokensTransactionDrawer";
-import { PoolContract } from "efi/pools/PoolContract";
-import { InterestToken } from "elf-contracts/types/InterestToken";
 import { SellYieldTokensDrawer } from "efi-ui/swaps/SellYieldTokensDrawer/SellYieldTokensDrawer";
+import { PoolContract } from "efi/pools/PoolContract";
 
 interface SellYieldTokensButtonProps {
   chainId: number | undefined;

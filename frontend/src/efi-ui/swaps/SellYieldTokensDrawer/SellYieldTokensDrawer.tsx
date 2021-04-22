@@ -2,16 +2,17 @@ import React, { ReactElement } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
-import { Tranche } from "elf-contracts/types/Tranche";
+import { ERC20 } from "elf-contracts/types/ERC20";
+import { InterestToken } from "elf-contracts/types/InterestToken";
 import { Signer } from "ethers";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
-import { useQueryBatchSwapInputs } from "efi-ui/balancer/useQueryBatchSwapInputs";
+import { getBalancerApprovalMessage } from "efi-ui/balancer/balancerApprovalMessage";
+import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { useBatchSwapGivenIn } from "efi-ui/balancer/useBatchSwapGivenIn/useBatchSwapGivenIn";
+import { useQueryBatchSwapInputs } from "efi-ui/balancer/useQueryBatchSwapInputs";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
-import { SwapDetailsForm } from "efi-ui/swaps/SwapDetailsPreview/SwapDetailsForm";
-import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/TransactionDrawer";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
@@ -19,19 +20,16 @@ import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSy
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
 import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
-import { PrincipalTokenTransactionDetails } from "efi-ui/swaps/PrincipalTokenTransactionDetails/PrincipalTokenTransactionDetails";
+import { SellYieldTokenDetails } from "efi-ui/swaps/SellYieldTokensDrawer/SellYieldTokensDetails";
+import { SwapDetailsForm } from "efi-ui/swaps/SwapDetailsPreview/SwapDetailsForm";
+import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
+import { useTrancheForInterestToken } from "efi-ui/tranche/useTrancheForInterestToken";
+import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/TransactionDrawer";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
+import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { calculatePurchasePrice } from "efi/pools/calculatePurchasePrice";
 import { calculateSlippage } from "efi/pools/calculateSlippage";
 import { PoolContract } from "efi/pools/PoolContract";
-import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
-import { ERC20 } from "elf-contracts/types/ERC20";
-import { getBalancerApprovalMessage } from "efi-ui/balancer/balancerApprovalMessage";
-import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
-import { InterestToken } from "elf-contracts/types/InterestToken";
-import { useTrancheForInterestToken } from "efi-ui/tranche/useTrancheForInterestToken";
-import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
-import { SellYieldTokenDetails } from "efi-ui/swaps/SellYieldTokensDrawer/SellYieldTokensDetails";
 
 interface SellYieldTokensDrawerProps {
   chainId: number | undefined;

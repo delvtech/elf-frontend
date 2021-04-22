@@ -1,7 +1,7 @@
 import React, { Fragment, ReactElement } from "react";
 import { Helmet } from "react-helmet";
 
-import { AnchorButton, ButtonGroup, Callout, H2, H3 } from "@blueprintjs/core";
+import { AnchorButton, ButtonGroup, Callout, H3 } from "@blueprintjs/core";
 import { RouteComponentProps } from "@reach/router";
 import discordLogo from "efi-static-assets/logos/svg/DISCORD.svg";
 import telegramLogo from "efi-static-assets/logos/svg/TELEGRAM.svg";
