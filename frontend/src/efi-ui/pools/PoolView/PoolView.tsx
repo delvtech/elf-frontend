@@ -1,13 +1,11 @@
-import React, { Fragment, ReactElement } from "react";
+import { Fragment, ReactElement } from "react";
 import { Helmet } from "react-helmet";
 
-import { Classes, H2 } from "@blueprintjs/core";
+import { H2 } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { RouteComponentProps } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
-import classNames from "classnames";
 import { Signer } from "ethers";
-import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { getQueryData } from "efi-ui/base/queryResults";
