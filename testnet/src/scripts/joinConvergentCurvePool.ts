@@ -1,6 +1,7 @@
 import abi from "ethereumjs-abi";
 import { Signer } from "ethers";
-import { parseUnits } from "ethers/lib/utils";
+import { defaultAbiCoder, formatUnits, parseUnits } from "ethers/lib/utils";
+import { ConvergentCurvePool } from "src/types/ConvergentCurvePool";
 
 import { Tranche } from "src/types/Tranche";
 import { USDC } from "src/types/USDC";
@@ -30,19 +31,12 @@ export async function joinConvergentCurvePool(
 
   // just do same amounts for each, balancer will figure out how much of each you need.
   const maxAmountsIn = [parseToken(maxAmountIn), parseToken(maxAmountIn)];
-  const amounts = maxAmountsIn.map((amt) => amt.toHexString());
+  // Balancer V2 vault allows userData as a way to pass props through to pool contracts.  In our
+  // case we need to pass the maxAmountsIn.
+  const userData = defaultAbiCoder.encode(["uint256[]"], [maxAmountsIn]);
 
   // Whether or not to use balances held in balancer.  Since The Vault has nothing, set this to false.
   const fromInternalBalance = false;
-
-  // Allow balancer pool to take user's fyt and base tokens
-  // await baseAssetContract.approve(vaultContract.address, MAX_ALLOWANCE);
-  // await trancheContract.approve(vaultContract.address, MAX_ALLOWANCE);
-
-  // Balancer V2 vault allows userData as a way to pass props through to pool contracts.  In our
-  // case we need to pass the maxAmountsIn.
-  // TODO: switch to defaultAbiEncoder from ethers
-  const userData = abi.rawEncode(["uint256[]"], [amounts]);
 
   console.log("aboot to join");
   const joinRequest = {
