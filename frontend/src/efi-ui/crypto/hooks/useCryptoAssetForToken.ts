@@ -1,17 +1,15 @@
-import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
-import { ERC20Permit__factory } from "elf-contracts/types/factories/ERC20Permit__factory";
-
-import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
-import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
-import { CryptoIconSvg, findAssetIcon } from "efi-ui/crypto/CryptoIcon";
+import { getSmartContractFromRegistry } from "efi-ui/contracts/SmartContractsRegistry";
 import { useInterestTokenContracts } from "efi-ui/interestToken/useInterestTokens/useInterestTokens";
 import { useTrancheContracts } from "efi-ui/tranche/useTrancheContracts";
 import ContractAddresses, {
   KNOWN_ERC20_TOKENS,
   KNOWN_ERC20PERMIT_TOKENS,
 } from "efi/contracts/contractsJson";
-import { CryptoAssetType } from "efi/crypto/CryptoAsset";
-import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
+import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
+import { ERC20 } from "elf-contracts/types/ERC20";
+import { ERC20Permit } from "elf-contracts/types/ERC20Permit";
+import { ERC20Permit__factory } from "elf-contracts/types/factories/ERC20Permit__factory";
+import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
 
 /**
  * Turns a token into its CryptoAsset equivalent.
@@ -19,25 +17,10 @@ import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
  */
 export function useCryptoAssetForToken(
   tokenAddress: string | undefined
-): CryptoAssetWithIcon | undefined {
+): CryptoAsset | undefined {
+  // element tranches and interest tokens are known permits
   const trancheContracts = useTrancheContracts();
   const interestTokenContracts = useInterestTokenContracts();
-  const elementTokenAddresses = [
-    ...trancheContracts,
-    ...interestTokenContracts,
-  ].map(({ address }) => address);
-
-  const erc20Contract = useSmartContractFromFactory(
-    tokenAddress,
-    ERC20__factory.connect
-  );
-
-  const erc20PermitContract = useSmartContractFromFactory(
-    tokenAddress,
-    ERC20Permit__factory.connect
-  );
-
-  const { data: symbol } = useTokenSymbol(erc20Contract);
 
   if (!tokenAddress) {
     return;
@@ -45,37 +28,42 @@ export function useCryptoAssetForToken(
 
   // Turn weth into eth because it is special
   if (tokenAddress === ContractAddresses.wethAddress) {
-    const cryptoAsset: CryptoAssetWithIcon = {
+    const cryptoAsset: CryptoAsset = {
       id: "ethereum",
       type: CryptoAssetType.ETHEREUM,
-      assetIcon: CryptoIconSvg.ETH,
     };
     return cryptoAsset;
   }
 
   // If it's a known erc20, make it so
-  const assetIcon = findAssetIcon(symbol);
-  if (erc20Contract && KNOWN_ERC20_TOKENS.includes(tokenAddress)) {
-    const cryptoAsset: CryptoAssetWithIcon = {
+  if (KNOWN_ERC20_TOKENS.includes(tokenAddress)) {
+    const erc20Contract = getSmartContractFromRegistry(
+      tokenAddress,
+      ERC20__factory.connect
+    ) as ERC20;
+    const cryptoAsset: CryptoAsset = {
       id: tokenAddress,
       type: CryptoAssetType.ERC20,
       tokenContract: erc20Contract,
-      assetIcon,
     };
     return cryptoAsset;
   }
 
   const isERC20PermitAsset = [
-    ...elementTokenAddresses,
+    ...trancheContracts.map(({ address }) => address),
+    ...interestTokenContracts.map(({ address }) => address),
     ...KNOWN_ERC20PERMIT_TOKENS,
   ].includes(tokenAddress);
 
-  if (erc20PermitContract && isERC20PermitAsset) {
-    const cryptoAsset: CryptoAssetWithIcon = {
+  if (isERC20PermitAsset) {
+    const erc20PermitContract = getSmartContractFromRegistry(
+      tokenAddress,
+      ERC20Permit__factory.connect
+    ) as ERC20Permit;
+    const cryptoAsset: CryptoAsset = {
       id: tokenAddress,
       type: CryptoAssetType.ERC20PERMIT,
       tokenContract: erc20PermitContract,
-      assetIcon,
     };
 
     return cryptoAsset;

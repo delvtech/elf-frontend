@@ -34,6 +34,7 @@ import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { PoolContract } from "efi/pools/PoolContract";
 import { validateStakingValue } from "efi/staking/validateStakeValue";
 import { useJoinConvergentPool } from "efi-ui/pools/useJoinConvergentPool/useJoinConvergentPool";
+import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 
 interface StakingPanelProps {
   library: Web3Provider | undefined;
@@ -87,7 +88,8 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
 
   // use this hook to make sure we get the ETH icon if the base asset it WETH
   const cryptoAsset = useCryptoAssetForToken(baseAssetContract?.address);
-  const baseAssetIcon = cryptoAsset?.assetIcon;
+  const cryptoAssetSymbol = useCryptoSymbol(cryptoAsset);
+  const baseAssetIcon = findAssetIcon(cryptoAssetSymbol);
 
   const {
     asset: yieldAsset,

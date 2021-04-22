@@ -8,7 +8,7 @@ import { Tranche } from "elf-contracts/types/Tranche";
 
 import tw from "efi-tailwindcss-classnames";
 import { useBaseAssetForTranche } from "efi-ui/tranche/useBaseAssetForTranche";
-import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
+import { CryptoAsset } from "efi/crypto/CryptoAsset";
 
 interface TrancheButtonProps {
   library: Web3Provider | undefined;
@@ -21,7 +21,7 @@ interface TrancheButtonProps {
   showCaret?: boolean;
   buttonLabelRenderer: (
     tranche: Tranche | undefined,
-    baseAsset: CryptoAssetWithIcon | undefined
+    baseAsset: CryptoAsset | undefined
   ) => JSX.Element;
 }
 

@@ -5,22 +5,22 @@ import { Web3Provider } from "@ethersproject/providers";
 import { Tranche } from "elf-contracts/types/Tranche";
 
 import tw from "efi-tailwindcss-classnames";
-import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 
 import { TermButton } from "./TermButton";
 import styles from "./TermPicker.module.css";
 import classNames from "classnames";
+import { CryptoAsset } from "efi/crypto/CryptoAsset";
 
 interface TermPickerProps {
   library: Web3Provider | undefined;
   account: string | null | undefined;
-  baseAsset: CryptoAssetWithIcon | undefined;
+  baseAsset: CryptoAsset | undefined;
   tranches: Tranche[];
   activeTrancheIndex: number | undefined;
   onTrancheChange: (newTranche: Tranche) => void;
   buttonLabelRenderer: (
     tranche: Tranche | undefined,
-    baseAsset: CryptoAssetWithIcon | undefined
+    baseAsset: CryptoAsset | undefined
   ) => JSX.Element;
 }
 
