@@ -33,15 +33,16 @@ interface PoolDetailsProps {
   pool: PoolContract | undefined;
 }
 
-export function PoolDetails({
-  library,
-  signer,
-  account,
-  chainId,
-  connector,
-  walletActive,
-  pool,
-}: PoolDetailsProps): ReactElement {
+export function PoolDetails(props: PoolDetailsProps): ReactElement {
+  const {
+    library,
+    signer,
+    account,
+    chainId,
+    connector,
+    walletActive,
+    pool,
+  } = props;
   const poolTokensResult = usePoolTokens(pool);
   const tokenAddresses = getQueryData(poolTokensResult)?.[0] || [];
 
