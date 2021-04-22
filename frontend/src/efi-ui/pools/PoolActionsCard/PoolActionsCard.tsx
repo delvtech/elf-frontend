@@ -61,7 +61,10 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
       >
         <Tab id={MarketAction.SWAP}>{t`Swap`}</Tab>
         <Tab id={MarketAction.STAKE}>{t`+ Add liquidity`}</Tab>
-        <Tab id={MarketAction.UNSTAKE}>{t`- Remove liquidity`}</Tab>
+        <Tab
+          id={MarketAction.UNSTAKE}
+          disabled={!account}
+        >{t`- Remove liquidity`}</Tab>
       </Tabs>
       <Card
         className={tw("flex", "flex-col", "flex-1", "w-full", "transition-all")}
