@@ -26,6 +26,7 @@ export function getSmartContractFromRegistry<TReturnContract extends Contract>(
     address,
     signerOrProvider ?? jsonRpcProvider
   );
+
   return SMART_CONTRACTS_REGISTRY[address] as TReturnContract;
 }
 

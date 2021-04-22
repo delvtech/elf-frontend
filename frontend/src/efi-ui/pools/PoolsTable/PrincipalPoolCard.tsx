@@ -1,7 +1,7 @@
-import { ReactElement } from "react";
+import { ReactElement, useCallback, useMemo } from "react";
 
 import { Card, Elevation } from "@blueprintjs/core";
-import { Link } from "@reach/router";
+import { Link, navigate } from "@reach/router";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -25,23 +25,32 @@ interface PrincipalPoolCardProps {
 
 const cellClassName = tw("flex", "mr-4", "items-center", "overflow-hidden");
 
-export function PrincipalPoolCard({
-  pool,
-}: PrincipalPoolCardProps): ReactElement | null {
+export function PrincipalPoolCard(
+  props: PrincipalPoolCardProps
+): ReactElement | null {
+  const { pool } = props;
   const tranche = useTrancheForPool(pool);
   const liquidity = useTotalLiquidityForPool(pool);
-  const trancheCreatedAtResult = useTrancheCreatedAt(tranche);
+  const trancheCreatedAt = useTrancheCreatedAt(tranche);
   const poolNameResult = useSmartContractReadCall(pool, "name");
   const baseAsset = usePoolPairedToken(pool, tranche as ERC20Shim);
   const unlockTimestampResult = useSmartContractReadCall(
     tranche,
     "unlockTimestamp"
   );
-  const maturityDate = convertEpochSecondsToDate(
-    getQueryData(unlockTimestampResult)
+  const goToPoolPage = useCallback(
+    () => navigate(`exchange/${pool?.address}`),
+    [pool?.address]
+  );
+  const unlockTimestamp = getQueryData(unlockTimestampResult);
+  const maturityDate = useMemo(
+    () => convertEpochSecondsToDate(unlockTimestamp),
+    [unlockTimestamp]
   );
 
-  const startDate = convertEpochSecondsToDate(trancheCreatedAtResult);
+  const startDate = useMemo(() => convertEpochSecondsToDate(trancheCreatedAt), [
+    trancheCreatedAt,
+  ]);
 
   if (!pool || !baseAsset) {
     return null;
@@ -62,6 +71,7 @@ export function PrincipalPoolCard({
     <Card
       elevation={Elevation.TWO}
       interactive
+      onClick={goToPoolPage}
       className={tw(
         "grid",
         "grid-cols-3",
