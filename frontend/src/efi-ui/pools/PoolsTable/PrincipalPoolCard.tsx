@@ -26,6 +26,12 @@ interface PrincipalPoolCardProps {
 
 const cellClassName = tw("flex", "mr-4", "items-center", "overflow-hidden");
 
+// Stop propagation of clicks from the card title up to the card itself,
+// otherwise you get double routed to /exchange/exchange/0xdeadbeef
+const stopPropagationHandler = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  e.stopPropagation();
+};
+
 export function PrincipalPoolCard(
   props: PrincipalPoolCardProps
 ): ReactElement | null {
@@ -41,7 +47,7 @@ export function PrincipalPoolCard(
   );
   // TODO: Get this from props
   const goToPoolPage = useCallback(() => {
-    navigate(`${pool?.address}`);
+    navigate(`exchange/${pool?.address}`);
   }, [pool?.address]);
 
   const unlockTimestamp = getQueryData(unlockTimestampResult);
@@ -80,7 +86,11 @@ export function PrincipalPoolCard(
         <LabeledText
           large
           text={
-            <Link className={tw("flex", "space-x-2")} to={pool?.address || ""}>
+            <Link
+              className={tw("flex", "space-x-2")}
+              to={pool?.address || ""}
+              onClick={stopPropagationHandler}
+            >
               {getQueryData(poolNameResult)}
             </Link>
           }
