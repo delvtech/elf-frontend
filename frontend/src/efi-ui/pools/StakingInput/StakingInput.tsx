@@ -4,12 +4,12 @@ import { InputGroup, Intent, Tag } from "@blueprintjs/core";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { SvgIcon } from "efi-ui/base/SvgIcon";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
+import { clipStringValueToDecimals } from "efi/math/fixedPoint";
 import { calculateLPOutGivenInFixed } from "efi/pools/calculateLPOutGivenIn";
 
 import styles from "./StakingInput.module.css";
-import { SvgIcon } from "efi-ui/base/SvgIcon";
-import { clipStringValueToDecimals } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 
 interface StakingInputProps {
   cryptoDisplayBalance: string | number;
