@@ -52,10 +52,7 @@ export function StakingInput(props: StakingInputProps): ReactElement {
       );
       onChangeInputValue(safeValue);
 
-      const {
-        otherNeeded: otherNeededFixed,
-        lpOut: lpOutFixed,
-      } = calculateLPOutGivenInFixed(
+      const { otherNeeded, lpOut } = calculateLPOutGivenInFixed(
         userInputValue || "0",
         Number.MAX_SAFE_INTEGER.toString(),
         tokenPoolReserves?.toString() || "0",
@@ -64,7 +61,7 @@ export function StakingInput(props: StakingInputProps): ReactElement {
         totalSupply?.toString() || "0"
       );
 
-      onCalculateLPOutGivenIn(otherNeededFixed, lpOutFixed);
+      onCalculateLPOutGivenIn(otherNeeded, lpOut);
     },
     [
       cryptoDecimals,

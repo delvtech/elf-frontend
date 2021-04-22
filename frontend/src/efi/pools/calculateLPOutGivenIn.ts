@@ -9,7 +9,16 @@ export interface LPOutGivenTokenIn {
   lpOut: number;
 }
 
-export function calculateLPOutGivenIn(
+/**
+ * @deprecated this will return inexact results which lead to dust problems when joining a CCPool
+ * @param givenInAmount
+ * @param maxOther
+ * @param givenInReserves
+ * @param otherReserves
+ * @param totalSupply
+ * @returns
+ */
+export function calculateLPOutGivenInUNSAFE(
   givenInAmount: number,
   maxOther: number,
   givenInReserves: number,

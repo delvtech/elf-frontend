@@ -3,7 +3,7 @@ import { formatUnits } from "ethers/lib/utils";
 
 import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
 import {
-  calculateLPOutGivenIn,
+  calculateLPOutGivenInUNSAFE,
   LPOutGivenTokenIn,
 } from "efi/pools/calculateLPOutGivenIn";
 
@@ -28,7 +28,7 @@ export function calculatePrincipalTokenNeededForBaseAssetIn(
     BALANCER_POOL_LP_TOKEN_DECIMALS
   );
 
-  return calculateLPOutGivenIn(
+  return calculateLPOutGivenInUNSAFE(
     principalTokenIn,
     Number.MAX_SAFE_INTEGER,
     baseAssetReservesNumber,
