@@ -6,6 +6,6 @@ export enum Navigation {
   MINT = "mint",
   POOLS = "pools",
   EARN = "earn",
-  FAQ = "faq",
+  RESOURCES = "resources",
   EXCHANGE = "exchange",
 }

@@ -105,7 +105,7 @@ export function SidebarNavigation({
             }
           />
           <Tab
-            id={Navigation.FAQ}
+            id={Navigation.RESOURCES}
             title={
               <div className={tabTitleClassName}>
                 <Icon icon={IconNames.MANUAL} iconSize={Icon.SIZE_LARGE} />
