@@ -104,7 +104,7 @@ function makeExitPoolCallArgs(
     poolTokenDecimals
   ) as BigNumber[];
 
-  // weighted pools take a exit kind and amount of bpt token in the user dataV
+  // weighted pools take a exit kind and amount of bpt token in the user data
   const userData = defaultAbiCoder.encode(
     ["uint8", "uint256"],
     [WeightedPoolExitKind.EXACT_BPT_IN_FOR_TOKENS_OUT, lpBalanceOf]

@@ -20,6 +20,7 @@ import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 import ContractAddresses from "efi/contracts/contractsJson";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { calculateTokensOutForLPInFixed } from "efi/pools/calculateTokensOutForLPIn";
+import { clipStringValueToDecimals } from "efi/math/fixedPoint";
 
 export function useExitConvergentCurvePool(
   signer: Signer | undefined,
@@ -48,21 +49,30 @@ export function useExitConvergentCurvePool(
     signer
   );
 
-  const exitPoolCallArgs = makeExitPolCallArgs(
-    poolId,
-    account,
-    poolTokens,
-    poolTokenReserves,
-    poolTokenDecimals,
-    totalSupply,
-    lpBalanceOf
-  );
   const onExitPool = useCallback(() => {
+    const exitPoolCallArgs = makeExitPolCallArgs(
+      poolId,
+      account,
+      poolTokens,
+      poolTokenReserves,
+      poolTokenDecimals,
+      totalSupply,
+      lpBalanceOf
+    );
     if (!exitPoolCallArgs) {
       return;
     }
     exitPool(exitPoolCallArgs);
-  }, [exitPool, exitPoolCallArgs]);
+  }, [
+    account,
+    exitPool,
+    lpBalanceOf,
+    poolId,
+    poolTokenDecimals,
+    poolTokenReserves,
+    poolTokens,
+    totalSupply,
+  ]);
 
   return onExitPool;
 }
@@ -157,9 +167,19 @@ function getPoolTokenMinAmountsOut(
     return undefined;
   }
 
+  // because ConvergentCurvePool doesn't let you specify exact BPT in, rather you have to specify
+  // min pool tokens out.  because of rounding errors in the contract itself, we can't calculate
+  // the exact tokens out.  therefore we chop off the last two decimals and leave very fine dust.
+  // like really fine. like more fine than playa dust.
   const poolTokenMinAmountsOut = [
-    parseUnits(xNeeded, poolTokenDecimals[0]),
-    parseUnits(yNeeded, poolTokenDecimals[1]),
+    parseUnits(
+      clipStringValueToDecimals(xNeeded, 16) as string,
+      poolTokenDecimals[0]
+    ),
+    parseUnits(
+      clipStringValueToDecimals(yNeeded, 16) as string,
+      poolTokenDecimals[1]
+    ),
   ];
 
   return poolTokenMinAmountsOut;
