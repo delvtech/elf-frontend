@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React, { Fragment, ReactElement } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
@@ -10,6 +10,7 @@ import tw from "efi-tailwindcss-classnames";
 import { PrincipalTokenLPCard } from "efi-ui/portfolio/LiquidityPositionCard/PrincipalTokenLPCard";
 import { NoLPsInWalletNonIdealState } from "efi-ui/wallets/NoLPsInWalletNonIdealState/NoLPsInWalletNonIdealState";
 import { NoWalletConnectedNonIdealState } from "efi-ui/wallets/NoWalletConnectedNonIdealState/NoWalletConnectedNonIdealState";
+import { YieldTokenLPCard } from "efi-ui/portfolio/LiquidityPositionCard/YieldTokenLPCard";
 
 interface LiquidityPositionPortfolioProps {
   chainId: number | undefined;
@@ -51,16 +52,28 @@ export function LiquidityPositionPortfolio({
           {nonIdealStateContent}
         </div>
       ) : (
-        principalTokenPools.map((pool) => [
-          <div key={pool.address}>
-            <PrincipalTokenLPCard
-              library={library}
-              connector={connector}
-              account={account}
-              pool={pool}
-            />
-          </div>,
-        ])
+        <Fragment>
+          {principalTokenPools.map((pool) => [
+            <div key={pool.address}>
+              <PrincipalTokenLPCard
+                library={library}
+                connector={connector}
+                account={account}
+                pool={pool}
+              />
+            </div>,
+          ])}
+          {yieldTokenPools.map((pool) => [
+            <div key={pool.address}>
+              <YieldTokenLPCard
+                library={library}
+                connector={connector}
+                account={account}
+                pool={pool}
+              />
+            </div>,
+          ])}
+        </Fragment>
       )}
     </div>
   );

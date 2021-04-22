@@ -19,12 +19,13 @@ import ContractAddresses from "efi/contracts/contractsJson";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { calculateTokensOutForLPIn } from "efi/pools/calculateTokensOutForLPIn";
 import { getSmartContractFromRegistryMulti } from "efi-ui/contracts/SmartContractsRegistry";
-import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
+import { WeightedPool } from "elf-contracts/types/WeightedPool";
+import { WeightedPoolExitKind } from "efi/pools/weightedPool";
 
-export function useExitConvergentCurvePool(
+export function useExitWeightedPool(
   signer: Signer | undefined,
   account: string | null | undefined,
-  pool: ConvergentCurvePool | undefined
+  pool: WeightedPool | undefined
 ): () => void {
   const balancerVault = useBalancerVault();
   const { data: poolId } = useSmartContractReadCall(pool, "getPoolId");
@@ -48,7 +49,7 @@ export function useExitConvergentCurvePool(
     signer
   );
 
-  const exitPoolCallArgs = makeExitPolCallArgs(
+  const exitPoolCallArgs = makeExitPoolCallArgs(
     poolId,
     account,
     poolTokens,
@@ -67,7 +68,7 @@ export function useExitConvergentCurvePool(
   return onExitPool;
 }
 
-function makeExitPolCallArgs(
+function makeExitPoolCallArgs(
   poolId: string | undefined,
   account: string | null | undefined,
   poolTokens: string[] | undefined,
@@ -101,9 +102,10 @@ function makeExitPolCallArgs(
     poolTokenDecimals
   );
 
+  // weighted pools take a exit kind and amount of bpt token in the user dataV
   const userData = defaultAbiCoder.encode(
-    ["uint256[]"],
-    [poolTokenMinAmountsOut]
+    ["uint8", "uint256[]"],
+    [WeightedPoolExitKind.EXACT_BPT_IN_FOR_TOKENS_OUT, lpBalanceOf]
   );
 
   const exitRequest: ExitRequest = {
@@ -153,16 +155,8 @@ function getPoolTokenMinAmountsOut(
     totalSupplyNumber
   );
   const poolTokenMinAmountsOut = [
-    parseUnits(
-      // TODO: use fixed point math so that we don't create dust
-      (0.999 * xNeeded).toFixed(poolTokenDecimals[0]),
-      poolTokenDecimals[0]
-    ),
-    parseUnits(
-      // TODO: use fixed point math so that we don't create dust
-      (0.999 * yNeeded).toFixed(poolTokenDecimals[1]),
-      poolTokenDecimals[1]
-    ),
+    parseUnits(xNeeded.toFixed(poolTokenDecimals[0]), poolTokenDecimals[0]),
+    parseUnits(yNeeded.toFixed(poolTokenDecimals[1]), poolTokenDecimals[1]),
   ];
   return poolTokenMinAmountsOut;
 }

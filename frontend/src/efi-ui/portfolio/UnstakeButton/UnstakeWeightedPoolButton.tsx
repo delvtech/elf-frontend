@@ -6,24 +6,24 @@ import { AbstractConnector } from "@web3-react/abstract-connector";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { useExitConvergentCurvePool } from "efi-ui/pools/useUnstake/useExitConvergentCurvePool";
 import { Signer } from "ethers";
-import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
+import { WeightedPool } from "elf-contracts/types/WeightedPool";
+import { useExitWeightedPool } from "efi-ui/pools/useUnstake/useExitWeightedPool";
 
-interface UnstakeConvergentCurvePoolButtonProps {
+interface UnstakeWeightedPoolButtonProps {
   account: string | null | undefined;
   connector: AbstractConnector | undefined;
   library: Web3Provider | undefined;
-  pool: ConvergentCurvePool | undefined;
+  pool: WeightedPool | undefined;
 }
 
-export function UnstakeConvergentCurvePoolButton({
+export function UnstakeWeightedPoolButton({
   pool,
   library,
   account,
-}: UnstakeConvergentCurvePoolButtonProps): ReactElement {
+}: UnstakeWeightedPoolButtonProps): ReactElement {
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
-  const exitPool = useExitConvergentCurvePool(signer, account, pool);
+  const exitPool = useExitWeightedPool(signer, account, pool);
 
   return (
     <Button fill minimal intent={Intent.PRIMARY} onClick={exitPool}>
