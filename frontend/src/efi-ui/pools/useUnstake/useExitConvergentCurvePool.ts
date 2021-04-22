@@ -171,13 +171,16 @@ function getPoolTokenMinAmountsOut(
   // min pool tokens out.  because of rounding errors in the contract itself, we can't calculate
   // the exact tokens out.  therefore we chop off the last two decimals and leave very fine dust.
   // like really fine. like more fine than playa dust.
+  const adjustedDecimals = poolTokenDecimals.map((value) =>
+    value ? Math.max(6, value - 2) : 0
+  );
   const poolTokenMinAmountsOut = [
     parseUnits(
-      clipStringValueToDecimals(xNeeded, 16) as string,
+      clipStringValueToDecimals(xNeeded, adjustedDecimals[0]) as string,
       poolTokenDecimals[0]
     ),
     parseUnits(
-      clipStringValueToDecimals(yNeeded, 16) as string,
+      clipStringValueToDecimals(xNeeded, adjustedDecimals[1]) as string,
       poolTokenDecimals[1]
     ),
   ];
