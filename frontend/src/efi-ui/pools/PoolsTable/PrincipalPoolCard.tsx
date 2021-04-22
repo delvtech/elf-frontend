@@ -19,6 +19,7 @@ import { getTimeLeft2 } from "efi/base/time";
 import { formatMoney } from "efi/money/formatMoney";
 import { PoolContract } from "efi/pools/PoolContract";
 import { calculateProgress } from "efi-ui/tranche/calculateProgress";
+import { useFeeVolumeForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
 
 interface PrincipalPoolCardProps {
   pool: PoolContract | undefined;
@@ -39,6 +40,7 @@ export function PrincipalPoolCard(
   const tranche = useTrancheForPool(pool);
   const liquidity = useTotalLiquidityForPool(pool);
   const trancheCreatedAt = useTrancheCreatedAt(tranche);
+  const fees = useFeeVolumeForPool(pool);
   const poolNameResult = useSmartContractReadCall(pool, "name");
   const baseAsset = usePoolPairedToken(pool, tranche as ERC20Shim);
   const unlockTimestampResult = useSmartContractReadCall(
@@ -102,7 +104,7 @@ export function PrincipalPoolCard(
         <LabeledText large text={formatMoney(liquidity)} label={`liquidity`} />
       </div>
       <div className={tw(cellClassName, "hidden", "lg:flex")}>
-        <LabeledText large text={formatMoney(liquidity)} label={`ROI`} />
+        <LabeledText large text={formatMoney(fees)} label={`Fees`} />
       </div>
       <div className={tw(cellClassName, "flex-wrap")}>
         <LabeledText

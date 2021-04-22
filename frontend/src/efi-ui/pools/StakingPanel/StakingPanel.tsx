@@ -2,7 +2,6 @@ import { ReactElement, useCallback, useState } from "react";
 
 import { Button, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
-import { AbstractConnector } from "@web3-react/abstract-connector";
 import { ERC20 } from "elf-contracts/types/ERC20";
 import { BigNumber, Signer } from "ethers";
 import { formatEther, formatUnits, parseUnits } from "ethers/lib/utils";
@@ -40,9 +39,6 @@ interface StakingPanelProps {
   library: Web3Provider | undefined;
   signer: Signer | undefined;
   account: string | null | undefined;
-  chainId: number | undefined;
-  connector: AbstractConnector | undefined;
-  walletActive: boolean;
   pool: PoolContract | undefined;
   formDisabled?: boolean;
   submitDisabled?: boolean;
@@ -56,10 +52,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
     account,
     library,
     signer,
-    // chainId,
-    // connector,
     buttonLabel,
-    // walletActive,
     formDisabled = false,
     submitDisabled = false,
     inputLabel,
@@ -74,7 +67,6 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
   // Pool calls
   const { data: totalSupplyBN } = useSmartContractReadCall(pool, "totalSupply");
   const totalSupply = formatEther(totalSupplyBN ?? 0);
-  // const spotPrice = usePoolSpotPrice(pool, baseAssetContract);
 
   const {
     asset: baseAsset,
@@ -202,7 +194,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
 
       {/* Receive Asset */}
       <div className={tw("flex", "justify-between", "items-center")}>
-        <span>{t`And`}</span>
+        <span>{t`Input #2`}</span>
       </div>
       <StakingInput
         cryptoDisplayBalance={yieldAssetDisplayBalance || ""}
