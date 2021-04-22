@@ -50,6 +50,7 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
     (tabId: MarketAction) => setActiveTab(tabId),
     []
   );
+
   return (
     <div className={tw("flex", "flex-col", "flex-1", "h-500", "w-3/10")}>
       <Tabs
@@ -59,8 +60,8 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
         onChange={onChangeTab}
       >
         <Tab id={MarketAction.SWAP}>{t`Swap`}</Tab>
-        <Tab id={MarketAction.STAKE}>{t`Add liquidity`}</Tab>
-        <Tab id={MarketAction.UNSTAKE}>{t`Remove liquidity`}</Tab>
+        <Tab id={MarketAction.STAKE}>{t`+ Add liquidity`}</Tab>
+        <Tab id={MarketAction.UNSTAKE}>{t`- Remove liquidity`}</Tab>
       </Tabs>
       <Card
         className={tw("flex", "flex-col", "flex-1", "w-full", "transition-all")}
@@ -76,8 +77,8 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
             pool={pool}
             tokenIn={tokenIn}
             tokenOut={tokenOut}
-            inputLabel={t`Trade`}
-            buttonLabel={t`Trade`}
+            inputLabel={t`Swap`}
+            buttonLabel={t`Swap`}
             buttonIntent={Intent.PRIMARY}
           />
         )}
