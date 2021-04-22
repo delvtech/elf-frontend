@@ -64,20 +64,21 @@ export function StakingInput(props: StakingInputProps): ReactElement {
         return;
       }
 
+      // try to get safe value by handling edge cases and clipping decimals
       const safeValue = clipStringValueToDecimals(
         userInputValue,
         cryptoDecimals || 18
       );
 
       // if value is not undefiend, then check if its invalid.  if so, we want to ignore the user's input
-      if (!validateInput(safeValue)) {
+      if (!validateInput(safeValue) || safeValue === undefined) {
         return;
       }
 
-      onChangeInputValue(safeValue || "");
+      onChangeInputValue(safeValue);
 
       const { otherNeeded, lpOut } = calculateLPOutGivenInFixed(
-        userInputValue || "0",
+        safeValue,
         Number.MAX_SAFE_INTEGER.toString(),
         tokenPoolReserves?.toString() || "0",
         otherTokenPoolReserves?.toString() || "0",
