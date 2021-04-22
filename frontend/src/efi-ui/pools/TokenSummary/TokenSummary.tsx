@@ -22,7 +22,6 @@ import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
 import { formatMoney } from "efi/money/formatMoney";
 import { PoolContract } from "efi/pools/PoolContract";
 import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
-import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 
 interface TokenSummaryProps {
   pool: PoolContract | undefined;
@@ -57,7 +56,10 @@ export function TokenSummary({ pool }: TokenSummaryProps): ReactElement {
                 {t`Token`}
               </span>
               <span className={tw("text-lg", "truncate")}>
-                {baseAssetSymbol}
+                {
+                  // TODO: do this properly
+                  baseAssetSymbol === "WETH" ? "ETH" : baseAssetSymbol
+                }
               </span>
             </div>
             <div
@@ -164,8 +166,6 @@ function useTokensSummary(pool: PoolContract | undefined): TokensSummary {
     baseAssetContract,
     yieldAssetContract,
   } = parseSortedTokensForPool(tokens);
-
-  useBaseAssetForPool(pool);
 
   const baseAssetBalance = balances?.[baseAssetIndex];
 

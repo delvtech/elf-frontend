@@ -66,6 +66,7 @@ export function TermPicker({
       onItemSelect={onTrancheChange}
     >
       <TermButton
+        disabled={tranches.length < 2}
         library={library}
         account={account}
         tranche={activeTranche}

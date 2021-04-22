@@ -14,6 +14,7 @@ interface TrancheButtonProps {
   library: Web3Provider | undefined;
   account: string | null | undefined;
   tranche: Tranche | undefined;
+  disabled?: boolean;
   onClick?: (event: React.MouseEvent<HTMLElement>) => void;
   /**
    * If true will show the dropdown caret, defaults to true
@@ -27,6 +28,7 @@ interface TrancheButtonProps {
 
 export function TermButton({
   tranche,
+  disabled = false,
   buttonLabelRenderer,
   showCaret = true,
   onClick,
@@ -34,6 +36,7 @@ export function TermButton({
   const baseAsset = useBaseAssetForTranche(tranche);
   return (
     <button
+      disabled={disabled}
       onClick={onClick}
       className={classNames(
         Classes.BUTTON,
