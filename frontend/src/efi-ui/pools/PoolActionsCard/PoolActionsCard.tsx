@@ -79,7 +79,6 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
             inputLabel={t`Trade`}
             buttonLabel={t`Trade`}
             buttonIntent={Intent.PRIMARY}
-            onTransaction={() => {}}
           />
         )}
         {activeTab === MarketAction.STAKE && (
@@ -94,7 +93,6 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
             inputLabel={t`Stake`}
             buttonLabel={t`Stake`}
             buttonIntent={Intent.PRIMARY}
-            onTransaction={() => {}}
           />
         )}
         {activeTab === MarketAction.UNSTAKE && (

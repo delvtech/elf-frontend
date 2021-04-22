@@ -49,7 +49,6 @@ interface TradePanelProps {
   buttonIntent?: Intent;
   tokenIn: ERC20 | undefined;
   tokenOut: ERC20 | undefined;
-  onTransaction: (amount: BigNumber) => void;
 }
 
 export function TradePanel(props: TradePanelProps): ReactElement {

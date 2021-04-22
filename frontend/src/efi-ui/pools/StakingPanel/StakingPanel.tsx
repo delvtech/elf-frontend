@@ -49,7 +49,6 @@ interface StakingPanelProps {
   inputLabel: string;
   buttonLabel: string;
   buttonIntent?: Intent;
-  onTransaction: (amount: BigNumber) => void;
 }
 
 export function StakingPanel(props: StakingPanelProps): ReactElement {
