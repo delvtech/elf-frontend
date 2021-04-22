@@ -50,7 +50,7 @@ export function useExitConvergentCurvePool(
   );
 
   const onExitPool = useCallback(() => {
-    const exitPoolCallArgs = makeExitPolCallArgs(
+    const exitPoolCallArgs = makeExitPoolCallArgs(
       poolId,
       account,
       poolTokens,
@@ -77,7 +77,7 @@ export function useExitConvergentCurvePool(
   return onExitPool;
 }
 
-function makeExitPolCallArgs(
+function makeExitPoolCallArgs(
   poolId: string | undefined,
   account: string | null | undefined,
   poolTokens: string[] | undefined,
@@ -171,13 +171,29 @@ function getPoolTokenMinAmountsOut(
   // min pool tokens out.  because of rounding errors in the contract itself, we can't calculate
   // the exact tokens out.  therefore we chop off the last two decimals and leave very fine dust.
   // like really fine. like more fine than playa dust.
+
+  const adjustedDecimals = poolTokenDecimals.map((decimals) => {
+    // this indicates we are loading, set to 18 and risk failing the exit
+    if (!decimals) {
+      return 18;
+    }
+
+    // for USDC and BTC only clip the last place
+    if (decimals < 10) {
+      return decimals - 1;
+    }
+
+    // for ten or higher, which will usually be 18, clip 2
+    return decimals - 2;
+  });
+
   const poolTokenMinAmountsOut = [
     parseUnits(
-      clipStringValueToDecimals(xNeeded, 16) as string,
+      clipStringValueToDecimals(xNeeded, adjustedDecimals[0] ?? 0) as string,
       poolTokenDecimals[0]
     ),
     parseUnits(
-      clipStringValueToDecimals(yNeeded, 16) as string,
+      clipStringValueToDecimals(yNeeded, adjustedDecimals[1] ?? 0) as string,
       poolTokenDecimals[1]
     ),
   ];

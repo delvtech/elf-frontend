@@ -29,15 +29,10 @@ export function calculateTokensOutForLPInFixed(
   const _yReserves = getSafeFixedNumber(yReserves);
   const _totalSupply = getSafeFixedNumber(totalSupply);
 
-  // solve for y_needed: lp_out = ((x_reserves / y_reserves) * y_needed * total_supply)/x_reserves
-  // const yNeeded = (lpIn * xReserves) / ((xReserves / yReserves) * totalSupply);
-  const _yNeeded = _lpIn
-    .mulUnsafe(_xReserves)
-    .divUnsafe(_xReserves.divUnsafe(_yReserves).mulUnsafe(_totalSupply));
+  const _lpShare = _lpIn.divUnsafe(_totalSupply);
 
-  // solve for x_needed: x_reserves/y_reserves = x_needed/y_needed
-  // const xNeeded = (xReserves / yReserves) * yNeeded;
-  const _xNeeded = _xReserves.divUnsafe(_yReserves).mulUnsafe(_yNeeded);
+  const _yNeeded = _lpShare.mulUnsafe(_yReserves);
+  const _xNeeded = _lpShare.mulUnsafe(_xReserves);
 
   const xNeeded = clipFixNumberToStringDecimals(_xNeeded, tokenDecimals);
   const yNeeded = clipFixNumberToStringDecimals(_yNeeded, tokenDecimals);

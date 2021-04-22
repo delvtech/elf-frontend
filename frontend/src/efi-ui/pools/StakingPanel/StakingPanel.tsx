@@ -34,6 +34,9 @@ import { PoolContract } from "efi/pools/PoolContract";
 import { validateStakingValue } from "efi/staking/validateStakeValue";
 import { useJoinConvergentPool } from "efi-ui/pools/useJoinConvergentPool/useJoinConvergentPool";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
+import { useJoinWeightedPool } from "efi-ui/pools/useJoinWeightedPool";
+import { useTrancheContracts } from "efi-ui/tranche/useTrancheContracts";
+import { WeightedPool } from "elf-contracts/types/WeightedPool";
 
 interface StakingPanelProps {
   library: Web3Provider | undefined;
@@ -84,10 +87,15 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
 
   const {
     asset: yieldAsset,
+    address: yieldAssetAddress,
     decimals: yieldAssetDecimals,
     displayBalance: yieldAssetDisplayBalance,
     poolBalance: yieldAssetPoolBalance,
   } = useTokenInfoForTradeInput(pool, yieldAssetContract, account, library);
+  const trancheContracts = useTrancheContracts();
+  const isPrincipalPoolType = trancheContracts
+    .map(({ address }) => address)
+    .includes(yieldAssetAddress ?? "");
 
   const {
     symbol: trancheAssetSymbol,
@@ -151,6 +159,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
     parseUnits(amountIn || "0", baseAssetDecimals),
     parseUnits(amountOut || "0", yieldAssetDecimals),
   ];
+
   const joinConvergentPool = useJoinConvergentPool(
     signer,
     account,
@@ -158,10 +167,21 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
     poolTokenMaxAmounts
   );
 
+  const joinWeightedPool = useJoinWeightedPool(
+    signer,
+    account,
+    pool as WeightedPool,
+    poolTokenMaxAmounts
+  );
+
   // TODO: use differnt join types depending on pool type
   const onStake = useCallback(() => {
-    joinConvergentPool();
-  }, [joinConvergentPool]);
+    if (isPrincipalPoolType) {
+      joinConvergentPool();
+    } else {
+      joinWeightedPool();
+    }
+  }, [isPrincipalPoolType, joinConvergentPool, joinWeightedPool]);
 
   return (
     <div className={tw("flex", "flex-col", "space-y-5")}>
