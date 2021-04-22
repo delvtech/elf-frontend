@@ -21,6 +21,9 @@ export function usePendingTransaction(): string | undefined {
     }
 
     const transaction = await jsonRpcProvider.getTransaction(transactionHash);
+    if (!transaction) {
+      return;
+    }
     const { blockHash } = transaction;
 
     // if the transaction is included in a block then it was successful, so we clear the pending tx

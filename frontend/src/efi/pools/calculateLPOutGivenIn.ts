@@ -61,15 +61,13 @@ export interface LPOutGivenTokenInFixed {
 }
 
 export function calculateLPOutGivenInFixed(
-  yIn: string, // y value, bond
-  xIn: string, // x value, base
+  yIn: string, // given token
   yReserves: string,
   xReserves: string,
-  tokenDecimals: number,
-  totalSupply: string // lp tokens, always 18 point decimal
+  totalSupply: string, // lp tokens, always 18 point decimal
+  tokenDecimals: number
 ): LPOutGivenTokenInFixed {
   const _yIn = getSafeFixedNumber(yIn);
-  const _xIn = getSafeFixedNumber(xIn);
   const _xReserves = getSafeFixedNumber(xReserves);
   const _yReserves = getSafeFixedNumber(yReserves);
   const _totalSupply = getSafeFixedNumber(totalSupply);
@@ -77,46 +75,30 @@ export function calculateLPOutGivenInFixed(
   // Check if the pool is initialized
   if (_totalSupply.isZero()) {
     // When uninitialized we mint exactly the underlying input in LP tokens
-    const lpOut = clipFixNumberToStringDecimals(_xIn, tokenDecimals);
-    const otherNeeded = clipFixNumberToStringDecimals(_xIn, tokenDecimals);
+    const lpOut = clipFixNumberToStringDecimals(_yIn, tokenDecimals);
+    const otherNeeded = clipFixNumberToStringDecimals(_yIn, tokenDecimals);
     const givenInNeeded = "0";
     return { otherNeeded, givenInNeeded, lpOut };
   }
 
-  // calc the number of x needed for the y_in provided
-  let _otherNeeded = _yReserves.divUnsafe(_xReserves).mulUnsafe(_yIn);
-  // if there isn't enough x_in provided
-  if (_otherNeeded > _xIn) {
-    const _lpOut = _xIn.mulUnsafe(_totalSupply).divUnsafe(_yReserves);
+  const _reservesRatio = _yReserves.divUnsafe(_xReserves);
+  const _givenInNeeded = _yIn;
+  const _otherNeeded = _yIn.divUnsafe(_reservesRatio);
 
-    // use all the x_in
-    _otherNeeded = _xIn;
-    // solve for: x_reserves/y_reserves = x_needed/y_needed
-    // givenInNeeded = otherNeeded / (yReserves / xReserves)
-    const _givenInNeeded = _otherNeeded.divUnsafe(
-      _yReserves.divUnsafe(_xReserves)
-    );
-
-    const otherNeeded = clipFixNumberToStringDecimals(
-      _otherNeeded,
-      tokenDecimals
-    );
-    const givenInNeeded = clipFixNumberToStringDecimals(
-      _givenInNeeded,
-      tokenDecimals
-    );
-    const lpOut = _lpOut.toString();
-    return { otherNeeded, givenInNeeded, lpOut };
-  }
-
-  // We calculate the percent increase in the reserves from contributing all of the bond
-  const _lpOut = _otherNeeded.mulUnsafe(_totalSupply).divUnsafe(_yReserves);
+  // CCPool will make lpOut the lesser of xIn/xReserves or yIn/yReserves.  Since we are just making
+  // the ratios match exactly we can just use yIn/yReserves.
+  const _lpOut = _yIn.divUnsafe(_yReserves);
 
   const otherNeeded = clipFixNumberToStringDecimals(
     _otherNeeded,
     tokenDecimals
   );
-  const givenInNeeded = clipFixNumberToStringDecimals(_yIn, tokenDecimals);
+
+  const givenInNeeded = clipFixNumberToStringDecimals(
+    _givenInNeeded,
+    tokenDecimals
+  );
   const lpOut = _lpOut.toString();
+
   return { otherNeeded, givenInNeeded, lpOut };
 }
