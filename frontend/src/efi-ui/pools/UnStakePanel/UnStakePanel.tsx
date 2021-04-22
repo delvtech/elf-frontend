@@ -4,8 +4,9 @@ import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 
 import tw from "efi-tailwindcss-classnames";
-import { UnstakeButton } from "efi-ui/portfolio/UnstakeButton/UnstakeButton";
 import { PoolContract } from "efi/pools/PoolContract";
+import { UnstakeConvergentCurvePoolButton } from "efi-ui/portfolio/UnstakeButton/UnstakeConvergentCurvePoolButton";
+import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
 
 interface UnStakePanelProps {
   library: Web3Provider | undefined;
@@ -34,8 +35,8 @@ export function UnStakePanel(props: UnStakePanelProps): ReactElement {
   return (
     <div className={tw("flex", "flex-col", "space-y-5")}>
       <div className={tw("flex", "justify-between", "items-center")}>
-        <UnstakeButton
-          pool={pool}
+        <UnstakeConvergentCurvePoolButton
+          pool={pool as ConvergentCurvePool}
           library={library}
           account={account}
           connector={connector}
