@@ -54,6 +54,7 @@ export function TermPicker({
       filterable={false}
       itemRenderer={(tranche, { handleClick }) => (
         <TermButton
+          key={tranche?.address}
           showCaret={false}
           library={library}
           account={account}

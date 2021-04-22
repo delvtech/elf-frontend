@@ -1,41 +1,41 @@
-import { ReactElement } from "react";
+import React, { ReactElement } from "react";
 
 import { ButtonGroup, Callout, Card, Intent, Tag } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import classNames from "classnames";
-import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
 import { Tranche__factory } from "elf-contracts/types/factories/Tranche__factory";
+import { WeightedPool } from "elf-contracts/types/WeightedPool";
 import { BigNumber } from "ethers";
+import { formatUnits } from "ethers/lib/utils";
+import zipObject from "lodash.zipobject";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
+import { getSmartContractFromRegistry } from "efi-ui/contracts/SmartContractsRegistry";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useShareOfPool } from "efi-ui/portfolio/hooks/useShareOfPool";
-import { UnstakeConvergentCurvePoolButton } from "efi-ui/portfolio/UnstakeButton/UnstakeConvergentCurvePoolButton";
+import { GoToMarketButton } from "efi-ui/portfolio/PrincipalTokenCard/GoToMarketButton";
+import { UnstakeWeightedPoolButton } from "efi-ui/portfolio/UnstakeButton/UnstakeWeightedPoolButton";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { useTokenName } from "efi-ui/token/hooks/useTokenName";
 import { useTrancheUnlockTimestamp } from "efi-ui/tranche/useTrancheUnlockTimestamp";
-import { formatPercent } from "efi/base/formatPercent";
-import { KNOWN_BASE_ASSETS } from "efi/contracts/contractsJson";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
-import zipObject from "lodash.zipobject";
-import { formatUnits } from "ethers/lib/utils";
-import { GoToMarketButton } from "efi-ui/portfolio/PrincipalTokenCard/GoToMarketButton";
-import { getSmartContractFromRegistry } from "efi-ui/contracts/SmartContractsRegistry";
+import { formatPercent } from "efi/base/formatPercent";
+import { KNOWN_BASE_ASSETS } from "efi/contracts/contractsJson";
 
-interface PrincipalTokenLPCardProps {
+interface YieldTokenLPCardProps {
   library: Web3Provider | undefined;
   connector: AbstractConnector | undefined;
   account: string | null | undefined;
-  pool: ConvergentCurvePool | undefined;
+  pool: WeightedPool | undefined;
 }
 
 const calloutClassName = tw(
@@ -48,12 +48,12 @@ const calloutClassName = tw(
   "justify-center"
 );
 
-export function PrincipalTokenLPCard({
+export function YieldTokenLPCard({
   library,
   account,
   connector,
   pool,
-}: PrincipalTokenLPCardProps): ReactElement {
+}: YieldTokenLPCardProps): ReactElement {
   const { isDarkMode } = useDarkMode();
 
   // base asset
@@ -133,12 +133,12 @@ export function PrincipalTokenLPCard({
             <div className={tw("flex", "w-full", "items-center", "space-x-2")}>
               <Tag
                 large
-                intent={Intent.PRIMARY}
+                intent={Intent.SUCCESS}
                 className={tw("justify-between")}
               >
                 <span>{formattedDate}</span>
               </Tag>
-              <span> {t`Principal token term`}</span>
+              <span> {t`Term`}</span>
             </div>
           </div>
         </div>
@@ -179,7 +179,7 @@ export function PrincipalTokenLPCard({
 
       {/* Quick Actions */}
       <ButtonGroup className={tw("space-x-6")}>
-        <UnstakeConvergentCurvePoolButton
+        <UnstakeWeightedPoolButton
           account={account}
           connector={connector}
           library={library}
@@ -225,7 +225,7 @@ function getPoolSharesLabel(poolShares: number | undefined) {
   return formatPercent(poolShares, 2);
 }
 
-function useTrancheForPool(pool: ConvergentCurvePool | undefined) {
+function useTrancheForPool(pool: WeightedPool | undefined) {
   const { data: [poolTokens = []] = [] } = usePoolTokens(pool);
   const principalTokenAddress = poolTokens.find(
     (address) => !KNOWN_BASE_ASSETS.includes(address)

@@ -6,24 +6,24 @@ import { AbstractConnector } from "@web3-react/abstract-connector";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { PoolContract } from "efi/pools/PoolContract";
-import { useUnstake } from "efi-ui/pools/useUnstake/useUnstake";
 import { Signer } from "ethers";
+import { WeightedPool } from "elf-contracts/types/WeightedPool";
+import { useExitWeightedPool } from "efi-ui/pools/useUnstake/useExitWeightedPool";
 
-interface UnstakeButtonProps {
+interface UnstakeWeightedPoolButtonProps {
   account: string | null | undefined;
   connector: AbstractConnector | undefined;
   library: Web3Provider | undefined;
-  pool: PoolContract | undefined;
+  pool: WeightedPool | undefined;
 }
 
-export function UnstakeButton({
+export function UnstakeWeightedPoolButton({
   pool,
   library,
   account,
-}: UnstakeButtonProps): ReactElement {
+}: UnstakeWeightedPoolButtonProps): ReactElement {
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
-  const exitPool = useUnstake(signer, account, pool);
+  const exitPool = useExitWeightedPool(signer, account, pool);
 
   return (
     <Button fill minimal intent={Intent.PRIMARY} onClick={exitPool}>
