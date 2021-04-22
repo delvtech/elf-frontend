@@ -4,7 +4,10 @@ import { formatUnits } from "ethers/lib/utils";
 import { clipStringValueToDecimals } from "efi/math/fixedPoint";
 import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
 
-const dustThreshold = 0.00001;
+/**
+ * The smallest viable amount of balance. Anything less is considered dust.
+ */
+const DUST_THRESHOLD = 0.00001;
 
 /**
  * When unstaking completely from a pool, it's nigh impossible to avoid the
@@ -20,7 +23,13 @@ export function hasLPDust(lpBalanceOf: BigNumber): boolean {
     ) || 0
   );
 
-  if (lpBalance <= dustThreshold) {
+  // no balance means no dust
+  if (lpBalance === 0) {
+    return false;
+  }
+
+  // If the balance is less than the dust threshold, then we have dust
+  if (lpBalance <= DUST_THRESHOLD) {
     return true;
   }
 
