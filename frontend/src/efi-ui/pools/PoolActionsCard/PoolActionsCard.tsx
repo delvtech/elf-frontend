@@ -65,7 +65,7 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
       <Card
         className={tw("flex", "flex-col", "flex-1", "w-full", "transition-all")}
       >
-        {activeTab === "swap" && (
+        {activeTab === MarketAction.SWAP && (
           <TradePanel
             library={library}
             signer={signer}
@@ -82,7 +82,7 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
             onTransaction={() => {}}
           />
         )}
-        {activeTab === "stake" && (
+        {activeTab === MarketAction.STAKE && (
           <StakingPanel
             library={library}
             signer={signer}
@@ -97,7 +97,7 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
             onTransaction={() => {}}
           />
         )}
-        {activeTab === "unstake" && (
+        {activeTab === MarketAction.UNSTAKE && (
           <UnStakePanel
             library={library}
             account={account}
