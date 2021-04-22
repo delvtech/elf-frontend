@@ -131,6 +131,21 @@ function getPlacesAfterDecimal(stringValue: string): number {
   return 0;
 }
 
+// TODO: move somewhere shared like efi/math/fixedHeplers
+export function clipStringValueToDecimals(
+  value: string,
+  maxDecimals: number
+): string {
+  if (getPlacesAfterDecimal(value) <= maxDecimals) {
+    return value;
+  }
+
+  const [integerPart, decimalPart] = value.split(".");
+  const clippedDecimals = decimalPart.slice(0, maxDecimals);
+
+  return `${integerPart}.${clippedDecimals}`;
+}
+
 /**
  * Number.isFinite doesn't type guard to number.
  * @param num value to test

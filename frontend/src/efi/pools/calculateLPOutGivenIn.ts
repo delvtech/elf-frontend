@@ -1,6 +1,7 @@
 import { FixedNumber } from "ethers";
 // import { FixedFormat } from "@ethersproject/bignumber";
 import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
+import { clipStringValueToDecimals } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 
 export interface LPOutGivenTokenIn {
   otherNeeded: number;
@@ -76,19 +77,11 @@ export function calculateLPOutGivenInFixed(
   //   _multiplier: "1",
   // };
 
-  const bpt = {
-    decimals: BALANCER_POOL_LP_TOKEN_DECIMALS,
-    signed: false,
-    width: 256,
-    name: "BPT",
-    _multiplier: "1",
-  };
-
-  const _yIn = FixedNumber.fromString(yIn, bpt);
-  const _xIn = FixedNumber.fromString(xIn, bpt);
-  const _xReserves = FixedNumber.fromString(xReserves, bpt);
-  const _yReserves = FixedNumber.fromString(yReserves, bpt);
-  const _totalSupply = FixedNumber.fromString(totalSupply, bpt);
+  const _yIn = getSafeFixedNumber(yIn);
+  const _xIn = getSafeFixedNumber(xIn);
+  const _xReserves = getSafeFixedNumber(xReserves);
+  const _yReserves = getSafeFixedNumber(yReserves);
+  const _totalSupply = getSafeFixedNumber(totalSupply);
   console.log("_xIn", _xIn.toString());
   console.log("_yIn", _yIn.toString());
   console.log("_xReserves", _xReserves.toString());
@@ -102,8 +95,8 @@ export function calculateLPOutGivenInFixed(
   // Check if the pool is initialized
   if (_totalSupply.isZero()) {
     // When uninitialized we mint exactly the underlying input in LP tokens
-    const lpOut = _xIn.round(tokenDecimals).toString();
-    const otherNeeded = _xIn.round(tokenDecimals).toString();
+    const lpOut = clipFixNumberToStringDecimals(_xIn, tokenDecimals);
+    const otherNeeded = clipFixNumberToStringDecimals(_xIn, tokenDecimals);
     const givenInNeeded = "0";
     return { otherNeeded, givenInNeeded, lpOut };
   }
@@ -123,8 +116,14 @@ export function calculateLPOutGivenInFixed(
       _yReserves.divUnsafe(_xReserves)
     );
 
-    const otherNeeded = _otherNeeded.round(tokenDecimals).toString();
-    const givenInNeeded = _givenInNeeded.round(tokenDecimals).toString();
+    const otherNeeded = clipFixNumberToStringDecimals(
+      _otherNeeded,
+      tokenDecimals
+    );
+    const givenInNeeded = clipFixNumberToStringDecimals(
+      _givenInNeeded,
+      tokenDecimals
+    );
     const lpOut = _lpOut.toString();
     return { otherNeeded, givenInNeeded, lpOut };
   }
@@ -132,8 +131,70 @@ export function calculateLPOutGivenInFixed(
   // We calculate the percent increase in the reserves from contributing all of the bond
   const _lpOut = _otherNeeded.mulUnsafe(_totalSupply).divUnsafe(_yReserves);
 
-  const otherNeeded = _otherNeeded.round(tokenDecimals).toString();
-  const givenInNeeded = _yIn.round(tokenDecimals).toString();
+  const otherNeeded = clipFixNumberToStringDecimals(
+    _otherNeeded,
+    tokenDecimals
+  );
+  const givenInNeeded = clipFixNumberToStringDecimals(_yIn, tokenDecimals);
   const lpOut = _lpOut.toString();
   return { otherNeeded, givenInNeeded, lpOut };
+}
+
+interface FixedFormat {
+  /**
+   * number of decimals to use for fixed point math
+   */
+  decimals: number;
+
+  /**
+   * if the number is signed or unsigned
+   */
+  signed: boolean;
+
+  /**
+   * width in bits, must be power of 8. i.e. 8, 16, ..., 256.  Max is 256
+   */
+  width: number;
+
+  /**
+   * name of this format
+   */
+  name: string;
+
+  /**
+   * multiplier added to this number
+   */
+  _multiplier: string;
+}
+interface FixedFormatOptions {
+  decimals?: number;
+  signed?: boolean;
+  width?: number;
+  name?: string;
+  _multiplier?: string;
+}
+
+const defaultFormat: FixedFormat = {
+  decimals: BALANCER_POOL_LP_TOKEN_DECIMALS,
+  signed: false,
+  width: 256,
+  name: "18POINT",
+  _multiplier: "1",
+};
+function getSafeFixedNumber(value: string, formatOptions?: FixedFormatOptions) {
+  const format: FixedFormat = {
+    ...defaultFormat,
+    ...formatOptions,
+  };
+  const { decimals } = format;
+
+  // ok to cast because defaultFormat will always return a value
+  const safeValue = clipStringValueToDecimals(value, decimals);
+  return FixedNumber.from(safeValue, format);
+}
+
+function clipFixNumberToStringDecimals(value: FixedNumber, decimals: number) {
+  const unsafeString = value.toString();
+  const safeValue = clipStringValueToDecimals(unsafeString, decimals);
+  return safeValue;
 }

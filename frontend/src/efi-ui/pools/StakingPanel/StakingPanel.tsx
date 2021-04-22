@@ -119,7 +119,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
     onChangeOutFromIn,
     onChangeInFromOut,
     setValueIn,
-  } = useUpdateInputs();
+  } = useUpdateInputs({ maxPrecision: baseAssetDecimals });
 
   const isValidBaseAssetValue = validateStakingValue(
     amountIn,
@@ -324,7 +324,7 @@ const numericInputOptions: NumericInputOptions = {
   maxPrecision: 18,
 };
 
-function useUpdateInputs() {
+function useUpdateInputs(options: NumericInputOptions) {
   // useNumericInput ensures valid numeric inputs from the user
   const { stringValue: stringValueIn, setValue: setValueIn } = useNumericInput(
     numericInputOptions

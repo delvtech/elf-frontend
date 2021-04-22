@@ -12,6 +12,7 @@ import {
 
 import styles from "./StakingInput.module.css";
 import { SvgIcon } from "efi-ui/base/SvgIcon";
+import { clipStringValueToDecimals } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 
 interface StakingInputProps {
   cryptoDisplayBalance: string | number;
@@ -48,17 +49,11 @@ export function StakingInput(props: StakingInputProps): ReactElement {
   const onChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const userInputValue = event.target.value;
-      onChangeInputValue(userInputValue);
-
-      // const { otherNeeded, lpOut } = calculateLPOutGivenIn(
-      //   +userInputValue,
-      //   Number.MAX_SAFE_INTEGER,
-      //   tokenPoolReserves ?? 0,
-      //   otherTokenPoolReserves ?? 0,
-      //   totalSupply ?? 0
-      // );
-      // console.log("otherNeeded", otherNeeded);
-      // console.log("lpOut", lpOut);
+      const safeValue = clipStringValueToDecimals(
+        userInputValue,
+        cryptoDecimals || 18
+      );
+      onChangeInputValue(safeValue);
 
       const {
         otherNeeded: otherNeededFixed,
@@ -71,18 +66,16 @@ export function StakingInput(props: StakingInputProps): ReactElement {
         cryptoDecimals || 18,
         totalSupply?.toString() || "0"
       );
-      console.log("lpOutFixed", lpOutFixed);
-      console.log("otherNeededFixed", otherNeededFixed);
 
       onCalculateLPOutGivenIn(otherNeededFixed, lpOutFixed);
     },
     [
+      cryptoDecimals,
       onChangeInputValue,
       tokenPoolReserves,
       otherTokenPoolReserves,
       totalSupply,
       onCalculateLPOutGivenIn,
-      cryptoDecimals,
     ]
   );
 
