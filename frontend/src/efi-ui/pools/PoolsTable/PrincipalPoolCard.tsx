@@ -39,10 +39,11 @@ export function PrincipalPoolCard(
     tranche,
     "unlockTimestamp"
   );
-  const goToPoolPage = useCallback(
-    () => navigate(`exchange/${pool?.address}`),
-    [pool?.address]
-  );
+  // TODO: Get this from props
+  const goToPoolPage = useCallback(() => {
+    navigate(`${pool?.address}`);
+  }, [pool?.address]);
+
   const unlockTimestamp = getQueryData(unlockTimestampResult);
   const maturityDate = useMemo(
     () => convertEpochSecondsToDate(unlockTimestamp),

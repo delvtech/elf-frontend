@@ -59,7 +59,7 @@ const App: FC<AppProps> = () => {
           <ExchangeView path={Navigation.EXCHANGE} />
           <PoolView path={`${Navigation.EXCHANGE}/:poolAddress`} />
           <MintView path={Navigation.MINT} />
-          <FAQView path={Navigation.FAQ} />
+          <FAQView path={Navigation.RESOURCES} />
         </Router>
       </div>
 
