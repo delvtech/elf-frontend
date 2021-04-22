@@ -336,7 +336,7 @@ function useUpdateInputs(options: NumericInputOptions) {
 
   const onChangeOutFromIn = useCallback(
     (otherNeeded: string, lpOut: string) => {
-      if (!otherNeeded) {
+      if (!otherNeeded || +otherNeeded === 0) {
         setValueOut(undefined);
       } else {
         setValueOut(otherNeeded);
