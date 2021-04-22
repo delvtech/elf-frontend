@@ -79,7 +79,11 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
               feeVolume={feeVolume24hr}
               feeVolumeTrend={feeVolumeTrend}
             />
-            <VaultSummary startDate={startDate} maturityDate={maturityDate} />
+            <VaultSummary
+              baseAsset={baseAssetContract}
+              startDate={startDate}
+              maturityDate={maturityDate}
+            />
             <TokenSummary pool={pool} />
           </div>
           <div className={tw("flex", "space-x-12")}>

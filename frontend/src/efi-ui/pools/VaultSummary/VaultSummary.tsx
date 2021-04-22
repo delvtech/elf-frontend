@@ -8,18 +8,24 @@ import tw from "efi-tailwindcss-classnames";
 import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { formatPercent } from "efi/base/formatPercent";
+import { ERC20 } from "elf-contracts/types/ERC20";
+import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
 
 interface VaultSummaryProps {
   maturityDate: number | undefined;
   startDate: number | undefined;
+  baseAsset: ERC20 | undefined;
 }
 
 // TODO: add loading states
 export function VaultSummary(props: VaultSummaryProps): ReactElement {
-  const { maturityDate = 0, startDate = 0 } = props;
+  const { baseAsset, maturityDate = 0, startDate = 0 } = props;
   const maturityDateString = new Date(maturityDate).toLocaleDateString();
   // hardcode for now, will make this dynamic after updating testnet
-  const { data: vaultInfo } = useYearnVault("yvWETH");
+  const { data: baseAssetSymbol } = useTokenSymbol(baseAsset);
+  const { data: vaultInfo } = useYearnVault(
+    baseAssetSymbol ? t`yv${baseAssetSymbol}` : undefined
+  );
   const { name, type } = vaultInfo || {};
   const apy = vaultInfo?.apy?.recommended;
 
