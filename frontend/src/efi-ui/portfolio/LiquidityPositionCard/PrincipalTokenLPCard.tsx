@@ -76,20 +76,20 @@ export function PrincipalTokenLPCard({
 
   // pool shares
   const { data: poolName } = useTokenName(pool);
-  const poolShares = useShareOfPool(pool, account);
-  const poolSharesLabel = getPoolSharesLabel(poolShares);
+  const shareOfPool = useShareOfPool(pool, account);
+  const poolSharesLabel = getPoolSharesLabel(shareOfPool);
 
   // liquidity
   const { data: [addresses, poolBalances] = [] } = usePoolTokens(pool);
   const baseAssetLiquidity = calculatePoolShareLiquidity(
-    poolShares,
+    shareOfPool,
     addresses,
     poolBalances,
     baseAssetContract?.address,
     baseAssetDecimals
   );
   const principalTokenLiquidity = calculatePoolShareLiquidity(
-    poolShares,
+    shareOfPool,
     addresses,
     poolBalances,
     tranche?.address,
@@ -192,7 +192,7 @@ export function PrincipalTokenLPCard({
 }
 
 function calculatePoolShareLiquidity(
-  poolShares: number | undefined,
+  shareOfPool: number | undefined,
   poolTokenAddresses: string[] | undefined,
   poolTokenReserves: BigNumber[] | undefined,
   tokenAddress: string | undefined,
@@ -200,7 +200,7 @@ function calculatePoolShareLiquidity(
 ): number | undefined {
   let baseAssetLiquidity: number | undefined;
   if (
-    poolShares &&
+    shareOfPool &&
     poolTokenAddresses &&
     poolTokenReserves &&
     tokenAddress &&
@@ -209,7 +209,7 @@ function calculatePoolShareLiquidity(
     const reservesByAddress = zipObject(poolTokenAddresses, poolTokenReserves);
     const reserves = reservesByAddress[tokenAddress];
     const reservesNumber = +formatUnits(reserves, tokenDecimals);
-    baseAssetLiquidity = poolShares * reservesNumber;
+    baseAssetLiquidity = shareOfPool * reservesNumber;
   }
   return baseAssetLiquidity;
 }
