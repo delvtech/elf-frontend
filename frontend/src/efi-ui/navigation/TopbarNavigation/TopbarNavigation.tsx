@@ -1,4 +1,4 @@
-import { ReactElement, useState } from "react";
+import { ReactElement, useCallback, useState } from "react";
 
 import {
   Button,
@@ -11,7 +11,6 @@ import {
   Tabs,
 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
-import classNames from "classnames";
 import { t } from "ttag";
 
 import logoDark from "efi-static-assets/logos/svg/logo--dark.svg";
@@ -27,7 +26,7 @@ import { isMainnet } from "efi/crypto/ethereum";
 import { formatChainName } from "efi/crypto/formatChainName";
 import { formatWalletAddress } from "efi/wallets/formatWalletAddress";
 
-import styles from "./TopbarNavigation.module.css";
+import { Popover2, Tooltip2 } from "@blueprintjs/popover2";
 
 interface TopbarNavigationProps {
   chainId: number | undefined;
@@ -39,6 +38,12 @@ interface TopbarNavigationProps {
   activeTab: Navigation;
   changeTab: (tabId: Navigation) => void;
 }
+const tabStyle = {
+  paddingRight: 64,
+  paddingLeft: 64,
+  paddingTop: 24,
+  paddingBottom: 24,
+};
 export function TopbarNavigation({
   activeTab,
   changeTab,
@@ -58,79 +63,125 @@ export function TopbarNavigation({
     walletButtonIntent = Intent.DANGER;
   }
   const connectionStatusColor = active ? Colors.GREEN4 : Colors.RED4;
+  const onCloseWalletDialog = useCallback(() => setWalletDialogOpen(false), []);
+  const onOpenWalletDialog = useCallback(() => setWalletDialogOpen(true), []);
+
   return (
     <div className={tw("lg:hidden", "h-16", "flex", "flex-shrink-0")}>
-      <Navbar fixedToTop className={tw("flex", "justify-between")}>
+      <Navbar className={tw("flex", "justify-between")}>
         <NavbarGroup>
           <img
-            className={tw("h-8")}
+            style={{
+              height: 32, // don't use tailwind here since we want fixed height and rem is dynamic
+            }}
             src={isDarkMode ? logoDark : logo}
             alt={t`Element Finance`}
           />
         </NavbarGroup>
         <NavbarGroup>
-          <Tabs
-            id="primary-nav-mobile"
-            className={classNames(styles.smTabs)}
-            selectedTabId={activeTab}
-            onChange={changeTab}
-          >
-            <Tab id={Navigation.PORTFOLIO} title={t`Portfolio`} />
-            <Tab id={Navigation.EARN} title={t`Earn`} />
-            <Tab id={Navigation.EXCHANGE} title={t`Exchange`} />
-            <Tab id={Navigation.MINT} title={t`Mint`} />
-            <Tab id={Navigation.FAQ} title={t`Resources`} />
-          </Tabs>
-        </NavbarGroup>
-        <NavbarGroup>
-          <Button
-            minimal={!mainnetDanger}
-            icon={
-              !account ? (
-                <Icon
-                  icon={IconNames.SEND_TO_GRAPH}
-                  iconSize={Icon.SIZE_LARGE}
-                />
-              ) : (
-                <WalletJazzicon size={28} account={account} />
-              )
-            }
-            fill
-            intent={walletButtonIntent}
-            onClick={() => setWalletDialogOpen(true)}
-          >
-            <div className={tw("flex", "space-x-4", "items-center")}>
-              {!account ? (
+          {!account ? (
+            <div>
+              <Button
+                minimal={!mainnetDanger}
+                fill
+                intent={walletButtonIntent}
+                onClick={onOpenWalletDialog}
+              >
                 <span className={tw("text-center")}>
                   {t`Connect wallet to begin`}
                 </span>
-              ) : (
-                <LabeledText
-                  className={tw("text-center")}
-                  text={
-                    <span>
-                      <Icon
-                        className={tw("pr-2")}
-                        icon={IconNames.DOT}
-                        color={connectionStatusColor}
-                      />
-                      {formatWalletAddress(account)}
-                    </span>
-                  }
-                  label={formatChainName(active, chainId)}
-                />
-              )}
+              </Button>
             </div>
-            <ConnectWalletDialog
-              isOpen={isWalletDialogOpen}
-              onClose={() => setWalletDialogOpen(false)}
-            />
-          </Button>
+          ) : (
+            <Tooltip2
+              inheritDarkTheme={false}
+              content={
+                <div className={tw("flex", "space-x-4", "items-center")}>
+                  <LabeledText
+                    className={tw("text-center")}
+                    text={
+                      <span>
+                        <Icon
+                          className={tw("pr-2")}
+                          icon={IconNames.DOT}
+                          color={connectionStatusColor}
+                        />
+                        {formatWalletAddress(account)}
+                      </span>
+                    }
+                    label={
+                      <span className={tw("text-gray-500")}>
+                        {formatChainName(active, chainId)}
+                      </span>
+                    }
+                  />
+                </div>
+              }
+            >
+              <Button
+                minimal={!mainnetDanger}
+                icon={<WalletJazzicon size={28} account={account} />}
+                fill
+                intent={walletButtonIntent}
+                onClick={onOpenWalletDialog}
+              >
+                {formatWalletAddress(account)}
+              </Button>
+            </Tooltip2>
+          )}
         </NavbarGroup>
         <NavbarGroup>
           <DarkModeSwitch />
+          <Popover2
+            content={
+              <Tabs
+                large
+                vertical
+                id="primary-nav-mobile"
+                selectedTabId={activeTab}
+                onChange={changeTab}
+              >
+                <Tab
+                  id={Navigation.PORTFOLIO}
+                  className={tw("text-center")}
+                  style={tabStyle}
+                  title={t`Portfolio`}
+                />
+                <Tab
+                  id={Navigation.EARN}
+                  className={tw("text-center")}
+                  style={tabStyle}
+                  title={t`Earn`}
+                />
+                <Tab
+                  id={Navigation.EXCHANGE}
+                  className={tw("text-center")}
+                  style={tabStyle}
+                  title={t`Exchange`}
+                />
+                <Tab
+                  id={Navigation.MINT}
+                  className={tw("text-center")}
+                  style={tabStyle}
+                  title={t`Mint`}
+                />
+                <Tab
+                  id={Navigation.RESOURCES}
+                  className={tw("text-center")}
+                  style={tabStyle}
+                  title={t`Resources`}
+                />
+              </Tabs>
+            }
+          >
+            <Button large minimal icon={IconNames.MENU}></Button>
+          </Popover2>
         </NavbarGroup>
       </Navbar>
+      <ConnectWalletDialog
+        isOpen={isWalletDialogOpen}
+        onClose={onCloseWalletDialog}
+      />
     </div>
   );
 }
