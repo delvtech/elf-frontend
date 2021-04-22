@@ -18,6 +18,7 @@ import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { getTimeLeft2 } from "efi/base/time";
 import { formatMoney } from "efi/money/formatMoney";
 import { PoolContract } from "efi/pools/PoolContract";
+import { calculateProgress } from "efi-ui/tranche/calculateProgress";
 
 interface PrincipalPoolCardProps {
   pool: PoolContract | undefined;
@@ -56,14 +57,7 @@ export function PrincipalPoolCard(
     return null;
   }
 
-  const currentTime = Date.now();
-  const endTime = maturityDate?.getTime() ?? 0;
-  const startTime = startDate?.getTime() ?? 0;
-  // bind progress value between 0 and 1
-  const progressValue = Math.max(
-    0,
-    Math.min(1, (currentTime - startTime) / (endTime - startTime))
-  );
+  const progressValue = calculateProgress(startDate, maturityDate);
   const progressLabel = progressValue === 1 ? t`closed` : `running`;
   const timeLeft = getTimeLeft2(maturityDate);
 
