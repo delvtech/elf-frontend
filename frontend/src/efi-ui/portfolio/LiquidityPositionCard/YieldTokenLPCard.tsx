@@ -19,7 +19,7 @@ import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForTok
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
-import { useShareOfPool } from "efi-ui/portfolio/hooks/useShareOfPool";
+import { useShareOfPool } from "efi-ui/pools/useShareOfPool";
 import { GoToMarketButton } from "efi-ui/portfolio/PrincipalTokenCard/GoToMarketButton";
 import { UnstakeWeightedPoolButton } from "efi-ui/pools/UnstakeButton/UnstakeWeightedPoolButton";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";

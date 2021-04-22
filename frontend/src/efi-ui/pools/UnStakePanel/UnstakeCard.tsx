@@ -19,7 +19,7 @@ import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSy
 import { UnstakeConvergentCurvePoolButton } from "efi-ui/pools/UnstakeButton/UnstakeConvergentCurvePoolButton";
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
-import { useShareOfPool } from "efi-ui/portfolio/hooks/useShareOfPool";
+import { useShareOfPool } from "efi-ui/pools/useShareOfPool";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { formatPercent } from "efi/base/formatPercent";
 import { KNOWN_BASE_ASSETS } from "efi/contracts/contractsJson";
