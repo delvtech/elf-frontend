@@ -245,7 +245,7 @@ contract ConvergentCurvePool is IMinimalSwapInfoPool, BalancerPoolToken {
         bytes32, // poolId
         address, // sender
         address recipient,
-        uint256[] calldata currentBalances,
+        uint256[] memory currentBalances,
         uint256,
         uint256 protocolSwapFee,
         bytes calldata userData
@@ -312,7 +312,7 @@ contract ConvergentCurvePool is IMinimalSwapInfoPool, BalancerPoolToken {
         bytes32,
         address,
         address recipient,
-        uint256[] calldata currentBalances,
+        uint256[] memory currentBalances,
         uint256,
         uint256 protocolSwapFee,
         bytes calldata userData
