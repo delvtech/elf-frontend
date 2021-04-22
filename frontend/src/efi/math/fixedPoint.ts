@@ -61,16 +61,24 @@ export function getSafeFixedNumber(
 export function clipFixNumberToStringDecimals(
   value: FixedNumber,
   decimals: number
-): string {
+): string | undefined {
   const unsafeString = value.toString();
   const safeValue = clipStringValueToDecimals(unsafeString, decimals);
   return safeValue;
 }
 
 export function clipStringValueToDecimals(
-  value: string,
+  value: string | undefined,
   maxDecimals: number
-): string {
+): string | undefined {
+  if (value === undefined) {
+    return undefined;
+  }
+
+  if (value === ".") {
+    return "0.";
+  }
+
   if (getPlacesAfterDecimal(value) <= maxDecimals) {
     return value;
   }
@@ -78,7 +86,7 @@ export function clipStringValueToDecimals(
   const [integerPart, decimalPart] = value.split(".");
   const clippedDecimals = decimalPart.slice(0, maxDecimals);
 
-  return `${integerPart}.${clippedDecimals}`;
+  return `${integerPart || 0}.${clippedDecimals}`;
 }
 
 /**
@@ -87,11 +95,15 @@ export function clipStringValueToDecimals(
  *
  * @param stringValue a numeric string with or without a decimal i.e. 3.14 or 42.
  */
-export function getPlacesAfterDecimal(stringValue: string): number {
+export function getPlacesAfterDecimal(stringValue: string | undefined): number {
+  if (stringValue === undefined) {
+    return 0;
+  }
+
   const hasDecimal = stringValue.indexOf(".") !== -1;
 
   if (hasDecimal) {
-    return stringValue.split(".")[1].length;
+    return stringValue.split(".")[1].length ?? 0;
   }
 
   return 0;

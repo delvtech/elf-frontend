@@ -1,6 +1,10 @@
 import { ChangeEvent, useCallback, useState } from "react";
 
-import { ANY_NUMBER_REGEX } from "efi/base/numbers";
+import {
+  ANY_NUMBER_REGEX,
+  isFiniteNumber,
+  isIntegerNumber,
+} from "efi/base/numbers";
 import { getPlacesAfterDecimal } from "efi/math/fixedPoint";
 
 export interface NumericInputOptions {
@@ -79,11 +83,11 @@ export function useNumericInput(
   };
 }
 
-function validateInput(
-  inputString: string,
-  min: number | undefined,
-  max: number | undefined,
-  maxPrecision: number | undefined
+export function validateInput(
+  inputString: string | undefined = "",
+  min?: number,
+  max?: number,
+  maxPrecision?: number
 ): boolean {
   const inputValue = Number(inputString);
   if (!ANY_NUMBER_REGEX.test(inputString)) {
@@ -114,20 +118,4 @@ function validateInput(
   }
 
   return true;
-}
-
-/**
- * Number.isFinite doesn't type guard to number.
- * @param num value to test
- */
-function isFiniteNumber(num: unknown): num is number {
-  return Number.isFinite(num as number);
-}
-
-/**
- * Number.isInteger doesn't type guard to number.
- * @param num value to test
- */
-function isIntegerNumber(num: unknown): num is number {
-  return Number.isInteger(num as number);
 }

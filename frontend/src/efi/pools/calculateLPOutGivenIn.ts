@@ -55,9 +55,9 @@ export function calculateLPOutGivenInUNSAFE(
 }
 
 export interface LPOutGivenTokenInFixed {
-  otherNeeded: string;
-  givenInNeeded: string;
-  lpOut: string;
+  otherNeeded: string | undefined;
+  givenInNeeded: string | undefined;
+  lpOut: string | undefined;
 }
 
 export function calculateLPOutGivenInFixed(
