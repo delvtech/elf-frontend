@@ -21,6 +21,8 @@ export function getContracts(hre: HardhatRuntimeEnvironment, signer?: Signer) {
     weightedPoolFactoryAddress,
     wethTrancheAddress,
     marketFyWethAddress,
+    usdcTrancheAddress,
+    marketFyUsdcAddress,
     userProxyContractAddress,
   } = addresses;
   const provider = hre.ethers.provider;
@@ -49,11 +51,21 @@ export function getContracts(hre: HardhatRuntimeEnvironment, signer?: Signer) {
     marketFyWethAddress,
     signer ?? provider
   );
+  const usdcTrancheContract = Tranche__factory.connect(
+    usdcTrancheAddress,
+    signer ?? provider
+  );
+
+  const marketFyUsdcContract = ConvergentCurvePool__factory.connect(
+    marketFyUsdcAddress,
+    signer ?? provider
+  );
 
   const userProxyContract = UserProxy__factory.connect(
     userProxyContractAddress,
     signer ?? provider
   );
+
   return {
     balancerVaultContract,
     wethContract,
@@ -62,6 +74,8 @@ export function getContracts(hre: HardhatRuntimeEnvironment, signer?: Signer) {
     weightedPoolFactory,
     wethTrancheContract,
     marketFyWethContract,
+    usdcTrancheContract,
+    marketFyUsdcContract,
     userProxyContract,
   };
 }

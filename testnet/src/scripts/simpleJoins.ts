@@ -1,4 +1,4 @@
-import { parseEther } from "ethers/lib/utils";
+import { parseEther, parseUnits } from "ethers/lib/utils";
 import hre from "hardhat";
 
 import { MAX_ALLOWANCE } from "src/maxAllowance";
@@ -13,33 +13,33 @@ async function simpleJoins() {
   const trader1 = await getSigner(SIGNER.TRADER1, hre);
   const {
     balancerVaultContract,
-    wethContract,
-    wethTrancheContract,
-    marketFyWethContract,
+    usdcContract: baseAssetContract,
+    usdcTrancheContract: trancheContract,
+    marketFyUsdcContract: ptPoolContract,
     userProxyContract,
   } = getContracts(hre, trader1);
 
   const trader1Address = await trader1.getAddress();
 
-  await wethContract.approve(balancerVaultContract.address, MAX_ALLOWANCE);
-  await wethTrancheContract.approve(
-    balancerVaultContract.address,
-    MAX_ALLOWANCE
+  await baseAssetContract.approve(balancerVaultContract.address, MAX_ALLOWANCE);
+  await trancheContract.approve(balancerVaultContract.address, MAX_ALLOWANCE);
+  const baseAssetDecimals = await baseAssetContract.decimals();
+  await baseAssetContract.mint(
+    trader1Address,
+    parseUnits("10000000", baseAssetDecimals)
   );
 
-  await wethContract.mint(trader1Address, parseEther("10000000"));
-  const wethDecimals = await wethContract.decimals();
-  const wethFytPoolId = await marketFyWethContract.getPoolId();
-  const { tokens } = await balancerVaultContract.getPoolTokens(wethFytPoolId);
-  await printTokenInfoForPool(balancerVaultContract, wethFytPoolId, trader1);
+  const poolId = await ptPoolContract.getPoolId();
+  const { tokens } = await balancerVaultContract.getPoolTokens(poolId);
+  await printTokenInfoForPool(balancerVaultContract, poolId, trader1);
 
-  await wethContract.approve(userProxyContract.address, MAX_ALLOWANCE);
-  const expiration = await wethTrancheContract.unlockTimestamp();
-  const position = await wethTrancheContract.position();
+  await baseAssetContract.approve(userProxyContract.address, MAX_ALLOWANCE);
+  const expiration = await trancheContract.unlockTimestamp();
+  const position = await trancheContract.position();
 
   const mintTx = await userProxyContract.mint(
-    parseEther("10000"),
-    wethContract.address,
+    parseUnits("10000", baseAssetDecimals),
+    baseAssetContract.address,
     expiration,
     position,
     []
@@ -47,40 +47,41 @@ async function simpleJoins() {
   await mintTx.wait(1);
 
   await joinConvergentCurvePool(
-    wethFytPoolId,
+    poolId,
     trader1,
     balancerVaultContract,
     tokens,
-    wethDecimals,
+    baseAssetDecimals,
     "1000"
   );
 
-  const numBatches = 100;
+  const numBatches = 1;
   let batchCount = 0;
   while (batchCount < numBatches) {
     try {
-      const numSwaps = 2;
+      const numSwaps = 1;
       let joinCount = 0;
       const joins = [];
       while (joinCount < numSwaps) {
         joins.push(
           joinConvergentCurvePool(
-            wethFytPoolId,
+            poolId,
             trader1,
             balancerVaultContract,
             tokens,
-            wethDecimals,
-            "100"
+            baseAssetDecimals,
+            "11.123"
           )
         );
+
         joins.push(
           exitConvergentCurvePool(
-            wethFytPoolId,
+            poolId,
             trader1,
             balancerVaultContract,
             tokens,
-            wethDecimals,
-            "100"
+            baseAssetDecimals,
+            "10.02"
           )
         );
 
