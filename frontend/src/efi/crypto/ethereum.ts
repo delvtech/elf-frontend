@@ -5,19 +5,19 @@ import { parseUnits } from "ethers/lib/utils";
  */
 export enum ChainId {
   MAINNET = 1,
-  KOVAN = 42,
+  GOERLI = 5,
   LOCAL = 31337,
 }
 
 export const ChainNames: Record<ChainId, string> = {
   [ChainId.MAINNET]: "Ethereum Mainnet",
-  [ChainId.KOVAN]: "Ethereum Testnet Kovan",
+  [ChainId.GOERLI]: "Ethereum Testnet Goerli",
   [ChainId.LOCAL]: "Local development",
 };
 
 export const DEFAULT_CHAIN_IDS: ChainId[] = [
   ChainId.MAINNET,
-  ChainId.KOVAN,
+  ChainId.GOERLI,
   ChainId.LOCAL,
 ];
 
