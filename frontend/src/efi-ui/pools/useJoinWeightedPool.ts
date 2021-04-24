@@ -1,6 +1,7 @@
 import { useCallback } from "react";
 
 import { Vault } from "elf-contracts/types/Vault";
+import { WeightedPool } from "elf-contracts/types/WeightedPool";
 import { BigNumber, CallOverrides, Signer } from "ethers";
 import { defaultAbiCoder, formatEther } from "ethers/lib/utils";
 import zipObject from "lodash.zipobject";
@@ -13,14 +14,13 @@ import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSma
 import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 import ContractAddresses from "efi/contracts/contractsJson";
 import { ContractMethodArgs } from "efi/contracts/types";
-import { PoolContract } from "efi/pools/PoolContract";
-import { WeightedPool } from "elf-contracts/types/WeightedPool";
 
 enum JoinKind {
   INIT,
   EXACT_TOKENS_IN_FOR_BPT_OUT,
   TOKEN_IN_FOR_EXACT_BPT_OUT,
 }
+
 export function useJoinWeightedPool(
   signer: Signer | undefined,
   account: string | null | undefined,
@@ -72,12 +72,6 @@ function makeJoinPoolCallArgs(
   ) {
     return;
   }
-
-  // TODO: apply pool weights to input handlers
-  console.log(
-    "poolweights",
-    poolWeights.map((bn) => formatEther(bn))
-  );
 
   let isEth = false;
   const assets = poolTokens.map((poolToken) => {
