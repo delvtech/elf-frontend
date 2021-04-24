@@ -94,7 +94,15 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
             />
             <TokenSummary pool={pool} />
           </div>
-          <div className={tw("flex", "space-x-12")}>
+          <div
+            className={tw(
+              "grid",
+              "grid-flow-row",
+              "gap-12",
+              "grid-cols-2",
+              "auto-rows-max"
+            )}
+          >
             <PoolCharts pool={pool} />
             <PoolActionsCard
               library={library}
