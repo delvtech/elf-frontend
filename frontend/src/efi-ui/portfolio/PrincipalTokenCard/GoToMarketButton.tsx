@@ -11,7 +11,7 @@ interface GoToMarketButtonProps {
 
 export function GoToMarketButton(props: GoToMarketButtonProps): ReactElement {
   const { pool } = props;
-  const onClick = useCallback(() => navigate(`exchange/${pool?.address}`), [
+  const onClick = useCallback(() => navigate(`pools/${pool?.address}`), [
     pool?.address,
   ]);
   return (

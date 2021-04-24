@@ -5,7 +5,7 @@ import { LocationProvider, Redirect, Router } from "@reach/router";
 import classNames from "classnames";
 
 import { tw } from "efi-tailwindcss-classnames";
-import { ExchangeView } from "efi-ui/exchange/ExchangeView/ExchangeView";
+import { PoolsView } from "efi-ui/exchange/PoolsView/PoolsView";
 import { FAQView } from "efi-ui/faq/FAQView";
 import { EarnView } from "efi-ui/earn/EarnView/EarnView";
 import { PoolView } from "efi-ui/pools/PoolView/PoolView";
@@ -56,8 +56,8 @@ const App: FC<AppProps> = () => {
 
           <PortfolioView path={Navigation.PORTFOLIO} />
           <EarnView path={Navigation.EARN} />
-          <ExchangeView path={Navigation.EXCHANGE} />
-          <PoolView path={`${Navigation.EXCHANGE}/:poolAddress`} />
+          <PoolsView path={Navigation.POOLS} />
+          <PoolView path={`${Navigation.POOLS}/:poolAddress`} />
           <MintView path={Navigation.MINT} />
           <FAQView path={Navigation.RESOURCES} />
         </Router>

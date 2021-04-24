@@ -23,9 +23,6 @@ export function useActiveTab(): Navigation {
     case Navigation.PORTFOLIO: {
       return Navigation.PORTFOLIO;
     }
-    case Navigation.EXCHANGE: {
-      return Navigation.EXCHANGE;
-    }
     case Navigation.EARN: {
       return Navigation.EARN;
     }
