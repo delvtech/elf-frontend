@@ -53,7 +53,9 @@ export function PoolView({ poolAddress }: PoolViewProps): ReactElement {
         )}
       >
         {/* Main content */}
-        <div className={tw("flex", "flex-col", "flex-1", "space-y-8")}>
+        <div
+          className={tw("flex", "flex-col", "flex-1", "space-y-8", "w-full")}
+        >
           {/* page title */}
           <div className={tw("flex", "justify-between")}>
             <H2>{poolName}</H2>

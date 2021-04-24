@@ -67,56 +67,60 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
   const { feeVolume24hr, feeVolumeTrend } = useFeeVolumeTrend(pool);
 
   return (
-    <div className={tw("flex", "mb-8", "space-x-4", "w-full", "items-stretch")}>
-      <div className={tw("flex", "flex-1")}>
-        <div className={tw("flex", "flex-col", "space-y-8", "w-full")}>
-          <div
-            className={tw(
-              "grid",
-              "grid-flow-row",
-              "gap-12",
-              "grid-cols-3",
-              "auto-rows-max"
-            )}
-          >
-            <PoolSummary
-              liquidity={totalLiquidity}
-              liquidityTrend={liquidityTrend}
-              volume={volume24hr}
-              volumeTrend={volumeTrend}
-              feeVolume={feeVolume24hr}
-              feeVolumeTrend={feeVolumeTrend}
-            />
-            <VaultSummary
-              baseAsset={baseAssetContract}
-              startDate={startDate}
-              maturityDate={maturityDate}
-            />
-            <TokenSummary pool={pool} />
-          </div>
-          <div
-            className={tw(
-              "grid",
-              "grid-flow-row",
-              "gap-12",
-              "grid-cols-2",
-              "auto-rows-max"
-            )}
-          >
-            <PoolCharts pool={pool} />
-            <PoolActionsCard
-              library={library}
-              signer={signer}
-              account={account}
-              chainId={chainId}
-              connector={connector}
-              walletActive={walletActive}
-              pool={pool}
-              tokenIn={baseAssetContract}
-              tokenOut={yieldAssetContract}
-            />
-          </div>
-        </div>
+    <div className={tw("flex", "flex-col", "space-y-8", "w-full")}>
+      <div
+        className={tw(
+          "flex",
+          "flex-col",
+          "space-y-8",
+          "lg:space-y-0",
+          "lg:grid",
+          "lg:grid-flow-row",
+          "lg:gap-12",
+          "lg:grid-cols-3",
+          "lg:auto-rows-max"
+        )}
+      >
+        <PoolSummary
+          liquidity={totalLiquidity}
+          liquidityTrend={liquidityTrend}
+          volume={volume24hr}
+          volumeTrend={volumeTrend}
+          feeVolume={feeVolume24hr}
+          feeVolumeTrend={feeVolumeTrend}
+        />
+        <VaultSummary
+          baseAsset={baseAssetContract}
+          startDate={startDate}
+          maturityDate={maturityDate}
+        />
+        <TokenSummary pool={pool} />
+      </div>
+      <div
+        className={tw(
+          "flex",
+          "flex-col",
+          "space-y-8",
+          "lg:space-y-0",
+          "lg:grid",
+          "lg:grid-flow-row",
+          "lg:gap-12",
+          "lg:grid-cols-2",
+          "lg:auto-rows-max"
+        )}
+      >
+        <PoolCharts pool={pool} />
+        <PoolActionsCard
+          library={library}
+          signer={signer}
+          account={account}
+          chainId={chainId}
+          connector={connector}
+          walletActive={walletActive}
+          pool={pool}
+          tokenIn={baseAssetContract}
+          tokenOut={yieldAssetContract}
+        />
       </div>
     </div>
   );
