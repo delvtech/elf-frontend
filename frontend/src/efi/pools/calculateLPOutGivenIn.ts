@@ -75,7 +75,7 @@ export function calculateLPOutGivenInFixed(
   // Check if the pool is initialized
   if (_totalSupply.isZero()) {
     // When uninitialized we mint exactly the underlying input in LP tokens
-    const lpOut = clipFixNumberToStringDecimals(_yIn, tokenDecimals);
+    const lpOut = _yIn.toString();
     const otherNeeded = clipFixNumberToStringDecimals(_yIn, tokenDecimals);
     const givenInNeeded = "0";
     return { otherNeeded, givenInNeeded, lpOut };

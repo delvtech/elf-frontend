@@ -8,6 +8,7 @@ export enum SIGNER {
 
   TRADER1,
   TRADER2,
+  TRADER3 = 19,
 }
 
 export async function getSigner(

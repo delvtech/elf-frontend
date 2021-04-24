@@ -85,7 +85,13 @@ async function main() {
     balancerVaultContract,
     convergentPoolFactory,
     weightedPoolFactory,
-    { mintAmount: "20000", baseAssetIn: "20000", yieldAssetIn: "10000" }
+    {
+      mintAmount: "20000",
+      baseAssetIn: "20000",
+      yieldAssetIn: "10000",
+      ytBaseAssetIn: "1000",
+      ytYieldAssetIn: "20000",
+    }
   );
 
   console.log("deploy second WETH tranche");
@@ -99,9 +105,11 @@ async function main() {
     convergentPoolFactory,
     weightedPoolFactory,
     {
-      mintAmount: "10000",
-      baseAssetIn: "10000",
-      yieldAssetIn: "5000",
+      mintAmount: "20000",
+      baseAssetIn: "20000",
+      yieldAssetIn: "10000",
+      ytBaseAssetIn: "1000",
+      ytYieldAssetIn: "20000",
       // ~ 3 months
       durationInSeconds: THIRTY_DAYS_IN_SECONDS * 3,
     }
@@ -121,6 +129,8 @@ async function main() {
       mintAmount: "20",
       baseAssetIn: "20",
       yieldAssetIn: "13",
+      ytBaseAssetIn: "1",
+      ytYieldAssetIn: "20",
       durationInSeconds: 120,
     }
   );
@@ -145,6 +155,8 @@ async function main() {
       mintAmount: "20000000",
       baseAssetIn: "20000000",
       yieldAssetIn: "10000000",
+      ytBaseAssetIn: "100000",
+      ytYieldAssetIn: "2000000",
     }
   );
   // add some interest to yUsdc

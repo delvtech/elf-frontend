@@ -64,9 +64,12 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
   } = props;
 
   const { data: [tokens] = [] } = usePoolTokens(pool);
-  const { baseAssetContract, yieldAssetContract } = parseSortedTokensForPool(
-    tokens
-  );
+  const {
+    baseAssetContract,
+    baseAssetIndex,
+    yieldAssetContract,
+    yieldAssetIndex,
+  } = parseSortedTokensForPool(tokens);
   // Pool calls
   const { data: totalSupplyBN } = useSmartContractReadCall(pool, "totalSupply");
   const totalSupply = formatEther(totalSupplyBN ?? 0);
@@ -155,10 +158,15 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
     !amountIn ||
     !amountOut;
 
-  const poolTokenMaxAmounts = [
-    parseUnits(amountIn || "0", baseAssetDecimals),
-    parseUnits(amountOut || "0", yieldAssetDecimals),
-  ];
+  const poolTokenMaxAmounts = [BigNumber.from(0), BigNumber.from(0)];
+  poolTokenMaxAmounts[baseAssetIndex] = parseUnits(
+    amountIn || "0",
+    baseAssetDecimals
+  );
+  poolTokenMaxAmounts[yieldAssetIndex] = parseUnits(
+    amountOut || "0",
+    yieldAssetDecimals
+  );
 
   const joinConvergentPool = useJoinConvergentPool(
     signer,
@@ -174,7 +182,6 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
     poolTokenMaxAmounts
   );
 
-  // TODO: use differnt join types depending on pool type
   const onStake = useCallback(() => {
     if (isPrincipalPoolType) {
       joinConvergentPool();
