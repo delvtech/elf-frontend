@@ -50,18 +50,21 @@ export function TokenSummary({ pool }: TokenSummaryProps): ReactElement {
       <div className="mb-2">{t`Tokens`}</div>
       <div className={tw("flex", "flex-col", "space-x-4")}>
         <Card className={tw("flex", "space-x-8")}>
-          <div className={tw("space-y-6", "flex-1")}>
+          <div className={tw("space-y-6", "flex-1", "overflow-hidden")}>
             <div
-              className={tw("flex", "flex-col", "justify-center", "space-y-1")}
+              className={tw(
+                "flex",
+                "flex-col",
+                "justify-center",
+                "space-y-1",
+                "overflow-hidden"
+              )}
             >
               <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
                 {t`Token`}
               </span>
               <span className={tw("text-lg", "truncate")}>
-                {
-                  // TODO: do this properly
-                  baseAssetSymbol === "WETH" ? "ETH" : baseAssetSymbol
-                }
+                {baseAssetSymbol}
               </span>
             </div>
             <div
@@ -93,9 +96,15 @@ export function TokenSummary({ pool }: TokenSummaryProps): ReactElement {
               </div>
             </div>
           </div>
-          <div className={tw("space-y-6", "flex-1")}>
+          <div className={tw("space-y-6", "flex-1", "overflow-hidden")}>
             <div
-              className={tw("flex", "flex-col", "justify-center", "space-y-1")}
+              className={tw(
+                "flex",
+                "flex-col",
+                "justify-center",
+                "space-y-1",
+                "overflow-hidden"
+              )}
             >
               <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
                 {t`Token`}

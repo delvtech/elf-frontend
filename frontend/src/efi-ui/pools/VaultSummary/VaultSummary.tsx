@@ -55,7 +55,14 @@ export function VaultSummary(props: VaultSummaryProps): ReactElement {
               </div>
             </div>
           </div>
-          <div className={tw("flex", "space-x-4", "justify-between")}>
+          <div
+            className={tw(
+              "flex",
+              "space-x-4",
+              "justify-between",
+              "overflow-hidden"
+            )}
+          >
             <div className={tw("flex", "flex-col")}>
               <span
                 className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
@@ -64,7 +71,7 @@ export function VaultSummary(props: VaultSummaryProps): ReactElement {
                 {maturityDateString}
               </div>
             </div>
-            <div className={tw("flex", "self-end")}>
+            <div className={tw("flex", "self-end", "overflow-hidden")}>
               <TimeLeft startDate={startDate} maturityDate={maturityDate} />
             </div>
           </div>
