@@ -22,7 +22,7 @@ import { useTokenPoolBalance } from "efi-ui/pools/useTokenPoolBalance/useTokenPo
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
-import { useTrancheAssetSymbol } from "efi-ui/tranche/useTrancheAssetSymbol";
+import { useTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
 import { useEthBalance } from "efi-ui/wallets/hooks/useEthBalance/useEthBalance";
 import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 import { formatBalance } from "efi/base/formatBalance";
@@ -100,7 +100,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
   const {
     symbol: trancheAssetSymbol,
     label: trancheAssetSymbolLabel,
-  } = useTrancheAssetSymbol(yieldAsset, baseAssetSymbol);
+  } = useTermAssetSymbol(yieldAssetAddress, baseAssetSymbol);
 
   const baseAssetReserves = formatUnits(
     baseAssetPoolBalance ?? 0,

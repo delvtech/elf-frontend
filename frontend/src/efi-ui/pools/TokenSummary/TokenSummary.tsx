@@ -22,6 +22,9 @@ import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
 import { formatMoney } from "efi/money/formatMoney";
 import { PoolContract } from "efi/pools/PoolContract";
 import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
+import { useTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
+import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
+import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
 
 interface TokenSummaryProps {
   pool: PoolContract | undefined;
@@ -166,21 +169,26 @@ function useTokensSummary(pool: PoolContract | undefined): TokensSummary {
     baseAssetContract,
     yieldAssetContract,
   } = parseSortedTokensForPool(tokens);
+  const baseAsset = useCryptoAssetForToken(baseAssetContract?.address);
+  const termAsset = useCryptoAssetForToken(yieldAssetContract?.address);
 
+  // Base Asset Info
   const baseAssetBalance = balances?.[baseAssetIndex];
-
-  const { data: baseAssetSymbol } = useTokenSymbol(baseAssetContract);
+  const baseAssetSymbol = useCryptoSymbol(baseAsset);
   const [baseAssetPrice] = useTokenPrice(baseAssetContract, currency);
   const [baseAssetPriceYesterday] = useTokenHistoricalPrice(
     baseAssetContract,
     currency,
     1
   );
-
   const { data: baseAssetDecimals } = useTokenDecimals(baseAssetContract);
 
+  // Term Asset Info
   const yieldAssetBalance = balances?.[yieldAssetIndex];
-  const { data: yieldAssetSymbol } = useTokenSymbol(yieldAssetContract);
+  const { label: yieldAssetSymbol } = useTermAssetSymbol(
+    yieldAssetContract?.address,
+    baseAssetSymbol
+  );
   const { data: yieldAssetDecimals } = useTokenDecimals(yieldAssetContract);
 
   const spotPrice = usePoolSpotPrice(pool, baseAssetContract);
