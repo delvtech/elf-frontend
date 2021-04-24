@@ -49,7 +49,7 @@ export function PrincipalPoolCard(
   );
   // TODO: Get this from props
   const goToPoolPage = useCallback(() => {
-    navigate(`exchange/${pool?.address}`);
+    navigate(`pools/${pool?.address}`);
   }, [pool?.address]);
 
   const unlockTimestamp = getQueryData(unlockTimestampResult);
