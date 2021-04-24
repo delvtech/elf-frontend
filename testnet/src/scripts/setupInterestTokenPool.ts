@@ -43,7 +43,7 @@ export async function setupInterestTokenPool(
   const baseAssetValue = BigNumber.from(baseAssetContract.address);
 
   let poolTokens = [baseAssetContract.address, interestTokenAddress];
-  let weights = [parseEther("20"), parseEther("1")];
+  let weights = [parseEther("1"), parseEther("1")];
   let maxAmountsIn = [parseToken(baseAssetIn), parseToken(yieldAssetIn)];
   let amounts = [
     parseToken(baseAssetIn).toHexString(),

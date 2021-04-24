@@ -34,6 +34,8 @@ export async function deployTrancheAndMarket(
     durationInSeconds?: number;
     baseAssetIn: string;
     yieldAssetIn: string;
+    ytBaseAssetIn: string;
+    ytYieldAssetIn: string;
     mintAmount: string;
   }
 ) {
@@ -42,6 +44,8 @@ export async function deployTrancheAndMarket(
     durationInSeconds,
     baseAssetIn,
     yieldAssetIn,
+    ytBaseAssetIn,
+    ytYieldAssetIn,
     mintAmount,
   } = {
     ...defaultOptions,
@@ -91,7 +95,7 @@ export async function deployTrancheAndMarket(
     balancerVaultContract,
     baseAssetContract,
     weightedPoolFactory,
-    { baseAssetIn, yieldAssetIn: baseAssetIn }
+    { baseAssetIn: ytBaseAssetIn, yieldAssetIn: ytYieldAssetIn }
   );
 
   return {
