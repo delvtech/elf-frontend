@@ -87,11 +87,11 @@ export function SidebarNavigation({
             }
           />
           <Tab
-            id={Navigation.EXCHANGE}
+            id={Navigation.POOLS}
             title={
               <div className={tabTitleClassName}>
                 <Icon icon={IconNames.SHOP} iconSize={Icon.SIZE_LARGE} />
-                <span>{t`Exchange`}</span>
+                <span>{t`Pools`}</span>
               </div>
             }
           />

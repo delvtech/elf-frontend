@@ -7,5 +7,4 @@ export enum Navigation {
   POOLS = "pools",
   EARN = "earn",
   RESOURCES = "resources",
-  EXCHANGE = "exchange",
 }

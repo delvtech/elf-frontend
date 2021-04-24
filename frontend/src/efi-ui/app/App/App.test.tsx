@@ -23,8 +23,8 @@ test.skip("full app rendering/navigating", async () => {
   await navigate("/earn");
   expect(getByTestId("earn-view")).toBeVisible();
 
-  await navigate("/exchange");
-  expect(getByTestId("exchange-view")).toBeVisible();
+  await navigate("/pools");
+  expect(getByTestId("pools-view")).toBeVisible();
 
   await navigate("/mint");
   expect(getByTestId("mint-view")).toBeVisible();

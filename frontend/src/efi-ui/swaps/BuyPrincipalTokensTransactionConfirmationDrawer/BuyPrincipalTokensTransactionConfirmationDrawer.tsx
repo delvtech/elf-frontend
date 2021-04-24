@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import { ReactElement } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
@@ -13,7 +13,6 @@ import { useBatchSwapGivenIn } from "efi-ui/balancer/useBatchSwapGivenIn/useBatc
 import { parseQueryBatchSwapResult } from "efi-ui/balancer/useQueryBatchSwap/parseQueryBatchSwapResult";
 import { useQueryBatchSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
-import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/TransactionDrawer";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
@@ -23,6 +22,7 @@ import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolToken
 import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
 import { PrincipalTokenTransactionDetails } from "efi-ui/swaps/PrincipalTokenTransactionDetails/PrincipalTokenTransactionDetails";
 import { SwapDetailsForm } from "efi-ui/swaps/SwapDetailsPreview/SwapDetailsForm";
+import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/TransactionDrawer";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { calculatePurchasePrice } from "efi/pools/calculatePurchasePrice";
 import { calculateSlippage } from "efi/pools/calculateSlippage";
@@ -45,7 +45,7 @@ interface BuyPrincipalTransactionConfirmationDrawerProps {
   onClose: () => void;
 }
 
-export const BuyPrincipalTokensTransactionConfirmationDrawer: FC<BuyPrincipalTransactionConfirmationDrawerProps> = ({
+export function BuyPrincipalTokensTransactionConfirmationDrawer({
   connector,
   walletConnectionActive,
   library,
@@ -58,7 +58,7 @@ export const BuyPrincipalTokensTransactionConfirmationDrawer: FC<BuyPrincipalTra
   isOpen,
   onClose,
   pool,
-}) => {
+}: BuyPrincipalTransactionConfirmationDrawerProps): ReactElement {
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
   const balancerVault = useBalancerVault();
 
@@ -124,6 +124,7 @@ export const BuyPrincipalTokensTransactionConfirmationDrawer: FC<BuyPrincipalTra
       onClose={onClose}
       account={account}
       assetIn={baseAsset}
+      assetInSymbol={baseAssetSymbol}
       assetInIcon={baseAsset.assetIcon}
       walletConnectionActive={walletConnectionActive}
       amountIn={amountInAsBigNumber}
@@ -151,7 +152,7 @@ export const BuyPrincipalTokensTransactionConfirmationDrawer: FC<BuyPrincipalTra
       }
     />
   );
-};
+}
 function getPriceSlippageAndTradingFee(
   amountIn: number,
   amountOutNumber: number,
