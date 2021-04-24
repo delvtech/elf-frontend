@@ -70,7 +70,15 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
     <div className={tw("flex", "mb-8", "space-x-4", "w-full", "items-stretch")}>
       <div className={tw("flex", "flex-1")}>
         <div className={tw("flex", "flex-col", "space-y-8", "w-full")}>
-          <div className={tw("flex", "space-x-12")}>
+          <div
+            className={tw(
+              "grid",
+              "grid-flow-row",
+              "gap-12",
+              "grid-cols-3",
+              "auto-rows-max"
+            )}
+          >
             <PoolSummary
               liquidity={totalLiquidity}
               liquidityTrend={liquidityTrend}

@@ -26,19 +26,21 @@ export function LabeledProgressBar({
         "w-full",
         "flex-col",
         "justify-center",
-        "space-y-2"
+        "space-y-2",
+        "overflow-hidden"
       )}
     >
       <span>{label}</span>
       <ProgressBar
-        className={tw("flex-shrink-0")}
         intent={intent}
         animate={false}
         stripes={false}
         value={progressValue}
       />
       {!!helperText && (
-        <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
+        <span
+          className={classNames(Classes.TEXT_MUTED, tw("text-sm", "truncate"))}
+        >
           {helperText}
         </span>
       )}
