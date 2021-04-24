@@ -52,7 +52,7 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
   );
 
   return (
-    <div className={tw("flex", "flex-col", "flex-1", "h-500", "w-3/10")}>
+    <div className={tw("flex", "flex-col", "flex-1", "h-500")}>
       <Tabs
         id="tabs-pool-actions"
         selectedTabId={activeTab}
