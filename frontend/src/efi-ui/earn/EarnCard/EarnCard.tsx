@@ -56,6 +56,8 @@ export function EarnCard({
 }: EarnCardProps): ReactElement {
   // local state
   const [isDrawerOpen, setDrawerOpen] = useState(false);
+  const closeDrawer = useCallback(() => setDrawerOpen(false), []);
+  const openDrawer = useCallback(() => setDrawerOpen(true), []);
 
   // base asset
   const { activeBaseAsset, setActiveBaseAsset } = useActiveBaseAsset(
@@ -217,7 +219,7 @@ export function EarnCard({
             intent={Intent.PRIMARY}
             className={tw("flex-1")}
             disabled={!amountIn}
-            onClick={() => setDrawerOpen(true)}
+            onClick={openDrawer}
           >
             <div className={tw("p-4", "text-lg")}>{t`Buy`}</div>
           </Button>
@@ -236,7 +238,7 @@ export function EarnCard({
           connector={connector}
           amountIn={amountIn}
           isOpen={isDrawerOpen}
-          onClose={() => setDrawerOpen(false)}
+          onClose={closeDrawer}
         />
       )}
     </Fragment>

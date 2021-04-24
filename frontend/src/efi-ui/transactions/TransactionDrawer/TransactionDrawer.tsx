@@ -10,8 +10,6 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { SvgIcon } from "efi-ui/base/SvgIcon";
-import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
-import { ERC20ApproveButton } from "efi-ui/token/ERC20ApproveButton/ERC20ApproveButton";
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
 import { WalletDrawer } from "efi-ui/wallets/WalletDrawer/WalletDrawer";
 import {
@@ -88,7 +86,6 @@ export function TransactionDrawer({
         )}
       >
         {transactionDetails}
-
         {
           // we can't pull this out to a new variable because typescript can't
           // narrow the type of baseAssetContract when referencing a variable
@@ -104,22 +101,6 @@ export function TransactionDrawer({
         }
 
         <div className={tw("flex", "space-x-2")}>
-          {
-            // we can't pull this out to a new variable because typescript can't
-            // narrow the type of baseAssetContract when referencing a variable
-            account && assetIn?.type !== CryptoAssetType.ETHEREUM ? (
-              <ERC20ApproveButton
-                className={tw("h-16")}
-                owner={account}
-                spender={approvalSpenderAddress}
-                approvalAmount={amountIn}
-                contract={assetInContract as ERC20Shim}
-                tokenSymbol={assetInSymbol}
-                signer={signer}
-              />
-            ) : null
-          }
-
           <Button
             fill
             disabled={confirmButtonDisabled}
