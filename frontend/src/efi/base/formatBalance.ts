@@ -1,5 +1,5 @@
 import { BigNumber } from "ethers";
-import { formatUnits } from "ethers/lib/utils";
+import { commify, formatUnits } from "ethers/lib/utils";
 
 export function formatBalance(
   balance: BigNumber | undefined,
@@ -10,5 +10,5 @@ export function formatBalance(
   }
 
   const numBalance = +formatUnits(balance, decimals);
-  return numBalance.toFixed(4);
+  return commify(numBalance.toFixed(4));
 }
