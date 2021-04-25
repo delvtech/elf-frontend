@@ -179,10 +179,8 @@ function useSetMaxValue(
   tokenDecimals: number | undefined
 ) {
   return useCallback(() => {
-    console.log("tokenBalanceOf", tokenBalanceOf);
     if (tokenBalanceOf) {
       const maxValue = formatUnits(tokenBalanceOf, tokenDecimals);
-      console.log("maxValue", maxValue);
       const event = {
         target: { value: maxValue },
       } as ChangeEvent<HTMLInputElement>;

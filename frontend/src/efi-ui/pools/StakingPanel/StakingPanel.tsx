@@ -44,7 +44,6 @@ interface StakingPanelProps {
   pool: PoolContract | undefined;
   formDisabled?: boolean;
   submitDisabled?: boolean;
-  inputLabel: string;
   buttonLabel: string;
   buttonIntent?: Intent;
 }
@@ -57,7 +56,6 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
     buttonLabel,
     formDisabled = false,
     submitDisabled = false,
-    inputLabel,
     buttonIntent = Intent.PRIMARY,
     pool,
   } = props;
@@ -91,6 +89,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
     asset: yieldAsset,
     address: yieldAssetAddress,
     decimals: yieldAssetDecimals,
+    balanceOf: yieldAssetBalanceOf,
     displayBalance: yieldAssetDisplayBalance,
     poolBalance: yieldAssetPoolBalance,
   } = useTokenInfoForTradeInput(pool, yieldAssetContract, account, library);
@@ -121,7 +120,6 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
     onChangeOut,
     onChangeOutFromIn,
     onChangeInFromOut,
-    setValueIn,
   } = useUpdateInputs({ maxPrecision: baseAssetDecimals });
 
   const isValidBaseAssetValue = validateStakingValue(
@@ -142,12 +140,6 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
   const submitTransaction = useCallback(() => {
     setDrawerOpen(true);
   }, []);
-
-  const setMaxValue = useSetMaxValue(
-    baseAssetBalanceOf,
-    setValueIn,
-    baseAssetDecimals
-  );
 
   const submitButtonDisabled =
     formDisabled ||
@@ -190,27 +182,17 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
   }, [isPrincipalPoolType, joinConvergentPool, joinWeightedPool]);
 
   return (
-    <div className={tw("flex", "flex-col", "space-y-4")}>
-      {/* Trade Asset */}
-      <div className={tw("flex", "justify-between", "items-center")}>
-        <span>{inputLabel}</span>
-        <Button
-          disabled={formDisabled}
-          onClick={setMaxValue}
-          minimal
-          outlined
-          small
-          intent={Intent.SUCCESS}
-        >{t`MAX`}</Button>
-      </div>
+    <div className={tw("flex", "flex-col", "justify-between", "h-full")}>
       <StakingInput
-        cryptoDisplayBalance={baseAssetDisplayBalance || ""}
         cryptoSymbol={baseAssetSymbol as CryptoSymbol}
         cryptoDecimals={baseAssetDecimals}
         cryptoAssetIcon={baseAssetIcon}
+        cryptoBalanceOf={baseAssetBalanceOf}
+        cryptoDisplayBalance={baseAssetDisplayBalance || ""}
         disabled={formDisabled}
         onChangeInputValue={onChangeIn}
         onCalculateLPOutGivenIn={onChangeOutFromIn}
+        label={t`Base asset`}
         value={amountIn}
         validValue={isValidBaseAssetValue}
         tokenPoolReserves={baseAssetReserves}
@@ -218,34 +200,34 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
         totalSupply={totalSupply}
       />
 
-      {/* Receive Asset */}
-      <div className={tw("flex", "justify-between", "items-center")}>
-        <span>{t`Input #2`}</span>
+      <div className={tw("flex", "flex-col", "space-y-10")}>
+        <StakingInput
+          cryptoSymbol={trancheAssetSymbol as CryptoSymbol}
+          cryptoDecimals={baseAssetDecimals}
+          cryptoAssetIcon={baseAssetIcon}
+          cryptoBalanceOf={yieldAssetBalanceOf}
+          cryptoDisplayBalance={yieldAssetDisplayBalance || ""}
+          disabled={formDisabled}
+          onChangeInputValue={onChangeOut}
+          onCalculateLPOutGivenIn={onChangeInFromOut}
+          label={t`Term asset`}
+          value={amountOut}
+          validValue={isValidTrancheAssetValue}
+          tokenPoolReserves={yieldAssetReserves}
+          otherTokenPoolReserves={baseAssetReserves}
+          totalSupply={totalSupply}
+        />
+        <Button
+          disabled={submitButtonDisabled}
+          onClick={submitTransaction}
+          minimal
+          outlined
+          large
+          intent={buttonIntent}
+        >
+          {buttonLabel}
+        </Button>
       </div>
-      <StakingInput
-        cryptoDisplayBalance={yieldAssetDisplayBalance || ""}
-        cryptoSymbol={trancheAssetSymbol as CryptoSymbol}
-        cryptoDecimals={baseAssetDecimals}
-        cryptoAssetIcon={baseAssetIcon}
-        disabled={formDisabled}
-        onChangeInputValue={onChangeOut}
-        onCalculateLPOutGivenIn={onChangeInFromOut}
-        value={amountOut}
-        validValue={isValidTrancheAssetValue}
-        tokenPoolReserves={yieldAssetReserves}
-        otherTokenPoolReserves={baseAssetReserves}
-        totalSupply={totalSupply}
-      />
-      <Button
-        disabled={submitButtonDisabled}
-        onClick={submitTransaction}
-        minimal
-        outlined
-        large
-        intent={buttonIntent}
-      >
-        {buttonLabel}
-      </Button>
       <StakingConfirmationDrawer
         library={library}
         account={account}
@@ -265,18 +247,6 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
       />
     </div>
   );
-}
-
-function useSetMaxValue(
-  tokenInBalanceOf: BigNumber | undefined,
-  setValueIn: (value: string) => void,
-  tokenInDecimals: number | undefined
-) {
-  return useCallback(() => {
-    if (tokenInBalanceOf) {
-      setValueIn(formatUnits(tokenInBalanceOf, tokenInDecimals));
-    }
-  }, [tokenInBalanceOf, setValueIn, tokenInDecimals]);
 }
 
 // TODO: clean this up, I don't know what we need amountOut in here

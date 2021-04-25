@@ -1,6 +1,6 @@
-import React, { ReactElement, useCallback } from "react";
+import React, { ChangeEvent, ReactElement, useCallback } from "react";
 
-import { InputGroup, Intent, Tag } from "@blueprintjs/core";
+import { Button, InputGroup, Intent, Tag } from "@blueprintjs/core";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -11,19 +11,22 @@ import { calculateLPOutGivenInFixed } from "efi/pools/calculateLPOutGivenIn";
 
 import styles from "./StakingInput.module.css";
 import { validateInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
+import { formatUnits } from "ethers/lib/utils";
+import { BigNumber } from "ethers";
 
 interface StakingInputProps {
-  cryptoDisplayBalance: string | number;
   cryptoSymbol: CryptoSymbol;
   cryptoDecimals: number | undefined;
   cryptoAssetIcon: SvgIcon | undefined;
-
+  cryptoBalanceOf: BigNumber | undefined;
+  cryptoDisplayBalance: string | number;
   disabled: boolean;
   onCalculateLPOutGivenIn: (
     otherNeeded: string | undefined,
     lpOut: string | undefined
   ) => void;
   onChangeInputValue: (inputValue: string) => void;
+  label: string | undefined;
   value: string | undefined;
   validValue: boolean;
   tokenPoolReserves: string | undefined;
@@ -33,13 +36,15 @@ interface StakingInputProps {
 
 export function StakingInput(props: StakingInputProps): ReactElement {
   const {
-    cryptoDisplayBalance,
     cryptoSymbol,
     cryptoDecimals,
     cryptoAssetIcon: CryptoAssetIcon,
+    cryptoBalanceOf,
+    cryptoDisplayBalance,
     disabled,
     onChangeInputValue,
     onCalculateLPOutGivenIn,
+    label,
     value = "",
     validValue,
     tokenPoolReserves,
@@ -106,8 +111,20 @@ export function StakingInput(props: StakingInputProps): ReactElement {
     ]
   );
 
+  const setMaxValue = useSetMaxValue(cryptoBalanceOf, onChange, cryptoDecimals);
   return (
-    <div className={tw("flex", "flex-col", "space-y-2")}>
+    <div className={tw("flex", "flex-col", "space-y-5")}>
+      <div className={tw("flex", "justify-between", "items-center")}>
+        <span className={tw("text-xs", "text-right")}>{label}</span>
+        <Button
+          disabled={false}
+          onClick={setMaxValue}
+          minimal
+          outlined
+          small
+          intent={Intent.SUCCESS}
+        >{t`MAX`}</Button>
+      </div>
       <InputGroup
         disabled={disabled}
         onChange={onChange}
@@ -142,4 +159,20 @@ export function StakingInput(props: StakingInputProps): ReactElement {
       </div>
     </div>
   );
+}
+
+function useSetMaxValue(
+  tokenBalanceOf: BigNumber | undefined,
+  setValue: (event: React.ChangeEvent<HTMLInputElement>) => void,
+  tokenDecimals: number | undefined
+) {
+  return useCallback(() => {
+    if (tokenBalanceOf) {
+      const maxValue = formatUnits(tokenBalanceOf, tokenDecimals);
+      const event = {
+        target: { value: maxValue },
+      } as ChangeEvent<HTMLInputElement>;
+      setValue(event);
+    }
+  }, [tokenBalanceOf, setValue, tokenDecimals]);
 }
