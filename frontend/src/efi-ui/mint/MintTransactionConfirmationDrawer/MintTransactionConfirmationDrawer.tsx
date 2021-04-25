@@ -19,7 +19,7 @@ import { SwapDetailsForm } from "efi-ui/swaps/SwapDetailsPreview/SwapDetailsForm
 import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/TransactionDrawer";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
-import { TokenIcon } from "efi-ui/ethereum/EthIcon";
+import { TokenIcon } from "efi-ui/token/TokenIcon";
 
 interface MintTransactionConfirmationDrawerProps {
   chainId: number | undefined;

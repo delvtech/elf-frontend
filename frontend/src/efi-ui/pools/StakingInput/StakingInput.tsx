@@ -7,7 +7,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { validateInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
-import { TokenIcon } from "efi-ui/ethereum/EthIcon";
+import { TokenIcon } from "efi-ui/token/TokenIcon";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { clipStringValueToDecimals } from "efi/math/fixedPoint";
 import { calculateLPOutGivenInFixed } from "efi/pools/calculateLPOutGivenIn";

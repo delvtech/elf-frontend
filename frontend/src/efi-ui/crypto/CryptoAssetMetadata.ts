@@ -1,4 +1,4 @@
-import { TokenIcon } from "efi-ui/ethereum/EthIcon";
+import { TokenIcon } from "efi-ui/token/TokenIcon";
 
 export interface CryptoAssetMetadata {
   name: string | undefined;

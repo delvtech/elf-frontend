@@ -5,12 +5,7 @@ import usdcLogo from "efi-static-assets/logos/USDC-logo.png";
 import usdtLogo from "efi-static-assets/logos/USDT-logo.png";
 import wethLogo from "efi-static-assets/logos/WETH-logo.png";
 import yfiLogo from "efi-static-assets/logos/YFI-logo.png";
-import {
-  EthIcon,
-  TokenIcon,
-  UsdcIcon,
-  WethIcon,
-} from "efi-ui/ethereum/EthIcon";
+import { EthIcon, TokenIcon, UsdcIcon, WethIcon } from "efi-ui/token/TokenIcon";
 import { CryptoSymbol, CryptoSymbolOld } from "efi/crypto/CryptoSymbol";
 
 /**

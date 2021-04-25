@@ -10,7 +10,7 @@ import tw from "efi-tailwindcss-classnames";
 import { SellPrincipalTokensTransactionDrawer } from "efi-ui/swaps/SellPrincipalTokensTransactionDrawer/SellPrincipalTokensTransactionDrawer";
 import { PoolContract } from "efi/pools/PoolContract";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
-import { TokenIcon } from "efi-ui/ethereum/EthIcon";
+import { TokenIcon } from "efi-ui/token/TokenIcon";
 
 interface SellPrincipalTokensProps {
   chainId: number | undefined;

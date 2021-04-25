@@ -10,7 +10,7 @@ import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoName } from "efi-ui/crypto/hooks/useCryptoName/useCryptoName";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
-import { TokenIcon } from "efi-ui/ethereum/EthIcon";
+import { TokenIcon } from "efi-ui/token/TokenIcon";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 
 interface CryptoAssetButtonProps {

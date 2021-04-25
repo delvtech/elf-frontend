@@ -27,7 +27,7 @@ import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { calculatePurchasePrice } from "efi/pools/calculatePurchasePrice";
 import { calculateSlippage } from "efi/pools/calculateSlippage";
 import { PoolContract } from "efi/pools/PoolContract";
-import { TokenIcon } from "efi-ui/ethereum/EthIcon";
+import { TokenIcon } from "efi-ui/token/TokenIcon";
 
 interface BuyPrincipalTransactionConfirmationDrawerProps {
   chainId: number | undefined;

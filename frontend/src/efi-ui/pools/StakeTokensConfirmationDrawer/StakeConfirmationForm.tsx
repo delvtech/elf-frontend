@@ -5,7 +5,7 @@ import classNames from "classnames";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { TokenIcon } from "efi-ui/ethereum/EthIcon";
+import { TokenIcon } from "efi-ui/token/TokenIcon";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 
 import styles from "./styles.module.css";
