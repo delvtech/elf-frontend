@@ -10,7 +10,6 @@ import { formatUnits, parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { useQueryBatchSwapInputs } from "efi-ui/balancer/useQueryBatchSwapInputs";
 import {
   NumericInputOptions,
   useNumericInput,
@@ -33,6 +32,8 @@ import { ContractMethodArgs } from "efi/contracts/types";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { PoolContract } from "efi/pools/PoolContract";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
+import { SwapKind } from "efi-ui/balancer/SwapKind";
+import { useTokenPoolIndex } from "efi-ui/pools/useTokenPoolIndex/useTokenPoolIndex";
 
 interface TradePanelProps {
   library: Web3Provider | undefined;
@@ -84,6 +85,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     balanceOf: tokenInBalanceOf,
     displayBalance: tokenInDisplayBalance,
     poolBalance: tokenInPoolBalance,
+    poolIndex: tokenInPoolIndex,
   } = useTokenInfoForTradeInput(pool, tokenIn, account, library);
 
   const {
@@ -93,6 +95,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     decimals: tokenOutDecimals,
     displayBalance: tokenOutDisplayBalance,
     poolBalance: tokenOutPoolBalance,
+    poolIndex: tokenOutPoolIndex,
   } = useTokenInfoForTradeInput(pool, tokenOut, account, library);
 
   const {
@@ -100,9 +103,11 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     amountOut,
     onChangeIn,
     onChangeOut,
+    onChangeInFromOut,
+    onChangeOutFromIn,
     setValueIn,
     setValueOut,
-  } = useUpdateInputs(pool, tokenIn, tokenOut, tokenInDecimals);
+  } = useUpdateInputs();
 
   // clear inputs when they switch.  we can improve this UX later to keep the previous values.
   useEffect(() => {
@@ -155,10 +160,17 @@ export function TradePanel(props: TradePanelProps): ReactElement {
         >{t`MAX`}</Button>
       </div>
       <TradeInput
+        cryptoAddress={tokenInAddress}
+        cryptoDecimals={tokenInDecimals}
         cryptoDisplayBalance={tokenInDisplayBalance || ""}
         cryptoSymbol={tokenInSymbol as CryptoSymbol}
+        otherCryptoAddress={tokenOutAddress}
+        otherCryptoIndex={tokenOutPoolIndex}
         disabled={formDisabled}
-        onChange={onChangeIn}
+        swapKind={SwapKind.GIVEN_IN}
+        pool={pool}
+        onChangeThisValue={onChangeIn}
+        onChangeOtherValue={onChangeOutFromIn}
         value={amountIn}
         validValue={isValidTokenInValue}
       />
@@ -176,10 +188,17 @@ export function TradePanel(props: TradePanelProps): ReactElement {
         <span>{t`For`}</span>
       </div>
       <TradeInput
+        cryptoAddress={tokenOutAddress}
+        cryptoDecimals={tokenOutDecimals}
         cryptoDisplayBalance={tokenOutDisplayBalance || ""}
         cryptoSymbol={tokenOutSymbol as CryptoSymbol}
+        otherCryptoAddress={tokenInAddress}
+        otherCryptoIndex={tokenInPoolIndex}
         disabled={formDisabled}
-        onChange={onChangeOut}
+        swapKind={SwapKind.GIVEN_OUT}
+        pool={pool}
+        onChangeThisValue={onChangeOut}
+        onChangeOtherValue={onChangeInFromOut}
         value={amountOut}
         validValue={isValidTokenOutValue}
       />
@@ -283,6 +302,7 @@ function useTokenInfoForTradeInput(
 
   // otherwise get values from token calls
   const poolBalance = useTokenPoolBalance(pool, tokenContract);
+  const poolIndex = useTokenPoolIndex(pool, tokenContract);
   const { data: symbol } = useTokenSymbol(tokenContract);
   const icon = findAssetIcon(symbol);
   const { data: decimals } = useTokenDecimals(tokenContract);
@@ -301,6 +321,7 @@ function useTokenInfoForTradeInput(
     balanceOf,
     displayBalance,
     poolBalance,
+    poolIndex,
   };
 }
 
@@ -312,52 +333,43 @@ const numericInputOptions: NumericInputOptions = {
   maxPrecision: 18,
 };
 
-function useUpdateInputs(
-  pool: PoolContract | undefined,
-  tokenIn: ERC20 | undefined,
-  tokenOut: ERC20 | undefined,
-  tokenInDecimals: number | undefined
-) {
-  // Since updates to amountIn updates amountOut and vice versa, useBalancerTransactionInputs
-  // ensures we don't get infinite updates.
-  const {
-    amountIn,
-    amountOut,
-    onAmountOutChange,
-    onAmountInChange,
-  } = useQueryBatchSwapInputs(
-    pool,
-    tokenIn?.address,
-    tokenInDecimals,
-    tokenOut?.address,
-    tokenInDecimals
-  );
-
+function useUpdateInputs() {
   // useNumericInput ensures valid numeric inputs from the user
-  const {
-    stringValue: stringValueIn,
-    onChange: onChangeIn,
-    setValue: setValueIn,
-  } = useNumericInput(numericInputOptions);
+  const { stringValue: stringValueIn, setValue: setValueIn } = useNumericInput(
+    numericInputOptions
+  );
   const {
     stringValue: stringValueOut,
-    onChange: onChangeOut,
     setValue: setValueOut,
   } = useNumericInput(numericInputOptions);
 
-  useEffect(() => {
-    onAmountInChange(stringValueIn);
-  }, [onAmountInChange, stringValueIn]);
-
-  useEffect(() => {
-    onAmountOutChange(stringValueOut);
-  }, [onAmountOutChange, stringValueOut]);
-
+  const onChangeOutFromIn = useCallback(
+    (otherNeeded: string | undefined) => {
+      if (!otherNeeded || +otherNeeded === 0) {
+        setValueOut(undefined);
+      } else {
+        setValueOut(otherNeeded);
+      }
+    },
+    [setValueOut]
+  );
+  const onChangeInFromOut = useCallback(
+    (otherNeeded: string | undefined) => {
+      if (!otherNeeded) {
+        setValueIn(undefined);
+      } else {
+        setValueIn(otherNeeded);
+      }
+    },
+    [setValueIn]
+  );
   return {
-    amountIn,
-    amountOut,
-    onChangeIn,
-    onChangeOut,
+    amountIn: stringValueIn,
+    amountOut: stringValueOut,
+    onChangeIn: setValueIn,
+    onChangeOut: setValueOut,
+    onChangeOutFromIn,
+    onChangeInFromOut,
     setValueIn,
     setValueOut,
   };
