@@ -15,7 +15,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { CryptoAssetPicker } from "efi-ui/crypto/CryptoAssetPicker/CryptoAssetPicker";
-import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
+import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoBalance } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
@@ -27,6 +27,7 @@ import { YieldTokenPreview } from "efi-ui/mint/MintCard/YieldTokenPreview";
 import { MintTermPicker } from "efi-ui/mint/MintTermPicker/MintTermPicker";
 import { MintTransactionConfirmationDrawer } from "efi-ui/mint/MintTransactionConfirmationDrawer/MintTransactionConfirmationDrawer";
 import { formatBalance } from "efi/base/formatBalance";
+import { CryptoAsset } from "efi/crypto/CryptoAsset";
 
 export interface MintCardProps {
   library: Web3Provider | undefined;
@@ -34,7 +35,7 @@ export interface MintCardProps {
   chainId: number | undefined;
   walletConnectionActive: boolean;
   connector: AbstractConnector | undefined;
-  baseAssets: (CryptoAssetWithIcon | undefined)[];
+  baseAssets: (CryptoAsset | undefined)[];
   tranchesByBaseAsset: Record<string, Tranche[]>;
 }
 
@@ -57,6 +58,7 @@ export function MintCard({
     baseAssets
   );
   const activeBaseAssetSymbol = useCryptoSymbol(activeBaseAsset);
+  const baseAssetIcon = findAssetIcon(activeBaseAssetSymbol);
   const activeBaseAssetDecimals = useCryptoDecimals(activeBaseAsset);
   const activeBaseAssetBalance = useCryptoBalance(
     library,
@@ -177,6 +179,7 @@ export function MintCard({
       {!activeBaseAsset ? null : (
         <MintTransactionConfirmationDrawer
           baseAsset={activeBaseAsset}
+          baseAssetIcon={baseAssetIcon}
           tranche={activeTranche}
           account={account}
           library={library}
@@ -206,9 +209,9 @@ function useActiveMintPreview(
 }
 
 function useSetDefaultActiveBaseAsset(
-  activeBaseAsset: CryptoAssetWithIcon | undefined,
-  setActiveBaseAsset: (baseAsset: CryptoAssetWithIcon | undefined) => void,
-  defaultBaseAsset: CryptoAssetWithIcon | undefined
+  activeBaseAsset: CryptoAsset | undefined,
+  setActiveBaseAsset: (baseAsset: CryptoAsset | undefined) => void,
+  defaultBaseAsset: CryptoAsset | undefined
 ) {
   useEffect(() => {
     if (activeBaseAsset === undefined) {
@@ -217,14 +220,12 @@ function useSetDefaultActiveBaseAsset(
   }, [activeBaseAsset, defaultBaseAsset, setActiveBaseAsset]);
 }
 
-function useActiveBaseAsset(
-  allBaseAssets: (CryptoAssetWithIcon | undefined)[]
-) {
+function useActiveBaseAsset(allBaseAssets: (CryptoAsset | undefined)[]) {
   const [activeBaseAsset, setActiveBaseAssetState] = useState<
-    CryptoAssetWithIcon | undefined
+    CryptoAsset | undefined
   >();
   const setActiveBaseAsset = useCallback(
-    (baseAsset: CryptoAssetWithIcon | undefined) => {
+    (baseAsset: CryptoAsset | undefined) => {
       setActiveBaseAssetState(baseAsset);
     },
     []

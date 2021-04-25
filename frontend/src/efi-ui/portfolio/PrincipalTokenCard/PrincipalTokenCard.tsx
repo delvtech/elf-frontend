@@ -136,7 +136,6 @@ export function PrincipalTokenCard(
         {BaseAssetIcon ? (
           <BaseAssetIcon
             className={tw("flex-shrink-0")}
-            title={baseAssetSymbol}
             height={72}
             width={72}
           />

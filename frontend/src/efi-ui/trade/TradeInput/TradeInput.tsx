@@ -9,9 +9,7 @@ import tw from "efi-tailwindcss-classnames";
 import { SwapKind } from "efi-ui/balancer/SwapKind";
 import { useQueryBatchSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
 import { validateInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
-import { CryptoIcon } from "efi-ui/crypto/CryptoIcon";
-import { CryptoName } from "efi/crypto/CryptoName";
-import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
+import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { clipStringValueToDecimals } from "efi/math/fixedPoint";
 import { PoolContract } from "efi/pools/PoolContract";
 
@@ -19,7 +17,7 @@ import styles from "./TradeInput.module.css";
 
 interface TradeInputProps {
   cryptoAddress: string | undefined;
-  cryptoSymbol: CryptoSymbol;
+  cryptoSymbol: string | undefined;
   cryptoDecimals: number | undefined;
   cryptoBalanceOf: BigNumber | undefined;
   cryptoDisplayBalance: string | number;
@@ -91,6 +89,8 @@ export function TradeInput(props: TradeInputProps): ReactElement {
     onChangeFromProps
   );
 
+  const CryptoIcon = findAssetIcon(cryptoSymbol);
+
   return (
     <div className={tw("flex", "flex-col", "space-y-5")}>
       <div className={tw("flex", "justify-between", "items-center")}>
@@ -117,18 +117,7 @@ export function TradeInput(props: TradeInputProps): ReactElement {
           </Tag>
         }
         leftElement={
-          <div className={tw("px-2")}>
-            {cryptoSymbol === ("ELF" as CryptoSymbol) ||
-            !CryptoIcon[cryptoSymbol as CryptoSymbol] ? (
-              "✨"
-            ) : (
-              <img
-                className={tw("h-5", "w-5")}
-                src={CryptoIcon[cryptoSymbol as CryptoSymbol]}
-                alt={CryptoName[cryptoSymbol as CryptoSymbol]}
-              />
-            )}
-          </div>
+          <div>{CryptoIcon ? <CryptoIcon height={18} width={18} /> : null}</div>
         }
       />
       <div className={tw("flex", "justify-between")}>

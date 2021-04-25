@@ -5,15 +5,15 @@ import classNames from "classnames";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { SvgIcon } from "efi-ui/base/SvgIcon";
+import { TokenIcon } from "efi-ui/token/TokenIcon";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { ANY_NUMBER_REGEX } from "efi/base/numbers";
 
 import styles from "./styles.module.css";
 
 interface SwapDetailsFormProps {
-  assetInIcon?: SvgIcon | null;
-  assetOutIcon?: SvgIcon | null;
+  assetInIcon?: TokenIcon | undefined | null;
+  assetOutIcon?: TokenIcon | undefined | null;
   assetInSymbol: string | undefined;
   assetOutSymbol: string | undefined;
   amountIn: string | undefined;

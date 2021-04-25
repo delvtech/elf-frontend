@@ -28,7 +28,6 @@ import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 import { formatBalance } from "efi/base/formatBalance";
 import ContractAddresses from "efi/contracts/contractsJson";
 import { ContractMethodArgs } from "efi/contracts/types";
-import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { PoolContract } from "efi/pools/PoolContract";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
 
@@ -74,7 +73,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
   const {
     asset: tokenInAsset,
     address: tokenInAddress,
-    icon: tokenInIcon,
+    icon: TokenInIcon,
     symbol: tokenInSymbol,
     decimals: tokenInDecimals,
     balanceOf: tokenInBalanceOf,
@@ -85,7 +84,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
 
   const {
     address: tokenOutAddress,
-    icon: tokenOutIcon,
+    icon: TokenOutIcon,
     symbol: tokenOutSymbol,
     decimals: tokenOutDecimals,
     balanceOf: tokenOutBalanceOf,
@@ -135,7 +134,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
         cryptoDecimals={tokenInDecimals}
         cryptoBalanceOf={tokenInBalanceOf}
         cryptoDisplayBalance={tokenInDisplayBalance || ""}
-        cryptoSymbol={tokenInSymbol as CryptoSymbol}
+        cryptoSymbol={tokenInSymbol}
         previewCryptoAddress={tokenOutAddress}
         previewCryptoPoolIndex={tokenOutPoolIndex}
         label={t`Swap`}
@@ -159,7 +158,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
         cryptoDecimals={tokenOutDecimals}
         cryptoBalanceOf={tokenOutBalanceOf}
         cryptoDisplayBalance={tokenOutDisplayBalance || ""}
-        cryptoSymbol={tokenOutSymbol as CryptoSymbol}
+        cryptoSymbol={tokenOutSymbol}
         previewCryptoAddress={tokenInAddress}
         previewCryptoPoolIndex={tokenInPoolIndex}
         label={t`For`}
@@ -186,11 +185,11 @@ export function TradePanel(props: TradePanelProps): ReactElement {
         tokenInSymbol={tokenInSymbol}
         tokenInDecimals={tokenInDecimals}
         tokenInAsset={tokenInAsset}
-        tokenInIcon={tokenInIcon}
+        tokenInIcon={TokenInIcon}
         tokenOutAddress={tokenOutAddress}
         tokenOutSymbol={tokenOutSymbol}
         tokenOutDecimals={tokenOutDecimals}
-        tokenOutIcon={tokenOutIcon}
+        tokenOutIcon={TokenOutIcon}
         account={account}
         library={library}
         chainId={chainId}

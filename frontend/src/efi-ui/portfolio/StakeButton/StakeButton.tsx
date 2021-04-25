@@ -7,9 +7,9 @@ import { Tranche } from "elf-contracts/types/Tranche";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { StakePrincipalTokensDrawer } from "efi-ui/pools/StakePrincipalTokensDrawer/StakePrincipalTokensDrawer";
 import { PoolContract } from "efi/pools/PoolContract";
+import { CryptoAsset } from "efi/crypto/CryptoAsset";
 
 interface StakeButtonProps {
   account: string | null | undefined;
@@ -20,7 +20,7 @@ interface StakeButtonProps {
   sellAmount: string | undefined;
 
   tranche: Tranche | undefined;
-  baseAsset: CryptoAssetWithIcon | undefined;
+  baseAsset: CryptoAsset | undefined;
 }
 
 export function StakeButton({

@@ -8,7 +8,6 @@ import { parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { useMintPreview } from "efi-ui/mint/hooks/useMintPreview";
@@ -19,6 +18,8 @@ import { getUserProxyApprovalMessage } from "efi-ui/mint/userProxyApprovalMessag
 import { SwapDetailsForm } from "efi-ui/swaps/SwapDetailsPreview/SwapDetailsForm";
 import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/TransactionDrawer";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
+import { CryptoAsset } from "efi/crypto/CryptoAsset";
+import { TokenIcon } from "efi-ui/token/TokenIcon";
 
 interface MintTransactionConfirmationDrawerProps {
   chainId: number | undefined;
@@ -28,7 +29,8 @@ interface MintTransactionConfirmationDrawerProps {
   library: Web3Provider | undefined;
 
   amountIn: string | undefined;
-  baseAsset: CryptoAssetWithIcon;
+  baseAsset: CryptoAsset;
+  baseAssetIcon: TokenIcon | undefined;
 
   tranche: Tranche | undefined;
   isOpen: boolean;
@@ -42,7 +44,7 @@ export function MintTransactionConfirmationDrawer({
   library,
   chainId,
   account,
-  baseAsset: { assetIcon: AssetIcon },
+  baseAssetIcon: BaseAssetIcon,
   baseAsset,
   tranche,
   amountIn,
@@ -81,7 +83,7 @@ export function MintTransactionConfirmationDrawer({
       onClose={onClose}
       account={account}
       assetIn={baseAsset}
-      assetInIcon={baseAsset.assetIcon}
+      assetInIcon={BaseAssetIcon}
       walletConnectionActive={walletConnectionActive}
       walletApprovalMessageRenderer={getUserProxyApprovalMessage}
       amountIn={amountInAsBigNumber}
@@ -93,7 +95,7 @@ export function MintTransactionConfirmationDrawer({
         <SwapDetailsForm
           amountIn={amountInAsNumber.toFixed(4)}
           heading={t`Mint Preview`}
-          assetInIcon={AssetIcon}
+          assetInIcon={BaseAssetIcon}
           amountInLabel={t`Deposit`}
           assetInSymbol={baseAssetSymbol}
           assetOutSymbol={`${baseAssetSymbol} Principal Token`}

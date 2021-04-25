@@ -80,7 +80,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
   // use this hook to make sure we get the ETH icon if the base asset it WETH
   const cryptoAsset = useCryptoAssetForToken(baseAssetContract?.address);
   const cryptoAssetSymbol = useCryptoSymbol(cryptoAsset);
-  const baseAssetIcon = findAssetIcon(cryptoAssetSymbol);
+  const BaseAssetIcon = findAssetIcon(cryptoAssetSymbol);
 
   const {
     asset: yieldAsset,
@@ -177,7 +177,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
       <StakingInput
         cryptoSymbol={baseAssetSymbol as CryptoSymbol}
         cryptoDecimals={baseAssetDecimals}
-        cryptoAssetIcon={baseAssetIcon}
+        cryptoAssetIcon={BaseAssetIcon}
         cryptoBalanceOf={baseAssetBalanceOf}
         cryptoDisplayBalance={baseAssetDisplayBalance || ""}
         disabled={formDisabled}
@@ -195,7 +195,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
         <StakingInput
           cryptoSymbol={trancheAssetSymbol as CryptoSymbol}
           cryptoDecimals={baseAssetDecimals}
-          cryptoAssetIcon={baseAssetIcon}
+          cryptoAssetIcon={BaseAssetIcon}
           cryptoBalanceOf={yieldAssetBalanceOf}
           cryptoDisplayBalance={yieldAssetDisplayBalance || ""}
           disabled={formDisabled}

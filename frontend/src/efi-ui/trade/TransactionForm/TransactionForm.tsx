@@ -10,12 +10,10 @@ import {
   NumericInputOptions,
   useNumericInput,
 } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
-import { CryptoIcon } from "efi-ui/crypto/CryptoIcon";
 import styles from "efi-ui/trade/TransactionForm/TransactionForm.module.css";
 import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
-import { CryptoName } from "efi/crypto/CryptoName";
-import { CryptoSymbol, CryptoSymbolOld } from "efi/crypto/CryptoSymbol";
 import { TokenBalance } from "efi/crypto/TokenBalance";
+import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 
 interface TransactionFormProps {
   formDisabled?: boolean;
@@ -23,7 +21,7 @@ interface TransactionFormProps {
   inputLabel: string;
   buttonLabel: string;
   buttonIntent?: Intent;
-  cryptoSymbol: CryptoSymbolOld;
+  cryptoSymbol: string | undefined;
   cryptoBalance: TokenBalance | undefined;
   onTransaction: (amount: BigNumber) => void;
 }
@@ -46,6 +44,8 @@ export function TransactionForm({
   buttonIntent = Intent.PRIMARY,
   onTransaction,
 }: TransactionFormProps): ReactElement {
+  const CryptoIcon = findAssetIcon(cryptoSymbol);
+
   const { stringValue, onChange, setValue } = useNumericInput(
     numericInputOptions
   );
@@ -103,16 +103,8 @@ export function TransactionForm({
             </Tag>
           }
           leftElement={
-            <div className={tw("px-2")}>
-              {cryptoSymbol === ("ELF" as CryptoSymbol) ? (
-                "✨"
-              ) : (
-                <img
-                  className={tw("h-5", "w-5")}
-                  src={CryptoIcon[cryptoSymbol as CryptoSymbolOld]}
-                  alt={CryptoName[cryptoSymbol as CryptoSymbolOld]}
-                />
-              )}
+            <div>
+              {CryptoIcon ? <CryptoIcon height={18} width={18} /> : null}
             </div>
           }
         />

@@ -7,9 +7,10 @@ import { InterestToken } from "elf-contracts/types/InterestToken";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { SellYieldTokensDrawer } from "efi-ui/swaps/SellYieldTokensDrawer/SellYieldTokensDrawer";
 import { PoolContract } from "efi/pools/PoolContract";
+import { CryptoAsset } from "efi/crypto/CryptoAsset";
+import { TokenIcon } from "efi-ui/token/TokenIcon";
 
 interface SellYieldTokensButtonProps {
   chainId: number | undefined;
@@ -22,11 +23,13 @@ interface SellYieldTokensButtonProps {
   maxSellAmount: string | undefined;
 
   yieldToken: InterestToken | undefined;
-  baseAsset: CryptoAssetWithIcon | undefined;
+  baseAsset: CryptoAsset | undefined;
+  baseAssetIcon: TokenIcon | undefined;
 }
 
 export function SellYieldTokensButton({
   baseAsset,
+  baseAssetIcon,
   yieldToken,
   account,
   chainId,
@@ -48,12 +51,14 @@ export function SellYieldTokensButton({
       >
         <div className={tw("p-2", "text-base")}>{t`Sell`}</div>
       </Button>
+
       {!baseAsset ? null : (
         <SellYieldTokensDrawer
           isOpen={isDrawerOpen}
           yieldToken={yieldToken}
           account={account}
           baseAsset={baseAsset}
+          baseAssetIcon={baseAssetIcon}
           chainId={chainId}
           connector={connector}
           library={library}

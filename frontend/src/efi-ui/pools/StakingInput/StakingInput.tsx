@@ -7,7 +7,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { validateInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
-import { SvgIcon } from "efi-ui/base/SvgIcon";
+import { TokenIcon } from "efi-ui/token/TokenIcon";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { clipStringValueToDecimals } from "efi/math/fixedPoint";
 import { calculateLPOutGivenInFixed } from "efi/pools/calculateLPOutGivenIn";
@@ -17,7 +17,7 @@ import styles from "./StakingInput.module.css";
 interface StakingInputProps {
   cryptoSymbol: CryptoSymbol;
   cryptoDecimals: number | undefined;
-  cryptoAssetIcon: SvgIcon | undefined;
+  cryptoAssetIcon: TokenIcon | undefined;
   cryptoBalanceOf: BigNumber | undefined;
   cryptoDisplayBalance: string | number;
   disabled: boolean;

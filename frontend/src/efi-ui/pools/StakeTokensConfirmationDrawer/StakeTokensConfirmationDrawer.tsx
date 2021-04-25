@@ -99,8 +99,8 @@ export function StakingConfirmationDrawer({
           assetOneSymbolLabel={baseAssetSymbol}
           assetTwoSymbolLabel={trancheAssetSymbolLabel}
           heading={t`Confirm Staking`}
-          AssetOneIcon={baseAssetIcon}
-          AssetTwoIcon={trancheAssetIcon}
+          assetOneIcon={baseAssetIcon}
+          assetTwoIcon={trancheAssetIcon}
           assetOneValueLabel={baseAssetIn}
           assetTwoValueLabel={trancheAssetIn}
         />
