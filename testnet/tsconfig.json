@@ -8,11 +8,24 @@
     "outDir": "./build/",
     "resolveJsonModule": true,
     "paths": {
-      "src": ["./src"],
-      "src/*": ["./src/*"],
+      "src": [
+        "./src"
+      ],
+      "src/*": [
+        "./src/*"
+      ],
     },
   },
-  "include": ["./src/**/*", "./hardhat.config.ts"],
-  "exclude": ["../frontend/**/*"],
-  "files": ["./src/**/*", "./hardhat.config.ts"]
+  "include": [
+    "./src/**/*",
+    "../schema/*",
+    "./hardhat.config.ts"
+  ],
+  "exclude": [
+    "../frontend/**/*"
+  ],
+  "files": [
+    "./src/**/*",
+    "./hardhat.config.ts"
+  ]
 }

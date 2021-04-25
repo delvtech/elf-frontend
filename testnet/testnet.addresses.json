@@ -1,0 +1,11 @@
+{
+  "elementAddress": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+  "balancerVaultAddress": "0x0165878A594ca255338adfa4d48449f69242Eb8F",
+  "trancheFactoryAddress": "0x0DCd1Bf9A1b36cE34237eEaFef220932846BCD82",
+  "interestTokenFactoryAddress": "0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0",
+  "weightedPoolFactoryAddress": "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6",
+  "convergentPoolFactoryAddress": "0x610178dA211FEF7D417bC0e6FeD39F05609AD788",
+  "userProxyContractAddress": "0x2E2Ed0Cfd3AD2f1d34481277b3204d807Ca2F8c2",
+  "wethAddress": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+  "usdcAddress": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
+}

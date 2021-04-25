@@ -3,10 +3,16 @@ import "module-alias/register";
 import fs from "fs";
 import hre from "hardhat";
 
-import { deployConvergentPoolFactory } from "src/scripts/deployConvergentPoolFactory";
-import { deployInterestTokenFactory } from "src/scripts/deployInterestTokenFactory";
+import {
+  deployConvergentPoolFactory,
+} from "src/scripts/deployConvergentPoolFactory";
+import {
+  deployInterestTokenFactory,
+} from "src/scripts/deployInterestTokenFactory";
 import { deployTrancheFactory } from "src/scripts/deployTrancheFactory";
+import { THIRTY_DAYS_IN_SECONDS } from "src/time";
 
+import { AddressesJson } from "../../../schema/AddressesJson";
 import { deployBalancerVault } from "./balancerV2Vault";
 import { deployBaseAssets } from "./baseAssets";
 import { deployTrancheAndMarket } from "./deployTrancheAndMarket";
@@ -15,7 +21,6 @@ import { deployWeightedPoolFactory } from "./deployWeightedPoolFactory";
 import { getSigner, SIGNER } from "./getSigner";
 import { mintTokensForAddress } from "./mintTokensForAddress";
 import { deployUserProxy } from "./userProxy";
-import { THIRTY_DAYS_IN_SECONDS } from "src/time";
 
 async function main() {
   const elementSigner = await getSigner(SIGNER.ELEMENT, hre);
@@ -169,7 +174,8 @@ async function main() {
     trancheFactory
   );
 
-  const addresses = JSON.stringify(
+  // Produce a full list of all addresses deployed in the mian.ts script.
+  const allAddresses = JSON.stringify(
     {
       // signer addresses
       elementAddress,
@@ -219,9 +225,26 @@ async function main() {
     null,
     2
   );
-  console.log("addresses", addresses);
-  fs.writeFileSync("./addresses.json", addresses);
-  fs.writeFileSync("./src/addresses.json", addresses);
+
+
+  console.log("addresses", allAddresses);
+  fs.writeFileSync("./addresses.json", allAddresses);
+  fs.writeFileSync("./src/addresses.json", allAddresses);
+
+  // Produce a schema-compliant testnet.addresses.json file
+  const schemaAddresses: AddressesJson = {
+      elementAddress,
+      balancerVaultAddress: balancerVaultContract.address,
+      trancheFactoryAddress: trancheFactory.address,
+      interestTokenFactoryAddress: interestTokenFactory.address,
+      weightedPoolFactoryAddress: weightedPoolFactory.address,
+      convergentPoolFactoryAddress: convergentPoolFactory.address,
+      userProxyContractAddress: userProxyContract.address,
+      wethAddress: wethContract.address,
+      usdcAddress: usdcContract.address,
+    };
+
+  fs.writeFileSync("./testnet.addresses.json", JSON.stringify(schemaAddresses, null, 2));
 }
 
 // We recommend this pattern to be able to use async/await everywhere

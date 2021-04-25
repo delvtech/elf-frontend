@@ -3,20 +3,11 @@
 // dynamic and will throw an error at runtime. For tools like eslint and
 // dependency-cruiser, we don't need to run the app, but we need TS to compile
 // correctly, so we use a require() statement here.
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const ContractAddresses: ContractJson = require("local.addresses.json");
-export interface ContractJson {
-  elementAddress: string;
-  balancerVaultAddress: string;
-  trancheFactoryAddress: string;
-  interestTokenFactoryAddress: string;
-  weightedPoolFactoryAddress: string;
-  convergentPoolFactoryAddress: string;
-  userProxyContractAddress: string;
-  wethAddress: string;
-  usdcAddress: string;
-}
 
+import { AddressesJson } from "AddressesJson";
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const ContractAddresses: AddressesJson = require("local.addresses.json");
 /**
  * Helpful debugging tool for making sure a contract is from our contracts json
  */
