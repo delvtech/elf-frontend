@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "elementAddress": {
+      "type": "string"
+    },
+    "balancerVaultAddress": {
+      "type": "string"
+    },
+    "trancheFactoryAddress": {
+      "type": "string"
+    },
+    "interestTokenFactoryAddress": {
+      "type": "string"
+    },
+    "weightedPoolFactoryAddress": {
+      "type": "string"
+    },
+    "convergentPoolFactoryAddress": {
+      "type": "string"
+    },
+    "userProxyContractAddress": {
+      "type": "string"
+    },
+    "wethAddress": {
+      "type": "string"
+    },
+    "usdcAddress": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "elementAddress",
+    "balancerVaultAddress",
+    "trancheFactoryAddress",
+    "interestTokenFactoryAddress",
+    "weightedPoolFactoryAddress",
+    "convergentPoolFactoryAddress",
+    "userProxyContractAddress",
+    "wethAddress",
+    "usdcAddress"
+  ]
+}
