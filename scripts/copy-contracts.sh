@@ -6,4 +6,4 @@ mkdir -p frontend/src/elf-contracts/types
 # without further investigation
 cp -R testnet/src/types/* frontend/src/elf-contracts/types
 
-cp -f testnet/addresses.json frontend/src/addresses.json
+cp -f testnet/addresses.json frontend/src/local.addresses.json

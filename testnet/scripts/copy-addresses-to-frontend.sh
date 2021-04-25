@@ -1,1 +1,1 @@
-cp -R addresses.json efi-frontend/frontend/src/.
+cp -R addresses.json efi-frontend/frontend/src/local.addresses.json

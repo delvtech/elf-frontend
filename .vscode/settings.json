@@ -55,6 +55,12 @@
         "*.tokenlist.json"
       ],
       "url": "https://uniswap.org/tokenlist.schema.json"
+    },
+    {
+      "fileMatch": [
+        "*.addresses.json"
+      ],
+      "url": "./schema/addresses.schema.json"
     }
   ],
   "solidity.compileUsingRemoteVersion": "v0.8.0+commit.c7dfd78e",
