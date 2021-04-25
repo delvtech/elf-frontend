@@ -11,10 +11,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { SwapKind } from "efi-ui/balancer/SwapKind";
-import {
-  NumericInputOptions,
-  useNumericInput,
-} from "efi-ui/base/hooks/useNumericInput/useNumericInput";
+import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
@@ -97,21 +94,13 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     poolIndex: tokenOutPoolIndex,
   } = useTokenInfoForTradeInput(pool, tokenOut, account, library);
 
-  const {
-    amountIn,
-    amountOut,
-    onChangeIn,
-    onChangeOut,
-    onChangeInFromOut,
-    onChangeOutFromIn,
-    setValueIn,
-    setValueOut,
-  } = useUpdateInputs();
+  const { stringValue: amountIn, setValue: onChangeIn } = useNumericInput();
+  const { stringValue: amountOut, setValue: onChangeOut } = useNumericInput();
 
   // clear inputs when they switch.  we can improve this UX later to keep the previous values.
   useEffect(() => {
-    setValueIn(undefined);
-    setValueOut(undefined);
+    onChangeIn(undefined);
+    onChangeOut(undefined);
     // don't want to call this effect when the hooks update, only when isReversed updates
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isReversed]);
@@ -147,14 +136,14 @@ export function TradePanel(props: TradePanelProps): ReactElement {
         cryptoBalanceOf={tokenInBalanceOf}
         cryptoDisplayBalance={tokenInDisplayBalance || ""}
         cryptoSymbol={tokenInSymbol as CryptoSymbol}
-        otherCryptoAddress={tokenOutAddress}
-        otherCryptoIndex={tokenOutPoolIndex}
+        previewCryptoAddress={tokenOutAddress}
+        previewCryptoPoolIndex={tokenOutPoolIndex}
         label={t`Swap`}
         disabled={formDisabled}
         swapKind={SwapKind.GIVEN_IN}
         pool={pool}
-        onChangeThisValue={onChangeIn}
-        onChangeOtherValue={onChangeOutFromIn}
+        onChange={onChangeIn}
+        onPreviewUpdate={onChangeOut}
         value={amountIn}
         validValue={isValidTokenInValue}
       />
@@ -165,24 +154,20 @@ export function TradePanel(props: TradePanelProps): ReactElement {
         large
         intent={buttonIntent}
       ></Button>
-      {/* Receive Asset
-      <div className={tw("flex", "justify-between", "items-center")}>
-        <span>{t`For`}</span>
-      </div> */}
       <TradeInput
         cryptoAddress={tokenOutAddress}
         cryptoDecimals={tokenOutDecimals}
         cryptoBalanceOf={tokenOutBalanceOf}
         cryptoDisplayBalance={tokenOutDisplayBalance || ""}
         cryptoSymbol={tokenOutSymbol as CryptoSymbol}
-        otherCryptoAddress={tokenInAddress}
-        otherCryptoIndex={tokenInPoolIndex}
+        previewCryptoAddress={tokenInAddress}
+        previewCryptoPoolIndex={tokenInPoolIndex}
         label={t`For`}
         disabled={formDisabled}
         swapKind={SwapKind.GIVEN_OUT}
         pool={pool}
-        onChangeThisValue={onChangeOut}
-        onChangeOtherValue={onChangeInFromOut}
+        onChange={onChangeOut}
+        onPreviewUpdate={onChangeIn}
         value={amountOut}
         validValue={isValidTokenOutValue}
       />
@@ -294,55 +279,5 @@ function useTokenInfoForTradeInput(
     displayBalance,
     poolBalance,
     poolIndex,
-  };
-}
-
-const numericInputOptions: NumericInputOptions = {
-  min: 0,
-  /**
-   * limit precision to prevent BigNumber overflows
-   */
-  maxPrecision: 18,
-};
-
-function useUpdateInputs() {
-  // useNumericInput ensures valid numeric inputs from the user
-  const { stringValue: stringValueIn, setValue: setValueIn } = useNumericInput(
-    numericInputOptions
-  );
-  const {
-    stringValue: stringValueOut,
-    setValue: setValueOut,
-  } = useNumericInput(numericInputOptions);
-
-  const onChangeOutFromIn = useCallback(
-    (otherNeeded: string | undefined) => {
-      if (!otherNeeded || +otherNeeded === 0) {
-        setValueOut(undefined);
-      } else {
-        setValueOut(otherNeeded);
-      }
-    },
-    [setValueOut]
-  );
-  const onChangeInFromOut = useCallback(
-    (otherNeeded: string | undefined) => {
-      if (!otherNeeded) {
-        setValueIn(undefined);
-      } else {
-        setValueIn(otherNeeded);
-      }
-    },
-    [setValueIn]
-  );
-  return {
-    amountIn: stringValueIn,
-    amountOut: stringValueOut,
-    onChangeIn: setValueIn,
-    onChangeOut: setValueOut,
-    onChangeOutFromIn,
-    onChangeInFromOut,
-    setValueIn,
-    setValueOut,
   };
 }

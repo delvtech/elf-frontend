@@ -1,12 +1,7 @@
-import React, {
-  ChangeEvent,
-  ReactElement,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import React, { ReactElement, useCallback, useEffect, useState } from "react";
 
 import { Button, InputGroup, Intent, Tag } from "@blueprintjs/core";
+import { BigNumber } from "ethers";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
@@ -21,7 +16,6 @@ import { clipStringValueToDecimals } from "efi/math/fixedPoint";
 import { PoolContract } from "efi/pools/PoolContract";
 
 import styles from "./TradeInput.module.css";
-import { BigNumber } from "ethers";
 
 interface TradeInputProps {
   cryptoAddress: string | undefined;
@@ -29,13 +23,13 @@ interface TradeInputProps {
   cryptoDecimals: number | undefined;
   cryptoBalanceOf: BigNumber | undefined;
   cryptoDisplayBalance: string | number;
-  otherCryptoAddress: string | undefined;
-  otherCryptoIndex: number | undefined;
+  previewCryptoAddress: string | undefined;
+  previewCryptoPoolIndex: number | undefined;
 
   label: string;
   disabled: boolean;
-  onChangeThisValue: (value: string | undefined) => void;
-  onChangeOtherValue: (value: string | undefined) => void;
+  onChange: (value: string | undefined) => void;
+  onPreviewUpdate: (value: string | undefined) => void;
   value: string | undefined;
   validValue: boolean;
   swapKind: SwapKind;
@@ -49,74 +43,51 @@ export function TradeInput(props: TradeInputProps): ReactElement {
     cryptoDecimals,
     cryptoBalanceOf,
     cryptoDisplayBalance,
-    otherCryptoAddress,
-    otherCryptoIndex,
+    previewCryptoAddress,
+    previewCryptoPoolIndex,
     label,
     disabled,
-    onChangeThisValue,
-    onChangeOtherValue,
+    onChange: onChangeFromProps,
+    onPreviewUpdate,
     value = "",
     validValue,
     swapKind,
     pool,
   } = props;
+  // changes to this will trigger calculating and calling handler to update the other value
+  const [internalValue, setInternalValue] = useState("");
 
-  const [amount, setAmount] = useState("");
-
-  const tokenInAddress =
-    swapKind === SwapKind.GIVEN_IN ? cryptoAddress : otherCryptoAddress;
-  const tokenOutAddress =
-    swapKind === SwapKind.GIVEN_OUT ? cryptoAddress : otherCryptoAddress;
-  const { data: swap } = useQueryBatchSwap(
-    swapKind,
-    pool,
-    tokenInAddress,
-    tokenOutAddress,
-    parseUnits(amount || "0", cryptoDecimals ?? 18)
+  // handles user input changes.  call onChangeThisValue to tell the parent the value changed.  also
+  // updates the internal value.
+  const onChange = useOnInputChange(
+    setInternalValue,
+    onChangeFromProps,
+    onPreviewUpdate,
+    cryptoDecimals
   );
 
-  const otherValue = swap?.[otherCryptoIndex ?? 1];
-  const otherStringValue = otherValue
-    ? formatUnits(otherValue.abs(), cryptoDecimals)
-    : undefined;
-
-  useEffect(() => {
-    onChangeOtherValue(otherStringValue);
-  }, [onChangeOtherValue, otherStringValue]);
-
-  const onChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      const userInputValue = event.target.value;
-
-      // allow user to clear input
-      if (userInputValue === undefined || userInputValue === "") {
-        setAmount("");
-        onChangeThisValue("");
-        onChangeOtherValue(undefined);
-        return;
-      }
-
-      // try to get safe value by handling edge cases and clipping decimals
-      const safeValue = clipStringValueToDecimals(
-        userInputValue,
-        cryptoDecimals || 18
-      );
-
-      // if value is not undefiend, then check if its invalid.  if so, we want to ignore the user's input
-      if (!validateInput(safeValue) || safeValue === undefined) {
-        return;
-      }
-
-      onChangeThisValue(safeValue);
-
-      setAmount(safeValue);
-    },
-    [cryptoDecimals, onChangeThisValue, onChangeOtherValue]
+  // watches for updates to internal value, calculate preview value and calls onPreviewUpdate
+  useUpdatePreviewValue(
+    swapKind,
+    cryptoAddress,
+    previewCryptoAddress,
+    pool,
+    internalValue,
+    cryptoDecimals,
+    previewCryptoPoolIndex,
+    onPreviewUpdate
   );
 
   // TODO: disable setting max value if the user balance >  pool balance.  better yet, disable max
   // value if the trade would cause too much slippage.
-  const setMaxValue = useSetMaxValue(cryptoBalanceOf, onChange, cryptoDecimals);
+
+  // sets the max value for the input
+  const setMaxValue = useSetMaxValue(
+    cryptoBalanceOf, // the max value
+    cryptoDecimals,
+    setInternalValue,
+    onChangeFromProps
+  );
 
   return (
     <div className={tw("flex", "flex-col", "space-y-5")}>
@@ -173,18 +144,104 @@ export function TradeInput(props: TradeInputProps): ReactElement {
     </div>
   );
 }
+function useOnInputChange(
+  setInternalValue: (value: string) => void,
+  onChange: (value: string | undefined) => void,
+  onPreviewUpdate: (value: string | undefined) => void,
+  cryptoDecimals: number | undefined
+) {
+  return useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const userInputValue = event.target.value;
+
+      // sets internal value
+      validateAndSetValue(
+        userInputValue,
+        setInternalValue,
+        onChange,
+        onPreviewUpdate,
+        cryptoDecimals
+      );
+    },
+    [setInternalValue, onChange, onPreviewUpdate, cryptoDecimals]
+  );
+}
+
+function useUpdatePreviewValue(
+  swapKind: SwapKind,
+  cryptoAddress: string | undefined,
+  previewCryptoAddress: string | undefined,
+  pool: PoolContract | undefined,
+  internalValue: string,
+  cryptoDecimals: number | undefined,
+  previewCryptoIndex: number | undefined,
+  onChangeOtherValue: (value: string | undefined) => void
+) {
+  const tokenInAddress =
+    swapKind === SwapKind.GIVEN_IN ? cryptoAddress : previewCryptoAddress;
+  const tokenOutAddress =
+    swapKind === SwapKind.GIVEN_OUT ? cryptoAddress : previewCryptoAddress;
+
+  // get the preview value
+  const { data: swap } = useQueryBatchSwap(
+    swapKind,
+    pool,
+    tokenInAddress,
+    tokenOutAddress,
+    parseUnits(internalValue || "0", cryptoDecimals ?? 18)
+  );
+
+  const otherValue = swap?.[previewCryptoIndex ?? 1];
+  const otherStringValue = otherValue
+    ? formatUnits(otherValue.abs(), cryptoDecimals)
+    : undefined;
+
+  useEffect(() => {
+    // let parent know preview value updated
+    onChangeOtherValue(otherStringValue);
+  }, [onChangeOtherValue, otherStringValue]);
+}
+
 function useSetMaxValue(
   tokenBalanceOf: BigNumber | undefined,
-  setValue: (event: React.ChangeEvent<HTMLInputElement>) => void,
-  tokenDecimals: number | undefined
+  tokenDecimals: number | undefined,
+  setInternalValue: (value: string) => void,
+  onChange: (value: string | undefined) => void
 ) {
   return useCallback(() => {
     if (tokenBalanceOf) {
       const maxValue = formatUnits(tokenBalanceOf, tokenDecimals);
-      const event = {
-        target: { value: maxValue },
-      } as ChangeEvent<HTMLInputElement>;
-      setValue(event);
+      setInternalValue(maxValue);
+      onChange(maxValue);
     }
-  }, [tokenBalanceOf, setValue, tokenDecimals]);
+  }, [tokenBalanceOf, tokenDecimals, setInternalValue, onChange]);
+}
+
+function validateAndSetValue(
+  value: string,
+  setInternalValue: (value: string) => void,
+  onChange: (value: string | undefined) => void,
+  updatePreviewValue: (value: string | undefined) => void,
+  cryptoDecimals: number | undefined
+) {
+  // allow user to clear input
+  if (value === "") {
+    setInternalValue("");
+    onChange("");
+    updatePreviewValue("");
+    return;
+  }
+
+  // get safe value by handling edge cases and clipping decimals
+  const safeValue = clipStringValueToDecimals(value, cryptoDecimals || 18);
+
+  // if value is not undefiend, then check if its invalid.  if so, we want to ignore the user's input
+  if (!validateInput(safeValue) || safeValue === undefined) {
+    return;
+  }
+
+  // since this is a controlled component, we let the parent know what to update the value to
+  onChange(safeValue);
+  // we also internally set the value so we can trigger an update for the other value
+  setInternalValue(safeValue);
 }
