@@ -8,10 +8,7 @@ import { formatEther, formatUnits, parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import {
-  NumericInputOptions,
-  useNumericInput,
-} from "efi-ui/base/hooks/useNumericInput/useNumericInput";
+import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
@@ -113,14 +110,8 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
     yieldAssetDecimals
   );
 
-  const {
-    amountIn,
-    amountOut,
-    onChangeIn,
-    onChangeOut,
-    onChangeOutFromIn,
-    onChangeInFromOut,
-  } = useUpdateInputs({ maxPrecision: baseAssetDecimals });
+  const { stringValue: amountIn, setValue: onChangeIn } = useNumericInput();
+  const { stringValue: amountOut, setValue: onChangeOut } = useNumericInput();
 
   const isValidBaseAssetValue = validateStakingValue(
     amountIn,
@@ -190,8 +181,8 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
         cryptoBalanceOf={baseAssetBalanceOf}
         cryptoDisplayBalance={baseAssetDisplayBalance || ""}
         disabled={formDisabled}
-        onChangeInputValue={onChangeIn}
-        onCalculateLPOutGivenIn={onChangeOutFromIn}
+        onChange={onChangeIn}
+        onPreviewUpdate={onChangeOut}
         label={t`Base asset`}
         value={amountIn}
         validValue={isValidBaseAssetValue}
@@ -208,8 +199,8 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
           cryptoBalanceOf={yieldAssetBalanceOf}
           cryptoDisplayBalance={yieldAssetDisplayBalance || ""}
           disabled={formDisabled}
-          onChangeInputValue={onChangeOut}
-          onCalculateLPOutGivenIn={onChangeInFromOut}
+          onChange={onChangeOut}
+          onPreviewUpdate={onChangeIn}
           label={t`Term asset`}
           value={amountOut}
           validValue={isValidTrancheAssetValue}
@@ -309,55 +300,5 @@ function useTokenInfoForTradeInput(
     balanceOf,
     displayBalance,
     poolBalance,
-  };
-}
-
-const numericInputOptions: NumericInputOptions = {
-  min: 0,
-  /**
-   * limit precision to prevent BigNumber overflows
-   */
-  maxPrecision: 18,
-};
-
-function useUpdateInputs(options: NumericInputOptions) {
-  // useNumericInput ensures valid numeric inputs from the user
-  const { stringValue: stringValueIn, setValue: setValueIn } = useNumericInput(
-    numericInputOptions
-  );
-  const {
-    stringValue: stringValueOut,
-    setValue: setValueOut,
-  } = useNumericInput(numericInputOptions);
-
-  const onChangeOutFromIn = useCallback(
-    (otherNeeded: string | undefined, lpOut: string | undefined) => {
-      if (!otherNeeded || +otherNeeded === 0) {
-        setValueOut(undefined);
-      } else {
-        setValueOut(otherNeeded);
-      }
-    },
-    [setValueOut]
-  );
-  const onChangeInFromOut = useCallback(
-    (otherNeeded: string | undefined, lpOut: string | undefined) => {
-      if (!otherNeeded) {
-        setValueIn(undefined);
-      } else {
-        setValueIn(otherNeeded);
-      }
-    },
-    [setValueIn]
-  );
-  return {
-    amountIn: stringValueIn,
-    amountOut: stringValueOut,
-    onChangeIn: setValueIn,
-    onChangeOut: setValueOut,
-    onChangeOutFromIn,
-    onChangeInFromOut,
-    setValueIn,
-    setValueOut,
   };
 }
