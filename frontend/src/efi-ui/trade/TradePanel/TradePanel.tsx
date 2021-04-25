@@ -141,7 +141,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     !amountOut;
 
   return (
-    <div className={tw("flex", "flex-col", "space-y-5")}>
+    <div className={tw("flex", "flex-col", "justify-between", "h-full")}>
       {/* Trade Asset */}
       <TradeInput
         cryptoAddress={tokenInAddress}
@@ -151,6 +151,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
         cryptoSymbol={tokenInSymbol as CryptoSymbol}
         otherCryptoAddress={tokenOutAddress}
         otherCryptoIndex={tokenOutPoolIndex}
+        label={t`Swap`}
         disabled={formDisabled}
         swapKind={SwapKind.GIVEN_IN}
         pool={pool}
@@ -159,7 +160,6 @@ export function TradePanel(props: TradePanelProps): ReactElement {
         value={amountIn}
         validValue={isValidTokenInValue}
       />
-
       <Button
         icon={IconNames.ARROWS_VERTICAL}
         onClick={swapAssets}
@@ -167,11 +167,10 @@ export function TradePanel(props: TradePanelProps): ReactElement {
         large
         intent={buttonIntent}
       ></Button>
-
-      {/* Receive Asset */}
+      {/* Receive Asset
       <div className={tw("flex", "justify-between", "items-center")}>
         <span>{t`For`}</span>
-      </div>
+      </div> */}
       <TradeInput
         cryptoAddress={tokenOutAddress}
         cryptoDecimals={tokenOutDecimals}
@@ -180,6 +179,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
         cryptoSymbol={tokenOutSymbol as CryptoSymbol}
         otherCryptoAddress={tokenInAddress}
         otherCryptoIndex={tokenInPoolIndex}
+        label={t`For`}
         disabled={formDisabled}
         swapKind={SwapKind.GIVEN_OUT}
         pool={pool}

@@ -32,6 +32,7 @@ interface TradeInputProps {
   otherCryptoAddress: string | undefined;
   otherCryptoIndex: number | undefined;
 
+  label: string;
   disabled: boolean;
   onChangeThisValue: (value: string | undefined) => void;
   onChangeOtherValue: (value: string | undefined) => void;
@@ -50,6 +51,7 @@ export function TradeInput(props: TradeInputProps): ReactElement {
     cryptoDisplayBalance,
     otherCryptoAddress,
     otherCryptoIndex,
+    label,
     disabled,
     onChangeThisValue,
     onChangeOtherValue,
@@ -117,8 +119,9 @@ export function TradeInput(props: TradeInputProps): ReactElement {
   const setMaxValue = useSetMaxValue(cryptoBalanceOf, onChange, cryptoDecimals);
 
   return (
-    <div className={tw("flex", "flex-col", "space-y-4")}>
-      <div className={tw("flex", "justify-end", "items-center")}>
+    <div className={tw("flex", "flex-col", "space-y-5")}>
+      <div className={tw("flex", "justify-between", "items-center")}>
+        <span className={tw("text-xs", "text-right")}>{label}</span>
         <Button
           disabled={false}
           onClick={setMaxValue}
