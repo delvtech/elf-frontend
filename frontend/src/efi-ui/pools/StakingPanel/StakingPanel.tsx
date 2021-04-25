@@ -21,7 +21,6 @@ import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useTokenPoolBalance } from "efi-ui/pools/useTokenPoolBalance/useTokenPoolBalance";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
-import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
 import { useTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
 import { useEthBalance } from "efi-ui/wallets/hooks/useEthBalance/useEthBalance";
 import { BALANCER_ETH_SENTINEL } from "efi/balancer";
@@ -313,17 +312,24 @@ function useTokenInfoForTradeInput(
   const isWETH = tokenContract?.address === ContractAddresses.wethAddress;
   const { data: ethBalance } = useEthBalance(library, account);
 
+  const asset = useCryptoAssetForToken(tokenContract?.address);
+  const baseAssetSymbol = useCryptoSymbol(asset);
+  const { symbol: termAssetSymbol } = useTermAssetSymbol(
+    tokenContract?.address,
+    baseAssetSymbol
+  );
+  const symbol = termAssetSymbol ?? baseAssetSymbol;
+  const icon = findAssetIcon(baseAssetSymbol);
+
   // otherwise get values from token calls
   const poolBalance = useTokenPoolBalance(pool, tokenContract);
-  const { data: symbol } = useTokenSymbol(tokenContract);
-  const icon = findAssetIcon(symbol);
+
   const { data: decimals } = useTokenDecimals(tokenContract);
   const { data: tokenBalance } = useTokenBalanceOf(tokenContract, account);
 
   const balanceOf = isWETH ? ethBalance : tokenBalance;
   const displayBalance = formatBalance(balanceOf, decimals);
   const address = isWETH ? BALANCER_ETH_SENTINEL : tokenContract?.address;
-  const asset = useCryptoAssetForToken(tokenContract?.address);
   return {
     asset,
     address,
