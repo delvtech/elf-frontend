@@ -1,6 +1,12 @@
-import React, { ReactElement, useCallback, useEffect, useState } from "react";
+import React, {
+  ChangeEvent,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 
-import { InputGroup, Intent, Tag } from "@blueprintjs/core";
+import { Button, InputGroup, Intent, Tag } from "@blueprintjs/core";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
@@ -15,15 +21,18 @@ import { clipStringValueToDecimals } from "efi/math/fixedPoint";
 import { PoolContract } from "efi/pools/PoolContract";
 
 import styles from "./TradeInput.module.css";
+import { BigNumber } from "ethers";
 
 interface TradeInputProps {
   cryptoAddress: string | undefined;
-  cryptoDisplayBalance: string | number;
   cryptoSymbol: CryptoSymbol;
   cryptoDecimals: number | undefined;
+  cryptoBalanceOf: BigNumber | undefined;
+  cryptoDisplayBalance: string | number;
   otherCryptoAddress: string | undefined;
   otherCryptoIndex: number | undefined;
 
+  label: string;
   disabled: boolean;
   onChangeThisValue: (value: string | undefined) => void;
   onChangeOtherValue: (value: string | undefined) => void;
@@ -36,11 +45,13 @@ interface TradeInputProps {
 export function TradeInput(props: TradeInputProps): ReactElement {
   const {
     cryptoAddress,
-    cryptoDisplayBalance,
     cryptoSymbol,
     cryptoDecimals,
+    cryptoBalanceOf,
+    cryptoDisplayBalance,
     otherCryptoAddress,
     otherCryptoIndex,
+    label,
     disabled,
     onChangeThisValue,
     onChangeOtherValue,
@@ -77,12 +88,6 @@ export function TradeInput(props: TradeInputProps): ReactElement {
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const userInputValue = event.target.value;
 
-      // TODO: Think about getting this logic outta here. We should be dumb and unconditionally call
-      // onChangeInputValue and onCalculateLPOutGivenIn and let the consumer figure this out.  Also,
-      // onCalculateLPOutGivenIn should just be 'onChangeOther' with the userInput.
-      // I want to share this logic with all the other inputs because it super safe and doesn't blow
-      // up.
-
       // allow user to clear input
       if (userInputValue === undefined || userInputValue === "") {
         setAmount("");
@@ -109,8 +114,23 @@ export function TradeInput(props: TradeInputProps): ReactElement {
     [cryptoDecimals, onChangeThisValue, onChangeOtherValue]
   );
 
+  // TODO: disable setting max value if the user balance >  pool balance.  better yet, disable max
+  // value if the trade would cause too much slippage.
+  const setMaxValue = useSetMaxValue(cryptoBalanceOf, onChange, cryptoDecimals);
+
   return (
-    <div className={tw("flex", "flex-col", "space-y-2")}>
+    <div className={tw("flex", "flex-col", "space-y-5")}>
+      <div className={tw("flex", "justify-between", "items-center")}>
+        <span className={tw("text-xs", "text-right")}>{label}</span>
+        <Button
+          disabled={false}
+          onClick={setMaxValue}
+          minimal
+          outlined
+          small
+          intent={Intent.SUCCESS}
+        >{t`MAX`}</Button>
+      </div>
       <InputGroup
         disabled={disabled}
         onChange={onChange}
@@ -152,4 +172,19 @@ export function TradeInput(props: TradeInputProps): ReactElement {
       </div>
     </div>
   );
+}
+function useSetMaxValue(
+  tokenBalanceOf: BigNumber | undefined,
+  setValue: (event: React.ChangeEvent<HTMLInputElement>) => void,
+  tokenDecimals: number | undefined
+) {
+  return useCallback(() => {
+    if (tokenBalanceOf) {
+      const maxValue = formatUnits(tokenBalanceOf, tokenDecimals);
+      const event = {
+        target: { value: maxValue },
+      } as ChangeEvent<HTMLInputElement>;
+      setValue(event);
+    }
+  }, [tokenBalanceOf, setValue, tokenDecimals]);
 }

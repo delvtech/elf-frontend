@@ -5,11 +5,12 @@ import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { ERC20 } from "elf-contracts/types/ERC20";
-import { BigNumber, Signer } from "ethers";
-import { formatUnits, parseUnits } from "ethers/lib/utils";
+import { Signer } from "ethers";
+import { parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { SwapKind } from "efi-ui/balancer/SwapKind";
 import {
   NumericInputOptions,
   useNumericInput,
@@ -19,6 +20,7 @@ import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { useTokenPoolBalance } from "efi-ui/pools/useTokenPoolBalance/useTokenPoolBalance";
+import { useTokenPoolIndex } from "efi-ui/pools/useTokenPoolIndex/useTokenPoolIndex";
 import { SwapTokensTransactionConfirmationDrawer } from "efi-ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensTransactionConfirmationDrawer";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
@@ -32,8 +34,6 @@ import { ContractMethodArgs } from "efi/contracts/types";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { PoolContract } from "efi/pools/PoolContract";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
-import { SwapKind } from "efi-ui/balancer/SwapKind";
-import { useTokenPoolIndex } from "efi-ui/pools/useTokenPoolIndex/useTokenPoolIndex";
 
 interface TradePanelProps {
   library: Web3Provider | undefined;
@@ -45,7 +45,6 @@ interface TradePanelProps {
   pool: PoolContract | undefined;
   formDisabled?: boolean;
   submitDisabled?: boolean;
-  inputLabel: string;
   buttonLabel: string;
   buttonIntent?: Intent;
   tokenIn: ERC20 | undefined;
@@ -62,7 +61,6 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     walletActive,
     formDisabled = false,
     submitDisabled = false,
-    inputLabel,
     buttonIntent = Intent.PRIMARY,
     pool,
     tokenIn: tokenInFromProps,
@@ -93,6 +91,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     icon: tokenOutIcon,
     symbol: tokenOutSymbol,
     decimals: tokenOutDecimals,
+    balanceOf: tokenOutBalanceOf,
     displayBalance: tokenOutDisplayBalance,
     poolBalance: tokenOutPoolBalance,
     poolIndex: tokenOutPoolIndex,
@@ -131,12 +130,6 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     setDrawerOpen(true);
   }, []);
 
-  const setMaxValue = useSetMaxValue(
-    tokenInBalanceOf,
-    setValueIn,
-    tokenInDecimals
-  );
-
   const submitButtonDisabled =
     formDisabled ||
     submitDisabled ||
@@ -146,26 +139,17 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     !amountOut;
 
   return (
-    <div className={tw("flex", "flex-col", "space-y-5")}>
+    <div className={tw("flex", "flex-col", "justify-between", "h-full")}>
       {/* Trade Asset */}
-      <div className={tw("flex", "justify-between", "items-center")}>
-        <span>{inputLabel}</span>
-        <Button
-          disabled={formDisabled}
-          onClick={setMaxValue}
-          minimal
-          outlined
-          small
-          intent={Intent.SUCCESS}
-        >{t`MAX`}</Button>
-      </div>
       <TradeInput
         cryptoAddress={tokenInAddress}
         cryptoDecimals={tokenInDecimals}
+        cryptoBalanceOf={tokenInBalanceOf}
         cryptoDisplayBalance={tokenInDisplayBalance || ""}
         cryptoSymbol={tokenInSymbol as CryptoSymbol}
         otherCryptoAddress={tokenOutAddress}
         otherCryptoIndex={tokenOutPoolIndex}
+        label={t`Swap`}
         disabled={formDisabled}
         swapKind={SwapKind.GIVEN_IN}
         pool={pool}
@@ -174,7 +158,6 @@ export function TradePanel(props: TradePanelProps): ReactElement {
         value={amountIn}
         validValue={isValidTokenInValue}
       />
-
       <Button
         icon={IconNames.ARROWS_VERTICAL}
         onClick={swapAssets}
@@ -182,18 +165,19 @@ export function TradePanel(props: TradePanelProps): ReactElement {
         large
         intent={buttonIntent}
       ></Button>
-
-      {/* Receive Asset */}
+      {/* Receive Asset
       <div className={tw("flex", "justify-between", "items-center")}>
         <span>{t`For`}</span>
-      </div>
+      </div> */}
       <TradeInput
         cryptoAddress={tokenOutAddress}
         cryptoDecimals={tokenOutDecimals}
+        cryptoBalanceOf={tokenOutBalanceOf}
         cryptoDisplayBalance={tokenOutDisplayBalance || ""}
         cryptoSymbol={tokenOutSymbol as CryptoSymbol}
         otherCryptoAddress={tokenInAddress}
         otherCryptoIndex={tokenInPoolIndex}
+        label={t`For`}
         disabled={formDisabled}
         swapKind={SwapKind.GIVEN_OUT}
         pool={pool}
@@ -235,18 +219,6 @@ export function TradePanel(props: TradePanelProps): ReactElement {
       />
     </div>
   );
-}
-
-function useSetMaxValue(
-  tokenInBalanceOf: BigNumber | undefined,
-  setValueIn: (value: string) => void,
-  tokenInDecimals: number | undefined
-) {
-  return useCallback(() => {
-    if (tokenInBalanceOf) {
-      setValueIn(formatUnits(tokenInBalanceOf, tokenInDecimals));
-    }
-  }, [tokenInBalanceOf, setValueIn, tokenInDecimals]);
 }
 
 function useReversableTokens(
