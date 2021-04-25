@@ -93,6 +93,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     icon: tokenOutIcon,
     symbol: tokenOutSymbol,
     decimals: tokenOutDecimals,
+    balanceOf: tokenOutBalanceOf,
     displayBalance: tokenOutDisplayBalance,
     poolBalance: tokenOutPoolBalance,
     poolIndex: tokenOutPoolIndex,
@@ -131,12 +132,6 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     setDrawerOpen(true);
   }, []);
 
-  const setMaxValue = useSetMaxValue(
-    tokenInBalanceOf,
-    setValueIn,
-    tokenInDecimals
-  );
-
   const submitButtonDisabled =
     formDisabled ||
     submitDisabled ||
@@ -148,20 +143,10 @@ export function TradePanel(props: TradePanelProps): ReactElement {
   return (
     <div className={tw("flex", "flex-col", "space-y-5")}>
       {/* Trade Asset */}
-      <div className={tw("flex", "justify-between", "items-center")}>
-        <span>{inputLabel}</span>
-        <Button
-          disabled={formDisabled}
-          onClick={setMaxValue}
-          minimal
-          outlined
-          small
-          intent={Intent.SUCCESS}
-        >{t`MAX`}</Button>
-      </div>
       <TradeInput
         cryptoAddress={tokenInAddress}
         cryptoDecimals={tokenInDecimals}
+        cryptoBalanceOf={tokenInBalanceOf}
         cryptoDisplayBalance={tokenInDisplayBalance || ""}
         cryptoSymbol={tokenInSymbol as CryptoSymbol}
         otherCryptoAddress={tokenOutAddress}
@@ -190,6 +175,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
       <TradeInput
         cryptoAddress={tokenOutAddress}
         cryptoDecimals={tokenOutDecimals}
+        cryptoBalanceOf={tokenOutBalanceOf}
         cryptoDisplayBalance={tokenOutDisplayBalance || ""}
         cryptoSymbol={tokenOutSymbol as CryptoSymbol}
         otherCryptoAddress={tokenInAddress}
@@ -235,18 +221,6 @@ export function TradePanel(props: TradePanelProps): ReactElement {
       />
     </div>
   );
-}
-
-function useSetMaxValue(
-  tokenInBalanceOf: BigNumber | undefined,
-  setValueIn: (value: string) => void,
-  tokenInDecimals: number | undefined
-) {
-  return useCallback(() => {
-    if (tokenInBalanceOf) {
-      setValueIn(formatUnits(tokenInBalanceOf, tokenInDecimals));
-    }
-  }, [tokenInBalanceOf, setValueIn, tokenInDecimals]);
 }
 
 function useReversableTokens(

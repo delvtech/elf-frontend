@@ -190,7 +190,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
   }, [isPrincipalPoolType, joinConvergentPool, joinWeightedPool]);
 
   return (
-    <div className={tw("flex", "flex-col", "space-y-5")}>
+    <div className={tw("flex", "flex-col", "space-y-4")}>
       {/* Trade Asset */}
       <div className={tw("flex", "justify-between", "items-center")}>
         <span>{inputLabel}</span>
