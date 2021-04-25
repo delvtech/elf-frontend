@@ -49,9 +49,10 @@ export function EthIcon({
   style,
 }: IconProps): ReactElement {
   const { isDarkMode } = useDarkMode();
+  // TODO get new icons for dark and light mode
   const color = isDarkMode ? Colors.GRAY5 : Colors.DARK_GRAY5;
   const iconStyle: CSSProperties = {
-    backgroundColor: color,
+    color,
     ...style,
   };
 
@@ -73,18 +74,11 @@ export function UsdcIcon({
   className,
   style,
 }: IconProps): ReactElement {
-  const { isDarkMode } = useDarkMode();
-  const color = isDarkMode ? Colors.GRAY5 : Colors.DARK_GRAY5;
-  const iconStyle: CSSProperties = {
-    backgroundColor: color,
-    ...style,
-  };
-
   return (
     <SvgIcon
       alt={"usdc"}
       className={className}
-      style={iconStyle}
+      style={style}
       src={usdcIcon}
       height={height}
       width={width}
@@ -98,10 +92,10 @@ export function WethIcon({
   className,
   style,
 }: IconProps): ReactElement {
-  const { isDarkMode } = useDarkMode();
-  const color = isDarkMode ? Colors.GRAY5 : Colors.DARK_GRAY5;
+  // const { isDarkMode } = useDarkMode();
+  // const color = isDarkMode ? Colors.GRAY5 : Colors.DARK_GRAY5;
   const iconStyle: CSSProperties = {
-    backgroundColor: color,
+    // backgroundColor: color,
     ...style,
   };
 
