@@ -7,12 +7,7 @@
 const ContractAddresses: ContractJson = require("addresses.json");
 export interface ContractJson {
   elementAddress: string;
-  balancerAddress: string;
-  userAddress: string;
   balancerVaultAddress: string;
-  marketYcFactory: string;
-  wethYearnVaultAssetProxyAddress: string;
-  usdcYearnVaultAssetProxyAddress: string;
   trancheFactoryAddress: string;
   interestTokenFactoryAddress: string;
   weightedPoolFactoryAddress: string;
