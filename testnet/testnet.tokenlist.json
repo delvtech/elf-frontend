@@ -1,0 +1,102 @@
+{
+  "name": "Testnet token list",
+  "logoURI": "https://element.fi/logo.svg",
+  "tags": {
+    "ptToken": {
+      "name": "Principal token",
+      "description": "Token that represents a deposit of principal into a yield position"
+    },
+    "ytToken": {
+      "name": "Yield token",
+      "description": "Token that represents the yield on a deposit into a yield position"
+    }
+  },
+  "timestamp": "2021-04-25T22:57:45.368Z",
+  "version": {
+    "major": 0,
+    "minor": 0,
+    "patch": 0
+  },
+  "tokens": [
+    {
+      "chainId": 31337,
+      "address": "0x71b827d190e27b6A6898c72334D95cb638B2383E",
+      "symbol": "eP:ELFyWETH:24-OCT-21-GMT",
+      "decimals": 18,
+      "name": "Element Principal TokenELFyWETH:24-OCT-21-GMT",
+      "tags": [
+        "ptToken"
+      ]
+    },
+    {
+      "chainId": 31337,
+      "address": "0xA9f781DeCd802243f9AeE360dAF6a4536069Ea37",
+      "symbol": "eP:ELFyWETH:24-JUL-21-GMT",
+      "decimals": 18,
+      "name": "Element Principal TokenELFyWETH:24-JUL-21-GMT",
+      "tags": [
+        "ptToken"
+      ]
+    },
+    {
+      "chainId": 31337,
+      "address": "0xB7e49D937B06D7b5563F8e890A045d8E3C7e503E",
+      "symbol": "eP:ELFyWETH:25-APR-21-GMT",
+      "decimals": 18,
+      "name": "Element Principal TokenELFyWETH:25-APR-21-GMT",
+      "tags": [
+        "ptToken"
+      ]
+    },
+    {
+      "chainId": 31337,
+      "address": "0x8C3c82F055DF4EbA98f42aC1B2a911ae4F75dbC7",
+      "symbol": "eP:ELFyUSDC:24-OCT-21-GMT",
+      "decimals": 6,
+      "name": "Element Principal TokenELFyUSDC:24-OCT-21-GMT",
+      "tags": [
+        "ptToken"
+      ]
+    },
+    {
+      "chainId": 31337,
+      "address": "0x1F708C24a0D3A740cD47cC0444E9480899f3dA7D",
+      "symbol": "eY:ELFyWETH:24-OCT-21-GMT",
+      "decimals": 18,
+      "name": "Element Yield Token ELFyWETH:24-OCT-21-GMT",
+      "tags": [
+        "ytToken"
+      ]
+    },
+    {
+      "chainId": 31337,
+      "address": "0xf41B47c54dEFF12f8fE830A411a09D865eBb120E",
+      "symbol": "eY:ELFyWETH:24-JUL-21-GMT",
+      "decimals": 18,
+      "name": "Element Yield Token ELFyWETH:24-JUL-21-GMT",
+      "tags": [
+        "ytToken"
+      ]
+    },
+    {
+      "chainId": 31337,
+      "address": "0x05242D4AC717Cdf38C36AF290F2b0DA99AA82c67",
+      "symbol": "eY:ELFyWETH:25-APR-21-GMT",
+      "decimals": 18,
+      "name": "Element Yield Token ELFyWETH:25-APR-21-GMT",
+      "tags": [
+        "ytToken"
+      ]
+    },
+    {
+      "chainId": 31337,
+      "address": "0x1655f30B495586cDC5E1E332844FabF7363b3667",
+      "symbol": "eY:ELFyUSDC:24-OCT-21-GMT",
+      "decimals": 6,
+      "name": "Element Yield Token ELFyUSDC:24-OCT-21-GMT",
+      "tags": [
+        "ytToken"
+      ]
+    }
+  ]
+}

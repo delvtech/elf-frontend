@@ -3,6 +3,8 @@
   "homepage": "https://github.com/element-fi/efi-frontend#readme",
   "description": "The frontend for Element.fi",
   "scripts": {
-    "copy-addresses": "sh ./scripts/copy-addresses.sh"
+    "copy-contracts": "npm run copy-addresses && npm run copy-typechain",
+    "copy-addresses": "sh ./scripts/copy-addresses.sh",
+    "copy-typechain": "sh ./scripts/copy-typechain.sh"
   }
 }
