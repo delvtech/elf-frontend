@@ -3,7 +3,7 @@ import { useCallback } from "react";
 import { Vault } from "elf-contracts/types/Vault";
 import { WeightedPool } from "elf-contracts/types/WeightedPool";
 import { BigNumber, CallOverrides, Signer } from "ethers";
-import { defaultAbiCoder, formatEther } from "ethers/lib/utils";
+import { defaultAbiCoder } from "ethers/lib/utils";
 import zipObject from "lodash.zipobject";
 
 import { JoinRequest } from "efi-balancer/JoinRequest";
