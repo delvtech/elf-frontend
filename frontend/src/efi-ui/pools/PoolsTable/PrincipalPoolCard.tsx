@@ -1,7 +1,7 @@
 import { ReactElement, useCallback, useMemo } from "react";
 
-import { Card, Elevation } from "@blueprintjs/core";
-import { Link, navigate } from "@reach/router";
+import { Card, Colors, Elevation } from "@blueprintjs/core";
+import { navigate } from "@reach/router";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -20,6 +20,11 @@ import { formatMoney } from "efi/money/formatMoney";
 import { PoolContract } from "efi/pools/PoolContract";
 import { calculateProgress } from "efi-ui/tranche/calculateProgress";
 import { useFeeVolumeForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
+import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
+import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
+import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
+import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
+import classNames from "classnames";
 
 interface PrincipalPoolCardProps {
   pool: PoolContract | undefined;
@@ -29,9 +34,9 @@ const cellClassName = tw("flex", "mr-4", "items-center", "overflow-hidden");
 
 // Stop propagation of clicks from the card title up to the card itself,
 // otherwise you get double routed to /exchange/exchange/0xdeadbeef
-const stopPropagationHandler = (e: React.MouseEvent<HTMLAnchorElement>) => {
-  e.stopPropagation();
-};
+// const stopPropagationHandler = (e: React.MouseEvent<HTMLAnchorElement>) => {
+//   e.stopPropagation();
+// };
 
 export function PrincipalPoolCard(
   props: PrincipalPoolCardProps
@@ -41,12 +46,15 @@ export function PrincipalPoolCard(
   const liquidity = useTotalLiquidityForPool(pool);
   const trancheCreatedAt = useTrancheCreatedAt(tranche);
   const fees = useFeeVolumeForPool(pool);
-  const poolNameResult = useSmartContractReadCall(pool, "name");
-  const baseAsset = usePoolPairedToken(pool, tranche as ERC20Shim);
+  const baseAssetContract = usePoolPairedToken(pool, tranche as ERC20Shim);
+  const baseAsset = useCryptoAssetForToken(baseAssetContract?.address);
+  const symbol = useCryptoSymbol(baseAsset);
+  const BaseAssetIcon = findAssetIcon(symbol);
   const unlockTimestampResult = useSmartContractReadCall(
     tranche,
     "unlockTimestamp"
   );
+
   // TODO: Get this from props
   const goToPoolPage = useCallback(() => {
     navigate(`pools/${pool?.address}`);
@@ -62,7 +70,9 @@ export function PrincipalPoolCard(
     trancheCreatedAt,
   ]);
 
-  if (!pool || !baseAsset) {
+  const { isDarkMode } = useDarkMode();
+
+  if (!pool || !baseAssetContract) {
     return null;
   }
 
@@ -85,11 +95,50 @@ export function PrincipalPoolCard(
       )}
     >
       <div className={cellClassName}>
-        <LabeledText
+        {BaseAssetIcon ? (
+          <div
+            // style={{ backgroundColor: isDarkMode ? undefined : Colors.GRAY5 }}
+            className={classNames(tw("flex", "items-center", "rounded", "p-2"))}
+          >
+            <div
+              style={{
+                borderColor: isDarkMode ? Colors.GRAY5 : undefined,
+                backgroundColor: isDarkMode ? Colors.WHITE : undefined,
+              }}
+              className={tw(
+                "flex",
+                "items-center",
+                "p-2",
+                "rounded-full",
+                "z-10",
+                "bg-white",
+                "border",
+                "shadow-sm"
+              )}
+            >
+              <BaseAssetIcon height={24} width={24} />
+            </div>
+            <div
+              style={{ marginLeft: -8 }}
+              className={tw(
+                "flex",
+                "items-center",
+                "p-2",
+                "rounded-full",
+                "bg-white",
+                "border"
+              )}
+            >
+              <BaseAssetIcon height={24} width={24} />
+            </div>
+          </div>
+        ) : null}
+        {/* <LabeledText
           large
           text={
             <Link
               className={tw("flex", "space-x-2")}
+
               to={pool?.address || ""}
               onClick={stopPropagationHandler}
             >
@@ -97,7 +146,7 @@ export function PrincipalPoolCard(
             </Link>
           }
           label={`tokens`}
-        />
+        /> */}
       </div>
 
       <div className={tw(cellClassName, "hidden", "lg:flex")}>
