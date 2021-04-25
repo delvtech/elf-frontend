@@ -54,7 +54,9 @@ export function TradeInput(props: TradeInputProps): ReactElement {
     swapKind,
     pool,
   } = props;
-  // changes to this will trigger calculating and calling handler to update the other value
+  // changes to this will trigger calculating and calling handler to update the other value.  we
+  // need to do this because the calculation is asynchronous so we can't update the preview directly
+  // in the useOnInputChange handler
   const [internalValue, setInternalValue] = useState("");
 
   // handles user input changes.  call onChangeThisValue to tell the parent the value changed.  also
