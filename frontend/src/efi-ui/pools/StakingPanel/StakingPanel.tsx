@@ -36,7 +36,6 @@ import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSy
 import { useJoinWeightedPool } from "efi-ui/pools/useJoinWeightedPool";
 import { useTrancheContracts } from "efi-ui/tranche/useTrancheContracts";
 import { WeightedPool } from "elf-contracts/types/WeightedPool";
-import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 
 interface StakingPanelProps {
   library: Web3Provider | undefined;
