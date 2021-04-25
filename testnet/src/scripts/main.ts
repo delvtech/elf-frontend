@@ -245,6 +245,7 @@ async function main() {
     };
 
   fs.writeFileSync("./testnet.addresses.json", JSON.stringify(schemaAddresses, null, 2));
+  fs.writeFileSync("./src/testnet.addresses.json", allAddresses);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

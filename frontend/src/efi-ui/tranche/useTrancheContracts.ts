@@ -6,9 +6,9 @@ import { TrancheFactory } from "elf-contracts/types/TrancheFactory";
 import { Signer } from "ethers";
 
 import {
-  useSmartContractFromFactory,
-  useSmartContractFromFactoryMulti,
-} from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
+  getSmartContractFromRegistry,
+  getSmartContractFromRegistryMulti,
+} from "efi-ui/contracts/SmartContractsRegistry";
 import { useSmartContractEvents } from "efi-ui/contracts/useSmartContractEvents/useSmartContractEvents";
 import ContractAddresses from "efi/contracts/contractsJson";
 
@@ -21,7 +21,7 @@ export function useTrancheContracts(
 ): Tranche[] {
   const { trancheFactoryAddress } = ContractAddresses;
 
-  const trancheFactoryContract = useSmartContractFromFactory(
+  const trancheFactoryContract = getSmartContractFromRegistry(
     trancheFactoryAddress,
     TrancheFactory__factory.connect
   );
@@ -39,7 +39,7 @@ export function useTrancheContracts(
         event.args?.[0]
     ) as (string | undefined)[]) || [];
 
-  const trancheContracts = useSmartContractFromFactoryMulti(
+  const trancheContracts = getSmartContractFromRegistryMulti(
     trancheAddresses,
     Tranche__factory.connect,
     signerOrProvider
