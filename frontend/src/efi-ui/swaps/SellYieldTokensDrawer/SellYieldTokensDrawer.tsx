@@ -14,7 +14,6 @@ import { useBatchSwapGivenIn } from "efi-ui/balancer/useBatchSwapGivenIn/useBatc
 import { useQueryBatchSwapInputs } from "efi-ui/balancer/useQueryBatchSwapInputs";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
@@ -30,6 +29,7 @@ import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { calculatePurchasePrice } from "efi/pools/calculatePurchasePrice";
 import { calculateSlippage } from "efi/pools/calculateSlippage";
 import { PoolContract } from "efi/pools/PoolContract";
+import { TokenIcon } from "efi-ui/ethereum/EthIcon";
 
 interface SellYieldTokensDrawerProps {
   chainId: number | undefined;
@@ -38,7 +38,8 @@ interface SellYieldTokensDrawerProps {
   connector: AbstractConnector | undefined;
   library: Web3Provider | undefined;
   pool: PoolContract | undefined;
-  baseAsset: CryptoAssetWithIcon;
+  baseAsset: CryptoAsset;
+  baseAssetIcon: TokenIcon | undefined;
   yieldToken: InterestToken | undefined;
   isOpen: boolean;
   onClose: () => void;
@@ -53,8 +54,8 @@ export function SellYieldTokensDrawer(
     library,
     chainId,
     account,
-    baseAsset: { assetIcon: AssetIcon },
     baseAsset,
+    baseAssetIcon,
     yieldToken,
     isOpen,
     onClose,
@@ -164,7 +165,7 @@ export function SellYieldTokensDrawer(
           heading={t`Enter an amount to sell`}
           assetInIcon={null}
           assetInSymbol={`${baseAssetSymbol} Yield Token`}
-          assetOutIcon={AssetIcon}
+          assetOutIcon={baseAssetIcon}
           assetOutSymbol={baseAssetSymbol}
         >
           <SellYieldTokenDetails

@@ -1,21 +1,19 @@
+import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { Tranche } from "elf-contracts/types/Tranche";
 import groupBy from "lodash.groupby";
 import mapValues from "lodash.mapvalues";
 import zip from "lodash.zip";
 
-import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
-
 export function useTranchesByBaseAsset(
   tranches: (Tranche | undefined)[],
-  baseAssets: (CryptoAssetWithIcon | undefined)[]
+  baseAssets: (CryptoAsset | undefined)[]
 ): Record<string, Tranche[]> {
   const zipped = zip(tranches, baseAssets);
 
   // remove any zipped entries that don't have groupable data yet
-  const filtered = zipped.filter((entry): entry is [
-    Tranche,
-    CryptoAssetWithIcon
-  ] => entry.every((value) => !!value));
+  const filtered = zipped.filter((entry): entry is [Tranche, CryptoAsset] =>
+    entry.every((value) => !!value)
+  );
 
   const entriesByBaseAsset = groupBy(
     filtered,

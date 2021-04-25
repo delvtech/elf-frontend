@@ -3,15 +3,13 @@ import { ERC20Permit__factory } from "elf-contracts/types/factories/ERC20Permit_
 import zip from "lodash.zip";
 
 import { getQueriesData } from "efi-ui/base/queryResults";
-import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
-import { CryptoIconSvg, findAssetIcon } from "efi-ui/crypto/CryptoIcon";
+import { getSmartContractFromRegistryMulti } from "efi-ui/contracts/SmartContractsRegistry";
 import { useTokenSymbolMulti } from "efi-ui/token/hooks/useTokenSymbolMulti";
 import ContractAddresses, {
   KNOWN_ERC20_TOKENS,
   KNOWN_ERC20PERMIT_TOKENS,
 } from "efi/contracts/contractsJson";
-import { CryptoAssetType } from "efi/crypto/CryptoAsset";
-import { useSmartContractFromFactoryMulti } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
+import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
 
 /**
  * Turns a list of tokens into a list of CryptoAsset equivalents.
@@ -19,14 +17,14 @@ import { useSmartContractFromFactoryMulti } from "efi-ui/contracts/useSmartContr
  */
 export function useCryptoAssetForTokenMulti(
   tokenAddresses: (string | undefined)[]
-): (CryptoAssetWithIcon | undefined)[] {
-  const erc20Contracts = useSmartContractFromFactoryMulti(
+): (CryptoAsset | undefined)[] {
+  const erc20Contracts = getSmartContractFromRegistryMulti(
     tokenAddresses,
     ERC20__factory.connect
   );
   const erc20SymbolResults = useTokenSymbolMulti(erc20Contracts);
 
-  const erc20PermitContracts = useSmartContractFromFactoryMulti(
+  const erc20PermitContracts = getSmartContractFromRegistryMulti(
     tokenAddresses,
     ERC20Permit__factory.connect
   );
@@ -52,42 +50,31 @@ export function useCryptoAssetForTokenMulti(
 
       // Turn weth into eth because it is special
       if (tokenAddress === ContractAddresses.wethAddress) {
-        const cryptoAsset: CryptoAssetWithIcon = {
+        const cryptoAsset: CryptoAsset = {
           id: "ethereum",
           type: CryptoAssetType.ETHEREUM,
-          assetIcon: CryptoIconSvg.ETH,
         };
         return cryptoAsset;
       }
 
-      // If it's a known erc20, make it so
-      const erc20Icon = findAssetIcon(erc20Symbol);
-      if (
-        erc20Contract &&
-        erc20Icon &&
-        KNOWN_ERC20_TOKENS.includes(tokenAddress)
-      ) {
-        const cryptoAsset: CryptoAssetWithIcon = {
+      if (erc20Contract && KNOWN_ERC20_TOKENS.includes(tokenAddress)) {
+        const cryptoAsset: CryptoAsset = {
           id: tokenAddress,
           type: CryptoAssetType.ERC20,
           tokenContract: erc20Contract,
-          assetIcon: erc20Icon,
         };
         return cryptoAsset;
       }
 
       // If it's a known erc20Permit, make it so
-      const erc20PermitIcon = findAssetIcon(erc20PermitSymbol);
       if (
         erc20PermitContract &&
-        erc20PermitIcon &&
         KNOWN_ERC20PERMIT_TOKENS.includes(tokenAddress)
       ) {
-        const cryptoAsset: CryptoAssetWithIcon = {
+        const cryptoAsset: CryptoAsset = {
           id: tokenAddress,
           type: CryptoAssetType.ERC20PERMIT,
           tokenContract: erc20PermitContract,
-          assetIcon: erc20PermitIcon,
         };
         return cryptoAsset;
       }

@@ -1,29 +1,33 @@
 import daiLogo from "efi-static-assets/logos/DAI-logo.png";
-import efiLogo from "efi-static-assets/logos/efi-logo.svg";
 import ethLogo from "efi-static-assets/logos/ETH-logo.png";
-import { ReactComponent as UsdcIcon } from "efi-static-assets/logos/svg/USDC.svg";
-import { ReactComponent as WethIcon } from "efi-static-assets/logos/svg/WETH.svg";
 import tusdLogo from "efi-static-assets/logos/TUSD-logo.png";
 import usdcLogo from "efi-static-assets/logos/USDC-logo.png";
 import usdtLogo from "efi-static-assets/logos/USDT-logo.png";
 import wethLogo from "efi-static-assets/logos/WETH-logo.png";
 import yfiLogo from "efi-static-assets/logos/YFI-logo.png";
-import { EthIcon } from "efi-ui/ethereum/EthIcon";
+import {
+  EthIcon,
+  TokenIcon,
+  UsdcIcon,
+  WethIcon,
+} from "efi-ui/ethereum/EthIcon";
 import { CryptoSymbol, CryptoSymbolOld } from "efi/crypto/CryptoSymbol";
-import { SvgIcon } from "efi-ui/base/SvgIcon";
 
 /**
  * Lookup object to get the svg icon for a given symbol. NOTE: all keys are in
  * uppercase, so consumers might need to format in order to get the correct
  * icon.
  */
-export const CryptoIconSvg: Record<CryptoSymbol, SvgIcon> = {
+// TODO: type this better
+export const CryptoIconSvg: Record<CryptoSymbol, TokenIcon> = {
   ETH: EthIcon,
   USDC: UsdcIcon,
   WETH: WethIcon,
 };
 
-export function findAssetIcon(symbol: string | undefined): SvgIcon | undefined {
+export function findAssetIcon(
+  symbol: string | undefined
+): TokenIcon | undefined {
   if (!symbol) {
     return undefined;
   }
@@ -45,7 +49,4 @@ export const CryptoIcon: Record<CryptoSymbolOld, string> = {
   yTUSD: tusdLogo,
   yUSDC: usdcLogo,
   yUSDT: usdtLogo,
-  "ELF-L": efiLogo,
-  "ELF-M": efiLogo,
-  "ELF-H": efiLogo,
 };

@@ -51,19 +51,4 @@ export const CryptoName: Record<CryptoSymbolOld, string> = {
    * Yearn-Wrapped Ether
    */
   yETH: "Yearn Wrapped Ethereum",
-
-  /**
-   * Element Low Risk Pool Token
-   */
-  "ELF-L": "Element Low Risk Pool Token",
-
-  /**
-   * Element Medium Risk Pool Token
-   */
-  "ELF-M": "Element Medium Risk Pool Token",
-
-  /**
-   * Element High Risk Pool Token
-   */
-  "ELF-H": "Element High Risk Pool Token",
 };

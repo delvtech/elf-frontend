@@ -15,25 +15,26 @@ import { parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { useQueryBatchSwapInputs } from "efi-ui/balancer/useQueryBatchSwapInputs";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { CryptoAssetPicker } from "efi-ui/crypto/CryptoAssetPicker/CryptoAssetPicker";
-import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
+import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoBalance } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { PrincipalDiscountPreview } from "efi-ui/earn/EarnCard/PrincipalDiscountPreview";
 import { EarnInput } from "efi-ui/earn/EarnInput/EarnInput";
-import { useActiveTranche } from "efi-ui/earn/hooks/useActiveTranche";
 import { EarnTermPicker } from "efi-ui/earn/EarnTermPicker/EarnTermPicker";
+import { useActiveTranche } from "efi-ui/earn/hooks/useActiveTranche";
 import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
-import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
 import { BuyPrincipalTokensTransactionConfirmationDrawer } from "efi-ui/swaps/BuyPrincipalTokensTransactionConfirmationDrawer/BuyPrincipalTokensTransactionConfirmationDrawer";
-import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
-import { useQueryBatchSwapInputs } from "efi-ui/balancer/useQueryBatchSwapInputs";
-import { formatBalance } from "efi/base/formatBalance";
+import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
+import { formatBalance } from "efi/base/formatBalance";
+import { CryptoAsset } from "efi/crypto/CryptoAsset";
+import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 
 export interface EarnCardProps {
   library: Web3Provider | undefined;
@@ -41,7 +42,7 @@ export interface EarnCardProps {
   chainId: number | undefined;
   walletConnectionActive: boolean;
   connector: AbstractConnector | undefined;
-  baseAssets: (CryptoAssetWithIcon | undefined)[];
+  baseAssets: (CryptoAsset | undefined)[];
   tranchesByBaseAsset: Record<string, Tranche[]>;
 }
 
@@ -111,6 +112,7 @@ export function EarnCard({
     spotPriceBaseAssetForOneToken: amountOfEthForOneTranche,
   } = usePoolTokenPrices(pool, baseAssetPoolToken);
   const inputTokenSymbol = useCryptoSymbol(activeBaseAsset);
+  const baseAssetIcon = findAssetIcon(inputTokenSymbol);
 
   // input calculations
   const amountInAsBigNumber = amountIn
@@ -229,6 +231,7 @@ export function EarnCard({
       {!activeBaseAsset ? null : (
         <BuyPrincipalTokensTransactionConfirmationDrawer
           baseAsset={activeBaseAsset}
+          baseAssetIcon={baseAssetIcon}
           tranche={activeTranche}
           account={account}
           library={library}
@@ -246,9 +249,9 @@ export function EarnCard({
 }
 
 function useSetDefaultActiveBaseAsset(
-  activeBaseAsset: CryptoAssetWithIcon | undefined,
-  setActiveBaseAsset: (baseAsset: CryptoAssetWithIcon | undefined) => void,
-  defaultBaseAsset: CryptoAssetWithIcon | undefined
+  activeBaseAsset: CryptoAsset | undefined,
+  setActiveBaseAsset: (baseAsset: CryptoAsset | undefined) => void,
+  defaultBaseAsset: CryptoAsset | undefined
 ) {
   useEffect(() => {
     if (activeBaseAsset === undefined) {
@@ -257,14 +260,12 @@ function useSetDefaultActiveBaseAsset(
   }, [activeBaseAsset, defaultBaseAsset, setActiveBaseAsset]);
 }
 
-function useActiveBaseAsset(
-  allBaseAssets: (CryptoAssetWithIcon | undefined)[]
-) {
+function useActiveBaseAsset(allBaseAssets: (CryptoAsset | undefined)[]) {
   const [activeBaseAsset, setActiveBaseAssetState] = useState<
-    CryptoAssetWithIcon | undefined
+    CryptoAsset | undefined
   >();
   const setActiveBaseAsset = useCallback(
-    (baseAsset: CryptoAssetWithIcon | undefined) => {
+    (baseAsset: CryptoAsset | undefined) => {
       setActiveBaseAssetState(baseAsset);
     },
     []

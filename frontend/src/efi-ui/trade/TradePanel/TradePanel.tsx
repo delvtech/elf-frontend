@@ -74,7 +74,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
   const {
     asset: tokenInAsset,
     address: tokenInAddress,
-    icon: tokenInIcon,
+    icon: TokenInIcon,
     symbol: tokenInSymbol,
     decimals: tokenInDecimals,
     balanceOf: tokenInBalanceOf,
@@ -85,7 +85,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
 
   const {
     address: tokenOutAddress,
-    icon: tokenOutIcon,
+    icon: TokenOutIcon,
     symbol: tokenOutSymbol,
     decimals: tokenOutDecimals,
     balanceOf: tokenOutBalanceOf,
@@ -186,11 +186,11 @@ export function TradePanel(props: TradePanelProps): ReactElement {
         tokenInSymbol={tokenInSymbol}
         tokenInDecimals={tokenInDecimals}
         tokenInAsset={tokenInAsset}
-        tokenInIcon={tokenInIcon}
+        tokenInIcon={TokenInIcon}
         tokenOutAddress={tokenOutAddress}
         tokenOutSymbol={tokenOutSymbol}
         tokenOutDecimals={tokenOutDecimals}
-        tokenOutIcon={tokenOutIcon}
+        tokenOutIcon={TokenOutIcon}
         account={account}
         library={library}
         chainId={chainId}

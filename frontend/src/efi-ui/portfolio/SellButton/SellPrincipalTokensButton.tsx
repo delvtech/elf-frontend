@@ -7,9 +7,10 @@ import { Tranche } from "elf-contracts/types/Tranche";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { SellPrincipalTokensTransactionDrawer } from "efi-ui/swaps/SellPrincipalTokensTransactionDrawer/SellPrincipalTokensTransactionDrawer";
 import { PoolContract } from "efi/pools/PoolContract";
+import { CryptoAsset } from "efi/crypto/CryptoAsset";
+import { TokenIcon } from "efi-ui/ethereum/EthIcon";
 
 interface SellPrincipalTokensProps {
   chainId: number | undefined;
@@ -22,11 +23,13 @@ interface SellPrincipalTokensProps {
   maxSellAmount: string | undefined;
 
   tranche: Tranche | undefined;
-  baseAsset: CryptoAssetWithIcon | undefined;
+  baseAsset: CryptoAsset | undefined;
+  baseAssetIcon: TokenIcon | undefined;
 }
 
 export function SellPrincipalTokensButton({
   baseAsset,
+  baseAssetIcon,
   tranche,
   account,
   chainId,
@@ -54,6 +57,7 @@ export function SellPrincipalTokensButton({
           tranche={tranche}
           account={account}
           baseAsset={baseAsset}
+          baseAssetIcon={baseAssetIcon}
           chainId={chainId}
           connector={connector}
           library={library}

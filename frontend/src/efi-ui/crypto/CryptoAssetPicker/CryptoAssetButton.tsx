@@ -7,9 +7,10 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { SvgIcon } from "efi-ui/base/SvgIcon";
+import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoName } from "efi-ui/crypto/hooks/useCryptoName/useCryptoName";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
+import { TokenIcon } from "efi-ui/ethereum/EthIcon";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 
 interface CryptoAssetButtonProps {
@@ -17,7 +18,6 @@ interface CryptoAssetButtonProps {
   fill?: boolean;
   minimal?: boolean;
   cryptoAsset: CryptoAsset;
-  assetIcon: SvgIcon | undefined;
   rightIcon?: IconName;
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
@@ -27,12 +27,12 @@ export function CryptoAssetButton({
   minimal,
   outlined,
   cryptoAsset,
-  assetIcon,
   rightIcon,
   onClick,
 }: CryptoAssetButtonProps): ReactElement {
   const assetName = useCryptoName(cryptoAsset);
   const assetSymbol = useCryptoSymbol(cryptoAsset);
+  const assetIcon = findAssetIcon(assetSymbol);
 
   return (
     <button
@@ -57,7 +57,7 @@ export function CryptoAssetButton({
   );
 }
 interface AssetLabelProps {
-  icon: SvgIcon | undefined;
+  icon: TokenIcon | undefined;
   assetName: string;
   assetSymbol: string;
 }

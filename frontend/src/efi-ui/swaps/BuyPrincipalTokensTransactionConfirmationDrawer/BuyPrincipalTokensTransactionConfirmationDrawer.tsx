@@ -14,7 +14,6 @@ import { parseQueryBatchSwapResult } from "efi-ui/balancer/useQueryBatchSwap/par
 import { useQueryBatchSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
@@ -24,9 +23,11 @@ import { PrincipalTokenTransactionDetails } from "efi-ui/swaps/PrincipalTokenTra
 import { SwapDetailsForm } from "efi-ui/swaps/SwapDetailsPreview/SwapDetailsForm";
 import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/TransactionDrawer";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
+import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { calculatePurchasePrice } from "efi/pools/calculatePurchasePrice";
 import { calculateSlippage } from "efi/pools/calculateSlippage";
 import { PoolContract } from "efi/pools/PoolContract";
+import { TokenIcon } from "efi-ui/ethereum/EthIcon";
 
 interface BuyPrincipalTransactionConfirmationDrawerProps {
   chainId: number | undefined;
@@ -37,7 +38,8 @@ interface BuyPrincipalTransactionConfirmationDrawerProps {
   pool: PoolContract | undefined;
 
   amountIn: string | undefined;
-  baseAsset: CryptoAssetWithIcon;
+  baseAsset: CryptoAsset;
+  baseAssetIcon: TokenIcon | undefined;
 
   tranche: Tranche | undefined;
   isOpen: boolean;
@@ -51,7 +53,7 @@ export function BuyPrincipalTokensTransactionConfirmationDrawer({
   library,
   chainId,
   account,
-  baseAsset: { assetIcon: AssetIcon },
+  baseAssetIcon,
   baseAsset,
   tranche,
   amountIn,
@@ -125,7 +127,7 @@ export function BuyPrincipalTokensTransactionConfirmationDrawer({
       account={account}
       assetIn={baseAsset}
       assetInSymbol={baseAssetSymbol}
-      assetInIcon={baseAsset.assetIcon}
+      assetInIcon={baseAssetIcon}
       walletConnectionActive={walletConnectionActive}
       amountIn={amountInAsBigNumber}
       chainId={chainId}
@@ -137,7 +139,7 @@ export function BuyPrincipalTokensTransactionConfirmationDrawer({
         <SwapDetailsForm
           amountIn={amountIn}
           amountOut={amountOutFormatted}
-          assetInIcon={AssetIcon}
+          assetInIcon={baseAssetIcon}
           assetInSymbol={baseAssetSymbol}
           assetOutSymbol={`${baseAssetSymbol} Principal Token`}
           assetOutIcon={null}

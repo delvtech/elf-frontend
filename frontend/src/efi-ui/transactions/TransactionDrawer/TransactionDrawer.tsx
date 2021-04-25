@@ -9,7 +9,7 @@ import { BigNumber, Signer } from "ethers";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { SvgIcon } from "efi-ui/base/SvgIcon";
+import { TokenIcon } from "efi-ui/ethereum/EthIcon";
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
 import { WalletDrawer } from "efi-ui/wallets/WalletDrawer/WalletDrawer";
 import {
@@ -24,7 +24,7 @@ interface TransactionDrawerProps {
   account: string | null | undefined;
   amountIn: BigNumber | undefined;
   assetIn: CryptoAsset | undefined;
-  assetInIcon: SvgIcon | undefined;
+  assetInIcon: TokenIcon | undefined;
   assetInSymbol?: string;
   chainId: number | undefined;
   connector: AbstractConnector | undefined;

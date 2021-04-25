@@ -6,9 +6,6 @@
 export type CryptoSymbolOld =
   | "USDC"
   | "DAI"
-  | "ELF-L"
-  | "ELF-M"
-  | "ELF-H"
   | "ETH"
   | "yETH"
   | "WETH"

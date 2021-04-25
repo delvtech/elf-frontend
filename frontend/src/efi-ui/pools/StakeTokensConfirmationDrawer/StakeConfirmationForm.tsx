@@ -5,7 +5,7 @@ import classNames from "classnames";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { SvgIcon } from "efi-ui/base/SvgIcon";
+import { TokenIcon } from "efi-ui/ethereum/EthIcon";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 
 import styles from "./styles.module.css";
@@ -24,8 +24,8 @@ interface StakeConfirmationFormProps {
    * input
    */
   assetTwoSymbol?: string | undefined;
-  AssetOneIcon?: SvgIcon;
-  AssetTwoIcon?: SvgIcon;
+  assetOneIcon?: TokenIcon;
+  assetTwoIcon?: TokenIcon;
   assetOneValueLabel?: string | undefined;
   assetTwoValueLabel?: string | undefined;
   assetOneSymbolLabel?: string | undefined;
@@ -35,8 +35,8 @@ interface StakeConfirmationFormProps {
 
 export function StakeConfirmationForm({
   heading = t`Stake`,
-  AssetOneIcon,
-  AssetTwoIcon,
+  assetOneIcon: AssetOneIcon,
+  assetTwoIcon: AssetTwoIcon,
   assetOneSymbol,
   assetTwoSymbol,
   assetOneValueLabel,

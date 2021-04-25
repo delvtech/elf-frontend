@@ -6,16 +6,16 @@ import classNames from "classnames";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { CryptoAssetWithIcon } from "efi-ui/crypto/CryptoAssetWithIcon";
 import styles from "efi-ui/crypto/CryptoAssetPicker/styles.module.css";
+import { CryptoAsset } from "efi/crypto/CryptoAsset";
 
 import { CryptoAssetButton } from "./CryptoAssetButton";
 
 interface CryptoAssetPickerProps {
   className?: string;
-  cryptoAssets: (CryptoAssetWithIcon | undefined)[];
-  activeCryptoAsset: CryptoAssetWithIcon | undefined;
-  onCryptoAssetChange: (newCryptoAsset: CryptoAssetWithIcon) => void;
+  cryptoAssets: (CryptoAsset | undefined)[];
+  activeCryptoAsset: CryptoAsset | undefined;
+  onCryptoAssetChange: (newCryptoAsset: CryptoAsset) => void;
 }
 
 export function CryptoAssetPicker({
@@ -25,7 +25,7 @@ export function CryptoAssetPicker({
   activeCryptoAsset,
 }: CryptoAssetPickerProps): ReactElement {
   const availableCryptoAssets = cryptoAssets.filter(
-    (cryptoAsset): cryptoAsset is CryptoAssetWithIcon => !!cryptoAsset
+    (cryptoAsset): cryptoAsset is CryptoAsset => !!cryptoAsset
   );
 
   if (!activeCryptoAsset || !availableCryptoAssets.length) {
@@ -48,7 +48,6 @@ export function CryptoAssetPicker({
           minimal
           onClick={handleClick}
           cryptoAsset={baseAsset}
-          assetIcon={baseAsset.assetIcon}
         />
       )}
       onItemSelect={onCryptoAssetChange}
@@ -56,7 +55,6 @@ export function CryptoAssetPicker({
       <CryptoAssetButton
         minimal
         cryptoAsset={activeCryptoAsset}
-        assetIcon={activeCryptoAsset.assetIcon}
         rightIcon={IconNames.CARET_DOWN}
       />
     </Select>

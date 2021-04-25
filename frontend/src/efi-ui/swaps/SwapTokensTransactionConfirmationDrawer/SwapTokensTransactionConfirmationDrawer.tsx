@@ -11,7 +11,6 @@ import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { useBatchSwapGivenIn } from "efi-ui/balancer/useBatchSwapGivenIn/useBatchSwapGivenIn";
 import { parseQueryBatchSwapResult } from "efi-ui/balancer/useQueryBatchSwap/parseQueryBatchSwapResult";
 import { useQueryBatchSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
-import { SvgIcon } from "efi-ui/base/SvgIcon";
 import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/TransactionDrawer";
 import { SwapDetailsForm } from "efi-ui/swaps/SwapDetailsPreview/SwapDetailsForm";
 import { SwapTokenDetails } from "efi-ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensDetails";
@@ -19,6 +18,7 @@ import { calculatePurchasePrice } from "efi/pools/calculatePurchasePrice";
 import { calculateSlippage } from "efi/pools/calculateSlippage";
 import { PoolContract } from "efi/pools/PoolContract";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
+import { TokenIcon } from "efi-ui/ethereum/EthIcon";
 
 interface SwapTokensTransactionConfirmationDrawerProps {
   chainId: number | undefined;
@@ -33,11 +33,11 @@ interface SwapTokensTransactionConfirmationDrawerProps {
   tokenInAddress: string | undefined;
   tokenInSymbol: string | undefined;
   tokenInDecimals: number | undefined;
-  tokenInIcon: SvgIcon | undefined;
+  tokenInIcon: TokenIcon | undefined;
   tokenOutAddress: string | undefined;
   tokenOutSymbol: string | undefined;
   tokenOutDecimals: number | undefined;
-  tokenOutIcon: SvgIcon | undefined;
+  tokenOutIcon: TokenIcon | undefined;
 
   // out/in
   spotPrice: number | undefined;
