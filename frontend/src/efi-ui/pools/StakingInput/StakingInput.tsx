@@ -21,7 +21,7 @@ interface StakingInputProps {
   cryptoBalanceOf: BigNumber | undefined;
   cryptoDisplayBalance: string | number;
   disabled: boolean;
-  onUpdatePreview: (
+  onPreviewUpdate: (
     otherNeeded: string | undefined,
     lpOut: string | undefined
   ) => void;
@@ -43,7 +43,7 @@ export function StakingInput(props: StakingInputProps): ReactElement {
     cryptoDisplayBalance,
     disabled,
     onChange: onChangeFromProps,
-    onUpdatePreview,
+    onPreviewUpdate,
     label,
     value = "",
     validValue,
@@ -54,7 +54,7 @@ export function StakingInput(props: StakingInputProps): ReactElement {
 
   const onChange = useOnInputChange(
     onChangeFromProps,
-    onUpdatePreview,
+    onPreviewUpdate,
     cryptoDecimals,
     tokenPoolReserves,
     otherTokenPoolReserves,
@@ -68,7 +68,7 @@ export function StakingInput(props: StakingInputProps): ReactElement {
     totalSupply,
     cryptoDecimals,
     onChangeFromProps,
-    onUpdatePreview
+    onPreviewUpdate
   );
 
   return (
@@ -122,7 +122,7 @@ export function StakingInput(props: StakingInputProps): ReactElement {
 
 function useOnInputChange(
   onChangeFromProps: (inputValue: string) => void,
-  onUpdatePreview: (
+  onPreviewUpdate: (
     otherNeeded: string | undefined,
     lpOut: string | undefined
   ) => void,
@@ -138,7 +138,7 @@ function useOnInputChange(
       // allow user to clear input
       if (userInputValue === undefined || userInputValue === "") {
         onChangeFromProps("");
-        onUpdatePreview(undefined, undefined);
+        onPreviewUpdate(undefined, undefined);
         return;
       }
 
@@ -175,7 +175,7 @@ function useOnInputChange(
         cryptoDecimals
       );
 
-      onUpdatePreview(otherNeeded, lpOut);
+      onPreviewUpdate(otherNeeded, lpOut);
     },
     [
       cryptoDecimals,
@@ -183,7 +183,7 @@ function useOnInputChange(
       tokenPoolReserves,
       otherTokenPoolReserves,
       totalSupply,
-      onUpdatePreview,
+      onPreviewUpdate,
     ]
   );
 }
@@ -195,7 +195,7 @@ function useSetMaxValue(
   totalSupply: string | undefined,
   tokenDecimals: number | undefined,
   onChange: (value: string) => void,
-  onUpdatePreview: (
+  onPreviewUpdate: (
     value: string | undefined,
     lpOut: string | undefined
   ) => void
@@ -222,7 +222,7 @@ function useSetMaxValue(
         totalSupply,
         tokenDecimals
       );
-      onUpdatePreview(otherNeeded, lpOut);
+      onPreviewUpdate(otherNeeded, lpOut);
     }
   }, [
     tokenBalanceOf,
@@ -231,6 +231,6 @@ function useSetMaxValue(
     tokenPoolReserves,
     otherTokenPoolReserves,
     totalSupply,
-    onUpdatePreview,
+    onPreviewUpdate,
   ]);
 }

@@ -182,7 +182,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
         cryptoDisplayBalance={baseAssetDisplayBalance || ""}
         disabled={formDisabled}
         onChange={onChangeIn}
-        onUpdatePreview={onChangeOut}
+        onPreviewUpdate={onChangeOut}
         label={t`Base asset`}
         value={amountIn}
         validValue={isValidBaseAssetValue}
@@ -200,7 +200,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
           cryptoDisplayBalance={yieldAssetDisplayBalance || ""}
           disabled={formDisabled}
           onChange={onChangeOut}
-          onUpdatePreview={onChangeIn}
+          onPreviewUpdate={onChangeIn}
           label={t`Term asset`}
           value={amountOut}
           validValue={isValidTrancheAssetValue}
