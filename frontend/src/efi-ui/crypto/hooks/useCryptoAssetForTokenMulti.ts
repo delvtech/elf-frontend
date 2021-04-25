@@ -18,6 +18,8 @@ import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
 export function useCryptoAssetForTokenMulti(
   tokenAddresses: (string | undefined)[]
 ): (CryptoAsset | undefined)[] {
+  // TODO: there might be a bug here with the registry putting the wrong type of contract in.
+  // should get fixed with tokenlists though
   const erc20Contracts = getSmartContractFromRegistryMulti(
     tokenAddresses,
     ERC20__factory.connect
