@@ -1,8 +1,17 @@
 {
   "name": "Local dev token list",
   "keywords": [],
-  "tags": {},
   "logoURI": "https://element.fi/logo.svg",
+  "tags": {
+    "principal": {
+      "name": "Principal token",
+      "description": "Token that represents a deposit of principal into a yield position"
+    },
+    "yield": {
+      "name": "Yield token",
+      "description": "Token that represents the yield on a deposit into a yield position"
+    }
+  },
   "timestamp": "2021-04-23T22:39:30.185Z",
   "version": {
     "major": 0,
