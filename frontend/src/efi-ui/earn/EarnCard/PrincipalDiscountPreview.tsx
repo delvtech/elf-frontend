@@ -1,19 +1,17 @@
 import React, { Fragment, ReactElement } from "react";
 
 import { Callout, Colors } from "@blueprintjs/core";
-import { BigNumber } from "ethers";
-import { formatUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
+import { formatPercent } from "efi/base/formatPercent";
 
 interface PrincipalDiscountPreviewProps {
-  amountIn: BigNumber | undefined;
-  amountOut: BigNumber | undefined;
+  amountIn: string | undefined;
+  amountOut: string | undefined;
   baseAssetSymbol: string | undefined;
-  baseAssetDecimals: number | undefined;
 }
 const calloutClassName = tw(
   "flex",
@@ -29,20 +27,13 @@ export function PrincipalDiscountPreview({
   amountIn,
   amountOut,
   baseAssetSymbol,
-  baseAssetDecimals,
 }: PrincipalDiscountPreviewProps): ReactElement {
   const { isDarkMode } = useDarkMode();
-  const totalYield = calculateTotalYield(
-    amountOut,
-    amountIn,
-    baseAssetDecimals
-  );
+  const amountInNumber = amountIn ? +amountIn : undefined;
+  const amountOutNumber = amountOut ? +amountOut : undefined;
+  const totalYield = calculateTotalYield(amountOutNumber, amountInNumber);
+  const percentYield = calculatePercentYield(amountInNumber, totalYield);
 
-  const percentYield = calculatePercentYield(
-    amountIn,
-    baseAssetDecimals,
-    totalYield
-  );
   return (
     <Callout className={calloutClassName}>
       <LabeledText
@@ -61,12 +52,14 @@ export function PrincipalDiscountPreview({
             t`Enter an amount`
           ) : (
             <Fragment>
-              <span>{`${totalYield.toFixed(4)} ${baseAssetSymbol}`}</span>{" "}
+              <span>{`${totalYield?.toFixed(4)} ${baseAssetSymbol}`}</span>{" "}
               <span
                 style={{
                   color: isDarkMode ? Colors.GREEN5 : Colors.GREEN3,
                 }}
-              >{`(+${percentYield?.toFixed(2)}%)`}</span>
+              >
+                {percentYield && formatPercent(percentYield)}
+              </span>
             </Fragment>
           )
         }
@@ -81,28 +74,24 @@ export function PrincipalDiscountPreview({
  * for what you put in.
  */
 function calculateTotalYield(
-  amountOut: BigNumber | undefined,
-  amountIn: BigNumber | undefined,
-  decimalsAmountIn: number | undefined
-) {
-  let totalYield = 0;
-  if (amountOut) {
-    const yieldAsBigNumber = amountOut.sub(amountIn || 0);
-    totalYield = +formatUnits(yieldAsBigNumber, decimalsAmountIn);
+  amountOut: number | undefined,
+  amountIn: number | undefined
+): number | undefined {
+  if (amountOut === undefined || amountIn === undefined) {
+    return;
   }
+  const totalYield = amountOut - amountIn;
   return totalYield;
 }
 
 function calculatePercentYield(
-  amountIn: BigNumber | undefined,
-  tokenInDecimals: number | undefined,
-  totalYield: number
+  amountIn: number | undefined,
+  totalYield: number | undefined
 ): number | undefined {
-  if (!amountIn || !tokenInDecimals) {
+  if (amountIn === undefined || totalYield === undefined) {
     return;
   }
 
-  const amountInAsNumber = +formatUnits(amountIn, tokenInDecimals);
-  const percentYield = (totalYield / amountInAsNumber) * 100;
+  const percentYield = totalYield / amountIn;
   return percentYield;
 }

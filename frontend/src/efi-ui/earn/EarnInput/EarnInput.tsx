@@ -14,7 +14,6 @@ import { formatUnits, parseUnits } from "ethers/lib/utils";
 import { BigNumber } from "ethers";
 import { clipStringValueToDecimals } from "efi/math/fixedPoint";
 import { validateInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
-import { TokenIcon } from "efi-ui/token/TokenIcon";
 
 interface EarnInputProps {
   showMaxButton: boolean;
@@ -30,8 +29,6 @@ interface EarnInputProps {
   swapKind: SwapKind;
   pool: PoolContract | undefined;
   cryptoAddress: string | undefined;
-  cryptoIcon: TokenIcon | undefined;
-  cryptoSymbol: string | undefined;
   cryptoDecimals: number | undefined;
   cryptoBalanceOf: BigNumber | undefined;
   cryptoDisplayBalance: string | number;
