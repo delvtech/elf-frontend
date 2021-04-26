@@ -32,32 +32,6 @@ export function EarnInput({
 }: EarnInputProps): ReactElement {
   const { isDarkMode } = useDarkMode();
 
-  const setMaxAmount = useCallback(() => {
-    onValueChange(`${assetBalance}`);
-  }, [assetBalance, onValueChange]);
-
-  const maxButtonElement = showMaxButton ? (
-    <div className={tw("px-4")}>
-      <Tag minimal interactive onClick={setMaxAmount}>{t`MAX`}</Tag>
-    </div>
-  ) : undefined;
-
-  const onChange = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
-      if (!event.target.value.match(ANY_NUMBER_REGEX)) {
-        return;
-      }
-      onValueChange(event.target.value);
-    },
-    [onValueChange]
-  );
-
-  // We want InputGroup to be a controlled component, but passing `undefined` is
-  // how you express an uncontrolled component. Having this change between
-  // uncontrolled and controlled causes bugginess and big warnings in the
-  // console, so we use empty string here to keep everything controlled.
-  const inputValue = value === undefined ? "" : value;
-
   return (
     <InputGroup
       placeholder={placeholder}
