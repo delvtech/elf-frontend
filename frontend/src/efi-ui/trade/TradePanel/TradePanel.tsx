@@ -60,7 +60,6 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     walletActive,
     formDisabled = false,
     submitDisabled = false,
-    buttonIntent = Intent.PRIMARY,
     pool,
     tokenIn: tokenInFromProps,
     tokenOut: tokenOutFromProps,
@@ -121,13 +120,41 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     setDrawerOpen(true);
   }, []);
 
+  const insufficientBalance = parseUnits(amountIn ?? "0").gt(
+    tokenInBalanceOf ?? 0
+  );
+
+  const insufficientPoolBalance =
+    parseUnits(amountIn ?? "0", tokenInDecimals).gt(tokenInPoolBalance ?? 0) ||
+    parseUnits(amountOut ?? "0", tokenOutDecimals).gt(tokenOutPoolBalance ?? 0);
+
   const submitButtonDisabled =
     formDisabled ||
     submitDisabled ||
+    insufficientBalance ||
+    insufficientPoolBalance ||
     !isValidTokenInValue ||
     !isValidTokenOutValue ||
     !amountIn ||
-    !amountOut;
+    !amountOut ||
+    !account;
+
+  let submitButtonLabel = buttonLabel;
+  let submitButtonError = false;
+  if (!amountIn && !amountOut) {
+    submitButtonLabel = t`Enter an amount`;
+  }
+  if (insufficientBalance && account) {
+    submitButtonError = true;
+    submitButtonLabel = t`Insufficient balance`;
+  }
+  if (insufficientPoolBalance && account) {
+    submitButtonError = true;
+    submitButtonLabel = t`Insufficient pool balance`;
+  }
+  if (!account) {
+    submitButtonLabel = t`Connect wallet`;
+  }
 
   return (
     <div className={tw("flex", "flex-col", "justify-between", "h-full")}>
@@ -155,7 +182,6 @@ export function TradePanel(props: TradePanelProps): ReactElement {
         onClick={swapAssets}
         minimal
         large
-        intent={buttonIntent}
       ></Button>
       <TradeInput
         cryptoAddress={tokenOutAddress}
@@ -181,9 +207,9 @@ export function TradePanel(props: TradePanelProps): ReactElement {
         minimal
         outlined
         large
-        intent={buttonIntent}
+        intent={submitButtonError ? Intent.DANGER : Intent.PRIMARY}
       >
-        {buttonLabel}
+        {submitButtonLabel}
       </Button>
       <SwapTokensTransactionConfirmationDrawer
         tokenInAddress={tokenInAddress}

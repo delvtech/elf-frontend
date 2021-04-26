@@ -96,7 +96,7 @@ export function TradeInput(props: TradeInputProps): ReactElement {
       <div className={tw("flex", "justify-between", "items-center")}>
         <span className={tw("text-xs", "text-right")}>{label}</span>
         <Button
-          disabled={false}
+          disabled={disabled}
           onClick={setMaxValue}
           minimal
           outlined
