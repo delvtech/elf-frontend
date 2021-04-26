@@ -12,22 +12,25 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { SwapKind } from "efi-ui/balancer/SwapKind";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
+import { getQueryData } from "efi-ui/base/queryResults";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
+import { useCryptoBalance } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
+import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
+import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useTokenPoolBalance } from "efi-ui/pools/useTokenPoolBalance/useTokenPoolBalance";
 import { useTokenPoolIndex } from "efi-ui/pools/useTokenPoolIndex/useTokenPoolIndex";
 import { SwapTokensTransactionConfirmationDrawer } from "efi-ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensTransactionConfirmationDrawer";
-import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
-import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
 import { TradeInput } from "efi-ui/trade/TradeInput/TradeInput";
-import { useEthBalance } from "efi-ui/wallets/hooks/useEthBalance/useEthBalance";
+import { useTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
 import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 import { formatBalance } from "efi/base/formatBalance";
-import ContractAddresses from "efi/contracts/contractsJson";
 import { ContractMethodArgs } from "efi/contracts/types";
+import { CryptoAssetType } from "efi/crypto/CryptoAsset";
+import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { PoolContract } from "efi/pools/PoolContract";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
 
@@ -73,7 +76,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
   const {
     asset: tokenInAsset,
     address: tokenInAddress,
-    icon: TokenInIcon,
+    icon: tokenInIcon,
     symbol: tokenInSymbol,
     decimals: tokenInDecimals,
     balanceOf: tokenInBalanceOf,
@@ -84,7 +87,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
 
   const {
     address: tokenOutAddress,
-    icon: TokenOutIcon,
+    icon: tokenOutIcon,
     symbol: tokenOutSymbol,
     decimals: tokenOutDecimals,
     balanceOf: tokenOutBalanceOf,
@@ -135,6 +138,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
         cryptoBalanceOf={tokenInBalanceOf}
         cryptoDisplayBalance={tokenInDisplayBalance || ""}
         cryptoSymbol={tokenInSymbol}
+        cryptoIcon={tokenInIcon}
         previewCryptoAddress={tokenOutAddress}
         previewCryptoPoolIndex={tokenOutPoolIndex}
         label={t`Swap`}
@@ -159,6 +163,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
         cryptoBalanceOf={tokenOutBalanceOf}
         cryptoDisplayBalance={tokenOutDisplayBalance || ""}
         cryptoSymbol={tokenOutSymbol}
+        cryptoIcon={tokenOutIcon}
         previewCryptoAddress={tokenInAddress}
         previewCryptoPoolIndex={tokenInPoolIndex}
         label={t`For`}
@@ -185,11 +190,11 @@ export function TradePanel(props: TradePanelProps): ReactElement {
         tokenInSymbol={tokenInSymbol}
         tokenInDecimals={tokenInDecimals}
         tokenInAsset={tokenInAsset}
-        tokenInIcon={TokenInIcon}
+        tokenInIcon={tokenInIcon}
         tokenOutAddress={tokenOutAddress}
         tokenOutSymbol={tokenOutSymbol}
         tokenOutDecimals={tokenOutDecimals}
-        tokenOutIcon={TokenOutIcon}
+        tokenOutIcon={tokenOutIcon}
         account={account}
         library={library}
         chainId={chainId}
@@ -253,21 +258,41 @@ function useTokenInfoForTradeInput(
   account: string | null | undefined,
   library: Web3Provider | undefined
 ) {
-  const isWETH = tokenContract?.address === ContractAddresses.wethAddress;
-  const { data: ethBalance } = useEthBalance(library, account);
+  // getting the proper symbols is a pain using hooks.  all this logic is for that:
+  // get contracts/assets
+  const tokensResult = usePoolTokens(pool);
+  const [tokens] = getQueryData(tokensResult) ?? [];
+  const { yieldAssetContract, baseAssetContract } = parseSortedTokensForPool(
+    tokens
+  );
+  const baseCryptoAsset = useCryptoAssetForToken(baseAssetContract?.address);
 
-  // otherwise get values from token calls
+  // get symbols
+  const baseAssetSymbol = useCryptoSymbol(baseCryptoAsset);
+  const { symbol: termSymbol } = useTermAssetSymbol(
+    yieldAssetContract?.address,
+    baseAssetSymbol
+  );
+
+  // choose correct symbol
+  const symbol =
+    yieldAssetContract?.address === tokenContract?.address
+      ? termSymbol
+      : baseAssetSymbol;
+
+  // get other properties
+  const asset = useCryptoAssetForToken(tokenContract?.address);
+  const address =
+    asset?.type === CryptoAssetType.ETHEREUM
+      ? BALANCER_ETH_SENTINEL
+      : tokenContract?.address;
+  const icon = findAssetIcon(baseAssetSymbol);
+  const { data: decimals } = useTokenDecimals(tokenContract);
+  const balanceOf = useCryptoBalance(library, account, asset);
+  const displayBalance = formatBalance(balanceOf, decimals);
   const poolBalance = useTokenPoolBalance(pool, tokenContract);
   const poolIndex = useTokenPoolIndex(pool, tokenContract);
-  const { data: symbol } = useTokenSymbol(tokenContract);
-  const icon = findAssetIcon(symbol);
-  const { data: decimals } = useTokenDecimals(tokenContract);
-  const { data: tokenBalance } = useTokenBalanceOf(tokenContract, account);
 
-  const balanceOf = isWETH ? ethBalance : tokenBalance;
-  const displayBalance = formatBalance(balanceOf, decimals);
-  const address = isWETH ? BALANCER_ETH_SENTINEL : tokenContract?.address;
-  const asset = useCryptoAssetForToken(tokenContract?.address);
   return {
     asset,
     address,
