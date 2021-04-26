@@ -20,6 +20,12 @@ import { YieldTokenPortfolio } from "efi-ui/portfolio/YieldTokenPortfolio/YieldT
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useTokensWithBalance } from "efi-ui/token/hooks/useTokensWithBalance";
 import { useTrancheContracts } from "efi-ui/tranche/useTrancheContracts";
+import { useTokenDecimalsMulti } from "efi-ui/token/hooks/useTokenDecimalsMulti";
+import { getQueriesData } from "efi-ui/base/queryResults";
+import zip from "lodash.zip";
+import { ERC20 } from "elf-contracts/types/ERC20";
+import { BigNumber } from "ethers";
+import { isDust } from "efi/coins/isDust";
 
 export function usePortfolioTabs(
   chainId: number | undefined,
@@ -106,23 +112,35 @@ function usePrincipalTokenTab(
   provider?: Provider
 ) {
   const trancheContracts = useTrancheContracts();
+  const trancheDecimalsResults = useTokenDecimalsMulti(trancheContracts);
+  const trancheDecimals = getQueriesData(trancheDecimalsResults);
   const tranchesWithBalanceResults = useTokensWithBalance(
     account,
     (trancheContracts as unknown) as ERC20Shim[],
     provider
   );
 
-  const tranchesWithBalance = tranchesWithBalanceResults.map(
-    ({ token }) => (token as unknown) as Tranche
-  );
+  // filter out dust, because redeeming a PT can leave a small amount of dust in
+  // the user's account
+  const tranchesWithoutDust = zip(tranchesWithBalanceResults, trancheDecimals)
+    .filter((zipped): zipped is [
+      { token: ERC20; balanceOf: BigNumber },
+      number
+    ] => zipped.every((v) => !!v))
+    .filter(([{ balanceOf }, decimals]) => !isDust(balanceOf, decimals))
+    .map(([{ token }]) => (token as unknown) as Tranche);
 
+  // The total fiat balance
   const totalFiatBalanceAllTranches = useTotalFiatBalance(
     library,
     account,
-    tranchesWithBalance
+    tranchesWithoutDust
   );
 
-  return { tranchesWithBalance, totalFiatBalanceAllTranches };
+  return {
+    tranchesWithBalance: tranchesWithoutDust,
+    totalFiatBalanceAllTranches,
+  };
 }
 
 function useYieldTokenTab(
