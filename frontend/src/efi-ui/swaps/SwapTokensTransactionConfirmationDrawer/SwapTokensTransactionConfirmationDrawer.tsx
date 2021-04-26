@@ -11,14 +11,15 @@ import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { useBatchSwapGivenIn } from "efi-ui/balancer/useBatchSwapGivenIn/useBatchSwapGivenIn";
 import { parseQueryBatchSwapResult } from "efi-ui/balancer/useQueryBatchSwap/parseQueryBatchSwapResult";
 import { useQueryBatchSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
-import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/TransactionDrawer";
 import { SwapDetailsForm } from "efi-ui/swaps/SwapDetailsPreview/SwapDetailsForm";
 import { SwapTokenDetails } from "efi-ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensDetails";
+import { TokenIcon } from "efi-ui/token/TokenIcon";
+import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/TransactionDrawer";
+import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { calculatePurchasePrice } from "efi/pools/calculatePurchasePrice";
 import { calculateSlippage } from "efi/pools/calculateSlippage";
 import { PoolContract } from "efi/pools/PoolContract";
-import { CryptoAsset } from "efi/crypto/CryptoAsset";
-import { TokenIcon } from "efi-ui/token/TokenIcon";
+import { getAmountOutWithTolerance } from "efi/trade/getAmountOutWithTolerance";
 
 interface SwapTokensTransactionConfirmationDrawerProps {
   chainId: number | undefined;
@@ -86,13 +87,20 @@ export function SwapTokensTransactionConfirmationDrawer({
     queryBatchSwapInResult
   );
 
+  const minAmountOut = getAmountOutWithTolerance(
+    amountOut,
+    tokenOutDecimals,
+    0.01
+  );
+
   const onConfirmSwapTokens = useBatchSwapGivenIn(
     account,
     signer,
     pool,
     tokenInAddress,
     tokenOutAddress,
-    amountInAsBigNumber
+    amountInAsBigNumber,
+    minAmountOut
   );
 
   const amountOutNumber = +formatUnits(amountOut?.abs() || 0, tokenInDecimals);
@@ -143,7 +151,7 @@ function getPriceSlippageAndTradingFee(
   spotPriceTokenForOneBaseAsset: number | undefined
 ) {
   const amountInNumber = +(amountIn || 0);
-  const purchasePrice = calculatePurchasePrice(amountInNumber, amountOutNumber);
+  const purchasePrice = calculatePurchasePrice(amountOutNumber, amountInNumber);
   const priceSlippageAndTradingFee = calculateSlippage(
     spotPriceTokenForOneBaseAsset || 0,
     purchasePrice

@@ -29,7 +29,8 @@ export function useBatchSwapGivenIn(
   pool: PoolContract | undefined,
   tokenInAddress: string | undefined,
   tokenOutAddress: string | undefined,
-  amountIn: BigNumber | undefined
+  amountIn: BigNumber | undefined,
+  limitOut?: BigNumber
 ): () => void {
   const balancerVault = useBalancerVault();
   const poolIdResult = useSmartContractReadCall(pool, "getPoolId");
@@ -55,7 +56,8 @@ export function useBatchSwapGivenIn(
       poolId,
       tokenInAddress,
       tokenOutAddress,
-      amountIn
+      amountIn,
+      limitOut
     );
     if (callArgs) {
       batchSwapGivenIn(callArgs);
@@ -64,6 +66,7 @@ export function useBatchSwapGivenIn(
     account,
     amountIn,
     batchSwapGivenIn,
+    limitOut,
     poolId,
     tokenInAddress,
     tokenOutAddress,
@@ -77,7 +80,8 @@ function makeBatchSwapGivenInCallArgs(
   poolId: string | undefined,
   tokenInAddress: string | undefined,
   tokenOutAddress: string | undefined,
-  amountIn: BigNumber | undefined
+  amountIn: BigNumber | undefined,
+  limitOut: BigNumber | undefined
 ): ContractMethodArgs<Vault, "batchSwapGivenIn"> | undefined {
   if (!account || !poolId || !tokenInAddress || !tokenOutAddress || !amountIn) {
     return;
@@ -110,14 +114,16 @@ function makeBatchSwapGivenInCallArgs(
     fromInternalBalance: false,
     toInternalBalance: false,
   };
-  // the user is sending this one, so the delta will be negative, so just set a limit of zero.
+
+  // this one is exact since we are doing a SwapKind.GIVEN_IN
   const limitTokenIn = amountIn;
 
-  // performing a SwapIn, so we can specifiy exactly how much in and set the limit to that.
-  const limitTokenOut = amountIn;
+  // this one is seen as a negative delta from the pool's POV.  We can just set this to zero if we
+  // don't care about slippage during the transaction.
+  const limitTokenOut = limitOut ?? BigNumber.from(0);
 
   // limits of how much of each token is allowed to be traded.  order must be the same as 'tokens'
-  const limits = assets.map((tokenAddress, index) => {
+  const limits = assets.map((_, index) => {
     if (index === tokenInIndex) {
       return limitTokenIn;
     }

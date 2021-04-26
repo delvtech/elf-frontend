@@ -22,6 +22,7 @@ import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalan
 import { SellYieldTokenDetails } from "efi-ui/swaps/SellYieldTokensDrawer/SellYieldTokensDetails";
 import { SwapDetailsForm } from "efi-ui/swaps/SwapDetailsPreview/SwapDetailsForm";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
+import { TokenIcon } from "efi-ui/token/TokenIcon";
 import { useTrancheForInterestToken } from "efi-ui/tranche/useTrancheForInterestToken";
 import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/TransactionDrawer";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
@@ -29,7 +30,7 @@ import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { calculatePurchasePrice } from "efi/pools/calculatePurchasePrice";
 import { calculateSlippage } from "efi/pools/calculateSlippage";
 import { PoolContract } from "efi/pools/PoolContract";
-import { TokenIcon } from "efi-ui/token/TokenIcon";
+import { getAmountOutWithTolerance } from "efi/trade/getAmountOutWithTolerance";
 
 interface SellYieldTokensDrawerProps {
   chainId: number | undefined;
@@ -109,13 +110,20 @@ export function SellYieldTokensDrawer(
   const amountInAsBigNumber = parseUnits(amountIn || "0", baseAssetDecimals);
   const amountOutAsBigNumber = parseUnits(amountOut || "0", yieldTokenDecimals);
 
+  const minAmountOut = getAmountOutWithTolerance(
+    amountOutAsBigNumber,
+    baseAssetDecimals,
+    0.01
+  );
+
   const onConfirmSellPrincipalTokens = useBatchSwapGivenIn(
     account,
     signer,
     pool,
     yieldToken?.address,
     baseAssetBalancerAddress,
-    amountInAsBigNumber
+    amountInAsBigNumber,
+    minAmountOut
   );
 
   const amountOutNumber = +formatUnits(
