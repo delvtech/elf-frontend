@@ -28,6 +28,10 @@ import { MintTermPicker } from "efi-ui/mint/MintTermPicker/MintTermPicker";
 import { MintTransactionConfirmationDrawer } from "efi-ui/mint/MintTransactionConfirmationDrawer/MintTransactionConfirmationDrawer";
 import { formatBalance } from "efi/base/formatBalance";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
+import { SwapKind } from "efi-ui/balancer/SwapKind";
+import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
+import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
+import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 
 export interface MintCardProps {
   library: Web3Provider | undefined;
@@ -83,6 +87,17 @@ export function MintCard({
     amountIn
   );
 
+  // active pool
+  const pool = usePoolForToken(activeTranche);
+  const { data: [tokens] = [] } = usePoolTokens(pool);
+  const {
+    // activeBaseAsset from above might be ETH, but we need the WETH contract for queryBatchSwap in
+    // EarnInput to work correctly.
+    baseAssetContract,
+    yieldAssetIndex: termAssetIndex,
+    yieldAssetContract: termAssetContract,
+  } = parseSortedTokensForPool(tokens);
+
   return (
     <Fragment>
       <Card
@@ -123,6 +138,15 @@ export function MintCard({
               value={amountInString}
               onValueChange={setAmountIn}
               assetBalance={+activeBaseAssetDisplayBalance}
+              cryptoAddress={baseAssetContract?.address}
+              cryptoDecimals={activeBaseAssetDecimals}
+              cryptoBalanceOf={activeBaseAssetBalance}
+              cryptoDisplayBalance={activeBaseAssetDisplayBalance || ""}
+              previewCryptoAddress={termAssetContract?.address}
+              previewCryptoPoolIndex={termAssetIndex}
+              pool={pool}
+              onPreviewUpdate={() => {}}
+              swapKind={SwapKind.GIVEN_IN}
             />
           </div>
         </div>
