@@ -1,30 +1,31 @@
 import { ReactElement, useCallback, useMemo } from "react";
 
 import { Card, Colors, Elevation } from "@blueprintjs/core";
-import { navigate } from "@reach/router";
+import { Link, navigate } from "@reach/router";
+import classNames from "classnames";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledProgressBar } from "efi-ui/base/LabeledProgressBar/LabeledProgressBar";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { getQueryData } from "efi-ui/base/queryResults";
-import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
+import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
+import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
+import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
+import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
+import { useFeeVolumeForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { useTotalLiquidityForPool } from "efi-ui/pools/useTotalLiquidityForPool/useTotalLiquidityForPool";
 import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForPool";
+import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
+import { calculateProgress } from "efi-ui/tranche/calculateProgress";
+import { useTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
 import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { getTimeLeft2 } from "efi/base/time";
 import { formatMoney } from "efi/money/formatMoney";
 import { PoolContract } from "efi/pools/PoolContract";
-import { calculateProgress } from "efi-ui/tranche/calculateProgress";
-import { useFeeVolumeForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
-import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
-import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
-import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
-import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import classNames from "classnames";
 
 interface PrincipalPoolCardProps {
   pool: PoolContract | undefined;
@@ -34,9 +35,9 @@ const cellClassName = tw("flex", "mr-4", "items-center", "overflow-hidden");
 
 // Stop propagation of clicks from the card title up to the card itself,
 // otherwise you get double routed to /exchange/exchange/0xdeadbeef
-// const stopPropagationHandler = (e: React.MouseEvent<HTMLAnchorElement>) => {
-//   e.stopPropagation();
-// };
+const stopPropagationHandler = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  e.stopPropagation();
+};
 
 export function PrincipalPoolCard(
   props: PrincipalPoolCardProps
@@ -46,10 +47,15 @@ export function PrincipalPoolCard(
   const liquidity = useTotalLiquidityForPool(pool);
   const trancheCreatedAt = useTrancheCreatedAt(tranche);
   const fees = useFeeVolumeForPool(pool);
-  const baseAssetContract = usePoolPairedToken(pool, tranche as ERC20Shim);
+  const baseAssetContract = useBaseAssetForPool(pool);
   const baseAsset = useCryptoAssetForToken(baseAssetContract?.address);
-  const symbol = useCryptoSymbol(baseAsset);
-  const BaseAssetIcon = findAssetIcon(symbol);
+  const baseAssetSymbol = useCryptoSymbol(baseAsset);
+  const BaseAssetIcon = findAssetIcon(baseAssetSymbol);
+  const termAssetContract = usePoolPairedToken(pool, baseAssetContract);
+  const { symbol: termAssetSymbol } = useTermAssetSymbol(
+    termAssetContract?.address,
+    baseAssetSymbol
+  );
   const unlockTimestampResult = useSmartContractReadCall(
     tranche,
     "unlockTimestamp"
@@ -88,17 +94,26 @@ export function PrincipalPoolCard(
       className={tw(
         "grid",
         "grid-cols-3",
-        "lg:grid-cols-5",
+        "lg:grid-cols-4",
+        "xl:grid-cols-5",
         "h-24",
         "w-full",
         "grid"
       )}
     >
-      <div className={cellClassName}>
+      <div className={tw(cellClassName, "flex-shrink-0")}>
         {BaseAssetIcon ? (
           <div
-            // style={{ backgroundColor: isDarkMode ? undefined : Colors.GRAY5 }}
-            className={classNames(tw("flex", "items-center", "rounded", "p-2"))}
+            className={classNames(
+              tw(
+                "hidden",
+                "md:flex",
+                "items-center",
+                "rounded",
+                "p-2",
+                "flex-shrink-0"
+              )
+            )}
           >
             <div
               style={{
@@ -107,6 +122,7 @@ export function PrincipalPoolCard(
               }}
               className={tw(
                 "flex",
+                "flex-shrink-0",
                 "items-center",
                 "p-2",
                 "rounded-full",
@@ -122,6 +138,7 @@ export function PrincipalPoolCard(
               style={{ marginLeft: -8 }}
               className={tw(
                 "flex",
+                "flex-shrink-0",
                 "items-center",
                 "p-2",
                 "rounded-full",
@@ -133,29 +150,28 @@ export function PrincipalPoolCard(
             </div>
           </div>
         ) : null}
-        {/* <LabeledText
+        <LabeledText
           large
           text={
             <Link
               className={tw("flex", "space-x-2")}
-
               to={pool?.address || ""}
               onClick={stopPropagationHandler}
             >
-              {getQueryData(poolNameResult)}
+              {`${baseAssetSymbol} - ${termAssetSymbol}`}
             </Link>
           }
           label={`tokens`}
-        /> */}
+        />
       </div>
 
-      <div className={tw(cellClassName, "hidden", "lg:flex")}>
+      <div className={tw(cellClassName)}>
         <LabeledText large text={formatMoney(liquidity)} label={`liquidity`} />
       </div>
       <div className={tw(cellClassName, "hidden", "lg:flex")}>
         <LabeledText large text={formatMoney(fees)} label={`Fees`} />
       </div>
-      <div className={tw(cellClassName, "flex-wrap")}>
+      <div className={tw(cellClassName, "hidden", "xl:flex", "flex-wrap")}>
         <LabeledText
           className={tw("mr-4")}
           large

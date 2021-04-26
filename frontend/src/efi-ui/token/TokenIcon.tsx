@@ -1,15 +1,12 @@
 import { CSSProperties, ReactElement } from "react";
 
-import { Colors } from "@blueprintjs/core";
-
-import ethSVGIcon from "efi-static-assets/logos/svg/ETH-alt.svg";
+import ethIconGrey from "efi-static-assets/logos/svg/ETH-grey.svg";
 import usdcIcon from "efi-static-assets/logos/svg/USDC.svg";
 import wethIcon from "efi-static-assets/logos/svg/WETH.svg";
-import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 
 interface SvgIconProps {
-  height: number | undefined;
-  width: number | undefined;
+  height: number;
+  width: number;
   className: string | undefined;
   style: CSSProperties | undefined;
   alt: string;
@@ -36,8 +33,8 @@ export function SvgIcon({
   );
 }
 interface IconProps {
-  height: number | undefined;
-  width: number | undefined;
+  height: number;
+  width: number;
   className?: string | undefined;
   style?: CSSProperties | undefined;
 }
@@ -48,20 +45,12 @@ export function EthIcon({
   className,
   style,
 }: IconProps): ReactElement {
-  const { isDarkMode } = useDarkMode();
-  // TODO get new icons for dark and light mode
-  const color = isDarkMode ? Colors.GRAY5 : Colors.DARK_GRAY5;
-  const iconStyle: CSSProperties = {
-    color,
-    ...style,
-  };
-
   return (
     <SvgIcon
       alt={"ethereum"}
       className={className}
-      style={iconStyle}
-      src={ethSVGIcon}
+      style={style}
+      src={ethIconGrey}
       height={height}
       width={width}
     />
