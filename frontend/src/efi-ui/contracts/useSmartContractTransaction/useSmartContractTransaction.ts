@@ -4,9 +4,10 @@ import { useMutation, UseMutationResult } from "react-query";
 import { ContractMethodArgs, ContractMethodName } from "efi/contracts/types";
 import { lookupAddressKey } from "efi/contracts/contractsJson";
 
-interface UseSmartContractTransactionOptions {
+export interface UseSmartContractTransactionOptions {
   confirmations?: number;
   onSuccess?: (result: ContractTransaction) => void | Promise<void>;
+  onError?: (result: Error) => void | Promise<void>;
 }
 export function useSmartContractTransaction<
   TContract extends Contract,
@@ -21,7 +22,7 @@ export function useSmartContractTransaction<
   unknown,
   ContractMethodArgs<TContract, TMethodName>
 > {
-  const { confirmations = 1, onSuccess } = options;
+  const { confirmations = 1, onSuccess, onError } = options;
   return useMutation(
     async (args: ContractMethodArgs<TContract, TMethodName>) => {
       if (!signer || !contract) {
@@ -35,13 +36,15 @@ export function useSmartContractTransaction<
       return connected[methodName](...args);
     },
     {
-      onError: (...callArgs) => {
+      onError: async (error: Error) => {
         const addressesJsonKey = lookupAddressKey(contract?.address);
         console.error(
           `Error calling ${methodName} on ${addressesJsonKey}: ${contract?.address} with arguments:`,
-          callArgs
+          error
         );
+        await onError?.(error);
       },
+
       onSuccess: async (txReceipt) => {
         await txReceipt?.wait(confirmations);
         await onSuccess?.(txReceipt);
