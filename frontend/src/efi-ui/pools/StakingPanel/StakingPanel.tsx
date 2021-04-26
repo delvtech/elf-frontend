@@ -196,7 +196,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
   }
   if (insufficientPoolBalance && account) {
     submitButtonError = true;
-    submitButtonLabel = t`Insufficient pool balance`;
+    submitButtonLabel = t`Insufficient pool liquidity`;
   }
   if (!account) {
     submitButtonLabel = t`Connect wallet`;
