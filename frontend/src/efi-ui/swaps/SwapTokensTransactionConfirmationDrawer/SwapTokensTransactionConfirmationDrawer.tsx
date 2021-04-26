@@ -143,7 +143,7 @@ function getPriceSlippageAndTradingFee(
   spotPriceTokenForOneBaseAsset: number | undefined
 ) {
   const amountInNumber = +(amountIn || 0);
-  const purchasePrice = calculatePurchasePrice(amountInNumber, amountOutNumber);
+  const purchasePrice = calculatePurchasePrice(amountOutNumber, amountInNumber);
   const priceSlippageAndTradingFee = calculateSlippage(
     spotPriceTokenForOneBaseAsset || 0,
     purchasePrice
