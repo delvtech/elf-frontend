@@ -134,11 +134,13 @@ async function main() {
       mintAmount: "20",
       baseAssetIn: "20",
       yieldAssetIn: "13",
-      ytBaseAssetIn: "1",
-      ytYieldAssetIn: "20",
+      ytBaseAssetIn: "100",
+      ytYieldAssetIn: "200",
       durationInSeconds: 120,
     }
+
   );
+  await yWeth.updateShares();
 
   console.log("deploy USDC tranche");
   // usdc tranche
