@@ -4,7 +4,8 @@ import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
 
 import { useConvergentCurvePools } from "efi-ui/pools/useConvergentCurvePools/useConvergentCurvePools";
 import { useTokensWithBalance } from "efi-ui/token/hooks/useTokensWithBalance";
-import { hasLPDust } from "efi-ui/pools/hasLPDust";
+import { isDust } from "efi/coins/isDust";
+import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
 
 export function useConvergentCurvePoolsWithLPBalance(
   account: string | null | undefined
@@ -14,7 +15,9 @@ export function useConvergentCurvePoolsWithLPBalance(
   return useMemo(
     () =>
       poolsWithLP
-        .filter(({ balanceOf }) => !hasLPDust(balanceOf))
+        .filter(
+          ({ balanceOf }) => !isDust(balanceOf, BALANCER_POOL_LP_TOKEN_DECIMALS)
+        )
         .map(({ token }) => token),
     [poolsWithLP]
   );

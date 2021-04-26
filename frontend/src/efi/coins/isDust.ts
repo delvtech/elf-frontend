@@ -2,18 +2,14 @@ import { BigNumber } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
 
 import { clipStringValueToDecimals } from "efi/math/fixedPoint";
-import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
 
 /**
  * When unstaking completely from a pool, it's nigh impossible to avoid the
  * remaining LP dust that remains due to how the apis for unstaking work. The
  * UI should avoid showing small amounts of dust, wherever balances are shown.
  */
-export function hasLPDust(lpBalanceOf: BigNumber): boolean {
-  const lpBalanceString = formatUnits(
-    lpBalanceOf,
-    BALANCER_POOL_LP_TOKEN_DECIMALS
-  );
+export function isDust(balanceOf: BigNumber, decimals: number): boolean {
+  const lpBalanceString = formatUnits(balanceOf, decimals);
   // no balance means no dust
   if (+lpBalanceString === 0) {
     return false;
