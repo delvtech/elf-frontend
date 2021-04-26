@@ -25,6 +25,7 @@ import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForTok
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import classNames from "classnames";
+import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 
 interface PrincipalPoolCardProps {
   pool: PoolContract | undefined;
@@ -46,7 +47,7 @@ export function PrincipalPoolCard(
   const liquidity = useTotalLiquidityForPool(pool);
   const trancheCreatedAt = useTrancheCreatedAt(tranche);
   const fees = useFeeVolumeForPool(pool);
-  const baseAssetContract = usePoolPairedToken(pool, tranche as ERC20Shim);
+  const baseAssetContract = useBaseAssetForPool(pool);
   const baseAsset = useCryptoAssetForToken(baseAssetContract?.address);
   const symbol = useCryptoSymbol(baseAsset);
   const BaseAssetIcon = findAssetIcon(symbol);
