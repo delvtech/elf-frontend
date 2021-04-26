@@ -3,6 +3,7 @@ import { ReactElement, useCallback, useState } from "react";
 import { Button, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { ERC20 } from "elf-contracts/types/ERC20";
+import { WeightedPool } from "elf-contracts/types/WeightedPool";
 import { BigNumber, Signer } from "ethers";
 import { formatEther, formatUnits, parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
@@ -12,13 +13,17 @@ import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInp
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
+import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { StakingConfirmationDrawer } from "efi-ui/pools/StakeTokensConfirmationDrawer/StakeTokensConfirmationDrawer";
 import { StakingInput } from "efi-ui/pools/StakingInput/StakingInput";
+import { useJoinConvergentPool } from "efi-ui/pools/useJoinConvergentPool/useJoinConvergentPool";
+import { useJoinWeightedPool } from "efi-ui/pools/useJoinWeightedPool";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useTokenPoolBalance } from "efi-ui/pools/useTokenPoolBalance/useTokenPoolBalance";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { useTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
+import { useTrancheContracts } from "efi-ui/tranche/useTrancheContracts";
 import { useEthBalance } from "efi-ui/wallets/hooks/useEthBalance/useEthBalance";
 import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 import { formatBalance } from "efi/base/formatBalance";
@@ -28,11 +33,6 @@ import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { PoolContract } from "efi/pools/PoolContract";
 import { validateStakingValue } from "efi/staking/validateStakeValue";
-import { useJoinConvergentPool } from "efi-ui/pools/useJoinConvergentPool/useJoinConvergentPool";
-import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
-import { useJoinWeightedPool } from "efi-ui/pools/useJoinWeightedPool";
-import { useTrancheContracts } from "efi-ui/tranche/useTrancheContracts";
-import { WeightedPool } from "elf-contracts/types/WeightedPool";
 
 interface StakingPanelProps {
   library: Web3Provider | undefined;
@@ -53,7 +53,6 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
     buttonLabel,
     formDisabled = false,
     submitDisabled = false,
-    buttonIntent = Intent.PRIMARY,
     pool,
   } = props;
 
@@ -122,23 +121,15 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
 
   const isValidTrancheAssetValue = validateStakingValue(
     amountOut,
-    baseAssetBalanceOf,
-    baseAssetDecimals,
-    baseAssetPoolBalance
+    yieldAssetBalanceOf,
+    yieldAssetDecimals,
+    yieldAssetPoolBalance
   );
 
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const submitTransaction = useCallback(() => {
     setDrawerOpen(true);
   }, []);
-
-  const submitButtonDisabled =
-    formDisabled ||
-    submitDisabled ||
-    !isValidBaseAssetValue ||
-    !isValidTrancheAssetValue ||
-    !amountIn ||
-    !amountOut;
 
   const poolTokenMaxAmounts = [BigNumber.from(0), BigNumber.from(0)];
   poolTokenMaxAmounts[baseAssetIndex] = parseUnits(
@@ -171,6 +162,45 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
       joinWeightedPool();
     }
   }, [isPrincipalPoolType, joinConvergentPool, joinWeightedPool]);
+
+  const insufficientBalance =
+    parseUnits(amountIn ?? "0").gt(baseAssetBalanceOf ?? 0) ||
+    parseUnits(amountOut ?? "0").gt(yieldAssetBalanceOf ?? 0);
+
+  const insufficientPoolBalance =
+    parseUnits(amountIn ?? "0", baseAssetDecimals).gt(
+      baseAssetPoolBalance ?? 0
+    ) ||
+    parseUnits(amountOut ?? "0", yieldAssetDecimals).gt(
+      yieldAssetPoolBalance ?? 0
+    );
+
+  const submitButtonDisabled =
+    formDisabled ||
+    submitDisabled ||
+    insufficientBalance ||
+    insufficientPoolBalance ||
+    !isValidBaseAssetValue ||
+    !isValidTrancheAssetValue ||
+    !amountIn ||
+    !amountOut;
+
+  let submitButtonLabel = buttonLabel;
+  let submitButtonError = false;
+  if (!amountIn && !amountOut) {
+    submitButtonLabel = t`Enter an amount`;
+  }
+  if (insufficientBalance && account) {
+    submitButtonError = true;
+    submitButtonLabel = t`Insufficient balance`;
+  }
+  if (insufficientPoolBalance && account) {
+    submitButtonError = true;
+    submitButtonLabel = t`Insufficient pool liquidity`;
+  }
+  if (!account) {
+    submitButtonLabel = t`Connect wallet`;
+  }
 
   return (
     <div className={tw("flex", "flex-col", "justify-between", "h-full")}>
@@ -214,9 +244,9 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
           minimal
           outlined
           large
-          intent={buttonIntent}
+          intent={submitButtonError ? Intent.DANGER : Intent.PRIMARY}
         >
-          {buttonLabel}
+          {submitButtonLabel}
         </Button>
       </div>
       <StakingConfirmationDrawer

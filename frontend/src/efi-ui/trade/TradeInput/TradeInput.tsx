@@ -9,14 +9,15 @@ import tw from "efi-tailwindcss-classnames";
 import { SwapKind } from "efi-ui/balancer/SwapKind";
 import { useQueryBatchSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
 import { validateInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
-import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { clipStringValueToDecimals } from "efi/math/fixedPoint";
 import { PoolContract } from "efi/pools/PoolContract";
 
 import styles from "./TradeInput.module.css";
+import { TokenIcon } from "efi-ui/token/TokenIcon";
 
 interface TradeInputProps {
   cryptoAddress: string | undefined;
+  cryptoIcon: TokenIcon | undefined;
   cryptoSymbol: string | undefined;
   cryptoDecimals: number | undefined;
   cryptoBalanceOf: BigNumber | undefined;
@@ -38,6 +39,7 @@ export function TradeInput(props: TradeInputProps): ReactElement {
   const {
     cryptoAddress,
     cryptoSymbol,
+    cryptoIcon: CryptoIcon,
     cryptoDecimals,
     cryptoBalanceOf,
     cryptoDisplayBalance,
@@ -89,14 +91,12 @@ export function TradeInput(props: TradeInputProps): ReactElement {
     onChangeFromProps
   );
 
-  const CryptoIcon = findAssetIcon(cryptoSymbol);
-
   return (
     <div className={tw("flex", "flex-col", "space-y-5")}>
       <div className={tw("flex", "justify-between", "items-center")}>
         <span className={tw("text-xs", "text-right")}>{label}</span>
         <Button
-          disabled={false}
+          disabled={disabled}
           onClick={setMaxValue}
           minimal
           outlined
@@ -117,7 +117,9 @@ export function TradeInput(props: TradeInputProps): ReactElement {
           </Tag>
         }
         leftElement={
-          <div>{CryptoIcon ? <CryptoIcon height={18} width={18} /> : null}</div>
+          <div className={tw("px-2")}>
+            {CryptoIcon ? <CryptoIcon height={18} width={18} /> : null}
+          </div>
         }
       />
       <div className={tw("flex", "justify-between")}>

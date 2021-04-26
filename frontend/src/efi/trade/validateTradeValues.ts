@@ -21,5 +21,6 @@ export function validateTradeValues(
     amountOut && tokenOutPoolBalance
       ? parseUnits(amountOut ?? 0, tokenInDecimals).lte(tokenOutPoolBalance)
       : true;
+
   return { isValidTokenInValue, isValidTokenOutValue };
 }
