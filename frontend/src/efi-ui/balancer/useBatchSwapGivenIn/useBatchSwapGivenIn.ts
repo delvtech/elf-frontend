@@ -11,6 +11,11 @@ import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { PoolContract } from "efi/pools/PoolContract";
+import {
+  AppToaster,
+  makeErrorToast,
+  makeSuccessToast,
+} from "efi-ui/toaster/AppToaster/AppToaster";
 
 /**
  * Hook wrapper for the Balancer Vault's batchSwapGivenIn method.
@@ -33,7 +38,15 @@ export function useBatchSwapGivenIn(
   const { mutate: batchSwapGivenIn } = useSmartContractTransactionPersisted(
     balancerVault,
     "batchSwapGivenIn",
-    signer
+    signer,
+    {
+      onError: (error) => {
+        AppToaster.show(makeErrorToast(error.message));
+      },
+      onSuccess: () => {
+        AppToaster.show(makeSuccessToast("Transaction succeeded"));
+      },
+    }
   );
 
   const onSwapGivenInTransaction = useCallback(() => {

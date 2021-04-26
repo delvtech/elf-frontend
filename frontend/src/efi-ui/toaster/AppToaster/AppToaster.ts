@@ -19,7 +19,7 @@ import { IconName, IconNames } from "@blueprintjs/icons";
  * AppToaster.show({ message: "Toasted." });
  */
 export const AppToaster = Toaster.create({
-  position: Position.BOTTOM_RIGHT,
+  position: Position.TOP_RIGHT,
 
   // TODO: Figure out a way to change this dynamically via user pref. Might need
   // to contribute a Toaster.setClassName() method back to Blueprint for this,
@@ -32,18 +32,27 @@ export function makeToast(message: string): IToastProps {
   };
 }
 
-export function makeSuccessToast(message: string): IToastProps {
+export function makeSuccessToast(
+  message: string,
+  timeoutMs?: number
+): IToastProps {
   return {
     message,
     icon: IconNames.TICK,
     intent: Intent.SUCCESS,
+    timeout: timeoutMs,
   };
 }
 
-export function makeErrorToast(message: string, icon?: IconName): IToastProps {
+export function makeErrorToast(
+  message: string,
+  icon?: IconName,
+  timeoutMs?: number
+): IToastProps {
   return {
     message,
     icon: icon || IconNames.ERROR,
     intent: Intent.DANGER,
+    timeout: timeoutMs,
   };
 }

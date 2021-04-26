@@ -3,13 +3,17 @@ import { UseMutationResult } from "react-query";
 
 import { Contract, ContractTransaction, Signer } from "ethers";
 
-import { useSmartContractTransaction } from "efi-ui/contracts/useSmartContractTransaction/useSmartContractTransaction";
+import {
+  useSmartContractTransaction,
+  UseSmartContractTransactionOptions,
+} from "efi-ui/contracts/useSmartContractTransaction/useSmartContractTransaction";
 import { usePendingTransactionPref } from "efi-ui/prefs/usePendingTransactionPref/usePendingTransactionPref";
 import { ContractMethodArgs, ContractMethodName } from "efi/contracts/types";
 
 interface UseSmartContractTransactionWithPrefOptions {
   confirmations?: number;
   onSuccess?: (result: ContractTransaction) => void | Promise<void>;
+  onError?: (Error: Error) => void | Promise<void>;
 }
 
 /**
@@ -33,25 +37,37 @@ export function useSmartContractTransactionPersisted<
   unknown,
   ContractMethodArgs<TContract, TMethodName>
 > {
+  const {
+    onSuccess: onSuccessFromOptions,
+    onError: onErrorFromProps,
+  } = options;
   const { setTransaction } = usePendingTransactionPref();
 
   const onSuccess = useCallback(
     (txReceipt: ContractTransaction) => {
       setTransaction(txReceipt.hash);
-      options?.onSuccess?.(txReceipt);
+      onSuccessFromOptions?.(txReceipt);
     },
-    [options, setTransaction]
+    [onSuccessFromOptions, setTransaction]
+  );
+  const onError = useCallback(
+    (error: Error) => {
+      setTransaction(undefined);
+      onErrorFromProps?.(error);
+    },
+    [onErrorFromProps, setTransaction]
   );
 
-  const optionsWithOnSuccess = {
+  const finalOptions: UseSmartContractTransactionOptions = {
     ...options,
     onSuccess,
+    onError,
   };
 
   return useSmartContractTransaction(
     contract,
     methodName,
     signer,
-    optionsWithOnSuccess
+    finalOptions
   );
 }

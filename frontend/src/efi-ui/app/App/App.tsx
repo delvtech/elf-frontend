@@ -17,6 +17,7 @@ import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useSyncWithInjectedEthereum } from "efi-ui/wallets/hooks/useSyncWithInjectedEthereum";
 
 import styles from "./App.module.css";
+import { AppToaster } from "efi-ui/toaster/AppToaster/AppToaster";
 
 const contentClassName = tw(
   "flex-1",
