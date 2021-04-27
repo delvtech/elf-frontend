@@ -140,7 +140,6 @@ export function SellPrincipalTokensTransactionDrawer(
       onClose={onClose}
       account={account}
       assetIn={assetIn}
-      assetInIcon={undefined}
       assetInSymbol={`pt${baseAssetSymbol}`}
       walletConnectionActive={walletConnectionActive}
       walletApprovalMessageRenderer={getBalancerApprovalMessage}

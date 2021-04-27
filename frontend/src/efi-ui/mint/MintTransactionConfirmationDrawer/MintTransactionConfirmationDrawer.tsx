@@ -83,7 +83,6 @@ export function MintTransactionConfirmationDrawer({
       onClose={onClose}
       account={account}
       assetIn={baseAsset}
-      assetInIcon={BaseAssetIcon}
       walletConnectionActive={walletConnectionActive}
       walletApprovalMessageRenderer={getUserProxyApprovalMessage}
       amountIn={amountInAsBigNumber}

@@ -147,7 +147,6 @@ export function SellYieldTokensDrawer(
       onClose={onClose}
       account={account}
       assetIn={assetIn}
-      assetInIcon={undefined}
       assetInSymbol={assetInSymbol}
       walletConnectionActive={walletConnectionActive}
       walletApprovalMessageRenderer={getBalancerApprovalMessage}
