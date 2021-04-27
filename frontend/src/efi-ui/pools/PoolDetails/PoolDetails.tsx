@@ -46,7 +46,7 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
   const poolTokensResult = usePoolTokens(pool);
   const tokenAddresses = getQueryData(poolTokensResult)?.[0] || [];
 
-  const { baseAssetContract, yieldAssetContract } = parseSortedTokensForPool(
+  const { baseAssetContract, termAssetContract } = parseSortedTokensForPool(
     tokenAddresses
   );
 
@@ -119,7 +119,7 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
           walletActive={walletActive}
           pool={pool}
           tokenIn={baseAssetContract}
-          tokenOut={yieldAssetContract}
+          tokenOut={termAssetContract}
         />
       </div>
     </div>

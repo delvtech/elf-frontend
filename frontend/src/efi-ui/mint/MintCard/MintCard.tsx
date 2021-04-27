@@ -94,8 +94,9 @@ export function MintCard({
     // activeBaseAsset from above might be ETH, but we need the WETH contract for queryBatchSwap in
     // EarnInput to work correctly.
     baseAssetContract,
-    yieldAssetIndex: termAssetIndex,
-    yieldAssetContract: termAssetContract,
+    // these are only needed to make EarnInput work.  can get rid of these if we make a MintInput
+    termAssetIndex,
+    termAssetContract,
   } = parseSortedTokensForPool(tokens);
 
   return (
@@ -125,6 +126,7 @@ export function MintCard({
               "border-gray-500"
             )}
           >
+            {/* TODO: we need a MintInput that doesn't require a queryBatchSwap */}
             <EarnInput
               showMaxButton={!!account}
               assetPicker={

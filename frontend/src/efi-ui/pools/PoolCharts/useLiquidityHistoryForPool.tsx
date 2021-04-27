@@ -49,7 +49,7 @@ export function useLiquidityHistoryForPool(
   const {
     baseAssetContract,
     baseAssetIndex,
-    yieldAssetIndex,
+    termAssetIndex: yieldAssetIndex,
   } = parseSortedTokensForPool(tokens);
   const { data: baseAssetDecimals } = useTokenDecimals(baseAssetContract);
   const spotPrice = usePoolSpotPrice(pool, baseAssetContract);

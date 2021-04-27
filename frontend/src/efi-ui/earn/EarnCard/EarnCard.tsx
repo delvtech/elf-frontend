@@ -102,7 +102,7 @@ export function EarnCard({
 
   const pool = usePoolForToken(activeTranche as ERC20Shim, jsonRpcProvider);
   const { data: [tokens] = [] } = usePoolTokens(pool);
-  const { baseAssetIndex, yieldAssetIndex } = parseSortedTokensForPool(tokens);
+  const { baseAssetIndex, termAssetIndex } = parseSortedTokensForPool(tokens);
 
   // the tranche's pool
   const baseAssetPoolToken = usePoolPairedToken(
@@ -166,7 +166,7 @@ export function EarnCard({
               cryptoBalanceOf={activeBaseAssetBalance}
               cryptoDisplayBalance={activeBaseAssetDisplayBalance || ""}
               previewCryptoAddress={principalTokenAddress}
-              previewCryptoPoolIndex={yieldAssetIndex}
+              previewCryptoPoolIndex={termAssetIndex}
               pool={pool}
               onPreviewUpdate={onChangeOut}
               swapKind={SwapKind.GIVEN_IN}

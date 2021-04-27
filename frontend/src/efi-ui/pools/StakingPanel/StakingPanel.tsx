@@ -60,8 +60,8 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
   const {
     baseAssetContract,
     baseAssetIndex,
-    yieldAssetContract,
-    yieldAssetIndex,
+    termAssetContract,
+    termAssetIndex,
   } = parseSortedTokensForPool(tokens);
   // Pool calls
   const { data: totalSupplyBN } = useSmartContractReadCall(pool, "totalSupply");
@@ -88,7 +88,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
     balanceOf: yieldAssetBalanceOf,
     displayBalance: yieldAssetDisplayBalance,
     poolBalance: yieldAssetPoolBalance,
-  } = useTokenInfoForTradeInput(pool, yieldAssetContract, account, library);
+  } = useTokenInfoForTradeInput(pool, termAssetContract, account, library);
   const trancheContracts = useTrancheContracts();
   const isPrincipalPoolType = trancheContracts
     .map(({ address }) => address)
@@ -136,7 +136,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
     amountIn || "0",
     baseAssetDecimals
   );
-  poolTokenMaxAmounts[yieldAssetIndex] = parseUnits(
+  poolTokenMaxAmounts[termAssetIndex] = parseUnits(
     amountOut || "0",
     yieldAssetDecimals
   );
