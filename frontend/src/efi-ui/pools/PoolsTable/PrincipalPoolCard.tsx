@@ -111,6 +111,7 @@ export function PrincipalPoolCard(
         elevation={Elevation.TWO}
         interactive
         onClick={goToPoolPage}
+        style={{ maxWidth: 1180 }}
         className={classNames(
           Classes.SKELETON,
           tw("h-24", "w-full", "transition", "duration-1000", "ease-in-out")
@@ -124,6 +125,7 @@ export function PrincipalPoolCard(
       elevation={Elevation.TWO}
       interactive
       onClick={goToPoolPage}
+      style={{ maxWidth: 1180 }}
       className={classNames(
         styles.gridColsPoolCard,
         tw(

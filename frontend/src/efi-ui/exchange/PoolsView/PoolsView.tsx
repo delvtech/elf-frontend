@@ -43,9 +43,7 @@ export function PoolsView(props: PoolsViewProps): ReactElement {
             className={tw("text-center", "pt-12")}
           />
 
-          <div className={tw("flex", "flex-1")}>
-            <PoolsTable signerOrProvider={signer} className={tw("w-full")} />
-          </div>
+          <PoolsTable signerOrProvider={signer} className={tw("w-full")} />
         </div>
       </div>
     </Fragment>

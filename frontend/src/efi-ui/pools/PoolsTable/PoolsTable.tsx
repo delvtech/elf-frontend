@@ -26,7 +26,9 @@ export function PoolsTable({
   }
 
   return (
-    <div className={tw("w-full", "space-y-2")}>
+    <div
+      className={tw("flex", "flex-col", "items-center", "w-full", "space-y-2")}
+    >
       <Fragment>
         {principalTokenPools.map((pool, index) => {
           return (
