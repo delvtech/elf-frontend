@@ -60,8 +60,9 @@ export function EarnInput({
   // in the useOnInputChange handler
   const [internalValue, setInternalValue] = useState("");
 
-  // handles user input changes.  call onChangeThisValue to tell the parent the value changed.  also
-  // updates the internal value.
+  // handles user input changes.  call onChangeFromProps to tell the parent the value changed.  also
+  // updates the internal value.  if the user clears the inputs, we also call onPreviewUpdate to
+  // clear the preview.
   const onChange = useOnInputChange(
     setInternalValue,
     onChangeFromProps,
