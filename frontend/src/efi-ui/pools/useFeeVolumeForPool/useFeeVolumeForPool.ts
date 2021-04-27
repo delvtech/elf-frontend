@@ -138,8 +138,9 @@ function calculateTotalFees(
     totalFeesBond = totalFeesBond.add(collectedBond);
   });
 
-  const baseAssetFees = +formatUnits(totalFeesBase, baseAssetDecimals);
-  const yieldAssetFees = +formatUnits(totalFeesBond, baseAssetDecimals);
+  // note that all fees are reported in 18 decimal
+  const baseAssetFees = +formatEther(totalFeesBase);
+  const yieldAssetFees = +formatEther(totalFeesBond);
 
   const totalFees = baseAssetFiatPrice.multiply(
     baseAssetFees + yieldAssetFees / spotPrice,
