@@ -12,7 +12,7 @@ import {
 import { deployTrancheFactory } from "src/scripts/deployTrancheFactory";
 import { THIRTY_DAYS_IN_SECONDS } from "src/time";
 
-import { AddressesJson } from "../../../schema/AddressesJson";
+import { AddressesJson } from "../../../addresses/AddressesJson";
 import { deployBalancerVault } from "./balancerV2Vault";
 import { deployBaseAssets } from "./baseAssets";
 import { deployTrancheAndMarket } from "./deployTrancheAndMarket";
