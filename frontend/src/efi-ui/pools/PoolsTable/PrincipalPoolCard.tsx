@@ -1,6 +1,6 @@
-import { ReactElement, useCallback, useMemo } from "react";
+import { ReactElement, useCallback, useEffect, useMemo, useState } from "react";
 
-import { Card, Colors, Elevation } from "@blueprintjs/core";
+import { Card, Classes, Colors, Elevation } from "@blueprintjs/core";
 import { Link, navigate } from "@reach/router";
 import classNames from "classnames";
 import { t } from "ttag";
@@ -78,6 +78,31 @@ export function PrincipalPoolCard(
 
   const { isDarkMode } = useDarkMode();
 
+  const allDataLoaded =
+    tranche &&
+    liquidity &&
+    trancheCreatedAt &&
+    fees &&
+    baseAssetContract &&
+    baseAsset &&
+    baseAssetSymbol &&
+    BaseAssetIcon &&
+    termAssetContract &&
+    termAssetSymbol &&
+    unlockTimestampResult;
+
+  const [transitionsEnabled, setTransitionsEnabled] = useState(true);
+
+  // One tme useEffect to let us show transitions for the skeletons once the data is loaded.
+  // Afterwards we disable transitions so they don't interfere with light/dark mode switching.
+  useEffect(() => {
+    if (allDataLoaded) {
+      setTimeout(() => {
+        setTransitionsEnabled(false);
+      }, 1000);
+    }
+  }, [allDataLoaded]);
+
   if (!pool || !baseAssetContract) {
     return null;
   }
@@ -85,6 +110,20 @@ export function PrincipalPoolCard(
   const progressValue = calculateProgress(startDate, maturityDate);
   const progressLabel = progressValue === 1 ? t`closed` : `running`;
   const timeLeft = getTimeLeft2(maturityDate);
+
+  if (!allDataLoaded) {
+    return (
+      <Card
+        elevation={Elevation.TWO}
+        interactive
+        onClick={goToPoolPage}
+        className={classNames(
+          Classes.SKELETON,
+          tw("h-24", "w-full", "transition", "duration-1000", "ease-in-out")
+        )}
+      ></Card>
+    );
+  }
 
   return (
     <Card
@@ -98,7 +137,11 @@ export function PrincipalPoolCard(
         "xl:grid-cols-5",
         "h-24",
         "w-full",
-        "grid"
+        {
+          transition: transitionsEnabled,
+          "duration-1000": transitionsEnabled,
+          "ease-in-out": transitionsEnabled,
+        }
       )}
     >
       <div className={tw(cellClassName, "flex-shrink-0")}>
