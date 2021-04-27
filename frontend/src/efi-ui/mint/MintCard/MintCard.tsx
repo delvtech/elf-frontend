@@ -32,6 +32,7 @@ import { SwapKind } from "efi-ui/balancer/SwapKind";
 import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
 import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
+import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 
 export interface MintCardProps {
   library: Web3Provider | undefined;
@@ -54,7 +55,13 @@ export function MintCard({
 }: MintCardProps): ReactElement {
   // local state
   const [isDrawerOpen, setDrawerOpen] = useState(false);
-  const [amountInString, setAmountIn] = useState<string | undefined>(undefined);
+  const {
+    stringValue: amountInString,
+    setValue: setAmountIn,
+  } = useNumericInput({
+    // no one needs to put in more than a trillion anything
+    max: 999_999_999_999,
+  });
   const amountIn = +(amountInString || 0);
 
   // active base asset

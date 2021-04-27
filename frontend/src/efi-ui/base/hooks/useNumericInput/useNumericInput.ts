@@ -37,6 +37,11 @@ const DEFAULT_NUMERIC_INPUT_OPTIONS: NumericInputOptions = {
    * from the user
    */
   min: 0,
+
+  /**
+   *  no one needs to put in more than a trillion anything
+   *  */
+  max: 999_999_999_999,
 };
 
 /**
