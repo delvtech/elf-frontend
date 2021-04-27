@@ -1,4 +1,4 @@
-import { ReactElement, useCallback, useEffect, useMemo, useState } from "react";
+import { ReactElement, useCallback, useEffect, useState } from "react";
 
 import { Card, Classes, Colors, Elevation } from "@blueprintjs/core";
 import { Link, navigate } from "@reach/router";
@@ -6,9 +6,8 @@ import classNames from "classnames";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { LabeledProgressBar } from "efi-ui/base/LabeledProgressBar/LabeledProgressBar";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { getQueryData } from "efi-ui/base/queryResults";
+import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
@@ -22,8 +21,6 @@ import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { calculateProgress } from "efi-ui/tranche/calculateProgress";
 import { useTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
 import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
-import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
-import { getTimeLeft2 } from "efi/base/time";
 import { formatMoney } from "efi/money/formatMoney";
 import { PoolContract } from "efi/pools/PoolContract";
 
@@ -56,25 +53,16 @@ export function PrincipalPoolCard(
     termAssetContract?.address,
     baseAssetSymbol
   );
-  const unlockTimestampResult = useSmartContractReadCall(
+  const { data: unlockBN } = useSmartContractReadCall(
     tranche,
     "unlockTimestamp"
   );
+  const unlockTime = unlockBN?.toNumber();
 
   // TODO: Get this from props
   const goToPoolPage = useCallback(() => {
     navigate(`pools/${pool?.address}`);
   }, [pool?.address]);
-
-  const unlockTimestamp = getQueryData(unlockTimestampResult);
-  const maturityDate = useMemo(
-    () => convertEpochSecondsToDate(unlockTimestamp),
-    [unlockTimestamp]
-  );
-
-  const startDate = useMemo(() => convertEpochSecondsToDate(trancheCreatedAt), [
-    trancheCreatedAt,
-  ]);
 
   const { isDarkMode } = useDarkMode();
 
@@ -89,7 +77,7 @@ export function PrincipalPoolCard(
     BaseAssetIcon &&
     termAssetContract &&
     termAssetSymbol &&
-    unlockTimestampResult;
+    unlockBN;
 
   const [transitionsEnabled, setTransitionsEnabled] = useState(true);
 
@@ -107,9 +95,12 @@ export function PrincipalPoolCard(
     return null;
   }
 
+  const startTime = trancheCreatedAt ? trancheCreatedAt * 1000 : undefined;
+  const maturityTime = unlockTime ? unlockTime * 1000 : undefined;
+  const startDate = startTime ? new Date(startTime) : undefined;
+  const maturityDate = maturityTime ? new Date(maturityTime) : undefined;
   const progressValue = calculateProgress(startDate, maturityDate);
   const progressLabel = progressValue === 1 ? t`closed` : `running`;
-  const timeLeft = getTimeLeft2(maturityDate);
 
   if (!allDataLoaded) {
     return (
@@ -228,10 +219,10 @@ export function PrincipalPoolCard(
         />
       </div>
       <div className={cellClassName}>
-        <LabeledProgressBar
+        <TimeLeft
           label={progressLabel}
-          progressValue={progressValue}
-          helperText={timeLeft}
+          startDate={startTime}
+          maturityDate={maturityTime}
         />
       </div>
     </Card>
