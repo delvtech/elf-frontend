@@ -9,6 +9,7 @@ import styles from "efi-ui/crypto/CryptoAssetPicker/styles.module.css";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 
 import { CryptoAssetButton } from "./CryptoAssetButton";
+import { Classes } from "@blueprintjs/core";
 
 interface CryptoAssetPickerProps {
   className?: string;
@@ -29,11 +30,11 @@ export function CryptoAssetPicker({
 
   if (!activeCryptoAsset || !availableCryptoAssets.length) {
     return (
-      <CryptoAssetButton
-        minimal
-        loading
-        cryptoAsset={activeCryptoAsset}
-        rightIcon={IconNames.CARET_DOWN}
+      <div
+        className={classNames(
+          Classes.SKELETON,
+          tw("flex", "flex-1", "h-full", "w-300")
+        )}
       />
     );
   }

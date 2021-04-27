@@ -18,7 +18,7 @@ interface CryptoAssetButtonProps {
   fill?: boolean;
   minimal?: boolean;
   cryptoAsset: CryptoAsset | undefined;
-  loading?: boolean;
+
   rightIcon?: IconName;
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
@@ -29,12 +29,15 @@ export function CryptoAssetButton({
   outlined,
   cryptoAsset,
   rightIcon,
-  loading,
   onClick,
 }: CryptoAssetButtonProps): ReactElement {
   const assetName = useCryptoName(cryptoAsset);
   const assetSymbol = useCryptoSymbol(cryptoAsset);
   const assetIcon = findAssetIcon(assetSymbol);
+
+  if (!cryptoAsset || !assetSymbol || !assetIcon) {
+    return <div className={classNames(Classes.SKELETON)} />;
+  }
 
   return (
     <button
@@ -45,7 +48,6 @@ export function CryptoAssetButton({
           [Classes.MINIMAL]: minimal,
           [Classes.OUTLINED]: outlined,
           [Classes.FILL]: fill,
-          [Classes.SKELETON]: loading,
         },
         tw("flex", "justify-start")
       )}
@@ -53,7 +55,7 @@ export function CryptoAssetButton({
       <AssetLabel
         icon={assetIcon}
         assetName={assetName}
-        assetSymbol={assetSymbol || ""}
+        assetSymbol={assetSymbol}
       />
       {rightIcon && <Icon icon={rightIcon} className={tw("pr-4")} />}
     </button>
