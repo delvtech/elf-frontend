@@ -4,7 +4,7 @@ import { formatDistance, formatDuration, intervalToDuration } from "date-fns";
 import { t } from "ttag";
 
 import { LabeledProgressBar } from "efi-ui/base/LabeledProgressBar/LabeledProgressBar";
-import { calculateProgress } from "efi-ui/tranche/calculateProgress";
+import { calculateProgress } from "efi/base/calculateProgress";
 
 interface TimeLeftProps {
   /**
