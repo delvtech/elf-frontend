@@ -3,13 +3,13 @@ import React, { ReactElement } from "react";
 import { IconNames } from "@blueprintjs/icons";
 import { Select } from "@blueprintjs/select";
 import classNames from "classnames";
-import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import styles from "efi-ui/crypto/CryptoAssetPicker/styles.module.css";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 
 import { CryptoAssetButton } from "./CryptoAssetButton";
+import { Classes } from "@blueprintjs/core";
 
 interface CryptoAssetPickerProps {
   className?: string;
@@ -29,7 +29,14 @@ export function CryptoAssetPicker({
   );
 
   if (!activeCryptoAsset || !availableCryptoAssets.length) {
-    return <span>{t`Could not find any base assets`}</span>;
+    return (
+      <div
+        className={classNames(
+          Classes.SKELETON,
+          tw("flex", "flex-1", "h-full", "w-300")
+        )}
+      />
+    );
   }
 
   return (

@@ -6,6 +6,9 @@ import { Tranche } from "elf-contracts/types/Tranche";
 import { TermPicker } from "efi-ui/tranche/TermPicker/TermPicker";
 import { PrincipalTokenTermButtonLabel } from "efi-ui/tranche/TermPicker/PrincipalTokenTermButtonLabel";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
+import tw from "efi-tailwindcss-classnames";
+import classNames from "classnames";
+import { Classes } from "@blueprintjs/core";
 
 interface EarnTermPickerProps {
   library: Web3Provider | undefined;
@@ -24,9 +27,15 @@ export function EarnTermPicker({
   onTrancheChange,
   activeTrancheIndex,
 }: EarnTermPickerProps): ReactElement | null {
-  // TODO: Show a loading or disabled state of some kind
   if (!tranches.length || activeTrancheIndex === undefined) {
-    return null;
+    return (
+      <div
+        className={classNames(
+          Classes.SKELETON,
+          tw("flex", "flex-1", "h-full", "w-300")
+        )}
+      />
+    );
   }
 
   return (
