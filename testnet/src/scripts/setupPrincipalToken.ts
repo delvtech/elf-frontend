@@ -20,7 +20,7 @@ export async function setupPrincipalTokenPool(
   trancheContract: Tranche,
   options: { mintAmount: string; baseAssetIn: string; yieldAssetIn: string }
 ) {
-  const { baseAssetIn, yieldAssetIn } = options;
+  const { baseAssetIn, yieldAssetIn, mintAmount } = options;
   const sender = await signer.getAddress();
 
   // put base asset into market
@@ -38,7 +38,7 @@ export async function setupPrincipalTokenPool(
     signer,
     baseAssetContract,
     trancheContract,
-    baseAssetIn
+    mintAmount 
   );
 
   // trade some tranche assets for some base assets

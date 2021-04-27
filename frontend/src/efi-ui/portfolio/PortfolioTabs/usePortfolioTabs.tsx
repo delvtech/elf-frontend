@@ -20,6 +20,12 @@ import { YieldTokenPortfolio } from "efi-ui/portfolio/YieldTokenPortfolio/YieldT
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useTokensWithBalance } from "efi-ui/token/hooks/useTokensWithBalance";
 import { useTrancheContracts } from "efi-ui/tranche/useTrancheContracts";
+import { useTokenDecimalsMulti } from "efi-ui/token/hooks/useTokenDecimalsMulti";
+import { getQueriesData } from "efi-ui/base/queryResults";
+import zip from "lodash.zip";
+import { ERC20 } from "elf-contracts/types/ERC20";
+import { BigNumber } from "ethers";
+import { isDust } from "efi/coins/isDust";
 
 export function usePortfolioTabs(
   chainId: number | undefined,
@@ -30,8 +36,8 @@ export function usePortfolioTabs(
   provider?: Provider
 ): PortfolioTab[] {
   const {
-    tranchesWithBalance,
-    totalFiatBalanceAllTranches,
+    principalTokens,
+    totalFiatBalanceAllPrincipalTokens,
   } = usePrincipalTokenTab(library, account, provider);
 
   const {
@@ -49,8 +55,8 @@ export function usePortfolioTabs(
     {
       id: "principal-tokens",
       name: t`Principal Tokens`,
-      quantity: tranchesWithBalance.length,
-      totalFiatValue: totalFiatBalanceAllTranches,
+      quantity: principalTokens.length,
+      totalFiatValue: totalFiatBalanceAllPrincipalTokens,
       contentRenderer: () => (
         <PrincipalTokenPortfolio
           chainId={chainId}
@@ -58,7 +64,7 @@ export function usePortfolioTabs(
           connector={connector}
           walletConnectionActive={walletConnectionActive}
           account={account}
-          tranches={tranchesWithBalance}
+          tranches={principalTokens}
         />
       ),
     },
@@ -105,24 +111,39 @@ function usePrincipalTokenTab(
   account: string | null | undefined,
   provider?: Provider
 ) {
-  const trancheContracts = useTrancheContracts();
-  const tranchesWithBalanceResults = useTokensWithBalance(
+  const principalTokens = useTrancheContracts();
+  const principalTokenDecimalResults = useTokenDecimalsMulti(principalTokens);
+  const principalTokenDecimals = getQueriesData(principalTokenDecimalResults);
+  const principalTokensWithBalanceResults = useTokensWithBalance(
     account,
-    (trancheContracts as unknown) as ERC20Shim[],
+    (principalTokens as unknown) as ERC20Shim[],
     provider
   );
 
-  const tranchesWithBalance = tranchesWithBalanceResults.map(
-    ({ token }) => (token as unknown) as Tranche
-  );
+  // filter out dust, because redeeming a PT can leave a small amount of dust in
+  // the user's account
+  const principalTokensWithoutDust = zip(
+    principalTokensWithBalanceResults,
+    principalTokenDecimals
+  )
+    .filter((zipped): zipped is [
+      { token: ERC20; balanceOf: BigNumber },
+      number
+    ] => zipped.every((v) => !!v))
+    .filter(([{ balanceOf }, decimals]) => !isDust(balanceOf, decimals))
+    .map(([{ token }]) => (token as unknown) as Tranche);
 
-  const totalFiatBalanceAllTranches = useTotalFiatBalance(
+  // The total fiat balance
+  const totalFiatBalanceAllPrincipalTokens = useTotalFiatBalance(
     library,
     account,
-    tranchesWithBalance
+    principalTokensWithoutDust
   );
 
-  return { tranchesWithBalance, totalFiatBalanceAllTranches };
+  return {
+    principalTokens: principalTokensWithoutDust,
+    totalFiatBalanceAllPrincipalTokens,
+  };
 }
 
 function useYieldTokenTab(
