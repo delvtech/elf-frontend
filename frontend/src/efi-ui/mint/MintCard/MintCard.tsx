@@ -28,6 +28,11 @@ import { MintTermPicker } from "efi-ui/mint/MintTermPicker/MintTermPicker";
 import { MintTransactionConfirmationDrawer } from "efi-ui/mint/MintTransactionConfirmationDrawer/MintTransactionConfirmationDrawer";
 import { formatBalance } from "efi/base/formatBalance";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
+import { SwapKind } from "efi-ui/balancer/SwapKind";
+import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
+import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
+import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
+import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 
 export interface MintCardProps {
   library: Web3Provider | undefined;
@@ -50,7 +55,13 @@ export function MintCard({
 }: MintCardProps): ReactElement {
   // local state
   const [isDrawerOpen, setDrawerOpen] = useState(false);
-  const [amountInString, setAmountIn] = useState<string | undefined>(undefined);
+  const {
+    stringValue: amountInString,
+    setValue: setAmountIn,
+  } = useNumericInput({
+    // no one needs to put in more than a trillion anything
+    max: 999_999_999_999,
+  });
   const amountIn = +(amountInString || 0);
 
   // active base asset
@@ -83,6 +94,18 @@ export function MintCard({
     amountIn
   );
 
+  // active pool
+  const pool = usePoolForToken(activeTranche);
+  const { data: [tokens] = [] } = usePoolTokens(pool);
+  const {
+    // activeBaseAsset from above might be ETH, but we need the WETH contract for queryBatchSwap in
+    // EarnInput to work correctly.
+    baseAssetContract,
+    // these are only needed to make EarnInput work.  can get rid of these if we make a MintInput
+    termAssetIndex,
+    termAssetContract,
+  } = parseSortedTokensForPool(tokens);
+
   return (
     <Fragment>
       <Card
@@ -110,6 +133,7 @@ export function MintCard({
               "border-gray-500"
             )}
           >
+            {/* TODO: we need a MintInput that doesn't require a queryBatchSwap */}
             <EarnInput
               showMaxButton={!!account}
               assetPicker={
@@ -123,6 +147,15 @@ export function MintCard({
               value={amountInString}
               onValueChange={setAmountIn}
               assetBalance={+activeBaseAssetDisplayBalance}
+              cryptoAddress={baseAssetContract?.address}
+              cryptoDecimals={activeBaseAssetDecimals}
+              cryptoBalanceOf={activeBaseAssetBalance}
+              cryptoDisplayBalance={activeBaseAssetDisplayBalance || ""}
+              previewCryptoAddress={termAssetContract?.address}
+              previewCryptoPoolIndex={termAssetIndex}
+              pool={pool}
+              onPreviewUpdate={() => {}}
+              swapKind={SwapKind.GIVEN_IN}
             />
           </div>
         </div>

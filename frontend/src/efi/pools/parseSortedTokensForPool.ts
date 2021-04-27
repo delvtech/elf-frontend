@@ -7,8 +7,8 @@ import { ERC20 } from "elf-contracts/types/ERC20";
 interface ParsedTokens {
   baseAssetContract: ERC20 | undefined;
   baseAssetIndex: number;
-  yieldAssetContract: ERC20 | undefined;
-  yieldAssetIndex: number;
+  termAssetContract: ERC20 | undefined;
+  termAssetIndex: number;
 }
 // tokens and token related values are returned as arrrays that are sorted alphanumerically by token
 // addresses.  this returns the index of the 'base asset' and 'yield asset' values of those arrays.
@@ -17,23 +17,23 @@ export function parseSortedTokensForPool(
 ): ParsedTokens {
   const baseAssetIndex: number =
     tokens?.findIndex((address) => KNOWN_BASE_ASSETS.includes(address)) ?? 0;
-  const yieldAssetIndex = baseAssetIndex === 0 ? 1 : 0;
+  const termAssetIndex = baseAssetIndex === 0 ? 1 : 0;
 
   const baseAssetAddress = tokens?.[baseAssetIndex];
-  const yieldAssetAddress = tokens?.[yieldAssetIndex];
+  const termAssetAddress = tokens?.[termAssetIndex];
 
   const baseAssetContract = baseAssetAddress
     ? ERC20__factory.connect(baseAssetAddress, jsonRpcProvider)
     : undefined;
 
-  const yieldAssetContract = yieldAssetAddress
-    ? ERC20__factory.connect(yieldAssetAddress, jsonRpcProvider)
+  const termAssetContract = termAssetAddress
+    ? ERC20__factory.connect(termAssetAddress, jsonRpcProvider)
     : undefined;
 
   return {
     baseAssetContract,
     baseAssetIndex,
-    yieldAssetContract,
-    yieldAssetIndex,
+    termAssetContract,
+    termAssetIndex,
   };
 }

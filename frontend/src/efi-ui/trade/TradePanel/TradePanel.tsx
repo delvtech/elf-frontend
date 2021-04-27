@@ -288,7 +288,7 @@ function useTokenInfoForTradeInput(
   // get contracts/assets
   const tokensResult = usePoolTokens(pool);
   const [tokens] = getQueryData(tokensResult) ?? [];
-  const { yieldAssetContract, baseAssetContract } = parseSortedTokensForPool(
+  const { termAssetContract, baseAssetContract } = parseSortedTokensForPool(
     tokens
   );
   const baseCryptoAsset = useCryptoAssetForToken(baseAssetContract?.address);
@@ -296,13 +296,13 @@ function useTokenInfoForTradeInput(
   // get symbols
   const baseAssetSymbol = useCryptoSymbol(baseCryptoAsset);
   const { symbol: termSymbol } = useTermAssetSymbol(
-    yieldAssetContract?.address,
+    termAssetContract?.address,
     baseAssetSymbol
   );
 
   // choose correct symbol
   const symbol =
-    yieldAssetContract?.address === tokenContract?.address
+    termAssetContract?.address === tokenContract?.address
       ? termSymbol
       : baseAssetSymbol;
 

@@ -173,9 +173,9 @@ function useTokensSummary(pool: PoolContract | undefined): TokensSummary {
 
   const {
     baseAssetIndex,
-    yieldAssetIndex: termAssetIndex,
+    termAssetIndex,
     baseAssetContract,
-    yieldAssetContract: termAssetContract,
+    termAssetContract,
   } = parseSortedTokensForPool(tokens);
   const baseAsset = useCryptoAssetForToken(baseAssetContract?.address);
 

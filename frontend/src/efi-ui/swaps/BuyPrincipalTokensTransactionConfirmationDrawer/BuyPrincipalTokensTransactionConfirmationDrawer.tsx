@@ -134,7 +134,6 @@ export function BuyPrincipalTokensTransactionConfirmationDrawer({
       account={account}
       assetIn={baseAsset}
       assetInSymbol={baseAssetSymbol}
-      assetInIcon={baseAssetIcon}
       walletConnectionActive={walletConnectionActive}
       amountIn={amountInAsBigNumber}
       chainId={chainId}

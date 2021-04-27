@@ -11,11 +11,11 @@ import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import classNames from "classnames";
 import { Tranche } from "elf-contracts/types/Tranche";
-import { parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { useQueryBatchSwapInputs } from "efi-ui/balancer/useQueryBatchSwapInputs";
+import { SwapKind } from "efi-ui/balancer/SwapKind";
+import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { CryptoAssetPicker } from "efi-ui/crypto/CryptoAssetPicker/CryptoAssetPicker";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
@@ -29,12 +29,14 @@ import { useActiveTranche } from "efi-ui/earn/hooks/useActiveTranche";
 import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
+import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { BuyPrincipalTokensTransactionConfirmationDrawer } from "efi-ui/swaps/BuyPrincipalTokensTransactionConfirmationDrawer/BuyPrincipalTokensTransactionConfirmationDrawer";
-import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { formatBalance } from "efi/base/formatBalance";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
+import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
+import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
 
 export interface EarnCardProps {
   library: Web3Provider | undefined;
@@ -64,7 +66,6 @@ export function EarnCard({
   const { activeBaseAsset, setActiveBaseAsset } = useActiveBaseAsset(
     baseAssets
   );
-  const tokenInAddress = getTokenAddressForBalancer(activeBaseAsset);
 
   // tranche
   const {
@@ -86,22 +87,22 @@ export function EarnCard({
     activeBaseAssetDecimals
   );
 
-  const tokenOutAddress = activeTranche?.address;
+  const principalTokenAddress = activeTranche?.address;
+  const principalTokenAsset = useCryptoAssetForToken(principalTokenAddress);
+  const principalTokenDecimals = useCryptoDecimals(principalTokenAsset);
+  const principalTokenBalanceOf = useCryptoBalance(
+    library,
+    account,
+    principalTokenAsset
+  );
+  const principalTokenDisplayBalance = formatBalance(
+    principalTokenBalanceOf,
+    principalTokenDecimals
+  );
 
   const pool = usePoolForToken(activeTranche as ERC20Shim, jsonRpcProvider);
-
-  const {
-    amountIn,
-    amountOut,
-    onAmountOutChange,
-    onAmountInChange,
-  } = useQueryBatchSwapInputs(
-    pool,
-    tokenInAddress,
-    activeBaseAssetDecimals,
-    tokenOutAddress,
-    trancheDecimals
-  );
+  const { data: [tokens] = [] } = usePoolTokens(pool);
+  const { baseAssetIndex, termAssetIndex } = parseSortedTokensForPool(tokens);
 
   // the tranche's pool
   const baseAssetPoolToken = usePoolPairedToken(
@@ -109,22 +110,16 @@ export function EarnCard({
     activeTranche as ERC20Shim
   );
   const {
-    spotPriceBaseAssetForOneToken: amountOfEthForOneTranche,
+    spotPriceBaseAssetForOneToken: amountOfEthForOnePrincipalEth,
   } = usePoolTokenPrices(pool, baseAssetPoolToken);
   const inputTokenSymbol = useCryptoSymbol(activeBaseAsset);
   const baseAssetIcon = findAssetIcon(inputTokenSymbol);
 
-  // input calculations
-  const amountInAsBigNumber = amountIn
-    ? parseUnits(amountIn, activeBaseAssetDecimals)
-    : undefined;
+  const { stringValue: amountIn, setValue: onChangeIn } = useNumericInput();
+  const { stringValue: amountOut, setValue: onChangeOut } = useNumericInput();
 
-  const amountOutAsBigNumber = amountOut
-    ? parseUnits(amountOut, trancheDecimals)
-    : undefined;
-
-  const roundedTranchePrice = amountOfEthForOneTranche?.toFixed(4);
-  const marketRateLabel = t`1 ${inputTokenSymbol} Principal Token ≈ ${roundedTranchePrice} ${activeBaseAssetSymbol}`;
+  const roundedPrincipalPrice = amountOfEthForOnePrincipalEth?.toFixed(4);
+  const marketRateLabel = t`1 ${inputTokenSymbol} Principal Token ≈ ${roundedPrincipalPrice} ${activeBaseAssetSymbol}`;
 
   return (
     <Fragment>
@@ -164,8 +159,17 @@ export function EarnCard({
               }
               placeholder="0.00"
               value={amountIn}
-              onValueChange={onAmountInChange}
+              onValueChange={onChangeIn}
               assetBalance={+activeBaseAssetDisplayBalance}
+              cryptoAddress={baseAssetPoolToken?.address}
+              cryptoDecimals={activeBaseAssetDecimals}
+              cryptoBalanceOf={activeBaseAssetBalance}
+              cryptoDisplayBalance={activeBaseAssetDisplayBalance || ""}
+              previewCryptoAddress={principalTokenAddress}
+              previewCryptoPoolIndex={termAssetIndex}
+              pool={pool}
+              onPreviewUpdate={onChangeOut}
+              swapKind={SwapKind.GIVEN_IN}
             />
           </div>
         </div>
@@ -202,18 +206,26 @@ export function EarnCard({
               }
               placeholder="0.00"
               value={amountOut}
-              onValueChange={onAmountOutChange}
+              onValueChange={onChangeOut}
+              onPreviewUpdate={onChangeIn}
               assetBalance={+activeBaseAssetDisplayBalance}
+              cryptoAddress={principalTokenAddress}
+              cryptoDecimals={trancheDecimals}
+              cryptoBalanceOf={principalTokenBalanceOf}
+              cryptoDisplayBalance={principalTokenDisplayBalance}
+              previewCryptoAddress={baseAssetPoolToken?.address}
+              previewCryptoPoolIndex={baseAssetIndex}
+              pool={pool}
+              swapKind={SwapKind.GIVEN_OUT}
             />
           </div>
         </div>
 
         <div className={tw("flex", "space-x-10", "h-24", "mt-10")}>
           <PrincipalDiscountPreview
-            amountIn={amountInAsBigNumber}
+            amountIn={amountIn}
             baseAssetSymbol={activeBaseAssetSymbol}
-            amountOut={amountOutAsBigNumber}
-            baseAssetDecimals={activeBaseAssetDecimals}
+            amountOut={amountOut}
           />
           <Button
             large
