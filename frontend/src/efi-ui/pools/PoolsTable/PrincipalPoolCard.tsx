@@ -24,6 +24,8 @@ import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
 import { formatMoney } from "efi/money/formatMoney";
 import { PoolContract } from "efi/pools/PoolContract";
 
+import styles from "./PrincipalPoolCard.module.css";
+
 interface PrincipalPoolCardProps {
   pool: PoolContract | undefined;
 }
@@ -121,18 +123,21 @@ export function PrincipalPoolCard(
       elevation={Elevation.TWO}
       interactive
       onClick={goToPoolPage}
-      className={tw(
-        "grid",
-        "grid-cols-3",
-        "lg:grid-cols-4",
-        "xl:grid-cols-5",
-        "h-24",
-        "w-full",
-        {
-          transition: transitionsEnabled,
-          "duration-1000": transitionsEnabled,
-          "ease-in-out": transitionsEnabled,
-        }
+      className={classNames(
+        styles.gridColsPoolCard,
+        tw(
+          "grid",
+          "grid-cols-3",
+          "lg:grid-cols-4",
+          "xl:grid-cols-poolcard",
+          "h-24",
+          "w-full",
+          {
+            transition: transitionsEnabled,
+            "duration-1000": transitionsEnabled,
+            "ease-in-out": transitionsEnabled,
+          }
+        )
       )}
     >
       <div className={tw(cellClassName, "flex-shrink-0")}>
@@ -200,12 +205,20 @@ export function PrincipalPoolCard(
       </div>
 
       <div className={tw(cellClassName)}>
-        <LabeledText large text={formatMoney(liquidity)} label={`liquidity`} />
+        <LabeledText
+          large
+          text={formatMoney(liquidity, { wholeAmounts: true })}
+          label={`liquidity`}
+        />
       </div>
       <div className={tw(cellClassName, "hidden", "lg:flex")}>
-        <LabeledText large text={formatMoney(fees)} label={`Fees`} />
+        <LabeledText
+          large
+          text={formatMoney(fees, { wholeAmounts: true })}
+          label={`Fees`}
+        />
       </div>
-      <div className={tw(cellClassName, "hidden", "xl:flex", "flex-wrap")}>
+      <div className={tw(cellClassName, "hidden", "xl:flex")}>
         <LabeledText
           className={tw("mr-4")}
           large

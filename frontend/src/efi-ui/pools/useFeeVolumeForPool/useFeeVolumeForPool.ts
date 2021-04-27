@@ -2,7 +2,7 @@ import { useQuery } from "react-query";
 
 import { Event } from "@ethersproject/contracts";
 import { BigNumber } from "ethers";
-import { formatEther, formatUnits } from "ethers/lib/utils";
+import { formatEther } from "ethers/lib/utils";
 import { Money } from "ts-money";
 
 import { getQueryData } from "efi-ui/base/queryResults";

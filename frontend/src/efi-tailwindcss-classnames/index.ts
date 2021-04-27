@@ -1031,7 +1031,8 @@ export type TGridTemplateColumns =
   | "grid-cols-10"
   | "grid-cols-11"
   | "grid-cols-12"
-  | "grid-cols-none";
+  | "grid-cols-none"
+  | "grid-cols-poolcard";
 
 export type TGridAutoColumns =
   | "auto-cols-auto"
@@ -12233,6 +12234,10 @@ export type TPseudoClasses =
   | "md:grid-cols-none"
   | "lg:grid-cols-none"
   | "xl:grid-cols-none"
+  | "sm:grid-cols-poolcard"
+  | "md:grid-cols-poolcard"
+  | "lg:grid-cols-poolcard"
+  | "xl:grid-cols-poolcard"
   | "sm:auto-cols-auto"
   | "md:auto-cols-auto"
   | "lg:auto-cols-auto"
