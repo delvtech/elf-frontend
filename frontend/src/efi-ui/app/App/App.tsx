@@ -5,19 +5,18 @@ import { LocationProvider, Redirect, Router } from "@reach/router";
 import classNames from "classnames";
 
 import { tw } from "efi-tailwindcss-classnames";
+import { EarnView } from "efi-ui/earn/EarnView/EarnView";
 import { PoolsView } from "efi-ui/exchange/PoolsView/PoolsView";
 import { FAQView } from "efi-ui/faq/FAQView";
-import { EarnView } from "efi-ui/earn/EarnView/EarnView";
-import { PoolView } from "efi-ui/pools/PoolView/PoolView";
 import { MintView } from "efi-ui/mint/MintView/MintView";
 import { MainNavigation } from "efi-ui/navigation/MainNavigation/MainNavigation";
 import { Navigation } from "efi-ui/navigation/navigation";
+import { PoolView } from "efi-ui/pools/PoolView/PoolView";
 import { PortfolioView } from "efi-ui/portfolio/PortfolioView/PortfolioView";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useSyncWithInjectedEthereum } from "efi-ui/wallets/hooks/useSyncWithInjectedEthereum";
 
 import styles from "./App.module.css";
-import { AppToaster } from "efi-ui/toaster/AppToaster/AppToaster";
 
 const contentClassName = tw(
   "flex-1",
