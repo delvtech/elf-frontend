@@ -36,8 +36,8 @@ export function usePortfolioTabs(
   provider?: Provider
 ): PortfolioTab[] {
   const {
-    tranchesWithBalance,
-    totalFiatBalanceAllTranches,
+    principalTokens,
+    totalFiatBalanceAllPrincipalTokens,
   } = usePrincipalTokenTab(library, account, provider);
 
   const {
@@ -55,8 +55,8 @@ export function usePortfolioTabs(
     {
       id: "principal-tokens",
       name: t`Principal Tokens`,
-      quantity: tranchesWithBalance.length,
-      totalFiatValue: totalFiatBalanceAllTranches,
+      quantity: principalTokens.length,
+      totalFiatValue: totalFiatBalanceAllPrincipalTokens,
       contentRenderer: () => (
         <PrincipalTokenPortfolio
           chainId={chainId}
@@ -64,7 +64,7 @@ export function usePortfolioTabs(
           connector={connector}
           walletConnectionActive={walletConnectionActive}
           account={account}
-          tranches={tranchesWithBalance}
+          tranches={principalTokens}
         />
       ),
     },
@@ -111,18 +111,21 @@ function usePrincipalTokenTab(
   account: string | null | undefined,
   provider?: Provider
 ) {
-  const trancheContracts = useTrancheContracts();
-  const trancheDecimalsResults = useTokenDecimalsMulti(trancheContracts);
-  const trancheDecimals = getQueriesData(trancheDecimalsResults);
-  const tranchesWithBalanceResults = useTokensWithBalance(
+  const principalTokens = useTrancheContracts();
+  const principalTokenDecimalResults = useTokenDecimalsMulti(principalTokens);
+  const principalTokenDecimals = getQueriesData(principalTokenDecimalResults);
+  const principalTokensWithBalanceResults = useTokensWithBalance(
     account,
-    (trancheContracts as unknown) as ERC20Shim[],
+    (principalTokens as unknown) as ERC20Shim[],
     provider
   );
 
   // filter out dust, because redeeming a PT can leave a small amount of dust in
   // the user's account
-  const tranchesWithoutDust = zip(tranchesWithBalanceResults, trancheDecimals)
+  const principalTokensWithoutDust = zip(
+    principalTokensWithBalanceResults,
+    principalTokenDecimals
+  )
     .filter((zipped): zipped is [
       { token: ERC20; balanceOf: BigNumber },
       number
@@ -131,15 +134,15 @@ function usePrincipalTokenTab(
     .map(([{ token }]) => (token as unknown) as Tranche);
 
   // The total fiat balance
-  const totalFiatBalanceAllTranches = useTotalFiatBalance(
+  const totalFiatBalanceAllPrincipalTokens = useTotalFiatBalance(
     library,
     account,
-    tranchesWithoutDust
+    principalTokensWithoutDust
   );
 
   return {
-    tranchesWithBalance: tranchesWithoutDust,
-    totalFiatBalanceAllTranches,
+    principalTokens: principalTokensWithoutDust,
+    totalFiatBalanceAllPrincipalTokens,
   };
 }
 
