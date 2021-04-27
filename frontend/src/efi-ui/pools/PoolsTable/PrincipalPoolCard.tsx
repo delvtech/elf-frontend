@@ -25,6 +25,7 @@ import { formatMoney } from "efi/money/formatMoney";
 import { PoolContract } from "efi/pools/PoolContract";
 
 import styles from "./PrincipalPoolCard.module.css";
+import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 
 interface PrincipalPoolCardProps {
   pool: PoolContract | undefined;
@@ -99,8 +100,8 @@ export function PrincipalPoolCard(
 
   const startTime = trancheCreatedAt ? trancheCreatedAt * 1000 : undefined;
   const maturityTime = unlockTime ? unlockTime * 1000 : undefined;
-  const startDate = startTime ? new Date(startTime) : undefined;
-  const maturityDate = maturityTime ? new Date(maturityTime) : undefined;
+  const startDate = convertEpochSecondsToDate(startTime);
+  const maturityDate = convertEpochSecondsToDate(maturityTime);
   const progressValue = calculateProgress(startDate, maturityDate);
   const progressLabel = progressValue === 1 ? t`closed` : `running`;
 
@@ -208,7 +209,7 @@ export function PrincipalPoolCard(
         <LabeledText
           large
           text={formatMoney(liquidity, { wholeAmounts: true })}
-          label={`liquidity`}
+          label={`Liquidity`}
         />
       </div>
       <div className={tw(cellClassName, "hidden", "lg:flex")}>

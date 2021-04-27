@@ -4,6 +4,7 @@ import { formatDistance, formatDuration, intervalToDuration } from "date-fns";
 import { t } from "ttag";
 
 import { LabeledProgressBar } from "efi-ui/base/LabeledProgressBar/LabeledProgressBar";
+import { calculateProgress } from "efi-ui/tranche/calculateProgress";
 
 interface TimeLeftProps {
   /**
@@ -20,7 +21,7 @@ interface TimeLeftProps {
 
 export function TimeLeft(props: TimeLeftProps): ReactElement {
   const { startDate = 0, maturityDate = 0, label } = props;
-  const progress = (Date.now() - startDate) / (maturityDate - startDate);
+  const progress = calculateProgress(startDate, maturityDate);
   const timeLeft = getTimeLeft(maturityDate);
   const timeSince = getTimeSince(maturityDate);
   const time = progress > 1 ? timeSince : timeLeft;
