@@ -119,6 +119,7 @@ export function SwapTokensTransactionConfirmationDrawer({
       onClose={onClose}
       account={account}
       assetIn={tokenInAsset}
+      assetInSymbol={tokenInSymbol}
       walletConnectionActive={walletConnectionActive}
       amountIn={amountInAsBigNumber}
       chainId={chainId}
