@@ -29,7 +29,7 @@ import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolToken
 import { RedeemPrincipalTokensButton } from "efi-ui/portfolio/RedeemButton/RedeemPrincipalTokensButton";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
-import { calculateProgress } from "efi-ui/tranche/calculateProgress";
+import { calculateProgress } from "efi/base/calculateProgress";
 import { useBaseAssetForTranche } from "efi-ui/tranche/useBaseAssetForTranche";
 import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
 import { useUnderlyingVaultForTranche } from "efi-ui/tranche/useUnderlyingVaultForTranche";

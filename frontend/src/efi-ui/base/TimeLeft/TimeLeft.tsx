@@ -1,10 +1,10 @@
-import React, { ReactElement, useState } from "react";
-import { useInterval } from "react-use";
+import React, { ReactElement } from "react";
 
+import { formatDistance, formatDuration, intervalToDuration } from "date-fns";
 import { t } from "ttag";
 
 import { LabeledProgressBar } from "efi-ui/base/LabeledProgressBar/LabeledProgressBar";
-import { getTimeLeft } from "efi/base/time";
+import { calculateProgress } from "efi/base/calculateProgress";
 
 interface TimeLeftProps {
   /**
@@ -15,21 +15,53 @@ interface TimeLeftProps {
    * unix time in ms
    */
   maturityDate: number | undefined;
+
+  label?: string;
 }
 
 export function TimeLeft(props: TimeLeftProps): ReactElement {
-  const { startDate = 0, maturityDate = 0 } = props;
-  const progress = (Date.now() - startDate) / (maturityDate - startDate);
-  const [timerValue, setTimerValue] = useState(maturityDate - Date.now());
-  useInterval(() => {
-    setTimerValue(maturityDate - Date.now());
-  }, 1000);
-  const [daysLeft, hoursLeft, minutesLeft] = getTimeLeft(timerValue);
-  const time = t`${daysLeft} days, ${hoursLeft}, hours, ${minutesLeft} minutes`;
+  const { startDate = 0, maturityDate = 0, label } = props;
+  const progress = calculateProgress(startDate, maturityDate);
+  const timeLeft = getTimeLeft(maturityDate);
+  const timeSince = getTimeSince(maturityDate);
+  const time = progress > 1 ? timeSince : timeLeft;
 
   if (!startDate || !maturityDate) {
     return <span>{t`loading`}</span>;
   }
 
-  return <LabeledProgressBar progressValue={progress} helperText={time} />;
+  return (
+    <LabeledProgressBar
+      label={label}
+      progressValue={progress}
+      helperText={time}
+    />
+  );
+}
+
+function getTimeLeft(end: number): string {
+  const now = Date.now();
+
+  const duration = intervalToDuration({
+    start: now,
+    end: end,
+  });
+  const { years, months, weeks } = duration;
+
+  const format =
+    years || months || weeks
+      ? ["years", "months", "days"]
+      : ["days", "hours", "minutes"];
+
+  const timeLeft = formatDuration(duration, {
+    delimiter: ", ",
+    format,
+  });
+
+  return timeLeft;
+}
+
+function getTimeSince(end: number): string {
+  const now = Date.now();
+  return formatDistance(end, now, { addSuffix: true });
 }

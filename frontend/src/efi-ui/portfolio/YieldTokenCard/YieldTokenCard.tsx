@@ -28,7 +28,7 @@ import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryp
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
 import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
-import { calculateProgress } from "efi-ui/tranche/calculateProgress";
+import { calculateProgress } from "efi/base/calculateProgress";
 import { GoToMarketButton } from "efi-ui/portfolio/PrincipalTokenCard/GoToMarketButton";
 import { MaturityTimeBar } from "efi-ui/portfolio/PrincipalTokenCard/MaturityTimeBar";
 import { RedeemYieldTokensButton } from "efi-ui/portfolio/RedeemButton/RedeemYieldTokensButton";

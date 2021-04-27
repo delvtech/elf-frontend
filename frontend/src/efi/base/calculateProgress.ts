@@ -1,15 +1,21 @@
 import { scaleLinear } from "@visx/scale";
+import { isIntegerNumber } from "efi/base/numbers";
 
 export function calculateProgress(
-  createdAtDate: Date | undefined,
-  unlockDate: Date | undefined
+  createdAtDate: Date | number | undefined,
+  unlockDate: Date | number | undefined
 ): number {
   if (!createdAtDate || !unlockDate) {
     return 0;
   }
 
-  const endTime = unlockDate.getTime();
-  const startTime = createdAtDate.getTime();
+  const endTime = isIntegerNumber(unlockDate)
+    ? unlockDate
+    : unlockDate.getTime();
+
+  const startTime = isIntegerNumber(createdAtDate)
+    ? createdAtDate
+    : createdAtDate.getTime();
 
   // bind progress value between 0 and 1
   const currentTime = Date.now();
