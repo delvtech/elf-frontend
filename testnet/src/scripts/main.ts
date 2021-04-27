@@ -131,11 +131,11 @@ async function main() {
     convergentPoolFactory,
     weightedPoolFactory,
     {
-      mintAmount: "20",
+      mintAmount: "2000",
       baseAssetIn: "20",
       yieldAssetIn: "13",
-      ytBaseAssetIn: "100",
-      ytYieldAssetIn: "200",
+      ytBaseAssetIn: "100", // ratio must be 1:20
+      ytYieldAssetIn: "2000",
       durationInSeconds: 120,
     }
 
@@ -234,7 +234,7 @@ async function main() {
   fs.writeFileSync("./src/addresses.json", allAddresses);
 
   // Produce a schema-compliant testnet.addresses.json file
-  const schemaAddresses: AddressesJson = {
+  const schemaAddresses = JSON.stringify({
       elementAddress,
       balancerVaultAddress: balancerVaultContract.address,
       trancheFactoryAddress: trancheFactory.address,
@@ -244,10 +244,10 @@ async function main() {
       userProxyContractAddress: userProxyContract.address,
       wethAddress: wethContract.address,
       usdcAddress: usdcContract.address,
-    };
+    } as AddressesJson , null, 2);
 
-  fs.writeFileSync("./testnet.addresses.json", JSON.stringify(schemaAddresses, null, 2));
-  fs.writeFileSync("./src/testnet.addresses.json", allAddresses);
+  fs.writeFileSync("./testnet.addresses.json", schemaAddresses);
+  fs.writeFileSync("./src/testnet.addresses.json", schemaAddresses);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
