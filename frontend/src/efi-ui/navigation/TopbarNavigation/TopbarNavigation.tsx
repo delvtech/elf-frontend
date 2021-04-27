@@ -67,7 +67,16 @@ export function TopbarNavigation({
   const onOpenWalletDialog = useCallback(() => setWalletDialogOpen(true), []);
 
   return (
-    <div className={tw("lg:hidden", "h-16", "flex", "flex-shrink-0")}>
+    <div
+      className={tw(
+        "lg:hidden",
+        "h-16",
+        "flex",
+        "flex-shrink-0",
+        "fixed",
+        "w-full"
+      )}
+    >
       <Navbar className={tw("flex", "justify-between")}>
         <NavbarGroup>
           <img
