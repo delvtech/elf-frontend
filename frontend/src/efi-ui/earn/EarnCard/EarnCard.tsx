@@ -119,7 +119,11 @@ export function EarnCard({
   const { stringValue: amountOut, setValue: onChangeOut } = useNumericInput();
 
   const roundedPrincipalPrice = amountOfEthForOnePrincipalEth?.toFixed(4);
-  const marketRateLabel = t`1 ${inputTokenSymbol} Principal Token ≈ ${roundedPrincipalPrice} ${activeBaseAssetSymbol}`;
+  const marketRateLabel = getMarketRateLabel(
+    inputTokenSymbol,
+    roundedPrincipalPrice,
+    activeBaseAssetSymbol
+  );
 
   return (
     <Fragment>
@@ -178,9 +182,11 @@ export function EarnCard({
             <span
               className={classNames(tw("text-base"), Classes.TEXT_MUTED)}
             >{t`To`}</span>
-            <span className={classNames(tw("text-base"), Classes.TEXT_MUTED)}>
-              {marketRateLabel}
-            </span>
+            {marketRateLabel && (
+              <span className={classNames(tw("text-base"), Classes.TEXT_MUTED)}>
+                {marketRateLabel}
+              </span>
+            )}
           </div>
           <div
             className={tw(
@@ -290,4 +296,14 @@ function useActiveBaseAsset(allBaseAssets: (CryptoAsset | undefined)[]) {
     allBaseAssets[0]
   );
   return { activeBaseAsset, setActiveBaseAsset };
+}
+function getMarketRateLabel(
+  inputTokenSymbol: string | undefined,
+  roundedTranchePrice: string | undefined,
+  activeBaseAssetSymbol: string | undefined
+): string | undefined {
+  if (!inputTokenSymbol || !roundedTranchePrice || !activeBaseAssetSymbol) {
+    return;
+  }
+  return t`1 ${inputTokenSymbol} Principal Token ≈ ${roundedTranchePrice} ${activeBaseAssetSymbol}`;
 }

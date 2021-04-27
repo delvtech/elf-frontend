@@ -3,7 +3,6 @@ import React, { ReactElement } from "react";
 import { IconNames } from "@blueprintjs/icons";
 import { Select } from "@blueprintjs/select";
 import classNames from "classnames";
-import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import styles from "efi-ui/crypto/CryptoAssetPicker/styles.module.css";

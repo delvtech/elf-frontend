@@ -141,7 +141,7 @@ export function StakePrincipalTokensDrawer({
             cryptoAsset={baseAsset}
             approvalAmount={baseAssetInBigNumber}
             signer={signer}
-            message={getBalancerApprovalMessage(baseAssetSymbol)}
+            message={getBalancerApprovalMessage(baseAssetSymbol || "")}
           />
         ) : null}
         {trancheCryptoAsset?.type === CryptoAssetType.ERC20 ||

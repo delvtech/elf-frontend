@@ -53,7 +53,7 @@ export function CryptoAssetButton({
       <AssetLabel
         icon={assetIcon}
         assetName={assetName}
-        assetSymbol={assetSymbol}
+        assetSymbol={assetSymbol || ""}
       />
       {rightIcon && <Icon icon={rightIcon} className={tw("pr-4")} />}
     </button>
