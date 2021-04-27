@@ -17,11 +17,15 @@ export function getAmountOutWithTolerance(
 ): BigNumber {
   // this one is exact since we are doing a SwapKind.GIVEN_IN
   // performing a SwapIn, so we can specify a minimum amount out in case price changes from under
-  const toleranceFN = getSafeFixedNumber(`${1 - tolerance}`, { signed: true });
+  const toleranceFN = getSafeFixedNumber(`${1 - tolerance}`, {
+    signed: true,
+    decimals,
+  });
   const limitTokenOutFN = getSafeFixedNumber(
     formatUnits(expectedAmountOut || "1"),
     {
       signed: true,
+      decimals,
     }
   );
 
