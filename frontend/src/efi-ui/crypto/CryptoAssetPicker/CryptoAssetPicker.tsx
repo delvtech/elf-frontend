@@ -29,7 +29,14 @@ export function CryptoAssetPicker({
   );
 
   if (!activeCryptoAsset || !availableCryptoAssets.length) {
-    return <span>{t`Could not find any base assets`}</span>;
+    return (
+      <CryptoAssetButton
+        minimal
+        loading
+        cryptoAsset={activeCryptoAsset}
+        rightIcon={IconNames.CARET_DOWN}
+      />
+    );
   }
 
   return (
