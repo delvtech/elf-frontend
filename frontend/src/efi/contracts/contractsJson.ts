@@ -4,10 +4,12 @@
 // dependency-cruiser, we don't need to run the app, but we need TS to compile
 // correctly, so we use a require() statement here.
 
-import { AddressesJson } from "AddressesJson";
+import { AddressesJson } from "addresses/AddressesJson";
 
+const addressesJsonId = process.env.REACT_APP_ADDRESSES_JSON_ID || "testnet";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const ContractAddresses: AddressesJson = require("local.addresses.json");
+const ContractAddresses: AddressesJson = require(`addresses/${addressesJsonId}.addresses.json`);
+
 /**
  * Helpful debugging tool for making sure a contract is from our contracts json
  */

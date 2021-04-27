@@ -12,7 +12,6 @@ import {
 import { deployTrancheFactory } from "src/scripts/deployTrancheFactory";
 import { THIRTY_DAYS_IN_SECONDS } from "src/time";
 
-import { AddressesJson } from "../../../addresses/AddressesJson";
 import { deployBalancerVault } from "./balancerV2Vault";
 import { deployBaseAssets } from "./baseAssets";
 import { deployTrancheAndMarket } from "./deployTrancheAndMarket";
@@ -21,6 +20,7 @@ import { deployWeightedPoolFactory } from "./deployWeightedPoolFactory";
 import { getSigner, SIGNER } from "./getSigner";
 import { mintTokensForAddress } from "./mintTokensForAddress";
 import { deployUserProxy } from "./userProxy";
+import { AddressesJson } from "../../../addresses/AddressesJson";
 
 async function main() {
   const elementSigner = await getSigner(SIGNER.ELEMENT, hre);
