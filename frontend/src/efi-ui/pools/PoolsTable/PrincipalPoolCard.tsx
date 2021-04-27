@@ -91,11 +91,15 @@ export function PrincipalPoolCard(
     termAssetContract &&
     termAssetSymbol &&
     unlockTimestampResult;
-  const [dataLoaded, setDataLoaded] = useState(false);
+
+  const [transitionsEnabled, setTransitionsEnabled] = useState(true);
+
+  // One tme useEffect to let us show transitions for the skeletons once the data is loaded.
+  // Afterwards we disable transitions so they don't interfere with light/dark mode switching.
   useEffect(() => {
     if (allDataLoaded) {
       setTimeout(() => {
-        setDataLoaded(true);
+        setTransitionsEnabled(false);
       }, 1000);
     }
   }, [allDataLoaded]);
@@ -135,9 +139,9 @@ export function PrincipalPoolCard(
         "h-24",
         "w-full",
         {
-          transition: !dataLoaded,
-          "duration-1000": !dataLoaded,
-          "ease-in-out": !dataLoaded,
+          transition: transitionsEnabled,
+          "duration-1000": transitionsEnabled,
+          "ease-in-out": transitionsEnabled,
         }
       )}
     >
