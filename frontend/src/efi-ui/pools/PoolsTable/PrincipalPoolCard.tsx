@@ -1,4 +1,4 @@
-import { ReactElement, useCallback, useMemo } from "react";
+import { ReactElement, useCallback, useEffect, useMemo, useState } from "react";
 
 import { Card, Classes, Colors, Elevation } from "@blueprintjs/core";
 import { Link, navigate } from "@reach/router";
@@ -26,6 +26,7 @@ import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { getTimeLeft2 } from "efi/base/time";
 import { formatMoney } from "efi/money/formatMoney";
 import { PoolContract } from "efi/pools/PoolContract";
+import { useTimeout } from "react-use";
 
 interface PrincipalPoolCardProps {
   pool: PoolContract | undefined;
@@ -78,6 +79,27 @@ export function PrincipalPoolCard(
 
   const { isDarkMode } = useDarkMode();
 
+  const allDataLoaded =
+    tranche &&
+    liquidity &&
+    trancheCreatedAt &&
+    fees &&
+    baseAssetContract &&
+    baseAsset &&
+    baseAssetSymbol &&
+    BaseAssetIcon &&
+    termAssetContract &&
+    termAssetSymbol &&
+    unlockTimestampResult;
+  const [dataLoaded, setDataLoaded] = useState(false);
+  useEffect(() => {
+    if (allDataLoaded) {
+      setTimeout(() => {
+        setDataLoaded(true);
+      }, 1000);
+    }
+  }, [allDataLoaded]);
+
   if (!pool || !baseAssetContract) {
     return null;
   }
@@ -86,25 +108,16 @@ export function PrincipalPoolCard(
   const progressLabel = progressValue === 1 ? t`closed` : `running`;
   const timeLeft = getTimeLeft2(maturityDate);
 
-  if (
-    !tranche ||
-    !liquidity ||
-    !trancheCreatedAt ||
-    !fees ||
-    !baseAssetContract ||
-    !baseAsset ||
-    !baseAssetSymbol ||
-    !BaseAssetIcon ||
-    !termAssetContract ||
-    !termAssetSymbol ||
-    !unlockTimestampResult
-  ) {
+  if (!allDataLoaded) {
     return (
       <Card
         elevation={Elevation.TWO}
         interactive
         onClick={goToPoolPage}
-        className={classNames(Classes.SKELETON, tw("h-24", "w-full"))}
+        className={classNames(
+          Classes.SKELETON,
+          tw("h-24", "w-full", "transition", "duration-1000", "ease-in-out")
+        )}
       ></Card>
     );
   }
@@ -121,7 +134,11 @@ export function PrincipalPoolCard(
         "xl:grid-cols-5",
         "h-24",
         "w-full",
-        "grid"
+        {
+          transition: !dataLoaded,
+          "duration-1000": !dataLoaded,
+          "ease-in-out": !dataLoaded,
+        }
       )}
     >
       <div className={tw(cellClassName, "flex-shrink-0")}>
