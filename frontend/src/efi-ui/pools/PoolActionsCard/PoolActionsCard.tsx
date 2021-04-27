@@ -66,9 +66,7 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
           disabled={!account}
         >{t`- Remove liquidity`}</Tab>
       </Tabs>
-      <Card
-        className={tw("flex", "flex-col", "flex-1", "w-full", "transition-all")}
-      >
+      <Card className={tw("flex", "flex-col", "flex-1", "w-full")}>
         {activeTab === MarketAction.SWAP && (
           <TradePanel
             library={library}
