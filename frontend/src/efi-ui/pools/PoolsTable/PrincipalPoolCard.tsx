@@ -26,7 +26,6 @@ import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { getTimeLeft2 } from "efi/base/time";
 import { formatMoney } from "efi/money/formatMoney";
 import { PoolContract } from "efi/pools/PoolContract";
-import { useTimeout } from "react-use";
 
 interface PrincipalPoolCardProps {
   pool: PoolContract | undefined;
