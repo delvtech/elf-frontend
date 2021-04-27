@@ -1,19 +1,17 @@
 import { Fragment, ReactElement } from "react";
-import { Helmet } from "react-helmet";
 
-import { H2 } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { RouteComponentProps } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
 import { Signer } from "ethers";
 
 import tw from "efi-tailwindcss-classnames";
-import { getQueryData } from "efi-ui/base/queryResults";
 import { PoolDetails } from "efi-ui/pools/PoolDetails/PoolDetails";
 import { useAllPools } from "efi-ui/pools/useAllPools/useAllPools";
-import { useTokenName } from "efi-ui/token/hooks/useTokenName";
 import { TransactionPendingCard } from "efi-ui/transactions/TransactionPendingCard/TransactionPendingCard";
 import { getConnectorName } from "efi/wallets/connectors";
+import { PoolViewHeader } from "./PoolViewHeader";
+import { PoolViewTitle } from "./PoolViewTitle";
 
 interface PoolViewProps extends RouteComponentProps {
   poolAddress?: string;
@@ -30,18 +28,12 @@ export function PoolView({ poolAddress }: PoolViewProps): ReactElement {
 
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
   const allPools = useAllPools(signer);
-
   const pool = allPools.find((pool) => pool?.address === poolAddress);
-  const poolNameResult = useTokenName(pool);
-
-  const poolName = getQueryData(poolNameResult);
   const connectorName = getConnectorName(connector, library);
 
   return (
     <Fragment>
-      <Helmet>
-        <title>{poolName}</title>
-      </Helmet>
+      <PoolViewTitle pool={pool} />
       <div
         data-testid="pool-view"
         className={tw(
@@ -58,7 +50,7 @@ export function PoolView({ poolAddress }: PoolViewProps): ReactElement {
         >
           {/* page title */}
           <div className={tw("flex", "justify-between")}>
-            <H2>{poolName}</H2>
+            <PoolViewHeader pool={pool} />
             <TransactionPendingCard
               active={active}
               account={account}

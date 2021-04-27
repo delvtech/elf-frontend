@@ -120,7 +120,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     setDrawerOpen(true);
   }, []);
 
-  const insufficientBalance = parseUnits(amountIn ?? "0").gt(
+  const insufficientBalance = parseUnits(amountIn ?? "0", tokenInDecimals).gt(
     tokenInBalanceOf ?? 0
   );
 
