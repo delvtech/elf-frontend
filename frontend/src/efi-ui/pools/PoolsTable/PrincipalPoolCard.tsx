@@ -1,6 +1,6 @@
 import { ReactElement, useCallback, useMemo } from "react";
 
-import { Card, Colors, Elevation } from "@blueprintjs/core";
+import { Card, Classes, Colors, Elevation } from "@blueprintjs/core";
 import { Link, navigate } from "@reach/router";
 import classNames from "classnames";
 import { t } from "ttag";
@@ -85,6 +85,29 @@ export function PrincipalPoolCard(
   const progressValue = calculateProgress(startDate, maturityDate);
   const progressLabel = progressValue === 1 ? t`closed` : `running`;
   const timeLeft = getTimeLeft2(maturityDate);
+
+  if (
+    !tranche ||
+    !liquidity ||
+    !trancheCreatedAt ||
+    !fees ||
+    !baseAssetContract ||
+    !baseAsset ||
+    !baseAssetSymbol ||
+    !BaseAssetIcon ||
+    !termAssetContract ||
+    !termAssetSymbol ||
+    !unlockTimestampResult
+  ) {
+    return (
+      <Card
+        elevation={Elevation.TWO}
+        interactive
+        onClick={goToPoolPage}
+        className={classNames(Classes.SKELETON, tw("h-24", "w-full"))}
+      ></Card>
+    );
+  }
 
   return (
     <Card
