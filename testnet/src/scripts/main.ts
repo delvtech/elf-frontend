@@ -229,9 +229,8 @@ async function main() {
   );
 
 
-  console.log("addresses", allAddresses);
-  fs.writeFileSync("./addresses.json", allAddresses);
-  fs.writeFileSync("./src/addresses.json", allAddresses);
+  console.log("all-addresses.json", allAddresses);
+  fs.writeFileSync("./src/all-addresses.json", allAddresses);
 
   // Produce a schema-compliant testnet.addresses.json file
   const schemaAddresses = JSON.stringify({
@@ -246,7 +245,8 @@ async function main() {
       usdcAddress: usdcContract.address,
     } as AddressesJson , null, 2);
 
-  fs.writeFileSync("./testnet.addresses.json", schemaAddresses);
+
+  console.log("testnet.addresses.json", schemaAddresses);
   fs.writeFileSync("./src/testnet.addresses.json", schemaAddresses);
 }
 

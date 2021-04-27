@@ -8,7 +8,7 @@ import { Vault__factory } from "src/types/factories/Vault__factory";
 import { WeightedPoolFactory__factory } from "src/types/factories/WeightedPoolFactory__factory";
 import { WETH__factory } from "src/types/factories/WETH__factory";
 
-import addresses from "src/addresses.json";
+import addresses from "src/all-addresses.json";
 import { UserProxy__factory } from "src/types/factories/UserProxy__factory";
 import { Signer } from "@ethersproject/abstract-signer";
 
