@@ -3,7 +3,7 @@ import {
   CryptoAssetType,
   findTokenContract,
 } from "efi/crypto/CryptoAsset";
-import { NUM_ETH_DECIMALS } from "efi/crypto/ethereum";
+import { NUM_ETH_DECIMALS } from "efi/ethereum";
 import { assertNever } from "efi/base/assertNever";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 

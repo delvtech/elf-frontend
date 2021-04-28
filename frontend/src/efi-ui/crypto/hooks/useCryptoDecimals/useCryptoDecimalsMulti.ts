@@ -8,7 +8,7 @@ import {
   CryptoAssetType,
   findTokenContract,
 } from "efi/crypto/CryptoAsset";
-import { NUM_ETH_DECIMALS } from "efi/crypto/ethereum";
+import { NUM_ETH_DECIMALS } from "efi/ethereum";
 
 export function useCryptoDecimalsMulti(
   assets: (CryptoAsset | undefined)[]

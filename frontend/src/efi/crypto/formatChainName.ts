@@ -1,6 +1,6 @@
 import { t } from "ttag";
 
-import { ChainId, ChainNames } from "efi/crypto/ethereum";
+import { ChainId, ChainNames } from "efi/ethereum";
 
 export function formatChainName(
   active: boolean,

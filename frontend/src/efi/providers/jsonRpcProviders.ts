@@ -1,5 +1,5 @@
 import { AddressesJson } from "efi/addresses";
-import { ChainId } from "efi/crypto/ethereum";
+import { ChainId } from "efi/ethereum";
 import { providers } from "ethers";
 
 // Default rpc host to local, but check the chain id in the addresses.json for
