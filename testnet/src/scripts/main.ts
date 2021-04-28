@@ -20,7 +20,7 @@ import { deployWeightedPoolFactory } from "./deployWeightedPoolFactory";
 import { getSigner, SIGNER } from "./getSigner";
 import { mintTokensForAddress } from "./mintTokensForAddress";
 import { deployUserProxy } from "./userProxy";
-import { AddressesJson } from "../../../addresses/AddressesJson";
+import { AddressesJsonFile } from "../../../addresses/AddressesJsonFile";
 
 async function main() {
   const elementSigner = await getSigner(SIGNER.ELEMENT, hre);
@@ -246,7 +246,7 @@ async function main() {
       wethAddress: wethContract.address,
       usdcAddress: usdcContract.address,
     }
-    } as AddressesJson , null, 2);
+    } as AddressesJsonFile , null, 2);
 
 
   console.log("testnet.addresses.json", schemaAddresses);
