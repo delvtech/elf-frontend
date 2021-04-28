@@ -100,6 +100,7 @@
   "scripts": {
     "add:language": "bash ./scripts/add-language.sh",
     "build": "react-scripts build",
+    "build:new": "bash ./scripts/build.sh",
     "build:tailwind": "tailwindcss build src/tailwind.css -o src/tailwind.output.css",
     "build:tailwindcss-classnames": "tailwindcss-classnames --config tailwind.config.js -o src/efi-tailwindcss-classnames/index.ts",
     "build:version-json": "bash ./scripts/build-version-json.sh",

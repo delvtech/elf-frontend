@@ -6,7 +6,10 @@
 
 import { AddressesJson } from "addresses/AddressesJson";
 
+// Default to the testnet in this repo so `npm start` Just Works without having
+// to specify it.
 const addressesJsonId = process.env.REACT_APP_ADDRESSES_JSON_ID || "testnet";
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const ContractAddresses: AddressesJson = require(`addresses/${addressesJsonId}.addresses.json`);
 
