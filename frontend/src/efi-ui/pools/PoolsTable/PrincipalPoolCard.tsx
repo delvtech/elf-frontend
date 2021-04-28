@@ -1,4 +1,10 @@
-import { ReactElement, useCallback, useEffect, useState } from "react";
+import {
+  CSSProperties,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 
 import { Card, Classes, Colors, Elevation } from "@blueprintjs/core";
 import { Link, navigate } from "@reach/router";
@@ -33,6 +39,7 @@ interface PrincipalPoolCardProps {
 
 const cellClassName = tw("flex", "mr-4", "items-center", "overflow-hidden");
 
+const poolCardStyle: CSSProperties = { maxWidth: 1180 };
 // Stop propagation of clicks from the card title up to the card itself,
 // otherwise you get double routed to /exchange/exchange/0xdeadbeef
 const stopPropagationHandler = (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -111,7 +118,7 @@ export function PrincipalPoolCard(
         elevation={Elevation.TWO}
         interactive
         onClick={goToPoolPage}
-        style={{ maxWidth: 1180 }}
+        style={poolCardStyle}
         className={classNames(
           Classes.SKELETON,
           tw("h-24", "w-full", "transition", "duration-1000", "ease-in-out")
@@ -125,7 +132,7 @@ export function PrincipalPoolCard(
       elevation={Elevation.TWO}
       interactive
       onClick={goToPoolPage}
-      style={{ maxWidth: 1180 }}
+      style={poolCardStyle}
       className={classNames(
         styles.gridColsPoolCard,
         tw(
