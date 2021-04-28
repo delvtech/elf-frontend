@@ -35,7 +35,7 @@ export function CryptoAssetButton({
   const assetSymbol = useCryptoSymbol(cryptoAsset);
   const assetIcon = findAssetIcon(assetSymbol);
 
-  if (!cryptoAsset || !assetSymbol || !assetIcon) {
+  if (!cryptoAsset || !assetSymbol) {
     return <div className={classNames(Classes.SKELETON)} />;
   }
 
