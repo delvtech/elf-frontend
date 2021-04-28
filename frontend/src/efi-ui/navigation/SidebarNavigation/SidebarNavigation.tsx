@@ -61,7 +61,6 @@ export function SidebarNavigation({
           id="primary-nav-desktop"
           large
           vertical
-          className={classNames(styles.tabs)}
           onChange={changeTab}
           selectedTabId={activeTab}
         >
