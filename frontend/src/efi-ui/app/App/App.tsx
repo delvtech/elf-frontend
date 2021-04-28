@@ -24,7 +24,8 @@ const contentClassName = tw(
   "h-full",
   "lg:h-full",
   "lg:w-auto",
-  "lg:pt-0"
+  "lg:pt-0",
+  "overflow-hidden"
 );
 
 interface AppProps {}

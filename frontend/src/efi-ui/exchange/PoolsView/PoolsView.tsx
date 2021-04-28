@@ -27,26 +27,23 @@ export function PoolsView(props: PoolsViewProps): ReactElement {
         data-testid="pools-view"
         className={tw(
           "flex",
+          "flex-col",
           "p-12",
-          "pt-32",
+          "pt-24",
           "lg:pt-12",
           "h-full",
-          "space-x-12",
+          "space-y-12",
           "items-center",
           "overflow-scroll"
         )}
       >
-        {/* Main content */}
-        <div className={tw("flex", "flex-col", "flex-1", "space-y-12")}>
-          {/* page title */}
-          <ViewTitle
-            title={t`Element Pools`}
-            subtitle={t`Swap your Principal or Interest tokens for their base asset, or provide liquidity by staking in Element pools.`}
-            className={tw("text-center", "pt-12")}
-          />
+        <ViewTitle
+          title={t`Element Pools`}
+          subtitle={t`Swap your Principal or Interest tokens for their base asset, or provide liquidity by staking in Element pools.`}
+          className={tw("text-center")}
+        />
 
-          <PoolsTable signerOrProvider={signer} className={tw("w-full")} />
-        </div>
+        <PoolsTable signerOrProvider={signer} className={tw("w-full")} />
       </div>
     </Fragment>
   );

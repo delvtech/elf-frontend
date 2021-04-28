@@ -74,7 +74,8 @@ export function TopbarNavigation({
         "flex",
         "flex-shrink-0",
         "fixed",
-        "w-full"
+        "w-full",
+        "z-20"
       )}
     >
       <Navbar className={tw("flex", "justify-between")}>
