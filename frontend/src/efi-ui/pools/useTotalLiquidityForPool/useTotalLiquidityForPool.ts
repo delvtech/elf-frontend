@@ -17,7 +17,7 @@ import {
   useTokenPrice,
   useTokenPriceMulti,
 } from "efi-ui/token/hooks/useTokenPrice";
-import { KNOWN_BASE_ASSETS } from "efi/contracts/contractsJson";
+import { KNOWN_BASE_ASSETS } from "efi/addresses";
 import { convertToFiatBalance } from "efi/money/convertToFiatBalance";
 import { PoolContract } from "efi/pools/PoolContract";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";

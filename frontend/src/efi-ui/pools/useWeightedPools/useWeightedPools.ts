@@ -6,7 +6,7 @@ import { Signer } from "ethers";
 
 import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
 import { useSmartContractEvents } from "efi-ui/contracts/useSmartContractEvents/useSmartContractEvents";
-import ContractAddresses from "efi/contracts/contractsJson";
+import ContractAddresses from "efi/addresses";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 
 export function useWeightedPools(

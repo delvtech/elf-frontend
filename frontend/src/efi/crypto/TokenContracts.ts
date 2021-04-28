@@ -1,6 +1,6 @@
 import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
 
-import ContractAddresses from "efi/contracts/contractsJson";
+import ContractAddresses from "efi/addresses";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 
 export const wethContract = ERC20__factory.connect(

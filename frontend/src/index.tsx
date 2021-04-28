@@ -3,7 +3,7 @@
 import "./stylesheets";
 import "./index.css";
 import "efi/debug/consoleEther";
-import "efi/contracts/contractsJson";
+import "efi/addresses";
 // end our CSS
 
 import { Web3ReactProvider } from "@web3-react/core";
@@ -17,9 +17,7 @@ import { getEthereumProviderLibrary } from "efi/wallets/providers";
 
 import { efiQueryClient } from "./efi/queryClient";
 import versionJson from "./version.output.json";
-import ContractAddresses, {
-  lookupAddressKey,
-} from "efi/contracts/contractsJson";
+import ContractAddresses, { lookupAddressKey } from "efi/addresses";
 
 logAppVersion();
 
@@ -58,6 +56,11 @@ function logAppVersion() {
   console.log(`%cBuild date: ${date}`, "font-size:12px");
   // eslint-disable-next-line no-console
   console.log(`%cApp version: ${versionUrl}`, "font-size:12px");
+  // eslint-disable-next-line no-console
+  console.log(
+    `%cContracts: ${JSON.stringify(ContractAddresses, null, 2)}`,
+    "font-size:12px"
+  );
   // eslint-disable-next-line no-console
   console.log(`%cUnreleased commits: ${unreleasedUrl}`, "font-size:12px");
 }

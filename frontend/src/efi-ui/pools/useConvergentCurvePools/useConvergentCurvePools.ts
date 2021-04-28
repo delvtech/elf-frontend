@@ -5,7 +5,7 @@ import { ConvergentPoolFactory__factory } from "elf-contracts/types/factories/Co
 import { Signer } from "ethers";
 
 import { useSmartContractEvents } from "efi-ui/contracts/useSmartContractEvents/useSmartContractEvents";
-import ContractAddresses from "efi/contracts/contractsJson";
+import ContractAddresses from "efi/addresses";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 import { getSmartContractFromRegistry } from "efi-ui/contracts/SmartContractsRegistry";
 import { useMemo } from "react";

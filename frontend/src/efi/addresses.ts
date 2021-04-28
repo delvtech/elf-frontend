@@ -1,13 +1,20 @@
+import { AddressesJsonFile } from "addresses/AddressesJsonFile";
+
+// Default to the testnet in this repo so `npm start` Just Works without having
+// to specify it on the command line.
+const addressesJsonId = process.env.REACT_APP_ADDRESSES_JSON_ID || "testnet";
+
 // Import statements in TS are statically checked, and will throw compile-time
 // errors if the file doesn't exist. Require statements on the other hand are
 // dynamic and will throw an error at runtime. For tools like eslint and
 // dependency-cruiser, we don't need to run the app, but we need TS to compile
 // correctly, so we use a require() statement here.
-
-import { AddressesJson } from "AddressesJson";
-
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const ContractAddresses: AddressesJson = require("local.addresses.json");
+export const AddressesJson: AddressesJsonFile = require(`addresses/${addressesJsonId}.addresses.json`);
+
+const ContractAddresses = AddressesJson.addresses;
+export default ContractAddresses;
+
 /**
  * Helpful debugging tool for making sure a contract is from our contracts json
  */
@@ -15,18 +22,16 @@ export function lookupAddressKey(
   address: string | undefined
 ): string | undefined {
   const [addressesJsonKey] =
-    Object.entries(ContractAddresses).find(
+    Object.entries(AddressesJson.addresses).find(
       ([key, value]) => value === address
     ) || [];
   return addressesJsonKey;
 }
 
-export const KNOWN_ERC20_TOKENS = [ContractAddresses.wethAddress];
-export const KNOWN_ERC20PERMIT_TOKENS = [ContractAddresses.usdcAddress];
+export const KNOWN_ERC20_TOKENS = [AddressesJson.addresses.wethAddress];
+export const KNOWN_ERC20PERMIT_TOKENS = [AddressesJson.addresses.usdcAddress];
 
 export const KNOWN_BASE_ASSETS = [
   ...KNOWN_ERC20_TOKENS,
   ...KNOWN_ERC20PERMIT_TOKENS,
 ];
-
-export default ContractAddresses;

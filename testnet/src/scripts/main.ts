@@ -12,7 +12,6 @@ import {
 import { deployTrancheFactory } from "src/scripts/deployTrancheFactory";
 import { THIRTY_DAYS_IN_SECONDS } from "src/time";
 
-import { AddressesJson } from "../../../schema/AddressesJson";
 import { deployBalancerVault } from "./balancerV2Vault";
 import { deployBaseAssets } from "./baseAssets";
 import { deployTrancheAndMarket } from "./deployTrancheAndMarket";
@@ -21,6 +20,7 @@ import { deployWeightedPoolFactory } from "./deployWeightedPoolFactory";
 import { getSigner, SIGNER } from "./getSigner";
 import { mintTokensForAddress } from "./mintTokensForAddress";
 import { deployUserProxy } from "./userProxy";
+import { AddressesJsonFile } from "../../../addresses/AddressesJsonFile";
 
 async function main() {
   const elementSigner = await getSigner(SIGNER.ELEMENT, hre);
@@ -229,12 +229,13 @@ async function main() {
   );
 
 
-  console.log("addresses", allAddresses);
-  fs.writeFileSync("./addresses.json", allAddresses);
-  fs.writeFileSync("./src/addresses.json", allAddresses);
+  console.log("all-addresses.json", allAddresses);
+  fs.writeFileSync("./src/all-addresses.json", allAddresses);
 
   // Produce a schema-compliant testnet.addresses.json file
   const schemaAddresses = JSON.stringify({
+    chainId: 31337,
+    addresses: {
       elementAddress,
       balancerVaultAddress: balancerVaultContract.address,
       trancheFactoryAddress: trancheFactory.address,
@@ -244,9 +245,11 @@ async function main() {
       userProxyContractAddress: userProxyContract.address,
       wethAddress: wethContract.address,
       usdcAddress: usdcContract.address,
-    } as AddressesJson , null, 2);
+    }
+    } as AddressesJsonFile , null, 2);
 
-  fs.writeFileSync("./testnet.addresses.json", schemaAddresses);
+
+  console.log("testnet.addresses.json", schemaAddresses);
   fs.writeFileSync("./src/testnet.addresses.json", schemaAddresses);
 }
 

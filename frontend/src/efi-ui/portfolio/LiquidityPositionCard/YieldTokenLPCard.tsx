@@ -29,7 +29,7 @@ import { useTrancheUnlockTimestamp } from "efi-ui/tranche/useTrancheUnlockTimest
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
 import { formatPercent } from "efi/base/formatPercent";
-import { KNOWN_BASE_ASSETS } from "efi/contracts/contractsJson";
+import { KNOWN_BASE_ASSETS } from "efi/addresses";
 
 interface YieldTokenLPCardProps {
   library: Web3Provider | undefined;

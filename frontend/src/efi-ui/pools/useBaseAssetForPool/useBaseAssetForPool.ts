@@ -5,7 +5,7 @@ import { Signer } from "ethers";
 
 import { getQueryData } from "efi-ui/base/queryResults";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
-import { KNOWN_BASE_ASSETS } from "efi/contracts/contractsJson";
+import { KNOWN_BASE_ASSETS } from "efi/addresses";
 import { PoolContract } from "efi/pools/PoolContract";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 import { getSmartContractFromRegistry } from "efi-ui/contracts/SmartContractsRegistry";

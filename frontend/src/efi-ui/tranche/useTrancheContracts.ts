@@ -10,7 +10,7 @@ import {
   getSmartContractFromRegistryMulti,
 } from "efi-ui/contracts/SmartContractsRegistry";
 import { useSmartContractEvents } from "efi-ui/contracts/useSmartContractEvents/useSmartContractEvents";
-import ContractAddresses from "efi/contracts/contractsJson";
+import ContractAddresses from "efi/addresses";
 
 type TrancheFilterOptions = Parameters<
   TrancheFactory["filters"]["TrancheCreated"]

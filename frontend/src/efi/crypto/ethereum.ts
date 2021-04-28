@@ -11,7 +11,7 @@ export enum ChainId {
 
 export const ChainNames: Record<ChainId, string> = {
   [ChainId.MAINNET]: "Ethereum Mainnet",
-  [ChainId.GOERLI]: "Ethereum Testnet Goerli",
+  [ChainId.GOERLI]: "Goerli Testnet",
   [ChainId.LOCAL]: "Local development",
 };
 

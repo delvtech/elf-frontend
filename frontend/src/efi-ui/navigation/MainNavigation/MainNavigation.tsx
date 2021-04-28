@@ -24,31 +24,27 @@ export function MainNavigation(): ReactElement {
   return (
     <Fragment>
       {/* Mobile/Tablet */}
-      {
-        <TopbarNavigation
-          account={account}
-          active={active}
-          chainId={chainId}
-          connectorName={getConnectorName(connector, library)}
-          deactivate={deactivate}
-          isDarkMode={isDarkMode}
-          activeTab={activeTab}
-          changeTab={changeTab}
-        />
-      }
+      <TopbarNavigation
+        account={account}
+        active={active}
+        chainId={chainId}
+        connectorName={getConnectorName(connector, library)}
+        deactivate={deactivate}
+        isDarkMode={isDarkMode}
+        activeTab={activeTab}
+        changeTab={changeTab}
+      />
 
       {/* Desktop */}
-      {
-        <SidebarNavigation
-          account={account}
-          active={active}
-          chainId={chainId}
-          connectorName={getConnectorName(connector, library)}
-          isDarkMode={isDarkMode}
-          changeTab={changeTab}
-          activeTab={activeTab}
-        />
-      }
+      <SidebarNavigation
+        account={account}
+        active={active}
+        chainId={chainId}
+        connectorName={getConnectorName(connector, library)}
+        isDarkMode={isDarkMode}
+        changeTab={changeTab}
+        activeTab={activeTab}
+      />
     </Fragment>
   );
 }

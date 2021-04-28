@@ -4,12 +4,9 @@ import { FortmaticConnector } from "@web3-react/fortmatic-connector";
 import { InjectedConnector } from "@web3-react/injected-connector";
 import { TorusConnector } from "@web3-react/torus-connector";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
-import { WalletLinkConnector } from "@web3-react/walletlink-connector";
 import { t } from "ttag";
 
 import { ChainId, ChainNames, DEFAULT_CHAIN_IDS } from "efi/crypto/ethereum";
-import { FORTMATIC_API_KEY } from "efi/fortmatic";
-import { INFURA_URL } from "efi/infura";
 
 /**
  * The 'injected' connector refers to plugin-based wallets like MetaMask, which
@@ -42,30 +39,6 @@ injectedConnector.handleChainChanged = (chainId: string | number) => {
  */
 export const walletConnectConnector = new WalletConnectConnector({
   rpc: { [ChainId.LOCAL]: ChainNames[ChainId.LOCAL] },
-});
-
-/**
- * WalletLink.  This provides access to coinbase wallet.
- */
-export const walletLinkConnector = new WalletLinkConnector({
-  url: INFURA_URL,
-  appName: "Element Finance",
-});
-
-/**
- * Fortmatic web wallet.
- */
-export const fortmaticConnector = new FortmaticConnector({
-  // doesn't recognize LOCAL chainId, use mainnet for now
-  chainId: ChainId.MAINNET,
-  apiKey: FORTMATIC_API_KEY,
-});
-
-/**
- * Torus web wallet.
- */
-export const torusConnector = new TorusConnector({
-  chainId: ChainId.LOCAL,
 });
 
 export function getConnectorName(

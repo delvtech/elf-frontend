@@ -22,7 +22,7 @@ import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useShareOfPool } from "efi-ui/pools/useShareOfPool";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { formatPercent } from "efi/base/formatPercent";
-import { KNOWN_BASE_ASSETS } from "efi/contracts/contractsJson";
+import { KNOWN_BASE_ASSETS } from "efi/addresses";
 
 interface UnstakeCardProps {
   library: Web3Provider | undefined;

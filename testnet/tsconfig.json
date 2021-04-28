@@ -18,7 +18,6 @@
   },
   "include": [
     "./src/**/*",
-    "../schema/*",
     "./hardhat.config.ts"
   ],
   "exclude": [
