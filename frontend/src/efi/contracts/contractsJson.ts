@@ -20,18 +20,20 @@ export function lookupAddressKey(
   address: string | undefined
 ): string | undefined {
   const [addressesJsonKey] =
-    Object.entries(ContractAddresses).find(
+    Object.entries(ContractAddresses.addresses).find(
       ([key, value]) => value === address
     ) || [];
   return addressesJsonKey;
 }
 
-export const KNOWN_ERC20_TOKENS = [ContractAddresses.wethAddress];
-export const KNOWN_ERC20PERMIT_TOKENS = [ContractAddresses.usdcAddress];
+export const KNOWN_ERC20_TOKENS = [ContractAddresses.addresses.wethAddress];
+export const KNOWN_ERC20PERMIT_TOKENS = [
+  ContractAddresses.addresses.usdcAddress,
+];
 
 export const KNOWN_BASE_ASSETS = [
   ...KNOWN_ERC20_TOKENS,
   ...KNOWN_ERC20PERMIT_TOKENS,
 ];
 
-export default ContractAddresses;
+export default ContractAddresses.addresses;

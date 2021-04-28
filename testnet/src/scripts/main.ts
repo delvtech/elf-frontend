@@ -234,6 +234,8 @@ async function main() {
 
   // Produce a schema-compliant testnet.addresses.json file
   const schemaAddresses = JSON.stringify({
+    chainId: 31337,
+    addresses: {
       elementAddress,
       balancerVaultAddress: balancerVaultContract.address,
       trancheFactoryAddress: trancheFactory.address,
@@ -243,6 +245,7 @@ async function main() {
       userProxyContractAddress: userProxyContract.address,
       wethAddress: wethContract.address,
       usdcAddress: usdcContract.address,
+    }
     } as AddressesJson , null, 2);
 
 
