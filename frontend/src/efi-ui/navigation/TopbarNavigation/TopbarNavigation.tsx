@@ -22,7 +22,7 @@ import { DarkModeSwitch } from "efi-ui/prefs/DarkModeSwitch/DarkModeSwitch";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
 import { WalletJazzicon } from "efi-ui/wallets/WalletJazzicon/WalletJazzicon";
-import { isMainnet } from "efi/crypto/ethereum";
+import { isMainnet } from "efi/ethereum";
 import { formatChainName } from "efi/crypto/formatChainName";
 import { formatWalletAddress } from "efi/wallets/formatWalletAddress";
 

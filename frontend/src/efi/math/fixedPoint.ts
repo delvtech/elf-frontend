@@ -1,6 +1,6 @@
 import { FixedNumber } from "ethers";
 
-import { NUM_ETH_DECIMALS } from "efi/crypto/ethereum";
+import { NUM_ETH_DECIMALS } from "efi/ethereum";
 
 export interface FixedFormat {
   /**

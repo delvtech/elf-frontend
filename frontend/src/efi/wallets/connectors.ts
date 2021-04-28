@@ -6,7 +6,7 @@ import { TorusConnector } from "@web3-react/torus-connector";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import { t } from "ttag";
 
-import { ChainId, ChainNames, DEFAULT_CHAIN_IDS } from "efi/crypto/ethereum";
+import { ChainId, ChainNames, DEFAULT_CHAIN_IDS } from "efi/ethereum";
 
 /**
  * The 'injected' connector refers to plugin-based wallets like MetaMask, which

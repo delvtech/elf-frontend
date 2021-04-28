@@ -7,7 +7,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import { isMainnet } from "efi/crypto/ethereum";
+import { isMainnet } from "efi/ethereum";
 
 import { Popover2 } from "@blueprintjs/popover2";
 import { ConnectWalletButtons } from "efi-ui/wallets/ConnectWalletButtons/ConnectWalletButtons";

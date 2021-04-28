@@ -17,14 +17,14 @@ import { getEthereumProviderLibrary } from "efi/wallets/providers";
 
 import { efiQueryClient } from "./efi/queryClient";
 import versionJson from "./version.output.json";
-import ContractAddresses, { lookupAddressKey } from "efi/addresses";
+import { AddressesJson, lookupAddressKey } from "efi/addresses";
 
 logAppVersion();
 
 if (process.env.NODE_ENV === "development") {
   prefixDocumentTitle("(D)");
 }
-window.addresses = ContractAddresses;
+window.addresses = AddressesJson;
 window.lookupAddressKey = lookupAddressKey;
 
 ReactDOM.render(
@@ -58,7 +58,7 @@ function logAppVersion() {
   console.log(`%cApp version: ${versionUrl}`, "font-size:12px");
   // eslint-disable-next-line no-console
   console.log(
-    `%cContracts: ${JSON.stringify(ContractAddresses, null, 2)}`,
+    `%cContracts: ${JSON.stringify(AddressesJson, null, 2)}`,
     "font-size:12px"
   );
   // eslint-disable-next-line no-console

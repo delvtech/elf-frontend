@@ -28,7 +28,7 @@ export function lookupAddressKey(
   return addressesJsonKey;
 }
 
-export const KNOWN_ERC20_TOKENS = [AddressesJson.addresses.wethAddress];
+export const KNOWN_ERC20_TOKENS = [ContractAddresses.wethAddress];
 export const KNOWN_ERC20PERMIT_TOKENS = [AddressesJson.addresses.usdcAddress];
 
 export const KNOWN_BASE_ASSETS = [
