@@ -48,7 +48,7 @@ export function SidebarNavigation({
         Classes.ELEVATION_2,
         styles.sideBar,
         { [styles.sideBarDark]: isDarkMode },
-        tw("hidden", "w-48", "lg:flex", "flex-col", "h-full")
+        tw("hidden", "w-48", "lg:flex", "flex-col", "h-full", "overflow-hidden")
       )}
     >
       <div className={tw("flex", "justify-center", "pt-8", "pb-16", "px-6")}>
