@@ -32,7 +32,10 @@ export function EarnView(props: EarnViewProps): ReactElement {
     allBaseAssets
   );
 
-  const uniqueBaseAssets = uniqBy(allBaseAssets, (v) => v?.id);
+  const uniqueBaseAssets = uniqBy(
+    allBaseAssets.filter((v) => !!v),
+    (v) => v?.id
+  );
 
   return (
     <Fragment>
