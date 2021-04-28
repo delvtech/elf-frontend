@@ -2,12 +2,9 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Building for production
 
-```
-npm run build:new <addresses-json-id>
-```
+### `npm run build:new <addresses-json-id>`
 
 Example:
-
 
 Create a prod build against the element Goerli contracts
 ```
