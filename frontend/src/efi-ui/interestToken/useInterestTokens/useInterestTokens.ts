@@ -10,7 +10,7 @@ import {
   useSmartContractFromFactory,
   useSmartContractFromFactoryMulti,
 } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
-import ContractAddresses from "efi/contracts/contractsJson";
+import ContractAddresses from "efi/addresses";
 
 type InterestTokenCreatedFilterOptions = Parameters<
   InterestTokenFactory["filters"]["InterestTokenCreated"]

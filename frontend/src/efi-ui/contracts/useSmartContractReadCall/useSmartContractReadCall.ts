@@ -8,7 +8,7 @@ import {
   ContractMethodName,
   StaticContractReturnType,
 } from "efi/contracts/types";
-import { lookupAddressKey } from "efi/contracts/contractsJson";
+import { lookupAddressKey } from "efi/addresses";
 
 export interface UseSmartContractReadCallOptions<
   TContract extends Contract,

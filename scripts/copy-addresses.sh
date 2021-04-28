@@ -6,4 +6,4 @@ rm -rf frontend/src/addresses && mkdir frontend/src/addresses
 find addresses/ -type f -name "*.addresses.json" -exec cp {} frontend/src/addresses/ \;
 
 # Copy the typescript definition file to the frontend
-cp -f addresses/AddressesJson.d.ts frontend/src/addresses/
+cp -f addresses/AddressesJsonFile.d.ts frontend/src/addresses/

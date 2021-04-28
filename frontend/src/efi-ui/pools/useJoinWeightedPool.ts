@@ -12,7 +12,7 @@ import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadC
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
 import { BALANCER_ETH_SENTINEL } from "efi/balancer";
-import ContractAddresses from "efi/contracts/contractsJson";
+import ContractAddresses from "efi/addresses";
 import { ContractMethodArgs } from "efi/contracts/types";
 
 enum JoinKind {

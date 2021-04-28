@@ -5,7 +5,7 @@ import zip from "lodash.zip";
 import { getQueriesData } from "efi-ui/base/queryResults";
 import { useCryptoAssetForTokenMulti } from "efi-ui/crypto/hooks/useCryptoAssetForTokenMulti";
 import { usePoolTokensMulti } from "efi-ui/pools/usePoolTokens/usePoolTokensMulti";
-import { KNOWN_BASE_ASSETS } from "efi/contracts/contractsJson";
+import { KNOWN_BASE_ASSETS } from "efi/addresses";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { PoolContract } from "efi/pools/PoolContract";
 

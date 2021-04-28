@@ -2,7 +2,7 @@ import { QueryObserverResult, useQuery, UseQueryOptions } from "react-query";
 
 import { Contract, Event } from "ethers";
 
-import { lookupAddressKey } from "efi/contracts/contractsJson";
+import { lookupAddressKey } from "efi/addresses";
 import { ContractFilterArgs, ContractFilterName } from "efi/contracts/types";
 
 export interface UseSmartContractEventsCallOptions<

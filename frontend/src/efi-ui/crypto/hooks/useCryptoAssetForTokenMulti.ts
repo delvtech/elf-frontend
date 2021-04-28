@@ -8,7 +8,7 @@ import { useTokenSymbolMulti } from "efi-ui/token/hooks/useTokenSymbolMulti";
 import ContractAddresses, {
   KNOWN_ERC20_TOKENS,
   KNOWN_ERC20PERMIT_TOKENS,
-} from "efi/contracts/contractsJson";
+} from "efi/addresses";
 import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
 
 /**

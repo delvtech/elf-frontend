@@ -1,4 +1,4 @@
-export interface AddressesJson {
+export interface AddressesJsonFile {
   chainId: number;
   addresses: {
     elementAddress: string;

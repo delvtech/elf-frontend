@@ -4,7 +4,7 @@ import { useTrancheContracts } from "efi-ui/tranche/useTrancheContracts";
 import ContractAddresses, {
   KNOWN_ERC20_TOKENS,
   KNOWN_ERC20PERMIT_TOKENS,
-} from "efi/contracts/contractsJson";
+} from "efi/addresses";
 import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { ERC20 } from "elf-contracts/types/ERC20";
 import { ERC20Permit } from "elf-contracts/types/ERC20Permit";

@@ -2,7 +2,7 @@ import { Contract, ContractTransaction, Signer } from "ethers";
 
 import { useMutation, UseMutationResult } from "react-query";
 import { ContractMethodArgs, ContractMethodName } from "efi/contracts/types";
-import { lookupAddressKey } from "efi/contracts/contractsJson";
+import { lookupAddressKey } from "efi/addresses";
 
 export interface UseSmartContractTransactionOptions {
   confirmations?: number;
