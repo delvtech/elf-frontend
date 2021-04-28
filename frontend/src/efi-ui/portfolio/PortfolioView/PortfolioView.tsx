@@ -59,6 +59,8 @@ export function PortfolioView(props: PortfolioViewProps): ReactElement {
         className={tw(
           "flex",
           "p-12",
+          "pt-32",
+          "lg:pt-12",
           "h-full",
           "space-x-12",
           "items-center",
