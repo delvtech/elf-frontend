@@ -33,11 +33,11 @@ export function makeQueryBatchSwapCallArgs(
     return undefined;
   }
 
-  // queryBatchSwap requires that the assets be sorted.  ETH is a special case. Balancer uses the
+  // balancer's batchSwap requires that the assets be sorted
+  let assets = [tokenInAddress, tokenOutAddress].sort();
+  // ETH is a special case. Balancer uses the
   // zero address as an address sentinel for ETH, but still expects the addresses sorted as though
   // it were WETH.
-  let assets = [tokenInAddress, tokenOutAddress].sort();
-
   if (assets.includes(BALANCER_ETH_SENTINEL)) {
     assets = assets.map(mapETHSentinalToWETH).sort().map(mapWETHToETHSentinal);
   }
@@ -57,7 +57,6 @@ export function makeQueryBatchSwapCallArgs(
       amount,
       // no need to pass data
       userData: "0x00",
-      // userData: defaultAbiCoder.encode(["uint8"], ["0x00"]),
     },
   ];
 
