@@ -42,7 +42,7 @@ export async function getTokenList() {
   fs.writeFileSync("./testnet.tokenlist.json",tokenListString );
 }
 export async function getPrincipalTokens() {
-    const trancheFactory = TrancheFactory__factory.connect(testnetAddresses.trancheFactoryAddress,provider);
+    const trancheFactory = TrancheFactory__factory.connect(testnetAddresses.addresses.trancheFactoryAddress,provider);
     const filter = trancheFactory.filters.TrancheCreated(null,null,null);
     const events = await trancheFactory.queryFilter(filter);
     const trancheAddresses =
@@ -77,7 +77,7 @@ export async function getPrincipalTokens() {
 
 }
 export async function getInterestTokens() {
-    const interestTokenFactory = InterestTokenFactory__factory.connect(testnetAddresses.interestTokenFactoryAddress,provider);
+    const interestTokenFactory = InterestTokenFactory__factory.connect(testnetAddresses.addresses.interestTokenFactoryAddress,provider);
     const filter = interestTokenFactory.filters.InterestTokenCreated(null,null);
     const events = await interestTokenFactory.queryFilter(filter);
     const interestTokenAddresses =

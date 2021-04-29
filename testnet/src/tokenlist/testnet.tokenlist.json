@@ -4,11 +4,11 @@
   "tags": {
     "ptToken": {
       "name": "Principal token",
-      "description": "Token that represents a deposit of principal into a yield position"
+      "description": "Token representing a deposit of principal into a yield position"
     },
     "ytToken": {
       "name": "Yield token",
-      "description": "Token that represents the yield on a deposit into a yield position"
+      "description": "Token representing the yield on a deposit into a yield position"
     }
   },
   "timestamp": "2021-04-25T22:57:45.368Z",

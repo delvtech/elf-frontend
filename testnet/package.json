@@ -2,9 +2,9 @@
   "scripts": {
     "start": "npx hardhat node",
     "build": "rm -rf src/types && npx hardhat compile && rm src/types/index.ts",
+    "build:tokenlist": "npx hardhat run src/scripts/tokenlist/createTokenList.ts --network localhost --no-compile",
     "load-contracts": "sh scripts/load-elf-contracts.sh",
-    "deploy-contracts": "npx hardhat run src/scripts/main.ts --network localhost --no-compile",
-    "build-tokenlist": "npx hardhat run src/scripts/tokenlist/createTokenList.ts --network localhost --no-compile"
+    "deploy-contracts": "npx hardhat run src/scripts/main.ts --network localhost --no-compile"
   },
   "_moduleAliases": {
     "src": "./src"
