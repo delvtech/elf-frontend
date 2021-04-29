@@ -1,0 +1,9 @@
+import { getTokenList } from "src/tokenlist/getTokenList";
+import goerliAddressesJson from "src/goerli.addresses.json";
+
+getTokenList(goerliAddressesJson, "Goerli token list", "./goerli.tokenlist.json")
+  .then(() => process.exit(0))
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });

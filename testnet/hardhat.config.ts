@@ -36,6 +36,9 @@ const config: HardhatUserConfig = {
       blockGasLimit: 0x1fffffffffffff,
       allowUnlimitedContractSize: true,
     },
+    goerli: {
+      url: "https://eth-goerli.alchemyapi.io/v2/fBuOKVPGvseZZb0h8HyPIDqtKC7nslig",
+    }
   },
 };
 

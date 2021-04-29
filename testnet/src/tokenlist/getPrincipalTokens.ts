@@ -7,12 +7,12 @@ import {
   TrancheFactory__factory,
 } from "src/types/factories/TrancheFactory__factory";
 
-import { provider } from "./main";
 import { ERC20__factory } from "src/types/factories/ERC20__factory";
 import { WrappedPosition__factory } from "src/types/factories/WrappedPosition__factory";
 import { Tranche } from "src/types/Tranche";
 
-export async function getPrincipalTokens(trancheFactoryAddress: string) {
+export const provider = hre.ethers.provider;
+export async function getPrincipalTokens(trancheFactoryAddress: string, chainId: number) {
   const trancheFactory = TrancheFactory__factory.connect(trancheFactoryAddress, provider);
   const filter = trancheFactory.filters.TrancheCreated(null, null, null);
   const events = await trancheFactory.queryFilter(filter);
@@ -21,8 +21,6 @@ export async function getPrincipalTokens(trancheFactoryAddress: string) {
       // The first arg is the trancheAddress
       event.args?.[0]
   ) as string[]);
-
-  const chainId = hre.ethers.provider.network.chainId;
 
   const tranches = trancheAddresses.map((address) => Tranche__factory.connect(address, provider));
 

@@ -2,14 +2,11 @@ import { Tags, TokenList } from "@uniswap/token-lists";
 import fs from "fs";
 import hre from "hardhat";
 
-import testnetAddresses from "src/testnet.addresses.json";
-import goerliAddresses from "src/goerli.addresses.json";
 import { AddressesJsonFile } from "../../../addresses/AddressesJsonFile";
 
 import { getYieldTokens } from "./getYieldTokens";
 import { getPrincipalTokens } from "./getPrincipalTokens";
 
-export const provider = hre.ethers.provider;
 
 const tags: Tags = {
   eP: {
@@ -23,10 +20,10 @@ const tags: Tags = {
 };
 
 export async function getTokenList(addressesJson: AddressesJsonFile, name: string, outputPath: string) {
-  const { addresses: {trancheFactoryAddress, interestTokenFactoryAddress} } = addressesJson;
+  const {chainId, addresses: {trancheFactoryAddress, interestTokenFactoryAddress} } = addressesJson;
 
-  const principalTokensList =  await getPrincipalTokens(trancheFactoryAddress);
-  const yieldTokensList =  await getYieldTokens(interestTokenFactoryAddress);
+  const principalTokensList =  await getPrincipalTokens(trancheFactoryAddress, chainId);
+  const yieldTokensList =  await getYieldTokens(interestTokenFactoryAddress, chainId);
 
   const tokens = [...principalTokensList, ...yieldTokensList];
   const tokenList: TokenList = {
@@ -58,10 +55,3 @@ export async function getTokenList(addressesJson: AddressesJsonFile, name: strin
 //     console.error(error);
 //     process.exit(1);
 //   });
-
-getTokenList(goerliAddresses, "Goerli token list", "./goerli.tokenlist.json")
-  .then(() => process.exit(0))
-  .catch((error) => {
-    console.error(error);
-    process.exit(1);
-  });

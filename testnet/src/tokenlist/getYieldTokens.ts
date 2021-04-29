@@ -7,9 +7,10 @@ import { InterestToken__factory } from "src/types/factories/InterestToken__facto
 import { Tranche__factory } from "src/types/factories/Tranche__factory";
 import { WrappedPosition__factory } from "src/types/factories/WrappedPosition__factory";
 import { InterestToken } from "src/types/InterestToken";
-import { provider } from "./main";
 
-export async function getYieldTokens(interestTokenFactoryAddress: string) {
+export const provider = hre.ethers.provider;
+
+export async function getYieldTokens(interestTokenFactoryAddress: string, chainId: number) {
   const interestTokenFactory = InterestTokenFactory__factory.connect(interestTokenFactoryAddress, provider);
   const filter = interestTokenFactory.filters.InterestTokenCreated(null, null);
   const events = await interestTokenFactory.queryFilter(filter);
@@ -19,7 +20,6 @@ export async function getYieldTokens(interestTokenFactoryAddress: string) {
       event.args?.[0]
   ) as string[]);
 
-  const chainId = hre.ethers.provider.network.chainId;
 
   const interestTokens = interestTokenAddresses.map((address) => InterestToken__factory.connect(address, provider));
   const yieldTokenNames = await getYieldTokenNames(interestTokens);
