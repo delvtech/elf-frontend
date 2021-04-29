@@ -10,7 +10,6 @@ import {
   mapWETHToETHSentinal,
 } from "efi/balancer";
 import { StaticContractMethodArgs } from "efi/contracts/types";
-import ContractAddresses from "efi/addresses";
 
 /**
  * This is a simple read-only funds argument for queryBatchSwap

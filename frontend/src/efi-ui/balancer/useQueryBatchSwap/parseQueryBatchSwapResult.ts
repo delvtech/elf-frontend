@@ -1,3 +1,8 @@
+import {
+  BALANCER_ETH_SENTINEL,
+  mapETHSentinalToWETH,
+  mapWETHToETHSentinal,
+} from "efi/balancer";
 import { BigNumber } from "ethers";
 
 interface ParsedQueryBatchSwapResult {
@@ -10,11 +15,22 @@ export function parseQueryBatchSwapResult(
   tokenOutAddress: string | undefined,
   batchSwaps: BigNumber[] | undefined
 ): ParsedQueryBatchSwapResult {
-  const sortedAssets = [tokenInAddress, tokenOutAddress].sort();
-  const tokenInIndex = sortedAssets.findIndex(
+  if (!tokenInAddress || !tokenOutAddress) {
+    return { tokenIn: undefined, tokenOut: undefined };
+  }
+
+  // balancer's batchSwap requires that the assets be sorted
+  let assets = [tokenInAddress, tokenOutAddress].sort();
+  // ETH is a special case. Balancer uses the
+  // zero address as an address sentinel for ETH, but still expects the addresses sorted as though
+  // it were WETH.
+  if (assets.includes(BALANCER_ETH_SENTINEL)) {
+    assets = assets.map(mapETHSentinalToWETH).sort().map(mapWETHToETHSentinal);
+  }
+  const tokenInIndex = assets.findIndex(
     (address) => address === tokenInAddress
   );
-  const tokenOutIndex = sortedAssets.findIndex(
+  const tokenOutIndex = assets.findIndex(
     (address) => address === tokenOutAddress
   );
   const tokenIn = batchSwaps?.[tokenInIndex];

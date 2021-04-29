@@ -104,8 +104,11 @@ export function SwapTokensTransactionConfirmationDrawer({
   );
 
   const amountOutNumber = +formatUnits(amountOut?.abs() || 0, tokenInDecimals);
+  console.log("amountIn", amountIn);
+  console.log("amountOutNumber", amountOutNumber);
   const amountOutFormatted = amountOutNumber.toFixed(4);
 
+  console.log("spotPrice", spotPrice);
   const priceSlippageAndTradingFee = getPriceSlippageAndTradingFee(
     +(amountIn || 0),
     amountOutNumber,
