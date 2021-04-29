@@ -1,21 +1,23 @@
 import { useCallback } from "react";
 
 import { Vault } from "elf-contracts/types/Vault";
-import { BigNumber, PayableOverrides, Signer } from "ethers";
+import { BigNumber, BytesLike, PayableOverrides, Signer } from "ethers";
 
+import { SwapKind } from "efi-ui/balancer/SwapKind";
+import { BatchSwapStep } from "efi-ui/balancer/SwapRequest";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { getQueryData } from "efi-ui/base/queryResults";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
-import { BALANCER_ETH_SENTINEL } from "efi/balancer";
-import { ONE_DAY_IN_SECONDS } from "efi/base/time";
-import { ContractMethodArgs } from "efi/contracts/types";
-import { PoolContract } from "efi/pools/PoolContract";
 import {
   AppToaster,
   makeErrorToast,
   makeSuccessToast,
 } from "efi-ui/toaster/AppToaster/AppToaster";
+import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
+import { BALANCER_ETH_SENTINEL } from "efi/balancer";
+import { ONE_DAY_IN_SECONDS } from "efi/base/time";
+import { ContractMethodArgs } from "efi/contracts/types";
+import { PoolContract } from "efi/pools/PoolContract";
 
 /**
  * Hook wrapper for the Balancer Vault's batchSwapGivenIn method.
@@ -38,7 +40,7 @@ export function useBatchSwapGivenIn(
 
   const { mutate: batchSwapGivenIn } = useSmartContractTransactionPersisted(
     balancerVault,
-    "batchSwapGivenIn",
+    "batchSwap",
     signer,
     {
       onError: (error) => {
@@ -77,32 +79,33 @@ export function useBatchSwapGivenIn(
 
 function makeBatchSwapGivenInCallArgs(
   account: string | null | undefined,
-  poolId: string | undefined,
+  poolId: BytesLike | undefined,
   tokenInAddress: string | undefined,
   tokenOutAddress: string | undefined,
-  amountIn: BigNumber | undefined,
+  amount: BigNumber | undefined,
   limitOut: BigNumber | undefined
-): ContractMethodArgs<Vault, "batchSwapGivenIn"> | undefined {
-  if (!account || !poolId || !tokenInAddress || !tokenOutAddress || !amountIn) {
+): ContractMethodArgs<Vault, "batchSwap"> | undefined {
+  if (!account || !poolId || !tokenInAddress || !tokenOutAddress || !amount) {
     return;
   }
 
   // batchSwapGivenIn requires that the assets be sorted
   const assets = [tokenInAddress, tokenOutAddress].sort();
-  const tokenInIndex = assets.findIndex(
+  const assetInIndex = assets.findIndex(
     (address) => address === tokenInAddress
   );
-  const tokenOutIndex = assets.findIndex(
+  const assetOutIndex = assets.findIndex(
     (address) => address === tokenOutAddress
   );
 
-  const swaps = [
+  const swaps: BatchSwapStep[] = [
     {
       poolId,
-      tokenInIndex,
-      tokenOutIndex,
-      amountIn,
-      userData: poolId,
+      assetInIndex,
+      assetOutIndex,
+      amount,
+      // no need to pass data
+      userData: "0x00",
     },
   ];
 
@@ -116,7 +119,7 @@ function makeBatchSwapGivenInCallArgs(
   };
 
   // this one is exact since we are doing a SwapKind.GIVEN_IN
-  const limitTokenIn = amountIn;
+  const limitTokenIn = amount;
 
   // this one is seen as a negative delta from the pool's POV.  We can just set this to zero if we
   // don't care about slippage during the transaction.
@@ -124,10 +127,10 @@ function makeBatchSwapGivenInCallArgs(
 
   // limits of how much of each token is allowed to be traded.  order must be the same as 'tokens'
   const limits = assets.map((_, index) => {
-    if (index === tokenInIndex) {
+    if (index === assetInIndex) {
       return limitTokenIn;
     }
-    if (index === tokenOutIndex) {
+    if (index === assetOutIndex) {
       return limitTokenOut;
     }
     // this should never happen but is here for completeness
@@ -137,7 +140,8 @@ function makeBatchSwapGivenInCallArgs(
   // set a large deadline for now, it was being buggy.  time is in seconds.  must be an integer.
   const deadline = Math.round(Date.now() / 1000) + ONE_DAY_IN_SECONDS;
 
-  const callArgs: ContractMethodArgs<Vault, "batchSwapGivenIn"> = [
+  const callArgs: ContractMethodArgs<Vault, "batchSwap"> = [
+    SwapKind.GIVEN_IN,
     swaps,
     assets,
     funds,
@@ -145,7 +149,7 @@ function makeBatchSwapGivenInCallArgs(
     deadline,
   ];
   if (tokenInAddress === BALANCER_ETH_SENTINEL) {
-    const overrides: PayableOverrides = { value: amountIn };
+    const overrides: PayableOverrides = { value: amount };
     callArgs.push(overrides);
   }
 

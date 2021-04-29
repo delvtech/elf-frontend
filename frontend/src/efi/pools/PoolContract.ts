@@ -34,5 +34,5 @@ export function isWeightedPool(
 
   // YieldCurvePool has a property called `getSwapFee` instead of `percentFee`
   // TODO: is there a better way to identify the type of pool we've got?
-  return !!(pool as WeightedPool).callStatic.getSwapFee;
+  return !!(pool as WeightedPool).callStatic.getSwapFeePercentage;
 }

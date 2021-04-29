@@ -13,7 +13,7 @@ export function makeOnSwapGivenInCallArgs(
   amount: BigNumber | undefined,
   tokenOutAddress: string | undefined,
   balances: BigNumber[] | undefined,
-  latestBlockNumberUsed: number | undefined
+  lastChangeBlock: number | undefined
 ): StaticContractMethodArgs<ConvergentCurvePool, "onSwap"> | undefined {
   if (
     !account ||
@@ -22,7 +22,7 @@ export function makeOnSwapGivenInCallArgs(
     !amount?.gt(0) ||
     !tokenOutAddress ||
     !balances?.length ||
-    !latestBlockNumberUsed
+    !lastChangeBlock
   ) {
     return undefined;
   }
@@ -32,7 +32,7 @@ export function makeOnSwapGivenInCallArgs(
     tokenOut: tokenOutAddress,
     amount,
     poolId,
-    latestBlockNumberUsed,
+    lastChangeBlock,
     from: account,
     to: account,
     userData: EMPTY_BYTES_LIKE,

@@ -90,9 +90,9 @@ export function useTotalLiquidityForPoolMulti(
   const { currency } = useCurrencyPref();
   // get the tokens for each pool and create lookup objects for their balances
   const poolTokensMultiResult = usePoolTokensMulti(pools);
-  const poolTokensMulti: [string[], BigNumber[]][] = getQueriesData(
+  const poolTokensMulti: [string[], BigNumber[], BigNumber][] = getQueriesData(
     poolTokensMultiResult
-  ).filter((v): v is [string[], BigNumber[]] => !!v);
+  ).filter((v): v is [string[], BigNumber[], BigNumber] => !!v);
   const balancesByTokenMulti = poolTokensMulti.map(([addresses, balances]) =>
     zipObject(addresses, balances)
   );
