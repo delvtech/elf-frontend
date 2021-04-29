@@ -12,19 +12,19 @@ import { formatPercent } from "efi/base/formatPercent";
 interface SwapTokenDetailsProps {
   spotPriceBaseAssetForOneToken: number | undefined;
   baseAssetSymbol: string | undefined;
-
-  priceSlippageAndTradingFee: number | undefined;
+  priceSlippage: number | undefined;
+  feePercent: number | undefined;
 }
 export function SwapTokenDetails({
   baseAssetSymbol,
-  priceSlippageAndTradingFee,
+  priceSlippage,
+  feePercent,
   spotPriceBaseAssetForOneToken,
 }: SwapTokenDetailsProps): ReactElement {
   const roundedTranchePrice = spotPriceBaseAssetForOneToken?.toFixed(4);
 
-  const formattedSlippageAndTradingFee = formatPercent(
-    priceSlippageAndTradingFee || 0
-  );
+  const formattedSlippage = formatPercent(priceSlippage || 0);
+  const formattedFeePercent = formatPercent(feePercent || 0);
 
   return (
     <div className={tw("flex", "flex-col", "space-y-6", "items-center")}>
@@ -42,13 +42,16 @@ export function SwapTokenDetails({
       <LabeledText
         muted={false}
         bold
-        text={<span>{t`Price slippage + trading fees`}</span>}
+        text={<span>{t`Fees`}</span>}
         className={tw("items-center")}
-        label={
-          <span className={tw("text-base")}>
-            {formattedSlippageAndTradingFee}
-          </span>
-        }
+        label={<span className={tw("text-base")}>{formattedFeePercent}</span>}
+      />
+      <LabeledText
+        muted={false}
+        bold
+        text={<span>{t`Price impact`}</span>}
+        className={tw("items-center")}
+        label={<span className={tw("text-base")}>{formattedSlippage}</span>}
       />
     </div>
   );
