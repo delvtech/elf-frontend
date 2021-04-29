@@ -5,7 +5,6 @@ The frontend for Element.fi
 From the testnet directory, run the following commands:
 
 ```bash
-npm run load-contracts
 npm ci 
 npm run build
 npm start
@@ -25,4 +24,11 @@ Run
 ```bash
 npm ci
 npm start
+```
+
+### Updating contracts
+From the testnet directory, run:
+
+```bash
+npm run load-contracts
 ```
