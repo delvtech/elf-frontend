@@ -22,38 +22,43 @@ import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 
 interface ProtocolFeesCollectorInterface extends ethers.utils.Interface {
   functions: {
+    "getActionId(bytes4)": FunctionFragment;
     "getAuthorizer()": FunctionFragment;
-    "getCollectedFees(address[])": FunctionFragment;
-    "getFlashLoanFee()": FunctionFragment;
-    "getSwapFee()": FunctionFragment;
-    "setFlashLoanFee(uint256)": FunctionFragment;
-    "setSwapFee(uint256)": FunctionFragment;
+    "getCollectedFeeAmounts(address[])": FunctionFragment;
+    "getFlashLoanFeePercentage()": FunctionFragment;
+    "getSwapFeePercentage()": FunctionFragment;
+    "setFlashLoanFeePercentage(uint256)": FunctionFragment;
+    "setSwapFeePercentage(uint256)": FunctionFragment;
     "vault()": FunctionFragment;
     "withdrawCollectedFees(address[],uint256[],address)": FunctionFragment;
   };
 
   encodeFunctionData(
+    functionFragment: "getActionId",
+    values: [BytesLike]
+  ): string;
+  encodeFunctionData(
     functionFragment: "getAuthorizer",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "getCollectedFees",
+    functionFragment: "getCollectedFeeAmounts",
     values: [string[]]
   ): string;
   encodeFunctionData(
-    functionFragment: "getFlashLoanFee",
+    functionFragment: "getFlashLoanFeePercentage",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "getSwapFee",
+    functionFragment: "getSwapFeePercentage",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "setFlashLoanFee",
+    functionFragment: "setFlashLoanFeePercentage",
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "setSwapFee",
+    functionFragment: "setSwapFeePercentage",
     values: [BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "vault", values?: undefined): string;
@@ -63,23 +68,33 @@ interface ProtocolFeesCollectorInterface extends ethers.utils.Interface {
   ): string;
 
   decodeFunctionResult(
+    functionFragment: "getActionId",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "getAuthorizer",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getCollectedFees",
+    functionFragment: "getCollectedFeeAmounts",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getFlashLoanFee",
+    functionFragment: "getFlashLoanFeePercentage",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "getSwapFee", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "setFlashLoanFee",
+    functionFragment: "getSwapFeePercentage",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "setSwapFee", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "setFlashLoanFeePercentage",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setSwapFeePercentage",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "vault", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "withdrawCollectedFees",
@@ -87,12 +102,14 @@ interface ProtocolFeesCollectorInterface extends ethers.utils.Interface {
   ): Result;
 
   events: {
-    "FlashLoanFeeChanged(uint256)": EventFragment;
-    "SwapFeeChanged(uint256)": EventFragment;
+    "FlashLoanFeePercentageChanged(uint256)": EventFragment;
+    "SwapFeePercentageChanged(uint256)": EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "FlashLoanFeeChanged"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "SwapFeeChanged"): EventFragment;
+  getEvent(
+    nameOrSignatureOrTopic: "FlashLoanFeePercentageChanged"
+  ): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "SwapFeePercentageChanged"): EventFragment;
 }
 
 export class ProtocolFeesCollector extends Contract {
@@ -109,45 +126,57 @@ export class ProtocolFeesCollector extends Contract {
   interface: ProtocolFeesCollectorInterface;
 
   functions: {
+    getActionId(
+      selector: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
+    "getActionId(bytes4)"(
+      selector: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
     getAuthorizer(overrides?: CallOverrides): Promise<[string]>;
 
     "getAuthorizer()"(overrides?: CallOverrides): Promise<[string]>;
 
-    getCollectedFees(
+    getCollectedFeeAmounts(
       tokens: string[],
       overrides?: CallOverrides
-    ): Promise<[BigNumber[]] & { fees: BigNumber[] }>;
+    ): Promise<[BigNumber[]] & { feeAmounts: BigNumber[] }>;
 
-    "getCollectedFees(address[])"(
+    "getCollectedFeeAmounts(address[])"(
       tokens: string[],
       overrides?: CallOverrides
-    ): Promise<[BigNumber[]] & { fees: BigNumber[] }>;
+    ): Promise<[BigNumber[]] & { feeAmounts: BigNumber[] }>;
 
-    getFlashLoanFee(overrides?: CallOverrides): Promise<[BigNumber]>;
+    getFlashLoanFeePercentage(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    "getFlashLoanFee()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+    "getFlashLoanFeePercentage()"(
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
-    getSwapFee(overrides?: CallOverrides): Promise<[BigNumber]>;
+    getSwapFeePercentage(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    "getSwapFee()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+    "getSwapFeePercentage()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    setFlashLoanFee(
-      newFlashLoanFee: BigNumberish,
+    setFlashLoanFeePercentage(
+      newFlashLoanFeePercentage: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "setFlashLoanFee(uint256)"(
-      newFlashLoanFee: BigNumberish,
+    "setFlashLoanFeePercentage(uint256)"(
+      newFlashLoanFeePercentage: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    setSwapFee(
-      newSwapFee: BigNumberish,
+    setSwapFeePercentage(
+      newSwapFeePercentage: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "setSwapFee(uint256)"(
-      newSwapFee: BigNumberish,
+    "setSwapFeePercentage(uint256)"(
+      newSwapFeePercentage: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
@@ -170,45 +199,52 @@ export class ProtocolFeesCollector extends Contract {
     ): Promise<ContractTransaction>;
   };
 
+  getActionId(selector: BytesLike, overrides?: CallOverrides): Promise<string>;
+
+  "getActionId(bytes4)"(
+    selector: BytesLike,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
   getAuthorizer(overrides?: CallOverrides): Promise<string>;
 
   "getAuthorizer()"(overrides?: CallOverrides): Promise<string>;
 
-  getCollectedFees(
+  getCollectedFeeAmounts(
     tokens: string[],
     overrides?: CallOverrides
   ): Promise<BigNumber[]>;
 
-  "getCollectedFees(address[])"(
+  "getCollectedFeeAmounts(address[])"(
     tokens: string[],
     overrides?: CallOverrides
   ): Promise<BigNumber[]>;
 
-  getFlashLoanFee(overrides?: CallOverrides): Promise<BigNumber>;
+  getFlashLoanFeePercentage(overrides?: CallOverrides): Promise<BigNumber>;
 
-  "getFlashLoanFee()"(overrides?: CallOverrides): Promise<BigNumber>;
+  "getFlashLoanFeePercentage()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-  getSwapFee(overrides?: CallOverrides): Promise<BigNumber>;
+  getSwapFeePercentage(overrides?: CallOverrides): Promise<BigNumber>;
 
-  "getSwapFee()"(overrides?: CallOverrides): Promise<BigNumber>;
+  "getSwapFeePercentage()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-  setFlashLoanFee(
-    newFlashLoanFee: BigNumberish,
+  setFlashLoanFeePercentage(
+    newFlashLoanFeePercentage: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "setFlashLoanFee(uint256)"(
-    newFlashLoanFee: BigNumberish,
+  "setFlashLoanFeePercentage(uint256)"(
+    newFlashLoanFeePercentage: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  setSwapFee(
-    newSwapFee: BigNumberish,
+  setSwapFeePercentage(
+    newSwapFeePercentage: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "setSwapFee(uint256)"(
-    newSwapFee: BigNumberish,
+  "setSwapFeePercentage(uint256)"(
+    newSwapFeePercentage: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -231,45 +267,57 @@ export class ProtocolFeesCollector extends Contract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
+    getActionId(
+      selector: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    "getActionId(bytes4)"(
+      selector: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
     getAuthorizer(overrides?: CallOverrides): Promise<string>;
 
     "getAuthorizer()"(overrides?: CallOverrides): Promise<string>;
 
-    getCollectedFees(
+    getCollectedFeeAmounts(
       tokens: string[],
       overrides?: CallOverrides
     ): Promise<BigNumber[]>;
 
-    "getCollectedFees(address[])"(
+    "getCollectedFeeAmounts(address[])"(
       tokens: string[],
       overrides?: CallOverrides
     ): Promise<BigNumber[]>;
 
-    getFlashLoanFee(overrides?: CallOverrides): Promise<BigNumber>;
+    getFlashLoanFeePercentage(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "getFlashLoanFee()"(overrides?: CallOverrides): Promise<BigNumber>;
+    "getFlashLoanFeePercentage()"(
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
-    getSwapFee(overrides?: CallOverrides): Promise<BigNumber>;
+    getSwapFeePercentage(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "getSwapFee()"(overrides?: CallOverrides): Promise<BigNumber>;
+    "getSwapFeePercentage()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-    setFlashLoanFee(
-      newFlashLoanFee: BigNumberish,
+    setFlashLoanFeePercentage(
+      newFlashLoanFeePercentage: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "setFlashLoanFee(uint256)"(
-      newFlashLoanFee: BigNumberish,
+    "setFlashLoanFeePercentage(uint256)"(
+      newFlashLoanFeePercentage: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    setSwapFee(
-      newSwapFee: BigNumberish,
+    setSwapFeePercentage(
+      newSwapFeePercentage: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "setSwapFee(uint256)"(
-      newSwapFee: BigNumberish,
+    "setSwapFeePercentage(uint256)"(
+      newSwapFeePercentage: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -293,51 +341,63 @@ export class ProtocolFeesCollector extends Contract {
   };
 
   filters: {
-    FlashLoanFeeChanged(newFlashLoanFee: null): EventFilter;
+    FlashLoanFeePercentageChanged(newFlashLoanFeePercentage: null): EventFilter;
 
-    SwapFeeChanged(newSwapFee: null): EventFilter;
+    SwapFeePercentageChanged(newSwapFeePercentage: null): EventFilter;
   };
 
   estimateGas: {
+    getActionId(
+      selector: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "getActionId(bytes4)"(
+      selector: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     getAuthorizer(overrides?: CallOverrides): Promise<BigNumber>;
 
     "getAuthorizer()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getCollectedFees(
+    getCollectedFeeAmounts(
       tokens: string[],
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    "getCollectedFees(address[])"(
+    "getCollectedFeeAmounts(address[])"(
       tokens: string[],
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getFlashLoanFee(overrides?: CallOverrides): Promise<BigNumber>;
+    getFlashLoanFeePercentage(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "getFlashLoanFee()"(overrides?: CallOverrides): Promise<BigNumber>;
+    "getFlashLoanFeePercentage()"(
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
-    getSwapFee(overrides?: CallOverrides): Promise<BigNumber>;
+    getSwapFeePercentage(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "getSwapFee()"(overrides?: CallOverrides): Promise<BigNumber>;
+    "getSwapFeePercentage()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-    setFlashLoanFee(
-      newFlashLoanFee: BigNumberish,
+    setFlashLoanFeePercentage(
+      newFlashLoanFeePercentage: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    "setFlashLoanFee(uint256)"(
-      newFlashLoanFee: BigNumberish,
+    "setFlashLoanFeePercentage(uint256)"(
+      newFlashLoanFeePercentage: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    setSwapFee(
-      newSwapFee: BigNumberish,
+    setSwapFeePercentage(
+      newSwapFeePercentage: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    "setSwapFee(uint256)"(
-      newSwapFee: BigNumberish,
+    "setSwapFeePercentage(uint256)"(
+      newSwapFeePercentage: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
@@ -361,47 +421,63 @@ export class ProtocolFeesCollector extends Contract {
   };
 
   populateTransaction: {
+    getActionId(
+      selector: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "getActionId(bytes4)"(
+      selector: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     getAuthorizer(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     "getAuthorizer()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    getCollectedFees(
+    getCollectedFeeAmounts(
       tokens: string[],
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    "getCollectedFees(address[])"(
+    "getCollectedFeeAmounts(address[])"(
       tokens: string[],
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    getFlashLoanFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "getFlashLoanFee()"(
+    getFlashLoanFeePercentage(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    getSwapFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    "getFlashLoanFeePercentage()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
-    "getSwapFee()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    getSwapFeePercentage(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
-    setFlashLoanFee(
-      newFlashLoanFee: BigNumberish,
+    "getSwapFeePercentage()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    setFlashLoanFeePercentage(
+      newFlashLoanFeePercentage: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "setFlashLoanFee(uint256)"(
-      newFlashLoanFee: BigNumberish,
+    "setFlashLoanFeePercentage(uint256)"(
+      newFlashLoanFeePercentage: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    setSwapFee(
-      newSwapFee: BigNumberish,
+    setSwapFeePercentage(
+      newSwapFeePercentage: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "setSwapFee(uint256)"(
-      newSwapFee: BigNumberish,
+    "setSwapFeePercentage(uint256)"(
+      newSwapFeePercentage: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 

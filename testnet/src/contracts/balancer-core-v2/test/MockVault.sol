@@ -15,21 +15,31 @@
 pragma solidity ^0.7.0;
 pragma experimental ABIEncoderV2;
 
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "../lib/openzeppelin/IERC20.sol";
 
 import "../vault/interfaces/IVault.sol";
 import "../vault/interfaces/IBasePool.sol";
+import "../vault/interfaces/IPoolSwapStructs.sol";
+import "../vault/interfaces/IMinimalSwapInfoPool.sol";
 
-contract MockVault {
+contract MockVault is IPoolSwapStructs {
     struct Pool {
         IERC20[] tokens;
         mapping(IERC20 => uint256) balances;
     }
 
     IAuthorizer private _authorizer;
-    mapping (bytes32 => Pool) private pools;
+    mapping(bytes32 => Pool) private pools;
 
-    event PoolBalanceChanged(bool positive, uint256[] amounts, uint256[] dueProtocolFeeAmounts);
+    event Swap(bytes32 indexed poolId, IERC20 indexed tokenIn, IERC20 indexed tokenOut, uint256 amount);
+
+    event PoolBalanceChanged(
+        bytes32 indexed poolId,
+        address indexed liquidityProvider,
+        IERC20[] tokens,
+        int256[] deltas,
+        uint256[] protocolFees
+    );
 
     constructor(IAuthorizer authorizer) {
         _authorizer = authorizer;
@@ -56,8 +66,8 @@ contract MockVault {
 
     function registerTokens(
         bytes32 poolId,
-        IERC20[] calldata tokens,
-        address[] calldata
+        IERC20[] memory tokens,
+        address[] memory
     ) external {
         Pool storage pool = pools[poolId];
         for (uint256 i = 0; i < tokens.length; i++) {
@@ -65,12 +75,17 @@ contract MockVault {
         }
     }
 
+    function callMinimalPoolSwap(address pool, SwapRequest memory request, uint256 balanceTokenIn, uint256 balanceTokenOut) external {
+        uint256 amount = IMinimalSwapInfoPool(pool).onSwap(request, balanceTokenIn, balanceTokenOut);
+        emit Swap(request.poolId, request.tokenIn, request.tokenOut, amount);
+    }
+
     function callJoinPool(
         address poolAddress,
         bytes32 poolId,
         address recipient,
         uint256[] memory currentBalances,
-        uint256 latestBlockNumberUsed,
+        uint256 lastChangeBlock,
         uint256 protocolFeePercentage,
         bytes memory userData
     ) external {
@@ -79,7 +94,7 @@ contract MockVault {
             msg.sender,
             recipient,
             currentBalances,
-            latestBlockNumberUsed,
+            lastChangeBlock,
             protocolFeePercentage,
             userData
         );
@@ -89,7 +104,13 @@ contract MockVault {
             pool.balances[pool.tokens[i]] += amountsIn[i];
         }
 
-        emit PoolBalanceChanged(true, amountsIn, dueProtocolFeeAmounts);
+        IERC20[] memory tokens = new IERC20[](currentBalances.length);
+        int256[] memory deltas = new int256[](amountsIn.length);
+        for (uint256 i = 0; i < amountsIn.length; ++i) {
+            deltas[i] = int256(amountsIn[i]);
+        }
+
+        emit PoolBalanceChanged(poolId, msg.sender, tokens, deltas, dueProtocolFeeAmounts);
     }
 
     function callExitPool(
@@ -97,7 +118,7 @@ contract MockVault {
         bytes32 poolId,
         address recipient,
         uint256[] memory currentBalances,
-        uint256 latestBlockNumberUsed,
+        uint256 lastChangeBlock,
         uint256 protocolFeePercentage,
         bytes memory userData
     ) external {
@@ -106,7 +127,7 @@ contract MockVault {
             msg.sender,
             recipient,
             currentBalances,
-            latestBlockNumberUsed,
+            lastChangeBlock,
             protocolFeePercentage,
             userData
         );
@@ -116,6 +137,12 @@ contract MockVault {
             pool.balances[pool.tokens[i]] -= amountsOut[i];
         }
 
-        emit PoolBalanceChanged(false, amountsOut, dueProtocolFeeAmounts);
+        IERC20[] memory tokens = new IERC20[](currentBalances.length);
+        int256[] memory deltas = new int256[](amountsOut.length);
+        for (uint256 i = 0; i < amountsOut.length; ++i) {
+            deltas[i] = int256(-amountsOut[i]);
+        }
+
+        emit PoolBalanceChanged(poolId, msg.sender, tokens, deltas, dueProtocolFeeAmounts);
     }
 }

@@ -24,7 +24,6 @@ interface MockPoolInterface extends ethers.utils.Interface {
   functions: {
     "deregisterTokens(address[])": FunctionFragment;
     "getPoolId()": FunctionFragment;
-    "getRate()": FunctionFragment;
     "getVault()": FunctionFragment;
     "onExitPool(bytes32,address,address,uint256[],uint256,uint256,bytes)": FunctionFragment;
     "onJoinPool(bytes32,address,address,uint256[],uint256,uint256,bytes)": FunctionFragment;
@@ -38,7 +37,6 @@ interface MockPoolInterface extends ethers.utils.Interface {
     values: [string[]]
   ): string;
   encodeFunctionData(functionFragment: "getPoolId", values?: undefined): string;
-  encodeFunctionData(functionFragment: "getRate", values?: undefined): string;
   encodeFunctionData(functionFragment: "getVault", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "onExitPool",
@@ -73,7 +71,7 @@ interface MockPoolInterface extends ethers.utils.Interface {
         tokenOut: string;
         amount: BigNumberish;
         poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
+        lastChangeBlock: BigNumberish;
         from: string;
         to: string;
         userData: BytesLike;
@@ -97,7 +95,6 @@ interface MockPoolInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "getPoolId", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "getRate", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getVault", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "onExitPool", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "onJoinPool", data: BytesLike): Result;
@@ -148,10 +145,6 @@ export class MockPool extends Contract {
 
     "getPoolId()"(overrides?: CallOverrides): Promise<[string]>;
 
-    getRate(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    "getRate()"(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     getVault(overrides?: CallOverrides): Promise<[string]>;
 
     "getVault()"(overrides?: CallOverrides): Promise<[string]>;
@@ -161,8 +154,8 @@ export class MockPool extends Contract {
       sender: string,
       recipient: string,
       currentBalances: BigNumberish[],
-      latestBlockNumberUsed: BigNumberish,
-      protocolSwapFee: BigNumberish,
+      lastChangeBlock: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
@@ -172,8 +165,8 @@ export class MockPool extends Contract {
       sender: string,
       recipient: string,
       currentBalances: BigNumberish[],
-      latestBlockNumberUsed: BigNumberish,
-      protocolSwapFee: BigNumberish,
+      lastChangeBlock: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
@@ -183,8 +176,8 @@ export class MockPool extends Contract {
       sender: string,
       recipient: string,
       currentBalances: BigNumberish[],
-      latestBlockNumberUsed: BigNumberish,
-      protocolSwapFee: BigNumberish,
+      lastChangeBlock: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
@@ -194,8 +187,8 @@ export class MockPool extends Contract {
       sender: string,
       recipient: string,
       currentBalances: BigNumberish[],
-      latestBlockNumberUsed: BigNumberish,
-      protocolSwapFee: BigNumberish,
+      lastChangeBlock: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
@@ -207,7 +200,7 @@ export class MockPool extends Contract {
         tokenOut: string;
         amount: BigNumberish;
         poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
+        lastChangeBlock: BigNumberish;
         from: string;
         to: string;
         userData: BytesLike;
@@ -225,7 +218,7 @@ export class MockPool extends Contract {
         tokenOut: string;
         amount: BigNumberish;
         poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
+        lastChangeBlock: BigNumberish;
         from: string;
         to: string;
         userData: BytesLike;
@@ -272,10 +265,6 @@ export class MockPool extends Contract {
 
   "getPoolId()"(overrides?: CallOverrides): Promise<string>;
 
-  getRate(overrides?: CallOverrides): Promise<BigNumber>;
-
-  "getRate()"(overrides?: CallOverrides): Promise<BigNumber>;
-
   getVault(overrides?: CallOverrides): Promise<string>;
 
   "getVault()"(overrides?: CallOverrides): Promise<string>;
@@ -285,8 +274,8 @@ export class MockPool extends Contract {
     sender: string,
     recipient: string,
     currentBalances: BigNumberish[],
-    latestBlockNumberUsed: BigNumberish,
-    protocolSwapFee: BigNumberish,
+    lastChangeBlock: BigNumberish,
+    protocolSwapFeePercentage: BigNumberish,
     userData: BytesLike,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
@@ -296,8 +285,8 @@ export class MockPool extends Contract {
     sender: string,
     recipient: string,
     currentBalances: BigNumberish[],
-    latestBlockNumberUsed: BigNumberish,
-    protocolSwapFee: BigNumberish,
+    lastChangeBlock: BigNumberish,
+    protocolSwapFeePercentage: BigNumberish,
     userData: BytesLike,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
@@ -307,8 +296,8 @@ export class MockPool extends Contract {
     sender: string,
     recipient: string,
     currentBalances: BigNumberish[],
-    latestBlockNumberUsed: BigNumberish,
-    protocolSwapFee: BigNumberish,
+    lastChangeBlock: BigNumberish,
+    protocolSwapFeePercentage: BigNumberish,
     userData: BytesLike,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
@@ -318,8 +307,8 @@ export class MockPool extends Contract {
     sender: string,
     recipient: string,
     currentBalances: BigNumberish[],
-    latestBlockNumberUsed: BigNumberish,
-    protocolSwapFee: BigNumberish,
+    lastChangeBlock: BigNumberish,
+    protocolSwapFeePercentage: BigNumberish,
     userData: BytesLike,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
@@ -331,7 +320,7 @@ export class MockPool extends Contract {
       tokenOut: string;
       amount: BigNumberish;
       poolId: BytesLike;
-      latestBlockNumberUsed: BigNumberish;
+      lastChangeBlock: BigNumberish;
       from: string;
       to: string;
       userData: BytesLike;
@@ -349,7 +338,7 @@ export class MockPool extends Contract {
       tokenOut: string;
       amount: BigNumberish;
       poolId: BytesLike;
-      latestBlockNumberUsed: BigNumberish;
+      lastChangeBlock: BigNumberish;
       from: string;
       to: string;
       userData: BytesLike;
@@ -396,10 +385,6 @@ export class MockPool extends Contract {
 
     "getPoolId()"(overrides?: CallOverrides): Promise<string>;
 
-    getRate(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "getRate()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     getVault(overrides?: CallOverrides): Promise<string>;
 
     "getVault()"(overrides?: CallOverrides): Promise<string>;
@@ -409,8 +394,8 @@ export class MockPool extends Contract {
       sender: string,
       recipient: string,
       currentBalances: BigNumberish[],
-      latestBlockNumberUsed: BigNumberish,
-      protocolSwapFee: BigNumberish,
+      lastChangeBlock: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
       overrides?: CallOverrides
     ): Promise<
@@ -425,8 +410,8 @@ export class MockPool extends Contract {
       sender: string,
       recipient: string,
       currentBalances: BigNumberish[],
-      latestBlockNumberUsed: BigNumberish,
-      protocolSwapFee: BigNumberish,
+      lastChangeBlock: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
       overrides?: CallOverrides
     ): Promise<
@@ -441,8 +426,8 @@ export class MockPool extends Contract {
       sender: string,
       recipient: string,
       currentBalances: BigNumberish[],
-      latestBlockNumberUsed: BigNumberish,
-      protocolSwapFee: BigNumberish,
+      lastChangeBlock: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
       overrides?: CallOverrides
     ): Promise<
@@ -457,8 +442,8 @@ export class MockPool extends Contract {
       sender: string,
       recipient: string,
       currentBalances: BigNumberish[],
-      latestBlockNumberUsed: BigNumberish,
-      protocolSwapFee: BigNumberish,
+      lastChangeBlock: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
       overrides?: CallOverrides
     ): Promise<
@@ -475,7 +460,7 @@ export class MockPool extends Contract {
         tokenOut: string;
         amount: BigNumberish;
         poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
+        lastChangeBlock: BigNumberish;
         from: string;
         to: string;
         userData: BytesLike;
@@ -493,7 +478,7 @@ export class MockPool extends Contract {
         tokenOut: string;
         amount: BigNumberish;
         poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
+        lastChangeBlock: BigNumberish;
         from: string;
         to: string;
         userData: BytesLike;
@@ -532,8 +517,8 @@ export class MockPool extends Contract {
       sender: null,
       recipient: null,
       currentBalances: null,
-      latestBlockNumberUsed: null,
-      protocolSwapFee: null,
+      lastChangeBlock: null,
+      protocolSwapFeePercentage: null,
       userData: null
     ): EventFilter;
 
@@ -542,8 +527,8 @@ export class MockPool extends Contract {
       sender: null,
       recipient: null,
       currentBalances: null,
-      latestBlockNumberUsed: null,
-      protocolSwapFee: null,
+      lastChangeBlock: null,
+      protocolSwapFeePercentage: null,
       userData: null
     ): EventFilter;
   };
@@ -563,10 +548,6 @@ export class MockPool extends Contract {
 
     "getPoolId()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getRate(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "getRate()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     getVault(overrides?: CallOverrides): Promise<BigNumber>;
 
     "getVault()"(overrides?: CallOverrides): Promise<BigNumber>;
@@ -576,8 +557,8 @@ export class MockPool extends Contract {
       sender: string,
       recipient: string,
       currentBalances: BigNumberish[],
-      latestBlockNumberUsed: BigNumberish,
-      protocolSwapFee: BigNumberish,
+      lastChangeBlock: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
       overrides?: Overrides
     ): Promise<BigNumber>;
@@ -587,8 +568,8 @@ export class MockPool extends Contract {
       sender: string,
       recipient: string,
       currentBalances: BigNumberish[],
-      latestBlockNumberUsed: BigNumberish,
-      protocolSwapFee: BigNumberish,
+      lastChangeBlock: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
       overrides?: Overrides
     ): Promise<BigNumber>;
@@ -598,8 +579,8 @@ export class MockPool extends Contract {
       sender: string,
       recipient: string,
       currentBalances: BigNumberish[],
-      latestBlockNumberUsed: BigNumberish,
-      protocolSwapFee: BigNumberish,
+      lastChangeBlock: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
       overrides?: Overrides
     ): Promise<BigNumber>;
@@ -609,8 +590,8 @@ export class MockPool extends Contract {
       sender: string,
       recipient: string,
       currentBalances: BigNumberish[],
-      latestBlockNumberUsed: BigNumberish,
-      protocolSwapFee: BigNumberish,
+      lastChangeBlock: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
       overrides?: Overrides
     ): Promise<BigNumber>;
@@ -622,7 +603,7 @@ export class MockPool extends Contract {
         tokenOut: string;
         amount: BigNumberish;
         poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
+        lastChangeBlock: BigNumberish;
         from: string;
         to: string;
         userData: BytesLike;
@@ -640,7 +621,7 @@ export class MockPool extends Contract {
         tokenOut: string;
         amount: BigNumberish;
         poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
+        lastChangeBlock: BigNumberish;
         from: string;
         to: string;
         userData: BytesLike;
@@ -688,10 +669,6 @@ export class MockPool extends Contract {
 
     "getPoolId()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    getRate(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "getRate()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     getVault(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     "getVault()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -701,8 +678,8 @@ export class MockPool extends Contract {
       sender: string,
       recipient: string,
       currentBalances: BigNumberish[],
-      latestBlockNumberUsed: BigNumberish,
-      protocolSwapFee: BigNumberish,
+      lastChangeBlock: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
@@ -712,8 +689,8 @@ export class MockPool extends Contract {
       sender: string,
       recipient: string,
       currentBalances: BigNumberish[],
-      latestBlockNumberUsed: BigNumberish,
-      protocolSwapFee: BigNumberish,
+      lastChangeBlock: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
@@ -723,8 +700,8 @@ export class MockPool extends Contract {
       sender: string,
       recipient: string,
       currentBalances: BigNumberish[],
-      latestBlockNumberUsed: BigNumberish,
-      protocolSwapFee: BigNumberish,
+      lastChangeBlock: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
@@ -734,8 +711,8 @@ export class MockPool extends Contract {
       sender: string,
       recipient: string,
       currentBalances: BigNumberish[],
-      latestBlockNumberUsed: BigNumberish,
-      protocolSwapFee: BigNumberish,
+      lastChangeBlock: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
@@ -747,7 +724,7 @@ export class MockPool extends Contract {
         tokenOut: string;
         amount: BigNumberish;
         poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
+        lastChangeBlock: BigNumberish;
         from: string;
         to: string;
         userData: BytesLike;
@@ -765,7 +742,7 @@ export class MockPool extends Contract {
         tokenOut: string;
         amount: BigNumberish;
         poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
+        lastChangeBlock: BigNumberish;
         from: string;
         to: string;
         userData: BytesLike;

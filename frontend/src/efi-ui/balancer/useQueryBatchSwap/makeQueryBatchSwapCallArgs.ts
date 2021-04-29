@@ -1,11 +1,11 @@
 import { Vault } from "elf-contracts/types/Vault";
 import { BigNumber } from "ethers";
 
-import { SwapKind } from "efi-ui/balancer/SwapKind";
-import { StaticContractMethodArgs } from "efi/contracts/types";
-import { SwapRequest } from "efi-ui/balancer/SwapRequest";
 import { FundManagement } from "efi-ui/balancer/FundManagement";
+import { SwapKind } from "efi-ui/balancer/SwapKind";
+import { BatchSwapStep } from "efi-ui/balancer/SwapRequest";
 import { BALANCER_ETH_SENTINEL } from "efi/balancer";
+import { StaticContractMethodArgs } from "efi/contracts/types";
 
 /**
  * This is a simple read-only funds argument for queryBatchSwap
@@ -30,20 +30,22 @@ export function makeQueryBatchSwapCallArgs(
 
   // queryBatchSwap requires that the assets be sorted
   const assets = [tokenInAddress, tokenOutAddress].sort();
-  const tokenInIndex = assets.findIndex(
+  const assetInIndex = assets.findIndex(
     (address) => address === tokenInAddress
   );
-  const tokenOutIndex = assets.findIndex(
+  const assetOutIndex = assets.findIndex(
     (address) => address === tokenOutAddress
   );
 
-  const swaps: SwapRequest[] = [
+  const swaps: BatchSwapStep[] = [
     {
       poolId,
+      assetInIndex,
+      assetOutIndex,
       amount,
-      tokenInIndex,
-      tokenOutIndex,
-      userData: poolId,
+      // no need to pass data
+      userData: "0x00",
+      // userData: defaultAbiCoder.encode(["uint8"], ["0x00"]),
     },
   ];
 

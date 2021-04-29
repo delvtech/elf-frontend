@@ -6,7 +6,9 @@ export type UsePoolTokensQueryResult = QueryObserverResult<
     // addresses
     string[],
     // balances
-    BigNumber[]
+    BigNumber[],
+    // lastChangeBlock
+    BigNumber
   ],
   unknown
 >;

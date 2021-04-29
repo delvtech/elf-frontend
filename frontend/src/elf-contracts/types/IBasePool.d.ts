@@ -22,12 +22,10 @@ import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 
 interface IBasePoolInterface extends ethers.utils.Interface {
   functions: {
-    "getRate()": FunctionFragment;
     "onExitPool(bytes32,address,address,uint256[],uint256,uint256,bytes)": FunctionFragment;
     "onJoinPool(bytes32,address,address,uint256[],uint256,uint256,bytes)": FunctionFragment;
   };
 
-  encodeFunctionData(functionFragment: "getRate", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "onExitPool",
     values: [
@@ -53,7 +51,6 @@ interface IBasePoolInterface extends ethers.utils.Interface {
     ]
   ): string;
 
-  decodeFunctionResult(functionFragment: "getRate", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "onExitPool", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "onJoinPool", data: BytesLike): Result;
 
@@ -74,17 +71,13 @@ export class IBasePool extends Contract {
   interface: IBasePoolInterface;
 
   functions: {
-    getRate(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    "getRate()"(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     onExitPool(
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      currentBalances: BigNumberish[],
-      latestBlockNumberUsed: BigNumberish,
-      protocolSwapFee: BigNumberish,
+      balances: BigNumberish[],
+      lastChangeBlock: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
@@ -93,9 +86,9 @@ export class IBasePool extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      currentBalances: BigNumberish[],
-      latestBlockNumberUsed: BigNumberish,
-      protocolSwapFee: BigNumberish,
+      balances: BigNumberish[],
+      lastChangeBlock: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
@@ -104,9 +97,9 @@ export class IBasePool extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      currentBalances: BigNumberish[],
-      latestBlockNumberUsed: BigNumberish,
-      protocolSwapFee: BigNumberish,
+      balances: BigNumberish[],
+      lastChangeBlock: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
@@ -115,25 +108,21 @@ export class IBasePool extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      currentBalances: BigNumberish[],
-      latestBlockNumberUsed: BigNumberish,
-      protocolSwapFee: BigNumberish,
+      balances: BigNumberish[],
+      lastChangeBlock: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
   };
 
-  getRate(overrides?: CallOverrides): Promise<BigNumber>;
-
-  "getRate()"(overrides?: CallOverrides): Promise<BigNumber>;
-
   onExitPool(
     poolId: BytesLike,
     sender: string,
     recipient: string,
-    currentBalances: BigNumberish[],
-    latestBlockNumberUsed: BigNumberish,
-    protocolSwapFee: BigNumberish,
+    balances: BigNumberish[],
+    lastChangeBlock: BigNumberish,
+    protocolSwapFeePercentage: BigNumberish,
     userData: BytesLike,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
@@ -142,9 +131,9 @@ export class IBasePool extends Contract {
     poolId: BytesLike,
     sender: string,
     recipient: string,
-    currentBalances: BigNumberish[],
-    latestBlockNumberUsed: BigNumberish,
-    protocolSwapFee: BigNumberish,
+    balances: BigNumberish[],
+    lastChangeBlock: BigNumberish,
+    protocolSwapFeePercentage: BigNumberish,
     userData: BytesLike,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
@@ -153,9 +142,9 @@ export class IBasePool extends Contract {
     poolId: BytesLike,
     sender: string,
     recipient: string,
-    currentBalances: BigNumberish[],
-    latestBlockNumberUsed: BigNumberish,
-    protocolSwapFee: BigNumberish,
+    balances: BigNumberish[],
+    lastChangeBlock: BigNumberish,
+    protocolSwapFeePercentage: BigNumberish,
     userData: BytesLike,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
@@ -164,25 +153,21 @@ export class IBasePool extends Contract {
     poolId: BytesLike,
     sender: string,
     recipient: string,
-    currentBalances: BigNumberish[],
-    latestBlockNumberUsed: BigNumberish,
-    protocolSwapFee: BigNumberish,
+    balances: BigNumberish[],
+    lastChangeBlock: BigNumberish,
+    protocolSwapFeePercentage: BigNumberish,
     userData: BytesLike,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    getRate(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "getRate()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     onExitPool(
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      currentBalances: BigNumberish[],
-      latestBlockNumberUsed: BigNumberish,
-      protocolSwapFee: BigNumberish,
+      balances: BigNumberish[],
+      lastChangeBlock: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
       overrides?: CallOverrides
     ): Promise<
@@ -196,9 +181,9 @@ export class IBasePool extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      currentBalances: BigNumberish[],
-      latestBlockNumberUsed: BigNumberish,
-      protocolSwapFee: BigNumberish,
+      balances: BigNumberish[],
+      lastChangeBlock: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
       overrides?: CallOverrides
     ): Promise<
@@ -212,9 +197,9 @@ export class IBasePool extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      currentBalances: BigNumberish[],
-      latestBlockNumberUsed: BigNumberish,
-      protocolSwapFee: BigNumberish,
+      balances: BigNumberish[],
+      lastChangeBlock: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
       overrides?: CallOverrides
     ): Promise<
@@ -228,9 +213,9 @@ export class IBasePool extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      currentBalances: BigNumberish[],
-      latestBlockNumberUsed: BigNumberish,
-      protocolSwapFee: BigNumberish,
+      balances: BigNumberish[],
+      lastChangeBlock: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
       overrides?: CallOverrides
     ): Promise<
@@ -244,17 +229,13 @@ export class IBasePool extends Contract {
   filters: {};
 
   estimateGas: {
-    getRate(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "getRate()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     onExitPool(
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      currentBalances: BigNumberish[],
-      latestBlockNumberUsed: BigNumberish,
-      protocolSwapFee: BigNumberish,
+      balances: BigNumberish[],
+      lastChangeBlock: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
       overrides?: Overrides
     ): Promise<BigNumber>;
@@ -263,9 +244,9 @@ export class IBasePool extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      currentBalances: BigNumberish[],
-      latestBlockNumberUsed: BigNumberish,
-      protocolSwapFee: BigNumberish,
+      balances: BigNumberish[],
+      lastChangeBlock: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
       overrides?: Overrides
     ): Promise<BigNumber>;
@@ -274,9 +255,9 @@ export class IBasePool extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      currentBalances: BigNumberish[],
-      latestBlockNumberUsed: BigNumberish,
-      protocolSwapFee: BigNumberish,
+      balances: BigNumberish[],
+      lastChangeBlock: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
       overrides?: Overrides
     ): Promise<BigNumber>;
@@ -285,26 +266,22 @@ export class IBasePool extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      currentBalances: BigNumberish[],
-      latestBlockNumberUsed: BigNumberish,
-      protocolSwapFee: BigNumberish,
+      balances: BigNumberish[],
+      lastChangeBlock: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
       overrides?: Overrides
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    getRate(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "getRate()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     onExitPool(
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      currentBalances: BigNumberish[],
-      latestBlockNumberUsed: BigNumberish,
-      protocolSwapFee: BigNumberish,
+      balances: BigNumberish[],
+      lastChangeBlock: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
@@ -313,9 +290,9 @@ export class IBasePool extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      currentBalances: BigNumberish[],
-      latestBlockNumberUsed: BigNumberish,
-      protocolSwapFee: BigNumberish,
+      balances: BigNumberish[],
+      lastChangeBlock: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
@@ -324,9 +301,9 @@ export class IBasePool extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      currentBalances: BigNumberish[],
-      latestBlockNumberUsed: BigNumberish,
-      protocolSwapFee: BigNumberish,
+      balances: BigNumberish[],
+      lastChangeBlock: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
@@ -335,9 +312,9 @@ export class IBasePool extends Contract {
       poolId: BytesLike,
       sender: string,
       recipient: string,
-      currentBalances: BigNumberish[],
-      latestBlockNumberUsed: BigNumberish,
-      protocolSwapFee: BigNumberish,
+      balances: BigNumberish[],
+      lastChangeBlock: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;

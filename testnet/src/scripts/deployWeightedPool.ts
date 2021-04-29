@@ -15,22 +15,22 @@ export async function deployWeightedPool(
   weights: BigNumberish[],
   swapFee: string
 ) {
+  const signerAddress = await signer.getAddress();
   const createTx = await poolFactory.create(
     name,
     symbol,
     tokens,
     weights,
     parseEther(swapFee),
-    0,
-    0
+    signerAddress
   );
   await createTx.wait(1);
 
-  const filter = vaultContract.filters.PoolRegistered(null);
-  const results = await vaultContract.queryFilter(filter);
-  const poolId = results[results.length - 1]?.args?.poolId;
-  const [poolAddress] = await vaultContract.getPool(poolId);
+  const filter = poolFactory.filters.PoolCreated(null);
+  const results = await poolFactory.queryFilter(filter);
+  const poolAddress = results[results.length - 1]?.args?.[0];
 
   const poolContract = WeightedPool__factory.connect(poolAddress, signer);
+  const poolId = await poolContract.getPoolId();
   return { poolId, poolContract };
 }

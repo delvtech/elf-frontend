@@ -22,7 +22,7 @@ import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 interface MockWeightedMathInterface extends ethers.utils.Interface {
   functions: {
     "bptInForExactTokensOut(uint256[],uint256[],uint256[],uint256,uint256)": FunctionFragment;
-    "calculateDueTokenProtocolSwapFee(uint256,uint256,uint256,uint256,uint256)": FunctionFragment;
+    "calculateDueTokenProtocolSwapFeeAmount(uint256,uint256,uint256,uint256,uint256)": FunctionFragment;
     "exactBPTInForTokenOut(uint256,uint256,uint256,uint256,uint256)": FunctionFragment;
     "exactBPTInForTokensOut(uint256[],uint256,uint256)": FunctionFragment;
     "exactTokensInForBPTOut(uint256[],uint256[],uint256[],uint256,uint256)": FunctionFragment;
@@ -43,7 +43,7 @@ interface MockWeightedMathInterface extends ethers.utils.Interface {
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "calculateDueTokenProtocolSwapFee",
+    functionFragment: "calculateDueTokenProtocolSwapFeeAmount",
     values: [
       BigNumberish,
       BigNumberish,
@@ -116,7 +116,7 @@ interface MockWeightedMathInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "calculateDueTokenProtocolSwapFee",
+    functionFragment: "calculateDueTokenProtocolSwapFeeAmount",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -174,7 +174,7 @@ export class MockWeightedMath extends Contract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
-    calculateDueTokenProtocolSwapFee(
+    calculateDueTokenProtocolSwapFeeAmount(
       balance: BigNumberish,
       normalizedWeight: BigNumberish,
       previousInvariant: BigNumberish,
@@ -183,7 +183,7 @@ export class MockWeightedMath extends Contract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
-    "calculateDueTokenProtocolSwapFee(uint256,uint256,uint256,uint256,uint256)"(
+    "calculateDueTokenProtocolSwapFeeAmount(uint256,uint256,uint256,uint256,uint256)"(
       balance: BigNumberish,
       normalizedWeight: BigNumberish,
       previousInvariant: BigNumberish,
@@ -327,7 +327,7 @@ export class MockWeightedMath extends Contract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  calculateDueTokenProtocolSwapFee(
+  calculateDueTokenProtocolSwapFeeAmount(
     balance: BigNumberish,
     normalizedWeight: BigNumberish,
     previousInvariant: BigNumberish,
@@ -336,7 +336,7 @@ export class MockWeightedMath extends Contract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  "calculateDueTokenProtocolSwapFee(uint256,uint256,uint256,uint256,uint256)"(
+  "calculateDueTokenProtocolSwapFeeAmount(uint256,uint256,uint256,uint256,uint256)"(
     balance: BigNumberish,
     normalizedWeight: BigNumberish,
     previousInvariant: BigNumberish,
@@ -480,7 +480,7 @@ export class MockWeightedMath extends Contract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    calculateDueTokenProtocolSwapFee(
+    calculateDueTokenProtocolSwapFeeAmount(
       balance: BigNumberish,
       normalizedWeight: BigNumberish,
       previousInvariant: BigNumberish,
@@ -489,7 +489,7 @@ export class MockWeightedMath extends Contract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    "calculateDueTokenProtocolSwapFee(uint256,uint256,uint256,uint256,uint256)"(
+    "calculateDueTokenProtocolSwapFeeAmount(uint256,uint256,uint256,uint256,uint256)"(
       balance: BigNumberish,
       normalizedWeight: BigNumberish,
       previousInvariant: BigNumberish,
@@ -636,7 +636,7 @@ export class MockWeightedMath extends Contract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    calculateDueTokenProtocolSwapFee(
+    calculateDueTokenProtocolSwapFeeAmount(
       balance: BigNumberish,
       normalizedWeight: BigNumberish,
       previousInvariant: BigNumberish,
@@ -645,7 +645,7 @@ export class MockWeightedMath extends Contract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    "calculateDueTokenProtocolSwapFee(uint256,uint256,uint256,uint256,uint256)"(
+    "calculateDueTokenProtocolSwapFeeAmount(uint256,uint256,uint256,uint256,uint256)"(
       balance: BigNumberish,
       normalizedWeight: BigNumberish,
       previousInvariant: BigNumberish,
@@ -790,7 +790,7 @@ export class MockWeightedMath extends Contract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    calculateDueTokenProtocolSwapFee(
+    calculateDueTokenProtocolSwapFeeAmount(
       balance: BigNumberish,
       normalizedWeight: BigNumberish,
       previousInvariant: BigNumberish,
@@ -799,7 +799,7 @@ export class MockWeightedMath extends Contract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    "calculateDueTokenProtocolSwapFee(uint256,uint256,uint256,uint256,uint256)"(
+    "calculateDueTokenProtocolSwapFeeAmount(uint256,uint256,uint256,uint256,uint256)"(
       balance: BigNumberish,
       normalizedWeight: BigNumberish,
       previousInvariant: BigNumberish,

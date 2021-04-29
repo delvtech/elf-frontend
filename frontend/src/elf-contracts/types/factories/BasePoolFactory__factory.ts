@@ -27,17 +27,36 @@ const _abi = [
         type: "address",
       },
     ],
-    name: "PoolRegistered",
+    name: "PoolCreated",
     type: "event",
   },
   {
     inputs: [],
-    name: "vault",
+    name: "getVault",
     outputs: [
       {
         internalType: "contract IVault",
         name: "",
         type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "pool",
+        type: "address",
+      },
+    ],
+    name: "isPoolFromFactory",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
       },
     ],
     stateMutability: "view",

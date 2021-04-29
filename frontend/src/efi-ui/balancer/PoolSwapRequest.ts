@@ -12,7 +12,7 @@ export interface PoolSwapRequest {
   tokenOut: string;
   amount: BigNumberish;
   poolId: BytesLike;
-  latestBlockNumberUsed: BigNumberish;
+  lastChangeBlock: BigNumberish;
   from: string;
   to: string;
   userData: BytesLike;

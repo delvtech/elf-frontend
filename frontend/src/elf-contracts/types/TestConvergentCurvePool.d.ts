@@ -22,7 +22,7 @@ import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 
 interface TestConvergentCurvePoolInterface extends ethers.utils.Interface {
   functions: {
-    "EPSILON()": FunctionFragment;
+    "DOMAIN_SEPARATOR()": FunctionFragment;
     "FEE_BOUND()": FunctionFragment;
     "allowance(address,address)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
@@ -38,7 +38,6 @@ interface TestConvergentCurvePoolInterface extends ethers.utils.Interface {
     "feesUnderlying()": FunctionFragment;
     "fixedToToken(uint256,address)": FunctionFragment;
     "getPoolId()": FunctionFragment;
-    "getRate()": FunctionFragment;
     "getVault()": FunctionFragment;
     "getYieldExponent()": FunctionFragment;
     "governance()": FunctionFragment;
@@ -46,12 +45,14 @@ interface TestConvergentCurvePoolInterface extends ethers.utils.Interface {
     "mintGovLP(uint256[])": FunctionFragment;
     "mintLP(uint256,uint256,uint256[],address)": FunctionFragment;
     "name()": FunctionFragment;
+    "nonces(address)": FunctionFragment;
     "normalize(uint256,uint8,uint8)": FunctionFragment;
     "onExitPool(bytes32,address,address,uint256[],uint256,uint256,bytes)": FunctionFragment;
     "onJoinPool(bytes32,address,address,uint256[],uint256,uint256,bytes)": FunctionFragment;
     "onSwap(tuple,uint256,uint256)": FunctionFragment;
     "percentFee()": FunctionFragment;
     "percentFeeGov()": FunctionFragment;
+    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)": FunctionFragment;
     "setFees(uint128,uint128)": FunctionFragment;
     "setLPBalance(address,uint256)": FunctionFragment;
     "solveTradeInvariant(uint256,uint256,uint256,bool)": FunctionFragment;
@@ -67,7 +68,10 @@ interface TestConvergentCurvePoolInterface extends ethers.utils.Interface {
     "unitSeconds()": FunctionFragment;
   };
 
-  encodeFunctionData(functionFragment: "EPSILON", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "DOMAIN_SEPARATOR",
+    values?: undefined
+  ): string;
   encodeFunctionData(functionFragment: "FEE_BOUND", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "allowance",
@@ -110,7 +114,6 @@ interface TestConvergentCurvePoolInterface extends ethers.utils.Interface {
     values: [BigNumberish, string]
   ): string;
   encodeFunctionData(functionFragment: "getPoolId", values?: undefined): string;
-  encodeFunctionData(functionFragment: "getRate", values?: undefined): string;
   encodeFunctionData(functionFragment: "getVault", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "getYieldExponent",
@@ -133,6 +136,7 @@ interface TestConvergentCurvePoolInterface extends ethers.utils.Interface {
     values: [BigNumberish, BigNumberish, BigNumberish[], string]
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
+  encodeFunctionData(functionFragment: "nonces", values: [string]): string;
   encodeFunctionData(
     functionFragment: "normalize",
     values: [BigNumberish, BigNumberish, BigNumberish]
@@ -170,7 +174,7 @@ interface TestConvergentCurvePoolInterface extends ethers.utils.Interface {
         tokenOut: string;
         amount: BigNumberish;
         poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
+        lastChangeBlock: BigNumberish;
         from: string;
         to: string;
         userData: BytesLike;
@@ -186,6 +190,18 @@ interface TestConvergentCurvePoolInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "percentFeeGov",
     values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "permit",
+    values: [
+      string,
+      string,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BytesLike,
+      BytesLike
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "setFees",
@@ -208,7 +224,7 @@ interface TestConvergentCurvePoolInterface extends ethers.utils.Interface {
         tokenOut: string;
         amount: BigNumberish;
         poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
+        lastChangeBlock: BigNumberish;
         from: string;
         to: string;
         userData: BytesLike;
@@ -251,7 +267,10 @@ interface TestConvergentCurvePoolInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
 
-  decodeFunctionResult(functionFragment: "EPSILON", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "DOMAIN_SEPARATOR",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "FEE_BOUND", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
@@ -282,7 +301,6 @@ interface TestConvergentCurvePoolInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "getPoolId", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "getRate", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getVault", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getYieldExponent",
@@ -296,6 +314,7 @@ interface TestConvergentCurvePoolInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "mintGovLP", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "mintLP", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "nonces", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "normalize", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "onExitPool", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "onJoinPool", data: BytesLike): Result;
@@ -305,6 +324,7 @@ interface TestConvergentCurvePoolInterface extends ethers.utils.Interface {
     functionFragment: "percentFeeGov",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "permit", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "setFees", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "setLPBalance",
@@ -370,9 +390,9 @@ export class TestConvergentCurvePool extends Contract {
   interface: TestConvergentCurvePoolInterface;
 
   functions: {
-    EPSILON(overrides?: CallOverrides): Promise<[BigNumber]>;
+    DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<[string]>;
 
-    "EPSILON()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+    "DOMAIN_SEPARATOR()"(overrides?: CallOverrides): Promise<[string]>;
 
     FEE_BOUND(overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -493,10 +513,6 @@ export class TestConvergentCurvePool extends Contract {
 
     "getPoolId()"(overrides?: CallOverrides): Promise<[string]>;
 
-    getRate(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    "getRate()"(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     getVault(overrides?: CallOverrides): Promise<[string]>;
 
     "getVault()"(overrides?: CallOverrides): Promise<[string]>;
@@ -551,6 +567,13 @@ export class TestConvergentCurvePool extends Contract {
 
     "name()"(overrides?: CallOverrides): Promise<[string]>;
 
+    nonces(owner: string, overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "nonces(address)"(
+      owner: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
     normalize(
       amount: BigNumberish,
       decimalsBefore: BigNumberish,
@@ -566,7 +589,7 @@ export class TestConvergentCurvePool extends Contract {
     ): Promise<[BigNumber]>;
 
     onExitPool(
-      arg0: BytesLike,
+      poolId: BytesLike,
       arg1: string,
       recipient: string,
       currentBalances: BigNumberish[],
@@ -577,7 +600,7 @@ export class TestConvergentCurvePool extends Contract {
     ): Promise<ContractTransaction>;
 
     "onExitPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
-      arg0: BytesLike,
+      poolId: BytesLike,
       arg1: string,
       recipient: string,
       currentBalances: BigNumberish[],
@@ -588,7 +611,7 @@ export class TestConvergentCurvePool extends Contract {
     ): Promise<ContractTransaction>;
 
     onJoinPool(
-      arg0: BytesLike,
+      poolId: BytesLike,
       arg1: string,
       recipient: string,
       currentBalances: BigNumberish[],
@@ -599,7 +622,7 @@ export class TestConvergentCurvePool extends Contract {
     ): Promise<ContractTransaction>;
 
     "onJoinPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
-      arg0: BytesLike,
+      poolId: BytesLike,
       arg1: string,
       recipient: string,
       currentBalances: BigNumberish[],
@@ -616,7 +639,7 @@ export class TestConvergentCurvePool extends Contract {
         tokenOut: string;
         amount: BigNumberish;
         poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
+        lastChangeBlock: BigNumberish;
         from: string;
         to: string;
         userData: BytesLike;
@@ -633,7 +656,7 @@ export class TestConvergentCurvePool extends Contract {
         tokenOut: string;
         amount: BigNumberish;
         poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
+        lastChangeBlock: BigNumberish;
         from: string;
         to: string;
         userData: BytesLike;
@@ -650,6 +673,28 @@ export class TestConvergentCurvePool extends Contract {
     percentFeeGov(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     "percentFeeGov()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    permit(
+      owner: string,
+      spender: string,
+      value: BigNumberish,
+      deadline: BigNumberish,
+      v: BigNumberish,
+      r: BytesLike,
+      s: BytesLike,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
+      owner: string,
+      spender: string,
+      value: BigNumberish,
+      deadline: BigNumberish,
+      v: BigNumberish,
+      r: BytesLike,
+      s: BytesLike,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
 
     setFees(
       amountUnderlying: BigNumberish,
@@ -698,7 +743,7 @@ export class TestConvergentCurvePool extends Contract {
         tokenOut: string;
         amount: BigNumberish;
         poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
+        lastChangeBlock: BigNumberish;
         from: string;
         to: string;
         userData: BytesLike;
@@ -718,7 +763,7 @@ export class TestConvergentCurvePool extends Contract {
         tokenOut: string;
         amount: BigNumberish;
         poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
+        lastChangeBlock: BigNumberish;
         from: string;
         to: string;
         userData: BytesLike;
@@ -794,9 +839,9 @@ export class TestConvergentCurvePool extends Contract {
     "unitSeconds()"(overrides?: CallOverrides): Promise<[BigNumber]>;
   };
 
-  EPSILON(overrides?: CallOverrides): Promise<BigNumber>;
+  DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<string>;
 
-  "EPSILON()"(overrides?: CallOverrides): Promise<BigNumber>;
+  "DOMAIN_SEPARATOR()"(overrides?: CallOverrides): Promise<string>;
 
   FEE_BOUND(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -917,10 +962,6 @@ export class TestConvergentCurvePool extends Contract {
 
   "getPoolId()"(overrides?: CallOverrides): Promise<string>;
 
-  getRate(overrides?: CallOverrides): Promise<BigNumber>;
-
-  "getRate()"(overrides?: CallOverrides): Promise<BigNumber>;
-
   getVault(overrides?: CallOverrides): Promise<string>;
 
   "getVault()"(overrides?: CallOverrides): Promise<string>;
@@ -975,6 +1016,13 @@ export class TestConvergentCurvePool extends Contract {
 
   "name()"(overrides?: CallOverrides): Promise<string>;
 
+  nonces(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+  "nonces(address)"(
+    owner: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   normalize(
     amount: BigNumberish,
     decimalsBefore: BigNumberish,
@@ -990,7 +1038,7 @@ export class TestConvergentCurvePool extends Contract {
   ): Promise<BigNumber>;
 
   onExitPool(
-    arg0: BytesLike,
+    poolId: BytesLike,
     arg1: string,
     recipient: string,
     currentBalances: BigNumberish[],
@@ -1001,7 +1049,7 @@ export class TestConvergentCurvePool extends Contract {
   ): Promise<ContractTransaction>;
 
   "onExitPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
-    arg0: BytesLike,
+    poolId: BytesLike,
     arg1: string,
     recipient: string,
     currentBalances: BigNumberish[],
@@ -1012,7 +1060,7 @@ export class TestConvergentCurvePool extends Contract {
   ): Promise<ContractTransaction>;
 
   onJoinPool(
-    arg0: BytesLike,
+    poolId: BytesLike,
     arg1: string,
     recipient: string,
     currentBalances: BigNumberish[],
@@ -1023,7 +1071,7 @@ export class TestConvergentCurvePool extends Contract {
   ): Promise<ContractTransaction>;
 
   "onJoinPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
-    arg0: BytesLike,
+    poolId: BytesLike,
     arg1: string,
     recipient: string,
     currentBalances: BigNumberish[],
@@ -1040,7 +1088,7 @@ export class TestConvergentCurvePool extends Contract {
       tokenOut: string;
       amount: BigNumberish;
       poolId: BytesLike;
-      latestBlockNumberUsed: BigNumberish;
+      lastChangeBlock: BigNumberish;
       from: string;
       to: string;
       userData: BytesLike;
@@ -1057,7 +1105,7 @@ export class TestConvergentCurvePool extends Contract {
       tokenOut: string;
       amount: BigNumberish;
       poolId: BytesLike;
-      latestBlockNumberUsed: BigNumberish;
+      lastChangeBlock: BigNumberish;
       from: string;
       to: string;
       userData: BytesLike;
@@ -1074,6 +1122,28 @@ export class TestConvergentCurvePool extends Contract {
   percentFeeGov(overrides?: CallOverrides): Promise<BigNumber>;
 
   "percentFeeGov()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+  permit(
+    owner: string,
+    spender: string,
+    value: BigNumberish,
+    deadline: BigNumberish,
+    v: BigNumberish,
+    r: BytesLike,
+    s: BytesLike,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
+    owner: string,
+    spender: string,
+    value: BigNumberish,
+    deadline: BigNumberish,
+    v: BigNumberish,
+    r: BytesLike,
+    s: BytesLike,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
 
   setFees(
     amountUnderlying: BigNumberish,
@@ -1122,7 +1192,7 @@ export class TestConvergentCurvePool extends Contract {
       tokenOut: string;
       amount: BigNumberish;
       poolId: BytesLike;
-      latestBlockNumberUsed: BigNumberish;
+      lastChangeBlock: BigNumberish;
       from: string;
       to: string;
       userData: BytesLike;
@@ -1142,7 +1212,7 @@ export class TestConvergentCurvePool extends Contract {
       tokenOut: string;
       amount: BigNumberish;
       poolId: BytesLike;
-      latestBlockNumberUsed: BigNumberish;
+      lastChangeBlock: BigNumberish;
       from: string;
       to: string;
       userData: BytesLike;
@@ -1218,9 +1288,9 @@ export class TestConvergentCurvePool extends Contract {
   "unitSeconds()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   callStatic: {
-    EPSILON(overrides?: CallOverrides): Promise<BigNumber>;
+    DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<string>;
 
-    "EPSILON()"(overrides?: CallOverrides): Promise<BigNumber>;
+    "DOMAIN_SEPARATOR()"(overrides?: CallOverrides): Promise<string>;
 
     FEE_BOUND(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1341,10 +1411,6 @@ export class TestConvergentCurvePool extends Contract {
 
     "getPoolId()"(overrides?: CallOverrides): Promise<string>;
 
-    getRate(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "getRate()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     getVault(overrides?: CallOverrides): Promise<string>;
 
     "getVault()"(overrides?: CallOverrides): Promise<string>;
@@ -1399,6 +1465,13 @@ export class TestConvergentCurvePool extends Contract {
 
     "name()"(overrides?: CallOverrides): Promise<string>;
 
+    nonces(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    "nonces(address)"(
+      owner: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     normalize(
       amount: BigNumberish,
       decimalsBefore: BigNumberish,
@@ -1414,7 +1487,7 @@ export class TestConvergentCurvePool extends Contract {
     ): Promise<BigNumber>;
 
     onExitPool(
-      arg0: BytesLike,
+      poolId: BytesLike,
       arg1: string,
       recipient: string,
       currentBalances: BigNumberish[],
@@ -1430,7 +1503,7 @@ export class TestConvergentCurvePool extends Contract {
     >;
 
     "onExitPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
-      arg0: BytesLike,
+      poolId: BytesLike,
       arg1: string,
       recipient: string,
       currentBalances: BigNumberish[],
@@ -1446,7 +1519,7 @@ export class TestConvergentCurvePool extends Contract {
     >;
 
     onJoinPool(
-      arg0: BytesLike,
+      poolId: BytesLike,
       arg1: string,
       recipient: string,
       currentBalances: BigNumberish[],
@@ -1462,7 +1535,7 @@ export class TestConvergentCurvePool extends Contract {
     >;
 
     "onJoinPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
-      arg0: BytesLike,
+      poolId: BytesLike,
       arg1: string,
       recipient: string,
       currentBalances: BigNumberish[],
@@ -1484,7 +1557,7 @@ export class TestConvergentCurvePool extends Contract {
         tokenOut: string;
         amount: BigNumberish;
         poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
+        lastChangeBlock: BigNumberish;
         from: string;
         to: string;
         userData: BytesLike;
@@ -1501,7 +1574,7 @@ export class TestConvergentCurvePool extends Contract {
         tokenOut: string;
         amount: BigNumberish;
         poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
+        lastChangeBlock: BigNumberish;
         from: string;
         to: string;
         userData: BytesLike;
@@ -1518,6 +1591,28 @@ export class TestConvergentCurvePool extends Contract {
     percentFeeGov(overrides?: CallOverrides): Promise<BigNumber>;
 
     "percentFeeGov()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    permit(
+      owner: string,
+      spender: string,
+      value: BigNumberish,
+      deadline: BigNumberish,
+      v: BigNumberish,
+      r: BytesLike,
+      s: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
+      owner: string,
+      spender: string,
+      value: BigNumberish,
+      deadline: BigNumberish,
+      v: BigNumberish,
+      r: BytesLike,
+      s: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     setFees(
       amountUnderlying: BigNumberish,
@@ -1566,7 +1661,7 @@ export class TestConvergentCurvePool extends Contract {
         tokenOut: string;
         amount: BigNumberish;
         poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
+        lastChangeBlock: BigNumberish;
         from: string;
         to: string;
         userData: BytesLike;
@@ -1586,7 +1681,7 @@ export class TestConvergentCurvePool extends Contract {
         tokenOut: string;
         amount: BigNumberish;
         poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
+        lastChangeBlock: BigNumberish;
         from: string;
         to: string;
         userData: BytesLike;
@@ -1682,9 +1777,9 @@ export class TestConvergentCurvePool extends Contract {
   };
 
   estimateGas: {
-    EPSILON(overrides?: CallOverrides): Promise<BigNumber>;
+    DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "EPSILON()"(overrides?: CallOverrides): Promise<BigNumber>;
+    "DOMAIN_SEPARATOR()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     FEE_BOUND(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1805,10 +1900,6 @@ export class TestConvergentCurvePool extends Contract {
 
     "getPoolId()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getRate(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "getRate()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     getVault(overrides?: CallOverrides): Promise<BigNumber>;
 
     "getVault()"(overrides?: CallOverrides): Promise<BigNumber>;
@@ -1863,6 +1954,13 @@ export class TestConvergentCurvePool extends Contract {
 
     "name()"(overrides?: CallOverrides): Promise<BigNumber>;
 
+    nonces(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    "nonces(address)"(
+      owner: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     normalize(
       amount: BigNumberish,
       decimalsBefore: BigNumberish,
@@ -1878,7 +1976,7 @@ export class TestConvergentCurvePool extends Contract {
     ): Promise<BigNumber>;
 
     onExitPool(
-      arg0: BytesLike,
+      poolId: BytesLike,
       arg1: string,
       recipient: string,
       currentBalances: BigNumberish[],
@@ -1889,7 +1987,7 @@ export class TestConvergentCurvePool extends Contract {
     ): Promise<BigNumber>;
 
     "onExitPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
-      arg0: BytesLike,
+      poolId: BytesLike,
       arg1: string,
       recipient: string,
       currentBalances: BigNumberish[],
@@ -1900,7 +1998,7 @@ export class TestConvergentCurvePool extends Contract {
     ): Promise<BigNumber>;
 
     onJoinPool(
-      arg0: BytesLike,
+      poolId: BytesLike,
       arg1: string,
       recipient: string,
       currentBalances: BigNumberish[],
@@ -1911,7 +2009,7 @@ export class TestConvergentCurvePool extends Contract {
     ): Promise<BigNumber>;
 
     "onJoinPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
-      arg0: BytesLike,
+      poolId: BytesLike,
       arg1: string,
       recipient: string,
       currentBalances: BigNumberish[],
@@ -1928,7 +2026,7 @@ export class TestConvergentCurvePool extends Contract {
         tokenOut: string;
         amount: BigNumberish;
         poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
+        lastChangeBlock: BigNumberish;
         from: string;
         to: string;
         userData: BytesLike;
@@ -1945,7 +2043,7 @@ export class TestConvergentCurvePool extends Contract {
         tokenOut: string;
         amount: BigNumberish;
         poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
+        lastChangeBlock: BigNumberish;
         from: string;
         to: string;
         userData: BytesLike;
@@ -1962,6 +2060,28 @@ export class TestConvergentCurvePool extends Contract {
     percentFeeGov(overrides?: CallOverrides): Promise<BigNumber>;
 
     "percentFeeGov()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    permit(
+      owner: string,
+      spender: string,
+      value: BigNumberish,
+      deadline: BigNumberish,
+      v: BigNumberish,
+      r: BytesLike,
+      s: BytesLike,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
+      owner: string,
+      spender: string,
+      value: BigNumberish,
+      deadline: BigNumberish,
+      v: BigNumberish,
+      r: BytesLike,
+      s: BytesLike,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
 
     setFees(
       amountUnderlying: BigNumberish,
@@ -2010,7 +2130,7 @@ export class TestConvergentCurvePool extends Contract {
         tokenOut: string;
         amount: BigNumberish;
         poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
+        lastChangeBlock: BigNumberish;
         from: string;
         to: string;
         userData: BytesLike;
@@ -2030,7 +2150,7 @@ export class TestConvergentCurvePool extends Contract {
         tokenOut: string;
         amount: BigNumberish;
         poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
+        lastChangeBlock: BigNumberish;
         from: string;
         to: string;
         userData: BytesLike;
@@ -2107,9 +2227,11 @@ export class TestConvergentCurvePool extends Contract {
   };
 
   populateTransaction: {
-    EPSILON(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "EPSILON()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    "DOMAIN_SEPARATOR()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     FEE_BOUND(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -2235,10 +2357,6 @@ export class TestConvergentCurvePool extends Contract {
 
     "getPoolId()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    getRate(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "getRate()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     getVault(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     "getVault()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -2295,6 +2413,16 @@ export class TestConvergentCurvePool extends Contract {
 
     "name()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    nonces(
+      owner: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "nonces(address)"(
+      owner: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     normalize(
       amount: BigNumberish,
       decimalsBefore: BigNumberish,
@@ -2310,7 +2438,7 @@ export class TestConvergentCurvePool extends Contract {
     ): Promise<PopulatedTransaction>;
 
     onExitPool(
-      arg0: BytesLike,
+      poolId: BytesLike,
       arg1: string,
       recipient: string,
       currentBalances: BigNumberish[],
@@ -2321,7 +2449,7 @@ export class TestConvergentCurvePool extends Contract {
     ): Promise<PopulatedTransaction>;
 
     "onExitPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
-      arg0: BytesLike,
+      poolId: BytesLike,
       arg1: string,
       recipient: string,
       currentBalances: BigNumberish[],
@@ -2332,7 +2460,7 @@ export class TestConvergentCurvePool extends Contract {
     ): Promise<PopulatedTransaction>;
 
     onJoinPool(
-      arg0: BytesLike,
+      poolId: BytesLike,
       arg1: string,
       recipient: string,
       currentBalances: BigNumberish[],
@@ -2343,7 +2471,7 @@ export class TestConvergentCurvePool extends Contract {
     ): Promise<PopulatedTransaction>;
 
     "onJoinPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
-      arg0: BytesLike,
+      poolId: BytesLike,
       arg1: string,
       recipient: string,
       currentBalances: BigNumberish[],
@@ -2360,7 +2488,7 @@ export class TestConvergentCurvePool extends Contract {
         tokenOut: string;
         amount: BigNumberish;
         poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
+        lastChangeBlock: BigNumberish;
         from: string;
         to: string;
         userData: BytesLike;
@@ -2377,7 +2505,7 @@ export class TestConvergentCurvePool extends Contract {
         tokenOut: string;
         amount: BigNumberish;
         poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
+        lastChangeBlock: BigNumberish;
         from: string;
         to: string;
         userData: BytesLike;
@@ -2394,6 +2522,28 @@ export class TestConvergentCurvePool extends Contract {
     percentFeeGov(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     "percentFeeGov()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    permit(
+      owner: string,
+      spender: string,
+      value: BigNumberish,
+      deadline: BigNumberish,
+      v: BigNumberish,
+      r: BytesLike,
+      s: BytesLike,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
+      owner: string,
+      spender: string,
+      value: BigNumberish,
+      deadline: BigNumberish,
+      v: BigNumberish,
+      r: BytesLike,
+      s: BytesLike,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
 
     setFees(
       amountUnderlying: BigNumberish,
@@ -2442,7 +2592,7 @@ export class TestConvergentCurvePool extends Contract {
         tokenOut: string;
         amount: BigNumberish;
         poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
+        lastChangeBlock: BigNumberish;
         from: string;
         to: string;
         userData: BytesLike;
@@ -2462,7 +2612,7 @@ export class TestConvergentCurvePool extends Contract {
         tokenOut: string;
         amount: BigNumberish;
         poolId: BytesLike;
-        latestBlockNumberUsed: BigNumberish;
+        lastChangeBlock: BigNumberish;
         from: string;
         to: string;
         userData: BytesLike;

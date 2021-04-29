@@ -34,6 +34,7 @@ interface UserProxyInterface extends ethers.utils.Interface {
     "setIsFrozen(bool)": FunctionFragment;
     "setOwner(address)": FunctionFragment;
     "weth()": FunctionFragment;
+    "withdrawWeth(uint256,address,uint256,uint256,tuple[])": FunctionFragment;
   };
 
   encodeFunctionData(functionFragment: "authorize", values: [string]): string;
@@ -70,6 +71,24 @@ interface UserProxyInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "setOwner", values: [string]): string;
   encodeFunctionData(functionFragment: "weth", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "withdrawWeth",
+    values: [
+      BigNumberish,
+      string,
+      BigNumberish,
+      BigNumberish,
+      {
+        tokenContract: string;
+        who: string;
+        amount: BigNumberish;
+        expiration: BigNumberish;
+        r: BytesLike;
+        s: BytesLike;
+        v: BigNumberish;
+      }[]
+    ]
+  ): string;
 
   decodeFunctionResult(functionFragment: "authorize", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "authorized", data: BytesLike): Result;
@@ -91,6 +110,10 @@ interface UserProxyInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "setOwner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "weth", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "withdrawWeth",
+    data: BytesLike
+  ): Result;
 
   events: {};
 }
@@ -206,6 +229,40 @@ export class UserProxy extends Contract {
     weth(overrides?: CallOverrides): Promise<[string]>;
 
     "weth()"(overrides?: CallOverrides): Promise<[string]>;
+
+    withdrawWeth(
+      _expiration: BigNumberish,
+      _position: string,
+      _amountPT: BigNumberish,
+      _amountYT: BigNumberish,
+      _permitCallData: {
+        tokenContract: string;
+        who: string;
+        amount: BigNumberish;
+        expiration: BigNumberish;
+        r: BytesLike;
+        s: BytesLike;
+        v: BigNumberish;
+      }[],
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "withdrawWeth(uint256,address,uint256,uint256,tuple[])"(
+      _expiration: BigNumberish,
+      _position: string,
+      _amountPT: BigNumberish,
+      _amountYT: BigNumberish,
+      _permitCallData: {
+        tokenContract: string;
+        who: string;
+        amount: BigNumberish;
+        expiration: BigNumberish;
+        r: BytesLike;
+        s: BytesLike;
+        v: BigNumberish;
+      }[],
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
   };
 
   authorize(who: string, overrides?: Overrides): Promise<ContractTransaction>;
@@ -303,6 +360,40 @@ export class UserProxy extends Contract {
 
   "weth()"(overrides?: CallOverrides): Promise<string>;
 
+  withdrawWeth(
+    _expiration: BigNumberish,
+    _position: string,
+    _amountPT: BigNumberish,
+    _amountYT: BigNumberish,
+    _permitCallData: {
+      tokenContract: string;
+      who: string;
+      amount: BigNumberish;
+      expiration: BigNumberish;
+      r: BytesLike;
+      s: BytesLike;
+      v: BigNumberish;
+    }[],
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "withdrawWeth(uint256,address,uint256,uint256,tuple[])"(
+    _expiration: BigNumberish,
+    _position: string,
+    _amountPT: BigNumberish,
+    _amountYT: BigNumberish,
+    _permitCallData: {
+      tokenContract: string;
+      who: string;
+      amount: BigNumberish;
+      expiration: BigNumberish;
+      r: BytesLike;
+      s: BytesLike;
+      v: BigNumberish;
+    }[],
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
   callStatic: {
     authorize(who: string, overrides?: CallOverrides): Promise<void>;
 
@@ -389,6 +480,40 @@ export class UserProxy extends Contract {
     weth(overrides?: CallOverrides): Promise<string>;
 
     "weth()"(overrides?: CallOverrides): Promise<string>;
+
+    withdrawWeth(
+      _expiration: BigNumberish,
+      _position: string,
+      _amountPT: BigNumberish,
+      _amountYT: BigNumberish,
+      _permitCallData: {
+        tokenContract: string;
+        who: string;
+        amount: BigNumberish;
+        expiration: BigNumberish;
+        r: BytesLike;
+        s: BytesLike;
+        v: BigNumberish;
+      }[],
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "withdrawWeth(uint256,address,uint256,uint256,tuple[])"(
+      _expiration: BigNumberish,
+      _position: string,
+      _amountPT: BigNumberish,
+      _amountYT: BigNumberish,
+      _permitCallData: {
+        tokenContract: string;
+        who: string;
+        amount: BigNumberish;
+        expiration: BigNumberish;
+        r: BytesLike;
+        s: BytesLike;
+        v: BigNumberish;
+      }[],
+      overrides?: CallOverrides
+    ): Promise<void>;
   };
 
   filters: {};
@@ -482,6 +607,40 @@ export class UserProxy extends Contract {
     weth(overrides?: CallOverrides): Promise<BigNumber>;
 
     "weth()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    withdrawWeth(
+      _expiration: BigNumberish,
+      _position: string,
+      _amountPT: BigNumberish,
+      _amountYT: BigNumberish,
+      _permitCallData: {
+        tokenContract: string;
+        who: string;
+        amount: BigNumberish;
+        expiration: BigNumberish;
+        r: BytesLike;
+        s: BytesLike;
+        v: BigNumberish;
+      }[],
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "withdrawWeth(uint256,address,uint256,uint256,tuple[])"(
+      _expiration: BigNumberish,
+      _position: string,
+      _amountPT: BigNumberish,
+      _amountYT: BigNumberish,
+      _permitCallData: {
+        tokenContract: string;
+        who: string;
+        amount: BigNumberish;
+        expiration: BigNumberish;
+        r: BytesLike;
+        s: BytesLike;
+        v: BigNumberish;
+      }[],
+      overrides?: Overrides
+    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -591,5 +750,39 @@ export class UserProxy extends Contract {
     weth(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     "weth()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    withdrawWeth(
+      _expiration: BigNumberish,
+      _position: string,
+      _amountPT: BigNumberish,
+      _amountYT: BigNumberish,
+      _permitCallData: {
+        tokenContract: string;
+        who: string;
+        amount: BigNumberish;
+        expiration: BigNumberish;
+        r: BytesLike;
+        s: BytesLike;
+        v: BigNumberish;
+      }[],
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "withdrawWeth(uint256,address,uint256,uint256,tuple[])"(
+      _expiration: BigNumberish,
+      _position: string,
+      _amountPT: BigNumberish,
+      _amountYT: BigNumberish,
+      _permitCallData: {
+        tokenContract: string;
+        who: string;
+        amount: BigNumberish;
+        expiration: BigNumberish;
+        r: BytesLike;
+        s: BytesLike;
+        v: BigNumberish;
+      }[],
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
   };
 }

@@ -38,7 +38,7 @@ export async function setupPrincipalTokenPool(
     signer,
     baseAssetContract,
     trancheContract,
-    mintAmount 
+    mintAmount
   );
 
   // trade some tranche assets for some base assets

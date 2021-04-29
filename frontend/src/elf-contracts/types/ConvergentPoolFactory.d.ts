@@ -26,14 +26,15 @@ interface ConvergentPoolFactoryInterface extends ethers.utils.Interface {
     "authorized(address)": FunctionFragment;
     "create(address,address,uint256,uint256,uint256,string,string)": FunctionFragment;
     "deauthorize(address)": FunctionFragment;
+    "getVault()": FunctionFragment;
     "governance()": FunctionFragment;
     "isAuthorized(address)": FunctionFragment;
+    "isPoolFromFactory(address)": FunctionFragment;
     "owner()": FunctionFragment;
     "percentFeeGov()": FunctionFragment;
     "setGov(address)": FunctionFragment;
     "setGovFee(uint256)": FunctionFragment;
     "setOwner(address)": FunctionFragment;
-    "vault()": FunctionFragment;
   };
 
   encodeFunctionData(functionFragment: "authorize", values: [string]): string;
@@ -51,12 +52,17 @@ interface ConvergentPoolFactoryInterface extends ethers.utils.Interface {
     ]
   ): string;
   encodeFunctionData(functionFragment: "deauthorize", values: [string]): string;
+  encodeFunctionData(functionFragment: "getVault", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "governance",
     values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "isAuthorized",
+    values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "isPoolFromFactory",
     values: [string]
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
@@ -70,7 +76,6 @@ interface ConvergentPoolFactoryInterface extends ethers.utils.Interface {
     values: [BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "setOwner", values: [string]): string;
-  encodeFunctionData(functionFragment: "vault", values?: undefined): string;
 
   decodeFunctionResult(functionFragment: "authorize", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "authorized", data: BytesLike): Result;
@@ -79,9 +84,14 @@ interface ConvergentPoolFactoryInterface extends ethers.utils.Interface {
     functionFragment: "deauthorize",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "getVault", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "governance", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "isAuthorized",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "isPoolFromFactory",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
@@ -92,15 +102,14 @@ interface ConvergentPoolFactoryInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "setGov", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "setGovFee", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "setOwner", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "vault", data: BytesLike): Result;
 
   events: {
-    "PoolCreated(address,address)": EventFragment;
-    "PoolRegistered(address)": EventFragment;
+    "CCPoolCreated(address,address)": EventFragment;
+    "PoolCreated(address)": EventFragment;
   };
 
+  getEvent(nameOrSignatureOrTopic: "CCPoolCreated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "PoolCreated"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "PoolRegistered"): EventFragment;
 }
 
 export class ConvergentPoolFactory extends Contract {
@@ -163,6 +172,10 @@ export class ConvergentPoolFactory extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
+    getVault(overrides?: CallOverrides): Promise<[string]>;
+
+    "getVault()"(overrides?: CallOverrides): Promise<[string]>;
+
     governance(overrides?: CallOverrides): Promise<[string]>;
 
     "governance()"(overrides?: CallOverrides): Promise<[string]>;
@@ -171,6 +184,16 @@ export class ConvergentPoolFactory extends Contract {
 
     "isAuthorized(address)"(
       who: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
+    isPoolFromFactory(
+      pool: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
+    "isPoolFromFactory(address)"(
+      pool: string,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
@@ -205,10 +228,6 @@ export class ConvergentPoolFactory extends Contract {
       who: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
-
-    vault(overrides?: CallOverrides): Promise<[string]>;
-
-    "vault()"(overrides?: CallOverrides): Promise<[string]>;
   };
 
   authorize(who: string, overrides?: Overrides): Promise<ContractTransaction>;
@@ -254,6 +273,10 @@ export class ConvergentPoolFactory extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
+  getVault(overrides?: CallOverrides): Promise<string>;
+
+  "getVault()"(overrides?: CallOverrides): Promise<string>;
+
   governance(overrides?: CallOverrides): Promise<string>;
 
   "governance()"(overrides?: CallOverrides): Promise<string>;
@@ -262,6 +285,13 @@ export class ConvergentPoolFactory extends Contract {
 
   "isAuthorized(address)"(
     who: string,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
+  isPoolFromFactory(pool: string, overrides?: CallOverrides): Promise<boolean>;
+
+  "isPoolFromFactory(address)"(
+    pool: string,
     overrides?: CallOverrides
   ): Promise<boolean>;
 
@@ -296,10 +326,6 @@ export class ConvergentPoolFactory extends Contract {
     who: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
-
-  vault(overrides?: CallOverrides): Promise<string>;
-
-  "vault()"(overrides?: CallOverrides): Promise<string>;
 
   callStatic: {
     authorize(who: string, overrides?: CallOverrides): Promise<void>;
@@ -342,6 +368,10 @@ export class ConvergentPoolFactory extends Contract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    getVault(overrides?: CallOverrides): Promise<string>;
+
+    "getVault()"(overrides?: CallOverrides): Promise<string>;
+
     governance(overrides?: CallOverrides): Promise<string>;
 
     "governance()"(overrides?: CallOverrides): Promise<string>;
@@ -350,6 +380,16 @@ export class ConvergentPoolFactory extends Contract {
 
     "isAuthorized(address)"(
       who: string,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    isPoolFromFactory(
+      pool: string,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    "isPoolFromFactory(address)"(
+      pool: string,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
@@ -375,16 +415,12 @@ export class ConvergentPoolFactory extends Contract {
     setOwner(who: string, overrides?: CallOverrides): Promise<void>;
 
     "setOwner(address)"(who: string, overrides?: CallOverrides): Promise<void>;
-
-    vault(overrides?: CallOverrides): Promise<string>;
-
-    "vault()"(overrides?: CallOverrides): Promise<string>;
   };
 
   filters: {
-    PoolCreated(pool: string | null, bondToken: string | null): EventFilter;
+    CCPoolCreated(pool: string | null, bondToken: string | null): EventFilter;
 
-    PoolRegistered(pool: string | null): EventFilter;
+    PoolCreated(pool: string | null): EventFilter;
   };
 
   estimateGas: {
@@ -431,6 +467,10 @@ export class ConvergentPoolFactory extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
+    getVault(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "getVault()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     governance(overrides?: CallOverrides): Promise<BigNumber>;
 
     "governance()"(overrides?: CallOverrides): Promise<BigNumber>;
@@ -439,6 +479,16 @@ export class ConvergentPoolFactory extends Contract {
 
     "isAuthorized(address)"(
       who: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    isPoolFromFactory(
+      pool: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "isPoolFromFactory(address)"(
+      pool: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -467,10 +517,6 @@ export class ConvergentPoolFactory extends Contract {
     setOwner(who: string, overrides?: Overrides): Promise<BigNumber>;
 
     "setOwner(address)"(who: string, overrides?: Overrides): Promise<BigNumber>;
-
-    vault(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "vault()"(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -526,6 +572,10 @@ export class ConvergentPoolFactory extends Contract {
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
+    getVault(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "getVault()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     governance(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     "governance()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -537,6 +587,16 @@ export class ConvergentPoolFactory extends Contract {
 
     "isAuthorized(address)"(
       who: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    isPoolFromFactory(
+      pool: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "isPoolFromFactory(address)"(
+      pool: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -574,9 +634,5 @@ export class ConvergentPoolFactory extends Contract {
       who: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
-
-    vault(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "vault()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }

@@ -43,7 +43,8 @@ export async function setupInterestTokenPool(
   const baseAssetValue = BigNumber.from(baseAssetContract.address);
 
   let poolTokens = [baseAssetContract.address, interestTokenAddress];
-  let weights = [parseEther("1"), parseEther("1")];
+  // weights must be normalized now, so they have to add up to 1
+  let weights = [parseEther(".5"), parseEther(".5")];
   let maxAmountsIn = [parseToken(baseAssetIn), parseToken(yieldAssetIn)];
   let amounts = [
     parseToken(baseAssetIn).toHexString(),
@@ -60,8 +61,8 @@ export async function setupInterestTokenPool(
     signer,
     balancerVaultContract,
     poolFactory,
-    `Element ${baseAssetSymbol} - yc${baseAssetSymbol}`,
-    `${baseAssetSymbol}-yc${baseAssetSymbol}`,
+    `Element ${baseAssetSymbol} - ey${baseAssetSymbol}`,
+    `${baseAssetSymbol}-ey${baseAssetSymbol}`,
     poolTokens,
     weights,
     "0.003"

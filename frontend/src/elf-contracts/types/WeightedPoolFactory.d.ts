@@ -22,32 +22,42 @@ import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 
 interface WeightedPoolFactoryInterface extends ethers.utils.Interface {
   functions: {
-    "create(string,string,address[],uint256[],uint256,uint256,uint256)": FunctionFragment;
-    "vault()": FunctionFragment;
+    "create(string,string,address[],uint256[],uint256,address)": FunctionFragment;
+    "getPauseConfiguration()": FunctionFragment;
+    "getVault()": FunctionFragment;
+    "isPoolFromFactory(address)": FunctionFragment;
   };
 
   encodeFunctionData(
     functionFragment: "create",
-    values: [
-      string,
-      string,
-      string[],
-      BigNumberish[],
-      BigNumberish,
-      BigNumberish,
-      BigNumberish
-    ]
+    values: [string, string, string[], BigNumberish[], BigNumberish, string]
   ): string;
-  encodeFunctionData(functionFragment: "vault", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "getPauseConfiguration",
+    values?: undefined
+  ): string;
+  encodeFunctionData(functionFragment: "getVault", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "isPoolFromFactory",
+    values: [string]
+  ): string;
 
   decodeFunctionResult(functionFragment: "create", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "vault", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "getPauseConfiguration",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "getVault", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "isPoolFromFactory",
+    data: BytesLike
+  ): Result;
 
   events: {
-    "PoolRegistered(address)": EventFragment;
+    "PoolCreated(address)": EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "PoolRegistered"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "PoolCreated"): EventFragment;
 }
 
 export class WeightedPoolFactory extends Contract {
@@ -69,26 +79,52 @@ export class WeightedPoolFactory extends Contract {
       symbol: string,
       tokens: string[],
       weights: BigNumberish[],
-      swapFee: BigNumberish,
-      emergencyPeriod: BigNumberish,
-      emergencyPeriodCheckExtension: BigNumberish,
+      swapFeePercentage: BigNumberish,
+      owner: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "create(string,string,address[],uint256[],uint256,uint256,uint256)"(
+    "create(string,string,address[],uint256[],uint256,address)"(
       name: string,
       symbol: string,
       tokens: string[],
       weights: BigNumberish[],
-      swapFee: BigNumberish,
-      emergencyPeriod: BigNumberish,
-      emergencyPeriodCheckExtension: BigNumberish,
+      swapFeePercentage: BigNumberish,
+      owner: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    vault(overrides?: CallOverrides): Promise<[string]>;
+    getPauseConfiguration(
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber] & {
+        pauseWindowDuration: BigNumber;
+        bufferPeriodDuration: BigNumber;
+      }
+    >;
 
-    "vault()"(overrides?: CallOverrides): Promise<[string]>;
+    "getPauseConfiguration()"(
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber] & {
+        pauseWindowDuration: BigNumber;
+        bufferPeriodDuration: BigNumber;
+      }
+    >;
+
+    getVault(overrides?: CallOverrides): Promise<[string]>;
+
+    "getVault()"(overrides?: CallOverrides): Promise<[string]>;
+
+    isPoolFromFactory(
+      pool: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
+    "isPoolFromFactory(address)"(
+      pool: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
   };
 
   create(
@@ -96,26 +132,49 @@ export class WeightedPoolFactory extends Contract {
     symbol: string,
     tokens: string[],
     weights: BigNumberish[],
-    swapFee: BigNumberish,
-    emergencyPeriod: BigNumberish,
-    emergencyPeriodCheckExtension: BigNumberish,
+    swapFeePercentage: BigNumberish,
+    owner: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "create(string,string,address[],uint256[],uint256,uint256,uint256)"(
+  "create(string,string,address[],uint256[],uint256,address)"(
     name: string,
     symbol: string,
     tokens: string[],
     weights: BigNumberish[],
-    swapFee: BigNumberish,
-    emergencyPeriod: BigNumberish,
-    emergencyPeriodCheckExtension: BigNumberish,
+    swapFeePercentage: BigNumberish,
+    owner: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  vault(overrides?: CallOverrides): Promise<string>;
+  getPauseConfiguration(
+    overrides?: CallOverrides
+  ): Promise<
+    [BigNumber, BigNumber] & {
+      pauseWindowDuration: BigNumber;
+      bufferPeriodDuration: BigNumber;
+    }
+  >;
 
-  "vault()"(overrides?: CallOverrides): Promise<string>;
+  "getPauseConfiguration()"(
+    overrides?: CallOverrides
+  ): Promise<
+    [BigNumber, BigNumber] & {
+      pauseWindowDuration: BigNumber;
+      bufferPeriodDuration: BigNumber;
+    }
+  >;
+
+  getVault(overrides?: CallOverrides): Promise<string>;
+
+  "getVault()"(overrides?: CallOverrides): Promise<string>;
+
+  isPoolFromFactory(pool: string, overrides?: CallOverrides): Promise<boolean>;
+
+  "isPoolFromFactory(address)"(
+    pool: string,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
 
   callStatic: {
     create(
@@ -123,30 +182,56 @@ export class WeightedPoolFactory extends Contract {
       symbol: string,
       tokens: string[],
       weights: BigNumberish[],
-      swapFee: BigNumberish,
-      emergencyPeriod: BigNumberish,
-      emergencyPeriodCheckExtension: BigNumberish,
+      swapFeePercentage: BigNumberish,
+      owner: string,
       overrides?: CallOverrides
     ): Promise<string>;
 
-    "create(string,string,address[],uint256[],uint256,uint256,uint256)"(
+    "create(string,string,address[],uint256[],uint256,address)"(
       name: string,
       symbol: string,
       tokens: string[],
       weights: BigNumberish[],
-      swapFee: BigNumberish,
-      emergencyPeriod: BigNumberish,
-      emergencyPeriodCheckExtension: BigNumberish,
+      swapFeePercentage: BigNumberish,
+      owner: string,
       overrides?: CallOverrides
     ): Promise<string>;
 
-    vault(overrides?: CallOverrides): Promise<string>;
+    getPauseConfiguration(
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber] & {
+        pauseWindowDuration: BigNumber;
+        bufferPeriodDuration: BigNumber;
+      }
+    >;
 
-    "vault()"(overrides?: CallOverrides): Promise<string>;
+    "getPauseConfiguration()"(
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber] & {
+        pauseWindowDuration: BigNumber;
+        bufferPeriodDuration: BigNumber;
+      }
+    >;
+
+    getVault(overrides?: CallOverrides): Promise<string>;
+
+    "getVault()"(overrides?: CallOverrides): Promise<string>;
+
+    isPoolFromFactory(
+      pool: string,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    "isPoolFromFactory(address)"(
+      pool: string,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
   };
 
   filters: {
-    PoolRegistered(pool: string | null): EventFilter;
+    PoolCreated(pool: string | null): EventFilter;
   };
 
   estimateGas: {
@@ -155,26 +240,38 @@ export class WeightedPoolFactory extends Contract {
       symbol: string,
       tokens: string[],
       weights: BigNumberish[],
-      swapFee: BigNumberish,
-      emergencyPeriod: BigNumberish,
-      emergencyPeriodCheckExtension: BigNumberish,
+      swapFeePercentage: BigNumberish,
+      owner: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    "create(string,string,address[],uint256[],uint256,uint256,uint256)"(
+    "create(string,string,address[],uint256[],uint256,address)"(
       name: string,
       symbol: string,
       tokens: string[],
       weights: BigNumberish[],
-      swapFee: BigNumberish,
-      emergencyPeriod: BigNumberish,
-      emergencyPeriodCheckExtension: BigNumberish,
+      swapFeePercentage: BigNumberish,
+      owner: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    vault(overrides?: CallOverrides): Promise<BigNumber>;
+    getPauseConfiguration(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "vault()"(overrides?: CallOverrides): Promise<BigNumber>;
+    "getPauseConfiguration()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getVault(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "getVault()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    isPoolFromFactory(
+      pool: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "isPoolFromFactory(address)"(
+      pool: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -183,25 +280,41 @@ export class WeightedPoolFactory extends Contract {
       symbol: string,
       tokens: string[],
       weights: BigNumberish[],
-      swapFee: BigNumberish,
-      emergencyPeriod: BigNumberish,
-      emergencyPeriodCheckExtension: BigNumberish,
+      swapFeePercentage: BigNumberish,
+      owner: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "create(string,string,address[],uint256[],uint256,uint256,uint256)"(
+    "create(string,string,address[],uint256[],uint256,address)"(
       name: string,
       symbol: string,
       tokens: string[],
       weights: BigNumberish[],
-      swapFee: BigNumberish,
-      emergencyPeriod: BigNumberish,
-      emergencyPeriodCheckExtension: BigNumberish,
+      swapFeePercentage: BigNumberish,
+      owner: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    vault(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    getPauseConfiguration(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
-    "vault()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    "getPauseConfiguration()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getVault(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "getVault()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    isPoolFromFactory(
+      pool: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "isPoolFromFactory(address)"(
+      pool: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
   };
 }

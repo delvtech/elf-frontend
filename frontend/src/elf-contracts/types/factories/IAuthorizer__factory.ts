@@ -21,7 +21,7 @@ const _abi = [
     inputs: [
       {
         internalType: "bytes32",
-        name: "role",
+        name: "actionId",
         type: "bytes32",
       },
       {
@@ -29,8 +29,13 @@ const _abi = [
         name: "account",
         type: "address",
       },
+      {
+        internalType: "address",
+        name: "where",
+        type: "address",
+      },
     ],
-    name: "hasRole",
+    name: "canPerform",
     outputs: [
       {
         internalType: "bool",

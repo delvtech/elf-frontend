@@ -23,8 +23,8 @@ export function useConvergentCurvePools(
 
   const { data: events } = useSmartContractEvents(
     convergentPoolFactory,
-    "PoolRegistered",
-    { callArgs: [null] }
+    "CCPoolCreated",
+    { callArgs: [null, null] }
   );
 
   const convergentPoolContracts = useMemo(

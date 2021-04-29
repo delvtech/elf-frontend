@@ -3,12 +3,8 @@ import "module-alias/register";
 import fs from "fs";
 import hre from "hardhat";
 
-import {
-  deployConvergentPoolFactory,
-} from "src/scripts/deployConvergentPoolFactory";
-import {
-  deployInterestTokenFactory,
-} from "src/scripts/deployInterestTokenFactory";
+import { deployConvergentPoolFactory } from "src/scripts/deployConvergentPoolFactory";
+import { deployInterestTokenFactory } from "src/scripts/deployInterestTokenFactory";
 import { deployTrancheFactory } from "src/scripts/deployTrancheFactory";
 import { THIRTY_DAYS_IN_SECONDS } from "src/time";
 
@@ -51,7 +47,11 @@ async function main() {
     wethContract
   );
   // register element with balancer so we can deploy pools
-  await balancerVaultContract.changeRelayerAllowance(elementAddress, true);
+  await balancerVaultContract.setRelayerApproval(
+    elementAddress,
+    elementAddress,
+    true
+  );
 
   // deploy factories
   const weightedPoolFactory = await deployWeightedPoolFactory(
@@ -138,7 +138,6 @@ async function main() {
       ytYieldAssetIn: "2000",
       durationInSeconds: 120,
     }
-
   );
   await yWeth.updateShares();
 
@@ -228,26 +227,28 @@ async function main() {
     2
   );
 
-
   console.log("all-addresses.json", allAddresses);
   fs.writeFileSync("./src/all-addresses.json", allAddresses);
 
   // Produce a schema-compliant testnet.addresses.json file
-  const schemaAddresses = JSON.stringify({
-    chainId: 31337,
-    addresses: {
-      elementAddress,
-      balancerVaultAddress: balancerVaultContract.address,
-      trancheFactoryAddress: trancheFactory.address,
-      interestTokenFactoryAddress: interestTokenFactory.address,
-      weightedPoolFactoryAddress: weightedPoolFactory.address,
-      convergentPoolFactoryAddress: convergentPoolFactory.address,
-      userProxyContractAddress: userProxyContract.address,
-      wethAddress: wethContract.address,
-      usdcAddress: usdcContract.address,
-    }
-    } as AddressesJsonFile , null, 2);
-
+  const schemaAddresses = JSON.stringify(
+    {
+      chainId: 31337,
+      addresses: {
+        elementAddress,
+        balancerVaultAddress: balancerVaultContract.address,
+        trancheFactoryAddress: trancheFactory.address,
+        interestTokenFactoryAddress: interestTokenFactory.address,
+        weightedPoolFactoryAddress: weightedPoolFactory.address,
+        convergentPoolFactoryAddress: convergentPoolFactory.address,
+        userProxyContractAddress: userProxyContract.address,
+        wethAddress: wethContract.address,
+        usdcAddress: usdcContract.address,
+      },
+    } as AddressesJsonFile,
+    null,
+    2
+  );
 
   console.log("testnet.addresses.json", schemaAddresses);
   fs.writeFileSync("./src/testnet.addresses.json", schemaAddresses);

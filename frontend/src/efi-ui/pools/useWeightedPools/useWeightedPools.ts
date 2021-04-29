@@ -21,7 +21,7 @@ export function useWeightedPools(
 
   const { data: events } = useSmartContractEvents(
     convergentPoolFactory,
-    "PoolRegistered",
+    "PoolCreated",
     { callArgs: [null] }
   );
 

@@ -21,15 +21,15 @@ import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 
 interface IAuthorizerInterface extends ethers.utils.Interface {
   functions: {
-    "hasRole(bytes32,address)": FunctionFragment;
+    "canPerform(bytes32,address,address)": FunctionFragment;
   };
 
   encodeFunctionData(
-    functionFragment: "hasRole",
-    values: [BytesLike, string]
+    functionFragment: "canPerform",
+    values: [BytesLike, string, string]
   ): string;
 
-  decodeFunctionResult(functionFragment: "hasRole", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "canPerform", data: BytesLike): Result;
 
   events: {};
 }
@@ -48,41 +48,47 @@ export class IAuthorizer extends Contract {
   interface: IAuthorizerInterface;
 
   functions: {
-    hasRole(
-      role: BytesLike,
+    canPerform(
+      actionId: BytesLike,
       account: string,
+      where: string,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
-    "hasRole(bytes32,address)"(
-      role: BytesLike,
+    "canPerform(bytes32,address,address)"(
+      actionId: BytesLike,
       account: string,
+      where: string,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
   };
 
-  hasRole(
-    role: BytesLike,
+  canPerform(
+    actionId: BytesLike,
     account: string,
+    where: string,
     overrides?: CallOverrides
   ): Promise<boolean>;
 
-  "hasRole(bytes32,address)"(
-    role: BytesLike,
+  "canPerform(bytes32,address,address)"(
+    actionId: BytesLike,
     account: string,
+    where: string,
     overrides?: CallOverrides
   ): Promise<boolean>;
 
   callStatic: {
-    hasRole(
-      role: BytesLike,
+    canPerform(
+      actionId: BytesLike,
       account: string,
+      where: string,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    "hasRole(bytes32,address)"(
-      role: BytesLike,
+    "canPerform(bytes32,address,address)"(
+      actionId: BytesLike,
       account: string,
+      where: string,
       overrides?: CallOverrides
     ): Promise<boolean>;
   };
@@ -90,29 +96,33 @@ export class IAuthorizer extends Contract {
   filters: {};
 
   estimateGas: {
-    hasRole(
-      role: BytesLike,
+    canPerform(
+      actionId: BytesLike,
       account: string,
+      where: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    "hasRole(bytes32,address)"(
-      role: BytesLike,
+    "canPerform(bytes32,address,address)"(
+      actionId: BytesLike,
       account: string,
+      where: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    hasRole(
-      role: BytesLike,
+    canPerform(
+      actionId: BytesLike,
       account: string,
+      where: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    "hasRole(bytes32,address)"(
-      role: BytesLike,
+    "canPerform(bytes32,address,address)"(
+      actionId: BytesLike,
       account: string,
+      where: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
   };

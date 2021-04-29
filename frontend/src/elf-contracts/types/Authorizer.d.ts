@@ -23,6 +23,7 @@ import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 interface AuthorizerInterface extends ethers.utils.Interface {
   functions: {
     "DEFAULT_ADMIN_ROLE()": FunctionFragment;
+    "canPerform(bytes32,address,address)": FunctionFragment;
     "getRoleAdmin(bytes32)": FunctionFragment;
     "getRoleMember(bytes32,uint256)": FunctionFragment;
     "getRoleMemberCount(bytes32)": FunctionFragment;
@@ -39,6 +40,10 @@ interface AuthorizerInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "DEFAULT_ADMIN_ROLE",
     values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "canPerform",
+    values: [BytesLike, string, string]
   ): string;
   encodeFunctionData(
     functionFragment: "getRoleAdmin",
@@ -89,6 +94,7 @@ interface AuthorizerInterface extends ethers.utils.Interface {
     functionFragment: "DEFAULT_ADMIN_ROLE",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "canPerform", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getRoleAdmin",
     data: BytesLike
@@ -150,6 +156,20 @@ export class Authorizer extends Contract {
     DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<[string]>;
 
     "DEFAULT_ADMIN_ROLE()"(overrides?: CallOverrides): Promise<[string]>;
+
+    canPerform(
+      actionId: BytesLike,
+      account: string,
+      arg2: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
+    "canPerform(bytes32,address,address)"(
+      actionId: BytesLike,
+      account: string,
+      arg2: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
 
     getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<[string]>;
 
@@ -281,6 +301,20 @@ export class Authorizer extends Contract {
 
   "DEFAULT_ADMIN_ROLE()"(overrides?: CallOverrides): Promise<string>;
 
+  canPerform(
+    actionId: BytesLike,
+    account: string,
+    arg2: string,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
+  "canPerform(bytes32,address,address)"(
+    actionId: BytesLike,
+    account: string,
+    arg2: string,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
   getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<string>;
 
   "getRoleAdmin(bytes32)"(
@@ -410,6 +444,20 @@ export class Authorizer extends Contract {
     DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
 
     "DEFAULT_ADMIN_ROLE()"(overrides?: CallOverrides): Promise<string>;
+
+    canPerform(
+      actionId: BytesLike,
+      account: string,
+      arg2: string,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    "canPerform(bytes32,address,address)"(
+      actionId: BytesLike,
+      account: string,
+      arg2: string,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
 
     getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<string>;
 
@@ -562,6 +610,20 @@ export class Authorizer extends Contract {
 
     "DEFAULT_ADMIN_ROLE()"(overrides?: CallOverrides): Promise<BigNumber>;
 
+    canPerform(
+      actionId: BytesLike,
+      account: string,
+      arg2: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "canPerform(bytes32,address,address)"(
+      actionId: BytesLike,
+      account: string,
+      arg2: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     getRoleAdmin(
       role: BytesLike,
       overrides?: CallOverrides
@@ -697,6 +759,20 @@ export class Authorizer extends Contract {
     ): Promise<PopulatedTransaction>;
 
     "DEFAULT_ADMIN_ROLE()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    canPerform(
+      actionId: BytesLike,
+      account: string,
+      arg2: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "canPerform(bytes32,address,address)"(
+      actionId: BytesLike,
+      account: string,
+      arg2: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

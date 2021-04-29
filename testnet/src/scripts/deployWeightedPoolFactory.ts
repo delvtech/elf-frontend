@@ -7,6 +7,7 @@ export async function deployWeightedPoolFactory(
   signer: Signer,
   balancerVaultContract: Vault
 ) {
+  const signerAddress = await signer.getAddress();
   const balancerVaultAddress = balancerVaultContract.address;
   const deployer = new WeightedPoolFactory__factory(signer);
   const weightedPoolFactoryContract = await deployer.deploy(
@@ -14,7 +15,8 @@ export async function deployWeightedPoolFactory(
   );
 
   await weightedPoolFactoryContract.deployed();
-  await balancerVaultContract.changeRelayerAllowance(
+  await balancerVaultContract.setRelayerApproval(
+    signerAddress,
     weightedPoolFactoryContract.address,
     true
   );

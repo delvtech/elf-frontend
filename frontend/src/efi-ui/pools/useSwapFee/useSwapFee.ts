@@ -14,7 +14,7 @@ export function useSwapFee(
 ): BigNumber | undefined {
   const { data: swapFee } = useSmartContractReadCall(
     pool as WeightedPool,
-    "getSwapFee",
+    "getSwapFeePercentage",
     {
       enabled: isWeightedPool(pool),
     }

@@ -13,7 +13,8 @@ export function usePoolTokens(
 ): QueryObserverResult<
   [
     string[], // addresses
-    BigNumber[] // balances
+    BigNumber[], // balances
+    BigNumber // lastChangeBlock
   ]
 > {
   const balancerVault = useBalancerVault();

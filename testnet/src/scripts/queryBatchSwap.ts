@@ -5,8 +5,8 @@ import { Vault } from "src/types/Vault";
 
 interface Swap {
   poolId: BytesLike;
-  tokenInIndex: number;
-  tokenOutIndex: number;
+  assetInIndex: BigNumberish;
+  assetOutIndex: BigNumberish;
   amount: BigNumberish;
   userData: BytesLike;
 }
@@ -31,10 +31,10 @@ export async function queryBatchSwap(
   const tokenInDecimals = await tokenInContract.decimals();
 
   const tokens: string[] = [tokenInAddress, tokenOutAddress].sort();
-  const tokenInIndex = tokens.findIndex(
+  const assetInIndex = tokens.findIndex(
     (address) => address === tokenInAddress
   );
-  const tokenOutIndex = tokens.findIndex(
+  const assetOutIndex = tokens.findIndex(
     (address) => address === tokenOutAddress
   );
   const amount = parseUnits(swapInAmount, tokenInDecimals);
@@ -46,8 +46,8 @@ export async function queryBatchSwap(
     {
       poolId,
       // indicies from 'tokens', puttin FYTs in, getting base asset out.
-      tokenInIndex,
-      tokenOutIndex,
+      assetInIndex,
+      assetOutIndex,
       amount,
       userData,
     },
