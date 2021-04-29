@@ -19,29 +19,29 @@ import { BytesLike } from "@ethersproject/bytes";
 import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 
-interface EmergencyPeriodInterface extends ethers.utils.Interface {
+interface ITemporarilyPausableInterface extends ethers.utils.Interface {
   functions: {
-    "getEmergencyPeriod()": FunctionFragment;
+    "getPausedState()": FunctionFragment;
   };
 
   encodeFunctionData(
-    functionFragment: "getEmergencyPeriod",
+    functionFragment: "getPausedState",
     values?: undefined
   ): string;
 
   decodeFunctionResult(
-    functionFragment: "getEmergencyPeriod",
+    functionFragment: "getPausedState",
     data: BytesLike
   ): Result;
 
   events: {
-    "EmergencyPeriodChanged(bool)": EventFragment;
+    "PausedStateChanged(bool)": EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "EmergencyPeriodChanged"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "PausedStateChanged"): EventFragment;
 }
 
-export class EmergencyPeriod extends Contract {
+export class ITemporarilyPausable extends Contract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -52,88 +52,86 @@ export class EmergencyPeriod extends Contract {
   removeAllListeners(eventName: EventFilter | string): this;
   removeListener(eventName: any, listener: Listener): this;
 
-  interface: EmergencyPeriodInterface;
+  interface: ITemporarilyPausableInterface;
 
   functions: {
-    getEmergencyPeriod(
+    getPausedState(
       overrides?: CallOverrides
     ): Promise<
       [boolean, BigNumber, BigNumber] & {
-        active: boolean;
-        endDate: BigNumber;
-        checkEndDate: BigNumber;
+        paused: boolean;
+        pauseWindowEndTime: BigNumber;
+        bufferPeriodEndTime: BigNumber;
       }
     >;
 
-    "getEmergencyPeriod()"(
+    "getPausedState()"(
       overrides?: CallOverrides
     ): Promise<
       [boolean, BigNumber, BigNumber] & {
-        active: boolean;
-        endDate: BigNumber;
-        checkEndDate: BigNumber;
+        paused: boolean;
+        pauseWindowEndTime: BigNumber;
+        bufferPeriodEndTime: BigNumber;
       }
     >;
   };
 
-  getEmergencyPeriod(
+  getPausedState(
     overrides?: CallOverrides
   ): Promise<
     [boolean, BigNumber, BigNumber] & {
-      active: boolean;
-      endDate: BigNumber;
-      checkEndDate: BigNumber;
+      paused: boolean;
+      pauseWindowEndTime: BigNumber;
+      bufferPeriodEndTime: BigNumber;
     }
   >;
 
-  "getEmergencyPeriod()"(
+  "getPausedState()"(
     overrides?: CallOverrides
   ): Promise<
     [boolean, BigNumber, BigNumber] & {
-      active: boolean;
-      endDate: BigNumber;
-      checkEndDate: BigNumber;
+      paused: boolean;
+      pauseWindowEndTime: BigNumber;
+      bufferPeriodEndTime: BigNumber;
     }
   >;
 
   callStatic: {
-    getEmergencyPeriod(
+    getPausedState(
       overrides?: CallOverrides
     ): Promise<
       [boolean, BigNumber, BigNumber] & {
-        active: boolean;
-        endDate: BigNumber;
-        checkEndDate: BigNumber;
+        paused: boolean;
+        pauseWindowEndTime: BigNumber;
+        bufferPeriodEndTime: BigNumber;
       }
     >;
 
-    "getEmergencyPeriod()"(
+    "getPausedState()"(
       overrides?: CallOverrides
     ): Promise<
       [boolean, BigNumber, BigNumber] & {
-        active: boolean;
-        endDate: BigNumber;
-        checkEndDate: BigNumber;
+        paused: boolean;
+        pauseWindowEndTime: BigNumber;
+        bufferPeriodEndTime: BigNumber;
       }
     >;
   };
 
   filters: {
-    EmergencyPeriodChanged(active: null): EventFilter;
+    PausedStateChanged(paused: null): EventFilter;
   };
 
   estimateGas: {
-    getEmergencyPeriod(overrides?: CallOverrides): Promise<BigNumber>;
+    getPausedState(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "getEmergencyPeriod()"(overrides?: CallOverrides): Promise<BigNumber>;
+    "getPausedState()"(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    getEmergencyPeriod(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    getPausedState(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "getEmergencyPeriod()"(
+    "getPausedState()"(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
   };

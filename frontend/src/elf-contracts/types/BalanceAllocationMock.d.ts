@@ -21,7 +21,6 @@ import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 
 interface BalanceAllocationMockInterface extends ethers.utils.Interface {
   functions: {
-    "blockNumber(bytes32)": FunctionFragment;
     "cash(bytes32)": FunctionFragment;
     "cashToManaged(bytes32,uint256)": FunctionFragment;
     "decreaseCash(bytes32,uint256)": FunctionFragment;
@@ -30,6 +29,7 @@ interface BalanceAllocationMockInterface extends ethers.utils.Interface {
     "increaseCash(bytes32,uint256)": FunctionFragment;
     "isNotZero(bytes32)": FunctionFragment;
     "isZero(bytes32)": FunctionFragment;
+    "lastChangeBlock(bytes32)": FunctionFragment;
     "managed(bytes32)": FunctionFragment;
     "managedToCash(bytes32,uint256)": FunctionFragment;
     "setManaged(bytes32,uint256)": FunctionFragment;
@@ -40,10 +40,6 @@ interface BalanceAllocationMockInterface extends ethers.utils.Interface {
     "totals(bytes32[])": FunctionFragment;
   };
 
-  encodeFunctionData(
-    functionFragment: "blockNumber",
-    values: [BytesLike]
-  ): string;
   encodeFunctionData(functionFragment: "cash", values: [BytesLike]): string;
   encodeFunctionData(
     functionFragment: "cashToManaged",
@@ -70,6 +66,10 @@ interface BalanceAllocationMockInterface extends ethers.utils.Interface {
     values: [BytesLike]
   ): string;
   encodeFunctionData(functionFragment: "isZero", values: [BytesLike]): string;
+  encodeFunctionData(
+    functionFragment: "lastChangeBlock",
+    values: [BytesLike]
+  ): string;
   encodeFunctionData(functionFragment: "managed", values: [BytesLike]): string;
   encodeFunctionData(
     functionFragment: "managedToCash",
@@ -94,10 +94,6 @@ interface BalanceAllocationMockInterface extends ethers.utils.Interface {
   encodeFunctionData(functionFragment: "total", values: [BytesLike]): string;
   encodeFunctionData(functionFragment: "totals", values: [BytesLike[]]): string;
 
-  decodeFunctionResult(
-    functionFragment: "blockNumber",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "cash", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "cashToManaged",
@@ -121,6 +117,10 @@ interface BalanceAllocationMockInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "isNotZero", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "isZero", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "lastChangeBlock",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "managed", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "managedToCash",
@@ -156,16 +156,6 @@ export class BalanceAllocationMock extends Contract {
   interface: BalanceAllocationMockInterface;
 
   functions: {
-    blockNumber(
-      balance: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    "blockNumber(bytes32)"(
-      balance: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
     cash(balance: BytesLike, overrides?: CallOverrides): Promise<[BigNumber]>;
 
     "cash(bytes32)"(
@@ -250,6 +240,16 @@ export class BalanceAllocationMock extends Contract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
+    lastChangeBlock(
+      balance: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    "lastChangeBlock(bytes32)"(
+      balance: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
     managed(
       balance: BytesLike,
       overrides?: CallOverrides
@@ -287,14 +287,14 @@ export class BalanceAllocationMock extends Contract {
     toBalance(
       _cash: BigNumberish,
       _managed: BigNumberish,
-      _blockNumber: BigNumberish,
+      _lastChangeBlock: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[string]>;
 
     "toBalance(uint256,uint256,uint256)"(
       _cash: BigNumberish,
       _managed: BigNumberish,
-      _blockNumber: BigNumberish,
+      _lastChangeBlock: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[string]>;
 
@@ -332,23 +332,13 @@ export class BalanceAllocationMock extends Contract {
     totals(
       balances: BytesLike[],
       overrides?: CallOverrides
-    ): Promise<[BigNumber[]]>;
+    ): Promise<[BigNumber[]] & { result: BigNumber[] }>;
 
     "totals(bytes32[])"(
       balances: BytesLike[],
       overrides?: CallOverrides
-    ): Promise<[BigNumber[]]>;
+    ): Promise<[BigNumber[]] & { result: BigNumber[] }>;
   };
-
-  blockNumber(
-    balance: BytesLike,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  "blockNumber(bytes32)"(
-    balance: BytesLike,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
 
   cash(balance: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -431,6 +421,16 @@ export class BalanceAllocationMock extends Contract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
+  lastChangeBlock(
+    balance: BytesLike,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  "lastChangeBlock(bytes32)"(
+    balance: BytesLike,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   managed(balance: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
 
   "managed(bytes32)"(
@@ -465,14 +465,14 @@ export class BalanceAllocationMock extends Contract {
   toBalance(
     _cash: BigNumberish,
     _managed: BigNumberish,
-    _blockNumber: BigNumberish,
+    _lastChangeBlock: BigNumberish,
     overrides?: CallOverrides
   ): Promise<string>;
 
   "toBalance(uint256,uint256,uint256)"(
     _cash: BigNumberish,
     _managed: BigNumberish,
-    _blockNumber: BigNumberish,
+    _lastChangeBlock: BigNumberish,
     overrides?: CallOverrides
   ): Promise<string>;
 
@@ -518,16 +518,6 @@ export class BalanceAllocationMock extends Contract {
   ): Promise<BigNumber[]>;
 
   callStatic: {
-    blockNumber(
-      balance: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "blockNumber(bytes32)"(
-      balance: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     cash(balance: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
 
     "cash(bytes32)"(
@@ -609,6 +599,16 @@ export class BalanceAllocationMock extends Contract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    lastChangeBlock(
+      balance: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "lastChangeBlock(bytes32)"(
+      balance: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     managed(balance: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
 
     "managed(bytes32)"(
@@ -643,14 +643,14 @@ export class BalanceAllocationMock extends Contract {
     toBalance(
       _cash: BigNumberish,
       _managed: BigNumberish,
-      _blockNumber: BigNumberish,
+      _lastChangeBlock: BigNumberish,
       overrides?: CallOverrides
     ): Promise<string>;
 
     "toBalance(uint256,uint256,uint256)"(
       _cash: BigNumberish,
       _managed: BigNumberish,
-      _blockNumber: BigNumberish,
+      _lastChangeBlock: BigNumberish,
       overrides?: CallOverrides
     ): Promise<string>;
 
@@ -699,16 +699,6 @@ export class BalanceAllocationMock extends Contract {
   filters: {};
 
   estimateGas: {
-    blockNumber(
-      balance: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "blockNumber(bytes32)"(
-      balance: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     cash(balance: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
 
     "cash(bytes32)"(
@@ -793,6 +783,16 @@ export class BalanceAllocationMock extends Contract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    lastChangeBlock(
+      balance: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "lastChangeBlock(bytes32)"(
+      balance: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     managed(balance: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
 
     "managed(bytes32)"(
@@ -827,14 +827,14 @@ export class BalanceAllocationMock extends Contract {
     toBalance(
       _cash: BigNumberish,
       _managed: BigNumberish,
-      _blockNumber: BigNumberish,
+      _lastChangeBlock: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     "toBalance(uint256,uint256,uint256)"(
       _cash: BigNumberish,
       _managed: BigNumberish,
-      _blockNumber: BigNumberish,
+      _lastChangeBlock: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -881,16 +881,6 @@ export class BalanceAllocationMock extends Contract {
   };
 
   populateTransaction: {
-    blockNumber(
-      balance: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "blockNumber(bytes32)"(
-      balance: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     cash(
       balance: BytesLike,
       overrides?: CallOverrides
@@ -981,6 +971,16 @@ export class BalanceAllocationMock extends Contract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    lastChangeBlock(
+      balance: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "lastChangeBlock(bytes32)"(
+      balance: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     managed(
       balance: BytesLike,
       overrides?: CallOverrides
@@ -1018,14 +1018,14 @@ export class BalanceAllocationMock extends Contract {
     toBalance(
       _cash: BigNumberish,
       _managed: BigNumberish,
-      _blockNumber: BigNumberish,
+      _lastChangeBlock: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     "toBalance(uint256,uint256,uint256)"(
       _cash: BigNumberish,
       _managed: BigNumberish,
-      _blockNumber: BigNumberish,
+      _lastChangeBlock: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

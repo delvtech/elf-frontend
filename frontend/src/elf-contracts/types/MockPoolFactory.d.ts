@@ -23,20 +23,29 @@ import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 interface MockPoolFactoryInterface extends ethers.utils.Interface {
   functions: {
     "create()": FunctionFragment;
-    "vault()": FunctionFragment;
+    "getVault()": FunctionFragment;
+    "isPoolFromFactory(address)": FunctionFragment;
   };
 
   encodeFunctionData(functionFragment: "create", values?: undefined): string;
-  encodeFunctionData(functionFragment: "vault", values?: undefined): string;
+  encodeFunctionData(functionFragment: "getVault", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "isPoolFromFactory",
+    values: [string]
+  ): string;
 
   decodeFunctionResult(functionFragment: "create", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "vault", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "getVault", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "isPoolFromFactory",
+    data: BytesLike
+  ): Result;
 
   events: {
-    "PoolRegistered(address)": EventFragment;
+    "PoolCreated(address)": EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "PoolRegistered"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "PoolCreated"): EventFragment;
 }
 
 export class MockPoolFactory extends Contract {
@@ -57,31 +66,58 @@ export class MockPoolFactory extends Contract {
 
     "create()"(overrides?: Overrides): Promise<ContractTransaction>;
 
-    vault(overrides?: CallOverrides): Promise<[string]>;
+    getVault(overrides?: CallOverrides): Promise<[string]>;
 
-    "vault()"(overrides?: CallOverrides): Promise<[string]>;
+    "getVault()"(overrides?: CallOverrides): Promise<[string]>;
+
+    isPoolFromFactory(
+      pool: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
+    "isPoolFromFactory(address)"(
+      pool: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
   };
 
   create(overrides?: Overrides): Promise<ContractTransaction>;
 
   "create()"(overrides?: Overrides): Promise<ContractTransaction>;
 
-  vault(overrides?: CallOverrides): Promise<string>;
+  getVault(overrides?: CallOverrides): Promise<string>;
 
-  "vault()"(overrides?: CallOverrides): Promise<string>;
+  "getVault()"(overrides?: CallOverrides): Promise<string>;
+
+  isPoolFromFactory(pool: string, overrides?: CallOverrides): Promise<boolean>;
+
+  "isPoolFromFactory(address)"(
+    pool: string,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
 
   callStatic: {
     create(overrides?: CallOverrides): Promise<string>;
 
     "create()"(overrides?: CallOverrides): Promise<string>;
 
-    vault(overrides?: CallOverrides): Promise<string>;
+    getVault(overrides?: CallOverrides): Promise<string>;
 
-    "vault()"(overrides?: CallOverrides): Promise<string>;
+    "getVault()"(overrides?: CallOverrides): Promise<string>;
+
+    isPoolFromFactory(
+      pool: string,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    "isPoolFromFactory(address)"(
+      pool: string,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
   };
 
   filters: {
-    PoolRegistered(pool: string | null): EventFilter;
+    PoolCreated(pool: string | null): EventFilter;
   };
 
   estimateGas: {
@@ -89,9 +125,19 @@ export class MockPoolFactory extends Contract {
 
     "create()"(overrides?: Overrides): Promise<BigNumber>;
 
-    vault(overrides?: CallOverrides): Promise<BigNumber>;
+    getVault(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "vault()"(overrides?: CallOverrides): Promise<BigNumber>;
+    "getVault()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    isPoolFromFactory(
+      pool: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "isPoolFromFactory(address)"(
+      pool: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -99,8 +145,18 @@ export class MockPoolFactory extends Contract {
 
     "create()"(overrides?: Overrides): Promise<PopulatedTransaction>;
 
-    vault(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    getVault(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "vault()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    "getVault()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    isPoolFromFactory(
+      pool: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "isPoolFromFactory(address)"(
+      pool: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
   };
 }

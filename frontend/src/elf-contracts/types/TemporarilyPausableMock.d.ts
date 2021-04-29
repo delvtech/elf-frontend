@@ -20,38 +20,32 @@ import { BytesLike } from "@ethersproject/bytes";
 import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 
-interface EmergencyPeriodMockInterface extends ethers.utils.Interface {
+interface TemporarilyPausableMockInterface extends ethers.utils.Interface {
   functions: {
-    "getEmergencyPeriod()": FunctionFragment;
-    "setEmergencyPeriod(bool)": FunctionFragment;
+    "getPausedState()": FunctionFragment;
+    "setPaused(bool)": FunctionFragment;
   };
 
   encodeFunctionData(
-    functionFragment: "getEmergencyPeriod",
+    functionFragment: "getPausedState",
     values?: undefined
   ): string;
-  encodeFunctionData(
-    functionFragment: "setEmergencyPeriod",
-    values: [boolean]
-  ): string;
+  encodeFunctionData(functionFragment: "setPaused", values: [boolean]): string;
 
   decodeFunctionResult(
-    functionFragment: "getEmergencyPeriod",
+    functionFragment: "getPausedState",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "setEmergencyPeriod",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "setPaused", data: BytesLike): Result;
 
   events: {
-    "EmergencyPeriodChanged(bool)": EventFragment;
+    "PausedStateChanged(bool)": EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "EmergencyPeriodChanged"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "PausedStateChanged"): EventFragment;
 }
 
-export class EmergencyPeriodMock extends Contract {
+export class TemporarilyPausableMock extends Contract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -62,138 +56,130 @@ export class EmergencyPeriodMock extends Contract {
   removeAllListeners(eventName: EventFilter | string): this;
   removeListener(eventName: any, listener: Listener): this;
 
-  interface: EmergencyPeriodMockInterface;
+  interface: TemporarilyPausableMockInterface;
 
   functions: {
-    getEmergencyPeriod(
+    getPausedState(
       overrides?: CallOverrides
     ): Promise<
       [boolean, BigNumber, BigNumber] & {
-        active: boolean;
-        endDate: BigNumber;
-        checkEndDate: BigNumber;
+        paused: boolean;
+        pauseWindowEndTime: BigNumber;
+        bufferPeriodEndTime: BigNumber;
       }
     >;
 
-    "getEmergencyPeriod()"(
+    "getPausedState()"(
       overrides?: CallOverrides
     ): Promise<
       [boolean, BigNumber, BigNumber] & {
-        active: boolean;
-        endDate: BigNumber;
-        checkEndDate: BigNumber;
+        paused: boolean;
+        pauseWindowEndTime: BigNumber;
+        bufferPeriodEndTime: BigNumber;
       }
     >;
 
-    setEmergencyPeriod(
-      active: boolean,
+    setPaused(
+      paused: boolean,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "setEmergencyPeriod(bool)"(
-      active: boolean,
+    "setPaused(bool)"(
+      paused: boolean,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
   };
 
-  getEmergencyPeriod(
+  getPausedState(
     overrides?: CallOverrides
   ): Promise<
     [boolean, BigNumber, BigNumber] & {
-      active: boolean;
-      endDate: BigNumber;
-      checkEndDate: BigNumber;
+      paused: boolean;
+      pauseWindowEndTime: BigNumber;
+      bufferPeriodEndTime: BigNumber;
     }
   >;
 
-  "getEmergencyPeriod()"(
+  "getPausedState()"(
     overrides?: CallOverrides
   ): Promise<
     [boolean, BigNumber, BigNumber] & {
-      active: boolean;
-      endDate: BigNumber;
-      checkEndDate: BigNumber;
+      paused: boolean;
+      pauseWindowEndTime: BigNumber;
+      bufferPeriodEndTime: BigNumber;
     }
   >;
 
-  setEmergencyPeriod(
-    active: boolean,
+  setPaused(
+    paused: boolean,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "setEmergencyPeriod(bool)"(
-    active: boolean,
+  "setPaused(bool)"(
+    paused: boolean,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    getEmergencyPeriod(
+    getPausedState(
       overrides?: CallOverrides
     ): Promise<
       [boolean, BigNumber, BigNumber] & {
-        active: boolean;
-        endDate: BigNumber;
-        checkEndDate: BigNumber;
+        paused: boolean;
+        pauseWindowEndTime: BigNumber;
+        bufferPeriodEndTime: BigNumber;
       }
     >;
 
-    "getEmergencyPeriod()"(
+    "getPausedState()"(
       overrides?: CallOverrides
     ): Promise<
       [boolean, BigNumber, BigNumber] & {
-        active: boolean;
-        endDate: BigNumber;
-        checkEndDate: BigNumber;
+        paused: boolean;
+        pauseWindowEndTime: BigNumber;
+        bufferPeriodEndTime: BigNumber;
       }
     >;
 
-    setEmergencyPeriod(
-      active: boolean,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    setPaused(paused: boolean, overrides?: CallOverrides): Promise<void>;
 
-    "setEmergencyPeriod(bool)"(
-      active: boolean,
+    "setPaused(bool)"(
+      paused: boolean,
       overrides?: CallOverrides
     ): Promise<void>;
   };
 
   filters: {
-    EmergencyPeriodChanged(active: null): EventFilter;
+    PausedStateChanged(paused: null): EventFilter;
   };
 
   estimateGas: {
-    getEmergencyPeriod(overrides?: CallOverrides): Promise<BigNumber>;
+    getPausedState(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "getEmergencyPeriod()"(overrides?: CallOverrides): Promise<BigNumber>;
+    "getPausedState()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-    setEmergencyPeriod(
-      active: boolean,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
+    setPaused(paused: boolean, overrides?: Overrides): Promise<BigNumber>;
 
-    "setEmergencyPeriod(bool)"(
-      active: boolean,
+    "setPaused(bool)"(
+      paused: boolean,
       overrides?: Overrides
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    getEmergencyPeriod(
+    getPausedState(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "getPausedState()"(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    "getEmergencyPeriod()"(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    setEmergencyPeriod(
-      active: boolean,
+    setPaused(
+      paused: boolean,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "setEmergencyPeriod(bool)"(
-      active: boolean,
+    "setPaused(bool)"(
+      paused: boolean,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
   };

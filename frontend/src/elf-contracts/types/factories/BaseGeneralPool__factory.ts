@@ -48,11 +48,11 @@ const _abi = [
       {
         indexed: false,
         internalType: "bool",
-        name: "active",
+        name: "paused",
         type: "bool",
       },
     ],
-    name: "EmergencyPeriodChanged",
+    name: "PausedStateChanged",
     type: "event",
   },
   {
@@ -61,11 +61,11 @@ const _abi = [
       {
         indexed: false,
         internalType: "uint256",
-        name: "swapFee",
+        name: "swapFeePercentage",
         type: "uint256",
       },
     ],
-    name: "SwapFeeChanged",
+    name: "SwapFeePercentageChanged",
     type: "event",
   },
   {
@@ -92,6 +92,19 @@ const _abi = [
     ],
     name: "Transfer",
     type: "event",
+  },
+  {
+    inputs: [],
+    name: "DOMAIN_SEPARATOR",
+    outputs: [
+      {
+        internalType: "bytes32",
+        name: "",
+        type: "bytes32",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
   },
   {
     inputs: [
@@ -198,6 +211,25 @@ const _abi = [
     type: "function",
   },
   {
+    inputs: [
+      {
+        internalType: "bytes4",
+        name: "selector",
+        type: "bytes4",
+      },
+    ],
+    name: "getActionId",
+    outputs: [
+      {
+        internalType: "bytes32",
+        name: "",
+        type: "bytes32",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [],
     name: "getAuthorizer",
     outputs: [
@@ -212,21 +244,34 @@ const _abi = [
   },
   {
     inputs: [],
-    name: "getEmergencyPeriod",
+    name: "getOwner",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getPausedState",
     outputs: [
       {
         internalType: "bool",
-        name: "active",
+        name: "paused",
         type: "bool",
       },
       {
         internalType: "uint256",
-        name: "endDate",
+        name: "pauseWindowEndTime",
         type: "uint256",
       },
       {
         internalType: "uint256",
-        name: "checkEndDate",
+        name: "bufferPeriodEndTime",
         type: "uint256",
       },
     ],
@@ -248,20 +293,7 @@ const _abi = [
   },
   {
     inputs: [],
-    name: "getRate",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "getSwapFee",
+    name: "getSwapFeePercentage",
     outputs: [
       {
         internalType: "uint256",
@@ -325,6 +357,25 @@ const _abi = [
   {
     inputs: [
       {
+        internalType: "address",
+        name: "owner",
+        type: "address",
+      },
+    ],
+    name: "nonces",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "bytes32",
         name: "poolId",
         type: "bytes32",
@@ -341,12 +392,12 @@ const _abi = [
       },
       {
         internalType: "uint256[]",
-        name: "currentBalances",
+        name: "balances",
         type: "uint256[]",
       },
       {
         internalType: "uint256",
-        name: "latestBlockNumberUsed",
+        name: "lastChangeBlock",
         type: "uint256",
       },
       {
@@ -395,12 +446,12 @@ const _abi = [
       },
       {
         internalType: "uint256[]",
-        name: "currentBalances",
+        name: "balances",
         type: "uint256[]",
       },
       {
         internalType: "uint256",
-        name: "latestBlockNumberUsed",
+        name: "lastChangeBlock",
         type: "uint256",
       },
       {
@@ -461,7 +512,7 @@ const _abi = [
           },
           {
             internalType: "uint256",
-            name: "latestBlockNumberUsed",
+            name: "lastChangeBlock",
             type: "uint256",
           },
           {
@@ -514,6 +565,49 @@ const _abi = [
   {
     inputs: [
       {
+        internalType: "address",
+        name: "owner",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "spender",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "value",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "deadline",
+        type: "uint256",
+      },
+      {
+        internalType: "uint8",
+        name: "v",
+        type: "uint8",
+      },
+      {
+        internalType: "bytes32",
+        name: "r",
+        type: "bytes32",
+      },
+      {
+        internalType: "bytes32",
+        name: "s",
+        type: "bytes32",
+      },
+    ],
+    name: "permit",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "bytes32",
         name: "poolId",
         type: "bytes32",
@@ -530,12 +624,12 @@ const _abi = [
       },
       {
         internalType: "uint256[]",
-        name: "currentBalances",
+        name: "balances",
         type: "uint256[]",
       },
       {
         internalType: "uint256",
-        name: "latestBlockNumberUsed",
+        name: "lastChangeBlock",
         type: "uint256",
       },
       {
@@ -584,12 +678,12 @@ const _abi = [
       },
       {
         internalType: "uint256[]",
-        name: "currentBalances",
+        name: "balances",
         type: "uint256[]",
       },
       {
         internalType: "uint256",
-        name: "latestBlockNumberUsed",
+        name: "lastChangeBlock",
         type: "uint256",
       },
       {
@@ -623,11 +717,11 @@ const _abi = [
     inputs: [
       {
         internalType: "bool",
-        name: "active",
+        name: "paused",
         type: "bool",
       },
     ],
-    name: "setEmergencyPeriod",
+    name: "setPaused",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -636,11 +730,11 @@ const _abi = [
     inputs: [
       {
         internalType: "uint256",
-        name: "swapFee",
+        name: "swapFeePercentage",
         type: "uint256",
       },
     ],
-    name: "setSwapFee",
+    name: "setSwapFeePercentage",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

@@ -19,6 +19,81 @@ const _abi = [
     inputs: [
       {
         indexed: true,
+        internalType: "contract IAuthorizer",
+        name: "newAuthorizer",
+        type: "address",
+      },
+    ],
+    name: "AuthorizerChanged",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "contract IERC20",
+        name: "token",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "sender",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "recipient",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+    ],
+    name: "ExternalBalanceTransfer",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "contract IFlashLoanRecipient",
+        name: "recipient",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "contract IERC20",
+        name: "token",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "feeAmount",
+        type: "uint256",
+      },
+    ],
+    name: "FlashLoan",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
         internalType: "address",
         name: "user",
         type: "address",
@@ -37,6 +112,19 @@ const _abi = [
       },
     ],
     name: "InternalBalanceChanged",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "bool",
+        name: "paused",
+        type: "bool",
+      },
+    ],
+    name: "PausedStateChanged",
     type: "event",
   },
   {
@@ -63,13 +151,13 @@ const _abi = [
       {
         indexed: false,
         internalType: "int256[]",
-        name: "amounts",
+        name: "deltas",
         type: "int256[]",
       },
       {
         indexed: false,
         internalType: "uint256[]",
-        name: "protocolFees",
+        name: "protocolFeeAmounts",
         type: "uint256[]",
       },
     ],
@@ -100,7 +188,13 @@ const _abi = [
       {
         indexed: false,
         internalType: "int256",
-        name: "amount",
+        name: "cashDelta",
+        type: "int256",
+      },
+      {
+        indexed: false,
+        internalType: "int256",
+        name: "managedDelta",
         type: "int256",
       },
     ],
@@ -111,13 +205,50 @@ const _abi = [
     anonymous: false,
     inputs: [
       {
-        indexed: false,
+        indexed: true,
         internalType: "bytes32",
         name: "poolId",
         type: "bytes32",
       },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "poolAddress",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "enum IVault.PoolSpecialization",
+        name: "specialization",
+        type: "uint8",
+      },
     ],
     name: "PoolRegistered",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "relayer",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "sender",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "bool",
+        name: "approved",
+        type: "bool",
+      },
+    ],
+    name: "RelayerApprovalChanged",
     type: "event",
   },
   {
@@ -144,13 +275,13 @@ const _abi = [
       {
         indexed: false,
         internalType: "uint256",
-        name: "tokensIn",
+        name: "amountIn",
         type: "uint256",
       },
       {
         indexed: false,
         internalType: "uint256",
-        name: "tokensOut",
+        name: "amountOut",
         type: "uint256",
       },
     ],
@@ -161,7 +292,7 @@ const _abi = [
     anonymous: false,
     inputs: [
       {
-        indexed: false,
+        indexed: true,
         internalType: "bytes32",
         name: "poolId",
         type: "bytes32",
@@ -180,7 +311,7 @@ const _abi = [
     anonymous: false,
     inputs: [
       {
-        indexed: false,
+        indexed: true,
         internalType: "bytes32",
         name: "poolId",
         type: "bytes32",
@@ -217,93 +348,10 @@ const _abi = [
   {
     inputs: [
       {
-        components: [
-          {
-            internalType: "bytes32",
-            name: "poolId",
-            type: "bytes32",
-          },
-          {
-            internalType: "uint256",
-            name: "tokenInIndex",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "tokenOutIndex",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "amountIn",
-            type: "uint256",
-          },
-          {
-            internalType: "bytes",
-            name: "userData",
-            type: "bytes",
-          },
-        ],
-        internalType: "struct IVault.SwapIn[]",
-        name: "swaps",
-        type: "tuple[]",
+        internalType: "enum IVault.SwapKind",
+        name: "kind",
+        type: "uint8",
       },
-      {
-        internalType: "contract IAsset[]",
-        name: "assets",
-        type: "address[]",
-      },
-      {
-        components: [
-          {
-            internalType: "address",
-            name: "sender",
-            type: "address",
-          },
-          {
-            internalType: "bool",
-            name: "fromInternalBalance",
-            type: "bool",
-          },
-          {
-            internalType: "address payable",
-            name: "recipient",
-            type: "address",
-          },
-          {
-            internalType: "bool",
-            name: "toInternalBalance",
-            type: "bool",
-          },
-        ],
-        internalType: "struct IVault.FundManagement",
-        name: "funds",
-        type: "tuple",
-      },
-      {
-        internalType: "int256[]",
-        name: "limits",
-        type: "int256[]",
-      },
-      {
-        internalType: "uint256",
-        name: "deadline",
-        type: "uint256",
-      },
-    ],
-    name: "batchSwapGivenIn",
-    outputs: [
-      {
-        internalType: "int256[]",
-        name: "",
-        type: "int256[]",
-      },
-    ],
-    stateMutability: "payable",
-    type: "function",
-  },
-  {
-    inputs: [
       {
         components: [
           {
@@ -313,122 +361,13 @@ const _abi = [
           },
           {
             internalType: "uint256",
-            name: "tokenInIndex",
+            name: "assetInIndex",
             type: "uint256",
           },
           {
             internalType: "uint256",
-            name: "tokenOutIndex",
+            name: "assetOutIndex",
             type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "amountOut",
-            type: "uint256",
-          },
-          {
-            internalType: "bytes",
-            name: "userData",
-            type: "bytes",
-          },
-        ],
-        internalType: "struct IVault.SwapOut[]",
-        name: "swaps",
-        type: "tuple[]",
-      },
-      {
-        internalType: "contract IAsset[]",
-        name: "assets",
-        type: "address[]",
-      },
-      {
-        components: [
-          {
-            internalType: "address",
-            name: "sender",
-            type: "address",
-          },
-          {
-            internalType: "bool",
-            name: "fromInternalBalance",
-            type: "bool",
-          },
-          {
-            internalType: "address payable",
-            name: "recipient",
-            type: "address",
-          },
-          {
-            internalType: "bool",
-            name: "toInternalBalance",
-            type: "bool",
-          },
-        ],
-        internalType: "struct IVault.FundManagement",
-        name: "funds",
-        type: "tuple",
-      },
-      {
-        internalType: "int256[]",
-        name: "limits",
-        type: "int256[]",
-      },
-      {
-        internalType: "uint256",
-        name: "deadline",
-        type: "uint256",
-      },
-    ],
-    name: "batchSwapGivenOut",
-    outputs: [
-      {
-        internalType: "int256[]",
-        name: "",
-        type: "int256[]",
-      },
-    ],
-    stateMutability: "payable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "contract IAuthorizer",
-        name: "newAuthorizer",
-        type: "address",
-      },
-    ],
-    name: "changeAuthorizer",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "relayer",
-        type: "address",
-      },
-      {
-        internalType: "bool",
-        name: "allowed",
-        type: "bool",
-      },
-    ],
-    name: "changeRelayerAllowance",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        components: [
-          {
-            internalType: "contract IAsset",
-            name: "asset",
-            type: "address",
           },
           {
             internalType: "uint256",
@@ -436,23 +375,66 @@ const _abi = [
             type: "uint256",
           },
           {
+            internalType: "bytes",
+            name: "userData",
+            type: "bytes",
+          },
+        ],
+        internalType: "struct IVault.BatchSwapStep[]",
+        name: "swaps",
+        type: "tuple[]",
+      },
+      {
+        internalType: "contract IAsset[]",
+        name: "assets",
+        type: "address[]",
+      },
+      {
+        components: [
+          {
             internalType: "address",
             name: "sender",
             type: "address",
+          },
+          {
+            internalType: "bool",
+            name: "fromInternalBalance",
+            type: "bool",
           },
           {
             internalType: "address payable",
             name: "recipient",
             type: "address",
           },
+          {
+            internalType: "bool",
+            name: "toInternalBalance",
+            type: "bool",
+          },
         ],
-        internalType: "struct IVault.AssetBalanceTransfer[]",
-        name: "transfers",
-        type: "tuple[]",
+        internalType: "struct IVault.FundManagement",
+        name: "funds",
+        type: "tuple",
+      },
+      {
+        internalType: "int256[]",
+        name: "limits",
+        type: "int256[]",
+      },
+      {
+        internalType: "uint256",
+        name: "deadline",
+        type: "uint256",
       },
     ],
-    name: "depositToInternalBalance",
-    outputs: [],
+    name: "batchSwap",
+    outputs: [
+      {
+        internalType: "int256[]",
+        name: "",
+        type: "int256[]",
+      },
+    ],
     stateMutability: "payable",
     type: "function",
   },
@@ -527,8 +509,8 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: "contract IFlashLoanReceiver",
-        name: "receiver",
+        internalType: "contract IFlashLoanRecipient",
+        name: "recipient",
         type: "address",
       },
       {
@@ -543,7 +525,7 @@ const _abi = [
       },
       {
         internalType: "bytes",
-        name: "receiverData",
+        name: "userData",
         type: "bytes",
       },
     ],
@@ -560,6 +542,19 @@ const _abi = [
         internalType: "contract IAuthorizer",
         name: "",
         type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getDomainSeparator",
+    outputs: [
+      {
+        internalType: "bytes32",
+        name: "",
+        type: "bytes32",
       },
     ],
     stateMutability: "view",
@@ -584,6 +579,48 @@ const _abi = [
         internalType: "uint256[]",
         name: "",
         type: "uint256[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "user",
+        type: "address",
+      },
+    ],
+    name: "getNextNonce",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getPausedState",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "paused",
+        type: "bool",
+      },
+      {
+        internalType: "uint256",
+        name: "pauseWindowEndTime",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "bufferPeriodEndTime",
+        type: "uint256",
       },
     ],
     stateMutability: "view",
@@ -640,7 +677,7 @@ const _abi = [
       },
       {
         internalType: "uint256",
-        name: "blockNumber",
+        name: "lastChangeBlock",
         type: "uint256",
       },
       {
@@ -672,6 +709,11 @@ const _abi = [
         name: "balances",
         type: "uint256[]",
       },
+      {
+        internalType: "uint256",
+        name: "lastChangeBlock",
+        type: "uint256",
+      },
     ],
     stateMutability: "view",
     type: "function",
@@ -702,7 +744,7 @@ const _abi = [
         type: "address",
       },
     ],
-    name: "hasAllowedRelayer",
+    name: "hasApprovedRelayer",
     outputs: [
       {
         internalType: "bool",
@@ -766,17 +808,17 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: "bytes32",
-        name: "poolId",
-        type: "bytes32",
-      },
-      {
-        internalType: "enum IVault.AssetManagerOpKind",
-        name: "kind",
-        type: "uint8",
-      },
-      {
         components: [
+          {
+            internalType: "enum IVault.PoolBalanceOpKind",
+            name: "kind",
+            type: "uint8",
+          },
+          {
+            internalType: "bytes32",
+            name: "poolId",
+            type: "bytes32",
+          },
           {
             internalType: "contract IERC20",
             name: "token",
@@ -788,14 +830,54 @@ const _abi = [
             type: "uint256",
           },
         ],
-        internalType: "struct IVault.AssetManagerTransfer[]",
-        name: "transfers",
+        internalType: "struct IVault.PoolBalanceOp[]",
+        name: "ops",
         type: "tuple[]",
       },
     ],
     name: "managePoolBalance",
     outputs: [],
     stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        components: [
+          {
+            internalType: "enum IVault.UserBalanceOpKind",
+            name: "kind",
+            type: "uint8",
+          },
+          {
+            internalType: "contract IAsset",
+            name: "asset",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "amount",
+            type: "uint256",
+          },
+          {
+            internalType: "address",
+            name: "sender",
+            type: "address",
+          },
+          {
+            internalType: "address payable",
+            name: "recipient",
+            type: "address",
+          },
+        ],
+        internalType: "struct IVault.UserBalanceOp[]",
+        name: "ops",
+        type: "tuple[]",
+      },
+    ],
+    name: "manageUserBalance",
+    outputs: [],
+    stateMutability: "payable",
     type: "function",
   },
   {
@@ -814,12 +896,12 @@ const _abi = [
           },
           {
             internalType: "uint256",
-            name: "tokenInIndex",
+            name: "assetInIndex",
             type: "uint256",
           },
           {
             internalType: "uint256",
-            name: "tokenOutIndex",
+            name: "assetOutIndex",
             type: "uint256",
           },
           {
@@ -833,7 +915,7 @@ const _abi = [
             type: "bytes",
           },
         ],
-        internalType: "struct IVault.SwapRequest[]",
+        internalType: "struct IVault.BatchSwapStep[]",
         name: "swaps",
         type: "tuple[]",
       },
@@ -926,6 +1008,55 @@ const _abi = [
   {
     inputs: [
       {
+        internalType: "contract IAuthorizer",
+        name: "newAuthorizer",
+        type: "address",
+      },
+    ],
+    name: "setAuthorizer",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bool",
+        name: "paused",
+        type: "bool",
+      },
+    ],
+    name: "setPaused",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "sender",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "relayer",
+        type: "address",
+      },
+      {
+        internalType: "bool",
+        name: "approved",
+        type: "bool",
+      },
+    ],
+    name: "setRelayerApproval",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         components: [
           {
             internalType: "bytes32",
@@ -959,7 +1090,7 @@ const _abi = [
           },
         ],
         internalType: "struct IVault.SingleSwap",
-        name: "request",
+        name: "singleSwap",
         type: "tuple",
       },
       {
@@ -1009,111 +1140,6 @@ const _abi = [
       },
     ],
     stateMutability: "payable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        components: [
-          {
-            internalType: "contract IERC20",
-            name: "token",
-            type: "address",
-          },
-          {
-            internalType: "uint256",
-            name: "amount",
-            type: "uint256",
-          },
-          {
-            internalType: "address",
-            name: "sender",
-            type: "address",
-          },
-          {
-            internalType: "address payable",
-            name: "recipient",
-            type: "address",
-          },
-        ],
-        internalType: "struct IVault.TokenBalanceTransfer[]",
-        name: "transfers",
-        type: "tuple[]",
-      },
-    ],
-    name: "transferInternalBalance",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        components: [
-          {
-            internalType: "contract IERC20",
-            name: "token",
-            type: "address",
-          },
-          {
-            internalType: "uint256",
-            name: "amount",
-            type: "uint256",
-          },
-          {
-            internalType: "address",
-            name: "sender",
-            type: "address",
-          },
-          {
-            internalType: "address payable",
-            name: "recipient",
-            type: "address",
-          },
-        ],
-        internalType: "struct IVault.TokenBalanceTransfer[]",
-        name: "transfers",
-        type: "tuple[]",
-      },
-    ],
-    name: "transferToExternalBalance",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        components: [
-          {
-            internalType: "contract IAsset",
-            name: "asset",
-            type: "address",
-          },
-          {
-            internalType: "uint256",
-            name: "amount",
-            type: "uint256",
-          },
-          {
-            internalType: "address",
-            name: "sender",
-            type: "address",
-          },
-          {
-            internalType: "address payable",
-            name: "recipient",
-            type: "address",
-          },
-        ],
-        internalType: "struct IVault.AssetBalanceTransfer[]",
-        name: "transfers",
-        type: "tuple[]",
-      },
-    ],
-    name: "withdrawFromInternalBalance",
-    outputs: [],
-    stateMutability: "nonpayable",
     type: "function",
   },
 ];

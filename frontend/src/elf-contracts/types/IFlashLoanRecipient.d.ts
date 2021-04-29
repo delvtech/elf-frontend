@@ -20,7 +20,7 @@ import { BytesLike } from "@ethersproject/bytes";
 import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 
-interface IFlashLoanReceiverInterface extends ethers.utils.Interface {
+interface IFlashLoanRecipientInterface extends ethers.utils.Interface {
   functions: {
     "receiveFlashLoan(address[],uint256[],uint256[],bytes)": FunctionFragment;
   };
@@ -38,7 +38,7 @@ interface IFlashLoanReceiverInterface extends ethers.utils.Interface {
   events: {};
 }
 
-export class IFlashLoanReceiver extends Contract {
+export class IFlashLoanRecipient extends Contract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -49,14 +49,14 @@ export class IFlashLoanReceiver extends Contract {
   removeAllListeners(eventName: EventFilter | string): this;
   removeListener(eventName: any, listener: Listener): this;
 
-  interface: IFlashLoanReceiverInterface;
+  interface: IFlashLoanRecipientInterface;
 
   functions: {
     receiveFlashLoan(
       tokens: string[],
       amounts: BigNumberish[],
       feeAmounts: BigNumberish[],
-      receiverData: BytesLike,
+      userData: BytesLike,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
@@ -64,7 +64,7 @@ export class IFlashLoanReceiver extends Contract {
       tokens: string[],
       amounts: BigNumberish[],
       feeAmounts: BigNumberish[],
-      receiverData: BytesLike,
+      userData: BytesLike,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
   };
@@ -73,7 +73,7 @@ export class IFlashLoanReceiver extends Contract {
     tokens: string[],
     amounts: BigNumberish[],
     feeAmounts: BigNumberish[],
-    receiverData: BytesLike,
+    userData: BytesLike,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -81,7 +81,7 @@ export class IFlashLoanReceiver extends Contract {
     tokens: string[],
     amounts: BigNumberish[],
     feeAmounts: BigNumberish[],
-    receiverData: BytesLike,
+    userData: BytesLike,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -90,7 +90,7 @@ export class IFlashLoanReceiver extends Contract {
       tokens: string[],
       amounts: BigNumberish[],
       feeAmounts: BigNumberish[],
-      receiverData: BytesLike,
+      userData: BytesLike,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -98,7 +98,7 @@ export class IFlashLoanReceiver extends Contract {
       tokens: string[],
       amounts: BigNumberish[],
       feeAmounts: BigNumberish[],
-      receiverData: BytesLike,
+      userData: BytesLike,
       overrides?: CallOverrides
     ): Promise<void>;
   };
@@ -110,7 +110,7 @@ export class IFlashLoanReceiver extends Contract {
       tokens: string[],
       amounts: BigNumberish[],
       feeAmounts: BigNumberish[],
-      receiverData: BytesLike,
+      userData: BytesLike,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
@@ -118,7 +118,7 @@ export class IFlashLoanReceiver extends Contract {
       tokens: string[],
       amounts: BigNumberish[],
       feeAmounts: BigNumberish[],
-      receiverData: BytesLike,
+      userData: BytesLike,
       overrides?: Overrides
     ): Promise<BigNumber>;
   };
@@ -128,7 +128,7 @@ export class IFlashLoanReceiver extends Contract {
       tokens: string[],
       amounts: BigNumberish[],
       feeAmounts: BigNumberish[],
-      receiverData: BytesLike,
+      userData: BytesLike,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
@@ -136,7 +136,7 @@ export class IFlashLoanReceiver extends Contract {
       tokens: string[],
       amounts: BigNumberish[],
       feeAmounts: BigNumberish[],
-      receiverData: BytesLike,
+      userData: BytesLike,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
   };

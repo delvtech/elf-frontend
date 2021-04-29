@@ -5,14 +5,14 @@
 import { Contract, Signer } from "ethers";
 import { Provider } from "@ethersproject/providers";
 
-import type { IFlashLoanReceiver } from "../IFlashLoanReceiver";
+import type { IFlashLoanRecipient } from "../IFlashLoanRecipient";
 
-export class IFlashLoanReceiver__factory {
+export class IFlashLoanRecipient__factory {
   static connect(
     address: string,
     signerOrProvider: Signer | Provider
-  ): IFlashLoanReceiver {
-    return new Contract(address, _abi, signerOrProvider) as IFlashLoanReceiver;
+  ): IFlashLoanRecipient {
+    return new Contract(address, _abi, signerOrProvider) as IFlashLoanRecipient;
   }
 }
 
@@ -36,7 +36,7 @@ const _abi = [
       },
       {
         internalType: "bytes",
-        name: "receiverData",
+        name: "userData",
         type: "bytes",
       },
     ],

@@ -18,19 +18,6 @@ export class IBasePool__factory {
 
 const _abi = [
   {
-    inputs: [],
-    name: "getRate",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
     inputs: [
       {
         internalType: "bytes32",
@@ -49,17 +36,17 @@ const _abi = [
       },
       {
         internalType: "uint256[]",
-        name: "currentBalances",
+        name: "balances",
         type: "uint256[]",
       },
       {
         internalType: "uint256",
-        name: "latestBlockNumberUsed",
+        name: "lastChangeBlock",
         type: "uint256",
       },
       {
         internalType: "uint256",
-        name: "protocolSwapFee",
+        name: "protocolSwapFeePercentage",
         type: "uint256",
       },
       {
@@ -103,17 +90,17 @@ const _abi = [
       },
       {
         internalType: "uint256[]",
-        name: "currentBalances",
+        name: "balances",
         type: "uint256[]",
       },
       {
         internalType: "uint256",
-        name: "latestBlockNumberUsed",
+        name: "lastChangeBlock",
         type: "uint256",
       },
       {
         internalType: "uint256",
-        name: "protocolSwapFee",
+        name: "protocolSwapFeePercentage",
         type: "uint256",
       },
       {
