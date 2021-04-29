@@ -9,11 +9,16 @@ import { ONE_DAY_IN_SECONDS } from "src/time";
 
 interface SwapIn {
   poolId: BytesLike;
-  tokenInIndex: number;
-  tokenOutIndex: number;
-  amountIn: BigNumberish;
+  assetInIndex: number;
+  assetOutIndex: number;
+  amount: BigNumberish;
   userData: BytesLike;
 }
+export enum SwapKind {
+  GIVEN_IN,
+  GIVEN_OUT,
+}
+
 interface FundManagement {
   sender: string;
   fromInternalBalance: boolean;
@@ -39,24 +44,24 @@ export async function batchSwapIn(
   }
 
   const tokens: string[] = [tokenInAddress, tokenOutAddress].sort();
-  const tokenInIndex = tokens.findIndex(
+  const assetInIndex = tokens.findIndex(
     (address) => address === tokenInAddress
   );
-  const tokenOutIndex = tokens.findIndex(
+  const assetOutIndex = tokens.findIndex(
     (address) => address === tokenOutAddress
   );
-  const amountIn = parseUnits(swapInAmount, tokenInDecimals);
+  const amount = parseUnits(swapInAmount, tokenInDecimals);
   // have to set this to something
-  const userData: BytesLike = poolId;
+  const userData: BytesLike = poolId; //"0x00";
 
   // the series of swaps to perform, only one in this case.
   const swaps: SwapIn[] = [
     {
       poolId,
       // indicies from 'tokens', puttin FYTs in, getting base asset out.
-      tokenInIndex,
-      tokenOutIndex,
-      amountIn,
+      assetInIndex,
+      assetOutIndex,
+      amount,
       userData,
     },
   ];
@@ -70,11 +75,12 @@ export async function batchSwapIn(
     toInternalBalance: false,
   };
 
-  // the user is sending this one, so the delta will be negative, so just set a limit of zero.
-  const limitTokenIn = amountIn;
+  // pool is receivin this one, so make it there's enough
+  const limitTokenIn = amount;
 
   // performing a SwapIn, so we can specifiy exactly how much in and set the limit to that.
-  const limitTokenOut = amountIn;
+  // pool is sending sending this one, so the delta will be negative
+  const limitTokenOut = amount;
 
   // limits of how much of each token is allowed to be traded.  order must be the same as 'tokens'
   const limits: BigNumberish[] = [limitTokenIn, limitTokenOut];
@@ -82,7 +88,9 @@ export async function batchSwapIn(
   // set a large deadline for now, it was being buggy.  time is in seconds.  must be an integer.
   const deadline = Math.round(Date.now() / 1000) + ONE_DAY_IN_SECONDS;
 
-  const swapReceipt = await balancerVaultContract.batchSwapGivenIn(
+  const swapKind = SwapKind.GIVEN_IN;
+  const swapReceipt = await balancerVaultContract.batchSwap(
+    swapKind,
     swaps,
     tokens,
     funds,

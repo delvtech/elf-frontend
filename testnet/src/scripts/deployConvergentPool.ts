@@ -49,18 +49,19 @@ export async function deployConvergentPool(
     `${baseAssetSymbol}-fy${baseAssetSymbol}`
   );
   await createTx.wait(1);
+  await createTx.wait(1);
 
   // grab last poolId from last event
-  const newPools = balancerVaultContract.filters.PoolRegistered(null);
-  const results = await balancerVaultContract.queryFilter(newPools);
-  const poolIds: string[] = results.map((result) => result.args?.poolId);
-  const poolId = poolIds[poolIds.length - 1];
+  const newPools = convergentPoolFactory.filters.CCPoolCreated(null, null);
+  const results = await convergentPoolFactory.queryFilter(newPools);
+  const poolAddresses: string[] = results.map((result) => result.args?.[0]);
+  const poolAddress = poolAddresses[poolAddresses.length - 1];
 
-  const [poolAddress] = await balancerVaultContract.getPool(poolId);
   const poolContract = ConvergentCurvePool__factory.connect(
     poolAddress,
     signer
   );
+  const poolId = await poolContract.getPoolId();
 
   return { poolId, poolContract };
 }
