@@ -1,7 +1,7 @@
 import { ONE_YEAR_IN_MILLISECONDS } from "efi/base/time";
 
 export function calculateTrancheAPY(
-  tranchePrice: number,
+  trancheSpotPrice: number,
   startTimestampMilliseconds: number,
   endTimestampMilliseconds: number
 ): number {
@@ -12,13 +12,9 @@ export function calculateTrancheAPY(
 
   // Figure out the discount the market is selling at
   // Note: The base asset is always worth 1
-  const discount = 1 - tranchePrice;
+  const discount = 1 - trancheSpotPrice;
 
   // annualize the discount for the apy, eg: 0.2607
-  const totalYearlySavings = discount * multiplier;
-
-  // turn it into a percent, eg: 26.07
-  const apy = totalYearlySavings * 100;
-
+  const apy = discount * multiplier;
   return apy;
 }

@@ -40,6 +40,7 @@ import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
 
 import { GoToMarketButton } from "./GoToMarketButton";
 import { MaturityTimeBar } from "./MaturityTimeBar";
+import { formatPercent } from "efi/base/formatPercent";
 
 interface PrincipalTokenCardProps {
   chainId: number | undefined;
@@ -172,19 +173,19 @@ export function PrincipalTokenCard(
               <LabeledText
                 bold
                 textClassName={tw("text-base")}
-                text={`${trancheAPY.toFixed(2)}%`}
+                text={`${formatPercent(trancheAPY)}`}
                 label={t`yearly`}
               />
               <LabeledText
                 bold
                 textClassName={tw("text-base")}
-                text={`${(trancheAPY / 12).toFixed(2)}%`}
+                text={`${formatPercent(trancheAPY / 12)}`}
                 label={t`monthly`}
               />
               <LabeledText
                 bold
                 textClassName={tw("text-base")}
-                text={`${(trancheAPY / 365).toFixed(2)}%`}
+                text={`${formatPercent(trancheAPY / 365)}`}
                 label={t`daily`}
               />
             </div>

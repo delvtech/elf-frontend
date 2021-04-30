@@ -18,6 +18,7 @@ import { formatAbbreviatedDate } from "efi/base/dates";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
+import { formatPercent } from "efi/base/formatPercent";
 
 interface PrincipalTokenTermButtonLabelProps {
   tranche: Tranche | undefined;
@@ -46,16 +47,18 @@ export function PrincipalTokenTermButtonLabel({
 
   const pool = usePoolForToken(tranche as ERC20Shim, jsonRpcProvider);
   const baseAssetSymbol = useCryptoSymbol(baseAsset);
-  const tranchePrice = usePoolSpotPrice(pool, tranche as ERC20Shim);
+  const trancheSpotPrice = usePoolSpotPrice(pool, tranche as ERC20Shim);
 
-  let trancheAPY = "-";
-  if (tranchePrice && unlockDate) {
+  let trancheAPY;
+  if (trancheSpotPrice && unlockDate) {
     trancheAPY = calculateTrancheAPY(
-      tranchePrice,
+      trancheSpotPrice,
       Date.now(),
       unlockDate.getTime()
-    ).toFixed(2);
+    );
   }
+
+  const formattedTrancheAPY = trancheAPY ? formatPercent(trancheAPY) : "-";
 
   const formattedDate = unlockDate
     ? formatAbbreviatedDate(unlockDate)
@@ -76,7 +79,7 @@ export function PrincipalTokenTermButtonLabel({
             )}
           >
             <span className={tw("text-lg", "text-center")}>
-              {t`${trancheAPY}% APY`}
+              {t`${formattedTrancheAPY} APY`}
             </span>
             <Tag
               large
