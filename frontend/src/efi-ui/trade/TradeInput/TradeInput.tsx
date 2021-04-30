@@ -1,6 +1,13 @@
-import React, { ReactElement, useCallback, useEffect, useState } from "react";
+import React, {
+  CSSProperties,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 
-import { Button, InputGroup, Intent, Tag } from "@blueprintjs/core";
+import { Button, Classes, InputGroup, Intent } from "@blueprintjs/core";
+import classNames from "classnames";
 import { BigNumber } from "ethers";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
@@ -9,11 +16,19 @@ import tw from "efi-tailwindcss-classnames";
 import { SwapKind } from "efi-ui/balancer/SwapKind";
 import { useQueryBatchSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
 import { validateInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
+import { TokenIcon } from "efi-ui/token/TokenIcon";
 import { clipStringValueToDecimals } from "efi/math/fixedPoint";
 import { PoolContract } from "efi/pools/PoolContract";
 
 import styles from "./TradeInput.module.css";
-import { TokenIcon } from "efi-ui/token/TokenIcon";
+
+const tradeInputStyle: CSSProperties = {
+  height: "96px",
+  width: "100%",
+  fontSize: 26,
+  paddingRight: 64,
+  textAlign: "right",
+};
 
 interface TradeInputProps {
   cryptoAddress: string | undefined;
@@ -25,7 +40,7 @@ interface TradeInputProps {
   previewCryptoAddress: string | undefined;
   previewCryptoPoolIndex: number | undefined;
 
-  label: string;
+  labelTopLeft: string;
   disabled: boolean;
   onChange: (value: string | undefined) => void;
   onPreviewUpdate: (value: string | undefined) => void;
@@ -45,7 +60,7 @@ export function TradeInput(props: TradeInputProps): ReactElement {
     cryptoDisplayBalance,
     previewCryptoAddress,
     previewCryptoPoolIndex,
-    label,
+    labelTopLeft,
     disabled,
     onChange: onChangeFromProps,
     onPreviewUpdate,
@@ -56,8 +71,11 @@ export function TradeInput(props: TradeInputProps): ReactElement {
   } = props;
   // changes to this will trigger calculating and calling handler to update the other value.  we
   // need to do this because the calculation is asynchronous so we can't update the preview directly
-  // in the useOnInputChange handler
-  const [internalValue, setInternalValue] = useState("");
+  // in the useOnInputChange handler.  Note that we use an object here to make sure we trigger
+  // useUpdatePreviewValue when the string value is the same as the previous value.
+  const [internalValue, setInternalValue] = useState<{
+    value: string | undefined;
+  }>({ value: "" });
 
   // handles user input changes.  call onChangeFromProps to tell the parent the value changed.  also
   // updates the internal value.  if the user clears the inputs, we also call onPreviewUpdate to
@@ -93,53 +111,103 @@ export function TradeInput(props: TradeInputProps): ReactElement {
   );
 
   return (
-    <div className={tw("flex", "flex-col", "space-y-5")}>
-      <div className={tw("flex", "justify-between", "items-center")}>
-        <span className={tw("text-xs", "text-right")}>{label}</span>
-        <Button
-          disabled={disabled}
-          onClick={setMaxValue}
-          minimal
-          outlined
-          small
-          intent={Intent.SUCCESS}
-        >{t`MAX`}</Button>
-      </div>
+    <div className={tw("flex", "flex-col", "space-y-2")}>
+      {/* <div className={tw("flex", "justify-between", "items-center")}>
+        <span className={tw("text-right")}>{label}</span>
+        <Tag large minimal>
+          <span>{cryptoSymbol}</span>
+        </Tag>
+      </div> */}
       <InputGroup
         disabled={disabled}
         onChange={onChange}
+        placeholder={"0.00"}
         value={value}
-        className={styles.depositInput}
+        style={tradeInputStyle}
+        className={classNames(styles.depositInput, tw("text-right"))}
         large
         intent={validValue ? undefined : Intent.DANGER}
         rightElement={
-          <Tag large minimal>
-            <span>{cryptoSymbol}</span>
-          </Tag>
+          <div
+            className={tw(
+              "h-full",
+              "flex",
+              "flex-col",
+              "items-center",
+              "justify-center",
+              "relative"
+            )}
+          >
+            <Button disabled={disabled} onClick={setMaxValue} large>
+              {t`MAX`}
+            </Button>
+          </div>
         }
         leftElement={
-          <div className={tw("px-2")}>
-            {CryptoIcon ? <CryptoIcon height={18} width={18} /> : null}
+          <div
+            className={tw(
+              "h-full",
+              "flex",
+              "flex-col",
+              "items-center",
+              "justify-center",
+              "relative"
+            )}
+          >
+            <div
+              className={tw(
+                "absolute",
+                "top-0",
+                "left-0",
+                "flex",
+                "w-auto",
+                "p-1",
+                "space-x-2"
+              )}
+            >
+              <span
+                className={classNames(
+                  Classes.TEXT_MUTED,
+                  tw("text-xs", "whitespace-no-wrap")
+                )}
+              >
+                {labelTopLeft}
+              </span>
+            </div>
+            <div className={tw("flex", "text-2xl", "pr-4")}>
+              {CryptoIcon ? <CryptoIcon height={24} width={24} /> : null}
+              <span>{cryptoSymbol}</span>
+            </div>
+            <div
+              className={tw(
+                "absolute",
+                "bottom-0",
+                "left-0",
+                "flex",
+                "w-auto",
+                "p-1",
+                "space-x-2"
+              )}
+            >
+              <span
+                className={classNames(
+                  tw("text-xs", "whitespace-no-wrap", {
+                    "text-danger": !validValue,
+                  }),
+                  { [Classes.TEXT_MUTED]: validValue }
+                )}
+              >
+                {t`Balance:`} {`${cryptoDisplayBalance} ${cryptoSymbol}`}
+              </span>
+            </div>
           </div>
         }
       />
-      <div className={tw("flex", "justify-between")}>
-        <span
-          className={tw("text-xs", "text-right", {
-            "text-danger": !validValue,
-          })}
-        >{t`Balance:`}</span>
-        <span
-          className={tw("text-xs", "text-right", {
-            "text-danger": !validValue,
-          })}
-        >{`${cryptoDisplayBalance} ${cryptoSymbol}`}</span>
-      </div>
     </div>
   );
 }
 function useOnInputChange(
-  setInternalValue: (value: string) => void,
+  setInternalValue: (value: { value: string | undefined }) => void,
   onChange: (value: string | undefined) => void,
   onPreviewUpdate: (value: string | undefined) => void,
   cryptoDecimals: number | undefined
@@ -166,7 +234,7 @@ function useUpdatePreviewValue(
   cryptoAddress: string | undefined,
   previewCryptoAddress: string | undefined,
   pool: PoolContract | undefined,
-  internalValue: string,
+  internalValue: { value: string | undefined },
   cryptoDecimals: number | undefined,
   previewCryptoIndex: number | undefined,
   onChangeOtherValue: (value: string | undefined) => void
@@ -176,13 +244,15 @@ function useUpdatePreviewValue(
   const tokenOutAddress =
     swapKind === SwapKind.GIVEN_OUT ? cryptoAddress : previewCryptoAddress;
 
+  const { value } = internalValue;
+
   // get the preview value
   const { data: swap } = useQueryBatchSwap(
     swapKind,
     pool,
     tokenInAddress,
     tokenOutAddress,
-    parseUnits(internalValue || "0", cryptoDecimals ?? 18)
+    parseUnits(value || "0", cryptoDecimals ?? 18)
   );
 
   const otherValue = swap?.[previewCryptoIndex ?? 1];
@@ -193,19 +263,19 @@ function useUpdatePreviewValue(
   useEffect(() => {
     // let parent know preview value updated
     onChangeOtherValue(otherStringValue);
-  }, [onChangeOtherValue, otherStringValue]);
+  }, [internalValue, onChangeOtherValue, otherStringValue]);
 }
 
 function useSetMaxValue(
   tokenBalanceOf: BigNumber | undefined,
   tokenDecimals: number | undefined,
-  setInternalValue: (value: string) => void,
+  setInternalValue: (value: { value: string | undefined }) => void,
   onChange: (value: string | undefined) => void
 ) {
   return useCallback(() => {
     if (tokenBalanceOf) {
       const maxValue = formatUnits(tokenBalanceOf, tokenDecimals);
-      setInternalValue(maxValue);
+      setInternalValue({ value: maxValue });
       onChange(maxValue);
     }
   }, [tokenBalanceOf, tokenDecimals, setInternalValue, onChange]);
@@ -213,14 +283,14 @@ function useSetMaxValue(
 
 function validateAndSetValue(
   value: string,
-  setInternalValue: (value: string) => void,
+  setInternalValue: (value: { value: string }) => void,
   onChange: (value: string | undefined) => void,
   updatePreviewValue: (value: string | undefined) => void,
   cryptoDecimals: number | undefined
 ) {
   // allow user to clear input
   if (value === "") {
-    setInternalValue("");
+    setInternalValue({ value: "" });
     onChange("");
     updatePreviewValue("");
     return;
@@ -237,5 +307,5 @@ function validateAndSetValue(
   // since this is a controlled component, we let the parent know what to update the value to
   onChange(safeValue);
   // we also internally set the value so we can trigger an update for the other value
-  setInternalValue(safeValue);
+  setInternalValue({ value: safeValue });
 }

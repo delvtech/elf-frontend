@@ -3,3 +3,9 @@
   height: 100%;
   align-items: center;
 }
+
+.depositInput :global(.bp3-input-action) {
+  display: flex;
+  height: 100%;
+  align-items: center;
+}

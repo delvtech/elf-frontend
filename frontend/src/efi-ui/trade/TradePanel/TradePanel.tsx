@@ -33,6 +33,7 @@ import { CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { PoolContract } from "efi/pools/PoolContract";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
+import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 
 interface TradePanelProps {
   library: Web3Provider | undefined;
@@ -70,7 +71,8 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     tokenOutFromProps
   );
 
-  const spotPrice = usePoolSpotPrice(pool, tokenIn);
+  const baseAsset = useBaseAssetForPool(pool);
+  const spotPrice = usePoolSpotPrice(pool, baseAsset);
 
   const {
     asset: tokenInAsset,
@@ -100,8 +102,8 @@ export function TradePanel(props: TradePanelProps): ReactElement {
 
   // clear inputs when they switch.  we can improve this UX later to keep the previous values.
   useEffect(() => {
-    onChangeIn(undefined);
-    onChangeOut(undefined);
+    onChangeIn("");
+    onChangeOut("");
     // don't want to call this effect when the hooks update, only when isReversed updates
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isReversed]);
@@ -157,7 +159,15 @@ export function TradePanel(props: TradePanelProps): ReactElement {
   }
 
   return (
-    <div className={tw("flex", "flex-col", "justify-between", "h-full")}>
+    <div
+      className={tw(
+        "flex",
+        "flex-col",
+        "justify-around",
+        "space-y-2",
+        "h-full"
+      )}
+    >
       {/* Trade Asset */}
       <TradeInput
         cryptoAddress={tokenInAddress}
@@ -168,7 +178,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
         cryptoIcon={tokenInIcon}
         previewCryptoAddress={tokenOutAddress}
         previewCryptoPoolIndex={tokenOutPoolIndex}
-        label={t`Swap`}
+        labelTopLeft={t`Trade`}
         disabled={formDisabled}
         swapKind={SwapKind.GIVEN_IN}
         pool={pool}
@@ -177,12 +187,16 @@ export function TradePanel(props: TradePanelProps): ReactElement {
         value={amountIn}
         validValue={isValidTokenInValue}
       />
-      <Button
-        icon={IconNames.ARROWS_VERTICAL}
-        onClick={swapAssets}
-        minimal
-        large
-      ></Button>
+      <div className={tw("flex", "justify-center", "rounded-full")}>
+        <Button
+          icon={IconNames.ARROWS_VERTICAL}
+          onClick={swapAssets}
+          minimal
+          outlined
+          large
+          intent={Intent.PRIMARY}
+        ></Button>
+      </div>
       <TradeInput
         cryptoAddress={tokenOutAddress}
         cryptoDecimals={tokenOutDecimals}
@@ -192,7 +206,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
         cryptoIcon={tokenOutIcon}
         previewCryptoAddress={tokenInAddress}
         previewCryptoPoolIndex={tokenInPoolIndex}
-        label={t`For`}
+        labelTopLeft={t`For (estimated)`}
         disabled={formDisabled}
         swapKind={SwapKind.GIVEN_OUT}
         pool={pool}

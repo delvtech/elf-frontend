@@ -1,4 +1,10 @@
-import { ReactElement, useCallback, useEffect, useState } from "react";
+import {
+  CSSProperties,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 
 import { InputGroup, Tag } from "@blueprintjs/core";
 import classNames from "classnames";
@@ -36,6 +42,11 @@ interface EarnInputProps {
   previewCryptoPoolIndex: number | undefined;
 }
 
+const earnInputStyle: CSSProperties = {
+  height: "94px",
+  width: "100%",
+  fontSize: 26,
+};
 export function EarnInput({
   className,
   value,
@@ -57,8 +68,11 @@ export function EarnInput({
 
   // changes to this will trigger calculating and calling handler to update the other value.  we
   // need to do this because the calculation is asynchronous so we can't update the preview directly
-  // in the useOnInputChange handler
-  const [internalValue, setInternalValue] = useState("");
+  // in the useOnInputChange handler.  Note that we use an object here to make sure we trigger
+  // useUpdatePreviewValue when the string value is the same as the previous value.
+  const [internalValue, setInternalValue] = useState<{
+    value: string | undefined;
+  }>({ value: "" });
 
   // handles user input changes.  call onChangeFromProps to tell the parent the value changed.  also
   // updates the internal value.  if the user clears the inputs, we also call onPreviewUpdate to
@@ -102,11 +116,7 @@ export function EarnInput({
   return (
     <InputGroup
       placeholder={placeholder}
-      style={{
-        height: "94px",
-        width: "100%",
-        fontSize: 26,
-      }}
+      style={earnInputStyle}
       className={classNames(
         tw("w-full"),
         styles.investmentAmount,
@@ -123,7 +133,7 @@ export function EarnInput({
 }
 
 function useOnInputChange(
-  setInternalValue: (value: string) => void,
+  setInternalValue: (value: { value: string }) => void,
   onChange: (value: string | undefined) => void,
   onPreviewUpdate: (value: string | undefined) => void,
   cryptoDecimals: number | undefined
@@ -150,7 +160,7 @@ function useUpdatePreviewValue(
   cryptoAddress: string | undefined,
   previewCryptoAddress: string | undefined,
   pool: PoolContract | undefined,
-  internalValue: string,
+  internalValue: { value: string | undefined },
   cryptoDecimals: number | undefined,
   previewCryptoIndex: number | undefined,
   onChangeOtherValue: (value: string | undefined) => void
@@ -160,13 +170,14 @@ function useUpdatePreviewValue(
   const tokenOutAddress =
     swapKind === SwapKind.GIVEN_OUT ? cryptoAddress : previewCryptoAddress;
 
+  const { value } = internalValue;
   // get the preview value
   const { data: swap } = useQueryBatchSwap(
     swapKind,
     pool,
     tokenInAddress,
     tokenOutAddress,
-    parseUnits(internalValue || "0", cryptoDecimals ?? 18)
+    parseUnits(value || "0", cryptoDecimals ?? 18)
   );
 
   const otherValue = swap?.[previewCryptoIndex ?? 1];
@@ -177,19 +188,19 @@ function useUpdatePreviewValue(
   useEffect(() => {
     // let parent know preview value updated
     onChangeOtherValue(otherStringValue);
-  }, [onChangeOtherValue, otherStringValue]);
+  }, [onChangeOtherValue, otherStringValue, internalValue]);
 }
 
 function useSetMaxValue(
   tokenBalanceOf: BigNumber | undefined,
   tokenDecimals: number | undefined,
-  setInternalValue: (value: string) => void,
+  setInternalValue: (value: { value: string | undefined }) => void,
   onChange: (value: string | undefined) => void
 ) {
   return useCallback(() => {
     if (tokenBalanceOf) {
       const maxValue = formatUnits(tokenBalanceOf, tokenDecimals);
-      setInternalValue(maxValue);
+      setInternalValue({ value: maxValue });
       onChange(maxValue);
     }
   }, [tokenBalanceOf, tokenDecimals, setInternalValue, onChange]);
@@ -197,14 +208,14 @@ function useSetMaxValue(
 
 function validateAndSetValue(
   value: string,
-  setInternalValue: (value: string) => void,
+  setInternalValue: (value: { value: string }) => void,
   onChange: (value: string | undefined) => void,
   updatePreviewValue: (value: string | undefined) => void,
   cryptoDecimals: number | undefined
 ) {
   // allow user to clear input
   if (value === "") {
-    setInternalValue("");
+    setInternalValue({ value: "" });
     onChange("");
     updatePreviewValue("");
     return;
@@ -221,5 +232,5 @@ function validateAndSetValue(
   // since this is a controlled component, we let the parent know what to update the value to
   onChange(safeValue);
   // we also internally set the value so we can trigger an update for the other value
-  setInternalValue(safeValue);
+  setInternalValue({ value: safeValue });
 }
