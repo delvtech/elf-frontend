@@ -1,6 +1,6 @@
 import { ReactElement, useCallback, useState } from "react";
 
-import { Card, Intent, Tab, Tabs } from "@blueprintjs/core";
+import { Button, Card, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { ERC20 } from "elf-contracts/types/ERC20";
@@ -12,8 +12,6 @@ import { StakingPanel } from "efi-ui/pools/StakingPanel/StakingPanel";
 import { UnStakePanel } from "efi-ui/pools/UnStakePanel/UnStakePanel";
 import { TradePanel } from "efi-ui/trade/TradePanel/TradePanel";
 import { PoolContract } from "efi/pools/PoolContract";
-
-import styles from "./PoolActionsCard.module.css";
 
 interface PoolActionsCardProps {
   library: Web3Provider | undefined;
@@ -53,20 +51,33 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
 
   return (
     <div className={tw("flex", "flex-col", "flex-1", "h-500")}>
-      <Tabs
-        id="tabs-pool-actions"
-        selectedTabId={activeTab}
-        className={styles.smTabs}
-        onChange={onChangeTab}
-      >
-        <Tab id={MarketAction.SWAP}>{t`Swap`}</Tab>
-        <Tab id={MarketAction.STAKE}>{t`+ Add liquidity`}</Tab>
-        <Tab
-          id={MarketAction.UNSTAKE}
-          disabled={!account}
-        >{t`- Remove liquidity`}</Tab>
-      </Tabs>
-      <Card className={tw("flex", "flex-col", "flex-1", "w-full")}>
+      <div className={tw("mb-2", "flex", "space-x-4")}>
+        <span>{t`Pool Actions`}</span>
+      </div>
+      <Card className={tw("flex", "flex-col", "flex-1", "w-full", "space-y-2")}>
+        <div className={tw("flex", "space-x-4")}>
+          <Button
+            onClick={() => onChangeTab(MarketAction.SWAP)}
+            active={activeTab === MarketAction.SWAP}
+            minimal
+            outlined
+            intent={Intent.PRIMARY}
+          >{t`Swap`}</Button>
+          <Button
+            onClick={() => onChangeTab(MarketAction.STAKE)}
+            active={activeTab === MarketAction.STAKE}
+            minimal
+            outlined
+            intent={Intent.PRIMARY}
+          >{t`Add Liquidity`}</Button>
+          <Button
+            onClick={() => onChangeTab(MarketAction.UNSTAKE)}
+            active={activeTab === MarketAction.UNSTAKE}
+            minimal
+            outlined
+            intent={Intent.PRIMARY}
+          >{t`Remove Liquidity`}</Button>
+        </div>
         {activeTab === MarketAction.SWAP && (
           <TradePanel
             library={library}

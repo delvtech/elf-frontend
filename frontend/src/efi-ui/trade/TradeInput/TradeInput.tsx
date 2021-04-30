@@ -6,7 +6,7 @@ import React, {
   useState,
 } from "react";
 
-import { Button, InputGroup, Intent, Tag } from "@blueprintjs/core";
+import { Button, Classes, InputGroup, Intent, Tag } from "@blueprintjs/core";
 import { BigNumber } from "ethers";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
@@ -20,11 +20,14 @@ import { clipStringValueToDecimals } from "efi/math/fixedPoint";
 import { PoolContract } from "efi/pools/PoolContract";
 
 import styles from "./TradeInput.module.css";
+import classNames from "classnames";
 
 const tradeInputStyle: CSSProperties = {
-  height: "94px",
+  height: "96px",
   width: "100%",
   fontSize: 26,
+  paddingRight: 64,
+  textAlign: "right",
 };
 
 interface TradeInputProps {
@@ -37,7 +40,7 @@ interface TradeInputProps {
   previewCryptoAddress: string | undefined;
   previewCryptoPoolIndex: number | undefined;
 
-  label: string;
+  labelTopLeft: string;
   disabled: boolean;
   onChange: (value: string | undefined) => void;
   onPreviewUpdate: (value: string | undefined) => void;
@@ -57,7 +60,7 @@ export function TradeInput(props: TradeInputProps): ReactElement {
     cryptoDisplayBalance,
     previewCryptoAddress,
     previewCryptoPoolIndex,
-    label,
+    labelTopLeft,
     disabled,
     onChange: onChangeFromProps,
     onPreviewUpdate,
@@ -105,53 +108,98 @@ export function TradeInput(props: TradeInputProps): ReactElement {
   );
 
   return (
-    <div className={tw("flex", "flex-col", "space-y-5")}>
-      <div className={tw("flex", "justify-between", "items-center")}>
-        <span className={tw("text-xs", "text-right")}>{label}</span>
+    <div className={tw("flex", "flex-col", "space-y-2")}>
+      {/* <div className={tw("flex", "justify-between", "items-center")}>
+        <span className={tw("text-right")}>{label}</span>
         <Tag large minimal>
           <span>{cryptoSymbol}</span>
         </Tag>
-      </div>
+      </div> */}
       <InputGroup
         disabled={disabled}
         onChange={onChange}
+        placeholder={"0.00"}
         value={value}
         style={tradeInputStyle}
-        className={styles.depositInput}
+        className={classNames(styles.depositInput, tw("text-right"))}
         large
         intent={validValue ? undefined : Intent.DANGER}
         rightElement={
-          <div className={tw("h-full", "flex", "items-center")}>
-            <Button
-              disabled={disabled}
-              onClick={setMaxValue}
-              // minimal
-              large
-              // outlined
-              // intent={Intent.SUCCESS}
-            >
+          <div
+            className={tw(
+              "h-full",
+              "flex",
+              "flex-col",
+              "items-center",
+              "justify-center",
+              "relative"
+            )}
+          >
+            <Button disabled={disabled} onClick={setMaxValue} large>
               {t`MAX`}
             </Button>
           </div>
         }
         leftElement={
-          <div className={tw("px-2")}>
-            {CryptoIcon ? <CryptoIcon height={18} width={18} /> : null}
+          <div
+            className={tw(
+              "h-full",
+              "flex",
+              "flex-col",
+              "items-center",
+              "justify-center",
+              "relative"
+            )}
+          >
+            <div
+              className={tw(
+                "absolute",
+                "top-0",
+                "left-0",
+                "flex",
+                "w-auto",
+                "p-1",
+                "space-x-2"
+              )}
+            >
+              <span
+                className={classNames(
+                  Classes.TEXT_MUTED,
+                  tw("text-xs", "whitespace-no-wrap")
+                )}
+              >
+                {labelTopLeft}
+              </span>
+            </div>
+            <div className={tw("flex", "text-2xl", "pr-4")}>
+              {CryptoIcon ? <CryptoIcon height={24} width={24} /> : null}
+              <span>{cryptoSymbol}</span>
+            </div>
+            <div
+              className={tw(
+                "absolute",
+                "bottom-0",
+                "left-0",
+                "flex",
+                "w-auto",
+                "p-1",
+                "space-x-2"
+              )}
+            >
+              <span
+                className={classNames(
+                  tw("text-xs", "whitespace-no-wrap", {
+                    "text-danger": !validValue,
+                  }),
+                  { [Classes.TEXT_MUTED]: validValue }
+                )}
+              >
+                {t`Balance:`} {`${cryptoDisplayBalance} ${cryptoSymbol}`}
+              </span>
+            </div>
           </div>
         }
       />
-      <div className={tw("flex", "justify-between")}>
-        <span
-          className={tw("text-xs", "text-right", {
-            "text-danger": !validValue,
-          })}
-        >{t`Balance:`}</span>
-        <span
-          className={tw("text-xs", "text-right", {
-            "text-danger": !validValue,
-          })}
-        >{`${cryptoDisplayBalance} ${cryptoSymbol}`}</span>
-      </div>
     </div>
   );
 }

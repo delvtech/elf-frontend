@@ -157,7 +157,15 @@ export function TradePanel(props: TradePanelProps): ReactElement {
   }
 
   return (
-    <div className={tw("flex", "flex-col", "justify-between", "h-full")}>
+    <div
+      className={tw(
+        "flex",
+        "flex-col",
+        "justify-around",
+        "space-y-2",
+        "h-full"
+      )}
+    >
       {/* Trade Asset */}
       <TradeInput
         cryptoAddress={tokenInAddress}
@@ -168,7 +176,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
         cryptoIcon={tokenInIcon}
         previewCryptoAddress={tokenOutAddress}
         previewCryptoPoolIndex={tokenOutPoolIndex}
-        label={t`Swap`}
+        labelTopLeft={t`Trade`}
         disabled={formDisabled}
         swapKind={SwapKind.GIVEN_IN}
         pool={pool}
@@ -177,12 +185,16 @@ export function TradePanel(props: TradePanelProps): ReactElement {
         value={amountIn}
         validValue={isValidTokenInValue}
       />
-      <Button
-        icon={IconNames.ARROWS_VERTICAL}
-        onClick={swapAssets}
-        minimal
-        large
-      ></Button>
+      <div className={tw("flex", "justify-center", "rounded-full")}>
+        <Button
+          icon={IconNames.ARROWS_VERTICAL}
+          onClick={swapAssets}
+          minimal
+          outlined
+          large
+          intent={Intent.PRIMARY}
+        ></Button>
+      </div>
       <TradeInput
         cryptoAddress={tokenOutAddress}
         cryptoDecimals={tokenOutDecimals}
@@ -192,7 +204,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
         cryptoIcon={tokenOutIcon}
         previewCryptoAddress={tokenInAddress}
         previewCryptoPoolIndex={tokenInPoolIndex}
-        label={t`For`}
+        labelTopLeft={t`For (estimated)`}
         disabled={formDisabled}
         swapKind={SwapKind.GIVEN_OUT}
         pool={pool}
@@ -201,18 +213,16 @@ export function TradePanel(props: TradePanelProps): ReactElement {
         value={amountOut}
         validValue={isValidTokenOutValue}
       />
-      <div>
-        <Button
-          disabled={submitButtonDisabled}
-          onClick={submitTransaction}
-          minimal
-          outlined
-          large
-          intent={submitButtonError ? Intent.DANGER : Intent.PRIMARY}
-        >
-          {submitButtonLabel}
-        </Button>
-      </div>
+      <Button
+        disabled={submitButtonDisabled}
+        onClick={submitTransaction}
+        minimal
+        outlined
+        large
+        intent={submitButtonError ? Intent.DANGER : Intent.PRIMARY}
+      >
+        {submitButtonLabel}
+      </Button>
       <SwapTokensTransactionConfirmationDrawer
         tokenInAddress={tokenInAddress}
         tokenInSymbol={tokenInSymbol}
