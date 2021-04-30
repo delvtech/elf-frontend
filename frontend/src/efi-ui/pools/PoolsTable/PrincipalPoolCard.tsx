@@ -19,19 +19,19 @@ import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
-import { useFeeVolumeForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
+import { useFeeVolumeFiatForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { useTotalLiquidityForPool } from "efi-ui/pools/useTotalLiquidityForPool/useTotalLiquidityForPool";
 import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForPool";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import { calculateProgress } from "efi/base/calculateProgress";
 import { useTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
 import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
+import { calculateProgress } from "efi/base/calculateProgress";
+import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatMoney } from "efi/money/formatMoney";
 import { PoolContract } from "efi/pools/PoolContract";
 
 import styles from "./PrincipalPoolCard.module.css";
-import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 
 interface PrincipalPoolCardProps {
   pool: PoolContract | undefined;
@@ -53,7 +53,7 @@ export function PrincipalPoolCard(
   const tranche = useTrancheForPool(pool);
   const liquidity = useTotalLiquidityForPool(pool);
   const trancheCreatedAt = useTrancheCreatedAt(tranche);
-  const fees = useFeeVolumeForPool(pool);
+  const fees = useFeeVolumeFiatForPool(pool);
   const baseAssetContract = useBaseAssetForPool(pool);
   const baseAsset = useCryptoAssetForToken(baseAssetContract?.address);
   const baseAssetSymbol = useCryptoSymbol(baseAsset);

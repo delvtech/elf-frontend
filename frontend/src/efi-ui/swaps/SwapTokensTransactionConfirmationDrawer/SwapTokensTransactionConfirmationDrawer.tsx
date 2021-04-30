@@ -107,6 +107,7 @@ export function SwapTokensTransactionConfirmationDrawer({
   const amountOutNumber = +formatUnits(amountOut?.abs() || 0, tokenInDecimals);
   const amountOutFormatted = amountOutNumber.toFixed(4);
 
+  // this needs to be updated. assume amountIn is base asset.
   const priceSlippage = getPriceSlippageAndTradingFee(
     +(amountIn || 0),
     amountOutNumber,

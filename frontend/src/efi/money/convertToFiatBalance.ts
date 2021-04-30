@@ -25,3 +25,11 @@ export function convertToFiatBalance(
   // Now we can safely multiply the crypto price by the balance to get the fiat balance
   return fiatValue.multiply(cryptoBalance, Math.round);
 }
+
+export function convertNumberToFiatBalance(
+  fiatValue: Money,
+  cryptoNominalValue: number
+): Money {
+  // Now we can safely multiply the crypto price by the balance to get the fiat balance
+  return fiatValue.multiply(cryptoNominalValue, Math.round);
+}

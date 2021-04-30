@@ -11,7 +11,7 @@ import { PoolActionsCard } from "efi-ui/pools/PoolActionsCard/PoolActionsCard";
 import { PoolCharts } from "efi-ui/pools/PoolCharts/PoolCharts";
 import { PoolSummary } from "efi-ui/pools/PoolSummary/PoolSummary";
 import { TokenSummary } from "efi-ui/pools/TokenSummary/TokenSummary";
-import { useFeeVolumeForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
+import { useFeeVolumeFiatForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useTotalLiquidityForPool } from "efi-ui/pools/useTotalLiquidityForPool/useTotalLiquidityForPool";
 import { useTotalLiquidityTrend } from "efi-ui/pools/useTotalLiquidityTrend/useTotalLiquidityTrend";
@@ -127,12 +127,16 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
 }
 
 function useFeeVolumeTrend(pool: PoolContract | undefined) {
-  const feeVolume24hr = useFeeVolumeForPool(pool, ONE_DAY_IN_SECONDS);
-  const feeVolumePrevious24hr = useFeeVolumeForPool(
+  const feeVolume24hr = useFeeVolumeFiatForPool(pool, ONE_DAY_IN_SECONDS);
+  const feeVolumePrevious24hr = useFeeVolumeFiatForPool(
     pool,
     ONE_DAY_IN_SECONDS * 2,
     ONE_DAY_IN_SECONDS
   );
+
+  if (!feeVolume24hr || !feeVolumePrevious24hr) {
+    return {};
+  }
 
   const feeVolumeTrend = getTrend(
     feeVolumePrevious24hr?.toDecimal(),

@@ -12,6 +12,7 @@ import { getQueriesData } from "efi-ui/base/queryResults";
 import { usePoolPairedTokenMulti } from "efi-ui/pools/usePoolPairedToken/usePoolPairedTokenMulti";
 import { useQueryBatchSwapMulti } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwapMulti";
 import zip from "lodash.zip";
+import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 
 /**
  * Lazy spot price technique until we get a better method.  Right now just calculates how much out
@@ -21,17 +22,14 @@ import zip from "lodash.zip";
  * NOTE: When using this with a tranche pool, pass the base asset as the underlying token.
  * returns spotPrice = yield / base, therefore to convert between base and yield assets:
  *
- * base = yield / spotPrice
- * yield = base * spotPrice
+ * base = yield * spotPrice
+ * yield = base / spotPrice
  */
 export function usePoolSpotPrice(
   pool: PoolContract | undefined,
   underlyingToken: ERC20 | undefined
 ): number | undefined {
-  const { data: decimals } = useSmartContractReadCall(
-    underlyingToken,
-    "decimals"
-  );
+  const { data: decimals } = useTokenDecimals(underlyingToken);
 
   const yieldToken = usePoolPairedToken(pool, underlyingToken);
   const { data: tokenOutDecimals } = useSmartContractReadCall(
