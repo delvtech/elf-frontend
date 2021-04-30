@@ -25,7 +25,7 @@ interface PoolActionsCardProps {
   tokenOut: ERC20 | undefined;
 }
 
-enum MarketAction {
+enum PoolAction {
   SWAP = "swap",
   STAKE = "stake",
   UNSTAKE = "unstake",
@@ -42,10 +42,10 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
     tokenOut,
     pool,
   } = props;
-  const [activeTab, setActiveTab] = useState<MarketAction>(MarketAction.SWAP);
+  const [activeTab, setActiveTab] = useState<PoolAction>(PoolAction.SWAP);
 
   const onChangeTab = useCallback(
-    (tabId: MarketAction) => setActiveTab(tabId),
+    (tabId: PoolAction) => setActiveTab(tabId),
     []
   );
 
@@ -57,28 +57,28 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
       <Card className={tw("flex", "flex-col", "flex-1", "w-full", "space-y-2")}>
         <div className={tw("flex", "space-x-4")}>
           <Button
-            onClick={() => onChangeTab(MarketAction.SWAP)}
-            active={activeTab === MarketAction.SWAP}
+            onClick={() => onChangeTab(PoolAction.SWAP)}
+            active={activeTab === PoolAction.SWAP}
             minimal
             outlined
             intent={Intent.PRIMARY}
           >{t`Swap`}</Button>
           <Button
-            onClick={() => onChangeTab(MarketAction.STAKE)}
-            active={activeTab === MarketAction.STAKE}
+            onClick={() => onChangeTab(PoolAction.STAKE)}
+            active={activeTab === PoolAction.STAKE}
             minimal
             outlined
             intent={Intent.PRIMARY}
           >{t`Add Liquidity`}</Button>
           <Button
-            onClick={() => onChangeTab(MarketAction.UNSTAKE)}
-            active={activeTab === MarketAction.UNSTAKE}
+            onClick={() => onChangeTab(PoolAction.UNSTAKE)}
+            active={activeTab === PoolAction.UNSTAKE}
             minimal
             outlined
             intent={Intent.PRIMARY}
           >{t`Remove Liquidity`}</Button>
         </div>
-        {activeTab === MarketAction.SWAP && (
+        {activeTab === PoolAction.SWAP && (
           <TradePanel
             library={library}
             signer={signer}
@@ -93,7 +93,7 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
             buttonIntent={Intent.PRIMARY}
           />
         )}
-        {activeTab === MarketAction.STAKE && (
+        {activeTab === PoolAction.STAKE && (
           <StakingPanel
             library={library}
             signer={signer}
@@ -103,7 +103,7 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
             buttonIntent={Intent.PRIMARY}
           />
         )}
-        {activeTab === MarketAction.UNSTAKE && (
+        {activeTab === PoolAction.UNSTAKE && (
           <UnStakePanel
             library={library}
             account={account}
