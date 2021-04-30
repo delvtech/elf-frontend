@@ -8,8 +8,7 @@ import { Signer } from "ethers";
 import tw from "efi-tailwindcss-classnames";
 import { PoolDetails } from "efi-ui/pools/PoolDetails/PoolDetails";
 import { useAllPools } from "efi-ui/pools/useAllPools/useAllPools";
-import { TransactionPendingCard } from "efi-ui/transactions/TransactionPendingCard/TransactionPendingCard";
-import { getConnectorName } from "efi/wallets/connectors";
+
 import { PoolViewHeader } from "./PoolViewHeader";
 import { PoolViewTitle } from "./PoolViewTitle";
 
@@ -29,7 +28,6 @@ export function PoolView({ poolAddress }: PoolViewProps): ReactElement {
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
   const allPools = useAllPools(signer);
   const pool = allPools.find((pool) => pool?.address === poolAddress);
-  const connectorName = getConnectorName(connector, library);
 
   return (
     <Fragment>
@@ -51,12 +49,6 @@ export function PoolView({ poolAddress }: PoolViewProps): ReactElement {
           {/* page title */}
           <div className={tw("flex", "justify-between")}>
             <PoolViewHeader pool={pool} />
-            <TransactionPendingCard
-              active={active}
-              account={account}
-              chainId={chainId}
-              connectorName={connectorName}
-            />
           </div>
           <div className={tw("flex", "flex-col", "justify-between")}>
             <PoolDetails
