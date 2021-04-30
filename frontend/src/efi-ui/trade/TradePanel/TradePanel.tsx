@@ -100,8 +100,8 @@ export function TradePanel(props: TradePanelProps): ReactElement {
 
   // clear inputs when they switch.  we can improve this UX later to keep the previous values.
   useEffect(() => {
-    onChangeIn(undefined);
-    onChangeOut(undefined);
+    onChangeIn("");
+    onChangeOut("");
     // don't want to call this effect when the hooks update, only when isReversed updates
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isReversed]);
