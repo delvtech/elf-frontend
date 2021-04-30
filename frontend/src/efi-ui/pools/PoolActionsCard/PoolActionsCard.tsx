@@ -13,7 +13,7 @@ import { UnStakePanel } from "efi-ui/pools/UnStakePanel/UnStakePanel";
 import {
   PoolAction,
   usePoolViewPoolActionsTab,
-} from "efi-ui/prefs/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
+} from "efi-ui/pools/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
 import { TradePanel } from "efi-ui/trade/TradePanel/TradePanel";
 import { PoolContract } from "efi/pools/PoolContract";
 
