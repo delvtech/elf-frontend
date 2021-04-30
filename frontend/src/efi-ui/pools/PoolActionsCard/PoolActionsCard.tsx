@@ -1,4 +1,4 @@
-import { ReactElement, useCallback, useState } from "react";
+import { ReactElement } from "react";
 
 import { Button, Card, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
@@ -10,6 +10,10 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { StakingPanel } from "efi-ui/pools/StakingPanel/StakingPanel";
 import { UnStakePanel } from "efi-ui/pools/UnStakePanel/UnStakePanel";
+import {
+  PoolAction,
+  usePoolViewPoolActionsTab,
+} from "efi-ui/pools/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
 import { TradePanel } from "efi-ui/trade/TradePanel/TradePanel";
 import { PoolContract } from "efi/pools/PoolContract";
 
@@ -25,11 +29,6 @@ interface PoolActionsCardProps {
   tokenOut: ERC20 | undefined;
 }
 
-enum MarketAction {
-  SWAP = "swap",
-  STAKE = "stake",
-  UNSTAKE = "unstake",
-}
 export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
   const {
     library,
@@ -42,12 +41,7 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
     tokenOut,
     pool,
   } = props;
-  const [activeTab, setActiveTab] = useState<MarketAction>(MarketAction.SWAP);
-
-  const onChangeTab = useCallback(
-    (tabId: MarketAction) => setActiveTab(tabId),
-    []
-  );
+  const { tab, setTab } = usePoolViewPoolActionsTab();
 
   return (
     <div className={tw("flex", "flex-col", "flex-1", "h-500")}>
@@ -57,28 +51,28 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
       <Card className={tw("flex", "flex-col", "flex-1", "w-full", "space-y-2")}>
         <div className={tw("flex", "space-x-4")}>
           <Button
-            onClick={() => onChangeTab(MarketAction.SWAP)}
-            active={activeTab === MarketAction.SWAP}
+            onClick={() => setTab(PoolAction.SWAP)}
+            active={tab === PoolAction.SWAP}
             minimal
             outlined
             intent={Intent.PRIMARY}
           >{t`Swap`}</Button>
           <Button
-            onClick={() => onChangeTab(MarketAction.STAKE)}
-            active={activeTab === MarketAction.STAKE}
+            onClick={() => setTab(PoolAction.STAKE)}
+            active={tab === PoolAction.STAKE}
             minimal
             outlined
             intent={Intent.PRIMARY}
           >{t`Add Liquidity`}</Button>
           <Button
-            onClick={() => onChangeTab(MarketAction.UNSTAKE)}
-            active={activeTab === MarketAction.UNSTAKE}
+            onClick={() => setTab(PoolAction.UNSTAKE)}
+            active={tab === PoolAction.UNSTAKE}
             minimal
             outlined
             intent={Intent.PRIMARY}
           >{t`Remove Liquidity`}</Button>
         </div>
-        {activeTab === MarketAction.SWAP && (
+        {tab === PoolAction.SWAP && (
           <TradePanel
             library={library}
             signer={signer}
@@ -93,7 +87,7 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
             buttonIntent={Intent.PRIMARY}
           />
         )}
-        {activeTab === MarketAction.STAKE && (
+        {tab === PoolAction.STAKE && (
           <StakingPanel
             library={library}
             signer={signer}
@@ -103,7 +97,7 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
             buttonIntent={Intent.PRIMARY}
           />
         )}
-        {activeTab === MarketAction.UNSTAKE && (
+        {tab === PoolAction.UNSTAKE && (
           <UnStakePanel
             library={library}
             account={account}
