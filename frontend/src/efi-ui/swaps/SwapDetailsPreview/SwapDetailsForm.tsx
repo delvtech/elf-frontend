@@ -43,7 +43,7 @@ export function SwapDetailsForm({
   amountOutLabel = t`To`,
   assetInSymbol,
   assetOutSymbol,
-  heading = t`Confirm Transaction`,
+  heading = t`Trade Confirmation`,
   onAmountInChange: onAmountInChangeFromProps,
   onAmountOutChange: onAmountOutChangeFromProps,
   children,

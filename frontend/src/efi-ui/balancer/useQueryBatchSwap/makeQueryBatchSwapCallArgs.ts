@@ -4,7 +4,11 @@ import { BigNumber } from "ethers";
 import { FundManagement } from "efi-ui/balancer/FundManagement";
 import { SwapKind } from "efi-ui/balancer/SwapKind";
 import { BatchSwapStep } from "efi-ui/balancer/SwapRequest";
-import { BALANCER_ETH_SENTINEL } from "efi/balancer";
+import {
+  BALANCER_ETH_SENTINEL,
+  mapETHSentinalToWETH,
+  mapWETHToETHSentinal,
+} from "efi/balancer";
 import { StaticContractMethodArgs } from "efi/contracts/types";
 
 /**
@@ -28,8 +32,15 @@ export function makeQueryBatchSwapCallArgs(
     return undefined;
   }
 
-  // queryBatchSwap requires that the assets be sorted
-  const assets = [tokenInAddress, tokenOutAddress].sort();
+  // balancer's batchSwap requires that the assets be sorted
+  let assets = [tokenInAddress, tokenOutAddress].sort();
+  // ETH is a special case. Balancer uses the
+  // zero address as an address sentinel for ETH, but still expects the addresses sorted as though
+  // it were WETH.
+  if (assets.includes(BALANCER_ETH_SENTINEL)) {
+    assets = assets.map(mapETHSentinalToWETH).sort().map(mapWETHToETHSentinal);
+  }
+
   const assetInIndex = assets.findIndex(
     (address) => address === tokenInAddress
   );
@@ -45,7 +56,6 @@ export function makeQueryBatchSwapCallArgs(
       amount,
       // no need to pass data
       userData: "0x00",
-      // userData: defaultAbiCoder.encode(["uint8"], ["0x00"]),
     },
   ];
 

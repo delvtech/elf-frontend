@@ -4,6 +4,7 @@ import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { Signer } from "ethers";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
+import { t } from "ttag";
 
 import { getBalancerApprovalMessage } from "efi-ui/balancer/balancerApprovalMessage";
 import { SwapKind } from "efi-ui/balancer/SwapKind";
@@ -106,11 +107,14 @@ export function SwapTokensTransactionConfirmationDrawer({
   const amountOutNumber = +formatUnits(amountOut?.abs() || 0, tokenInDecimals);
   const amountOutFormatted = amountOutNumber.toFixed(4);
 
-  const priceSlippageAndTradingFee = getPriceSlippageAndTradingFee(
+  const priceSlippage = getPriceSlippageAndTradingFee(
     +(amountIn || 0),
     amountOutNumber,
     1 / (spotPrice || 1)
   );
+
+  // TODO: add this calculation.
+  const feePercent = 0;
 
   return (
     <TransactionDrawer
@@ -127,17 +131,19 @@ export function SwapTokensTransactionConfirmationDrawer({
       library={library}
       onConfirmTransaction={onConfirmSwapTokens}
       walletApprovalMessageRenderer={getBalancerApprovalMessage}
+      buttonLabel={t`Trade`}
       transactionDetails={
         <SwapDetailsForm
           amountIn={amountIn}
           amountOut={amountOutFormatted}
           assetInIcon={tokenInIcon}
           assetInSymbol={tokenInSymbol}
-          assetOutSymbol={`${tokenInSymbol} Principal Token`}
+          assetOutSymbol={tokenOutSymbol}
         >
           <SwapTokenDetails
             baseAssetSymbol={tokenInSymbol}
-            priceSlippageAndTradingFee={priceSlippageAndTradingFee}
+            priceSlippage={priceSlippage}
+            feePercent={feePercent}
             spotPriceBaseAssetForOneToken={spotPrice}
           />
         </SwapDetailsForm>

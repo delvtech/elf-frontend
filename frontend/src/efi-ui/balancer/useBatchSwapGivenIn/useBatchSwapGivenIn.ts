@@ -14,7 +14,11 @@ import {
   makeSuccessToast,
 } from "efi-ui/toaster/AppToaster/AppToaster";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
-import { BALANCER_ETH_SENTINEL } from "efi/balancer";
+import {
+  BALANCER_ETH_SENTINEL,
+  mapETHSentinalToWETH,
+  mapWETHToETHSentinal,
+} from "efi/balancer";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { PoolContract } from "efi/pools/PoolContract";
@@ -89,8 +93,15 @@ function makeBatchSwapGivenInCallArgs(
     return;
   }
 
-  // batchSwapGivenIn requires that the assets be sorted
-  const assets = [tokenInAddress, tokenOutAddress].sort();
+  // balancer's batchSwap requires that the assets be sorted
+  let assets = [tokenInAddress, tokenOutAddress].sort();
+  // ETH is a special case. Balancer uses the
+  // zero address as an address sentinel for ETH, but still expects the addresses sorted as though
+  // it were WETH.
+  if (assets.includes(BALANCER_ETH_SENTINEL)) {
+    assets = assets.map(mapETHSentinalToWETH).sort().map(mapWETHToETHSentinal);
+  }
+
   const assetInIndex = assets.findIndex(
     (address) => address === tokenInAddress
   );
