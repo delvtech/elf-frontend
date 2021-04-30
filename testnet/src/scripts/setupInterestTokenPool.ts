@@ -24,7 +24,7 @@ export async function setupInterestTokenPool(
   balancerVaultContract: Vault,
   baseAssetContract: WETH | USDC,
   poolFactory: WeightedPoolFactory,
-  options: { baseAssetIn: string; yieldAssetIn: string }
+  options: { swapFee: string; baseAssetIn: string; yieldAssetIn: string }
 ) {
   const { baseAssetIn, yieldAssetIn } = options;
   const signerAddress = await signer.getAddress();
