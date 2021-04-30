@@ -43,6 +43,7 @@ export function TermPicker({
   return (
     <Select
       disabled={tranches.length < 2}
+      className={tw("pr-2")}
       popoverProps={{
         minimal: true,
         className: tw("w-full"),
