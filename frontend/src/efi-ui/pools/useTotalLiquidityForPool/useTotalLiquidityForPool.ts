@@ -68,7 +68,7 @@ export function useTotalLiquidityForPool(
   }
 
   const yieldAssetPrice = Money.fromDecimal(
-    spotPrice * (baseAssetPrice?.toDecimal() || 1),
+    (baseAssetPrice?.toDecimal() || 1) / spotPrice,
     currency,
     Math.round
   );
