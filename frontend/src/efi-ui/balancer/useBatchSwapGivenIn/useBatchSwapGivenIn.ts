@@ -64,9 +64,6 @@ export function useBatchSwapGivenIn(
       onError: (error) => {
         AppToaster.show(makeErrorToast(error.message));
       },
-      onSuccess: () => {
-        AppToaster.show(makeSuccessToast("Transaction succeeded"));
-      },
     }
   );
 
