@@ -11,6 +11,10 @@ import {
   isWeightedPool,
   PoolContract,
 } from "efi/pools/PoolContract";
+import { Money } from "ts-money";
+import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
+import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
+import { convertNumberToFiatBalance } from "efi/money/convertToFiatBalance";
 
 /**
  * Returns the fiat volume for a pool in a given time range
@@ -21,7 +25,7 @@ import {
  * @returns {Array<BigNumber>} an array of deltas for each token in the pool
  * over the time period. values in ascending token address order.
  */
-export function useFeeVolumeForPool2(
+export function useFeeVolumeForPool(
   pool: PoolContract | undefined,
   fromTime: number = ONE_DAY_IN_SECONDS,
   toTime?: number
@@ -60,6 +64,24 @@ export function useFeeVolumeForPool2(
   }
 
   return 0;
+}
+
+export function useFeeVolumeFiatForPool(
+  pool: PoolContract | undefined,
+  fromTime: number = ONE_DAY_IN_SECONDS,
+  toTime?: number
+): Money | undefined {
+  const fees = useFeeVolumeForPool(pool, fromTime, toTime);
+  const { currency } = useCurrencyPref();
+  const baseAssetContract = useBaseAssetForPool(pool);
+  const [baseAssetPrice] = useTokenPrice(baseAssetContract, currency);
+
+  if (!baseAssetPrice || !fees) {
+    return undefined;
+  }
+
+  const fiatFees = convertNumberToFiatBalance(baseAssetPrice, fees);
+  return fiatFees;
 }
 
 /**
