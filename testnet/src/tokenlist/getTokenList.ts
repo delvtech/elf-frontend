@@ -47,11 +47,3 @@ export async function getTokenList(addressesJson: AddressesJsonFile, name: strin
   // there are no squiggles.
   fs.writeFileSync(outputPath, tokenListString );
 }
-
-// Generate the testnet.tokenlist.json file
-// getTokenList(testnetAddresses, "Testnet token list", "./testnet.tokenlist.json")
-//   .then(() => process.exit(0))
-//   .catch((error) => {
-//     console.error(error);
-//     process.exit(1);
-//   });

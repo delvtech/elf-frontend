@@ -22,8 +22,9 @@ export async function getYieldTokens(interestTokenFactoryAddress: string, chainI
 
 
   const interestTokens = interestTokenAddresses.map((address) => InterestToken__factory.connect(address, provider));
-  const yieldTokenNames = await getYieldTokenNames(interestTokens);
-  const yieldTokenSymbols = await getYieldTokenSymbols(interestTokens);
+  const underlyingSymbols = await getUnderlyingSymbols(interestTokens);
+  const yieldTokenNames = formatYieldTokenNames(underlyingSymbols);
+  const yieldTokenSymbols = formatYieldTokenSymbols(underlyingSymbols);
 
   const decimals = await Promise.all(interestTokens.map(interestToken => interestToken.decimals()));
 
@@ -44,22 +45,16 @@ export async function getYieldTokens(interestTokenFactoryAddress: string, chainI
   return yieldTokensList;
 
 }
-async function getYieldTokenSymbols(interestTokens: InterestToken[]) {
-    const trancheAddresses =  await Promise.all(interestTokens.map(interestToken => interestToken.tranche()));
-    const tranches = trancheAddresses.map((address) => Tranche__factory.connect(address, provider));
-    const wrappedPositionAddresses = await Promise.all(tranches.map(tranche => tranche.position()));
-    const wrappedPositions = wrappedPositionAddresses.map(address => WrappedPosition__factory.connect(address, provider));
-    const wrappedPositionSymbols = await Promise.all(wrappedPositions.map(vault => vault.symbol()));
-    const principalTokenSymbols = wrappedPositionSymbols.map(symbol => `eY-${symbol}`);
-    return principalTokenSymbols;
+function formatYieldTokenSymbols(underlyingSymbols: string[]) {
+    const yieldTokenSymbols= underlyingSymbols.map(symbol => {
+        const name = symbol === 'WETH' ? 'eY-ETH' : `eY-${symbol}`;
+        return name;
+    });
+    return yieldTokenSymbols;
 }
 
-async function getYieldTokenNames(interestTokens: InterestToken[]) {
-    const trancheAddresses =  await Promise.all(interestTokens.map(interestToken => interestToken.tranche()));
-    const tranches = trancheAddresses.map((address) => Tranche__factory.connect(address, provider));
-    const underlyingAddresses = await Promise.all(tranches.map(tranche => tranche.underlying()));
-    const underlyingContracts = underlyingAddresses.map(address => ERC20__factory.connect(address, provider));
-    const underlyingSymbols = await Promise.all(underlyingContracts.map(underlying => underlying.symbol()));
+
+function formatYieldTokenNames(underlyingSymbols: string[]) {
     const yieldTokenNames = underlyingSymbols.map(symbol => {
         const name = symbol === 'WETH' ? 'ETH Yield Token' : `${symbol} Yield Token`;
         return name;
@@ -67,3 +62,11 @@ async function getYieldTokenNames(interestTokens: InterestToken[]) {
     return yieldTokenNames;
 }
 
+async function getUnderlyingSymbols(interestTokens: InterestToken[]) {
+  const trancheAddresses = await Promise.all(interestTokens.map(interestToken => interestToken.tranche()));
+  const tranches = trancheAddresses.map((address) => Tranche__factory.connect(address, provider));
+  const underlyingAddresses = await Promise.all(tranches.map(tranche => tranche.underlying()));
+  const underlyingContracts = underlyingAddresses.map(address => ERC20__factory.connect(address, provider));
+  const underlyingSymbols = await Promise.all(underlyingContracts.map(underlying => underlying.symbol()));
+  return underlyingSymbols;
+}
