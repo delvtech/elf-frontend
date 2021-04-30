@@ -49,10 +49,13 @@ export async function getPrincipalTokens(trancheFactoryAddress: string, chainId:
 
 }
 async function getPrincipalTokenSymbols(tranches: Tranche[]) {
-    const wrappedPositionAddresses = await Promise.all(tranches.map(tranche => tranche.position()));
-    const wrappedPositions = wrappedPositionAddresses.map(address => WrappedPosition__factory.connect(address, provider));
-    const wrappedPositionSymbols = await Promise.all(wrappedPositions.map(vault => vault.symbol()));
-    const principalTokenSymbols = wrappedPositionSymbols.map(symbol => `eP-${symbol}`);
+    const underlyingAddresses = await Promise.all(tranches.map(tranche => tranche.underlying()));
+    const underlyingContracts = underlyingAddresses.map(address => ERC20__factory.connect(address, provider));
+    const underlyingSymbols = await Promise.all(underlyingContracts.map(underlying => underlying.symbol()));
+    const principalTokenSymbols = underlyingSymbols.map(symbol => {
+        const name = symbol === 'WETH' ? 'eP-ETH' : `eP-${symbol}`;
+        return name;
+    });
     return principalTokenSymbols;
 }
 
