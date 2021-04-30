@@ -1,4 +1,10 @@
-import React, { ReactElement, useCallback, useEffect, useState } from "react";
+import React, {
+  CSSProperties,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 
 import { Button, InputGroup, Intent, Tag } from "@blueprintjs/core";
 import { BigNumber } from "ethers";
@@ -9,11 +15,17 @@ import tw from "efi-tailwindcss-classnames";
 import { SwapKind } from "efi-ui/balancer/SwapKind";
 import { useQueryBatchSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
 import { validateInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
+import { TokenIcon } from "efi-ui/token/TokenIcon";
 import { clipStringValueToDecimals } from "efi/math/fixedPoint";
 import { PoolContract } from "efi/pools/PoolContract";
 
 import styles from "./TradeInput.module.css";
-import { TokenIcon } from "efi-ui/token/TokenIcon";
+
+const tradeInputStyle: CSSProperties = {
+  height: "94px",
+  width: "100%",
+  fontSize: 26,
+};
 
 interface TradeInputProps {
   cryptoAddress: string | undefined;
@@ -96,26 +108,31 @@ export function TradeInput(props: TradeInputProps): ReactElement {
     <div className={tw("flex", "flex-col", "space-y-5")}>
       <div className={tw("flex", "justify-between", "items-center")}>
         <span className={tw("text-xs", "text-right")}>{label}</span>
-        <Button
-          disabled={disabled}
-          onClick={setMaxValue}
-          minimal
-          outlined
-          small
-          intent={Intent.SUCCESS}
-        >{t`MAX`}</Button>
+        <Tag large minimal>
+          <span>{cryptoSymbol}</span>
+        </Tag>
       </div>
       <InputGroup
         disabled={disabled}
         onChange={onChange}
         value={value}
+        style={tradeInputStyle}
         className={styles.depositInput}
         large
         intent={validValue ? undefined : Intent.DANGER}
         rightElement={
-          <Tag large minimal>
-            <span>{cryptoSymbol}</span>
-          </Tag>
+          <div className={tw("h-full", "flex", "items-center")}>
+            <Button
+              disabled={disabled}
+              onClick={setMaxValue}
+              // minimal
+              large
+              // outlined
+              // intent={Intent.SUCCESS}
+            >
+              {t`MAX`}
+            </Button>
+          </div>
         }
         leftElement={
           <div className={tw("px-2")}>

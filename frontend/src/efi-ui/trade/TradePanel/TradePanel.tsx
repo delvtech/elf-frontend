@@ -201,16 +201,18 @@ export function TradePanel(props: TradePanelProps): ReactElement {
         value={amountOut}
         validValue={isValidTokenOutValue}
       />
-      <Button
-        disabled={submitButtonDisabled}
-        onClick={submitTransaction}
-        minimal
-        outlined
-        large
-        intent={submitButtonError ? Intent.DANGER : Intent.PRIMARY}
-      >
-        {submitButtonLabel}
-      </Button>
+      <div>
+        <Button
+          disabled={submitButtonDisabled}
+          onClick={submitTransaction}
+          minimal
+          outlined
+          large
+          intent={submitButtonError ? Intent.DANGER : Intent.PRIMARY}
+        >
+          {submitButtonLabel}
+        </Button>
+      </div>
       <SwapTokensTransactionConfirmationDrawer
         tokenInAddress={tokenInAddress}
         tokenInSymbol={tokenInSymbol}

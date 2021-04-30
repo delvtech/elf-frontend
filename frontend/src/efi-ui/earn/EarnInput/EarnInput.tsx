@@ -1,4 +1,10 @@
-import { ReactElement, useCallback, useEffect, useState } from "react";
+import {
+  CSSProperties,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 
 import { InputGroup, Tag } from "@blueprintjs/core";
 import classNames from "classnames";
@@ -36,6 +42,11 @@ interface EarnInputProps {
   previewCryptoPoolIndex: number | undefined;
 }
 
+const earnInputStyle: CSSProperties = {
+  height: "94px",
+  width: "100%",
+  fontSize: 26,
+};
 export function EarnInput({
   className,
   value,
@@ -102,11 +113,7 @@ export function EarnInput({
   return (
     <InputGroup
       placeholder={placeholder}
-      style={{
-        height: "94px",
-        width: "100%",
-        fontSize: 26,
-      }}
+      style={earnInputStyle}
       className={classNames(
         tw("w-full"),
         styles.investmentAmount,
