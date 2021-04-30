@@ -5,6 +5,7 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { formatPercent } from "efi/base/formatPercent";
+import { TermAssetType } from "efi/tranche/TermAssetType";
 
 /**
  * Generalize this further to handle any transaction confirmation
@@ -14,14 +15,20 @@ interface SwapTokenDetailsProps {
   baseAssetSymbol: string | undefined;
   priceSlippage: number | undefined;
   feePercent: number | undefined;
+  termAssetType: TermAssetType;
 }
 export function SwapTokenDetails({
   baseAssetSymbol,
   priceSlippage,
   feePercent,
-  spotPriceBaseAssetForOneToken,
+  spotPriceBaseAssetForOneToken = 0,
+  termAssetType,
 }: SwapTokenDetailsProps): ReactElement {
-  const roundedTranchePrice = spotPriceBaseAssetForOneToken?.toFixed(4);
+  const roundedTermAssetPrice = (1 / spotPriceBaseAssetForOneToken).toFixed(4);
+  let label = t`1 Principal Token ≈ ${roundedTermAssetPrice} ${baseAssetSymbol}`;
+  if (termAssetType === "yield") {
+    label = t`1 Yield Token ≈ ${roundedTermAssetPrice} ${baseAssetSymbol}`;
+  }
 
   const formattedSlippage = formatPercent(priceSlippage || 0);
   const formattedFeePercent = formatPercent(feePercent || 0);
@@ -33,11 +40,7 @@ export function SwapTokenDetails({
         muted={false}
         className={tw("items-center")}
         text={<span>{t`Market rate`}</span>}
-        label={
-          <span
-            className={tw("text-base")}
-          >{t`1 Principal Token ≈ ${roundedTranchePrice} ${baseAssetSymbol}`}</span>
-        }
+        label={<span className={tw("text-base")}>{label}</span>}
       />
       <LabeledText
         muted={false}

@@ -33,6 +33,7 @@ import { CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { PoolContract } from "efi/pools/PoolContract";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
+import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 
 interface TradePanelProps {
   library: Web3Provider | undefined;
@@ -70,7 +71,8 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     tokenOutFromProps
   );
 
-  const spotPrice = usePoolSpotPrice(pool, tokenIn);
+  const baseAsset = useBaseAssetForPool(pool);
+  const spotPrice = usePoolSpotPrice(pool, baseAsset);
 
   const {
     asset: tokenInAsset,

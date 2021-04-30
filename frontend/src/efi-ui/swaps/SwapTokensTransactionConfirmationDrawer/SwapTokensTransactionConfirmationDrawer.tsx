@@ -19,8 +19,12 @@ import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/Transac
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { calculatePurchasePrice } from "efi/pools/calculatePurchasePrice";
 import { calculateSlippage } from "efi/pools/calculateSlippage";
-import { PoolContract } from "efi/pools/PoolContract";
+import { isConvergentCurvePool, PoolContract } from "efi/pools/PoolContract";
 import { getAmountOutWithTolerance } from "efi/trade/getAmountOutWithTolerance";
+import { TermAssetType } from "efi/tranche/TermAssetType";
+import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
+import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
+import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 
 interface SwapTokensTransactionConfirmationDrawerProps {
   chainId: number | undefined;
@@ -72,6 +76,14 @@ export function SwapTokensTransactionConfirmationDrawer({
 }: SwapTokensTransactionConfirmationDrawerProps): ReactElement {
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
   const balancerVault = useBalancerVault();
+
+  const baseAssetContract = useBaseAssetForPool(pool);
+  const baseAsset = useCryptoAssetForToken(baseAssetContract?.address);
+  const baseAssetSymbol = useCryptoSymbol(baseAsset);
+
+  const termAssetType: TermAssetType = isConvergentCurvePool(pool)
+    ? "principal"
+    : "yield";
 
   // pool calls
   const amountInAsBigNumber = parseUnits(amountIn || "0", tokenInDecimals);
@@ -142,10 +154,11 @@ export function SwapTokensTransactionConfirmationDrawer({
           assetOutSymbol={tokenOutSymbol}
         >
           <SwapTokenDetails
-            baseAssetSymbol={tokenInSymbol}
+            baseAssetSymbol={baseAssetSymbol}
             priceSlippage={priceSlippage}
             feePercent={feePercent}
             spotPriceBaseAssetForOneToken={spotPrice}
+            termAssetType={termAssetType}
           />
         </SwapDetailsForm>
       }
