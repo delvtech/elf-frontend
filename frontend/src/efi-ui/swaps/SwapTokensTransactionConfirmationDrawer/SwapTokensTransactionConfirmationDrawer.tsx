@@ -16,7 +16,7 @@ import { useCryptoAddress } from "efi-ui/crypto/hooks/useCryptoAddress/useCrypto
 import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
-import { useSwapFee } from "efi-ui/pools/useSwapFee/useSwapFee";
+import { usePoolSwapFee } from "efi-ui/pools/usePoolSwapFee/usePoolSwapFee";
 import { SwapDetailsForm } from "efi-ui/swaps/SwapDetailsPreview/SwapDetailsForm";
 import { SwapTokenDetails } from "efi-ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensDetails";
 import { TokenIcon } from "efi-ui/token/TokenIcon";
@@ -132,7 +132,7 @@ export function SwapTokensTransactionConfirmationDrawer({
     spotPriceInOut
   );
 
-  const feePercentBN = useSwapFee(pool);
+  const feePercentBN = usePoolSwapFee(pool);
   const feePercent = +formatEther(feePercentBN ?? 0);
   let appliedFeePercent = feePercent;
   if (isConvergentCurvePool(pool) && spotPrice) {

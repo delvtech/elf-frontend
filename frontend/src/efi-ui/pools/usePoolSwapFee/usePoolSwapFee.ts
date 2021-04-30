@@ -9,7 +9,7 @@ import {
   PoolContract,
 } from "efi/pools/PoolContract";
 
-export function useSwapFee(
+export function usePoolSwapFee(
   pool: PoolContract | undefined
 ): BigNumber | undefined {
   const { data: swapFee } = useSmartContractReadCall(
