@@ -1,8 +1,6 @@
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
-import { FortmaticConnector } from "@web3-react/fortmatic-connector";
 import { InjectedConnector } from "@web3-react/injected-connector";
-import { TorusConnector } from "@web3-react/torus-connector";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import { t } from "ttag";
 
@@ -55,39 +53,19 @@ export function getConnectorName(
     return "MetaMask";
   }
 
-  if (isTorusConnector(connector)) {
-    return "Torus";
-  }
-
   if (isWalletConnectConnector(connector)) {
     const walletBrand =
       connector.walletConnectProvider?.wc?._peerMeta?.name || t`unknown`;
     return `WalletConnect (${walletBrand})`;
   }
 
-  if (isFortmaticConnector(connector)) {
-    return "Fortmatic";
-  }
-
   return t`Uknown connector`;
-}
-
-export function isTorusConnector(
-  connector: AbstractConnector
-): connector is TorusConnector {
-  return !!(connector as TorusConnector)?.torus;
 }
 
 export function isWalletConnectConnector(
   connector: AbstractConnector
 ): connector is WalletConnectConnector {
   return !!(connector as WalletConnectConnector)?.walletConnectProvider;
-}
-
-export function isFortmaticConnector(
-  connector: AbstractConnector
-): connector is FortmaticConnector {
-  return !!(connector as FortmaticConnector)?.fortmatic;
 }
 
 export function isMetaMaskConnector(
