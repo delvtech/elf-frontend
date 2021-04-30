@@ -3,8 +3,9 @@
   "homepage": "https://github.com/element-fi/efi-frontend#readme",
   "description": "The frontend for Element.fi",
   "scripts": {
-    "copy-contracts": "npm run copy-addresses && npm run copy-typechain",
+    "copy-contracts": "npm run copy-addresses && npm run copy-typechain && npm run copy-tokenlists",
     "copy-addresses": "sh ./scripts/copy-addresses.sh",
+    "copy-tokenlists": "sh ./scripts/copy-tokenlists.sh",
     "copy-typechain": "sh ./scripts/copy-typechain.sh"
   }
 }
