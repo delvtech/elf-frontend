@@ -110,7 +110,9 @@ export function SellPrincipalTokensTransactionDrawer(
     0.01
   );
 
-  const [onConfirmSellPrincipalTokens] = useBatchSwapGivenIn(
+  const {
+    batchSwapGivenIn: onConfirmSellPrincipalTokens,
+  } = useBatchSwapGivenIn(
     account,
     signer,
     pool,

@@ -110,7 +110,10 @@ export function SwapTokensTransactionConfirmationDrawer({
     0.01
   );
 
-  const [onConfirmSwapTokens, swapMuation] = useBatchSwapGivenIn(
+  const {
+    batchSwapGivenIn: onConfirmSwapTokens,
+    mutationResult: swapResult,
+  } = useBatchSwapGivenIn(
     account,
     signer,
     pool,
@@ -120,7 +123,7 @@ export function SwapTokensTransactionConfirmationDrawer({
     minAmountOut
   );
 
-  const { isLoading, isError, isSuccess, reset } = swapMuation;
+  const { isLoading, isError, isSuccess, reset } = swapResult;
 
   const amountOutNumber = +formatUnits(amountOut?.abs() || 0, tokenInDecimals);
   const amountOutFormatted = amountOutNumber.toFixed(4);

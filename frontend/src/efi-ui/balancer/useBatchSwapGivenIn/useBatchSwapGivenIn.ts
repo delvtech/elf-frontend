@@ -44,14 +44,14 @@ export function useBatchSwapGivenIn(
   tokenOutAddress: string | undefined,
   amountIn: BigNumber | undefined,
   limitOut?: BigNumber
-): [
-  () => void,
-  UseMutationResult<
+): {
+  batchSwapGivenIn: () => void;
+  mutationResult: UseMutationResult<
     ContractTransaction | undefined,
     unknown,
     Parameters<Vault["batchSwap"]>
-  >
-] {
+  >;
+} {
   const balancerVault = useBalancerVault();
   const poolIdResult = useSmartContractReadCall(pool, "getPoolId");
   const poolId = getQueryData(poolIdResult);
@@ -93,7 +93,7 @@ export function useBatchSwapGivenIn(
     tokenOutAddress,
   ]);
 
-  return [onSwapGivenInTransaction, mutationResult];
+  return { batchSwapGivenIn: onSwapGivenInTransaction, mutationResult };
 }
 
 function makeBatchSwapGivenInCallArgs(
