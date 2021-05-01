@@ -14,10 +14,6 @@ import {
 } from "efi-ui/portfolio/PortfolioTabs/PortfolioTabs";
 import { usePortfolioTabs } from "efi-ui/portfolio/PortfolioTabs/usePortfolioTabs";
 import { formatWalletAddress } from "efi/wallets/formatWalletAddress";
-import { LoadingCard } from "efi-ui/portfolio/LoadingCard";
-import { PendingTransactionPref } from "efi-ui/prefs/usePendingTransactionPref/usePendingTransactionPref";
-import ContractAddresses from "efi/addresses";
-import { usePendingTransaction } from "efi-ui/transactions/usePendingTransaction/usePendingTransaction";
 
 interface PortfolioViewProps extends RouteComponentProps {}
 
@@ -29,11 +25,6 @@ export function PortfolioView(props: PortfolioViewProps): ReactElement {
     chainId,
     connector,
   } = useWeb3React<Web3Provider>();
-
-  const pendingTransaction = usePendingTransaction();
-  const hasPendingTransactions = hasPendingPortfolioTransactions(
-    pendingTransaction
-  );
 
   const portfolioTabs: PortfolioTab[] = usePortfolioTabs(
     chainId,
@@ -99,8 +90,6 @@ export function PortfolioView(props: PortfolioViewProps): ReactElement {
               </H2>
             ) : null}
 
-            {hasPendingTransactions ? <LoadingCard /> : null}
-
             {account ? (
               <PortfolioTabs
                 onChangeTab={onChangeTab}
@@ -132,32 +121,4 @@ export function PortfolioView(props: PortfolioViewProps): ReactElement {
       </div>
     </Fragment>
   );
-}
-
-function hasPendingPortfolioTransactions(
-  pendingTransactionPref: PendingTransactionPref
-) {
-  const { contractAddress, methodName } = pendingTransactionPref;
-  // no pending transactions
-  if (!contractAddress || !methodName) {
-    return false;
-  }
-
-  // user proxy txs that affect portfolio
-  if (
-    contractAddress === ContractAddresses.userProxyContractAddress &&
-    ["mint"].includes(methodName)
-  ) {
-    return true;
-  }
-
-  // pending swap txs affect portfolio
-  if (
-    contractAddress === ContractAddresses.balancerVaultAddress &&
-    ["batchSwap"].includes(methodName)
-  ) {
-    return true;
-  }
-
-  return false;
 }

@@ -5,12 +5,14 @@ export interface PendingTransactionPref {
   contractAddress: string | undefined;
   transactionHash: string | undefined;
   methodName: string | undefined;
+  callArgs: unknown[] | undefined;
 }
 
 interface UsePendingTransactionPref extends PendingTransactionPref {
   setPendingTransactionPref: (
     contractAddress: string | undefined,
     methodName: string | undefined,
+    callArgs: unknown[],
     transactionHash: string | undefined
   ) => void;
   clearPendingTransactionPref: () => void;
@@ -36,13 +38,14 @@ export function usePendingTransactionPref(): UsePendingTransactionPref {
     (
       contractAddress: string | undefined,
       methodName: string | undefined,
+      callArgs: unknown[] | undefined,
       transactionHash: string | undefined
     ) => {
       if (!contractAddress || !methodName || !transactionHash) {
         setPref(undefined);
         return;
       }
-      setPref({ contractAddress, methodName, transactionHash });
+      setPref({ contractAddress, methodName, callArgs, transactionHash });
     },
     [setPref]
   );
@@ -51,6 +54,7 @@ export function usePendingTransactionPref(): UsePendingTransactionPref {
     contractAddress: pref?.contractAddress,
     transactionHash: pref?.transactionHash,
     methodName: pref?.methodName,
+    callArgs: pref?.callArgs,
     setPendingTransactionPref: setPendingTransaction,
     clearPendingTransactionPref: clearPendingTransaction,
   };

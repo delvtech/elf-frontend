@@ -4,11 +4,18 @@ import { useMutation, UseMutationResult } from "react-query";
 import { ContractMethodArgs, ContractMethodName } from "efi/contracts/types";
 import { lookupAddressKey } from "efi/addresses";
 
-export interface UseSmartContractTransactionOptions {
+export interface UseSmartContractTransactionOptions<
+  TContract extends Contract,
+  TMethodName extends ContractMethodName<TContract>
+> {
   confirmations?: number;
-  onSuccess?: (result: ContractTransaction) => void | Promise<void>;
+  onSuccess?: (
+    result: ContractTransaction,
+    callArgs: ContractMethodArgs<TContract, TMethodName>
+  ) => void | Promise<void>;
   onError?: (result: Error) => void | Promise<void>;
 }
+
 export function useSmartContractTransaction<
   TContract extends Contract,
   TMethodName extends ContractMethodName<TContract>
@@ -16,7 +23,7 @@ export function useSmartContractTransaction<
   contract: TContract | undefined,
   methodName: TMethodName,
   signer: Signer | undefined,
-  options: UseSmartContractTransactionOptions = {}
+  options: UseSmartContractTransactionOptions<TContract, TMethodName> = {}
 ): UseMutationResult<
   ContractTransaction | undefined,
   unknown,
@@ -45,9 +52,9 @@ export function useSmartContractTransaction<
         await onError?.(error);
       },
 
-      onSuccess: async (txReceipt) => {
+      onSuccess: async (txReceipt, vars) => {
         await txReceipt?.wait(confirmations);
-        await onSuccess?.(txReceipt);
+        await onSuccess?.(txReceipt, vars);
       },
     }
   );
