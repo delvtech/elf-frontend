@@ -10,9 +10,15 @@ import {
 import { usePendingTransactionPref } from "efi-ui/prefs/usePendingTransactionPref/usePendingTransactionPref";
 import { ContractMethodArgs, ContractMethodName } from "efi/contracts/types";
 
-interface UseSmartContractTransactionWithPrefOptions {
+interface UseSmartContractTransactionPersistedOptions<
+  TContract extends Contract,
+  TMethodName extends ContractMethodName<TContract>
+> {
   confirmations?: number;
-  onSuccess?: (result: ContractTransaction) => void | Promise<void>;
+  onSuccess?: (
+    result: ContractTransaction,
+    callArgs: ContractMethodArgs<TContract, TMethodName>
+  ) => void | Promise<void>;
   onError?: (Error: Error) => void | Promise<void>;
 }
 
@@ -31,7 +37,10 @@ export function useSmartContractTransactionPersisted<
   contract: TContract | undefined,
   methodName: TMethodName,
   signer: Signer | undefined,
-  options: UseSmartContractTransactionWithPrefOptions = {}
+  options: UseSmartContractTransactionPersistedOptions<
+    TContract,
+    TMethodName
+  > = {}
 ): UseMutationResult<
   ContractTransaction | undefined,
   unknown,
@@ -47,13 +56,17 @@ export function useSmartContractTransactionPersisted<
   } = usePendingTransactionPref();
 
   const onSuccess = useCallback(
-    (txReceipt: ContractTransaction) => {
+    (
+      txReceipt: ContractTransaction,
+      callArgs: ContractMethodArgs<TContract, TMethodName>
+    ) => {
       setPendingTransactionPref(
         contract?.address,
         methodName as string,
+        callArgs,
         txReceipt.hash
       );
-      onSuccessFromOptions?.(txReceipt);
+      onSuccessFromOptions?.(txReceipt, callArgs);
     },
     [
       contract?.address,
@@ -70,7 +83,10 @@ export function useSmartContractTransactionPersisted<
     [clearPendingTransactionPref, onErrorFromProps]
   );
 
-  const finalOptions: UseSmartContractTransactionOptions = {
+  const finalOptions: UseSmartContractTransactionOptions<
+    TContract,
+    TMethodName
+  > = {
     ...options,
     onSuccess,
     onError,

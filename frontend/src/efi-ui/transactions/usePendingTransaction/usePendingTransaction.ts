@@ -24,6 +24,7 @@ export function usePendingTransaction(): PendingTransactionPref {
     contractAddress,
     methodName,
     transactionHash,
+    callArgs,
     clearPendingTransactionPref,
   } = usePendingTransactionPref();
 
@@ -33,7 +34,7 @@ export function usePendingTransaction(): PendingTransactionPref {
     jsonRpcProvider
   );
 
-  return { contractAddress, methodName, transactionHash };
+  return { contractAddress, methodName, transactionHash, callArgs };
 }
 
 function useClearPendingTransactionOnMined(
