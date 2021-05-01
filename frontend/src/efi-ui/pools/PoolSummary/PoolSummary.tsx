@@ -35,48 +35,49 @@ export function PoolSummary(props: PoolSummaryProps): ReactElement {
   return (
     <div>
       <div className="mb-2">{t`Pool Summary`}</div>
-      <Card style={summaryCardStyle}>
-        <div className={tw("flex", "flex-col", "space-y-6")}>
-          <div className={tw("flex", "space-x-4", "justify-between")}>
-            <div className={tw("flex", "flex-col")}>
-              <span
-                className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
-              >{t`Total Liquidity`}</span>
-              <div className={classNames("h3", tw("space-x-4"))}>
-                {formatMoney(liquidity)}
-              </div>
-            </div>
-            <div className={tw("flex", "self-end")}>
-              <TrendIndicator value={liquidityTrend} />
+      <Card
+        style={summaryCardStyle}
+        className={tw("flex", "flex-col", "space-y-6")}
+      >
+        <div className={tw("flex", "space-x-4", "justify-between")}>
+          <div className={tw("flex", "flex-col")}>
+            <span
+              className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
+            >{t`Total Liquidity`}</span>
+            <div className={classNames("h3", tw("space-x-4"))}>
+              {formatMoney(liquidity)}
             </div>
           </div>
-          {/* Volume (24hr)*/}
-          <div className={tw("flex", "space-x-4", "justify-between")}>
-            <div className={tw("flex", "flex-col")}>
-              <span
-                className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
-              >{t`Volume (24hr)`}</span>
-              <div className={classNames("h3", tw("space-x-4"))}>
-                {formatMoney(volume)}
-              </div>
-            </div>
-            <div className={tw("flex", "self-end")}>
-              <TrendIndicator value={volumeTrend} />
+          <div className={tw("flex", "self-end")}>
+            <TrendIndicator value={liquidityTrend} />
+          </div>
+        </div>
+        {/* Volume (24hr)*/}
+        <div className={tw("flex", "space-x-4", "justify-between")}>
+          <div className={tw("flex", "flex-col")}>
+            <span
+              className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
+            >{t`Volume (24hr)`}</span>
+            <div className={classNames("h3", tw("space-x-4"))}>
+              {formatMoney(volume)}
             </div>
           </div>
-          {/* Fees (24hr)*/}
-          <div className={tw("flex", "space-x-4", "justify-between")}>
-            <div className={tw("flex", "flex-col")}>
-              <span
-                className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
-              >{t`Fees (24hr)`}</span>
-              <div className={classNames("h3", tw("space-x-4"))}>
-                {formatMoney(feeVolume)}
-              </div>
+          <div className={tw("flex", "self-end")}>
+            <TrendIndicator value={volumeTrend} />
+          </div>
+        </div>
+        {/* Fees (24hr)*/}
+        <div className={tw("flex", "space-x-4", "justify-between")}>
+          <div className={tw("flex", "flex-col")}>
+            <span
+              className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
+            >{t`Fees (24hr)`}</span>
+            <div className={classNames("h3", tw("space-x-4"))}>
+              {formatMoney(feeVolume)}
             </div>
-            <div className={tw("flex", "self-end")}>
-              <TrendIndicator value={feeVolumeTrend} />
-            </div>
+          </div>
+          <div className={tw("flex", "self-end")}>
+            <TrendIndicator value={feeVolumeTrend} />
           </div>
         </div>
       </Card>

@@ -70,14 +70,14 @@ export function useFeeVolumeFiatForPool(
   pool: PoolContract | undefined,
   fromTime: number = ONE_DAY_IN_SECONDS,
   toTime?: number
-): Money | undefined {
+): Money {
   const fees = useFeeVolumeForPool(pool, fromTime, toTime);
   const { currency } = useCurrencyPref();
   const baseAssetContract = useBaseAssetForPool(pool);
   const [baseAssetPrice] = useTokenPrice(baseAssetContract, currency);
 
   if (!baseAssetPrice || !fees) {
-    return undefined;
+    return Money.fromDecimal(0, currency);
   }
 
   const fiatFees = convertNumberToFiatBalance(baseAssetPrice, fees);
