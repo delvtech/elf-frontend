@@ -116,7 +116,7 @@ export function SellYieldTokensDrawer(
     0.01
   );
 
-  const onConfirmSellPrincipalTokens = useBatchSwapGivenIn(
+  const [onConfirmSellPrincipalTokens] = useBatchSwapGivenIn(
     account,
     signer,
     pool,

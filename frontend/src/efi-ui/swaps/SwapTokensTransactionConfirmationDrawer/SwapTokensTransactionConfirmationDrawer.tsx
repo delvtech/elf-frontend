@@ -110,7 +110,7 @@ export function SwapTokensTransactionConfirmationDrawer({
     0.01
   );
 
-  const onConfirmSwapTokens = useBatchSwapGivenIn(
+  const [onConfirmSwapTokens] = useBatchSwapGivenIn(
     account,
     signer,
     pool,
