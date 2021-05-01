@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React, { CSSProperties, ReactElement } from "react";
 
 import { Card, Classes } from "@blueprintjs/core";
 import classNames from "classnames";
@@ -10,6 +10,10 @@ import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { formatPercent } from "efi/base/formatPercent";
 import { ERC20 } from "elf-contracts/types/ERC20";
 import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
+
+const summaryCardStyle: CSSProperties = {
+  height: 220,
+};
 
 interface VaultSummaryProps {
   maturityDate: number | undefined;
@@ -30,50 +34,53 @@ export function VaultSummary(props: VaultSummaryProps): ReactElement {
   const apy = vaultInfo?.apy?.recommended;
 
   return (
-    <div className={tw("flex-1")}>
+    <div>
       <div className="mb-2">{t`Vault and Term Summary`}</div>
-      <Card>
-        <div className={tw("flex", "flex-col", "space-y-6")}>
-          <div className={tw("flex", "space-x-4", "justify-between")}>
-            <div className={tw("flex", "flex-col")}>
-              <span
-                className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
-              >{t`Vault Name`}</span>
-              <div className={classNames("h3", tw("space-x-4"))}>
-                {name} {type}
-              </div>
+      <Card
+        style={summaryCardStyle}
+        className={tw("flex", "flex-col", "space-y-6")}
+      >
+        {/* Vault Name */}
+        <div className={tw("flex", "flex-col")}>
+          <span
+            className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
+          >{t`Vault Name`}</span>
+          <div className={classNames("h3", tw("space-x-4"))}>
+            {name} {type}
+          </div>
+        </div>
+
+        {/* Vault ROI */}
+        <div className={tw("flex", "space-x-4", "justify-between")}>
+          <div className={tw("flex", "flex-col")}>
+            <span
+              className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
+            >{t`Vault ROI (annual)`}</span>
+            <div className={classNames("h3", tw("space-x-4"))}>
+              {apy ? formatPercent(apy) : undefined}
             </div>
           </div>
-          {/* Volume (24hr)*/}
-          <div className={tw("flex", "space-x-4", "justify-between")}>
-            <div className={tw("flex", "flex-col")}>
-              <span
-                className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
-              >{t`Vault ROI (annual)`}</span>
-              <div className={classNames("h3", tw("space-x-4"))}>
-                {apy ? formatPercent(apy) : undefined}
-              </div>
+        </div>
+
+        {/* Maturity Date */}
+        <div
+          className={tw(
+            "flex",
+            "space-x-4",
+            "justify-between",
+            "overflow-hidden"
+          )}
+        >
+          <div className={tw("flex", "flex-col")}>
+            <span
+              className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
+            >{t`Term date`}</span>
+            <div className={classNames("h3", tw("space-x-4", "flex"))}>
+              {maturityDateString}
             </div>
           </div>
-          <div
-            className={tw(
-              "flex",
-              "space-x-4",
-              "justify-between",
-              "overflow-hidden"
-            )}
-          >
-            <div className={tw("flex", "flex-col")}>
-              <span
-                className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
-              >{t`Term date`}</span>
-              <div className={classNames("h3", tw("space-x-4", "flex"))}>
-                {maturityDateString}
-              </div>
-            </div>
-            <div className={tw("flex", "self-end", "overflow-hidden")}>
-              <TimeLeft startDate={startDate} maturityDate={maturityDate} />
-            </div>
+          <div className={tw("flex", "self-end", "overflow-hidden")}>
+            <TimeLeft startDate={startDate} maturityDate={maturityDate} />
           </div>
         </div>
       </Card>

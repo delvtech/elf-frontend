@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React, { CSSProperties, ReactElement } from "react";
 
 import { Card, Classes } from "@blueprintjs/core";
 import classNames from "classnames";
@@ -8,6 +8,10 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { TrendIndicator } from "efi-ui/base/TrendIndicator/TrendIndicator";
 import { formatMoney } from "efi/money/formatMoney";
+
+const summaryCardStyle: CSSProperties = {
+  height: 220,
+};
 
 interface PoolSummaryProps {
   liquidity: Money | undefined;
@@ -29,9 +33,9 @@ export function PoolSummary(props: PoolSummaryProps): ReactElement {
   } = props;
 
   return (
-    <div className={tw("flex-1")}>
+    <div>
       <div className="mb-2">{t`Pool Summary`}</div>
-      <Card>
+      <Card style={summaryCardStyle}>
         <div className={tw("flex", "flex-col", "space-y-6")}>
           <div className={tw("flex", "space-x-4", "justify-between")}>
             <div className={tw("flex", "flex-col")}>
