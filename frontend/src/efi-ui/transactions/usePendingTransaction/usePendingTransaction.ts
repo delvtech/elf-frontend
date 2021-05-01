@@ -42,33 +42,28 @@ function useClearPendingTransactionOnMined(
   clearPendingTransactionPref: () => void,
   provider: Provider | undefined
 ) {
-  // If the tx cleared while the user was not in the app, clear it out
   useEffect(() => {
     if (!transactionHash) {
       return;
     }
 
-    const clearIfMined = async () => {
+    jsonRpcProvider.getTransaction(transactionHash).then(({ blockHash }) => {
       // if the transaction is included in a block then it was successful, so we
       // clear the pending tx hash.
-      const { blockHash } = await jsonRpcProvider.getTransaction(
-        transactionHash
-      );
       if (blockHash) {
-        setTimeout(() => clearPendingTransactionPref(), CLEAR_PENDING_DELAY);
+        const timeout = setTimeout(() => {
+          clearPendingTransactionPref();
+        }, CLEAR_PENDING_DELAY);
+        return () => clearTimeout(timeout);
       }
-    };
 
-    clearIfMined();
-  }, [clearPendingTransactionPref, transactionHash]);
-
-  useEffect(() => {
-    if (!transactionHash) {
-      return;
-    }
-
-    provider?.once(transactionHash, () => {
-      setTimeout(() => clearPendingTransactionPref(), CLEAR_PENDING_DELAY);
+      // Otherwise set a handler that will clear the pref when it is mined
+      provider?.once(transactionHash, () => {
+        const timeout = setTimeout(() => {
+          return clearPendingTransactionPref();
+        }, CLEAR_PENDING_DELAY);
+        return () => clearTimeout(timeout);
+      });
     });
   }, [clearPendingTransactionPref, provider, transactionHash]);
 }

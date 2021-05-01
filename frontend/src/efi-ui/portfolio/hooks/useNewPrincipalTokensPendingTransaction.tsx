@@ -30,9 +30,9 @@ export function useNewPrincipalTokensPendingTransaction():
     methodName === "batchSwap"
   ) {
     const [, , assets] = callArgs as ContractMethodArgs<Vault, "batchSwap">;
-    const isPT = !!assets.find(
-      (address) => !!TokenMetadata[address]?.tags?.includes("eP")
-    );
+    const isPT = !!assets.find((address) => {
+      return !!TokenMetadata[address]?.tags?.includes("eP");
+    });
     if (isPT) {
       return pendingTransaction;
     }

@@ -125,7 +125,7 @@ export function PrincipalTokenCard(
 
   return (
     <Card
-      style={{ width: 512 }}
+      style={{ width: 512, height: 632 }}
       className={classNames(
         tw("p-8", "flex", "flex-col", "m-4", "space-y-5", "text-base", {
           "text-gray-700": !isDarkMode,
