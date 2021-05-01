@@ -15,8 +15,11 @@ import { PoolView } from "efi-ui/pools/PoolView/PoolView";
 import { PortfolioView } from "efi-ui/portfolio/PortfolioView/PortfolioView";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useSyncWithInjectedEthereum } from "efi-ui/wallets/hooks/useSyncWithInjectedEthereum";
+import { FocusStyleManager } from "@blueprintjs/core";
 
 import styles from "./App.module.css";
+
+FocusStyleManager.onlyShowFocusOnTabs();
 
 const contentClassName = tw(
   "flex-1",
