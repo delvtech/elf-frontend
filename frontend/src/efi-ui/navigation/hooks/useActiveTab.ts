@@ -14,8 +14,11 @@ export function useActiveTab(): Navigation {
     case Navigation.PULSE: {
       return Navigation.PULSE;
     }
-    case Navigation.POOLS: {
-      return Navigation.POOLS;
+    case Navigation.PRINCIPAL_TOKENS: {
+      return Navigation.PRINCIPAL_TOKENS;
+    }
+    case Navigation.YIELD_TOKENS: {
+      return Navigation.YIELD_TOKENS;
     }
     case Navigation.RESOURCES: {
       return Navigation.RESOURCES;

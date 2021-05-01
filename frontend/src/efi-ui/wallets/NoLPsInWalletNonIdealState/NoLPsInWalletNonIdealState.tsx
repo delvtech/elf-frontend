@@ -9,9 +9,10 @@ import { Navigation } from "efi-ui/navigation/navigation";
 
 export function NoLPsInWalletNonIdealState(): ReactElement {
   const { changeTab } = useNavigation();
-  const goToExchange = useCallback(() => changeTab(Navigation.POOLS), [
-    changeTab,
-  ]);
+  const goToExchange = useCallback(
+    () => changeTab(Navigation.PRINCIPAL_TOKENS),
+    [changeTab]
+  );
   return (
     <NonIdealState
       icon={IconNames.BANK_ACCOUNT}
