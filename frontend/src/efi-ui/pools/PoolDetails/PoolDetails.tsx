@@ -22,6 +22,7 @@ import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
 import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { PoolContract } from "efi/pools/PoolContract";
+import { APYSummary } from "efi-ui/pools/APYSummary/APYSummary";
 
 interface PoolDetailsProps {
   library: Web3Provider | undefined;
@@ -68,6 +69,12 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
 
   return (
     <div className={tw("flex", "flex-col", "space-y-8", "w-full")}>
+      <APYSummary
+        pool={pool}
+        baseAsset={baseAssetContract}
+        startDate={startDate}
+        maturityDate={maturityDate}
+      />
       <div
         className={tw(
           "flex",
