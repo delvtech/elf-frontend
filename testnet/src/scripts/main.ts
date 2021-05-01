@@ -175,6 +175,11 @@ async function main() {
     trancheFactory
   );
 
+  console.log("Disabling automine");
+  await hre.ethers.provider.send("evm_setAutomine", [false]);
+  console.log("Setting mining interval to 10s");
+  await hre.ethers.provider.send("evm_setIntervalMining", [10_000]);
+
   // Produce a full list of all addresses deployed in the mian.ts script.
   const allAddresses = JSON.stringify(
     {
