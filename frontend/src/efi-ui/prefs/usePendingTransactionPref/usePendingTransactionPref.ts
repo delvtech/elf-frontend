@@ -1,19 +1,57 @@
 import { usePref } from "efi-ui/prefs/usePref/usePref";
+import { useCallback } from "react";
 
-interface PendingTransactionPref {
+export interface PendingTransactionPref {
+  contractAddress: string | undefined;
   transactionHash: string | undefined;
-  setTransaction: (transactionHash: string | undefined) => void;
+  methodName: string | undefined;
+}
+
+interface UsePendingTransactionPref extends PendingTransactionPref {
+  setPendingTransactionPref: (
+    contractAddress: string | undefined,
+    methodName: string | undefined,
+    transactionHash: string | undefined
+  ) => void;
+  clearPendingTransactionPref: () => void;
 }
 
 const PENDING_TRANSACTION_PREF_ID = "pending-transaction";
 
-export function usePendingTransactionPref(): PendingTransactionPref {
-  const { pref: transactionHash, setPref: setTransaction } = usePref<
-    string | undefined
-  >(PENDING_TRANSACTION_PREF_ID, undefined);
+/**
+ * A pref that holds the user's transaction while it's still pending on the
+ * network.  This can be used to show toasts, disable other transaction
+ * buttons, or render "loading" states.
+ */
+export function usePendingTransactionPref(): UsePendingTransactionPref {
+  const { pref, setPref } = usePref<PendingTransactionPref | undefined>(
+    PENDING_TRANSACTION_PREF_ID,
+    undefined
+  );
+  const clearPendingTransaction = useCallback(() => {
+    setPref(undefined);
+  }, [setPref]);
+
+  const setPendingTransaction = useCallback(
+    (
+      contractAddress: string | undefined,
+      methodName: string | undefined,
+      transactionHash: string | undefined
+    ) => {
+      if (!contractAddress || !methodName || !transactionHash) {
+        setPref(undefined);
+        return;
+      }
+      setPref({ contractAddress, methodName, transactionHash });
+    },
+    [setPref]
+  );
 
   return {
-    transactionHash,
-    setTransaction,
+    contractAddress: pref?.contractAddress,
+    transactionHash: pref?.transactionHash,
+    methodName: pref?.methodName,
+    setPendingTransactionPref: setPendingTransaction,
+    clearPendingTransactionPref: clearPendingTransaction,
   };
 }

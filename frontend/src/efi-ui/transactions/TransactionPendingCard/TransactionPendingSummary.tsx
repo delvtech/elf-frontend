@@ -16,7 +16,7 @@ interface TransactionPendingSummaryProps {
 export function TransactionPendingSummary({
   account,
 }: TransactionPendingSummaryProps): ReactElement | null {
-  const transactionHash = usePendingTransaction();
+  const { transactionHash } = usePendingTransaction();
   if (!transactionHash) {
     return null;
   }

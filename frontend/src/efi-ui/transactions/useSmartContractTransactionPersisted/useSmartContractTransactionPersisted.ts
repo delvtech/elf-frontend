@@ -41,21 +41,33 @@ export function useSmartContractTransactionPersisted<
     onSuccess: onSuccessFromOptions,
     onError: onErrorFromProps,
   } = options;
-  const { setTransaction } = usePendingTransactionPref();
+  const {
+    setPendingTransactionPref,
+    clearPendingTransactionPref,
+  } = usePendingTransactionPref();
 
   const onSuccess = useCallback(
     (txReceipt: ContractTransaction) => {
-      setTransaction(txReceipt.hash);
+      setPendingTransactionPref(
+        contract?.address,
+        methodName as string,
+        txReceipt.hash
+      );
       onSuccessFromOptions?.(txReceipt);
     },
-    [onSuccessFromOptions, setTransaction]
+    [
+      contract?.address,
+      methodName,
+      onSuccessFromOptions,
+      setPendingTransactionPref,
+    ]
   );
   const onError = useCallback(
     (error: Error) => {
-      setTransaction(undefined);
+      clearPendingTransactionPref();
       onErrorFromProps?.(error);
     },
-    [onErrorFromProps, setTransaction]
+    [clearPendingTransactionPref, onErrorFromProps]
   );
 
   const finalOptions: UseSmartContractTransactionOptions = {
