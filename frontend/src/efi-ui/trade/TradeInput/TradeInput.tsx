@@ -112,12 +112,6 @@ export function TradeInput(props: TradeInputProps): ReactElement {
 
   return (
     <div className={tw("flex", "flex-col", "space-y-2")}>
-      {/* <div className={tw("flex", "justify-between", "items-center")}>
-        <span className={tw("text-right")}>{label}</span>
-        <Tag large minimal>
-          <span>{cryptoSymbol}</span>
-        </Tag>
-      </div> */}
       <InputGroup
         disabled={disabled}
         onChange={onChange}
