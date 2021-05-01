@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useCallback } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
@@ -110,7 +110,10 @@ export function SwapTokensTransactionConfirmationDrawer({
     0.01
   );
 
-  const onConfirmSwapTokens = useBatchSwapGivenIn(
+  const {
+    batchSwapGivenIn: onConfirmSwapTokens,
+    mutationResult: swapResult,
+  } = useBatchSwapGivenIn(
     account,
     signer,
     pool,
@@ -119,6 +122,8 @@ export function SwapTokensTransactionConfirmationDrawer({
     amountInAsBigNumber,
     minAmountOut
   );
+
+  const { isLoading, isError, isSuccess, reset } = swapResult;
 
   const amountOutNumber = +formatUnits(amountOut?.abs() || 0, tokenInDecimals);
   const amountOutFormatted = amountOutNumber.toFixed(4);
@@ -140,11 +145,16 @@ export function SwapTokensTransactionConfirmationDrawer({
     appliedFeePercent = feePercent * Math.abs(1 - spotPrice);
   }
 
+  const resetSwap = useCallback(() => {
+    reset();
+    onClose();
+  }, [onClose, reset]);
+
   return (
     <TransactionDrawer
       approvalSpenderAddress={balancerVault?.address}
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={resetSwap}
       account={account}
       assetIn={tokenInAsset}
       assetInSymbol={tokenInSymbol}
@@ -156,6 +166,9 @@ export function SwapTokensTransactionConfirmationDrawer({
       onConfirmTransaction={onConfirmSwapTokens}
       walletApprovalMessageRenderer={getBalancerApprovalMessage}
       buttonLabel={t`Trade`}
+      transactionPending={isLoading}
+      transactionFailed={isError}
+      transactionSuccess={isSuccess}
       transactionDetails={
         <SwapDetailsForm
           amountIn={amountIn}

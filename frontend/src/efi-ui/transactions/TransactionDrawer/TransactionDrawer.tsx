@@ -35,6 +35,9 @@ interface TransactionDrawerProps {
   walletConnectionActive: boolean;
   walletApprovalMessageRenderer: (assetSymbol: string) => string;
   approvalSpenderAddress: string | undefined;
+  transactionPending?: boolean;
+  transactionSuccess?: boolean;
+  transactionFailed?: boolean;
 }
 
 export function TransactionDrawer({
@@ -50,6 +53,9 @@ export function TransactionDrawer({
   buttonLabel,
   approvalSpenderAddress,
   walletApprovalMessageRenderer,
+  transactionPending = false,
+  transactionSuccess = false,
+  transactionFailed = false,
 }: TransactionDrawerProps): ReactElement {
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
 
@@ -61,12 +67,25 @@ export function TransactionDrawer({
     approvalSpenderAddress
   );
 
-  const confirmButtonLabel = getConfirmButtonLabel(account, buttonLabel);
+  const confirmButtonLabel = getConfirmButtonLabel(
+    buttonLabel,
+    account,
+    transactionSuccess,
+    transactionFailed
+  );
+
   const confirmButtonDisabled = getConfirmButtonDisabled(
     account,
     assetIn,
     amountIn,
-    allowance
+    allowance,
+    transactionPending,
+    transactionSuccess,
+    transactionFailed
+  );
+  const buttonIntent = getConfirmButtonIntent(
+    transactionSuccess,
+    transactionFailed
   );
 
   const message = assetInSymbol
@@ -101,12 +120,13 @@ export function TransactionDrawer({
 
         <div className={tw("flex", "space-x-2")}>
           <Button
+            loading={transactionPending}
             fill
             disabled={confirmButtonDisabled}
-            intent={Intent.PRIMARY}
+            intent={buttonIntent}
             className={tw("h-16")}
             large
-            outlined
+            outlined={!transactionSuccess}
             onClick={onConfirmTransaction}
           >
             {confirmButtonLabel}
@@ -117,12 +137,36 @@ export function TransactionDrawer({
   );
 }
 
+function getConfirmButtonIntent(
+  transactionSuccess: boolean,
+  transactionFailed: boolean
+) {
+  let buttonIntent: Intent = Intent.PRIMARY;
+  if (transactionSuccess) {
+    buttonIntent = Intent.SUCCESS;
+  }
+  if (transactionFailed) {
+    buttonIntent = Intent.DANGER;
+  }
+  return buttonIntent;
+}
+
 function getConfirmButtonLabel(
+  label = t`Confirm transaction`,
   account: string | null | undefined,
-  label = t`Confirm transaction`
+  transactionSuccess: boolean,
+  transactionError: boolean
 ) {
   if (!account) {
     return t`Connect your wallet to continue`;
+  }
+
+  if (transactionSuccess) {
+    return `Success`;
+  }
+
+  if (transactionError) {
+    return `Failed`;
   }
 
   return label;
@@ -131,8 +175,15 @@ function getConfirmButtonDisabled(
   account: string | null | undefined,
   baseAsset: CryptoAsset | undefined,
   amountIn: BigNumber | undefined,
-  marketAllowance: BigNumber | undefined
+  marketAllowance: BigNumber | undefined,
+  transactionPending: boolean,
+  transactionSuccess: boolean,
+  transactionFailed: boolean
 ) {
+  if (transactionPending || transactionSuccess || transactionFailed) {
+    return true;
+  }
+
   // can't confirm anything w/out a base asset
   if (!baseAsset) {
     return true;

@@ -1,7 +1,13 @@
 import { useCallback } from "react";
 
 import { Vault } from "elf-contracts/types/Vault";
-import { BigNumber, BytesLike, PayableOverrides, Signer } from "ethers";
+import {
+  BigNumber,
+  BytesLike,
+  ContractTransaction,
+  PayableOverrides,
+  Signer,
+} from "ethers";
 
 import { SwapKind } from "efi-ui/balancer/SwapKind";
 import { BatchSwapStep } from "efi-ui/balancer/SwapRequest";
@@ -22,6 +28,7 @@ import {
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { PoolContract } from "efi/pools/PoolContract";
+import { UseMutationResult } from "react-query";
 
 /**
  * Hook wrapper for the Balancer Vault's batchSwapGivenIn method.
@@ -37,12 +44,19 @@ export function useBatchSwapGivenIn(
   tokenOutAddress: string | undefined,
   amountIn: BigNumber | undefined,
   limitOut?: BigNumber
-): () => void {
+): {
+  batchSwapGivenIn: () => void;
+  mutationResult: UseMutationResult<
+    ContractTransaction | undefined,
+    unknown,
+    Parameters<Vault["batchSwap"]>
+  >;
+} {
   const balancerVault = useBalancerVault();
   const poolIdResult = useSmartContractReadCall(pool, "getPoolId");
   const poolId = getQueryData(poolIdResult);
 
-  const { mutate: batchSwapGivenIn } = useSmartContractTransactionPersisted(
+  const mutationResult = useSmartContractTransactionPersisted(
     balancerVault,
     "batchSwap",
     signer,
@@ -56,6 +70,7 @@ export function useBatchSwapGivenIn(
     }
   );
 
+  const { mutate: batchSwapGivenIn } = mutationResult;
   const onSwapGivenInTransaction = useCallback(() => {
     const callArgs = makeBatchSwapGivenInCallArgs(
       account,
@@ -78,7 +93,7 @@ export function useBatchSwapGivenIn(
     tokenOutAddress,
   ]);
 
-  return onSwapGivenInTransaction;
+  return { batchSwapGivenIn: onSwapGivenInTransaction, mutationResult };
 }
 
 function makeBatchSwapGivenInCallArgs(
