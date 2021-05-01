@@ -161,7 +161,7 @@ export function StakingInput(props: StakingInputProps): ReactElement {
                   { [Classes.TEXT_MUTED]: validValue }
                 )}
               >
-                {t`Balance:`} {`${cryptoDisplayBalance} ${cryptoSymbol}`}
+                {t`Balance: ${cryptoDisplayBalance} ${cryptoSymbol}`}
               </span>
             </div>
           </div>
