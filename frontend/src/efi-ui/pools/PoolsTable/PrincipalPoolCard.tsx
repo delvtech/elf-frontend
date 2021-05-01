@@ -135,7 +135,7 @@ export function PrincipalPoolCard(
       style={poolCardStyle}
       className={classNames(
         styles.gridColsPoolCard,
-        tw("grid", "grid-cols-12", "w-full", {
+        tw("grid", "grid-cols-12", "gap-y-4", "w-full", {
           transition: transitionsEnabled,
           "duration-1000": transitionsEnabled,
           "ease-in-out": transitionsEnabled,
@@ -282,14 +282,19 @@ export function PrincipalPoolCard(
           "col-span-2",
           "md:col-span-1",
           "flex",
-          "flex-col"
+          "flex-col",
+          "overflow-visible"
         )}
       >
-        <div className={tw("flex-1")}>
-          <Button minimal>Trade</Button>
+        <div className={tw("flex-1", "mb-2")}>
+          <Button minimal outlined>
+            Trade
+          </Button>
         </div>
         <div className={tw("flex-1")}>
-          <Button minimal>Stake</Button>
+          <Button minimal outlined>
+            Stake
+          </Button>
         </div>
       </div>
     </Card>

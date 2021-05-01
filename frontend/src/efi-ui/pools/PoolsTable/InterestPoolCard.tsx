@@ -135,7 +135,7 @@ export function InterestPoolCard(
       style={poolCardStyle}
       className={classNames(
         styles.gridColsPoolCard,
-        tw("grid", "grid-cols-12", "w-full", {
+        tw("grid", "grid-cols-12", "gap-y-6", "w-full", {
           transition: transitionsEnabled,
           "duration-1000": transitionsEnabled,
           "ease-in-out": transitionsEnabled,
@@ -190,7 +190,8 @@ export function InterestPoolCard(
           "col-span-3",
           "md:pl-2",
           "lg:pl-0",
-          "md:col-span-2"
+          "md:col-span-2",
+          "lg:col-span-1"
         )}
       >
         <LabeledText
@@ -230,6 +231,16 @@ export function InterestPoolCard(
       <div
         className={tw(
           cellClassName,
+          "col-span-2",
+          "md:col-span-2",
+          "xl:col-span-1"
+        )}
+      >
+        <LabeledText text={"20%"} label={`Vault APY`} />
+      </div>
+      <div
+        className={tw(
+          cellClassName,
           "col-span-3",
           "xl:col-span-2",
           "lg:col-span-2"
@@ -244,8 +255,9 @@ export function InterestPoolCard(
         className={tw(
           cellClassName,
           "col-span-2",
-          "col-start-3",
-          "md:col-start-auto",
+          "sm:col-start-auto",
+          "md:col-start-3",
+          "lg:col-start-auto",
           "md:col-span-2",
           "xl:col-span-1"
         )}
@@ -256,7 +268,8 @@ export function InterestPoolCard(
         className={tw(
           cellClassName,
           "col-span-2",
-          "md:col-start-4",
+          "sm:col-start-auto",
+          "lg:col-start-4",
           "md:col-span-2",
           "xl:col-span-1"
         )}
@@ -283,14 +296,19 @@ export function InterestPoolCard(
           "col-span-2",
           "md:col-span-1",
           "flex",
-          "flex-col"
+          "flex-col",
+          "overflow-visible"
         )}
       >
-        <div className={tw("flex-1")}>
-          <Button minimal>Trade</Button>
+        <div className={tw("flex-1", "mb-2")}>
+          <Button minimal outlined>
+            Trade
+          </Button>
         </div>
         <div className={tw("flex-1")}>
-          <Button minimal>Stake</Button>
+          <Button minimal outlined>
+            Stake
+          </Button>
         </div>
       </div>
     </Card>
