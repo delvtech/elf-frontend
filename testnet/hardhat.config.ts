@@ -12,14 +12,18 @@ task("intervalMining", "Mine blocks on an interval")
     types.int
   )
   .setAction(async (taskArgs, hre) => {
-    const { interval } = taskArgs;
+    const { interval = 10000 } = taskArgs;
+    console.log("Disabling automine");
     await hre.ethers.provider.send("evm_setAutomine", [false]);
+    console.log("Setting mining interval to", interval);
     await hre.ethers.provider.send("evm_setIntervalMining", [interval]);
   });
 
 task("autoMine", "Mine blocks on every transaction automatically").setAction(
   async (taskArgs, hre) => {
+    console.log("Enabling automine");
     await hre.ethers.provider.send("evm_setAutomine", [true]);
+    console.log("Disabling interval");
     await hre.ethers.provider.send("evm_setIntervalMining", [0]);
   }
 );
