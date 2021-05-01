@@ -54,7 +54,7 @@ function useClearPendingTransactionOnMined(
         transactionHash
       );
       if (blockHash) {
-        clearPendingTransactionPref();
+        setTimeout(() => clearPendingTransactionPref(), CLEAR_PENDING_DELAY);
       }
     };
 

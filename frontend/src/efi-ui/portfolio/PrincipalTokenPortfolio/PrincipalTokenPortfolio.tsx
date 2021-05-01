@@ -32,10 +32,6 @@ export function PrincipalTokenPortfolio({
   tranches,
 }: PrincipalTokenPortfolioProps): ReactElement {
   const hasFYTs = tranches.length;
-  const pendingTransaction = usePendingTransaction();
-  const hasPendingTransactions = hasPendingPrincipalTokenTransactions(
-    pendingTransaction
-  );
 
   let nonIdealStateContent = null;
   if (!account) {
@@ -55,9 +51,15 @@ export function PrincipalTokenPortfolio({
           {nonIdealStateContent}
         </div>
       ) : (
-        <Fragment>
-          {hasPendingTransactions ? <LoadingCard /> : null}
-
+        <div
+          className={tw(
+            "flex",
+            "flex-col",
+            "w-full",
+            "justify-center",
+            "items-center"
+          )}
+        >
           {tranches.map((tranche) => [
             <div key={tranche.address}>
               <PrincipalTokenCard
@@ -70,38 +72,8 @@ export function PrincipalTokenPortfolio({
               />
             </div>,
           ])}
-        </Fragment>
+        </div>
       )}
     </div>
   );
-}
-
-function hasPendingPrincipalTokenTransactions(
-  pendingTransactionPref: PendingTransactionPref
-) {
-  const { contractAddress, methodName } = pendingTransactionPref;
-  // no pending transactions
-  if (!contractAddress || !methodName) {
-    return false;
-  }
-
-  // user proxy txs that affect principal tokens
-  if (
-    contractAddress === ContractAddresses.userProxyContractAddress &&
-    ["mint"].includes(methodName)
-  ) {
-    return true;
-  }
-
-  // pending swap txs create principal tokens
-  // TODO: figure out how to track if it's a pt swap specifically, right now
-  // this just looks for any balancer swaps
-  if (
-    contractAddress === ContractAddresses.balancerVaultAddress &&
-    ["batchSwap"].includes(methodName)
-  ) {
-    return true;
-  }
-
-  return false;
 }
