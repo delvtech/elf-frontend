@@ -17,7 +17,8 @@ import { setupInterestTokenPool } from "./setupInterestTokenPool";
 import { ERC20 } from "src/types/ERC20";
 
 const defaultOptions = {
-  swapFee: ".003",
+  swapFeeConvergentCurvePool: "0.1",
+  swapFeeWeightedPool: ".003",
   durationInSeconds: SIX_MONTHS_IN_SECONDS,
 };
 
@@ -30,7 +31,8 @@ export async function deployTrancheAndMarket(
   convergentPoolFactory: ConvergentPoolFactory,
   weightedPoolFactory: WeightedPoolFactory,
   options: {
-    swapFee?: string;
+    swapFeeConvergentCurvePool?: string;
+    swapFeeWeightedPool?: string;
     durationInSeconds?: number;
     baseAssetIn: string;
     yieldAssetIn: string;
@@ -40,7 +42,8 @@ export async function deployTrancheAndMarket(
   }
 ) {
   const {
-    swapFee,
+    swapFeeConvergentCurvePool,
+    swapFeeWeightedPool,
     durationInSeconds,
     baseAssetIn,
     yieldAssetIn,
@@ -72,7 +75,7 @@ export async function deployTrancheAndMarket(
     balancerVaultContract,
     baseAssetContract,
     (trancheContract as unknown) as ERC20,
-    { swapFee, durationInSeconds }
+    { swapFee: swapFeeConvergentCurvePool, durationInSeconds }
   );
 
   // seed market with initial yield asset
@@ -95,7 +98,11 @@ export async function deployTrancheAndMarket(
     balancerVaultContract,
     baseAssetContract,
     weightedPoolFactory,
-    { baseAssetIn: ytBaseAssetIn, yieldAssetIn: ytYieldAssetIn }
+    {
+      swapFee: swapFeeWeightedPool,
+      baseAssetIn: ytBaseAssetIn,
+      yieldAssetIn: ytYieldAssetIn,
+    }
   );
 
   return {

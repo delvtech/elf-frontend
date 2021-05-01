@@ -11,7 +11,7 @@ import { WETH } from "src/types/WETH";
 import { ONE_YEAR_IN_SECONDS, SIX_MONTHS_IN_SECONDS } from "src/time";
 
 const defaultOptions = {
-  swapFee: ".003",
+  swapFee: ".1",
   durationInSeconds: SIX_MONTHS_IN_SECONDS,
   tParam: ONE_YEAR_IN_SECONDS,
 };

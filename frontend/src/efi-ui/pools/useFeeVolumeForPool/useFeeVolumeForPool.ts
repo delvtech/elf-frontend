@@ -2,7 +2,7 @@ import { formatEther, formatUnits } from "ethers/lib/utils";
 
 import { SwapEventWithTimeStamp } from "efi-balancer/SwapEvent";
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
-import { useSwapFee } from "efi-ui/pools/useSwapFee/useSwapFee";
+import { usePoolSwapFee } from "efi-ui/pools/usePoolSwapFee/usePoolSwapFee";
 import { useSwaps } from "efi-ui/pools/useSwaps/useSwaps";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
@@ -34,7 +34,7 @@ export function useFeeVolumeForPool(
   const baseAssetContract = useBaseAssetForPool(pool);
   const { data: baseAssetDecimals } = useTokenDecimals(baseAssetContract);
 
-  const swapFeeBN = useSwapFee(pool);
+  const swapFeeBN = usePoolSwapFee(pool);
 
   if (!swapEvents?.length || !baseAssetContract || !baseAssetDecimals) {
     return undefined;

@@ -3,7 +3,7 @@ import React, { ReactElement } from "react";
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { Signer } from "ethers";
-import { formatUnits, parseUnits } from "ethers/lib/utils";
+import { formatEther, formatUnits, parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import { getBalancerApprovalMessage } from "efi-ui/balancer/balancerApprovalMessage";
@@ -16,6 +16,7 @@ import { useCryptoAddress } from "efi-ui/crypto/hooks/useCryptoAddress/useCrypto
 import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
+import { usePoolSwapFee } from "efi-ui/pools/usePoolSwapFee/usePoolSwapFee";
 import { SwapDetailsForm } from "efi-ui/swaps/SwapDetailsPreview/SwapDetailsForm";
 import { SwapTokenDetails } from "efi-ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensDetails";
 import { TokenIcon } from "efi-ui/token/TokenIcon";
@@ -131,8 +132,13 @@ export function SwapTokensTransactionConfirmationDrawer({
     spotPriceInOut
   );
 
-  // TODO: add this calculation.
-  const feePercent = 0;
+  const feePercentBN = usePoolSwapFee(pool);
+  const feePercent = +formatEther(feePercentBN ?? 0);
+  let appliedFeePercent = feePercent;
+  if (isConvergentCurvePool(pool) && spotPrice) {
+    // CCPools apply the fee perent to the difference in price between the two assets
+    appliedFeePercent = feePercent * Math.abs(1 - spotPrice);
+  }
 
   return (
     <TransactionDrawer
@@ -161,7 +167,7 @@ export function SwapTokensTransactionConfirmationDrawer({
           <SwapTokenDetails
             baseAssetSymbol={baseAssetSymbol}
             priceSlippage={priceSlippage}
-            feePercent={feePercent}
+            feePercent={appliedFeePercent}
             spotPriceBaseAssetForOneToken={spotPrice}
             termAssetType={termAssetType}
           />
