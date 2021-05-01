@@ -1,6 +1,7 @@
-import React, { ReactElement, useCallback } from "react";
+import React, { CSSProperties, ReactElement, useCallback } from "react";
 
-import { Button, InputGroup, Intent, Tag } from "@blueprintjs/core";
+import { Button, Classes, InputGroup, Intent } from "@blueprintjs/core";
+import classNames from "classnames";
 import { BigNumber } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
 import { t } from "ttag";
@@ -14,6 +15,13 @@ import { calculateLPOutGivenInFixed } from "efi/pools/calculateLPOutGivenIn";
 
 import styles from "./StakingInput.module.css";
 
+const stakingInputStyle: CSSProperties = {
+  height: "96px",
+  width: "100%",
+  fontSize: 26,
+  paddingRight: 64,
+  textAlign: "right",
+};
 interface StakingInputProps {
   cryptoSymbol: CryptoSymbol;
   cryptoDecimals: number | undefined;
@@ -26,7 +34,7 @@ interface StakingInputProps {
     lpOut: string | undefined
   ) => void;
   onChange: (inputValue: string) => void;
-  label: string | undefined;
+  labelTopLeft: string | undefined;
   value: string | undefined;
   validValue: boolean;
   tokenPoolReserves: string | undefined;
@@ -44,7 +52,7 @@ export function StakingInput(props: StakingInputProps): ReactElement {
     disabled,
     onChange: onChangeFromProps,
     onPreviewUpdate,
-    label,
+    labelTopLeft,
     value = "",
     validValue,
     tokenPoolReserves,
@@ -70,52 +78,95 @@ export function StakingInput(props: StakingInputProps): ReactElement {
     onChangeFromProps,
     onPreviewUpdate
   );
-
   return (
-    <div className={tw("flex", "flex-col", "space-y-5")}>
-      <div className={tw("flex", "justify-between", "items-center")}>
-        <span className={tw("text-xs", "text-right")}>{label}</span>
-        <Button
-          disabled={false}
-          onClick={setMaxValue}
-          minimal
-          outlined
-          small
-          intent={Intent.SUCCESS}
-        >{t`MAX`}</Button>
-      </div>
+    <div className={tw("flex", "flex-col", "space-y-2")}>
       <InputGroup
         disabled={disabled}
         onChange={onChange}
+        placeholder={"0.00"}
         value={value}
-        className={styles.tokenInput}
+        style={stakingInputStyle}
+        className={classNames(styles.stakingInput, tw("text-right"))}
         large
         intent={validValue ? undefined : Intent.DANGER}
         rightElement={
-          <Tag large minimal>
-            <span>{cryptoSymbol}</span>
-          </Tag>
+          <div
+            className={tw(
+              "h-full",
+              "flex",
+              "flex-col",
+              "items-center",
+              "justify-center",
+              "relative"
+            )}
+          >
+            <Button disabled={disabled} onClick={setMaxValue} large>
+              {t`MAX`}
+            </Button>
+          </div>
         }
         leftElement={
-          <div className={tw("flex", "items-center", "px-2")}>
-            {CryptoAssetIcon ? (
-              <CryptoAssetIcon height={18} width={18} />
-            ) : null}
+          <div
+            className={tw(
+              "h-full",
+              "flex",
+              "flex-col",
+              "items-center",
+              "justify-center",
+              "relative"
+            )}
+          >
+            <div
+              className={tw(
+                "absolute",
+                "top-0",
+                "left-0",
+                "flex",
+                "w-auto",
+                "p-1",
+                "space-x-2"
+              )}
+            >
+              <span
+                className={classNames(
+                  Classes.TEXT_MUTED,
+                  tw("text-xs", "whitespace-no-wrap")
+                )}
+              >
+                {labelTopLeft}
+              </span>
+            </div>
+            <div className={tw("flex", "text-2xl", "pr-4")}>
+              {CryptoAssetIcon ? (
+                <CryptoAssetIcon height={24} width={24} />
+              ) : null}
+              <span>{cryptoSymbol}</span>
+            </div>
+            <div
+              className={tw(
+                "absolute",
+                "bottom-0",
+                "left-0",
+                "flex",
+                "w-auto",
+                "p-1",
+                "space-x-2"
+              )}
+            >
+              <span
+                className={classNames(
+                  tw("text-xs", "whitespace-no-wrap", {
+                    "text-danger": !validValue,
+                  }),
+                  { [Classes.TEXT_MUTED]: validValue }
+                )}
+              >
+                {t`Balance:`} {`${cryptoDisplayBalance} ${cryptoSymbol}`}
+              </span>
+            </div>
           </div>
         }
       />
-      <div className={tw("flex", "justify-between")}>
-        <span
-          className={tw("text-xs", "text-right", {
-            "text-danger": !validValue,
-          })}
-        >{t`Balance:`}</span>
-        <span
-          className={tw("text-xs", "text-right", {
-            "text-danger": !validValue,
-          })}
-        >{`${cryptoDisplayBalance} ${cryptoSymbol}`}</span>
-      </div>
     </div>
   );
 }

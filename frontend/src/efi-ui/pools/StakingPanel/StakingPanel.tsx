@@ -25,9 +25,9 @@ import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { useTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
 import { useTrancheContracts } from "efi-ui/tranche/useTrancheContracts";
 import { useEthBalance } from "efi-ui/wallets/hooks/useEthBalance/useEthBalance";
+import ContractAddresses from "efi/addresses";
 import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 import { formatBalance } from "efi/base/formatBalance";
-import ContractAddresses from "efi/addresses";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
@@ -207,7 +207,15 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
   }
 
   return (
-    <div className={tw("flex", "flex-col", "justify-between", "h-full")}>
+    <div
+      className={tw(
+        "flex",
+        "flex-col",
+        "justify-around",
+        "h-full",
+        "space-y-2"
+      )}
+    >
       <StakingInput
         cryptoSymbol={baseAssetSymbol as CryptoSymbol}
         cryptoDecimals={baseAssetDecimals}
@@ -217,7 +225,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
         disabled={formDisabled}
         onChange={onChangeIn}
         onPreviewUpdate={onChangeOut}
-        label={t`Base asset`}
+        labelTopLeft={t`Base asset`}
         value={amountIn}
         validValue={isValidBaseAssetValue}
         tokenPoolReserves={baseAssetReserves}
@@ -225,34 +233,33 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
         totalSupply={totalSupply}
       />
 
-      <div className={tw("flex", "flex-col", "space-y-10")}>
-        <StakingInput
-          cryptoSymbol={trancheAssetSymbol as CryptoSymbol}
-          cryptoDecimals={baseAssetDecimals}
-          cryptoAssetIcon={BaseAssetIcon}
-          cryptoBalanceOf={yieldAssetBalanceOf}
-          cryptoDisplayBalance={yieldAssetDisplayBalance || ""}
-          disabled={formDisabled}
-          onChange={onChangeOut}
-          onPreviewUpdate={onChangeIn}
-          label={t`Term asset`}
-          value={amountOut}
-          validValue={isValidTrancheAssetValue}
-          tokenPoolReserves={yieldAssetReserves}
-          otherTokenPoolReserves={baseAssetReserves}
-          totalSupply={totalSupply}
-        />
-        <Button
-          disabled={submitButtonDisabled}
-          onClick={submitTransaction}
-          minimal
-          outlined
-          large
-          intent={submitButtonError ? Intent.DANGER : Intent.PRIMARY}
-        >
-          {submitButtonLabel}
-        </Button>
-      </div>
+      <div style={{ height: 40, width: "100%" }} />
+      <StakingInput
+        cryptoSymbol={trancheAssetSymbol as CryptoSymbol}
+        cryptoDecimals={baseAssetDecimals}
+        cryptoAssetIcon={BaseAssetIcon}
+        cryptoBalanceOf={yieldAssetBalanceOf}
+        cryptoDisplayBalance={yieldAssetDisplayBalance || ""}
+        disabled={formDisabled}
+        onChange={onChangeOut}
+        onPreviewUpdate={onChangeIn}
+        labelTopLeft={t`Term asset`}
+        value={amountOut}
+        validValue={isValidTrancheAssetValue}
+        tokenPoolReserves={yieldAssetReserves}
+        otherTokenPoolReserves={baseAssetReserves}
+        totalSupply={totalSupply}
+      />
+      <Button
+        disabled={submitButtonDisabled}
+        onClick={submitTransaction}
+        minimal
+        outlined
+        large
+        intent={submitButtonError ? Intent.DANGER : Intent.PRIMARY}
+      >
+        {submitButtonLabel}
+      </Button>
       <StakingConfirmationDrawer
         library={library}
         account={account}
