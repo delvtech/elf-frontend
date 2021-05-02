@@ -1,6 +1,13 @@
 import React, { ReactElement, useState } from "react";
 
-import { Classes, Icon, Tab, Tabs } from "@blueprintjs/core";
+import {
+  Classes,
+  Icon,
+  Spinner,
+  SpinnerSize,
+  Tab,
+  Tabs,
+} from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import classNames from "classnames";
 import { t } from "ttag";
@@ -13,6 +20,7 @@ import { DarkModeSwitch } from "efi-ui/prefs/DarkModeSwitch/DarkModeSwitch";
 
 import { ConnectWalletButton } from "./ConnectWalletButton";
 import styles from "./SidebarNavigation.module.css";
+import { usePendingTransaction } from "efi-ui/transactions/usePendingTransaction/usePendingTransaction";
 
 interface SidebarNavigationProps {
   chainId: number | undefined;
@@ -41,6 +49,8 @@ export function SidebarNavigation({
   activeTab,
 }: SidebarNavigationProps): ReactElement {
   const [isWalletDialogOpen, setWalletDialogOpen] = useState(false);
+  const { transactionHash } = usePendingTransaction();
+  const hasPendingTransaction = !!transactionHash;
 
   return (
     <div
@@ -96,7 +106,13 @@ export function SidebarNavigation({
             title={
               <div className={tabTitleClassName}>
                 <Icon
-                  icon={IconNames.TIMELINE_AREA_CHART}
+                  icon={
+                    hasPendingTransaction ? (
+                      <Spinner size={SpinnerSize.SMALL} />
+                    ) : (
+                      IconNames.TIMELINE_AREA_CHART
+                    )
+                  }
                   iconSize={Icon.SIZE_LARGE}
                 />
                 <span>{t`Portfolio`}</span>

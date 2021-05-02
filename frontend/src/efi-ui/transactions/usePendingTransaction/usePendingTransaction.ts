@@ -5,7 +5,7 @@ import { Provider } from "@ethersproject/providers";
 import {
   PendingTransactionPref,
   usePendingTransactionPref,
-} from "efi-ui/prefs/usePendingTransactionPref/usePendingTransactionPref";
+} from "efi-ui/transactions/usePendingTransactionPref/usePendingTransactionPref";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 
 const __DEVELOPMENT__ = process.env.NODE_ENV === "development";
