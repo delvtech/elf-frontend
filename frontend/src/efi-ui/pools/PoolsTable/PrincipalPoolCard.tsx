@@ -21,7 +21,7 @@ import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSy
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 import { useFeeVolumeFiatForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
-import { useTotalLiquidityForPool } from "efi-ui/pools/useTotalLiquidityForPool/useTotalLiquidityForPool";
+import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidityForPool.ts/useTotalFiatLiquidityForPool";
 import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForPool";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
@@ -51,7 +51,7 @@ export function PrincipalPoolCard(
 ): ReactElement | null {
   const { pool } = props;
   const tranche = useTrancheForPool(pool);
-  const liquidity = useTotalLiquidityForPool(pool);
+  const liquidity = useTotalFiatLiquidityForPool(pool);
   const trancheCreatedAt = useTrancheCreatedAt(tranche);
   const fees = useFeeVolumeFiatForPool(pool);
   const baseAssetContract = useBaseAssetForPool(pool);

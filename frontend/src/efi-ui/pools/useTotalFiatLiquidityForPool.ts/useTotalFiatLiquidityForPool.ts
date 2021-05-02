@@ -23,7 +23,7 @@ import { PoolContract } from "efi/pools/PoolContract";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 import { useSmartContractFromFactoryMulti } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
 
-export function useTotalLiquidityForPool(
+export function useTotalFiatLiquidityForPool(
   pool: PoolContract | undefined
 ): Money | undefined {
   const { currency } = useCurrencyPref();

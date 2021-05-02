@@ -34,6 +34,7 @@ export function APYSummary(props: APYSummaryProps): ReactElement {
   const termAssetType: TermAssetType = isWeightedPool(pool)
     ? "yield"
     : "principal";
+
   const tokenYieldLabel =
     termAssetType === "principal"
       ? t`Principal Fixed Yield`
