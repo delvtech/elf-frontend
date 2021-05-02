@@ -30,8 +30,6 @@ import { formatMoney } from "efi/money/formatMoney";
 import { PoolContract } from "efi/pools/PoolContract";
 
 import styles from "./PrincipalPoolCard.module.css";
-import { useConsole } from "efi-ui/debug/useConsole";
-import { TokenMetadata } from "efi/tokenlists";
 
 interface PrincipalPoolCardProps {
   pool: PoolContract | undefined;
