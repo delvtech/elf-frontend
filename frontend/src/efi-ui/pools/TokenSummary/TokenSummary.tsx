@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React, { CSSProperties, ReactElement } from "react";
 
 import { Card, Classes } from "@blueprintjs/core";
 import classNames from "classnames";
@@ -25,6 +25,10 @@ import { formatMoney } from "efi/money/formatMoney";
 import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { PoolContract } from "efi/pools/PoolContract";
 
+const summaryCardStyle: CSSProperties = {
+  height: 220,
+};
+
 interface TokenSummaryProps {
   pool: PoolContract | undefined;
 }
@@ -46,104 +50,26 @@ export function TokenSummary({ pool }: TokenSummaryProps): ReactElement {
   } = useTokensSummary(pool);
 
   return (
-    <div className={tw("flex-1")}>
-      <div className="mb-2">{t`Tokens`}</div>
-      <div className={tw("flex", "flex-col", "space-x-4")}>
-        <Card className={tw("flex", "space-x-8")}>
-          <div className={tw("space-y-6", "flex-1", "overflow-hidden")}>
-            <div
-              className={tw(
-                "flex",
-                "flex-col",
-                "justify-center",
-                "space-y-1",
-                "overflow-hidden"
-              )}
-            >
-              <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
-                {t`Token`}
-              </span>
-              <span className={tw("text-lg", "truncate")}>
-                {baseAssetSymbol}
-              </span>
-            </div>
-            <div
-              className={tw("flex", "flex-col", "justify-center", "space-y-1")}
-            >
-              <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
-                {t`Price`}
-              </span>
-              <div className={tw("flex", "justify-between")}>
-                <span className={tw("text-lg")}>
-                  {formatMoney(baseAssetPrice)}
-                </span>
-                <TrendIndicator value={baseAssetPriceTrend} />
-              </div>
-            </div>
-            <div
-              className={tw("flex", "flex-col", "justify-center", "space-y-1")}
-            >
-              <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
-                {t`Quantity`}
-              </span>
-              <div className={tw("flex", "justify-between")}>
-                <span className={tw("text-lg")}>
-                  {Number(
-                    formatUnits(baseAssetBalance || 0, baseAssetDecimals)
-                  ).toFixed(2)}
-                </span>
-                <TrendIndicator value={baseAssetBalanceTrend} />
-              </div>
-            </div>
-          </div>
-          <div className={tw("space-y-6", "flex-1", "overflow-hidden")}>
-            <div
-              className={tw(
-                "flex",
-                "flex-col",
-                "justify-center",
-                "space-y-1",
-                "overflow-hidden"
-              )}
-            >
-              <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
-                {t`Token`}
-              </span>
-              <span className={tw("text-lg", "overflow-hidden", "truncate")}>
-                {termAssetSymbol}
-              </span>
-            </div>
-            <div
-              className={tw("flex", "flex-col", "justify-center", "space-y-1")}
-            >
-              <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
-                {t`Price`}
-              </span>
-              <div className={tw("flex", "justify-between")}>
-                <span className={tw("text-lg")}>
-                  {formatMoney(termAssetPrice)}
-                </span>
-                <TrendIndicator value={termAssetPriceTrend} />
-              </div>
-            </div>
-            <div
-              className={tw("flex", "flex-col", "justify-center", "space-y-1")}
-            >
-              <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
-                {t`Quantity`}
-              </span>
-              <div className={tw("flex", "justify-between")}>
-                <span className={tw("text-lg")}>
-                  {Number(
-                    formatUnits(termAssetBalance || 0, termAssetDecimals)
-                  ).toFixed(2)}
-                </span>
-                <TrendIndicator value={termAssetBalanceTrend} />
-              </div>
-            </div>
-          </div>
-        </Card>
-      </div>
+    <div>
+      <div className="mb-2">{t`Token Summary`}</div>
+      <Card style={summaryCardStyle} className={tw("flex", "space-x-8")}>
+        <TokenInfo
+          assetSymbol={baseAssetSymbol}
+          assetPrice={baseAssetPrice}
+          assetPriceTrend={baseAssetPriceTrend}
+          assetBalance={baseAssetBalance}
+          assetDecimals={baseAssetDecimals}
+          assetBalanceTrend={baseAssetBalanceTrend}
+        />
+        <TokenInfo
+          assetSymbol={termAssetSymbol}
+          assetPrice={termAssetPrice}
+          assetPriceTrend={termAssetPriceTrend}
+          assetBalance={termAssetBalance}
+          assetDecimals={termAssetDecimals}
+          assetBalanceTrend={termAssetBalanceTrend}
+        />
+      </Card>
     </div>
   );
 }
@@ -163,6 +89,62 @@ interface TokensSummary {
   termAssetDecimals: number | undefined;
   termAssetPrice: Money | undefined;
   termAssetPriceTrend: number | undefined;
+}
+
+interface TokenInfoProps {
+  assetSymbol: string | undefined;
+  assetPrice: Money | undefined;
+  assetPriceTrend: number | undefined;
+  assetBalance: BigNumber | undefined;
+  assetDecimals: number | undefined;
+  assetBalanceTrend: number | undefined;
+}
+function TokenInfo({
+  assetSymbol,
+  assetPrice,
+  assetPriceTrend,
+  assetBalance,
+  assetDecimals,
+  assetBalanceTrend,
+}: TokenInfoProps): ReactElement {
+  return (
+    <div className={tw("space-y-6", "flex-1", "overflow-hidden")}>
+      <div
+        className={tw(
+          "flex",
+          "flex-col",
+          "justify-center",
+          "space-y-1",
+          "overflow-hidden"
+        )}
+      >
+        <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
+          {t`Token`}
+        </span>
+        <span className={tw("text-lg", "truncate")}>{assetSymbol}</span>
+      </div>
+      <div className={tw("flex", "flex-col", "justify-center", "space-y-1")}>
+        <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
+          {t`Price`}
+        </span>
+        <div className={tw("flex", "justify-between")}>
+          <span className={tw("text-lg")}>{formatMoney(assetPrice)}</span>
+          <TrendIndicator value={assetPriceTrend} />
+        </div>
+      </div>
+      <div className={tw("flex", "flex-col", "justify-center", "space-y-1")}>
+        <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
+          {t`Quantity`}
+        </span>
+        <div className={tw("flex", "justify-between")}>
+          <span className={tw("text-lg")}>
+            {Number(formatUnits(assetBalance || 0, assetDecimals)).toFixed(2)}
+          </span>
+          <TrendIndicator value={assetBalanceTrend} />
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function useTokensSummary(pool: PoolContract | undefined): TokensSummary {

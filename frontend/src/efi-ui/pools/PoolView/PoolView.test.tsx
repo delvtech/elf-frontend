@@ -10,6 +10,6 @@ test("should render the pool view", async () => {
 
   expect(getByText("Pool Summary")).toBeVisible();
   expect(getByText("Vault and Term Summary")).toBeVisible();
-  expect(getByText("Tokens")).toBeVisible();
+  expect(getByText("Token Summary")).toBeVisible();
   expect(getByText("Pool Charts")).toBeVisible();
 });

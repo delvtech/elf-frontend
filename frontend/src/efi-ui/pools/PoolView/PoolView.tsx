@@ -36,31 +36,28 @@ export function PoolView({ poolAddress }: PoolViewProps): ReactElement {
         data-testid="pool-view"
         className={tw(
           "flex",
+          "flex-col",
           "p-12",
           "h-full",
-          "space-x-12",
+          "w-full",
+          "space-y-8",
           "overflow-scroll"
         )}
       >
-        {/* Main content */}
-        <div
-          className={tw("flex", "flex-col", "flex-1", "space-y-8", "w-full")}
-        >
-          {/* page title */}
-          <div className={tw("flex", "justify-between")}>
-            <PoolViewHeader pool={pool} />
-          </div>
-          <div className={tw("flex", "flex-col", "justify-between")}>
-            <PoolDetails
-              library={library}
-              signer={signer}
-              account={account}
-              chainId={chainId}
-              connector={connector}
-              walletActive={active}
-              pool={pool}
-            />
-          </div>
+        {/* page title */}
+        <div className={tw("flex", "justify-between")}>
+          <PoolViewHeader pool={pool} />
+        </div>
+        <div className={tw("flex", "flex-col", "justify-between")}>
+          <PoolDetails
+            library={library}
+            signer={signer}
+            account={account}
+            chainId={chainId}
+            connector={connector}
+            walletActive={active}
+            pool={pool}
+          />
         </div>
       </div>
     </Fragment>
