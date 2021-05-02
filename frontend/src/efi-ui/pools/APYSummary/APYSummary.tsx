@@ -7,6 +7,8 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
+import { useAccumulatedFiatInterestForTranche } from "efi-ui/pools/useAccumulatedFiatInterestForTranche";
+import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 import { useFeeVolumeFiatForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidityForPool.ts/useTotalFiatLiquidityForPool";
@@ -15,11 +17,9 @@ import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { formatPercent } from "efi/base/formatPercent";
 import { ONE_DAY_IN_SECONDS, ONE_YEAR_IN_SECONDS } from "efi/base/time";
+import { formatMoney } from "efi/money/formatMoney";
 import { isWeightedPool, PoolContract } from "efi/pools/PoolContract";
 import { TermAssetType } from "efi/tranche/TermAssetType";
-import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
-import { formatMoney } from "efi/money/formatMoney";
-import { useAccumulatedFiatInterestForTranche } from "../useAccumulatedFiatInterestForTranche";
 
 interface APYSummaryProps {
   pool: PoolContract | undefined;
