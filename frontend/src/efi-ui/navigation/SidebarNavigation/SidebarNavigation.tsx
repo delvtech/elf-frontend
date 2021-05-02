@@ -1,5 +1,6 @@
 import React, { ReactElement, useState } from "react";
 
+<<<<<<< HEAD
 import {
   Classes,
   Icon,
@@ -8,6 +9,9 @@ import {
   Tab,
   Tabs,
 } from "@blueprintjs/core";
+=======
+import { Classes, Icon, IconSize, Tab, Tabs } from "@blueprintjs/core";
+>>>>>>> c5974db2 (slim down sidebar)
 import { IconNames } from "@blueprintjs/icons";
 import classNames from "classnames";
 import { t } from "ttag";
@@ -34,10 +38,10 @@ interface SidebarNavigationProps {
 
 const tabTitleClassName = tw(
   "flex",
-  "space-x-6",
+  "space-x-2",
   "items-center",
-  "px-6",
-  "py-8"
+  "px-2",
+  "py-4"
 );
 
 export function SidebarNavigation({
@@ -60,7 +64,7 @@ export function SidebarNavigation({
         { [styles.sideBarDark]: isDarkMode },
         tw(
           "hidden",
-          "w-48",
+          "w-32",
           "lg:flex",
           "flex-col",
           "h-full",
@@ -70,7 +74,7 @@ export function SidebarNavigation({
         )
       )}
     >
-      <div className={tw("flex", "justify-center", "pt-8", "pb-16", "px-6")}>
+      <div className={tw("flex", "justify-center", "pt-4", "pb-8", "px-6")}>
         <img src={isDarkMode ? logoDark : logo} alt={t`Element Finance`} />
       </div>
       <div
@@ -78,7 +82,6 @@ export function SidebarNavigation({
       >
         <Tabs
           id="primary-nav-desktop"
-          large
           vertical
           onChange={changeTab}
           selectedTabId={activeTab}
@@ -87,7 +90,7 @@ export function SidebarNavigation({
             id={Navigation.EARN}
             title={
               <div className={tabTitleClassName}>
-                <Icon icon={IconNames.DOLLAR} iconSize={Icon.SIZE_LARGE} />
+                <Icon icon={IconNames.DOLLAR} iconSize={IconSize.STANDARD} />
                 <span>{t`Earn`}</span>
               </div>
             }
@@ -96,7 +99,7 @@ export function SidebarNavigation({
             id={Navigation.MINT}
             title={
               <div className={tabTitleClassName}>
-                <Icon icon={IconNames.CUBE_ADD} iconSize={Icon.SIZE_LARGE} />
+                <Icon icon={IconNames.CUBE_ADD} iconSize={IconSize.STANDARD} />
                 <span>{t`Deposit`}</span>
               </div>
             }
@@ -113,7 +116,7 @@ export function SidebarNavigation({
                       IconNames.TIMELINE_AREA_CHART
                     )
                   }
-                  iconSize={Icon.SIZE_LARGE}
+                  iconSize={IconSize.STANDARD}
                 />
                 <span>{t`Portfolio`}</span>
               </div>
@@ -123,7 +126,7 @@ export function SidebarNavigation({
             id={Navigation.PRINCIPAL_POOLS}
             title={
               <div className={tabTitleClassName}>
-                <Icon icon={IconNames.SHOP} iconSize={Icon.SIZE_LARGE} />
+                <Icon icon={IconNames.SHOP} iconSize={IconSize.STANDARD} />
                 <span>{t`Principal`}</span>
               </div>
             }
@@ -132,7 +135,10 @@ export function SidebarNavigation({
             id={Navigation.YIELD_POOLS}
             title={
               <div className={tabTitleClassName}>
-                <Icon icon={IconNames.PERCENTAGE} iconSize={Icon.SIZE_LARGE} />
+                <Icon
+                  icon={IconNames.PERCENTAGE}
+                  iconSize={IconSize.STANDARD}
+                />
                 <span>{t`Yield`}</span>
               </div>
             }
@@ -141,23 +147,12 @@ export function SidebarNavigation({
             id={Navigation.RESOURCES}
             title={
               <div className={tabTitleClassName}>
-                <Icon icon={IconNames.MANUAL} iconSize={Icon.SIZE_LARGE} />
+                <Icon icon={IconNames.MANUAL} iconSize={IconSize.STANDARD} />
                 <span>{t`Resources`}</span>
               </div>
             }
           />
         </Tabs>
-        <div className={tw("flex", "w-full", "justify-center", "space-y-4")}>
-          <ConnectWalletButton
-            isDialogOpen={isWalletDialogOpen}
-            onDialogOpen={() => setWalletDialogOpen(true)}
-            onDialogClose={() => setWalletDialogOpen(false)}
-            account={account}
-            active={active}
-            chainId={chainId}
-          />
-        </div>
-
         <div
           className={tw(
             "flex",
@@ -167,6 +162,17 @@ export function SidebarNavigation({
             "space-y-4"
           )}
         >
+          <div className={tw("flex", "w-full", "justify-center", "space-y-4")}>
+            <ConnectWalletButton
+              isDialogOpen={isWalletDialogOpen}
+              onDialogOpen={() => setWalletDialogOpen(true)}
+              onDialogClose={() => setWalletDialogOpen(false)}
+              account={account}
+              active={active}
+              chainId={chainId}
+            />
+          </div>
+
           <DarkModeSwitch />
         </div>
       </div>
