@@ -51,7 +51,7 @@ export function InterestPoolCard(
   const tranche = useTrancheForPool(pool);
   const liquidity = useTotalFiatLiquidityForPool(pool);
   const trancheCreatedAt = useTrancheCreatedAt(tranche);
-  const fees = useFeeVolumeForPool(pool);
+  const fees = useFeeVolumeForPool(pool) ?? 0;
   const baseAssetContract = useBaseAssetForPool(pool);
   const baseAsset = useCryptoAssetForToken(baseAssetContract?.address);
   const baseAssetSymbol = useCryptoSymbol(baseAsset);
@@ -74,18 +74,22 @@ export function InterestPoolCard(
 
   const { isDarkMode } = useDarkMode();
 
-  const allDataLoaded =
-    tranche &&
-    liquidity &&
-    trancheCreatedAt &&
-    fees &&
-    baseAssetContract &&
-    baseAsset &&
-    baseAssetSymbol &&
-    BaseAssetIcon &&
-    termAssetContract &&
-    termAssetSymbol &&
-    unlockBN;
+  // TODO: this is a big hammer for loading state.  we should use a more granular technique when we can.
+  const dataToLoad = [
+    tranche,
+    liquidity,
+    trancheCreatedAt,
+    fees,
+    baseAssetContract,
+    baseAsset,
+    baseAssetSymbol,
+    BaseAssetIcon,
+    termAssetContract,
+    termAssetSymbol,
+    unlockBN,
+  ];
+  // TODO: this is a big hammer for loading state.  we should use a more granular technique when we can.
+  const allDataLoaded = dataToLoad.every((data) => data !== undefined);
 
   const [transitionsEnabled, setTransitionsEnabled] = useState(true);
 

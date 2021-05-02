@@ -30,6 +30,8 @@ import { formatMoney } from "efi/money/formatMoney";
 import { PoolContract } from "efi/pools/PoolContract";
 
 import styles from "./PrincipalPoolCard.module.css";
+import { useConsole } from "efi-ui/debug/useConsole";
+import { TokenMetadata } from "efi/tokenlists";
 
 interface PrincipalPoolCardProps {
   pool: PoolContract | undefined;
@@ -51,7 +53,7 @@ export function PrincipalPoolCard(
   const tranche = useTrancheForPool(pool);
   const liquidity = useTotalFiatLiquidityForPool(pool);
   const trancheCreatedAt = useTrancheCreatedAt(tranche);
-  const fees = useFeeVolumeFiatForPool(pool);
+  const fees = useFeeVolumeFiatForPool(pool) ?? 0;
   const baseAssetContract = useBaseAssetForPool(pool);
   const baseAsset = useCryptoAssetForToken(baseAssetContract?.address);
   const baseAssetSymbol = useCryptoSymbol(baseAsset);
@@ -74,18 +76,21 @@ export function PrincipalPoolCard(
 
   const { isDarkMode } = useDarkMode();
 
-  const allDataLoaded =
-    tranche &&
-    liquidity &&
-    trancheCreatedAt &&
-    fees &&
-    baseAssetContract &&
-    baseAsset &&
-    baseAssetSymbol &&
-    BaseAssetIcon &&
-    termAssetContract &&
-    termAssetSymbol &&
-    unlockBN;
+  const dataToLoad = [
+    tranche,
+    liquidity,
+    trancheCreatedAt,
+    fees,
+    baseAssetContract,
+    baseAsset,
+    baseAssetSymbol,
+    BaseAssetIcon,
+    termAssetContract,
+    termAssetSymbol,
+    unlockBN,
+  ];
+  // TODO: this is a big hammer for loading state.  we should use a more granular technique when we can.
+  const allDataLoaded = dataToLoad.every((data) => data !== undefined);
 
   const [transitionsEnabled, setTransitionsEnabled] = useState(true);
 
