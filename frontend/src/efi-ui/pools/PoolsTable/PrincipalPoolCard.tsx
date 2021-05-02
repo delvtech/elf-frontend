@@ -9,7 +9,6 @@ import {
 import { Button, Card, Classes, Colors, Elevation } from "@blueprintjs/core";
 import { Link, navigate } from "@reach/router";
 import classNames from "classnames";
-import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
@@ -107,10 +106,6 @@ export function PrincipalPoolCard(
 
   const startTime = trancheCreatedAt ? trancheCreatedAt * 1000 : undefined;
   const maturityTime = unlockTime ? unlockTime * 1000 : undefined;
-  const startDate = convertEpochSecondsToDate(startTime);
-  const maturityDate = convertEpochSecondsToDate(maturityTime);
-  const progressValue = calculateProgress(startDate, maturityDate);
-  const progressLabel = progressValue === 1 ? t`closed` : `running`;
 
   if (!allDataLoaded) {
     return (

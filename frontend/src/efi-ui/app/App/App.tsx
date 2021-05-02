@@ -6,7 +6,7 @@ import classNames from "classnames";
 
 import { tw } from "efi-tailwindcss-classnames";
 import { EarnView } from "efi-ui/earn/EarnView/EarnView";
-import { PoolsView } from "efi-ui/exchange/PoolsView/PoolsView";
+import { PoolsView } from "efi-ui/pools/PoolsView/PoolsView";
 import { FAQView } from "efi-ui/faq/FAQView";
 import { MintView } from "efi-ui/mint/MintView/MintView";
 import { MainNavigation } from "efi-ui/navigation/MainNavigation/MainNavigation";
