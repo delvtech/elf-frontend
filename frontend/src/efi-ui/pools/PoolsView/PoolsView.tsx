@@ -18,10 +18,10 @@ export function PoolsView(props: PoolsViewProps): ReactElement {
 
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
   const isYieldPage = props.path === "yield";
-  const title = isYieldPage ? "Yield Token Pools" : "Principal Token Pools";
+  const title = isYieldPage ? t`Yield Token Pools` : t`Principal Token Pools`;
   const subtitle = isYieldPage
-    ? "Trade your Yield Tokens, or provide liquidity by staking in Element pools."
-    : "Trade your Principal, or provide liquidity by staking in Element pools.";
+    ? t`Trade your Yield Tokens, or provide liquidity by staking in Element pools.`
+    : t`Trade your Principal, or provide liquidity by staking in Element pools.`;
 
   return (
     <Fragment>
