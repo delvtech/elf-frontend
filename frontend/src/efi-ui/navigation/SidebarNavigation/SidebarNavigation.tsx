@@ -1,17 +1,14 @@
 import React, { ReactElement, useState } from "react";
 
-<<<<<<< HEAD
 import {
   Classes,
   Icon,
+  IconSize,
   Spinner,
   SpinnerSize,
   Tab,
   Tabs,
 } from "@blueprintjs/core";
-=======
-import { Classes, Icon, IconSize, Tab, Tabs } from "@blueprintjs/core";
->>>>>>> c5974db2 (slim down sidebar)
 import { IconNames } from "@blueprintjs/icons";
 import classNames from "classnames";
 import { t } from "ttag";
@@ -21,10 +18,10 @@ import logo from "efi-static-assets/logos/svg/logo-vertical--light.svg";
 import tw from "efi-tailwindcss-classnames";
 import { Navigation } from "efi-ui/navigation/navigation";
 import { DarkModeSwitch } from "efi-ui/prefs/DarkModeSwitch/DarkModeSwitch";
+import { usePendingTransaction } from "efi-ui/transactions/usePendingTransaction/usePendingTransaction";
 
 import { ConnectWalletButton } from "./ConnectWalletButton";
 import styles from "./SidebarNavigation.module.css";
-import { usePendingTransaction } from "efi-ui/transactions/usePendingTransaction/usePendingTransaction";
 
 interface SidebarNavigationProps {
   chainId: number | undefined;
