@@ -9,6 +9,7 @@ npm ci
 npm run build
 npm start
 npm run deploy-contracts
+npm run build:tokenlist
 ```
 
 From the project top-level directory, run the following commands:
