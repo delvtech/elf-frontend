@@ -134,13 +134,18 @@ function useTokenYield(
     const timeLeftInSeconds =
       unlockTimestampBN.toNumber() - Math.round(Date.now() / 1000);
 
-    // spotPrice is principal price / base price, so we should get numbers like 0.9.  since we know
-    // the principal will be equal to base at term, 1 - spotPrice gives us the the fixed interest for the
-    // rest of the term.  so we take that number and scale up to a year for APY:
+    // spot price is how much principal tokens for 1 base token.  but we want how much base tokens for 1 principal
+    // tokens so we take the inverse.  i.e. 0.9 ETH for 1 principal token.
+    // base token.
+    const principalPrice = 1 / spotPrice;
+
+    // principalPrice is the price in terms of the base asset.  Since we know the principal will be
+    // equal to base at term, (1 - principalPrice) gives us the the fixed interest for the rest of
+    // the term.  so we take that number and scale up to a year for APY:
     //
     // fixed apy = fixed interest * one_year / term_length
 
-    fixedAPY = ((1 - spotPrice) * ONE_YEAR_IN_SECONDS) / timeLeftInSeconds;
+    fixedAPY = ((1 - principalPrice) * ONE_YEAR_IN_SECONDS) / timeLeftInSeconds;
   }
 
   // the yield token apy is the same as the underlying vault, so we pull from there.
