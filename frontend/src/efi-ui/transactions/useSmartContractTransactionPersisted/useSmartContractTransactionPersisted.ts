@@ -7,7 +7,7 @@ import {
   useSmartContractTransaction,
   UseSmartContractTransactionOptions,
 } from "efi-ui/contracts/useSmartContractTransaction/useSmartContractTransaction";
-import { usePendingTransactionPref } from "efi-ui/prefs/usePendingTransactionPref/usePendingTransactionPref";
+import { usePendingTransactionPref } from "efi-ui/transactions/usePendingTransactionPref/usePendingTransactionPref";
 import { ContractMethodArgs, ContractMethodName } from "efi/contracts/types";
 
 interface UseSmartContractTransactionPersistedOptions<

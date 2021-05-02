@@ -13,6 +13,7 @@ import { DarkModeSwitch } from "efi-ui/prefs/DarkModeSwitch/DarkModeSwitch";
 
 import { ConnectWalletButton } from "./ConnectWalletButton";
 import styles from "./SidebarNavigation.module.css";
+import { usePendingTransaction } from "efi-ui/transactions/usePendingTransaction/usePendingTransaction";
 
 interface SidebarNavigationProps {
   chainId: number | undefined;
@@ -41,6 +42,7 @@ export function SidebarNavigation({
   activeTab,
 }: SidebarNavigationProps): ReactElement {
   const [isWalletDialogOpen, setWalletDialogOpen] = useState(false);
+  const { transactionHash } = usePendingTransaction();
 
   return (
     <div

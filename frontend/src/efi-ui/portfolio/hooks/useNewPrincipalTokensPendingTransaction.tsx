@@ -3,7 +3,7 @@ import { usePendingTransaction } from "efi-ui/transactions/usePendingTransaction
 import { ContractMethodArgs } from "efi/contracts/types";
 import { Vault } from "elf-contracts/types/Vault";
 import { TokenMetadata } from "efi/tokenlists";
-import { PendingTransactionPref } from "efi-ui/prefs/usePendingTransactionPref/usePendingTransactionPref";
+import { PendingTransactionPref } from "efi-ui/transactions/usePendingTransactionPref/usePendingTransactionPref";
 
 export function useNewPrincipalTokensPendingTransaction():
   | PendingTransactionPref
