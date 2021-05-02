@@ -18,6 +18,8 @@ src/addresses/*
 # This definition file is an exception as it does not change on every machine
 # and CI will fail without it.
 !src/addresses/AddressesJsonFile.d.ts
+# This is a stub used for unit tests, it does not change on every machine
+!src/addresses/mock.addresses.json
 
 # misc
 .DS_Store
