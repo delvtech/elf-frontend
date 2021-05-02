@@ -24,14 +24,12 @@ import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPaire
 import { useTotalLiquidityForPool } from "efi-ui/pools/useTotalLiquidityForPool/useTotalLiquidityForPool";
 import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForPool";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import { calculateProgress } from "efi/base/calculateProgress";
 import { useTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
 import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
 import { formatMoney } from "efi/money/formatMoney";
 import { PoolContract } from "efi/pools/PoolContract";
 
 import styles from "./PrincipalPoolCard.module.css";
-import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 
 interface InterestPoolCardProps {
   pool: PoolContract | undefined;
@@ -107,10 +105,6 @@ export function InterestPoolCard(
 
   const startTime = trancheCreatedAt ? trancheCreatedAt * 1000 : undefined;
   const maturityTime = unlockTime ? unlockTime * 1000 : undefined;
-  const startDate = convertEpochSecondsToDate(startTime);
-  const maturityDate = convertEpochSecondsToDate(maturityTime);
-  const progressValue = calculateProgress(startDate, maturityDate);
-  const progressLabel = progressValue === 1 ? t`closed` : `running`;
 
   if (!allDataLoaded) {
     return (
@@ -204,7 +198,7 @@ export function InterestPoolCard(
               {`${baseAssetSymbol} - ${termAssetSymbol}`}
             </Link>
           }
-          label={`tokens`}
+          label={t`tokens`}
         />
       </div>
       <div
@@ -216,7 +210,7 @@ export function InterestPoolCard(
           "lg:col-span-1"
         )}
       >
-        <LabeledText text={"Yearn ySTETH"} label={`Vault`} />
+        <LabeledText text={"Yearn ySTETH"} label={t`Vault`} />
       </div>
       <div
         className={tw(
@@ -226,7 +220,7 @@ export function InterestPoolCard(
           "xl:col-span-1"
         )}
       >
-        <LabeledText text={"90 Day"} label={`Term`} />
+        <LabeledText text={"90 Day"} label={t`Term`} />
       </div>
       <div
         className={tw(
@@ -236,7 +230,7 @@ export function InterestPoolCard(
           "xl:col-span-1"
         )}
       >
-        <LabeledText text={"20%"} label={`Vault APY`} />
+        <LabeledText text={"20%"} label={t`Vault APY`} />
       </div>
       <div
         className={tw(
@@ -248,7 +242,7 @@ export function InterestPoolCard(
       >
         <LabeledText
           text={formatMoney(liquidity, { wholeAmounts: true })}
-          label={`Pool Liquidity`}
+          label={t`Pool Liquidity`}
         />
       </div>
       <div
@@ -262,7 +256,7 @@ export function InterestPoolCard(
           "xl:col-span-1"
         )}
       >
-        <LabeledText text={"$235.00"} label={`Price`} />
+        <LabeledText text={"$235.00"} label={t`Price`} />
       </div>
       <div
         className={tw(
@@ -274,7 +268,7 @@ export function InterestPoolCard(
           "xl:col-span-1"
         )}
       >
-        <LabeledText text={"10%"} label={`Stake APY`} />
+        <LabeledText text={"10%"} label={t`Stake APY`} />
       </div>
       <div
         className={tw(
@@ -302,12 +296,12 @@ export function InterestPoolCard(
       >
         <div className={tw("flex-1", "mb-2")}>
           <Button minimal outlined>
-            Trade
+            {t`Trade`}
           </Button>
         </div>
         <div className={tw("flex-1")}>
           <Button minimal outlined>
-            Stake
+            {t`Stake`}
           </Button>
         </div>
       </div>

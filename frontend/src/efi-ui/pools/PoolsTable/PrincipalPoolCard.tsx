@@ -9,6 +9,7 @@ import {
 import { Button, Card, Classes, Colors, Elevation } from "@blueprintjs/core";
 import { Link, navigate } from "@reach/router";
 import classNames from "classnames";
+import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
@@ -199,7 +200,7 @@ export function PrincipalPoolCard(
               {`${baseAssetSymbol} - ${termAssetSymbol}`}
             </Link>
           }
-          label={`tokens`}
+          label={t`tokens`}
         />
       </div>
       <div
@@ -212,7 +213,7 @@ export function PrincipalPoolCard(
           "flex-grow"
         )}
       >
-        <LabeledText large text={"90 Day"} label={`Term`} />
+        <LabeledText large text={"90 Day"} label={t`Term`} />
       </div>
       <div
         className={tw(
@@ -226,7 +227,7 @@ export function PrincipalPoolCard(
         <LabeledText
           large
           text={formatMoney(liquidity, { wholeAmounts: true })}
-          label={`Pool Liquidity`}
+          label={t`Pool Liquidity`}
         />
       </div>
       <div
@@ -238,7 +239,7 @@ export function PrincipalPoolCard(
           "lg:col-span-2"
         )}
       >
-        <LabeledText large text={"20%"} label={`Fixed APY`} />
+        <LabeledText large text={"20%"} label={t`Fixed APY`} />
       </div>
       <div
         className={tw(
@@ -252,7 +253,7 @@ export function PrincipalPoolCard(
           "lg:col-span-2"
         )}
       >
-        <LabeledText large text={"10%"} label={`Stake APY`} />
+        <LabeledText large text={"10%"} label={t`Stake APY`} />
       </div>
       <div
         className={tw(
@@ -283,12 +284,12 @@ export function PrincipalPoolCard(
       >
         <div className={tw("flex-1", "mb-2")}>
           <Button minimal outlined>
-            Trade
+            {t`Trade`}
           </Button>
         </div>
         <div className={tw("flex-1")}>
           <Button minimal outlined>
-            Stake
+            {t`Stake`}
           </Button>
         </div>
       </div>
