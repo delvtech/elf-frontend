@@ -11,7 +11,7 @@
       "description": "Token that represents the yield on a deposit into a yield position"
     }
   },
-  "timestamp": "2021-05-01T05:48:35.641Z",
+  "timestamp": "2021-05-02T18:56:47.089Z",
   "version": {
     "major": 0,
     "minor": 0,
@@ -20,7 +20,7 @@
   "tokens": [
     {
       "chainId": 31337,
-      "address": "0xE65232dED8F51De165Ede458A336b1b78B8CEC6A",
+      "address": "0xAC2AA1209b39d7B123f3Aeaf588E8CcC775035f4",
       "symbol": "eP-ETH",
       "decimals": 18,
       "name": "ETH Principal Token",
@@ -30,7 +30,7 @@
     },
     {
       "chainId": 31337,
-      "address": "0x759f4f4a1c0417d783f5b51dD97EcC220c83A308",
+      "address": "0x3Cdf8cC84e64b6c582CA029dAaF00F393A8cbC45",
       "symbol": "eP-ETH",
       "decimals": 18,
       "name": "ETH Principal Token",
@@ -40,7 +40,7 @@
     },
     {
       "chainId": 31337,
-      "address": "0x2e20a25A901658f9c65EcdB2b55b4793fDC4F8dE",
+      "address": "0x59a1ADA7813242ec013f4e501294520c8f9E596E",
       "symbol": "eP-ETH",
       "decimals": 18,
       "name": "ETH Principal Token",
@@ -50,7 +50,7 @@
     },
     {
       "chainId": 31337,
-      "address": "0xFfa5A642076918139BF52D2f76AbD828786F433a",
+      "address": "0x58A0E58AFD1c5BBE94707171E18cb64ea8Bc0958",
       "symbol": "eP-USDC",
       "decimals": 6,
       "name": "USDC Principal Token",
