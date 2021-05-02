@@ -19,21 +19,19 @@ import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
-import { useFeeVolumeFiatForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
+import { useFeeVolumeForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { useTotalLiquidityForPool } from "efi-ui/pools/useTotalLiquidityForPool/useTotalLiquidityForPool";
 import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForPool";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
 import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
-import { calculateProgress } from "efi/base/calculateProgress";
-import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatMoney } from "efi/money/formatMoney";
 import { PoolContract } from "efi/pools/PoolContract";
 
 import styles from "./PrincipalPoolCard.module.css";
 
-interface PrincipalPoolCardProps {
+interface InterestPoolCardProps {
   pool: PoolContract | undefined;
 }
 
@@ -46,14 +44,14 @@ const stopPropagationHandler = (e: React.MouseEvent<HTMLAnchorElement>) => {
   e.stopPropagation();
 };
 
-export function PrincipalPoolCard(
-  props: PrincipalPoolCardProps
+export function InterestPoolCard(
+  props: InterestPoolCardProps
 ): ReactElement | null {
   const { pool } = props;
   const tranche = useTrancheForPool(pool);
   const liquidity = useTotalLiquidityForPool(pool);
   const trancheCreatedAt = useTrancheCreatedAt(tranche);
-  const fees = useFeeVolumeFiatForPool(pool);
+  const fees = useFeeVolumeForPool(pool);
   const baseAssetContract = useBaseAssetForPool(pool);
   const baseAsset = useCryptoAssetForToken(baseAssetContract?.address);
   const baseAssetSymbol = useCryptoSymbol(baseAsset);
@@ -131,7 +129,7 @@ export function PrincipalPoolCard(
       style={poolCardStyle}
       className={classNames(
         styles.gridColsPoolCard,
-        tw("grid", "grid-cols-12", "gap-y-4", "w-full", {
+        tw("grid", "grid-cols-12", "gap-y-6", "w-full", {
           transition: transitionsEnabled,
           "duration-1000": transitionsEnabled,
           "ease-in-out": transitionsEnabled,
@@ -155,7 +153,7 @@ export function PrincipalPoolCard(
                 "items-center",
                 "justify-center",
                 "rounded",
-                "p-2",
+                "p-1",
                 "flex-shrink-0"
               )
             )}
@@ -167,7 +165,7 @@ export function PrincipalPoolCard(
               }}
               className={tw(
                 "items-center",
-                "p-2",
+                "p-1",
                 "rounded-full",
                 "z-10",
                 "bg-white",
@@ -175,7 +173,7 @@ export function PrincipalPoolCard(
                 "shadow-sm"
               )}
             >
-              <BaseAssetIcon height={24} width={24} />
+              <BaseAssetIcon height={20} width={20} />
             </div>
           </div>
         ) : null}
@@ -186,11 +184,11 @@ export function PrincipalPoolCard(
           "col-span-3",
           "md:pl-2",
           "lg:pl-0",
-          "lg:col-span-2"
+          "md:col-span-2",
+          "lg:col-span-1"
         )}
       >
         <LabeledText
-          large
           text={
             <Link
               className={tw("flex", "space-x-2")}
@@ -207,25 +205,42 @@ export function PrincipalPoolCard(
         className={tw(
           cellClassName,
           "col-span-2",
-          "md:col-span-2",
-          "xl:col-span-1",
           "lg:col-span-2",
-          "flex-grow"
+          "xl:col-span-1",
+          "lg:col-span-1"
         )}
       >
-        <LabeledText large text={"90 Day"} label={t`Term`} />
+        <LabeledText text={"Yearn ySTETH"} label={t`Vault`} />
+      </div>
+      <div
+        className={tw(
+          cellClassName,
+          "col-span-2",
+          "md:col-span-2",
+          "xl:col-span-1"
+        )}
+      >
+        <LabeledText text={"90 Day"} label={t`Term`} />
+      </div>
+      <div
+        className={tw(
+          cellClassName,
+          "col-span-2",
+          "md:col-span-2",
+          "xl:col-span-1"
+        )}
+      >
+        <LabeledText text={"20%"} label={t`Vault APY`} />
       </div>
       <div
         className={tw(
           cellClassName,
           "col-span-3",
-          "md:col-span-3",
-          "lg:col-span-3",
-          "xl:col-span-2"
+          "xl:col-span-2",
+          "lg:col-span-2"
         )}
       >
         <LabeledText
-          large
           text={formatMoney(liquidity, { wholeAmounts: true })}
           label={t`Pool Liquidity`}
         />
@@ -234,36 +249,33 @@ export function PrincipalPoolCard(
         className={tw(
           cellClassName,
           "col-span-2",
-          "md:col-span-1",
-          "xl:col-span-1",
-          "lg:col-span-2"
+          "sm:col-start-auto",
+          "md:col-start-3",
+          "lg:col-start-auto",
+          "md:col-span-2",
+          "xl:col-span-1"
         )}
       >
-        <LabeledText large text={"20%"} label={t`Fixed APY`} />
+        <LabeledText text={"$235.00"} label={t`Price`} />
       </div>
       <div
         className={tw(
           cellClassName,
           "col-span-2",
-          "col-start-3",
-          "md:col-start-12",
-          "lg:col-start-auto",
-          "md:col-span-1",
-          "xl:col-span-1",
-          "lg:col-span-2"
+          "sm:col-start-auto",
+          "lg:col-start-4",
+          "md:col-span-2",
+          "xl:col-span-1"
         )}
       >
-        <LabeledText large text={"10%"} label={t`Stake APY`} />
+        <LabeledText text={"10%"} label={t`Stake APY`} />
       </div>
       <div
         className={tw(
           cellClassName,
-          "col-span-4",
-          "md:col-start-5",
-          "sm:col-span-4",
-          "lg:col-start-5",
-          "xl:col-span-3",
-          "xl:col-start-auto"
+          "col-span-3",
+          "sm:col-span-3",
+          "xl:col-span-2"
         )}
       >
         <TimeLeft

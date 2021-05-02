@@ -74,6 +74,24 @@ export function SidebarNavigation({
           selectedTabId={activeTab}
         >
           <Tab
+            id={Navigation.EARN}
+            title={
+              <div className={tabTitleClassName}>
+                <Icon icon={IconNames.DOLLAR} iconSize={Icon.SIZE_LARGE} />
+                <span>{t`Earn`}</span>
+              </div>
+            }
+          />
+          <Tab
+            id={Navigation.MINT}
+            title={
+              <div className={tabTitleClassName}>
+                <Icon icon={IconNames.CUBE_ADD} iconSize={Icon.SIZE_LARGE} />
+                <span>{t`Deposit`}</span>
+              </div>
+            }
+          />
+          <Tab
             id={Navigation.PORTFOLIO}
             title={
               <div className={tabTitleClassName}>
@@ -86,29 +104,20 @@ export function SidebarNavigation({
             }
           />
           <Tab
-            id={Navigation.EARN}
-            title={
-              <div className={tabTitleClassName}>
-                <Icon icon={IconNames.PERCENTAGE} iconSize={Icon.SIZE_LARGE} />
-                <span>{t`Earn`}</span>
-              </div>
-            }
-          />
-          <Tab
-            id={Navigation.POOLS}
+            id={Navigation.PRINCIPAL_POOLS}
             title={
               <div className={tabTitleClassName}>
                 <Icon icon={IconNames.SHOP} iconSize={Icon.SIZE_LARGE} />
-                <span>{t`Pools`}</span>
+                <span>{t`Principal`}</span>
               </div>
             }
           />
           <Tab
-            id={Navigation.MINT}
+            id={Navigation.YIELD_POOLS}
             title={
               <div className={tabTitleClassName}>
-                <Icon icon={IconNames.CUBE_ADD} iconSize={Icon.SIZE_LARGE} />
-                <span>{t`Mint`}</span>
+                <Icon icon={IconNames.PERCENTAGE} iconSize={Icon.SIZE_LARGE} />
+                <span>{t`Yield`}</span>
               </div>
             }
           />

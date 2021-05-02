@@ -14,14 +14,20 @@ export function useActiveTab(): Navigation {
     case Navigation.PULSE: {
       return Navigation.PULSE;
     }
-    case Navigation.POOLS: {
-      return Navigation.POOLS;
+    case Navigation.PRINCIPAL_POOLS: {
+      return Navigation.PRINCIPAL_POOLS;
+    }
+    case Navigation.YIELD_POOLS: {
+      return Navigation.YIELD_POOLS;
     }
     case Navigation.RESOURCES: {
       return Navigation.RESOURCES;
     }
     case Navigation.PORTFOLIO: {
       return Navigation.PORTFOLIO;
+    }
+    case Navigation.POOL: {
+      return Navigation.POOL;
     }
     case Navigation.EARN: {
       return Navigation.EARN;

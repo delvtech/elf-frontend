@@ -17,6 +17,11 @@ export function PoolsView(props: PoolsViewProps): ReactElement {
   const { library, account } = useWeb3React<Web3Provider>();
 
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
+  const isYieldPage = props.path === "yield";
+  const title = isYieldPage ? t`Yield Token Pools` : t`Principal Token Pools`;
+  const subtitle = isYieldPage
+    ? t`Trade your Yield Tokens, or provide liquidity by staking in Element pools.`
+    : t`Trade your Principal, or provide liquidity by staking in Element pools.`;
 
   return (
     <Fragment>
@@ -38,12 +43,16 @@ export function PoolsView(props: PoolsViewProps): ReactElement {
         )}
       >
         <ViewTitle
-          title={t`Element Pools`}
-          subtitle={t`Swap your Principal or Interest tokens for their base asset, or provide liquidity by staking in Element pools.`}
+          title={title}
+          subtitle={subtitle}
           className={tw("text-center")}
         />
 
-        <PoolsTable signerOrProvider={signer} className={tw("w-full")} />
+        <PoolsTable
+          signerOrProvider={signer}
+          className={tw("w-full")}
+          isYieldPools={isYieldPage}
+        />
       </div>
     </Fragment>
   );
