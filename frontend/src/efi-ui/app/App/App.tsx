@@ -63,8 +63,8 @@ const App: FC<AppProps> = () => {
 
           <PortfolioView path={Navigation.PORTFOLIO} />
           <EarnView path={Navigation.EARN} />
-          <PoolsView path={Navigation.PRINCIPAL_TOKENS} />
-          <PoolsView path={Navigation.YIELD_TOKENS} />
+          <PoolsView path={Navigation.PRINCIPAL_POOLS} />
+          <PoolsView path={Navigation.YIELD_POOLS} />
           <PoolView path={`pools/:poolAddress`} />
           <MintView path={Navigation.MINT} />
           <FAQView path={Navigation.RESOURCES} />

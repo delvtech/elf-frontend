@@ -104,7 +104,7 @@ export function SidebarNavigation({
             }
           />
           <Tab
-            id={Navigation.PRINCIPAL_TOKENS}
+            id={Navigation.PRINCIPAL_POOLS}
             title={
               <div className={tabTitleClassName}>
                 <Icon icon={IconNames.SHOP} iconSize={Icon.SIZE_LARGE} />
@@ -113,7 +113,7 @@ export function SidebarNavigation({
             }
           />
           <Tab
-            id={Navigation.YIELD_TOKENS}
+            id={Navigation.YIELD_POOLS}
             title={
               <div className={tabTitleClassName}>
                 <Icon icon={IconNames.PERCENTAGE} iconSize={Icon.SIZE_LARGE} />

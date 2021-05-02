@@ -10,7 +10,7 @@ import { Navigation } from "efi-ui/navigation/navigation";
 export function NoLPsInWalletNonIdealState(): ReactElement {
   const { changeTab } = useNavigation();
   const goToExchange = useCallback(
-    () => changeTab(Navigation.PRINCIPAL_TOKENS),
+    () => changeTab(Navigation.PRINCIPAL_POOLS),
     [changeTab]
   );
   return (
