@@ -53,7 +53,7 @@ export function ConnectWalletButton({
           "space-y-4",
           "items-center",
           "px-6",
-          "py-8"
+          "py-2"
         )}
       >
         {!account ? (

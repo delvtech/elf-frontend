@@ -162,7 +162,7 @@ export function SidebarNavigation({
             "space-y-4"
           )}
         >
-          <div className={tw("flex", "w-full", "justify-center", "space-y-4")}>
+          <div className={tw("flex", "w-full", "justify-center", "space-y-2")}>
             <ConnectWalletButton
               isDialogOpen={isWalletDialogOpen}
               onDialogOpen={() => setWalletDialogOpen(true)}
