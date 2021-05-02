@@ -13,7 +13,7 @@ import {
 } from "efi-ui/ethereum/usePreviousBlockNumber/usePreviousBlockNumber";
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
-import { useTotalLiquidityForPool } from "efi-ui/pools/useTotalLiquidityForPool/useTotalLiquidityForPool";
+import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidityForPool.ts/useTotalFiatLiquidityForPool";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
@@ -41,7 +41,7 @@ export function useLiquidityHistoryForPool(
   pool: PoolContract | undefined,
   fromTime: number = ONE_DAY_IN_SECONDS
 ): TimeData[] | undefined {
-  const totalLiquidity = useTotalLiquidityForPool(pool);
+  const totalLiquidity = useTotalFiatLiquidityForPool(pool);
   const { data: poolId } = useSmartContractReadCall(pool, "getPoolId");
   const balancerVault = useBalancerVault();
   const { data: fromBlockNumber } = usePreviousBlockNumber(fromTime);

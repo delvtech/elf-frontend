@@ -13,7 +13,7 @@ import { PoolSummary } from "efi-ui/pools/PoolSummary/PoolSummary";
 import { TokenSummary } from "efi-ui/pools/TokenSummary/TokenSummary";
 import { useFeeVolumeFiatForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
-import { useTotalLiquidityForPool } from "efi-ui/pools/useTotalLiquidityForPool/useTotalLiquidityForPool";
+import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidityForPool.ts/useTotalFiatLiquidityForPool";
 import { useTotalLiquidityTrend } from "efi-ui/pools/useTotalLiquidityTrend/useTotalLiquidityTrend";
 import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForPool";
 import { useVolumeForPool } from "efi-ui/pools/useVolumeForPool/useVolumeForPool";
@@ -51,7 +51,7 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
     tokenAddresses
   );
 
-  const totalLiquidity = useTotalLiquidityForPool(pool);
+  const totalLiquidity = useTotalFiatLiquidityForPool(pool);
   const liquidityTrend = useTotalLiquidityTrend(pool);
 
   const tranche = useTrancheForPool(pool);
