@@ -12,7 +12,7 @@ import { useParseSortedTokensForPool } from "efi-ui/pools/useParsedTokensForPool
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
-import { ONE_YEAR_IN_SECONDS } from "efi/base/time";
+import { ONE_DAY_IN_SECONDS, ONE_YEAR_IN_SECONDS } from "efi/base/time";
 import {
   isConvergentCurvePool,
   isWeightedPool,
@@ -20,6 +20,8 @@ import {
 } from "efi/pools/PoolContract";
 import { TermAssetType } from "efi/tranche/TermAssetType";
 import { formatPercent } from "efi/base/formatPercent";
+import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidityForPool.ts/useTotalFiatLiquidityForPool";
+import { useFeeVolumeFiatForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
 
 interface APYSummaryProps {
   pool: PoolContract | undefined;
@@ -44,6 +46,8 @@ export function APYSummary(props: APYSummaryProps): ReactElement {
     pool
   );
 
+  const stakingAPY = useStakingAPY(pool);
+
   const tokenYield = useTokenYield(
     baseAssetContract,
     pool,
@@ -62,7 +66,9 @@ export function APYSummary(props: APYSummaryProps): ReactElement {
             <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
               {t`Pool Staking Yield`}
             </span>
-            <div className={classNames("h1", tw("space-x-4"))}>0%</div>
+            <div className={classNames("h1", tw("space-x-4"))}>
+              {formatPercent(stakingAPY)}
+            </div>
           </div>
         </div>
         {/* Token APY */}
@@ -93,6 +99,20 @@ export function APYSummary(props: APYSummaryProps): ReactElement {
     </div>
   );
 }
+function useStakingAPY(pool: PoolContract | undefined) {
+  const totalLiquidity = useTotalFiatLiquidityForPool(pool);
+  const feeVolume24hr = useFeeVolumeFiatForPool(pool);
+
+  const liquidity = totalLiquidity?.toDecimal();
+  const fees = feeVolume24hr.toDecimal();
+  let stakingAPY = 0;
+  if (liquidity && fees) {
+    const stakingYield24hr = fees / liquidity;
+    stakingAPY = (stakingYield24hr * ONE_YEAR_IN_SECONDS) / ONE_DAY_IN_SECONDS;
+  }
+  return stakingAPY;
+}
+
 function useTokenYield(
   baseAssetContract: ERC20 | undefined,
   pool: PoolContract | undefined,
@@ -116,11 +136,11 @@ function useTokenYield(
 
     // spotPrice is principal price / base price, so we should get numbers like 0.9.  since we know
     // the principal will be equal to base at term, 1 - spotPrice gives us the the fixed interest for the
-    // rest of the term.  so we take that number and scale it down to a year for APY:
+    // rest of the term.  so we take that number and scale up to a year for APY:
     //
     // fixed apy = fixed interest * one_year / term_length
 
-    fixedAPY = ((1 - spotPrice) * timeLeftInSeconds) / ONE_YEAR_IN_SECONDS;
+    fixedAPY = ((1 - spotPrice) * ONE_YEAR_IN_SECONDS) / timeLeftInSeconds;
   }
 
   // the yield token apy is the same as the underlying vault, so we pull from there.
