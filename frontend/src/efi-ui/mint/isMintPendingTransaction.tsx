@@ -6,9 +6,9 @@ import ContractAddresses from "efi/addresses";
  * operation
  */
 export function isMintPendingTransaction(
-  pendingTransactionPref: PendingTransactionPref
+  pendingTransactionPref: PendingTransactionPref | undefined
 ): boolean {
-  const { contractAddress, methodName } = pendingTransactionPref;
+  const { contractAddress, methodName } = pendingTransactionPref || {};
   // no pending transactions
   if (!contractAddress || !methodName) {
     return false;

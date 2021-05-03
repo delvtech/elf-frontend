@@ -34,7 +34,7 @@ export function useERC20Approve(
           predicate: (query) => {
             const match = matchSmartContractReadCallQuery(
               query,
-              baseAssetContract,
+              baseAssetContract?.address,
               "allowance",
               [owner as string, spender as string]
             );
