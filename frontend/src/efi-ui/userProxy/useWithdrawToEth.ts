@@ -56,6 +56,7 @@ export function useWithdrawToEth(
     }
 
     const signerAddress = await signer.getAddress();
+    // TODO: check approval for this token first
     const ptPermitData = await fetchPermitData(
       signer,
       principalTokenContract,
@@ -64,6 +65,7 @@ export function useWithdrawToEth(
       amountPrinicpalToken,
       "1"
     );
+    // TODO: check approval for this token first
     const ytPermitData = await fetchPermitData(
       signer,
       yieldTokenContract,
