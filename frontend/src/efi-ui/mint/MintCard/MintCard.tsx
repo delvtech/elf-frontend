@@ -209,7 +209,7 @@ export function MintCard({
         </Button>
       </Card>
 
-      {!activeBaseAsset ? null : (
+      {!activeBaseAsset || !isDrawerOpen ? null : (
         <MintTransactionConfirmationDrawer
           baseAsset={activeBaseAsset}
           baseAssetIcon={baseAssetIcon}
