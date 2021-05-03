@@ -2,6 +2,10 @@
   "name": "Goerli token list",
   "logoURI": "https://element.fi/logo.svg",
   "tags": {
+    "underlying": {
+      "name": "Underlying asset",
+      "description": "The base asset of a principal or yield token"
+    },
     "eP": {
       "name": "Principal token",
       "description": "Token that represents a deposit of principal into a yield position"
@@ -11,13 +15,33 @@
       "description": "Token that represents the yield on a deposit into a yield position"
     }
   },
-  "timestamp": "2021-04-30T03:53:46.954Z",
+  "timestamp": "2021-05-03T18:52:27.792Z",
   "version": {
     "major": 0,
     "minor": 0,
     "patch": 0
   },
   "tokens": [
+    {
+      "chainId": 5,
+      "address": "0xD3E043F06359bD94b8289f30138764CB6cA32704",
+      "symbol": "mWETH",
+      "decimals": 18,
+      "name": "WETH Mock Token",
+      "tags": [
+        "underlying"
+      ]
+    },
+    {
+      "chainId": 5,
+      "address": "0xbb6d1A992DD40158Cc11806a34e181cd3464F4d0",
+      "symbol": "mUSDC",
+      "decimals": 6,
+      "name": "USDC Mock Token",
+      "tags": [
+        "underlying"
+      ]
+    },
     {
       "chainId": 5,
       "address": "0x2F6E9365182987Bfb5699A0E0232919b041BD2c8",

@@ -15,6 +15,8 @@ import { TokenListTag } from "src/tokenlist/tags";
 export const provider = hre.ethers.provider;
 export async function getPrincipalTokens(trancheFactoryAddress: string, chainId: number) {
   const trancheFactory = TrancheFactory__factory.connect(trancheFactoryAddress, provider);
+  const asdf = trancheFactory.deployTransaction;
+  console.log('from', asdf, asdf?.from);
   const filter = trancheFactory.filters.TrancheCreated(null, null, null);
   const events = await trancheFactory.queryFilter(filter);
   const trancheAddresses = (events.map(
