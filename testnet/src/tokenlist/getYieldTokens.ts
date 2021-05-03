@@ -8,21 +8,49 @@ import { InterestToken__factory } from "src/types/factories/InterestToken__facto
 import { Tranche__factory } from "src/types/factories/Tranche__factory";
 import { WrappedPosition__factory } from "src/types/factories/WrappedPosition__factory";
 import { InterestToken } from "src/types/InterestToken";
+import { Tranche } from "src/types/Tranche";
 
 export const provider = hre.ethers.provider;
 
-export async function getYieldTokens(interestTokenFactoryAddress: string, chainId: number) {
+export async function getYieldTokensFromFactory(interestTokenFactoryAddress: string, chainId: number, safelist: string[]) {
   const interestTokenFactory = InterestTokenFactory__factory.connect(interestTokenFactoryAddress, provider);
   const filter = interestTokenFactory.filters.InterestTokenCreated(null, null);
   const events = await interestTokenFactory.queryFilter(filter);
-  const interestTokenAddresses = (events.map(
+  const allInterestTokenAddresses = (events.map(
     (event) =>
       // The first arg is the interestToken
       event.args?.[0]
   ) as string[]);
+  const safeInterestTokenAddresses = allInterestTokenAddresses.filter(address => safelist.includes(address));
 
 
-  const interestTokens = interestTokenAddresses.map((address) => InterestToken__factory.connect(address, provider));
+  const interestTokens = safeInterestTokenAddresses.map((address) => InterestToken__factory.connect(address, provider));
+  const underlyingSymbols = await getUnderlyingSymbols(interestTokens);
+  const yieldTokenNames = formatYieldTokenNames(underlyingSymbols);
+  const yieldTokenSymbols = formatYieldTokenSymbols(underlyingSymbols);
+
+  const decimals = await Promise.all(interestTokens.map(interestToken => interestToken.decimals()));
+
+  const yieldTokensList: TokenInfo[] = zip(safeInterestTokenAddresses, yieldTokenSymbols, yieldTokenNames, decimals)
+    .map(([address, symbol, name, decimal]) => {
+      return {
+        chainId,
+        address: address as string,
+        symbol: symbol as string,
+        decimals: decimal as number,
+        name: name as string,
+        tags: [TokenListTag.YIELD],
+        // TODO: What logo do we want to show for interest tokens?
+        // logoURI: ""
+      };
+    });
+
+  return yieldTokensList;
+}
+
+export async function getYieldTokensFromTranches(tranches: Tranche[], chainId: number) {
+  const interestTokenAddresses = await Promise.all(tranches.map(tranche => tranche.interestToken()));
+  const interestTokens = interestTokenAddresses.map(address => InterestToken__factory.connect(address, provider));
   const underlyingSymbols = await getUnderlyingSymbols(interestTokens);
   const yieldTokenNames = formatYieldTokenNames(underlyingSymbols);
   const yieldTokenSymbols = formatYieldTokenSymbols(underlyingSymbols);
@@ -44,8 +72,8 @@ export async function getYieldTokens(interestTokenFactoryAddress: string, chainI
     });
 
   return yieldTokensList;
-
 }
+
 function formatYieldTokenSymbols(underlyingSymbols: string[]) {
     const yieldTokenSymbols= underlyingSymbols.map(symbol => {
         const name = symbol === 'WETH' ? 'eY-ETH' : `eY-${symbol}`;

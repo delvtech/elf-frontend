@@ -5,17 +5,17 @@ import hre from "hardhat";
 import { AddressesJsonFile } from "../../../addresses/AddressesJsonFile";
 import { getPrincipalTokens } from "./getPrincipalTokens";
 import { tags } from './tags';
-import { getYieldTokens } from "./getYieldTokens";
+import { getYieldTokensFromFactory, getYieldTokensFromTranches } from "./getYieldTokens";
 import { getBaseAssets } from "src/tokenlist/getBaseAssets";
 
 export async function getTokenList(addressesJson: AddressesJsonFile, name: string, outputPath: string) {
   const {chainId, addresses: {
     trancheFactoryAddress, interestTokenFactoryAddress,wethAddress,usdcAddress 
-  } } = addressesJson;
+  }, safelist } = addressesJson;
 
   const baseAssetsList =  await getBaseAssets(wethAddress, usdcAddress, chainId);
-  const principalTokensList =  await getPrincipalTokens(trancheFactoryAddress, chainId);
-  const yieldTokensList =  await getYieldTokens(interestTokenFactoryAddress, chainId);
+  const { tranches, principalTokensList } =  await getPrincipalTokens(trancheFactoryAddress, chainId, safelist);
+  const yieldTokensList =  await getYieldTokensFromTranches(tranches, chainId);
 
   const tokens = [...baseAssetsList, ...principalTokensList, ...yieldTokensList];
   const tokenList: TokenList = {
