@@ -33,6 +33,7 @@ import { PoolContract } from "efi/pools/PoolContract";
 
 import styles from "./PrincipalPoolCard.module.css";
 import { formatPercent } from "efi/base/formatPercent";
+import { useStakingAPY } from "efi-ui/pools/useStakingAPY";
 
 interface PrincipalPoolCardProps {
   pool: PoolContract | undefined;
@@ -69,6 +70,7 @@ export function PrincipalPoolCard(
     "unlockTimestamp"
   );
   const fixedYield = useTokenYield(baseAssetContract, pool, "principal");
+  const stakingYield = useStakingAPY(pool);
 
   // TODO: Get this from props
   const goToPoolPage = useCallback(() => {
@@ -89,6 +91,7 @@ export function PrincipalPoolCard(
     termAssetContract,
     termAssetSymbol,
     fixedYield,
+    stakingYield,
     unlockBN,
   ];
 
@@ -269,7 +272,11 @@ export function PrincipalPoolCard(
           "lg:col-span-2"
         )}
       >
-        <LabeledText large text={"10%"} label={t`Stake APY`} />
+        <LabeledText
+          large
+          text={formatPercent(stakingYield)}
+          label={t`Stake APY`}
+        />
       </div>
       <div
         className={tw(

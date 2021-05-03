@@ -33,6 +33,7 @@ import { PoolContract } from "efi/pools/PoolContract";
 import styles from "./PrincipalPoolCard.module.css";
 import { useTokenYield } from "efi-ui/pools/useTokenYield";
 import { formatPercent } from "efi/base/formatPercent";
+import { useStakingAPY } from "efi-ui/pools/useStakingAPY";
 
 interface InterestPoolCardProps {
   pool: PoolContract | undefined;
@@ -71,6 +72,7 @@ export function InterestPoolCard(
   const unlockTime = unlockBN?.toNumber();
 
   const variableYield = useTokenYield(baseAssetContract, pool, "yield");
+  const stakingYield = useStakingAPY(pool);
   // TODO: Get this from props
   const goToPoolPage = useCallback(() => {
     navigate(`pools/${pool?.address}`);
@@ -91,6 +93,7 @@ export function InterestPoolCard(
     termAssetContract,
     termAssetSymbol,
     variableYield,
+    stakingYield,
     unlockBN,
   ];
   // TODO: this is a big hammer for loading state.  we should use a more granular technique when we can.
@@ -280,7 +283,7 @@ export function InterestPoolCard(
           "xl:col-span-1"
         )}
       >
-        <LabeledText text={"10%"} label={t`Stake APY`} />
+        <LabeledText text={formatPercent(stakingYield)} label={t`Stake APY`} />
       </div>
       <div
         className={tw(
