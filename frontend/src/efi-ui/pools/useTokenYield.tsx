@@ -45,7 +45,12 @@ export function useTokenYield(
     // the term.  so we take that number and scale up to a year for APY:
     //
     // fixed apy = fixed interest * one_year / term_length
-    fixedAPY = ((1 - principalPrice) * ONE_YEAR_IN_SECONDS) / timeLeftInSeconds;
+    if (timeLeftInSeconds > 0) {
+      fixedAPY =
+        ((1 - principalPrice) * ONE_YEAR_IN_SECONDS) / timeLeftInSeconds;
+    } else {
+      fixedAPY = 0;
+    }
   }
 
   // the yield token apy is the same as the underlying vault, so we pull from there.
