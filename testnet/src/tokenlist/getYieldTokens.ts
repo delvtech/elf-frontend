@@ -1,6 +1,7 @@
 import { TokenInfo } from "@uniswap/token-lists";
 import hre from "hardhat";
 import zip from "lodash.zip";
+import { TokenListTag } from "src/tokenlist/tags";
 import { ERC20__factory } from "src/types/factories/ERC20__factory";
 import { InterestTokenFactory__factory } from "src/types/factories/InterestTokenFactory__factory";
 import { InterestToken__factory } from "src/types/factories/InterestToken__factory";
@@ -36,7 +37,7 @@ export async function getYieldTokens(interestTokenFactoryAddress: string, chainI
         symbol: symbol as string,
         decimals: decimal as number,
         name: name as string,
-        tags: ["eY"],
+        tags: [TokenListTag.YIELD],
         // TODO: What logo do we want to show for interest tokens?
         // logoURI: ""
       };

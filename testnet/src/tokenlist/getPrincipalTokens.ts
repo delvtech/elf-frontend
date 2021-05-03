@@ -10,6 +10,7 @@ import {
 import { ERC20__factory } from "src/types/factories/ERC20__factory";
 import { WrappedPosition__factory } from "src/types/factories/WrappedPosition__factory";
 import { Tranche } from "src/types/Tranche";
+import { TokenListTag } from "src/tokenlist/tags";
 
 export const provider = hre.ethers.provider;
 export async function getPrincipalTokens(trancheFactoryAddress: string, chainId: number) {
@@ -39,7 +40,7 @@ export async function getPrincipalTokens(trancheFactoryAddress: string, chainId:
         symbol: symbol as string,
         decimals: decimal as number,
         name: name as string,
-        tags: ["eP"],
+        tags: [TokenListTag.PRINCIPAL],
         // TODO: What logo do we want to show for interest tokens?
         // logoURI: ""
       };
