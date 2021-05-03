@@ -1,12 +1,18 @@
 // install (please make sure versions match peerDependencies)
-// yarn add @nivo/core @nivo/line
-import { ResponsiveLine } from "@nivo/line";
 import { ReactElement } from "react";
+
+// yarn add @nivo/core @nivo/line
+import { ResponsiveLine, Serie } from "@nivo/line";
+
 // make sure parent container have a defined height when using
 // responsive component, otherwise height will be 0 and
 // no chart will be rendered.
 // website examples showcase many properties,
 // you'll often use just a few of them.
+
+export interface LineChartProps {
+  data: Serie[];
+}
 export function LineChart({
   data /* see data tab */,
 }: LineChartProps): ReactElement {
@@ -26,24 +32,28 @@ export function LineChart({
       curve="basis"
       axisTop={null}
       axisRight={null}
-      axisBottom={{
-        orient: "bottom",
-        tickSize: 5,
-        tickPadding: 5,
-        tickRotation: 0,
-        legend: "transportation",
-        legendOffset: 36,
-        legendPosition: "middle",
-      }}
-      axisLeft={{
-        orient: "left",
-        tickSize: 5,
-        tickPadding: 5,
-        tickRotation: 0,
-        legend: "count",
-        legendOffset: -40,
-        legendPosition: "middle",
-      }}
+      axisBottom={
+        {
+          orient: "bottom",
+          tickSize: 5,
+          tickPadding: 5,
+          tickRotation: 0,
+          legend: "transportation",
+          legendOffset: 36,
+          legendPosition: "middle",
+        } as any
+      }
+      axisLeft={
+        {
+          orient: "left",
+          tickSize: 5,
+          tickPadding: 5,
+          tickRotation: 0,
+          legend: "count",
+          legendOffset: -40,
+          legendPosition: "middle",
+        } as any
+      }
       enablePoints={false}
       pointSize={10}
       pointColor={{ theme: "background" }}
