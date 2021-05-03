@@ -8,11 +8,9 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { useAccumulatedFiatInterestForTranche } from "efi-ui/pools/useAccumulatedFiatInterestForTranche";
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
-import { useFeeVolumeFiatForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
+import { useStakingAPY } from "efi-ui/pools/useStakingAPY";
 import { useTokenYield } from "efi-ui/pools/useTokenYield";
-import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidityForPool.ts/useTotalFiatLiquidityForPool";
 import { formatPercent } from "efi/base/formatPercent";
-import { ONE_DAY_IN_SECONDS, ONE_YEAR_IN_SECONDS } from "efi/base/time";
 import { formatMoney } from "efi/money/formatMoney";
 import { isWeightedPool, PoolContract } from "efi/pools/PoolContract";
 import { TermAssetType } from "efi/tranche/TermAssetType";
@@ -91,17 +89,4 @@ export function APYSummary(props: APYSummaryProps): ReactElement {
       {/* </Card> */}
     </div>
   );
-}
-function useStakingAPY(pool: PoolContract | undefined) {
-  const totalLiquidity = useTotalFiatLiquidityForPool(pool);
-  const feeVolume24hr = useFeeVolumeFiatForPool(pool);
-
-  const liquidity = totalLiquidity?.toDecimal();
-  const fees = feeVolume24hr.toDecimal();
-  let stakingAPY = 0;
-  if (liquidity && fees) {
-    const stakingYield24hr = fees / liquidity;
-    stakingAPY = (stakingYield24hr * ONE_YEAR_IN_SECONDS) / ONE_DAY_IN_SECONDS;
-  }
-  return stakingAPY;
 }
