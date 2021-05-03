@@ -1,23 +1,11 @@
-import { Tags, TokenList } from "@uniswap/token-lists";
+import { TokenList } from "@uniswap/token-lists";
 import fs from "fs";
 import hre from "hardhat";
 
 import { AddressesJsonFile } from "../../../addresses/AddressesJsonFile";
-
-import { getYieldTokens } from "./getYieldTokens";
 import { getPrincipalTokens } from "./getPrincipalTokens";
-
-
-const tags: Tags = {
-  eP: {
-    name: "Principal token",
-    description: "Token that represents a deposit of principal into a yield position",
-  },
-  eY: {
-    name: "Yield token",
-    description: "Token that represents the yield on a deposit into a yield position"
-  }
-};
+import { tags } from './tags';
+import { getYieldTokens } from "./getYieldTokens";
 
 export async function getTokenList(addressesJson: AddressesJsonFile, name: string, outputPath: string) {
   const {chainId, addresses: {trancheFactoryAddress, interestTokenFactoryAddress} } = addressesJson;
