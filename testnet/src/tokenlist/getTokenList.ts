@@ -6,14 +6,18 @@ import { AddressesJsonFile } from "../../../addresses/AddressesJsonFile";
 import { getPrincipalTokens } from "./getPrincipalTokens";
 import { tags } from './tags';
 import { getYieldTokens } from "./getYieldTokens";
+import { getBaseAssets } from "src/tokenlist/getBaseAssets";
 
 export async function getTokenList(addressesJson: AddressesJsonFile, name: string, outputPath: string) {
-  const {chainId, addresses: {trancheFactoryAddress, interestTokenFactoryAddress} } = addressesJson;
+  const {chainId, addresses: {
+    trancheFactoryAddress, interestTokenFactoryAddress,wethAddress,usdcAddress 
+  } } = addressesJson;
 
+  const baseAssetsList =  await getBaseAssets(wethAddress, usdcAddress, chainId);
   const principalTokensList =  await getPrincipalTokens(trancheFactoryAddress, chainId);
   const yieldTokensList =  await getYieldTokens(interestTokenFactoryAddress, chainId);
 
-  const tokens = [...principalTokensList, ...yieldTokensList];
+  const tokens = [...baseAssetsList, ...principalTokensList, ...yieldTokensList];
   const tokenList: TokenList = {
     name,
     logoURI: "https://element.fi/logo.svg",
