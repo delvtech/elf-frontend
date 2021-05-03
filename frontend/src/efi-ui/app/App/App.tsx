@@ -18,7 +18,6 @@ import { useSyncWithInjectedEthereum } from "efi-ui/wallets/hooks/useSyncWithInj
 import { FocusStyleManager } from "@blueprintjs/core";
 
 import styles from "./App.module.css";
-import { useTransactionToasts } from "efi-ui/transactions/useTransactionToasts";
 
 FocusStyleManager.onlyShowFocusOnTabs();
 
@@ -48,8 +47,6 @@ const App: FC<AppProps> = () => {
   // set event handlers. TODO: clean this up so that it's more of a portable
   // singleton and can live in useWallet and be called multiple times safely
   useSyncWithInjectedEthereum();
-
-  useTransactionToasts();
 
   return (
     <Fragment>
