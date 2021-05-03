@@ -76,6 +76,7 @@ export function MintTransactionConfirmationDrawer({
 
   return (
     <TransactionDrawer
+      buttonLabel={t`Mint`}
       transactionPending={isLoading}
       transactionFailed={isError}
       transactionSuccess={isSuccess}
