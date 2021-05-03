@@ -31,7 +31,6 @@ import { formatMoney } from "efi/money/formatMoney";
 import { PoolContract } from "efi/pools/PoolContract";
 
 import styles from "./PrincipalPoolCard.module.css";
-import { start } from "node:repl";
 
 interface InterestPoolCardProps {
   pool: PoolContract | undefined;
