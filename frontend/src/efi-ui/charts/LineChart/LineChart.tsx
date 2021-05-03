@@ -5,6 +5,7 @@ import { ReactElement, RefObject, useMemo } from "react";
 import { ResponsiveLine, Serie } from "@nivo/line";
 import { useMeasure } from "react-use";
 import tw from "efi-tailwindcss-classnames";
+import { defaultLineData } from "efi-ui/charts/LineChart/defaultLineData";
 
 // make sure parent container have a defined height when using
 // responsive component, otherwise height will be 0 and
@@ -15,8 +16,9 @@ import tw from "efi-tailwindcss-classnames";
 export interface LineChartProps {
   data: Serie[];
 }
+
 export function LineChart({
-  data /* see data tab */,
+  data = defaultLineData,
 }: LineChartProps): ReactElement {
   const [ref, dimensions] = useMeasure();
   const refObject = (ref as unknown) as RefObject<HTMLDivElement>;
