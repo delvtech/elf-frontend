@@ -18,6 +18,7 @@ import { ContractMethodArgs } from "efi/contracts/types";
 export function useWithdrawToEth(
   signer: Signer | undefined,
   tranche: Tranche | undefined,
+  account: string | null | undefined,
   // note both are required.  set to BigNumber.from(0) if you don't want that one.
   amountPrinicpalToken: BigNumber,
   amountYieldToken: BigNumber
@@ -45,22 +46,25 @@ export function useWithdrawToEth(
   return useCallback(async () => {
     if (
       !signer ||
+      !account ||
       !userProxy ||
       !expiration ||
       !position ||
-      !amountPrinicpalToken ||
-      !amountYieldToken ||
       !yieldTokenContract
     ) {
       return;
     }
 
-    const signerAddress = await signer.getAddress();
+    // we need an amount from at least one
+    if (!amountPrinicpalToken.gt(0) && !amountYieldToken.gt(0)) {
+      return;
+    }
+
     // TODO: check approval for this token first
     const ptPermitData = await fetchPermitData(
       signer,
       principalTokenContract,
-      signerAddress,
+      account,
       userProxy.address,
       amountPrinicpalToken,
       "1"
@@ -69,7 +73,7 @@ export function useWithdrawToEth(
     const ytPermitData = await fetchPermitData(
       signer,
       yieldTokenContract,
-      signerAddress,
+      account,
       userProxy.address,
       amountYieldToken,
       "1"
@@ -85,6 +89,7 @@ export function useWithdrawToEth(
 
     withdrawToEth(withdrawInterestToEthCallArgs);
   }, [
+    account,
     amountPrinicpalToken,
     amountYieldToken,
     expiration,
