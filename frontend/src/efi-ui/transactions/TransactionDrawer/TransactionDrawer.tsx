@@ -1,6 +1,6 @@
-import { ReactElement, useMemo } from "react";
+import React, { ReactElement, useMemo } from "react";
 
-import { Button, Intent } from "@blueprintjs/core";
+import { Button, Intent, Tag } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { ERC20 } from "elf-contracts/types/ERC20";
@@ -18,6 +18,7 @@ import {
 } from "efi/crypto/CryptoAsset";
 
 import { WalletApprovalCallout } from "./WalletApprovalCallout";
+import { IconNames } from "@blueprintjs/icons";
 
 interface TransactionDrawerProps {
   account: string | null | undefined;
@@ -31,7 +32,7 @@ interface TransactionDrawerProps {
   onClose: () => void;
   onConfirmTransaction: () => void;
   transactionDetails?: ReactElement | null;
-  buttonLabel?: string;
+  buttonLabel: string;
   walletConnectionActive: boolean;
   walletApprovalMessageRenderer: (assetSymbol: string) => string;
   approvalSpenderAddress: string | undefined;
@@ -70,7 +71,6 @@ export function TransactionDrawer({
   const confirmButtonLabel = getConfirmButtonLabel(
     buttonLabel,
     account,
-    transactionSuccess,
     transactionFailed
   );
 
@@ -79,14 +79,13 @@ export function TransactionDrawer({
     assetIn,
     amountIn,
     allowance,
-    transactionPending,
-    transactionSuccess,
-    transactionFailed
+    transactionPending
   );
   const buttonIntent = getConfirmButtonIntent(
     transactionSuccess,
     transactionFailed
   );
+  const helperText = getHelperText(transactionSuccess, transactionFailed);
 
   const message = assetInSymbol
     ? walletApprovalMessageRenderer(assetInSymbol)
@@ -118,7 +117,7 @@ export function TransactionDrawer({
           ) : null
         }
 
-        <div className={tw("flex", "space-x-2")}>
+        <div className={tw("flex", "flex-col", "space-y-2")}>
           <Button
             loading={transactionPending}
             fill
@@ -126,11 +125,26 @@ export function TransactionDrawer({
             intent={buttonIntent}
             className={tw("h-16")}
             large
-            outlined={!transactionSuccess}
+            outlined
             onClick={onConfirmTransaction}
           >
             {confirmButtonLabel}
           </Button>
+          {helperText && (
+            <Tag
+              intent={buttonIntent}
+              minimal
+              large
+              fill
+              icon={
+                transactionSuccess
+                  ? IconNames.TICK_CIRCLE
+                  : IconNames.WARNING_SIGN
+              }
+            >
+              {helperText}
+            </Tag>
+          )}
         </div>
       </div>
     </WalletDrawer>
@@ -139,48 +153,50 @@ export function TransactionDrawer({
 
 function getConfirmButtonIntent(
   transactionSuccess: boolean,
-  transactionFailed: boolean
+  transactionError: boolean
 ) {
   let buttonIntent: Intent = Intent.PRIMARY;
   if (transactionSuccess) {
     buttonIntent = Intent.SUCCESS;
   }
-  if (transactionFailed) {
+  if (transactionError) {
     buttonIntent = Intent.DANGER;
   }
   return buttonIntent;
 }
 
+function getHelperText(transactionSuccess: boolean, transactionError: boolean) {
+  if (transactionSuccess) {
+    return `Transaction succeeded`;
+  }
+  if (transactionError) {
+    return `Transaction failed`;
+  }
+}
+
 function getConfirmButtonLabel(
-  label = t`Confirm transaction`,
+  label: string,
   account: string | null | undefined,
-  transactionSuccess: boolean,
   transactionError: boolean
 ) {
   if (!account) {
     return t`Connect your wallet to continue`;
   }
-
-  if (transactionSuccess) {
-    return `Success`;
-  }
-
   if (transactionError) {
-    return `Failed`;
+    return `Retry ${label}`;
   }
 
   return label;
 }
+
 function getConfirmButtonDisabled(
   account: string | null | undefined,
   baseAsset: CryptoAsset | undefined,
   amountIn: BigNumber | undefined,
   marketAllowance: BigNumber | undefined,
-  transactionPending: boolean,
-  transactionSuccess: boolean,
-  transactionFailed: boolean
+  transactionPending: boolean
 ) {
-  if (transactionPending || transactionSuccess || transactionFailed) {
+  if (transactionPending) {
     return true;
   }
 

@@ -69,15 +69,17 @@ export function MintTransactionConfirmationDrawer({
   const amountInAsNumber = +(amountIn || 0);
   const numPrincipalTokens = useMintPreview(tranche, amountInAsNumber);
 
-  const onMintTransaction = useMintTransaction(
-    signer,
-    baseAsset,
-    tranche,
-    amountInAsNumber
-  );
+  const {
+    mint,
+    mutationResult: { isLoading, isSuccess, isError },
+  } = useMintTransaction(signer, baseAsset, tranche, amountInAsNumber);
 
   return (
     <TransactionDrawer
+      buttonLabel={t`Mint`}
+      transactionPending={isLoading}
+      transactionFailed={isError}
+      transactionSuccess={isSuccess}
       approvalSpenderAddress={userProxy?.address}
       isOpen={isOpen}
       onClose={onClose}
@@ -89,7 +91,7 @@ export function MintTransactionConfirmationDrawer({
       chainId={chainId}
       connector={connector}
       library={library}
-      onConfirmTransaction={onMintTransaction}
+      onConfirmTransaction={mint}
       transactionDetails={
         <SwapDetailsForm
           amountIn={amountInAsNumber.toFixed(4)}

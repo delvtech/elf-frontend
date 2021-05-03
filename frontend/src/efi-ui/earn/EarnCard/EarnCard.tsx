@@ -246,7 +246,7 @@ export function EarnCard({
         </div>
       </Card>
 
-      {!activeBaseAsset ? null : (
+      {!activeBaseAsset || !isDrawerOpen ? null : (
         <BuyPrincipalTokensTransactionConfirmationDrawer
           baseAsset={activeBaseAsset}
           baseAssetIcon={baseAssetIcon}
