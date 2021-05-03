@@ -15,7 +15,7 @@ import { useTrancheUnlockTimestamp } from "efi-ui/tranche/useTrancheUnlockTimest
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
 import { ContractMethodArgs } from "efi/contracts/types";
 
-export function useWithdrawToEth(
+export function useRedeemTermAssetsToEth(
   signer: Signer | undefined,
   tranche: Tranche | undefined,
   account: string | null | undefined,

@@ -21,7 +21,7 @@ import { WalletDrawer } from "efi-ui/wallets/WalletDrawer/WalletDrawer";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatFullDate } from "efi/base/dates";
 import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
-import { useWithdrawToEth } from "efi-ui/userProxy/useWithdrawToEth";
+import { useRedeemTermAssetsToEth } from "efi-ui/userProxy/useRedeemTermAssetsToEth";
 
 interface RedeemYieldTokensDrawerProps {
   account: string | null | undefined;
@@ -88,7 +88,7 @@ export function RedeemYieldTokensDrawer({
     interestTokenAmountBigNumber
   );
 
-  const withdrawToEth = useWithdrawToEth(
+  const withdrawToEth = useRedeemTermAssetsToEth(
     signer,
     tranche,
     account,
