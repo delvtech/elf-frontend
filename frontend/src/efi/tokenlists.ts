@@ -3,7 +3,14 @@ import keyBy from "lodash.keyby";
 
 // Default to the testnet in this repo so `npm start` Just Works without having
 // to specify it on the command line.
-const chainName = process.env.REACT_APP_CHAIN_NAME || "testnet";
+const chainName = getTokenListJsonId();
+function getTokenListJsonId() {
+  if (process.env.NODE_ENV === "test") {
+    return "mock";
+  }
+
+  return process.env.REACT_APP_CHAIN_NAME || "testnet";
+}
 
 // Import statements in TS are statically checked, and will throw compile-time
 // errors if the file doesn't exist. Require statements on the other hand are

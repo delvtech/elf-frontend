@@ -11,7 +11,7 @@
       "description": "Token that represents the yield on a deposit into a yield position"
     }
   },
-  "timestamp": "2021-05-01T05:48:35.641Z",
+  "timestamp": "2021-05-02T22:09:16.374Z",
   "version": {
     "major": 0,
     "minor": 0,
@@ -20,43 +20,35 @@
   "tokens": [
     {
       "chainId": 31337,
-      "address": "0xE65232dED8F51De165Ede458A336b1b78B8CEC6A",
+      "address": "0xC2Dd2Bc51eBd34E81204D79d58E1c425c926835d",
       "symbol": "eP-ETH",
       "decimals": 18,
       "name": "ETH Principal Token",
-      "tags": [
-        "eP"
-      ]
+      "tags": ["eP"]
     },
     {
       "chainId": 31337,
-      "address": "0x759f4f4a1c0417d783f5b51dD97EcC220c83A308",
+      "address": "0xe2Bb99ef9D1F1C225621a0b8118f9a45eb01ACBF",
       "symbol": "eP-ETH",
       "decimals": 18,
       "name": "ETH Principal Token",
-      "tags": [
-        "eP"
-      ]
+      "tags": ["eP"]
     },
     {
       "chainId": 31337,
-      "address": "0x2e20a25A901658f9c65EcdB2b55b4793fDC4F8dE",
+      "address": "0x1233A3E9902bCeb466d865fEC0aC1aD59E81ef60",
       "symbol": "eP-ETH",
       "decimals": 18,
       "name": "ETH Principal Token",
-      "tags": [
-        "eP"
-      ]
+      "tags": ["eP"]
     },
     {
       "chainId": 31337,
-      "address": "0xFfa5A642076918139BF52D2f76AbD828786F433a",
+      "address": "0xcbe49e0cAA0a2df8098B0527ECd11041029DEcfc",
       "symbol": "eP-USDC",
       "decimals": 6,
       "name": "USDC Principal Token",
-      "tags": [
-        "eP"
-      ]
+      "tags": ["eP"]
     },
     {
       "chainId": 31337,
@@ -64,9 +56,7 @@
       "symbol": "eY-ETH",
       "decimals": 18,
       "name": "ETH Yield Token",
-      "tags": [
-        "eY"
-      ]
+      "tags": ["eY"]
     },
     {
       "chainId": 31337,
@@ -74,9 +64,7 @@
       "symbol": "eY-ETH",
       "decimals": 18,
       "name": "ETH Yield Token",
-      "tags": [
-        "eY"
-      ]
+      "tags": ["eY"]
     },
     {
       "chainId": 31337,
@@ -84,9 +72,7 @@
       "symbol": "eY-ETH",
       "decimals": 18,
       "name": "ETH Yield Token",
-      "tags": [
-        "eY"
-      ]
+      "tags": ["eY"]
     },
     {
       "chainId": 31337,
@@ -94,9 +80,7 @@
       "symbol": "eY-USDC",
       "decimals": 6,
       "name": "USDC Yield Token",
-      "tags": [
-        "eY"
-      ]
+      "tags": ["eY"]
     }
   ]
 }

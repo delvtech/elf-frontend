@@ -37,7 +37,7 @@ export const ERC20ApproveButton: FC<ERC20ApproveButtonProps> = ({
   const assetSymbol = tokenSymbolFromProps || symbol;
   const { data: allowance } = useTokenAllowance(contract, owner, spender);
 
-  const onApproveClick = useERC20Approve(contract, signer, owner, spender);
+  const { onApproveClick } = useERC20Approve(contract, signer, owner, spender);
 
   const hasApproval = !!approvalAmount && allowance?.gte(approvalAmount);
 
