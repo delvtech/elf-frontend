@@ -6,7 +6,7 @@
 cp -f testnet/src/testnet.addresses.json addresses/testnet.addresses.json
 
 # Copy over all the addresses.json files from the top-level directory into the frontend
-rm -rf frontend/src/addresses && mkdir frontend/src/addresses
+rm -f frontend/src/addresses/goerli.addresses.json frontend/src/addresses/testnet.addresses.json
 find addresses/ -type f -name "*.addresses.json" -exec cp {} frontend/src/addresses/ \;
 
 # Copy the typescript definition file to the frontend
