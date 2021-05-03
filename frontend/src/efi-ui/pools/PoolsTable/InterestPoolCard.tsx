@@ -9,6 +9,7 @@ import {
 import { Button, Card, Classes, Colors, Elevation } from "@blueprintjs/core";
 import { Link, navigate } from "@reach/router";
 import classNames from "classnames";
+import { differenceInDays } from "date-fns";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -21,6 +22,7 @@ import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSy
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 import { useFeeVolumeForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
+import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidityForPool.ts/useTotalFiatLiquidityForPool";
 import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForPool";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
@@ -29,7 +31,7 @@ import { formatMoney } from "efi/money/formatMoney";
 import { PoolContract } from "efi/pools/PoolContract";
 
 import styles from "./PrincipalPoolCard.module.css";
-import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidityForPool.ts/useTotalFiatLiquidityForPool";
+import { start } from "node:repl";
 
 interface InterestPoolCardProps {
   pool: PoolContract | undefined;
@@ -107,9 +109,6 @@ export function InterestPoolCard(
     return null;
   }
 
-  const startTime = trancheCreatedAt ? trancheCreatedAt * 1000 : undefined;
-  const maturityTime = unlockTime ? unlockTime * 1000 : undefined;
-
   if (!allDataLoaded) {
     return (
       <Card
@@ -124,6 +123,12 @@ export function InterestPoolCard(
       ></Card>
     );
   }
+
+  const startTime = trancheCreatedAt ? trancheCreatedAt * 1000 : 0;
+  const maturityTime = unlockTime ? unlockTime * 1000 : 0;
+
+  const termLength =
+    Math.round(differenceInDays(maturityTime, startTime) / 10) * 10;
 
   return (
     <Card
@@ -224,7 +229,7 @@ export function InterestPoolCard(
           "xl:col-span-1"
         )}
       >
-        <LabeledText text={"90 Day"} label={t`Term`} />
+        <LabeledText text={t`${termLength} Day`} label={t`Term`} />
       </div>
       <div
         className={tw(

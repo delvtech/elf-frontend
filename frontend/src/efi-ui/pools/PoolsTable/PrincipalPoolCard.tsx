@@ -9,6 +9,7 @@ import {
 import { Button, Card, Classes, Colors, Elevation } from "@blueprintjs/core";
 import { Link, navigate } from "@reach/router";
 import classNames from "classnames";
+import { differenceInDays } from "date-fns";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -30,7 +31,6 @@ import { formatMoney } from "efi/money/formatMoney";
 import { PoolContract } from "efi/pools/PoolContract";
 
 import styles from "./PrincipalPoolCard.module.css";
-import { getTimeLeft } from "efi/base/time";
 
 interface PrincipalPoolCardProps {
   pool: PoolContract | undefined;
@@ -87,6 +87,7 @@ export function PrincipalPoolCard(
     termAssetSymbol,
     unlockBN,
   ];
+
   const unlockTime = unlockBN?.toNumber();
   // TODO: this is a big hammer for loading state.  we should use a more granular technique when we can.
   const allDataLoaded = dataToLoad.every((data) => data !== undefined);
@@ -107,11 +108,6 @@ export function PrincipalPoolCard(
     return null;
   }
 
-  const startTime = trancheCreatedAt ? trancheCreatedAt * 1000 : undefined;
-  const maturityTime = unlockTime ? unlockTime * 1000 : undefined;
-
-  const termLength = getTimeLeft(maturationDate);
-
   if (!allDataLoaded) {
     return (
       <Card
@@ -126,6 +122,14 @@ export function PrincipalPoolCard(
       ></Card>
     );
   }
+
+  const startTime = trancheCreatedAt ? trancheCreatedAt * 1000 : undefined;
+  const maturityTime = unlockTime ? unlockTime * 1000 : undefined;
+
+  const termLength =
+    Math.round(
+      differenceInDays(maturityTime as number, startTime as number) / 10
+    ) * 10;
 
   return (
     <Card
@@ -217,7 +221,7 @@ export function PrincipalPoolCard(
           "flex-grow"
         )}
       >
-        <LabeledText large text={termLength} label={t`Term`} />
+        <LabeledText large text={t`${termLength} Day`} label={t`Term`} />
       </div>
       <div
         className={tw(
