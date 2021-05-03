@@ -30,7 +30,7 @@ import { formatMoney } from "efi/money/formatMoney";
 import { PoolContract } from "efi/pools/PoolContract";
 
 import styles from "./PrincipalPoolCard.module.css";
-import { getTimeLeft2 } from "efi/base/time";
+import { getTimeLeft } from "efi/base/time";
 
 interface PrincipalPoolCardProps {
   pool: PoolContract | undefined;
@@ -110,7 +110,7 @@ export function PrincipalPoolCard(
   const startTime = trancheCreatedAt ? trancheCreatedAt * 1000 : undefined;
   const maturityTime = unlockTime ? unlockTime * 1000 : undefined;
 
-  const termLength = getTimeLeft2(maturationDate);
+  const termLength = getTimeLeft(maturationDate);
 
   if (!allDataLoaded) {
     return (
