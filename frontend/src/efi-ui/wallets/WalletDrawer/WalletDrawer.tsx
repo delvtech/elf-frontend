@@ -10,6 +10,7 @@ import tw from "efi-tailwindcss-classnames";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { WalletConnectionSummary } from "efi-ui/wallets/WalletConnectionCard/WalletConnectionSummary";
 import { getConnectorName } from "efi/wallets/connectors";
+import styles from "./WalletDrawer.module.css";
 
 import { ConnectWalletCallout } from "./ConnectWalletCallout";
 
@@ -45,10 +46,18 @@ export function WalletDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={onClose}
+      isCloseButtonShown
+      title={
+        ""
+        // <span
+        //   className={tw("text-base", "font-normal")}
+        // >{t`Wallet connected`}</span>
+      }
       size={500}
       style={!isDarkMode ? { background: "var(--bp3-bg-color)" } : {}}
       className={classNames(
         darkModeClassName,
+        styles.walletDrawer,
         tw(
           "flex",
           "flex-col",
@@ -56,6 +65,7 @@ export function WalletDrawer({
           "text-base",
           "overflow-scroll",
           "p-10",
+          "pt-8",
           {
             "text-gray-700": !isDarkMode,
             "text-white": isDarkMode,

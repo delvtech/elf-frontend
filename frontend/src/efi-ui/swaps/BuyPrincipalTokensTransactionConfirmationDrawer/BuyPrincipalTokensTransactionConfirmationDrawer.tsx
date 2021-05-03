@@ -132,7 +132,7 @@ export function BuyPrincipalTokensTransactionConfirmationDrawer({
 
   return (
     <TransactionDrawer
-      buttonLabel={t`Purchase`}
+      buttonLabel={t`Buy`}
       approvalSpenderAddress={balancerVault?.address}
       transactionPending={isLoading}
       transactionFailed={isError}
