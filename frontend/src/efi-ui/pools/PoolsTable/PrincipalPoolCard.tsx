@@ -6,7 +6,14 @@ import {
   useState,
 } from "react";
 
-import { Button, Card, Classes, Colors, Elevation } from "@blueprintjs/core";
+import {
+  Button,
+  Card,
+  Classes,
+  Colors,
+  Elevation,
+  Tag,
+} from "@blueprintjs/core";
 import { Link, navigate } from "@reach/router";
 import classNames from "classnames";
 import { t } from "ttag";
@@ -87,6 +94,7 @@ export function PrincipalPoolCard(
     termAssetSymbol,
     unlockBN,
   ];
+
   // TODO: this is a big hammer for loading state.  we should use a more granular technique when we can.
   const allDataLoaded = dataToLoad.every((data) => data !== undefined);
 
@@ -114,7 +122,6 @@ export function PrincipalPoolCard(
       <Card
         elevation={Elevation.TWO}
         interactive
-        onClick={goToPoolPage}
         style={poolCardStyle}
         className={classNames(
           Classes.SKELETON,
@@ -128,11 +135,10 @@ export function PrincipalPoolCard(
     <Card
       elevation={Elevation.TWO}
       interactive
-      onClick={goToPoolPage}
       style={poolCardStyle}
       className={classNames(
         styles.gridColsPoolCard,
-        tw("grid", "grid-cols-12", "gap-y-4", "w-full", {
+        tw("w-full", "flex", {
           transition: transitionsEnabled,
           "duration-1000": transitionsEnabled,
           "ease-in-out": transitionsEnabled,
@@ -141,155 +147,177 @@ export function PrincipalPoolCard(
     >
       <div
         className={tw(
-          cellClassName,
-          "col-span-2",
-          "sm:mr-0",
-          "md:col-span-1",
-          "xl:ml-4",
-          "items-center"
+          "flex-1",
+          "w-full",
+          "grid",
+          "grid-cols-11",
+          "gap-y-4",
+          "w-full",
+          "items-start"
         )}
       >
-        {BaseAssetIcon ? (
-          <div
-            className={classNames(
-              tw(
-                "items-center",
-                "justify-center",
-                "rounded",
-                "p-2",
-                "flex-shrink-0"
-              )
-            )}
-          >
+        <div
+          className={tw(
+            cellClassName,
+            "col-span-2",
+            "sm:mr-0",
+            "md:col-span-1",
+            "xl:ml-4",
+            "items-start"
+          )}
+        >
+          {BaseAssetIcon && baseAssetSymbol === "ETH" ? (
             <div
-              style={{
-                borderColor: isDarkMode ? Colors.GRAY5 : undefined,
-                backgroundColor: isDarkMode ? Colors.WHITE : undefined,
-              }}
-              className={tw(
-                "items-center",
-                "p-2",
-                "rounded-full",
-                "z-10",
-                "bg-white",
-                "border",
-                "shadow-sm"
+              className={classNames(
+                tw(
+                  "items-start",
+                  "justify-center",
+                  "rounded",
+                  "-mt-2",
+                  "p-2",
+                  "flex-shrink-0"
+                )
               )}
             >
-              <BaseAssetIcon height={24} width={24} />
+              <div
+                style={{
+                  borderColor: isDarkMode ? Colors.GRAY5 : undefined,
+                  backgroundColor: isDarkMode ? Colors.WHITE : undefined,
+                }}
+                className={tw(
+                  "items-start",
+                  "p-2",
+                  "rounded-full",
+                  "z-10",
+                  "bg-white",
+                  "border",
+                  "shadow-sm"
+                )}
+              >
+                <BaseAssetIcon height={24} width={24} />
+              </div>
+            </div>
+          ) : BaseAssetIcon ? (
+            <div className={tw("ml-2")}>
+              <BaseAssetIcon height={46} width={46} />
+            </div>
+          ) : null}
+        </div>
+        <div
+          className={tw(
+            cellClassName,
+            "col-span-3",
+            "md:col-span-2",
+            "md:pl-2",
+            "lg:pl-0",
+            "lg:col-span-2"
+          )}
+        >
+          <LabeledText
+            large
+            text={
+              <Link
+                className={tw("flex", "space-x-2")}
+                to={pool?.address || ""}
+                onClick={stopPropagationHandler}
+              >
+                {`${baseAssetSymbol} - ${termAssetSymbol}`}
+              </Link>
+            }
+            label={t`Token Pool`}
+          />
+        </div>
+        <div
+          className={tw(
+            cellClassName,
+            "col-span-2",
+            "md:col-span-2",
+            "xl:col-span-1",
+            "lg:col-span-2",
+            "flex-grow"
+          )}
+        >
+          <LabeledText large text={"90 Day"} label={t`Term`} />
+        </div>
+        <div
+          className={tw(
+            cellClassName,
+            "col-span-3",
+            "md:col-span-2",
+            "lg:col-span-2",
+            "xl:col-span-2"
+          )}
+        >
+          <LabeledText
+            large
+            text={formatMoney(liquidity, { wholeAmounts: true })}
+            label={t`Pool Liquidity`}
+          />
+        </div>
+        <div
+          className={tw(
+            cellClassName,
+            "col-span-2",
+            "col-start-2",
+            "md:col-start-auto",
+            "md:col-span-2",
+            "xl:col-span-1",
+            "lg:col-span-2"
+          )}
+        >
+          <LabeledText large text={"20%"} label={t`Fixed APY`} />
+        </div>
+        <div
+          className={tw(
+            cellClassName,
+            "col-span-2",
+            "md:col-span-2",
+            "xl:col-span-1",
+            "lg:col-span-2"
+          )}
+        >
+          <LabeledText large text={"10%"} label={t`Stake APY`} />
+        </div>
+        <div
+          className={tw(
+            cellClassName,
+            "col-span-6",
+            "md:col-start-5",
+            "sm:col-span-5",
+            "md:col-span-4",
+            "lg:col-start-5",
+            "xl:col-span-3",
+            "xl:col-start-auto"
+          )}
+        >
+          <div className={tw("flex", "w-full")}>
+            <div>
+              {startTime && maturityTime && startTime < maturityTime ? (
+                <Tag intent="primary" className={tw("mr-4", "flex-grow-0")}>
+                  Running
+                </Tag>
+              ) : (
+                <Tag intent="success" className={tw("mr-4", "flex-grow-0")}>
+                  Matured
+                </Tag>
+              )}
+            </div>
+            <div className={tw("flex-1", "-mt-2")}>
+              <TimeLeft startDate={startTime} maturityDate={maturityTime} />
             </div>
           </div>
-        ) : null}
+        </div>
       </div>
       <div
-        className={tw(
-          cellClassName,
-          "col-span-3",
-          "md:pl-2",
-          "lg:pl-0",
-          "lg:col-span-2"
-        )}
+        className={tw("flex", "flex-col", "overflow-visible", "items-start")}
       >
-        <LabeledText
-          large
-          text={
-            <Link
-              className={tw("flex", "space-x-2")}
-              to={pool?.address || ""}
-              onClick={stopPropagationHandler}
-            >
-              {`${baseAssetSymbol} - ${termAssetSymbol}`}
-            </Link>
-          }
-          label={t`tokens`}
-        />
-      </div>
-      <div
-        className={tw(
-          cellClassName,
-          "col-span-2",
-          "md:col-span-2",
-          "xl:col-span-1",
-          "lg:col-span-2",
-          "flex-grow"
-        )}
-      >
-        <LabeledText large text={"90 Day"} label={t`Term`} />
-      </div>
-      <div
-        className={tw(
-          cellClassName,
-          "col-span-3",
-          "md:col-span-3",
-          "lg:col-span-3",
-          "xl:col-span-2"
-        )}
-      >
-        <LabeledText
-          large
-          text={formatMoney(liquidity, { wholeAmounts: true })}
-          label={t`Pool Liquidity`}
-        />
-      </div>
-      <div
-        className={tw(
-          cellClassName,
-          "col-span-2",
-          "md:col-span-1",
-          "xl:col-span-1",
-          "lg:col-span-2"
-        )}
-      >
-        <LabeledText large text={"20%"} label={t`Fixed APY`} />
-      </div>
-      <div
-        className={tw(
-          cellClassName,
-          "col-span-2",
-          "col-start-3",
-          "md:col-start-12",
-          "lg:col-start-auto",
-          "md:col-span-1",
-          "xl:col-span-1",
-          "lg:col-span-2"
-        )}
-      >
-        <LabeledText large text={"10%"} label={t`Stake APY`} />
-      </div>
-      <div
-        className={tw(
-          cellClassName,
-          "col-span-4",
-          "md:col-start-5",
-          "sm:col-span-4",
-          "lg:col-start-5",
-          "xl:col-span-3",
-          "xl:col-start-auto"
-        )}
-      >
-        <TimeLeft
-          label={"Running, July 30, 2020"}
-          startDate={startTime}
-          maturityDate={maturityTime}
-        />
-      </div>
-      <div
-        className={tw(
-          cellClassName,
-          "col-span-2",
-          "md:col-span-1",
-          "flex",
-          "flex-col",
-          "overflow-visible"
-        )}
-      >
-        <div className={tw("flex-1", "mb-2")}>
-          <Button minimal outlined>
+        <div className={tw("mb-2")}>
+          <Button minimal outlined intent={"primary"}>
             {t`Trade`}
           </Button>
         </div>
-        <div className={tw("flex-1")}>
-          <Button minimal outlined>
+        <div>
+          <Button minimal outlined intent={"primary"}>
             {t`Stake`}
           </Button>
         </div>

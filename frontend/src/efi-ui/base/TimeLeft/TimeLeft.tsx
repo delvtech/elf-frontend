@@ -2,8 +2,10 @@ import React, { ReactElement } from "react";
 
 import { formatDistance, formatDuration, intervalToDuration } from "date-fns";
 import { t } from "ttag";
+import tw from "efi-tailwindcss-classnames";
 
 import { LabeledProgressBar } from "efi-ui/base/LabeledProgressBar/LabeledProgressBar";
+import { Classes, Intent, ProgressBar } from "@blueprintjs/core";
 import { calculateProgress } from "efi/base/calculateProgress";
 
 interface TimeLeftProps {
@@ -35,6 +37,7 @@ export function TimeLeft(props: TimeLeftProps): ReactElement {
       label={label}
       progressValue={progress}
       helperText={time}
+      subHelperText={"Jul 30, 2020"}
     />
   );
 }

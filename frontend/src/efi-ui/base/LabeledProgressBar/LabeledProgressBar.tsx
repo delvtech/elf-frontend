@@ -10,10 +10,12 @@ interface LabeledProgressBarProps {
   label?: string;
 
   helperText?: string;
+  subHelperText?: string;
   intent?: Intent;
 }
 export function LabeledProgressBar({
   helperText,
+  subHelperText,
   intent,
   label,
   progressValue,
@@ -42,6 +44,13 @@ export function LabeledProgressBar({
           className={classNames(Classes.TEXT_MUTED, tw("text-sm", "truncate"))}
         >
           {helperText}
+        </span>
+      )}
+      {!!subHelperText && (
+        <span
+          className={classNames(Classes.TEXT_MUTED, tw("text-sm", "truncate"))}
+        >
+          {subHelperText}
         </span>
       )}
     </div>
