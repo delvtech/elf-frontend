@@ -29,6 +29,7 @@ import { calculatePurchasePrice } from "efi/pools/calculatePurchasePrice";
 import { calculateSlippage } from "efi/pools/calculateSlippage";
 import { PoolContract } from "efi/pools/PoolContract";
 import { getAmountOutWithTolerance } from "efi/trade/getAmountOutWithTolerance";
+import { t } from "ttag";
 
 interface BuyPrincipalTransactionConfirmationDrawerProps {
   chainId: number | undefined;
@@ -131,6 +132,7 @@ export function BuyPrincipalTokensTransactionConfirmationDrawer({
 
   return (
     <TransactionDrawer
+      buttonLabel={t`Purchase`}
       approvalSpenderAddress={balancerVault?.address}
       transactionPending={isLoading}
       transactionFailed={isError}

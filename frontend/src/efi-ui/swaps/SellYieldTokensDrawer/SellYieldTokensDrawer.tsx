@@ -152,6 +152,7 @@ export function SellYieldTokensDrawer(
 
   return (
     <TransactionDrawer
+      buttonLabel={t`Sell`}
       approvalSpenderAddress={balancerVault?.address}
       isOpen={isOpen}
       onClose={onClose}

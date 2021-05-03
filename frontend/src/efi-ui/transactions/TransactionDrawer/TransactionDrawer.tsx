@@ -32,7 +32,7 @@ interface TransactionDrawerProps {
   onClose: () => void;
   onConfirmTransaction: () => void;
   transactionDetails?: ReactElement | null;
-  buttonLabel?: string;
+  buttonLabel: string;
   walletConnectionActive: boolean;
   walletApprovalMessageRenderer: (assetSymbol: string) => string;
   approvalSpenderAddress: string | undefined;
@@ -68,7 +68,11 @@ export function TransactionDrawer({
     approvalSpenderAddress
   );
 
-  const confirmButtonLabel = getConfirmButtonLabel(buttonLabel, account);
+  const confirmButtonLabel = getConfirmButtonLabel(
+    buttonLabel,
+    account,
+    transactionFailed
+  );
 
   const confirmButtonDisabled = getConfirmButtonDisabled(
     account,
@@ -171,11 +175,15 @@ function getHelperText(transactionSuccess: boolean, transactionError: boolean) {
 }
 
 function getConfirmButtonLabel(
-  label = t`Confirm transaction`,
-  account: string | null | undefined
+  label: string,
+  account: string | null | undefined,
+  transactionError: boolean
 ) {
   if (!account) {
     return t`Connect your wallet to continue`;
+  }
+  if (transactionError) {
+    return `Retry ${label}`;
   }
 
   return label;
