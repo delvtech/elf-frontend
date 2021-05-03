@@ -30,6 +30,7 @@ import { formatMoney } from "efi/money/formatMoney";
 import { PoolContract } from "efi/pools/PoolContract";
 
 import styles from "./PrincipalPoolCard.module.css";
+import { getTimeLeft2 } from "efi/base/time";
 
 interface PrincipalPoolCardProps {
   pool: PoolContract | undefined;
@@ -65,7 +66,6 @@ export function PrincipalPoolCard(
     tranche,
     "unlockTimestamp"
   );
-  const unlockTime = unlockBN?.toNumber();
 
   // TODO: Get this from props
   const goToPoolPage = useCallback(() => {
@@ -87,6 +87,7 @@ export function PrincipalPoolCard(
     termAssetSymbol,
     unlockBN,
   ];
+  const unlockTime = unlockBN?.toNumber();
   // TODO: this is a big hammer for loading state.  we should use a more granular technique when we can.
   const allDataLoaded = dataToLoad.every((data) => data !== undefined);
 
@@ -108,6 +109,8 @@ export function PrincipalPoolCard(
 
   const startTime = trancheCreatedAt ? trancheCreatedAt * 1000 : undefined;
   const maturityTime = unlockTime ? unlockTime * 1000 : undefined;
+
+  const termLength = getTimeLeft2(maturationDate);
 
   if (!allDataLoaded) {
     return (
@@ -214,7 +217,7 @@ export function PrincipalPoolCard(
           "flex-grow"
         )}
       >
-        <LabeledText large text={"90 Day"} label={t`Term`} />
+        <LabeledText large text={termLength} label={t`Term`} />
       </div>
       <div
         className={tw(
