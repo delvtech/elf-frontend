@@ -11,6 +11,10 @@ import { PoolContract } from "efi/pools/PoolContract";
 
 import { useLiquidityHistoryForPool } from "./useLiquidityHistoryForPool";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
+import { useTrancheContract } from "efi-ui/tranche/useTrancheContract";
+import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
+import { useAllPools } from "efi-ui/pools/useAllPools/useAllPools";
+import { usePoolCreatedAt } from "efi-ui/pools/usePoolCreatedAt";
 
 const fillerData = [
   { timeMs: Date.parse("2021-01-12"), value: 1077.800674325 },
@@ -32,6 +36,7 @@ interface PoolChartsProps {
 }
 export function PoolCharts({ pool }: PoolChartsProps): ReactElement {
   const { isDarkMode } = useDarkMode();
+  const poolCreatedAt = usePoolCreatedAt(pool);
   const liquidityData = useLiquidityHistoryForPool(pool);
   // console.log("liquidityData", liquidityData);
   const volumeData = useVolumeHistoryForPool(pool);
