@@ -2,16 +2,17 @@ import { Tranche } from "elf-contracts/types/Tranche";
 import zip from "lodash.zip";
 
 import { getQueriesData } from "efi-ui/base/queryResults";
-import { useTrancheContracts } from "efi-ui/tranche/useTrancheContracts";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { BigNumber } from "ethers";
 import { useTrancheUnlockTimestampMulti } from "./useTrancheUnlockTimestamp";
+import { TrancheContracts } from "efi/tranche/tranches";
 
 export function useOpenTranches(): Tranche[] {
-  const allTranches = useTrancheContracts();
-  const unlockTimestampResults = useTrancheUnlockTimestampMulti(allTranches);
+  const unlockTimestampResults = useTrancheUnlockTimestampMulti(
+    TrancheContracts
+  );
 
-  if (!allTranches.length) {
+  if (!TrancheContracts.length) {
     return [];
   }
 
@@ -22,7 +23,7 @@ export function useOpenTranches(): Tranche[] {
   );
 
   const now = new Date();
-  const openTranches = zip(allTranches, unlockTimestamps)
+  const openTranches = zip(TrancheContracts, unlockTimestamps)
     .filter((entry): entry is [Tranche, Date] => !entry.includes(undefined))
     .filter(([tranche, unlockDate]) => now.getTime() < unlockDate.getTime())
     .map(([tranche]) => tranche);

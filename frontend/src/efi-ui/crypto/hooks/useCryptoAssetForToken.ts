@@ -1,11 +1,11 @@
 import { getSmartContractFromRegistry } from "efi-ui/contracts/SmartContractsRegistry";
 import { useInterestTokenContracts } from "efi-ui/interestToken/useInterestTokens/useInterestTokens";
-import { useTrancheContracts } from "efi-ui/tranche/useTrancheContracts";
 import ContractAddresses, {
   KNOWN_ERC20_TOKENS,
   KNOWN_ERC20PERMIT_TOKENS,
 } from "efi/addresses";
 import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
+import { TrancheContracts } from "efi/tranche/tranches";
 import { ERC20 } from "elf-contracts/types/ERC20";
 import { ERC20Permit } from "elf-contracts/types/ERC20Permit";
 import { ERC20Permit__factory } from "elf-contracts/types/factories/ERC20Permit__factory";
@@ -19,7 +19,6 @@ export function useCryptoAssetForToken(
   tokenAddress: string | undefined
 ): CryptoAsset | undefined {
   // element tranches and interest tokens are known permits
-  const trancheContracts = useTrancheContracts();
   const interestTokenContracts = useInterestTokenContracts();
 
   if (!tokenAddress) {
@@ -50,7 +49,7 @@ export function useCryptoAssetForToken(
   }
 
   const isERC20PermitAsset = [
-    ...trancheContracts.map(({ address }) => address),
+    ...TrancheContracts.map(({ address }) => address),
     ...interestTokenContracts.map(({ address }) => address),
     ...KNOWN_ERC20PERMIT_TOKENS,
   ].includes(tokenAddress);

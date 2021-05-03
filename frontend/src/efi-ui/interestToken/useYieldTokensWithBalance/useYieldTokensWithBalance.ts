@@ -7,16 +7,17 @@ import zip from "lodash.zip";
 import { getQueriesData } from "efi-ui/base/queryResults";
 import { useSmartContractFromFactoryMulti } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
 import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
-import { useTrancheContracts } from "efi-ui/tranche/useTrancheContracts";
 import { useTrancheInterestTokenMulti } from "efi-ui/tranche/useTrancheInterestTokenMulti";
+import { TrancheContracts } from "efi/tranche/tranches";
 
 export function useYieldTokensWithBalance(
   account: string | null | undefined,
   provider?: Provider
 ): InterestToken[] {
   // InterestTokens are sourced from the Tranche contracts
-  const tranches = useTrancheContracts(provider);
-  const interestTokenAddressResults = useTrancheInterestTokenMulti(tranches);
+  const interestTokenAddressResults = useTrancheInterestTokenMulti(
+    TrancheContracts
+  );
   const interestTokenContracts = useSmartContractFromFactoryMulti(
     getQueriesData(interestTokenAddressResults),
     InterestToken__factory.connect

@@ -5,9 +5,9 @@ import { WeightedPool } from "elf-contracts/types/WeightedPool";
 import { Signer } from "ethers";
 
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
-import { useTrancheContracts } from "efi-ui/tranche/useTrancheContracts";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 import { useTrancheInterestTokenMulti } from "efi-ui/tranche/useTrancheInterestTokenMulti";
+import { TrancheContracts } from "efi/tranche/tranches";
 
 export function useInterestTokenForPool(
   pool: WeightedPool | undefined,
@@ -15,8 +15,9 @@ export function useInterestTokenForPool(
 ): InterestToken | undefined {
   const poolTokensResult = usePoolTokens(pool);
   const poolTokens = poolTokensResult.data?.[0]?.filter(Boolean) || [];
-  const tranches = useTrancheContracts(signerOrProvider);
-  const interestTokenAddressResults = useTrancheInterestTokenMulti(tranches);
+  const interestTokenAddressResults = useTrancheInterestTokenMulti(
+    TrancheContracts
+  );
   const interestTokenAddresses = interestTokenAddressResults
     .map((result) => {
       const { data: address } = result;
