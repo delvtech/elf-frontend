@@ -9,7 +9,7 @@ import {
 import { Button, Card, Classes, Colors, Elevation } from "@blueprintjs/core";
 import { Link, navigate } from "@reach/router";
 import classNames from "classnames";
-import { differenceInDays } from "date-fns";
+import { differenceInDays, format } from "date-fns";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -135,6 +135,8 @@ export function InterestPoolCard(
 
   const termLength =
     Math.round(differenceInDays(maturityTime, startTime) / 10) * 10;
+
+  const maturityDate = format(maturityTime, "MMM, d, yyyy");
 
   return (
     <Card
@@ -294,7 +296,7 @@ export function InterestPoolCard(
         )}
       >
         <TimeLeft
-          label={"Running, July 30, 2020"}
+          label={t`Running, ${maturityDate}`}
           startDate={startTime}
           maturityDate={maturityTime}
         />
