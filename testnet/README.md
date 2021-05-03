@@ -36,20 +36,6 @@ $ npm start
 $ npm run deploy-contracts
 ```
 
-### Generate the tokenlist
-
-If you're running the frontend, you'll need the generate the tokenlist for the testnet.
-
-```bash
-$ npm run build:tokenlist
-```
-
-You can also generate the tokenlist for goerli.
-
-```bash
-$ npm run build:tokenlist-goerli
-```
-
 Now all the contracts are loaded to the local testnet!
 
 You'll need to grab the private key associated with the userAddres in addresses.json.
