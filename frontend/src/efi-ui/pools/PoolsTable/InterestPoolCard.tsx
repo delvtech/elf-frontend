@@ -34,6 +34,9 @@ import styles from "./PrincipalPoolCard.module.css";
 import { useTokenYield } from "efi-ui/pools/useTokenYield";
 import { formatPercent } from "efi/base/formatPercent";
 import { useStakingAPY } from "efi-ui/pools/useStakingAPY";
+import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
+import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
+import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 
 interface InterestPoolCardProps {
   pool: PoolContract | undefined;
@@ -73,6 +76,9 @@ export function InterestPoolCard(
 
   const variableYield = useTokenYield(baseAssetContract, pool, "yield");
   const stakingYield = useStakingAPY(pool);
+  const { currency } = useCurrencyPref();
+  const [baseAssetPrice] = useTokenPrice(baseAssetContract, currency);
+  const spotPrice = usePoolSpotPrice(pool, termAssetContract) ?? 0;
   // TODO: Get this from props
   const goToPoolPage = useCallback(() => {
     navigate(`pools/${pool?.address}`);
@@ -88,16 +94,20 @@ export function InterestPoolCard(
     fees,
     baseAssetContract,
     baseAsset,
+    baseAssetPrice,
     baseAssetSymbol,
     BaseAssetIcon,
     termAssetContract,
     termAssetSymbol,
     variableYield,
     stakingYield,
+    spotPrice,
     unlockBN,
   ];
   // TODO: this is a big hammer for loading state.  we should use a more granular technique when we can.
-  const allDataLoaded = dataToLoad.every((data) => data !== undefined);
+  const allDataLoaded = dataToLoad.every(
+    (data): data is typeof data => data !== undefined
+  );
 
   const [transitionsEnabled, setTransitionsEnabled] = useState(true);
 
@@ -137,6 +147,8 @@ export function InterestPoolCard(
     Math.round(differenceInDays(maturityTime, startTime) / 10) * 10;
 
   const maturityDate = format(maturityTime, "MMM, d, yyyy");
+
+  const yieldTokenPrice = baseAssetPrice?.multiply(spotPrice, Math.round);
 
   return (
     <Card
@@ -273,7 +285,12 @@ export function InterestPoolCard(
           "xl:col-span-1"
         )}
       >
-        <LabeledText text={"$235.00"} label={t`Price`} />
+        <LabeledText
+          text={formatMoney(yieldTokenPrice, {
+            wholeAmounts: (yieldTokenPrice?.toDecimal() ?? 0) > 10,
+          })}
+          label={t`Price`}
+        />
       </div>
       <div
         className={tw(
