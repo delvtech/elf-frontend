@@ -77,11 +77,13 @@ async function main() {
 
   console.log("deploy first WETH tranche");
   const {
-    trancheContract: wethTrancheContract,
-    fytPoolContract: wethFytPoolContract,
+    trancheContract: firstWethTrancheContract,
+    interestTokenContract: firstWethInterestTokenContract,
+    fytPoolContract: firstWethFytPoolContract,
+    ycPoolContract: firstWethYcPoolContract,
     fytPoolId: wethFytPoolId,
-    ycPoolContract: wethYcPoolContract,
     ycPoolId: wethYcPoolId,
+
   } = await deployTrancheAndMarket(
     elementSigner,
     trancheFactory,
@@ -101,7 +103,12 @@ async function main() {
 
   console.log("deploy second WETH tranche");
   // second WETH tranche
-  await deployTrancheAndMarket(
+  const {
+    trancheContract: secondWethTrancheContract,
+    interestTokenContract: secondWethInterestTokenContract,
+    fytPoolContract: secondWethFytPoolContract,
+    ycPoolContract: secondWethYcPoolContract,
+  } = await deployTrancheAndMarket(
     elementSigner,
     trancheFactory,
     wethYearnVaultAssetProxy,
@@ -122,7 +129,12 @@ async function main() {
 
   console.log("deploy expired WETH tranche");
   // expired WETH tranche
-  await deployTrancheAndMarket(
+  const {
+    trancheContract: expiredWethTrancheContract,
+    interestTokenContract: expiredWethInterestTokenContract,
+    fytPoolContract: expiredWethFytPoolContract,
+    ycPoolContract:  expiredWethYcPoolContract,
+  } = await deployTrancheAndMarket(
     elementSigner,
     trancheFactory,
     wethYearnVaultAssetProxy,
@@ -145,9 +157,10 @@ async function main() {
   // usdc tranche
   const {
     trancheContract: usdcTrancheContract,
+    interestTokenContract: usdcInterestTokenContract,
     fytPoolContract: usdcFytPoolContract,
-    fytPoolId: usdcFytPoolId,
     ycPoolContract: usdcYcPoolContract,
+    fytPoolId: usdcFytPoolId,
     ycPoolId: usdcYcPoolId,
   } = await deployTrancheAndMarket(
     elementSigner,
@@ -203,15 +216,15 @@ async function main() {
       // tranche contracts
       trancheFactoryAddress: trancheFactory.address,
       interestTokenFactoryAddress: interestTokenFactory.address,
-      wethTrancheAddress: wethTrancheContract.address,
+      wethTrancheAddress: firstWethTrancheContract.address,
       usdcTrancheAddress: usdcTrancheContract.address,
 
       // market addresses and ids
       weightedPoolFactoryAddress: weightedPoolFactory.address,
       convergentPoolFactoryAddress: convergentPoolFactory.address,
-      marketFyWethAddress: wethFytPoolContract.address,
+      marketFyWethAddress: firstWethFytPoolContract.address,
       marketFyWethId: wethFytPoolId,
-      marketYcWethAddress: wethYcPoolContract.address,
+      marketYcWethAddress: firstWethYcPoolContract.address,
       marketYcWethId: wethYcPoolId,
 
       marketFyUsdcAddress: usdcFytPoolContract.address,
@@ -236,21 +249,40 @@ async function main() {
   fs.writeFileSync("./src/all-addresses.json", allAddresses);
 
   // Produce a schema-compliant testnet.addresses.json file
+  const addressesJson:AddressesJsonFile  = {
+    chainId: 31337,
+    addresses: {
+      elementAddress,
+      balancerVaultAddress: balancerVaultContract.address,
+      trancheFactoryAddress: trancheFactory.address,
+      interestTokenFactoryAddress: interestTokenFactory.address,
+      weightedPoolFactoryAddress: weightedPoolFactory.address,
+      convergentPoolFactoryAddress: convergentPoolFactory.address,
+      userProxyContractAddress: userProxyContract.address,
+      wethAddress: wethContract.address,
+      usdcAddress: usdcContract.address,
+    },
+    safelist: [
+      firstWethTrancheContract.address,
+      firstWethInterestTokenContract.address,
+      firstWethFytPoolContract.address,
+      firstWethYcPoolContract.address,
+      secondWethTrancheContract.address,
+      secondWethInterestTokenContract.address,
+      secondWethFytPoolContract.address,
+      secondWethYcPoolContract.address,
+      expiredWethTrancheContract.address,
+      expiredWethInterestTokenContract.address,
+      expiredWethFytPoolContract.address,
+      expiredWethYcPoolContract.address,
+      usdcTrancheContract.address,
+      usdcInterestTokenContract.address,
+      usdcFytPoolContract.address,
+      usdcYcPoolContract.address,
+    ],
+  };
   const schemaAddresses = JSON.stringify(
-    {
-      chainId: 31337,
-      addresses: {
-        elementAddress,
-        balancerVaultAddress: balancerVaultContract.address,
-        trancheFactoryAddress: trancheFactory.address,
-        interestTokenFactoryAddress: interestTokenFactory.address,
-        weightedPoolFactoryAddress: weightedPoolFactory.address,
-        convergentPoolFactoryAddress: convergentPoolFactory.address,
-        userProxyContractAddress: userProxyContract.address,
-        wethAddress: wethContract.address,
-        usdcAddress: usdcContract.address,
-      },
-    } as AddressesJsonFile,
+     addressesJson,
     null,
     2
   );

@@ -7,4 +7,5 @@ efi-frontend
 elf-contracts
 src/types
 src/tokenlist/testnet.tokenlist.json
+src/testnet.addresses.json
 all-addresses.json
