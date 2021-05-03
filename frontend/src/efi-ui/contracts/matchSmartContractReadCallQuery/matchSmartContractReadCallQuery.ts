@@ -13,13 +13,13 @@ export function matchSmartContractReadCallQuery<
   TMethodName extends ContractMethodName<TContract>
 >(
   query: Query,
-  contract: TContract | undefined,
+  contractAddress: string | undefined,
   methodName: TMethodName,
   callArgs: Parameters<TContract["functions"][TMethodName]> | undefined
 ): boolean {
   const match = isEqual(
     query.queryKey,
-    makeSmartContractReadCallQueryKey(contract, methodName, callArgs)
+    makeSmartContractReadCallQueryKey(contractAddress, methodName, callArgs)
   );
   return match;
 }

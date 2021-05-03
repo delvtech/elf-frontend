@@ -61,8 +61,6 @@ export function usePortfolioTabs(
         <PrincipalTokenPortfolio
           chainId={chainId}
           library={library}
-          connector={connector}
-          walletConnectionActive={walletConnectionActive}
           account={account}
           tranches={principalTokens}
         />
