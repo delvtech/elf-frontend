@@ -15,6 +15,7 @@ import { SIX_MONTHS_IN_SECONDS } from "src/time";
 import { deployTranche } from "./deployTranche";
 import { setupInterestTokenPool } from "./setupInterestTokenPool";
 import { ERC20 } from "src/types/ERC20";
+import { InterestToken__factory } from "src/types/factories/InterestToken__factory";
 
 const defaultOptions = {
   swapFeeConvergentCurvePool: "0.1",
@@ -64,6 +65,8 @@ export async function deployTrancheAndMarket(
     yearnVaultAssetProxy,
     expiration
   );
+  const interestTokenAddress = await trancheContract.interestToken();
+  const interestTokenContract = InterestToken__factory.connect(interestTokenAddress, signer);
 
   // deploy an FYT market, seed with base asset
   const {
@@ -107,6 +110,7 @@ export async function deployTrancheAndMarket(
 
   return {
     trancheContract,
+    interestTokenContract,
     fytPoolContract,
     fytPoolId,
     ycPoolContract,

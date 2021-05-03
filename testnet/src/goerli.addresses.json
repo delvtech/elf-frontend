@@ -10,5 +10,6 @@
     "convergentPoolFactoryAddress": "0x7E2e1DbBaF6736665844f91E411E05d6634bC3E4",
     "userProxyContractAddress": "0x3D6AFca056AA531D95035220fB824B5B6E83A546",
     "weightedPoolFactoryAddress": "0x2F3072bcD7dFFeD2d4580bf5C3beaF893d0e91FE"
-  }
+  },
+  "safelist": []
 }

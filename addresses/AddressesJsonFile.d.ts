@@ -11,4 +11,5 @@ export interface AddressesJsonFile {
     wethAddress: string;
     usdcAddress: string;
   };
+  safelist: string[];
 }

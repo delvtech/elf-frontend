@@ -44,10 +44,16 @@
       ],
       "type": "object"
     },
+    "safelist": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
     "chainId": {
       "type": "number"
     }
   },
-  "required": ["addresses", "chainId"],
+  "required": ["addresses", "chainId", "safelist"],
   "type": "object"
 }
