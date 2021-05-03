@@ -104,7 +104,10 @@ export function BuyPrincipalTokensTransactionConfirmationDrawer({
     0.01
   );
 
-  const { batchSwapGivenIn: onConfirmBuyPrincipalTokens } = useBatchSwapGivenIn(
+  const {
+    batchSwapGivenIn: onConfirmBuyPrincipalTokens,
+    mutationResult: { isLoading, isSuccess, isError },
+  } = useBatchSwapGivenIn(
     account,
     signer,
     pool,
@@ -129,6 +132,9 @@ export function BuyPrincipalTokensTransactionConfirmationDrawer({
   return (
     <TransactionDrawer
       approvalSpenderAddress={balancerVault?.address}
+      transactionPending={isLoading}
+      transactionFailed={isError}
+      transactionSuccess={isSuccess}
       isOpen={isOpen}
       onClose={onClose}
       account={account}
