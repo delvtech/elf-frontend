@@ -1,7 +1,7 @@
 {
   "chainId": 5,
   "addresses": {
-    "elementAddress": "",
+    "elementAddress": "0xc484862841af2fde669436a8a81ccdf833ef28bf",
     "usdcAddress": "0xbb6d1A992DD40158Cc11806a34e181cd3464F4d0",
     "wethAddress": "0xD3E043F06359bD94b8289f30138764CB6cA32704",
     "trancheFactoryAddress": "0x495F926B3E18187E2930A760d5B2e025257942b1",
