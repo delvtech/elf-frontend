@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 
 import { Tranche } from "elf-contracts/types/Tranche";
-import { Signer } from "ethers";
+import { ContractTransaction, Signer } from "ethers";
 import { parseUnits } from "ethers/lib/utils";
 
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
@@ -9,6 +9,8 @@ import { useMintCallArgs } from "efi-ui/mint/hooks/useMintCallArgs";
 import { useUserProxy } from "efi-ui/mint/hooks/userProxy";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
+import { UserProxy } from "elf-contracts/types/UserProxy";
+import { UseMutationResult } from "react-query";
 
 /**
  * Returns the number of Principal Tokens you'd get for minting into a tranche.
@@ -21,7 +23,14 @@ export function useMintTransaction(
   baseAsset: CryptoAsset | undefined,
   tranche: Tranche | undefined,
   amountIn: number | undefined
-): () => void {
+): {
+  mint: () => void;
+  mutationResult: UseMutationResult<
+    ContractTransaction | undefined,
+    unknown,
+    Parameters<UserProxy["mint"]>
+  >;
+} {
   const userProxy = useUserProxy();
   const baseAssetDecimals = useCryptoDecimals(baseAsset);
   const amountInBigNumber = parseUnits(
@@ -29,12 +38,12 @@ export function useMintTransaction(
     baseAssetDecimals
   );
 
-  const { mutate: mint } = useSmartContractTransactionPersisted(
+  const mutationResult = useSmartContractTransactionPersisted(
     userProxy,
     "mint",
     signer
   );
-
+  const { mutate: mint } = mutationResult;
   const mintCallArgs = useMintCallArgs(tranche, baseAsset, amountInBigNumber);
   const onMintTransaction = useCallback(() => {
     if (mintCallArgs) {
@@ -42,5 +51,5 @@ export function useMintTransaction(
     }
   }, [mint, mintCallArgs]);
 
-  return onMintTransaction;
+  return { mint: onMintTransaction, mutationResult };
 }
