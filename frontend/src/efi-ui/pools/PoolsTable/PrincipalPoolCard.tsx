@@ -22,6 +22,7 @@ import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSy
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 import { useFeeVolumeFiatForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
+import { useTokenYield } from "efi-ui/pools/useTokenYield";
 import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidityForPool.ts/useTotalFiatLiquidityForPool";
 import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForPool";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
@@ -31,6 +32,7 @@ import { formatMoney } from "efi/money/formatMoney";
 import { PoolContract } from "efi/pools/PoolContract";
 
 import styles from "./PrincipalPoolCard.module.css";
+import { formatPercent } from "efi/base/formatPercent";
 
 interface PrincipalPoolCardProps {
   pool: PoolContract | undefined;
@@ -66,6 +68,7 @@ export function PrincipalPoolCard(
     tranche,
     "unlockTimestamp"
   );
+  const fixedYield = useTokenYield(baseAssetContract, pool, "principal");
 
   // TODO: Get this from props
   const goToPoolPage = useCallback(() => {
@@ -85,6 +88,7 @@ export function PrincipalPoolCard(
     BaseAssetIcon,
     termAssetContract,
     termAssetSymbol,
+    fixedYield,
     unlockBN,
   ];
 
@@ -247,7 +251,11 @@ export function PrincipalPoolCard(
           "lg:col-span-2"
         )}
       >
-        <LabeledText large text={"20%"} label={t`Fixed APY`} />
+        <LabeledText
+          large
+          text={formatPercent(fixedYield)}
+          label={t`Fixed APY`}
+        />
       </div>
       <div
         className={tw(

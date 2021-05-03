@@ -7,14 +7,22 @@ import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { ONE_YEAR_IN_SECONDS } from "efi/base/time";
 import { PoolContract } from "efi/pools/PoolContract";
+import { TermAssetType } from "efi/tranche/TermAssetType";
 
+/**
+ * Returns the APY for either a principal token or a yield token
+ * @param baseAssetContract
+ * @param pool
+ * @param termAssetType
+ * @returns
+ */
 export function useTokenYield(
   baseAssetContract: ERC20 | undefined,
   pool: PoolContract | undefined,
-  termAssetType: string
+  termAssetType: TermAssetType
 ): number {
   // get fixed yield
-  const baseAssetSymbol = useTokenSymbol(baseAssetContract);
+  const { data: baseAssetSymbol } = useTokenSymbol(baseAssetContract);
   const spotPrice = usePoolSpotPrice(pool, baseAssetContract);
   const trancheContract = useTrancheForPool(pool);
 
