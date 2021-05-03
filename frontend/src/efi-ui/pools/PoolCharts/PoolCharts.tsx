@@ -1,6 +1,6 @@
 import React, { ReactElement, useMemo, useState } from "react";
 
-import { Button, Card, Intent } from "@blueprintjs/core";
+import { Button, Callout, Card, H2, Intent } from "@blueprintjs/core";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -84,8 +84,25 @@ export function PoolCharts({ pool }: PoolChartsProps): ReactElement {
               >{t`Day`}</Button>
             </div>
           </div>
-          <div className={tw("w-full", "h-full", "pt-8")}>
-            {showLiquidityChart ? (
+          <div className={tw("w-full", "h-full", "pt-8", "relative")}>
+            {!poolAtLeastOneDayOld ? (
+              <div className={tw("pt-5", "h-full", "w-full")}>
+                <Callout
+                  icon={null}
+                  className={tw(
+                    "flex",
+                    "items-center",
+                    "justify-center",
+                    "h-full",
+                    "w-full"
+                  )}
+                  intent={Intent.PRIMARY}
+                >
+                  <H2>{t`Charts available after 24hrs`}</H2>
+                </Callout>
+              </div>
+            ) : null}
+            {showLiquidityChart && poolAtLeastOneDayOld ? (
               <BrushChart
                 data={liquidityData?.length ? liquidityData : fillerData}
                 getXValue={({ timeMs }) => timeMs}
@@ -94,7 +111,7 @@ export function PoolCharts({ pool }: PoolChartsProps): ReactElement {
                 isDarkMode={isDarkMode}
               />
             ) : null}
-            {showVolumeChart ? (
+            {showVolumeChart && poolAtLeastOneDayOld ? (
               <BarChart
                 data={volumeData?.length ? volumeData : fillerData}
                 getXValue={({ timeMs }) => new Date(timeMs)}

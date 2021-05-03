@@ -23,7 +23,7 @@ export function usePoolCreatedAt(
       callArgs: [pool?.address as string, null],
     }
   );
-  const convergentBlockNumber = convergentEvents?.[0].blockNumber;
+  const convergentBlockNumber = convergentEvents?.[0]?.blockNumber;
   const { data: convergentBlock } = useBlockFromTag(convergentBlockNumber);
 
   const { weightedPoolFactoryAddress } = ContractAddresses;
@@ -36,7 +36,7 @@ export function usePoolCreatedAt(
     "PoolCreated",
     { enabled: !!pool?.address, callArgs: [pool?.address as string] }
   );
-  const weightedBlockNumber = weightedEvents?.[0].blockNumber;
+  const weightedBlockNumber = weightedEvents?.[0]?.blockNumber;
   const { data: weightedBlock } = useBlockFromTag(weightedBlockNumber);
 
   if (convergentBlock) {
