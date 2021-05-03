@@ -9,6 +9,9 @@ export interface UseSmartContractTransactionOptions<
   TMethodName extends ContractMethodName<TContract>
 > {
   confirmations?: number;
+  onMutate?: (
+    callArgs: ContractMethodArgs<TContract, TMethodName>
+  ) => void | Promise<void>;
   onSuccess?: (
     result: ContractTransaction,
     callArgs: ContractMethodArgs<TContract, TMethodName>
@@ -29,7 +32,7 @@ export function useSmartContractTransaction<
   unknown,
   ContractMethodArgs<TContract, TMethodName>
 > {
-  const { confirmations = 1, onSuccess, onError } = options;
+  const { confirmations = 1, onSuccess, onMutate, onError } = options;
   return useMutation(
     async (args: ContractMethodArgs<TContract, TMethodName>) => {
       if (!signer || !contract) {
@@ -43,6 +46,9 @@ export function useSmartContractTransaction<
       return connected[methodName](...args);
     },
     {
+      onMutate: async (vars) => {
+        await onMutate?.(vars);
+      },
       onError: async (error: Error) => {
         const addressesJsonKey = lookupAddressKey(contract?.address);
         console.error(
