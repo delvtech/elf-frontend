@@ -15,7 +15,7 @@ import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidity
 import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
 import { useTrancheForInterestToken } from "efi-ui/tranche/useTrancheForInterestToken";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
-import { getTimeLeft2 } from "efi/base/time";
+import { getTimeLeft } from "efi/base/time";
 
 interface InterestTokenPoolCardProps {
   pool: WeightedPool | undefined;
@@ -54,7 +54,7 @@ export function InterestTokenPoolCard({
     Math.min(1, (currentTime - startTime) / (endTime - startTime))
   );
   const progressLabel = progressValue === 1 ? t`closed` : `running`;
-  const timeLeft = getTimeLeft2(maturityDate);
+  const timeLeft = getTimeLeft(maturityDate);
 
   return (
     <tr>

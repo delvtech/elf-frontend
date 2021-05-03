@@ -1,4 +1,5 @@
 import { useCallback } from "react";
+import { UseMutationResult } from "react-query";
 
 import { Vault } from "elf-contracts/types/Vault";
 import {
@@ -17,7 +18,6 @@ import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadC
 import {
   AppToaster,
   makeErrorToast,
-  makeSuccessToast,
 } from "efi-ui/toaster/AppToaster/AppToaster";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
 import {
@@ -28,7 +28,6 @@ import {
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { PoolContract } from "efi/pools/PoolContract";
-import { UseMutationResult } from "react-query";
 
 /**
  * Hook wrapper for the Balancer Vault's batchSwapGivenIn method.
