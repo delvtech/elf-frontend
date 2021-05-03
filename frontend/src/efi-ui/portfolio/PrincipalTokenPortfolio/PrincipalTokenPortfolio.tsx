@@ -2,7 +2,6 @@ import { ReactElement } from "react";
 
 import { Callout, Card, Classes, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
-import { AbstractConnector } from "@web3-react/abstract-connector";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { t } from "ttag";
 
@@ -17,8 +16,6 @@ import React from "react";
 interface PrincipalTokenPortfolioProps {
   chainId: number | undefined;
   library: Web3Provider | undefined;
-  connector: AbstractConnector | undefined;
-  walletConnectionActive: boolean;
   account: string | null | undefined;
   tranches: Tranche[];
 }
@@ -26,8 +23,6 @@ interface PrincipalTokenPortfolioProps {
 export function PrincipalTokenPortfolio({
   library,
   account,
-  connector,
-  walletConnectionActive,
   chainId,
   tranches,
 }: PrincipalTokenPortfolioProps): ReactElement {
@@ -83,8 +78,6 @@ export function PrincipalTokenPortfolio({
               <PrincipalTokenCard
                 chainId={chainId}
                 library={library}
-                connector={connector}
-                walletConnectionActive={walletConnectionActive}
                 account={account}
                 tranche={tranche}
               />

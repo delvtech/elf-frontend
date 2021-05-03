@@ -10,7 +10,6 @@ import {
 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
-import { AbstractConnector } from "@web3-react/abstract-connector";
 import classNames from "classnames";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { jt, t } from "ttag";
@@ -45,8 +44,6 @@ import { formatPercent } from "efi/base/formatPercent";
 interface PrincipalTokenCardProps {
   chainId: number | undefined;
   library: Web3Provider | undefined;
-  connector: AbstractConnector | undefined;
-  walletConnectionActive: boolean;
   account: string | null | undefined;
   tranche: Tranche;
 }
