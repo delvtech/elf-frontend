@@ -18,24 +18,12 @@ interface PoolsTableProps {
   className?: string;
   signerOrProvider?: Signer | Provider;
   isYieldPools?: boolean;
-  isMintPage?: boolean;
-  library: Web3Provider | undefined;
-  account: string | null | undefined;
-  chainId: number | undefined;
-  walletConnectionActive: boolean;
-  connector: AbstractConnector | undefined;
 }
 
 export function PoolsTable({
   className,
   signerOrProvider,
   isYieldPools,
-  isMintPage,
-  library,
-  account,
-  walletConnectionActive,
-  chainId,
-  connector,
 }: PoolsTableProps): ReactElement {
   const principalTokenPools = useConvergentCurvePools(signerOrProvider);
   const interestTokenPools = useWeightedPools(signerOrProvider);
@@ -45,23 +33,7 @@ export function PoolsTable({
       className={tw("flex", "flex-col", "items-center", "w-full", "space-y-5")}
     >
       <Fragment>
-        {isMintPage
-          ? interestTokenPools
-              .filter((pool): pool is WeightedPool => !!pool)
-              .map((pool, index) => {
-                return (
-                  <MintPoolCard
-                    key={pool?.contractAddress || index}
-                    pool={pool}
-                    library={library}
-                    account={account}
-                    walletConnectionActive={walletConnectionActive}
-                    chainId={chainId}
-                    connector={connector}
-                  />
-                );
-              })
-          : isYieldPools
+        {isYieldPools
           ? interestTokenPools
               .filter((pool): pool is WeightedPool => !!pool)
               .map((pool, index) => {

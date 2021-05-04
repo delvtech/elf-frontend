@@ -64,15 +64,9 @@ export function PoolsView(props: PoolsViewProps): ReactElement {
         />
 
         <PoolsTable
-          library={library}
-          account={account}
-          walletConnectionActive={active}
-          chainId={chainId}
-          connector={connector}
           signerOrProvider={signer}
           className={tw("w-full")}
           isYieldPools={isYieldPage}
-          isMintPage={props.path == "deposit"}
         />
       </div>
     </Fragment>
