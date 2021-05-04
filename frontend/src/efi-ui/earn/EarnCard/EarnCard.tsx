@@ -18,7 +18,7 @@ import { SwapKind } from "efi-ui/balancer/SwapKind";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { CryptoAssetPicker } from "efi-ui/crypto/CryptoAssetPicker/CryptoAssetPicker";
-import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
+import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoBalance } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
@@ -113,7 +113,7 @@ export function EarnCard({
     spotPriceBaseAssetForOneToken: amountOfEthForOnePrincipalEth,
   } = usePoolTokenPrices(pool, baseAssetPoolToken);
   const inputTokenSymbol = useCryptoSymbol(activeBaseAsset);
-  const baseAssetIcon = findAssetIcon(inputTokenSymbol);
+  const baseAssetIcon = findAssetIcon2(activeBaseAsset);
 
   const { stringValue: amountIn, setValue: onChangeIn } = useNumericInput();
   const { stringValue: amountOut, setValue: onChangeOut } = useNumericInput();
