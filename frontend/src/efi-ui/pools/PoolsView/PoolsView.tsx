@@ -20,8 +20,8 @@ export function PoolsView(props: PoolsViewProps): ReactElement {
   const isYieldPage = props.path === "yield";
   const title = isYieldPage ? t`Yield Token Pools` : t`Principal Token Pools`;
   const subtitle = isYieldPage
-    ? t`Trade your Yield Tokens, or provide liquidity by staking in Element pools.`
-    : t`Trade your Principal, or provide liquidity by staking in Element pools.`;
+    ? t`Trade your Yield Tokens or provide liquidity by staking in Element pools.`
+    : t`Trade your Principal or provide liquidity by staking in Element pools.`;
 
   return (
     <Fragment>
