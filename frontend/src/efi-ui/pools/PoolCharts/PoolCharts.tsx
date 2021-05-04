@@ -1,16 +1,18 @@
-import React, { ReactElement, useState } from "react";
+import React, { ReactElement, useMemo, useState } from "react";
 
-import { Button, Card, Intent } from "@blueprintjs/core";
+import { Button, Callout, Card, H2, Intent } from "@blueprintjs/core";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import BarChart from "efi-ui/charts/BarChart/BarChart";
 import BrushChart from "efi-ui/charts/BrushChart/BrushChart";
 import { useVolumeHistoryForPool } from "efi-ui/pools/PoolCharts/useLiquidityVolumeHistoryForPool";
+import { usePoolCreatedAt } from "efi-ui/pools/usePoolCreatedAt";
+import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
+import { ONE_DAY_IN_SECONDS } from "efi/base/time";
 import { PoolContract } from "efi/pools/PoolContract";
 
 import { useLiquidityHistoryForPool } from "./useLiquidityHistoryForPool";
-import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 
 const fillerData = [
   { timeMs: Date.parse("2021-01-12"), value: 1077.800674325 },
@@ -32,13 +34,12 @@ interface PoolChartsProps {
 }
 export function PoolCharts({ pool }: PoolChartsProps): ReactElement {
   const { isDarkMode } = useDarkMode();
+  const poolAtLeastOneDayOld = usePoolAtLeastOneDayOld(pool);
+
   const liquidityData = useLiquidityHistoryForPool(pool);
-  // console.log("liquidityData", liquidityData);
   const volumeData = useVolumeHistoryForPool(pool);
-  // console.log("volumeData", volumeData);
 
   const [activeChart, setChart] = useState(ChartType.VOLUME);
-  // console.log("activeChart", activeChart);
   const showLiquidityChart = activeChart === ChartType.LIQUIDITY;
   const showVolumeChart = activeChart === ChartType.VOLUME;
 
@@ -83,8 +84,25 @@ export function PoolCharts({ pool }: PoolChartsProps): ReactElement {
               >{t`Day`}</Button>
             </div>
           </div>
-          <div className={tw("w-full", "h-full", "pt-8")}>
-            {showLiquidityChart ? (
+          <div className={tw("w-full", "h-full", "pt-8", "relative")}>
+            {!poolAtLeastOneDayOld ? (
+              <div className={tw("pt-5", "h-full", "w-full")}>
+                <Callout
+                  icon={null}
+                  className={tw(
+                    "flex",
+                    "items-center",
+                    "justify-center",
+                    "h-full",
+                    "w-full"
+                  )}
+                  intent={Intent.NONE}
+                >
+                  <H2>{t`Charts available after 24hrs`}</H2>
+                </Callout>
+              </div>
+            ) : null}
+            {showLiquidityChart && poolAtLeastOneDayOld ? (
               <BrushChart
                 data={liquidityData?.length ? liquidityData : fillerData}
                 getXValue={({ timeMs }) => timeMs}
@@ -93,7 +111,7 @@ export function PoolCharts({ pool }: PoolChartsProps): ReactElement {
                 isDarkMode={isDarkMode}
               />
             ) : null}
-            {showVolumeChart ? (
+            {showVolumeChart && poolAtLeastOneDayOld ? (
               <BarChart
                 data={volumeData?.length ? volumeData : fillerData}
                 getXValue={({ timeMs }) => new Date(timeMs)}
@@ -107,4 +125,15 @@ export function PoolCharts({ pool }: PoolChartsProps): ReactElement {
       </div>
     </div>
   );
+}
+function usePoolAtLeastOneDayOld(pool: PoolContract | undefined) {
+  const nowInSeconds = useMemo(() => {
+    const now = Date.now();
+    return Math.round(now / 1000);
+  }, []);
+  const poolCreatedAt = usePoolCreatedAt(pool) ?? nowInSeconds;
+
+  const poolAge = nowInSeconds - poolCreatedAt;
+  const hasEnoughPoolData = poolAge >= ONE_DAY_IN_SECONDS;
+  return hasEnoughPoolData;
 }

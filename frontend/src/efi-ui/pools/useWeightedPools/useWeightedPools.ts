@@ -8,19 +8,20 @@ import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFr
 import { useSmartContractEvents } from "efi-ui/contracts/useSmartContractEvents/useSmartContractEvents";
 import ContractAddresses from "efi/addresses";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
+import { getSmartContractFromRegistry } from "efi-ui/contracts/SmartContractsRegistry";
 
 export function useWeightedPools(
   signerOrProvider?: Signer | Provider
 ): (WeightedPool | undefined)[] {
   const { weightedPoolFactoryAddress } = ContractAddresses;
 
-  const convergentPoolFactory = useSmartContractFromFactory(
+  const weightedPoolFactory = getSmartContractFromRegistry(
     weightedPoolFactoryAddress,
     WeightedPoolFactory__factory.connect
   );
 
   const { data: events } = useSmartContractEvents(
-    convergentPoolFactory,
+    weightedPoolFactory,
     "PoolCreated",
     { callArgs: [null] }
   );
