@@ -18,7 +18,7 @@ import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 import ContractAddresses from "efi/addresses";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { calculateTokensOutForLPInFixed } from "efi/pools/calculateTokensOutForLPIn";
-import { getSmartContractFromRegistryMulti } from "efi-ui/contracts/SmartContractsRegistry";
+import { getSmartContractFromRegistryMulti } from "efi/contracts/SmartContractsRegistry";
 import { WeightedPool } from "elf-contracts/types/WeightedPool";
 import { WeightedPoolExitKind } from "efi/pools/weightedPool";
 

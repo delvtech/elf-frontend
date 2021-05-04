@@ -1,6 +1,6 @@
 import { Tranche__factory } from "elf-contracts/types/factories/Tranche__factory";
 
-import { getSmartContractFromRegistryMulti } from "efi-ui/contracts/SmartContractsRegistry";
+import { getSmartContractFromRegistryMulti } from "efi/contracts/SmartContractsRegistry";
 import { PrincipalTokenInfos, YieldTokenInfos } from "efi/tokenlists";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { InterestToken__factory } from "elf-contracts/types/factories/InterestToken__factory";

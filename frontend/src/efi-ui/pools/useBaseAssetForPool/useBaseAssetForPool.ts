@@ -8,7 +8,7 @@ import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { KNOWN_BASE_ASSETS } from "efi/addresses";
 import { PoolContract } from "efi/pools/PoolContract";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
-import { getSmartContractFromRegistry } from "efi-ui/contracts/SmartContractsRegistry";
+import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
 
 export function useBaseAssetForPool(
   pool: PoolContract | undefined,

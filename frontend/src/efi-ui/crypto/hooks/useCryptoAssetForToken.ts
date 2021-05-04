@@ -1,4 +1,4 @@
-import { getSmartContractFromRegistry } from "efi-ui/contracts/SmartContractsRegistry";
+import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
 import ContractAddresses, {
   KNOWN_ERC20_TOKENS,
   KNOWN_ERC20PERMIT_TOKENS,

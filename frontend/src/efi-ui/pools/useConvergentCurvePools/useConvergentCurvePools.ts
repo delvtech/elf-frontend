@@ -7,7 +7,7 @@ import { Signer } from "ethers";
 import { useSmartContractEvents } from "efi-ui/contracts/useSmartContractEvents/useSmartContractEvents";
 import ContractAddresses from "efi/addresses";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
-import { getSmartContractFromRegistry } from "efi-ui/contracts/SmartContractsRegistry";
+import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
 import { useMemo } from "react";
 
 const { convergentPoolFactoryAddress } = ContractAddresses;
