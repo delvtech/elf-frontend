@@ -5,6 +5,7 @@ import { Signer } from "ethers";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { MintPoolCard } from "efi-ui/pools/PoolsTable/MintPoolCard";
 import { PrincipalPoolCard } from "efi-ui/pools/PoolsTable/PrincipalPoolCard";
 import { InterestPoolCard } from "efi-ui/pools/PoolsTable/InterestPoolCard";
 import { useConvergentCurvePools } from "efi-ui/pools/useConvergentCurvePools/useConvergentCurvePools";
@@ -16,30 +17,35 @@ interface PoolsTableProps {
   className?: string;
   signerOrProvider?: Signer | Provider;
   isYieldPools?: boolean;
+  isMintPage?: boolean;
 }
 
 export function PoolsTable({
   className,
   signerOrProvider,
   isYieldPools,
+  isMintPage,
 }: PoolsTableProps): ReactElement {
   const principalTokenPools = useConvergentCurvePools(signerOrProvider);
   const interestTokenPools = useWeightedPools(signerOrProvider);
-
-  if (isYieldPools && !interestTokenPools.length) {
-    return <span>{t`no markets found`}</span>;
-  }
-
-  if (!isYieldPools && !principalTokenPools.length) {
-    return <span>{t`no markets found`}</span>;
-  }
 
   return (
     <div
       className={tw("flex", "flex-col", "items-center", "w-full", "space-y-5")}
     >
       <Fragment>
-        {isYieldPools
+        {isMintPage
+          ? interestTokenPools
+              .filter((pool): pool is WeightedPool => !!pool)
+              .map((pool, index) => {
+                return (
+                  <MintPoolCard
+                    key={pool?.contractAddress || index}
+                    pool={pool}
+                  />
+                );
+              })
+          : isYieldPools
           ? interestTokenPools
               .filter((pool): pool is WeightedPool => !!pool)
               .map((pool, index) => {

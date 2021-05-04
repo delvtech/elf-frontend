@@ -23,6 +23,14 @@ export function PoolsView(props: PoolsViewProps): ReactElement {
     ? t`Trade your Yield Tokens, or provide liquidity by staking in Element pools.`
     : t`Trade your Principal, or provide liquidity by staking in Element pools.`;
 
+  let tempTitle;
+  let tempSubtitle;
+
+  if (props.path === "deposit") {
+    tempTitle = "Mint Page";
+    tempSubtitle = "Time to Mint Baby";
+  }
+
   return (
     <Fragment>
       <Helmet>
@@ -43,8 +51,8 @@ export function PoolsView(props: PoolsViewProps): ReactElement {
         )}
       >
         <ViewTitle
-          title={title}
-          subtitle={subtitle}
+          title={tempTitle || title}
+          subtitle={tempSubtitle || subtitle}
           className={tw("text-center")}
         />
 
@@ -52,6 +60,7 @@ export function PoolsView(props: PoolsViewProps): ReactElement {
           signerOrProvider={signer}
           className={tw("w-full")}
           isYieldPools={isYieldPage}
+          isMintPage={props.path == "deposit"}
         />
       </div>
     </Fragment>

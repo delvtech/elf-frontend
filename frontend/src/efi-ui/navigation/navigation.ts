@@ -3,7 +3,7 @@ export enum Navigation {
   PULSE = "pulse",
   PORTFOLIO = "portfolio",
 
-  MINT = "mint",
+  DEPOSIT = "deposit",
   PRINCIPAL_POOLS = "principal",
   YIELD_POOLS = "yield",
   POOL = "pool",

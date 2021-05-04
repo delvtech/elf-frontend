@@ -32,8 +32,8 @@ export function useActiveTab(): Navigation {
     case Navigation.EARN: {
       return Navigation.EARN;
     }
-    case Navigation.MINT: {
-      return Navigation.MINT;
+    case Navigation.DEPOSIT: {
+      return Navigation.DEPOSIT;
     }
 
     default:
