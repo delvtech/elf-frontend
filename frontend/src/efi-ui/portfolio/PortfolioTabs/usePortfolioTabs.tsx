@@ -8,7 +8,6 @@ import { Money } from "ts-money";
 import { t } from "ttag";
 
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
-import { useInterestTokenContracts } from "efi-ui/interestToken/useInterestTokens/useInterestTokens";
 import { useConvergentCurvePoolsWithLPBalance } from "efi-ui/portfolio/hooks/useConvergentCurvePoolsWithLPBalance";
 import { useTotalFiatBalance } from "efi-ui/portfolio/hooks/useTotalFiatBalance";
 import { useTotalLiquidityProvidedMulti } from "efi-ui/portfolio/hooks/useTotalLiquidityProvidedMulti";
@@ -25,7 +24,7 @@ import zip from "lodash.zip";
 import { ERC20 } from "elf-contracts/types/ERC20";
 import { BigNumber } from "ethers";
 import { isDust } from "efi/coins/isDust";
-import { TrancheContracts } from "efi/tranche/tranches";
+import { InterestTokenContracts, TrancheContracts } from "efi/tranche/tranches";
 
 export function usePortfolioTabs(
   chainId: number | undefined,
@@ -148,11 +147,9 @@ function useYieldTokenTab(
   account: string | null | undefined,
   provider?: Provider
 ) {
-  const yieldTokens = useInterestTokenContracts();
-
   const yieldTokensWithBalanceResults = useTokensWithBalance(
     account,
-    (yieldTokens as unknown) as ERC20Shim[],
+    (InterestTokenContracts as unknown) as ERC20Shim[],
     provider
   );
 

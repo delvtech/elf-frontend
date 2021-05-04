@@ -10,8 +10,7 @@ import { isConvergentCurvePool, PoolContract } from "efi/pools/PoolContract";
 import { InterestToken__factory } from "elf-contracts/types/factories/InterestToken__factory";
 import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
 import { Tranche__factory } from "elf-contracts/types/factories/Tranche__factory";
-import { useInterestTokenContracts } from "efi-ui/interestToken/useInterestTokens/useInterestTokens";
-import { TrancheContracts } from "efi/tranche/tranches";
+import { InterestTokenContracts, TrancheContracts } from "efi/tranche/tranches";
 
 export function useTrancheForPool(
   pool: PoolContract | undefined,
@@ -29,8 +28,7 @@ export function useTrancheForPool(
   // just have to look up the tranche address
   const { data: tokenInfo } = usePoolTokens(pool);
   const [tokens] = tokenInfo || [];
-  const interestTokens = useInterestTokenContracts();
-  const interestTokenAddresses = interestTokens.map((c) => c.address);
+  const interestTokenAddresses = InterestTokenContracts.map((c) => c.address);
   const interestTokenAddress = interestTokenAddresses.find((address) =>
     tokens?.includes(address)
   );

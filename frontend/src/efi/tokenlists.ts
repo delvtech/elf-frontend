@@ -35,7 +35,7 @@ export const PrincipalTokenInfos = TokenInfos.filter((tokenInfo) =>
 );
 export const PrincipalTokenMetadata = keyBy(PrincipalTokenInfos, "address");
 
-const YieldTokenInfos = TokenInfos.filter(
+export const YieldTokenInfos = TokenInfos.filter(
   (tokenInfo) => tokenInfo.tags?.includes(TokenListTag.YIELD),
   "address"
 );
