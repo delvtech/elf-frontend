@@ -19,6 +19,9 @@ import {
 } from "@blueprintjs/core";
 import { Link, navigate } from "@reach/router";
 import classNames from "classnames";
+import { Web3Provider } from "@ethersproject/providers";
+import { AbstractConnector } from "@web3-react/abstract-connector";
+import { Tranche } from "elf-contracts/types/Tranche";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -27,23 +30,37 @@ import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
+import { useCryptoBalance } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
+import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 import { useFeeVolumeForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
+import { useMintPreview } from "efi-ui/mint/hooks/useMintPreview";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
+import { MintTransactionConfirmationDrawer } from "efi-ui/mint/MintTransactionConfirmationDrawer/MintTransactionConfirmationDrawer";
+import { PrincipalTokenPreview } from "efi-ui/mint/MintCard/PrincipalTokenPreview";
+import { YieldTokenPreview } from "efi-ui/mint/MintCard/YieldTokenPreview";
 import { TradeInputAlt } from "efi-ui/trade/TradeInput/TradeInputAlt";
 import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForPool";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
 import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
 import { formatMoney } from "efi/money/formatMoney";
+import { formatBalance } from "efi/base/formatBalance";
+import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { PoolContract } from "efi/pools/PoolContract";
+import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 
 import styles from "./PrincipalPoolCard.module.css";
 import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidityForPool.ts/useTotalFiatLiquidityForPool";
 
 interface MintPoolCardProps {
   pool: PoolContract | undefined;
+  library: Web3Provider | undefined;
+  account: string | null | undefined;
+  chainId: number | undefined;
+  walletConnectionActive: boolean;
+  connector: AbstractConnector | undefined;
 }
 
 const cellClassName = tw("flex", "mr-4", "items-center", "overflow-hidden");
@@ -59,8 +76,28 @@ const stopPropagationHandler = (e: React.MouseEvent<HTMLAnchorElement>) => {
   e.stopPropagation();
 };
 
+function useActiveMintPreview(
+  activeTranche: Tranche | undefined,
+  amountIn: number
+) {
+  const numPrincipalTokensOut = useMintPreview(activeTranche, amountIn);
+
+  // You will always receive the same amount of yield tokens as the amount of
+  // base asset you put in
+  const numYieldTokensOut = amountIn;
+
+  return { numPrincipalTokensOut, numYieldTokensOut };
+}
+
 export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
-  const { pool } = props;
+  const {
+    pool,
+    library,
+    account,
+    chainId,
+    walletConnectionActive,
+    connector,
+  } = props;
   const tranche = useTrancheForPool(pool);
   const liquidity = useTotalFiatLiquidityForPool(pool);
   const trancheCreatedAt = useTrancheCreatedAt(tranche);
@@ -74,6 +111,7 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
     termAssetContract?.address,
     baseAssetSymbol
   );
+
   const { data: unlockBN } = useSmartContractReadCall(
     tranche,
     "unlockTimestamp"
@@ -106,7 +144,29 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
 
   const [transitionsEnabled, setTransitionsEnabled] = useState(true);
   const [isOpen, setOpen] = useState(false);
-  console.log(styles);
+  const [isDrawerOpen, setDrawerOpen] = useState(false);
+
+  const {
+    stringValue: amountInString,
+    setValue: setAmountIn,
+  } = useNumericInput({
+    // no one needs to put in more than a trillion anything
+    max: 999_999_999_999,
+  });
+  const amountIn = +(amountInString || 0);
+
+  const { numPrincipalTokensOut, numYieldTokensOut } = useActiveMintPreview(
+    tranche,
+    amountIn
+  );
+
+  const baseAssetDecimals = useCryptoDecimals(baseAsset);
+  const baseAssetBalance = useCryptoBalance(library, account, baseAsset);
+
+  const activeBaseAssetDisplayBalance = formatBalance(
+    baseAssetBalance,
+    baseAssetDecimals
+  );
 
   // One tme useEffect to let us show transitions for the skeletons once the data is loaded.
   // Afterwards we disable transitions so they don't interfere with light/dark mode switching.
@@ -346,29 +406,27 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
           <div className={tw("text-lg")}>Mint</div>
         </div>
         <div className={tw("pl-24", "pt-4", "-ml-1")}>
-          <div className={tw("mb-1")}>Available: 234.34</div>
+          <div className={tw("mb-1")}>
+            Available: {activeBaseAssetDisplayBalance}
+          </div>
           <div className={tw("flex", "items-center")}>
             <div style={{ maxWidth: "300px" }}>
               <TradeInputAlt
-                cryptoAddress={"0x0000000000000000000000000000000000000000"}
-                cryptoDecimals={18}
-                cryptoBalanceOf={undefined}
-                cryptoDisplayBalance={0}
-                cryptoSymbol={"ETH"}
+                cryptoAddress={baseAssetContract?.address}
+                cryptoDecimals={baseAssetDecimals}
+                cryptoBalanceOf={baseAssetBalance}
+                cryptoDisplayBalance={activeBaseAssetDisplayBalance || ""}
+                cryptoSymbol={baseAssetSymbol}
                 cryptoIcon={BaseAssetIcon}
-                previewCryptoAddress={
-                  "0x90AF5AE6a337734da85Eb751a4B8aCF088Aa74d5"
-                }
+                previewCryptoAddress={termAssetContract?.address}
                 previewCryptoPoolIndex={1}
                 labelTopLeft={t`Mint`}
                 disabled={false}
                 swapKind={0}
                 pool={pool}
-                onChange={() => {
-                  console.log("change");
-                }}
-                onPreviewUpdate={() => console.log("hi")}
-                value={"12"}
+                onChange={setAmountIn}
+                onPreviewUpdate={() => {}}
+                value={amountInString}
                 validValue={true}
               />
             </div>
@@ -388,7 +446,10 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
                 "justify-center"
               )}
             >
-              <LabeledText text={"11.98 eP:yETH"} label={`Principal Tokens`} />
+              <LabeledText
+                text={`${numPrincipalTokensOut || 0} eP:yETH`}
+                label={`Principal Tokens`}
+              />
             </Callout>
             <Callout
               style={{ width: "145px", textAlign: "center" }}
@@ -400,11 +461,19 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
                 "justify-center"
               )}
             >
-              <LabeledText text={"12 eP:yETH"} label={`Yield Tokens`} />
+              <LabeledText
+                text={`${numYieldTokensOut || 0} eP:yETH`}
+                label={`Yield Tokens`}
+              />
             </Callout>
           </div>
           <div className={tw("mt-4")}>
-            <Button minimal outlined intent="primary">
+            <Button
+              minimal
+              outlined
+              intent="primary"
+              onClick={() => setDrawerOpen(true)}
+            >
               Mint Tokens
             </Button>
           </div>
@@ -436,6 +505,19 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
             Or sell your principal to re-invest.
           </div>
         </div>
+        <MintTransactionConfirmationDrawer
+          baseAsset={baseAsset}
+          baseAssetIcon={BaseAssetIcon}
+          tranche={tranche}
+          account={account}
+          library={library}
+          chainId={chainId}
+          walletConnectionActive={walletConnectionActive}
+          connector={connector}
+          amountIn={amountInString}
+          isOpen={isDrawerOpen}
+          onClose={() => setDrawerOpen(false)}
+        />
       </Collapse>
     </Card>
   );

@@ -14,9 +14,16 @@ import { PoolsTable } from "efi-ui/pools/PoolsTable/PoolsTable";
 interface PoolsViewProps extends RouteComponentProps {}
 
 export function PoolsView(props: PoolsViewProps): ReactElement {
-  const { library, account } = useWeb3React<Web3Provider>();
+  const {
+    library,
+    account,
+    active,
+    chainId,
+    connector,
+  } = useWeb3React<Web3Provider>();
 
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
+
   const isYieldPage = props.path === "yield";
   const title = isYieldPage ? t`Yield Token Pools` : t`Principal Token Pools`;
   const subtitle = isYieldPage
@@ -57,6 +64,11 @@ export function PoolsView(props: PoolsViewProps): ReactElement {
         />
 
         <PoolsTable
+          library={library}
+          account={account}
+          walletConnectionActive={active}
+          chainId={chainId}
+          connector={connector}
           signerOrProvider={signer}
           className={tw("w-full")}
           isYieldPools={isYieldPage}

@@ -1,6 +1,7 @@
 import { Fragment, ReactElement } from "react";
 
-import { Provider } from "@ethersproject/providers";
+import { Provider, Web3Provider } from "@ethersproject/providers";
+import { AbstractConnector } from "@web3-react/abstract-connector";
 import { Signer } from "ethers";
 import { t } from "ttag";
 
@@ -18,6 +19,11 @@ interface PoolsTableProps {
   signerOrProvider?: Signer | Provider;
   isYieldPools?: boolean;
   isMintPage?: boolean;
+  library: Web3Provider | undefined;
+  account: string | null | undefined;
+  chainId: number | undefined;
+  walletConnectionActive: boolean;
+  connector: AbstractConnector | undefined;
 }
 
 export function PoolsTable({
@@ -25,6 +31,11 @@ export function PoolsTable({
   signerOrProvider,
   isYieldPools,
   isMintPage,
+  library,
+  account,
+  walletConnectionActive,
+  chainId,
+  connector,
 }: PoolsTableProps): ReactElement {
   const principalTokenPools = useConvergentCurvePools(signerOrProvider);
   const interestTokenPools = useWeightedPools(signerOrProvider);
@@ -42,6 +53,11 @@ export function PoolsTable({
                   <MintPoolCard
                     key={pool?.contractAddress || index}
                     pool={pool}
+                    library={library}
+                    account={account}
+                    walletConnectionActive={walletConnectionActive}
+                    chainId={chainId}
+                    connector={connector}
                   />
                 );
               })
