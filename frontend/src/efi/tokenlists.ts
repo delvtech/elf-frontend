@@ -12,6 +12,13 @@ function getTokenListJsonId() {
   return process.env.REACT_APP_CHAIN_NAME || "testnet";
 }
 
+// Copied from testnet
+export enum TokenListTag {
+  UNDERLYING = "underlying",
+  PRINCIPAL = "eP",
+  YIELD = "eY",
+}
+
 // Import statements in TS are statically checked, and will throw compile-time
 // errors if the file doesn't exist. Require statements on the other hand are
 // dynamic and will throw an error at runtime. For tools like eslint and
@@ -20,5 +27,23 @@ function getTokenListJsonId() {
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 export const tokenListJson: TokenList = require(`tokenlists/${chainName}.tokenlist.json`);
 
-export const TokenMetadata = keyBy(tokenListJson.tokens, "address");
+const TokenInfos = tokenListJson.tokens;
+export const TokenMetadata = keyBy(TokenInfos, "address");
+
+export const PrincipalTokenInfos = TokenInfos.filter((tokenInfo) =>
+  tokenInfo.tags?.includes(TokenListTag.PRINCIPAL)
+);
+export const PrincipalTokenMetadata = keyBy(PrincipalTokenInfos, "address");
+
+export const YieldTokenInfos = TokenInfos.filter(
+  (tokenInfo) => tokenInfo.tags?.includes(TokenListTag.YIELD),
+  "address"
+);
+export const YieldTokenMetadata = keyBy(YieldTokenInfos);
+
+export const UnderlyingTokenInfos = TokenInfos.filter((tokenInfo) =>
+  tokenInfo.tags?.includes(TokenListTag.UNDERLYING)
+);
+export const UnderlyingTokenMetadata = keyBy(UnderlyingTokenInfos, "address");
+
 export default tokenListJson;

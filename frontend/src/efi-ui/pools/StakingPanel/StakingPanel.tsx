@@ -23,7 +23,6 @@ import { useTokenPoolBalance } from "efi-ui/pools/useTokenPoolBalance/useTokenPo
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { useTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
-import { useTrancheContracts } from "efi-ui/tranche/useTrancheContracts";
 import { useEthBalance } from "efi-ui/wallets/hooks/useEthBalance/useEthBalance";
 import ContractAddresses from "efi/addresses";
 import { BALANCER_ETH_SENTINEL } from "efi/balancer";
@@ -33,6 +32,7 @@ import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { PoolContract } from "efi/pools/PoolContract";
 import { validateStakingValue } from "efi/staking/validateStakeValue";
+import { TrancheContracts } from "efi/tranche/tranches";
 
 interface StakingPanelProps {
   library: Web3Provider | undefined;
@@ -89,10 +89,9 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
     displayBalance: yieldAssetDisplayBalance,
     poolBalance: yieldAssetPoolBalance,
   } = useTokenInfoForTradeInput(pool, termAssetContract, account, library);
-  const trancheContracts = useTrancheContracts();
-  const isPrincipalPoolType = trancheContracts
-    .map(({ address }) => address)
-    .includes(yieldAssetAddress ?? "");
+  const isPrincipalPoolType = TrancheContracts.map(
+    ({ address }) => address
+  ).includes(yieldAssetAddress ?? "");
 
   const {
     symbol: trancheAssetSymbol,

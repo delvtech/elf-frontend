@@ -8,7 +8,6 @@ import { Money } from "ts-money";
 import { t } from "ttag";
 
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
-import { useInterestTokenContracts } from "efi-ui/interestToken/useInterestTokens/useInterestTokens";
 import { useConvergentCurvePoolsWithLPBalance } from "efi-ui/portfolio/hooks/useConvergentCurvePoolsWithLPBalance";
 import { useTotalFiatBalance } from "efi-ui/portfolio/hooks/useTotalFiatBalance";
 import { useTotalLiquidityProvidedMulti } from "efi-ui/portfolio/hooks/useTotalLiquidityProvidedMulti";
@@ -19,13 +18,13 @@ import { PrincipalTokenPortfolio } from "efi-ui/portfolio/PrincipalTokenPortfoli
 import { YieldTokenPortfolio } from "efi-ui/portfolio/YieldTokenPortfolio/YieldTokenPortfolio";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useTokensWithBalance } from "efi-ui/token/hooks/useTokensWithBalance";
-import { useTrancheContracts } from "efi-ui/tranche/useTrancheContracts";
 import { useTokenDecimalsMulti } from "efi-ui/token/hooks/useTokenDecimalsMulti";
 import { getQueriesData } from "efi-ui/base/queryResults";
 import zip from "lodash.zip";
 import { ERC20 } from "elf-contracts/types/ERC20";
 import { BigNumber } from "ethers";
 import { isDust } from "efi/coins/isDust";
+import { InterestTokenContracts, TrancheContracts } from "efi/tranche/tranches";
 
 export function usePortfolioTabs(
   chainId: number | undefined,
@@ -109,12 +108,11 @@ function usePrincipalTokenTab(
   account: string | null | undefined,
   provider?: Provider
 ) {
-  const principalTokens = useTrancheContracts();
-  const principalTokenDecimalResults = useTokenDecimalsMulti(principalTokens);
+  const principalTokenDecimalResults = useTokenDecimalsMulti(TrancheContracts);
   const principalTokenDecimals = getQueriesData(principalTokenDecimalResults);
   const principalTokensWithBalanceResults = useTokensWithBalance(
     account,
-    (principalTokens as unknown) as ERC20Shim[],
+    (TrancheContracts as unknown) as ERC20Shim[],
     provider
   );
 
@@ -149,11 +147,9 @@ function useYieldTokenTab(
   account: string | null | undefined,
   provider?: Provider
 ) {
-  const yieldTokens = useInterestTokenContracts();
-
   const yieldTokensWithBalanceResults = useTokensWithBalance(
     account,
-    (yieldTokens as unknown) as ERC20Shim[],
+    (InterestTokenContracts as unknown) as ERC20Shim[],
     provider
   );
 

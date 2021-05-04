@@ -3,7 +3,7 @@ import { ERC20Permit__factory } from "elf-contracts/types/factories/ERC20Permit_
 import zip from "lodash.zip";
 
 import { getQueriesData } from "efi-ui/base/queryResults";
-import { getSmartContractFromRegistryMulti } from "efi-ui/contracts/SmartContractsRegistry";
+import { getSmartContractFromRegistryMulti } from "efi/contracts/SmartContractsRegistry";
 import { useTokenSymbolMulti } from "efi-ui/token/hooks/useTokenSymbolMulti";
 import ContractAddresses, {
   KNOWN_ERC20_TOKENS,
