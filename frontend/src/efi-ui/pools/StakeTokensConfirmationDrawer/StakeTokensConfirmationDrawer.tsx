@@ -146,7 +146,7 @@ function getConfirmButtonLabel(account: string | null | undefined) {
     return t`Connect your wallet to continue`;
   }
 
-  return t`Confirm transaction`;
+  return t`Stake`;
 }
 
 function getConfirmButtonDisabled(
