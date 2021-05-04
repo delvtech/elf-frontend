@@ -7,7 +7,7 @@ import { UserProxy } from "elf-contracts/types/UserProxy";
 import { BigNumber, Signer } from "ethers";
 
 import { fetchPermitData, PermitCallData } from "efi-ui/base/fetchPermitData";
-import { getSmartContractFromRegistry } from "efi-ui/contracts/SmartContractsRegistry";
+import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useUserProxy } from "efi-ui/mint/hooks/userProxy";
 import { useTranchePosition } from "efi-ui/tranche/useTranchePosition";
