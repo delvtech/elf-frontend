@@ -404,7 +404,9 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
             </Callout>
           </div>
           <div className={tw("mt-4")}>
-            <Button intent="primary">Mint Tokens</Button>
+            <Button minimal outlined intent="primary">
+              Mint Tokens
+            </Button>
           </div>
         </div>
         <div className={classNames(styles.lineBreak, tw("mt-4"))} />

@@ -310,7 +310,7 @@ export function InterestPoolCard(
         >
           <div className={tw("flex", "w-full")}>
             <div>
-              {startTime && maturityTime && startTime < maturityTime ? (
+              {startTime && maturityTime && Date.now() < maturityTime ? (
                 <Tag intent="primary" className={tw("mr-4", "flex-grow-0")}>
                   Running
                 </Tag>
