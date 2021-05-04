@@ -2,7 +2,7 @@ import { TokenList } from "@uniswap/token-lists";
 import fs from "fs";
 import hre from "hardhat";
 
-import { AddressesJsonFile } from "../../../addresses/AddressesJsonFile";
+import { AddressesJsonFile } from "src/addresses/AddressesJsonFile";
 import { getPrincipalTokens } from "./getPrincipalTokens";
 import { tags } from './tags';
 import { getYieldTokensFromFactory, getYieldTokensFromTranches } from "./getYieldTokens";
