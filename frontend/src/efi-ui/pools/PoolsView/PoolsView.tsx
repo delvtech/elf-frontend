@@ -14,13 +14,7 @@ import { PoolsTable } from "efi-ui/pools/PoolsTable/PoolsTable";
 interface PoolsViewProps extends RouteComponentProps {}
 
 export function PoolsView(props: PoolsViewProps): ReactElement {
-  const {
-    library,
-    account,
-    active,
-    chainId,
-    connector,
-  } = useWeb3React<Web3Provider>();
+  const { library, account } = useWeb3React<Web3Provider>();
 
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
 
@@ -29,14 +23,6 @@ export function PoolsView(props: PoolsViewProps): ReactElement {
   const subtitle = isYieldPage
     ? t`Trade your Yield Tokens, or provide liquidity by staking in Element pools.`
     : t`Trade your Principal, or provide liquidity by staking in Element pools.`;
-
-  let tempTitle;
-  let tempSubtitle;
-
-  if (props.path === "deposit") {
-    tempTitle = "Mint Page";
-    tempSubtitle = "Time to Mint Baby";
-  }
 
   return (
     <Fragment>
@@ -58,8 +44,8 @@ export function PoolsView(props: PoolsViewProps): ReactElement {
         )}
       >
         <ViewTitle
-          title={tempTitle || title}
-          subtitle={tempSubtitle || subtitle}
+          title={title}
+          subtitle={subtitle}
           className={tw("text-center")}
         />
 

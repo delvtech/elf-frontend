@@ -65,7 +65,7 @@ const App: FC<AppProps> = () => {
           <EarnView path={Navigation.EARN} />
           <PoolsView path={Navigation.PRINCIPAL_POOLS} />
           <PoolsView path={Navigation.YIELD_POOLS} />
-          <PoolsView path={Navigation.DEPOSIT} />
+          <MintView path={Navigation.DEPOSIT} />
           <PoolView path={`pools/:poolAddress`} />
           <FAQView path={Navigation.RESOURCES} />
         </Router>
