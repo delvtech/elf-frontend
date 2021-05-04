@@ -4,11 +4,10 @@ import { WeightedPoolFactory__factory } from "elf-contracts/types/factories/Weig
 import { WeightedPool } from "elf-contracts/types/WeightedPool";
 import { Signer } from "ethers";
 
-import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
 import { useSmartContractEvents } from "efi-ui/contracts/useSmartContractEvents/useSmartContractEvents";
 import ContractAddresses from "efi/addresses";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
-import { getSmartContractFromRegistry } from "efi-ui/contracts/SmartContractsRegistry";
+import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
 
 export function useWeightedPools(
   signerOrProvider?: Signer | Provider
