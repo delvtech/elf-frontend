@@ -15,7 +15,7 @@
       "description": "Token that represents the yield on a deposit into a yield position"
     }
   },
-  "timestamp": "2021-05-03T20:21:17.424Z",
+  "timestamp": "2021-05-04T20:22:29.918Z",
   "version": {
     "major": 0,
     "minor": 0,
@@ -44,40 +44,10 @@
     },
     {
       "chainId": 5,
-      "address": "0xbC5519C646FFF10705f4206dDFFf673548344482",
-      "symbol": "eP-mUSDC",
-      "decimals": 6,
-      "name": "mUSDC Principal Token",
-      "tags": [
-        "eP"
-      ]
-    },
-    {
-      "chainId": 5,
       "address": "0xE8e1dC35aE0Fa78f9F7EFc3c7265b46BDA15C642",
       "symbol": "eP-mUSDC",
       "decimals": 6,
       "name": "mUSDC Principal Token",
-      "tags": [
-        "eP"
-      ]
-    },
-    {
-      "chainId": 5,
-      "address": "0xA5148c2E1127521AEa80D7D6F860e82a1AEe5647",
-      "symbol": "eP-mUSDC",
-      "decimals": 6,
-      "name": "mUSDC Principal Token",
-      "tags": [
-        "eP"
-      ]
-    },
-    {
-      "chainId": 5,
-      "address": "0x97DB8005fE097265b454e42D558e94D1F2024fb3",
-      "symbol": "eP-mWETH",
-      "decimals": 18,
-      "name": "mWETH Principal Token",
       "tags": [
         "eP"
       ]
@@ -94,26 +64,6 @@
     },
     {
       "chainId": 5,
-      "address": "0xcEc9301f44537b5A91a61706080b12111048D75c",
-      "symbol": "eP-mWETH",
-      "decimals": 18,
-      "name": "mWETH Principal Token",
-      "tags": [
-        "eP"
-      ]
-    },
-    {
-      "chainId": 5,
-      "address": "0x3F05404778D1572bAcaf107ed02947F3f2a7B905",
-      "symbol": "eY-mUSDC",
-      "decimals": 6,
-      "name": "mUSDC Yield Token",
-      "tags": [
-        "eY"
-      ]
-    },
-    {
-      "chainId": 5,
       "address": "0x01dcA43455D3D2cadebd1ee83666601CCEEC4d1F",
       "symbol": "eY-mUSDC",
       "decimals": 6,
@@ -124,37 +74,7 @@
     },
     {
       "chainId": 5,
-      "address": "0x582852F0c1c514dcF28269f89bD0F55CB1348301",
-      "symbol": "eY-mUSDC",
-      "decimals": 6,
-      "name": "mUSDC Yield Token",
-      "tags": [
-        "eY"
-      ]
-    },
-    {
-      "chainId": 5,
-      "address": "0xcd1e9a54574280bACa5E8bf81b40770f2dD92921",
-      "symbol": "eY-mWETH",
-      "decimals": 18,
-      "name": "mWETH Yield Token",
-      "tags": [
-        "eY"
-      ]
-    },
-    {
-      "chainId": 5,
       "address": "0x6ACC2bc4CF1BD3263e431fFbE25aaB564A704B2C",
-      "symbol": "eY-mWETH",
-      "decimals": 18,
-      "name": "mWETH Yield Token",
-      "tags": [
-        "eY"
-      ]
-    },
-    {
-      "chainId": 5,
-      "address": "0x7e0a5b07ED230FDe03E3342304da3A27ddDA500B",
       "symbol": "eY-mWETH",
       "decimals": 18,
       "name": "mWETH Yield Token",

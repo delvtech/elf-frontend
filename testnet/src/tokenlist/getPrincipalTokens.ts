@@ -8,7 +8,6 @@ import {
 } from "src/types/factories/TrancheFactory__factory";
 
 import { ERC20__factory } from "src/types/factories/ERC20__factory";
-import { WrappedPosition__factory } from "src/types/factories/WrappedPosition__factory";
 import { Tranche } from "src/types/Tranche";
 import { TokenListTag } from "src/tokenlist/tags";
 

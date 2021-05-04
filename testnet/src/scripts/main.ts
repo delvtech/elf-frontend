@@ -16,7 +16,7 @@ import { deployWeightedPoolFactory } from "./deployWeightedPoolFactory";
 import { getSigner, SIGNER } from "./getSigner";
 import { mintTokensForAddress } from "./mintTokensForAddress";
 import { deployUserProxy } from "./userProxy";
-import { AddressesJsonFile } from "../../../addresses/AddressesJsonFile";
+import { AddressesJsonFile } from "../addresses/AddressesJsonFile";
 
 async function main() {
   const elementSigner = await getSigner(SIGNER.ELEMENT, hre);
@@ -78,7 +78,6 @@ async function main() {
   console.log("deploy first WETH tranche");
   const {
     trancheContract: firstWethTrancheContract,
-    interestTokenContract: firstWethInterestTokenContract,
     fytPoolContract: firstWethFytPoolContract,
     ycPoolContract: firstWethYcPoolContract,
     fytPoolId: wethFytPoolId,
@@ -105,7 +104,6 @@ async function main() {
   // second WETH tranche
   const {
     trancheContract: secondWethTrancheContract,
-    interestTokenContract: secondWethInterestTokenContract,
     fytPoolContract: secondWethFytPoolContract,
     ycPoolContract: secondWethYcPoolContract,
   } = await deployTrancheAndMarket(
@@ -131,7 +129,6 @@ async function main() {
   // expired WETH tranche
   const {
     trancheContract: expiredWethTrancheContract,
-    interestTokenContract: expiredWethInterestTokenContract,
     fytPoolContract: expiredWethFytPoolContract,
     ycPoolContract:  expiredWethYcPoolContract,
   } = await deployTrancheAndMarket(
@@ -157,7 +154,6 @@ async function main() {
   // usdc tranche
   const {
     trancheContract: usdcTrancheContract,
-    interestTokenContract: usdcInterestTokenContract,
     fytPoolContract: usdcFytPoolContract,
     ycPoolContract: usdcYcPoolContract,
     fytPoolId: usdcFytPoolId,
@@ -252,7 +248,6 @@ async function main() {
   const addressesJson:AddressesJsonFile  = {
     chainId: 31337,
     addresses: {
-      elementAddress,
       balancerVaultAddress: balancerVaultContract.address,
       trancheFactoryAddress: trancheFactory.address,
       interestTokenFactoryAddress: interestTokenFactory.address,
@@ -264,19 +259,15 @@ async function main() {
     },
     safelist: [
       firstWethTrancheContract.address,
-      firstWethInterestTokenContract.address,
       firstWethFytPoolContract.address,
       firstWethYcPoolContract.address,
       secondWethTrancheContract.address,
-      secondWethInterestTokenContract.address,
       secondWethFytPoolContract.address,
       secondWethYcPoolContract.address,
       expiredWethTrancheContract.address,
-      expiredWethInterestTokenContract.address,
       expiredWethFytPoolContract.address,
       expiredWethYcPoolContract.address,
       usdcTrancheContract.address,
-      usdcInterestTokenContract.address,
       usdcFytPoolContract.address,
       usdcYcPoolContract.address,
     ],
@@ -288,7 +279,7 @@ async function main() {
   );
 
   console.log("testnet.addresses.json", schemaAddresses);
-  fs.writeFileSync("./src/testnet.addresses.json", schemaAddresses);
+  fs.writeFileSync("./src/addresses/testnet.addresses.json", schemaAddresses);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
