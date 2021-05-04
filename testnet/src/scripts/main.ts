@@ -252,7 +252,6 @@ async function main() {
   const addressesJson:AddressesJsonFile  = {
     chainId: 31337,
     addresses: {
-      elementAddress,
       balancerVaultAddress: balancerVaultContract.address,
       trancheFactoryAddress: trancheFactory.address,
       interestTokenFactoryAddress: interestTokenFactory.address,
