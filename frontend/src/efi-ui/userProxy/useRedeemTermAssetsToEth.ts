@@ -4,7 +4,7 @@ import { ERC20Permit } from "elf-contracts/types/ERC20Permit";
 import { ERC20Permit__factory } from "elf-contracts/types/factories/ERC20Permit__factory";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { UserProxy } from "elf-contracts/types/UserProxy";
-import { BigNumber, Signer } from "ethers";
+import { BigNumber, ethers, Signer } from "ethers";
 
 import { fetchPermitData, PermitCallData } from "efi-ui/base/fetchPermitData";
 import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
@@ -50,11 +50,11 @@ export function useRedeemTermAssetsToEth(
       !userProxy ||
       !expiration ||
       !position ||
+      !principalTokenContract ||
       !yieldTokenContract
     ) {
       return;
     }
-
     // we need an amount from at least one
     if (!amountPrinicpalToken.gt(0) && !amountYieldToken.gt(0)) {
       return;
@@ -66,18 +66,23 @@ export function useRedeemTermAssetsToEth(
       principalTokenContract,
       account,
       userProxy.address,
-      amountPrinicpalToken,
+      ethers.constants.MaxUint256,
       "1"
     );
+
     // TODO: check approval for this token first
     const ytPermitData = await fetchPermitData(
       signer,
       yieldTokenContract,
       account,
       userProxy.address,
-      amountYieldToken,
+      ethers.constants.MaxUint256,
       "1"
     );
+
+    if (!ptPermitData || !ytPermitData) {
+      return;
+    }
 
     const withdrawInterestToEthCallArgs = makeWithdrawInterestToEthCallArgs(
       expiration,
