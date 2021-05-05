@@ -71,20 +71,15 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
     "unlockTimestamp"
   );
 
-  const startDate = (startDateInUnixSeconds || 0) * 1000;
-  const maturityDate = (maturityDateInUnixSeconds?.toNumber() || 0) * 1000;
+  const startTimeMs = (startDateInUnixSeconds || 0) * 1000;
+  const maturityTimeMs = (maturityDateInUnixSeconds?.toNumber() || 0) * 1000;
 
   const { volume24hr, volumeTrend } = useVolumeTrend(pool);
   const { feeVolume24hr, feeVolumeTrend } = useFeeVolumeTrend(pool);
 
   return (
     <div className={tw("flex", "flex-col", "space-y-8", "w-full")}>
-      <APYSummary
-        pool={pool}
-        baseAsset={baseAssetContract}
-        startDate={startDate}
-        maturityDate={maturityDate}
-      />
+      <APYSummary pool={pool} baseAsset={baseAssetContract} />
       <div
         className={tw(
           "flex",
@@ -111,8 +106,8 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
           interestSupply={+formatEther(interestSupplyBN ?? 0)}
           totalValueLocked={totalValueLocked}
           baseAsset={baseAssetContract}
-          startDate={startDate}
-          maturityDate={maturityDate}
+          startTimeMs={startTimeMs}
+          maturityTimeMs={maturityTimeMs}
         />
         <TokenSummary pool={pool} />
       </div>

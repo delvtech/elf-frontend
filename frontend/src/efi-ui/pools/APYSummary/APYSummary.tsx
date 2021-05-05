@@ -15,8 +15,6 @@ import { TermAssetType } from "efi/tranche/TermAssetType";
 
 interface APYSummaryProps {
   pool: PoolContract | undefined;
-  maturityDate: number | undefined;
-  startDate: number | undefined;
   baseAsset: ERC20 | undefined;
 }
 

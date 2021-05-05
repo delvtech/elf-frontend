@@ -13,6 +13,13 @@ import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { formatMoney } from "efi/money/formatMoney";
 import { PoolContract } from "efi/pools/PoolContract";
 import { Money } from "ts-money";
+import {
+  formatDistanceToNow,
+  fromUnixTime,
+  getDate,
+  getTime,
+  getUnixTime,
+} from "date-fns";
 
 const summaryCardStyle: CSSProperties = {
   height: 220,
@@ -22,8 +29,8 @@ interface VaultSummaryProps {
   pool: PoolContract | undefined;
   totalValueLocked: Money | undefined;
   interestSupply: number | undefined;
-  maturityDate: number | undefined;
-  startDate: number | undefined;
+  maturityTimeMs: number | undefined;
+  startTimeMs: number | undefined;
   baseAsset: ERC20 | undefined;
 }
 
@@ -34,8 +41,8 @@ export function VaultSummary(props: VaultSummaryProps): ReactElement {
     totalValueLocked,
     interestSupply,
     baseAsset,
-    maturityDate = 0,
-    startDate = 0,
+    maturityTimeMs = 0,
+    startTimeMs = 0,
   } = props;
   const { data: baseAssetSymbol } = useTokenSymbol(baseAsset);
   const { data: vaultInfo } = useYearnVault(
@@ -50,6 +57,18 @@ export function VaultSummary(props: VaultSummaryProps): ReactElement {
   const interestPerToken = interestSupply
     ? accumulatedInterest?.divide(interestSupply, Math.round)
     : undefined;
+
+  const now = new Date();
+  const nowTimeMs = getTime(now);
+  const termComplete = nowTimeMs > maturityTimeMs;
+  const completeLabel = formatDistanceToNow(
+    fromUnixTime(Math.round(maturityTimeMs / 1000)),
+    {
+      addSuffix: true,
+    }
+  );
+
+  const termStatus = termComplete ? t`complete` : t`running`;
 
   return (
     <div>
@@ -73,9 +92,15 @@ export function VaultSummary(props: VaultSummaryProps): ReactElement {
               <span
                 className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
               >{t`Status`}</span>
-              <Tag intent={Intent.PRIMARY}>running</Tag>
+              <Tag intent={termComplete ? Intent.SUCCESS : Intent.PRIMARY}>
+                {termStatus}
+              </Tag>
             </div>
-            <TimeLeft startDate={startDate} maturityDate={maturityDate} />
+            {termComplete ? (
+              <div style={{ minWidth: 120 }}>{`(${completeLabel})`}</div>
+            ) : (
+              <TimeLeft startDate={startTimeMs} maturityDate={maturityTimeMs} />
+            )}
           </div>
         </div>
 
