@@ -37,6 +37,7 @@ const tabTitleClassName = tw(
   "flex",
   "space-x-2",
   "items-center",
+  "w-full",
   "px-2",
   "py-4"
 );
@@ -61,7 +62,7 @@ export function SidebarNavigation({
         { [styles.sideBarDark]: isDarkMode },
         tw(
           "hidden",
-          "w-32",
+          "w-48",
           "lg:flex",
           "flex-col",
           "h-full",
@@ -82,6 +83,7 @@ export function SidebarNavigation({
           vertical
           onChange={changeTab}
           selectedTabId={activeTab}
+          className={tw("w-full", "flex-col")}
         >
           <Tab
             id={Navigation.EARN}
@@ -106,16 +108,15 @@ export function SidebarNavigation({
             title={
               <div className={tabTitleClassName}>
                 <Icon
-                  icon={
-                    hasPendingTransaction ? (
-                      <Spinner size={SpinnerSize.SMALL} />
-                    ) : (
-                      IconNames.TIMELINE_AREA_CHART
-                    )
-                  }
+                  icon={IconNames.TIMELINE_AREA_CHART}
                   iconSize={IconSize.STANDARD}
                 />
-                <span>{t`Portfolio`}</span>
+                <span
+                  className={tw("flex", "w-full", "justify-between")}
+                >{t`Portfolio`}</span>
+                {hasPendingTransaction ? (
+                  <Spinner size={SpinnerSize.SMALL} />
+                ) : null}
               </div>
             }
           />

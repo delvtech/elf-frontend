@@ -1,4 +1,4 @@
-import { ReactElement, useMemo } from "react";
+import React, { ReactElement, useMemo } from "react";
 
 import {
   ButtonGroup,
@@ -20,7 +20,7 @@ import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
+import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
@@ -40,6 +40,7 @@ import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
 import { GoToMarketButton } from "./GoToMarketButton";
 import { MaturityTimeBar } from "./MaturityTimeBar";
 import { formatPercent } from "efi/base/formatPercent";
+import { Link } from "@reach/router";
 
 interface PrincipalTokenCardProps {
   chainId: number | undefined;
@@ -103,7 +104,7 @@ export function PrincipalTokenCard(
     fiatPrice = formatMoney(baseAssetCoinGeckoPrice.multiply(exitValue));
   }
 
-  const BaseAssetIcon = findAssetIcon(baseAssetSymbol);
+  const BaseAssetIcon = findAssetIcon2(baseAsset);
 
   const tableRowLink = getTableRowLink(vaultContract?.address, vaultName);
   const maturationDate = useMemo(
@@ -140,14 +141,9 @@ export function PrincipalTokenCard(
         ) : null}
         <div className={tw("flex", "flex-col", "space-y-2")}>
           <span className={tw("text-2xl", "font-semibold")}>
-            <a
-              title={t`View principal token on etherscan`}
-              href={`https://etherscan.io/address/${tranche.address}`}
-              target="_blank"
-              rel="noreferrer noopener"
-            >
+            <Link to={`/pools/${pool?.address}`}>
               {t`${baseAssetSymbol} Principal Token` || null}
-            </a>
+            </Link>
           </span>
           <div
             className={tw(

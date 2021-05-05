@@ -22,7 +22,7 @@ import { DarkModeSwitch } from "efi-ui/prefs/DarkModeSwitch/DarkModeSwitch";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
 import { WalletJazzicon } from "efi-ui/wallets/WalletJazzicon/WalletJazzicon";
-import { isMainnet } from "efi/ethereum";
+import { ChainId, isMainnet } from "efi/ethereum";
 import { formatChainName } from "efi/crypto/formatChainName";
 import { formatWalletAddress } from "efi/wallets/formatWalletAddress";
 
@@ -44,6 +44,12 @@ const tabStyle = {
   paddingTop: 24,
   paddingBottom: 24,
 };
+
+const ChainColor: Record<number, string> = {
+  [ChainId.GOERLI]: Colors.BLUE4,
+  [ChainId.MAINNET]: Colors.GREEN4,
+  [ChainId.LOCAL]: Colors.WHITE,
+};
 export function TopbarNavigation({
   activeTab,
   changeTab,
@@ -62,7 +68,8 @@ export function TopbarNavigation({
   } else if (mainnetDanger) {
     walletButtonIntent = Intent.DANGER;
   }
-  const connectionStatusColor = active ? Colors.GREEN4 : Colors.RED4;
+  const connectionStatusColor =
+    active && !!chainId ? ChainColor[chainId] : Colors.RED4;
   const onCloseWalletDialog = useCallback(() => setWalletDialogOpen(false), []);
   const onOpenWalletDialog = useCallback(() => setWalletDialogOpen(true), []);
 
