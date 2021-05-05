@@ -25,9 +25,8 @@ contract TrancheFactory {
     address internal _tempWpAddress;
     uint256 internal _tempExpiration;
     IInterestToken internal _tempInterestToken;
-    bytes32 public constant TRANCHE_CREATION_HASH = keccak256(
-        type(Tranche).creationCode
-    );
+    bytes32 public constant TRANCHE_CREATION_HASH =
+        keccak256(type(Tranche).creationCode);
     // The address of our date library
     address internal immutable _dateLibrary;
 
@@ -56,20 +55,21 @@ contract TrancheFactory {
         uint8 underlyingDecimals = underlying.decimals();
 
         // derive the expected tranche address
-        address predictedAddress = address(
-            uint160(
-                uint256(
-                    keccak256(
-                        abi.encodePacked(
-                            bytes1(0xff),
-                            address(this),
-                            salt,
-                            TRANCHE_CREATION_HASH
+        address predictedAddress =
+            address(
+                uint160(
+                    uint256(
+                        keccak256(
+                            abi.encodePacked(
+                                bytes1(0xff),
+                                address(this),
+                                salt,
+                                TRANCHE_CREATION_HASH
+                            )
                         )
                     )
                 )
-            )
-        );
+            );
 
         _tempInterestToken = _interestTokenFactory.deployInterestToken(
             predictedAddress,
@@ -78,7 +78,7 @@ contract TrancheFactory {
             underlyingDecimals
         );
 
-        Tranche tranche = new Tranche{ salt: salt }();
+        Tranche tranche = new Tranche{salt: salt}();
         emit TrancheCreated(address(tranche), _wpAddress, _expiration);
         require(
             address(tranche) == predictedAddress,

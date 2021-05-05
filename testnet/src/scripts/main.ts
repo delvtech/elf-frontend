@@ -1,7 +1,7 @@
 import "module-alias/register";
 
 import fs from "fs";
-import hre from "hardhat";
+import hre, { ethers } from "hardhat";
 
 import { deployConvergentPoolFactory } from "src/scripts/deployConvergentPoolFactory";
 import { deployInterestTokenFactory } from "src/scripts/deployInterestTokenFactory";
@@ -17,6 +17,7 @@ import { getSigner, SIGNER } from "./getSigner";
 import { mintTokensForAddress } from "./mintTokensForAddress";
 import { deployUserProxy } from "./userProxy";
 import { AddressesJsonFile } from "../addresses/AddressesJsonFile";
+import { TestDate } from "src/types/TestDate";
 
 async function main() {
   const elementSigner = await getSigner(SIGNER.ELEMENT, hre);
@@ -63,9 +64,17 @@ async function main() {
     balancerVaultContract
   );
   const interestTokenFactory = await deployInterestTokenFactory(elementSigner);
+
+  const dateLibraryDeployer = await ethers.getContractFactory(
+    "DateString",
+    elementSigner
+  );
+  const testDate = (await dateLibraryDeployer.deploy()) as TestDate;
+
   const trancheFactory = await deployTrancheFactory(
     elementSigner,
-    interestTokenFactory
+    interestTokenFactory,
+    testDate
   );
 
   const {
@@ -82,7 +91,6 @@ async function main() {
     ycPoolContract: firstWethYcPoolContract,
     fytPoolId: wethFytPoolId,
     ycPoolId: wethYcPoolId,
-
   } = await deployTrancheAndMarket(
     elementSigner,
     trancheFactory,
@@ -130,7 +138,7 @@ async function main() {
   const {
     trancheContract: expiredWethTrancheContract,
     fytPoolContract: expiredWethFytPoolContract,
-    ycPoolContract:  expiredWethYcPoolContract,
+    ycPoolContract: expiredWethYcPoolContract,
   } = await deployTrancheAndMarket(
     elementSigner,
     trancheFactory,
@@ -245,7 +253,7 @@ async function main() {
   fs.writeFileSync("./src/all-addresses.json", allAddresses);
 
   // Produce a schema-compliant testnet.addresses.json file
-  const addressesJson:AddressesJsonFile  = {
+  const addressesJson: AddressesJsonFile = {
     chainId: 31337,
     addresses: {
       balancerVaultAddress: balancerVaultContract.address,
@@ -272,11 +280,7 @@ async function main() {
       usdcYcPoolContract.address,
     ],
   };
-  const schemaAddresses = JSON.stringify(
-     addressesJson,
-    null,
-    2
-  );
+  const schemaAddresses = JSON.stringify(addressesJson, null, 2);
 
   console.log("testnet.addresses.json", schemaAddresses);
   fs.writeFileSync("./src/addresses/testnet.addresses.json", schemaAddresses);
