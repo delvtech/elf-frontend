@@ -3,10 +3,12 @@ import React, { ReactElement } from "react";
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { Signer } from "ethers";
+import { formatEther } from "ethers/lib/utils";
 
 import tw from "efi-tailwindcss-classnames";
 import { getQueryData } from "efi-ui/base/queryResults";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
+import { APYSummary } from "efi-ui/pools/APYSummary/APYSummary";
 import { PoolActionsCard } from "efi-ui/pools/PoolActionsCard/PoolActionsCard";
 import { PoolCharts } from "efi-ui/pools/PoolCharts/PoolCharts";
 import { PoolSummary } from "efi-ui/pools/PoolSummary/PoolSummary";
@@ -15,6 +17,7 @@ import { useFeeVolumeFiatForPool } from "efi-ui/pools/useFeeVolumeForPool/useFee
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidityForPool.ts/useTotalFiatLiquidityForPool";
 import { useTotalLiquidityTrend } from "efi-ui/pools/useTotalLiquidityTrend/useTotalLiquidityTrend";
+import { useTotalValueLockedForTranche } from "efi-ui/pools/useTotalValueLockedForTranche";
 import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForPool";
 import { useVolumeForPool } from "efi-ui/pools/useVolumeForPool/useVolumeForPool";
 import { VaultSummary } from "efi-ui/pools/VaultSummary/VaultSummary";
@@ -22,16 +25,6 @@ import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
 import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { PoolContract } from "efi/pools/PoolContract";
-import { APYSummary } from "efi-ui/pools/APYSummary/APYSummary";
-import { formatEther, formatUnits } from "ethers/lib/utils";
-import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
-import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
-import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
-import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
-import { Tranche } from "elf-contracts/types/Tranche";
-import { ERC20 } from "elf-contracts/types/ERC20";
-import { Money } from "ts-money";
-import { useTotalValueLockedForTranche } from "efi-ui/pools/useTotalValueLockedForTranche";
 
 interface PoolDetailsProps {
   library: Web3Provider | undefined;

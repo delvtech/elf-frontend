@@ -37,9 +37,7 @@ export function VaultSummary(props: VaultSummaryProps): ReactElement {
     maturityDate = 0,
     startDate = 0,
   } = props;
-  // hardcode for now, will make this dynamic after updating testnet
   const { data: baseAssetSymbol } = useTokenSymbol(baseAsset);
-  console.log("baseAssetSymbol", baseAssetSymbol);
   const { data: vaultInfo } = useYearnVault(
     baseAssetSymbol ? t`yv${baseAssetSymbol}` : undefined
   );
