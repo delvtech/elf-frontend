@@ -14,6 +14,7 @@ import { useTranchePosition } from "efi-ui/tranche/useTranchePosition";
 import { useTrancheUnlockTimestamp } from "efi-ui/tranche/useTrancheUnlockTimestamp";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
 import { ContractMethodArgs } from "efi/contracts/types";
+import { flushPromises } from "efi/base/flush";
 
 export function useRedeemTermAssetsToEth(
   signer: Signer | undefined,
@@ -70,6 +71,8 @@ export function useRedeemTermAssetsToEth(
       "1"
     );
 
+    await flushPromises(100);
+
     // TODO: check approval for this token first
     const ytPermitData = await fetchPermitData(
       signer,
@@ -79,6 +82,8 @@ export function useRedeemTermAssetsToEth(
       ethers.constants.MaxUint256,
       "1"
     );
+
+    await flushPromises(100);
 
     if (!ptPermitData || !ytPermitData) {
       return;
