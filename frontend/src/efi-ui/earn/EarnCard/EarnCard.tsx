@@ -235,10 +235,12 @@ export function EarnCard({
             outlined
             intent={Intent.PRIMARY}
             className={tw("flex-1")}
-            disabled={!amountIn}
+            disabled={!amountIn || !account}
             onClick={openDrawer}
           >
-            <div className={tw("p-4", "text-lg")}>{t`Buy`}</div>
+            <div className={tw("p-4", "text-lg")}>
+              {!!account ? t`Buy` : `Connect Wallet`}
+            </div>
           </Button>
         </div>
       </Card>
