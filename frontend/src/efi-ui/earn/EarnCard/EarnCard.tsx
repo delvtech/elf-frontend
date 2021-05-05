@@ -162,7 +162,7 @@ export function EarnCard({
                 />
               }
               placeholder="0.00"
-              value={amountIn}
+              value={amountIn || ""}
               onValueChange={onChangeIn}
               assetBalance={+activeBaseAssetDisplayBalance}
               cryptoAddress={baseAssetPoolToken?.address}
@@ -211,7 +211,7 @@ export function EarnCard({
                 />
               }
               placeholder="0.00"
-              value={amountOut}
+              value={amountOut || ""}
               onValueChange={onChangeOut}
               onPreviewUpdate={onChangeIn}
               assetBalance={+activeBaseAssetDisplayBalance}

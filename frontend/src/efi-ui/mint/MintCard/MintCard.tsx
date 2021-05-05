@@ -144,7 +144,7 @@ export function MintCard({
                 />
               }
               placeholder="0.00"
-              value={amountInString}
+              value={amountInString || ""}
               onValueChange={setAmountIn}
               assetBalance={+activeBaseAssetDisplayBalance}
               cryptoAddress={baseAssetContract?.address}
