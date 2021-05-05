@@ -1,23 +1,35 @@
 import "module-alias/register";
 
+import { parseUnits } from "ethers/lib/utils";
 import fs from "fs";
 import hre, { ethers } from "hardhat";
 
+import { TestDate } from "src/types/TestDate";
+
+import { MAX_ALLOWANCE } from "src/maxAllowance";
 import { deployConvergentPoolFactory } from "src/scripts/deployConvergentPoolFactory";
 import { deployInterestTokenFactory } from "src/scripts/deployInterestTokenFactory";
 import { deployTrancheFactory } from "src/scripts/deployTrancheFactory";
+import { exitConvergentCurvePool } from "src/scripts/exitConvergentCurvePool";
+import { getContracts } from "src/scripts/getContracts";
+import { getSigner, SIGNER } from "src/scripts/getSigner";
+import { joinConvergentCurvePool } from "src/scripts/joinConvergentCurvePool";
+import { printTokenInfoForPool } from "src/scripts/printTokenInfoForPool";
 import { THIRTY_DAYS_IN_SECONDS } from "src/time";
 
+import { AddressesJsonFile } from "../addresses/AddressesJsonFile";
 import { deployBalancerVault } from "./balancerV2Vault";
 import { deployBaseAssets } from "./baseAssets";
 import { deployTrancheAndMarket } from "./deployTrancheAndMarket";
 import { deployVaultsAndProxys } from "./deployVaultsAndProxys";
 import { deployWeightedPoolFactory } from "./deployWeightedPoolFactory";
-import { getSigner, SIGNER } from "./getSigner";
 import { mintTokensForAddress } from "./mintTokensForAddress";
 import { deployUserProxy } from "./userProxy";
-import { AddressesJsonFile } from "../addresses/AddressesJsonFile";
-import { TestDate } from "src/types/TestDate";
+import { Tranche } from "src/types/Tranche";
+import { Signer } from "ethers";
+import { ERC20 } from "src/types/ERC20";
+import { Vault } from "src/types/Vault";
+import { UserProxy } from "src/types/UserProxy";
 
 async function main() {
   const elementSigner = await getSigner(SIGNER.ELEMENT, hre);
@@ -75,6 +87,12 @@ async function main() {
     elementSigner,
     interestTokenFactory,
     testDate
+  );
+  // deploy user proxy
+  const userProxyContract = await deployUserProxy(
+    elementSigner,
+    wethContract,
+    trancheFactory
   );
 
   const {
@@ -156,6 +174,14 @@ async function main() {
       durationInSeconds: 120,
     }
   );
+
+  await mintTrancheTokensForSigner(
+    userSigner,
+    wethContract,
+    expiredWethTrancheContract,
+    balancerVaultContract,
+    userProxyContract
+  );
   await yWeth.updateShares();
 
   console.log("deploy USDC tranche");
@@ -184,13 +210,6 @@ async function main() {
   );
   // add some interest to yUsdc
   await yUsdc.updateShares();
-
-  // deploy user proxy
-  const userProxyContract = await deployUserProxy(
-    elementSigner,
-    wethContract,
-    trancheFactory
-  );
 
   console.log("Disabling automine");
   await hre.ethers.provider.send("evm_setAutomine", [false]);
@@ -294,3 +313,38 @@ main()
     console.error(error);
     process.exit(1);
   });
+
+async function mintTrancheTokensForSigner(
+  signer: Signer,
+  baseAssetContractUnsigend: ERC20,
+  trancheContractUnsigend: Tranche,
+  balancerVaultContract: Vault,
+  userProxyContractUnsigend: UserProxy,
+  amount: string = "100"
+) {
+  const signerAddress = await signer.getAddress();
+  const baseAssetContract = baseAssetContractUnsigend.connect(signer);
+  const trancheContract = trancheContractUnsigend.connect(signer);
+  const userProxyContract = userProxyContractUnsigend.connect(signer);
+
+  await baseAssetContract.approve(balancerVaultContract.address, MAX_ALLOWANCE);
+  await trancheContract.approve(balancerVaultContract.address, MAX_ALLOWANCE);
+  const baseAssetDecimals = await baseAssetContract.decimals();
+  await baseAssetContract.mint(
+    signerAddress,
+    parseUnits(amount, baseAssetDecimals)
+  );
+
+  await baseAssetContract.approve(userProxyContract.address, MAX_ALLOWANCE);
+  const expiration = await trancheContract.unlockTimestamp();
+  const position = await trancheContract.position();
+
+  const mintTx = await userProxyContract.mint(
+    parseUnits(amount, baseAssetDecimals),
+    baseAssetContract.address,
+    expiration,
+    position,
+    []
+  );
+  await mintTx.wait(1);
+}
