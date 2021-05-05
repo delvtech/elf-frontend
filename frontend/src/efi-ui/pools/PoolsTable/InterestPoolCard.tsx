@@ -287,7 +287,10 @@ export function InterestPoolCard(
             "lg:col-span-1"
           )}
         >
-          <LabeledText text={"20%"} label={t`Vault APY`} />
+          <LabeledText
+            text={t`${formatPercent(variableYield)}`}
+            label={t`Vault APY`}
+          />
         </div>
         <div className={tw(cellClassName, "col-span-3", "md:col-span-2")}>
           <LabeledText

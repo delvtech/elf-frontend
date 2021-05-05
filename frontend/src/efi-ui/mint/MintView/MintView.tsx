@@ -27,7 +27,6 @@ export function MintView(props: MintViewProps): ReactElement {
   } = useWeb3React<Web3Provider>();
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
 
-  const principalTokenPools = useConvergentCurvePools(signer);
   const interestTokenPools = useWeightedPools(signer);
 
   return (

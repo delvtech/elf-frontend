@@ -21,6 +21,7 @@ import classNames from "classnames";
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { Tranche } from "elf-contracts/types/Tranche";
+import { differenceInDays, format } from "date-fns";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -32,14 +33,20 @@ import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForTok
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 import { useFeeVolumeForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
+import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
 import { MintCard } from "efi-ui/mint/MintCard/MintCard";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
+import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
+import { useParseSortedTokensForPool } from "efi-ui/pools/useParsedTokensForPool/useParsedTokensForPool";
+import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForPool";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
 import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
 import { formatMoney } from "efi/money/formatMoney";
 import { PoolContract } from "efi/pools/PoolContract";
+import { useTokenYield } from "efi-ui/pools/useTokenYield";
+import { formatPercent } from "efi/base/formatPercent";
 
 import styles from "./PrincipalPoolCard.module.css";
 import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidityForPool.ts/useTotalFiatLiquidityForPool";
@@ -76,7 +83,16 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
     connector,
   } = props;
   const tranche = useTrancheForPool(pool);
+  const principalPool = usePoolForToken(tranche);
+  const {
+    termAssetContract: principalTokenContract,
+  } = useParseSortedTokensForPool(pool);
   const liquidity = useTotalFiatLiquidityForPool(pool);
+  const principalLiquidity = useTotalFiatLiquidityForPool(principalPool);
+  const principalPrice = usePoolSpotPrice(
+    principalPool,
+    principalTokenContract
+  );
   const trancheCreatedAt = useTrancheCreatedAt(tranche);
   const fees = useFeeVolumeForPool(pool) ?? 0;
   const baseAssetContract = useBaseAssetForPool(pool);
@@ -94,11 +110,17 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
     "unlockTimestamp"
   );
   const unlockTime = unlockBN?.toNumber();
+  const variableYield = useTokenYield(baseAssetContract, pool, "yield");
 
   // TODO: Get this from props
   const goToPoolPage = useCallback(() => {
     navigate(`pools/${pool?.address}`);
   }, [pool?.address]);
+
+  const { data: vaultInfo } = useYearnVault(
+    baseAssetSymbol ? t`yv${baseAssetSymbol}` : undefined
+  );
+  const { name, type } = vaultInfo || {};
 
   const { isDarkMode } = useDarkMode();
 
@@ -115,7 +137,9 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
     termAssetContract,
     termAssetSymbol,
     unlockBN,
+    variableYield,
   ];
+
   // TODO: this is a big hammer for loading state.  we should use a more granular technique when we can.
   const allDataLoaded = dataToLoad.every((data) => data !== undefined);
 
@@ -136,8 +160,11 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
     return null;
   }
 
-  const startTime = trancheCreatedAt ? trancheCreatedAt * 1000 : undefined;
-  const maturityTime = unlockTime ? unlockTime * 1000 : undefined;
+  const startTime = trancheCreatedAt ? trancheCreatedAt * 1000 : 0;
+  const maturityTime = unlockTime ? unlockTime * 1000 : 0;
+
+  const termLength =
+    Math.round(differenceInDays(maturityTime, startTime) / 10) * 10;
 
   if (!allDataLoaded) {
     return (
@@ -234,7 +261,7 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
               "lg:col-span-1"
             )}
           >
-            <LabeledText text={"Yearn ySTETH"} label={`Vault`} />
+            <LabeledText text={t`${name} ${type}`} label={t`Vault`} />
           </div>
           <div
             className={tw(
@@ -244,7 +271,7 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
               "xl:col-span-1"
             )}
           >
-            <LabeledText text={"90 Day"} label={`Term`} />
+            <LabeledText text={t`${termLength} Day`} label={t`Term`} />
           </div>
           <div
             className={tw(
@@ -254,7 +281,10 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
               "xl:col-span-1"
             )}
           >
-            <LabeledText text={"20%"} label={`Vault APY`} />
+            <LabeledText
+              text={t`${formatPercent(variableYield)}`}
+              label={`Vault APY`}
+            />
           </div>
           <div
             className={tw(
@@ -265,7 +295,7 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
             )}
           >
             <LabeledText
-              text={formatMoney(liquidity, { wholeAmounts: true })}
+              text={formatMoney(principalLiquidity, { wholeAmounts: true })}
               label={`Principal Pool Liquidity`}
             />
           </div>
@@ -293,7 +323,10 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
               "xl:col-span-1"
             )}
           >
-            <LabeledText text={".97 ETH"} label={`Principal Price`} />
+            <LabeledText
+              text={t`${principalPrice}`}
+              label={`Principal Price`}
+            />
           </div>
           <div
             className={tw(
