@@ -2,7 +2,9 @@ import React, { CSSProperties, ReactElement } from "react";
 
 import { Card, Classes, Intent, Tag } from "@blueprintjs/core";
 import classNames from "classnames";
+import { formatDistanceToNow, fromUnixTime, getTime } from "date-fns";
 import { ERC20 } from "elf-contracts/types/ERC20";
+import { Money } from "ts-money";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -12,14 +14,6 @@ import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { formatMoney } from "efi/money/formatMoney";
 import { PoolContract } from "efi/pools/PoolContract";
-import { Money } from "ts-money";
-import {
-  formatDistanceToNow,
-  fromUnixTime,
-  getDate,
-  getTime,
-  getUnixTime,
-} from "date-fns";
 
 const summaryCardStyle: CSSProperties = {
   height: 220,
