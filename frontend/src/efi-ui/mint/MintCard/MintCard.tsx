@@ -15,7 +15,7 @@ import { useMintPreview } from "efi-ui/mint/hooks/useMintPreview";
 import { MintTransactionConfirmationDrawer } from "efi-ui/mint/MintTransactionConfirmationDrawer/MintTransactionConfirmationDrawer";
 import { PrincipalTokenPreview } from "efi-ui/mint/MintCard/PrincipalTokenPreview";
 import { YieldTokenPreview } from "efi-ui/mint/MintCard/YieldTokenPreview";
-import { TradeInputAlt } from "efi-ui/trade/TradeInput/TradeInputAlt";
+import { MintInput } from "efi-ui/mint/MintInput/MintInput";
 import { formatBalance } from "efi/base/formatBalance";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
@@ -107,7 +107,7 @@ export function MintCard(props: MintCardProps): ReactElement | null {
         </div>
         <div className={tw("flex", "items-center")}>
           <div className={styles.mintInput}>
-            <TradeInputAlt
+            <MintInput
               cryptoAddress={baseAssetContract?.address}
               cryptoDecimals={baseAssetDecimals}
               cryptoBalanceOf={baseAssetBalance}
