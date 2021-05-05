@@ -20,7 +20,7 @@ import { useTotalLiquidityTrend } from "efi-ui/pools/useTotalLiquidityTrend/useT
 import { useTotalValueLockedForTranche } from "efi-ui/pools/useTotalValueLockedForTranche";
 import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForPool";
 import { useVolumeForPool } from "efi-ui/pools/useVolumeForPool/useVolumeForPool";
-import { VaultSummary } from "efi-ui/pools/VaultSummary/VaultSummary";
+import { TermSummary } from "efi-ui/pools/TermSummary/TermSummary";
 import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
 import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
@@ -101,7 +101,7 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
           feeVolume={feeVolume24hr}
           feeVolumeTrend={feeVolumeTrend}
         />
-        <VaultSummary
+        <TermSummary
           pool={pool}
           interestSupply={+formatEther(interestSupplyBN ?? 0)}
           totalValueLocked={totalValueLocked}

@@ -19,7 +19,7 @@ const summaryCardStyle: CSSProperties = {
   height: 220,
 };
 
-interface VaultSummaryProps {
+interface TermSummaryProps {
   pool: PoolContract | undefined;
   totalValueLocked: Money | undefined;
   interestSupply: number | undefined;
@@ -29,7 +29,7 @@ interface VaultSummaryProps {
 }
 
 // TODO: add loading states
-export function VaultSummary(props: VaultSummaryProps): ReactElement {
+export function TermSummary(props: TermSummaryProps): ReactElement {
   const {
     pool,
     totalValueLocked,
