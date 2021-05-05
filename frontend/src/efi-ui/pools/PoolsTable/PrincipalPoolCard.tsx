@@ -1,10 +1,4 @@
-import {
-  CSSProperties,
-  ReactElement,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import { CSSProperties, ReactElement, useEffect, useState } from "react";
 
 import {
   Button,
@@ -14,9 +8,9 @@ import {
   Elevation,
   Tag,
 } from "@blueprintjs/core";
-import { Link, navigate } from "@reach/router";
+import { Link } from "@reach/router";
 import classNames from "classnames";
-import { differenceInDays, format } from "date-fns";
+import { differenceInDays } from "date-fns";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -79,11 +73,6 @@ export function PrincipalPoolCard(
   const fixedYield = useTokenYield(baseAssetContract, pool, "principal");
   const stakingYield = useStakingAPY(pool);
 
-  // TODO: Get this from props
-  const goToPoolPage = useCallback(() => {
-    navigate(`pools/${pool?.address}`);
-  }, [pool?.address]);
-
   const { isDarkMode } = useDarkMode();
 
   const dataToLoad = [
@@ -139,7 +128,6 @@ export function PrincipalPoolCard(
 
   const startTime = trancheCreatedAt ? trancheCreatedAt * 1000 : undefined;
   const maturityTime = unlockTime ? unlockTime * 1000 : undefined;
-  const maturityDate = format(maturityTime ?? 0, "MMM, d, yyyy");
 
   const termLength =
     Math.round(

@@ -1,12 +1,9 @@
 import { Fragment, ReactElement } from "react";
 
-import { Provider, Web3Provider } from "@ethersproject/providers";
-import { AbstractConnector } from "@web3-react/abstract-connector";
+import { Provider } from "@ethersproject/providers";
 import { Signer } from "ethers";
-import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { MintPoolCard } from "efi-ui/pools/PoolsTable/MintPoolCard";
 import { PrincipalPoolCard } from "efi-ui/pools/PoolsTable/PrincipalPoolCard";
 import { InterestPoolCard } from "efi-ui/pools/PoolsTable/InterestPoolCard";
 import { useConvergentCurvePools } from "efi-ui/pools/useConvergentCurvePools/useConvergentCurvePools";

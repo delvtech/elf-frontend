@@ -1,6 +1,7 @@
 import React, { Fragment, ReactElement, useState } from "react";
+import { Link } from "@reach/router";
 
-import { Button, Card, Callout } from "@blueprintjs/core";
+import { Button, Callout } from "@blueprintjs/core";
 import classNames from "classnames";
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
@@ -10,29 +11,29 @@ import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useCryptoBalance } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
-import { ERC20 } from "elf-contracts/types/ERC20";
 import { parseUnits } from "ethers/lib/utils";
 import { useMintPreview } from "efi-ui/mint/hooks/useMintPreview";
 import { MintTransactionConfirmationDrawer } from "efi-ui/mint/MintTransactionConfirmationDrawer/MintTransactionConfirmationDrawer";
-import { PrincipalTokenPreview } from "efi-ui/mint/MintCard/PrincipalTokenPreview";
-import { YieldTokenPreview } from "efi-ui/mint/MintCard/YieldTokenPreview";
 import { MintInput } from "efi-ui/mint/MintInput/MintInput";
 import { formatBalance } from "efi/base/formatBalance";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
-import { PoolContract } from "efi/pools/PoolContract";
 import { TokenIcon } from "efi-ui/token/TokenIcon";
 import { Tranche } from "elf-contracts/types/Tranche";
 
 import styles from "./MintCard.module.css";
 
+// Stop propagation of clicks from the card title up to the card itself,
+// otherwise you get double routed to /exchange/exchange/0xdeadbeef
+const stopPropagationHandler = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  e.stopPropagation();
+};
+
 interface MintCardProps {
   baseAsset: CryptoAsset | undefined;
   baseAssetIcon: TokenIcon | undefined;
-  baseAssetContract: ERC20 | undefined;
   baseAssetSymbol: string | undefined;
   tranche: Tranche | undefined;
-  pool: PoolContract | undefined;
   library: Web3Provider | undefined;
   account: string | null | undefined;
   chainId: number | undefined;
@@ -55,14 +56,12 @@ function useActiveMintPreview(
 
 export function MintCard(props: MintCardProps): ReactElement | null {
   const {
-    pool,
     library,
     account,
     chainId,
     walletConnectionActive,
     connector,
     baseAsset,
-    baseAssetContract,
     baseAssetSymbol,
     baseAssetIcon,
     tranche,
@@ -132,7 +131,6 @@ export function MintCard(props: MintCardProps): ReactElement | null {
             cryptoDisplayBalance={activeBaseAssetDisplayBalance || ""}
             cryptoSymbol={baseAssetSymbol}
             cryptoIcon={baseAssetIcon}
-            labelTopLeft={t`Mint`}
             disabled={false}
             onChange={setAmountIn}
             value={amountInString}
@@ -187,7 +185,11 @@ export function MintCard(props: MintCardProps): ReactElement | null {
       </div>
       <div className={tw("flex", "pl-12", "pt-2", "mb-6", "items-center")}>
         <div className={"ml-10 bp3-text-muted text-sm"}>
-          Go to the <a>Portfolio Page</a>. <br />
+          Go to the{" "}
+          <Link to={`/portfolio`} onClick={stopPropagationHandler}>
+            Portfolio Page
+          </Link>
+          . <br />
           Stake your tokens for additional APY. <br />
           Or sell your principal to re-invest.
         </div>

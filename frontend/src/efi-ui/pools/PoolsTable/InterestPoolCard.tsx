@@ -16,7 +16,7 @@ import {
 } from "@blueprintjs/core";
 import { Link, navigate } from "@reach/router";
 import classNames from "classnames";
-import { differenceInDays, format } from "date-fns";
+import { differenceInDays } from "date-fns";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -92,8 +92,6 @@ export function InterestPoolCard(
     navigate(`pools/${pool?.address}`);
   }, [pool?.address]);
 
-  const symbolQuery = baseAssetSymbol === "ETH" ? "WETH" : baseAssetSymbol;
-
   const { data: vaultInfo } = useYearnVault(
     baseAssetSymbol ? t`yv${baseAssetSymbol}` : undefined
   );
@@ -160,8 +158,6 @@ export function InterestPoolCard(
 
   const termLength =
     Math.round(differenceInDays(maturityTime, startTime) / 10) * 10;
-
-  const maturityDate = format(maturityTime, "MMM, d, yyyy");
 
   const yieldTokenPrice = baseAssetPrice?.multiply(spotPrice, Math.round);
 

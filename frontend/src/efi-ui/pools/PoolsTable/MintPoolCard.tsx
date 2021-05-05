@@ -1,27 +1,18 @@
-import {
-  CSSProperties,
-  ReactElement,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import { CSSProperties, ReactElement, useEffect, useState } from "react";
 
 import {
   Button,
   Card,
-  Callout,
   Classes,
   Colors,
   Collapse,
   Elevation,
   Tag,
 } from "@blueprintjs/core";
-import { Link, navigate } from "@reach/router";
 import classNames from "classnames";
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
-import { Tranche } from "elf-contracts/types/Tranche";
-import { differenceInDays, format } from "date-fns";
+import { differenceInDays } from "date-fns";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -67,11 +58,6 @@ const poolCardStyle: CSSProperties = {
   minWidth: 560,
   padding: "0px",
 };
-// Stop propagation of clicks from the card title up to the card itself,
-// otherwise you get double routed to /exchange/exchange/0xdeadbeef
-const stopPropagationHandler = (e: React.MouseEvent<HTMLAnchorElement>) => {
-  e.stopPropagation();
-};
 
 export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
   const {
@@ -111,11 +97,6 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
   );
   const unlockTime = unlockBN?.toNumber();
   const variableYield = useTokenYield(baseAssetContract, pool, "yield");
-
-  // TODO: Get this from props
-  const goToPoolPage = useCallback(() => {
-    navigate(`pools/${pool?.address}`);
-  }, [pool?.address]);
 
   const symbolQuery = baseAssetSymbol === "ETH" ? "WETH" : baseAssetSymbol;
 
@@ -380,14 +361,12 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
       </div>
       <Collapse isOpen={isOpen}>
         <MintCard
-          pool={pool}
           library={library}
           account={account}
           chainId={chainId}
           walletConnectionActive={walletConnectionActive}
           connector={connector}
           baseAsset={baseAsset}
-          baseAssetContract={baseAssetContract}
           baseAssetSymbol={baseAssetSymbol}
           baseAssetIcon={BaseAssetIcon}
           tranche={tranche}

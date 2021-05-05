@@ -1,24 +1,15 @@
-import React, {
-  CSSProperties,
-  ReactElement,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import React, { CSSProperties, ReactElement, useCallback } from "react";
 
-import { Button, Classes, InputGroup, Intent } from "@blueprintjs/core";
+import { Button, InputGroup, Intent } from "@blueprintjs/core";
 import classNames from "classnames";
 import { BigNumber } from "ethers";
-import { formatUnits, parseUnits } from "ethers/lib/utils";
+import { formatUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { SwapKind } from "efi-ui/balancer/SwapKind";
-import { useQueryBatchSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
 import { validateInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { TokenIcon } from "efi-ui/token/TokenIcon";
 import { clipStringValueToDecimals } from "efi/math/fixedPoint";
-import { PoolContract } from "efi/pools/PoolContract";
 
 import styles from "./MintInput.module.css";
 
@@ -36,8 +27,6 @@ interface MintInputProps {
   cryptoDecimals: number | undefined;
   cryptoBalanceOf: BigNumber | undefined;
   cryptoDisplayBalance: string | number;
-
-  labelTopLeft: string;
   disabled: boolean;
   onChange: (value: string | undefined) => void;
   onPreviewUpdate: (value: string | undefined) => void;
@@ -52,26 +41,17 @@ export function MintInput(props: MintInputProps): ReactElement {
     cryptoDecimals,
     cryptoBalanceOf,
     cryptoDisplayBalance,
-    labelTopLeft,
     disabled,
     onChange: onChangeFromProps,
     value = "",
     validValue,
     onPreviewUpdate,
   } = props;
-  // changes to this will trigger calculating and calling handler to update the other value.  we
-  // need to do this because the calculation is asynchronous so we can't update the preview directly
-  // in the useOnInputChange handler.  Note that we use an object here to make sure we trigger
-  // useUpdatePreviewValue when the string value is the same as the previous value.
-  const [internalValue, setInternalValue] = useState<{
-    value: string | undefined;
-  }>({ value: "" });
 
   // handles user input changes.  call onChangeFromProps to tell the parent the value changed.  also
   // updates the internal value.  if the user clears the inputs, we also call onPreviewUpdate to
   // clear the preview.
   const onChange = useOnInputChange(
-    setInternalValue,
     onChangeFromProps,
     onPreviewUpdate,
     cryptoDecimals
@@ -84,7 +64,6 @@ export function MintInput(props: MintInputProps): ReactElement {
   const setMaxValue = useSetMaxValue(
     cryptoBalanceOf, // the max value
     cryptoDecimals,
-    setInternalValue,
     onChangeFromProps
   );
 
@@ -139,7 +118,6 @@ export function MintInput(props: MintInputProps): ReactElement {
 }
 
 function useOnInputChange(
-  setInternalValue: (value: { value: string | undefined }) => void,
   onChange: (value: string | undefined) => void,
   onPreviewUpdate: (value: string | undefined) => void,
   cryptoDecimals: number | undefined
@@ -151,41 +129,36 @@ function useOnInputChange(
       // sets internal value
       validateAndSetValue(
         userInputValue,
-        setInternalValue,
         onChange,
         onPreviewUpdate,
         cryptoDecimals
       );
     },
-    [setInternalValue, onChange, onPreviewUpdate, cryptoDecimals]
+    [onChange, onPreviewUpdate, cryptoDecimals]
   );
 }
 
 function useSetMaxValue(
   tokenBalanceOf: BigNumber | undefined,
   tokenDecimals: number | undefined,
-  setInternalValue: (value: { value: string | undefined }) => void,
   onChange: (value: string | undefined) => void
 ) {
   return useCallback(() => {
     if (tokenBalanceOf) {
       const maxValue = formatUnits(tokenBalanceOf, tokenDecimals);
-      setInternalValue({ value: maxValue });
       onChange(maxValue);
     }
-  }, [tokenBalanceOf, tokenDecimals, setInternalValue, onChange]);
+  }, [tokenBalanceOf, tokenDecimals, onChange]);
 }
 
 function validateAndSetValue(
   value: string,
-  setInternalValue: (value: { value: string }) => void,
   onChange: (value: string | undefined) => void,
   updatePreviewValue: (value: string | undefined) => void,
   cryptoDecimals: number | undefined
 ) {
   // allow user to clear input
   if (value === "") {
-    setInternalValue({ value: "" });
     onChange("");
     updatePreviewValue("");
     return;
@@ -201,6 +174,4 @@ function validateAndSetValue(
 
   // since this is a controlled component, we let the parent know what to update the value to
   onChange(safeValue);
-  // we also internally set the value so we can trigger an update for the other value
-  setInternalValue({ value: safeValue });
 }

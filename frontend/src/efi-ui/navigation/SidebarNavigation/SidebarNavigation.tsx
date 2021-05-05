@@ -1,7 +1,6 @@
 import React, { ReactElement, useState } from "react";
 
 import {
-  Button,
   Classes,
   Icon,
   IconSize,
@@ -23,7 +22,7 @@ import { usePendingTransaction } from "efi-ui/transactions/usePendingTransaction
 
 import { ConnectWalletButton } from "./ConnectWalletButton";
 import styles from "./SidebarNavigation.module.css";
-import { Link, useNavigate } from "@reach/router";
+import { Link } from "@reach/router";
 
 interface SidebarNavigationProps {
   chainId: number | undefined;
@@ -52,7 +51,6 @@ export function SidebarNavigation({
   changeTab,
   activeTab,
 }: SidebarNavigationProps): ReactElement {
-  const navigate = useNavigate();
   const [isWalletDialogOpen, setWalletDialogOpen] = useState(false);
   const { transactionHash } = usePendingTransaction();
   const hasPendingTransaction = !!transactionHash;
