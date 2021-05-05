@@ -6,3 +6,23 @@
 :global(.bp3-dark) .lineBreak {
   background-color: #5c7080;
 }
+
+.circledNumber {
+  width: 25px;
+  height: 25px;
+  line-height: 25x;
+  border-radius: 50%;
+  text-align: center;
+  background: rgba(138, 155, 168, 0.2);
+  padding-top: 2px;
+}
+
+.mintInput {
+  max-width: 300px;
+}
+
+.callOut {
+  width: 145px;
+  text-align: center;
+  margin-right: 10px;
+}

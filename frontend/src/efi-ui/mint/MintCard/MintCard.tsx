@@ -95,16 +95,7 @@ export function MintCard(props: MintCardProps): ReactElement | null {
       <div className={styles.lineBreak} />
       <div className={tw("flex", "pl-12", "pt-4", "items-center")}>
         <div
-          className={tw("mr-4", "text-lg")}
-          style={{
-            width: "25px",
-            height: "25px",
-            lineHeight: "25x",
-            borderRadius: "50%",
-            textAlign: "center",
-            background: "rgba(138, 155, 168, 0.2)",
-            paddingTop: "2px",
-          }}
+          className={classNames(styles.circledNumber, tw("mr-4", "text-lg"))}
         >
           1
         </div>
@@ -115,7 +106,7 @@ export function MintCard(props: MintCardProps): ReactElement | null {
           Available: {activeBaseAssetDisplayBalance}
         </div>
         <div className={tw("flex", "items-center")}>
-          <div style={{ maxWidth: "300px" }}>
+          <div className={styles.mintInput}>
             <TradeInputAlt
               cryptoAddress={baseAssetContract?.address}
               cryptoDecimals={baseAssetDecimals}
@@ -138,17 +129,9 @@ export function MintCard(props: MintCardProps): ReactElement | null {
         </div>
         <div className={tw("flex", "mt-4")}>
           <Callout
-            style={{
-              width: "145px",
-              textAlign: "center",
-              marginRight: "10px",
-            }}
-            className={tw(
-              "flex",
-              "flex-col",
-              "h-full",
-              "items-center",
-              "justify-center"
+            className={classNames(
+              styles.callOut,
+              tw("flex", "flex-col", "h-full", "items-center", "justify-center")
             )}
           >
             <LabeledText
@@ -157,13 +140,9 @@ export function MintCard(props: MintCardProps): ReactElement | null {
             />
           </Callout>
           <Callout
-            style={{ width: "145px", textAlign: "center" }}
-            className={tw(
-              "flex",
-              "flex-col",
-              "h-full",
-              "items-center",
-              "justify-center"
+            className={classNames(
+              styles.callOut,
+              tw("flex", "flex-col", "h-full", "items-center", "justify-center")
             )}
           >
             <LabeledText
@@ -186,16 +165,7 @@ export function MintCard(props: MintCardProps): ReactElement | null {
       <div className={classNames(styles.lineBreak, tw("mt-4"))} />
       <div className={tw("flex", "pl-12", "pt-4", "items-center")}>
         <div
-          className={tw("mr-4", "text-lg")}
-          style={{
-            width: "25px",
-            height: "25px",
-            lineHeight: "25x",
-            borderRadius: "50%",
-            textAlign: "center",
-            background: "rgba(138, 155, 168, 0.2)",
-            paddingTop: "2px",
-          }}
+          className={classNames(styles.circledNumber, tw("mr-4", "text-lg"))}
         >
           2
         </div>
