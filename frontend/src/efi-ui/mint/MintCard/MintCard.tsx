@@ -1,231 +1,42 @@
-import {
-  Fragment,
-  ReactElement,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import React, { Fragment, ReactElement, useState } from "react";
 
-import { Button, Card, Classes, Elevation, Intent } from "@blueprintjs/core";
+import { Button, Card, Callout } from "@blueprintjs/core";
+import classNames from "classnames";
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
-import classNames from "classnames";
-import { Tranche } from "elf-contracts/types/Tranche";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { CryptoAssetPicker } from "efi-ui/crypto/CryptoAssetPicker/CryptoAssetPicker";
-import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
+import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useCryptoBalance } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
-import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
-import { EarnInput } from "efi-ui/earn/EarnInput/EarnInput";
-import { useActiveTranche } from "efi-ui/earn/hooks/useActiveTranche";
+import { ERC20 } from "elf-contracts/types/ERC20";
 import { useMintPreview } from "efi-ui/mint/hooks/useMintPreview";
+import { MintTransactionConfirmationDrawer } from "efi-ui/mint/MintTransactionConfirmationDrawer/MintTransactionConfirmationDrawer";
 import { PrincipalTokenPreview } from "efi-ui/mint/MintCard/PrincipalTokenPreview";
 import { YieldTokenPreview } from "efi-ui/mint/MintCard/YieldTokenPreview";
-import { MintTermPicker } from "efi-ui/mint/MintTermPicker/MintTermPicker";
-import { MintTransactionConfirmationDrawer } from "efi-ui/mint/MintTransactionConfirmationDrawer/MintTransactionConfirmationDrawer";
+import { TradeInputAlt } from "efi-ui/trade/TradeInput/TradeInputAlt";
 import { formatBalance } from "efi/base/formatBalance";
-import { CryptoAsset } from "efi/crypto/CryptoAsset";
-import { SwapKind } from "efi-ui/balancer/SwapKind";
-import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
-import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
-import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
+import { CryptoAsset } from "efi/crypto/CryptoAsset";
+import { PoolContract } from "efi/pools/PoolContract";
+import { TokenIcon } from "efi-ui/token/TokenIcon";
+import { Tranche } from "elf-contracts/types/Tranche";
 
-export interface MintCardProps {
+import styles from "./MintCard.module.css";
+
+interface MintCardProps {
+  baseAsset: CryptoAsset | undefined;
+  baseAssetIcon: TokenIcon | undefined;
+  baseAssetContract: ERC20 | undefined;
+  baseAssetSymbol: string;
+  tranche: Tranche | undefined;
+  pool: PoolContract | undefined;
   library: Web3Provider | undefined;
   account: string | null | undefined;
   chainId: number | undefined;
   walletConnectionActive: boolean;
   connector: AbstractConnector | undefined;
-  baseAssets: (CryptoAsset | undefined)[];
-  tranchesByBaseAsset: Record<string, Tranche[]>;
-}
-
-export function MintCard({
-  library,
-  account,
-  baseAssets,
-  chainId,
-  connector,
-  walletConnectionActive,
-  tranchesByBaseAsset,
-}: MintCardProps): ReactElement {
-  // local state
-  const [isDrawerOpen, setDrawerOpen] = useState(false);
-  const {
-    stringValue: amountInString,
-    setValue: setAmountIn,
-  } = useNumericInput({
-    // no one needs to put in more than a trillion anything
-    max: 999_999_999_999,
-  });
-  const amountIn = +(amountInString || 0);
-
-  // active base asset
-  const { activeBaseAsset, setActiveBaseAsset } = useActiveBaseAsset(
-    baseAssets
-  );
-  const activeBaseAssetSymbol = useCryptoSymbol(activeBaseAsset);
-  const baseAssetIcon = findAssetIcon(activeBaseAssetSymbol);
-  const activeBaseAssetDecimals = useCryptoDecimals(activeBaseAsset);
-  const activeBaseAssetBalance = useCryptoBalance(
-    library,
-    account,
-    activeBaseAsset
-  );
-  const activeBaseAssetDisplayBalance = formatBalance(
-    activeBaseAssetBalance,
-    activeBaseAssetDecimals
-  );
-
-  // active tranche
-  const {
-    activeTrancheIndex,
-    activeTranche,
-    availableTranches,
-    setActiveTranche,
-  } = useActiveTranche(tranchesByBaseAsset, activeBaseAsset);
-
-  const { numPrincipalTokensOut, numYieldTokensOut } = useActiveMintPreview(
-    activeTranche,
-    amountIn
-  );
-
-  // active pool
-  const pool = usePoolForToken(activeTranche);
-  const { data: [tokens] = [] } = usePoolTokens(pool);
-  const {
-    // activeBaseAsset from above might be ETH, but we need the WETH contract for queryBatchSwap in
-    // EarnInput to work correctly.
-    baseAssetContract,
-    // these are only needed to make EarnInput work.  can get rid of these if we make a MintInput
-    termAssetIndex,
-    termAssetContract,
-  } = parseSortedTokensForPool(tokens);
-
-  return (
-    <Fragment>
-      <Card
-        elevation={isDrawerOpen ? Elevation.ZERO : Elevation.TWO}
-        className={tw("flex", "flex-col", "p-10", "flex-1", "space-y-10")}
-      >
-        <div className={tw("flex", "flex-col", "space-y-2")}>
-          <div className={tw("flex", "justify-between")}>
-            <span
-              className={classNames(tw("text-base"), Classes.TEXT_MUTED)}
-            >{t`Deposit`}</span>
-            {!!account && (
-              <span
-                className={classNames(tw("text-base"), Classes.TEXT_MUTED)}
-              >{t`Balance: ${activeBaseAssetDisplayBalance} ${activeBaseAssetSymbol}`}</span>
-            )}
-          </div>
-          <div
-            className={tw(
-              "flex",
-              "space-x-1",
-              "h-24",
-              "border",
-              "rounded",
-              "border-gray-500"
-            )}
-          >
-            {/* TODO: we need a MintInput that doesn't require a queryBatchSwap */}
-            <EarnInput
-              showMaxButton={!!account}
-              assetPicker={
-                <CryptoAssetPicker
-                  cryptoAssets={baseAssets}
-                  activeCryptoAsset={activeBaseAsset}
-                  onCryptoAssetChange={setActiveBaseAsset}
-                />
-              }
-              placeholder="0.00"
-              value={amountInString}
-              onValueChange={setAmountIn}
-              assetBalance={+activeBaseAssetDisplayBalance}
-              cryptoAddress={baseAssetContract?.address}
-              cryptoDecimals={activeBaseAssetDecimals}
-              cryptoBalanceOf={activeBaseAssetBalance}
-              cryptoDisplayBalance={activeBaseAssetDisplayBalance || ""}
-              previewCryptoAddress={termAssetContract?.address}
-              previewCryptoPoolIndex={termAssetIndex}
-              pool={pool}
-              onPreviewUpdate={() => {}}
-              swapKind={SwapKind.GIVEN_IN}
-            />
-          </div>
-        </div>
-        <div className={tw("flex", "flex-col", "space-y-2")}>
-          <div className={tw("flex", "justify-between")}>
-            <span
-              className={classNames(tw("text-base"), Classes.TEXT_MUTED)}
-            >{t`Term and Vault`}</span>
-          </div>
-          <div
-            className={tw(
-              "flex",
-              "space-x-1",
-              "h-24",
-              "border",
-              "rounded",
-              "border-gray-500"
-            )}
-          >
-            <MintTermPicker
-              library={library}
-              account={account}
-              onTrancheChange={setActiveTranche}
-              baseAsset={activeBaseAsset}
-              tranches={availableTranches}
-              activeTrancheIndex={activeTrancheIndex}
-            />
-          </div>
-        </div>
-
-        <div className={tw("flex", "space-x-10", "h-24", "mt-10")}>
-          <PrincipalTokenPreview
-            amount={numPrincipalTokensOut}
-            baseAssetSymbol={activeBaseAssetSymbol}
-          />
-          <YieldTokenPreview
-            amount={numYieldTokensOut}
-            baseAssetSymbol={activeBaseAssetSymbol}
-            baseAssetDecimals={activeBaseAssetDecimals}
-          />
-        </div>
-        <Button
-          large
-          outlined
-          intent={Intent.PRIMARY}
-          className={tw("flex-1")}
-          disabled={!amountIn}
-          onClick={() => setDrawerOpen(true)}
-        >
-          <div className={tw("p-4", "text-lg")}>{t`Mint`}</div>
-        </Button>
-      </Card>
-
-      {!activeBaseAsset ? null : (
-        <MintTransactionConfirmationDrawer
-          baseAsset={activeBaseAsset}
-          baseAssetIcon={baseAssetIcon}
-          tranche={activeTranche}
-          account={account}
-          library={library}
-          chainId={chainId}
-          walletConnectionActive={walletConnectionActive}
-          connector={connector}
-          amountIn={amountInString}
-          isOpen={isDrawerOpen}
-          onClose={() => setDrawerOpen(false)}
-        />
-      )}
-    </Fragment>
-  );
 }
 
 function useActiveMintPreview(
@@ -241,34 +52,175 @@ function useActiveMintPreview(
   return { numPrincipalTokensOut, numYieldTokensOut };
 }
 
-function useSetDefaultActiveBaseAsset(
-  activeBaseAsset: CryptoAsset | undefined,
-  setActiveBaseAsset: (baseAsset: CryptoAsset | undefined) => void,
-  defaultBaseAsset: CryptoAsset | undefined
-) {
-  useEffect(() => {
-    if (activeBaseAsset === undefined) {
-      setActiveBaseAsset(defaultBaseAsset);
-    }
-  }, [activeBaseAsset, defaultBaseAsset, setActiveBaseAsset]);
-}
+export function MintCard(props: MintCardProps): ReactElement | null {
+  const {
+    pool,
+    library,
+    account,
+    chainId,
+    walletConnectionActive,
+    connector,
+    baseAsset,
+    baseAssetContract,
+    baseAssetSymbol,
+    baseAssetIcon,
+    tranche,
+  } = props;
 
-function useActiveBaseAsset(allBaseAssets: (CryptoAsset | undefined)[]) {
-  const [activeBaseAsset, setActiveBaseAssetState] = useState<
-    CryptoAsset | undefined
-  >();
-  const setActiveBaseAsset = useCallback(
-    (baseAsset: CryptoAsset | undefined) => {
-      setActiveBaseAssetState(baseAsset);
-    },
-    []
+  const [isDrawerOpen, setDrawerOpen] = useState(false);
+  const {
+    stringValue: amountInString,
+    setValue: setAmountIn,
+  } = useNumericInput({
+    // no one needs to put in more than a trillion anything
+    max: 999_999_999_999,
+  });
+  const amountIn = +(amountInString || 0);
+
+  const baseAssetDecimals = useCryptoDecimals(baseAsset);
+  const baseAssetBalance = useCryptoBalance(library, account, baseAsset);
+
+  const activeBaseAssetDisplayBalance = formatBalance(
+    baseAssetBalance,
+    baseAssetDecimals
   );
-  // The list of base assets will be empty while the data loads, so we want to
-  // set the default after it's been populated
-  useSetDefaultActiveBaseAsset(
-    activeBaseAsset,
-    setActiveBaseAsset,
-    allBaseAssets[0]
+
+  const { numPrincipalTokensOut, numYieldTokensOut } = useActiveMintPreview(
+    tranche,
+    amountIn
   );
-  return { activeBaseAsset, setActiveBaseAsset };
+
+  return (
+    <Fragment>
+      <div className={styles.lineBreak} />
+      <div className={tw("flex", "pl-12", "pt-4", "items-center")}>
+        <div
+          className={tw("mr-4", "text-lg")}
+          style={{
+            width: "25px",
+            height: "25px",
+            lineHeight: "25x",
+            borderRadius: "50%",
+            textAlign: "center",
+            background: "rgba(138, 155, 168, 0.2)",
+            paddingTop: "2px",
+          }}
+        >
+          1
+        </div>
+        <div className={tw("text-lg")}>Mint</div>
+      </div>
+      <div className={tw("pl-24", "pt-4", "-ml-1")}>
+        <div className={tw("mb-1")}>
+          Available: {activeBaseAssetDisplayBalance}
+        </div>
+        <div className={tw("flex", "items-center")}>
+          <div style={{ maxWidth: "300px" }}>
+            <TradeInputAlt
+              cryptoAddress={baseAssetContract?.address}
+              cryptoDecimals={baseAssetDecimals}
+              cryptoBalanceOf={baseAssetBalance}
+              cryptoDisplayBalance={activeBaseAssetDisplayBalance || ""}
+              cryptoSymbol={baseAssetSymbol}
+              cryptoIcon={baseAssetIcon}
+              previewCryptoAddress={""}
+              previewCryptoPoolIndex={1}
+              labelTopLeft={t`Mint`}
+              disabled={false}
+              swapKind={0}
+              pool={pool}
+              onChange={setAmountIn}
+              onPreviewUpdate={() => {}}
+              value={amountInString}
+              validValue={true}
+            />
+          </div>
+        </div>
+        <div className={tw("flex", "mt-4")}>
+          <Callout
+            style={{
+              width: "145px",
+              textAlign: "center",
+              marginRight: "10px",
+            }}
+            className={tw(
+              "flex",
+              "flex-col",
+              "h-full",
+              "items-center",
+              "justify-center"
+            )}
+          >
+            <LabeledText
+              text={`${numPrincipalTokensOut || 0} eP:yETH`}
+              label={`Principal Tokens`}
+            />
+          </Callout>
+          <Callout
+            style={{ width: "145px", textAlign: "center" }}
+            className={tw(
+              "flex",
+              "flex-col",
+              "h-full",
+              "items-center",
+              "justify-center"
+            )}
+          >
+            <LabeledText
+              text={`${numYieldTokensOut || 0} eP:yETH`}
+              label={`Yield Tokens`}
+            />
+          </Callout>
+        </div>
+        <div className={tw("mt-4")}>
+          <Button
+            minimal
+            outlined
+            intent="primary"
+            onClick={() => setDrawerOpen(true)}
+          >
+            Mint Tokens
+          </Button>
+        </div>
+      </div>
+      <div className={classNames(styles.lineBreak, tw("mt-4"))} />
+      <div className={tw("flex", "pl-12", "pt-4", "items-center")}>
+        <div
+          className={tw("mr-4", "text-lg")}
+          style={{
+            width: "25px",
+            height: "25px",
+            lineHeight: "25x",
+            borderRadius: "50%",
+            textAlign: "center",
+            background: "rgba(138, 155, 168, 0.2)",
+            paddingTop: "2px",
+          }}
+        >
+          2
+        </div>
+        <div className={tw("text-lg")}>Stake Your Tokens or Sell Principal</div>
+      </div>
+      <div className={tw("flex", "pl-12", "pt-2", "mb-6", "items-center")}>
+        <div className={"ml-10 bp3-text-muted text-sm"}>
+          Go to the <a>Portfolio Page</a>. <br />
+          Stake your tokens for additional APY. <br />
+          Or sell your principal to re-invest.
+        </div>
+      </div>
+      <MintTransactionConfirmationDrawer
+        baseAsset={baseAsset}
+        baseAssetIcon={baseAssetIcon}
+        tranche={tranche}
+        account={account}
+        library={library}
+        chainId={chainId}
+        walletConnectionActive={walletConnectionActive}
+        connector={connector}
+        amountIn={amountInString}
+        isOpen={isDrawerOpen}
+        onClose={() => setDrawerOpen(false)}
+      />
+    </Fragment>
+  );
 }
