@@ -24,7 +24,8 @@ import { validateInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput
 interface EarnInputProps {
   showMaxButton: boolean;
   assetBalance: number;
-  value: string | undefined;
+  // cannot be undefined as that enables 'uncontrolled' component behavior for InputGroup
+  value: string;
   onValueChange: (value: string | undefined) => void;
   onPreviewUpdate: (value: string | undefined) => void;
   className?: string;
@@ -71,7 +72,7 @@ export function EarnInput({
   // in the useOnInputChange handler.  Note that we use an object here to make sure we trigger
   // useUpdatePreviewValue when the string value is the same as the previous value.
   const [internalValue, setInternalValue] = useState<{
-    value: string | undefined;
+    value: string;
   }>({ value: "" });
 
   // handles user input changes.  call onChangeFromProps to tell the parent the value changed.  also
@@ -123,7 +124,7 @@ export function EarnInput({
         { [styles.investmentAmountLightMode]: !isDarkMode },
         className
       )}
-      value={value}
+      value={value || ""}
       large
       leftElement={assetPicker}
       rightElement={maxButtonElement}
@@ -194,7 +195,7 @@ function useUpdatePreviewValue(
 function useSetMaxValue(
   tokenBalanceOf: BigNumber | undefined,
   tokenDecimals: number | undefined,
-  setInternalValue: (value: { value: string | undefined }) => void,
+  setInternalValue: (value: { value: string }) => void,
   onChange: (value: string | undefined) => void
 ) {
   return useCallback(() => {
@@ -210,11 +211,11 @@ function validateAndSetValue(
   value: string,
   setInternalValue: (value: { value: string }) => void,
   onChange: (value: string | undefined) => void,
-  updatePreviewValue: (value: string | undefined) => void,
+  updatePreviewValue: (value: string) => void,
   cryptoDecimals: number | undefined
 ) {
   // allow user to clear input
-  if (value === "") {
+  if (value === "" || value === undefined) {
     setInternalValue({ value: "" });
     onChange("");
     updatePreviewValue("");
