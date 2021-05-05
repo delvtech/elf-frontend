@@ -23,6 +23,7 @@ import { ONE_DAY_IN_SECONDS } from "efi/base/time";
 import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { PoolContract } from "efi/pools/PoolContract";
 import { APYSummary } from "efi-ui/pools/APYSummary/APYSummary";
+import { formatEther } from "ethers/lib/utils";
 
 interface PoolDetailsProps {
   library: Web3Provider | undefined;
@@ -55,6 +56,10 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
   const liquidityTrend = useTotalLiquidityTrend(pool);
 
   const tranche = useTrancheForPool(pool);
+  const { data: interestSupplyBN } = useSmartContractReadCall(
+    tranche,
+    "interestSupply"
+  );
   const startDateInUnixSeconds = useTrancheCreatedAt(tranche);
   const { data: maturityDateInUnixSeconds } = useSmartContractReadCall(
     tranche,
@@ -97,6 +102,8 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
           feeVolumeTrend={feeVolumeTrend}
         />
         <VaultSummary
+          pool={pool}
+          interestSupply={+formatEther(interestSupplyBN ?? 0)}
           baseAsset={baseAssetContract}
           startDate={startDate}
           maturityDate={maturityDate}

@@ -6,12 +6,10 @@ import { ERC20 } from "elf-contracts/types/ERC20";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { useAccumulatedFiatInterestForTranche } from "efi-ui/pools/useAccumulatedFiatInterestForTranche";
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 import { useStakingAPY } from "efi-ui/pools/useStakingAPY";
 import { useTokenYield } from "efi-ui/pools/useTokenYield";
 import { formatPercent } from "efi/base/formatPercent";
-import { formatMoney } from "efi/money/formatMoney";
 import { isWeightedPool, PoolContract } from "efi/pools/PoolContract";
 import { TermAssetType } from "efi/tranche/TermAssetType";
 
@@ -40,11 +38,6 @@ export function APYSummary(props: APYSummaryProps): ReactElement {
 
   const tokenYield = useTokenYield(baseAssetContract, pool, termAssetType);
 
-  const accumulatedInterest = useAccumulatedFiatInterestForTranche(
-    baseAssetContract,
-    pool
-  );
-
   return (
     <div className={tw("flex-1")}>
       {/* <div className="mb-2">{t`APY Summary`}</div> */}
@@ -69,19 +62,6 @@ export function APYSummary(props: APYSummaryProps): ReactElement {
             </span>
             <div className={classNames("h1", tw("space-x-4"))}>
               {formatPercent(tokenYield)}
-            </div>
-          </div>
-        </div>
-        {/*Interest*/}
-        <div className={tw("flex", "space-x-4", "justify-center")}>
-          <div className={tw("flex", "flex-col")}>
-            <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
-              {t`Accumulated Interest`}
-            </span>
-            <div className={tw("flex", "space-x-4")}>
-              <div className={classNames("h1", tw("space-x-4"))}>
-                {formatMoney(accumulatedInterest)}
-              </div>
             </div>
           </div>
         </div>
