@@ -21,7 +21,6 @@ interface PoolsTableProps {
 }
 
 export function PoolsTable({
-  className,
   signerOrProvider,
   isYieldPools,
 }: PoolsTableProps): ReactElement {

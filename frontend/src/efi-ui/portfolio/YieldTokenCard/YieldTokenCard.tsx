@@ -1,4 +1,4 @@
-import { ReactElement, ReactNode, useMemo } from "react";
+import React, { ReactElement, ReactNode, useMemo } from "react";
 
 import {
   ButtonGroup,
@@ -45,6 +45,7 @@ import { formatAbbreviatedDate } from "efi/base/dates";
 import { formatPercent } from "efi/base/formatPercent";
 import { CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { formatMoney } from "efi/money/formatMoney";
+import { Link } from "@reach/router";
 
 interface YieldTokenCardProps {
   library: Web3Provider | undefined;
@@ -162,16 +163,32 @@ export function YieldTokenCard({
             />
           ) : null}
           <div className={tw("flex", "flex-col", "space-y-2")}>
-            <span className={tw("text-2xl", "font-semibold")}>
-              <a
-                title={t`View tranche on etherscan`}
-                href={`https://etherscan.io/address/${yieldToken.address}`}
-                target="_blank"
-                rel="noreferrer noopener"
-              >
+            <div
+              className={tw(
+                "flex",
+                "items-center",
+                "space-x-2",
+                "text-2xl",
+                "font-semibold"
+              )}
+            >
+              <Link to={`/pools/${pool?.address}`}>
                 {t`${baseAssetSymbol} Yield Token` || null}
+              </Link>
+              <a
+                className={tw("flex", "items-center")}
+                onClick={(e) => e.stopPropagation()}
+                href={`https://etherscan.io/address/${yieldToken?.address}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Icon
+                  intent={Intent.NONE}
+                  className={tw("pr-2")}
+                  icon={IconNames.SHARE}
+                />
               </a>
-            </span>
+            </div>
             <div
               className={tw(
                 "flex",

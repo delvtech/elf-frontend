@@ -9,9 +9,6 @@
         "convergentPoolFactoryAddress": {
           "type": "string"
         },
-        "elementAddress": {
-          "type": "string"
-        },
         "interestTokenFactoryAddress": {
           "type": "string"
         },
@@ -34,7 +31,6 @@
       "required": [
         "balancerVaultAddress",
         "convergentPoolFactoryAddress",
-        "elementAddress",
         "interestTokenFactoryAddress",
         "trancheFactoryAddress",
         "usdcAddress",
@@ -44,10 +40,16 @@
       ],
       "type": "object"
     },
+    "safelist": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
     "chainId": {
       "type": "number"
     }
   },
-  "required": ["addresses", "chainId"],
+  "required": ["addresses", "chainId", "safelist"],
   "type": "object"
 }

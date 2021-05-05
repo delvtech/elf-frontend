@@ -52,7 +52,7 @@ export function makeSmartContractReadCallUseQueryOptions<
   const { enabled = true, callArgs, staleTime } = options || {};
 
   const queryKey = makeSmartContractReadCallQueryKey<TContract, TMethodName>(
-    contract,
+    contract?.address,
     methodName,
     callArgs
   );
@@ -90,7 +90,7 @@ export function makeSmartContractReadCallQueryKey<
   TContract extends Contract,
   TMethodName extends ContractMethodName<TContract>
 >(
-  contract: TContract | undefined,
+  contractAddress: string | undefined,
   methodName: TMethodName,
   callArgs: Parameters<TContract["functions"][TMethodName]> | undefined
 ): [
@@ -100,5 +100,5 @@ export function makeSmartContractReadCallQueryKey<
     callArgs: Parameters<TContract["functions"][TMethodName]> | undefined;
   }
 ] {
-  return [["contractCall", contract?.address], { methodName, callArgs }];
+  return [["contractCall", contractAddress], { methodName, callArgs }];
 }

@@ -16,6 +16,7 @@ import {
 } from "@blueprintjs/core";
 import { Link, navigate } from "@reach/router";
 import classNames from "classnames";
+import { differenceInDays, format } from "date-fns";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -28,15 +29,22 @@ import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSy
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 import { useFeeVolumeForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
+import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidityForPool.ts/useTotalFiatLiquidityForPool";
 import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForPool";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
 import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
+import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { formatMoney } from "efi/money/formatMoney";
 import { PoolContract } from "efi/pools/PoolContract";
 
 import styles from "./PrincipalPoolCard.module.css";
-import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidityForPool.ts/useTotalFiatLiquidityForPool";
+import { useTokenYield } from "efi-ui/pools/useTokenYield";
+import { formatPercent } from "efi/base/formatPercent";
+import { useStakingAPY } from "efi-ui/pools/useStakingAPY";
+import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
+import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
+import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 
 interface InterestPoolCardProps {
   pool: PoolContract | undefined;
@@ -74,10 +82,20 @@ export function InterestPoolCard(
   );
   const unlockTime = unlockBN?.toNumber();
 
+  const variableYield = useTokenYield(baseAssetContract, pool, "yield");
+  const stakingYield = useStakingAPY(pool);
+  const { currency } = useCurrencyPref();
+  const [baseAssetPrice] = useTokenPrice(baseAssetContract, currency);
+  const spotPrice = usePoolSpotPrice(pool, termAssetContract) ?? 0;
   // TODO: Get this from props
   const goToPoolPage = useCallback(() => {
     navigate(`pools/${pool?.address}`);
   }, [pool?.address]);
+
+  const { data: vaultInfo } = useYearnVault(
+    baseAssetSymbol ? t`yv${baseAssetSymbol}` : undefined
+  );
+  const { name, type } = vaultInfo || {};
 
   const { isDarkMode } = useDarkMode();
 
@@ -89,14 +107,20 @@ export function InterestPoolCard(
     fees,
     baseAssetContract,
     baseAsset,
+    baseAssetPrice,
     baseAssetSymbol,
     BaseAssetIcon,
     termAssetContract,
     termAssetSymbol,
+    variableYield,
+    stakingYield,
+    spotPrice,
     unlockBN,
   ];
   // TODO: this is a big hammer for loading state.  we should use a more granular technique when we can.
-  const allDataLoaded = dataToLoad.every((data) => data !== undefined);
+  const allDataLoaded = dataToLoad.every(
+    (data): data is typeof data => data !== undefined
+  );
 
   const [transitionsEnabled, setTransitionsEnabled] = useState(true);
 
@@ -114,9 +138,6 @@ export function InterestPoolCard(
     return null;
   }
 
-  const startTime = trancheCreatedAt ? trancheCreatedAt * 1000 : undefined;
-  const maturityTime = unlockTime ? unlockTime * 1000 : undefined;
-
   if (!allDataLoaded) {
     return (
       <Card
@@ -131,6 +152,16 @@ export function InterestPoolCard(
       ></Card>
     );
   }
+
+  const startTime = trancheCreatedAt ? trancheCreatedAt * 1000 : 0;
+  const maturityTime = unlockTime ? unlockTime * 1000 : 0;
+
+  const termLength =
+    Math.round(differenceInDays(maturityTime, startTime) / 10) * 10;
+
+  const maturityDate = format(maturityTime, "MMM, d, yyyy");
+
+  const yieldTokenPrice = baseAssetPrice?.multiply(spotPrice, Math.round);
 
   return (
     <Card
@@ -218,7 +249,7 @@ export function InterestPoolCard(
             text={
               <Link
                 className={tw("flex", "space-x-2")}
-                to={pool?.address || ""}
+                to={`/pools/${pool?.address}` || ""}
                 onClick={stopPropagationHandler}
               >
                 {`${baseAssetSymbol} - ${termAssetSymbol}`}
@@ -236,7 +267,7 @@ export function InterestPoolCard(
             "lg:col-span-1"
           )}
         >
-          <LabeledText text={"Yearn ySTETH"} label={t`Vault`} />
+          <LabeledText text={t`${name} ${type}`} label={t`Vault`} />
         </div>
         <div
           className={tw(
@@ -246,7 +277,7 @@ export function InterestPoolCard(
             "lg:col-span-1"
           )}
         >
-          <LabeledText text={"90 Day"} label={t`Term`} />
+          <LabeledText text={t`${termLength} Day`} label={t`Term`} />
         </div>
         <div
           className={tw(
@@ -276,7 +307,12 @@ export function InterestPoolCard(
             "xl:-ml-12"
           )}
         >
-          <LabeledText text={"$235.00"} label={t`Price`} />
+          <LabeledText
+            text={formatMoney(yieldTokenPrice, {
+              wholeAmounts: (yieldTokenPrice?.toDecimal() ?? 0) > 10,
+            })}
+            label={t`Price`}
+          />
         </div>
         <div
           className={tw(
@@ -290,7 +326,10 @@ export function InterestPoolCard(
             "xl:-ml-12"
           )}
         >
-          <LabeledText text={"10%"} label={t`Stake APY`} />
+          <LabeledText
+            text={formatPercent(stakingYield)}
+            label={t`Stake APY`}
+          />
         </div>
         <div
           className={tw(

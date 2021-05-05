@@ -55,7 +55,7 @@ export function useSmartContractTransactionPersisted<
     clearPendingTransactionPref,
   } = usePendingTransactionPref();
 
-  const onSuccess = useCallback(
+  const onBeginTransaction = useCallback(
     (
       txReceipt: ContractTransaction,
       callArgs: ContractMethodArgs<TContract, TMethodName>
@@ -75,6 +75,18 @@ export function useSmartContractTransactionPersisted<
       setPendingTransactionPref,
     ]
   );
+
+  const onSuccess = useCallback(
+    (
+      txReceipt: ContractTransaction,
+      callArgs: ContractMethodArgs<TContract, TMethodName>
+    ) => {
+      clearPendingTransactionPref();
+      onSuccessFromOptions?.(txReceipt, callArgs);
+    },
+    [clearPendingTransactionPref, onSuccessFromOptions]
+  );
+
   const onError = useCallback(
     (error: Error) => {
       clearPendingTransactionPref();
@@ -88,6 +100,7 @@ export function useSmartContractTransactionPersisted<
     TMethodName
   > = {
     ...options,
+    onBeginTransaction,
     onSuccess,
     onError,
   };

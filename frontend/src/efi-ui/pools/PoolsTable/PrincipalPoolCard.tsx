@@ -16,6 +16,7 @@ import {
 } from "@blueprintjs/core";
 import { Link, navigate } from "@reach/router";
 import classNames from "classnames";
+import { differenceInDays, format } from "date-fns";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -28,6 +29,7 @@ import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSy
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 import { useFeeVolumeFiatForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
+import { useTokenYield } from "efi-ui/pools/useTokenYield";
 import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidityForPool.ts/useTotalFiatLiquidityForPool";
 import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForPool";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
@@ -37,6 +39,8 @@ import { formatMoney } from "efi/money/formatMoney";
 import { PoolContract } from "efi/pools/PoolContract";
 
 import styles from "./PrincipalPoolCard.module.css";
+import { formatPercent } from "efi/base/formatPercent";
+import { useStakingAPY } from "efi-ui/pools/useStakingAPY";
 
 interface PrincipalPoolCardProps {
   pool: PoolContract | undefined;
@@ -72,7 +76,8 @@ export function PrincipalPoolCard(
     tranche,
     "unlockTimestamp"
   );
-  const unlockTime = unlockBN?.toNumber();
+  const fixedYield = useTokenYield(baseAssetContract, pool, "principal");
+  const stakingYield = useStakingAPY(pool);
 
   // TODO: Get this from props
   const goToPoolPage = useCallback(() => {
@@ -92,8 +97,12 @@ export function PrincipalPoolCard(
     BaseAssetIcon,
     termAssetContract,
     termAssetSymbol,
+    fixedYield,
+    stakingYield,
     unlockBN,
   ];
+
+  const unlockTime = unlockBN?.toNumber();
 
   // TODO: this is a big hammer for loading state.  we should use a more granular technique when we can.
   const allDataLoaded = dataToLoad.every((data) => data !== undefined);
@@ -114,9 +123,6 @@ export function PrincipalPoolCard(
     return null;
   }
 
-  const startTime = trancheCreatedAt ? trancheCreatedAt * 1000 : undefined;
-  const maturityTime = unlockTime ? unlockTime * 1000 : undefined;
-
   if (!allDataLoaded) {
     return (
       <Card
@@ -130,6 +136,15 @@ export function PrincipalPoolCard(
       ></Card>
     );
   }
+
+  const startTime = trancheCreatedAt ? trancheCreatedAt * 1000 : undefined;
+  const maturityTime = unlockTime ? unlockTime * 1000 : undefined;
+  const maturityDate = format(maturityTime ?? 0, "MMM, d, yyyy");
+
+  const termLength =
+    Math.round(
+      differenceInDays(maturityTime as number, startTime as number) / 10
+    ) * 10;
 
   return (
     <Card
@@ -218,7 +233,7 @@ export function PrincipalPoolCard(
             text={
               <Link
                 className={tw("flex", "space-x-2")}
-                to={pool?.address || ""}
+                to={`/pools/${pool?.address}` || ""}
                 onClick={stopPropagationHandler}
               >
                 {`${baseAssetSymbol} - ${termAssetSymbol}`}
@@ -237,7 +252,7 @@ export function PrincipalPoolCard(
             "flex-grow"
           )}
         >
-          <LabeledText large text={"90 Day"} label={t`Term`} />
+          <LabeledText large text={t`${termLength} Day`} label={t`Term`} />
         </div>
         <div
           className={tw(
@@ -265,7 +280,11 @@ export function PrincipalPoolCard(
             "lg:col-span-2"
           )}
         >
-          <LabeledText large text={"20%"} label={t`Fixed APY`} />
+          <LabeledText
+            large
+            text={formatPercent(fixedYield)}
+            label={t`Fixed APY`}
+          />
         </div>
         <div
           className={tw(
@@ -276,7 +295,11 @@ export function PrincipalPoolCard(
             "lg:col-span-2"
           )}
         >
-          <LabeledText large text={"10%"} label={t`Stake APY`} />
+          <LabeledText
+            large
+            text={formatPercent(stakingYield)}
+            label={t`Stake APY`}
+          />
         </div>
         <div
           className={tw(

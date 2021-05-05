@@ -26,7 +26,7 @@ import { useTrancheForInterestToken } from "efi-ui/tranche/useTrancheForInterest
 import { useUnderlyingVaultForTranche } from "efi-ui/tranche/useUnderlyingVaultForTranche";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
-import { getTimeLeft2 } from "efi/base/time";
+import { getTimeLeft } from "efi/base/time";
 import { formatMoney } from "efi/money/formatMoney";
 
 interface InterestTokenTableRowProps {
@@ -100,7 +100,7 @@ export function InterestTokenTableRow({
     baseAssetFiatPrice?.multiply(currentExitValue)
   );
   const maturationDate = convertEpochSecondsToDate(unlockTimestamp);
-  const timeLeft = getTimeLeft2(maturationDate);
+  const timeLeft = getTimeLeft(maturationDate);
   const tableRowLink = getTableRowLink(vaultContract?.address, vaultName);
 
   return (

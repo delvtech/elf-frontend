@@ -1,4 +1,4 @@
-import { ReactElement, useMemo } from "react";
+import React, { ReactElement, useMemo } from "react";
 
 import {
   ButtonGroup,
@@ -10,7 +10,6 @@ import {
 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
-import { AbstractConnector } from "@web3-react/abstract-connector";
 import classNames from "classnames";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { jt, t } from "ttag";
@@ -21,7 +20,7 @@ import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
+import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
@@ -41,12 +40,11 @@ import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
 import { GoToMarketButton } from "./GoToMarketButton";
 import { MaturityTimeBar } from "./MaturityTimeBar";
 import { formatPercent } from "efi/base/formatPercent";
+import { Link } from "@reach/router";
 
 interface PrincipalTokenCardProps {
   chainId: number | undefined;
   library: Web3Provider | undefined;
-  connector: AbstractConnector | undefined;
-  walletConnectionActive: boolean;
   account: string | null | undefined;
   tranche: Tranche;
 }
@@ -106,7 +104,7 @@ export function PrincipalTokenCard(
     fiatPrice = formatMoney(baseAssetCoinGeckoPrice.multiply(exitValue));
   }
 
-  const BaseAssetIcon = findAssetIcon(baseAssetSymbol);
+  const BaseAssetIcon = findAssetIcon2(baseAsset);
 
   const tableRowLink = getTableRowLink(vaultContract?.address, vaultName);
   const maturationDate = useMemo(
@@ -142,16 +140,32 @@ export function PrincipalTokenCard(
           />
         ) : null}
         <div className={tw("flex", "flex-col", "space-y-2")}>
-          <span className={tw("text-2xl", "font-semibold")}>
-            <a
-              title={t`View principal token on etherscan`}
-              href={`https://etherscan.io/address/${tranche.address}`}
-              target="_blank"
-              rel="noreferrer noopener"
-            >
+          <div
+            className={tw(
+              "flex",
+              "items-center",
+              "space-x-2",
+              "text-2xl",
+              "font-semibold"
+            )}
+          >
+            <Link to={`/pools/${pool?.address}`}>
               {t`${baseAssetSymbol} Principal Token` || null}
+            </Link>
+            <a
+              className={tw("flex", "items-center")}
+              onClick={(e) => e.stopPropagation()}
+              href={`https://etherscan.io/address/${tranche?.address}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Icon
+                intent={Intent.NONE}
+                className={tw("pr-2")}
+                icon={IconNames.SHARE}
+              />
             </a>
-          </span>
+          </div>
           <div
             className={tw(
               "flex",

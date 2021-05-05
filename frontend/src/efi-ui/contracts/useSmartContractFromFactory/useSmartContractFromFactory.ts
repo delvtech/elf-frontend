@@ -1,7 +1,7 @@
 import { Provider } from "@ethersproject/providers";
 import { Contract, Signer } from "ethers";
 
-import { getSmartContractFromRegistry } from "efi-ui/contracts/SmartContractsRegistry";
+import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
 import { FactoryConnectFn } from "efi/contracts/FactoryConnectFn";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 

@@ -145,6 +145,7 @@ export function SellPrincipalTokensTransactionDrawer(
 
   return (
     <TransactionDrawer
+      buttonLabel={t`Sell`}
       approvalSpenderAddress={balancerVault?.address}
       isOpen={isOpen}
       onClose={onClose}

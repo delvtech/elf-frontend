@@ -10,6 +10,10 @@ The purpose of this repo is automate the setup of a local testnet to run the elf
 $ npm run load-contracts
 ```
 
+#### Compile the contracts
+```bash
+$ npm run build
+```
 ### Run the hardhat local testnet
 
 Install npm packages
@@ -18,13 +22,7 @@ Install npm packages
 $ npm ci
 ```
 
-Compile the contracts
-
-```bash
-$ npm run build
-```
-
-Run the Hardhat Runtime Environment
+### Run the Hardhat Runtime Environment
 
 ```bash
 $ npm start
@@ -32,7 +30,7 @@ $ npm start
 
 (This makes a local testnet at http://localhost:8545/ and chain id 31337)
 
-Deploy the contracts
+### Deploy the contracts
 
 ```bash
 $ npm run deploy-contracts

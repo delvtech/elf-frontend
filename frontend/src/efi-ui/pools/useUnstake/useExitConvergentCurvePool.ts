@@ -10,7 +10,7 @@ import { ExitRequest } from "efi-balancer/ExitRequest";
 import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { getQueriesData } from "efi-ui/base/queryResults";
-import { getSmartContractFromRegistryMulti } from "efi-ui/contracts/SmartContractsRegistry";
+import { getSmartContractFromRegistryMulti } from "efi/contracts/SmartContractsRegistry";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";

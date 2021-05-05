@@ -1,6 +1,12 @@
 import React, { ReactElement } from "react";
 
-import { Button, Callout, Intent } from "@blueprintjs/core";
+import {
+  Button,
+  Callout,
+  Intent,
+  Spinner,
+  SpinnerSize,
+} from "@blueprintjs/core";
 import { BigNumber, Signer } from "ethers";
 import { t } from "ttag";
 
@@ -40,7 +46,10 @@ export function WalletApprovalCallout({
     balancerVault?.address
   );
 
-  const onApproveClick = useERC20Approve(
+  const {
+    onApproveClick,
+    mutationResult: { isLoading },
+  } = useERC20Approve(
     cryptoAssetContract as ERC20Shim,
     signer,
     account,
@@ -77,11 +86,16 @@ export function WalletApprovalCallout({
       <Button
         large
         fill
+        disabled={isLoading}
         outlined
         intent={Intent.WARNING}
         onClick={onApproveClick}
       >
-        {t`Approve`}
+        {isLoading ? (
+          <Spinner size={SpinnerSize.SMALL} intent={Intent.WARNING} />
+        ) : (
+          t`Approve`
+        )}
       </Button>
     </Callout>
   );

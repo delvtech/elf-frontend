@@ -1,31 +1,23 @@
-import { Tags, TokenList } from "@uniswap/token-lists";
+import { TokenList } from "@uniswap/token-lists";
 import fs from "fs";
 import hre from "hardhat";
 
-import { AddressesJsonFile } from "../../../addresses/AddressesJsonFile";
-
-import { getYieldTokens } from "./getYieldTokens";
+import { AddressesJsonFile } from "src/addresses/AddressesJsonFile";
 import { getPrincipalTokens } from "./getPrincipalTokens";
-
-
-const tags: Tags = {
-  eP: {
-    name: "Principal token",
-    description: "Token that represents a deposit of principal into a yield position",
-  },
-  eY: {
-    name: "Yield token",
-    description: "Token that represents the yield on a deposit into a yield position"
-  }
-};
+import { tags } from './tags';
+import { getYieldTokensFromFactory, getYieldTokensFromTranches } from "./getYieldTokens";
+import { getBaseAssets } from "src/tokenlist/getBaseAssets";
 
 export async function getTokenList(addressesJson: AddressesJsonFile, name: string, outputPath: string) {
-  const {chainId, addresses: {trancheFactoryAddress, interestTokenFactoryAddress} } = addressesJson;
+  const {chainId, addresses: {
+    trancheFactoryAddress, interestTokenFactoryAddress,wethAddress,usdcAddress 
+  }, safelist } = addressesJson;
 
-  const principalTokensList =  await getPrincipalTokens(trancheFactoryAddress, chainId);
-  const yieldTokensList =  await getYieldTokens(interestTokenFactoryAddress, chainId);
+  const baseAssetsList =  await getBaseAssets(wethAddress, usdcAddress, chainId);
+  const { tranches, principalTokensList } =  await getPrincipalTokens(trancheFactoryAddress, chainId, safelist);
+  const yieldTokensList =  await getYieldTokensFromTranches(tranches, chainId);
 
-  const tokens = [...principalTokensList, ...yieldTokensList];
+  const tokens = [...baseAssetsList, ...principalTokensList, ...yieldTokensList];
   const tokenList: TokenList = {
     name,
     logoURI: "https://element.fi/logo.svg",

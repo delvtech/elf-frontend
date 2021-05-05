@@ -18,18 +18,10 @@ export function DarkModeSwitch(): ReactElement {
     <Fragment>
       <Switch
         checked={isDarkMode}
-        className={tw("mb-0", "lg:hidden")}
+        className={tw("mb-0")}
         onChange={onDarkModeChange}
         innerLabel={t`Light`}
         innerLabelChecked={t`Dark`}
-      />
-      <Switch
-        large
-        checked={isDarkMode}
-        className={tw("mb-0", "hidden", "lg:inline-block")}
-        onChange={onDarkModeChange}
-        innerLabel={t`Light mode`}
-        innerLabelChecked={t`Dark mode`}
       />
     </Fragment>
   );

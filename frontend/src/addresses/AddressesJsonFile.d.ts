@@ -1,7 +1,6 @@
 export interface AddressesJsonFile {
   chainId: number;
   addresses: {
-    elementAddress: string;
     balancerVaultAddress: string;
     trancheFactoryAddress: string;
     interestTokenFactoryAddress: string;
@@ -11,4 +10,5 @@ export interface AddressesJsonFile {
     wethAddress: string;
     usdcAddress: string;
   };
+  safelist: string[];
 }

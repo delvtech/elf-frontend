@@ -8,11 +8,11 @@ import {
 } from "src/types/factories/TrancheFactory__factory";
 
 import { ERC20__factory } from "src/types/factories/ERC20__factory";
-import { WrappedPosition__factory } from "src/types/factories/WrappedPosition__factory";
 import { Tranche } from "src/types/Tranche";
+import { TokenListTag } from "src/tokenlist/tags";
 
 export const provider = hre.ethers.provider;
-export async function getPrincipalTokens(trancheFactoryAddress: string, chainId: number) {
+export async function getPrincipalTokens(trancheFactoryAddress: string, chainId: number, safelist: string[]) {
   const trancheFactory = TrancheFactory__factory.connect(trancheFactoryAddress, provider);
   const filter = trancheFactory.filters.TrancheCreated(null, null, null);
   const events = await trancheFactory.queryFilter(filter);
@@ -21,17 +21,18 @@ export async function getPrincipalTokens(trancheFactoryAddress: string, chainId:
       // The first arg is the trancheAddress
       event.args?.[0]
   ) as string[]);
+  const safeTrancheAddresses = trancheAddresses.filter(address => safelist.includes(address));
 
-  const tranches = trancheAddresses.map((address) => Tranche__factory.connect(address, provider));
+  const safeTranches = safeTrancheAddresses.map((address) => Tranche__factory.connect(address, provider));
 
   // Create the principal token name, eg: "ETH Principal Token"
-  const principalTokenNames = await getPrincipalTokenName(tranches);
+  const principalTokenNames = await getPrincipalTokenName(safeTranches);
   // Create the principal token symbol, eg: "eP-ELFyWETH"
-  const principalTokenSymbols = await getPrincipalTokenSymbols(tranches);
+  const principalTokenSymbols = await getPrincipalTokenSymbols(safeTranches);
 
-  const decimals = await Promise.all(tranches.map(tranche => tranche.decimals()));
+  const decimals = await Promise.all(safeTranches.map(tranche => tranche.decimals()));
 
-  const principalTokensList: TokenInfo[] = zip(trancheAddresses, principalTokenSymbols, principalTokenNames, decimals)
+  const principalTokensList: TokenInfo[] = zip(safeTrancheAddresses, principalTokenSymbols, principalTokenNames, decimals)
     .map(([address, symbol, name, decimal]) => {
       return {
         chainId,
@@ -39,13 +40,13 @@ export async function getPrincipalTokens(trancheFactoryAddress: string, chainId:
         symbol: symbol as string,
         decimals: decimal as number,
         name: name as string,
-        tags: ["eP"],
+        tags: [TokenListTag.PRINCIPAL],
         // TODO: What logo do we want to show for interest tokens?
         // logoURI: ""
       };
     });
 
-  return principalTokensList;
+  return { tranches: safeTranches, principalTokensList };
 
 }
 async function getPrincipalTokenSymbols(tranches: Tranche[]) {

@@ -1,6 +1,7 @@
 import React, { ReactElement, useState } from "react";
 
 import {
+  Button,
   Classes,
   Icon,
   IconSize,
@@ -22,6 +23,7 @@ import { usePendingTransaction } from "efi-ui/transactions/usePendingTransaction
 
 import { ConnectWalletButton } from "./ConnectWalletButton";
 import styles from "./SidebarNavigation.module.css";
+import { Link, useNavigate } from "@reach/router";
 
 interface SidebarNavigationProps {
   chainId: number | undefined;
@@ -37,6 +39,7 @@ const tabTitleClassName = tw(
   "flex",
   "space-x-2",
   "items-center",
+  "w-full",
   "px-2",
   "py-4"
 );
@@ -49,6 +52,7 @@ export function SidebarNavigation({
   changeTab,
   activeTab,
 }: SidebarNavigationProps): ReactElement {
+  const navigate = useNavigate();
   const [isWalletDialogOpen, setWalletDialogOpen] = useState(false);
   const { transactionHash } = usePendingTransaction();
   const hasPendingTransaction = !!transactionHash;
@@ -61,7 +65,7 @@ export function SidebarNavigation({
         { [styles.sideBarDark]: isDarkMode },
         tw(
           "hidden",
-          "w-32",
+          "w-48",
           "lg:flex",
           "flex-col",
           "h-full",
@@ -71,9 +75,12 @@ export function SidebarNavigation({
         )
       )}
     >
-      <div className={tw("flex", "justify-center", "pt-4", "pb-8", "px-6")}>
+      <Link
+        className={tw("flex", "justify-center", "pt-4", "pb-8", "px-6")}
+        to={t`/${Navigation.EARN}`}
+      >
         <img src={isDarkMode ? logoDark : logo} alt={t`Element Finance`} />
-      </div>
+      </Link>
       <div
         className={tw("flex", "flex-col", "h-full", "justify-between", "pb-8")}
       >
@@ -82,6 +89,7 @@ export function SidebarNavigation({
           vertical
           onChange={changeTab}
           selectedTabId={activeTab}
+          className={tw("w-full", "flex-col")}
         >
           <Tab
             id={Navigation.EARN}
@@ -106,16 +114,15 @@ export function SidebarNavigation({
             title={
               <div className={tabTitleClassName}>
                 <Icon
-                  icon={
-                    hasPendingTransaction ? (
-                      <Spinner size={SpinnerSize.SMALL} />
-                    ) : (
-                      IconNames.TIMELINE_AREA_CHART
-                    )
-                  }
+                  icon={IconNames.TIMELINE_AREA_CHART}
                   iconSize={IconSize.STANDARD}
                 />
-                <span>{t`Portfolio`}</span>
+                <span
+                  className={tw("flex", "w-full", "justify-between")}
+                >{t`Portfolio`}</span>
+                {hasPendingTransaction ? (
+                  <Spinner size={SpinnerSize.SMALL} />
+                ) : null}
               </div>
             }
           />
