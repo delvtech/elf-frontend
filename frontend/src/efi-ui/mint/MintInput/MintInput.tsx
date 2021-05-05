@@ -31,14 +31,11 @@ const mintInputStyle: CSSProperties = {
 };
 
 interface MintInputProps {
-  cryptoAddress: string | undefined;
   cryptoIcon: TokenIcon | undefined;
   cryptoSymbol: string | undefined;
   cryptoDecimals: number | undefined;
   cryptoBalanceOf: BigNumber | undefined;
   cryptoDisplayBalance: string | number;
-  previewCryptoAddress: string | undefined;
-  previewCryptoPoolIndex: number | undefined;
 
   labelTopLeft: string;
   disabled: boolean;
@@ -46,28 +43,21 @@ interface MintInputProps {
   onPreviewUpdate: (value: string | undefined) => void;
   value: string | undefined;
   validValue: boolean;
-  swapKind: SwapKind;
-  pool: PoolContract | undefined;
 }
 
 export function MintInput(props: MintInputProps): ReactElement {
   const {
-    cryptoAddress,
     cryptoSymbol,
     cryptoIcon: CryptoIcon,
     cryptoDecimals,
     cryptoBalanceOf,
     cryptoDisplayBalance,
-    previewCryptoAddress,
-    previewCryptoPoolIndex,
     labelTopLeft,
     disabled,
     onChange: onChangeFromProps,
-    onPreviewUpdate,
     value = "",
     validValue,
-    swapKind,
-    pool,
+    onPreviewUpdate,
   } = props;
   // changes to this will trigger calculating and calling handler to update the other value.  we
   // need to do this because the calculation is asynchronous so we can't update the preview directly
@@ -87,18 +77,6 @@ export function MintInput(props: MintInputProps): ReactElement {
     cryptoDecimals
   );
 
-  // watches for updates to internal value, calculate preview value and calls onPreviewUpdate
-  useUpdatePreviewValue(
-    swapKind,
-    cryptoAddress,
-    previewCryptoAddress,
-    pool,
-    internalValue,
-    cryptoDecimals,
-    previewCryptoPoolIndex,
-    onPreviewUpdate
-  );
-
   // TODO: disable setting max value if the user balance >  pool balance.  better yet, disable max
   // value if the trade would cause too much slippage.
 
@@ -112,6 +90,7 @@ export function MintInput(props: MintInputProps): ReactElement {
 
   return (
     <div className={tw("flex", "flex-col", "space-y-2")}>
+      <div className={tw("-mb-1")}>Available: {cryptoDisplayBalance}</div>
       <InputGroup
         disabled={disabled}
         onChange={onChange}
@@ -158,6 +137,7 @@ export function MintInput(props: MintInputProps): ReactElement {
     </div>
   );
 }
+
 function useOnInputChange(
   setInternalValue: (value: { value: string | undefined }) => void,
   onChange: (value: string | undefined) => void,
@@ -179,43 +159,6 @@ function useOnInputChange(
     },
     [setInternalValue, onChange, onPreviewUpdate, cryptoDecimals]
   );
-}
-
-function useUpdatePreviewValue(
-  swapKind: SwapKind,
-  cryptoAddress: string | undefined,
-  previewCryptoAddress: string | undefined,
-  pool: PoolContract | undefined,
-  internalValue: { value: string | undefined },
-  cryptoDecimals: number | undefined,
-  previewCryptoIndex: number | undefined,
-  onChangeOtherValue: (value: string | undefined) => void
-) {
-  const tokenInAddress =
-    swapKind === SwapKind.GIVEN_IN ? cryptoAddress : previewCryptoAddress;
-  const tokenOutAddress =
-    swapKind === SwapKind.GIVEN_OUT ? cryptoAddress : previewCryptoAddress;
-
-  const { value } = internalValue;
-
-  // get the preview value
-  const { data: swap } = useQueryBatchSwap(
-    swapKind,
-    pool,
-    tokenInAddress,
-    tokenOutAddress,
-    parseUnits(value || "0", cryptoDecimals ?? 18)
-  );
-
-  const otherValue = swap?.[previewCryptoIndex ?? 1];
-  const otherStringValue = otherValue
-    ? formatUnits(otherValue.abs(), cryptoDecimals)
-    : undefined;
-
-  useEffect(() => {
-    // let parent know preview value updated
-    onChangeOtherValue(otherStringValue);
-  }, [internalValue, onChangeOtherValue, otherStringValue]);
 }
 
 function useSetMaxValue(

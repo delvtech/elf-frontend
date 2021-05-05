@@ -11,6 +11,7 @@ import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useCryptoBalance } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
 import { ERC20 } from "elf-contracts/types/ERC20";
+import { parseUnits } from "ethers/lib/utils";
 import { useMintPreview } from "efi-ui/mint/hooks/useMintPreview";
 import { MintTransactionConfirmationDrawer } from "efi-ui/mint/MintTransactionConfirmationDrawer/MintTransactionConfirmationDrawer";
 import { PrincipalTokenPreview } from "efi-ui/mint/MintCard/PrincipalTokenPreview";
@@ -75,6 +76,7 @@ export function MintCard(props: MintCardProps): ReactElement | null {
     // no one needs to put in more than a trillion anything
     max: 999_999_999_999,
   });
+
   const amountIn = +(amountInString || 0);
 
   const baseAssetDecimals = useCryptoDecimals(baseAsset);
@@ -90,6 +92,27 @@ export function MintCard(props: MintCardProps): ReactElement | null {
     amountIn
   );
 
+  const insufficientBalance = parseUnits(
+    amountInString ?? "0",
+    baseAssetDecimals
+  ).gt(baseAssetBalance ?? 0);
+
+  const mintButtonDisabled = insufficientBalance || !amountIn || !account;
+
+  let mintButtonLabel = t`Mint tokens`;
+  let mintButtonError = false;
+
+  if (!amountIn) {
+    mintButtonLabel = t`Enter an amount`;
+  }
+  if (insufficientBalance && account) {
+    mintButtonError = true;
+    mintButtonLabel = t`Insufficient balance`;
+  }
+  if (!account) {
+    mintButtonLabel = t`Connect wallet`;
+  }
+
   return (
     <Fragment>
       <div className={styles.lineBreak} />
@@ -102,30 +125,20 @@ export function MintCard(props: MintCardProps): ReactElement | null {
         <div className={tw("text-lg")}>Mint</div>
       </div>
       <div className={tw("pl-24", "pt-4", "-ml-1")}>
-        <div className={tw("mb-1")}>
-          Available: {activeBaseAssetDisplayBalance}
-        </div>
-        <div className={tw("flex", "items-center")}>
-          <div className={styles.mintInput}>
-            <MintInput
-              cryptoAddress={baseAssetContract?.address}
-              cryptoDecimals={baseAssetDecimals}
-              cryptoBalanceOf={baseAssetBalance}
-              cryptoDisplayBalance={activeBaseAssetDisplayBalance || ""}
-              cryptoSymbol={baseAssetSymbol}
-              cryptoIcon={baseAssetIcon}
-              previewCryptoAddress={""}
-              previewCryptoPoolIndex={1}
-              labelTopLeft={t`Mint`}
-              disabled={false}
-              swapKind={0}
-              pool={pool}
-              onChange={setAmountIn}
-              onPreviewUpdate={() => {}}
-              value={amountInString}
-              validValue={true}
-            />
-          </div>
+        <div className={styles.mintInput}>
+          <MintInput
+            cryptoDecimals={baseAssetDecimals}
+            cryptoBalanceOf={baseAssetBalance}
+            cryptoDisplayBalance={activeBaseAssetDisplayBalance || ""}
+            cryptoSymbol={baseAssetSymbol}
+            cryptoIcon={baseAssetIcon}
+            labelTopLeft={t`Mint`}
+            disabled={false}
+            onChange={setAmountIn}
+            value={amountInString}
+            onPreviewUpdate={() => {}}
+            validValue={!mintButtonError}
+          />
         </div>
         <div className={tw("flex", "mt-4")}>
           <Callout
@@ -155,10 +168,11 @@ export function MintCard(props: MintCardProps): ReactElement | null {
           <Button
             minimal
             outlined
-            intent="primary"
+            disabled={mintButtonDisabled}
+            intent={mintButtonError ? "danger" : "primary"}
             onClick={() => setDrawerOpen(true)}
           >
-            Mint Tokens
+            {mintButtonLabel}
           </Button>
         </div>
       </div>
