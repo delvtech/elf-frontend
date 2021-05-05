@@ -13,7 +13,6 @@ import {
   Classes,
   Colors,
   Collapse,
-  Divider,
   Elevation,
   Tag,
 } from "@blueprintjs/core";
@@ -30,26 +29,17 @@ import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
-import { useCryptoBalance } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
-import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 import { useFeeVolumeForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
-import { useMintPreview } from "efi-ui/mint/hooks/useMintPreview";
+import { MintCard } from "efi-ui/mint/MintCard/MintCard";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
-import { MintTransactionConfirmationDrawer } from "efi-ui/mint/MintTransactionConfirmationDrawer/MintTransactionConfirmationDrawer";
-import { PrincipalTokenPreview } from "efi-ui/mint/MintCard/PrincipalTokenPreview";
-import { YieldTokenPreview } from "efi-ui/mint/MintCard/YieldTokenPreview";
-import { TradeInputAlt } from "efi-ui/trade/TradeInput/TradeInputAlt";
 import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForPool";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
 import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
 import { formatMoney } from "efi/money/formatMoney";
-import { formatBalance } from "efi/base/formatBalance";
-import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { PoolContract } from "efi/pools/PoolContract";
-import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 
 import styles from "./PrincipalPoolCard.module.css";
 import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidityForPool.ts/useTotalFiatLiquidityForPool";
@@ -75,19 +65,6 @@ const poolCardStyle: CSSProperties = {
 const stopPropagationHandler = (e: React.MouseEvent<HTMLAnchorElement>) => {
   e.stopPropagation();
 };
-
-function useActiveMintPreview(
-  activeTranche: Tranche | undefined,
-  amountIn: number
-) {
-  const numPrincipalTokensOut = useMintPreview(activeTranche, amountIn);
-
-  // You will always receive the same amount of yield tokens as the amount of
-  // base asset you put in
-  const numYieldTokensOut = amountIn;
-
-  return { numPrincipalTokensOut, numYieldTokensOut };
-}
 
 export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
   const {
@@ -144,29 +121,6 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
 
   const [transitionsEnabled, setTransitionsEnabled] = useState(true);
   const [isOpen, setOpen] = useState(false);
-  const [isDrawerOpen, setDrawerOpen] = useState(false);
-
-  const {
-    stringValue: amountInString,
-    setValue: setAmountIn,
-  } = useNumericInput({
-    // no one needs to put in more than a trillion anything
-    max: 999_999_999_999,
-  });
-  const amountIn = +(amountInString || 0);
-
-  const { numPrincipalTokensOut, numYieldTokensOut } = useActiveMintPreview(
-    tranche,
-    amountIn
-  );
-
-  const baseAssetDecimals = useCryptoDecimals(baseAsset);
-  const baseAssetBalance = useCryptoBalance(library, account, baseAsset);
-
-  const activeBaseAssetDisplayBalance = formatBalance(
-    baseAssetBalance,
-    baseAssetDecimals
-  );
 
   // One tme useEffect to let us show transitions for the skeletons once the data is loaded.
   // Afterwards we disable transitions so they don't interfere with light/dark mode switching.
@@ -387,136 +341,18 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
         </div>
       </div>
       <Collapse isOpen={isOpen}>
-        <div className={styles.lineBreak} />
-        <div className={tw("flex", "pl-12", "pt-4", "items-center")}>
-          <div
-            className={tw("mr-4", "text-lg")}
-            style={{
-              width: "25px",
-              height: "25px",
-              lineHeight: "25x",
-              borderRadius: "50%",
-              textAlign: "center",
-              background: "rgba(138, 155, 168, 0.2)",
-              paddingTop: "2px",
-            }}
-          >
-            1
-          </div>
-          <div className={tw("text-lg")}>Mint</div>
-        </div>
-        <div className={tw("pl-24", "pt-4", "-ml-1")}>
-          <div className={tw("mb-1")}>
-            Available: {activeBaseAssetDisplayBalance}
-          </div>
-          <div className={tw("flex", "items-center")}>
-            <div style={{ maxWidth: "300px" }}>
-              <TradeInputAlt
-                cryptoAddress={baseAssetContract?.address}
-                cryptoDecimals={baseAssetDecimals}
-                cryptoBalanceOf={baseAssetBalance}
-                cryptoDisplayBalance={activeBaseAssetDisplayBalance || ""}
-                cryptoSymbol={baseAssetSymbol}
-                cryptoIcon={BaseAssetIcon}
-                previewCryptoAddress={termAssetContract?.address}
-                previewCryptoPoolIndex={1}
-                labelTopLeft={t`Mint`}
-                disabled={false}
-                swapKind={0}
-                pool={pool}
-                onChange={setAmountIn}
-                onPreviewUpdate={() => {}}
-                value={amountInString}
-                validValue={true}
-              />
-            </div>
-          </div>
-          <div className={tw("flex", "mt-4")}>
-            <Callout
-              style={{
-                width: "145px",
-                textAlign: "center",
-                marginRight: "10px",
-              }}
-              className={tw(
-                "flex",
-                "flex-col",
-                "h-full",
-                "items-center",
-                "justify-center"
-              )}
-            >
-              <LabeledText
-                text={`${numPrincipalTokensOut || 0} eP:yETH`}
-                label={`Principal Tokens`}
-              />
-            </Callout>
-            <Callout
-              style={{ width: "145px", textAlign: "center" }}
-              className={tw(
-                "flex",
-                "flex-col",
-                "h-full",
-                "items-center",
-                "justify-center"
-              )}
-            >
-              <LabeledText
-                text={`${numYieldTokensOut || 0} eP:yETH`}
-                label={`Yield Tokens`}
-              />
-            </Callout>
-          </div>
-          <div className={tw("mt-4")}>
-            <Button
-              minimal
-              outlined
-              intent="primary"
-              onClick={() => setDrawerOpen(true)}
-            >
-              Mint Tokens
-            </Button>
-          </div>
-        </div>
-        <div className={classNames(styles.lineBreak, tw("mt-4"))} />
-        <div className={tw("flex", "pl-12", "pt-4", "items-center")}>
-          <div
-            className={tw("mr-4", "text-lg")}
-            style={{
-              width: "25px",
-              height: "25px",
-              lineHeight: "25x",
-              borderRadius: "50%",
-              textAlign: "center",
-              background: "rgba(138, 155, 168, 0.2)",
-              paddingTop: "2px",
-            }}
-          >
-            2
-          </div>
-          <div className={tw("text-lg")}>
-            Stake Your Tokens or Sell Principal
-          </div>
-        </div>
-        <div className={tw("flex", "pl-12", "pt-2", "mb-6", "items-center")}>
-          <div className={"ml-10 bp3-text-muted text-sm"}>
-            Go to the <a>Portfolio Page</a>. <br />
-            Stake your tokens for additional APY. <br />
-            Or sell your principal to re-invest.
-          </div>
-        </div>
-        <MintTransactionConfirmationDrawer
-          baseAsset={baseAsset}
-          baseAssetIcon={BaseAssetIcon}
-          tranche={tranche}
-          account={account}
+        <MintCard
+          pool={pool}
           library={library}
+          account={account}
           chainId={chainId}
           walletConnectionActive={walletConnectionActive}
           connector={connector}
-          amountIn={amountInString}
-          isOpen={isDrawerOpen}
-          onClose={() => setDrawerOpen(false)}
+          baseAsset={baseAsset}
+          baseAssetContract={baseAssetContract}
+          baseAssetSymbol={baseAssetSymbol}
+          baseAssetIcon={BaseAssetIcon}
+          tranche={tranche}
         />
       </Collapse>
     </Card>

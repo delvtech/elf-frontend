@@ -29,7 +29,7 @@ interface MintCardProps {
   baseAsset: CryptoAsset | undefined;
   baseAssetIcon: TokenIcon | undefined;
   baseAssetContract: ERC20 | undefined;
-  baseAssetSymbol: string;
+  baseAssetSymbol: string | undefined;
   tranche: Tranche | undefined;
   pool: PoolContract | undefined;
   library: Web3Provider | undefined;
