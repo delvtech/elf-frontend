@@ -117,10 +117,13 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
     navigate(`pools/${pool?.address}`);
   }, [pool?.address]);
 
+  const symbolQuery = baseAssetSymbol === "ETH" ? "WETH" : baseAssetSymbol;
+
   const { data: vaultInfo } = useYearnVault(
-    baseAssetSymbol ? t`yv${baseAssetSymbol}` : undefined
+    symbolQuery ? t`yv${symbolQuery}` : undefined
   );
-  const { name, type } = vaultInfo || {};
+
+  const { displayName, type } = vaultInfo || {};
 
   const { isDarkMode } = useDarkMode();
 
@@ -261,7 +264,10 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
               "lg:col-span-1"
             )}
           >
-            <LabeledText text={t`${name} ${type}`} label={t`Vault`} />
+            <LabeledText
+              text={t`Yearn ${displayName} ${type}`}
+              label={t`Vault`}
+            />
           </div>
           <div
             className={tw(

@@ -92,10 +92,12 @@ export function InterestPoolCard(
     navigate(`pools/${pool?.address}`);
   }, [pool?.address]);
 
+  const symbolQuery = baseAssetSymbol === "ETH" ? "WETH" : baseAssetSymbol;
+
   const { data: vaultInfo } = useYearnVault(
     baseAssetSymbol ? t`yv${baseAssetSymbol}` : undefined
   );
-  const { name, type } = vaultInfo || {};
+  const { displayName, type } = vaultInfo || {};
 
   const { isDarkMode } = useDarkMode();
 
@@ -267,7 +269,7 @@ export function InterestPoolCard(
             "lg:col-span-1"
           )}
         >
-          <LabeledText text={t`${name} ${type}`} label={t`Vault`} />
+          <LabeledText text={t`${displayName} ${type}`} label={t`Vault`} />
         </div>
         <div
           className={tw(

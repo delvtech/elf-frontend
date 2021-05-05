@@ -49,7 +49,7 @@ export function MintView(props: MintViewProps): ReactElement {
           title={t`Stay liquid with Principal and Yield Tokens`}
           titleTag={<Tag minimal intent={Intent.WARNING}>{t`alpha`}</Tag>}
           className={tw("text-center")}
-          subtitle={"Mint those damn tokens"}
+          subtitle={t`Mint Principal and Yield Tokens`}
         />
         <div
           className={tw(
