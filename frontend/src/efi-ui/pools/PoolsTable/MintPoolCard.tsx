@@ -143,9 +143,8 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
     return (
       <Card
         elevation={Elevation.TWO}
-        interactive
-        onClick={goToPoolPage}
         style={poolCardStyle}
+        interactive
         className={classNames(
           Classes.SKELETON,
           tw("h-24", "w-full", "transition", "duration-1000", "ease-in-out")
