@@ -23,7 +23,15 @@ import { ONE_DAY_IN_SECONDS } from "efi/base/time";
 import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { PoolContract } from "efi/pools/PoolContract";
 import { APYSummary } from "efi-ui/pools/APYSummary/APYSummary";
-import { formatEther } from "ethers/lib/utils";
+import { formatEther, formatUnits } from "ethers/lib/utils";
+import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
+import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
+import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
+import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
+import { Tranche } from "elf-contracts/types/Tranche";
+import { ERC20 } from "elf-contracts/types/ERC20";
+import { Money } from "ts-money";
+import { useTotalValueLockedForTranche } from "efi-ui/pools/useTotalValueLockedForTranche";
 
 interface PoolDetailsProps {
   library: Web3Provider | undefined;
@@ -56,6 +64,10 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
   const liquidityTrend = useTotalLiquidityTrend(pool);
 
   const tranche = useTrancheForPool(pool);
+  const totalValueLocked = useTotalValueLockedForTranche(
+    tranche,
+    baseAssetContract
+  );
   const { data: interestSupplyBN } = useSmartContractReadCall(
     tranche,
     "interestSupply"
@@ -104,6 +116,7 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
         <VaultSummary
           pool={pool}
           interestSupply={+formatEther(interestSupplyBN ?? 0)}
+          totalValueLocked={totalValueLocked}
           baseAsset={baseAssetContract}
           startDate={startDate}
           maturityDate={maturityDate}

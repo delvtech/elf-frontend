@@ -12,6 +12,7 @@ import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { formatMoney } from "efi/money/formatMoney";
 import { PoolContract } from "efi/pools/PoolContract";
+import { Money } from "ts-money";
 
 const summaryCardStyle: CSSProperties = {
   height: 220,
@@ -19,6 +20,7 @@ const summaryCardStyle: CSSProperties = {
 
 interface VaultSummaryProps {
   pool: PoolContract | undefined;
+  totalValueLocked: Money | undefined;
   interestSupply: number | undefined;
   maturityDate: number | undefined;
   startDate: number | undefined;
@@ -29,6 +31,7 @@ interface VaultSummaryProps {
 export function VaultSummary(props: VaultSummaryProps): ReactElement {
   const {
     pool,
+    totalValueLocked,
     interestSupply,
     baseAsset,
     maturityDate = 0,
@@ -36,6 +39,7 @@ export function VaultSummary(props: VaultSummaryProps): ReactElement {
   } = props;
   // hardcode for now, will make this dynamic after updating testnet
   const { data: baseAssetSymbol } = useTokenSymbol(baseAsset);
+  console.log("baseAssetSymbol", baseAssetSymbol);
   const { data: vaultInfo } = useYearnVault(
     baseAssetSymbol ? t`yv${baseAssetSymbol}` : undefined
   );
@@ -48,6 +52,7 @@ export function VaultSummary(props: VaultSummaryProps): ReactElement {
   const interestPerToken = interestSupply
     ? accumulatedInterest?.divide(interestSupply, Math.round)
     : undefined;
+
   return (
     <div>
       <div className="mb-2">{t`Term Summary`}</div>
@@ -61,7 +66,9 @@ export function VaultSummary(props: VaultSummaryProps): ReactElement {
             <span
               className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
             >{t`Total Value Locked`}</span>
-            <div className={classNames("h3", tw("space-x-4"))}>$50,000,000</div>
+            <div className={classNames("h3", tw("space-x-4"))}>
+              {totalValueLocked ? formatMoney(totalValueLocked) : null}
+            </div>
           </div>
           <div className={tw("absolute", "top-0", "right-0")}>
             <div className={tw("flex", "justify-between")}>
