@@ -1,6 +1,6 @@
 import React, { CSSProperties, ReactElement } from "react";
 
-import { Card, Classes } from "@blueprintjs/core";
+import { Card, Classes, Intent, Tag } from "@blueprintjs/core";
 import classNames from "classnames";
 import { t } from "ttag";
 
@@ -35,18 +35,27 @@ export function VaultSummary(props: VaultSummaryProps): ReactElement {
 
   return (
     <div>
-      <div className="mb-2">{t`Vault and Term Summary`}</div>
+      <div className="mb-2">{t`Term Summary`}</div>
       <Card
         style={summaryCardStyle}
         className={tw("flex", "flex-col", "space-y-6")}
       >
         {/* Vault Name */}
-        <div className={tw("flex", "flex-col")}>
-          <span
-            className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
-          >{t`Vault Name`}</span>
-          <div className={classNames("h3", tw("space-x-4"))}>
-            {name} {type}
+        <div className={tw("flex", "space-x-4", "justify-between", "relative")}>
+          <div className={tw("flex", "flex-col")}>
+            <span
+              className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
+            >{t`Total Value Locked`}</span>
+            <div className={classNames("h3", tw("space-x-4"))}>$50,000,000</div>
+          </div>
+          <div className={tw("absolute", "top-0", "right-0")}>
+            <div className={tw("flex", "justify-between")}>
+              <span
+                className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
+              >{t`Status`}</span>
+              <Tag intent={Intent.PRIMARY}>running</Tag>
+            </div>
+            <TimeLeft startDate={startDate} maturityDate={maturityDate} />
           </div>
         </div>
 
@@ -55,32 +64,26 @@ export function VaultSummary(props: VaultSummaryProps): ReactElement {
           <div className={tw("flex", "flex-col")}>
             <span
               className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
-            >{t`Vault ROI (annual)`}</span>
+            >{t`Accumulated Interest`}</span>
             <div className={classNames("h3", tw("space-x-4"))}>
-              {apy ? formatPercent(apy) : undefined}
+              $6,656,440.00
             </div>
           </div>
         </div>
 
-        {/* Maturity Date */}
-        <div
-          className={tw(
-            "flex",
-            "space-x-4",
-            "justify-between",
-            "overflow-hidden"
-          )}
-        >
+        {/* Vault ROI */}
+        <div className={tw("flex", "space-x-4", "justify-between")}>
           <div className={tw("flex", "flex-col")}>
             <span
               className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
-            >{t`Term date`}</span>
-            <div className={classNames("h3", tw("space-x-4", "flex"))}>
-              {maturityDateString}
-            </div>
+            >{t`(Acc. Interest Per token)`}</span>
+            <div className={classNames("h3", tw("space-x-4"))}>$1,000</div>
           </div>
-          <div className={tw("flex", "self-end", "overflow-hidden")}>
-            <TimeLeft startDate={startDate} maturityDate={maturityDate} />
+          <div className={tw("flex", "flex-col")}>
+            <span
+              className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
+            >{t`Underlying Strategy`}</span>
+            <div className={classNames("h3", tw("space-x-4"))}>yWETH</div>
           </div>
         </div>
       </Card>
