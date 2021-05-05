@@ -39,7 +39,7 @@ export function PoolCharts({ pool }: PoolChartsProps): ReactElement {
   const liquidityData = useLiquidityHistoryForPool(pool);
   const volumeData = useVolumeHistoryForPool(pool);
 
-  const [activeChart, setChart] = useState(ChartType.VOLUME);
+  const [activeChart, setChart] = useState(ChartType.LIQUIDITY);
   const showLiquidityChart = activeChart === ChartType.LIQUIDITY;
   const showVolumeChart = activeChart === ChartType.VOLUME;
 
