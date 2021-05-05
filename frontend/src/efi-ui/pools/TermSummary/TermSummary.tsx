@@ -69,10 +69,19 @@ export function TermSummary(props: TermSummaryProps): ReactElement {
       <div className="mb-2">{t`Term Summary`}</div>
       <Card
         style={summaryCardStyle}
-        className={tw("flex", "flex-col", "space-y-6")}
+        className={tw("grid", "grid-cols-2", "gap-4")}
       >
-        {/* Vault Name */}
-        <div className={tw("flex", "space-x-4", "justify-between", "relative")}>
+        {/* First Column*/}
+        <div
+          className={tw(
+            "flex",
+            "flex-col",
+            "h-full",
+            "justify-between",
+            "truncate"
+          )}
+        >
+          {/* Total Value Locked */}
           <div className={tw("flex", "flex-col")}>
             <span
               className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
@@ -81,8 +90,42 @@ export function TermSummary(props: TermSummaryProps): ReactElement {
               {totalValueLocked ? formatMoney(totalValueLocked) : null}
             </div>
           </div>
-          <div className={tw("absolute", "top-0", "right-0")}>
-            <div className={tw("flex", "justify-between")}>
+          {/*Interest*/}
+          <div className={tw("flex", "flex-col")}>
+            <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
+              {t`Accumulated Interest`}
+            </span>
+            <div className={tw("flex", "space-x-4")}>
+              <div className={classNames("h3", tw("space-x-4"))}>
+                {formatMoney(accumulatedInterest)}
+              </div>
+            </div>
+          </div>
+
+          {/* Interest per token */}
+          <div className={tw("flex", "flex-col")}>
+            <span
+              className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
+            >{t`(Acc. Interest Per token)`}</span>
+            <div className={classNames("h3", tw("space-x-4"))}>
+              {formatMoney(interestPerToken)}
+            </div>
+          </div>
+        </div>
+
+        {/* Second column */}
+        <div
+          className={tw(
+            "flex",
+            "flex-col",
+            "h-full",
+            "justify-between",
+            "overflow-hidden"
+          )}
+        >
+          {/* Status */}
+          <div className={tw("flex", "flex-col", "justify-end")}>
+            <div className={tw("flex", "space-x-2")}>
               <span
                 className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
               >{t`Status`}</span>
@@ -96,32 +139,7 @@ export function TermSummary(props: TermSummaryProps): ReactElement {
               <TimeLeft startDate={startTimeMs} maturityDate={maturityTimeMs} />
             )}
           </div>
-        </div>
 
-        {/*Interest*/}
-        <div className={tw("flex", "space-x-4", "justify-between")}>
-          <div className={tw("flex", "flex-col")}>
-            <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
-              {t`Accumulated Interest`}
-            </span>
-            <div className={tw("flex", "space-x-4")}>
-              <div className={classNames("h3", tw("space-x-4"))}>
-                {formatMoney(accumulatedInterest)}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Vault ROI */}
-        <div className={tw("flex", "space-x-4", "justify-between")}>
-          <div className={tw("flex", "flex-col")}>
-            <span
-              className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
-            >{t`(Acc. Interest Per token)`}</span>
-            <div className={classNames("h3", tw("space-x-4"))}>
-              {formatMoney(interestPerToken)}
-            </div>
-          </div>
           <div className={tw("flex", "flex-col")}>
             <span
               className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
