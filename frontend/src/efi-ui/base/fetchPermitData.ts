@@ -1,5 +1,10 @@
 import { ERC20Permit } from "elf-contracts/types/ERC20Permit";
 import { BigNumberish, BytesLike, ethers, Signer } from "ethers";
+import {
+  TypedDataSigner,
+  TypedDataDomain,
+  TypedDataField,
+} from "@ethersproject/abstract-signer";
 
 export interface PermitCallData {
   tokenContract: string;
@@ -21,17 +26,19 @@ export async function fetchPermitData(
   // '1' for every ERC20Permit.  Except USDC which is '2' ¯\_(ツ)_/¯
   version: string
 ): Promise<PermitCallData | undefined> {
+  const typedSigner = (signer as unknown) as TypedDataSigner;
   // don't use metdata, must match exactly
   const name = await token.name();
   const chainId = await signer.getChainId();
-  const domain = {
+
+  const domain: TypedDataDomain = {
     name,
     version: version,
     chainId: chainId,
     verifyingContract: token.address,
   };
 
-  const types = {
+  const types: Record<string, TypedDataField[]> = {
     Permit: [
       {
         name: "owner",
@@ -72,7 +79,7 @@ export async function fetchPermitData(
 
   // _signeTypedData is an experimental feature and is not on the type signature!
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const sigString: string = await (signer as any)._signTypedData(
+  const sigString: string = await typedSigner._signTypedData(
     domain,
     types,
     data
