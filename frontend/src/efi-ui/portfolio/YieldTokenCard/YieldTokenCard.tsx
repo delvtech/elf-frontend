@@ -163,11 +163,32 @@ export function YieldTokenCard({
             />
           ) : null}
           <div className={tw("flex", "flex-col", "space-y-2")}>
-            <span className={tw("text-2xl", "font-semibold")}>
+            <div
+              className={tw(
+                "flex",
+                "items-center",
+                "space-x-2",
+                "text-2xl",
+                "font-semibold"
+              )}
+            >
               <Link to={`/pools/${pool?.address}`}>
                 {t`${baseAssetSymbol} Yield Token` || null}
               </Link>
-            </span>
+              <a
+                className={tw("flex", "items-center")}
+                onClick={(e) => e.stopPropagation()}
+                href={`https://etherscan.io/address/${yieldToken?.address}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Icon
+                  intent={Intent.NONE}
+                  className={tw("pr-2")}
+                  icon={IconNames.SHARE}
+                />
+              </a>
+            </div>
             <div
               className={tw(
                 "flex",

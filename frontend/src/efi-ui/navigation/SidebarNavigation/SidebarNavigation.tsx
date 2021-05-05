@@ -1,6 +1,7 @@
 import React, { ReactElement, useState } from "react";
 
 import {
+  Button,
   Classes,
   Icon,
   IconSize,
@@ -22,6 +23,7 @@ import { usePendingTransaction } from "efi-ui/transactions/usePendingTransaction
 
 import { ConnectWalletButton } from "./ConnectWalletButton";
 import styles from "./SidebarNavigation.module.css";
+import { Link, useNavigate } from "@reach/router";
 
 interface SidebarNavigationProps {
   chainId: number | undefined;
@@ -50,6 +52,7 @@ export function SidebarNavigation({
   changeTab,
   activeTab,
 }: SidebarNavigationProps): ReactElement {
+  const navigate = useNavigate();
   const [isWalletDialogOpen, setWalletDialogOpen] = useState(false);
   const { transactionHash } = usePendingTransaction();
   const hasPendingTransaction = !!transactionHash;
@@ -72,9 +75,12 @@ export function SidebarNavigation({
         )
       )}
     >
-      <div className={tw("flex", "justify-center", "pt-4", "pb-8", "px-6")}>
+      <Link
+        className={tw("flex", "justify-center", "pt-4", "pb-8", "px-6")}
+        to={t`/${Navigation.EARN}`}
+      >
         <img src={isDarkMode ? logoDark : logo} alt={t`Element Finance`} />
-      </div>
+      </Link>
       <div
         className={tw("flex", "flex-col", "h-full", "justify-between", "pb-8")}
       >

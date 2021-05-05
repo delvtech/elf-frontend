@@ -15,6 +15,8 @@ import {
 import { usePortfolioTabs } from "efi-ui/portfolio/PortfolioTabs/usePortfolioTabs";
 import { formatWalletAddress } from "efi/wallets/formatWalletAddress";
 
+import styles from "./styles.module.css";
+
 interface PortfolioViewProps extends RouteComponentProps {}
 
 export function PortfolioView(props: PortfolioViewProps): ReactElement {
@@ -84,9 +86,16 @@ export function PortfolioView(props: PortfolioViewProps): ReactElement {
             {account ? (
               <H2 className={tw("text-center")}>
                 {t`Portfolio `}{" "}
-                <span className={Classes.TEXT_MUTED}>{`(${formatWalletAddress(
-                  account
-                )})`}</span>
+                <a
+                  className={styles.accountLink}
+                  href={`https://etherscan.io/address/${account}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <span className={Classes.TEXT_MUTED}>{`(${formatWalletAddress(
+                    account
+                  )})`}</span>
+                </a>
               </H2>
             ) : null}
 

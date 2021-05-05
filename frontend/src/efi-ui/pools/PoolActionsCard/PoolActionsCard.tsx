@@ -56,21 +56,21 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
             minimal
             outlined
             intent={Intent.PRIMARY}
-          >{t`Swap`}</Button>
+          >{t`Trade`}</Button>
           <Button
             onClick={() => setTab(PoolAction.STAKE)}
             active={tab === PoolAction.STAKE}
             minimal
             outlined
             intent={Intent.PRIMARY}
-          >{t`Add Liquidity`}</Button>
+          >{t`Stake`}</Button>
           <Button
             onClick={() => setTab(PoolAction.UNSTAKE)}
             active={tab === PoolAction.UNSTAKE}
             minimal
             outlined
             intent={Intent.PRIMARY}
-          >{t`Remove Liquidity`}</Button>
+          >{t`Unstake`}</Button>
         </div>
         {tab === PoolAction.SWAP && (
           <TradePanel

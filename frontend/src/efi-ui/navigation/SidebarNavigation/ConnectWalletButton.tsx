@@ -75,14 +75,21 @@ export function ConnectWalletButton({
           <LabeledText
             className={tw("text-center")}
             text={
-              <span>
-                <Icon
-                  className={tw("pr-2")}
-                  icon={IconNames.DOT}
-                  color={connectionStatusColor}
-                />
-                {formatWalletAddress(account)}
-              </span>
+              <a
+                onClick={(e) => e.stopPropagation()}
+                href={`https://etherscan.io/address/${account}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span>
+                  <Icon
+                    className={tw("pr-2")}
+                    icon={IconNames.DOT}
+                    color={connectionStatusColor}
+                  />
+                  {formatWalletAddress(account)}
+                </span>
+              </a>
             }
             label={formatChainName(active, chainId)}
           />

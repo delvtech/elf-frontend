@@ -221,7 +221,7 @@ export function InterestPoolCard(
           text={
             <Link
               className={tw("flex", "space-x-2")}
-              to={pool?.address || ""}
+              to={`/pools/${pool?.address}` || ""}
               onClick={stopPropagationHandler}
             >
               {`${baseAssetSymbol} - ${termAssetSymbol}`}
