@@ -36,6 +36,11 @@ const _abi = [
         name: "",
         type: "address",
       },
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
     ],
     stateMutability: "nonpayable",
     type: "function",

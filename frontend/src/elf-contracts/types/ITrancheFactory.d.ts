@@ -56,11 +56,13 @@ export class ITrancheFactory extends Contract {
   "getData()"(overrides?: Overrides): Promise<ContractTransaction>;
 
   callStatic: {
-    getData(overrides?: CallOverrides): Promise<[string, BigNumber, string]>;
+    getData(
+      overrides?: CallOverrides
+    ): Promise<[string, BigNumber, string, string]>;
 
     "getData()"(
       overrides?: CallOverrides
-    ): Promise<[string, BigNumber, string]>;
+    ): Promise<[string, BigNumber, string, string]>;
   };
 
   filters: {};

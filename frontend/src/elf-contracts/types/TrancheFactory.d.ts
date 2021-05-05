@@ -84,11 +84,13 @@ export class TrancheFactory extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    getData(overrides?: CallOverrides): Promise<[string, BigNumber, string]>;
+    getData(
+      overrides?: CallOverrides
+    ): Promise<[string, BigNumber, string, string]>;
 
     "getData()"(
       overrides?: CallOverrides
-    ): Promise<[string, BigNumber, string]>;
+    ): Promise<[string, BigNumber, string, string]>;
   };
 
   TRANCHE_CREATION_HASH(overrides?: CallOverrides): Promise<string>;
@@ -107,9 +109,13 @@ export class TrancheFactory extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  getData(overrides?: CallOverrides): Promise<[string, BigNumber, string]>;
+  getData(
+    overrides?: CallOverrides
+  ): Promise<[string, BigNumber, string, string]>;
 
-  "getData()"(overrides?: CallOverrides): Promise<[string, BigNumber, string]>;
+  "getData()"(
+    overrides?: CallOverrides
+  ): Promise<[string, BigNumber, string, string]>;
 
   callStatic: {
     TRANCHE_CREATION_HASH(overrides?: CallOverrides): Promise<string>;
@@ -128,11 +134,13 @@ export class TrancheFactory extends Contract {
       overrides?: CallOverrides
     ): Promise<string>;
 
-    getData(overrides?: CallOverrides): Promise<[string, BigNumber, string]>;
+    getData(
+      overrides?: CallOverrides
+    ): Promise<[string, BigNumber, string, string]>;
 
     "getData()"(
       overrides?: CallOverrides
-    ): Promise<[string, BigNumber, string]>;
+    ): Promise<[string, BigNumber, string, string]>;
   };
 
   filters: {

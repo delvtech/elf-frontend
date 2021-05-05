@@ -671,14 +671,14 @@ export class IWrappedPosition extends Contract {
       _amount: BigNumberish,
       _minUnderlying: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<[BigNumber, BigNumber]>;
 
     "withdrawUnderlying(address,uint256,uint256)"(
       _destination: string,
       _amount: BigNumberish,
       _minUnderlying: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<[BigNumber, BigNumber]>;
   };
 
   filters: {
