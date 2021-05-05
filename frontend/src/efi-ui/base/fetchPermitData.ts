@@ -1,8 +1,6 @@
 import { ERC20Permit } from "elf-contracts/types/ERC20Permit";
 import { BigNumberish, BytesLike, ethers, Signer } from "ethers";
 
-import { TokenMetadata } from "efi/tokenlists";
-
 export interface PermitCallData {
   tokenContract: string;
   who: string;
@@ -22,11 +20,12 @@ export async function fetchPermitData(
   spenderAmount: BigNumberish,
   // '1' for every ERC20Permit.  Except USDC which is '2' ¯\_(ツ)_/¯
   version: string
-): Promise<PermitCallData> {
-  const name = TokenMetadata[token.address].name;
-  const chainId = TokenMetadata[token.address].chainId;
+): Promise<PermitCallData | undefined> {
+  // don't use metdata, must match exactly
+  const name = await token.name();
+  const chainId = await signer.getChainId();
   const domain = {
-    name: name,
+    name,
     version: version,
     chainId: chainId,
     verifyingContract: token.address,
@@ -58,12 +57,15 @@ export async function fetchPermitData(
   };
 
   // don't do this in a query hook.  make sure we grab the latest
-  const nonce = await token.nonces;
+  const nonce = await token.nonces(sourceAddr);
+  if (!name || nonce === undefined || chainId === undefined) {
+    return;
+  }
 
   const data = {
     owner: sourceAddr,
     spender: spenderAddr,
-    value: spenderAmount,
+    value: ethers.constants.MaxUint256,
     nonce: nonce,
     deadline: ethers.constants.MaxUint256,
   };
@@ -76,14 +78,14 @@ export async function fetchPermitData(
     data
   );
 
-  const r = sigString.slice(2, 33);
-  const s = sigString.slice(34, 63);
-  const v = sigString.slice(64);
+  const r = `0x${sigString.slice(2, 66)}`;
+  const s = `0x${sigString.slice(66, 130)}`;
+  const v = `0x${sigString.slice(130, 132)}`;
 
   return {
     tokenContract: token.address,
     who: spenderAddr,
-    amount: spenderAmount,
+    amount: ethers.constants.MaxUint256,
     expiration: ethers.constants.MaxUint256,
     r,
     s,
