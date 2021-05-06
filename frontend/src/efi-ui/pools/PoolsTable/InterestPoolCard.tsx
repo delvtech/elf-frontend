@@ -13,7 +13,6 @@ import {
   Colors,
   Elevation,
   Intent,
-  Tag,
 } from "@blueprintjs/core";
 import { Link, navigate } from "@reach/router";
 import classNames from "classnames";

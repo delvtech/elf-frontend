@@ -1,16 +1,10 @@
 import React, { ReactElement } from "react";
 
-import {
-  formatDistance,
-  formatDuration,
-  intervalToDuration,
-  format,
-} from "date-fns";
+import { formatDuration, intervalToDuration, format } from "date-fns";
 import { t } from "ttag";
 import { Classes, Intent, ProgressBar, Tag } from "@blueprintjs/core";
 import classNames from "classnames";
 
-import { LabeledProgressBar } from "efi-ui/base/LabeledProgressBar/LabeledProgressBar";
 import { calculateProgress } from "efi/base/calculateProgress";
 
 import tw from "efi-tailwindcss-classnames";
@@ -24,16 +18,12 @@ interface TimeLeftProps {
    * unix time in ms
    */
   maturityDate: number | undefined;
-
-  label?: string;
 }
 
 export function TimeLeft(props: TimeLeftProps): ReactElement {
-  const { startDate = 0, maturityDate = 0, label } = props;
+  const { startDate = 0, maturityDate = 0 } = props;
   const progress = calculateProgress(startDate, maturityDate);
   const timeLeft = getTimeLeft(maturityDate);
-  const timeSince = getTimeSince(maturityDate);
-  const time = progress > 1 ? timeSince : timeLeft;
 
   if (!startDate || !maturityDate) {
     return <span>{t`loading`}</span>;
@@ -97,9 +87,4 @@ function getTimeLeft(end: number): string {
   });
 
   return timeLeft;
-}
-
-function getTimeSince(end: number): string {
-  const now = Date.now();
-  return formatDistance(end, now, { addSuffix: true });
 }

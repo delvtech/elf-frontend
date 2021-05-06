@@ -1,17 +1,10 @@
-import React, { ReactElement, useCallback } from "react";
+import React, { ReactElement } from "react";
 
-import { Button, NonIdealState } from "@blueprintjs/core";
+import { NonIdealState } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { t } from "ttag";
 
-import { useNavigation } from "efi-ui/navigation/hooks/useTab";
-import { Navigation } from "efi-ui/navigation/navigation";
-
 export function NoLPsInWalletNonIdealState(): ReactElement {
-  const { changeTab } = useNavigation();
-  const goToExchange = useCallback(() => changeTab(Navigation.YIELD_POOLS), [
-    changeTab,
-  ]);
   return (
     <NonIdealState
       icon={IconNames.BANK_ACCOUNT}

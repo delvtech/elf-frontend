@@ -8,7 +8,6 @@ import {
   Collapse,
   Elevation,
   Intent,
-  Tag,
 } from "@blueprintjs/core";
 import classNames from "classnames";
 import { Web3Provider } from "@ethersproject/providers";
