@@ -1,10 +1,19 @@
 import React, { ReactElement } from "react";
 
-import { formatDistance, formatDuration, intervalToDuration } from "date-fns";
+import {
+  formatDistance,
+  formatDuration,
+  intervalToDuration,
+  format,
+} from "date-fns";
 import { t } from "ttag";
+import { Classes, Intent, ProgressBar, Tag } from "@blueprintjs/core";
+import classNames from "classnames";
 
 import { LabeledProgressBar } from "efi-ui/base/LabeledProgressBar/LabeledProgressBar";
 import { calculateProgress } from "efi/base/calculateProgress";
+
+import tw from "efi-tailwindcss-classnames";
 
 interface TimeLeftProps {
   /**
@@ -30,14 +39,41 @@ export function TimeLeft(props: TimeLeftProps): ReactElement {
     return <span>{t`loading`}</span>;
   }
 
+  const isMatured = Date.now() > maturityDate;
+  const intent = isMatured ? Intent.SUCCESS : Intent.PRIMARY;
+
   return (
-    <LabeledProgressBar
-      showProgress={maturityDate > Date.now()}
-      label={label}
-      progressValue={progress}
-      helperText={time}
-      subHelperText={"Jul 30, 2020"}
-    />
+    <div className={tw("h-full", "w-full", "space-y-2")}>
+      {isMatured ? (
+        <div>
+          <Tag intent={Intent.SUCCESS} className={tw("mr-4", "flex-grow-0")}>
+            Matured
+          </Tag>
+        </div>
+      ) : (
+        <Tag intent={Intent.PRIMARY} className={tw("mr-4", "flex-grow-0")}>
+          Running
+        </Tag>
+      )}
+      {!isMatured ? (
+        <ProgressBar
+          intent={intent}
+          animate={false}
+          stripes={false}
+          value={progress}
+        />
+      ) : null}
+      <div
+        className={classNames(Classes.TEXT_MUTED, tw("text-sm", "truncate"))}
+      >
+        {format(maturityDate, "MMM d, y")}
+      </div>
+      <div
+        className={classNames(Classes.TEXT_MUTED, tw("text-sm", "truncate"))}
+      >
+        {timeLeft}
+      </div>
+    </div>
   );
 }
 
