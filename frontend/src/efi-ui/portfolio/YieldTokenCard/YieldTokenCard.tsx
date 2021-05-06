@@ -46,6 +46,7 @@ import { formatPercent } from "efi/base/formatPercent";
 import { CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { formatMoney } from "efi/money/formatMoney";
 import { Link } from "@reach/router";
+import { useTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
 
 interface YieldTokenCardProps {
   library: Web3Provider | undefined;
@@ -142,6 +143,11 @@ export function YieldTokenCard({
   const progress = calculateProgress(createdAtDate, unlockDate);
   const tableRowLink = getTableRowLink(vaultContract?.address, vaultName);
 
+  const { symbol: termAssetSymbol } = useTermAssetSymbol(
+    yieldToken.address,
+    vaultSymbol
+  );
+
   return (
     <div>
       <Card
@@ -230,7 +236,7 @@ export function YieldTokenCard({
               className={tw("flex", "justify-center", "items-center")}
               bold
               textClassName={tw("text-2xl")}
-              text={`${yieldTokenBalance.toFixed(6)} yt${baseAssetSymbol}`}
+              text={`${yieldTokenBalance.toFixed(6)} ${termAssetSymbol}`}
               label={t`1 Yield Token = yield on 1 ${baseAssetSymbol} at maturity`}
             />
           </Callout>

@@ -41,6 +41,8 @@ import { GoToMarketButton } from "./GoToMarketButton";
 import { MaturityTimeBar } from "./MaturityTimeBar";
 import { formatPercent } from "efi/base/formatPercent";
 import { Link } from "@reach/router";
+import { useTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
+import { CryptoAssetType } from "efi/crypto/CryptoAsset";
 
 interface PrincipalTokenCardProps {
   chainId: number | undefined;
@@ -120,6 +122,20 @@ export function PrincipalTokenCard(
       maturationDate?.getTime()
     );
   }
+
+  // TODO: Proof of concept for now, this should be done w/ a lookup against a
+  // list of mainnet addresses
+  let vaultSymbol: string | undefined;
+  if (baseAsset?.type === CryptoAssetType.ETHEREUM) {
+    vaultSymbol = "yvWETH";
+  } else if (baseAsset?.type === CryptoAssetType.ERC20PERMIT) {
+    vaultSymbol = "yvUSDC";
+  }
+
+  const { symbol: termAssetSymbol } = useTermAssetSymbol(
+    tranche.address,
+    vaultSymbol
+  );
 
   return (
     <Card
@@ -218,7 +234,7 @@ export function PrincipalTokenCard(
             className={tw("flex", "justify-center", "items-center")}
             bold
             textClassName={tw("text-2xl")}
-            text={`${trancheBalance.toFixed(6)} pt${baseAssetSymbol}`}
+            text={`${trancheBalance.toFixed(6)} ${termAssetSymbol}`}
             label={t`1 Principal Token = 1 ${baseAssetSymbol} at maturity`}
           />
         </Callout>
