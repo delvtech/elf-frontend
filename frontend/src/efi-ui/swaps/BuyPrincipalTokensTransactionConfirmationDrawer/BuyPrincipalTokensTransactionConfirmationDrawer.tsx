@@ -130,22 +130,26 @@ export function BuyPrincipalTokensTransactionConfirmationDrawer({
     spotPriceTokenForOneBaseAsset
   );
 
+  const walletApprovalInfos = [
+    {
+      cryptoAsset: baseAsset,
+      ownerAddress: account,
+      spenderAddress: balancerVault?.address,
+      messageRenderer: getBalancerApprovalMessage,
+    },
+  ];
   return (
     <TransactionDrawer
       buttonLabel={t`Buy`}
-      approvalSpenderAddress={balancerVault?.address}
       transactionPending={isLoading}
       transactionFailed={isError}
       transactionSuccess={isSuccess}
       isOpen={isOpen}
       onClose={onClose}
       account={account}
-      assetIn={baseAsset}
-      assetInSymbol={baseAssetSymbol}
-      amountIn={amountInAsBigNumber}
+      walletApprovalInfos={walletApprovalInfos}
       library={library}
       onConfirmTransaction={onConfirmBuyPrincipalTokens}
-      walletApprovalMessageRenderer={getBalancerApprovalMessage}
       transactionDetails={
         <SwapDetailsForm
           amountIn={amountIn}

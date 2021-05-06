@@ -1,37 +1,38 @@
-import React, { ReactElement, useMemo } from "react";
+import { ReactElement } from "react";
 
 import { Button, Intent, Tag } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
-import { ERC20 } from "elf-contracts/types/ERC20";
-import { ERC20Permit } from "elf-contracts/types/ERC20Permit";
 import { BigNumber, Signer } from "ethers";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
+import { useTokenAllowanceMulti } from "efi-ui/token/hooks/useTokenAllowance";
 import { WalletDrawer } from "efi-ui/wallets/WalletDrawer/WalletDrawer";
-import {
-  CryptoAsset,
-  CryptoAssetType,
-  findTokenContract,
-} from "efi/crypto/CryptoAsset";
+import { CryptoAsset, findTokenContract } from "efi/crypto/CryptoAsset";
 
 import { WalletApprovalCallout } from "./WalletApprovalCallout";
 import { IconNames } from "@blueprintjs/icons";
+import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
+import { getQueriesData } from "efi-ui/base/queryResults";
+import { MAX_ALLOWANCE } from "efi/contracts/token";
+
+interface WalletApprovalInfo {
+  spenderAddress: string | null | undefined;
+  ownerAddress: string | null | undefined;
+  cryptoAsset: CryptoAsset | undefined;
+  messageRenderer: (assetSymbol: string) => string;
+}
 
 interface TransactionDrawerProps {
   account: string | null | undefined;
-  amountIn: BigNumber | undefined;
-  assetIn: CryptoAsset | undefined;
-  assetInSymbol?: string;
+  confirmButtonDisabled?: boolean;
   isOpen: boolean;
   library: Web3Provider | undefined;
   onClose: () => void;
   onConfirmTransaction: () => void;
   transactionDetails?: ReactElement | null;
   buttonLabel: string;
-  walletApprovalMessageRenderer: (assetSymbol: string) => string;
-  approvalSpenderAddress: string | undefined;
+  walletApprovalInfos?: WalletApprovalInfo[];
   transactionPending?: boolean;
   transactionSuccess?: boolean;
   transactionFailed?: boolean;
@@ -39,29 +40,31 @@ interface TransactionDrawerProps {
 
 export function TransactionDrawer({
   account,
-  amountIn,
-  assetInSymbol,
-  assetIn,
   isOpen,
   library,
   onClose,
   onConfirmTransaction,
   transactionDetails,
+  confirmButtonDisabled: confirmButtonDisabledFromProps,
+  walletApprovalInfos = [],
   buttonLabel,
-  approvalSpenderAddress,
-  walletApprovalMessageRenderer,
   transactionPending = false,
   transactionSuccess = false,
   transactionFailed = false,
 }: TransactionDrawerProps): ReactElement {
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
 
-  const assetInContract = useAssetSignedContract(assetIn, signer);
-
-  const { data: allowance } = useTokenAllowance(
-    assetInContract as ERC20,
-    account,
-    approvalSpenderAddress
+  const owners = walletApprovalInfos?.map(({ ownerAddress }) => ownerAddress);
+  const spenders = walletApprovalInfos?.map(
+    ({ spenderAddress }) => spenderAddress
+  );
+  const walletApprovalContracts = walletApprovalInfos?.map(({ cryptoAsset }) =>
+    findTokenContract(cryptoAsset)
+  );
+  const approvalAllowances = useTokenAllowanceMulti(
+    walletApprovalContracts as ERC20Shim[],
+    owners,
+    spenders
   );
 
   const confirmButtonLabel = getConfirmButtonLabel(
@@ -70,22 +73,20 @@ export function TransactionDrawer({
     transactionFailed
   );
 
-  const confirmButtonDisabled = getConfirmButtonDisabled(
-    account,
-    assetIn,
-    amountIn,
-    allowance,
-    transactionPending
-  );
+  const confirmButtonDisabled =
+    confirmButtonDisabledFromProps ||
+    getConfirmButtonDisabled(
+      account,
+      walletApprovalInfos,
+      getQueriesData(approvalAllowances),
+      transactionPending
+    );
+
   const buttonIntent = getConfirmButtonIntent(
     transactionSuccess,
     transactionFailed
   );
   const helperText = getHelperText(transactionSuccess, transactionFailed);
-
-  const message = assetInSymbol
-    ? walletApprovalMessageRenderer(assetInSymbol)
-    : undefined;
 
   return (
     <WalletDrawer isOpen={isOpen} onClose={onClose}>
@@ -99,20 +100,20 @@ export function TransactionDrawer({
         )}
       >
         {transactionDetails}
-        {
-          // we can't pull this out to a new variable because typescript can't
-          // narrow the type of baseAssetContract when referencing a variable
-          account && message && assetIn?.type !== CryptoAssetType.ETHEREUM ? (
-            <WalletApprovalCallout
-              spenderAddress={approvalSpenderAddress}
-              message={message}
-              signer={signer}
-              account={account}
-              cryptoAsset={assetIn}
-              approvalAmount={amountIn}
-            />
-          ) : null
-        }
+
+        {walletApprovalInfos?.map(
+          ({ cryptoAsset, messageRenderer, ownerAddress, spenderAddress }) => {
+            return (
+              <WalletApprovalCallout
+                spenderAddress={spenderAddress}
+                messageRenderer={messageRenderer}
+                signer={signer}
+                ownerAddress={ownerAddress}
+                cryptoAsset={cryptoAsset}
+              />
+            );
+          }
+        )}
 
         <div className={tw("flex", "flex-col", "space-y-2")}>
           <Button
@@ -188,17 +189,16 @@ function getConfirmButtonLabel(
 
 function getConfirmButtonDisabled(
   account: string | null | undefined,
-  baseAsset: CryptoAsset | undefined,
-  amountIn: BigNumber | undefined,
-  marketAllowance: BigNumber | undefined,
+  walletApprovalInfos: WalletApprovalInfo[],
+  allowances: (BigNumber | undefined)[],
   transactionPending: boolean
 ) {
   if (transactionPending) {
     return true;
   }
 
-  // can't confirm anything w/out a base asset
-  if (!baseAsset) {
+  // can't confirm anything w/out base assets
+  if (!walletApprovalInfos.every(({ cryptoAsset }) => !!cryptoAsset)) {
     return true;
   }
 
@@ -207,39 +207,13 @@ function getConfirmButtonDisabled(
     return true;
   }
 
-  // disabled when no amount is entered
-  if (!amountIn) {
+  const hasEnoughAllowance = allowances.every((allowance) =>
+    allowance?.gte(MAX_ALLOWANCE)
+  );
+  if (!hasEnoughAllowance) {
     return true;
-  }
-
-  // disabled if it's an erc20 or erc20permits w/out enough allowance.
-  // NOTE: we have to use approvals for erc20permits because balancer does not
-  // support that
-  if (
-    [CryptoAssetType.ERC20, CryptoAssetType.ERC20PERMIT].includes(
-      baseAsset.type
-    )
-  ) {
-    const hasEnoughAllowance = marketAllowance?.gte(amountIn);
-    if (!hasEnoughAllowance) {
-      return true;
-    }
   }
 
   // otherwise the button should not be disabled
   return false;
-}
-
-function useAssetSignedContract(
-  asset: CryptoAsset | undefined,
-  signer: Signer | undefined
-): ERC20 | ERC20Permit | undefined {
-  const assetContract = useMemo(() => {
-    const tokenContract = findTokenContract(asset);
-    if (signer && tokenContract) {
-      return tokenContract.connect(signer);
-    }
-  }, [asset, signer]);
-
-  return assetContract;
 }

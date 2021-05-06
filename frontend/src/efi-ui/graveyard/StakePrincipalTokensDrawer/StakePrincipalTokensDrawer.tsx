@@ -20,7 +20,7 @@ import { useConvergentCurvePoolStakeInputs } from "efi-ui/pools/useConvergentCur
 import { useJoinConvergentPool } from "efi-ui/pools/useJoinConvergentPool/useJoinConvergentPool";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
-import { WalletApprovalCallout } from "efi-ui/transactions/TransactionDrawer/WalletApprovalCallout";
+import { WalletApprovalCalloutOld } from "efi-ui/transactions/TransactionDrawer/WalletApprovalCallout";
 import { WalletDrawer } from "efi-ui/wallets/WalletDrawer/WalletDrawer";
 import {
   CryptoAsset,
@@ -106,7 +106,12 @@ export function StakePrincipalTokensDrawer({
         })
       : undefined;
 
-  const onStake = useJoinConvergentPool(signer, account, pool, maxAmountsIn);
+  const { onJoinPool } = useJoinConvergentPool(
+    signer,
+    account,
+    pool,
+    maxAmountsIn
+  );
 
   const confirmButtonLabel = getConfirmButtonLabel(account);
   const confirmButtonDisabled = getConfirmButtonDisabled(
@@ -136,8 +141,8 @@ export function StakePrincipalTokensDrawer({
         />
         {baseAsset.type === CryptoAssetType.ERC20 ||
         baseAsset.type === CryptoAssetType.ERC20PERMIT ? (
-          <WalletApprovalCallout
-            account={account}
+          <WalletApprovalCalloutOld
+            ownerAddress={account}
             cryptoAsset={baseAsset}
             approvalAmount={baseAssetInBigNumber}
             signer={signer}
@@ -147,8 +152,8 @@ export function StakePrincipalTokensDrawer({
         ) : null}
         {trancheCryptoAsset?.type === CryptoAssetType.ERC20 ||
         trancheCryptoAsset?.type === CryptoAssetType.ERC20PERMIT ? (
-          <WalletApprovalCallout
-            account={account}
+          <WalletApprovalCalloutOld
+            ownerAddress={account}
             spenderAddress={balancerVault?.address}
             cryptoAsset={trancheCryptoAsset}
             approvalAmount={principalTokenInBigNumber}
@@ -163,7 +168,7 @@ export function StakePrincipalTokensDrawer({
           className={tw("h-16")}
           large
           outlined
-          onClick={onStake}
+          // onClick={onStake}
         >
           {confirmButtonLabel}
         </Button>

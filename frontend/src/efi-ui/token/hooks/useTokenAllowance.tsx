@@ -2,6 +2,9 @@ import { ERC20 } from "elf-contracts/types/ERC20";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { QueryObserverResult } from "react-query";
 import { BigNumber } from "ethers";
+import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
+import zip from "lodash.zip";
+import { ContractMethodArgs } from "efi/contracts/types";
 
 export function useTokenAllowance(
   contract: ERC20 | undefined,
@@ -12,4 +15,21 @@ export function useTokenAllowance(
     enabled: !!owner && !!spender,
     callArgs: [owner as string, spender as string],
   });
+}
+export function useTokenAllowanceMulti(
+  contracts: (ERC20 | undefined)[],
+  owners: (string | null | undefined)[],
+  spenders: (string | null | undefined)[]
+): QueryObserverResult<BigNumber>[] {
+  const callArgs = zip(owners, spenders).map(([owner, spender]) => {
+    return {
+      enabled: !!owner && !!spender,
+      callArgs: [owner as string, spender as string] as ContractMethodArgs<
+        ERC20,
+        "allowance"
+      >,
+    };
+  });
+
+  return useSmartContractReadCalls(contracts, "allowance", callArgs);
 }

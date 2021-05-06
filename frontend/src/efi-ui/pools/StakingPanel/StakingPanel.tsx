@@ -139,14 +139,23 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
     yieldAssetDecimals
   );
 
-  const joinConvergentPool = useJoinConvergentPool(
-    signer,
-    account,
-    pool,
-    poolTokenMaxAmounts
-  );
+  const {
+    onJoinPool: joinConvergentPool,
+    mutationResult: {
+      isLoading: isJoinCCPoolLoading,
+      isSuccess: isJoinCCPoolSuccess,
+      isError: isJoinCCPoolError,
+    },
+  } = useJoinConvergentPool(signer, account, pool, poolTokenMaxAmounts);
 
-  const joinWeightedPool = useJoinWeightedPool(
+  const {
+    onJoinPool: joinWeightedPool,
+    mutationResult: {
+      isLoading: isJoinWPoolLoading,
+      isSuccess: isJoinWPoolSuccess,
+      isError: isJoinWPoolError,
+    },
+  } = useJoinWeightedPool(
     signer,
     account,
     pool as WeightedPool,
@@ -273,6 +282,15 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
         onClose={() => {
           setDrawerOpen(false);
         }}
+        isStakeLoading={
+          isPrincipalPoolType ? isJoinCCPoolLoading : isJoinWPoolLoading
+        }
+        isStakeError={
+          isPrincipalPoolType ? isJoinCCPoolError : isJoinWPoolError
+        }
+        isStakeSuccess={
+          isPrincipalPoolType ? isJoinCCPoolSuccess : isJoinWPoolSuccess
+        }
         onStake={onStake}
       />
     </div>

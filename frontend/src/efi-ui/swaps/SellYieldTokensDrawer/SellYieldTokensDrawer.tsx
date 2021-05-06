@@ -139,7 +139,6 @@ export function SellYieldTokensDrawer(
   );
 
   const assetIn = makeCryptoAsset(yieldToken as ERC20Shim);
-  const assetInSymbol = `yt${baseAssetSymbol}`;
 
   // We want InputGroup to be a controlled component, but passing `undefined` is
   // how you express an uncontrolled component. Having this change between
@@ -147,18 +146,23 @@ export function SellYieldTokensDrawer(
   // console, so we use empty string here to keep everything controlled.
   const safeAmountIn = amountIn ?? "";
 
+  const walletApprovalInfos = [
+    {
+      cryptoAsset: assetIn,
+      ownerAddress: account,
+      spenderAddress: balancerVault?.address,
+      messageRenderer: getBalancerApprovalMessage,
+    },
+  ];
+
   return (
     <TransactionDrawer
       buttonLabel={t`Sell`}
-      approvalSpenderAddress={balancerVault?.address}
       isOpen={isOpen}
       onClose={onClose}
       account={account}
-      assetIn={assetIn}
-      assetInSymbol={assetInSymbol}
-      walletApprovalMessageRenderer={getBalancerApprovalMessage}
-      amountIn={amountInAsBigNumber}
       library={library}
+      walletApprovalInfos={walletApprovalInfos}
       onConfirmTransaction={onConfirmSellPrincipalTokens}
       transactionDetails={
         <SwapDetailsForm
