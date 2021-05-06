@@ -45,11 +45,14 @@ function useActiveMintPreview(
   activeTranche: Tranche | undefined,
   amountIn: number
 ) {
-  const numPrincipalTokensOut = useMintPreview(activeTranche, amountIn);
+  const numPrincipalTokensOut = useMintPreview(
+    activeTranche,
+    amountIn
+  )?.toFixed(4);
 
   // You will always receive the same amount of yield tokens as the amount of
   // base asset you put in
-  const numYieldTokensOut = amountIn;
+  const numYieldTokensOut = amountIn?.toFixed(4);
 
   return { numPrincipalTokensOut, numYieldTokensOut };
 }
