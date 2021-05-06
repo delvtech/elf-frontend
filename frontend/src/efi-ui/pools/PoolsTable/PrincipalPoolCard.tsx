@@ -1,9 +1,9 @@
 import {
   CSSProperties,
   ReactElement,
+  useCallback,
   useEffect,
   useState,
-  useCallback,
 } from "react";
 
 import {
@@ -26,27 +26,28 @@ import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
-import { CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 import { useFeeVolumeFiatForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import {
-  usePoolViewPoolActionsTab,
   PoolAction,
+  usePoolViewPoolActionsTab,
 } from "efi-ui/pools/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
+import { useStakingAPY } from "efi-ui/pools/useStakingAPY";
 import { useTokenYield } from "efi-ui/pools/useTokenYield";
 import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidityForPool.ts/useTotalFiatLiquidityForPool";
 import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForPool";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
 import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
+import { formatPercent } from "efi/base/formatPercent";
+import { CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { formatMoney } from "efi/money/formatMoney";
 import { PoolContract } from "efi/pools/PoolContract";
+import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 
 import styles from "./PrincipalPoolCard.module.css";
-import { formatPercent } from "efi/base/formatPercent";
-import { useStakingAPY } from "efi-ui/pools/useStakingAPY";
 
 interface PrincipalPoolCardProps {
   pool: PoolContract | undefined;
@@ -74,9 +75,11 @@ export function PrincipalPoolCard(
   const baseAssetSymbol = useCryptoSymbol(baseAsset);
   const BaseAssetIcon = findAssetIcon(baseAssetSymbol);
   const termAssetContract = usePoolPairedToken(pool, baseAssetContract);
+
+  const vaultSymbol = getVaultSymbol(baseAsset);
   const { symbol: termAssetSymbol } = useTermAssetSymbol(
     termAssetContract?.address,
-    baseAssetSymbol
+    vaultSymbol
   );
   const { data: unlockBN } = useSmartContractReadCall(
     tranche,

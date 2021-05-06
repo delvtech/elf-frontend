@@ -51,6 +51,7 @@ import { useStakingAPY } from "efi-ui/pools/useStakingAPY";
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
+import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 
 interface InterestPoolCardProps {
   pool: PoolContract | undefined;
@@ -78,9 +79,10 @@ export function InterestPoolCard(
   const baseAssetSymbol = useCryptoSymbol(baseAsset);
   const BaseAssetIcon = findAssetIcon(baseAssetSymbol);
   const termAssetContract = usePoolPairedToken(pool, baseAssetContract);
+  const vaultSymbol = getVaultSymbol(baseAsset);
   const { symbol: termAssetSymbol } = useTermAssetSymbol(
     termAssetContract?.address,
-    baseAssetSymbol
+    vaultSymbol
   );
   const { data: unlockBN } = useSmartContractReadCall(
     tranche,
