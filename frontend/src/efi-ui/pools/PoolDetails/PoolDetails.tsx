@@ -3,10 +3,12 @@ import React, { ReactElement } from "react";
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { Signer } from "ethers";
+import { formatEther } from "ethers/lib/utils";
 
 import tw from "efi-tailwindcss-classnames";
 import { getQueryData } from "efi-ui/base/queryResults";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
+import { APYSummary } from "efi-ui/pools/APYSummary/APYSummary";
 import { PoolActionsCard } from "efi-ui/pools/PoolActionsCard/PoolActionsCard";
 import { PoolCharts } from "efi-ui/pools/PoolCharts/PoolCharts";
 import { PoolSummary } from "efi-ui/pools/PoolSummary/PoolSummary";
@@ -15,14 +17,14 @@ import { useFeeVolumeFiatForPool } from "efi-ui/pools/useFeeVolumeForPool/useFee
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidityForPool.ts/useTotalFiatLiquidityForPool";
 import { useTotalLiquidityTrend } from "efi-ui/pools/useTotalLiquidityTrend/useTotalLiquidityTrend";
+import { useTotalValueLockedForTranche } from "efi-ui/pools/useTotalValueLockedForTranche";
 import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForPool";
 import { useVolumeForPool } from "efi-ui/pools/useVolumeForPool/useVolumeForPool";
-import { VaultSummary } from "efi-ui/pools/VaultSummary/VaultSummary";
+import { TermSummary } from "efi-ui/pools/TermSummary/TermSummary";
 import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
 import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { PoolContract } from "efi/pools/PoolContract";
-import { APYSummary } from "efi-ui/pools/APYSummary/APYSummary";
 
 interface PoolDetailsProps {
   library: Web3Provider | undefined;
@@ -55,26 +57,29 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
   const liquidityTrend = useTotalLiquidityTrend(pool);
 
   const tranche = useTrancheForPool(pool);
+  const totalValueLocked = useTotalValueLockedForTranche(
+    tranche,
+    baseAssetContract
+  );
+  const { data: interestSupplyBN } = useSmartContractReadCall(
+    tranche,
+    "interestSupply"
+  );
   const startDateInUnixSeconds = useTrancheCreatedAt(tranche);
   const { data: maturityDateInUnixSeconds } = useSmartContractReadCall(
     tranche,
     "unlockTimestamp"
   );
 
-  const startDate = (startDateInUnixSeconds || 0) * 1000;
-  const maturityDate = (maturityDateInUnixSeconds?.toNumber() || 0) * 1000;
+  const startTimeMs = (startDateInUnixSeconds || 0) * 1000;
+  const maturityTimeMs = (maturityDateInUnixSeconds?.toNumber() || 0) * 1000;
 
   const { volume24hr, volumeTrend } = useVolumeTrend(pool);
   const { feeVolume24hr, feeVolumeTrend } = useFeeVolumeTrend(pool);
 
   return (
     <div className={tw("flex", "flex-col", "space-y-8", "w-full")}>
-      <APYSummary
-        pool={pool}
-        baseAsset={baseAssetContract}
-        startDate={startDate}
-        maturityDate={maturityDate}
-      />
+      <APYSummary pool={pool} baseAsset={baseAssetContract} />
       <div
         className={tw(
           "flex",
@@ -96,10 +101,13 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
           feeVolume={feeVolume24hr}
           feeVolumeTrend={feeVolumeTrend}
         />
-        <VaultSummary
+        <TermSummary
+          pool={pool}
+          interestSupply={+formatEther(interestSupplyBN ?? 0)}
+          totalValueLocked={totalValueLocked}
           baseAsset={baseAssetContract}
-          startDate={startDate}
-          maturityDate={maturityDate}
+          startTimeMs={startTimeMs}
+          maturityTimeMs={maturityTimeMs}
         />
         <TokenSummary pool={pool} />
       </div>

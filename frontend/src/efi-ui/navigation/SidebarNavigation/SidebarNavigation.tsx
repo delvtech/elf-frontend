@@ -10,6 +10,7 @@ import {
   Tabs,
 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
+import { Link } from "@reach/router";
 import classNames from "classnames";
 import { t } from "ttag";
 
@@ -22,7 +23,6 @@ import { usePendingTransaction } from "efi-ui/transactions/usePendingTransaction
 
 import { ConnectWalletButton } from "./ConnectWalletButton";
 import styles from "./SidebarNavigation.module.css";
-import { Link } from "@reach/router";
 
 interface SidebarNavigationProps {
   chainId: number | undefined;

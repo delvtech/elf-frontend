@@ -1,22 +1,35 @@
 import "module-alias/register";
 
+import { parseUnits } from "ethers/lib/utils";
 import fs from "fs";
-import hre from "hardhat";
+import hre, { ethers } from "hardhat";
 
+import { TestDate } from "src/types/TestDate";
+
+import { MAX_ALLOWANCE } from "src/maxAllowance";
 import { deployConvergentPoolFactory } from "src/scripts/deployConvergentPoolFactory";
 import { deployInterestTokenFactory } from "src/scripts/deployInterestTokenFactory";
 import { deployTrancheFactory } from "src/scripts/deployTrancheFactory";
+import { exitConvergentCurvePool } from "src/scripts/exitConvergentCurvePool";
+import { getContracts } from "src/scripts/getContracts";
+import { getSigner, SIGNER } from "src/scripts/getSigner";
+import { joinConvergentCurvePool } from "src/scripts/joinConvergentCurvePool";
+import { printTokenInfoForPool } from "src/scripts/printTokenInfoForPool";
 import { THIRTY_DAYS_IN_SECONDS } from "src/time";
 
+import { AddressesJsonFile } from "../addresses/AddressesJsonFile";
 import { deployBalancerVault } from "./balancerV2Vault";
 import { deployBaseAssets } from "./baseAssets";
 import { deployTrancheAndMarket } from "./deployTrancheAndMarket";
 import { deployVaultsAndProxys } from "./deployVaultsAndProxys";
 import { deployWeightedPoolFactory } from "./deployWeightedPoolFactory";
-import { getSigner, SIGNER } from "./getSigner";
 import { mintTokensForAddress } from "./mintTokensForAddress";
 import { deployUserProxy } from "./userProxy";
-import { AddressesJsonFile } from "../addresses/AddressesJsonFile";
+import { Tranche } from "src/types/Tranche";
+import { Signer } from "ethers";
+import { ERC20 } from "src/types/ERC20";
+import { Vault } from "src/types/Vault";
+import { UserProxy } from "src/types/UserProxy";
 
 async function main() {
   const elementSigner = await getSigner(SIGNER.ELEMENT, hre);
@@ -63,9 +76,23 @@ async function main() {
     balancerVaultContract
   );
   const interestTokenFactory = await deployInterestTokenFactory(elementSigner);
+
+  const dateLibraryDeployer = await ethers.getContractFactory(
+    "DateString",
+    elementSigner
+  );
+  const testDate = (await dateLibraryDeployer.deploy()) as TestDate;
+
   const trancheFactory = await deployTrancheFactory(
     elementSigner,
-    interestTokenFactory
+    interestTokenFactory,
+    testDate
+  );
+  // deploy user proxy
+  const userProxyContract = await deployUserProxy(
+    elementSigner,
+    wethContract,
+    trancheFactory
   );
 
   const {
@@ -82,7 +109,6 @@ async function main() {
     ycPoolContract: firstWethYcPoolContract,
     fytPoolId: wethFytPoolId,
     ycPoolId: wethYcPoolId,
-
   } = await deployTrancheAndMarket(
     elementSigner,
     trancheFactory,
@@ -130,7 +156,7 @@ async function main() {
   const {
     trancheContract: expiredWethTrancheContract,
     fytPoolContract: expiredWethFytPoolContract,
-    ycPoolContract:  expiredWethYcPoolContract,
+    ycPoolContract: expiredWethYcPoolContract,
   } = await deployTrancheAndMarket(
     elementSigner,
     trancheFactory,
@@ -147,6 +173,14 @@ async function main() {
       ytYieldAssetIn: "2000",
       durationInSeconds: 120,
     }
+  );
+
+  await mintTrancheTokensForSigner(
+    userSigner,
+    wethContract,
+    expiredWethTrancheContract,
+    balancerVaultContract,
+    userProxyContract
   );
   await yWeth.updateShares();
 
@@ -176,13 +210,6 @@ async function main() {
   );
   // add some interest to yUsdc
   await yUsdc.updateShares();
-
-  // deploy user proxy
-  const userProxyContract = await deployUserProxy(
-    elementSigner,
-    wethContract,
-    trancheFactory
-  );
 
   console.log("Disabling automine");
   await hre.ethers.provider.send("evm_setAutomine", [false]);
@@ -245,7 +272,7 @@ async function main() {
   fs.writeFileSync("./src/all-addresses.json", allAddresses);
 
   // Produce a schema-compliant testnet.addresses.json file
-  const addressesJson:AddressesJsonFile  = {
+  const addressesJson: AddressesJsonFile = {
     chainId: 31337,
     addresses: {
       balancerVaultAddress: balancerVaultContract.address,
@@ -272,11 +299,7 @@ async function main() {
       usdcYcPoolContract.address,
     ],
   };
-  const schemaAddresses = JSON.stringify(
-     addressesJson,
-    null,
-    2
-  );
+  const schemaAddresses = JSON.stringify(addressesJson, null, 2);
 
   console.log("testnet.addresses.json", schemaAddresses);
   fs.writeFileSync("./src/addresses/testnet.addresses.json", schemaAddresses);
@@ -290,3 +313,38 @@ main()
     console.error(error);
     process.exit(1);
   });
+
+async function mintTrancheTokensForSigner(
+  signer: Signer,
+  baseAssetContractUnsigend: ERC20,
+  trancheContractUnsigend: Tranche,
+  balancerVaultContract: Vault,
+  userProxyContractUnsigend: UserProxy,
+  amount: string = "100"
+) {
+  const signerAddress = await signer.getAddress();
+  const baseAssetContract = baseAssetContractUnsigend.connect(signer);
+  const trancheContract = trancheContractUnsigend.connect(signer);
+  const userProxyContract = userProxyContractUnsigend.connect(signer);
+
+  await baseAssetContract.approve(balancerVaultContract.address, MAX_ALLOWANCE);
+  await trancheContract.approve(balancerVaultContract.address, MAX_ALLOWANCE);
+  const baseAssetDecimals = await baseAssetContract.decimals();
+  await baseAssetContract.mint(
+    signerAddress,
+    parseUnits(amount, baseAssetDecimals)
+  );
+
+  await baseAssetContract.approve(userProxyContract.address, MAX_ALLOWANCE);
+  const expiration = await trancheContract.unlockTimestamp();
+  const position = await trancheContract.position();
+
+  const mintTx = await userProxyContract.mint(
+    parseUnits(amount, baseAssetDecimals),
+    baseAssetContract.address,
+    expiration,
+    position,
+    []
+  );
+  await mintTx.wait(1);
+}
