@@ -32,6 +32,7 @@ import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPaire
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { useParseSortedTokensForPool } from "efi-ui/pools/useParsedTokensForPool/useParsedTokensForPool";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
+import { useTotalValueLockedForTranche } from "efi-ui/pools/useTotalValueLockedForTranche";
 import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForPool";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
@@ -92,6 +93,8 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
     termAssetContract?.address,
     baseAssetSymbol
   );
+  const tvl = useTotalValueLockedForTranche(tranche, baseAssetContract);
+  const yieldPrice = usePoolSpotPrice(pool, termAssetContract)?.toFixed(4);
 
   const { data: unlockBN } = useSmartContractReadCall(
     tranche,
@@ -282,7 +285,7 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
             )}
           >
             <LabeledText
-              text={formatMoney(principalLiquidity, { wholeAmounts: true })}
+              text={tvl ? formatMoney(tvl, { wholeAmounts: true }) : null}
               label={`Element TVL`}
             />
           </div>
@@ -337,7 +340,7 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
               />
               <LabeledText
                 className={tw("mt-2", "hidden", "xl:flex")}
-                text={t`${principalPrice}`}
+                text={t`${yieldPrice}`}
                 label={`Yield Price (${baseAssetSymbol})`}
               />
             </div>
