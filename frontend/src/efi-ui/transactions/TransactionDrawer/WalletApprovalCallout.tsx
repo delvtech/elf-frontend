@@ -11,7 +11,6 @@ import { BigNumber, Signer } from "ethers";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
 import {
   CryptoAsset,
@@ -24,18 +23,19 @@ import { useERC20Approve } from "efi-ui/token/hooks/useERC20Approve";
 interface WalletApprovalCalloutProps {
   signer: Signer | undefined;
   account: string | null | undefined;
+  spenderAddress: string | undefined;
   cryptoAsset: CryptoAsset | undefined;
   approvalAmount: BigNumber | undefined;
   message: string;
 }
 export function WalletApprovalCallout({
   account,
+  spenderAddress,
   signer,
   message,
   cryptoAsset,
   approvalAmount,
 }: WalletApprovalCalloutProps): ReactElement | null {
-  const balancerVault = useBalancerVault();
   const cryptoAssetContract = findTokenContract(cryptoAsset);
   const {
     data: marketAllowance,
@@ -43,7 +43,7 @@ export function WalletApprovalCallout({
   } = useTokenAllowance(
     cryptoAssetContract as ERC20Shim,
     account,
-    balancerVault?.address
+    spenderAddress
   );
 
   const {
@@ -53,7 +53,7 @@ export function WalletApprovalCallout({
     cryptoAssetContract as ERC20Shim,
     signer,
     account,
-    balancerVault?.address
+    spenderAddress
   );
 
   // Ethereum does not need approvals

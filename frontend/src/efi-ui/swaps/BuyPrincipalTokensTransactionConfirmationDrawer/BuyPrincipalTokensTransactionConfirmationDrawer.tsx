@@ -142,10 +142,7 @@ export function BuyPrincipalTokensTransactionConfirmationDrawer({
       account={account}
       assetIn={baseAsset}
       assetInSymbol={baseAssetSymbol}
-      walletConnectionActive={walletConnectionActive}
       amountIn={amountInAsBigNumber}
-      chainId={chainId}
-      connector={connector}
       library={library}
       onConfirmTransaction={onConfirmBuyPrincipalTokens}
       walletApprovalMessageRenderer={getBalancerApprovalMessage}

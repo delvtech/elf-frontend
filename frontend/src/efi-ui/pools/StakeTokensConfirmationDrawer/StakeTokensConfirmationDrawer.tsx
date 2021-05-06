@@ -13,13 +13,14 @@ import { useCryptoAssetMetadata } from "efi-ui/crypto/hooks/useCryptoAssetMetada
 import { StakeConfirmationForm } from "efi-ui/pools/StakeTokensConfirmationDrawer/StakeConfirmationForm";
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
 import { WalletApprovalCallout } from "efi-ui/transactions/TransactionDrawer/WalletApprovalCallout";
-import { WalletDrawer } from "efi-ui/wallets/WalletDrawer/WalletDrawer";
 import {
   CryptoAsset,
   CryptoAssetType,
   findTokenContract,
 } from "efi/crypto/CryptoAsset";
 import { parseUnits } from "ethers/lib/utils";
+import React from "react";
+import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/TransactionDrawer";
 
 interface StakingConfirmationDrawerProps {
   account: string | null | undefined;
@@ -87,10 +88,18 @@ export function StakingConfirmationDrawer({
   const confirmButtonDisabled = !hasTokenApprovals;
 
   return (
-    <WalletDrawer
+    <TransactionDrawer
+      account={account}
+      approvalSpenderAddress={balancerVault?.address}
+      walletApprovalMessageRenderer={getBalancerApprovalMessage}
+      transactionPending={}
+      transactionSuccess={}
+      assetInSymbol={baseAssetSymbol}
+      assetIn={baseAsset}
+      amountIn={baseAssetInBigNumber}
+      buttonLabel={t`Stake`}
       isOpen={isOpen}
       onClose={onClose}
-      className={tw("justify-between")}
     >
       <div className={tw("flex", "flex-col", "space-y-4")}>
         <StakeConfirmationForm
@@ -108,6 +117,7 @@ export function StakingConfirmationDrawer({
         baseAsset?.type === CryptoAssetType.ERC20PERMIT ? (
           <WalletApprovalCallout
             account={account}
+            spenderAddress={balancerVault?.address}
             cryptoAsset={baseAsset}
             approvalAmount={baseAssetInBigNumber}
             signer={signer}
@@ -119,6 +129,7 @@ export function StakingConfirmationDrawer({
         trancheAsset?.type === CryptoAssetType.ERC20PERMIT ? (
           <WalletApprovalCallout
             account={account}
+            spenderAddress={balancerVault?.address}
             cryptoAsset={trancheAsset}
             approvalAmount={trancheAssetInBigNumber}
             signer={signer}
@@ -137,7 +148,7 @@ export function StakingConfirmationDrawer({
           {confirmButtonLabel}
         </Button>
       </div>
-    </WalletDrawer>
+    </TransactionDrawer>
   );
 }
 

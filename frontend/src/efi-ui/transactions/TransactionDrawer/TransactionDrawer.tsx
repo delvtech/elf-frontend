@@ -2,7 +2,6 @@ import React, { ReactElement, useMemo } from "react";
 
 import { Button, Intent, Tag } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
-import { AbstractConnector } from "@web3-react/abstract-connector";
 import { ERC20 } from "elf-contracts/types/ERC20";
 import { ERC20Permit } from "elf-contracts/types/ERC20Permit";
 import { BigNumber, Signer } from "ethers";
@@ -25,15 +24,12 @@ interface TransactionDrawerProps {
   amountIn: BigNumber | undefined;
   assetIn: CryptoAsset | undefined;
   assetInSymbol?: string;
-  chainId: number | undefined;
-  connector: AbstractConnector | undefined;
   isOpen: boolean;
   library: Web3Provider | undefined;
   onClose: () => void;
   onConfirmTransaction: () => void;
   transactionDetails?: ReactElement | null;
   buttonLabel: string;
-  walletConnectionActive: boolean;
   walletApprovalMessageRenderer: (assetSymbol: string) => string;
   approvalSpenderAddress: string | undefined;
   transactionPending?: boolean;
@@ -108,6 +104,7 @@ export function TransactionDrawer({
           // narrow the type of baseAssetContract when referencing a variable
           account && message && assetIn?.type !== CryptoAssetType.ETHEREUM ? (
             <WalletApprovalCallout
+              spenderAddress={approvalSpenderAddress}
               message={message}
               signer={signer}
               account={account}

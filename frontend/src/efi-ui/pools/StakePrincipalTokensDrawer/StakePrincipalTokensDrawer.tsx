@@ -141,6 +141,7 @@ export function StakePrincipalTokensDrawer({
             cryptoAsset={baseAsset}
             approvalAmount={baseAssetInBigNumber}
             signer={signer}
+            spenderAddress={balancerVault?.address}
             message={getBalancerApprovalMessage(baseAssetSymbol || "")}
           />
         ) : null}
@@ -148,6 +149,7 @@ export function StakePrincipalTokensDrawer({
         trancheCryptoAsset?.type === CryptoAssetType.ERC20PERMIT ? (
           <WalletApprovalCallout
             account={account}
+            spenderAddress={balancerVault?.address}
             cryptoAsset={trancheCryptoAsset}
             approvalAmount={principalTokenInBigNumber}
             signer={signer}

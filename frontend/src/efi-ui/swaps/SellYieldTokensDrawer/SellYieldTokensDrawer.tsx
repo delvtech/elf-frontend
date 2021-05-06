@@ -50,10 +50,7 @@ export function SellYieldTokensDrawer(
   props: SellYieldTokensDrawerProps
 ): ReactElement {
   const {
-    connector,
-    walletConnectionActive,
     library,
-    chainId,
     account,
     baseAsset,
     baseAssetIcon,
@@ -159,11 +156,8 @@ export function SellYieldTokensDrawer(
       account={account}
       assetIn={assetIn}
       assetInSymbol={assetInSymbol}
-      walletConnectionActive={walletConnectionActive}
       walletApprovalMessageRenderer={getBalancerApprovalMessage}
       amountIn={amountInAsBigNumber}
-      chainId={chainId}
-      connector={connector}
       library={library}
       onConfirmTransaction={onConfirmSellPrincipalTokens}
       transactionDetails={

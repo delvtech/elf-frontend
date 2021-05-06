@@ -158,10 +158,7 @@ export function SwapTokensTransactionConfirmationDrawer({
       account={account}
       assetIn={tokenInAsset}
       assetInSymbol={tokenInSymbol}
-      walletConnectionActive={walletConnectionActive}
       amountIn={amountInAsBigNumber}
-      chainId={chainId}
-      connector={connector}
       library={library}
       onConfirmTransaction={onConfirmSwapTokens}
       walletApprovalMessageRenderer={getBalancerApprovalMessage}

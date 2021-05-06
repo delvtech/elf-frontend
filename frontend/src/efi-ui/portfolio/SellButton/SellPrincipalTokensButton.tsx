@@ -58,12 +58,9 @@ export function SellPrincipalTokensButton({
           account={account}
           baseAsset={baseAsset}
           baseAssetIcon={baseAssetIcon}
-          chainId={chainId}
-          connector={connector}
           library={library}
           onClose={() => setDrawerOpen(false)}
           pool={pool}
-          walletConnectionActive={walletConnectionActive}
         />
       )}
     </Fragment>
