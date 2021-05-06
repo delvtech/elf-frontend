@@ -11,6 +11,7 @@ import {
 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
+import { Link } from "@reach/router";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import classNames from "classnames";
 import { InterestToken } from "elf-contracts/types/InterestToken";
@@ -28,7 +29,6 @@ import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryp
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
 import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
-import { calculateProgress } from "efi/base/calculateProgress";
 import { GoToMarketButton } from "efi-ui/portfolio/PrincipalTokenCard/GoToMarketButton";
 import { MaturityTimeBar } from "efi-ui/portfolio/PrincipalTokenCard/MaturityTimeBar";
 import { RedeemYieldTokensButton } from "efi-ui/portfolio/RedeemButton/RedeemYieldTokensButton";
@@ -36,16 +36,17 @@ import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
 import { useBaseAssetForTranche } from "efi-ui/tranche/useBaseAssetForTranche";
+import { useTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
 import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
 import { useTrancheForInterestToken } from "efi-ui/tranche/useTrancheForInterestToken";
 import { useUnderlyingVaultForTranche } from "efi-ui/tranche/useUnderlyingVaultForTranche";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
+import { calculateProgress } from "efi/base/calculateProgress";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
 import { formatPercent } from "efi/base/formatPercent";
-import { CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { formatMoney } from "efi/money/formatMoney";
-import { Link } from "@reach/router";
+import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 
 interface YieldTokenCardProps {
   library: Web3Provider | undefined;
@@ -121,15 +122,7 @@ export function YieldTokenCard({
 
   const BaseAssetIcon = findAssetIcon(baseAssetSymbol);
 
-  // TODO: Proof of concept for now, this should be done w/ a lookup against a
-  // list of mainnet addresses
-  let vaultSymbol: string | undefined;
-  if (baseAsset?.type === CryptoAssetType.ETHEREUM) {
-    vaultSymbol = "yvWETH";
-  } else if (baseAsset?.type === CryptoAssetType.ERC20PERMIT) {
-    vaultSymbol = "yvUSDC";
-  }
-
+  const vaultSymbol = getVaultSymbol(baseAsset);
   const { data: yearnVault } = useYearnVault(vaultSymbol);
   const { name: vaultName } = yearnVault || {};
 
@@ -141,6 +134,11 @@ export function YieldTokenCard({
     : t`Loading unlock date...`;
   const progress = calculateProgress(createdAtDate, unlockDate);
   const tableRowLink = getTableRowLink(vaultContract?.address, vaultName);
+
+  const { symbol: termAssetSymbol } = useTermAssetSymbol(
+    yieldToken.address,
+    vaultSymbol
+  );
 
   return (
     <div>
@@ -230,7 +228,7 @@ export function YieldTokenCard({
               className={tw("flex", "justify-center", "items-center")}
               bold
               textClassName={tw("text-2xl")}
-              text={`${yieldTokenBalance.toFixed(6)} yt${baseAssetSymbol}`}
+              text={`${yieldTokenBalance.toFixed(6)} ${termAssetSymbol}`}
               label={t`1 Yield Token = yield on 1 ${baseAssetSymbol} at maturity`}
             />
           </Callout>
