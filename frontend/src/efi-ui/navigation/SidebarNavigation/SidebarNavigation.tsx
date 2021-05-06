@@ -108,23 +108,6 @@ export function SidebarNavigation({
             }
           />
           <Tab
-            id={Navigation.PORTFOLIO}
-            title={
-              <div className={tabTitleClassName}>
-                <Icon
-                  icon={IconNames.TIMELINE_AREA_CHART}
-                  iconSize={IconSize.STANDARD}
-                />
-                <span
-                  className={tw("flex", "w-full", "justify-between")}
-                >{t`Portfolio`}</span>
-                {hasPendingTransaction ? (
-                  <Spinner size={SpinnerSize.SMALL} />
-                ) : null}
-              </div>
-            }
-          />
-          <Tab
             id={Navigation.PRINCIPAL_POOLS}
             title={
               <div className={tabTitleClassName}>
@@ -142,6 +125,23 @@ export function SidebarNavigation({
                   iconSize={IconSize.STANDARD}
                 />
                 <span>{t`Yield`}</span>
+              </div>
+            }
+          />
+          <Tab
+            id={Navigation.PORTFOLIO}
+            title={
+              <div className={tabTitleClassName}>
+                <Icon
+                  icon={IconNames.TIMELINE_AREA_CHART}
+                  iconSize={IconSize.STANDARD}
+                />
+                <span
+                  className={tw("flex", "w-full", "justify-between")}
+                >{t`Portfolio`}</span>
+                {hasPendingTransaction ? (
+                  <Spinner size={SpinnerSize.SMALL} />
+                ) : null}
               </div>
             }
           />
