@@ -64,7 +64,8 @@ export function useTotalFiatLiquidityForPool(
     yieldAssetBalance === undefined ||
     yieldAssetDecimals === undefined
   ) {
-    return undefined;
+    // if there is no yield assets in the pool, then we just show the base fiat balance
+    return baseAssetFiatBalance;
   }
 
   const yieldAssetPrice = Money.fromDecimal(
