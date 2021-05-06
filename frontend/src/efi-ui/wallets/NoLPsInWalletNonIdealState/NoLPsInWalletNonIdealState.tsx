@@ -9,21 +9,13 @@ import { Navigation } from "efi-ui/navigation/navigation";
 
 export function NoLPsInWalletNonIdealState(): ReactElement {
   const { changeTab } = useNavigation();
-  const goToExchange = useCallback(
-    () => changeTab(Navigation.PRINCIPAL_POOLS),
-    [changeTab]
-  );
+  const goToExchange = useCallback(() => changeTab(Navigation.YIELD_POOLS), [
+    changeTab,
+  ]);
   return (
     <NonIdealState
       icon={IconNames.BANK_ACCOUNT}
-      description={t`This wallet does not contain any Liquidity Positions.`}
-      action={
-        <Button
-          outlined
-          large
-          onClick={goToExchange}
-        >{t`Go to Exchange`}</Button>
-      }
+      description={t`This wallet does not contain any Liquidity Positions. Stake your portfolio Yield and Principal tokens.`}
     />
   );
 }
