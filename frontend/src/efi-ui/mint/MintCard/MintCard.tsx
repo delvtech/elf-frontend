@@ -187,7 +187,7 @@ export function MintCard(props: MintCardProps): ReactElement | null {
         <div className={tw("text-lg")}>Stake Your Tokens or Sell Principal</div>
       </div>
       <div className={tw("flex", "pl-12", "pt-2", "mb-6", "items-center")}>
-        <div className={"ml-10 bp3-text-muted text-sm"}>
+        <div className={"ml-10 text-sm"}>
           Go to the{" "}
           <Link to={`/portfolio`} onClick={stopPropagationHandler}>
             Portfolio Page

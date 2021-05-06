@@ -1,10 +1,13 @@
 import React, { ReactElement } from "react";
 
-import { formatDistance, formatDuration, intervalToDuration } from "date-fns";
+import { formatDuration, intervalToDuration, format } from "date-fns";
 import { t } from "ttag";
+import { Classes, Intent, ProgressBar, Tag } from "@blueprintjs/core";
+import classNames from "classnames";
 
-import { LabeledProgressBar } from "efi-ui/base/LabeledProgressBar/LabeledProgressBar";
 import { calculateProgress } from "efi/base/calculateProgress";
+
+import tw from "efi-tailwindcss-classnames";
 
 interface TimeLeftProps {
   /**
@@ -15,29 +18,52 @@ interface TimeLeftProps {
    * unix time in ms
    */
   maturityDate: number | undefined;
-
-  label?: string;
 }
 
 export function TimeLeft(props: TimeLeftProps): ReactElement {
-  const { startDate = 0, maturityDate = 0, label } = props;
+  const { startDate = 0, maturityDate = 0 } = props;
   const progress = calculateProgress(startDate, maturityDate);
   const timeLeft = getTimeLeft(maturityDate);
-  const timeSince = getTimeSince(maturityDate);
-  const time = progress > 1 ? timeSince : timeLeft;
 
   if (!startDate || !maturityDate) {
     return <span>{t`loading`}</span>;
   }
 
+  const isMatured = Date.now() > maturityDate;
+  const intent = isMatured ? Intent.SUCCESS : Intent.PRIMARY;
+
   return (
-    <LabeledProgressBar
-      showProgress={maturityDate > Date.now()}
-      label={label}
-      progressValue={progress}
-      helperText={time}
-      subHelperText={"Jul 30, 2020"}
-    />
+    <div className={tw("h-full", "w-full", "space-y-2")}>
+      {isMatured ? (
+        <div>
+          <Tag intent={Intent.SUCCESS} className={tw("mr-4", "flex-grow-0")}>
+            Matured
+          </Tag>
+        </div>
+      ) : (
+        <Tag intent={Intent.PRIMARY} className={tw("mr-4", "flex-grow-0")}>
+          Running
+        </Tag>
+      )}
+      {!isMatured ? (
+        <ProgressBar
+          intent={intent}
+          animate={false}
+          stripes={false}
+          value={progress}
+        />
+      ) : null}
+      <div
+        className={classNames(Classes.TEXT_MUTED, tw("text-sm", "truncate"))}
+      >
+        {format(maturityDate, "MMM d, y")}
+      </div>
+      <div
+        className={classNames(Classes.TEXT_MUTED, tw("text-sm", "truncate"))}
+      >
+        {timeLeft}
+      </div>
+    </div>
   );
 }
 
@@ -61,9 +87,4 @@ function getTimeLeft(end: number): string {
   });
 
   return timeLeft;
-}
-
-function getTimeSince(end: number): string {
-  const now = Date.now();
-  return formatDistance(end, now, { addSuffix: true });
 }

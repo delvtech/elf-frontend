@@ -159,16 +159,16 @@ export function TopbarNavigation({
                 onChange={changeTab}
               >
                 <Tab
-                  id={Navigation.PORTFOLIO}
-                  className={tw("text-center")}
-                  style={tabStyle}
-                  title={t`Portfolio`}
-                />
-                <Tab
                   id={Navigation.EARN}
                   className={tw("text-center")}
                   style={tabStyle}
                   title={t`Earn`}
+                />
+                <Tab
+                  id={Navigation.DEPOSIT}
+                  className={tw("text-center")}
+                  style={tabStyle}
+                  title={t`Deposit`}
                 />
                 <Tab
                   id={Navigation.PRINCIPAL_POOLS}
@@ -183,10 +183,10 @@ export function TopbarNavigation({
                   title={t`Yield`}
                 />
                 <Tab
-                  id={Navigation.DEPOSIT}
+                  id={Navigation.PORTFOLIO}
                   className={tw("text-center")}
                   style={tabStyle}
-                  title={t`Deposit`}
+                  title={t`Portfolio`}
                 />
                 <Tab
                   id={Navigation.RESOURCES}

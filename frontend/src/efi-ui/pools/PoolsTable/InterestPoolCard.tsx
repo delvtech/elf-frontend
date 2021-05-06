@@ -13,7 +13,6 @@ import {
   Colors,
   Elevation,
   Intent,
-  Tag,
 } from "@blueprintjs/core";
 import { Link, navigate } from "@reach/router";
 import classNames from "classnames";
@@ -59,7 +58,7 @@ interface InterestPoolCardProps {
 
 const cellClassName = tw("flex", "mr-4", "items-center", "overflow-hidden");
 
-const poolCardStyle: CSSProperties = { maxWidth: 1180, minWidth: 560 };
+const poolCardStyle: CSSProperties = { maxWidth: 1180, minWidth: 800 };
 // Stop propagation of clicks from the card title up to the card itself,
 // otherwise you get double routed to /exchange/exchange/0xdeadbeef
 const stopPropagationHandler = (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -96,9 +95,12 @@ export function InterestPoolCard(
   const [baseAssetPrice] = useTokenPrice(baseAssetContract, currency);
   const spotPrice = usePoolSpotPrice(pool, termAssetContract) ?? 0;
 
+  const symbolQuery = baseAssetSymbol === "ETH" ? "WETH" : baseAssetSymbol;
+
   const { data: vaultInfo } = useYearnVault(
-    baseAssetSymbol ? t`yv${baseAssetSymbol}` : undefined
+    symbolQuery ? t`yv${symbolQuery}` : undefined
   );
+
   const { displayName, type } = vaultInfo || {};
 
   const { isDarkMode } = useDarkMode();
@@ -202,14 +204,7 @@ export function InterestPoolCard(
         )}
       >
         <div
-          className={tw(
-            cellClassName,
-            "col-span-2",
-            "sm:mr-0",
-            "md:col-span-1",
-            "xl:ml-4",
-            "items-center"
-          )}
+          className={tw(cellClassName, "col-span-1", "xl:ml-4", "items-center")}
         >
           {BaseAssetIcon && baseAsset?.type === CryptoAssetType.ETHEREUM ? (
             <div
@@ -249,14 +244,7 @@ export function InterestPoolCard(
           ) : null}
         </div>
         <div
-          className={tw(
-            cellClassName,
-            "col-span-3",
-            "md:pl-2",
-            "lg:pl-0",
-            "md:col-span-2",
-            "lg:col-span-1"
-          )}
+          className={tw(cellClassName, "col-span-2", "pl-2", "xl:col-span-1")}
         >
           <LabeledText
             text={
@@ -271,41 +259,29 @@ export function InterestPoolCard(
             label={t`tokens`}
           />
         </div>
+        <div className={tw(cellClassName, "col-span-2", "xl:col-span-1")}>
+          <LabeledText
+            text={t`Yearn ${displayName} ${type}`}
+            label={t`Vault`}
+          />
+        </div>
         <div
           className={tw(
             cellClassName,
             "col-span-2",
             "lg:col-span-2",
-            "xl:col-span-1",
-            "lg:col-span-1"
-          )}
-        >
-          <LabeledText text={t`${displayName} ${type}`} label={t`Vault`} />
-        </div>
-        <div
-          className={tw(
-            cellClassName,
-            "col-span-2",
-            "md:col-span-2",
-            "lg:col-span-1"
+            "xl:col-span-1"
           )}
         >
           <LabeledText text={t`${termLength} Day`} label={t`Term`} />
         </div>
-        <div
-          className={tw(
-            cellClassName,
-            "col-span-2",
-            "md:col-span-2",
-            "lg:col-span-1"
-          )}
-        >
+        <div className={tw(cellClassName, "col-span-2", "xl:col-span-1")}>
           <LabeledText
             text={t`${formatPercent(variableYield)}`}
             label={t`Vault APY`}
           />
         </div>
-        <div className={tw(cellClassName, "col-span-3", "md:col-span-2")}>
+        <div className={tw(cellClassName, "col-span-2")}>
           <LabeledText
             text={formatMoney(liquidity, { wholeAmounts: true })}
             label={t`Pool Liquidity`}
@@ -315,12 +291,10 @@ export function InterestPoolCard(
           className={tw(
             cellClassName,
             "col-span-2",
-            "sm:col-start-auto",
-            "md:col-start-2",
-            "lg:col-start-auto",
-            "md:col-span-2",
+            "col-start-4",
+            "xl:col-start-auto",
             "xl:col-span-1",
-            "xl:-ml-12"
+            "xl:-ml-6"
           )}
         >
           <LabeledText
@@ -334,12 +308,8 @@ export function InterestPoolCard(
           className={tw(
             cellClassName,
             "col-span-2",
-            "sm:col-start-auto",
-            "md:col-span-2",
-            "lg:-ml-8",
-            "xl:ml-0",
-            "lg:col-span-1",
-            "xl:-ml-12"
+            "xl:col-span-1",
+            "xl:-ml-6"
           )}
         >
           <LabeledText
@@ -351,39 +321,13 @@ export function InterestPoolCard(
           className={tw(
             cellClassName,
             "overflow-visible",
-            "-ml-8",
-            "sm:ml-0",
-            "col-span-4",
-            "sm:col-span-3",
-            "md:col-span-5",
-            "lg:col-start-5",
-            "lg:col-span-4",
-            "xl:col-start-auto",
-            "xl:col-span-2",
-            "xl:-ml-12"
+            "col-span-3",
+            "lg:col-span-3",
+            "xl:col-span-2"
           )}
         >
-          <div className={tw("flex", "w-full")}>
-            <div>
-              {startTime && maturityTime && Date.now() < maturityTime ? (
-                <Tag
-                  intent={Intent.PRIMARY}
-                  className={tw("mr-4", "flex-grow-0")}
-                >
-                  Running
-                </Tag>
-              ) : (
-                <Tag
-                  intent={Intent.SUCCESS}
-                  className={tw("mr-4", "flex-grow-0")}
-                >
-                  Matured
-                </Tag>
-              )}
-            </div>
-            <div className={tw("flex-1", "-mt-2")}>
-              <TimeLeft startDate={startTime} maturityDate={maturityTime} />
-            </div>
+          <div className={tw("flex", "w-full", "items-start")}>
+            <TimeLeft startDate={startTime} maturityDate={maturityTime} />
           </div>
         </div>
       </div>
