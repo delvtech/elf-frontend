@@ -11,7 +11,7 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
+import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { StakingConfirmationDrawer } from "efi-ui/pools/StakeTokensConfirmationDrawer/StakeTokensConfirmationDrawer";
@@ -78,8 +78,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
 
   // use this hook to make sure we get the ETH icon if the base asset it WETH
   const cryptoAsset = useCryptoAssetForToken(baseAssetContract?.address);
-  const cryptoAssetSymbol = useCryptoSymbol(cryptoAsset);
-  const BaseAssetIcon = findAssetIcon(cryptoAssetSymbol);
+  const BaseAssetIcon = findAssetIcon2(cryptoAsset);
 
   const {
     asset: yieldAsset,
@@ -320,7 +319,7 @@ function useTokenInfoForTradeInput(
     baseAssetSymbol
   );
   const symbol = termAssetSymbol ?? baseAssetSymbol;
-  const icon = findAssetIcon(baseAssetSymbol);
+  const icon = findAssetIcon2(asset);
 
   // otherwise get values from token calls
   const poolBalance = useTokenPoolBalance(pool, tokenContract);
