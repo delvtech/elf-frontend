@@ -1,12 +1,5 @@
-import abi from "ethereumjs-abi";
-import { BigNumber, Signer } from "ethers";
-import {
-  defaultAbiCoder,
-  formatEther,
-  formatUnits,
-  parseEther,
-  parseUnits,
-} from "ethers/lib/utils";
+import { Signer } from "ethers";
+import { defaultAbiCoder, parseUnits } from "ethers/lib/utils";
 
 import { Tranche } from "src/types/Tranche";
 import { USDC } from "src/types/USDC";
