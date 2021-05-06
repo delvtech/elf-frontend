@@ -31,6 +31,10 @@ import { useFeeVolumeForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolu
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidityForPool.ts/useTotalFiatLiquidityForPool";
 import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForPool";
+import {
+  usePoolViewPoolActionsTab,
+  PoolAction,
+} from "efi-ui/pools/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
 import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
@@ -87,10 +91,6 @@ export function InterestPoolCard(
   const { currency } = useCurrencyPref();
   const [baseAssetPrice] = useTokenPrice(baseAssetContract, currency);
   const spotPrice = usePoolSpotPrice(pool, termAssetContract) ?? 0;
-  // TODO: Get this from props
-  const goToPoolPage = useCallback(() => {
-    navigate(`pools/${pool?.address}`);
-  }, [pool?.address]);
 
   const { data: vaultInfo } = useYearnVault(
     baseAssetSymbol ? t`yv${baseAssetSymbol}` : undefined
@@ -98,6 +98,18 @@ export function InterestPoolCard(
   const { displayName, type } = vaultInfo || {};
 
   const { isDarkMode } = useDarkMode();
+
+  const { setTab } = usePoolViewPoolActionsTab();
+
+  const goToTrade = useCallback(() => {
+    setTab(PoolAction.SWAP);
+    navigate(`pools/${pool?.address}`);
+  }, [pool?.address, setTab]);
+
+  const goToStake = useCallback(() => {
+    setTab(PoolAction.STAKE);
+    navigate(`pools/${pool?.address}`);
+  }, [pool?.address, setTab]);
 
   // TODO: this is a big hammer for loading state.  we should use a more granular technique when we can.
   const dataToLoad = [
@@ -143,7 +155,6 @@ export function InterestPoolCard(
       <Card
         elevation={Elevation.TWO}
         interactive
-        onClick={goToPoolPage}
         style={poolCardStyle}
         className={classNames(
           Classes.SKELETON,
@@ -367,15 +378,21 @@ export function InterestPoolCard(
         </div>
       </div>
       <div
-        className={tw("flex", "flex-col", "overflow-visible", "items-start")}
+        className={tw(
+          "flex",
+          "flex-col",
+          "overflow-visible",
+          "items-start",
+          maturityTime && Date.now() < maturityTime ? "visible" : "invisible"
+        )}
       >
         <div className={tw("mb-2")}>
-          <Button minimal outlined intent={"primary"}>
+          <Button minimal outlined intent={"primary"} onClick={goToTrade}>
             {t`Trade`}
           </Button>
         </div>
         <div>
-          <Button minimal outlined intent={"primary"}>
+          <Button minimal outlined intent={"primary"} onClick={goToStake}>
             {t`Stake`}
           </Button>
         </div>

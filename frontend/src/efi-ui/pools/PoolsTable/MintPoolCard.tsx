@@ -72,13 +72,13 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
   const principalPool = usePoolForToken(tranche);
   const {
     termAssetContract: principalTokenContract,
-  } = useParseSortedTokensForPool(pool);
+  } = useParseSortedTokensForPool(principalPool);
   const liquidity = useTotalFiatLiquidityForPool(pool);
   const principalLiquidity = useTotalFiatLiquidityForPool(principalPool);
   const principalPrice = usePoolSpotPrice(
     principalPool,
     principalTokenContract
-  );
+  )?.toFixed(4);
   const trancheCreatedAt = useTrancheCreatedAt(tranche);
   const fees = useFeeVolumeForPool(pool) ?? 0;
   const baseAssetContract = useBaseAssetForPool(pool);

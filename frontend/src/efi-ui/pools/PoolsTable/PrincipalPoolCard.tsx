@@ -1,4 +1,11 @@
-import { CSSProperties, ReactElement, useEffect, useState } from "react";
+import {
+  CSSProperties,
+  Fragment,
+  ReactElement,
+  useEffect,
+  useState,
+  useCallback,
+} from "react";
 
 import {
   Button,
@@ -8,7 +15,7 @@ import {
   Elevation,
   Tag,
 } from "@blueprintjs/core";
-import { Link } from "@reach/router";
+import { Link, navigate } from "@reach/router";
 import classNames from "classnames";
 import { differenceInDays } from "date-fns";
 import { t } from "ttag";
@@ -23,6 +30,10 @@ import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSy
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 import { useFeeVolumeFiatForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
+import {
+  usePoolViewPoolActionsTab,
+  PoolAction,
+} from "efi-ui/pools/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
 import { useTokenYield } from "efi-ui/pools/useTokenYield";
 import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidityForPool.ts/useTotalFiatLiquidityForPool";
 import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForPool";
@@ -74,6 +85,18 @@ export function PrincipalPoolCard(
   const stakingYield = useStakingAPY(pool);
 
   const { isDarkMode } = useDarkMode();
+
+  const { setTab } = usePoolViewPoolActionsTab();
+
+  const goToTrade = useCallback(() => {
+    setTab(PoolAction.SWAP);
+    navigate(`pools/${pool?.address}`);
+  }, [pool?.address, setTab]);
+
+  const goToStake = useCallback(() => {
+    setTab(PoolAction.STAKE);
+    navigate(`pools/${pool?.address}`);
+  }, [pool?.address, setTab]);
 
   const dataToLoad = [
     tranche,
@@ -320,15 +343,23 @@ export function PrincipalPoolCard(
         </div>
       </div>
       <div
-        className={tw("flex", "flex-col", "overflow-visible", "items-start")}
+        className={tw(
+          "flex",
+          "flex-col",
+          "overflow-visible",
+          "items-start",
+          maturityTime && Date.now() < maturityTime ? "visible" : "invisible"
+        )}
       >
         <div className={tw("mb-2")}>
-          <Button minimal outlined intent={"primary"}>
+          <Button minimal outlined intent={"primary"} onClick={goToTrade}>
             {t`Trade`}
           </Button>
         </div>
-        <div>
-          <Button minimal outlined intent={"primary"}>
+        <div
+          className={maturityTime && maturityTime < Date.now() ? "hidden" : ""}
+        >
+          <Button minimal outlined intent={"primary"} onClick={goToStake}>
             {t`Stake`}
           </Button>
         </div>
