@@ -27,12 +27,12 @@ export function useTermAssetSymbol(
   if (principalAddresses.includes(termAssetAddress ?? "")) {
     return {
       label: t`${baseAssetSymbol} Principal Token`,
-      symbol: t`pt${baseAssetSymbol}`,
+      symbol: t`eP${baseAssetSymbol}`,
     };
   } else if (interestTokenAddresses.includes(termAssetAddress ?? "")) {
     return {
       label: t`${baseAssetSymbol} Yield Token`,
-      symbol: t`yt${baseAssetSymbol}`,
+      symbol: t`eY${baseAssetSymbol}`,
     };
   }
 
