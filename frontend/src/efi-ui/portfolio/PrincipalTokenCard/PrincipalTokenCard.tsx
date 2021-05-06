@@ -10,6 +10,7 @@ import {
 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
+import { Link } from "@reach/router";
 import classNames from "classnames";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { jt, t } from "ttag";
@@ -28,21 +29,20 @@ import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolToken
 import { RedeemPrincipalTokensButton } from "efi-ui/portfolio/RedeemButton/RedeemPrincipalTokensButton";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
-import { calculateProgress } from "efi/base/calculateProgress";
 import { useBaseAssetForTranche } from "efi-ui/tranche/useBaseAssetForTranche";
+import { useTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
 import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
 import { useUnderlyingVaultForTranche } from "efi-ui/tranche/useUnderlyingVaultForTranche";
+import { calculateProgress } from "efi/base/calculateProgress";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
+import { formatPercent } from "efi/base/formatPercent";
 import { formatMoney } from "efi/money/formatMoney";
 import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
+import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 
 import { GoToMarketButton } from "./GoToMarketButton";
 import { MaturityTimeBar } from "./MaturityTimeBar";
-import { formatPercent } from "efi/base/formatPercent";
-import { Link } from "@reach/router";
-import { useTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
-import { CryptoAssetType } from "efi/crypto/CryptoAsset";
 
 interface PrincipalTokenCardProps {
   chainId: number | undefined;
@@ -123,14 +123,7 @@ export function PrincipalTokenCard(
     );
   }
 
-  // TODO: Proof of concept for now, this should be done w/ a lookup against a
-  // list of mainnet addresses
-  let vaultSymbol: string | undefined;
-  if (baseAsset?.type === CryptoAssetType.ETHEREUM) {
-    vaultSymbol = "yvWETH";
-  } else if (baseAsset?.type === CryptoAssetType.ERC20PERMIT) {
-    vaultSymbol = "yvUSDC";
-  }
+  const vaultSymbol: string | undefined = getVaultSymbol(baseAsset);
 
   const { symbol: termAssetSymbol } = useTermAssetSymbol(
     tranche.address,
