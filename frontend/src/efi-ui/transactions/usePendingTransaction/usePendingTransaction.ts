@@ -47,6 +47,7 @@ function useClearPendingTransactionOnMined(
       return;
     }
 
+    let timeout: NodeJS.Timeout;
     jsonRpcProvider.getTransaction(transactionHash).then(({ blockHash }) => {
       // if the transaction is included in a block then it was successful, so we
       // clear the pending tx hash.
@@ -59,11 +60,12 @@ function useClearPendingTransactionOnMined(
 
       // Otherwise set a handler that will clear the pref when it is mined
       provider?.once(transactionHash, () => {
-        const timeout = setTimeout(() => {
+        timeout = setTimeout(() => {
           return clearPendingTransactionPref();
         }, CLEAR_PENDING_DELAY);
-        return () => clearTimeout(timeout);
       });
     });
+
+    return () => clearTimeout(timeout);
   }, [clearPendingTransactionPref, provider, transactionHash]);
 }
