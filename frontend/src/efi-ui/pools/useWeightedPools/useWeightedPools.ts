@@ -5,10 +5,11 @@ import { WeightedPool } from "elf-contracts/types/WeightedPool";
 import { Signer } from "ethers";
 
 import { useSmartContractEvents } from "efi-ui/contracts/useSmartContractEvents/useSmartContractEvents";
-import ContractAddresses from "efi/addresses";
+import ContractAddresses, { safeList } from "efi/addresses";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
 
+const EMPTY_ARRAY: (WeightedPool | undefined)[] = [];
 export function useWeightedPools(
   signerOrProvider?: Signer | Provider
 ): (WeightedPool | undefined)[] {
@@ -26,12 +27,16 @@ export function useWeightedPools(
   );
 
   const weightedPoolContracts =
-    events?.map<WeightedPool>((event) =>
-      WeightedPool__factory.connect(
-        event.args?.pool,
-        signerOrProvider ?? jsonRpcProvider
+    events
+      ?.map<WeightedPool>((event) =>
+        WeightedPool__factory.connect(
+          event.args?.pool,
+          signerOrProvider ?? jsonRpcProvider
+        )
       )
-    ) || [];
+      .filter(
+        (pool): pool is WeightedPool => pool && safeList.includes(pool.address)
+      ) || EMPTY_ARRAY;
 
   return weightedPoolContracts;
 }
