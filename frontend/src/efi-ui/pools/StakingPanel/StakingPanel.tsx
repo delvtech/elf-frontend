@@ -114,15 +114,13 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
   const isValidBaseAssetValue = validateStakingValue(
     amountIn,
     baseAssetBalanceOf,
-    baseAssetDecimals,
-    baseAssetPoolBalance
+    baseAssetDecimals
   );
 
   const isValidTrancheAssetValue = validateStakingValue(
     amountOut,
     yieldAssetBalanceOf,
-    yieldAssetDecimals,
-    yieldAssetPoolBalance
+    yieldAssetDecimals
   );
 
   const [isDrawerOpen, setDrawerOpen] = useState(false);
@@ -170,19 +168,10 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
       yieldAssetBalanceOf ?? 0
     );
 
-  const insufficientPoolBalance =
-    parseUnits(amountIn ?? "0", baseAssetDecimals).gt(
-      baseAssetPoolBalance ?? 0
-    ) ||
-    parseUnits(amountOut ?? "0", yieldAssetDecimals).gt(
-      yieldAssetPoolBalance ?? 0
-    );
-
   const submitButtonDisabled =
     formDisabled ||
     submitDisabled ||
     insufficientBalance ||
-    insufficientPoolBalance ||
     !isValidBaseAssetValue ||
     !isValidTrancheAssetValue ||
     !amountIn ||
@@ -196,10 +185,6 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
   if (insufficientBalance && account) {
     submitButtonError = true;
     submitButtonLabel = t`Insufficient balance`;
-  }
-  if (insufficientPoolBalance && account) {
-    submitButtonError = true;
-    submitButtonLabel = t`Insufficient pool liquidity`;
   }
   if (!account) {
     submitButtonLabel = t`Connect wallet`;
