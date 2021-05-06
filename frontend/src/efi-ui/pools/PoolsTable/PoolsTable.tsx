@@ -2,7 +2,6 @@ import { Fragment, ReactElement } from "react";
 
 import { Provider } from "@ethersproject/providers";
 import { Signer } from "ethers";
-import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { PrincipalPoolCard } from "efi-ui/pools/PoolsTable/PrincipalPoolCard";
@@ -24,14 +23,6 @@ export function PoolsTable({
 }: PoolsTableProps): ReactElement {
   const principalTokenPools = useConvergentCurvePools(signerOrProvider);
   const interestTokenPools = useWeightedPools(signerOrProvider);
-
-  if (isYieldPools && !interestTokenPools.length) {
-    return <span>{t`no markets found`}</span>;
-  }
-
-  if (!isYieldPools && !principalTokenPools.length) {
-    return <span>{t`no markets found`}</span>;
-  }
 
   return (
     <div

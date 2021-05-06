@@ -29,7 +29,7 @@ interface MintTransactionConfirmationDrawerProps {
   library: Web3Provider | undefined;
 
   amountIn: string | undefined;
-  baseAsset: CryptoAsset;
+  baseAsset: CryptoAsset | undefined;
   baseAssetIcon: TokenIcon | undefined;
 
   tranche: Tranche | undefined;

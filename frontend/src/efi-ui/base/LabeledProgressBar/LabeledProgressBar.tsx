@@ -10,13 +10,17 @@ interface LabeledProgressBarProps {
   label?: string;
 
   helperText?: string;
+  subHelperText?: string;
   intent?: Intent;
+  showProgress: boolean;
 }
 export function LabeledProgressBar({
   helperText,
+  subHelperText,
   intent,
   label,
   progressValue,
+  showProgress,
 }: LabeledProgressBarProps): ReactElement {
   return (
     <div
@@ -31,17 +35,26 @@ export function LabeledProgressBar({
       )}
     >
       <span>{label}</span>
-      <ProgressBar
-        intent={intent}
-        animate={false}
-        stripes={false}
-        value={progressValue}
-      />
+      {showProgress ? (
+        <ProgressBar
+          intent={intent}
+          animate={false}
+          stripes={false}
+          value={progressValue}
+        />
+      ) : null}
       {!!helperText && (
         <span
           className={classNames(Classes.TEXT_MUTED, tw("text-sm", "truncate"))}
         >
           {helperText}
+        </span>
+      )}
+      {!!subHelperText && (
+        <span
+          className={classNames(Classes.TEXT_MUTED, tw("text-sm", "truncate"))}
+        >
+          {subHelperText}
         </span>
       )}
     </div>

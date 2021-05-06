@@ -17,6 +17,7 @@ export function PoolsView(props: PoolsViewProps): ReactElement {
   const { library, account } = useWeb3React<Web3Provider>();
 
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
+
   const isYieldPage = props.path === "yield";
   const title = isYieldPage ? t`Yield Token Pools` : t`Principal Token Pools`;
   const subtitle = isYieldPage

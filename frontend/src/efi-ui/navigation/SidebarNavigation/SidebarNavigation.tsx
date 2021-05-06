@@ -99,7 +99,7 @@ export function SidebarNavigation({
             }
           />
           <Tab
-            id={Navigation.MINT}
+            id={Navigation.DEPOSIT}
             title={
               <div className={tabTitleClassName}>
                 <Icon icon={IconNames.CUBE_ADD} iconSize={IconSize.STANDARD} />

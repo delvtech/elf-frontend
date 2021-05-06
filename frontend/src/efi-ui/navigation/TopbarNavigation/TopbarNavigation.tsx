@@ -183,10 +183,10 @@ export function TopbarNavigation({
                   title={t`Yield`}
                 />
                 <Tab
-                  id={Navigation.MINT}
+                  id={Navigation.DEPOSIT}
                   className={tw("text-center")}
                   style={tabStyle}
-                  title={t`Mint`}
+                  title={t`Deposit`}
                 />
                 <Tab
                   id={Navigation.RESOURCES}

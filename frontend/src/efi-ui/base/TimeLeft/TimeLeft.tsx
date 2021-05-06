@@ -32,9 +32,11 @@ export function TimeLeft(props: TimeLeftProps): ReactElement {
 
   return (
     <LabeledProgressBar
+      showProgress={maturityDate > Date.now()}
       label={label}
       progressValue={progress}
       helperText={time}
+      subHelperText={"Jul 30, 2020"}
     />
   );
 }
