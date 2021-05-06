@@ -1,4 +1,3 @@
-import abi from "ethereumjs-abi";
 import { Signer } from "ethers";
 import { defaultAbiCoder, parseUnits } from "ethers/lib/utils";
 
