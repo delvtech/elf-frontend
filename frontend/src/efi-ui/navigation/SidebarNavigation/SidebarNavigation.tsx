@@ -19,10 +19,10 @@ import logo from "efi-static-assets/logos/svg/logo-vertical--light.svg";
 import tw from "efi-tailwindcss-classnames";
 import { Navigation } from "efi-ui/navigation/navigation";
 import { DarkModeSwitch } from "efi-ui/prefs/DarkModeSwitch/DarkModeSwitch";
-import { usePendingTransaction } from "efi-ui/transactions/usePendingTransaction/usePendingTransaction";
 
 import { ConnectWalletButton } from "./ConnectWalletButton";
 import styles from "./SidebarNavigation.module.css";
+import { usePendingTransactionPref } from "efi-ui/transactions/usePendingTransactionPref/usePendingTransactionPref";
 
 interface SidebarNavigationProps {
   chainId: number | undefined;
@@ -52,7 +52,7 @@ export function SidebarNavigation({
   activeTab,
 }: SidebarNavigationProps): ReactElement {
   const [isWalletDialogOpen, setWalletDialogOpen] = useState(false);
-  const { transactionHash } = usePendingTransaction();
+  const { transactionHash } = usePendingTransactionPref();
   const hasPendingTransaction = !!transactionHash;
 
   return (

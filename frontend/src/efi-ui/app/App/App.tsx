@@ -18,6 +18,8 @@ import { useSyncWithInjectedEthereum } from "efi-ui/wallets/hooks/useSyncWithInj
 import { FocusStyleManager } from "@blueprintjs/core";
 
 import styles from "./App.module.css";
+import { useTransactionToasts } from "efi-ui/transactions/useTransactionToasts";
+import { useClearPendingTransactionOnMined } from "efi-ui/transactions/usePendingTransaction/useClearPendingTransaction";
 
 FocusStyleManager.onlyShowFocusOnTabs();
 
@@ -43,10 +45,11 @@ const App: FC<AppProps> = () => {
     tw("flex", "flex-col", "lg:flex-row", "w-full", "h-full")
   );
 
-  // Do this at the top in one place so we don't have multiple callers trying to
-  // set event handlers. TODO: clean this up so that it's more of a portable
-  // singleton and can live in useWallet and be called multiple times safely
+  // Do these at the top of the app in one place so we don't have multiple
+  // callers trying to set event handlers.
   useSyncWithInjectedEthereum();
+  useClearPendingTransactionOnMined();
+  useTransactionToasts();
 
   return (
     <Fragment>
