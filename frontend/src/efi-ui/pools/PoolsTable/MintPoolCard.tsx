@@ -7,6 +7,7 @@ import {
   Colors,
   Collapse,
   Elevation,
+  Intent,
   Tag,
 } from "@blueprintjs/core";
 import classNames from "classnames";
@@ -20,6 +21,7 @@ import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
+import { CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
@@ -199,7 +201,7 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
               "items-center"
             )}
           >
-            {BaseAssetIcon && baseAssetSymbol === "ETH" ? (
+            {BaseAssetIcon && baseAsset?.type === CryptoAssetType.ETHEREUM ? (
               <div
                 className={classNames(
                   tw(
@@ -330,11 +332,17 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
             <div className={tw("flex", "w-full")}>
               <div>
                 {startTime && maturityTime && Date.now() < maturityTime ? (
-                  <Tag intent="primary" className={tw("mr-4", "flex-grow-0")}>
+                  <Tag
+                    intent={Intent.PRIMARY}
+                    className={tw("mr-4", "flex-grow-0")}
+                  >
                     Running
                   </Tag>
                 ) : (
-                  <Tag intent="success" className={tw("mr-4", "flex-grow-0")}>
+                  <Tag
+                    intent={Intent.SUCCESS}
+                    className={tw("mr-4", "flex-grow-0")}
+                  >
                     Matured
                   </Tag>
                 )}
@@ -346,10 +354,16 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
           </div>
         </div>
         <div
-          className={tw("flex", "flex-col", "overflow-visible", "items-start")}
+          className={tw(
+            "flex",
+            "flex-col",
+            "overflow-visible",
+            "items-start",
+            maturityTime && Date.now() < maturityTime ? "visible" : "invisible"
+          )}
         >
           <Button
-            intent="primary"
+            intent={Intent.PRIMARY}
             minimal
             outlined
             active={isOpen}

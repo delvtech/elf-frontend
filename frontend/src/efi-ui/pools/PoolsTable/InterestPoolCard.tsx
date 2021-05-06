@@ -12,6 +12,7 @@ import {
   Classes,
   Colors,
   Elevation,
+  Intent,
   Tag,
 } from "@blueprintjs/core";
 import { Link, navigate } from "@reach/router";
@@ -21,6 +22,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
+import { CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
@@ -207,7 +209,7 @@ export function InterestPoolCard(
             "items-center"
           )}
         >
-          {BaseAssetIcon && baseAssetSymbol === "ETH" ? (
+          {BaseAssetIcon && baseAsset?.type === CryptoAssetType.ETHEREUM ? (
             <div
               className={classNames(
                 tw(
@@ -362,11 +364,17 @@ export function InterestPoolCard(
           <div className={tw("flex", "w-full")}>
             <div>
               {startTime && maturityTime && Date.now() < maturityTime ? (
-                <Tag intent="primary" className={tw("mr-4", "flex-grow-0")}>
+                <Tag
+                  intent={Intent.PRIMARY}
+                  className={tw("mr-4", "flex-grow-0")}
+                >
                   Running
                 </Tag>
               ) : (
-                <Tag intent="success" className={tw("mr-4", "flex-grow-0")}>
+                <Tag
+                  intent={Intent.SUCCESS}
+                  className={tw("mr-4", "flex-grow-0")}
+                >
                   Matured
                 </Tag>
               )}
@@ -387,12 +395,12 @@ export function InterestPoolCard(
         )}
       >
         <div className={tw("mb-2")}>
-          <Button minimal outlined intent={"primary"} onClick={goToTrade}>
+          <Button minimal outlined intent={Intent.PRIMARY} onClick={goToTrade}>
             {t`Trade`}
           </Button>
         </div>
         <div>
-          <Button minimal outlined intent={"primary"} onClick={goToStake}>
+          <Button minimal outlined intent={Intent.PRIMARY} onClick={goToStake}>
             {t`Stake`}
           </Button>
         </div>

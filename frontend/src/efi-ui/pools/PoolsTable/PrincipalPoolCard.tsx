@@ -1,6 +1,5 @@
 import {
   CSSProperties,
-  Fragment,
   ReactElement,
   useEffect,
   useState,
@@ -13,6 +12,7 @@ import {
   Classes,
   Colors,
   Elevation,
+  Intent,
   Tag,
 } from "@blueprintjs/core";
 import { Link, navigate } from "@reach/router";
@@ -26,6 +26,7 @@ import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
+import { CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 import { useFeeVolumeFiatForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
@@ -192,7 +193,7 @@ export function PrincipalPoolCard(
             "items-start"
           )}
         >
-          {BaseAssetIcon && baseAssetSymbol === "ETH" ? (
+          {BaseAssetIcon && baseAsset?.type === CryptoAssetType.ETHEREUM ? (
             <div
               className={classNames(
                 tw(
@@ -265,15 +266,7 @@ export function PrincipalPoolCard(
         >
           <LabeledText large text={t`${termLength} Day`} label={t`Term`} />
         </div>
-        <div
-          className={tw(
-            cellClassName,
-            "col-span-3",
-            "md:col-span-2",
-            "lg:col-span-2",
-            "xl:col-span-2"
-          )}
-        >
+        <div className={tw(cellClassName, "col-span-3", "md:col-span-2")}>
           <LabeledText
             large
             text={formatMoney(liquidity, { wholeAmounts: true })}
@@ -287,8 +280,7 @@ export function PrincipalPoolCard(
             "col-start-2",
             "md:col-start-auto",
             "md:col-span-2",
-            "xl:col-span-1",
-            "lg:col-span-2"
+            "xl:col-span-1"
           )}
         >
           <LabeledText
@@ -327,11 +319,17 @@ export function PrincipalPoolCard(
           <div className={tw("flex", "w-full")}>
             <div>
               {startTime && maturityTime && Date.now() < maturityTime ? (
-                <Tag intent="primary" className={tw("mr-4", "flex-grow-0")}>
+                <Tag
+                  intent={Intent.PRIMARY}
+                  className={tw("mr-4", "flex-grow-0")}
+                >
                   Running
                 </Tag>
               ) : (
-                <Tag intent="success" className={tw("mr-4", "flex-grow-0")}>
+                <Tag
+                  intent={Intent.SUCCESS}
+                  className={tw("mr-4", "flex-grow-0")}
+                >
                   Matured
                 </Tag>
               )}
@@ -352,14 +350,14 @@ export function PrincipalPoolCard(
         )}
       >
         <div className={tw("mb-2")}>
-          <Button minimal outlined intent={"primary"} onClick={goToTrade}>
+          <Button minimal outlined intent={Intent.PRIMARY} onClick={goToTrade}>
             {t`Trade`}
           </Button>
         </div>
         <div
           className={maturityTime && maturityTime < Date.now() ? "hidden" : ""}
         >
-          <Button minimal outlined intent={"primary"} onClick={goToStake}>
+          <Button minimal outlined intent={Intent.PRIMARY} onClick={goToStake}>
             {t`Stake`}
           </Button>
         </div>

@@ -1,7 +1,7 @@
 import React, { Fragment, ReactElement, useState } from "react";
 import { Link } from "@reach/router";
 
-import { Button, Callout } from "@blueprintjs/core";
+import { Button, Intent, Callout } from "@blueprintjs/core";
 import classNames from "classnames";
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
@@ -95,7 +95,7 @@ export function MintCard(props: MintCardProps): ReactElement | null {
   );
 
   const insufficientBalance = parseUnits(
-    amountInString ?? "0",
+    amountInString ?? t`0`,
     baseAssetDecimals
   ).gt(baseAssetBalance ?? 0);
 
@@ -149,8 +149,8 @@ export function MintCard(props: MintCardProps): ReactElement | null {
             )}
           >
             <LabeledText
-              text={`${numPrincipalTokensOut || 0} eP:yETH`}
-              label={`Principal Tokens`}
+              text={t`${numPrincipalTokensOut || 0} eP:yETH`}
+              label={t`Principal Tokens`}
             />
           </Callout>
           <Callout
@@ -160,8 +160,8 @@ export function MintCard(props: MintCardProps): ReactElement | null {
             )}
           >
             <LabeledText
-              text={`${numYieldTokensOut || 0} eP:yETH`}
-              label={`Yield Tokens`}
+              text={t`${numYieldTokensOut || 0} eP:yETH`}
+              label={t`Yield Tokens`}
             />
           </Callout>
         </div>
@@ -170,7 +170,7 @@ export function MintCard(props: MintCardProps): ReactElement | null {
             minimal
             outlined
             disabled={mintButtonDisabled}
-            intent={mintButtonError ? "danger" : "primary"}
+            intent={mintButtonError ? Intent.DANGER : Intent.PRIMARY}
             onClick={() => setDrawerOpen(true)}
           >
             {mintButtonLabel}
