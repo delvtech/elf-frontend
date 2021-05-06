@@ -15,7 +15,7 @@
       "description": "Token that represents the yield on a deposit into a yield position"
     }
   },
-  "timestamp": "2021-05-04T22:26:59.048Z",
+  "timestamp": "2021-05-06T20:36:55.216Z",
   "version": {
     "major": 0,
     "minor": 0,
@@ -24,100 +24,80 @@
   "tokens": [
     {
       "chainId": 5,
-      "address": "0xD3E043F06359bD94b8289f30138764CB6cA32704",
-      "symbol": "mWETH",
+      "address": "0x9A1000D492d40bfccbc03f413A48F5B6516Ec0Fd",
+      "symbol": "WETH",
       "decimals": 18,
-      "name": "WETH Mock Token",
+      "name": "Wrapped Ethereum",
       "tags": [
         "underlying"
       ]
     },
     {
       "chainId": 5,
-      "address": "0xbb6d1A992DD40158Cc11806a34e181cd3464F4d0",
-      "symbol": "mUSDC",
+      "address": "0x78dEca24CBa286C0f8d56370f5406B48cFCE2f86",
+      "symbol": "USDC",
       "decimals": 6,
-      "name": "USDC Mock Token",
+      "name": "USD Coin",
       "tags": [
         "underlying"
       ]
     },
     {
       "chainId": 5,
-      "address": "0xE8e1dC35aE0Fa78f9F7EFc3c7265b46BDA15C642",
-      "symbol": "eP-mUSDC",
-      "decimals": 6,
-      "name": "mUSDC Principal Token",
-      "tags": [
-        "eP"
-      ]
-    },
-    {
-      "chainId": 5,
-      "address": "0xA5148c2E1127521AEa80D7D6F860e82a1AEe5647",
-      "symbol": "eP-mUSDC",
-      "decimals": 6,
-      "name": "mUSDC Principal Token",
-      "tags": [
-        "eP"
-      ]
-    },
-    {
-      "chainId": 5,
-      "address": "0x695E1F0B2db31d6D6D0a4e0DC7947cb5F04F6F79",
-      "symbol": "eP-mWETH",
+      "address": "0xBf9D2Ea6d068e9474AB02DF67a74B56C32267eeB",
+      "symbol": "eP-ETH",
       "decimals": 18,
-      "name": "mWETH Principal Token",
+      "name": "ETH Principal Token",
       "tags": [
         "eP"
       ]
     },
     {
       "chainId": 5,
-      "address": "0xcEc9301f44537b5A91a61706080b12111048D75c",
-      "symbol": "eP-mWETH",
+      "address": "0x0b8e7f2F4AAb4a9F9622dB6C06E9f4Cd7c649dFB",
+      "symbol": "eP-ETH",
       "decimals": 18,
-      "name": "mWETH Principal Token",
+      "name": "ETH Principal Token",
       "tags": [
         "eP"
       ]
     },
     {
       "chainId": 5,
-      "address": "0x01dcA43455D3D2cadebd1ee83666601CCEEC4d1F",
-      "symbol": "eY-mUSDC",
+      "address": "0x410F79f8c49330353B2733CdaDe6aD0876f2A7Ff",
+      "symbol": "eP-USDC",
       "decimals": 6,
-      "name": "mUSDC Yield Token",
+      "name": "USDC Principal Token",
+      "tags": [
+        "eP"
+      ]
+    },
+    {
+      "chainId": 5,
+      "address": "0xD4a575780fa60199d387a4d2e106479D99c5176b",
+      "symbol": "eY-ETH",
+      "decimals": 18,
+      "name": "ETH Yield Token",
       "tags": [
         "eY"
       ]
     },
     {
       "chainId": 5,
-      "address": "0x582852F0c1c514dcF28269f89bD0F55CB1348301",
-      "symbol": "eY-mUSDC",
+      "address": "0xA193A777cEbf679E2EdE32fB4889dE87e0f6B12D",
+      "symbol": "eY-ETH",
+      "decimals": 18,
+      "name": "ETH Yield Token",
+      "tags": [
+        "eY"
+      ]
+    },
+    {
+      "chainId": 5,
+      "address": "0xDe8Bf1cf667888392912E9Ac964eA3E8dd9E22A7",
+      "symbol": "eY-USDC",
       "decimals": 6,
-      "name": "mUSDC Yield Token",
-      "tags": [
-        "eY"
-      ]
-    },
-    {
-      "chainId": 5,
-      "address": "0x6ACC2bc4CF1BD3263e431fFbE25aaB564A704B2C",
-      "symbol": "eY-mWETH",
-      "decimals": 18,
-      "name": "mWETH Yield Token",
-      "tags": [
-        "eY"
-      ]
-    },
-    {
-      "chainId": 5,
-      "address": "0x7e0a5b07ED230FDe03E3342304da3A27ddDA500B",
-      "symbol": "eY-mWETH",
-      "decimals": 18,
-      "name": "mWETH Yield Token",
+      "name": "USDC Yield Token",
       "tags": [
         "eY"
       ]

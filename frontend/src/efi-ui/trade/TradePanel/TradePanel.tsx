@@ -34,6 +34,7 @@ import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { PoolContract } from "efi/pools/PoolContract";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
+import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 
 interface TradePanelProps {
   library: Web3Provider | undefined;
@@ -309,9 +310,10 @@ function useTokenInfoForTradeInput(
 
   // get symbols
   const baseAssetSymbol = useCryptoSymbol(baseCryptoAsset);
+  const vaultSymbol = getVaultSymbol(baseCryptoAsset);
   const { symbol: termSymbol } = useTermAssetSymbol(
     termAssetContract?.address,
-    baseAssetSymbol
+    vaultSymbol
   );
 
   // choose correct symbol

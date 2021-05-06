@@ -1,12 +1,7 @@
-import abi from "ethereumjs-abi";
 import { Signer } from "ethers";
-import { defaultAbiCoder, formatUnits, parseUnits } from "ethers/lib/utils";
-import { ConvergentCurvePool } from "src/types/ConvergentCurvePool";
+import { defaultAbiCoder, parseUnits } from "ethers/lib/utils";
 
-import { Tranche } from "src/types/Tranche";
-import { USDC } from "src/types/USDC";
 import { Vault } from "src/types/Vault";
-import { WETH } from "src/types/WETH";
 
 /**
  * Stakes an initial amount of base asset into the ConvergentCurvePool
