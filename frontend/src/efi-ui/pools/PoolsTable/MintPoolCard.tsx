@@ -57,7 +57,7 @@ const cellClassName = tw("flex", "mr-4", "items-center", "overflow-hidden");
 
 const poolCardStyle: CSSProperties = {
   maxWidth: 1180,
-  minWidth: 560,
+  minWidth: 800,
   padding: "0px",
 };
 
@@ -194,9 +194,7 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
           <div
             className={tw(
               cellClassName,
-              "col-span-2",
-              "sm:mr-0",
-              "md:col-span-1",
+              "col-span-1",
               "xl:ml-4",
               "items-center"
             )}
@@ -285,71 +283,82 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
           >
             <LabeledText
               text={formatMoney(principalLiquidity, { wholeAmounts: true })}
-              label={`Principal Pool Liquidity`}
-            />
-          </div>
-          <div
-            className={tw(
-              cellClassName,
-              "col-span-3",
-              "col-start-3",
-              "lg:col-span-2",
-              "xl:col-span-2"
-            )}
-          >
-            <LabeledText
-              text={formatMoney(liquidity, { wholeAmounts: true })}
-              label={`Yield Pool Liquidity`}
+              label={`Element TVL`}
             />
           </div>
           <div
             className={tw(
               cellClassName,
               "col-span-2",
-              "md:col-span-2",
-              "lg:col-start-4",
-              "xl:col-start-auto",
-              "xl:col-span-1"
+              "lg:col-span-3",
+              "xl:col-span-2"
+            )}
+          >
+            <div className={tw("flex", "flex-col")}>
+              <LabeledText
+                text={formatMoney(liquidity, { wholeAmounts: true })}
+                label={`Yield Pool Liquidity`}
+              />
+              <LabeledText
+                className={tw("mt-2", "hidden", "xl:flex")}
+                text={formatMoney(principalLiquidity, { wholeAmounts: true })}
+                label={`Principal Pool Liquidity`}
+              />
+            </div>
+          </div>
+          <div
+            className={tw(
+              cellClassName,
+              "col-span-2",
+              "col-start-2",
+              "lg:col-span-3",
+              "lg:col-start-2",
+              "xl:hidden"
             )}
           >
             <LabeledText
+              text={formatMoney(principalLiquidity, { wholeAmounts: true })}
+              label={`Principal Pool Liquidity`}
+            />
+          </div>
+          <div
+            className={tw(
+              cellClassName,
+              "col-span-2",
+              "lg:col-start-6",
+              "xl:col-start-auto",
+              "xl:col-span-2"
+            )}
+          >
+            <div className={tw("flex", "flex-col")}>
+              <LabeledText
+                text={t`${principalPrice}`}
+                label={`Principal Price (${baseAssetSymbol})`}
+              />
+              <LabeledText
+                className={tw("mt-2", "hidden", "xl:flex")}
+                text={t`${principalPrice}`}
+                label={`Yield Price (${baseAssetSymbol})`}
+              />
+            </div>
+          </div>
+          <div className={tw(cellClassName, "col-span-2", "xl:hidden")}>
+            <LabeledText
               text={t`${principalPrice}`}
-              label={`Principal Price`}
+              label={`Yield Price (${baseAssetSymbol})`}
             />
           </div>
           <div
             className={tw(
               cellClassName,
               "overflow-visible",
-              "sm:ml-0",
-              "col-span-4",
-              "sm:col-span-3",
-              "md:col-span-5",
-              "lg:col-span-4",
-              "xl:col-span-3"
+              "col-span-3",
+              "lg:col-span-3",
+              "xl:col-span-2"
             )}
           >
-            <div className={tw("flex", "w-full")}>
-              <div>
-                {startTime && maturityTime && Date.now() < maturityTime ? (
-                  <Tag
-                    intent={Intent.PRIMARY}
-                    className={tw("mr-4", "flex-grow-0")}
-                  >
-                    Running
-                  </Tag>
-                ) : (
-                  <Tag
-                    intent={Intent.SUCCESS}
-                    className={tw("mr-4", "flex-grow-0")}
-                  >
-                    Matured
-                  </Tag>
-                )}
-              </div>
-              <div className={tw("flex-1", "-mt-2")}>
-                <TimeLeft startDate={startTime} maturityDate={maturityTime} />
-              </div>
+            <div className={tw("flex", "w-full", "items-start")}>
+              <TimeLeft startDate={startTime} maturityDate={maturityTime} />
             </div>
           </div>
         </div>

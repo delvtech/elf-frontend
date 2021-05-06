@@ -35,6 +35,7 @@ import {
   usePoolViewPoolActionsTab,
   PoolAction,
 } from "efi-ui/pools/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
+import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { useTokenYield } from "efi-ui/pools/useTokenYield";
 import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidityForPool.ts/useTotalFiatLiquidityForPool";
 import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForPool";
@@ -52,9 +53,9 @@ interface PrincipalPoolCardProps {
   pool: PoolContract | undefined;
 }
 
-const cellClassName = tw("flex", "mr-4", "items-center", "overflow-hidden");
+const cellClassName = tw("flex", "mr-4", "items-center");
 
-const poolCardStyle: CSSProperties = { maxWidth: 1180, minWidth: 560 };
+const poolCardStyle: CSSProperties = { maxWidth: 1180, minWidth: 800 };
 // Stop propagation of clicks from the card title up to the card itself,
 // otherwise you get double routed to /exchange/exchange/0xdeadbeef
 const stopPropagationHandler = (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -83,6 +84,8 @@ export function PrincipalPoolCard(
     "unlockTimestamp"
   );
   const fixedYield = useTokenYield(baseAssetContract, pool, "principal");
+  const principalPrice = usePoolSpotPrice(pool, termAssetContract)?.toFixed(4);
+
   const stakingYield = useStakingAPY(pool);
 
   const { isDarkMode } = useDarkMode();
@@ -184,14 +187,7 @@ export function PrincipalPoolCard(
         )}
       >
         <div
-          className={tw(
-            cellClassName,
-            "col-span-2",
-            "sm:mr-0",
-            "md:col-span-1",
-            "xl:ml-4",
-            "items-start"
-          )}
+          className={tw(cellClassName, "col-span-1", "xl:ml-4", "items-start")}
         >
           {BaseAssetIcon && baseAsset?.type === CryptoAssetType.ETHEREUM ? (
             <div
@@ -233,9 +229,8 @@ export function PrincipalPoolCard(
         <div
           className={tw(
             cellClassName,
-            "col-span-3",
-            "md:col-span-2",
-            "md:pl-2",
+            "col-span-2",
+            "pl-2",
             "lg:pl-0",
             "lg:col-span-2"
           )}
@@ -258,31 +253,21 @@ export function PrincipalPoolCard(
           className={tw(
             cellClassName,
             "col-span-2",
-            "md:col-span-2",
-            "xl:col-span-1",
             "lg:col-span-2",
+            "xl:col-span-1",
             "flex-grow"
           )}
         >
           <LabeledText large text={t`${termLength} Day`} label={t`Term`} />
         </div>
-        <div className={tw(cellClassName, "col-span-3", "md:col-span-2")}>
+        <div className={tw(cellClassName, "col-span-2")}>
           <LabeledText
             large
             text={formatMoney(liquidity, { wholeAmounts: true })}
             label={t`Pool Liquidity`}
           />
         </div>
-        <div
-          className={tw(
-            cellClassName,
-            "col-span-2",
-            "col-start-2",
-            "md:col-start-auto",
-            "md:col-span-2",
-            "xl:col-span-1"
-          )}
-        >
+        <div className={tw(cellClassName, "col-span-2", "xl:col-span-1")}>
           <LabeledText
             large
             text={formatPercent(fixedYield)}
@@ -293,7 +278,6 @@ export function PrincipalPoolCard(
           className={tw(
             cellClassName,
             "col-span-2",
-            "md:col-span-2",
             "xl:col-span-1",
             "lg:col-span-2"
           )}
@@ -307,34 +291,22 @@ export function PrincipalPoolCard(
         <div
           className={tw(
             cellClassName,
-            "col-span-6",
-            "md:col-start-5",
-            "sm:col-span-5",
-            "md:col-span-4",
-            "lg:col-start-5",
-            "xl:col-span-3",
-            "xl:col-start-auto"
+            "col-span-2",
+            "col-start-4",
+            "lg:col-start-4",
+            "xl:col-start-auto",
+            "xl:col-span-1"
           )}
         >
+          <LabeledText
+            large
+            text={t`${principalPrice}`}
+            label={t`Price (${baseAssetSymbol})`}
+          />
+        </div>
+        <div className={tw(cellClassName, "col-span-3", "xl:col-span-2")}>
           <div className={tw("flex", "w-full")}>
-            <div>
-              {startTime && maturityTime && Date.now() < maturityTime ? (
-                <Tag
-                  intent={Intent.PRIMARY}
-                  className={tw("mr-4", "flex-grow-0")}
-                >
-                  Running
-                </Tag>
-              ) : (
-                <Tag
-                  intent={Intent.SUCCESS}
-                  className={tw("mr-4", "flex-grow-0")}
-                >
-                  Matured
-                </Tag>
-              )}
-            </div>
-            <div className={tw("flex-1", "-mt-2")}>
+            <div className={tw("flex-1")}>
               <TimeLeft startDate={startTime} maturityDate={maturityTime} />
             </div>
           </div>
