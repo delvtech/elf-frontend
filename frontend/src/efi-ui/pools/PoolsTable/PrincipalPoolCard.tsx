@@ -163,6 +163,8 @@ export function PrincipalPoolCard(
       differenceInDays(maturityTime as number, startTime as number) / 10
     ) * 10;
 
+  console.log(differenceInDays(maturityTime as number, startTime as number));
+
   return (
     <Card
       elevation={Elevation.TWO}

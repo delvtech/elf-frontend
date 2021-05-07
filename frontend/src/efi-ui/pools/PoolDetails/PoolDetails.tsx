@@ -18,6 +18,7 @@ import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidityForPool.ts/useTotalFiatLiquidityForPool";
 import { useTotalLiquidityTrend } from "efi-ui/pools/useTotalLiquidityTrend/useTotalLiquidityTrend";
 import { useTotalValueLockedForTranche } from "efi-ui/pools/useTotalValueLockedForTranche";
+import { useStakingAPY } from "efi-ui/pools/useStakingAPY";
 import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForPool";
 import { useVolumeForPool } from "efi-ui/pools/useVolumeForPool/useVolumeForPool";
 import { TermSummary } from "efi-ui/pools/TermSummary/TermSummary";
@@ -77,9 +78,10 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
   const { volume24hr, volumeTrend } = useVolumeTrend(pool);
   const { feeVolume24hr, feeVolumeTrend } = useFeeVolumeTrend(pool);
 
+  const stakingAPY = useStakingAPY(pool);
+
   return (
     <div className={tw("flex", "flex-col", "space-y-8", "w-full")}>
-      <APYSummary pool={pool} baseAsset={baseAssetContract} />
       <div
         className={tw(
           "flex",
@@ -100,6 +102,8 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
           volumeTrend={volumeTrend}
           feeVolume={feeVolume24hr}
           feeVolumeTrend={feeVolumeTrend}
+          stakingAPY={stakingAPY}
+          pool={pool}
         />
         <TermSummary
           pool={pool}

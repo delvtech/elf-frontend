@@ -2,7 +2,7 @@ import React, { CSSProperties, ReactElement } from "react";
 
 import { Card, Classes, Intent, Tag } from "@blueprintjs/core";
 import classNames from "classnames";
-import { formatDistanceToNow, fromUnixTime, getTime } from "date-fns";
+import { formatDistanceToNow, fromUnixTime, getTime, format } from "date-fns";
 import { ERC20 } from "elf-contracts/types/ERC20";
 import { Money } from "ts-money";
 import { t } from "ttag";
@@ -90,61 +90,35 @@ export function TermSummary(props: TermSummaryProps): ReactElement {
               {totalValueLocked ? formatMoney(totalValueLocked) : null}
             </div>
           </div>
-          {/*Interest*/}
-          <div className={tw("flex", "flex-col")}>
-            <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
-              {t`Accumulated Interest`}
-            </span>
-            <div className={tw("flex", "space-x-4")}>
-              <div className={classNames("h3", tw("space-x-4"))}>
-                {formatMoney(accumulatedInterest)}
-              </div>
-            </div>
-          </div>
-
-          {/* Interest per token */}
-          <div className={tw("flex", "flex-col")}>
-            <span
-              className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
-            >{t`(Acc. Interest Per token)`}</span>
-            <div className={classNames("h3", tw("space-x-4"))}>
-              {formatMoney(interestPerToken)}
-            </div>
-          </div>
         </div>
 
-        {/* Second column */}
         <div
           className={tw(
             "flex",
             "flex-col",
             "h-full",
             "justify-between",
-            "overflow-hidden"
+            "truncate"
           )}
         >
-          {/* Status */}
+          {/* Start Date */}
           <div className={tw("flex", "flex-col", "justify-end")}>
-            <div className={tw("flex", "space-x-2")}>
-              <span
-                className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
-              >{t`Status`}</span>
-              <Tag intent={termComplete ? Intent.SUCCESS : Intent.PRIMARY}>
-                {termStatus}
-              </Tag>
+            <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
+              {t`Start Date`}
+            </span>
+            <div className={classNames("h3", tw("space-x-4"))}>
+              {format(startTimeMs, "MMM d, y")}
             </div>
-            {termComplete ? (
-              <div style={{ minWidth: 120 }}>{`(${completeLabel})`}</div>
-            ) : (
-              <TimeLeft startDate={startTimeMs} maturityDate={maturityTimeMs} />
-            )}
           </div>
 
-          <div className={tw("flex", "flex-col")}>
+          {/* Status */}
+          <div className={tw("flex", "flex-col", "justify-end")}>
             <span
               className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
-            >{t`Underlying Strategy`}</span>
-            <div className={classNames("h3", tw("space-x-4"))}>{name}</div>
+            >{t`Status`}</span>
+          </div>
+          <div style={{ maxWidth: "150px" }}>
+            <TimeLeft startDate={startTimeMs} maturityDate={maturityTimeMs} />
           </div>
         </div>
       </Card>

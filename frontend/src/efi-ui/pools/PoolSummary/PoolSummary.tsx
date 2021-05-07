@@ -2,12 +2,21 @@ import React, { CSSProperties, ReactElement } from "react";
 
 import { Card, Classes } from "@blueprintjs/core";
 import classNames from "classnames";
+import { formatPercent } from "efi/base/formatPercent";
+import { formatUnits } from "ethers/lib/utils";
 import { Money } from "ts-money";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { TrendIndicator } from "efi-ui/base/TrendIndicator/TrendIndicator";
 import { formatMoney } from "efi/money/formatMoney";
+import { PoolContract } from "efi/pools/PoolContract";
+import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
+import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
+import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
+import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
+import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
+import { isConvergentCurvePool } from "efi/pools/PoolContract";
 
 const summaryCardStyle: CSSProperties = {
   height: 220,
@@ -20,6 +29,8 @@ interface PoolSummaryProps {
   volumeTrend: number | undefined;
   feeVolume: Money | undefined;
   feeVolumeTrend: number | undefined;
+  stakingAPY: number | undefined;
+  pool: PoolContract | undefined;
 }
 
 export function PoolSummary(props: PoolSummaryProps): ReactElement {
@@ -30,54 +41,140 @@ export function PoolSummary(props: PoolSummaryProps): ReactElement {
     volumeTrend,
     feeVolume,
     feeVolumeTrend,
+    stakingAPY,
+    pool,
   } = props;
+
+  const { data: [tokens, balances] = [undefined, undefined] } = usePoolTokens(
+    pool
+  );
+
+  const {
+    baseAssetIndex,
+    termAssetIndex,
+    baseAssetContract,
+    termAssetContract,
+  } = parseSortedTokensForPool(tokens);
+
+  const baseAsset = useCryptoAssetForToken(baseAssetContract?.address);
+  const baseAssetSymbol = useCryptoSymbol(baseAsset);
+
+  const baseAssetBalance = balances?.[baseAssetIndex];
+  const termAssetBalance = balances?.[termAssetIndex];
+
+  const { data: baseAssetDecimals } = useTokenDecimals(baseAssetContract);
+  const { data: termAssetDecimals } = useTokenDecimals(termAssetContract);
 
   return (
     <div>
       <div className="mb-2">{t`Pool Summary`}</div>
       <Card
         style={summaryCardStyle}
-        className={tw("flex", "flex-col", "space-y-6")}
+        className={tw("grid", "grid-cols-2", "gap-4")}
       >
-        <div className={tw("flex", "space-x-4", "justify-between")}>
-          <div className={tw("flex", "flex-col")}>
-            <span
-              className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
-            >{t`Total Liquidity`}</span>
-            <div className={classNames("h3", tw("space-x-4"))}>
-              {formatMoney(liquidity)}
+        {/* First Column*/}
+        <div
+          className={tw(
+            "flex",
+            "flex-col",
+            "h-full",
+            "justify-between",
+            "truncate"
+          )}
+        >
+          <div className={tw("flex", "space-x-4", "justify-between")}>
+            <div className={tw("flex", "flex-col")}>
+              <span
+                className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
+              >{t`Total Liquidity`}</span>
+              <div className={classNames("h3", tw("space-x-4"))}>
+                {formatMoney(liquidity)}
+              </div>
+            </div>
+            <div className={tw("flex", "self-end")}>
+              <TrendIndicator value={liquidityTrend} />
             </div>
           </div>
-          <div className={tw("flex", "self-end")}>
-            <TrendIndicator value={liquidityTrend} />
+          {/* Volume (24hr)*/}
+          <div className={tw("flex", "space-x-4", "justify-between")}>
+            <div className={tw("flex", "flex-col")}>
+              <span
+                className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
+              >{t`Volume (24hr)`}</span>
+              <div className={classNames("h3", tw("space-x-4"))}>
+                {formatMoney(volume)}
+              </div>
+            </div>
+            <div className={tw("flex", "self-end")}>
+              <TrendIndicator value={volumeTrend} />
+            </div>
+          </div>
+          {/* Quantity Base (24hr)*/}
+          <div className={tw("flex", "space-x-4", "justify-between")}>
+            <div className={tw("flex", "flex-col")}>
+              <span
+                className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
+              >{t`Quantity ${baseAssetSymbol}`}</span>
+              <div className={classNames("h3", tw("space-x-4"))}>
+                {Number(
+                  formatUnits(baseAssetBalance || 0, baseAssetDecimals)
+                ).toFixed(2)}
+              </div>
+            </div>
           </div>
         </div>
-        {/* Volume (24hr)*/}
-        <div className={tw("flex", "space-x-4", "justify-between")}>
-          <div className={tw("flex", "flex-col")}>
-            <span
-              className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
-            >{t`Volume (24hr)`}</span>
-            <div className={classNames("h3", tw("space-x-4"))}>
-              {formatMoney(volume)}
+        {/* Second column */}
+        <div
+          className={tw(
+            "flex",
+            "flex-col",
+            "h-full",
+            "justify-between",
+            "overflow-hidden"
+          )}
+        >
+          {/* Staking APY (24hr) */}
+          <div className={tw("flex", "space-x-4", "justify-between")}>
+            <div className={tw("flex", "flex-col")}>
+              <span
+                className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
+              >{t`Staking APY (24h)`}</span>
+              <div className={classNames("h3", tw("space-x-4"))}>
+                {formatPercent(stakingAPY || 0)}
+              </div>
             </div>
           </div>
-          <div className={tw("flex", "self-end")}>
-            <TrendIndicator value={volumeTrend} />
-          </div>
-        </div>
-        {/* Fees (24hr)*/}
-        <div className={tw("flex", "space-x-4", "justify-between")}>
-          <div className={tw("flex", "flex-col")}>
-            <span
-              className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
-            >{t`Fees (24hr)`}</span>
-            <div className={classNames("h3", tw("space-x-4"))}>
-              {formatMoney(feeVolume)}
+          {/* Fees (24hr)*/}
+          <div className={tw("flex", "space-x-4", "justify-between")}>
+            <div className={tw("flex", "flex-col")}>
+              <span
+                className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
+              >{t`Fees (24hr)`}</span>
+              <div className={classNames("h3", tw("space-x-4"))}>
+                {formatMoney(feeVolume)}
+              </div>
+            </div>
+            <div className={tw("flex", "self-end")}>
+              <TrendIndicator value={feeVolumeTrend} />
             </div>
           </div>
-          <div className={tw("flex", "self-end")}>
-            <TrendIndicator value={feeVolumeTrend} />
+          {/* Quantity Term (24hr)*/}
+          <div className={tw("flex", "space-x-4", "justify-between")}>
+            <div className={tw("flex", "flex-col")}>
+              <span
+                className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
+              >{t`Quantity (${
+                isConvergentCurvePool(pool) ? "PT" : "YT"
+              })`}</span>
+              <div className={classNames("h3", tw("space-x-4"))}>
+                {Number(
+                  formatUnits(termAssetBalance || 0, termAssetDecimals)
+                ).toFixed(2)}
+              </div>
+            </div>
+            <div className={tw("flex", "self-end")}>
+              <TrendIndicator value={volumeTrend} />
+            </div>
           </div>
         </div>
       </Card>

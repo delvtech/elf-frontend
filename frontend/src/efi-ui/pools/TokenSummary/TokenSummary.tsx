@@ -23,6 +23,9 @@ import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
 import { useTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
 import { formatMoney } from "efi/money/formatMoney";
 import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
+import { formatPercent } from "efi/base/formatPercent";
+import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
+import { useTokenYield } from "efi-ui/pools/useTokenYield";
 import { PoolContract } from "efi/pools/PoolContract";
 
 const summaryCardStyle: CSSProperties = {
@@ -36,17 +39,13 @@ interface TokenSummaryProps {
 export function TokenSummary({ pool }: TokenSummaryProps): ReactElement {
   const {
     baseAssetSymbol,
-    baseAssetBalance,
-    baseAssetBalanceTrend,
-    baseAssetDecimals,
-    baseAssetPrice,
-    baseAssetPriceTrend,
     termAssetSymbol,
     termAssetBalance,
     termAssetBalanceTrend,
     termAssetDecimals,
     termAssetPrice,
     termAssetPriceTrend,
+    fixedYield,
   } = useTokensSummary(pool);
 
   return (
@@ -54,14 +53,7 @@ export function TokenSummary({ pool }: TokenSummaryProps): ReactElement {
       <div className="mb-2">{t`Token Summary`}</div>
       <Card style={summaryCardStyle} className={tw("flex", "space-x-8")}>
         <TokenInfo
-          assetSymbol={baseAssetSymbol}
-          assetPrice={baseAssetPrice}
-          assetPriceTrend={baseAssetPriceTrend}
-          assetBalance={baseAssetBalance}
-          assetDecimals={baseAssetDecimals}
-          assetBalanceTrend={baseAssetBalanceTrend}
-        />
-        <TokenInfo
+          baseAssetSymbol={baseAssetSymbol}
           assetSymbol={termAssetSymbol}
           assetPrice={termAssetPrice}
           assetPriceTrend={termAssetPriceTrend}
@@ -69,19 +61,33 @@ export function TokenSummary({ pool }: TokenSummaryProps): ReactElement {
           assetDecimals={termAssetDecimals}
           assetBalanceTrend={termAssetBalanceTrend}
         />
+        <div className={tw("space-y-6", "flex-1", "overflow-hidden")}>
+          <div
+            className={tw(
+              "flex",
+              "flex-col",
+              "justify-center",
+              "space-y-1",
+              "overflow-hidden"
+            )}
+          >
+            <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
+              {t`Fixed Rate APY`}
+            </span>
+            <div className={tw("flex", "justify-between")}>
+              <span className={tw("text-lg")}>
+                {formatPercent(fixedYield || 0)}
+              </span>
+            </div>
+          </div>
+        </div>
       </Card>
     </div>
   );
 }
 
 interface TokensSummary {
-  baseAssetContract: ERC20 | undefined;
   baseAssetSymbol: string | undefined;
-  baseAssetBalance: BigNumber | undefined;
-  baseAssetBalanceTrend: number | undefined;
-  baseAssetDecimals: number | undefined;
-  baseAssetPrice: Money | undefined;
-  baseAssetPriceTrend: number | undefined;
   termAssetContract: ERC20 | undefined;
   termAssetSymbol: string | undefined;
   termAssetBalance: BigNumber | undefined;
@@ -89,9 +95,11 @@ interface TokensSummary {
   termAssetDecimals: number | undefined;
   termAssetPrice: Money | undefined;
   termAssetPriceTrend: number | undefined;
+  fixedYield: number | undefined;
 }
 
 interface TokenInfoProps {
+  baseAssetSymbol: string | undefined;
   assetSymbol: string | undefined;
   assetPrice: Money | undefined;
   assetPriceTrend: number | undefined;
@@ -100,6 +108,7 @@ interface TokenInfoProps {
   assetBalanceTrend: number | undefined;
 }
 function TokenInfo({
+  baseAssetSymbol,
   assetSymbol,
   assetPrice,
   assetPriceTrend,
@@ -129,19 +138,13 @@ function TokenInfo({
         </span>
         <div className={tw("flex", "justify-between")}>
           <span className={tw("text-lg")}>{formatMoney(assetPrice)}</span>
-          <TrendIndicator value={assetPriceTrend} />
         </div>
       </div>
       <div className={tw("flex", "flex-col", "justify-center", "space-y-1")}>
         <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
-          {t`Quantity`}
+          {t`Price (${baseAssetSymbol})`}
         </span>
-        <div className={tw("flex", "justify-between")}>
-          <span className={tw("text-lg")}>
-            {Number(formatUnits(assetBalance || 0, assetDecimals)).toFixed(2)}
-          </span>
-          <TrendIndicator value={assetBalanceTrend} />
-        </div>
+        <span className={tw("text-lg", "truncate")}>0.997</span>
       </div>
     </div>
   );
@@ -170,13 +173,16 @@ function useTokensSummary(pool: PoolContract | undefined): TokensSummary {
     currency,
     1
   );
+
+  const fixedYield = useTokenYield(baseAssetContract, pool, "principal");
   const { data: baseAssetDecimals } = useTokenDecimals(baseAssetContract);
 
   // Term Asset Info
   const termAssetBalance = balances?.[termAssetIndex];
-  const { label: termAssetSymbol } = useTermAssetSymbol(
+  const vaultSymbol = getVaultSymbol(baseAsset);
+  const { symbol: termAssetSymbol } = useTermAssetSymbol(
     termAssetContract?.address,
-    baseAssetSymbol
+    vaultSymbol
   );
   const { data: termAssetDecimals } = useTokenDecimals(termAssetContract);
 
@@ -252,13 +258,7 @@ function useTokensSummary(pool: PoolContract | undefined): TokensSummary {
   }
 
   return {
-    baseAssetContract,
     baseAssetSymbol,
-    baseAssetBalance,
-    baseAssetBalanceTrend,
-    baseAssetDecimals,
-    baseAssetPrice,
-    baseAssetPriceTrend,
     termAssetContract,
     termAssetSymbol,
     termAssetBalance,
@@ -266,5 +266,6 @@ function useTokensSummary(pool: PoolContract | undefined): TokensSummary {
     termAssetDecimals,
     termAssetPrice,
     termAssetPriceTrend,
+    fixedYield,
   };
 }
