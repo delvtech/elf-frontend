@@ -9,13 +9,16 @@ import React, {
 import { Button, Card, Classes, Elevation, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import classNames from "classnames";
+import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
 import { Tranche } from "elf-contracts/types/Tranche";
+import { formatEther, formatUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { SwapKind } from "efi-ui/balancer/SwapKind";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
+import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { CryptoAssetPicker } from "efi-ui/crypto/CryptoAssetPicker/CryptoAssetPicker";
 import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
@@ -32,6 +35,7 @@ import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolToken
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { BuyPrincipalTokensTransactionConfirmationDrawer } from "efi-ui/swaps/BuyPrincipalTokensTransactionConfirmationDrawer/BuyPrincipalTokensTransactionConfirmationDrawer";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
+import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
 import { formatBalance } from "efi/base/formatBalance";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { clipStringValueToDecimals } from "efi/math/fixedPoint";
@@ -39,9 +43,6 @@ import { calcSwapOutGivenInCCPoolUNSAFE } from "efi/pools/calcPoolSwap";
 import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
-import { formatEther, formatUnits } from "ethers/lib/utils";
-import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
 
 export interface EarnCardProps {
   library: Web3Provider | undefined;
@@ -56,9 +57,16 @@ export function EarnCard({
   baseAssets,
   tranchesByBaseAsset,
 }: EarnCardProps): ReactElement {
+  const [isWalletDialogOpen, setWalletDialogOpen] = useState(false);
   // local state
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const openDrawer = useCallback(() => setDrawerOpen(true), []);
+  const onClickButton = useCallback(() => {
+    if (!account) {
+      return setWalletDialogOpen(true);
+    }
+    openDrawer();
+  }, [account, openDrawer]);
 
   const { stringValue: amountIn, setValue: setAmountIn } = useNumericInput();
   const { stringValue: amountOut, setValue: setAmountOut } = useNumericInput();
@@ -229,6 +237,7 @@ export function EarnCard({
     activeBaseAssetSymbol
   );
 
+  const buttonDisabled = !!account && !amountIn;
   const buttonLabel = !!account ? t`Buy` : t`Connect Wallet`;
 
   return (
@@ -332,8 +341,8 @@ export function EarnCard({
             outlined
             intent={Intent.PRIMARY}
             className={tw("flex-1")}
-            disabled={!amountIn || !account}
-            onClick={openDrawer}
+            disabled={buttonDisabled}
+            onClick={onClickButton}
           >
             <div className={tw("p-4", "text-lg")}>{buttonLabel}</div>
           </Button>
@@ -353,6 +362,10 @@ export function EarnCard({
           onClose={closeDrawer}
         />
       )}
+      <ConnectWalletDialog
+        isOpen={isWalletDialogOpen}
+        onClose={() => setWalletDialogOpen(false)}
+      />
     </Fragment>
   );
 }
