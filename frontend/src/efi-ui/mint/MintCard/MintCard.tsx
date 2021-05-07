@@ -1,4 +1,4 @@
-import React, { Fragment, ReactElement, useState } from "react";
+import React, { Fragment, ReactElement, useCallback, useState } from "react";
 import { Link } from "@reach/router";
 
 import { Button, Intent, Callout } from "@blueprintjs/core";
@@ -112,6 +112,10 @@ export function MintCard(props: MintCardProps): ReactElement | null {
     mintButtonLabel = t`Connect wallet`;
   }
 
+  const onClose = useCallback(() => {
+    setDrawerOpen(false);
+    setAmountIn("");
+  }, [setAmountIn]);
   return (
     <Fragment>
       <div className={styles.lineBreak} />
@@ -202,7 +206,7 @@ export function MintCard(props: MintCardProps): ReactElement | null {
         library={library}
         amountIn={amountInString}
         isOpen={isDrawerOpen}
-        onClose={() => setDrawerOpen(false)}
+        onClose={onClose}
       />
     </Fragment>
   );
