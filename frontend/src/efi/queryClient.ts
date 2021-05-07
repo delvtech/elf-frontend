@@ -14,6 +14,7 @@ export function createQueryClient(): QueryClient {
   const queryClient = new QueryClient({
     queryCache,
     mutationCache,
+    defaultOptions: { queries: { staleTime: 10000 } },
   });
 
   return queryClient;
