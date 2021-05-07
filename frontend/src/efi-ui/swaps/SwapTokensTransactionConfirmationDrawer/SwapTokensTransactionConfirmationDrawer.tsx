@@ -1,4 +1,4 @@
-import React, { ReactElement, useCallback } from "react";
+import React, { ReactElement, useCallback, useMemo } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
@@ -21,7 +21,7 @@ import { SwapDetailsForm } from "efi-ui/swaps/SwapDetailsPreview/SwapDetailsForm
 import { SwapTokenDetails } from "efi-ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensDetails";
 import { TokenIcon } from "efi-ui/token/TokenIcon";
 import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/TransactionDrawer";
-import { CryptoAsset } from "efi/crypto/CryptoAsset";
+import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { calculatePurchasePrice } from "efi/pools/calculatePurchasePrice";
 import { calculateSlippage } from "efi/pools/calculateSlippage";
 import { isConvergentCurvePool, PoolContract } from "efi/pools/PoolContract";
@@ -150,14 +150,11 @@ export function SwapTokensTransactionConfirmationDrawer({
     onClose();
   }, [onClose, reset]);
 
-  const walletApprovalInfos = [
-    {
-      cryptoAsset: tokenInAsset,
-      ownerAddress: account,
-      spenderAddress: balancerVault?.address,
-      messageRenderer: getBalancerApprovalMessage,
-    },
-  ];
+  const walletApprovalInfos = useWalletApprovalInfos(
+    tokenInAsset,
+    account,
+    balancerVault?.address
+  );
 
   return (
     <TransactionDrawer
@@ -203,4 +200,24 @@ function getPriceSlippageAndTradingFee(
     purchasePrice
   );
   return priceSlippageAndTradingFee;
+}
+
+function useWalletApprovalInfos(
+  tokenInAsset: CryptoAsset | undefined,
+  account: string | null | undefined,
+  balancerVaultAddress: string | undefined
+) {
+  return useMemo(() => {
+    if (!tokenInAsset || tokenInAsset.type === CryptoAssetType.ETHEREUM) {
+      return;
+    }
+    return [
+      {
+        cryptoAsset: tokenInAsset,
+        ownerAddress: account,
+        spenderAddress: balancerVaultAddress,
+        messageRenderer: getBalancerApprovalMessage,
+      },
+    ];
+  }, [account, tokenInAsset, balancerVaultAddress]);
 }

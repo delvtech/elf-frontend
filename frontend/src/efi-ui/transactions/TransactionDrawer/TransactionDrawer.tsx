@@ -16,7 +16,7 @@ import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { getQueriesData } from "efi-ui/base/queryResults";
 import { MAX_ALLOWANCE } from "efi/contracts/token";
 
-interface WalletApprovalInfo {
+export interface WalletApprovalInfo {
   spenderAddress: string | null | undefined;
   ownerAddress: string | null | undefined;
   cryptoAsset: CryptoAsset | undefined;
@@ -105,6 +105,7 @@ export function TransactionDrawer({
           ({ cryptoAsset, messageRenderer, ownerAddress, spenderAddress }) => {
             return (
               <WalletApprovalCallout
+                key={cryptoAsset?.id}
                 spenderAddress={spenderAddress}
                 messageRenderer={messageRenderer}
                 signer={signer}

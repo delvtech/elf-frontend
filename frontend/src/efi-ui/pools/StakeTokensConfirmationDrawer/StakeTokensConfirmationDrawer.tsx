@@ -1,18 +1,15 @@
-import { ReactElement } from "react";
+import { ReactElement, useMemo } from "react";
 
-import { Button, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { BigNumber, Signer } from "ethers";
 import { t } from "ttag";
 
-import tw from "efi-tailwindcss-classnames";
 import { getBalancerApprovalMessage } from "efi-ui/balancer/balancerApprovalMessage";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useCryptoAssetMetadata } from "efi-ui/crypto/hooks/useCryptoAssetMetadata/useCryptAssetMetadata";
 import { StakeConfirmationForm } from "efi-ui/pools/StakeTokensConfirmationDrawer/StakeConfirmationForm";
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
-import { WalletApprovalCalloutOld } from "efi-ui/transactions/TransactionDrawer/WalletApprovalCallout";
 import {
   CryptoAsset,
   CryptoAssetType,
@@ -20,7 +17,10 @@ import {
 } from "efi/crypto/CryptoAsset";
 import { parseUnits } from "ethers/lib/utils";
 import React from "react";
-import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/TransactionDrawer";
+import {
+  TransactionDrawer,
+  WalletApprovalInfo,
+} from "efi-ui/transactions/TransactionDrawer/TransactionDrawer";
 
 interface StakingConfirmationDrawerProps {
   account: string | null | undefined;
@@ -47,7 +47,6 @@ export function StakingConfirmationDrawer({
   baseAsset,
   trancheAsset,
   baseAssetSymbol,
-  baseAssetSymbolLabel,
   trancheAssetSymbol,
   trancheAssetSymbolLabel,
   baseAssetIn,
@@ -59,7 +58,6 @@ export function StakingConfirmationDrawer({
   isStakeSuccess,
   onStake,
 }: StakingConfirmationDrawerProps): ReactElement {
-  const signer = account ? (library?.getSigner(account) as Signer) : undefined;
   const balancerVault = useBalancerVault();
 
   const {
@@ -91,20 +89,13 @@ export function StakingConfirmationDrawer({
 
   // TODO: validate inputs as well
   const confirmButtonDisabled = !hasTokenApprovals;
-  const walletApprovalInfos = [
-    {
-      cryptoAsset: baseAsset,
-      ownerAddress: account,
-      spenderAddress: balancerVault?.address,
-      messageRenderer: getBalancerApprovalMessage,
-    },
-    {
-      cryptoAsset: trancheAsset,
-      ownerAddress: account,
-      spenderAddress: balancerVault?.address,
-      messageRenderer: getBalancerApprovalMessage,
-    },
-  ];
+
+  const walletApprovalInfos = useWalletApprovalInfos(
+    baseAsset,
+    trancheAsset,
+    account,
+    balancerVault?.address
+  );
 
   return (
     <TransactionDrawer
@@ -134,6 +125,32 @@ export function StakingConfirmationDrawer({
       }
     />
   );
+}
+function useWalletApprovalInfos(
+  baseAsset: CryptoAsset | undefined,
+  trancheAsset: CryptoAsset | undefined,
+  account: string | null | undefined,
+  vaultAddress: string | undefined
+) {
+  return useMemo(() => {
+    const walletApprovalInfos: WalletApprovalInfo[] = [
+      {
+        cryptoAsset: trancheAsset,
+        ownerAddress: account,
+        spenderAddress: vaultAddress,
+        messageRenderer: getBalancerApprovalMessage,
+      },
+    ];
+    if (baseAsset?.type !== CryptoAssetType.ETHEREUM) {
+      walletApprovalInfos.push({
+        cryptoAsset: baseAsset,
+        ownerAddress: account,
+        spenderAddress: vaultAddress,
+        messageRenderer: getBalancerApprovalMessage,
+      });
+    }
+    return walletApprovalInfos;
+  }, [account, baseAsset, trancheAsset, vaultAddress]);
 }
 
 function getConfirmButtonDisabled(

@@ -19,7 +19,7 @@ import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSy
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
 import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
-import { SellYieldTokenDetails } from "efi-ui/swaps/SellYieldTokensDrawer/SellYieldTokensDetails";
+import { SellYieldTokenDetails } from "efi-ui/graveyard/SellYieldTokensDrawer/SellYieldTokensDetails";
 import { SwapDetailsForm } from "efi-ui/swaps/SwapDetailsPreview/SwapDetailsForm";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { TokenIcon } from "efi-ui/token/TokenIcon";
