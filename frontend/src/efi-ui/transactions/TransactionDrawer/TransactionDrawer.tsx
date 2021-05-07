@@ -16,7 +16,7 @@ import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { getQueriesData } from "efi-ui/base/queryResults";
 import { MAX_ALLOWANCE } from "efi/contracts/token";
 
-interface WalletApprovalInfo {
+export interface WalletApprovalInfo {
   spenderAddress: string | null | undefined;
   ownerAddress: string | null | undefined;
   cryptoAsset: CryptoAsset | undefined;

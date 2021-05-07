@@ -17,7 +17,10 @@ import {
 } from "efi/crypto/CryptoAsset";
 import { parseUnits } from "ethers/lib/utils";
 import React from "react";
-import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/TransactionDrawer";
+import {
+  TransactionDrawer,
+  WalletApprovalInfo,
+} from "efi-ui/transactions/TransactionDrawer/TransactionDrawer";
 
 interface StakingConfirmationDrawerProps {
   account: string | null | undefined;
@@ -55,7 +58,6 @@ export function StakingConfirmationDrawer({
   isStakeSuccess,
   onStake,
 }: StakingConfirmationDrawerProps): ReactElement {
-  const signer = account ? (library?.getSigner(account) as Signer) : undefined;
   const balancerVault = useBalancerVault();
 
   const {
@@ -131,16 +133,7 @@ function useWalletApprovalInfos(
   vaultAddress: string | undefined
 ) {
   return useMemo(() => {
-    if (!baseAsset || baseAsset.type === CryptoAssetType.ETHEREUM) {
-      return;
-    }
-    return [
-      {
-        cryptoAsset: baseAsset,
-        ownerAddress: account,
-        spenderAddress: vaultAddress,
-        messageRenderer: getBalancerApprovalMessage,
-      },
+    const walletApprovalInfos: WalletApprovalInfo[] = [
       {
         cryptoAsset: trancheAsset,
         ownerAddress: account,
@@ -148,6 +141,15 @@ function useWalletApprovalInfos(
         messageRenderer: getBalancerApprovalMessage,
       },
     ];
+    if (baseAsset?.type !== CryptoAssetType.ETHEREUM) {
+      walletApprovalInfos.push({
+        cryptoAsset: baseAsset,
+        ownerAddress: account,
+        spenderAddress: vaultAddress,
+        messageRenderer: getBalancerApprovalMessage,
+      });
+    }
+    return walletApprovalInfos;
   }, [account, baseAsset, trancheAsset, vaultAddress]);
 }
 
