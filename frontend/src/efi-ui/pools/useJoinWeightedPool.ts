@@ -26,7 +26,8 @@ export function useJoinWeightedPool(
   signer: Signer | undefined,
   account: string | null | undefined,
   pool: WeightedPool | undefined,
-  poolTokenMaxAmounts: BigNumber[] | undefined
+  poolTokenMaxAmounts: BigNumber[] | undefined,
+  onTransactionStarted?: () => void
 ): {
   onJoinPool: () => void;
   mutationResult: UseMutationResult<
@@ -45,7 +46,8 @@ export function useJoinWeightedPool(
   const mutationResult = useSmartContractTransactionPersisted(
     balancerVault,
     "joinPool",
-    signer
+    signer,
+    { onTransactionStarted }
   );
 
   const { mutate: joinPool } = mutationResult;

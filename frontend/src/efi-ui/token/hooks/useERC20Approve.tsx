@@ -29,7 +29,7 @@ export function useERC20Approve(
     "approve",
     signer,
     {
-      onSuccess: () => {
+      onTransactionSuccess: () => {
         queryClient.invalidateQueries({
           predicate: (query) => {
             const match = matchSmartContractReadCallQuery(

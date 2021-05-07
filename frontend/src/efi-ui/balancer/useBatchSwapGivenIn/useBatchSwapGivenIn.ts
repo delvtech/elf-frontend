@@ -61,7 +61,7 @@ export function useBatchSwapGivenIn(
     "batchSwap",
     signer,
     {
-      onSuccess: () => {
+      onTransactionStarted: () => {
         onTransactionStarted?.();
       },
       onError: (error) => {

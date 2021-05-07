@@ -1,4 +1,4 @@
-import React, { ReactElement, useCallback, useEffect, useMemo } from "react";
+import React, { ReactElement, useCallback, useMemo } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
@@ -120,16 +120,11 @@ export function SwapTokensTransactionConfirmationDrawer({
     tokenInAddress,
     tokenOutAddress,
     amountInAsBigNumber,
-    minAmountOut
+    minAmountOut,
+    onClose
   );
 
   const { isLoading, isError, isSuccess, reset } = swapResult;
-  // close the drawer after swap succeeds
-  useEffect(() => {
-    if (isSuccess) {
-      onClose();
-    }
-  }, [isSuccess, onClose]);
 
   const amountOutNumber = +formatUnits(amountOut?.abs() || 0, tokenInDecimals);
   const amountOutFormatted = amountOutNumber.toFixed(4);

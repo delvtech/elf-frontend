@@ -44,7 +44,7 @@ export function useMintTransaction(
     "mint",
     signer,
     {
-      onSuccess: () => {
+      onTransactionStarted: () => {
         onTransactionStarted();
       },
     }

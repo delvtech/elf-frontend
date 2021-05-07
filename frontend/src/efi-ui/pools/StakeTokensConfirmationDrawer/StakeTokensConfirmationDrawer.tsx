@@ -60,11 +60,6 @@ export function StakingConfirmationDrawer({
 }: StakingConfirmationDrawerProps): ReactElement {
   const balancerVault = useBalancerVault();
   // close the drawer after stake succeeds
-  useEffect(() => {
-    if (isStakeSuccess) {
-      onClose();
-    }
-  }, [isStakeSuccess, onClose]);
 
   const {
     icon: baseAssetIcon,
