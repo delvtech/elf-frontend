@@ -7,12 +7,20 @@ import zip from "lodash.zip";
 import { getQueriesData } from "efi-ui/base/queryResults";
 import { UseSmartContractReadCallOptions } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
+import { getQueryCombinedStatus } from "efi-ui/query/getQueryCombinedStatus";
+import { EMPTY_ARRAY } from "efi/base/emptyArray";
+import { QueryStatus } from "react-query";
+import { useMemo } from "react";
 
+interface TokenWithBalance<TContract> {
+  token: TContract;
+  balanceOf: BigNumber;
+}
 export function useTokensWithBalance<TContract extends ERC20>(
   account: string | null | undefined,
   tokens: (TContract | undefined)[],
   provider?: Provider
-): { token: TContract; balanceOf: BigNumber }[] {
+): [tokens: TokenWithBalance<TContract>[], status: QueryStatus] {
   const balanceOfArgs: UseSmartContractReadCallOptions<
     ERC20 | ERC20Permit,
     "balanceOf"
@@ -27,16 +35,36 @@ export function useTokensWithBalance<TContract extends ERC20>(
     balanceOfArgs
   );
 
-  const loadedData = zip(
-    tokens,
-    getQueriesData(tokenBalanceOfResults)
-  ).filter((values): values is [TContract, BigNumber] =>
-    values.every((value) => !!value)
-  );
+  const status = getQueryCombinedStatus(tokenBalanceOfResults);
 
-  const tokensWithBalance = loadedData
-    .filter(([, balanceOf]) => balanceOf.gt(0))
-    .map(([token, balanceOf]) => ({ token, balanceOf }));
+  const computedResult = useMemo(() => {
+    const loadedData = zip(
+      tokens,
+      getQueriesData(tokenBalanceOfResults)
+    ).filter((values): values is [TContract, BigNumber] =>
+      values.every((value) => !!value)
+    );
 
-  return tokensWithBalance;
+    const tokensWithBalance = loadedData
+      .filter(([, balanceOf]) => balanceOf.gt(0))
+      .map(([token, balanceOf]) => ({ token, balanceOf }));
+
+    if (status === "loading") {
+      return [
+        EMPTY_ARRAY as { token: TContract; balanceOf: BigNumber }[],
+        status,
+      ];
+    }
+
+    return [tokensWithBalance, status] as [
+      tokens: TokenWithBalance<TContract>[],
+      status: QueryStatus
+    ];
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status]);
+
+  return computedResult as [
+    tokens: TokenWithBalance<TContract>[],
+    status: QueryStatus
+  ];
 }
