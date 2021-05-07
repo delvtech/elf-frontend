@@ -1,4 +1,4 @@
-import { ReactElement, useMemo } from "react";
+import { ReactElement, useEffect, useMemo } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
 import { Tranche } from "elf-contracts/types/Tranche";
@@ -110,6 +110,12 @@ export function BuyPrincipalTokensTransactionConfirmationDrawer({
     amountInAsBigNumber,
     minAmountOut
   );
+  // close the drawer after batchswap succeeds
+  useEffect(() => {
+    if (isSuccess) {
+      onClose();
+    }
+  }, [isSuccess, onClose]);
 
   const amountOutNumber = +formatUnits(
     amountOut?.abs() || 0,
