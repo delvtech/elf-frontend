@@ -74,12 +74,21 @@ function getTimeLeft(end: number): string {
     start: now,
     end: end,
   });
-  const { years, months, weeks } = duration;
+  const { months, days, hours } = duration;
 
-  const format =
-    years || months || weeks
-      ? ["years", "months", "days"]
-      : ["days", "hours", "minutes"];
+  let format;
+
+  if (days && days <= 1) {
+    format = ["hours", "minutes"];
+  }
+
+  if (months) {
+    format = ["months", "days"];
+  }
+
+  if (!months && days && days > 1) {
+    format = ["days", "hours"];
+  }
 
   const timeLeft = formatDuration(duration, {
     delimiter: ", ",
