@@ -1,28 +1,31 @@
-import { useTokenName } from "efi-ui/token/hooks/useTokenName";
+import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { assertNever } from "efi/base/assertNever";
 import {
   CryptoAsset,
   CryptoAssetType,
   findTokenContract,
 } from "efi/crypto/CryptoAsset";
+import { TokenMetadata } from "efi/tokenlists";
 
 export function useCryptoName(
   asset: CryptoAsset | undefined
 ): string | undefined {
-  const tokenContract = findTokenContract(asset);
-  const { data: tokenName } = useTokenName(tokenContract);
   if (!asset) {
     return;
   }
 
   const assetType = asset.type;
   switch (assetType) {
-    case CryptoAssetType.ERC20:
-      return tokenName;
-    case CryptoAssetType.ERC20PERMIT:
-      return tokenName;
     case CryptoAssetType.ETHEREUM:
       return "Ethereum";
+    case CryptoAssetType.ERC20:
+    case CryptoAssetType.ERC20PERMIT: {
+      const tokenContract = findTokenContract(asset) as ERC20Shim;
+      if (tokenContract?.address) {
+        return TokenMetadata[tokenContract.address].name;
+      }
+      return;
+    }
     default:
       assertNever(assetType);
       return;
