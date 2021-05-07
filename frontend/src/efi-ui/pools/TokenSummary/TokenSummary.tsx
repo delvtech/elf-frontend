@@ -53,6 +53,7 @@ export function TokenSummary({
     fixedYield,
     fiatInterestPerToken,
     interestPerToken,
+    spotPrice,
   } = useTokensSummary(pool, interestSupply || 0);
 
   const isPrincipalPool = isConvergentCurvePool(pool);
@@ -69,6 +70,7 @@ export function TokenSummary({
           assetBalance={termAssetBalance}
           assetDecimals={termAssetDecimals}
           assetBalanceTrend={termAssetBalanceTrend}
+          spotPrice={spotPrice}
         />
         <div
           className={tw("space-y-6", "flex-1", "overflow-hidden", "xl:ml-4")}
@@ -147,11 +149,12 @@ interface TokensSummary {
   termAssetBalance: BigNumber | undefined;
   termAssetBalanceTrend: number | undefined;
   termAssetDecimals: number | undefined;
-  termAssetPrice: Money | undefined;
   termAssetPriceTrend: number | undefined;
   fixedYield: number | undefined;
   fiatInterestPerToken: Money | undefined;
   interestPerToken: number | undefined;
+  termAssetPrice: Money | undefined;
+  spotPrice: number | undefined;
 }
 
 interface TokenInfoProps {
@@ -162,6 +165,7 @@ interface TokenInfoProps {
   assetBalance: BigNumber | undefined;
   assetDecimals: number | undefined;
   assetBalanceTrend: number | undefined;
+  spotPrice: number | undefined;
 }
 function TokenInfo({
   baseAssetSymbol,
@@ -171,6 +175,7 @@ function TokenInfo({
   assetBalance,
   assetDecimals,
   assetBalanceTrend,
+  spotPrice,
 }: TokenInfoProps): ReactElement {
   return (
     <div className={tw("space-y-6", "flex-1", "overflow-hidden")}>
@@ -196,7 +201,7 @@ function TokenInfo({
         </span>
         <div className={tw("flex", "justify-between")}>
           <span className={classNames("h5", tw("space-x-4"))}>
-            {formatMoney(assetPrice)}
+            {formatMoney(assetPrice) || t`$0`}
           </span>
         </div>
       </div>
@@ -204,7 +209,9 @@ function TokenInfo({
         <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
           {t`Price (${baseAssetSymbol})`}
         </span>
-        <span className={classNames("h5", tw("truncate"))}>0.997</span>
+        <span className={classNames("h5", tw("truncate"))}>
+          {spotPrice ? spotPrice.toFixed(4) : 0}
+        </span>
       </div>
     </div>
   );
@@ -306,6 +313,7 @@ function useTokensSummary(
     termAssetBalanceTrend,
     termAssetDecimals,
     termAssetPrice,
+    spotPrice,
     termAssetPriceTrend,
     fixedYield,
     fiatInterestPerToken,

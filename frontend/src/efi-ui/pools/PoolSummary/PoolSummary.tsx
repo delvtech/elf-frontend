@@ -65,6 +65,8 @@ export function PoolSummary(props: PoolSummaryProps): ReactElement {
   const { data: baseAssetDecimals } = useTokenDecimals(baseAssetContract);
   const { data: termAssetDecimals } = useTokenDecimals(termAssetContract);
 
+  const quantityLabel = isConvergentCurvePool(pool) ? "PT" : "YT";
+
   return (
     <div>
       <div className="mb-2">{t`Pool Summary`}</div>
@@ -163,9 +165,7 @@ export function PoolSummary(props: PoolSummaryProps): ReactElement {
             <div className={tw("flex", "flex-col")}>
               <span
                 className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
-              >{t`Quantity (${
-                isConvergentCurvePool(pool) ? "PT" : "YT"
-              })`}</span>
+              >{t`Quantity (${quantityLabel})`}</span>
               <div className={classNames("h5", tw("space-x-4"))}>
                 {Number(
                   formatUnits(termAssetBalance || 0, termAssetDecimals)

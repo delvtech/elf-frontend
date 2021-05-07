@@ -2,6 +2,7 @@ import { ReactElement } from "react";
 
 import { Colors } from "@blueprintjs/core";
 import classNames from "classnames";
+import { format } from "date-fns";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -12,6 +13,10 @@ import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
 import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
+import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
+import { differenceInDays } from "date-fns";
+import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForPool";
+import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
 import { PoolContract } from "efi/pools/PoolContract";
 
 interface PoolViewHeaderProps {
@@ -30,6 +35,29 @@ export function PoolViewHeader({ pool }: PoolViewHeaderProps): ReactElement {
     baseAssetSymbol
   );
   const BaseAssetIcon = findAssetIcon(baseAssetSymbol);
+
+  const tranche = useTrancheForPool(pool);
+  const { data: unlockBN } = useSmartContractReadCall(
+    tranche,
+    "unlockTimestamp"
+  );
+
+  const unlockTime = unlockBN?.toNumber();
+  const trancheCreatedAt = useTrancheCreatedAt(tranche);
+  const startTime = trancheCreatedAt ? trancheCreatedAt * 1000 : undefined;
+  const maturityTime = unlockTime ? unlockTime * 1000 : undefined;
+
+  const dayDifference = differenceInDays(
+    maturityTime as number,
+    startTime as number
+  );
+
+  const termLength =
+    dayDifference > 10
+      ? Math.round(
+          differenceInDays(maturityTime as number, startTime as number) / 10
+        ) * 10
+      : dayDifference;
 
   return (
     <div
@@ -95,9 +123,11 @@ export function PoolViewHeader({ pool }: PoolViewHeaderProps): ReactElement {
         )}
       >
         <div className={classNames("h2")}>
-          {t`${baseAssetSymbol} - ${termAssetSymbol}`}
+          {`${baseAssetSymbol} - ${termAssetSymbol}`}
         </div>
-        <div>90 Day - Jul, 7, 2020</div>
+        <div>{t`${termLength || 0} Day - ${
+          format(maturityTime || 0, "MMM d, y") || 0
+        }`}</div>
       </div>
     </div>
   );
