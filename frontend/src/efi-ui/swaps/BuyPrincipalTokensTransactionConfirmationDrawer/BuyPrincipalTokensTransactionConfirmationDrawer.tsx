@@ -30,7 +30,6 @@ import { calculateSlippage } from "efi/pools/calculateSlippage";
 import { PoolContract } from "efi/pools/PoolContract";
 import { getAmountOutWithTolerance } from "efi/trade/getAmountOutWithTolerance";
 import { t } from "ttag";
-import { Vault } from "elf-contracts/types/Vault";
 
 interface BuyPrincipalTransactionConfirmationDrawerProps {
   chainId: number | undefined;
