@@ -4,20 +4,6 @@ import keyBy from "lodash.keyby";
 // Default to the testnet in this repo so `npm start` Just Works without having
 // to specify it on the command line.
 const chainName = getTokenListJsonId();
-function getTokenListJsonId() {
-  if (process.env.NODE_ENV === "test") {
-    return "mock";
-  }
-
-  return process.env.REACT_APP_CHAIN_NAME || "testnet";
-}
-
-// Copied from testnet
-export enum TokenListTag {
-  UNDERLYING = "underlying",
-  PRINCIPAL = "eP",
-  YIELD = "eY",
-}
 
 // Import statements in TS are statically checked, and will throw compile-time
 // errors if the file doesn't exist. Require statements on the other hand are
@@ -27,23 +13,49 @@ export enum TokenListTag {
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 export const tokenListJson: TokenList = require(`tokenlists/${chainName}.tokenlist.json`);
 
-const TokenInfos = tokenListJson.tokens;
-export const TokenMetadata = keyBy(TokenInfos, "address");
+// Copied from testnet
+export enum TokenListTag {
+  UNDERLYING = "underlying",
+  PRINCIPAL = "eP",
+  YIELD = "eY",
+}
 
-export const PrincipalTokenInfos = TokenInfos.filter((tokenInfo) =>
+const tokenInfos = tokenListJson.tokens;
+
+/**
+ * A lookup object for getting the name, symbol, and decimals of any principal
+ * token, yield token, or base asset address.
+ */
+export const TokenMetadata = keyBy(tokenInfos, "address");
+
+/**
+ * The list of all base assets
+ */
+export const UnderlyingTokenInfos = tokenInfos.filter((tokenInfo) =>
+  tokenInfo.tags?.includes(TokenListTag.UNDERLYING)
+);
+
+/**
+ * The list of all principal tokens
+ */
+export const PrincipalTokenInfos = tokenInfos.filter((tokenInfo) =>
   tokenInfo.tags?.includes(TokenListTag.PRINCIPAL)
 );
-export const PrincipalTokenMetadata = keyBy(PrincipalTokenInfos, "address");
 
-export const YieldTokenInfos = TokenInfos.filter(
+/**
+ * The list of all yield tokens
+ */
+export const YieldTokenInfos = tokenInfos.filter(
   (tokenInfo) => tokenInfo.tags?.includes(TokenListTag.YIELD),
   "address"
 );
-export const YieldTokenMetadata = keyBy(YieldTokenInfos);
-
-export const UnderlyingTokenInfos = TokenInfos.filter((tokenInfo) =>
-  tokenInfo.tags?.includes(TokenListTag.UNDERLYING)
-);
-export const UnderlyingTokenMetadata = keyBy(UnderlyingTokenInfos, "address");
 
 export default tokenListJson;
+
+function getTokenListJsonId() {
+  if (process.env.NODE_ENV === "test") {
+    return "mock";
+  }
+
+  return process.env.REACT_APP_CHAIN_NAME || "testnet";
+}

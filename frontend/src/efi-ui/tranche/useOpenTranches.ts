@@ -7,13 +7,14 @@ import { BigNumber } from "ethers";
 import { useTrancheUnlockTimestampMulti } from "./useTrancheUnlockTimestamp";
 import { TrancheContracts } from "efi/tranche/tranches";
 
+const EMPTY_ARRAY: Tranche[] = [];
 export function useOpenTranches(): Tranche[] {
   const unlockTimestampResults = useTrancheUnlockTimestampMulti(
     TrancheContracts
   );
 
   if (!TrancheContracts.length) {
-    return [];
+    return EMPTY_ARRAY;
   }
 
   const unlockTimestamps = getQueriesData(
