@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useMemo } from "react";
+import { ReactElement, useMemo } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
 import { Tranche } from "elf-contracts/types/Tranche";
@@ -17,6 +17,7 @@ import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/Transac
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { TokenIcon } from "efi-ui/token/TokenIcon";
+import { usePendingTransactionPref } from "efi-ui/transactions/usePendingTransactionPref/usePendingTransactionPref";
 
 interface MintTransactionConfirmationDrawerProps {
   account: string | null | undefined;
@@ -61,13 +62,9 @@ export function MintTransactionConfirmationDrawer({
   const {
     mint,
     mutationResult: { isLoading, isSuccess, isError },
-  } = useMintTransaction(signer, baseAsset, tranche, amountInAsNumber);
+  } = useMintTransaction(signer, baseAsset, tranche, amountInAsNumber, onClose);
+
   // close the drawer after mint succeeds
-  useEffect(() => {
-    if (isSuccess) {
-      onClose();
-    }
-  }, [isSuccess, onClose]);
   const walletApprovalInfos = useWalletApprovalInfos(
     baseAsset,
     account,
