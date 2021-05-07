@@ -1,3 +1,5 @@
+import { useMemo } from "react";
+
 import { Provider } from "@ethersproject/providers";
 import { ERC20 } from "elf-contracts/types/ERC20";
 import { ERC20Permit } from "elf-contracts/types/ERC20Permit";
@@ -9,8 +11,6 @@ import { UseSmartContractReadCallOptions } from "efi-ui/contracts/useSmartContra
 import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
 import { getQueryCombinedStatus } from "efi-ui/query/getQueryCombinedStatus";
 import { EMPTY_ARRAY } from "efi/base/emptyArray";
-import { QueryStatus } from "react-query";
-import { useMemo } from "react";
 
 interface TokenWithBalance<TContract> {
   token: TContract;
@@ -20,7 +20,7 @@ export function useTokensWithBalance<TContract extends ERC20>(
   account: string | null | undefined,
   tokens: (TContract | undefined)[],
   provider?: Provider
-): [tokens: TokenWithBalance<TContract>[], status: QueryStatus] {
+): TokenWithBalance<TContract>[] {
   const balanceOfArgs: UseSmartContractReadCallOptions<
     ERC20 | ERC20Permit,
     "balanceOf"
@@ -45,26 +45,17 @@ export function useTokensWithBalance<TContract extends ERC20>(
       values.every((value) => !!value)
     );
 
+    if (status === "loading") {
+      return EMPTY_ARRAY as { token: TContract; balanceOf: BigNumber }[];
+    }
+
     const tokensWithBalance = loadedData
       .filter(([, balanceOf]) => balanceOf.gt(0))
       .map(([token, balanceOf]) => ({ token, balanceOf }));
 
-    if (status === "loading") {
-      return [
-        EMPTY_ARRAY as { token: TContract; balanceOf: BigNumber }[],
-        status,
-      ];
-    }
-
-    return [tokensWithBalance, status] as [
-      tokens: TokenWithBalance<TContract>[],
-      status: QueryStatus
-    ];
+    return tokensWithBalance as TokenWithBalance<TContract>[];
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
-  return computedResult as [
-    tokens: TokenWithBalance<TContract>[],
-    status: QueryStatus
-  ];
+  return computedResult as TokenWithBalance<TContract>[];
 }

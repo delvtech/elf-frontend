@@ -9,7 +9,7 @@ export function useWeightedPoolsWithLPBalance(
   account: string | null | undefined
 ): WeightedPool[] {
   const allWeightedPools = useWeightedPools();
-  const [poolsWithLP] = useTokensWithBalance(account, allWeightedPools);
+  const poolsWithLP = useTokensWithBalance(account, allWeightedPools);
   return poolsWithLP
     .filter(
       ({ balanceOf }) => !isDust(balanceOf, BALANCER_POOL_LP_TOKEN_DECIMALS)
