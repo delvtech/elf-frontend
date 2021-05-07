@@ -60,9 +60,14 @@ export function EarnCard({
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const openDrawer = useCallback(() => setDrawerOpen(true), []);
 
+  const { stringValue: amountIn, setValue: setAmountIn } = useNumericInput();
+  const { stringValue: amountOut, setValue: setAmountOut } = useNumericInput();
+
   // base asset
   const { activeBaseAsset, setActiveBaseAsset } = useActiveBaseAsset(
-    baseAssets
+    baseAssets,
+    setAmountIn,
+    setAmountOut
   );
 
   // tranche
@@ -132,8 +137,6 @@ export function EarnCard({
   const inputTokenSymbol = useCryptoSymbol(activeBaseAsset);
   const baseAssetIcon = findAssetIcon2(activeBaseAsset);
 
-  const { stringValue: amountIn, setValue: setAmountIn } = useNumericInput();
-  const { stringValue: amountOut, setValue: setAmountOut } = useNumericInput();
   const closeDrawer = useCallback(() => {
     setAmountIn("");
     setAmountOut("");
@@ -154,6 +157,7 @@ export function EarnCard({
       if (!newAmountIn) {
         setAmountIn("");
         setAmountOut("");
+        return;
       }
       const newAmountOutNumber = calcSwapOutGivenInCCPoolUNSAFE(
         newAmountIn,
@@ -188,6 +192,7 @@ export function EarnCard({
       if (!newAmountOut) {
         setAmountIn("");
         setAmountOut("");
+        return;
       }
       const newAmountInNumber = calcSwapOutGivenInCCPoolUNSAFE(
         newAmountOut,
@@ -364,15 +369,21 @@ function useSetDefaultActiveBaseAsset(
   }, [activeBaseAsset, defaultBaseAsset, setActiveBaseAsset]);
 }
 
-function useActiveBaseAsset(allBaseAssets: (CryptoAsset | undefined)[]) {
+function useActiveBaseAsset(
+  allBaseAssets: (CryptoAsset | undefined)[],
+  setAmountIn: (value: string) => void,
+  setAmountOut: (value: string) => void
+) {
   const [activeBaseAsset, setActiveBaseAssetState] = useState<
     CryptoAsset | undefined
   >();
   const setActiveBaseAsset = useCallback(
     (baseAsset: CryptoAsset | undefined) => {
+      setAmountIn("");
+      setAmountOut("");
       setActiveBaseAssetState(baseAsset);
     },
-    []
+    [setAmountIn, setAmountOut]
   );
   // The list of base assets will be empty while the data loads, so we want to
   // set the default after it's been populated
