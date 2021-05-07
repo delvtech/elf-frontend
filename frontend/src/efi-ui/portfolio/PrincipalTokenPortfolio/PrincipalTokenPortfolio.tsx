@@ -110,10 +110,7 @@ function usePrincipalTokenTab(
     principalTokenDecimalResults
   );
   const principalTokenDecimals = getQueriesData(principalTokenDecimalResults);
-  const [
-    principalTokensWithBalanceResults,
-    tokenResultsStatus,
-  ] = useTokensWithBalance(
+  const principalTokensWithBalanceResults = useTokensWithBalance(
     account,
     (TrancheContracts as unknown) as ERC20Shim[],
     provider
@@ -136,7 +133,7 @@ function usePrincipalTokenTab(
     return tokens;
   }, [principalTokenDecimals, principalTokensWithBalanceResults]);
 
-  if (decimalResultsStatus === "loading" || tokenResultsStatus === "loading") {
+  if (decimalResultsStatus === "loading") {
     return undefined;
   }
 

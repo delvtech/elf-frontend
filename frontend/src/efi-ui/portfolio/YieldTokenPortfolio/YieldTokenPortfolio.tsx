@@ -86,7 +86,7 @@ function useYieldTokenTab(
   account: string | null | undefined,
   provider?: Provider
 ) {
-  const [yieldTokensWithBalanceResults] = useTokensWithBalance(
+  const yieldTokensWithBalanceResults = useTokensWithBalance(
     account,
     (InterestTokenContracts as unknown) as ERC20Shim[],
     provider
