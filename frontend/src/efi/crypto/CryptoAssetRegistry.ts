@@ -22,6 +22,16 @@ const USDC_CRYPTO_ASSET: Erc20PermitCryptoAsset = {
   ) as InterestToken,
 };
 
+const baseAssetCryptoAssets: Record<string, CryptoAsset> = {
+  // weth should return eth wherever it's used, because the user should never
+  // interact with weth
+  [AddressesJson.addresses.wethAddress]: ETHEREUM_CRYPTO_ASSET,
+  [AddressesJson.addresses.usdcAddress]: USDC_CRYPTO_ASSET,
+};
+export const BASE_ASSET_CRYPTO_ASSETS: CryptoAsset[] = Object.values(
+  baseAssetCryptoAssets
+);
+
 const principalTokenCryptoAssets: Erc20PermitCryptoAsset[] = PrincipalTokenInfos.map(
   ({ address }) => ({
     id: address,
@@ -43,11 +53,13 @@ const yieldTokenCryptoAssets: Erc20PermitCryptoAsset[] = YieldTokenInfos.map(
   })
 );
 
+/**
+ * Lookup object to get the CryptoAsset of a token.
+ *
+ * NOTE: Lookups for weth will return the Ethereum crypto asset.
+ */
 export const CryptoAssets: Record<string, CryptoAsset> = Object.freeze({
-  // weth should return eth wherever it's used, because the user should never
-  // interact with weth
-  [AddressesJson.addresses.wethAddress]: ETHEREUM_CRYPTO_ASSET,
-  [AddressesJson.addresses.usdcAddress]: USDC_CRYPTO_ASSET,
+  ...baseAssetCryptoAssets,
   ...keyBy(
     principalTokenCryptoAssets,
     ({ tokenContract }) => tokenContract.address
