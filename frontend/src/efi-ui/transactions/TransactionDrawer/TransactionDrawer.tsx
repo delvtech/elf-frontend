@@ -105,6 +105,7 @@ export function TransactionDrawer({
           ({ cryptoAsset, messageRenderer, ownerAddress, spenderAddress }) => {
             return (
               <WalletApprovalCallout
+                key={cryptoAsset?.id}
                 spenderAddress={spenderAddress}
                 messageRenderer={messageRenderer}
                 signer={signer}

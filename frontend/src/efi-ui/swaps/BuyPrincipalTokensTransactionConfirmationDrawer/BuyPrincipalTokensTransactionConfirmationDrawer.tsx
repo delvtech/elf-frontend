@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import { ReactElement, useMemo } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
@@ -24,12 +24,13 @@ import { SwapDetailsForm } from "efi-ui/swaps/SwapDetailsPreview/SwapDetailsForm
 import { TokenIcon } from "efi-ui/token/TokenIcon";
 import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/TransactionDrawer";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
-import { CryptoAsset } from "efi/crypto/CryptoAsset";
+import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { calculatePurchasePrice } from "efi/pools/calculatePurchasePrice";
 import { calculateSlippage } from "efi/pools/calculateSlippage";
 import { PoolContract } from "efi/pools/PoolContract";
 import { getAmountOutWithTolerance } from "efi/trade/getAmountOutWithTolerance";
 import { t } from "ttag";
+import { Vault } from "elf-contracts/types/Vault";
 
 interface BuyPrincipalTransactionConfirmationDrawerProps {
   chainId: number | undefined;
@@ -130,14 +131,12 @@ export function BuyPrincipalTokensTransactionConfirmationDrawer({
     spotPriceTokenForOneBaseAsset
   );
 
-  const walletApprovalInfos = [
-    {
-      cryptoAsset: baseAsset,
-      ownerAddress: account,
-      spenderAddress: balancerVault?.address,
-      messageRenderer: getBalancerApprovalMessage,
-    },
-  ];
+  const walletApprovalInfos = useWalletApprovalInfos(
+    baseAsset,
+    account,
+    balancerVault?.address
+  );
+
   return (
     <TransactionDrawer
       buttonLabel={t`Buy`}
@@ -170,6 +169,27 @@ export function BuyPrincipalTokensTransactionConfirmationDrawer({
     />
   );
 }
+function useWalletApprovalInfos(
+  baseAsset: CryptoAsset,
+  account: string | null | undefined,
+  vaultAddress: string | undefined
+) {
+  return useMemo(
+    () =>
+      baseAsset.type === CryptoAssetType.ETHEREUM
+        ? undefined
+        : [
+            {
+              cryptoAsset: baseAsset,
+              ownerAddress: account,
+              spenderAddress: vaultAddress,
+              messageRenderer: getBalancerApprovalMessage,
+            },
+          ],
+    [account, baseAsset, vaultAddress]
+  );
+}
+
 function getPriceSlippageAndTradingFee(
   amountIn: number,
   amountOutNumber: number,

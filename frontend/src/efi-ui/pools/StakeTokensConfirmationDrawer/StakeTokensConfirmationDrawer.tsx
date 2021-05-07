@@ -1,18 +1,15 @@
-import { ReactElement } from "react";
+import { ReactElement, useMemo } from "react";
 
-import { Button, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { BigNumber, Signer } from "ethers";
 import { t } from "ttag";
 
-import tw from "efi-tailwindcss-classnames";
 import { getBalancerApprovalMessage } from "efi-ui/balancer/balancerApprovalMessage";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useCryptoAssetMetadata } from "efi-ui/crypto/hooks/useCryptoAssetMetadata/useCryptAssetMetadata";
 import { StakeConfirmationForm } from "efi-ui/pools/StakeTokensConfirmationDrawer/StakeConfirmationForm";
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
-import { WalletApprovalCalloutOld } from "efi-ui/transactions/TransactionDrawer/WalletApprovalCallout";
 import {
   CryptoAsset,
   CryptoAssetType,
@@ -47,7 +44,6 @@ export function StakingConfirmationDrawer({
   baseAsset,
   trancheAsset,
   baseAssetSymbol,
-  baseAssetSymbolLabel,
   trancheAssetSymbol,
   trancheAssetSymbolLabel,
   baseAssetIn,
@@ -91,20 +87,13 @@ export function StakingConfirmationDrawer({
 
   // TODO: validate inputs as well
   const confirmButtonDisabled = !hasTokenApprovals;
-  const walletApprovalInfos = [
-    {
-      cryptoAsset: baseAsset,
-      ownerAddress: account,
-      spenderAddress: balancerVault?.address,
-      messageRenderer: getBalancerApprovalMessage,
-    },
-    {
-      cryptoAsset: trancheAsset,
-      ownerAddress: account,
-      spenderAddress: balancerVault?.address,
-      messageRenderer: getBalancerApprovalMessage,
-    },
-  ];
+
+  const walletApprovalInfos = useWalletApprovalInfos(
+    baseAsset,
+    trancheAsset,
+    account,
+    balancerVault?.address
+  );
 
   return (
     <TransactionDrawer
@@ -134,6 +123,32 @@ export function StakingConfirmationDrawer({
       }
     />
   );
+}
+function useWalletApprovalInfos(
+  baseAsset: CryptoAsset | undefined,
+  trancheAsset: CryptoAsset | undefined,
+  account: string | null | undefined,
+  vaultAddress: string | undefined
+) {
+  return useMemo(() => {
+    if (!baseAsset || baseAsset.type === CryptoAssetType.ETHEREUM) {
+      return;
+    }
+    return [
+      {
+        cryptoAsset: baseAsset,
+        ownerAddress: account,
+        spenderAddress: vaultAddress,
+        messageRenderer: getBalancerApprovalMessage,
+      },
+      {
+        cryptoAsset: trancheAsset,
+        ownerAddress: account,
+        spenderAddress: vaultAddress,
+        messageRenderer: getBalancerApprovalMessage,
+      },
+    ];
+  }, [account, baseAsset, trancheAsset, vaultAddress]);
 }
 
 function getConfirmButtonDisabled(
