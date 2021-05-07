@@ -1,4 +1,4 @@
-import { ReactElement, useMemo } from "react";
+import { ReactElement, useEffect, useMemo } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
 import { BigNumber, Signer } from "ethers";
@@ -59,6 +59,12 @@ export function StakingConfirmationDrawer({
   onStake,
 }: StakingConfirmationDrawerProps): ReactElement {
   const balancerVault = useBalancerVault();
+  // close the drawer after stake succeeds
+  useEffect(() => {
+    if (isStakeSuccess) {
+      onClose();
+    }
+  }, [isStakeSuccess, onClose]);
 
   const {
     icon: baseAssetIcon,

@@ -8,7 +8,6 @@ import React, {
 
 import { Button, Card, Classes, Elevation, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
-import { AbstractConnector } from "@web3-react/abstract-connector";
 import classNames from "classnames";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { t } from "ttag";
@@ -19,6 +18,7 @@ import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInp
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { CryptoAssetPicker } from "efi-ui/crypto/CryptoAssetPicker/CryptoAssetPicker";
 import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
+import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
 import { useCryptoBalance } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
@@ -36,14 +36,10 @@ import { formatBalance } from "efi/base/formatBalance";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
-import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
 
 export interface EarnCardProps {
   library: Web3Provider | undefined;
   account: string | null | undefined;
-  chainId: number | undefined;
-  walletConnectionActive: boolean;
-  connector: AbstractConnector | undefined;
   baseAssets: (CryptoAsset | undefined)[];
   tranchesByBaseAsset: Record<string, Tranche[]>;
 }
@@ -52,9 +48,6 @@ export function EarnCard({
   library,
   account,
   baseAssets,
-  chainId,
-  connector,
-  walletConnectionActive,
   tranchesByBaseAsset,
 }: EarnCardProps): ReactElement {
   // local state
@@ -253,10 +246,7 @@ export function EarnCard({
           tranche={activeTranche}
           account={account}
           library={library}
-          chainId={chainId}
           pool={pool}
-          walletConnectionActive={walletConnectionActive}
-          connector={connector}
           amountIn={amountIn}
           isOpen={isDrawerOpen}
           onClose={closeDrawer}
