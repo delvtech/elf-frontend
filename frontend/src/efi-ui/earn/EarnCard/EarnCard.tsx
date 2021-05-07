@@ -34,8 +34,14 @@ import { BuyPrincipalTokensTransactionConfirmationDrawer } from "efi-ui/swaps/Bu
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { formatBalance } from "efi/base/formatBalance";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
+import { clipStringValueToDecimals } from "efi/math/fixedPoint";
+import { calcSwapOutGivenInCCPoolUNSAFE } from "efi/pools/calcPoolSwap";
 import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
+import { validateTradeValues } from "efi/trade/validateTradeValues";
+import { formatEther, formatUnits } from "ethers/lib/utils";
+import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
+import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
 
 export interface EarnCardProps {
   library: Web3Provider | undefined;
@@ -69,32 +75,51 @@ export function EarnCard({
   const { data: trancheDecimals } = useTokenDecimals(activeTranche);
   const activeBaseAssetSymbol = useCryptoSymbol(activeBaseAsset);
   const activeBaseAssetDecimals = useCryptoDecimals(activeBaseAsset);
-  const activeBaseAssetBalance = useCryptoBalance(
+  const activeBaseAssetBalanceOf = useCryptoBalance(
     library,
     account,
     activeBaseAsset
   );
   const activeBaseAssetDisplayBalance = formatBalance(
-    activeBaseAssetBalance,
+    activeBaseAssetBalanceOf,
     activeBaseAssetDecimals
   );
 
   const principalTokenAddress = activeTranche?.address;
   const principalTokenAsset = useCryptoAssetForToken(principalTokenAddress);
-  const principalTokenDecimals = useCryptoDecimals(principalTokenAsset);
   const principalTokenBalanceOf = useCryptoBalance(
     library,
     account,
     principalTokenAsset
   );
-  const principalTokenDisplayBalance = formatBalance(
-    principalTokenBalanceOf,
-    principalTokenDecimals
-  );
 
-  const pool = usePoolForToken(activeTranche as ERC20Shim, jsonRpcProvider);
-  const { data: [tokens] = [] } = usePoolTokens(pool);
+  const pool = usePoolForToken(
+    activeTranche as ERC20Shim,
+    jsonRpcProvider
+  ) as ConvergentCurvePool;
+  const { data: totalSupplyBN } = useSmartContractReadCall(pool, "totalSupply");
+  const { data: unitSecondsBN } = useSmartContractReadCall(pool, "unitSeconds");
+  const { data: expirationBN } = useSmartContractReadCall(pool, "expiration");
+  const nowInSeconds = Math.round(Date.now() / 1000);
+  const timeRemainingSeconds = expirationBN
+    ? expirationBN.toNumber() - nowInSeconds
+    : 0;
+  const tParamSeconds = unitSecondsBN?.toNumber() ?? 1;
+
+  const totalSupply = formatEther(totalSupplyBN ?? 0);
+
+  const { data: [tokens, balances = []] = [] } = usePoolTokens(pool);
   const { baseAssetIndex, termAssetIndex } = parseSortedTokensForPool(tokens);
+  const baseAssetPoolBalance = balances[baseAssetIndex];
+  const principalTokenPoolBalance = balances[termAssetIndex];
+  const baseReserves = formatUnits(
+    baseAssetPoolBalance ?? 0,
+    activeBaseAssetDecimals
+  );
+  const principalReserves = formatUnits(
+    principalTokenPoolBalance ?? 0,
+    activeBaseAssetDecimals
+  );
 
   // the tranche's pool
   const baseAssetPoolToken = usePoolPairedToken(
@@ -107,13 +132,90 @@ export function EarnCard({
   const inputTokenSymbol = useCryptoSymbol(activeBaseAsset);
   const baseAssetIcon = findAssetIcon2(activeBaseAsset);
 
-  const { stringValue: amountIn, setValue: onChangeIn } = useNumericInput();
-  const { stringValue: amountOut, setValue: onChangeOut } = useNumericInput();
+  const { stringValue: amountIn, setValue: setAmountIn } = useNumericInput();
+  const { stringValue: amountOut, setValue: setAmountOut } = useNumericInput();
   const closeDrawer = useCallback(() => {
-    onChangeIn("");
-    onChangeOut("");
+    setAmountIn("");
+    setAmountOut("");
     setDrawerOpen(false);
-  }, [onChangeIn, onChangeOut]);
+  }, [setAmountIn, setAmountOut]);
+
+  const { isValidTokenInValue, isValidTokenOutValue } = validateTradeValues(
+    amountIn,
+    activeBaseAssetBalanceOf,
+    activeBaseAssetDecimals,
+    baseAssetPoolBalance,
+    amountOut,
+    principalTokenPoolBalance
+  );
+
+  const onChangeIn = useCallback(
+    (newAmountIn: string, swapKind: SwapKind) => {
+      if (!newAmountIn) {
+        setAmountIn("");
+        setAmountOut("");
+      }
+      const newAmountOutNumber = calcSwapOutGivenInCCPoolUNSAFE(
+        newAmountIn,
+        baseReserves,
+        principalReserves,
+        totalSupply,
+        timeRemainingSeconds,
+        tParamSeconds,
+        true
+      );
+      const newAmountOut = clipStringValueToDecimals(
+        newAmountOutNumber.toString(),
+        activeBaseAssetDecimals ?? 18
+      );
+      setAmountIn(newAmountIn);
+      setAmountOut(newAmountOut);
+    },
+    [
+      activeBaseAssetDecimals,
+      baseReserves,
+      principalReserves,
+      setAmountIn,
+      setAmountOut,
+      tParamSeconds,
+      timeRemainingSeconds,
+      totalSupply,
+    ]
+  );
+
+  const onChangeOut = useCallback(
+    (newAmountOut: string, swapKind: SwapKind) => {
+      if (!newAmountOut) {
+        setAmountIn("");
+        setAmountOut("");
+      }
+      const newAmountInNumber = calcSwapOutGivenInCCPoolUNSAFE(
+        newAmountOut,
+        baseReserves,
+        principalReserves,
+        totalSupply,
+        timeRemainingSeconds,
+        tParamSeconds,
+        true
+      );
+      const newAmountIn = clipStringValueToDecimals(
+        newAmountInNumber.toString(),
+        activeBaseAssetDecimals ?? 18
+      );
+      setAmountIn(newAmountIn);
+      setAmountOut(newAmountOut);
+    },
+    [
+      activeBaseAssetDecimals,
+      baseReserves,
+      principalReserves,
+      setAmountIn,
+      setAmountOut,
+      tParamSeconds,
+      timeRemainingSeconds,
+      totalSupply,
+    ]
+  );
 
   const roundedPrincipalPrice = amountOfEthForOnePrincipalEth?.toFixed(4);
   const marketRateLabel = getMarketRateLabel(
@@ -121,6 +223,8 @@ export function EarnCard({
     roundedPrincipalPrice,
     activeBaseAssetSymbol
   );
+
+  const buttonLabel = !!account ? t`Buy` : t`Connect Wallet`;
 
   return (
     <Fragment>
@@ -160,16 +264,10 @@ export function EarnCard({
               }
               placeholder="0.00"
               value={amountIn || ""}
+              validValue={isValidTokenInValue}
               onValueChange={onChangeIn}
-              assetBalance={+activeBaseAssetDisplayBalance}
-              cryptoAddress={baseAssetPoolToken?.address}
               cryptoDecimals={activeBaseAssetDecimals}
-              cryptoBalanceOf={activeBaseAssetBalance}
-              cryptoDisplayBalance={activeBaseAssetDisplayBalance || ""}
-              previewCryptoAddress={principalTokenAddress}
-              previewCryptoPoolIndex={termAssetIndex}
-              pool={pool}
-              onPreviewUpdate={onChangeOut}
+              cryptoBalanceOf={activeBaseAssetBalanceOf}
               swapKind={SwapKind.GIVEN_IN}
             />
           </div>
@@ -209,16 +307,10 @@ export function EarnCard({
               }
               placeholder="0.00"
               value={amountOut || ""}
+              validValue={isValidTokenOutValue}
               onValueChange={onChangeOut}
-              onPreviewUpdate={onChangeIn}
-              assetBalance={+activeBaseAssetDisplayBalance}
-              cryptoAddress={principalTokenAddress}
               cryptoDecimals={trancheDecimals}
               cryptoBalanceOf={principalTokenBalanceOf}
-              cryptoDisplayBalance={principalTokenDisplayBalance}
-              previewCryptoAddress={baseAssetPoolToken?.address}
-              previewCryptoPoolIndex={baseAssetIndex}
-              pool={pool}
               swapKind={SwapKind.GIVEN_OUT}
             />
           </div>
@@ -238,9 +330,7 @@ export function EarnCard({
             disabled={!amountIn || !account}
             onClick={openDrawer}
           >
-            <div className={tw("p-4", "text-lg")}>
-              {!!account ? t`Buy` : `Connect Wallet`}
-            </div>
+            <div className={tw("p-4", "text-lg")}>{buttonLabel}</div>
           </Button>
         </div>
       </Card>
