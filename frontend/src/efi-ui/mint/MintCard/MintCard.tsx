@@ -114,7 +114,7 @@ export function MintCard(props: MintCardProps): ReactElement | null {
 
   const onClose = useCallback(() => {
     setDrawerOpen(false);
-    setAmountIn(undefined);
+    setAmountIn("");
   }, [setAmountIn]);
   return (
     <Fragment>

@@ -110,8 +110,8 @@ export function EarnCard({
   const { stringValue: amountIn, setValue: onChangeIn } = useNumericInput();
   const { stringValue: amountOut, setValue: onChangeOut } = useNumericInput();
   const closeDrawer = useCallback(() => {
-    onChangeIn(undefined);
-    onChangeOut(undefined);
+    onChangeIn("");
+    onChangeOut("");
     setDrawerOpen(false);
   }, [onChangeIn, onChangeOut]);
 

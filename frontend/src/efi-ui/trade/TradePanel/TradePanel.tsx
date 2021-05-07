@@ -159,6 +159,11 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     submitButtonLabel = t`Connect wallet`;
   }
 
+  const onClose = useCallback(() => {
+    setDrawerOpen(false);
+    onChangeIn("");
+    onChangeOut("");
+  }, [onChangeIn, onChangeOut]);
   return (
     <div
       className={tw(
@@ -245,7 +250,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
         amountIn={amountIn}
         spotPrice={spotPrice}
         isOpen={isDrawerOpen}
-        onClose={() => setDrawerOpen(false)}
+        onClose={onClose}
       />
     </div>
   );
