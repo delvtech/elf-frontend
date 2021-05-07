@@ -17,7 +17,6 @@ import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/Transac
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { TokenIcon } from "efi-ui/token/TokenIcon";
-import { usePendingTransactionPref } from "efi-ui/transactions/usePendingTransactionPref/usePendingTransactionPref";
 
 interface MintTransactionConfirmationDrawerProps {
   account: string | null | undefined;

@@ -1,7 +1,7 @@
-import { ReactElement, useEffect, useMemo } from "react";
+import { ReactElement, useMemo } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
-import { BigNumber, Signer } from "ethers";
+import { BigNumber } from "ethers";
 import { t } from "ttag";
 
 import { getBalancerApprovalMessage } from "efi-ui/balancer/balancerApprovalMessage";
@@ -16,7 +16,6 @@ import {
   findTokenContract,
 } from "efi/crypto/CryptoAsset";
 import { parseUnits } from "ethers/lib/utils";
-import React from "react";
 import {
   TransactionDrawer,
   WalletApprovalInfo,
