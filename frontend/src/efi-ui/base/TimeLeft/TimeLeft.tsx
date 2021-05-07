@@ -74,7 +74,7 @@ function getTimeLeft(end: number): string {
     start: now,
     end: end,
   });
-  const { months, days, hours } = duration;
+  const { months, days } = duration;
 
   let format;
 

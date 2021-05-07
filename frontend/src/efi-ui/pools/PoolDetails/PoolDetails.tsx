@@ -8,7 +8,6 @@ import { formatEther } from "ethers/lib/utils";
 import tw from "efi-tailwindcss-classnames";
 import { getQueryData } from "efi-ui/base/queryResults";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { APYSummary } from "efi-ui/pools/APYSummary/APYSummary";
 import { PoolActionsCard } from "efi-ui/pools/PoolActionsCard/PoolActionsCard";
 import { PoolCharts } from "efi-ui/pools/PoolCharts/PoolCharts";
 import { PoolSummary } from "efi-ui/pools/PoolSummary/PoolSummary";
@@ -18,6 +17,7 @@ import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidityForPool.ts/useTotalFiatLiquidityForPool";
 import { useTotalLiquidityTrend } from "efi-ui/pools/useTotalLiquidityTrend/useTotalLiquidityTrend";
 import { useTotalValueLockedForTranche } from "efi-ui/pools/useTotalValueLockedForTranche";
+import { useStakingAPY } from "efi-ui/pools/useStakingAPY";
 import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForPool";
 import { useVolumeForPool } from "efi-ui/pools/useVolumeForPool/useVolumeForPool";
 import { TermSummary } from "efi-ui/pools/TermSummary/TermSummary";
@@ -77,20 +77,21 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
   const { volume24hr, volumeTrend } = useVolumeTrend(pool);
   const { feeVolume24hr, feeVolumeTrend } = useFeeVolumeTrend(pool);
 
+  const stakingAPY = useStakingAPY(pool);
+
   return (
     <div className={tw("flex", "flex-col", "space-y-8", "w-full")}>
-      <APYSummary pool={pool} baseAsset={baseAssetContract} />
       <div
         className={tw(
           "flex",
           "flex-col",
           "space-y-8",
-          "lg:space-y-0",
-          "lg:grid",
-          "lg:grid-flow-row",
-          "lg:gap-12",
-          "lg:grid-cols-3",
-          "lg:auto-rows-max"
+          "xl:space-y-0",
+          "xl:grid",
+          "xl:grid-flow-row",
+          "xl:gap-12",
+          "xl:grid-cols-3",
+          "xl:auto-rows-max"
         )}
       >
         <PoolSummary
@@ -100,28 +101,32 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
           volumeTrend={volumeTrend}
           feeVolume={feeVolume24hr}
           feeVolumeTrend={feeVolumeTrend}
+          stakingAPY={stakingAPY}
+          pool={pool}
         />
         <TermSummary
           pool={pool}
-          interestSupply={+formatEther(interestSupplyBN ?? 0)}
           totalValueLocked={totalValueLocked}
           baseAsset={baseAssetContract}
           startTimeMs={startTimeMs}
           maturityTimeMs={maturityTimeMs}
         />
-        <TokenSummary pool={pool} />
+        <TokenSummary
+          pool={pool}
+          interestSupply={+formatEther(interestSupplyBN ?? 0)}
+        />
       </div>
       <div
         className={tw(
           "flex",
           "flex-col",
           "space-y-8",
-          "lg:space-y-0",
-          "lg:grid",
-          "lg:grid-flow-row",
-          "lg:gap-12",
-          "lg:grid-cols-2",
-          "lg:auto-rows-max"
+          "xl:space-y-0",
+          "xl:grid",
+          "xl:grid-flow-row",
+          "xl:gap-12",
+          "xl:grid-cols-2",
+          "xl:auto-rows-max"
         )}
       >
         <PoolCharts pool={pool} />

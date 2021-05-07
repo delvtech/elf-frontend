@@ -1,5 +1,3 @@
-import { t } from "ttag";
-
 import { useTokenName } from "efi-ui/token/hooks/useTokenName";
 import { assertNever } from "efi/base/assertNever";
 import {
