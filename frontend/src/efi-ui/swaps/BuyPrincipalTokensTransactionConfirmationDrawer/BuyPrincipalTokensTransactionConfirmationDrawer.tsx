@@ -1,10 +1,10 @@
 import { ReactElement, useMemo } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
-import { AbstractConnector } from "@web3-react/abstract-connector";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { Signer } from "ethers";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
+import { t } from "ttag";
 
 import { getBalancerApprovalMessage } from "efi-ui/balancer/balancerApprovalMessage";
 import { SwapKind } from "efi-ui/balancer/SwapKind";
@@ -29,13 +29,9 @@ import { calculatePurchasePrice } from "efi/pools/calculatePurchasePrice";
 import { calculateSlippage } from "efi/pools/calculateSlippage";
 import { PoolContract } from "efi/pools/PoolContract";
 import { getAmountOutWithTolerance } from "efi/trade/getAmountOutWithTolerance";
-import { t } from "ttag";
 
 interface BuyPrincipalTransactionConfirmationDrawerProps {
-  chainId: number | undefined;
   account: string | null | undefined;
-  walletConnectionActive: boolean;
-  connector: AbstractConnector | undefined;
   library: Web3Provider | undefined;
   pool: PoolContract | undefined;
 
@@ -50,10 +46,7 @@ interface BuyPrincipalTransactionConfirmationDrawerProps {
 }
 
 export function BuyPrincipalTokensTransactionConfirmationDrawer({
-  connector,
-  walletConnectionActive,
   library,
-  chainId,
   account,
   baseAssetIcon,
   baseAsset,

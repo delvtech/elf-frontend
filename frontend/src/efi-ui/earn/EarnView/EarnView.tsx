@@ -16,13 +16,7 @@ import { useOpenTranches } from "efi-ui/tranche/useOpenTranches";
 
 interface EarnViewProps extends RouteComponentProps {}
 export function EarnView(props: EarnViewProps): ReactElement {
-  const {
-    account,
-    active,
-    chainId,
-    connector,
-    library,
-  } = useWeb3React<Web3Provider>();
+  const { account, library } = useWeb3React<Web3Provider>();
 
   const openTranches = useOpenTranches();
 
@@ -77,9 +71,6 @@ export function EarnView(props: EarnViewProps): ReactElement {
             <EarnCard
               library={library}
               account={account}
-              walletConnectionActive={active}
-              chainId={chainId}
-              connector={connector}
               baseAssets={uniqueBaseAssets}
               tranchesByBaseAsset={tranchesByBaseAsset}
             />
