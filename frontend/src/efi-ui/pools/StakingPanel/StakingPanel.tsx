@@ -123,6 +123,9 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
   );
 
   const [isDrawerOpen, setDrawerOpen] = useState(false);
+  const onClose = useCallback(() => {
+    setDrawerOpen(false);
+  }, []);
   const submitTransaction = useCallback(() => {
     setDrawerOpen(true);
   }, []);
@@ -144,7 +147,13 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
       isSuccess: isJoinCCPoolSuccess,
       isError: isJoinCCPoolError,
     },
-  } = useJoinConvergentPool(signer, account, pool, poolTokenMaxAmounts);
+  } = useJoinConvergentPool(
+    signer,
+    account,
+    pool,
+    poolTokenMaxAmounts,
+    onClose
+  );
 
   const {
     onJoinPool: joinWeightedPool,
@@ -157,7 +166,8 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
     signer,
     account,
     pool as WeightedPool,
-    poolTokenMaxAmounts
+    poolTokenMaxAmounts,
+    onClose
   );
 
   const onStake = useCallback(() => {
@@ -264,9 +274,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
         baseAssetIn={amountIn}
         trancheAssetIn={amountOut}
         isOpen={isDrawerOpen}
-        onClose={() => {
-          setDrawerOpen(false);
-        }}
+        onClose={onClose}
         isStakeLoading={
           isPrincipalPoolType ? isJoinCCPoolLoading : isJoinWPoolLoading
         }

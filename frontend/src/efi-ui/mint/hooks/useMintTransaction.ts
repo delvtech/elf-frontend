@@ -22,7 +22,8 @@ export function useMintTransaction(
   signer: Signer | undefined,
   baseAsset: CryptoAsset | undefined,
   tranche: Tranche | undefined,
-  amountIn: number | undefined
+  amountIn: number | undefined,
+  onTransactionStarted: () => void
 ): {
   mint: () => void;
   mutationResult: UseMutationResult<
@@ -41,7 +42,12 @@ export function useMintTransaction(
   const mutationResult = useSmartContractTransactionPersisted(
     userProxy,
     "mint",
-    signer
+    signer,
+    {
+      onTransactionStarted: () => {
+        onTransactionStarted();
+      },
+    }
   );
   const { mutate: mint } = mutationResult;
   const mintCallArgs = useMintCallArgs(tranche, baseAsset, amountInBigNumber);

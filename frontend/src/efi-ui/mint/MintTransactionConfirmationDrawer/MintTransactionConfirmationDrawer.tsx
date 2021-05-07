@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useMemo } from "react";
+import { ReactElement, useMemo } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
 import { Tranche } from "elf-contracts/types/Tranche";
@@ -61,13 +61,9 @@ export function MintTransactionConfirmationDrawer({
   const {
     mint,
     mutationResult: { isLoading, isSuccess, isError },
-  } = useMintTransaction(signer, baseAsset, tranche, amountInAsNumber);
+  } = useMintTransaction(signer, baseAsset, tranche, amountInAsNumber, onClose);
+
   // close the drawer after mint succeeds
-  useEffect(() => {
-    if (isSuccess) {
-      onClose();
-    }
-  }, [isSuccess, onClose]);
   const walletApprovalInfos = useWalletApprovalInfos(
     baseAsset,
     account,

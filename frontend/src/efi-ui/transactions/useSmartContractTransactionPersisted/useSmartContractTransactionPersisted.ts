@@ -15,7 +15,11 @@ interface UseSmartContractTransactionPersistedOptions<
   TMethodName extends ContractMethodName<TContract>
 > {
   confirmations?: number;
-  onSuccess?: (
+  onTransactionStarted?: (
+    result: ContractTransaction,
+    callArgs: ContractMethodArgs<TContract, TMethodName>
+  ) => void | Promise<void>;
+  onTransactionSuccess?: (
     result: ContractTransaction,
     callArgs: ContractMethodArgs<TContract, TMethodName>
   ) => void | Promise<void>;
@@ -47,7 +51,8 @@ export function useSmartContractTransactionPersisted<
   ContractMethodArgs<TContract, TMethodName>
 > {
   const {
-    onSuccess: onSuccessFromOptions,
+    onTransactionStarted,
+    onTransactionSuccess,
     onError: onErrorFromProps,
   } = options;
   const {
@@ -66,12 +71,12 @@ export function useSmartContractTransactionPersisted<
         callArgs,
         txReceipt.hash
       );
-      onSuccessFromOptions?.(txReceipt, callArgs);
+      onTransactionStarted?.(txReceipt, callArgs);
     },
     [
       contract?.address,
       methodName,
-      onSuccessFromOptions,
+      onTransactionStarted,
       setPendingTransactionPref,
     ]
   );
@@ -82,9 +87,9 @@ export function useSmartContractTransactionPersisted<
       callArgs: ContractMethodArgs<TContract, TMethodName>
     ) => {
       clearPendingTransactionPref();
-      onSuccessFromOptions?.(txReceipt, callArgs);
+      onTransactionSuccess?.(txReceipt, callArgs);
     },
-    [clearPendingTransactionPref, onSuccessFromOptions]
+    [clearPendingTransactionPref, onTransactionSuccess]
   );
 
   const onError = useCallback(

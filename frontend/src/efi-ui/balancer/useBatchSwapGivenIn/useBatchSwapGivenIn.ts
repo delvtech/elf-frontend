@@ -42,7 +42,8 @@ export function useBatchSwapGivenIn(
   tokenInAddress: string | undefined,
   tokenOutAddress: string | undefined,
   amountIn: BigNumber | undefined,
-  limitOut?: BigNumber
+  limitOut?: BigNumber,
+  onTransactionStarted?: () => void
 ): {
   batchSwapGivenIn: () => void;
   mutationResult: UseMutationResult<
@@ -60,6 +61,9 @@ export function useBatchSwapGivenIn(
     "batchSwap",
     signer,
     {
+      onTransactionStarted: () => {
+        onTransactionStarted?.();
+      },
       onError: (error) => {
         AppToaster.show(makeErrorToast(error.message));
       },
