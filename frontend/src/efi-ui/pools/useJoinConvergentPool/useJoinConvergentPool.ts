@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 
 import { Vault } from "elf-contracts/types/Vault";
-import { BigNumber, CallOverrides, Signer } from "ethers";
+import { BigNumber, CallOverrides, ContractTransaction, Signer } from "ethers";
 import { defaultAbiCoder } from "ethers/lib/utils";
 import zipObject from "lodash.zipobject";
 
@@ -14,22 +14,31 @@ import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 import ContractAddresses from "efi/addresses";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { PoolContract } from "efi/pools/PoolContract";
+import { UseMutationResult } from "react-query";
 
 export function useJoinConvergentPool(
   signer: Signer | undefined,
   account: string | null | undefined,
   pool: PoolContract | undefined,
   poolTokenMaxAmounts: BigNumber[] | undefined
-): () => void {
+): {
+  onJoinPool: () => void;
+  mutationResult: UseMutationResult<
+    ContractTransaction | undefined,
+    unknown,
+    Parameters<Vault["joinPool"]>
+  >;
+} {
   const balancerVault = useBalancerVault();
   const { data: poolId } = useSmartContractReadCall(pool, "getPoolId");
   const { data: [poolTokens] = [] } = usePoolTokens(pool);
-  const { mutate: joinPool } = useSmartContractTransactionPersisted(
+  const mutationResult = useSmartContractTransactionPersisted(
     balancerVault,
     "joinPool",
     signer
   );
 
+  const { mutate: joinPool } = mutationResult;
   const joinPoolCallArgs = makeJoinPoolCallArgs(
     poolId,
     account,
@@ -42,7 +51,8 @@ export function useJoinConvergentPool(
     }
     joinPool(joinPoolCallArgs);
   }, [joinPool, joinPoolCallArgs]);
-  return onJoinPool;
+
+  return { onJoinPool, mutationResult };
 }
 
 function makeJoinPoolCallArgs(

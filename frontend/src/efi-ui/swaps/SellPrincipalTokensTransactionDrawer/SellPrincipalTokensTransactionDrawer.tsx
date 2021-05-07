@@ -1,7 +1,6 @@
 import React, { ReactElement } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
-import { AbstractConnector } from "@web3-react/abstract-connector";
 import { ERC20 } from "elf-contracts/types/ERC20";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { Signer } from "ethers";
@@ -31,10 +30,7 @@ import { PoolContract } from "efi/pools/PoolContract";
 import { getAmountOutWithTolerance } from "efi/trade/getAmountOutWithTolerance";
 
 interface SellPrincipalTransactionDrawerProps {
-  chainId: number | undefined;
   account: string | null | undefined;
-  walletConnectionActive: boolean;
-  connector: AbstractConnector | undefined;
   library: Web3Provider | undefined;
   pool: PoolContract | undefined;
   baseAsset: CryptoAsset;
@@ -48,10 +44,7 @@ export function SellPrincipalTokensTransactionDrawer(
   props: SellPrincipalTransactionDrawerProps
 ): ReactElement {
   const {
-    connector,
-    walletConnectionActive,
     library,
-    chainId,
     account,
     baseAsset,
     baseAssetIcon,
@@ -142,22 +135,23 @@ export function SellPrincipalTokensTransactionDrawer(
   // uncontrolled and controlled causes bugginess and big warnings in the
   // console, so we use empty string here to keep everything controlled.
   const safeAmountIn = amountIn ?? "";
+  const walletApprovalInfos = [
+    {
+      cryptoAsset: assetIn,
+      ownerAddress: account,
+      spenderAddress: balancerVault?.address,
+      messageRenderer: getBalancerApprovalMessage,
+    },
+  ];
 
   return (
     <TransactionDrawer
       buttonLabel={t`Sell`}
-      approvalSpenderAddress={balancerVault?.address}
       isOpen={isOpen}
       onClose={onClose}
       account={account}
-      assetIn={assetIn}
-      assetInSymbol={`pt${baseAssetSymbol}`}
-      walletConnectionActive={walletConnectionActive}
-      walletApprovalMessageRenderer={getBalancerApprovalMessage}
-      amountIn={amountInAsBigNumber}
-      chainId={chainId}
-      connector={connector}
       library={library}
+      walletApprovalInfos={walletApprovalInfos}
       onConfirmTransaction={onConfirmSellPrincipalTokens}
       transactionDetails={
         <SwapDetailsForm

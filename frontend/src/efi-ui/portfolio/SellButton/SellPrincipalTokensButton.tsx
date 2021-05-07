@@ -15,13 +15,9 @@ import { TokenIcon } from "efi-ui/token/TokenIcon";
 interface SellPrincipalTokensProps {
   chainId: number | undefined;
   account: string | null | undefined;
-  walletConnectionActive: boolean;
   connector: AbstractConnector | undefined;
   library: Web3Provider | undefined;
   pool: PoolContract | undefined;
-
-  maxSellAmount: string | undefined;
-
   tranche: Tranche | undefined;
   baseAsset: CryptoAsset | undefined;
   baseAssetIcon: TokenIcon | undefined;
@@ -32,12 +28,8 @@ export function SellPrincipalTokensButton({
   baseAssetIcon,
   tranche,
   account,
-  chainId,
-  connector,
   library,
   pool,
-  maxSellAmount,
-  walletConnectionActive,
 }: SellPrincipalTokensProps): ReactElement {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
 
@@ -58,12 +50,9 @@ export function SellPrincipalTokensButton({
           account={account}
           baseAsset={baseAsset}
           baseAssetIcon={baseAssetIcon}
-          chainId={chainId}
-          connector={connector}
           library={library}
           onClose={() => setDrawerOpen(false)}
           pool={pool}
-          walletConnectionActive={walletConnectionActive}
         />
       )}
     </Fragment>

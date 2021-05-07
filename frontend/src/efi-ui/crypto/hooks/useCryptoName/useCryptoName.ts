@@ -8,23 +8,25 @@ import {
   findTokenContract,
 } from "efi/crypto/CryptoAsset";
 
-export function useCryptoName(asset: CryptoAsset | undefined): string {
+export function useCryptoName(
+  asset: CryptoAsset | undefined
+): string | undefined {
   const tokenContract = findTokenContract(asset);
   const { data: tokenName } = useTokenName(tokenContract);
   if (!asset) {
-    return "Unknown token";
+    return;
   }
 
   const assetType = asset.type;
   switch (assetType) {
     case CryptoAssetType.ERC20:
-      return tokenName || t`ERC20 Token`;
+      return tokenName;
     case CryptoAssetType.ERC20PERMIT:
-      return tokenName || t`ERC20Permit Token`;
+      return tokenName;
     case CryptoAssetType.ETHEREUM:
       return "Ethereum";
     default:
       assertNever(assetType);
-      return "Unknown token";
+      return;
   }
 }

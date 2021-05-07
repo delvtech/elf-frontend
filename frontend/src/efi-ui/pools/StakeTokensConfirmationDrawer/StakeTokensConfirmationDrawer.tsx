@@ -12,14 +12,15 @@ import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useCryptoAssetMetadata } from "efi-ui/crypto/hooks/useCryptoAssetMetadata/useCryptAssetMetadata";
 import { StakeConfirmationForm } from "efi-ui/pools/StakeTokensConfirmationDrawer/StakeConfirmationForm";
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
-import { WalletApprovalCallout } from "efi-ui/transactions/TransactionDrawer/WalletApprovalCallout";
-import { WalletDrawer } from "efi-ui/wallets/WalletDrawer/WalletDrawer";
+import { WalletApprovalCalloutOld } from "efi-ui/transactions/TransactionDrawer/WalletApprovalCallout";
 import {
   CryptoAsset,
   CryptoAssetType,
   findTokenContract,
 } from "efi/crypto/CryptoAsset";
 import { parseUnits } from "ethers/lib/utils";
+import React from "react";
+import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/TransactionDrawer";
 
 interface StakingConfirmationDrawerProps {
   account: string | null | undefined;
@@ -35,6 +36,9 @@ interface StakingConfirmationDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   onStake: () => void;
+  isStakeLoading: boolean;
+  isStakeError: boolean;
+  isStakeSuccess: boolean;
 }
 
 export function StakingConfirmationDrawer({
@@ -50,6 +54,9 @@ export function StakingConfirmationDrawer({
   trancheAssetIn,
   isOpen,
   onClose,
+  isStakeError,
+  isStakeLoading,
+  isStakeSuccess,
   onStake,
 }: StakingConfirmationDrawerProps): ReactElement {
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
@@ -73,7 +80,6 @@ export function StakingConfirmationDrawer({
     trancheAssetDecimals
   );
 
-  const confirmButtonLabel = getConfirmButtonLabel(account);
   const hasTokenApprovals = useHasTokenApprovals(
     account,
     balancerVault?.address,
@@ -85,14 +91,35 @@ export function StakingConfirmationDrawer({
 
   // TODO: validate inputs as well
   const confirmButtonDisabled = !hasTokenApprovals;
+  const walletApprovalInfos = [
+    {
+      cryptoAsset: baseAsset,
+      ownerAddress: account,
+      spenderAddress: balancerVault?.address,
+      messageRenderer: getBalancerApprovalMessage,
+    },
+    {
+      cryptoAsset: trancheAsset,
+      ownerAddress: account,
+      spenderAddress: balancerVault?.address,
+      messageRenderer: getBalancerApprovalMessage,
+    },
+  ];
 
   return (
-    <WalletDrawer
+    <TransactionDrawer
+      library={library}
+      account={account}
+      transactionPending={isStakeLoading}
+      transactionSuccess={isStakeSuccess}
+      transactionFailed={isStakeError}
+      confirmButtonDisabled={confirmButtonDisabled}
+      buttonLabel={t`Stake`}
       isOpen={isOpen}
       onClose={onClose}
-      className={tw("justify-between")}
-    >
-      <div className={tw("flex", "flex-col", "space-y-4")}>
+      onConfirmTransaction={onStake}
+      walletApprovalInfos={walletApprovalInfos}
+      transactionDetails={
         <StakeConfirmationForm
           assetOneSymbol={baseAssetSymbol}
           assetTwoSymbol={trancheAssetSymbol}
@@ -104,49 +131,9 @@ export function StakingConfirmationDrawer({
           assetOneValueLabel={baseAssetIn}
           assetTwoValueLabel={trancheAssetIn}
         />
-        {baseAsset?.type === CryptoAssetType.ERC20 ||
-        baseAsset?.type === CryptoAssetType.ERC20PERMIT ? (
-          <WalletApprovalCallout
-            account={account}
-            cryptoAsset={baseAsset}
-            approvalAmount={baseAssetInBigNumber}
-            signer={signer}
-            message={getBalancerApprovalMessage(baseAssetSymbol || "")}
-          />
-        ) : null}
-
-        {trancheAsset?.type === CryptoAssetType.ERC20 ||
-        trancheAsset?.type === CryptoAssetType.ERC20PERMIT ? (
-          <WalletApprovalCallout
-            account={account}
-            cryptoAsset={trancheAsset}
-            approvalAmount={trancheAssetInBigNumber}
-            signer={signer}
-            message={getBalancerApprovalMessage(trancheAssetSymbolLabel || "")}
-          />
-        ) : null}
-        <Button
-          fill
-          disabled={confirmButtonDisabled}
-          intent={Intent.PRIMARY}
-          className={tw("h-16")}
-          large
-          outlined
-          onClick={onStake}
-        >
-          {confirmButtonLabel}
-        </Button>
-      </div>
-    </WalletDrawer>
+      }
+    />
   );
-}
-
-function getConfirmButtonLabel(account: string | null | undefined) {
-  if (!account) {
-    return t`Connect your wallet to continue`;
-  }
-
-  return t`Stake`;
 }
 
 function getConfirmButtonDisabled(

@@ -2,7 +2,7 @@ import { useCallback } from "react";
 
 import { Vault } from "elf-contracts/types/Vault";
 import { WeightedPool } from "elf-contracts/types/WeightedPool";
-import { BigNumber, CallOverrides, Signer } from "ethers";
+import { BigNumber, CallOverrides, ContractTransaction, Signer } from "ethers";
 import { defaultAbiCoder } from "ethers/lib/utils";
 import zipObject from "lodash.zipobject";
 
@@ -14,6 +14,7 @@ import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSma
 import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 import ContractAddresses from "efi/addresses";
 import { ContractMethodArgs } from "efi/contracts/types";
+import { UseMutationResult } from "react-query";
 
 enum JoinKind {
   INIT,
@@ -26,7 +27,14 @@ export function useJoinWeightedPool(
   account: string | null | undefined,
   pool: WeightedPool | undefined,
   poolTokenMaxAmounts: BigNumber[] | undefined
-): () => void {
+): {
+  onJoinPool: () => void;
+  mutationResult: UseMutationResult<
+    ContractTransaction | undefined,
+    unknown,
+    Parameters<Vault["joinPool"]>
+  >;
+} {
   const balancerVault = useBalancerVault();
   const { data: poolId } = useSmartContractReadCall(pool, "getPoolId");
   const { data: poolWeights } = useSmartContractReadCall(
@@ -34,11 +42,13 @@ export function useJoinWeightedPool(
     "getNormalizedWeights"
   );
   const { data: [poolTokens] = [] } = usePoolTokens(pool);
-  const { mutate: joinPool } = useSmartContractTransactionPersisted(
+  const mutationResult = useSmartContractTransactionPersisted(
     balancerVault,
     "joinPool",
     signer
   );
+
+  const { mutate: joinPool } = mutationResult;
 
   const joinPoolCallArgs = makeJoinPoolCallArgs(
     poolId,
@@ -53,7 +63,7 @@ export function useJoinWeightedPool(
     }
     joinPool(joinPoolCallArgs);
   }, [joinPool, joinPoolCallArgs]);
-  return onJoinPool;
+  return { onJoinPool, mutationResult };
 }
 
 function makeJoinPoolCallArgs(

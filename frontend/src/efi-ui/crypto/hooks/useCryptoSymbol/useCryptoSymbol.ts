@@ -20,9 +20,9 @@ export function useCryptoSymbol(
   const assetType = asset.type;
   switch (assetType) {
     case CryptoAssetType.ERC20:
-      return tokenSymbol || t`ERC20`;
+      return tokenSymbol;
     case CryptoAssetType.ERC20PERMIT:
-      return tokenSymbol || t`ERC20Permit`;
+      return tokenSymbol;
     case CryptoAssetType.ETHEREUM:
       return "ETH";
     default:

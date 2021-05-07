@@ -11,7 +11,6 @@ import { BigNumber, Signer } from "ethers";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
 import {
   CryptoAsset,
@@ -20,30 +19,33 @@ import {
 } from "efi/crypto/CryptoAsset";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useERC20Approve } from "efi-ui/token/hooks/useERC20Approve";
+import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
+import { MAX_ALLOWANCE } from "efi/contracts/token";
 
-interface WalletApprovalCalloutProps {
+interface WalletApprovalCalloutPropsOld {
   signer: Signer | undefined;
-  account: string | null | undefined;
+  ownerAddress: string | null | undefined;
+  spenderAddress: string | undefined;
   cryptoAsset: CryptoAsset | undefined;
   approvalAmount: BigNumber | undefined;
   message: string;
 }
-export function WalletApprovalCallout({
-  account,
+export function WalletApprovalCalloutOld({
+  ownerAddress,
+  spenderAddress,
   signer,
   message,
   cryptoAsset,
   approvalAmount,
-}: WalletApprovalCalloutProps): ReactElement | null {
-  const balancerVault = useBalancerVault();
+}: WalletApprovalCalloutPropsOld): ReactElement | null {
   const cryptoAssetContract = findTokenContract(cryptoAsset);
   const {
     data: marketAllowance,
     isLoading: isAllowanceLoading,
   } = useTokenAllowance(
     cryptoAssetContract as ERC20Shim,
-    account,
-    balancerVault?.address
+    ownerAddress,
+    spenderAddress
   );
 
   const {
@@ -52,8 +54,8 @@ export function WalletApprovalCallout({
   } = useERC20Approve(
     cryptoAssetContract as ERC20Shim,
     signer,
-    account,
-    balancerVault?.address
+    ownerAddress,
+    spenderAddress
   );
 
   // Ethereum does not need approvals
@@ -62,7 +64,7 @@ export function WalletApprovalCallout({
   }
 
   // If the user isn't connected, there can be no approvals
-  if (!account) {
+  if (!ownerAddress) {
     return null;
   }
 
@@ -72,6 +74,81 @@ export function WalletApprovalCallout({
     isAllowanceLoading ||
     marketAllowance?.gte(approvalAmount)
   ) {
+    return null;
+  }
+
+  return (
+    <Callout
+      intent={Intent.WARNING}
+      title={t`Wallet approval required`}
+      icon={null}
+      className={tw("p-4", "space-y-4")}
+    >
+      <div className={"pt-1"}>{message}</div>
+      <Button
+        large
+        fill
+        disabled={isLoading}
+        outlined
+        intent={Intent.WARNING}
+        onClick={onApproveClick}
+      >
+        {isLoading ? (
+          <Spinner size={SpinnerSize.SMALL} intent={Intent.WARNING} />
+        ) : (
+          t`Approve`
+        )}
+      </Button>
+    </Callout>
+  );
+}
+
+interface WalletApprovalCalloutProps {
+  signer: Signer | undefined;
+  ownerAddress: string | null | undefined;
+  spenderAddress: string | null | undefined;
+  cryptoAsset: CryptoAsset | undefined;
+  messageRenderer: (assetSymbol: string) => string;
+}
+export function WalletApprovalCallout({
+  ownerAddress,
+  spenderAddress,
+  signer,
+  messageRenderer,
+  cryptoAsset,
+}: WalletApprovalCalloutProps): ReactElement | null {
+  const symbol = useCryptoSymbol(cryptoAsset);
+  const message = symbol ? messageRenderer(symbol) : undefined;
+
+  const tokenContract = findTokenContract(cryptoAsset);
+
+  const { data: allowance, isLoading: isAllowanceLoading } = useTokenAllowance(
+    tokenContract as ERC20Shim,
+    ownerAddress,
+    spenderAddress
+  );
+  const {
+    onApproveClick,
+    mutationResult: { isLoading },
+  } = useERC20Approve(
+    tokenContract as ERC20Shim,
+    signer,
+    ownerAddress,
+    spenderAddress
+  );
+
+  // Ethereum does not need approvals
+  if (cryptoAsset?.type === CryptoAssetType.ETHEREUM) {
+    return null;
+  }
+
+  // If the user isn't connected, there can be no approvals
+  if (!ownerAddress) {
+    return null;
+  }
+
+  // if the approval already exists
+  if (isAllowanceLoading || allowance?.gte(MAX_ALLOWANCE)) {
     return null;
   }
 

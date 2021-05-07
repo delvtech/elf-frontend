@@ -63,7 +63,7 @@ export function CryptoAssetButton({
 }
 interface AssetLabelProps {
   icon: TokenIcon | undefined;
-  assetName: string;
+  assetName: string | undefined;
   assetSymbol: string;
 }
 function AssetLabel({

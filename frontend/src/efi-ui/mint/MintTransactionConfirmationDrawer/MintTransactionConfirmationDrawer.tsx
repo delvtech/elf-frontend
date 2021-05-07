@@ -73,6 +73,14 @@ export function MintTransactionConfirmationDrawer({
     mint,
     mutationResult: { isLoading, isSuccess, isError },
   } = useMintTransaction(signer, baseAsset, tranche, amountInAsNumber);
+  const walletApprovalInfos = [
+    {
+      cryptoAsset: baseAsset,
+      ownerAddress: account,
+      spenderAddress: userProxy?.address,
+      messageRenderer: getUserProxyApprovalMessage,
+    },
+  ];
 
   return (
     <TransactionDrawer
@@ -80,16 +88,10 @@ export function MintTransactionConfirmationDrawer({
       transactionPending={isLoading}
       transactionFailed={isError}
       transactionSuccess={isSuccess}
-      approvalSpenderAddress={userProxy?.address}
+      walletApprovalInfos={walletApprovalInfos}
       isOpen={isOpen}
       onClose={onClose}
       account={account}
-      assetIn={baseAsset}
-      walletConnectionActive={walletConnectionActive}
-      walletApprovalMessageRenderer={getUserProxyApprovalMessage}
-      amountIn={amountInAsBigNumber}
-      chainId={chainId}
-      connector={connector}
       library={library}
       onConfirmTransaction={mint}
       transactionDetails={

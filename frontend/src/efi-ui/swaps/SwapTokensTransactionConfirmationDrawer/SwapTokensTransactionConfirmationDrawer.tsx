@@ -150,22 +150,24 @@ export function SwapTokensTransactionConfirmationDrawer({
     onClose();
   }, [onClose, reset]);
 
+  const walletApprovalInfos = [
+    {
+      cryptoAsset: tokenInAsset,
+      ownerAddress: account,
+      spenderAddress: balancerVault?.address,
+      messageRenderer: getBalancerApprovalMessage,
+    },
+  ];
+
   return (
     <TransactionDrawer
-      approvalSpenderAddress={balancerVault?.address}
       isOpen={isOpen}
       onClose={resetSwap}
       account={account}
-      assetIn={tokenInAsset}
-      assetInSymbol={tokenInSymbol}
-      walletConnectionActive={walletConnectionActive}
-      amountIn={amountInAsBigNumber}
-      chainId={chainId}
-      connector={connector}
       library={library}
       onConfirmTransaction={onConfirmSwapTokens}
-      walletApprovalMessageRenderer={getBalancerApprovalMessage}
       buttonLabel={t`Trade`}
+      walletApprovalInfos={walletApprovalInfos}
       transactionPending={isLoading}
       transactionFailed={isError}
       transactionSuccess={isSuccess}
