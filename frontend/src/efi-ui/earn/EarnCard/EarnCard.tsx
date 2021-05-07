@@ -9,13 +9,16 @@ import React, {
 import { Button, Card, Classes, Elevation, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import classNames from "classnames";
+import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
 import { Tranche } from "elf-contracts/types/Tranche";
+import { formatEther, formatUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { SwapKind } from "efi-ui/balancer/SwapKind";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
+import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { CryptoAssetPicker } from "efi-ui/crypto/CryptoAssetPicker/CryptoAssetPicker";
 import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
@@ -32,10 +35,14 @@ import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolToken
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { BuyPrincipalTokensTransactionConfirmationDrawer } from "efi-ui/swaps/BuyPrincipalTokensTransactionConfirmationDrawer/BuyPrincipalTokensTransactionConfirmationDrawer";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
+import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
 import { formatBalance } from "efi/base/formatBalance";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
+import { clipStringValueToDecimals } from "efi/math/fixedPoint";
+import { calcSwapOutGivenInCCPoolUNSAFE } from "efi/pools/calcPoolSwap";
 import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
+import { validateTradeValues } from "efi/trade/validateTradeValues";
 
 export interface EarnCardProps {
   library: Web3Provider | undefined;
@@ -50,13 +57,25 @@ export function EarnCard({
   baseAssets,
   tranchesByBaseAsset,
 }: EarnCardProps): ReactElement {
+  const [isWalletDialogOpen, setWalletDialogOpen] = useState(false);
   // local state
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const openDrawer = useCallback(() => setDrawerOpen(true), []);
+  const onClickButton = useCallback(() => {
+    if (!account) {
+      return setWalletDialogOpen(true);
+    }
+    openDrawer();
+  }, [account, openDrawer]);
+
+  const { stringValue: amountIn, setValue: setAmountIn } = useNumericInput();
+  const { stringValue: amountOut, setValue: setAmountOut } = useNumericInput();
 
   // base asset
   const { activeBaseAsset, setActiveBaseAsset } = useActiveBaseAsset(
-    baseAssets
+    baseAssets,
+    setAmountIn,
+    setAmountOut
   );
 
   // tranche
@@ -69,32 +88,51 @@ export function EarnCard({
   const { data: trancheDecimals } = useTokenDecimals(activeTranche);
   const activeBaseAssetSymbol = useCryptoSymbol(activeBaseAsset);
   const activeBaseAssetDecimals = useCryptoDecimals(activeBaseAsset);
-  const activeBaseAssetBalance = useCryptoBalance(
+  const activeBaseAssetBalanceOf = useCryptoBalance(
     library,
     account,
     activeBaseAsset
   );
   const activeBaseAssetDisplayBalance = formatBalance(
-    activeBaseAssetBalance,
+    activeBaseAssetBalanceOf,
     activeBaseAssetDecimals
   );
 
   const principalTokenAddress = activeTranche?.address;
   const principalTokenAsset = useCryptoAssetForToken(principalTokenAddress);
-  const principalTokenDecimals = useCryptoDecimals(principalTokenAsset);
   const principalTokenBalanceOf = useCryptoBalance(
     library,
     account,
     principalTokenAsset
   );
-  const principalTokenDisplayBalance = formatBalance(
-    principalTokenBalanceOf,
-    principalTokenDecimals
-  );
 
-  const pool = usePoolForToken(activeTranche as ERC20Shim, jsonRpcProvider);
-  const { data: [tokens] = [] } = usePoolTokens(pool);
+  const pool = usePoolForToken(
+    activeTranche as ERC20Shim,
+    jsonRpcProvider
+  ) as ConvergentCurvePool;
+  const { data: totalSupplyBN } = useSmartContractReadCall(pool, "totalSupply");
+  const { data: unitSecondsBN } = useSmartContractReadCall(pool, "unitSeconds");
+  const { data: expirationBN } = useSmartContractReadCall(pool, "expiration");
+  const nowInSeconds = Math.round(Date.now() / 1000);
+  const timeRemainingSeconds = expirationBN
+    ? expirationBN.toNumber() - nowInSeconds
+    : 0;
+  const tParamSeconds = unitSecondsBN?.toNumber() ?? 1;
+
+  const totalSupply = formatEther(totalSupplyBN ?? 0);
+
+  const { data: [tokens, balances = []] = [] } = usePoolTokens(pool);
   const { baseAssetIndex, termAssetIndex } = parseSortedTokensForPool(tokens);
+  const baseAssetPoolBalance = balances[baseAssetIndex];
+  const principalTokenPoolBalance = balances[termAssetIndex];
+  const baseReserves = formatUnits(
+    baseAssetPoolBalance ?? 0,
+    activeBaseAssetDecimals
+  );
+  const principalReserves = formatUnits(
+    principalTokenPoolBalance ?? 0,
+    activeBaseAssetDecimals
+  );
 
   // the tranche's pool
   const baseAssetPoolToken = usePoolPairedToken(
@@ -107,13 +145,90 @@ export function EarnCard({
   const inputTokenSymbol = useCryptoSymbol(activeBaseAsset);
   const baseAssetIcon = findAssetIcon2(activeBaseAsset);
 
-  const { stringValue: amountIn, setValue: onChangeIn } = useNumericInput();
-  const { stringValue: amountOut, setValue: onChangeOut } = useNumericInput();
   const closeDrawer = useCallback(() => {
-    onChangeIn("");
-    onChangeOut("");
+    setAmountIn("");
+    setAmountOut("");
     setDrawerOpen(false);
-  }, [onChangeIn, onChangeOut]);
+  }, [setAmountIn, setAmountOut]);
+
+  const { isValidTokenInValue, isValidTokenOutValue } = validateTradeValues(
+    amountIn,
+    activeBaseAssetBalanceOf,
+    activeBaseAssetDecimals,
+    baseAssetPoolBalance,
+    amountOut,
+    principalTokenPoolBalance
+  );
+
+  const onChangeIn = useCallback(
+    (newAmountIn: string, swapKind: SwapKind) => {
+      if (!newAmountIn) {
+        setAmountIn("");
+        setAmountOut("");
+        return;
+      }
+      const newAmountOutNumber = calcSwapOutGivenInCCPoolUNSAFE(
+        newAmountIn,
+        baseReserves,
+        principalReserves,
+        totalSupply,
+        timeRemainingSeconds,
+        tParamSeconds,
+        true
+      );
+      const newAmountOut = clipStringValueToDecimals(
+        newAmountOutNumber.toString(),
+        activeBaseAssetDecimals ?? 18
+      );
+      setAmountIn(newAmountIn);
+      setAmountOut(newAmountOut);
+    },
+    [
+      activeBaseAssetDecimals,
+      baseReserves,
+      principalReserves,
+      setAmountIn,
+      setAmountOut,
+      tParamSeconds,
+      timeRemainingSeconds,
+      totalSupply,
+    ]
+  );
+
+  const onChangeOut = useCallback(
+    (newAmountOut: string, swapKind: SwapKind) => {
+      if (!newAmountOut) {
+        setAmountIn("");
+        setAmountOut("");
+        return;
+      }
+      const newAmountInNumber = calcSwapOutGivenInCCPoolUNSAFE(
+        newAmountOut,
+        baseReserves,
+        principalReserves,
+        totalSupply,
+        timeRemainingSeconds,
+        tParamSeconds,
+        true
+      );
+      const newAmountIn = clipStringValueToDecimals(
+        newAmountInNumber.toString(),
+        activeBaseAssetDecimals ?? 18
+      );
+      setAmountIn(newAmountIn);
+      setAmountOut(newAmountOut);
+    },
+    [
+      activeBaseAssetDecimals,
+      baseReserves,
+      principalReserves,
+      setAmountIn,
+      setAmountOut,
+      tParamSeconds,
+      timeRemainingSeconds,
+      totalSupply,
+    ]
+  );
 
   const roundedPrincipalPrice = amountOfEthForOnePrincipalEth?.toFixed(4);
   const marketRateLabel = getMarketRateLabel(
@@ -121,6 +236,9 @@ export function EarnCard({
     roundedPrincipalPrice,
     activeBaseAssetSymbol
   );
+
+  const buttonDisabled = !!account && !amountIn;
+  const buttonLabel = !!account ? t`Buy` : t`Connect Wallet`;
 
   return (
     <Fragment>
@@ -160,16 +278,10 @@ export function EarnCard({
               }
               placeholder="0.00"
               value={amountIn || ""}
+              validValue={isValidTokenInValue}
               onValueChange={onChangeIn}
-              assetBalance={+activeBaseAssetDisplayBalance}
-              cryptoAddress={baseAssetPoolToken?.address}
               cryptoDecimals={activeBaseAssetDecimals}
-              cryptoBalanceOf={activeBaseAssetBalance}
-              cryptoDisplayBalance={activeBaseAssetDisplayBalance || ""}
-              previewCryptoAddress={principalTokenAddress}
-              previewCryptoPoolIndex={termAssetIndex}
-              pool={pool}
-              onPreviewUpdate={onChangeOut}
+              cryptoBalanceOf={activeBaseAssetBalanceOf}
               swapKind={SwapKind.GIVEN_IN}
             />
           </div>
@@ -209,16 +321,10 @@ export function EarnCard({
               }
               placeholder="0.00"
               value={amountOut || ""}
+              validValue={isValidTokenOutValue}
               onValueChange={onChangeOut}
-              onPreviewUpdate={onChangeIn}
-              assetBalance={+activeBaseAssetDisplayBalance}
-              cryptoAddress={principalTokenAddress}
               cryptoDecimals={trancheDecimals}
               cryptoBalanceOf={principalTokenBalanceOf}
-              cryptoDisplayBalance={principalTokenDisplayBalance}
-              previewCryptoAddress={baseAssetPoolToken?.address}
-              previewCryptoPoolIndex={baseAssetIndex}
-              pool={pool}
               swapKind={SwapKind.GIVEN_OUT}
             />
           </div>
@@ -235,10 +341,10 @@ export function EarnCard({
             outlined
             intent={Intent.PRIMARY}
             className={tw("flex-1")}
-            disabled={!amountIn}
-            onClick={openDrawer}
+            disabled={buttonDisabled}
+            onClick={onClickButton}
           >
-            <div className={tw("p-4", "text-lg")}>{t`Buy`}</div>
+            <div className={tw("p-4", "text-lg")}>{buttonLabel}</div>
           </Button>
         </div>
       </Card>
@@ -256,6 +362,10 @@ export function EarnCard({
           onClose={closeDrawer}
         />
       )}
+      <ConnectWalletDialog
+        isOpen={isWalletDialogOpen}
+        onClose={() => setWalletDialogOpen(false)}
+      />
     </Fragment>
   );
 }
@@ -272,15 +382,21 @@ function useSetDefaultActiveBaseAsset(
   }, [activeBaseAsset, defaultBaseAsset, setActiveBaseAsset]);
 }
 
-function useActiveBaseAsset(allBaseAssets: (CryptoAsset | undefined)[]) {
+function useActiveBaseAsset(
+  allBaseAssets: (CryptoAsset | undefined)[],
+  setAmountIn: (value: string) => void,
+  setAmountOut: (value: string) => void
+) {
   const [activeBaseAsset, setActiveBaseAssetState] = useState<
     CryptoAsset | undefined
   >();
   const setActiveBaseAsset = useCallback(
     (baseAsset: CryptoAsset | undefined) => {
+      setAmountIn("");
+      setAmountOut("");
       setActiveBaseAssetState(baseAsset);
     },
-    []
+    [setAmountIn, setAmountOut]
   );
   // The list of base assets will be empty while the data loads, so we want to
   // set the default after it's been populated
