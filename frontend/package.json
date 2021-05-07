@@ -5,7 +5,7 @@
   "dependencies": {
     "@blueprintjs/core": "^3.44.2",
     "@blueprintjs/icons": "^3.26.0",
-    "@blueprintjs/popover2": "^0.7.2",
+    "@blueprintjs/popover2": "^0.7.3",
     "@blueprintjs/select": "^3.16.2",
     "@ethersproject/abi": "^5.1.2",
     "@ethersproject/bytes": "^5.1.0",
