@@ -79,7 +79,7 @@ export function useTotalFiatLiquidityForPool(
       yieldAssetPrice,
       yieldAssetBalance,
       yieldAssetDecimals
-    ) || Money.fromInteger(0, currency.code);
+    ) || Money.fromDecimal(0, currency.code, Math.round);
 
   const totalBalance = baseAssetFiatBalance?.add(yieldAssetFiatBalance);
   return totalBalance;
