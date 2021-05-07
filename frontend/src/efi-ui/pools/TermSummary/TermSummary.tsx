@@ -1,17 +1,20 @@
 import React, { CSSProperties, ReactElement } from "react";
 
-import { Card, Classes, Intent, Tag } from "@blueprintjs/core";
+import { Card, Classes } from "@blueprintjs/core";
 import classNames from "classnames";
-import { formatDistanceToNow, fromUnixTime, getTime, format } from "date-fns";
+import { format } from "date-fns";
 import { ERC20 } from "elf-contracts/types/ERC20";
 import { Money } from "ts-money";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { formatPercent } from "efi/base/formatPercent";
 import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
-import { useAccumulatedFiatInterestForTranche } from "efi-ui/pools/useAccumulatedFiatInterestForTranche";
+import { isConvergentCurvePool } from "efi/pools/PoolContract";
+import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
+import { useTokenYield } from "efi-ui/pools/useTokenYield";
 import { formatMoney } from "efi/money/formatMoney";
 import { PoolContract } from "efi/pools/PoolContract";
 
@@ -22,7 +25,6 @@ const summaryCardStyle: CSSProperties = {
 interface TermSummaryProps {
   pool: PoolContract | undefined;
   totalValueLocked: Money | undefined;
-  interestSupply: number | undefined;
   maturityTimeMs: number | undefined;
   startTimeMs: number | undefined;
   baseAsset: ERC20 | undefined;
@@ -33,7 +35,6 @@ export function TermSummary(props: TermSummaryProps): ReactElement {
   const {
     pool,
     totalValueLocked,
-    interestSupply,
     baseAsset,
     maturityTimeMs = 0,
     startTimeMs = 0,
@@ -42,27 +43,13 @@ export function TermSummary(props: TermSummaryProps): ReactElement {
   const { data: vaultInfo } = useYearnVault(
     baseAssetSymbol ? t`yv${baseAssetSymbol}` : undefined
   );
-  const { name } = vaultInfo || {};
 
-  const accumulatedInterest = useAccumulatedFiatInterestForTranche(
-    baseAsset,
-    pool
-  );
-  const interestPerToken = interestSupply
-    ? accumulatedInterest?.divide(interestSupply, Math.round)
-    : undefined;
+  const { displayName, type } = vaultInfo || {};
 
-  const now = new Date();
-  const nowTimeMs = getTime(now);
-  const termComplete = nowTimeMs > maturityTimeMs;
-  const completeLabel = formatDistanceToNow(
-    fromUnixTime(Math.round(maturityTimeMs / 1000)),
-    {
-      addSuffix: true,
-    }
-  );
+  const baseAssetContract = useBaseAssetForPool(pool);
+  const variableYield = useTokenYield(baseAssetContract, pool, "yield");
 
-  const termStatus = termComplete ? t`complete` : t`running`;
+  const isPrincipalPool = isConvergentCurvePool(pool);
 
   return (
     <div>
@@ -86,19 +73,44 @@ export function TermSummary(props: TermSummaryProps): ReactElement {
             <span
               className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
             >{t`Total Value Locked`}</span>
-            <div className={classNames("h3", tw("space-x-4"))}>
+            <div className={classNames("h5", tw("space-x-4"))}>
               {totalValueLocked ? formatMoney(totalValueLocked) : null}
             </div>
           </div>
+
+          {/* Underlying Vault */}
+          {!isPrincipalPool ? (
+            <div className={tw("flex", "flex-col")}>
+              <span
+                className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
+              >{t`Underlying Vault`}</span>
+              <div className={classNames("h5", tw("space-x-4"))}>
+                {t`Yearn ${displayName} ${type}`}
+              </div>
+            </div>
+          ) : null}
+
+          {/* Underlying Vault */}
+          {!isPrincipalPool ? (
+            <div className={tw("flex", "flex-col")}>
+              <span
+                className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
+              >{t`Vault APY`}</span>
+              <div className={classNames("h5", tw("space-x-4"))}>
+                {formatPercent(variableYield)}
+              </div>
+            </div>
+          ) : null}
         </div>
 
         <div
           className={tw(
             "flex",
             "flex-col",
-            "h-full",
             "justify-between",
-            "truncate"
+            "overflow-hidden",
+            "truncate",
+            "xl:ml-4"
           )}
         >
           {/* Start Date */}
@@ -106,19 +118,19 @@ export function TermSummary(props: TermSummaryProps): ReactElement {
             <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
               {t`Start Date`}
             </span>
-            <div className={classNames("h3", tw("space-x-4"))}>
+            <div className={classNames("h5", tw("space-x-4"))}>
               {format(startTimeMs, "MMM d, y")}
             </div>
           </div>
 
           {/* Status */}
-          <div className={tw("flex", "flex-col", "justify-end")}>
-            <span
-              className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
-            >{t`Status`}</span>
-          </div>
-          <div style={{ maxWidth: "150px" }}>
-            <TimeLeft startDate={startTimeMs} maturityDate={maturityTimeMs} />
+          <div>
+            <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
+              {t`Status`}
+            </span>
+            <div style={{ maxWidth: "150px" }} className={tw("mt-1")}>
+              <TimeLeft startDate={startTimeMs} maturityDate={maturityTimeMs} />
+            </div>
           </div>
         </div>
       </Card>

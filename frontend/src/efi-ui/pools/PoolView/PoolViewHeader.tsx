@@ -1,6 +1,6 @@
 import { ReactElement } from "react";
 
-import { Colors, Divider, H2, H6, Tag } from "@blueprintjs/core";
+import { Colors } from "@blueprintjs/core";
 import classNames from "classnames";
 import { t } from "ttag";
 
@@ -32,7 +32,10 @@ export function PoolViewHeader({ pool }: PoolViewHeaderProps): ReactElement {
   const BaseAssetIcon = findAssetIcon(baseAssetSymbol);
 
   return (
-    <div style={{ height: 70 }} className={tw("flex", "items-center")}>
+    <div
+      style={{ height: 70 }}
+      className={tw("flex", "items-center", "mt-8", "lg:mt-0")}
+    >
       {BaseAssetIcon ? (
         <div
           className={classNames(
@@ -81,16 +84,20 @@ export function PoolViewHeader({ pool }: PoolViewHeaderProps): ReactElement {
           </div>
         </div>
       ) : null}
-      <div>
-        <div className={tw("flex", "items-center")}>
-          <H2
-            className={tw("ml-4", "m-0", "mt-3")}
-          >{t`${baseAssetSymbol} - ${termAssetSymbol}`}</H2>
-          <div></div>
+      <div
+        className={tw(
+          "flex",
+          "flex-col",
+          "justify-center",
+          "ml-0",
+          "md:ml-4",
+          "m-0"
+        )}
+      >
+        <div className={classNames("h2")}>
+          {t`${baseAssetSymbol} - ${termAssetSymbol}`}
         </div>
-        <div className={tw("flex", "items-center", "ml-4")}>
-          <div>90 Day - Jul, 7, 2020</div>
-        </div>
+        <div>90 Day - Jul, 7, 2020</div>
       </div>
     </div>
   );

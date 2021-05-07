@@ -158,12 +158,17 @@ export function PrincipalPoolCard(
   const startTime = trancheCreatedAt ? trancheCreatedAt * 1000 : undefined;
   const maturityTime = unlockTime ? unlockTime * 1000 : undefined;
 
-  const termLength =
-    Math.round(
-      differenceInDays(maturityTime as number, startTime as number) / 10
-    ) * 10;
+  const dayDifference = differenceInDays(
+    maturityTime as number,
+    startTime as number
+  );
 
-  console.log(differenceInDays(maturityTime as number, startTime as number));
+  const termLength =
+    dayDifference > 10
+      ? Math.round(
+          differenceInDays(maturityTime as number, startTime as number) / 10
+        ) * 10
+      : dayDifference;
 
   return (
     <Card

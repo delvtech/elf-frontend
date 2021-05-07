@@ -1,4 +1,3 @@
-import { t } from "ttag";
 import {
   CryptoAsset,
   CryptoAssetType,

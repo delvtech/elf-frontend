@@ -87,7 +87,7 @@ export function PoolSummary(props: PoolSummaryProps): ReactElement {
               <span
                 className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
               >{t`Total Liquidity`}</span>
-              <div className={classNames("h3", tw("space-x-4"))}>
+              <div className={classNames("h5", tw("space-x-4"))}>
                 {formatMoney(liquidity)}
               </div>
             </div>
@@ -101,7 +101,7 @@ export function PoolSummary(props: PoolSummaryProps): ReactElement {
               <span
                 className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
               >{t`Volume (24hr)`}</span>
-              <div className={classNames("h3", tw("space-x-4"))}>
+              <div className={classNames("h5", tw("space-x-4"))}>
                 {formatMoney(volume)}
               </div>
             </div>
@@ -115,7 +115,7 @@ export function PoolSummary(props: PoolSummaryProps): ReactElement {
               <span
                 className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
               >{t`Quantity ${baseAssetSymbol}`}</span>
-              <div className={classNames("h3", tw("space-x-4"))}>
+              <div className={classNames("h5", tw("space-x-4"))}>
                 {Number(
                   formatUnits(baseAssetBalance || 0, baseAssetDecimals)
                 ).toFixed(2)}
@@ -139,7 +139,7 @@ export function PoolSummary(props: PoolSummaryProps): ReactElement {
               <span
                 className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
               >{t`Staking APY (24h)`}</span>
-              <div className={classNames("h3", tw("space-x-4"))}>
+              <div className={classNames("h5", tw("space-x-4"))}>
                 {formatPercent(stakingAPY || 0)}
               </div>
             </div>
@@ -150,7 +150,7 @@ export function PoolSummary(props: PoolSummaryProps): ReactElement {
               <span
                 className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
               >{t`Fees (24hr)`}</span>
-              <div className={classNames("h3", tw("space-x-4"))}>
+              <div className={classNames("h5", tw("space-x-4"))}>
                 {formatMoney(feeVolume)}
               </div>
             </div>
@@ -166,7 +166,7 @@ export function PoolSummary(props: PoolSummaryProps): ReactElement {
               >{t`Quantity (${
                 isConvergentCurvePool(pool) ? "PT" : "YT"
               })`}</span>
-              <div className={classNames("h3", tw("space-x-4"))}>
+              <div className={classNames("h5", tw("space-x-4"))}>
                 {Number(
                   formatUnits(termAssetBalance || 0, termAssetDecimals)
                 ).toFixed(2)}
