@@ -125,7 +125,9 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const onClose = useCallback(() => {
     setDrawerOpen(false);
-  }, []);
+    onChangeIn(undefined);
+    onChangeOut(undefined);
+  }, [onChangeIn, onChangeOut]);
   const submitTransaction = useCallback(() => {
     setDrawerOpen(true);
   }, []);
