@@ -11,7 +11,7 @@ export function useConvergentCurvePoolsWithLPBalance(
   account: string | null | undefined
 ): ConvergentCurvePool[] {
   const allConvergentCurvePools = useConvergentCurvePools();
-  const poolsWithLP = useTokensWithBalance(account, allConvergentCurvePools);
+  const [poolsWithLP] = useTokensWithBalance(account, allConvergentCurvePools);
   return useMemo(
     () =>
       poolsWithLP

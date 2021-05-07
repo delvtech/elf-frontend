@@ -28,7 +28,7 @@ export function useTotalFiatBalance(
   const { currency } = useCurrencyPref();
 
   // Get the balances we're going to sum over
-  const tokensWithBalanceResults = useTokensWithBalance(
+  const [tokensWithBalanceResults] = useTokensWithBalance(
     account,
     trancheOrYieldToken as ERC20Shim[]
   );
