@@ -1,7 +1,9 @@
 import {
+  ActionProps,
   Classes,
   Intent,
   IToastProps,
+  LinkProps,
   Position,
   Toaster,
 } from "@blueprintjs/core";
@@ -26,18 +28,24 @@ export const AppToaster = Toaster.create({
   // or have multiple toasters.
   className: Classes.DARK,
 });
-export function makeToast(message: string): IToastProps {
+export function makeToast(
+  message: string,
+  action?: ActionProps & LinkProps
+): IToastProps {
   return {
     message,
+    action,
   };
 }
 
 export function makeSuccessToast(
   message: string,
+  action?: ActionProps & LinkProps,
   timeoutMs?: number
 ): IToastProps {
   return {
     message,
+    action,
     icon: IconNames.TICK,
     intent: Intent.SUCCESS,
     timeout: timeoutMs,
@@ -47,10 +55,12 @@ export function makeSuccessToast(
 export function makeErrorToast(
   message: string,
   icon?: IconName,
+  action?: ActionProps & LinkProps,
   timeoutMs?: number
 ): IToastProps {
   return {
     message,
+    action,
     icon: icon || IconNames.ERROR,
     intent: Intent.DANGER,
     timeout: timeoutMs,
