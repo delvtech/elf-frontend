@@ -1,46 +1,32 @@
-import {
-  CSSProperties,
-  ReactElement,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import { CSSProperties, ReactElement, useCallback } from "react";
 
-import { InputGroup, Tag } from "@blueprintjs/core";
+import { InputGroup, Intent, Tag } from "@blueprintjs/core";
 import classNames from "classnames";
+import { BigNumber } from "ethers";
+import { formatUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { SwapKind } from "efi-ui/balancer/SwapKind";
+import { validateInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import styles from "efi-ui/earn/EarnInput/EarnInput.module.css";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import { SwapKind } from "efi-ui/balancer/SwapKind";
-import { PoolContract } from "efi/pools/PoolContract";
-import { useQueryBatchSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
-import { formatUnits, parseUnits } from "ethers/lib/utils";
-import { BigNumber } from "ethers";
 import { clipStringValueToDecimals } from "efi/math/fixedPoint";
-import { validateInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 
 interface EarnInputProps {
   showMaxButton: boolean;
-  assetBalance: number;
   // cannot be undefined as that enables 'uncontrolled' component behavior for InputGroup
   value: string;
-  onValueChange: (value: string | undefined) => void;
-  onPreviewUpdate: (value: string | undefined) => void;
+  validValue: boolean;
+  onValueChange: (value: string, swapKind: SwapKind) => void;
   className?: string;
 
   placeholder?: string;
 
   assetPicker: ReactElement;
   swapKind: SwapKind;
-  pool: PoolContract | undefined;
-  cryptoAddress: string | undefined;
   cryptoDecimals: number | undefined;
   cryptoBalanceOf: BigNumber | undefined;
-  cryptoDisplayBalance: string | number;
-  previewCryptoAddress: string | undefined;
-  previewCryptoPoolIndex: number | undefined;
 }
 
 const earnInputStyle: CSSProperties = {
@@ -51,60 +37,30 @@ const earnInputStyle: CSSProperties = {
 export function EarnInput({
   className,
   value,
+  validValue,
   showMaxButton,
   placeholder,
-  assetBalance,
   onValueChange: onChangeFromProps,
-  onPreviewUpdate,
   assetPicker,
   swapKind,
-  pool,
-  cryptoAddress,
   cryptoDecimals,
   cryptoBalanceOf,
-  previewCryptoAddress,
-  previewCryptoPoolIndex,
 }: EarnInputProps): ReactElement {
   const { isDarkMode } = useDarkMode();
 
-  // changes to this will trigger calculating and calling handler to update the other value.  we
-  // need to do this because the calculation is asynchronous so we can't update the preview directly
-  // in the useOnInputChange handler.  Note that we use an object here to make sure we trigger
-  // useUpdatePreviewValue when the string value is the same as the previous value.
-  const [internalValue, setInternalValue] = useState<{
-    value: string;
-  }>({ value: "" });
-
-  // handles user input changes.  call onChangeFromProps to tell the parent the value changed.  also
-  // updates the internal value.  if the user clears the inputs, we also call onPreviewUpdate to
-  // clear the preview.
   const onChange = useOnInputChange(
-    setInternalValue,
     onChangeFromProps,
-    onPreviewUpdate,
-    cryptoDecimals
-  );
-
-  // watches for updates to internal value, calculate preview value and calls onPreviewUpdate
-  useUpdatePreviewValue(
-    swapKind,
-    cryptoAddress,
-    previewCryptoAddress,
-    pool,
-    internalValue,
     cryptoDecimals,
-    previewCryptoPoolIndex,
-    onPreviewUpdate
+    swapKind
   );
 
   // TODO: disable setting max value if the user balance >  pool balance.  better yet, disable max
   // value if the trade would cause too much slippage.
-
   // sets the max value for the input
   const setMaxValue = useSetMaxValue(
     cryptoBalanceOf, // the max value
     cryptoDecimals,
-    setInternalValue,
+    swapKind,
     onChangeFromProps
   );
 
@@ -125,6 +81,7 @@ export function EarnInput({
         className
       )}
       value={value || ""}
+      intent={validValue ? undefined : Intent.DANGER}
       large
       leftElement={assetPicker}
       rightElement={maxButtonElement}
@@ -134,91 +91,43 @@ export function EarnInput({
 }
 
 function useOnInputChange(
-  setInternalValue: (value: { value: string }) => void,
-  onChange: (value: string | undefined) => void,
-  onPreviewUpdate: (value: string | undefined) => void,
-  cryptoDecimals: number | undefined
+  onChange: (value: string, swapKind: SwapKind) => void,
+  cryptoDecimals: number | undefined,
+  swapKind: SwapKind
 ) {
   return useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const userInputValue = event.target.value;
-
-      // sets internal value
-      validateAndSetValue(
-        userInputValue,
-        setInternalValue,
-        onChange,
-        onPreviewUpdate,
-        cryptoDecimals
-      );
+      // checks for valid values before reporting to parent
+      validateAndSetValue(userInputValue, onChange, cryptoDecimals, swapKind);
     },
-    [setInternalValue, onChange, onPreviewUpdate, cryptoDecimals]
+    [onChange, cryptoDecimals, swapKind]
   );
-}
-
-function useUpdatePreviewValue(
-  swapKind: SwapKind,
-  cryptoAddress: string | undefined,
-  previewCryptoAddress: string | undefined,
-  pool: PoolContract | undefined,
-  internalValue: { value: string | undefined },
-  cryptoDecimals: number | undefined,
-  previewCryptoIndex: number | undefined,
-  onChangeOtherValue: (value: string | undefined) => void
-) {
-  const tokenInAddress =
-    swapKind === SwapKind.GIVEN_IN ? cryptoAddress : previewCryptoAddress;
-  const tokenOutAddress =
-    swapKind === SwapKind.GIVEN_OUT ? cryptoAddress : previewCryptoAddress;
-
-  const { value } = internalValue;
-  // get the preview value
-  const { data: swap } = useQueryBatchSwap(
-    swapKind,
-    pool,
-    tokenInAddress,
-    tokenOutAddress,
-    parseUnits(value || "0", cryptoDecimals ?? 18)
-  );
-
-  const otherValue = swap?.[previewCryptoIndex ?? 1];
-  const otherStringValue = otherValue
-    ? formatUnits(otherValue.abs(), cryptoDecimals)
-    : undefined;
-
-  useEffect(() => {
-    // let parent know preview value updated
-    onChangeOtherValue(otherStringValue);
-  }, [onChangeOtherValue, otherStringValue, internalValue]);
 }
 
 function useSetMaxValue(
   tokenBalanceOf: BigNumber | undefined,
   tokenDecimals: number | undefined,
-  setInternalValue: (value: { value: string }) => void,
-  onChange: (value: string | undefined) => void
+  swapKind: SwapKind,
+  onChange: (value: string, swapKind: SwapKind) => void
 ) {
   return useCallback(() => {
     if (tokenBalanceOf) {
       const maxValue = formatUnits(tokenBalanceOf, tokenDecimals);
-      setInternalValue({ value: maxValue });
-      onChange(maxValue);
+      onChange(maxValue, swapKind);
     }
-  }, [tokenBalanceOf, tokenDecimals, setInternalValue, onChange]);
+  }, [tokenBalanceOf, tokenDecimals, onChange, swapKind]);
 }
 
 function validateAndSetValue(
   value: string,
-  setInternalValue: (value: { value: string }) => void,
-  onChange: (value: string | undefined) => void,
-  updatePreviewValue: (value: string) => void,
-  cryptoDecimals: number | undefined
+  onChange: (value: string, swapKind: SwapKind) => void,
+  cryptoDecimals: number | undefined,
+  swapKind: SwapKind
 ) {
   // allow user to clear input
   if (value === "" || value === undefined) {
-    setInternalValue({ value: "" });
-    onChange("");
-    updatePreviewValue("");
+    onChange("", swapKind);
     return;
   }
 
@@ -231,7 +140,5 @@ function validateAndSetValue(
   }
 
   // since this is a controlled component, we let the parent know what to update the value to
-  onChange(safeValue);
-  // we also internally set the value so we can trigger an update for the other value
-  setInternalValue({ value: safeValue });
+  onChange(safeValue, swapKind);
 }
