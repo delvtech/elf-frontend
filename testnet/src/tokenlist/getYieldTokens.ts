@@ -25,19 +25,23 @@ export async function getYieldTokensFromFactory(interestTokenFactoryAddress: str
 
 
   const interestTokens = safeInterestTokenAddresses.map((address) => InterestToken__factory.connect(address, provider));
+  const trancheAddresses = await Promise.all(interestTokens.map(interestToken => interestToken.tranche()));
+  const tranches = trancheAddresses.map((address) => Tranche__factory.connect(address, provider));
+  const underlyingAddresses = await Promise.all(tranches.map(tranche => tranche.underlying()));
   const underlyingSymbols = await getUnderlyingSymbols(interestTokens);
   const yieldTokenNames = formatYieldTokenNames(underlyingSymbols);
   const yieldTokenSymbols = formatYieldTokenSymbols(underlyingSymbols);
 
   const decimals = await Promise.all(interestTokens.map(interestToken => interestToken.decimals()));
 
-  const yieldTokensList: TokenInfo[] = zip(safeInterestTokenAddresses, yieldTokenSymbols, yieldTokenNames, decimals)
-    .map(([address, symbol, name, decimal]) => {
+  const yieldTokensList: TokenInfo[] = zip(safeInterestTokenAddresses, yieldTokenSymbols, yieldTokenNames, decimals, underlyingAddresses)
+    .map(([address, symbol, name, decimal, underlying]): TokenInfo => {
       return {
         chainId,
         address: address as string,
         symbol: symbol as string,
         decimals: decimal as number,
+        extensions: {underlying: underlying as string},
         name: name as string,
         tags: [TokenListTag.YIELD],
         // TODO: What logo do we want to show for interest tokens?
@@ -51,20 +55,22 @@ export async function getYieldTokensFromFactory(interestTokenFactoryAddress: str
 export async function getYieldTokensFromTranches(tranches: Tranche[], chainId: number) {
   const interestTokenAddresses = await Promise.all(tranches.map(tranche => tranche.interestToken()));
   const interestTokens = interestTokenAddresses.map(address => InterestToken__factory.connect(address, provider));
+  const underlyingAddresses = await Promise.all(tranches.map(tranche => tranche.underlying()));
   const underlyingSymbols = await getUnderlyingSymbols(interestTokens);
   const yieldTokenNames = formatYieldTokenNames(underlyingSymbols);
   const yieldTokenSymbols = formatYieldTokenSymbols(underlyingSymbols);
 
   const decimals = await Promise.all(interestTokens.map(interestToken => interestToken.decimals()));
 
-  const yieldTokensList: TokenInfo[] = zip(interestTokenAddresses, yieldTokenSymbols, yieldTokenNames, decimals)
-    .map(([address, symbol, name, decimal]) => {
+  const yieldTokensList: TokenInfo[] = zip(interestTokenAddresses, yieldTokenSymbols, yieldTokenNames, decimals, underlyingAddresses)
+    .map(([address, symbol, name, decimal, underlying]) => {
       return {
         chainId,
         address: address as string,
         symbol: symbol as string,
         decimals: decimal as number,
         name: name as string,
+        extensions: {underlying: underlying as string},
         tags: [TokenListTag.YIELD],
         // TODO: What logo do we want to show for interest tokens?
         // logoURI: ""
