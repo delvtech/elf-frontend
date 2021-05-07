@@ -255,6 +255,8 @@ function useTokensSummary(
   const { data: termAssetDecimals } = useTokenDecimals(termAssetContract);
 
   const spotPrice = usePoolSpotPrice(pool, baseAssetContract);
+  const termSpotPrice = usePoolSpotPrice(pool, termAssetContract);
+
   const swaps = useSwaps(pool);
 
   const termAssetPrice =
@@ -313,7 +315,7 @@ function useTokensSummary(
     termAssetBalanceTrend,
     termAssetDecimals,
     termAssetPrice,
-    spotPrice,
+    spotPrice: termSpotPrice,
     termAssetPriceTrend,
     fixedYield,
     fiatInterestPerToken,
