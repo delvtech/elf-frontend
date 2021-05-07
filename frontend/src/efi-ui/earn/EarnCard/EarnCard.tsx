@@ -52,7 +52,6 @@ export function EarnCard({
 }: EarnCardProps): ReactElement {
   // local state
   const [isDrawerOpen, setDrawerOpen] = useState(false);
-  const closeDrawer = useCallback(() => setDrawerOpen(false), []);
   const openDrawer = useCallback(() => setDrawerOpen(true), []);
 
   // base asset
@@ -110,6 +109,11 @@ export function EarnCard({
 
   const { stringValue: amountIn, setValue: onChangeIn } = useNumericInput();
   const { stringValue: amountOut, setValue: onChangeOut } = useNumericInput();
+  const closeDrawer = useCallback(() => {
+    onChangeIn(undefined);
+    onChangeOut(undefined);
+    setDrawerOpen(false);
+  }, [onChangeIn, onChangeOut]);
 
   const roundedPrincipalPrice = amountOfEthForOnePrincipalEth?.toFixed(4);
   const marketRateLabel = getMarketRateLabel(
