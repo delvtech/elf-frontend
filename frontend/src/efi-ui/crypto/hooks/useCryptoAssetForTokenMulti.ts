@@ -9,7 +9,11 @@ import ContractAddresses, {
   KNOWN_ERC20_TOKENS,
   KNOWN_ERC20PERMIT_TOKENS,
 } from "efi/addresses";
-import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
+import {
+  CryptoAsset,
+  CryptoAssetType,
+  ETHEREUM_CRYPTO_ASSET,
+} from "efi/crypto/CryptoAsset";
 
 /**
  * Turns a list of tokens into a list of CryptoAsset equivalents.
@@ -52,11 +56,7 @@ export function useCryptoAssetForTokenMulti(
 
       // Turn weth into eth because it is special
       if (tokenAddress === ContractAddresses.wethAddress) {
-        const cryptoAsset: CryptoAsset = {
-          id: "ethereum",
-          type: CryptoAssetType.ETHEREUM,
-        };
-        return cryptoAsset;
+        return ETHEREUM_CRYPTO_ASSET;
       }
 
       if (erc20Contract && KNOWN_ERC20_TOKENS.includes(tokenAddress)) {

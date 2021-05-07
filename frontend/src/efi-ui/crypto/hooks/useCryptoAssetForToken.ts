@@ -3,7 +3,11 @@ import ContractAddresses, {
   KNOWN_ERC20_TOKENS,
   KNOWN_ERC20PERMIT_TOKENS,
 } from "efi/addresses";
-import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
+import {
+  CryptoAsset,
+  CryptoAssetType,
+  ETHEREUM_CRYPTO_ASSET,
+} from "efi/crypto/CryptoAsset";
 import { InterestTokenContracts, TrancheContracts } from "efi/tranche/tranches";
 import { ERC20 } from "elf-contracts/types/ERC20";
 import { ERC20Permit } from "elf-contracts/types/ERC20Permit";
@@ -25,11 +29,7 @@ export function useCryptoAssetForToken(
 
   // Turn weth into eth because it is special
   if (tokenAddress === ContractAddresses.wethAddress) {
-    const cryptoAsset: CryptoAsset = {
-      id: "ethereum",
-      type: CryptoAssetType.ETHEREUM,
-    };
-    return cryptoAsset;
+    return ETHEREUM_CRYPTO_ASSET;
   }
 
   // If it's a known erc20, make it so

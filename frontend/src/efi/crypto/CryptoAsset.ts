@@ -31,6 +31,11 @@ export type CryptoAsset =
   | Erc20CryptoAsset
   | Erc20PermitCryptoAsset;
 
+export const ETHEREUM_CRYPTO_ASSET: EthereumCryptoAsset = {
+  id: "ethereum",
+  type: CryptoAssetType.ETHEREUM,
+};
+
 export function findTokenContract(
   cryptoAsset: CryptoAsset | undefined
 ): ERC20 | ERC20Permit | undefined {
