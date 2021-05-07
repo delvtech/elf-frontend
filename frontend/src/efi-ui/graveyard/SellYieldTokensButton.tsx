@@ -3,34 +3,42 @@ import React, { Fragment, ReactElement, useState } from "react";
 import { Button, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
-import { Tranche } from "elf-contracts/types/Tranche";
+import { InterestToken } from "elf-contracts/types/InterestToken";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { SellPrincipalTokensTransactionDrawer } from "efi-ui/swaps/SellPrincipalTokensTransactionDrawer/SellPrincipalTokensTransactionDrawer";
+import { SellYieldTokensDrawer } from "efi-ui/graveyard/SellYieldTokensDrawer/SellYieldTokensDrawer";
 import { PoolContract } from "efi/pools/PoolContract";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { TokenIcon } from "efi-ui/token/TokenIcon";
 
-interface SellPrincipalTokensProps {
+interface SellYieldTokensButtonProps {
   chainId: number | undefined;
   account: string | null | undefined;
+  walletConnectionActive: boolean;
   connector: AbstractConnector | undefined;
   library: Web3Provider | undefined;
   pool: PoolContract | undefined;
-  tranche: Tranche | undefined;
+
+  maxSellAmount: string | undefined;
+
+  yieldToken: InterestToken | undefined;
   baseAsset: CryptoAsset | undefined;
   baseAssetIcon: TokenIcon | undefined;
 }
 
-export function SellPrincipalTokensButton({
+export function SellYieldTokensButton({
   baseAsset,
   baseAssetIcon,
-  tranche,
+  yieldToken,
   account,
+  chainId,
+  connector,
   library,
   pool,
-}: SellPrincipalTokensProps): ReactElement {
+  maxSellAmount,
+  walletConnectionActive,
+}: SellYieldTokensButtonProps): ReactElement {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
 
   return (
@@ -43,16 +51,20 @@ export function SellPrincipalTokensButton({
       >
         <div className={tw("p-2", "text-base")}>{t`Sell`}</div>
       </Button>
+
       {!baseAsset ? null : (
-        <SellPrincipalTokensTransactionDrawer
+        <SellYieldTokensDrawer
           isOpen={isDrawerOpen}
-          tranche={tranche}
+          yieldToken={yieldToken}
           account={account}
           baseAsset={baseAsset}
           baseAssetIcon={baseAssetIcon}
+          chainId={chainId}
+          connector={connector}
           library={library}
           onClose={() => setDrawerOpen(false)}
           pool={pool}
+          walletConnectionActive={walletConnectionActive}
         />
       )}
     </Fragment>

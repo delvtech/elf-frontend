@@ -61,9 +61,6 @@ export function MintCard(props: MintCardProps): ReactElement | null {
   const {
     library,
     account,
-    chainId,
-    walletConnectionActive,
-    connector,
     baseAsset,
     baseAssetSymbol,
     baseAssetIcon,
@@ -203,9 +200,6 @@ export function MintCard(props: MintCardProps): ReactElement | null {
         tranche={tranche}
         account={account}
         library={library}
-        chainId={chainId}
-        walletConnectionActive={walletConnectionActive}
-        connector={connector}
         amountIn={amountInString}
         isOpen={isDrawerOpen}
         onClose={() => setDrawerOpen(false)}

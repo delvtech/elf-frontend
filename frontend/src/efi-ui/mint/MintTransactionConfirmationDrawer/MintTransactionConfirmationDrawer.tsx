@@ -1,14 +1,11 @@
-import { ReactElement } from "react";
+import { ReactElement, useMemo } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
-import { AbstractConnector } from "@web3-react/abstract-connector";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { Signer } from "ethers";
-import { parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { useMintPreview } from "efi-ui/mint/hooks/useMintPreview";
 import { useMintTransaction } from "efi-ui/mint/hooks/useMintTransaction";
@@ -18,14 +15,11 @@ import { getUserProxyApprovalMessage } from "efi-ui/mint/userProxyApprovalMessag
 import { SwapDetailsForm } from "efi-ui/swaps/SwapDetailsPreview/SwapDetailsForm";
 import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/TransactionDrawer";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
-import { CryptoAsset } from "efi/crypto/CryptoAsset";
+import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { TokenIcon } from "efi-ui/token/TokenIcon";
 
 interface MintTransactionConfirmationDrawerProps {
-  chainId: number | undefined;
   account: string | null | undefined;
-  walletConnectionActive: boolean;
-  connector: AbstractConnector | undefined;
   library: Web3Provider | undefined;
 
   amountIn: string | undefined;
@@ -39,10 +33,7 @@ interface MintTransactionConfirmationDrawerProps {
 }
 
 export function MintTransactionConfirmationDrawer({
-  connector,
-  walletConnectionActive,
   library,
-  chainId,
   account,
   baseAssetIcon: BaseAssetIcon,
   baseAsset,
@@ -56,7 +47,6 @@ export function MintTransactionConfirmationDrawer({
 
   // base asset calls
   const baseAssetSymbol = useCryptoSymbol(baseAsset);
-  const baseAssetDecimals = useCryptoDecimals(baseAsset);
 
   // tranche calls
   const { data: trancheUnlockTimestamp } = useSmartContractReadCall(
@@ -65,7 +55,6 @@ export function MintTransactionConfirmationDrawer({
   );
   const unlockTimeStampDate = convertEpochSecondsToDate(trancheUnlockTimestamp);
 
-  const amountInAsBigNumber = parseUnits(amountIn || "0", baseAssetDecimals);
   const amountInAsNumber = +(amountIn || 0);
   const numPrincipalTokens = useMintPreview(tranche, amountInAsNumber);
 
@@ -73,14 +62,11 @@ export function MintTransactionConfirmationDrawer({
     mint,
     mutationResult: { isLoading, isSuccess, isError },
   } = useMintTransaction(signer, baseAsset, tranche, amountInAsNumber);
-  const walletApprovalInfos = [
-    {
-      cryptoAsset: baseAsset,
-      ownerAddress: account,
-      spenderAddress: userProxy?.address,
-      messageRenderer: getUserProxyApprovalMessage,
-    },
-  ];
+  const walletApprovalInfos = useWalletApprovalInfos(
+    baseAsset,
+    account,
+    userProxy?.address
+  );
 
   return (
     <TransactionDrawer
@@ -114,4 +100,24 @@ export function MintTransactionConfirmationDrawer({
       }
     />
   );
+}
+
+function useWalletApprovalInfos(
+  baseAsset: CryptoAsset | undefined,
+  account: string | null | undefined,
+  userProxyAddress: string | undefined
+) {
+  return useMemo(() => {
+    if (!baseAsset || baseAsset.type === CryptoAssetType.ETHEREUM) {
+      return;
+    }
+    return [
+      {
+        cryptoAsset: baseAsset,
+        ownerAddress: account,
+        spenderAddress: userProxyAddress,
+        messageRenderer: getUserProxyApprovalMessage,
+      },
+    ];
+  }, [account, baseAsset, userProxyAddress]);
 }
