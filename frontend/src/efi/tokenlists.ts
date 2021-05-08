@@ -19,15 +19,20 @@ export enum TokenListTag {
   PRINCIPAL = "eP",
   YIELD = "eY",
 }
-interface PrincipalTokenInfo extends TokenInfo {
+export interface PrincipalTokenInfo extends TokenInfo {
   extensions: {
     /**
      * The underlying base asset for the principal token
      */
     underlying: string;
+
+    /**
+     * Number of seconds after epoch when the principal token can be redeemed
+     */
+    unlockTimestamp: number;
   };
 }
-interface YieldTokenInfo extends TokenInfo {
+export interface YieldTokenInfo extends TokenInfo {
   extensions: {
     /**
      * The underlying base asset for the yield token
