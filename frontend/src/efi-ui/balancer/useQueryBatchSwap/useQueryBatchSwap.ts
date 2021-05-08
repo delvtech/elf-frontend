@@ -71,7 +71,7 @@ export function useQueryBatchSwap(
   return queryBatchSwapResults;
 }
 
-export function useQueryBatchSwapNew(
+export function useQueryBatchSwapCalc(
   kind: SwapKind,
   pool: PoolContract | undefined,
   tokenInAddress: string | undefined,

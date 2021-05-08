@@ -3,7 +3,7 @@ import { formatUnits, parseUnits } from "ethers/lib/utils";
 
 import { SwapKind } from "efi-ui/balancer/SwapKind";
 import { parseQueryBatchSwapResult } from "efi-ui/balancer/useQueryBatchSwap/parseQueryBatchSwapResult";
-import { useQueryBatchSwapNew } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
+import { useQueryBatchSwapCalc } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { PoolContract } from "efi/pools/PoolContract";
 import { useTokenDecimalsMulti } from "efi-ui/token/hooks/useTokenDecimalsMulti";
@@ -33,7 +33,7 @@ export function usePoolSpotPrice(
   const amountIn = parseUnits("0.01", decimals);
 
   const [, amountOut] =
-    useQueryBatchSwapNew(
+    useQueryBatchSwapCalc(
       SwapKind.GIVEN_IN,
       pool,
       underlyingToken?.address,
