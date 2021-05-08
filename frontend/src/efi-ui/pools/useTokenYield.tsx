@@ -1,13 +1,14 @@
 import { ERC20 } from "elf-contracts/types/ERC20";
-import { t } from "ttag";
+
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
+import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForPool";
-import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { ONE_YEAR_IN_SECONDS } from "efi/base/time";
 import { PoolContract } from "efi/pools/PoolContract";
 import { TermAssetType } from "efi/tranche/TermAssetType";
+import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 
 /**
  * Returns the APY for either a principal token or a yield token
@@ -22,7 +23,7 @@ export function useTokenYield(
   termAssetType: TermAssetType
 ): number {
   // get fixed yield
-  const { data: baseAssetSymbol } = useTokenSymbol(baseAssetContract);
+  const baseAsset = useCryptoAssetForToken(baseAssetContract?.address);
   const spotPrice = usePoolSpotPrice(pool, baseAssetContract);
   const trancheContract = useTrancheForPool(pool);
 
@@ -54,9 +55,8 @@ export function useTokenYield(
   }
 
   // the yield token apy is the same as the underlying vault, so we pull from there.
-  const { data: vaultInfo } = useYearnVault(
-    baseAssetSymbol ? t`yv${baseAssetSymbol}` : undefined
-  );
+  const vaultSymbol = getVaultSymbol(baseAsset);
+  const { data: vaultInfo } = useYearnVault(vaultSymbol);
 
   const variableAPY = vaultInfo?.apy?.recommended ?? 0;
 
