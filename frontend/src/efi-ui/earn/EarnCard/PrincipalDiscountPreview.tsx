@@ -5,6 +5,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
+import { isFiniteNumber } from "efi/base/numbers";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { formatPercent } from "efi/base/formatPercent";
 
@@ -45,23 +46,25 @@ export function PrincipalDiscountPreview({
           "flex-col-reverse",
           "items-center"
         )}
-        label={<span className={tw("text-base")}>{t`Yield at term`}</span>}
+        label={<span className={tw("text-base")}>{t`Earned at Maturity`}</span>}
         textClassName={tw("text-lg")}
         text={
-          !amountIn ? (
-            t`Enter an amount`
-          ) : (
-            <Fragment>
-              <span>{`${totalYield?.toFixed(4)} ${baseAssetSymbol}`}</span>{" "}
-              <span
-                style={{
-                  color: isDarkMode ? Colors.GREEN5 : Colors.GREEN3,
-                }}
-              >
-                {percentYield && formatPercent(percentYield)}
-              </span>
-            </Fragment>
-          )
+          <Fragment>
+            <span>
+              {totalYield && isFiniteNumber(totalYield)
+                ? `${totalYield?.toFixed(4)} ${baseAssetSymbol}`
+                : `${0} ${baseAssetSymbol}`}
+            </span>{" "}
+            <span
+              style={{
+                color: isDarkMode ? Colors.GREEN5 : Colors.GREEN3,
+              }}
+            >
+              {percentYield && isFiniteNumber(percentYield)
+                ? formatPercent(percentYield)
+                : "0.00%"}
+            </span>
+          </Fragment>
         }
       />
     </Callout>
