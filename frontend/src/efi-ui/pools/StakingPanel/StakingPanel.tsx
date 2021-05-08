@@ -23,6 +23,7 @@ import { useTokenPoolBalance } from "efi-ui/pools/useTokenPoolBalance/useTokenPo
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { useTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
+import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
 import { useEthBalance } from "efi-ui/wallets/hooks/useEthBalance/useEthBalance";
 import ContractAddresses from "efi/addresses";
 import { BALANCER_ETH_SENTINEL } from "efi/balancer";
@@ -55,6 +56,17 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
     submitDisabled = false,
     pool,
   } = props;
+
+  const [isWalletDialogOpen, setWalletDialogOpen] = useState(false);
+  // local state
+  const [isDrawerOpen, setDrawerOpen] = useState(false);
+  const openDrawer = useCallback(() => setDrawerOpen(true), []);
+  const onClickButton = useCallback(() => {
+    if (!account) {
+      return setWalletDialogOpen(true);
+    }
+    openDrawer();
+  }, [account, openDrawer]);
 
   const { data: [tokens] = [] } = usePoolTokens(pool);
   const {
@@ -122,15 +134,11 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
     yieldAssetDecimals
   );
 
-  const [isDrawerOpen, setDrawerOpen] = useState(false);
   const onClose = useCallback(() => {
     setDrawerOpen(false);
     onChangeIn("");
     onChangeOut("");
   }, [onChangeIn, onChangeOut]);
-  const submitTransaction = useCallback(() => {
-    setDrawerOpen(true);
-  }, []);
 
   const poolTokenMaxAmounts = [BigNumber.from(0), BigNumber.from(0)];
   poolTokenMaxAmounts[baseAssetIndex] = parseUnits(
@@ -188,7 +196,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
       yieldAssetBalanceOf ?? 0
     );
 
-  const submitButtonDisabled =
+  const invalidInput =
     formDisabled ||
     submitDisabled ||
     insufficientBalance ||
@@ -196,6 +204,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
     !isValidTrancheAssetValue ||
     !amountIn ||
     !amountOut;
+  const submitButtonDisabled = !!account && invalidInput;
 
   let submitButtonLabel = buttonLabel;
   let submitButtonError = false;
@@ -256,7 +265,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
       />
       <Button
         disabled={submitButtonDisabled}
-        onClick={submitTransaction}
+        onClick={onClickButton}
         minimal
         outlined
         large
@@ -287,6 +296,10 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
           isPrincipalPoolType ? isJoinCCPoolSuccess : isJoinWPoolSuccess
         }
         onStake={onStake}
+      />
+      <ConnectWalletDialog
+        isOpen={isWalletDialogOpen}
+        onClose={() => setWalletDialogOpen(false)}
       />
     </div>
   );
