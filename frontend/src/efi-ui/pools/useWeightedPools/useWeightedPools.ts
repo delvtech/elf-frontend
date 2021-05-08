@@ -1,5 +1,7 @@
+import { Provider } from "@ethersproject/providers";
 import { WeightedPool__factory } from "elf-contracts/types/factories/WeightedPool__factory";
 import { WeightedPool } from "elf-contracts/types/WeightedPool";
+import { Signer } from "ethers";
 
 import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
 import { YieldTokenPoolInfo, YieldTokenPoolInfos } from "efi/tokenlists";
@@ -26,6 +28,10 @@ export const yieldTokenPools: YieldTokenPoolInfoWithContract[] = YieldTokenPoolI
  * @param signerOrProvider
  * @returns
  */
-export function useWeightedPools(): WeightedPool[] {
-  return yieldTokenPools.map((info) => info.contract);
+export function useWeightedPools(
+  signerOrProvider?: Signer | Provider
+): WeightedPool[] {
+  return yieldTokenPools.map((info) =>
+    signerOrProvider ? info.contract.connect(signerOrProvider) : info.contract
+  );
 }

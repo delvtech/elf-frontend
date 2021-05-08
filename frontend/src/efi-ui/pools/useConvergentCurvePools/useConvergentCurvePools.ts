@@ -1,5 +1,7 @@
+import { Provider } from "@ethersproject/providers";
 import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
 import { ConvergentCurvePool__factory } from "elf-contracts/types/factories/ConvergentCurvePool__factory";
+import { Signer } from "ethers";
 
 import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
 import {
@@ -30,6 +32,10 @@ export const principalTokenPools: PrincipalTokenPoolInfoWithContract[] = Princip
  * @param signerOrProvider
  * @returns
  */
-export function useConvergentCurvePools(): ConvergentCurvePool[] {
-  return principalTokenPools.map((info) => info.contract);
+export function useConvergentCurvePools(
+  signerOrProvider?: Signer | Provider
+): ConvergentCurvePool[] {
+  return principalTokenPools.map((info) =>
+    signerOrProvider ? info.contract.connect(signerOrProvider) : info.contract
+  );
 }
