@@ -38,17 +38,6 @@ export function PortfolioAssetLabel({
         label={""}
         className={tw("leading-none", "space-y-2")}
       />
-      {/*
-        <Tag
-          className={tw("hidden", "lg:block")}
-          minimal
-          round={!!quantity}
-          large={!!quantity}
-          intent={!quantity ? Intent.WARNING : Intent.NONE}
-        >
-          {quantity ? quantity : t`Learn more`}
-        </Tag>
-        */}
     </div>
   );
 }

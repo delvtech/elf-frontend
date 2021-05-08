@@ -157,11 +157,7 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
   );
 
   const termLength =
-    dayDifference > 10
-      ? Math.round(
-          differenceInDays(maturityTime as number, startTime as number) / 10
-        ) * 10
-      : dayDifference;
+    dayDifference > 10 ? Math.round(dayDifference / 10) * 10 : dayDifference;
 
   if (!allDataLoaded) {
     return (
