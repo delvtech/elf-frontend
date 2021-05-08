@@ -15,6 +15,8 @@ export const tokenListJson: TokenList = require(`tokenlists/${chainName}.tokenli
 
 // Copied from testnet
 export enum TokenListTag {
+  CCPOOL = "ccpool",
+  WPOOL = "wpool",
   UNDERLYING = "underlying",
   PRINCIPAL = "eP",
   YIELD = "eY",
@@ -38,6 +40,31 @@ export interface YieldTokenInfo extends TokenInfo {
      * The underlying base asset for the yield token
      */
     underlying: string;
+  };
+}
+export interface PrincipalTokenPoolInfo extends TokenInfo {
+  extensions: {
+    /**
+     * The
+     */
+    bond: string;
+    /**
+     * The underlying base asset for the principal token
+     */
+    underlying: string;
+
+    /**
+     * balancer poolId
+     */
+    poolId: string;
+  };
+}
+export interface YieldTokenPoolInfo extends TokenInfo {
+  extensions: {
+    /**
+     * The underlying base asset for the yield token
+     */
+    poolId: string;
   };
 }
 
@@ -70,6 +97,21 @@ export const YieldTokenInfos: YieldTokenInfo[] = tokenInfos.filter(
   (tokenInfo): tokenInfo is YieldTokenInfo => isYieldToken(tokenInfo)
 );
 
+/**
+ * The list of all principal token pools
+ */
+export const PrincipalTokenPoolInfos: PrincipalTokenPoolInfo[] = tokenInfos.filter(
+  (tokenInfo): tokenInfo is PrincipalTokenPoolInfo =>
+    isPrincipalTokenPool(tokenInfo)
+);
+
+/**
+ * The list of all yield tokens
+ */
+export const YieldTokenPoolInfos: YieldTokenPoolInfo[] = tokenInfos.filter(
+  (tokenInfo): tokenInfo is YieldTokenPoolInfo => isYieldTokenPool(tokenInfo)
+);
+
 export default tokenListJson;
 
 function getTokenListJsonId() {
@@ -88,4 +130,14 @@ function isPrincipalToken(
 
 function isYieldToken(tokenInfo: TokenInfo): tokenInfo is YieldTokenInfo {
   return !!tokenInfo.tags?.includes(TokenListTag.YIELD);
+}
+
+function isPrincipalTokenPool(
+  tokenInfo: TokenInfo
+): tokenInfo is PrincipalTokenInfo {
+  return !!tokenInfo.tags?.includes(TokenListTag.CCPOOL);
+}
+
+function isYieldTokenPool(tokenInfo: TokenInfo): tokenInfo is YieldTokenInfo {
+  return !!tokenInfo.tags?.includes(TokenListTag.WPOOL);
 }
