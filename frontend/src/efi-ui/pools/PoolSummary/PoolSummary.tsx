@@ -93,9 +93,10 @@ export function PoolSummary(props: PoolSummaryProps): ReactElement {
                 {liquidity ? formatMoney(liquidity) : "$0.00"}
               </div>
             </div>
-            <div className={tw("flex", "self-end")}>
+            {/*            <div className={tw("flex", "self-end")}>
               <TrendIndicator value={liquidityTrend} />
             </div>
+*/}{" "}
           </div>
           {/* Volume (24hr)*/}
           <div className={tw("flex", "space-x-4", "justify-between")}>
@@ -107,9 +108,10 @@ export function PoolSummary(props: PoolSummaryProps): ReactElement {
                 {volume ? formatMoney(volume) : "$0.00"}
               </div>
             </div>
-            <div className={tw("flex", "self-end")}>
+            {/*            <div className={tw("flex", "self-end")}>
               <TrendIndicator value={volumeTrend} />
             </div>
+*/}{" "}
           </div>
           {/* Quantity Base (24hr)*/}
           <div className={tw("flex", "space-x-4", "justify-between")}>
@@ -158,9 +160,10 @@ export function PoolSummary(props: PoolSummaryProps): ReactElement {
                 {feeVolume ? formatMoney(feeVolume) : "$0.00"}
               </div>
             </div>
-            <div className={tw("flex", "self-end")}>
+            {/*            <div className={tw("flex", "self-end")}>
               <TrendIndicator value={feeVolumeTrend} />
             </div>
+*/}{" "}
           </div>
           {/* Quantity Term (24hr)*/}
           <div className={tw("flex", "space-x-4", "justify-between")}>
@@ -176,9 +179,10 @@ export function PoolSummary(props: PoolSummaryProps): ReactElement {
                   : "0.00"}
               </div>
             </div>
-            <div className={tw("flex", "self-end")}>
+            {/*            <div className={tw("flex", "self-end")}>
               <TrendIndicator value={volumeTrend} />
             </div>
+*/}{" "}
           </div>
         </div>
       </Card>
