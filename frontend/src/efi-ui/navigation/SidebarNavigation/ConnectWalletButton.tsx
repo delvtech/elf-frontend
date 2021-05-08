@@ -68,9 +68,7 @@ export function ConnectWalletButton({
           <WalletJazzicon size={42} account={account} />
         )}
         {!account ? (
-          <span className={tw("text-center")}>
-            {t`Connect wallet to begin`}
-          </span>
+          <span className={tw("text-center")}>{t`Connect Wallet`}</span>
         ) : (
           <LabeledText
             className={tw("text-center")}

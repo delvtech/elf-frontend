@@ -101,7 +101,7 @@ export function PoolCharts({ pool }: PoolChartsProps): ReactElement {
                   )}
                   intent={Intent.NONE}
                 >
-                  <H4>{t`Charts available after 24hrs`}</H4>
+                  <H4>{t`Charts Available After 24 Hours of Activity`}</H4>
                 </Callout>
               </div>
             ) : null}
