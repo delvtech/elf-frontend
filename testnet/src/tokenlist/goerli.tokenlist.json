@@ -15,7 +15,7 @@
       "description": "Token that represents the yield on a deposit into a yield position"
     }
   },
-  "timestamp": "2021-05-07T22:39:12.163Z",
+  "timestamp": "2021-05-08T01:20:29.905Z",
   "version": {
     "major": 0,
     "minor": 0,
@@ -47,6 +47,9 @@
       "address": "0x44eecA004b2612d131EDA7dA2b9d986E7fED562e",
       "symbol": "eP-ETH",
       "decimals": 18,
+      "extensions": {
+        "underlying": "0x9A1000D492d40bfccbc03f413A48F5B6516Ec0Fd"
+      },
       "name": "ETH Principal Token",
       "tags": [
         "eP"
@@ -57,6 +60,9 @@
       "address": "0x89d66Ad25F3A723D606B78170366d8da9870A879",
       "symbol": "eP-ETH",
       "decimals": 18,
+      "extensions": {
+        "underlying": "0x9A1000D492d40bfccbc03f413A48F5B6516Ec0Fd"
+      },
       "name": "ETH Principal Token",
       "tags": [
         "eP"
@@ -67,6 +73,9 @@
       "address": "0x80272c960b862B4d6542CDB7338Ad1f727E0D18d",
       "symbol": "eP-USDC",
       "decimals": 6,
+      "extensions": {
+        "underlying": "0x78dEca24CBa286C0f8d56370f5406B48cFCE2f86"
+      },
       "name": "USDC Principal Token",
       "tags": [
         "eP"
@@ -78,6 +87,9 @@
       "symbol": "eY-ETH",
       "decimals": 18,
       "name": "ETH Yield Token",
+      "extensions": {
+        "underlying": "0x9A1000D492d40bfccbc03f413A48F5B6516Ec0Fd"
+      },
       "tags": [
         "eY"
       ]
@@ -88,6 +100,9 @@
       "symbol": "eY-ETH",
       "decimals": 18,
       "name": "ETH Yield Token",
+      "extensions": {
+        "underlying": "0x9A1000D492d40bfccbc03f413A48F5B6516Ec0Fd"
+      },
       "tags": [
         "eY"
       ]
@@ -98,6 +113,9 @@
       "symbol": "eY-USDC",
       "decimals": 6,
       "name": "USDC Yield Token",
+      "extensions": {
+        "underlying": "0x78dEca24CBa286C0f8d56370f5406B48cFCE2f86"
+      },
       "tags": [
         "eY"
       ]
