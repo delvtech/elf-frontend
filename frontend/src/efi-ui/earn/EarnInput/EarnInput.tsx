@@ -1,11 +1,9 @@
 import { CSSProperties, ReactElement, useCallback } from "react";
 
-import { InputGroup, Intent, Tag } from "@blueprintjs/core";
+import { Colors, FormGroup, InputGroup, Intent, Tag } from "@blueprintjs/core";
 import classNames from "classnames";
 import { BigNumber } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
-import { getPlacesAfterDecimal } from "efi/math/fixedPoint";
-
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -20,6 +18,7 @@ interface EarnInputProps {
   // cannot be undefined as that enables 'uncontrolled' component behavior for InputGroup
   value: string;
   validValue: boolean;
+  errorMessage?: string;
   onValueChange: (value: string, swapKind: SwapKind) => void;
   className?: string;
 
@@ -40,6 +39,7 @@ export function EarnInput({
   className,
   value,
   validValue,
+  errorMessage,
   showMaxButton,
   placeholder,
   onValueChange: onChangeFromProps,
@@ -72,23 +72,34 @@ export function EarnInput({
     </div>
   ) : undefined;
 
+  const helperText = validValue ? null : (
+    <div
+      style={{ color: validValue || Colors.RED3 }}
+      className={tw("w-full", "text-right")}
+    >
+      {errorMessage}
+    </div>
+  );
+
   return (
-    <InputGroup
-      placeholder={placeholder}
-      style={earnInputStyle}
-      className={classNames(
-        tw("w-full"),
-        styles.investmentAmount,
-        { [styles.investmentAmountLightMode]: !isDarkMode },
-        className
-      )}
-      value={value || ""}
-      intent={validValue ? undefined : Intent.DANGER}
-      large
-      leftElement={assetPicker}
-      rightElement={maxButtonElement}
-      onChange={onChange}
-    />
+    <FormGroup className={tw("w-full")} helperText={helperText}>
+      <InputGroup
+        placeholder={placeholder}
+        style={earnInputStyle}
+        className={classNames(
+          tw("w-full"),
+          styles.investmentAmount,
+          { [styles.investmentAmountLightMode]: !isDarkMode },
+          className
+        )}
+        value={value || ""}
+        intent={validValue ? undefined : Intent.DANGER}
+        large
+        leftElement={assetPicker}
+        rightElement={maxButtonElement}
+        onChange={onChange}
+      />
+    </FormGroup>
   );
 }
 

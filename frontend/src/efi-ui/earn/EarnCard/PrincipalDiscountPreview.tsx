@@ -5,9 +5,9 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { isFiniteNumber } from "efi/base/numbers";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { formatPercent } from "efi/base/formatPercent";
+import { isFiniteNumber } from "efi/base/numbers";
 
 interface PrincipalDiscountPreviewProps {
   amountIn: string | undefined;
@@ -60,9 +60,7 @@ export function PrincipalDiscountPreview({
                 color: isDarkMode ? Colors.GREEN5 : Colors.GREEN3,
               }}
             >
-              {percentYield && isFiniteNumber(percentYield)
-                ? formatPercent(percentYield)
-                : "0.00%"}
+              {isFiniteNumber(percentYield) && formatPercent(percentYield)}
             </span>
           </Fragment>
         }
@@ -82,6 +80,9 @@ function calculateTotalYield(
 ): number | undefined {
   if (amountOut === undefined || amountIn === undefined) {
     return;
+  }
+  if (amountOut < amountIn) {
+    return 0;
   }
   const totalYield = amountOut - amountIn;
   return totalYield;
