@@ -266,6 +266,7 @@ export function EarnCard({
           <div
             className={tw("flex", "space-x-1", "h-24", "border", "rounded", {
               "border-gray-500": isValidTokenInValue,
+              "border-red-600": !isValidTokenInValue,
             })}
           >
             <EarnInput
@@ -300,8 +301,9 @@ export function EarnCard({
             )}
           </div>
           <div
-            className={tw("flex", "space-x-1", "h-24", "rounded", {
-              "border-gray-500": isValidTokenOutValue,
+            className={tw("flex", "space-x-1", "h-24", "border", "rounded", {
+              "border-gray-500": isValidTokenInValue,
+              "border-red-600": !isValidTokenInValue,
             })}
           >
             <EarnInput
@@ -347,7 +349,19 @@ export function EarnCard({
         </div>
       </Card>
 
-      {}
+      {!activeBaseAsset || !isDrawerOpen ? null : (
+        <BuyPrincipalTokensTransactionConfirmationDrawer
+          baseAsset={activeBaseAsset}
+          baseAssetIcon={baseAssetIcon}
+          tranche={activeTranche}
+          account={account}
+          library={library}
+          pool={pool}
+          amountIn={amountIn}
+          isOpen={isDrawerOpen}
+          onClose={closeDrawer}
+        />
+      )}
       <ConnectWalletDialog
         isOpen={isWalletDialogOpen}
         onClose={() => setWalletDialogOpen(false)}
