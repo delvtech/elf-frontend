@@ -104,7 +104,8 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
   const vaultSymbol = getVaultSymbol(baseAsset);
   const { data: vaultInfo } = useYearnVault(vaultSymbol);
 
-  const { displayName, type } = vaultInfo || {};
+  const { displayName, type, apy } = vaultInfo || {};
+  const vaultApy = apy?.recommended ?? 0;
 
   const { isDarkMode } = useDarkMode();
 
@@ -274,7 +275,7 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
             )}
           >
             <LabeledText
-              text={t`${formatPercent(variableYield)}`}
+              text={t`${formatPercent(vaultApy)}`}
               label={`Vault APY`}
             />
           </div>
