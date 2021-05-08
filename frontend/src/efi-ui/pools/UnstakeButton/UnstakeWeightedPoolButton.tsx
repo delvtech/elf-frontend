@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import { Fragment, ReactElement, useCallback, useState } from "react";
 
 import { Button, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
@@ -12,6 +12,7 @@ import { useExitWeightedPool } from "efi-ui/pools/useUnstake/useExitWeightedPool
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { formatUnits } from "ethers/lib/utils";
 import { clipStringValueToDecimals } from "efi/math/fixedPoint";
+import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
 
 interface UnstakeWeightedPoolButtonProps {
   account: string | null | undefined;
@@ -27,27 +28,43 @@ export function UnstakeWeightedPoolButton({
 }: UnstakeWeightedPoolButtonProps): ReactElement {
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
 
+  const exitPool = useExitWeightedPool(signer, account, pool);
+
+  const [isWalletDialogOpen, setWalletDialogOpen] = useState(false);
+  const onClickUnstake = useCallback(() => {
+    if (!account) {
+      return setWalletDialogOpen(true);
+    }
+    exitPool();
+  }, [account, exitPool]);
+
   // disable the button when there's lp tokens or fine dust
   const { data: lpBalanceOf } = useTokenBalanceOf(pool, account);
-  let disabled = true;
+  let disabled = !!account;
   if (lpBalanceOf) {
     disabled = !+(
       clipStringValueToDecimals(formatUnits(lpBalanceOf, 18), 16) || 0
     );
   }
 
-  const exitPool = useExitWeightedPool(signer, account, pool);
+  const buttonLabel = !!account ? t`Unstake` : t`Connect Wallet`;
 
   return (
-    <Button
-      fill
-      minimal
-      outlined
-      intent={Intent.PRIMARY}
-      disabled={disabled}
-      onClick={exitPool}
-    >
-      <div className={tw("p-2", "text-base")}>{t`Unstake`}</div>
-    </Button>
+    <Fragment>
+      <Button
+        fill
+        minimal
+        outlined
+        intent={Intent.PRIMARY}
+        disabled={disabled}
+        onClick={onClickUnstake}
+      >
+        <div className={tw("p-2", "text-base")}>{buttonLabel}</div>
+      </Button>
+      <ConnectWalletDialog
+        isOpen={isWalletDialogOpen}
+        onClose={() => setWalletDialogOpen(false)}
+      />
+    </Fragment>
   );
 }
