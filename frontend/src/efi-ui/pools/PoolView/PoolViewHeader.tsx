@@ -123,11 +123,15 @@ export function PoolViewHeader({ pool }: PoolViewHeaderProps): ReactElement {
         )}
       >
         <div className={classNames("h2")}>
-          {`${baseAssetSymbol} - ${termAssetSymbol}`}
+          {baseAssetSymbol ? `${baseAssetSymbol} - ${termAssetSymbol}` : ""}
         </div>
-        <div>{t`${termLength || 0} Day - ${
-          format(maturityTime || 0, "MMM d, y") || 0
-        }`}</div>
+        <div>
+          {termLength
+            ? t`${termLength || 0} Day - ${
+                format(maturityTime || 0, "MMM d, y") || 0
+              }`
+            : ""}
+        </div>
       </div>
     </div>
   );

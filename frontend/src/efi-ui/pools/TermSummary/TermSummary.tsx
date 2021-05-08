@@ -74,12 +74,12 @@ export function TermSummary(props: TermSummaryProps): ReactElement {
               className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
             >{t`Total Value Locked`}</span>
             <div className={classNames("h5", tw("space-x-4"))}>
-              {totalValueLocked ? formatMoney(totalValueLocked) : null}
+              {totalValueLocked ? formatMoney(totalValueLocked) : "$0.00"}
             </div>
           </div>
 
           {/* Underlying Vault */}
-          {!isPrincipalPool ? (
+          {pool && !isPrincipalPool ? (
             <div className={tw("flex", "flex-col")}>
               <span
                 className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
@@ -91,7 +91,7 @@ export function TermSummary(props: TermSummaryProps): ReactElement {
           ) : null}
 
           {/* Underlying Vault */}
-          {!isPrincipalPool ? (
+          {pool && !isPrincipalPool ? (
             <div className={tw("flex", "flex-col")}>
               <span
                 className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
@@ -119,7 +119,7 @@ export function TermSummary(props: TermSummaryProps): ReactElement {
               {t`Start Date`}
             </span>
             <div className={classNames("h5", tw("space-x-4"))}>
-              {format(startTimeMs, "MMM d, y")}
+              {startTimeMs ? format(startTimeMs, "MMM d, y") : ""}
             </div>
           </div>
 

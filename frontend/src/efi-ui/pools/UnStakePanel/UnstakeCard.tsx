@@ -80,8 +80,12 @@ export function UnstakeCard({
     trancheDecimals
   );
 
-  const baseAssetLiquidityLabel = `${baseAssetLiquidity?.toFixed(4)}`;
-  const principalTokenLiquidityLabel = `${principalTokenLiquidity?.toFixed(4)}`;
+  const baseAssetLiquidityLabel = baseAssetLiquidity
+    ? `${baseAssetLiquidity?.toFixed(4)}`
+    : "0.0000";
+  const principalTokenLiquidityLabel = principalTokenLiquidity
+    ? `${principalTokenLiquidity?.toFixed(4)}`
+    : "0.0000";
 
   return (
     <div

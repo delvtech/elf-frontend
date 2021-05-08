@@ -95,7 +95,7 @@ export function TokenSummary({
               </div>
             </div>
           ) : null}
-          {!isPrincipalPool ? (
+          {pool && !isPrincipalPool ? (
             <div
               className={tw(
                 "flex",
@@ -116,7 +116,7 @@ export function TokenSummary({
               </div>
             </div>
           ) : null}
-          {!isPrincipalPool ? (
+          {pool && !isPrincipalPool ? (
             <div
               className={tw(
                 "flex",
@@ -192,7 +192,7 @@ function TokenInfo({
           {t`Token`}
         </span>
         <span className={classNames("h5", tw("space-x-4", "truncate"))}>
-          {assetSymbol}
+          {assetSymbol ? assetSymbol : ""}
         </span>
       </div>
       <div className={tw("flex", "flex-col", "justify-center", "space-y-1")}>
@@ -201,16 +201,16 @@ function TokenInfo({
         </span>
         <div className={tw("flex", "justify-between")}>
           <span className={classNames("h5", tw("space-x-4"))}>
-            {formatMoney(assetPrice) || t`$0`}
+            {assetPrice ? formatMoney(assetPrice) : "$0.00"}
           </span>
         </div>
       </div>
       <div className={tw("flex", "flex-col", "justify-center", "space-y-1")}>
         <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
-          {t`Price (${baseAssetSymbol})`}
+          {baseAssetSymbol ? t`Price (${baseAssetSymbol})` : "Price"}
         </span>
         <span className={classNames("h5", tw("truncate"))}>
-          {spotPrice ? spotPrice.toFixed(4) : 0}
+          {spotPrice ? spotPrice.toFixed(4) : "0.0000"}
         </span>
       </div>
     </div>
