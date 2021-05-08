@@ -1,6 +1,6 @@
 import { ReactElement } from "react";
 
-import { Colors } from "@blueprintjs/core";
+import { Colors, Intent, Tag } from "@blueprintjs/core";
 import classNames from "classnames";
 import { format } from "date-fns";
 import { t } from "ttag";
@@ -124,6 +124,11 @@ export function PoolViewHeader({ pool }: PoolViewHeaderProps): ReactElement {
       >
         <div className={classNames("h2")}>
           {baseAssetSymbol ? `${baseAssetSymbol} - ${termAssetSymbol}` : ""}
+          {baseAssetSymbol ? (
+            <sup className={tw("ml-1")}>
+              <Tag minimal intent={Intent.WARNING}>{t`alpha`}</Tag>
+            </sup>
+          ) : null}
         </div>
         <div>
           {termLength

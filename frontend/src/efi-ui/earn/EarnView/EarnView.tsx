@@ -2,7 +2,8 @@ import React, { FC, Fragment, ReactElement } from "react";
 import { Helmet } from "react-helmet";
 
 import { Web3Provider } from "@ethersproject/providers";
-import { RouteComponentProps } from "@reach/router";
+import { Intent, Tag } from "@blueprintjs/core";
+import { RouteComponentProps, Link } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
 import uniqBy from "lodash.uniqby";
 import { jt, t } from "ttag";
@@ -34,7 +35,7 @@ export function EarnView(props: EarnViewProps): ReactElement {
   return (
     <Fragment>
       <Helmet>
-        <title>{t`Earn fixed yield`}</title>
+        <title>{t`Earn fixed yield from buying at a discount. Exit anytime.`}</title>
       </Helmet>
       <div
         data-testid="earn-view"
@@ -43,10 +44,20 @@ export function EarnView(props: EarnViewProps): ReactElement {
           "flex-col",
           "p-12",
           "h-full",
-          "space-y-12",
-          "overflow-scroll"
+          "items-center",
+          "overflow-scroll",
+          "text-center"
         )}
       >
+        {/* page title */}
+        <div style={{ maxWidth: 672 }}>
+          <ViewTitle
+            title={t`Earn fixed yield from buying at a discount.`}
+            bottomTitle={t`Exit anytime.`}
+            titleTag={<Tag minimal intent={Intent.WARNING}>{t`alpha`}</Tag>}
+            subtitle={<EarnViewSubtitle />}
+          />
+        </div>
         {/* Main content */}
         <div
           className={tw(
@@ -63,11 +74,6 @@ export function EarnView(props: EarnViewProps): ReactElement {
             className={tw("flex", "flex-col", "space-y-12", "text-center")}
             style={{ width: 672 }}
           >
-            {/* page title */}
-            <ViewTitle
-              title={t`Earn fixed yield by buying at a discount.`}
-              subtitle={<EarnViewSubtitle />}
-            />
             <EarnCard
               library={library}
               account={account}
@@ -83,12 +89,19 @@ export function EarnView(props: EarnViewProps): ReactElement {
 
 const EarnViewSubtitle: FC = () => {
   const fixedYieldLink = (
-    <a key="fixed-yield-link" href={"/invest"}>
+    <a
+      key="fixed-yield-link"
+      href={
+        "https://medium.com/element-finance/fixed-rate-interest-markets-a-casual-users-journey-through-fixed-rate-interest-using-element-50f420df1859"
+      }
+    >
       {t`Read more about Fixed Yield.`}
     </a>
   );
 
+  const portfolioLink = <Link to={`/portfolio`}>Portfolio Page</Link>;
+
   return (
-    <Fragment>{jt`Principal tokens are redeemable one-to-one with their base asset once they have reached their maturity date. ${fixedYieldLink}`}</Fragment>
+    <Fragment>{jt`Principal Tokens are redeemable one-to-one with their base asset once they have reached their maturity date. To boost your APY further, you may stake your tokens on the ${portfolioLink}. ${fixedYieldLink}`}</Fragment>
   );
 };

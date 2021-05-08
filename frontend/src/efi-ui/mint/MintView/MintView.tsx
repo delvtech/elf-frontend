@@ -43,12 +43,14 @@ export function MintView(props: MintViewProps): ReactElement {
           "overflow-scroll"
         )}
       >
-        <ViewTitle
-          title={t`Stay liquid with Principal and Yield Tokens`}
-          titleTag={<Tag minimal intent={Intent.WARNING}>{t`alpha`}</Tag>}
-          className={tw("text-center")}
-          subtitle={t`Mint Principal and Yield Tokens`}
-        />
+        <div style={{ maxWidth: 610 }}>
+          <ViewTitle
+            title={t`Stay liquid with principal and yield tokens.`}
+            titleTag={<Tag minimal intent={Intent.WARNING}>{t`alpha`}</Tag>}
+            className={tw("text-center")}
+            subtitle={t`Gain capital efficiency on your existing positions, boost your APY by staking, and view current APYs across all available terms.`}
+          />
+        </div>
         <div
           className={tw(
             "flex",
