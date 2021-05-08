@@ -83,7 +83,13 @@ export function EarnView(props: EarnViewProps): ReactElement {
 
 const EarnViewSubtitle: FC = () => {
   const fixedYieldLink = (
-    <a key="fixed-yield-link" href={"/invest"}>
+    <a
+      key="fixed-yield-link"
+      target="_noreferrer"
+      href={
+        "https://paper.element.fi/#21-initial-use-cases-of-principal-tokens"
+      }
+    >
       {t`Read more about Fixed Yield.`}
     </a>
   );
