@@ -8,7 +8,6 @@ import zip from "lodash.zip";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { getQueriesData } from "efi-ui/base/queryResults";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useNewPrincipalTokensPendingTransaction } from "efi-ui/portfolio/hooks/useNewPrincipalTokensPendingTransaction";
 import { PrincipalTokenCard } from "efi-ui/portfolio/PrincipalTokenCard/PrincipalTokenCard";
@@ -19,6 +18,7 @@ import { NoWalletConnectedNonIdealState } from "efi-ui/wallets/NoWalletConnected
 import { isDust } from "efi/coins/isDust";
 import { TrancheContracts } from "efi/tranche/tranches";
 import { getQueryCombinedStatus } from "efi-ui/query/getQueryCombinedStatus";
+import { PrincipalTokenInfos } from "efi/tokenlists";
 
 interface PrincipalTokenPortfolioProps {
   chainId: number | undefined;
@@ -113,15 +113,20 @@ function usePrincipalTokenTab(
   account: string | null | undefined,
   provider?: Provider
 ) {
-  const principalTokenDecimalResults = useTokenDecimalsMulti(TrancheContracts);
-  const decimalResultsStatus = getQueryCombinedStatus(
-    principalTokenDecimalResults
-  );
-  const principalTokenDecimals = getQueriesData(principalTokenDecimalResults);
   const principalTokensWithBalanceResults = useTokensWithBalance(
     account,
     (TrancheContracts as unknown) as ERC20Shim[],
     provider
+  );
+  const principalTokenDecimals = principalTokensWithBalanceResults?.map(
+    ({ token }) =>
+      PrincipalTokenInfos.find((info) => info.address === token.address)
+        ?.decimals
+  );
+
+  const principalTokenDecimalResults = useTokenDecimalsMulti(TrancheContracts);
+  const decimalResultsStatus = getQueryCombinedStatus(
+    principalTokenDecimalResults
   );
 
   // filter out dust, because redeeming a PT can leave a small amount of dust in
