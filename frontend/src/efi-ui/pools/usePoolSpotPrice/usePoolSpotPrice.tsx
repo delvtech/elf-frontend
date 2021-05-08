@@ -3,8 +3,7 @@ import { formatUnits, parseUnits } from "ethers/lib/utils";
 
 import { SwapKind } from "efi-ui/balancer/SwapKind";
 import { parseQueryBatchSwapResult } from "efi-ui/balancer/useQueryBatchSwap/parseQueryBatchSwapResult";
-import { useQueryBatchSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
-import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
+import { useQueryBatchSwapCalc } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { PoolContract } from "efi/pools/PoolContract";
 import { useTokenDecimalsMulti } from "efi-ui/token/hooks/useTokenDecimalsMulti";
@@ -30,39 +29,24 @@ export function usePoolSpotPrice(
   underlyingToken: ERC20 | undefined
 ): number | undefined {
   const { data: decimals } = useTokenDecimals(underlyingToken);
-
   const yieldToken = usePoolPairedToken(pool, underlyingToken);
-  const { data: tokenOutDecimals } = useSmartContractReadCall(
-    yieldToken,
-    "decimals"
-  );
   const amountIn = parseUnits("0.01", decimals);
-  const { data: batchSwaps } = useQueryBatchSwap(
-    SwapKind.GIVEN_IN,
-    pool,
-    underlyingToken?.address,
-    yieldToken?.address,
-    amountIn
-  );
 
-  if (!batchSwaps) {
-    return undefined;
-  }
-
-  const { tokenOut: amountOut } = parseQueryBatchSwapResult(
-    underlyingToken?.address,
-    yieldToken?.address,
-    batchSwaps
-  );
+  const { result: [, amountOut] = [] } =
+    useQueryBatchSwapCalc(
+      SwapKind.GIVEN_IN,
+      pool,
+      underlyingToken?.address,
+      yieldToken?.address,
+      amountIn
+    ) ?? [];
 
   // can't give a meaningful spot price until we have the decimals
-  if (!amountOut || !decimals || !tokenOutDecimals) {
+  if (!amountOut || !decimals) {
     return undefined;
   }
 
-  const spotPrice =
-    +formatUnits(amountOut, tokenOutDecimals) /
-    +formatUnits(amountIn, decimals);
+  const spotPrice = +amountOut / +formatUnits(amountIn, decimals);
 
   return Math.abs(spotPrice);
 }

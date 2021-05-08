@@ -260,9 +260,9 @@ function useTokensSummary(
   const swaps = useSwaps(pool);
 
   const termAssetPrice =
-    baseAssetPrice && spotPrice
+    baseAssetPrice && termSpotPrice
       ? Money.fromDecimal(
-          baseAssetPrice.toDecimal() / spotPrice,
+          baseAssetPrice.toDecimal() * termSpotPrice,
           currency,
           Math.round
         )
