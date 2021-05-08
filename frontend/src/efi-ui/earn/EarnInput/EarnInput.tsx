@@ -1,6 +1,13 @@
 import { CSSProperties, ReactElement, useCallback } from "react";
 
-import { InputGroup, Intent, Tag } from "@blueprintjs/core";
+import {
+  Classes,
+  Colors,
+  FormGroup,
+  InputGroup,
+  Intent,
+  Tag,
+} from "@blueprintjs/core";
 import classNames from "classnames";
 import { BigNumber } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
@@ -70,23 +77,32 @@ export function EarnInput({
     </div>
   ) : undefined;
 
+  const helperText = validValue ? null : (
+    <div
+      style={{ color: validValue || Colors.RED3 }}
+      className={tw("w-full", "text-right")}
+    >{t`Invalid input`}</div>
+  );
+
   return (
-    <InputGroup
-      placeholder={placeholder}
-      style={earnInputStyle}
-      className={classNames(
-        tw("w-full"),
-        styles.investmentAmount,
-        { [styles.investmentAmountLightMode]: !isDarkMode },
-        className
-      )}
-      value={value || ""}
-      intent={validValue ? undefined : Intent.DANGER}
-      large
-      leftElement={assetPicker}
-      rightElement={maxButtonElement}
-      onChange={onChange}
-    />
+    <FormGroup className={tw("w-full")} helperText={helperText}>
+      <InputGroup
+        placeholder={placeholder}
+        style={earnInputStyle}
+        className={classNames(
+          tw("w-full"),
+          styles.investmentAmount,
+          { [styles.investmentAmountLightMode]: !isDarkMode },
+          className
+        )}
+        value={value || ""}
+        intent={validValue ? undefined : Intent.DANGER}
+        large
+        leftElement={assetPicker}
+        rightElement={maxButtonElement}
+        onChange={onChange}
+      />
+    </FormGroup>
   );
 }
 
