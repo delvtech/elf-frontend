@@ -2,6 +2,7 @@ import React, { FC, Fragment } from "react";
 import { ReactQueryDevtools } from "react-query/devtools";
 
 import { LocationProvider, Redirect, Router } from "@reach/router";
+import { Web3Provider } from "@ethersproject/providers";
 import classNames from "classnames";
 
 import { tw } from "efi-tailwindcss-classnames";
@@ -15,9 +16,10 @@ import { PoolView } from "efi-ui/pools/PoolView/PoolView";
 import { PortfolioView } from "efi-ui/portfolio/PortfolioView/PortfolioView";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useSyncWithInjectedEthereum } from "efi-ui/wallets/hooks/useSyncWithInjectedEthereum";
-import { FocusStyleManager } from "@blueprintjs/core";
+import { FocusStyleManager, Overlay, H1 } from "@blueprintjs/core";
 
 import styles from "./App.module.css";
+import { useWeb3React } from "@web3-react/core";
 import { useTransactionToasts } from "efi-ui/transactions/useTransactionToasts";
 import { useClearPendingTransactionOnMined } from "efi-ui/transactions/usePendingTransaction/useClearPendingTransaction";
 
@@ -36,6 +38,9 @@ const contentClassName = tw(
 interface AppProps {}
 
 const App: FC<AppProps> = () => {
+  const { active, chainId } = useWeb3React<Web3Provider>();
+  const onMainnet = active && chainId === 1;
+
   const { isDarkMode, darkModeClassName } = useDarkMode();
 
   const appClassName = classNames(
@@ -70,7 +75,38 @@ const App: FC<AppProps> = () => {
           <FAQView path={Navigation.RESOURCES} />
         </Router>
       </div>
-
+      <Overlay isOpen={onMainnet}>
+        <div
+          className={tw(
+            "flex",
+            "justify-center",
+            "items-center",
+            "w-full",
+            "h-full"
+          )}
+        >
+          <H1 className={styles.overlay}>Please Connect to Goerli Testnet</H1>
+        </div>
+      </Overlay>
+      <div className={styles.mobileView}>
+        <Overlay isOpen={true} className={styles.mobileView}>
+          <div
+            className={tw(
+              "flex",
+              "justify-center",
+              "items-center",
+              "w-full",
+              "h-full"
+            )}
+          >
+            <div>
+              <H1 className={styles.overlay}>
+                Mobile Compatibility Coming with Mainnet Launch
+              </H1>
+            </div>
+          </div>
+        </Overlay>
+      </div>
       {/* Safe to render unconditionally as it does not render in production
       builds by default */}
       <ReactQueryDevtools initialIsOpen={false} />
