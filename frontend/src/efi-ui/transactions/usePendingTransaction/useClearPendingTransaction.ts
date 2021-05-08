@@ -14,16 +14,19 @@ export function useClearPendingTransactionOnMined(): void {
       return;
     }
 
-    jsonRpcProvider.getTransaction(transactionHash).then(({ blockHash }) => {
-      // if the transaction is included in a block then it was successful, so we
-      // clear the pending tx hash.
-      if (blockHash) {
-        clearPendingTransactionPref();
+    (async () => {
+      const tx = await jsonRpcProvider.getTransaction(transactionHash);
+      if (tx) {
+        const { blockHash } = tx;
+        // if the transaction is included in a block then it was successful, so we
+        // clear the pending tx hash.
+        if (blockHash) {
+          clearPendingTransactionPref();
+        }
       }
-
       // Otherwise set a handler that will clear the pref when it is mined
       jsonRpcProvider?.once(transactionHash, clearPendingTransactionPref);
-    });
+    })();
 
     return () => {
       jsonRpcProvider.off(transactionHash, clearPendingTransactionPref);
