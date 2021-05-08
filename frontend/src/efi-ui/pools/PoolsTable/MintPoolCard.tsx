@@ -43,6 +43,7 @@ import { useTokenYield } from "efi-ui/pools/useTokenYield";
 import styles from "./PrincipalPoolCard.module.css";
 import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidityForPool.ts/useTotalFiatLiquidityForPool";
 import { formatPercent } from "efi/base/formatPercent";
+import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 
 interface MintPoolCardProps {
   pool: PoolContract | undefined;
@@ -100,11 +101,8 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
   const unlockTime = unlockBN?.toNumber();
   const variableYield = useTokenYield(baseAssetContract, pool, "yield");
 
-  const symbolQuery = baseAssetSymbol === "ETH" ? "WETH" : baseAssetSymbol;
-
-  const { data: vaultInfo } = useYearnVault(
-    symbolQuery ? t`yv${symbolQuery}` : undefined
-  );
+  const vaultSymbol = getVaultSymbol(baseAsset);
+  const { data: vaultInfo } = useYearnVault(vaultSymbol);
 
   const { displayName, type } = vaultInfo || {};
 

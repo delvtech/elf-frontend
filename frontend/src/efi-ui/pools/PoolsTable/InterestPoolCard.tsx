@@ -95,11 +95,7 @@ export function InterestPoolCard(
   const [baseAssetPrice] = useTokenPrice(baseAssetContract, currency);
   const spotPrice = usePoolSpotPrice(pool, termAssetContract) ?? 0;
 
-  const symbolQuery = baseAssetSymbol === "ETH" ? "WETH" : baseAssetSymbol;
-
-  const { data: vaultInfo } = useYearnVault(
-    symbolQuery ? t`yv${symbolQuery}` : undefined
-  );
+  const { data: vaultInfo } = useYearnVault(vaultSymbol);
 
   const { displayName, type } = vaultInfo || {};
 
