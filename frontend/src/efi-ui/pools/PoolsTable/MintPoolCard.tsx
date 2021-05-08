@@ -151,8 +151,13 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
   const startTime = trancheCreatedAt ? trancheCreatedAt * 1000 : 0;
   const maturityTime = unlockTime ? unlockTime * 1000 : 0;
 
+  const dayDifference = differenceInDays(
+    maturityTime as number,
+    startTime as number
+  );
+
   const termLength =
-    Math.round(differenceInDays(maturityTime, startTime) / 10) * 10;
+    dayDifference > 10 ? Math.round(dayDifference / 10) * 10 : dayDifference;
 
   if (!allDataLoaded) {
     return (

@@ -184,7 +184,7 @@ export function YieldTokenLPCard({
           library={library}
           pool={pool}
         />
-        <GoToMarketButton pool={pool} />
+        <GoToMarketButton pool={pool} isStake={false} label={t`Go to Market`} />
       </ButtonGroup>
     </Card>
   );

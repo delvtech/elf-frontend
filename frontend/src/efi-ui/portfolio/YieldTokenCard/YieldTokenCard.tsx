@@ -256,7 +256,8 @@ export function YieldTokenCard({
             library={library}
             baseAsset={baseAsset}
           />
-          <GoToMarketButton pool={pool} />
+          <GoToMarketButton pool={pool} isStake label={t`Stake`} />
+          <GoToMarketButton pool={pool} isStake={false} label={t`Sell`} />
         </ButtonGroup>
         <div className={tw("flex", "justify-center")}>
           <span>

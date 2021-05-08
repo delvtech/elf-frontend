@@ -29,24 +29,15 @@ export function PortfolioAssetLabel({
         "px-2",
         "w-full",
         "space-x-8",
-        "justify-between",
+        "justify-center",
         "items-center"
       )}
     >
       <LabeledText
         text={name}
-        label={quantityLabel}
+        label={""}
         className={tw("leading-none", "space-y-2")}
       />
-      <Tag
-        className={tw("hidden", "lg:block")}
-        minimal
-        round={!!quantity}
-        large={!!quantity}
-        intent={!quantity ? Intent.WARNING : Intent.NONE}
-      >
-        {quantity ? quantity : t`Learn more`}
-      </Tag>
     </div>
   );
 }
