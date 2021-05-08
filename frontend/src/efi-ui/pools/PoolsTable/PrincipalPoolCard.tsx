@@ -96,12 +96,12 @@ export function PrincipalPoolCard(
 
   const goToTrade = useCallback(() => {
     setTab(PoolAction.SWAP);
-    navigate(`pools/${pool?.address}`);
+    navigate(`/pools/${pool?.address}`);
   }, [pool?.address, setTab]);
 
   const goToStake = useCallback(() => {
     setTab(PoolAction.STAKE);
-    navigate(`pools/${pool?.address}`);
+    navigate(`/pools/${pool?.address}`);
   }, [pool?.address, setTab]);
 
   const dataToLoad = [

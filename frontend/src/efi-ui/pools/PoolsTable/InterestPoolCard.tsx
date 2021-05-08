@@ -109,12 +109,12 @@ export function InterestPoolCard(
 
   const goToTrade = useCallback(() => {
     setTab(PoolAction.SWAP);
-    navigate(`pools/${pool?.address}`);
+    navigate(`/pools/${pool?.address}`);
   }, [pool?.address, setTab]);
 
   const goToStake = useCallback(() => {
     setTab(PoolAction.STAKE);
-    navigate(`pools/${pool?.address}`);
+    navigate(`/pools/${pool?.address}`);
   }, [pool?.address, setTab]);
 
   // TODO: this is a big hammer for loading state.  we should use a more granular technique when we can.
@@ -173,8 +173,13 @@ export function InterestPoolCard(
   const startTime = trancheCreatedAt ? trancheCreatedAt * 1000 : 0;
   const maturityTime = unlockTime ? unlockTime * 1000 : 0;
 
+  const dayDifference = differenceInDays(
+    maturityTime as number,
+    startTime as number
+  );
+
   const termLength =
-    Math.round(differenceInDays(maturityTime, startTime) / 10) * 10;
+    dayDifference > 10 ? (dayDifference / 10) * 10 : dayDifference;
 
   const yieldTokenPrice = baseAssetPrice?.multiply(spotPrice, Math.round);
 
