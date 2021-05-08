@@ -1,26 +1,62 @@
 import { BigNumber } from "ethers";
 import { parseUnits } from "ethers/lib/utils";
+import { t } from "ttag";
 
 export function validateTradeValues(
   amountIn: string | undefined,
-  tokenInBalanceOf: BigNumber | undefined,
-  tokenInDecimals: number | undefined,
-  tokenInPoolBalance: BigNumber | undefined,
   amountOut: string | undefined,
-  tokenOutPoolBalance: BigNumber | undefined
-): { isValidTokenInValue: boolean; isValidTokenOutValue: boolean } {
+  tokenInPoolBalance: BigNumber | undefined,
+  tokenOutPoolBalance: BigNumber | undefined,
+  tokenInBalanceOf: BigNumber | undefined,
+  tokenInDecimals: number | undefined
+): {
+  isValidTokenInValue: boolean;
+  isValidTokenOutValue: boolean;
+  tokenInError?: string;
+  tokenOutError?: string;
+} {
   // input value must be lower than the user's balance and the pool's balance of that token
-  const isValidTokenInValue =
-    amountIn && tokenInBalanceOf && tokenInPoolBalance
-      ? parseUnits(amountIn ?? 0, tokenInDecimals).lte(tokenInBalanceOf) &&
-        parseUnits(amountIn ?? 0, tokenInDecimals).lte(tokenInPoolBalance)
-      : true;
+  let isValidTokenInValue = true;
+  let isValidTokenOutValue = true;
+  let tokenInError;
+  let tokenOutError;
 
-  // output value must be lower than the pool's balance of that token
-  const isValidTokenOutValue =
-    amountOut && tokenOutPoolBalance
-      ? parseUnits(amountOut ?? 0, tokenInDecimals).lte(tokenOutPoolBalance)
-      : true;
+  if (
+    !amountIn ||
+    !tokenInBalanceOf ||
+    !tokenInPoolBalance
+    // !amountOut ||
+    // !tokenOutPoolBalance
+  ) {
+    return {
+      isValidTokenInValue,
+      isValidTokenOutValue,
+      tokenInError,
+      tokenOutError,
+    };
+  }
 
-  return { isValidTokenInValue, isValidTokenOutValue };
+  if (parseUnits(amountIn, tokenInDecimals).gte(tokenInBalanceOf)) {
+    isValidTokenInValue = false;
+    tokenInError = t`Insuficcient balance`;
+  }
+
+  if (parseUnits(amountIn, tokenInDecimals).gte(tokenInPoolBalance)) {
+    isValidTokenInValue = false;
+    tokenOutError = t`Insuficcient pool balance`;
+  }
+
+  if (
+    parseUnits(amountOut ?? "0", tokenInDecimals).gte(tokenOutPoolBalance ?? 0)
+  ) {
+    isValidTokenOutValue = false;
+    tokenOutError = t`Insuficcient pool balance`;
+  }
+
+  return {
+    isValidTokenInValue,
+    isValidTokenOutValue,
+    tokenInError,
+    tokenOutError,
+  };
 }

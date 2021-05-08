@@ -151,13 +151,18 @@ export function EarnCard({
     setDrawerOpen(false);
   }, [setAmountIn, setAmountOut]);
 
-  const { isValidTokenInValue, isValidTokenOutValue } = validateTradeValues(
+  const {
+    isValidTokenInValue,
+    isValidTokenOutValue,
+    tokenInError,
+    tokenOutError,
+  } = validateTradeValues(
     amountIn,
-    activeBaseAssetBalanceOf,
-    activeBaseAssetDecimals,
-    baseAssetPoolBalance,
     amountOut,
-    principalTokenPoolBalance
+    baseAssetPoolBalance,
+    principalTokenPoolBalance,
+    activeBaseAssetBalanceOf,
+    activeBaseAssetDecimals
   );
 
   const onChangeIn = useCallback(
@@ -279,6 +284,7 @@ export function EarnCard({
               placeholder="0.00"
               value={amountIn || ""}
               validValue={isValidTokenInValue}
+              errorMessage={tokenInError}
               onValueChange={onChangeIn}
               cryptoDecimals={activeBaseAssetDecimals}
               cryptoBalanceOf={activeBaseAssetBalanceOf}
@@ -322,6 +328,7 @@ export function EarnCard({
               placeholder="0.00"
               value={amountOut || ""}
               validValue={isValidTokenOutValue}
+              errorMessage={tokenOutError}
               onValueChange={onChangeOut}
               cryptoDecimals={trancheDecimals}
               cryptoBalanceOf={principalTokenBalanceOf}

@@ -1,13 +1,6 @@
 import { CSSProperties, ReactElement, useCallback } from "react";
 
-import {
-  Classes,
-  Colors,
-  FormGroup,
-  InputGroup,
-  Intent,
-  Tag,
-} from "@blueprintjs/core";
+import { Colors, FormGroup, InputGroup, Intent, Tag } from "@blueprintjs/core";
 import classNames from "classnames";
 import { BigNumber } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
@@ -25,6 +18,7 @@ interface EarnInputProps {
   // cannot be undefined as that enables 'uncontrolled' component behavior for InputGroup
   value: string;
   validValue: boolean;
+  errorMessage?: string;
   onValueChange: (value: string, swapKind: SwapKind) => void;
   className?: string;
 
@@ -45,6 +39,7 @@ export function EarnInput({
   className,
   value,
   validValue,
+  errorMessage,
   showMaxButton,
   placeholder,
   onValueChange: onChangeFromProps,
@@ -81,7 +76,9 @@ export function EarnInput({
     <div
       style={{ color: validValue || Colors.RED3 }}
       className={tw("w-full", "text-right")}
-    >{t`Invalid input`}</div>
+    >
+      {errorMessage}
+    </div>
   );
 
   return (
