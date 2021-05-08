@@ -7,7 +7,7 @@ export function getVaultSymbol(
 ): string | undefined {
   let vaultSymbol: string | undefined;
   if (baseAsset?.type === CryptoAssetType.ETHEREUM) {
-    vaultSymbol = "yvWETH";
+    vaultSymbol = "yvCurve-stETH";
   } else if (baseAsset?.type === CryptoAssetType.ERC20PERMIT) {
     vaultSymbol = "yvUSDC";
   }

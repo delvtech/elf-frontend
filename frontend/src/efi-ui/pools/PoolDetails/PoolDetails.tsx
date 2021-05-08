@@ -11,16 +11,16 @@ import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadC
 import { PoolActionsCard } from "efi-ui/pools/PoolActionsCard/PoolActionsCard";
 import { PoolCharts } from "efi-ui/pools/PoolCharts/PoolCharts";
 import { PoolSummary } from "efi-ui/pools/PoolSummary/PoolSummary";
+import { TermSummary } from "efi-ui/pools/TermSummary/TermSummary";
 import { TokenSummary } from "efi-ui/pools/TokenSummary/TokenSummary";
 import { useFeeVolumeFiatForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
+import { useStakingAPY } from "efi-ui/pools/useStakingAPY";
 import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidityForPool.ts/useTotalFiatLiquidityForPool";
 import { useTotalLiquidityTrend } from "efi-ui/pools/useTotalLiquidityTrend/useTotalLiquidityTrend";
 import { useTotalValueLockedForTranche } from "efi-ui/pools/useTotalValueLockedForTranche";
-import { useStakingAPY } from "efi-ui/pools/useStakingAPY";
 import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForPool";
 import { useVolumeForPool } from "efi-ui/pools/useVolumeForPool/useVolumeForPool";
-import { TermSummary } from "efi-ui/pools/TermSummary/TermSummary";
 import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
 import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
@@ -107,7 +107,7 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
         <TermSummary
           pool={pool}
           totalValueLocked={totalValueLocked}
-          baseAsset={baseAssetContract}
+          baseAssetContract={baseAssetContract}
           startTimeMs={startTimeMs}
           maturityTimeMs={maturityTimeMs}
         />

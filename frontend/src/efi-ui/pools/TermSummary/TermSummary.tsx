@@ -8,15 +8,13 @@ import { Money } from "ts-money";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { formatPercent } from "efi/base/formatPercent";
 import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
-import { isConvergentCurvePool } from "efi/pools/PoolContract";
-import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
-import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
+import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
-import { useTokenYield } from "efi-ui/pools/useTokenYield";
+import { formatPercent } from "efi/base/formatPercent";
 import { formatMoney } from "efi/money/formatMoney";
-import { PoolContract } from "efi/pools/PoolContract";
+import { isConvergentCurvePool, PoolContract } from "efi/pools/PoolContract";
+import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 
 const summaryCardStyle: CSSProperties = {
   height: 220,
@@ -27,7 +25,7 @@ interface TermSummaryProps {
   totalValueLocked: Money | undefined;
   maturityTimeMs: number | undefined;
   startTimeMs: number | undefined;
-  baseAsset: ERC20 | undefined;
+  baseAssetContract: ERC20 | undefined;
 }
 
 // TODO: add loading states
@@ -35,19 +33,16 @@ export function TermSummary(props: TermSummaryProps): ReactElement {
   const {
     pool,
     totalValueLocked,
-    baseAsset,
+    baseAssetContract,
     maturityTimeMs = 0,
     startTimeMs = 0,
   } = props;
-  const { data: baseAssetSymbol } = useTokenSymbol(baseAsset);
-  const { data: vaultInfo } = useYearnVault(
-    baseAssetSymbol ? t`yv${baseAssetSymbol}` : undefined
-  );
+  const baseAsset = useCryptoAssetForToken(baseAssetContract?.address);
+  const vaultSymbol = getVaultSymbol(baseAsset);
+  const { data: vaultInfo } = useYearnVault(vaultSymbol);
 
-  const { displayName, type } = vaultInfo || {};
-
-  const baseAssetContract = useBaseAssetForPool(pool);
-  const variableYield = useTokenYield(baseAssetContract, pool, "yield");
+  const { displayName, type, apy } = vaultInfo || {};
+  const vaultApy = apy?.recommended ?? 0;
 
   const isPrincipalPool = isConvergentCurvePool(pool);
 
@@ -97,7 +92,7 @@ export function TermSummary(props: TermSummaryProps): ReactElement {
                 className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
               >{t`Vault APY`}</span>
               <div className={classNames("h5", tw("space-x-4"))}>
-                {formatPercent(variableYield)}
+                {formatPercent(vaultApy)}
               </div>
             </div>
           ) : null}

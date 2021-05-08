@@ -44,7 +44,6 @@ import { formatMoney } from "efi/money/formatMoney";
 import { PoolContract } from "efi/pools/PoolContract";
 
 import styles from "./PrincipalPoolCard.module.css";
-import { useTokenYield } from "efi-ui/pools/useTokenYield";
 import { formatPercent } from "efi/base/formatPercent";
 import { useStakingAPY } from "efi-ui/pools/useStakingAPY";
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
@@ -89,19 +88,14 @@ export function InterestPoolCard(
   );
   const unlockTime = unlockBN?.toNumber();
 
-  const variableYield = useTokenYield(baseAssetContract, pool, "yield");
   const stakingYield = useStakingAPY(pool);
   const { currency } = useCurrencyPref();
   const [baseAssetPrice] = useTokenPrice(baseAssetContract, currency);
   const spotPrice = usePoolSpotPrice(pool, termAssetContract) ?? 0;
 
-  const symbolQuery = baseAssetSymbol === "ETH" ? "WETH" : baseAssetSymbol;
-
-  const { data: vaultInfo } = useYearnVault(
-    symbolQuery ? t`yv${symbolQuery}` : undefined
-  );
-
-  const { displayName, type } = vaultInfo || {};
+  const { data: vaultInfo } = useYearnVault(vaultSymbol);
+  const { displayName, type, apy } = vaultInfo || {};
+  const vaultApy = apy?.recommended ?? 0;
 
   const { isDarkMode } = useDarkMode();
 
@@ -130,7 +124,6 @@ export function InterestPoolCard(
     BaseAssetIcon,
     termAssetContract,
     termAssetSymbol,
-    variableYield,
     stakingYield,
     spotPrice,
     unlockBN,
@@ -282,7 +275,7 @@ export function InterestPoolCard(
         </div>
         <div className={tw(cellClassName, "col-span-2", "xl:col-span-1")}>
           <LabeledText
-            text={t`${formatPercent(variableYield)}`}
+            text={t`${formatPercent(vaultApy)}`}
             label={t`Vault APY`}
           />
         </div>
