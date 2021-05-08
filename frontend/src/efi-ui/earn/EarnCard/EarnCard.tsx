@@ -151,13 +151,18 @@ export function EarnCard({
     setDrawerOpen(false);
   }, [setAmountIn, setAmountOut]);
 
-  const { isValidTokenInValue, isValidTokenOutValue } = validateTradeValues(
+  const {
+    isValidTokenInValue,
+    isValidTokenOutValue,
+    tokenInError,
+    tokenOutError,
+  } = validateTradeValues(
     amountIn,
-    activeBaseAssetBalanceOf,
-    activeBaseAssetDecimals,
-    baseAssetPoolBalance,
     amountOut,
-    principalTokenPoolBalance
+    baseAssetPoolBalance,
+    principalTokenPoolBalance,
+    activeBaseAssetBalanceOf,
+    activeBaseAssetDecimals
   );
 
   const onChangeIn = useCallback(
@@ -237,7 +242,8 @@ export function EarnCard({
     activeBaseAssetSymbol
   );
 
-  const buttonDisabled = !!account && !amountIn;
+  const buttonDisabled =
+    !!account && (!isValidTokenInValue || !isValidTokenOutValue);
   const buttonLabel = !!account ? t`Buy` : t`Connect Wallet`;
 
   return (
@@ -258,14 +264,10 @@ export function EarnCard({
             )}
           </div>
           <div
-            className={tw(
-              "flex",
-              "space-x-1",
-              "h-24",
-              "border",
-              "rounded",
-              "border-gray-500"
-            )}
+            className={tw("flex", "space-x-1", "h-24", "border", "rounded", {
+              "border-gray-500": isValidTokenInValue,
+              "border-red-600": !isValidTokenInValue,
+            })}
           >
             <EarnInput
               showMaxButton={!!account}
@@ -279,6 +281,7 @@ export function EarnCard({
               placeholder="0.00"
               value={amountIn || ""}
               validValue={isValidTokenInValue}
+              errorMessage={tokenInError}
               onValueChange={onChangeIn}
               cryptoDecimals={activeBaseAssetDecimals}
               cryptoBalanceOf={activeBaseAssetBalanceOf}
@@ -298,14 +301,10 @@ export function EarnCard({
             )}
           </div>
           <div
-            className={tw(
-              "flex",
-              "space-x-1",
-              "h-24",
-              "border",
-              "rounded",
-              "border-gray-500"
-            )}
+            className={tw("flex", "space-x-1", "h-24", "border", "rounded", {
+              "border-gray-500": isValidTokenOutValue,
+              "border-red-600": !isValidTokenOutValue,
+            })}
           >
             <EarnInput
               showMaxButton={false}
@@ -322,6 +321,7 @@ export function EarnCard({
               placeholder="0.00"
               value={amountOut || ""}
               validValue={isValidTokenOutValue}
+              errorMessage={tokenOutError}
               onValueChange={onChangeOut}
               cryptoDecimals={trancheDecimals}
               cryptoBalanceOf={principalTokenBalanceOf}

@@ -123,11 +123,11 @@ export function TradePanel(props: TradePanelProps): ReactElement {
 
   const { isValidTokenInValue, isValidTokenOutValue } = validateTradeValues(
     amountIn,
-    tokenInBalanceOf,
-    tokenInDecimals,
-    tokenInPoolBalance,
     amountOut,
-    tokenOutPoolBalance
+    tokenInPoolBalance,
+    tokenOutPoolBalance,
+    tokenInBalanceOf,
+    tokenInDecimals
   );
 
   const insufficientBalance = parseUnits(amountIn ?? "0", tokenInDecimals).gt(

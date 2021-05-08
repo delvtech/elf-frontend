@@ -94,6 +94,7 @@ const EarnViewSubtitle: FC = () => {
       href={
         "https://medium.com/element-finance/fixed-rate-interest-markets-a-casual-users-journey-through-fixed-rate-interest-using-element-50f420df1859"
       }
+      target="_noreferrer"
     >
       {t`Read more about Fixed Yield.`}
     </a>

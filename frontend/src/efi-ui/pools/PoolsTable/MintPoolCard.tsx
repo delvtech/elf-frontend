@@ -39,10 +39,10 @@ import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
 import { formatMoney } from "efi/money/formatMoney";
 import { PoolContract } from "efi/pools/PoolContract";
 import { useTokenYield } from "efi-ui/pools/useTokenYield";
-import { formatPercent } from "efi/base/formatPercent";
 
 import styles from "./PrincipalPoolCard.module.css";
 import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidityForPool.ts/useTotalFiatLiquidityForPool";
+import { formatPercent } from "efi/base/formatPercent";
 
 interface MintPoolCardProps {
   pool: PoolContract | undefined;
@@ -75,8 +75,6 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
   const {
     termAssetContract: principalTokenContract,
   } = useParseSortedTokensForPool(principalPool);
-  const liquidity = useTotalFiatLiquidityForPool(pool);
-  const principalLiquidity = useTotalFiatLiquidityForPool(principalPool);
   const principalPrice = usePoolSpotPrice(
     principalPool,
     principalTokenContract
@@ -114,8 +112,10 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
 
   // TODO: this is a big hammer for loading state.  we should use a more granular technique when we can.
   const dataToLoad = [
+    tvl,
+    vaultInfo,
+    yieldPrice,
     tranche,
-    liquidity,
     trancheCreatedAt,
     fees,
     baseAssetContract,
@@ -301,17 +301,7 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
               "xl:col-span-2"
             )}
           >
-            <div className={tw("flex", "flex-col")}>
-              <LabeledText
-                text={formatMoney(liquidity, { wholeAmounts: true })}
-                label={`Yield Pool Liquidity`}
-              />
-              <LabeledText
-                className={tw("mt-2", "hidden", "xl:flex")}
-                text={formatMoney(principalLiquidity, { wholeAmounts: true })}
-                label={`Principal Pool Liquidity`}
-              />
-            </div>
+            <LiquiditySection pool={pool} principalPool={principalPool} />
           </div>
           <div
             className={tw(
@@ -323,10 +313,7 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
               "xl:hidden"
             )}
           >
-            <LabeledText
-              text={formatMoney(principalLiquidity, { wholeAmounts: true })}
-              label={`Principal Pool Liquidity`}
-            />
+            <LiquiditySection pool={undefined} principalPool={principalPool} />
           </div>
           <div
             className={tw(
@@ -385,7 +372,7 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
             active={isOpen}
             onClick={() => setOpen(!isOpen)}
           >
-            Deposit
+            {t`Deposit`}
           </Button>
         </div>
       </div>
@@ -403,5 +390,32 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
         />
       </Collapse>
     </Card>
+  );
+}
+
+interface LiquiditySectionProps {
+  pool: PoolContract | undefined;
+  principalPool: PoolContract | undefined;
+}
+
+function LiquiditySection({ pool, principalPool }: LiquiditySectionProps) {
+  const liquidity = useTotalFiatLiquidityForPool(pool);
+  const principalLiquidity = useTotalFiatLiquidityForPool(principalPool);
+  return (
+    <div className={tw("flex", "flex-col")}>
+      {liquidity && (
+        <LabeledText
+          text={formatMoney(liquidity, { wholeAmounts: true })}
+          label={`Yield Pool Liquidity`}
+        />
+      )}
+      {principalLiquidity && (
+        <LabeledText
+          className={tw("mt-2", "hidden", "xl:flex")}
+          text={formatMoney(principalLiquidity, { wholeAmounts: true })}
+          label={`Principal Pool Liquidity`}
+        />
+      )}
+    </div>
   );
 }
