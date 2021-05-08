@@ -5,3 +5,18 @@
 .appBackgroundDark {
   background-color: var(--bp3-dark-bg-color);
 }
+
+.mobileView {
+  display: none;
+}
+
+.overlay {
+  color: white;
+}
+
+@media (max-width: 550px) {
+  .mobileView {
+    display: block;
+    text-align: center;
+  }
+}
