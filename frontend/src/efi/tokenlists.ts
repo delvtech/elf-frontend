@@ -50,7 +50,7 @@ const tokenInfos = tokenListJson.tokens;
 export const TokenMetadata = keyBy(tokenInfos, "address");
 
 /**
- * The list of all base assets
+ * The list of all base assets, it includes weth instead of eth
  */
 export const UnderlyingTokenInfos = tokenInfos.filter((tokenInfo) =>
   tokenInfo.tags?.includes(TokenListTag.UNDERLYING)
