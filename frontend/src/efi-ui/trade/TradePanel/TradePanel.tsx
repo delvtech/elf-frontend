@@ -18,6 +18,7 @@ import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
 import { useCryptoBalance } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
+import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useTokenPoolBalance } from "efi-ui/pools/useTokenPoolBalance/useTokenPoolBalance";
@@ -26,6 +27,7 @@ import { SwapTokensTransactionConfirmationDrawer } from "efi-ui/swaps/SwapTokens
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { TradeInput } from "efi-ui/trade/TradeInput/TradeInput";
 import { useTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
+import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
 import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 import { formatBalance } from "efi/base/formatBalance";
 import { ContractMethodArgs } from "efi/contracts/types";
@@ -33,7 +35,6 @@ import { CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { PoolContract } from "efi/pools/PoolContract";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
-import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 
 interface TradePanelProps {
@@ -66,6 +67,17 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     tokenIn: tokenInFromProps,
     tokenOut: tokenOutFromProps,
   } = props;
+
+  const [isWalletDialogOpen, setWalletDialogOpen] = useState(false);
+  // local state
+  const [isDrawerOpen, setDrawerOpen] = useState(false);
+  const openDrawer = useCallback(() => setDrawerOpen(true), []);
+  const onClickButton = useCallback(() => {
+    if (!account) {
+      return setWalletDialogOpen(true);
+    }
+    openDrawer();
+  }, [account, openDrawer]);
 
   const { tokenIn, tokenOut, swapAssets, isReversed } = useReversableTokens(
     tokenInFromProps,
@@ -118,11 +130,6 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     tokenOutPoolBalance
   );
 
-  const [isDrawerOpen, setDrawerOpen] = useState(false);
-  const submitTransaction = useCallback(() => {
-    setDrawerOpen(true);
-  }, []);
-
   const insufficientBalance = parseUnits(amountIn ?? "0", tokenInDecimals).gt(
     tokenInBalanceOf ?? 0
   );
@@ -131,7 +138,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     parseUnits(amountIn ?? "0", tokenInDecimals).gt(tokenInPoolBalance ?? 0) ||
     parseUnits(amountOut ?? "0", tokenOutDecimals).gt(tokenOutPoolBalance ?? 0);
 
-  const submitButtonDisabled =
+  const invalidInput =
     formDisabled ||
     submitDisabled ||
     insufficientBalance ||
@@ -139,8 +146,8 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     !isValidTokenInValue ||
     !isValidTokenOutValue ||
     !amountIn ||
-    !amountOut ||
-    !account;
+    !amountOut;
+  const submitButtonDisabled = !!account && invalidInput;
 
   let submitButtonLabel = buttonLabel;
   let submitButtonError = false;
@@ -223,7 +230,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
       />
       <Button
         disabled={submitButtonDisabled}
-        onClick={submitTransaction}
+        onClick={onClickButton}
         minimal
         outlined
         large
@@ -251,6 +258,10 @@ export function TradePanel(props: TradePanelProps): ReactElement {
         spotPrice={spotPrice}
         isOpen={isDrawerOpen}
         onClose={onClose}
+      />
+      <ConnectWalletDialog
+        isOpen={isWalletDialogOpen}
+        onClose={() => setWalletDialogOpen(false)}
       />
     </div>
   );
