@@ -1,4 +1,4 @@
-import { ReactElement, useMemo } from "react";
+import { ReactElement, Fragment, useMemo } from "react";
 
 import { Provider, Web3Provider } from "@ethersproject/providers";
 import { ERC20 } from "elf-contracts/types/ERC20";
@@ -77,13 +77,21 @@ function PrincipalTokenCards(props: PrincipalTokenCardsProps) {
     nonIdealStateContent = <NoPrincipalTokensInWalletNonIdealState />;
   }
   return (
-    <div className={tw("flex", "flex-1", "flex-wrap", "justify-center")}>
+    <div
+      className={tw(
+        "flex",
+        "flex-1",
+        "flex-wrap",
+        "justify-center",
+        "items-center"
+      )}
+    >
       {nonIdealStateContent ? (
         <div className={tw("flex", "flex-1", "justify-center", "items-center")}>
           {nonIdealStateContent}
         </div>
       ) : (
-        <div className={tw("flex", "w-full", "justify-center", "items-center")}>
+        <Fragment>
           {principalTokens?.map((principalToken) => [
             <div key={principalToken.address}>
               <PrincipalTokenCard
@@ -94,7 +102,7 @@ function PrincipalTokenCards(props: PrincipalTokenCardsProps) {
               />
             </div>,
           ])}
-        </div>
+        </Fragment>
       )}
     </div>
   );
