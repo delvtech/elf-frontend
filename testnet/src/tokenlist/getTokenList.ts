@@ -8,18 +8,20 @@ import { tags } from './tags';
 import { getYieldTokensFromFactory, getYieldTokensFromTranches } from "./getYieldTokens";
 import { getBaseAssets } from "src/tokenlist/getBaseAssets";
 import { getCCPools } from "src/tokenlist/getCCPools";
+import { getWeightedPools } from "src/tokenlist/getWeightedPools";
 
 export async function getTokenList(addressesJson: AddressesJsonFile, name: string, outputPath: string) {
   const {chainId, addresses: {
-    trancheFactoryAddress, wethAddress,usdcAddress ,convergentPoolFactoryAddress,
+    trancheFactoryAddress, wethAddress,usdcAddress ,convergentPoolFactoryAddress,weightedPoolFactoryAddress,
   }, safelist } = addressesJson;
 
   const baseAssetsList =  await getBaseAssets(wethAddress, usdcAddress, chainId);
   const { tranches, principalTokensList } =  await getPrincipalTokens(trancheFactoryAddress, chainId, safelist);
   const yieldTokensList =  await getYieldTokensFromTranches(tranches, chainId);
   const ccPoolsList = await getCCPools(convergentPoolFactoryAddress, chainId,safelist);
+  const weightedPoolsList = await getWeightedPools(weightedPoolFactoryAddress, chainId,safelist);
 
-  const tokens = [...baseAssetsList, ...principalTokensList, ...yieldTokensList, ...ccPoolsList];
+  const tokens = [...baseAssetsList, ...principalTokensList, ...yieldTokensList, ...ccPoolsList, ...weightedPoolsList];
   const tokenList: TokenList = {
     name,
     logoURI: "https://element.fi/logo.svg",

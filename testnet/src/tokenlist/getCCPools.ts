@@ -14,7 +14,6 @@ export async function getCCPools(ccPoolFactoryAddress: string, chainId: number, 
   const events = await poolFactory.queryFilter(filter);
   const poolCreatedEvents = events.map(
     (event) => {
-      // The first arg is the trancheAddress
       const [poolAddress, bondTokenAddress] = event.args || [];
       return { poolAddress, bondTokenAddress};
     }

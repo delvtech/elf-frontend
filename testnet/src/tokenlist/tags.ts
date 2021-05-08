@@ -2,6 +2,7 @@ import { Tags } from "@uniswap/token-lists";
 
 export enum TokenListTag {
     CCPOOL = 'ccpool',
+    WPOOL = 'wpool',
     UNDERLYING = 'underlying',
     PRINCIPAL = 'eP',
     YIELD = 'eY',
@@ -24,5 +25,9 @@ export const tags: Tags = {
   [TokenListTag.CCPOOL]: {
     name: "Convergent curve pool",
     description: "Token that represents the balancer pool for Principal tokens"
+  },
+  [TokenListTag.WPOOL]: {
+    name: "Weighted pool",
+    description: "Token that represents the balancer pool for Yield tokens"
   }
 };
