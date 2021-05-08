@@ -242,7 +242,8 @@ export function EarnCard({
     activeBaseAssetSymbol
   );
 
-  const buttonDisabled = !!account && !amountIn;
+  const buttonDisabled =
+    !!account && (!isValidTokenInValue || !isValidTokenOutValue);
   const buttonLabel = !!account ? t`Buy` : t`Connect Wallet`;
 
   return (
