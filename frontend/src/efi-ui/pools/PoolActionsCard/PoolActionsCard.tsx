@@ -83,7 +83,7 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
             pool={pool}
             tokenIn={tokenIn}
             tokenOut={tokenOut}
-            buttonLabel={t`Swap`}
+            buttonLabel={t`Trade`}
             buttonIntent={Intent.PRIMARY}
           />
         )}

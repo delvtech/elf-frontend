@@ -4,6 +4,8 @@ import { InputGroup, Intent, Tag } from "@blueprintjs/core";
 import classNames from "classnames";
 import { BigNumber } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
+import { getPlacesAfterDecimal } from "efi/math/fixedPoint";
+
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";

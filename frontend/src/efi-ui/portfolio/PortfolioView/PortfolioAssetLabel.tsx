@@ -1,12 +1,8 @@
 import React, { ReactElement } from "react";
-
-import { Intent, Tag } from "@blueprintjs/core";
 import { Money } from "ts-money";
-import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { formatMoney } from "efi/money/formatMoney";
 
 interface PortfolioAssetLabelProps {
   id: string;
@@ -20,7 +16,6 @@ export function PortfolioAssetLabel({
   name,
   totalFiatValue,
 }: PortfolioAssetLabelProps): ReactElement {
-  const quantityLabel = formatMoney(totalFiatValue);
   return (
     <div
       className={tw(
