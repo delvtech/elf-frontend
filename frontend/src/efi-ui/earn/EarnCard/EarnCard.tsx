@@ -262,9 +262,9 @@ export function EarnCard({
               "flex",
               "space-x-1",
               "h-24",
-              "border",
-              "rounded",
-              "border-gray-500"
+              // "border",
+              "rounded"
+              // "border-gray-500"
             )}
           >
             <EarnInput
@@ -302,9 +302,9 @@ export function EarnCard({
               "flex",
               "space-x-1",
               "h-24",
-              "border",
-              "rounded",
-              "border-gray-500"
+              // "border",
+              "rounded"
+              // "border-gray-500"
             )}
           >
             <EarnInput
