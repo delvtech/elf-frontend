@@ -40,19 +40,20 @@ function useToastOnMined() {
     if (!transactionHash) {
       return;
     }
-
-    jsonRpcProvider.getTransaction(transactionHash).then(({ blockHash }) => {
-      // Otherwise set a handler that will clear the pref when it is mined
-      jsonRpcProvider?.once(transactionHash, () => {
-        AppToaster.show(
-          makeSuccessToast(t`Transaction complete`, {
-            href: `${ETHERSCAN_DOMAIN}/tx/${transactionHash}`,
-            target: "_blank",
-            text: t`View`,
-            intent: Intent.SUCCESS,
-          })
-        );
-      });
-    });
+    (async () => {
+      const tx = await jsonRpcProvider.getTransaction(transactionHash);
+      if (tx) {
+        jsonRpcProvider?.once(transactionHash, () => {
+          AppToaster.show(
+            makeSuccessToast(t`Transaction complete`, {
+              href: `${ETHERSCAN_DOMAIN}/tx/${transactionHash}`,
+              target: "_blank",
+              text: t`View`,
+              intent: Intent.SUCCESS,
+            })
+          );
+        });
+      }
+    })();
   }, [transactionHash]);
 }
