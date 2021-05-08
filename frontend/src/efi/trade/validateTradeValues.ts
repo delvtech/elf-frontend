@@ -36,18 +36,18 @@ export function validateTradeValues(
     };
   }
 
-  if (parseUnits(amountIn, tokenInDecimals).gte(tokenInBalanceOf)) {
+  if (parseUnits(amountIn, tokenInDecimals).gt(tokenInBalanceOf)) {
     isValidTokenInValue = false;
     tokenInError = t`Insuficcient balance`;
   }
 
-  if (parseUnits(amountIn, tokenInDecimals).gte(tokenInPoolBalance)) {
+  if (parseUnits(amountIn, tokenInDecimals).gt(tokenInPoolBalance)) {
     isValidTokenInValue = false;
-    tokenOutError = t`Insuficcient pool balance`;
+    tokenInError = t`Insuficcient pool balance`;
   }
 
   if (
-    parseUnits(amountOut ?? "0", tokenInDecimals).gte(tokenOutPoolBalance ?? 0)
+    parseUnits(amountOut ?? "0", tokenInDecimals).gt(tokenOutPoolBalance ?? 0)
   ) {
     isValidTokenOutValue = false;
     tokenOutError = t`Insuficcient pool balance`;
