@@ -206,23 +206,4 @@ export function useQueryBatchSwapNew(
       clipStringValueToDecimals(calcInNumber.toString(), decimals) ?? "0";
     return [calcIn, amountOut];
   }
-
-  // const queryBatchSwapResults = useSmartContractReadCall(
-  //   balancerVault,
-  //   "queryBatchSwap",
-  //   {
-  //     enabled: [poolId, tokenInAddress, amount?.gt(0), tokenOutAddress].every(
-  //       (v) => !!v
-  //     ),
-  //     callArgs: makeQueryBatchSwapCallArgs(
-  //       kind,
-  //       poolId,
-  //       tokenInAddress,
-  //       amount,
-  //       tokenOutAddress
-  //     ),
-  //   }
-  // );
-
-  // return queryBatchSwapResults;
 }
