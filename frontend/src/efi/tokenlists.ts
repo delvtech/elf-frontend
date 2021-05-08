@@ -1,4 +1,4 @@
-import { TokenList } from "@uniswap/token-lists";
+import { TokenInfo, TokenList } from "@uniswap/token-lists";
 import keyBy from "lodash.keyby";
 
 // Default to the testnet in this repo so `npm start` Just Works without having
@@ -19,6 +19,27 @@ export enum TokenListTag {
   PRINCIPAL = "eP",
   YIELD = "eY",
 }
+export interface PrincipalTokenInfo extends TokenInfo {
+  extensions: {
+    /**
+     * The underlying base asset for the principal token
+     */
+    underlying: string;
+
+    /**
+     * Number of seconds after epoch when the principal token can be redeemed
+     */
+    unlockTimestamp: number;
+  };
+}
+export interface YieldTokenInfo extends TokenInfo {
+  extensions: {
+    /**
+     * The underlying base asset for the yield token
+     */
+    underlying: string;
+  };
+}
 
 const tokenInfos = tokenListJson.tokens;
 
@@ -38,16 +59,15 @@ export const UnderlyingTokenInfos = tokenInfos.filter((tokenInfo) =>
 /**
  * The list of all principal tokens
  */
-export const PrincipalTokenInfos = tokenInfos.filter((tokenInfo) =>
-  tokenInfo.tags?.includes(TokenListTag.PRINCIPAL)
+export const PrincipalTokenInfos: PrincipalTokenInfo[] = tokenInfos.filter(
+  (tokenInfo): tokenInfo is PrincipalTokenInfo => isPrincipalToken(tokenInfo)
 );
 
 /**
  * The list of all yield tokens
  */
-export const YieldTokenInfos = tokenInfos.filter(
-  (tokenInfo) => tokenInfo.tags?.includes(TokenListTag.YIELD),
-  "address"
+export const YieldTokenInfos: YieldTokenInfo[] = tokenInfos.filter(
+  (tokenInfo): tokenInfo is YieldTokenInfo => isYieldToken(tokenInfo)
 );
 
 export default tokenListJson;
@@ -58,4 +78,14 @@ function getTokenListJsonId() {
   }
 
   return process.env.REACT_APP_CHAIN_NAME || "testnet";
+}
+
+function isPrincipalToken(
+  tokenInfo: TokenInfo
+): tokenInfo is PrincipalTokenInfo {
+  return !!tokenInfo.tags?.includes(TokenListTag.PRINCIPAL);
+}
+
+function isYieldToken(tokenInfo: TokenInfo): tokenInfo is YieldTokenInfo {
+  return !!tokenInfo.tags?.includes(TokenListTag.YIELD);
 }

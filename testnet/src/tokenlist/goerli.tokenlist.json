@@ -48,7 +48,8 @@
       "symbol": "eP-ETH",
       "decimals": 18,
       "extensions": {
-        "underlying": "0x9A1000D492d40bfccbc03f413A48F5B6516Ec0Fd"
+        "underlying": "0x9A1000D492d40bfccbc03f413A48F5B6516Ec0Fd",
+        "unlockTimestamp": 1621010937
       },
       "name": "ETH Principal Token",
       "tags": [
@@ -61,7 +62,8 @@
       "symbol": "eP-ETH",
       "decimals": 18,
       "extensions": {
-        "underlying": "0x9A1000D492d40bfccbc03f413A48F5B6516Ec0Fd"
+        "underlying": "0x9A1000D492d40bfccbc03f413A48F5B6516Ec0Fd",
+        "unlockTimestamp": 1628210937
       },
       "name": "ETH Principal Token",
       "tags": [
@@ -74,7 +76,8 @@
       "symbol": "eP-USDC",
       "decimals": 6,
       "extensions": {
-        "underlying": "0x78dEca24CBa286C0f8d56370f5406B48cFCE2f86"
+        "underlying": "0x78dEca24CBa286C0f8d56370f5406B48cFCE2f86",
+        "unlockTimestamp": 1628211057
       },
       "name": "USDC Principal Token",
       "tags": [

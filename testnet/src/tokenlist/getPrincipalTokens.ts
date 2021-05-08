@@ -27,6 +27,7 @@ export async function getPrincipalTokens(trancheFactoryAddress: string, chainId:
 
   // Create the principal token name, eg: "ETH Principal Token"
   const underlyingAddresses = await Promise.all(safeTranches.map(tranche => tranche.underlying()));
+  const unlockTimestamps = await Promise.all(safeTranches.map(tranche => tranche.unlockTimestamp()));
 
   const principalTokenNames = await getPrincipalTokenName(safeTranches);
   // Create the principal token symbol, eg: "eP-ELFyWETH"
@@ -34,14 +35,18 @@ export async function getPrincipalTokens(trancheFactoryAddress: string, chainId:
 
   const decimals = await Promise.all(safeTranches.map(tranche => tranche.decimals()));
 
-  const principalTokensList: TokenInfo[] = zip(safeTrancheAddresses, principalTokenSymbols, principalTokenNames, decimals, underlyingAddresses)
-    .map(([address, symbol, name, decimal, underlying]): TokenInfo => {
+  const principalTokensList: TokenInfo[] = zip<any>(
+    safeTrancheAddresses, principalTokenSymbols, principalTokenNames, decimals, underlyingAddresses, unlockTimestamps)
+    .map(([address, symbol, name, decimal, underlying, unlockTimestamp]): TokenInfo => {
       return {
         chainId,
         address: address as string,
         symbol: symbol as string,
         decimals: decimal as number,
-        extensions: {underlying: underlying as string},
+        extensions: {
+          underlying: underlying as string,
+          unlockTimestamp: unlockTimestamp?.toNumber() as number,
+        },
         name: name as string,
         tags: [TokenListTag.PRINCIPAL],
         // TODO: What logo do we want to show for interest tokens?
