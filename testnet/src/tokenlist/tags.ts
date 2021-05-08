@@ -23,7 +23,7 @@ export const tags: Tags = {
     description: "Token that represents the yield on a deposit into a yield position"
   },
   [TokenListTag.CCPOOL]: {
-    name: "Convergent curve pool",
+    name: "ConvergentCurve pool",
     description: "Token that represents the balancer pool for Principal tokens"
   },
   [TokenListTag.WPOOL]: {

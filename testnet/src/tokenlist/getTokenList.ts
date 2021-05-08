@@ -5,7 +5,7 @@ import hre from "hardhat";
 import { AddressesJsonFile } from "src/addresses/AddressesJsonFile";
 import { getPrincipalTokens } from "./getPrincipalTokens";
 import { tags } from './tags';
-import { getYieldTokensFromFactory, getYieldTokensFromTranches } from "./getYieldTokens";
+import { getYieldTokensFromTranches } from "./getYieldTokens";
 import { getBaseAssets } from "src/tokenlist/getBaseAssets";
 import { getCCPools } from "src/tokenlist/getCCPools";
 import { getWeightedPools } from "src/tokenlist/getWeightedPools";

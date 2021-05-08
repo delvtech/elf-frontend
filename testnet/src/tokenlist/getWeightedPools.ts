@@ -20,7 +20,8 @@ export async function getWeightedPools(weightedPoolFactoryAddress: string, chain
   );
 
   const safePoolEvents = poolCreatedEvents.filter(( { poolAddress } ) => safelist.includes(poolAddress));
-  const safePools = safePoolEvents.map(( { poolAddress } ) => WeightedPool__factory.connect(poolAddress, provider));
+  const safePoolAddresses = safePoolEvents.map(( { poolAddress } ) => poolAddress);
+  const safePools = safePoolAddresses.map((poolAddress) => WeightedPool__factory.connect(poolAddress, provider));
 
   const poolIds = await Promise.all(safePools.map(pool => pool.getPoolId()));
   const poolNames = await Promise.all(safePools.map(pool => pool.name()));
@@ -28,7 +29,7 @@ export async function getWeightedPools(weightedPoolFactoryAddress: string, chain
   const poolDecimals = await Promise.all(safePools.map(pool => pool.decimals()));
 
   const weightedPoolTokensList: TokenInfo[] = zip<any>(
-    safePoolEvents, poolSymbols, poolNames, poolDecimals,   poolIds, )
+    safePoolAddresses, poolSymbols, poolNames, poolDecimals,   poolIds, )
     .map(([address, symbol, name, decimal,    poolId]): TokenInfo => {
       return {
         chainId,
@@ -40,7 +41,7 @@ export async function getWeightedPools(weightedPoolFactoryAddress: string, chain
         },
         name: name as string,
         tags: [TokenListTag.WPOOL],
-        // TODO: What logo do we want to show for ccpool tokens?
+        // TODO: What logo do we want to show for wpool tokens?
         // logoURI: ""
       };
     });

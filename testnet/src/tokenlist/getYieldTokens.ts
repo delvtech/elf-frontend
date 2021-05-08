@@ -12,46 +12,6 @@ import { Tranche } from "src/types/Tranche";
 
 export const provider = hre.ethers.provider;
 
-export async function getYieldTokensFromFactory(interestTokenFactoryAddress: string, chainId: number, safelist: string[]) {
-  const interestTokenFactory = InterestTokenFactory__factory.connect(interestTokenFactoryAddress, provider);
-  const filter = interestTokenFactory.filters.InterestTokenCreated(null, null);
-  const events = await interestTokenFactory.queryFilter(filter);
-  const allInterestTokenAddresses = (events.map(
-    (event) =>
-      // The first arg is the interestToken
-      event.args?.[0]
-  ) as string[]);
-  const safeInterestTokenAddresses = allInterestTokenAddresses.filter(address => safelist.includes(address));
-
-
-  const interestTokens = safeInterestTokenAddresses.map((address) => InterestToken__factory.connect(address, provider));
-  const trancheAddresses = await Promise.all(interestTokens.map(interestToken => interestToken.tranche()));
-  const tranches = trancheAddresses.map((address) => Tranche__factory.connect(address, provider));
-  const underlyingAddresses = await Promise.all(tranches.map(tranche => tranche.underlying()));
-  const underlyingSymbols = await getUnderlyingSymbols(interestTokens);
-  const yieldTokenNames = formatYieldTokenNames(underlyingSymbols);
-  const yieldTokenSymbols = formatYieldTokenSymbols(underlyingSymbols);
-
-  const decimals = await Promise.all(interestTokens.map(interestToken => interestToken.decimals()));
-
-  const yieldTokensList: TokenInfo[] = zip(safeInterestTokenAddresses, yieldTokenSymbols, yieldTokenNames, decimals, underlyingAddresses)
-    .map(([address, symbol, name, decimal, underlying]): TokenInfo => {
-      return {
-        chainId,
-        address: address as string,
-        symbol: symbol as string,
-        decimals: decimal as number,
-        extensions: {underlying: underlying as string},
-        name: name as string,
-        tags: [TokenListTag.YIELD],
-        // TODO: What logo do we want to show for interest tokens?
-        // logoURI: ""
-      };
-    });
-
-  return yieldTokensList;
-}
-
 export async function getYieldTokensFromTranches(tranches: Tranche[], chainId: number) {
   const interestTokenAddresses = await Promise.all(tranches.map(tranche => tranche.interestToken()));
   const interestTokens = interestTokenAddresses.map(address => InterestToken__factory.connect(address, provider));

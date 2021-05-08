@@ -13,9 +13,17 @@
     "eY": {
       "name": "Yield token",
       "description": "Token that represents the yield on a deposit into a yield position"
+    },
+    "ccpool": {
+      "name": "ConvergentCurve pool",
+      "description": "Token that represents the balancer pool for Principal tokens"
+    },
+    "wpool": {
+      "name": "Weighted pool",
+      "description": "Token that represents the balancer pool for Yield tokens"
     }
   },
-  "timestamp": "2021-05-08T01:20:29.905Z",
+  "timestamp": "2021-05-08T06:40:15.145Z",
   "version": {
     "major": 0,
     "minor": 0,
@@ -121,6 +129,90 @@
       },
       "tags": [
         "eY"
+      ]
+    },
+    {
+      "chainId": 5,
+      "address": "0x40bf8A2eCB62c6B880302b55a5552A4e315b5827",
+      "symbol": "USDC-fyUSDC",
+      "decimals": 18,
+      "extensions": {
+        "bond": "0x80272c960b862B4d6542CDB7338Ad1f727E0D18d",
+        "underlying": "0x78dEca24CBa286C0f8d56370f5406B48cFCE2f86",
+        "poolId": "0x40bf8a2ecb62c6b880302b55a5552a4e315b5827000200000000000000000062"
+      },
+      "name": "Element USDC - fyUSDC",
+      "tags": [
+        "ccpool"
+      ]
+    },
+    {
+      "chainId": 5,
+      "address": "0x5941DB4d6C500C4FFa57c359eE0C55c6b41D0b61",
+      "symbol": "WETH-fyWETH",
+      "decimals": 18,
+      "extensions": {
+        "bond": "0x44eecA004b2612d131EDA7dA2b9d986E7fED562e",
+        "underlying": "0x9A1000D492d40bfccbc03f413A48F5B6516Ec0Fd",
+        "poolId": "0x5941db4d6c500c4ffa57c359ee0c55c6b41d0b61000200000000000000000064"
+      },
+      "name": "Element WETH - fyWETH",
+      "tags": [
+        "ccpool"
+      ]
+    },
+    {
+      "chainId": 5,
+      "address": "0x9eB7F54C0eCc4d0D2dfF28a1276e36d598F2B0D1",
+      "symbol": "WETH-fyWETH",
+      "decimals": 18,
+      "extensions": {
+        "bond": "0x89d66Ad25F3A723D606B78170366d8da9870A879",
+        "underlying": "0x9A1000D492d40bfccbc03f413A48F5B6516Ec0Fd",
+        "poolId": "0x9eb7f54c0ecc4d0d2dff28a1276e36d598f2b0d1000200000000000000000066"
+      },
+      "name": "Element WETH - fyWETH",
+      "tags": [
+        "ccpool"
+      ]
+    },
+    {
+      "chainId": 5,
+      "address": "0x252797e51F51631b6956545C45F9d3F9fFCb0940",
+      "symbol": "eY_USDC_BPT",
+      "decimals": 18,
+      "extensions": {
+        "poolId": "0x252797e51f51631b6956545c45f9d3f9ffcb0940000200000000000000000063"
+      },
+      "name": "Ele BPT",
+      "tags": [
+        "wpool"
+      ]
+    },
+    {
+      "chainId": 5,
+      "address": "0xcF6894C48c2AF3ddD433CC1EDfEfC74e654cC9B4",
+      "symbol": "eY_WETH_BPT",
+      "decimals": 18,
+      "extensions": {
+        "poolId": "0xcf6894c48c2af3ddd433cc1edfefc74e654cc9b4000200000000000000000065"
+      },
+      "name": "Ele BPT",
+      "tags": [
+        "wpool"
+      ]
+    },
+    {
+      "chainId": 5,
+      "address": "0xD75bfF2444FF738d443066ff4688691e6852b217",
+      "symbol": "eY_WETH_BPT",
+      "decimals": 18,
+      "extensions": {
+        "poolId": "0xd75bff2444ff738d443066ff4688691e6852b217000200000000000000000067"
+      },
+      "name": "Ele BPT",
+      "tags": [
+        "wpool"
       ]
     }
   ]

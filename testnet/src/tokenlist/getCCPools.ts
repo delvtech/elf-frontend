@@ -20,7 +20,8 @@ export async function getCCPools(ccPoolFactoryAddress: string, chainId: number, 
   );
 
   const safePoolEvents = poolCreatedEvents.filter(( { poolAddress } ) => safelist.includes(poolAddress));
-  const safePools = safePoolEvents.map(( { poolAddress } ) => ConvergentCurvePool__factory.connect(poolAddress, provider));
+  const safePoolAddresses = safePoolEvents.map(( { poolAddress } ) => poolAddress);
+  const safePools = safePoolAddresses.map(( poolAddress ) => ConvergentCurvePool__factory.connect(poolAddress, provider));
 
   const poolBondAddresses = safePoolEvents.map(( { bondTokenAddress} ) => bondTokenAddress);
   const poolIds = await Promise.all(safePools.map(pool => pool.getPoolId()));
@@ -30,7 +31,7 @@ export async function getCCPools(ccPoolFactoryAddress: string, chainId: number, 
   const poolDecimals = await Promise.all(safePools.map(pool => pool.decimals()));
 
   const ccPoolTokensList: TokenInfo[] = zip<any>(
-    safePoolEvents, poolSymbols, poolNames, poolDecimals, poolBondAddresses, poolUnderlyingAddresses, poolIds, )
+    safePoolAddresses, poolSymbols, poolNames, poolDecimals, poolBondAddresses, poolUnderlyingAddresses, poolIds, )
     .map(([address, symbol, name, decimal,  bondAddress, underlyingAddress, poolId]): TokenInfo => {
       return {
         chainId,
