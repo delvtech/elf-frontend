@@ -9,7 +9,7 @@ interface DarkMode {
 }
 
 const DARK_MODE_PREF_ID = "isDarkMode";
-export const DARK_MODE_DEFAULT = false;
+export const DARK_MODE_DEFAULT = true;
 
 export function useDarkMode(): DarkMode {
   const { pref: isDarkMode, setPref: setDarkMode } = usePref(
