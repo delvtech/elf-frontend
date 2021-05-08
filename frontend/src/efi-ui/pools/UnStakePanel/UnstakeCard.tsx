@@ -13,16 +13,18 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
 import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { UnstakeConvergentCurvePoolButton } from "efi-ui/pools/UnstakeButton/UnstakeConvergentCurvePoolButton";
+import { UnstakeWeightedPoolButton } from "efi-ui/pools/UnstakeButton/UnstakeWeightedPoolButton";
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useShareOfPool } from "efi-ui/pools/useShareOfPool";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
-import { formatPercent } from "efi/base/formatPercent";
 import { KNOWN_BASE_ASSETS } from "efi/addresses";
+import { formatPercent } from "efi/base/formatPercent";
+import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
+import { isConvergentCurvePool, isWeightedPool } from "efi/pools/PoolContract";
 
 interface UnstakeCardProps {
   library: Web3Provider | undefined;
@@ -131,12 +133,22 @@ export function UnstakeCard({
       </Callout>
 
       {/* Quick Actions */}
-      <UnstakeConvergentCurvePoolButton
-        account={account}
-        connector={connector}
-        library={library}
-        pool={pool}
-      />
+      {isConvergentCurvePool(pool) && (
+        <UnstakeConvergentCurvePoolButton
+          account={account}
+          connector={connector}
+          library={library}
+          pool={pool}
+        />
+      )}
+      {isWeightedPool(pool) && (
+        <UnstakeWeightedPoolButton
+          account={account}
+          connector={connector}
+          library={library}
+          pool={pool}
+        />
+      )}
     </div>
   );
 }
