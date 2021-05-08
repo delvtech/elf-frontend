@@ -5,13 +5,13 @@ import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
 import { Signer } from "ethers";
+import { formatUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { useExitConvergentCurvePool } from "efi-ui/pools/useUnstake/useExitConvergentCurvePool";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { clipStringValueToDecimals } from "efi/math/fixedPoint";
-import { formatUnits } from "ethers/lib/utils";
 
 interface UnstakeConvergentCurvePoolButtonProps {
   account: string | null | undefined;
