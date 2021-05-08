@@ -1,4 +1,4 @@
-import { QueryObserverResult } from "react-query";
+import { QueryObserverResult, QueryStatus } from "react-query";
 
 import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
 import { BigNumber } from "ethers";
@@ -71,13 +71,19 @@ export function useQueryBatchSwap(
   return queryBatchSwapResults;
 }
 
+interface QueryBatchSwapCalcResults {
+  result: [amountIn: string, amountOut: string] | undefined;
+  // TBD
+  status: QueryStatus;
+}
+
 export function useQueryBatchSwapCalc(
   kind: SwapKind,
   pool: PoolContract | undefined,
   tokenInAddress: string | undefined,
   tokenOutAddress: string | undefined,
   amount: BigNumber | undefined
-): [string, string] | undefined {
+): QueryBatchSwapCalcResults {
   const { data } = usePoolTokens(pool);
   const [tokens, balances] = data ?? [[], []];
   const { baseAssetContract } = parseSortedTokensForPool(tokens);
@@ -115,7 +121,7 @@ export function useQueryBatchSwapCalc(
 
   // do weighted pools first since they don't need as many variables
   if (!amount || !tokenInAddress || !tokenOutAddress || !decimals) {
-    return undefined;
+    return { result: undefined, status: "loading" };
   }
   const tokenInReserves = formatUnits(
     balancesByAddress[tokenInAddress],
@@ -139,7 +145,7 @@ export function useQueryBatchSwapCalc(
     const calcOut =
       clipStringValueToDecimals(calcOutNumber.toString(), decimals) ?? "0";
 
-    return [amountIn, calcOut];
+    return { result: [amountIn, calcOut], status: "success" };
   }
 
   if (isWPool && kind === SwapKind.GIVEN_OUT) {
@@ -151,7 +157,7 @@ export function useQueryBatchSwapCalc(
     const calcIn =
       clipStringValueToDecimals(calcInNumber.toString(), decimals) ?? "0";
 
-    return [calcIn, amountOut];
+    return { result: [calcIn, amountOut], status: "success" };
   }
 
   if (
@@ -163,7 +169,7 @@ export function useQueryBatchSwapCalc(
     !expirationBN ||
     !decimals
   ) {
-    return undefined;
+    return { result: undefined, status: "loading" };
   }
 
   const nowInSeconds = Math.round(Date.now() / 1000);
@@ -188,7 +194,7 @@ export function useQueryBatchSwapCalc(
     const calcOut =
       clipStringValueToDecimals(calcOutNumber.toString(), decimals) ?? "0";
 
-    return [amountIn, calcOut];
+    return { result: [amountIn, calcOut], status: "success" };
   }
 
   if (isCCPool && kind === SwapKind.GIVEN_OUT) {
@@ -204,6 +210,8 @@ export function useQueryBatchSwapCalc(
 
     const calcIn =
       clipStringValueToDecimals(calcInNumber.toString(), decimals) ?? "0";
-    return [calcIn, amountOut];
+    return { result: [calcIn, amountOut], status: "success" };
   }
+
+  return { result: undefined, status: "error" };
 }

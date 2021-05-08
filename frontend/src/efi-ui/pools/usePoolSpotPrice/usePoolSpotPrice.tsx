@@ -32,7 +32,7 @@ export function usePoolSpotPrice(
   const yieldToken = usePoolPairedToken(pool, underlyingToken);
   const amountIn = parseUnits("0.01", decimals);
 
-  const [, amountOut] =
+  const { result: [, amountOut] = [] } =
     useQueryBatchSwapCalc(
       SwapKind.GIVEN_IN,
       pool,
