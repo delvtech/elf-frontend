@@ -42,6 +42,7 @@ export function UnstakeConvergentCurvePoolButton({
       disabled={disabled}
       fill
       minimal
+      outlined
       intent={Intent.PRIMARY}
       onClick={exitPool}
     >
