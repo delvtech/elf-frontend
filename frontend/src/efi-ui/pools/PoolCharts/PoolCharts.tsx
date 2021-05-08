@@ -1,6 +1,6 @@
 import React, { ReactElement, useMemo, useState } from "react";
 
-import { Button, Callout, Card, H2, Intent } from "@blueprintjs/core";
+import { Button, Callout, Card, H4, Intent } from "@blueprintjs/core";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -44,7 +44,10 @@ export function PoolCharts({ pool }: PoolChartsProps): ReactElement {
   const showVolumeChart = activeChart === ChartType.VOLUME;
 
   return (
-    <div className={tw("flex", "flex-1", "h-500")}>
+    <div
+      className={tw("flex", "flex-1", "h-500")}
+      style={{ minHeight: "300px" }}
+    >
       <div className={tw("flex", "flex-col", "w-full")}>
         <div className={tw("mb-2", "flex", "space-x-4")}>
           <span>{t`Pool Charts`}</span>
@@ -98,7 +101,7 @@ export function PoolCharts({ pool }: PoolChartsProps): ReactElement {
                   )}
                   intent={Intent.NONE}
                 >
-                  <H2>{t`Charts available after 24hrs`}</H2>
+                  <H4>{t`Charts available after 24hrs`}</H4>
                 </Callout>
               </div>
             ) : null}

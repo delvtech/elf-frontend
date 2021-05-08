@@ -90,7 +90,7 @@ export function PoolSummary(props: PoolSummaryProps): ReactElement {
                 className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
               >{t`Total Liquidity`}</span>
               <div className={classNames("h5", tw("space-x-4"))}>
-                {formatMoney(liquidity)}
+                {liquidity ? formatMoney(liquidity) : "$0.00"}
               </div>
             </div>
             <div className={tw("flex", "self-end")}>
@@ -104,7 +104,7 @@ export function PoolSummary(props: PoolSummaryProps): ReactElement {
                 className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
               >{t`Volume (24hr)`}</span>
               <div className={classNames("h5", tw("space-x-4"))}>
-                {formatMoney(volume)}
+                {volume ? formatMoney(volume) : "$0.00"}
               </div>
             </div>
             <div className={tw("flex", "self-end")}>
@@ -118,9 +118,11 @@ export function PoolSummary(props: PoolSummaryProps): ReactElement {
                 className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
               >{t`Quantity ${baseAssetSymbol}`}</span>
               <div className={classNames("h5", tw("space-x-4"))}>
-                {Number(
-                  formatUnits(baseAssetBalance || 0, baseAssetDecimals)
-                ).toFixed(2)}
+                {baseAssetBalance
+                  ? Number(
+                      formatUnits(baseAssetBalance || 0, baseAssetDecimals)
+                    ).toFixed(2)
+                  : "0.00"}
               </div>
             </div>
           </div>
@@ -153,7 +155,7 @@ export function PoolSummary(props: PoolSummaryProps): ReactElement {
                 className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
               >{t`Fees (24hr)`}</span>
               <div className={classNames("h5", tw("space-x-4"))}>
-                {formatMoney(feeVolume)}
+                {feeVolume ? formatMoney(feeVolume) : "$0.00"}
               </div>
             </div>
             <div className={tw("flex", "self-end")}>
@@ -167,9 +169,11 @@ export function PoolSummary(props: PoolSummaryProps): ReactElement {
                 className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
               >{t`Quantity (${quantityLabel})`}</span>
               <div className={classNames("h5", tw("space-x-4"))}>
-                {Number(
-                  formatUnits(termAssetBalance || 0, termAssetDecimals)
-                ).toFixed(2)}
+                {termAssetBalance
+                  ? Number(
+                      formatUnits(termAssetBalance || 0, termAssetDecimals)
+                    ).toFixed(2)
+                  : "0.00"}
               </div>
             </div>
             <div className={tw("flex", "self-end")}>
