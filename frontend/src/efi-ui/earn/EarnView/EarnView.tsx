@@ -100,7 +100,11 @@ const EarnViewSubtitle: FC = () => {
     </a>
   );
 
-  const portfolioLink = <Link to={`/portfolio`}>Portfolio Page</Link>;
+  const portfolioLink = (
+    <Link key="portfolio-link" to={`/portfolio`}>
+      {t`Portfolio Page`}
+    </Link>
+  );
 
   return (
     <Fragment>{jt`Principal Tokens are redeemable one-to-one with their base asset once they have reached their maturity date. To boost your APY further, you may stake your tokens on the ${portfolioLink}. ${fixedYieldLink}`}</Fragment>
