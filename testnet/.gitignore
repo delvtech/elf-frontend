@@ -9,3 +9,4 @@ src/types
 src/tokenlist/testnet.tokenlist.json
 src/addresses/testnet.addresses.json
 all-addresses.json
+.env.local
