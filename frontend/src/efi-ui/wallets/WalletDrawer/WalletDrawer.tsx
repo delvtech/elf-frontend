@@ -30,13 +30,8 @@ export function WalletDrawer({
   className,
   children,
 }: WalletDrawerProps): ReactElement {
-  const {
-    active,
-    account,
-    chainId,
-    connector,
-    library,
-  } = useWeb3React<Web3Provider>();
+  const { active, account, chainId, connector, library } =
+    useWeb3React<Web3Provider>();
   const connectorName = getConnectorName(connector, library);
   const { isDarkMode, darkModeClassName } = useDarkMode();
   const connectionStatusColor = active ? Colors.GREEN4 : Colors.RED4;

@@ -37,9 +37,10 @@ export function RedeemYieldTokensButton({
     tranche,
     "unlockTimestamp"
   );
-  const unlockDate = useMemo(() => convertEpochSecondsToDate(unlockTimestamp), [
-    unlockTimestamp,
-  ]);
+  const unlockDate = useMemo(
+    () => convertEpochSecondsToDate(unlockTimestamp),
+    [unlockTimestamp]
+  );
   const buttonDisabled = unlockDate && unlockDate.getTime() > Date.now();
 
   const openDrawer = useCallback(() => {

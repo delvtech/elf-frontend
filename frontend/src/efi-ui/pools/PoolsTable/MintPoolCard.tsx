@@ -63,19 +63,12 @@ const poolCardStyle: CSSProperties = {
 };
 
 export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
-  const {
-    pool,
-    library,
-    account,
-    chainId,
-    walletConnectionActive,
-    connector,
-  } = props;
+  const { pool, library, account, chainId, walletConnectionActive, connector } =
+    props;
   const tranche = useTrancheForPool(pool);
   const principalPool = usePoolForToken(tranche);
-  const {
-    termAssetContract: principalTokenContract,
-  } = useParseSortedTokensForPool(principalPool);
+  const { termAssetContract: principalTokenContract } =
+    useParseSortedTokensForPool(principalPool);
   const principalPrice = usePoolSpotPrice(
     principalPool,
     principalTokenContract

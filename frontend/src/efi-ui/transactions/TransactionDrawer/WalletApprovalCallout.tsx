@@ -39,14 +39,12 @@ export function WalletApprovalCalloutOld({
   approvalAmount,
 }: WalletApprovalCalloutPropsOld): ReactElement | null {
   const cryptoAssetContract = findTokenContract(cryptoAsset);
-  const {
-    data: marketAllowance,
-    isLoading: isAllowanceLoading,
-  } = useTokenAllowance(
-    cryptoAssetContract as ERC20Shim,
-    ownerAddress,
-    spenderAddress
-  );
+  const { data: marketAllowance, isLoading: isAllowanceLoading } =
+    useTokenAllowance(
+      cryptoAssetContract as ERC20Shim,
+      ownerAddress,
+      spenderAddress
+    );
 
   const {
     onApproveClick,

@@ -83,25 +83,19 @@ export function SellYieldTokensDrawer(
 
   // This might be weth in the case of eth, but that's okay for spot price
   const baseAssetPoolToken = usePoolPairedToken(pool, yieldToken as ERC20Shim);
-  const {
-    spotPriceBaseAssetForOneToken,
-    spotPriceTokenForOneBaseAsset,
-  } = usePoolTokenPrices(pool, baseAssetPoolToken);
+  const { spotPriceBaseAssetForOneToken, spotPriceTokenForOneBaseAsset } =
+    usePoolTokenPrices(pool, baseAssetPoolToken);
 
   const yieldTokenAddress = yieldToken?.address;
   const baseAssetBalancerAddress = getTokenAddressForBalancer(baseAsset);
-  const {
-    amountIn,
-    amountOut,
-    onAmountInChange,
-    onAmountOutChange,
-  } = useQueryBatchSwapInputs(
-    pool,
-    yieldTokenAddress,
-    trancheDecimals,
-    baseAssetBalancerAddress,
-    baseAssetDecimals
-  );
+  const { amountIn, amountOut, onAmountInChange, onAmountOutChange } =
+    useQueryBatchSwapInputs(
+      pool,
+      yieldTokenAddress,
+      trancheDecimals,
+      baseAssetBalancerAddress,
+      baseAssetDecimals
+    );
 
   // pool calls
   const amountInAsBigNumber = parseUnits(amountIn || "0", baseAssetDecimals);
@@ -113,17 +107,16 @@ export function SellYieldTokensDrawer(
     0.01
   );
 
-  const {
-    batchSwapGivenIn: onConfirmSellPrincipalTokens,
-  } = useBatchSwapGivenIn(
-    account,
-    signer,
-    pool,
-    yieldToken?.address,
-    baseAssetBalancerAddress,
-    amountInAsBigNumber,
-    minAmountOut
-  );
+  const { batchSwapGivenIn: onConfirmSellPrincipalTokens } =
+    useBatchSwapGivenIn(
+      account,
+      signer,
+      pool,
+      yieldToken?.address,
+      baseAssetBalancerAddress,
+      amountInAsBigNumber,
+      minAmountOut
+    );
 
   const amountOutNumber = +formatUnits(
     amountOutAsBigNumber?.abs() || 0,

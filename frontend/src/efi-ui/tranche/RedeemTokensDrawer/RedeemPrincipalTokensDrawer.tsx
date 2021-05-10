@@ -54,13 +54,11 @@ export function RedeemPrincipalTokensDrawer({
     ? formatFullDate(unlockTimestampDate)
     : undefined;
 
-  const {
-    stringValue: trancheAmountString,
-    setValue: setTrancheAmountString,
-  } = useNumericInput({
-    min: 0,
-    maxPrecision: trancheDecimals,
-  });
+  const { stringValue: trancheAmountString, setValue: setTrancheAmountString } =
+    useNumericInput({
+      min: 0,
+      maxPrecision: trancheDecimals,
+    });
   const accountTrancheBalance = useTokenBalance(tranche, account);
   const onSetMaxAmount = useCallback(() => {
     setTrancheAmountString(accountTrancheBalance.toString());

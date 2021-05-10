@@ -25,9 +25,8 @@ interface PoolViewHeaderProps {
 export function PoolViewHeader({ pool }: PoolViewHeaderProps): ReactElement {
   const { isDarkMode } = useDarkMode();
   const { data: [tokens] = [] } = usePoolTokens(pool);
-  const { baseAssetContract, termAssetContract } = parseSortedTokensForPool(
-    tokens
-  );
+  const { baseAssetContract, termAssetContract } =
+    parseSortedTokensForPool(tokens);
   const baseAsset = useCryptoAssetForToken(baseAssetContract?.address);
   const baseAssetSymbol = useCryptoSymbol(baseAsset);
   const { label: termAssetSymbol } = useTermAssetSymbol(

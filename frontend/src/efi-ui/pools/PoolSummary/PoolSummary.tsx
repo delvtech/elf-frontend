@@ -45,9 +45,8 @@ export function PoolSummary(props: PoolSummaryProps): ReactElement {
     pool,
   } = props;
 
-  const { data: [tokens, balances] = [undefined, undefined] } = usePoolTokens(
-    pool
-  );
+  const { data: [tokens, balances] = [undefined, undefined] } =
+    usePoolTokens(pool);
 
   const {
     baseAssetIndex,

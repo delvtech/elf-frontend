@@ -40,7 +40,7 @@ export const BarChart: FC<BarChartProps> = withTooltip<BarChartProps, TimeData>(
     },
   }) => {
     const [ref, dimensions] = useMeasure();
-    const refObject = (ref as unknown) as RefObject<HTMLDivElement>;
+    const refObject = ref as unknown as RefObject<HTMLDivElement>;
     const { width = 0, height = 0 } = dimensions;
 
     const innerHeight = height - margin.top - margin.bottom;

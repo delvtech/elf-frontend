@@ -38,7 +38,8 @@ export function PrincipalTokenPortfolio({
 }: PrincipalTokenPortfolioProps): ReactElement {
   const principalTokens = usePrincipalTokenTab(library, account, provider);
 
-  const pendingPrincipalTokenTransaction = useNewPrincipalTokensPendingTransaction();
+  const pendingPrincipalTokenTransaction =
+    useNewPrincipalTokensPendingTransaction();
 
   const hasFYTs =
     !!principalTokens?.length || !!pendingPrincipalTokenTransaction;
@@ -115,7 +116,7 @@ function usePrincipalTokenTab(
 ) {
   const principalTokensWithBalanceResults = useTokensWithBalance(
     account,
-    (TrancheContracts as unknown) as ERC20Shim[],
+    TrancheContracts as unknown as ERC20Shim[],
     provider
   );
   const principalTokenDecimals = principalTokensWithBalanceResults?.map(
@@ -142,7 +143,7 @@ function usePrincipalTokenTab(
         number
       ] => zipped.every((v) => !!v))
       .filter(([{ balanceOf }, decimals]) => !isDust(balanceOf, decimals))
-      .map(([{ token }]) => (token as unknown) as Tranche);
+      .map(([{ token }]) => token as unknown as Tranche);
     return tokens;
   }, [principalTokenDecimals, principalTokensWithBalanceResults]);
 

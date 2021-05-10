@@ -222,15 +222,11 @@ function useTokensSummary(
   interestSupply: number
 ): TokensSummary {
   const { currency } = useCurrencyPref();
-  const { data: [tokens, balances] = [undefined, undefined] } = usePoolTokens(
-    pool
-  );
+  const { data: [tokens, balances] = [undefined, undefined] } =
+    usePoolTokens(pool);
 
-  const {
-    termAssetIndex,
-    baseAssetContract,
-    termAssetContract,
-  } = parseSortedTokensForPool(tokens);
+  const { termAssetIndex, baseAssetContract, termAssetContract } =
+    parseSortedTokensForPool(tokens);
   const baseAsset = useCryptoAssetForToken(baseAssetContract?.address);
 
   // Base Asset Info

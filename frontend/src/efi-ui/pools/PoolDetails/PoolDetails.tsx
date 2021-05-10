@@ -38,21 +38,13 @@ interface PoolDetailsProps {
 }
 
 export function PoolDetails(props: PoolDetailsProps): ReactElement {
-  const {
-    library,
-    signer,
-    account,
-    chainId,
-    connector,
-    walletActive,
-    pool,
-  } = props;
+  const { library, signer, account, chainId, connector, walletActive, pool } =
+    props;
   const poolTokensResult = usePoolTokens(pool);
   const tokenAddresses = getQueryData(poolTokensResult)?.[0] || [];
 
-  const { baseAssetContract, termAssetContract } = parseSortedTokensForPool(
-    tokenAddresses
-  );
+  const { baseAssetContract, termAssetContract } =
+    parseSortedTokensForPool(tokenAddresses);
 
   const totalLiquidity = useTotalFiatLiquidityForPool(pool);
   const liquidityTrend = useTotalLiquidityTrend(pool);

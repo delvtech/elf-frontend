@@ -88,12 +88,12 @@ function useYieldTokenTab(
 ) {
   const yieldTokensWithBalanceResults = useTokensWithBalance(
     account,
-    (InterestTokenContracts as unknown) as ERC20Shim[],
+    InterestTokenContracts as unknown as ERC20Shim[],
     provider
   );
 
   const yieldTokensWithBalance = yieldTokensWithBalanceResults.map(
-    ({ token }) => (token as unknown) as InterestToken
+    ({ token }) => token as unknown as InterestToken
   );
 
   // const totalFiatBalanceAllYieldTokens = useTotalFiatBalance(

@@ -139,9 +139,8 @@ export function EarnCard({
     pool,
     activeTranche as ERC20Shim
   );
-  const {
-    spotPriceBaseAssetForOneToken: amountOfEthForOnePrincipalEth,
-  } = usePoolTokenPrices(pool, baseAssetPoolToken);
+  const { spotPriceBaseAssetForOneToken: amountOfEthForOnePrincipalEth } =
+    usePoolTokenPrices(pool, baseAssetPoolToken);
   const inputTokenSymbol = useCryptoSymbol(activeBaseAsset);
   const baseAssetIcon = findAssetIcon2(activeBaseAsset);
 
@@ -387,9 +386,8 @@ function useActiveBaseAsset(
   setAmountIn: (value: string) => void,
   setAmountOut: (value: string) => void
 ) {
-  const [activeBaseAsset, setActiveBaseAssetState] = useState<
-    CryptoAsset | undefined
-  >();
+  const [activeBaseAsset, setActiveBaseAssetState] =
+    useState<CryptoAsset | undefined>();
   const setActiveBaseAsset = useCallback(
     (baseAsset: CryptoAsset | undefined) => {
       setAmountIn("");

@@ -16,13 +16,8 @@ import { useWeightedPools } from "efi-ui/pools/useWeightedPools/useWeightedPools
 interface MintViewProps extends RouteComponentProps {}
 
 export function MintView(props: MintViewProps): ReactElement {
-  const {
-    account,
-    library,
-    active,
-    chainId,
-    connector,
-  } = useWeb3React<Web3Provider>();
+  const { account, library, active, chainId, connector } =
+    useWeb3React<Web3Provider>();
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
 
   const interestTokenPools = useWeightedPools(signer);

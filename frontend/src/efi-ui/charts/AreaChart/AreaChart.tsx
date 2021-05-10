@@ -58,14 +58,14 @@ export function AreaChart({
   left,
   children,
 }: AreaChartProps): ReactElement | null {
-  const setXScale = useCallback((d) => xScale(getXValue(d)) ?? 0, [
-    getXValue,
-    xScale,
-  ]);
-  const setYScale = useCallback((d) => yScale(getYValue(d)) ?? 0, [
-    getYValue,
-    yScale,
-  ]);
+  const setXScale = useCallback(
+    (d) => xScale(getXValue(d)) ?? 0,
+    [getXValue, xScale]
+  );
+  const setYScale = useCallback(
+    (d) => yScale(getYValue(d)) ?? 0,
+    [getYValue, yScale]
+  );
 
   const { isDarkMode } = useDarkMode();
 

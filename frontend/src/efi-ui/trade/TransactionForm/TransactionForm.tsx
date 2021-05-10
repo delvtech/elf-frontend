@@ -46,9 +46,8 @@ export function TransactionForm({
 }: TransactionFormProps): ReactElement {
   const CryptoIcon = findAssetIcon(cryptoSymbol);
 
-  const { stringValue, onChange, setValue } = useNumericInput(
-    numericInputOptions
-  );
+  const { stringValue, onChange, setValue } =
+    useNumericInput(numericInputOptions);
   const value = stringValue
     ? parseUnits(stringValue, cryptoBalance?.decimals)
     : undefined;

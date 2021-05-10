@@ -60,14 +60,10 @@ export function StakingConfirmationDrawer({
   const balancerVault = useBalancerVault();
   // close the drawer after stake succeeds
 
-  const {
-    icon: baseAssetIcon,
-    decimals: baseAssetDecimals,
-  } = useCryptoAssetMetadata(baseAsset);
-  const {
-    icon: trancheAssetIcon,
-    decimals: trancheAssetDecimals,
-  } = useCryptoAssetMetadata(trancheAsset);
+  const { icon: baseAssetIcon, decimals: baseAssetDecimals } =
+    useCryptoAssetMetadata(baseAsset);
+  const { icon: trancheAssetIcon, decimals: trancheAssetDecimals } =
+    useCryptoAssetMetadata(trancheAsset);
 
   const baseAssetInBigNumber = parseUnits(
     baseAssetIn ?? "0",

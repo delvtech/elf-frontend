@@ -73,25 +73,19 @@ export function SellPrincipalTokensTransactionDrawer(
 
   // This might be weth in the case of eth, but that's okay for spot price
   const baseAssetPoolToken = usePoolPairedToken(pool, tranche as ERC20Shim);
-  const {
-    spotPriceBaseAssetForOneToken,
-    spotPriceTokenForOneBaseAsset,
-  } = usePoolTokenPrices(pool, baseAssetPoolToken);
+  const { spotPriceBaseAssetForOneToken, spotPriceTokenForOneBaseAsset } =
+    usePoolTokenPrices(pool, baseAssetPoolToken);
 
   const trancheAddress = tranche?.address;
   const baseAssetBalancerAddress = getTokenAddressForBalancer(baseAsset);
-  const {
-    amountIn,
-    amountOut,
-    onAmountInChange,
-    onAmountOutChange,
-  } = useQueryBatchSwapInputs(
-    pool,
-    trancheAddress,
-    trancheDecimals,
-    baseAssetBalancerAddress,
-    baseAssetDecimals
-  );
+  const { amountIn, amountOut, onAmountInChange, onAmountOutChange } =
+    useQueryBatchSwapInputs(
+      pool,
+      trancheAddress,
+      trancheDecimals,
+      baseAssetBalancerAddress,
+      baseAssetDecimals
+    );
 
   // pool calls
   const amountInAsBigNumber = parseUnits(amountIn || "0", baseAssetDecimals);
@@ -103,17 +97,16 @@ export function SellPrincipalTokensTransactionDrawer(
     0.01
   );
 
-  const {
-    batchSwapGivenIn: onConfirmSellPrincipalTokens,
-  } = useBatchSwapGivenIn(
-    account,
-    signer,
-    pool,
-    tranche?.address,
-    baseAssetBalancerAddress,
-    amountInAsBigNumber,
-    minAmountOut
-  );
+  const { batchSwapGivenIn: onConfirmSellPrincipalTokens } =
+    useBatchSwapGivenIn(
+      account,
+      signer,
+      pool,
+      tranche?.address,
+      baseAssetBalancerAddress,
+      amountInAsBigNumber,
+      minAmountOut
+    );
 
   const amountOutNumber = +formatUnits(
     amountOutAsBigNumber?.abs() || 0,
