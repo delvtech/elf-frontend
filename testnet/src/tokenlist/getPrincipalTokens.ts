@@ -26,18 +26,20 @@ export async function getPrincipalTokens(trancheFactoryAddress: string, chainId:
   const safeTranches = safeTrancheAddresses.map((address) => Tranche__factory.connect(address, provider));
 
   // Create the principal token name, eg: "ETH Principal Token"
-  const underlyingAddresses = await Promise.all(safeTranches.map(tranche => tranche.underlying()));
-  const unlockTimestamps = await Promise.all(safeTranches.map(tranche => tranche.unlockTimestamp()));
-
   const principalTokenNames = await getPrincipalTokenName(safeTranches);
   // Create the principal token symbol, eg: "eP-ELFyWETH"
   const principalTokenSymbols = await getPrincipalTokenSymbols(safeTranches);
-
   const decimals = await Promise.all(safeTranches.map(tranche => tranche.decimals()));
+  const underlyingAddresses = await Promise.all(safeTranches.map(tranche => tranche.underlying()));
+  const unlockTimestamps = await Promise.all(safeTranches.map(tranche => tranche.unlockTimestamp()));
+  const interestTokens = await Promise.all(safeTranches.map(tranche => tranche.interestToken()));
+  const positions = await Promise.all(safeTranches.map(tranche => tranche.position()));
+
+
 
   const principalTokensList: TokenInfo[] = zip<any>(
-    safeTrancheAddresses, principalTokenSymbols, principalTokenNames, decimals, underlyingAddresses, unlockTimestamps)
-    .map(([address, symbol, name, decimal, underlying, unlockTimestamp]): TokenInfo => {
+    safeTrancheAddresses, principalTokenSymbols, principalTokenNames, decimals, underlyingAddresses, unlockTimestamps, interestTokens, positions)
+    .map(([address, symbol, name, decimal, underlying, unlockTimestamp, interestToken, position]): TokenInfo => {
       return {
         chainId,
         address: address as string,
@@ -45,6 +47,8 @@ export async function getPrincipalTokens(trancheFactoryAddress: string, chainId:
         decimals: decimal as number,
         extensions: {
           underlying: underlying as string,
+          position: position as string,
+          interestToken: interestToken as string,
           unlockTimestamp: unlockTimestamp?.toNumber() as number,
         },
         name: name as string,
