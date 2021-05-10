@@ -135,10 +135,10 @@ export const YieldTokenInfos: YieldTokenInfo[] = tokenInfos.filter(
 /**
  * The list of all principal token pools
  */
-export const PrincipalTokenPoolInfos: PrincipalTokenPoolInfo[] = tokenInfos.filter(
-  (tokenInfo): tokenInfo is PrincipalTokenPoolInfo =>
+export const PrincipalTokenPoolInfos: PrincipalTokenPoolInfo[] =
+  tokenInfos.filter((tokenInfo): tokenInfo is PrincipalTokenPoolInfo =>
     isPrincipalTokenPool(tokenInfo)
-);
+  );
 
 /**
  * The list of all yield tokens

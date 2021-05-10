@@ -5,9 +5,9 @@ import classNames from "classnames";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { usePendingTransactionPref } from "efi-ui/transactions/usePendingTransactionPref/usePendingTransactionPref";
 import { WalletJazzicon } from "efi-ui/wallets/WalletJazzicon/WalletJazzicon";
 import { formatWalletAddress } from "efi/wallets/formatWalletAddress";
-import { usePendingTransactionPref } from "efi-ui/transactions/usePendingTransactionPref/usePendingTransactionPref";
 
 interface TransactionPendingSummaryProps {
   account: string | null | undefined;

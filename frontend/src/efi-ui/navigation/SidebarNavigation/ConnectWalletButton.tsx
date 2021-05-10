@@ -8,8 +8,8 @@ import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
 import { WalletJazzicon } from "efi-ui/wallets/WalletJazzicon/WalletJazzicon";
-import { ChainId, isMainnet } from "efi/ethereum";
 import { formatChainName } from "efi/crypto/formatChainName";
+import { ChainId, isMainnet } from "efi/ethereum";
 import { formatWalletAddress } from "efi/wallets/formatWalletAddress";
 
 interface ConnectWalletButtonProps {

@@ -15,9 +15,8 @@ interface PoolViewTitleProps {
 }
 export function PoolViewTitle({ pool }: PoolViewTitleProps): ReactElement {
   const { data: [tokens] = [] } = usePoolTokens(pool);
-  const { baseAssetContract, termAssetContract } = parseSortedTokensForPool(
-    tokens
-  );
+  const { baseAssetContract, termAssetContract } =
+    parseSortedTokensForPool(tokens);
   const baseAsset = useCryptoAssetForToken(baseAssetContract?.address);
   const baseAssetSymbol = useCryptoSymbol(baseAsset);
   const { symbol: termAssetSymbol } = useTermAssetSymbol(

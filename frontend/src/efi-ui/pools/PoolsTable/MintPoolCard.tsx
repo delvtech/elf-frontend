@@ -4,14 +4,14 @@ import {
   Button,
   Card,
   Classes,
-  Colors,
   Collapse,
+  Colors,
   Elevation,
   Intent,
 } from "@blueprintjs/core";
-import classNames from "classnames";
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
+import classNames from "classnames";
 import { differenceInDays } from "date-fns";
 import { t } from "ttag";
 
@@ -20,30 +20,30 @@ import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
-import { CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
+import { MintCard } from "efi-ui/mint/MintCard/MintCard";
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 import { useFeeVolumeForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
+import { useParseSortedTokensForPool } from "efi-ui/pools/useParsedTokensForPool/useParsedTokensForPool";
 import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
-import { MintCard } from "efi-ui/mint/MintCard/MintCard";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
-import { useParseSortedTokensForPool } from "efi-ui/pools/useParsedTokensForPool/useParsedTokensForPool";
-import { useYearnVault } from "efi-ui/yearn/useYearnVault";
+import { useTokenYield } from "efi-ui/pools/useTokenYield";
+import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidityForPool.ts/useTotalFiatLiquidityForPool";
 import { useTotalValueLockedForTranche } from "efi-ui/pools/useTotalValueLockedForTranche";
 import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForPool";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
 import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
+import { useYearnVault } from "efi-ui/yearn/useYearnVault";
+import { formatPercent } from "efi/base/formatPercent";
+import { CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { formatMoney } from "efi/money/formatMoney";
 import { PoolContract } from "efi/pools/PoolContract";
-import { useTokenYield } from "efi-ui/pools/useTokenYield";
+import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 
 import styles from "./PrincipalPoolCard.module.css";
-import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidityForPool.ts/useTotalFiatLiquidityForPool";
-import { formatPercent } from "efi/base/formatPercent";
-import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 
 interface MintPoolCardProps {
   pool: PoolContract | undefined;
@@ -63,19 +63,12 @@ const poolCardStyle: CSSProperties = {
 };
 
 export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
-  const {
-    pool,
-    library,
-    account,
-    chainId,
-    walletConnectionActive,
-    connector,
-  } = props;
+  const { pool, library, account, chainId, walletConnectionActive, connector } =
+    props;
   const tranche = useTrancheForPool(pool);
   const principalPool = usePoolForToken(tranche);
-  const {
-    termAssetContract: principalTokenContract,
-  } = useParseSortedTokensForPool(principalPool);
+  const { termAssetContract: principalTokenContract } =
+    useParseSortedTokensForPool(principalPool);
   const principalPrice = usePoolSpotPrice(
     principalPool,
     principalTokenContract

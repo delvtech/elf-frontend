@@ -5,8 +5,8 @@ import { parseUnits } from "ethers/lib/utils";
 
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 
-import { usePrincipalTokenNeededGivenBaseAssetIn } from "./usePrincipalTokenNeededGivenBaseAssetIn";
 import { useBaseAssetNeededGivenPrincipalTokenIn } from "./useBaseAssetNeededGivenPrincipalTokenIn";
+import { usePrincipalTokenNeededGivenBaseAssetIn } from "./usePrincipalTokenNeededGivenBaseAssetIn";
 
 /**
  * ActiveInput is used to prevent infinite calls to onSwapGivenIn and
@@ -32,10 +32,8 @@ export function useConvergentCurvePoolStakeInputs(
   reservesPrincipalToken: BigNumber | undefined,
   totalSupply: BigNumber | undefined
 ): UseConvergentCurvePoolStakeInputs {
-  const [
-    activeInput,
-    setActiveInput,
-  ] = useState<ConvergentCurvePoolActiveInput>("principalTokenIn");
+  const [activeInput, setActiveInput] =
+    useState<ConvergentCurvePoolActiveInput>("principalTokenIn");
 
   const {
     inputNumber: principalTokenInNumber,
@@ -112,14 +110,15 @@ function useSyncPrincipalTokenPreview(
   setPrincipalTokenIn: (value: string | undefined) => void,
   clearBaseAssetIn: () => void
 ) {
-  const previewPrincipalTokenNeededGivenBaseAssetIn = usePrincipalTokenNeededGivenBaseAssetIn(
-    baseAssetInNumber,
-    decimalsBaseAsset,
-    reservesBaseAsset,
-    reservesPrincipalToken,
-    decimalsPrincipalToken,
-    totalSupply
-  );
+  const previewPrincipalTokenNeededGivenBaseAssetIn =
+    usePrincipalTokenNeededGivenBaseAssetIn(
+      baseAssetInNumber,
+      decimalsBaseAsset,
+      reservesBaseAsset,
+      reservesPrincipalToken,
+      decimalsPrincipalToken,
+      totalSupply
+    );
   const { otherNeeded: principalTokensNeededGivenBaseAssetIn } =
     previewPrincipalTokenNeededGivenBaseAssetIn || {};
 
@@ -145,14 +144,15 @@ function useSyncBaseAssetPreview(
   setBaseAssetIn: (value: string | undefined) => void,
   clearPrincipalTokenIn: () => void
 ) {
-  const previewBaseAssetNeededGivenPrincipalTokenIn = useBaseAssetNeededGivenPrincipalTokenIn(
-    principalTokenInNumber,
-    decimalsPrincipalToken,
-    reservesPrincipalToken,
-    reservesBaseAsset,
-    decimalsBaseAsset,
-    totalSupply
-  );
+  const previewBaseAssetNeededGivenPrincipalTokenIn =
+    useBaseAssetNeededGivenPrincipalTokenIn(
+      principalTokenInNumber,
+      decimalsPrincipalToken,
+      reservesPrincipalToken,
+      reservesBaseAsset,
+      decimalsBaseAsset,
+      totalSupply
+    );
   const { otherNeeded: baseAssetNeededGivenPrincipalTokenIn } =
     previewBaseAssetNeededGivenPrincipalTokenIn || {};
 

@@ -82,17 +82,16 @@ export function PrincipalTokenCard(
     : t`Loading unlock date...`;
 
   const trancheBalance = useTokenBalance(
-    (tranche as unknown) as ERC20Shim,
+    tranche as unknown as ERC20Shim,
     account
   );
 
   const vaultContract = useUnderlyingVaultForTranche(tranche);
   const { data: vaultName } = useSmartContractReadCall(vaultContract, "name");
-  const pool = usePoolForToken((tranche as unknown) as ERC20Shim);
+  const pool = usePoolForToken(tranche as unknown as ERC20Shim);
   const baseAssetContract = usePoolPairedToken(pool, tranche);
-  const {
-    spotPriceBaseAssetForOneToken: tranchePriceInBaseAsset = 0,
-  } = usePoolTokenPrices(pool, baseAssetContract);
+  const { spotPriceBaseAssetForOneToken: tranchePriceInBaseAsset = 0 } =
+    usePoolTokenPrices(pool, baseAssetContract);
 
   const baseAssetSymbol = useCryptoSymbol(baseAsset);
 

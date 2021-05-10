@@ -3,12 +3,12 @@ import { Helmet } from "react-helmet";
 
 import { AnchorButton, ButtonGroup, Callout, H3 } from "@blueprintjs/core";
 import { RouteComponentProps } from "@reach/router";
-import discordLogo from "efi-static-assets/logos/svg/DISCORD.svg";
-import telegramLogo from "efi-static-assets/logos/svg/TELEGRAM.svg";
-import twitterLogo from "efi-static-assets/logos/svg/TWITTER.svg";
-import mediumLogo from "efi-static-assets/logos/svg/MEDIUM.svg";
 import { t } from "ttag";
 
+import discordLogo from "efi-static-assets/logos/svg/DISCORD.svg";
+import mediumLogo from "efi-static-assets/logos/svg/MEDIUM.svg";
+import telegramLogo from "efi-static-assets/logos/svg/TELEGRAM.svg";
+import twitterLogo from "efi-static-assets/logos/svg/TWITTER.svg";
 import tw from "efi-tailwindcss-classnames";
 
 const faqViewClassName = tw(

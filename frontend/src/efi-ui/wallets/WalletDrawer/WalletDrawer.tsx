@@ -10,9 +10,9 @@ import tw from "efi-tailwindcss-classnames";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { WalletConnectionSummary } from "efi-ui/wallets/WalletConnectionCard/WalletConnectionSummary";
 import { getConnectorName } from "efi/wallets/connectors";
-import styles from "./WalletDrawer.module.css";
 
 import { ConnectWalletCallout } from "./ConnectWalletCallout";
+import styles from "./WalletDrawer.module.css";
 
 interface WalletDrawerProps {
   isOpen: boolean;
@@ -30,13 +30,8 @@ export function WalletDrawer({
   className,
   children,
 }: WalletDrawerProps): ReactElement {
-  const {
-    active,
-    account,
-    chainId,
-    connector,
-    library,
-  } = useWeb3React<Web3Provider>();
+  const { active, account, chainId, connector, library } =
+    useWeb3React<Web3Provider>();
   const connectorName = getConnectorName(connector, library);
   const { isDarkMode, darkModeClassName } = useDarkMode();
   const connectionStatusColor = active ? Colors.GREEN4 : Colors.RED4;

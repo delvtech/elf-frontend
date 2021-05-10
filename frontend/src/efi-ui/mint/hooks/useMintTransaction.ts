@@ -1,6 +1,8 @@
 import { useCallback } from "react";
+import { UseMutationResult } from "react-query";
 
 import { Tranche } from "elf-contracts/types/Tranche";
+import { UserProxy } from "elf-contracts/types/UserProxy";
 import { ContractTransaction, Signer } from "ethers";
 import { parseUnits } from "ethers/lib/utils";
 
@@ -9,8 +11,6 @@ import { useMintCallArgs } from "efi-ui/mint/hooks/useMintCallArgs";
 import { useUserProxy } from "efi-ui/mint/hooks/userProxy";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
-import { UserProxy } from "elf-contracts/types/UserProxy";
-import { UseMutationResult } from "react-query";
 
 /**
  * Returns the number of Principal Tokens you'd get for minting into a tranche.

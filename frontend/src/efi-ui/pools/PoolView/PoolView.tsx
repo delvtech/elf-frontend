@@ -17,13 +17,8 @@ interface PoolViewProps extends RouteComponentProps {
 }
 
 export function PoolView({ poolAddress }: PoolViewProps): ReactElement {
-  const {
-    active,
-    account,
-    chainId,
-    connector,
-    library,
-  } = useWeb3React<Web3Provider>();
+  const { active, account, chainId, connector, library } =
+    useWeb3React<Web3Provider>();
 
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
   const allPools = useAllPools(signer);

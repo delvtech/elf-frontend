@@ -1,20 +1,20 @@
 import { formatEther, formatUnits } from "ethers/lib/utils";
+import { Money } from "ts-money";
 
 import { SwapEventWithTimeStamp } from "efi-balancer/SwapEvent";
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 import { usePoolSwapFee } from "efi-ui/pools/usePoolSwapFee/usePoolSwapFee";
 import { useSwaps } from "efi-ui/pools/useSwaps/useSwaps";
+import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
+import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
+import { convertNumberToFiatBalance } from "efi/money/convertToFiatBalance";
 import {
   isConvergentCurvePool,
   isWeightedPool,
   PoolContract,
 } from "efi/pools/PoolContract";
-import { Money } from "ts-money";
-import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
-import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
-import { convertNumberToFiatBalance } from "efi/money/convertToFiatBalance";
 
 /**
  * Returns the fiat volume for a pool in a given time range

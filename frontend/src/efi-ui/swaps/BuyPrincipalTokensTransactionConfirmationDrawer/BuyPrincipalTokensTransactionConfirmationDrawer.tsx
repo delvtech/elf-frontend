@@ -70,10 +70,8 @@ export function BuyPrincipalTokensTransactionConfirmationDrawer({
   const unlockTimeStampDate = convertEpochSecondsToDate(trancheUnlockTimestamp);
 
   const baseAssetPoolToken = usePoolPairedToken(pool, tranche as ERC20Shim);
-  const {
-    spotPriceBaseAssetForOneToken,
-    spotPriceTokenForOneBaseAsset,
-  } = usePoolTokenPrices(pool, baseAssetPoolToken);
+  const { spotPriceBaseAssetForOneToken, spotPriceTokenForOneBaseAsset } =
+    usePoolTokenPrices(pool, baseAssetPoolToken);
 
   // pool calls
   const amountInAsBigNumber = parseUnits(amountIn || "0", baseAssetDecimals);

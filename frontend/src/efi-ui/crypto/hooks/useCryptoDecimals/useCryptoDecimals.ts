@@ -1,10 +1,10 @@
+import { assertNever } from "efi/base/assertNever";
 import {
   CryptoAsset,
   CryptoAssetType,
   findTokenContract,
 } from "efi/crypto/CryptoAsset";
 import { NUM_ETH_DECIMALS } from "efi/ethereum";
-import { assertNever } from "efi/base/assertNever";
 import { TokenMetadata } from "efi/tokenlists";
 
 export function useCryptoDecimals(

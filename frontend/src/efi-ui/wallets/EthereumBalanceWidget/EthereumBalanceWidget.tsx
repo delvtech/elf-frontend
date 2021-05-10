@@ -1,15 +1,15 @@
 import React, { FC } from "react";
 
 import { Classes, Colors, Icon } from "@blueprintjs/core";
+import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
 import classNames from "classnames";
 import { t } from "ttag";
 
+import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useEthBalance } from "efi-ui/wallets/hooks/useEthBalance/useEthBalance";
-import { IconNames } from "@blueprintjs/icons";
 import { formatEth } from "efi/coins/ether/formatEth";
-import tw from "efi-tailwindcss-classnames";
 
 interface EthereumBalanceWidgetProps {
   library: Web3Provider | undefined;

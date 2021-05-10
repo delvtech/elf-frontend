@@ -1,5 +1,7 @@
 import React, { ReactElement } from "react";
+
 import { Intent, ProgressBar } from "@blueprintjs/core";
+
 import tw from "efi-tailwindcss-classnames";
 import { TimeLeftLabel } from "efi-ui/portfolio/PrincipalTokenCard/getTimeLeftLabel";
 import { getIsMature } from "efi/tranche/getIsMature";

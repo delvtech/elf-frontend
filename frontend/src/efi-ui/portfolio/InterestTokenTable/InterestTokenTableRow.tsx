@@ -56,7 +56,7 @@ export function InterestTokenTableRow({
     }
   );
   const interestTokenBalance = useTokenBalance(
-    (interestToken as unknown) as ERC20Shim,
+    interestToken as unknown as ERC20Shim,
     account
   );
 
@@ -69,11 +69,11 @@ export function InterestTokenTableRow({
   const vaultContract = useUnderlyingVaultForTranche(tranche);
   const { data: vaultName } = useSmartContractReadCall(vaultContract, "name");
 
-  const pool = usePoolForToken((interestToken as unknown) as ERC20Shim);
+  const pool = usePoolForToken(interestToken as unknown as ERC20Shim);
 
   const baseAsset = usePoolPairedToken(
     pool,
-    (interestToken as unknown) as ERC20Shim
+    interestToken as unknown as ERC20Shim
   );
   const { data: baseAssetSymbol } = useSmartContractReadCall(
     baseAsset,
@@ -89,7 +89,7 @@ export function InterestTokenTableRow({
   );
   const { data: exitValue } = useOnSwapGivenIn(
     pool,
-    (interestToken as unknown) as ERC20Shim,
+    interestToken as unknown as ERC20Shim,
     interestTokenBalanceOf
   );
 

@@ -2,21 +2,20 @@ import React, { CSSProperties, ReactElement } from "react";
 
 import { Card, Classes } from "@blueprintjs/core";
 import classNames from "classnames";
-import { formatPercent } from "efi/base/formatPercent";
 import { formatUnits } from "ethers/lib/utils";
 import { Money } from "ts-money";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { TrendIndicator } from "efi-ui/base/TrendIndicator/TrendIndicator";
-import { formatMoney } from "efi/money/formatMoney";
-import { PoolContract } from "efi/pools/PoolContract";
-import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
-import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
-import { isConvergentCurvePool } from "efi/pools/PoolContract";
+import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
+import { formatPercent } from "efi/base/formatPercent";
+import { formatMoney } from "efi/money/formatMoney";
+import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
+import { isConvergentCurvePool, PoolContract } from "efi/pools/PoolContract";
 
 const summaryCardStyle: CSSProperties = {
   height: 220,
@@ -45,9 +44,8 @@ export function PoolSummary(props: PoolSummaryProps): ReactElement {
     pool,
   } = props;
 
-  const { data: [tokens, balances] = [undefined, undefined] } = usePoolTokens(
-    pool
-  );
+  const { data: [tokens, balances] = [undefined, undefined] } =
+    usePoolTokens(pool);
 
   const {
     baseAssetIndex,

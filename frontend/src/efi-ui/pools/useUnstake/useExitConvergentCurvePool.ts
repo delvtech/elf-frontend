@@ -10,17 +10,17 @@ import { ExitRequest } from "efi-balancer/ExitRequest";
 import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { getQueriesData } from "efi-ui/base/queryResults";
-import { getSmartContractFromRegistryMulti } from "efi/contracts/SmartContractsRegistry";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { useTokenDecimalsMulti } from "efi-ui/token/hooks/useTokenDecimalsMulti";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
-import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 import ContractAddresses from "efi/addresses";
+import { BALANCER_ETH_SENTINEL } from "efi/balancer";
+import { getSmartContractFromRegistryMulti } from "efi/contracts/SmartContractsRegistry";
 import { ContractMethodArgs } from "efi/contracts/types";
-import { calculateTokensOutForLPInFixed } from "efi/pools/calculateTokensOutForLPIn";
 import { clipStringValueToDecimals } from "efi/math/fixedPoint";
+import { calculateTokensOutForLPInFixed } from "efi/pools/calculateTokensOutForLPIn";
 
 export function useExitConvergentCurvePool(
   signer: Signer | undefined,
@@ -29,9 +29,8 @@ export function useExitConvergentCurvePool(
 ): () => void {
   const balancerVault = useBalancerVault();
   const { data: poolId } = useSmartContractReadCall(pool, "getPoolId");
-  const {
-    data: [poolTokens = [], poolTokenReserves = []] = [],
-  } = usePoolTokens(pool);
+  const { data: [poolTokens = [], poolTokenReserves = []] = [] } =
+    usePoolTokens(pool);
   const poolTokenContracts = getSmartContractFromRegistryMulti(
     poolTokens,
     ERC20__factory.connect

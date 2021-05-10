@@ -20,13 +20,8 @@ import styles from "./styles.module.css";
 interface PortfolioViewProps extends RouteComponentProps {}
 
 export function PortfolioView(props: PortfolioViewProps): ReactElement {
-  const {
-    account,
-    library,
-    active,
-    chainId,
-    connector,
-  } = useWeb3React<Web3Provider>();
+  const { account, library, active, chainId, connector } =
+    useWeb3React<Web3Provider>();
 
   const portfolioTabs: PortfolioTab[] = usePortfolioTabs(
     chainId,

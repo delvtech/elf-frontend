@@ -1,9 +1,9 @@
+import { assertNever } from "efi/base/assertNever";
 import {
   CryptoAsset,
   CryptoAssetType,
   findTokenContract,
 } from "efi/crypto/CryptoAsset";
-import { assertNever } from "efi/base/assertNever";
 import { TokenMetadata } from "efi/tokenlists";
 
 export function useCryptoSymbol(

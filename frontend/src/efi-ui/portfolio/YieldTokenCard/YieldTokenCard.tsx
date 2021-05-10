@@ -84,7 +84,7 @@ export function YieldTokenCard({
     }
   );
   const yieldTokenBalance = useTokenBalance(
-    (yieldToken as unknown) as ERC20Shim,
+    yieldToken as unknown as ERC20Shim,
     account
   );
 
@@ -95,9 +95,10 @@ export function YieldTokenCard({
     tranche,
     "unlockTimestamp"
   );
-  const unlockDate = useMemo(() => convertEpochSecondsToDate(unlockTimestamp), [
-    unlockTimestamp,
-  ]);
+  const unlockDate = useMemo(
+    () => convertEpochSecondsToDate(unlockTimestamp),
+    [unlockTimestamp]
+  );
   const createdAtDate = useMemo(
     () => convertEpochSecondsToDate(trancheCreatedAt),
     [trancheCreatedAt]
@@ -105,7 +106,7 @@ export function YieldTokenCard({
 
   const vaultContract = useUnderlyingVaultForTranche(tranche);
 
-  const pool = usePoolForToken((yieldToken as unknown) as ERC20Shim);
+  const pool = usePoolForToken(yieldToken as unknown as ERC20Shim);
 
   const baseAsset = useBaseAssetForTranche(tranche);
   const baseAssetSymbol = useCryptoSymbol(baseAsset);
@@ -116,7 +117,7 @@ export function YieldTokenCard({
   const baseAssetDecimals = useCryptoDecimals(baseAsset);
   const { data: exitValueBigNumber } = useOnSwapGivenIn(
     pool,
-    (yieldToken as unknown) as ERC20Shim,
+    yieldToken as unknown as ERC20Shim,
     yieldTokenBalanceOf
   );
 

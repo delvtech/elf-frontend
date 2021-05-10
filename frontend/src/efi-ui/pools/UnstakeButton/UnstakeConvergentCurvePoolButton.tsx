@@ -11,8 +11,8 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { useExitConvergentCurvePool } from "efi-ui/pools/useUnstake/useExitConvergentCurvePool";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
-import { clipStringValueToDecimals } from "efi/math/fixedPoint";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
+import { clipStringValueToDecimals } from "efi/math/fixedPoint";
 
 interface UnstakeConvergentCurvePoolButtonProps {
   account: string | null | undefined;

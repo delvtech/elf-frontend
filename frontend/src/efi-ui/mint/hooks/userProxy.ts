@@ -3,8 +3,8 @@ import { UserProxy__factory } from "elf-contracts/types/factories/UserProxy__fac
 import { UserProxy } from "elf-contracts/types/UserProxy";
 import { Signer } from "ethers";
 
-import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
 import ContractAddresses from "efi/addresses";
+import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
 
 export function useUserProxy(): UserProxy | undefined {
   const { library, account } = useWeb3React();

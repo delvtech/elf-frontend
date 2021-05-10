@@ -1,12 +1,13 @@
+import { QueryObserverResult } from "react-query";
+
 import { Vault } from "elf-contracts/types/Vault";
+import { BigNumber } from "ethers";
 
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { getQueryData } from "efi-ui/base/queryResults";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { PoolContract } from "efi/pools/PoolContract";
-import { QueryObserverResult } from "react-query";
-import { BigNumber } from "ethers";
 
 export function usePoolTokens(
   pool: PoolContract | undefined

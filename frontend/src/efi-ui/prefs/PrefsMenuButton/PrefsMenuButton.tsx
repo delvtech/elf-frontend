@@ -1,10 +1,11 @@
+import React, { FC, Fragment } from "react";
+
 import { Button, Icon } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
-import React, { FC, Fragment } from "react";
+import { Popover2 } from "@blueprintjs/popover2";
 
 import tw from "efi-tailwindcss-classnames";
 import { PrefsMenu } from "efi-ui/prefs/PrefsMenu/PrefsMenu";
-import { Popover2 } from "@blueprintjs/popover2";
 
 interface PrefsMenuButtonProps {}
 export const PrefsMenuButton: FC<PrefsMenuButtonProps> = () => {

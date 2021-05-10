@@ -1,6 +1,7 @@
-import isEqual from "lodash.isequal";
 import { useEffect } from "react";
 import { usePrevious } from "react-use";
+
+import isEqual from "lodash.isequal";
 
 /* eslint-disable */
 /**

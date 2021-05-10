@@ -8,9 +8,9 @@ import { SwapKind } from "efi-ui/balancer/SwapKind";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { makeQueryBatchSwapCallArgs } from "efi-ui/balancer/useQueryBatchSwap/makeQueryBatchSwapCallArgs";
 import { getQueriesData } from "efi-ui/base/queryResults";
+import { UseSmartContractReadCallOptions } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
 import { PoolContract } from "efi/pools/PoolContract";
-import { UseSmartContractReadCallOptions } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 
 export function useQueryBatchSwapMulti(
   kind: SwapKind,

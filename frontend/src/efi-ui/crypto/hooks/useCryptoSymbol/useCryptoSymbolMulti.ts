@@ -1,13 +1,13 @@
 import zip from "lodash.zip";
 
 import { getQueriesData } from "efi-ui/base/queryResults";
+import { useTokenSymbolMulti } from "efi-ui/token/hooks/useTokenSymbolMulti";
 import { assertNever } from "efi/base/assertNever";
 import {
   CryptoAsset,
   CryptoAssetType,
   findTokenContract,
 } from "efi/crypto/CryptoAsset";
-import { useTokenSymbolMulti } from "efi-ui/token/hooks/useTokenSymbolMulti";
 
 export function useCryptoSymbolMulti(
   assets: (CryptoAsset | undefined)[]

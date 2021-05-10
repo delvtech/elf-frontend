@@ -1,13 +1,12 @@
 import React, { ReactElement } from "react";
 
-import { formatDuration, intervalToDuration, format } from "date-fns";
-import { t } from "ttag";
 import { Classes, Intent, ProgressBar, Tag } from "@blueprintjs/core";
 import classNames from "classnames";
-
-import { calculateProgress } from "efi/base/calculateProgress";
+import { format, formatDuration, intervalToDuration } from "date-fns";
+import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { calculateProgress } from "efi/base/calculateProgress";
 
 interface TimeLeftProps {
   /**

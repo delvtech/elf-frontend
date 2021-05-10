@@ -1,7 +1,9 @@
 import { useEffect } from "react";
 
+import { Intent } from "@blueprintjs/core";
 import { t } from "ttag";
 
+import { ETHERSCAN_DOMAIN } from "efi-etherscan/ETHERSCAN_DOMAIN";
 import {
   AppToaster,
   makeSuccessToast,
@@ -9,8 +11,6 @@ import {
 } from "efi-ui/toaster/AppToaster/AppToaster";
 import { usePendingTransactionPref } from "efi-ui/transactions/usePendingTransactionPref/usePendingTransactionPref";
 import { defaultProvider } from "efi/providers/providers";
-import { Intent } from "@blueprintjs/core";
-import { ETHERSCAN_DOMAIN } from "efi-etherscan/ETHERSCAN_DOMAIN";
 
 export function useTransactionToasts(): void {
   useToastOnPending();

@@ -1,9 +1,10 @@
+import { ERC20 } from "elf-contracts/types/ERC20";
+
 import {
   usePoolSpotPrice,
   usePoolSpotPriceMulti,
 } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { PoolContract } from "efi/pools/PoolContract";
-import { ERC20 } from "elf-contracts/types/ERC20";
 
 interface PoolTokenPrices {
   spotPriceBaseAssetForOneToken: number | undefined;

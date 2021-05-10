@@ -1,8 +1,9 @@
-import { Web3Provider } from "@ethersproject/providers";
 import { QueryObserverResult, useQuery } from "react-query";
 
-import { fetchEthBalance } from "efi/coins/ether/fetchEthBalance";
+import { Web3Provider } from "@ethersproject/providers";
 import { BigNumber } from "ethers";
+
+import { fetchEthBalance } from "efi/coins/ether/fetchEthBalance";
 
 export function useEthBalance(
   library: Web3Provider | undefined,

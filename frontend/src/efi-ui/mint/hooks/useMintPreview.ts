@@ -25,9 +25,9 @@ export function useMintPreview(
 
   const { data: trancheDecimals } = useTokenDecimals(tranche);
   const { data: wrappedPositionDecimals } = useTokenDecimals(
-    (wrappedPosition as unknown) as ERC20
+    wrappedPosition as unknown as ERC20
   );
-  const { data: vaultDecimals } = useTokenDecimals((vault as unknown) as ERC20);
+  const { data: vaultDecimals } = useTokenDecimals(vault as unknown as ERC20);
 
   const { data: trancheValueSuppliedBN } = useSmartContractReadCall(
     tranche,

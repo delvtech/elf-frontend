@@ -4,8 +4,8 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import {
   createHistory,
   createMemorySource,
-  LocationProvider,
   History,
+  LocationProvider,
 } from "@reach/router";
 import { render, RenderResult } from "@testing-library/react";
 import { Web3ReactProvider } from "@web3-react/core";

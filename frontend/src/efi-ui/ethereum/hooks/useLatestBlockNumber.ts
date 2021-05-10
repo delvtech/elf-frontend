@@ -1,6 +1,7 @@
 import { QueryObserverResult, useQuery } from "react-query";
 
 import { Provider } from "@ethersproject/providers";
+
 import { defaultProvider } from "efi/providers/providers";
 
 /**

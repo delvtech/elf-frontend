@@ -3,8 +3,8 @@ import { QueryObserverResult } from "react-query";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { BigNumber } from "ethers";
 
-import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
+import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
 
 export function useTrancheUnlockTimestamp(
   tranche: Tranche | undefined

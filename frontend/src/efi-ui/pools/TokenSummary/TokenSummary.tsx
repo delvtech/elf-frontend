@@ -11,23 +11,22 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
+import { useAccumulatedFiatInterestForTranche } from "efi-ui/pools/useAccumulatedFiatInterestForTranche";
+import { useAccumulatedInterestForTranche } from "efi-ui/pools/useAccumulatedInterestForTranche";
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useSwaps } from "efi-ui/pools/useSwaps/useSwaps";
+import { useTokenYield } from "efi-ui/pools/useTokenYield";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { useTokenHistoricalPrice } from "efi-ui/token/hooks/useTokenHistoricalPrice";
 import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
 import { useTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
+import { formatPercent } from "efi/base/formatPercent";
 import { formatMoney } from "efi/money/formatMoney";
 import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
-import { formatPercent } from "efi/base/formatPercent";
+import { isConvergentCurvePool, PoolContract } from "efi/pools/PoolContract";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
-import { useTokenYield } from "efi-ui/pools/useTokenYield";
-import { PoolContract } from "efi/pools/PoolContract";
-import { isConvergentCurvePool } from "efi/pools/PoolContract";
-import { useAccumulatedInterestForTranche } from "efi-ui/pools/useAccumulatedInterestForTranche";
-import { useAccumulatedFiatInterestForTranche } from "efi-ui/pools/useAccumulatedFiatInterestForTranche";
 
 const summaryCardStyle: CSSProperties = {
   height: 220,
@@ -222,15 +221,11 @@ function useTokensSummary(
   interestSupply: number
 ): TokensSummary {
   const { currency } = useCurrencyPref();
-  const { data: [tokens, balances] = [undefined, undefined] } = usePoolTokens(
-    pool
-  );
+  const { data: [tokens, balances] = [undefined, undefined] } =
+    usePoolTokens(pool);
 
-  const {
-    termAssetIndex,
-    baseAssetContract,
-    termAssetContract,
-  } = parseSortedTokensForPool(tokens);
+  const { termAssetIndex, baseAssetContract, termAssetContract } =
+    parseSortedTokensForPool(tokens);
   const baseAsset = useCryptoAssetForToken(baseAssetContract?.address);
 
   // Base Asset Info

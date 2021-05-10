@@ -55,10 +55,8 @@ export function useSmartContractTransactionPersisted<
     onTransactionSuccess,
     onError: onErrorFromProps,
   } = options;
-  const {
-    setPendingTransactionPref,
-    clearPendingTransactionPref,
-  } = usePendingTransactionPref();
+  const { setPendingTransactionPref, clearPendingTransactionPref } =
+    usePendingTransactionPref();
 
   const onBeginTransaction = useCallback(
     (

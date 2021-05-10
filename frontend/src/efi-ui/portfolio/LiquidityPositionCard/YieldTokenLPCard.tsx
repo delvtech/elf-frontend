@@ -13,23 +13,23 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
+import { UnstakeWeightedPoolButton } from "efi-ui/pools/UnstakeButton/UnstakeWeightedPoolButton";
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useShareOfPool } from "efi-ui/pools/useShareOfPool";
 import { GoToMarketButton } from "efi-ui/portfolio/PrincipalTokenCard/GoToMarketButton";
-import { UnstakeWeightedPoolButton } from "efi-ui/pools/UnstakeButton/UnstakeWeightedPoolButton";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { useTokenName } from "efi-ui/token/hooks/useTokenName";
 import { useTrancheUnlockTimestamp } from "efi-ui/tranche/useTrancheUnlockTimestamp";
+import { KNOWN_BASE_ASSETS } from "efi/addresses";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
 import { formatPercent } from "efi/base/formatPercent";
-import { KNOWN_BASE_ASSETS } from "efi/addresses";
+import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
 
 interface YieldTokenLPCardProps {
   library: Web3Provider | undefined;

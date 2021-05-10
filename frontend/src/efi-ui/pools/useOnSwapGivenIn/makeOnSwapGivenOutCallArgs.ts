@@ -1,11 +1,11 @@
+import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
 import { ERC20 } from "elf-contracts/types/ERC20";
 import { BigNumber } from "ethers";
 
-import { StaticContractMethodArgs } from "efi/contracts/types";
-import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
 import { PoolSwapRequest } from "efi-ui/balancer/PoolSwapRequest";
 import { SwapKind } from "efi-ui/balancer/SwapKind";
 import { EMPTY_BYTES_LIKE } from "efi/base/bytes";
+import { StaticContractMethodArgs } from "efi/contracts/types";
 
 export function makeOnSwapGivenOutCallArgs(
   poolId: string | undefined,

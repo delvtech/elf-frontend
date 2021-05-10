@@ -110,19 +110,17 @@ export function SwapTokensTransactionConfirmationDrawer({
     0.01
   );
 
-  const {
-    batchSwapGivenIn: onConfirmSwapTokens,
-    mutationResult: swapResult,
-  } = useBatchSwapGivenIn(
-    account,
-    signer,
-    pool,
-    tokenInAddress,
-    tokenOutAddress,
-    amountInAsBigNumber,
-    minAmountOut,
-    onClose
-  );
+  const { batchSwapGivenIn: onConfirmSwapTokens, mutationResult: swapResult } =
+    useBatchSwapGivenIn(
+      account,
+      signer,
+      pool,
+      tokenInAddress,
+      tokenOutAddress,
+      amountInAsBigNumber,
+      minAmountOut,
+      onClose
+    );
 
   const { isLoading, isError, isSuccess, reset } = swapResult;
 

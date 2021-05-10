@@ -1,4 +1,5 @@
 import { QueryObserverResult, useQuery } from "react-query";
+
 import {
   EtherChainGasPriceResult,
   fetchGasPrice,

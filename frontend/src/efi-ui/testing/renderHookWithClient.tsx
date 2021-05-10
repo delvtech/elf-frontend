@@ -1,10 +1,11 @@
+import React, { FC } from "react";
+import { QueryClient, QueryClientProvider } from "react-query";
+
 import {
   renderHook,
   RenderHookOptions,
   RenderHookResult,
 } from "@testing-library/react-hooks";
-import React, { FC } from "react";
-import { QueryClient, QueryClientProvider } from "react-query";
 
 export function renderHookWithClient<P, R>(
   client: QueryClient,

@@ -29,11 +29,11 @@ import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSy
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 import { useFeeVolumeFiatForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
+import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import {
   PoolAction,
   usePoolViewPoolActionsTab,
 } from "efi-ui/pools/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
-import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { useStakingAPY } from "efi-ui/pools/useStakingAPY";
 import { useTokenYield } from "efi-ui/pools/useTokenYield";
 import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidityForPool.ts/useTotalFiatLiquidityForPool";

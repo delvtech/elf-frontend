@@ -10,14 +10,8 @@ import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { getConnectorName } from "efi/wallets/connectors";
 
 export function MainNavigation(): ReactElement {
-  const {
-    deactivate,
-    account,
-    active,
-    chainId,
-    connector,
-    library,
-  } = useWeb3React<Web3Provider>();
+  const { deactivate, account, active, chainId, connector, library } =
+    useWeb3React<Web3Provider>();
   const { activeTab, changeTab } = useNavigation();
   const { isDarkMode } = useDarkMode();
 

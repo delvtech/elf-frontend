@@ -1,8 +1,9 @@
-import { Contract } from "ethers";
 import { QueryObserverResult } from "react-query";
 
-import { renderHookWithClient } from "efi-ui/testing/renderHookWithClient";
+import { Contract } from "ethers";
+
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
+import { renderHookWithClient } from "efi-ui/testing/renderHookWithClient";
 import { createQueryClient } from "efi/queryClient";
 
 const SAMPLE_READ_CONTRACT_CALL_RESULT = { 0: "sample contract name" };
@@ -26,15 +27,13 @@ test("provides data from smart contract read methods", async () => {
 
   const queryClient = createQueryClient();
 
-  const {
-    result,
-    waitForNextUpdate,
-    rerender,
-  } = renderHookWithClient(queryClient, () =>
-    useSmartContractReadCall(
-      ({ callStatic: { name: mockNameFn } } as unknown) as Contract,
-      "name"
-    )
+  const { result, waitForNextUpdate, rerender } = renderHookWithClient(
+    queryClient,
+    () =>
+      useSmartContractReadCall(
+        { callStatic: { name: mockNameFn } } as unknown as Contract,
+        "name"
+      )
   );
 
   // called but hasn't resolved yet
@@ -59,7 +58,7 @@ test("passes arguments to smart contract read methods", async () => {
     queryClient,
     () =>
       useSmartContractReadCall(
-        ({ callStatic: { name: mockFn } } as unknown) as Contract,
+        { callStatic: { name: mockFn } } as unknown as Contract,
         "name",
         {
           callArgs: ["firstarg", "secondArg"],
@@ -92,7 +91,7 @@ test("properly handles enabled option", async () => {
     queryClient,
     ({ enabled }) =>
       useSmartContractReadCall(
-        ({ callStatic: { name: mockFn } } as unknown) as Contract,
+        { callStatic: { name: mockFn } } as unknown as Contract,
         "name",
         {
           callArgs: ["firstarg", "secondArg"],

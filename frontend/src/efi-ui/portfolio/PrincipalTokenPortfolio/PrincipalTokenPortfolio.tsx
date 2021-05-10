@@ -1,4 +1,4 @@
-import { ReactElement, Fragment, useMemo } from "react";
+import { Fragment, ReactElement, useMemo } from "react";
 
 import { Provider, Web3Provider } from "@ethersproject/providers";
 import { ERC20 } from "elf-contracts/types/ERC20";
@@ -11,14 +11,14 @@ import tw from "efi-tailwindcss-classnames";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useNewPrincipalTokensPendingTransaction } from "efi-ui/portfolio/hooks/useNewPrincipalTokensPendingTransaction";
 import { PrincipalTokenCard } from "efi-ui/portfolio/PrincipalTokenCard/PrincipalTokenCard";
+import { getQueryCombinedStatus } from "efi-ui/query/getQueryCombinedStatus";
 import { useTokenDecimalsMulti } from "efi-ui/token/hooks/useTokenDecimalsMulti";
 import { useTokensWithBalance } from "efi-ui/token/hooks/useTokensWithBalance";
 import { NoPrincipalTokensInWalletNonIdealState } from "efi-ui/wallets/NoPrincipalTokensInWalletNonIdealState/NoPrincipalTokensInWalletNonIdealState";
 import { NoWalletConnectedNonIdealState } from "efi-ui/wallets/NoWalletConnectedNonIdealState/NoWalletConnectedNonIdealState";
 import { isDust } from "efi/coins/isDust";
-import { TrancheContracts } from "efi/tranche/tranches";
-import { getQueryCombinedStatus } from "efi-ui/query/getQueryCombinedStatus";
 import { PrincipalTokenInfos } from "efi/tokenlists";
+import { TrancheContracts } from "efi/tranche/tranches";
 
 interface PrincipalTokenPortfolioProps {
   chainId: number | undefined;
@@ -38,7 +38,8 @@ export function PrincipalTokenPortfolio({
 }: PrincipalTokenPortfolioProps): ReactElement {
   const principalTokens = usePrincipalTokenTab(library, account, provider);
 
-  const pendingPrincipalTokenTransaction = useNewPrincipalTokensPendingTransaction();
+  const pendingPrincipalTokenTransaction =
+    useNewPrincipalTokensPendingTransaction();
 
   const hasFYTs =
     !!principalTokens?.length || !!pendingPrincipalTokenTransaction;
@@ -115,7 +116,7 @@ function usePrincipalTokenTab(
 ) {
   const principalTokensWithBalanceResults = useTokensWithBalance(
     account,
-    (TrancheContracts as unknown) as ERC20Shim[],
+    TrancheContracts as unknown as ERC20Shim[],
     provider
   );
   const principalTokenDecimals = principalTokensWithBalanceResults?.map(
@@ -142,7 +143,7 @@ function usePrincipalTokenTab(
         number
       ] => zipped.every((v) => !!v))
       .filter(([{ balanceOf }, decimals]) => !isDust(balanceOf, decimals))
-      .map(([{ token }]) => (token as unknown) as Tranche);
+      .map(([{ token }]) => token as unknown as Tranche);
     return tokens;
   }, [principalTokenDecimals, principalTokensWithBalanceResults]);
 

@@ -2,10 +2,10 @@ import { useMemo } from "react";
 
 import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
 
+import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
 import { useConvergentCurvePools } from "efi-ui/pools/useConvergentCurvePools/useConvergentCurvePools";
 import { useTokensWithBalance } from "efi-ui/token/hooks/useTokensWithBalance";
 import { isDust } from "efi/coins/isDust";
-import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
 
 export function useConvergentCurvePoolsWithLPBalance(
   account: string | null | undefined

@@ -11,6 +11,7 @@ import {
   Tabs,
 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
+import { Popover2, Tooltip2 } from "@blueprintjs/popover2";
 import { t } from "ttag";
 
 import logoDark from "efi-static-assets/logos/svg/logo--dark.svg";
@@ -22,11 +23,9 @@ import { DarkModeSwitch } from "efi-ui/prefs/DarkModeSwitch/DarkModeSwitch";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
 import { WalletJazzicon } from "efi-ui/wallets/WalletJazzicon/WalletJazzicon";
-import { ChainId, isMainnet } from "efi/ethereum";
 import { formatChainName } from "efi/crypto/formatChainName";
+import { ChainId, isMainnet } from "efi/ethereum";
 import { formatWalletAddress } from "efi/wallets/formatWalletAddress";
-
-import { Popover2, Tooltip2 } from "@blueprintjs/popover2";
 
 interface TopbarNavigationProps {
   chainId: number | undefined;

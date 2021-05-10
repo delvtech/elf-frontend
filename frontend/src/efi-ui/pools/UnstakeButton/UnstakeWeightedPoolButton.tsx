@@ -3,16 +3,16 @@ import { Fragment, ReactElement, useCallback, useState } from "react";
 import { Button, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
+import { WeightedPool } from "elf-contracts/types/WeightedPool";
+import { Signer } from "ethers";
+import { formatUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { Signer } from "ethers";
-import { WeightedPool } from "elf-contracts/types/WeightedPool";
 import { useExitWeightedPool } from "efi-ui/pools/useUnstake/useExitWeightedPool";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
-import { formatUnits } from "ethers/lib/utils";
-import { clipStringValueToDecimals } from "efi/math/fixedPoint";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
+import { clipStringValueToDecimals } from "efi/math/fixedPoint";
 
 interface UnstakeWeightedPoolButtonProps {
   account: string | null | undefined;

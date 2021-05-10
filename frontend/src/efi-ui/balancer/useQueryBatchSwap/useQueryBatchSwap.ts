@@ -11,6 +11,7 @@ import { getQueryData } from "efi-ui/base/queryResults";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
+import { clipStringValueToDecimals } from "efi/math/fixedPoint";
 import {
   calcSwapInGivenOutCCPoolUNSAFE,
   calcSwapInGivenOutWeightedPoolUNSAFE,
@@ -23,7 +24,6 @@ import {
   isWeightedPool,
   PoolContract,
 } from "efi/pools/PoolContract";
-import { clipStringValueToDecimals } from "efi/math/fixedPoint";
 
 /**
  * Useful for previewing a swap in the balancer V2 vault.

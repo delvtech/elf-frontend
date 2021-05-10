@@ -13,10 +13,10 @@ import { useUserProxy } from "efi-ui/mint/hooks/userProxy";
 import { MintTransactionDetails } from "efi-ui/mint/MintTransactionDetails/MintTransactionDetails";
 import { getUserProxyApprovalMessage } from "efi-ui/mint/userProxyApprovalMessage";
 import { SwapDetailsForm } from "efi-ui/swaps/SwapDetailsPreview/SwapDetailsForm";
+import { TokenIcon } from "efi-ui/token/TokenIcon";
 import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/TransactionDrawer";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
-import { TokenIcon } from "efi-ui/token/TokenIcon";
 
 interface MintTransactionConfirmationDrawerProps {
   account: string | null | undefined;

@@ -1,8 +1,9 @@
-import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { Tranche } from "elf-contracts/types/Tranche";
 import groupBy from "lodash.groupby";
 import mapValues from "lodash.mapvalues";
 import zip from "lodash.zip";
+
+import { CryptoAsset } from "efi/crypto/CryptoAsset";
 
 export function useTranchesByBaseAsset(
   tranches: (Tranche | undefined)[],
@@ -21,11 +22,9 @@ export function useTranchesByBaseAsset(
   );
 
   // We only care about the tranches now, not the entire entry
-  const tranchesByBaseAsset: Record<
-    string,
-    Tranche[]
-  > = mapValues(entriesByBaseAsset, (group) =>
-    group.map(([tranche, unusedBaseAsset]) => tranche)
+  const tranchesByBaseAsset: Record<string, Tranche[]> = mapValues(
+    entriesByBaseAsset,
+    (group) => group.map(([tranche, unusedBaseAsset]) => tranche)
   );
 
   return tranchesByBaseAsset;

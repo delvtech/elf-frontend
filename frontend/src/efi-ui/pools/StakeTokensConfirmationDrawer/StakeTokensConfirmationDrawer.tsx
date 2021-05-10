@@ -2,6 +2,7 @@ import { ReactElement, useMemo } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
 import { BigNumber } from "ethers";
+import { parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import { getBalancerApprovalMessage } from "efi-ui/balancer/balancerApprovalMessage";
@@ -11,15 +12,14 @@ import { useCryptoAssetMetadata } from "efi-ui/crypto/hooks/useCryptoAssetMetada
 import { StakeConfirmationForm } from "efi-ui/pools/StakeTokensConfirmationDrawer/StakeConfirmationForm";
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
 import {
+  TransactionDrawer,
+  WalletApprovalInfo,
+} from "efi-ui/transactions/TransactionDrawer/TransactionDrawer";
+import {
   CryptoAsset,
   CryptoAssetType,
   findTokenContract,
 } from "efi/crypto/CryptoAsset";
-import { parseUnits } from "ethers/lib/utils";
-import {
-  TransactionDrawer,
-  WalletApprovalInfo,
-} from "efi-ui/transactions/TransactionDrawer/TransactionDrawer";
 
 interface StakingConfirmationDrawerProps {
   account: string | null | undefined;
@@ -60,14 +60,10 @@ export function StakingConfirmationDrawer({
   const balancerVault = useBalancerVault();
   // close the drawer after stake succeeds
 
-  const {
-    icon: baseAssetIcon,
-    decimals: baseAssetDecimals,
-  } = useCryptoAssetMetadata(baseAsset);
-  const {
-    icon: trancheAssetIcon,
-    decimals: trancheAssetDecimals,
-  } = useCryptoAssetMetadata(trancheAsset);
+  const { icon: baseAssetIcon, decimals: baseAssetDecimals } =
+    useCryptoAssetMetadata(baseAsset);
+  const { icon: trancheAssetIcon, decimals: trancheAssetDecimals } =
+    useCryptoAssetMetadata(trancheAsset);
 
   const baseAssetInBigNumber = parseUnits(
     baseAssetIn ?? "0",

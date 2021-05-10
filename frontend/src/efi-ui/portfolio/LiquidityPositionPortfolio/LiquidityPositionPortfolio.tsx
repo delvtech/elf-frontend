@@ -88,9 +88,8 @@ function useLPTokenTab(
   provider?: Provider
 ) {
   // const { currency } = useCurrencyPref();
-  const convergentCurvePoolsWithLPBalance = useConvergentCurvePoolsWithLPBalance(
-    account
-  );
+  const convergentCurvePoolsWithLPBalance =
+    useConvergentCurvePoolsWithLPBalance(account);
   const weightedPoolsWithLPBalance = useWeightedPoolsWithLPBalance(account);
 
   // const totalLiquidityConvergentCurvePools = useTotalLiquidityProvidedMulti(

@@ -1,15 +1,15 @@
 import { Fragment, ReactElement } from "react";
 
 import { Provider } from "@ethersproject/providers";
+import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
+import { WeightedPool } from "elf-contracts/types/WeightedPool";
 import { Signer } from "ethers";
 
 import tw from "efi-tailwindcss-classnames";
-import { PrincipalPoolCard } from "efi-ui/pools/PoolsTable/PrincipalPoolCard";
 import { InterestPoolCard } from "efi-ui/pools/PoolsTable/InterestPoolCard";
+import { PrincipalPoolCard } from "efi-ui/pools/PoolsTable/PrincipalPoolCard";
 import { useConvergentCurvePools } from "efi-ui/pools/useConvergentCurvePools/useConvergentCurvePools";
 import { useWeightedPools } from "efi-ui/pools/useWeightedPools/useWeightedPools";
-import { WeightedPool } from "elf-contracts/types/WeightedPool";
-import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
 
 interface PoolsTableProps {
   className?: string;

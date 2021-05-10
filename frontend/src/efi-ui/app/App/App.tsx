@@ -1,27 +1,27 @@
 import React, { FC, Fragment } from "react";
 import { ReactQueryDevtools } from "react-query/devtools";
 
-import { LocationProvider, Redirect, Router } from "@reach/router";
+import { FocusStyleManager, H1, Overlay } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
+import { LocationProvider, Redirect, Router } from "@reach/router";
+import { useWeb3React } from "@web3-react/core";
 import classNames from "classnames";
 
 import { tw } from "efi-tailwindcss-classnames";
 import { EarnView } from "efi-ui/earn/EarnView/EarnView";
-import { PoolsView } from "efi-ui/pools/PoolsView/PoolsView";
 import { FAQView } from "efi-ui/faq/FAQView";
 import { MintView } from "efi-ui/mint/MintView/MintView";
 import { MainNavigation } from "efi-ui/navigation/MainNavigation/MainNavigation";
 import { Navigation } from "efi-ui/navigation/navigation";
+import { PoolsView } from "efi-ui/pools/PoolsView/PoolsView";
 import { PoolView } from "efi-ui/pools/PoolView/PoolView";
 import { PortfolioView } from "efi-ui/portfolio/PortfolioView/PortfolioView";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
+import { useClearPendingTransactionOnMined } from "efi-ui/transactions/usePendingTransaction/useClearPendingTransaction";
+import { useTransactionToasts } from "efi-ui/transactions/useTransactionToasts";
 import { useSyncWithInjectedEthereum } from "efi-ui/wallets/hooks/useSyncWithInjectedEthereum";
-import { FocusStyleManager, Overlay, H1 } from "@blueprintjs/core";
 
 import styles from "./App.module.css";
-import { useWeb3React } from "@web3-react/core";
-import { useTransactionToasts } from "efi-ui/transactions/useTransactionToasts";
-import { useClearPendingTransactionOnMined } from "efi-ui/transactions/usePendingTransaction/useClearPendingTransaction";
 
 FocusStyleManager.onlyShowFocusOnTabs();
 

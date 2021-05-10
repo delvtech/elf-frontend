@@ -24,9 +24,8 @@ export type ContractFilterCall<
   TFilterName extends ContractFilterName<TContract>
 > = TContract["filters"][TFilterName];
 
-export type ContractQueryFilterCall<
-  TContract extends Contract
-> = TContract["queryFilter"];
+export type ContractQueryFilterCall<TContract extends Contract> =
+  TContract["queryFilter"];
 /**
  * Gets a type for the specific contract call
  */
@@ -38,16 +37,14 @@ export type ContractFunctionCall<
 /**
  * Gets a type for the methods available on a given contract
  */
-export type ContractMethodName<
-  TContract extends Contract
-> = keyof TContract["functions"];
+export type ContractMethodName<TContract extends Contract> =
+  keyof TContract["functions"];
 
 /**
  * Gets a type for the filters available on a given contract
  */
-export type ContractFilterName<
-  TContract extends Contract
-> = keyof TContract["filters"];
+export type ContractFilterName<TContract extends Contract> =
+  keyof TContract["filters"];
 
 /**
  * Gets a type for the return type of the given contract call

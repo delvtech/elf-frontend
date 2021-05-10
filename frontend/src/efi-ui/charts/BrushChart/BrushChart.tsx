@@ -80,7 +80,7 @@ export const BrushChart: FC<BrushChartProps> = withTooltip<
     tooltipLeft = 0,
   }) => {
     const [ref, dimensions] = useMeasure();
-    const refObject = (ref as unknown) as RefObject<HTMLDivElement>;
+    const refObject = ref as unknown as RefObject<HTMLDivElement>;
     const { width = 0, height = 0 } = dimensions;
     const [filteredData, setFilteredData] = useState(data);
 

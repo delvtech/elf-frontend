@@ -104,10 +104,8 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
     ({ address }) => address
   ).includes(yieldAssetAddress ?? "");
 
-  const {
-    symbol: trancheAssetSymbol,
-    label: trancheAssetSymbolLabel,
-  } = useTermAssetSymbol(yieldAssetAddress, baseAssetSymbol);
+  const { symbol: trancheAssetSymbol, label: trancheAssetSymbolLabel } =
+    useTermAssetSymbol(yieldAssetAddress, baseAssetSymbol);
 
   const baseAssetReserves = formatUnits(
     baseAssetPoolBalance ?? 0,

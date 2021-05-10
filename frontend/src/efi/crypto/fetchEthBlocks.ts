@@ -24,10 +24,8 @@ export async function fetchEthBlocks(
   startTimeSeconds: number,
   endTimeSeconds: number
 ): Promise<Block[][]> {
-  const {
-    startBlockNumber,
-    endBlockNumber,
-  } = await fetchFirstAndLastBlockNumber(startTimeSeconds, endTimeSeconds);
+  const { startBlockNumber, endBlockNumber } =
+    await fetchFirstAndLastBlockNumber(startTimeSeconds, endTimeSeconds);
 
   // get blocks back in sets of 500 so that requests don't fail.  TheGraph only lets you query 500
   // at a time.
