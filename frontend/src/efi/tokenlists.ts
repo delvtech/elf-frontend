@@ -29,9 +29,19 @@ export interface PrincipalTokenInfo extends TokenInfo {
     underlying: string;
 
     /**
+     * The interest token for the principal token
+     */
+    interestToken: string;
+
+    /**
      * Number of seconds after epoch when the principal token can be redeemed
      */
     unlockTimestamp: number;
+
+    /**
+     * The wrapped position, eg: an Element yearn vault asset proxy
+     */
+    position: string;
   };
 }
 export interface YieldTokenInfo extends TokenInfo {
@@ -40,6 +50,11 @@ export interface YieldTokenInfo extends TokenInfo {
      * The underlying base asset for the yield token
      */
     underlying: string;
+
+    /**
+     * The Principal Token's address
+     */
+    tranche: string;
   };
 }
 export interface PrincipalTokenPoolInfo extends TokenInfo {
@@ -68,13 +83,33 @@ export interface YieldTokenPoolInfo extends TokenInfo {
   };
 }
 
+type AnyTokenListInfo =
+  | TokenInfo
+  | PrincipalTokenInfo
+  | YieldTokenInfo
+  | PrincipalTokenPoolInfo
+  | YieldTokenPoolInfo;
+
 const tokenInfos = tokenListJson.tokens;
 
+/**
+ * Helper function for looking up a tokenlist info when you know the type of TokenInfo you want.
+ * This is useful when you want strongly-typed properties for `extensions`, eg:
+ *
+ * const principalToken = getTokenInfo<PrincipalTokenInfo>('0xdeadbeef')
+ * const { extensions: { underlying, ... } } = principalToken;
+ */
+export function getTokenInfo<T extends TokenInfo>(address: string): T {
+  return TokenMetadata[address] as T;
+}
 /**
  * A lookup object for getting the name, symbol, and decimals of any principal
  * token, yield token, or base asset address.
  */
-export const TokenMetadata = keyBy(tokenInfos, "address");
+export const TokenMetadata: Record<string, AnyTokenListInfo> = keyBy(
+  tokenInfos,
+  "address"
+);
 
 /**
  * The list of all base assets, it includes weth instead of eth
