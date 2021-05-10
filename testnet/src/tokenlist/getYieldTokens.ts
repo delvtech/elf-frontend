@@ -15,22 +15,32 @@ export const provider = hre.ethers.provider;
 export async function getYieldTokensFromTranches(tranches: Tranche[], chainId: number) {
   const interestTokenAddresses = await Promise.all(tranches.map(tranche => tranche.interestToken()));
   const interestTokens = interestTokenAddresses.map(address => InterestToken__factory.connect(address, provider));
-  const underlyingAddresses = await Promise.all(tranches.map(tranche => tranche.underlying()));
+  const trancheAddresses = await Promise.all(interestTokens.map(interestToken => interestToken.tranche()));
   const underlyingSymbols = await getUnderlyingSymbols(interestTokens);
   const yieldTokenNames = formatYieldTokenNames(underlyingSymbols);
   const yieldTokenSymbols = formatYieldTokenSymbols(underlyingSymbols);
 
+  // It's generally useful to include the base asset yts even though it isn't
+  // directly available on the InterestToken
+  const underlyingAddresses = await Promise.all(tranches.map(tranche => tranche.underlying()));
+
+
   const decimals = await Promise.all(interestTokens.map(interestToken => interestToken.decimals()));
 
-  const yieldTokensList: TokenInfo[] = zip(interestTokenAddresses, yieldTokenSymbols, yieldTokenNames, decimals, underlyingAddresses)
-    .map(([address, symbol, name, decimal, underlying]) => {
+  const yieldTokensList: TokenInfo[] = zip<any>(
+    interestTokenAddresses, yieldTokenSymbols, yieldTokenNames,
+     decimals, underlyingAddresses, trancheAddresses)
+    .map(([address, symbol, name, decimal, underlying, trancheAddress]) => {
       return {
         chainId,
         address: address as string,
         symbol: symbol as string,
         decimals: decimal as number,
         name: name as string,
-        extensions: {underlying: underlying as string},
+        extensions: {
+          tranche: trancheAddress as string,
+          underlying: underlying as string
+        },
         tags: [TokenListTag.YIELD],
         // TODO: What logo do we want to show for interest tokens?
         // logoURI: ""
