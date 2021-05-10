@@ -20,7 +20,7 @@ import {
 import { KNOWN_BASE_ASSETS } from "efi/addresses";
 import { convertToFiatBalance } from "efi/money/convertToFiatBalance";
 import { PoolContract } from "efi/pools/PoolContract";
-import { jsonRpcProvider } from "efi/providers/providers";
+import { defaultProvider } from "efi/providers/providers";
 import { useSmartContractFromFactoryMulti } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
 
 export function useTotalFiatLiquidityForPool(
@@ -37,7 +37,7 @@ export function useTotalFiatLiquidityForPool(
   const baseAssetBalance = balances?.[baseAssetIndex];
 
   const baseAssetContract = baseAssetAddress
-    ? ERC20__factory.connect(baseAssetAddress, jsonRpcProvider)
+    ? ERC20__factory.connect(baseAssetAddress, defaultProvider)
     : undefined;
   const [baseAssetPrice] = useTokenPrice(baseAssetContract, currency);
   const { data: baseAssetDecimals } = useTokenDecimals(baseAssetContract);
@@ -53,7 +53,7 @@ export function useTotalFiatLiquidityForPool(
   const yieldAssetAddress = tokens?.[yieldAssetIndex];
   const yieldAssetBalance = balances?.[yieldAssetIndex];
   const yieldAssetContract = yieldAssetAddress
-    ? ERC20__factory.connect(yieldAssetAddress, jsonRpcProvider)
+    ? ERC20__factory.connect(yieldAssetAddress, defaultProvider)
     : undefined;
   const { data: yieldAssetDecimals } = useTokenDecimals(yieldAssetContract);
 

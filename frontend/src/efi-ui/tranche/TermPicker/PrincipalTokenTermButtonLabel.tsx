@@ -16,7 +16,7 @@ import { useUnderlyingVaultForTranche } from "efi-ui/tranche/useUnderlyingVaultF
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
-import { jsonRpcProvider } from "efi/providers/providers";
+import { defaultProvider } from "efi/providers/providers";
 import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
 import { formatPercent } from "efi/base/formatPercent";
 
@@ -45,7 +45,7 @@ export function PrincipalTokenTermButtonLabel({
     getQueryData(unlockTimestampResult)
   );
 
-  const pool = usePoolForToken(tranche as ERC20Shim, jsonRpcProvider);
+  const pool = usePoolForToken(tranche as ERC20Shim, defaultProvider);
   const baseAssetSymbol = useCryptoSymbol(baseAsset);
   const trancheSpotPrice = usePoolSpotPrice(pool, tranche as ERC20Shim);
 

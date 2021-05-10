@@ -14,7 +14,7 @@ export const alchemyWebSocketProvider = new providers.AlchemyWebSocketProvider(
   ALCHEMY_GOERLI_KEY
 );
 
-export const jsonRpcProvider = getProvider();
+export const defaultProvider = getProvider();
 
 // Default rpc host to local, but check the chain id in the addresses.json for
 // final say

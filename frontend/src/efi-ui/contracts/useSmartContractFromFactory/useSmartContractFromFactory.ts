@@ -3,7 +3,7 @@ import { Contract, Signer } from "ethers";
 
 import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
 import { FactoryConnectFn } from "efi/contracts/FactoryConnectFn";
-import { jsonRpcProvider } from "efi/providers/providers";
+import { defaultProvider } from "efi/providers/providers";
 
 /**
  * @deprecated hooks-based access for smart contracts is deprecated. Use
@@ -14,7 +14,7 @@ export function useSmartContractFromFactory<TReturnContract extends Contract>(
   factoryConnect: FactoryConnectFn<TReturnContract>,
   signerOrProvider?: Signer | Provider
 ): TReturnContract | undefined {
-  const signer = signerOrProvider ?? jsonRpcProvider;
+  const signer = signerOrProvider ?? defaultProvider;
   return getSmartContractFromRegistry<TReturnContract>(
     address,
     factoryConnect,
@@ -33,7 +33,7 @@ export function useSmartContractFromFactoryMulti<
   factoryConnect: FactoryConnectFn<TReturnContract>,
   signerOrProvider?: Signer | Provider
 ): (TReturnContract | undefined)[] {
-  const signer = signerOrProvider ?? jsonRpcProvider;
+  const signer = signerOrProvider ?? defaultProvider;
   return addresses.map((address) =>
     getSmartContractFromRegistry<TReturnContract>(
       address,
