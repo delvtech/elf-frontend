@@ -1,5 +1,6 @@
 import React, { CSSProperties, ReactElement, useCallback } from "react";
 
+import { Button, ButtonGroup } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
 
@@ -10,7 +11,6 @@ import {
   injectedConnector,
   walletConnectConnector,
 } from "efi/wallets/connectors";
-import { Button, ButtonGroup } from "@blueprintjs/core";
 
 const iconStyle: CSSProperties = {
   height: 48,

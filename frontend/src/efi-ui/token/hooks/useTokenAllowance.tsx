@@ -1,9 +1,11 @@
-import { ERC20 } from "elf-contracts/types/ERC20";
-import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { QueryObserverResult } from "react-query";
+
+import { ERC20 } from "elf-contracts/types/ERC20";
 import { BigNumber } from "ethers";
-import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
 import zip from "lodash.zip";
+
+import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
+import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
 import { ContractMethodArgs } from "efi/contracts/types";
 
 export function useTokenAllowance(

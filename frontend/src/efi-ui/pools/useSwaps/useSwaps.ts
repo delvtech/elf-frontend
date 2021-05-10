@@ -1,5 +1,6 @@
 import { SwapEventWithTimeStamp } from "efi-balancer/SwapEvent";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
+import { useSmartContractEvents } from "efi-ui/contracts/useSmartContractEvents/useSmartContractEvents";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useLatestBlockNumber } from "efi-ui/ethereum/hooks/useLatestBlockNumber";
 import {
@@ -8,7 +9,6 @@ import {
 } from "efi-ui/ethereum/usePreviousBlockNumber/usePreviousBlockNumber";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
 import { PoolContract } from "efi/pools/PoolContract";
-import { useSmartContractEvents } from "efi-ui/contracts/useSmartContractEvents/useSmartContractEvents";
 
 export function useSwaps(
   pool: PoolContract | undefined,

@@ -8,9 +8,9 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { SellPrincipalTokensTransactionDrawer } from "efi-ui/graveyard/SellPrincipalTokensTransactionDrawer/SellPrincipalTokensTransactionDrawer";
-import { PoolContract } from "efi/pools/PoolContract";
-import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { TokenIcon } from "efi-ui/token/TokenIcon";
+import { CryptoAsset } from "efi/crypto/CryptoAsset";
+import { PoolContract } from "efi/pools/PoolContract";
 
 interface SellPrincipalTokensProps {
   chainId: number | undefined;

@@ -9,16 +9,17 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
+import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
-import { RedeemForm } from "efi-ui/tranche/RedeemForm/RedeemForm";
-import { WalletDrawer } from "efi-ui/wallets/WalletDrawer/WalletDrawer";
-import { CryptoAsset } from "efi/crypto/CryptoAsset";
-import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
-import { formatFullDate } from "efi/base/dates";
 import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
+import { RedeemForm } from "efi-ui/tranche/RedeemForm/RedeemForm";
+import { WalletDrawer } from "efi-ui/wallets/WalletDrawer/WalletDrawer";
+import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
+import { formatFullDate } from "efi/base/dates";
+import { CryptoAsset } from "efi/crypto/CryptoAsset";
+
 import { useWithdrawPrincipal } from "./useWithdrawPrincipal";
 
 interface RedeemPrincipalTokensDrawerProps {

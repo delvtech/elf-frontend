@@ -15,9 +15,8 @@ export function useYieldTokensWithBalance(
   provider?: Provider
 ): InterestToken[] {
   // InterestTokens are sourced from the Tranche contracts
-  const interestTokenAddressResults = useTrancheInterestTokenMulti(
-    TrancheContracts
-  );
+  const interestTokenAddressResults =
+    useTrancheInterestTokenMulti(TrancheContracts);
   const interestTokenContracts = useSmartContractFromFactoryMulti(
     getQueriesData(interestTokenAddressResults),
     InterestToken__factory.connect

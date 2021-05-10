@@ -14,8 +14,8 @@ export interface PrincipalTokenPoolInfoWithContract
   contract: ConvergentCurvePool;
 }
 
-export const principalTokenPools: PrincipalTokenPoolInfoWithContract[] = PrincipalTokenPoolInfos.map(
-  (info) => {
+export const principalTokenPools: PrincipalTokenPoolInfoWithContract[] =
+  PrincipalTokenPoolInfos.map((info) => {
     const contract = getSmartContractFromRegistry(
       info.address,
       ConvergentCurvePool__factory.connect
@@ -24,8 +24,7 @@ export const principalTokenPools: PrincipalTokenPoolInfoWithContract[] = Princip
       ...info,
       contract,
     };
-  }
-);
+  });
 
 /**
  * @deprecated, just use principalTokenPools

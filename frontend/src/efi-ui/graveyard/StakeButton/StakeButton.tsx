@@ -8,8 +8,8 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { StakePrincipalTokensDrawer } from "efi-ui/graveyard/StakePrincipalTokensDrawer/StakePrincipalTokensDrawer";
-import { PoolContract } from "efi/pools/PoolContract";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
+import { PoolContract } from "efi/pools/PoolContract";
 
 interface StakeButtonProps {
   account: string | null | undefined;

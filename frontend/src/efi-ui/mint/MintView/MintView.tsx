@@ -4,13 +4,13 @@ import { Intent, Tag } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { RouteComponentProps } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
+import { WeightedPool } from "elf-contracts/types/WeightedPool";
 import { Signer } from "ethers";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { MintPoolCard } from "efi-ui/pools/PoolsTable/MintPoolCard";
-import { WeightedPool } from "elf-contracts/types/WeightedPool";
 import { useWeightedPools } from "efi-ui/pools/useWeightedPools/useWeightedPools";
 
 interface MintViewProps extends RouteComponentProps {}

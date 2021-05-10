@@ -15,10 +15,10 @@ import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice
 import { useUnderlyingVaultForTranche } from "efi-ui/tranche/useUnderlyingVaultForTranche";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
+import { formatPercent } from "efi/base/formatPercent";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { defaultProvider } from "efi/providers/providers";
 import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
-import { formatPercent } from "efi/base/formatPercent";
 
 interface PrincipalTokenTermButtonLabelProps {
   tranche: Tranche | undefined;

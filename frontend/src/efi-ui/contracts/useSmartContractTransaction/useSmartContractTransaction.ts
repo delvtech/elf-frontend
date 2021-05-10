@@ -1,8 +1,9 @@
+import { useMutation, UseMutationResult } from "react-query";
+
 import { Contract, ContractTransaction, Signer } from "ethers";
 
-import { useMutation, UseMutationResult } from "react-query";
-import { ContractMethodArgs, ContractMethodName } from "efi/contracts/types";
 import { lookupAddressKey } from "efi/addresses";
+import { ContractMethodArgs, ContractMethodName } from "efi/contracts/types";
 
 export interface UseSmartContractTransactionOptions<
   TContract extends Contract,

@@ -24,26 +24,23 @@ test("provides data from smart contract read methods", async () => {
   const mockFn1 = jest.fn(async () => stubContractName1);
   const mockFn2 = jest.fn(async () => stubContractName2);
 
-  const contract1 = ({
+  const contract1 = {
     address: "0xContract1",
     callStatic: {
       name: mockFn1,
     },
-  } as unknown) as ERC20;
-  const contract2 = ({
+  } as unknown as ERC20;
+  const contract2 = {
     address: "0xContract2",
     callStatic: {
       name: mockFn2,
     },
-  } as unknown) as ERC20;
+  } as unknown as ERC20;
 
   const queryClient = createQueryClient();
-  const {
-    result,
-    waitForNextUpdate,
-    rerender,
-  } = renderHookWithClient(queryClient, () =>
-    useSmartContractReadCalls([contract1, contract2], "name")
+  const { result, waitForNextUpdate, rerender } = renderHookWithClient(
+    queryClient,
+    () => useSmartContractReadCalls([contract1, contract2], "name")
   );
 
   // called but hasn't resolved yet
@@ -74,18 +71,18 @@ test("passes single arguments object to all smart contract read methods", async 
   const mockFn1 = jest.fn(async (account: string) => stubBalanceOf1);
   const mockFn2 = jest.fn(async (account: string) => stubBalanceOf2);
 
-  const contract1 = ({
+  const contract1 = {
     address: "0xContract1",
     callStatic: {
       balanceOf: mockFn1,
     },
-  } as unknown) as ERC20;
-  const contract2 = ({
+  } as unknown as ERC20;
+  const contract2 = {
     address: "0xContract2",
     callStatic: {
       balanceOf: mockFn2,
     },
-  } as unknown) as ERC20;
+  } as unknown as ERC20;
 
   const queryClient = createQueryClient();
   const { result, waitForNextUpdate, rerender } = renderHookWithClient(
@@ -125,18 +122,18 @@ test("passes arguments object list to smart contract read methods", async () => 
   const mockFn1 = jest.fn(async (account: string) => stubBalanceOf1);
   const mockFn2 = jest.fn(async (account: string) => stubBalanceOf2);
 
-  const contract1 = ({
+  const contract1 = {
     address: "0xContract1",
     callStatic: {
       balanceOf: mockFn1,
     },
-  } as unknown) as ERC20;
-  const contract2 = ({
+  } as unknown as ERC20;
+  const contract2 = {
     address: "0xContract2",
     callStatic: {
       balanceOf: mockFn2,
     },
-  } as unknown) as ERC20;
+  } as unknown as ERC20;
 
   const queryClient = createQueryClient();
   const { result, waitForNextUpdate, rerender } = renderHookWithClient(
@@ -181,18 +178,18 @@ test("properly handles enabled option", async () => {
   const mockFn1 = jest.fn(async () => stubContractName1);
   const mockFn2 = jest.fn(async () => stubContractName2);
 
-  const contract1 = ({
+  const contract1 = {
     address: "0xContract1",
     callStatic: {
       name: mockFn1,
     },
-  } as unknown) as ERC20;
-  const contract2 = ({
+  } as unknown as ERC20;
+  const contract2 = {
     address: "0xContract2",
     callStatic: {
       name: mockFn2,
     },
-  } as unknown) as ERC20;
+  } as unknown as ERC20;
 
   const queryClient = createQueryClient();
   const { result, waitForNextUpdate, rerender } = renderHookWithClient<

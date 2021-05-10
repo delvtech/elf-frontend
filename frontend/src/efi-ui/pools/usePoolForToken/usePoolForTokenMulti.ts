@@ -4,9 +4,9 @@ import { Signer } from "ethers";
 import zip from "lodash.zip";
 
 import { getQueriesData } from "efi-ui/base/queryResults";
-import { PoolContract } from "efi/pools/PoolContract";
 import { useAllPools } from "efi-ui/pools/useAllPools/useAllPools";
 import { usePoolTokensMulti } from "efi-ui/pools/usePoolTokens/usePoolTokensMulti";
+import { PoolContract } from "efi/pools/PoolContract";
 
 export function usePoolForTokenMulti(
   tokenContracts: (ERC20 | undefined)[],

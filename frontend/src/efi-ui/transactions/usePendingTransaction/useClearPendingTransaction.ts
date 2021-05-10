@@ -4,10 +4,8 @@ import { usePendingTransactionPref } from "efi-ui/transactions/usePendingTransac
 import { defaultProvider } from "efi/providers/providers";
 
 export function useClearPendingTransactionOnMined(): void {
-  const {
-    transactionHash,
-    clearPendingTransactionPref,
-  } = usePendingTransactionPref();
+  const { transactionHash, clearPendingTransactionPref } =
+    usePendingTransactionPref();
 
   useEffect(() => {
     if (!transactionHash) {

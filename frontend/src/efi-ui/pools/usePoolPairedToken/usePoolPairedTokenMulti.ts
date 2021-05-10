@@ -3,9 +3,9 @@ import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
 import zip from "lodash.zip";
 
 import { getQueriesData } from "efi-ui/base/queryResults";
+import { useSmartContractFromFactoryMulti } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
 import { usePoolTokensMulti } from "efi-ui/pools/usePoolTokens/usePoolTokensMulti";
 import { PoolContract } from "efi/pools/PoolContract";
-import { useSmartContractFromFactoryMulti } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
 
 export function usePoolPairedTokenMulti(
   pools: (PoolContract | undefined)[],

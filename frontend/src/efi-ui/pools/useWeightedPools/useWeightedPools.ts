@@ -10,8 +10,8 @@ export interface YieldTokenPoolInfoWithContract extends YieldTokenPoolInfo {
   contract: WeightedPool;
 }
 
-export const yieldTokenPools: YieldTokenPoolInfoWithContract[] = YieldTokenPoolInfos.map(
-  (info) => {
+export const yieldTokenPools: YieldTokenPoolInfoWithContract[] =
+  YieldTokenPoolInfos.map((info) => {
     const contract = getSmartContractFromRegistry(
       info.address,
       WeightedPool__factory.connect
@@ -20,8 +20,7 @@ export const yieldTokenPools: YieldTokenPoolInfoWithContract[] = YieldTokenPoolI
       ...info,
       contract,
     };
-  }
-);
+  });
 
 /**
  * @deprecated, just use yieldTokenPools

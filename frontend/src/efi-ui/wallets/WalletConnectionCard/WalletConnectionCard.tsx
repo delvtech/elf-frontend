@@ -2,15 +2,15 @@ import React, { FC, ReactElement, useCallback, useState } from "react";
 
 import { Callout, Classes, Colors, Icon, Tag } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
+import { Popover2 } from "@blueprintjs/popover2";
 import classNames from "classnames";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
+import { ConnectWalletButtons } from "efi-ui/wallets/ConnectWalletButtons/ConnectWalletButtons";
 import { isMainnet } from "efi/ethereum";
 
-import { Popover2 } from "@blueprintjs/popover2";
-import { ConnectWalletButtons } from "efi-ui/wallets/ConnectWalletButtons/ConnectWalletButtons";
 import { WalletConnectionSummary } from "./WalletConnectionSummary";
 
 interface WalletConnectionCardProps {

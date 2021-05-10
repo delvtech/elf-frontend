@@ -1,11 +1,11 @@
 import { ReactElement } from "react";
 
 import classNames from "classnames";
+import { formatDistance, formatDuration, intervalToDuration } from "date-fns";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { getIsMature } from "efi/tranche/getIsMature";
-import { formatDistance, formatDuration, intervalToDuration } from "date-fns";
 
 interface TimeLeftLabelProps {
   maturationDate: Date | undefined;

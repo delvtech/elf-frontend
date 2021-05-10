@@ -10,9 +10,9 @@ import tw from "efi-tailwindcss-classnames";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { WalletConnectionSummary } from "efi-ui/wallets/WalletConnectionCard/WalletConnectionSummary";
 import { getConnectorName } from "efi/wallets/connectors";
-import styles from "./WalletDrawer.module.css";
 
 import { ConnectWalletCallout } from "./ConnectWalletCallout";
+import styles from "./WalletDrawer.module.css";
 
 interface WalletDrawerProps {
   isOpen: boolean;

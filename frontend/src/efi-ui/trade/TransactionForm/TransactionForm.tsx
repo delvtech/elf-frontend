@@ -10,10 +10,10 @@ import {
   NumericInputOptions,
   useNumericInput,
 } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
+import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import styles from "efi-ui/trade/TransactionForm/TransactionForm.module.css";
 import { formatCurrency } from "efi/base/formatCurrency/formatCurrency";
 import { TokenBalance } from "efi/crypto/TokenBalance";
-import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 
 interface TransactionFormProps {
   formDisabled?: boolean;

@@ -11,16 +11,16 @@ import { BigNumber, Signer } from "ethers";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
+import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
+import { useERC20Approve } from "efi-ui/token/hooks/useERC20Approve";
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
+import { MAX_ALLOWANCE } from "efi/contracts/token";
 import {
   CryptoAsset,
   CryptoAssetType,
   findTokenContract,
 } from "efi/crypto/CryptoAsset";
-import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
-import { useERC20Approve } from "efi-ui/token/hooks/useERC20Approve";
-import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
-import { MAX_ALLOWANCE } from "efi/contracts/token";
 
 interface WalletApprovalCalloutPropsOld {
   signer: Signer | undefined;

@@ -7,8 +7,8 @@ import { BigNumber, Signer } from "ethers";
 import { t } from "ttag";
 
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
 import { useERC20Approve } from "efi-ui/token/hooks/useERC20Approve";
+import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
 
 interface ERC20ApproveButtonProps {
   owner: string | null | undefined;

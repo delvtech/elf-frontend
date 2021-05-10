@@ -1,8 +1,8 @@
 import React from "react";
 
+import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { renderWithClient } from "efi-ui/testing/renderWithClient";
 import { createQueryClient } from "efi/queryClient";
-import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 
 test("should render normally", async () => {
   const queryClient = createQueryClient();

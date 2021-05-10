@@ -1,8 +1,9 @@
+import { Query } from "react-query";
+
+import { Contract } from "@ethersproject/contracts";
 import isEqual from "lodash.isequal";
 
 import { makeSmartContractReadCallQueryKey } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { Query } from "react-query";
-import { Contract } from "@ethersproject/contracts";
 import { ContractMethodName } from "efi/contracts/types";
 
 /**

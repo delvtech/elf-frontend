@@ -1,26 +1,26 @@
 import React, { Fragment, ReactElement, useCallback, useState } from "react";
-import { Link } from "@reach/router";
 
-import { Button, Intent, Callout } from "@blueprintjs/core";
-import classNames from "classnames";
+import { Button, Callout, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
+import { Link } from "@reach/router";
 import { AbstractConnector } from "@web3-react/abstract-connector";
+import classNames from "classnames";
+import { Tranche } from "elf-contracts/types/Tranche";
+import { parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useCryptoBalance } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
-import { parseUnits } from "ethers/lib/utils";
 import { useMintPreview } from "efi-ui/mint/hooks/useMintPreview";
-import { MintTransactionConfirmationDrawer } from "efi-ui/mint/MintTransactionConfirmationDrawer/MintTransactionConfirmationDrawer";
 import { MintInput } from "efi-ui/mint/MintInput/MintInput";
+import { MintTransactionConfirmationDrawer } from "efi-ui/mint/MintTransactionConfirmationDrawer/MintTransactionConfirmationDrawer";
+import { TokenIcon } from "efi-ui/token/TokenIcon";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
 import { formatBalance } from "efi/base/formatBalance";
-import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
-import { TokenIcon } from "efi-ui/token/TokenIcon";
-import { Tranche } from "elf-contracts/types/Tranche";
 
 import styles from "./MintCard.module.css";
 

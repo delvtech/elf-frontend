@@ -1,11 +1,11 @@
 import { ConvergentPoolFactory__factory } from "elf-contracts/types/factories/ConvergentPoolFactory__factory";
+import { WeightedPoolFactory__factory } from "elf-contracts/types/factories/WeightedPoolFactory__factory";
 
 import { useSmartContractEvents } from "efi-ui/contracts/useSmartContractEvents/useSmartContractEvents";
 import { useBlockFromTag } from "efi-ui/provider/useBlockFromTag/useBlockFromTag";
 import ContractAddresses from "efi/addresses";
-import { PoolContract } from "efi/pools/PoolContract";
-import { WeightedPoolFactory__factory } from "elf-contracts/types/factories/WeightedPoolFactory__factory";
 import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
+import { PoolContract } from "efi/pools/PoolContract";
 
 export function usePoolCreatedAt(
   pool: PoolContract | undefined

@@ -1,5 +1,6 @@
-import { BigNumber } from "ethers";
 import { QueryObserverResult } from "react-query";
+
+import { BigNumber } from "ethers";
 
 export type UsePoolTokensQueryResult = QueryObserverResult<
   [

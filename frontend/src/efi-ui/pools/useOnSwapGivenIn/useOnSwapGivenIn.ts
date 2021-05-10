@@ -1,17 +1,17 @@
 import { QueryObserverResult } from "react-query";
 
 import { ERC20 } from "elf-contracts/types/ERC20";
+import { ERC20Permit } from "elf-contracts/types/ERC20Permit";
 import { BigNumber } from "ethers";
 
 import { getQueryData } from "efi-ui/base/queryResults";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
+import { useLatestBlockNumber } from "efi-ui/ethereum/hooks/useLatestBlockNumber";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { PoolContract } from "efi/pools/PoolContract";
 
 import { makeOnSwapGivenInCallArgs } from "./makeOnSwapGivenInCallArgs";
-import { useLatestBlockNumber } from "efi-ui/ethereum/hooks/useLatestBlockNumber";
-import { ERC20Permit } from "elf-contracts/types/ERC20Permit";
 
 export function useOnSwapGivenIn(
   pool: PoolContract | undefined,

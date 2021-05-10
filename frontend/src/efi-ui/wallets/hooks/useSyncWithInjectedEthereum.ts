@@ -1,6 +1,7 @@
+import { useEffect } from "react";
+
 import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
-import { useEffect } from "react";
 
 import { ChainId } from "efi/ethereum";
 import { injectedConnector } from "efi/wallets/connectors";

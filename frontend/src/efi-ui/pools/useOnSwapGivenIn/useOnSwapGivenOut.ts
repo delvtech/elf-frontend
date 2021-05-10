@@ -5,12 +5,11 @@ import { BigNumber } from "ethers";
 
 import { getQueryData } from "efi-ui/base/queryResults";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
-import { PoolContract } from "efi/pools/PoolContract";
-
 import { useLatestBlockNumber } from "efi-ui/ethereum/hooks/useLatestBlockNumber";
 import { makeOnSwapGivenOutCallArgs } from "efi-ui/pools/useOnSwapGivenIn/makeOnSwapGivenOutCallArgs";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
+import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
+import { PoolContract } from "efi/pools/PoolContract";
 
 export function useOnSwapGivenOut(
   pool: PoolContract | undefined,

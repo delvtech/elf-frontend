@@ -2,18 +2,18 @@ import { ReactElement } from "react";
 
 import { Intent, Tag } from "@blueprintjs/core";
 import { Tranche } from "elf-contracts/types/Tranche";
+import { Currencies, Money } from "ts-money";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { getQueryData } from "efi-ui/base/queryResults";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
+import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
-import { CryptoAsset } from "efi/crypto/CryptoAsset";
-import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { formatPercent } from "efi/base/formatPercent";
-import { Currencies, Money } from "ts-money";
+import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { formatMoney } from "efi/money/formatMoney";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 

@@ -1,10 +1,12 @@
-import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
-import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
+import { QueryObserverResult } from "react-query";
+
 import { InterestToken__factory } from "elf-contracts/types/factories/InterestToken__factory";
 import { InterestToken } from "elf-contracts/types/InterestToken";
 import { Tranche } from "elf-contracts/types/Tranche";
-import { QueryObserverResult } from "react-query";
+
+import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
+import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
+import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
 
 export function useInterestTokenForTranche(
   tranche: Tranche | undefined

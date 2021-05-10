@@ -1,20 +1,20 @@
 import { ReactElement } from "react";
 
 import { Button, Intent, Tag } from "@blueprintjs/core";
+import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
 import { BigNumber, Signer } from "ethers";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { getQueriesData } from "efi-ui/base/queryResults";
+import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useTokenAllowanceMulti } from "efi-ui/token/hooks/useTokenAllowance";
 import { WalletDrawer } from "efi-ui/wallets/WalletDrawer/WalletDrawer";
+import { MAX_ALLOWANCE } from "efi/contracts/token";
 import { CryptoAsset, findTokenContract } from "efi/crypto/CryptoAsset";
 
 import { WalletApprovalCallout } from "./WalletApprovalCallout";
-import { IconNames } from "@blueprintjs/icons";
-import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
-import { getQueriesData } from "efi-ui/base/queryResults";
-import { MAX_ALLOWANCE } from "efi/contracts/token";
 
 export interface WalletApprovalInfo {
   spenderAddress: string | null | undefined;

@@ -8,9 +8,9 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
+import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
 
 import styles from "./styles.module.css";
-import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
 
 interface RedeemFormProps {
   tranche: Tranche | undefined;

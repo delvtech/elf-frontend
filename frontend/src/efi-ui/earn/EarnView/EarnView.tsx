@@ -1,9 +1,9 @@
 import React, { FC, Fragment, ReactElement } from "react";
 import { Helmet } from "react-helmet";
 
-import { Web3Provider } from "@ethersproject/providers";
 import { Intent, Tag } from "@blueprintjs/core";
-import { RouteComponentProps, Link } from "@reach/router";
+import { Web3Provider } from "@ethersproject/providers";
+import { Link, RouteComponentProps } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
 import uniqBy from "lodash.uniqby";
 import { jt, t } from "ttag";

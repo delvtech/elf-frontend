@@ -1,11 +1,11 @@
 import React, { FC } from "react";
 
 import { Callout } from "@blueprintjs/core";
+import classNames from "classnames";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { ConnectWalletButtons } from "efi-ui/wallets/ConnectWalletButtons/ConnectWalletButtons";
-import classNames from "classnames";
 
 export const ConnectWalletCallout: FC<unknown> = () => {
   return (

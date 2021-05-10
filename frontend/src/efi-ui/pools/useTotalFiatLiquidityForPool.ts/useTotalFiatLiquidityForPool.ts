@@ -5,6 +5,7 @@ import zipObject from "lodash.zipobject";
 import { Money } from "ts-money";
 
 import { getQueriesData } from "efi-ui/base/queryResults";
+import { useSmartContractFromFactoryMulti } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
 import { useConvertToFiat } from "efi-ui/money/hooks/useConvertToFiat";
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { usePoolTokenPricesMulti } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
@@ -21,15 +22,13 @@ import { KNOWN_BASE_ASSETS } from "efi/addresses";
 import { convertToFiatBalance } from "efi/money/convertToFiatBalance";
 import { PoolContract } from "efi/pools/PoolContract";
 import { defaultProvider } from "efi/providers/providers";
-import { useSmartContractFromFactoryMulti } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
 
 export function useTotalFiatLiquidityForPool(
   pool: PoolContract | undefined
 ): Money | undefined {
   const { currency } = useCurrencyPref();
-  const { data: [tokens, balances] = [undefined, undefined] } = usePoolTokens(
-    pool
-  );
+  const { data: [tokens, balances] = [undefined, undefined] } =
+    usePoolTokens(pool);
 
   const baseAssetIndex: number =
     tokens?.findIndex((address) => KNOWN_BASE_ASSETS.includes(address)) ?? 0;

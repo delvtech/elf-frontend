@@ -1,5 +1,6 @@
 import React, { ReactElement } from "react";
 
+import { Classes } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { Select } from "@blueprintjs/select";
 import classNames from "classnames";
@@ -9,7 +10,6 @@ import styles from "efi-ui/crypto/CryptoAssetPicker/styles.module.css";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 
 import { CryptoAssetButton } from "./CryptoAssetButton";
-import { Classes } from "@blueprintjs/core";
 
 interface CryptoAssetPickerProps {
   className?: string;

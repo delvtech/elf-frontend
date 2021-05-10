@@ -1,8 +1,8 @@
 import zip from "lodash.zip";
 import { Money } from "ts-money";
 
-import { useTotalLiquidityForPoolMulti } from "efi-ui/pools/useTotalFiatLiquidityForPool.ts/useTotalFiatLiquidityForPool";
 import { useShareOfPoolMulti } from "efi-ui/pools/useShareOfPool";
+import { useTotalLiquidityForPoolMulti } from "efi-ui/pools/useTotalFiatLiquidityForPool.ts/useTotalFiatLiquidityForPool";
 import { PoolContract } from "efi/pools/PoolContract";
 
 /**
@@ -15,9 +15,8 @@ export function useTotalLiquidityProvidedMulti(
 ): (Money | undefined)[] {
   const shareOfPoolMulti = useShareOfPoolMulti(pools, account);
 
-  const totalLiquidityInConvergentCurvePools = useTotalLiquidityForPoolMulti(
-    pools
-  );
+  const totalLiquidityInConvergentCurvePools =
+    useTotalLiquidityForPoolMulti(pools);
 
   const shareOfPoolFiatMulti = zip(
     shareOfPoolMulti,

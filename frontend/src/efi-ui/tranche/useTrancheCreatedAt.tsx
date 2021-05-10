@@ -2,8 +2,8 @@ import { TrancheFactory__factory } from "elf-contracts/types/factories/TrancheFa
 import { Tranche } from "elf-contracts/types/Tranche";
 
 import { useSmartContractEvents } from "efi-ui/contracts/useSmartContractEvents/useSmartContractEvents";
-import ContractAddresses from "efi/addresses";
 import { useBlockFromTag } from "efi-ui/provider/useBlockFromTag/useBlockFromTag";
+import ContractAddresses from "efi/addresses";
 import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
 
 const { trancheFactoryAddress } = ContractAddresses;

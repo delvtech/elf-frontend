@@ -21,7 +21,6 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
@@ -30,26 +29,27 @@ import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSy
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 import { useFeeVolumeForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
+import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
+import {
+  PoolAction,
+  usePoolViewPoolActionsTab,
+} from "efi-ui/pools/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
+import { useStakingAPY } from "efi-ui/pools/useStakingAPY";
 import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidityForPool.ts/useTotalFiatLiquidityForPool";
 import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForPool";
-import {
-  usePoolViewPoolActionsTab,
-  PoolAction,
-} from "efi-ui/pools/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
+import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
+import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
 import { useTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
 import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
+import { formatPercent } from "efi/base/formatPercent";
+import { CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { formatMoney } from "efi/money/formatMoney";
 import { PoolContract } from "efi/pools/PoolContract";
+import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 
 import styles from "./PrincipalPoolCard.module.css";
-import { formatPercent } from "efi/base/formatPercent";
-import { useStakingAPY } from "efi-ui/pools/useStakingAPY";
-import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
-import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
-import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
-import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 
 interface InterestPoolCardProps {
   pool: PoolContract | undefined;

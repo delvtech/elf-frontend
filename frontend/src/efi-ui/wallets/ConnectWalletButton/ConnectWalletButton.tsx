@@ -1,6 +1,7 @@
+import React, { FC } from "react";
+
 import { Classes, H5 } from "@blueprintjs/core";
 import classNames from "classnames";
-import React, { FC } from "react";
 
 import tw from "efi-tailwindcss-classnames";
 

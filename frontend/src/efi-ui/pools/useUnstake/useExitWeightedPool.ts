@@ -2,6 +2,7 @@ import { useCallback } from "react";
 
 import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
 import { Vault } from "elf-contracts/types/Vault";
+import { WeightedPool } from "elf-contracts/types/WeightedPool";
 import { BigNumber, Signer } from "ethers";
 import { defaultAbiCoder, formatUnits, parseUnits } from "ethers/lib/utils";
 
@@ -14,12 +15,11 @@ import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { useTokenDecimalsMulti } from "efi-ui/token/hooks/useTokenDecimalsMulti";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
-import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 import ContractAddresses from "efi/addresses";
+import { BALANCER_ETH_SENTINEL } from "efi/balancer";
+import { getSmartContractFromRegistryMulti } from "efi/contracts/SmartContractsRegistry";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { calculateTokensOutForLPInFixed } from "efi/pools/calculateTokensOutForLPIn";
-import { getSmartContractFromRegistryMulti } from "efi/contracts/SmartContractsRegistry";
-import { WeightedPool } from "elf-contracts/types/WeightedPool";
 import { WeightedPoolExitKind } from "efi/pools/weightedPool";
 
 export function useExitWeightedPool(
@@ -29,9 +29,8 @@ export function useExitWeightedPool(
 ): () => void {
   const balancerVault = useBalancerVault();
   const { data: poolId } = useSmartContractReadCall(pool, "getPoolId");
-  const {
-    data: [poolTokens = [], poolTokenReserves = []] = [],
-  } = usePoolTokens(pool);
+  const { data: [poolTokens = [], poolTokenReserves = []] = [] } =
+    usePoolTokens(pool);
   const poolTokenContracts = getSmartContractFromRegistryMulti(
     poolTokens,
     ERC20__factory.connect

@@ -2,10 +2,10 @@ import { YVaultAssetProxy__factory } from "elf-contracts/types/factories/YVaultA
 import { BigNumber } from "ethers";
 
 import { getQueryData } from "efi-ui/base/queryResults";
-import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForPool";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
+import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
 import { PoolContract } from "efi/pools/PoolContract";
 
 export function useAccumulatedInterestForTranche(

@@ -2,13 +2,13 @@ import { QueryObserverResult, useQuery, UseQueryOptions } from "react-query";
 
 import { Contract } from "ethers";
 
+import { lookupAddressKey } from "efi/addresses";
 import { Unpacked } from "efi/base/Unpacked";
 import {
   ContractMethodArgs,
   ContractMethodName,
   StaticContractReturnType,
 } from "efi/contracts/types";
-import { lookupAddressKey } from "efi/addresses";
 
 export interface UseSmartContractReadCallOptions<
   TContract extends Contract,

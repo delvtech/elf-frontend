@@ -1,7 +1,7 @@
 import { QueryObserverResult, useQuery } from "react-query";
 
-import { defaultProvider } from "efi/providers/providers";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
+import { defaultProvider } from "efi/providers/providers";
 
 // TODO: get a better source for this.  I picked this up from https://etherscan.io/chart/blocktime
 const PRODUCTION = process.env.NODE_ENV === "production";

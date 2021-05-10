@@ -1,5 +1,6 @@
-import { usePref } from "efi-ui/prefs/usePref/usePref";
 import { useCallback } from "react";
+
+import { usePref } from "efi-ui/prefs/usePref/usePref";
 
 export interface PendingTransactionPref {
   contractAddress: string | undefined;

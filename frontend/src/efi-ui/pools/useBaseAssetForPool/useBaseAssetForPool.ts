@@ -6,9 +6,9 @@ import { Signer } from "ethers";
 import { getQueryData } from "efi-ui/base/queryResults";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { KNOWN_BASE_ASSETS } from "efi/addresses";
+import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
 import { PoolContract } from "efi/pools/PoolContract";
 import { defaultProvider } from "efi/providers/providers";
-import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
 
 export function useBaseAssetForPool(
   pool: PoolContract | undefined,

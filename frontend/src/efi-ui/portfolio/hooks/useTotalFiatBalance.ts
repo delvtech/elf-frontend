@@ -1,4 +1,6 @@
 import { Web3Provider } from "@ethersproject/providers";
+import { InterestToken } from "elf-contracts/types/InterestToken";
+import { Tranche } from "elf-contracts/types/Tranche";
 import { formatUnits } from "ethers/lib/utils";
 import zip from "lodash.zip";
 import { Currency, Money } from "ts-money";
@@ -12,13 +14,11 @@ import { useCoinGeckoPriceMulti } from "efi-ui/coingecko/useCoinGeckoPrices";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useCryptoDecimalsMulti } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimalsMulti";
 import { useCryptoSymbolMulti } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbolMulti";
+import { useBaseAssetForPools } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPoolMulti";
 import { usePoolForTokenMulti } from "efi-ui/pools/usePoolForToken/usePoolForTokenMulti";
-import { useTokensWithBalance } from "efi-ui/token/hooks/useTokensWithBalance";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
-import { useBaseAssetForPools } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPoolMulti";
-import { InterestToken } from "elf-contracts/types/InterestToken";
-import { Tranche } from "elf-contracts/types/Tranche";
+import { useTokensWithBalance } from "efi-ui/token/hooks/useTokensWithBalance";
 
 export function useTotalFiatBalance(
   library: Web3Provider | undefined,
