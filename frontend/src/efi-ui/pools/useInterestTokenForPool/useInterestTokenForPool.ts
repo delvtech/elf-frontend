@@ -5,7 +5,7 @@ import { WeightedPool } from "elf-contracts/types/WeightedPool";
 import { Signer } from "ethers";
 
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
-import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
+import { jsonRpcProvider } from "efi/providers/providers";
 import { useTrancheInterestTokenMulti } from "efi-ui/tranche/useTrancheInterestTokenMulti";
 import { TrancheContracts } from "efi/tranche/tranches";
 

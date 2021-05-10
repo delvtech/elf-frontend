@@ -8,7 +8,7 @@ import {
   makeToast,
 } from "efi-ui/toaster/AppToaster/AppToaster";
 import { usePendingTransactionPref } from "efi-ui/transactions/usePendingTransactionPref/usePendingTransactionPref";
-import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
+import { jsonRpcProvider } from "efi/providers/providers";
 import { Intent } from "@blueprintjs/core";
 import { ETHERSCAN_DOMAIN } from "efi-etherscan/ETHERSCAN_DOMAIN";
 

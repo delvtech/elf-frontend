@@ -3,7 +3,7 @@ import { QueryObserverResult, useQuery } from "react-query";
 import { BlockTag } from "@ethersproject/providers";
 
 import { Block } from "efi/crypto/fetchEthBlocks";
-import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
+import { jsonRpcProvider } from "efi/providers/providers";
 
 // TODO: generalize to make a useProviderCall just like we have useSmartContractReadCall
 /**

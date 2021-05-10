@@ -3,7 +3,7 @@ import { Contract, Signer } from "ethers";
 
 import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
 import { FactoryConnectFn } from "efi/contracts/FactoryConnectFn";
-import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
+import { jsonRpcProvider } from "efi/providers/providers";
 
 /**
  * @deprecated hooks-based access for smart contracts is deprecated. Use

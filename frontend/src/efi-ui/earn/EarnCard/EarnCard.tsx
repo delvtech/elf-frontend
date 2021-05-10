@@ -41,7 +41,7 @@ import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { clipStringValueToDecimals } from "efi/math/fixedPoint";
 import { calcSwapOutGivenInCCPoolUNSAFE } from "efi/pools/calcPoolSwap";
 import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
-import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
+import { jsonRpcProvider } from "efi/providers/providers";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
 
 export interface EarnCardProps {

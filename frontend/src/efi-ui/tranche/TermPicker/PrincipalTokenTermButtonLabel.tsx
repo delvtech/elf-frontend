@@ -16,7 +16,7 @@ import { useUnderlyingVaultForTranche } from "efi-ui/tranche/useUnderlyingVaultF
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
-import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
+import { jsonRpcProvider } from "efi/providers/providers";
 import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
 import { formatPercent } from "efi/base/formatPercent";
 

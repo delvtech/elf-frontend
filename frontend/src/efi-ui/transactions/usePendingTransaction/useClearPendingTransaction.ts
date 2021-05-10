@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 import { usePendingTransactionPref } from "efi-ui/transactions/usePendingTransactionPref/usePendingTransactionPref";
-import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
+import { jsonRpcProvider } from "efi/providers/providers";
 
 export function useClearPendingTransactionOnMined(): void {
   const {

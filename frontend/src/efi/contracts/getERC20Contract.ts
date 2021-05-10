@@ -3,7 +3,7 @@ import { ERC20 } from "elf-contracts/types/ERC20";
 import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
 import { Signer } from "ethers";
 
-import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
+import { jsonRpcProvider } from "efi/providers/providers";
 
 const erc20Cache: Record<string, ERC20> = {};
 export function getERC20Contract(

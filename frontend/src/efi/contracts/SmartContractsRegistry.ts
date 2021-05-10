@@ -1,6 +1,6 @@
 import { Provider } from "@ethersproject/providers";
 import { FactoryConnectFn } from "efi/contracts/FactoryConnectFn";
-import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
+import { jsonRpcProvider } from "efi/providers/providers";
 import { Contract, Signer } from "ethers";
 
 // Do not export this from this file

@@ -1,7 +1,7 @@
 import { QueryObserverResult, useQuery } from "react-query";
 
 import { Provider } from "@ethersproject/providers";
-import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
+import { jsonRpcProvider } from "efi/providers/providers";
 
 /**
  * Returns the block number (or height) of the most recently mined block.

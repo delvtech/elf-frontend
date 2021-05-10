@@ -20,7 +20,7 @@ import {
 import { KNOWN_BASE_ASSETS } from "efi/addresses";
 import { convertToFiatBalance } from "efi/money/convertToFiatBalance";
 import { PoolContract } from "efi/pools/PoolContract";
-import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
+import { jsonRpcProvider } from "efi/providers/providers";
 import { useSmartContractFromFactoryMulti } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
 
 export function useTotalFiatLiquidityForPool(
