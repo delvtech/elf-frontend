@@ -3,7 +3,7 @@ import React, { ReactElement } from "react";
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { Signer } from "ethers";
-import { formatEther } from "ethers/lib/utils";
+import { formatEther, formatUnits } from "ethers/lib/utils";
 
 import tw from "efi-tailwindcss-classnames";
 import { getQueryData } from "efi-ui/base/queryResults";
@@ -12,6 +12,7 @@ import { PoolActionsCard } from "efi-ui/pools/PoolActionsCard/PoolActionsCard";
 import { PoolCharts } from "efi-ui/pools/PoolCharts/PoolCharts";
 import { PoolSummary } from "efi-ui/pools/PoolSummary/PoolSummary";
 import { TermSummary } from "efi-ui/pools/TermSummary/TermSummary";
+import { getTokenInfo } from "efi/tokenlists";
 import { TokenSummary } from "efi-ui/pools/TokenSummary/TokenSummary";
 import { useFeeVolumeFiatForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
@@ -57,6 +58,10 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
   const liquidityTrend = useTotalLiquidityTrend(pool);
 
   const tranche = useTrancheForPool(pool);
+
+  const tokenInfo = getTokenInfo(tranche?.address ?? "");
+  const decimals = tokenInfo?.decimals;
+
   const totalValueLocked = useTotalValueLockedForTranche(
     tranche,
     baseAssetContract
@@ -113,7 +118,7 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
         />
         <TokenSummary
           pool={pool}
-          interestSupply={+formatEther(interestSupplyBN ?? 0)}
+          interestSupply={+formatUnits(interestSupplyBN ?? 0, decimals)}
         />
       </div>
       <div
