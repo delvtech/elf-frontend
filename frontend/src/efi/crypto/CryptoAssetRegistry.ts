@@ -32,16 +32,15 @@ export const BASE_ASSET_CRYPTO_ASSETS: CryptoAsset[] = Object.values(
   baseAssetCryptoAssets
 );
 
-const principalTokenCryptoAssets: Erc20PermitCryptoAsset[] = PrincipalTokenInfos.map(
-  ({ address }) => ({
+const principalTokenCryptoAssets: Erc20PermitCryptoAsset[] =
+  PrincipalTokenInfos.map(({ address }) => ({
     id: address,
     type: CryptoAssetType.ERC20PERMIT,
     tokenContract: getSmartContractFromRegistry(
       address,
       Tranche__factory.connect
     ) as Tranche,
-  })
-);
+  }));
 const yieldTokenCryptoAssets: Erc20PermitCryptoAsset[] = YieldTokenInfos.map(
   ({ address }) => ({
     id: address,

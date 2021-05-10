@@ -17,10 +17,8 @@ export function useActiveTranche(
   tranchesByBaseAsset: Record<string, Tranche[]>,
   activeBaseAsset: CryptoAsset | undefined
 ): ActiveTrancheInfo {
-  const {
-    activeTrancheIndexes,
-    setActiveTrancheIndexes,
-  } = useActiveTrancheIndexes(tranchesByBaseAsset);
+  const { activeTrancheIndexes, setActiveTrancheIndexes } =
+    useActiveTrancheIndexes(tranchesByBaseAsset);
 
   const availableTranches = useMemo(
     () => (activeBaseAsset?.id ? tranchesByBaseAsset[activeBaseAsset.id] : []),
