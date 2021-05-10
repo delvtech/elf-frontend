@@ -15,6 +15,7 @@ import { parseUnits } from "ethers/lib/utils";
 import { useMintPreview } from "efi-ui/mint/hooks/useMintPreview";
 import { MintTransactionConfirmationDrawer } from "efi-ui/mint/MintTransactionConfirmationDrawer/MintTransactionConfirmationDrawer";
 import { MintInput } from "efi-ui/mint/MintInput/MintInput";
+import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
 import { formatBalance } from "efi/base/formatBalance";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
@@ -68,6 +69,8 @@ export function MintCard(props: MintCardProps): ReactElement | null {
   } = props;
 
   const [isDrawerOpen, setDrawerOpen] = useState(false);
+  const [isWalletDialogOpen, setWalletDialogOpen] = useState(false);
+
   const {
     stringValue: amountInString,
     setValue: setAmountIn,
@@ -96,7 +99,7 @@ export function MintCard(props: MintCardProps): ReactElement | null {
     baseAssetDecimals
   ).gt(baseAssetBalance ?? 0);
 
-  const mintButtonDisabled = insufficientBalance || !amountIn || !account;
+  const mintButtonDisabled = !!account && (insufficientBalance || !amountIn);
 
   let mintButtonLabel = t`Mint tokens`;
   let mintButtonError = false;
@@ -116,6 +119,15 @@ export function MintCard(props: MintCardProps): ReactElement | null {
     setDrawerOpen(false);
     setAmountIn("");
   }, [setAmountIn]);
+
+  const onClick = useCallback(() => {
+    if (!account) {
+      return setWalletDialogOpen(true);
+    }
+
+    setDrawerOpen(true);
+  }, [account, setDrawerOpen]);
+
   return (
     <Fragment>
       <div className={styles.lineBreak} />
@@ -161,7 +173,7 @@ export function MintCard(props: MintCardProps): ReactElement | null {
             )}
           >
             <LabeledText
-              text={t`${numYieldTokensOut || 0} eP:yETH`}
+              text={t`${numYieldTokensOut || 0} eY:yETH`}
               label={t`Yield Tokens`}
             />
           </Callout>
@@ -172,7 +184,7 @@ export function MintCard(props: MintCardProps): ReactElement | null {
             outlined
             disabled={mintButtonDisabled}
             intent={mintButtonError ? Intent.DANGER : Intent.PRIMARY}
-            onClick={() => setDrawerOpen(true)}
+            onClick={onClick}
           >
             {mintButtonLabel}
           </Button>
@@ -207,6 +219,10 @@ export function MintCard(props: MintCardProps): ReactElement | null {
         amountIn={amountInString}
         isOpen={isDrawerOpen}
         onClose={onClose}
+      />
+      <ConnectWalletDialog
+        isOpen={isWalletDialogOpen}
+        onClose={() => setWalletDialogOpen(false)}
       />
     </Fragment>
   );
