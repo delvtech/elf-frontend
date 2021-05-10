@@ -1,5 +1,4 @@
 import { ExternalProvider, Web3Provider } from "@ethersproject/providers";
-import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 
 export function getEthereumProviderLibrary(
   provider?: ExternalProvider
@@ -11,10 +10,8 @@ export function getEthereumProviderLibrary(
     return null;
   }
 
-  const library = new Web3Provider(
-    (jsonRpcProvider as unknown) as ExternalProvider
-  );
-  library.pollingInterval = 8000;
+  // TODO: figure out if we are conencting to hardhat and use a localhost provider
+  const library = new Web3Provider(provider);
 
   return library;
 }

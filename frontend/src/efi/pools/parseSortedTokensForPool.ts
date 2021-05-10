@@ -1,7 +1,7 @@
 import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
 
 import { KNOWN_BASE_ASSETS } from "efi/addresses";
-import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
+import { defaultProvider } from "efi/providers/providers";
 import { ERC20 } from "elf-contracts/types/ERC20";
 
 interface ParsedTokens {
@@ -23,11 +23,11 @@ export function parseSortedTokensForPool(
   const termAssetAddress = tokens?.[termAssetIndex];
 
   const baseAssetContract = baseAssetAddress
-    ? ERC20__factory.connect(baseAssetAddress, jsonRpcProvider)
+    ? ERC20__factory.connect(baseAssetAddress, defaultProvider)
     : undefined;
 
   const termAssetContract = termAssetAddress
-    ? ERC20__factory.connect(termAssetAddress, jsonRpcProvider)
+    ? ERC20__factory.connect(termAssetAddress, defaultProvider)
     : undefined;
 
   return {

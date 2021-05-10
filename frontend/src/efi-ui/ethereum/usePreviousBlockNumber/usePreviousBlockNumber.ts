@@ -1,6 +1,6 @@
 import { QueryObserverResult, useQuery } from "react-query";
 
-import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
+import { defaultProvider } from "efi/providers/providers";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
 
 // TODO: get a better source for this.  I picked this up from https://etherscan.io/chart/blocktime
@@ -17,7 +17,7 @@ export function usePreviousBlockNumber(
   const result = useQuery({
     queryKey: [["blockattimestamp"], { secondsAgo: secondsAgo }],
     queryFn: async () => {
-      const lastestBlockNumber = await jsonRpcProvider.getBlockNumber();
+      const lastestBlockNumber = await defaultProvider.getBlockNumber();
 
       if (!secondsAgo || secondsAgo <= 0) {
         return lastestBlockNumber;

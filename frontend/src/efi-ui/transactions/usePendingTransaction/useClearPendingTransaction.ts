@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 import { usePendingTransactionPref } from "efi-ui/transactions/usePendingTransactionPref/usePendingTransactionPref";
-import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
+import { defaultProvider } from "efi/providers/providers";
 
 export function useClearPendingTransactionOnMined(): void {
   const {
@@ -15,7 +15,7 @@ export function useClearPendingTransactionOnMined(): void {
     }
 
     (async () => {
-      const tx = await jsonRpcProvider.getTransaction(transactionHash);
+      const tx = await defaultProvider.getTransaction(transactionHash);
       if (tx) {
         const { blockHash } = tx;
         // if the transaction is included in a block then it was successful, so we
@@ -25,11 +25,11 @@ export function useClearPendingTransactionOnMined(): void {
         }
       }
       // Otherwise set a handler that will clear the pref when it is mined
-      jsonRpcProvider?.once(transactionHash, clearPendingTransactionPref);
+      defaultProvider?.once(transactionHash, clearPendingTransactionPref);
     })();
 
     return () => {
-      jsonRpcProvider.off(transactionHash, clearPendingTransactionPref);
+      defaultProvider.off(transactionHash, clearPendingTransactionPref);
     };
   }, [clearPendingTransactionPref, transactionHash]);
 }

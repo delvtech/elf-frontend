@@ -1,6 +1,6 @@
 import { Provider } from "@ethersproject/providers";
 import { FactoryConnectFn } from "efi/contracts/FactoryConnectFn";
-import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
+import { defaultProvider } from "efi/providers/providers";
 import { Contract, Signer } from "ethers";
 
 // Do not export this from this file
@@ -24,7 +24,7 @@ export function getSmartContractFromRegistry<TReturnContract extends Contract>(
   // Otherwise populate cache and return it
   SMART_CONTRACTS_REGISTRY[address] = factoryConnect(
     address,
-    signerOrProvider ?? jsonRpcProvider
+    signerOrProvider ?? defaultProvider
   );
 
   return SMART_CONTRACTS_REGISTRY[address] as TReturnContract;

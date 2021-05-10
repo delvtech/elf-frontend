@@ -1,7 +1,7 @@
 import { QueryObserverResult, useQuery } from "react-query";
 
 import { Provider } from "@ethersproject/providers";
-import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
+import { defaultProvider } from "efi/providers/providers";
 
 /**
  * Returns the block number (or height) of the most recently mined block.
@@ -9,7 +9,7 @@ import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
 export function useLatestBlockNumber(
   provider?: Provider | undefined
 ): QueryObserverResult<number> {
-  const finalProvider = provider || jsonRpcProvider;
+  const finalProvider = provider || defaultProvider;
   return useQuery({
     queryKey: "ethereum-latest-block",
     queryFn: () => finalProvider?.getBlockNumber(),

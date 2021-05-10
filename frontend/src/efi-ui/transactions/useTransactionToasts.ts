@@ -8,7 +8,7 @@ import {
   makeToast,
 } from "efi-ui/toaster/AppToaster/AppToaster";
 import { usePendingTransactionPref } from "efi-ui/transactions/usePendingTransactionPref/usePendingTransactionPref";
-import { jsonRpcProvider } from "efi/providers/jsonRpcProviders";
+import { defaultProvider } from "efi/providers/providers";
 import { Intent } from "@blueprintjs/core";
 import { ETHERSCAN_DOMAIN } from "efi-etherscan/ETHERSCAN_DOMAIN";
 
@@ -41,9 +41,9 @@ function useToastOnMined() {
       return;
     }
     (async () => {
-      const tx = await jsonRpcProvider.getTransaction(transactionHash);
+      const tx = await defaultProvider.getTransaction(transactionHash);
       if (tx) {
-        jsonRpcProvider?.once(transactionHash, () => {
+        defaultProvider?.once(transactionHash, () => {
           AppToaster.show(
             makeSuccessToast(t`Transaction complete`, {
               href: `${ETHERSCAN_DOMAIN}/tx/${transactionHash}`,
