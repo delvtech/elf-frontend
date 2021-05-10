@@ -110,7 +110,7 @@ export function TokenSummary({
               </span>
               <div className={tw("flex", "justify-between")}>
                 <span className={classNames("h5", tw("space-x-4"))}>
-                  {interestPerToken ? +interestPerToken : 0}{" "}
+                  {interestPerToken ? +interestPerToken.toFixed(4) : 0}{" "}
                   {t` ${baseAssetSymbol}`}
                 </span>
               </div>
