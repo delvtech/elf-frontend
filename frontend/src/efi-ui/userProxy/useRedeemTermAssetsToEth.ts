@@ -61,10 +61,14 @@ export function useRedeemTermAssetsToEth(
       return;
     }
 
+    // Note the trailing space is required
+    const principalTokenName = "Principal Token ";
+
     // TODO: check approval for this token first
     const ptPermitData = await fetchPermitData(
       signer,
       principalTokenContract,
+      principalTokenName,
       account,
       userProxy.address,
       ethers.constants.MaxUint256,
@@ -73,10 +77,14 @@ export function useRedeemTermAssetsToEth(
 
     await flushPromises(100);
 
+    // Note the trailing space is required
+    const yieldTokenName = "Element Yield Token ";
+
     // TODO: check approval for this token first
     const ytPermitData = await fetchPermitData(
       signer,
       yieldTokenContract,
+      yieldTokenName,
       account,
       userProxy.address,
       ethers.constants.MaxUint256,

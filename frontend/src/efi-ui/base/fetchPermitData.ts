@@ -20,6 +20,7 @@ export interface PermitCallData {
 export async function fetchPermitData(
   signer: Signer,
   token: ERC20Permit,
+  tokenName: string,
   sourceAddr: string,
   spenderAddr: string,
   spenderAmount: BigNumberish,
@@ -28,11 +29,17 @@ export async function fetchPermitData(
 ): Promise<PermitCallData | undefined> {
   const typedSigner = (signer as unknown) as TypedDataSigner;
   // don't use metdata, must match exactly
-  const name = await token.name();
+
+  // The following line is commented out due a bug in our token's PERMIT_HASH's.  Our tokens are
+  // appending a datestring to the name after the PERMIT_HASH is created, which breaks permit calls.
+  // After we fix this we can uncomment this line instead of passing in the name as an argument to
+  // this function.
+  // const name = await token.name();
+
   const chainId = await signer.getChainId();
 
   const domain: TypedDataDomain = {
-    name,
+    name: tokenName,
     version: version,
     chainId: chainId,
     verifyingContract: token.address,
@@ -65,7 +72,7 @@ export async function fetchPermitData(
 
   // don't do this in a query hook.  make sure we grab the latest
   const nonce = await token.nonces(sourceAddr);
-  if (!name || nonce === undefined || chainId === undefined) {
+  if (nonce === undefined || chainId === undefined) {
     return;
   }
 
