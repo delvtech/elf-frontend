@@ -33,40 +33,29 @@ const tokenInfos = tokenListJson.tokens;
 export function getTokenInfo<T extends TokenInfo>(address: string): T {
   return TokenMetadata[address] as T;
 }
-/**
- * A lookup object for getting the name, symbol, and decimals of any principal
- * token, yield token, or base asset address.
- */
 export const TokenMetadata: Record<string, AnyTokenListInfo> = keyBy(
   tokenInfos,
   "address"
 );
 
 /**
- * The list of all base assets, it includes weth instead of eth
- */
-export const UnderlyingTokenInfos = tokenInfos.filter((tokenInfo) =>
-  tokenInfo.tags?.includes(TokenListTag.UNDERLYING)
-);
-
-/**
  * The list of all principal tokens
  */
-export const PrincipalTokenInfos: PrincipalTokenInfo[] = tokenInfos.filter(
+export const principalTokenInfos: PrincipalTokenInfo[] = tokenInfos.filter(
   (tokenInfo): tokenInfo is PrincipalTokenInfo => isPrincipalToken(tokenInfo)
 );
 
 /**
  * The list of all yield tokens
  */
-export const YieldTokenInfos: YieldTokenInfo[] = tokenInfos.filter(
+export const yieldTokenInfos: YieldTokenInfo[] = tokenInfos.filter(
   (tokenInfo): tokenInfo is YieldTokenInfo => isYieldToken(tokenInfo)
 );
 
 /**
  * The list of all principal token pools
  */
-export const PrincipalTokenPoolInfos: PrincipalTokenPoolInfo[] =
+export const principalTokenPoolInfos: PrincipalTokenPoolInfo[] =
   tokenInfos.filter((tokenInfo): tokenInfo is PrincipalTokenPoolInfo =>
     isPrincipalTokenPool(tokenInfo)
   );
@@ -74,11 +63,9 @@ export const PrincipalTokenPoolInfos: PrincipalTokenPoolInfo[] =
 /**
  * The list of all yield tokens
  */
-export const YieldTokenPoolInfos: YieldTokenPoolInfo[] = tokenInfos.filter(
+export const yieldTokenPoolInfos: YieldTokenPoolInfo[] = tokenInfos.filter(
   (tokenInfo): tokenInfo is YieldTokenPoolInfo => isYieldTokenPool(tokenInfo)
 );
-
-export default tokenListJson;
 
 function getTokenListJsonId() {
   if (process.env.NODE_ENV === "test") {

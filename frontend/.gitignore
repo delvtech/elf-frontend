@@ -18,7 +18,7 @@ src/tokenlists/*
 !src/tokenlists/mock.tokenlist.json
 # These are definitions, they do not change on every machine and are required
 # for compilation
-!src/tokenlists/types.d.ts
+!src/tokenlists/types.ts
 
 # these are copied in from the top-level scripts and will be different on every
 # machine

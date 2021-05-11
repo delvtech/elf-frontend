@@ -5,7 +5,7 @@ import { Signer } from "ethers";
 import { PrincipalTokenPoolInfo } from "tokenlists/types";
 
 import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
-import { PrincipalTokenPoolInfos } from "efi/tokenlists";
+import { principalTokenPoolInfos } from "efi/tokenlists";
 
 export interface PrincipalTokenPoolInfoWithContract
   extends PrincipalTokenPoolInfo {
@@ -13,7 +13,7 @@ export interface PrincipalTokenPoolInfoWithContract
 }
 
 export const principalTokenPools: PrincipalTokenPoolInfoWithContract[] =
-  PrincipalTokenPoolInfos.map((info) => {
+  principalTokenPoolInfos.map((info) => {
     const contract = getSmartContractFromRegistry(
       info.address,
       ConvergentCurvePool__factory.connect

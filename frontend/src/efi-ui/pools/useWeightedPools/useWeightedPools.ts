@@ -4,7 +4,7 @@ import { WeightedPool } from "elf-contracts/types/WeightedPool";
 import { Signer } from "ethers";
 
 import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
-import { YieldTokenPoolInfos } from "efi/tokenlists";
+import { yieldTokenPoolInfos } from "efi/tokenlists";
 import { YieldTokenPoolInfo } from "tokenlists/types";
 
 export interface YieldTokenPoolInfoWithContract extends YieldTokenPoolInfo {
@@ -12,7 +12,7 @@ export interface YieldTokenPoolInfoWithContract extends YieldTokenPoolInfo {
 }
 
 export const yieldTokenPools: YieldTokenPoolInfoWithContract[] =
-  YieldTokenPoolInfos.map((info) => {
+  yieldTokenPoolInfos.map((info) => {
     const contract = getSmartContractFromRegistry(
       info.address,
       WeightedPool__factory.connect
