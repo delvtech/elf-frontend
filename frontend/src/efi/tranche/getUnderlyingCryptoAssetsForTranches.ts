@@ -3,8 +3,9 @@ import { Tranche } from "elf-contracts/types/Tranche";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { CryptoAssets } from "efi/crypto/CryptoAssetRegistry";
 import { getTokenInfo, PrincipalTokenInfo } from "efi/tokenlists";
+import uniqBy from "lodash.uniqby";
 
-export function getUnderlyingCryptoAssetsForTranches(
+export function getBaseAssetsForTranches(
   tranches: (Tranche | undefined)[]
 ): (CryptoAsset | undefined)[] {
   const cryptoAssets = tranches.map((tranche) => {
@@ -17,5 +18,11 @@ export function getUnderlyingCryptoAssetsForTranches(
     return CryptoAssets[underlying];
   });
 
-  return cryptoAssets;
+  // De-dupe since multiple tranches can have the same base asset
+  const uniqueCryptoAssets = uniqBy(
+    cryptoAssets.filter((v) => !!v),
+    (v) => v?.id
+  );
+
+  return uniqueCryptoAssets;
 }

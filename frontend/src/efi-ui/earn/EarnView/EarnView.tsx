@@ -1,36 +1,23 @@
-import React, { FC, Fragment, ReactElement } from "react";
+import { FC, Fragment, ReactElement } from "react";
 import { Helmet } from "react-helmet";
 
 import { Intent, Tag } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { Link, RouteComponentProps } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
-import uniqBy from "lodash.uniqby";
 import { jt, t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { EarnCard } from "efi-ui/earn/EarnCard/EarnCard";
-import { useTranchesByBaseAsset } from "efi-ui/earn/hooks/useTranchesByBaseAsset";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
-import { getUnderlyingCryptoAssetsForTranches } from "efi-ui/tranche/getUnderlyingCryptoAssetsForTranches";
-import { useOpenTranches } from "efi-ui/tranche/useOpenTranches";
+import { openTranches, tranchesByBaseAsset } from "efi/tranche/tranches";
+import { getBaseAssetsForTranches } from "efi/tranche/getUnderlyingCryptoAssetsForTranches";
 
 interface EarnViewProps extends RouteComponentProps {}
+
+const openTrancheBaseAssets = getBaseAssetsForTranches(openTranches);
 export function EarnView(props: EarnViewProps): ReactElement {
   const { account, library } = useWeb3React<Web3Provider>();
-
-  const openTranches = useOpenTranches();
-
-  const allBaseAssets = getUnderlyingCryptoAssetsForTranches(openTranches);
-  const tranchesByBaseAsset = useTranchesByBaseAsset(
-    openTranches,
-    allBaseAssets
-  );
-
-  const uniqueBaseAssets = uniqBy(
-    allBaseAssets.filter((v) => !!v),
-    (v) => v?.id
-  );
 
   return (
     <Fragment>
@@ -77,7 +64,7 @@ export function EarnView(props: EarnViewProps): ReactElement {
             <EarnCard
               library={library}
               account={account}
-              baseAssets={uniqueBaseAssets}
+              baseAssets={openTrancheBaseAssets}
               tranchesByBaseAsset={tranchesByBaseAsset}
             />
           </div>
