@@ -12,7 +12,7 @@ import tw from "efi-tailwindcss-classnames";
 import { EarnCard } from "efi-ui/earn/EarnCard/EarnCard";
 import { useTranchesByBaseAsset } from "efi-ui/earn/hooks/useTranchesByBaseAsset";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
-import { useBaseAssetsForTranches } from "efi-ui/tranche/useBaseAssetsForTranches";
+import { getUnderlyingCryptoAssetsForTranches } from "efi-ui/tranche/getUnderlyingCryptoAssetsForTranches";
 import { useOpenTranches } from "efi-ui/tranche/useOpenTranches";
 
 interface EarnViewProps extends RouteComponentProps {}
@@ -21,7 +21,7 @@ export function EarnView(props: EarnViewProps): ReactElement {
 
   const openTranches = useOpenTranches();
 
-  const allBaseAssets = useBaseAssetsForTranches(openTranches);
+  const allBaseAssets = getUnderlyingCryptoAssetsForTranches(openTranches);
   const tranchesByBaseAsset = useTranchesByBaseAsset(
     openTranches,
     allBaseAssets
