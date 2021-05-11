@@ -7,9 +7,10 @@ import zip from "lodash.zip";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
 import { ContractMethodArgs } from "efi/contracts/types";
+import { ERC20Permit } from "elf-contracts/types/ERC20Permit";
 
 export function useTokenAllowance(
-  contract: ERC20 | undefined,
+  contract: ERC20 | ERC20Permit | undefined,
   owner: string | null | undefined,
   spender: string | null | undefined
 ): QueryObserverResult<BigNumber> {

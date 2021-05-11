@@ -7,14 +7,15 @@ import { UserProxy } from "elf-contracts/types/UserProxy";
 import { BigNumber, ethers, Signer } from "ethers";
 
 import { fetchPermitData, PermitCallData } from "efi-ui/base/fetchPermitData";
-import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useUserProxy } from "efi-ui/mint/hooks/userProxy";
+import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
 import { useTranchePosition } from "efi-ui/tranche/useTranchePosition";
 import { useTrancheUnlockTimestamp } from "efi-ui/tranche/useTrancheUnlockTimestamp";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
-import { ContractMethodArgs } from "efi/contracts/types";
 import { flushPromises } from "efi/base/flush";
+import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
+import { ContractMethodArgs } from "efi/contracts/types";
 
 export function useRedeemTermAssetsToEth(
   signer: Signer | undefined,
@@ -44,6 +45,18 @@ export function useRedeemTermAssetsToEth(
     signer
   );
 
+  const { data: ptApproval } = useTokenAllowance(
+    principalTokenContract,
+    account,
+    userProxy?.address
+  );
+
+  const { data: ytApproval } = useTokenAllowance(
+    yieldTokenContract,
+    account,
+    userProxy?.address
+  );
+
   return useCallback(async () => {
     if (
       !signer ||
@@ -52,7 +65,9 @@ export function useRedeemTermAssetsToEth(
       !expiration ||
       !position ||
       !principalTokenContract ||
-      !yieldTokenContract
+      !yieldTokenContract ||
+      !ptApproval ||
+      !ytApproval
     ) {
       return;
     }
@@ -64,45 +79,51 @@ export function useRedeemTermAssetsToEth(
     // Note the trailing space is required
     const principalTokenName = "Principal Token ";
 
-    // TODO: check approval for this token first
-    const ptPermitData = await fetchPermitData(
-      signer,
-      principalTokenContract,
-      principalTokenName,
-      account,
-      userProxy.address,
-      ethers.constants.MaxUint256,
-      "1"
-    );
+    const permits: PermitCallData[] = [];
+
+    if (ptApproval.lt(amountPrinicpalToken)) {
+      const ptPermitData = await fetchPermitData(
+        signer,
+        principalTokenContract,
+        principalTokenName,
+        account,
+        userProxy.address,
+        ethers.constants.MaxUint256,
+        "1"
+      );
+      if (ptPermitData) {
+        permits.push(ptPermitData);
+      }
+    }
 
     await flushPromises(100);
 
     // Note the trailing space is required
     const yieldTokenName = "Element Yield Token ";
 
-    // TODO: check approval for this token first
-    const ytPermitData = await fetchPermitData(
-      signer,
-      yieldTokenContract,
-      yieldTokenName,
-      account,
-      userProxy.address,
-      ethers.constants.MaxUint256,
-      "1"
-    );
+    if (ytApproval.lt(amountYieldToken)) {
+      const ytPermitData = await fetchPermitData(
+        signer,
+        yieldTokenContract,
+        yieldTokenName,
+        account,
+        userProxy.address,
+        ethers.constants.MaxUint256,
+        "1"
+      );
+      if (ytPermitData) {
+        permits.push(ytPermitData);
+      }
+    }
 
     await flushPromises(100);
-
-    if (!ptPermitData || !ytPermitData) {
-      return;
-    }
 
     const withdrawInterestToEthCallArgs = makeWithdrawInterestToEthCallArgs(
       expiration,
       position,
       amountPrinicpalToken,
       amountYieldToken,
-      [ptPermitData, ytPermitData]
+      permits
     );
 
     withdrawToEth(withdrawInterestToEthCallArgs);
@@ -113,10 +134,12 @@ export function useRedeemTermAssetsToEth(
     expiration,
     position,
     principalTokenContract,
+    ptApproval,
     signer,
     userProxy,
     withdrawToEth,
     yieldTokenContract,
+    ytApproval,
   ]);
 }
 export function makeWithdrawInterestToEthCallArgs(
