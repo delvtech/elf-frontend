@@ -1,3 +1,9 @@
+/**
+ * Element Finance tokenlist type definitions.
+ * 
+ * This file is maintained in `efi-frontend/testnet/tokenlist/types.d.ts` and
+ * copied over to the frontend/ directory as a means of codesharing.
+ */
 import { TokenInfo } from "@uniswap/token-lists";
 
 export enum TokenListTag {

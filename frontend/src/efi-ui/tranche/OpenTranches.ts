@@ -3,11 +3,8 @@ import { Tranche } from "elf-contracts/types/Tranche";
 import groupBy from "lodash.groupby";
 
 import { getSmartContractFromRegistryMulti } from "efi/contracts/SmartContractsRegistry";
-import {
-  PrincipalTokenInfo,
-  PrincipalTokenInfos,
-  TokenMetadata,
-} from "efi/tokenlists";
+import { PrincipalTokenInfos, TokenMetadata } from "efi/tokenlists";
+import { PrincipalTokenInfo } from "tokenlists/types";
 
 const openTranchesInfos = PrincipalTokenInfos.filter(
   ({ extensions: { unlockTimestamp } }) => unlockTimestamp * 1000 > Date.now()

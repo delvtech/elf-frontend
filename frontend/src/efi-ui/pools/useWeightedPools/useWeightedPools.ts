@@ -4,7 +4,8 @@ import { WeightedPool } from "elf-contracts/types/WeightedPool";
 import { Signer } from "ethers";
 
 import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
-import { YieldTokenPoolInfo, YieldTokenPoolInfos } from "efi/tokenlists";
+import { YieldTokenPoolInfos } from "efi/tokenlists";
+import { YieldTokenPoolInfo } from "tokenlists/types";
 
 export interface YieldTokenPoolInfoWithContract extends YieldTokenPoolInfo {
   contract: WeightedPool;

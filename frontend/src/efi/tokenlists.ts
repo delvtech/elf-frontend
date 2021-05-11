@@ -1,5 +1,13 @@
 import { TokenInfo, TokenList } from "@uniswap/token-lists";
 import keyBy from "lodash.keyby";
+import {
+  AnyTokenListInfo,
+  PrincipalTokenInfo,
+  PrincipalTokenPoolInfo,
+  TokenListTag,
+  YieldTokenInfo,
+  YieldTokenPoolInfo,
+} from "tokenlists/types";
 
 // Default to the testnet in this repo so `npm start` Just Works without having
 // to specify it on the command line.
@@ -12,95 +20,6 @@ const chainName = getTokenListJsonId();
 // correctly, so we use a require() statement here.
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 export const tokenListJson: TokenList = require(`tokenlists/${chainName}.tokenlist.json`);
-
-// Copied from testnet
-export enum TokenListTag {
-  CCPOOL = "ccpool",
-  WPOOL = "wpool",
-  UNDERLYING = "underlying",
-  PRINCIPAL = "eP",
-  YIELD = "eY",
-}
-export interface PrincipalTokenInfo extends TokenInfo {
-  extensions: {
-    /**
-     * The underlying base asset for the principal token
-     */
-    underlying: string;
-
-    /**
-     * The interest token for the principal token
-     */
-    interestToken: string;
-
-    /**
-     * Number of seconds after epoch when the principal token can be redeemed
-     */
-    unlockTimestamp: number;
-
-    /**
-     * The wrapped position, eg: an Element yearn vault asset proxy
-     */
-    position: string;
-  };
-}
-export interface YieldTokenInfo extends TokenInfo {
-  extensions: {
-    /**
-     * The underlying base asset for the yield token
-     */
-    underlying: string;
-
-    /**
-     * The Principal Token's address
-     */
-    tranche: string;
-  };
-}
-export interface PrincipalTokenPoolInfo extends TokenInfo {
-  extensions: {
-    /**
-     * The principal token address
-     */
-    bond: string;
-
-    /**
-     * The underlying base asset for the principal token
-     */
-    underlying: string;
-
-    /**
-     * balancer poolId
-     */
-    poolId: string;
-
-    /**
-     * Number of seconds after epoch when the pool assets will converge in
-     * price.
-     */
-    expiration: number;
-
-    /**
-     * The number of seconds in the pools timescale.
-     */
-    unitSeconds: number;
-  };
-}
-export interface YieldTokenPoolInfo extends TokenInfo {
-  extensions: {
-    /**
-     * The underlying base asset for the yield token
-     */
-    poolId: string;
-  };
-}
-
-type AnyTokenListInfo =
-  | TokenInfo
-  | PrincipalTokenInfo
-  | YieldTokenInfo
-  | PrincipalTokenPoolInfo
-  | YieldTokenPoolInfo;
 
 const tokenInfos = tokenListJson.tokens;
 
