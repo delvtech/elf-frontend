@@ -60,9 +60,10 @@ export interface YieldTokenInfo extends TokenInfo {
 export interface PrincipalTokenPoolInfo extends TokenInfo {
   extensions: {
     /**
-     * The
+     * The principal token address
      */
     bond: string;
+
     /**
      * The underlying base asset for the principal token
      */
@@ -72,6 +73,17 @@ export interface PrincipalTokenPoolInfo extends TokenInfo {
      * balancer poolId
      */
     poolId: string;
+
+    /**
+     * Number of seconds after epoch when the pool assets will converge in
+     * price.
+     */
+    expiration: number;
+
+    /**
+     * The number of seconds in the pools timescale.
+     */
+    unitSeconds: number;
   };
 }
 export interface YieldTokenPoolInfo extends TokenInfo {

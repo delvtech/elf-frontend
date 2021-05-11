@@ -29,10 +29,17 @@ export async function getCCPools(ccPoolFactoryAddress: string, chainId: number, 
   const poolNames = await Promise.all(safePools.map(pool => pool.name()));
   const poolSymbols = await Promise.all(safePools.map(pool => pool.symbol()));
   const poolDecimals = await Promise.all(safePools.map(pool => pool.decimals()));
+  const poolUnitSeconds = await Promise.all(safePools.map(pool => pool.unitSeconds()));
+  const poolExpirations = await Promise.all(safePools.map(pool => pool.expiration()));
 
   const ccPoolTokensList: TokenInfo[] = zip<any>(
-    safePoolAddresses, poolSymbols, poolNames, poolDecimals, poolBondAddresses, poolUnderlyingAddresses, poolIds, )
-    .map(([address, symbol, name, decimal,  bondAddress, underlyingAddress, poolId]): TokenInfo => {
+    safePoolAddresses, poolSymbols, poolNames, poolDecimals, poolBondAddresses,
+     poolUnderlyingAddresses, poolIds, poolUnitSeconds, poolExpirations
+    )
+    .map(([
+      address, symbol, name, decimal,  bondAddress, underlyingAddress,
+      poolId, unitSeconds, expiration
+    ]): TokenInfo => {
       return {
         chainId,
         address: address as string,
@@ -42,6 +49,8 @@ export async function getCCPools(ccPoolFactoryAddress: string, chainId: number, 
           bond: bondAddress as string,
           underlying: underlyingAddress as string,
           poolId: poolId as string,
+          unitSeconds: unitSeconds.toNumber() as number,
+          expiration: expiration.toNumber() as number,
         },
         name: name as string,
         tags: [TokenListTag.CCPOOL],
