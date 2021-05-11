@@ -8,7 +8,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { TrendIndicator } from "efi-ui/base/TrendIndicator/TrendIndicator";
-import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
+import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
@@ -54,7 +54,7 @@ export function PoolSummary(props: PoolSummaryProps): ReactElement {
     termAssetContract,
   } = parseSortedTokensForPool(tokens);
 
-  const baseAsset = useCryptoAssetForToken(baseAssetContract?.address);
+  const baseAsset = getCryptoAssetForToken(baseAssetContract?.address);
   const baseAssetSymbol = useCryptoSymbol(baseAsset);
 
   const baseAssetBalance = balances?.[baseAssetIndex];

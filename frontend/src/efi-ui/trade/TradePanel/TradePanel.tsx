@@ -15,7 +15,7 @@ import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInp
 import { getQueryData } from "efi-ui/base/queryResults";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
-import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
+import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { useCryptoBalance } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
@@ -321,7 +321,7 @@ function useTokenInfoForTradeInput(
   const [tokens] = getQueryData(tokensResult) ?? [];
   const { termAssetContract, baseAssetContract } =
     parseSortedTokensForPool(tokens);
-  const baseCryptoAsset = useCryptoAssetForToken(baseAssetContract?.address);
+  const baseCryptoAsset = getCryptoAssetForToken(baseAssetContract?.address);
 
   // get symbols
   const baseAssetSymbol = useCryptoSymbol(baseCryptoAsset);
@@ -338,7 +338,7 @@ function useTokenInfoForTradeInput(
       : baseAssetSymbol;
 
   // get other properties
-  const asset = useCryptoAssetForToken(tokenContract?.address);
+  const asset = getCryptoAssetForToken(tokenContract?.address);
   const address =
     asset?.type === CryptoAssetType.ETHEREUM
       ? BALANCER_ETH_SENTINEL

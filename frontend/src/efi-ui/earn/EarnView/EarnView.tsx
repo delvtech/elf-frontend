@@ -15,7 +15,6 @@ import { getBaseAssetsForTranches } from "efi/tranche/getUnderlyingCryptoAssetsF
 
 interface EarnViewProps extends RouteComponentProps {}
 
-const openTrancheBaseAssets = getBaseAssetsForTranches(openTranches);
 export function EarnView(props: EarnViewProps): ReactElement {
   const { account, library } = useWeb3React<Web3Provider>();
 

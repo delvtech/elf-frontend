@@ -8,7 +8,7 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
-import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
+import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForPool";
@@ -26,7 +26,7 @@ export function PoolViewHeader({ pool }: PoolViewHeaderProps): ReactElement {
   const { data: [tokens] = [] } = usePoolTokens(pool);
   const { baseAssetContract, termAssetContract } =
     parseSortedTokensForPool(tokens);
-  const baseAsset = useCryptoAssetForToken(baseAssetContract?.address);
+  const baseAsset = getCryptoAssetForToken(baseAssetContract?.address);
   const baseAssetSymbol = useCryptoSymbol(baseAsset);
   const { label: termAssetSymbol } = useTermAssetSymbol(
     termAssetContract?.address,

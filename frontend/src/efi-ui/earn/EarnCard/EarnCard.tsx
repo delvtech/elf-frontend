@@ -10,7 +10,6 @@ import { Button, Card, Classes, Elevation, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import classNames from "classnames";
 import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
-import { Tranche } from "elf-contracts/types/Tranche";
 import { formatEther, formatUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
@@ -21,7 +20,7 @@ import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { CryptoAssetPicker } from "efi-ui/crypto/CryptoAssetPicker/CryptoAssetPicker";
 import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
-import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
+import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { useCryptoBalance } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
@@ -43,20 +42,18 @@ import { calcSwapOutGivenInCCPoolUNSAFE } from "efi/pools/calcPoolSwap";
 import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { defaultProvider } from "efi/providers/providers";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
+import { getBaseAssetsForTranches } from "efi/tranche/getUnderlyingCryptoAssetsForTranches";
+import { openTranches, tranchesByBaseAsset } from "efi/tranche/tranches";
 
 export interface EarnCardProps {
   library: Web3Provider | undefined;
   account: string | null | undefined;
   baseAssets: (CryptoAsset | undefined)[];
-  tranchesByBaseAsset: Record<string, Tranche[]>;
 }
 
-export function EarnCard({
-  library,
-  account,
-  baseAssets,
-  tranchesByBaseAsset,
-}: EarnCardProps): ReactElement {
+const openTrancheBaseAssets = getBaseAssetsForTranches(openTranches);
+
+export function EarnCard({ library, account }: EarnCardProps): ReactElement {
   const [isWalletDialogOpen, setWalletDialogOpen] = useState(false);
   // local state
   const [isDrawerOpen, setDrawerOpen] = useState(false);
@@ -73,7 +70,7 @@ export function EarnCard({
 
   // base asset
   const { activeBaseAsset, setActiveBaseAsset } = useActiveBaseAsset(
-    baseAssets,
+    openTrancheBaseAssets,
     setAmountIn,
     setAmountOut
   );
@@ -99,7 +96,7 @@ export function EarnCard({
   );
 
   const principalTokenAddress = activeTranche?.address;
-  const principalTokenAsset = useCryptoAssetForToken(principalTokenAddress);
+  const principalTokenAsset = getCryptoAssetForToken(principalTokenAddress);
   const principalTokenBalanceOf = useCryptoBalance(
     library,
     account,
@@ -272,7 +269,7 @@ export function EarnCard({
               showMaxButton={!!account}
               assetPicker={
                 <CryptoAssetPicker
-                  cryptoAssets={baseAssets}
+                  cryptoAssets={openTrancheBaseAssets}
                   activeCryptoAsset={activeBaseAsset}
                   onCryptoAssetChange={setActiveBaseAsset}
                 />

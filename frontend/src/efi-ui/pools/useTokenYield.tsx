@@ -1,7 +1,7 @@
 import { ERC20 } from "elf-contracts/types/ERC20";
 
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
+import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForPool";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
@@ -23,7 +23,7 @@ export function useTokenYield(
   termAssetType: TermAssetType
 ): number {
   // get fixed yield
-  const baseAsset = useCryptoAssetForToken(baseAssetContract?.address);
+  const baseAsset = getCryptoAssetForToken(baseAssetContract?.address);
   const spotPrice = usePoolSpotPrice(pool, baseAssetContract);
   const trancheContract = useTrancheForPool(pool);
 

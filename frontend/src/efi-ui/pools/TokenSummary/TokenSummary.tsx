@@ -9,7 +9,7 @@ import { Money } from "ts-money";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
+import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { useAccumulatedFiatInterestForTranche } from "efi-ui/pools/useAccumulatedFiatInterestForTranche";
 import { useAccumulatedInterestForTranche } from "efi-ui/pools/useAccumulatedInterestForTranche";
@@ -226,7 +226,7 @@ function useTokensSummary(
 
   const { termAssetIndex, baseAssetContract, termAssetContract } =
     parseSortedTokensForPool(tokens);
-  const baseAsset = useCryptoAssetForToken(baseAssetContract?.address);
+  const baseAsset = getCryptoAssetForToken(baseAssetContract?.address);
 
   // Base Asset Info
   const baseAssetSymbol = useCryptoSymbol(baseAsset);

@@ -13,7 +13,7 @@ import { useBatchSwapGivenIn } from "efi-ui/balancer/useBatchSwapGivenIn/useBatc
 import { parseQueryBatchSwapResult } from "efi-ui/balancer/useQueryBatchSwap/parseQueryBatchSwapResult";
 import { useQueryBatchSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
 import { useCryptoAddress } from "efi-ui/crypto/hooks/useCryptoAddress/useCryptoAddress";
-import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
+import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 import { usePoolSwapFee } from "efi-ui/pools/usePoolSwapFee/usePoolSwapFee";
@@ -80,7 +80,7 @@ export function SwapTokensTransactionConfirmationDrawer({
   const balancerVault = useBalancerVault();
 
   const baseAssetContract = useBaseAssetForPool(pool);
-  const baseAsset = useCryptoAssetForToken(baseAssetContract?.address);
+  const baseAsset = getCryptoAssetForToken(baseAssetContract?.address);
   const baseAssetSymbol = useCryptoSymbol(baseAsset);
   const baseAssetAddress = useCryptoAddress(baseAsset);
   const baseAssetIn = baseAssetAddress === tokenInAddress;
