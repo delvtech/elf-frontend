@@ -1,4 +1,4 @@
-import { FC, Fragment, ReactElement } from "react";
+import { CSSProperties, FC, Fragment, ReactElement } from "react";
 import { Helmet } from "react-helmet";
 
 import { Intent, Tag } from "@blueprintjs/core";
@@ -10,11 +10,11 @@ import { jt, t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { EarnCard } from "efi-ui/earn/EarnCard/EarnCard";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
-import { openTranches, tranchesByBaseAsset } from "efi/tranche/tranches";
-import { getBaseAssetsForTranches } from "efi/tranche/getUnderlyingCryptoAssetsForTranches";
 
 interface EarnViewProps extends RouteComponentProps {}
 
+const maxWidthStyle: CSSProperties = { maxWidth: 672 };
+const widthStyle = { width: 672 };
 export function EarnView(props: EarnViewProps): ReactElement {
   const { account, library } = useWeb3React<Web3Provider>();
 
@@ -36,7 +36,7 @@ export function EarnView(props: EarnViewProps): ReactElement {
         )}
       >
         {/* page title */}
-        <div style={{ maxWidth: 672 }}>
+        <div style={maxWidthStyle}>
           <ViewTitle
             title={t`Earn fixed yield from buying at a discount.`}
             bottomTitle={t`Exit anytime.`}
@@ -58,7 +58,7 @@ export function EarnView(props: EarnViewProps): ReactElement {
         >
           <div
             className={tw("flex", "flex-col", "space-y-12", "text-center")}
-            style={{ width: 672 }}
+            style={widthStyle}
           >
             <EarnCard library={library} account={account} />
           </div>
