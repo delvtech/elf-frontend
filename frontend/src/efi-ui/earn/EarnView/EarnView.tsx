@@ -60,12 +60,7 @@ export function EarnView(props: EarnViewProps): ReactElement {
             className={tw("flex", "flex-col", "space-y-12", "text-center")}
             style={{ width: 672 }}
           >
-            <EarnCard
-              library={library}
-              account={account}
-              baseAssets={openTrancheBaseAssets}
-              tranchesByBaseAsset={tranchesByBaseAsset}
-            />
+            <EarnCard library={library} account={account} />
           </div>
         </div>
       </div>

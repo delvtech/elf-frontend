@@ -48,7 +48,6 @@ import { openTranches, tranchesByBaseAsset } from "efi/tranche/tranches";
 export interface EarnCardProps {
   library: Web3Provider | undefined;
   account: string | null | undefined;
-  baseAssets: (CryptoAsset | undefined)[];
 }
 
 const openTrancheBaseAssets = getBaseAssetsForTranches(openTranches);
