@@ -42,7 +42,7 @@ import { calcSwapOutGivenInCCPoolUNSAFE } from "efi/pools/calcPoolSwap";
 import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { defaultProvider } from "efi/providers/providers";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
-import { getBaseAssetsForTranches } from "efi/tranche/getUnderlyingCryptoAssetsForTranches";
+import { getBaseAssetsForTranches } from "efi/tranche/getBaseAssetsForTranches";
 import { openTranches, tranchesByBaseAsset } from "efi/tranche/tranches";
 
 export interface EarnCardProps {
