@@ -22,6 +22,7 @@ import { useTransactionToasts } from "efi-ui/transactions/useTransactionToasts";
 import { useSyncWithInjectedEthereum } from "efi-ui/wallets/hooks/useSyncWithInjectedEthereum";
 
 import styles from "./App.module.css";
+import { useEagerConnect } from "efi-ui/wallets/hooks/useEagerReconnect";
 
 FocusStyleManager.onlyShowFocusOnTabs();
 
@@ -53,6 +54,7 @@ const App: FC<AppProps> = () => {
   // Do these at the top of the app in one place so we don't have multiple
   // callers trying to set event handlers.
   useSyncWithInjectedEthereum();
+  useEagerConnect();
   useClearPendingTransactionOnMined();
   useTransactionToasts();
 
