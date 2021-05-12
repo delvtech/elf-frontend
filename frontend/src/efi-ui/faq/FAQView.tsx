@@ -37,6 +37,7 @@ export function FAQView(props: EarnViewProps): ReactElement {
               <AnchorButton
                 minimal
                 href="https://twitter.com/element_fi"
+                target="_blank"
                 className={tw("py-4", "px-10", "justify-start", "space-x-1")}
                 icon={
                   <img
@@ -53,6 +54,7 @@ export function FAQView(props: EarnViewProps): ReactElement {
               </AnchorButton>
               <AnchorButton
                 minimal
+                target="_blank"
                 href="https://discord.gg/JpctS728r9"
                 className={tw("py-4", "px-10", "justify-start")}
                 icon={
@@ -70,6 +72,7 @@ export function FAQView(props: EarnViewProps): ReactElement {
               </AnchorButton>
               <AnchorButton
                 minimal
+                target="_blank"
                 href="https://t.me/elementfinance"
                 className={tw("py-4", "px-10", "justify-start", "space-x-1")}
                 icon={
@@ -87,6 +90,7 @@ export function FAQView(props: EarnViewProps): ReactElement {
               </AnchorButton>
               <AnchorButton
                 minimal
+                target="_blank"
                 href="https://medium.com/element-finance"
                 className={tw("py-4", "px-10", "justify-start", "space-x-1")}
                 icon={
