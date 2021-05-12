@@ -17,7 +17,7 @@ import { useTokensWithBalance } from "efi-ui/token/hooks/useTokensWithBalance";
 import { NoPrincipalTokensInWalletNonIdealState } from "efi-ui/wallets/NoPrincipalTokensInWalletNonIdealState/NoPrincipalTokensInWalletNonIdealState";
 import { NoWalletConnectedNonIdealState } from "efi-ui/wallets/NoWalletConnectedNonIdealState/NoWalletConnectedNonIdealState";
 import { isDust } from "efi/coins/isDust";
-import { PrincipalTokenInfos } from "efi/tokenlists";
+import { principalTokenInfos } from "efi/tokenlists";
 import { TrancheContracts } from "efi/tranche/tranches";
 
 interface PrincipalTokenPortfolioProps {
@@ -121,7 +121,7 @@ function usePrincipalTokenTab(
   );
   const principalTokenDecimals = principalTokensWithBalanceResults?.map(
     ({ token }) =>
-      PrincipalTokenInfos.find((info) => info.address === token.address)
+      principalTokenInfos.find((info) => info.address === token.address)
         ?.decimals
   );
 

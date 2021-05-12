@@ -23,7 +23,7 @@
       "description": "Token that represents the balancer pool for Yield tokens"
     }
   },
-  "timestamp": "2021-05-10T00:52:09.624Z",
+  "timestamp": "2021-05-11T21:10:50.999Z",
   "version": {
     "major": 0,
     "minor": 0,
@@ -148,7 +148,9 @@
       "extensions": {
         "bond": "0x80272c960b862B4d6542CDB7338Ad1f727E0D18d",
         "underlying": "0x78dEca24CBa286C0f8d56370f5406B48cFCE2f86",
-        "poolId": "0x40bf8a2ecb62c6b880302b55a5552a4e315b5827000200000000000000000062"
+        "poolId": "0x40bf8a2ecb62c6b880302b55a5552a4e315b5827000200000000000000000062",
+        "unitSeconds": 252480000,
+        "expiration": 1628211057
       },
       "name": "Element USDC - fyUSDC",
       "tags": [
@@ -163,7 +165,9 @@
       "extensions": {
         "bond": "0x44eecA004b2612d131EDA7dA2b9d986E7fED562e",
         "underlying": "0x9A1000D492d40bfccbc03f413A48F5B6516Ec0Fd",
-        "poolId": "0x5941db4d6c500c4ffa57c359ee0c55c6b41d0b61000200000000000000000064"
+        "poolId": "0x5941db4d6c500c4ffa57c359ee0c55c6b41d0b61000200000000000000000064",
+        "unitSeconds": 284040000,
+        "expiration": 1621010937
       },
       "name": "Element WETH - fyWETH",
       "tags": [
@@ -178,7 +182,9 @@
       "extensions": {
         "bond": "0x89d66Ad25F3A723D606B78170366d8da9870A879",
         "underlying": "0x9A1000D492d40bfccbc03f413A48F5B6516Ec0Fd",
-        "poolId": "0x9eb7f54c0ecc4d0d2dff28a1276e36d598f2b0d1000200000000000000000066"
+        "poolId": "0x9eb7f54c0ecc4d0d2dff28a1276e36d598f2b0d1000200000000000000000066",
+        "unitSeconds": 284040000,
+        "expiration": 1628210937
       },
       "name": "Element WETH - fyWETH",
       "tags": [

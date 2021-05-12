@@ -6,7 +6,7 @@ import {
   Erc20PermitCryptoAsset,
   ETHEREUM_CRYPTO_ASSET,
 } from "efi/crypto/CryptoAsset";
-import { PrincipalTokenInfos, YieldTokenInfos } from "efi/tokenlists";
+import { principalTokenInfos, yieldTokenInfos } from "efi/tokenlists";
 import { InterestToken__factory } from "elf-contracts/types/factories/InterestToken__factory";
 import { Tranche__factory } from "elf-contracts/types/factories/Tranche__factory";
 import { InterestToken } from "elf-contracts/types/InterestToken";
@@ -33,7 +33,7 @@ export const BASE_ASSET_CRYPTO_ASSETS: CryptoAsset[] = Object.values(
 );
 
 const principalTokenCryptoAssets: Erc20PermitCryptoAsset[] =
-  PrincipalTokenInfos.map(({ address }) => ({
+  principalTokenInfos.map(({ address }) => ({
     id: address,
     type: CryptoAssetType.ERC20PERMIT,
     tokenContract: getSmartContractFromRegistry(
@@ -41,7 +41,7 @@ const principalTokenCryptoAssets: Erc20PermitCryptoAsset[] =
       Tranche__factory.connect
     ) as Tranche,
   }));
-const yieldTokenCryptoAssets: Erc20PermitCryptoAsset[] = YieldTokenInfos.map(
+const yieldTokenCryptoAssets: Erc20PermitCryptoAsset[] = yieldTokenInfos.map(
   ({ address }) => ({
     id: address,
     type: CryptoAssetType.ERC20PERMIT,
