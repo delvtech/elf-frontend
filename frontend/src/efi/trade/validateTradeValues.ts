@@ -38,19 +38,19 @@ export function validateTradeValues(
 
   if (parseUnits(amountIn, tokenInDecimals).gt(tokenInBalanceOf)) {
     isValidTokenInValue = false;
-    tokenInError = t`Insuficcient balance`;
+    tokenInError = t`Insufficient balance`;
   }
 
   if (parseUnits(amountIn, tokenInDecimals).gt(tokenInPoolBalance)) {
     isValidTokenInValue = false;
-    tokenInError = t`Insuficcient pool balance`;
+    tokenInError = t`Insufficient pool balance`;
   }
 
   if (
     parseUnits(amountOut ?? "0", tokenInDecimals).gt(tokenOutPoolBalance ?? 0)
   ) {
     isValidTokenOutValue = false;
-    tokenOutError = t`Insuficcient pool balance`;
+    tokenOutError = t`Insufficient pool balance`;
   }
 
   return {
