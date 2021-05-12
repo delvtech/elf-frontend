@@ -46,7 +46,7 @@ export const principalTokenInfos: PrincipalTokenInfo[] = tokenInfos.filter(
   (tokenInfo): tokenInfo is PrincipalTokenInfo => isPrincipalToken(tokenInfo)
 );
 export const PrincipalTokenInfosByBaseAsset = groupBy(
-  PrincipalTokenInfos,
+  principalTokenInfos,
   (tokenInfo) => tokenInfo.extensions.underlying
 );
 

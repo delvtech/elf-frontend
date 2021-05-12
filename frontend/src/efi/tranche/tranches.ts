@@ -1,17 +1,17 @@
+import { InterestToken__factory } from "elf-contracts/types/factories/InterestToken__factory";
 import { Tranche__factory } from "elf-contracts/types/factories/Tranche__factory";
+import { InterestToken } from "elf-contracts/types/InterestToken";
+import { Tranche } from "elf-contracts/types/Tranche";
+import groupBy from "lodash.groupby";
+import { PrincipalTokenInfo } from "tokenlists/types";
 
 import { getSmartContractFromRegistryMulti } from "efi/contracts/SmartContractsRegistry";
+import { CryptoAssets } from "efi/crypto/CryptoAssetRegistry";
 import {
   getTokenInfo,
-  PrincipalTokenInfo,
-  PrincipalTokenInfos,
-  YieldTokenInfos,
+  principalTokenInfos,
+  yieldTokenInfos,
 } from "efi/tokenlists";
-import { Tranche } from "elf-contracts/types/Tranche";
-import { InterestToken__factory } from "elf-contracts/types/factories/InterestToken__factory";
-import { InterestToken } from "elf-contracts/types/InterestToken";
-import { CryptoAssets } from "efi/crypto/CryptoAssetRegistry";
-import groupBy from "lodash.groupby";
 
 export const TrancheContracts = getSmartContractFromRegistryMulti(
   principalTokenInfos.map(({ address }) => address),
@@ -23,7 +23,7 @@ export const InterestTokenContracts = getSmartContractFromRegistryMulti(
   InterestToken__factory.connect
 ) as InterestToken[];
 
-const openTranchesInfos = PrincipalTokenInfos.filter(
+const openTranchesInfos = principalTokenInfos.filter(
   ({ extensions: { unlockTimestamp } }) => unlockTimestamp * 1000 > Date.now()
 );
 

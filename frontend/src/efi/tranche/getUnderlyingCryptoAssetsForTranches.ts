@@ -1,9 +1,10 @@
 import { Tranche } from "elf-contracts/types/Tranche";
+import uniqBy from "lodash.uniqby";
+import { PrincipalTokenInfo } from "tokenlists/types";
 
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { CryptoAssets } from "efi/crypto/CryptoAssetRegistry";
-import { getTokenInfo, PrincipalTokenInfo } from "efi/tokenlists";
-import uniqBy from "lodash.uniqby";
+import { getTokenInfo } from "efi/tokenlists";
 
 export function getBaseAssetsForTranches(
   tranches: (Tranche | undefined)[]
