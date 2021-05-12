@@ -5,4 +5,4 @@ rm -f frontend/src/tokenlists/types.d.ts
 
 # Copy the tokenlist.json files and TS definitions to the frontend
 find testnet/src/tokenlist/ -type f -name "*.tokenlist.json" -exec cp {} frontend/src/tokenlists/ \;
-cp testnet/src/tokenlist/types.d.ts frontend/src/tokenlists/types.d.ts
+cp testnet/src/tokenlist/types.ts frontend/src/tokenlists/types.ts
