@@ -1,4 +1,5 @@
 import { TokenInfo, TokenList } from "@uniswap/token-lists";
+import groupBy from "lodash.groupby";
 import keyBy from "lodash.keyby";
 import {
   AnyTokenListInfo,
@@ -43,6 +44,10 @@ export const TokenMetadata: Record<string, AnyTokenListInfo> = keyBy(
  */
 export const principalTokenInfos: PrincipalTokenInfo[] = tokenInfos.filter(
   (tokenInfo): tokenInfo is PrincipalTokenInfo => isPrincipalToken(tokenInfo)
+);
+export const PrincipalTokenInfosByBaseAsset = groupBy(
+  principalTokenInfos,
+  (tokenInfo) => tokenInfo.extensions.underlying
 );
 
 /**

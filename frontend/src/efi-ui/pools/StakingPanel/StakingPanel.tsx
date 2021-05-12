@@ -12,7 +12,7 @@ import tw from "efi-tailwindcss-classnames";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
-import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
+import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { StakingConfirmationDrawer } from "efi-ui/pools/StakeTokensConfirmationDrawer/StakeTokensConfirmationDrawer";
 import { StakingInput } from "efi-ui/pools/StakingInput/StakingInput";
@@ -89,7 +89,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
   } = useTokenInfoForTradeInput(pool, baseAssetContract, account, library);
 
   // use this hook to make sure we get the ETH icon if the base asset it WETH
-  const cryptoAsset = useCryptoAssetForToken(baseAssetContract?.address);
+  const cryptoAsset = getCryptoAssetForToken(baseAssetContract?.address);
   const BaseAssetIcon = findAssetIcon2(cryptoAsset);
 
   const {
@@ -336,7 +336,7 @@ function useTokenInfoForTradeInput(
   const isWETH = tokenContract?.address === ContractAddresses.wethAddress;
   const { data: ethBalance } = useEthBalance(library, account);
 
-  const asset = useCryptoAssetForToken(tokenContract?.address);
+  const asset = getCryptoAssetForToken(tokenContract?.address);
   const baseAssetSymbol = useCryptoSymbol(asset);
   const { symbol: termAssetSymbol } = useTermAssetSymbol(
     tokenContract?.address,

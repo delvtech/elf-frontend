@@ -14,7 +14,7 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
-import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
+import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { UnstakeWeightedPoolButton } from "efi-ui/pools/UnstakeButton/UnstakeWeightedPoolButton";
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
@@ -59,7 +59,7 @@ export function YieldTokenLPCard({
   // base asset
   const baseAssetContract = useBaseAssetForPool(pool);
   const { data: baseAssetDecimals } = useTokenDecimals(baseAssetContract);
-  const baseAssetCryptoAsset = useCryptoAssetForToken(
+  const baseAssetCryptoAsset = getCryptoAssetForToken(
     baseAssetContract?.address
   );
   const baseAssetSymbol = useCryptoSymbol(baseAssetCryptoAsset);

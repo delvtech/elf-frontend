@@ -3,12 +3,10 @@ import { CryptoAssets } from "efi/crypto/CryptoAssetRegistry";
 
 /**
  * Turns a token into its CryptoAsset equivalent.
- * NOTE: This will turn a WETH address into an Ethereum CryptoAsset.
  *
- * @deprecated Hooks based lookups for CryptoAsset is deprecated.  use
- * `CryptoAssets` object lookup instead.
+ * NOTE: This will turn a WETH address into an Ethereum CryptoAsset.
  */
-export function useCryptoAssetForToken(
+export function getCryptoAssetForToken(
   tokenAddress: string | undefined
 ): CryptoAsset | undefined {
   // element tranches and interest tokens are known permits

@@ -9,7 +9,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
-import { useCryptoAssetForToken } from "efi-ui/crypto/hooks/useCryptoAssetForToken";
+import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { formatPercent } from "efi/base/formatPercent";
 import { formatMoney } from "efi/money/formatMoney";
@@ -37,7 +37,7 @@ export function TermSummary(props: TermSummaryProps): ReactElement {
     maturityTimeMs = 0,
     startTimeMs = 0,
   } = props;
-  const baseAsset = useCryptoAssetForToken(baseAssetContract?.address);
+  const baseAsset = getCryptoAssetForToken(baseAssetContract?.address);
   const vaultSymbol = getVaultSymbol(baseAsset);
   const { data: vaultInfo } = useYearnVault(vaultSymbol);
 
