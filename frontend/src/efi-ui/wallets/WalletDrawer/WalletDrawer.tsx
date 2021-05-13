@@ -41,6 +41,7 @@ export function WalletDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={onClose}
+      onClosing={onClose}
       isCloseButtonShown
       title={
         ""
