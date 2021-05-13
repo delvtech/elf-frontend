@@ -17,17 +17,18 @@ export async function mintTrancheAssets(
   const signerAddress = await signer.getAddress();
 
   // allow tranche contract to take signers's base asset tokens
-  await baseAssetContract.approve(trancheContract.address, MAX_ALLOWANCE);
+  await baseAssetContract
+    .connect(signer)
+    .approve(trancheContract.address, MAX_ALLOWANCE);
 
   const wrappedPositionAddress = await trancheContract.position();
   const wrappedPositionContract = YVaultAssetProxy__factory.connect(
     wrappedPositionAddress,
     signer
   );
-  await baseAssetContract.approve(
-    wrappedPositionContract.address,
-    MAX_ALLOWANCE
-  );
+  await baseAssetContract
+    .connect(signer)
+    .approve(wrappedPositionContract.address, MAX_ALLOWANCE);
 
   const baseAssetDecimals = await baseAssetContract.decimals();
   const baseAssetDeposit = parseUnits(baseAssetAmountIn, baseAssetDecimals);

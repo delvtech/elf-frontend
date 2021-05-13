@@ -18,9 +18,10 @@ import { RedeemForm } from "efi-ui/tranche/RedeemForm/RedeemForm";
 import { WalletDrawer } from "efi-ui/wallets/WalletDrawer/WalletDrawer";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatFullDate } from "efi/base/dates";
-import { CryptoAsset } from "efi/crypto/CryptoAsset";
+import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
 
 import { useWithdrawPrincipal } from "./useWithdrawPrincipal";
+import { useRedeemTermAssetsToEth } from "efi-ui/userProxy/useRedeemTermAssetsToEth";
 
 interface RedeemPrincipalTokensDrawerProps {
   account: string | null | undefined;
@@ -82,6 +83,22 @@ export function RedeemPrincipalTokensDrawer({
     trancheAmountBigNumber
   );
 
+  const withdrawToEth = useRedeemTermAssetsToEth(
+    signer,
+    tranche,
+    account,
+    trancheAmountBigNumber || BigNumber.from(0),
+    BigNumber.from(0)
+  );
+
+  const redeemPrincipalTokens = useCallback(() => {
+    if (baseAsset.type === CryptoAssetType.ETHEREUM) {
+      withdrawToEth();
+    } else {
+      withdrawPrincipal();
+    }
+  }, [baseAsset.type, withdrawPrincipal, withdrawToEth]);
+
   return (
     <WalletDrawer
       isOpen={isOpen}
@@ -116,7 +133,7 @@ export function RedeemPrincipalTokensDrawer({
           className={tw("h-16")}
           large
           outlined
-          onClick={withdrawPrincipal}
+          onClick={redeemPrincipalTokens}
         >
           {confirmButtonLabel}
         </Button>

@@ -68,10 +68,9 @@ export async function setupInterestTokenPool(
     "0.003"
   );
 
-  await interestTokenContract.approve(
-    balancerVaultContract.address,
-    MAX_ALLOWANCE
-  );
+  await interestTokenContract
+    .connect(signer)
+    .approve(balancerVaultContract.address, MAX_ALLOWANCE);
 
   // this encodes the joinKind and the amountsIn.
   const userData = defaultAbiCoder.encode(

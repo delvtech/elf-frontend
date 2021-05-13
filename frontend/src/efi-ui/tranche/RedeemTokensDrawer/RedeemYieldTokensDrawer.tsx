@@ -20,7 +20,8 @@ import { useInterestTokenForTranche } from "efi-ui/tranche/useTrancheInterestTok
 import { WalletDrawer } from "efi-ui/wallets/WalletDrawer/WalletDrawer";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatFullDate } from "efi/base/dates";
-import { CryptoAsset } from "efi/crypto/CryptoAsset";
+import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
+import { useRedeemTermAssetsToEth } from "efi-ui/userProxy/useRedeemTermAssetsToEth";
 
 interface RedeemYieldTokensDrawerProps {
   account: string | null | undefined;
@@ -74,7 +75,7 @@ export function RedeemYieldTokensDrawer({
   const interestTokenAmountBigNumber =
     interestTokenAmountString && interestTokenDecimals
       ? parseUnits(interestTokenAmountString, interestTokenDecimals)
-      : undefined;
+      : BigNumber.from(0);
   const confirmButtonDisabled = getConfirmButtonDisabled(
     account,
     interestTokenAmountBigNumber
@@ -86,6 +87,22 @@ export function RedeemYieldTokensDrawer({
     account,
     interestTokenAmountBigNumber
   );
+
+  const withdrawToEth = useRedeemTermAssetsToEth(
+    signer,
+    tranche,
+    account,
+    BigNumber.from(0),
+    interestTokenAmountBigNumber
+  );
+
+  const redeemYieldTokens = useCallback(() => {
+    if (baseAsset.type === CryptoAssetType.ETHEREUM) {
+      withdrawToEth();
+    } else {
+      withdrawInterest();
+    }
+  }, [baseAsset.type, withdrawInterest, withdrawToEth]);
 
   return (
     <WalletDrawer
@@ -121,7 +138,7 @@ export function RedeemYieldTokensDrawer({
           className={tw("h-16")}
           large
           outlined
-          onClick={withdrawInterest}
+          onClick={redeemYieldTokens}
         >
           {confirmButtonLabel}
         </Button>
