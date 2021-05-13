@@ -43,7 +43,7 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
   } = props;
   const { tab, setTab } = usePoolViewPoolActionsTab();
   const [activeTab, setActiveTab] = useState(tab);
-  useClearTab(setTab);
+  useClearTab(tab, setTab);
 
   return (
     <div className={tw("flex", "flex-col", "flex-1", "h-500")}>
@@ -113,7 +113,11 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
 }
 
 // one time use effect to set the default back to swap.
-function useClearTab(setTab: (tab: PoolAction) => void) {
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => setTab(PoolAction.SWAP), []);
+function useClearTab(tab: PoolAction, setTab: (tab: PoolAction) => void) {
+  useEffect(() => {
+    if (tab !== PoolAction.SWAP) {
+      setTab(PoolAction.SWAP);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 }
