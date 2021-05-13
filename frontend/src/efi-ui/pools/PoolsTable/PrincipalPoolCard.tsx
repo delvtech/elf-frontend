@@ -312,7 +312,10 @@ export function PrincipalPoolCard(
         <div className={tw(cellClassName, "col-span-3", "xl:col-span-2")}>
           <div className={tw("flex", "w-full")}>
             <div className={tw("flex-1")}>
-              <TimeLeft startDate={startTime} maturityDate={maturityTime} />
+              <TimeLeft
+                startTimestamp={startTime}
+                maturityTimestamp={maturityTime}
+              />
             </div>
           </div>
         </div>

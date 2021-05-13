@@ -2,7 +2,6 @@ import React, { CSSProperties, ReactElement } from "react";
 
 import { Card, Classes } from "@blueprintjs/core";
 import classNames from "classnames";
-import { format } from "date-fns";
 import { ERC20 } from "elf-contracts/types/ERC20";
 import { Money } from "ts-money";
 import { t } from "ttag";
@@ -15,6 +14,7 @@ import { formatPercent } from "efi/base/formatPercent";
 import { formatMoney } from "efi/money/formatMoney";
 import { isConvergentCurvePool, PoolContract } from "efi/pools/PoolContract";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
+import { formatAbbreviatedDate } from "efi/base/dates";
 
 const summaryCardStyle: CSSProperties = {
   height: 220,
@@ -45,6 +45,10 @@ export function TermSummary(props: TermSummaryProps): ReactElement {
   const vaultApy = apy?.recommended ?? 0;
 
   const isPrincipalPool = isConvergentCurvePool(pool);
+
+  const startDateLabel = startTimeMs
+    ? formatAbbreviatedDate(new Date(startTimeMs))
+    : "";
 
   return (
     <div>
@@ -114,7 +118,7 @@ export function TermSummary(props: TermSummaryProps): ReactElement {
               {t`Start Date`}
             </span>
             <div className={classNames("h5", tw("space-x-4"))}>
-              {startTimeMs ? format(startTimeMs, "MMM d, y") : ""}
+              {startDateLabel}
             </div>
           </div>
 
@@ -124,7 +128,10 @@ export function TermSummary(props: TermSummaryProps): ReactElement {
               {t`Status`}
             </span>
             <div style={{ maxWidth: "150px" }} className={tw("mt-1")}>
-              <TimeLeft startDate={startTimeMs} maturityDate={maturityTimeMs} />
+              <TimeLeft
+                startTimestamp={startTimeMs}
+                maturityTimestamp={maturityTimeMs}
+              />
             </div>
           </div>
         </div>

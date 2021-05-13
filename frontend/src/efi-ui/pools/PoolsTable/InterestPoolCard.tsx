@@ -325,7 +325,10 @@ export function InterestPoolCard(
           )}
         >
           <div className={tw("flex", "w-full", "items-start")}>
-            <TimeLeft startDate={startTime} maturityDate={maturityTime} />
+            <TimeLeft
+              startTimestamp={startTime}
+              maturityTimestamp={maturityTime}
+            />
           </div>
         </div>
       </div>
