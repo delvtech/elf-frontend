@@ -36,7 +36,7 @@ export function TimeLeft(props: TimeLeftProps): ReactElement {
       {isMatured ? (
         <div>
           <Tag intent={Intent.SUCCESS} className={tw("mr-4", "flex-grow-0")}>
-            Matured
+            Mature
           </Tag>
         </div>
       ) : (
