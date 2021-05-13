@@ -27,6 +27,10 @@ export enum TokenListTag {
       interestToken: string;
   
       /**
+       * Number of seconds after epoch when the principal token was created 
+       */
+      createdAtTimestamp: number;
+      /**
        * Number of seconds after epoch when the principal token can be redeemed
        */
       unlockTimestamp: number;

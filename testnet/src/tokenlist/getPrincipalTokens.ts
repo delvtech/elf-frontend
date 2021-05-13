@@ -1,13 +1,15 @@
+import { Event } from "@ethersproject/contracts";
 import { TokenInfo } from "@uniswap/token-lists";
 import hre from "hardhat";
 import zip from "lodash.zip";
 
+import { ERC20__factory } from "src/types/factories/ERC20__factory";
 import { Tranche__factory } from "src/types/factories/Tranche__factory";
 import { TrancheFactory__factory } from "src/types/factories/TrancheFactory__factory";
-
-import { ERC20__factory } from "src/types/factories/ERC20__factory";
 import { Tranche } from "src/types/Tranche";
+
 import { TokenListTag } from "src/tokenlist/tags";
+import { PrincipalTokenInfo } from "src/tokenlist/types";
 
 export const provider = hre.ethers.provider;
 export async function getPrincipalTokens(
@@ -20,14 +22,18 @@ export async function getPrincipalTokens(
     provider
   );
   const filter = trancheFactory.filters.TrancheCreated(null, null, null);
-  const events = await trancheFactory.queryFilter(filter);
-  const trancheAddresses = events.map(
+  const trancheCreatedEvents = await trancheFactory.queryFilter(filter);
+  const trancheAddresses = trancheCreatedEvents.map(
     (event) =>
       // The first arg is the trancheAddress
       event.args?.[0]
   ) as string[];
   const safeTrancheAddresses = trancheAddresses.filter((address) =>
     safelist.includes(address)
+  );
+  const createdAtTimestamps = await getTrancheCreatedEvents(
+    trancheCreatedEvents,
+    safeTrancheAddresses
   );
 
   const safeTranches = safeTrancheAddresses.map((address) =>
@@ -62,7 +68,8 @@ export async function getPrincipalTokens(
     underlyingAddresses,
     unlockTimestamps,
     interestTokens,
-    positions
+    positions,
+    createdAtTimestamps
   ).map(
     ([
       address,
@@ -73,7 +80,8 @@ export async function getPrincipalTokens(
       unlockTimestamp,
       interestToken,
       position,
-    ]): TokenInfo => {
+      createdAtTimestamp,
+    ]): PrincipalTokenInfo => {
       return {
         chainId,
         address: address as string,
@@ -84,6 +92,7 @@ export async function getPrincipalTokens(
           position: position as string,
           interestToken: interestToken as string,
           unlockTimestamp: unlockTimestamp?.toNumber() as number,
+          createdAtTimestamp: createdAtTimestamp as number,
         },
         name: name as string,
         tags: [TokenListTag.PRINCIPAL],
@@ -128,4 +137,24 @@ async function getPrincipalTokenName(tranches: Tranche[]) {
     return name;
   });
   return principalTokenNames;
+}
+
+async function getTrancheCreatedEvents(
+  trancheCreatedEvents: Event[],
+  trancheAddresses: string[]
+) {
+  // The events that the given tranches were created in
+  const filteredTranches = trancheCreatedEvents.filter((event) =>
+    trancheAddresses.includes(event.args?.[0])
+  );
+
+  // the blocks the tranches were created in
+  const blocks = await Promise.all(
+    filteredTranches.map((event) => {
+      const blockNumber = event.blockNumber;
+      return provider.getBlock(blockNumber);
+    })
+  );
+
+  return blocks.map((block) => +block.timestamp);
 }
