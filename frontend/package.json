@@ -8,6 +8,7 @@
     "@blueprintjs/popover2": "^0.8.0",
     "@blueprintjs/select": "^3.16.2",
     "@ethersproject/abi": "^5.1.2",
+    "@ethersproject/abstract-signer": "^5.1.0",
     "@ethersproject/bytes": "^5.1.0",
     "@ethersproject/contracts": "^5.0.12",
     "@ethersproject/hash": "^5.1.0",
