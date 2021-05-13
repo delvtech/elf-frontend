@@ -124,7 +124,10 @@ export function TermSummary(props: TermSummaryProps): ReactElement {
               {t`Status`}
             </span>
             <div style={{ maxWidth: "150px" }} className={tw("mt-1")}>
-              <TimeLeft startDate={startTimeMs} maturityDate={maturityTimeMs} />
+              <TimeLeft
+                startTimestamp={startTimeMs}
+                maturityTimestamp={maturityTimeMs}
+              />
             </div>
           </div>
         </div>

@@ -12,15 +12,16 @@ interface TimeLeftProps {
   /**
    * unix time in ms
    */
-  startDate: number | undefined;
+  startTimestamp: number | undefined;
   /**
    * unix time in ms
    */
-  maturityDate: number | undefined;
+  maturityTimestamp: number | undefined;
 }
 
 export function TimeLeft(props: TimeLeftProps): ReactElement {
-  const { startDate = 0, maturityDate = 0 } = props;
+  const { startTimestamp: startDate = 0, maturityTimestamp: maturityDate = 0 } =
+    props;
   const progress = calculateProgress(startDate, maturityDate);
   const timeLeft = getTimeLeft(maturityDate);
 
