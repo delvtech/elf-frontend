@@ -1,10 +1,10 @@
-import { ERC20Permit } from "elf-contracts/types/ERC20Permit";
-import { BigNumberish, BytesLike, ethers, Signer } from "ethers";
 import {
-  TypedDataSigner,
   TypedDataDomain,
   TypedDataField,
+  TypedDataSigner,
 } from "@ethersproject/abstract-signer";
+import { ERC20Permit } from "elf-contracts/types/ERC20Permit";
+import { BigNumberish, BytesLike, ethers, Signer } from "ethers";
 
 export interface PermitCallData {
   tokenContract: string;
@@ -27,7 +27,7 @@ export async function fetchPermitData(
   // '1' for every ERC20Permit.  Except USDC which is '2' ¯\_(ツ)_/¯
   version: string
 ): Promise<PermitCallData | undefined> {
-  const typedSigner = (signer as unknown) as TypedDataSigner;
+  const typedSigner = signer as unknown as TypedDataSigner;
   // don't use metdata, must match exactly
 
   // The following line is commented out due a bug in our token's PERMIT_HASH's.  Our tokens are
