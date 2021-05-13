@@ -14,6 +14,9 @@ export const ONE_WEEK_IN_MILLISECONDS = 7 * ONE_DAY_IN_MILLISECONDS;
 export const ONE_YEAR_IN_MILLISECONDS = 365 * ONE_DAY_IN_MILLISECONDS;
 export const THIRTY_DAYS_IN_MILLISECONDS = 30 * ONE_DAY_IN_MILLISECONDS;
 
+/**
+ * @deprecated use `formatTimeLeft` instead
+ */
 export function getTimeLeft(
   maturationDate: Date | undefined
 ): string | undefined {
