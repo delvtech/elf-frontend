@@ -96,6 +96,7 @@ export function useRedeemTermAssetsToEth(
       }
     }
 
+    // wait before bringing up MM again, otherwise the pop-up can get hidden sometimes.
     await flushPromises(100);
 
     // Note the trailing space is required
@@ -116,6 +117,7 @@ export function useRedeemTermAssetsToEth(
       }
     }
 
+    // wait before bringing up MM again, otherwise the pop-up can get hidden sometimes.
     await flushPromises(100);
 
     const withdrawInterestToEthCallArgs = makeWithdrawInterestToEthCallArgs(
