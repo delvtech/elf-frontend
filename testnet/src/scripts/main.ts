@@ -10,11 +10,7 @@ import { MAX_ALLOWANCE } from "src/maxAllowance";
 import { deployConvergentPoolFactory } from "src/scripts/deployConvergentPoolFactory";
 import { deployInterestTokenFactory } from "src/scripts/deployInterestTokenFactory";
 import { deployTrancheFactory } from "src/scripts/deployTrancheFactory";
-import { exitConvergentCurvePool } from "src/scripts/exitConvergentCurvePool";
-import { getContracts } from "src/scripts/getContracts";
 import { getSigner, SIGNER } from "src/scripts/getSigner";
-import { joinConvergentCurvePool } from "src/scripts/joinConvergentCurvePool";
-import { printTokenInfoForPool } from "src/scripts/printTokenInfoForPool";
 import { THIRTY_DAYS_IN_SECONDS } from "src/time";
 
 import { AddressesJsonFile } from "../addresses/AddressesJsonFile";
@@ -35,12 +31,17 @@ async function main() {
   const elementSigner = await getSigner(SIGNER.ELEMENT, hre);
   const balancerSigner = await getSigner(SIGNER.ELEMENT, hre);
   const userSigner = await getSigner(SIGNER.USER, hre);
+  const wethSigner = await getSigner(SIGNER.WETH, hre);
+  const usdcSigner = await getSigner(SIGNER.USDC, hre);
   const elementAddress = await elementSigner.getAddress();
   const balancerAddress = await balancerSigner.getAddress();
   const userAddress = await userSigner.getAddress();
 
   // deploy base assets
-  const [wethContract, usdcContract] = await deployBaseAssets(elementSigner);
+  const [wethContract, usdcContract] = await deployBaseAssets(
+    wethSigner,
+    usdcSigner
+  );
 
   // supply element with WETH and USDC
   await mintTokensForAddress(elementAddress, {

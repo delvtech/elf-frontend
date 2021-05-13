@@ -28,7 +28,10 @@ export async function deployVaultsAndProxys(
   // seed the yearn vault with an initial totalSupply.  wrapped positions calculate the base asset
   // amount per share by assets * numShares / totalSupply which will return a divide by zero error
   // if total supply is zero.
-  await wethContract.approve(yWeth.address, MAX_ALLOWANCE);
+  const approvexTx = await wethContract
+    .connect(signer)
+    .approve(yWeth.address, MAX_ALLOWANCE);
+  await approvexTx.wait(1);
   await yWeth.deposit(parseUnits("1000", 6), signerAddress);
 
   // deploy yearn vault asset proxy
@@ -52,7 +55,7 @@ export async function deployVaultsAndProxys(
   // seed the yearn vault with an initial totalSupply.  wrapped positions calculate the base asset
   // amount per share by assets * numShares / totalSupply which will return a divide by zero error
   // if total supply is zero.
-  await usdcContract.approve(yUsdc.address, MAX_ALLOWANCE);
+  await usdcContract.connect(signer).approve(yUsdc.address, MAX_ALLOWANCE);
   await yUsdc.deposit(parseUnits("1000", 6), signerAddress);
 
   // deploy yearn vault asset proxy
