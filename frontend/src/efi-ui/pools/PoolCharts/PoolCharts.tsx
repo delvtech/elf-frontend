@@ -58,6 +58,7 @@ export function PoolCharts({ pool }: PoolChartsProps): ReactElement {
               "absolute",
               "w-full",
               "flex",
+              "z-10",
               "justify-between",
               "pr-10"
             )}
