@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import { ReactElement, useEffect, useState } from "react";
 
 import { Button, Card, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
@@ -42,6 +42,8 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
     pool,
   } = props;
   const { tab, setTab } = usePoolViewPoolActionsTab();
+  const [activeTab, setActiveTab] = useState(tab);
+  useClearTab(tab, setTab);
 
   return (
     <div className={tw("flex", "flex-col", "flex-1", "h-500")}>
@@ -51,28 +53,28 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
       <Card className={tw("flex", "flex-col", "flex-1", "w-full", "space-y-2")}>
         <div className={tw("flex", "space-x-4")}>
           <Button
-            onClick={() => setTab(PoolAction.SWAP)}
-            active={tab === PoolAction.SWAP}
+            onClick={() => setActiveTab(PoolAction.SWAP)}
+            active={activeTab === PoolAction.SWAP}
             minimal
             outlined
             intent={Intent.PRIMARY}
           >{t`Trade`}</Button>
           <Button
-            onClick={() => setTab(PoolAction.STAKE)}
-            active={tab === PoolAction.STAKE}
+            onClick={() => setActiveTab(PoolAction.STAKE)}
+            active={activeTab === PoolAction.STAKE}
             minimal
             outlined
             intent={Intent.PRIMARY}
           >{t`Stake`}</Button>
           <Button
-            onClick={() => setTab(PoolAction.UNSTAKE)}
-            active={tab === PoolAction.UNSTAKE}
+            onClick={() => setActiveTab(PoolAction.UNSTAKE)}
+            active={activeTab === PoolAction.UNSTAKE}
             minimal
             outlined
             intent={Intent.PRIMARY}
           >{t`Unstake`}</Button>
         </div>
-        {tab === PoolAction.SWAP && (
+        {activeTab === PoolAction.SWAP && (
           <TradePanel
             library={library}
             signer={signer}
@@ -87,7 +89,7 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
             buttonIntent={Intent.PRIMARY}
           />
         )}
-        {tab === PoolAction.STAKE && (
+        {activeTab === PoolAction.STAKE && (
           <StakingPanel
             library={library}
             signer={signer}
@@ -97,7 +99,7 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
             buttonIntent={Intent.PRIMARY}
           />
         )}
-        {tab === PoolAction.UNSTAKE && (
+        {activeTab === PoolAction.UNSTAKE && (
           <UnStakePanel
             library={library}
             account={account}
@@ -108,4 +110,14 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
       </Card>
     </div>
   );
+}
+
+// one time use effect to set the default back to swap.
+function useClearTab(tab: PoolAction, setTab: (tab: PoolAction) => void) {
+  useEffect(() => {
+    if (tab !== PoolAction.SWAP) {
+      setTab(PoolAction.SWAP);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 }
