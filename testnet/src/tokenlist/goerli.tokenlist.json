@@ -23,7 +23,7 @@
       "description": "Token that represents the balancer pool for Yield tokens"
     }
   },
-  "timestamp": "2021-05-11T21:10:50.999Z",
+  "timestamp": "2021-05-13T02:32:54.098Z",
   "version": {
     "major": 0,
     "minor": 0,
@@ -59,7 +59,8 @@
         "underlying": "0x9A1000D492d40bfccbc03f413A48F5B6516Ec0Fd",
         "position": "0x6F643Ba6894D8C50c476A3539e1D1690B2194018",
         "interestToken": "0x91dDF92af38Afac1B59F450dDb94ddab10a11490",
-        "unlockTimestamp": 1621010937
+        "unlockTimestamp": 1621010937,
+        "createdAtTimestamp": 1620385952
       },
       "name": "ETH Principal Token",
       "tags": [
@@ -75,7 +76,8 @@
         "underlying": "0x9A1000D492d40bfccbc03f413A48F5B6516Ec0Fd",
         "position": "0x6F643Ba6894D8C50c476A3539e1D1690B2194018",
         "interestToken": "0xBf4B5cB5ca49B1eF6B02615a94980723f6484899",
-        "unlockTimestamp": 1628210937
+        "unlockTimestamp": 1628210937,
+        "createdAtTimestamp": 1620385967
       },
       "name": "ETH Principal Token",
       "tags": [
@@ -91,7 +93,8 @@
         "underlying": "0x78dEca24CBa286C0f8d56370f5406B48cFCE2f86",
         "position": "0x814C447a9F58A2b823504Fe2775bA48c843925B6",
         "interestToken": "0x2c637c5142eE4F31A1a78Ad3DF012fc242F6CAe6",
-        "unlockTimestamp": 1628211057
+        "unlockTimestamp": 1628211057,
+        "createdAtTimestamp": 1620386087
       },
       "name": "USDC Principal Token",
       "tags": [
