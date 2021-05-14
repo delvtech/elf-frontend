@@ -28,7 +28,7 @@ import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPaire
 import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
 import { RedeemPrincipalTokensButton } from "efi-ui/portfolio/RedeemButton/RedeemPrincipalTokensButton";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
+import { useTokenBalanceUNSAFE } from "efi-ui/token/hooks/useTokenBalance";
 import { useBaseAssetForTranche } from "efi-ui/tranche/useBaseAssetForTranche";
 import { useTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
 import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
@@ -81,7 +81,7 @@ export function PrincipalTokenCard(
     ? formatAbbreviatedDate(unlockDate)
     : t`Loading unlock date...`;
 
-  const trancheBalance = useTokenBalance(
+  const trancheBalance = useTokenBalanceUNSAFE(
     tranche as unknown as ERC20Shim,
     account
   );

@@ -4,7 +4,7 @@ import { Button, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { BigNumber, Signer } from "ethers";
-import { parseUnits } from "ethers/lib/utils";
+import { formatUnits, parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -12,16 +12,16 @@ import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInp
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
-import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
+import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { RedeemForm } from "efi-ui/tranche/RedeemForm/RedeemForm";
 import { useWithdrawInterest } from "efi-ui/tranche/RedeemTokensDrawer/useWithdrawInterest";
 import { useInterestTokenForTranche } from "efi-ui/tranche/useTrancheInterestTokenMulti";
+import { useRedeemTermAssetsToEth } from "efi-ui/userProxy/useRedeemTermAssetsToEth";
 import { WalletDrawer } from "efi-ui/wallets/WalletDrawer/WalletDrawer";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatFullDate } from "efi/base/dates";
 import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
-import { useRedeemTermAssetsToEth } from "efi-ui/userProxy/useRedeemTermAssetsToEth";
 
 interface RedeemYieldTokensDrawerProps {
   account: string | null | undefined;
@@ -56,6 +56,7 @@ export function RedeemYieldTokensDrawer({
     : undefined;
 
   const interestToken = useInterestTokenForTranche(tranche);
+
   const { data: interestTokenDecimals } = useTokenDecimals(interestToken);
 
   // input
@@ -66,10 +67,20 @@ export function RedeemYieldTokensDrawer({
     min: 0,
     maxPrecision: interestTokenDecimals,
   });
-  const accountInterestTokenBalance = useTokenBalance(interestToken, account);
+
+  const { data: accountInterestTokenBalance } = useTokenBalanceOf(
+    interestToken,
+    account
+  );
   const onSetMaxAmount = useCallback(() => {
-    setInterestTokenAmountString(accountInterestTokenBalance.toString());
-  }, [accountInterestTokenBalance, setInterestTokenAmountString]);
+    setInterestTokenAmountString(
+      formatUnits(accountInterestTokenBalance ?? 0, interestTokenDecimals)
+    );
+  }, [
+    accountInterestTokenBalance,
+    interestTokenDecimals,
+    setInterestTokenAmountString,
+  ]);
 
   const confirmButtonLabel = getConfirmButtonLabel(account);
   const interestTokenAmountBigNumber =

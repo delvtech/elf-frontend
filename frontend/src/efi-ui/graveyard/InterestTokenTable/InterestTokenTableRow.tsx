@@ -21,7 +21,7 @@ import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
+import { useTokenBalanceUNSAFE } from "efi-ui/token/hooks/useTokenBalance";
 import { useTrancheForInterestToken } from "efi-ui/tranche/useTrancheForInterestToken";
 import { useUnderlyingVaultForTranche } from "efi-ui/tranche/useUnderlyingVaultForTranche";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
@@ -55,7 +55,7 @@ export function InterestTokenTableRow({
       callArgs: [account as string],
     }
   );
-  const interestTokenBalance = useTokenBalance(
+  const interestTokenBalance = useTokenBalanceUNSAFE(
     interestToken as unknown as ERC20Shim,
     account
   );
