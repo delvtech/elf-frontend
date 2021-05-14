@@ -7,6 +7,7 @@ import {
   AVG_MINE_RATE_SECONDS,
   usePreviousBlockNumber,
 } from "efi-ui/ethereum/usePreviousBlockNumber/usePreviousBlockNumber";
+import { EMPTY_ARRAY } from "efi/base/emptyArray";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
 import { PoolContract } from "efi/pools/PoolContract";
 import { useMemo } from "react";
@@ -31,7 +32,7 @@ export function useSwaps(
 
   const swaps: SwapEventWithTimeStamp[] = useMemo(() => {
     if (!lastestBlockNumber) {
-      return [];
+      return EMPTY_ARRAY as SwapEventWithTimeStamp[];
     }
 
     return events

@@ -4,7 +4,7 @@ import { Button, Callout, Card, H4, Intent } from "@blueprintjs/core";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import BarChart from "efi-ui/charts/BarChart/BarChart";
+import BarChart, { TimeData } from "efi-ui/charts/BarChart/BarChart";
 import BrushChart from "efi-ui/charts/BrushChart/BrushChart";
 import { useVolumeHistoryForPool } from "efi-ui/pools/PoolCharts/useLiquidityVolumeHistoryForPool";
 import { usePoolCreatedAt } from "efi-ui/pools/usePoolCreatedAt";
@@ -13,7 +13,11 @@ import { ONE_DAY_IN_SECONDS } from "efi/base/time";
 import { PoolContract } from "efi/pools/PoolContract";
 
 import { useLiquidityHistoryForPool } from "./useLiquidityHistoryForPool";
+import { EMPTY_ARRAY } from "efi/base/emptyArray";
 
+const getBrushXValue: (data: TimeData) => number = ({ timeMs }) => timeMs;
+const getYValue: (data: TimeData) => number = ({ value }) => value;
+const getBarXValue: (data: TimeData) => Date = ({ timeMs }) => new Date(timeMs);
 enum ChartType {
   LIQUIDITY = "liquidity",
   VOLUME = "volume",
@@ -104,18 +108,18 @@ export function PoolCharts(props: PoolChartsProps): ReactElement {
             showLiquidityChart &&
             poolAtLeastOneDayOld ? (
               <BrushChart
-                data={liquidityData || []}
-                getXValue={({ timeMs }) => timeMs}
-                getYValue={({ value }) => value}
+                data={liquidityData || EMPTY_ARRAY}
+                getXValue={getBrushXValue}
+                getYValue={getYValue}
                 compact
                 isDarkMode={isDarkMode}
               />
             ) : null}
             {volumeData?.length && showVolumeChart && poolAtLeastOneDayOld ? (
               <BarChart
-                data={volumeData || []}
-                getXValue={({ timeMs }) => new Date(timeMs)}
-                getYValue={({ value }) => value}
+                data={volumeData || EMPTY_ARRAY}
+                getXValue={getBarXValue}
+                getYValue={getYValue}
                 // compact
                 isDarkMode={isDarkMode}
               />
