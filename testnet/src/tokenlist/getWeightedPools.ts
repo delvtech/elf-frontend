@@ -51,6 +51,15 @@ export async function getWeightedPools(
       ) as string;
     })
   );
+  const interestTokenAddresses = await Promise.all(
+    zip(safePools, poolIds).map(async (zipped) => {
+      const [pool, poolId] = zipped as [WeightedPool, string];
+      const [tokenAddresses] = await vault.getPoolTokens(poolId);
+      return tokenAddresses.find(
+        (address) => ![wethAddress, usdcAddress].includes(address)
+      ) as string;
+    })
+  );
   const poolSymbols = await Promise.all(safePools.map((pool) => pool.symbol()));
   const poolDecimals = await Promise.all(
     safePools.map((pool) => pool.decimals())
@@ -62,7 +71,8 @@ export async function getWeightedPools(
     poolNames,
     poolDecimals,
     poolIds,
-    underlyingAddresses
+    underlyingAddresses,
+    interestTokenAddresses
   ).map(
     ([
       address,
@@ -70,7 +80,8 @@ export async function getWeightedPools(
       name,
       decimal,
       poolId,
-      underlyingAddress,
+      underlying,
+      interestToken,
     ]): YieldTokenPoolInfo => {
       return {
         chainId,
@@ -79,7 +90,8 @@ export async function getWeightedPools(
         decimals: decimal as number,
         extensions: {
           poolId: poolId as string,
-          underlying: underlyingAddress as string,
+          underlying: underlying as string,
+          interestToken: interestToken as string,
         },
         name: name as string,
         tags: [TokenListTag.WPOOL],

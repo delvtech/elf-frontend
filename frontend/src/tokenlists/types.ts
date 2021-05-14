@@ -89,6 +89,11 @@ export interface PrincipalTokenPoolInfo extends TokenInfo {
 export interface YieldTokenPoolInfo extends TokenInfo {
   extensions: {
     /**
+     * The yield token address
+     */
+    interestToken: string;
+
+    /**
      * The underlying base asset for the yield token
      */
     underlying: string;
