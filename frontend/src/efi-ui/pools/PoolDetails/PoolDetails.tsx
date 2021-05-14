@@ -47,13 +47,11 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
 
   const totalLiquidityResult = useTotalFiatLiquidityForPool(pool);
   const totalLiquidityNumber = totalLiquidityResult?.toDecimal();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const totalLiquidity = useMemo(
     () => totalLiquidityResult,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [totalLiquidityNumber]
   );
-
-  // const liquidityTrend = useTotalLiquidityTrend(pool);
 
   const tranche = useTrancheForPool(pool);
 

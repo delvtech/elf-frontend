@@ -132,17 +132,17 @@ function usePoolCharts(pool: PoolContract | undefined) {
 
   const liquidityDataResult = useLiquidityHistoryForPool(pool);
   const liquidityDataLength = liquidityDataResult?.length;
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const liquidityData = useMemo(
     () => liquidityDataResult,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [pool, poolAtLeastOneDayOld, liquidityDataLength]
   );
 
   const volumeDataResult = useVolumeHistoryForPool(pool);
   const volumeDataLength = volumeDataResult?.length;
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const volumeData = useMemo(
     () => volumeDataResult,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [pool, poolAtLeastOneDayOld, volumeDataLength]
   );
 
