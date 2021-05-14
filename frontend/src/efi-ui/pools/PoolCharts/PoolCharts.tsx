@@ -15,7 +15,8 @@ import { PoolContract } from "efi/pools/PoolContract";
 import { useLiquidityHistoryForPool } from "./useLiquidityHistoryForPool";
 import { EMPTY_ARRAY } from "efi/base/emptyArray";
 
-const getBrushXValue: (data: TimeData) => number = ({ timeMs }) => timeMs;
+const getBrushXValue: (data: TimeData) => Date = ({ timeMs }) =>
+  new Date(timeMs);
 const getYValue: (data: TimeData) => number = ({ value }) => value;
 const getBarXValue: (data: TimeData) => Date = ({ timeMs }) => new Date(timeMs);
 enum ChartType {
