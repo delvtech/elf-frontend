@@ -1,8 +1,8 @@
 import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
 
 import { KNOWN_BASE_ASSETS } from "efi/addresses";
-import { defaultProvider } from "efi/providers/providers";
 import { ERC20 } from "elf-contracts/types/ERC20";
+import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
 
 interface ParsedTokens {
   baseAssetContract: ERC20 | undefined;
@@ -22,13 +22,15 @@ export function parseSortedTokensForPool(
   const baseAssetAddress = tokens?.[baseAssetIndex];
   const termAssetAddress = tokens?.[termAssetIndex];
 
-  const baseAssetContract = baseAssetAddress
-    ? ERC20__factory.connect(baseAssetAddress, defaultProvider)
-    : undefined;
+  const baseAssetContract = getSmartContractFromRegistry(
+    baseAssetAddress,
+    ERC20__factory.connect
+  );
 
-  const termAssetContract = termAssetAddress
-    ? ERC20__factory.connect(termAssetAddress, defaultProvider)
-    : undefined;
+  const termAssetContract = getSmartContractFromRegistry(
+    termAssetAddress,
+    ERC20__factory.connect
+  );
 
   return {
     baseAssetContract,
