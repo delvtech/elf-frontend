@@ -4,7 +4,7 @@ import { Button, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { BigNumber, Signer } from "ethers";
-import { parseUnits } from "ethers/lib/utils";
+import { formatUnits, parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -22,6 +22,7 @@ import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
 
 import { useWithdrawPrincipal } from "./useWithdrawPrincipal";
 import { useRedeemTermAssetsToEth } from "efi-ui/userProxy/useRedeemTermAssetsToEth";
+import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 
 interface RedeemPrincipalTokensDrawerProps {
   account: string | null | undefined;
@@ -61,10 +62,13 @@ export function RedeemPrincipalTokensDrawer({
       min: 0,
       maxPrecision: trancheDecimals,
     });
-  const accountTrancheBalance = useTokenBalance(tranche, account);
+
+  const { data: accountTrancheBalance } = useTokenBalanceOf(tranche, account);
   const onSetMaxAmount = useCallback(() => {
-    setTrancheAmountString(accountTrancheBalance.toString());
-  }, [accountTrancheBalance, setTrancheAmountString]);
+    setTrancheAmountString(
+      formatUnits(accountTrancheBalance ?? 0, trancheDecimals)
+    );
+  }, [accountTrancheBalance, setTrancheAmountString, trancheDecimals]);
 
   const confirmButtonLabel = getConfirmButtonLabel(account);
   const trancheAmountBigNumber =
