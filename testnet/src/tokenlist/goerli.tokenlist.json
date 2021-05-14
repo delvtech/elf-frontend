@@ -23,7 +23,7 @@
       "description": "Token that represents the balancer pool for Yield tokens"
     }
   },
-  "timestamp": "2021-05-13T02:32:54.098Z",
+  "timestamp": "2021-05-14T18:33:07.715Z",
   "version": {
     "major": 0,
     "minor": 0,
@@ -200,7 +200,8 @@
       "symbol": "eY_USDC_BPT",
       "decimals": 18,
       "extensions": {
-        "poolId": "0x252797e51f51631b6956545c45f9d3f9ffcb0940000200000000000000000063"
+        "poolId": "0x252797e51f51631b6956545c45f9d3f9ffcb0940000200000000000000000063",
+        "underlying": "0x78dEca24CBa286C0f8d56370f5406B48cFCE2f86"
       },
       "name": "Ele BPT",
       "tags": [
@@ -213,7 +214,8 @@
       "symbol": "eY_WETH_BPT",
       "decimals": 18,
       "extensions": {
-        "poolId": "0xcf6894c48c2af3ddd433cc1edfefc74e654cc9b4000200000000000000000065"
+        "poolId": "0xcf6894c48c2af3ddd433cc1edfefc74e654cc9b4000200000000000000000065",
+        "underlying": "0x9A1000D492d40bfccbc03f413A48F5B6516Ec0Fd"
       },
       "name": "Ele BPT",
       "tags": [
@@ -226,7 +228,8 @@
       "symbol": "eY_WETH_BPT",
       "decimals": 18,
       "extensions": {
-        "poolId": "0xd75bff2444ff738d443066ff4688691e6852b217000200000000000000000067"
+        "poolId": "0xd75bff2444ff738d443066ff4688691e6852b217000200000000000000000067",
+        "underlying": "0x9A1000D492d40bfccbc03f413A48F5B6516Ec0Fd"
       },
       "name": "Ele BPT",
       "tags": [

@@ -27,6 +27,10 @@ export interface PrincipalTokenInfo extends TokenInfo {
     interestToken: string;
 
     /**
+     * Number of seconds after epoch when the principal token was created
+     */
+    createdAtTimestamp: number;
+    /**
      * Number of seconds after epoch when the principal token can be redeemed
      */
     unlockTimestamp: number;
@@ -84,6 +88,11 @@ export interface PrincipalTokenPoolInfo extends TokenInfo {
 
 export interface YieldTokenPoolInfo extends TokenInfo {
   extensions: {
+    /**
+     * The underlying base asset for the yield token
+     */
+    underlying: string;
+
     /**
      * The underlying base asset for the yield token
      */

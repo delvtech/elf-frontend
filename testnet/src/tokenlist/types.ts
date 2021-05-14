@@ -91,6 +91,11 @@ export enum TokenListTag {
       /**
        * The underlying base asset for the yield token
        */
+      underlying: string;
+
+      /**
+       * The underlying base asset for the yield token
+       */
       poolId: string;
     };
   }
