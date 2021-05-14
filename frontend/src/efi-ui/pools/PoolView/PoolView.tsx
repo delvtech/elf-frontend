@@ -1,4 +1,4 @@
-import { Fragment, ReactElement } from "react";
+import { Fragment, ReactElement, useMemo } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
 import { RouteComponentProps } from "@reach/router";
@@ -19,10 +19,8 @@ interface PoolViewProps extends RouteComponentProps {
 export function PoolView({ poolAddress }: PoolViewProps): ReactElement {
   const { active, account, chainId, connector, library } =
     useWeb3React<Web3Provider>();
-
-  const signer = account ? (library?.getSigner(account) as Signer) : undefined;
-  const allPools = useAllPools(signer);
-  const pool = allPools.find((pool) => pool?.address === poolAddress);
+  const signer = useSigner(account, library);
+  const pool = usePool(poolAddress);
 
   return (
     <Fragment>
@@ -57,4 +55,18 @@ export function PoolView({ poolAddress }: PoolViewProps): ReactElement {
       </div>
     </Fragment>
   );
+}
+function usePool(poolAddress: string | undefined) {
+  const allPools = useAllPools();
+  const pool = allPools.find((pool) => pool?.address === poolAddress);
+  return pool;
+}
+
+function useSigner(
+  account: string | null | undefined,
+  library: Web3Provider | undefined
+) {
+  return useMemo(() => {
+    return account ? (library?.getSigner(account) as Signer) : undefined;
+  }, [account, library]);
 }

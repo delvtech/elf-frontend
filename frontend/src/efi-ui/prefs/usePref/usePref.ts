@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { useQuery, useQueryClient } from "react-query";
 
 import efiLocalStorage from "efi/base/localStorage";
@@ -11,7 +11,7 @@ interface PrefResult<T> {
 
 export function usePref<T>(id: string, defaultValue: T): PrefResult<T> {
   const queryClient = useQueryClient();
-  const queryKey = makePrefQueryKey(id);
+  const queryKey = usePrefQueryKey(id);
 
   const { data: prefEnvelope } = useQuery<PrefEnvelope<T>>({
     queryKey,
@@ -41,8 +41,8 @@ export function usePref<T>(id: string, defaultValue: T): PrefResult<T> {
   };
 }
 
-function makePrefQueryKey(id: string) {
-  const queryKey = [["efi", "prefs"], { id }];
+function usePrefQueryKey(id: string) {
+  const queryKey = useMemo(() => [["efi", "prefs"], { id }], [id]);
   return queryKey;
 }
 

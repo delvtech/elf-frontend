@@ -39,7 +39,7 @@ import { formatBalance } from "efi/base/formatBalance";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { clipStringValueToDecimals } from "efi/math/fixedPoint";
 import { calcSwapOutGivenInCCPoolUNSAFE } from "efi/pools/calcPoolSwap";
-import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
+import { useParseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { defaultProvider } from "efi/providers/providers";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
 import { getBaseAssetsForTranches } from "efi/tranche/getBaseAssetsForTranches";
@@ -118,7 +118,8 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
   const totalSupply = formatEther(totalSupplyBN ?? 0);
 
   const { data: [tokens, balances = []] = [] } = usePoolTokens(pool);
-  const { baseAssetIndex, termAssetIndex } = parseSortedTokensForPool(tokens);
+  const { baseAssetIndex, termAssetIndex } =
+    useParseSortedTokensForPool(tokens);
   const baseAssetPoolBalance = balances[baseAssetIndex];
   const principalTokenPoolBalance = balances[termAssetIndex];
   const baseReserves = formatUnits(

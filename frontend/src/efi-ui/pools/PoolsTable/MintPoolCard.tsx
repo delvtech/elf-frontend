@@ -25,7 +25,6 @@ import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSy
 import { MintCard } from "efi-ui/mint/MintCard/MintCard";
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 import { useFeeVolumeForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
-import { useParseSortedTokensForPool } from "efi-ui/pools/useParsedTokensForPool/useParsedTokensForPool";
 import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
@@ -44,6 +43,9 @@ import { PoolContract } from "efi/pools/PoolContract";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 
 import styles from "./PrincipalPoolCard.module.css";
+import { useParseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
+import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
+import { getQueryData } from "efi-ui/base/queryResults";
 
 interface MintPoolCardProps {
   pool: PoolContract | undefined;
@@ -67,8 +69,10 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
     props;
   const tranche = useTrancheForPool(pool);
   const principalPool = usePoolForToken(tranche);
+  const poolTokensResult = usePoolTokens(pool);
+  const tokenAddresses = getQueryData(poolTokensResult)?.[0] || [];
   const { termAssetContract: principalTokenContract } =
-    useParseSortedTokensForPool(principalPool);
+    useParseSortedTokensForPool(tokenAddresses);
   const principalPrice = usePoolSpotPrice(
     principalPool,
     principalTokenContract

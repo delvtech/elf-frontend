@@ -1,8 +1,10 @@
+import { useMemo } from "react";
+
+import { ERC20 } from "elf-contracts/types/ERC20";
 import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
 
 import { KNOWN_BASE_ASSETS } from "efi/addresses";
 import { defaultProvider } from "efi/providers/providers";
-import { ERC20 } from "elf-contracts/types/ERC20";
 
 interface ParsedTokens {
   baseAssetContract: ERC20 | undefined;
@@ -10,9 +12,10 @@ interface ParsedTokens {
   termAssetContract: ERC20 | undefined;
   termAssetIndex: number;
 }
+
 // tokens and token related values are returned as arrrays that are sorted alphanumerically by token
 // addresses.  this returns the index of the 'base asset' and 'yield asset' values of those arrays.
-export function parseSortedTokensForPool(
+export function useParseSortedTokensForPool(
   tokens: string[] | undefined
 ): ParsedTokens {
   const baseAssetIndex: number =
@@ -22,13 +25,19 @@ export function parseSortedTokensForPool(
   const baseAssetAddress = tokens?.[baseAssetIndex];
   const termAssetAddress = tokens?.[termAssetIndex];
 
-  const baseAssetContract = baseAssetAddress
-    ? ERC20__factory.connect(baseAssetAddress, defaultProvider)
-    : undefined;
+  const baseAssetContract = useMemo(() => {
+    if (!baseAssetAddress) {
+      return undefined;
+    }
+    return ERC20__factory.connect(baseAssetAddress, defaultProvider);
+  }, [baseAssetAddress]);
 
-  const termAssetContract = termAssetAddress
-    ? ERC20__factory.connect(termAssetAddress, defaultProvider)
-    : undefined;
+  const termAssetContract = useMemo(() => {
+    if (!termAssetAddress) {
+      return undefined;
+    }
+    return ERC20__factory.connect(termAssetAddress, defaultProvider);
+  }, [termAssetAddress]);
 
   return {
     baseAssetContract,

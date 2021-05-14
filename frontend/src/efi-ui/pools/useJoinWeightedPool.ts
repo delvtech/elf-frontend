@@ -15,6 +15,7 @@ import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSma
 import ContractAddresses from "efi/addresses";
 import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 import { ContractMethodArgs } from "efi/contracts/types";
+import { isWeightedPool } from "efi/pools/PoolContract";
 
 enum JoinKind {
   INIT,
@@ -40,7 +41,10 @@ export function useJoinWeightedPool(
   const { data: poolId } = useSmartContractReadCall(pool, "getPoolId");
   const { data: poolWeights } = useSmartContractReadCall(
     pool,
-    "getNormalizedWeights"
+    "getNormalizedWeights",
+    {
+      enabled: isWeightedPool(pool),
+    }
   );
   const { data: [poolTokens] = [] } = usePoolTokens(pool);
   const mutationResult = useSmartContractTransactionPersisted(

@@ -7,8 +7,10 @@ import {
   AVG_MINE_RATE_SECONDS,
   usePreviousBlockNumber,
 } from "efi-ui/ethereum/usePreviousBlockNumber/usePreviousBlockNumber";
+import { EMPTY_ARRAY } from "efi/base/emptyArray";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
 import { PoolContract } from "efi/pools/PoolContract";
+import { useMemo } from "react";
 
 export function useSwaps(
   pool: PoolContract | undefined,
@@ -20,7 +22,6 @@ export function useSwaps(
   const { data: fromBlockNumber } = usePreviousBlockNumber(fromTime);
   const { data: toBlockNumber } = usePreviousBlockNumber(toTime);
   const { data: lastestBlockNumber } = useLatestBlockNumber();
-  const nowInMs = Date.now();
 
   const { data: events = [] } = useSmartContractEvents(balancerVault, "Swap", {
     callArgs: [poolId as string, null, null, null, null],
@@ -29,33 +30,36 @@ export function useSwaps(
     toBlock: toBlockNumber,
   });
 
-  if (!lastestBlockNumber) {
-    return [];
-  }
+  const swaps: SwapEventWithTimeStamp[] = useMemo(() => {
+    if (!lastestBlockNumber) {
+      return EMPTY_ARRAY as SwapEventWithTimeStamp[];
+    }
 
-  const swaps: SwapEventWithTimeStamp[] = events
-    .map((event) => {
-      const { args, blockNumber } = event;
-      if (!args) {
-        return undefined;
-      }
+    return events
+      .map((event) => {
+        const { args, blockNumber } = event;
+        if (!args) {
+          return undefined;
+        }
+        const nowInMs = Date.now();
 
-      // estimating timestamp here by taking the current time and subtracting the mining rate
-      // multiplied by the number blocks mined:
-      const timeStamp =
-        nowInMs -
-        (lastestBlockNumber - blockNumber) * AVG_MINE_RATE_SECONDS * 1000;
+        // estimating timestamp here by taking the current time and subtracting the mining rate
+        // multiplied by the number blocks mined:
+        const timeStamp =
+          nowInMs -
+          (lastestBlockNumber - blockNumber) * AVG_MINE_RATE_SECONDS * 1000;
 
-      const [poolId, tokenIn, tokenOut, amountIn, amountOut] = args;
-      return [poolId, tokenIn, tokenOut, amountIn, amountOut, timeStamp];
-    })
-    .filter((swap): swap is SwapEventWithTimeStamp => {
-      if (!swap) {
-        return false;
-      }
-      const [poolId, tokenIn, tokenOut, amountIn, amountOut] = swap;
-      return !!poolId && !!tokenIn && !!tokenOut && !!amountIn && !!amountOut;
-    });
+        const [poolId, tokenIn, tokenOut, amountIn, amountOut] = args;
+        return [poolId, tokenIn, tokenOut, amountIn, amountOut, timeStamp];
+      })
+      .filter((swap): swap is SwapEventWithTimeStamp => {
+        if (!swap) {
+          return false;
+        }
+        const [poolId, tokenIn, tokenOut, amountIn, amountOut] = swap;
+        return !!poolId && !!tokenIn && !!tokenOut && !!amountIn && !!amountOut;
+      });
+  }, [events, lastestBlockNumber]);
 
   return swaps;
 }

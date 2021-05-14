@@ -1,5 +1,4 @@
 import { BigNumber } from "ethers";
-import { Money } from "ts-money";
 
 import { useConvertToFiat } from "efi-ui/money/hooks/useConvertToFiat";
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
@@ -23,7 +22,7 @@ export function useVolumeForPool(
   pool: PoolContract | undefined,
   fromTime: number = ONE_DAY_IN_SECONDS,
   toTime?: number
-): Money | undefined {
+): number | undefined {
   const swapEvents = useSwaps(pool, fromTime, toTime);
   const baseAsset = useBaseAssetForPool(pool);
   const { currency } = useCurrencyPref();
@@ -46,5 +45,5 @@ export function useVolumeForPool(
     baseAssetDecimals
   );
 
-  return fiatVolume;
+  return fiatVolume?.toDecimal();
 }
