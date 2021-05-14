@@ -89,7 +89,7 @@ export function useQueryBatchSwapCalc(
   const { baseAssetContract } = useParseSortedTokensForPool(tokens);
   const { data: decimals } = useTokenDecimals(baseAssetContract);
 
-  const balancesByAddress: Record<string, BigNumber> = {};
+  const balancesByAddress: Record<string, BigNumber | undefined> = {};
   tokens
     .filter((address): address is string => !!address)
     .forEach(
@@ -124,12 +124,12 @@ export function useQueryBatchSwapCalc(
     return { result: undefined, status: "loading" };
   }
   const tokenInReserves = formatUnits(
-    balancesByAddress[tokenInAddress],
+    balancesByAddress[tokenInAddress] ?? 0,
     decimals
   );
 
   const tokenOutReserves = formatUnits(
-    balancesByAddress[tokenOutAddress],
+    balancesByAddress[tokenOutAddress] ?? 0,
     decimals
   );
 
