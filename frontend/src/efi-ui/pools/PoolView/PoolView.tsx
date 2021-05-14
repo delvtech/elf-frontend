@@ -17,11 +17,10 @@ interface PoolViewProps extends RouteComponentProps {
 }
 
 export function PoolView({ poolAddress }: PoolViewProps): ReactElement {
-  const web3ReactContext = useWeb3React<Web3Provider>();
-  const { active, account, chainId, connector, library } = web3ReactContext;
+  const { active, account, chainId, connector, library } =
+    useWeb3React<Web3Provider>();
   const signer = useSigner(account, library);
-  const allPools = useAllPools();
-  const pool = allPools.find((pool) => pool?.address === poolAddress);
+  const pool = usePool(poolAddress);
 
   return (
     <Fragment>
@@ -57,6 +56,12 @@ export function PoolView({ poolAddress }: PoolViewProps): ReactElement {
     </Fragment>
   );
 }
+function usePool(poolAddress: string | undefined) {
+  const allPools = useAllPools();
+  const pool = allPools.find((pool) => pool?.address === poolAddress);
+  return pool;
+}
+
 function useSigner(
   account: string | null | undefined,
   library: Web3Provider | undefined
