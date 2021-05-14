@@ -1,10 +1,9 @@
-import React, { ReactElement } from "react";
+import { ReactElement } from "react";
 
 import { ButtonGroup, Callout, Card, Intent, Tag } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import classNames from "classnames";
-import { Tranche__factory } from "elf-contracts/types/factories/Tranche__factory";
 import { WeightedPool } from "elf-contracts/types/WeightedPool";
 import { BigNumber } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
@@ -13,7 +12,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
+import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { UnstakeWeightedPoolButton } from "efi-ui/pools/UnstakeButton/UnstakeWeightedPoolButton";
@@ -24,12 +23,15 @@ import { GoToMarketButton } from "efi-ui/portfolio/PrincipalTokenCard/GoToMarket
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { useTokenName } from "efi-ui/token/hooks/useTokenName";
-import { useTrancheUnlockTimestamp } from "efi-ui/tranche/useTrancheUnlockTimestamp";
-import { KNOWN_BASE_ASSETS } from "efi/addresses";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
 import { formatPercent } from "efi/base/formatPercent";
-import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
+import { getTokenInfo } from "efi/tokenlists";
+import {
+  YieldTokenInfo,
+  PrincipalTokenInfo,
+  YieldTokenPoolInfo,
+} from "tokenlists/types";
 
 interface YieldTokenLPCardProps {
   library: Web3Provider | undefined;
@@ -63,12 +65,21 @@ export function YieldTokenLPCard({
     baseAssetContract?.address
   );
   const baseAssetSymbol = useCryptoSymbol(baseAssetCryptoAsset);
-  const BaseAssetIcon = findAssetIcon(baseAssetSymbol);
+  const BaseAssetIcon = findAssetIcon2(baseAssetCryptoAsset);
 
-  // Principal token
-  const tranche = useTrancheForPool(pool);
-  const { data: trancheDecimals } = useTokenDecimals(tranche);
-  const { data: unlockTimestamp } = useTrancheUnlockTimestamp(tranche);
+  let yieldTokenAddress;
+  let yieldTokenDecimals;
+  if (pool?.address) {
+    ({ address: yieldTokenAddress, decimals: yieldTokenDecimals } =
+      getYieldTokenForWeightedPool(pool.address));
+  }
+
+  const {
+    extensions: { unlockTimestamp },
+  } = yieldTokenAddress
+    ? getPrincipalTokenForYieldToken(yieldTokenAddress)
+    : { extensions: { unlockTimestamp: undefined } };
+
   const unlockDate = convertEpochSecondsToDate(unlockTimestamp);
   const formattedDate = unlockDate
     ? formatAbbreviatedDate(unlockDate)
@@ -92,8 +103,8 @@ export function YieldTokenLPCard({
     poolShares,
     addresses,
     poolBalances,
-    tranche?.address,
-    trancheDecimals
+    yieldTokenAddress,
+    yieldTokenDecimals
   );
 
   const baseAssetLiquidityLabel = `${baseAssetLiquidity?.toFixed(4)}`;
@@ -224,14 +235,20 @@ function getPoolSharesLabel(poolShares: number | undefined) {
   return formatPercent(poolShares, 2);
 }
 
-function useTrancheForPool(pool: WeightedPool | undefined) {
-  const { data: [poolTokens = []] = [] } = usePoolTokens(pool);
-  const principalTokenAddress = poolTokens.find(
-    (address) => !KNOWN_BASE_ASSETS.includes(address)
-  );
+function getPrincipalTokenForYieldToken(
+  interestTokenAddress: string
+): PrincipalTokenInfo {
+  const {
+    extensions: { tranche },
+  } = getTokenInfo<YieldTokenInfo>(interestTokenAddress);
 
-  return getSmartContractFromRegistry(
-    principalTokenAddress,
-    Tranche__factory.connect
-  );
+  return getTokenInfo<PrincipalTokenInfo>(tranche);
+}
+
+function getYieldTokenForWeightedPool(poolAddress: string): YieldTokenInfo {
+  const {
+    extensions: { interestToken: yieldTokenAddress },
+  } = getTokenInfo<YieldTokenPoolInfo>(poolAddress);
+
+  return getTokenInfo<YieldTokenInfo>(yieldTokenAddress);
 }
