@@ -7,12 +7,12 @@ import { Money } from "ts-money";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { TrendIndicator } from "efi-ui/base/TrendIndicator/TrendIndicator";
-import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
+import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { formatPercent } from "efi/base/formatPercent";
+import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { formatMoney } from "efi/money/formatMoney";
 import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { isConvergentCurvePool, PoolContract } from "efi/pools/PoolContract";
@@ -23,26 +23,17 @@ const summaryCardStyle: CSSProperties = {
 
 interface PoolSummaryProps {
   liquidity: Money | undefined;
-  liquidityTrend: number | undefined;
-  volume: Money | undefined;
-  volumeTrend: number | undefined;
+  liquidityTrend?: number | undefined;
+  volume: number | undefined;
+  volumeTrend?: number | undefined;
   feeVolume: Money | undefined;
-  feeVolumeTrend: number | undefined;
+  feeVolumeTrend?: number | undefined;
   stakingAPY: number | undefined;
   pool: PoolContract | undefined;
 }
 
 export function PoolSummary(props: PoolSummaryProps): ReactElement {
-  const {
-    liquidity,
-    liquidityTrend,
-    volume,
-    volumeTrend,
-    feeVolume,
-    feeVolumeTrend,
-    stakingAPY,
-    pool,
-  } = props;
+  const { liquidity, volume, feeVolume, stakingAPY, pool } = props;
 
   const { data: [tokens, balances] = [undefined, undefined] } =
     usePoolTokens(pool);
@@ -65,6 +56,9 @@ export function PoolSummary(props: PoolSummaryProps): ReactElement {
 
   const quantityLabel = isConvergentCurvePool(pool) ? "PT" : "YT";
 
+  const { currency } = useCurrencyPref();
+  const volumeMoney = Money.fromDecimal(volume ?? 0, currency, Math.round);
+  const volumeDisplayValue = volume ? formatMoney(volumeMoney) : "$0.00";
   return (
     <div>
       <div className="mb-2">{t`Pool Summary`}</div>
@@ -103,7 +97,7 @@ export function PoolSummary(props: PoolSummaryProps): ReactElement {
                 className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
               >{t`Volume (24hr)`}</span>
               <div className={classNames("h5", tw("space-x-4"))}>
-                {volume ? formatMoney(volume) : "$0.00"}
+                {volumeDisplayValue}
               </div>
             </div>
             {/*            <div className={tw("flex", "self-end")}>
