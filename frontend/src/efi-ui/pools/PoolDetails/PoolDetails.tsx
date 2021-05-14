@@ -1,4 +1,4 @@
-import React, { ReactElement, useMemo } from "react";
+import React, { ReactElement } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
@@ -45,13 +45,7 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
   const { baseAssetContract, termAssetContract } =
     useParseSortedTokensForPool(tokenAddresses);
 
-  const totalLiquidityResult = useTotalFiatLiquidityForPool(pool);
-  const totalLiquidityNumber = totalLiquidityResult?.toDecimal();
-  const totalLiquidity = useMemo(
-    () => totalLiquidityResult,
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [totalLiquidityNumber]
-  );
+  const totalLiquidity = useTotalFiatLiquidityForPool(pool);
 
   const tranche = useTrancheForPool(pool);
 

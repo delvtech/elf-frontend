@@ -1,3 +1,5 @@
+import { useMemo } from "react";
+
 import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
 import { BigNumber } from "ethers";
 import zip from "lodash.zip";
@@ -58,15 +60,6 @@ export function useTotalFiatLiquidityForPool(
 
   const spotPrice = usePoolSpotPrice(pool, baseAssetContract);
 
-  if (
-    spotPrice === undefined ||
-    yieldAssetBalance === undefined ||
-    yieldAssetDecimals === undefined
-  ) {
-    // if there is no yield assets in the pool, then we just show the base fiat balance
-    return baseAssetFiatBalance;
-  }
-
   const yieldAssetPrice = Money.fromDecimal(
     (baseAssetPrice?.toDecimal() || 1) / (spotPrice || 1),
     currency,
@@ -76,12 +69,30 @@ export function useTotalFiatLiquidityForPool(
   const yieldAssetFiatBalance =
     convertToFiatBalance(
       yieldAssetPrice,
-      yieldAssetBalance,
-      yieldAssetDecimals
+      yieldAssetBalance ?? BigNumber.from(0),
+      yieldAssetDecimals ?? 18
     ) || Money.fromDecimal(0, currency.code, Math.round);
 
   const totalBalance = baseAssetFiatBalance?.add(yieldAssetFiatBalance);
-  return totalBalance;
+
+  const totalBalanceString = totalBalance?.toString();
+  const totalLiquidity = useMemo(
+    () => totalBalance,
+    // hack to memoize the Money object by looking at its converted string value
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [totalBalanceString]
+  );
+
+  if (
+    spotPrice === undefined ||
+    yieldAssetBalance === undefined ||
+    yieldAssetDecimals === undefined
+  ) {
+    // if there is no yield assets in the pool, then we just show the base fiat balance
+    return baseAssetFiatBalance;
+  }
+
+  return totalLiquidity;
 }
 
 export function useTotalLiquidityForPoolMulti(
