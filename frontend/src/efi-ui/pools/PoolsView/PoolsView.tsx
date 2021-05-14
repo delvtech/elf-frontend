@@ -9,7 +9,7 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { PoolsTable } from "efi-ui/pools/PoolsTable/PoolsTable";
-import { useSigner } from "efi-ui/provider/useBlockFromTag/useSigner";
+import { useSigner } from "efi-ui/provider/useBlockFromTag/useSigner/useSigner";
 
 interface PoolsViewProps extends RouteComponentProps {}
 

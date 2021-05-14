@@ -8,6 +8,7 @@ export function useSigner(
   library: Web3Provider | undefined
 ): Signer | undefined {
   return useMemo(() => {
+    // returns a new instance evertime so we memoize
     return account ? (library?.getSigner(account) as Signer) : undefined;
   }, [account, library]);
 }

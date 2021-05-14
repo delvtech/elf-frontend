@@ -136,7 +136,6 @@ function usePoolCharts(pool: PoolContract | undefined) {
   const poolAtLeastOneDayOld = usePoolAtLeastOneDayOld(pool);
 
   const liquidityData = useLiquidityHistoryForPool(pool);
-
   const volumeData = useVolumeHistoryForPool(pool);
 
   const [activeChart, setChart] = useState(ChartType.LIQUIDITY);

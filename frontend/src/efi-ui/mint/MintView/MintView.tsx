@@ -11,7 +11,7 @@ import tw from "efi-tailwindcss-classnames";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { MintPoolCard } from "efi-ui/pools/PoolsTable/MintPoolCard";
 import { useWeightedPools } from "efi-ui/pools/useWeightedPools/useWeightedPools";
-import { useSigner } from "efi-ui/provider/useBlockFromTag/useSigner";
+import { useSigner } from "efi-ui/provider/useBlockFromTag/useSigner/useSigner";
 
 interface MintViewProps extends RouteComponentProps {}
 
