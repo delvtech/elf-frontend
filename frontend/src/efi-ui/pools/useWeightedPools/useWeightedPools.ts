@@ -6,6 +6,7 @@ import { Signer } from "ethers";
 import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
 import { yieldTokenPoolInfos } from "efi/tokenlists";
 import { YieldTokenPoolInfo } from "tokenlists/types";
+import { useMemo } from "react";
 
 export interface YieldTokenPoolInfoWithContract extends YieldTokenPoolInfo {
   contract: WeightedPool;
@@ -31,7 +32,9 @@ export const yieldTokenPools: YieldTokenPoolInfoWithContract[] =
 export function useWeightedPools(
   signerOrProvider?: Signer | Provider
 ): WeightedPool[] {
-  return yieldTokenPools.map((info) =>
-    signerOrProvider ? info.contract.connect(signerOrProvider) : info.contract
-  );
+  return useMemo(() => {
+    return yieldTokenPools.map((info) =>
+      signerOrProvider ? info.contract.connect(signerOrProvider) : info.contract
+    );
+  }, [signerOrProvider]);
 }

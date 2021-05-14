@@ -6,6 +6,7 @@ import { PrincipalTokenPoolInfo } from "tokenlists/types";
 
 import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
 import { principalTokenPoolInfos } from "efi/tokenlists";
+import { useMemo } from "react";
 
 export interface PrincipalTokenPoolInfoWithContract
   extends PrincipalTokenPoolInfo {
@@ -32,7 +33,9 @@ export const principalTokenPools: PrincipalTokenPoolInfoWithContract[] =
 export function useConvergentCurvePools(
   signerOrProvider?: Signer | Provider
 ): ConvergentCurvePool[] {
-  return principalTokenPools.map((info) =>
-    signerOrProvider ? info.contract.connect(signerOrProvider) : info.contract
-  );
+  return useMemo(() => {
+    return principalTokenPools.map((info) =>
+      signerOrProvider ? info.contract.connect(signerOrProvider) : info.contract
+    );
+  }, [signerOrProvider]);
 }
