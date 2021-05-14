@@ -1,4 +1,4 @@
-import React, { ReactElement, useMemo } from "react";
+import React, { ReactElement } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
@@ -16,7 +16,7 @@ import { TokenSummary } from "efi-ui/pools/TokenSummary/TokenSummary";
 import { useFeeVolumeFiatForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useStakingAPY } from "efi-ui/pools/useStakingAPY";
-import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidityForPool.ts/useTotalFiatLiquidityForPool";
+import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
 import { useTotalValueLockedForTranche } from "efi-ui/pools/useTotalValueLockedForTranche";
 import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForPool";
 import { useVolumeForPool } from "efi-ui/pools/useVolumeForPool/useVolumeForPool";
@@ -45,13 +45,7 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
   const { baseAssetContract, termAssetContract } =
     useParseSortedTokensForPool(tokenAddresses);
 
-  const totalLiquidityResult = useTotalFiatLiquidityForPool(pool);
-  const totalLiquidityNumber = totalLiquidityResult?.toDecimal();
-  const totalLiquidity = useMemo(
-    () => totalLiquidityResult,
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [totalLiquidityNumber]
-  );
+  const totalLiquidity = useTotalFiatLiquidityForPool(pool);
 
   const tranche = useTrancheForPool(pool);
 

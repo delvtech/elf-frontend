@@ -1,13 +1,13 @@
-import { Fragment, ReactElement, useMemo } from "react";
+import { Fragment, ReactElement } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
 import { RouteComponentProps } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
-import { Signer } from "ethers";
 
 import tw from "efi-tailwindcss-classnames";
 import { PoolDetails } from "efi-ui/pools/PoolDetails/PoolDetails";
 import { useAllPools } from "efi-ui/pools/useAllPools/useAllPools";
+import { useSigner } from "efi-ui/provider/useBlockFromTag/useSigner/useSigner";
 
 import { PoolViewHeader } from "./PoolViewHeader";
 import { PoolViewTitle } from "./PoolViewTitle";
@@ -60,13 +60,4 @@ function usePool(poolAddress: string | undefined) {
   const allPools = useAllPools();
   const pool = allPools.find((pool) => pool?.address === poolAddress);
   return pool;
-}
-
-function useSigner(
-  account: string | null | undefined,
-  library: Web3Provider | undefined
-) {
-  return useMemo(() => {
-    return account ? (library?.getSigner(account) as Signer) : undefined;
-  }, [account, library]);
 }

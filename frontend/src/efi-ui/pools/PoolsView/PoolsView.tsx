@@ -4,19 +4,19 @@ import { Helmet } from "react-helmet";
 import { Web3Provider } from "@ethersproject/providers";
 import { RouteComponentProps } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
-import { Signer } from "ethers";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { PoolsTable } from "efi-ui/pools/PoolsTable/PoolsTable";
+import { useSigner } from "efi-ui/provider/useBlockFromTag/useSigner/useSigner";
 
 interface PoolsViewProps extends RouteComponentProps {}
 
 export function PoolsView(props: PoolsViewProps): ReactElement {
   const { library, account } = useWeb3React<Web3Provider>();
 
-  const signer = account ? (library?.getSigner(account) as Signer) : undefined;
+  const signer = useSigner(account, library);
 
   const isYieldPage = props.path === "yield";
   const title = isYieldPage ? t`Yield Token Pools` : t`Principal Token Pools`;

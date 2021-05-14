@@ -8,6 +8,7 @@ import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
 import { PoolContract } from "efi/pools/PoolContract";
+import { EMPTY_ARRAY } from "efi/base/emptyArray";
 
 /**
  * Returns the fiat volume for a pool in a given time range
@@ -44,5 +45,5 @@ export function useVolumeHistoryForPool(
     });
   }
 
-  return [];
+  return EMPTY_ARRAY as TimeData[];
 }
