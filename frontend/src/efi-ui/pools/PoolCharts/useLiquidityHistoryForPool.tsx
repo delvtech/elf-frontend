@@ -18,7 +18,7 @@ import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
-import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
+import { useParseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { PoolContract } from "efi/pools/PoolContract";
 
 type PoolBalanceChangedArguments = [
@@ -50,7 +50,7 @@ export function useLiquidityHistoryForPool(
     baseAssetContract,
     baseAssetIndex,
     termAssetIndex: yieldAssetIndex,
-  } = parseSortedTokensForPool(tokens);
+  } = useParseSortedTokensForPool(tokens);
   const { data: baseAssetDecimals } = useTokenDecimals(baseAssetContract);
   const spotPrice = usePoolSpotPrice(pool, baseAssetContract);
   const { currency } = useCurrencyPref();

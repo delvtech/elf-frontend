@@ -14,7 +14,7 @@ import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { formatPercent } from "efi/base/formatPercent";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { formatMoney } from "efi/money/formatMoney";
-import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
+import { useParseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { isConvergentCurvePool, PoolContract } from "efi/pools/PoolContract";
 
 const summaryCardStyle: CSSProperties = {
@@ -43,7 +43,7 @@ export function PoolSummary(props: PoolSummaryProps): ReactElement {
     termAssetIndex,
     baseAssetContract,
     termAssetContract,
-  } = parseSortedTokensForPool(tokens);
+  } = useParseSortedTokensForPool(tokens);
 
   const baseAsset = getCryptoAssetForToken(baseAssetContract?.address);
   const baseAssetSymbol = useCryptoSymbol(baseAsset);

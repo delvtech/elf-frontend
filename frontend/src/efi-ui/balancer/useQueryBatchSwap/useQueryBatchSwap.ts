@@ -18,7 +18,7 @@ import {
   calcSwapOutGivenInCCPoolUNSAFE,
   calcSwapOutGivenInWeightedPoolUNSAFE,
 } from "efi/pools/calcPoolSwap";
-import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
+import { useParseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import {
   isConvergentCurvePool,
   isWeightedPool,
@@ -86,7 +86,7 @@ export function useQueryBatchSwapCalc(
 ): QueryBatchSwapCalcResults {
   const { data } = usePoolTokens(pool);
   const [tokens, balances] = data ?? [[], []];
-  const { baseAssetContract } = parseSortedTokensForPool(tokens);
+  const { baseAssetContract } = useParseSortedTokensForPool(tokens);
   const { data: decimals } = useTokenDecimals(baseAssetContract);
 
   const balancesByAddress: Record<string, BigNumber> = {};

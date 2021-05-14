@@ -22,7 +22,7 @@ import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForP
 import { useVolumeForPool } from "efi-ui/pools/useVolumeForPool/useVolumeForPool";
 import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
-import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
+import { useParseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { PoolContract } from "efi/pools/PoolContract";
 import { getTokenInfo } from "efi/tokenlists";
 
@@ -43,7 +43,7 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
   const tokenAddresses = getQueryData(poolTokensResult)?.[0] || [];
 
   const { baseAssetContract, termAssetContract } =
-    parseSortedTokensForPool(tokenAddresses);
+    useParseSortedTokensForPool(tokenAddresses);
 
   const totalLiquidityResult = useTotalFiatLiquidityForPool(pool);
   const totalLiquidityNumber = totalLiquidityResult?.toDecimal();

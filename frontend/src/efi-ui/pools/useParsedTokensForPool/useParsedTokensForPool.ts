@@ -2,7 +2,7 @@ import { ERC20 } from "elf-contracts/types/ERC20";
 
 import { getQueryData } from "efi-ui/base/queryResults";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
-import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
+import { useParseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { PoolContract } from "efi/pools/PoolContract";
 
 interface ParsedTokens {
@@ -24,7 +24,7 @@ export function useParseSortedTokensForPool(
   const poolTokensResult = usePoolTokens(pool);
   const tokenAddresses = getQueryData(poolTokensResult)?.[0] || [];
 
-  const parsedTokens = parseSortedTokensForPool(tokenAddresses);
+  const parsedTokens = useParseSortedTokensForPool(tokenAddresses);
 
   return parsedTokens;
 }

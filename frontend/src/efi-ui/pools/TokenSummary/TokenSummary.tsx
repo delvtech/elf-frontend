@@ -24,7 +24,7 @@ import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
 import { useTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
 import { formatPercent } from "efi/base/formatPercent";
 import { formatMoney } from "efi/money/formatMoney";
-import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
+import { useParseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { isConvergentCurvePool, PoolContract } from "efi/pools/PoolContract";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 
@@ -225,7 +225,7 @@ function useTokensSummary(
     usePoolTokens(pool);
 
   const { termAssetIndex, baseAssetContract, termAssetContract } =
-    parseSortedTokensForPool(tokens);
+    useParseSortedTokensForPool(tokens);
   const baseAsset = getCryptoAssetForToken(baseAssetContract?.address);
 
   // Base Asset Info

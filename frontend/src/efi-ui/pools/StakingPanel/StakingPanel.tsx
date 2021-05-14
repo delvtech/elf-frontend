@@ -30,7 +30,7 @@ import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 import { formatBalance } from "efi/base/formatBalance";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
-import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
+import { useParseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { PoolContract } from "efi/pools/PoolContract";
 import { validateStakingValue } from "efi/staking/validateStakeValue";
 import { TrancheContracts } from "efi/tranche/tranches";
@@ -74,7 +74,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
     baseAssetIndex,
     termAssetContract,
     termAssetIndex,
-  } = parseSortedTokensForPool(tokens);
+  } = useParseSortedTokensForPool(tokens);
   // Pool calls
   const { data: totalSupplyBN } = useSmartContractReadCall(pool, "totalSupply");
   const totalSupply = formatEther(totalSupplyBN ?? 0);

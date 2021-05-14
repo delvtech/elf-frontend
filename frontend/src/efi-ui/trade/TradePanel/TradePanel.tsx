@@ -32,7 +32,7 @@ import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 import { formatBalance } from "efi/base/formatBalance";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { CryptoAssetType } from "efi/crypto/CryptoAsset";
-import { parseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
+import { useParseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { PoolContract } from "efi/pools/PoolContract";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
@@ -320,7 +320,7 @@ function useTokenInfoForTradeInput(
   const tokensResult = usePoolTokens(pool);
   const [tokens] = getQueryData(tokensResult) ?? [];
   const { termAssetContract, baseAssetContract } =
-    parseSortedTokensForPool(tokens);
+    useParseSortedTokensForPool(tokens);
   const baseCryptoAsset = getCryptoAssetForToken(baseAssetContract?.address);
 
   // get symbols
