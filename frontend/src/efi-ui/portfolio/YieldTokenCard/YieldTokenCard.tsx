@@ -34,7 +34,7 @@ import { MaturityTimeBar } from "efi-ui/portfolio/PrincipalTokenCard/MaturityTim
 import { RedeemYieldTokensButton } from "efi-ui/portfolio/RedeemButton/RedeemYieldTokensButton";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
+import { useTokenBalanceUNSAFE } from "efi-ui/token/hooks/useTokenBalance";
 import { useBaseAssetForTranche } from "efi-ui/tranche/useBaseAssetForTranche";
 import { useTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
 import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
@@ -83,7 +83,7 @@ export function YieldTokenCard({
       callArgs: [account as string],
     }
   );
-  const yieldTokenBalance = useTokenBalance(
+  const yieldTokenBalance = useTokenBalanceUNSAFE(
     yieldToken as unknown as ERC20Shim,
     account
   );
