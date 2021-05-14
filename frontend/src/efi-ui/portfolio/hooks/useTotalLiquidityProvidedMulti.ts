@@ -2,7 +2,7 @@ import zip from "lodash.zip";
 import { Money } from "ts-money";
 
 import { useShareOfPoolMulti } from "efi-ui/pools/useShareOfPool";
-import { useTotalLiquidityForPoolMulti } from "efi-ui/pools/useTotalFiatLiquidityForPool.ts/useTotalFiatLiquidityForPool";
+import { useTotalLiquidityForPoolMulti } from "efi-ui/pools/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
 import { PoolContract } from "efi/pools/PoolContract";
 
 /**
