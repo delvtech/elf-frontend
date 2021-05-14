@@ -135,21 +135,9 @@ function usePoolCharts(pool: PoolContract | undefined) {
   const { isDarkMode } = useDarkMode();
   const poolAtLeastOneDayOld = usePoolAtLeastOneDayOld(pool);
 
-  const liquidityDataResult = useLiquidityHistoryForPool(pool);
-  const liquidityDataLength = liquidityDataResult?.length;
-  const liquidityData = useMemo(
-    () => liquidityDataResult,
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [pool, poolAtLeastOneDayOld, liquidityDataLength]
-  );
+  const liquidityData = useLiquidityHistoryForPool(pool);
 
-  const volumeDataResult = useVolumeHistoryForPool(pool);
-  const volumeDataLength = volumeDataResult?.length;
-  const volumeData = useMemo(
-    () => volumeDataResult,
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [pool, poolAtLeastOneDayOld, volumeDataLength]
-  );
+  const volumeData = useVolumeHistoryForPool(pool);
 
   const [activeChart, setChart] = useState(ChartType.LIQUIDITY);
   const showLiquidityChart = activeChart === ChartType.LIQUIDITY;
