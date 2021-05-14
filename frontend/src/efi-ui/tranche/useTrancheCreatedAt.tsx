@@ -19,7 +19,13 @@ export function useTrancheCreatedAt(
   const { data: events } = useSmartContractEvents(
     trancheFactoryContract,
     "TrancheCreated",
-    { callArgs: [tranche?.address as string, null, null], enabled: !!tranche }
+    {
+      callArgs: [tranche?.address as string, null, null],
+      enabled: !!tranche,
+      staleTime: Infinity,
+      cacheTime: Infinity,
+      refetchOnWindowFocus: false,
+    }
   );
   const blockNumber = events?.[0].blockNumber;
 

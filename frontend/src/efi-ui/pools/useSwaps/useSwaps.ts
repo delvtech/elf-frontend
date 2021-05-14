@@ -28,6 +28,7 @@ export function useSwaps(
     enabled: !!poolId && !!fromBlockNumber,
     fromBlock: fromBlockNumber,
     toBlock: toBlockNumber,
+    refetchOnWindowFocus: false,
   });
 
   const swaps: SwapEventWithTimeStamp[] = useMemo(() => {

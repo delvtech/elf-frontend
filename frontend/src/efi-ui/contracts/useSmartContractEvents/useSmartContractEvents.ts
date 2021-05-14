@@ -11,6 +11,10 @@ export interface UseSmartContractEventsCallOptions<
 > {
   callArgs?: ContractFilterArgs<TContract, TFilterName>;
   enabled?: boolean;
+
+  staleTime?: number;
+  cacheTime?: number;
+  refetchOnWindowFocus?: boolean;
   fromBlock?: number;
   toBlock?: number;
 }
@@ -41,7 +45,15 @@ export function makeSmartContractEventsUseQueryOptions<
   filterName: TFilterName,
   options?: UseSmartContractEventsCallOptions<TContract, TFilterName>
 ): UseQueryOptions<Event[]> {
-  const { enabled = true, callArgs, fromBlock, toBlock } = options || {};
+  const {
+    enabled = true,
+    staleTime,
+    cacheTime,
+    refetchOnWindowFocus,
+    callArgs,
+    fromBlock,
+    toBlock,
+  } = options || {};
 
   const queryKey = makeSmartContractEventsQueryKey<TContract, TFilterName>(
     contract,
@@ -76,6 +88,9 @@ export function makeSmartContractEventsUseQueryOptions<
       );
     },
     enabled: !!contract && enabled,
+    staleTime,
+    cacheTime,
+    refetchOnWindowFocus,
   };
 }
 

@@ -21,6 +21,9 @@ export function usePoolCreatedAt(
     {
       enabled: !!pool?.address,
       callArgs: [pool?.address as string, null],
+      staleTime: Infinity,
+      cacheTime: Infinity,
+      refetchOnWindowFocus: false,
     }
   );
   const convergentBlockNumber = convergentEvents?.[0]?.blockNumber;
@@ -34,7 +37,13 @@ export function usePoolCreatedAt(
   const { data: weightedEvents } = useSmartContractEvents(
     weightedPoolFactory,
     "PoolCreated",
-    { enabled: !!pool?.address, callArgs: [pool?.address as string] }
+    {
+      enabled: !!pool?.address,
+      callArgs: [pool?.address as string],
+      refetchOnWindowFocus: false,
+      staleTime: Infinity,
+      cacheTime: Infinity,
+    }
   );
   const weightedBlockNumber = weightedEvents?.[0]?.blockNumber;
   const { data: weightedBlock } = useBlockFromTag(weightedBlockNumber);
