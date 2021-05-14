@@ -12,7 +12,6 @@ import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInp
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
-import { useTokenBalance } from "efi-ui/token/hooks/useTokenBalance";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { RedeemForm } from "efi-ui/tranche/RedeemForm/RedeemForm";
 import { WalletDrawer } from "efi-ui/wallets/WalletDrawer/WalletDrawer";
