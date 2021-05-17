@@ -1,4 +1,4 @@
-import React, { Fragment, ReactElement, useCallback, useState } from "react";
+import { Fragment, ReactElement, useCallback, useState } from "react";
 
 import { Button, Card, Classes, Elevation, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
@@ -26,7 +26,6 @@ import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPaire
 import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { BuyPrincipalTokensTransactionConfirmationDrawer } from "efi-ui/swaps/BuyPrincipalTokensTransactionConfirmationDrawer/BuyPrincipalTokensTransactionConfirmationDrawer";
-import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
 import { formatBalance } from "efi/base/formatBalance";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
@@ -36,10 +35,9 @@ import { calcSwapOutGivenInCCPoolUNSAFE } from "efi/pools/calcPoolSwap";
 import { useParseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { defaultProvider } from "efi/providers/providers";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
-import {
-  openTrancheBaseAssets,
-  tranchesByBaseAsset,
-} from "efi/tranche/baseAssets";
+import { openTrancheBaseAssets } from "efi/tranche/baseAssets";
+import { getTokenInfo } from "efi/tokenlists";
+import { PrincipalTokenInfo } from "tokenlists/types";
 
 export interface EarnCardProps {
   library: Web3Provider | undefined;
@@ -68,15 +66,6 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
   // base asset
   const { activeBaseAsset, setActiveBaseAsset } =
     useActiveBaseAsset(clearInputs);
-
-  // tranche
-  const {
-    activeTrancheIndex,
-    activeTranche,
-    availableTranches,
-    setActiveTranche,
-  } = useActiveTranche(activeBaseAsset);
-  const { data: trancheDecimals } = useTokenDecimals(activeTranche);
   const activeBaseAssetSymbol = useCryptoSymbol(activeBaseAsset);
   const activeBaseAssetDecimals = useCryptoDecimals(activeBaseAsset);
   const activeBaseAssetBalanceOf = useCryptoBalance(
@@ -89,7 +78,18 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
     activeBaseAssetDecimals
   );
 
+  // tranche
+  const {
+    activeTrancheIndex,
+    activeTranche,
+    availableTranches,
+    setActiveTranche,
+  } = useActiveTranche(activeBaseAsset);
   const principalTokenAddress = activeTranche?.address;
+  const { decimals: principalTokenDecimals } = getTokenInfo<PrincipalTokenInfo>(
+    activeTranche.address
+  );
+
   const principalTokenAsset = getCryptoAssetForToken(principalTokenAddress);
   const principalTokenBalanceOf = useCryptoBalance(
     library,
@@ -101,6 +101,7 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
     activeTranche as ERC20Shim,
     defaultProvider
   ) as ConvergentCurvePool;
+
   const { data: totalSupplyBN } = useSmartContractReadCall(pool, "totalSupply");
   const { data: unitSecondsBN } = useSmartContractReadCall(pool, "unitSeconds");
   const { data: expirationBN } = useSmartContractReadCall(pool, "expiration");
@@ -314,7 +315,7 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
               validValue={isValidTokenOutValue}
               errorMessage={tokenOutError}
               onValueChange={onChangeOut}
-              cryptoDecimals={trancheDecimals}
+              cryptoDecimals={principalTokenDecimals}
               cryptoBalanceOf={principalTokenBalanceOf}
               swapKind={SwapKind.GIVEN_OUT}
             />

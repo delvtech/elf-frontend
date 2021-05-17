@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { Tranche } from "elf-contracts/types/Tranche";
 import mapValues from "lodash.mapvalues";
@@ -8,8 +8,8 @@ import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { tranchesByBaseAsset } from "efi/tranche/baseAssets";
 
 interface ActiveTrancheInfo {
-  activeTranche: Tranche | undefined;
-  activeTrancheIndex: number | undefined;
+  activeTranche: Tranche;
+  activeTrancheIndex: number;
   availableTranches: Tranche[];
   setActiveTranche: (newTranche: Tranche) => void;
 }
@@ -20,17 +20,11 @@ export function useActiveTranche(
   const { activeTrancheIndexes, setActiveTrancheIndexes } =
     useActiveTrancheIndexes(tranchesByBaseAsset);
 
-  const availableTranches = useMemo(
-    () => (activeBaseAsset?.id ? tranchesByBaseAsset[activeBaseAsset.id] : []),
-    [activeBaseAsset.id]
-  );
+  const availableTranches = tranchesByBaseAsset[activeBaseAsset.id];
 
   const setActiveTranche = useCallback(
     (tranche: Tranche) => {
       setActiveTrancheIndexes((prevActiveTranches) => {
-        if (!activeBaseAsset?.id) {
-          return prevActiveTranches;
-        }
         const trancheIndex = findTrancheIndex(availableTranches, tranche);
         return {
           ...prevActiveTranches,
@@ -41,14 +35,8 @@ export function useActiveTranche(
     [activeBaseAsset?.id, availableTranches, setActiveTrancheIndexes]
   );
 
-  const activeTrancheIndex = activeBaseAsset?.id
-    ? activeTrancheIndexes[activeBaseAsset?.id]
-    : undefined;
-
-  const activeTranche =
-    activeTrancheIndex !== undefined
-      ? availableTranches[activeTrancheIndex]
-      : undefined;
+  const activeTrancheIndex = activeTrancheIndexes[activeBaseAsset.id];
+  const activeTranche = availableTranches[activeTrancheIndex];
 
   return {
     activeTranche,
