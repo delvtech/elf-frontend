@@ -11,7 +11,7 @@ import { YieldTokenCard } from "efi-ui/portfolio/YieldTokenCard/YieldTokenCard";
 import { useTokensWithBalance } from "efi-ui/token/hooks/useTokensWithBalance";
 import { NoWalletConnectedNonIdealState } from "efi-ui/wallets/NoWalletConnectedNonIdealState/NoWalletConnectedNonIdealState";
 import { NoYieldTokensInWalletNonIdealState } from "efi-ui/wallets/NoYieldTokensInWalletNonIdealState/NoYieldTokensInWalletNonIdealState";
-import { InterestTokenContracts } from "efi/tranche/tranches";
+import { InterestTokenContracts } from "efi/interestToken/interestToken";
 
 interface YieldTokenPortfolioProps {
   chainId: number | undefined;

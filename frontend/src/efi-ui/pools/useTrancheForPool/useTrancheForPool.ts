@@ -10,7 +10,8 @@ import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFr
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { isConvergentCurvePool, PoolContract } from "efi/pools/PoolContract";
-import { InterestTokenContracts, TrancheContracts } from "efi/tranche/tranches";
+import { TrancheContracts } from "efi/tranche/tranches";
+import { InterestTokenContracts } from "efi/interestToken/interestToken";
 
 export function useTrancheForPool(
   pool: PoolContract | undefined,

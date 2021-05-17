@@ -1,5 +1,4 @@
 import { TokenInfo, TokenList } from "@uniswap/token-lists";
-import groupBy from "lodash.groupby";
 import keyBy from "lodash.keyby";
 import {
   AnyTokenListInfo,
@@ -40,20 +39,6 @@ export const TokenMetadata: Record<string, AnyTokenListInfo> = keyBy(
 );
 
 /**
- * The list of all principal tokens
- */
-export const principalTokenInfos: PrincipalTokenInfo[] = tokenInfos.filter(
-  (tokenInfo): tokenInfo is PrincipalTokenInfo => isPrincipalToken(tokenInfo)
-);
-
-/**
- * The list of all yield tokens
- */
-export const yieldTokenInfos: YieldTokenInfo[] = tokenInfos.filter(
-  (tokenInfo): tokenInfo is YieldTokenInfo => isYieldToken(tokenInfo)
-);
-
-/**
  * The list of all principal token pools
  */
 export const principalTokenPoolInfos: PrincipalTokenPoolInfo[] =
@@ -74,16 +59,6 @@ function getTokenListJsonId() {
   }
 
   return process.env.REACT_APP_CHAIN_NAME || "testnet";
-}
-
-function isPrincipalToken(
-  tokenInfo: TokenInfo
-): tokenInfo is PrincipalTokenInfo {
-  return !!tokenInfo.tags?.includes(TokenListTag.PRINCIPAL);
-}
-
-function isYieldToken(tokenInfo: TokenInfo): tokenInfo is YieldTokenInfo {
-  return !!tokenInfo.tags?.includes(TokenListTag.YIELD);
 }
 
 function isPrincipalTokenPool(
