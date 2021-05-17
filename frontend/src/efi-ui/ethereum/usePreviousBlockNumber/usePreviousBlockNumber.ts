@@ -14,7 +14,7 @@ export const AVG_MINE_RATE_SECONDS = PRODUCTION
 
 export function usePreviousBlockNumber(
   secondsAgo: number | undefined,
-  queryOptions: UseQueryOptions
+  queryOptions?: UseQueryOptions
 ): UseQueryResult<number, unknown> {
   const result = useQuery({
     queryKey: [["blockattimestamp"], { secondsAgo: secondsAgo }],
