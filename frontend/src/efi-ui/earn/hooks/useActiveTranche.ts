@@ -5,6 +5,7 @@ import mapValues from "lodash.mapvalues";
 
 import { hasSameKeys } from "efi/base/hasSameKeys";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
+import { tranchesByBaseAsset } from "efi/tranche/baseAssets";
 
 interface ActiveTrancheInfo {
   activeTranche: Tranche | undefined;
@@ -14,15 +15,14 @@ interface ActiveTrancheInfo {
 }
 
 export function useActiveTranche(
-  tranchesByBaseAsset: Record<string, Tranche[]>,
-  activeBaseAsset: CryptoAsset | undefined
+  activeBaseAsset: CryptoAsset
 ): ActiveTrancheInfo {
   const { activeTrancheIndexes, setActiveTrancheIndexes } =
     useActiveTrancheIndexes(tranchesByBaseAsset);
 
   const availableTranches = useMemo(
     () => (activeBaseAsset?.id ? tranchesByBaseAsset[activeBaseAsset.id] : []),
-    [activeBaseAsset?.id, tranchesByBaseAsset]
+    [activeBaseAsset.id]
   );
 
   const setActiveTranche = useCallback(

@@ -75,7 +75,7 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
     activeTranche,
     availableTranches,
     setActiveTranche,
-  } = useActiveTranche(tranchesByBaseAsset, activeBaseAsset);
+  } = useActiveTranche(activeBaseAsset);
   const { data: trancheDecimals } = useTokenDecimals(activeTranche);
   const activeBaseAssetSymbol = useCryptoSymbol(activeBaseAsset);
   const activeBaseAssetDecimals = useCryptoDecimals(activeBaseAsset);
@@ -361,17 +361,14 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
   );
 }
 
-function useActiveBaseAsset(
-  onChange: (baseAsset: CryptoAsset | undefined) => void
-) {
-  const [activeBaseAsset, setActiveBaseAssetState] = useState<
-    CryptoAsset | undefined
-  >(openTrancheBaseAssets[0]);
+function useActiveBaseAsset(onChange: (baseAsset: CryptoAsset) => void) {
+  const [activeBaseAsset, setActiveBaseAssetState] = useState<CryptoAsset>(
+    openTrancheBaseAssets[0]
+  );
 
   const setActiveBaseAsset = useCallback(
-    (baseAsset: CryptoAsset | undefined) => {
+    (baseAsset: CryptoAsset) => {
       onChange(baseAsset);
-
       setActiveBaseAssetState(baseAsset);
     },
     [onChange]

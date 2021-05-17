@@ -8,7 +8,9 @@ import { CryptoAssets } from "efi/crypto/CryptoAssetRegistry";
 import { getTokenInfo } from "efi/tokenlists";
 import { OpenTranches } from "efi/tranche/tranches";
 
-export const openTrancheBaseAssets = getBaseAssetsForTranches(OpenTranches);
+export const openTrancheBaseAssets = getBaseAssetsForTranches(
+  OpenTranches
+) as CryptoAsset[];
 
 /**
  * A lookup object for the tranche contracts of a given base asset's `CryptoAsset.id`, ie:
