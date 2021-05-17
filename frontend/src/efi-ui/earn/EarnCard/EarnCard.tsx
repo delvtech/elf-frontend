@@ -1,10 +1,4 @@
-import React, {
-  Fragment,
-  ReactElement,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import React, { Fragment, ReactElement, useCallback, useState } from "react";
 
 import { Button, Card, Classes, Elevation, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
@@ -69,7 +63,6 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
 
   // base asset
   const { activeBaseAsset, setActiveBaseAsset } = useActiveBaseAsset(
-    openTrancheBaseAssets,
     setAmountIn,
     setAmountOut
   );
@@ -366,25 +359,13 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
   );
 }
 
-function useSetDefaultActiveBaseAsset(
-  activeBaseAsset: CryptoAsset | undefined,
-  setActiveBaseAsset: (baseAsset: CryptoAsset | undefined) => void,
-  defaultBaseAsset: CryptoAsset | undefined
-) {
-  useEffect(() => {
-    if (activeBaseAsset === undefined) {
-      setActiveBaseAsset(defaultBaseAsset);
-    }
-  }, [activeBaseAsset, defaultBaseAsset, setActiveBaseAsset]);
-}
-
 function useActiveBaseAsset(
-  allBaseAssets: (CryptoAsset | undefined)[],
   setAmountIn: (value: string) => void,
   setAmountOut: (value: string) => void
 ) {
-  const [activeBaseAsset, setActiveBaseAssetState] =
-    useState<CryptoAsset | undefined>();
+  const [activeBaseAsset, setActiveBaseAssetState] = useState<
+    CryptoAsset | undefined
+  >(openTrancheBaseAssets[0]);
   const setActiveBaseAsset = useCallback(
     (baseAsset: CryptoAsset | undefined) => {
       setAmountIn("");
@@ -392,13 +373,6 @@ function useActiveBaseAsset(
       setActiveBaseAssetState(baseAsset);
     },
     [setAmountIn, setAmountOut]
-  );
-  // The list of base assets will be empty while the data loads, so we want to
-  // set the default after it's been populated
-  useSetDefaultActiveBaseAsset(
-    activeBaseAsset,
-    setActiveBaseAsset,
-    allBaseAssets[0]
   );
   return { activeBaseAsset, setActiveBaseAsset };
 }
