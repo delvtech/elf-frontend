@@ -45,10 +45,6 @@ export const TokenMetadata: Record<string, AnyTokenListInfo> = keyBy(
 export const principalTokenInfos: PrincipalTokenInfo[] = tokenInfos.filter(
   (tokenInfo): tokenInfo is PrincipalTokenInfo => isPrincipalToken(tokenInfo)
 );
-export const PrincipalTokenInfosByBaseAsset = groupBy(
-  principalTokenInfos,
-  (tokenInfo) => tokenInfo.extensions.underlying
-);
 
 /**
  * The list of all yield tokens
