@@ -1,13 +1,6 @@
 import { TokenInfo, TokenList } from "@uniswap/token-lists";
 import keyBy from "lodash.keyby";
-import {
-  AnyTokenListInfo,
-  PrincipalTokenInfo,
-  PrincipalTokenPoolInfo,
-  TokenListTag,
-  YieldTokenInfo,
-  YieldTokenPoolInfo,
-} from "tokenlists/types";
+import { AnyTokenListInfo } from "tokenlists/types";
 
 // Default to the testnet in this repo so `npm start` Just Works without having
 // to specify it on the command line.
@@ -38,35 +31,10 @@ export const TokenMetadata: Record<string, AnyTokenListInfo> = keyBy(
   "address"
 );
 
-/**
- * The list of all principal token pools
- */
-export const principalTokenPoolInfos: PrincipalTokenPoolInfo[] =
-  tokenInfos.filter((tokenInfo): tokenInfo is PrincipalTokenPoolInfo =>
-    isPrincipalTokenPool(tokenInfo)
-  );
-
-/**
- * The list of all yield tokens
- */
-export const yieldTokenPoolInfos: YieldTokenPoolInfo[] = tokenInfos.filter(
-  (tokenInfo): tokenInfo is YieldTokenPoolInfo => isYieldTokenPool(tokenInfo)
-);
-
 function getTokenListJsonId() {
   if (process.env.NODE_ENV === "test") {
     return "mock";
   }
 
   return process.env.REACT_APP_CHAIN_NAME || "testnet";
-}
-
-function isPrincipalTokenPool(
-  tokenInfo: TokenInfo
-): tokenInfo is PrincipalTokenInfo {
-  return !!tokenInfo.tags?.includes(TokenListTag.CCPOOL);
-}
-
-function isYieldTokenPool(tokenInfo: TokenInfo): tokenInfo is YieldTokenInfo {
-  return !!tokenInfo.tags?.includes(TokenListTag.WPOOL);
 }

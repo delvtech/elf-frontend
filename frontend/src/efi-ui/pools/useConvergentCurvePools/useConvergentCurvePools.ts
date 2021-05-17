@@ -5,8 +5,8 @@ import { Signer } from "ethers";
 import { PrincipalTokenPoolInfo } from "tokenlists/types";
 
 import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
-import { principalTokenPoolInfos } from "efi/tokenlists";
 import { useMemo } from "react";
+import { CCPoolTokenInfos } from "efi/pools/ccpool";
 
 export interface PrincipalTokenPoolInfoWithContract
   extends PrincipalTokenPoolInfo {
@@ -14,7 +14,7 @@ export interface PrincipalTokenPoolInfoWithContract
 }
 
 export const principalTokenPools: PrincipalTokenPoolInfoWithContract[] =
-  principalTokenPoolInfos.map((info) => {
+  CCPoolTokenInfos.map((info) => {
     const contract = getSmartContractFromRegistry(
       info.address,
       ConvergentCurvePool__factory.connect
