@@ -1,9 +1,8 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
 import { Tranche } from "elf-contracts/types/Tranche";
 import mapValues from "lodash.mapvalues";
 
-import { hasSameKeys } from "efi/base/hasSameKeys";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { tranchesByBaseAsset } from "efi/tranche/baseAssets";
 
@@ -14,13 +13,22 @@ interface ActiveTrancheInfo {
   setActiveTranche: (newTranche: Tranche) => void;
 }
 
+// By default, use the first open tranche.
+const defaultActiveTranches: Record<string, number> = mapValues(
+  tranchesByBaseAsset,
+  () => 0
+);
+
 export function useActiveTranche(
   activeBaseAsset: CryptoAsset
 ): ActiveTrancheInfo {
-  const { activeTrancheIndexes, setActiveTrancheIndexes } =
-    useActiveTrancheIndexes(tranchesByBaseAsset);
+  const [activeTrancheIndexes, setActiveTrancheIndexes] = useState(
+    defaultActiveTranches
+  );
 
   const availableTranches = tranchesByBaseAsset[activeBaseAsset.id];
+  const activeTrancheIndex = activeTrancheIndexes[activeBaseAsset.id];
+  const activeTranche = availableTranches[activeTrancheIndex];
 
   const setActiveTranche = useCallback(
     (tranche: Tranche) => {
@@ -35,40 +43,11 @@ export function useActiveTranche(
     [activeBaseAsset?.id, availableTranches, setActiveTrancheIndexes]
   );
 
-  const activeTrancheIndex = activeTrancheIndexes[activeBaseAsset.id];
-  const activeTranche = availableTranches[activeTrancheIndex];
-
   return {
     activeTranche,
     activeTrancheIndex,
     availableTranches,
     setActiveTranche,
-  };
-}
-
-function useActiveTrancheIndexes(
-  tranchesByBaseAsset: Record<string, Tranche[]>
-) {
-  const defaultActiveTranches: Record<string, number> = mapValues(
-    tranchesByBaseAsset,
-    () => 0
-  );
-
-  const [activeTrancheIndexes, setActiveTrancheIndexes] = useState(
-    defaultActiveTranches
-  );
-
-  // tranchesByBaseAsset starts off empty, so keep our active indexes in sync as
-  // it populates.
-  useEffect(() => {
-    if (!hasSameKeys(activeTrancheIndexes, tranchesByBaseAsset)) {
-      setActiveTrancheIndexes(defaultActiveTranches);
-    }
-  }, [activeTrancheIndexes, defaultActiveTranches, tranchesByBaseAsset]);
-
-  return {
-    activeTrancheIndexes,
-    setActiveTrancheIndexes,
   };
 }
 
