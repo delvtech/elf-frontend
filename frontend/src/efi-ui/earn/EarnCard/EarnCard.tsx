@@ -20,7 +20,6 @@ import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { CryptoAssetPicker } from "efi-ui/crypto/CryptoAssetPicker/CryptoAssetPicker";
 import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
-import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { useCryptoBalance } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
 import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
@@ -37,20 +36,21 @@ import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
 import { formatBalance } from "efi/base/formatBalance";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
+import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { clipStringValueToDecimals } from "efi/math/fixedPoint";
 import { calcSwapOutGivenInCCPoolUNSAFE } from "efi/pools/calcPoolSwap";
 import { useParseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { defaultProvider } from "efi/providers/providers";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
-import { getBaseAssetsForTranches } from "efi/tranche/getBaseAssetsForTranches";
-import { openTranches, tranchesByBaseAsset } from "efi/tranche/tranches";
+import {
+  openTrancheBaseAssets,
+  tranchesByBaseAsset,
+} from "efi/tranche/baseAssets";
 
 export interface EarnCardProps {
   library: Web3Provider | undefined;
   account: string | null | undefined;
 }
-
-const openTrancheBaseAssets = getBaseAssetsForTranches(openTranches);
 
 export function EarnCard({ library, account }: EarnCardProps): ReactElement {
   const [isWalletDialogOpen, setWalletDialogOpen] = useState(false);

@@ -1,6 +1,7 @@
 import { t } from "ttag";
 
-import { InterestTokenContracts, TrancheContracts } from "efi/tranche/tranches";
+import { TrancheContracts } from "efi/tranche/tranches";
+import { InterestTokenContracts } from "efi/interestToken/interestToken";
 
 interface TermAssetSymbols {
   /**

@@ -1,54 +1,35 @@
-import { InterestToken__factory } from "elf-contracts/types/factories/InterestToken__factory";
+import { TokenInfo } from "@uniswap/token-lists";
 import { Tranche__factory } from "elf-contracts/types/factories/Tranche__factory";
-import { InterestToken } from "elf-contracts/types/InterestToken";
 import { Tranche } from "elf-contracts/types/Tranche";
-import groupBy from "lodash.groupby";
-import { PrincipalTokenInfo } from "tokenlists/types";
+import { PrincipalTokenInfo, TokenListTag } from "tokenlists/types";
 
 import { getSmartContractFromRegistryMulti } from "efi/contracts/SmartContractsRegistry";
-import { CryptoAssets } from "efi/crypto/CryptoAssetRegistry";
-import {
-  getTokenInfo,
-  principalTokenInfos,
-  yieldTokenInfos,
-} from "efi/tokenlists";
+import { tokenListJson } from "efi/tokenlists";
+
+export const PrincipalTokenInfos: PrincipalTokenInfo[] =
+  tokenListJson.tokens.filter((tokenInfo): tokenInfo is PrincipalTokenInfo =>
+    isPrincipalToken(tokenInfo)
+  );
 
 export const TrancheContracts = getSmartContractFromRegistryMulti(
-  principalTokenInfos.map(({ address }) => address),
+  PrincipalTokenInfos.map(({ address }) => address),
   Tranche__factory.connect
 ) as Tranche[];
 
-export const InterestTokenContracts = getSmartContractFromRegistryMulti(
-  yieldTokenInfos.map(({ address }) => address),
-  InterestToken__factory.connect
-) as InterestToken[];
-
-const openTranchesInfos = principalTokenInfos.filter(
+const openTranchesInfos = PrincipalTokenInfos.filter(
   ({ extensions: { unlockTimestamp } }) => unlockTimestamp * 1000 > Date.now()
 );
 
 /**
  * The list of tranches that are currently running.
  */
-export const openTranches = getSmartContractFromRegistryMulti(
+export const OpenTranches = getSmartContractFromRegistryMulti(
   openTranchesInfos.map(({ address }) => address),
   Tranche__factory.connect
 ) as Tranche[];
 
-/**
- * A lookup object for the tranche contracts of a given base asset, ie:
- *
- * {
- *   ethereum: [Tranche, Tranche, ....],
- *   0xUsdcAddress: [Tranche, ...],
- * }
- */
-export const tranchesByBaseAsset: Record<string, Tranche[]> = groupBy(
-  openTranches,
-  (tranche) => {
-    const {
-      extensions: { underlying: baseAssetAddress },
-    } = getTokenInfo<PrincipalTokenInfo>(tranche.address);
-    return CryptoAssets[baseAssetAddress].id;
-  }
-);
+function isPrincipalToken(
+  tokenInfo: TokenInfo
+): tokenInfo is PrincipalTokenInfo {
+  return !!tokenInfo.tags?.includes(TokenListTag.PRINCIPAL);
+}
