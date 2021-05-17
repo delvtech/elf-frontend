@@ -5,6 +5,7 @@ import { Web3Provider } from "@ethersproject/providers";
 import classNames from "classnames";
 import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
 import { formatEther, formatUnits } from "ethers/lib/utils";
+import { PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -21,7 +22,6 @@ import { PrincipalDiscountPreview } from "efi-ui/earn/EarnCard/PrincipalDiscount
 import { EarnInput } from "efi-ui/earn/EarnInput/EarnInput";
 import { EarnTermPicker } from "efi-ui/earn/EarnTermPicker/EarnTermPicker";
 import { useActiveTranche } from "efi-ui/earn/hooks/useActiveTranche";
-import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
@@ -32,12 +32,14 @@ import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { clipStringValueToDecimals } from "efi/math/fixedPoint";
 import { calcSwapOutGivenInCCPoolUNSAFE } from "efi/pools/calcPoolSwap";
+import {
+  getPrincipalPoolForTranche,
+  PrincipalPoolContracts,
+} from "efi/pools/ccpool";
 import { useParseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
-import { defaultProvider } from "efi/providers/providers";
+import { getTokenInfo } from "efi/tokenlists";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
 import { openTrancheBaseAssets } from "efi/tranche/baseAssets";
-import { getTokenInfo } from "efi/tokenlists";
-import { PrincipalTokenInfo } from "tokenlists/types";
 
 export interface EarnCardProps {
   library: Web3Provider | undefined;
@@ -97,23 +99,26 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
     principalTokenAsset
   );
 
-  const pool = usePoolForToken(
-    activeTranche as ERC20Shim,
-    defaultProvider
+  const {
+    address: poolAddress,
+    extensions: { expiration, unitSeconds },
+  } = getPrincipalPoolForTranche(activeTranche.address);
+
+  const poolContract = PrincipalPoolContracts.find(
+    (contract) => contract.address === poolAddress
   ) as ConvergentCurvePool;
 
-  const { data: totalSupplyBN } = useSmartContractReadCall(pool, "totalSupply");
-  const { data: unitSecondsBN } = useSmartContractReadCall(pool, "unitSeconds");
-  const { data: expirationBN } = useSmartContractReadCall(pool, "expiration");
   const nowInSeconds = Math.round(Date.now() / 1000);
-  const timeRemainingSeconds = expirationBN
-    ? expirationBN.toNumber() - nowInSeconds
-    : 0;
-  const tParamSeconds = unitSecondsBN?.toNumber() ?? 1;
+  const timeRemainingSeconds = expiration - nowInSeconds;
+  const tParamSeconds = unitSeconds ?? 1;
 
+  const { data: totalSupplyBN } = useSmartContractReadCall(
+    poolContract,
+    "totalSupply"
+  );
   const totalSupply = formatEther(totalSupplyBN ?? 0);
 
-  const { data: [tokens, balances = []] = [] } = usePoolTokens(pool);
+  const { data: [tokens, balances = []] = [] } = usePoolTokens(poolContract);
   const { baseAssetIndex, termAssetIndex } =
     useParseSortedTokensForPool(tokens);
   const baseAssetPoolBalance = balances[baseAssetIndex];
@@ -129,11 +134,11 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
 
   // the tranche's pool
   const baseAssetPoolToken = usePoolPairedToken(
-    pool,
+    poolContract,
     activeTranche as ERC20Shim
   );
   const { spotPriceBaseAssetForOneToken: amountOfEthForOnePrincipalEth } =
-    usePoolTokenPrices(pool, baseAssetPoolToken);
+    usePoolTokenPrices(poolContract, baseAssetPoolToken);
   const inputTokenSymbol = useCryptoSymbol(activeBaseAsset);
   const baseAssetIcon = findAssetIcon2(activeBaseAsset);
 
@@ -348,7 +353,7 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
           tranche={activeTranche}
           account={account}
           library={library}
-          pool={pool}
+          pool={poolContract}
           amountIn={amountIn}
           isOpen={isDrawerOpen}
           onClose={closeDrawer}
