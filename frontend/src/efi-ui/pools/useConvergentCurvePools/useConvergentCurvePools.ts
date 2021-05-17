@@ -6,7 +6,7 @@ import { PrincipalTokenPoolInfo } from "tokenlists/types";
 
 import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
 import { useMemo } from "react";
-import { CCPoolTokenInfos } from "efi/pools/ccpool";
+import { PrincipalPools } from "efi/pools/ccpool";
 
 export interface PrincipalTokenPoolInfoWithContract
   extends PrincipalTokenPoolInfo {
@@ -14,7 +14,7 @@ export interface PrincipalTokenPoolInfoWithContract
 }
 
 export const principalTokenPools: PrincipalTokenPoolInfoWithContract[] =
-  CCPoolTokenInfos.map((info) => {
+  PrincipalPools.map((info) => {
     const contract = getSmartContractFromRegistry(
       info.address,
       ConvergentCurvePool__factory.connect

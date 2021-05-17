@@ -7,14 +7,14 @@ import { Signer } from "ethers";
 import { YieldTokenPoolInfo } from "tokenlists/types";
 
 import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
-import { WeightedPoolTokenInfos } from "efi/pools/weightedPool";
+import { YieldPools } from "efi/pools/weightedPool";
 
-export interface YieldTokenPoolInfoWithContract extends YieldTokenPoolInfo {
+interface YieldTokenPoolInfoWithContract extends YieldTokenPoolInfo {
   contract: WeightedPool;
 }
 
-export const yieldTokenPools: YieldTokenPoolInfoWithContract[] =
-  WeightedPoolTokenInfos.map((info) => {
+export const yieldTokenPools: YieldTokenPoolInfoWithContract[] = YieldPools.map(
+  (info) => {
     const contract = getSmartContractFromRegistry(
       info.address,
       WeightedPool__factory.connect
@@ -23,7 +23,8 @@ export const yieldTokenPools: YieldTokenPoolInfoWithContract[] =
       ...info,
       contract,
     };
-  });
+  }
+);
 
 /**
  * @deprecated, just use yieldTokenPools

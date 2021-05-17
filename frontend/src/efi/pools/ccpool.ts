@@ -9,13 +9,13 @@ import {
 /**
  * The list of all principal token pools
  */
-export const CCPoolTokenInfos: PrincipalTokenPoolInfo[] =
+export const PrincipalPools: PrincipalTokenPoolInfo[] =
   tokenListJson.tokens.filter(
     (tokenInfo): tokenInfo is PrincipalTokenPoolInfo =>
-      isPrincipalTokenPool(tokenInfo)
+      isPrincipalPool(tokenInfo)
   );
 
-function isPrincipalTokenPool(
+function isPrincipalPool(
   tokenInfo: TokenInfo
 ): tokenInfo is PrincipalTokenInfo {
   return !!tokenInfo.tags?.includes(TokenListTag.CCPOOL);

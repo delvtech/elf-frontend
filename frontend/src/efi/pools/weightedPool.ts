@@ -13,11 +13,10 @@ export enum WeightedPoolExitKind {
   BPT_IN_FOR_EXACT_TOKENS_OUT,
 }
 
-export const WeightedPoolTokenInfos: YieldTokenPoolInfo[] =
-  tokenListJson.tokens.filter((tokenInfo): tokenInfo is YieldTokenPoolInfo =>
-    isYieldTokenPool(tokenInfo)
-  );
+export const YieldPools: YieldTokenPoolInfo[] = tokenListJson.tokens.filter(
+  (tokenInfo): tokenInfo is YieldTokenPoolInfo => isYieldPool(tokenInfo)
+);
 
-function isYieldTokenPool(tokenInfo: TokenInfo): tokenInfo is YieldTokenInfo {
+function isYieldPool(tokenInfo: TokenInfo): tokenInfo is YieldTokenInfo {
   return !!tokenInfo.tags?.includes(TokenListTag.WPOOL);
 }
