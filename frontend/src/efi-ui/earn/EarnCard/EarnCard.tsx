@@ -60,12 +60,14 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
 
   const { stringValue: amountIn, setValue: setAmountIn } = useNumericInput();
   const { stringValue: amountOut, setValue: setAmountOut } = useNumericInput();
+  const clearInputs = useCallback(() => {
+    setAmountIn("");
+    setAmountOut("");
+  }, [setAmountIn, setAmountOut]);
 
   // base asset
-  const { activeBaseAsset, setActiveBaseAsset } = useActiveBaseAsset(
-    setAmountIn,
-    setAmountOut
-  );
+  const { activeBaseAsset, setActiveBaseAsset } =
+    useActiveBaseAsset(clearInputs);
 
   // tranche
   const {
@@ -157,8 +159,7 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
   const onChangeIn = useCallback(
     (newAmountIn: string, swapKind: SwapKind) => {
       if (!newAmountIn) {
-        setAmountIn("");
-        setAmountOut("");
+        clearInputs();
         return;
       }
       const newAmountOutNumber = calcSwapOutGivenInCCPoolUNSAFE(
@@ -180,6 +181,7 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
     [
       activeBaseAssetDecimals,
       baseReserves,
+      clearInputs,
       principalReserves,
       setAmountIn,
       setAmountOut,
@@ -192,8 +194,7 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
   const onChangeOut = useCallback(
     (newAmountOut: string, swapKind: SwapKind) => {
       if (!newAmountOut) {
-        setAmountIn("");
-        setAmountOut("");
+        clearInputs();
         return;
       }
       const newAmountInNumber = calcSwapOutGivenInCCPoolUNSAFE(
@@ -215,6 +216,7 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
     [
       activeBaseAssetDecimals,
       baseReserves,
+      clearInputs,
       principalReserves,
       setAmountIn,
       setAmountOut,
@@ -360,19 +362,19 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
 }
 
 function useActiveBaseAsset(
-  setAmountIn: (value: string) => void,
-  setAmountOut: (value: string) => void
+  onChange: (baseAsset: CryptoAsset | undefined) => void
 ) {
   const [activeBaseAsset, setActiveBaseAssetState] = useState<
     CryptoAsset | undefined
   >(openTrancheBaseAssets[0]);
+
   const setActiveBaseAsset = useCallback(
     (baseAsset: CryptoAsset | undefined) => {
-      setAmountIn("");
-      setAmountOut("");
+      onChange(baseAsset);
+
       setActiveBaseAssetState(baseAsset);
     },
-    [setAmountIn, setAmountOut]
+    [onChange]
   );
   return { activeBaseAsset, setActiveBaseAsset };
 }
