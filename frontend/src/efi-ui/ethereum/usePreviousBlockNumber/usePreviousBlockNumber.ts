@@ -1,4 +1,4 @@
-import { QueryObserverResult, useQuery } from "react-query";
+import { useQuery, UseQueryOptions, UseQueryResult } from "react-query";
 
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
 import { defaultProvider } from "efi/providers/providers";
@@ -13,8 +13,9 @@ export const AVG_MINE_RATE_SECONDS = PRODUCTION
   : ONE_DAY_IN_SECONDS / 100;
 
 export function usePreviousBlockNumber(
-  secondsAgo: number | undefined
-): QueryObserverResult<number> {
+  secondsAgo: number | undefined,
+  queryOptions: UseQueryOptions
+): UseQueryResult<number, unknown> {
   const result = useQuery({
     queryKey: [["blockattimestamp"], { secondsAgo: secondsAgo }],
     queryFn: async () => {
@@ -32,7 +33,8 @@ export function usePreviousBlockNumber(
 
       return blockNumberAtTimestamp;
     },
+    ...queryOptions,
   });
 
-  return result;
+  return result as UseQueryResult<number, unknown>;
 }
