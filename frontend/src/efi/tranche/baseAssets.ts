@@ -1,12 +1,34 @@
 import { Tranche } from "elf-contracts/types/Tranche";
+import groupBy from "lodash.groupby";
 import uniqBy from "lodash.uniqby";
 import { PrincipalTokenInfo } from "tokenlists/types";
 
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { CryptoAssets } from "efi/crypto/CryptoAssetRegistry";
 import { getTokenInfo } from "efi/tokenlists";
+import { OpenTranches } from "efi/tranche/tranches";
 
-export function getBaseAssetsForTranches(
+export const openTrancheBaseAssets = getBaseAssetsForTranches(OpenTranches);
+
+/**
+ * A lookup object for the tranche contracts of a given base asset's `CryptoAsset.id`, ie:
+ *
+ * {
+ *   'ethereum': [Tranche, Tranche, ....],
+ *   '0xUsdcAddress': [Tranche, ...],
+ * }
+ */
+export const tranchesByBaseAsset: Record<string, Tranche[]> = groupBy(
+  OpenTranches,
+  (tranche) => {
+    const {
+      extensions: { underlying: baseAssetAddress },
+    } = getTokenInfo<PrincipalTokenInfo>(tranche.address);
+    return CryptoAssets[baseAssetAddress].id;
+  }
+);
+
+function getBaseAssetsForTranches(
   tranches: (Tranche | undefined)[]
 ): (CryptoAsset | undefined)[] {
   const cryptoAssets = tranches.map((tranche) => {
