@@ -8,7 +8,7 @@ import { getQueriesData } from "efi-ui/base/queryResults";
 import { useSmartContractFromFactoryMulti } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
 import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
 import { useTrancheInterestTokenMulti } from "efi-ui/tranche/useTrancheInterestTokenMulti";
-import { TrancheContracts } from "efi/tranche/tranches";
+import { trancheContracts } from "efi/tranche/tranches";
 
 export function useYieldTokensWithBalance(
   account: string | null | undefined,
@@ -16,7 +16,7 @@ export function useYieldTokensWithBalance(
 ): InterestToken[] {
   // InterestTokens are sourced from the Tranche contracts
   const interestTokenAddressResults =
-    useTrancheInterestTokenMulti(TrancheContracts);
+    useTrancheInterestTokenMulti(trancheContracts);
   const interestTokenContracts = useSmartContractFromFactoryMulti(
     getQueriesData(interestTokenAddressResults),
     InterestToken__factory.connect

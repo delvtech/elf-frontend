@@ -5,16 +5,21 @@ import { PrincipalTokenInfo, TokenListTag } from "tokenlists/types";
 
 import { getSmartContractFromRegistryMulti } from "efi/contracts/SmartContractsRegistry";
 import { tokenListJson } from "efi/tokenlists";
+import keyBy from "lodash.keyby";
 
 export const PrincipalTokenInfos: PrincipalTokenInfo[] =
   tokenListJson.tokens.filter((tokenInfo): tokenInfo is PrincipalTokenInfo =>
     isPrincipalToken(tokenInfo)
   );
 
-export const TrancheContracts = getSmartContractFromRegistryMulti(
+export const trancheContracts = getSmartContractFromRegistryMulti(
   PrincipalTokenInfos.map(({ address }) => address),
   Tranche__factory.connect
 ) as Tranche[];
+export const TrancheContractsByAddress = keyBy(
+  trancheContracts,
+  (tranche) => tranche.address
+);
 
 const openTranchesInfos = PrincipalTokenInfos.filter(
   ({ extensions: { unlockTimestamp } }) => unlockTimestamp * 1000 > Date.now()

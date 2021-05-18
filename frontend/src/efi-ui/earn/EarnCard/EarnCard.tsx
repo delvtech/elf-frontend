@@ -14,8 +14,6 @@ import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadC
 import { CryptoAssetPicker } from "efi-ui/crypto/CryptoAssetPicker/CryptoAssetPicker";
 import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoBalance } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
-import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { PrincipalDiscountPreview } from "efi-ui/earn/EarnCard/PrincipalDiscountPreview";
 import { EarnInput } from "efi-ui/earn/EarnInput/EarnInput";
 import { EarnTermPicker } from "efi-ui/earn/EarnTermPicker/EarnTermPicker";
@@ -23,9 +21,12 @@ import { useActiveTranche } from "efi-ui/earn/hooks/useActiveTranche";
 import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { BuyPrincipalTokensTransactionConfirmationDrawer } from "efi-ui/swaps/BuyPrincipalTokensTransactionConfirmationDrawer/BuyPrincipalTokensTransactionConfirmationDrawer";
+import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
 import { formatBalance } from "efi/base/formatBalance";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
+import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { clipStringValueToDecimals } from "efi/math/fixedPoint";
 import { calcSwapOutGivenInCCPoolUNSAFE } from "efi/pools/calcPoolSwap";
 import {
@@ -37,7 +38,6 @@ import { getTokenInfo } from "efi/tokenlists";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
 import { openTrancheBaseAssets } from "efi/tranche/baseAssets";
 import { UnderlyingContracts } from "efi/underlying/underlying";
-import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 
 export interface EarnCardProps {
   library: Web3Provider | undefined;
@@ -62,6 +62,10 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
     setAmountIn("");
     setAmountOut("");
   }, [setAmountIn, setAmountOut]);
+  const closeDrawer = useCallback(() => {
+    clearInputs();
+    setDrawerOpen(false);
+  }, [clearInputs]);
 
   // base asset
   const { activeBaseAsset, setActiveBaseAsset } =
@@ -77,8 +81,10 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
     activeBaseAssetBalanceOf,
     activeBaseAssetDecimals
   );
+  const baseAssetSymbol = getCryptoSymbol(activeBaseAsset);
+  const baseAssetIcon = findAssetIcon2(activeBaseAsset);
 
-  // tranche
+  // principal token
   const {
     activeTrancheIndex,
     activeTranche,
@@ -94,6 +100,7 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
     account
   );
 
+  // pool
   const {
     extensions: { expiration, unitSeconds, underlying },
   } = getPrincipalPoolForTranche(activeTranche.address);
@@ -126,19 +133,9 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
     activeBaseAssetDecimals
   );
 
-  // the tranche's pool
   const underlyingPoolTokenContract = UnderlyingContracts[underlying];
   const { spotPriceBaseAssetForOneToken: amountOfEthForOnePrincipalEth } =
     usePoolTokenPrices(poolContract, underlyingPoolTokenContract);
-
-  const inputTokenSymbol = getCryptoSymbol(activeBaseAsset);
-  const baseAssetIcon = findAssetIcon2(activeBaseAsset);
-
-  const closeDrawer = useCallback(() => {
-    setAmountIn("");
-    setAmountOut("");
-    setDrawerOpen(false);
-  }, [setAmountIn, setAmountOut]);
 
   const {
     isValidTokenInValue,
@@ -226,7 +223,7 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
 
   const roundedPrincipalPrice = amountOfEthForOnePrincipalEth?.toFixed(4);
   const marketRateLabel = getMarketRateLabel(
-    inputTokenSymbol,
+    baseAssetSymbol,
     roundedPrincipalPrice,
     activeBaseAssetSymbol
   );

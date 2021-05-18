@@ -1,15 +1,16 @@
-import { useMemo } from "react";
-
-import { ERC20 } from "elf-contracts/types/ERC20";
-import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
-
 import { KNOWN_BASE_ASSETS } from "efi/addresses";
-import { defaultProvider } from "efi/providers/providers";
+import { UnderlyingContracts } from "efi/underlying/underlying";
+import { TrancheContractsByAddress } from "efi/tranche/tranches";
+import { InterestTokenContractsByAddress } from "efi/interestToken/interestToken";
+import { USDC } from "elf-contracts/types/USDC";
+import { WETH } from "elf-contracts/types/WETH";
+import { InterestToken } from "elf-contracts/types/InterestToken";
+import { Tranche } from "elf-contracts/types/Tranche";
 
 interface ParsedTokens {
-  baseAssetContract: ERC20 | undefined;
+  baseAssetContract: WETH | USDC | undefined;
   baseAssetIndex: number;
-  termAssetContract: ERC20 | undefined;
+  termAssetContract: InterestToken | Tranche | undefined;
   termAssetIndex: number;
 }
 
@@ -25,19 +26,14 @@ export function useParseSortedTokensForPool(
   const baseAssetAddress = tokens?.[baseAssetIndex];
   const termAssetAddress = tokens?.[termAssetIndex];
 
-  const baseAssetContract = useMemo(() => {
-    if (!baseAssetAddress) {
-      return undefined;
-    }
-    return ERC20__factory.connect(baseAssetAddress, defaultProvider);
-  }, [baseAssetAddress]);
+  const baseAssetContract = baseAssetAddress
+    ? UnderlyingContracts[baseAssetAddress]
+    : undefined;
 
-  const termAssetContract = useMemo(() => {
-    if (!termAssetAddress) {
-      return undefined;
-    }
-    return ERC20__factory.connect(termAssetAddress, defaultProvider);
-  }, [termAssetAddress]);
+  const termAssetContract = termAssetAddress
+    ? TrancheContractsByAddress[termAssetAddress] ||
+      InterestTokenContractsByAddress[termAssetAddress]
+    : undefined;
 
   return {
     baseAssetContract,

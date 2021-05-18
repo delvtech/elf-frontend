@@ -33,7 +33,7 @@ import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { useParseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { PoolContract } from "efi/pools/PoolContract";
 import { validateStakingValue } from "efi/staking/validateStakeValue";
-import { TrancheContracts } from "efi/tranche/tranches";
+import { trancheContracts } from "efi/tranche/tranches";
 
 interface StakingPanelProps {
   library: Web3Provider | undefined;
@@ -100,9 +100,9 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
     displayBalance: yieldAssetDisplayBalance,
     poolBalance: yieldAssetPoolBalance,
   } = useTokenInfoForTradeInput(pool, termAssetContract, account, library);
-  const isPrincipalPoolType = TrancheContracts.map(
-    ({ address }) => address
-  ).includes(yieldAssetAddress ?? "");
+  const isPrincipalPoolType = trancheContracts
+    .map(({ address }) => address)
+    .includes(yieldAssetAddress ?? "");
 
   const { symbol: trancheAssetSymbol, label: trancheAssetSymbolLabel } =
     useTermAssetSymbol(yieldAssetAddress, baseAssetSymbol);

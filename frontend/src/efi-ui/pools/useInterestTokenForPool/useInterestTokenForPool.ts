@@ -7,7 +7,7 @@ import { Signer } from "ethers";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useTrancheInterestTokenMulti } from "efi-ui/tranche/useTrancheInterestTokenMulti";
 import { defaultProvider } from "efi/providers/providers";
-import { TrancheContracts } from "efi/tranche/tranches";
+import { trancheContracts } from "efi/tranche/tranches";
 
 export function useInterestTokenForPool(
   pool: WeightedPool | undefined,
@@ -16,7 +16,7 @@ export function useInterestTokenForPool(
   const poolTokensResult = usePoolTokens(pool);
   const poolTokens = poolTokensResult.data?.[0]?.filter(Boolean) || [];
   const interestTokenAddressResults =
-    useTrancheInterestTokenMulti(TrancheContracts);
+    useTrancheInterestTokenMulti(trancheContracts);
   const interestTokenAddresses = interestTokenAddressResults
     .map((result) => {
       const { data: address } = result;
