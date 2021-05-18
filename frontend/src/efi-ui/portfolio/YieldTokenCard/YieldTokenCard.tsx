@@ -25,7 +25,7 @@ import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
-import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
+import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
 import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
@@ -114,7 +114,7 @@ export function YieldTokenCard({
     getCoinGeckoId(baseAssetSymbol),
     currency
   );
-  const baseAssetDecimals = useCryptoDecimals(baseAsset);
+  const baseAssetDecimals = getCryptoDecimals(baseAsset);
   const { data: exitValueBigNumber } = useOnSwapGivenIn(
     pool,
     yieldToken as unknown as ERC20Shim,

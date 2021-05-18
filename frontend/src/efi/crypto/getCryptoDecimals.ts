@@ -7,7 +7,7 @@ import {
 import { NUM_ETH_DECIMALS } from "efi/ethereum";
 import { TokenMetadata } from "efi/tokenlists";
 
-export function useCryptoDecimals(
+export function getCryptoDecimals(
   asset: CryptoAsset | undefined
 ): number | undefined {
   if (!asset) {

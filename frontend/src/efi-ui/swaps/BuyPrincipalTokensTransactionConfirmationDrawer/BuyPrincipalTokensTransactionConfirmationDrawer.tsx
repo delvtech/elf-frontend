@@ -14,7 +14,7 @@ import { parseQueryBatchSwapResult } from "efi-ui/balancer/useQueryBatchSwap/par
 import { useQueryBatchSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
+import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
@@ -60,7 +60,7 @@ export function BuyPrincipalTokensTransactionConfirmationDrawer({
   const balancerVault = useBalancerVault();
   // base asset calls
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
-  const baseAssetDecimals = useCryptoDecimals(baseAsset);
+  const baseAssetDecimals = getCryptoDecimals(baseAsset);
 
   // tranche calls
   const { data: trancheUnlockTimestamp } = useSmartContractReadCall(

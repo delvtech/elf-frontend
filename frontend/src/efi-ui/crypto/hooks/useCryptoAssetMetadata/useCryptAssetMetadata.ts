@@ -1,6 +1,6 @@
 import { CryptoAssetMetadata } from "efi-ui/crypto/CryptoAssetMetadata";
 import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
-import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
+import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { getCryptoName } from "efi/crypto/getCryptoName/getCryptoName";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
@@ -16,7 +16,7 @@ export function useCryptoAssetMetadata(
 ): CryptoAssetMetadata {
   const name = getCryptoName(asset);
   const symbol = getCryptoSymbol(asset);
-  const decimals = useCryptoDecimals(asset);
+  const decimals = getCryptoDecimals(asset);
   const icon = findAssetIcon2(asset);
 
   const metadata: CryptoAssetMetadata = {

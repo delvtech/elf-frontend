@@ -13,7 +13,7 @@ import { useBatchSwapGivenIn } from "efi-ui/balancer/useBatchSwapGivenIn/useBatc
 import { useQueryBatchSwapInputs } from "efi-ui/balancer/useQueryBatchSwapInputs";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
+import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
@@ -58,7 +58,7 @@ export function SellPrincipalTokensTransactionDrawer(
 
   // base asset calls
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
-  const baseAssetDecimals = useCryptoDecimals(baseAsset);
+  const baseAssetDecimals = getCryptoDecimals(baseAsset);
 
   // tranche calls
   const { data: trancheUnlockTimestamp } = useSmartContractReadCall(
