@@ -8,7 +8,7 @@ import zip from "lodash.zip";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
+import { ERC20Shim } from "efi/contracts/ERC20Shim";
 import { useNewPrincipalTokensPendingTransaction } from "efi-ui/portfolio/hooks/useNewPrincipalTokensPendingTransaction";
 import { PrincipalTokenCard } from "efi-ui/portfolio/PrincipalTokenCard/PrincipalTokenCard";
 import { getQueryCombinedStatus } from "efi-ui/query/getQueryCombinedStatus";

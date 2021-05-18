@@ -12,7 +12,7 @@ import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { useBatchSwapGivenIn } from "efi-ui/balancer/useBatchSwapGivenIn/useBatchSwapGivenIn";
 import { parseQueryBatchSwapResult } from "efi-ui/balancer/useQueryBatchSwap/parseQueryBatchSwapResult";
 import { useQueryBatchSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
-import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
+import { ERC20Shim } from "efi/contracts/ERC20Shim";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";

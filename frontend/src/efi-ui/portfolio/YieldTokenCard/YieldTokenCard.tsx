@@ -22,7 +22,7 @@ import { getCoinGeckoId } from "efi-coingecko";
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
-import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
+import { ERC20Shim } from "efi/contracts/ERC20Shim";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";

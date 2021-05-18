@@ -11,7 +11,7 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { getBalancerApprovalMessage } from "efi-ui/balancer/balancerApprovalMessage";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
-import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
+import { ERC20Shim } from "efi/contracts/ERC20Shim";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";

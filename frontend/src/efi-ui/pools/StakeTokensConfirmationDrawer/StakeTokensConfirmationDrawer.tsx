@@ -7,7 +7,7 @@ import { t } from "ttag";
 
 import { getBalancerApprovalMessage } from "efi-ui/balancer/balancerApprovalMessage";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
-import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
+import { ERC20Shim } from "efi/contracts/ERC20Shim";
 import { useCryptoAssetMetadata } from "efi-ui/crypto/hooks/useCryptoAssetMetadata/useCryptAssetMetadata";
 import { StakeConfirmationForm } from "efi-ui/pools/StakeTokensConfirmationDrawer/StakeConfirmationForm";
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
