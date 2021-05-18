@@ -10,7 +10,7 @@ import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFr
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { isConvergentCurvePool, PoolContract } from "efi/pools/PoolContract";
-import { TrancheContracts } from "efi/tranche/tranches";
+import { trancheContracts } from "efi/tranche/tranches";
 import { InterestTokenContracts } from "efi/interestToken/interestToken";
 
 export function useTrancheForPool(
@@ -49,7 +49,7 @@ export function useTrancheForPool(
     trancheAddressFromPrincipalTokenAddress &&
     isAddress(trancheAddressFromPrincipalTokenAddress)
   ) {
-    const tranche = TrancheContracts.find(
+    const tranche = trancheContracts.find(
       (tranche) => tranche.address === trancheAddressFromPrincipalTokenAddress
     );
 

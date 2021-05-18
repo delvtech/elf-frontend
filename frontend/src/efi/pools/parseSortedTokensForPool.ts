@@ -5,6 +5,7 @@ import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
 
 import { KNOWN_BASE_ASSETS } from "efi/addresses";
 import { defaultProvider } from "efi/providers/providers";
+import { UnderlyingContracts } from "efi/underlying/underlying";
 
 interface ParsedTokens {
   baseAssetContract: ERC20 | undefined;
@@ -25,12 +26,9 @@ export function useParseSortedTokensForPool(
   const baseAssetAddress = tokens?.[baseAssetIndex];
   const termAssetAddress = tokens?.[termAssetIndex];
 
-  const baseAssetContract = useMemo(() => {
-    if (!baseAssetAddress) {
-      return undefined;
-    }
-    return ERC20__factory.connect(baseAssetAddress, defaultProvider);
-  }, [baseAssetAddress]);
+  const baseAssetContract = baseAssetAddress
+    ? UnderlyingContracts[baseAssetAddress]
+    : undefined;
 
   const termAssetContract = useMemo(() => {
     if (!termAssetAddress) {

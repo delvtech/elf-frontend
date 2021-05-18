@@ -17,7 +17,7 @@ import { useTokensWithBalance } from "efi-ui/token/hooks/useTokensWithBalance";
 import { NoPrincipalTokensInWalletNonIdealState } from "efi-ui/wallets/NoPrincipalTokensInWalletNonIdealState/NoPrincipalTokensInWalletNonIdealState";
 import { NoWalletConnectedNonIdealState } from "efi-ui/wallets/NoWalletConnectedNonIdealState/NoWalletConnectedNonIdealState";
 import { isDust } from "efi/coins/isDust";
-import { PrincipalTokenInfos, TrancheContracts } from "efi/tranche/tranches";
+import { PrincipalTokenInfos, trancheContracts } from "efi/tranche/tranches";
 
 interface PrincipalTokenPortfolioProps {
   chainId: number | undefined;
@@ -115,7 +115,7 @@ function usePrincipalTokenTab(
 ) {
   const principalTokensWithBalanceResults = useTokensWithBalance(
     account,
-    TrancheContracts as unknown as ERC20Shim[],
+    trancheContracts as unknown as ERC20Shim[],
     provider
   );
   const principalTokenDecimals = principalTokensWithBalanceResults?.map(
@@ -124,7 +124,7 @@ function usePrincipalTokenTab(
         ?.decimals
   );
 
-  const principalTokenDecimalResults = useTokenDecimalsMulti(TrancheContracts);
+  const principalTokenDecimalResults = useTokenDecimalsMulti(trancheContracts);
   const decimalResultsStatus = getQueryCombinedStatus(
     principalTokenDecimalResults
   );
