@@ -4,12 +4,12 @@ import { Provider } from "@ethersproject/providers";
 import { WeightedPool__factory } from "elf-contracts/types/factories/WeightedPool__factory";
 import { WeightedPool } from "elf-contracts/types/WeightedPool";
 import { Signer } from "ethers";
-import { YieldTokenPoolInfo } from "tokenlists/types";
+import { YieldPoolTokenInfo } from "tokenlists/types";
 
 import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
 import { YieldPools } from "efi/pools/weightedPool";
 
-interface YieldTokenPoolInfoWithContract extends YieldTokenPoolInfo {
+interface YieldTokenPoolInfoWithContract extends YieldPoolTokenInfo {
   contract: WeightedPool;
 }
 

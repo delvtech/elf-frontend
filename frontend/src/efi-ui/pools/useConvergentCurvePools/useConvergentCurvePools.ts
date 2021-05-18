@@ -2,14 +2,14 @@ import { Provider } from "@ethersproject/providers";
 import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
 import { ConvergentCurvePool__factory } from "elf-contracts/types/factories/ConvergentCurvePool__factory";
 import { Signer } from "ethers";
-import { PrincipalTokenPoolInfo } from "tokenlists/types";
+import { PrincipalPoolTokenInfo } from "tokenlists/types";
 
 import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
 import { useMemo } from "react";
 import { PrincipalPools } from "efi/pools/ccpool";
 
 export interface PrincipalTokenPoolInfoWithContract
-  extends PrincipalTokenPoolInfo {
+  extends PrincipalPoolTokenInfo {
   contract: ConvergentCurvePool;
 }
 
