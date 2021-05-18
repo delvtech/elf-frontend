@@ -7,7 +7,7 @@ import {
 } from "efi/crypto/CryptoAsset";
 import { TokenMetadata } from "efi/tokenlists";
 
-export function useCryptoName(
+export function getCryptoName(
   asset: CryptoAsset | undefined
 ): string | undefined {
   if (!asset) {
