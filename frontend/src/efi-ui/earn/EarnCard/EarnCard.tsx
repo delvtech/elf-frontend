@@ -104,7 +104,7 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
 
   const nowInSeconds = Math.round(Date.now() / 1000);
   const timeRemainingSeconds = expiration - nowInSeconds;
-  const tParamSeconds = unitSeconds ?? 1;
+  const tParamSeconds = unitSeconds;
 
   const { data: totalSupplyBN } = useSmartContractReadCall(
     poolContract,
@@ -113,16 +113,16 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
   const totalSupply = formatEther(totalSupplyBN ?? 0);
 
   const { data: [tokens, balances = []] = [] } = usePoolTokens(poolContract);
-  const { baseAssetIndex, termAssetIndex } =
+  const { baseAssetIndex, termAssetIndex: principalTokenIndex } =
     useParseSortedTokensForPool(tokens);
-  const baseAssetPoolBalance = balances[baseAssetIndex];
-  const principalTokenPoolBalance = balances[termAssetIndex];
+  const baseAssetReservesBalanceOf = balances[baseAssetIndex];
+  const principalReservesBalanceOf = balances[principalTokenIndex];
   const baseReserves = formatUnits(
-    baseAssetPoolBalance ?? 0,
+    baseAssetReservesBalanceOf ?? 0,
     activeBaseAssetDecimals
   );
   const principalReserves = formatUnits(
-    principalTokenPoolBalance ?? 0,
+    principalReservesBalanceOf ?? 0,
     activeBaseAssetDecimals
   );
 
@@ -130,6 +130,7 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
   const underlyingPoolTokenContract = UnderlyingContracts[underlying];
   const { spotPriceBaseAssetForOneToken: amountOfEthForOnePrincipalEth } =
     usePoolTokenPrices(poolContract, underlyingPoolTokenContract);
+
   const inputTokenSymbol = getCryptoSymbol(activeBaseAsset);
   const baseAssetIcon = findAssetIcon2(activeBaseAsset);
 
@@ -147,8 +148,8 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
   } = validateTradeValues(
     amountIn,
     amountOut,
-    baseAssetPoolBalance,
-    principalTokenPoolBalance,
+    baseAssetReservesBalanceOf,
+    principalReservesBalanceOf,
     activeBaseAssetBalanceOf,
     activeBaseAssetDecimals
   );
