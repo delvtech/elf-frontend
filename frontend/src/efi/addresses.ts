@@ -2,7 +2,7 @@ import { AddressesJsonFile } from "addresses/AddressesJsonFile";
 
 // Default to the testnet in this repo so `npm start` Just Works without having
 // to specify it on the command line.
-export const addressesJsonId = getAddressesJsonId();
+const addressesJsonId = getAddressesJsonId();
 function getAddressesJsonId() {
   if (process.env.NODE_ENV === "test") {
     return "mock";
