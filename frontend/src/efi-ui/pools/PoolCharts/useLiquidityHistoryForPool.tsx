@@ -44,7 +44,13 @@ export function useLiquidityHistoryForPool(
   const totalLiquidity = useTotalFiatLiquidityForPool(pool);
   const { data: poolId } = useSmartContractReadCall(pool, "getPoolId");
   const balancerVault = useBalancerVault();
-  const { data: fromBlockNumber } = usePreviousBlockNumber(fromTime);
+  const { data: fromBlockNumber } = usePreviousBlockNumber(fromTime, {
+    staleTime: Infinity,
+    cacheTime: Infinity,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+  });
   const { data: [tokens] = [] } = usePoolTokens(pool);
   const {
     baseAssetContract,
@@ -63,8 +69,11 @@ export function useLiquidityHistoryForPool(
   // get the timestamps
   const { data: liquidityEvents = [] } = useQuery({
     staleTime: Infinity,
+    keepPreviousData: true,
     cacheTime: Infinity,
     refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
     queryKey: [
       ["balancerVault", "queryFilter", "PoolBalanceChanged", "liquidityEvents"],
       { poolId, fromBlockNumber, spotPrice },
