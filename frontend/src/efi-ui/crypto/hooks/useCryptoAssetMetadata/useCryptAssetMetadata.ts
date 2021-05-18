@@ -8,6 +8,8 @@ import { CryptoAsset } from "efi/crypto/CryptoAsset";
 /**
  * Turns a token into its CryptoAsset equivalent.
  * NOTE: This will turn a WETH address into an Ethereum CryptoAsset.
+ *
+ * @deprecated use tokenlists instead
  */
 export function useCryptoAssetMetadata(
   asset: CryptoAsset | undefined
