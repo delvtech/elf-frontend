@@ -11,7 +11,6 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { SwapKind } from "efi-ui/balancer/SwapKind";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
-import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { CryptoAssetPicker } from "efi-ui/crypto/CryptoAssetPicker/CryptoAssetPicker";
 import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
@@ -22,14 +21,12 @@ import { PrincipalDiscountPreview } from "efi-ui/earn/EarnCard/PrincipalDiscount
 import { EarnInput } from "efi-ui/earn/EarnInput/EarnInput";
 import { EarnTermPicker } from "efi-ui/earn/EarnTermPicker/EarnTermPicker";
 import { useActiveTranche } from "efi-ui/earn/hooks/useActiveTranche";
-import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { BuyPrincipalTokensTransactionConfirmationDrawer } from "efi-ui/swaps/BuyPrincipalTokensTransactionConfirmationDrawer/BuyPrincipalTokensTransactionConfirmationDrawer";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
 import { formatBalance } from "efi/base/formatBalance";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
-import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { clipStringValueToDecimals } from "efi/math/fixedPoint";
 import { calcSwapOutGivenInCCPoolUNSAFE } from "efi/pools/calcPoolSwap";
 import {
@@ -40,6 +37,8 @@ import { useParseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool"
 import { getTokenInfo } from "efi/tokenlists";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
 import { openTrancheBaseAssets } from "efi/tranche/baseAssets";
+import { UnderlyingContracts } from "efi/underlying/underlying";
+import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 
 export interface EarnCardProps {
   library: Web3Provider | undefined;
@@ -87,21 +86,18 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
     availableTranches,
     setActiveTranche,
   } = useActiveTranche(activeBaseAsset);
-  const principalTokenAddress = activeTranche?.address;
   const { decimals: principalTokenDecimals } = getTokenInfo<PrincipalTokenInfo>(
     activeTranche.address
   );
 
-  const principalTokenAsset = getCryptoAssetForToken(principalTokenAddress);
-  const principalTokenBalanceOf = useCryptoBalance(
-    library,
-    account,
-    principalTokenAsset
+  const { data: principalTokenBalanceOf } = useTokenBalanceOf(
+    activeTranche,
+    account
   );
 
   const {
     address: poolAddress,
-    extensions: { expiration, unitSeconds },
+    extensions: { expiration, unitSeconds, underlying },
   } = getPrincipalPoolForTranche(activeTranche.address);
 
   const poolContract = PrincipalPoolContracts.find(
@@ -133,12 +129,9 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
   );
 
   // the tranche's pool
-  const baseAssetPoolToken = usePoolPairedToken(
-    poolContract,
-    activeTranche as ERC20Shim
-  );
+  const underlyingPoolTokenContract = UnderlyingContracts[underlying];
   const { spotPriceBaseAssetForOneToken: amountOfEthForOnePrincipalEth } =
-    usePoolTokenPrices(poolContract, baseAssetPoolToken);
+    usePoolTokenPrices(poolContract, underlyingPoolTokenContract);
   const inputTokenSymbol = useCryptoSymbol(activeBaseAsset);
   const baseAssetIcon = findAssetIcon2(activeBaseAsset);
 
