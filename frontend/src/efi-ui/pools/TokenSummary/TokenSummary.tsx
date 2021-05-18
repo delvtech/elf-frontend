@@ -10,7 +10,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { getCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/getCryptoSymbol";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { useAccumulatedFiatInterestForTranche } from "efi-ui/pools/useAccumulatedFiatInterestForTranche";
 import { useAccumulatedInterestForTranche } from "efi-ui/pools/useAccumulatedInterestForTranche";
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";

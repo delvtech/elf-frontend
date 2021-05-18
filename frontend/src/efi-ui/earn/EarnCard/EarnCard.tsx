@@ -15,7 +15,7 @@ import { CryptoAssetPicker } from "efi-ui/crypto/CryptoAssetPicker/CryptoAssetPi
 import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoBalance } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
-import { getCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/getCryptoSymbol";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { PrincipalDiscountPreview } from "efi-ui/earn/EarnCard/PrincipalDiscountPreview";
 import { EarnInput } from "efi-ui/earn/EarnInput/EarnInput";
 import { EarnTermPicker } from "efi-ui/earn/EarnTermPicker/EarnTermPicker";

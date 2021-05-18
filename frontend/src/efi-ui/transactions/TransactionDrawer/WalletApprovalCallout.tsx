@@ -12,7 +12,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
-import { getCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/getCryptoSymbol";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { useERC20Approve } from "efi-ui/token/hooks/useERC20Approve";
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
 import { MAX_ALLOWANCE } from "efi/contracts/token";

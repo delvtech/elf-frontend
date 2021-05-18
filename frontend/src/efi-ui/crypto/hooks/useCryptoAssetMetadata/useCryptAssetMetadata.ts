@@ -2,7 +2,7 @@ import { CryptoAssetMetadata } from "efi-ui/crypto/CryptoAssetMetadata";
 import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
 import { getCryptoName } from "efi/crypto/getCryptoName/getCryptoName";
-import { getCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/getCryptoSymbol";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 
 /**

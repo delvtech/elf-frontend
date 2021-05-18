@@ -9,7 +9,7 @@ import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 import { getCryptoName } from "efi/crypto/getCryptoName/getCryptoName";
-import { getCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/getCryptoSymbol";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { TokenIcon } from "efi-ui/token/TokenIcon";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 

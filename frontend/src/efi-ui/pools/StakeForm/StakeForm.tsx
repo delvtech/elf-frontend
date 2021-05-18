@@ -6,7 +6,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
-import { getCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/getCryptoSymbol";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { ConvergentCurvePoolActiveInput } from "efi-ui/pools/useConvergentCurvePoolStakeInputs/useConvergentCurvePoolStakeInputs";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
