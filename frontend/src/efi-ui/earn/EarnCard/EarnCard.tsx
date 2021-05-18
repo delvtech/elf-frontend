@@ -62,6 +62,10 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
     setAmountIn("");
     setAmountOut("");
   }, [setAmountIn, setAmountOut]);
+  const closeDrawer = useCallback(() => {
+    clearInputs();
+    setDrawerOpen(false);
+  }, [clearInputs]);
 
   // base asset
   const { activeBaseAsset, setActiveBaseAsset } =
@@ -77,8 +81,10 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
     activeBaseAssetBalanceOf,
     activeBaseAssetDecimals
   );
+  const baseAssetSymbol = getCryptoSymbol(activeBaseAsset);
+  const baseAssetIcon = findAssetIcon2(activeBaseAsset);
 
-  // tranche
+  // principal token
   const {
     activeTrancheIndex,
     activeTranche,
@@ -94,6 +100,7 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
     account
   );
 
+  // pool
   const {
     extensions: { expiration, unitSeconds, underlying },
   } = getPrincipalPoolForTranche(activeTranche.address);
@@ -126,19 +133,9 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
     activeBaseAssetDecimals
   );
 
-  // the tranche's pool
   const underlyingPoolTokenContract = UnderlyingContracts[underlying];
   const { spotPriceBaseAssetForOneToken: amountOfEthForOnePrincipalEth } =
     usePoolTokenPrices(poolContract, underlyingPoolTokenContract);
-
-  const inputTokenSymbol = getCryptoSymbol(activeBaseAsset);
-  const baseAssetIcon = findAssetIcon2(activeBaseAsset);
-
-  const closeDrawer = useCallback(() => {
-    setAmountIn("");
-    setAmountOut("");
-    setDrawerOpen(false);
-  }, [setAmountIn, setAmountOut]);
 
   const {
     isValidTokenInValue,
@@ -226,7 +223,7 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
 
   const roundedPrincipalPrice = amountOfEthForOnePrincipalEth?.toFixed(4);
   const marketRateLabel = getMarketRateLabel(
-    inputTokenSymbol,
+    baseAssetSymbol,
     roundedPrincipalPrice,
     activeBaseAssetSymbol
   );
