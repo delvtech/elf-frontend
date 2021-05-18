@@ -3,7 +3,6 @@ import { Fragment, ReactElement, useCallback, useState } from "react";
 import { Button, Card, Classes, Elevation, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import classNames from "classnames";
-import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
 import { formatEther, formatUnits } from "ethers/lib/utils";
 import { PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
@@ -30,8 +29,8 @@ import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { clipStringValueToDecimals } from "efi/math/fixedPoint";
 import { calcSwapOutGivenInCCPoolUNSAFE } from "efi/pools/calcPoolSwap";
 import {
+  getPrincipalPoolContractForTranche,
   getPrincipalPoolForTranche,
-  PrincipalPoolContracts,
 } from "efi/pools/ccpool";
 import { useParseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { getTokenInfo } from "efi/tokenlists";
@@ -96,13 +95,12 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
   );
 
   const {
-    address: poolAddress,
     extensions: { expiration, unitSeconds, underlying },
   } = getPrincipalPoolForTranche(activeTranche.address);
 
-  const poolContract = PrincipalPoolContracts.find(
-    (contract) => contract.address === poolAddress
-  ) as ConvergentCurvePool;
+  const poolContract = getPrincipalPoolContractForTranche(
+    activeTranche.address
+  );
 
   const nowInSeconds = Math.round(Date.now() / 1000);
   const timeRemainingSeconds = expiration - nowInSeconds;

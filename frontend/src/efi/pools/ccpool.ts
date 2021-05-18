@@ -18,7 +18,8 @@ export const PrincipalPools: PrincipalPoolTokenInfo[] =
     (tokenInfo): tokenInfo is PrincipalPoolTokenInfo =>
       isPrincipalPool(tokenInfo)
   );
-export const PrincipalPoolContracts = getSmartContractFromRegistryMulti(
+
+const PrincipalPoolContracts = getSmartContractFromRegistryMulti(
   PrincipalPools.map(({ address }) => address),
   ConvergentCurvePool__factory.connect
 ) as ConvergentCurvePool[];
@@ -34,4 +35,14 @@ export function getPrincipalPoolForTranche(
   return PrincipalPools.find(
     ({ extensions: { bond } }) => bond === trancheAddress
   ) as PrincipalPoolTokenInfo;
+}
+
+export function getPrincipalPoolContractForTranche(
+  trancheAddress: string
+): ConvergentCurvePool {
+  const pool = getPrincipalPoolForTranche(trancheAddress);
+  const poolContract = PrincipalPoolContracts.find(
+    (contract) => contract.address === pool.address
+  ) as ConvergentCurvePool;
+  return poolContract;
 }
