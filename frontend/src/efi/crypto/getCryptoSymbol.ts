@@ -4,12 +4,11 @@ import {
   CryptoAssetType,
   findTokenContract,
 } from "efi/crypto/CryptoAsset";
-import { NUM_ETH_DECIMALS } from "efi/ethereum";
 import { TokenMetadata } from "efi/tokenlists";
 
-export function useCryptoDecimals(
+export function getCryptoSymbol(
   asset: CryptoAsset | undefined
-): number | undefined {
+): string | undefined {
   if (!asset) {
     return;
   }
@@ -17,16 +16,17 @@ export function useCryptoDecimals(
   const assetType = asset.type;
   switch (assetType) {
     case CryptoAssetType.ETHEREUM:
-      return NUM_ETH_DECIMALS;
+      return "ETH";
     case CryptoAssetType.ERC20:
     case CryptoAssetType.ERC20PERMIT: {
       const tokenContract = findTokenContract(asset);
       if (tokenContract?.address) {
-        return TokenMetadata[tokenContract.address].decimals;
+        return TokenMetadata[tokenContract.address].symbol;
       }
       return;
     }
     default:
       assertNever(assetType);
+      return;
   }
 }

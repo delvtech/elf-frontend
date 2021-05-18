@@ -6,7 +6,7 @@ import { Signer } from "ethers";
 import { t } from "ttag";
 
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { useMintPreview } from "efi-ui/mint/hooks/useMintPreview";
 import { useMintTransaction } from "efi-ui/mint/hooks/useMintTransaction";
 import { useUserProxy } from "efi-ui/mint/hooks/userProxy";
@@ -46,7 +46,7 @@ export function MintTransactionConfirmationDrawer({
   const userProxy = useUserProxy();
 
   // base asset calls
-  const baseAssetSymbol = useCryptoSymbol(baseAsset);
+  const baseAssetSymbol = getCryptoSymbol(baseAsset);
 
   // tranche calls
   const { data: trancheUnlockTimestamp } = useSmartContractReadCall(

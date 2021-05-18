@@ -11,10 +11,10 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { getBalancerApprovalMessage } from "efi-ui/balancer/balancerApprovalMessage";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
-import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
+import { ERC20Shim } from "efi/contracts/ERC20Shim";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
-import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
+import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { StakeForm } from "efi-ui/pools/StakeForm/StakeForm";
 import { useConvergentCurvePoolStakeInputs } from "efi-ui/pools/useConvergentCurvePoolStakeInputs/useConvergentCurvePoolStakeInputs";
 import { useJoinConvergentPool } from "efi-ui/pools/useJoinConvergentPool/useJoinConvergentPool";
@@ -53,14 +53,14 @@ export function StakePrincipalTokensDrawer({
   const balancerVault = useBalancerVault();
 
   // base asset calls
-  const baseAssetSymbol = useCryptoSymbol(baseAsset);
+  const baseAssetSymbol = getCryptoSymbol(baseAsset);
   const baseAssetAddress = findTokenAddressForPool(baseAsset);
   const { data: allowance } = useTokenAllowance(
     findTokenContract(baseAsset) as ERC20Shim,
     account,
     balancerVault?.address
   );
-  const baseAssetDecimals = useCryptoDecimals(baseAsset);
+  const baseAssetDecimals = getCryptoDecimals(baseAsset);
 
   // tranche calls
   const trancheCryptoAsset = makeCryptoAsset(tranche as ERC20Shim);

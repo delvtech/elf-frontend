@@ -9,6 +9,9 @@ import {
   findTokenContract,
 } from "efi/crypto/CryptoAsset";
 
+/**
+ * @deprecated hooks based lookups for crypto symbols are depreacted. use getCryptoSymbol instead.
+ */
 export function useCryptoSymbolMulti(
   assets: (CryptoAsset | undefined)[]
 ): (string | undefined)[] {

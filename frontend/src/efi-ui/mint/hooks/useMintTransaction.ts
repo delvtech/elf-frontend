@@ -6,7 +6,7 @@ import { UserProxy } from "elf-contracts/types/UserProxy";
 import { ContractTransaction, Signer } from "ethers";
 import { parseUnits } from "ethers/lib/utils";
 
-import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
+import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { useMintCallArgs } from "efi-ui/mint/hooks/useMintCallArgs";
 import { useUserProxy } from "efi-ui/mint/hooks/userProxy";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
@@ -33,7 +33,7 @@ export function useMintTransaction(
   >;
 } {
   const userProxy = useUserProxy();
-  const baseAssetDecimals = useCryptoDecimals(baseAsset);
+  const baseAssetDecimals = getCryptoDecimals(baseAsset);
   const amountInBigNumber = parseUnits(
     amountIn?.toString() || "0",
     baseAssetDecimals

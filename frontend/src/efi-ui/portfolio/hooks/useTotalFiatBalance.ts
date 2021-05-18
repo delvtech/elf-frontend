@@ -11,7 +11,7 @@ import { parseQueryBatchSwapResult } from "efi-ui/balancer/useQueryBatchSwap/par
 import { useQueryBatchSwapMulti } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwapMulti";
 import { getQueriesData } from "efi-ui/base/queryResults";
 import { useCoinGeckoPriceMulti } from "efi-ui/coingecko/useCoinGeckoPrices";
-import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
+import { ERC20Shim } from "efi/contracts/ERC20Shim";
 import { useCryptoDecimalsMulti } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimalsMulti";
 import { useCryptoSymbolMulti } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbolMulti";
 import { useBaseAssetForPools } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPoolMulti";

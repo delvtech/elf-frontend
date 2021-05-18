@@ -13,7 +13,7 @@ import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInp
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { StakingConfirmationDrawer } from "efi-ui/pools/StakeTokensConfirmationDrawer/StakeTokensConfirmationDrawer";
 import { StakingInput } from "efi-ui/pools/StakingInput/StakingInput";
 import { useJoinConvergentPool } from "efi-ui/pools/useJoinConvergentPool/useJoinConvergentPool";
@@ -337,7 +337,7 @@ function useTokenInfoForTradeInput(
   const { data: ethBalance } = useEthBalance(library, account);
 
   const asset = getCryptoAssetForToken(tokenContract?.address);
-  const baseAssetSymbol = useCryptoSymbol(asset);
+  const baseAssetSymbol = getCryptoSymbol(asset);
   const { symbol: termAssetSymbol } = useTermAssetSymbol(
     tokenContract?.address,
     baseAssetSymbol

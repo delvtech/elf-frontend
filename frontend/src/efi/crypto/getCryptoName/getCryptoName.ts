@@ -1,4 +1,4 @@
-import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
+import { ERC20Shim } from "efi/contracts/ERC20Shim";
 import { assertNever } from "efi/base/assertNever";
 import {
   CryptoAsset,
@@ -7,7 +7,7 @@ import {
 } from "efi/crypto/CryptoAsset";
 import { TokenMetadata } from "efi/tokenlists";
 
-export function useCryptoName(
+export function getCryptoName(
   asset: CryptoAsset | undefined
 ): string | undefined {
   if (!asset) {

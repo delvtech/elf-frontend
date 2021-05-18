@@ -12,9 +12,8 @@ import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { useBatchSwapGivenIn } from "efi-ui/balancer/useBatchSwapGivenIn/useBatchSwapGivenIn";
 import { parseQueryBatchSwapResult } from "efi-ui/balancer/useQueryBatchSwap/parseQueryBatchSwapResult";
 import { useQueryBatchSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
-import { useCryptoAddress } from "efi-ui/crypto/hooks/useCryptoAddress/useCryptoAddress";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 import { usePoolSwapFee } from "efi-ui/pools/usePoolSwapFee/usePoolSwapFee";
 import { SwapDetailsForm } from "efi-ui/swaps/SwapDetailsPreview/SwapDetailsForm";
@@ -27,6 +26,7 @@ import { calculateSlippage } from "efi/pools/calculateSlippage";
 import { isConvergentCurvePool, PoolContract } from "efi/pools/PoolContract";
 import { getAmountOutWithTolerance } from "efi/trade/getAmountOutWithTolerance";
 import { TermAssetType } from "efi/tranche/TermAssetType";
+import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
 
 interface SwapTokensTransactionConfirmationDrawerProps {
   chainId: number | undefined;
@@ -81,8 +81,8 @@ export function SwapTokensTransactionConfirmationDrawer({
 
   const baseAssetContract = useBaseAssetForPool(pool);
   const baseAsset = getCryptoAssetForToken(baseAssetContract?.address);
-  const baseAssetSymbol = useCryptoSymbol(baseAsset);
-  const baseAssetAddress = useCryptoAddress(baseAsset);
+  const baseAssetSymbol = getCryptoSymbol(baseAsset);
+  const baseAssetAddress = getTokenAddressForBalancer(baseAsset);
   const baseAssetIn = baseAssetAddress === tokenInAddress;
 
   const termAssetType: TermAssetType = isConvergentCurvePool(pool)

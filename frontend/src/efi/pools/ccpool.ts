@@ -13,13 +13,14 @@ import { tokenListJson } from "efi/tokenlists";
 /**
  * The list of all principal token pools
  */
-export const PrincipalPools: PrincipalPoolTokenInfo[] =
+export const principalPools: PrincipalPoolTokenInfo[] =
   tokenListJson.tokens.filter(
     (tokenInfo): tokenInfo is PrincipalPoolTokenInfo =>
       isPrincipalPool(tokenInfo)
   );
-export const PrincipalPoolContracts = getSmartContractFromRegistryMulti(
-  PrincipalPools.map(({ address }) => address),
+
+const principalPoolContracts = getSmartContractFromRegistryMulti(
+  principalPools.map(({ address }) => address),
   ConvergentCurvePool__factory.connect
 ) as ConvergentCurvePool[];
 
@@ -31,7 +32,17 @@ function isPrincipalPool(
 export function getPrincipalPoolForTranche(
   trancheAddress: string
 ): PrincipalPoolTokenInfo {
-  return PrincipalPools.find(
+  return principalPools.find(
     ({ extensions: { bond } }) => bond === trancheAddress
   ) as PrincipalPoolTokenInfo;
+}
+
+export function getPrincipalPoolContractForTranche(
+  trancheAddress: string
+): ConvergentCurvePool {
+  const pool = getPrincipalPoolForTranche(trancheAddress);
+  const poolContract = principalPoolContracts.find(
+    (contract) => contract.address === pool.address
+  ) as ConvergentCurvePool;
+  return poolContract;
 }

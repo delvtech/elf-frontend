@@ -4,7 +4,7 @@ import { Helmet } from "react-helmet";
 import { t } from "ttag";
 
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
 import { useParseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
@@ -18,7 +18,7 @@ export function PoolViewTitle({ pool }: PoolViewTitleProps): ReactElement {
   const { baseAssetContract, termAssetContract } =
     useParseSortedTokensForPool(tokens);
   const baseAsset = getCryptoAssetForToken(baseAssetContract?.address);
-  const baseAssetSymbol = useCryptoSymbol(baseAsset);
+  const baseAssetSymbol = getCryptoSymbol(baseAsset);
   const { symbol: termAssetSymbol } = useTermAssetSymbol(
     termAssetContract?.address,
     baseAssetSymbol

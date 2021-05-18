@@ -14,7 +14,7 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { UnstakeConvergentCurvePoolButton } from "efi-ui/pools/UnstakeButton/UnstakeConvergentCurvePoolButton";
 import { UnstakeWeightedPoolButton } from "efi-ui/pools/UnstakeButton/UnstakeWeightedPoolButton";
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
@@ -55,7 +55,7 @@ export function UnstakeCard({
   const baseAssetCryptoAsset = getCryptoAssetForToken(
     baseAssetContract?.address
   );
-  const baseAssetSymbol = useCryptoSymbol(baseAssetCryptoAsset);
+  const baseAssetSymbol = getCryptoSymbol(baseAssetCryptoAsset);
 
   // Principal token
   const tranche = useTrancheForPool(pool);

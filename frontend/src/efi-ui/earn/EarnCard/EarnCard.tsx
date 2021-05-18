@@ -3,7 +3,6 @@ import { Fragment, ReactElement, useCallback, useState } from "react";
 import { Button, Card, Classes, Elevation, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import classNames from "classnames";
-import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
 import { formatEther, formatUnits } from "ethers/lib/utils";
 import { PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
@@ -15,8 +14,8 @@ import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadC
 import { CryptoAssetPicker } from "efi-ui/crypto/CryptoAssetPicker/CryptoAssetPicker";
 import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoBalance } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
-import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
-import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
+import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { PrincipalDiscountPreview } from "efi-ui/earn/EarnCard/PrincipalDiscountPreview";
 import { EarnInput } from "efi-ui/earn/EarnInput/EarnInput";
 import { EarnTermPicker } from "efi-ui/earn/EarnTermPicker/EarnTermPicker";
@@ -30,8 +29,8 @@ import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { clipStringValueToDecimals } from "efi/math/fixedPoint";
 import { calcSwapOutGivenInCCPoolUNSAFE } from "efi/pools/calcPoolSwap";
 import {
+  getPrincipalPoolContractForTranche,
   getPrincipalPoolForTranche,
-  PrincipalPoolContracts,
 } from "efi/pools/ccpool";
 import { useParseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { getTokenInfo } from "efi/tokenlists";
@@ -67,8 +66,8 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
   // base asset
   const { activeBaseAsset, setActiveBaseAsset } =
     useActiveBaseAsset(clearInputs);
-  const activeBaseAssetSymbol = useCryptoSymbol(activeBaseAsset);
-  const activeBaseAssetDecimals = useCryptoDecimals(activeBaseAsset);
+  const activeBaseAssetSymbol = getCryptoSymbol(activeBaseAsset);
+  const activeBaseAssetDecimals = getCryptoDecimals(activeBaseAsset);
   const activeBaseAssetBalanceOf = useCryptoBalance(
     library,
     account,
@@ -96,17 +95,16 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
   );
 
   const {
-    address: poolAddress,
     extensions: { expiration, unitSeconds, underlying },
   } = getPrincipalPoolForTranche(activeTranche.address);
 
-  const poolContract = PrincipalPoolContracts.find(
-    (contract) => contract.address === poolAddress
-  ) as ConvergentCurvePool;
+  const poolContract = getPrincipalPoolContractForTranche(
+    activeTranche.address
+  );
 
   const nowInSeconds = Math.round(Date.now() / 1000);
   const timeRemainingSeconds = expiration - nowInSeconds;
-  const tParamSeconds = unitSeconds ?? 1;
+  const tParamSeconds = unitSeconds;
 
   const { data: totalSupplyBN } = useSmartContractReadCall(
     poolContract,
@@ -115,16 +113,16 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
   const totalSupply = formatEther(totalSupplyBN ?? 0);
 
   const { data: [tokens, balances = []] = [] } = usePoolTokens(poolContract);
-  const { baseAssetIndex, termAssetIndex } =
+  const { baseAssetIndex, termAssetIndex: principalTokenIndex } =
     useParseSortedTokensForPool(tokens);
-  const baseAssetPoolBalance = balances[baseAssetIndex];
-  const principalTokenPoolBalance = balances[termAssetIndex];
+  const baseAssetReservesBalanceOf = balances[baseAssetIndex];
+  const principalReservesBalanceOf = balances[principalTokenIndex];
   const baseReserves = formatUnits(
-    baseAssetPoolBalance ?? 0,
+    baseAssetReservesBalanceOf ?? 0,
     activeBaseAssetDecimals
   );
   const principalReserves = formatUnits(
-    principalTokenPoolBalance ?? 0,
+    principalReservesBalanceOf ?? 0,
     activeBaseAssetDecimals
   );
 
@@ -132,7 +130,8 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
   const underlyingPoolTokenContract = UnderlyingContracts[underlying];
   const { spotPriceBaseAssetForOneToken: amountOfEthForOnePrincipalEth } =
     usePoolTokenPrices(poolContract, underlyingPoolTokenContract);
-  const inputTokenSymbol = useCryptoSymbol(activeBaseAsset);
+
+  const inputTokenSymbol = getCryptoSymbol(activeBaseAsset);
   const baseAssetIcon = findAssetIcon2(activeBaseAsset);
 
   const closeDrawer = useCallback(() => {
@@ -149,8 +148,8 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
   } = validateTradeValues(
     amountIn,
     amountOut,
-    baseAssetPoolBalance,
-    principalTokenPoolBalance,
+    baseAssetReservesBalanceOf,
+    principalReservesBalanceOf,
     activeBaseAssetBalanceOf,
     activeBaseAssetDecimals
   );

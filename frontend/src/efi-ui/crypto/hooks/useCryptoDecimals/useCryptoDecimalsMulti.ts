@@ -10,6 +10,9 @@ import {
 } from "efi/crypto/CryptoAsset";
 import { NUM_ETH_DECIMALS } from "efi/ethereum";
 
+/**
+ * @deprecated hooks based lookups for decimals is deprecated, use getCryptoDecimals instead
+ */
 export function useCryptoDecimalsMulti(
   assets: (CryptoAsset | undefined)[]
 ): (number | undefined)[] {
