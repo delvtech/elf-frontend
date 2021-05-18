@@ -1,7 +1,7 @@
 import { t } from "ttag";
 
 import { trancheContracts } from "efi/tranche/tranches";
-import { InterestTokenContracts } from "efi/interestToken/interestToken";
+import { interestTokenContracts } from "efi/interestToken/interestToken";
 
 interface TermAssetSymbols {
   /**
@@ -21,7 +21,7 @@ export function useTermAssetSymbol(
 ): TermAssetSymbols {
   // note that the principal tokens are built into the same contract as the tranches
   const principalAddresses = trancheContracts.map(({ address }) => address);
-  const interestTokenAddresses = InterestTokenContracts.map(
+  const interestTokenAddresses = interestTokenContracts.map(
     ({ address }) => address
   );
 

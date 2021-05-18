@@ -5,18 +5,22 @@ import { TokenListTag, YieldTokenInfo } from "tokenlists/types";
 
 import { getSmartContractFromRegistryMulti } from "efi/contracts/SmartContractsRegistry";
 import { tokenListJson } from "efi/tokenlists";
+import keyBy from "lodash.keyby";
 
 /**
  * The list of all yield tokens
  */
-export const YieldTokenInfos: YieldTokenInfo[] = tokenListJson.tokens.filter(
+export const yieldTokenInfos: YieldTokenInfo[] = tokenListJson.tokens.filter(
   (tokenInfo): tokenInfo is YieldTokenInfo => isYieldToken(tokenInfo)
 );
-export const InterestTokenContracts = getSmartContractFromRegistryMulti(
-  YieldTokenInfos.map(({ address }) => address),
+export const interestTokenContracts = getSmartContractFromRegistryMulti(
+  yieldTokenInfos.map(({ address }) => address),
   InterestToken__factory.connect
 ) as InterestToken[];
-
+export const InterestTokenContractsByAddress = keyBy(
+  interestTokenContracts,
+  (interestToken) => interestToken.address
+);
 function isYieldToken(tokenInfo: TokenInfo): tokenInfo is YieldTokenInfo {
   return !!tokenInfo.tags?.includes(TokenListTag.YIELD);
 }

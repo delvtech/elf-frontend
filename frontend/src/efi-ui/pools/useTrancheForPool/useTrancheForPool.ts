@@ -11,7 +11,7 @@ import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadC
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { isConvergentCurvePool, PoolContract } from "efi/pools/PoolContract";
 import { trancheContracts } from "efi/tranche/tranches";
-import { InterestTokenContracts } from "efi/interestToken/interestToken";
+import { interestTokenContracts } from "efi/interestToken/interestToken";
 
 export function useTrancheForPool(
   pool: PoolContract | undefined,
@@ -28,7 +28,7 @@ export function useTrancheForPool(
   // just have to look up the tranche address
   const { data: tokenInfo } = usePoolTokens(pool);
   const [tokens] = tokenInfo || [];
-  const interestTokenAddresses = InterestTokenContracts.map((c) => c.address);
+  const interestTokenAddresses = interestTokenContracts.map((c) => c.address);
   const interestTokenAddress = interestTokenAddresses.find((address) =>
     tokens?.includes(address)
   );
