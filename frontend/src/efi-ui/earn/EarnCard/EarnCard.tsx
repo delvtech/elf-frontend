@@ -27,7 +27,6 @@ import { BuyPrincipalTokensTransactionConfirmationDrawer } from "efi-ui/swaps/Bu
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
 import { formatBalance } from "efi/base/formatBalance";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
-import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { clipStringValueToDecimals } from "efi/math/fixedPoint";
 import { calcSwapOutGivenInCCPoolUNSAFE } from "efi/pools/calcPoolSwap";
 import {
@@ -39,6 +38,7 @@ import { getTokenInfo } from "efi/tokenlists";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
 import { openTrancheBaseAssets } from "efi/tranche/baseAssets";
 import { UnderlyingContracts } from "efi/underlying/underlying";
+import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 
 export interface EarnCardProps {
   library: Web3Provider | undefined;
@@ -86,16 +86,13 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
     availableTranches,
     setActiveTranche,
   } = useActiveTranche(activeBaseAsset);
-  const principalTokenAddress = activeTranche?.address;
   const { decimals: principalTokenDecimals } = getTokenInfo<PrincipalTokenInfo>(
     activeTranche.address
   );
 
-  const principalTokenAsset = getCryptoAssetForToken(principalTokenAddress);
-  const principalTokenBalanceOf = useCryptoBalance(
-    library,
-    account,
-    principalTokenAsset
+  const { data: principalTokenBalanceOf } = useTokenBalanceOf(
+    activeTranche,
+    account
   );
 
   const {
