@@ -17,7 +17,7 @@ interface EarnInputProps {
   showMaxButton: boolean;
   // cannot be undefined as that enables 'uncontrolled' component behavior for InputGroup
   value: string;
-  validValue: boolean;
+  isValid: boolean;
   errorMessage?: string;
   onValueChange: (value: string, swapKind: SwapKind) => void;
   className?: string;
@@ -26,8 +26,8 @@ interface EarnInputProps {
 
   assetPicker: ReactElement;
   swapKind: SwapKind;
-  cryptoDecimals: number | undefined;
-  cryptoBalanceOf: BigNumber | undefined;
+  valueDecimals: number | undefined;
+  valueBalanceOf: BigNumber | undefined;
 }
 
 const earnInputStyle: CSSProperties = {
@@ -38,30 +38,26 @@ const earnInputStyle: CSSProperties = {
 export function EarnInput({
   className,
   value,
-  validValue,
+  isValid,
   errorMessage,
   showMaxButton,
   placeholder,
   onValueChange: onChangeFromProps,
   assetPicker,
   swapKind,
-  cryptoDecimals,
-  cryptoBalanceOf,
+  valueDecimals,
+  valueBalanceOf,
 }: EarnInputProps): ReactElement {
   const { isDarkMode } = useDarkMode();
 
-  const onChange = useOnInputChange(
-    onChangeFromProps,
-    cryptoDecimals,
-    swapKind
-  );
+  const onChange = useOnInputChange(onChangeFromProps, valueDecimals, swapKind);
 
   // TODO: disable setting max value if the user balance >  pool balance.  better yet, disable max
   // value if the trade would cause too much slippage.
   // sets the max value for the input
   const setMaxValue = useSetMaxValue(
-    cryptoBalanceOf, // the max value
-    cryptoDecimals,
+    valueBalanceOf, // the max value
+    valueDecimals,
     swapKind,
     onChangeFromProps
   );
@@ -72,9 +68,9 @@ export function EarnInput({
     </div>
   ) : undefined;
 
-  const helperText = validValue ? null : (
+  const helperText = isValid ? null : (
     <div
-      style={{ color: validValue || Colors.RED3 }}
+      style={{ color: isValid || Colors.RED3 }}
       className={tw("w-full", "text-right")}
     >
       {errorMessage}
@@ -93,7 +89,7 @@ export function EarnInput({
           className
         )}
         value={value || ""}
-        intent={validValue ? undefined : Intent.DANGER}
+        intent={isValid ? undefined : Intent.DANGER}
         large
         leftElement={assetPicker}
         rightElement={maxButtonElement}

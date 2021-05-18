@@ -56,7 +56,7 @@ export interface YieldTokenInfo extends TokenInfo {
   };
 }
 
-export interface PrincipalTokenPoolInfo extends TokenInfo {
+export interface PrincipalPoolTokenInfo extends TokenInfo {
   extensions: {
     /**
      * The principal token address
@@ -86,7 +86,7 @@ export interface PrincipalTokenPoolInfo extends TokenInfo {
   };
 }
 
-export interface YieldTokenPoolInfo extends TokenInfo {
+export interface YieldPoolTokenInfo extends TokenInfo {
   extensions: {
     /**
      * The yield token address
@@ -109,5 +109,5 @@ export type AnyTokenListInfo =
   | TokenInfo
   | PrincipalTokenInfo
   | YieldTokenInfo
-  | PrincipalTokenPoolInfo
-  | YieldTokenPoolInfo;
+  | PrincipalPoolTokenInfo
+  | YieldPoolTokenInfo;

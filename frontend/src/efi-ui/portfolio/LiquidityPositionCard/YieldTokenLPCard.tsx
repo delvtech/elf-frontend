@@ -30,7 +30,7 @@ import { getTokenInfo } from "efi/tokenlists";
 import {
   YieldTokenInfo,
   PrincipalTokenInfo,
-  YieldTokenPoolInfo,
+  YieldPoolTokenInfo,
 } from "tokenlists/types";
 
 interface YieldTokenLPCardProps {
@@ -248,7 +248,7 @@ function getPrincipalTokenForYieldToken(
 function getYieldTokenForWeightedPool(poolAddress: string): YieldTokenInfo {
   const {
     extensions: { interestToken: yieldTokenAddress },
-  } = getTokenInfo<YieldTokenPoolInfo>(poolAddress);
+  } = getTokenInfo<YieldPoolTokenInfo>(poolAddress);
 
   return getTokenInfo<YieldTokenInfo>(yieldTokenAddress);
 }

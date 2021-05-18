@@ -3,7 +3,7 @@ import hre from "hardhat";
 import zip from "lodash.zip";
 
 import { TokenListTag } from "src/tokenlist/tags";
-import { YieldTokenPoolInfo } from "src/tokenlist/types";
+import { YieldPoolTokenInfo } from "src/tokenlist/types";
 import { Vault__factory } from "src/types/factories/Vault__factory";
 import { WeightedPoolFactory__factory } from "src/types/factories/WeightedPoolFactory__factory";
 import { WeightedPool__factory } from "src/types/factories/WeightedPool__factory";
@@ -82,7 +82,7 @@ export async function getWeightedPools(
       poolId,
       underlying,
       interestToken,
-    ]): YieldTokenPoolInfo => {
+    ]): YieldPoolTokenInfo => {
       return {
         chainId,
         address: address as string,

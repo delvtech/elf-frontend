@@ -277,11 +277,11 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
               }
               placeholder="0.00"
               value={amountIn || ""}
-              validValue={isValidTokenInValue}
+              isValid={isValidTokenInValue}
               errorMessage={tokenInError}
               onValueChange={onChangeIn}
-              cryptoDecimals={activeBaseAssetDecimals}
-              cryptoBalanceOf={activeBaseAssetBalanceOf}
+              valueDecimals={activeBaseAssetDecimals}
+              valueBalanceOf={activeBaseAssetBalanceOf}
               swapKind={SwapKind.GIVEN_IN}
             />
           </div>
@@ -317,11 +317,11 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
               }
               placeholder="0.00"
               value={amountOut || ""}
-              validValue={isValidTokenOutValue}
+              isValid={isValidTokenOutValue}
               errorMessage={tokenOutError}
               onValueChange={onChangeOut}
-              cryptoDecimals={principalTokenDecimals}
-              cryptoBalanceOf={principalTokenBalanceOf}
+              valueDecimals={principalTokenDecimals}
+              valueBalanceOf={principalTokenBalanceOf}
               swapKind={SwapKind.GIVEN_OUT}
             />
           </div>

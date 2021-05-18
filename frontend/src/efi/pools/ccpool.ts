@@ -3,7 +3,7 @@ import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
 import { ConvergentCurvePool__factory } from "elf-contracts/types/factories/ConvergentCurvePool__factory";
 import {
   PrincipalTokenInfo,
-  PrincipalTokenPoolInfo,
+  PrincipalPoolTokenInfo,
   TokenListTag,
 } from "tokenlists/types";
 
@@ -13,9 +13,9 @@ import { tokenListJson } from "efi/tokenlists";
 /**
  * The list of all principal token pools
  */
-export const PrincipalPools: PrincipalTokenPoolInfo[] =
+export const PrincipalPools: PrincipalPoolTokenInfo[] =
   tokenListJson.tokens.filter(
-    (tokenInfo): tokenInfo is PrincipalTokenPoolInfo =>
+    (tokenInfo): tokenInfo is PrincipalPoolTokenInfo =>
       isPrincipalPool(tokenInfo)
   );
 export const PrincipalPoolContracts = getSmartContractFromRegistryMulti(
@@ -30,8 +30,8 @@ function isPrincipalPool(
 }
 export function getPrincipalPoolForTranche(
   trancheAddress: string
-): PrincipalTokenPoolInfo {
+): PrincipalPoolTokenInfo {
   return PrincipalPools.find(
     ({ extensions: { bond } }) => bond === trancheAddress
-  ) as PrincipalTokenPoolInfo;
+  ) as PrincipalPoolTokenInfo;
 }

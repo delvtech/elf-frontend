@@ -2,7 +2,7 @@ import { TokenInfo } from "@uniswap/token-lists";
 import {
   TokenListTag,
   YieldTokenInfo,
-  YieldTokenPoolInfo,
+  YieldPoolTokenInfo,
 } from "tokenlists/types";
 
 import { tokenListJson } from "efi/tokenlists";
@@ -13,8 +13,8 @@ export enum WeightedPoolExitKind {
   BPT_IN_FOR_EXACT_TOKENS_OUT,
 }
 
-export const YieldPools: YieldTokenPoolInfo[] = tokenListJson.tokens.filter(
-  (tokenInfo): tokenInfo is YieldTokenPoolInfo => isYieldPool(tokenInfo)
+export const YieldPools: YieldPoolTokenInfo[] = tokenListJson.tokens.filter(
+  (tokenInfo): tokenInfo is YieldPoolTokenInfo => isYieldPool(tokenInfo)
 );
 
 function isYieldPool(tokenInfo: TokenInfo): tokenInfo is YieldTokenInfo {

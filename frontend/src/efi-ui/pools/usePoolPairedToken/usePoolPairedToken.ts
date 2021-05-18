@@ -7,7 +7,9 @@ import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFr
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { PoolContract } from "efi/pools/PoolContract";
 
-// TODO: This should also return ERC20Permit when it makes sense
+/**
+ * @deprecated hooks are deprecated for pool paired tokens, use a tokenlist getter instead
+ */
 export function usePoolPairedToken(
   pool: PoolContract | undefined,
   poolToken: ERC20 | ERC20Permit | undefined
