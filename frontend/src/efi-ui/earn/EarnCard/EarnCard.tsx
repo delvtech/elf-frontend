@@ -15,7 +15,7 @@ import { CryptoAssetPicker } from "efi-ui/crypto/CryptoAssetPicker/CryptoAssetPi
 import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoBalance } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
-import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
+import { getCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/getCryptoSymbol";
 import { PrincipalDiscountPreview } from "efi-ui/earn/EarnCard/PrincipalDiscountPreview";
 import { EarnInput } from "efi-ui/earn/EarnInput/EarnInput";
 import { EarnTermPicker } from "efi-ui/earn/EarnTermPicker/EarnTermPicker";
@@ -66,7 +66,7 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
   // base asset
   const { activeBaseAsset, setActiveBaseAsset } =
     useActiveBaseAsset(clearInputs);
-  const activeBaseAssetSymbol = useCryptoSymbol(activeBaseAsset);
+  const activeBaseAssetSymbol = getCryptoSymbol(activeBaseAsset);
   const activeBaseAssetDecimals = useCryptoDecimals(activeBaseAsset);
   const activeBaseAssetBalanceOf = useCryptoBalance(
     library,
@@ -130,7 +130,7 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
   const underlyingPoolTokenContract = UnderlyingContracts[underlying];
   const { spotPriceBaseAssetForOneToken: amountOfEthForOnePrincipalEth } =
     usePoolTokenPrices(poolContract, underlyingPoolTokenContract);
-  const inputTokenSymbol = useCryptoSymbol(activeBaseAsset);
+  const inputTokenSymbol = getCryptoSymbol(activeBaseAsset);
   const baseAssetIcon = findAssetIcon2(activeBaseAsset);
 
   const closeDrawer = useCallback(() => {

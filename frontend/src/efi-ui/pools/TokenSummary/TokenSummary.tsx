@@ -10,7 +10,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
+import { getCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/getCryptoSymbol";
 import { useAccumulatedFiatInterestForTranche } from "efi-ui/pools/useAccumulatedFiatInterestForTranche";
 import { useAccumulatedInterestForTranche } from "efi-ui/pools/useAccumulatedInterestForTranche";
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
@@ -229,7 +229,7 @@ function useTokensSummary(
   const baseAsset = getCryptoAssetForToken(baseAssetContract?.address);
 
   // Base Asset Info
-  const baseAssetSymbol = useCryptoSymbol(baseAsset);
+  const baseAssetSymbol = getCryptoSymbol(baseAsset);
   const [baseAssetPrice] = useTokenPrice(baseAssetContract, currency);
   const [baseAssetPriceYesterday] = useTokenHistoricalPrice(
     baseAssetContract,

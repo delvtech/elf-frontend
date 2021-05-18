@@ -6,7 +6,7 @@ import {
 } from "efi/crypto/CryptoAsset";
 import { TokenMetadata } from "efi/tokenlists";
 
-export function useCryptoSymbol(
+export function getCryptoSymbol(
   asset: CryptoAsset | undefined
 ): string | undefined {
   if (!asset) {

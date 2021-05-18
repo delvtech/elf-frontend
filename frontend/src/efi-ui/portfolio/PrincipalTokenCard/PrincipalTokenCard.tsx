@@ -22,7 +22,7 @@ import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
-import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
+import { getCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/getCryptoSymbol";
 import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
@@ -93,7 +93,7 @@ export function PrincipalTokenCard(
   const { spotPriceBaseAssetForOneToken: tranchePriceInBaseAsset = 0 } =
     usePoolTokenPrices(pool, baseAssetContract);
 
-  const baseAssetSymbol = useCryptoSymbol(baseAsset);
+  const baseAssetSymbol = getCryptoSymbol(baseAsset);
 
   const exitValue = trancheBalance * tranchePriceInBaseAsset;
   const { data: baseAssetCoinGeckoPrice } = useCoinGeckoPrice(

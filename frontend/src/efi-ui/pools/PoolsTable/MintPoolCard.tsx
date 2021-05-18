@@ -21,7 +21,7 @@ import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
+import { getCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/getCryptoSymbol";
 import { MintCard } from "efi-ui/mint/MintCard/MintCard";
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 import { useFeeVolumeForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
@@ -81,7 +81,7 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
   const fees = useFeeVolumeForPool(pool) ?? 0;
   const baseAssetContract = useBaseAssetForPool(pool);
   const baseAsset = getCryptoAssetForToken(baseAssetContract?.address);
-  const baseAssetSymbol = useCryptoSymbol(baseAsset);
+  const baseAssetSymbol = getCryptoSymbol(baseAsset);
   const BaseAssetIcon = findAssetIcon(baseAssetSymbol);
   const termAssetContract = usePoolPairedToken(pool, baseAssetContract);
   const { symbol: termAssetSymbol } = useTermAssetSymbol(

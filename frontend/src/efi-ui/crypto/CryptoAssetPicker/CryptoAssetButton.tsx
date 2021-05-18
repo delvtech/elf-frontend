@@ -9,7 +9,7 @@ import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoName } from "efi-ui/crypto/hooks/useCryptoName/useCryptoName";
-import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
+import { getCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/getCryptoSymbol";
 import { TokenIcon } from "efi-ui/token/TokenIcon";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 
@@ -32,7 +32,7 @@ export function CryptoAssetButton({
   onClick,
 }: CryptoAssetButtonProps): ReactElement {
   const assetName = useCryptoName(cryptoAsset);
-  const assetSymbol = useCryptoSymbol(cryptoAsset);
+  const assetSymbol = getCryptoSymbol(cryptoAsset);
   const assetIcon = findAssetIcon2(cryptoAsset);
 
   if (!cryptoAsset || !assetSymbol) {

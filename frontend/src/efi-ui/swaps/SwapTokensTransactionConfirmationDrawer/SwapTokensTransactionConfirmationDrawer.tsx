@@ -14,7 +14,7 @@ import { parseQueryBatchSwapResult } from "efi-ui/balancer/useQueryBatchSwap/par
 import { useQueryBatchSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
 import { useCryptoAddress } from "efi-ui/crypto/hooks/useCryptoAddress/useCryptoAddress";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
+import { getCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/getCryptoSymbol";
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 import { usePoolSwapFee } from "efi-ui/pools/usePoolSwapFee/usePoolSwapFee";
 import { SwapDetailsForm } from "efi-ui/swaps/SwapDetailsPreview/SwapDetailsForm";
@@ -81,7 +81,7 @@ export function SwapTokensTransactionConfirmationDrawer({
 
   const baseAssetContract = useBaseAssetForPool(pool);
   const baseAsset = getCryptoAssetForToken(baseAssetContract?.address);
-  const baseAssetSymbol = useCryptoSymbol(baseAsset);
+  const baseAssetSymbol = getCryptoSymbol(baseAsset);
   const baseAssetAddress = useCryptoAddress(baseAsset);
   const baseAssetIn = baseAssetAddress === tokenInAddress;
 

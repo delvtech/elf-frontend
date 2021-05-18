@@ -14,7 +14,7 @@ import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { ERC20Shim } from "efi-ui/contracts/ERC20Shim";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useCryptoDecimals } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimals";
-import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
+import { getCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/getCryptoSymbol";
 import { StakeForm } from "efi-ui/pools/StakeForm/StakeForm";
 import { useConvergentCurvePoolStakeInputs } from "efi-ui/pools/useConvergentCurvePoolStakeInputs/useConvergentCurvePoolStakeInputs";
 import { useJoinConvergentPool } from "efi-ui/pools/useJoinConvergentPool/useJoinConvergentPool";
@@ -53,7 +53,7 @@ export function StakePrincipalTokensDrawer({
   const balancerVault = useBalancerVault();
 
   // base asset calls
-  const baseAssetSymbol = useCryptoSymbol(baseAsset);
+  const baseAssetSymbol = getCryptoSymbol(baseAsset);
   const baseAssetAddress = findTokenAddressForPool(baseAsset);
   const { data: allowance } = useTokenAllowance(
     findTokenContract(baseAsset) as ERC20Shim,

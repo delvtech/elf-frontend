@@ -15,7 +15,7 @@ import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { useCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbol";
+import { getCryptoSymbol } from "efi-ui/crypto/hooks/useCryptoSymbol/getCryptoSymbol";
 import { UnstakeConvergentCurvePoolButton } from "efi-ui/pools/UnstakeButton/UnstakeConvergentCurvePoolButton";
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
@@ -62,7 +62,7 @@ export function PrincipalTokenLPCard({
   const baseAssetCryptoAsset = getCryptoAssetForToken(
     baseAssetContract?.address
   );
-  const baseAssetSymbol = useCryptoSymbol(baseAssetCryptoAsset);
+  const baseAssetSymbol = getCryptoSymbol(baseAssetCryptoAsset);
   const BaseAssetIcon = findAssetIcon2(baseAssetCryptoAsset);
 
   // Principal token
