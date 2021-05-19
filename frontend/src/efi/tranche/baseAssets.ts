@@ -30,6 +30,13 @@ export const tranchesByBaseAsset: Record<string, Tranche[]> = groupBy(
   }
 );
 
+export function getBaseAssetForTranche(trancheAddress: string): CryptoAsset {
+  const {
+    extensions: { underlying },
+  } = getTokenInfo<PrincipalTokenInfo>(trancheAddress);
+  return CryptoAssets[underlying];
+}
+
 function getBaseAssetsForTranches(
   tranches: (Tranche | undefined)[]
 ): (CryptoAsset | undefined)[] {

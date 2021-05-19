@@ -17,8 +17,8 @@ interface TermPickerProps {
   activeTrancheIndex: number;
   onTrancheChange: (newTranche: Tranche) => void;
   buttonLabelRenderer: (
-    tranche: Tranche | undefined,
-    baseAsset: CryptoAsset | undefined
+    tranche: Tranche,
+    baseAsset: CryptoAsset
   ) => JSX.Element;
 }
 

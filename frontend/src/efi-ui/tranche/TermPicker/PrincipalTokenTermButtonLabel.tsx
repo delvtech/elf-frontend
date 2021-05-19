@@ -19,10 +19,12 @@ import { formatPercent } from "efi/base/formatPercent";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { defaultProvider } from "efi/providers/providers";
 import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
+import { getTokenInfo } from "efi/tokenlists";
+import { PrincipalTokenInfo } from "tokenlists/types";
 
 interface PrincipalTokenTermButtonLabelProps {
-  tranche: Tranche | undefined;
-  baseAsset: CryptoAsset | undefined;
+  tranche: Tranche;
+  baseAsset: CryptoAsset;
 }
 
 /**
@@ -33,17 +35,15 @@ export function PrincipalTokenTermButtonLabel({
   baseAsset,
   tranche,
 }: PrincipalTokenTermButtonLabelProps): ReactElement {
-  const unlockTimestampResult = useSmartContractReadCall(
-    tranche,
-    "unlockTimestamp"
-  );
+  const trancheInfo = getTokenInfo<PrincipalTokenInfo>(tranche.address);
+  const {
+    extensions: { unlockTimestamp },
+  } = trancheInfo;
 
   const position = useUnderlyingVaultForTranche(tranche);
   const { data: positionName } = useSmartContractReadCall(position, "name");
 
-  const unlockDate = convertEpochSecondsToDate(
-    getQueryData(unlockTimestampResult)
-  );
+  const unlockDate = convertEpochSecondsToDate(unlockTimestamp);
 
   const pool = usePoolForToken(tranche as ERC20Shim, defaultProvider);
   const baseAssetSymbol = getCryptoSymbol(baseAsset);

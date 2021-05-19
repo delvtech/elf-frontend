@@ -44,10 +44,7 @@ export function EarnTermPicker({
   );
 }
 
-function buttonLabelRenderer(
-  tranche: Tranche | undefined,
-  baseAsset: CryptoAsset | undefined
-) {
+function buttonLabelRenderer(tranche: Tranche, baseAsset: CryptoAsset) {
   return (
     <PrincipalTokenTermButtonLabel tranche={tranche} baseAsset={baseAsset} />
   );
