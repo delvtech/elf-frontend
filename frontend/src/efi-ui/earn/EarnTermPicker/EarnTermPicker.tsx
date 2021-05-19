@@ -11,14 +11,12 @@ import { CryptoAsset } from "efi/crypto/CryptoAsset";
 
 interface EarnTermPickerProps {
   account: string | null | undefined;
-  baseAsset: CryptoAsset | undefined;
   tranches: Tranche[];
-  activeTrancheIndex: number | undefined;
+  activeTrancheIndex: number;
   onTrancheChange: (newTranche: Tranche) => void;
 }
 
 export function EarnTermPicker({
-  baseAsset,
   tranches,
   account,
   onTrancheChange,
@@ -37,7 +35,6 @@ export function EarnTermPicker({
 
   return (
     <TermPicker
-      baseAsset={baseAsset}
       account={account}
       activeTrancheIndex={activeTrancheIndex}
       buttonLabelRenderer={buttonLabelRenderer}

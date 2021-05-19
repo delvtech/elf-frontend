@@ -249,18 +249,11 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
       <EarnTermPicker
         account={account}
         onTrancheChange={setActiveTranche}
-        baseAsset={activeBaseAsset}
         tranches={availableTranches}
         activeTrancheIndex={activeTrancheIndex}
       />
     ),
-    [
-      account,
-      activeBaseAsset,
-      activeTrancheIndex,
-      availableTranches,
-      setActiveTranche,
-    ]
+    [account, activeTrancheIndex, availableTranches, setActiveTranche]
   );
 
   return (

@@ -1,7 +1,6 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useCallback } from "react";
 
-import { Select } from "@blueprintjs/select";
-import { Web3Provider } from "@ethersproject/providers";
+import { ItemRenderer, Select } from "@blueprintjs/select";
 import classNames from "classnames";
 import { Tranche } from "elf-contracts/types/Tranche";
 
@@ -10,12 +9,12 @@ import { CryptoAsset } from "efi/crypto/CryptoAsset";
 
 import { TermButton } from "./TermButton";
 import styles from "./TermPicker.module.css";
+import { IPopoverProps } from "@blueprintjs/core";
 
 interface TermPickerProps {
   account: string | null | undefined;
-  baseAsset: CryptoAsset | undefined;
   tranches: Tranche[];
-  activeTrancheIndex: number | undefined;
+  activeTrancheIndex: number;
   onTrancheChange: (newTranche: Tranche) => void;
   buttonLabelRenderer: (
     tranche: Tranche | undefined,
@@ -23,48 +22,51 @@ interface TermPickerProps {
   ) => JSX.Element;
 }
 
+const popoverProps: IPopoverProps = {
+  minimal: true,
+  className: tw("w-full"),
+  targetClassName: classNames(styles.fullHeight, tw("w-full", "h-full")),
+  popoverClassName: tw("w-full", "h-full"),
+  portalClassName: tw("w-64"),
+};
 export function TermPicker({
-  baseAsset,
   tranches,
   account,
   onTrancheChange,
   activeTrancheIndex,
   buttonLabelRenderer,
 }: TermPickerProps): ReactElement | null {
-  // TODO: Show a loading or disabled state of some kind
-  if (!tranches.length || activeTrancheIndex === undefined) {
-    return null;
-  }
-
   const activeTranche = tranches[activeTrancheIndex];
+
+  const itemRenderer: ItemRenderer<Tranche> = useCallback(
+    (tranche: Tranche, { handleClick }) => (
+      <TermButton
+        key={tranche?.address}
+        showCaret={false}
+        account={account}
+        tranche={tranche}
+        onClick={handleClick}
+        buttonLabelRenderer={buttonLabelRenderer}
+      />
+    ),
+    [account, buttonLabelRenderer]
+  );
+
+  const hasZeroOrOneTranche = tranches.length < 2;
 
   return (
     <Select
-      disabled={tranches.length < 2}
+      disabled={hasZeroOrOneTranche}
       className={tw("pr-2")}
-      popoverProps={{
-        minimal: true,
-        className: tw("w-full"),
-        targetClassName: classNames(styles.fullHeight, tw("w-full", "h-full")),
-        popoverClassName: tw("w-full", "h-full"),
-        portalClassName: tw("w-64"),
-      }}
+      popoverProps={popoverProps}
       items={tranches}
       filterable={false}
-      itemRenderer={(tranche, { handleClick }) => (
-        <TermButton
-          key={tranche?.address}
-          showCaret={false}
-          account={account}
-          tranche={tranche}
-          onClick={handleClick}
-          buttonLabelRenderer={buttonLabelRenderer}
-        />
-      )}
+      itemRenderer={itemRenderer}
       onItemSelect={onTrancheChange}
     >
       <TermButton
-        disabled={tranches.length < 2}
+        disabled={hasZeroOrOneTranche}
+        showCaret={hasZeroOrOneTranche}
         account={account}
         tranche={activeTranche}
         buttonLabelRenderer={buttonLabelRenderer}
