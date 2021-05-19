@@ -1,13 +1,5 @@
 import { Tags } from "@uniswap/token-lists";
-
-export enum TokenListTag {
-  ASSET_PROXY = "assetproxy",
-  CCPOOL = "ccpool",
-  PRINCIPAL = "eP",
-  UNDERLYING = "underlying",
-  WPOOL = "wpool",
-  YIELD = "eY",
-}
+import { TokenListTag } from "src/tokenlist/types";
 
 export const tags: Tags = {
   [TokenListTag.UNDERLYING]: {
@@ -34,6 +26,7 @@ export const tags: Tags = {
   },
   [TokenListTag.ASSET_PROXY]: {
     name: "Vault asset proxy",
-    description: "Token that wraps a yield position, ie: Yearn vault asset proxy",
+    description:
+      "Token that wraps a yield position, ie: Yearn vault asset proxy",
   },
 };

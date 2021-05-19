@@ -8,8 +8,7 @@ import { Tranche__factory } from "src/types/factories/Tranche__factory";
 import { TrancheFactory__factory } from "src/types/factories/TrancheFactory__factory";
 import { Tranche } from "src/types/Tranche";
 
-import { TokenListTag } from "src/tokenlist/tags";
-import { PrincipalTokenInfo } from "src/tokenlist/types";
+import { PrincipalTokenInfo, TokenListTag } from "src/tokenlist/types";
 
 export const provider = hre.ethers.provider;
 export async function getPrincipalTokens(

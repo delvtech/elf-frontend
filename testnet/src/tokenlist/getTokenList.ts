@@ -35,10 +35,7 @@ export async function getTokenList(
     chainId,
     safelist
   );
-  const assetProxies = await getAssetProxies(
-    tranches,
-    chainId,
-  );
+  const assetProxiesList = await getAssetProxies(tranches, chainId);
   const yieldTokensList = await getYieldTokensFromTranches(tranches, chainId);
   const ccPoolsList = await getCCPools(
     convergentPoolFactoryAddress,
@@ -56,6 +53,7 @@ export async function getTokenList(
 
   const tokens = [
     ...baseAssetsList,
+    ...assetProxiesList,
     ...principalTokensList,
     ...yieldTokensList,
     ...ccPoolsList,

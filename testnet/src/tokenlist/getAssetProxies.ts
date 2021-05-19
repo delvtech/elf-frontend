@@ -2,26 +2,42 @@ import { TokenInfo } from "@uniswap/token-lists";
 import hre from "hardhat";
 import zip from "lodash.zip";
 
-import { ERC20__factory } from "src/types/factories/ERC20__factory";
 import { TokenListTag } from "src/tokenlist/tags";
 import { ERC20 } from "src/types/ERC20";
-import { UnderlyingTokenInfo } from "src/tokenlist/types";
+import { AssetProxyTokenInfo, UnderlyingTokenInfo } from "src/tokenlist/types";
 import { Tranche } from "src/types/Tranche";
+import { YVaultAssetProxy__factory } from "src/types/factories/YVaultAssetProxy__factory";
+import uniq from "lodash.uniq";
 
 export const provider = hre.ethers.provider;
 export async function getAssetProxies(tranches: Tranche[], chainId: number) {
-  const names = await getTokenNameMulti(tranches);
-  const symbols = await getTokenSymbolMulti(tranches);
-  const decimals = await getTokenDecimalsMulti(tranches);
+  const allPositions = await Promise.all(
+    tranches.map((tranche) => tranche.position())
+  );
+  // uniq b/c different tranches can have the same positionj
+  const uniqPositionAddresses = uniq(allPositions);
+  const positions = uniqPositionAddresses.map((address) =>
+    YVaultAssetProxy__factory.connect(address, provider)
+  );
 
-  const trancheAddresses = tranches.map((tranche) => tranche.address);
+  console.log("positions", positions.length);
+  const vaults = await Promise.all(
+    positions.map((position) => position.vault())
+  );
+  const names = await getTokenNameMulti((positions as unknown) as ERC20[]);
+  const symbols = await getTokenSymbolMulti((positions as unknown) as ERC20[]);
+  const decimals = await getTokenDecimalsMulti(
+    (positions as unknown) as ERC20[]
+  );
+
   const assetProxyTokensList: TokenInfo[] = zip(
-    trancheAddresses,
+    uniqPositionAddresses,
     symbols,
     names,
-    decimals
+    decimals,
+    vaults
   ).map(
-    ([address, symbol, name, decimal]): UnderlyingTokenInfo => {
+    ([address, symbol, name, decimal, vault]): AssetProxyTokenInfo => {
       return {
         chainId,
         address: address as string,
@@ -29,6 +45,7 @@ export async function getAssetProxies(tranches: Tranche[], chainId: number) {
         decimals: decimal as number,
         name: name as string,
         tags: [TokenListTag.ASSET_PROXY],
+        extensions: { vault: vault as string },
         // TODO: What logo do we want to show for base assets?
         // logoURI: ""
       };

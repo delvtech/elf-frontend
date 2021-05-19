@@ -7,10 +7,11 @@
 import { TokenInfo } from "@uniswap/token-lists";
 
 export enum TokenListTag {
+  ASSET_PROXY = "assetproxy",
   CCPOOL = "ccpool",
-  WPOOL = "wpool",
-  UNDERLYING = "underlying",
   PRINCIPAL = "eP",
+  UNDERLYING = "underlying",
+  WPOOL = "wpool",
   YIELD = "eY",
 }
 
