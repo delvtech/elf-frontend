@@ -2,7 +2,6 @@ import React from "react";
 
 import { Classes, Icon } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
-import { Web3Provider } from "@ethersproject/providers";
 import classNames from "classnames";
 import { Tranche } from "elf-contracts/types/Tranche";
 
@@ -11,7 +10,6 @@ import { useBaseAssetForTranche } from "efi-ui/tranche/useBaseAssetForTranche";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 
 interface TrancheButtonProps {
-  library: Web3Provider | undefined;
   account: string | null | undefined;
   tranche: Tranche | undefined;
   disabled?: boolean;

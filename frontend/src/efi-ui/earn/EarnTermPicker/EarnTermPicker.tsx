@@ -1,7 +1,6 @@
 import React, { ReactElement } from "react";
 
 import { Classes } from "@blueprintjs/core";
-import { Web3Provider } from "@ethersproject/providers";
 import classNames from "classnames";
 import { Tranche } from "elf-contracts/types/Tranche";
 
@@ -11,7 +10,6 @@ import { TermPicker } from "efi-ui/tranche/TermPicker/TermPicker";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 
 interface EarnTermPickerProps {
-  library: Web3Provider | undefined;
   account: string | null | undefined;
   baseAsset: CryptoAsset | undefined;
   tranches: Tranche[];
@@ -23,7 +21,6 @@ export function EarnTermPicker({
   baseAsset,
   tranches,
   account,
-  library,
   onTrancheChange,
   activeTrancheIndex,
 }: EarnTermPickerProps): ReactElement | null {
@@ -44,7 +41,6 @@ export function EarnTermPicker({
       account={account}
       activeTrancheIndex={activeTrancheIndex}
       buttonLabelRenderer={buttonLabelRenderer}
-      library={library}
       onTrancheChange={onTrancheChange}
       tranches={tranches}
     />

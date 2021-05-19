@@ -12,7 +12,6 @@ import { TermButton } from "./TermButton";
 import styles from "./TermPicker.module.css";
 
 interface TermPickerProps {
-  library: Web3Provider | undefined;
   account: string | null | undefined;
   baseAsset: CryptoAsset | undefined;
   tranches: Tranche[];
@@ -28,7 +27,6 @@ export function TermPicker({
   baseAsset,
   tranches,
   account,
-  library,
   onTrancheChange,
   activeTrancheIndex,
   buttonLabelRenderer,
@@ -57,7 +55,6 @@ export function TermPicker({
         <TermButton
           key={tranche?.address}
           showCaret={false}
-          library={library}
           account={account}
           tranche={tranche}
           onClick={handleClick}
@@ -68,7 +65,6 @@ export function TermPicker({
     >
       <TermButton
         disabled={tranches.length < 2}
-        library={library}
         account={account}
         tranche={activeTranche}
         buttonLabelRenderer={buttonLabelRenderer}

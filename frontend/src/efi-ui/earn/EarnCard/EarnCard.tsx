@@ -1,4 +1,4 @@
-import { Fragment, ReactElement, useCallback, useState } from "react";
+import React, { Fragment, ReactElement, useCallback, useState } from "react";
 
 import { Button, Card, Classes, Elevation, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
@@ -109,6 +109,7 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
     activeTranche.address
   );
 
+  // TODO: use a global Date.now that updates at a constant interval
   const nowInSeconds = Math.round(Date.now() / 1000);
   const timeRemainingSeconds = expiration - nowInSeconds;
   const tParamSeconds = unitSeconds;
@@ -232,6 +233,36 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
     !!account && (!isValidTokenInValue || !isValidTokenOutValue);
   const buttonLabel = !!account ? t`Buy` : t`Connect Wallet`;
 
+  const assetPickerRenderer = useCallback(
+    () => (
+      <CryptoAssetPicker
+        cryptoAssets={openTrancheBaseAssets}
+        activeCryptoAsset={activeBaseAsset}
+        onCryptoAssetChange={setActiveBaseAsset}
+      />
+    ),
+    [activeBaseAsset, setActiveBaseAsset]
+  );
+
+  const termPickerRenderer = useCallback(
+    () => (
+      <EarnTermPicker
+        account={account}
+        onTrancheChange={setActiveTranche}
+        baseAsset={activeBaseAsset}
+        tranches={availableTranches}
+        activeTrancheIndex={activeTrancheIndex}
+      />
+    ),
+    [
+      account,
+      activeBaseAsset,
+      activeTrancheIndex,
+      availableTranches,
+      setActiveTranche,
+    ]
+  );
+
   return (
     <Fragment>
       <Card
@@ -257,13 +288,7 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
           >
             <EarnInput
               showMaxButton={!!account}
-              assetPicker={
-                <CryptoAssetPicker
-                  cryptoAssets={openTrancheBaseAssets}
-                  activeCryptoAsset={activeBaseAsset}
-                  onCryptoAssetChange={setActiveBaseAsset}
-                />
-              }
+              assetPickerRenderer={assetPickerRenderer}
               placeholder="0.00"
               value={amountIn || ""}
               isValid={isValidTokenInValue}
@@ -294,16 +319,7 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
           >
             <EarnInput
               showMaxButton={false}
-              assetPicker={
-                <EarnTermPicker
-                  library={library}
-                  account={account}
-                  onTrancheChange={setActiveTranche}
-                  baseAsset={activeBaseAsset}
-                  tranches={availableTranches}
-                  activeTrancheIndex={activeTrancheIndex}
-                />
-              }
+              assetPickerRenderer={termPickerRenderer}
               placeholder="0.00"
               value={amountOut || ""}
               isValid={isValidTokenOutValue}
