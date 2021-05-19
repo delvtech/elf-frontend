@@ -35,7 +35,6 @@ import { RedeemYieldTokensButton } from "efi-ui/portfolio/RedeemButton/RedeemYie
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenBalanceUNSAFE } from "efi-ui/token/hooks/useTokenBalance";
-import { useBaseAssetForTranche } from "efi-ui/tranche/useBaseAssetForTranche";
 import { useTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { calculateProgress } from "efi/base/calculateProgress";
@@ -49,6 +48,7 @@ import {
   getVaultForTranche,
   trancheContractsByAddress,
 } from "efi/tranche/tranches";
+import { getBaseAssetForTranche } from "efi/tranche/baseAssets";
 
 interface YieldTokenCardProps {
   library: Web3Provider | undefined;
@@ -110,7 +110,7 @@ export function YieldTokenCard({
 
   const pool = usePoolForToken(yieldToken as unknown as ERC20Shim);
 
-  const baseAsset = useBaseAssetForTranche(tranche);
+  const baseAsset = getBaseAssetForTranche(tranche.address);
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
   const { data: baseAssetFiatPrice } = useCoinGeckoPrice(
     getCoinGeckoId(baseAssetSymbol),

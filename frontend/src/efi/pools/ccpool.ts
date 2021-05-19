@@ -9,6 +9,7 @@ import {
 
 import { getSmartContractFromRegistryMulti } from "efi/contracts/SmartContractsRegistry";
 import { tokenListJson } from "efi/tokenlists";
+import { keyBy } from "lodash";
 
 /**
  * The list of all principal token pools
@@ -23,6 +24,11 @@ const principalPoolContracts = getSmartContractFromRegistryMulti(
   principalPools.map(({ address }) => address),
   ConvergentCurvePool__factory.connect
 ) as ConvergentCurvePool[];
+
+const principalPoolContractsByAddress = keyBy(
+  principalPoolContracts,
+  (poolContract) => poolContract.address
+);
 
 function isPrincipalPool(
   tokenInfo: TokenInfo
@@ -41,8 +47,6 @@ export function getPrincipalPoolContractForTranche(
   trancheAddress: string
 ): ConvergentCurvePool {
   const pool = getPrincipalPoolForTranche(trancheAddress);
-  const poolContract = principalPoolContracts.find(
-    (contract) => contract.address === pool.address
-  ) as ConvergentCurvePool;
+  const poolContract = principalPoolContractsByAddress[pool.address];
   return poolContract;
 }
