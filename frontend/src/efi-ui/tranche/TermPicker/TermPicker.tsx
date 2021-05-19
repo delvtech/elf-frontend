@@ -66,7 +66,7 @@ export function TermPicker({
     >
       <TermButton
         disabled={hasZeroOrOneTranche}
-        showCaret={hasZeroOrOneTranche}
+        showCaret={tranches.length > 1}
         account={account}
         tranche={activeTranche}
         buttonLabelRenderer={buttonLabelRenderer}
