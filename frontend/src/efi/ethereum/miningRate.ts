@@ -1,14 +1,16 @@
+import { AddressesJson } from "efi/addresses";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
+import { ChainId, ChainSymbols } from "efi/ethereum";
 
-// Default to the testnet in this repo so `npm start` Just Works without having
-// to specify it on the command line.
-const chainName = getAddressesJsonId();
-function getAddressesJsonId() {
+const chainName = getChainName();
+function getChainName() {
+  const chainSymbol = ChainSymbols[AddressesJson.chainId as ChainId];
   if (process.env.NODE_ENV === "test") {
     return "mock";
   }
-
-  return process.env.REACT_APP_CHAIN_NAME || "testnet";
+  // Default to the testnet in this repo so `npm start` Just Works without having
+  // to specify it on the command line.
+  return chainSymbol || "testnet";
 }
 
 // TODO: get a better source for this.  I picked this up from https://etherscan.io/chart/blocktime
