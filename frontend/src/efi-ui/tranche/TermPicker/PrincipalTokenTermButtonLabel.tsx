@@ -7,11 +7,9 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { ERC20Shim } from "efi/contracts/ERC20Shim";
-import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
-import { useUnderlyingVaultForTranche } from "efi-ui/tranche/useUnderlyingVaultForTranche";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
 import { formatPercent } from "efi/base/formatPercent";
@@ -19,7 +17,7 @@ import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { defaultProvider } from "efi/providers/providers";
 import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
 import { getTokenInfo } from "efi/tokenlists";
-import { PrincipalTokenInfo } from "tokenlists/types";
+import { AssetProxyTokenInfo, PrincipalTokenInfo } from "tokenlists/types";
 
 interface PrincipalTokenTermButtonLabelProps {
   tranche: Tranche;
@@ -39,8 +37,10 @@ export function PrincipalTokenTermButtonLabel({
     extensions: { unlockTimestamp },
   } = trancheInfo;
 
-  const position = useUnderlyingVaultForTranche(tranche);
-  const { data: positionName } = useSmartContractReadCall(position, "name");
+  const {
+    extensions: { position },
+  } = getTokenInfo<PrincipalTokenInfo>(tranche.address);
+  const { name: positionName } = getTokenInfo<AssetProxyTokenInfo>(position);
 
   const unlockDate = convertEpochSecondsToDate(unlockTimestamp);
 

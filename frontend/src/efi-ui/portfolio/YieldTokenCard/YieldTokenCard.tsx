@@ -1,4 +1,4 @@
-import React, { ReactElement, ReactNode, useMemo } from "react";
+import { ReactElement, ReactNode, useMemo } from "react";
 
 import {
   ButtonGroup,
@@ -37,9 +37,6 @@ import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenBalanceUNSAFE } from "efi-ui/token/hooks/useTokenBalance";
 import { useBaseAssetForTranche } from "efi-ui/tranche/useBaseAssetForTranche";
 import { useTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
-import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
-import { useTrancheForInterestToken } from "efi-ui/tranche/useTrancheForInterestToken";
-import { useUnderlyingVaultForTranche } from "efi-ui/tranche/useUnderlyingVaultForTranche";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { calculateProgress } from "efi/base/calculateProgress";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
@@ -47,6 +44,11 @@ import { formatAbbreviatedDate } from "efi/base/dates";
 import { formatPercent } from "efi/base/formatPercent";
 import { formatMoney } from "efi/money/formatMoney";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
+import { getPrincipalTokenForYieldToken } from "efi/tranche/yieldTokens";
+import {
+  getVaultForTranche,
+  trancheContractsByAddress,
+} from "efi/tranche/tranches";
 
 interface YieldTokenCardProps {
   library: Web3Provider | undefined;
@@ -89,22 +91,22 @@ export function YieldTokenCard({
   );
 
   // The tranche contains the unlockTimestamp
-  const tranche = useTrancheForInterestToken(yieldToken);
-  const trancheCreatedAt = useTrancheCreatedAt(tranche);
-  const { data: unlockTimestamp } = useSmartContractReadCall(
-    tranche,
-    "unlockTimestamp"
-  );
+  const {
+    address: trancheAddress,
+    extensions: { createdAtTimestamp, unlockTimestamp },
+  } = getPrincipalTokenForYieldToken(yieldToken.address);
+  const tranche = trancheContractsByAddress[trancheAddress];
+
   const unlockDate = useMemo(
     () => convertEpochSecondsToDate(unlockTimestamp),
     [unlockTimestamp]
   );
   const createdAtDate = useMemo(
-    () => convertEpochSecondsToDate(trancheCreatedAt),
-    [trancheCreatedAt]
+    () => convertEpochSecondsToDate(createdAtTimestamp),
+    [createdAtTimestamp]
   );
 
-  const vaultContract = useUnderlyingVaultForTranche(tranche);
+  const vaultContract = getVaultForTranche(trancheAddress);
 
   const pool = usePoolForToken(yieldToken as unknown as ERC20Shim);
 

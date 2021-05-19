@@ -8,6 +8,9 @@ import { useAllPools } from "efi-ui/pools/useAllPools/useAllPools";
 import { usePoolTokensMulti } from "efi-ui/pools/usePoolTokens/usePoolTokensMulti";
 import { PoolContract } from "efi/pools/PoolContract";
 
+/**
+ * @deprecated hooks based lookups for pools are deprecated. use a getter instead
+ */
 export function usePoolForToken(
   tokenContract: ERC20 | undefined,
   signerOrProvider?: Signer | Provider

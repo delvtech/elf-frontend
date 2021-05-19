@@ -1,22 +1,30 @@
-import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
-import { getTokenInfo } from "efi/tokenlists";
-import { TestYVault__factory } from "elf-contracts/types/factories/TestYVault__factory";
-import { TestYVault } from "elf-contracts/types/TestYVault";
-import { PrincipalTokenInfo, AssetProxyTokenInfo } from "tokenlists/types";
+import { TokenInfo } from "@uniswap/token-lists";
+import { getSmartContractFromRegistryMulti } from "efi/contracts/SmartContractsRegistry";
+import { tokenListJson } from "efi/tokenlists";
+import { YVaultAssetProxy__factory } from "elf-contracts/types/factories/YVaultAssetProxy__factory";
+import { YVaultAssetProxy } from "elf-contracts/types/YVaultAssetProxy";
+import keyBy from "lodash.keyby";
+import {
+  PrincipalTokenInfo,
+  AssetProxyTokenInfo,
+  TokenListTag,
+} from "tokenlists/types";
 
-export function getVaultForTranche(trancheAddress: string): TestYVault {
-  const {
-    extensions: { position },
-  } = getTokenInfo<PrincipalTokenInfo>(trancheAddress);
+export const assetProxyTokenInfos: AssetProxyTokenInfo[] =
+  tokenListJson.tokens.filter((tokenInfo): tokenInfo is AssetProxyTokenInfo =>
+    isAssetProxy(tokenInfo)
+  );
 
-  const {
-    extensions: { vault },
-  } = getTokenInfo<AssetProxyTokenInfo>(position);
+const assetProxyContracts = getSmartContractFromRegistryMulti(
+  assetProxyTokenInfos.map(({ address }) => address),
+  YVaultAssetProxy__factory.connect
+) as YVaultAssetProxy[];
 
-  const vaultContract = getSmartContractFromRegistry(
-    vault,
-    TestYVault__factory.connect
-  ) as TestYVault;
+export const assetProxyContractsByAddress = keyBy(
+  assetProxyContracts,
+  (position) => position.address
+);
 
-  return vaultContract;
+function isAssetProxy(tokenInfo: TokenInfo): tokenInfo is PrincipalTokenInfo {
+  return !!tokenInfo.tags?.includes(TokenListTag.ASSET_PROXY);
 }

@@ -6,10 +6,10 @@ import { PrincipalTokenInfo } from "tokenlists/types";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { CryptoAssets } from "efi/crypto/CryptoAssetRegistry";
 import { getTokenInfo } from "efi/tokenlists";
-import { OpenTranches } from "efi/tranche/tranches";
+import { openTranches } from "efi/tranche/tranches";
 
 export const openTrancheBaseAssets = getBaseAssetsForTranches(
-  OpenTranches
+  openTranches
 ) as CryptoAsset[];
 
 /**
@@ -21,7 +21,7 @@ export const openTrancheBaseAssets = getBaseAssetsForTranches(
  * }
  */
 export const tranchesByBaseAsset: Record<string, Tranche[]> = groupBy(
-  OpenTranches,
+  openTranches,
   (tranche) => {
     const {
       extensions: { underlying: baseAssetAddress },
