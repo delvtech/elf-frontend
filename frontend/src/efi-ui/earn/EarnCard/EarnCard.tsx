@@ -49,6 +49,7 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
   // local state
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const openDrawer = useCallback(() => setDrawerOpen(true), []);
+  const closeWalletDialog = useCallback(() => setWalletDialogOpen(false), []);
   const onClickButton = useCallback(() => {
     if (!account) {
       return setWalletDialogOpen(true);
@@ -359,7 +360,7 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
       )}
       <ConnectWalletDialog
         isOpen={isWalletDialogOpen}
-        onClose={() => setWalletDialogOpen(false)}
+        onClose={closeWalletDialog}
       />
     </Fragment>
   );
