@@ -9,6 +9,7 @@ import { getYieldTokensFromTranches } from "./getYieldTokens";
 import { getBaseAssets } from "src/tokenlist/getBaseAssets";
 import { getCCPools } from "src/tokenlist/getCCPools";
 import { getWeightedPools } from "src/tokenlist/getWeightedPools";
+import { getAssetProxies } from "src/tokenlist/getAssetProxies";
 
 export async function getTokenList(
   addressesJson: AddressesJsonFile,
@@ -33,6 +34,10 @@ export async function getTokenList(
     trancheFactoryAddress,
     chainId,
     safelist
+  );
+  const assetProxies = await getAssetProxies(
+    tranches,
+    chainId,
   );
   const yieldTokensList = await getYieldTokensFromTranches(tranches, chainId);
   const ccPoolsList = await getCCPools(
