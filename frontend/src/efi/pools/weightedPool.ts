@@ -31,12 +31,12 @@ export const yieldPoolContractsByAddress = keyBy(
   (yieldPool) => yieldPool.address
 );
 
-export function getPoolForYieldToken(
-  yieldTokenAddress: string
-): YieldPoolTokenInfo {
-  return yieldPools.find(
+export function getPoolForYieldToken(yieldTokenAddress: string): WeightedPool {
+  const yieldPool = yieldPools.find(
     ({ extensions: { interestToken } }) => interestToken === yieldTokenAddress
   ) as YieldPoolTokenInfo;
+
+  return yieldPoolContractsByAddress[yieldPool.address];
 }
 
 function isYieldPool(tokenInfo: TokenInfo): tokenInfo is YieldTokenInfo {

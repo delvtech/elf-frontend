@@ -24,11 +24,10 @@ import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
 import { ERC20Shim } from "efi/contracts/ERC20Shim";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
+import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
-import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
 import { GoToMarketButton } from "efi-ui/portfolio/PrincipalTokenCard/GoToMarketButton";
 import { MaturityTimeBar } from "efi-ui/portfolio/PrincipalTokenCard/MaturityTimeBar";
 import { RedeemYieldTokensButton } from "efi-ui/portfolio/RedeemButton/RedeemYieldTokensButton";
@@ -49,6 +48,7 @@ import {
   trancheContractsByAddress,
 } from "efi/tranche/tranches";
 import { getBaseAssetForTranche } from "efi/tranche/baseAssets";
+import { getPoolForYieldToken } from "efi/pools/weightedPool";
 
 interface YieldTokenCardProps {
   library: Web3Provider | undefined;
@@ -108,8 +108,6 @@ export function YieldTokenCard({
 
   const vaultContract = getVaultForTranche(trancheAddress);
 
-  const pool = usePoolForToken(yieldToken as unknown as ERC20Shim);
-
   const baseAsset = getBaseAssetForTranche(tranche.address);
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
   const { data: baseAssetFiatPrice } = useCoinGeckoPrice(
@@ -117,13 +115,15 @@ export function YieldTokenCard({
     currency
   );
   const baseAssetDecimals = getCryptoDecimals(baseAsset);
+
+  const pool = getPoolForYieldToken(yieldToken.address);
   const { data: exitValueBigNumber } = useOnSwapGivenIn(
     pool,
     yieldToken as unknown as ERC20Shim,
     yieldTokenBalanceOf
   );
 
-  const BaseAssetIcon = findAssetIcon(baseAssetSymbol);
+  const BaseAssetIcon = findAssetIcon2(baseAsset);
 
   const vaultSymbol = getVaultSymbol(baseAsset);
   const { data: yearnVault } = useYearnVault(vaultSymbol);
