@@ -21,7 +21,7 @@ import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { useTokenHistoricalPrice } from "efi-ui/token/hooks/useTokenHistoricalPrice";
 import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
-import { useTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
+import { getTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
 import { formatPercent } from "efi/base/formatPercent";
 import { formatMoney } from "efi/money/formatMoney";
 import { useParseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
@@ -243,7 +243,7 @@ function useTokensSummary(
   // Term Asset Info
   const termAssetBalance = balances?.[termAssetIndex];
   const vaultSymbol = getVaultSymbol(baseAsset);
-  const { symbol: termAssetSymbol } = useTermAssetSymbol(
+  const { symbol: termAssetSymbol } = getTermAssetSymbol(
     termAssetContract?.address,
     vaultSymbol
   );

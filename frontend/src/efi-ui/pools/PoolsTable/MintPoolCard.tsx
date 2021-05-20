@@ -33,7 +33,7 @@ import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidity
 import { useTotalValueLockedForTranche } from "efi-ui/pools/useTotalValueLockedForTranche";
 import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForPool";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import { useTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
+import { getTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
 import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { formatPercent } from "efi/base/formatPercent";
@@ -84,7 +84,7 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
   const BaseAssetIcon = findAssetIcon(baseAssetSymbol);
   const termAssetContract = usePoolPairedToken(pool, baseAssetContract);
-  const { symbol: termAssetSymbol } = useTermAssetSymbol(
+  const { symbol: termAssetSymbol } = getTermAssetSymbol(
     termAssetContract?.address,
     baseAssetSymbol
   );

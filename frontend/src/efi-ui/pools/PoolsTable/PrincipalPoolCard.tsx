@@ -39,7 +39,7 @@ import { useTokenYield } from "efi-ui/pools/useTokenYield";
 import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
 import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForPool";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import { useTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
+import { getTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
 import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
 import { formatPercent } from "efi/base/formatPercent";
 import { CryptoAssetType } from "efi/crypto/CryptoAsset";
@@ -77,7 +77,7 @@ export function PrincipalPoolCard(
   const termAssetContract = usePoolPairedToken(pool, baseAssetContract);
 
   const vaultSymbol = getVaultSymbol(baseAsset);
-  const { symbol: termAssetSymbol } = useTermAssetSymbol(
+  const { symbol: termAssetSymbol } = getTermAssetSymbol(
     termAssetContract?.address,
     vaultSymbol
   );

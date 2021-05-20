@@ -40,7 +40,7 @@ import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForP
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
-import { useTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
+import { getTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
 import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { formatPercent } from "efi/base/formatPercent";
@@ -78,7 +78,7 @@ export function InterestPoolCard(
   const BaseAssetIcon = findAssetIcon(baseAssetSymbol);
   const termAssetContract = usePoolPairedToken(pool, baseAssetContract);
   const vaultSymbol = getVaultSymbol(baseAsset);
-  const { symbol: termAssetSymbol } = useTermAssetSymbol(
+  const { symbol: termAssetSymbol } = getTermAssetSymbol(
     termAssetContract?.address,
     vaultSymbol
   );

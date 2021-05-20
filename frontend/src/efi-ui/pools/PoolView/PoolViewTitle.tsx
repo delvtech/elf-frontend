@@ -6,7 +6,7 @@ import { t } from "ttag";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
-import { useTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
+import { getTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
 import { useParseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { PoolContract } from "efi/pools/PoolContract";
 
@@ -19,7 +19,7 @@ export function PoolViewTitle({ pool }: PoolViewTitleProps): ReactElement {
     useParseSortedTokensForPool(tokens);
   const baseAsset = getCryptoAssetForToken(baseAssetContract?.address);
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
-  const { symbol: termAssetSymbol } = useTermAssetSymbol(
+  const { symbol: termAssetSymbol } = getTermAssetSymbol(
     termAssetContract?.address,
     baseAssetSymbol
   );

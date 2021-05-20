@@ -13,7 +13,7 @@ import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForPool";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import { useTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
+import { getTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
 import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
 import { useParseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { PoolContract } from "efi/pools/PoolContract";
@@ -28,7 +28,7 @@ export function PoolViewHeader({ pool }: PoolViewHeaderProps): ReactElement {
     useParseSortedTokensForPool(tokens);
   const baseAsset = getCryptoAssetForToken(baseAssetContract?.address);
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
-  const { label: termAssetSymbol } = useTermAssetSymbol(
+  const { label: termAssetSymbol } = getTermAssetSymbol(
     termAssetContract?.address,
     baseAssetSymbol
   );
