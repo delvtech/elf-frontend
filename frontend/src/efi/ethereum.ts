@@ -9,11 +9,6 @@ export enum ChainId {
   LOCAL = 31337,
 }
 
-export const ChainSymbols: Record<ChainId, string> = {
-  [ChainId.MAINNET]: "mainnet",
-  [ChainId.GOERLI]: "goerli",
-  [ChainId.LOCAL]: "testnet",
-};
 export const ChainNames: Record<ChainId, string> = {
   [ChainId.MAINNET]: "Ethereum Mainnet",
   [ChainId.GOERLI]: "Goerli Testnet",
