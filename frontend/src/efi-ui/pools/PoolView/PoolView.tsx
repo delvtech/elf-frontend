@@ -11,6 +11,7 @@ import { useSigner } from "efi-ui/provider/useBlockFromTag/useSigner/useSigner";
 
 import { PoolViewHeader } from "./PoolViewHeader";
 import { PoolViewTitle } from "./PoolViewTitle";
+import { getPoolInfo } from "efi/pools/getPoolInfo";
 
 interface PoolViewProps extends RouteComponentProps {
   poolAddress?: string;
@@ -21,6 +22,7 @@ export function PoolView({ poolAddress }: PoolViewProps): ReactElement {
     useWeb3React<Web3Provider>();
   const signer = useSigner(account, library);
   const pool = usePool(poolAddress);
+  const poolInfo = getPoolInfo(poolAddress as string);
 
   return (
     <Fragment>
