@@ -7,32 +7,31 @@ import { AbstractConnector } from "@web3-react/abstract-connector";
 import { ERC20 } from "elf-contracts/types/ERC20";
 import { Signer } from "ethers";
 import { parseUnits } from "ethers/lib/utils";
+import { PrincipalPoolTokenInfo, YieldPoolTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { SwapKind } from "efi-ui/balancer/SwapKind";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
-import { getQueryData } from "efi-ui/base/queryResults";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
-import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { useCryptoBalance } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
-import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useTokenPoolBalance } from "efi-ui/pools/useTokenPoolBalance/useTokenPoolBalance";
 import { useTokenPoolIndex } from "efi-ui/pools/useTokenPoolIndex/useTokenPoolIndex";
 import { SwapTokensTransactionConfirmationDrawer } from "efi-ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensTransactionConfirmationDrawer";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { TradeInput } from "efi-ui/trade/TradeInput/TradeInput";
-import { getTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
+import { getTermAssetSymbol } from "efi-ui/tranche/getTermAssetSymbol";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
 import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 import { formatBalance } from "efi/base/formatBalance";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { CryptoAssetType } from "efi/crypto/CryptoAsset";
-import { useParseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
+import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { getPoolInfo } from "efi/pools/getPoolInfo";
 import { PoolContract } from "efi/pools/PoolContract";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
@@ -317,25 +316,26 @@ function useTokenInfoForTradeInput(
 ) {
   // getting the proper symbols is a pain using hooks.  all this logic is for that:
   // get contracts/assets
-  const tokensResult = usePoolTokens(pool);
-  const [tokens] = getQueryData(tokensResult) ?? [];
-  const { termAssetContract, baseAssetContract } =
-    useParseSortedTokensForPool(tokens);
-  const baseCryptoAsset = getCryptoAssetForToken(baseAssetContract?.address);
+  const poolInfo = getPoolInfo(pool) as
+    | PrincipalPoolTokenInfo
+    | YieldPoolTokenInfo;
+  const baseAssetAddress = poolInfo?.extensions.underlying;
+  const termAssetAddress =
+    (poolInfo as PrincipalPoolTokenInfo)?.extensions?.bond ??
+    (poolInfo as YieldPoolTokenInfo)?.extensions?.interestToken;
+  const baseCryptoAsset = getCryptoAssetForToken(baseAssetAddress);
 
   // get symbols
   const baseAssetSymbol = getCryptoSymbol(baseCryptoAsset);
   const vaultSymbol = getVaultSymbol(baseCryptoAsset);
   const { symbol: termSymbol } = getTermAssetSymbol(
-    termAssetContract?.address,
+    termAssetAddress,
     vaultSymbol
   );
 
   // choose correct symbol
   const symbol =
-    termAssetContract?.address === tokenContract?.address
-      ? termSymbol
-      : baseAssetSymbol;
+    termAssetAddress === tokenContract?.address ? termSymbol : baseAssetSymbol;
 
   // get other properties
   const asset = getCryptoAssetForToken(tokenContract?.address);
