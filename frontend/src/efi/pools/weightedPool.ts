@@ -1,11 +1,7 @@
 import { TokenInfo } from "@uniswap/token-lists";
 import { WeightedPool__factory } from "elf-contracts/types/factories/WeightedPool__factory";
 import { WeightedPool } from "elf-contracts/types/WeightedPool";
-import {
-  TokenListTag,
-  YieldPoolTokenInfo,
-  YieldTokenInfo,
-} from "tokenlists/types";
+import { TokenListTag, YieldPoolTokenInfo } from "tokenlists/types";
 
 import { getSmartContractFromRegistryMulti } from "efi/contracts/SmartContractsRegistry";
 import { tokenListJson } from "efi/tokenlists";
@@ -39,6 +35,8 @@ export function getPoolForYieldToken(yieldTokenAddress: string): WeightedPool {
   return yieldPoolContractsByAddress[yieldPool.address];
 }
 
-function isYieldPool(tokenInfo: TokenInfo): tokenInfo is YieldTokenInfo {
+export function isYieldPool(
+  tokenInfo: TokenInfo
+): tokenInfo is YieldPoolTokenInfo {
   return !!tokenInfo.tags?.includes(TokenListTag.WPOOL);
 }
