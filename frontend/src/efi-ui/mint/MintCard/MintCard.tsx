@@ -72,10 +72,7 @@ export function MintCard(props: MintCardProps): ReactElement | null {
   const [isWalletDialogOpen, setWalletDialogOpen] = useState(false);
 
   const { stringValue: amountInString, setValue: setAmountIn } =
-    useNumericInput({
-      // no one needs to put in more than a trillion anything
-      max: 999_999_999_999,
-    });
+    useNumericInput();
 
   const amountIn = +(amountInString || 0);
 
