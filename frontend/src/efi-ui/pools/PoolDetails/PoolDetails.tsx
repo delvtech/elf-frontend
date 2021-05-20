@@ -16,7 +16,6 @@ import { useFeeVolumeFiatForPool } from "efi-ui/pools/useFeeVolumeForPool/useFee
 import { useStakingAPY } from "efi-ui/pools/useStakingAPY";
 import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
 import { useTotalValueLockedForTranche } from "efi-ui/pools/useTotalValueLockedForTranche";
-import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForPool";
 import { useVolumeForPool } from "efi-ui/pools/useVolumeForPool/useVolumeForPool";
 import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
@@ -24,6 +23,7 @@ import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolContract } from "efi/pools/PoolContract";
 import { getTokenInfo } from "efi/tokenlists";
 import { PoolInfo } from "efi/pools/PoolInfo";
+import { getTrancheForPool } from "efi/pools/getTrancheForPool";
 
 interface PoolDetailsProps {
   library: Web3Provider | undefined;
@@ -51,8 +51,7 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
     getPoolTokens(poolInfo);
 
   const totalLiquidity = useTotalFiatLiquidityForPool(pool);
-
-  const tranche = useTrancheForPool(pool);
+  const tranche = getTrancheForPool(poolInfo);
 
   const tokenInfo = getTokenInfo(tranche?.address ?? "");
   const decimals = tokenInfo?.decimals;
