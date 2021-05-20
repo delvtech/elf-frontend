@@ -6,7 +6,6 @@ import { Signer } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
 
 import tw from "efi-tailwindcss-classnames";
-import { getQueryData } from "efi-ui/base/queryResults";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { PoolActionsCard } from "efi-ui/pools/PoolActionsCard/PoolActionsCard";
 import { PoolCharts } from "efi-ui/pools/PoolCharts/PoolCharts";
@@ -14,7 +13,6 @@ import { PoolSummary } from "efi-ui/pools/PoolSummary/PoolSummary";
 import { TermSummary } from "efi-ui/pools/TermSummary/TermSummary";
 import { TokenSummary } from "efi-ui/pools/TokenSummary/TokenSummary";
 import { useFeeVolumeFiatForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
-import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useStakingAPY } from "efi-ui/pools/useStakingAPY";
 import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
 import { useTotalValueLockedForTranche } from "efi-ui/pools/useTotalValueLockedForTranche";
@@ -22,7 +20,7 @@ import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForP
 import { useVolumeForPool } from "efi-ui/pools/useVolumeForPool/useVolumeForPool";
 import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
-import { useParseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
+import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolContract } from "efi/pools/PoolContract";
 import { getTokenInfo } from "efi/tokenlists";
 import { PoolInfo } from "efi/pools/PoolInfo";
@@ -39,13 +37,18 @@ interface PoolDetailsProps {
 }
 
 export function PoolDetails(props: PoolDetailsProps): ReactElement {
-  const { library, signer, account, chainId, connector, walletActive, pool } =
-    props;
-  const poolTokensResult = usePoolTokens(pool);
-  const tokenAddresses = getQueryData(poolTokensResult)?.[0] || [];
-
-  const { baseAssetContract, termAssetContract } =
-    useParseSortedTokensForPool(tokenAddresses);
+  const {
+    library,
+    signer,
+    account,
+    chainId,
+    connector,
+    walletActive,
+    pool,
+    poolInfo,
+  } = props;
+  const { baseAssetInfo, termAssetInfo, baseAssetContract, termAssetContract } =
+    getPoolTokens(poolInfo);
 
   const totalLiquidity = useTotalFiatLiquidityForPool(pool);
 
