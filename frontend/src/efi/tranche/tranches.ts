@@ -40,7 +40,7 @@ export const openTranches = getSmartContractFromRegistryMulti(
   Tranche__factory.connect
 ) as Tranche[];
 
-function isPrincipalToken(
+export function isPrincipalToken(
   tokenInfo: TokenInfo
 ): tokenInfo is PrincipalTokenInfo {
   return !!tokenInfo.tags?.includes(TokenListTag.PRINCIPAL);
