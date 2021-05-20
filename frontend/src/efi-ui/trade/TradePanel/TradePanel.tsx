@@ -31,7 +31,7 @@ import { ContractMethodArgs } from "efi/contracts/types";
 import { CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
-import { getPoolInfo } from "efi/pools/getPoolInfo";
+import { getPoolInfoFromContract } from "efi/pools/getPoolInfo";
 import { PoolContract } from "efi/pools/PoolContract";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
@@ -316,7 +316,7 @@ function useTokenInfoForTradeInput(
 ) {
   // getting the proper symbols is a pain using hooks.  all this logic is for that:
   // get contracts/assets
-  const poolInfo = getPoolInfo(pool) as
+  const poolInfo = getPoolInfoFromContract(pool) as
     | PrincipalPoolTokenInfo
     | YieldPoolTokenInfo;
   const baseAssetAddress = poolInfo?.extensions.underlying;

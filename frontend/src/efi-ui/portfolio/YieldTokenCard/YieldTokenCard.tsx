@@ -32,8 +32,8 @@ import { RedeemYieldTokensButton } from "efi-ui/portfolio/RedeemButton/RedeemYie
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
-import { getTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
 import { useUnderlyingVaultForTranche } from "efi-ui/tranche/useUnderlyingVaultForTranche";
+import { getTermAssetSymbol } from "efi-ui/tranche/getTermAssetSymbol";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { calculateProgress } from "efi/base/calculateProgress";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
