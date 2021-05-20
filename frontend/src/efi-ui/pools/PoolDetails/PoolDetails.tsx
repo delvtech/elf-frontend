@@ -25,6 +25,8 @@ import { ONE_DAY_IN_SECONDS } from "efi/base/time";
 import { useParseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { PoolContract } from "efi/pools/PoolContract";
 import { getTokenInfo } from "efi/tokenlists";
+import { YieldPoolTokenInfo } from "tokenlists/types";
+import { PoolInfo } from "efi/pools/PoolInfo";
 
 interface PoolDetailsProps {
   library: Web3Provider | undefined;
@@ -34,6 +36,7 @@ interface PoolDetailsProps {
   connector: AbstractConnector | undefined;
   walletActive: boolean;
   pool: PoolContract | undefined;
+  poolInfo: PoolInfo;
 }
 
 export function PoolDetails(props: PoolDetailsProps): ReactElement {

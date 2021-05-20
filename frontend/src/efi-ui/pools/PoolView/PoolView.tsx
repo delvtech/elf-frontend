@@ -52,6 +52,7 @@ export function PoolView({ poolAddress }: PoolViewProps): ReactElement {
             connector={connector}
             walletActive={active}
             pool={pool}
+            poolInfo={poolInfo}
           />
         </div>
       </div>
