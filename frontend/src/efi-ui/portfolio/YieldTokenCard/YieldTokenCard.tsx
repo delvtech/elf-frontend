@@ -24,6 +24,7 @@ import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
 import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
+import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { GoToMarketButton } from "efi-ui/portfolio/PrincipalTokenCard/GoToMarketButton";
 import { MaturityTimeBar } from "efi-ui/portfolio/PrincipalTokenCard/MaturityTimeBar";
 import { RedeemYieldTokensButton } from "efi-ui/portfolio/RedeemButton/RedeemYieldTokensButton";
@@ -115,6 +116,7 @@ export function YieldTokenCard({
     yieldToken as unknown as ERC20Shim,
     yieldTokenBalanceOf
   );
+  const spotPrice = usePoolSpotPrice(pool, yieldToken as unknown as ERC20Shim);
 
   const BaseAssetIcon = findAssetIcon2(baseAsset);
 
@@ -123,7 +125,9 @@ export function YieldTokenCard({
   const { name: vaultName } = yearnVault || {};
 
   const postedAPY = formatPercent(yearnVault?.apy?.recommended || 0);
-  const exitValue = +formatUnits(exitValueBigNumber || 0, baseAssetDecimals);
+  const exitValue =
+    +formatUnits(yieldTokenBalanceOf || 0, baseAssetDecimals) *
+    (spotPrice || 0);
   const exitValueFiat = formatMoney(baseAssetFiatPrice?.multiply(exitValue));
   const formattedDate = unlockDate
     ? formatAbbreviatedDate(unlockDate)
@@ -231,7 +235,7 @@ export function YieldTokenCard({
           <Callout icon={null} className={calloutClassName}>
             <span
               className={classNames(tw("text-base", "mb-0"))}
-            >{t`Current exit value`}</span>
+            >{t`Current value`}</span>
             <LabeledText
               bold
               muted={false}
