@@ -228,8 +228,12 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
     activeBaseAssetSymbol
   );
 
+  // true if undefined or zero value
+  const noAmountIn = amountIn ? !+amountIn : true;
+
   const buttonDisabled =
-    !!account && (!isValidTokenInValue || !isValidTokenOutValue);
+    (!!account && (!isValidTokenInValue || !isValidTokenOutValue)) ||
+    noAmountIn;
   const buttonLabel = !!account ? t`Buy` : t`Connect Wallet`;
 
   return (
