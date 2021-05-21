@@ -51,9 +51,11 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
   } = props;
   const { baseAssetInfo, termAssetInfo, baseAssetContract, termAssetContract } =
     getPoolTokens(poolInfo);
+  console.log("poolInfo", poolInfo);
 
   const totalLiquidity = useTotalFiatLiquidityForPool(pool);
   const trancheInfo = getTrancheForPool(poolInfo);
+
   const trancheContract = getSmartContractFromRegistryStatic(
     trancheInfo.address,
     Tranche__factory

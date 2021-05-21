@@ -45,29 +45,35 @@ export function getSmartContractFromRegistryMulti<
   );
 }
 
-interface Factory<TReturnContract extends Contract> {
-  connect(
+interface ContractFactory<TReturnContract extends Contract> {
+  connect: (
     address: string,
     signerOrProvider: Signer | Provider
-  ): TReturnContract;
+  ) => TReturnContract;
 }
 
 export function getSmartContractFromRegistryStatic<
   TReturnContract extends Contract
 >(
   address: string,
-  factory: Factory<TReturnContract>,
+  Factory: ContractFactory<TReturnContract>,
   signerOrProvider?: Signer | Provider
 ): TReturnContract {
+  // not sure how to type this correctly
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const factory = new (Factory as any)();
+  // get the name of the factory
   const type = factory.constructor.name;
+
   // Pull from cache if we have the instance already
-  const cachedContract = SMART_CONTRACTS_REGISTRY_STATIC[address][type];
+  const cachedContract = SMART_CONTRACTS_REGISTRY_STATIC[address]?.[type];
   if (cachedContract) {
     return cachedContract as TReturnContract;
   }
 
   // Otherwise populate cache and return it
-  SMART_CONTRACTS_REGISTRY_STATIC[address][type] = factory.connect(
+  SMART_CONTRACTS_REGISTRY_STATIC[address] = {};
+  SMART_CONTRACTS_REGISTRY_STATIC[address][type] = Factory.connect(
     address,
     signerOrProvider ?? defaultProvider
   );

@@ -3,25 +3,24 @@ import { Helmet } from "react-helmet";
 
 import { t } from "ttag";
 
+import { getTermAssetSymbol } from "efi-ui/tranche/getTermAssetSymbol";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
-import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
-import { getTermAssetSymbol } from "efi-ui/tranche/getTermAssetSymbol";
-import { useParseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
-import { PoolContract } from "efi/pools/PoolContract";
+import { getPoolTokens } from "efi/pools/getPoolTokens";
+import { PoolInfo } from "efi/pools/PoolInfo";
+import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 
 interface PoolViewTitleProps {
-  pool: PoolContract | undefined;
+  poolInfo: PoolInfo;
 }
-export function PoolViewTitle({ pool }: PoolViewTitleProps): ReactElement {
-  const { data: [tokens] = [] } = usePoolTokens(pool);
-  const { baseAssetContract, termAssetContract } =
-    useParseSortedTokensForPool(tokens);
-  const baseAsset = getCryptoAssetForToken(baseAssetContract?.address);
-  const baseAssetSymbol = getCryptoSymbol(baseAsset);
+export function PoolViewTitle({ poolInfo }: PoolViewTitleProps): ReactElement {
+  const { baseAssetInfo, termAssetInfo } = getPoolTokens(poolInfo);
+  const baseCryptoAsset = getCryptoAssetForToken(baseAssetInfo.address);
+  const baseAssetSymbol = getCryptoSymbol(baseCryptoAsset);
+  const vaultSymbol = getVaultSymbol(baseCryptoAsset);
   const { symbol: termAssetSymbol } = getTermAssetSymbol(
-    termAssetContract?.address,
-    baseAssetSymbol
+    termAssetInfo.address,
+    vaultSymbol
   );
 
   return (

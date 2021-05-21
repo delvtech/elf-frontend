@@ -43,7 +43,7 @@ export const openTranches = getSmartContractFromRegistryMulti(
 export function isPrincipalToken(
   tokenInfo: TokenInfo
 ): tokenInfo is PrincipalTokenInfo {
-  return !!tokenInfo.tags?.includes(TokenListTag.PRINCIPAL);
+  return !!tokenInfo?.tags?.includes(TokenListTag.PRINCIPAL);
 }
 
 export function getVaultForTranche(trancheAddress: string): TestYVault {

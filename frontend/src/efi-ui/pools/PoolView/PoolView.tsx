@@ -26,7 +26,7 @@ export function PoolView({ poolAddress }: PoolViewProps): ReactElement {
 
   return (
     <Fragment>
-      <PoolViewTitle pool={pool} />
+      <PoolViewTitle poolInfo={poolInfo} />
       <div
         data-testid="pool-view"
         className={tw(
