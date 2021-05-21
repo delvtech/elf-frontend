@@ -1,4 +1,10 @@
-import React, { Fragment, ReactElement, useCallback, useState } from "react";
+import React, {
+  Fragment,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 
 import { Button, Card, Classes, Elevation, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
@@ -222,6 +228,11 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
       totalSupply,
     ]
   );
+
+  // need to recalculate output when a new term is selected.
+  useEffect(() => {
+    onChangeIn(amountIn ?? "", SwapKind.GIVEN_IN);
+  }, [activeTranche]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const roundedPrincipalPrice = amountOfEthForOnePrincipalEth?.toFixed(4);
   const marketRateLabel = getMarketRateLabel(
