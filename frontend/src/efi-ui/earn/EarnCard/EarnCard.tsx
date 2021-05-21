@@ -34,7 +34,10 @@ import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { clipStringValueToDecimals } from "efi/math/fixedPoint";
-import { calcSwapOutGivenInCCPoolUNSAFE } from "efi/pools/calcPoolSwap";
+import {
+  calcSwapInGivenOutCCPoolUNSAFE,
+  calcSwapOutGivenInCCPoolUNSAFE,
+} from "efi/pools/calcPoolSwap";
 import {
   getPrincipalPoolContractForTranche,
   getPrincipalPoolForTranche,
@@ -202,14 +205,14 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
         clearInputs();
         return;
       }
-      const newAmountInNumber = calcSwapOutGivenInCCPoolUNSAFE(
+      const newAmountInNumber = calcSwapInGivenOutCCPoolUNSAFE(
         newAmountOut,
-        baseReserves,
         principalReserves,
+        baseReserves,
         totalSupply,
         timeRemainingSeconds,
         tParamSeconds,
-        true
+        false
       );
       const newAmountIn = clipStringValueToDecimals(
         newAmountInNumber.toString(),
