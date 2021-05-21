@@ -73,10 +73,16 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
     setAmountIn("");
     setAmountOut("");
   }, [setAmountIn, setAmountOut]);
-  const closeDrawer = useCallback(() => {
-    clearInputs();
-    setDrawerOpen(false);
-  }, [clearInputs]);
+  const closeDrawer = useCallback(
+    (transactionAttemped) => {
+      console.log("transactionAttemped", transactionAttemped);
+      if (transactionAttemped) {
+        clearInputs();
+      }
+      setDrawerOpen(false);
+    },
+    [clearInputs]
+  );
 
   // base asset
   const { activeBaseAsset, setActiveBaseAsset } =

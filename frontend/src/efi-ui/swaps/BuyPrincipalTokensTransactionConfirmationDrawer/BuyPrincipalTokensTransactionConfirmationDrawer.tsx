@@ -1,4 +1,4 @@
-import { ReactElement, useMemo } from "react";
+import { ReactElement, useCallback, useMemo, useState } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
 import { Tranche } from "elf-contracts/types/Tranche";
@@ -29,6 +29,7 @@ import { calculatePurchasePrice } from "efi/pools/calculatePurchasePrice";
 import { calculateSlippage } from "efi/pools/calculateSlippage";
 import { PoolContract } from "efi/pools/PoolContract";
 import { getAmountOutWithTolerance } from "efi/trade/getAmountOutWithTolerance";
+import { useSigner } from "efi-ui/provider/useBlockFromTag/useSigner/useSigner";
 
 interface BuyPrincipalTransactionConfirmationDrawerProps {
   account: string | null | undefined;
@@ -45,7 +46,7 @@ interface BuyPrincipalTransactionConfirmationDrawerProps {
   tranche: Tranche | undefined;
   isOpen: boolean;
 
-  onClose: () => void;
+  onClose: (transactionAttempted: boolean) => void;
 }
 
 export function BuyPrincipalTokensTransactionConfirmationDrawer({
@@ -61,7 +62,13 @@ export function BuyPrincipalTokensTransactionConfirmationDrawer({
   onClose,
   pool,
 }: BuyPrincipalTransactionConfirmationDrawerProps): ReactElement {
-  const signer = account ? (library?.getSigner(account) as Signer) : undefined;
+  const signer = useSigner(account, library);
+  const onCloseWithoutTransaction = useCallback(
+    () => onClose(false),
+    [onClose]
+  );
+  const onCloseWithTransaction = useCallback(() => onClose(true), [onClose]);
+
   const balancerVault = useBalancerVault();
   // base asset calls
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
@@ -112,14 +119,13 @@ export function BuyPrincipalTokensTransactionConfirmationDrawer({
     tranche?.address,
     amountInAsBigNumber,
     minAmountOut,
-    onClose
+    onCloseWithTransaction
   );
 
   const amountOutNumber = +formatUnits(
     queryAmountOut?.abs() || 0,
     baseAssetDecimals
   );
-  const amountOutFormatted = amountOutNumber.toFixed(4);
 
   const priceSlippageAndTradingFee = getPriceSlippageAndTradingFee(
     +(amountIn || 0),
@@ -140,7 +146,7 @@ export function BuyPrincipalTokensTransactionConfirmationDrawer({
       transactionFailed={isError}
       transactionSuccess={isSuccess}
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={onCloseWithoutTransaction}
       account={account}
       walletApprovalInfos={walletApprovalInfos}
       library={library}
