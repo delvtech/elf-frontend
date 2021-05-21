@@ -51,6 +51,7 @@ export interface EarnCardProps {
 }
 
 export function EarnCard({ library, account }: EarnCardProps): ReactElement {
+  const [swapKind, setSwapKind] = useState(SwapKind.GIVEN_IN);
   const [isWalletDialogOpen, setWalletDialogOpen] = useState(false);
   // local state
   const [isDrawerOpen, setDrawerOpen] = useState(false);
@@ -178,6 +179,7 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
         newAmountOutNumber.toString(),
         activeBaseAssetDecimals ?? 18
       );
+      setSwapKind(swapKind);
       setAmountIn(newAmountIn);
       setAmountOut(newAmountOut);
     },
@@ -213,6 +215,7 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
         newAmountInNumber.toString(),
         activeBaseAssetDecimals ?? 18
       );
+      setSwapKind(swapKind);
       setAmountIn(newAmountIn);
       setAmountOut(newAmountOut);
     },
@@ -231,7 +234,12 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
 
   // need to recalculate output when a new term is selected.
   useEffect(() => {
-    onChangeIn(amountIn ?? "", SwapKind.GIVEN_IN);
+    if (swapKind === SwapKind.GIVEN_IN) {
+      onChangeIn(amountIn ?? "", SwapKind.GIVEN_IN);
+    }
+    if (swapKind === SwapKind.GIVEN_OUT) {
+      onChangeOut(amountOut ?? "", SwapKind.GIVEN_OUT);
+    }
   }, [activeTranche]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const roundedPrincipalPrice = amountOfEthForOnePrincipalEth?.toFixed(4);
