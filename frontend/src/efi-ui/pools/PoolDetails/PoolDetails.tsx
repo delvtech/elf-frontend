@@ -17,7 +17,6 @@ import { useStakingAPY } from "efi-ui/pools/useStakingAPY";
 import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
 import { useTotalValueLockedForTranche } from "efi-ui/pools/useTotalValueLockedForTranche";
 import { useVolumeForPool } from "efi-ui/pools/useVolumeForPool/useVolumeForPool";
-import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolContract } from "efi/pools/PoolContract";
@@ -51,7 +50,6 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
   } = props;
   const { baseAssetInfo, termAssetInfo, baseAssetContract, termAssetContract } =
     getPoolTokens(poolInfo);
-  console.log("poolInfo", poolInfo);
 
   const totalLiquidity = useTotalFiatLiquidityForPool(pool);
   const trancheInfo = getTrancheForPool(poolInfo);
@@ -141,6 +139,8 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
           pool={pool}
           tokenIn={baseAssetContract}
           tokenOut={termAssetContract}
+          firstTokenInfo={baseAssetInfo}
+          secondTokenInfo={termAssetInfo}
         />
       </div>
     </div>
