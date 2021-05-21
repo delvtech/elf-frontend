@@ -36,6 +36,9 @@ interface BuyPrincipalTransactionConfirmationDrawerProps {
   pool: PoolContract | undefined;
 
   amountIn: string | undefined;
+  amountOut: string | undefined;
+  swapKind: SwapKind;
+
   baseAsset: CryptoAsset;
   baseAssetIcon: TokenIcon | undefined;
 
@@ -52,6 +55,8 @@ export function BuyPrincipalTokensTransactionConfirmationDrawer({
   baseAsset,
   tranche,
   amountIn,
+  amountOut,
+  swapKind,
   isOpen,
   onClose,
   pool,
@@ -78,20 +83,20 @@ export function BuyPrincipalTokensTransactionConfirmationDrawer({
   const tokenInAddress = getTokenAddressForBalancer(baseAsset);
   const tokenOutAddress = tranche?.address;
   const { data: queryBatchSwapInResult = [] } = useQueryBatchSwap(
-    SwapKind.GIVEN_IN,
+    swapKind,
     pool,
     tokenInAddress,
     tokenOutAddress,
     amountInAsBigNumber
   );
-  const { tokenOut: amountOut } = parseQueryBatchSwapResult(
+  const { tokenOut: queryAmountOut } = parseQueryBatchSwapResult(
     tokenInAddress,
     tokenOutAddress,
     queryBatchSwapInResult
   );
 
   const minAmountOut = getAmountOutWithTolerance(
-    amountOut,
+    queryAmountOut,
     baseAssetDecimals,
     0.01
   );
@@ -111,7 +116,7 @@ export function BuyPrincipalTokensTransactionConfirmationDrawer({
   );
 
   const amountOutNumber = +formatUnits(
-    amountOut?.abs() || 0,
+    queryAmountOut?.abs() || 0,
     baseAssetDecimals
   );
   const amountOutFormatted = amountOutNumber.toFixed(4);
@@ -143,7 +148,7 @@ export function BuyPrincipalTokensTransactionConfirmationDrawer({
       transactionDetails={
         <SwapDetailsForm
           amountIn={amountIn}
-          amountOut={amountOutFormatted}
+          amountOut={amountOut}
           assetInIcon={baseAssetIcon}
           assetInSymbol={baseAssetSymbol}
           assetOutSymbol={`${baseAssetSymbol} Principal Token`}

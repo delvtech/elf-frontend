@@ -380,6 +380,8 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
           library={library}
           pool={poolContract}
           amountIn={amountIn}
+          amountOut={amountOut}
+          swapKind={swapKind}
           isOpen={isDrawerOpen}
           onClose={closeDrawer}
         />
