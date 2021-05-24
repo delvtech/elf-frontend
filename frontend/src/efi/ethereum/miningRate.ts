@@ -1,15 +1,6 @@
+import { AddressesJson } from "efi/addresses";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
-
-// Default to the testnet in this repo so `npm start` Just Works without having
-// to specify it on the command line.
-const chainName = getAddressesJsonId();
-function getAddressesJsonId() {
-  if (process.env.NODE_ENV === "test") {
-    return "mock";
-  }
-
-  return process.env.REACT_APP_CHAIN_NAME || "testnet";
-}
+import { ChainId } from "efi/ethereum";
 
 // TODO: get a better source for this.  I picked this up from https://etherscan.io/chart/blocktime
 // the average for this entire year is about 13.1s / block.  For local development though we just
@@ -19,12 +10,13 @@ function getAddressesJsonId() {
 // we can use their api just for the block number at timestamp.  they have a 5req/s limit per IP
 // which we shouldn't hit if we only use for this.
 const PRODUCTION = process.env.NODE_ENV === "production";
+const TEST = process.env.NODE_ENV === "test";
 function getMineRate() {
-  if (PRODUCTION) {
+  if (AddressesJson.chainId === ChainId.MAINNET && PRODUCTION) {
     return 13.1;
   }
 
-  if (chainName === "goerli") {
+  if (AddressesJson.chainId === ChainId.GOERLI && TEST) {
     return 30;
   }
 
