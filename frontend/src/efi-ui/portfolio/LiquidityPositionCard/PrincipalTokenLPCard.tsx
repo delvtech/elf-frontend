@@ -1,6 +1,13 @@
 import { ReactElement } from "react";
 
-import { ButtonGroup, Callout, Card, Intent, Tag } from "@blueprintjs/core";
+import {
+  ButtonGroup,
+  Callout,
+  Card,
+  Classes,
+  Intent,
+  Tag,
+} from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import classNames from "classnames";
@@ -14,8 +21,6 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
-import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { UnstakeConvergentCurvePoolButton } from "efi-ui/pools/UnstakeButton/UnstakeConvergentCurvePoolButton";
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
@@ -23,13 +28,19 @@ import { useShareOfPool } from "efi-ui/pools/useShareOfPool";
 import { GoToMarketButton } from "efi-ui/portfolio/PrincipalTokenCard/GoToMarketButton";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
-import { useTokenName } from "efi-ui/token/hooks/useTokenName";
 import { useTrancheUnlockTimestamp } from "efi-ui/tranche/useTrancheUnlockTimestamp";
 import { KNOWN_BASE_ASSETS } from "efi/addresses";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
 import { formatPercent } from "efi/base/formatPercent";
 import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
+import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { getPoolTokens } from "efi/pools/getPoolTokens";
+import { PoolInfo } from "efi/pools/PoolInfo";
+import { getTokenInfo } from "efi/tokenlists";
+import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
+import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 
 interface PrincipalTokenLPCardProps {
   library: Web3Provider | undefined;
@@ -75,7 +86,6 @@ export function PrincipalTokenLPCard({
     : t`Loading unlock date...`;
 
   // pool shares
-  const { data: poolName } = useTokenName(pool);
   const shareOfPool = useShareOfPool(pool, account);
   const poolSharesLabel = getPoolSharesLabel(shareOfPool);
 
@@ -98,6 +108,11 @@ export function PrincipalTokenLPCard({
 
   const baseAssetLiquidityLabel = `${baseAssetLiquidity?.toFixed(4)}`;
   const principalTokenLiquidityLabel = `${principalTokenLiquidity?.toFixed(4)}`;
+
+  const poolInfo = getTokenInfo<PoolInfo>(pool?.address as string);
+  const poolName = `${baseAssetSymbol} - ${baseAssetSymbol} Principal Token`;
+  const principalTokenSymbol = getPrincipalTokenSymbol(poolInfo);
+  const poolLabel = `(${baseAssetSymbol} - ${principalTokenSymbol})`;
 
   return (
     <Card
@@ -129,6 +144,7 @@ export function PrincipalTokenLPCard({
                 {poolName}
               </a>
             </span>
+            <span className={classNames(Classes.TEXT_MUTED)}>{poolLabel}</span>
             <div className={tw("flex", "w-full", "items-center", "space-x-2")}>
               <Tag
                 large
@@ -155,7 +171,7 @@ export function PrincipalTokenLPCard({
           <Callout className={calloutClassName}>
             <span
               className={classNames(tw("text-base", "mb-0"))}
-            >{t`pt${baseAssetSymbol} liquidity`}</span>
+            >{t`Principal liquidity`}</span>
             <span className={tw("text-lg", "font-semibold")}>
               {principalTokenLiquidityLabel}
             </span>
@@ -234,4 +250,16 @@ function useTrancheForPool(pool: ConvergentCurvePool | undefined) {
     principalTokenAddress,
     Tranche__factory.connect
   );
+}
+
+export function getPrincipalTokenSymbol(poolInfo: PoolInfo): string {
+  const { baseAssetInfo, termAssetInfo } = getPoolTokens(poolInfo);
+  const baseCryptoAsset = getCryptoAssetForToken(baseAssetInfo.address);
+  const vaultSymbol = getVaultSymbol(baseCryptoAsset);
+  const { symbol: termAssetSymbol } = getTermAssetSymbol(
+    termAssetInfo.address,
+    vaultSymbol
+  );
+
+  return termAssetSymbol as string;
 }
