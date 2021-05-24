@@ -75,7 +75,6 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
   }, [setAmountIn, setAmountOut]);
   const closeDrawer = useCallback(
     (transactionAttemped) => {
-      console.log("transactionAttemped", transactionAttemped);
       if (transactionAttemped) {
         clearInputs();
       }
@@ -249,7 +248,7 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
     if (swapKind === SwapKind.GIVEN_OUT) {
       onChangeOut(amountOut ?? "", SwapKind.GIVEN_OUT);
     }
-  }, [activeTranche]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [activeTranche, amountIn, amountOut, onChangeIn, onChangeOut, swapKind]);
 
   const roundedPrincipalPrice = amountOfEthForOnePrincipalEth?.toFixed(4);
   const marketRateLabel = getMarketRateLabel(
