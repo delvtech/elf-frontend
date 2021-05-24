@@ -1,15 +1,15 @@
 import { TokenInfo } from "@uniswap/token-lists";
 import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
 import { ConvergentCurvePool__factory } from "elf-contracts/types/factories/ConvergentCurvePool__factory";
+import keyBy from "lodash.keyby";
 import {
-  PrincipalTokenInfo,
   PrincipalPoolTokenInfo,
+  PrincipalTokenInfo,
   TokenListTag,
 } from "tokenlists/types";
 
 import { getSmartContractFromRegistryMulti } from "efi/contracts/SmartContractsRegistry";
 import { tokenListJson } from "efi/tokenlists";
-import { keyBy } from "lodash";
 
 /**
  * The list of all principal token pools

@@ -1,7 +1,6 @@
 import { TokenInfo } from "@uniswap/token-lists";
 import { WeightedPool__factory } from "elf-contracts/types/factories/WeightedPool__factory";
 import { WeightedPool } from "elf-contracts/types/WeightedPool";
-import { keyBy } from "lodash";
 import {
   TokenListTag,
   YieldPoolTokenInfo,
@@ -10,6 +9,7 @@ import {
 
 import { getSmartContractFromRegistryMulti } from "efi/contracts/SmartContractsRegistry";
 import { tokenListJson } from "efi/tokenlists";
+import keyBy from "lodash.keyby";
 
 export enum WeightedPoolExitKind {
   EXACT_BPT_IN_FOR_ONE_TOKEN_OUT,
