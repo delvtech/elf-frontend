@@ -6,7 +6,7 @@ import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { ERC20 } from "elf-contracts/types/ERC20";
 import { Signer } from "ethers";
-import { parseUnits } from "ethers/lib/utils";
+import { formatEther, formatUnits, parseUnits } from "ethers/lib/utils";
 import { PrincipalPoolTokenInfo, YieldPoolTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
@@ -35,6 +35,14 @@ import { getPoolInfoFromContract } from "efi/pools/getPoolInfo";
 import { PoolContract } from "efi/pools/PoolContract";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
+import {
+  calcSwapInGivenOutCCPoolUNSAFE,
+  calcSwapOutGivenInCCPoolUNSAFE,
+} from "efi/pools/calcPoolSwap";
+import { clipStringValueToDecimals } from "efi/math/fixedPoint";
+import { getPrincipalPoolForTranche } from "efi/pools/ccpool";
+import { getTrancheForPool } from "efi/pools/getTrancheForPool";
+import { PoolInfo } from "efi/pools/PoolInfo";
 
 interface TradePanelProps {
   library: Web3Provider | undefined;
@@ -66,6 +74,8 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     tokenIn: tokenInFromProps,
     tokenOut: tokenOutFromProps,
   } = props;
+  // TODO: use swap kind to indicate which value is estimated in UI
+  const [swapKind, setSwapKind] = useState(SwapKind.GIVEN_IN);
 
   const [isWalletDialogOpen, setWalletDialogOpen] = useState(false);
   // local state
@@ -109,13 +119,12 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     poolIndex: tokenOutPoolIndex,
   } = useTokenInfoForTradeInput(pool, tokenOut, account, library);
 
-  const { stringValue: amountIn, setValue: onChangeIn } = useNumericInput();
-  const { stringValue: amountOut, setValue: onChangeOut } = useNumericInput();
-
+  const { stringValue: amountIn, setValue: setAmountIn } = useNumericInput();
+  const { stringValue: amountOut, setValue: setAmountOut } = useNumericInput();
   // clear inputs when they switch.  we can improve this UX later to keep the previous values.
   useEffect(() => {
-    onChangeIn("");
-    onChangeOut("");
+    setAmountIn("");
+    setAmountOut("");
     // don't want to call this effect when the hooks update, only when isReversed updates
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isReversed]);
@@ -164,12 +173,105 @@ export function TradePanel(props: TradePanelProps): ReactElement {
   if (!account) {
     submitButtonLabel = t`Connect wallet`;
   }
+  const clearInputs = useCallback(() => {
+    setAmountIn("");
+    setAmountOut("");
+  }, [setAmountIn, setAmountOut]);
+
+  // pool
+  const poolInfo = getPoolInfoFromContract(pool);
+  const trancheInfo = getTrancheForPool(poolInfo as PoolInfo);
+  // pool
+  const {
+    extensions: { expiration, unitSeconds },
+  } = getPrincipalPoolForTranche(trancheInfo.address);
+  // TODO: use a global Date.now that updates at a constant interval
+  const nowInSeconds = Math.round(Date.now() / 1000);
+  const timeRemainingSeconds = expiration - nowInSeconds;
+  const tParamSeconds = unitSeconds;
+
+  const { data: totalSupplyBN } = useSmartContractReadCall(pool, "totalSupply");
+  const totalSupply = formatEther(totalSupplyBN ?? 0);
+
+  const onChangeIn = useCallback(
+    (newAmountIn: string, swapKind: SwapKind) => {
+      if (!newAmountIn) {
+        clearInputs();
+        return;
+      }
+      const newAmountOutNumber = calcSwapOutGivenInCCPoolUNSAFE(
+        newAmountIn,
+        formatUnits(tokenInBalanceOf ?? 0, tokenInDecimals),
+        formatUnits(tokenOutBalanceOf ?? 0, tokenInDecimals),
+        totalSupply,
+        timeRemainingSeconds,
+        tParamSeconds,
+        true
+      );
+      const newAmountOut = clipStringValueToDecimals(
+        newAmountOutNumber.toString(),
+        tokenInDecimals ?? 18
+      );
+      setSwapKind(swapKind);
+      setAmountIn(newAmountIn);
+      setAmountOut(newAmountOut);
+    },
+    [
+      clearInputs,
+      setAmountIn,
+      setAmountOut,
+      tParamSeconds,
+      timeRemainingSeconds,
+      tokenInBalanceOf,
+      tokenInDecimals,
+      tokenOutBalanceOf,
+      totalSupply,
+    ]
+  );
+
+  const onChangeOut = useCallback(
+    (newAmountOut: string, swapKind: SwapKind) => {
+      if (!newAmountOut) {
+        clearInputs();
+        return;
+      }
+      const newAmountInNumber = calcSwapInGivenOutCCPoolUNSAFE(
+        newAmountOut,
+        formatUnits(tokenOutBalanceOf ?? 0, tokenInDecimals),
+        formatUnits(tokenInBalanceOf ?? 0, tokenInDecimals),
+        totalSupply,
+        timeRemainingSeconds,
+        tParamSeconds,
+        false
+      );
+      const newAmountIn = clipStringValueToDecimals(
+        newAmountInNumber.toString(),
+        tokenOutDecimals ?? 18
+      );
+      setSwapKind(swapKind);
+      setAmountIn(newAmountIn);
+      setAmountOut(newAmountOut);
+    },
+    [
+      clearInputs,
+      setAmountIn,
+      setAmountOut,
+      tParamSeconds,
+      timeRemainingSeconds,
+      tokenInBalanceOf,
+      tokenInDecimals,
+      tokenOutBalanceOf,
+      tokenOutDecimals,
+      totalSupply,
+    ]
+  );
 
   const onClose = useCallback(() => {
     setDrawerOpen(false);
-    onChangeIn("");
-    onChangeOut("");
-  }, [onChangeIn, onChangeOut]);
+    setAmountIn("");
+    setAmountOut("");
+  }, [setAmountIn, setAmountOut]);
+
   return (
     <div
       className={tw(
@@ -195,7 +297,6 @@ export function TradePanel(props: TradePanelProps): ReactElement {
         swapKind={SwapKind.GIVEN_IN}
         pool={pool}
         onChange={onChangeIn}
-        onPreviewUpdate={onChangeOut}
         value={amountIn}
         validValue={isValidTokenInValue}
       />
@@ -223,7 +324,6 @@ export function TradePanel(props: TradePanelProps): ReactElement {
         swapKind={SwapKind.GIVEN_OUT}
         pool={pool}
         onChange={onChangeOut}
-        onPreviewUpdate={onChangeIn}
         value={amountOut}
         validValue={isValidTokenOutValue}
       />
@@ -284,7 +384,6 @@ function useReversableTokens(
   return { tokenIn, tokenOut, swapAssets, isReversed };
 }
 
-// TODO: clean this up, I don't know what we need amountOut in here
 export function useTokenApproval(
   account: string | null | undefined,
   pool: PoolContract | undefined,
