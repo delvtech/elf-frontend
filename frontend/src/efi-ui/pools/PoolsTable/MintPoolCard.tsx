@@ -13,42 +13,43 @@ import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import classNames from "classnames";
 import { differenceInDays } from "date-fns";
+import { YieldPoolTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
-import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
-import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { MintCard } from "efi-ui/mint/MintCard/MintCard";
-import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 import { useFeeVolumeForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
-import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
-import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { useTokenYield } from "efi-ui/pools/useTokenYield";
 import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
 import { useTotalValueLockedForTranche } from "efi-ui/pools/useTotalValueLockedForTranche";
-import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForPool";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
-import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { formatPercent } from "efi/base/formatPercent";
 import { CryptoAssetType } from "efi/crypto/CryptoAsset";
+import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { InterestTokenContractsByAddress } from "efi/interestToken/interestToken";
 import { formatMoney } from "efi/money/formatMoney";
+import {
+  getPrincipalPoolForTranche,
+  principalPoolContractsByAddress,
+} from "efi/pools/ccpool";
+import { getTrancheForPool } from "efi/pools/getTrancheForPool";
 import { PoolContract } from "efi/pools/PoolContract";
+import { yieldPoolContractsByAddress } from "efi/pools/weightedPool";
+import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
+import { trancheContractsByAddress } from "efi/tranche/tranches";
+import { UnderlyingContracts } from "efi/underlying/underlying";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 
 import styles from "./PrincipalPoolCard.module.css";
-import { useParseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
-import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
-import { getQueryData } from "efi-ui/base/queryResults";
 
 interface MintPoolCardProps {
-  pool: PoolContract | undefined;
+  poolInfo: YieldPoolTokenInfo;
   library: Web3Provider | undefined;
   account: string | null | undefined;
   chainId: number | undefined;
@@ -65,38 +66,57 @@ const poolCardStyle: CSSProperties = {
 };
 
 export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
-  const { pool, library, account, chainId, walletConnectionActive, connector } =
-    props;
-  const tranche = useTrancheForPool(pool);
-  const principalPool = usePoolForToken(tranche);
-  const poolTokensResult = usePoolTokens(pool);
-  const tokenAddresses = getQueryData(poolTokensResult)?.[0] || [];
-  const { termAssetContract: principalTokenContract } =
-    useParseSortedTokensForPool(tokenAddresses);
+  const {
+    poolInfo,
+    library,
+    account,
+    chainId,
+    walletConnectionActive,
+    connector,
+  } = props;
+  // get infos
+  const trancheInfo = getTrancheForPool(poolInfo);
+  const principalPoolInfo = getPrincipalPoolForTranche(trancheInfo.address);
+
+  // get contracts
+  const principalPoolContract =
+    principalPoolContractsByAddress[principalPoolInfo.address];
+  const yieldPoolContract = yieldPoolContractsByAddress[poolInfo.address];
+  const baseAssetContract =
+    UnderlyingContracts[trancheInfo.extensions.underlying];
+  const principalTokenContract = trancheContractsByAddress[trancheInfo.address];
+  const yieldTokenContract =
+    InterestTokenContractsByAddress[poolInfo.extensions.interestToken];
+  const trancheContract = trancheContractsByAddress[trancheInfo.address];
+
+  const { createdAtTimestamp: trancheCreatedAt, unlockTimestamp } =
+    trancheInfo.extensions;
+
   const principalPrice = usePoolSpotPrice(
-    principalPool,
+    principalPoolContract,
     principalTokenContract
   )?.toFixed(4);
-  const trancheCreatedAt = useTrancheCreatedAt(tranche);
-  const fees = useFeeVolumeForPool(pool) ?? 0;
-  const baseAssetContract = useBaseAssetForPool(pool);
+
+  const fees = useFeeVolumeForPool(yieldPoolContract) ?? 0;
   const baseAsset = getCryptoAssetForToken(baseAssetContract?.address);
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
   const BaseAssetIcon = findAssetIcon(baseAssetSymbol);
-  const termAssetContract = usePoolPairedToken(pool, baseAssetContract);
-  const { symbol: termAssetSymbol } = getTermAssetSymbol(
-    termAssetContract?.address,
+  const { symbol: yieldTokenSymbol } = getTermAssetSymbol(
+    yieldTokenContract?.address,
     baseAssetSymbol
   );
-  const tvl = useTotalValueLockedForTranche(tranche, baseAssetContract);
-  const yieldPrice = usePoolSpotPrice(pool, termAssetContract)?.toFixed(4);
 
-  const { data: unlockBN } = useSmartContractReadCall(
-    tranche,
-    "unlockTimestamp"
+  const tvl = useTotalValueLockedForTranche(trancheContract, baseAssetContract);
+  const yieldPrice = usePoolSpotPrice(
+    yieldPoolContract,
+    yieldTokenContract
+  )?.toFixed(4);
+
+  const variableYield = useTokenYield(
+    baseAssetContract,
+    yieldPoolContract,
+    "yield"
   );
-  const unlockTime = unlockBN?.toNumber();
-  const variableYield = useTokenYield(baseAssetContract, pool, "yield");
 
   const vaultSymbol = getVaultSymbol(baseAsset);
   const { data: vaultInfo } = useYearnVault(vaultSymbol);
@@ -111,16 +131,15 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
     tvl,
     vaultInfo,
     yieldPrice,
-    tranche,
+    trancheContract,
     trancheCreatedAt,
     fees,
     baseAssetContract,
     baseAsset,
     baseAssetSymbol,
     BaseAssetIcon,
-    termAssetContract,
-    termAssetSymbol,
-    unlockBN,
+    yieldTokenContract,
+    yieldTokenSymbol,
     variableYield,
   ];
 
@@ -140,12 +159,12 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
     }
   }, [allDataLoaded]);
 
-  if (!pool || !baseAssetContract) {
+  if (!yieldPoolContract || !baseAssetContract) {
     return null;
   }
 
   const startTime = trancheCreatedAt ? trancheCreatedAt * 1000 : 0;
-  const maturityTime = unlockTime ? unlockTime * 1000 : 0;
+  const maturityTime = unlockTimestamp * 1000;
 
   const dayDifference = differenceInDays(
     maturityTime as number,
@@ -297,7 +316,10 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
               "xl:col-span-2"
             )}
           >
-            <LiquiditySection pool={pool} principalPool={principalPool} />
+            <LiquiditySection
+              pool={yieldPoolContract}
+              principalPool={principalPoolContract}
+            />
           </div>
           <div
             className={tw(
@@ -309,7 +331,10 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
               "xl:hidden"
             )}
           >
-            <LiquiditySection pool={undefined} principalPool={principalPool} />
+            <LiquiditySection
+              pool={undefined}
+              principalPool={principalPoolContract}
+            />
           </div>
           <div
             className={tw(
@@ -385,7 +410,7 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
           baseAsset={baseAsset}
           baseAssetSymbol={baseAssetSymbol}
           baseAssetIcon={BaseAssetIcon}
-          tranche={tranche}
+          tranche={trancheContract}
         />
       </Collapse>
     </Card>

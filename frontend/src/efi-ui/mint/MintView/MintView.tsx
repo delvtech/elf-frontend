@@ -4,23 +4,18 @@ import { Intent, Tag } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { RouteComponentProps } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
-import { WeightedPool } from "elf-contracts/types/WeightedPool";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { MintPoolCard } from "efi-ui/pools/PoolsTable/MintPoolCard";
-import { useWeightedPools } from "efi-ui/pools/useWeightedPools/useWeightedPools";
-import { useSigner } from "efi-ui/provider/useBlockFromTag/useSigner/useSigner";
+import { yieldPools } from "efi/pools/weightedPool";
 
 interface MintViewProps extends RouteComponentProps {}
 
 export function MintView(props: MintViewProps): ReactElement {
   const { account, library, active, chainId, connector } =
     useWeb3React<Web3Provider>();
-  const signer = useSigner(account, library);
-
-  const interestTokenPools = useWeightedPools(signer);
 
   return (
     <Fragment>
@@ -55,21 +50,19 @@ export function MintView(props: MintViewProps): ReactElement {
             "space-y-5"
           )}
         >
-          {interestTokenPools
-            .filter((pool): pool is WeightedPool => !!pool)
-            .map((pool, index) => {
-              return (
-                <MintPoolCard
-                  key={pool?.contractAddress || index}
-                  library={library}
-                  account={account}
-                  chainId={chainId}
-                  walletConnectionActive={active}
-                  connector={connector}
-                  pool={pool}
-                />
-              );
-            })}
+          {yieldPools.map((poolInfo) => {
+            return (
+              <MintPoolCard
+                key={poolInfo.address}
+                library={library}
+                account={account}
+                chainId={chainId}
+                walletConnectionActive={active}
+                connector={connector}
+                poolInfo={poolInfo}
+              />
+            );
+          })}
         </div>
       </div>
     </Fragment>
