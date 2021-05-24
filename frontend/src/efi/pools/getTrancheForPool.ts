@@ -13,7 +13,7 @@ export function getTrancheForPool(
   if (isPrincipalPool(poolInfo)) {
     const trancheAddress = poolInfo.extensions.bond;
     const trancheInfo = PrincipalTokenInfos.find(
-      (info) => info.extensions.interestToken === trancheAddress
+      (info) => info.address === trancheAddress
     ) as PrincipalTokenInfo;
     return trancheInfo;
   }
