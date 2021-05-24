@@ -7,6 +7,9 @@ import { getQueryData } from "efi-ui/base/queryResults";
 import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 
+/**
+ * @deprecated hooks based lookups are deprecated, use getVaultForTranche instead
+ */
 export function useUnderlyingVaultForTranche(
   tranche: Tranche | undefined
 ): TestYVault | undefined {

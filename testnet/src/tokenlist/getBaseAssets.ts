@@ -3,9 +3,8 @@ import hre from "hardhat";
 import zip from "lodash.zip";
 
 import { ERC20__factory } from "src/types/factories/ERC20__factory";
-import { TokenListTag } from "src/tokenlist/tags";
 import { ERC20 } from "src/types/ERC20";
-import { UnderlyingTokenInfo } from "src/tokenlist/types";
+import { TokenListTag, UnderlyingTokenInfo } from "src/tokenlist/types";
 
 export const provider = hre.ethers.provider;
 export async function getBaseAssets(

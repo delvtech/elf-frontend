@@ -30,7 +30,7 @@ import { RedeemPrincipalTokensButton } from "efi-ui/portfolio/RedeemButton/Redee
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenBalanceUNSAFE } from "efi-ui/token/hooks/useTokenBalance";
 import { useBaseAssetForTranche } from "efi-ui/tranche/useBaseAssetForTranche";
-import { useTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
+import { getTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
 import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
 import { useUnderlyingVaultForTranche } from "efi-ui/tranche/useUnderlyingVaultForTranche";
 import { calculateProgress } from "efi/base/calculateProgress";
@@ -124,7 +124,7 @@ export function PrincipalTokenCard(
 
   const vaultSymbol: string | undefined = getVaultSymbol(baseAsset);
 
-  const { symbol: termAssetSymbol } = useTermAssetSymbol(
+  const { symbol: termAssetSymbol } = getTermAssetSymbol(
     tranche.address,
     vaultSymbol
   );

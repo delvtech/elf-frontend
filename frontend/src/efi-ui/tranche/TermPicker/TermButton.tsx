@@ -2,18 +2,16 @@ import React from "react";
 
 import { Classes, Icon } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
-import { Web3Provider } from "@ethersproject/providers";
 import classNames from "classnames";
 import { Tranche } from "elf-contracts/types/Tranche";
 
 import tw from "efi-tailwindcss-classnames";
-import { useBaseAssetForTranche } from "efi-ui/tranche/useBaseAssetForTranche";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
+import { getBaseAssetForTranche } from "efi/tranche/baseAssets";
 
 interface TrancheButtonProps {
-  library: Web3Provider | undefined;
   account: string | null | undefined;
-  tranche: Tranche | undefined;
+  tranche: Tranche;
   disabled?: boolean;
   onClick?: (event: React.MouseEvent<HTMLElement>) => void;
   /**
@@ -21,8 +19,8 @@ interface TrancheButtonProps {
    */
   showCaret?: boolean;
   buttonLabelRenderer: (
-    tranche: Tranche | undefined,
-    baseAsset: CryptoAsset | undefined
+    tranche: Tranche,
+    baseAsset: CryptoAsset
   ) => JSX.Element;
 }
 
@@ -33,7 +31,7 @@ export function TermButton({
   showCaret = true,
   onClick,
 }: TrancheButtonProps): JSX.Element {
-  const baseAsset = useBaseAssetForTranche(tranche);
+  const baseAsset = getBaseAssetForTranche(tranche.address);
   return (
     <button
       disabled={disabled}

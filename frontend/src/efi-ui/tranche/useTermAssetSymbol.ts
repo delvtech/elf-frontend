@@ -15,7 +15,10 @@ interface TermAssetSymbols {
   label?: string | undefined;
 }
 
-export function useTermAssetSymbol(
+/**
+ * @deprecated use tokenlist instead
+ */
+export function getTermAssetSymbol(
   termAssetAddress: string | undefined,
   baseAssetSymbol: string | undefined
 ): TermAssetSymbols {

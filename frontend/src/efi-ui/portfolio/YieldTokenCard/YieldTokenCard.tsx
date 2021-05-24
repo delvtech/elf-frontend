@@ -1,4 +1,4 @@
-import React, { ReactElement, ReactNode, useMemo } from "react";
+import { ReactElement, ReactNode, useMemo } from "react";
 
 import {
   ButtonGroup,
@@ -22,30 +22,32 @@ import { getCoinGeckoId } from "efi-coingecko";
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
-import { ERC20Shim } from "efi/contracts/ERC20Shim";
-import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
-import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 import { useOnSwapGivenIn } from "efi-ui/pools/useOnSwapGivenIn/useOnSwapGivenIn";
-import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
 import { GoToMarketButton } from "efi-ui/portfolio/PrincipalTokenCard/GoToMarketButton";
 import { MaturityTimeBar } from "efi-ui/portfolio/PrincipalTokenCard/MaturityTimeBar";
 import { RedeemYieldTokensButton } from "efi-ui/portfolio/RedeemButton/RedeemYieldTokensButton";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenBalanceUNSAFE } from "efi-ui/token/hooks/useTokenBalance";
-import { useBaseAssetForTranche } from "efi-ui/tranche/useBaseAssetForTranche";
-import { useTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
-import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
-import { useTrancheForInterestToken } from "efi-ui/tranche/useTrancheForInterestToken";
-import { useUnderlyingVaultForTranche } from "efi-ui/tranche/useUnderlyingVaultForTranche";
+import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
+import { getTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { calculateProgress } from "efi/base/calculateProgress";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
 import { formatPercent } from "efi/base/formatPercent";
+import { ERC20Shim } from "efi/contracts/ERC20Shim";
+import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { formatMoney } from "efi/money/formatMoney";
+import { getPoolForYieldToken } from "efi/pools/weightedPool";
+import { getBaseAssetForTranche } from "efi/tranche/baseAssets";
+import {
+  getVaultForTranche,
+  trancheContractsByAddress,
+} from "efi/tranche/tranches";
+import { getPrincipalTokenForYieldToken } from "efi/tranche/yieldTokens";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 
 interface YieldTokenCardProps {
@@ -75,53 +77,46 @@ export function YieldTokenCard({
   const { isDarkMode } = useDarkMode();
   const { currency } = useCurrencyPref();
 
-  const { data: yieldTokenBalanceOf } = useSmartContractReadCall(
-    yieldToken,
-    "balanceOf",
-    {
-      enabled: !!account,
-      callArgs: [account as string],
-    }
-  );
+  const { data: yieldTokenBalanceOf } = useTokenBalanceOf(yieldToken, account);
   const yieldTokenBalance = useTokenBalanceUNSAFE(
     yieldToken as unknown as ERC20Shim,
     account
   );
 
   // The tranche contains the unlockTimestamp
-  const tranche = useTrancheForInterestToken(yieldToken);
-  const trancheCreatedAt = useTrancheCreatedAt(tranche);
-  const { data: unlockTimestamp } = useSmartContractReadCall(
-    tranche,
-    "unlockTimestamp"
-  );
+  const {
+    address: trancheAddress,
+    extensions: { createdAtTimestamp, unlockTimestamp },
+  } = getPrincipalTokenForYieldToken(yieldToken.address);
+  const tranche = trancheContractsByAddress[trancheAddress];
+
   const unlockDate = useMemo(
     () => convertEpochSecondsToDate(unlockTimestamp),
     [unlockTimestamp]
   );
   const createdAtDate = useMemo(
-    () => convertEpochSecondsToDate(trancheCreatedAt),
-    [trancheCreatedAt]
+    () => convertEpochSecondsToDate(createdAtTimestamp),
+    [createdAtTimestamp]
   );
 
-  const vaultContract = useUnderlyingVaultForTranche(tranche);
+  const vaultContract = getVaultForTranche(trancheAddress);
 
-  const pool = usePoolForToken(yieldToken as unknown as ERC20Shim);
-
-  const baseAsset = useBaseAssetForTranche(tranche);
+  const baseAsset = getBaseAssetForTranche(tranche.address);
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
   const { data: baseAssetFiatPrice } = useCoinGeckoPrice(
     getCoinGeckoId(baseAssetSymbol),
     currency
   );
   const baseAssetDecimals = getCryptoDecimals(baseAsset);
+
+  const pool = getPoolForYieldToken(yieldToken.address);
   const { data: exitValueBigNumber } = useOnSwapGivenIn(
     pool,
     yieldToken as unknown as ERC20Shim,
     yieldTokenBalanceOf
   );
 
-  const BaseAssetIcon = findAssetIcon(baseAssetSymbol);
+  const BaseAssetIcon = findAssetIcon2(baseAsset);
 
   const vaultSymbol = getVaultSymbol(baseAsset);
   const { data: yearnVault } = useYearnVault(vaultSymbol);
@@ -136,7 +131,7 @@ export function YieldTokenCard({
   const progress = calculateProgress(createdAtDate, unlockDate);
   const tableRowLink = getTableRowLink(vaultContract?.address, vaultName);
 
-  const { symbol: termAssetSymbol } = useTermAssetSymbol(
+  const { symbol: termAssetSymbol } = getTermAssetSymbol(
     yieldToken.address,
     vaultSymbol
   );

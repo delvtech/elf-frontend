@@ -22,7 +22,7 @@ import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useTokenPoolBalance } from "efi-ui/pools/useTokenPoolBalance/useTokenPoolBalance";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
-import { useTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
+import { getTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
 import { useEthBalance } from "efi-ui/wallets/hooks/useEthBalance/useEthBalance";
 import ContractAddresses from "efi/addresses";
@@ -105,7 +105,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
     .includes(yieldAssetAddress ?? "");
 
   const { symbol: trancheAssetSymbol, label: trancheAssetSymbolLabel } =
-    useTermAssetSymbol(yieldAssetAddress, baseAssetSymbol);
+    getTermAssetSymbol(yieldAssetAddress, baseAssetSymbol);
 
   const baseAssetReserves = formatUnits(
     baseAssetPoolBalance ?? 0,
@@ -338,7 +338,7 @@ function useTokenInfoForTradeInput(
 
   const asset = getCryptoAssetForToken(tokenContract?.address);
   const baseAssetSymbol = getCryptoSymbol(asset);
-  const { symbol: termAssetSymbol } = useTermAssetSymbol(
+  const { symbol: termAssetSymbol } = getTermAssetSymbol(
     tokenContract?.address,
     baseAssetSymbol
   );

@@ -26,7 +26,7 @@ import { useTokenPoolIndex } from "efi-ui/pools/useTokenPoolIndex/useTokenPoolIn
 import { SwapTokensTransactionConfirmationDrawer } from "efi-ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensTransactionConfirmationDrawer";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { TradeInput } from "efi-ui/trade/TradeInput/TradeInput";
-import { useTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
+import { getTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
 import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 import { formatBalance } from "efi/base/formatBalance";
@@ -326,7 +326,7 @@ function useTokenInfoForTradeInput(
   // get symbols
   const baseAssetSymbol = getCryptoSymbol(baseCryptoAsset);
   const vaultSymbol = getVaultSymbol(baseCryptoAsset);
-  const { symbol: termSymbol } = useTermAssetSymbol(
+  const { symbol: termSymbol } = getTermAssetSymbol(
     termAssetContract?.address,
     vaultSymbol
   );

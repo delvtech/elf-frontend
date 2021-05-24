@@ -5,8 +5,10 @@
   "dependencies": {
     "@typechain/ethers-v5": "^5.0.0",
     "@types/ethereumjs-abi": "^0.6.3",
+    "@types/lodash.uniq": "^4.5.6",
     "@uniswap/token-lists": "^1.0.0-beta.21",
     "hardhat": "^2.2.1",
+    "lodash.uniq": "^4.5.0",
     "lodash.zip": "^4.2.0",
     "module-alias": "^2.2.2",
     "prettier": "^2.2.1"

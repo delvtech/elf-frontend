@@ -21,9 +21,13 @@
     "wpool": {
       "name": "Weighted pool",
       "description": "Token that represents the balancer pool for Yield tokens"
+    },
+    "assetproxy": {
+      "name": "Vault asset proxy",
+      "description": "Token that wraps a yield position, ie: Yearn vault asset proxy"
     }
   },
-  "timestamp": "2021-05-14T18:53:46.725Z",
+  "timestamp": "2021-05-19T18:19:27.502Z",
   "version": {
     "major": 0,
     "minor": 0,
@@ -49,6 +53,32 @@
       "tags": [
         "underlying"
       ]
+    },
+    {
+      "chainId": 5,
+      "address": "0x6F643Ba6894D8C50c476A3539e1D1690B2194018",
+      "symbol": "eyWETH",
+      "decimals": 18,
+      "name": "Element Yearn WETH",
+      "tags": [
+        "assetproxy"
+      ],
+      "extensions": {
+        "vault": "0xdD82595F5eB0e7477D7432B24E44be7c0252bbf1"
+      }
+    },
+    {
+      "chainId": 5,
+      "address": "0x814C447a9F58A2b823504Fe2775bA48c843925B6",
+      "symbol": "eyUSDC",
+      "decimals": 6,
+      "name": "Element Yearn USDC",
+      "tags": [
+        "assetproxy"
+      ],
+      "extensions": {
+        "vault": "0x23c3C6C06d7684207fB09076914A15B16aba02c5"
+      }
     },
     {
       "chainId": 5,

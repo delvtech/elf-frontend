@@ -24,7 +24,7 @@ interface EarnInputProps {
 
   placeholder?: string;
 
-  assetPicker: ReactElement;
+  assetPickerRenderer: () => ReactElement;
   swapKind: SwapKind;
   valueDecimals: number | undefined;
   valueBalanceOf: BigNumber | undefined;
@@ -35,19 +35,20 @@ const earnInputStyle: CSSProperties = {
   width: "100%",
   fontSize: 26,
 };
-export function EarnInput({
-  className,
-  value,
-  isValid,
-  errorMessage,
-  showMaxButton,
-  placeholder,
-  onValueChange: onChangeFromProps,
-  assetPicker,
-  swapKind,
-  valueDecimals,
-  valueBalanceOf,
-}: EarnInputProps): ReactElement {
+export function EarnInput(props: EarnInputProps): ReactElement {
+  const {
+    className,
+    value,
+    isValid,
+    errorMessage,
+    showMaxButton,
+    placeholder,
+    onValueChange: onChangeFromProps,
+    assetPickerRenderer,
+    swapKind,
+    valueDecimals,
+    valueBalanceOf,
+  } = props;
   const { isDarkMode } = useDarkMode();
 
   const onChange = useOnInputChange(onChangeFromProps, valueDecimals, swapKind);
@@ -76,6 +77,8 @@ export function EarnInput({
       {errorMessage}
     </div>
   );
+
+  const assetPicker = assetPickerRenderer();
 
   return (
     <FormGroup className={tw("w-full")} helperText={helperText}>

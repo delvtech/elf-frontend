@@ -4,6 +4,9 @@ import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadC
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 
+/**
+ * @deprecated hooks based lookups are deprecated. use `getBaseAssetForTranche` instead.
+ */
 export function useBaseAssetForTranche(
   tranche: Tranche | undefined
 ): CryptoAsset | undefined {

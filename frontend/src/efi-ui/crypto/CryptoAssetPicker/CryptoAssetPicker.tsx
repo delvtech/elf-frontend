@@ -1,8 +1,8 @@
 import React, { ReactElement } from "react";
 
-import { Classes } from "@blueprintjs/core";
+import { IPopoverProps } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
-import { Select } from "@blueprintjs/select";
+import { ItemRenderer, Select } from "@blueprintjs/select";
 import classNames from "classnames";
 
 import tw from "efi-tailwindcss-classnames";
@@ -13,50 +13,39 @@ import { CryptoAssetButton } from "./CryptoAssetButton";
 
 interface CryptoAssetPickerProps {
   className?: string;
-  cryptoAssets: (CryptoAsset | undefined)[];
-  activeCryptoAsset: CryptoAsset | undefined;
+  cryptoAssets: CryptoAsset[];
+  activeCryptoAsset: CryptoAsset;
   onCryptoAssetChange: (newCryptoAsset: CryptoAsset) => void;
 }
 
-export function CryptoAssetPicker({
-  className,
-  cryptoAssets,
-  onCryptoAssetChange,
-  activeCryptoAsset,
-}: CryptoAssetPickerProps): ReactElement {
-  const availableCryptoAssets = cryptoAssets.filter(
-    (cryptoAsset): cryptoAsset is CryptoAsset => !!cryptoAsset
-  );
+const popoverProps: IPopoverProps = {
+  minimal: true,
+  popoverClassName: classNames(styles.baseAssetPicker),
+};
 
-  if (!activeCryptoAsset || !availableCryptoAssets.length) {
-    return (
-      <div
-        className={classNames(
-          Classes.SKELETON,
-          tw("flex", "flex-1", "h-full", "w-300")
-        )}
-      />
-    );
-  }
+const itemRenderer: ItemRenderer<CryptoAsset> = (
+  baseAsset: CryptoAsset,
+  { handleClick }
+) => (
+  <CryptoAssetButton
+    key={baseAsset.id}
+    fill
+    minimal
+    onClick={handleClick}
+    cryptoAsset={baseAsset}
+  />
+);
+export function CryptoAssetPicker(props: CryptoAssetPickerProps): ReactElement {
+  const { className, cryptoAssets, onCryptoAssetChange, activeCryptoAsset } =
+    props;
 
   return (
     <Select
       className={classNames(tw("flex-shrink-0"), className)}
-      popoverProps={{
-        minimal: true,
-        popoverClassName: classNames(styles.baseAssetPicker),
-      }}
-      items={availableCryptoAssets}
+      popoverProps={popoverProps}
+      items={cryptoAssets}
       filterable={false}
-      itemRenderer={(baseAsset, { handleClick }) => (
-        <CryptoAssetButton
-          key={baseAsset.id}
-          fill
-          minimal
-          onClick={handleClick}
-          cryptoAsset={baseAsset}
-        />
-      )}
+      itemRenderer={itemRenderer}
       onItemSelect={onCryptoAssetChange}
     >
       <CryptoAssetButton

@@ -7,10 +7,11 @@
 import { TokenInfo } from "@uniswap/token-lists";
 
 export enum TokenListTag {
+  ASSET_PROXY = "assetproxy",
   CCPOOL = "ccpool",
-  WPOOL = "wpool",
-  UNDERLYING = "underlying",
   PRINCIPAL = "eP",
+  UNDERLYING = "underlying",
+  WPOOL = "wpool",
   YIELD = "eY",
 }
 
@@ -41,6 +42,15 @@ export interface PrincipalTokenInfo extends TokenInfo {
      * The wrapped position, eg: an Element yearn vault asset proxy
      */
     position: string;
+  };
+}
+
+export interface AssetProxyTokenInfo extends TokenInfo {
+  extensions: {
+    /**
+     * The vault address
+     */
+    vault: string;
   };
 }
 

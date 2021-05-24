@@ -7,13 +7,13 @@ import { Signer } from "ethers";
 import { YieldPoolTokenInfo } from "tokenlists/types";
 
 import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
-import { YieldPools } from "efi/pools/weightedPool";
+import { yieldPools } from "efi/pools/weightedPool";
 
 interface YieldTokenPoolInfoWithContract extends YieldPoolTokenInfo {
   contract: WeightedPool;
 }
 
-export const yieldTokenPools: YieldTokenPoolInfoWithContract[] = YieldPools.map(
+export const yieldTokenPools: YieldTokenPoolInfoWithContract[] = yieldPools.map(
   (info) => {
     const contract = getSmartContractFromRegistry(
       info.address,

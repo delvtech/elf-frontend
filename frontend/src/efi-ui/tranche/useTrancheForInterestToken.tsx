@@ -5,6 +5,9 @@ import { Tranche } from "elf-contracts/types/Tranche";
 import { useSmartContractFromFactory } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 
+/**
+ * @deprecated use getTrancheForInterestToken instead
+ */
 export function useTrancheForInterestToken(
   interestToken: InterestToken | undefined
 ): Tranche | undefined {

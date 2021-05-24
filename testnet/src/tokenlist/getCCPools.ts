@@ -1,44 +1,78 @@
 import { TokenInfo } from "@uniswap/token-lists";
 import hre from "hardhat";
 import zip from "lodash.zip";
+import { TokenListTag } from "src/tokenlist/types";
 
 import { ConvergentCurvePool__factory } from "src/types/factories/ConvergentCurvePool__factory";
 import { ConvergentPoolFactory__factory } from "src/types/factories/ConvergentPoolFactory__factory";
 
-import { TokenListTag } from "src/tokenlist/tags";
-
 export const provider = hre.ethers.provider;
-export async function getCCPools(ccPoolFactoryAddress: string, chainId: number, safelist: string[]) {
-  const poolFactory = ConvergentPoolFactory__factory.connect(ccPoolFactoryAddress, provider);
+export async function getCCPools(
+  ccPoolFactoryAddress: string,
+  chainId: number,
+  safelist: string[]
+) {
+  const poolFactory = ConvergentPoolFactory__factory.connect(
+    ccPoolFactoryAddress,
+    provider
+  );
   const filter = poolFactory.filters.CCPoolCreated(null, null);
   const events = await poolFactory.queryFilter(filter);
-  const poolCreatedEvents = events.map(
-    (event) => {
-      const [poolAddress, bondTokenAddress] = event.args || [];
-      return { poolAddress, bondTokenAddress};
-    }
+  const poolCreatedEvents = events.map((event) => {
+    const [poolAddress, bondTokenAddress] = event.args || [];
+    return { poolAddress, bondTokenAddress };
+  });
+
+  const safePoolEvents = poolCreatedEvents.filter(({ poolAddress }) =>
+    safelist.includes(poolAddress)
+  );
+  const safePoolAddresses = safePoolEvents.map(
+    ({ poolAddress }) => poolAddress
+  );
+  const safePools = safePoolAddresses.map((poolAddress) =>
+    ConvergentCurvePool__factory.connect(poolAddress, provider)
   );
 
-  const safePoolEvents = poolCreatedEvents.filter(( { poolAddress } ) => safelist.includes(poolAddress));
-  const safePoolAddresses = safePoolEvents.map(( { poolAddress } ) => poolAddress);
-  const safePools = safePoolAddresses.map(( poolAddress ) => ConvergentCurvePool__factory.connect(poolAddress, provider));
-
-  const poolBondAddresses = safePoolEvents.map(( { bondTokenAddress} ) => bondTokenAddress);
-  const poolIds = await Promise.all(safePools.map(pool => pool.getPoolId()));
-  const poolUnderlyingAddresses = await Promise.all(safePools.map(pool => pool.underlying()));
-  const poolNames = await Promise.all(safePools.map(pool => pool.name()));
-  const poolSymbols = await Promise.all(safePools.map(pool => pool.symbol()));
-  const poolDecimals = await Promise.all(safePools.map(pool => pool.decimals()));
-  const poolUnitSeconds = await Promise.all(safePools.map(pool => pool.unitSeconds()));
-  const poolExpirations = await Promise.all(safePools.map(pool => pool.expiration()));
+  const poolBondAddresses = safePoolEvents.map(
+    ({ bondTokenAddress }) => bondTokenAddress
+  );
+  const poolIds = await Promise.all(safePools.map((pool) => pool.getPoolId()));
+  const poolUnderlyingAddresses = await Promise.all(
+    safePools.map((pool) => pool.underlying())
+  );
+  const poolNames = await Promise.all(safePools.map((pool) => pool.name()));
+  const poolSymbols = await Promise.all(safePools.map((pool) => pool.symbol()));
+  const poolDecimals = await Promise.all(
+    safePools.map((pool) => pool.decimals())
+  );
+  const poolUnitSeconds = await Promise.all(
+    safePools.map((pool) => pool.unitSeconds())
+  );
+  const poolExpirations = await Promise.all(
+    safePools.map((pool) => pool.expiration())
+  );
 
   const ccPoolTokensList: TokenInfo[] = zip<any>(
-    safePoolAddresses, poolSymbols, poolNames, poolDecimals, poolBondAddresses,
-     poolUnderlyingAddresses, poolIds, poolUnitSeconds, poolExpirations
-    )
-    .map(([
-      address, symbol, name, decimal,  bondAddress, underlyingAddress,
-      poolId, unitSeconds, expiration
+    safePoolAddresses,
+    poolSymbols,
+    poolNames,
+    poolDecimals,
+    poolBondAddresses,
+    poolUnderlyingAddresses,
+    poolIds,
+    poolUnitSeconds,
+    poolExpirations
+  ).map(
+    ([
+      address,
+      symbol,
+      name,
+      decimal,
+      bondAddress,
+      underlyingAddress,
+      poolId,
+      unitSeconds,
+      expiration,
     ]): TokenInfo => {
       return {
         chainId,
@@ -57,9 +91,8 @@ export async function getCCPools(ccPoolFactoryAddress: string, chainId: number, 
         // TODO: What logo do we want to show for ccpool tokens?
         // logoURI: ""
       };
-    });
+    }
+  );
 
   return ccPoolTokensList;
 }
-
-
