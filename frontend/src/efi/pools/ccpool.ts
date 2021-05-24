@@ -20,7 +20,7 @@ export const principalPools: PrincipalPoolTokenInfo[] =
       isPrincipalPool(tokenInfo)
   );
 
-const principalPoolContracts = getSmartContractFromRegistryMulti(
+export const principalPoolContracts = getSmartContractFromRegistryMulti(
   principalPools.map(({ address }) => address),
   ConvergentCurvePool__factory.connect
 ) as ConvergentCurvePool[];
@@ -30,7 +30,7 @@ const principalPoolContractsByAddress = keyBy(
   (poolContract) => poolContract.address
 );
 
-function isPrincipalPool(
+export function isPrincipalPool(
   tokenInfo: TokenInfo
 ): tokenInfo is PrincipalTokenInfo {
   return !!tokenInfo.tags?.includes(TokenListTag.CCPOOL);
