@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@blueprintjs/core": "^3.44.3",
-    "@blueprintjs/icons": "^3.26.0",
+    "@blueprintjs/icons": "^3.26.1",
     "@blueprintjs/popover2": "^0.8.0",
     "@blueprintjs/select": "^3.16.3",
     "@ethersproject/abi": "^5.1.2",
