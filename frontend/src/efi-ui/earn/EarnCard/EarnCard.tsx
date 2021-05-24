@@ -1,4 +1,10 @@
-import React, { Fragment, ReactElement, useCallback, useState } from "react";
+import React, {
+  Fragment,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 
 import { Button, Card, Classes, Elevation, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
@@ -28,7 +34,10 @@ import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { clipStringValueToDecimals } from "efi/math/fixedPoint";
-import { calcSwapOutGivenInCCPoolUNSAFE } from "efi/pools/calcPoolSwap";
+import {
+  calcSwapInGivenOutCCPoolUNSAFE,
+  calcSwapOutGivenInCCPoolUNSAFE,
+} from "efi/pools/calcPoolSwap";
 import {
   getPrincipalPoolContractForTranche,
   getPrincipalPoolForTranche,
@@ -45,6 +54,7 @@ export interface EarnCardProps {
 }
 
 export function EarnCard({ library, account }: EarnCardProps): ReactElement {
+  const [swapKind, setSwapKind] = useState(SwapKind.GIVEN_IN);
   const [isWalletDialogOpen, setWalletDialogOpen] = useState(false);
   // local state
   const [isDrawerOpen, setDrawerOpen] = useState(false);
@@ -63,10 +73,15 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
     setAmountIn("");
     setAmountOut("");
   }, [setAmountIn, setAmountOut]);
-  const closeDrawer = useCallback(() => {
-    clearInputs();
-    setDrawerOpen(false);
-  }, [clearInputs]);
+  const closeDrawer = useCallback(
+    (transactionAttemped) => {
+      if (transactionAttemped) {
+        clearInputs();
+      }
+      setDrawerOpen(false);
+    },
+    [clearInputs]
+  );
 
   // base asset
   const { activeBaseAsset, setActiveBaseAsset } =
@@ -172,6 +187,7 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
         newAmountOutNumber.toString(),
         activeBaseAssetDecimals ?? 18
       );
+      setSwapKind(swapKind);
       setAmountIn(newAmountIn);
       setAmountOut(newAmountOut);
     },
@@ -194,19 +210,20 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
         clearInputs();
         return;
       }
-      const newAmountInNumber = calcSwapOutGivenInCCPoolUNSAFE(
+      const newAmountInNumber = calcSwapInGivenOutCCPoolUNSAFE(
         newAmountOut,
-        baseReserves,
         principalReserves,
+        baseReserves,
         totalSupply,
         timeRemainingSeconds,
         tParamSeconds,
-        true
+        false
       );
       const newAmountIn = clipStringValueToDecimals(
         newAmountInNumber.toString(),
         activeBaseAssetDecimals ?? 18
       );
+      setSwapKind(swapKind);
       setAmountIn(newAmountIn);
       setAmountOut(newAmountOut);
     },
@@ -222,6 +239,16 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
       totalSupply,
     ]
   );
+
+  // need to recalculate output when a new term is selected.
+  useEffect(() => {
+    if (swapKind === SwapKind.GIVEN_IN) {
+      onChangeIn(amountIn ?? "", SwapKind.GIVEN_IN);
+    }
+    if (swapKind === SwapKind.GIVEN_OUT) {
+      onChangeOut(amountOut ?? "", SwapKind.GIVEN_OUT);
+    }
+  }, [activeTranche, amountIn, amountOut, onChangeIn, onChangeOut, swapKind]);
 
   const roundedPrincipalPrice = amountOfEthForOnePrincipalEth?.toFixed(4);
   const marketRateLabel = getMarketRateLabel(
@@ -358,6 +385,8 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
           library={library}
           pool={poolContract}
           amountIn={amountIn}
+          amountOut={amountOut}
+          swapKind={swapKind}
           isOpen={isDrawerOpen}
           onClose={closeDrawer}
         />

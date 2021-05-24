@@ -24,11 +24,10 @@ const calloutClassName = tw(
   "justify-center"
 );
 
-export function PrincipalDiscountPreview({
-  amountIn,
-  amountOut,
-  baseAssetSymbol,
-}: PrincipalDiscountPreviewProps): ReactElement {
+export function PrincipalDiscountPreview(
+  props: PrincipalDiscountPreviewProps
+): ReactElement {
+  const { amountIn, amountOut, baseAssetSymbol } = props;
   const { isDarkMode } = useDarkMode();
   const amountInNumber = amountIn ? +amountIn : undefined;
   const amountOutNumber = amountOut ? +amountOut : undefined;

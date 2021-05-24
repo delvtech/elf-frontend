@@ -1,8 +1,7 @@
-import { ReactElement, useMemo } from "react";
+import { ReactElement, useCallback, useMemo } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
 import { Tranche } from "elf-contracts/types/Tranche";
-import { Signer } from "ethers";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
@@ -29,6 +28,7 @@ import { calculatePurchasePrice } from "efi/pools/calculatePurchasePrice";
 import { calculateSlippage } from "efi/pools/calculateSlippage";
 import { PoolContract } from "efi/pools/PoolContract";
 import { getAmountOutWithTolerance } from "efi/trade/getAmountOutWithTolerance";
+import { useSigner } from "efi-ui/provider/useBlockFromTag/useSigner/useSigner";
 
 interface BuyPrincipalTransactionConfirmationDrawerProps {
   account: string | null | undefined;
@@ -36,13 +36,16 @@ interface BuyPrincipalTransactionConfirmationDrawerProps {
   pool: PoolContract | undefined;
 
   amountIn: string | undefined;
+  amountOut: string | undefined;
+  swapKind: SwapKind;
+
   baseAsset: CryptoAsset;
   baseAssetIcon: TokenIcon | undefined;
 
   tranche: Tranche | undefined;
   isOpen: boolean;
 
-  onClose: () => void;
+  onClose: (transactionAttempted: boolean) => void;
 }
 
 export function BuyPrincipalTokensTransactionConfirmationDrawer({
@@ -52,11 +55,19 @@ export function BuyPrincipalTokensTransactionConfirmationDrawer({
   baseAsset,
   tranche,
   amountIn,
+  amountOut,
+  swapKind,
   isOpen,
   onClose,
   pool,
 }: BuyPrincipalTransactionConfirmationDrawerProps): ReactElement {
-  const signer = account ? (library?.getSigner(account) as Signer) : undefined;
+  const signer = useSigner(account, library);
+  const onCloseWithoutTransaction = useCallback(
+    () => onClose(false),
+    [onClose]
+  );
+  const onCloseWithTransaction = useCallback(() => onClose(true), [onClose]);
+
   const balancerVault = useBalancerVault();
   // base asset calls
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
@@ -78,20 +89,20 @@ export function BuyPrincipalTokensTransactionConfirmationDrawer({
   const tokenInAddress = getTokenAddressForBalancer(baseAsset);
   const tokenOutAddress = tranche?.address;
   const { data: queryBatchSwapInResult = [] } = useQueryBatchSwap(
-    SwapKind.GIVEN_IN,
+    swapKind,
     pool,
     tokenInAddress,
     tokenOutAddress,
     amountInAsBigNumber
   );
-  const { tokenOut: amountOut } = parseQueryBatchSwapResult(
+  const { tokenOut: queryAmountOut } = parseQueryBatchSwapResult(
     tokenInAddress,
     tokenOutAddress,
     queryBatchSwapInResult
   );
 
   const minAmountOut = getAmountOutWithTolerance(
-    amountOut,
+    queryAmountOut,
     baseAssetDecimals,
     0.01
   );
@@ -107,14 +118,13 @@ export function BuyPrincipalTokensTransactionConfirmationDrawer({
     tranche?.address,
     amountInAsBigNumber,
     minAmountOut,
-    onClose
+    onCloseWithTransaction
   );
 
   const amountOutNumber = +formatUnits(
-    amountOut?.abs() || 0,
+    queryAmountOut?.abs() || 0,
     baseAssetDecimals
   );
-  const amountOutFormatted = amountOutNumber.toFixed(4);
 
   const priceSlippageAndTradingFee = getPriceSlippageAndTradingFee(
     +(amountIn || 0),
@@ -135,7 +145,7 @@ export function BuyPrincipalTokensTransactionConfirmationDrawer({
       transactionFailed={isError}
       transactionSuccess={isSuccess}
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={onCloseWithoutTransaction}
       account={account}
       walletApprovalInfos={walletApprovalInfos}
       library={library}
@@ -143,7 +153,7 @@ export function BuyPrincipalTokensTransactionConfirmationDrawer({
       transactionDetails={
         <SwapDetailsForm
           amountIn={amountIn}
-          amountOut={amountOutFormatted}
+          amountOut={amountOut}
           assetInIcon={baseAssetIcon}
           assetInSymbol={baseAssetSymbol}
           assetOutSymbol={`${baseAssetSymbol} Principal Token`}
