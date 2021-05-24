@@ -2,12 +2,12 @@ import { PrincipalPoolTokenInfo, YieldPoolTokenInfo } from "tokenlists/types";
 
 import { principalPools } from "efi/pools/ccpool";
 import { PoolContract } from "efi/pools/PoolContract";
-import { YieldPools } from "efi/pools/weightedPool";
+import { yieldPools } from "efi/pools/weightedPool";
 
 export function getPoolInfoFromContract(
   poolContract: PoolContract | undefined
 ): PrincipalPoolTokenInfo | YieldPoolTokenInfo | undefined {
-  const allPools = [...YieldPools, ...principalPools];
+  const allPools = [...yieldPools, ...principalPools];
 
   const poolInfo = allPools.find(
     (pool) => pool.address === poolContract?.address
@@ -19,7 +19,7 @@ export function getPoolInfoFromContract(
 export function getPoolInfo(
   address: string
 ): PrincipalPoolTokenInfo | YieldPoolTokenInfo {
-  const allPools = [...YieldPools, ...principalPools];
+  const allPools = [...yieldPools, ...principalPools];
 
   const poolInfo = allPools.find((pool) => pool.address === address);
 
