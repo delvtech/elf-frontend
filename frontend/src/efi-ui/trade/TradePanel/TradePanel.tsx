@@ -74,7 +74,6 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     tokenIn: tokenInFromProps,
     tokenOut: tokenOutFromProps,
   } = props;
-  // TODO: use swap kind to indicate which value is estimated in UI
   const [swapKind, setSwapKind] = useState(SwapKind.GIVEN_IN);
 
   const [isWalletDialogOpen, setWalletDialogOpen] = useState(false);
@@ -292,7 +291,9 @@ export function TradePanel(props: TradePanelProps): ReactElement {
         cryptoIcon={tokenInIcon}
         previewCryptoAddress={tokenOutAddress}
         previewCryptoPoolIndex={tokenOutPoolIndex}
-        labelTopLeft={t`Trade`}
+        labelTopLeft={
+          swapKind === SwapKind.GIVEN_IN ? t`Trade` : t`Trade (estimated)`
+        }
         disabled={formDisabled}
         swapKind={SwapKind.GIVEN_IN}
         pool={pool}
@@ -319,7 +320,9 @@ export function TradePanel(props: TradePanelProps): ReactElement {
         cryptoIcon={tokenOutIcon}
         previewCryptoAddress={tokenInAddress}
         previewCryptoPoolIndex={tokenInPoolIndex}
-        labelTopLeft={t`For (estimated)`}
+        labelTopLeft={
+          swapKind === SwapKind.GIVEN_OUT ? t`For` : t`For (estimated)`
+        }
         disabled={formDisabled}
         swapKind={SwapKind.GIVEN_OUT}
         pool={pool}
