@@ -223,6 +223,8 @@ export function MintCard(props: MintCardProps): ReactElement | null {
       <MintTransactionConfirmationDrawer
         baseAsset={baseAsset}
         baseAssetIcon={baseAssetIcon}
+        principalTokenSymbol={principalTokenSymbol}
+        yieldTokenSymbol={yieldTokenSymbol}
         tranche={tranche}
         account={account}
         library={library}

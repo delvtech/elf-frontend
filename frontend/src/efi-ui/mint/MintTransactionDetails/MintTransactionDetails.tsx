@@ -11,12 +11,16 @@ import { formatFullDate } from "efi/base/dates";
  */
 interface MintTransactionDetailsProps {
   baseAssetSymbol: string | undefined;
+  principalTokenSymbol: string | undefined;
+  yieldTokenSymbol: string | undefined;
   numPrincipalTokens: number | undefined;
   numYieldTokens: number | undefined;
   unlockTimestamp: Date | undefined;
 }
 export function MintTransactionDetails({
   baseAssetSymbol,
+  principalTokenSymbol,
+  yieldTokenSymbol,
   numPrincipalTokens,
   numYieldTokens,
   unlockTimestamp,
@@ -34,7 +38,7 @@ export function MintTransactionDetails({
         label={
           <span className={tw("text-base")}>{t`${numPrincipalTokens?.toFixed(
             4
-          )} pt${baseAssetSymbol}`}</span>
+          )} ${principalTokenSymbol}`}</span>
         }
       />
       <LabeledText
@@ -44,7 +48,7 @@ export function MintTransactionDetails({
         text={<span>{t`Yield Tokens you receive`}</span>}
         label={
           <span className={tw("text-base")}>
-            {t`${numYieldTokens?.toFixed(4)} yt${baseAssetSymbol}`}
+            {t`${numYieldTokens?.toFixed(4)} ${yieldTokenSymbol}`}
           </span>
         }
       />
