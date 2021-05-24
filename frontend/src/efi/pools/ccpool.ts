@@ -30,7 +30,7 @@ const principalPoolContractsByAddress = keyBy(
   (poolContract) => poolContract.address
 );
 
-export function isPrincipalPool(
+function isPrincipalPool(
   tokenInfo: TokenInfo
 ): tokenInfo is PrincipalTokenInfo {
   return !!tokenInfo.tags?.includes(TokenListTag.CCPOOL);

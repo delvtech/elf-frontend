@@ -17,7 +17,7 @@ import classNames from "classnames";
 import { Tranche__factory } from "elf-contracts/types/factories/Tranche__factory";
 import { InterestToken } from "elf-contracts/types/InterestToken";
 import { formatUnits } from "ethers/lib/utils";
-import { PrincipalTokenInfo } from "tokenlists/types";
+import { PrincipalTokenInfo, YieldTokenInfo } from "tokenlists/types";
 import { jt, t } from "ttag";
 
 import { getCoinGeckoId } from "efi-coingecko";
@@ -44,10 +44,9 @@ import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegist
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
-import { yieldTokenInfos } from "efi/interestToken/interestToken";
 import { formatMoney } from "efi/money/formatMoney";
 import { getPoolForYieldToken } from "efi/pools/weightedPool";
-import { PrincipalTokenInfos } from "efi/tranche/tranches";
+import { getTokenInfo } from "efi/tokenlists";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 
 interface YieldTokenCardProps {
@@ -77,9 +76,7 @@ export function YieldTokenCard({
   const { isDarkMode } = useDarkMode();
   const { currency } = useCurrencyPref();
 
-  const yieldTokenInfo = yieldTokenInfos.find(
-    (info) => info.address === yieldToken?.address
-  );
+  const yieldTokenInfo = getTokenInfo<YieldTokenInfo>(yieldToken.address);
 
   const { data: yieldTokenBalanceOf } = useTokenBalanceOf(yieldToken, account);
   const yieldTokenBalance = +formatUnits(
@@ -89,20 +86,17 @@ export function YieldTokenCard({
 
   // The tranche contains the unlockTimestamp
   const trancheAddress = yieldTokenInfo?.extensions?.tranche;
-  const trancheInfo = PrincipalTokenInfos.find(
-    (info) => info.address === trancheAddress
-  );
+  const trancheInfo = getTokenInfo<PrincipalTokenInfo>(trancheAddress);
 
   const {
     createdAtTimestamp: trancheCreatedAt,
     unlockTimestamp,
-    position,
     underlying,
   } = trancheInfo?.extensions ?? ({} as PrincipalTokenInfo["extensions"]);
   const unlockDate = convertEpochSecondsToDate(unlockTimestamp);
   const createdAtDate = convertEpochSecondsToDate(trancheCreatedAt);
   const trancheContract = getSmartContractFromRegistry(
-    position,
+    trancheInfo.address,
     Tranche__factory.connect
   );
   const vaultContract = useUnderlyingVaultForTranche(trancheContract);

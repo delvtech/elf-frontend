@@ -39,6 +39,6 @@ export function getPoolForYieldToken(yieldTokenAddress: string): WeightedPool {
   return yieldPoolContractsByAddress[yieldPool.address];
 }
 
-export function isYieldPool(tokenInfo: TokenInfo): tokenInfo is YieldTokenInfo {
+function isYieldPool(tokenInfo: TokenInfo): tokenInfo is YieldTokenInfo {
   return !!tokenInfo.tags?.includes(TokenListTag.WPOOL);
 }
