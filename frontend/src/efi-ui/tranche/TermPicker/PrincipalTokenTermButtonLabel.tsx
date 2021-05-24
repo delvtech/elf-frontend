@@ -2,22 +2,22 @@ import { ReactElement } from "react";
 
 import { Intent, Tag } from "@blueprintjs/core";
 import { Tranche } from "elf-contracts/types/Tranche";
+import { AssetProxyTokenInfo, PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { ERC20Shim } from "efi/contracts/ERC20Shim";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
-import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
+import { useTokenYield } from "efi-ui/pools/useTokenYield";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
 import { formatPercent } from "efi/base/formatPercent";
+import { ERC20Shim } from "efi/contracts/ERC20Shim";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { defaultProvider } from "efi/providers/providers";
-import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
 import { getTokenInfo } from "efi/tokenlists";
-import { AssetProxyTokenInfo, PrincipalTokenInfo } from "tokenlists/types";
 
 interface PrincipalTokenTermButtonLabelProps {
   tranche: Tranche;
@@ -45,23 +45,16 @@ export function PrincipalTokenTermButtonLabel({
   const unlockDate = convertEpochSecondsToDate(unlockTimestamp);
 
   const pool = usePoolForToken(tranche as ERC20Shim, defaultProvider);
-  const baseAssetSymbol = getCryptoSymbol(baseAsset);
-  const trancheSpotPrice = usePoolSpotPrice(pool, tranche as ERC20Shim);
+  const baseAssetContract = useBaseAssetForPool(pool);
+  const fixedYield = useTokenYield(baseAssetContract, pool, "principal");
 
-  let trancheAPY;
-  if (trancheSpotPrice && unlockDate) {
-    trancheAPY = calculateTrancheAPY(
-      trancheSpotPrice,
-      Date.now(),
-      unlockDate.getTime()
-    );
-  }
-
-  const formattedTrancheAPY = trancheAPY ? formatPercent(trancheAPY) : "-";
+  const formattedTrancheAPY = fixedYield ? formatPercent(fixedYield) : "-";
 
   const formattedDate = unlockDate
     ? formatAbbreviatedDate(unlockDate)
     : t`Loading unlock date...`;
+
+  const baseAssetSymbol = getCryptoSymbol(baseAsset);
 
   return (
     <div className={tw("flex", "items-center", "h-full", "space-x-4")}>
