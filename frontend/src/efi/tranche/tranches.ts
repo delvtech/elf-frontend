@@ -13,13 +13,13 @@ import { getSmartContractFromRegistryMulti } from "efi/contracts/SmartContractsR
 import { getTokenInfo, tokenListJson } from "efi/tokenlists";
 import { vaultContractsByAddress } from "efi/tranche/vaults";
 
-export const principalTokenInfos: PrincipalTokenInfo[] =
+export const PrincipalTokenInfos: PrincipalTokenInfo[] =
   tokenListJson.tokens.filter((tokenInfo): tokenInfo is PrincipalTokenInfo =>
     isPrincipalToken(tokenInfo)
   );
 
 export const trancheContracts = getSmartContractFromRegistryMulti(
-  principalTokenInfos.map(({ address }) => address),
+  PrincipalTokenInfos.map(({ address }) => address),
   Tranche__factory.connect
 ) as Tranche[];
 
@@ -28,7 +28,7 @@ export const trancheContractsByAddress = keyBy(
   (tranche) => tranche.address
 );
 
-const openTranchesInfos = principalTokenInfos.filter(
+const openTranchesInfos = PrincipalTokenInfos.filter(
   ({ extensions: { unlockTimestamp } }) => unlockTimestamp * 1000 > Date.now()
 );
 
