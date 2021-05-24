@@ -1,13 +1,17 @@
 import { TokenInfo } from "@uniswap/token-lists";
 import hre from "hardhat";
+import uniq from "lodash.uniq";
 import zip from "lodash.zip";
 
-import { TokenListTag } from "src/tokenlist/tags";
 import { ERC20 } from "src/types/ERC20";
-import { AssetProxyTokenInfo, UnderlyingTokenInfo } from "src/tokenlist/types";
-import { Tranche } from "src/types/Tranche";
 import { YVaultAssetProxy__factory } from "src/types/factories/YVaultAssetProxy__factory";
-import uniq from "lodash.uniq";
+import { Tranche } from "src/types/Tranche";
+
+import {
+  AssetProxyTokenInfo,
+  TokenListTag,
+  UnderlyingTokenInfo,
+} from "src/tokenlist/types";
 
 export const provider = hre.ethers.provider;
 export async function getAssetProxies(tranches: Tranche[], chainId: number) {
@@ -20,7 +24,6 @@ export async function getAssetProxies(tranches: Tranche[], chainId: number) {
     YVaultAssetProxy__factory.connect(address, provider)
   );
 
-  console.log("positions", positions.length);
   const vaults = await Promise.all(
     positions.map((position) => position.vault())
   );
