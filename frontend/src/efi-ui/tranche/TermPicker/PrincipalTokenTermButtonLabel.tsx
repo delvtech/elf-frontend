@@ -44,7 +44,7 @@ export function PrincipalTokenTermButtonLabel({
 
   const unlockDate = convertEpochSecondsToDate(unlockTimestamp);
 
-  const pool = usePoolForToken(tranche as ERC20Shim, defaultProvider);
+  const pool = usePoolForToken(tranche as ERC20Shim);
   const baseAssetContract = useBaseAssetForPool(pool);
   const fixedYield = useTokenYield(baseAssetContract, pool, "principal");
 

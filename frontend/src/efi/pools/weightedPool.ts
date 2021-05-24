@@ -21,7 +21,7 @@ export const yieldPools: YieldPoolTokenInfo[] = tokenListJson.tokens.filter(
   (tokenInfo): tokenInfo is YieldPoolTokenInfo => isYieldPool(tokenInfo)
 );
 
-const yieldPoolContracts = getSmartContractFromRegistryMulti(
+export const yieldPoolContracts = getSmartContractFromRegistryMulti(
   yieldPools.map(({ address }) => address),
   WeightedPool__factory.connect
 ) as WeightedPool[];
