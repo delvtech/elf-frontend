@@ -34,6 +34,9 @@ interface MintCardProps {
   baseAsset: CryptoAsset | undefined;
   baseAssetIcon: TokenIcon | undefined;
   baseAssetSymbol: string | undefined;
+
+  principalTokenSymbol: string | undefined;
+  yieldTokenSymbol: string | undefined;
   tranche: Tranche | undefined;
   library: Web3Provider | undefined;
   account: string | null | undefined;
@@ -65,6 +68,8 @@ export function MintCard(props: MintCardProps): ReactElement | null {
     baseAsset,
     baseAssetSymbol,
     baseAssetIcon,
+    principalTokenSymbol,
+    yieldTokenSymbol,
     tranche,
   } = props;
 
@@ -165,7 +170,9 @@ export function MintCard(props: MintCardProps): ReactElement | null {
             )}
           >
             <LabeledText
-              text={t`${numPrincipalTokensOut || 0} eP:yETH`}
+              text={`${
+                numPrincipalTokensOut || (0).toFixed(4)
+              } ${principalTokenSymbol}`}
               label={t`Principal Tokens`}
             />
           </Callout>
@@ -176,7 +183,9 @@ export function MintCard(props: MintCardProps): ReactElement | null {
             )}
           >
             <LabeledText
-              text={t`${numYieldTokensOut || 0} eY:yETH`}
+              text={`${
+                numYieldTokensOut || (0).toFixed(4)
+              } ${yieldTokenSymbol}`}
               label={t`Yield Tokens`}
             />
           </Callout>

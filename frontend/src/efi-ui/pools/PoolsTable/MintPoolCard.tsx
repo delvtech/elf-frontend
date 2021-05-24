@@ -74,6 +74,11 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
     walletConnectionActive,
     connector,
   } = props;
+  // state
+  const { isDarkMode } = useDarkMode();
+  const [transitionsEnabled, setTransitionsEnabled] = useState(true);
+  const [isOpen, setOpen] = useState(false);
+
   // get infos
   const trancheInfo = getTrancheForPool(poolInfo);
   const principalPoolInfo = getPrincipalPoolForTranche(trancheInfo.address);
@@ -89,65 +94,45 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
     InterestTokenContractsByAddress[poolInfo.extensions.interestToken];
   const trancheContract = trancheContractsByAddress[trancheInfo.address];
 
+  // get static display information
   const { createdAtTimestamp: trancheCreatedAt, unlockTimestamp } =
     trancheInfo.extensions;
+  const baseAsset = getCryptoAssetForToken(baseAssetContract?.address);
+  const baseAssetSymbol = getCryptoSymbol(baseAsset);
+  const BaseAssetIcon = findAssetIcon(baseAssetSymbol);
+  const vaultSymbol = getVaultSymbol(baseAsset);
+  const { data: vaultInfo } = useYearnVault(vaultSymbol);
+  const { displayName, type, apy } = vaultInfo || {};
+  const { symbol: yieldTokenSymbol } = getTermAssetSymbol(
+    yieldTokenContract?.address,
+    vaultSymbol
+  );
+  const { symbol: principalTokenSymbol } = getTermAssetSymbol(
+    principalTokenContract?.address,
+    vaultSymbol
+  );
 
+  // get dynamic pool information
   const principalPrice = usePoolSpotPrice(
     principalPoolContract,
     principalTokenContract
   )?.toFixed(4);
-
-  const fees = useFeeVolumeForPool(yieldPoolContract) ?? 0;
-  const baseAsset = getCryptoAssetForToken(baseAssetContract?.address);
-  const baseAssetSymbol = getCryptoSymbol(baseAsset);
-  const BaseAssetIcon = findAssetIcon(baseAssetSymbol);
-  const { symbol: yieldTokenSymbol } = getTermAssetSymbol(
-    yieldTokenContract?.address,
-    baseAssetSymbol
-  );
-
-  const tvl = useTotalValueLockedForTranche(trancheContract, baseAssetContract);
   const yieldPrice = usePoolSpotPrice(
     yieldPoolContract,
     yieldTokenContract
   )?.toFixed(4);
-
+  const fees = useFeeVolumeForPool(yieldPoolContract) ?? 0;
+  const tvl = useTotalValueLockedForTranche(trancheContract, baseAssetContract);
   const variableYield = useTokenYield(
     baseAssetContract,
     yieldPoolContract,
     "yield"
   );
-
-  const vaultSymbol = getVaultSymbol(baseAsset);
-  const { data: vaultInfo } = useYearnVault(vaultSymbol);
-
-  const { displayName, type, apy } = vaultInfo || {};
   const vaultApy = apy?.recommended ?? 0;
 
-  const { isDarkMode } = useDarkMode();
-
   // TODO: this is a big hammer for loading state.  we should use a more granular technique when we can.
-  const dataToLoad = [
-    tvl,
-    vaultInfo,
-    yieldPrice,
-    trancheContract,
-    trancheCreatedAt,
-    fees,
-    baseAssetContract,
-    baseAsset,
-    baseAssetSymbol,
-    BaseAssetIcon,
-    yieldTokenContract,
-    yieldTokenSymbol,
-    variableYield,
-  ];
-
-  // TODO: this is a big hammer for loading state.  we should use a more granular technique when we can.
+  const dataToLoad = [tvl, vaultInfo, yieldPrice, fees, variableYield];
   const allDataLoaded = dataToLoad.every((data) => data !== undefined);
-
-  const [transitionsEnabled, setTransitionsEnabled] = useState(true);
-  const [isOpen, setOpen] = useState(false);
 
   // One tme useEffect to let us show transitions for the skeletons once the data is loaded.
   // Afterwards we disable transitions so they don't interfere with light/dark mode switching.
@@ -409,6 +394,8 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
           connector={connector}
           baseAsset={baseAsset}
           baseAssetSymbol={baseAssetSymbol}
+          principalTokenSymbol={principalTokenSymbol}
+          yieldTokenSymbol={yieldTokenSymbol}
           baseAssetIcon={BaseAssetIcon}
           tranche={trancheContract}
         />
