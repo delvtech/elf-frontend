@@ -27,7 +27,7 @@
       "description": "Token that wraps a yield position, ie: Yearn vault asset proxy"
     }
   },
-  "timestamp": "2021-05-19T18:19:27.502Z",
+  "timestamp": "2021-05-25T23:14:22.929Z",
   "version": {
     "major": 0,
     "minor": 0,
@@ -57,7 +57,7 @@
     {
       "chainId": 5,
       "address": "0x6F643Ba6894D8C50c476A3539e1D1690B2194018",
-      "symbol": "eyWETH",
+      "symbol": "eyvCurve-stETH",
       "decimals": 18,
       "name": "Element Yearn WETH",
       "tags": [
@@ -70,7 +70,7 @@
     {
       "chainId": 5,
       "address": "0x814C447a9F58A2b823504Fe2775bA48c843925B6",
-      "symbol": "eyUSDC",
+      "symbol": "eyvUSDC",
       "decimals": 6,
       "name": "Element Yearn USDC",
       "tags": [
@@ -82,8 +82,28 @@
     },
     {
       "chainId": 5,
+      "address": "0xdD82595F5eB0e7477D7432B24E44be7c0252bbf1",
+      "symbol": "yvCurve-stETH",
+      "decimals": 18,
+      "name": "Yearn WETH",
+      "tags": [
+        "vault"
+      ]
+    },
+    {
+      "chainId": 5,
+      "address": "0x23c3C6C06d7684207fB09076914A15B16aba02c5",
+      "symbol": "yvUSDC",
+      "decimals": 6,
+      "name": "Yearn USDC",
+      "tags": [
+        "vault"
+      ]
+    },
+    {
+      "chainId": 5,
       "address": "0x44eecA004b2612d131EDA7dA2b9d986E7fED562e",
-      "symbol": "eP-ETH",
+      "symbol": "ePyvCurve-stETH",
       "decimals": 18,
       "extensions": {
         "underlying": "0x9A1000D492d40bfccbc03f413A48F5B6516Ec0Fd",
@@ -100,7 +120,7 @@
     {
       "chainId": 5,
       "address": "0x89d66Ad25F3A723D606B78170366d8da9870A879",
-      "symbol": "eP-ETH",
+      "symbol": "ePyvCurve-stETH",
       "decimals": 18,
       "extensions": {
         "underlying": "0x9A1000D492d40bfccbc03f413A48F5B6516Ec0Fd",
@@ -117,7 +137,7 @@
     {
       "chainId": 5,
       "address": "0x80272c960b862B4d6542CDB7338Ad1f727E0D18d",
-      "symbol": "eP-USDC",
+      "symbol": "ePyvUSDC",
       "decimals": 6,
       "extensions": {
         "underlying": "0x78dEca24CBa286C0f8d56370f5406B48cFCE2f86",
@@ -134,7 +154,7 @@
     {
       "chainId": 5,
       "address": "0x91dDF92af38Afac1B59F450dDb94ddab10a11490",
-      "symbol": "eY-ETH",
+      "symbol": "eYyvCurve-stETH",
       "decimals": 18,
       "name": "ETH Yield Token",
       "extensions": {
@@ -148,7 +168,7 @@
     {
       "chainId": 5,
       "address": "0xBf4B5cB5ca49B1eF6B02615a94980723f6484899",
-      "symbol": "eY-ETH",
+      "symbol": "eYyvCurve-stETH",
       "decimals": 18,
       "name": "ETH Yield Token",
       "extensions": {
@@ -162,7 +182,7 @@
     {
       "chainId": 5,
       "address": "0x2c637c5142eE4F31A1a78Ad3DF012fc242F6CAe6",
-      "symbol": "eY-USDC",
+      "symbol": "eYyvUSDC",
       "decimals": 6,
       "name": "USDC Yield Token",
       "extensions": {

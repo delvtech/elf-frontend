@@ -3,8 +3,12 @@ import hre from "hardhat";
 import zip from "lodash.zip";
 
 import { ERC20__factory } from "src/types/factories/ERC20__factory";
-import { ERC20 } from "src/types/ERC20";
-import { TokenListTag, UnderlyingTokenInfo } from "src/tokenlist/types";
+import { TokenListTag } from "src/tokenlist/types";
+import {
+  getTokenNameMulti,
+  getTokenSymbolMulti,
+  getTokenDecimalsMulti,
+} from "src/tokenlist/erc20";
 
 export const provider = hre.ethers.provider;
 export async function getBaseAssets(
@@ -21,13 +25,13 @@ export async function getBaseAssets(
   const symbols = await getTokenSymbolMulti(baseAssets);
   const decimals = await getTokenDecimalsMulti(baseAssets);
 
-  const principalTokensList: TokenInfo[] = zip(
+  const principalTokensList = zip(
     baseAssetAddresses,
     symbols,
     names,
     decimals
   ).map(
-    ([address, symbol, name, decimal]): UnderlyingTokenInfo => {
+    ([address, symbol, name, decimal]): TokenInfo => {
       return {
         chainId,
         address: address as string,
@@ -42,17 +46,4 @@ export async function getBaseAssets(
   );
 
   return principalTokensList;
-}
-
-async function getTokenDecimalsMulti(tokens: ERC20[]) {
-  const tokenNames = await Promise.all(tokens.map((token) => token.decimals()));
-  return tokenNames;
-}
-async function getTokenSymbolMulti(tokens: ERC20[]) {
-  const tokenNames = await Promise.all(tokens.map((token) => token.symbol()));
-  return tokenNames;
-}
-async function getTokenNameMulti(tokens: ERC20[]) {
-  const tokenNames = await Promise.all(tokens.map((token) => token.name()));
-  return tokenNames;
 }

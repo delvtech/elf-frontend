@@ -9,7 +9,17 @@ import { TrancheFactory__factory } from "src/types/factories/TrancheFactory__fac
 import { Tranche } from "src/types/Tranche";
 
 import { PrincipalTokenInfo, TokenListTag } from "src/tokenlist/types";
+import { getTokenSymbolMulti } from "src/tokenlist/erc20";
 
+const GOERLI_CHAIN_ID = 5;
+const symbolOverrides: Record<number, Record<string, string>> = {
+  [GOERLI_CHAIN_ID]: {
+    // these contracts have v1 vault symbols, but we want the v2 vaults on testnet
+    "0x44eecA004b2612d131EDA7dA2b9d986E7fED562e": "ePyvCurve-stETH",
+    "0x89d66Ad25F3A723D606B78170366d8da9870A879": "ePyvCurve-stETH",
+    "0x80272c960b862B4d6542CDB7338Ad1f727E0D18d": "ePyvUSDC",
+  },
+};
 export const provider = hre.ethers.provider;
 export async function getPrincipalTokens(
   trancheFactoryAddress: string,
@@ -39,10 +49,12 @@ export async function getPrincipalTokens(
     Tranche__factory.connect(address, provider)
   );
 
-  // Create the principal token name, eg: "ETH Principal Token"
   const principalTokenNames = await getPrincipalTokenName(safeTranches);
-  // Create the principal token symbol, eg: "eP-ELFyWETH"
-  const principalTokenSymbols = await getPrincipalTokenSymbols(safeTranches);
+  const principalTokenSymbols = await getPrincipalTokenSymbols(
+    chainId,
+    safeTranches
+  );
+
   const decimals = await Promise.all(
     safeTranches.map((tranche) => tranche.decimals())
   );
@@ -103,21 +115,19 @@ export async function getPrincipalTokens(
 
   return { tranches: safeTranches, principalTokensList };
 }
-async function getPrincipalTokenSymbols(tranches: Tranche[]) {
-  const underlyingAddresses = await Promise.all(
-    tranches.map((tranche) => tranche.underlying())
-  );
-  const underlyingContracts = underlyingAddresses.map((address) =>
-    ERC20__factory.connect(address, provider)
-  );
-  const underlyingSymbols = await Promise.all(
-    underlyingContracts.map((underlying) => underlying.symbol())
-  );
-  const principalTokenSymbols = underlyingSymbols.map((symbol) => {
-    const name = symbol === "WETH" ? "eP-ETH" : `eP-${symbol}`;
-    return name;
+
+async function getPrincipalTokenSymbols(chainId: number, tranches: Tranche[]) {
+  const trancheAddresses = tranches.map((tranche) => tranche.address);
+  const trancheSymbols = await getTokenSymbolMulti(tranches);
+  const overrides = symbolOverrides[chainId] || {};
+  const symbols = zip(trancheAddresses, trancheSymbols).map((zipped) => {
+    const [address, symbol] = zipped as [string, string];
+    if (overrides[address]) {
+      return overrides[address];
+    }
+    return symbol;
   });
-  return principalTokenSymbols;
+  return symbols;
 }
 
 async function getPrincipalTokenName(tranches: Tranche[]) {
