@@ -3,7 +3,7 @@ import hre from "hardhat";
 import zip from "lodash.zip";
 
 import { ERC20__factory } from "src/types/factories/ERC20__factory";
-import { TokenListTag, UnderlyingTokenInfo } from "src/tokenlist/types";
+import { TokenListTag } from "src/tokenlist/types";
 import {
   getTokenNameMulti,
   getTokenSymbolMulti,
@@ -25,13 +25,13 @@ export async function getBaseAssets(
   const symbols = await getTokenSymbolMulti(baseAssets);
   const decimals = await getTokenDecimalsMulti(baseAssets);
 
-  const principalTokensList: TokenInfo[] = zip(
+  const principalTokensList = zip(
     baseAssetAddresses,
     symbols,
     names,
     decimals
   ).map(
-    ([address, symbol, name, decimal]): UnderlyingTokenInfo => {
+    ([address, symbol, name, decimal]): TokenInfo => {
       return {
         chainId,
         address: address as string,
