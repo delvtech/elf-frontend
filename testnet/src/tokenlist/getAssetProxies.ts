@@ -14,7 +14,10 @@ import {
 } from "src/tokenlist/types";
 
 export const provider = hre.ethers.provider;
-export async function getAssetProxies(tranches: Tranche[], chainId: number) {
+export async function getAssetProxies(
+  tranches: Tranche[],
+  chainId: number
+): Promise<AssetProxyTokenInfo[]> {
   const allPositions = await Promise.all(
     tranches.map((tranche) => tranche.position())
   );
@@ -33,7 +36,7 @@ export async function getAssetProxies(tranches: Tranche[], chainId: number) {
     (positions as unknown) as ERC20[]
   );
 
-  const assetProxyTokensList: TokenInfo[] = zip(
+  const assetProxyTokensList = zip(
     uniqPositionAddresses,
     symbols,
     names,

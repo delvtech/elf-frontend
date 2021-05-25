@@ -7,6 +7,7 @@
 import { TokenInfo } from "@uniswap/token-lists";
 
 export enum TokenListTag {
+  VAULT = "vault",
   ASSET_PROXY = "assetproxy",
   CCPOOL = "ccpool",
   PRINCIPAL = "eP",
@@ -53,6 +54,7 @@ export interface AssetProxyTokenInfo extends TokenInfo {
     vault: string;
   };
 }
+export interface VaultTokenInfo extends TokenInfo {}
 
 export interface YieldTokenInfo extends TokenInfo {
   extensions: {

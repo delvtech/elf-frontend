@@ -27,7 +27,7 @@
       "description": "Token that wraps a yield position, ie: Yearn vault asset proxy"
     }
   },
-  "timestamp": "2021-05-19T18:19:27.502Z",
+  "timestamp": "2021-05-25T22:07:34.574Z",
   "version": {
     "major": 0,
     "minor": 0,
@@ -79,6 +79,26 @@
       "extensions": {
         "vault": "0x23c3C6C06d7684207fB09076914A15B16aba02c5"
       }
+    },
+    {
+      "chainId": 5,
+      "address": "0xdD82595F5eB0e7477D7432B24E44be7c0252bbf1",
+      "symbol": "yvCurve-stETH",
+      "decimals": 18,
+      "name": "Yearn WETH",
+      "tags": [
+        "vault"
+      ]
+    },
+    {
+      "chainId": 5,
+      "address": "0x23c3C6C06d7684207fB09076914A15B16aba02c5",
+      "symbol": "yvUSDC",
+      "decimals": 6,
+      "name": "Yearn USDC",
+      "tags": [
+        "vault"
+      ]
     },
     {
       "chainId": 5,

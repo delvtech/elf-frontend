@@ -3,13 +3,15 @@ import fs from "fs";
 import hre from "hardhat";
 
 import { AddressesJsonFile } from "src/addresses/AddressesJsonFile";
-import { getPrincipalTokens } from "./getPrincipalTokens";
-import { tags } from "./tags";
-import { getYieldTokensFromTranches } from "./getYieldTokens";
+import { getAssetProxies } from "src/tokenlist/getAssetProxies";
 import { getBaseAssets } from "src/tokenlist/getBaseAssets";
 import { getCCPools } from "src/tokenlist/getCCPools";
+import { getVaults } from "src/tokenlist/getVaults";
 import { getWeightedPools } from "src/tokenlist/getWeightedPools";
-import { getAssetProxies } from "src/tokenlist/getAssetProxies";
+
+import { getPrincipalTokens } from "./getPrincipalTokens";
+import { getYieldTokensFromTranches } from "./getYieldTokens";
+import { tags } from "./tags";
 
 export async function getTokenList(
   addressesJson: AddressesJsonFile,
@@ -36,6 +38,10 @@ export async function getTokenList(
     safelist
   );
   const assetProxiesList = await getAssetProxies(tranches, chainId);
+  const vaultsList = await getVaults(
+    assetProxiesList.map(({ extensions: { vault } }) => vault),
+    chainId
+  );
   const yieldTokensList = await getYieldTokensFromTranches(tranches, chainId);
   const ccPoolsList = await getCCPools(
     convergentPoolFactoryAddress,
@@ -54,6 +60,7 @@ export async function getTokenList(
   const tokens = [
     ...baseAssetsList,
     ...assetProxiesList,
+    ...vaultsList,
     ...principalTokensList,
     ...yieldTokensList,
     ...ccPoolsList,
