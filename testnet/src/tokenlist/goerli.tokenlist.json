@@ -27,7 +27,7 @@
       "description": "Token that wraps a yield position, ie: Yearn vault asset proxy"
     }
   },
-  "timestamp": "2021-05-25T22:26:12.604Z",
+  "timestamp": "2021-05-25T22:44:08.682Z",
   "version": {
     "major": 0,
     "minor": 0,
@@ -103,7 +103,7 @@
     {
       "chainId": 5,
       "address": "0x44eecA004b2612d131EDA7dA2b9d986E7fED562e",
-      "symbol": "eP-ETH",
+      "symbol": "ePyvCurve-stETH",
       "decimals": 18,
       "extensions": {
         "underlying": "0x9A1000D492d40bfccbc03f413A48F5B6516Ec0Fd",
@@ -120,7 +120,7 @@
     {
       "chainId": 5,
       "address": "0x89d66Ad25F3A723D606B78170366d8da9870A879",
-      "symbol": "eP-ETH",
+      "symbol": "ePyvCurve-stETH",
       "decimals": 18,
       "extensions": {
         "underlying": "0x9A1000D492d40bfccbc03f413A48F5B6516Ec0Fd",
@@ -137,7 +137,7 @@
     {
       "chainId": 5,
       "address": "0x80272c960b862B4d6542CDB7338Ad1f727E0D18d",
-      "symbol": "eP-USDC",
+      "symbol": "ePyvUSDC",
       "decimals": 6,
       "extensions": {
         "underlying": "0x78dEca24CBa286C0f8d56370f5406B48cFCE2f86",
