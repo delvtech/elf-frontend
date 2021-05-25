@@ -6,6 +6,11 @@ import { ERC20 } from "src/types/ERC20";
 
 import { TokenListTag, VaultTokenInfo } from "src/tokenlist/types";
 import { TestYVault__factory } from "src/types/factories/TestYVault__factory";
+import {
+  getTokenNameMulti,
+  getTokenSymbolMulti,
+  getTokenDecimalsMulti,
+} from "./erc20";
 
 export const provider = hre.ethers.provider;
 
@@ -28,14 +33,7 @@ export async function getVaults(vaultAddresses: string[], chainId: number) {
     (vaults as unknown) as ERC20[]
   );
 
-  const symbolOverrides = VaultSymbolOverrides[chainId] || {};
-  const symbols = zip(vaultAddresses, vaultSymbols).map((zipped) => {
-    const [vaultAddress, vaultSymbol] = zipped as [string, string];
-    if (symbolOverrides[vaultAddress]) {
-      return symbolOverrides[vaultAddress];
-    }
-    return vaultSymbol;
-  });
+  const symbols = getVaultSymbolMulti(chainId, vaultAddresses, vaultSymbols);
 
   const decimals = await getTokenDecimalsMulti((vaults as unknown) as ERC20[]);
 
@@ -62,15 +60,18 @@ export async function getVaults(vaultAddresses: string[], chainId: number) {
   return vaultTokensList;
 }
 
-async function getTokenDecimalsMulti(tokens: ERC20[]) {
-  const tokenNames = await Promise.all(tokens.map((token) => token.decimals()));
-  return tokenNames;
-}
-async function getTokenSymbolMulti(tokens: ERC20[]) {
-  const tokenNames = await Promise.all(tokens.map((token) => token.symbol()));
-  return tokenNames;
-}
-async function getTokenNameMulti(tokens: ERC20[]) {
-  const tokenNames = await Promise.all(tokens.map((token) => token.name()));
-  return tokenNames;
+function getVaultSymbolMulti(
+  chainId: number,
+  vaultAddresses: string[],
+  vaultSymbols: string[]
+) {
+  const symbolOverrides = VaultSymbolOverrides[chainId] || {};
+  const symbols = zip(vaultAddresses, vaultSymbols).map((zipped) => {
+    const [vaultAddress, vaultSymbol] = zipped as [string, string];
+    if (symbolOverrides[vaultAddress]) {
+      return symbolOverrides[vaultAddress];
+    }
+    return vaultSymbol;
+  });
+  return symbols;
 }

@@ -10,6 +10,14 @@ import { Tranche } from "src/types/Tranche";
 
 import { PrincipalTokenInfo, TokenListTag } from "src/tokenlist/types";
 
+const GOERLI_CHAIN_ID = 5;
+const symbolOverrides: Record<number, Record<string, string>> = {
+  [GOERLI_CHAIN_ID]: {
+    // these contracts have v1 vault symbols, but we want the v2 vaults on testnet
+    "0xdD82595F5eB0e7477D7432B24E44be7c0252bbf1": "ePyvCurve-stETH",
+    "0x23c3C6C06d7684207fB09076914A15B16aba02c5": "ePyvUSDC",
+  },
+};
 export const provider = hre.ethers.provider;
 export async function getPrincipalTokens(
   trancheFactoryAddress: string,
@@ -103,7 +111,11 @@ export async function getPrincipalTokens(
 
   return { tranches: safeTranches, principalTokensList };
 }
+
 async function getPrincipalTokenSymbols(tranches: Tranche[]) {
+  const allPositions = await Promise.all(
+    tranches.map((tranche) => tranche.position())
+  );
   const underlyingAddresses = await Promise.all(
     tranches.map((tranche) => tranche.underlying())
   );
