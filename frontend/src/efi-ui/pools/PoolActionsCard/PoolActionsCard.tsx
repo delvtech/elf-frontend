@@ -17,6 +17,7 @@ import {
 import { TradePanel } from "efi-ui/trade/TradePanel/TradePanel";
 import { PoolContract } from "efi/pools/PoolContract";
 import { TokenInfo } from "@uniswap/token-lists";
+import { PoolInfo } from "efi/pools/PoolInfo";
 
 interface PoolActionsCardProps {
   library: Web3Provider | undefined;
@@ -26,6 +27,7 @@ interface PoolActionsCardProps {
   connector: AbstractConnector | undefined;
   walletActive: boolean;
   pool: PoolContract | undefined;
+  poolInfo: PoolInfo;
   tokenIn: ERC20 | undefined;
   tokenOut: ERC20 | undefined;
 
@@ -69,6 +71,7 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
             connector={connector}
             walletActive={walletActive}
             pool={pool}
+            poolInfo={poolInfo}
             tokenIn={tokenIn}
             tokenOut={tokenOut}
             buttonLabel={t`Trade`}

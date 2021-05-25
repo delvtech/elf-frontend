@@ -12,6 +12,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { SwapKind } from "efi-ui/balancer/SwapKind";
+import { getCalcSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
@@ -30,14 +31,7 @@ import { ContractMethodArgs } from "efi/contracts/types";
 import { CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
-import { clipStringValueToDecimals } from "efi/math/fixedPoint";
-import {
-  calcSwapInGivenOutCCPoolUNSAFE,
-  calcSwapOutGivenInCCPoolUNSAFE,
-} from "efi/pools/calcPoolSwap";
-import { getPrincipalPoolForTranche } from "efi/pools/ccpool";
 import { getPoolTokenInfoFromContract } from "efi/pools/getPoolInfo";
-import { getTrancheForPool } from "efi/pools/getTrancheForPool";
 import { PoolContract } from "efi/pools/PoolContract";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
@@ -52,6 +46,7 @@ interface TradePanelProps {
   connector: AbstractConnector | undefined;
   walletActive: boolean;
   pool: PoolContract | undefined;
+  poolInfo: PoolInfo;
   formDisabled?: boolean;
   submitDisabled?: boolean;
   buttonLabel: string;
@@ -71,6 +66,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     formDisabled = false,
     submitDisabled = false,
     pool,
+    poolInfo,
     tokenIn: tokenInFromProps,
     tokenOut: tokenOutFromProps,
   } = props;
@@ -111,10 +107,12 @@ export function TradePanel(props: TradePanelProps): ReactElement {
 
   const baseAsset = useBaseAssetForPool(pool);
   const spotPrice = usePoolSpotPrice(pool, baseAsset);
+  const { data: totalSupplyBN } = useSmartContractReadCall(pool, "totalSupply");
+  const totalSupply = formatEther(totalSupplyBN ?? 0);
 
   const {
     asset: tokenInAsset,
-    address: tokenInAddress,
+    address: tokenInAddress = "",
     icon: tokenInIcon,
     symbol: tokenInSymbol,
     decimals: tokenInDecimals,
@@ -125,7 +123,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
   } = useTokenInfoForTradeInput(pool, tokenIn, account, library);
 
   const {
-    address: tokenOutAddress,
+    address: tokenOutAddress = "",
     icon: tokenOutIcon,
     symbol: tokenOutSymbol,
     decimals: tokenOutDecimals,
@@ -173,29 +171,15 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     insufficientPoolBalance
   );
 
-  // pool
-  const poolInfo = getPoolTokenInfoFromContract(pool);
-  const trancheInfo = getTrancheForPool(poolInfo as PoolInfo);
-  // pool
-  const {
-    extensions: { expiration, unitSeconds },
-  } = getPrincipalPoolForTranche(trancheInfo.address);
-
-  // TODO: use a global Date.now that updates at a constant interval
-  const nowInSeconds = Math.round(Date.now() / 1000);
-  const timeRemainingSeconds = expiration - nowInSeconds;
-  const tParamSeconds = unitSeconds;
-
-  const { data: totalSupplyBN } = useSmartContractReadCall(pool, "totalSupply");
-  const totalSupply = formatEther(totalSupplyBN ?? 0);
-
   const onChangeIn = useOnChangeIn(
+    poolInfo,
+    tokenInAddress,
     tokenInBalanceOf,
     tokenInDecimals,
+    tokenOutAddress,
     tokenOutBalanceOf,
+    tokenOutDecimals,
     totalSupply,
-    timeRemainingSeconds,
-    tParamSeconds,
     clearInputs,
     setSwapKind,
     setAmountIn,
@@ -203,13 +187,14 @@ export function TradePanel(props: TradePanelProps): ReactElement {
   );
 
   const onChangeOut = useOnChangeOut(
-    tokenOutBalanceOf,
-    tokenInDecimals,
+    poolInfo,
+    tokenInAddress,
     tokenInBalanceOf,
-    totalSupply,
-    timeRemainingSeconds,
-    tParamSeconds,
+    tokenInDecimals,
+    tokenOutAddress,
+    tokenOutBalanceOf,
     tokenOutDecimals,
+    totalSupply,
     clearInputs,
     setSwapKind,
     setAmountIn,
@@ -317,13 +302,14 @@ export function TradePanel(props: TradePanelProps): ReactElement {
 }
 
 function useOnChangeOut(
-  tokenOutBalanceOf: BigNumber | undefined,
-  tokenInDecimals: number | undefined,
+  poolInfo: PoolInfo,
+  tokenInAddress: string,
   tokenInBalanceOf: BigNumber | undefined,
-  totalSupply: string,
-  timeRemainingSeconds: number,
-  tParamSeconds: number,
+  tokenInDecimals: number | undefined,
+  tokenOutAddress: string,
+  tokenOutBalanceOf: BigNumber | undefined,
   tokenOutDecimals: number | undefined,
+  totalSupply: string,
   clearInputs: () => void,
   setSwapKind: (swapKind: SwapKind) => void,
   setAmountIn: (value: string) => void,
@@ -335,32 +321,42 @@ function useOnChangeOut(
         clearInputs();
         return;
       }
-      const newAmountInNumber = calcSwapInGivenOutCCPoolUNSAFE(
+
+      const tokenInReserves = formatUnits(
+        tokenInBalanceOf ?? 0,
+        tokenInDecimals
+      );
+      const tokenOutReserves = formatUnits(
+        tokenOutBalanceOf ?? 0,
+        tokenOutDecimals
+      );
+
+      const newAmountOutResult = getCalcSwap(
         newAmountOut,
-        formatUnits(tokenOutBalanceOf ?? 0, tokenInDecimals),
-        formatUnits(tokenInBalanceOf ?? 0, tokenInDecimals),
-        totalSupply,
-        timeRemainingSeconds,
-        tParamSeconds,
-        false
+        SwapKind.GIVEN_OUT,
+        poolInfo,
+        tokenInAddress,
+        tokenOutAddress,
+        tokenInReserves,
+        tokenOutReserves,
+        totalSupply
       );
-      const newAmountIn = clipStringValueToDecimals(
-        newAmountInNumber.toString(),
-        tokenOutDecimals ?? 18
-      );
+
+      const { result: [newAmountIn] = ["", ""] } = newAmountOutResult;
       setSwapKind(swapKind);
       setAmountIn(newAmountIn);
       setAmountOut(newAmountOut);
     },
     [
       clearInputs,
+      poolInfo,
       setAmountIn,
       setAmountOut,
       setSwapKind,
-      tParamSeconds,
-      timeRemainingSeconds,
+      tokenInAddress,
       tokenInBalanceOf,
       tokenInDecimals,
+      tokenOutAddress,
       tokenOutBalanceOf,
       tokenOutDecimals,
       totalSupply,
@@ -369,12 +365,14 @@ function useOnChangeOut(
 }
 
 function useOnChangeIn(
+  poolInfo: PoolInfo,
+  tokenInAddress: string,
   tokenInBalanceOf: BigNumber | undefined,
   tokenInDecimals: number | undefined,
+  tokenOutAddress: string,
   tokenOutBalanceOf: BigNumber | undefined,
+  tokenOutDecimals: number | undefined,
   totalSupply: string,
-  timeRemainingSeconds: number,
-  tParamSeconds: number,
   clearInputs: () => void,
   setSwapKind: (swapKind: SwapKind) => void,
   setAmountIn: (value: string) => void,
@@ -386,19 +384,27 @@ function useOnChangeIn(
         clearInputs();
         return;
       }
-      const newAmountOutNumber = calcSwapOutGivenInCCPoolUNSAFE(
+      const tokenInReserves = formatUnits(
+        tokenInBalanceOf ?? 0,
+        tokenInDecimals
+      );
+      const tokenOutReserves = formatUnits(
+        tokenOutBalanceOf ?? 0,
+        tokenOutDecimals
+      );
+
+      const newAmountOutResult = getCalcSwap(
         newAmountIn,
-        formatUnits(tokenInBalanceOf ?? 0, tokenInDecimals),
-        formatUnits(tokenOutBalanceOf ?? 0, tokenInDecimals),
-        totalSupply,
-        timeRemainingSeconds,
-        tParamSeconds,
-        true
+        SwapKind.GIVEN_IN,
+        poolInfo,
+        tokenInAddress,
+        tokenOutAddress,
+        tokenInReserves,
+        tokenOutReserves,
+        totalSupply
       );
-      const newAmountOut = clipStringValueToDecimals(
-        newAmountOutNumber.toString(),
-        tokenInDecimals ?? 18
-      );
+
+      const { result: [, newAmountOut] = ["", ""] } = newAmountOutResult;
 
       setSwapKind(swapKind);
       setAmountIn(newAmountIn);
@@ -406,14 +412,16 @@ function useOnChangeIn(
     },
     [
       clearInputs,
+      poolInfo,
       setAmountIn,
       setAmountOut,
       setSwapKind,
-      tParamSeconds,
-      timeRemainingSeconds,
+      tokenInAddress,
       tokenInBalanceOf,
       tokenInDecimals,
+      tokenOutAddress,
       tokenOutBalanceOf,
+      tokenOutDecimals,
       totalSupply,
     ]
   );
