@@ -128,11 +128,12 @@ export function useQueryBatchSwapCalc(
     return { result: undefined, status: "loading" };
   }
 
-  if (isPrincipalPool(poolInfo as PrincipalPoolTokenInfo)) {
+  if (isPrincipalPool(poolInfo as PoolInfo)) {
     return calcSwapPrincipalPool(
       amount,
       kind,
-      poolInfo,
+      // i don't know why the type guard isnt working
+      poolInfo as PrincipalPoolTokenInfo,
       decimals,
       tokenInReserves,
       tokenOutReserves,
