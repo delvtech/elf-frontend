@@ -43,7 +43,7 @@ import { PoolContract } from "efi/pools/PoolContract";
 import { yieldPoolContractsByAddress } from "efi/pools/weightedPool";
 import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
-import { UnderlyingContracts } from "efi/underlying/underlying";
+import { underlyingContracts } from "efi/underlying/underlying";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 
 import styles from "./PrincipalPoolCard.module.css";
@@ -88,7 +88,7 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
     principalPoolContractsByAddress[principalPoolInfo.address];
   const yieldPoolContract = yieldPoolContractsByAddress[poolInfo.address];
   const baseAssetContract =
-    UnderlyingContracts[trancheInfo.extensions.underlying];
+    underlyingContracts[trancheInfo.extensions.underlying];
   const principalTokenContract = trancheContractsByAddress[trancheInfo.address];
   const yieldTokenContract =
     InterestTokenContractsByAddress[poolInfo.extensions.interestToken];
