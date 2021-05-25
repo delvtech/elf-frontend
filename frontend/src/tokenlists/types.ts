@@ -15,8 +15,6 @@ export enum TokenListTag {
   YIELD = "eY",
 }
 
-export interface UnderlyingTokenInfo extends TokenInfo {}
-
 export interface PrincipalTokenInfo extends TokenInfo {
   extensions: {
     /**
