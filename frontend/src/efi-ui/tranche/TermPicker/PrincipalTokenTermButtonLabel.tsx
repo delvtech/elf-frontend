@@ -16,7 +16,6 @@ import { formatPercent } from "efi/base/formatPercent";
 import { ERC20Shim } from "efi/contracts/ERC20Shim";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
-import { defaultProvider } from "efi/providers/providers";
 import { getTokenInfo } from "efi/tokenlists";
 
 interface PrincipalTokenTermButtonLabelProps {
