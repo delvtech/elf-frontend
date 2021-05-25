@@ -1,17 +1,25 @@
 import { TokenInfo } from "@uniswap/token-lists";
 import hre from "hardhat";
 import zip from "lodash.zip";
+import { getTokenSymbolMulti } from "src/tokenlist/erc20";
 import { TokenListTag } from "src/tokenlist/types";
 import { ERC20__factory } from "src/types/factories/ERC20__factory";
-import { InterestTokenFactory__factory } from "src/types/factories/InterestTokenFactory__factory";
 import { InterestToken__factory } from "src/types/factories/InterestToken__factory";
 import { Tranche__factory } from "src/types/factories/Tranche__factory";
-import { WrappedPosition__factory } from "src/types/factories/WrappedPosition__factory";
 import { InterestToken } from "src/types/InterestToken";
 import { Tranche } from "src/types/Tranche";
 
 export const provider = hre.ethers.provider;
 
+const GOERLI_CHAIN_ID = 5;
+const symbolOverrides: Record<number, Record<string, string>> = {
+  [GOERLI_CHAIN_ID]: {
+    // these contracts have v1 vault symbols, but we want the v2 vaults on testnet
+    "0x91dDF92af38Afac1B59F450dDb94ddab10a11490": "eYyvCurve-stETH",
+    "0xBf4B5cB5ca49B1eF6B02615a94980723f6484899": "eYyvCurve-stETH",
+    "0x2c637c5142eE4F31A1a78Ad3DF012fc242F6CAe6": "eYyvUSDC",
+  },
+};
 export async function getYieldTokensFromTranches(
   tranches: Tranche[],
   chainId: number
@@ -27,7 +35,7 @@ export async function getYieldTokensFromTranches(
   );
   const underlyingSymbols = await getUnderlyingSymbols(interestTokens);
   const yieldTokenNames = formatYieldTokenNames(underlyingSymbols);
-  const yieldTokenSymbols = formatYieldTokenSymbols(underlyingSymbols);
+  const yieldTokenSymbols = await getYieldTokenSymbols(chainId, interestTokens);
 
   // It's generally useful to include the base asset yts even though it isn't
   // directly available on the InterestToken
@@ -66,12 +74,23 @@ export async function getYieldTokensFromTranches(
   return yieldTokensList;
 }
 
-function formatYieldTokenSymbols(underlyingSymbols: string[]) {
-  const yieldTokenSymbols = underlyingSymbols.map((symbol) => {
-    const name = symbol === "WETH" ? "eY-ETH" : `eY-${symbol}`;
-    return name;
+async function getYieldTokenSymbols(
+  chainId: number,
+  interestTokens: InterestToken[]
+) {
+  const addresses = interestTokens.map(
+    (interestToken) => interestToken.address
+  );
+  const interestTokenSymbols = await getTokenSymbolMulti(interestTokens);
+  const overrides = symbolOverrides[chainId] || {};
+  const symbols = zip(addresses, interestTokenSymbols).map((zipped) => {
+    const [address, symbol] = zipped as [string, string];
+    if (overrides[address]) {
+      return overrides[address];
+    }
+    return symbol;
   });
-  return yieldTokenSymbols;
+  return symbols;
 }
 
 function formatYieldTokenNames(underlyingSymbols: string[]) {
