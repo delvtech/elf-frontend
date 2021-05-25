@@ -66,11 +66,11 @@ export function StakingConfirmationDrawer({
     useCryptoAssetMetadata(trancheAsset);
 
   const baseAssetInBigNumber = parseUnits(
-    baseAssetIn ?? "0",
+    baseAssetIn || "0",
     baseAssetDecimals
   );
   const trancheAssetInBigNumber = parseUnits(
-    trancheAssetIn ?? "0",
+    trancheAssetIn || "0",
     trancheAssetDecimals
   );
 

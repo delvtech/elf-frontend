@@ -21,8 +21,8 @@ interface UseConvergentCurvePoolStakeInputs {
   principalTokenInBigNumber: BigNumber | undefined;
   baseAssetIn: number | undefined;
   baseAssetInBigNumber: BigNumber | undefined;
-  onBaseAssetInChange: (amount: string | undefined) => void;
-  onPrincipalTokenInChange: (amount: string | undefined) => void;
+  onBaseAssetInChange: (amount: string) => void;
+  onPrincipalTokenInChange: (amount: string) => void;
 }
 
 export function useConvergentCurvePoolStakeInputs(
@@ -49,7 +49,7 @@ export function useConvergentCurvePoolStakeInputs(
   } = useStakeInput(decimalsBaseAsset);
 
   const onPrincipalTokenInChange = useCallback(
-    (amount: string | undefined) => {
+    (amount: string) => {
       setActiveInput("principalTokenIn");
       setPrincipalTokenIn(amount);
     },
@@ -57,7 +57,7 @@ export function useConvergentCurvePoolStakeInputs(
   );
 
   const onBaseAssetInChange = useCallback(
-    (amount: string | undefined) => {
+    (amount: string) => {
       setActiveInput("baseAssetIn");
       setBaseAssetIn(amount);
     },
@@ -107,7 +107,7 @@ function useSyncPrincipalTokenPreview(
   decimalsPrincipalToken: number | undefined,
   totalSupply: BigNumber | undefined,
   activeInput: ConvergentCurvePoolActiveInput,
-  setPrincipalTokenIn: (value: string | undefined) => void,
+  setPrincipalTokenIn: (value: string) => void,
   clearBaseAssetIn: () => void
 ) {
   const previewPrincipalTokenNeededGivenBaseAssetIn =
@@ -141,7 +141,7 @@ function useSyncBaseAssetPreview(
   decimalsBaseAsset: number | undefined,
   totalSupply: BigNumber | undefined,
   activeInput: ConvergentCurvePoolActiveInput,
-  setBaseAssetIn: (value: string | undefined) => void,
+  setBaseAssetIn: (value: string) => void,
   clearPrincipalTokenIn: () => void
 ) {
   const previewBaseAssetNeededGivenPrincipalTokenIn =
@@ -174,7 +174,7 @@ function useSyncWithActiveInput(
   syncedInput: ConvergentCurvePoolActiveInput,
   activeInput: ConvergentCurvePoolActiveInput,
   newAmount: string | undefined,
-  setAmount: (amount: string | undefined) => void,
+  setAmount: (amount: string) => void,
   clearActiveInput: () => void
 ) {
   useEffect(() => {
@@ -184,7 +184,7 @@ function useSyncWithActiveInput(
     }
 
     if (!newAmount) {
-      setAmount(undefined);
+      setAmount("");
       clearActiveInput();
       return;
     }
@@ -202,7 +202,7 @@ function useStakeInput(inputDecimals: number | undefined) {
   } = useNumericInput();
 
   const clearInputValue = useCallback(() => {
-    setInputValue(undefined);
+    setInputValue("");
   }, [setInputValue]);
 
   const inputBigNumber = inputString

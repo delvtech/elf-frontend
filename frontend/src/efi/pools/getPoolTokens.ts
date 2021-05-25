@@ -28,7 +28,7 @@ export function getPoolTokens(poolInfo: PoolInfo): PoolTokens {
     ERC20__factory
   );
   const termAssetContract = getSmartContractFromRegistryStatic(
-    baseAssetAddress,
+    termAssetAddress,
     ERC20__factory
   );
 

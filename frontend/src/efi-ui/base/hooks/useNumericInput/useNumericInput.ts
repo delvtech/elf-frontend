@@ -26,9 +26,9 @@ export interface NumericInputOptions {
 }
 
 interface UseNumericInput {
-  stringValue: string | undefined;
+  stringValue: string;
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
-  setValue: (value: string | undefined) => void;
+  setValue: (value: string) => void;
 }
 
 const DEFAULT_NUMERIC_INPUT_OPTIONS: NumericInputOptions = {
@@ -52,14 +52,14 @@ const DEFAULT_NUMERIC_INPUT_OPTIONS: NumericInputOptions = {
 export function useNumericInput(
   options = DEFAULT_NUMERIC_INPUT_OPTIONS
 ): UseNumericInput {
-  const [stringValue, setStringValueState] = useState<string | undefined>();
+  const [stringValue, setStringValueState] = useState("");
   const { min, max, maxPrecision } = options;
 
   const setValue = useCallback(
-    (inputString: string | undefined) => {
+    (inputString: string) => {
       // clear the input
       if (inputString === undefined || inputString === "") {
-        setStringValueState(undefined);
+        setStringValueState("");
         return;
       }
 
@@ -73,7 +73,7 @@ export function useNumericInput(
 
   const onChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
-      const inputString = event.target.value as string | undefined;
+      const inputString = event.target.value;
 
       // clear the input
       setValue(inputString);

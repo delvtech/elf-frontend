@@ -160,7 +160,7 @@ function makeBatchSwapGivenInCallArgs(
       return limitTokenOut;
     }
     // this should never happen but is here for completeness
-    return undefined;
+    return BigNumber.from(0);
   }) as BigNumber[];
 
   // set a large deadline for now, it was being buggy.  time is in seconds.  must be an integer.

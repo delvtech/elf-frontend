@@ -67,6 +67,7 @@ export function SwapDetailsForm({
     },
     [onAmountOutChangeFromProps]
   );
+
   return (
     <Callout className={tw("flex", "flex-col", "p-8", "space-y-6")}>
       <span className={classNames("h4", tw("text-center"))}>{heading}</span>

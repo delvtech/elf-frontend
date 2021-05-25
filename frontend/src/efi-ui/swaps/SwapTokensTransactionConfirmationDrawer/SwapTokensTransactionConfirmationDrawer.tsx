@@ -3,7 +3,7 @@ import React, { ReactElement, useCallback, useMemo } from "react";
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { Signer } from "ethers";
-import { formatEther, formatUnits, parseUnits } from "ethers/lib/utils";
+import { formatEther, parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import { getBalancerApprovalMessage } from "efi-ui/balancer/balancerApprovalMessage";
@@ -36,7 +36,9 @@ interface SwapTokensTransactionConfirmationDrawerProps {
   library: Web3Provider | undefined;
   pool: PoolContract | undefined;
 
-  amountIn: string | undefined;
+  amountIn: string;
+  amountOut: string;
+  swapKind: SwapKind;
   tokenInAsset: CryptoAsset | undefined;
   tokenInAddress: string | undefined;
   tokenInSymbol: string | undefined;
@@ -72,6 +74,8 @@ export function SwapTokensTransactionConfirmationDrawer({
   tokenOutIcon,
   spotPrice,
   amountIn,
+  amountOut,
+  swapKind,
   isOpen,
   onClose,
   pool,
@@ -92,20 +96,20 @@ export function SwapTokensTransactionConfirmationDrawer({
   // pool calls
   const amountInAsBigNumber = parseUnits(amountIn || "0", tokenInDecimals);
   const { data: queryBatchSwapInResult = [] } = useQueryBatchSwap(
-    SwapKind.GIVEN_IN,
+    swapKind,
     pool,
     tokenInAddress,
     tokenOutAddress,
     amountInAsBigNumber
   );
-  const { tokenOut: amountOut } = parseQueryBatchSwapResult(
+  const { tokenOut: queryAmountOut } = parseQueryBatchSwapResult(
     tokenInAddress,
     tokenOutAddress,
     queryBatchSwapInResult
   );
 
   const minAmountOut = getAmountOutWithTolerance(
-    amountOut,
+    queryAmountOut,
     tokenOutDecimals,
     0.01
   );
@@ -124,8 +128,7 @@ export function SwapTokensTransactionConfirmationDrawer({
 
   const { isLoading, isError, isSuccess, reset } = swapResult;
 
-  const amountOutNumber = +formatUnits(amountOut?.abs() || 0, tokenInDecimals);
-  const amountOutFormatted = amountOutNumber.toFixed(4);
+  const amountOutNumber = +amountOut;
 
   // spotPrice is yield out / base in.  So, if the base asset is the output, we need to flip the
   // spotPrice so it'll match the purchasePrice.
@@ -170,7 +173,7 @@ export function SwapTokensTransactionConfirmationDrawer({
       transactionDetails={
         <SwapDetailsForm
           amountIn={amountIn}
-          amountOut={amountOutFormatted}
+          amountOut={amountOut}
           assetInIcon={tokenInIcon}
           assetInSymbol={tokenInSymbol}
           assetOutSymbol={tokenOutSymbol}

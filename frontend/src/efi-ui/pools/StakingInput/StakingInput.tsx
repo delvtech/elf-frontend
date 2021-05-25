@@ -29,10 +29,7 @@ interface StakingInputProps {
   cryptoBalanceOf: BigNumber | undefined;
   cryptoDisplayBalance: string | number;
   disabled: boolean;
-  onPreviewUpdate: (
-    otherNeeded: string | undefined,
-    lpOut: string | undefined
-  ) => void;
+  onPreviewUpdate: (otherNeeded: string, lpOut: string | undefined) => void;
   onChange: (inputValue: string) => void;
   labelTopLeft: string | undefined;
   value: string | undefined;
@@ -173,10 +170,7 @@ export function StakingInput(props: StakingInputProps): ReactElement {
 
 function useOnInputChange(
   onChangeFromProps: (inputValue: string) => void,
-  onPreviewUpdate: (
-    otherNeeded: string | undefined,
-    lpOut: string | undefined
-  ) => void,
+  onPreviewUpdate: (otherNeeded: string, lpOut: string | undefined) => void,
   cryptoDecimals: number | undefined,
   tokenPoolReserves: string | undefined,
   otherTokenPoolReserves: string | undefined,
@@ -189,7 +183,7 @@ function useOnInputChange(
       // allow user to clear input
       if (userInputValue === undefined || userInputValue === "") {
         onChangeFromProps("");
-        onPreviewUpdate(undefined, undefined);
+        onPreviewUpdate("", undefined);
         return;
       }
 
@@ -246,10 +240,7 @@ function useSetMaxValue(
   totalSupply: string | undefined,
   tokenDecimals: number | undefined,
   onChange: (value: string) => void,
-  onPreviewUpdate: (
-    value: string | undefined,
-    lpOut: string | undefined
-  ) => void
+  onPreviewUpdate: (value: string, lpOut: string | undefined) => void
 ) {
   return useCallback(() => {
     if (tokenBalanceOf) {

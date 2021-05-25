@@ -187,10 +187,10 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
   }, [isPrincipalPoolType, joinConvergentPool, joinWeightedPool]);
 
   const insufficientBalance =
-    parseUnits(amountIn ?? "0", baseAssetDecimals).gt(
+    parseUnits(amountIn || "0", baseAssetDecimals).gt(
       baseAssetBalanceOf ?? 0
     ) ||
-    parseUnits(amountOut ?? "0", yieldAssetDecimals).gt(
+    parseUnits(amountOut || "0", yieldAssetDecimals).gt(
       yieldAssetBalanceOf ?? 0
     );
 

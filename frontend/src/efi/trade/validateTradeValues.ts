@@ -36,7 +36,7 @@ export function validateTradeValues(
   }
 
   if (
-    parseUnits(amountOut ?? "0", tokenInDecimals).gt(tokenOutPoolBalance ?? 0)
+    parseUnits(amountOut || "0", tokenInDecimals).gt(tokenOutPoolBalance ?? 0)
   ) {
     isValidTokenOutValue = false;
     tokenOutError = t`Insufficient pool balance`;

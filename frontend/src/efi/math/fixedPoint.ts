@@ -61,7 +61,7 @@ export function getSafeFixedNumber(
 export function clipFixNumberToStringDecimals(
   value: FixedNumber,
   decimals: number
-): string | undefined {
+): string {
   const unsafeString = value.toString();
   const safeValue = clipStringValueToDecimals(unsafeString, decimals);
   return safeValue;
@@ -70,9 +70,9 @@ export function clipFixNumberToStringDecimals(
 export function clipStringValueToDecimals(
   value: string | undefined,
   maxDecimals: number
-): string | undefined {
+): string {
   if (value === undefined) {
-    return undefined;
+    return "";
   }
 
   if (value === ".") {
