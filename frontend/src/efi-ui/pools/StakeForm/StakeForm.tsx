@@ -37,12 +37,12 @@ interface StakeFormProps {
    * If provided, this will make the input interactive, otherwise it will be
    * disabled and read-only
    */
-  onAssetOneAmountChange?: (amount: string | undefined) => void;
+  onAssetOneAmountChange?: (amount: string) => void;
   /**
    * If provided, this will make the input interactive, otherwise it will be
    * disabled and read-only
    */
-  onAssetTwoAmountChange?: (amount: string | undefined) => void;
+  onAssetTwoAmountChange?: (amount: string) => void;
   children?: ReactElement;
 }
 

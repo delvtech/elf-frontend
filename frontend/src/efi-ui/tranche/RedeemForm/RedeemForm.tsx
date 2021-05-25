@@ -29,7 +29,7 @@ interface RedeemFormProps {
    * If provided, this will make the input interactive, otherwise it will be
    * disabled and read-only
    */
-  onAmountChange?: (amount: string | undefined) => void;
+  onAmountChange?: (amount: string) => void;
   children?: ReactElement;
 }
 

@@ -28,7 +28,7 @@ interface MintInputProps {
   cryptoBalanceOf: BigNumber | undefined;
   cryptoDisplayBalance: string | number;
   disabled: boolean;
-  onChange: (value: string | undefined) => void;
+  onChange: (value: string) => void;
   onPreviewUpdate: (value: string | undefined) => void;
   value: string | undefined;
   validValue: boolean;
@@ -118,7 +118,7 @@ export function MintInput(props: MintInputProps): ReactElement {
 }
 
 function useOnInputChange(
-  onChange: (value: string | undefined) => void,
+  onChange: (value: string) => void,
   onPreviewUpdate: (value: string | undefined) => void,
   cryptoDecimals: number | undefined
 ) {
@@ -141,7 +141,7 @@ function useOnInputChange(
 function useSetMaxValue(
   tokenBalanceOf: BigNumber | undefined,
   tokenDecimals: number | undefined,
-  onChange: (value: string | undefined) => void
+  onChange: (value: string) => void
 ) {
   return useCallback(() => {
     if (tokenBalanceOf) {
@@ -153,7 +153,7 @@ function useSetMaxValue(
 
 function validateAndSetValue(
   value: string,
-  onChange: (value: string | undefined) => void,
+  onChange: (value: string) => void,
   updatePreviewValue: (value: string | undefined) => void,
   cryptoDecimals: number | undefined
 ) {
