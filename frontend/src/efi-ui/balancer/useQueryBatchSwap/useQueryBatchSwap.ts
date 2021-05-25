@@ -1,8 +1,8 @@
 import { QueryObserverResult, QueryStatus } from "react-query";
 
-import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
 import { BigNumber } from "ethers";
-import { formatEther, formatUnits } from "ethers/lib/utils";
+import { formatUnits } from "ethers/lib/utils";
+import { PrincipalPoolTokenInfo } from "tokenlists/types";
 
 import { SwapKind } from "efi-ui/balancer/SwapKind";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
@@ -10,7 +10,6 @@ import { makeQueryBatchSwapCallArgs } from "efi-ui/balancer/useQueryBatchSwap/ma
 import { getQueryData } from "efi-ui/base/queryResults";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
-import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { clipStringValueToDecimals } from "efi/math/fixedPoint";
 import {
   calcSwapInGivenOutCCPoolUNSAFE,
@@ -18,12 +17,12 @@ import {
   calcSwapOutGivenInCCPoolUNSAFE,
   calcSwapOutGivenInWeightedPoolUNSAFE,
 } from "efi/pools/calcPoolSwap";
-import { useParseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
-import {
-  isConvergentCurvePool,
-  isWeightedPool,
-  PoolContract,
-} from "efi/pools/PoolContract";
+import { isPrincipalPool } from "efi/pools/ccpool";
+import { getPoolTokenInfoFromContract } from "efi/pools/getPoolInfo";
+import { getPoolTokens } from "efi/pools/getPoolTokens";
+import { isConvergentCurvePool, PoolContract } from "efi/pools/PoolContract";
+import { PoolInfo } from "efi/pools/PoolInfo";
+import { isYieldPool } from "efi/pools/weightedPool";
 
 /**
  * Useful for previewing a swap in the balancer V2 vault.
@@ -79,85 +78,44 @@ interface QueryBatchSwapCalcResults {
 
 export function useQueryBatchSwapCalc(
   kind: SwapKind,
-  pool: PoolContract | undefined,
+  poolContract: PoolContract | undefined,
   tokenInAddress: string | undefined,
   tokenOutAddress: string | undefined,
-  amount: BigNumber | undefined
+  amountBN: BigNumber | undefined
 ): QueryBatchSwapCalcResults {
-  const { data } = usePoolTokens(pool);
+  const { data } = usePoolTokens(poolContract);
   const [tokens, balances] = data ?? [[], []];
-  const { baseAssetContract } = useParseSortedTokensForPool(tokens);
-  const { data: decimals } = useTokenDecimals(baseAssetContract);
-
-  const balancesByAddress: Record<string, BigNumber | undefined> = {};
-  tokens
-    .filter((address): address is string => !!address)
-    .forEach(
-      (address, index) => (balancesByAddress[address] = balances[index])
-    );
-
-  const isCCPool = isConvergentCurvePool(pool);
-  const isWPool = isWeightedPool(pool);
-
+  const poolInfo = getPoolTokenInfoFromContract(poolContract) as PoolInfo;
+  const { baseAssetInfo } = getPoolTokens(poolInfo);
+  const { decimals, address: baseAssetAddress } = baseAssetInfo;
+  const { tokenInReserves, tokenOutReserves } = getTokenReserves(
+    tokens,
+    balances,
+    tokenInAddress,
+    decimals,
+    tokenOutAddress
+  );
   const { data: totalSupplyBN } = useSmartContractReadCall(
-    pool,
+    poolContract,
     "totalSupply",
-    { enabled: isCCPool }
+    { enabled: isConvergentCurvePool(poolContract) }
   );
-  const { data: unitSecondsBN } = useSmartContractReadCall(
-    pool as ConvergentCurvePool,
-    "unitSeconds",
-    {
-      enabled: isCCPool,
-    }
-  );
-  const { data: expirationBN } = useSmartContractReadCall(
-    pool as ConvergentCurvePool,
-    "expiration",
-    {
-      enabled: isCCPool,
-    }
-  );
+  const totalSupply = formatUnits(totalSupplyBN ?? 0, decimals);
+  const amount = formatUnits(amountBN ?? 0, decimals);
 
   // do weighted pools first since they don't need as many variables
   if (!amount || !tokenInAddress || !tokenOutAddress || !decimals) {
     return { result: undefined, status: "loading" };
   }
-  const tokenInReserves = formatUnits(
-    balancesByAddress[tokenInAddress] ?? 0,
-    decimals
-  );
 
-  const tokenOutReserves = formatUnits(
-    balancesByAddress[tokenOutAddress] ?? 0,
-    decimals
-  );
-
-  const amountIn = formatUnits(amount, decimals);
-  const amountOut = formatUnits(amount, decimals);
-
-  if (isWPool && kind === SwapKind.GIVEN_IN) {
-    const calcOutNumber = calcSwapOutGivenInWeightedPoolUNSAFE(
-      amountIn,
-      tokenOutReserves,
-      tokenInReserves
+  if (isYieldPool(poolInfo as PoolInfo)) {
+    return calcSwapYieldPool(
+      amount,
+      kind,
+      decimals,
+      tokenInReserves,
+      tokenOutReserves
     );
-    const calcOut =
-      clipStringValueToDecimals(calcOutNumber.toString(), decimals) ?? "0";
-
-    return { result: [amountIn, calcOut], status: "success" };
-  }
-
-  if (isWPool && kind === SwapKind.GIVEN_OUT) {
-    const calcInNumber = calcSwapInGivenOutWeightedPoolUNSAFE(
-      amountOut,
-      tokenOutReserves,
-      tokenInReserves
-    );
-    const calcIn =
-      clipStringValueToDecimals(calcInNumber.toString(), decimals) ?? "0";
-
-    return { result: [calcIn, amountOut], status: "success" };
   }
 
   if (
@@ -165,53 +123,127 @@ export function useQueryBatchSwapCalc(
     !tokenInAddress ||
     !tokenOutAddress ||
     !totalSupplyBN ||
-    !unitSecondsBN ||
-    !expirationBN ||
     !decimals
   ) {
     return { result: undefined, status: "loading" };
   }
 
+  if (isPrincipalPool(poolInfo as PrincipalPoolTokenInfo)) {
+    return calcSwapPrincipalPool(
+      amount,
+      kind,
+      poolInfo,
+      decimals,
+      tokenInReserves,
+      tokenOutReserves,
+      totalSupply,
+      tokenInAddress === baseAssetAddress
+    );
+  }
+
+  return { result: undefined, status: "error" };
+}
+
+function getTokenReserves(
+  tokens: string[] | never[],
+  balances: BigNumber[] | never[],
+  tokenInAddress: string | undefined,
+  decimals: number,
+  tokenOutAddress: string | undefined
+) {
+  const balancesByAddress: Record<string, BigNumber | undefined> = {};
+  tokens
+    .filter((address): address is string => !!address)
+    .forEach(
+      (address, index) => (balancesByAddress[address] = balances[index])
+    );
+  const tokenInReserves = formatUnits(
+    balancesByAddress[tokenInAddress ?? ""] ?? 0,
+    decimals
+  );
+
+  const tokenOutReserves = formatUnits(
+    balancesByAddress[tokenOutAddress ?? ""] ?? 0,
+    decimals
+  );
+  return { tokenInReserves, tokenOutReserves };
+}
+
+function calcSwapYieldPool(
+  amount: string,
+  kind: SwapKind,
+  decimals: number,
+  tokenInReserves: string,
+  tokenOutReserves: string
+): QueryBatchSwapCalcResults {
+  if (kind === SwapKind.GIVEN_IN) {
+    const calcOutNumber = calcSwapOutGivenInWeightedPoolUNSAFE(
+      amount,
+      tokenOutReserves,
+      tokenInReserves
+    );
+    const calcOut =
+      clipStringValueToDecimals(calcOutNumber.toString(), decimals) ?? "0";
+
+    return { result: [amount, calcOut], status: "success" };
+  }
+
+  // SwapKind.GIVEN_OUT
+  const calcInNumber = calcSwapInGivenOutWeightedPoolUNSAFE(
+    amount,
+    tokenOutReserves,
+    tokenInReserves
+  );
+  const calcIn =
+    clipStringValueToDecimals(calcInNumber.toString(), decimals) ?? "0";
+
+  return { result: [calcIn, amount], status: "success" };
+}
+
+function calcSwapPrincipalPool(
+  amount: string,
+  swapKind: SwapKind,
+  poolInfo: PrincipalPoolTokenInfo,
+  decimals: number,
+  tokenInReserves: string,
+  tokenOutReserves: string,
+  totalSupply: string,
+  baseAssetIn: boolean
+): QueryBatchSwapCalcResults {
   const nowInSeconds = Math.round(Date.now() / 1000);
-  const timeRemainingSeconds = expirationBN
-    ? expirationBN.toNumber() - nowInSeconds
-    : 0;
-  const tParamSeconds = unitSecondsBN?.toNumber() ?? 1;
+  const { extensions } = poolInfo;
+  const { unitSeconds: tParamSeconds, expiration } = extensions;
+  const timeRemainingSeconds = expiration - nowInSeconds;
 
-  const totalSupply = formatEther(totalSupplyBN);
-
-  if (isCCPool && kind === SwapKind.GIVEN_IN) {
+  if (swapKind === SwapKind.GIVEN_IN) {
     const calcOutNumber = calcSwapOutGivenInCCPoolUNSAFE(
-      amountIn, // xAmount,
+      amount, // xAmount,
       tokenInReserves, // xReserves,
       tokenOutReserves, // yReserves,
       totalSupply, // totalSupply,
       timeRemainingSeconds, // timeRemainingSeconds,
       tParamSeconds, // tParamSeconds,
-      tokenInAddress === baseAssetContract?.address // baseAssetIn
+      baseAssetIn // baseAssetIn
     );
 
     const calcOut =
       clipStringValueToDecimals(calcOutNumber.toString(), decimals) ?? "0";
 
-    return { result: [amountIn, calcOut], status: "success" };
+    return { result: [amount, calcOut], status: "success" };
   }
 
-  if (isCCPool && kind === SwapKind.GIVEN_OUT) {
-    const calcInNumber = calcSwapInGivenOutCCPoolUNSAFE(
-      amountOut, // xAmount,
-      tokenInReserves, // xReserves,
-      tokenOutReserves, // yReserves,
-      totalSupply, // totalSupply,
-      timeRemainingSeconds, // timeRemainingSeconds,
-      tParamSeconds, // tParamSeconds,
-      tokenInAddress === baseAssetContract?.address // baseAssetIn
-    );
+  // SwapKind.GIVEN_OUT
+  const calcInNumber = calcSwapInGivenOutCCPoolUNSAFE(
+    amount, // xAmount,
+    tokenInReserves, // xReserves,
+    tokenOutReserves, // yReserves,
+    totalSupply, // totalSupply,
+    timeRemainingSeconds, // timeRemainingSeconds,
+    tParamSeconds, // tParamSeconds,
+    baseAssetIn // baseAssetIn
+  );
 
-    const calcIn =
-      clipStringValueToDecimals(calcInNumber.toString(), decimals) ?? "0";
-    return { result: [calcIn, amountOut], status: "success" };
-  }
-
-  return { result: undefined, status: "error" };
+  const calcIn =
+    clipStringValueToDecimals(calcInNumber.toString(), decimals) ?? "0";
+  return { result: [calcIn, amount], status: "success" };
 }
