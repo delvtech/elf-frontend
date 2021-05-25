@@ -5,7 +5,7 @@ import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { ERC20 } from "elf-contracts/types/ERC20";
-import { Signer } from "ethers";
+import { BigNumber, Signer } from "ethers";
 import { formatEther, formatUnits, parseUnits } from "ethers/lib/utils";
 import { PrincipalPoolTokenInfo, YieldPoolTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
@@ -23,7 +23,6 @@ import { useTokenPoolIndex } from "efi-ui/pools/useTokenPoolIndex/useTokenPoolIn
 import { SwapTokensTransactionConfirmationDrawer } from "efi-ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensTransactionConfirmationDrawer";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { TradeInput } from "efi-ui/trade/TradeInput/TradeInput";
-import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
 import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 import { formatBalance } from "efi/base/formatBalance";
@@ -31,18 +30,19 @@ import { ContractMethodArgs } from "efi/contracts/types";
 import { CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
-import { getPoolTokenInfoFromContract } from "efi/pools/getPoolInfo";
-import { PoolContract } from "efi/pools/PoolContract";
-import { validateTradeValues } from "efi/trade/validateTradeValues";
-import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
+import { clipStringValueToDecimals } from "efi/math/fixedPoint";
 import {
   calcSwapInGivenOutCCPoolUNSAFE,
   calcSwapOutGivenInCCPoolUNSAFE,
 } from "efi/pools/calcPoolSwap";
-import { clipStringValueToDecimals } from "efi/math/fixedPoint";
 import { getPrincipalPoolForTranche } from "efi/pools/ccpool";
+import { getPoolTokenInfoFromContract } from "efi/pools/getPoolInfo";
 import { getTrancheForPool } from "efi/pools/getTrancheForPool";
+import { PoolContract } from "efi/pools/PoolContract";
 import { PoolInfo } from "efi/pools/PoolInfo";
+import { validateTradeValues } from "efi/trade/validateTradeValues";
+import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
+import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 
 interface TradePanelProps {
   library: Web3Provider | undefined;
@@ -75,9 +75,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     tokenOut: tokenOutFromProps,
   } = props;
   const [swapKind, setSwapKind] = useState(SwapKind.GIVEN_IN);
-
   const [isWalletDialogOpen, setWalletDialogOpen] = useState(false);
-  // local state
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const openDrawer = useCallback(() => setDrawerOpen(true), []);
   const onClickButton = useCallback(() => {
@@ -91,6 +89,25 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     tokenInFromProps,
     tokenOutFromProps
   );
+
+  const { stringValue: amountIn, setValue: setAmountIn } = useNumericInput();
+  const { stringValue: amountOut, setValue: setAmountOut } = useNumericInput();
+
+  const clearInputs = useCallback(() => {
+    setAmountIn("");
+    setAmountOut("");
+  }, [setAmountIn, setAmountOut]);
+
+  // clear inputs when they switch.  we can improve this UX later to keep the previous values.
+  useEffect(() => {
+    clearInputs();
+  }, [clearInputs, isReversed]);
+
+  const onClose = useCallback(() => {
+    setDrawerOpen(false);
+    setAmountIn("");
+    setAmountOut("");
+  }, [setAmountIn, setAmountOut]);
 
   const baseAsset = useBaseAssetForPool(pool);
   const spotPrice = usePoolSpotPrice(pool, baseAsset);
@@ -117,16 +134,6 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     poolBalance: tokenOutPoolBalance,
     poolIndex: tokenOutPoolIndex,
   } = useTokenInfoForTradeInput(pool, tokenOut, account, library);
-
-  const { stringValue: amountIn, setValue: setAmountIn } = useNumericInput();
-  const { stringValue: amountOut, setValue: setAmountOut } = useNumericInput();
-  // clear inputs when they switch.  we can improve this UX later to keep the previous values.
-  useEffect(() => {
-    setAmountIn("");
-    setAmountOut("");
-    // don't want to call this effect when the hooks update, only when isReversed updates
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isReversed]);
 
   const { isValidTokenInValue, isValidTokenOutValue } = validateTradeValues(
     amountIn,
@@ -156,26 +163,14 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     !amountOut;
   const submitButtonDisabled = !!account && invalidInput;
 
-  let submitButtonLabel = buttonLabel;
-  let submitButtonError = false;
-  if (!amountIn && !amountOut) {
-    submitButtonLabel = t`Enter an amount`;
-  }
-  if (insufficientBalance && account) {
-    submitButtonError = true;
-    submitButtonLabel = t`Insufficient balance`;
-  }
-  if (insufficientPoolBalance && account) {
-    submitButtonError = true;
-    submitButtonLabel = t`Insufficient pool liquidity`;
-  }
-  if (!account) {
-    submitButtonLabel = t`Connect wallet`;
-  }
-  const clearInputs = useCallback(() => {
-    setAmountIn("");
-    setAmountOut("");
-  }, [setAmountIn, setAmountOut]);
+  const { submitButtonError, submitButtonLabel } = getSubmitButtonLabel(
+    buttonLabel,
+    amountIn,
+    amountOut,
+    insufficientBalance,
+    account,
+    insufficientPoolBalance
+  );
 
   // pool
   const poolInfo = getPoolTokenInfoFromContract(pool);
@@ -184,6 +179,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
   const {
     extensions: { expiration, unitSeconds },
   } = getPrincipalPoolForTranche(trancheInfo.address);
+
   // TODO: use a global Date.now that updates at a constant interval
   const nowInSeconds = Math.round(Date.now() / 1000);
   const timeRemainingSeconds = expiration - nowInSeconds;
@@ -192,85 +188,32 @@ export function TradePanel(props: TradePanelProps): ReactElement {
   const { data: totalSupplyBN } = useSmartContractReadCall(pool, "totalSupply");
   const totalSupply = formatEther(totalSupplyBN ?? 0);
 
-  const onChangeIn = useCallback(
-    (newAmountIn: string, swapKind: SwapKind) => {
-      if (!newAmountIn) {
-        clearInputs();
-        return;
-      }
-      const newAmountOutNumber = calcSwapOutGivenInCCPoolUNSAFE(
-        newAmountIn,
-        formatUnits(tokenInBalanceOf ?? 0, tokenInDecimals),
-        formatUnits(tokenOutBalanceOf ?? 0, tokenInDecimals),
-        totalSupply,
-        timeRemainingSeconds,
-        tParamSeconds,
-        true
-      );
-      const newAmountOut = clipStringValueToDecimals(
-        newAmountOutNumber.toString(),
-        tokenInDecimals ?? 18
-      );
-
-      setSwapKind(swapKind);
-      setAmountIn(newAmountIn);
-      setAmountOut(newAmountOut);
-    },
-    [
-      clearInputs,
-      setAmountIn,
-      setAmountOut,
-      tParamSeconds,
-      timeRemainingSeconds,
-      tokenInBalanceOf,
-      tokenInDecimals,
-      tokenOutBalanceOf,
-      totalSupply,
-    ]
+  const onChangeIn = useOnChangeIn(
+    clearInputs,
+    tokenInBalanceOf,
+    tokenInDecimals,
+    tokenOutBalanceOf,
+    totalSupply,
+    timeRemainingSeconds,
+    tParamSeconds,
+    setSwapKind,
+    setAmountIn,
+    setAmountOut
   );
 
-  const onChangeOut = useCallback(
-    (newAmountOut: string, swapKind: SwapKind) => {
-      if (!newAmountOut) {
-        clearInputs();
-        return;
-      }
-      const newAmountInNumber = calcSwapInGivenOutCCPoolUNSAFE(
-        newAmountOut,
-        formatUnits(tokenOutBalanceOf ?? 0, tokenInDecimals),
-        formatUnits(tokenInBalanceOf ?? 0, tokenInDecimals),
-        totalSupply,
-        timeRemainingSeconds,
-        tParamSeconds,
-        false
-      );
-      const newAmountIn = clipStringValueToDecimals(
-        newAmountInNumber.toString(),
-        tokenOutDecimals ?? 18
-      );
-      setSwapKind(swapKind);
-      setAmountIn(newAmountIn);
-      setAmountOut(newAmountOut);
-    },
-    [
-      clearInputs,
-      setAmountIn,
-      setAmountOut,
-      tParamSeconds,
-      timeRemainingSeconds,
-      tokenInBalanceOf,
-      tokenInDecimals,
-      tokenOutBalanceOf,
-      tokenOutDecimals,
-      totalSupply,
-    ]
+  const onChangeOut = useOnChangeOut(
+    clearInputs,
+    tokenOutBalanceOf,
+    tokenInDecimals,
+    tokenInBalanceOf,
+    totalSupply,
+    timeRemainingSeconds,
+    tParamSeconds,
+    tokenOutDecimals,
+    setSwapKind,
+    setAmountIn,
+    setAmountOut
   );
-
-  const onClose = useCallback(() => {
-    setDrawerOpen(false);
-    setAmountIn("");
-    setAmountOut("");
-  }, [setAmountIn, setAmountOut]);
 
   return (
     <div
@@ -370,6 +313,136 @@ export function TradePanel(props: TradePanelProps): ReactElement {
       />
     </div>
   );
+}
+
+function useOnChangeOut(
+  clearInputs: () => void,
+  tokenOutBalanceOf: BigNumber | undefined,
+  tokenInDecimals: number | undefined,
+  tokenInBalanceOf: BigNumber | undefined,
+  totalSupply: string,
+  timeRemainingSeconds: number,
+  tParamSeconds: number,
+  tokenOutDecimals: number | undefined,
+  setSwapKind: (swapKind: SwapKind) => void,
+  setAmountIn: (value: string) => void,
+  setAmountOut: (value: string) => void
+) {
+  return useCallback(
+    (newAmountOut: string, swapKind: SwapKind) => {
+      if (!newAmountOut) {
+        clearInputs();
+        return;
+      }
+      const newAmountInNumber = calcSwapInGivenOutCCPoolUNSAFE(
+        newAmountOut,
+        formatUnits(tokenOutBalanceOf ?? 0, tokenInDecimals),
+        formatUnits(tokenInBalanceOf ?? 0, tokenInDecimals),
+        totalSupply,
+        timeRemainingSeconds,
+        tParamSeconds,
+        false
+      );
+      const newAmountIn = clipStringValueToDecimals(
+        newAmountInNumber.toString(),
+        tokenOutDecimals ?? 18
+      );
+      setSwapKind(swapKind);
+      setAmountIn(newAmountIn);
+      setAmountOut(newAmountOut);
+    },
+    [
+      clearInputs,
+      setAmountIn,
+      setAmountOut,
+      setSwapKind,
+      tParamSeconds,
+      timeRemainingSeconds,
+      tokenInBalanceOf,
+      tokenInDecimals,
+      tokenOutBalanceOf,
+      tokenOutDecimals,
+      totalSupply,
+    ]
+  );
+}
+
+function useOnChangeIn(
+  clearInputs: () => void,
+  tokenInBalanceOf: BigNumber | undefined,
+  tokenInDecimals: number | undefined,
+  tokenOutBalanceOf: BigNumber | undefined,
+  totalSupply: string,
+  timeRemainingSeconds: number,
+  tParamSeconds: number,
+  setSwapKind: (swapKind: SwapKind) => void,
+  setAmountIn: (value: string) => void,
+  setAmountOut: (value: string) => void
+) {
+  return useCallback(
+    (newAmountIn: string, swapKind: SwapKind) => {
+      if (!newAmountIn) {
+        clearInputs();
+        return;
+      }
+      const newAmountOutNumber = calcSwapOutGivenInCCPoolUNSAFE(
+        newAmountIn,
+        formatUnits(tokenInBalanceOf ?? 0, tokenInDecimals),
+        formatUnits(tokenOutBalanceOf ?? 0, tokenInDecimals),
+        totalSupply,
+        timeRemainingSeconds,
+        tParamSeconds,
+        true
+      );
+      const newAmountOut = clipStringValueToDecimals(
+        newAmountOutNumber.toString(),
+        tokenInDecimals ?? 18
+      );
+
+      setSwapKind(swapKind);
+      setAmountIn(newAmountIn);
+      setAmountOut(newAmountOut);
+    },
+    [
+      clearInputs,
+      setAmountIn,
+      setAmountOut,
+      setSwapKind,
+      tParamSeconds,
+      timeRemainingSeconds,
+      tokenInBalanceOf,
+      tokenInDecimals,
+      tokenOutBalanceOf,
+      totalSupply,
+    ]
+  );
+}
+
+function getSubmitButtonLabel(
+  buttonLabel: string,
+  amountIn: string,
+  amountOut: string,
+  insufficientBalance: boolean,
+  account: string | null | undefined,
+  insufficientPoolBalance: boolean
+) {
+  let submitButtonLabel = buttonLabel;
+  let submitButtonError = false;
+  if (!amountIn && !amountOut) {
+    submitButtonLabel = t`Enter an amount`;
+  }
+  if (insufficientBalance && account) {
+    submitButtonError = true;
+    submitButtonLabel = t`Insufficient balance`;
+  }
+  if (insufficientPoolBalance && account) {
+    submitButtonError = true;
+    submitButtonLabel = t`Insufficient pool liquidity`;
+  }
+  if (!account) {
+    submitButtonLabel = t`Connect wallet`;
+  }
+  return { submitButtonError, submitButtonLabel };
 }
 
 function useReversableTokens(

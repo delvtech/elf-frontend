@@ -53,6 +53,7 @@ export function useBatchSwapGivenIn(
   >;
 } {
   const balancerVault = useBalancerVault();
+  console.log("amountIn", amountIn);
   const poolIdResult = useSmartContractReadCall(pool, "getPoolId");
   const poolId = getQueryData(poolIdResult);
 
@@ -80,6 +81,7 @@ export function useBatchSwapGivenIn(
       amountIn,
       limitOut
     );
+    console.log("callArgs", callArgs);
     if (callArgs) {
       batchSwapGivenIn(callArgs);
     }
@@ -160,7 +162,7 @@ function makeBatchSwapGivenInCallArgs(
       return limitTokenOut;
     }
     // this should never happen but is here for completeness
-    return undefined;
+    return BigNumber.from(0);
   }) as BigNumber[];
 
   // set a large deadline for now, it was being buggy.  time is in seconds.  must be an integer.
