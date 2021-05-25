@@ -148,9 +148,10 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     tokenInBalanceOf ?? 0
   );
 
-  const insufficientPoolBalance =
-    parseUnits(amountIn || "0", tokenInDecimals).gt(tokenInPoolBalance ?? 0) ||
-    parseUnits(amountOut || "0", tokenOutDecimals).gt(tokenOutPoolBalance ?? 0);
+  const insufficientPoolBalance = parseUnits(
+    amountOut || "0",
+    tokenOutDecimals
+  ).gt(tokenOutPoolBalance ?? 0);
 
   const invalidInput =
     formDisabled ||
