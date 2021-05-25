@@ -1,5 +1,5 @@
 import { KNOWN_BASE_ASSETS } from "efi/addresses";
-import { UnderlyingContracts } from "efi/underlying/underlying";
+import { underlyingContracts } from "efi/underlying/underlying";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
 import { InterestTokenContractsByAddress } from "efi/interestToken/interestToken";
 import { USDC } from "elf-contracts/types/USDC";
@@ -27,7 +27,7 @@ export function useParseSortedTokensForPool(
   const termAssetAddress = tokens?.[termAssetIndex];
 
   const baseAssetContract = baseAssetAddress
-    ? UnderlyingContracts[baseAssetAddress]
+    ? underlyingContracts[baseAssetAddress]
     : undefined;
 
   const termAssetContract = termAssetAddress
