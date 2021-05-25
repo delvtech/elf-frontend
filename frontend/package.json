@@ -152,7 +152,7 @@
   },
   "devDependencies": {
     "@testing-library/dom": "^7.31.0",
-    "@testing-library/react-hooks": "^6.0.0",
+    "@testing-library/react-hooks": "^7.0.0",
     "@typechain/ethers-v5": "^6.0.5",
     "@types/d3-time-format": "^3.0.0",
     "dependency-cruiser": "^10.0.1",
