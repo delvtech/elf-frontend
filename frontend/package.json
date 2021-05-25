@@ -8,12 +8,12 @@
     "@blueprintjs/icons": "^3.26.1",
     "@blueprintjs/popover2": "^0.9.0",
     "@blueprintjs/select": "^3.16.3",
-    "@ethersproject/abi": "^5.1.2",
-    "@ethersproject/abstract-signer": "^5.1.0",
-    "@ethersproject/bytes": "^5.1.0",
-    "@ethersproject/contracts": "^5.0.12",
-    "@ethersproject/hash": "^5.1.0",
-    "@ethersproject/providers": "^5.0.24",
+    "@ethersproject/abi": "^5.2.0",
+    "@ethersproject/abstract-signer": "^5.2.0",
+    "@ethersproject/bytes": "^5.2.0",
+    "@ethersproject/contracts": "^5.2.0",
+    "@ethersproject/hash": "^5.2.0",
+    "@ethersproject/providers": "^5.2.0",
     "@fontsource/inter": "^4.3.0",
     "@fontsource/rubik": "^4.3.0",
     "@metamask/jazzicon": "^2.0.0",
@@ -66,7 +66,7 @@
     "d3-time-format": "^3.0.0",
     "date-fns": "^2.21.3",
     "ethereum-waffle": "^3.3.0",
-    "ethers": "^5.0.32",
+    "ethers": "^5.2.0",
     "fuzzaldrin-plus": "^0.6.0",
     "graphql": "^15.5.0",
     "graphql-request": "^3.4.0",
@@ -153,7 +153,7 @@
   "devDependencies": {
     "@testing-library/dom": "^7.31.0",
     "@testing-library/react-hooks": "^7.0.0",
-    "@typechain/ethers-v5": "^6.0.5",
+    "@typechain/ethers-v5": "^7.0.0",
     "@types/d3-time-format": "^3.0.0",
     "dependency-cruiser": "^10.0.1",
     "eslint-config-prettier": "^8.3.0",
@@ -164,6 +164,6 @@
     "prettier": "^2.3.0",
     "react-test-renderer": "^17.0.2",
     "ttag-cli": "^1.9.2",
-    "typechain": "^4.0.3"
+    "typechain": "^5.0.0"
   }
 }
