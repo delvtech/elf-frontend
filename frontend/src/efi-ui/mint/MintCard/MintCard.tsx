@@ -124,7 +124,7 @@ export function MintCard(props: MintCardProps): ReactElement | null {
   }, [account, setDrawerOpen]);
 
   const link = (
-    <Link to={`/portfolio`} onClick={stopPropagationHandler}>
+    <Link key="porfolioLink" to={`/portfolio`} onClick={stopPropagationHandler}>
       {t`Portfolio Page`}
     </Link>
   );

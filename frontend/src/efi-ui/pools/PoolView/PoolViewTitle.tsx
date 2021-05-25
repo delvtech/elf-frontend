@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet";
 
 import { t } from "ttag";
 
-import { getTermAssetSymbol } from "efi-ui/tranche/getTermAssetSymbol";
+import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { getPoolTokens } from "efi/pools/getPoolTokens";

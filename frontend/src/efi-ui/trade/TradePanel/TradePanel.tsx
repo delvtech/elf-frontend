@@ -23,7 +23,7 @@ import { useTokenPoolIndex } from "efi-ui/pools/useTokenPoolIndex/useTokenPoolIn
 import { SwapTokensTransactionConfirmationDrawer } from "efi-ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensTransactionConfirmationDrawer";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { TradeInput } from "efi-ui/trade/TradeInput/TradeInput";
-import { getTermAssetSymbol } from "efi-ui/tranche/getTermAssetSymbol";
+import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
 import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 import { formatBalance } from "efi/base/formatBalance";
@@ -31,7 +31,7 @@ import { ContractMethodArgs } from "efi/contracts/types";
 import { CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
-import { getPoolInfoFromContract } from "efi/pools/getPoolInfo";
+import { getPoolTokenInfoFromContract } from "efi/pools/getPoolInfo";
 import { PoolContract } from "efi/pools/PoolContract";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
@@ -178,7 +178,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
   }, [setAmountIn, setAmountOut]);
 
   // pool
-  const poolInfo = getPoolInfoFromContract(pool);
+  const poolInfo = getPoolTokenInfoFromContract(pool);
   const trancheInfo = getTrancheForPool(poolInfo as PoolInfo);
   // pool
   const {
@@ -418,7 +418,7 @@ function useTokenInfoForTradeInput(
 ) {
   // getting the proper symbols is a pain using hooks.  all this logic is for that:
   // get contracts/assets
-  const poolInfo = getPoolInfoFromContract(pool) as
+  const poolInfo = getPoolTokenInfoFromContract(pool) as
     | PrincipalPoolTokenInfo
     | YieldPoolTokenInfo;
   const baseAssetAddress = poolInfo?.extensions.underlying;

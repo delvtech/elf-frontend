@@ -16,6 +16,7 @@ interface TermAssetSymbols {
   label?: string | undefined;
 }
 
+// TODO: lets make this the default format for label/symbol in tokenlists
 export function getTermAssetSymbol(
   termAssetAddress: string | undefined,
   vaultSymbol: string | undefined
