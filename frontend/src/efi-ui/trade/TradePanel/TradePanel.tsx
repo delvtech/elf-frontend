@@ -190,20 +190,19 @@ export function TradePanel(props: TradePanelProps): ReactElement {
   const totalSupply = formatEther(totalSupplyBN ?? 0);
 
   const onChangeIn = useOnChangeIn(
-    clearInputs,
     tokenInBalanceOf,
     tokenInDecimals,
     tokenOutBalanceOf,
     totalSupply,
     timeRemainingSeconds,
     tParamSeconds,
+    clearInputs,
     setSwapKind,
     setAmountIn,
     setAmountOut
   );
 
   const onChangeOut = useOnChangeOut(
-    clearInputs,
     tokenOutBalanceOf,
     tokenInDecimals,
     tokenInBalanceOf,
@@ -211,6 +210,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     timeRemainingSeconds,
     tParamSeconds,
     tokenOutDecimals,
+    clearInputs,
     setSwapKind,
     setAmountIn,
     setAmountOut
@@ -317,7 +317,6 @@ export function TradePanel(props: TradePanelProps): ReactElement {
 }
 
 function useOnChangeOut(
-  clearInputs: () => void,
   tokenOutBalanceOf: BigNumber | undefined,
   tokenInDecimals: number | undefined,
   tokenInBalanceOf: BigNumber | undefined,
@@ -325,6 +324,7 @@ function useOnChangeOut(
   timeRemainingSeconds: number,
   tParamSeconds: number,
   tokenOutDecimals: number | undefined,
+  clearInputs: () => void,
   setSwapKind: (swapKind: SwapKind) => void,
   setAmountIn: (value: string) => void,
   setAmountOut: (value: string) => void
@@ -369,13 +369,13 @@ function useOnChangeOut(
 }
 
 function useOnChangeIn(
-  clearInputs: () => void,
   tokenInBalanceOf: BigNumber | undefined,
   tokenInDecimals: number | undefined,
   tokenOutBalanceOf: BigNumber | undefined,
   totalSupply: string,
   timeRemainingSeconds: number,
   tParamSeconds: number,
+  clearInputs: () => void,
   setSwapKind: (swapKind: SwapKind) => void,
   setAmountIn: (value: string) => void,
   setAmountOut: (value: string) => void

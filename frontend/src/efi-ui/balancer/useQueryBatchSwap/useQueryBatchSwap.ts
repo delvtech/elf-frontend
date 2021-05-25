@@ -9,7 +9,6 @@ import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { makeQueryBatchSwapCallArgs } from "efi-ui/balancer/useQueryBatchSwap/makeQueryBatchSwapCallArgs";
 import { getQueryData } from "efi-ui/base/queryResults";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { clipStringValueToDecimals } from "efi/math/fixedPoint";
 import {
   calcSwapInGivenOutCCPoolUNSAFE,
@@ -18,9 +17,8 @@ import {
   calcSwapOutGivenInWeightedPoolUNSAFE,
 } from "efi/pools/calcPoolSwap";
 import { isPrincipalPool } from "efi/pools/ccpool";
-import { getPoolTokenInfoFromContract } from "efi/pools/getPoolInfo";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
-import { isConvergentCurvePool, PoolContract } from "efi/pools/PoolContract";
+import { PoolContract } from "efi/pools/PoolContract";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { isYieldPool } from "efi/pools/weightedPool";
 
@@ -76,33 +74,18 @@ interface QueryBatchSwapCalcResults {
   status: QueryStatus;
 }
 
-export function useQueryBatchSwapCalc(
+export function getCalcSwap(
+  amount: string,
   kind: SwapKind,
-  poolContract: PoolContract | undefined,
-  tokenInAddress: string | undefined,
-  tokenOutAddress: string | undefined,
-  amountBN: BigNumber | undefined
+  poolInfo: PoolInfo,
+  tokenInAddress: string,
+  tokenOutAddress: string,
+  tokenInReserves: string,
+  tokenOutReserves: string,
+  totalSupply: string
 ): QueryBatchSwapCalcResults {
-  const { data } = usePoolTokens(poolContract);
-  const [tokens, balances] = data ?? [[], []];
-  const poolInfo = getPoolTokenInfoFromContract(poolContract) as PoolInfo;
   const { baseAssetInfo } = getPoolTokens(poolInfo);
   const { decimals, address: baseAssetAddress } = baseAssetInfo;
-  const { tokenInReserves, tokenOutReserves } = getTokenReserves(
-    tokens,
-    balances,
-    tokenInAddress,
-    decimals,
-    tokenOutAddress
-  );
-  const { data: totalSupplyBN } = useSmartContractReadCall(
-    poolContract,
-    "totalSupply",
-    { enabled: isConvergentCurvePool(poolContract) }
-  );
-  const totalSupply = formatUnits(totalSupplyBN ?? 0, decimals);
-  const amount = formatUnits(amountBN ?? 0, decimals);
-
   // do weighted pools first since they don't need as many variables
   if (!amount || !tokenInAddress || !tokenOutAddress || !decimals) {
     return { result: undefined, status: "loading" };
@@ -118,13 +101,7 @@ export function useQueryBatchSwapCalc(
     );
   }
 
-  if (
-    !amount ||
-    !tokenInAddress ||
-    !tokenOutAddress ||
-    !totalSupplyBN ||
-    !decimals
-  ) {
+  if (!amount || !decimals) {
     return { result: undefined, status: "loading" };
   }
 
@@ -145,13 +122,13 @@ export function useQueryBatchSwapCalc(
   return { result: undefined, status: "error" };
 }
 
-function getTokenReserves(
+export function getTokenReserves(
   tokens: string[] | never[],
   balances: BigNumber[] | never[],
   tokenInAddress: string | undefined,
-  decimals: number,
-  tokenOutAddress: string | undefined
-) {
+  tokenOutAddress: string | undefined,
+  decimals: number
+): { tokenInReserves: string; tokenOutReserves: string } {
   const balancesByAddress: Record<string, BigNumber | undefined> = {};
   tokens
     .filter((address): address is string => !!address)

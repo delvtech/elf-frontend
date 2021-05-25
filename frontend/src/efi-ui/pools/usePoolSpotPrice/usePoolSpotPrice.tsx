@@ -4,14 +4,20 @@ import zip from "lodash.zip";
 
 import { SwapKind } from "efi-ui/balancer/SwapKind";
 import { parseQueryBatchSwapResult } from "efi-ui/balancer/useQueryBatchSwap/parseQueryBatchSwapResult";
-import { useQueryBatchSwapCalc } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
+import {
+  getCalcSwap,
+  getTokenReserves,
+} from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
 import { useQueryBatchSwapMulti } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwapMulti";
 import { getQueriesData } from "efi-ui/base/queryResults";
-import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
+import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { usePoolPairedTokenMulti } from "efi-ui/pools/usePoolPairedToken/usePoolPairedTokenMulti";
-import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
+import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useTokenDecimalsMulti } from "efi-ui/token/hooks/useTokenDecimalsMulti";
-import { PoolContract } from "efi/pools/PoolContract";
+import { getPoolTokenInfoFromContract } from "efi/pools/getPoolInfo";
+import { getPoolTokens } from "efi/pools/getPoolTokens";
+import { isConvergentCurvePool, PoolContract } from "efi/pools/PoolContract";
+import { PoolInfo } from "efi/pools/PoolInfo";
 
 /**
  * Lazy spot price technique until we get a better method.  Right now just calculates how much out
@@ -25,28 +31,54 @@ import { PoolContract } from "efi/pools/PoolContract";
  * yield = base / spotPrice
  */
 export function usePoolSpotPrice(
-  pool: PoolContract | undefined,
+  poolContract: PoolContract | undefined,
   underlyingToken: ERC20 | undefined
 ): number | undefined {
-  const { data: decimals } = useTokenDecimals(underlyingToken);
-  const yieldToken = usePoolPairedToken(pool, underlyingToken);
-  const amountIn = parseUnits("0.01", decimals);
+  const amount = "0.01";
+  const { data } = usePoolTokens(poolContract);
+  const [tokens, balances] = data ?? [[], []];
+  const poolInfo = getPoolTokenInfoFromContract(poolContract) as PoolInfo;
+  const { baseAssetInfo, termAssetInfo } = getPoolTokens(poolInfo);
+  const { data: totalSupplyBN } = useSmartContractReadCall(
+    poolContract,
+    "totalSupply",
+    { enabled: isConvergentCurvePool(poolContract) }
+  );
+  const totalSupply = formatUnits(totalSupplyBN ?? 0, baseAssetInfo.decimals);
 
-  const { result: [, amountOut] = [] } =
-    useQueryBatchSwapCalc(
-      SwapKind.GIVEN_IN,
-      pool,
-      underlyingToken?.address,
-      yieldToken?.address,
-      amountIn
-    ) ?? [];
+  const tokenInAddress =
+    baseAssetInfo.address === underlyingToken?.address
+      ? baseAssetInfo.address
+      : termAssetInfo.address;
+  const tokenOutAddress =
+    baseAssetInfo.address === underlyingToken?.address
+      ? termAssetInfo.address
+      : baseAssetInfo.address;
+  const { tokenInReserves, tokenOutReserves } = getTokenReserves(
+    tokens,
+    balances,
+    tokenInAddress,
+    tokenOutAddress,
+    baseAssetInfo.decimals
+  );
+
+  const { result: [, amountOut] = [] } = getCalcSwap(
+    amount,
+    SwapKind.GIVEN_IN,
+    poolInfo,
+    tokenInAddress,
+    tokenOutAddress,
+    tokenInReserves,
+    tokenOutReserves,
+    totalSupply
+  );
 
   // can't give a meaningful spot price until we have the decimals
-  if (!amountOut || !decimals) {
+  if (!amountOut) {
     return undefined;
   }
 
-  const spotPrice = +amountOut / +formatUnits(amountIn, decimals);
+  const spotPrice = +amountOut / +formatUnits(amount, baseAssetInfo.decimals);
 
   return Math.abs(spotPrice);
 }
