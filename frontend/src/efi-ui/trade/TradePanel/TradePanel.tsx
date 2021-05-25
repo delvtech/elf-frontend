@@ -6,36 +6,43 @@ import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { ERC20 } from "elf-contracts/types/ERC20";
 import { Signer } from "ethers";
-import { parseUnits } from "ethers/lib/utils";
+import { formatEther, formatUnits, parseUnits } from "ethers/lib/utils";
+import { PrincipalPoolTokenInfo, YieldPoolTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { SwapKind } from "efi-ui/balancer/SwapKind";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
-import { getQueryData } from "efi-ui/base/queryResults";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
-import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { useCryptoBalance } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
-import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useTokenPoolBalance } from "efi-ui/pools/useTokenPoolBalance/useTokenPoolBalance";
 import { useTokenPoolIndex } from "efi-ui/pools/useTokenPoolIndex/useTokenPoolIndex";
 import { SwapTokensTransactionConfirmationDrawer } from "efi-ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensTransactionConfirmationDrawer";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { TradeInput } from "efi-ui/trade/TradeInput/TradeInput";
-import { getTermAssetSymbol } from "efi-ui/tranche/useTermAssetSymbol";
+import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
 import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 import { formatBalance } from "efi/base/formatBalance";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { CryptoAssetType } from "efi/crypto/CryptoAsset";
-import { useParseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
+import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { getPoolTokenInfoFromContract } from "efi/pools/getPoolInfo";
 import { PoolContract } from "efi/pools/PoolContract";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
+import {
+  calcSwapInGivenOutCCPoolUNSAFE,
+  calcSwapOutGivenInCCPoolUNSAFE,
+} from "efi/pools/calcPoolSwap";
+import { clipStringValueToDecimals } from "efi/math/fixedPoint";
+import { getPrincipalPoolForTranche } from "efi/pools/ccpool";
+import { getTrancheForPool } from "efi/pools/getTrancheForPool";
+import { PoolInfo } from "efi/pools/PoolInfo";
 
 interface TradePanelProps {
   library: Web3Provider | undefined;
@@ -67,6 +74,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     tokenIn: tokenInFromProps,
     tokenOut: tokenOutFromProps,
   } = props;
+  const [swapKind, setSwapKind] = useState(SwapKind.GIVEN_IN);
 
   const [isWalletDialogOpen, setWalletDialogOpen] = useState(false);
   // local state
@@ -110,13 +118,12 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     poolIndex: tokenOutPoolIndex,
   } = useTokenInfoForTradeInput(pool, tokenOut, account, library);
 
-  const { stringValue: amountIn, setValue: onChangeIn } = useNumericInput();
-  const { stringValue: amountOut, setValue: onChangeOut } = useNumericInput();
-
+  const { stringValue: amountIn, setValue: setAmountIn } = useNumericInput();
+  const { stringValue: amountOut, setValue: setAmountOut } = useNumericInput();
   // clear inputs when they switch.  we can improve this UX later to keep the previous values.
   useEffect(() => {
-    onChangeIn("");
-    onChangeOut("");
+    setAmountIn("");
+    setAmountOut("");
     // don't want to call this effect when the hooks update, only when isReversed updates
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isReversed]);
@@ -165,12 +172,105 @@ export function TradePanel(props: TradePanelProps): ReactElement {
   if (!account) {
     submitButtonLabel = t`Connect wallet`;
   }
+  const clearInputs = useCallback(() => {
+    setAmountIn("");
+    setAmountOut("");
+  }, [setAmountIn, setAmountOut]);
+
+  // pool
+  const poolInfo = getPoolTokenInfoFromContract(pool);
+  const trancheInfo = getTrancheForPool(poolInfo as PoolInfo);
+  // pool
+  const {
+    extensions: { expiration, unitSeconds },
+  } = getPrincipalPoolForTranche(trancheInfo.address);
+  // TODO: use a global Date.now that updates at a constant interval
+  const nowInSeconds = Math.round(Date.now() / 1000);
+  const timeRemainingSeconds = expiration - nowInSeconds;
+  const tParamSeconds = unitSeconds;
+
+  const { data: totalSupplyBN } = useSmartContractReadCall(pool, "totalSupply");
+  const totalSupply = formatEther(totalSupplyBN ?? 0);
+
+  const onChangeIn = useCallback(
+    (newAmountIn: string, swapKind: SwapKind) => {
+      if (!newAmountIn) {
+        clearInputs();
+        return;
+      }
+      const newAmountOutNumber = calcSwapOutGivenInCCPoolUNSAFE(
+        newAmountIn,
+        formatUnits(tokenInBalanceOf ?? 0, tokenInDecimals),
+        formatUnits(tokenOutBalanceOf ?? 0, tokenInDecimals),
+        totalSupply,
+        timeRemainingSeconds,
+        tParamSeconds,
+        true
+      );
+      const newAmountOut = clipStringValueToDecimals(
+        newAmountOutNumber.toString(),
+        tokenInDecimals ?? 18
+      );
+      setSwapKind(swapKind);
+      setAmountIn(newAmountIn);
+      setAmountOut(newAmountOut);
+    },
+    [
+      clearInputs,
+      setAmountIn,
+      setAmountOut,
+      tParamSeconds,
+      timeRemainingSeconds,
+      tokenInBalanceOf,
+      tokenInDecimals,
+      tokenOutBalanceOf,
+      totalSupply,
+    ]
+  );
+
+  const onChangeOut = useCallback(
+    (newAmountOut: string, swapKind: SwapKind) => {
+      if (!newAmountOut) {
+        clearInputs();
+        return;
+      }
+      const newAmountInNumber = calcSwapInGivenOutCCPoolUNSAFE(
+        newAmountOut,
+        formatUnits(tokenOutBalanceOf ?? 0, tokenInDecimals),
+        formatUnits(tokenInBalanceOf ?? 0, tokenInDecimals),
+        totalSupply,
+        timeRemainingSeconds,
+        tParamSeconds,
+        false
+      );
+      const newAmountIn = clipStringValueToDecimals(
+        newAmountInNumber.toString(),
+        tokenOutDecimals ?? 18
+      );
+      setSwapKind(swapKind);
+      setAmountIn(newAmountIn);
+      setAmountOut(newAmountOut);
+    },
+    [
+      clearInputs,
+      setAmountIn,
+      setAmountOut,
+      tParamSeconds,
+      timeRemainingSeconds,
+      tokenInBalanceOf,
+      tokenInDecimals,
+      tokenOutBalanceOf,
+      tokenOutDecimals,
+      totalSupply,
+    ]
+  );
 
   const onClose = useCallback(() => {
     setDrawerOpen(false);
-    onChangeIn("");
-    onChangeOut("");
-  }, [onChangeIn, onChangeOut]);
+    setAmountIn("");
+    setAmountOut("");
+  }, [setAmountIn, setAmountOut]);
+
   return (
     <div
       className={tw(
@@ -191,12 +291,13 @@ export function TradePanel(props: TradePanelProps): ReactElement {
         cryptoIcon={tokenInIcon}
         previewCryptoAddress={tokenOutAddress}
         previewCryptoPoolIndex={tokenOutPoolIndex}
-        labelTopLeft={t`Trade`}
+        labelTopLeft={
+          swapKind === SwapKind.GIVEN_IN ? t`Trade` : t`Trade (estimated)`
+        }
         disabled={formDisabled}
         swapKind={SwapKind.GIVEN_IN}
         pool={pool}
         onChange={onChangeIn}
-        onPreviewUpdate={onChangeOut}
         value={amountIn}
         validValue={isValidTokenInValue}
       />
@@ -219,12 +320,13 @@ export function TradePanel(props: TradePanelProps): ReactElement {
         cryptoIcon={tokenOutIcon}
         previewCryptoAddress={tokenInAddress}
         previewCryptoPoolIndex={tokenInPoolIndex}
-        labelTopLeft={t`For (estimated)`}
+        labelTopLeft={
+          swapKind === SwapKind.GIVEN_OUT ? t`For` : t`For (estimated)`
+        }
         disabled={formDisabled}
         swapKind={SwapKind.GIVEN_OUT}
         pool={pool}
         onChange={onChangeOut}
-        onPreviewUpdate={onChangeIn}
         value={amountOut}
         validValue={isValidTokenOutValue}
       />
@@ -285,7 +387,6 @@ function useReversableTokens(
   return { tokenIn, tokenOut, swapAssets, isReversed };
 }
 
-// TODO: clean this up, I don't know what we need amountOut in here
 export function useTokenApproval(
   account: string | null | undefined,
   pool: PoolContract | undefined,
@@ -317,25 +418,26 @@ function useTokenInfoForTradeInput(
 ) {
   // getting the proper symbols is a pain using hooks.  all this logic is for that:
   // get contracts/assets
-  const tokensResult = usePoolTokens(pool);
-  const [tokens] = getQueryData(tokensResult) ?? [];
-  const { termAssetContract, baseAssetContract } =
-    useParseSortedTokensForPool(tokens);
-  const baseCryptoAsset = getCryptoAssetForToken(baseAssetContract?.address);
+  const poolInfo = getPoolTokenInfoFromContract(pool) as
+    | PrincipalPoolTokenInfo
+    | YieldPoolTokenInfo;
+  const baseAssetAddress = poolInfo?.extensions.underlying;
+  const termAssetAddress =
+    (poolInfo as PrincipalPoolTokenInfo)?.extensions?.bond ??
+    (poolInfo as YieldPoolTokenInfo)?.extensions?.interestToken;
+  const baseCryptoAsset = getCryptoAssetForToken(baseAssetAddress);
 
   // get symbols
   const baseAssetSymbol = getCryptoSymbol(baseCryptoAsset);
   const vaultSymbol = getVaultSymbol(baseCryptoAsset);
   const { symbol: termSymbol } = getTermAssetSymbol(
-    termAssetContract?.address,
+    termAssetAddress,
     vaultSymbol
   );
 
   // choose correct symbol
   const symbol =
-    termAssetContract?.address === tokenContract?.address
-      ? termSymbol
-      : baseAssetSymbol;
+    termAssetAddress === tokenContract?.address ? termSymbol : baseAssetSymbol;
 
   // get other properties
   const asset = getCryptoAssetForToken(tokenContract?.address);

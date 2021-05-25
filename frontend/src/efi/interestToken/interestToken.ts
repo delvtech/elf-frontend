@@ -21,6 +21,9 @@ export const InterestTokenContractsByAddress = keyBy(
   interestTokenContracts,
   (interestToken) => interestToken.address
 );
-function isYieldToken(tokenInfo: TokenInfo): tokenInfo is YieldTokenInfo {
-  return !!tokenInfo.tags?.includes(TokenListTag.YIELD);
+
+export function isYieldToken(
+  tokenInfo: TokenInfo
+): tokenInfo is YieldTokenInfo {
+  return !!tokenInfo?.tags?.includes(TokenListTag.YIELD);
 }

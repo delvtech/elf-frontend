@@ -2,11 +2,7 @@ import { TokenInfo } from "@uniswap/token-lists";
 import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
 import { ConvergentCurvePool__factory } from "elf-contracts/types/factories/ConvergentCurvePool__factory";
 import keyBy from "lodash.keyby";
-import {
-  PrincipalPoolTokenInfo,
-  PrincipalTokenInfo,
-  TokenListTag,
-} from "tokenlists/types";
+import { PrincipalPoolTokenInfo, TokenListTag } from "tokenlists/types";
 
 import { getSmartContractFromRegistryMulti } from "efi/contracts/SmartContractsRegistry";
 import { tokenListJson } from "efi/tokenlists";
@@ -30,9 +26,9 @@ const principalPoolContractsByAddress = keyBy(
   (poolContract) => poolContract.address
 );
 
-function isPrincipalPool(
+export function isPrincipalPool(
   tokenInfo: TokenInfo
-): tokenInfo is PrincipalTokenInfo {
+): tokenInfo is PrincipalPoolTokenInfo {
   return !!tokenInfo.tags?.includes(TokenListTag.CCPOOL);
 }
 export function getPrincipalPoolForTranche(

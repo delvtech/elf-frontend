@@ -16,6 +16,7 @@ import {
 } from "efi-ui/pools/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
 import { TradePanel } from "efi-ui/trade/TradePanel/TradePanel";
 import { PoolContract } from "efi/pools/PoolContract";
+import { TokenInfo } from "@uniswap/token-lists";
 
 interface PoolActionsCardProps {
   library: Web3Provider | undefined;
@@ -27,6 +28,9 @@ interface PoolActionsCardProps {
   pool: PoolContract | undefined;
   tokenIn: ERC20 | undefined;
   tokenOut: ERC20 | undefined;
+
+  firstTokenInfo: TokenInfo;
+  secondTokenInfo: TokenInfo;
 }
 
 export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {

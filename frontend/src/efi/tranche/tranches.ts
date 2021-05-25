@@ -40,10 +40,10 @@ export const openTranches = getSmartContractFromRegistryMulti(
   Tranche__factory.connect
 ) as Tranche[];
 
-function isPrincipalToken(
+export function isPrincipalToken(
   tokenInfo: TokenInfo
 ): tokenInfo is PrincipalTokenInfo {
-  return !!tokenInfo.tags?.includes(TokenListTag.PRINCIPAL);
+  return !!tokenInfo?.tags?.includes(TokenListTag.PRINCIPAL);
 }
 
 export function getVaultForTranche(trancheAddress: string): TestYVault {

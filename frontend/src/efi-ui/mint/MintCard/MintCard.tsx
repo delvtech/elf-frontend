@@ -7,7 +7,7 @@ import { AbstractConnector } from "@web3-react/abstract-connector";
 import classNames from "classnames";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { parseUnits } from "ethers/lib/utils";
-import { t } from "ttag";
+import { jt, t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
@@ -72,10 +72,7 @@ export function MintCard(props: MintCardProps): ReactElement | null {
   const [isWalletDialogOpen, setWalletDialogOpen] = useState(false);
 
   const { stringValue: amountInString, setValue: setAmountIn } =
-    useNumericInput({
-      // no one needs to put in more than a trillion anything
-      max: 999_999_999_999,
-    });
+    useNumericInput();
 
   const amountIn = +(amountInString || 0);
 
@@ -125,6 +122,14 @@ export function MintCard(props: MintCardProps): ReactElement | null {
 
     setDrawerOpen(true);
   }, [account, setDrawerOpen]);
+
+  const link = (
+    <Link key="porfolioLink" to={`/portfolio`} onClick={stopPropagationHandler}>
+      {t`Portfolio Page`}
+    </Link>
+  );
+
+  const portfolioLink = jt`Go to the ${link}.`;
 
   return (
     <Fragment>
@@ -195,17 +200,15 @@ export function MintCard(props: MintCardProps): ReactElement | null {
         >
           2
         </div>
-        <div className={tw("text-lg")}>Stake Your Tokens or Sell Principal</div>
+        <div
+          className={tw("text-lg")}
+        >{t`Stake Your Tokens or Sell Principal`}</div>
       </div>
       <div className={tw("flex", "pl-12", "pt-2", "mb-6", "items-center")}>
-        <div className={"ml-10 text-sm"}>
-          Go to the{" "}
-          <Link to={`/portfolio`} onClick={stopPropagationHandler}>
-            Portfolio Page
-          </Link>
-          . <br />
-          Stake your tokens for additional APY. <br />
-          Or sell your principal to re-invest.
+        <div className={"flex flex-col ml-10 text-sm"}>
+          <span>{portfolioLink}</span>
+          <span>{t`Stake your tokens for additional APY.`}</span>
+          <span>{t`Or sell your principal to re-invest.`}</span>
         </div>
       </div>
       <MintTransactionConfirmationDrawer
