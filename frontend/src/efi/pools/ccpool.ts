@@ -21,7 +21,7 @@ export const principalPoolContracts = getSmartContractFromRegistryMulti(
   ConvergentCurvePool__factory.connect
 ) as ConvergentCurvePool[];
 
-const principalPoolContractsByAddress = keyBy(
+export const principalPoolContractsByAddress = keyBy(
   principalPoolContracts,
   (poolContract) => poolContract.address
 );

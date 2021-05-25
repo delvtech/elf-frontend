@@ -25,6 +25,8 @@ interface MintTransactionConfirmationDrawerProps {
   amountIn: string | undefined;
   baseAsset: CryptoAsset | undefined;
   baseAssetIcon: TokenIcon | undefined;
+  principalTokenSymbol: string | undefined;
+  yieldTokenSymbol: string | undefined;
 
   tranche: Tranche | undefined;
   isOpen: boolean;
@@ -37,6 +39,8 @@ export function MintTransactionConfirmationDrawer({
   account,
   baseAssetIcon: BaseAssetIcon,
   baseAsset,
+  principalTokenSymbol,
+  yieldTokenSymbol,
   tranche,
   amountIn,
   isOpen,
@@ -94,6 +98,8 @@ export function MintTransactionConfirmationDrawer({
         >
           <MintTransactionDetails
             baseAssetSymbol={baseAssetSymbol}
+            principalTokenSymbol={principalTokenSymbol}
+            yieldTokenSymbol={yieldTokenSymbol}
             unlockTimestamp={unlockTimeStampDate}
             numPrincipalTokens={numPrincipalTokens}
             numYieldTokens={amountInAsNumber}
