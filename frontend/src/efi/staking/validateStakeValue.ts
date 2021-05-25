@@ -8,7 +8,7 @@ export function validateStakingValue(
 ): boolean {
   const isValidTokenValue =
     amount && tokenBalanceOf
-      ? parseUnits(amount ?? 0, tokenDecimals).lte(tokenBalanceOf)
+      ? parseUnits(amount || "0", tokenDecimals).lte(tokenBalanceOf)
       : true;
 
   return isValidTokenValue;

@@ -95,7 +95,7 @@ export function MintCard(props: MintCardProps): ReactElement | null {
   );
 
   const insufficientBalance = parseUnits(
-    amountInString ?? t`0`,
+    amountInString || t`0`,
     baseAssetDecimals
   ).gt(baseAssetBalance ?? 0);
 

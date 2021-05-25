@@ -137,13 +137,13 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     tokenInDecimals
   );
 
-  const insufficientBalance = parseUnits(amountIn ?? "0", tokenInDecimals).gt(
+  const insufficientBalance = parseUnits(amountIn || "0", tokenInDecimals).gt(
     tokenInBalanceOf ?? 0
   );
 
   const insufficientPoolBalance =
-    parseUnits(amountIn ?? "0", tokenInDecimals).gt(tokenInPoolBalance ?? 0) ||
-    parseUnits(amountOut ?? "0", tokenOutDecimals).gt(tokenOutPoolBalance ?? 0);
+    parseUnits(amountIn || "0", tokenInDecimals).gt(tokenInPoolBalance ?? 0) ||
+    parseUnits(amountOut || "0", tokenOutDecimals).gt(tokenOutPoolBalance ?? 0);
 
   const invalidInput =
     formDisabled ||

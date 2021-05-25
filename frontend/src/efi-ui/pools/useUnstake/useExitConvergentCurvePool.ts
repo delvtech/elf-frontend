@@ -188,11 +188,11 @@ function getPoolTokenMinAmountsOut(
 
   const poolTokenMinAmountsOut = [
     parseUnits(
-      clipStringValueToDecimals(xNeeded, adjustedDecimals[0] ?? 0) as string,
+      clipStringValueToDecimals(xNeeded, adjustedDecimals[0] ?? 0) || "0",
       poolTokenDecimals[0]
     ),
     parseUnits(
-      clipStringValueToDecimals(yNeeded, adjustedDecimals[1] ?? 0) as string,
+      clipStringValueToDecimals(yNeeded, adjustedDecimals[1] ?? 0) || "0",
       poolTokenDecimals[1]
     ),
   ];
