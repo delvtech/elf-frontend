@@ -211,6 +211,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
         newAmountOutNumber.toString(),
         tokenInDecimals ?? 18
       );
+
       setSwapKind(swapKind);
       setAmountIn(newAmountIn);
       setAmountOut(newAmountOut);
@@ -357,6 +358,8 @@ export function TradePanel(props: TradePanelProps): ReactElement {
         pool={pool}
         walletConnectionActive={walletActive}
         amountIn={amountIn}
+        amountOut={amountOut}
+        swapKind={swapKind}
         spotPrice={spotPrice}
         isOpen={isDrawerOpen}
         onClose={onClose}
