@@ -46,6 +46,7 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
     tokenIn,
     tokenOut,
     pool,
+    poolInfo,
   } = props;
   const { tab, setTab } = usePoolViewPoolActionsTab();
   const [activeTab, setActiveTab] = useState(tab);
