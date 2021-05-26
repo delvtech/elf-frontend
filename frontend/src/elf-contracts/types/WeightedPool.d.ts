@@ -9,16 +9,15 @@ import {
   BigNumber,
   BigNumberish,
   PopulatedTransaction,
-} from "ethers";
-import {
-  Contract,
+  BaseContract,
   ContractTransaction,
   Overrides,
   CallOverrides,
-} from "@ethersproject/contracts";
+} from "ethers";
 import { BytesLike } from "@ethersproject/bytes";
 import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
+import { TypedEventFilter, TypedEvent, TypedListener } from "./commons";
 
 interface WeightedPoolInterface extends ethers.utils.Interface {
   functions: {
@@ -294,31 +293,53 @@ interface WeightedPoolInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
 }
 
-export class WeightedPool extends Contract {
+export class WeightedPool extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  on(event: EventFilter | string, listener: Listener): this;
-  once(event: EventFilter | string, listener: Listener): this;
-  addListener(eventName: EventFilter | string, listener: Listener): this;
-  removeAllListeners(eventName: EventFilter | string): this;
-  removeListener(eventName: any, listener: Listener): this;
+  listeners<EventArgsArray extends Array<any>, EventArgsObject>(
+    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>
+  ): Array<TypedListener<EventArgsArray, EventArgsObject>>;
+  off<EventArgsArray extends Array<any>, EventArgsObject>(
+    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
+    listener: TypedListener<EventArgsArray, EventArgsObject>
+  ): this;
+  on<EventArgsArray extends Array<any>, EventArgsObject>(
+    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
+    listener: TypedListener<EventArgsArray, EventArgsObject>
+  ): this;
+  once<EventArgsArray extends Array<any>, EventArgsObject>(
+    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
+    listener: TypedListener<EventArgsArray, EventArgsObject>
+  ): this;
+  removeListener<EventArgsArray extends Array<any>, EventArgsObject>(
+    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
+    listener: TypedListener<EventArgsArray, EventArgsObject>
+  ): this;
+  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
+    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
+  ): this;
+
+  listeners(eventName?: string): Array<Listener>;
+  off(eventName: string, listener: Listener): this;
+  on(eventName: string, listener: Listener): this;
+  once(eventName: string, listener: Listener): this;
+  removeListener(eventName: string, listener: Listener): this;
+  removeAllListeners(eventName?: string): this;
+
+  queryFilter<EventArgsArray extends Array<any>, EventArgsObject>(
+    event: TypedEventFilter<EventArgsArray, EventArgsObject>,
+    fromBlockOrBlockhash?: string | number | undefined,
+    toBlock?: string | number | undefined
+  ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
   interface: WeightedPoolInterface;
 
   functions: {
     DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<[string]>;
 
-    "DOMAIN_SEPARATOR()"(overrides?: CallOverrides): Promise<[string]>;
-
     allowance(
-      owner: string,
-      spender: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    "allowance(address,address)"(
       owner: string,
       spender: string,
       overrides?: CallOverrides
@@ -327,36 +348,17 @@ export class WeightedPool extends Contract {
     approve(
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "approve(address,uint256)"(
-      spender: string,
-      amount: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     balanceOf(account: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    "balanceOf(address)"(
-      account: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
     decimals(overrides?: CallOverrides): Promise<[number]>;
-
-    "decimals()"(overrides?: CallOverrides): Promise<[number]>;
 
     decreaseApproval(
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "decreaseApproval(address,uint256)"(
-      spender: string,
-      amount: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     getActionId(
@@ -364,30 +366,15 @@ export class WeightedPool extends Contract {
       overrides?: CallOverrides
     ): Promise<[string]>;
 
-    "getActionId(bytes4)"(
-      selector: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
-
     getAuthorizer(overrides?: CallOverrides): Promise<[string]>;
-
-    "getAuthorizer()"(overrides?: CallOverrides): Promise<[string]>;
 
     getInvariant(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    "getInvariant()"(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     getLastInvariant(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    "getLastInvariant()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     getNormalizedWeights(overrides?: CallOverrides): Promise<[BigNumber[]]>;
 
-    "getNormalizedWeights()"(overrides?: CallOverrides): Promise<[BigNumber[]]>;
-
     getOwner(overrides?: CallOverrides): Promise<[string]>;
-
-    "getOwner()"(overrides?: CallOverrides): Promise<[string]>;
 
     getPausedState(
       overrides?: CallOverrides
@@ -399,54 +386,23 @@ export class WeightedPool extends Contract {
       }
     >;
 
-    "getPausedState()"(
-      overrides?: CallOverrides
-    ): Promise<
-      [boolean, BigNumber, BigNumber] & {
-        paused: boolean;
-        pauseWindowEndTime: BigNumber;
-        bufferPeriodEndTime: BigNumber;
-      }
-    >;
-
     getPoolId(overrides?: CallOverrides): Promise<[string]>;
-
-    "getPoolId()"(overrides?: CallOverrides): Promise<[string]>;
 
     getRate(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    "getRate()"(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     getSwapFeePercentage(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    "getSwapFeePercentage()"(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     getVault(overrides?: CallOverrides): Promise<[string]>;
-
-    "getVault()"(overrides?: CallOverrides): Promise<[string]>;
 
     increaseApproval(
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "increaseApproval(address,uint256)"(
-      spender: string,
-      amount: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     name(overrides?: CallOverrides): Promise<[string]>;
 
-    "name()"(overrides?: CallOverrides): Promise<[string]>;
-
     nonces(owner: string, overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    "nonces(address)"(
-      owner: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
 
     onExitPool(
       poolId: BytesLike,
@@ -456,18 +412,7 @@ export class WeightedPool extends Contract {
       lastChangeBlock: BigNumberish,
       protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "onExitPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
-      poolId: BytesLike,
-      sender: string,
-      recipient: string,
-      balances: BigNumberish[],
-      lastChangeBlock: BigNumberish,
-      protocolSwapFeePercentage: BigNumberish,
-      userData: BytesLike,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     onJoinPool(
@@ -478,38 +423,10 @@ export class WeightedPool extends Contract {
       lastChangeBlock: BigNumberish,
       protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "onJoinPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
-      poolId: BytesLike,
-      sender: string,
-      recipient: string,
-      balances: BigNumberish[],
-      lastChangeBlock: BigNumberish,
-      protocolSwapFeePercentage: BigNumberish,
-      userData: BytesLike,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     onSwap(
-      request: {
-        kind: BigNumberish;
-        tokenIn: string;
-        tokenOut: string;
-        amount: BigNumberish;
-        poolId: BytesLike;
-        lastChangeBlock: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      balanceTokenIn: BigNumberish,
-      balanceTokenOut: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    "onSwap(tuple,uint256,uint256)"(
       request: {
         kind: BigNumberish;
         tokenIn: string;
@@ -534,18 +451,7 @@ export class WeightedPool extends Contract {
       v: BigNumberish,
       r: BytesLike,
       s: BytesLike,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
-      owner: string,
-      spender: string,
-      value: BigNumberish,
-      deadline: BigNumberish,
-      v: BigNumberish,
-      r: BytesLike,
-      s: BytesLike,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     queryExit(
@@ -556,18 +462,7 @@ export class WeightedPool extends Contract {
       lastChangeBlock: BigNumberish,
       protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "queryExit(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
-      poolId: BytesLike,
-      sender: string,
-      recipient: string,
-      balances: BigNumberish[],
-      lastChangeBlock: BigNumberish,
-      protocolSwapFeePercentage: BigNumberish,
-      userData: BytesLike,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     queryJoin(
@@ -578,86 +473,40 @@ export class WeightedPool extends Contract {
       lastChangeBlock: BigNumberish,
       protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "queryJoin(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
-      poolId: BytesLike,
-      sender: string,
-      recipient: string,
-      balances: BigNumberish[],
-      lastChangeBlock: BigNumberish,
-      protocolSwapFeePercentage: BigNumberish,
-      userData: BytesLike,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     setPaused(
       paused: boolean,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "setPaused(bool)"(
-      paused: boolean,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     setSwapFeePercentage(
       swapFeePercentage: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "setSwapFeePercentage(uint256)"(
-      swapFeePercentage: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     symbol(overrides?: CallOverrides): Promise<[string]>;
 
-    "symbol()"(overrides?: CallOverrides): Promise<[string]>;
-
     totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    "totalSupply()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     transfer(
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "transfer(address,uint256)"(
-      recipient: string,
-      amount: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     transferFrom(
       sender: string,
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "transferFrom(address,address,uint256)"(
-      sender: string,
-      recipient: string,
-      amount: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
 
   DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<string>;
 
-  "DOMAIN_SEPARATOR()"(overrides?: CallOverrides): Promise<string>;
-
   allowance(
-    owner: string,
-    spender: string,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  "allowance(address,address)"(
     owner: string,
     spender: string,
     overrides?: CallOverrides
@@ -666,64 +515,30 @@ export class WeightedPool extends Contract {
   approve(
     spender: string,
     amount: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "approve(address,uint256)"(
-    spender: string,
-    amount: BigNumberish,
-    overrides?: Overrides
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-  "balanceOf(address)"(
-    account: string,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
   decimals(overrides?: CallOverrides): Promise<number>;
-
-  "decimals()"(overrides?: CallOverrides): Promise<number>;
 
   decreaseApproval(
     spender: string,
     amount: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "decreaseApproval(address,uint256)"(
-    spender: string,
-    amount: BigNumberish,
-    overrides?: Overrides
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   getActionId(selector: BytesLike, overrides?: CallOverrides): Promise<string>;
 
-  "getActionId(bytes4)"(
-    selector: BytesLike,
-    overrides?: CallOverrides
-  ): Promise<string>;
-
   getAuthorizer(overrides?: CallOverrides): Promise<string>;
-
-  "getAuthorizer()"(overrides?: CallOverrides): Promise<string>;
 
   getInvariant(overrides?: CallOverrides): Promise<BigNumber>;
 
-  "getInvariant()"(overrides?: CallOverrides): Promise<BigNumber>;
-
   getLastInvariant(overrides?: CallOverrides): Promise<BigNumber>;
-
-  "getLastInvariant()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   getNormalizedWeights(overrides?: CallOverrides): Promise<BigNumber[]>;
 
-  "getNormalizedWeights()"(overrides?: CallOverrides): Promise<BigNumber[]>;
-
   getOwner(overrides?: CallOverrides): Promise<string>;
-
-  "getOwner()"(overrides?: CallOverrides): Promise<string>;
 
   getPausedState(
     overrides?: CallOverrides
@@ -735,54 +550,23 @@ export class WeightedPool extends Contract {
     }
   >;
 
-  "getPausedState()"(
-    overrides?: CallOverrides
-  ): Promise<
-    [boolean, BigNumber, BigNumber] & {
-      paused: boolean;
-      pauseWindowEndTime: BigNumber;
-      bufferPeriodEndTime: BigNumber;
-    }
-  >;
-
   getPoolId(overrides?: CallOverrides): Promise<string>;
-
-  "getPoolId()"(overrides?: CallOverrides): Promise<string>;
 
   getRate(overrides?: CallOverrides): Promise<BigNumber>;
 
-  "getRate()"(overrides?: CallOverrides): Promise<BigNumber>;
-
   getSwapFeePercentage(overrides?: CallOverrides): Promise<BigNumber>;
 
-  "getSwapFeePercentage()"(overrides?: CallOverrides): Promise<BigNumber>;
-
   getVault(overrides?: CallOverrides): Promise<string>;
-
-  "getVault()"(overrides?: CallOverrides): Promise<string>;
 
   increaseApproval(
     spender: string,
     amount: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "increaseApproval(address,uint256)"(
-    spender: string,
-    amount: BigNumberish,
-    overrides?: Overrides
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   name(overrides?: CallOverrides): Promise<string>;
 
-  "name()"(overrides?: CallOverrides): Promise<string>;
-
   nonces(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
-
-  "nonces(address)"(
-    owner: string,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
 
   onExitPool(
     poolId: BytesLike,
@@ -792,18 +576,7 @@ export class WeightedPool extends Contract {
     lastChangeBlock: BigNumberish,
     protocolSwapFeePercentage: BigNumberish,
     userData: BytesLike,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "onExitPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
-    poolId: BytesLike,
-    sender: string,
-    recipient: string,
-    balances: BigNumberish[],
-    lastChangeBlock: BigNumberish,
-    protocolSwapFeePercentage: BigNumberish,
-    userData: BytesLike,
-    overrides?: Overrides
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   onJoinPool(
@@ -814,38 +587,10 @@ export class WeightedPool extends Contract {
     lastChangeBlock: BigNumberish,
     protocolSwapFeePercentage: BigNumberish,
     userData: BytesLike,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "onJoinPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
-    poolId: BytesLike,
-    sender: string,
-    recipient: string,
-    balances: BigNumberish[],
-    lastChangeBlock: BigNumberish,
-    protocolSwapFeePercentage: BigNumberish,
-    userData: BytesLike,
-    overrides?: Overrides
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   onSwap(
-    request: {
-      kind: BigNumberish;
-      tokenIn: string;
-      tokenOut: string;
-      amount: BigNumberish;
-      poolId: BytesLike;
-      lastChangeBlock: BigNumberish;
-      from: string;
-      to: string;
-      userData: BytesLike;
-    },
-    balanceTokenIn: BigNumberish,
-    balanceTokenOut: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  "onSwap(tuple,uint256,uint256)"(
     request: {
       kind: BigNumberish;
       tokenIn: string;
@@ -870,18 +615,7 @@ export class WeightedPool extends Contract {
     v: BigNumberish,
     r: BytesLike,
     s: BytesLike,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
-    owner: string,
-    spender: string,
-    value: BigNumberish,
-    deadline: BigNumberish,
-    v: BigNumberish,
-    r: BytesLike,
-    s: BytesLike,
-    overrides?: Overrides
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   queryExit(
@@ -892,18 +626,7 @@ export class WeightedPool extends Contract {
     lastChangeBlock: BigNumberish,
     protocolSwapFeePercentage: BigNumberish,
     userData: BytesLike,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "queryExit(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
-    poolId: BytesLike,
-    sender: string,
-    recipient: string,
-    balances: BigNumberish[],
-    lastChangeBlock: BigNumberish,
-    protocolSwapFeePercentage: BigNumberish,
-    userData: BytesLike,
-    overrides?: Overrides
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   queryJoin(
@@ -914,86 +637,40 @@ export class WeightedPool extends Contract {
     lastChangeBlock: BigNumberish,
     protocolSwapFeePercentage: BigNumberish,
     userData: BytesLike,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "queryJoin(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
-    poolId: BytesLike,
-    sender: string,
-    recipient: string,
-    balances: BigNumberish[],
-    lastChangeBlock: BigNumberish,
-    protocolSwapFeePercentage: BigNumberish,
-    userData: BytesLike,
-    overrides?: Overrides
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   setPaused(
     paused: boolean,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "setPaused(bool)"(
-    paused: boolean,
-    overrides?: Overrides
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   setSwapFeePercentage(
     swapFeePercentage: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "setSwapFeePercentage(uint256)"(
-    swapFeePercentage: BigNumberish,
-    overrides?: Overrides
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   symbol(overrides?: CallOverrides): Promise<string>;
 
-  "symbol()"(overrides?: CallOverrides): Promise<string>;
-
   totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
-
-  "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   transfer(
     recipient: string,
     amount: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "transfer(address,uint256)"(
-    recipient: string,
-    amount: BigNumberish,
-    overrides?: Overrides
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   transferFrom(
     sender: string,
     recipient: string,
     amount: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "transferFrom(address,address,uint256)"(
-    sender: string,
-    recipient: string,
-    amount: BigNumberish,
-    overrides?: Overrides
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   callStatic: {
     DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<string>;
 
-    "DOMAIN_SEPARATOR()"(overrides?: CallOverrides): Promise<string>;
-
     allowance(
-      owner: string,
-      spender: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "allowance(address,address)"(
       owner: string,
       spender: string,
       overrides?: CallOverrides
@@ -1005,30 +682,11 @@ export class WeightedPool extends Contract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    "approve(address,uint256)"(
-      spender: string,
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
     balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
-
-    "balanceOf(address)"(
-      account: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
 
     decimals(overrides?: CallOverrides): Promise<number>;
 
-    "decimals()"(overrides?: CallOverrides): Promise<number>;
-
     decreaseApproval(
-      spender: string,
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    "decreaseApproval(address,uint256)"(
       spender: string,
       amount: BigNumberish,
       overrides?: CallOverrides
@@ -1039,30 +697,15 @@ export class WeightedPool extends Contract {
       overrides?: CallOverrides
     ): Promise<string>;
 
-    "getActionId(bytes4)"(
-      selector: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<string>;
-
     getAuthorizer(overrides?: CallOverrides): Promise<string>;
-
-    "getAuthorizer()"(overrides?: CallOverrides): Promise<string>;
 
     getInvariant(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "getInvariant()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     getLastInvariant(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "getLastInvariant()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     getNormalizedWeights(overrides?: CallOverrides): Promise<BigNumber[]>;
 
-    "getNormalizedWeights()"(overrides?: CallOverrides): Promise<BigNumber[]>;
-
     getOwner(overrides?: CallOverrides): Promise<string>;
-
-    "getOwner()"(overrides?: CallOverrides): Promise<string>;
 
     getPausedState(
       overrides?: CallOverrides
@@ -1074,31 +717,13 @@ export class WeightedPool extends Contract {
       }
     >;
 
-    "getPausedState()"(
-      overrides?: CallOverrides
-    ): Promise<
-      [boolean, BigNumber, BigNumber] & {
-        paused: boolean;
-        pauseWindowEndTime: BigNumber;
-        bufferPeriodEndTime: BigNumber;
-      }
-    >;
-
     getPoolId(overrides?: CallOverrides): Promise<string>;
-
-    "getPoolId()"(overrides?: CallOverrides): Promise<string>;
 
     getRate(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "getRate()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     getSwapFeePercentage(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "getSwapFeePercentage()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     getVault(overrides?: CallOverrides): Promise<string>;
-
-    "getVault()"(overrides?: CallOverrides): Promise<string>;
 
     increaseApproval(
       spender: string,
@@ -1106,22 +731,9 @@ export class WeightedPool extends Contract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    "increaseApproval(address,uint256)"(
-      spender: string,
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
     name(overrides?: CallOverrides): Promise<string>;
 
-    "name()"(overrides?: CallOverrides): Promise<string>;
-
     nonces(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
-
-    "nonces(address)"(
-      owner: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
 
     onExitPool(
       poolId: BytesLike,
@@ -1134,29 +746,7 @@ export class WeightedPool extends Contract {
       overrides?: CallOverrides
     ): Promise<[BigNumber[], BigNumber[]]>;
 
-    "onExitPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
-      poolId: BytesLike,
-      sender: string,
-      recipient: string,
-      balances: BigNumberish[],
-      lastChangeBlock: BigNumberish,
-      protocolSwapFeePercentage: BigNumberish,
-      userData: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber[], BigNumber[]]>;
-
     onJoinPool(
-      poolId: BytesLike,
-      sender: string,
-      recipient: string,
-      balances: BigNumberish[],
-      lastChangeBlock: BigNumberish,
-      protocolSwapFeePercentage: BigNumberish,
-      userData: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber[], BigNumber[]]>;
-
-    "onJoinPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
       poolId: BytesLike,
       sender: string,
       recipient: string,
@@ -1184,35 +774,7 @@ export class WeightedPool extends Contract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    "onSwap(tuple,uint256,uint256)"(
-      request: {
-        kind: BigNumberish;
-        tokenIn: string;
-        tokenOut: string;
-        amount: BigNumberish;
-        poolId: BytesLike;
-        lastChangeBlock: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      balanceTokenIn: BigNumberish,
-      balanceTokenOut: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     permit(
-      owner: string,
-      spender: string,
-      value: BigNumberish,
-      deadline: BigNumberish,
-      v: BigNumberish,
-      r: BytesLike,
-      s: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
       owner: string,
       spender: string,
       value: BigNumberish,
@@ -1236,33 +798,7 @@ export class WeightedPool extends Contract {
       [BigNumber, BigNumber[]] & { bptIn: BigNumber; amountsOut: BigNumber[] }
     >;
 
-    "queryExit(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
-      poolId: BytesLike,
-      sender: string,
-      recipient: string,
-      balances: BigNumberish[],
-      lastChangeBlock: BigNumberish,
-      protocolSwapFeePercentage: BigNumberish,
-      userData: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber[]] & { bptIn: BigNumber; amountsOut: BigNumber[] }
-    >;
-
     queryJoin(
-      poolId: BytesLike,
-      sender: string,
-      recipient: string,
-      balances: BigNumberish[],
-      lastChangeBlock: BigNumberish,
-      protocolSwapFeePercentage: BigNumberish,
-      userData: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber[]] & { bptOut: BigNumber; amountsIn: BigNumber[] }
-    >;
-
-    "queryJoin(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
       poolId: BytesLike,
       sender: string,
       recipient: string,
@@ -1277,28 +813,14 @@ export class WeightedPool extends Contract {
 
     setPaused(paused: boolean, overrides?: CallOverrides): Promise<void>;
 
-    "setPaused(bool)"(
-      paused: boolean,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     setSwapFeePercentage(
-      swapFeePercentage: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "setSwapFeePercentage(uint256)"(
       swapFeePercentage: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     symbol(overrides?: CallOverrides): Promise<string>;
 
-    "symbol()"(overrides?: CallOverrides): Promise<string>;
-
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     transfer(
       recipient: string,
@@ -1306,20 +828,7 @@ export class WeightedPool extends Contract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    "transfer(address,uint256)"(
-      recipient: string,
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
     transferFrom(
-      sender: string,
-      recipient: string,
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    "transferFrom(address,address,uint256)"(
       sender: string,
       recipient: string,
       amount: BigNumberish,
@@ -1329,30 +838,36 @@ export class WeightedPool extends Contract {
 
   filters: {
     Approval(
-      owner: string | null,
-      spender: string | null,
-      value: null
-    ): EventFilter;
+      owner?: string | null,
+      spender?: string | null,
+      value?: null
+    ): TypedEventFilter<
+      [string, string, BigNumber],
+      { owner: string; spender: string; value: BigNumber }
+    >;
 
-    PausedStateChanged(paused: null): EventFilter;
+    PausedStateChanged(
+      paused?: null
+    ): TypedEventFilter<[boolean], { paused: boolean }>;
 
-    SwapFeePercentageChanged(swapFeePercentage: null): EventFilter;
+    SwapFeePercentageChanged(
+      swapFeePercentage?: null
+    ): TypedEventFilter<[BigNumber], { swapFeePercentage: BigNumber }>;
 
-    Transfer(from: string | null, to: string | null, value: null): EventFilter;
+    Transfer(
+      from?: string | null,
+      to?: string | null,
+      value?: null
+    ): TypedEventFilter<
+      [string, string, BigNumber],
+      { from: string; to: string; value: BigNumber }
+    >;
   };
 
   estimateGas: {
     DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "DOMAIN_SEPARATOR()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     allowance(
-      owner: string,
-      spender: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "allowance(address,address)"(
       owner: string,
       spender: string,
       overrides?: CallOverrides
@@ -1361,36 +876,17 @@ export class WeightedPool extends Contract {
     approve(
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "approve(address,uint256)"(
-      spender: string,
-      amount: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    "balanceOf(address)"(
-      account: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     decimals(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "decimals()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     decreaseApproval(
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "decreaseApproval(address,uint256)"(
-      spender: string,
-      amount: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     getActionId(
@@ -1398,73 +894,35 @@ export class WeightedPool extends Contract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    "getActionId(bytes4)"(
-      selector: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     getAuthorizer(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "getAuthorizer()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     getInvariant(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "getInvariant()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     getLastInvariant(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "getLastInvariant()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     getNormalizedWeights(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "getNormalizedWeights()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     getOwner(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "getOwner()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     getPausedState(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "getPausedState()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     getPoolId(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "getPoolId()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     getRate(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "getRate()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     getSwapFeePercentage(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "getSwapFeePercentage()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     getVault(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "getVault()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     increaseApproval(
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "increaseApproval(address,uint256)"(
-      spender: string,
-      amount: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "name()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     nonces(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
-
-    "nonces(address)"(
-      owner: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
 
     onExitPool(
       poolId: BytesLike,
@@ -1474,18 +932,7 @@ export class WeightedPool extends Contract {
       lastChangeBlock: BigNumberish,
       protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "onExitPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
-      poolId: BytesLike,
-      sender: string,
-      recipient: string,
-      balances: BigNumberish[],
-      lastChangeBlock: BigNumberish,
-      protocolSwapFeePercentage: BigNumberish,
-      userData: BytesLike,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     onJoinPool(
@@ -1496,38 +943,10 @@ export class WeightedPool extends Contract {
       lastChangeBlock: BigNumberish,
       protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "onJoinPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
-      poolId: BytesLike,
-      sender: string,
-      recipient: string,
-      balances: BigNumberish[],
-      lastChangeBlock: BigNumberish,
-      protocolSwapFeePercentage: BigNumberish,
-      userData: BytesLike,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     onSwap(
-      request: {
-        kind: BigNumberish;
-        tokenIn: string;
-        tokenOut: string;
-        amount: BigNumberish;
-        poolId: BytesLike;
-        lastChangeBlock: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      balanceTokenIn: BigNumberish,
-      balanceTokenOut: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "onSwap(tuple,uint256,uint256)"(
       request: {
         kind: BigNumberish;
         tokenIn: string;
@@ -1552,18 +971,7 @@ export class WeightedPool extends Contract {
       v: BigNumberish,
       r: BytesLike,
       s: BytesLike,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
-      owner: string,
-      spender: string,
-      value: BigNumberish,
-      deadline: BigNumberish,
-      v: BigNumberish,
-      r: BytesLike,
-      s: BytesLike,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     queryExit(
@@ -1574,18 +982,7 @@ export class WeightedPool extends Contract {
       lastChangeBlock: BigNumberish,
       protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "queryExit(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
-      poolId: BytesLike,
-      sender: string,
-      recipient: string,
-      balances: BigNumberish[],
-      lastChangeBlock: BigNumberish,
-      protocolSwapFeePercentage: BigNumberish,
-      userData: BytesLike,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     queryJoin(
@@ -1596,86 +993,41 @@ export class WeightedPool extends Contract {
       lastChangeBlock: BigNumberish,
       protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    "queryJoin(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
-      poolId: BytesLike,
-      sender: string,
-      recipient: string,
-      balances: BigNumberish[],
-      lastChangeBlock: BigNumberish,
-      protocolSwapFeePercentage: BigNumberish,
-      userData: BytesLike,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    setPaused(paused: boolean, overrides?: Overrides): Promise<BigNumber>;
-
-    "setPaused(bool)"(
+    setPaused(
       paused: boolean,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     setSwapFeePercentage(
       swapFeePercentage: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "setSwapFeePercentage(uint256)"(
-      swapFeePercentage: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     symbol(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "symbol()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     transfer(
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "transfer(address,uint256)"(
-      recipient: string,
-      amount: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     transferFrom(
       sender: string,
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "transferFrom(address,address,uint256)"(
-      sender: string,
-      recipient: string,
-      amount: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
     DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "DOMAIN_SEPARATOR()"(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     allowance(
-      owner: string,
-      spender: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "allowance(address,address)"(
       owner: string,
       spender: string,
       overrides?: CallOverrides
@@ -1684,13 +1036,7 @@ export class WeightedPool extends Contract {
     approve(
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "approve(address,uint256)"(
-      spender: string,
-      amount: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     balanceOf(
@@ -1698,25 +1044,12 @@ export class WeightedPool extends Contract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    "balanceOf(address)"(
-      account: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     decimals(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "decimals()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     decreaseApproval(
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "decreaseApproval(address,uint256)"(
-      spender: string,
-      amount: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     getActionId(
@@ -1724,85 +1057,39 @@ export class WeightedPool extends Contract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    "getActionId(bytes4)"(
-      selector: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     getAuthorizer(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "getAuthorizer()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getInvariant(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "getInvariant()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     getLastInvariant(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "getLastInvariant()"(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
 
     getNormalizedWeights(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    "getNormalizedWeights()"(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     getOwner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "getOwner()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getPausedState(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "getPausedState()"(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     getPoolId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "getPoolId()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     getRate(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "getRate()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getSwapFeePercentage(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    "getSwapFeePercentage()"(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     getVault(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "getVault()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     increaseApproval(
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "increaseApproval(address,uint256)"(
-      spender: string,
-      amount: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "name()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     nonces(
-      owner: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "nonces(address)"(
       owner: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -1815,18 +1102,7 @@ export class WeightedPool extends Contract {
       lastChangeBlock: BigNumberish,
       protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "onExitPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
-      poolId: BytesLike,
-      sender: string,
-      recipient: string,
-      balances: BigNumberish[],
-      lastChangeBlock: BigNumberish,
-      protocolSwapFeePercentage: BigNumberish,
-      userData: BytesLike,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     onJoinPool(
@@ -1837,38 +1113,10 @@ export class WeightedPool extends Contract {
       lastChangeBlock: BigNumberish,
       protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "onJoinPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
-      poolId: BytesLike,
-      sender: string,
-      recipient: string,
-      balances: BigNumberish[],
-      lastChangeBlock: BigNumberish,
-      protocolSwapFeePercentage: BigNumberish,
-      userData: BytesLike,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     onSwap(
-      request: {
-        kind: BigNumberish;
-        tokenIn: string;
-        tokenOut: string;
-        amount: BigNumberish;
-        poolId: BytesLike;
-        lastChangeBlock: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      balanceTokenIn: BigNumberish,
-      balanceTokenOut: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "onSwap(tuple,uint256,uint256)"(
       request: {
         kind: BigNumberish;
         tokenIn: string;
@@ -1893,18 +1141,7 @@ export class WeightedPool extends Contract {
       v: BigNumberish,
       r: BytesLike,
       s: BytesLike,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
-      owner: string,
-      spender: string,
-      value: BigNumberish,
-      deadline: BigNumberish,
-      v: BigNumberish,
-      r: BytesLike,
-      s: BytesLike,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     queryExit(
@@ -1915,18 +1152,7 @@ export class WeightedPool extends Contract {
       lastChangeBlock: BigNumberish,
       protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "queryExit(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
-      poolId: BytesLike,
-      sender: string,
-      recipient: string,
-      balances: BigNumberish[],
-      lastChangeBlock: BigNumberish,
-      protocolSwapFeePercentage: BigNumberish,
-      userData: BytesLike,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     queryJoin(
@@ -1937,72 +1163,34 @@ export class WeightedPool extends Contract {
       lastChangeBlock: BigNumberish,
       protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "queryJoin(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
-      poolId: BytesLike,
-      sender: string,
-      recipient: string,
-      balances: BigNumberish[],
-      lastChangeBlock: BigNumberish,
-      protocolSwapFeePercentage: BigNumberish,
-      userData: BytesLike,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     setPaused(
       paused: boolean,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "setPaused(bool)"(
-      paused: boolean,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     setSwapFeePercentage(
       swapFeePercentage: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "setSwapFeePercentage(uint256)"(
-      swapFeePercentage: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "symbol()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "totalSupply()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     transfer(
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "transfer(address,uint256)"(
-      recipient: string,
-      amount: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     transferFrom(
       sender: string,
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "transferFrom(address,address,uint256)"(
-      sender: string,
-      recipient: string,
-      amount: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };
 }

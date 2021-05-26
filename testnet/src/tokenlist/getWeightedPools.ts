@@ -54,9 +54,10 @@ export async function getWeightedPools(
     zip(safePools, poolIds).map(async (zipped) => {
       const [pool, poolId] = zipped as [WeightedPool, string];
       const [tokenAddresses] = await vault.getPoolTokens(poolId);
-      return tokenAddresses.find(
+      const interestToken = tokenAddresses.find(
         (address) => ![wethAddress, usdcAddress].includes(address)
       ) as string;
+      return interestToken;
     })
   );
   const poolSymbols = await Promise.all(safePools.map((pool) => pool.symbol()));

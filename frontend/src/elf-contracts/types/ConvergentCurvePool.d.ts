@@ -9,16 +9,15 @@ import {
   BigNumber,
   BigNumberish,
   PopulatedTransaction,
-} from "ethers";
-import {
-  Contract,
+  BaseContract,
   ContractTransaction,
   Overrides,
   CallOverrides,
-} from "@ethersproject/contracts";
+} from "ethers";
 import { BytesLike } from "@ethersproject/bytes";
 import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
+import { TypedEventFilter, TypedEvent, TypedListener } from "./commons";
 
 interface ConvergentCurvePoolInterface extends ethers.utils.Interface {
   functions: {
@@ -270,35 +269,55 @@ interface ConvergentCurvePoolInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
 }
 
-export class ConvergentCurvePool extends Contract {
+export class ConvergentCurvePool extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  on(event: EventFilter | string, listener: Listener): this;
-  once(event: EventFilter | string, listener: Listener): this;
-  addListener(eventName: EventFilter | string, listener: Listener): this;
-  removeAllListeners(eventName: EventFilter | string): this;
-  removeListener(eventName: any, listener: Listener): this;
+  listeners<EventArgsArray extends Array<any>, EventArgsObject>(
+    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>
+  ): Array<TypedListener<EventArgsArray, EventArgsObject>>;
+  off<EventArgsArray extends Array<any>, EventArgsObject>(
+    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
+    listener: TypedListener<EventArgsArray, EventArgsObject>
+  ): this;
+  on<EventArgsArray extends Array<any>, EventArgsObject>(
+    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
+    listener: TypedListener<EventArgsArray, EventArgsObject>
+  ): this;
+  once<EventArgsArray extends Array<any>, EventArgsObject>(
+    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
+    listener: TypedListener<EventArgsArray, EventArgsObject>
+  ): this;
+  removeListener<EventArgsArray extends Array<any>, EventArgsObject>(
+    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
+    listener: TypedListener<EventArgsArray, EventArgsObject>
+  ): this;
+  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
+    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
+  ): this;
+
+  listeners(eventName?: string): Array<Listener>;
+  off(eventName: string, listener: Listener): this;
+  on(eventName: string, listener: Listener): this;
+  once(eventName: string, listener: Listener): this;
+  removeListener(eventName: string, listener: Listener): this;
+  removeAllListeners(eventName?: string): this;
+
+  queryFilter<EventArgsArray extends Array<any>, EventArgsObject>(
+    event: TypedEventFilter<EventArgsArray, EventArgsObject>,
+    fromBlockOrBlockhash?: string | number | undefined,
+    toBlock?: string | number | undefined
+  ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
   interface: ConvergentCurvePoolInterface;
 
   functions: {
     DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<[string]>;
 
-    "DOMAIN_SEPARATOR()"(overrides?: CallOverrides): Promise<[string]>;
-
     FEE_BOUND(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    "FEE_BOUND()"(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     allowance(
-      owner: string,
-      spender: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    "allowance(address,address)"(
       owner: string,
       spender: string,
       overrides?: CallOverrides
@@ -307,92 +326,44 @@ export class ConvergentCurvePool extends Contract {
     approve(
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "approve(address,uint256)"(
-      spender: string,
-      amount: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     balanceOf(account: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    "balanceOf(address)"(
-      account: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
     bond(overrides?: CallOverrides): Promise<[string]>;
-
-    "bond()"(overrides?: CallOverrides): Promise<[string]>;
 
     bondDecimals(overrides?: CallOverrides): Promise<[number]>;
 
-    "bondDecimals()"(overrides?: CallOverrides): Promise<[number]>;
-
     decimals(overrides?: CallOverrides): Promise<[number]>;
-
-    "decimals()"(overrides?: CallOverrides): Promise<[number]>;
 
     decreaseApproval(
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "decreaseApproval(address,uint256)"(
-      spender: string,
-      amount: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     expiration(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    "expiration()"(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     feesBond(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    "feesBond()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     feesUnderlying(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    "feesUnderlying()"(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     getPoolId(overrides?: CallOverrides): Promise<[string]>;
-
-    "getPoolId()"(overrides?: CallOverrides): Promise<[string]>;
 
     getVault(overrides?: CallOverrides): Promise<[string]>;
 
-    "getVault()"(overrides?: CallOverrides): Promise<[string]>;
-
     governance(overrides?: CallOverrides): Promise<[string]>;
-
-    "governance()"(overrides?: CallOverrides): Promise<[string]>;
 
     increaseApproval(
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "increaseApproval(address,uint256)"(
-      spender: string,
-      amount: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     name(overrides?: CallOverrides): Promise<[string]>;
 
-    "name()"(overrides?: CallOverrides): Promise<[string]>;
-
     nonces(owner: string, overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    "nonces(address)"(
-      owner: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
 
     onExitPool(
       poolId: BytesLike,
@@ -402,18 +373,7 @@ export class ConvergentCurvePool extends Contract {
       arg4: BigNumberish,
       protocolSwapFee: BigNumberish,
       userData: BytesLike,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "onExitPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
-      poolId: BytesLike,
-      arg1: string,
-      recipient: string,
-      currentBalances: BigNumberish[],
-      arg4: BigNumberish,
-      protocolSwapFee: BigNumberish,
-      userData: BytesLike,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     onJoinPool(
@@ -424,18 +384,7 @@ export class ConvergentCurvePool extends Contract {
       arg4: BigNumberish,
       protocolSwapFee: BigNumberish,
       userData: BytesLike,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "onJoinPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
-      poolId: BytesLike,
-      arg1: string,
-      recipient: string,
-      currentBalances: BigNumberish[],
-      arg4: BigNumberish,
-      protocolSwapFee: BigNumberish,
-      userData: BytesLike,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     onSwap(
@@ -452,33 +401,12 @@ export class ConvergentCurvePool extends Contract {
       },
       currentBalanceTokenIn: BigNumberish,
       currentBalanceTokenOut: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "onSwap(tuple,uint256,uint256)"(
-      swapRequest: {
-        kind: BigNumberish;
-        tokenIn: string;
-        tokenOut: string;
-        amount: BigNumberish;
-        poolId: BytesLike;
-        lastChangeBlock: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      currentBalanceTokenIn: BigNumberish,
-      currentBalanceTokenOut: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     percentFee(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    "percentFee()"(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     percentFeeGov(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    "percentFeeGov()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     permit(
       owner: string,
@@ -488,18 +416,7 @@ export class ConvergentCurvePool extends Contract {
       v: BigNumberish,
       r: BytesLike,
       s: BytesLike,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
-      owner: string,
-      spender: string,
-      value: BigNumberish,
-      deadline: BigNumberish,
-      v: BigNumberish,
-      r: BytesLike,
-      s: BytesLike,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     solveTradeInvariant(
@@ -510,76 +427,35 @@ export class ConvergentCurvePool extends Contract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
-    "solveTradeInvariant(uint256,uint256,uint256,bool)"(
-      amountX: BigNumberish,
-      reserveX: BigNumberish,
-      reserveY: BigNumberish,
-      out: boolean,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
     symbol(overrides?: CallOverrides): Promise<[string]>;
 
-    "symbol()"(overrides?: CallOverrides): Promise<[string]>;
-
     totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    "totalSupply()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     transfer(
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "transfer(address,uint256)"(
-      recipient: string,
-      amount: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     transferFrom(
       sender: string,
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "transferFrom(address,address,uint256)"(
-      sender: string,
-      recipient: string,
-      amount: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     underlying(overrides?: CallOverrides): Promise<[string]>;
 
-    "underlying()"(overrides?: CallOverrides): Promise<[string]>;
-
     underlyingDecimals(overrides?: CallOverrides): Promise<[number]>;
 
-    "underlyingDecimals()"(overrides?: CallOverrides): Promise<[number]>;
-
     unitSeconds(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    "unitSeconds()"(overrides?: CallOverrides): Promise<[BigNumber]>;
   };
 
   DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<string>;
 
-  "DOMAIN_SEPARATOR()"(overrides?: CallOverrides): Promise<string>;
-
   FEE_BOUND(overrides?: CallOverrides): Promise<BigNumber>;
 
-  "FEE_BOUND()"(overrides?: CallOverrides): Promise<BigNumber>;
-
   allowance(
-    owner: string,
-    spender: string,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  "allowance(address,address)"(
     owner: string,
     spender: string,
     overrides?: CallOverrides
@@ -588,92 +464,44 @@ export class ConvergentCurvePool extends Contract {
   approve(
     spender: string,
     amount: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "approve(address,uint256)"(
-    spender: string,
-    amount: BigNumberish,
-    overrides?: Overrides
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-  "balanceOf(address)"(
-    account: string,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
   bond(overrides?: CallOverrides): Promise<string>;
-
-  "bond()"(overrides?: CallOverrides): Promise<string>;
 
   bondDecimals(overrides?: CallOverrides): Promise<number>;
 
-  "bondDecimals()"(overrides?: CallOverrides): Promise<number>;
-
   decimals(overrides?: CallOverrides): Promise<number>;
-
-  "decimals()"(overrides?: CallOverrides): Promise<number>;
 
   decreaseApproval(
     spender: string,
     amount: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "decreaseApproval(address,uint256)"(
-    spender: string,
-    amount: BigNumberish,
-    overrides?: Overrides
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   expiration(overrides?: CallOverrides): Promise<BigNumber>;
 
-  "expiration()"(overrides?: CallOverrides): Promise<BigNumber>;
-
   feesBond(overrides?: CallOverrides): Promise<BigNumber>;
-
-  "feesBond()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   feesUnderlying(overrides?: CallOverrides): Promise<BigNumber>;
 
-  "feesUnderlying()"(overrides?: CallOverrides): Promise<BigNumber>;
-
   getPoolId(overrides?: CallOverrides): Promise<string>;
-
-  "getPoolId()"(overrides?: CallOverrides): Promise<string>;
 
   getVault(overrides?: CallOverrides): Promise<string>;
 
-  "getVault()"(overrides?: CallOverrides): Promise<string>;
-
   governance(overrides?: CallOverrides): Promise<string>;
-
-  "governance()"(overrides?: CallOverrides): Promise<string>;
 
   increaseApproval(
     spender: string,
     amount: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "increaseApproval(address,uint256)"(
-    spender: string,
-    amount: BigNumberish,
-    overrides?: Overrides
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   name(overrides?: CallOverrides): Promise<string>;
 
-  "name()"(overrides?: CallOverrides): Promise<string>;
-
   nonces(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
-
-  "nonces(address)"(
-    owner: string,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
 
   onExitPool(
     poolId: BytesLike,
@@ -683,18 +511,7 @@ export class ConvergentCurvePool extends Contract {
     arg4: BigNumberish,
     protocolSwapFee: BigNumberish,
     userData: BytesLike,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "onExitPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
-    poolId: BytesLike,
-    arg1: string,
-    recipient: string,
-    currentBalances: BigNumberish[],
-    arg4: BigNumberish,
-    protocolSwapFee: BigNumberish,
-    userData: BytesLike,
-    overrides?: Overrides
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   onJoinPool(
@@ -705,18 +522,7 @@ export class ConvergentCurvePool extends Contract {
     arg4: BigNumberish,
     protocolSwapFee: BigNumberish,
     userData: BytesLike,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "onJoinPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
-    poolId: BytesLike,
-    arg1: string,
-    recipient: string,
-    currentBalances: BigNumberish[],
-    arg4: BigNumberish,
-    protocolSwapFee: BigNumberish,
-    userData: BytesLike,
-    overrides?: Overrides
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   onSwap(
@@ -733,33 +539,12 @@ export class ConvergentCurvePool extends Contract {
     },
     currentBalanceTokenIn: BigNumberish,
     currentBalanceTokenOut: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "onSwap(tuple,uint256,uint256)"(
-    swapRequest: {
-      kind: BigNumberish;
-      tokenIn: string;
-      tokenOut: string;
-      amount: BigNumberish;
-      poolId: BytesLike;
-      lastChangeBlock: BigNumberish;
-      from: string;
-      to: string;
-      userData: BytesLike;
-    },
-    currentBalanceTokenIn: BigNumberish,
-    currentBalanceTokenOut: BigNumberish,
-    overrides?: Overrides
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   percentFee(overrides?: CallOverrides): Promise<BigNumber>;
 
-  "percentFee()"(overrides?: CallOverrides): Promise<BigNumber>;
-
   percentFeeGov(overrides?: CallOverrides): Promise<BigNumber>;
-
-  "percentFeeGov()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   permit(
     owner: string,
@@ -769,18 +554,7 @@ export class ConvergentCurvePool extends Contract {
     v: BigNumberish,
     r: BytesLike,
     s: BytesLike,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
-    owner: string,
-    spender: string,
-    value: BigNumberish,
-    deadline: BigNumberish,
-    v: BigNumberish,
-    r: BytesLike,
-    s: BytesLike,
-    overrides?: Overrides
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   solveTradeInvariant(
@@ -791,76 +565,35 @@ export class ConvergentCurvePool extends Contract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  "solveTradeInvariant(uint256,uint256,uint256,bool)"(
-    amountX: BigNumberish,
-    reserveX: BigNumberish,
-    reserveY: BigNumberish,
-    out: boolean,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
   symbol(overrides?: CallOverrides): Promise<string>;
 
-  "symbol()"(overrides?: CallOverrides): Promise<string>;
-
   totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
-
-  "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   transfer(
     recipient: string,
     amount: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "transfer(address,uint256)"(
-    recipient: string,
-    amount: BigNumberish,
-    overrides?: Overrides
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   transferFrom(
     sender: string,
     recipient: string,
     amount: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "transferFrom(address,address,uint256)"(
-    sender: string,
-    recipient: string,
-    amount: BigNumberish,
-    overrides?: Overrides
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   underlying(overrides?: CallOverrides): Promise<string>;
 
-  "underlying()"(overrides?: CallOverrides): Promise<string>;
-
   underlyingDecimals(overrides?: CallOverrides): Promise<number>;
 
-  "underlyingDecimals()"(overrides?: CallOverrides): Promise<number>;
-
   unitSeconds(overrides?: CallOverrides): Promise<BigNumber>;
-
-  "unitSeconds()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   callStatic: {
     DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<string>;
 
-    "DOMAIN_SEPARATOR()"(overrides?: CallOverrides): Promise<string>;
-
     FEE_BOUND(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "FEE_BOUND()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     allowance(
-      owner: string,
-      spender: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "allowance(address,address)"(
       owner: string,
       spender: string,
       overrides?: CallOverrides
@@ -872,30 +605,13 @@ export class ConvergentCurvePool extends Contract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    "approve(address,uint256)"(
-      spender: string,
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
     balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
-
-    "balanceOf(address)"(
-      account: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
 
     bond(overrides?: CallOverrides): Promise<string>;
 
-    "bond()"(overrides?: CallOverrides): Promise<string>;
-
     bondDecimals(overrides?: CallOverrides): Promise<number>;
 
-    "bondDecimals()"(overrides?: CallOverrides): Promise<number>;
-
     decimals(overrides?: CallOverrides): Promise<number>;
-
-    "decimals()"(overrides?: CallOverrides): Promise<number>;
 
     decreaseApproval(
       spender: string,
@@ -903,35 +619,17 @@ export class ConvergentCurvePool extends Contract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    "decreaseApproval(address,uint256)"(
-      spender: string,
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
     expiration(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "expiration()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     feesBond(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "feesBond()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     feesUnderlying(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "feesUnderlying()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     getPoolId(overrides?: CallOverrides): Promise<string>;
 
-    "getPoolId()"(overrides?: CallOverrides): Promise<string>;
-
     getVault(overrides?: CallOverrides): Promise<string>;
 
-    "getVault()"(overrides?: CallOverrides): Promise<string>;
-
     governance(overrides?: CallOverrides): Promise<string>;
-
-    "governance()"(overrides?: CallOverrides): Promise<string>;
 
     increaseApproval(
       spender: string,
@@ -939,22 +637,9 @@ export class ConvergentCurvePool extends Contract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    "increaseApproval(address,uint256)"(
-      spender: string,
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
     name(overrides?: CallOverrides): Promise<string>;
 
-    "name()"(overrides?: CallOverrides): Promise<string>;
-
     nonces(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
-
-    "nonces(address)"(
-      owner: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
 
     onExitPool(
       poolId: BytesLike,
@@ -972,39 +657,7 @@ export class ConvergentCurvePool extends Contract {
       }
     >;
 
-    "onExitPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
-      poolId: BytesLike,
-      arg1: string,
-      recipient: string,
-      currentBalances: BigNumberish[],
-      arg4: BigNumberish,
-      protocolSwapFee: BigNumberish,
-      userData: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<
-      [BigNumber[], BigNumber[]] & {
-        amountsOut: BigNumber[];
-        dueProtocolFeeAmounts: BigNumber[];
-      }
-    >;
-
     onJoinPool(
-      poolId: BytesLike,
-      arg1: string,
-      recipient: string,
-      currentBalances: BigNumberish[],
-      arg4: BigNumberish,
-      protocolSwapFee: BigNumberish,
-      userData: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<
-      [BigNumber[], BigNumber[]] & {
-        amountsIn: BigNumber[];
-        dueProtocolFeeAmounts: BigNumber[];
-      }
-    >;
-
-    "onJoinPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
       poolId: BytesLike,
       arg1: string,
       recipient: string,
@@ -1037,30 +690,9 @@ export class ConvergentCurvePool extends Contract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    "onSwap(tuple,uint256,uint256)"(
-      swapRequest: {
-        kind: BigNumberish;
-        tokenIn: string;
-        tokenOut: string;
-        amount: BigNumberish;
-        poolId: BytesLike;
-        lastChangeBlock: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      currentBalanceTokenIn: BigNumberish,
-      currentBalanceTokenOut: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     percentFee(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "percentFee()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     percentFeeGov(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "percentFeeGov()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     permit(
       owner: string,
@@ -1073,26 +705,7 @@ export class ConvergentCurvePool extends Contract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
-      owner: string,
-      spender: string,
-      value: BigNumberish,
-      deadline: BigNumberish,
-      v: BigNumberish,
-      r: BytesLike,
-      s: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     solveTradeInvariant(
-      amountX: BigNumberish,
-      reserveX: BigNumberish,
-      reserveY: BigNumberish,
-      out: boolean,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "solveTradeInvariant(uint256,uint256,uint256,bool)"(
       amountX: BigNumberish,
       reserveX: BigNumberish,
       reserveY: BigNumberish,
@@ -1102,19 +715,9 @@ export class ConvergentCurvePool extends Contract {
 
     symbol(overrides?: CallOverrides): Promise<string>;
 
-    "symbol()"(overrides?: CallOverrides): Promise<string>;
-
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     transfer(
-      recipient: string,
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    "transfer(address,uint256)"(
       recipient: string,
       amount: BigNumberish,
       overrides?: CallOverrides
@@ -1127,59 +730,54 @@ export class ConvergentCurvePool extends Contract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    "transferFrom(address,address,uint256)"(
-      sender: string,
-      recipient: string,
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
     underlying(overrides?: CallOverrides): Promise<string>;
-
-    "underlying()"(overrides?: CallOverrides): Promise<string>;
 
     underlyingDecimals(overrides?: CallOverrides): Promise<number>;
 
-    "underlyingDecimals()"(overrides?: CallOverrides): Promise<number>;
-
     unitSeconds(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "unitSeconds()"(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   filters: {
     Approval(
-      owner: string | null,
-      spender: string | null,
-      value: null
-    ): EventFilter;
+      owner?: string | null,
+      spender?: string | null,
+      value?: null
+    ): TypedEventFilter<
+      [string, string, BigNumber],
+      { owner: string; spender: string; value: BigNumber }
+    >;
 
     FeeCollection(
-      collectedBase: null,
-      collectedBond: null,
-      remainingBase: null,
-      remainingBond: null
-    ): EventFilter;
+      collectedBase?: null,
+      collectedBond?: null,
+      remainingBase?: null,
+      remainingBond?: null
+    ): TypedEventFilter<
+      [BigNumber, BigNumber, BigNumber, BigNumber],
+      {
+        collectedBase: BigNumber;
+        collectedBond: BigNumber;
+        remainingBase: BigNumber;
+        remainingBond: BigNumber;
+      }
+    >;
 
-    Transfer(from: string | null, to: string | null, value: null): EventFilter;
+    Transfer(
+      from?: string | null,
+      to?: string | null,
+      value?: null
+    ): TypedEventFilter<
+      [string, string, BigNumber],
+      { from: string; to: string; value: BigNumber }
+    >;
   };
 
   estimateGas: {
     DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "DOMAIN_SEPARATOR()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     FEE_BOUND(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "FEE_BOUND()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     allowance(
-      owner: string,
-      spender: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "allowance(address,address)"(
       owner: string,
       spender: string,
       overrides?: CallOverrides
@@ -1188,92 +786,44 @@ export class ConvergentCurvePool extends Contract {
     approve(
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "approve(address,uint256)"(
-      spender: string,
-      amount: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    "balanceOf(address)"(
-      account: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     bond(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "bond()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     bondDecimals(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "bondDecimals()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     decimals(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "decimals()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     decreaseApproval(
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "decreaseApproval(address,uint256)"(
-      spender: string,
-      amount: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     expiration(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "expiration()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     feesBond(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "feesBond()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     feesUnderlying(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "feesUnderlying()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     getPoolId(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "getPoolId()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     getVault(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "getVault()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     governance(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "governance()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     increaseApproval(
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "increaseApproval(address,uint256)"(
-      spender: string,
-      amount: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "name()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     nonces(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
-
-    "nonces(address)"(
-      owner: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
 
     onExitPool(
       poolId: BytesLike,
@@ -1283,18 +833,7 @@ export class ConvergentCurvePool extends Contract {
       arg4: BigNumberish,
       protocolSwapFee: BigNumberish,
       userData: BytesLike,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "onExitPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
-      poolId: BytesLike,
-      arg1: string,
-      recipient: string,
-      currentBalances: BigNumberish[],
-      arg4: BigNumberish,
-      protocolSwapFee: BigNumberish,
-      userData: BytesLike,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     onJoinPool(
@@ -1305,18 +844,7 @@ export class ConvergentCurvePool extends Contract {
       arg4: BigNumberish,
       protocolSwapFee: BigNumberish,
       userData: BytesLike,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "onJoinPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
-      poolId: BytesLike,
-      arg1: string,
-      recipient: string,
-      currentBalances: BigNumberish[],
-      arg4: BigNumberish,
-      protocolSwapFee: BigNumberish,
-      userData: BytesLike,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     onSwap(
@@ -1333,33 +861,12 @@ export class ConvergentCurvePool extends Contract {
       },
       currentBalanceTokenIn: BigNumberish,
       currentBalanceTokenOut: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "onSwap(tuple,uint256,uint256)"(
-      swapRequest: {
-        kind: BigNumberish;
-        tokenIn: string;
-        tokenOut: string;
-        amount: BigNumberish;
-        poolId: BytesLike;
-        lastChangeBlock: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      currentBalanceTokenIn: BigNumberish,
-      currentBalanceTokenOut: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     percentFee(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "percentFee()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     percentFeeGov(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "percentFeeGov()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     permit(
       owner: string,
@@ -1369,29 +876,10 @@ export class ConvergentCurvePool extends Contract {
       v: BigNumberish,
       r: BytesLike,
       s: BytesLike,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
-      owner: string,
-      spender: string,
-      value: BigNumberish,
-      deadline: BigNumberish,
-      v: BigNumberish,
-      r: BytesLike,
-      s: BytesLike,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     solveTradeInvariant(
-      amountX: BigNumberish,
-      reserveX: BigNumberish,
-      reserveY: BigNumberish,
-      out: boolean,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "solveTradeInvariant(uint256,uint256,uint256,bool)"(
       amountX: BigNumberish,
       reserveX: BigNumberish,
       reserveY: BigNumberish,
@@ -1401,69 +889,34 @@ export class ConvergentCurvePool extends Contract {
 
     symbol(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "symbol()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     transfer(
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "transfer(address,uint256)"(
-      recipient: string,
-      amount: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     transferFrom(
       sender: string,
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "transferFrom(address,address,uint256)"(
-      sender: string,
-      recipient: string,
-      amount: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     underlying(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "underlying()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     underlyingDecimals(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "underlyingDecimals()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     unitSeconds(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "unitSeconds()"(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
     DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "DOMAIN_SEPARATOR()"(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     FEE_BOUND(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "FEE_BOUND()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     allowance(
-      owner: string,
-      spender: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "allowance(address,address)"(
       owner: string,
       spender: string,
       overrides?: CallOverrides
@@ -1472,13 +925,7 @@ export class ConvergentCurvePool extends Contract {
     approve(
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "approve(address,uint256)"(
-      spender: string,
-      amount: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     balanceOf(
@@ -1486,83 +933,39 @@ export class ConvergentCurvePool extends Contract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    "balanceOf(address)"(
-      account: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     bond(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "bond()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     bondDecimals(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "bondDecimals()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     decimals(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "decimals()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     decreaseApproval(
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "decreaseApproval(address,uint256)"(
-      spender: string,
-      amount: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     expiration(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "expiration()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     feesBond(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "feesBond()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     feesUnderlying(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "feesUnderlying()"(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     getPoolId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "getPoolId()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getVault(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "getVault()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     governance(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "governance()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     increaseApproval(
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "increaseApproval(address,uint256)"(
-      spender: string,
-      amount: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "name()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     nonces(
-      owner: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "nonces(address)"(
       owner: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -1575,18 +978,7 @@ export class ConvergentCurvePool extends Contract {
       arg4: BigNumberish,
       protocolSwapFee: BigNumberish,
       userData: BytesLike,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "onExitPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
-      poolId: BytesLike,
-      arg1: string,
-      recipient: string,
-      currentBalances: BigNumberish[],
-      arg4: BigNumberish,
-      protocolSwapFee: BigNumberish,
-      userData: BytesLike,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     onJoinPool(
@@ -1597,18 +989,7 @@ export class ConvergentCurvePool extends Contract {
       arg4: BigNumberish,
       protocolSwapFee: BigNumberish,
       userData: BytesLike,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "onJoinPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
-      poolId: BytesLike,
-      arg1: string,
-      recipient: string,
-      currentBalances: BigNumberish[],
-      arg4: BigNumberish,
-      protocolSwapFee: BigNumberish,
-      userData: BytesLike,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     onSwap(
@@ -1625,33 +1006,12 @@ export class ConvergentCurvePool extends Contract {
       },
       currentBalanceTokenIn: BigNumberish,
       currentBalanceTokenOut: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "onSwap(tuple,uint256,uint256)"(
-      swapRequest: {
-        kind: BigNumberish;
-        tokenIn: string;
-        tokenOut: string;
-        amount: BigNumberish;
-        poolId: BytesLike;
-        lastChangeBlock: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      currentBalanceTokenIn: BigNumberish,
-      currentBalanceTokenOut: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     percentFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "percentFee()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     percentFeeGov(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "percentFeeGov()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     permit(
       owner: string,
@@ -1661,18 +1021,7 @@ export class ConvergentCurvePool extends Contract {
       v: BigNumberish,
       r: BytesLike,
       s: BytesLike,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
-      owner: string,
-      spender: string,
-      value: BigNumberish,
-      deadline: BigNumberish,
-      v: BigNumberish,
-      r: BytesLike,
-      s: BytesLike,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     solveTradeInvariant(
@@ -1683,62 +1032,29 @@ export class ConvergentCurvePool extends Contract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    "solveTradeInvariant(uint256,uint256,uint256,bool)"(
-      amountX: BigNumberish,
-      reserveX: BigNumberish,
-      reserveY: BigNumberish,
-      out: boolean,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "symbol()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "totalSupply()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     transfer(
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "transfer(address,uint256)"(
-      recipient: string,
-      amount: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     transferFrom(
       sender: string,
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "transferFrom(address,address,uint256)"(
-      sender: string,
-      recipient: string,
-      amount: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     underlying(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "underlying()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     underlyingDecimals(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    "underlyingDecimals()"(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     unitSeconds(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "unitSeconds()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }

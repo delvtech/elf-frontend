@@ -2,23 +2,12 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { Contract, Signer } from "ethers";
+import { Contract, Signer, utils } from "ethers";
 import { Provider } from "@ethersproject/providers";
-
-import type { IInterestTokenFactory } from "../IInterestTokenFactory";
-
-export class IInterestTokenFactory__factory {
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): IInterestTokenFactory {
-    return new Contract(
-      address,
-      _abi,
-      signerOrProvider
-    ) as IInterestTokenFactory;
-  }
-}
+import type {
+  IInterestTokenFactory,
+  IInterestTokenFactoryInterface,
+} from "../IInterestTokenFactory";
 
 const _abi = [
   {
@@ -56,3 +45,20 @@ const _abi = [
     type: "function",
   },
 ];
+
+export class IInterestTokenFactory__factory {
+  static readonly abi = _abi;
+  static createInterface(): IInterestTokenFactoryInterface {
+    return new utils.Interface(_abi) as IInterestTokenFactoryInterface;
+  }
+  static connect(
+    address: string,
+    signerOrProvider: Signer | Provider
+  ): IInterestTokenFactory {
+    return new Contract(
+      address,
+      _abi,
+      signerOrProvider
+    ) as IInterestTokenFactory;
+  }
+}

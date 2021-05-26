@@ -9,16 +9,15 @@ import {
   BigNumber,
   BigNumberish,
   PopulatedTransaction,
-} from "ethers";
-import {
-  Contract,
+  BaseContract,
   ContractTransaction,
   Overrides,
   CallOverrides,
-} from "@ethersproject/contracts";
+} from "ethers";
 import { BytesLike } from "@ethersproject/bytes";
 import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
+import { TypedEventFilter, TypedEvent, TypedListener } from "./commons";
 
 interface MockFlashLoanRecipientInterface extends ethers.utils.Interface {
   functions: {
@@ -77,16 +76,46 @@ interface MockFlashLoanRecipientInterface extends ethers.utils.Interface {
   events: {};
 }
 
-export class MockFlashLoanRecipient extends Contract {
+export class MockFlashLoanRecipient extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  on(event: EventFilter | string, listener: Listener): this;
-  once(event: EventFilter | string, listener: Listener): this;
-  addListener(eventName: EventFilter | string, listener: Listener): this;
-  removeAllListeners(eventName: EventFilter | string): this;
-  removeListener(eventName: any, listener: Listener): this;
+  listeners<EventArgsArray extends Array<any>, EventArgsObject>(
+    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>
+  ): Array<TypedListener<EventArgsArray, EventArgsObject>>;
+  off<EventArgsArray extends Array<any>, EventArgsObject>(
+    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
+    listener: TypedListener<EventArgsArray, EventArgsObject>
+  ): this;
+  on<EventArgsArray extends Array<any>, EventArgsObject>(
+    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
+    listener: TypedListener<EventArgsArray, EventArgsObject>
+  ): this;
+  once<EventArgsArray extends Array<any>, EventArgsObject>(
+    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
+    listener: TypedListener<EventArgsArray, EventArgsObject>
+  ): this;
+  removeListener<EventArgsArray extends Array<any>, EventArgsObject>(
+    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
+    listener: TypedListener<EventArgsArray, EventArgsObject>
+  ): this;
+  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
+    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
+  ): this;
+
+  listeners(eventName?: string): Array<Listener>;
+  off(eventName: string, listener: Listener): this;
+  on(eventName: string, listener: Listener): this;
+  once(eventName: string, listener: Listener): this;
+  removeListener(eventName: string, listener: Listener): this;
+  removeAllListeners(eventName?: string): this;
+
+  queryFilter<EventArgsArray extends Array<any>, EventArgsObject>(
+    event: TypedEventFilter<EventArgsArray, EventArgsObject>,
+    fromBlockOrBlockhash?: string | number | undefined,
+    toBlock?: string | number | undefined
+  ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
   interface: MockFlashLoanRecipientInterface;
 
@@ -96,62 +125,31 @@ export class MockFlashLoanRecipient extends Contract {
       amounts: BigNumberish[],
       feeAmounts: BigNumberish[],
       userData: BytesLike,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "receiveFlashLoan(address[],uint256[],uint256[],bytes)"(
-      tokens: string[],
-      amounts: BigNumberish[],
-      feeAmounts: BigNumberish[],
-      userData: BytesLike,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     reenter(overrides?: CallOverrides): Promise<[boolean]>;
 
-    "reenter()"(overrides?: CallOverrides): Promise<[boolean]>;
-
     repayInExcess(overrides?: CallOverrides): Promise<[boolean]>;
-
-    "repayInExcess()"(overrides?: CallOverrides): Promise<[boolean]>;
 
     repayLoan(overrides?: CallOverrides): Promise<[boolean]>;
 
-    "repayLoan()"(overrides?: CallOverrides): Promise<[boolean]>;
-
     setReenter(
       _reenter: boolean,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "setReenter(bool)"(
-      _reenter: boolean,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     setRepayInExcess(
       _repayInExcess: boolean,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "setRepayInExcess(bool)"(
-      _repayInExcess: boolean,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     setRepayLoan(
       _repayLoan: boolean,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "setRepayLoan(bool)"(
-      _repayLoan: boolean,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     vault(overrides?: CallOverrides): Promise<[string]>;
-
-    "vault()"(overrides?: CallOverrides): Promise<[string]>;
   };
 
   receiveFlashLoan(
@@ -159,62 +157,31 @@ export class MockFlashLoanRecipient extends Contract {
     amounts: BigNumberish[],
     feeAmounts: BigNumberish[],
     userData: BytesLike,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "receiveFlashLoan(address[],uint256[],uint256[],bytes)"(
-    tokens: string[],
-    amounts: BigNumberish[],
-    feeAmounts: BigNumberish[],
-    userData: BytesLike,
-    overrides?: Overrides
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   reenter(overrides?: CallOverrides): Promise<boolean>;
 
-  "reenter()"(overrides?: CallOverrides): Promise<boolean>;
-
   repayInExcess(overrides?: CallOverrides): Promise<boolean>;
-
-  "repayInExcess()"(overrides?: CallOverrides): Promise<boolean>;
 
   repayLoan(overrides?: CallOverrides): Promise<boolean>;
 
-  "repayLoan()"(overrides?: CallOverrides): Promise<boolean>;
-
   setReenter(
     _reenter: boolean,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "setReenter(bool)"(
-    _reenter: boolean,
-    overrides?: Overrides
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   setRepayInExcess(
     _repayInExcess: boolean,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "setRepayInExcess(bool)"(
-    _repayInExcess: boolean,
-    overrides?: Overrides
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   setRepayLoan(
     _repayLoan: boolean,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "setRepayLoan(bool)"(
-    _repayLoan: boolean,
-    overrides?: Overrides
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   vault(overrides?: CallOverrides): Promise<string>;
-
-  "vault()"(overrides?: CallOverrides): Promise<string>;
 
   callStatic: {
     receiveFlashLoan(
@@ -225,53 +192,22 @@ export class MockFlashLoanRecipient extends Contract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "receiveFlashLoan(address[],uint256[],uint256[],bytes)"(
-      tokens: string[],
-      amounts: BigNumberish[],
-      feeAmounts: BigNumberish[],
-      userData: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     reenter(overrides?: CallOverrides): Promise<boolean>;
-
-    "reenter()"(overrides?: CallOverrides): Promise<boolean>;
 
     repayInExcess(overrides?: CallOverrides): Promise<boolean>;
 
-    "repayInExcess()"(overrides?: CallOverrides): Promise<boolean>;
-
     repayLoan(overrides?: CallOverrides): Promise<boolean>;
 
-    "repayLoan()"(overrides?: CallOverrides): Promise<boolean>;
-
     setReenter(_reenter: boolean, overrides?: CallOverrides): Promise<void>;
-
-    "setReenter(bool)"(
-      _reenter: boolean,
-      overrides?: CallOverrides
-    ): Promise<void>;
 
     setRepayInExcess(
       _repayInExcess: boolean,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "setRepayInExcess(bool)"(
-      _repayInExcess: boolean,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     setRepayLoan(_repayLoan: boolean, overrides?: CallOverrides): Promise<void>;
 
-    "setRepayLoan(bool)"(
-      _repayLoan: boolean,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     vault(overrides?: CallOverrides): Promise<string>;
-
-    "vault()"(overrides?: CallOverrides): Promise<string>;
   };
 
   filters: {};
@@ -282,59 +218,31 @@ export class MockFlashLoanRecipient extends Contract {
       amounts: BigNumberish[],
       feeAmounts: BigNumberish[],
       userData: BytesLike,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "receiveFlashLoan(address[],uint256[],uint256[],bytes)"(
-      tokens: string[],
-      amounts: BigNumberish[],
-      feeAmounts: BigNumberish[],
-      userData: BytesLike,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     reenter(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "reenter()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     repayInExcess(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "repayInExcess()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     repayLoan(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "repayLoan()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    setReenter(_reenter: boolean, overrides?: Overrides): Promise<BigNumber>;
-
-    "setReenter(bool)"(
+    setReenter(
       _reenter: boolean,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     setRepayInExcess(
       _repayInExcess: boolean,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "setRepayInExcess(bool)"(
-      _repayInExcess: boolean,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     setRepayLoan(
       _repayLoan: boolean,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "setRepayLoan(bool)"(
-      _repayLoan: boolean,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     vault(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "vault()"(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -343,61 +251,30 @@ export class MockFlashLoanRecipient extends Contract {
       amounts: BigNumberish[],
       feeAmounts: BigNumberish[],
       userData: BytesLike,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "receiveFlashLoan(address[],uint256[],uint256[],bytes)"(
-      tokens: string[],
-      amounts: BigNumberish[],
-      feeAmounts: BigNumberish[],
-      userData: BytesLike,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     reenter(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "reenter()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     repayInExcess(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "repayInExcess()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     repayLoan(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "repayLoan()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     setReenter(
       _reenter: boolean,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "setReenter(bool)"(
-      _reenter: boolean,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     setRepayInExcess(
       _repayInExcess: boolean,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "setRepayInExcess(bool)"(
-      _repayInExcess: boolean,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     setRepayLoan(
       _repayLoan: boolean,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "setRepayLoan(bool)"(
-      _repayLoan: boolean,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     vault(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "vault()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }
