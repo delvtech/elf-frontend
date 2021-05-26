@@ -34,20 +34,14 @@ export function PoolsTable({
               .filter((pool): pool is WeightedPool => !!pool)
               .map((pool, index) => {
                 return (
-                  <InterestPoolCard
-                    key={pool?.contractAddress || index}
-                    pool={pool}
-                  />
+                  <InterestPoolCard key={pool?.address || index} pool={pool} />
                 );
               })
           : principalTokenPools
               .filter((pool): pool is ConvergentCurvePool => !!pool)
               .map((pool, index) => {
                 return (
-                  <PrincipalPoolCard
-                    key={pool?.contractAddress || index}
-                    pool={pool}
-                  />
+                  <PrincipalPoolCard key={pool?.address || index} pool={pool} />
                 );
               })}
       </Fragment>

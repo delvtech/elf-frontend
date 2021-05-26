@@ -9,16 +9,15 @@ import {
   BigNumber,
   BigNumberish,
   PopulatedTransaction,
-} from "ethers";
-import {
-  Contract,
+  BaseContract,
   ContractTransaction,
   Overrides,
   CallOverrides,
-} from "@ethersproject/contracts";
+} from "ethers";
 import { BytesLike } from "@ethersproject/bytes";
 import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
+import { TypedEventFilter, TypedEvent, TypedListener } from "./commons";
 
 interface EnumerableIERC20ToBytes32MapMockInterface
   extends ethers.utils.Interface {
@@ -94,16 +93,46 @@ interface EnumerableIERC20ToBytes32MapMockInterface
   getEvent(nameOrSignatureOrTopic: "OperationResult"): EventFragment;
 }
 
-export class EnumerableIERC20ToBytes32MapMock extends Contract {
+export class EnumerableIERC20ToBytes32MapMock extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  on(event: EventFilter | string, listener: Listener): this;
-  once(event: EventFilter | string, listener: Listener): this;
-  addListener(eventName: EventFilter | string, listener: Listener): this;
-  removeAllListeners(eventName: EventFilter | string): this;
-  removeListener(eventName: any, listener: Listener): this;
+  listeners<EventArgsArray extends Array<any>, EventArgsObject>(
+    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>
+  ): Array<TypedListener<EventArgsArray, EventArgsObject>>;
+  off<EventArgsArray extends Array<any>, EventArgsObject>(
+    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
+    listener: TypedListener<EventArgsArray, EventArgsObject>
+  ): this;
+  on<EventArgsArray extends Array<any>, EventArgsObject>(
+    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
+    listener: TypedListener<EventArgsArray, EventArgsObject>
+  ): this;
+  once<EventArgsArray extends Array<any>, EventArgsObject>(
+    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
+    listener: TypedListener<EventArgsArray, EventArgsObject>
+  ): this;
+  removeListener<EventArgsArray extends Array<any>, EventArgsObject>(
+    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
+    listener: TypedListener<EventArgsArray, EventArgsObject>
+  ): this;
+  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
+    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
+  ): this;
+
+  listeners(eventName?: string): Array<Listener>;
+  off(eventName: string, listener: Listener): this;
+  on(eventName: string, listener: Listener): this;
+  once(eventName: string, listener: Listener): this;
+  removeListener(eventName: string, listener: Listener): this;
+  removeAllListeners(eventName?: string): this;
+
+  queryFilter<EventArgsArray extends Array<any>, EventArgsObject>(
+    event: TypedEventFilter<EventArgsArray, EventArgsObject>,
+    fromBlockOrBlockhash?: string | number | undefined,
+    toBlock?: string | number | undefined
+  ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
   interface: EnumerableIERC20ToBytes32MapMockInterface;
 
@@ -113,17 +142,7 @@ export class EnumerableIERC20ToBytes32MapMock extends Contract {
       overrides?: CallOverrides
     ): Promise<[string, string] & { key: string; value: string }>;
 
-    "at(uint256)"(
-      index: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[string, string] & { key: string; value: string }>;
-
     contains(key: string, overrides?: CallOverrides): Promise<[boolean]>;
-
-    "contains(address)"(
-      key: string,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
 
     get(
       key: string,
@@ -131,41 +150,20 @@ export class EnumerableIERC20ToBytes32MapMock extends Contract {
       overrides?: CallOverrides
     ): Promise<[string]>;
 
-    "get(address,uint256)"(
-      key: string,
-      errorCode: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
-
     length(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    "length()"(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    remove(key: string, overrides?: Overrides): Promise<ContractTransaction>;
-
-    "remove(address)"(
+    remove(
       key: string,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     set(
       key: string,
       value: BytesLike,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "set(address,bytes32)"(
-      key: string,
-      value: BytesLike,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     unchecked_at(
-      index: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[string, string] & { key: string; value: string }>;
-
-    "unchecked_at(uint256)"(
       index: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[string, string] & { key: string; value: string }>;
@@ -175,29 +173,13 @@ export class EnumerableIERC20ToBytes32MapMock extends Contract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
-    "unchecked_indexOf(address)"(
-      key: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
     unchecked_setAt(
       index: BigNumberish,
       value: BytesLike,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "unchecked_setAt(uint256,bytes32)"(
-      index: BigNumberish,
-      value: BytesLike,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     unchecked_valueAt(
-      index: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[string] & { value: string }>;
-
-    "unchecked_valueAt(uint256)"(
       index: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[string] & { value: string }>;
@@ -208,14 +190,7 @@ export class EnumerableIERC20ToBytes32MapMock extends Contract {
     overrides?: CallOverrides
   ): Promise<[string, string] & { key: string; value: string }>;
 
-  "at(uint256)"(
-    index: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<[string, string] & { key: string; value: string }>;
-
   contains(key: string, overrides?: CallOverrides): Promise<boolean>;
-
-  "contains(address)"(key: string, overrides?: CallOverrides): Promise<boolean>;
 
   get(
     key: string,
@@ -223,33 +198,17 @@ export class EnumerableIERC20ToBytes32MapMock extends Contract {
     overrides?: CallOverrides
   ): Promise<string>;
 
-  "get(address,uint256)"(
-    key: string,
-    errorCode: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<string>;
-
   length(overrides?: CallOverrides): Promise<BigNumber>;
 
-  "length()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-  remove(key: string, overrides?: Overrides): Promise<ContractTransaction>;
-
-  "remove(address)"(
+  remove(
     key: string,
-    overrides?: Overrides
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   set(
     key: string,
     value: BytesLike,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "set(address,bytes32)"(
-    key: string,
-    value: BytesLike,
-    overrides?: Overrides
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   unchecked_at(
@@ -257,36 +216,15 @@ export class EnumerableIERC20ToBytes32MapMock extends Contract {
     overrides?: CallOverrides
   ): Promise<[string, string] & { key: string; value: string }>;
 
-  "unchecked_at(uint256)"(
-    index: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<[string, string] & { key: string; value: string }>;
-
   unchecked_indexOf(key: string, overrides?: CallOverrides): Promise<BigNumber>;
-
-  "unchecked_indexOf(address)"(
-    key: string,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
 
   unchecked_setAt(
     index: BigNumberish,
     value: BytesLike,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "unchecked_setAt(uint256,bytes32)"(
-    index: BigNumberish,
-    value: BytesLike,
-    overrides?: Overrides
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   unchecked_valueAt(
-    index: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<string>;
-
-  "unchecked_valueAt(uint256)"(
     index: BigNumberish,
     overrides?: CallOverrides
   ): Promise<string>;
@@ -297,17 +235,7 @@ export class EnumerableIERC20ToBytes32MapMock extends Contract {
       overrides?: CallOverrides
     ): Promise<[string, string] & { key: string; value: string }>;
 
-    "at(uint256)"(
-      index: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[string, string] & { key: string; value: string }>;
-
     contains(key: string, overrides?: CallOverrides): Promise<boolean>;
-
-    "contains(address)"(
-      key: string,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
 
     get(
       key: string,
@@ -315,27 +243,11 @@ export class EnumerableIERC20ToBytes32MapMock extends Contract {
       overrides?: CallOverrides
     ): Promise<string>;
 
-    "get(address,uint256)"(
-      key: string,
-      errorCode: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<string>;
-
     length(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "length()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     remove(key: string, overrides?: CallOverrides): Promise<void>;
 
-    "remove(address)"(key: string, overrides?: CallOverrides): Promise<void>;
-
     set(
-      key: string,
-      value: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "set(address,bytes32)"(
       key: string,
       value: BytesLike,
       overrides?: CallOverrides
@@ -346,17 +258,7 @@ export class EnumerableIERC20ToBytes32MapMock extends Contract {
       overrides?: CallOverrides
     ): Promise<[string, string] & { key: string; value: string }>;
 
-    "unchecked_at(uint256)"(
-      index: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[string, string] & { key: string; value: string }>;
-
     unchecked_indexOf(
-      key: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "unchecked_indexOf(address)"(
       key: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -367,41 +269,22 @@ export class EnumerableIERC20ToBytes32MapMock extends Contract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "unchecked_setAt(uint256,bytes32)"(
-      index: BigNumberish,
-      value: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     unchecked_valueAt(
-      index: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<string>;
-
-    "unchecked_valueAt(uint256)"(
       index: BigNumberish,
       overrides?: CallOverrides
     ): Promise<string>;
   };
 
   filters: {
-    OperationResult(result: null): EventFilter;
+    OperationResult(
+      result?: null
+    ): TypedEventFilter<[boolean], { result: boolean }>;
   };
 
   estimateGas: {
     at(index: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
-    "at(uint256)"(
-      index: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     contains(key: string, overrides?: CallOverrides): Promise<BigNumber>;
-
-    "contains(address)"(
-      key: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
 
     get(
       key: string,
@@ -409,38 +292,20 @@ export class EnumerableIERC20ToBytes32MapMock extends Contract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    "get(address,uint256)"(
-      key: string,
-      errorCode: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     length(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "length()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    remove(key: string, overrides?: Overrides): Promise<BigNumber>;
-
-    "remove(address)"(key: string, overrides?: Overrides): Promise<BigNumber>;
+    remove(
+      key: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
 
     set(
       key: string,
       value: BytesLike,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "set(address,bytes32)"(
-      key: string,
-      value: BytesLike,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     unchecked_at(
-      index: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "unchecked_at(uint256)"(
       index: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -450,29 +315,13 @@ export class EnumerableIERC20ToBytes32MapMock extends Contract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    "unchecked_indexOf(address)"(
-      key: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     unchecked_setAt(
       index: BigNumberish,
       value: BytesLike,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "unchecked_setAt(uint256,bytes32)"(
-      index: BigNumberish,
-      value: BytesLike,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     unchecked_valueAt(
-      index: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "unchecked_valueAt(uint256)"(
       index: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -484,17 +333,7 @@ export class EnumerableIERC20ToBytes32MapMock extends Contract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    "at(uint256)"(
-      index: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     contains(
-      key: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "contains(address)"(
       key: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -505,41 +344,20 @@ export class EnumerableIERC20ToBytes32MapMock extends Contract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    "get(address,uint256)"(
-      key: string,
-      errorCode: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     length(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "length()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    remove(key: string, overrides?: Overrides): Promise<PopulatedTransaction>;
-
-    "remove(address)"(
+    remove(
       key: string,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     set(
       key: string,
       value: BytesLike,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "set(address,bytes32)"(
-      key: string,
-      value: BytesLike,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     unchecked_at(
-      index: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "unchecked_at(uint256)"(
       index: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -549,29 +367,13 @@ export class EnumerableIERC20ToBytes32MapMock extends Contract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    "unchecked_indexOf(address)"(
-      key: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     unchecked_setAt(
       index: BigNumberish,
       value: BytesLike,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "unchecked_setAt(uint256,bytes32)"(
-      index: BigNumberish,
-      value: BytesLike,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     unchecked_valueAt(
-      index: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "unchecked_valueAt(uint256)"(
       index: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;

@@ -9,16 +9,15 @@ import {
   BigNumber,
   BigNumberish,
   PopulatedTransaction,
-} from "ethers";
-import {
-  Contract,
+  BaseContract,
   ContractTransaction,
   Overrides,
   CallOverrides,
-} from "@ethersproject/contracts";
+} from "ethers";
 import { BytesLike } from "@ethersproject/bytes";
 import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
+import { TypedEventFilter, TypedEvent, TypedListener } from "./commons";
 
 interface MockVaultInterface extends ethers.utils.Interface {
   functions: {
@@ -129,16 +128,46 @@ interface MockVaultInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "Swap"): EventFragment;
 }
 
-export class MockVault extends Contract {
+export class MockVault extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  on(event: EventFilter | string, listener: Listener): this;
-  once(event: EventFilter | string, listener: Listener): this;
-  addListener(eventName: EventFilter | string, listener: Listener): this;
-  removeAllListeners(eventName: EventFilter | string): this;
-  removeListener(eventName: any, listener: Listener): this;
+  listeners<EventArgsArray extends Array<any>, EventArgsObject>(
+    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>
+  ): Array<TypedListener<EventArgsArray, EventArgsObject>>;
+  off<EventArgsArray extends Array<any>, EventArgsObject>(
+    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
+    listener: TypedListener<EventArgsArray, EventArgsObject>
+  ): this;
+  on<EventArgsArray extends Array<any>, EventArgsObject>(
+    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
+    listener: TypedListener<EventArgsArray, EventArgsObject>
+  ): this;
+  once<EventArgsArray extends Array<any>, EventArgsObject>(
+    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
+    listener: TypedListener<EventArgsArray, EventArgsObject>
+  ): this;
+  removeListener<EventArgsArray extends Array<any>, EventArgsObject>(
+    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
+    listener: TypedListener<EventArgsArray, EventArgsObject>
+  ): this;
+  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
+    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
+  ): this;
+
+  listeners(eventName?: string): Array<Listener>;
+  off(eventName: string, listener: Listener): this;
+  on(eventName: string, listener: Listener): this;
+  once(eventName: string, listener: Listener): this;
+  removeListener(eventName: string, listener: Listener): this;
+  removeAllListeners(eventName?: string): this;
+
+  queryFilter<EventArgsArray extends Array<any>, EventArgsObject>(
+    event: TypedEventFilter<EventArgsArray, EventArgsObject>,
+    fromBlockOrBlockhash?: string | number | undefined,
+    toBlock?: string | number | undefined
+  ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
   interface: MockVaultInterface;
 
@@ -151,18 +180,7 @@ export class MockVault extends Contract {
       lastChangeBlock: BigNumberish,
       protocolFeePercentage: BigNumberish,
       userData: BytesLike,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "callExitPool(address,bytes32,address,uint256[],uint256,uint256,bytes)"(
-      poolAddress: string,
-      poolId: BytesLike,
-      recipient: string,
-      currentBalances: BigNumberish[],
-      lastChangeBlock: BigNumberish,
-      protocolFeePercentage: BigNumberish,
-      userData: BytesLike,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     callJoinPool(
@@ -173,18 +191,7 @@ export class MockVault extends Contract {
       lastChangeBlock: BigNumberish,
       protocolFeePercentage: BigNumberish,
       userData: BytesLike,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "callJoinPool(address,bytes32,address,uint256[],uint256,uint256,bytes)"(
-      poolAddress: string,
-      poolId: BytesLike,
-      recipient: string,
-      currentBalances: BigNumberish[],
-      lastChangeBlock: BigNumberish,
-      protocolFeePercentage: BigNumberish,
-      userData: BytesLike,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     callMinimalPoolSwap(
@@ -202,39 +209,12 @@ export class MockVault extends Contract {
       },
       balanceTokenIn: BigNumberish,
       balanceTokenOut: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "callMinimalPoolSwap(address,tuple,uint256,uint256)"(
-      pool: string,
-      request: {
-        kind: BigNumberish;
-        tokenIn: string;
-        tokenOut: string;
-        amount: BigNumberish;
-        poolId: BytesLike;
-        lastChangeBlock: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      balanceTokenIn: BigNumberish,
-      balanceTokenOut: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     getAuthorizer(overrides?: CallOverrides): Promise<[string]>;
 
-    "getAuthorizer()"(overrides?: CallOverrides): Promise<[string]>;
-
     getPoolTokens(
-      poolId: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<
-      [string[], BigNumber[]] & { tokens: string[]; balances: BigNumber[] }
-    >;
-
-    "getPoolTokens(bytes32)"(
       poolId: BytesLike,
       overrides?: CallOverrides
     ): Promise<
@@ -246,23 +226,11 @@ export class MockVault extends Contract {
       overrides?: CallOverrides
     ): Promise<[string]>;
 
-    "registerPool(uint8)"(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
-
     registerTokens(
       poolId: BytesLike,
       tokens: string[],
       arg2: string[],
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "registerTokens(bytes32,address[],address[])"(
-      poolId: BytesLike,
-      tokens: string[],
-      arg2: string[],
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
 
@@ -274,18 +242,7 @@ export class MockVault extends Contract {
     lastChangeBlock: BigNumberish,
     protocolFeePercentage: BigNumberish,
     userData: BytesLike,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "callExitPool(address,bytes32,address,uint256[],uint256,uint256,bytes)"(
-    poolAddress: string,
-    poolId: BytesLike,
-    recipient: string,
-    currentBalances: BigNumberish[],
-    lastChangeBlock: BigNumberish,
-    protocolFeePercentage: BigNumberish,
-    userData: BytesLike,
-    overrides?: Overrides
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   callJoinPool(
@@ -296,18 +253,7 @@ export class MockVault extends Contract {
     lastChangeBlock: BigNumberish,
     protocolFeePercentage: BigNumberish,
     userData: BytesLike,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "callJoinPool(address,bytes32,address,uint256[],uint256,uint256,bytes)"(
-    poolAddress: string,
-    poolId: BytesLike,
-    recipient: string,
-    currentBalances: BigNumberish[],
-    lastChangeBlock: BigNumberish,
-    protocolFeePercentage: BigNumberish,
-    userData: BytesLike,
-    overrides?: Overrides
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   callMinimalPoolSwap(
@@ -325,30 +271,10 @@ export class MockVault extends Contract {
     },
     balanceTokenIn: BigNumberish,
     balanceTokenOut: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "callMinimalPoolSwap(address,tuple,uint256,uint256)"(
-    pool: string,
-    request: {
-      kind: BigNumberish;
-      tokenIn: string;
-      tokenOut: string;
-      amount: BigNumberish;
-      poolId: BytesLike;
-      lastChangeBlock: BigNumberish;
-      from: string;
-      to: string;
-      userData: BytesLike;
-    },
-    balanceTokenIn: BigNumberish,
-    balanceTokenOut: BigNumberish,
-    overrides?: Overrides
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   getAuthorizer(overrides?: CallOverrides): Promise<string>;
-
-  "getAuthorizer()"(overrides?: CallOverrides): Promise<string>;
 
   getPoolTokens(
     poolId: BytesLike,
@@ -357,47 +283,17 @@ export class MockVault extends Contract {
     [string[], BigNumber[]] & { tokens: string[]; balances: BigNumber[] }
   >;
 
-  "getPoolTokens(bytes32)"(
-    poolId: BytesLike,
-    overrides?: CallOverrides
-  ): Promise<
-    [string[], BigNumber[]] & { tokens: string[]; balances: BigNumber[] }
-  >;
-
   registerPool(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
-
-  "registerPool(uint8)"(
-    arg0: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<string>;
 
   registerTokens(
     poolId: BytesLike,
     tokens: string[],
     arg2: string[],
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "registerTokens(bytes32,address[],address[])"(
-    poolId: BytesLike,
-    tokens: string[],
-    arg2: string[],
-    overrides?: Overrides
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   callStatic: {
     callExitPool(
-      poolAddress: string,
-      poolId: BytesLike,
-      recipient: string,
-      currentBalances: BigNumberish[],
-      lastChangeBlock: BigNumberish,
-      protocolFeePercentage: BigNumberish,
-      userData: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "callExitPool(address,bytes32,address,uint256[],uint256,uint256,bytes)"(
       poolAddress: string,
       poolId: BytesLike,
       recipient: string,
@@ -419,36 +315,7 @@ export class MockVault extends Contract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "callJoinPool(address,bytes32,address,uint256[],uint256,uint256,bytes)"(
-      poolAddress: string,
-      poolId: BytesLike,
-      recipient: string,
-      currentBalances: BigNumberish[],
-      lastChangeBlock: BigNumberish,
-      protocolFeePercentage: BigNumberish,
-      userData: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     callMinimalPoolSwap(
-      pool: string,
-      request: {
-        kind: BigNumberish;
-        tokenIn: string;
-        tokenOut: string;
-        amount: BigNumberish;
-        poolId: BytesLike;
-        lastChangeBlock: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      balanceTokenIn: BigNumberish,
-      balanceTokenOut: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "callMinimalPoolSwap(address,tuple,uint256,uint256)"(
       pool: string,
       request: {
         kind: BigNumberish;
@@ -468,16 +335,7 @@ export class MockVault extends Contract {
 
     getAuthorizer(overrides?: CallOverrides): Promise<string>;
 
-    "getAuthorizer()"(overrides?: CallOverrides): Promise<string>;
-
     getPoolTokens(
-      poolId: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<
-      [string[], BigNumber[]] & { tokens: string[]; balances: BigNumber[] }
-    >;
-
-    "getPoolTokens(bytes32)"(
       poolId: BytesLike,
       overrides?: CallOverrides
     ): Promise<
@@ -489,19 +347,7 @@ export class MockVault extends Contract {
       overrides?: CallOverrides
     ): Promise<string>;
 
-    "registerPool(uint8)"(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<string>;
-
     registerTokens(
-      poolId: BytesLike,
-      tokens: string[],
-      arg2: string[],
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "registerTokens(bytes32,address[],address[])"(
       poolId: BytesLike,
       tokens: string[],
       arg2: string[],
@@ -511,19 +357,31 @@ export class MockVault extends Contract {
 
   filters: {
     PoolBalanceChanged(
-      poolId: BytesLike | null,
-      liquidityProvider: string | null,
-      tokens: null,
-      deltas: null,
-      protocolFees: null
-    ): EventFilter;
+      poolId?: BytesLike | null,
+      liquidityProvider?: string | null,
+      tokens?: null,
+      deltas?: null,
+      protocolFees?: null
+    ): TypedEventFilter<
+      [string, string, string[], BigNumber[], BigNumber[]],
+      {
+        poolId: string;
+        liquidityProvider: string;
+        tokens: string[];
+        deltas: BigNumber[];
+        protocolFees: BigNumber[];
+      }
+    >;
 
     Swap(
-      poolId: BytesLike | null,
-      tokenIn: string | null,
-      tokenOut: string | null,
-      amount: null
-    ): EventFilter;
+      poolId?: BytesLike | null,
+      tokenIn?: string | null,
+      tokenOut?: string | null,
+      amount?: null
+    ): TypedEventFilter<
+      [string, string, string, BigNumber],
+      { poolId: string; tokenIn: string; tokenOut: string; amount: BigNumber }
+    >;
   };
 
   estimateGas: {
@@ -535,18 +393,7 @@ export class MockVault extends Contract {
       lastChangeBlock: BigNumberish,
       protocolFeePercentage: BigNumberish,
       userData: BytesLike,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "callExitPool(address,bytes32,address,uint256[],uint256,uint256,bytes)"(
-      poolAddress: string,
-      poolId: BytesLike,
-      recipient: string,
-      currentBalances: BigNumberish[],
-      lastChangeBlock: BigNumberish,
-      protocolFeePercentage: BigNumberish,
-      userData: BytesLike,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     callJoinPool(
@@ -557,18 +404,7 @@ export class MockVault extends Contract {
       lastChangeBlock: BigNumberish,
       protocolFeePercentage: BigNumberish,
       userData: BytesLike,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "callJoinPool(address,bytes32,address,uint256[],uint256,uint256,bytes)"(
-      poolAddress: string,
-      poolId: BytesLike,
-      recipient: string,
-      currentBalances: BigNumberish[],
-      lastChangeBlock: BigNumberish,
-      protocolFeePercentage: BigNumberish,
-      userData: BytesLike,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     callMinimalPoolSwap(
@@ -586,37 +422,12 @@ export class MockVault extends Contract {
       },
       balanceTokenIn: BigNumberish,
       balanceTokenOut: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "callMinimalPoolSwap(address,tuple,uint256,uint256)"(
-      pool: string,
-      request: {
-        kind: BigNumberish;
-        tokenIn: string;
-        tokenOut: string;
-        amount: BigNumberish;
-        poolId: BytesLike;
-        lastChangeBlock: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      balanceTokenIn: BigNumberish,
-      balanceTokenOut: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     getAuthorizer(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "getAuthorizer()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     getPoolTokens(
-      poolId: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "getPoolTokens(bytes32)"(
       poolId: BytesLike,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -626,23 +437,11 @@ export class MockVault extends Contract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    "registerPool(uint8)"(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     registerTokens(
       poolId: BytesLike,
       tokens: string[],
       arg2: string[],
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "registerTokens(bytes32,address[],address[])"(
-      poolId: BytesLike,
-      tokens: string[],
-      arg2: string[],
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
 
@@ -655,18 +454,7 @@ export class MockVault extends Contract {
       lastChangeBlock: BigNumberish,
       protocolFeePercentage: BigNumberish,
       userData: BytesLike,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "callExitPool(address,bytes32,address,uint256[],uint256,uint256,bytes)"(
-      poolAddress: string,
-      poolId: BytesLike,
-      recipient: string,
-      currentBalances: BigNumberish[],
-      lastChangeBlock: BigNumberish,
-      protocolFeePercentage: BigNumberish,
-      userData: BytesLike,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     callJoinPool(
@@ -677,18 +465,7 @@ export class MockVault extends Contract {
       lastChangeBlock: BigNumberish,
       protocolFeePercentage: BigNumberish,
       userData: BytesLike,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "callJoinPool(address,bytes32,address,uint256[],uint256,uint256,bytes)"(
-      poolAddress: string,
-      poolId: BytesLike,
-      recipient: string,
-      currentBalances: BigNumberish[],
-      lastChangeBlock: BigNumberish,
-      protocolFeePercentage: BigNumberish,
-      userData: BytesLike,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     callMinimalPoolSwap(
@@ -706,37 +483,12 @@ export class MockVault extends Contract {
       },
       balanceTokenIn: BigNumberish,
       balanceTokenOut: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "callMinimalPoolSwap(address,tuple,uint256,uint256)"(
-      pool: string,
-      request: {
-        kind: BigNumberish;
-        tokenIn: string;
-        tokenOut: string;
-        amount: BigNumberish;
-        poolId: BytesLike;
-        lastChangeBlock: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      balanceTokenIn: BigNumberish,
-      balanceTokenOut: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     getAuthorizer(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "getAuthorizer()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     getPoolTokens(
-      poolId: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "getPoolTokens(bytes32)"(
       poolId: BytesLike,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -746,23 +498,11 @@ export class MockVault extends Contract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    "registerPool(uint8)"(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     registerTokens(
       poolId: BytesLike,
       tokens: string[],
       arg2: string[],
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "registerTokens(bytes32,address[],address[])"(
-      poolId: BytesLike,
-      tokens: string[],
-      arg2: string[],
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };
 }

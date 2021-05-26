@@ -9,16 +9,15 @@ import {
   BigNumber,
   BigNumberish,
   PopulatedTransaction,
-} from "ethers";
-import {
-  Contract,
+  BaseContract,
   ContractTransaction,
   Overrides,
   CallOverrides,
-} from "@ethersproject/contracts";
+} from "ethers";
 import { BytesLike } from "@ethersproject/bytes";
 import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
+import { TypedEventFilter, TypedEvent, TypedListener } from "./commons";
 
 interface IGeneralPoolInterface extends ethers.utils.Interface {
   functions: {
@@ -78,16 +77,46 @@ interface IGeneralPoolInterface extends ethers.utils.Interface {
   events: {};
 }
 
-export class IGeneralPool extends Contract {
+export class IGeneralPool extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  on(event: EventFilter | string, listener: Listener): this;
-  once(event: EventFilter | string, listener: Listener): this;
-  addListener(eventName: EventFilter | string, listener: Listener): this;
-  removeAllListeners(eventName: EventFilter | string): this;
-  removeListener(eventName: any, listener: Listener): this;
+  listeners<EventArgsArray extends Array<any>, EventArgsObject>(
+    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>
+  ): Array<TypedListener<EventArgsArray, EventArgsObject>>;
+  off<EventArgsArray extends Array<any>, EventArgsObject>(
+    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
+    listener: TypedListener<EventArgsArray, EventArgsObject>
+  ): this;
+  on<EventArgsArray extends Array<any>, EventArgsObject>(
+    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
+    listener: TypedListener<EventArgsArray, EventArgsObject>
+  ): this;
+  once<EventArgsArray extends Array<any>, EventArgsObject>(
+    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
+    listener: TypedListener<EventArgsArray, EventArgsObject>
+  ): this;
+  removeListener<EventArgsArray extends Array<any>, EventArgsObject>(
+    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
+    listener: TypedListener<EventArgsArray, EventArgsObject>
+  ): this;
+  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
+    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
+  ): this;
+
+  listeners(eventName?: string): Array<Listener>;
+  off(eventName: string, listener: Listener): this;
+  on(eventName: string, listener: Listener): this;
+  once(eventName: string, listener: Listener): this;
+  removeListener(eventName: string, listener: Listener): this;
+  removeAllListeners(eventName?: string): this;
+
+  queryFilter<EventArgsArray extends Array<any>, EventArgsObject>(
+    event: TypedEventFilter<EventArgsArray, EventArgsObject>,
+    fromBlockOrBlockhash?: string | number | undefined,
+    toBlock?: string | number | undefined
+  ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
   interface: IGeneralPoolInterface;
 
@@ -100,18 +129,7 @@ export class IGeneralPool extends Contract {
       lastChangeBlock: BigNumberish,
       protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "onExitPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
-      poolId: BytesLike,
-      sender: string,
-      recipient: string,
-      balances: BigNumberish[],
-      lastChangeBlock: BigNumberish,
-      protocolSwapFeePercentage: BigNumberish,
-      userData: BytesLike,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     onJoinPool(
@@ -122,18 +140,7 @@ export class IGeneralPool extends Contract {
       lastChangeBlock: BigNumberish,
       protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "onJoinPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
-      poolId: BytesLike,
-      sender: string,
-      recipient: string,
-      balances: BigNumberish[],
-      lastChangeBlock: BigNumberish,
-      protocolSwapFeePercentage: BigNumberish,
-      userData: BytesLike,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     onSwap(
@@ -151,25 +158,7 @@ export class IGeneralPool extends Contract {
       balances: BigNumberish[],
       indexIn: BigNumberish,
       indexOut: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "onSwap(tuple,uint256[],uint256,uint256)"(
-      swapRequest: {
-        kind: BigNumberish;
-        tokenIn: string;
-        tokenOut: string;
-        amount: BigNumberish;
-        poolId: BytesLike;
-        lastChangeBlock: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      balances: BigNumberish[],
-      indexIn: BigNumberish,
-      indexOut: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
 
@@ -181,18 +170,7 @@ export class IGeneralPool extends Contract {
     lastChangeBlock: BigNumberish,
     protocolSwapFeePercentage: BigNumberish,
     userData: BytesLike,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "onExitPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
-    poolId: BytesLike,
-    sender: string,
-    recipient: string,
-    balances: BigNumberish[],
-    lastChangeBlock: BigNumberish,
-    protocolSwapFeePercentage: BigNumberish,
-    userData: BytesLike,
-    overrides?: Overrides
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   onJoinPool(
@@ -203,18 +181,7 @@ export class IGeneralPool extends Contract {
     lastChangeBlock: BigNumberish,
     protocolSwapFeePercentage: BigNumberish,
     userData: BytesLike,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "onJoinPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
-    poolId: BytesLike,
-    sender: string,
-    recipient: string,
-    balances: BigNumberish[],
-    lastChangeBlock: BigNumberish,
-    protocolSwapFeePercentage: BigNumberish,
-    userData: BytesLike,
-    overrides?: Overrides
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   onSwap(
@@ -232,25 +199,7 @@ export class IGeneralPool extends Contract {
     balances: BigNumberish[],
     indexIn: BigNumberish,
     indexOut: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "onSwap(tuple,uint256[],uint256,uint256)"(
-    swapRequest: {
-      kind: BigNumberish;
-      tokenIn: string;
-      tokenOut: string;
-      amount: BigNumberish;
-      poolId: BytesLike;
-      lastChangeBlock: BigNumberish;
-      from: string;
-      to: string;
-      userData: BytesLike;
-    },
-    balances: BigNumberish[],
-    indexIn: BigNumberish,
-    indexOut: BigNumberish,
-    overrides?: Overrides
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   callStatic: {
@@ -270,22 +219,6 @@ export class IGeneralPool extends Contract {
       }
     >;
 
-    "onExitPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
-      poolId: BytesLike,
-      sender: string,
-      recipient: string,
-      balances: BigNumberish[],
-      lastChangeBlock: BigNumberish,
-      protocolSwapFeePercentage: BigNumberish,
-      userData: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<
-      [BigNumber[], BigNumber[]] & {
-        amountsOut: BigNumber[];
-        dueProtocolFeeAmounts: BigNumber[];
-      }
-    >;
-
     onJoinPool(
       poolId: BytesLike,
       sender: string,
@@ -302,41 +235,7 @@ export class IGeneralPool extends Contract {
       }
     >;
 
-    "onJoinPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
-      poolId: BytesLike,
-      sender: string,
-      recipient: string,
-      balances: BigNumberish[],
-      lastChangeBlock: BigNumberish,
-      protocolSwapFeePercentage: BigNumberish,
-      userData: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<
-      [BigNumber[], BigNumber[]] & {
-        amountsIn: BigNumber[];
-        dueProtocolFeeAmounts: BigNumber[];
-      }
-    >;
-
     onSwap(
-      swapRequest: {
-        kind: BigNumberish;
-        tokenIn: string;
-        tokenOut: string;
-        amount: BigNumberish;
-        poolId: BytesLike;
-        lastChangeBlock: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      balances: BigNumberish[],
-      indexIn: BigNumberish,
-      indexOut: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "onSwap(tuple,uint256[],uint256,uint256)"(
       swapRequest: {
         kind: BigNumberish;
         tokenIn: string;
@@ -366,18 +265,7 @@ export class IGeneralPool extends Contract {
       lastChangeBlock: BigNumberish,
       protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "onExitPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
-      poolId: BytesLike,
-      sender: string,
-      recipient: string,
-      balances: BigNumberish[],
-      lastChangeBlock: BigNumberish,
-      protocolSwapFeePercentage: BigNumberish,
-      userData: BytesLike,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     onJoinPool(
@@ -388,18 +276,7 @@ export class IGeneralPool extends Contract {
       lastChangeBlock: BigNumberish,
       protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "onJoinPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
-      poolId: BytesLike,
-      sender: string,
-      recipient: string,
-      balances: BigNumberish[],
-      lastChangeBlock: BigNumberish,
-      protocolSwapFeePercentage: BigNumberish,
-      userData: BytesLike,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     onSwap(
@@ -417,25 +294,7 @@ export class IGeneralPool extends Contract {
       balances: BigNumberish[],
       indexIn: BigNumberish,
       indexOut: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "onSwap(tuple,uint256[],uint256,uint256)"(
-      swapRequest: {
-        kind: BigNumberish;
-        tokenIn: string;
-        tokenOut: string;
-        amount: BigNumberish;
-        poolId: BytesLike;
-        lastChangeBlock: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      balances: BigNumberish[],
-      indexIn: BigNumberish,
-      indexOut: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
 
@@ -448,18 +307,7 @@ export class IGeneralPool extends Contract {
       lastChangeBlock: BigNumberish,
       protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "onExitPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
-      poolId: BytesLike,
-      sender: string,
-      recipient: string,
-      balances: BigNumberish[],
-      lastChangeBlock: BigNumberish,
-      protocolSwapFeePercentage: BigNumberish,
-      userData: BytesLike,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     onJoinPool(
@@ -470,18 +318,7 @@ export class IGeneralPool extends Contract {
       lastChangeBlock: BigNumberish,
       protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "onJoinPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
-      poolId: BytesLike,
-      sender: string,
-      recipient: string,
-      balances: BigNumberish[],
-      lastChangeBlock: BigNumberish,
-      protocolSwapFeePercentage: BigNumberish,
-      userData: BytesLike,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     onSwap(
@@ -499,25 +336,7 @@ export class IGeneralPool extends Contract {
       balances: BigNumberish[],
       indexIn: BigNumberish,
       indexOut: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "onSwap(tuple,uint256[],uint256,uint256)"(
-      swapRequest: {
-        kind: BigNumberish;
-        tokenIn: string;
-        tokenOut: string;
-        amount: BigNumberish;
-        poolId: BytesLike;
-        lastChangeBlock: BigNumberish;
-        from: string;
-        to: string;
-        userData: BytesLike;
-      },
-      balances: BigNumberish[],
-      indexIn: BigNumberish,
-      indexOut: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };
 }
