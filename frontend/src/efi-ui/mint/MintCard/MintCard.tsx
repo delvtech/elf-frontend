@@ -24,12 +24,6 @@ import { CryptoAsset } from "efi/crypto/CryptoAsset";
 
 import styles from "./MintCard.module.css";
 
-// Stop propagation of clicks from the card title up to the card itself,
-// otherwise you get double routed to /exchange/exchange/0xdeadbeef
-const stopPropagationHandler = (e: React.MouseEvent<HTMLAnchorElement>) => {
-  e.stopPropagation();
-};
-
 interface MintCardProps {
   baseAsset: CryptoAsset | undefined;
   baseAssetIcon: TokenIcon | undefined;
@@ -120,16 +114,19 @@ export function MintCard(props: MintCardProps): ReactElement | null {
     setAmountIn("");
   }, [setAmountIn]);
 
-  const onClick = useCallback(() => {
-    if (!account) {
-      return setWalletDialogOpen(true);
-    }
+  const onClick = useCallback(
+    (event) => {
+      if (!account) {
+        return setWalletDialogOpen(true);
+      }
 
-    setDrawerOpen(true);
-  }, [account, setDrawerOpen]);
+      setDrawerOpen(true);
+    },
+    [account, setDrawerOpen]
+  );
 
   const link = (
-    <Link key="porfolioLink" to={`/portfolio`} onClick={stopPropagationHandler}>
+    <Link key="porfolioLink" to={`/portfolio`}>
       {t`Portfolio Page`}
     </Link>
   );

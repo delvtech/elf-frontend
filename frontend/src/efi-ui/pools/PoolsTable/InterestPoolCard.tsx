@@ -49,8 +49,6 @@ import { formatMoney } from "efi/money/formatMoney";
 import { PoolContract } from "efi/pools/PoolContract";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 
-import styles from "./PrincipalPoolCard.module.css";
-
 interface InterestPoolCardProps {
   pool: PoolContract | undefined;
 }
@@ -186,7 +184,6 @@ export function InterestPoolCard(
       onClick={goToTrade}
       style={poolCardStyle}
       className={classNames(
-        styles.gridColsPoolCard,
         tw("w-full", "flex", {
           transition: transitionsEnabled,
           "duration-1000": transitionsEnabled,

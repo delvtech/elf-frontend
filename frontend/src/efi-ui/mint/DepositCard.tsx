@@ -53,8 +53,6 @@ import { trancheContractsByAddress } from "efi/tranche/tranches";
 import { underlyingContracts } from "efi/underlying/underlying";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 
-import styles from "./PrincipalPoolCard.module.css";
-
 interface MintPoolCardProps {
   poolInfo: YieldPoolTokenInfo;
   library: Web3Provider | undefined;
@@ -62,6 +60,9 @@ interface MintPoolCardProps {
   chainId: number | undefined;
   walletConnectionActive: boolean;
   connector: AbstractConnector | undefined;
+  isExpanded: boolean;
+  onExpandOpen: () => void;
+  onExpandClose: () => void;
 }
 
 const cellClassName = tw("flex", "mr-4", "items-center", "overflow-hidden");
@@ -72,7 +73,7 @@ const poolCardStyle: CSSProperties = {
   padding: "0px",
 };
 
-export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
+export function DepositCard(props: MintPoolCardProps): ReactElement | null {
   const {
     poolInfo,
     library,
@@ -80,13 +81,13 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
     chainId,
     walletConnectionActive,
     connector,
+    isExpanded,
+    onExpandClose,
+    onExpandOpen,
   } = props;
   // state
   const { isDarkMode } = useDarkMode();
   const [transitionsEnabled, setTransitionsEnabled] = useState(true);
-  const [isExpanded, setExpanded] = useState(false);
-  const expand = useCallback(() => setExpanded(true), []);
-
   // get infos
   const trancheInfo = getTrancheForPool(poolInfo);
   const principalPoolInfo = getPrincipalPoolForTranche(trancheInfo.address);
@@ -105,6 +106,18 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
   // get static display information
   const { createdAtTimestamp: trancheCreatedAt, unlockTimestamp } =
     trancheInfo.extensions;
+  const maturityTime = unlockTimestamp * 1000;
+  const isMature = getIsMature2(maturityTime);
+  const onToggleExpand = useCallback(() => {
+    if (isMature) {
+      return;
+    }
+    if (isExpanded) {
+      onExpandClose();
+    } else {
+      onExpandOpen();
+    }
+  }, [isExpanded, isMature, onExpandClose, onExpandOpen]);
   const baseAsset = getCryptoAssetForToken(baseAssetContract?.address);
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
   const BaseAssetIcon = findAssetIcon2(baseAsset);
@@ -160,8 +173,6 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
   }
 
   const startTime = trancheCreatedAt ? trancheCreatedAt * 1000 : 0;
-  const maturityTime = unlockTimestamp * 1000;
-  const isMature = getIsMature2(maturityTime);
 
   const dayDifference = differenceInDays(
     maturityTime as number,
@@ -189,10 +200,8 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
     <Card
       elevation={Elevation.TWO}
       interactive={!isMature}
-      onClick={isMature ? undefined : expand}
       style={poolCardStyle}
       className={classNames(
-        styles.gridColsPoolCard,
         tw("w-full", {
           transition: transitionsEnabled,
           "duration-1000": transitionsEnabled,
@@ -200,7 +209,7 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
         })
       )}
     >
-      <div className={tw("w-full", "flex", "p-5")}>
+      <Card onClick={onToggleExpand} className={tw("w-full", "flex", "p-5")}>
         <div
           className={tw(
             "w-full",
@@ -391,12 +400,12 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
             minimal
             outlined
             active={isExpanded}
-            onClick={() => setExpanded(!isExpanded)}
+            onClick={onToggleExpand}
           >
             {t`Deposit`}
           </Button>
         </div>
-      </div>
+      </Card>
       <Collapse isOpen={isExpanded}>
         <MintCard
           library={library}
