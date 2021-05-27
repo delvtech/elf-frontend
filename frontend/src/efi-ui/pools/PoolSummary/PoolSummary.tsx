@@ -2,7 +2,7 @@ import React, { CSSProperties, ReactElement } from "react";
 
 import { Card, Classes } from "@blueprintjs/core";
 import classNames from "classnames";
-import { formatUnits } from "ethers/lib/utils";
+import { commify, formatUnits } from "ethers/lib/utils";
 import { Money } from "ts-money";
 import { t } from "ttag";
 
@@ -85,12 +85,7 @@ export function PoolSummary(props: PoolSummaryProps): ReactElement {
                 {liquidity ? formatMoney(liquidity) : "$0.00"}
               </div>
             </div>
-            {/*            <div className={tw("flex", "self-end")}>
-              <TrendIndicator value={liquidityTrend} />
-            </div>
-*/}{" "}
           </div>
-          {/* Volume (24hr)*/}
           <div className={tw("flex", "space-x-4", "justify-between")}>
             <div className={tw("flex", "flex-col")}>
               <span
@@ -100,10 +95,6 @@ export function PoolSummary(props: PoolSummaryProps): ReactElement {
                 {volumeDisplayValue}
               </div>
             </div>
-            {/*            <div className={tw("flex", "self-end")}>
-              <TrendIndicator value={volumeTrend} />
-            </div>
-*/}{" "}
           </div>
           {/* Quantity Base (24hr)*/}
           <div className={tw("flex", "space-x-4", "justify-between")}>
@@ -113,9 +104,11 @@ export function PoolSummary(props: PoolSummaryProps): ReactElement {
               >{t`Quantity ${baseAssetSymbol}`}</span>
               <div className={classNames("h5", tw("space-x-4"))}>
                 {baseAssetBalance
-                  ? Number(
-                      formatUnits(baseAssetBalance || 0, baseAssetDecimals)
-                    ).toFixed(2)
+                  ? commify(
+                      Number(
+                        formatUnits(baseAssetBalance || 0, baseAssetDecimals)
+                      ).toFixed()
+                    )
                   : "0.00"}
               </div>
             </div>
@@ -152,10 +145,6 @@ export function PoolSummary(props: PoolSummaryProps): ReactElement {
                 {feeVolume ? formatMoney(feeVolume) : "$0.00"}
               </div>
             </div>
-            {/*            <div className={tw("flex", "self-end")}>
-              <TrendIndicator value={feeVolumeTrend} />
-            </div>
-*/}{" "}
           </div>
           {/* Quantity Term (24hr)*/}
           <div className={tw("flex", "space-x-4", "justify-between")}>
@@ -165,16 +154,14 @@ export function PoolSummary(props: PoolSummaryProps): ReactElement {
               >{t`Quantity (${quantityLabel})`}</span>
               <div className={classNames("h5", tw("space-x-4"))}>
                 {termAssetBalance
-                  ? Number(
-                      formatUnits(termAssetBalance || 0, termAssetDecimals)
-                    ).toFixed(2)
+                  ? commify(
+                      Number(
+                        formatUnits(termAssetBalance || 0, termAssetDecimals)
+                      ).toFixed()
+                    )
                   : "0.00"}
               </div>
             </div>
-            {/*            <div className={tw("flex", "self-end")}>
-              <TrendIndicator value={volumeTrend} />
-            </div>
-*/}{" "}
           </div>
         </div>
       </Card>
