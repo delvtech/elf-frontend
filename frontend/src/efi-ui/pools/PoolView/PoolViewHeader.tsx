@@ -7,7 +7,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
+import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
@@ -32,7 +32,7 @@ export function PoolViewHeader({ pool }: PoolViewHeaderProps): ReactElement {
     termAssetContract?.address,
     baseAssetSymbol
   );
-  const BaseAssetIcon = findAssetIcon(baseAssetSymbol);
+  const BaseAssetIcon = findAssetIcon2(baseAsset);
 
   const tranche = useTrancheForPool(pool);
   const { data: unlockBN } = useSmartContractReadCall(
@@ -90,20 +90,6 @@ export function PoolViewHeader({ pool }: PoolViewHeaderProps): ReactElement {
               "bg-white",
               "border",
               "shadow-sm"
-            )}
-          >
-            <BaseAssetIcon height={36} width={36} />
-          </div>
-          <div
-            style={{ marginLeft: -8 }}
-            className={tw(
-              "flex",
-              "flex-shrink-0",
-              "items-center",
-              "p-2",
-              "rounded-full",
-              "bg-white",
-              "border"
             )}
           >
             <BaseAssetIcon height={36} width={36} />
