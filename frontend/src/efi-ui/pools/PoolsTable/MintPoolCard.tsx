@@ -133,7 +133,7 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
     yieldTokenContract
   )?.toFixed(4);
   const fees = useFeeVolumeForPool(yieldPoolContract) ?? 0;
-  const tvl = useTotalValueLockedForTranche(trancheContract, baseAssetContract);
+  const tvl = useTotalValueLockedForTranche(trancheInfo, baseAssetContract);
   const variableYield = useTokenYield(
     baseAssetContract,
     yieldPoolContract,

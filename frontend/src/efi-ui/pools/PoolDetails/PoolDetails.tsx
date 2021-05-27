@@ -2,6 +2,7 @@ import React, { ReactElement } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
+import { Tranche__factory } from "elf-contracts/types/factories/Tranche__factory";
 import { Signer } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
 
@@ -18,13 +19,12 @@ import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidity
 import { useTotalValueLockedForTranche } from "efi-ui/pools/useTotalValueLockedForTranche";
 import { useVolumeForPool } from "efi-ui/pools/useVolumeForPool/useVolumeForPool";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
-import { getPoolTokens } from "efi/pools/getPoolTokens";
-import { PoolContract } from "efi/pools/PoolContract";
-import { getTokenInfo } from "efi/tokenlists";
-import { PoolInfo } from "efi/pools/PoolInfo";
-import { getTrancheForPool } from "efi/pools/getTrancheForPool";
 import { getSmartContractFromRegistryStatic } from "efi/contracts/SmartContractsRegistry";
-import { Tranche__factory } from "elf-contracts/types/factories/Tranche__factory";
+import { getPoolTokens } from "efi/pools/getPoolTokens";
+import { getTrancheForPool } from "efi/pools/getTrancheForPool";
+import { PoolContract } from "efi/pools/PoolContract";
+import { PoolInfo } from "efi/pools/PoolInfo";
+import { getTokenInfo } from "efi/tokenlists";
 
 interface PoolDetailsProps {
   library: Web3Provider | undefined;
@@ -63,7 +63,7 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
   const decimals = tokenInfo?.decimals;
 
   const totalValueLocked = useTotalValueLockedForTranche(
-    trancheContract,
+    trancheInfo,
     baseAssetContract
   );
   const { data: interestSupplyBN } = useSmartContractReadCall(
