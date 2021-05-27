@@ -1,8 +1,7 @@
-import React, { ReactElement } from "react";
+import { ReactElement } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
-import { Tranche__factory } from "elf-contracts/types/factories/Tranche__factory";
 import { Signer } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
 
@@ -19,12 +18,11 @@ import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidity
 import { useTotalValueLockedForTranche } from "efi-ui/pools/useTotalValueLockedForTranche";
 import { useVolumeForPool } from "efi-ui/pools/useVolumeForPool/useVolumeForPool";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
-import { getSmartContractFromRegistryStatic } from "efi/contracts/SmartContractsRegistry";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { getTrancheForPool } from "efi/pools/getTrancheForPool";
 import { PoolContract } from "efi/pools/PoolContract";
 import { PoolInfo } from "efi/pools/PoolInfo";
-import { getTokenInfo } from "efi/tokenlists";
+import { trancheContractsByAddress } from "efi/tranche/tranches";
 
 interface PoolDetailsProps {
   library: Web3Provider | undefined;
@@ -53,14 +51,14 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
 
   const totalLiquidity = useTotalFiatLiquidityForPool(pool);
   const trancheInfo = getTrancheForPool(poolInfo);
-
-  const trancheContract = getSmartContractFromRegistryStatic(
-    trancheInfo.address,
-    Tranche__factory
-  );
-
-  const tokenInfo = getTokenInfo(trancheContract?.address ?? "");
-  const decimals = tokenInfo?.decimals;
+  const {
+    address: trancheAddress,
+    decimals: trancheDecimals,
+    extensions: { createdAtTimestamp, unlockTimestamp },
+  } = trancheInfo;
+  const trancheContract = trancheContractsByAddress[trancheAddress];
+  const startTimeMs = createdAtTimestamp * 1000;
+  const maturityTimeMs = unlockTimestamp * 1000;
 
   const totalValueLocked = useTotalValueLockedForTranche(
     trancheInfo,
@@ -70,15 +68,9 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
     trancheContract,
     "interestSupply"
   );
-  const startDateInUnixSeconds = trancheInfo.extensions.createdAtTimestamp;
-  const maturityDateInUnixSeconds = trancheInfo.extensions.unlockTimestamp;
-
-  const startTimeMs = startDateInUnixSeconds * 1000;
-  const maturityTimeMs = maturityDateInUnixSeconds * 1000;
 
   const volume24hr = useVolumeForPool(pool, ONE_DAY_IN_SECONDS);
   const feeVolume24hr = useFeeVolumeFiatForPool(pool, ONE_DAY_IN_SECONDS);
-
   const stakingAPY = useStakingAPY(pool);
 
   return (
@@ -112,7 +104,7 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
         />
         <TokenSummary
           pool={pool}
-          interestSupply={+formatUnits(interestSupplyBN ?? 0, decimals)}
+          interestSupply={+formatUnits(interestSupplyBN ?? 0, trancheDecimals)}
         />
       </div>
       <div

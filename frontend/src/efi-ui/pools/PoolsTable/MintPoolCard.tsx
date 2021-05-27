@@ -85,10 +85,7 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
   const { isDarkMode } = useDarkMode();
   const [transitionsEnabled, setTransitionsEnabled] = useState(true);
   const [isExpanded, setExpanded] = useState(false);
-  const toggleExpanded = useCallback(
-    () => setExpanded(!isExpanded),
-    [isExpanded]
-  );
+  const expand = useCallback(() => setExpanded(true), []);
 
   // get infos
   const trancheInfo = getTrancheForPool(poolInfo);
@@ -149,9 +146,12 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
   // Afterwards we disable transitions so they don't interfere with light/dark mode switching.
   useEffect(() => {
     if (allDataLoaded) {
-      setTimeout(() => {
+      const id = setTimeout(() => {
         setTransitionsEnabled(false);
       }, 1000);
+      return () => {
+        clearInterval(id);
+      };
     }
   }, [allDataLoaded]);
 
@@ -189,7 +189,7 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
     <Card
       elevation={Elevation.TWO}
       interactive={!isMature}
-      onClick={isMature ? undefined : toggleExpanded}
+      onClick={isMature ? undefined : expand}
       style={poolCardStyle}
       className={classNames(
         styles.gridColsPoolCard,

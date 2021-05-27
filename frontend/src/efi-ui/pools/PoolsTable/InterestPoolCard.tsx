@@ -139,9 +139,12 @@ export function InterestPoolCard(
   // Afterwards we disable transitions so they don't interfere with light/dark mode switching.
   useEffect(() => {
     if (allDataLoaded) {
-      setTimeout(() => {
+      const id = setTimeout(() => {
         setTransitionsEnabled(false);
       }, 1000);
+      return () => {
+        clearTimeout(id);
+      };
     }
   }, [allDataLoaded]);
 
