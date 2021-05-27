@@ -105,6 +105,11 @@ export function getCalcSwap(
     return { result: undefined, status: "loading" };
   }
 
+  const isBaseAsset =
+    kind === SwapKind.GIVEN_IN
+      ? tokenInAddress === baseAssetAddress
+      : tokenOutAddress === baseAssetAddress;
+
   if (isPrincipalPool(poolInfo as PoolInfo)) {
     return calcSwapPrincipalPool(
       amount,
@@ -115,7 +120,7 @@ export function getCalcSwap(
       tokenInReserves,
       tokenOutReserves,
       totalSupply,
-      tokenInAddress === baseAssetAddress
+      isBaseAsset
     );
   }
 

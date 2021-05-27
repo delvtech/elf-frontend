@@ -113,6 +113,8 @@ export function TradePanel(props: TradePanelProps): ReactElement {
   const {
     asset: tokenInAsset,
     address: tokenInAddress = "",
+    // need this for calcSwap.  can't send ETH 0x00 address
+    contractAddress: tokenInContractAddress = "",
     icon: tokenInIcon,
     symbol: tokenInSymbol,
     decimals: tokenInDecimals,
@@ -124,6 +126,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
 
   const {
     address: tokenOutAddress = "",
+    contractAddress: tokenOutContractAddress = "",
     icon: tokenOutIcon,
     symbol: tokenOutSymbol,
     decimals: tokenOutDecimals,
@@ -173,11 +176,11 @@ export function TradePanel(props: TradePanelProps): ReactElement {
 
   const onChangeIn = useOnChangeIn(
     poolInfo,
-    tokenInAddress,
-    tokenInBalanceOf,
+    tokenInContractAddress,
+    tokenInPoolBalance,
     tokenInDecimals,
-    tokenOutAddress,
-    tokenOutBalanceOf,
+    tokenOutContractAddress,
+    tokenOutPoolBalance,
     tokenOutDecimals,
     totalSupply,
     clearInputs,
@@ -188,11 +191,11 @@ export function TradePanel(props: TradePanelProps): ReactElement {
 
   const onChangeOut = useOnChangeOut(
     poolInfo,
-    tokenInAddress,
-    tokenInBalanceOf,
+    tokenInContractAddress,
+    tokenInPoolBalance,
     tokenInDecimals,
-    tokenOutAddress,
-    tokenOutBalanceOf,
+    tokenOutContractAddress,
+    tokenOutPoolBalance,
     tokenOutDecimals,
     totalSupply,
     clearInputs,
@@ -539,6 +542,7 @@ function useTokenInfoForTradeInput(
 
   return {
     asset,
+    contractAddress: tokenContract?.address,
     address,
     icon,
     symbol,
