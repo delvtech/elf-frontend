@@ -1,4 +1,10 @@
-import { CSSProperties, ReactElement, useEffect, useState } from "react";
+import {
+  CSSProperties,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 
 import {
   Button,
@@ -19,7 +25,7 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
-import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
+import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 import { MintCard } from "efi-ui/mint/MintCard/MintCard";
 import { useFeeVolumeForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
@@ -41,12 +47,11 @@ import {
 import { getTrancheForPool } from "efi/pools/getTrancheForPool";
 import { PoolContract } from "efi/pools/PoolContract";
 import { yieldPoolContractsByAddress } from "efi/pools/weightedPool";
+import { getIsMature2 } from "efi/tranche/getIsMature";
 import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
 import { underlyingContracts } from "efi/underlying/underlying";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
-
-import styles from "./PrincipalPoolCard.module.css";
 
 interface MintPoolCardProps {
   poolInfo: YieldPoolTokenInfo;
@@ -55,6 +60,9 @@ interface MintPoolCardProps {
   chainId: number | undefined;
   walletConnectionActive: boolean;
   connector: AbstractConnector | undefined;
+  isExpanded: boolean;
+  onExpandOpen: () => void;
+  onExpandClose: () => void;
 }
 
 const cellClassName = tw("flex", "mr-4", "items-center", "overflow-hidden");
@@ -65,7 +73,7 @@ const poolCardStyle: CSSProperties = {
   padding: "0px",
 };
 
-export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
+export function DepositCard(props: MintPoolCardProps): ReactElement | null {
   const {
     poolInfo,
     library,
@@ -73,12 +81,13 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
     chainId,
     walletConnectionActive,
     connector,
+    isExpanded,
+    onExpandClose,
+    onExpandOpen,
   } = props;
   // state
   const { isDarkMode } = useDarkMode();
   const [transitionsEnabled, setTransitionsEnabled] = useState(true);
-  const [isOpen, setOpen] = useState(false);
-
   // get infos
   const trancheInfo = getTrancheForPool(poolInfo);
   const principalPoolInfo = getPrincipalPoolForTranche(trancheInfo.address);
@@ -97,9 +106,21 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
   // get static display information
   const { createdAtTimestamp: trancheCreatedAt, unlockTimestamp } =
     trancheInfo.extensions;
+  const maturityTime = unlockTimestamp * 1000;
+  const isMature = getIsMature2(maturityTime);
+  const onToggleExpand = useCallback(() => {
+    if (isMature) {
+      return;
+    }
+    if (isExpanded) {
+      onExpandClose();
+    } else {
+      onExpandOpen();
+    }
+  }, [isExpanded, isMature, onExpandClose, onExpandOpen]);
   const baseAsset = getCryptoAssetForToken(baseAssetContract?.address);
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
-  const BaseAssetIcon = findAssetIcon(baseAssetSymbol);
+  const BaseAssetIcon = findAssetIcon2(baseAsset);
   const vaultSymbol = getVaultSymbol(baseAsset);
   const { data: vaultInfo } = useYearnVault(vaultSymbol);
   const { displayName, type, apy } = vaultInfo || {};
@@ -122,7 +143,7 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
     yieldTokenContract
   )?.toFixed(4);
   const fees = useFeeVolumeForPool(yieldPoolContract) ?? 0;
-  const tvl = useTotalValueLockedForTranche(trancheContract, baseAssetContract);
+  const tvl = useTotalValueLockedForTranche(trancheInfo, baseAssetContract);
   const variableYield = useTokenYield(
     baseAssetContract,
     yieldPoolContract,
@@ -138,9 +159,12 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
   // Afterwards we disable transitions so they don't interfere with light/dark mode switching.
   useEffect(() => {
     if (allDataLoaded) {
-      setTimeout(() => {
+      const id = setTimeout(() => {
         setTransitionsEnabled(false);
       }, 1000);
+      return () => {
+        clearInterval(id);
+      };
     }
   }, [allDataLoaded]);
 
@@ -149,7 +173,6 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
   }
 
   const startTime = trancheCreatedAt ? trancheCreatedAt * 1000 : 0;
-  const maturityTime = unlockTimestamp * 1000;
 
   const dayDifference = differenceInDays(
     maturityTime as number,
@@ -176,10 +199,9 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
   return (
     <Card
       elevation={Elevation.TWO}
-      interactive
+      interactive={!isMature}
       style={poolCardStyle}
       className={classNames(
-        styles.gridColsPoolCard,
         tw("w-full", {
           transition: transitionsEnabled,
           "duration-1000": transitionsEnabled,
@@ -187,7 +209,7 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
         })
       )}
     >
-      <div className={tw("w-full", "flex")} style={{ padding: "20px" }}>
+      <Card onClick={onToggleExpand} className={tw("w-full", "flex", "p-5")}>
         <div
           className={tw(
             "w-full",
@@ -248,8 +270,7 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
               cellClassName,
               "col-span-2",
               "lg:col-span-2",
-              "xl:col-span-1",
-              "lg:col-span-1"
+              "xl:col-span-1"
             )}
           >
             <LabeledText
@@ -378,14 +399,14 @@ export function MintPoolCard(props: MintPoolCardProps): ReactElement | null {
             intent={Intent.PRIMARY}
             minimal
             outlined
-            active={isOpen}
-            onClick={() => setOpen(!isOpen)}
+            active={isExpanded}
+            onClick={onToggleExpand}
           >
             {t`Deposit`}
           </Button>
         </div>
-      </div>
-      <Collapse isOpen={isOpen}>
+      </Card>
+      <Collapse isOpen={isExpanded}>
         <MintCard
           library={library}
           account={account}

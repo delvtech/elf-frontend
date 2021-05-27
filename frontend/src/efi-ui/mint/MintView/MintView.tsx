@@ -1,4 +1,4 @@
-import React, { Fragment, ReactElement } from "react";
+import React, { Fragment, ReactElement, useCallback, useState } from "react";
 
 import { Intent, Tag } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
@@ -8,7 +8,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
-import { MintPoolCard } from "efi-ui/pools/PoolsTable/MintPoolCard";
+import { DepositCard } from "efi-ui/mint/DepositCard";
 import { yieldPools } from "efi/pools/weightedPool";
 
 interface MintViewProps extends RouteComponentProps {}
@@ -16,6 +16,8 @@ interface MintViewProps extends RouteComponentProps {}
 export function MintView(props: MintViewProps): ReactElement {
   const { account, library, active, chainId, connector } =
     useWeb3React<Web3Provider>();
+  const [expandedPoolIndex, setExpandedPoolIndex] = useState(-1);
+  const onExpandClose = useCallback(() => setExpandedPoolIndex(-1), []);
 
   return (
     <Fragment>
@@ -50,9 +52,14 @@ export function MintView(props: MintViewProps): ReactElement {
             "space-y-5"
           )}
         >
-          {yieldPools.map((poolInfo) => {
+          {yieldPools.map((poolInfo, index) => {
             return (
-              <MintPoolCard
+              <DepositCard
+                isExpanded={index === expandedPoolIndex}
+                onExpandOpen={() => {
+                  setExpandedPoolIndex(index);
+                }}
+                onExpandClose={onExpandClose}
                 key={poolInfo.address}
                 library={library}
                 account={account}

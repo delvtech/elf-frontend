@@ -90,7 +90,7 @@ export function MintInput(props: MintInputProps): ReactElement {
               "relative"
             )}
           >
-            <Button disabled={disabled} onClick={setMaxValue} large>
+            <Button large disabled={disabled} onClick={setMaxValue}>
               {t`MAX`}
             </Button>
           </div>
