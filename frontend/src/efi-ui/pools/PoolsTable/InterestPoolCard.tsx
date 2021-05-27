@@ -180,6 +180,7 @@ export function InterestPoolCard(
     <Card
       elevation={Elevation.TWO}
       interactive
+      onClick={goToTrade}
       style={poolCardStyle}
       className={classNames(
         styles.gridColsPoolCard,
