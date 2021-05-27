@@ -84,10 +84,25 @@ export function PoolCharts(props: PoolChartsProps): ReactElement {
                   <H4>{t`Charts Available After 24 Hours of Activity`}</H4>
                 </Callout>
               </div>
-            ) : null}
-            {liquidityData?.length &&
-            showLiquidityChart &&
-            poolAtLeastOneDayOld ? (
+            ) : !liquidityData?.length && showLiquidityChart ? (
+              <div className={tw("pt-5", "h-full", "w-full")}>
+                <Callout
+                  icon={null}
+                  className={tw(
+                    "flex",
+                    "items-center",
+                    "justify-center",
+                    "h-full",
+                    "w-full"
+                  )}
+                  intent={Intent.NONE}
+                >
+                  <H4>{t`No data available for Liquidity chart`}</H4>
+                </Callout>
+              </div>
+            ) : liquidityData?.length &&
+              showLiquidityChart &&
+              poolAtLeastOneDayOld ? (
               <BrushChart
                 data={liquidityData || EMPTY_ARRAY}
                 getXValue={getBrushXValue}
@@ -95,8 +110,25 @@ export function PoolCharts(props: PoolChartsProps): ReactElement {
                 compact
                 isDarkMode={isDarkMode}
               />
-            ) : null}
-            {volumeData?.length && showVolumeChart && poolAtLeastOneDayOld ? (
+            ) : !volumeData?.length && showVolumeChart ? (
+              <div className={tw("pt-5", "h-full", "w-full")}>
+                <Callout
+                  icon={null}
+                  className={tw(
+                    "flex",
+                    "items-center",
+                    "justify-center",
+                    "h-full",
+                    "w-full"
+                  )}
+                  intent={Intent.NONE}
+                >
+                  <H4>{t`No data available for Volume chart`}</H4>
+                </Callout>
+              </div>
+            ) : volumeData?.length &&
+              showVolumeChart &&
+              poolAtLeastOneDayOld ? (
               <BarChart
                 data={volumeData || EMPTY_ARRAY}
                 getXValue={getBarXValue}
