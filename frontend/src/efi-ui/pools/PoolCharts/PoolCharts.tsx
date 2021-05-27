@@ -1,6 +1,6 @@
-import React, { ReactElement, useMemo, useState } from "react";
+import { ReactElement, useMemo, useState } from "react";
 
-import { Button, Callout, Card, H4, Intent } from "@blueprintjs/core";
+import { Callout, Card, H4, Intent, Tab, Tabs } from "@blueprintjs/core";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -62,30 +62,10 @@ export function PoolCharts(props: PoolChartsProps): ReactElement {
               "pr-10"
             )}
           >
-            <div className={tw("flex", "space-x-4")}>
-              <Button
-                onClick={() => setChart(ChartType.LIQUIDITY)}
-                active={showLiquidityChart}
-                minimal
-                outlined
-                intent={Intent.PRIMARY}
-              >{t`Liquidity`}</Button>
-              <Button
-                onClick={() => setChart(ChartType.VOLUME)}
-                active={showVolumeChart}
-                minimal
-                outlined
-                intent={Intent.PRIMARY}
-              >{t`Volume`}</Button>
-            </div>
-            <div className={tw("flex", "space-x-4")}>
-              <Button
-                active
-                minimal
-                outlined
-                intent={Intent.PRIMARY}
-              >{t`Day`}</Button>
-            </div>
+            <Tabs onChange={setChart as (newTabId: ChartType) => void}>
+              <Tab id={ChartType.LIQUIDITY} title={t`Liquidity`} />
+              <Tab id={ChartType.VOLUME} title={t`Volume`} />
+            </Tabs>
           </div>
           <div className={tw("w-full", "h-full", "pt-8", "relative")}>
             {!poolAtLeastOneDayOld ? (

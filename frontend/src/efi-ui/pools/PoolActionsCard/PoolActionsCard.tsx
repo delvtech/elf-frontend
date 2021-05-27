@@ -1,6 +1,6 @@
 import { ReactElement, useEffect, useState } from "react";
 
-import { Button, Card, Intent } from "@blueprintjs/core";
+import { Card, Intent, Tab, Tabs } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { ERC20 } from "elf-contracts/types/ERC20";
@@ -55,29 +55,11 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
         <span>{t`Pool Actions`}</span>
       </div>
       <Card className={tw("flex", "flex-col", "flex-1", "w-full", "space-y-2")}>
-        <div className={tw("flex", "space-x-4")}>
-          <Button
-            onClick={() => setActiveTab(PoolAction.SWAP)}
-            active={activeTab === PoolAction.SWAP}
-            minimal
-            outlined
-            intent={Intent.PRIMARY}
-          >{t`Trade`}</Button>
-          <Button
-            onClick={() => setActiveTab(PoolAction.STAKE)}
-            active={activeTab === PoolAction.STAKE}
-            minimal
-            outlined
-            intent={Intent.PRIMARY}
-          >{t`Stake`}</Button>
-          <Button
-            onClick={() => setActiveTab(PoolAction.UNSTAKE)}
-            active={activeTab === PoolAction.UNSTAKE}
-            minimal
-            outlined
-            intent={Intent.PRIMARY}
-          >{t`Unstake`}</Button>
-        </div>
+        <Tabs onChange={setActiveTab as (newTabId: PoolAction) => void}>
+          <Tab id={PoolAction.SWAP} title={t`Trade`} />
+          <Tab id={PoolAction.STAKE} title={t`Stake`} />
+          <Tab id={PoolAction.UNSTAKE} title={t`Unstake`} />
+        </Tabs>
         {activeTab === PoolAction.SWAP && (
           <TradePanel
             library={library}
