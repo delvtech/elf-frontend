@@ -23,7 +23,7 @@ export function GoToMarketButton(props: GoToMarketButtonProps): ReactElement {
 
   const onClick = useCallback(() => {
     if (isStake) {
-      setTab(PoolAction.STAKE);
+      setTab(PoolAction.ADD_LIQUIDITY);
     } else {
       setTab(PoolAction.SWAP);
     }

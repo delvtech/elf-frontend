@@ -57,8 +57,8 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
       <Card className={tw("flex", "flex-col", "flex-1", "w-full", "space-y-2")}>
         <Tabs onChange={setActiveTab as (newTabId: PoolAction) => void}>
           <Tab id={PoolAction.SWAP} title={t`Trade`} />
-          <Tab id={PoolAction.STAKE} title={t`Add Liquidity`} />
-          <Tab id={PoolAction.UNSTAKE} title={t`Remove Liquidity`} />
+          <Tab id={PoolAction.ADD_LIQUIDITY} title={t`Add Liquidity`} />
+          <Tab id={PoolAction.REMOVE_LIQUIDITY} title={t`Remove Liquidity`} />
         </Tabs>
         {activeTab === PoolAction.SWAP && (
           <TradePanel
@@ -75,7 +75,7 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
             buttonIntent={Intent.PRIMARY}
           />
         )}
-        {activeTab === PoolAction.STAKE && (
+        {activeTab === PoolAction.ADD_LIQUIDITY && (
           <StakingPanel
             library={library}
             signer={signer}
@@ -85,7 +85,7 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
             buttonIntent={Intent.PRIMARY}
           />
         )}
-        {activeTab === PoolAction.UNSTAKE && (
+        {activeTab === PoolAction.REMOVE_LIQUIDITY && (
           <UnStakePanel
             library={library}
             account={account}

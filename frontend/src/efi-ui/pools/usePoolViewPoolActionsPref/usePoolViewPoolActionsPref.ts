@@ -2,8 +2,8 @@ import { usePref } from "efi-ui/prefs/usePref/usePref";
 
 export enum PoolAction {
   SWAP = "swap",
-  STAKE = "stake",
-  UNSTAKE = "unstake",
+  ADD_LIQUIDITY = "stake",
+  REMOVE_LIQUIDITY = "unstake",
 }
 interface PoolActionsPref {
   tab: PoolAction;
