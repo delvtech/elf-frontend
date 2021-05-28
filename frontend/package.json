@@ -14,7 +14,7 @@
     "@ethersproject/contracts": "^5.2.0",
     "@ethersproject/hash": "^5.2.0",
     "@ethersproject/providers": "^5.2.0",
-    "@fontsource/inter": "^4.3.0",
+    "@fontsource/inter": "^4.4.0",
     "@fontsource/rubik": "^4.3.0",
     "@metamask/jazzicon": "^2.0.0",
     "@nomiclabs/hardhat-ethers": "^2.0.2",
