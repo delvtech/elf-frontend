@@ -18,6 +18,7 @@ import { getPoolTokenInfoFromContract } from "efi/pools/getPoolInfo";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { isConvergentCurvePool, PoolContract } from "efi/pools/PoolContract";
 import { PoolInfo } from "efi/pools/PoolInfo";
+import { useMemo } from "react";
 
 /**
  * Lazy spot price technique until we get a better method.  Right now just calculates how much out
@@ -54,6 +55,7 @@ export function usePoolSpotPrice(
     baseAssetInfo.address === underlyingToken?.address
       ? termAssetInfo.address
       : baseAssetInfo.address;
+
   const { tokenInReserves, tokenOutReserves } = getTokenReserves(
     tokens,
     balances,
@@ -62,16 +64,26 @@ export function usePoolSpotPrice(
     baseAssetInfo.decimals
   );
 
-  const { result: [, amountOut] = [] } = getCalcSwap(
-    amount,
-    SwapKind.GIVEN_IN,
+  const { result: [, amountOut] = [] } = useMemo(() => {
+    const result = getCalcSwap(
+      amount,
+      SwapKind.GIVEN_IN,
+      poolInfo,
+      tokenInAddress,
+      tokenOutAddress,
+      tokenInReserves,
+      tokenOutReserves,
+      totalSupply
+    );
+    return result;
+  }, [
     poolInfo,
     tokenInAddress,
-    tokenOutAddress,
     tokenInReserves,
+    tokenOutAddress,
     tokenOutReserves,
-    totalSupply
-  );
+    totalSupply,
+  ]);
 
   // can't give a meaningful spot price until we have the decimals
   if (!amountOut) {
