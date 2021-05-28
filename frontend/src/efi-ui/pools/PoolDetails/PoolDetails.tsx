@@ -129,6 +129,7 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
           connector={connector}
           walletActive={walletActive}
           pool={pool}
+          poolInfo={poolInfo}
           tokenIn={baseAssetContract}
           tokenOut={termAssetContract}
           firstTokenInfo={baseAssetInfo}
