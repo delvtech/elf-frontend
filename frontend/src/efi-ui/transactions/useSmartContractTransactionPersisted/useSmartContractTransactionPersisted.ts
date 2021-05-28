@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { UseMutationResult } from "react-query";
+import { UseMutationResult, useQueryClient } from "react-query";
 
 import { Contract, ContractTransaction, Signer } from "ethers";
 
@@ -9,6 +9,7 @@ import {
 } from "efi-ui/contracts/useSmartContractTransaction/useSmartContractTransaction";
 import { usePendingTransactionPref } from "efi-ui/transactions/usePendingTransactionPref/usePendingTransactionPref";
 import { ContractMethodArgs, ContractMethodName } from "efi/contracts/types";
+import { ETH_BALANCE_QUERY_KEY } from "efi-ui/wallets/hooks/useEthBalance/useEthBalance";
 
 interface UseSmartContractTransactionPersistedOptions<
   TContract extends Contract,
@@ -50,6 +51,7 @@ export function useSmartContractTransactionPersisted<
   unknown,
   ContractMethodArgs<TContract, TMethodName>
 > {
+  const queryClient = useQueryClient();
   const {
     onTransactionStarted,
     onTransactionSuccess,
@@ -85,9 +87,13 @@ export function useSmartContractTransactionPersisted<
       callArgs: ContractMethodArgs<TContract, TMethodName>
     ) => {
       clearPendingTransactionPref();
+      // This ensures that balances refresh when a tx completes. In general,
+      // all txs should invalidate all balances.
+      queryClient.invalidateQueries(ETH_BALANCE_QUERY_KEY);
+      queryClient.invalidateQueries(["contractCall", "balanceOf"]);
       onTransactionSuccess?.(txReceipt, callArgs);
     },
-    [clearPendingTransactionPref, onTransactionSuccess]
+    [clearPendingTransactionPref, onTransactionSuccess, queryClient]
   );
 
   const onError = useCallback(

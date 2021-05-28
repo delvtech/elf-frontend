@@ -98,7 +98,7 @@ export function PrincipalPoolCard(
   }, [pool?.address, setTab]);
 
   const goToStake = useCallback(() => {
-    setTab(PoolAction.STAKE);
+    setTab(PoolAction.ADD_LIQUIDITY);
     navigate(`/pools/${pool?.address}`);
   }, [pool?.address, setTab]);
 
