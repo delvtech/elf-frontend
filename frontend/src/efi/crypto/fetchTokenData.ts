@@ -2,7 +2,6 @@ import { gql, request } from "graphql-request";
 
 import { Block, fetchEthBlocks } from "efi/crypto/fetchEthBlocks";
 import { THE_GRAPH_UNISWAP_V2_URL } from "efi/crypto/thegraph";
-import { USDC_CONTRACT_ADDRESS_MAINNET } from "efi/crypto/TokenContractAddresses";
 
 function getTokenDataQuery(address: string, blocks: Block[]) {
   let tokenQueries = "";
@@ -42,6 +41,8 @@ export interface TokenData {
   timeMs: number;
 }
 
+const USDC_CONTRACT_ADDRESS_MAINNET =
+  "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48";
 export async function fetchTokenData(
   tokenAddress: string,
   startTimeSeconds: number,
