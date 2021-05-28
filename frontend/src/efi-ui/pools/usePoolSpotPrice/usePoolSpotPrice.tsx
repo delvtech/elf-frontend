@@ -39,7 +39,6 @@ export function usePoolSpotPrice(
   const { data } = usePoolTokens(poolContract);
   const [tokens, balances] = data ?? [[], []];
   const poolInfo = getPoolTokenInfoFromContract(poolContract) as PoolInfo;
-  console.log("usePoolSpotPrice poolInfo", poolInfo);
   const { baseAssetInfo, termAssetInfo } = getPoolTokens(poolInfo);
   const { data: totalSupplyBN } = useSmartContractReadCall(
     poolContract,
@@ -52,7 +51,6 @@ export function usePoolSpotPrice(
     baseAssetInfo.address === underlyingToken?.address
       ? baseAssetInfo.address
       : termAssetInfo.address;
-  console.log("tokenInAddress", tokenInAddress);
   const tokenOutAddress =
     baseAssetInfo.address === underlyingToken?.address
       ? termAssetInfo.address
@@ -91,7 +89,6 @@ export function usePoolSpotPrice(
   if (!amountOut) {
     return undefined;
   }
-  console.log("amountOut", amountOut);
 
   const spotPrice = +amountOut / +amount;
 
