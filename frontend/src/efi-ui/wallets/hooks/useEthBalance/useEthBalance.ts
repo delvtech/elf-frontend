@@ -5,7 +5,7 @@ import { BigNumber } from "ethers";
 
 import { fetchEthBalance } from "efi/coins/ether/fetchEthBalance";
 
-const ETH_BALANCE_QUERY_KEY = ["balanceOf", "ethereum"];
+export const ETH_BALANCE_QUERY_KEY = ["ethereum", "balanceOf"];
 
 export function useEthBalance(
   library: Web3Provider | undefined,

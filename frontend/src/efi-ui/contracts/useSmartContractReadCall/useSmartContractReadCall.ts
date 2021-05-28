@@ -94,11 +94,12 @@ export function makeSmartContractReadCallQueryKey<
   methodName: TMethodName,
   callArgs: Parameters<TContract["functions"][TMethodName]> | undefined
 ): [
-  [string, string | undefined],
+  string,
+  TMethodName,
+  string | undefined,
   {
-    methodName: TMethodName;
     callArgs: Parameters<TContract["functions"][TMethodName]> | undefined;
   }
 ] {
-  return [["contractCall", contractAddress], { methodName, callArgs }];
+  return ["contractCall", methodName, contractAddress, { callArgs }];
 }
