@@ -57,8 +57,8 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
       <Card className={tw("flex", "flex-col", "flex-1", "w-full", "space-y-2")}>
         <Tabs onChange={setActiveTab as (newTabId: PoolAction) => void}>
           <Tab id={PoolAction.SWAP} title={t`Trade`} />
-          <Tab id={PoolAction.STAKE} title={t`Stake`} />
-          <Tab id={PoolAction.UNSTAKE} title={t`Unstake`} />
+          <Tab id={PoolAction.STAKE} title={t`Add Liquidity`} />
+          <Tab id={PoolAction.UNSTAKE} title={t`Remove Liquidity`} />
         </Tabs>
         {activeTab === PoolAction.SWAP && (
           <TradePanel
