@@ -5,25 +5,19 @@ import { BigNumber } from "ethers";
 
 import { fetchEthBalance } from "efi/coins/ether/fetchEthBalance";
 
+const ETH_BALANCE_QUERY_KEY = ["balanceOf", "ethereum"];
+
 export function useEthBalance(
   library: Web3Provider | undefined,
   account: string | null | undefined
 ): QueryObserverResult<BigNumber | undefined> {
-  const walletBalanceKey = makeEtherBalanceQueryKey(library, account);
-  const etherBalanceResult = useQuery(walletBalanceKey, async () => {
-    if (library && account) {
-      return fetchEthBalance(library, account);
-    }
+  const etherBalanceResult = useQuery({
+    queryKey: ETH_BALANCE_QUERY_KEY,
+    queryFn: () => {
+      return fetchEthBalance(library as Web3Provider, account as string);
+    },
+    enabled: !!library && !!account,
   });
 
   return etherBalanceResult;
-}
-
-function makeEtherBalanceQueryKey(
-  library: Web3Provider | undefined,
-  account: string | null | undefined
-) {
-  // Interpolating values in the cache key that change over time will bust the
-  // cache when they update.
-  return [[library && "web3Provider", "wallet", account, "balance"]];
 }
