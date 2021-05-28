@@ -323,8 +323,8 @@ export function DepositCard(props: MintPoolCardProps): ReactElement | null {
             )}
           >
             <LiquiditySection
-              pool={yieldPoolContract}
-              principalPool={principalPoolContract}
+              yieldPoolContract={yieldPoolContract}
+              principalPoolContract={principalPoolContract}
             />
           </div>
           <div
@@ -338,8 +338,8 @@ export function DepositCard(props: MintPoolCardProps): ReactElement | null {
             )}
           >
             <LiquiditySection
-              pool={undefined}
-              principalPool={principalPoolContract}
+              yieldPoolContract={yieldPoolContract}
+              principalPoolContract={principalPoolContract}
             />
           </div>
           <div
@@ -426,13 +426,18 @@ export function DepositCard(props: MintPoolCardProps): ReactElement | null {
 }
 
 interface LiquiditySectionProps {
-  pool: PoolContract | undefined;
-  principalPool: PoolContract | undefined;
+  yieldPoolContract: PoolContract;
+  principalPoolContract: PoolContract;
 }
 
-function LiquiditySection({ pool, principalPool }: LiquiditySectionProps) {
-  const liquidity = useTotalFiatLiquidityForPool(pool);
-  const principalLiquidity = useTotalFiatLiquidityForPool(principalPool);
+function LiquiditySection({
+  yieldPoolContract,
+  principalPoolContract,
+}: LiquiditySectionProps) {
+  const liquidity = useTotalFiatLiquidityForPool(yieldPoolContract);
+  const principalLiquidity = useTotalFiatLiquidityForPool(
+    principalPoolContract
+  );
   return (
     <div className={tw("flex", "flex-col")}>
       {liquidity && (
