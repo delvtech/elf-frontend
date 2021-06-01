@@ -27,7 +27,7 @@
       "description": "Token that wraps a yield position, ie: Yearn vault asset proxy"
     }
   },
-  "timestamp": "2021-06-01T21:19:20.372Z",
+  "timestamp": "2021-06-01T21:59:38.376Z",
   "version": {
     "major": 0,
     "minor": 0,
@@ -154,7 +154,7 @@
     {
       "chainId": 5,
       "address": "0x7D64aD2b83a62C0d02514a43E5B4582C671E5F72",
-      "symbol": "eP:eyUSDC:02-JUN-21-GMT",
+      "symbol": "ePyvUSDC",
       "decimals": 6,
       "extensions": {
         "underlying": "0x78dEca24CBa286C0f8d56370f5406B48cFCE2f86",
@@ -171,7 +171,7 @@
     {
       "chainId": 5,
       "address": "0x8Bd721BB84a30c0078aF4a5a732c7169C5BE6eDB",
-      "symbol": "eP:eyUSDC:09-JUN-21-GMT",
+      "symbol": "ePyvUSDC",
       "decimals": 6,
       "extensions": {
         "underlying": "0x78dEca24CBa286C0f8d56370f5406B48cFCE2f86",
@@ -230,7 +230,7 @@
     {
       "chainId": 5,
       "address": "0x8F28E7085882Ef6010a74Fa092C4eC519A0583B5",
-      "symbol": "eY:eyUSDC:02-JUN-21-GMT",
+      "symbol": "eYyvUSDC",
       "decimals": 6,
       "name": "USDC Yield Token",
       "extensions": {
@@ -244,7 +244,7 @@
     {
       "chainId": 5,
       "address": "0x51E7DF22DF4A391A5702D6a99a350cE3c55c02Ce",
-      "symbol": "eY:eyUSDC:09-JUN-21-GMT",
+      "symbol": "eYyvUSDC",
       "decimals": 6,
       "name": "USDC Yield Token",
       "extensions": {
