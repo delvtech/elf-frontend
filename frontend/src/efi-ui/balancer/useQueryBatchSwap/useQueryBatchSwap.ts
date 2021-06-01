@@ -110,12 +110,11 @@ export function getCalcSwap(
       ? tokenInAddress === baseAssetAddress
       : tokenOutAddress === baseAssetAddress;
 
-  if (isPrincipalPool(poolInfo as PoolInfo)) {
+  if (isPrincipalPool(poolInfo)) {
     return calcSwapPrincipalPool(
       amount,
       kind,
-      // i don't know why the type guard isnt working
-      poolInfo as PrincipalPoolTokenInfo,
+      poolInfo,
       decimals,
       tokenInReserves,
       tokenOutReserves,
