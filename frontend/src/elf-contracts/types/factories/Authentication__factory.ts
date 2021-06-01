@@ -2,12 +2,19 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { Contract, Signer, utils } from "ethers";
+import { Contract, Signer } from "ethers";
 import { Provider } from "@ethersproject/providers";
-import type {
-  Authentication,
-  AuthenticationInterface,
-} from "../Authentication";
+
+import type { Authentication } from "../Authentication";
+
+export class Authentication__factory {
+  static connect(
+    address: string,
+    signerOrProvider: Signer | Provider
+  ): Authentication {
+    return new Contract(address, _abi, signerOrProvider) as Authentication;
+  }
+}
 
 const _abi = [
   {
@@ -30,16 +37,3 @@ const _abi = [
     type: "function",
   },
 ];
-
-export class Authentication__factory {
-  static readonly abi = _abi;
-  static createInterface(): AuthenticationInterface {
-    return new utils.Interface(_abi) as AuthenticationInterface;
-  }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): Authentication {
-    return new Contract(address, _abi, signerOrProvider) as Authentication;
-  }
-}

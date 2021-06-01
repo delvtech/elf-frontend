@@ -9,15 +9,16 @@ import {
   BigNumber,
   BigNumberish,
   PopulatedTransaction,
-  BaseContract,
+} from "ethers";
+import {
+  Contract,
   ContractTransaction,
   Overrides,
   CallOverrides,
-} from "ethers";
+} from "@ethersproject/contracts";
 import { BytesLike } from "@ethersproject/bytes";
 import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
-import { TypedEventFilter, TypedEvent, TypedListener } from "./commons";
 
 interface TrancheFactoryInterface extends ethers.utils.Interface {
   functions: {
@@ -53,79 +54,81 @@ interface TrancheFactoryInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "TrancheCreated"): EventFragment;
 }
 
-export class TrancheFactory extends BaseContract {
+export class TrancheFactory extends Contract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  listeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): Array<TypedListener<EventArgsArray, EventArgsObject>>;
-  off<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  on<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  once<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeListener<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): this;
-
-  listeners(eventName?: string): Array<Listener>;
-  off(eventName: string, listener: Listener): this;
-  on(eventName: string, listener: Listener): this;
-  once(eventName: string, listener: Listener): this;
-  removeListener(eventName: string, listener: Listener): this;
-  removeAllListeners(eventName?: string): this;
-
-  queryFilter<EventArgsArray extends Array<any>, EventArgsObject>(
-    event: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
-  ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
+  on(event: EventFilter | string, listener: Listener): this;
+  once(event: EventFilter | string, listener: Listener): this;
+  addListener(eventName: EventFilter | string, listener: Listener): this;
+  removeAllListeners(eventName: EventFilter | string): this;
+  removeListener(eventName: any, listener: Listener): this;
 
   interface: TrancheFactoryInterface;
 
   functions: {
     TRANCHE_CREATION_HASH(overrides?: CallOverrides): Promise<[string]>;
 
+    "TRANCHE_CREATION_HASH()"(overrides?: CallOverrides): Promise<[string]>;
+
     deployTranche(
       _expiration: BigNumberish,
       _wpAddress: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "deployTranche(uint256,address)"(
+      _expiration: BigNumberish,
+      _wpAddress: string,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     getData(
+      overrides?: CallOverrides
+    ): Promise<[string, BigNumber, string, string]>;
+
+    "getData()"(
       overrides?: CallOverrides
     ): Promise<[string, BigNumber, string, string]>;
   };
 
   TRANCHE_CREATION_HASH(overrides?: CallOverrides): Promise<string>;
 
+  "TRANCHE_CREATION_HASH()"(overrides?: CallOverrides): Promise<string>;
+
   deployTranche(
     _expiration: BigNumberish,
     _wpAddress: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "deployTranche(uint256,address)"(
+    _expiration: BigNumberish,
+    _wpAddress: string,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   getData(
     overrides?: CallOverrides
   ): Promise<[string, BigNumber, string, string]>;
 
+  "getData()"(
+    overrides?: CallOverrides
+  ): Promise<[string, BigNumber, string, string]>;
+
   callStatic: {
     TRANCHE_CREATION_HASH(overrides?: CallOverrides): Promise<string>;
 
+    "TRANCHE_CREATION_HASH()"(overrides?: CallOverrides): Promise<string>;
+
     deployTranche(
+      _expiration: BigNumberish,
+      _wpAddress: string,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    "deployTranche(uint256,address)"(
       _expiration: BigNumberish,
       _wpAddress: string,
       overrides?: CallOverrides
@@ -134,29 +137,40 @@ export class TrancheFactory extends BaseContract {
     getData(
       overrides?: CallOverrides
     ): Promise<[string, BigNumber, string, string]>;
+
+    "getData()"(
+      overrides?: CallOverrides
+    ): Promise<[string, BigNumber, string, string]>;
   };
 
   filters: {
     TrancheCreated(
-      trancheAddress?: string | null,
-      wpAddress?: string | null,
-      expiration?: BigNumberish | null
-    ): TypedEventFilter<
-      [string, string, BigNumber],
-      { trancheAddress: string; wpAddress: string; expiration: BigNumber }
-    >;
+      trancheAddress: string | null,
+      wpAddress: string | null,
+      expiration: BigNumberish | null
+    ): EventFilter;
   };
 
   estimateGas: {
     TRANCHE_CREATION_HASH(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "TRANCHE_CREATION_HASH()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     deployTranche(
       _expiration: BigNumberish,
       _wpAddress: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "deployTranche(uint256,address)"(
+      _expiration: BigNumberish,
+      _wpAddress: string,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     getData(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "getData()"(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -164,12 +178,24 @@ export class TrancheFactory extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "TRANCHE_CREATION_HASH()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     deployTranche(
       _expiration: BigNumberish,
       _wpAddress: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "deployTranche(uint256,address)"(
+      _expiration: BigNumberish,
+      _wpAddress: string,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     getData(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "getData()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }

@@ -9,14 +9,15 @@ import {
   BigNumber,
   BigNumberish,
   PopulatedTransaction,
-  BaseContract,
+} from "ethers";
+import {
+  Contract,
   ContractTransaction,
   CallOverrides,
-} from "ethers";
+} from "@ethersproject/contracts";
 import { BytesLike } from "@ethersproject/bytes";
 import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
-import { TypedEventFilter, TypedEvent, TypedListener } from "./commons";
 
 interface TemporarilyPausableInterface extends ethers.utils.Interface {
   functions: {
@@ -40,51 +41,31 @@ interface TemporarilyPausableInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "PausedStateChanged"): EventFragment;
 }
 
-export class TemporarilyPausable extends BaseContract {
+export class TemporarilyPausable extends Contract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  listeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): Array<TypedListener<EventArgsArray, EventArgsObject>>;
-  off<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  on<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  once<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeListener<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): this;
-
-  listeners(eventName?: string): Array<Listener>;
-  off(eventName: string, listener: Listener): this;
-  on(eventName: string, listener: Listener): this;
-  once(eventName: string, listener: Listener): this;
-  removeListener(eventName: string, listener: Listener): this;
-  removeAllListeners(eventName?: string): this;
-
-  queryFilter<EventArgsArray extends Array<any>, EventArgsObject>(
-    event: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
-  ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
+  on(event: EventFilter | string, listener: Listener): this;
+  once(event: EventFilter | string, listener: Listener): this;
+  addListener(eventName: EventFilter | string, listener: Listener): this;
+  removeAllListeners(eventName: EventFilter | string): this;
+  removeListener(eventName: any, listener: Listener): this;
 
   interface: TemporarilyPausableInterface;
 
   functions: {
     getPausedState(
+      overrides?: CallOverrides
+    ): Promise<
+      [boolean, BigNumber, BigNumber] & {
+        paused: boolean;
+        pauseWindowEndTime: BigNumber;
+        bufferPeriodEndTime: BigNumber;
+      }
+    >;
+
+    "getPausedState()"(
       overrides?: CallOverrides
     ): Promise<
       [boolean, BigNumber, BigNumber] & {
@@ -105,8 +86,28 @@ export class TemporarilyPausable extends BaseContract {
     }
   >;
 
+  "getPausedState()"(
+    overrides?: CallOverrides
+  ): Promise<
+    [boolean, BigNumber, BigNumber] & {
+      paused: boolean;
+      pauseWindowEndTime: BigNumber;
+      bufferPeriodEndTime: BigNumber;
+    }
+  >;
+
   callStatic: {
     getPausedState(
+      overrides?: CallOverrides
+    ): Promise<
+      [boolean, BigNumber, BigNumber] & {
+        paused: boolean;
+        pauseWindowEndTime: BigNumber;
+        bufferPeriodEndTime: BigNumber;
+      }
+    >;
+
+    "getPausedState()"(
       overrides?: CallOverrides
     ): Promise<
       [boolean, BigNumber, BigNumber] & {
@@ -118,16 +119,20 @@ export class TemporarilyPausable extends BaseContract {
   };
 
   filters: {
-    PausedStateChanged(
-      paused?: null
-    ): TypedEventFilter<[boolean], { paused: boolean }>;
+    PausedStateChanged(paused: null): EventFilter;
   };
 
   estimateGas: {
     getPausedState(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "getPausedState()"(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
     getPausedState(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "getPausedState()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
   };
 }

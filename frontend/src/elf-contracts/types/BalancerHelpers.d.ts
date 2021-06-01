@@ -9,15 +9,16 @@ import {
   BigNumber,
   BigNumberish,
   PopulatedTransaction,
-  BaseContract,
+} from "ethers";
+import {
+  Contract,
   ContractTransaction,
   Overrides,
   CallOverrides,
-} from "ethers";
+} from "@ethersproject/contracts";
 import { BytesLike } from "@ethersproject/bytes";
 import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
-import { TypedEventFilter, TypedEvent, TypedListener } from "./commons";
 
 interface BalancerHelpersInterface extends ethers.utils.Interface {
   functions: {
@@ -63,46 +64,16 @@ interface BalancerHelpersInterface extends ethers.utils.Interface {
   events: {};
 }
 
-export class BalancerHelpers extends BaseContract {
+export class BalancerHelpers extends Contract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  listeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): Array<TypedListener<EventArgsArray, EventArgsObject>>;
-  off<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  on<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  once<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeListener<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): this;
-
-  listeners(eventName?: string): Array<Listener>;
-  off(eventName: string, listener: Listener): this;
-  on(eventName: string, listener: Listener): this;
-  once(eventName: string, listener: Listener): this;
-  removeListener(eventName: string, listener: Listener): this;
-  removeAllListeners(eventName?: string): this;
-
-  queryFilter<EventArgsArray extends Array<any>, EventArgsObject>(
-    event: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
-  ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
+  on(event: EventFilter | string, listener: Listener): this;
+  once(event: EventFilter | string, listener: Listener): this;
+  addListener(eventName: EventFilter | string, listener: Listener): this;
+  removeAllListeners(eventName: EventFilter | string): this;
+  removeListener(eventName: any, listener: Listener): this;
 
   interface: BalancerHelpersInterface;
 
@@ -117,7 +88,20 @@ export class BalancerHelpers extends BaseContract {
         userData: BytesLike;
         toInternalBalance: boolean;
       },
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "queryExit(bytes32,address,address,tuple)"(
+      poolId: BytesLike,
+      sender: string,
+      recipient: string,
+      request: {
+        assets: string[];
+        minAmountsOut: BigNumberish[];
+        userData: BytesLike;
+        toInternalBalance: boolean;
+      },
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     queryJoin(
@@ -130,10 +114,25 @@ export class BalancerHelpers extends BaseContract {
         userData: BytesLike;
         fromInternalBalance: boolean;
       },
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "queryJoin(bytes32,address,address,tuple)"(
+      poolId: BytesLike,
+      sender: string,
+      recipient: string,
+      request: {
+        assets: string[];
+        maxAmountsIn: BigNumberish[];
+        userData: BytesLike;
+        fromInternalBalance: boolean;
+      },
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     vault(overrides?: CallOverrides): Promise<[string]>;
+
+    "vault()"(overrides?: CallOverrides): Promise<[string]>;
   };
 
   queryExit(
@@ -146,7 +145,20 @@ export class BalancerHelpers extends BaseContract {
       userData: BytesLike;
       toInternalBalance: boolean;
     },
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "queryExit(bytes32,address,address,tuple)"(
+    poolId: BytesLike,
+    sender: string,
+    recipient: string,
+    request: {
+      assets: string[];
+      minAmountsOut: BigNumberish[];
+      userData: BytesLike;
+      toInternalBalance: boolean;
+    },
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   queryJoin(
@@ -159,13 +171,43 @@ export class BalancerHelpers extends BaseContract {
       userData: BytesLike;
       fromInternalBalance: boolean;
     },
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "queryJoin(bytes32,address,address,tuple)"(
+    poolId: BytesLike,
+    sender: string,
+    recipient: string,
+    request: {
+      assets: string[];
+      maxAmountsIn: BigNumberish[];
+      userData: BytesLike;
+      fromInternalBalance: boolean;
+    },
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   vault(overrides?: CallOverrides): Promise<string>;
 
+  "vault()"(overrides?: CallOverrides): Promise<string>;
+
   callStatic: {
     queryExit(
+      poolId: BytesLike,
+      sender: string,
+      recipient: string,
+      request: {
+        assets: string[];
+        minAmountsOut: BigNumberish[];
+        userData: BytesLike;
+        toInternalBalance: boolean;
+      },
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber[]] & { bptIn: BigNumber; amountsOut: BigNumber[] }
+    >;
+
+    "queryExit(bytes32,address,address,tuple)"(
       poolId: BytesLike,
       sender: string,
       recipient: string,
@@ -195,7 +237,24 @@ export class BalancerHelpers extends BaseContract {
       [BigNumber, BigNumber[]] & { bptOut: BigNumber; amountsIn: BigNumber[] }
     >;
 
+    "queryJoin(bytes32,address,address,tuple)"(
+      poolId: BytesLike,
+      sender: string,
+      recipient: string,
+      request: {
+        assets: string[];
+        maxAmountsIn: BigNumberish[];
+        userData: BytesLike;
+        fromInternalBalance: boolean;
+      },
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber[]] & { bptOut: BigNumber; amountsIn: BigNumber[] }
+    >;
+
     vault(overrides?: CallOverrides): Promise<string>;
+
+    "vault()"(overrides?: CallOverrides): Promise<string>;
   };
 
   filters: {};
@@ -211,7 +270,20 @@ export class BalancerHelpers extends BaseContract {
         userData: BytesLike;
         toInternalBalance: boolean;
       },
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "queryExit(bytes32,address,address,tuple)"(
+      poolId: BytesLike,
+      sender: string,
+      recipient: string,
+      request: {
+        assets: string[];
+        minAmountsOut: BigNumberish[];
+        userData: BytesLike;
+        toInternalBalance: boolean;
+      },
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     queryJoin(
@@ -224,10 +296,25 @@ export class BalancerHelpers extends BaseContract {
         userData: BytesLike;
         fromInternalBalance: boolean;
       },
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "queryJoin(bytes32,address,address,tuple)"(
+      poolId: BytesLike,
+      sender: string,
+      recipient: string,
+      request: {
+        assets: string[];
+        maxAmountsIn: BigNumberish[];
+        userData: BytesLike;
+        fromInternalBalance: boolean;
+      },
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     vault(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "vault()"(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -241,7 +328,20 @@ export class BalancerHelpers extends BaseContract {
         userData: BytesLike;
         toInternalBalance: boolean;
       },
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "queryExit(bytes32,address,address,tuple)"(
+      poolId: BytesLike,
+      sender: string,
+      recipient: string,
+      request: {
+        assets: string[];
+        minAmountsOut: BigNumberish[];
+        userData: BytesLike;
+        toInternalBalance: boolean;
+      },
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     queryJoin(
@@ -254,9 +354,24 @@ export class BalancerHelpers extends BaseContract {
         userData: BytesLike;
         fromInternalBalance: boolean;
       },
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "queryJoin(bytes32,address,address,tuple)"(
+      poolId: BytesLike,
+      sender: string,
+      recipient: string,
+      request: {
+        assets: string[];
+        maxAmountsIn: BigNumberish[];
+        userData: BytesLike;
+        fromInternalBalance: boolean;
+      },
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     vault(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "vault()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }

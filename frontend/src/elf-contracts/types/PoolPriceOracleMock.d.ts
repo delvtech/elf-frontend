@@ -9,15 +9,16 @@ import {
   BigNumber,
   BigNumberish,
   PopulatedTransaction,
-  BaseContract,
+} from "ethers";
+import {
+  Contract,
   ContractTransaction,
   Overrides,
   CallOverrides,
-} from "ethers";
+} from "@ethersproject/contracts";
 import { BytesLike } from "@ethersproject/bytes";
 import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
-import { TypedEventFilter, TypedEvent, TypedListener } from "./commons";
 
 interface PoolPriceOracleMockInterface extends ethers.utils.Interface {
   functions: {
@@ -142,51 +143,46 @@ interface PoolPriceOracleMockInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "PriceDataProcessed"): EventFragment;
 }
 
-export class PoolPriceOracleMock extends BaseContract {
+export class PoolPriceOracleMock extends Contract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  listeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): Array<TypedListener<EventArgsArray, EventArgsObject>>;
-  off<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  on<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  once<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeListener<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): this;
-
-  listeners(eventName?: string): Array<Listener>;
-  off(eventName: string, listener: Listener): this;
-  on(eventName: string, listener: Listener): this;
-  once(eventName: string, listener: Listener): this;
-  removeListener(eventName: string, listener: Listener): this;
-  removeAllListeners(eventName?: string): this;
-
-  queryFilter<EventArgsArray extends Array<any>, EventArgsObject>(
-    event: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
-  ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
+  on(event: EventFilter | string, listener: Listener): this;
+  once(event: EventFilter | string, listener: Listener): this;
+  addListener(eventName: EventFilter | string, listener: Listener): this;
+  removeAllListeners(eventName: EventFilter | string): this;
+  removeListener(eventName: any, listener: Listener): this;
 
   interface: PoolPriceOracleMockInterface;
 
   functions: {
     decode(
+      sample: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<
+      [
+        [
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          BigNumber
+        ] & {
+          logPairPrice: BigNumber;
+          accLogPairPrice: BigNumber;
+          logBptPrice: BigNumber;
+          accLogBptPrice: BigNumber;
+          logInvariant: BigNumber;
+          accLogInvariant: BigNumber;
+          timestamp: BigNumber;
+        }
+      ]
+    >;
+
+    "decode(bytes32)"(
       sample: BytesLike,
       overrides?: CallOverrides
     ): Promise<
@@ -224,6 +220,19 @@ export class PoolPriceOracleMock extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[string]>;
 
+    "encode(tuple)"(
+      sample: {
+        logPairPrice: BigNumberish;
+        accLogPairPrice: BigNumberish;
+        logBptPrice: BigNumberish;
+        accLogBptPrice: BigNumberish;
+        logInvariant: BigNumberish;
+        accLogInvariant: BigNumberish;
+        timestamp: BigNumberish;
+      },
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
     findNearestSamplesTimestamp(
       dates: BigNumberish[],
       offset: BigNumberish,
@@ -237,7 +246,27 @@ export class PoolPriceOracleMock extends BaseContract {
       }
     >;
 
+    "findNearestSamplesTimestamp(uint256[],uint256)"(
+      dates: BigNumberish[],
+      offset: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<
+      [([BigNumber, BigNumber] & { prev: BigNumber; next: BigNumber })[]] & {
+        results: ([BigNumber, BigNumber] & {
+          prev: BigNumber;
+          next: BigNumber;
+        })[];
+      }
+    >;
+
     getPastAccumulator(
+      variable: BigNumberish,
+      currentIndex: BigNumberish,
+      timestamp: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    "getPastAccumulator(uint8,uint256,uint256)"(
       variable: BigNumberish,
       currentIndex: BigNumberish,
       timestamp: BigNumberish,
@@ -267,7 +296,32 @@ export class PoolPriceOracleMock extends BaseContract {
       }
     >;
 
+    "getSample(uint256)"(
+      index: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<
+      [
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        BigNumber
+      ] & {
+        logPairPrice: BigNumber;
+        accLogPairPrice: BigNumber;
+        logBptPrice: BigNumber;
+        accLogBptPrice: BigNumber;
+        logInvariant: BigNumber;
+        accLogInvariant: BigNumber;
+        timestamp: BigNumber;
+      }
+    >;
+
     getTotalSamples(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "getTotalSamples()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     mockSample(
       index: BigNumberish,
@@ -280,7 +334,21 @@ export class PoolPriceOracleMock extends BaseContract {
         accLogInvariant: BigNumberish;
         timestamp: BigNumberish;
       },
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "mockSample(uint256,tuple)"(
+      index: BigNumberish,
+      sample: {
+        logPairPrice: BigNumberish;
+        accLogPairPrice: BigNumberish;
+        logBptPrice: BigNumberish;
+        accLogBptPrice: BigNumberish;
+        logInvariant: BigNumberish;
+        accLogInvariant: BigNumberish;
+        timestamp: BigNumberish;
+      },
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     mockSamples(
@@ -294,7 +362,21 @@ export class PoolPriceOracleMock extends BaseContract {
         accLogInvariant: BigNumberish;
         timestamp: BigNumberish;
       }[],
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "mockSamples(uint256[],tuple[])"(
+      indexes: BigNumberish[],
+      samples: {
+        logPairPrice: BigNumberish;
+        accLogPairPrice: BigNumberish;
+        logBptPrice: BigNumberish;
+        accLogBptPrice: BigNumberish;
+        logInvariant: BigNumberish;
+        accLogInvariant: BigNumberish;
+        timestamp: BigNumberish;
+      }[],
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     processPriceData(
@@ -303,10 +385,48 @@ export class PoolPriceOracleMock extends BaseContract {
       logPairPrice: BigNumberish,
       logBptPrice: BigNumberish,
       logInvariant: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "processPriceData(uint256,uint256,int256,int256,int256)"(
+      elapsed: BigNumberish,
+      currentIndex: BigNumberish,
+      logPairPrice: BigNumberish,
+      logBptPrice: BigNumberish,
+      logInvariant: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     update(
+      sample: BytesLike,
+      logPairPrice: BigNumberish,
+      logBptPrice: BigNumberish,
+      logInvariant: BigNumberish,
+      timestamp: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<
+      [
+        [
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          BigNumber
+        ] & {
+          logPairPrice: BigNumber;
+          accLogPairPrice: BigNumber;
+          logBptPrice: BigNumber;
+          accLogBptPrice: BigNumber;
+          logInvariant: BigNumber;
+          accLogInvariant: BigNumber;
+          timestamp: BigNumber;
+        }
+      ]
+    >;
+
+    "update(bytes32,int256,int256,int256,uint256)"(
       sample: BytesLike,
       logPairPrice: BigNumberish,
       logBptPrice: BigNumberish,
@@ -359,7 +479,43 @@ export class PoolPriceOracleMock extends BaseContract {
     }
   >;
 
+  "decode(bytes32)"(
+    sample: BytesLike,
+    overrides?: CallOverrides
+  ): Promise<
+    [
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      BigNumber
+    ] & {
+      logPairPrice: BigNumber;
+      accLogPairPrice: BigNumber;
+      logBptPrice: BigNumber;
+      accLogBptPrice: BigNumber;
+      logInvariant: BigNumber;
+      accLogInvariant: BigNumber;
+      timestamp: BigNumber;
+    }
+  >;
+
   encode(
+    sample: {
+      logPairPrice: BigNumberish;
+      accLogPairPrice: BigNumberish;
+      logBptPrice: BigNumberish;
+      accLogBptPrice: BigNumberish;
+      logInvariant: BigNumberish;
+      accLogInvariant: BigNumberish;
+      timestamp: BigNumberish;
+    },
+    overrides?: CallOverrides
+  ): Promise<string>;
+
+  "encode(tuple)"(
     sample: {
       logPairPrice: BigNumberish;
       accLogPairPrice: BigNumberish;
@@ -378,7 +534,20 @@ export class PoolPriceOracleMock extends BaseContract {
     overrides?: CallOverrides
   ): Promise<([BigNumber, BigNumber] & { prev: BigNumber; next: BigNumber })[]>;
 
+  "findNearestSamplesTimestamp(uint256[],uint256)"(
+    dates: BigNumberish[],
+    offset: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<([BigNumber, BigNumber] & { prev: BigNumber; next: BigNumber })[]>;
+
   getPastAccumulator(
+    variable: BigNumberish,
+    currentIndex: BigNumberish,
+    timestamp: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  "getPastAccumulator(uint8,uint256,uint256)"(
     variable: BigNumberish,
     currentIndex: BigNumberish,
     timestamp: BigNumberish,
@@ -408,7 +577,32 @@ export class PoolPriceOracleMock extends BaseContract {
     }
   >;
 
+  "getSample(uint256)"(
+    index: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<
+    [
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      BigNumber
+    ] & {
+      logPairPrice: BigNumber;
+      accLogPairPrice: BigNumber;
+      logBptPrice: BigNumber;
+      accLogBptPrice: BigNumber;
+      logInvariant: BigNumber;
+      accLogInvariant: BigNumber;
+      timestamp: BigNumber;
+    }
+  >;
+
   getTotalSamples(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "getTotalSamples()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   mockSample(
     index: BigNumberish,
@@ -421,7 +615,21 @@ export class PoolPriceOracleMock extends BaseContract {
       accLogInvariant: BigNumberish;
       timestamp: BigNumberish;
     },
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "mockSample(uint256,tuple)"(
+    index: BigNumberish,
+    sample: {
+      logPairPrice: BigNumberish;
+      accLogPairPrice: BigNumberish;
+      logBptPrice: BigNumberish;
+      accLogBptPrice: BigNumberish;
+      logInvariant: BigNumberish;
+      accLogInvariant: BigNumberish;
+      timestamp: BigNumberish;
+    },
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   mockSamples(
@@ -435,7 +643,21 @@ export class PoolPriceOracleMock extends BaseContract {
       accLogInvariant: BigNumberish;
       timestamp: BigNumberish;
     }[],
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "mockSamples(uint256[],tuple[])"(
+    indexes: BigNumberish[],
+    samples: {
+      logPairPrice: BigNumberish;
+      accLogPairPrice: BigNumberish;
+      logBptPrice: BigNumberish;
+      accLogBptPrice: BigNumberish;
+      logInvariant: BigNumberish;
+      accLogInvariant: BigNumberish;
+      timestamp: BigNumberish;
+    }[],
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   processPriceData(
@@ -444,10 +666,46 @@ export class PoolPriceOracleMock extends BaseContract {
     logPairPrice: BigNumberish,
     logBptPrice: BigNumberish,
     logInvariant: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "processPriceData(uint256,uint256,int256,int256,int256)"(
+    elapsed: BigNumberish,
+    currentIndex: BigNumberish,
+    logPairPrice: BigNumberish,
+    logBptPrice: BigNumberish,
+    logInvariant: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   update(
+    sample: BytesLike,
+    logPairPrice: BigNumberish,
+    logBptPrice: BigNumberish,
+    logInvariant: BigNumberish,
+    timestamp: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<
+    [
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      BigNumber
+    ] & {
+      logPairPrice: BigNumber;
+      accLogPairPrice: BigNumber;
+      logBptPrice: BigNumber;
+      accLogBptPrice: BigNumber;
+      logInvariant: BigNumber;
+      accLogInvariant: BigNumber;
+      timestamp: BigNumber;
+    }
+  >;
+
+  "update(bytes32,int256,int256,int256,uint256)"(
     sample: BytesLike,
     logPairPrice: BigNumberish,
     logBptPrice: BigNumberish,
@@ -498,7 +756,43 @@ export class PoolPriceOracleMock extends BaseContract {
       }
     >;
 
+    "decode(bytes32)"(
+      sample: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<
+      [
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        BigNumber
+      ] & {
+        logPairPrice: BigNumber;
+        accLogPairPrice: BigNumber;
+        logBptPrice: BigNumber;
+        accLogBptPrice: BigNumber;
+        logInvariant: BigNumber;
+        accLogInvariant: BigNumber;
+        timestamp: BigNumber;
+      }
+    >;
+
     encode(
+      sample: {
+        logPairPrice: BigNumberish;
+        accLogPairPrice: BigNumberish;
+        logBptPrice: BigNumberish;
+        accLogBptPrice: BigNumberish;
+        logInvariant: BigNumberish;
+        accLogInvariant: BigNumberish;
+        timestamp: BigNumberish;
+      },
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    "encode(tuple)"(
       sample: {
         logPairPrice: BigNumberish;
         accLogPairPrice: BigNumberish;
@@ -519,7 +813,22 @@ export class PoolPriceOracleMock extends BaseContract {
       ([BigNumber, BigNumber] & { prev: BigNumber; next: BigNumber })[]
     >;
 
+    "findNearestSamplesTimestamp(uint256[],uint256)"(
+      dates: BigNumberish[],
+      offset: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<
+      ([BigNumber, BigNumber] & { prev: BigNumber; next: BigNumber })[]
+    >;
+
     getPastAccumulator(
+      variable: BigNumberish,
+      currentIndex: BigNumberish,
+      timestamp: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "getPastAccumulator(uint8,uint256,uint256)"(
       variable: BigNumberish,
       currentIndex: BigNumberish,
       timestamp: BigNumberish,
@@ -549,9 +858,48 @@ export class PoolPriceOracleMock extends BaseContract {
       }
     >;
 
+    "getSample(uint256)"(
+      index: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<
+      [
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        BigNumber
+      ] & {
+        logPairPrice: BigNumber;
+        accLogPairPrice: BigNumber;
+        logBptPrice: BigNumber;
+        accLogBptPrice: BigNumber;
+        logInvariant: BigNumber;
+        accLogInvariant: BigNumber;
+        timestamp: BigNumber;
+      }
+    >;
+
     getTotalSamples(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "getTotalSamples()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     mockSample(
+      index: BigNumberish,
+      sample: {
+        logPairPrice: BigNumberish;
+        accLogPairPrice: BigNumberish;
+        logBptPrice: BigNumberish;
+        accLogBptPrice: BigNumberish;
+        logInvariant: BigNumberish;
+        accLogInvariant: BigNumberish;
+        timestamp: BigNumberish;
+      },
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "mockSample(uint256,tuple)"(
       index: BigNumberish,
       sample: {
         logPairPrice: BigNumberish;
@@ -579,6 +927,20 @@ export class PoolPriceOracleMock extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    "mockSamples(uint256[],tuple[])"(
+      indexes: BigNumberish[],
+      samples: {
+        logPairPrice: BigNumberish;
+        accLogPairPrice: BigNumberish;
+        logBptPrice: BigNumberish;
+        accLogBptPrice: BigNumberish;
+        logInvariant: BigNumberish;
+        accLogInvariant: BigNumberish;
+        timestamp: BigNumberish;
+      }[],
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     processPriceData(
       elapsed: BigNumberish,
       currentIndex: BigNumberish,
@@ -588,7 +950,43 @@ export class PoolPriceOracleMock extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    "processPriceData(uint256,uint256,int256,int256,int256)"(
+      elapsed: BigNumberish,
+      currentIndex: BigNumberish,
+      logPairPrice: BigNumberish,
+      logBptPrice: BigNumberish,
+      logInvariant: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     update(
+      sample: BytesLike,
+      logPairPrice: BigNumberish,
+      logBptPrice: BigNumberish,
+      logInvariant: BigNumberish,
+      timestamp: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<
+      [
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        BigNumber
+      ] & {
+        logPairPrice: BigNumber;
+        accLogPairPrice: BigNumber;
+        logBptPrice: BigNumber;
+        accLogBptPrice: BigNumber;
+        logInvariant: BigNumber;
+        accLogInvariant: BigNumber;
+        timestamp: BigNumber;
+      }
+    >;
+
+    "update(bytes32,int256,int256,int256,uint256)"(
       sample: BytesLike,
       logPairPrice: BigNumberish,
       logBptPrice: BigNumberish,
@@ -617,19 +1015,31 @@ export class PoolPriceOracleMock extends BaseContract {
   };
 
   filters: {
-    PriceDataProcessed(
-      newSample?: null,
-      sampleIndex?: null
-    ): TypedEventFilter<
-      [boolean, BigNumber],
-      { newSample: boolean; sampleIndex: BigNumber }
-    >;
+    PriceDataProcessed(newSample: null, sampleIndex: null): EventFilter;
   };
 
   estimateGas: {
     decode(sample: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
 
+    "decode(bytes32)"(
+      sample: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     encode(
+      sample: {
+        logPairPrice: BigNumberish;
+        accLogPairPrice: BigNumberish;
+        logBptPrice: BigNumberish;
+        accLogBptPrice: BigNumberish;
+        logInvariant: BigNumberish;
+        accLogInvariant: BigNumberish;
+        timestamp: BigNumberish;
+      },
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "encode(tuple)"(
       sample: {
         logPairPrice: BigNumberish;
         accLogPairPrice: BigNumberish;
@@ -648,7 +1058,20 @@ export class PoolPriceOracleMock extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    "findNearestSamplesTimestamp(uint256[],uint256)"(
+      dates: BigNumberish[],
+      offset: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     getPastAccumulator(
+      variable: BigNumberish,
+      currentIndex: BigNumberish,
+      timestamp: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "getPastAccumulator(uint8,uint256,uint256)"(
       variable: BigNumberish,
       currentIndex: BigNumberish,
       timestamp: BigNumberish,
@@ -660,7 +1083,14 @@ export class PoolPriceOracleMock extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    "getSample(uint256)"(
+      index: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     getTotalSamples(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "getTotalSamples()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     mockSample(
       index: BigNumberish,
@@ -673,7 +1103,21 @@ export class PoolPriceOracleMock extends BaseContract {
         accLogInvariant: BigNumberish;
         timestamp: BigNumberish;
       },
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "mockSample(uint256,tuple)"(
+      index: BigNumberish,
+      sample: {
+        logPairPrice: BigNumberish;
+        accLogPairPrice: BigNumberish;
+        logBptPrice: BigNumberish;
+        accLogBptPrice: BigNumberish;
+        logInvariant: BigNumberish;
+        accLogInvariant: BigNumberish;
+        timestamp: BigNumberish;
+      },
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     mockSamples(
@@ -687,7 +1131,21 @@ export class PoolPriceOracleMock extends BaseContract {
         accLogInvariant: BigNumberish;
         timestamp: BigNumberish;
       }[],
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "mockSamples(uint256[],tuple[])"(
+      indexes: BigNumberish[],
+      samples: {
+        logPairPrice: BigNumberish;
+        accLogPairPrice: BigNumberish;
+        logBptPrice: BigNumberish;
+        accLogBptPrice: BigNumberish;
+        logInvariant: BigNumberish;
+        accLogInvariant: BigNumberish;
+        timestamp: BigNumberish;
+      }[],
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     processPriceData(
@@ -696,10 +1154,28 @@ export class PoolPriceOracleMock extends BaseContract {
       logPairPrice: BigNumberish,
       logBptPrice: BigNumberish,
       logInvariant: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "processPriceData(uint256,uint256,int256,int256,int256)"(
+      elapsed: BigNumberish,
+      currentIndex: BigNumberish,
+      logPairPrice: BigNumberish,
+      logBptPrice: BigNumberish,
+      logInvariant: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     update(
+      sample: BytesLike,
+      logPairPrice: BigNumberish,
+      logBptPrice: BigNumberish,
+      logInvariant: BigNumberish,
+      timestamp: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "update(bytes32,int256,int256,int256,uint256)"(
       sample: BytesLike,
       logPairPrice: BigNumberish,
       logBptPrice: BigNumberish,
@@ -715,7 +1191,25 @@ export class PoolPriceOracleMock extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "decode(bytes32)"(
+      sample: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     encode(
+      sample: {
+        logPairPrice: BigNumberish;
+        accLogPairPrice: BigNumberish;
+        logBptPrice: BigNumberish;
+        accLogBptPrice: BigNumberish;
+        logInvariant: BigNumberish;
+        accLogInvariant: BigNumberish;
+        timestamp: BigNumberish;
+      },
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "encode(tuple)"(
       sample: {
         logPairPrice: BigNumberish;
         accLogPairPrice: BigNumberish;
@@ -734,7 +1228,20 @@ export class PoolPriceOracleMock extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "findNearestSamplesTimestamp(uint256[],uint256)"(
+      dates: BigNumberish[],
+      offset: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     getPastAccumulator(
+      variable: BigNumberish,
+      currentIndex: BigNumberish,
+      timestamp: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "getPastAccumulator(uint8,uint256,uint256)"(
       variable: BigNumberish,
       currentIndex: BigNumberish,
       timestamp: BigNumberish,
@@ -746,7 +1253,16 @@ export class PoolPriceOracleMock extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "getSample(uint256)"(
+      index: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     getTotalSamples(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "getTotalSamples()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     mockSample(
       index: BigNumberish,
@@ -759,7 +1275,21 @@ export class PoolPriceOracleMock extends BaseContract {
         accLogInvariant: BigNumberish;
         timestamp: BigNumberish;
       },
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "mockSample(uint256,tuple)"(
+      index: BigNumberish,
+      sample: {
+        logPairPrice: BigNumberish;
+        accLogPairPrice: BigNumberish;
+        logBptPrice: BigNumberish;
+        accLogBptPrice: BigNumberish;
+        logInvariant: BigNumberish;
+        accLogInvariant: BigNumberish;
+        timestamp: BigNumberish;
+      },
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     mockSamples(
@@ -773,7 +1303,21 @@ export class PoolPriceOracleMock extends BaseContract {
         accLogInvariant: BigNumberish;
         timestamp: BigNumberish;
       }[],
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "mockSamples(uint256[],tuple[])"(
+      indexes: BigNumberish[],
+      samples: {
+        logPairPrice: BigNumberish;
+        accLogPairPrice: BigNumberish;
+        logBptPrice: BigNumberish;
+        accLogBptPrice: BigNumberish;
+        logInvariant: BigNumberish;
+        accLogInvariant: BigNumberish;
+        timestamp: BigNumberish;
+      }[],
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     processPriceData(
@@ -782,10 +1326,28 @@ export class PoolPriceOracleMock extends BaseContract {
       logPairPrice: BigNumberish,
       logBptPrice: BigNumberish,
       logInvariant: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "processPriceData(uint256,uint256,int256,int256,int256)"(
+      elapsed: BigNumberish,
+      currentIndex: BigNumberish,
+      logPairPrice: BigNumberish,
+      logBptPrice: BigNumberish,
+      logInvariant: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     update(
+      sample: BytesLike,
+      logPairPrice: BigNumberish,
+      logBptPrice: BigNumberish,
+      logInvariant: BigNumberish,
+      timestamp: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "update(bytes32,int256,int256,int256,uint256)"(
       sample: BytesLike,
       logPairPrice: BigNumberish,
       logBptPrice: BigNumberish,

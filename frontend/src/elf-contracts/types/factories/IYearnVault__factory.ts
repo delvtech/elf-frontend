@@ -2,9 +2,19 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { Contract, Signer, utils } from "ethers";
+import { Contract, Signer } from "ethers";
 import { Provider } from "@ethersproject/providers";
-import type { IYearnVault, IYearnVaultInterface } from "../IYearnVault";
+
+import type { IYearnVault } from "../IYearnVault";
+
+export class IYearnVault__factory {
+  static connect(
+    address: string,
+    signerOrProvider: Signer | Provider
+  ): IYearnVault {
+    return new Contract(address, _abi, signerOrProvider) as IYearnVault;
+  }
+}
 
 const _abi = [
   {
@@ -322,16 +332,3 @@ const _abi = [
     type: "function",
   },
 ];
-
-export class IYearnVault__factory {
-  static readonly abi = _abi;
-  static createInterface(): IYearnVaultInterface {
-    return new utils.Interface(_abi) as IYearnVaultInterface;
-  }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): IYearnVault {
-    return new Contract(address, _abi, signerOrProvider) as IYearnVault;
-  }
-}

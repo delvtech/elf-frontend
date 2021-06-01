@@ -2,12 +2,19 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { Contract, Signer, utils } from "ethers";
+import { Contract, Signer } from "ethers";
 import { Provider } from "@ethersproject/providers";
-import type {
-  IWrappedPosition,
-  IWrappedPositionInterface,
-} from "../IWrappedPosition";
+
+import type { IWrappedPosition } from "../IWrappedPosition";
+
+export class IWrappedPosition__factory {
+  static connect(
+    address: string,
+    signerOrProvider: Signer | Provider
+  ): IWrappedPosition {
+    return new Contract(address, _abi, signerOrProvider) as IWrappedPosition;
+  }
+}
 
 const _abi = [
   {
@@ -449,16 +456,3 @@ const _abi = [
     type: "function",
   },
 ];
-
-export class IWrappedPosition__factory {
-  static readonly abi = _abi;
-  static createInterface(): IWrappedPositionInterface {
-    return new utils.Interface(_abi) as IWrappedPositionInterface;
-  }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): IWrappedPosition {
-    return new Contract(address, _abi, signerOrProvider) as IWrappedPosition;
-  }
-}

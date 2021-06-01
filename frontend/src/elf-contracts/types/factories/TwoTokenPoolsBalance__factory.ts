@@ -2,12 +2,23 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { Contract, Signer, utils } from "ethers";
+import { Contract, Signer } from "ethers";
 import { Provider } from "@ethersproject/providers";
-import type {
-  TwoTokenPoolsBalance,
-  TwoTokenPoolsBalanceInterface,
-} from "../TwoTokenPoolsBalance";
+
+import type { TwoTokenPoolsBalance } from "../TwoTokenPoolsBalance";
+
+export class TwoTokenPoolsBalance__factory {
+  static connect(
+    address: string,
+    signerOrProvider: Signer | Provider
+  ): TwoTokenPoolsBalance {
+    return new Contract(
+      address,
+      _abi,
+      signerOrProvider
+    ) as TwoTokenPoolsBalance;
+  }
+}
 
 const _abi = [
   {
@@ -1158,20 +1169,3 @@ const _abi = [
     type: "function",
   },
 ];
-
-export class TwoTokenPoolsBalance__factory {
-  static readonly abi = _abi;
-  static createInterface(): TwoTokenPoolsBalanceInterface {
-    return new utils.Interface(_abi) as TwoTokenPoolsBalanceInterface;
-  }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): TwoTokenPoolsBalance {
-    return new Contract(
-      address,
-      _abi,
-      signerOrProvider
-    ) as TwoTokenPoolsBalance;
-  }
-}

@@ -2,12 +2,23 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { Contract, Signer, utils } from "ethers";
+import { Contract, Signer } from "ethers";
 import { Provider } from "@ethersproject/providers";
-import type {
-  IWeightedPoolPriceOracle,
-  IWeightedPoolPriceOracleInterface,
-} from "../IWeightedPoolPriceOracle";
+
+import type { IWeightedPoolPriceOracle } from "../IWeightedPoolPriceOracle";
+
+export class IWeightedPoolPriceOracle__factory {
+  static connect(
+    address: string,
+    signerOrProvider: Signer | Provider
+  ): IWeightedPoolPriceOracle {
+    return new Contract(
+      address,
+      _abi,
+      signerOrProvider
+    ) as IWeightedPoolPriceOracle;
+  }
+}
 
 const _abi = [
   {
@@ -73,20 +84,3 @@ const _abi = [
     type: "function",
   },
 ];
-
-export class IWeightedPoolPriceOracle__factory {
-  static readonly abi = _abi;
-  static createInterface(): IWeightedPoolPriceOracleInterface {
-    return new utils.Interface(_abi) as IWeightedPoolPriceOracleInterface;
-  }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): IWeightedPoolPriceOracle {
-    return new Contract(
-      address,
-      _abi,
-      signerOrProvider
-    ) as IWeightedPoolPriceOracle;
-  }
-}
