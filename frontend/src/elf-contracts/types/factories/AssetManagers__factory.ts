@@ -2,9 +2,19 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { Contract, Signer, utils } from "ethers";
+import { Contract, Signer } from "ethers";
 import { Provider } from "@ethersproject/providers";
-import type { AssetManagers, AssetManagersInterface } from "../AssetManagers";
+
+import type { AssetManagers } from "../AssetManagers";
+
+export class AssetManagers__factory {
+  static connect(
+    address: string,
+    signerOrProvider: Signer | Provider
+  ): AssetManagers {
+    return new Contract(address, _abi, signerOrProvider) as AssetManagers;
+  }
+}
 
 const _abi = [
   {
@@ -1155,16 +1165,3 @@ const _abi = [
     type: "function",
   },
 ];
-
-export class AssetManagers__factory {
-  static readonly abi = _abi;
-  static createInterface(): AssetManagersInterface {
-    return new utils.Interface(_abi) as AssetManagersInterface;
-  }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): AssetManagers {
-    return new Contract(address, _abi, signerOrProvider) as AssetManagers;
-  }
-}

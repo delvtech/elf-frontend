@@ -2,9 +2,19 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { Contract, Signer, utils } from "ethers";
+import { Contract, Signer } from "ethers";
 import { Provider } from "@ethersproject/providers";
-import type { IBasePool, IBasePoolInterface } from "../IBasePool";
+
+import type { IBasePool } from "../IBasePool";
+
+export class IBasePool__factory {
+  static connect(
+    address: string,
+    signerOrProvider: Signer | Provider
+  ): IBasePool {
+    return new Contract(address, _abi, signerOrProvider) as IBasePool;
+  }
+}
 
 const _abi = [
   {
@@ -116,16 +126,3 @@ const _abi = [
     type: "function",
   },
 ];
-
-export class IBasePool__factory {
-  static readonly abi = _abi;
-  static createInterface(): IBasePoolInterface {
-    return new utils.Interface(_abi) as IBasePoolInterface;
-  }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): IBasePool {
-    return new Contract(address, _abi, signerOrProvider) as IBasePool;
-  }
-}

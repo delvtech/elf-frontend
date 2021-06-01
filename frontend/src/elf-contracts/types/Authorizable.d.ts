@@ -9,15 +9,16 @@ import {
   BigNumber,
   BigNumberish,
   PopulatedTransaction,
-  BaseContract,
+} from "ethers";
+import {
+  Contract,
   ContractTransaction,
   Overrides,
   CallOverrides,
-} from "ethers";
+} from "@ethersproject/contracts";
 import { BytesLike } from "@ethersproject/bytes";
 import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
-import { TypedEventFilter, TypedEvent, TypedListener } from "./commons";
 
 interface AuthorizableInterface extends ethers.utils.Interface {
   functions: {
@@ -55,136 +56,186 @@ interface AuthorizableInterface extends ethers.utils.Interface {
   events: {};
 }
 
-export class Authorizable extends BaseContract {
+export class Authorizable extends Contract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  listeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): Array<TypedListener<EventArgsArray, EventArgsObject>>;
-  off<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  on<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  once<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeListener<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): this;
-
-  listeners(eventName?: string): Array<Listener>;
-  off(eventName: string, listener: Listener): this;
-  on(eventName: string, listener: Listener): this;
-  once(eventName: string, listener: Listener): this;
-  removeListener(eventName: string, listener: Listener): this;
-  removeAllListeners(eventName?: string): this;
-
-  queryFilter<EventArgsArray extends Array<any>, EventArgsObject>(
-    event: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
-  ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
+  on(event: EventFilter | string, listener: Listener): this;
+  once(event: EventFilter | string, listener: Listener): this;
+  addListener(eventName: EventFilter | string, listener: Listener): this;
+  removeAllListeners(eventName: EventFilter | string): this;
+  removeListener(eventName: any, listener: Listener): this;
 
   interface: AuthorizableInterface;
 
   functions: {
-    authorize(
+    authorize(who: string, overrides?: Overrides): Promise<ContractTransaction>;
+
+    "authorize(address)"(
       who: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     authorized(arg0: string, overrides?: CallOverrides): Promise<[boolean]>;
 
+    "authorized(address)"(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
     deauthorize(
       who: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "deauthorize(address)"(
+      who: string,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     isAuthorized(who: string, overrides?: CallOverrides): Promise<[boolean]>;
 
+    "isAuthorized(address)"(
+      who: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
     owner(overrides?: CallOverrides): Promise<[string]>;
 
-    setOwner(
+    "owner()"(overrides?: CallOverrides): Promise<[string]>;
+
+    setOwner(who: string, overrides?: Overrides): Promise<ContractTransaction>;
+
+    "setOwner(address)"(
       who: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
   };
 
-  authorize(
+  authorize(who: string, overrides?: Overrides): Promise<ContractTransaction>;
+
+  "authorize(address)"(
     who: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   authorized(arg0: string, overrides?: CallOverrides): Promise<boolean>;
 
-  deauthorize(
+  "authorized(address)"(
+    arg0: string,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
+  deauthorize(who: string, overrides?: Overrides): Promise<ContractTransaction>;
+
+  "deauthorize(address)"(
     who: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   isAuthorized(who: string, overrides?: CallOverrides): Promise<boolean>;
 
+  "isAuthorized(address)"(
+    who: string,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
   owner(overrides?: CallOverrides): Promise<string>;
 
-  setOwner(
+  "owner()"(overrides?: CallOverrides): Promise<string>;
+
+  setOwner(who: string, overrides?: Overrides): Promise<ContractTransaction>;
+
+  "setOwner(address)"(
     who: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   callStatic: {
     authorize(who: string, overrides?: CallOverrides): Promise<void>;
 
+    "authorize(address)"(who: string, overrides?: CallOverrides): Promise<void>;
+
     authorized(arg0: string, overrides?: CallOverrides): Promise<boolean>;
+
+    "authorized(address)"(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
 
     deauthorize(who: string, overrides?: CallOverrides): Promise<void>;
 
+    "deauthorize(address)"(
+      who: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     isAuthorized(who: string, overrides?: CallOverrides): Promise<boolean>;
+
+    "isAuthorized(address)"(
+      who: string,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
 
     owner(overrides?: CallOverrides): Promise<string>;
 
+    "owner()"(overrides?: CallOverrides): Promise<string>;
+
     setOwner(who: string, overrides?: CallOverrides): Promise<void>;
+
+    "setOwner(address)"(who: string, overrides?: CallOverrides): Promise<void>;
   };
 
   filters: {};
 
   estimateGas: {
-    authorize(
+    authorize(who: string, overrides?: Overrides): Promise<BigNumber>;
+
+    "authorize(address)"(
       who: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     authorized(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    deauthorize(
+    "authorized(address)"(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    deauthorize(who: string, overrides?: Overrides): Promise<BigNumber>;
+
+    "deauthorize(address)"(
       who: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     isAuthorized(who: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+    "isAuthorized(address)"(
+      who: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
-    setOwner(
-      who: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    "owner()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    setOwner(who: string, overrides?: Overrides): Promise<BigNumber>;
+
+    "setOwner(address)"(who: string, overrides?: Overrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
     authorize(
       who: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "authorize(address)"(
+      who: string,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     authorized(
@@ -192,9 +243,19 @@ export class Authorizable extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "authorized(address)"(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     deauthorize(
       who: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "deauthorize(address)"(
+      who: string,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     isAuthorized(
@@ -202,11 +263,20 @@ export class Authorizable extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "isAuthorized(address)"(
+      who: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    setOwner(
+    "owner()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    setOwner(who: string, overrides?: Overrides): Promise<PopulatedTransaction>;
+
+    "setOwner(address)"(
       who: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
   };
 }

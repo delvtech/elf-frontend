@@ -9,15 +9,16 @@ import {
   BigNumber,
   BigNumberish,
   PopulatedTransaction,
-  BaseContract,
+} from "ethers";
+import {
+  Contract,
   ContractTransaction,
   Overrides,
   CallOverrides,
-} from "ethers";
+} from "@ethersproject/contracts";
 import { BytesLike } from "@ethersproject/bytes";
 import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
-import { TypedEventFilter, TypedEvent, TypedListener } from "./commons";
 
 interface SignaturesValidatorMockInterface extends ethers.utils.Interface {
   functions: {
@@ -88,170 +89,229 @@ interface SignaturesValidatorMockInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "CalldataDecoded"): EventFragment;
 }
 
-export class SignaturesValidatorMock extends BaseContract {
+export class SignaturesValidatorMock extends Contract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  listeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): Array<TypedListener<EventArgsArray, EventArgsObject>>;
-  off<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  on<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  once<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeListener<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): this;
-
-  listeners(eventName?: string): Array<Listener>;
-  off(eventName: string, listener: Listener): this;
-  on(eventName: string, listener: Listener): this;
-  once(eventName: string, listener: Listener): this;
-  removeListener(eventName: string, listener: Listener): this;
-  removeAllListeners(eventName?: string): this;
-
-  queryFilter<EventArgsArray extends Array<any>, EventArgsObject>(
-    event: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
-  ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
+  on(event: EventFilter | string, listener: Listener): this;
+  once(event: EventFilter | string, listener: Listener): this;
+  addListener(eventName: EventFilter | string, listener: Listener): this;
+  removeAllListeners(eventName: EventFilter | string): this;
+  removeListener(eventName: any, listener: Listener): this;
 
   interface: SignaturesValidatorMockInterface;
 
   functions: {
     anotherFunction(
       user: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "anotherFunction(address)"(
+      user: string,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     authenticateCall(
       user: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    decodeCalldata(
-      overrides?: Overrides & { from?: string | Promise<string> }
+    "authenticateCall(address)"(
+      user: string,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
+
+    decodeCalldata(overrides?: Overrides): Promise<ContractTransaction>;
+
+    "decodeCalldata()"(overrides?: Overrides): Promise<ContractTransaction>;
 
     getDomainSeparator(overrides?: CallOverrides): Promise<[string]>;
 
+    "getDomainSeparator()"(overrides?: CallOverrides): Promise<[string]>;
+
     getNextNonce(user: string, overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "getNextNonce(address)"(
+      user: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
     increaseNonce(
       user: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "increaseNonce(address)"(
+      user: string,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
   };
 
   anotherFunction(
     user: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "anotherFunction(address)"(
+    user: string,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   authenticateCall(
     user: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  decodeCalldata(
-    overrides?: Overrides & { from?: string | Promise<string> }
+  "authenticateCall(address)"(
+    user: string,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
+
+  decodeCalldata(overrides?: Overrides): Promise<ContractTransaction>;
+
+  "decodeCalldata()"(overrides?: Overrides): Promise<ContractTransaction>;
 
   getDomainSeparator(overrides?: CallOverrides): Promise<string>;
 
+  "getDomainSeparator()"(overrides?: CallOverrides): Promise<string>;
+
   getNextNonce(user: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+  "getNextNonce(address)"(
+    user: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   increaseNonce(
     user: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "increaseNonce(address)"(
+    user: string,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   callStatic: {
     anotherFunction(user: string, overrides?: CallOverrides): Promise<void>;
 
+    "anotherFunction(address)"(
+      user: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     authenticateCall(user: string, overrides?: CallOverrides): Promise<void>;
+
+    "authenticateCall(address)"(
+      user: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     decodeCalldata(overrides?: CallOverrides): Promise<void>;
 
+    "decodeCalldata()"(overrides?: CallOverrides): Promise<void>;
+
     getDomainSeparator(overrides?: CallOverrides): Promise<string>;
+
+    "getDomainSeparator()"(overrides?: CallOverrides): Promise<string>;
 
     getNextNonce(user: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+    "getNextNonce(address)"(
+      user: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     increaseNonce(user: string, overrides?: CallOverrides): Promise<void>;
+
+    "increaseNonce(address)"(
+      user: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
   };
 
   filters: {
-    Authenticated(
-      user?: null,
-      sender?: null
-    ): TypedEventFilter<[string, string], { user: string; sender: string }>;
+    Authenticated(user: null, sender: null): EventFilter;
 
     CalldataDecoded(
-      data?: null,
-      deadline?: null,
-      v?: null,
-      r?: null,
-      s?: null
-    ): TypedEventFilter<
-      [string, BigNumber, number, string, string],
-      { data: string; deadline: BigNumber; v: number; r: string; s: string }
-    >;
+      data: null,
+      deadline: null,
+      v: null,
+      r: null,
+      s: null
+    ): EventFilter;
   };
 
   estimateGas: {
-    anotherFunction(
+    anotherFunction(user: string, overrides?: Overrides): Promise<BigNumber>;
+
+    "anotherFunction(address)"(
       user: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
-    authenticateCall(
+    authenticateCall(user: string, overrides?: Overrides): Promise<BigNumber>;
+
+    "authenticateCall(address)"(
       user: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
-    decodeCalldata(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    decodeCalldata(overrides?: Overrides): Promise<BigNumber>;
+
+    "decodeCalldata()"(overrides?: Overrides): Promise<BigNumber>;
 
     getDomainSeparator(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "getDomainSeparator()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     getNextNonce(user: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    increaseNonce(
+    "getNextNonce(address)"(
       user: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    increaseNonce(user: string, overrides?: Overrides): Promise<BigNumber>;
+
+    "increaseNonce(address)"(
+      user: string,
+      overrides?: Overrides
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
     anotherFunction(
       user: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "anotherFunction(address)"(
+      user: string,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     authenticateCall(
       user: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    decodeCalldata(
-      overrides?: Overrides & { from?: string | Promise<string> }
+    "authenticateCall(address)"(
+      user: string,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
+
+    decodeCalldata(overrides?: Overrides): Promise<PopulatedTransaction>;
+
+    "decodeCalldata()"(overrides?: Overrides): Promise<PopulatedTransaction>;
 
     getDomainSeparator(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "getDomainSeparator()"(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -260,9 +320,19 @@ export class SignaturesValidatorMock extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "getNextNonce(address)"(
+      user: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     increaseNonce(
       user: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "increaseNonce(address)"(
+      user: string,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
   };
 }

@@ -9,16 +9,17 @@ import {
   BigNumber,
   BigNumberish,
   PopulatedTransaction,
-  BaseContract,
+} from "ethers";
+import {
+  Contract,
   ContractTransaction,
   Overrides,
   PayableOverrides,
   CallOverrides,
-} from "ethers";
+} from "@ethersproject/contracts";
 import { BytesLike } from "@ethersproject/bytes";
 import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
-import { TypedEventFilter, TypedEvent, TypedListener } from "./commons";
 
 interface TestUserProxyInterface extends ethers.utils.Interface {
   functions: {
@@ -126,65 +127,47 @@ interface TestUserProxyInterface extends ethers.utils.Interface {
   events: {};
 }
 
-export class TestUserProxy extends BaseContract {
+export class TestUserProxy extends Contract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  listeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): Array<TypedListener<EventArgsArray, EventArgsObject>>;
-  off<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  on<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  once<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeListener<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): this;
-
-  listeners(eventName?: string): Array<Listener>;
-  off(eventName: string, listener: Listener): this;
-  on(eventName: string, listener: Listener): this;
-  once(eventName: string, listener: Listener): this;
-  removeListener(eventName: string, listener: Listener): this;
-  removeAllListeners(eventName?: string): this;
-
-  queryFilter<EventArgsArray extends Array<any>, EventArgsObject>(
-    event: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
-  ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
+  on(event: EventFilter | string, listener: Listener): this;
+  once(event: EventFilter | string, listener: Listener): this;
+  addListener(eventName: EventFilter | string, listener: Listener): this;
+  removeAllListeners(eventName: EventFilter | string): this;
+  removeListener(eventName: any, listener: Listener): this;
 
   interface: TestUserProxyInterface;
 
   functions: {
-    authorize(
+    authorize(who: string, overrides?: Overrides): Promise<ContractTransaction>;
+
+    "authorize(address)"(
       who: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     authorized(arg0: string, overrides?: CallOverrides): Promise<[boolean]>;
 
+    "authorized(address)"(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
     deauthorize(
       who: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    deprecate(
-      overrides?: Overrides & { from?: string | Promise<string> }
+    "deauthorize(address)"(
+      who: string,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
+
+    deprecate(overrides?: Overrides): Promise<ContractTransaction>;
+
+    "deprecate()"(overrides?: Overrides): Promise<ContractTransaction>;
 
     deriveTranche(
       position: string,
@@ -192,9 +175,22 @@ export class TestUserProxy extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[string]>;
 
+    "deriveTranche(address,uint256)"(
+      position: string,
+      expiration: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
     isAuthorized(who: string, overrides?: CallOverrides): Promise<[boolean]>;
 
+    "isAuthorized(address)"(
+      who: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
     isFrozen(overrides?: CallOverrides): Promise<[boolean]>;
+
+    "isFrozen()"(overrides?: CallOverrides): Promise<[boolean]>;
 
     mint(
       _amount: BigNumberish,
@@ -210,22 +206,50 @@ export class TestUserProxy extends BaseContract {
         s: BytesLike;
         v: BigNumberish;
       }[],
-      overrides?: PayableOverrides & { from?: string | Promise<string> }
+      overrides?: PayableOverrides
+    ): Promise<ContractTransaction>;
+
+    "mint(uint256,address,uint256,address,tuple[])"(
+      _amount: BigNumberish,
+      _underlying: string,
+      _expiration: BigNumberish,
+      _position: string,
+      _permitCallData: {
+        tokenContract: string;
+        who: string;
+        amount: BigNumberish;
+        expiration: BigNumberish;
+        r: BytesLike;
+        s: BytesLike;
+        v: BigNumberish;
+      }[],
+      overrides?: PayableOverrides
     ): Promise<ContractTransaction>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
+    "owner()"(overrides?: CallOverrides): Promise<[string]>;
+
     setIsFrozen(
       _newState: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    setOwner(
+    "setIsFrozen(bool)"(
+      _newState: boolean,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    setOwner(who: string, overrides?: Overrides): Promise<ContractTransaction>;
+
+    "setOwner(address)"(
       who: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     weth(overrides?: CallOverrides): Promise<[string]>;
+
+    "weth()"(overrides?: CallOverrides): Promise<[string]>;
 
     withdrawWeth(
       _expiration: BigNumberish,
@@ -241,25 +265,51 @@ export class TestUserProxy extends BaseContract {
         s: BytesLike;
         v: BigNumberish;
       }[],
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "withdrawWeth(uint256,address,uint256,uint256,tuple[])"(
+      _expiration: BigNumberish,
+      _position: string,
+      _amountPT: BigNumberish,
+      _amountYT: BigNumberish,
+      _permitCallData: {
+        tokenContract: string;
+        who: string;
+        amount: BigNumberish;
+        expiration: BigNumberish;
+        r: BytesLike;
+        s: BytesLike;
+        v: BigNumberish;
+      }[],
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
   };
 
-  authorize(
+  authorize(who: string, overrides?: Overrides): Promise<ContractTransaction>;
+
+  "authorize(address)"(
     who: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   authorized(arg0: string, overrides?: CallOverrides): Promise<boolean>;
 
-  deauthorize(
+  "authorized(address)"(
+    arg0: string,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
+  deauthorize(who: string, overrides?: Overrides): Promise<ContractTransaction>;
+
+  "deauthorize(address)"(
     who: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  deprecate(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  deprecate(overrides?: Overrides): Promise<ContractTransaction>;
+
+  "deprecate()"(overrides?: Overrides): Promise<ContractTransaction>;
 
   deriveTranche(
     position: string,
@@ -267,9 +317,22 @@ export class TestUserProxy extends BaseContract {
     overrides?: CallOverrides
   ): Promise<string>;
 
+  "deriveTranche(address,uint256)"(
+    position: string,
+    expiration: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
   isAuthorized(who: string, overrides?: CallOverrides): Promise<boolean>;
 
+  "isAuthorized(address)"(
+    who: string,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
   isFrozen(overrides?: CallOverrides): Promise<boolean>;
+
+  "isFrozen()"(overrides?: CallOverrides): Promise<boolean>;
 
   mint(
     _amount: BigNumberish,
@@ -285,22 +348,50 @@ export class TestUserProxy extends BaseContract {
       s: BytesLike;
       v: BigNumberish;
     }[],
-    overrides?: PayableOverrides & { from?: string | Promise<string> }
+    overrides?: PayableOverrides
+  ): Promise<ContractTransaction>;
+
+  "mint(uint256,address,uint256,address,tuple[])"(
+    _amount: BigNumberish,
+    _underlying: string,
+    _expiration: BigNumberish,
+    _position: string,
+    _permitCallData: {
+      tokenContract: string;
+      who: string;
+      amount: BigNumberish;
+      expiration: BigNumberish;
+      r: BytesLike;
+      s: BytesLike;
+      v: BigNumberish;
+    }[],
+    overrides?: PayableOverrides
   ): Promise<ContractTransaction>;
 
   owner(overrides?: CallOverrides): Promise<string>;
 
+  "owner()"(overrides?: CallOverrides): Promise<string>;
+
   setIsFrozen(
     _newState: boolean,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  setOwner(
+  "setIsFrozen(bool)"(
+    _newState: boolean,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  setOwner(who: string, overrides?: Overrides): Promise<ContractTransaction>;
+
+  "setOwner(address)"(
     who: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   weth(overrides?: CallOverrides): Promise<string>;
+
+  "weth()"(overrides?: CallOverrides): Promise<string>;
 
   withdrawWeth(
     _expiration: BigNumberish,
@@ -316,17 +407,48 @@ export class TestUserProxy extends BaseContract {
       s: BytesLike;
       v: BigNumberish;
     }[],
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "withdrawWeth(uint256,address,uint256,uint256,tuple[])"(
+    _expiration: BigNumberish,
+    _position: string,
+    _amountPT: BigNumberish,
+    _amountYT: BigNumberish,
+    _permitCallData: {
+      tokenContract: string;
+      who: string;
+      amount: BigNumberish;
+      expiration: BigNumberish;
+      r: BytesLike;
+      s: BytesLike;
+      v: BigNumberish;
+    }[],
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   callStatic: {
     authorize(who: string, overrides?: CallOverrides): Promise<void>;
 
+    "authorize(address)"(who: string, overrides?: CallOverrides): Promise<void>;
+
     authorized(arg0: string, overrides?: CallOverrides): Promise<boolean>;
+
+    "authorized(address)"(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
 
     deauthorize(who: string, overrides?: CallOverrides): Promise<void>;
 
+    "deauthorize(address)"(
+      who: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     deprecate(overrides?: CallOverrides): Promise<void>;
+
+    "deprecate()"(overrides?: CallOverrides): Promise<void>;
 
     deriveTranche(
       position: string,
@@ -334,9 +456,22 @@ export class TestUserProxy extends BaseContract {
       overrides?: CallOverrides
     ): Promise<string>;
 
+    "deriveTranche(address,uint256)"(
+      position: string,
+      expiration: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
     isAuthorized(who: string, overrides?: CallOverrides): Promise<boolean>;
 
+    "isAuthorized(address)"(
+      who: string,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     isFrozen(overrides?: CallOverrides): Promise<boolean>;
+
+    "isFrozen()"(overrides?: CallOverrides): Promise<boolean>;
 
     mint(
       _amount: BigNumberish,
@@ -355,15 +490,60 @@ export class TestUserProxy extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber, BigNumber]>;
 
+    "mint(uint256,address,uint256,address,tuple[])"(
+      _amount: BigNumberish,
+      _underlying: string,
+      _expiration: BigNumberish,
+      _position: string,
+      _permitCallData: {
+        tokenContract: string;
+        who: string;
+        amount: BigNumberish;
+        expiration: BigNumberish;
+        r: BytesLike;
+        s: BytesLike;
+        v: BigNumberish;
+      }[],
+      overrides?: CallOverrides
+    ): Promise<[BigNumber, BigNumber]>;
+
     owner(overrides?: CallOverrides): Promise<string>;
+
+    "owner()"(overrides?: CallOverrides): Promise<string>;
 
     setIsFrozen(_newState: boolean, overrides?: CallOverrides): Promise<void>;
 
+    "setIsFrozen(bool)"(
+      _newState: boolean,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     setOwner(who: string, overrides?: CallOverrides): Promise<void>;
+
+    "setOwner(address)"(who: string, overrides?: CallOverrides): Promise<void>;
 
     weth(overrides?: CallOverrides): Promise<string>;
 
+    "weth()"(overrides?: CallOverrides): Promise<string>;
+
     withdrawWeth(
+      _expiration: BigNumberish,
+      _position: string,
+      _amountPT: BigNumberish,
+      _amountYT: BigNumberish,
+      _permitCallData: {
+        tokenContract: string;
+        who: string;
+        amount: BigNumberish;
+        expiration: BigNumberish;
+        r: BytesLike;
+        s: BytesLike;
+        v: BigNumberish;
+      }[],
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "withdrawWeth(uint256,address,uint256,uint256,tuple[])"(
       _expiration: BigNumberish,
       _position: string,
       _amountPT: BigNumberish,
@@ -384,21 +564,30 @@ export class TestUserProxy extends BaseContract {
   filters: {};
 
   estimateGas: {
-    authorize(
+    authorize(who: string, overrides?: Overrides): Promise<BigNumber>;
+
+    "authorize(address)"(
       who: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     authorized(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    deauthorize(
-      who: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+    "authorized(address)"(
+      arg0: string,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    deprecate(
-      overrides?: Overrides & { from?: string | Promise<string> }
+    deauthorize(who: string, overrides?: Overrides): Promise<BigNumber>;
+
+    "deauthorize(address)"(
+      who: string,
+      overrides?: Overrides
     ): Promise<BigNumber>;
+
+    deprecate(overrides?: Overrides): Promise<BigNumber>;
+
+    "deprecate()"(overrides?: Overrides): Promise<BigNumber>;
 
     deriveTranche(
       position: string,
@@ -406,9 +595,22 @@ export class TestUserProxy extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    "deriveTranche(address,uint256)"(
+      position: string,
+      expiration: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     isAuthorized(who: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+    "isAuthorized(address)"(
+      who: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     isFrozen(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "isFrozen()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     mint(
       _amount: BigNumberish,
@@ -424,22 +626,44 @@ export class TestUserProxy extends BaseContract {
         s: BytesLike;
         v: BigNumberish;
       }[],
-      overrides?: PayableOverrides & { from?: string | Promise<string> }
+      overrides?: PayableOverrides
+    ): Promise<BigNumber>;
+
+    "mint(uint256,address,uint256,address,tuple[])"(
+      _amount: BigNumberish,
+      _underlying: string,
+      _expiration: BigNumberish,
+      _position: string,
+      _permitCallData: {
+        tokenContract: string;
+        who: string;
+        amount: BigNumberish;
+        expiration: BigNumberish;
+        r: BytesLike;
+        s: BytesLike;
+        v: BigNumberish;
+      }[],
+      overrides?: PayableOverrides
     ): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
-    setIsFrozen(
+    "owner()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    setIsFrozen(_newState: boolean, overrides?: Overrides): Promise<BigNumber>;
+
+    "setIsFrozen(bool)"(
       _newState: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
-    setOwner(
-      who: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    setOwner(who: string, overrides?: Overrides): Promise<BigNumber>;
+
+    "setOwner(address)"(who: string, overrides?: Overrides): Promise<BigNumber>;
 
     weth(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "weth()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     withdrawWeth(
       _expiration: BigNumberish,
@@ -455,14 +679,36 @@ export class TestUserProxy extends BaseContract {
         s: BytesLike;
         v: BigNumberish;
       }[],
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "withdrawWeth(uint256,address,uint256,uint256,tuple[])"(
+      _expiration: BigNumberish,
+      _position: string,
+      _amountPT: BigNumberish,
+      _amountYT: BigNumberish,
+      _permitCallData: {
+        tokenContract: string;
+        who: string;
+        amount: BigNumberish;
+        expiration: BigNumberish;
+        r: BytesLike;
+        s: BytesLike;
+        v: BigNumberish;
+      }[],
+      overrides?: Overrides
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
     authorize(
       who: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "authorize(address)"(
+      who: string,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     authorized(
@@ -470,16 +716,32 @@ export class TestUserProxy extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "authorized(address)"(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     deauthorize(
       who: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    deprecate(
-      overrides?: Overrides & { from?: string | Promise<string> }
+    "deauthorize(address)"(
+      who: string,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
+
+    deprecate(overrides?: Overrides): Promise<PopulatedTransaction>;
+
+    "deprecate()"(overrides?: Overrides): Promise<PopulatedTransaction>;
 
     deriveTranche(
+      position: string,
+      expiration: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "deriveTranche(address,uint256)"(
       position: string,
       expiration: BigNumberish,
       overrides?: CallOverrides
@@ -490,7 +752,14 @@ export class TestUserProxy extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "isAuthorized(address)"(
+      who: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     isFrozen(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "isFrozen()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     mint(
       _amount: BigNumberish,
@@ -506,22 +775,50 @@ export class TestUserProxy extends BaseContract {
         s: BytesLike;
         v: BigNumberish;
       }[],
-      overrides?: PayableOverrides & { from?: string | Promise<string> }
+      overrides?: PayableOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "mint(uint256,address,uint256,address,tuple[])"(
+      _amount: BigNumberish,
+      _underlying: string,
+      _expiration: BigNumberish,
+      _position: string,
+      _permitCallData: {
+        tokenContract: string;
+        who: string;
+        amount: BigNumberish;
+        expiration: BigNumberish;
+        r: BytesLike;
+        s: BytesLike;
+        v: BigNumberish;
+      }[],
+      overrides?: PayableOverrides
     ): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "owner()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     setIsFrozen(
       _newState: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    setOwner(
+    "setIsFrozen(bool)"(
+      _newState: boolean,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    setOwner(who: string, overrides?: Overrides): Promise<PopulatedTransaction>;
+
+    "setOwner(address)"(
       who: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     weth(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "weth()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     withdrawWeth(
       _expiration: BigNumberish,
@@ -537,7 +834,24 @@ export class TestUserProxy extends BaseContract {
         s: BytesLike;
         v: BigNumberish;
       }[],
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "withdrawWeth(uint256,address,uint256,uint256,tuple[])"(
+      _expiration: BigNumberish,
+      _position: string,
+      _amountPT: BigNumberish,
+      _amountYT: BigNumberish,
+      _permitCallData: {
+        tokenContract: string;
+        who: string;
+        amount: BigNumberish;
+        expiration: BigNumberish;
+        r: BytesLike;
+        s: BytesLike;
+        v: BigNumberish;
+      }[],
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
   };
 }

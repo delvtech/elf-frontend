@@ -9,15 +9,16 @@ import {
   BigNumber,
   BigNumberish,
   PopulatedTransaction,
-  BaseContract,
+} from "ethers";
+import {
+  Contract,
   ContractTransaction,
   Overrides,
   CallOverrides,
-} from "ethers";
+} from "@ethersproject/contracts";
 import { BytesLike } from "@ethersproject/bytes";
 import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
-import { TypedEventFilter, TypedEvent, TypedListener } from "./commons";
 
 interface WeightedPool2TokensFactoryInterface extends ethers.utils.Interface {
   functions: {
@@ -67,46 +68,16 @@ interface WeightedPool2TokensFactoryInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "PoolCreated"): EventFragment;
 }
 
-export class WeightedPool2TokensFactory extends BaseContract {
+export class WeightedPool2TokensFactory extends Contract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  listeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): Array<TypedListener<EventArgsArray, EventArgsObject>>;
-  off<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  on<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  once<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeListener<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): this;
-
-  listeners(eventName?: string): Array<Listener>;
-  off(eventName: string, listener: Listener): this;
-  on(eventName: string, listener: Listener): this;
-  once(eventName: string, listener: Listener): this;
-  removeListener(eventName: string, listener: Listener): this;
-  removeAllListeners(eventName?: string): this;
-
-  queryFilter<EventArgsArray extends Array<any>, EventArgsObject>(
-    event: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
-  ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
+  on(event: EventFilter | string, listener: Listener): this;
+  once(event: EventFilter | string, listener: Listener): this;
+  addListener(eventName: EventFilter | string, listener: Listener): this;
+  removeAllListeners(eventName: EventFilter | string): this;
+  removeListener(eventName: any, listener: Listener): this;
 
   interface: WeightedPool2TokensFactoryInterface;
 
@@ -119,7 +90,18 @@ export class WeightedPool2TokensFactory extends BaseContract {
       swapFeePercentage: BigNumberish,
       oracleEnabled: boolean,
       owner: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "create(string,string,address[],uint256[],uint256,bool,address)"(
+      name: string,
+      symbol: string,
+      tokens: string[],
+      weights: BigNumberish[],
+      swapFeePercentage: BigNumberish,
+      oracleEnabled: boolean,
+      owner: string,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     getPauseConfiguration(
@@ -131,9 +113,25 @@ export class WeightedPool2TokensFactory extends BaseContract {
       }
     >;
 
+    "getPauseConfiguration()"(
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber] & {
+        pauseWindowDuration: BigNumber;
+        bufferPeriodDuration: BigNumber;
+      }
+    >;
+
     getVault(overrides?: CallOverrides): Promise<[string]>;
 
+    "getVault()"(overrides?: CallOverrides): Promise<[string]>;
+
     isPoolFromFactory(
+      pool: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
+    "isPoolFromFactory(address)"(
       pool: string,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
@@ -147,7 +145,18 @@ export class WeightedPool2TokensFactory extends BaseContract {
     swapFeePercentage: BigNumberish,
     oracleEnabled: boolean,
     owner: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "create(string,string,address[],uint256[],uint256,bool,address)"(
+    name: string,
+    symbol: string,
+    tokens: string[],
+    weights: BigNumberish[],
+    swapFeePercentage: BigNumberish,
+    oracleEnabled: boolean,
+    owner: string,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   getPauseConfiguration(
@@ -159,12 +168,39 @@ export class WeightedPool2TokensFactory extends BaseContract {
     }
   >;
 
+  "getPauseConfiguration()"(
+    overrides?: CallOverrides
+  ): Promise<
+    [BigNumber, BigNumber] & {
+      pauseWindowDuration: BigNumber;
+      bufferPeriodDuration: BigNumber;
+    }
+  >;
+
   getVault(overrides?: CallOverrides): Promise<string>;
+
+  "getVault()"(overrides?: CallOverrides): Promise<string>;
 
   isPoolFromFactory(pool: string, overrides?: CallOverrides): Promise<boolean>;
 
+  "isPoolFromFactory(address)"(
+    pool: string,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
   callStatic: {
     create(
+      name: string,
+      symbol: string,
+      tokens: string[],
+      weights: BigNumberish[],
+      swapFeePercentage: BigNumberish,
+      oracleEnabled: boolean,
+      owner: string,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    "create(string,string,address[],uint256[],uint256,bool,address)"(
       name: string,
       symbol: string,
       tokens: string[],
@@ -184,18 +220,32 @@ export class WeightedPool2TokensFactory extends BaseContract {
       }
     >;
 
+    "getPauseConfiguration()"(
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber] & {
+        pauseWindowDuration: BigNumber;
+        bufferPeriodDuration: BigNumber;
+      }
+    >;
+
     getVault(overrides?: CallOverrides): Promise<string>;
 
+    "getVault()"(overrides?: CallOverrides): Promise<string>;
+
     isPoolFromFactory(
+      pool: string,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    "isPoolFromFactory(address)"(
       pool: string,
       overrides?: CallOverrides
     ): Promise<boolean>;
   };
 
   filters: {
-    PoolCreated(
-      pool?: string | null
-    ): TypedEventFilter<[string], { pool: string }>;
+    PoolCreated(pool: string | null): EventFilter;
   };
 
   estimateGas: {
@@ -207,14 +257,34 @@ export class WeightedPool2TokensFactory extends BaseContract {
       swapFeePercentage: BigNumberish,
       oracleEnabled: boolean,
       owner: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "create(string,string,address[],uint256[],uint256,bool,address)"(
+      name: string,
+      symbol: string,
+      tokens: string[],
+      weights: BigNumberish[],
+      swapFeePercentage: BigNumberish,
+      oracleEnabled: boolean,
+      owner: string,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     getPauseConfiguration(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "getPauseConfiguration()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     getVault(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "getVault()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     isPoolFromFactory(
+      pool: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "isPoolFromFactory(address)"(
       pool: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -229,16 +299,38 @@ export class WeightedPool2TokensFactory extends BaseContract {
       swapFeePercentage: BigNumberish,
       oracleEnabled: boolean,
       owner: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "create(string,string,address[],uint256[],uint256,bool,address)"(
+      name: string,
+      symbol: string,
+      tokens: string[],
+      weights: BigNumberish[],
+      swapFeePercentage: BigNumberish,
+      oracleEnabled: boolean,
+      owner: string,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     getPauseConfiguration(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "getPauseConfiguration()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     getVault(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "getVault()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     isPoolFromFactory(
+      pool: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "isPoolFromFactory(address)"(
       pool: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;

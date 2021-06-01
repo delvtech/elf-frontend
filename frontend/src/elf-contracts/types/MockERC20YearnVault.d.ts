@@ -9,15 +9,16 @@ import {
   BigNumber,
   BigNumberish,
   PopulatedTransaction,
-  BaseContract,
+} from "ethers";
+import {
+  Contract,
   ContractTransaction,
   Overrides,
   CallOverrides,
-} from "ethers";
+} from "@ethersproject/contracts";
 import { BytesLike } from "@ethersproject/bytes";
 import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
-import { TypedEventFilter, TypedEvent, TypedListener } from "./commons";
 
 interface MockERC20YearnVaultInterface extends ethers.utils.Interface {
   functions: {
@@ -249,57 +250,41 @@ interface MockERC20YearnVaultInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
 }
 
-export class MockERC20YearnVault extends BaseContract {
+export class MockERC20YearnVault extends Contract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  listeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): Array<TypedListener<EventArgsArray, EventArgsObject>>;
-  off<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  on<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  once<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeListener<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): this;
-
-  listeners(eventName?: string): Array<Listener>;
-  off(eventName: string, listener: Listener): this;
-  on(eventName: string, listener: Listener): this;
-  once(eventName: string, listener: Listener): this;
-  removeListener(eventName: string, listener: Listener): this;
-  removeAllListeners(eventName?: string): this;
-
-  queryFilter<EventArgsArray extends Array<any>, EventArgsObject>(
-    event: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
-  ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
+  on(event: EventFilter | string, listener: Listener): this;
+  once(event: EventFilter | string, listener: Listener): this;
+  addListener(eventName: EventFilter | string, listener: Listener): this;
+  removeAllListeners(eventName: EventFilter | string): this;
+  removeListener(eventName: any, listener: Listener): this;
 
   interface: MockERC20YearnVaultInterface;
 
   functions: {
     DEGRADATION_COEFFICIENT(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    "DEGRADATION_COEFFICIENT()"(
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
     DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<[string]>;
+
+    "DOMAIN_SEPARATOR()"(overrides?: CallOverrides): Promise<[string]>;
 
     PERMIT_TYPEHASH(overrides?: CallOverrides): Promise<[string]>;
 
+    "PERMIT_TYPEHASH()"(overrides?: CallOverrides): Promise<[string]>;
+
     allowance(
+      arg0: string,
+      arg1: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    "allowance(address,address)"(
       arg0: string,
       arg1: string,
       overrides?: CallOverrides
@@ -308,46 +293,101 @@ export class MockERC20YearnVault extends BaseContract {
     approve(
       account: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    authorize(
+    "approve(address,uint256)"(
+      account: string,
+      amount: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    authorize(who: string, overrides?: Overrides): Promise<ContractTransaction>;
+
+    "authorize(address)"(
       who: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     authorized(arg0: string, overrides?: CallOverrides): Promise<[boolean]>;
 
+    "authorized(address)"(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
     balanceOf(arg0: string, overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "balanceOf(address)"(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
     deauthorize(
       who: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "deauthorize(address)"(
+      who: string,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     decimals(overrides?: CallOverrides): Promise<[number]>;
 
+    "decimals()"(overrides?: CallOverrides): Promise<[number]>;
+
     deposit(
       _amount: BigNumberish,
       _recipient: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "deposit(uint256,address)"(
+      _amount: BigNumberish,
+      _recipient: string,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     governance(overrides?: CallOverrides): Promise<[string]>;
 
+    "governance()"(overrides?: CallOverrides): Promise<[string]>;
+
     isAuthorized(who: string, overrides?: CallOverrides): Promise<[boolean]>;
+
+    "isAuthorized(address)"(
+      who: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
 
     lastReport(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    "lastReport()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     lockedProfit(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "lockedProfit()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     lockedProfitDegradation(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    "lockedProfitDegradation()"(
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
     name(overrides?: CallOverrides): Promise<[string]>;
+
+    "name()"(overrides?: CallOverrides): Promise<[string]>;
 
     nonces(arg0: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    "nonces(address)"(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
     owner(overrides?: CallOverrides): Promise<[string]>;
+
+    "owner()"(overrides?: CallOverrides): Promise<[string]>;
 
     permit(
       owner: string,
@@ -357,66 +397,135 @@ export class MockERC20YearnVault extends BaseContract {
       v: BigNumberish,
       r: BytesLike,
       s: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
+      owner: string,
+      spender: string,
+      value: BigNumberish,
+      deadline: BigNumberish,
+      v: BigNumberish,
+      r: BytesLike,
+      s: BytesLike,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     precisionFactor(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    "precisionFactor()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     pricePerShare(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "pricePerShare()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     report(
       _deposit: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "report(uint256)"(
+      _deposit: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     setDepositLimit(
       _limit: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    setOwner(
+    "setDepositLimit(uint256)"(
+      _limit: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    setOwner(who: string, overrides?: Overrides): Promise<ContractTransaction>;
+
+    "setOwner(address)"(
       who: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     symbol(overrides?: CallOverrides): Promise<[string]>;
 
+    "symbol()"(overrides?: CallOverrides): Promise<[string]>;
+
     token(overrides?: CallOverrides): Promise<[string]>;
+
+    "token()"(overrides?: CallOverrides): Promise<[string]>;
 
     totalAssets(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    "totalAssets()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     totalShares(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    "totalShares()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "totalSupply()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     transfer(
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "transfer(address,uint256)"(
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     transferFrom(
       spender: string,
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "transferFrom(address,address,uint256)"(
+      spender: string,
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     withdraw(
       _maxShares: BigNumberish,
       _recipient: string,
       _maxLoss: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "withdraw(uint256,address,uint256)"(
+      _maxShares: BigNumberish,
+      _recipient: string,
+      _maxLoss: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
   };
 
   DEGRADATION_COEFFICIENT(overrides?: CallOverrides): Promise<BigNumber>;
 
+  "DEGRADATION_COEFFICIENT()"(overrides?: CallOverrides): Promise<BigNumber>;
+
   DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<string>;
+
+  "DOMAIN_SEPARATOR()"(overrides?: CallOverrides): Promise<string>;
 
   PERMIT_TYPEHASH(overrides?: CallOverrides): Promise<string>;
 
+  "PERMIT_TYPEHASH()"(overrides?: CallOverrides): Promise<string>;
+
   allowance(
+    arg0: string,
+    arg1: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  "allowance(address,address)"(
     arg0: string,
     arg1: string,
     overrides?: CallOverrides
@@ -425,46 +534,96 @@ export class MockERC20YearnVault extends BaseContract {
   approve(
     account: string,
     amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  authorize(
+  "approve(address,uint256)"(
+    account: string,
+    amount: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  authorize(who: string, overrides?: Overrides): Promise<ContractTransaction>;
+
+  "authorize(address)"(
     who: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   authorized(arg0: string, overrides?: CallOverrides): Promise<boolean>;
 
+  "authorized(address)"(
+    arg0: string,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
   balanceOf(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-  deauthorize(
+  "balanceOf(address)"(
+    arg0: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  deauthorize(who: string, overrides?: Overrides): Promise<ContractTransaction>;
+
+  "deauthorize(address)"(
     who: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   decimals(overrides?: CallOverrides): Promise<number>;
 
+  "decimals()"(overrides?: CallOverrides): Promise<number>;
+
   deposit(
     _amount: BigNumberish,
     _recipient: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "deposit(uint256,address)"(
+    _amount: BigNumberish,
+    _recipient: string,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   governance(overrides?: CallOverrides): Promise<string>;
 
+  "governance()"(overrides?: CallOverrides): Promise<string>;
+
   isAuthorized(who: string, overrides?: CallOverrides): Promise<boolean>;
+
+  "isAuthorized(address)"(
+    who: string,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
 
   lastReport(overrides?: CallOverrides): Promise<BigNumber>;
 
+  "lastReport()"(overrides?: CallOverrides): Promise<BigNumber>;
+
   lockedProfit(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "lockedProfit()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   lockedProfitDegradation(overrides?: CallOverrides): Promise<BigNumber>;
 
+  "lockedProfitDegradation()"(overrides?: CallOverrides): Promise<BigNumber>;
+
   name(overrides?: CallOverrides): Promise<string>;
+
+  "name()"(overrides?: CallOverrides): Promise<string>;
 
   nonces(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+  "nonces(address)"(
+    arg0: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   owner(overrides?: CallOverrides): Promise<string>;
+
+  "owner()"(overrides?: CallOverrides): Promise<string>;
 
   permit(
     owner: string,
@@ -474,66 +633,135 @@ export class MockERC20YearnVault extends BaseContract {
     v: BigNumberish,
     r: BytesLike,
     s: BytesLike,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
+    owner: string,
+    spender: string,
+    value: BigNumberish,
+    deadline: BigNumberish,
+    v: BigNumberish,
+    r: BytesLike,
+    s: BytesLike,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   precisionFactor(overrides?: CallOverrides): Promise<BigNumber>;
 
+  "precisionFactor()"(overrides?: CallOverrides): Promise<BigNumber>;
+
   pricePerShare(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "pricePerShare()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   report(
     _deposit: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "report(uint256)"(
+    _deposit: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   setDepositLimit(
     _limit: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  setOwner(
+  "setDepositLimit(uint256)"(
+    _limit: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  setOwner(who: string, overrides?: Overrides): Promise<ContractTransaction>;
+
+  "setOwner(address)"(
     who: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   symbol(overrides?: CallOverrides): Promise<string>;
 
+  "symbol()"(overrides?: CallOverrides): Promise<string>;
+
   token(overrides?: CallOverrides): Promise<string>;
+
+  "token()"(overrides?: CallOverrides): Promise<string>;
 
   totalAssets(overrides?: CallOverrides): Promise<BigNumber>;
 
+  "totalAssets()"(overrides?: CallOverrides): Promise<BigNumber>;
+
   totalShares(overrides?: CallOverrides): Promise<BigNumber>;
 
+  "totalShares()"(overrides?: CallOverrides): Promise<BigNumber>;
+
   totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   transfer(
     recipient: string,
     amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "transfer(address,uint256)"(
+    recipient: string,
+    amount: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   transferFrom(
     spender: string,
     recipient: string,
     amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "transferFrom(address,address,uint256)"(
+    spender: string,
+    recipient: string,
+    amount: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   withdraw(
     _maxShares: BigNumberish,
     _recipient: string,
     _maxLoss: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "withdraw(uint256,address,uint256)"(
+    _maxShares: BigNumberish,
+    _recipient: string,
+    _maxLoss: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   callStatic: {
     DEGRADATION_COEFFICIENT(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "DEGRADATION_COEFFICIENT()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<string>;
+
+    "DOMAIN_SEPARATOR()"(overrides?: CallOverrides): Promise<string>;
 
     PERMIT_TYPEHASH(overrides?: CallOverrides): Promise<string>;
 
+    "PERMIT_TYPEHASH()"(overrides?: CallOverrides): Promise<string>;
+
     allowance(
+      arg0: string,
+      arg1: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "allowance(address,address)"(
       arg0: string,
       arg1: string,
       overrides?: CallOverrides
@@ -545,15 +773,40 @@ export class MockERC20YearnVault extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    "approve(address,uint256)"(
+      account: string,
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     authorize(who: string, overrides?: CallOverrides): Promise<void>;
+
+    "authorize(address)"(who: string, overrides?: CallOverrides): Promise<void>;
 
     authorized(arg0: string, overrides?: CallOverrides): Promise<boolean>;
 
+    "authorized(address)"(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     balanceOf(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    "balanceOf(address)"(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     deauthorize(who: string, overrides?: CallOverrides): Promise<void>;
 
+    "deauthorize(address)"(
+      who: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     decimals(overrides?: CallOverrides): Promise<number>;
+
+    "decimals()"(overrides?: CallOverrides): Promise<number>;
 
     deposit(
       _amount: BigNumberish,
@@ -561,21 +814,49 @@ export class MockERC20YearnVault extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    "deposit(uint256,address)"(
+      _amount: BigNumberish,
+      _recipient: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     governance(overrides?: CallOverrides): Promise<string>;
+
+    "governance()"(overrides?: CallOverrides): Promise<string>;
 
     isAuthorized(who: string, overrides?: CallOverrides): Promise<boolean>;
 
+    "isAuthorized(address)"(
+      who: string,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     lastReport(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "lastReport()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     lockedProfit(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "lockedProfit()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     lockedProfitDegradation(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "lockedProfitDegradation()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     name(overrides?: CallOverrides): Promise<string>;
 
+    "name()"(overrides?: CallOverrides): Promise<string>;
+
     nonces(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+    "nonces(address)"(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     owner(overrides?: CallOverrides): Promise<string>;
+
+    "owner()"(overrides?: CallOverrides): Promise<string>;
 
     permit(
       owner: string,
@@ -588,30 +869,73 @@ export class MockERC20YearnVault extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
+      owner: string,
+      spender: string,
+      value: BigNumberish,
+      deadline: BigNumberish,
+      v: BigNumberish,
+      r: BytesLike,
+      s: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     precisionFactor(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "precisionFactor()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     pricePerShare(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "pricePerShare()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     report(_deposit: BigNumberish, overrides?: CallOverrides): Promise<void>;
+
+    "report(uint256)"(
+      _deposit: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     setDepositLimit(
       _limit: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
+    "setDepositLimit(uint256)"(
+      _limit: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     setOwner(who: string, overrides?: CallOverrides): Promise<void>;
+
+    "setOwner(address)"(who: string, overrides?: CallOverrides): Promise<void>;
 
     symbol(overrides?: CallOverrides): Promise<string>;
 
+    "symbol()"(overrides?: CallOverrides): Promise<string>;
+
     token(overrides?: CallOverrides): Promise<string>;
+
+    "token()"(overrides?: CallOverrides): Promise<string>;
 
     totalAssets(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "totalAssets()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     totalShares(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "totalShares()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     transfer(
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    "transfer(address,uint256)"(
       recipient: string,
       amount: BigNumberish,
       overrides?: CallOverrides
@@ -624,7 +948,21 @@ export class MockERC20YearnVault extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    "transferFrom(address,address,uint256)"(
+      spender: string,
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     withdraw(
+      _maxShares: BigNumberish,
+      _recipient: string,
+      _maxLoss: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "withdraw(uint256,address,uint256)"(
       _maxShares: BigNumberish,
       _recipient: string,
       _maxLoss: BigNumberish,
@@ -634,32 +972,34 @@ export class MockERC20YearnVault extends BaseContract {
 
   filters: {
     Approval(
-      owner?: string | null,
-      spender?: string | null,
-      value?: null
-    ): TypedEventFilter<
-      [string, string, BigNumber],
-      { owner: string; spender: string; value: BigNumber }
-    >;
+      owner: string | null,
+      spender: string | null,
+      value: null
+    ): EventFilter;
 
-    Transfer(
-      from?: string | null,
-      to?: string | null,
-      value?: null
-    ): TypedEventFilter<
-      [string, string, BigNumber],
-      { from: string; to: string; value: BigNumber }
-    >;
+    Transfer(from: string | null, to: string | null, value: null): EventFilter;
   };
 
   estimateGas: {
     DEGRADATION_COEFFICIENT(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "DEGRADATION_COEFFICIENT()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "DOMAIN_SEPARATOR()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     PERMIT_TYPEHASH(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "PERMIT_TYPEHASH()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     allowance(
+      arg0: string,
+      arg1: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "allowance(address,address)"(
       arg0: string,
       arg1: string,
       overrides?: CallOverrides
@@ -668,46 +1008,96 @@ export class MockERC20YearnVault extends BaseContract {
     approve(
       account: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
-    authorize(
+    "approve(address,uint256)"(
+      account: string,
+      amount: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    authorize(who: string, overrides?: Overrides): Promise<BigNumber>;
+
+    "authorize(address)"(
       who: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     authorized(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+    "authorized(address)"(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     balanceOf(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    deauthorize(
+    "balanceOf(address)"(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    deauthorize(who: string, overrides?: Overrides): Promise<BigNumber>;
+
+    "deauthorize(address)"(
       who: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     decimals(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "decimals()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     deposit(
       _amount: BigNumberish,
       _recipient: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "deposit(uint256,address)"(
+      _amount: BigNumberish,
+      _recipient: string,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     governance(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "governance()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     isAuthorized(who: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    "isAuthorized(address)"(
+      who: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     lastReport(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "lastReport()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     lockedProfit(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "lockedProfit()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     lockedProfitDegradation(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "lockedProfitDegradation()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     name(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "name()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     nonces(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+    "nonces(address)"(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     owner(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "owner()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     permit(
       owner: string,
@@ -717,56 +1107,107 @@ export class MockERC20YearnVault extends BaseContract {
       v: BigNumberish,
       r: BytesLike,
       s: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
+      owner: string,
+      spender: string,
+      value: BigNumberish,
+      deadline: BigNumberish,
+      v: BigNumberish,
+      r: BytesLike,
+      s: BytesLike,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     precisionFactor(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "precisionFactor()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     pricePerShare(overrides?: CallOverrides): Promise<BigNumber>;
 
-    report(
+    "pricePerShare()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    report(_deposit: BigNumberish, overrides?: Overrides): Promise<BigNumber>;
+
+    "report(uint256)"(
       _deposit: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     setDepositLimit(
       _limit: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
-    setOwner(
-      who: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+    "setDepositLimit(uint256)"(
+      _limit: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
+
+    setOwner(who: string, overrides?: Overrides): Promise<BigNumber>;
+
+    "setOwner(address)"(who: string, overrides?: Overrides): Promise<BigNumber>;
 
     symbol(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "symbol()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     token(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "token()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     totalAssets(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "totalAssets()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     totalShares(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "totalShares()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     transfer(
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "transfer(address,uint256)"(
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     transferFrom(
       spender: string,
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "transferFrom(address,address,uint256)"(
+      spender: string,
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     withdraw(
       _maxShares: BigNumberish,
       _recipient: string,
       _maxLoss: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "withdraw(uint256,address,uint256)"(
+      _maxShares: BigNumberish,
+      _recipient: string,
+      _maxLoss: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
   };
 
@@ -775,11 +1216,29 @@ export class MockERC20YearnVault extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "DEGRADATION_COEFFICIENT()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "DOMAIN_SEPARATOR()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     PERMIT_TYPEHASH(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "PERMIT_TYPEHASH()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     allowance(
+      arg0: string,
+      arg1: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "allowance(address,address)"(
       arg0: string,
       arg1: string,
       overrides?: CallOverrides
@@ -788,15 +1247,31 @@ export class MockERC20YearnVault extends BaseContract {
     approve(
       account: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "approve(address,uint256)"(
+      account: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     authorize(
       who: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "authorize(address)"(
+      who: string,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     authorized(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "authorized(address)"(
       arg0: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -806,42 +1281,84 @@ export class MockERC20YearnVault extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "balanceOf(address)"(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     deauthorize(
       who: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "deauthorize(address)"(
+      who: string,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     decimals(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "decimals()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     deposit(
       _amount: BigNumberish,
       _recipient: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "deposit(uint256,address)"(
+      _amount: BigNumberish,
+      _recipient: string,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     governance(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "governance()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     isAuthorized(
       who: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "isAuthorized(address)"(
+      who: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     lastReport(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "lastReport()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     lockedProfit(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "lockedProfit()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     lockedProfitDegradation(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "lockedProfitDegradation()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "name()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     nonces(
       arg0: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "nonces(address)"(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "owner()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     permit(
       owner: string,
@@ -851,56 +1368,115 @@ export class MockERC20YearnVault extends BaseContract {
       v: BigNumberish,
       r: BytesLike,
       s: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
+      owner: string,
+      spender: string,
+      value: BigNumberish,
+      deadline: BigNumberish,
+      v: BigNumberish,
+      r: BytesLike,
+      s: BytesLike,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     precisionFactor(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "precisionFactor()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     pricePerShare(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "pricePerShare()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     report(
       _deposit: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "report(uint256)"(
+      _deposit: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     setDepositLimit(
       _limit: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    setOwner(
+    "setDepositLimit(uint256)"(
+      _limit: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    setOwner(who: string, overrides?: Overrides): Promise<PopulatedTransaction>;
+
+    "setOwner(address)"(
       who: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "symbol()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     token(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "token()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     totalAssets(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "totalAssets()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     totalShares(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "totalShares()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "totalSupply()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     transfer(
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "transfer(address,uint256)"(
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     transferFrom(
       spender: string,
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "transferFrom(address,address,uint256)"(
+      spender: string,
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     withdraw(
       _maxShares: BigNumberish,
       _recipient: string,
       _maxLoss: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "withdraw(uint256,address,uint256)"(
+      _maxShares: BigNumberish,
+      _recipient: string,
+      _maxLoss: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
   };
 }

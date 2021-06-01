@@ -2,12 +2,23 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { Contract, Signer, utils } from "ethers";
+import { Contract, Signer } from "ethers";
 import { Provider } from "@ethersproject/providers";
-import type {
-  BaseMinimalSwapInfoPool,
-  BaseMinimalSwapInfoPoolInterface,
-} from "../BaseMinimalSwapInfoPool";
+
+import type { BaseMinimalSwapInfoPool } from "../BaseMinimalSwapInfoPool";
+
+export class BaseMinimalSwapInfoPool__factory {
+  static connect(
+    address: string,
+    signerOrProvider: Signer | Provider
+  ): BaseMinimalSwapInfoPool {
+    return new Contract(
+      address,
+      _abi,
+      signerOrProvider
+    ) as BaseMinimalSwapInfoPool;
+  }
+}
 
 const _abi = [
   {
@@ -807,20 +818,3 @@ const _abi = [
     type: "function",
   },
 ];
-
-export class BaseMinimalSwapInfoPool__factory {
-  static readonly abi = _abi;
-  static createInterface(): BaseMinimalSwapInfoPoolInterface {
-    return new utils.Interface(_abi) as BaseMinimalSwapInfoPoolInterface;
-  }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): BaseMinimalSwapInfoPool {
-    return new Contract(
-      address,
-      _abi,
-      signerOrProvider
-    ) as BaseMinimalSwapInfoPool;
-  }
-}

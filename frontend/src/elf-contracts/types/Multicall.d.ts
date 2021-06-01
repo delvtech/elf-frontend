@@ -9,15 +9,16 @@ import {
   BigNumber,
   BigNumberish,
   PopulatedTransaction,
-  BaseContract,
+} from "ethers";
+import {
+  Contract,
   ContractTransaction,
   Overrides,
   CallOverrides,
-} from "ethers";
+} from "@ethersproject/contracts";
 import { BytesLike } from "@ethersproject/bytes";
 import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
-import { TypedEventFilter, TypedEvent, TypedListener } from "./commons";
 
 interface MulticallInterface extends ethers.utils.Interface {
   functions: {
@@ -97,56 +98,36 @@ interface MulticallInterface extends ethers.utils.Interface {
   events: {};
 }
 
-export class Multicall extends BaseContract {
+export class Multicall extends Contract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  listeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): Array<TypedListener<EventArgsArray, EventArgsObject>>;
-  off<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  on<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  once<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeListener<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): this;
-
-  listeners(eventName?: string): Array<Listener>;
-  off(eventName: string, listener: Listener): this;
-  on(eventName: string, listener: Listener): this;
-  once(eventName: string, listener: Listener): this;
-  removeListener(eventName: string, listener: Listener): this;
-  removeAllListeners(eventName?: string): this;
-
-  queryFilter<EventArgsArray extends Array<any>, EventArgsObject>(
-    event: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
-  ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
+  on(event: EventFilter | string, listener: Listener): this;
+  once(event: EventFilter | string, listener: Listener): this;
+  addListener(eventName: EventFilter | string, listener: Listener): this;
+  removeAllListeners(eventName: EventFilter | string): this;
+  removeListener(eventName: any, listener: Listener): this;
 
   interface: MulticallInterface;
 
   functions: {
     aggregate(
       calls: { target: string; callData: BytesLike }[],
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "aggregate(tuple[])"(
+      calls: { target: string; callData: BytesLike }[],
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     getBlockHash(
+      blockNumber: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[string] & { blockHash: string }>;
+
+    "getBlockHash(uint256)"(
       blockNumber: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[string] & { blockHash: string }>;
@@ -155,7 +136,15 @@ export class Multicall extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[string] & { coinbase: string }>;
 
+    "getCurrentBlockCoinbase()"(
+      overrides?: CallOverrides
+    ): Promise<[string] & { coinbase: string }>;
+
     getCurrentBlockDifficulty(
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { difficulty: BigNumber }>;
+
+    "getCurrentBlockDifficulty()"(
       overrides?: CallOverrides
     ): Promise<[BigNumber] & { difficulty: BigNumber }>;
 
@@ -163,7 +152,15 @@ export class Multicall extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber] & { gaslimit: BigNumber }>;
 
+    "getCurrentBlockGasLimit()"(
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { gaslimit: BigNumber }>;
+
     getCurrentBlockTimestamp(
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { timestamp: BigNumber }>;
+
+    "getCurrentBlockTimestamp()"(
       overrides?: CallOverrides
     ): Promise<[BigNumber] & { timestamp: BigNumber }>;
 
@@ -172,14 +169,28 @@ export class Multicall extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber] & { balance: BigNumber }>;
 
+    "getEthBalance(address)"(
+      addr: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { balance: BigNumber }>;
+
     getLastBlockHash(
+      overrides?: CallOverrides
+    ): Promise<[string] & { blockHash: string }>;
+
+    "getLastBlockHash()"(
       overrides?: CallOverrides
     ): Promise<[string] & { blockHash: string }>;
   };
 
   aggregate(
     calls: { target: string; callData: BytesLike }[],
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "aggregate(tuple[])"(
+    calls: { target: string; callData: BytesLike }[],
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   getBlockHash(
@@ -187,20 +198,47 @@ export class Multicall extends BaseContract {
     overrides?: CallOverrides
   ): Promise<string>;
 
+  "getBlockHash(uint256)"(
+    blockNumber: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
   getCurrentBlockCoinbase(overrides?: CallOverrides): Promise<string>;
+
+  "getCurrentBlockCoinbase()"(overrides?: CallOverrides): Promise<string>;
 
   getCurrentBlockDifficulty(overrides?: CallOverrides): Promise<BigNumber>;
 
+  "getCurrentBlockDifficulty()"(overrides?: CallOverrides): Promise<BigNumber>;
+
   getCurrentBlockGasLimit(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "getCurrentBlockGasLimit()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   getCurrentBlockTimestamp(overrides?: CallOverrides): Promise<BigNumber>;
 
+  "getCurrentBlockTimestamp()"(overrides?: CallOverrides): Promise<BigNumber>;
+
   getEthBalance(addr: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+  "getEthBalance(address)"(
+    addr: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   getLastBlockHash(overrides?: CallOverrides): Promise<string>;
 
+  "getLastBlockHash()"(overrides?: CallOverrides): Promise<string>;
+
   callStatic: {
     aggregate(
+      calls: { target: string; callData: BytesLike }[],
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, string[]] & { blockNumber: BigNumber; returnData: string[] }
+    >;
+
+    "aggregate(tuple[])"(
       calls: { target: string; callData: BytesLike }[],
       overrides?: CallOverrides
     ): Promise<
@@ -212,17 +250,39 @@ export class Multicall extends BaseContract {
       overrides?: CallOverrides
     ): Promise<string>;
 
+    "getBlockHash(uint256)"(
+      blockNumber: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
     getCurrentBlockCoinbase(overrides?: CallOverrides): Promise<string>;
+
+    "getCurrentBlockCoinbase()"(overrides?: CallOverrides): Promise<string>;
 
     getCurrentBlockDifficulty(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "getCurrentBlockDifficulty()"(
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     getCurrentBlockGasLimit(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "getCurrentBlockGasLimit()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     getCurrentBlockTimestamp(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "getCurrentBlockTimestamp()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     getEthBalance(addr: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+    "getEthBalance(address)"(
+      addr: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     getLastBlockHash(overrides?: CallOverrides): Promise<string>;
+
+    "getLastBlockHash()"(overrides?: CallOverrides): Promise<string>;
   };
 
   filters: {};
@@ -230,7 +290,12 @@ export class Multicall extends BaseContract {
   estimateGas: {
     aggregate(
       calls: { target: string; callData: BytesLike }[],
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "aggregate(tuple[])"(
+      calls: { target: string; callData: BytesLike }[],
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     getBlockHash(
@@ -238,26 +303,58 @@ export class Multicall extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    "getBlockHash(uint256)"(
+      blockNumber: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     getCurrentBlockCoinbase(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "getCurrentBlockCoinbase()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     getCurrentBlockDifficulty(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "getCurrentBlockDifficulty()"(
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     getCurrentBlockGasLimit(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "getCurrentBlockGasLimit()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     getCurrentBlockTimestamp(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "getCurrentBlockTimestamp()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     getEthBalance(addr: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+    "getEthBalance(address)"(
+      addr: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     getLastBlockHash(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "getLastBlockHash()"(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
     aggregate(
       calls: { target: string; callData: BytesLike }[],
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "aggregate(tuple[])"(
+      calls: { target: string; callData: BytesLike }[],
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     getBlockHash(
+      blockNumber: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "getBlockHash(uint256)"(
       blockNumber: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -266,7 +363,15 @@ export class Multicall extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "getCurrentBlockCoinbase()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     getCurrentBlockDifficulty(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "getCurrentBlockDifficulty()"(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -274,7 +379,15 @@ export class Multicall extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "getCurrentBlockGasLimit()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     getCurrentBlockTimestamp(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "getCurrentBlockTimestamp()"(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -283,6 +396,15 @@ export class Multicall extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "getEthBalance(address)"(
+      addr: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     getLastBlockHash(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "getLastBlockHash()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
   };
 }

@@ -9,15 +9,16 @@ import {
   BigNumber,
   BigNumberish,
   PopulatedTransaction,
-  BaseContract,
+} from "ethers";
+import {
+  Contract,
   ContractTransaction,
   Overrides,
   CallOverrides,
-} from "ethers";
+} from "@ethersproject/contracts";
 import { BytesLike } from "@ethersproject/bytes";
 import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
-import { TypedEventFilter, TypedEvent, TypedListener } from "./commons";
 
 interface TestTokenInterface extends ethers.utils.Interface {
   functions: {
@@ -193,55 +194,35 @@ interface TestTokenInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
 }
 
-export class TestToken extends BaseContract {
+export class TestToken extends Contract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  listeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): Array<TypedListener<EventArgsArray, EventArgsObject>>;
-  off<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  on<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  once<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeListener<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): this;
-
-  listeners(eventName?: string): Array<Listener>;
-  off(eventName: string, listener: Listener): this;
-  on(eventName: string, listener: Listener): this;
-  once(eventName: string, listener: Listener): this;
-  removeListener(eventName: string, listener: Listener): this;
-  removeAllListeners(eventName?: string): this;
-
-  queryFilter<EventArgsArray extends Array<any>, EventArgsObject>(
-    event: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
-  ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
+  on(event: EventFilter | string, listener: Listener): this;
+  once(event: EventFilter | string, listener: Listener): this;
+  addListener(eventName: EventFilter | string, listener: Listener): this;
+  removeAllListeners(eventName: EventFilter | string): this;
+  removeListener(eventName: any, listener: Listener): this;
 
   interface: TestTokenInterface;
 
   functions: {
     DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<[string]>;
 
+    "DEFAULT_ADMIN_ROLE()"(overrides?: CallOverrides): Promise<[string]>;
+
     MINTER_ROLE(overrides?: CallOverrides): Promise<[string]>;
 
+    "MINTER_ROLE()"(overrides?: CallOverrides): Promise<[string]>;
+
     allowance(
+      owner: string,
+      spender: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    "allowance(address,address)"(
       owner: string,
       spender: string,
       overrides?: CallOverrides
@@ -250,33 +231,74 @@ export class TestToken extends BaseContract {
     approve(
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "approve(address,uint256)"(
+      spender: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     balanceOf(account: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    "balanceOf(address)"(
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
     burn(
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "burn(uint256)"(
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     burnFrom(
       account: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "burnFrom(address,uint256)"(
+      account: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     decimals(overrides?: CallOverrides): Promise<[number]>;
 
+    "decimals()"(overrides?: CallOverrides): Promise<[number]>;
+
     decreaseAllowance(
       spender: string,
       subtractedValue: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "decreaseAllowance(address,uint256)"(
+      spender: string,
+      subtractedValue: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<[string]>;
 
+    "getRoleAdmin(bytes32)"(
+      role: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
     getRoleMember(
+      role: BytesLike,
+      index: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
+    "getRoleMember(bytes32,uint256)"(
       role: BytesLike,
       index: BigNumberish,
       overrides?: CallOverrides
@@ -287,10 +309,21 @@ export class TestToken extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
+    "getRoleMemberCount(bytes32)"(
+      role: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
     grantRole(
       role: BytesLike,
       account: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "grantRole(bytes32,address)"(
+      role: BytesLike,
+      account: string,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     hasRole(
@@ -299,55 +332,114 @@ export class TestToken extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
+    "hasRole(bytes32,address)"(
+      role: BytesLike,
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "increaseAllowance(address,uint256)"(
+      spender: string,
+      addedValue: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     mint(
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "mint(address,uint256)"(
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     name(overrides?: CallOverrides): Promise<[string]>;
 
+    "name()"(overrides?: CallOverrides): Promise<[string]>;
+
     renounceRole(
       role: BytesLike,
       account: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "renounceRole(bytes32,address)"(
+      role: BytesLike,
+      account: string,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     revokeRole(
       role: BytesLike,
       account: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "revokeRole(bytes32,address)"(
+      role: BytesLike,
+      account: string,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     symbol(overrides?: CallOverrides): Promise<[string]>;
 
+    "symbol()"(overrides?: CallOverrides): Promise<[string]>;
+
     totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "totalSupply()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     transfer(
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "transfer(address,uint256)"(
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     transferFrom(
       sender: string,
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "transferFrom(address,address,uint256)"(
+      sender: string,
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
   };
 
   DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
 
+  "DEFAULT_ADMIN_ROLE()"(overrides?: CallOverrides): Promise<string>;
+
   MINTER_ROLE(overrides?: CallOverrides): Promise<string>;
 
+  "MINTER_ROLE()"(overrides?: CallOverrides): Promise<string>;
+
   allowance(
+    owner: string,
+    spender: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  "allowance(address,address)"(
     owner: string,
     spender: string,
     overrides?: CallOverrides
@@ -356,33 +448,74 @@ export class TestToken extends BaseContract {
   approve(
     spender: string,
     amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "approve(address,uint256)"(
+    spender: string,
+    amount: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+  "balanceOf(address)"(
+    account: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   burn(
     amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "burn(uint256)"(
+    amount: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   burnFrom(
     account: string,
     amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "burnFrom(address,uint256)"(
+    account: string,
+    amount: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   decimals(overrides?: CallOverrides): Promise<number>;
 
+  "decimals()"(overrides?: CallOverrides): Promise<number>;
+
   decreaseAllowance(
     spender: string,
     subtractedValue: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "decreaseAllowance(address,uint256)"(
+    spender: string,
+    subtractedValue: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<string>;
 
+  "getRoleAdmin(bytes32)"(
+    role: BytesLike,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
   getRoleMember(
+    role: BytesLike,
+    index: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
+  "getRoleMember(bytes32,uint256)"(
     role: BytesLike,
     index: BigNumberish,
     overrides?: CallOverrides
@@ -393,10 +526,21 @@ export class TestToken extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  "getRoleMemberCount(bytes32)"(
+    role: BytesLike,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   grantRole(
     role: BytesLike,
     account: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "grantRole(bytes32,address)"(
+    role: BytesLike,
+    account: string,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   hasRole(
@@ -405,55 +549,114 @@ export class TestToken extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
+  "hasRole(bytes32,address)"(
+    role: BytesLike,
+    account: string,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
   increaseAllowance(
     spender: string,
     addedValue: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "increaseAllowance(address,uint256)"(
+    spender: string,
+    addedValue: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   mint(
     recipient: string,
     amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "mint(address,uint256)"(
+    recipient: string,
+    amount: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   name(overrides?: CallOverrides): Promise<string>;
 
+  "name()"(overrides?: CallOverrides): Promise<string>;
+
   renounceRole(
     role: BytesLike,
     account: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "renounceRole(bytes32,address)"(
+    role: BytesLike,
+    account: string,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   revokeRole(
     role: BytesLike,
     account: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "revokeRole(bytes32,address)"(
+    role: BytesLike,
+    account: string,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   symbol(overrides?: CallOverrides): Promise<string>;
 
+  "symbol()"(overrides?: CallOverrides): Promise<string>;
+
   totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   transfer(
     recipient: string,
     amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "transfer(address,uint256)"(
+    recipient: string,
+    amount: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   transferFrom(
     sender: string,
     recipient: string,
     amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "transferFrom(address,address,uint256)"(
+    sender: string,
+    recipient: string,
+    amount: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   callStatic: {
     DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
 
+    "DEFAULT_ADMIN_ROLE()"(overrides?: CallOverrides): Promise<string>;
+
     MINTER_ROLE(overrides?: CallOverrides): Promise<string>;
 
+    "MINTER_ROLE()"(overrides?: CallOverrides): Promise<string>;
+
     allowance(
+      owner: string,
+      spender: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "allowance(address,address)"(
       owner: string,
       spender: string,
       overrides?: CallOverrides
@@ -465,9 +668,25 @@ export class TestToken extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    "approve(address,uint256)"(
+      spender: string,
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+    "balanceOf(address)"(
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     burn(amount: BigNumberish, overrides?: CallOverrides): Promise<void>;
+
+    "burn(uint256)"(
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     burnFrom(
       account: string,
@@ -475,7 +694,15 @@ export class TestToken extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    "burnFrom(address,uint256)"(
+      account: string,
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     decimals(overrides?: CallOverrides): Promise<number>;
+
+    "decimals()"(overrides?: CallOverrides): Promise<number>;
 
     decreaseAllowance(
       spender: string,
@@ -483,9 +710,26 @@ export class TestToken extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    "decreaseAllowance(address,uint256)"(
+      spender: string,
+      subtractedValue: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<string>;
 
+    "getRoleAdmin(bytes32)"(
+      role: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
     getRoleMember(
+      role: BytesLike,
+      index: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    "getRoleMember(bytes32,uint256)"(
       role: BytesLike,
       index: BigNumberish,
       overrides?: CallOverrides
@@ -496,7 +740,18 @@ export class TestToken extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    "getRoleMemberCount(bytes32)"(
+      role: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     grantRole(
+      role: BytesLike,
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "grantRole(bytes32,address)"(
       role: BytesLike,
       account: string,
       overrides?: CallOverrides
@@ -508,7 +763,19 @@ export class TestToken extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    "hasRole(bytes32,address)"(
+      role: BytesLike,
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     increaseAllowance(
+      spender: string,
+      addedValue: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    "increaseAllowance(address,uint256)"(
       spender: string,
       addedValue: BigNumberish,
       overrides?: CallOverrides
@@ -520,9 +787,23 @@ export class TestToken extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    "mint(address,uint256)"(
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     name(overrides?: CallOverrides): Promise<string>;
 
+    "name()"(overrides?: CallOverrides): Promise<string>;
+
     renounceRole(
+      role: BytesLike,
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "renounceRole(bytes32,address)"(
       role: BytesLike,
       account: string,
       overrides?: CallOverrides
@@ -534,9 +815,19 @@ export class TestToken extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    "revokeRole(bytes32,address)"(
+      role: BytesLike,
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     symbol(overrides?: CallOverrides): Promise<string>;
 
+    "symbol()"(overrides?: CallOverrides): Promise<string>;
+
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     transfer(
       recipient: string,
@@ -544,7 +835,20 @@ export class TestToken extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    "transfer(address,uint256)"(
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     transferFrom(
+      sender: string,
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    "transferFrom(address,address,uint256)"(
       sender: string,
       recipient: string,
       amount: BigNumberish,
@@ -554,57 +858,48 @@ export class TestToken extends BaseContract {
 
   filters: {
     Approval(
-      owner?: string | null,
-      spender?: string | null,
-      value?: null
-    ): TypedEventFilter<
-      [string, string, BigNumber],
-      { owner: string; spender: string; value: BigNumber }
-    >;
+      owner: string | null,
+      spender: string | null,
+      value: null
+    ): EventFilter;
 
     RoleAdminChanged(
-      role?: BytesLike | null,
-      previousAdminRole?: BytesLike | null,
-      newAdminRole?: BytesLike | null
-    ): TypedEventFilter<
-      [string, string, string],
-      { role: string; previousAdminRole: string; newAdminRole: string }
-    >;
+      role: BytesLike | null,
+      previousAdminRole: BytesLike | null,
+      newAdminRole: BytesLike | null
+    ): EventFilter;
 
     RoleGranted(
-      role?: BytesLike | null,
-      account?: string | null,
-      sender?: string | null
-    ): TypedEventFilter<
-      [string, string, string],
-      { role: string; account: string; sender: string }
-    >;
+      role: BytesLike | null,
+      account: string | null,
+      sender: string | null
+    ): EventFilter;
 
     RoleRevoked(
-      role?: BytesLike | null,
-      account?: string | null,
-      sender?: string | null
-    ): TypedEventFilter<
-      [string, string, string],
-      { role: string; account: string; sender: string }
-    >;
+      role: BytesLike | null,
+      account: string | null,
+      sender: string | null
+    ): EventFilter;
 
-    Transfer(
-      from?: string | null,
-      to?: string | null,
-      value?: null
-    ): TypedEventFilter<
-      [string, string, BigNumber],
-      { from: string; to: string; value: BigNumber }
-    >;
+    Transfer(from: string | null, to: string | null, value: null): EventFilter;
   };
 
   estimateGas: {
     DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "DEFAULT_ADMIN_ROLE()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     MINTER_ROLE(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "MINTER_ROLE()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     allowance(
+      owner: string,
+      spender: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "allowance(address,address)"(
       owner: string,
       spender: string,
       overrides?: CallOverrides
@@ -613,31 +908,63 @@ export class TestToken extends BaseContract {
     approve(
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "approve(address,uint256)"(
+      spender: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    burn(
+    "balanceOf(address)"(
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    burn(amount: BigNumberish, overrides?: Overrides): Promise<BigNumber>;
+
+    "burn(uint256)"(
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     burnFrom(
       account: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "burnFrom(address,uint256)"(
+      account: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     decimals(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "decimals()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     decreaseAllowance(
       spender: string,
       subtractedValue: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "decreaseAllowance(address,uint256)"(
+      spender: string,
+      subtractedValue: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     getRoleAdmin(
+      role: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "getRoleAdmin(bytes32)"(
       role: BytesLike,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -648,7 +975,18 @@ export class TestToken extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    "getRoleMember(bytes32,uint256)"(
+      role: BytesLike,
+      index: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     getRoleMemberCount(
+      role: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "getRoleMemberCount(bytes32)"(
       role: BytesLike,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -656,7 +994,13 @@ export class TestToken extends BaseContract {
     grantRole(
       role: BytesLike,
       account: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "grantRole(bytes32,address)"(
+      role: BytesLike,
+      account: string,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     hasRole(
@@ -665,47 +1009,96 @@ export class TestToken extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    "hasRole(bytes32,address)"(
+      role: BytesLike,
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "increaseAllowance(address,uint256)"(
+      spender: string,
+      addedValue: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     mint(
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "mint(address,uint256)"(
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "name()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     renounceRole(
       role: BytesLike,
       account: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "renounceRole(bytes32,address)"(
+      role: BytesLike,
+      account: string,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     revokeRole(
       role: BytesLike,
       account: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "revokeRole(bytes32,address)"(
+      role: BytesLike,
+      account: string,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     symbol(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "symbol()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     transfer(
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "transfer(address,uint256)"(
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     transferFrom(
       sender: string,
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "transferFrom(address,address,uint256)"(
+      sender: string,
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
   };
 
@@ -714,9 +1107,21 @@ export class TestToken extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "DEFAULT_ADMIN_ROLE()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     MINTER_ROLE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "MINTER_ROLE()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     allowance(
+      owner: string,
+      spender: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "allowance(address,address)"(
       owner: string,
       spender: string,
       overrides?: CallOverrides
@@ -725,7 +1130,13 @@ export class TestToken extends BaseContract {
     approve(
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "approve(address,uint256)"(
+      spender: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     balanceOf(
@@ -733,26 +1144,55 @@ export class TestToken extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "balanceOf(address)"(
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     burn(
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "burn(uint256)"(
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     burnFrom(
       account: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "burnFrom(address,uint256)"(
+      account: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     decimals(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "decimals()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     decreaseAllowance(
       spender: string,
       subtractedValue: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "decreaseAllowance(address,uint256)"(
+      spender: string,
+      subtractedValue: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     getRoleAdmin(
+      role: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "getRoleAdmin(bytes32)"(
       role: BytesLike,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -763,7 +1203,18 @@ export class TestToken extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "getRoleMember(bytes32,uint256)"(
+      role: BytesLike,
+      index: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     getRoleMemberCount(
+      role: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "getRoleMemberCount(bytes32)"(
       role: BytesLike,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -771,7 +1222,13 @@ export class TestToken extends BaseContract {
     grantRole(
       role: BytesLike,
       account: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "grantRole(bytes32,address)"(
+      role: BytesLike,
+      account: string,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     hasRole(
@@ -780,47 +1237,96 @@ export class TestToken extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "hasRole(bytes32,address)"(
+      role: BytesLike,
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "increaseAllowance(address,uint256)"(
+      spender: string,
+      addedValue: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     mint(
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "mint(address,uint256)"(
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "name()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     renounceRole(
       role: BytesLike,
       account: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "renounceRole(bytes32,address)"(
+      role: BytesLike,
+      account: string,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     revokeRole(
       role: BytesLike,
       account: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "revokeRole(bytes32,address)"(
+      role: BytesLike,
+      account: string,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "symbol()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "totalSupply()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     transfer(
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "transfer(address,uint256)"(
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     transferFrom(
       sender: string,
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "transferFrom(address,address,uint256)"(
+      sender: string,
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
   };
 }

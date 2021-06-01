@@ -9,15 +9,16 @@ import {
   BigNumber,
   BigNumberish,
   PopulatedTransaction,
-  BaseContract,
+} from "ethers";
+import {
+  Contract,
   ContractTransaction,
   Overrides,
   CallOverrides,
-} from "ethers";
+} from "@ethersproject/contracts";
 import { BytesLike } from "@ethersproject/bytes";
 import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
-import { TypedEventFilter, TypedEvent, TypedListener } from "./commons";
 
 interface StablePoolInterface extends ethers.utils.Interface {
   functions: {
@@ -276,53 +277,31 @@ interface StablePoolInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
 }
 
-export class StablePool extends BaseContract {
+export class StablePool extends Contract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  listeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): Array<TypedListener<EventArgsArray, EventArgsObject>>;
-  off<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  on<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  once<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeListener<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): this;
-
-  listeners(eventName?: string): Array<Listener>;
-  off(eventName: string, listener: Listener): this;
-  on(eventName: string, listener: Listener): this;
-  once(eventName: string, listener: Listener): this;
-  removeListener(eventName: string, listener: Listener): this;
-  removeAllListeners(eventName?: string): this;
-
-  queryFilter<EventArgsArray extends Array<any>, EventArgsObject>(
-    event: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
-  ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
+  on(event: EventFilter | string, listener: Listener): this;
+  once(event: EventFilter | string, listener: Listener): this;
+  addListener(eventName: EventFilter | string, listener: Listener): this;
+  removeAllListeners(eventName: EventFilter | string): this;
+  removeListener(eventName: any, listener: Listener): this;
 
   interface: StablePoolInterface;
 
   functions: {
     DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<[string]>;
 
+    "DOMAIN_SEPARATOR()"(overrides?: CallOverrides): Promise<[string]>;
+
     allowance(
+      owner: string,
+      spender: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    "allowance(address,address)"(
       owner: string,
       spender: string,
       overrides?: CallOverrides
@@ -331,17 +310,36 @@ export class StablePool extends BaseContract {
     approve(
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "approve(address,uint256)"(
+      spender: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     balanceOf(account: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    "balanceOf(address)"(
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
     decimals(overrides?: CallOverrides): Promise<[number]>;
+
+    "decimals()"(overrides?: CallOverrides): Promise<[number]>;
 
     decreaseApproval(
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "decreaseApproval(address,uint256)"(
+      spender: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     getActionId(
@@ -349,11 +347,24 @@ export class StablePool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[string]>;
 
+    "getActionId(bytes4)"(
+      selector: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
     getAmplificationParameter(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "getAmplificationParameter()"(
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
     getAuthorizer(overrides?: CallOverrides): Promise<[string]>;
 
+    "getAuthorizer()"(overrides?: CallOverrides): Promise<[string]>;
+
     getOwner(overrides?: CallOverrides): Promise<[string]>;
+
+    "getOwner()"(overrides?: CallOverrides): Promise<[string]>;
 
     getPausedState(
       overrides?: CallOverrides
@@ -365,23 +376,54 @@ export class StablePool extends BaseContract {
       }
     >;
 
+    "getPausedState()"(
+      overrides?: CallOverrides
+    ): Promise<
+      [boolean, BigNumber, BigNumber] & {
+        paused: boolean;
+        pauseWindowEndTime: BigNumber;
+        bufferPeriodEndTime: BigNumber;
+      }
+    >;
+
     getPoolId(overrides?: CallOverrides): Promise<[string]>;
+
+    "getPoolId()"(overrides?: CallOverrides): Promise<[string]>;
 
     getRate(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    "getRate()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     getSwapFeePercentage(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    "getSwapFeePercentage()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     getVault(overrides?: CallOverrides): Promise<[string]>;
+
+    "getVault()"(overrides?: CallOverrides): Promise<[string]>;
 
     increaseApproval(
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "increaseApproval(address,uint256)"(
+      spender: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     name(overrides?: CallOverrides): Promise<[string]>;
 
+    "name()"(overrides?: CallOverrides): Promise<[string]>;
+
     nonces(owner: string, overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "nonces(address)"(
+      owner: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
     onExitPool(
       poolId: BytesLike,
@@ -391,7 +433,18 @@ export class StablePool extends BaseContract {
       lastChangeBlock: BigNumberish,
       protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "onExitPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
+      poolId: BytesLike,
+      sender: string,
+      recipient: string,
+      balances: BigNumberish[],
+      lastChangeBlock: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
+      userData: BytesLike,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     onJoinPool(
@@ -402,10 +455,39 @@ export class StablePool extends BaseContract {
       lastChangeBlock: BigNumberish,
       protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "onJoinPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
+      poolId: BytesLike,
+      sender: string,
+      recipient: string,
+      balances: BigNumberish[],
+      lastChangeBlock: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
+      userData: BytesLike,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     onSwap(
+      swapRequest: {
+        kind: BigNumberish;
+        tokenIn: string;
+        tokenOut: string;
+        amount: BigNumberish;
+        poolId: BytesLike;
+        lastChangeBlock: BigNumberish;
+        from: string;
+        to: string;
+        userData: BytesLike;
+      },
+      balances: BigNumberish[],
+      indexIn: BigNumberish,
+      indexOut: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    "onSwap(tuple,uint256[],uint256,uint256)"(
       swapRequest: {
         kind: BigNumberish;
         tokenIn: string;
@@ -431,7 +513,18 @@ export class StablePool extends BaseContract {
       v: BigNumberish,
       r: BytesLike,
       s: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
+      owner: string,
+      spender: string,
+      value: BigNumberish,
+      deadline: BigNumberish,
+      v: BigNumberish,
+      r: BytesLike,
+      s: BytesLike,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     queryExit(
@@ -442,7 +535,18 @@ export class StablePool extends BaseContract {
       lastChangeBlock: BigNumberish,
       protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "queryExit(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
+      poolId: BytesLike,
+      sender: string,
+      recipient: string,
+      balances: BigNumberish[],
+      lastChangeBlock: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
+      userData: BytesLike,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     queryJoin(
@@ -453,40 +557,86 @@ export class StablePool extends BaseContract {
       lastChangeBlock: BigNumberish,
       protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "queryJoin(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
+      poolId: BytesLike,
+      sender: string,
+      recipient: string,
+      balances: BigNumberish[],
+      lastChangeBlock: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
+      userData: BytesLike,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     setPaused(
       paused: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "setPaused(bool)"(
+      paused: boolean,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     setSwapFeePercentage(
       swapFeePercentage: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "setSwapFeePercentage(uint256)"(
+      swapFeePercentage: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     symbol(overrides?: CallOverrides): Promise<[string]>;
 
+    "symbol()"(overrides?: CallOverrides): Promise<[string]>;
+
     totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "totalSupply()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     transfer(
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "transfer(address,uint256)"(
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     transferFrom(
       sender: string,
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "transferFrom(address,address,uint256)"(
+      sender: string,
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
   };
 
   DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<string>;
 
+  "DOMAIN_SEPARATOR()"(overrides?: CallOverrides): Promise<string>;
+
   allowance(
+    owner: string,
+    spender: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  "allowance(address,address)"(
     owner: string,
     spender: string,
     overrides?: CallOverrides
@@ -495,26 +645,56 @@ export class StablePool extends BaseContract {
   approve(
     spender: string,
     amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "approve(address,uint256)"(
+    spender: string,
+    amount: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+  "balanceOf(address)"(
+    account: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   decimals(overrides?: CallOverrides): Promise<number>;
+
+  "decimals()"(overrides?: CallOverrides): Promise<number>;
 
   decreaseApproval(
     spender: string,
     amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "decreaseApproval(address,uint256)"(
+    spender: string,
+    amount: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   getActionId(selector: BytesLike, overrides?: CallOverrides): Promise<string>;
 
+  "getActionId(bytes4)"(
+    selector: BytesLike,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
   getAmplificationParameter(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "getAmplificationParameter()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   getAuthorizer(overrides?: CallOverrides): Promise<string>;
 
+  "getAuthorizer()"(overrides?: CallOverrides): Promise<string>;
+
   getOwner(overrides?: CallOverrides): Promise<string>;
+
+  "getOwner()"(overrides?: CallOverrides): Promise<string>;
 
   getPausedState(
     overrides?: CallOverrides
@@ -526,23 +706,54 @@ export class StablePool extends BaseContract {
     }
   >;
 
+  "getPausedState()"(
+    overrides?: CallOverrides
+  ): Promise<
+    [boolean, BigNumber, BigNumber] & {
+      paused: boolean;
+      pauseWindowEndTime: BigNumber;
+      bufferPeriodEndTime: BigNumber;
+    }
+  >;
+
   getPoolId(overrides?: CallOverrides): Promise<string>;
+
+  "getPoolId()"(overrides?: CallOverrides): Promise<string>;
 
   getRate(overrides?: CallOverrides): Promise<BigNumber>;
 
+  "getRate()"(overrides?: CallOverrides): Promise<BigNumber>;
+
   getSwapFeePercentage(overrides?: CallOverrides): Promise<BigNumber>;
 
+  "getSwapFeePercentage()"(overrides?: CallOverrides): Promise<BigNumber>;
+
   getVault(overrides?: CallOverrides): Promise<string>;
+
+  "getVault()"(overrides?: CallOverrides): Promise<string>;
 
   increaseApproval(
     spender: string,
     amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "increaseApproval(address,uint256)"(
+    spender: string,
+    amount: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   name(overrides?: CallOverrides): Promise<string>;
 
+  "name()"(overrides?: CallOverrides): Promise<string>;
+
   nonces(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+  "nonces(address)"(
+    owner: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   onExitPool(
     poolId: BytesLike,
@@ -552,7 +763,18 @@ export class StablePool extends BaseContract {
     lastChangeBlock: BigNumberish,
     protocolSwapFeePercentage: BigNumberish,
     userData: BytesLike,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "onExitPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
+    poolId: BytesLike,
+    sender: string,
+    recipient: string,
+    balances: BigNumberish[],
+    lastChangeBlock: BigNumberish,
+    protocolSwapFeePercentage: BigNumberish,
+    userData: BytesLike,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   onJoinPool(
@@ -563,10 +785,39 @@ export class StablePool extends BaseContract {
     lastChangeBlock: BigNumberish,
     protocolSwapFeePercentage: BigNumberish,
     userData: BytesLike,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "onJoinPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
+    poolId: BytesLike,
+    sender: string,
+    recipient: string,
+    balances: BigNumberish[],
+    lastChangeBlock: BigNumberish,
+    protocolSwapFeePercentage: BigNumberish,
+    userData: BytesLike,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   onSwap(
+    swapRequest: {
+      kind: BigNumberish;
+      tokenIn: string;
+      tokenOut: string;
+      amount: BigNumberish;
+      poolId: BytesLike;
+      lastChangeBlock: BigNumberish;
+      from: string;
+      to: string;
+      userData: BytesLike;
+    },
+    balances: BigNumberish[],
+    indexIn: BigNumberish,
+    indexOut: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  "onSwap(tuple,uint256[],uint256,uint256)"(
     swapRequest: {
       kind: BigNumberish;
       tokenIn: string;
@@ -592,7 +843,18 @@ export class StablePool extends BaseContract {
     v: BigNumberish,
     r: BytesLike,
     s: BytesLike,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
+    owner: string,
+    spender: string,
+    value: BigNumberish,
+    deadline: BigNumberish,
+    v: BigNumberish,
+    r: BytesLike,
+    s: BytesLike,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   queryExit(
@@ -603,7 +865,18 @@ export class StablePool extends BaseContract {
     lastChangeBlock: BigNumberish,
     protocolSwapFeePercentage: BigNumberish,
     userData: BytesLike,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "queryExit(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
+    poolId: BytesLike,
+    sender: string,
+    recipient: string,
+    balances: BigNumberish[],
+    lastChangeBlock: BigNumberish,
+    protocolSwapFeePercentage: BigNumberish,
+    userData: BytesLike,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   queryJoin(
@@ -614,40 +887,86 @@ export class StablePool extends BaseContract {
     lastChangeBlock: BigNumberish,
     protocolSwapFeePercentage: BigNumberish,
     userData: BytesLike,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "queryJoin(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
+    poolId: BytesLike,
+    sender: string,
+    recipient: string,
+    balances: BigNumberish[],
+    lastChangeBlock: BigNumberish,
+    protocolSwapFeePercentage: BigNumberish,
+    userData: BytesLike,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   setPaused(
     paused: boolean,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "setPaused(bool)"(
+    paused: boolean,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   setSwapFeePercentage(
     swapFeePercentage: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "setSwapFeePercentage(uint256)"(
+    swapFeePercentage: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   symbol(overrides?: CallOverrides): Promise<string>;
 
+  "symbol()"(overrides?: CallOverrides): Promise<string>;
+
   totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   transfer(
     recipient: string,
     amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "transfer(address,uint256)"(
+    recipient: string,
+    amount: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   transferFrom(
     sender: string,
     recipient: string,
     amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "transferFrom(address,address,uint256)"(
+    sender: string,
+    recipient: string,
+    amount: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   callStatic: {
     DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<string>;
 
+    "DOMAIN_SEPARATOR()"(overrides?: CallOverrides): Promise<string>;
+
     allowance(
+      owner: string,
+      spender: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "allowance(address,address)"(
       owner: string,
       spender: string,
       overrides?: CallOverrides
@@ -659,11 +978,30 @@ export class StablePool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    "approve(address,uint256)"(
+      spender: string,
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    "balanceOf(address)"(
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     decimals(overrides?: CallOverrides): Promise<number>;
 
+    "decimals()"(overrides?: CallOverrides): Promise<number>;
+
     decreaseApproval(
+      spender: string,
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    "decreaseApproval(address,uint256)"(
       spender: string,
       amount: BigNumberish,
       overrides?: CallOverrides
@@ -674,11 +1012,24 @@ export class StablePool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<string>;
 
+    "getActionId(bytes4)"(
+      selector: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
     getAmplificationParameter(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "getAmplificationParameter()"(
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     getAuthorizer(overrides?: CallOverrides): Promise<string>;
 
+    "getAuthorizer()"(overrides?: CallOverrides): Promise<string>;
+
     getOwner(overrides?: CallOverrides): Promise<string>;
+
+    "getOwner()"(overrides?: CallOverrides): Promise<string>;
 
     getPausedState(
       overrides?: CallOverrides
@@ -690,13 +1041,31 @@ export class StablePool extends BaseContract {
       }
     >;
 
+    "getPausedState()"(
+      overrides?: CallOverrides
+    ): Promise<
+      [boolean, BigNumber, BigNumber] & {
+        paused: boolean;
+        pauseWindowEndTime: BigNumber;
+        bufferPeriodEndTime: BigNumber;
+      }
+    >;
+
     getPoolId(overrides?: CallOverrides): Promise<string>;
+
+    "getPoolId()"(overrides?: CallOverrides): Promise<string>;
 
     getRate(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "getRate()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     getSwapFeePercentage(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "getSwapFeePercentage()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     getVault(overrides?: CallOverrides): Promise<string>;
+
+    "getVault()"(overrides?: CallOverrides): Promise<string>;
 
     increaseApproval(
       spender: string,
@@ -704,9 +1073,22 @@ export class StablePool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    "increaseApproval(address,uint256)"(
+      spender: string,
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     name(overrides?: CallOverrides): Promise<string>;
 
+    "name()"(overrides?: CallOverrides): Promise<string>;
+
     nonces(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    "nonces(address)"(
+      owner: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     onExitPool(
       poolId: BytesLike,
@@ -719,7 +1101,29 @@ export class StablePool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber[], BigNumber[]]>;
 
+    "onExitPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
+      poolId: BytesLike,
+      sender: string,
+      recipient: string,
+      balances: BigNumberish[],
+      lastChangeBlock: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
+      userData: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber[], BigNumber[]]>;
+
     onJoinPool(
+      poolId: BytesLike,
+      sender: string,
+      recipient: string,
+      balances: BigNumberish[],
+      lastChangeBlock: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
+      userData: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber[], BigNumber[]]>;
+
+    "onJoinPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
       poolId: BytesLike,
       sender: string,
       recipient: string,
@@ -748,6 +1152,24 @@ export class StablePool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    "onSwap(tuple,uint256[],uint256,uint256)"(
+      swapRequest: {
+        kind: BigNumberish;
+        tokenIn: string;
+        tokenOut: string;
+        amount: BigNumberish;
+        poolId: BytesLike;
+        lastChangeBlock: BigNumberish;
+        from: string;
+        to: string;
+        userData: BytesLike;
+      },
+      balances: BigNumberish[],
+      indexIn: BigNumberish,
+      indexOut: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     permit(
       owner: string,
       spender: string,
@@ -759,7 +1181,31 @@ export class StablePool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
+      owner: string,
+      spender: string,
+      value: BigNumberish,
+      deadline: BigNumberish,
+      v: BigNumberish,
+      r: BytesLike,
+      s: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     queryExit(
+      poolId: BytesLike,
+      sender: string,
+      recipient: string,
+      balances: BigNumberish[],
+      lastChangeBlock: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
+      userData: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber[]] & { bptIn: BigNumber; amountsOut: BigNumber[] }
+    >;
+
+    "queryExit(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
       poolId: BytesLike,
       sender: string,
       recipient: string,
@@ -785,16 +1231,43 @@ export class StablePool extends BaseContract {
       [BigNumber, BigNumber[]] & { bptOut: BigNumber; amountsIn: BigNumber[] }
     >;
 
+    "queryJoin(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
+      poolId: BytesLike,
+      sender: string,
+      recipient: string,
+      balances: BigNumberish[],
+      lastChangeBlock: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
+      userData: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber[]] & { bptOut: BigNumber; amountsIn: BigNumber[] }
+    >;
+
     setPaused(paused: boolean, overrides?: CallOverrides): Promise<void>;
+
+    "setPaused(bool)"(
+      paused: boolean,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     setSwapFeePercentage(
       swapFeePercentage: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
+    "setSwapFeePercentage(uint256)"(
+      swapFeePercentage: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     symbol(overrides?: CallOverrides): Promise<string>;
 
+    "symbol()"(overrides?: CallOverrides): Promise<string>;
+
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     transfer(
       recipient: string,
@@ -802,7 +1275,20 @@ export class StablePool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    "transfer(address,uint256)"(
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     transferFrom(
+      sender: string,
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    "transferFrom(address,address,uint256)"(
       sender: string,
       recipient: string,
       amount: BigNumberish,
@@ -812,36 +1298,30 @@ export class StablePool extends BaseContract {
 
   filters: {
     Approval(
-      owner?: string | null,
-      spender?: string | null,
-      value?: null
-    ): TypedEventFilter<
-      [string, string, BigNumber],
-      { owner: string; spender: string; value: BigNumber }
-    >;
+      owner: string | null,
+      spender: string | null,
+      value: null
+    ): EventFilter;
 
-    PausedStateChanged(
-      paused?: null
-    ): TypedEventFilter<[boolean], { paused: boolean }>;
+    PausedStateChanged(paused: null): EventFilter;
 
-    SwapFeePercentageChanged(
-      swapFeePercentage?: null
-    ): TypedEventFilter<[BigNumber], { swapFeePercentage: BigNumber }>;
+    SwapFeePercentageChanged(swapFeePercentage: null): EventFilter;
 
-    Transfer(
-      from?: string | null,
-      to?: string | null,
-      value?: null
-    ): TypedEventFilter<
-      [string, string, BigNumber],
-      { from: string; to: string; value: BigNumber }
-    >;
+    Transfer(from: string | null, to: string | null, value: null): EventFilter;
   };
 
   estimateGas: {
     DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "DOMAIN_SEPARATOR()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     allowance(
+      owner: string,
+      spender: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "allowance(address,address)"(
       owner: string,
       spender: string,
       overrides?: CallOverrides
@@ -850,17 +1330,36 @@ export class StablePool extends BaseContract {
     approve(
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "approve(address,uint256)"(
+      spender: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+    "balanceOf(address)"(
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     decimals(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "decimals()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     decreaseApproval(
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "decreaseApproval(address,uint256)"(
+      spender: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     getActionId(
@@ -868,31 +1367,67 @@ export class StablePool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    "getActionId(bytes4)"(
+      selector: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     getAmplificationParameter(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "getAmplificationParameter()"(
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     getAuthorizer(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "getAuthorizer()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     getOwner(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "getOwner()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     getPausedState(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "getPausedState()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     getPoolId(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "getPoolId()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     getRate(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "getRate()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     getSwapFeePercentage(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "getSwapFeePercentage()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     getVault(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "getVault()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     increaseApproval(
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "increaseApproval(address,uint256)"(
+      spender: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "name()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     nonces(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    "nonces(address)"(
+      owner: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     onExitPool(
       poolId: BytesLike,
@@ -902,7 +1437,18 @@ export class StablePool extends BaseContract {
       lastChangeBlock: BigNumberish,
       protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "onExitPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
+      poolId: BytesLike,
+      sender: string,
+      recipient: string,
+      balances: BigNumberish[],
+      lastChangeBlock: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
+      userData: BytesLike,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     onJoinPool(
@@ -913,10 +1459,39 @@ export class StablePool extends BaseContract {
       lastChangeBlock: BigNumberish,
       protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "onJoinPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
+      poolId: BytesLike,
+      sender: string,
+      recipient: string,
+      balances: BigNumberish[],
+      lastChangeBlock: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
+      userData: BytesLike,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     onSwap(
+      swapRequest: {
+        kind: BigNumberish;
+        tokenIn: string;
+        tokenOut: string;
+        amount: BigNumberish;
+        poolId: BytesLike;
+        lastChangeBlock: BigNumberish;
+        from: string;
+        to: string;
+        userData: BytesLike;
+      },
+      balances: BigNumberish[],
+      indexIn: BigNumberish,
+      indexOut: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "onSwap(tuple,uint256[],uint256,uint256)"(
       swapRequest: {
         kind: BigNumberish;
         tokenIn: string;
@@ -942,7 +1517,18 @@ export class StablePool extends BaseContract {
       v: BigNumberish,
       r: BytesLike,
       s: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
+      owner: string,
+      spender: string,
+      value: BigNumberish,
+      deadline: BigNumberish,
+      v: BigNumberish,
+      r: BytesLike,
+      s: BytesLike,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     queryExit(
@@ -953,7 +1539,18 @@ export class StablePool extends BaseContract {
       lastChangeBlock: BigNumberish,
       protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "queryExit(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
+      poolId: BytesLike,
+      sender: string,
+      recipient: string,
+      balances: BigNumberish[],
+      lastChangeBlock: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
+      userData: BytesLike,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     queryJoin(
@@ -964,41 +1561,86 @@ export class StablePool extends BaseContract {
       lastChangeBlock: BigNumberish,
       protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
-    setPaused(
+    "queryJoin(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
+      poolId: BytesLike,
+      sender: string,
+      recipient: string,
+      balances: BigNumberish[],
+      lastChangeBlock: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
+      userData: BytesLike,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    setPaused(paused: boolean, overrides?: Overrides): Promise<BigNumber>;
+
+    "setPaused(bool)"(
       paused: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     setSwapFeePercentage(
       swapFeePercentage: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "setSwapFeePercentage(uint256)"(
+      swapFeePercentage: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     symbol(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "symbol()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     transfer(
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "transfer(address,uint256)"(
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     transferFrom(
       sender: string,
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "transferFrom(address,address,uint256)"(
+      sender: string,
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
     DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "DOMAIN_SEPARATOR()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     allowance(
+      owner: string,
+      spender: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "allowance(address,address)"(
       owner: string,
       spender: string,
       overrides?: CallOverrides
@@ -1007,7 +1649,13 @@ export class StablePool extends BaseContract {
     approve(
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "approve(address,uint256)"(
+      spender: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     balanceOf(
@@ -1015,15 +1663,33 @@ export class StablePool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "balanceOf(address)"(
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     decimals(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "decimals()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     decreaseApproval(
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "decreaseApproval(address,uint256)"(
+      spender: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     getActionId(
+      selector: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "getActionId(bytes4)"(
       selector: BytesLike,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -1032,31 +1698,66 @@ export class StablePool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "getAmplificationParameter()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     getAuthorizer(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "getAuthorizer()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getOwner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "getOwner()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     getPausedState(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "getPausedState()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     getPoolId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "getPoolId()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     getRate(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "getRate()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getSwapFeePercentage(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "getSwapFeePercentage()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     getVault(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "getVault()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     increaseApproval(
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "increaseApproval(address,uint256)"(
+      spender: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "name()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     nonces(
+      owner: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "nonces(address)"(
       owner: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -1069,7 +1770,18 @@ export class StablePool extends BaseContract {
       lastChangeBlock: BigNumberish,
       protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "onExitPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
+      poolId: BytesLike,
+      sender: string,
+      recipient: string,
+      balances: BigNumberish[],
+      lastChangeBlock: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
+      userData: BytesLike,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     onJoinPool(
@@ -1080,10 +1792,39 @@ export class StablePool extends BaseContract {
       lastChangeBlock: BigNumberish,
       protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "onJoinPool(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
+      poolId: BytesLike,
+      sender: string,
+      recipient: string,
+      balances: BigNumberish[],
+      lastChangeBlock: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
+      userData: BytesLike,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     onSwap(
+      swapRequest: {
+        kind: BigNumberish;
+        tokenIn: string;
+        tokenOut: string;
+        amount: BigNumberish;
+        poolId: BytesLike;
+        lastChangeBlock: BigNumberish;
+        from: string;
+        to: string;
+        userData: BytesLike;
+      },
+      balances: BigNumberish[],
+      indexIn: BigNumberish,
+      indexOut: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "onSwap(tuple,uint256[],uint256,uint256)"(
       swapRequest: {
         kind: BigNumberish;
         tokenIn: string;
@@ -1109,7 +1850,18 @@ export class StablePool extends BaseContract {
       v: BigNumberish,
       r: BytesLike,
       s: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
+      owner: string,
+      spender: string,
+      value: BigNumberish,
+      deadline: BigNumberish,
+      v: BigNumberish,
+      r: BytesLike,
+      s: BytesLike,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     queryExit(
@@ -1120,7 +1872,18 @@ export class StablePool extends BaseContract {
       lastChangeBlock: BigNumberish,
       protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "queryExit(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
+      poolId: BytesLike,
+      sender: string,
+      recipient: string,
+      balances: BigNumberish[],
+      lastChangeBlock: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
+      userData: BytesLike,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     queryJoin(
@@ -1131,34 +1894,72 @@ export class StablePool extends BaseContract {
       lastChangeBlock: BigNumberish,
       protocolSwapFeePercentage: BigNumberish,
       userData: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "queryJoin(bytes32,address,address,uint256[],uint256,uint256,bytes)"(
+      poolId: BytesLike,
+      sender: string,
+      recipient: string,
+      balances: BigNumberish[],
+      lastChangeBlock: BigNumberish,
+      protocolSwapFeePercentage: BigNumberish,
+      userData: BytesLike,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     setPaused(
       paused: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "setPaused(bool)"(
+      paused: boolean,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     setSwapFeePercentage(
       swapFeePercentage: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "setSwapFeePercentage(uint256)"(
+      swapFeePercentage: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "symbol()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "totalSupply()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     transfer(
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "transfer(address,uint256)"(
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     transferFrom(
       sender: string,
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "transferFrom(address,address,uint256)"(
+      sender: string,
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
   };
 }
