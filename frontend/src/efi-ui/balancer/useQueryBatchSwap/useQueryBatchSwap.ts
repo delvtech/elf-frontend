@@ -86,6 +86,7 @@ export function getCalcSwap(
 ): QueryBatchSwapCalcResults {
   const { baseAssetInfo } = getPoolTokens(poolInfo);
   const { decimals, address: baseAssetAddress } = baseAssetInfo;
+  console.log("decimals", decimals);
   // do weighted pools first since they don't need as many variables
   if (!amount || !tokenInAddress || !tokenOutAddress || !decimals) {
     return { result: undefined, status: "loading" };
@@ -110,12 +111,11 @@ export function getCalcSwap(
       ? tokenInAddress === baseAssetAddress
       : tokenOutAddress === baseAssetAddress;
 
-  if (isPrincipalPool(poolInfo as PoolInfo)) {
+  if (isPrincipalPool(poolInfo)) {
     return calcSwapPrincipalPool(
       amount,
       kind,
-      // i don't know why the type guard isnt working
-      poolInfo as PrincipalPoolTokenInfo,
+      poolInfo,
       decimals,
       tokenInReserves,
       tokenOutReserves,

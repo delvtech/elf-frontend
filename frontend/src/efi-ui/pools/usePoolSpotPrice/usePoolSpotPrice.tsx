@@ -1,19 +1,13 @@
 import { ERC20 } from "elf-contracts/types/ERC20";
-import { formatUnits, parseUnits } from "ethers/lib/utils";
-import zip from "lodash.zip";
+import { formatUnits } from "ethers/lib/utils";
 
 import { SwapKind } from "efi-ui/balancer/SwapKind";
-import { parseQueryBatchSwapResult } from "efi-ui/balancer/useQueryBatchSwap/parseQueryBatchSwapResult";
 import {
   getCalcSwap,
   getTokenReserves,
 } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
-import { useQueryBatchSwapMulti } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwapMulti";
-import { getQueriesData } from "efi-ui/base/queryResults";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { usePoolPairedTokenMulti } from "efi-ui/pools/usePoolPairedToken/usePoolPairedTokenMulti";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
-import { useTokenDecimalsMulti } from "efi-ui/token/hooks/useTokenDecimalsMulti";
 import { getPoolTokenInfoFromContract } from "efi/pools/getPoolInfo";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { isConvergentCurvePool, PoolContract } from "efi/pools/PoolContract";
@@ -93,85 +87,4 @@ export function usePoolSpotPrice(
   const spotPrice = +amountOut / +amount;
 
   return Math.abs(spotPrice);
-}
-
-export function usePoolSpotPriceMulti(
-  pools: (PoolContract | undefined)[],
-  baseAssetTokens: (ERC20 | undefined)[]
-): (number | undefined)[] {
-  const baseAssetDecimalsResult = useTokenDecimalsMulti(baseAssetTokens);
-  const baseAssetDecimals = getQueriesData(baseAssetDecimalsResult);
-
-  const principalOrYieldTokens = usePoolPairedTokenMulti(
-    pools,
-    baseAssetTokens
-  );
-  const principalOrYieldTokenDecimalsResult = useTokenDecimalsMulti(
-    principalOrYieldTokens
-  );
-  const principalOrYieldTokenDecimals = getQueriesData(
-    principalOrYieldTokenDecimalsResult
-  );
-
-  const baseAssetAmountIns = baseAssetDecimals.map((decimals) =>
-    parseUnits("0.01", decimals)
-  );
-  const baseAssetTokenAddresses = baseAssetTokens.map(
-    (token) => token?.address
-  );
-  const principalOrYieldTokenAddresses = principalOrYieldTokens.map(
-    (token) => token?.address
-  );
-  const queryBatchSwapResults = useQueryBatchSwapMulti(
-    SwapKind.GIVEN_IN,
-    pools,
-    baseAssetTokenAddresses,
-    principalOrYieldTokenAddresses,
-    baseAssetAmountIns
-  );
-  const queryBatchSwaps = getQueriesData(queryBatchSwapResults);
-
-  const spotPrices = zip(
-    baseAssetTokenAddresses,
-    principalOrYieldTokenAddresses,
-    queryBatchSwaps,
-    baseAssetDecimals,
-    principalOrYieldTokenDecimals,
-    baseAssetAmountIns
-  ).map(
-    ([
-      baseAssetAddress,
-      ptOrYtAddress,
-      queryBatchSwap,
-      baseAssetDecimal,
-      ptOrYtDecimal,
-      baseAssetAmountIn,
-    ]) => {
-      if (!queryBatchSwap) {
-        return undefined;
-      }
-
-      const { tokenOut: amountOut } = parseQueryBatchSwapResult(
-        baseAssetAddress,
-        ptOrYtAddress,
-        queryBatchSwap
-      );
-
-      if (
-        !baseAssetAmountIn ||
-        !amountOut ||
-        !baseAssetDecimals ||
-        !ptOrYtDecimal
-      ) {
-        return undefined;
-      }
-
-      const spotPrice =
-        +formatUnits(amountOut, ptOrYtDecimal) /
-        +formatUnits(baseAssetAmountIn, baseAssetDecimal);
-
-      return Math.abs(spotPrice);
-    }
-  );
-  return spotPrices;
 }
