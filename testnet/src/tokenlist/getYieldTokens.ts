@@ -18,6 +18,8 @@ const symbolOverrides: Record<number, Record<string, string>> = {
     "0x91dDF92af38Afac1B59F450dDb94ddab10a11490": "eYyvCurve-stETH",
     "0xBf4B5cB5ca49B1eF6B02615a94980723f6484899": "eYyvCurve-stETH",
     "0x2c637c5142eE4F31A1a78Ad3DF012fc242F6CAe6": "eYyvUSDC",
+    "0x8F28E7085882Ef6010a74Fa092C4eC519A0583B5": "eYyvUSDC",
+    "0x51E7DF22DF4A391A5702D6a99a350cE3c55c02Ce": "eYyvUSDC",
   },
 };
 export async function getYieldTokensFromTranches(

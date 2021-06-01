@@ -18,6 +18,8 @@ const symbolOverrides: Record<number, Record<string, string>> = {
     "0x44eecA004b2612d131EDA7dA2b9d986E7fED562e": "ePyvCurve-stETH",
     "0x89d66Ad25F3A723D606B78170366d8da9870A879": "ePyvCurve-stETH",
     "0x80272c960b862B4d6542CDB7338Ad1f727E0D18d": "ePyvUSDC",
+    "0x8Bd721BB84a30c0078aF4a5a732c7169C5BE6eDB": "ePyvUSDC",
+    "0x7D64aD2b83a62C0d02514a43E5B4582C671E5F72": "ePyvUSDC",
   },
 };
 export const provider = hre.ethers.provider;
