@@ -10,9 +10,10 @@ import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadC
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { getPoolTokenInfoFromContract } from "efi/pools/getPoolInfo";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
-import { isConvergentCurvePool, PoolContract } from "efi/pools/PoolContract";
+import { PoolContract } from "efi/pools/PoolContract";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { useMemo } from "react";
+import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
 
 /**
  * Lazy spot price technique until we get a better method.  Right now just calculates how much out
@@ -25,21 +26,23 @@ import { useMemo } from "react";
  * base = yield * spotPrice
  * yield = base / spotPrice
  */
+const SPOT_PRICE_AMOUNT = "0.01";
 export function usePoolSpotPrice(
   poolContract: PoolContract | undefined,
   underlyingToken: ERC20 | undefined
 ): number | undefined {
-  const amount = "0.01";
   const { data } = usePoolTokens(poolContract);
   const [tokens, balances] = data ?? [[], []];
   const poolInfo = getPoolTokenInfoFromContract(poolContract) as PoolInfo;
   const { baseAssetInfo, termAssetInfo } = getPoolTokens(poolInfo);
   const { data: totalSupplyBN } = useSmartContractReadCall(
     poolContract,
-    "totalSupply",
-    { enabled: isConvergentCurvePool(poolContract) }
+    "totalSupply"
   );
-  const totalSupply = formatUnits(totalSupplyBN ?? 0, baseAssetInfo.decimals);
+  const totalSupply = formatUnits(
+    totalSupplyBN ?? 0,
+    BALANCER_POOL_LP_TOKEN_DECIMALS
+  );
 
   const tokenInAddress =
     baseAssetInfo.address === underlyingToken?.address
@@ -60,7 +63,7 @@ export function usePoolSpotPrice(
 
   const { result: [, amountOut] = [] } = useMemo(() => {
     const result = getCalcSwap(
-      amount,
+      SPOT_PRICE_AMOUNT,
       SwapKind.GIVEN_IN,
       poolInfo,
       tokenInAddress,
@@ -84,7 +87,7 @@ export function usePoolSpotPrice(
     return undefined;
   }
 
-  const spotPrice = +amountOut / +amount;
+  const spotPrice = +amountOut / +SPOT_PRICE_AMOUNT;
 
   return Math.abs(spotPrice);
 }

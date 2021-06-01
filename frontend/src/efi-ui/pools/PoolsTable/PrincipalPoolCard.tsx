@@ -84,7 +84,8 @@ export function PrincipalPoolCard(
     "unlockTimestamp"
   );
   const fixedYield = useTokenYield(baseAssetContract, pool, "principal");
-  const principalPrice = usePoolSpotPrice(pool, termAssetContract)?.toFixed(4);
+  const principalPrice = usePoolSpotPrice(pool, termAssetContract);
+  const principalPriceFormatted = principalPrice?.toFixed(4);
 
   const stakingYield = useStakingAPY(pool);
 
@@ -303,7 +304,7 @@ export function PrincipalPoolCard(
         >
           <LabeledText
             large
-            text={t`${principalPrice}`}
+            text={t`${principalPriceFormatted}`}
             label={t`Price (${baseAssetSymbol})`}
           />
         </div>
