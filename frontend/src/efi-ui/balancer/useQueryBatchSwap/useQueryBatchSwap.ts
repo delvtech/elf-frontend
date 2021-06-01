@@ -86,7 +86,6 @@ export function getCalcSwap(
 ): QueryBatchSwapCalcResults {
   const { baseAssetInfo } = getPoolTokens(poolInfo);
   const { decimals, address: baseAssetAddress } = baseAssetInfo;
-  console.log("decimals", decimals);
   // do weighted pools first since they don't need as many variables
   if (!amount || !tokenInAddress || !tokenOutAddress || !decimals) {
     return { result: undefined, status: "loading" };
