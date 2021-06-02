@@ -23,6 +23,7 @@ import { useSyncWithInjectedEthereum } from "efi-ui/wallets/hooks/useSyncWithInj
 
 import styles from "./App.module.css";
 import { useEagerConnect } from "efi-ui/wallets/hooks/useEagerReconnect";
+import { SaveView } from "efi-ui/earn/SaveView/SaveView";
 
 FocusStyleManager.onlyShowFocusOnTabs();
 
@@ -70,6 +71,7 @@ const App: FC<AppProps> = () => {
 
           <PortfolioView path={Navigation.PORTFOLIO} />
           <EarnView path={Navigation.EARN} />
+          <SaveView path={Navigation.SAVE} />
           <PoolsView path={Navigation.PRINCIPAL_POOLS} />
           <PoolsView path={Navigation.YIELD_POOLS} />
           <MintView path={Navigation.DEPOSIT} />

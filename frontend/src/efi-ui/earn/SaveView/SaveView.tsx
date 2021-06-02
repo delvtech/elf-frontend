@@ -32,7 +32,7 @@ export enum SaveNavigation {
   SAVE = "save",
   BALANCES = "balances",
 }
-export function EarnView(props: EarnViewProps): ReactElement {
+export function SaveView(props: EarnViewProps): ReactElement {
   const { account, library } = useWeb3React<Web3Provider>();
   const [activeTab, setActiveTab] = useState<SaveNavigation>(
     SaveNavigation.SAVE
