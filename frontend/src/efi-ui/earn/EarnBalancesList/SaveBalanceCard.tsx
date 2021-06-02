@@ -1,7 +1,6 @@
 import React, { ReactElement } from "react";
 
 import { Button, ButtonGroup, Card, Intent, Tag } from "@blueprintjs/core";
-import { IconNames } from "@blueprintjs/icons";
 import { PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
@@ -36,8 +35,12 @@ export function SaveBalanceCard(
     },
   } = props;
   const tranche = trancheContractsByAddress[address];
-  const { data: balanceOf } = useTokenBalanceOf(tranche, account);
-  if ((balanceOf && isDust(balanceOf, decimals)) || balanceOf?.isZero()) {
+  const { data: balanceOf, isLoading } = useTokenBalanceOf(tranche, account);
+  if (
+    isLoading ||
+    (balanceOf && isDust(balanceOf, decimals)) ||
+    balanceOf?.isZero()
+  ) {
     return null;
   }
 
@@ -64,9 +67,9 @@ export function SaveBalanceCard(
         </Tag>
       </span>
       <div className={tw("col-span-2", "justify-end")}>
-        <ButtonGroup large>
-          <Button outlined icon={IconNames.MINUS}></Button>
-          <Button outlined icon={IconNames.PLUS}></Button>
+        <ButtonGroup>
+          <Button outlined>{t`Sell`}</Button>
+          <Button outlined>{t`Buy`}</Button>
           <Button outlined disabled={!isRedeemable}>{t`Redeem`}</Button>
         </ButtonGroup>
       </div>

@@ -29,6 +29,9 @@ export function useActiveTab(): Navigation {
     case Navigation.POOL: {
       return Navigation.POOL;
     }
+    case Navigation.SAVE: {
+      return Navigation.SAVE;
+    }
     case Navigation.EARN: {
       return Navigation.EARN;
     }
