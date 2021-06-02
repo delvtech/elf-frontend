@@ -1,59 +1,23 @@
-import {
-  CSSProperties,
-  Fragment,
-  ReactElement,
-  useCallback,
-  useState,
-} from "react";
+import { CSSProperties, FC, Fragment, ReactElement } from "react";
 import { Helmet } from "react-helmet";
 
-import { Button, Intent, Tag } from "@blueprintjs/core";
+import { Intent, Tag } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
-import { RouteComponentProps } from "@reach/router";
+import { Link, RouteComponentProps } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
-import { t } from "ttag";
+import { jt, t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { EarnCard } from "efi-ui/earn/EarnCard/EarnCard";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
-import { EarnBalancesList } from "efi-ui/earn/EarnBalancesList/EarnBalancesList";
-import { assertNever } from "efi/base/assertNever";
-import { principalTokenInfos } from "efi/tranche/tranches";
-import { IconNames } from "@blueprintjs/icons";
-import { formatWalletAddress } from "efi/wallets/formatWalletAddress";
-import { SaveViewSubtitle } from "./SaveViewSubtitle";
 
 interface EarnViewProps extends RouteComponentProps {}
 
 const maxWidthStyle: CSSProperties = { maxWidth: 672 };
 const widthStyle = { width: 672 };
-
-export enum SaveNavigation {
-  SAVE = "save",
-  BALANCES = "balances",
-}
 export function EarnView(props: EarnViewProps): ReactElement {
   const { account, library } = useWeb3React<Web3Provider>();
-  const [activeTab, setActiveTab] = useState<SaveNavigation>(
-    SaveNavigation.SAVE
-  );
-  const onActiveTabClick = useCallback(() => {
-    switch (activeTab) {
-      case SaveNavigation.SAVE:
-        setActiveTab(SaveNavigation.BALANCES);
-        return;
-      case SaveNavigation.BALANCES:
-        setActiveTab(SaveNavigation.SAVE);
-        return;
-      default:
-        assertNever(activeTab);
-    }
-  }, [activeTab]);
 
-  const activeTabLabel = getActiveTabLabel(activeTab);
-  const activeTabIcon = getActiveTabIconName(activeTab);
-  const viewTitleLabel = getViewTitle(activeTab, account);
-  const viewTitleBottomLabel = getBottomViewTitle(activeTab, account);
   return (
     <Fragment>
       <Helmet>
@@ -74,10 +38,10 @@ export function EarnView(props: EarnViewProps): ReactElement {
         {/* page title */}
         <div style={maxWidthStyle}>
           <ViewTitle
-            title={viewTitleLabel}
-            bottomTitle={viewTitleBottomLabel}
+            title={t`Earn fixed yield from buying at a discount.`}
+            bottomTitle={t`Exit anytime.`}
             titleTag={<Tag minimal intent={Intent.WARNING}>{t`alpha`}</Tag>}
-            subtitle={<SaveViewSubtitle activeTab={activeTab} />}
+            subtitle={<EarnViewSubtitle />}
           />
         </div>
         {/* Main content */}
@@ -93,86 +57,37 @@ export function EarnView(props: EarnViewProps): ReactElement {
           )}
         >
           <div
-            className={tw("flex", "flex-col", "space-y-4")}
+            className={tw("flex", "flex-col", "space-y-12", "text-center")}
             style={widthStyle}
           >
-            <div className={tw("text-right")}>
-              <Button
-                minimal
-                large
-                onClick={onActiveTabClick}
-                icon={activeTabIcon}
-              >
-                {activeTabLabel}
-              </Button>
-            </div>
-
-            {activeTab === SaveNavigation.SAVE && (
-              <EarnCard library={library} account={account} />
-            )}
-
-            {activeTab === SaveNavigation.BALANCES && (
-              <EarnBalancesList
-                account={account}
-                principalTokens={principalTokenInfos}
-              />
-            )}
+            <EarnCard library={library} account={account} />
           </div>
         </div>
       </div>
     </Fragment>
   );
 }
-function getActiveTabLabel(activeTab: SaveNavigation) {
-  switch (activeTab) {
-    case SaveNavigation.SAVE: {
-      return t`View balances`;
-    }
-    case SaveNavigation.BALANCES:
-      return t`Back to Save`;
-    default:
-      assertNever(activeTab);
-  }
-}
 
-function getActiveTabIconName(activeTab: SaveNavigation) {
-  switch (activeTab) {
-    case SaveNavigation.SAVE:
-      return IconNames.TH_LIST;
-    case SaveNavigation.BALANCES:
-      return IconNames.ARROW_LEFT;
-    default:
-      assertNever(activeTab);
-  }
-}
-function getViewTitle(
-  activeTab: SaveNavigation,
-  account: string | null | undefined
-) {
-  switch (activeTab) {
-    case SaveNavigation.SAVE:
-      return t`Earn fixed yield from buying at a discount.`;
-
-    case SaveNavigation.BALANCES:
-      return t`Principal token balances`;
-    default:
-      assertNever(activeTab);
-  }
-}
-function getBottomViewTitle(
-  activeTab: SaveNavigation,
-  account: string | null | undefined
-) {
-  switch (activeTab) {
-    case SaveNavigation.SAVE:
-      return t`Exit anytime.`;
-
-    case SaveNavigation.BALANCES:
-      if (account) {
-        return t`(${formatWalletAddress(account)})`;
+const EarnViewSubtitle: FC = () => {
+  const fixedYieldLink = (
+    <a
+      key="fixed-yield-link"
+      href={
+        "https://medium.com/element-finance/fixed-rate-interest-markets-a-casual-users-journey-through-fixed-rate-interest-using-element-50f420df1859"
       }
-      return null;
-    default:
-      assertNever(activeTab);
-  }
-}
+      target="_noreferrer"
+    >
+      {t`Read more about Fixed Yield.`}
+    </a>
+  );
+
+  const portfolioLink = (
+    <Link key="portfolio-link" to={`/portfolio`}>
+      {t`Portfolio Page`}
+    </Link>
+  );
+
+  return (
+    <Fragment>{jt`Principal Tokens are redeemable one-to-one with their base asset once they have reached their maturity date. To boost your APY further, you may stake your tokens on the ${portfolioLink}. ${fixedYieldLink}`}</Fragment>
+  );
+};

@@ -1,7 +1,7 @@
 import React, { Fragment, ReactElement } from "react";
 import { Link } from "@reach/router";
 import { jt, t } from "ttag";
-import { SaveNavigation } from "./EarnView";
+import { SaveNavigation } from "./SaveView";
 import { assertNever } from "efi/base/assertNever";
 import { Callout } from "@blueprintjs/core";
 
