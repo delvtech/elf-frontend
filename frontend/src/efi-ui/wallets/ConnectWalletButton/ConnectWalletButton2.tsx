@@ -70,6 +70,7 @@ export function ConnectWalletButton2(
               />
             }
             fill
+            large
             intent={walletButtonIntent}
             onClick={onOpenWalletDialog}
           >

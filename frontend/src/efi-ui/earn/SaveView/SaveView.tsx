@@ -27,6 +27,8 @@ import { useTokensWithBalance } from "efi-ui/token/hooks/useTokensWithBalance";
 import { isDust } from "efi/coins/isDust";
 import { getTokenInfo } from "efi/tokenlists";
 import { PrincipalTokenInfo } from "tokenlists/types";
+import { IconNames } from "@blueprintjs/icons";
+import { Button } from "@blueprintjs/core";
 
 interface EarnViewProps extends RouteComponentProps {}
 
@@ -40,7 +42,7 @@ export function SaveView(props: EarnViewProps): ReactElement {
     chainId,
     active: walletConnectionActive,
   } = useWeb3React<Web3Provider>();
-  const { isDarkMode } = useDarkMode();
+  const { isDarkMode, setDarkModeOn, setDarkModeOff } = useDarkMode();
 
   const [activeTab, setActiveTab] = useState<SaveNavigation>(
     SaveNavigation.SAVE
@@ -80,11 +82,19 @@ export function SaveView(props: EarnViewProps): ReactElement {
             src={isDarkMode ? logoDark : logo}
             alt={t`Element Finance`}
           />
-          <ConnectWalletButton2
-            account={account}
-            chainId={chainId}
-            walletConnectionActive={walletConnectionActive}
-          />
+          <div className={tw("flex", "space-x-4")}>
+            <Button
+              minimal
+              className={tw("px-6")}
+              icon={isDarkMode ? IconNames.FLASH : IconNames.MOON}
+              onClick={isDarkMode ? setDarkModeOff : setDarkModeOn}
+            />
+            <ConnectWalletButton2
+              account={account}
+              chainId={chainId}
+              walletConnectionActive={walletConnectionActive}
+            />
+          </div>
         </div>
 
         <div
