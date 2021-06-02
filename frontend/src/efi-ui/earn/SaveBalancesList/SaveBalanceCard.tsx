@@ -1,6 +1,13 @@
 import React, { ReactElement } from "react";
 
-import { Button, ButtonGroup, Card, Intent, Tag } from "@blueprintjs/core";
+import {
+  Button,
+  ButtonGroup,
+  Card,
+  Elevation,
+  Intent,
+  Tag,
+} from "@blueprintjs/core";
 import { PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
@@ -51,7 +58,10 @@ export function SaveBalanceCard(
   const formattedUnlockDate = formatAbbreviatedDate(unlockDate);
   const isRedeemable = getIsMature2(unlockTimestamp);
   return (
-    <Card className={tw("grid", "grid-cols-6", "gap-4")}>
+    <Card
+      elevation={Elevation.TWO}
+      className={tw("grid", "grid-cols-6", "gap-4")}
+    >
       <div className={tw("flex", "space-x-2", "col-span-2")}>
         <LabeledText
           className={tw("text-left", "pl-2")}

@@ -1,9 +1,12 @@
-import React, { Fragment, ReactElement } from "react";
+import { Fragment, ReactElement } from "react";
+
+import { Callout } from "@blueprintjs/core";
 import { Link } from "@reach/router";
 import { jt, t } from "ttag";
-import { SaveNavigation } from "./SaveView";
+
 import { assertNever } from "efi/base/assertNever";
-import { Callout } from "@blueprintjs/core";
+
+import { SaveNavigation } from "./SaveView";
 
 interface SaveViewSubtitleProps {
   activeTab: SaveNavigation;

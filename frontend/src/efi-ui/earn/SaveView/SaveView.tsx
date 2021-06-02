@@ -7,7 +7,7 @@ import {
 } from "react";
 import { Helmet } from "react-helmet";
 
-import { Button, Colors, Icon, Intent, Tag } from "@blueprintjs/core";
+import { Button, Colors, Icon, Intent } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
 import { RouteComponentProps } from "@reach/router";
@@ -80,8 +80,8 @@ export function SaveView(props: EarnViewProps): ReactElement {
 
   const activeTabLabel = getActiveTabLabel(activeTab);
   const activeTabIcon = getActiveTabIconName(activeTab);
-  const viewTitleLabel = getViewTitle(activeTab, account);
-  const viewTitleBottomLabel = getBottomViewTitle(activeTab, account);
+  const viewTitleLabel = getViewTitle(activeTab);
+  const viewTitleBottomLabel = getBottomViewTitle(activeTab);
   return (
     <Fragment>
       <Helmet>
@@ -107,40 +107,42 @@ export function SaveView(props: EarnViewProps): ReactElement {
             src={isDarkMode ? logoDark : logo}
             alt={t`Element Finance`}
           />
-          {!account ? (
-            <div>
-              <Button
-                outlined
-                fill
-                large
-                intent={walletButtonIntent}
-                onClick={onOpenWalletDialog}
-              >
-                <span className={tw("text-center")}>
-                  {t`Connect wallet to begin`}
-                </span>
-              </Button>
-            </div>
-          ) : (
-            <div>
-              <Button
-                minimal={!mainnetDanger}
-                icon={<WalletJazzicon size={28} account={account} />}
-                rightIcon={
-                  <Icon
-                    className={tw("pr-2")}
-                    icon={IconNames.DOT}
-                    color={connectionStatusColor}
-                  />
-                }
-                fill
-                intent={walletButtonIntent}
-                onClick={onOpenWalletDialog}
-              >
-                {formatWalletAddress(account)}
-              </Button>
-            </div>
-          )}
+          <div className={tw("flex", "space-x-8", "items-center")}>
+            {!account ? (
+              <div>
+                <Button
+                  outlined
+                  fill
+                  large
+                  intent={walletButtonIntent}
+                  onClick={onOpenWalletDialog}
+                >
+                  <span className={tw("text-center")}>
+                    {t`Connect wallet to begin`}
+                  </span>
+                </Button>
+              </div>
+            ) : (
+              <div>
+                <Button
+                  minimal={!mainnetDanger}
+                  icon={<WalletJazzicon size={28} account={account} />}
+                  rightIcon={
+                    <Icon
+                      className={tw("pr-2")}
+                      icon={IconNames.DOT}
+                      color={connectionStatusColor}
+                    />
+                  }
+                  fill
+                  intent={walletButtonIntent}
+                  onClick={onOpenWalletDialog}
+                >
+                  {formatWalletAddress(account)}
+                </Button>
+              </div>
+            )}
+          </div>
         </div>
 
         <div
@@ -148,10 +150,9 @@ export function SaveView(props: EarnViewProps): ReactElement {
             "flex",
             "flex-col",
             "flex-1",
-            "space-y-12",
-            "pt-12",
+            "space-y-10",
+            "pt-10",
             "items-center",
-            "justify-center",
             "text-center"
           )}
           style={maxWidthStyle}
@@ -159,7 +160,6 @@ export function SaveView(props: EarnViewProps): ReactElement {
           <ViewTitle
             title={viewTitleLabel}
             bottomTitle={viewTitleBottomLabel}
-            titleTag={<Tag minimal intent={Intent.WARNING}>{t`alpha`}</Tag>}
             subtitle={<SaveViewSubtitle activeTab={activeTab} />}
           />
           <div
@@ -221,32 +221,23 @@ function getActiveTabIconName(activeTab: SaveNavigation) {
       assertNever(activeTab);
   }
 }
-function getViewTitle(
-  activeTab: SaveNavigation,
-  account: string | null | undefined
-) {
+function getViewTitle(activeTab: SaveNavigation) {
   switch (activeTab) {
     case SaveNavigation.SAVE:
       return t`Earn fixed yield from buying at a discount.`;
 
     case SaveNavigation.BALANCES:
-      return t`Principal token balances`;
+      return t`Principal Token balances`;
     default:
       assertNever(activeTab);
   }
 }
-function getBottomViewTitle(
-  activeTab: SaveNavigation,
-  account: string | null | undefined
-) {
+function getBottomViewTitle(activeTab: SaveNavigation) {
   switch (activeTab) {
     case SaveNavigation.SAVE:
       return t`Exit anytime.`;
 
     case SaveNavigation.BALANCES:
-      if (account) {
-        return t`(${formatWalletAddress(account)})`;
-      }
       return null;
     default:
       assertNever(activeTab);
