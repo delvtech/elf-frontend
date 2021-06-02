@@ -1,4 +1,4 @@
-import {
+import React, {
   CSSProperties,
   Fragment,
   ReactElement,
@@ -7,21 +7,31 @@ import {
 } from "react";
 import { Helmet } from "react-helmet";
 
-import { Button, Intent, Tag } from "@blueprintjs/core";
+import { Button, Colors, Icon, Intent, Tag } from "@blueprintjs/core";
+import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
 import { RouteComponentProps } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
 import { t } from "ttag";
 
+import logo from "efi-static-assets/logos/svg/logo--light.svg";
+import logoDark from "efi-static-assets/logos/svg/logo--dark.svg";
 import tw from "efi-tailwindcss-classnames";
+import { SaveBalancesList } from "efi-ui/earn/SaveBalancesList/SaveBalancesList";
 import { EarnCard } from "efi-ui/earn/EarnCard/EarnCard";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
-import { EarnBalancesList } from "efi-ui/earn/EarnBalancesList/EarnBalancesList";
 import { assertNever } from "efi/base/assertNever";
 import { principalTokenInfos } from "efi/tranche/tranches";
-import { IconNames } from "@blueprintjs/icons";
 import { formatWalletAddress } from "efi/wallets/formatWalletAddress";
+
 import { SaveViewSubtitle } from "./SaveViewSubtitle";
+import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
+import { ChainId, isMainnet } from "efi/ethereum";
+import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
+import { Tooltip2 } from "@blueprintjs/popover2";
+import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
+import { WalletJazzicon } from "efi-ui/wallets/WalletJazzicon/WalletJazzicon";
+import { formatChainName } from "efi/crypto/formatChainName";
 
 interface EarnViewProps extends RouteComponentProps {}
 
@@ -32,8 +42,29 @@ export enum SaveNavigation {
   SAVE = "save",
   BALANCES = "balances",
 }
+const ChainColor: Record<number, string> = {
+  [ChainId.GOERLI]: Colors.BLUE4,
+  [ChainId.MAINNET]: Colors.GREEN4,
+  [ChainId.LOCAL]: Colors.WHITE,
+};
 export function SaveView(props: EarnViewProps): ReactElement {
-  const { account, library } = useWeb3React<Web3Provider>();
+  const { account, library, chainId, active } = useWeb3React<Web3Provider>();
+  const { isDarkMode } = useDarkMode();
+  const [isWalletDialogOpen, setWalletDialogOpen] = useState(false);
+  const mainnetDanger =
+    !!chainId && isMainnet(chainId) && process.env.NODE_ENV !== "production";
+
+  let walletButtonIntent: Intent = Intent.NONE;
+  if (!account) {
+    walletButtonIntent = Intent.WARNING;
+  } else if (mainnetDanger) {
+    walletButtonIntent = Intent.DANGER;
+  }
+  const connectionStatusColor =
+    active && !!chainId ? ChainColor[chainId] : Colors.RED4;
+  const onCloseWalletDialog = useCallback(() => setWalletDialogOpen(false), []);
+  const onOpenWalletDialog = useCallback(() => setWalletDialogOpen(true), []);
+
   const [activeTab, setActiveTab] = useState<SaveNavigation>(
     SaveNavigation.SAVE
   );
@@ -64,15 +95,61 @@ export function SaveView(props: EarnViewProps): ReactElement {
         className={tw(
           "flex",
           "flex-col",
-          "p-12",
+          "p-8",
           "h-full",
           "items-center",
-          "overflow-scroll",
-          "text-center"
+          "overflow-scroll"
         )}
       >
         {/* page title */}
-        <div style={maxWidthStyle}>
+        <div className={tw("flex", "w-full", "justify-between")}>
+          <img
+            style={{
+              height: 48, // don't use tailwind here since we want fixed height and rem is dynamic
+            }}
+            src={isDarkMode ? logoDark : logo}
+            alt={t`Element Finance`}
+          />
+          {!account ? (
+            <div>
+              <Button
+                outlined
+                fill
+                large
+                intent={walletButtonIntent}
+                onClick={onOpenWalletDialog}
+              >
+                <span className={tw("text-center")}>
+                  {t`Connect wallet to begin`}
+                </span>
+              </Button>
+            </div>
+          ) : (
+            <div>
+              <Button
+                minimal={!mainnetDanger}
+                icon={<WalletJazzicon size={28} account={account} />}
+                rightIcon={
+                  <Icon
+                    className={tw("pr-2")}
+                    icon={IconNames.DOT}
+                    color={connectionStatusColor}
+                  />
+                }
+                fill
+                intent={walletButtonIntent}
+                onClick={onOpenWalletDialog}
+              >
+                {formatWalletAddress(account)}
+              </Button>
+            </div>
+          )}
+        </div>
+
+        <div
+          className={tw("text-center", "items-center")}
+          style={maxWidthStyle}
+        >
           <ViewTitle
             title={viewTitleLabel}
             bottomTitle={viewTitleBottomLabel}
@@ -112,7 +189,7 @@ export function SaveView(props: EarnViewProps): ReactElement {
             )}
 
             {activeTab === SaveNavigation.BALANCES && (
-              <EarnBalancesList
+              <SaveBalancesList
                 account={account}
                 principalTokens={principalTokenInfos}
               />
@@ -120,6 +197,10 @@ export function SaveView(props: EarnViewProps): ReactElement {
           </div>
         </div>
       </div>
+      <ConnectWalletDialog
+        isOpen={isWalletDialogOpen}
+        onClose={onCloseWalletDialog}
+      />
     </Fragment>
   );
 }

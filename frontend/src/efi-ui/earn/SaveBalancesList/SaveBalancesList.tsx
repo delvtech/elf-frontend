@@ -4,14 +4,14 @@ import { PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { SaveBalanceCard } from "efi-ui/earn/EarnBalancesList/SaveBalanceCard";
+import { SaveBalanceCard } from "efi-ui/earn/SaveBalancesList/SaveBalanceCard";
 
-interface EarnBalancesListProps {
+interface SaveBalancesListProps {
   account: string | null | undefined;
   principalTokens: PrincipalTokenInfo[];
 }
 
-export function EarnBalancesList(props: EarnBalancesListProps): ReactElement {
+export function SaveBalancesList(props: SaveBalancesListProps): ReactElement {
   const { principalTokens, account } = props;
   return (
     <div className={tw("flex", "flex-col", "space-y-4")}>
