@@ -20,7 +20,7 @@ export const ETH_SENTINEL_ADDRESS =
  * @param baseAssetDecimals the decimal precision of the asset, i.e. 18 for Ether
  * @param signerOrProvider
  */
-export async function userProxyMint(
+export async function mintWithUserProxy(
   userProxyContractAddress: string,
   trancheExpiration: number,
   tranchePosition: string,
