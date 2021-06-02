@@ -33,7 +33,6 @@ export async function joinConvergentCurvePool(
   // Whether or not to use balances held in balancer.  Since The Vault has nothing, set this to false.
   const fromInternalBalance = false;
 
-  console.log("aboot to join");
   const joinRequest = {
     assets: tokens,
     maxAmountsIn,
