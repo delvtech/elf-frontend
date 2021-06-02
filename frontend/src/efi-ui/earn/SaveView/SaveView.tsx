@@ -15,11 +15,18 @@ import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { ConnectWalletButton2 } from "efi-ui/wallets/ConnectWalletButton/ConnectWalletButton2";
 import { assertNever } from "efi/base/assertNever";
-import { principalTokenInfos } from "efi/tranche/tranches";
+import {
+  principalTokenInfos,
+  trancheContractsByAddress,
+} from "efi/tranche/tranches";
 
 import { SaveNavigation } from "./SaveNavigation";
 import { SaveTab } from "./SaveTab";
 import { SaveViewSubtitle } from "./SaveViewSubtitle";
+import { useTokensWithBalance } from "efi-ui/token/hooks/useTokensWithBalance";
+import { isDust } from "efi/coins/isDust";
+import { getTokenInfo } from "efi/tokenlists";
+import { PrincipalTokenInfo } from "tokenlists/types";
 
 interface EarnViewProps extends RouteComponentProps {}
 
@@ -39,8 +46,15 @@ export function SaveView(props: EarnViewProps): ReactElement {
     SaveNavigation.SAVE
   );
 
+  const principalTokensWithBalance =
+    usePrincipalTokensWithNonDustBalance(account);
+
   const viewTitleLabel = getViewTitle(activeTab);
   const viewTitleBottomLabel = getBottomViewTitle(activeTab);
+
+  // don't show the link to View Balances if they aren't connect or don't have any
+  const showBalancesLink = account && principalTokensWithBalance.length > 0;
+
   return (
     <Fragment>
       <Helmet>
@@ -94,7 +108,7 @@ export function SaveView(props: EarnViewProps): ReactElement {
             className={tw("flex", "flex-col", "space-y-4")}
             style={widthStyle}
           >
-            {account ? (
+            {showBalancesLink ? (
               <SaveTab activeTab={activeTab} onActiveTabChange={setActiveTab} />
             ) : null}
 
@@ -105,7 +119,7 @@ export function SaveView(props: EarnViewProps): ReactElement {
             {activeTab === SaveNavigation.BALANCES && (
               <SaveBalancesList
                 account={account}
-                principalTokens={principalTokenInfos}
+                principalTokens={principalTokensWithBalance}
               />
             )}
           </div>
@@ -114,6 +128,32 @@ export function SaveView(props: EarnViewProps): ReactElement {
     </Fragment>
   );
 }
+
+function usePrincipalTokensWithNonDustBalance(
+  account: string | null | undefined
+): PrincipalTokenInfo[] {
+  const principalTokenContracts = principalTokenInfos.map(
+    ({ address }) => trancheContractsByAddress[address]
+  );
+
+  const principalTokensWithBalance = useTokensWithBalance(
+    account,
+    principalTokenContracts
+  );
+
+  const filteredByDust = principalTokensWithBalance.filter(
+    ({ balanceOf, token }) => {
+      const { decimals } = getTokenInfo(token.address);
+      return !isDust(balanceOf, decimals);
+    }
+  );
+  const principalTokensWithNonDustBalance = filteredByDust.map(
+    ({ balanceOf, token }) => getTokenInfo<PrincipalTokenInfo>(token.address)
+  );
+
+  return principalTokensWithNonDustBalance;
+}
+
 function getViewTitle(activeTab: SaveNavigation) {
   switch (activeTab) {
     case SaveNavigation.SAVE:

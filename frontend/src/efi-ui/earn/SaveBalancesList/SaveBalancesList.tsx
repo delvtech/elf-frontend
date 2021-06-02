@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import { ReactElement } from "react";
 
 import { PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
@@ -13,6 +13,7 @@ interface SaveBalancesListProps {
 
 export function SaveBalancesList(props: SaveBalancesListProps): ReactElement {
   const { principalTokens, account } = props;
+
   return (
     <div className={tw("flex", "flex-col", "space-y-4")}>
       <div className={tw("grid", "grid-cols-6", "gap-4")}>
