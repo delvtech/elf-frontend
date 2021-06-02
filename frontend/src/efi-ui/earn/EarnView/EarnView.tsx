@@ -1,6 +1,5 @@
 import {
   CSSProperties,
-  FC,
   Fragment,
   ReactElement,
   useCallback,
@@ -10,9 +9,9 @@ import { Helmet } from "react-helmet";
 
 import { Button, Intent, Tag } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
-import { Link, RouteComponentProps } from "@reach/router";
+import { RouteComponentProps } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
-import { jt, t } from "ttag";
+import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { EarnCard } from "efi-ui/earn/EarnCard/EarnCard";
@@ -21,6 +20,8 @@ import { EarnBalancesList } from "efi-ui/earn/EarnBalancesList/EarnBalancesList"
 import { assertNever } from "efi/base/assertNever";
 import { principalTokenInfos } from "efi/tranche/tranches";
 import { IconNames } from "@blueprintjs/icons";
+import { formatWalletAddress } from "efi/wallets/formatWalletAddress";
+import { SaveViewSubtitle } from "./SaveViewSubtitle";
 
 interface EarnViewProps extends RouteComponentProps {}
 
@@ -49,9 +50,10 @@ export function EarnView(props: EarnViewProps): ReactElement {
     }
   }, [activeTab]);
 
-  const activeTabLabel = getActiveTabLabel(activeTab, account);
+  const activeTabLabel = getActiveTabLabel(activeTab);
   const activeTabIcon = getActiveTabIconName(activeTab);
-
+  const viewTitleLabel = getViewTitle(activeTab, account);
+  const viewTitleBottomLabel = getBottomViewTitle(activeTab, account);
   return (
     <Fragment>
       <Helmet>
@@ -72,10 +74,10 @@ export function EarnView(props: EarnViewProps): ReactElement {
         {/* page title */}
         <div style={maxWidthStyle}>
           <ViewTitle
-            title={t`Earn fixed yield from buying at a discount.`}
-            bottomTitle={t`Exit anytime.`}
+            title={viewTitleLabel}
+            bottomTitle={viewTitleBottomLabel}
             titleTag={<Tag minimal intent={Intent.WARNING}>{t`alpha`}</Tag>}
-            subtitle={<EarnViewSubtitle />}
+            subtitle={<SaveViewSubtitle activeTab={activeTab} />}
           />
         </div>
         {/* Main content */}
@@ -121,34 +123,7 @@ export function EarnView(props: EarnViewProps): ReactElement {
     </Fragment>
   );
 }
-
-const EarnViewSubtitle: FC = () => {
-  const fixedYieldLink = (
-    <a
-      key="fixed-yield-link"
-      href={
-        "https://medium.com/element-finance/fixed-rate-interest-markets-a-casual-users-journey-through-fixed-rate-interest-using-element-50f420df1859"
-      }
-      target="_noreferrer"
-    >
-      {t`Read more about Fixed Yield.`}
-    </a>
-  );
-
-  const portfolioLink = (
-    <Link key="portfolio-link" to={`/portfolio`}>
-      {t`Portfolio Page`}
-    </Link>
-  );
-
-  return (
-    <Fragment>{jt`Principal Tokens are redeemable one-to-one with their base asset once they have reached their maturity date. To boost your APY further, you may stake your tokens on the ${portfolioLink}. ${fixedYieldLink}`}</Fragment>
-  );
-};
-function getActiveTabLabel(
-  activeTab: SaveNavigation,
-  account: string | null | undefined
-) {
+function getActiveTabLabel(activeTab: SaveNavigation) {
   switch (activeTab) {
     case SaveNavigation.SAVE: {
       return t`View balances`;
@@ -166,6 +141,37 @@ function getActiveTabIconName(activeTab: SaveNavigation) {
       return IconNames.TH_LIST;
     case SaveNavigation.BALANCES:
       return IconNames.ARROW_LEFT;
+    default:
+      assertNever(activeTab);
+  }
+}
+function getViewTitle(
+  activeTab: SaveNavigation,
+  account: string | null | undefined
+) {
+  switch (activeTab) {
+    case SaveNavigation.SAVE:
+      return t`Earn fixed yield from buying at a discount.`;
+
+    case SaveNavigation.BALANCES:
+      return t`Principal token balances`;
+    default:
+      assertNever(activeTab);
+  }
+}
+function getBottomViewTitle(
+  activeTab: SaveNavigation,
+  account: string | null | undefined
+) {
+  switch (activeTab) {
+    case SaveNavigation.SAVE:
+      return t`Exit anytime.`;
+
+    case SaveNavigation.BALANCES:
+      if (account) {
+        return t`(${formatWalletAddress(account)})`;
+      }
+      return null;
     default:
       assertNever(activeTab);
   }
