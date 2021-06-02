@@ -1,4 +1,5 @@
 import { Signer } from "ethers";
+import { getTerms } from "src/helpers/getTerms";
 import { Tranche__factory } from "src/types/factories/Tranche__factory";
 import { TrancheFactory } from "src/types/TrancheFactory";
 import { YVaultAssetProxy } from "src/types/YVaultAssetProxy";
@@ -15,14 +16,13 @@ export async function deployTranche(
   );
   await txReceipt.wait(1);
 
-  const queryFilter = trancheFactoryContract.filters.TrancheCreated(
-    null,
+  const trancheAddresses = await getTerms(
+    trancheFactoryContract.address,
     yearnVaultAssetProxy.address,
-    null
+    signer
   );
-  const trancheEvents = await trancheFactoryContract.queryFilter(queryFilter);
-  const trancheAddress: string =
-    trancheEvents[trancheEvents.length - 1].args?.trancheAddress;
-  const trancheContract = Tranche__factory.connect(trancheAddress, signer);
+
+  const lastTrancheDeployed = trancheAddresses[trancheAddresses.length - 1];
+  const trancheContract = Tranche__factory.connect(lastTrancheDeployed, signer);
   return trancheContract;
 }
