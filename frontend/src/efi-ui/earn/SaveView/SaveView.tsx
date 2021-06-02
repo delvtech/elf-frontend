@@ -1,14 +1,6 @@
-import {
-  CSSProperties,
-  Fragment,
-  ReactElement,
-  useCallback,
-  useState,
-} from "react";
+import { CSSProperties, Fragment, ReactElement, useState } from "react";
 import { Helmet } from "react-helmet";
 
-import { Button } from "@blueprintjs/core";
-import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
 import { RouteComponentProps } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
@@ -21,21 +13,18 @@ import { EarnCard } from "efi-ui/earn/EarnCard/EarnCard";
 import { SaveBalancesList } from "efi-ui/earn/SaveBalancesList/SaveBalancesList";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
+import { ConnectWalletButton2 } from "efi-ui/wallets/ConnectWalletButton/ConnectWalletButton2";
 import { assertNever } from "efi/base/assertNever";
 import { principalTokenInfos } from "efi/tranche/tranches";
 
+import { SaveNavigation } from "./SaveNavigation";
+import { SaveTab } from "./SaveTab";
 import { SaveViewSubtitle } from "./SaveViewSubtitle";
-import { ConnectWalletButton2 } from "efi-ui/wallets/ConnectWalletButton/ConnectWalletButton2";
 
 interface EarnViewProps extends RouteComponentProps {}
 
 const maxWidthStyle: CSSProperties = { maxWidth: 672 };
 const widthStyle = { width: 672 };
-
-export enum SaveNavigation {
-  SAVE = "save",
-  BALANCES = "balances",
-}
 
 export function SaveView(props: EarnViewProps): ReactElement {
   const {
@@ -49,21 +38,7 @@ export function SaveView(props: EarnViewProps): ReactElement {
   const [activeTab, setActiveTab] = useState<SaveNavigation>(
     SaveNavigation.SAVE
   );
-  const onActiveTabClick = useCallback(() => {
-    switch (activeTab) {
-      case SaveNavigation.SAVE:
-        setActiveTab(SaveNavigation.BALANCES);
-        return;
-      case SaveNavigation.BALANCES:
-        setActiveTab(SaveNavigation.SAVE);
-        return;
-      default:
-        assertNever(activeTab);
-    }
-  }, [activeTab]);
 
-  const activeTabLabel = getActiveTabLabel(activeTab);
-  const activeTabIcon = getActiveTabIconName(activeTab);
   const viewTitleLabel = getViewTitle(activeTab);
   const viewTitleBottomLabel = getBottomViewTitle(activeTab);
   return (
@@ -120,16 +95,7 @@ export function SaveView(props: EarnViewProps): ReactElement {
             style={widthStyle}
           >
             {account ? (
-              <div className={tw("text-right")}>
-                <Button
-                  minimal
-                  large
-                  onClick={onActiveTabClick}
-                  icon={activeTabIcon}
-                >
-                  {activeTabLabel}
-                </Button>
-              </div>
+              <SaveTab activeTab={activeTab} onActiveTabChange={setActiveTab} />
             ) : null}
 
             {activeTab === SaveNavigation.SAVE && (
@@ -147,28 +113,6 @@ export function SaveView(props: EarnViewProps): ReactElement {
       </div>
     </Fragment>
   );
-}
-function getActiveTabLabel(activeTab: SaveNavigation) {
-  switch (activeTab) {
-    case SaveNavigation.SAVE: {
-      return t`View balances`;
-    }
-    case SaveNavigation.BALANCES:
-      return t`Back to Save`;
-    default:
-      assertNever(activeTab);
-  }
-}
-
-function getActiveTabIconName(activeTab: SaveNavigation) {
-  switch (activeTab) {
-    case SaveNavigation.SAVE:
-      return IconNames.TH_LIST;
-    case SaveNavigation.BALANCES:
-      return IconNames.ARROW_LEFT;
-    default:
-      assertNever(activeTab);
-  }
 }
 function getViewTitle(activeTab: SaveNavigation) {
   switch (activeTab) {
