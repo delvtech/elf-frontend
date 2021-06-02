@@ -1,4 +1,4 @@
-import React, {
+import {
   CSSProperties,
   Fragment,
   ReactElement,
@@ -28,10 +28,7 @@ import { SaveViewSubtitle } from "./SaveViewSubtitle";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { ChainId, isMainnet } from "efi/ethereum";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
-import { Tooltip2 } from "@blueprintjs/popover2";
-import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { WalletJazzicon } from "efi-ui/wallets/WalletJazzicon/WalletJazzicon";
-import { formatChainName } from "efi/crypto/formatChainName";
 
 interface EarnViewProps extends RouteComponentProps {}
 
@@ -95,7 +92,7 @@ export function SaveView(props: EarnViewProps): ReactElement {
         className={tw(
           "flex",
           "flex-col",
-          "p-8",
+          "p-6",
           "h-full",
           "items-center",
           "overflow-scroll"
@@ -147,7 +144,16 @@ export function SaveView(props: EarnViewProps): ReactElement {
         </div>
 
         <div
-          className={tw("text-center", "items-center")}
+          className={tw(
+            "flex",
+            "flex-col",
+            "flex-1",
+            "space-y-12",
+            "pt-12",
+            "items-center",
+            "justify-center",
+            "text-center"
+          )}
           style={maxWidthStyle}
         >
           <ViewTitle
@@ -156,33 +162,22 @@ export function SaveView(props: EarnViewProps): ReactElement {
             titleTag={<Tag minimal intent={Intent.WARNING}>{t`alpha`}</Tag>}
             subtitle={<SaveViewSubtitle activeTab={activeTab} />}
           />
-        </div>
-        {/* Main content */}
-        <div
-          className={tw(
-            "flex",
-            "flex-col",
-            "flex-1",
-            "space-y-12",
-            "pt-12",
-            "items-center",
-            "justify-center"
-          )}
-        >
           <div
             className={tw("flex", "flex-col", "space-y-4")}
             style={widthStyle}
           >
-            <div className={tw("text-right")}>
-              <Button
-                minimal
-                large
-                onClick={onActiveTabClick}
-                icon={activeTabIcon}
-              >
-                {activeTabLabel}
-              </Button>
-            </div>
+            {account ? (
+              <div className={tw("text-right")}>
+                <Button
+                  minimal
+                  large
+                  onClick={onActiveTabClick}
+                  icon={activeTabIcon}
+                >
+                  {activeTabLabel}
+                </Button>
+              </div>
+            ) : null}
 
             {activeTab === SaveNavigation.SAVE && (
               <EarnCard library={library} account={account} />
