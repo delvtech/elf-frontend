@@ -28,7 +28,7 @@ export const trancheContractsByAddress = keyBy(
   (tranche) => tranche.address
 );
 
-const openTranchesInfos = principalTokenInfos.filter(
+export const openPrincipalTokens = principalTokenInfos.filter(
   ({ extensions: { unlockTimestamp } }) => unlockTimestamp * 1000 > Date.now()
 );
 
@@ -36,7 +36,7 @@ const openTranchesInfos = principalTokenInfos.filter(
  * The list of tranches that are currently running.
  */
 export const openTranches = getSmartContractFromRegistryMulti(
-  openTranchesInfos.map(({ address }) => address),
+  openPrincipalTokens.map(({ address }) => address),
   Tranche__factory.connect
 ) as Tranche[];
 

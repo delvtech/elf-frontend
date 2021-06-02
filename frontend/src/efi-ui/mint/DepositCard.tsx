@@ -107,7 +107,7 @@ export function DepositCard(props: MintPoolCardProps): ReactElement | null {
   const { createdAtTimestamp: trancheCreatedAt, unlockTimestamp } =
     trancheInfo.extensions;
   const maturityTime = unlockTimestamp * 1000;
-  const isMature = getIsMature2(maturityTime);
+  const isMature = getIsMature2(unlockTimestamp);
   const onToggleExpand = useCallback(() => {
     if (isMature) {
       return;
