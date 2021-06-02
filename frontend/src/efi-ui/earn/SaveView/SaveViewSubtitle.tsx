@@ -43,7 +43,7 @@ export function SaveViewSubtitle(
   switch (activeTab) {
     case SaveNavigation.SAVE:
       return (
-        <Fragment>{jt`Principal Tokens are redeemable one-to-one with their base asset once they have reached their maturity date. To boost your APY further, you may stake your tokens on the ${portfolioLink}. ${fixedYieldLink}`}</Fragment>
+        <Fragment>{jt`Principal Tokens are redeemable one-to-one with their base asset once they have reached their maturity date. ${fixedYieldLink}`}</Fragment>
       );
 
     case SaveNavigation.BALANCES:
