@@ -31,6 +31,7 @@ export function useExitWeightedPool(
   const { data: poolId } = useSmartContractReadCall(pool, "getPoolId");
   const { data: [poolTokens = [], poolTokenReserves = []] = [] } =
     usePoolTokens(pool);
+
   const poolTokenContracts = getSmartContractFromRegistryMulti(
     poolTokens,
     ERC20__factory.connect
@@ -133,6 +134,10 @@ function getPoolTokenMinAmountsOut(
   poolTokenReserves: BigNumber[],
   poolTokenDecimals: (number | undefined)[]
 ) {
+  if (!poolTokenReserves.length) {
+    return undefined;
+  }
+
   const lpIn = formatUnits(lpBalanceOf, BALANCER_POOL_LP_TOKEN_DECIMALS);
   const totalSupplyString = formatUnits(
     totalSupply,
