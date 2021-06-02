@@ -10,6 +10,7 @@ import { clipStringValueToDecimals } from "efi/math/fixedPoint";
  */
 export function isDust(balanceOf: BigNumber, decimals: number): boolean {
   const lpBalanceString = formatUnits(balanceOf, decimals);
+
   // no balance means no dust
   if (+lpBalanceString === 0) {
     return false;

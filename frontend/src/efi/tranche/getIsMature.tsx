@@ -15,7 +15,7 @@ export function getIsMature(maturationDate: Date | undefined): boolean {
 
 export function getIsMature2(unlockTimestamp: number): boolean {
   const now = Date.now();
-  if (now >= unlockTimestamp) {
+  if (now >= unlockTimestamp * 1000) {
     return true;
   }
   return false;

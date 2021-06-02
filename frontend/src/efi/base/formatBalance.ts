@@ -6,7 +6,7 @@ export function formatBalance(
   decimals: number | undefined
 ): string {
   if (!balance || !decimals) {
-    return "0";
+    return "0.0000";
   }
 
   const numBalance = +formatUnits(balance, decimals);

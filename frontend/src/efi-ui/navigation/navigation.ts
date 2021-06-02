@@ -8,5 +8,6 @@ export enum Navigation {
   YIELD_POOLS = "yield",
   POOL = "pool",
   EARN = "earn",
+  SAVE = "save",
   RESOURCES = "resources",
 }
