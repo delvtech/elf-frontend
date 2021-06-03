@@ -3,7 +3,6 @@
 }
 
 .investmentAmount input {
-  /* box-shadow: none; */
   text-align: right;
 
   /* equivalent to tw('pr-5'); */
