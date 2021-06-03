@@ -1,6 +1,13 @@
 import { ReactElement, useState } from "react";
 
-import { Button, Card, Collapse, Intent, Tag } from "@blueprintjs/core";
+import {
+  Button,
+  Card,
+  Collapse,
+  Elevation,
+  Intent,
+  Tag,
+} from "@blueprintjs/core";
 import { PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
@@ -68,7 +75,11 @@ export function SaveBalanceCard(
   const formattedUnlockDate = formatAbbreviatedDate(unlockDate);
   const isRedeemable = getIsMature2(unlockTimestamp);
   return (
-    <Card interactive className={tw("p-0")}>
+    <Card
+      interactive={!isExpanded}
+      elevation={isExpanded ? Elevation.TWO : Elevation.ZERO}
+      className={tw("p-0")}
+    >
       <Card
         className={tw("grid", "grid-cols-5", "gap-4")}
         onClick={isExpanded ? onExpandClose : onExpandOpen}
