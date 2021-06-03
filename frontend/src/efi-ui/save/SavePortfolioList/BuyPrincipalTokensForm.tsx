@@ -58,7 +58,7 @@ export function BuyPrincipalTokensForm(
         )}
       >
         <span
-          className={tw("pb-4", "text-base")}
+          className={tw("pb-4")}
         >{t`Buy principal tokens with your ${baseAssetSymbol}`}</span>
         <div className={tw("grid", "grid-cols-4", "gap-3")}>
           <SaveInput

@@ -47,7 +47,7 @@ export function SellPrincipalTokensForm(
     <div className={tw("flex", "items-center")}>
       <div className={tw("flex", "flex-col", "w-full", "space-y-2")}>
         <span
-          className={tw("pb-4", "text-base")}
+          className={tw("pb-4")}
         >{t`Sell your principal tokens for ${baseAssetSymbol}`}</span>
         <div className={tw("grid", "grid-cols-4", "gap-3")}>
           <SaveInput
