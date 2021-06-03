@@ -12,7 +12,7 @@ import tw from "efi-tailwindcss-classnames";
 import { useExitWeightedPool } from "efi-ui/pools/useUnstake/useExitWeightedPool";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
-import { clipStringValueToDecimals } from "efi/math/fixedPoint";
+import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
 
 interface UnstakeWeightedPoolButtonProps {
   account: string | null | undefined;

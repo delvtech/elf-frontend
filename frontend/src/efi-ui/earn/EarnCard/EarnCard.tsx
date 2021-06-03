@@ -33,7 +33,7 @@ import { formatBalance } from "efi/base/formatBalance";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
-import { clipStringValueToDecimals } from "efi/math/fixedPoint";
+import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
 import {
   calcSwapInGivenOutCCPoolUNSAFE,
   calcSwapOutGivenInCCPoolUNSAFE,

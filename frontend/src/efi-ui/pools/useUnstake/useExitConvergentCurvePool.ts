@@ -19,7 +19,7 @@ import ContractAddresses from "efi/addresses";
 import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 import { getSmartContractFromRegistryMulti } from "efi/contracts/SmartContractsRegistry";
 import { ContractMethodArgs } from "efi/contracts/types";
-import { clipStringValueToDecimals } from "efi/math/fixedPoint";
+import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
 import { calculateTokensOutForLPInFixed } from "efi/pools/calculateTokensOutForLPIn";
 
 export function useExitConvergentCurvePool(

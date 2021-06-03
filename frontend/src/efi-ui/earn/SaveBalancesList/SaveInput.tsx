@@ -11,7 +11,7 @@ import { SwapKind } from "efi-ui/balancer/SwapKind";
 import { validateInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import styles from "efi-ui/earn/SaveBalancesList/SaveInput.module.css";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import { clipStringValueToDecimals } from "efi/math/fixedPoint";
+import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
 
 interface EarnInputProps {
   showMaxButton: boolean;
