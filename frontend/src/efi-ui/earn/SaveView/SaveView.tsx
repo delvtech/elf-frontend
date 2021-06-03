@@ -171,7 +171,7 @@ function getViewTitle(activeTab: SaveNavigation) {
       return t`Earn fixed yield from buying at a discount.`;
 
     case SaveNavigation.BALANCES:
-      return t`Principal Token balances`;
+      return t`Principal tokens in this wallet`;
     default:
       assertNever(activeTab);
   }

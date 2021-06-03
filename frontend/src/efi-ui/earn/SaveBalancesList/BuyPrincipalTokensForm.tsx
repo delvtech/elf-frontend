@@ -41,6 +41,7 @@ export function BuyPrincipalTokensForm(
   const { decimals: baseAssetDecimals } = baseAssetTokenInfo;
   const baseAssetBalanceLabel = formatBalance(
     baseAssetBalanceOf,
+    baseAssetDecimals,
     baseAssetDecimals
   );
   return (

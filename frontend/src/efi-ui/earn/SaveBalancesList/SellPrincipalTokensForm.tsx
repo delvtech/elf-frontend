@@ -35,7 +35,7 @@ export function SellPrincipalTokensForm(
   // tranche
   const trancheContract = trancheContractsByAddress[ptAddress];
   const { data: ptBalanceOf } = useTokenBalanceOf(trancheContract, account);
-  const ptBalanceLabel = formatBalance(ptBalanceOf, ptDecimals);
+  const ptBalanceLabel = formatBalance(ptBalanceOf, ptDecimals, ptDecimals);
 
   return (
     <div className={tw("flex", "items-center")}>
