@@ -2,7 +2,7 @@ import { ReactElement } from "react";
 import { Button, Intent, Tag } from "@blueprintjs/core";
 import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
-import { SaveInput } from "efi-ui/earn/SaveBalancesList/SaveInput";
+import { SaveInput } from "efi-ui/earn/SavePortfolioList/SaveInput";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { PrincipalTokenInfo } from "tokenlists/types";
 import { SwapKind } from "efi-ui/balancer/SwapKind";

@@ -4,16 +4,16 @@ import { PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { SaveBalanceCard } from "efi-ui/earn/SaveBalancesList/SaveBalanceCard";
+import { SavePortfolioCard } from "efi-ui/earn/SavePortfolioList/SavePortfolioCard";
 import { Web3Provider } from "@ethersproject/providers";
 
-interface SaveBalancesListProps {
+interface SavePortfolioListProps {
   library: Web3Provider | undefined;
   account: string | null | undefined;
   principalTokens: PrincipalTokenInfo[];
 }
 
-export function SaveBalancesList(props: SaveBalancesListProps): ReactElement {
+export function SavePortfolioList(props: SavePortfolioListProps): ReactElement {
   const { library, principalTokens, account } = props;
 
   const [expandedCardIndex, setExpandedCardIndex] = useState(-1);
@@ -31,7 +31,7 @@ export function SaveBalancesList(props: SaveBalancesListProps): ReactElement {
       </div>
       {principalTokens.map((principalToken, i) => {
         return (
-          <SaveBalanceCard
+          <SavePortfolioCard
             library={library}
             key={principalToken.address}
             account={account}
