@@ -59,11 +59,12 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
       </div>
       <Card className={tw("flex", "flex-col", "flex-1", "w-full", "space-y-2")}>
         <Tabs onChange={setActiveTab as (newTabId: PoolAction) => void}>
-          <Tab id={PoolAction.SWAP} title={t`Trade`} />
+          <Tab id={PoolAction.BUY} title={t`Buy`} />
+          <Tab id={PoolAction.SELL} title={t`Sell`} />
           <Tab id={PoolAction.ADD_LIQUIDITY} title={t`Add Liquidity`} />
           <Tab id={PoolAction.REMOVE_LIQUIDITY} title={t`Remove Liquidity`} />
         </Tabs>
-        {activeTab === PoolAction.SWAP && (
+        {activeTab === PoolAction.BUY && (
           <TradePanel
             library={library}
             signer={signer}
@@ -75,7 +76,23 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
             poolInfo={poolInfo}
             tokenIn={tokenIn}
             tokenOut={tokenOut}
-            buttonLabel={t`Trade`}
+            buttonLabel={t`Buy`}
+            buttonIntent={Intent.PRIMARY}
+          />
+        )}
+        {activeTab === PoolAction.SELL && (
+          <TradePanel
+            library={library}
+            signer={signer}
+            account={account}
+            chainId={chainId}
+            connector={connector}
+            walletActive={walletActive}
+            pool={pool}
+            poolInfo={poolInfo}
+            tokenIn={tokenIn}
+            tokenOut={tokenOut}
+            buttonLabel={t`Sell`}
             buttonIntent={Intent.PRIMARY}
           />
         )}
@@ -105,8 +122,8 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
 // one time use effect to set the default back to swap.
 function useClearTab(tab: PoolAction, setTab: (tab: PoolAction) => void) {
   useEffect(() => {
-    if (tab !== PoolAction.SWAP) {
-      setTab(PoolAction.SWAP);
+    if (tab !== PoolAction.BUY) {
+      setTab(PoolAction.BUY);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

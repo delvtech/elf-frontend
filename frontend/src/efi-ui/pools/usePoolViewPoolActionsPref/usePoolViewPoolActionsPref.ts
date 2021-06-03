@@ -1,7 +1,8 @@
 import { usePref } from "efi-ui/prefs/usePref/usePref";
 
 export enum PoolAction {
-  SWAP = "swap",
+  BUY = "buy",
+  SELL = "sell",
   ADD_LIQUIDITY = "stake",
   REMOVE_LIQUIDITY = "unstake",
 }
@@ -13,9 +14,9 @@ interface PoolActionsPref {
 const POOL_VIEW_ACTION_TAB_PREF_ID = "poolview-action-tab";
 
 export function usePoolViewPoolActionsTab(): PoolActionsPref {
-  const { pref: tab = PoolAction.SWAP, setPref: setTab } = usePref<PoolAction>(
+  const { pref: tab = PoolAction.BUY, setPref: setTab } = usePref<PoolAction>(
     POOL_VIEW_ACTION_TAB_PREF_ID,
-    PoolAction.SWAP
+    PoolAction.BUY
   );
 
   return {
