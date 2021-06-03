@@ -2,10 +2,10 @@ import { parseEther, parseUnits } from "ethers/lib/utils";
 import hre from "hardhat";
 
 import { MAX_ALLOWANCE } from "src/maxAllowance";
-import { exitConvergentCurvePool } from "src/scripts/exitConvergentCurvePool";
+import { exitConvergentCurvePool } from "src/helpers/exitConvergentCurvePool";
 import { getContracts } from "src/scripts/getContracts";
 import { getSigner, SIGNER } from "src/scripts/getSigner";
-import { joinConvergentCurvePool } from "src/scripts/joinConvergentCurvePool";
+import { joinConvergentCurvePool } from "src/helpers/joinConvergentCurvePool";
 import { printSpotPriceForPool } from "src/scripts/printSpotPriceForPool";
 import { printTokenInfoForPool } from "src/scripts/printTokenInfoForPool";
 
