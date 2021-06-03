@@ -58,10 +58,7 @@ interface SwapTokensTransactionConfirmationDrawerProps {
 }
 
 export function SwapTokensTransactionConfirmationDrawer({
-  connector,
-  walletConnectionActive,
   library,
-  chainId,
   account,
   tokenInAsset,
   tokenInAddress,

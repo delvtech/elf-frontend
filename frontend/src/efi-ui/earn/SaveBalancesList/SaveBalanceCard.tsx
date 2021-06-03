@@ -1,9 +1,9 @@
-import React, { ReactElement } from "react";
+import { ReactElement, useState } from "react";
 
 import {
   Button,
-  ButtonGroup,
   Card,
+  Collapse,
   Elevation,
   Intent,
   Tag,
@@ -22,17 +22,29 @@ import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { isDust } from "efi/coins/isDust";
+import { SaveTransactionsCard } from "./SaveTransactionsCard";
+import { SaveTransactionTabId } from "./SaveTransactionTabId";
+import { Web3Provider } from "@ethersproject/providers";
 
 interface SaveBalanceCardProps {
+  library: Web3Provider | undefined;
   account: string | null | undefined;
   principalToken: PrincipalTokenInfo;
+  isExpanded: boolean;
+  onExpandOpen: () => void;
+  onExpandClose: () => void;
 }
 
 export function SaveBalanceCard(
   props: SaveBalanceCardProps
 ): ReactElement | null {
   const {
+    library,
     account,
+    isExpanded,
+    onExpandOpen,
+    onExpandClose,
+    principalToken,
     principalToken: {
       address,
       decimals,
@@ -41,6 +53,11 @@ export function SaveBalanceCard(
       extensions: { unlockTimestamp, underlying },
     },
   } = props;
+
+  const [activeTabId, setActiveTabId] = useState<SaveTransactionTabId>(
+    SaveTransactionTabId.BUY
+  );
+
   const tranche = trancheContractsByAddress[address];
   const { data: balanceOf, isLoading } = useTokenBalanceOf(tranche, account);
   if (
@@ -59,30 +76,51 @@ export function SaveBalanceCard(
   const isRedeemable = getIsMature2(unlockTimestamp);
   return (
     <Card
-      elevation={Elevation.TWO}
-      className={tw("grid", "grid-cols-6", "gap-4")}
+      interactive={!isExpanded}
+      elevation={isExpanded ? Elevation.TWO : Elevation.ZERO}
+      className={tw("p-0")}
     >
-      <div className={tw("flex", "space-x-2", "col-span-2")}>
-        <LabeledText
-          className={tw("text-left", "pl-2")}
-          icon={BaseAssetIcon ? <BaseAssetIcon height={36} width={36} /> : null}
-          label={symbol}
-          text={name}
+      <Card
+        className={tw("grid", "grid-cols-5", "gap-4")}
+        onClick={isExpanded ? onExpandClose : onExpandOpen}
+      >
+        <div className={tw("flex", "space-x-2", "col-span-2")}>
+          <LabeledText
+            className={tw("text-left", "pl-2")}
+            icon={
+              BaseAssetIcon ? <BaseAssetIcon height={36} width={36} /> : null
+            }
+            label={symbol}
+            text={name}
+          />
+        </div>
+        <span>{balanceLabel}</span>
+        <span>
+          <Tag fill intent={isRedeemable ? Intent.SUCCESS : Intent.PRIMARY}>
+            {formattedUnlockDate}
+          </Tag>
+        </span>
+        <div className={tw("justify-end")}>
+          <Button
+            fill
+            minimal
+            intent={Intent.PRIMARY}
+            active={isExpanded}
+            onClick={isExpanded ? onExpandClose : onExpandOpen}
+          >
+            {isExpanded ? t`Hide` : t`Show`}
+          </Button>
+        </div>
+      </Card>
+      <Collapse isOpen={isExpanded}>
+        <SaveTransactionsCard
+          library={library}
+          account={account}
+          principalToken={principalToken}
+          activeTabId={activeTabId}
+          setActiveTabId={setActiveTabId}
         />
-      </div>
-      <span>{balanceLabel}</span>
-      <span>
-        <Tag minimal intent={isRedeemable ? Intent.SUCCESS : Intent.PRIMARY}>
-          {formattedUnlockDate}
-        </Tag>
-      </span>
-      <div className={tw("col-span-2", "justify-end")}>
-        <ButtonGroup>
-          <Button outlined>{t`Sell`}</Button>
-          <Button outlined>{t`Buy`}</Button>
-          <Button outlined disabled={!isRedeemable}>{t`Redeem`}</Button>
-        </ButtonGroup>
-      </div>
+      </Collapse>
     </Card>
   );
 }

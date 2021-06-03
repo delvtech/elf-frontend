@@ -16,7 +16,7 @@ import { getCalcSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
-import { useCryptoBalance } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
+import { useCryptoBalanceOf } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { useTokenPoolBalance } from "efi-ui/pools/useTokenPoolBalance/useTokenPoolBalance";
@@ -535,7 +535,7 @@ function useTokenInfoForTradeInput(
       : tokenContract?.address;
   const icon = findAssetIcon(baseAssetSymbol);
   const { data: decimals } = useTokenDecimals(tokenContract);
-  const balanceOf = useCryptoBalance(library, account, asset);
+  const balanceOf = useCryptoBalanceOf(library, account, asset);
   const displayBalance = formatBalance(balanceOf, decimals);
   const poolBalance = useTokenPoolBalance(pool, tokenContract);
   const poolIndex = useTokenPoolIndex(pool, tokenContract);

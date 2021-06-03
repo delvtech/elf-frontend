@@ -1,4 +1,4 @@
-import { getSafeFixedNumber } from "efi/math/fixedPoint";
+import { getSafeFixedNumber } from "efi/base/math/fixedPoint";
 import { BigNumber } from "ethers";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
 

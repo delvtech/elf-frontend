@@ -1,4 +1,4 @@
-import { CSSProperties, ReactElement, useCallback } from "react";
+import { ReactElement, useCallback } from "react";
 
 import { Colors, FormGroup, InputGroup, Intent, Tag } from "@blueprintjs/core";
 import classNames from "classnames";
@@ -9,7 +9,7 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { SwapKind } from "efi-ui/balancer/SwapKind";
 import { validateInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
-import styles from "efi-ui/earn/EarnInput/EarnInput.module.css";
+import styles from "efi-ui/earn/SaveBalancesList/SaveInput.module.css";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
 
@@ -24,18 +24,13 @@ interface EarnInputProps {
 
   placeholder?: string;
 
-  assetPickerRenderer: () => ReactElement;
+  assetIcon?: ReactElement;
   swapKind: SwapKind;
   valueDecimals: number | undefined;
   valueBalanceOf: BigNumber | undefined;
 }
 
-const earnInputStyle: CSSProperties = {
-  height: "94px",
-  width: "100%",
-  fontSize: 26,
-};
-export function EarnInput(props: EarnInputProps): ReactElement {
+export function SaveInput(props: EarnInputProps): ReactElement {
   const {
     className,
     value,
@@ -44,7 +39,7 @@ export function EarnInput(props: EarnInputProps): ReactElement {
     showMaxButton,
     placeholder,
     onValueChange: onChangeFromProps,
-    assetPickerRenderer,
+    assetIcon,
     swapKind,
     valueDecimals,
     valueBalanceOf,
@@ -64,7 +59,7 @@ export function EarnInput(props: EarnInputProps): ReactElement {
   );
 
   const maxButtonElement = showMaxButton ? (
-    <div className={tw("px-4")}>
+    <div className={tw("pl-4", "mr-1")}>
       <Tag minimal interactive onClick={setMaxValue}>{t`MAX`}</Tag>
     </div>
   ) : undefined;
@@ -78,23 +73,19 @@ export function EarnInput(props: EarnInputProps): ReactElement {
     </div>
   );
 
-  const assetPicker = assetPickerRenderer();
-
   return (
-    <FormGroup className={tw("w-full")} helperText={helperText}>
+    <FormGroup
+      className={classNames(tw("w-full", "mb-0"), className)}
+      helperText={helperText}
+    >
       <InputGroup
         placeholder={placeholder}
-        style={earnInputStyle}
-        className={classNames(
-          tw("w-full"),
-          styles.investmentAmount,
-          { [styles.investmentAmountLightMode]: !isDarkMode },
-          className
-        )}
+        className={classNames(tw("w-full"), styles.investmentAmount, {
+          [styles.investmentAmountLightMode]: !isDarkMode,
+        })}
         value={value || ""}
         intent={isValid ? undefined : Intent.DANGER}
-        large
-        leftElement={assetPicker}
+        leftElement={assetIcon}
         rightElement={maxButtonElement}
         onChange={onChange}
       />

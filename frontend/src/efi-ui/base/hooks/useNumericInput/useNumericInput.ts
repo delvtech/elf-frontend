@@ -5,7 +5,7 @@ import {
   isFiniteNumber,
   isIntegerNumber,
 } from "efi/base/numbers";
-import { getPlacesAfterDecimal } from "efi/math/fixedPoint";
+import { getPlacesAfterDecimal } from "efi/base/math/fixedPoint";
 
 export interface NumericInputOptions {
   /**

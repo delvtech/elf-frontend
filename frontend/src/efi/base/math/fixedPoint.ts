@@ -1,6 +1,6 @@
 import { FixedNumber } from "ethers";
 
-import { NUM_ETH_DECIMALS } from "efi/ethereum";
+const NUM_ETH_DECIMALS = 18;
 
 export interface FixedFormat {
   /**

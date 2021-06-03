@@ -10,7 +10,7 @@ import tw from "efi-tailwindcss-classnames";
 import { SwapKind } from "efi-ui/balancer/SwapKind";
 import { validateInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { TokenIcon } from "efi-ui/token/TokenIcon";
-import { clipStringValueToDecimals } from "efi/math/fixedPoint";
+import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
 import { PoolContract } from "efi/pools/PoolContract";
 
 import styles from "./TradeInput.module.css";

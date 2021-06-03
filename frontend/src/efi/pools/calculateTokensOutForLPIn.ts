@@ -1,7 +1,7 @@
 import {
   clipFixNumberToStringDecimals,
   getSafeFixedNumber,
-} from "efi/math/fixedPoint";
+} from "efi/base/math/fixedPoint";
 
 /**
  * calculates the tokens that would be recieved for an exact amount of LP in.  uses fixedpoint math

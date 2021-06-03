@@ -1,87 +1,62 @@
-import {
-  CSSProperties,
-  Fragment,
-  ReactElement,
-  useCallback,
-  useState,
-} from "react";
+import { CSSProperties, Fragment, ReactElement, useState } from "react";
 import { Helmet } from "react-helmet";
 
-import { Button, Colors, Icon, Intent } from "@blueprintjs/core";
-import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
 import { RouteComponentProps } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
 import { t } from "ttag";
 
-import logo from "efi-static-assets/logos/svg/logo--light.svg";
 import logoDark from "efi-static-assets/logos/svg/logo--dark.svg";
+import logo from "efi-static-assets/logos/svg/logo--light.svg";
 import tw from "efi-tailwindcss-classnames";
-import { SaveBalancesList } from "efi-ui/earn/SaveBalancesList/SaveBalancesList";
 import { EarnCard } from "efi-ui/earn/EarnCard/EarnCard";
+import { SaveBalancesList } from "efi-ui/earn/SaveBalancesList/SaveBalancesList";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
-import { assertNever } from "efi/base/assertNever";
-import { principalTokenInfos } from "efi/tranche/tranches";
-import { formatWalletAddress } from "efi/wallets/formatWalletAddress";
-
-import { SaveViewSubtitle } from "./SaveViewSubtitle";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import { ChainId, isMainnet } from "efi/ethereum";
-import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
-import { WalletJazzicon } from "efi-ui/wallets/WalletJazzicon/WalletJazzicon";
+import { ConnectWalletButton2 } from "efi-ui/wallets/ConnectWalletButton/ConnectWalletButton2";
+import { assertNever } from "efi/base/assertNever";
+import {
+  principalTokenInfos,
+  trancheContractsByAddress,
+} from "efi/tranche/tranches";
+
+import { SaveNavigation } from "./SaveNavigation";
+import { SaveTab } from "./SaveTab";
+import { SaveViewSubtitle } from "./SaveViewSubtitle";
+import { useTokensWithBalance } from "efi-ui/token/hooks/useTokensWithBalance";
+import { isDust } from "efi/coins/isDust";
+import { getTokenInfo } from "efi/tokenlists";
+import { PrincipalTokenInfo } from "tokenlists/types";
+import { IconNames } from "@blueprintjs/icons";
+import { Button } from "@blueprintjs/core";
 
 interface EarnViewProps extends RouteComponentProps {}
 
 const maxWidthStyle: CSSProperties = { maxWidth: 672 };
 const widthStyle = { width: 672 };
 
-export enum SaveNavigation {
-  SAVE = "save",
-  BALANCES = "balances",
-}
-const ChainColor: Record<number, string> = {
-  [ChainId.GOERLI]: Colors.BLUE4,
-  [ChainId.MAINNET]: Colors.GREEN4,
-  [ChainId.LOCAL]: Colors.WHITE,
-};
 export function SaveView(props: EarnViewProps): ReactElement {
-  const { account, library, chainId, active } = useWeb3React<Web3Provider>();
-  const { isDarkMode } = useDarkMode();
-  const [isWalletDialogOpen, setWalletDialogOpen] = useState(false);
-  const mainnetDanger =
-    !!chainId && isMainnet(chainId) && process.env.NODE_ENV !== "production";
-
-  let walletButtonIntent: Intent = Intent.NONE;
-  if (!account) {
-    walletButtonIntent = Intent.WARNING;
-  } else if (mainnetDanger) {
-    walletButtonIntent = Intent.DANGER;
-  }
-  const connectionStatusColor =
-    active && !!chainId ? ChainColor[chainId] : Colors.RED4;
-  const onCloseWalletDialog = useCallback(() => setWalletDialogOpen(false), []);
-  const onOpenWalletDialog = useCallback(() => setWalletDialogOpen(true), []);
+  const {
+    account,
+    library,
+    chainId,
+    active: walletConnectionActive,
+  } = useWeb3React<Web3Provider>();
+  const { isDarkMode, setDarkModeOn, setDarkModeOff } = useDarkMode();
 
   const [activeTab, setActiveTab] = useState<SaveNavigation>(
     SaveNavigation.SAVE
   );
-  const onActiveTabClick = useCallback(() => {
-    switch (activeTab) {
-      case SaveNavigation.SAVE:
-        setActiveTab(SaveNavigation.BALANCES);
-        return;
-      case SaveNavigation.BALANCES:
-        setActiveTab(SaveNavigation.SAVE);
-        return;
-      default:
-        assertNever(activeTab);
-    }
-  }, [activeTab]);
 
-  const activeTabLabel = getActiveTabLabel(activeTab);
-  const activeTabIcon = getActiveTabIconName(activeTab);
+  const principalTokensWithBalance =
+    usePrincipalTokensWithNonDustBalance(account);
+
   const viewTitleLabel = getViewTitle(activeTab);
   const viewTitleBottomLabel = getBottomViewTitle(activeTab);
+
+  // don't show the link to View Balances if they aren't connect or don't have any
+  const showBalancesLink = account && principalTokensWithBalance.length > 0;
+
   return (
     <Fragment>
       <Helmet>
@@ -107,41 +82,18 @@ export function SaveView(props: EarnViewProps): ReactElement {
             src={isDarkMode ? logoDark : logo}
             alt={t`Element Finance`}
           />
-          <div className={tw("flex", "space-x-8", "items-center")}>
-            {!account ? (
-              <div>
-                <Button
-                  outlined
-                  fill
-                  large
-                  intent={walletButtonIntent}
-                  onClick={onOpenWalletDialog}
-                >
-                  <span className={tw("text-center")}>
-                    {t`Connect wallet to begin`}
-                  </span>
-                </Button>
-              </div>
-            ) : (
-              <div>
-                <Button
-                  minimal={!mainnetDanger}
-                  icon={<WalletJazzicon size={28} account={account} />}
-                  rightIcon={
-                    <Icon
-                      className={tw("pr-2")}
-                      icon={IconNames.DOT}
-                      color={connectionStatusColor}
-                    />
-                  }
-                  fill
-                  intent={walletButtonIntent}
-                  onClick={onOpenWalletDialog}
-                >
-                  {formatWalletAddress(account)}
-                </Button>
-              </div>
-            )}
+          <div className={tw("flex", "space-x-4")}>
+            <Button
+              minimal
+              className={tw("px-6")}
+              icon={isDarkMode ? IconNames.FLASH : IconNames.MOON}
+              onClick={isDarkMode ? setDarkModeOff : setDarkModeOn}
+            />
+            <ConnectWalletButton2
+              account={account}
+              chainId={chainId}
+              walletConnectionActive={walletConnectionActive}
+            />
           </div>
         </div>
 
@@ -166,17 +118,8 @@ export function SaveView(props: EarnViewProps): ReactElement {
             className={tw("flex", "flex-col", "space-y-4")}
             style={widthStyle}
           >
-            {account ? (
-              <div className={tw("text-right")}>
-                <Button
-                  minimal
-                  large
-                  onClick={onActiveTabClick}
-                  icon={activeTabIcon}
-                >
-                  {activeTabLabel}
-                </Button>
-              </div>
+            {showBalancesLink ? (
+              <SaveTab activeTab={activeTab} onActiveTabChange={setActiveTab} />
             ) : null}
 
             {activeTab === SaveNavigation.SAVE && (
@@ -185,49 +128,50 @@ export function SaveView(props: EarnViewProps): ReactElement {
 
             {activeTab === SaveNavigation.BALANCES && (
               <SaveBalancesList
+                library={library}
                 account={account}
-                principalTokens={principalTokenInfos}
+                principalTokens={principalTokensWithBalance}
               />
             )}
           </div>
         </div>
       </div>
-      <ConnectWalletDialog
-        isOpen={isWalletDialogOpen}
-        onClose={onCloseWalletDialog}
-      />
     </Fragment>
   );
 }
-function getActiveTabLabel(activeTab: SaveNavigation) {
-  switch (activeTab) {
-    case SaveNavigation.SAVE: {
-      return t`View balances`;
+
+function usePrincipalTokensWithNonDustBalance(
+  account: string | null | undefined
+): PrincipalTokenInfo[] {
+  const principalTokenContracts = principalTokenInfos.map(
+    ({ address }) => trancheContractsByAddress[address]
+  );
+
+  const principalTokensWithBalance = useTokensWithBalance(
+    account,
+    principalTokenContracts
+  );
+
+  const filteredByDust = principalTokensWithBalance.filter(
+    ({ balanceOf, token }) => {
+      const { decimals } = getTokenInfo(token.address);
+      return !isDust(balanceOf, decimals);
     }
-    case SaveNavigation.BALANCES:
-      return t`Back to Save`;
-    default:
-      assertNever(activeTab);
-  }
+  );
+  const principalTokensWithNonDustBalance = filteredByDust.map(
+    ({ balanceOf, token }) => getTokenInfo<PrincipalTokenInfo>(token.address)
+  );
+
+  return principalTokensWithNonDustBalance;
 }
 
-function getActiveTabIconName(activeTab: SaveNavigation) {
-  switch (activeTab) {
-    case SaveNavigation.SAVE:
-      return IconNames.TH_LIST;
-    case SaveNavigation.BALANCES:
-      return IconNames.ARROW_LEFT;
-    default:
-      assertNever(activeTab);
-  }
-}
 function getViewTitle(activeTab: SaveNavigation) {
   switch (activeTab) {
     case SaveNavigation.SAVE:
       return t`Earn fixed yield from buying at a discount.`;
 
     case SaveNavigation.BALANCES:
-      return t`Principal Token balances`;
+      return t`Principal tokens in this wallet`;
     default:
       assertNever(activeTab);
   }
