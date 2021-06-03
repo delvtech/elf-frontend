@@ -169,7 +169,7 @@ function getViewTitle(activeTab: SaveNavigation) {
       return t`The simplest way to grow your crypto.`;
 
     case SaveNavigation.BALANCES:
-      return t`Principal tokens in this wallet`;
+      return t`Wallet Overview`;
     default:
       assertNever(activeTab);
   }
