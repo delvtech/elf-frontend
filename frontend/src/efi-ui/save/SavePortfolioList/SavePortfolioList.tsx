@@ -1,11 +1,11 @@
 import { ReactElement, useCallback, useState } from "react";
 
+import { Web3Provider } from "@ethersproject/providers";
 import { PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { SavePortfolioCard } from "efi-ui/earn/SavePortfolioList/SavePortfolioCard";
-import { Web3Provider } from "@ethersproject/providers";
+import { SavePortfolioCard } from "efi-ui/save/SavePortfolioList/SavePortfolioCard";
 
 interface SavePortfolioListProps {
   library: Web3Provider | undefined;

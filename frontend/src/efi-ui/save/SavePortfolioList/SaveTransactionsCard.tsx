@@ -6,10 +6,10 @@ import { PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { SaveTransactionTabId } from "efi-ui/earn/SavePortfolioList/SaveTransactionTabId";
+import { SaveTransactionTabId } from "efi-ui/save/SavePortfolioList/SaveTransactionTabId";
 
 import { BuyPrincipalTokensForm } from "./BuyPrincipalTokensForm";
-import { SellPrincipalTokensForm } from "efi-ui/earn/SavePortfolioList/SellPrincipalTokensForm";
+import { SellPrincipalTokensForm } from "efi-ui/save/SavePortfolioList/SellPrincipalTokensForm";
 import { getIsMature2 } from "efi/tranche/getIsMature";
 
 interface SaveTransactionsCardProps {

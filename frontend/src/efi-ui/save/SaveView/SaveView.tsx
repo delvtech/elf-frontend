@@ -13,7 +13,7 @@ import logoDark from "efi-static-assets/logos/svg/logo--dark.svg";
 import logo from "efi-static-assets/logos/svg/logo--light.svg";
 import tw from "efi-tailwindcss-classnames";
 import { EarnCard } from "efi-ui/earn/EarnCard/EarnCard";
-import { SavePortfolioList } from "efi-ui/earn/SavePortfolioList/SavePortfolioList";
+import { SavePortfolioList } from "efi-ui/save/SavePortfolioList/SavePortfolioList";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokensWithBalance } from "efi-ui/token/hooks/useTokensWithBalance";

@@ -23,7 +23,7 @@ import { useSyncWithInjectedEthereum } from "efi-ui/wallets/hooks/useSyncWithInj
 
 import styles from "./App.module.css";
 import { useEagerConnect } from "efi-ui/wallets/hooks/useEagerReconnect";
-import { SaveView } from "efi-ui/earn/SaveView/SaveView";
+import { SaveView } from "efi-ui/save/SaveView/SaveView";
 
 FocusStyleManager.onlyShowFocusOnTabs();
 
