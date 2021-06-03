@@ -3,7 +3,6 @@ import { ReactElement, useEffect, useState } from "react";
 import { Card, Intent, Tab, Tabs } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
-import { ERC20 } from "elf-contracts/types/ERC20";
 import { Signer } from "ethers";
 import { t } from "ttag";
 
@@ -26,13 +25,10 @@ interface PoolActionsCardProps {
   chainId: number | undefined;
   connector: AbstractConnector | undefined;
   walletActive: boolean;
-  pool: PoolContract | undefined;
+  pool: PoolContract;
   poolInfo: PoolInfo;
-  tokenIn: ERC20 | undefined;
-  tokenOut: ERC20 | undefined;
-
-  firstTokenInfo: TokenInfo;
-  secondTokenInfo: TokenInfo;
+  baseTokenInfo: TokenInfo;
+  termTokenInfo: TokenInfo;
 }
 
 export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
@@ -43,8 +39,8 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
     chainId,
     connector,
     walletActive,
-    tokenIn,
-    tokenOut,
+    baseTokenInfo,
+    termTokenInfo,
     pool,
     poolInfo,
   } = props;
@@ -74,8 +70,8 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
             walletActive={walletActive}
             pool={pool}
             poolInfo={poolInfo}
-            tokenIn={tokenIn}
-            tokenOut={tokenOut}
+            tokenIn={baseTokenInfo}
+            tokenOut={termTokenInfo}
             buttonLabel={t`Buy`}
             buttonIntent={Intent.PRIMARY}
           />
@@ -90,8 +86,8 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
             walletActive={walletActive}
             pool={pool}
             poolInfo={poolInfo}
-            tokenIn={tokenIn}
-            tokenOut={tokenOut}
+            tokenIn={termTokenInfo}
+            tokenOut={baseTokenInfo}
             buttonLabel={t`Sell`}
             buttonIntent={Intent.PRIMARY}
           />

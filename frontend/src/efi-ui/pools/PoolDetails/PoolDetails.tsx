@@ -31,7 +31,7 @@ interface PoolDetailsProps {
   chainId: number | undefined;
   connector: AbstractConnector | undefined;
   walletActive: boolean;
-  pool: PoolContract | undefined;
+  pool: PoolContract;
   poolInfo: PoolInfo;
 }
 
@@ -46,7 +46,7 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
     pool,
     poolInfo,
   } = props;
-  const { baseAssetInfo, termAssetInfo, baseAssetContract, termAssetContract } =
+  const { baseAssetInfo, termAssetInfo, baseAssetContract } =
     getPoolTokens(poolInfo);
 
   const totalLiquidity = useTotalFiatLiquidityForPool(pool);
@@ -130,10 +130,8 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
           walletActive={walletActive}
           pool={pool}
           poolInfo={poolInfo}
-          tokenIn={baseAssetContract}
-          tokenOut={termAssetContract}
-          firstTokenInfo={baseAssetInfo}
-          secondTokenInfo={termAssetInfo}
+          baseTokenInfo={baseAssetInfo}
+          termTokenInfo={termAssetInfo}
         />
       </div>
     </div>

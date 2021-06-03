@@ -1,13 +1,12 @@
-import { ReactElement, useCallback, useEffect, useState } from "react";
+import { ReactElement, useCallback, useState } from "react";
 
 import { Button, Intent } from "@blueprintjs/core";
-import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
+import { TokenInfo } from "@uniswap/token-lists";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { ERC20 } from "elf-contracts/types/ERC20";
 import { BigNumber, Signer } from "ethers";
 import { formatEther, formatUnits, parseUnits } from "ethers/lib/utils";
-import { PrincipalPoolTokenInfo, YieldPoolTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -30,13 +29,13 @@ import { formatBalance } from "efi/base/formatBalance";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
-import { getPoolTokenInfoFromContract } from "efi/pools/getPoolInfo";
+import { InterestTokenContractsByAddress } from "efi/interestToken/interestToken";
+import { getPoolTokenInfo } from "efi/pools/getPoolInfo";
+import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolContract } from "efi/pools/PoolContract";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
-import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
-import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
+import { principalTokenContractsByAddress } from "efi/tranche/tranches";
 
 interface TradePanelProps {
   library: Web3Provider | undefined;
@@ -45,14 +44,14 @@ interface TradePanelProps {
   chainId: number | undefined;
   connector: AbstractConnector | undefined;
   walletActive: boolean;
-  pool: PoolContract | undefined;
+  pool: PoolContract;
   poolInfo: PoolInfo;
   formDisabled?: boolean;
   submitDisabled?: boolean;
   buttonLabel: string;
   buttonIntent?: Intent;
-  tokenIn: ERC20 | undefined;
-  tokenOut: ERC20 | undefined;
+  tokenIn: TokenInfo;
+  tokenOut: TokenInfo;
 }
 
 export function TradePanel(props: TradePanelProps): ReactElement {
@@ -67,12 +66,20 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     submitDisabled = false,
     pool,
     poolInfo,
-    tokenIn: tokenInFromProps,
-    tokenOut: tokenOutFromProps,
+    tokenIn,
+    tokenOut,
   } = props;
+
+  /**
+   * Component state
+   **/
   const [swapKind, setSwapKind] = useState(SwapKind.GIVEN_IN);
   const [isWalletDialogOpen, setWalletDialogOpen] = useState(false);
   const [isDrawerOpen, setDrawerOpen] = useState(false);
+
+  /**
+   * Handlers
+   **/
   const openDrawer = useCallback(() => setDrawerOpen(true), []);
   const onClickButton = useCallback(() => {
     if (!account) {
@@ -80,11 +87,6 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     }
     openDrawer();
   }, [account, openDrawer]);
-
-  const { tokenIn, tokenOut, swapAssets, isReversed } = useReversableTokens(
-    tokenInFromProps,
-    tokenOutFromProps
-  );
 
   const { stringValue: amountIn, setValue: setAmountIn } = useNumericInput();
   const { stringValue: amountOut, setValue: setAmountOut } = useNumericInput();
@@ -94,22 +96,15 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     setAmountOut("");
   }, [setAmountIn, setAmountOut]);
 
-  // clear inputs when they switch.  we can improve this UX later to keep the previous values.
-  useEffect(() => {
-    clearInputs();
-  }, [clearInputs, isReversed]);
-
   const onClose = useCallback(() => {
     setDrawerOpen(false);
     setAmountIn("");
     setAmountOut("");
   }, [setAmountIn, setAmountOut]);
 
-  const baseAsset = useBaseAssetForPool(pool);
-  const spotPrice = usePoolSpotPrice(pool, baseAsset);
-  const { data: totalSupplyBN } = useSmartContractReadCall(pool, "totalSupply");
-  const totalSupply = formatEther(totalSupplyBN ?? 0);
-
+  /**
+   * Token information for inputs
+   */
   const {
     asset: tokenInAsset,
     address: tokenInAddress = "",
@@ -136,6 +131,9 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     poolIndex: tokenOutPoolIndex,
   } = useTokenInfoForTradeInput(pool, tokenOut, account, library);
 
+  /**
+   * Form validation
+   */
   const { isValidTokenInValue, isValidTokenOutValue } = validateTradeValues(
     amountIn,
     amountOut,
@@ -174,6 +172,12 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     insufficientPoolBalance
   );
 
+  const { data: totalSupplyBN } = useSmartContractReadCall(pool, "totalSupply");
+  const totalSupply = formatEther(totalSupplyBN ?? 0);
+
+  /**
+   * Main input handlers
+   */
   const onChangeIn = useOnChangeIn(
     poolInfo,
     tokenInContractAddress,
@@ -203,6 +207,9 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     setAmountIn,
     setAmountOut
   );
+
+  const baseAsset = useBaseAssetForPool(pool);
+  const spotPrice = usePoolSpotPrice(pool, baseAsset);
 
   return (
     <div
@@ -234,16 +241,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
         value={amountIn}
         validValue={isValidTokenInValue}
       />
-      <div className={tw("flex", "justify-center", "rounded-full")}>
-        <Button
-          icon={IconNames.ARROWS_VERTICAL}
-          onClick={swapAssets}
-          minimal
-          outlined
-          large
-          intent={Intent.PRIMARY}
-        ></Button>
-      </div>
+      <div className={tw("flex")}></div>
       <TradeInput
         cryptoAddress={tokenOutAddress}
         cryptoDecimals={tokenOutDecimals}
@@ -457,24 +455,6 @@ function getSubmitButtonLabel(
   return { submitButtonError, submitButtonLabel };
 }
 
-function useReversableTokens(
-  tokenInFromProps: ERC20 | undefined,
-  tokenOutFromProps: ERC20 | undefined
-) {
-  const [isReversed, setReversed] = useState(false);
-  const swapAssets = useCallback(() => {
-    setReversed(!isReversed);
-  }, [isReversed]);
-
-  let tokenIn = tokenInFromProps;
-  let tokenOut = tokenOutFromProps;
-  if (isReversed) {
-    tokenIn = tokenOutFromProps;
-    tokenOut = tokenInFromProps;
-  }
-  return { tokenIn, tokenOut, swapAssets, isReversed };
-}
-
 export function useTokenApproval(
   account: string | null | undefined,
   pool: PoolContract | undefined,
@@ -499,41 +479,27 @@ export function useTokenApproval(
 }
 
 function useTokenInfoForTradeInput(
-  pool: PoolContract | undefined,
-  tokenContract: ERC20 | undefined,
+  pool: PoolContract,
+  tokenInfo: TokenInfo,
   account: string | null | undefined,
   library: Web3Provider | undefined
 ) {
-  // getting the proper symbols is a pain using hooks.  all this logic is for that:
-  // get contracts/assets
-  const poolInfo = getPoolTokenInfoFromContract(pool) as
-    | PrincipalPoolTokenInfo
-    | YieldPoolTokenInfo;
-  const baseAssetAddress = poolInfo?.extensions.underlying;
-  const termAssetAddress =
-    (poolInfo as PrincipalPoolTokenInfo)?.extensions?.bond ??
-    (poolInfo as YieldPoolTokenInfo)?.extensions?.interestToken;
-  const baseCryptoAsset = getCryptoAssetForToken(baseAssetAddress);
+  const { symbol } = tokenInfo;
 
-  // get symbols
-  const baseAssetSymbol = getCryptoSymbol(baseCryptoAsset);
-  const vaultSymbol = getVaultSymbol(baseCryptoAsset);
-  const { symbol: termSymbol } = getTermAssetSymbol(
-    termAssetAddress,
-    vaultSymbol
-  );
+  const tokenContract =
+    principalTokenContractsByAddress[tokenInfo.address] ??
+    InterestTokenContractsByAddress[tokenInfo.address];
 
-  // choose correct symbol
-  const symbol =
-    termAssetAddress === tokenContract?.address ? termSymbol : baseAssetSymbol;
-
-  // get other properties
   const asset = getCryptoAssetForToken(tokenContract?.address);
   const address =
     asset?.type === CryptoAssetType.ETHEREUM
       ? BALANCER_ETH_SENTINEL
       : tokenContract?.address;
-  const icon = findAssetIcon(baseAssetSymbol);
+
+  const poolInfo = getPoolTokenInfo(pool.address);
+  const { baseAssetInfo } = getPoolTokens(poolInfo);
+  const icon = findAssetIcon(baseAssetInfo.symbol);
+
   const { data: decimals } = useTokenDecimals(tokenContract);
   const balanceOf = useCryptoBalanceOf(library, account, asset);
   const displayBalance = formatBalance(balanceOf, decimals);

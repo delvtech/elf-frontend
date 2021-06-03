@@ -28,6 +28,9 @@ export const trancheContractsByAddress = keyBy(
   (tranche) => tranche.address
 );
 
+// alias for principal tokens
+export const principalTokenContractsByAddress = trancheContractsByAddress;
+
 export const openPrincipalTokens = principalTokenInfos.filter(
   ({ extensions: { unlockTimestamp } }) => unlockTimestamp * 1000 > Date.now()
 );
