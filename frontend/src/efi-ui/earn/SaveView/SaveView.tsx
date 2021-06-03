@@ -128,6 +128,7 @@ export function SaveView(props: EarnViewProps): ReactElement {
 
             {activeTab === SaveNavigation.BALANCES && (
               <SaveBalancesList
+                library={library}
                 account={account}
                 principalTokens={principalTokensWithBalance}
               />

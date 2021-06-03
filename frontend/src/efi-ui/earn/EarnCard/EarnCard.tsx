@@ -19,7 +19,7 @@ import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInp
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { CryptoAssetPicker } from "efi-ui/crypto/CryptoAssetPicker/CryptoAssetPicker";
 import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
-import { useCryptoBalance } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
+import { useCryptoBalanceOf } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { PrincipalDiscountPreview } from "efi-ui/earn/EarnCard/PrincipalDiscountPreview";
 import { EarnInput } from "efi-ui/earn/EarnInput/EarnInput";
 import { EarnTermPicker } from "efi-ui/earn/EarnTermPicker/EarnTermPicker";
@@ -88,7 +88,7 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
     useActiveBaseAsset(clearInputs);
   const activeBaseAssetSymbol = getCryptoSymbol(activeBaseAsset);
   const activeBaseAssetDecimals = getCryptoDecimals(activeBaseAsset);
-  const activeBaseAssetBalanceOf = useCryptoBalance(
+  const activeBaseAssetBalanceOf = useCryptoBalanceOf(
     library,
     account,
     activeBaseAsset

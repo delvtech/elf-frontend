@@ -12,7 +12,7 @@ import { jt, t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { useCryptoBalance } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
+import { useCryptoBalanceOf } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { useMintPreview } from "efi-ui/mint/hooks/useMintPreview";
 import { MintInput } from "efi-ui/mint/MintInput/MintInput";
@@ -76,7 +76,7 @@ export function MintCard(props: MintCardProps): ReactElement | null {
   const amountIn = +(amountInString || 0);
 
   const baseAssetDecimals = getCryptoDecimals(baseAsset);
-  const baseAssetBalance = useCryptoBalance(library, account, baseAsset);
+  const baseAssetBalance = useCryptoBalanceOf(library, account, baseAsset);
 
   const activeBaseAssetDisplayBalance = formatBalance(
     baseAssetBalance,
