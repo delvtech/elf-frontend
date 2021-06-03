@@ -24,12 +24,6 @@ const fixedYieldLink = (
   </a>
 );
 
-const portfolioLink = (
-  <Link key="portfolio-link" to={`/portfolio`}>
-    {t`Portfolio Page`}
-  </Link>
-);
-
 const poolsLink = (
   <Link key="pools-link" to={`/principal`}>
     {t`Element Pools`}
@@ -43,7 +37,7 @@ export function SaveViewSubtitle(
   switch (activeTab) {
     case SaveNavigation.SAVE:
       return (
-        <Fragment>{jt`Principal Tokens are redeemable one-to-one with their base asset once they have reached their maturity date. ${fixedYieldLink}`}</Fragment>
+        <Fragment>{jt`No minimums, no withdrawal penalties, no lockups. Just fixed rate interest. ${fixedYieldLink}`}</Fragment>
       );
 
     case SaveNavigation.BALANCES:
