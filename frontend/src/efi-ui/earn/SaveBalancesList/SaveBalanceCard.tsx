@@ -96,7 +96,7 @@ export function SaveBalanceCard(
         </div>
         <span>{balanceLabel}</span>
         <span>
-          <Tag minimal intent={isRedeemable ? Intent.SUCCESS : Intent.PRIMARY}>
+          <Tag fill intent={isRedeemable ? Intent.SUCCESS : Intent.PRIMARY}>
             {formattedUnlockDate}
           </Tag>
         </span>

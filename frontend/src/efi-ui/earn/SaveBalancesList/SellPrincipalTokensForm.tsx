@@ -10,6 +10,8 @@ import { Web3Provider } from "@ethersproject/providers";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
 import { formatBalance } from "efi/base/formatBalance";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { getBaseAssetForTranche } from "efi/tranche/baseAssets";
 
 interface SellPrincipalTokensFormProps {
   library: Web3Provider | undefined;
@@ -28,6 +30,10 @@ export function SellPrincipalTokensForm(
       symbol: ptSymbol,
     },
   } = props;
+  // base asset
+  const baseAsset = getBaseAssetForTranche(ptAddress);
+  const baseAssetSymbol = getCryptoSymbol(baseAsset);
+
   // inputs
   const { stringValue: ptInputValue, setValue: onPrincipalTokenInputChange } =
     useNumericInput();
@@ -40,7 +46,10 @@ export function SellPrincipalTokensForm(
   return (
     <div className={tw("flex", "items-center")}>
       <div className={tw("flex", "flex-col", "w-full", "space-y-2")}>
-        <div className={tw("grid", "grid-cols-4", "gap-4")}>
+        <span
+          className={tw("pb-4", "text-base")}
+        >{t`Sell your principal tokens for ${baseAssetSymbol}`}</span>
+        <div className={tw("grid", "grid-cols-4", "gap-3")}>
           <SaveInput
             swapKind={SwapKind.GIVEN_IN}
             className={tw("col-span-3")}
@@ -65,7 +74,7 @@ export function SellPrincipalTokensForm(
             >{t`Sell`}</Button>
           </div>
         </div>
-        <div className={tw("grid", "grid-cols-4", "gap-4")}>
+        <div className={tw("grid", "grid-cols-4", "gap-3")}>
           <span
             className={tw("col-span-3", "text-right")}
           >{t`Available balance: ${ptBalanceLabel}`}</span>

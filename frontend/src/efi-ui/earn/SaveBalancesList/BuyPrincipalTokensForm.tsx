@@ -12,6 +12,7 @@ import { useCryptoBalanceOf } from "efi-ui/crypto/hooks/useCryptoBalance/useCryp
 import { Web3Provider } from "@ethersproject/providers";
 import { formatBalance } from "efi/base/formatBalance";
 import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 
 interface BuyPrincipalTokensFormProps {
   library: Web3Provider | undefined;
@@ -34,10 +35,11 @@ export function BuyPrincipalTokensForm(
     useNumericInput();
 
   // base asset
-  const baseAssetTokenInfo = getTokenInfo(underlying);
   const baseAsset = getCryptoAssetForToken(underlying);
+  const baseAssetSymbol = getCryptoSymbol(baseAsset);
   const BaseAssetIcon = findAssetIcon2(baseAsset);
   const baseAssetBalanceOf = useCryptoBalanceOf(library, account, baseAsset);
+  const baseAssetTokenInfo = getTokenInfo(underlying);
   const { decimals: baseAssetDecimals } = baseAssetTokenInfo;
   const baseAssetBalanceLabel = formatBalance(
     baseAssetBalanceOf,
@@ -45,9 +47,20 @@ export function BuyPrincipalTokensForm(
     baseAssetDecimals
   );
   return (
-    <div className={tw("flex", "items-center")}>
-      <div className={tw("flex", "flex-col", "w-full", "space-y-2")}>
-        <div className={tw("grid", "grid-cols-4", "gap-4")}>
+    <div className={tw("flex")}>
+      <div
+        className={tw(
+          "flex",
+          "flex-col",
+          "w-full",
+          "space-y-2",
+          "justify-center"
+        )}
+      >
+        <span
+          className={tw("pb-4", "text-base")}
+        >{t`Buy principal tokens with your ${baseAssetSymbol}`}</span>
+        <div className={tw("grid", "grid-cols-4", "gap-3")}>
           <SaveInput
             swapKind={SwapKind.GIVEN_IN}
             className={tw("col-span-3")}
@@ -72,7 +85,7 @@ export function BuyPrincipalTokensForm(
             >{t`Buy`}</Button>
           </div>
         </div>
-        <div className={tw("grid", "grid-cols-4", "gap-4")}>
+        <div className={tw("grid", "grid-cols-4", "gap-3")}>
           <span
             className={tw("col-span-3", "text-right")}
           >{t`Available balance: ${baseAssetBalanceLabel}`}</span>

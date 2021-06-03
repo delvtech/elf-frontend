@@ -52,6 +52,7 @@ export function SaveTransactionsCard(
           disabled={!isMature}
           id={SaveTransactionTabId.REDEEM}
         >{t`Redeem`}</Tab>
+        <Tab disabled id={SaveTransactionTabId.INFO}>{t`More Information`}</Tab>
       </Tabs>
       <div className={tw("flex", "flex-col", "flex-1")}>
         {activeTabId === SaveTransactionTabId.BUY ? (
