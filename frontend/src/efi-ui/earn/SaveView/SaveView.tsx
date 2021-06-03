@@ -52,7 +52,6 @@ export function SaveView(props: EarnViewProps): ReactElement {
     usePrincipalTokensWithNonDustBalance(account);
 
   const viewTitleLabel = getViewTitle(activeTab);
-  const viewTitleBottomLabel = getBottomViewTitle(activeTab);
 
   // don't show the link to View Balances if they aren't connect or don't have any
   const showBalancesLink = account && principalTokensWithBalance.length > 0;
@@ -111,7 +110,6 @@ export function SaveView(props: EarnViewProps): ReactElement {
         >
           <ViewTitle
             title={viewTitleLabel}
-            bottomTitle={viewTitleBottomLabel}
             subtitle={<SaveViewSubtitle activeTab={activeTab} />}
           />
           <div
@@ -168,21 +166,10 @@ function usePrincipalTokensWithNonDustBalance(
 function getViewTitle(activeTab: SaveNavigation) {
   switch (activeTab) {
     case SaveNavigation.SAVE:
-      return t`Earn fixed yield from buying at a discount.`;
+      return t`The simplest way to grow your crypto.`;
 
     case SaveNavigation.BALANCES:
       return t`Principal tokens in this wallet`;
-    default:
-      assertNever(activeTab);
-  }
-}
-function getBottomViewTitle(activeTab: SaveNavigation) {
-  switch (activeTab) {
-    case SaveNavigation.SAVE:
-      return t`Exit anytime.`;
-
-    case SaveNavigation.BALANCES:
-      return null;
     default:
       assertNever(activeTab);
   }
