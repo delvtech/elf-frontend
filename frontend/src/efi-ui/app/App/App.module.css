@@ -10,8 +10,14 @@
 }
 
 .appBackgroundDark {
-  background: none;
-  background-color: var(--bp3-dark-bg-color);
+  background: radial-gradient(
+    circle,
+    #293742,
+    #27343e,
+    #24313a,
+    #222e37,
+    #202b33
+  );
 }
 
 .mobileView {
