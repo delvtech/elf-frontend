@@ -5,9 +5,8 @@ import { IconNames } from "@blueprintjs/icons";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { SaveNavigation } from "efi-ui/save/SaveNavigation/SaveNavigation";
 import { assertNever } from "efi/base/assertNever";
-
-import { SaveNavigation } from "../SaveNavigation/SaveNavigation";
 
 interface SaveTabProps {
   activeTab: SaveNavigation;

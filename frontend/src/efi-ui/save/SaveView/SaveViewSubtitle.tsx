@@ -2,9 +2,8 @@ import { Fragment, ReactElement } from "react";
 
 import { jt, t } from "ttag";
 
+import { SaveNavigation } from "efi-ui/save/SaveNavigation/SaveNavigation";
 import { assertNever } from "efi/base/assertNever";
-
-import { SaveNavigation } from "../SaveNavigation/SaveNavigation";
 
 interface SaveViewSubtitleProps {
   activeTab: SaveNavigation;
