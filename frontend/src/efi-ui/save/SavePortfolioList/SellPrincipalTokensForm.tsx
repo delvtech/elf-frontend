@@ -56,7 +56,7 @@ export function SellPrincipalTokensForm(
             isValid
             showMaxButton
             assetIcon={
-              <Tag large className={tw("ml-2")}>
+              <Tag minimal large className={tw("ml-2")}>
                 {ptSymbol}
               </Tag>
             }

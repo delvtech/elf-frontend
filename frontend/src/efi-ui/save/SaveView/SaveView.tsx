@@ -94,6 +94,12 @@ export function SaveView(props: EarnViewProps): ReactElement {
               chainId={chainId}
               walletConnectionActive={walletConnectionActive}
             />
+            <Button
+              minimal
+              className={tw("px-6")}
+              icon={IconNames.MENU}
+              onClick={isDarkMode ? setDarkModeOff : setDarkModeOn}
+            />
           </div>
         </div>
 

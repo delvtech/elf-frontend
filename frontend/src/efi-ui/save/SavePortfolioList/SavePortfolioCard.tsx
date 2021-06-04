@@ -77,7 +77,7 @@ export function SavePortfolioCard(
   return (
     <Card
       interactive={!isExpanded}
-      elevation={isExpanded ? Elevation.TWO : Elevation.ZERO}
+      elevation={isExpanded ? Elevation.THREE : Elevation.ZERO}
       className={tw("p-0")}
     >
       <Card

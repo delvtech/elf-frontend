@@ -59,8 +59,13 @@ export function SaveInput(props: EarnInputProps): ReactElement {
   );
 
   const maxButtonElement = showMaxButton ? (
-    <div className={tw("pl-4", "mr-1")}>
-      <Tag minimal interactive onClick={setMaxValue}>{t`MAX`}</Tag>
+    <div className={tw("pl-1", "mr-1")}>
+      <Tag
+        minimal
+        intent={Intent.PRIMARY}
+        interactive
+        onClick={setMaxValue}
+      >{t`MAX`}</Tag>
     </div>
   ) : undefined;
 
