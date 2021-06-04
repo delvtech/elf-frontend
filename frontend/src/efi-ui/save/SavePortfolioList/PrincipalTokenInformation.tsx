@@ -52,9 +52,9 @@ export function PrincipalTokenInformation(
         <span>{getPrincipalTokenLink(ptAddress)}</span>
         <span>{getGoogleCalendarLink(principalToken)}</span>
         <Callout
-          icon={IconNames.CLEAN}
+          icon={null}
           intent={Intent.PRIMARY}
-        >{jt`Tip: Earn additional yield on your principal tokens by adding them as liquidity to the ${getElementPoolLink(
+        >{jt`Earn additional yield on your principal tokens by adding them as liquidity to the ${getElementPoolLink(
           principalToken,
           origin
         )}`}</Callout>
