@@ -13,9 +13,11 @@ import logoDark from "efi-static-assets/logos/svg/logo--dark.svg";
 import logo from "efi-static-assets/logos/svg/logo--light.svg";
 import tw from "efi-tailwindcss-classnames";
 import { EarnCard } from "efi-ui/earn/EarnCard/EarnCard";
-import { SavePortfolioList } from "efi-ui/save/SavePortfolioList/SavePortfolioList";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
+import { SaveNavigation } from "efi-ui/save/SaveNavigation/SaveNavigation";
+import { SaveNavigationButton } from "efi-ui/save/SaveNavigation/SaveNavigationButton";
+import { SavePortfolioList } from "efi-ui/save/SavePortfolioList/SavePortfolioList";
 import { useTokensWithBalance } from "efi-ui/token/hooks/useTokensWithBalance";
 import { ConnectWalletButton2 } from "efi-ui/wallets/ConnectWalletButton/ConnectWalletButton2";
 import { assertNever } from "efi/base/assertNever";
@@ -26,10 +28,8 @@ import {
   trancheContractsByAddress,
 } from "efi/tranche/tranches";
 
-import { SaveNavigation } from "./SaveNavigation";
 import { SaveTab } from "./SaveTab";
 import { SaveViewSubtitle } from "./SaveViewSubtitle";
-import { SaveNavigationButton } from "./SaveNavigationButton";
 
 interface EarnViewProps extends RouteComponentProps {}
 

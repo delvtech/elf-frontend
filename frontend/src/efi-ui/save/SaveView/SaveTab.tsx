@@ -7,7 +7,7 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { assertNever } from "efi/base/assertNever";
 
-import { SaveNavigation } from "./SaveNavigation";
+import { SaveNavigation } from "../SaveNavigation/SaveNavigation";
 
 interface SaveTabProps {
   activeTab: SaveNavigation;

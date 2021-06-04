@@ -4,7 +4,7 @@ import { jt, t } from "ttag";
 
 import { assertNever } from "efi/base/assertNever";
 
-import { SaveNavigation } from "./SaveNavigation";
+import { SaveNavigation } from "../SaveNavigation/SaveNavigation";
 
 interface SaveViewSubtitleProps {
   activeTab: SaveNavigation;
