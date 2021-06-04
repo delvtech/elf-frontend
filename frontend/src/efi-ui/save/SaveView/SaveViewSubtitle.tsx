@@ -1,7 +1,5 @@
 import { Fragment, ReactElement } from "react";
 
-import { Callout } from "@blueprintjs/core";
-import { Link } from "@reach/router";
 import { jt, t } from "ttag";
 
 import { assertNever } from "efi/base/assertNever";
@@ -24,11 +22,6 @@ const fixedYieldLink = (
   </a>
 );
 
-const poolsLink = (
-  <Link key="pools-link" to={`/principal`}>
-    {t`Element Pools`}
-  </Link>
-);
 export function SaveViewSubtitle(
   props: SaveViewSubtitleProps
 ): ReactElement | null {
@@ -41,9 +34,7 @@ export function SaveViewSubtitle(
       );
 
     case SaveNavigation.BALANCES:
-      return (
-        <Callout>{jt`Tip: Earn additional yield on your Principal tokens by providing them as liquidity in ${poolsLink}.`}</Callout>
-      );
+      return null;
 
     default:
       assertNever(activeTab);
