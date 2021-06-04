@@ -29,6 +29,7 @@ import {
 import { SaveNavigation } from "./SaveNavigation";
 import { SaveTab } from "./SaveTab";
 import { SaveViewSubtitle } from "./SaveViewSubtitle";
+import { SaveNavigationButton } from "./SaveNavigationButton";
 
 interface EarnViewProps extends RouteComponentProps {}
 
@@ -94,12 +95,7 @@ export function SaveView(props: EarnViewProps): ReactElement {
               chainId={chainId}
               walletConnectionActive={walletConnectionActive}
             />
-            <Button
-              minimal
-              className={tw("px-6")}
-              icon={IconNames.MENU}
-              onClick={isDarkMode ? setDarkModeOff : setDarkModeOn}
-            />
+            <SaveNavigationButton />
           </div>
         </div>
 
