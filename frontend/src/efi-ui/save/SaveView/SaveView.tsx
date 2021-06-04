@@ -12,7 +12,6 @@ import { t } from "ttag";
 import logoDark from "efi-static-assets/logos/svg/logo--dark.svg";
 import logo from "efi-static-assets/logos/svg/logo--light.svg";
 import tw from "efi-tailwindcss-classnames";
-import { EarnCard } from "efi-ui/earn/EarnCard/EarnCard";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { SaveNavigation } from "efi-ui/save/SaveNavigation/SaveNavigation";
@@ -30,6 +29,7 @@ import {
 
 import { SaveTab } from "./SaveTab";
 import { SaveViewSubtitle } from "./SaveViewSubtitle";
+import { SaveCard } from "efi-ui/save/SaveCard/SaveCard";
 
 interface EarnViewProps extends RouteComponentProps {}
 
@@ -124,7 +124,7 @@ export function SaveView(props: EarnViewProps): ReactElement {
             ) : null}
 
             {activeTab === SaveNavigation.SAVE && (
-              <EarnCard library={library} account={account} />
+              <SaveCard library={library} account={account} />
             )}
 
             {activeTab === SaveNavigation.BALANCES && (
