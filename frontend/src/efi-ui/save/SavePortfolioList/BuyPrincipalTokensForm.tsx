@@ -17,7 +17,6 @@ import { useTokenYield } from "efi-ui/pools/useTokenYield";
 import { underlyingContracts } from "efi/underlying/underlying";
 import {
   getPrincipalPoolForTranche,
-  principalPoolContracts,
   principalPoolContractsByAddress,
 } from "efi/pools/ccpool";
 import { formatPercent } from "efi/base/formatPercent";
