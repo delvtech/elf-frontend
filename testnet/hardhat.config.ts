@@ -58,6 +58,7 @@ const config: HardhatUserConfig = {
     //   allowUnlimitedContractSize: true,
     // },
     hardhat: {
+      allowUnlimitedContractSize: true,
       forking: {
         url:
           "https://eth-mainnet.alchemyapi.io/v2/kwjMP-X-Vajdk1ItCfU-56Uaq1wwhamK",
