@@ -1,11 +1,11 @@
 .appBackground {
   background: radial-gradient(
     circle,
-    #f5f8fa,
-    #f5f8fb,
-    #f5f8fb,
-    #f5f8fc,
-    #f5f8fc
+    #ffffff,
+    #fbfbfd,
+    #f6f8fa,
+    #f1f4f8,
+    #ebf1f5
   );
 }
 
