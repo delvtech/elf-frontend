@@ -48,7 +48,7 @@ export function PrincipalTokenInformation(
   return (
     <div className={tw("flex", "text-left")}>
       <div className={tw("flex", "flex-col", "w-full", "space-y-2")}>
-        <span>{jt`Yield is backed by ${baseAssetSymbol} deposited in ${vaultLink}`}</span>
+        <span>{jt`Your yield is backed by ${baseAssetSymbol} deposited in ${vaultLink}`}</span>
         <span>{getPrincipalTokenLink(ptAddress)}</span>
         <span>{getGoogleCalendarLink(principalToken)}</span>
         <Callout
@@ -111,7 +111,7 @@ function getGoogleCalendarLink(
       rel="noreferrer"
       href={google(event)}
     >
-      {t`Add term date to Google Calendar`}{" "}
+      {t`Add the term redemption date to your Google Calendar`}{" "}
       <sup>
         <Icon icon={IconNames.SHARE} iconSize={8} />
       </sup>
