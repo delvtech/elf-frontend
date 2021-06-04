@@ -1,8 +1,16 @@
 .appBackground {
-  background-color: var(--bp3-bg-color);
+  background: radial-gradient(
+    circle,
+    #f5f8fa,
+    #f5f8fb,
+    #f5f8fb,
+    #f5f8fc,
+    #f5f8fc
+  );
 }
 
 .appBackgroundDark {
+  background: none;
   background-color: var(--bp3-dark-bg-color);
 }
 
