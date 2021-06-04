@@ -2,7 +2,7 @@ import { ReactElement } from "react";
 import { Button, Intent, Tag } from "@blueprintjs/core";
 import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
-import { SaveInput } from "efi-ui/earn/SaveBalancesList/SaveInput";
+import { SaveInput } from "efi-ui/save/SavePortfolioList/SaveInput";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { PrincipalTokenInfo } from "tokenlists/types";
 import { SwapKind } from "efi-ui/balancer/SwapKind";
@@ -47,7 +47,7 @@ export function SellPrincipalTokensForm(
     <div className={tw("flex", "items-center")}>
       <div className={tw("flex", "flex-col", "w-full", "space-y-2")}>
         <span
-          className={tw("pb-4", "text-base")}
+          className={tw("pb-4")}
         >{t`Sell your principal tokens for ${baseAssetSymbol}`}</span>
         <div className={tw("grid", "grid-cols-4", "gap-3")}>
           <SaveInput
@@ -56,7 +56,7 @@ export function SellPrincipalTokensForm(
             isValid
             showMaxButton
             assetIcon={
-              <Tag large className={tw("ml-2")}>
+              <Tag minimal large className={tw("ml-2")}>
                 {ptSymbol}
               </Tag>
             }

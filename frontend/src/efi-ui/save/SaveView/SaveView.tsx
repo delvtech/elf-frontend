@@ -1,34 +1,35 @@
 import { CSSProperties, Fragment, ReactElement, useState } from "react";
 import { Helmet } from "react-helmet";
 
+import { Button } from "@blueprintjs/core";
+import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
 import { RouteComponentProps } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
+import { PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import logoDark from "efi-static-assets/logos/svg/logo--dark.svg";
 import logo from "efi-static-assets/logos/svg/logo--light.svg";
 import tw from "efi-tailwindcss-classnames";
-import { EarnCard } from "efi-ui/earn/EarnCard/EarnCard";
-import { SaveBalancesList } from "efi-ui/earn/SaveBalancesList/SaveBalancesList";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
+import { SaveNavigation } from "efi-ui/save/SaveNavigation/SaveNavigation";
+import { SaveNavigationButton } from "efi-ui/save/SaveNavigation/SaveNavigationButton";
+import { SavePortfolioList } from "efi-ui/save/SavePortfolioList/SavePortfolioList";
+import { useTokensWithBalance } from "efi-ui/token/hooks/useTokensWithBalance";
 import { ConnectWalletButton2 } from "efi-ui/wallets/ConnectWalletButton/ConnectWalletButton2";
 import { assertNever } from "efi/base/assertNever";
+import { isDust } from "efi/coins/isDust";
+import { getTokenInfo } from "efi/tokenlists";
 import {
   principalTokenInfos,
   trancheContractsByAddress,
 } from "efi/tranche/tranches";
 
-import { SaveNavigation } from "./SaveNavigation";
 import { SaveTab } from "./SaveTab";
 import { SaveViewSubtitle } from "./SaveViewSubtitle";
-import { useTokensWithBalance } from "efi-ui/token/hooks/useTokensWithBalance";
-import { isDust } from "efi/coins/isDust";
-import { getTokenInfo } from "efi/tokenlists";
-import { PrincipalTokenInfo } from "tokenlists/types";
-import { IconNames } from "@blueprintjs/icons";
-import { Button } from "@blueprintjs/core";
+import { SaveCard } from "efi-ui/save/SaveCard/SaveCard";
 
 interface EarnViewProps extends RouteComponentProps {}
 
@@ -53,8 +54,9 @@ export function SaveView(props: EarnViewProps): ReactElement {
 
   const viewTitleLabel = getViewTitle(activeTab);
 
-  // don't show the link to View Balances if they aren't connect or don't have any
-  const showBalancesLink = account && principalTokensWithBalance.length > 0;
+  // don't show the link to View Balances if they aren't connected or don't have
+  // any balances
+  const showPortfolioLink = account && principalTokensWithBalance.length > 0;
 
   return (
     <Fragment>
@@ -93,6 +95,7 @@ export function SaveView(props: EarnViewProps): ReactElement {
               chainId={chainId}
               walletConnectionActive={walletConnectionActive}
             />
+            <SaveNavigationButton />
           </div>
         </div>
 
@@ -116,16 +119,16 @@ export function SaveView(props: EarnViewProps): ReactElement {
             className={tw("flex", "flex-col", "space-y-4")}
             style={widthStyle}
           >
-            {showBalancesLink ? (
+            {showPortfolioLink ? (
               <SaveTab activeTab={activeTab} onActiveTabChange={setActiveTab} />
             ) : null}
 
             {activeTab === SaveNavigation.SAVE && (
-              <EarnCard library={library} account={account} />
+              <SaveCard library={library} account={account} />
             )}
 
             {activeTab === SaveNavigation.BALANCES && (
-              <SaveBalancesList
+              <SavePortfolioList
                 library={library}
                 account={account}
                 principalTokens={principalTokensWithBalance}
@@ -169,7 +172,7 @@ function getViewTitle(activeTab: SaveNavigation) {
       return t`The simplest way to grow your crypto.`;
 
     case SaveNavigation.BALANCES:
-      return t`Principal tokens in this wallet`;
+      return t`Wallet Overview`;
     default:
       assertNever(activeTab);
   }

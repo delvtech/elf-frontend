@@ -26,7 +26,7 @@ import { SaveTransactionsCard } from "./SaveTransactionsCard";
 import { SaveTransactionTabId } from "./SaveTransactionTabId";
 import { Web3Provider } from "@ethersproject/providers";
 
-interface SaveBalanceCardProps {
+interface SavePortfolioCardProps {
   library: Web3Provider | undefined;
   account: string | null | undefined;
   principalToken: PrincipalTokenInfo;
@@ -35,8 +35,8 @@ interface SaveBalanceCardProps {
   onExpandClose: () => void;
 }
 
-export function SaveBalanceCard(
-  props: SaveBalanceCardProps
+export function SavePortfolioCard(
+  props: SavePortfolioCardProps
 ): ReactElement | null {
   const {
     library,
@@ -77,7 +77,7 @@ export function SaveBalanceCard(
   return (
     <Card
       interactive={!isExpanded}
-      elevation={isExpanded ? Elevation.TWO : Elevation.ZERO}
+      elevation={isExpanded ? Elevation.THREE : Elevation.ZERO}
       className={tw("p-0")}
     >
       <Card

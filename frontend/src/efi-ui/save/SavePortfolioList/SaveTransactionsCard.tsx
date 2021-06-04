@@ -6,11 +6,12 @@ import { PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { SaveTransactionTabId } from "efi-ui/earn/SaveBalancesList/SaveTransactionTabId";
+import { SaveTransactionTabId } from "efi-ui/save/SavePortfolioList/SaveTransactionTabId";
 
 import { BuyPrincipalTokensForm } from "./BuyPrincipalTokensForm";
-import { SellPrincipalTokensForm } from "efi-ui/earn/SaveBalancesList/SellPrincipalTokensForm";
+import { SellPrincipalTokensForm } from "efi-ui/save/SavePortfolioList/SellPrincipalTokensForm";
 import { getIsMature2 } from "efi/tranche/getIsMature";
+import { PrincipalTokenInformation } from "efi-ui/save/SavePortfolioList/PrincipalTokenInformation";
 
 interface SaveTransactionsCardProps {
   library: Web3Provider | undefined;
@@ -52,7 +53,7 @@ export function SaveTransactionsCard(
           disabled={!isMature}
           id={SaveTransactionTabId.REDEEM}
         >{t`Redeem`}</Tab>
-        <Tab disabled id={SaveTransactionTabId.INFO}>{t`More Information`}</Tab>
+        <Tab id={SaveTransactionTabId.INFO}>{t`More Information`}</Tab>
       </Tabs>
       <div className={tw("flex", "flex-col", "flex-1")}>
         {activeTabId === SaveTransactionTabId.BUY ? (
@@ -64,6 +65,20 @@ export function SaveTransactionsCard(
         ) : null}
         {activeTabId === SaveTransactionTabId.SELL ? (
           <SellPrincipalTokensForm
+            account={account}
+            library={library}
+            principalToken={principalToken}
+          />
+        ) : null}
+        {activeTabId === SaveTransactionTabId.REDEEM ? (
+          <SellPrincipalTokensForm
+            account={account}
+            library={library}
+            principalToken={principalToken}
+          />
+        ) : null}
+        {activeTabId === SaveTransactionTabId.INFO ? (
+          <PrincipalTokenInformation
             account={account}
             library={library}
             principalToken={principalToken}

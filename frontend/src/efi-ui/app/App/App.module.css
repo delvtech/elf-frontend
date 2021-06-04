@@ -1,9 +1,23 @@
 .appBackground {
-  background-color: var(--bp3-bg-color);
+  background: radial-gradient(
+    circle,
+    #ffffff,
+    #fbfbfd,
+    #f6f8fa,
+    #f1f4f8,
+    #ebf1f5
+  );
 }
 
 .appBackgroundDark {
-  background-color: var(--bp3-dark-bg-color);
+  background: radial-gradient(
+    circle,
+    #293742,
+    #25313b,
+    #202b34,
+    #1c262d,
+    #182026
+  );
 }
 
 .mobileView {
