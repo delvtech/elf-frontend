@@ -7,11 +7,13 @@ import { ERC20__factory } from "src/types/factories/ERC20__factory";
 import { Tranche__factory } from "src/types/factories/Tranche__factory";
 import { TrancheFactory__factory } from "src/types/factories/TrancheFactory__factory";
 import { Tranche } from "src/types/Tranche";
+import hardhatSymbolOverrides from "src/addresses/testnet.symbolOverrides.json";
 
 import { PrincipalTokenInfo, TokenListTag } from "src/tokenlist/types";
 import { getTokenSymbolMulti } from "src/tokenlist/erc20";
 
 const GOERLI_CHAIN_ID = 5;
+const HARDHAT_CHAIN_ID = 31337;
 const symbolOverrides: Record<number, Record<string, string>> = {
   [GOERLI_CHAIN_ID]: {
     // these contracts have v1 vault symbols, but we want the v2 vaults on testnet
@@ -21,6 +23,7 @@ const symbolOverrides: Record<number, Record<string, string>> = {
     "0x8Bd721BB84a30c0078aF4a5a732c7169C5BE6eDB": "ePyvUSDC",
     "0x7D64aD2b83a62C0d02514a43E5B4582C671E5F72": "ePyvUSDC",
   },
+  [HARDHAT_CHAIN_ID]: hardhatSymbolOverrides,
 };
 export const provider = hre.ethers.provider;
 export async function getPrincipalTokens(
