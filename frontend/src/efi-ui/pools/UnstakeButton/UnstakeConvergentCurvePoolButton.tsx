@@ -19,16 +19,18 @@ interface UnstakeConvergentCurvePoolButtonProps {
   connector: AbstractConnector | undefined;
   library: Web3Provider | undefined;
   pool: ConvergentCurvePool | undefined;
+  amount: string;
 }
 
 export function UnstakeConvergentCurvePoolButton({
   pool,
   library,
   account,
+  amount,
 }: UnstakeConvergentCurvePoolButtonProps): ReactElement {
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
 
-  const exitPool = useExitConvergentCurvePool(signer, account, pool);
+  const exitPool = useExitConvergentCurvePool(signer, account, pool, amount);
 
   const [isWalletDialogOpen, setWalletDialogOpen] = useState(false);
   const onClickUnstake = useCallback(() => {

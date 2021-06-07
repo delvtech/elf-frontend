@@ -19,16 +19,18 @@ interface UnstakeWeightedPoolButtonProps {
   connector: AbstractConnector | undefined;
   library: Web3Provider | undefined;
   pool: WeightedPool | undefined;
+  amount: string;
 }
 
 export function UnstakeWeightedPoolButton({
   pool,
   library,
   account,
+  amount,
 }: UnstakeWeightedPoolButtonProps): ReactElement {
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
 
-  const exitPool = useExitWeightedPool(signer, account, pool);
+  const exitPool = useExitWeightedPool(signer, account, pool, amount);
 
   const [isWalletDialogOpen, setWalletDialogOpen] = useState(false);
   const onClickUnstake = useCallback(() => {
