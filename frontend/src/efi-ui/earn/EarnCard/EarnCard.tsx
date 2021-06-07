@@ -317,7 +317,7 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
               placeholder="0.00"
               value={amountIn || ""}
               isValid={isValidTokenInValue}
-              errorMessage={tokenInError}
+              errorMessage={tokenInError || ""}
               onValueChange={onChangeIn}
               valueDecimals={activeBaseAssetDecimals}
               valueBalanceOf={activeBaseAssetBalanceOf}
@@ -348,7 +348,7 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
               placeholder="0.00"
               value={amountOut || ""}
               isValid={isValidTokenOutValue}
-              errorMessage={tokenOutError}
+              errorMessage={tokenOutError || ""}
               onValueChange={onChangeOut}
               valueDecimals={principalTokenDecimals}
               valueBalanceOf={principalTokenBalanceOf}
