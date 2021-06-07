@@ -3,7 +3,7 @@ import { ReactElement } from "react";
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { BigNumber } from "ethers";
-import { formatEther, formatUnits } from "ethers/lib/utils";
+import { formatEther, formatUnits, parseUnits } from "ethers/lib/utils";
 import zipObject from "lodash.zipobject";
 import { t } from "ttag";
 
@@ -21,13 +21,13 @@ import { formatPercent } from "efi/base/formatPercent";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
-import { getTrancheForPool } from "efi/pools/getTrancheForPool";
 import {
   isConvergentCurvePool,
   isWeightedPool,
   PoolContract,
 } from "efi/pools/PoolContract";
 import { PoolInfo } from "efi/pools/PoolInfo";
+import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
 
 interface UnstakeCardProps {
   library: Web3Provider | undefined;
@@ -95,6 +95,18 @@ export function UnstakeCard({
 
   const { stringValue, setValue } = useNumericInput();
 
+  const valueBN = parseUnits(
+    stringValue || "0",
+    BALANCER_POOL_LP_TOKEN_DECIMALS
+  );
+
+  const balanceIsZero = lpBalanceOf?.isZero() ?? true;
+  const valueIsZero = valueBN.isZero();
+  const valueLessThanBalance = lpBalanceOf ? valueBN.lte(lpBalanceOf) : false;
+
+  const isValidValue = valueLessThanBalance;
+  const disableUnstake = balanceIsZero || valueIsZero || !isValidValue;
+
   return (
     <div
       className={tw(
@@ -113,10 +125,10 @@ export function UnstakeCard({
         cryptoAssetIcon={ElfIcon}
         cryptoBalanceOf={lpBalanceOf}
         cryptoDisplayBalance={lpDisplayBalance || ""}
-        disabled={false}
+        disabled={balanceIsZero}
         onChange={setValue}
         value={stringValue}
-        validValue={true}
+        validValue={isValidValue}
       />
       <div className={calloutClassName}>
         <LabeledText
@@ -153,6 +165,7 @@ export function UnstakeCard({
           library={library}
           pool={pool}
           amount={stringValue}
+          disabled={disableUnstake}
         />
       )}
       {isWeightedPool(pool) && (
@@ -162,6 +175,7 @@ export function UnstakeCard({
           library={library}
           pool={pool}
           amount={stringValue}
+          disabled={disableUnstake}
         />
       )}
     </div>

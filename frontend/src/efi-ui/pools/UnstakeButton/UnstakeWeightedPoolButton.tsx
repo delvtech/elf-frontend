@@ -20,6 +20,7 @@ interface UnstakeWeightedPoolButtonProps {
   library: Web3Provider | undefined;
   pool: WeightedPool | undefined;
   amount: string;
+  disabled?: boolean;
 }
 
 export function UnstakeWeightedPoolButton({
@@ -27,6 +28,7 @@ export function UnstakeWeightedPoolButton({
   library,
   account,
   amount,
+  disabled: disabledFromProps,
 }: UnstakeWeightedPoolButtonProps): ReactElement {
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
 
@@ -48,6 +50,7 @@ export function UnstakeWeightedPoolButton({
       clipStringValueToDecimals(formatUnits(lpBalanceOf, 18), 16) || 0
     );
   }
+  disabled = disabledFromProps || disabled;
 
   const buttonLabel = !!account ? t`Unstake` : t`Connect Wallet`;
 

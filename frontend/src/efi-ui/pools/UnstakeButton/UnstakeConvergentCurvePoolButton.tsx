@@ -20,6 +20,7 @@ interface UnstakeConvergentCurvePoolButtonProps {
   library: Web3Provider | undefined;
   pool: ConvergentCurvePool | undefined;
   amount: string;
+  disabled?: boolean;
 }
 
 export function UnstakeConvergentCurvePoolButton({
@@ -27,6 +28,7 @@ export function UnstakeConvergentCurvePoolButton({
   library,
   account,
   amount,
+  disabled: disabledFromProps,
 }: UnstakeConvergentCurvePoolButtonProps): ReactElement {
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
 
@@ -48,6 +50,7 @@ export function UnstakeConvergentCurvePoolButton({
       clipStringValueToDecimals(formatUnits(lpBalanceOf, 18), 16) || 0
     );
   }
+  disabled = disabledFromProps || disabled;
 
   const buttonLabel = !!account ? t`Unstake` : t`Connect Wallet`;
 
