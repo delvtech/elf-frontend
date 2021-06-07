@@ -9,7 +9,6 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { validateInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { TokenIcon } from "efi-ui/token/TokenIcon";
-import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
 
 import styles from "./UnstakeInput.module.css";
@@ -23,15 +22,15 @@ const stakingInputStyle: CSSProperties = {
 };
 
 interface UnstakeInputProps {
-  cryptoSymbol: CryptoSymbol;
-  cryptoDecimals: number | undefined;
-  cryptoAssetIcon: TokenIcon | undefined;
+  cryptoSymbol: string;
+  cryptoDecimals: number;
+  cryptoAssetIcon: TokenIcon;
   cryptoBalanceOf: BigNumber | undefined;
   cryptoDisplayBalance: string | number;
   disabled: boolean;
   onChange: (inputValue: string) => void;
-  labelTopLeft: string | undefined;
-  value: string | undefined;
+  label: string;
+  value: string;
   validValue: boolean;
 }
 
@@ -44,7 +43,7 @@ export function UnstakeInput(props: UnstakeInputProps): ReactElement {
     cryptoDisplayBalance,
     disabled,
     onChange: onChangeFromProps,
-    labelTopLeft,
+    label,
     value = "",
     validValue,
   } = props;
@@ -57,7 +56,7 @@ export function UnstakeInput(props: UnstakeInputProps): ReactElement {
     onChangeFromProps
   );
   return (
-    <div className={tw("flex", "flex-col", "space-y-2")}>
+    <div className={tw("flex", "flex-col", "space-y-2", "w-full")}>
       <InputGroup
         disabled={disabled}
         onChange={onChange}
@@ -111,14 +110,14 @@ export function UnstakeInput(props: UnstakeInputProps): ReactElement {
                   tw("text-xs", "whitespace-no-wrap")
                 )}
               >
-                {labelTopLeft}
+                {cryptoSymbol}
               </span>
             </div>
             <div className={tw("flex", "text-2xl", "pr-4")}>
               {CryptoAssetIcon ? (
                 <CryptoAssetIcon height={24} width={24} />
               ) : null}
-              <span>{cryptoSymbol}</span>
+              <span>{label}</span>
             </div>
             <div
               className={tw(
@@ -139,7 +138,7 @@ export function UnstakeInput(props: UnstakeInputProps): ReactElement {
                   { [Classes.TEXT_MUTED]: validValue }
                 )}
               >
-                {t`Balance: ${cryptoDisplayBalance} ${cryptoSymbol}`}
+                {t`Balance: ${cryptoDisplayBalance}`}
               </span>
             </div>
           </div>

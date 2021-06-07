@@ -18,7 +18,6 @@ import { useShareOfPool } from "efi-ui/pools/useShareOfPool";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { ElfIcon } from "efi-ui/token/TokenIcon";
 import { formatPercent } from "efi/base/formatPercent";
-import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
@@ -55,7 +54,9 @@ export function UnstakeCard({
   poolInfo,
 }: UnstakeCardProps): ReactElement {
   // base asset
-  const { baseAssetContract, baseAssetInfo } = getPoolTokens(poolInfo);
+  const { baseAssetContract, baseAssetInfo, termAssetInfo } =
+    getPoolTokens(poolInfo);
+  const symbol = `ELF:${baseAssetInfo.symbol}-${termAssetInfo.symbol}`;
   const { decimals: baseAssetDecimals } = baseAssetInfo;
   const baseAssetCryptoAsset = getCryptoAssetForToken(baseAssetInfo.address);
   const baseAssetSymbol = getCryptoSymbol(baseAssetCryptoAsset);
@@ -103,20 +104,20 @@ export function UnstakeCard({
         "flex",
         "flex-col",
         "flex-1",
-        "space-y-5",
-        "p-8",
+        "space-y-2",
+        "py-4",
         "items-center"
       )}
     >
       <UnstakeInput
-        cryptoSymbol={baseAssetSymbol as CryptoSymbol}
-        cryptoDecimals={baseAssetDecimals}
+        label={t`Pool Tokens`}
+        cryptoSymbol={symbol}
+        cryptoDecimals={poolInfo.decimals}
         cryptoAssetIcon={ElfIcon}
         cryptoBalanceOf={lpBalanceOf}
         cryptoDisplayBalance={lpDisplayBalance || ""}
         disabled={false}
         onChange={setValue}
-        labelTopLeft={t`Base asset`}
         value={stringValue}
         validValue={true}
       />

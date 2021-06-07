@@ -55,6 +55,7 @@ export function UnstakeWeightedPoolButton({
         fill
         minimal
         outlined
+        small
         intent={Intent.PRIMARY}
         disabled={disabled}
         onClick={onClickUnstake}
