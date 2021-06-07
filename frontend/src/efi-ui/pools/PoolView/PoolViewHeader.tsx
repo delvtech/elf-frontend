@@ -6,44 +6,36 @@ import { differenceInDays, format } from "date-fns";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
+import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
-import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
-import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForPool";
-import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
+import { getPoolTokens } from "efi/pools/getPoolTokens";
+import { getTrancheForPool } from "efi/pools/getTrancheForPool";
+import { PoolInfo } from "efi/pools/PoolInfo";
 import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
-import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
-import { useParseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
-import { PoolContract } from "efi/pools/PoolContract";
 
 interface PoolViewHeaderProps {
-  pool: PoolContract | undefined;
+  poolInfo: PoolInfo;
 }
-export function PoolViewHeader({ pool }: PoolViewHeaderProps): ReactElement {
+export function PoolViewHeader({
+  poolInfo,
+}: PoolViewHeaderProps): ReactElement {
   const { isDarkMode } = useDarkMode();
-  const { data: [tokens] = [] } = usePoolTokens(pool);
-  const { baseAssetContract, termAssetContract } =
-    useParseSortedTokensForPool(tokens);
-  const baseAsset = getCryptoAssetForToken(baseAssetContract?.address);
+  const { baseAssetInfo, termAssetInfo } = getPoolTokens(poolInfo);
+  const baseAsset = getCryptoAssetForToken(baseAssetInfo.address);
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
   const { label: termAssetSymbol } = getTermAssetSymbol(
-    termAssetContract?.address,
+    termAssetInfo.address,
     baseAssetSymbol
   );
   const BaseAssetIcon = findAssetIcon2(baseAsset);
 
-  const tranche = useTrancheForPool(pool);
-  const { data: unlockBN } = useSmartContractReadCall(
-    tranche,
-    "unlockTimestamp"
-  );
+  const trancheInfo = getTrancheForPool(poolInfo);
+  const { unlockTimestamp, createdAtTimestamp } = trancheInfo.extensions;
 
-  const unlockTime = unlockBN?.toNumber();
-  const trancheCreatedAt = useTrancheCreatedAt(tranche);
-  const startTime = trancheCreatedAt ? trancheCreatedAt * 1000 : undefined;
-  const maturityTime = unlockTime ? unlockTime * 1000 : undefined;
+  const startTime = createdAtTimestamp * 1000;
+  const maturityTime = unlockTimestamp * 1000;
 
   const dayDifference = differenceInDays(
     maturityTime as number,

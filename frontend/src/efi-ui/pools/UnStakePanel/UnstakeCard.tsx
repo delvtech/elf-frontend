@@ -21,19 +21,15 @@ import { formatPercent } from "efi/base/formatPercent";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
-import {
-  isConvergentCurvePool,
-  isWeightedPool,
-  PoolContract,
-} from "efi/pools/PoolContract";
+import { isConvergentCurvePool, isWeightedPool } from "efi/pools/PoolContract";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
+import { getPoolContract } from "efi/pools/getPoolContract";
 
 interface UnstakeCardProps {
   library: Web3Provider | undefined;
   connector: AbstractConnector | undefined;
   account: string | null | undefined;
-  pool: PoolContract;
   poolInfo: PoolInfo;
 }
 
@@ -50,9 +46,9 @@ export function UnstakeCard({
   library,
   account,
   connector,
-  pool,
   poolInfo,
 }: UnstakeCardProps): ReactElement {
+  const pool = getPoolContract(poolInfo.address);
   // base asset
   const { baseAssetContract, baseAssetInfo, termAssetInfo } =
     getPoolTokens(poolInfo);

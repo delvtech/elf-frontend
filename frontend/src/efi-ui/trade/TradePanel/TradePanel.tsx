@@ -37,6 +37,7 @@ import { principalTokenContractsByAddress } from "efi/tranche/tranches";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
 import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
+import { getPoolContract } from "efi/pools/getPoolContract";
 
 interface TradePanelProps {
   library: Web3Provider | undefined;
@@ -45,7 +46,6 @@ interface TradePanelProps {
   chainId: number | undefined;
   connector: AbstractConnector | undefined;
   walletActive: boolean;
-  pool: PoolContract;
   poolInfo: PoolInfo;
   formDisabled?: boolean;
   submitDisabled?: boolean;
@@ -65,11 +65,12 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     walletActive,
     formDisabled = false,
     submitDisabled = false,
-    pool,
     poolInfo,
     tokenIn,
     tokenOut,
   } = props;
+
+  const pool = getPoolContract(poolInfo.address);
 
   /**
    * Component state

@@ -18,9 +18,9 @@ import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidity
 import { useTotalValueLockedForTranche } from "efi-ui/pools/useTotalValueLockedForTranche";
 import { useVolumeForPool } from "efi-ui/pools/useVolumeForPool/useVolumeForPool";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
+import { getPoolContract } from "efi/pools/getPoolContract";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { getTrancheForPool } from "efi/pools/getTrancheForPool";
-import { PoolContract } from "efi/pools/PoolContract";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
 
@@ -31,7 +31,6 @@ interface PoolDetailsProps {
   chainId: number | undefined;
   connector: AbstractConnector | undefined;
   walletActive: boolean;
-  pool: PoolContract;
   poolInfo: PoolInfo;
 }
 
@@ -43,9 +42,9 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
     chainId,
     connector,
     walletActive,
-    pool,
     poolInfo,
   } = props;
+  const pool = getPoolContract(poolInfo.address);
   const { baseAssetInfo, termAssetInfo, baseAssetContract } =
     getPoolTokens(poolInfo);
 
@@ -128,7 +127,6 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
           chainId={chainId}
           connector={connector}
           walletActive={walletActive}
-          pool={pool}
           poolInfo={poolInfo}
           baseTokenInfo={baseAssetInfo}
           termTokenInfo={termAssetInfo}

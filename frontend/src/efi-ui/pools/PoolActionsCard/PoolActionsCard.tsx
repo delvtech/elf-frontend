@@ -2,6 +2,7 @@ import { ReactElement, useEffect, useState } from "react";
 
 import { Card, Intent, Tab, Tabs } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
+import { TokenInfo } from "@uniswap/token-lists";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { Signer } from "ethers";
 import { t } from "ttag";
@@ -14,8 +15,6 @@ import {
   usePoolViewPoolActionsTab,
 } from "efi-ui/pools/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
 import { TradePanel } from "efi-ui/trade/TradePanel/TradePanel";
-import { PoolContract } from "efi/pools/PoolContract";
-import { TokenInfo } from "@uniswap/token-lists";
 import { PoolInfo } from "efi/pools/PoolInfo";
 
 interface PoolActionsCardProps {
@@ -25,7 +24,6 @@ interface PoolActionsCardProps {
   chainId: number | undefined;
   connector: AbstractConnector | undefined;
   walletActive: boolean;
-  pool: PoolContract;
   poolInfo: PoolInfo;
   baseTokenInfo: TokenInfo;
   termTokenInfo: TokenInfo;
@@ -41,7 +39,6 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
     walletActive,
     baseTokenInfo,
     termTokenInfo,
-    pool,
     poolInfo,
   } = props;
   const { tab, setTab } = usePoolViewPoolActionsTab();
@@ -68,7 +65,6 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
             chainId={chainId}
             connector={connector}
             walletActive={walletActive}
-            pool={pool}
             poolInfo={poolInfo}
             tokenIn={baseTokenInfo}
             tokenOut={termTokenInfo}
@@ -84,7 +80,6 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
             chainId={chainId}
             connector={connector}
             walletActive={walletActive}
-            pool={pool}
             poolInfo={poolInfo}
             tokenIn={termTokenInfo}
             tokenOut={baseTokenInfo}
@@ -97,7 +92,7 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
             library={library}
             signer={signer}
             account={account}
-            pool={pool}
+            poolInfo={poolInfo}
             buttonLabel={t`Stake`}
             buttonIntent={Intent.PRIMARY}
           />
@@ -107,7 +102,6 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
             library={library}
             account={account}
             connector={connector}
-            pool={pool}
             poolInfo={poolInfo}
           />
         )}
