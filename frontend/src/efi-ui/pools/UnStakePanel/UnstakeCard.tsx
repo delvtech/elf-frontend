@@ -2,8 +2,6 @@ import { ReactElement } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
-import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
-import { Tranche__factory } from "elf-contracts/types/factories/Tranche__factory";
 import { BigNumber } from "ethers";
 import { formatEther, formatUnits } from "ethers/lib/utils";
 import zipObject from "lodash.zipobject";
@@ -15,24 +13,29 @@ import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { UnstakeConvergentCurvePoolButton } from "efi-ui/pools/UnstakeButton/UnstakeConvergentCurvePoolButton";
 import { UnstakeWeightedPoolButton } from "efi-ui/pools/UnstakeButton/UnstakeWeightedPoolButton";
 import { UnstakeInput } from "efi-ui/pools/UnstakeInput/UnstakeInput";
-import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useShareOfPool } from "efi-ui/pools/useShareOfPool";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
-import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
-import { KNOWN_BASE_ASSETS } from "efi/addresses";
+import { ElfIcon } from "efi-ui/token/TokenIcon";
 import { formatPercent } from "efi/base/formatPercent";
-import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
-import { isConvergentCurvePool, isWeightedPool } from "efi/pools/PoolContract";
+import { getPoolTokens } from "efi/pools/getPoolTokens";
+import { getTrancheForPool } from "efi/pools/getTrancheForPool";
+import {
+  isConvergentCurvePool,
+  isWeightedPool,
+  PoolContract,
+} from "efi/pools/PoolContract";
+import { PoolInfo } from "efi/pools/PoolInfo";
 
 interface UnstakeCardProps {
   library: Web3Provider | undefined;
   connector: AbstractConnector | undefined;
   account: string | null | undefined;
-  pool: ConvergentCurvePool | undefined;
+  pool: PoolContract;
+  poolInfo: PoolInfo;
 }
 
 const calloutClassName = tw(
@@ -49,18 +52,17 @@ export function UnstakeCard({
   account,
   connector,
   pool,
+  poolInfo,
 }: UnstakeCardProps): ReactElement {
   // base asset
-  const baseAssetContract = useBaseAssetForPool(pool);
-  const { data: baseAssetDecimals } = useTokenDecimals(baseAssetContract);
-  const baseAssetCryptoAsset = getCryptoAssetForToken(
-    baseAssetContract?.address
-  );
+  const { baseAssetContract, baseAssetInfo } = getPoolTokens(poolInfo);
+  const { decimals: baseAssetDecimals } = baseAssetInfo;
+  const baseAssetCryptoAsset = getCryptoAssetForToken(baseAssetInfo.address);
   const baseAssetSymbol = getCryptoSymbol(baseAssetCryptoAsset);
 
   // Principal token
-  const tranche = useTrancheForPool(pool);
-  const { data: trancheDecimals } = useTokenDecimals(tranche);
+  const trancheInfo = getTrancheForPool(poolInfo);
+  const { decimals: trancheDecimals } = trancheInfo;
 
   // pool shares
   const { data: lpBalanceOf } = useTokenBalanceOf(pool, account);
@@ -82,7 +84,7 @@ export function UnstakeCard({
     shareOfPool,
     addresses,
     poolBalances,
-    tranche?.address,
+    trancheInfo.address,
     trancheDecimals
   );
 
@@ -109,7 +111,7 @@ export function UnstakeCard({
       <UnstakeInput
         cryptoSymbol={baseAssetSymbol as CryptoSymbol}
         cryptoDecimals={baseAssetDecimals}
-        cryptoAssetIcon={undefined}
+        cryptoAssetIcon={ElfIcon}
         cryptoBalanceOf={lpBalanceOf}
         cryptoDisplayBalance={lpDisplayBalance || ""}
         disabled={false}
@@ -198,16 +200,4 @@ function getShareOfPoolLabel(shareOfPool: number | undefined) {
   }
 
   return formatPercent(shareOfPool, 2);
-}
-
-function useTrancheForPool(pool: ConvergentCurvePool | undefined) {
-  const { data: [poolTokens = []] = [] } = usePoolTokens(pool);
-  const principalTokenAddress = poolTokens.find(
-    (address) => !KNOWN_BASE_ASSETS.includes(address)
-  );
-
-  return getSmartContractFromRegistry(
-    principalTokenAddress,
-    Tranche__factory.connect
-  );
 }

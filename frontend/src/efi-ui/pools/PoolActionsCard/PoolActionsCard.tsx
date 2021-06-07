@@ -106,8 +106,9 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
           <UnStakePanel
             library={library}
             account={account}
-            pool={pool}
             connector={connector}
+            pool={pool}
+            poolInfo={poolInfo}
           />
         )}
       </Card>
