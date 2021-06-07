@@ -11,9 +11,8 @@ import { validateInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput
 import { TokenIcon } from "efi-ui/token/TokenIcon";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
-import { calculateLPOutGivenInFixed } from "efi/pools/calculateLPOutGivenIn";
 
-import styles from "./StakingInput.module.css";
+import styles from "./UnstakeInput.module.css";
 
 const stakingInputStyle: CSSProperties = {
   height: "96px",
@@ -22,24 +21,21 @@ const stakingInputStyle: CSSProperties = {
   paddingRight: 64,
   textAlign: "right",
 };
-interface StakingInputProps {
+
+interface UnstakeInputProps {
   cryptoSymbol: CryptoSymbol;
   cryptoDecimals: number | undefined;
   cryptoAssetIcon: TokenIcon | undefined;
   cryptoBalanceOf: BigNumber | undefined;
   cryptoDisplayBalance: string | number;
   disabled: boolean;
-  onPreviewUpdate: (otherNeeded: string, lpOut: string | undefined) => void;
   onChange: (inputValue: string) => void;
   labelTopLeft: string | undefined;
   value: string | undefined;
   validValue: boolean;
-  tokenPoolReserves: string | undefined;
-  otherTokenPoolReserves: string | undefined;
-  totalSupply: string | undefined;
 }
 
-export function StakingInput(props: StakingInputProps): ReactElement {
+export function UnstakeInput(props: UnstakeInputProps): ReactElement {
   const {
     cryptoSymbol,
     cryptoDecimals,
@@ -48,32 +44,17 @@ export function StakingInput(props: StakingInputProps): ReactElement {
     cryptoDisplayBalance,
     disabled,
     onChange: onChangeFromProps,
-    onPreviewUpdate,
     labelTopLeft,
     value = "",
     validValue,
-    tokenPoolReserves,
-    otherTokenPoolReserves,
-    totalSupply,
   } = props;
 
-  const onChange = useOnInputChange(
-    onChangeFromProps,
-    onPreviewUpdate,
-    cryptoDecimals,
-    tokenPoolReserves,
-    otherTokenPoolReserves,
-    totalSupply
-  );
+  const onChange = useOnInputChange(onChangeFromProps, cryptoDecimals);
 
   const setMaxValue = useSetMaxValue(
     cryptoBalanceOf,
-    tokenPoolReserves,
-    otherTokenPoolReserves,
-    totalSupply,
     cryptoDecimals,
-    onChangeFromProps,
-    onPreviewUpdate
+    onChangeFromProps
   );
   return (
     <div className={tw("flex", "flex-col", "space-y-2")}>
@@ -170,11 +151,7 @@ export function StakingInput(props: StakingInputProps): ReactElement {
 
 function useOnInputChange(
   onChangeFromProps: (inputValue: string) => void,
-  onPreviewUpdate: (otherNeeded: string, lpOut: string | undefined) => void,
-  cryptoDecimals: number | undefined,
-  tokenPoolReserves: string | undefined,
-  otherTokenPoolReserves: string | undefined,
-  totalSupply: string | undefined
+  cryptoDecimals: number | undefined
 ) {
   return useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -183,7 +160,6 @@ function useOnInputChange(
       // allow user to clear input
       if (userInputValue === undefined || userInputValue === "") {
         onChangeFromProps("");
-        onPreviewUpdate("", undefined);
         return;
       }
 
@@ -203,44 +179,18 @@ function useOnInputChange(
       onChangeFromProps(safeValue);
 
       // values may be undefined while loading, prevent calling calcLPOutGivenInFixed
-      if (
-        !tokenPoolReserves ||
-        !otherTokenPoolReserves ||
-        !totalSupply ||
-        !cryptoDecimals
-      ) {
+      if (!cryptoDecimals) {
         return;
       }
-
-      const { otherNeeded, lpOut } = calculateLPOutGivenInFixed(
-        safeValue,
-        tokenPoolReserves,
-        otherTokenPoolReserves,
-        totalSupply,
-        cryptoDecimals
-      );
-
-      onPreviewUpdate(otherNeeded, lpOut);
     },
-    [
-      cryptoDecimals,
-      onChangeFromProps,
-      tokenPoolReserves,
-      otherTokenPoolReserves,
-      totalSupply,
-      onPreviewUpdate,
-    ]
+    [cryptoDecimals, onChangeFromProps]
   );
 }
 
 function useSetMaxValue(
   tokenBalanceOf: BigNumber | undefined,
-  tokenPoolReserves: string | undefined,
-  otherTokenPoolReserves: string | undefined,
-  totalSupply: string | undefined,
   tokenDecimals: number | undefined,
-  onChange: (value: string) => void,
-  onPreviewUpdate: (value: string, lpOut: string | undefined) => void
+  onChange: (value: string) => void
 ) {
   return useCallback(() => {
     if (tokenBalanceOf) {
@@ -249,30 +199,9 @@ function useSetMaxValue(
       onChange(maxValue);
 
       // values may be undefined while loading, prevent calling calcLPOutGivenInFixed
-      if (
-        !tokenPoolReserves ||
-        !otherTokenPoolReserves ||
-        !totalSupply ||
-        !tokenDecimals
-      ) {
+      if (!tokenDecimals) {
         return;
       }
-      const { otherNeeded, lpOut } = calculateLPOutGivenInFixed(
-        maxValue,
-        tokenPoolReserves,
-        otherTokenPoolReserves,
-        totalSupply,
-        tokenDecimals
-      );
-      onPreviewUpdate(otherNeeded, lpOut);
     }
-  }, [
-    tokenBalanceOf,
-    tokenDecimals,
-    onChange,
-    tokenPoolReserves,
-    otherTokenPoolReserves,
-    totalSupply,
-    onPreviewUpdate,
-  ]);
+  }, [tokenBalanceOf, tokenDecimals, onChange]);
 }

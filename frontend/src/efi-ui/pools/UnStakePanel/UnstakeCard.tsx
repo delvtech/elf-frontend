@@ -5,25 +5,28 @@ import { AbstractConnector } from "@web3-react/abstract-connector";
 import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
 import { Tranche__factory } from "elf-contracts/types/factories/Tranche__factory";
 import { BigNumber } from "ethers";
-import { formatUnits } from "ethers/lib/utils";
+import { formatEther, formatUnits } from "ethers/lib/utils";
 import zipObject from "lodash.zipobject";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { UnstakeConvergentCurvePoolButton } from "efi-ui/pools/UnstakeButton/UnstakeConvergentCurvePoolButton";
 import { UnstakeWeightedPoolButton } from "efi-ui/pools/UnstakeButton/UnstakeWeightedPoolButton";
+import { UnstakeInput } from "efi-ui/pools/UnstakeInput/UnstakeInput";
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useShareOfPool } from "efi-ui/pools/useShareOfPool";
+import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { KNOWN_BASE_ASSETS } from "efi/addresses";
 import { formatPercent } from "efi/base/formatPercent";
 import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
+import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { isConvergentCurvePool, isWeightedPool } from "efi/pools/PoolContract";
-import { StakingInput } from "efi-ui/pools/StakingInput/StakingInput";
 
 interface UnstakeCardProps {
   library: Web3Provider | undefined;
@@ -60,11 +63,14 @@ export function UnstakeCard({
   const { data: trancheDecimals } = useTokenDecimals(tranche);
 
   // pool shares
+  const { data: lpBalanceOf } = useTokenBalanceOf(pool, account);
+  const lpDisplayBalance = formatEther(lpBalanceOf ?? 0);
   const shareOfPool = useShareOfPool(pool, account);
   const shareOfPoolLabel = getShareOfPoolLabel(shareOfPool);
 
   // liquidity
   const { data: [addresses, poolBalances] = [] } = usePoolTokens(pool);
+
   const baseAssetLiquidity = calculatePoolShareLiquidity(
     shareOfPool,
     addresses,
@@ -87,6 +93,8 @@ export function UnstakeCard({
     ? `${principalTokenLiquidity?.toFixed(4)}`
     : "0.0000";
 
+  const { stringValue, setValue } = useNumericInput();
+
   return (
     <div
       className={tw(
@@ -98,6 +106,18 @@ export function UnstakeCard({
         "items-center"
       )}
     >
+      <UnstakeInput
+        cryptoSymbol={baseAssetSymbol as CryptoSymbol}
+        cryptoDecimals={baseAssetDecimals}
+        cryptoAssetIcon={undefined}
+        cryptoBalanceOf={lpBalanceOf}
+        cryptoDisplayBalance={lpDisplayBalance || ""}
+        disabled={false}
+        onChange={setValue}
+        labelTopLeft={t`Base asset`}
+        value={stringValue}
+        validValue={true}
+      />
       <div className={calloutClassName}>
         <LabeledText
           muted={false}
