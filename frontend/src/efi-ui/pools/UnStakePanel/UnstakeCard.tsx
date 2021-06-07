@@ -1,9 +1,7 @@
 import { ReactElement } from "react";
 
-import { Callout } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
-import classNames from "classnames";
 import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
 import { Tranche__factory } from "elf-contracts/types/factories/Tranche__factory";
 import { BigNumber } from "ethers";
@@ -13,8 +11,6 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { UnstakeConvergentCurvePoolButton } from "efi-ui/pools/UnstakeButton/UnstakeConvergentCurvePoolButton";
 import { UnstakeWeightedPoolButton } from "efi-ui/pools/UnstakeButton/UnstakeWeightedPoolButton";
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
@@ -24,7 +20,10 @@ import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { KNOWN_BASE_ASSETS } from "efi/addresses";
 import { formatPercent } from "efi/base/formatPercent";
 import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
+import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { isConvergentCurvePool, isWeightedPool } from "efi/pools/PoolContract";
+import { StakingInput } from "efi-ui/pools/StakingInput/StakingInput";
 
 interface UnstakeCardProps {
   library: Web3Provider | undefined;
@@ -35,12 +34,11 @@ interface UnstakeCardProps {
 
 const calloutClassName = tw(
   "flex",
-  "flex-col",
   "flex-1",
-  "h-full",
   "p-8",
+  "w-full",
   "items-center",
-  "justify-center"
+  "justify-between"
 );
 
 export function UnstakeCard({
@@ -100,37 +98,32 @@ export function UnstakeCard({
         "items-center"
       )}
     >
-      <div className={tw("flex", "w-full", "space-x-5", "items-center")}>
-        <Callout className={calloutClassName}>
-          <span
-            className={classNames(tw("text-base", "mb-0"))}
-          >{t`${baseAssetSymbol} liquidity`}</span>
-          <span className={tw("text-lg", "font-semibold")}>
-            {baseAssetLiquidityLabel}
-          </span>
-        </Callout>
-        <Callout className={calloutClassName}>
-          <span
-            className={classNames(tw("text-base", "mb-0"))}
-          >{t`pt${baseAssetSymbol} liquidity`}</span>
-          <span className={tw("text-lg", "font-semibold")}>
-            {principalTokenLiquidityLabel}
-          </span>
-        </Callout>
-      </div>
-      <Callout className={calloutClassName}>
-        <span
-          className={classNames(tw("text-base", "mb-0"))}
-        >{t`Share of pool`}</span>
+      <div className={calloutClassName}>
         <LabeledText
           muted={false}
-          className={tw("flex", "justify-center", "items-center")}
+          className={tw("flex", "flex-col", "justify-center", "items-center")}
           bold
           textClassName={tw("text-2xl")}
           text={shareOfPoolLabel}
-          label={""}
+          label={"Share of pool"}
         />
-      </Callout>
+        <LabeledText
+          muted={false}
+          className={tw("flex", "flex-col", "justify-center", "items-center")}
+          bold
+          textClassName={tw("text-2xl")}
+          text={principalTokenLiquidityLabel}
+          label={t`pt${baseAssetSymbol} liquidity`}
+        />
+        <LabeledText
+          muted={false}
+          className={tw("flex", "flex-col", "justify-center", "items-center")}
+          bold
+          textClassName={tw("text-2xl")}
+          text={baseAssetLiquidityLabel}
+          label={t`${baseAssetSymbol} liquidity`}
+        />
+      </div>
 
       {/* Quick Actions */}
       {isConvergentCurvePool(pool) && (
