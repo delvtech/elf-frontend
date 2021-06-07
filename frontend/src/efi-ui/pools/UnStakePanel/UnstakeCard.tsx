@@ -61,10 +61,6 @@ export function UnstakeCard({
   const baseAssetCryptoAsset = getCryptoAssetForToken(baseAssetInfo.address);
   const baseAssetSymbol = getCryptoSymbol(baseAssetCryptoAsset);
 
-  // Principal token
-  const trancheInfo = getTrancheForPool(poolInfo);
-  const { decimals: trancheDecimals } = trancheInfo;
-
   // pool shares
   const { data: lpBalanceOf } = useTokenBalanceOf(pool, account);
   const lpDisplayBalance = formatEther(lpBalanceOf ?? 0);
@@ -81,19 +77,20 @@ export function UnstakeCard({
     baseAssetContract?.address,
     baseAssetDecimals
   );
-  const principalTokenLiquidity = calculatePoolShareLiquidity(
+
+  const termAssetLiquidity = calculatePoolShareLiquidity(
     shareOfPool,
     addresses,
     poolBalances,
-    trancheInfo.address,
-    trancheDecimals
+    termAssetInfo.address,
+    termAssetInfo.decimals
   );
 
   const baseAssetLiquidityLabel = baseAssetLiquidity
     ? `${baseAssetLiquidity?.toFixed(4)}`
     : "0.0000";
-  const principalTokenLiquidityLabel = principalTokenLiquidity
-    ? `${principalTokenLiquidity?.toFixed(4)}`
+  const termAssetLiquidityLabel = termAssetLiquidity
+    ? `${termAssetLiquidity?.toFixed(4)}`
     : "0.0000";
 
   const { stringValue, setValue } = useNumericInput();
@@ -135,8 +132,8 @@ export function UnstakeCard({
           className={tw("flex", "flex-col", "justify-center", "items-center")}
           bold
           textClassName={tw("text-2xl")}
-          text={principalTokenLiquidityLabel}
-          label={t`pt${baseAssetSymbol} liquidity`}
+          text={termAssetLiquidityLabel}
+          label={t`${termAssetInfo.symbol} liquidity`}
         />
         <LabeledText
           muted={false}
@@ -155,6 +152,7 @@ export function UnstakeCard({
           connector={connector}
           library={library}
           pool={pool}
+          amount={stringValue}
         />
       )}
       {isWeightedPool(pool) && (
@@ -163,6 +161,7 @@ export function UnstakeCard({
           connector={connector}
           library={library}
           pool={pool}
+          amount={stringValue}
         />
       )}
     </div>
@@ -186,7 +185,7 @@ function calculatePoolShareLiquidity(
   ) {
     const reservesByAddress = zipObject(poolTokenAddresses, poolTokenReserves);
     const reserves = reservesByAddress[tokenAddress];
-    const reservesNumber = +formatUnits(reserves, tokenDecimals);
+    const reservesNumber = +formatUnits(reserves ?? 0, tokenDecimals);
     baseAssetLiquidity = poolShares * reservesNumber;
   }
   return baseAssetLiquidity;
