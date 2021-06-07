@@ -3,6 +3,9 @@ import { CSSProperties, ReactElement } from "react";
 import ethIconGrey from "efi-static-assets/logos/svg/ETH-grey.svg";
 import usdcIcon from "efi-static-assets/logos/svg/USDC.svg";
 import wethIcon from "efi-static-assets/logos/svg/WETH.svg";
+import elfIconDark from "efi-static-assets/logos/svg/logo-dark.svg";
+import elfIcon from "efi-static-assets/logos/svg/logo-light.svg";
+import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 
 interface SvgIconProps {
   height: number;
@@ -94,6 +97,26 @@ export function WethIcon({
       className={className}
       style={iconStyle}
       src={wethIcon}
+      height={height}
+      width={width}
+    />
+  );
+}
+
+export function ElfIcon({
+  height,
+  width,
+  className,
+  style,
+}: IconProps): ReactElement {
+  const { isDarkMode } = useDarkMode();
+  const icon = isDarkMode ? elfIconDark : elfIcon;
+  return (
+    <SvgIcon
+      alt={"element"}
+      className={className}
+      style={style}
+      src={icon}
       height={height}
       width={width}
     />
