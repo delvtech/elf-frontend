@@ -20,6 +20,8 @@ import {
   CryptoAssetType,
   findTokenContract,
 } from "efi/crypto/CryptoAsset";
+import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
+import { TokenIcon } from "efi-ui/token/TokenIcon";
 
 interface StakingConfirmationDrawerProps {
   account: string | null | undefined;
@@ -60,10 +62,11 @@ export function StakingConfirmationDrawer({
   const balancerVault = useBalancerVault();
   // close the drawer after stake succeeds
 
-  const { icon: baseAssetIcon, decimals: baseAssetDecimals } =
-    useCryptoAssetMetadata(baseAsset);
-  const { icon: trancheAssetIcon, decimals: trancheAssetDecimals } =
+  const { decimals: baseAssetDecimals } = useCryptoAssetMetadata(baseAsset);
+  const baseAssetIcon = findAssetIcon2(baseAsset) as TokenIcon;
+  const { decimals: trancheAssetDecimals } =
     useCryptoAssetMetadata(trancheAsset);
+  const trancheAssetIcon = findAssetIcon2(trancheAsset) as TokenIcon;
 
   const baseAssetInBigNumber = parseUnits(
     baseAssetIn || "0",
