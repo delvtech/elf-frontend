@@ -94,20 +94,20 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
   const BaseAssetIcon = findAssetIcon2(cryptoAsset);
 
   const {
-    asset: yieldAsset,
-    symbol: yieldAssetSymbol,
-    address: yieldAssetAddress,
-    decimals: yieldAssetDecimals,
-    balanceOf: yieldAssetBalanceOf,
-    displayBalance: yieldAssetDisplayBalance,
-    poolBalance: yieldAssetPoolBalance,
+    asset: termAsset,
+    symbol: termAssetSymbol,
+    address: termAssetAddress,
+    decimals: termAssetDecimals,
+    balanceOf: termAssetBalanceOf,
+    displayBalance: termAssetDisplayBalance,
+    poolBalance: termAssetPoolBalance,
   } = useTokenInfoForTradeInput(pool, termAssetContract, account, library);
   const isPrincipalPoolType = trancheContracts
     .map(({ address }) => address)
-    .includes(yieldAssetAddress ?? "");
+    .includes(termAssetAddress ?? "");
 
   const { label: termAssetSymbolLabel } = getTermAssetSymbol(
-    yieldAssetAddress,
+    termAssetAddress,
     baseAssetSymbol
   );
 
@@ -117,8 +117,8 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
   );
 
   const yieldAssetReserves = formatUnits(
-    yieldAssetPoolBalance ?? 0,
-    yieldAssetDecimals
+    termAssetPoolBalance ?? 0,
+    termAssetDecimals
   );
 
   const { stringValue: amountIn, setValue: onChangeIn } = useNumericInput();
@@ -132,8 +132,8 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
 
   const isValidTrancheAssetValue = validateStakingValue(
     amountOut,
-    yieldAssetBalanceOf,
-    yieldAssetDecimals
+    termAssetBalanceOf,
+    termAssetDecimals
   );
 
   const onClose = useCallback(() => {
@@ -149,7 +149,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
   );
   poolTokenMaxAmounts[termAssetIndex] = parseUnits(
     amountOut || "0",
-    yieldAssetDecimals
+    termAssetDecimals
   );
 
   const {
@@ -194,9 +194,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
     parseUnits(amountIn || "0", baseAssetDecimals).gt(
       baseAssetBalanceOf ?? 0
     ) ||
-    parseUnits(amountOut || "0", yieldAssetDecimals).gt(
-      yieldAssetBalanceOf ?? 0
-    );
+    parseUnits(amountOut || "0", termAssetDecimals).gt(termAssetBalanceOf ?? 0);
 
   const invalidInput =
     formDisabled ||
@@ -250,11 +248,11 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
 
       <div style={{ height: 40, width: "100%" }} />
       <StakingInput
-        cryptoSymbol={yieldAssetSymbol as CryptoSymbol}
+        cryptoSymbol={termAssetSymbol as CryptoSymbol}
         cryptoDecimals={baseAssetDecimals}
         cryptoAssetIcon={BaseAssetIcon}
-        cryptoBalanceOf={yieldAssetBalanceOf}
-        cryptoDisplayBalance={yieldAssetDisplayBalance || ""}
+        cryptoBalanceOf={termAssetBalanceOf}
+        cryptoDisplayBalance={termAssetDisplayBalance || ""}
         disabled={formDisabled}
         onChange={onChangeOut}
         onPreviewUpdate={onChangeIn}
@@ -279,10 +277,10 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
         library={library}
         account={account}
         baseAsset={baseAsset}
-        trancheAsset={yieldAsset}
+        trancheAsset={termAsset}
         baseAssetSymbol={baseAssetSymbol}
         baseAssetSymbolLabel={baseAssetSymbol}
-        trancheAssetSymbol={yieldAssetSymbol}
+        trancheAssetSymbol={termAssetSymbol}
         trancheAssetSymbolLabel={termAssetSymbolLabel}
         baseAssetIn={amountIn}
         trancheAssetIn={amountOut}
