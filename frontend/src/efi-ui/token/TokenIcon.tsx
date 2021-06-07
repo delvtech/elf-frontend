@@ -1,10 +1,10 @@
 import { CSSProperties, ReactElement } from "react";
 
+import elementIconDark from "efi-static-assets/logos/svg/ELEMENT-dark.svg";
+import elementIcon from "efi-static-assets/logos/svg/ELEMENT-light.svg";
 import ethIconGrey from "efi-static-assets/logos/svg/ETH-grey.svg";
 import usdcIcon from "efi-static-assets/logos/svg/USDC.svg";
 import wethIcon from "efi-static-assets/logos/svg/WETH.svg";
-import elfIconDark from "efi-static-assets/logos/svg/logo-dark.svg";
-import elfIcon from "efi-static-assets/logos/svg/logo-light.svg";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 
 interface SvgIconProps {
@@ -19,8 +19,8 @@ export type TokenIcon = typeof EthIcon | typeof UsdcIcon | typeof WethIcon;
 export function SvgIcon({
   height,
   width,
-  className,
-  style,
+  className = "",
+  style = {},
   src,
   alt,
 }: SvgIconProps): ReactElement {
@@ -103,14 +103,14 @@ export function WethIcon({
   );
 }
 
-export function ElfIcon({
+export function ElementIcon({
   height,
   width,
   className,
   style,
 }: IconProps): ReactElement {
   const { isDarkMode } = useDarkMode();
-  const icon = isDarkMode ? elfIconDark : elfIcon;
+  const icon = isDarkMode ? elementIconDark : elementIcon;
   return (
     <SvgIcon
       alt={"element"}

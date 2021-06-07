@@ -16,7 +16,7 @@ import { UnstakeInput } from "efi-ui/pools/UnstakeInput/UnstakeInput";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useShareOfPool } from "efi-ui/pools/useShareOfPool";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
-import { ElfIcon } from "efi-ui/token/TokenIcon";
+import { ElementIcon } from "efi-ui/token/TokenIcon";
 import { formatPercent } from "efi/base/formatPercent";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
@@ -122,7 +122,7 @@ export function UnstakeCard({
         label={t`Pool Tokens`}
         cryptoSymbol={symbol}
         cryptoDecimals={poolInfo.decimals}
-        cryptoAssetIcon={ElfIcon}
+        cryptoAssetIcon={ElementIcon}
         cryptoBalanceOf={lpBalanceOf}
         cryptoDisplayBalance={lpDisplayBalance || ""}
         disabled={balanceIsZero}
@@ -137,7 +137,7 @@ export function UnstakeCard({
           bold
           textClassName={tw("text-2xl")}
           text={shareOfPoolLabel}
-          label={"Share of pool"}
+          label={t`Share of pool`}
         />
         <LabeledText
           muted={false}
