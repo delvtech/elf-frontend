@@ -86,7 +86,7 @@ export function TradeInput(props: TradeInputProps): ReactElement {
         style={tradeInputStyle}
         className={classNames(styles.depositInput, tw("text-right"))}
         large
-        intent={validValue ? undefined : Intent.DANGER}
+        intent={validValue ? Intent.NONE : Intent.DANGER}
         rightElement={
           <div
             className={tw(

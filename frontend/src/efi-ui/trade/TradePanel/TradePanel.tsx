@@ -14,14 +14,13 @@ import { SwapKind } from "efi-ui/balancer/SwapKind";
 import { getCalcSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
+import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoBalanceOf } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { useTokenPoolBalance } from "efi-ui/pools/useTokenPoolBalance/useTokenPoolBalance";
 import { useTokenPoolIndex } from "efi-ui/pools/useTokenPoolIndex/useTokenPoolIndex";
 import { SwapTokensTransactionConfirmationDrawer } from "efi-ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensTransactionConfirmationDrawer";
-import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { TradeInput } from "efi-ui/trade/TradeInput/TradeInput";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
 import { BALANCER_ETH_SENTINEL } from "efi/balancer";
@@ -36,6 +35,9 @@ import { PoolContract } from "efi/pools/PoolContract";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
 import { principalTokenContractsByAddress } from "efi/tranche/tranches";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
+import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
 
 interface TradePanelProps {
   library: Web3Provider | undefined;
@@ -484,23 +486,25 @@ function useTokenInfoForTradeInput(
   account: string | null | undefined,
   library: Web3Provider | undefined
 ) {
-  const { symbol } = tokenInfo;
+  const { decimals } = tokenInfo;
 
   const tokenContract =
     principalTokenContractsByAddress[tokenInfo.address] ??
-    InterestTokenContractsByAddress[tokenInfo.address];
+    InterestTokenContractsByAddress[tokenInfo.address] ??
+    getSmartContractFromRegistry(tokenInfo.address, ERC20__factory.connect);
 
-  const asset = getCryptoAssetForToken(tokenContract?.address);
+  const asset = getCryptoAssetForToken(tokenInfo.address);
   const address =
     asset?.type === CryptoAssetType.ETHEREUM
       ? BALANCER_ETH_SENTINEL
-      : tokenContract?.address;
+      : tokenInfo.address;
 
   const poolInfo = getPoolTokenInfo(pool.address);
   const { baseAssetInfo } = getPoolTokens(poolInfo);
-  const icon = findAssetIcon(baseAssetInfo.symbol);
+  const baseCryptoAsset = getCryptoAssetForToken(baseAssetInfo.address);
+  const symbol = getCryptoSymbol(asset);
+  const icon = findAssetIcon2(baseCryptoAsset);
 
-  const { data: decimals } = useTokenDecimals(tokenContract);
   const balanceOf = useCryptoBalanceOf(library, account, asset);
   const displayBalance = formatBalance(balanceOf, decimals);
   const poolBalance = useTokenPoolBalance(pool, tokenContract);
@@ -508,7 +512,7 @@ function useTokenInfoForTradeInput(
 
   return {
     asset,
-    contractAddress: tokenContract?.address,
+    contractAddress: tokenInfo.address,
     address,
     icon,
     symbol,
