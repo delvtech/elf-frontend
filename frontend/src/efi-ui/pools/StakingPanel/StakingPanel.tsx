@@ -230,24 +230,6 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
       )}
     >
       <StakingInput
-        cryptoSymbol={baseAssetSymbol as CryptoSymbol}
-        cryptoDecimals={baseAssetDecimals}
-        cryptoAssetIcon={BaseAssetIcon}
-        cryptoBalanceOf={baseAssetBalanceOf}
-        cryptoDisplayBalance={baseAssetDisplayBalance || ""}
-        disabled={formDisabled}
-        onChange={onChangeIn}
-        onPreviewUpdate={onChangeOut}
-        labelTopLeft={t`Base asset`}
-        value={amountIn}
-        validValue={isValidBaseAssetValue}
-        tokenPoolReserves={baseAssetReserves}
-        otherTokenPoolReserves={yieldAssetReserves}
-        totalSupply={totalSupply}
-      />
-
-      <div style={{ height: 40, width: "100%" }} />
-      <StakingInput
         cryptoSymbol={termAssetSymbol as CryptoSymbol}
         cryptoDecimals={baseAssetDecimals}
         cryptoAssetIcon={BaseAssetIcon}
@@ -261,6 +243,23 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
         validValue={isValidTrancheAssetValue}
         tokenPoolReserves={yieldAssetReserves}
         otherTokenPoolReserves={baseAssetReserves}
+        totalSupply={totalSupply}
+      />
+      <div style={{ height: 40, width: "100%" }} />
+      <StakingInput
+        cryptoSymbol={baseAssetSymbol as CryptoSymbol}
+        cryptoDecimals={baseAssetDecimals}
+        cryptoAssetIcon={BaseAssetIcon}
+        cryptoBalanceOf={baseAssetBalanceOf}
+        cryptoDisplayBalance={baseAssetDisplayBalance || ""}
+        disabled={formDisabled}
+        onChange={onChangeIn}
+        onPreviewUpdate={onChangeOut}
+        labelTopLeft={t`Base asset`}
+        value={amountIn}
+        validValue={isValidBaseAssetValue}
+        tokenPoolReserves={baseAssetReserves}
+        otherTokenPoolReserves={yieldAssetReserves}
         totalSupply={totalSupply}
       />
       <Button
