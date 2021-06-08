@@ -27,17 +27,16 @@ import { formatBalance } from "efi/base/formatBalance";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { InterestTokenContractsByAddress } from "efi/interestToken/interestToken";
+import { getPoolContract } from "efi/pools/getPoolContract";
 import { getPoolTokenInfo } from "efi/pools/getPoolInfo";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolContract } from "efi/pools/PoolContract";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
 import { principalTokenContractsByAddress } from "efi/tranche/tranches";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
-import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
-import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
-import { getPoolContract } from "efi/pools/getPoolContract";
+import { underlyingContracts } from "efi/underlying/underlying";
 
 interface TradePanelProps {
   library: Web3Provider | undefined;
@@ -491,7 +490,7 @@ function useTokenInfoForTradeInput(
   const tokenContract =
     principalTokenContractsByAddress[tokenInfo.address] ??
     InterestTokenContractsByAddress[tokenInfo.address] ??
-    getSmartContractFromRegistry(tokenInfo.address, ERC20__factory.connect);
+    underlyingContracts[tokenInfo.address];
 
   const asset = getCryptoAssetForToken(tokenInfo.address);
   const address =
