@@ -2,19 +2,12 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { Contract, Signer } from "ethers";
+import { Contract, Signer, utils } from "ethers";
 import { Provider } from "@ethersproject/providers";
-
-import type { SignaturesValidator } from "../SignaturesValidator";
-
-export class SignaturesValidator__factory {
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): SignaturesValidator {
-    return new Contract(address, _abi, signerOrProvider) as SignaturesValidator;
-  }
-}
+import type {
+  SignaturesValidator,
+  SignaturesValidatorInterface,
+} from "../SignaturesValidator";
 
 const _abi = [
   {
@@ -50,3 +43,16 @@ const _abi = [
     type: "function",
   },
 ];
+
+export class SignaturesValidator__factory {
+  static readonly abi = _abi;
+  static createInterface(): SignaturesValidatorInterface {
+    return new utils.Interface(_abi) as SignaturesValidatorInterface;
+  }
+  static connect(
+    address: string,
+    signerOrProvider: Signer | Provider
+  ): SignaturesValidator {
+    return new Contract(address, _abi, signerOrProvider) as SignaturesValidator;
+  }
+}

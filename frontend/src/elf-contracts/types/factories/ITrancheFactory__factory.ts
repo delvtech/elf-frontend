@@ -2,19 +2,12 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { Contract, Signer } from "ethers";
+import { Contract, Signer, utils } from "ethers";
 import { Provider } from "@ethersproject/providers";
-
-import type { ITrancheFactory } from "../ITrancheFactory";
-
-export class ITrancheFactory__factory {
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): ITrancheFactory {
-    return new Contract(address, _abi, signerOrProvider) as ITrancheFactory;
-  }
-}
+import type {
+  ITrancheFactory,
+  ITrancheFactoryInterface,
+} from "../ITrancheFactory";
 
 const _abi = [
   {
@@ -46,3 +39,16 @@ const _abi = [
     type: "function",
   },
 ];
+
+export class ITrancheFactory__factory {
+  static readonly abi = _abi;
+  static createInterface(): ITrancheFactoryInterface {
+    return new utils.Interface(_abi) as ITrancheFactoryInterface;
+  }
+  static connect(
+    address: string,
+    signerOrProvider: Signer | Provider
+  ): ITrancheFactory {
+    return new Contract(address, _abi, signerOrProvider) as ITrancheFactory;
+  }
+}

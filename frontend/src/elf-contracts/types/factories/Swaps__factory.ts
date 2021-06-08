@@ -2,16 +2,9 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { Contract, Signer } from "ethers";
+import { Contract, Signer, utils } from "ethers";
 import { Provider } from "@ethersproject/providers";
-
-import type { Swaps } from "../Swaps";
-
-export class Swaps__factory {
-  static connect(address: string, signerOrProvider: Signer | Provider): Swaps {
-    return new Contract(address, _abi, signerOrProvider) as Swaps;
-  }
-}
+import type { Swaps, SwapsInterface } from "../Swaps";
 
 const _abi = [
   {
@@ -1166,3 +1159,13 @@ const _abi = [
     type: "receive",
   },
 ];
+
+export class Swaps__factory {
+  static readonly abi = _abi;
+  static createInterface(): SwapsInterface {
+    return new utils.Interface(_abi) as SwapsInterface;
+  }
+  static connect(address: string, signerOrProvider: Signer | Provider): Swaps {
+    return new Contract(address, _abi, signerOrProvider) as Swaps;
+  }
+}

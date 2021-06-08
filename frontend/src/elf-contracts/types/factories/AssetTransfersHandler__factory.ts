@@ -2,12 +2,25 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { Contract, Signer } from "ethers";
+import { Contract, Signer, utils } from "ethers";
 import { Provider } from "@ethersproject/providers";
+import type {
+  AssetTransfersHandler,
+  AssetTransfersHandlerInterface,
+} from "../AssetTransfersHandler";
 
-import type { AssetTransfersHandler } from "../AssetTransfersHandler";
+const _abi = [
+  {
+    stateMutability: "payable",
+    type: "receive",
+  },
+];
 
 export class AssetTransfersHandler__factory {
+  static readonly abi = _abi;
+  static createInterface(): AssetTransfersHandlerInterface {
+    return new utils.Interface(_abi) as AssetTransfersHandlerInterface;
+  }
   static connect(
     address: string,
     signerOrProvider: Signer | Provider
@@ -19,10 +32,3 @@ export class AssetTransfersHandler__factory {
     ) as AssetTransfersHandler;
   }
 }
-
-const _abi = [
-  {
-    stateMutability: "payable",
-    type: "receive",
-  },
-];
