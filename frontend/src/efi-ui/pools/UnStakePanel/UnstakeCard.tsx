@@ -115,7 +115,7 @@ export function UnstakeCard({
       )}
     >
       <UnstakeInput
-        label={t`Pool Tokens`}
+        label={t`LP Tokens`}
         cryptoSymbol={symbol}
         cryptoDecimals={poolInfo.decimals}
         cryptoAssetIcon={ElementIcon}
