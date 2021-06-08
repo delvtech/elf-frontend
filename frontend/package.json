@@ -87,7 +87,7 @@
     "react-blockies": "^1.4.1",
     "react-dom": "^17.0.2",
     "react-helmet": "^6.1.0",
-    "react-query": "^3.16.0",
+    "react-query": "^3.16.1",
     "react-render-markup": "^3.4.0",
     "react-scripts": "4.0.3",
     "react-use": "^17.2.4",
@@ -163,7 +163,7 @@
     "eslint-plugin-prettier": "^3.4.0",
     "husky": "^4.3.8",
     "lint-staged": "^11.0.0",
-    "prettier": "^2.3.0",
+    "prettier": "^2.3.1",
     "react-test-renderer": "^17.0.2",
     "ttag-cli": "^1.9.2",
     "typechain": "^5.0.0"
