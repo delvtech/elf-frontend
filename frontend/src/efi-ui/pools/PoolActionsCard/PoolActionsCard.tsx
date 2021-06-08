@@ -43,6 +43,7 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
   } = props;
   const { tab, setTab } = usePoolViewPoolActionsTab();
   const [activeTab, setActiveTab] = useState(tab);
+  // clear pref, use local state above to control tabs for smoother UI
   useClearTab(tab, setTab);
 
   return (
@@ -51,7 +52,10 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
         <span>{t`Pool Actions`}</span>
       </div>
       <Card className={tw("flex", "flex-col", "flex-1", "w-full", "space-y-2")}>
-        <Tabs onChange={setActiveTab as (newTabId: PoolAction) => void}>
+        <Tabs
+          selectedTabId={activeTab}
+          onChange={setActiveTab as (newTabId: PoolAction) => void}
+        >
           <Tab id={PoolAction.BUY} title={t`Buy`} />
           <Tab id={PoolAction.SELL} title={t`Sell`} />
           <Tab id={PoolAction.ADD_LIQUIDITY} title={t`Add Liquidity`} />
@@ -110,7 +114,7 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
   );
 }
 
-// one time use effect to set the default back to swap.
+// one time use effect to set the default pref back to buy.
 function useClearTab(tab: PoolAction, setTab: (tab: PoolAction) => void) {
   useEffect(() => {
     if (tab !== PoolAction.BUY) {
