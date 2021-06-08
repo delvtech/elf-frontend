@@ -64,7 +64,7 @@
     "@web3-react/walletconnect-connector": "^6.2.0",
     "calendar-link": "^2.1.1",
     "classnames": "^2.3.1",
-    "d3-array": "^2.12.1",
+    "d3-array": "^3.0.1",
     "d3-time-format": "^4.0.0",
     "date-fns": "^2.22.1",
     "ethereum-waffle": "^3.3.0",
