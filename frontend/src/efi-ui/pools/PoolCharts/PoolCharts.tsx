@@ -1,6 +1,6 @@
 import { ReactElement, useMemo, useState } from "react";
 
-import { Card, Tab, Tabs } from "@blueprintjs/core";
+import { Callout, Card, H4, Intent, Tab, Tabs } from "@blueprintjs/core";
 import { Serie } from "@nivo/line";
 import { t } from "ttag";
 
@@ -12,7 +12,10 @@ import { usePoolCreatedAt } from "efi-ui/pools/usePoolCreatedAt";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { EMPTY_ARRAY } from "efi/base/emptyArray";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
+import { principalPoolContractsByAddress } from "efi/pools/ccpool";
 import { PoolContract } from "efi/pools/PoolContract";
+import { PoolInfo } from "efi/pools/PoolInfo";
+import { yieldPoolContractsByAddress } from "efi/pools/weightedPool";
 
 import { useLiquidityHistoryForPool } from "./useLiquidityHistoryForPool";
 
@@ -34,10 +37,19 @@ enum ChartType {
 }
 
 interface PoolChartsProps {
-  pool: PoolContract | undefined;
+  poolInfo: PoolInfo;
 }
-export function PoolCharts({ pool }: PoolChartsProps): ReactElement {
+export function PoolCharts({ poolInfo }: PoolChartsProps): ReactElement {
+  const pool = getPoolContract(poolInfo);
   const { isDarkMode } = useDarkMode();
+  const {
+    volumeData,
+    setChart,
+    showLiquidityChart,
+    showVolumeChart,
+    poolAtLeastOneDayOld,
+  } = usePoolCharts(pool);
+
   const liquidityData = useLiquidityHistoryForPool(pool);
   const lineData =
     liquidityData?.map(({ value, timeMs }) => ({
@@ -50,12 +62,6 @@ export function PoolCharts({ pool }: PoolChartsProps): ReactElement {
       data: lineData,
     },
   ];
-
-  const volumeData = useVolumeHistoryForPool(pool);
-
-  const [activeChart, setChart] = useState(ChartType.VOLUME);
-  const showLiquidityChart = activeChart === ChartType.LIQUIDITY;
-  const showVolumeChart = activeChart === ChartType.VOLUME;
 
   return (
     <div
@@ -82,80 +88,28 @@ export function PoolCharts({ pool }: PoolChartsProps): ReactElement {
               <Tab id={ChartType.VOLUME} title={t`Volume`} />
             </Tabs>
           </div>
-          {/* <<<<<<< HEAD
-          <div className={tw("w-full", "h-full", "pt-8", "relative")}>
-            {!poolAtLeastOneDayOld ? (
-              <div className={tw("pt-5", "h-full", "w-full")}>
-                <Callout
-                  icon={null}
-                  className={tw(
-                    "flex",
-                    "items-center",
-                    "justify-center",
-                    "h-full",
-                    "w-full"
-                  )}
-                  intent={Intent.NONE}
-                >
-                  <H4>{t`Charts Available After 24 Hours of Activity`}</H4>
-                </Callout>
-              </div>
-            ) : !liquidityData?.length && showLiquidityChart ? (
-              <div className={tw("pt-5", "h-full", "w-full")}>
-                <Callout
-                  icon={null}
-                  className={tw(
-                    "flex",
-                    "items-center",
-                    "justify-center",
-                    "h-full",
-                    "w-full"
-                  )}
-                  intent={Intent.NONE}
-                >
-                  <H4>{t`No data available for Liquidity chart`}</H4>
-                </Callout>
-              </div>
-            ) : liquidityData?.length &&
-              showLiquidityChart &&
-              poolAtLeastOneDayOld ? (
-              <BrushChart
-                data={liquidityData || EMPTY_ARRAY}
-                getXValue={getBrushXValue}
-                getYValue={getYValue}
-                compact
-                isDarkMode={isDarkMode}
-              />
-            ) : !volumeData?.length && showVolumeChart ? (
-              <div className={tw("pt-5", "h-full", "w-full")}>
-                <Callout
-                  icon={null}
-                  className={tw(
-                    "flex",
-                    "items-center",
-                    "justify-center",
-                    "h-full",
-                    "w-full"
-                  )}
-                  intent={Intent.NONE}
-                >
-                  <H4>{t`No data available for Volume chart`}</H4>
-                </Callout>
-              </div>
-            ) : volumeData?.length &&
-              showVolumeChart &&
-              poolAtLeastOneDayOld ? (
-======= */}
           <div className={tw("w-full", "h-full", "pt-8")}>
-            {showLiquidityChart ? <LineChart data={lineSerie} /> : null}
+            {showLiquidityChart ? (
+              <ChartMessages
+                poolAtLeastOneDayOld={poolAtLeastOneDayOld}
+                hasData={!!lineSerie.length}
+              >
+                <LineChart data={lineSerie} />
+              </ChartMessages>
+            ) : null}
             {showVolumeChart ? (
-              <BarChart
-                data={volumeData || (EMPTY_ARRAY as TimeData[])}
-                getXValue={getBarXValue}
-                getYValue={getYValue}
-                // compact
-                isDarkMode={isDarkMode}
-              />
+              <ChartMessages
+                poolAtLeastOneDayOld={poolAtLeastOneDayOld}
+                hasData={!!volumeData?.length}
+              >
+                <BarChart
+                  data={volumeData || (EMPTY_ARRAY as TimeData[])}
+                  getXValue={getBarXValue}
+                  getYValue={getYValue}
+                  // compact
+                  isDarkMode={isDarkMode}
+                />
+              </ChartMessages>
             ) : null}
           </div>
         </Card>
@@ -163,8 +117,7 @@ export function PoolCharts({ pool }: PoolChartsProps): ReactElement {
     </div>
   );
 }
-function usePoolCharts(pool: PoolContract | undefined) {
-  const { isDarkMode } = useDarkMode();
+function usePoolCharts(pool: PoolContract) {
   const poolAtLeastOneDayOld = usePoolAtLeastOneDayOld(pool);
 
   const liquidityData = useLiquidityHistoryForPool(pool);
@@ -174,7 +127,6 @@ function usePoolCharts(pool: PoolContract | undefined) {
   const showLiquidityChart = activeChart === ChartType.LIQUIDITY;
   const showVolumeChart = activeChart === ChartType.VOLUME;
   return {
-    isDarkMode,
     poolAtLeastOneDayOld,
     liquidityData,
     volumeData,
@@ -185,7 +137,7 @@ function usePoolCharts(pool: PoolContract | undefined) {
   };
 }
 
-function usePoolAtLeastOneDayOld(pool: PoolContract | undefined) {
+function usePoolAtLeastOneDayOld(pool: PoolContract) {
   const nowInSeconds = useMemo(() => {
     const now = Date.now();
     return Math.round(now / 1000);
@@ -195,4 +147,57 @@ function usePoolAtLeastOneDayOld(pool: PoolContract | undefined) {
   const poolAge = nowInSeconds - poolCreatedAt;
   const hasEnoughPoolData = poolAge >= ONE_DAY_IN_SECONDS;
   return hasEnoughPoolData;
+}
+
+// temporary until other PR lands
+function getPoolContract(poolInfo: PoolInfo) {
+  const pools = {
+    ...principalPoolContractsByAddress,
+    ...yieldPoolContractsByAddress,
+  };
+  return pools[poolInfo.address];
+}
+
+interface ChartMessagesProps {
+  poolAtLeastOneDayOld: boolean;
+  hasData: boolean;
+  children: ReactElement | null;
+}
+
+function ChartMessages(props: ChartMessagesProps): ReactElement {
+  const { poolAtLeastOneDayOld, hasData, children } = props;
+
+  let message = t`No data available for chart`;
+  if (!poolAtLeastOneDayOld) {
+    message = t`Charts Available After 24 Hours of Activity`;
+  }
+
+  if (!poolAtLeastOneDayOld || !hasData) {
+    return (
+      <div className={tw("w-full", "h-full", "pt-8", "relative")}>
+        <div className={tw("pt-5", "h-full", "w-full")}>
+          <Callout
+            icon={null}
+            className={tw(
+              "flex",
+              "items-center",
+              "justify-center",
+              "h-full",
+              "w-full"
+            )}
+            intent={Intent.NONE}
+          >
+            <H4>{message}</H4>
+          </Callout>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={tw("w-full", "h-full", "pt-8", "relative")}>
+      <div className={tw("pt-5", "h-full", "w-full")}></div>
+      {children}
+    </div>
+  );
 }
