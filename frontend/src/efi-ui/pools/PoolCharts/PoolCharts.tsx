@@ -5,12 +5,10 @@ import { Serie } from "@nivo/line";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import BarChart, { TimeData } from "efi-ui/charts/BarChart/BarChart";
 import { LineChart } from "efi-ui/charts/LineChart/LineChart";
 import { useVolumeHistoryForPool } from "efi-ui/pools/PoolCharts/useLiquidityVolumeHistoryForPool";
 import { usePoolCreatedAt } from "efi-ui/pools/usePoolCreatedAt";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import { EMPTY_ARRAY } from "efi/base/emptyArray";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
 import { principalPoolContractsByAddress } from "efi/pools/ccpool";
 import { PoolContract } from "efi/pools/PoolContract";
@@ -19,18 +17,8 @@ import { yieldPoolContractsByAddress } from "efi/pools/weightedPool";
 
 import { useLiquidityHistoryForPool } from "./useLiquidityHistoryForPool";
 
-const fillerData = [
-  { timeMs: Date.parse("2021-01-12"), value: 1077.800674325 },
-  { timeMs: Date.parse("2021-01-13"), value: 1156.5184414717 },
-  { timeMs: Date.parse("2021-01-14"), value: 1238.2550033254 },
-  { timeMs: Date.parse("2021-01-15"), value: 1183.2555122763 },
-  { timeMs: Date.parse("2021-01-16"), value: 1184.195903343 },
-  { timeMs: Date.parse("2021-01-17"), value: 1221.2200249181 },
-  { timeMs: Date.parse("2021-01-18"), value: 1257.0474852058 },
-];
-
-const getYValue: (data: TimeData) => number = ({ value }) => value;
-const getBarXValue: (data: TimeData) => Date = ({ timeMs }) => new Date(timeMs);
+// const getYValue: (data: TimeData) => number = ({ value }) => value;
+// const getBarXValue: (data: TimeData) => Date = ({ timeMs }) => new Date(timeMs);
 enum ChartType {
   LIQUIDITY = "liquidity",
   VOLUME = "volume",
@@ -94,21 +82,15 @@ export function PoolCharts({ poolInfo }: PoolChartsProps): ReactElement {
                 poolAtLeastOneDayOld={poolAtLeastOneDayOld}
                 hasData={!!lineSerie.length}
               >
-                <LineChart data={lineSerie} />
+                <LineChart type="lines" data={lineSerie} />
               </ChartMessages>
             ) : null}
             {showVolumeChart ? (
               <ChartMessages
                 poolAtLeastOneDayOld={poolAtLeastOneDayOld}
-                hasData={!!volumeData?.length}
+                hasData={!!lineSerie?.length}
               >
-                <BarChart
-                  data={volumeData || (EMPTY_ARRAY as TimeData[])}
-                  getXValue={getBarXValue}
-                  getYValue={getYValue}
-                  // compact
-                  isDarkMode={isDarkMode}
-                />
+                <LineChart type="bars" data={lineSerie} />
               </ChartMessages>
             ) : null}
           </div>

@@ -3,7 +3,6 @@ import { Serie } from "@nivo/line";
 export const defaultLineData: Serie[] = [
   {
     id: "gradientA",
-    color: "hsl(338, 70%, 50%)",
     data: [
       {
         x: 0,
