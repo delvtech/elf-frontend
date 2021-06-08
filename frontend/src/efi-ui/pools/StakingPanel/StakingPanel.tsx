@@ -224,7 +224,8 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
       className={tw(
         "flex",
         "flex-col",
-        "justify-around",
+        "justify-between",
+        "py-2",
         "h-full",
         "space-y-2"
       )}
@@ -245,7 +246,6 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
         otherTokenPoolReserves={baseAssetReserves}
         totalSupply={totalSupply}
       />
-      <div style={{ height: 40, width: "100%" }} />
       <StakingInput
         cryptoSymbol={baseAssetSymbol as CryptoSymbol}
         cryptoDecimals={baseAssetDecimals}

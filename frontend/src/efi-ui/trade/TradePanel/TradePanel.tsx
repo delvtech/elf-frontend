@@ -217,7 +217,8 @@ export function TradePanel(props: TradePanelProps): ReactElement {
       className={tw(
         "flex",
         "flex-col",
-        "justify-around",
+        "justify-between",
+        "py-2",
         "space-y-2",
         "h-full"
       )}
@@ -242,7 +243,6 @@ export function TradePanel(props: TradePanelProps): ReactElement {
         value={amountIn}
         validValue={isValidTokenInValue}
       />
-      <div className={tw("flex")}></div>
       <TradeInput
         cryptoAddress={tokenOutAddress}
         cryptoDecimals={tokenOutDecimals}

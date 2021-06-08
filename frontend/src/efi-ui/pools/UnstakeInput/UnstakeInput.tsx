@@ -115,7 +115,9 @@ export function UnstakeInput(props: UnstakeInputProps): ReactElement {
             </div>
             <div className={tw("flex", "text-2xl", "pr-4")}>
               {CryptoAssetIcon ? (
-                <CryptoAssetIcon height={24} width={24} />
+                <div className={tw("flex", "items-center", "px-2")}>
+                  <CryptoAssetIcon height={24} width={24} />
+                </div>
               ) : null}
               <span>{label}</span>
             </div>
