@@ -84,7 +84,8 @@ export function PoolCharts({ poolInfo }: PoolChartsProps): ReactElement {
               >
                 <LineChart
                   key={isDarkMode ? "a" : "b"}
-                  type="lines"
+                  chartType="lines"
+                  dataLabel={t`liquidity`}
                   darkMode={isDarkMode}
                   data={lineSerie}
                 />
@@ -97,7 +98,8 @@ export function PoolCharts({ poolInfo }: PoolChartsProps): ReactElement {
               >
                 <LineChart
                   key={isDarkMode ? "a" : "b"}
-                  type="bars"
+                  chartType="bars"
+                  dataLabel={t`volume`}
                   darkMode={isDarkMode}
                   data={lineSerie}
                 />

@@ -1,12 +1,20 @@
 import { ReactElement, RefObject, useMemo } from "react";
-
-import { CustomLayerProps, ResponsiveLine, Serie } from "@nivo/line";
 import { useMeasure } from "react-use";
+
+import { Colors } from "@blueprintjs/core";
+import { Margin } from "@nivo/core";
+import {
+  CustomLayerProps,
+  ResponsiveLine,
+  Serie,
+  SliceTooltipProps,
+} from "@nivo/line";
+import { AxisProps } from "@nivo/axes";
+import { LinearScale } from "@nivo/scales";
+import { line } from "@visx/shape/lib/util/D3ShapeFactories";
+
 import tw from "efi-tailwindcss-classnames";
 import { defaultLineData } from "efi-ui/charts/LineChart/defaultLineData";
-import { t } from "ttag";
-import { line } from "@visx/shape/lib/util/D3ShapeFactories";
-import { Colors } from "@blueprintjs/core";
 
 // make sure parent container have a defined height when using
 // responsive component, otherwise height will be 0 and
@@ -14,26 +22,46 @@ import { Colors } from "@blueprintjs/core";
 // website examples showcase many properties,
 // you'll often use just a few of them.
 
+const margin: Partial<Margin> = { top: 40, right: 40, bottom: 60, left: 60 };
+const xScale: LinearScale = { type: "linear", min: 0, max: 24 };
+const yScale: LinearScale = {
+  type: "linear",
+  min: 0,
+  max: "auto",
+  stacked: true,
+  reverse: false,
+};
+const axisBottom: AxisProps = {
+  tickSize: 5,
+  tickPadding: 5,
+  tickRotation: 0,
+  legendOffset: 36,
+  legendPosition: "middle",
+};
+
 export interface LineChartProps {
-  type: "lines" | "bars";
+  chartType: "lines" | "bars";
+  dataLabel: string;
   darkMode?: boolean;
   data: Serie[];
 }
 
 export function LineChart({
-  type = "lines",
+  chartType = "lines",
+  dataLabel,
   darkMode,
   data = defaultLineData,
 }: LineChartProps): ReactElement {
-  const [ref, dimensions] = useMeasure();
-  const refObject = ref as unknown as RefObject<HTMLDivElement>;
-  const { width = 0, height = 0 } = dimensions;
+  const { refObject, containerStyle } = useContainer();
 
   const { dataColor, textColor, tooltipBackground, tooltipColor } =
     getColors(darkMode);
 
-  const CustomLayer = type === "lines" ? "lines" : makeBarLayer(dataColor);
-  const containerStyle = useMemo(() => ({ height, width }), [height, width]);
+  const theme = getTheme(textColor);
+
+  const CustomLayer = chartType === "lines" ? "lines" : makeBarLayer(dataColor);
+  const SliceTooltip = makeSliceToolptip(tooltipBackground, tooltipColor);
+
   return (
     <div className={tw("flex", "w-full", "h-full")} ref={refObject}>
       <div style={containerStyle}>
@@ -43,68 +71,27 @@ export function LineChart({
           data={defaultLineData}
           enableCrosshair={true}
           crosshairType={"x"}
-          sliceTooltip={({ slice }) => {
-            return (
-              <div
-                className={tw("p-2", "px-4", "rounded-sm")}
-                style={{
-                  background: tooltipBackground,
-                  color: tooltipColor,
-                  opacity: 1,
-                }}
-              >
-                {slice.points[0].data.y}
-              </div>
-            );
-          }}
-          margin={{ top: 40, right: 40, bottom: 60, left: 60 }}
-          xScale={{ type: "linear", min: 0, max: 24 }}
-          yScale={{
-            type: "linear",
-            min: 0,
-            max: "auto",
-            stacked: true,
-            reverse: false,
-          }}
+          sliceTooltip={SliceTooltip}
+          margin={margin}
+          xScale={xScale}
+          yScale={yScale}
           yFormat=" >-.2f"
           curve="cardinal"
           axisTop={null}
           axisRight={null}
-          theme={{
-            textColor: textColor,
-            grid: {
-              line: {
-                stroke: textColor,
-                strokeOpacity: 0.1,
-                strokeDasharray: "1%",
-              },
-            },
-            crosshair: {
-              line: {
-                stroke: textColor,
-                strokeOpacity: 0.5,
-                strokeWidth: 1,
-              },
-            },
-          }}
+          theme={theme}
           colors={[dataColor, "white"]}
-          axisBottom={{
-            tickSize: 5,
-            tickPadding: 5,
-            tickRotation: 0,
-            legendOffset: 36,
-            legendPosition: "middle",
-          }}
+          axisBottom={axisBottom}
           axisLeft={{
             tickSize: 5,
             tickPadding: 5,
             tickRotation: 0,
-            legend: t`liquidity`,
+            legend: dataLabel,
             legendOffset: -40,
             legendPosition: "middle",
           }}
           enablePoints={false}
-          enableArea={type === "lines"}
+          enableArea={chartType === "lines"}
           areaBlendMode="normal"
           layers={[
             "grid",
@@ -123,9 +110,62 @@ export function LineChart({
     </div>
   );
 }
-const makeBarLayer =
-  (dataColor: string) =>
-  ({ xScale, yScale, data }: CustomLayerProps) => {
+
+function useContainer() {
+  const [ref, dimensions] = useMeasure();
+  const refObject = ref as unknown as RefObject<HTMLDivElement>;
+  const { width = 0, height = 0 } = dimensions;
+  const containerStyle = useMemo(() => ({ height, width }), [height, width]);
+  return { refObject, containerStyle };
+}
+
+function getColors(darkMode: boolean | undefined) {
+  return {
+    dataColor: darkMode ? Colors.BLUE5 : Colors.BLUE4,
+    textColor: darkMode ? "white" : Colors.DARK_GRAY5,
+    tooltipBackground: darkMode ? "white" : Colors.DARK_GRAY5,
+    tooltipColor: darkMode ? Colors.DARK_GRAY5 : "white",
+  };
+}
+function getTheme(textColor: string) {
+  return {
+    textColor: textColor,
+    grid: {
+      line: {
+        stroke: textColor,
+        strokeOpacity: 0.1,
+        strokeDasharray: "1%",
+      },
+    },
+    crosshair: {
+      line: {
+        stroke: textColor,
+        strokeOpacity: 0.5,
+        strokeWidth: 1,
+      },
+    },
+  };
+}
+
+function makeSliceToolptip(tooltipBackground: string, tooltipColor: string) {
+  return ({ slice }: SliceTooltipProps) => {
+    return (
+      <div
+        className={tw("p-2", "px-4", "rounded-sm")}
+        style={{
+          background: tooltipBackground,
+          color: tooltipColor,
+          opacity: 1,
+        }}
+      >
+        {slice.points[0].data.y}
+      </div>
+    );
+  };
+}
+
+function makeBarLayer(dataColor: string) {
+  return ({ xScale, yScale, data }: CustomLayerProps) => {
     const lineGenerator = line();
     const serieData = data[0].data;
     const pathStrings = serieData
@@ -144,13 +184,5 @@ const makeBarLayer =
         ))}
       </g>
     );
-  };
-
-function getColors(darkMode: boolean | undefined) {
-  return {
-    dataColor: darkMode ? Colors.BLUE5 : Colors.BLUE4,
-    textColor: darkMode ? "white" : Colors.DARK_GRAY5,
-    tooltipBackground: darkMode ? "white" : Colors.DARK_GRAY5,
-    tooltipColor: darkMode ? Colors.DARK_GRAY5 : "white",
   };
 }
