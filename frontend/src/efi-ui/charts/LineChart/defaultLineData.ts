@@ -2,55 +2,107 @@ import { Serie } from "@nivo/line";
 
 export const defaultLineData: Serie[] = [
   {
-    id: "japan",
+    id: "gradientA",
     color: "hsl(338, 70%, 50%)",
     data: [
       {
-        x: "plane",
+        x: 0,
         y: 233,
       },
       {
-        x: "helicopter",
+        x: 1,
+        y: 233,
+      },
+      {
+        x: 2,
         y: 159,
       },
       {
-        x: "boat",
+        x: 3,
         y: 116,
       },
       {
-        x: "train",
+        x: 4,
         y: 129,
       },
       {
-        x: "subway",
+        x: 5,
         y: 49,
       },
       {
-        x: "bus",
+        x: 6,
         y: 162,
       },
       {
-        x: "car",
+        x: 7,
         y: 235,
       },
       {
-        x: "moto",
+        x: 8,
         y: 158,
       },
       {
-        x: "bicycle",
+        x: 9,
         y: 161,
       },
       {
-        x: "horse",
+        x: 10,
         y: 166,
       },
       {
-        x: "skateboard",
+        x: 11,
         y: 277,
       },
       {
-        x: "others",
+        x: 12,
+        y: 72,
+      },
+      {
+        x: 13,
+        y: 233,
+      },
+      {
+        x: 14,
+        y: 159,
+      },
+      {
+        x: 15,
+        y: 116,
+      },
+      {
+        x: 16,
+        y: 129,
+      },
+      {
+        x: 17,
+        y: 49,
+      },
+      {
+        x: 18,
+        y: 162,
+      },
+      {
+        x: 19,
+        y: 235,
+      },
+      {
+        x: 20,
+        y: 158,
+      },
+      {
+        x: 21,
+        y: 161,
+      },
+      {
+        x: 22,
+        y: 166,
+      },
+      {
+        x: 23,
+        y: 277,
+      },
+      {
+        x: 24,
         y: 72,
       },
     ],

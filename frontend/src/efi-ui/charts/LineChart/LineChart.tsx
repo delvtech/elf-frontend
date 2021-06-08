@@ -21,36 +21,43 @@ export function LineChart({
   data = defaultLineData,
 }: LineChartProps): ReactElement {
   const [ref, dimensions] = useMeasure();
-  const refObject = (ref as unknown) as RefObject<HTMLDivElement>;
+  const refObject = ref as unknown as RefObject<HTMLDivElement>;
   const { width = 0, height = 0 } = dimensions;
   const containerStyle = useMemo(() => ({ height, width }), [height, width]);
   return (
     <div className={tw("flex", "w-full", "h-full")} ref={refObject}>
       <div style={containerStyle}>
         <ResponsiveLine
-          data={data}
-          margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
-          xScale={{ type: "linear" }}
+          data={defaultLineData}
+          margin={{ top: 40, right: 40, bottom: 60, left: 60 }}
+          xScale={{ type: "linear", min: 0, max: 24 }}
           yScale={{
             type: "linear",
-            min: "auto",
+            min: 0,
             max: "auto",
             stacked: true,
             reverse: false,
           }}
           yFormat=" >-.2f"
-          curve="basis"
+          curve="cardinal"
           axisTop={null}
           axisRight={null}
+          theme={{
+            textColor: "white",
+            grid: { line: { strokeOpacity: 0.1, strokeDasharray: "1%" } },
+          }}
+          colors={["white", "hsl(338, 75%, 65%)"]}
           axisBottom={
             {
-              orient: "bottom",
+              fill: "white",
+              // orient: "bottom",
               tickSize: 5,
               tickPadding: 5,
               tickRotation: 0,
-              legend: "transportation",
+              legend: "hour",
               legendOffset: 36,
               legendPosition: "middle",
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
             } as any
           }
           axisLeft={
@@ -62,6 +69,7 @@ export function LineChart({
               legend: "count",
               legendOffset: -40,
               legendPosition: "middle",
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
             } as any
           }
           enablePoints={false}

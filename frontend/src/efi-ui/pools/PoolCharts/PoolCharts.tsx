@@ -1,22 +1,31 @@
 import { ReactElement, useMemo, useState } from "react";
 
-import { Callout, Card, H4, Intent, Tab, Tabs } from "@blueprintjs/core";
+import { Card, Tab, Tabs } from "@blueprintjs/core";
+import { Serie } from "@nivo/line";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import BarChart, { TimeData } from "efi-ui/charts/BarChart/BarChart";
-import BrushChart from "efi-ui/charts/BrushChart/BrushChart";
+import { LineChart } from "efi-ui/charts/LineChart/LineChart";
 import { useVolumeHistoryForPool } from "efi-ui/pools/PoolCharts/useLiquidityVolumeHistoryForPool";
 import { usePoolCreatedAt } from "efi-ui/pools/usePoolCreatedAt";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
+import { EMPTY_ARRAY } from "efi/base/emptyArray";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
 import { PoolContract } from "efi/pools/PoolContract";
 
 import { useLiquidityHistoryForPool } from "./useLiquidityHistoryForPool";
-import { EMPTY_ARRAY } from "efi/base/emptyArray";
 
-const getBrushXValue: (data: TimeData) => Date = ({ timeMs }) =>
-  new Date(timeMs);
+const fillerData = [
+  { timeMs: Date.parse("2021-01-12"), value: 1077.800674325 },
+  { timeMs: Date.parse("2021-01-13"), value: 1156.5184414717 },
+  { timeMs: Date.parse("2021-01-14"), value: 1238.2550033254 },
+  { timeMs: Date.parse("2021-01-15"), value: 1183.2555122763 },
+  { timeMs: Date.parse("2021-01-16"), value: 1184.195903343 },
+  { timeMs: Date.parse("2021-01-17"), value: 1221.2200249181 },
+  { timeMs: Date.parse("2021-01-18"), value: 1257.0474852058 },
+];
+
 const getYValue: (data: TimeData) => number = ({ value }) => value;
 const getBarXValue: (data: TimeData) => Date = ({ timeMs }) => new Date(timeMs);
 enum ChartType {
@@ -27,20 +36,26 @@ enum ChartType {
 interface PoolChartsProps {
   pool: PoolContract | undefined;
 }
-export function PoolCharts(props: PoolChartsProps): ReactElement {
-  const { pool } = props;
+export function PoolCharts({ pool }: PoolChartsProps): ReactElement {
+  const { isDarkMode } = useDarkMode();
+  const liquidityData = useLiquidityHistoryForPool(pool);
+  const lineData =
+    liquidityData?.map(({ value, timeMs }) => ({
+      x: timeMs,
+      y: value,
+    })) ?? [];
+  const lineSerie: Serie[] = [
+    {
+      id: "liquidity",
+      data: lineData,
+    },
+  ];
 
-  const poolChartInfo = usePoolCharts(pool);
+  const volumeData = useVolumeHistoryForPool(pool);
 
-  const {
-    isDarkMode,
-    poolAtLeastOneDayOld,
-    liquidityData,
-    volumeData,
-    setChart,
-    showLiquidityChart,
-    showVolumeChart,
-  } = poolChartInfo;
+  const [activeChart, setChart] = useState(ChartType.VOLUME);
+  const showLiquidityChart = activeChart === ChartType.LIQUIDITY;
+  const showVolumeChart = activeChart === ChartType.VOLUME;
 
   return (
     <div
@@ -67,6 +82,7 @@ export function PoolCharts(props: PoolChartsProps): ReactElement {
               <Tab id={ChartType.VOLUME} title={t`Volume`} />
             </Tabs>
           </div>
+          {/* <<<<<<< HEAD
           <div className={tw("w-full", "h-full", "pt-8", "relative")}>
             {!poolAtLeastOneDayOld ? (
               <div className={tw("pt-5", "h-full", "w-full")}>
@@ -129,8 +145,12 @@ export function PoolCharts(props: PoolChartsProps): ReactElement {
             ) : volumeData?.length &&
               showVolumeChart &&
               poolAtLeastOneDayOld ? (
+======= */}
+          <div className={tw("w-full", "h-full", "pt-8")}>
+            {showLiquidityChart ? <LineChart data={lineSerie} /> : null}
+            {showVolumeChart ? (
               <BarChart
-                data={volumeData || EMPTY_ARRAY}
+                data={volumeData || (EMPTY_ARRAY as TimeData[])}
                 getXValue={getBarXValue}
                 getYValue={getYValue}
                 // compact
