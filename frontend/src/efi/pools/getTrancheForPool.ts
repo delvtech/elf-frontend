@@ -1,15 +1,10 @@
-import { Provider } from "@ethersproject/providers";
-import { Signer } from "ethers";
 import { PrincipalTokenInfo } from "tokenlists/types";
 
 import { isPrincipalPool } from "efi/pools/ccpool";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { principalTokenInfos } from "efi/tranche/tranches";
 
-export function getTrancheForPool(
-  poolInfo: PoolInfo,
-  signerOrProvider?: Signer | Provider
-): PrincipalTokenInfo {
+export function getTrancheForPool(poolInfo: PoolInfo): PrincipalTokenInfo {
   if (isPrincipalPool(poolInfo)) {
     const trancheAddress = poolInfo.extensions.bond;
     const trancheInfo = principalTokenInfos.find(

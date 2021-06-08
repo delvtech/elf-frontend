@@ -19,7 +19,7 @@ const usdcContract = getSmartContractFromRegistry(
 /**
  * Lookup the contract instance for a underlying's address.
  */
-export const underlyingContracts = Object.freeze({
+export const underlyingContractsByAddress = Object.freeze({
   [wethAddress]: wethContract,
   [usdcAddress]: usdcContract,
 });

@@ -7,15 +7,13 @@ import { formatUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { SwapKind } from "efi-ui/balancer/SwapKind";
 import { validateInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { TokenIcon } from "efi-ui/token/TokenIcon";
 import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
-import { PoolContract } from "efi/pools/PoolContract";
 
-import styles from "./TradeInput.module.css";
+import styles from "./UnstakeInput.module.css";
 
-const tradeInputStyle: CSSProperties = {
+const stakingInputStyle: CSSProperties = {
   height: "96px",
   width: "100%",
   fontSize: 26,
@@ -23,68 +21,49 @@ const tradeInputStyle: CSSProperties = {
   textAlign: "right",
 };
 
-interface TradeInputProps {
-  cryptoAddress: string | undefined;
-  cryptoIcon: TokenIcon | undefined;
-  cryptoSymbol: string | undefined;
-  cryptoDecimals: number | undefined;
+interface UnstakeInputProps {
+  cryptoSymbol: string;
+  cryptoDecimals: number;
+  cryptoAssetIcon: TokenIcon;
   cryptoBalanceOf: BigNumber | undefined;
   cryptoDisplayBalance: string | number;
-  previewCryptoAddress: string | undefined;
-  previewCryptoPoolIndex: number | undefined;
-
-  labelTopLeft: string;
   disabled: boolean;
-  onChange: (value: string, swapKind: SwapKind) => void;
-  value: string | undefined;
+  onChange: (inputValue: string) => void;
+  label: string;
+  value: string;
   validValue: boolean;
-  swapKind: SwapKind;
-  pool: PoolContract | undefined;
 }
 
-export function TradeInput(props: TradeInputProps): ReactElement {
+export function UnstakeInput(props: UnstakeInputProps): ReactElement {
   const {
     cryptoSymbol,
-    cryptoIcon: CryptoIcon,
     cryptoDecimals,
+    cryptoAssetIcon: CryptoAssetIcon,
     cryptoBalanceOf,
     cryptoDisplayBalance,
-    labelTopLeft,
     disabled,
     onChange: onChangeFromProps,
+    label,
     value = "",
     validValue,
-    swapKind,
   } = props;
-  // handles user input changes.  call onChangeFromProps to tell the parent the value changed.  also
-  // updates the internal value.  if the user clears the inputs, we also call onPreviewUpdate to
-  // clear the preview.
 
-  const onChange = useOnInputChange(
-    onChangeFromProps,
-    cryptoDecimals,
-    swapKind
-  );
-  // TODO: disable setting max value if the user balance >  pool balance.  better yet, disable max
-  // value if the trade would cause too much slippage.
+  const onChange = useOnInputChange(onChangeFromProps, cryptoDecimals);
 
-  // sets the max value for the input
   const setMaxValue = useSetMaxValue(
-    cryptoBalanceOf, // the max value
+    cryptoBalanceOf,
     cryptoDecimals,
-    swapKind,
     onChangeFromProps
   );
-
   return (
-    <div className={tw("flex", "flex-col", "space-y-2")}>
+    <div className={tw("flex", "flex-col", "space-y-2", "w-full")}>
       <InputGroup
         disabled={disabled}
         onChange={onChange}
         placeholder={"0.00"}
         value={value}
-        style={tradeInputStyle}
-        className={classNames(styles.depositInput, tw("text-right"))}
+        style={stakingInputStyle}
+        className={classNames(styles.stakingInput, tw("text-right"))}
         large
         intent={validValue ? Intent.NONE : Intent.DANGER}
         rightElement={
@@ -131,12 +110,14 @@ export function TradeInput(props: TradeInputProps): ReactElement {
                   tw("text-xs", "whitespace-no-wrap")
                 )}
               >
-                {labelTopLeft}
+                {cryptoSymbol}
               </span>
             </div>
             <div className={tw("flex", "text-2xl", "pr-4")}>
-              {CryptoIcon ? <CryptoIcon height={24} width={24} /> : null}
-              <span>{cryptoSymbol}</span>
+              {CryptoAssetIcon ? (
+                <CryptoAssetIcon height={24} width={24} />
+              ) : null}
+              <span>{label}</span>
             </div>
             <div
               className={tw(
@@ -157,7 +138,7 @@ export function TradeInput(props: TradeInputProps): ReactElement {
                   { [Classes.TEXT_MUTED]: validValue }
                 )}
               >
-                {t`Balance:`} {`${cryptoDisplayBalance} ${cryptoSymbol}`}
+                {t`Balance: ${cryptoDisplayBalance}`}
               </span>
             </div>
           </div>
@@ -166,55 +147,60 @@ export function TradeInput(props: TradeInputProps): ReactElement {
     </div>
   );
 }
+
 function useOnInputChange(
-  onChange: (value: string, swapKind: SwapKind) => void,
-  cryptoDecimals: number | undefined,
-  swapKind: SwapKind
+  onChangeFromProps: (inputValue: string) => void,
+  cryptoDecimals: number | undefined
 ) {
   return useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const userInputValue = event.target.value;
-      // checks for valid values before reporting to parent
-      validateAndSetValue(userInputValue, onChange, cryptoDecimals, swapKind);
+
+      // allow user to clear input
+      if (userInputValue === undefined || userInputValue === "") {
+        onChangeFromProps("");
+        return;
+      }
+
+      // try to get safe value by handling edge cases and clipping decimals
+      const safeValue = clipStringValueToDecimals(
+        userInputValue,
+        cryptoDecimals || 18
+      );
+
+      // if value is not undefiend, then check if it is valid.  if not, we want to ignore the user's
+      // input
+      if (!validateInput(safeValue) || safeValue === undefined) {
+        return;
+      }
+
+      // valid value so ok to set
+      onChangeFromProps(safeValue);
+
+      // values may be undefined while loading, prevent calling calcLPOutGivenInFixed
+      if (!cryptoDecimals) {
+        return;
+      }
     },
-    [onChange, cryptoDecimals, swapKind]
+    [cryptoDecimals, onChangeFromProps]
   );
 }
 
 function useSetMaxValue(
   tokenBalanceOf: BigNumber | undefined,
   tokenDecimals: number | undefined,
-  swapKind: SwapKind,
-  onChange: (value: string, swapKind: SwapKind) => void
+  onChange: (value: string) => void
 ) {
   return useCallback(() => {
     if (tokenBalanceOf) {
       const maxValue = formatUnits(tokenBalanceOf, tokenDecimals);
-      onChange(maxValue, swapKind);
+      // fix this to pass lpOut
+      onChange(maxValue);
+
+      // values may be undefined while loading, prevent calling calcLPOutGivenInFixed
+      if (!tokenDecimals) {
+        return;
+      }
     }
-  }, [tokenBalanceOf, tokenDecimals, onChange, swapKind]);
-}
-
-function validateAndSetValue(
-  value: string,
-  onChange: (value: string, swapKind: SwapKind) => void,
-  cryptoDecimals: number | undefined,
-  swapKind: SwapKind
-) {
-  // allow user to clear input
-  if (value === "" || value === undefined) {
-    onChange("", swapKind);
-    return;
-  }
-
-  // get safe value by handling edge cases and clipping decimals
-  const safeValue = clipStringValueToDecimals(value, cryptoDecimals || 18);
-
-  // if value is not undefiend, then check if its invalid.  if so, we want to ignore the user's input
-  if (!validateInput(safeValue) || safeValue === undefined) {
-    return;
-  }
-
-  // since this is a controlled component, we let the parent know what to update the value to
-  onChange(safeValue, swapKind);
+  }, [tokenBalanceOf, tokenDecimals, onChange]);
 }

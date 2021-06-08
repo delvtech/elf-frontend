@@ -1,8 +1,11 @@
 import { CSSProperties, ReactElement } from "react";
 
+import elementIconDark from "efi-static-assets/logos/svg/ELEMENT-dark.svg";
+import elementIcon from "efi-static-assets/logos/svg/ELEMENT-light.svg";
 import ethIconGrey from "efi-static-assets/logos/svg/ETH-grey.svg";
 import usdcIcon from "efi-static-assets/logos/svg/USDC.svg";
 import wethIcon from "efi-static-assets/logos/svg/WETH.svg";
+import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 
 interface SvgIconProps {
   height: number;
@@ -16,8 +19,8 @@ export type TokenIcon = typeof EthIcon | typeof UsdcIcon | typeof WethIcon;
 export function SvgIcon({
   height,
   width,
-  className,
-  style,
+  className = "",
+  style = {},
   src,
   alt,
 }: SvgIconProps): ReactElement {
@@ -94,6 +97,26 @@ export function WethIcon({
       className={className}
       style={iconStyle}
       src={wethIcon}
+      height={height}
+      width={width}
+    />
+  );
+}
+
+export function ElementIcon({
+  height,
+  width,
+  className,
+  style,
+}: IconProps): ReactElement {
+  const { isDarkMode } = useDarkMode();
+  const icon = isDarkMode ? elementIconDark : elementIcon;
+  return (
+    <SvgIcon
+      alt={"element"}
+      className={className}
+      style={style}
+      src={icon}
       height={height}
       width={width}
     />

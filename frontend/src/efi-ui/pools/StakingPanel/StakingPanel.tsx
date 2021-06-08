@@ -12,17 +12,13 @@ import tw from "efi-tailwindcss-classnames";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
-import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { StakingConfirmationDrawer } from "efi-ui/pools/StakeTokensConfirmationDrawer/StakeTokensConfirmationDrawer";
 import { StakingInput } from "efi-ui/pools/StakingInput/StakingInput";
 import { useJoinConvergentPool } from "efi-ui/pools/useJoinConvergentPool/useJoinConvergentPool";
 import { useJoinWeightedPool } from "efi-ui/pools/useJoinWeightedPool";
-import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useTokenPoolBalance } from "efi-ui/pools/useTokenPoolBalance/useTokenPoolBalance";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
-import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
 import { useEthBalance } from "efi-ui/wallets/hooks/useEthBalance/useEthBalance";
 import ContractAddresses from "efi/addresses";
@@ -30,16 +26,21 @@ import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 import { formatBalance } from "efi/base/formatBalance";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
-import { useParseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
+import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolContract } from "efi/pools/PoolContract";
+import { PoolInfo } from "efi/pools/PoolInfo";
 import { validateStakingValue } from "efi/staking/validateStakeValue";
+import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
 import { trancheContracts } from "efi/tranche/tranches";
+import { getPoolContract } from "efi/pools/getPoolContract";
 
 interface StakingPanelProps {
   library: Web3Provider | undefined;
   signer: Signer | undefined;
   account: string | null | undefined;
-  pool: PoolContract | undefined;
+  poolInfo: PoolInfo;
   formDisabled?: boolean;
   submitDisabled?: boolean;
   buttonLabel: string;
@@ -54,8 +55,9 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
     buttonLabel,
     formDisabled = false,
     submitDisabled = false,
-    pool,
+    poolInfo,
   } = props;
+  const pool = getPoolContract(poolInfo.address);
 
   const [isWalletDialogOpen, setWalletDialogOpen] = useState(false);
   // local state
@@ -68,13 +70,12 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
     openDrawer();
   }, [account, openDrawer]);
 
-  const { data: [tokens] = [] } = usePoolTokens(pool);
   const {
     baseAssetContract,
     baseAssetIndex,
     termAssetContract,
     termAssetIndex,
-  } = useParseSortedTokensForPool(tokens);
+  } = getPoolTokens(poolInfo);
   // Pool calls
   const { data: totalSupplyBN } = useSmartContractReadCall(pool, "totalSupply");
   const totalSupply = formatEther(totalSupplyBN ?? 0);
@@ -93,19 +94,22 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
   const BaseAssetIcon = findAssetIcon2(cryptoAsset);
 
   const {
-    asset: yieldAsset,
-    address: yieldAssetAddress,
-    decimals: yieldAssetDecimals,
-    balanceOf: yieldAssetBalanceOf,
-    displayBalance: yieldAssetDisplayBalance,
-    poolBalance: yieldAssetPoolBalance,
+    asset: termAsset,
+    symbol: termAssetSymbol,
+    address: termAssetAddress,
+    decimals: termAssetDecimals,
+    balanceOf: termAssetBalanceOf,
+    displayBalance: termAssetDisplayBalance,
+    poolBalance: termAssetPoolBalance,
   } = useTokenInfoForTradeInput(pool, termAssetContract, account, library);
   const isPrincipalPoolType = trancheContracts
     .map(({ address }) => address)
-    .includes(yieldAssetAddress ?? "");
+    .includes(termAssetAddress ?? "");
 
-  const { symbol: trancheAssetSymbol, label: trancheAssetSymbolLabel } =
-    getTermAssetSymbol(yieldAssetAddress, baseAssetSymbol);
+  const { label: termAssetSymbolLabel } = getTermAssetSymbol(
+    termAssetAddress,
+    baseAssetSymbol
+  );
 
   const baseAssetReserves = formatUnits(
     baseAssetPoolBalance ?? 0,
@@ -113,8 +117,8 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
   );
 
   const yieldAssetReserves = formatUnits(
-    yieldAssetPoolBalance ?? 0,
-    yieldAssetDecimals
+    termAssetPoolBalance ?? 0,
+    termAssetDecimals
   );
 
   const { stringValue: amountIn, setValue: onChangeIn } = useNumericInput();
@@ -128,8 +132,8 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
 
   const isValidTrancheAssetValue = validateStakingValue(
     amountOut,
-    yieldAssetBalanceOf,
-    yieldAssetDecimals
+    termAssetBalanceOf,
+    termAssetDecimals
   );
 
   const onClose = useCallback(() => {
@@ -145,7 +149,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
   );
   poolTokenMaxAmounts[termAssetIndex] = parseUnits(
     amountOut || "0",
-    yieldAssetDecimals
+    termAssetDecimals
   );
 
   const {
@@ -190,9 +194,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
     parseUnits(amountIn || "0", baseAssetDecimals).gt(
       baseAssetBalanceOf ?? 0
     ) ||
-    parseUnits(amountOut || "0", yieldAssetDecimals).gt(
-      yieldAssetBalanceOf ?? 0
-    );
+    parseUnits(amountOut || "0", termAssetDecimals).gt(termAssetBalanceOf ?? 0);
 
   const invalidInput =
     formDisabled ||
@@ -246,11 +248,11 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
 
       <div style={{ height: 40, width: "100%" }} />
       <StakingInput
-        cryptoSymbol={trancheAssetSymbol as CryptoSymbol}
+        cryptoSymbol={termAssetSymbol as CryptoSymbol}
         cryptoDecimals={baseAssetDecimals}
         cryptoAssetIcon={BaseAssetIcon}
-        cryptoBalanceOf={yieldAssetBalanceOf}
-        cryptoDisplayBalance={yieldAssetDisplayBalance || ""}
+        cryptoBalanceOf={termAssetBalanceOf}
+        cryptoDisplayBalance={termAssetDisplayBalance || ""}
         disabled={formDisabled}
         onChange={onChangeOut}
         onPreviewUpdate={onChangeIn}
@@ -275,11 +277,11 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
         library={library}
         account={account}
         baseAsset={baseAsset}
-        trancheAsset={yieldAsset}
+        trancheAsset={termAsset}
         baseAssetSymbol={baseAssetSymbol}
         baseAssetSymbolLabel={baseAssetSymbol}
-        trancheAssetSymbol={trancheAssetSymbol}
-        trancheAssetSymbolLabel={trancheAssetSymbolLabel}
+        trancheAssetSymbol={termAssetSymbol}
+        trancheAssetSymbolLabel={termAssetSymbolLabel}
         baseAssetIn={amountIn}
         trancheAssetIn={amountOut}
         isOpen={isDrawerOpen}
@@ -337,12 +339,7 @@ function useTokenInfoForTradeInput(
   const { data: ethBalance } = useEthBalance(library, account);
 
   const asset = getCryptoAssetForToken(tokenContract?.address);
-  const baseAssetSymbol = getCryptoSymbol(asset);
-  const { symbol: termAssetSymbol } = getTermAssetSymbol(
-    tokenContract?.address,
-    baseAssetSymbol
-  );
-  const symbol = termAssetSymbol ?? baseAssetSymbol;
+  const symbol = getCryptoSymbol(asset);
   const icon = findAssetIcon2(asset);
 
   // otherwise get values from token calls

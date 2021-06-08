@@ -12,7 +12,6 @@ import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { getQueriesData } from "efi-ui/base/queryResults";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
-import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { useTokenDecimalsMulti } from "efi-ui/token/hooks/useTokenDecimalsMulti";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
 import ContractAddresses from "efi/addresses";
@@ -25,7 +24,8 @@ import { calculateTokensOutForLPInFixed } from "efi/pools/calculateTokensOutForL
 export function useExitConvergentCurvePool(
   signer: Signer | undefined,
   account: string | null | undefined,
-  pool: ConvergentCurvePool | undefined
+  pool: ConvergentCurvePool | undefined,
+  lpIn: string
 ): () => void {
   const balancerVault = useBalancerVault();
   const { data: poolId } = useSmartContractReadCall(pool, "getPoolId");
@@ -40,7 +40,6 @@ export function useExitConvergentCurvePool(
   const poolTokenDecimals = getQueriesData(poolTokenDecimalsResults);
 
   const { data: totalSupply } = useSmartContractReadCall(pool, "totalSupply");
-  const { data: lpBalanceOf } = useTokenBalanceOf(pool, account);
 
   const { mutate: exitPool } = useSmartContractTransactionPersisted(
     balancerVault,
@@ -56,7 +55,7 @@ export function useExitConvergentCurvePool(
       poolTokenReserves,
       poolTokenDecimals,
       totalSupply,
-      lpBalanceOf
+      lpIn
     );
     if (!exitPoolCallArgs) {
       return;
@@ -65,7 +64,7 @@ export function useExitConvergentCurvePool(
   }, [
     account,
     exitPool,
-    lpBalanceOf,
+    lpIn,
     poolId,
     poolTokenDecimals,
     poolTokenReserves,
@@ -83,14 +82,13 @@ function makeExitPoolCallArgs(
   poolTokenReserves: BigNumber[] | undefined,
   poolTokenDecimals: (number | undefined)[],
   totalSupply: BigNumber | undefined,
-  lpBalanceOf: BigNumber | undefined
+  lpIn: string
 ): ContractMethodArgs<Vault, "exitPool"> | undefined {
   if (
     !poolId ||
     !account ||
     !poolTokens ||
     !poolTokenReserves ||
-    !lpBalanceOf ||
     !totalSupply
   ) {
     return;
@@ -105,7 +103,7 @@ function makeExitPoolCallArgs(
 
   // ok to cast since all input defined above
   const poolTokenMinAmountsOut = getPoolTokenMinAmountsOut(
-    lpBalanceOf,
+    lpIn,
     totalSupply,
     poolTokenReserves,
     poolTokenDecimals
@@ -134,12 +132,11 @@ function makeExitPoolCallArgs(
 }
 
 function getPoolTokenMinAmountsOut(
-  lpBalanceOf: BigNumber,
+  lpIn: string,
   totalSupply: BigNumber,
   poolTokenReserves: BigNumber[],
   poolTokenDecimals: (number | undefined)[]
 ) {
-  const lpIn = formatUnits(lpBalanceOf, BALANCER_POOL_LP_TOKEN_DECIMALS);
   const totalSupplyString = formatUnits(
     totalSupply,
     BALANCER_POOL_LP_TOKEN_DECIMALS

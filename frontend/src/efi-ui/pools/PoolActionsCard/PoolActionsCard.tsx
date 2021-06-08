@@ -2,8 +2,8 @@ import { ReactElement, useEffect, useState } from "react";
 
 import { Card, Intent, Tab, Tabs } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
+import { TokenInfo } from "@uniswap/token-lists";
 import { AbstractConnector } from "@web3-react/abstract-connector";
-import { ERC20 } from "elf-contracts/types/ERC20";
 import { Signer } from "ethers";
 import { t } from "ttag";
 
@@ -15,8 +15,6 @@ import {
   usePoolViewPoolActionsTab,
 } from "efi-ui/pools/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
 import { TradePanel } from "efi-ui/trade/TradePanel/TradePanel";
-import { PoolContract } from "efi/pools/PoolContract";
-import { TokenInfo } from "@uniswap/token-lists";
 import { PoolInfo } from "efi/pools/PoolInfo";
 
 interface PoolActionsCardProps {
@@ -26,13 +24,9 @@ interface PoolActionsCardProps {
   chainId: number | undefined;
   connector: AbstractConnector | undefined;
   walletActive: boolean;
-  pool: PoolContract | undefined;
   poolInfo: PoolInfo;
-  tokenIn: ERC20 | undefined;
-  tokenOut: ERC20 | undefined;
-
-  firstTokenInfo: TokenInfo;
-  secondTokenInfo: TokenInfo;
+  baseTokenInfo: TokenInfo;
+  termTokenInfo: TokenInfo;
 }
 
 export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
@@ -43,9 +37,8 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
     chainId,
     connector,
     walletActive,
-    tokenIn,
-    tokenOut,
-    pool,
+    baseTokenInfo,
+    termTokenInfo,
     poolInfo,
   } = props;
   const { tab, setTab } = usePoolViewPoolActionsTab();
@@ -59,11 +52,12 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
       </div>
       <Card className={tw("flex", "flex-col", "flex-1", "w-full", "space-y-2")}>
         <Tabs onChange={setActiveTab as (newTabId: PoolAction) => void}>
-          <Tab id={PoolAction.SWAP} title={t`Trade`} />
+          <Tab id={PoolAction.BUY} title={t`Buy`} />
+          <Tab id={PoolAction.SELL} title={t`Sell`} />
           <Tab id={PoolAction.ADD_LIQUIDITY} title={t`Add Liquidity`} />
           <Tab id={PoolAction.REMOVE_LIQUIDITY} title={t`Remove Liquidity`} />
         </Tabs>
-        {activeTab === PoolAction.SWAP && (
+        {activeTab === PoolAction.BUY && (
           <TradePanel
             library={library}
             signer={signer}
@@ -71,11 +65,25 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
             chainId={chainId}
             connector={connector}
             walletActive={walletActive}
-            pool={pool}
             poolInfo={poolInfo}
-            tokenIn={tokenIn}
-            tokenOut={tokenOut}
-            buttonLabel={t`Trade`}
+            tokenIn={baseTokenInfo}
+            tokenOut={termTokenInfo}
+            buttonLabel={t`Buy`}
+            buttonIntent={Intent.PRIMARY}
+          />
+        )}
+        {activeTab === PoolAction.SELL && (
+          <TradePanel
+            library={library}
+            signer={signer}
+            account={account}
+            chainId={chainId}
+            connector={connector}
+            walletActive={walletActive}
+            poolInfo={poolInfo}
+            tokenIn={termTokenInfo}
+            tokenOut={baseTokenInfo}
+            buttonLabel={t`Sell`}
             buttonIntent={Intent.PRIMARY}
           />
         )}
@@ -84,7 +92,7 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
             library={library}
             signer={signer}
             account={account}
-            pool={pool}
+            poolInfo={poolInfo}
             buttonLabel={t`Stake`}
             buttonIntent={Intent.PRIMARY}
           />
@@ -93,8 +101,8 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
           <UnStakePanel
             library={library}
             account={account}
-            pool={pool}
             connector={connector}
+            poolInfo={poolInfo}
           />
         )}
       </Card>
@@ -105,8 +113,8 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
 // one time use effect to set the default back to swap.
 function useClearTab(tab: PoolAction, setTab: (tab: PoolAction) => void) {
   useEffect(() => {
-    if (tab !== PoolAction.SWAP) {
-      setTab(PoolAction.SWAP);
+    if (tab !== PoolAction.BUY) {
+      setTab(PoolAction.BUY);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

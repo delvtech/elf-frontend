@@ -85,7 +85,7 @@ export function StakingInput(props: StakingInputProps): ReactElement {
         style={stakingInputStyle}
         className={classNames(styles.stakingInput, tw("text-right"))}
         large
-        intent={validValue ? undefined : Intent.DANGER}
+        intent={validValue ? Intent.NONE : Intent.DANGER}
         rightElement={
           <div
             className={tw(

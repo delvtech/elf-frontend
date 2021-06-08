@@ -25,7 +25,7 @@ export function GoToMarketButton(props: GoToMarketButtonProps): ReactElement {
     if (isStake) {
       setTab(PoolAction.ADD_LIQUIDITY);
     } else {
-      setTab(PoolAction.SWAP);
+      setTab(PoolAction.BUY);
     }
 
     navigate(`/pools/${pool?.address}`);

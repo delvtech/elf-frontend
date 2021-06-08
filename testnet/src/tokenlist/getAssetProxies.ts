@@ -44,7 +44,11 @@ export async function getAssetProxies(
   const names = await getTokenNameMulti((positions as unknown) as ERC20[]);
 
   const symbols = await getTokenSymbolMulti((positions as unknown) as ERC20[]);
-  const assetProxySymbols = getAssetProxySymbolMulti(chainId, uniqPositionAddresses,symbols);
+  const assetProxySymbols = getAssetProxySymbolMulti(
+    chainId,
+    uniqPositionAddresses,
+    symbols
+  );
 
   const decimals = await getTokenDecimalsMulti(
     (positions as unknown) as ERC20[]

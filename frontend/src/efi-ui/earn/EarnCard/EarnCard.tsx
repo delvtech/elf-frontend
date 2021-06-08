@@ -46,7 +46,7 @@ import { useParseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool"
 import { getTokenInfo } from "efi/tokenlists";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
 import { openTrancheBaseAssets } from "efi/tranche/baseAssets";
-import { underlyingContracts } from "efi/underlying/underlying";
+import { underlyingContractsByAddress } from "efi/underlying/underlying";
 
 export interface EarnCardProps {
   library: Web3Provider | undefined;
@@ -150,7 +150,7 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
     activeBaseAssetDecimals
   );
 
-  const underlyingPoolTokenContract = underlyingContracts[underlying];
+  const underlyingPoolTokenContract = underlyingContractsByAddress[underlying];
   const { spotPriceBaseAssetForOneToken: amountOfEthForOnePrincipalEth } =
     usePoolTokenPrices(poolContract, underlyingPoolTokenContract);
 
@@ -317,7 +317,7 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
               placeholder="0.00"
               value={amountIn || ""}
               isValid={isValidTokenInValue}
-              errorMessage={tokenInError}
+              errorMessage={tokenInError || ""}
               onValueChange={onChangeIn}
               valueDecimals={activeBaseAssetDecimals}
               valueBalanceOf={activeBaseAssetBalanceOf}
@@ -348,7 +348,7 @@ export function EarnCard({ library, account }: EarnCardProps): ReactElement {
               placeholder="0.00"
               value={amountOut || ""}
               isValid={isValidTokenOutValue}
-              errorMessage={tokenOutError}
+              errorMessage={tokenOutError || ""}
               onValueChange={onChangeOut}
               valueDecimals={principalTokenDecimals}
               valueBalanceOf={principalTokenBalanceOf}

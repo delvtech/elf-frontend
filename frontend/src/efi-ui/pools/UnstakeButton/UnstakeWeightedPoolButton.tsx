@@ -19,16 +19,20 @@ interface UnstakeWeightedPoolButtonProps {
   connector: AbstractConnector | undefined;
   library: Web3Provider | undefined;
   pool: WeightedPool | undefined;
+  amount: string;
+  disabled?: boolean;
 }
 
 export function UnstakeWeightedPoolButton({
   pool,
   library,
   account,
+  amount,
+  disabled: disabledFromProps,
 }: UnstakeWeightedPoolButtonProps): ReactElement {
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
 
-  const exitPool = useExitWeightedPool(signer, account, pool);
+  const exitPool = useExitWeightedPool(signer, account, pool, amount);
 
   const [isWalletDialogOpen, setWalletDialogOpen] = useState(false);
   const onClickUnstake = useCallback(() => {
@@ -46,6 +50,7 @@ export function UnstakeWeightedPoolButton({
       clipStringValueToDecimals(formatUnits(lpBalanceOf, 18), 16) || 0
     );
   }
+  disabled = disabledFromProps || disabled;
 
   const buttonLabel = !!account ? t`Unstake` : t`Connect Wallet`;
 
@@ -55,6 +60,7 @@ export function UnstakeWeightedPoolButton({
         fill
         minimal
         outlined
+        small
         intent={Intent.PRIMARY}
         disabled={disabled}
         onClick={onClickUnstake}

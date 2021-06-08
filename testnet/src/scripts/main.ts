@@ -304,6 +304,28 @@ async function main() {
 
   console.log("testnet.addresses.json", schemaAddresses);
   fs.writeFileSync("./src/addresses/testnet.addresses.json", schemaAddresses);
+
+  const firstWethInterestTokenAddress = await firstWethTrancheContract.interestToken();
+  const secondWethInterestTokenAddress = await secondWethTrancheContract.interestToken();
+  const expiredWethInterestTokenAddress = await expiredWethTrancheContract.interestToken();
+  const usdcInterestTokenAddress = await usdcTrancheContract.interestToken();
+
+  const symbolOverrides = {
+    [firstWethTrancheContract.address]: "ePyvCurve-stETH",
+    [secondWethTrancheContract.address]: "ePyvCurve-stETH",
+    [expiredWethTrancheContract.address]: "ePyvCurve-stETH",
+    [usdcTrancheContract.address]: "ePyvUSDC",
+
+    [firstWethInterestTokenAddress]: "eYyvCurve-stETH",
+    [secondWethInterestTokenAddress]: "eYyvCurve-stETH",
+    [expiredWethInterestTokenAddress]: "eYyvCurve-stETH",
+    [usdcInterestTokenAddress]: "eYyvUSDC",
+  };
+
+  fs.writeFileSync(
+    "./src/addresses/testnet.symbolOverrides.json",
+    JSON.stringify(symbolOverrides)
+  );
 }
 
 // We recommend this pattern to be able to use async/await everywhere

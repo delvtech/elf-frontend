@@ -1,72 +1,71 @@
 import { ReactElement } from "react";
 
-import { Callout } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
-import classNames from "classnames";
-import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
-import { Tranche__factory } from "elf-contracts/types/factories/Tranche__factory";
 import { BigNumber } from "ethers";
-import { formatUnits } from "ethers/lib/utils";
+import { formatEther, formatUnits, parseUnits } from "ethers/lib/utils";
 import zipObject from "lodash.zipobject";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { UnstakeConvergentCurvePoolButton } from "efi-ui/pools/UnstakeButton/UnstakeConvergentCurvePoolButton";
 import { UnstakeWeightedPoolButton } from "efi-ui/pools/UnstakeButton/UnstakeWeightedPoolButton";
-import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
+import { UnstakeInput } from "efi-ui/pools/UnstakeInput/UnstakeInput";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useShareOfPool } from "efi-ui/pools/useShareOfPool";
-import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
-import { KNOWN_BASE_ASSETS } from "efi/addresses";
+import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
+import { ElementIcon } from "efi-ui/token/TokenIcon";
 import { formatPercent } from "efi/base/formatPercent";
-import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
+import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { isConvergentCurvePool, isWeightedPool } from "efi/pools/PoolContract";
+import { PoolInfo } from "efi/pools/PoolInfo";
+import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
+import { getPoolContract } from "efi/pools/getPoolContract";
 
 interface UnstakeCardProps {
   library: Web3Provider | undefined;
   connector: AbstractConnector | undefined;
   account: string | null | undefined;
-  pool: ConvergentCurvePool | undefined;
+  poolInfo: PoolInfo;
 }
 
 const calloutClassName = tw(
   "flex",
-  "flex-col",
   "flex-1",
-  "h-full",
   "p-8",
+  "w-full",
   "items-center",
-  "justify-center"
+  "justify-between"
 );
 
 export function UnstakeCard({
   library,
   account,
   connector,
-  pool,
+  poolInfo,
 }: UnstakeCardProps): ReactElement {
+  const pool = getPoolContract(poolInfo.address);
   // base asset
-  const baseAssetContract = useBaseAssetForPool(pool);
-  const { data: baseAssetDecimals } = useTokenDecimals(baseAssetContract);
-  const baseAssetCryptoAsset = getCryptoAssetForToken(
-    baseAssetContract?.address
-  );
+  const { baseAssetContract, baseAssetInfo, termAssetInfo } =
+    getPoolTokens(poolInfo);
+  const symbol = `ELF:${baseAssetInfo.symbol}-${termAssetInfo.symbol}`;
+  const { decimals: baseAssetDecimals } = baseAssetInfo;
+  const baseAssetCryptoAsset = getCryptoAssetForToken(baseAssetInfo.address);
   const baseAssetSymbol = getCryptoSymbol(baseAssetCryptoAsset);
 
-  // Principal token
-  const tranche = useTrancheForPool(pool);
-  const { data: trancheDecimals } = useTokenDecimals(tranche);
-
   // pool shares
+  const { data: lpBalanceOf } = useTokenBalanceOf(pool, account);
+  const lpDisplayBalance = formatEther(lpBalanceOf ?? 0);
   const shareOfPool = useShareOfPool(pool, account);
   const shareOfPoolLabel = getShareOfPoolLabel(shareOfPool);
 
   // liquidity
   const { data: [addresses, poolBalances] = [] } = usePoolTokens(pool);
+
   const baseAssetLiquidity = calculatePoolShareLiquidity(
     shareOfPool,
     addresses,
@@ -74,20 +73,35 @@ export function UnstakeCard({
     baseAssetContract?.address,
     baseAssetDecimals
   );
-  const principalTokenLiquidity = calculatePoolShareLiquidity(
+
+  const termAssetLiquidity = calculatePoolShareLiquidity(
     shareOfPool,
     addresses,
     poolBalances,
-    tranche?.address,
-    trancheDecimals
+    termAssetInfo.address,
+    termAssetInfo.decimals
   );
 
   const baseAssetLiquidityLabel = baseAssetLiquidity
     ? `${baseAssetLiquidity?.toFixed(4)}`
     : "0.0000";
-  const principalTokenLiquidityLabel = principalTokenLiquidity
-    ? `${principalTokenLiquidity?.toFixed(4)}`
+  const termAssetLiquidityLabel = termAssetLiquidity
+    ? `${termAssetLiquidity?.toFixed(4)}`
     : "0.0000";
+
+  const { stringValue, setValue } = useNumericInput();
+
+  const valueBN = parseUnits(
+    stringValue || "0",
+    BALANCER_POOL_LP_TOKEN_DECIMALS
+  );
+
+  const balanceIsZero = lpBalanceOf?.isZero() ?? true;
+  const valueIsZero = valueBN.isZero();
+  const valueLessThanBalance = lpBalanceOf ? valueBN.lte(lpBalanceOf) : false;
+
+  const isValidValue = valueLessThanBalance;
+  const disableUnstake = balanceIsZero || valueIsZero || !isValidValue;
 
   return (
     <div
@@ -95,42 +109,49 @@ export function UnstakeCard({
         "flex",
         "flex-col",
         "flex-1",
-        "space-y-5",
-        "p-8",
+        "space-y-2",
+        "py-4",
         "items-center"
       )}
     >
-      <div className={tw("flex", "w-full", "space-x-5", "items-center")}>
-        <Callout className={calloutClassName}>
-          <span
-            className={classNames(tw("text-base", "mb-0"))}
-          >{t`${baseAssetSymbol} liquidity`}</span>
-          <span className={tw("text-lg", "font-semibold")}>
-            {baseAssetLiquidityLabel}
-          </span>
-        </Callout>
-        <Callout className={calloutClassName}>
-          <span
-            className={classNames(tw("text-base", "mb-0"))}
-          >{t`pt${baseAssetSymbol} liquidity`}</span>
-          <span className={tw("text-lg", "font-semibold")}>
-            {principalTokenLiquidityLabel}
-          </span>
-        </Callout>
-      </div>
-      <Callout className={calloutClassName}>
-        <span
-          className={classNames(tw("text-base", "mb-0"))}
-        >{t`Share of pool`}</span>
+      <UnstakeInput
+        label={t`Pool Tokens`}
+        cryptoSymbol={symbol}
+        cryptoDecimals={poolInfo.decimals}
+        cryptoAssetIcon={ElementIcon}
+        cryptoBalanceOf={lpBalanceOf}
+        cryptoDisplayBalance={lpDisplayBalance || ""}
+        disabled={balanceIsZero}
+        onChange={setValue}
+        value={stringValue}
+        validValue={isValidValue}
+      />
+      <div className={calloutClassName}>
         <LabeledText
           muted={false}
-          className={tw("flex", "justify-center", "items-center")}
+          className={tw("flex", "flex-col", "justify-center", "items-center")}
           bold
           textClassName={tw("text-2xl")}
           text={shareOfPoolLabel}
-          label={""}
+          label={t`Share of pool`}
         />
-      </Callout>
+        <LabeledText
+          muted={false}
+          className={tw("flex", "flex-col", "justify-center", "items-center")}
+          bold
+          textClassName={tw("text-2xl")}
+          text={termAssetLiquidityLabel}
+          label={t`${termAssetInfo.symbol} liquidity`}
+        />
+        <LabeledText
+          muted={false}
+          className={tw("flex", "flex-col", "justify-center", "items-center")}
+          bold
+          textClassName={tw("text-2xl")}
+          text={baseAssetLiquidityLabel}
+          label={t`${baseAssetSymbol} liquidity`}
+        />
+      </div>
 
       {/* Quick Actions */}
       {isConvergentCurvePool(pool) && (
@@ -139,6 +160,8 @@ export function UnstakeCard({
           connector={connector}
           library={library}
           pool={pool}
+          amount={stringValue}
+          disabled={disableUnstake}
         />
       )}
       {isWeightedPool(pool) && (
@@ -147,6 +170,8 @@ export function UnstakeCard({
           connector={connector}
           library={library}
           pool={pool}
+          amount={stringValue}
+          disabled={disableUnstake}
         />
       )}
     </div>
@@ -170,7 +195,7 @@ function calculatePoolShareLiquidity(
   ) {
     const reservesByAddress = zipObject(poolTokenAddresses, poolTokenReserves);
     const reserves = reservesByAddress[tokenAddress];
-    const reservesNumber = +formatUnits(reserves, tokenDecimals);
+    const reservesNumber = +formatUnits(reserves ?? 0, tokenDecimals);
     baseAssetLiquidity = poolShares * reservesNumber;
   }
   return baseAssetLiquidity;
@@ -185,16 +210,4 @@ function getShareOfPoolLabel(shareOfPool: number | undefined) {
   }
 
   return formatPercent(shareOfPool, 2);
-}
-
-function useTrancheForPool(pool: ConvergentCurvePool | undefined) {
-  const { data: [poolTokens = []] = [] } = usePoolTokens(pool);
-  const principalTokenAddress = poolTokens.find(
-    (address) => !KNOWN_BASE_ASSETS.includes(address)
-  );
-
-  return getSmartContractFromRegistry(
-    principalTokenAddress,
-    Tranche__factory.connect
-  );
 }

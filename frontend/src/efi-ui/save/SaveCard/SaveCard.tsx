@@ -46,7 +46,7 @@ import { useParseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool"
 import { getTokenInfo } from "efi/tokenlists";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
 import { openTrancheBaseAssets } from "efi/tranche/baseAssets";
-import { underlyingContracts } from "efi/underlying/underlying";
+import { underlyingContractsByAddress } from "efi/underlying/underlying";
 
 export interface SaveCardProps {
   library: Web3Provider | undefined;
@@ -150,7 +150,7 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
     activeBaseAssetDecimals
   );
 
-  const underlyingPoolTokenContract = underlyingContracts[underlying];
+  const underlyingPoolTokenContract = underlyingContractsByAddress[underlying];
   const { spotPriceBaseAssetForOneToken: amountOfEthForOnePrincipalEth } =
     usePoolTokenPrices(poolContract, underlyingPoolTokenContract);
 

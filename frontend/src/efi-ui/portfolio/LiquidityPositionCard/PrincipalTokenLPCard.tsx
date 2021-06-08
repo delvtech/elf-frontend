@@ -41,6 +41,8 @@ import { PoolInfo } from "efi/pools/PoolInfo";
 import { getTokenInfo } from "efi/tokenlists";
 import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
+import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
+import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
 
 interface PrincipalTokenLPCardProps {
   library: Web3Provider | undefined;
@@ -112,6 +114,11 @@ export function PrincipalTokenLPCard({
   const poolInfo = getTokenInfo<PoolInfo>(pool?.address as string);
   const poolName = `${baseAssetSymbol} - ${baseAssetSymbol} Principal Token`;
   const principalTokenSymbol = getPrincipalTokenSymbol(poolInfo);
+  const { data: poolBalanceOf } = useTokenBalanceOf(pool, account);
+  const lpBalance = formatUnits(
+    poolBalanceOf ?? 0,
+    BALANCER_POOL_LP_TOKEN_DECIMALS
+  );
   const poolLabel = `(${baseAssetSymbol} - ${principalTokenSymbol})`;
 
   return (
@@ -199,6 +206,7 @@ export function PrincipalTokenLPCard({
           connector={connector}
           library={library}
           pool={pool}
+          amount={lpBalance}
         />
         <GoToMarketButton pool={pool} isStake={false} label={t`Go to Market`} />
       </ButtonGroup>

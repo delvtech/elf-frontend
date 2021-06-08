@@ -14,7 +14,7 @@ import { formatBalance } from "efi/base/formatBalance";
 import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { useTokenYield } from "efi-ui/pools/useTokenYield";
-import { underlyingContracts } from "efi/underlying/underlying";
+import { underlyingContractsByAddress } from "efi/underlying/underlying";
 import {
   getPrincipalPoolForTranche,
   principalPoolContractsByAddress,
@@ -42,7 +42,7 @@ export function BuyPrincipalTokensForm(
   const { stringValue: baseAssetInputValue, setValue: onBaseAssetChange } =
     useNumericInput();
 
-  const baseAssetContract = underlyingContracts[underlying];
+  const baseAssetContract = underlyingContractsByAddress[underlying];
   const principalPool = getPrincipalPoolForTranche(ptAddress);
   const principalPoolContract =
     principalPoolContractsByAddress[principalPool.address];

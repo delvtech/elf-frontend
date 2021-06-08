@@ -17,7 +17,7 @@ export const interestTokenContracts = getSmartContractFromRegistryMulti(
   yieldTokenInfos.map(({ address }) => address),
   InterestToken__factory.connect
 ) as InterestToken[];
-export const InterestTokenContractsByAddress = keyBy(
+export const interestTokenContractsByAddress = keyBy(
   interestTokenContracts,
   (interestToken) => interestToken.address
 );

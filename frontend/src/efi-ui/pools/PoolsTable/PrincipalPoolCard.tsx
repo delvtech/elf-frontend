@@ -94,7 +94,7 @@ export function PrincipalPoolCard(
   const { setTab } = usePoolViewPoolActionsTab();
 
   const goToTrade = useCallback(() => {
-    setTab(PoolAction.SWAP);
+    setTab(PoolAction.SELL);
     navigate(`/pools/${pool?.address}`);
   }, [pool?.address, setTab]);
 
