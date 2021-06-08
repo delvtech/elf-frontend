@@ -108,10 +108,11 @@ export function UnstakeCard({
       className={tw(
         "flex",
         "flex-col",
-        "flex-1",
         "space-y-2",
-        "py-4",
-        "items-center"
+        "py-2",
+        "items-center",
+        "justify-between",
+        "h-full"
       )}
     >
       <UnstakeInput
