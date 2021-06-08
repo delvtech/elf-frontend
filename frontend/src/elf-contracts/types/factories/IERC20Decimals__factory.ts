@@ -2,19 +2,12 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { Contract, Signer } from "ethers";
+import { Contract, Signer, utils } from "ethers";
 import { Provider } from "@ethersproject/providers";
-
-import type { IERC20Decimals } from "../IERC20Decimals";
-
-export class IERC20Decimals__factory {
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): IERC20Decimals {
-    return new Contract(address, _abi, signerOrProvider) as IERC20Decimals;
-  }
-}
+import type {
+  IERC20Decimals,
+  IERC20DecimalsInterface,
+} from "../IERC20Decimals";
 
 const _abi = [
   {
@@ -214,3 +207,16 @@ const _abi = [
     type: "function",
   },
 ];
+
+export class IERC20Decimals__factory {
+  static readonly abi = _abi;
+  static createInterface(): IERC20DecimalsInterface {
+    return new utils.Interface(_abi) as IERC20DecimalsInterface;
+  }
+  static connect(
+    address: string,
+    signerOrProvider: Signer | Provider
+  ): IERC20Decimals {
+    return new Contract(address, _abi, signerOrProvider) as IERC20Decimals;
+  }
+}

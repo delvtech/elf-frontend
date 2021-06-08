@@ -9,16 +9,15 @@ import {
   BigNumber,
   BigNumberish,
   PopulatedTransaction,
-} from "ethers";
-import {
-  Contract,
+  BaseContract,
   ContractTransaction,
   Overrides,
   CallOverrides,
-} from "@ethersproject/contracts";
+} from "ethers";
 import { BytesLike } from "@ethersproject/bytes";
 import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
+import { TypedEventFilter, TypedEvent, TypedListener } from "./commons";
 
 interface TokenFactoryInterface extends ethers.utils.Interface {
   functions: {
@@ -54,16 +53,46 @@ interface TokenFactoryInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "TokenCreated"): EventFragment;
 }
 
-export class TokenFactory extends Contract {
+export class TokenFactory extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  on(event: EventFilter | string, listener: Listener): this;
-  once(event: EventFilter | string, listener: Listener): this;
-  addListener(eventName: EventFilter | string, listener: Listener): this;
-  removeAllListeners(eventName: EventFilter | string): this;
-  removeListener(eventName: any, listener: Listener): this;
+  listeners<EventArgsArray extends Array<any>, EventArgsObject>(
+    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>
+  ): Array<TypedListener<EventArgsArray, EventArgsObject>>;
+  off<EventArgsArray extends Array<any>, EventArgsObject>(
+    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
+    listener: TypedListener<EventArgsArray, EventArgsObject>
+  ): this;
+  on<EventArgsArray extends Array<any>, EventArgsObject>(
+    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
+    listener: TypedListener<EventArgsArray, EventArgsObject>
+  ): this;
+  once<EventArgsArray extends Array<any>, EventArgsObject>(
+    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
+    listener: TypedListener<EventArgsArray, EventArgsObject>
+  ): this;
+  removeListener<EventArgsArray extends Array<any>, EventArgsObject>(
+    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
+    listener: TypedListener<EventArgsArray, EventArgsObject>
+  ): this;
+  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
+    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
+  ): this;
+
+  listeners(eventName?: string): Array<Listener>;
+  off(eventName: string, listener: Listener): this;
+  on(eventName: string, listener: Listener): this;
+  once(eventName: string, listener: Listener): this;
+  removeListener(eventName: string, listener: Listener): this;
+  removeAllListeners(eventName?: string): this;
+
+  queryFilter<EventArgsArray extends Array<any>, EventArgsObject>(
+    event: TypedEventFilter<EventArgsArray, EventArgsObject>,
+    fromBlockOrBlockhash?: string | number | undefined,
+    toBlock?: string | number | undefined
+  ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
   interface: TokenFactoryInterface;
 
@@ -73,15 +102,7 @@ export class TokenFactory extends Contract {
       name: string,
       symbol: string,
       decimals: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "create(address,string,string,uint8)"(
-      admin: string,
-      name: string,
-      symbol: string,
-      decimals: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     getTokens(
@@ -90,15 +111,7 @@ export class TokenFactory extends Contract {
       overrides?: CallOverrides
     ): Promise<[string[]]>;
 
-    "getTokens(uint256,uint256)"(
-      start: BigNumberish,
-      end: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[string[]]>;
-
     getTotalTokens(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    "getTotalTokens()"(overrides?: CallOverrides): Promise<[BigNumber]>;
   };
 
   create(
@@ -106,15 +119,7 @@ export class TokenFactory extends Contract {
     name: string,
     symbol: string,
     decimals: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "create(address,string,string,uint8)"(
-    admin: string,
-    name: string,
-    symbol: string,
-    decimals: BigNumberish,
-    overrides?: Overrides
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   getTokens(
@@ -123,15 +128,7 @@ export class TokenFactory extends Contract {
     overrides?: CallOverrides
   ): Promise<string[]>;
 
-  "getTokens(uint256,uint256)"(
-    start: BigNumberish,
-    end: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<string[]>;
-
   getTotalTokens(overrides?: CallOverrides): Promise<BigNumber>;
-
-  "getTotalTokens()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   callStatic: {
     create(
@@ -142,33 +139,19 @@ export class TokenFactory extends Contract {
       overrides?: CallOverrides
     ): Promise<string>;
 
-    "create(address,string,string,uint8)"(
-      admin: string,
-      name: string,
-      symbol: string,
-      decimals: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<string>;
-
     getTokens(
       start: BigNumberish,
       end: BigNumberish,
       overrides?: CallOverrides
     ): Promise<string[]>;
 
-    "getTokens(uint256,uint256)"(
-      start: BigNumberish,
-      end: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<string[]>;
-
     getTotalTokens(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "getTotalTokens()"(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   filters: {
-    TokenCreated(token: string | null): EventFilter;
+    TokenCreated(
+      token?: string | null
+    ): TypedEventFilter<[string], { token: string }>;
   };
 
   estimateGas: {
@@ -177,15 +160,7 @@ export class TokenFactory extends Contract {
       name: string,
       symbol: string,
       decimals: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "create(address,string,string,uint8)"(
-      admin: string,
-      name: string,
-      symbol: string,
-      decimals: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     getTokens(
@@ -194,15 +169,7 @@ export class TokenFactory extends Contract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    "getTokens(uint256,uint256)"(
-      start: BigNumberish,
-      end: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     getTotalTokens(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "getTotalTokens()"(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -211,15 +178,7 @@ export class TokenFactory extends Contract {
       name: string,
       symbol: string,
       decimals: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "create(address,string,string,uint8)"(
-      admin: string,
-      name: string,
-      symbol: string,
-      decimals: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     getTokens(
@@ -228,16 +187,6 @@ export class TokenFactory extends Contract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    "getTokens(uint256,uint256)"(
-      start: BigNumberish,
-      end: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     getTotalTokens(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "getTotalTokens()"(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
   };
 }

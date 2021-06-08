@@ -9,16 +9,15 @@ import {
   BigNumber,
   BigNumberish,
   PopulatedTransaction,
-} from "ethers";
-import {
-  Contract,
+  BaseContract,
   ContractTransaction,
   Overrides,
   CallOverrides,
-} from "@ethersproject/contracts";
+} from "ethers";
 import { BytesLike } from "@ethersproject/bytes";
 import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
+import { TypedEventFilter, TypedEvent, TypedListener } from "./commons";
 
 interface TrancheInterface extends ethers.utils.Interface {
   functions: {
@@ -210,35 +209,55 @@ interface TrancheInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
 }
 
-export class Tranche extends Contract {
+export class Tranche extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  on(event: EventFilter | string, listener: Listener): this;
-  once(event: EventFilter | string, listener: Listener): this;
-  addListener(eventName: EventFilter | string, listener: Listener): this;
-  removeAllListeners(eventName: EventFilter | string): this;
-  removeListener(eventName: any, listener: Listener): this;
+  listeners<EventArgsArray extends Array<any>, EventArgsObject>(
+    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>
+  ): Array<TypedListener<EventArgsArray, EventArgsObject>>;
+  off<EventArgsArray extends Array<any>, EventArgsObject>(
+    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
+    listener: TypedListener<EventArgsArray, EventArgsObject>
+  ): this;
+  on<EventArgsArray extends Array<any>, EventArgsObject>(
+    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
+    listener: TypedListener<EventArgsArray, EventArgsObject>
+  ): this;
+  once<EventArgsArray extends Array<any>, EventArgsObject>(
+    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
+    listener: TypedListener<EventArgsArray, EventArgsObject>
+  ): this;
+  removeListener<EventArgsArray extends Array<any>, EventArgsObject>(
+    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
+    listener: TypedListener<EventArgsArray, EventArgsObject>
+  ): this;
+  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
+    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
+  ): this;
+
+  listeners(eventName?: string): Array<Listener>;
+  off(eventName: string, listener: Listener): this;
+  on(eventName: string, listener: Listener): this;
+  once(eventName: string, listener: Listener): this;
+  removeListener(eventName: string, listener: Listener): this;
+  removeAllListeners(eventName?: string): this;
+
+  queryFilter<EventArgsArray extends Array<any>, EventArgsObject>(
+    event: TypedEventFilter<EventArgsArray, EventArgsObject>,
+    fromBlockOrBlockhash?: string | number | undefined,
+    toBlock?: string | number | undefined
+  ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
   interface: TrancheInterface;
 
   functions: {
     DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<[string]>;
 
-    "DOMAIN_SEPARATOR()"(overrides?: CallOverrides): Promise<[string]>;
-
     PERMIT_TYPEHASH(overrides?: CallOverrides): Promise<[string]>;
 
-    "PERMIT_TYPEHASH()"(overrides?: CallOverrides): Promise<[string]>;
-
     allowance(
-      arg0: string,
-      arg1: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    "allowance(address,address)"(
       arg0: string,
       arg1: string,
       overrides?: CallOverrides
@@ -247,60 +266,30 @@ export class Tranche extends Contract {
     approve(
       account: string,
       amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "approve(address,uint256)"(
-      account: string,
-      amount: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     balanceOf(arg0: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    "balanceOf(address)"(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
     decimals(overrides?: CallOverrides): Promise<[number]>;
-
-    "decimals()"(overrides?: CallOverrides): Promise<[number]>;
 
     deposit(
       _amount: BigNumberish,
       _destination: string,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    "deposit(uint256,address)"(
-      _amount: BigNumberish,
-      _destination: string,
-      overrides?: Overrides
+    hitSpeedbump(
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
-
-    hitSpeedbump(overrides?: Overrides): Promise<ContractTransaction>;
-
-    "hitSpeedbump()"(overrides?: Overrides): Promise<ContractTransaction>;
 
     interestSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    "interestSupply()"(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     interestToken(overrides?: CallOverrides): Promise<[string]>;
-
-    "interestToken()"(overrides?: CallOverrides): Promise<[string]>;
 
     name(overrides?: CallOverrides): Promise<[string]>;
 
-    "name()"(overrides?: CallOverrides): Promise<[string]>;
-
     nonces(arg0: string, overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    "nonces(address)"(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
 
     permit(
       owner: string,
@@ -310,124 +299,59 @@ export class Tranche extends Contract {
       v: BigNumberish,
       r: BytesLike,
       s: BytesLike,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
-      owner: string,
-      spender: string,
-      value: BigNumberish,
-      deadline: BigNumberish,
-      v: BigNumberish,
-      r: BytesLike,
-      s: BytesLike,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     position(overrides?: CallOverrides): Promise<[string]>;
 
-    "position()"(overrides?: CallOverrides): Promise<[string]>;
-
     prefundedDeposit(
       _destination: string,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "prefundedDeposit(address)"(
-      _destination: string,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     speedbump(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    "speedbump()"(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     symbol(overrides?: CallOverrides): Promise<[string]>;
 
-    "symbol()"(overrides?: CallOverrides): Promise<[string]>;
-
     totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    "totalSupply()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     transfer(
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "transfer(address,uint256)"(
-      recipient: string,
-      amount: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     transferFrom(
       spender: string,
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "transferFrom(address,address,uint256)"(
-      spender: string,
-      recipient: string,
-      amount: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     underlying(overrides?: CallOverrides): Promise<[string]>;
 
-    "underlying()"(overrides?: CallOverrides): Promise<[string]>;
-
     unlockTimestamp(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    "unlockTimestamp()"(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     valueSupplied(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    "valueSupplied()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     withdrawInterest(
       _amount: BigNumberish,
       _destination: string,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "withdrawInterest(uint256,address)"(
-      _amount: BigNumberish,
-      _destination: string,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     withdrawPrincipal(
       _amount: BigNumberish,
       _destination: string,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "withdrawPrincipal(uint256,address)"(
-      _amount: BigNumberish,
-      _destination: string,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
 
   DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<string>;
 
-  "DOMAIN_SEPARATOR()"(overrides?: CallOverrides): Promise<string>;
-
   PERMIT_TYPEHASH(overrides?: CallOverrides): Promise<string>;
 
-  "PERMIT_TYPEHASH()"(overrides?: CallOverrides): Promise<string>;
-
   allowance(
-    arg0: string,
-    arg1: string,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  "allowance(address,address)"(
     arg0: string,
     arg1: string,
     overrides?: CallOverrides
@@ -436,60 +360,30 @@ export class Tranche extends Contract {
   approve(
     account: string,
     amount: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "approve(address,uint256)"(
-    account: string,
-    amount: BigNumberish,
-    overrides?: Overrides
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   balanceOf(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-  "balanceOf(address)"(
-    arg0: string,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
   decimals(overrides?: CallOverrides): Promise<number>;
-
-  "decimals()"(overrides?: CallOverrides): Promise<number>;
 
   deposit(
     _amount: BigNumberish,
     _destination: string,
-    overrides?: Overrides
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  "deposit(uint256,address)"(
-    _amount: BigNumberish,
-    _destination: string,
-    overrides?: Overrides
+  hitSpeedbump(
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
-
-  hitSpeedbump(overrides?: Overrides): Promise<ContractTransaction>;
-
-  "hitSpeedbump()"(overrides?: Overrides): Promise<ContractTransaction>;
 
   interestSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
-  "interestSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
-
   interestToken(overrides?: CallOverrides): Promise<string>;
-
-  "interestToken()"(overrides?: CallOverrides): Promise<string>;
 
   name(overrides?: CallOverrides): Promise<string>;
 
-  "name()"(overrides?: CallOverrides): Promise<string>;
-
   nonces(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
-
-  "nonces(address)"(
-    arg0: string,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
 
   permit(
     owner: string,
@@ -499,124 +393,59 @@ export class Tranche extends Contract {
     v: BigNumberish,
     r: BytesLike,
     s: BytesLike,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
-    owner: string,
-    spender: string,
-    value: BigNumberish,
-    deadline: BigNumberish,
-    v: BigNumberish,
-    r: BytesLike,
-    s: BytesLike,
-    overrides?: Overrides
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   position(overrides?: CallOverrides): Promise<string>;
 
-  "position()"(overrides?: CallOverrides): Promise<string>;
-
   prefundedDeposit(
     _destination: string,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "prefundedDeposit(address)"(
-    _destination: string,
-    overrides?: Overrides
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   speedbump(overrides?: CallOverrides): Promise<BigNumber>;
 
-  "speedbump()"(overrides?: CallOverrides): Promise<BigNumber>;
-
   symbol(overrides?: CallOverrides): Promise<string>;
 
-  "symbol()"(overrides?: CallOverrides): Promise<string>;
-
   totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
-
-  "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   transfer(
     recipient: string,
     amount: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "transfer(address,uint256)"(
-    recipient: string,
-    amount: BigNumberish,
-    overrides?: Overrides
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   transferFrom(
     spender: string,
     recipient: string,
     amount: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "transferFrom(address,address,uint256)"(
-    spender: string,
-    recipient: string,
-    amount: BigNumberish,
-    overrides?: Overrides
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   underlying(overrides?: CallOverrides): Promise<string>;
 
-  "underlying()"(overrides?: CallOverrides): Promise<string>;
-
   unlockTimestamp(overrides?: CallOverrides): Promise<BigNumber>;
 
-  "unlockTimestamp()"(overrides?: CallOverrides): Promise<BigNumber>;
-
   valueSupplied(overrides?: CallOverrides): Promise<BigNumber>;
-
-  "valueSupplied()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   withdrawInterest(
     _amount: BigNumberish,
     _destination: string,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "withdrawInterest(uint256,address)"(
-    _amount: BigNumberish,
-    _destination: string,
-    overrides?: Overrides
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   withdrawPrincipal(
     _amount: BigNumberish,
     _destination: string,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "withdrawPrincipal(uint256,address)"(
-    _amount: BigNumberish,
-    _destination: string,
-    overrides?: Overrides
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   callStatic: {
     DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<string>;
 
-    "DOMAIN_SEPARATOR()"(overrides?: CallOverrides): Promise<string>;
-
     PERMIT_TYPEHASH(overrides?: CallOverrides): Promise<string>;
 
-    "PERMIT_TYPEHASH()"(overrides?: CallOverrides): Promise<string>;
-
     allowance(
-      arg0: string,
-      arg1: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "allowance(address,address)"(
       arg0: string,
       arg1: string,
       overrides?: CallOverrides
@@ -628,22 +457,9 @@ export class Tranche extends Contract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    "approve(address,uint256)"(
-      account: string,
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
     balanceOf(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    "balanceOf(address)"(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     decimals(overrides?: CallOverrides): Promise<number>;
-
-    "decimals()"(overrides?: CallOverrides): Promise<number>;
 
     deposit(
       _amount: BigNumberish,
@@ -651,47 +467,17 @@ export class Tranche extends Contract {
       overrides?: CallOverrides
     ): Promise<[BigNumber, BigNumber]>;
 
-    "deposit(uint256,address)"(
-      _amount: BigNumberish,
-      _destination: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber, BigNumber]>;
-
     hitSpeedbump(overrides?: CallOverrides): Promise<void>;
-
-    "hitSpeedbump()"(overrides?: CallOverrides): Promise<void>;
 
     interestSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "interestSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     interestToken(overrides?: CallOverrides): Promise<string>;
-
-    "interestToken()"(overrides?: CallOverrides): Promise<string>;
 
     name(overrides?: CallOverrides): Promise<string>;
 
-    "name()"(overrides?: CallOverrides): Promise<string>;
-
     nonces(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    "nonces(address)"(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     permit(
-      owner: string,
-      spender: string,
-      value: BigNumberish,
-      deadline: BigNumberish,
-      v: BigNumberish,
-      r: BytesLike,
-      s: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
       owner: string,
       spender: string,
       value: BigNumberish,
@@ -704,29 +490,16 @@ export class Tranche extends Contract {
 
     position(overrides?: CallOverrides): Promise<string>;
 
-    "position()"(overrides?: CallOverrides): Promise<string>;
-
     prefundedDeposit(
-      _destination: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber, BigNumber]>;
-
-    "prefundedDeposit(address)"(
       _destination: string,
       overrides?: CallOverrides
     ): Promise<[BigNumber, BigNumber]>;
 
     speedbump(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "speedbump()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     symbol(overrides?: CallOverrides): Promise<string>;
 
-    "symbol()"(overrides?: CallOverrides): Promise<string>;
-
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     transfer(
       recipient: string,
@@ -734,20 +507,7 @@ export class Tranche extends Contract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    "transfer(address,uint256)"(
-      recipient: string,
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
     transferFrom(
-      spender: string,
-      recipient: string,
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    "transferFrom(address,address,uint256)"(
       spender: string,
       recipient: string,
       amount: BigNumberish,
@@ -756,15 +516,9 @@ export class Tranche extends Contract {
 
     underlying(overrides?: CallOverrides): Promise<string>;
 
-    "underlying()"(overrides?: CallOverrides): Promise<string>;
-
     unlockTimestamp(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "unlockTimestamp()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     valueSupplied(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "valueSupplied()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     withdrawInterest(
       _amount: BigNumberish,
@@ -772,19 +526,7 @@ export class Tranche extends Contract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    "withdrawInterest(uint256,address)"(
-      _amount: BigNumberish,
-      _destination: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     withdrawPrincipal(
-      _amount: BigNumberish,
-      _destination: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "withdrawPrincipal(uint256,address)"(
       _amount: BigNumberish,
       _destination: string,
       overrides?: CallOverrides
@@ -793,32 +535,34 @@ export class Tranche extends Contract {
 
   filters: {
     Approval(
-      owner: string | null,
-      spender: string | null,
-      value: null
-    ): EventFilter;
+      owner?: string | null,
+      spender?: string | null,
+      value?: null
+    ): TypedEventFilter<
+      [string, string, BigNumber],
+      { owner: string; spender: string; value: BigNumber }
+    >;
 
-    SpeedBumpHit(timestamp: null): EventFilter;
+    SpeedBumpHit(
+      timestamp?: null
+    ): TypedEventFilter<[BigNumber], { timestamp: BigNumber }>;
 
-    Transfer(from: string | null, to: string | null, value: null): EventFilter;
+    Transfer(
+      from?: string | null,
+      to?: string | null,
+      value?: null
+    ): TypedEventFilter<
+      [string, string, BigNumber],
+      { from: string; to: string; value: BigNumber }
+    >;
   };
 
   estimateGas: {
     DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "DOMAIN_SEPARATOR()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     PERMIT_TYPEHASH(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "PERMIT_TYPEHASH()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     allowance(
-      arg0: string,
-      arg1: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "allowance(address,address)"(
       arg0: string,
       arg1: string,
       overrides?: CallOverrides
@@ -827,60 +571,30 @@ export class Tranche extends Contract {
     approve(
       account: string,
       amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "approve(address,uint256)"(
-      account: string,
-      amount: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     balanceOf(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    "balanceOf(address)"(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     decimals(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "decimals()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     deposit(
       _amount: BigNumberish,
       _destination: string,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    "deposit(uint256,address)"(
-      _amount: BigNumberish,
-      _destination: string,
-      overrides?: Overrides
+    hitSpeedbump(
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
-
-    hitSpeedbump(overrides?: Overrides): Promise<BigNumber>;
-
-    "hitSpeedbump()"(overrides?: Overrides): Promise<BigNumber>;
 
     interestSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "interestSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     interestToken(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "interestToken()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "name()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     nonces(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
-
-    "nonces(address)"(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
 
     permit(
       owner: string,
@@ -890,129 +604,60 @@ export class Tranche extends Contract {
       v: BigNumberish,
       r: BytesLike,
       s: BytesLike,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
-      owner: string,
-      spender: string,
-      value: BigNumberish,
-      deadline: BigNumberish,
-      v: BigNumberish,
-      r: BytesLike,
-      s: BytesLike,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     position(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "position()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     prefundedDeposit(
       _destination: string,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "prefundedDeposit(address)"(
-      _destination: string,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     speedbump(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "speedbump()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     symbol(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "symbol()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     transfer(
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "transfer(address,uint256)"(
-      recipient: string,
-      amount: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     transferFrom(
       spender: string,
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "transferFrom(address,address,uint256)"(
-      spender: string,
-      recipient: string,
-      amount: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     underlying(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "underlying()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     unlockTimestamp(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "unlockTimestamp()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     valueSupplied(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "valueSupplied()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     withdrawInterest(
       _amount: BigNumberish,
       _destination: string,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "withdrawInterest(uint256,address)"(
-      _amount: BigNumberish,
-      _destination: string,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     withdrawPrincipal(
       _amount: BigNumberish,
       _destination: string,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "withdrawPrincipal(uint256,address)"(
-      _amount: BigNumberish,
-      _destination: string,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
     DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "DOMAIN_SEPARATOR()"(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     PERMIT_TYPEHASH(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "PERMIT_TYPEHASH()"(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     allowance(
-      arg0: string,
-      arg1: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "allowance(address,address)"(
       arg0: string,
       arg1: string,
       overrides?: CallOverrides
@@ -1021,13 +666,7 @@ export class Tranche extends Contract {
     approve(
       account: string,
       amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "approve(address,uint256)"(
-      account: string,
-      amount: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     balanceOf(
@@ -1035,51 +674,25 @@ export class Tranche extends Contract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    "balanceOf(address)"(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     decimals(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "decimals()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     deposit(
       _amount: BigNumberish,
       _destination: string,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    "deposit(uint256,address)"(
-      _amount: BigNumberish,
-      _destination: string,
-      overrides?: Overrides
+    hitSpeedbump(
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
-
-    hitSpeedbump(overrides?: Overrides): Promise<PopulatedTransaction>;
-
-    "hitSpeedbump()"(overrides?: Overrides): Promise<PopulatedTransaction>;
 
     interestSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "interestSupply()"(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     interestToken(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "interestToken()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "name()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     nonces(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "nonces(address)"(
       arg0: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -1092,108 +705,51 @@ export class Tranche extends Contract {
       v: BigNumberish,
       r: BytesLike,
       s: BytesLike,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
-      owner: string,
-      spender: string,
-      value: BigNumberish,
-      deadline: BigNumberish,
-      v: BigNumberish,
-      r: BytesLike,
-      s: BytesLike,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     position(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "position()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     prefundedDeposit(
       _destination: string,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "prefundedDeposit(address)"(
-      _destination: string,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     speedbump(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "speedbump()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "symbol()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "totalSupply()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     transfer(
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "transfer(address,uint256)"(
-      recipient: string,
-      amount: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     transferFrom(
       spender: string,
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "transferFrom(address,address,uint256)"(
-      spender: string,
-      recipient: string,
-      amount: BigNumberish,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     underlying(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "underlying()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     unlockTimestamp(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "unlockTimestamp()"(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     valueSupplied(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "valueSupplied()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     withdrawInterest(
       _amount: BigNumberish,
       _destination: string,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "withdrawInterest(uint256,address)"(
-      _amount: BigNumberish,
-      _destination: string,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     withdrawPrincipal(
       _amount: BigNumberish,
       _destination: string,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "withdrawPrincipal(uint256,address)"(
-      _amount: BigNumberish,
-      _destination: string,
-      overrides?: Overrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };
 }

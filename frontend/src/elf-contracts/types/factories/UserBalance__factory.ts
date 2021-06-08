@@ -2,19 +2,9 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { Contract, Signer } from "ethers";
+import { Contract, Signer, utils } from "ethers";
 import { Provider } from "@ethersproject/providers";
-
-import type { UserBalance } from "../UserBalance";
-
-export class UserBalance__factory {
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): UserBalance {
-    return new Contract(address, _abi, signerOrProvider) as UserBalance;
-  }
-}
+import type { UserBalance, UserBalanceInterface } from "../UserBalance";
 
 const _abi = [
   {
@@ -1169,3 +1159,16 @@ const _abi = [
     type: "receive",
   },
 ];
+
+export class UserBalance__factory {
+  static readonly abi = _abi;
+  static createInterface(): UserBalanceInterface {
+    return new utils.Interface(_abi) as UserBalanceInterface;
+  }
+  static connect(
+    address: string,
+    signerOrProvider: Signer | Provider
+  ): UserBalance {
+    return new Contract(address, _abi, signerOrProvider) as UserBalance;
+  }
+}

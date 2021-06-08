@@ -2,19 +2,9 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { Contract, Signer } from "ethers";
+import { Contract, Signer, utils } from "ethers";
 import { Provider } from "@ethersproject/providers";
-
-import type { IERC20Permit } from "../IERC20Permit";
-
-export class IERC20Permit__factory {
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): IERC20Permit {
-    return new Contract(address, _abi, signerOrProvider) as IERC20Permit;
-  }
-}
+import type { IERC20Permit, IERC20PermitInterface } from "../IERC20Permit";
 
 const _abi = [
   {
@@ -289,3 +279,16 @@ const _abi = [
     type: "function",
   },
 ];
+
+export class IERC20Permit__factory {
+  static readonly abi = _abi;
+  static createInterface(): IERC20PermitInterface {
+    return new utils.Interface(_abi) as IERC20PermitInterface;
+  }
+  static connect(
+    address: string,
+    signerOrProvider: Signer | Provider
+  ): IERC20Permit {
+    return new Contract(address, _abi, signerOrProvider) as IERC20Permit;
+  }
+}
