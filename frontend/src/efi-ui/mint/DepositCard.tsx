@@ -38,7 +38,7 @@ import { formatPercent } from "efi/base/formatPercent";
 import { CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
-import { InterestTokenContractsByAddress } from "efi/interestToken/interestToken";
+import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
 import { formatMoney } from "efi/money/formatMoney";
 import {
   getPrincipalPoolForTranche,
@@ -50,7 +50,7 @@ import { yieldPoolContractsByAddress } from "efi/pools/weightedPool";
 import { getIsMature2 } from "efi/tranche/getIsMature";
 import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
-import { underlyingContracts } from "efi/underlying/underlying";
+import { underlyingContractsByAddress } from "efi/underlying/underlying";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 
 interface MintPoolCardProps {
@@ -97,10 +97,10 @@ export function DepositCard(props: MintPoolCardProps): ReactElement | null {
     principalPoolContractsByAddress[principalPoolInfo.address];
   const yieldPoolContract = yieldPoolContractsByAddress[poolInfo.address];
   const baseAssetContract =
-    underlyingContracts[trancheInfo.extensions.underlying];
+    underlyingContractsByAddress[trancheInfo.extensions.underlying];
   const principalTokenContract = trancheContractsByAddress[trancheInfo.address];
   const yieldTokenContract =
-    InterestTokenContractsByAddress[poolInfo.extensions.interestToken];
+    interestTokenContractsByAddress[poolInfo.extensions.interestToken];
   const trancheContract = trancheContractsByAddress[trancheInfo.address];
 
   // get static display information

@@ -28,7 +28,7 @@ import { ContractMethodArgs } from "efi/contracts/types";
 import { CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
-import { InterestTokenContractsByAddress } from "efi/interestToken/interestToken";
+import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
 import { getPoolContract } from "efi/pools/getPoolContract";
 import { getPoolTokenInfo } from "efi/pools/getPoolInfo";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
@@ -36,7 +36,7 @@ import { PoolContract } from "efi/pools/PoolContract";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
 import { principalTokenContractsByAddress } from "efi/tranche/tranches";
-import { underlyingContracts } from "efi/underlying/underlying";
+import { underlyingContractsByAddress } from "efi/underlying/underlying";
 
 interface TradePanelProps {
   library: Web3Provider | undefined;
@@ -489,8 +489,8 @@ function useTokenInfoForTradeInput(
 
   const tokenContract =
     principalTokenContractsByAddress[tokenInfo.address] ??
-    InterestTokenContractsByAddress[tokenInfo.address] ??
-    underlyingContracts[tokenInfo.address];
+    interestTokenContractsByAddress[tokenInfo.address] ??
+    underlyingContractsByAddress[tokenInfo.address];
 
   const asset = getCryptoAssetForToken(tokenInfo.address);
   const address =
