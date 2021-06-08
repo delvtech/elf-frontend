@@ -146,7 +146,8 @@ function usePoolAtLeastOneDayOld(pool: PoolContract) {
 
   const poolAge = nowInSeconds - poolCreatedAt;
   const hasEnoughPoolData = poolAge >= ONE_DAY_IN_SECONDS;
-  return hasEnoughPoolData;
+  return true;
+  // return hasEnoughPoolData;
 }
 
 // temporary until other PR lands
@@ -174,30 +175,23 @@ function ChartMessages(props: ChartMessagesProps): ReactElement {
 
   if (!poolAtLeastOneDayOld || !hasData) {
     return (
-      <div className={tw("w-full", "h-full", "pt-8", "relative")}>
-        <div className={tw("pt-5", "h-full", "w-full")}>
-          <Callout
-            icon={null}
-            className={tw(
-              "flex",
-              "items-center",
-              "justify-center",
-              "h-full",
-              "w-full"
-            )}
-            intent={Intent.NONE}
-          >
-            <H4>{message}</H4>
-          </Callout>
-        </div>
+      <div className={tw("w-full", "h-full", "pt-8")}>
+        <Callout
+          icon={null}
+          className={tw(
+            "flex",
+            "items-center",
+            "justify-center",
+            "h-full",
+            "w-full"
+          )}
+          intent={Intent.NONE}
+        >
+          <H4>{message}</H4>
+        </Callout>
       </div>
     );
   }
 
-  return (
-    <div className={tw("w-full", "h-full", "pt-8", "relative")}>
-      <div className={tw("pt-5", "h-full", "w-full")}></div>
-      {children}
-    </div>
-  );
+  return <div className={tw("w-full", "h-full")}>{children}</div>;
 }
