@@ -35,7 +35,7 @@ import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolContract } from "efi/pools/PoolContract";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
-import { principalTokenContractsByAddress } from "efi/tranche/tranches";
+import { trancheContractsByAddress as principalTokenContractsByAddress } from "efi/tranche/tranches";
 import { underlyingContractsByAddress } from "efi/underlying/underlying";
 
 interface TradePanelProps {

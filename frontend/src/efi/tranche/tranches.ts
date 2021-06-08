@@ -13,10 +13,19 @@ import { getSmartContractFromRegistryMulti } from "efi/contracts/SmartContractsR
 import { getTokenInfo, tokenListJson } from "efi/tokenlists";
 import { vaultContractsByAddress } from "efi/tranche/vaults";
 
+export function isPrincipalToken(
+  tokenInfo: TokenInfo
+): tokenInfo is PrincipalTokenInfo {
+  return !!tokenInfo?.tags?.includes(TokenListTag.PRINCIPAL);
+}
+
 export const principalTokenInfos: PrincipalTokenInfo[] =
   tokenListJson.tokens.filter((tokenInfo): tokenInfo is PrincipalTokenInfo =>
     isPrincipalToken(tokenInfo)
   );
+export const openPrincipalTokenInfos = principalTokenInfos.filter(
+  ({ extensions: { unlockTimestamp } }) => unlockTimestamp * 1000 > Date.now()
+);
 
 export const trancheContracts = getSmartContractFromRegistryMulti(
   principalTokenInfos.map(({ address }) => address),
@@ -28,26 +37,13 @@ export const trancheContractsByAddress = keyBy(
   (tranche) => tranche.address
 );
 
-// alias for principal tokens
-export const principalTokenContractsByAddress = trancheContractsByAddress;
-
-export const openPrincipalTokens = principalTokenInfos.filter(
-  ({ extensions: { unlockTimestamp } }) => unlockTimestamp * 1000 > Date.now()
-);
-
 /**
  * The list of tranches that are currently running.
  */
 export const openTranches = getSmartContractFromRegistryMulti(
-  openPrincipalTokens.map(({ address }) => address),
+  openPrincipalTokenInfos.map(({ address }) => address),
   Tranche__factory.connect
 ) as Tranche[];
-
-export function isPrincipalToken(
-  tokenInfo: TokenInfo
-): tokenInfo is PrincipalTokenInfo {
-  return !!tokenInfo?.tags?.includes(TokenListTag.PRINCIPAL);
-}
 
 export function getVaultForTranche(trancheAddress: string): TestYVault {
   const {
