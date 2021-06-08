@@ -137,10 +137,10 @@ function usePrincipalTokenTab(
       principalTokensWithBalanceResults,
       principalTokenDecimals
     )
-      .filter((zipped): zipped is [
-        { token: ERC20; balanceOf: BigNumber },
-        number
-      ] => zipped.every((v) => !!v))
+      .filter(
+        (zipped): zipped is [{ token: ERC20; balanceOf: BigNumber }, number] =>
+          zipped.every((v) => !!v)
+      )
       .filter(([{ balanceOf }, decimals]) => !isDust(balanceOf, decimals))
       .map(([{ token }]) => token as unknown as Tranche);
     return tokens;

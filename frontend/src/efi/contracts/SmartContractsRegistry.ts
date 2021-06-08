@@ -1,13 +1,16 @@
 import { Provider } from "@ethersproject/providers";
+import { Contract, Signer } from "ethers";
+
 import { FactoryConnectFn } from "efi/contracts/FactoryConnectFn";
 import { defaultProvider } from "efi/providers/providers";
-import { Contract, Signer } from "ethers";
 
 // Do not export this from this file
 const SMART_CONTRACTS_REGISTRY: Record<string, unknown> = {};
 
-const SMART_CONTRACTS_REGISTRY_STATIC: Record<string, Record<string, unknown>> =
-  {};
+const SMART_CONTRACTS_REGISTRY_STATIC: Record<
+  string,
+  Record<string, unknown>
+> = {};
 
 export function getSmartContractFromRegistry<TReturnContract extends Contract>(
   address: string | undefined,
