@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import { Fragment, ReactElement, useCallback, useState } from "react";
 
 import { Button, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
@@ -32,6 +32,9 @@ import { useParseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool"
 import { getTokenInfo } from "efi/tokenlists";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
 import { underlyingContractsByAddress } from "efi/underlying/underlying";
+import { BuyPrincipalTokensTransactionConfirmationDrawer } from "efi-ui/swaps/BuyPrincipalTokensTransactionConfirmationDrawer/BuyPrincipalTokensTransactionConfirmationDrawer";
+import { trancheContractsByAddress } from "efi/tranche/tranches";
+import { CryptoAsset } from "efi/crypto/CryptoAsset";
 
 interface BuyPrincipalTokensFormProps {
   library: Web3Provider | undefined;
@@ -51,12 +54,25 @@ export function BuyPrincipalTokensForm(
     },
   } = props;
 
+  const trancheContract = trancheContractsByAddress[ptAddress];
+
   // inputs
+  const [isDrawerOpen, setDrawerOpen] = useState(false);
+  const openDrawer = useCallback(() => setDrawerOpen(true), []);
   const { stringValue: baseAssetInputValue, setValue: onBaseAssetChange } =
     useNumericInput();
+  const closeDrawer = useCallback(
+    (transactionAttemped) => {
+      if (transactionAttemped) {
+        onBaseAssetChange("");
+      }
+      setDrawerOpen(false);
+    },
+    [onBaseAssetChange]
+  );
 
   // base asset
-  const baseAsset = getCryptoAssetForToken(underlying);
+  const baseAsset = getCryptoAssetForToken(underlying) as CryptoAsset;
   const BaseAssetIcon = findAssetIcon2(baseAsset);
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
   const baseAssetBalanceOf = useCryptoBalanceOf(library, account, baseAsset);
@@ -75,6 +91,10 @@ export function BuyPrincipalTokensForm(
   const formattedAPY = apy ? formatPercent(apy) : "-";
 
   // input validation
+  const amountOut = useCalculatePrincipalTokenAmountOut(
+    poolInfo,
+    baseAssetInputValue
+  );
   const {
     isValidTokenInValue,
     isValidTokenOutValue,
@@ -90,54 +110,75 @@ export function BuyPrincipalTokensForm(
   }
 
   return (
-    <div className={tw("flex")}>
-      <div
-        className={tw(
-          "flex",
-          "flex-col",
-          "w-full",
-          "space-y-2",
-          "justify-center"
-        )}
-      >
-        <span
-          className={tw("pb-4")}
-        >{t`Buy principal tokens with your ${baseAssetSymbol}`}</span>
-        <span className={tw("pb-4")}>{t`Current APY: ${formattedAPY}`}</span>
-        <div className={tw("grid", "grid-cols-4", "gap-3")}>
-          <SaveInput
-            swapKind={SwapKind.GIVEN_IN}
-            className={tw("col-span-3")}
-            isValid={isValidTokenInValue && isValidTokenOutValue}
-            errorMessage={tokenInError || tokenOutError}
-            showMaxButton
-            assetIcon={
-              BaseAssetIcon ? (
-                <BaseAssetIcon height={20} width={20} className={tw("ml-2")} />
-              ) : undefined
-            }
-            value={baseAssetInputValue}
-            valueBalanceOf={baseAssetBalanceOf}
-            valueDecimals={baseAssetDecimals}
-            onValueChange={onBaseAssetChange}
-          />
-          <div>
-            <Button
-              fill
-              outlined
-              large
-              disabled={buttonDisabled}
-              intent={buttonIntent}
-            >{t`Buy`}</Button>
+    <Fragment>
+      <div className={tw("flex")}>
+        <div
+          className={tw(
+            "flex",
+            "flex-col",
+            "w-full",
+            "space-y-2",
+            "justify-center"
+          )}
+        >
+          <span
+            className={tw("pb-4")}
+          >{t`Buy principal tokens with your ${baseAssetSymbol}`}</span>
+          <span className={tw("pb-4")}>{t`Current APY: ${formattedAPY}`}</span>
+          <div className={tw("grid", "grid-cols-4", "gap-3")}>
+            <SaveInput
+              swapKind={SwapKind.GIVEN_IN}
+              className={tw("col-span-3")}
+              placeholder="0.00"
+              isValid={isValidTokenInValue && isValidTokenOutValue}
+              errorMessage={tokenInError || tokenOutError}
+              showMaxButton
+              assetIcon={
+                BaseAssetIcon ? (
+                  <BaseAssetIcon
+                    height={20}
+                    width={20}
+                    className={tw("ml-2")}
+                  />
+                ) : undefined
+              }
+              value={baseAssetInputValue}
+              valueBalanceOf={baseAssetBalanceOf}
+              valueDecimals={baseAssetDecimals}
+              onValueChange={onBaseAssetChange}
+            />
+            <div>
+              <Button
+                fill
+                outlined
+                large
+                disabled={buttonDisabled}
+                intent={buttonIntent}
+                onClick={openDrawer}
+              >{t`Buy`}</Button>
+            </div>
+          </div>
+          <div className={tw("grid", "grid-cols-4", "gap-3")}>
+            <span
+              className={tw("col-span-3", "text-right")}
+            >{t`Available balance: ${baseAssetBalanceLabel}`}</span>
           </div>
         </div>
-        <div className={tw("grid", "grid-cols-4", "gap-3")}>
-          <span
-            className={tw("col-span-3", "text-right")}
-          >{t`Available balance: ${baseAssetBalanceLabel}`}</span>
-        </div>
       </div>
-    </div>
+      <BuyPrincipalTokensTransactionConfirmationDrawer
+        baseAsset={baseAsset}
+        baseAssetIcon={BaseAssetIcon}
+        tranche={trancheContract}
+        account={account}
+        library={library}
+        pool={poolContract}
+        amountIn={baseAssetInputValue}
+        amountOut={amountOut}
+        swapKind={SwapKind.GIVEN_IN}
+        isOpen={isDrawerOpen}
+        onClose={closeDrawer}
+      />
+    </Fragment>
   );
 }
 
@@ -149,11 +190,46 @@ function useValidateInput(
 ) {
   const {
     address: poolAddress,
-    extensions: { bond, underlying, expiration, unitSeconds },
+    extensions: { bond, underlying },
   } = poolInfo;
 
   const baseAsset = getCryptoAssetForToken(underlying);
   const baseAssetBalanceOf = useCryptoBalanceOf(library, account, baseAsset);
+  const { decimals: baseAssetDecimals } = getTokenInfo(underlying);
+
+  const sortedTokens = [bond, underlying].sort();
+  const { baseAssetIndex, termAssetIndex: principalTokenIndex } =
+    useParseSortedTokensForPool(sortedTokens);
+
+  const poolContract = getPoolContract(poolAddress);
+
+  const { data: [, balances] = [] } = usePoolTokens(poolContract);
+  const underlyingReservesBalanceOf = balances?.[baseAssetIndex];
+  const principalReservesBalanceOf = balances?.[principalTokenIndex];
+
+  const amountPrincipalTokensOutBN = useCalculatePrincipalTokenAmountOut(
+    poolInfo,
+    amountIn
+  );
+
+  return validateTradeValues(
+    amountIn,
+    amountPrincipalTokensOutBN,
+    underlyingReservesBalanceOf,
+    principalReservesBalanceOf,
+    baseAssetBalanceOf,
+    baseAssetDecimals
+  );
+}
+
+function useCalculatePrincipalTokenAmountOut(
+  poolInfo: PrincipalPoolTokenInfo,
+  amountIn: string
+) {
+  const {
+    address: poolAddress,
+    extensions: { bond, underlying, expiration, unitSeconds },
+  } = poolInfo;
 
   const sortedTokens = [bond, underlying].sort();
   const { baseAssetIndex, termAssetIndex: principalTokenIndex } =
@@ -183,7 +259,7 @@ function useValidateInput(
 
   const nowInSeconds = Math.round(Date.now() / 1000);
   const timeRemainingSeconds = expiration - nowInSeconds;
-  const amountPrincipalTokensOut = calcSwapOutGivenInCCPoolUNSAFE(
+  const amountOut = calcSwapOutGivenInCCPoolUNSAFE(
     amountIn,
     underlyingReserves,
     principalReserves,
@@ -192,17 +268,10 @@ function useValidateInput(
     unitSeconds,
     true
   );
-  const amountPrincipalTokensOutBN = clipStringValueToDecimals(
-    amountPrincipalTokensOut.toString(),
-    baseAssetDecimals ?? 18
-  );
-
-  return validateTradeValues(
-    amountIn,
-    amountPrincipalTokensOutBN,
-    underlyingReservesBalanceOf,
-    principalReservesBalanceOf,
-    baseAssetBalanceOf,
+  const amountOutBN = clipStringValueToDecimals(
+    amountOut.toString(),
     baseAssetDecimals
   );
+
+  return amountOutBN;
 }
