@@ -100,7 +100,7 @@ export function InterestPoolCard(
   const { setTab } = usePoolViewPoolActionsTab();
 
   const goToTrade = useCallback(() => {
-    setTab(PoolAction.SELL);
+    setTab(PoolAction.BUY);
     navigate(`/pools/${pool?.address}`);
   }, [pool?.address, setTab]);
 
@@ -344,7 +344,7 @@ export function InterestPoolCard(
       >
         <div className={tw("mb-2")}>
           <Button minimal outlined intent={Intent.PRIMARY} onClick={goToTrade}>
-            {t`Trade`}
+            {t`Buy`}
           </Button>
         </div>
         <div>
