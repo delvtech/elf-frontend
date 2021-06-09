@@ -316,12 +316,14 @@ export function PrincipalPoolCard(
           poolAddress={pool.address}
           poolAction={PoolAction.ADD_LIQUIDITY}
           label={t`Stake`}
+          outlined
         />
         {maturityTime && maturityTime < Date.now() ? (
           <GoToMarketButton
             poolAddress={pool.address}
             poolAction={PoolAction.SELL}
             label={t`Sell`}
+            outlined
           />
         ) : null}
       </div>
