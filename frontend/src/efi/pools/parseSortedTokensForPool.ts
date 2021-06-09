@@ -1,4 +1,3 @@
-import { KNOWN_BASE_ASSETS } from "efi/addresses";
 import { underlyingContractsByAddress } from "efi/underlying/underlying";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
 import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
@@ -20,7 +19,8 @@ export function useParseSortedTokensForPool(
   tokens: string[] | undefined
 ): ParsedTokens {
   const baseAssetIndex: number =
-    tokens?.findIndex((address) => KNOWN_BASE_ASSETS.includes(address)) ?? 0;
+    tokens?.findIndex((address) => underlyingContractsByAddress[address]) ?? 0;
+
   const termAssetIndex = baseAssetIndex === 0 ? 1 : 0;
 
   const baseAssetAddress = tokens?.[baseAssetIndex];
