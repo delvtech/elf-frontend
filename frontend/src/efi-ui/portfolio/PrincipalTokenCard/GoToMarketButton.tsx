@@ -8,28 +8,23 @@ import {
   PoolAction,
   usePoolViewPoolActionsTab,
 } from "efi-ui/pools/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
-import { PoolContract } from "efi/pools/PoolContract";
 
 interface GoToMarketButtonProps {
-  pool: PoolContract | undefined;
-  isStake: boolean;
+  poolAddress: string;
+  poolAction: PoolAction;
   label: string;
 }
 
 export function GoToMarketButton(props: GoToMarketButtonProps): ReactElement {
-  const { pool, isStake, label } = props;
+  const { poolAddress, poolAction, label } = props;
 
   const { setTab } = usePoolViewPoolActionsTab();
 
   const onClick = useCallback(() => {
-    if (isStake) {
-      setTab(PoolAction.ADD_LIQUIDITY);
-    } else {
-      setTab(PoolAction.SELL);
-    }
+    setTab(poolAction);
 
-    navigate(`/pools/${pool?.address}`);
-  }, [pool?.address, isStake, setTab]);
+    navigate(`/pools/${poolAddress}`);
+  }, [setTab, poolAction, poolAddress]);
   return (
     <AnchorButton fill intent={Intent.PRIMARY} onClick={onClick} minimal>
       <div className={tw("p-2", "text-base")}>{label}</div>
