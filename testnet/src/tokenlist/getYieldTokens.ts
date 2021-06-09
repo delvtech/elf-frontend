@@ -8,8 +8,11 @@ import { InterestToken__factory } from "src/types/factories/InterestToken__facto
 import { Tranche__factory } from "src/types/factories/Tranche__factory";
 import { InterestToken } from "src/types/InterestToken";
 import { Tranche } from "src/types/Tranche";
-import hardhatSymbolOverrides from "src/addresses/testnet.symbolOverrides.json";
 
+let hardhatSymbolOverrides = {};
+if (process.env.NODE_ENV === "development") {
+  hardhatSymbolOverrides = require("src/addresses/testnet.symbolOverrides.json");
+}
 export const provider = hre.ethers.provider;
 
 const GOERLI_CHAIN_ID = 5;
