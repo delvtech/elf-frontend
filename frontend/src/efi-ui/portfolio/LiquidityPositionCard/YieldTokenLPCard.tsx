@@ -25,11 +25,11 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
-import { UnstakeWeightedPoolButton } from "efi-ui/pools/UnstakeButton/UnstakeWeightedPoolButton";
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
+import { PoolAction } from "efi-ui/pools/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
 import { useShareOfPool } from "efi-ui/pools/useShareOfPool";
-import { GoToMarketButton } from "efi-ui/portfolio/PrincipalTokenCard/GoToMarketButton";
+import { GoToPoolButton } from "efi-ui/pools/GoToPoolButton/GoToPoolButton";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
@@ -42,8 +42,6 @@ import { PoolInfo } from "efi/pools/PoolInfo";
 import { getTokenInfo } from "efi/tokenlists";
 import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
-import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
-import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
 
 interface YieldTokenLPCardProps {
   library: Web3Provider | undefined;
@@ -124,11 +122,6 @@ export function YieldTokenLPCard({
   const poolInfo = getTokenInfo<PoolInfo>(pool?.address as string);
   const poolName = `${baseAssetSymbol} - ${baseAssetSymbol} Yield Token`;
   const yieldTokenSymbol = getYieldTokenSymbol(poolInfo);
-  const { data: poolBalanceOf } = useTokenBalanceOf(pool, account);
-  const lpBalance = formatUnits(
-    poolBalanceOf ?? 0,
-    BALANCER_POOL_LP_TOKEN_DECIMALS
-  );
   const poolLabel = `(${baseAssetSymbol} - ${yieldTokenSymbol})`;
 
   return (
@@ -211,14 +204,16 @@ export function YieldTokenLPCard({
 
       {/* Quick Actions */}
       <ButtonGroup className={tw("space-x-6")}>
-        <UnstakeWeightedPoolButton
-          account={account}
-          connector={connector}
-          library={library}
-          pool={pool}
-          amount={lpBalance}
+        <GoToPoolButton
+          poolAddress={poolInfo.address}
+          poolAction={PoolAction.REMOVE_LIQUIDITY}
+          label={t`Unstake`}
         />
-        <GoToMarketButton pool={pool} isStake={false} label={t`Go to Market`} />
+        <GoToPoolButton
+          poolAddress={poolInfo.address}
+          poolAction={PoolAction.BUY}
+          label={t`Go to Market`}
+        />
       </ButtonGroup>
     </Card>
   );

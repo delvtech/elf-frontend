@@ -1,4 +1,4 @@
-import {
+import React, {
   CSSProperties,
   ReactElement,
   useCallback,
@@ -6,14 +6,7 @@ import {
   useState,
 } from "react";
 
-import {
-  Button,
-  Card,
-  Classes,
-  Colors,
-  Elevation,
-  Intent,
-} from "@blueprintjs/core";
+import { Card, Classes, Colors, Elevation } from "@blueprintjs/core";
 import { Link, navigate } from "@reach/router";
 import classNames from "classnames";
 import { differenceInDays } from "date-fns";
@@ -24,27 +17,25 @@ import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
-import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 import { useFeeVolumeFiatForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
 import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
-import {
-  PoolAction,
-  usePoolViewPoolActionsTab,
-} from "efi-ui/pools/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
+import { PoolAction } from "efi-ui/pools/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
 import { useStakingAPY } from "efi-ui/pools/useStakingAPY";
 import { useTokenYield } from "efi-ui/pools/useTokenYield";
 import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
 import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForPool";
+import { GoToPoolButton } from "efi-ui/pools/GoToPoolButton/GoToPoolButton";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
 import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
 import { formatPercent } from "efi/base/formatPercent";
 import { CryptoAssetType } from "efi/crypto/CryptoAsset";
+import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { formatMoney } from "efi/money/formatMoney";
 import { PoolContract } from "efi/pools/PoolContract";
+import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 
 interface PrincipalPoolCardProps {
@@ -91,17 +82,9 @@ export function PrincipalPoolCard(
 
   const { isDarkMode } = useDarkMode();
 
-  const { setTab } = usePoolViewPoolActionsTab();
-
   const goToTrade = useCallback(() => {
-    setTab(PoolAction.BUY);
     navigate(`/pools/${pool?.address}`);
-  }, [pool?.address, setTab]);
-
-  const goToStake = useCallback(() => {
-    setTab(PoolAction.ADD_LIQUIDITY);
-    navigate(`/pools/${pool?.address}`);
-  }, [pool?.address, setTab]);
+  }, [pool?.address]);
 
   const dataToLoad = [
     tranche,
@@ -323,23 +306,29 @@ export function PrincipalPoolCard(
         className={tw(
           "flex",
           "flex-col",
+          "space-y-2",
           "overflow-visible",
-          "items-start",
+          "items-center",
+          "justify-center",
           maturityTime && Date.now() < maturityTime ? "visible" : "invisible"
         )}
       >
-        <div className={tw("mb-2")}>
-          <Button minimal outlined intent={Intent.PRIMARY} onClick={goToTrade}>
-            {t`Buy`}
-          </Button>
-        </div>
-        <div
-          className={maturityTime && maturityTime < Date.now() ? "hidden" : ""}
-        >
-          <Button minimal outlined intent={Intent.PRIMARY} onClick={goToStake}>
-            {t`Stake`}
-          </Button>
-        </div>
+        <GoToPoolButton
+          poolAddress={pool.address}
+          poolAction={PoolAction.BUY}
+          label={t`Buy`}
+          outlined
+          small
+        />
+        {maturityTime && maturityTime > Date.now() ? (
+          <GoToPoolButton
+            poolAddress={pool.address}
+            poolAction={PoolAction.ADD_LIQUIDITY}
+            label={t`Stake`}
+            outlined
+            small
+          />
+        ) : null}
       </div>
     </Card>
   );

@@ -26,14 +26,14 @@ import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
 import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
-import { GoToMarketButton } from "efi-ui/portfolio/PrincipalTokenCard/GoToMarketButton";
+import { PoolAction } from "efi-ui/pools/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
+import { GoToPoolButton } from "efi-ui/pools/GoToPoolButton/GoToPoolButton";
 import { MaturityTimeBar } from "efi-ui/portfolio/PrincipalTokenCard/MaturityTimeBar";
 import { RedeemYieldTokensButton } from "efi-ui/portfolio/RedeemButton/RedeemYieldTokensButton";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { useUnderlyingVaultForTranche } from "efi-ui/tranche/useUnderlyingVaultForTranche";
-import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { calculateProgress } from "efi/base/calculateProgress";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
@@ -129,11 +129,6 @@ export function YieldTokenCard({
   const progress = calculateProgress(createdAtDate, unlockDate);
   const tableRowLink = getTableRowLink(vaultContract?.address, vaultName);
 
-  const { symbol: termAssetSymbol } = getTermAssetSymbol(
-    yieldToken.address,
-    vaultSymbol
-  );
-
   return (
     <div>
       <Card
@@ -222,7 +217,7 @@ export function YieldTokenCard({
               className={tw("flex", "justify-center", "items-center")}
               bold
               textClassName={tw("text-2xl")}
-              text={`${yieldTokenBalance.toFixed(6)} ${termAssetSymbol}`}
+              text={`${yieldTokenBalance.toFixed(6)} ${yieldTokenInfo.symbol}`}
               label={t`1 Yield Token = yield on 1 ${baseAssetSymbol} at maturity`}
             />
           </Callout>
@@ -250,8 +245,16 @@ export function YieldTokenCard({
             library={library}
             baseAsset={baseAsset}
           />
-          <GoToMarketButton pool={pool} isStake label={t`Stake`} />
-          <GoToMarketButton pool={pool} isStake={false} label={t`Sell`} />
+          <GoToPoolButton
+            poolAddress={pool.address}
+            poolAction={PoolAction.ADD_LIQUIDITY}
+            label={t`Stake`}
+          />
+          <GoToPoolButton
+            poolAddress={pool.address}
+            poolAction={PoolAction.SELL}
+            label={t`Sell`}
+          />
         </ButtonGroup>
         <div className={tw("flex", "justify-center")}>
           <span>
