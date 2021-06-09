@@ -15,7 +15,8 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
-import { PortfolioActionsCard } from "efi-ui/save/PortfolioActionsCard/PortfolioActionsCard";
+import { PortfolioActionsCard } from "efi-ui/portfolio/PortfolioActionsCard/PortfolioActionsCard";
+import { PortfolioActionTabId } from "efi-ui/portfolio/PortfolioActionsCard/PortfolioActionTabId";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { convertEpochSecondsToDate2 } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
@@ -24,8 +25,6 @@ import { isDust } from "efi/coins/isDust";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getIsMature2 } from "efi/tranche/getIsMature";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
-
-import { SaveTransactionTabId } from "./SaveTransactionTabId";
 
 interface SavePortfolioCardProps {
   library: Web3Provider | undefined;
@@ -55,8 +54,8 @@ export function SavePortfolioCard(
     },
   } = props;
 
-  const [activeTabId, setActiveTabId] = useState<SaveTransactionTabId>(
-    SaveTransactionTabId.BUY
+  const [activeTabId, setActiveTabId] = useState<PortfolioActionTabId>(
+    PortfolioActionTabId.BUY
   );
 
   const tranche = trancheContractsByAddress[address];

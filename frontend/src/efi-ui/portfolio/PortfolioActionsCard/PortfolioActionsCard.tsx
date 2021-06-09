@@ -6,18 +6,18 @@ import { PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { BuyPrincipalTokensForm } from "efi-ui/save/SavePortfolioList/BuyPrincipalTokensForm";
-import { PrincipalTokenInformation } from "efi-ui/save/SavePortfolioList/PrincipalTokenInformation";
-import { SaveTransactionTabId } from "efi-ui/save/SavePortfolioList/SaveTransactionTabId";
-import { SellPrincipalTokensForm } from "efi-ui/save/SavePortfolioList/SellPrincipalTokensForm";
+import { BuyPrincipalTokensForm } from "efi-ui/portfolio/PortfolioActionsCard/BuyPrincipalTokensForm";
+import { PortfolioActionTabId } from "efi-ui/portfolio/PortfolioActionsCard/PortfolioActionTabId";
+import { PrincipalTokenInformation } from "efi-ui/portfolio/PortfolioActionsCard/PrincipalTokenInformation";
+import { SellPrincipalTokensForm } from "efi-ui/portfolio/PortfolioActionsCard/SellPrincipalTokensForm";
 import { getIsMature2 } from "efi/tranche/getIsMature";
 
 interface SaveTransactionsCardProps {
   library: Web3Provider | undefined;
   account: string | null | undefined;
   principalToken: PrincipalTokenInfo;
-  activeTabId: SaveTransactionTabId;
-  setActiveTabId: (tabId: SaveTransactionTabId) => void;
+  activeTabId: PortfolioActionTabId;
+  setActiveTabId: (tabId: PortfolioActionTabId) => void;
 }
 
 export function PortfolioActionsCard(
@@ -46,37 +46,37 @@ export function PortfolioActionsCard(
         className={tw("text-left")}
         onChange={setActiveTabId}
       >
-        <Tab id={SaveTransactionTabId.BUY}>{t`Buy`}</Tab>
-        <Tab id={SaveTransactionTabId.SELL}>{t`Sell`}</Tab>
+        <Tab id={PortfolioActionTabId.BUY}>{t`Buy`}</Tab>
+        <Tab id={PortfolioActionTabId.SELL}>{t`Sell`}</Tab>
         <Tab
           disabled={!isMature}
-          id={SaveTransactionTabId.REDEEM}
+          id={PortfolioActionTabId.REDEEM}
         >{t`Redeem`}</Tab>
-        <Tab id={SaveTransactionTabId.INFO}>{t`More Information`}</Tab>
+        <Tab id={PortfolioActionTabId.INFO}>{t`More Information`}</Tab>
       </Tabs>
       <div className={tw("flex", "flex-col", "flex-1")}>
-        {activeTabId === SaveTransactionTabId.BUY ? (
+        {activeTabId === PortfolioActionTabId.BUY ? (
           <BuyPrincipalTokensForm
             account={account}
             library={library}
             principalToken={principalToken}
           />
         ) : null}
-        {activeTabId === SaveTransactionTabId.SELL ? (
+        {activeTabId === PortfolioActionTabId.SELL ? (
           <SellPrincipalTokensForm
             account={account}
             library={library}
             principalToken={principalToken}
           />
         ) : null}
-        {activeTabId === SaveTransactionTabId.REDEEM ? (
+        {activeTabId === PortfolioActionTabId.REDEEM ? (
           <SellPrincipalTokensForm
             account={account}
             library={library}
             principalToken={principalToken}
           />
         ) : null}
-        {activeTabId === SaveTransactionTabId.INFO ? (
+        {activeTabId === PortfolioActionTabId.INFO ? (
           <PrincipalTokenInformation
             account={account}
             library={library}
