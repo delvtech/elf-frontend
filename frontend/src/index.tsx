@@ -18,7 +18,9 @@ import { getEthereumProviderLibrary } from "efi/wallets/providers";
 import { efiQueryClient } from "./efi/queryClient";
 import versionJson from "./version.output.json";
 import { AddressesJson, lookupAddressKey } from "efi/addresses";
+import efiLocalStorage from "efi/base/localStorage";
 
+clearLocalStorageOnNewVersion();
 logAppVersion();
 
 if (process.env.NODE_ENV === "development") {
@@ -37,6 +39,29 @@ ReactDOM.render(
   </Web3ReactProvider>,
   document.getElementById("root")
 );
+
+function clearLocalStorageOnNewVersion() {
+  const lastVersion = efiLocalStorage.getItem("app-version");
+  if (lastVersion !== versionJson.version) {
+    const styles = [
+      "background: #ffff00",
+      "color: black",
+      "display: block",
+      "line-height: 40px",
+      "text-align: center",
+      "font-weight: bold",
+      "font-size: 24px",
+    ].join(";");
+
+    // eslint-disable-next-line no-console
+    console.log(
+      "%c🤘 New app version detected, clearing local storage 🤘",
+      styles
+    );
+    efiLocalStorage.clear();
+    efiLocalStorage.setItem("app-version", versionJson.version);
+  }
+}
 
 function prefixDocumentTitle(prefix: string) {
   document.title = `${prefix} ${document.title}`;
