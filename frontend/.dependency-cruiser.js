@@ -95,8 +95,7 @@ module.exports = {
       severity: "error",
       from: {},
       to: {
-        path:
-          "\\.(spec|test)\\.(js|mjs|cjs|ts|tsx|ls|coffee|litcoffee|coffee\\.md)$",
+        path: "\\.(spec|test)\\.(js|mjs|cjs|ts|tsx|ls|coffee|litcoffee|coffee\\.md)$",
       },
     },
     {
@@ -188,11 +187,13 @@ module.exports = {
     {
       name: "efi-not-to-portfolio",
       comment:
-        "Importing from portfolio/ is prohibited outside of the app/ directory. Perhaps you want " +
+        "Importing from portfolio/ is prohibited outside of the app/ and save/ directories. Perhaps you want " +
         "to import something specific from wallet/ or markets/ instead?",
       severity: "error",
       from: {
-        pathNot: `(${["efi-ui/app", "efi-ui/portfolio"].join("|")})`,
+        pathNot: `(${["efi-ui/app", "efi-ui/portfolio", "efi-ui/save"].join(
+          "|"
+        )})`,
       },
       to: {
         path: "efi-ui/portfolio",

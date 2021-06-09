@@ -76,7 +76,8 @@ export interface PrincipalPoolTokenInfo extends TokenInfo {
     bond: string;
 
     /**
-     * The underlying base asset for the principal token
+     * The underlying base asset for the principal token.  NOTE: This will be a
+     * weth address when dealing with eth tranches.
      */
     underlying: string;
 
@@ -106,7 +107,8 @@ export interface YieldPoolTokenInfo extends TokenInfo {
     interestToken: string;
 
     /**
-     * The underlying base asset for the yield token
+     * The underlying base asset for the yield token.  NOTE: This will be a
+     * weth address when dealing with eth yield tokens.
      */
     underlying: string;
 

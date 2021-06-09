@@ -1,4 +1,4 @@
-export enum SaveTransactionTabId {
+export enum PortfolioActionTabId {
   INFO = "info",
   BUY = "buy",
   SELL = "sell",

@@ -13,7 +13,7 @@ import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import styles from "efi-ui/save/SavePortfolioList/SaveInput.module.css";
 import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
 
-interface EarnInputProps {
+interface SaveInputProps {
   showMaxButton: boolean;
   // cannot be undefined as that enables 'uncontrolled' component behavior for InputGroup
   value: string;
@@ -30,7 +30,7 @@ interface EarnInputProps {
   valueBalanceOf: BigNumber | undefined;
 }
 
-export function SaveInput(props: EarnInputProps): ReactElement {
+export function SaveInput(props: SaveInputProps): ReactElement {
   const {
     className,
     value,
