@@ -19,26 +19,28 @@ import { getCoinGeckoId } from "efi-coingecko";
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
-import { ERC20Shim } from "efi/contracts/ERC20Shim";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
-import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
-import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
+import { PoolAction } from "efi-ui/pools/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
 import { RedeemPrincipalTokensButton } from "efi-ui/portfolio/RedeemButton/RedeemPrincipalTokensButton";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenBalanceUNSAFE } from "efi-ui/token/hooks/useTokenBalance";
 import { useBaseAssetForTranche } from "efi-ui/tranche/useBaseAssetForTranche";
-import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
 import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
 import { useUnderlyingVaultForTranche } from "efi-ui/tranche/useUnderlyingVaultForTranche";
 import { calculateProgress } from "efi/base/calculateProgress";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
 import { formatPercent } from "efi/base/formatPercent";
+import { ERC20Shim } from "efi/contracts/ERC20Shim";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { formatMoney } from "efi/money/formatMoney";
+import { getPrincipalPoolForTranche } from "efi/pools/ccpool";
+import { getPoolContract } from "efi/pools/getPoolContract";
+import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
+import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 
 import { GoToMarketButton } from "./GoToMarketButton";
@@ -88,8 +90,10 @@ export function PrincipalTokenCard(
 
   const vaultContract = useUnderlyingVaultForTranche(tranche);
   const { data: vaultName } = useSmartContractReadCall(vaultContract, "name");
-  const pool = usePoolForToken(tranche as unknown as ERC20Shim);
-  const baseAssetContract = usePoolPairedToken(pool, tranche);
+  const poolInfo = getPrincipalPoolForTranche(tranche.address);
+  const pool = getPoolContract(poolInfo.address);
+  const { baseAssetContract } = getPoolTokens(poolInfo);
+
   const { spotPriceBaseAssetForOneToken: tranchePriceInBaseAsset = 0 } =
     usePoolTokenPrices(pool, baseAssetContract);
 
@@ -253,8 +257,16 @@ export function PrincipalTokenCard(
           tranche={tranche}
           baseAsset={baseAsset}
         />
-        <GoToMarketButton pool={pool} isStake label={t`Stake`} />
-        <GoToMarketButton pool={pool} isStake={false} label={t`Sell`} />
+        <GoToMarketButton
+          poolAddress={poolInfo.address}
+          poolAction={PoolAction.ADD_LIQUIDITY}
+          label={t`Stake`}
+        />
+        <GoToMarketButton
+          poolAddress={poolInfo.address}
+          poolAction={PoolAction.SELL}
+          label={t`Sell`}
+        />
       </ButtonGroup>
       <div className={tw("flex", "justify-center")}>
         <span>
