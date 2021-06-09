@@ -1,25 +1,27 @@
 import { ReactElement } from "react";
+
 import { Button, Intent } from "@blueprintjs/core";
-import { t } from "ttag";
-import tw from "efi-tailwindcss-classnames";
-import { SaveInput } from "efi-ui/save/SavePortfolioList/SaveInput";
-import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
-import { PrincipalTokenInfo } from "tokenlists/types";
-import { SwapKind } from "efi-ui/balancer/SwapKind";
-import { getTokenInfo } from "efi/tokenlists";
-import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { useCryptoBalanceOf } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { Web3Provider } from "@ethersproject/providers";
-import { formatBalance } from "efi/base/formatBalance";
+import { PrincipalTokenInfo } from "tokenlists/types";
+import { t } from "ttag";
+
+import tw from "efi-tailwindcss-classnames";
+import { SwapKind } from "efi-ui/balancer/SwapKind";
+import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { useCryptoBalanceOf } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { useTokenYield } from "efi-ui/pools/useTokenYield";
-import { underlyingContractsByAddress } from "efi/underlying/underlying";
+import { SaveInput } from "efi-ui/save/SavePortfolioList/SaveInput";
+import { formatBalance } from "efi/base/formatBalance";
+import { formatPercent } from "efi/base/formatPercent";
+import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import {
   getPrincipalPoolForTranche,
   principalPoolContractsByAddress,
 } from "efi/pools/ccpool";
-import { formatPercent } from "efi/base/formatPercent";
+import { getTokenInfo } from "efi/tokenlists";
+import { underlyingContractsByAddress } from "efi/underlying/underlying";
 
 interface BuyPrincipalTokensFormProps {
   library: Web3Provider | undefined;
