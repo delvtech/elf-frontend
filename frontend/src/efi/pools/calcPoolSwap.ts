@@ -30,6 +30,11 @@ export function calcSwapOutGivenInCCPoolUNSAFE(
 
   const amountY = yR - yAfter;
 
+  // This can happen if the reserve amounts can't cover the amount being swapped
+  if (Number.isNaN(amountY)) {
+    return 0;
+  }
+
   return amountY;
 }
 
