@@ -320,21 +320,27 @@ export function InterestPoolCard(
         className={tw(
           "flex",
           "flex-col",
+          "space-y-2",
           "overflow-visible",
-          "items-start",
+          "items-center",
+          "justify-center",
           maturityTime && Date.now() < maturityTime ? "visible" : "invisible"
         )}
       >
         <GoToMarketButton
           poolAddress={pool.address}
-          poolAction={PoolAction.ADD_LIQUIDITY}
-          label={t`Stake`}
+          poolAction={PoolAction.BUY}
+          label={t`Buy`}
+          outlined
+          small
         />
-        {maturityTime && maturityTime < Date.now() ? (
+        {maturityTime && maturityTime > Date.now() ? (
           <GoToMarketButton
             poolAddress={pool.address}
-            poolAction={PoolAction.SELL}
-            label={t`Sell`}
+            poolAction={PoolAction.ADD_LIQUIDITY}
+            label={t`Stake`}
+            outlined
+            small
           />
         ) : null}
       </div>

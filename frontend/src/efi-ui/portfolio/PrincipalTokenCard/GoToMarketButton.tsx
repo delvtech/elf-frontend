@@ -14,11 +14,18 @@ interface GoToMarketButtonProps {
   poolAction: PoolAction;
   label: string;
 
+  small?: boolean;
   outlined?: boolean;
 }
 
 export function GoToMarketButton(props: GoToMarketButtonProps): ReactElement {
-  const { poolAddress, poolAction, label, outlined = false } = props;
+  const {
+    poolAddress,
+    poolAction,
+    label,
+    outlined = false,
+    small = false,
+  } = props;
 
   const { setTab } = usePoolViewPoolActionsTab();
 
@@ -27,12 +34,14 @@ export function GoToMarketButton(props: GoToMarketButtonProps): ReactElement {
 
     navigate(`/pools/${poolAddress}`);
   }, [setTab, poolAction, poolAddress]);
+
   return (
     <AnchorButton
       fill
       intent={Intent.PRIMARY}
       onClick={onClick}
       minimal
+      small={small}
       outlined={outlined}
     >
       <div className={tw("p-2", "text-base")}>{label}</div>
