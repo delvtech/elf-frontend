@@ -6,12 +6,11 @@ import { PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { BuyPrincipalTokensForm } from "efi-ui/save/SavePortfolioList/BuyPrincipalTokensForm";
+import { PrincipalTokenInformation } from "efi-ui/save/SavePortfolioList/PrincipalTokenInformation";
 import { SaveTransactionTabId } from "efi-ui/save/SavePortfolioList/SaveTransactionTabId";
-
-import { BuyPrincipalTokensForm } from "./BuyPrincipalTokensForm";
 import { SellPrincipalTokensForm } from "efi-ui/save/SavePortfolioList/SellPrincipalTokensForm";
 import { getIsMature2 } from "efi/tranche/getIsMature";
-import { PrincipalTokenInformation } from "efi-ui/save/SavePortfolioList/PrincipalTokenInformation";
 
 interface SaveTransactionsCardProps {
   library: Web3Provider | undefined;
@@ -21,7 +20,7 @@ interface SaveTransactionsCardProps {
   setActiveTabId: (tabId: SaveTransactionTabId) => void;
 }
 
-export function SaveTransactionsCard(
+export function PortfolioActionsCard(
   props: SaveTransactionsCardProps
 ): ReactElement {
   const {

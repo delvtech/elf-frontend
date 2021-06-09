@@ -8,23 +8,24 @@ import {
   Intent,
   Tag,
 } from "@blueprintjs/core";
+import { Web3Provider } from "@ethersproject/providers";
 import { PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
+import tw from "efi-tailwindcss-classnames";
+import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
+import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
+import { PortfolioActionsCard } from "efi-ui/save/PortfolioActionsCard/PortfolioActionsCard";
+import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { convertEpochSecondsToDate2 } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
-import tw from "efi-tailwindcss-classnames";
-import { getIsMature2 } from "efi/tranche/getIsMature";
-import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
-import { trancheContractsByAddress } from "efi/tranche/tranches";
 import { formatBalance } from "efi/base/formatBalance";
-import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
-import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { isDust } from "efi/coins/isDust";
-import { SaveTransactionsCard } from "./SaveTransactionsCard";
+import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
+import { getIsMature2 } from "efi/tranche/getIsMature";
+import { trancheContractsByAddress } from "efi/tranche/tranches";
+
 import { SaveTransactionTabId } from "./SaveTransactionTabId";
-import { Web3Provider } from "@ethersproject/providers";
 
 interface SavePortfolioCardProps {
   library: Web3Provider | undefined;
@@ -113,7 +114,7 @@ export function SavePortfolioCard(
         </div>
       </Card>
       <Collapse isOpen={isExpanded}>
-        <SaveTransactionsCard
+        <PortfolioActionsCard
           library={library}
           account={account}
           principalToken={principalToken}
