@@ -9,7 +9,7 @@ import {
   usePoolViewPoolActionsTab,
 } from "efi-ui/pools/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
 
-interface GoToMarketButtonProps {
+interface GoToPoolButtonProps {
   poolAddress: string;
   poolAction: PoolAction;
   label: string;
@@ -18,7 +18,7 @@ interface GoToMarketButtonProps {
   outlined?: boolean;
 }
 
-export function GoToMarketButton(props: GoToMarketButtonProps): ReactElement {
+export function GoToPoolButton(props: GoToPoolButtonProps): ReactElement {
   const {
     poolAddress,
     poolAction,

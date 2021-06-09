@@ -29,7 +29,7 @@ import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAss
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { PoolAction } from "efi-ui/pools/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
 import { useShareOfPool } from "efi-ui/pools/useShareOfPool";
-import { GoToMarketButton } from "efi-ui/portfolio/PrincipalTokenCard/GoToMarketButton";
+import { GoToPoolButton } from "efi-ui/pools/GoToPoolButton/GoToPoolButton";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
@@ -204,12 +204,12 @@ export function YieldTokenLPCard({
 
       {/* Quick Actions */}
       <ButtonGroup className={tw("space-x-6")}>
-        <GoToMarketButton
+        <GoToPoolButton
           poolAddress={poolInfo.address}
           poolAction={PoolAction.REMOVE_LIQUIDITY}
           label={t`Unstake`}
         />
-        <GoToMarketButton
+        <GoToPoolButton
           poolAddress={poolInfo.address}
           poolAction={PoolAction.BUY}
           label={t`Go to Market`}

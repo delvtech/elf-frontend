@@ -24,7 +24,7 @@ import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useShareOfPool } from "efi-ui/pools/useShareOfPool";
-import { GoToMarketButton } from "efi-ui/portfolio/PrincipalTokenCard/GoToMarketButton";
+import { GoToPoolButton } from "efi-ui/pools/GoToPoolButton/GoToPoolButton";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { useTrancheUnlockTimestamp } from "efi-ui/tranche/useTrancheUnlockTimestamp";
@@ -194,12 +194,12 @@ export function PrincipalTokenLPCard({
 
       {/* Quick Actions */}
       <ButtonGroup className={tw("space-x-6")}>
-        <GoToMarketButton
+        <GoToPoolButton
           poolAddress={poolInfo.address}
           poolAction={PoolAction.REMOVE_LIQUIDITY}
           label={t`Unstake`}
         />
-        <GoToMarketButton
+        <GoToPoolButton
           poolAddress={poolInfo.address}
           poolAction={PoolAction.BUY}
           label={t`Go to Market`}

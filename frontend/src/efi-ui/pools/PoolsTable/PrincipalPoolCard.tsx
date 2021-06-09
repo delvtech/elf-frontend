@@ -26,7 +26,7 @@ import { useStakingAPY } from "efi-ui/pools/useStakingAPY";
 import { useTokenYield } from "efi-ui/pools/useTokenYield";
 import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
 import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForPool";
-import { GoToMarketButton } from "efi-ui/portfolio/PrincipalTokenCard/GoToMarketButton";
+import { GoToPoolButton } from "efi-ui/pools/GoToPoolButton/GoToPoolButton";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
 import { formatPercent } from "efi/base/formatPercent";
@@ -313,7 +313,7 @@ export function PrincipalPoolCard(
           maturityTime && Date.now() < maturityTime ? "visible" : "invisible"
         )}
       >
-        <GoToMarketButton
+        <GoToPoolButton
           poolAddress={pool.address}
           poolAction={PoolAction.BUY}
           label={t`Buy`}
@@ -321,7 +321,7 @@ export function PrincipalPoolCard(
           small
         />
         {maturityTime && maturityTime > Date.now() ? (
-          <GoToMarketButton
+          <GoToPoolButton
             poolAddress={pool.address}
             poolAction={PoolAction.ADD_LIQUIDITY}
             label={t`Stake`}

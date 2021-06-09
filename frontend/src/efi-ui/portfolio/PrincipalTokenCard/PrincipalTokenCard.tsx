@@ -43,8 +43,8 @@ import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
 import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 
-import { GoToMarketButton } from "./GoToMarketButton";
 import { MaturityTimeBar } from "./MaturityTimeBar";
+import { GoToPoolButton } from "efi-ui/pools/GoToPoolButton/GoToPoolButton";
 
 interface PrincipalTokenCardProps {
   chainId: number | undefined;
@@ -257,12 +257,12 @@ export function PrincipalTokenCard(
           tranche={tranche}
           baseAsset={baseAsset}
         />
-        <GoToMarketButton
+        <GoToPoolButton
           poolAddress={poolInfo.address}
           poolAction={PoolAction.ADD_LIQUIDITY}
           label={t`Stake`}
         />
-        <GoToMarketButton
+        <GoToPoolButton
           poolAddress={poolInfo.address}
           poolAction={PoolAction.SELL}
           label={t`Sell`}

@@ -27,7 +27,7 @@ import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
 import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { PoolAction } from "efi-ui/pools/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
-import { GoToMarketButton } from "efi-ui/portfolio/PrincipalTokenCard/GoToMarketButton";
+import { GoToPoolButton } from "efi-ui/pools/GoToPoolButton/GoToPoolButton";
 import { MaturityTimeBar } from "efi-ui/portfolio/PrincipalTokenCard/MaturityTimeBar";
 import { RedeemYieldTokensButton } from "efi-ui/portfolio/RedeemButton/RedeemYieldTokensButton";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
@@ -245,12 +245,12 @@ export function YieldTokenCard({
             library={library}
             baseAsset={baseAsset}
           />
-          <GoToMarketButton
+          <GoToPoolButton
             poolAddress={pool.address}
             poolAction={PoolAction.ADD_LIQUIDITY}
             label={t`Stake`}
           />
-          <GoToMarketButton
+          <GoToPoolButton
             poolAddress={pool.address}
             poolAction={PoolAction.SELL}
             label={t`Sell`}
