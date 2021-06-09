@@ -21,7 +21,13 @@ export function validateTradeValues(
   let tokenInError;
   let tokenOutError;
 
-  if (!amountIn || !tokenInBalanceOf || !tokenInPoolBalance) {
+  if (
+    !amountIn ||
+    // Check the amount as a number because the user my input "0" or "0.0" etc...
+    !+amountIn ||
+    !tokenInBalanceOf ||
+    !tokenInPoolBalance
+  ) {
     return {
       isValidTokenInValue,
       isValidTokenOutValue,
