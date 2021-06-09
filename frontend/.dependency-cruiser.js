@@ -216,7 +216,7 @@ module.exports = {
       comment: "Importing efiLocalStorage outside of prefs/ is prohibited",
       severity: "error",
       from: {
-        pathNot: `(${["efi/prefs", "setupTests.ts", "efi-ui/prefs"].join(
+        pathNot: `(${["efi/prefs", "setupTests.ts", "efi-ui/prefs", "index.tsx"].join(
           "|"
         )})`,
       },
