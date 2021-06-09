@@ -1,13 +1,13 @@
 import { ReactElement } from "react";
 
-import { Card, Tab, Tabs } from "@blueprintjs/core";
+import { Card } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { PrincipalTokenInfo } from "tokenlists/types";
-import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { BuyPrincipalTokensForm } from "efi-ui/portfolio/PortfolioActionsCard/BuyPrincipalTokensForm";
 import { PortfolioActionTabId } from "efi-ui/portfolio/PortfolioActionsCard/PortfolioActionTabId";
+import { PortfolioActionTabs } from "efi-ui/portfolio/PortfolioActionsCard/PortfolioActionTabs";
 import { PrincipalTokenInformation } from "efi-ui/portfolio/PortfolioActionsCard/PrincipalTokenInformation";
 import { SellPrincipalTokensForm } from "efi-ui/portfolio/PortfolioActionsCard/SellPrincipalTokensForm";
 import { getIsMature2 } from "efi/tranche/getIsMature";
@@ -39,21 +39,12 @@ export function PortfolioActionsCard(
 
   return (
     <Card className={tw("flex", "space-x-6")}>
-      <Tabs
-        id="save-transactions-tab"
-        vertical
-        selectedTabId={activeTabId}
-        className={tw("text-left")}
-        onChange={setActiveTabId}
-      >
-        <Tab id={PortfolioActionTabId.BUY}>{t`Buy`}</Tab>
-        <Tab id={PortfolioActionTabId.SELL}>{t`Sell`}</Tab>
-        <Tab
-          disabled={!isMature}
-          id={PortfolioActionTabId.REDEEM}
-        >{t`Redeem`}</Tab>
-        <Tab id={PortfolioActionTabId.INFO}>{t`More Information`}</Tab>
-      </Tabs>
+      <PortfolioActionTabs
+        activeTabId={activeTabId}
+        onSetActiveTab={setActiveTabId}
+        isRedeemDisabled={!isMature}
+      />
+
       <div className={tw("flex", "flex-col", "flex-1")}>
         {activeTabId === PortfolioActionTabId.BUY ? (
           <BuyPrincipalTokensForm
