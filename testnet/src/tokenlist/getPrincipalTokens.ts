@@ -7,7 +7,11 @@ import { ERC20__factory } from "src/types/factories/ERC20__factory";
 import { Tranche__factory } from "src/types/factories/Tranche__factory";
 import { TrancheFactory__factory } from "src/types/factories/TrancheFactory__factory";
 import { Tranche } from "src/types/Tranche";
-import hardhatSymbolOverrides from "src/addresses/testnet.symbolOverrides.json";
+
+let hardhatSymbolOverrides = {};
+if (process.env.NODE_ENV === "development") {
+  hardhatSymbolOverrides = require("src/addresses/testnet.symbolOverrides.json");
+}
 
 import { PrincipalTokenInfo, TokenListTag } from "src/tokenlist/types";
 import { getTokenSymbolMulti } from "src/tokenlist/erc20";
