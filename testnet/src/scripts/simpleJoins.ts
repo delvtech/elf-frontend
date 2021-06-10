@@ -1,4 +1,4 @@
-import { parseEther, parseUnits } from "ethers/lib/utils";
+import { formatUnits, parseEther, parseUnits } from "ethers/lib/utils";
 import hre from "hardhat";
 
 import { MAX_ALLOWANCE } from "src/maxAllowance";
@@ -13,9 +13,12 @@ async function simpleJoins() {
   const trader1 = await getSigner(SIGNER.TRADER1, hre);
   const {
     balancerVaultContract,
-    usdcContract: baseAssetContract,
-    usdcTrancheContract: trancheContract,
-    marketFyUsdcContract: ptPoolContract,
+    wethContract: baseAssetContract,
+    wethTrancheContract: trancheContract,
+    marketFyWethContract: ptPoolContract,
+    // usdcContract: baseAssetContract,
+    // usdcTrancheContract: trancheContract,
+    // marketFyUsdcContract: ptPoolContract,
     userProxyContract,
   } = getContracts(hre, trader1);
 
@@ -55,7 +58,7 @@ async function simpleJoins() {
     "1000"
   );
 
-  const numBatches = 1;
+  const numBatches = 100;
   let batchCount = 0;
   while (batchCount < numBatches) {
     try {

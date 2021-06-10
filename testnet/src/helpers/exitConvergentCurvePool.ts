@@ -1,5 +1,6 @@
 import { Signer } from "ethers";
 import { defaultAbiCoder, parseUnits } from "ethers/lib/utils";
+import { MAX_ALLOWANCE } from "src/maxAllowance";
 
 import { Vault } from "src/types/Vault";
 
@@ -27,8 +28,8 @@ export async function exitConvergentCurvePool(
   // just do same amounts for each, balancer will figure out how much of each you need.
   const minAmountsOut = [parseToken(minAmountOut), parseToken(minAmountOut)];
   // Balancer V2 vault allows userData as a way to pass props through to pool contracts.  In our
-  // case we need to pass the maxAmountsIn.
-  const userData = defaultAbiCoder.encode(["uint256[]"], [minAmountOut]);
+  // case we need to pass the minAmountsOut.
+  const userData = defaultAbiCoder.encode(["uint256[]"], [minAmountsOut]);
 
   // Whether or not to use balances held in balancer.  Since The Vault has nothing, set this to false.
   const toInternalBalance = false;
