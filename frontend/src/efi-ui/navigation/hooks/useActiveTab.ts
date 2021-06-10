@@ -14,8 +14,8 @@ export function useActiveTab(): Navigation {
     case Navigation.PULSE: {
       return Navigation.PULSE;
     }
-    case Navigation.POOL: {
-      return Navigation.POOL;
+    case Navigation.TRADE: {
+      return Navigation.TRADE;
     }
     case Navigation.RESOURCES: {
       return Navigation.RESOURCES;

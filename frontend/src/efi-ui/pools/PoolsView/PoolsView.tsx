@@ -54,6 +54,7 @@ export function PoolsView(props: PoolsViewProps): ReactElement {
         />
 
         <Tabs
+          large
           selectedTabId={activeTab}
           onChange={setActiveTab as (newTabId: TermToken) => void}
         >
