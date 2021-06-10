@@ -1,7 +1,9 @@
 import { ReactElement } from "react";
+
 import { Button, Card, Intent, Tag } from "@blueprintjs/core";
 import { PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
+
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";

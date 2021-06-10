@@ -23,6 +23,11 @@ export interface NumericInputOptions {
    * more digits than precision, the change is ignored.
    */
   maxPrecision?: number;
+
+  /**
+   * A predicate function to omit calls to onChange
+   */
+  filter?: (inputValue: string) => boolean;
 }
 
 interface UseNumericInput {
@@ -44,6 +49,8 @@ const DEFAULT_NUMERIC_INPUT_OPTIONS: NumericInputOptions = {
   max: 999_999_999_999,
 };
 
+const DEFAULT_FILTER = () => true;
+
 /**
  * A hook to handle limiting the user's interaction with a numeric input.  This can be used on text
  * inputs as well to ensure that only numeric values are allowed.
@@ -53,7 +60,7 @@ export function useNumericInput(
   options = DEFAULT_NUMERIC_INPUT_OPTIONS
 ): UseNumericInput {
   const [stringValue, setStringValueState] = useState("");
-  const { min, max, maxPrecision } = options;
+  const { min, max, maxPrecision, filter = DEFAULT_FILTER } = options;
 
   const setValue = useCallback(
     (inputString: string) => {
@@ -64,11 +71,11 @@ export function useNumericInput(
       }
 
       // or validate and set it
-      if (validateInput(inputString, min, max, maxPrecision)) {
+      if (validateInput(inputString, filter, min, max, maxPrecision)) {
         setStringValueState(inputString);
       }
     },
-    [max, maxPrecision, min]
+    [filter, max, maxPrecision, min]
   );
 
   const onChange = useCallback(
@@ -90,10 +97,15 @@ export function useNumericInput(
 
 export function validateInput(
   inputString: string | undefined = "",
+  filter?: (inputValue: string) => boolean,
   min?: number,
   max?: number,
   maxPrecision?: number
 ): boolean {
+  if (filter && !filter(inputString)) {
+    return false;
+  }
+
   const inputValue = Number(inputString);
   if (!ANY_NUMBER_REGEX.test(inputString)) {
     return false;

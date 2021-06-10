@@ -16,6 +16,7 @@ import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { usePoolTotalSupply } from "efi-ui/pools/usePoolTotalSupply";
 import { useTokenYield } from "efi-ui/pools/useTokenYield";
 import { BuyPrincipalTokensTransactionConfirmationDrawer } from "efi-ui/swaps/BuyPrincipalTokensTransactionConfirmationDrawer/BuyPrincipalTokensTransactionConfirmationDrawer";
+import { TokenAmountInput } from "efi-ui/token/TokenAmountInput/TokenAmountInput";
 import { formatBalance } from "efi/base/formatBalance";
 import { formatPercent } from "efi/base/formatPercent";
 import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
@@ -34,7 +35,6 @@ import { getTokenInfo } from "efi/tokenlists";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
 import { underlyingContractsByAddress } from "efi/underlying/underlying";
-import { TokenAmountInput } from "efi-ui/token/TokenAmountInput/TokenAmountInput";
 
 interface BuyPrincipalTokensFormProps {
   library: Web3Provider | undefined;
