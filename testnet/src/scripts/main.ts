@@ -82,7 +82,7 @@ async function main() {
     "DateString",
     elementSigner
   );
-  const testDate = (await dateLibraryDeployer.deploy()) as TestDate;
+  const testDate = ((await dateLibraryDeployer.deploy()) as unknown) as TestDate;
 
   const trancheFactory = await deployTrancheFactory(
     elementSigner,

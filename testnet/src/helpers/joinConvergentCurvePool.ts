@@ -1,4 +1,4 @@
-import { Signer } from "ethers";
+import { BigNumber, Signer } from "ethers";
 import { defaultAbiCoder, parseUnits } from "ethers/lib/utils";
 
 import { Vault } from "src/types/Vault";

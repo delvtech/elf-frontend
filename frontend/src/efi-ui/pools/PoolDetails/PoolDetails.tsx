@@ -119,7 +119,7 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
           "xl:auto-rows-max"
         )}
       >
-        <PoolCharts pool={pool} />
+        <PoolCharts poolInfo={poolInfo} />
         <PoolActionsCard
           library={library}
           signer={signer}
