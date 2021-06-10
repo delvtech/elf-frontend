@@ -13,7 +13,6 @@ import { LinearScale, TimeScale } from "@nivo/scales";
 import { line } from "@visx/shape/lib/util/D3ShapeFactories";
 
 import tw from "efi-tailwindcss-classnames";
-import { defaultLineData } from "efi-ui/charts/LineChart/defaultLineData";
 
 const margin: Partial<Margin> = { top: 40, right: 40, bottom: 60, left: 80 };
 
@@ -44,7 +43,7 @@ export function LineChart({
   chartType = "lines",
   dataLabel,
   darkMode,
-  data = defaultLineData,
+  data,
 }: LineChartProps): ReactElement {
   const { dataColor, textColor, tooltipBackground, tooltipColor } =
     getColors(darkMode);
@@ -63,11 +62,15 @@ export function LineChart({
       <ResponsiveLine
         lineWidth={2}
         enableSlices={"x"}
+        animate={false}
         data={data}
+        enableCrosshair={true}
+        crosshairType={"x"}
         sliceTooltip={SliceTooltip}
         useMesh={false}
         margin={margin}
         xScale={xScale}
+        xFormat="time:%d.%b %H:%M"
         yScale={yScale}
         yFormat=" >-.2f"
         curve="cardinal"
