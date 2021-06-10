@@ -1,7 +1,7 @@
-import { ReactElement, RefObject, useMemo } from "react";
-import { useMeasure } from "react-use";
+import { ReactElement } from "react";
 
 import { Colors } from "@blueprintjs/core";
+import { AxisProps } from "@nivo/axes";
 import { Margin } from "@nivo/core";
 import {
   CustomLayerProps,
@@ -9,21 +9,14 @@ import {
   Serie,
   SliceTooltipProps,
 } from "@nivo/line";
-import { AxisProps } from "@nivo/axes";
-import { LinearScale } from "@nivo/scales";
+import { LinearScale, TimeScale } from "@nivo/scales";
 import { line } from "@visx/shape/lib/util/D3ShapeFactories";
 
 import tw from "efi-tailwindcss-classnames";
 import { defaultLineData } from "efi-ui/charts/LineChart/defaultLineData";
 
-// make sure parent container have a defined height when using
-// responsive component, otherwise height will be 0 and
-// no chart will be rendered.
-// website examples showcase many properties,
-// you'll often use just a few of them.
+const margin: Partial<Margin> = { top: 40, right: 40, bottom: 60, left: 80 };
 
-const margin: Partial<Margin> = { top: 40, right: 40, bottom: 60, left: 60 };
-const xScale: LinearScale = { type: "linear", min: 0, max: 24 };
 const yScale: LinearScale = {
   type: "linear",
   min: 0,
@@ -33,6 +26,7 @@ const yScale: LinearScale = {
 };
 const axisBottom: AxisProps = {
   tickSize: 5,
+  format: "%H:%M",
   tickPadding: 5,
   tickRotation: 0,
   legendOffset: 36,
@@ -52,8 +46,6 @@ export function LineChart({
   darkMode,
   data = defaultLineData,
 }: LineChartProps): ReactElement {
-  const { refObject, containerStyle } = useContainer();
-
   const { dataColor, textColor, tooltipBackground, tooltipColor } =
     getColors(darkMode);
 
@@ -62,61 +54,54 @@ export function LineChart({
   const CustomLayer = chartType === "lines" ? "lines" : makeBarLayer(dataColor);
   const SliceTooltip = makeSliceToolptip(tooltipBackground, tooltipColor);
 
+  const xScale: TimeScale = {
+    type: "time",
+  };
+
   return (
-    <div className={tw("flex", "w-full", "h-full")} ref={refObject}>
-      <div style={containerStyle}>
-        <ResponsiveLine
-          lineWidth={2}
-          enableSlices={"x"}
-          data={defaultLineData}
-          enableCrosshair={true}
-          crosshairType={"x"}
-          sliceTooltip={SliceTooltip}
-          margin={margin}
-          xScale={xScale}
-          yScale={yScale}
-          yFormat=" >-.2f"
-          curve="cardinal"
-          axisTop={null}
-          axisRight={null}
-          theme={theme}
-          colors={[dataColor, "white"]}
-          axisBottom={axisBottom}
-          axisLeft={{
-            tickSize: 5,
-            tickPadding: 5,
-            tickRotation: 0,
-            legend: dataLabel,
-            legendOffset: -40,
-            legendPosition: "middle",
-          }}
-          enablePoints={false}
-          enableArea={chartType === "lines"}
-          areaBlendMode="normal"
-          layers={[
-            "grid",
-            "markers",
-            "areas",
-            "slices",
-            "crosshair",
-            CustomLayer,
-            "axes",
-            "points",
-            "legends",
-          ]}
-          legends={[]}
-        />
-      </div>
+    <div className={tw("flex", "w-full", "h-full")}>
+      <ResponsiveLine
+        lineWidth={2}
+        enableSlices={"x"}
+        data={data}
+        sliceTooltip={SliceTooltip}
+        useMesh={false}
+        margin={margin}
+        xScale={xScale}
+        yScale={yScale}
+        yFormat=" >-.2f"
+        curve="cardinal"
+        axisTop={null}
+        axisRight={null}
+        theme={theme}
+        colors={[dataColor, "white"]}
+        axisBottom={axisBottom}
+        axisLeft={{
+          tickSize: 5,
+          tickPadding: 5,
+          tickRotation: 0,
+          legend: dataLabel,
+          legendOffset: -60,
+          legendPosition: "middle",
+        }}
+        enablePoints={false}
+        enableArea={chartType === "lines"}
+        areaBlendMode="normal"
+        layers={[
+          "grid",
+          "markers",
+          "areas",
+          "slices",
+          "crosshair",
+          CustomLayer,
+          "axes",
+          "points",
+          "legends",
+        ]}
+        legends={[]}
+      />
     </div>
   );
-}
-
-function useContainer() {
-  const [ref, dimensions] = useMeasure();
-  const refObject = ref as unknown as RefObject<HTMLDivElement>;
-  const { width = 0, height = 0 } = dimensions;
-  const containerStyle = useMemo(() => ({ height, width }), [height, width]);
-  return { refObject, containerStyle };
 }
 
 function getColors(darkMode: boolean | undefined) {
@@ -171,8 +156,8 @@ function makeBarLayer(dataColor: string) {
     const pathStrings = serieData
       .map((datum) => {
         return lineGenerator([
-          [xScale(datum.x as number), yScale(0)],
-          [xScale(datum.x as number), yScale(datum.y as number)],
+          [xScale(datum.x as Date), yScale(0)],
+          [xScale(datum.x as Date), yScale(datum.y as number)],
         ]);
       })
       .filter(Boolean) as string[];
@@ -180,7 +165,12 @@ function makeBarLayer(dataColor: string) {
     return (
       <g>
         {pathStrings.map((pathString) => (
-          <path d={pathString} stroke={dataColor} strokeWidth={2} />
+          <path
+            style={{ pointerEvents: "none" }}
+            d={pathString}
+            stroke={dataColor}
+            strokeWidth={2}
+          />
         ))}
       </g>
     );

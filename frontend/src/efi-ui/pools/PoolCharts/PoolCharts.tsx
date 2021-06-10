@@ -10,15 +10,16 @@ import { useVolumeHistoryForPool } from "efi-ui/pools/PoolCharts/useLiquidityVol
 import { usePoolCreatedAt } from "efi-ui/pools/usePoolCreatedAt";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
-import { principalPoolContractsByAddress } from "efi/pools/ccpool";
+import { getPoolContract } from "efi/pools/getPoolContract";
 import { PoolContract } from "efi/pools/PoolContract";
 import { PoolInfo } from "efi/pools/PoolInfo";
-import { yieldPoolContractsByAddress } from "efi/pools/weightedPool";
 
 import { useLiquidityHistoryForPool } from "./useLiquidityHistoryForPool";
 
-// const getYValue: (data: TimeData) => number = ({ value }) => value;
-// const getBarXValue: (data: TimeData) => Date = ({ timeMs }) => new Date(timeMs);
+export interface TimeData {
+  timeMs: number;
+  value: number;
+}
 enum ChartType {
   LIQUIDITY = "liquidity",
   VOLUME = "volume",
@@ -28,28 +29,22 @@ interface PoolChartsProps {
   poolInfo: PoolInfo;
 }
 export function PoolCharts({ poolInfo }: PoolChartsProps): ReactElement {
-  const pool = getPoolContract(poolInfo);
+  const pool = getPoolContract(poolInfo.address);
   const { isDarkMode } = useDarkMode();
   const {
     volumeData,
+    liquidityData,
     setChart,
     showLiquidityChart,
     showVolumeChart,
     poolAtLeastOneDayOld,
   } = usePoolCharts(pool);
 
-  const liquidityData = useLiquidityHistoryForPool(pool);
-  const lineData =
-    liquidityData?.map(({ value, timeMs }) => ({
-      x: timeMs,
-      y: value,
-    })) ?? [];
-  const lineSerie: Serie[] = [
-    {
-      id: "liquidity",
-      data: lineData,
-    },
-  ];
+  const liquiditySerie = convertTimeDataToSerie(
+    liquidityData ?? [],
+    "liquidity"
+  );
+  const volumeSerie = convertTimeDataToSerie(volumeData ?? [], "volume");
 
   return (
     <div
@@ -80,28 +75,28 @@ export function PoolCharts({ poolInfo }: PoolChartsProps): ReactElement {
             {showLiquidityChart ? (
               <ChartMessages
                 poolAtLeastOneDayOld={poolAtLeastOneDayOld}
-                hasData={!!lineSerie.length}
+                hasData={!!liquidityData?.length}
               >
                 <LineChart
                   key={isDarkMode ? "a" : "b"}
                   chartType="lines"
                   dataLabel={t`liquidity`}
                   darkMode={isDarkMode}
-                  data={lineSerie}
+                  data={liquiditySerie}
                 />
               </ChartMessages>
             ) : null}
             {showVolumeChart ? (
               <ChartMessages
                 poolAtLeastOneDayOld={poolAtLeastOneDayOld}
-                hasData={!!lineSerie?.length}
+                hasData={!!volumeData?.length}
               >
                 <LineChart
                   key={isDarkMode ? "a" : "b"}
                   chartType="bars"
                   dataLabel={t`volume`}
                   darkMode={isDarkMode}
-                  data={lineSerie}
+                  data={volumeSerie}
                 />
               </ChartMessages>
             ) : null}
@@ -144,15 +139,6 @@ function usePoolAtLeastOneDayOld(pool: PoolContract) {
   // return hasEnoughPoolData;
 }
 
-// temporary until other PR lands
-function getPoolContract(poolInfo: PoolInfo) {
-  const pools = {
-    ...principalPoolContractsByAddress,
-    ...yieldPoolContractsByAddress,
-  };
-  return pools[poolInfo.address];
-}
-
 interface ChartMessagesProps {
   poolAtLeastOneDayOld: boolean;
   hasData: boolean;
@@ -188,4 +174,22 @@ function ChartMessages(props: ChartMessagesProps): ReactElement {
   }
 
   return <div className={tw("w-full", "h-full")}>{children}</div>;
+}
+
+function convertTimeDataToSerie(timeData: TimeData[], id: string): Serie[] {
+  const lineData =
+    timeData?.map(({ value, timeMs }) => {
+      return {
+        x: new Date(timeMs),
+        y: value,
+      };
+    }) ?? [];
+  const lineSerie: Serie[] = [
+    {
+      id,
+      data: lineData,
+    },
+  ];
+
+  return lineSerie;
 }
