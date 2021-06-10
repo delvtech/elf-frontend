@@ -13,8 +13,16 @@ import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getIsMature2 } from "efi/tranche/getIsMature";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
 
-export function PortfolioSummaryCard(
-  props: PortfolioSummaryCardProps
+interface PrincipalTokenSummaryCardProps {
+  account: string | null | undefined;
+  principalToken: PrincipalTokenInfo;
+  isExpanded: boolean;
+  onExpandClose: () => void;
+  onExpandOpen: () => void;
+}
+
+export function PrincipalTokenSummaryCard(
+  props: PrincipalTokenSummaryCardProps
 ): ReactElement {
   const {
     account,
@@ -69,11 +77,4 @@ export function PortfolioSummaryCard(
       </div>
     </Card>
   );
-}
-interface PortfolioSummaryCardProps {
-  account: string | null | undefined;
-  principalToken: PrincipalTokenInfo;
-  isExpanded: boolean;
-  onExpandClose: () => void;
-  onExpandOpen: () => void;
 }

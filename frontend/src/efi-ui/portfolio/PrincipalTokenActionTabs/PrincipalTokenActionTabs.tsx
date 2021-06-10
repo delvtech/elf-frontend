@@ -4,19 +4,19 @@ import { Tab, Tabs } from "@blueprintjs/core";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { PortfolioActionTabId } from "efi-ui/portfolio/PortfolioActionsCard/PortfolioActionTabId";
+import { PrincipalTokenActionTabId } from "efi-ui/portfolio/PrincipalTokenActionTabs/tabs";
 
 interface PortfolioActionTabsProps {
-  activeTabId: PortfolioActionTabId;
+  activeTabId: PrincipalTokenActionTabId;
   onSetActiveTab: (
-    newTabId: PortfolioActionTabId,
-    prevTabId: PortfolioActionTabId
+    newTabId: PrincipalTokenActionTabId,
+    prevTabId: PrincipalTokenActionTabId
   ) => void;
 
   isRedeemDisabled?: boolean;
 }
 
-export function PortfolioActionTabs(
+export function PrincipalTokenActionTabs(
   props: PortfolioActionTabsProps
 ): ReactElement {
   const { activeTabId, onSetActiveTab, isRedeemDisabled } = props;
@@ -28,13 +28,13 @@ export function PortfolioActionTabs(
       className={tw("text-left")}
       onChange={onSetActiveTab}
     >
-      <Tab id={PortfolioActionTabId.BUY}>{t`Buy`}</Tab>
-      <Tab id={PortfolioActionTabId.SELL}>{t`Sell`}</Tab>
+      <Tab id={PrincipalTokenActionTabId.BUY}>{t`Buy`}</Tab>
+      <Tab id={PrincipalTokenActionTabId.SELL}>{t`Sell`}</Tab>
       <Tab
-        id={PortfolioActionTabId.REDEEM}
+        id={PrincipalTokenActionTabId.REDEEM}
         disabled={isRedeemDisabled}
       >{t`Redeem`}</Tab>
-      <Tab id={PortfolioActionTabId.INFO}>{t`More Information`}</Tab>
+      <Tab id={PrincipalTokenActionTabId.INFO}>{t`More Information`}</Tab>
     </Tabs>
   );
 }

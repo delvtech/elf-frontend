@@ -5,9 +5,9 @@ import { Web3Provider } from "@ethersproject/providers";
 import { PrincipalTokenInfo } from "tokenlists/types";
 
 import tw from "efi-tailwindcss-classnames";
-import { PortfolioActionsCard } from "efi-ui/portfolio/PortfolioActionsCard/PortfolioActionsCard";
-import { PortfolioActionTabId } from "efi-ui/portfolio/PortfolioActionsCard/PortfolioActionTabId";
-import { PortfolioSummaryCard } from "efi-ui/save/SavePortfolioList/PortfolioSummaryCard";
+import { PrincipalTokenActionsCard } from "efi-ui/portfolio/PrincipalTokenActionsCard/PrincipalTokenActionsCard";
+import { PrincipalTokenActionTabId } from "efi-ui/portfolio/PrincipalTokenActionTabs/tabs";
+import { PrincipalTokenSummaryCard } from "efi-ui/portfolio/PrincipalTokenSummaryCard/PrincipalTokenSummaryCard";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { isDust } from "efi/coins/isDust";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
@@ -34,8 +34,8 @@ export function SavePortfolioCard(
     principalToken: { address, decimals },
   } = props;
 
-  const [activeTabId, setActiveTabId] = useState<PortfolioActionTabId>(
-    PortfolioActionTabId.BUY
+  const [activeTabId, setActiveTabId] = useState<PrincipalTokenActionTabId>(
+    PrincipalTokenActionTabId.BUY
   );
 
   const tranche = trancheContractsByAddress[address];
@@ -54,7 +54,7 @@ export function SavePortfolioCard(
       elevation={isExpanded ? Elevation.THREE : Elevation.ZERO}
       className={tw("p-0")}
     >
-      <PortfolioSummaryCard
+      <PrincipalTokenSummaryCard
         account={account}
         principalToken={principalToken}
         isExpanded={isExpanded}
@@ -63,7 +63,7 @@ export function SavePortfolioCard(
       />
 
       <Collapse isOpen={isExpanded}>
-        <PortfolioActionsCard
+        <PrincipalTokenActionsCard
           library={library}
           account={account}
           principalToken={principalToken}
