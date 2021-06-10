@@ -108,23 +108,11 @@ export function SidebarNavigation({
             }
           />
           <Tab
-            id={Navigation.PRINCIPAL_POOLS}
+            id={Navigation.TRADE}
             title={
               <div className={tabTitleClassName}>
                 <Icon icon={IconNames.SHOP} iconSize={IconSize.STANDARD} />
-                <span>{t`Principal`}</span>
-              </div>
-            }
-          />
-          <Tab
-            id={Navigation.YIELD_POOLS}
-            title={
-              <div className={tabTitleClassName}>
-                <Icon
-                  icon={IconNames.PERCENTAGE}
-                  iconSize={IconSize.STANDARD}
-                />
-                <span>{t`Yield`}</span>
+                <span>{t`Trade`}</span>
               </div>
             }
           />

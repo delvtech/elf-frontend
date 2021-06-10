@@ -4,9 +4,7 @@ export enum Navigation {
   PORTFOLIO = "portfolio",
 
   DEPOSIT = "deposit",
-  PRINCIPAL_POOLS = "principal",
-  YIELD_POOLS = "yield",
-  POOL = "pool",
+  TRADE = "pools",
   EARN = "earn",
   SAVE = "save",
   RESOURCES = "resources",

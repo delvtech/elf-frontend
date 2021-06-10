@@ -1,4 +1,4 @@
-import React, { Fragment, ReactElement } from "react";
+import React, { Fragment, ReactElement, useState } from "react";
 import { Helmet } from "react-helmet";
 
 import { Web3Provider } from "@ethersproject/providers";
@@ -10,19 +10,23 @@ import tw from "efi-tailwindcss-classnames";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { PoolsTable } from "efi-ui/pools/PoolsTable/PoolsTable";
 import { useSigner } from "efi-ui/provider/useBlockFromTag/useSigner/useSigner";
+import { Tab, Tabs } from "@blueprintjs/core";
 
+type TermToken = "principal" | "yield";
 interface PoolsViewProps extends RouteComponentProps {}
 
 export function PoolsView(props: PoolsViewProps): ReactElement {
   const { library, account } = useWeb3React<Web3Provider>();
-
   const signer = useSigner(account, library);
 
-  const isYieldPage = props.path === "yield";
-  const title = isYieldPage ? t`Yield Token Pools` : t`Principal Token Pools`;
-  const subtitle = isYieldPage
-    ? t`Buy and sell yield tokens or provide liquidity by staking in Element yield pools.`
-    : t`Buy and sell principal or provide liquidity by staking in Element principal pools.`;
+  const [activeTab, setActiveTab] = useState<TermToken>("principal");
+
+  const title =
+    activeTab === "yield" ? t`Yield Token Pools` : t`Principal Token Pools`;
+  const subtitle =
+    activeTab === "yield"
+      ? t`Buy and sell yield tokens or provide liquidity by staking in Element yield pools.`
+      : t`Buy and sell principal or provide liquidity by staking in Element principal pools.`;
 
   return (
     <Fragment>
@@ -49,10 +53,19 @@ export function PoolsView(props: PoolsViewProps): ReactElement {
           className={tw("text-center")}
         />
 
+        <Tabs
+          large
+          selectedTabId={activeTab}
+          onChange={setActiveTab as (newTabId: TermToken) => void}
+        >
+          <Tab id={"principal"} title={t`Principal Tokens`} />
+          <Tab id={"yield"} title={t`Yield Tokens`} />
+        </Tabs>
+
         <PoolsTable
           signerOrProvider={signer}
           className={tw("w-full")}
-          isYieldPools={isYieldPage}
+          isYieldPools={activeTab === "yield"}
         />
       </div>
     </Fragment>

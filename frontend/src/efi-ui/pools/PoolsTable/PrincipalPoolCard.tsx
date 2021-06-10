@@ -223,7 +223,6 @@ export function PrincipalPoolCard(
           )}
         >
           <LabeledText
-            large
             text={
               <Link
                 className={tw("flex", "space-x-2")}
@@ -245,21 +244,16 @@ export function PrincipalPoolCard(
             "flex-grow"
           )}
         >
-          <LabeledText large text={t`${termLength} Day`} label={t`Term`} />
+          <LabeledText text={t`${termLength} Day`} label={t`Term`} />
         </div>
         <div className={tw(cellClassName, "col-span-2")}>
           <LabeledText
-            large
             text={formatMoney(liquidity, { wholeAmounts: true })}
             label={t`Pool Liquidity`}
           />
         </div>
         <div className={tw(cellClassName, "col-span-2", "xl:col-span-1")}>
-          <LabeledText
-            large
-            text={formatPercent(fixedYield)}
-            label={t`Fixed APY`}
-          />
+          <LabeledText text={formatPercent(fixedYield)} label={t`Fixed APY`} />
         </div>
         <div
           className={tw(
@@ -270,7 +264,6 @@ export function PrincipalPoolCard(
           )}
         >
           <LabeledText
-            large
             text={formatPercent(stakingYield)}
             label={t`Stake APY`}
           />
@@ -286,7 +279,6 @@ export function PrincipalPoolCard(
           )}
         >
           <LabeledText
-            large
             text={t`${principalPriceFormatted}`}
             label={t`Price (${baseAssetSymbol})`}
           />

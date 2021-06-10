@@ -51,11 +51,11 @@ export function LabeledText({
   large = false,
 }: LabeledTextProps): ReactElement {
   return (
-    <div className={tw("flex", "items-center")}>
+    <div className={tw("flex", "justify-center", "items-center", "w-full")}>
       {icon && <div className={iconClassName}>{icon}</div>}
       <div
         className={classNames(
-          tw("flex", "flex-col", "justify-center"),
+          tw("flex", "flex-col", "justify-center", "items-center"),
           className
         )}
       >
