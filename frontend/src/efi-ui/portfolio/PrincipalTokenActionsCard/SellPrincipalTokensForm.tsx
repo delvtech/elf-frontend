@@ -1,17 +1,18 @@
 import { ReactElement } from "react";
+
 import { Button, Intent, Tag } from "@blueprintjs/core";
-import { t } from "ttag";
-import tw from "efi-tailwindcss-classnames";
-import { SaveInput } from "efi-ui/save/SavePortfolioList/SaveInput";
-import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
-import { PrincipalTokenInfo } from "tokenlists/types";
-import { SwapKind } from "efi-ui/balancer/SwapKind";
 import { Web3Provider } from "@ethersproject/providers";
+import { PrincipalTokenInfo } from "tokenlists/types";
+import { t } from "ttag";
+
+import tw from "efi-tailwindcss-classnames";
+import { TokenAmountInput } from "efi-ui/token/TokenAmountInput/TokenAmountInput";
+import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
-import { trancheContractsByAddress } from "efi/tranche/tranches";
 import { formatBalance } from "efi/base/formatBalance";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { getBaseAssetForTranche } from "efi/tranche/baseAssets";
+import { trancheContractsByAddress } from "efi/tranche/tranches";
 
 interface SellPrincipalTokensFormProps {
   library: Web3Provider | undefined;
@@ -50,12 +51,11 @@ export function SellPrincipalTokensForm(
           className={tw("pb-4")}
         >{t`Sell your principal tokens for ${baseAssetSymbol}`}</span>
         <div className={tw("grid", "grid-cols-4", "gap-3")}>
-          <SaveInput
-            swapKind={SwapKind.GIVEN_IN}
+          <TokenAmountInput
             className={tw("col-span-3")}
             isValid
             showMaxButton
-            assetIcon={
+            leftIcon={
               <Tag minimal large className={tw("ml-2")}>
                 {ptSymbol}
               </Tag>

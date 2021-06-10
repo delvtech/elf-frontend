@@ -15,10 +15,11 @@ import { useCryptoBalanceOf } from "efi-ui/crypto/hooks/useCryptoBalance/useCryp
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { usePoolTotalSupply } from "efi-ui/pools/usePoolTotalSupply";
 import { useTokenYield } from "efi-ui/pools/useTokenYield";
-import { SaveInput } from "efi-ui/save/SavePortfolioList/SaveInput";
+import { BuyPrincipalTokensTransactionConfirmationDrawer } from "efi-ui/swaps/BuyPrincipalTokensTransactionConfirmationDrawer/BuyPrincipalTokensTransactionConfirmationDrawer";
 import { formatBalance } from "efi/base/formatBalance";
 import { formatPercent } from "efi/base/formatPercent";
 import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
+import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
@@ -31,10 +32,9 @@ import { getPoolContract } from "efi/pools/getPoolContract";
 import { useParseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { getTokenInfo } from "efi/tokenlists";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
-import { underlyingContractsByAddress } from "efi/underlying/underlying";
-import { BuyPrincipalTokensTransactionConfirmationDrawer } from "efi-ui/swaps/BuyPrincipalTokensTransactionConfirmationDrawer/BuyPrincipalTokensTransactionConfirmationDrawer";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
-import { CryptoAsset } from "efi/crypto/CryptoAsset";
+import { underlyingContractsByAddress } from "efi/underlying/underlying";
+import { TokenAmountInput } from "efi-ui/token/TokenAmountInput/TokenAmountInput";
 
 interface BuyPrincipalTokensFormProps {
   library: Web3Provider | undefined;
@@ -126,14 +126,13 @@ export function BuyPrincipalTokensForm(
           >{t`Buy principal tokens with your ${baseAssetSymbol}`}</span>
           <span className={tw("pb-4")}>{t`Current APY: ${formattedAPY}`}</span>
           <div className={tw("grid", "grid-cols-4", "gap-3")}>
-            <SaveInput
-              swapKind={SwapKind.GIVEN_IN}
+            <TokenAmountInput
               className={tw("col-span-3")}
               placeholder="0.00"
               isValid={isValidTokenInValue && isValidTokenOutValue}
               errorMessage={tokenInError || tokenOutError}
               showMaxButton
-              assetIcon={
+              leftIcon={
                 BaseAssetIcon ? (
                   <BaseAssetIcon
                     height={20}
