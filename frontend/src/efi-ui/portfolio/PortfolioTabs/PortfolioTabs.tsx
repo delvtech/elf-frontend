@@ -29,7 +29,7 @@ export function PortfolioTabs({
     <Tabs
       id="portfolio-tabs"
       large
-      className={tw("flex", "justify-center")}
+      className={tw("flex", "justify-center", "items-center")}
       renderActiveTabPanelOnly
       onChange={onChangeTab}
       selectedTabId={activePortfolioTabId}
