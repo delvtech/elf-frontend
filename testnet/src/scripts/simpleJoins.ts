@@ -16,6 +16,7 @@ async function simpleJoins() {
     wethContract: baseAssetContract,
     wethTrancheContract: trancheContract,
     marketFyWethContract: ptPoolContract,
+    // TODO: make the baseAsset or pool configurable for this script
     // usdcContract: baseAssetContract,
     // usdcTrancheContract: trancheContract,
     // marketFyUsdcContract: ptPoolContract,

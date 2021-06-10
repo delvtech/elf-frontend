@@ -154,7 +154,7 @@ function ChartMessages(props: ChartMessagesProps): ReactElement {
 
   let message = t`No data available for chart`;
   if (!poolAtLeastOneDayOld) {
-    message = t`Charts Available After 24 Hours of Activity`;
+    message = t`Charts available after 24 hours of activity`;
   }
 
   if (!poolAtLeastOneDayOld || !hasData) {

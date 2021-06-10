@@ -51,7 +51,7 @@ export function LineChart({
   const theme = getTheme(textColor);
 
   const CustomLayer = chartType === "lines" ? "lines" : makeBarLayer(dataColor);
-  const SliceTooltip = makeSliceToolptip(tooltipBackground, tooltipColor);
+  const SliceTooltip = makeSliceTooltip(tooltipBackground, tooltipColor);
 
   const xScale: TimeScale = {
     type: "time",
@@ -135,7 +135,7 @@ function getTheme(textColor: string) {
   };
 }
 
-function makeSliceToolptip(tooltipBackground: string, tooltipColor: string) {
+function makeSliceTooltip(tooltipBackground: string, tooltipColor: string) {
   return ({ slice }: SliceTooltipProps) => {
     return (
       <div
