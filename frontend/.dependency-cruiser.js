@@ -187,8 +187,7 @@ module.exports = {
     {
       name: "efi-not-to-portfolio",
       comment:
-        "Importing from portfolio/ is prohibited outside of the app/ and save/ directories. Perhaps you want " +
-        "to import something specific from wallet/ or markets/ instead?",
+        "Importing from portfolio/ is prohibited outside of the app/ and save/ directories.",
       severity: "error",
       from: {
         pathNot: `(${["efi-ui/app", "efi-ui/portfolio", "efi-ui/save"].join(
@@ -197,6 +196,18 @@ module.exports = {
       },
       to: {
         path: "efi-ui/portfolio",
+      },
+    },
+    {
+      name: "efi-not-to-save",
+      comment:
+        "Importing from save/ is prohibited outside of the app/ and save/ directories.",
+      severity: "error",
+      from: {
+        pathNot: `(${["efi-ui/app", "efi-ui/save"].join("|")})`,
+      },
+      to: {
+        path: "efi-ui/save",
       },
     },
 
@@ -216,9 +227,12 @@ module.exports = {
       comment: "Importing efiLocalStorage outside of prefs/ is prohibited",
       severity: "error",
       from: {
-        pathNot: `(${["efi/prefs", "setupTests.ts", "efi-ui/prefs", "index.tsx"].join(
-          "|"
-        )})`,
+        pathNot: `(${[
+          "efi/prefs",
+          "setupTests.ts",
+          "efi-ui/prefs",
+          "index.tsx",
+        ].join("|")})`,
       },
       to: {
         path: "efi/base/localStorage.ts",
