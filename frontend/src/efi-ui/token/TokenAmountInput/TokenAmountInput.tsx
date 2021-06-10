@@ -1,6 +1,6 @@
 import { ReactElement, useCallback } from "react";
 
-import { Colors, FormGroup, InputGroup, Intent, Tag } from "@blueprintjs/core";
+import { FormGroup, InputGroup, Intent, Tag } from "@blueprintjs/core";
 import classNames from "classnames";
 import { BigNumber } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
@@ -15,39 +15,34 @@ import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
 interface TokenAmountInputProps {
   className?: string;
   errorMessage?: string;
-  isValid: boolean;
   leftIcon?: ReactElement;
   onValueChange: (value: string) => void;
   placeholder?: string;
   showMaxButton: boolean;
   value: string;
-  valueBalanceOf: BigNumber | undefined;
-  valueDecimals: number | undefined;
+  maxAmount: BigNumber | undefined;
+  tokenDecimals: number | undefined;
 }
 
 export function TokenAmountInput(props: TokenAmountInputProps): ReactElement {
   const {
     className,
     value,
-    isValid,
     errorMessage,
     showMaxButton,
     placeholder,
     onValueChange: onChangeFromProps,
     leftIcon,
-    valueDecimals,
-    valueBalanceOf,
+    tokenDecimals,
+    maxAmount,
   } = props;
   const { isDarkMode } = useDarkMode();
 
-  const onChange = useOnInputChange(onChangeFromProps, valueDecimals);
+  const onChange = useOnInputChange(onChangeFromProps, tokenDecimals);
 
-  // TODO: disable setting max value if the user balance >  pool balance.  better yet, disable max
-  // value if the trade would cause too much slippage.
-  // sets the max value for the input
   const setMaxValue = useSetMaxValue(
-    valueBalanceOf, // the max value
-    valueDecimals,
+    maxAmount, // the max value
+    tokenDecimals,
     onChangeFromProps
   );
 
@@ -62,18 +57,14 @@ export function TokenAmountInput(props: TokenAmountInputProps): ReactElement {
     </div>
   ) : undefined;
 
-  const helperText = isValid ? null : (
-    <div
-      style={{ color: isValid || Colors.RED3 }}
-      className={tw("w-full", "text-right")}
-    >
-      {errorMessage}
-    </div>
-  );
+  const helperText = errorMessage ? (
+    <div className={tw("w-full", "text-right")}>{errorMessage}</div>
+  ) : null;
 
   return (
     <FormGroup
       className={classNames(tw("w-full", "mb-0"), className)}
+      intent={errorMessage ? Intent.DANGER : Intent.NONE}
       helperText={helperText}
     >
       <InputGroup
@@ -82,7 +73,7 @@ export function TokenAmountInput(props: TokenAmountInputProps): ReactElement {
           [styles.investmentAmountLightMode]: !isDarkMode,
         })}
         value={value || ""}
-        intent={isValid ? undefined : Intent.DANGER}
+        intent={errorMessage ? Intent.DANGER : Intent.NONE}
         leftElement={leftIcon}
         rightElement={maxButtonElement}
         onChange={onChange}

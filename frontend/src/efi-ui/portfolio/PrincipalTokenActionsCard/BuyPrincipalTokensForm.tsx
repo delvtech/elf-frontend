@@ -95,12 +95,12 @@ export function BuyPrincipalTokensForm(
     poolInfo,
     baseAssetInputValue
   );
-  const {
-    isValidTokenInValue,
-    isValidTokenOutValue,
-    tokenOutError,
-    tokenInError,
-  } = useValidateInput(library, account, poolInfo, baseAssetInputValue);
+  const { tokenOutError, tokenInError } = useValidateInput(
+    library,
+    account,
+    poolInfo,
+    baseAssetInputValue
+  );
 
   const buttonDisabled =
     !!tokenInError || !!tokenOutError || !baseAssetInputValue;
@@ -129,7 +129,6 @@ export function BuyPrincipalTokensForm(
             <TokenAmountInput
               className={tw("col-span-3")}
               placeholder="0.00"
-              isValid={isValidTokenInValue && isValidTokenOutValue}
               errorMessage={tokenInError || tokenOutError}
               showMaxButton
               leftIcon={
@@ -142,8 +141,8 @@ export function BuyPrincipalTokensForm(
                 ) : undefined
               }
               value={baseAssetInputValue}
-              valueBalanceOf={baseAssetBalanceOf}
-              valueDecimals={baseAssetDecimals}
+              maxAmount={baseAssetBalanceOf}
+              tokenDecimals={baseAssetDecimals}
               onValueChange={onBaseAssetChange}
             />
             <div>

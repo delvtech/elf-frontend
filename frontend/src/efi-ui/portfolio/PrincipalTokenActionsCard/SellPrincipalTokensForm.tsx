@@ -53,7 +53,6 @@ export function SellPrincipalTokensForm(
         <div className={tw("grid", "grid-cols-4", "gap-3")}>
           <TokenAmountInput
             className={tw("col-span-3")}
-            isValid
             showMaxButton
             leftIcon={
               <Tag minimal large className={tw("ml-2")}>
@@ -61,8 +60,8 @@ export function SellPrincipalTokensForm(
               </Tag>
             }
             value={ptInputValue}
-            valueBalanceOf={ptBalanceOf}
-            valueDecimals={ptDecimals}
+            maxAmount={ptBalanceOf}
+            tokenDecimals={ptDecimals}
             onValueChange={onPrincipalTokenInputChange}
           />
           <div>
