@@ -186,7 +186,7 @@ export function InterestPoolCard(
         )}
       >
         <div
-          className={tw(cellClassName, "col-span-1", "xl:ml-4", "items-center")}
+          className={tw(cellClassName, "col-span-1", "xl:ml-4", "items-start")}
         >
           {BaseAssetIcon && baseAsset?.type === CryptoAssetType.ETHEREUM ? (
             <div
@@ -216,19 +216,26 @@ export function InterestPoolCard(
                   "shadow-sm"
                 )}
               >
-                <BaseAssetIcon height={18} width={18} />
+                <BaseAssetIcon height={24} width={24} />
               </div>
             </div>
           ) : BaseAssetIcon ? (
             <div className={tw("ml-2")}>
-              <BaseAssetIcon height={40} width={40} />
+              <BaseAssetIcon height={46} width={46} />
             </div>
           ) : null}
         </div>
         <div
-          className={tw(cellClassName, "col-span-2", "pl-2", "xl:col-span-1")}
+          className={tw(
+            cellClassName,
+            "flex-col",
+            "col-span-2",
+            "space-y-2",
+            "xl:col-span-2"
+          )}
         >
           <LabeledText
+            className={tw("w-full")}
             text={
               <Link
                 className={tw("flex", "space-x-2")}
@@ -238,11 +245,10 @@ export function InterestPoolCard(
                 {`${baseAssetSymbol} - ${termAssetSymbol}`}
               </Link>
             }
-            label={t`tokens`}
+            label={t`Token Pool`}
           />
-        </div>
-        <div className={tw(cellClassName, "col-span-2", "xl:col-span-1")}>
           <LabeledText
+            className={tw("w-full")}
             text={t`Yearn ${displayName} ${type}`}
             label={t`Vault`}
           />
