@@ -223,7 +223,7 @@ function useValidateInput(
 function useCalculatePrincipalTokenAmountOut(
   poolInfo: PrincipalPoolTokenInfo,
   amountIn: string
-) {
+): string {
   const {
     address: poolAddress,
     extensions: { bond, underlying, expiration, unitSeconds },
