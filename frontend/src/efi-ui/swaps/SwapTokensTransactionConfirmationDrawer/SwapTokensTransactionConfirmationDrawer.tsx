@@ -1,7 +1,6 @@
 import React, { ReactElement, useCallback, useMemo } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
-import { AbstractConnector } from "@web3-react/abstract-connector";
 import { Signer } from "ethers";
 import { formatEther, parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
@@ -12,29 +11,28 @@ import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { useBatchSwapGivenIn } from "efi-ui/balancer/useBatchSwapGivenIn/useBatchSwapGivenIn";
 import { parseQueryBatchSwapResult } from "efi-ui/balancer/useQueryBatchSwap/parseQueryBatchSwapResult";
 import { useQueryBatchSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
-import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 import { usePoolSwapFee } from "efi-ui/pools/usePoolSwapFee/usePoolSwapFee";
+import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
 import { SwapDetailsForm } from "efi-ui/swaps/SwapDetailsPreview/SwapDetailsForm";
 import { SwapTokenDetails } from "efi-ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensDetails";
 import { TokenIcon } from "efi-ui/token/TokenIcon";
 import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/TransactionDrawer";
 import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
+import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { calculatePurchasePrice } from "efi/pools/calculatePurchasePrice";
 import { calculateSlippage } from "efi/pools/calculateSlippage";
 import { isConvergentCurvePool, PoolContract } from "efi/pools/PoolContract";
 import { getAmountOutWithTolerance } from "efi/trade/getAmountOutWithTolerance";
 import { TermAssetType } from "efi/tranche/TermAssetType";
-import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
 
 interface SwapTokensTransactionConfirmationDrawerProps {
-  chainId: number | undefined;
   account: string | null | undefined;
-  walletConnectionActive: boolean;
-  connector: AbstractConnector | undefined;
   library: Web3Provider | undefined;
   pool: PoolContract | undefined;
+
+  buttonLabel?: string;
 
   amountIn: string;
   amountOut: string;
@@ -69,6 +67,7 @@ export function SwapTokensTransactionConfirmationDrawer({
   tokenOutSymbol,
   tokenOutDecimals,
   tokenOutIcon,
+  buttonLabel = t`Trade`,
   spotPrice,
   amountIn,
   amountOut,
@@ -162,7 +161,7 @@ export function SwapTokensTransactionConfirmationDrawer({
       account={account}
       library={library}
       onConfirmTransaction={onConfirmSwapTokens}
-      buttonLabel={t`Trade`}
+      buttonLabel={buttonLabel}
       walletApprovalInfos={walletApprovalInfos}
       transactionPending={isLoading}
       transactionFailed={isError}
@@ -172,6 +171,7 @@ export function SwapTokensTransactionConfirmationDrawer({
           amountIn={amountIn}
           amountOut={amountOut}
           assetInIcon={tokenInIcon}
+          assetOutIcon={tokenOutIcon}
           assetInSymbol={tokenInSymbol}
           assetOutSymbol={tokenOutSymbol}
         >

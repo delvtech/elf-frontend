@@ -1,22 +1,29 @@
-import { ReactElement } from "react";
+import { Fragment, ReactElement, useCallback, useState } from "react";
 
 import { Button, Intent, Tag } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
+import { ConvergentCurvePool } from "elf-contracts/types";
 import { formatUnits } from "ethers/lib/utils";
 import { PrincipalPoolTokenInfo, PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
 import tw from "efi-tailwindcss-classnames";
+import { SwapKind } from "efi-ui/balancer/SwapKind";
+import { getCalcSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
+import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
+import { usePoolSpotPrice2 } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { usePoolTotalSupply } from "efi-ui/pools/usePoolTotalSupply";
+import { SwapTokensTransactionConfirmationDrawer } from "efi-ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensTransactionConfirmationDrawer";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { TokenAmountInput } from "efi-ui/token/TokenAmountInput/TokenAmountInput";
 import { formatBalance } from "efi/base/formatBalance";
 import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
+import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
+import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
-import { calcSwapOutGivenInCCPoolUNSAFE } from "efi/pools/calcPoolSwap";
 import { getPrincipalPoolForTranche } from "efi/pools/ccpool";
 import { getPoolContract } from "efi/pools/getPoolContract";
 import { useParseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
@@ -35,72 +42,109 @@ export function SellPrincipalTokensForm(
   props: SellPrincipalTokensFormProps
 ): ReactElement {
   const {
+    library,
     account,
     principalToken: {
       address: ptAddress,
       decimals: ptDecimals,
       symbol: ptSymbol,
+      extensions: { underlying: underlyingAddress },
     },
   } = props;
+  const [isDrawerOpen, setDrawerOpen] = useState(false);
+  const openDrawer = useCallback(() => setDrawerOpen(true), []);
+  const { stringValue: amountIn, setValue: onAmountInChange } =
+    useNumericInput();
+  const closeDrawer = useCallback(() => {
+    onAmountInChange("");
+    setDrawerOpen(false);
+  }, [onAmountInChange]);
+
   // base asset
   const baseAsset = getBaseAssetForTranche(ptAddress);
+  const baseAssetIcon = findAssetIcon2(baseAsset);
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
+  const baseAssetDecimals = getCryptoDecimals(baseAsset);
 
-  // inputs
-  const { stringValue: ptInputValue, setValue: onPrincipalTokenInputChange } =
-    useNumericInput();
-
-  // tranche
+  // principal token
   const trancheContract = trancheContractsByAddress[ptAddress];
   const { data: ptBalanceOf } = useTokenBalanceOf(trancheContract, account);
   const ptBalanceLabel = formatBalance(ptBalanceOf, ptDecimals, ptDecimals);
+  const principalTokenCryptoAsset = getCryptoAssetForToken(ptAddress);
+  const ptIcon = findAssetIcon2(principalTokenCryptoAsset);
 
-  // pool
+  // inputs
   const poolInfo = getPrincipalPoolForTranche(ptAddress);
   const { tokenOutError, tokenInError } = useValidateInput(
     account,
     poolInfo,
-    ptInputValue
+    amountIn
   );
-  const amountOut = useCalculateUnderlyingTokenOut(poolInfo, ptInputValue);
+  const previewAmountOut = useCalculateUnderlyingTokenOut(poolInfo, amountIn);
+  const poolContract = getPoolContract(poolInfo.address) as ConvergentCurvePool;
+  const spotPrice = usePoolSpotPrice2(poolContract, underlyingAddress);
 
   return (
-    <div className={tw("flex", "items-center")}>
-      <div className={tw("flex", "flex-col", "w-full", "space-y-2")}>
-        <span
-          className={tw("pb-4")}
-        >{t`Sell your principal tokens for ${baseAssetSymbol}`}</span>
-        <div className={tw("grid", "grid-cols-4", "gap-3")}>
-          <TokenAmountInput
-            className={tw("col-span-3")}
-            showMaxButton
-            errorMessage={tokenInError || tokenOutError}
-            leftIcon={
-              <Tag minimal large className={tw("ml-2")}>
-                {ptSymbol}
-              </Tag>
-            }
-            value={ptInputValue}
-            maxAmount={ptBalanceOf}
-            tokenDecimals={ptDecimals}
-            onValueChange={onPrincipalTokenInputChange}
-          />
-          <div>
-            <Button
-              fill
-              outlined
-              large
-              intent={Intent.PRIMARY}
-            >{t`Sell`}</Button>
+    <Fragment>
+      <div className={tw("flex", "items-center")}>
+        <div className={tw("flex", "flex-col", "w-full", "space-y-2")}>
+          <span
+            className={tw("pb-4")}
+          >{t`Sell your principal tokens for ${baseAssetSymbol}`}</span>
+          <div className={tw("grid", "grid-cols-4", "gap-3")}>
+            <TokenAmountInput
+              className={tw("col-span-3")}
+              showMaxButton
+              errorMessage={tokenInError || tokenOutError}
+              leftIcon={
+                <Tag minimal large className={tw("ml-2")}>
+                  {ptSymbol}
+                </Tag>
+              }
+              value={amountIn}
+              maxAmount={ptBalanceOf}
+              tokenDecimals={ptDecimals}
+              onValueChange={onAmountInChange}
+            />
+            <div>
+              <Button
+                fill
+                outlined
+                large
+                intent={Intent.PRIMARY}
+                onClick={openDrawer}
+              >{t`Sell`}</Button>
+            </div>
+          </div>
+          <div className={tw("grid", "grid-cols-4", "gap-3")}>
+            <span
+              className={tw("col-span-3", "text-right")}
+            >{t`Available balance: ${ptBalanceLabel}`}</span>
           </div>
         </div>
-        <div className={tw("grid", "grid-cols-4", "gap-3")}>
-          <span
-            className={tw("col-span-3", "text-right")}
-          >{t`Available balance: ${ptBalanceLabel}`}</span>
-        </div>
       </div>
-    </div>
+      <SwapTokensTransactionConfirmationDrawer
+        buttonLabel={t`Sell`}
+        tokenInAddress={ptAddress}
+        tokenInSymbol={ptSymbol}
+        tokenInDecimals={ptDecimals}
+        tokenInAsset={principalTokenCryptoAsset}
+        tokenInIcon={ptIcon}
+        tokenOutAddress={underlyingAddress}
+        tokenOutSymbol={baseAssetSymbol}
+        tokenOutDecimals={baseAssetDecimals}
+        tokenOutIcon={baseAssetIcon}
+        account={account}
+        library={library}
+        pool={poolContract}
+        amountIn={amountIn}
+        amountOut={previewAmountOut}
+        swapKind={SwapKind.GIVEN_IN}
+        spotPrice={spotPrice}
+        isOpen={isDrawerOpen}
+        onClose={closeDrawer}
+      />
+    </Fragment>
   );
 }
 
@@ -149,7 +193,7 @@ function useCalculateUnderlyingTokenOut(
 ): string {
   const {
     address: poolAddress,
-    extensions: { bond, underlying, expiration, unitSeconds },
+    extensions: { bond, underlying },
   } = poolInfo;
 
   const sortedTokens = [bond, underlying].sort();
@@ -178,21 +222,16 @@ function useCalculateUnderlyingTokenOut(
     baseAssetDecimals
   );
 
-  const nowInSeconds = Math.round(Date.now() / 1000);
-  const timeRemainingSeconds = expiration - nowInSeconds;
-  const amountOut = calcSwapOutGivenInCCPoolUNSAFE(
+  const { result: [, amountOut] = [] } = getCalcSwap(
     amountIn,
+    SwapKind.GIVEN_IN,
+    poolInfo,
+    bond,
+    underlying,
     principalReserves,
     underlyingReserves,
-    totalSupply,
-    timeRemainingSeconds,
-    unitSeconds,
-    true
-  );
-  const amountOutBN = clipStringValueToDecimals(
-    amountOut.toString(),
-    baseAssetDecimals
+    totalSupply
   );
 
-  return amountOutBN;
+  return clipStringValueToDecimals(amountOut?.toString(), baseAssetDecimals);
 }
