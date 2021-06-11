@@ -21,9 +21,7 @@ interface PoolActionsCardProps {
   library: Web3Provider | undefined;
   signer: Signer | undefined;
   account: string | null | undefined;
-  chainId: number | undefined;
   connector: AbstractConnector | undefined;
-  walletActive: boolean;
   poolInfo: PoolInfo;
   baseTokenInfo: TokenInfo;
   termTokenInfo: TokenInfo;
@@ -34,9 +32,7 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
     library,
     signer,
     account,
-    chainId,
     connector,
-    walletActive,
     baseTokenInfo,
     termTokenInfo,
     poolInfo,
@@ -66,9 +62,6 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
             library={library}
             signer={signer}
             account={account}
-            chainId={chainId}
-            connector={connector}
-            walletActive={walletActive}
             poolInfo={poolInfo}
             tokenIn={baseTokenInfo}
             tokenOut={termTokenInfo}
@@ -81,9 +74,6 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
             library={library}
             signer={signer}
             account={account}
-            chainId={chainId}
-            connector={connector}
-            walletActive={walletActive}
             poolInfo={poolInfo}
             tokenIn={termTokenInfo}
             tokenOut={baseTokenInfo}

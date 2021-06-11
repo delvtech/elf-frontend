@@ -42,9 +42,6 @@ interface TradePanelProps {
   library: Web3Provider | undefined;
   signer: Signer | undefined;
   account: string | null | undefined;
-  chainId: number | undefined;
-  connector: AbstractConnector | undefined;
-  walletActive: boolean;
   poolInfo: PoolInfo;
   formDisabled?: boolean;
   submitDisabled?: boolean;
@@ -58,10 +55,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
   const {
     account,
     library,
-    chainId,
-    connector,
     buttonLabel,
-    walletActive,
     formDisabled = false,
     submitDisabled = false,
     poolInfo,
@@ -284,10 +278,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
         tokenOutIcon={tokenOutIcon}
         account={account}
         library={library}
-        chainId={chainId}
-        connector={connector}
         pool={pool}
-        walletConnectionActive={walletActive}
         amountIn={amountIn}
         amountOut={amountOut}
         swapKind={swapKind}
@@ -498,11 +489,8 @@ function useTokenInfoForTradeInput(
       ? BALANCER_ETH_SENTINEL
       : tokenInfo.address;
 
-  const poolInfo = getPoolTokenInfo(pool.address);
-  const { baseAssetInfo } = getPoolTokens(poolInfo);
-  const baseCryptoAsset = getCryptoAssetForToken(baseAssetInfo.address);
   const symbol = getCryptoSymbol(asset);
-  const icon = findAssetIcon2(baseCryptoAsset);
+  const icon = findAssetIcon2(asset);
 
   const balanceOf = useCryptoBalanceOf(library, account, asset);
   const displayBalance = formatBalance(balanceOf, decimals);
