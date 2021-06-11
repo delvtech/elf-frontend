@@ -84,7 +84,8 @@ export function SellPrincipalTokensForm(
   const poolContract = getPoolContract(poolInfo.address) as ConvergentCurvePool;
   const spotPrice = usePoolSpotPrice2(poolContract, underlyingAddress);
 
-  const buttonDisabled = !!tokenInError || !!tokenOutError || !amountIn;
+  const buttonDisabled = !!tokenInError || !!tokenOutError || !+amountIn; // cover the case where they type  "" or "0";
+
   let buttonIntent: Intent = Intent.PRIMARY;
   if (tokenInError || tokenOutError) {
     buttonIntent = Intent.DANGER;
