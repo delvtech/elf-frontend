@@ -16,7 +16,6 @@ import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 import { usePoolSpotPrice2 } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { usePoolTotalSupply } from "efi-ui/pools/usePoolTotalSupply";
-import { SwapTokensTransactionConfirmationDrawer } from "efi-ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensTransactionConfirmationDrawer";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { TokenAmountInput } from "efi-ui/token/TokenAmountInput/TokenAmountInput";
 import { formatBalance } from "efi/base/formatBalance";
@@ -31,6 +30,7 @@ import { validateTradeValues } from "efi/trade/validateTradeValues";
 import { getBaseAssetForTranche } from "efi/tranche/baseAssets";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
+import { RedeemPrincipalTokensConfirmationDrawer } from "efi-ui/tranche/RedeemTokensDrawer/RedeemPrincipalTokensConfirmationDrawer/RedeemPrincipalTokensConfirmationDrawer";
 
 interface RedeemPrincipalTokensFormProps {
   library: Web3Provider | undefined;
@@ -81,9 +81,6 @@ export function RedeemPrincipalTokensForm(
     poolInfo,
     amountIn
   );
-  const previewAmountOut = useCalculateUnderlyingTokenOut(poolInfo, amountIn);
-  const poolContract = getPoolContract(poolInfo.address) as ConvergentCurvePool;
-  const spotPrice = usePoolSpotPrice2(poolContract, underlyingAddress);
 
   const buttonDisabled = !!tokenInError || !!tokenOutError || !amountIn;
   let buttonIntent: Intent = Intent.PRIMARY;
@@ -131,24 +128,11 @@ export function RedeemPrincipalTokensForm(
           </div>
         </div>
       </div>
-      <SwapTokensTransactionConfirmationDrawer
-        buttonLabel={t`Sell`}
-        tokenInAddress={ptAddress}
-        tokenInSymbol={ptSymbol}
-        tokenInDecimals={ptDecimals}
-        tokenInAsset={principalTokenCryptoAsset}
-        tokenInIcon={ptIcon}
-        tokenOutAddress={underlyingAddress}
-        tokenOutSymbol={baseAssetSymbol}
-        tokenOutDecimals={baseAssetDecimals}
-        tokenOutIcon={baseAssetIcon}
-        account={account}
+      <RedeemPrincipalTokensConfirmationDrawer
+        baseAsset={baseAsset}
         library={library}
-        pool={poolContract}
-        amountIn={amountIn}
-        amountOut={previewAmountOut}
-        swapKind={SwapKind.GIVEN_IN}
-        spotPrice={spotPrice}
+        tranche={trancheContractsByAddress[ptAddress]}
+        account={account}
         isOpen={isDrawerOpen}
         onClose={closeDrawer}
       />
