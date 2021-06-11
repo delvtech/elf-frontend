@@ -5,6 +5,8 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { PrincipalTokenActionTabId } from "efi-ui/portfolio/PrincipalTokenActionTabs/tabs";
+import { PrincipalTokenInfo } from "tokenlists/types";
+import { getIsMature2 } from "efi/tranche/getIsMature";
 
 interface PortfolioActionTabsProps {
   activeTabId: PrincipalTokenActionTabId;
@@ -13,13 +15,20 @@ interface PortfolioActionTabsProps {
     prevTabId: PrincipalTokenActionTabId
   ) => void;
 
-  isRedeemDisabled?: boolean;
+  principalToken: PrincipalTokenInfo;
 }
 
 export function PrincipalTokenActionTabs(
   props: PortfolioActionTabsProps
 ): ReactElement {
-  const { activeTabId, onSetActiveTab, isRedeemDisabled } = props;
+  const {
+    activeTabId,
+    onSetActiveTab,
+    principalToken: {
+      extensions: { unlockTimestamp },
+    },
+  } = props;
+  const isMature = getIsMature2(unlockTimestamp);
   return (
     <Tabs
       id="save-transactions-tab"
@@ -28,11 +37,14 @@ export function PrincipalTokenActionTabs(
       className={tw("text-left")}
       onChange={onSetActiveTab}
     >
-      <Tab id={PrincipalTokenActionTabId.BUY}>{t`Buy`}</Tab>
-      <Tab id={PrincipalTokenActionTabId.SELL}>{t`Sell`}</Tab>
+      <Tab disabled={isMature} id={PrincipalTokenActionTabId.BUY}>{t`Buy`}</Tab>
+      <Tab
+        disabled={isMature}
+        id={PrincipalTokenActionTabId.SELL}
+      >{t`Sell`}</Tab>
       <Tab
         id={PrincipalTokenActionTabId.REDEEM}
-        disabled={isRedeemDisabled}
+        disabled={!isMature}
       >{t`Redeem`}</Tab>
       <Tab id={PrincipalTokenActionTabId.INFO}>{t`More Information`}</Tab>
     </Tabs>

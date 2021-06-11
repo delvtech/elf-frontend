@@ -13,6 +13,11 @@ export function getIsMature(maturationDate: Date | undefined): boolean {
   return false;
 }
 
+/**
+ * Returns true if the tranche is expired.
+ *
+ * @param unlockTimestamp - time in seconds, you can get this directly from the tokenInfo
+ */
 export function getIsMature2(unlockTimestamp: number): boolean {
   const now = Date.now();
   if (now >= unlockTimestamp * 1000) {
