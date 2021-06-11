@@ -10,6 +10,7 @@ import { PrincipalTokenActionTabId } from "efi-ui/portfolio/PrincipalTokenAction
 import { PrincipalTokenActionTabs } from "efi-ui/portfolio/PrincipalTokenActionTabs/PrincipalTokenActionTabs";
 import { PrincipalTokenInformation } from "efi-ui/portfolio/PrincipalTokenInformation/PrincipalTokenInformation";
 import { SellPrincipalTokensForm } from "efi-ui/portfolio/PrincipalTokenActionsCard/SellPrincipalTokensForm";
+import { RedeemPrincipalTokensForm } from "efi-ui/portfolio/PrincipalTokenActionsCard/RedeemPrincipalTokensForm";
 
 interface PrincipalTokenActionsCardProps {
   library: Web3Provider | undefined;
@@ -49,7 +50,7 @@ export function PrincipalTokenActionsCard(
           />
         ) : null}
         {activeTabId === PrincipalTokenActionTabId.REDEEM ? (
-          <SellPrincipalTokensForm
+          <RedeemPrincipalTokensForm
             account={account}
             library={library}
             principalToken={principalToken}
