@@ -26,11 +26,11 @@ import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { getPrincipalPoolForTranche } from "efi/pools/ccpool";
 import { getPoolContract } from "efi/pools/getPoolContract";
-import { useParseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { getTokenInfo } from "efi/tokenlists";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
 import { getBaseAssetForTranche } from "efi/tranche/baseAssets";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
+import { getPoolTokens } from "efi/pools/getPoolTokens";
 
 interface SellPrincipalTokensFormProps {
   library: Web3Provider | undefined;
@@ -162,16 +162,15 @@ function useValidateInput(
 ) {
   const {
     address: poolAddress,
-    extensions: { bond, underlying },
+    extensions: { bond },
   } = poolInfo;
 
   const trancheContract = trancheContractsByAddress[bond];
   const { data: ptBalanceOf } = useTokenBalanceOf(trancheContract, account);
   const { decimals: ptDecimals } = getTokenInfo<PrincipalTokenInfo>(bond);
 
-  const sortedTokens = [bond, underlying].sort();
   const { baseAssetIndex, termAssetIndex: principalTokenIndex } =
-    useParseSortedTokensForPool(sortedTokens);
+    getPoolTokens(poolInfo);
 
   const poolContract = getPoolContract(poolAddress);
 
@@ -203,9 +202,8 @@ function useCalculateUnderlyingTokenOut(
     extensions: { bond, underlying },
   } = poolInfo;
 
-  const sortedTokens = [bond, underlying].sort();
   const { baseAssetIndex, termAssetIndex: principalTokenIndex } =
-    useParseSortedTokensForPool(sortedTokens);
+    getPoolTokens(poolInfo);
 
   const poolContract = getPoolContract(poolAddress);
 

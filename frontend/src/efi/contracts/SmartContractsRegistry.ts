@@ -55,6 +55,10 @@ interface ContractFactory<TReturnContract extends Contract> {
   ) => TReturnContract;
 }
 
+/**
+ * @deprecated The smart contract registry is deprecated in favor of lookup
+ * objects like trancheContracts, interestTokenContracts, etc...
+ */
 export function getSmartContractFromRegistryStatic<
   TReturnContract extends Contract
 >(

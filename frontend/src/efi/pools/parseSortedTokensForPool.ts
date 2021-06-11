@@ -15,6 +15,9 @@ interface ParsedTokens {
 
 // tokens and token related values are returned as arrrays that are sorted alphanumerically by token
 // addresses.  this returns the index of the 'base asset' and 'yield asset' values of those arrays.
+/**
+ * @deprecated use getPoolTokens instead
+ */
 export function useParseSortedTokensForPool(
   tokens: string[] | undefined
 ): ParsedTokens {
