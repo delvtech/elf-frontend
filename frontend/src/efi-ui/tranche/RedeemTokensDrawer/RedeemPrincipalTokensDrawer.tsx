@@ -121,6 +121,7 @@ export function RedeemPrincipalTokensDrawer({
             <LabeledText
               bold
               muted={false}
+              containerClassName={tw("justify-center")}
               className={tw("items-center")}
               text={<span>{t`Term date`}</span>}
               label={

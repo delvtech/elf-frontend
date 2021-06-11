@@ -97,7 +97,7 @@ export function RedeemPrincipalTokensForm(
         <div className={tw("flex", "flex-col", "w-full", "space-y-2")}>
           <span
             className={tw("pb-4")}
-          >{t`Sell your principal tokens for ${baseAssetSymbol}`}</span>
+          >{t`Redeem ${baseAssetSymbol} for your principal tokens`}</span>
           <div className={tw("grid", "grid-cols-4", "gap-3")}>
             <TokenAmountInput
               className={tw("col-span-3")}
@@ -121,7 +121,7 @@ export function RedeemPrincipalTokensForm(
                 large
                 intent={buttonIntent}
                 onClick={openDrawer}
-              >{t`Sell`}</Button>
+              >{t`Redeem`}</Button>
             </div>
           </div>
           <div className={tw("grid", "grid-cols-4", "gap-3")}>
