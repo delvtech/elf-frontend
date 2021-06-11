@@ -37,7 +37,7 @@
     "typescript": "^4.1.3"
   },
   "scripts": {
-    "build": "rm -rf src/types && npx hardhat compile",
+    "build": "rm -rf artifacts src/types && npx hardhat compile",
     "build:tokenlist-goerli": "npx hardhat run src/tokenlist/goerli.ts --network goerli --no-compile",
     "build:tokenlist-testnet": "npx hardhat run src/tokenlist/localhost.ts --network localhost --no-compile",
     "deploy-contracts": "npx hardhat run src/scripts/main.ts --network localhost --no-compile && npm run build:tokenlist-testnet",
