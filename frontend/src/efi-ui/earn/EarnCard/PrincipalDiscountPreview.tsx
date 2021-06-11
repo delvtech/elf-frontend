@@ -39,6 +39,7 @@ export function PrincipalDiscountPreview(
       <LabeledText
         muted={false}
         bold
+        containerClassName={tw("justify-center")}
         className={tw(
           "flex",
           "justify-center",

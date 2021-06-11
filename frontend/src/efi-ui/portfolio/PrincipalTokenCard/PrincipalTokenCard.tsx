@@ -228,6 +228,7 @@ export function PrincipalTokenCard(
           <LabeledText
             muted={false}
             className={tw("flex", "justify-center", "items-center")}
+            containerClassName={tw("justify-center")}
             bold
             textClassName={tw("text-2xl")}
             text={`${trancheBalance.toFixed(6)} ${termAssetSymbol}`}
@@ -242,6 +243,7 @@ export function PrincipalTokenCard(
             bold
             muted={false}
             className={tw("flex", "justify-center", "items-center")}
+            containerClassName={tw("justify-center")}
             textClassName={tw("text-2xl")}
             text={<span>{t`${exitValue.toFixed(6)} ${baseAssetSymbol}`}</span>}
             label={fiatPrice}

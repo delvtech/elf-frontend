@@ -133,6 +133,7 @@ export function RedeemYieldTokensDrawer({
           <div className={tw("flex", "flex-col", "space-y-6", "items-center")}>
             <LabeledText
               bold
+              containerClassName={tw("justify-center")}
               muted={false}
               className={tw("items-center")}
               text={<span>{t`Term date`}</span>}

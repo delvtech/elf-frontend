@@ -39,6 +39,7 @@ export function PrincipalTokenTransactionDetails({
       <LabeledText
         bold
         muted={false}
+        containerClassName={tw("justify-center")}
         className={tw("items-center")}
         text={<span>{t`Market rate`}</span>}
         label={
@@ -51,6 +52,7 @@ export function PrincipalTokenTransactionDetails({
         muted={false}
         bold
         text={<span>{t`Price slippage + trading fees`}</span>}
+        containerClassName={tw("justify-center")}
         className={tw("items-center")}
         label={
           <span className={tw("text-base")}>
@@ -62,6 +64,7 @@ export function PrincipalTokenTransactionDetails({
         bold
         muted={false}
         className={tw("items-center")}
+        containerClassName={tw("justify-center")}
         text={<span>{t`Term date`}</span>}
         label={<span className={tw("text-base")}>{unlockTimeStampLabel}</span>}
       />

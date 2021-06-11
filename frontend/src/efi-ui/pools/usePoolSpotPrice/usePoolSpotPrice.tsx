@@ -27,6 +27,9 @@ import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
  * yield = base / spotPrice
  */
 const SPOT_PRICE_AMOUNT = "0.01";
+/**
+ * @deprecated use usePoolSpotPrice2 instead
+ */
 export function usePoolSpotPrice(
   poolContract: PoolContract | undefined,
   underlyingToken: ERC20 | undefined
@@ -50,6 +53,71 @@ export function usePoolSpotPrice(
       : termAssetInfo.address;
   const tokenOutAddress =
     baseAssetInfo.address === underlyingToken?.address
+      ? termAssetInfo.address
+      : baseAssetInfo.address;
+
+  const { tokenInReserves, tokenOutReserves } = getTokenReserves(
+    tokens,
+    balances,
+    tokenInAddress,
+    tokenOutAddress,
+    baseAssetInfo.decimals
+  );
+
+  const { result: [, amountOut] = [] } = useMemo(() => {
+    const result = getCalcSwap(
+      SPOT_PRICE_AMOUNT,
+      SwapKind.GIVEN_IN,
+      poolInfo,
+      tokenInAddress,
+      tokenOutAddress,
+      tokenInReserves,
+      tokenOutReserves,
+      totalSupply
+    );
+    return result;
+  }, [
+    poolInfo,
+    tokenInAddress,
+    tokenInReserves,
+    tokenOutAddress,
+    tokenOutReserves,
+    totalSupply,
+  ]);
+
+  // can't give a meaningful spot price until we have the decimals
+  if (!amountOut) {
+    return undefined;
+  }
+
+  const spotPrice = +amountOut / +SPOT_PRICE_AMOUNT;
+
+  return Math.abs(spotPrice);
+}
+
+export function usePoolSpotPrice2(
+  poolContract: PoolContract,
+  underlyingToken: string
+): number | undefined {
+  const { data } = usePoolTokens(poolContract);
+  const [tokens, balances] = data ?? [[], []];
+  const poolInfo = getPoolTokenInfoFromContract(poolContract) as PoolInfo;
+  const { baseAssetInfo, termAssetInfo } = getPoolTokens(poolInfo);
+  const { data: totalSupplyBN } = useSmartContractReadCall(
+    poolContract,
+    "totalSupply"
+  );
+  const totalSupply = formatUnits(
+    totalSupplyBN ?? 0,
+    BALANCER_POOL_LP_TOKEN_DECIMALS
+  );
+
+  const tokenInAddress =
+    baseAssetInfo.address === underlyingToken
+      ? baseAssetInfo.address
+      : termAssetInfo.address;
+  const tokenOutAddress =
+    baseAssetInfo.address === underlyingToken
       ? termAssetInfo.address
       : baseAssetInfo.address;
 

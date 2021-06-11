@@ -34,14 +34,9 @@ export function PortfolioTabs({
       onChange={onChangeTab}
       selectedTabId={activePortfolioTabId}
     >
-      {portfolioTabs.map(({ id, name, quantity, totalFiatValue }) => (
+      {portfolioTabs.map(({ id, name }) => (
         <Tab key={id} id={id} className={tw("lg:w-300")}>
-          <PortfolioAssetLabel
-            id={id}
-            name={name}
-            quantity={quantity}
-            totalFiatValue={totalFiatValue}
-          />
+          <PortfolioAssetLabel name={name} />
         </Tab>
       ))}
     </Tabs>

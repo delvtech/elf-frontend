@@ -3,7 +3,6 @@ import { ReactElement, useCallback, useState } from "react";
 import { Button, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { TokenInfo } from "@uniswap/token-lists";
-import { AbstractConnector } from "@web3-react/abstract-connector";
 import { ERC20 } from "elf-contracts/types/ERC20";
 import { BigNumber, Signer } from "ethers";
 import { formatEther, formatUnits, parseUnits } from "ethers/lib/utils";
@@ -16,7 +15,7 @@ import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInp
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoBalanceOf } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
-import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
+import { usePoolSpotPrice2 } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { useTokenPoolBalance } from "efi-ui/pools/useTokenPoolBalance/useTokenPoolBalance";
 import { useTokenPoolIndex } from "efi-ui/pools/useTokenPoolIndex/useTokenPoolIndex";
 import { SwapTokensTransactionConfirmationDrawer } from "efi-ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensTransactionConfirmationDrawer";
@@ -30,8 +29,6 @@ import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
 import { getPoolContract } from "efi/pools/getPoolContract";
-import { getPoolTokenInfo } from "efi/pools/getPoolInfo";
-import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolContract } from "efi/pools/PoolContract";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
@@ -42,9 +39,6 @@ interface TradePanelProps {
   library: Web3Provider | undefined;
   signer: Signer | undefined;
   account: string | null | undefined;
-  chainId: number | undefined;
-  connector: AbstractConnector | undefined;
-  walletActive: boolean;
   poolInfo: PoolInfo;
   formDisabled?: boolean;
   submitDisabled?: boolean;
@@ -58,10 +52,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
   const {
     account,
     library,
-    chainId,
-    connector,
     buttonLabel,
-    walletActive,
     formDisabled = false,
     submitDisabled = false,
     poolInfo,
@@ -209,8 +200,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     setAmountOut
   );
 
-  const { baseAssetContract } = getPoolTokens(poolInfo);
-  const spotPrice = usePoolSpotPrice(pool, baseAssetContract);
+  const spotPrice = usePoolSpotPrice2(pool, poolInfo.extensions.underlying);
 
   return (
     <div
@@ -284,10 +274,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
         tokenOutIcon={tokenOutIcon}
         account={account}
         library={library}
-        chainId={chainId}
-        connector={connector}
         pool={pool}
-        walletConnectionActive={walletActive}
         amountIn={amountIn}
         amountOut={amountOut}
         swapKind={swapKind}
@@ -498,11 +485,8 @@ function useTokenInfoForTradeInput(
       ? BALANCER_ETH_SENTINEL
       : tokenInfo.address;
 
-  const poolInfo = getPoolTokenInfo(pool.address);
-  const { baseAssetInfo } = getPoolTokens(poolInfo);
-  const baseCryptoAsset = getCryptoAssetForToken(baseAssetInfo.address);
   const symbol = getCryptoSymbol(asset);
-  const icon = findAssetIcon2(baseCryptoAsset);
+  const icon = findAssetIcon2(asset);
 
   const balanceOf = useCryptoBalanceOf(library, account, asset);
   const displayBalance = formatBalance(balanceOf, decimals);

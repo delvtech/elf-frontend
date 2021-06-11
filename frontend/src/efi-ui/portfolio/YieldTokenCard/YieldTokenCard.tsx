@@ -217,6 +217,7 @@ export function YieldTokenCard({
               className={tw("flex", "justify-center", "items-center")}
               bold
               textClassName={tw("text-2xl")}
+              containerClassName={tw("justify-center")}
               text={`${yieldTokenBalance.toFixed(6)} ${yieldTokenInfo.symbol}`}
               label={t`1 Yield Token = yield on 1 ${baseAssetSymbol} at maturity`}
             />
@@ -230,6 +231,7 @@ export function YieldTokenCard({
               muted={false}
               className={tw("flex", "justify-center", "items-center")}
               textClassName={tw("text-2xl")}
+              containerClassName={tw("justify-center")}
               text={
                 <span>{t`${exitValue.toFixed(6)} ${baseAssetSymbol}`}</span>
               }

@@ -15,10 +15,12 @@ import { useCryptoBalanceOf } from "efi-ui/crypto/hooks/useCryptoBalance/useCryp
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { usePoolTotalSupply } from "efi-ui/pools/usePoolTotalSupply";
 import { useTokenYield } from "efi-ui/pools/useTokenYield";
-import { SaveInput } from "efi-ui/save/SavePortfolioList/SaveInput";
+import { BuyPrincipalTokensTransactionConfirmationDrawer } from "efi-ui/swaps/BuyPrincipalTokensTransactionConfirmationDrawer/BuyPrincipalTokensTransactionConfirmationDrawer";
+import { TokenAmountInput } from "efi-ui/token/TokenAmountInput/TokenAmountInput";
 import { formatBalance } from "efi/base/formatBalance";
 import { formatPercent } from "efi/base/formatPercent";
 import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
+import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
@@ -28,13 +30,11 @@ import {
   getPrincipalPoolForTranche,
 } from "efi/pools/ccpool";
 import { getPoolContract } from "efi/pools/getPoolContract";
-import { useParseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { getTokenInfo } from "efi/tokenlists";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
-import { underlyingContractsByAddress } from "efi/underlying/underlying";
-import { BuyPrincipalTokensTransactionConfirmationDrawer } from "efi-ui/swaps/BuyPrincipalTokensTransactionConfirmationDrawer/BuyPrincipalTokensTransactionConfirmationDrawer";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
-import { CryptoAsset } from "efi/crypto/CryptoAsset";
+import { underlyingContractsByAddress } from "efi/underlying/underlying";
+import { getPoolTokens } from "efi/pools/getPoolTokens";
 
 interface BuyPrincipalTokensFormProps {
   library: Web3Provider | undefined;
@@ -95,12 +95,12 @@ export function BuyPrincipalTokensForm(
     poolInfo,
     baseAssetInputValue
   );
-  const {
-    isValidTokenInValue,
-    isValidTokenOutValue,
-    tokenOutError,
-    tokenInError,
-  } = useValidateInput(library, account, poolInfo, baseAssetInputValue);
+  const { tokenOutError, tokenInError } = useValidateInput(
+    library,
+    account,
+    poolInfo,
+    baseAssetInputValue
+  );
 
   const buttonDisabled =
     !!tokenInError || !!tokenOutError || !baseAssetInputValue;
@@ -126,14 +126,12 @@ export function BuyPrincipalTokensForm(
           >{t`Buy principal tokens with your ${baseAssetSymbol}`}</span>
           <span className={tw("pb-4")}>{t`Current APY: ${formattedAPY}`}</span>
           <div className={tw("grid", "grid-cols-4", "gap-3")}>
-            <SaveInput
-              swapKind={SwapKind.GIVEN_IN}
+            <TokenAmountInput
               className={tw("col-span-3")}
               placeholder="0.00"
-              isValid={isValidTokenInValue && isValidTokenOutValue}
               errorMessage={tokenInError || tokenOutError}
               showMaxButton
-              assetIcon={
+              leftIcon={
                 BaseAssetIcon ? (
                   <BaseAssetIcon
                     height={20}
@@ -143,8 +141,8 @@ export function BuyPrincipalTokensForm(
                 ) : undefined
               }
               value={baseAssetInputValue}
-              valueBalanceOf={baseAssetBalanceOf}
-              valueDecimals={baseAssetDecimals}
+              maxAmount={baseAssetBalanceOf}
+              tokenDecimals={baseAssetDecimals}
               onValueChange={onBaseAssetChange}
             />
             <div>
@@ -190,16 +188,15 @@ function useValidateInput(
 ) {
   const {
     address: poolAddress,
-    extensions: { bond, underlying },
+    extensions: { underlying },
   } = poolInfo;
 
   const baseAsset = getCryptoAssetForToken(underlying);
   const baseAssetBalanceOf = useCryptoBalanceOf(library, account, baseAsset);
   const { decimals: baseAssetDecimals } = getTokenInfo(underlying);
 
-  const sortedTokens = [bond, underlying].sort();
   const { baseAssetIndex, termAssetIndex: principalTokenIndex } =
-    useParseSortedTokensForPool(sortedTokens);
+    getPoolTokens(poolInfo);
 
   const poolContract = getPoolContract(poolAddress);
 
@@ -225,15 +222,14 @@ function useValidateInput(
 function useCalculatePrincipalTokenAmountOut(
   poolInfo: PrincipalPoolTokenInfo,
   amountIn: string
-) {
+): string {
   const {
     address: poolAddress,
-    extensions: { bond, underlying, expiration, unitSeconds },
+    extensions: { underlying, expiration, unitSeconds },
   } = poolInfo;
 
-  const sortedTokens = [bond, underlying].sort();
   const { baseAssetIndex, termAssetIndex: principalTokenIndex } =
-    useParseSortedTokensForPool(sortedTokens);
+    getPoolTokens(poolInfo);
 
   const poolContract = getPoolContract(poolAddress);
 

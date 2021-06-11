@@ -28,22 +28,12 @@ interface PoolDetailsProps {
   library: Web3Provider | undefined;
   signer: Signer | undefined;
   account: string | null | undefined;
-  chainId: number | undefined;
   connector: AbstractConnector | undefined;
-  walletActive: boolean;
   poolInfo: PoolInfo;
 }
 
 export function PoolDetails(props: PoolDetailsProps): ReactElement {
-  const {
-    library,
-    signer,
-    account,
-    chainId,
-    connector,
-    walletActive,
-    poolInfo,
-  } = props;
+  const { library, signer, account, connector, poolInfo } = props;
   const pool = getPoolContract(poolInfo.address);
   const { baseAssetInfo, termAssetInfo, baseAssetContract } =
     getPoolTokens(poolInfo);
@@ -124,9 +114,7 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
           library={library}
           signer={signer}
           account={account}
-          chainId={chainId}
           connector={connector}
-          walletActive={walletActive}
           poolInfo={poolInfo}
           baseTokenInfo={baseAssetInfo}
           termTokenInfo={termAssetInfo}

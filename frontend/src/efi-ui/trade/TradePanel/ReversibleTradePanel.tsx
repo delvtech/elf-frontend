@@ -59,10 +59,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
   const {
     account,
     library,
-    chainId,
-    connector,
     buttonLabel,
-    walletActive,
     formDisabled = false,
     submitDisabled = false,
     pool,
@@ -285,10 +282,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
         tokenOutIcon={tokenOutIcon}
         account={account}
         library={library}
-        chainId={chainId}
-        connector={connector}
         pool={pool}
-        walletConnectionActive={walletActive}
         amountIn={amountIn}
         amountOut={amountOut}
         swapKind={swapKind}

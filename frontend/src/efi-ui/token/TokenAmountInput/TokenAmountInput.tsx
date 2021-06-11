@@ -1,60 +1,48 @@
 import { ReactElement, useCallback } from "react";
 
-import { Colors, FormGroup, InputGroup, Intent, Tag } from "@blueprintjs/core";
+import { FormGroup, InputGroup, Intent, Tag } from "@blueprintjs/core";
 import classNames from "classnames";
 import { BigNumber } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { SwapKind } from "efi-ui/balancer/SwapKind";
 import { validateInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import styles from "efi-ui/save/SavePortfolioList/SaveInput.module.css";
+import styles from "efi-ui/token/TokenAmountInput/TokenAmountInput.module.css";
 import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
 
-interface SaveInputProps {
-  showMaxButton: boolean;
-  // cannot be undefined as that enables 'uncontrolled' component behavior for InputGroup
-  value: string;
-  isValid: boolean;
-  errorMessage?: string;
-  onValueChange: (value: string, swapKind: SwapKind) => void;
+interface TokenAmountInputProps {
   className?: string;
-
+  errorMessage?: string;
+  leftIcon?: ReactElement;
+  onValueChange: (value: string) => void;
   placeholder?: string;
-
-  assetIcon?: ReactElement;
-  swapKind: SwapKind;
-  valueDecimals: number | undefined;
-  valueBalanceOf: BigNumber | undefined;
+  showMaxButton: boolean;
+  value: string;
+  maxAmount: BigNumber | undefined;
+  tokenDecimals: number | undefined;
 }
 
-export function SaveInput(props: SaveInputProps): ReactElement {
+export function TokenAmountInput(props: TokenAmountInputProps): ReactElement {
   const {
     className,
     value,
-    isValid,
     errorMessage,
     showMaxButton,
     placeholder,
     onValueChange: onChangeFromProps,
-    assetIcon,
-    swapKind,
-    valueDecimals,
-    valueBalanceOf,
+    leftIcon,
+    tokenDecimals,
+    maxAmount,
   } = props;
   const { isDarkMode } = useDarkMode();
 
-  const onChange = useOnInputChange(onChangeFromProps, valueDecimals, swapKind);
+  const onChange = useOnInputChange(onChangeFromProps, tokenDecimals);
 
-  // TODO: disable setting max value if the user balance >  pool balance.  better yet, disable max
-  // value if the trade would cause too much slippage.
-  // sets the max value for the input
   const setMaxValue = useSetMaxValue(
-    valueBalanceOf, // the max value
-    valueDecimals,
-    swapKind,
+    maxAmount, // the max value
+    tokenDecimals,
     onChangeFromProps
   );
 
@@ -69,18 +57,14 @@ export function SaveInput(props: SaveInputProps): ReactElement {
     </div>
   ) : undefined;
 
-  const helperText = isValid ? null : (
-    <div
-      style={{ color: isValid || Colors.RED3 }}
-      className={tw("w-full", "text-right")}
-    >
-      {errorMessage}
-    </div>
-  );
+  const helperText = errorMessage ? (
+    <div className={tw("w-full", "text-right")}>{errorMessage}</div>
+  ) : null;
 
   return (
     <FormGroup
       className={classNames(tw("w-full", "mb-0"), className)}
+      intent={errorMessage ? Intent.DANGER : Intent.NONE}
       helperText={helperText}
     >
       <InputGroup
@@ -89,8 +73,8 @@ export function SaveInput(props: SaveInputProps): ReactElement {
           [styles.investmentAmountLightMode]: !isDarkMode,
         })}
         value={value || ""}
-        intent={isValid ? undefined : Intent.DANGER}
-        leftElement={assetIcon}
+        intent={errorMessage ? Intent.DANGER : Intent.NONE}
+        leftElement={leftIcon}
         rightElement={maxButtonElement}
         onChange={onChange}
       />
@@ -99,43 +83,40 @@ export function SaveInput(props: SaveInputProps): ReactElement {
 }
 
 function useOnInputChange(
-  onChange: (value: string, swapKind: SwapKind) => void,
-  cryptoDecimals: number | undefined,
-  swapKind: SwapKind
+  onChange: (value: string) => void,
+  cryptoDecimals: number | undefined
 ) {
   return useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const userInputValue = event.target.value;
       // checks for valid values before reporting to parent
-      validateAndSetValue(userInputValue, onChange, cryptoDecimals, swapKind);
+      validateAndSetValue(userInputValue, onChange, cryptoDecimals);
     },
-    [onChange, cryptoDecimals, swapKind]
+    [onChange, cryptoDecimals]
   );
 }
 
 function useSetMaxValue(
   tokenBalanceOf: BigNumber | undefined,
   tokenDecimals: number | undefined,
-  swapKind: SwapKind,
-  onChange: (value: string, swapKind: SwapKind) => void
+  onChange: (value: string) => void
 ) {
   return useCallback(() => {
     if (tokenBalanceOf) {
       const maxValue = formatUnits(tokenBalanceOf, tokenDecimals);
-      onChange(maxValue, swapKind);
+      onChange(maxValue);
     }
-  }, [tokenBalanceOf, tokenDecimals, onChange, swapKind]);
+  }, [tokenBalanceOf, tokenDecimals, onChange]);
 }
 
 function validateAndSetValue(
   value: string,
-  onChange: (value: string, swapKind: SwapKind) => void,
-  cryptoDecimals: number | undefined,
-  swapKind: SwapKind
+  onChange: (value: string) => void,
+  cryptoDecimals: number | undefined
 ) {
   // allow user to clear input
   if (value === "" || value === undefined) {
-    onChange("", swapKind);
+    onChange("");
     return;
   }
 
@@ -148,5 +129,5 @@ function validateAndSetValue(
   }
 
   // since this is a controlled component, we let the parent know what to update the value to
-  onChange(safeValue, swapKind);
+  onChange(safeValue);
 }

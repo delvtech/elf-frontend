@@ -38,6 +38,7 @@ export function SwapTokenDetails({
       <LabeledText
         bold
         muted={false}
+        containerClassName={tw("justify-center")}
         className={tw("items-center")}
         text={<span>{t`Market rate`}</span>}
         label={<span className={tw("text-base")}>{label}</span>}
@@ -45,6 +46,7 @@ export function SwapTokenDetails({
       <LabeledText
         muted={false}
         bold
+        containerClassName={tw("justify-center")}
         text={<span>{t`Fees`}</span>}
         className={tw("items-center")}
         label={<span className={tw("text-base")}>{formattedFeePercent}</span>}
@@ -52,6 +54,7 @@ export function SwapTokenDetails({
       <LabeledText
         muted={false}
         bold
+        containerClassName={tw("justify-center")}
         text={<span>{t`Price impact`}</span>}
         className={tw("items-center")}
         label={<span className={tw("text-base")}>{formattedSlippage}</span>}
