@@ -84,6 +84,12 @@ export function SellPrincipalTokensForm(
   const poolContract = getPoolContract(poolInfo.address) as ConvergentCurvePool;
   const spotPrice = usePoolSpotPrice2(poolContract, underlyingAddress);
 
+  const buttonDisabled = !!tokenInError || !!tokenOutError || !amountIn;
+  let buttonIntent: Intent = Intent.PRIMARY;
+  if (tokenInError || tokenOutError) {
+    buttonIntent = Intent.DANGER;
+  }
+
   return (
     <Fragment>
       <div className={tw("flex", "items-center")}>
@@ -109,9 +115,10 @@ export function SellPrincipalTokensForm(
             <div>
               <Button
                 fill
+                disabled={buttonDisabled}
                 outlined
                 large
-                intent={Intent.PRIMARY}
+                intent={buttonIntent}
                 onClick={openDrawer}
               >{t`Sell`}</Button>
             </div>
