@@ -1,0 +1,173 @@
+import { ReactElement, useCallback } from "react";
+
+import { Button, Intent } from "@blueprintjs/core";
+import { Web3Provider } from "@ethersproject/providers";
+import { Tranche } from "elf-contracts/types/Tranche";
+import { BigNumber, Signer } from "ethers";
+import { formatUnits, parseUnits } from "ethers/lib/utils";
+import { t } from "ttag";
+
+import tw from "efi-tailwindcss-classnames";
+import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
+import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
+import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
+import { RedeemForm } from "efi-ui/tranche/RedeemForm/RedeemForm";
+import { WalletDrawer } from "efi-ui/wallets/WalletDrawer/WalletDrawer";
+import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
+import { formatFullDate } from "efi/base/dates";
+import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
+
+import { useRedeemTermAssetsToEth } from "efi-ui/userProxy/useRedeemTermAssetsToEth";
+import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
+import { useWithdrawPrincipal } from "efi-ui/tranche/RedeemTokensDrawer/useWithdrawPrincipal";
+
+interface RedeemPrincipalTokensConfirmationDrawerProps {
+  account: string | null | undefined;
+  library: Web3Provider | undefined;
+  baseAsset: CryptoAsset;
+  tranche: Tranche | undefined;
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export function RedeemPrincipalTokensConfirmationDrawer({
+  library,
+  account,
+  baseAsset,
+  tranche,
+  isOpen,
+  onClose,
+}: RedeemPrincipalTokensConfirmationDrawerProps): ReactElement {
+  const signer = account ? (library?.getSigner(account) as Signer) : undefined;
+
+  // base asset calls
+  const baseAssetSymbol = getCryptoSymbol(baseAsset);
+
+  // tranche calls
+  const { data: trancheDecimals } = useTokenDecimals(tranche);
+  const { data: trancheUnlockTimestamp } = useSmartContractReadCall(
+    tranche,
+    "unlockTimestamp"
+  );
+  const unlockTimestampDate = convertEpochSecondsToDate(trancheUnlockTimestamp);
+  const unlockTimestampLabel = unlockTimestampDate
+    ? formatFullDate(unlockTimestampDate)
+    : undefined;
+
+  const { stringValue: trancheAmountString, setValue: setTrancheAmountString } =
+    useNumericInput({
+      min: 0,
+      maxPrecision: trancheDecimals,
+    });
+
+  const { data: accountTrancheBalance } = useTokenBalanceOf(tranche, account);
+  const onSetMaxAmount = useCallback(() => {
+    setTrancheAmountString(
+      formatUnits(accountTrancheBalance ?? 0, trancheDecimals)
+    );
+  }, [accountTrancheBalance, setTrancheAmountString, trancheDecimals]);
+
+  const confirmButtonLabel = getConfirmButtonLabel(account);
+  const trancheAmountBigNumber =
+    trancheAmountString && trancheDecimals
+      ? parseUnits(trancheAmountString, trancheDecimals)
+      : undefined;
+  const confirmButtonDisabled = getConfirmButtonDisabled(
+    account,
+    trancheAmountBigNumber
+  );
+
+  const withdrawPrincipal = useWithdrawPrincipal(
+    signer,
+    tranche,
+    account,
+    trancheAmountBigNumber
+  );
+
+  const withdrawToEth = useRedeemTermAssetsToEth(
+    signer,
+    tranche,
+    account,
+    trancheAmountBigNumber || BigNumber.from(0),
+    BigNumber.from(0)
+  );
+
+  const redeemPrincipalTokens = useCallback(() => {
+    if (baseAsset.type === CryptoAssetType.ETHEREUM) {
+      withdrawToEth();
+    } else {
+      withdrawPrincipal();
+    }
+  }, [baseAsset.type, withdrawPrincipal, withdrawToEth]);
+
+  return (
+    <WalletDrawer
+      isOpen={isOpen}
+      onClose={onClose}
+      className={tw("justify-between")}
+    >
+      <div className={tw("flex", "flex-col", "space-y-4")}>
+        <RedeemForm
+          onSetMaxAmount={onSetMaxAmount}
+          heading={t`Redeem ${baseAssetSymbol} Principal Tokens`}
+          tranche={tranche}
+          amount={trancheAmountString}
+          assetSymbol={t`${baseAssetSymbol} Principal Token`}
+          onAmountChange={setTrancheAmountString}
+        >
+          <div className={tw("flex", "flex-col", "space-y-6", "items-center")}>
+            <LabeledText
+              bold
+              muted={false}
+              containerClassName={tw("justify-center")}
+              className={tw("items-center")}
+              text={<span>{t`Term date`}</span>}
+              label={
+                <span className={tw("text-base")}>{unlockTimestampLabel}</span>
+              }
+            />
+          </div>
+        </RedeemForm>
+        <Button
+          fill
+          disabled={confirmButtonDisabled}
+          intent={Intent.PRIMARY}
+          className={tw("h-16")}
+          large
+          outlined
+          onClick={redeemPrincipalTokens}
+        >
+          {confirmButtonLabel}
+        </Button>
+      </div>
+    </WalletDrawer>
+  );
+}
+
+function getConfirmButtonLabel(account: string | null | undefined) {
+  if (!account) {
+    return t`Connect your wallet to continue`;
+  }
+
+  return t`Confirm transaction`;
+}
+
+function getConfirmButtonDisabled(
+  account: string | null | undefined,
+  amountIn: BigNumber | undefined
+) {
+  // must be connected to click this button
+  if (!account) {
+    return true;
+  }
+
+  // disabled when no amount is entered
+  if (!amountIn) {
+    return true;
+  }
+
+  // otherwise the button should not be disabled
+  return false;
+}

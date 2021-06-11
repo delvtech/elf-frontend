@@ -43,12 +43,7 @@ export function WalletDrawer({
       onClose={onClose}
       onClosing={onClose}
       isCloseButtonShown
-      title={
-        ""
-        // <span
-        //   className={tw("text-base", "font-normal")}
-        // >{t`Wallet connected`}</span>
-      }
+      title={""}
       size={500}
       style={!isDarkMode ? { background: "var(--bp3-bg-color)" } : {}}
       className={classNames(
@@ -70,21 +65,23 @@ export function WalletDrawer({
         className
       )}
     >
-      {!account ? (
-        <ConnectWalletCallout />
-      ) : (
-        <Callout className={tw("p-6")}>
-          <WalletConnectionSummary
-            account={account}
-            active={active}
-            chainId={chainId}
-            connectionStatusColor={connectionStatusColor}
-            connectorMessage={connectorMessage}
-          />
-        </Callout>
-      )}
+      <div className={tw("flex", "flex-1", "flex-col", "justify-between")}>
+        {!account ? (
+          <ConnectWalletCallout />
+        ) : (
+          <Callout className={tw("p-6")}>
+            <WalletConnectionSummary
+              account={account}
+              active={active}
+              chainId={chainId}
+              connectionStatusColor={connectionStatusColor}
+              connectorMessage={connectorMessage}
+            />
+          </Callout>
+        )}
 
-      {children}
+        {children}
+      </div>
     </Drawer>
   );
 }
