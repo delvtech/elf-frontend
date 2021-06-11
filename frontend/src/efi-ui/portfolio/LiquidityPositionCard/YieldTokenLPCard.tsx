@@ -196,6 +196,7 @@ export function YieldTokenLPCard({
             className={tw("flex", "justify-center", "items-center")}
             bold
             textClassName={tw("text-2xl")}
+            containerClassName={tw("justify-center")}
             text={poolSharesLabel}
             label={""}
           />

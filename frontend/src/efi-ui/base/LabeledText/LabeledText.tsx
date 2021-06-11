@@ -1,4 +1,4 @@
-import React, { ReactElement, ReactNode } from "react";
+import { ReactElement, ReactNode } from "react";
 
 import { Classes } from "@blueprintjs/core";
 import classNames from "classnames";
@@ -36,6 +36,7 @@ interface LabeledTextProps {
 
   iconClassName?: string;
   textClassName?: string;
+  containerClassName?: string;
 }
 
 export function LabeledText({
@@ -47,18 +48,19 @@ export function LabeledText({
   className,
   textClassName,
   iconClassName,
+  containerClassName,
   icon,
   large = false,
 }: LabeledTextProps): ReactElement {
   return (
-    <div className={tw("flex", "justify-center", "items-center", "w-full")}>
+    <div
+      className={classNames(
+        tw("flex", "items-center", "w-full"),
+        containerClassName
+      )}
+    >
       {icon && <div className={iconClassName}>{icon}</div>}
-      <div
-        className={classNames(
-          tw("flex", "flex-col", "justify-center", "items-center"),
-          className
-        )}
-      >
+      <div className={classNames(tw("flex", "flex-col"), className)}>
         <span
           className={classNames(
             tw({ "font-semibold": bold, "text-lg": large }),

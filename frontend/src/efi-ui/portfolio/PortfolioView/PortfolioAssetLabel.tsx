@@ -1,21 +1,13 @@
-import React, { ReactElement } from "react";
-
-import { Money } from "ts-money";
+import { ReactElement } from "react";
 
 import tw from "efi-tailwindcss-classnames";
-import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 
 interface PortfolioAssetLabelProps {
-  id: string;
   name: string;
-  quantity: number;
-  totalFiatValue: Money;
 }
 
 export function PortfolioAssetLabel({
-  quantity,
   name,
-  totalFiatValue,
 }: PortfolioAssetLabelProps): ReactElement {
   return (
     <div
@@ -29,11 +21,7 @@ export function PortfolioAssetLabel({
         "items-center"
       )}
     >
-      <LabeledText
-        text={name}
-        label={""}
-        className={tw("leading-none", "space-y-2")}
-      />
+      {name}
     </div>
   );
 }
