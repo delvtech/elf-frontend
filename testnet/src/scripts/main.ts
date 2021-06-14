@@ -26,6 +26,7 @@ import { Signer } from "ethers";
 import { ERC20 } from "src/types/ERC20";
 import { Vault } from "src/types/Vault";
 import { UserProxy } from "src/types/UserProxy";
+import { USDC, WETH } from "src/types";
 
 async function main() {
   const elementSigner = await getSigner(SIGNER.ELEMENT, hre);
@@ -339,14 +340,15 @@ main()
 
 async function mintTrancheTokensForSigner(
   signer: Signer,
-  baseAssetContractUnsigend: ERC20,
+  // WETH for now since ERC20 doesn't have a mint method
+  baseAssetContractUnsigned: WETH | USDC,
   trancheContractUnsigend: Tranche,
   balancerVaultContract: Vault,
   userProxyContractUnsigend: UserProxy,
   amount: string = "100"
 ) {
   const signerAddress = await signer.getAddress();
-  const baseAssetContract = baseAssetContractUnsigend.connect(signer);
+  const baseAssetContract = baseAssetContractUnsigned.connect(signer);
   const trancheContract = trancheContractUnsigend.connect(signer);
   const userProxyContract = userProxyContractUnsigend.connect(signer);
 
