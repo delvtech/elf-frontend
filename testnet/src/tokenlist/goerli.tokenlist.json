@@ -27,7 +27,7 @@
       "description": "Token that wraps a yield position, ie: Yearn vault asset proxy"
     }
   },
-  "timestamp": "2021-06-01T21:59:38.376Z",
+  "timestamp": "2021-06-15T02:52:40.432Z",
   "version": {
     "major": 0,
     "minor": 0,
@@ -265,7 +265,8 @@
         "underlying": "0x78dEca24CBa286C0f8d56370f5406B48cFCE2f86",
         "poolId": "0x40bf8a2ecb62c6b880302b55a5552a4e315b5827000200000000000000000062",
         "unitSeconds": 252480000,
-        "expiration": 1628211057
+        "expiration": 1628211057,
+        "createdAtTimestamp": 1620435562
       },
       "name": "Element USDC - fyUSDC",
       "tags": [
@@ -282,7 +283,8 @@
         "underlying": "0x9A1000D492d40bfccbc03f413A48F5B6516Ec0Fd",
         "poolId": "0x5941db4d6c500c4ffa57c359ee0c55c6b41d0b61000200000000000000000064",
         "unitSeconds": 284040000,
-        "expiration": 1621010937
+        "expiration": 1621010937,
+        "createdAtTimestamp": 1620435682
       },
       "name": "Element WETH - fyWETH",
       "tags": [
@@ -299,7 +301,8 @@
         "underlying": "0x9A1000D492d40bfccbc03f413A48F5B6516Ec0Fd",
         "poolId": "0x9eb7f54c0ecc4d0d2dff28a1276e36d598f2b0d1000200000000000000000066",
         "unitSeconds": 284040000,
-        "expiration": 1628210937
+        "expiration": 1628210937,
+        "createdAtTimestamp": 1620435847
       },
       "name": "Element WETH - fyWETH",
       "tags": [
@@ -316,7 +319,8 @@
         "underlying": "0x78dEca24CBa286C0f8d56370f5406B48cFCE2f86",
         "poolId": "0x5e5d0f28d52ebc7dfe101542e3bfd32f09065f15000200000000000000000072",
         "unitSeconds": 347126472,
-        "expiration": 1622661612
+        "expiration": 1622661612,
+        "createdAtTimestamp": 1622053097
       },
       "name": "LP Principal Token eyUSDC:02-JUN-21-GMT",
       "tags": [
@@ -333,7 +337,8 @@
         "underlying": "0x78dEca24CBa286C0f8d56370f5406B48cFCE2f86",
         "poolId": "0x680c7914e2cae78a2ac94dabf6277692ef652353000200000000000000000074",
         "unitSeconds": 347126472,
-        "expiration": 1623266597
+        "expiration": 1623266597,
+        "createdAtTimestamp": 1622575622
       },
       "name": "LP Principal Token eyUSDC:09-JUN-21-GMT",
       "tags": [
@@ -348,7 +353,8 @@
       "extensions": {
         "poolId": "0x252797e51f51631b6956545c45f9d3f9ffcb0940000200000000000000000063",
         "underlying": "0x78dEca24CBa286C0f8d56370f5406B48cFCE2f86",
-        "interestToken": "0x2c637c5142eE4F31A1a78Ad3DF012fc242F6CAe6"
+        "interestToken": "0x2c637c5142eE4F31A1a78Ad3DF012fc242F6CAe6",
+        "createdAtTimestamp": 1620435577
       },
       "name": "Ele BPT",
       "tags": [
@@ -363,7 +369,8 @@
       "extensions": {
         "poolId": "0xcf6894c48c2af3ddd433cc1edfefc74e654cc9b4000200000000000000000065",
         "underlying": "0x9A1000D492d40bfccbc03f413A48F5B6516Ec0Fd",
-        "interestToken": "0x91dDF92af38Afac1B59F450dDb94ddab10a11490"
+        "interestToken": "0x91dDF92af38Afac1B59F450dDb94ddab10a11490",
+        "createdAtTimestamp": 1620435742
       },
       "name": "Ele BPT",
       "tags": [
@@ -378,7 +385,8 @@
       "extensions": {
         "poolId": "0xd75bff2444ff738d443066ff4688691e6852b217000200000000000000000067",
         "underlying": "0x9A1000D492d40bfccbc03f413A48F5B6516Ec0Fd",
-        "interestToken": "0xBf4B5cB5ca49B1eF6B02615a94980723f6484899"
+        "interestToken": "0xBf4B5cB5ca49B1eF6B02615a94980723f6484899",
+        "createdAtTimestamp": 1620435862
       },
       "name": "Ele BPT",
       "tags": [
@@ -393,7 +401,8 @@
       "extensions": {
         "poolId": "0x7dfd3ec2dd0020b7f85e0555b6d499156420d796000200000000000000000070",
         "underlying": "0x78dEca24CBa286C0f8d56370f5406B48cFCE2f86",
-        "interestToken": "0x8F28E7085882Ef6010a74Fa092C4eC519A0583B5"
+        "interestToken": "0x8F28E7085882Ef6010a74Fa092C4eC519A0583B5",
+        "createdAtTimestamp": 1621970877
       },
       "name": "LP Element Yield Token eyUSDC:02-JUN-21-GMT",
       "tags": [
@@ -408,7 +417,8 @@
       "extensions": {
         "poolId": "0xcdee31456e502ef883316d4f6a3cf12027554afe000200000000000000000073",
         "underlying": "0x78dEca24CBa286C0f8d56370f5406B48cFCE2f86",
-        "interestToken": "0x51E7DF22DF4A391A5702D6a99a350cE3c55c02Ce"
+        "interestToken": "0x51E7DF22DF4A391A5702D6a99a350cE3c55c02Ce",
+        "createdAtTimestamp": 1622575577
       },
       "name": "LP Element Yield Token eyUSDC:09-JUN-21-GMT",
       "tags": [

@@ -1,7 +1,7 @@
 import { TokenInfo } from "@uniswap/token-lists";
 import hre from "hardhat";
 import zip from "lodash.zip";
-import { TokenListTag } from "src/tokenlist/types";
+import { PrincipalPoolTokenInfo, TokenListTag } from "src/tokenlist/types";
 
 import { ConvergentCurvePool__factory } from "src/types/factories/ConvergentCurvePool__factory";
 import { ConvergentPoolFactory__factory } from "src/types/factories/ConvergentPoolFactory__factory";
@@ -20,7 +20,8 @@ export async function getCCPools(
   const events = await poolFactory.queryFilter(filter);
   const poolCreatedEvents = events.map((event) => {
     const [poolAddress, bondTokenAddress] = event.args || [];
-    return { poolAddress, bondTokenAddress };
+    const { blockNumber } = event;
+    return { poolAddress, bondTokenAddress, blockNumber };
   });
 
   const safePoolEvents = poolCreatedEvents.filter(({ poolAddress }) =>
@@ -36,6 +37,14 @@ export async function getCCPools(
   const poolBondAddresses = safePoolEvents.map(
     ({ bondTokenAddress }) => bondTokenAddress
   );
+
+  const poolCreatedAts = await Promise.all(
+    safePoolEvents.map(async ({ blockNumber }) => {
+      const block = await provider.getBlock(blockNumber as number);
+      return +block.timestamp;
+    })
+  );
+
   const poolIds = await Promise.all(safePools.map((pool) => pool.getPoolId()));
   const poolUnderlyingAddresses = await Promise.all(
     safePools.map((pool) => pool.underlying())
@@ -61,7 +70,8 @@ export async function getCCPools(
     poolUnderlyingAddresses,
     poolIds,
     poolUnitSeconds,
-    poolExpirations
+    poolExpirations,
+    poolCreatedAts
   ).map(
     ([
       address,
@@ -73,7 +83,8 @@ export async function getCCPools(
       poolId,
       unitSeconds,
       expiration,
-    ]): TokenInfo => {
+      poolCreatedAt,
+    ]): PrincipalPoolTokenInfo => {
       return {
         chainId,
         address: address as string,
@@ -85,6 +96,7 @@ export async function getCCPools(
           poolId: poolId as string,
           unitSeconds: unitSeconds.toNumber() as number,
           expiration: expiration.toNumber() as number,
+          createdAtTimestamp: poolCreatedAt as number,
         },
         name: name as string,
         tags: [TokenListTag.CCPOOL],

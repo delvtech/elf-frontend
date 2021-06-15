@@ -26,7 +26,8 @@ export async function getWeightedPools(
   const events = await poolFactory.queryFilter(filter);
   const poolCreatedEvents = events.map((event) => {
     const [poolAddress] = event.args || [];
-    return { poolAddress };
+    const { blockNumber } = event;
+    return { poolAddress, blockNumber };
   });
 
   const safePoolEvents = poolCreatedEvents.filter(({ poolAddress }) =>
@@ -39,6 +40,12 @@ export async function getWeightedPools(
     WeightedPool__factory.connect(poolAddress, provider)
   );
 
+  const poolCreatedAts = await Promise.all(
+    safePoolEvents.map(async ({ blockNumber }) => {
+      const block = await provider.getBlock(blockNumber as number);
+      return +block.timestamp;
+    })
+  );
   const poolIds = await Promise.all(safePools.map((pool) => pool.getPoolId()));
   const poolNames = await Promise.all(safePools.map((pool) => pool.name()));
   const underlyingAddresses = await Promise.all(
@@ -72,7 +79,8 @@ export async function getWeightedPools(
     poolDecimals,
     poolIds,
     underlyingAddresses,
-    interestTokenAddresses
+    interestTokenAddresses,
+    poolCreatedAts
   ).map(
     ([
       address,
@@ -82,6 +90,7 @@ export async function getWeightedPools(
       poolId,
       underlying,
       interestToken,
+      poolCreatedAt,
     ]): YieldPoolTokenInfo => {
       return {
         chainId,
@@ -92,6 +101,7 @@ export async function getWeightedPools(
           poolId: poolId as string,
           underlying: underlying as string,
           interestToken: interestToken as string,
+          createdAtTimestamp: poolCreatedAt as number,
         },
         name: name as string,
         tags: [TokenListTag.WPOOL],

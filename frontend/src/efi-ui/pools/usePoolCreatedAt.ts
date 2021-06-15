@@ -7,6 +7,9 @@ import ContractAddresses from "efi/addresses";
 import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
 import { PoolContract } from "efi/pools/PoolContract";
 
+/**
+ * @deprecated use tokenlist instead
+ */
 export function usePoolCreatedAt(
   pool: PoolContract | undefined
 ): number | undefined {

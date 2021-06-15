@@ -87,6 +87,11 @@ export interface PrincipalPoolTokenInfo extends TokenInfo {
     poolId: string;
 
     /**
+     * Number of seconds after epoch when the pool was created
+     */
+    createdAtTimestamp: number;
+
+    /**
      * Number of seconds after epoch when the pool assets will converge in
      * price.
      */
@@ -116,6 +121,11 @@ export interface YieldPoolTokenInfo extends TokenInfo {
      * The underlying base asset for the yield token
      */
     poolId: string;
+
+    /**
+     * Number of seconds after epoch when the pool was created
+     */
+    createdAtTimestamp: number;
   };
 }
 
