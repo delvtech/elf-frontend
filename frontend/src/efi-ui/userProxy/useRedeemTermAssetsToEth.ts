@@ -1,42 +1,36 @@
 import { useCallback } from "react";
 
-import { ERC20Permit } from "elf-contracts/types/ERC20Permit";
-import { ERC20Permit__factory } from "elf-contracts/types/factories/ERC20Permit__factory";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { UserProxy } from "elf-contracts/types/UserProxy";
 import { BigNumber, ethers, Signer } from "ethers";
 
 import { fetchPermitData, PermitCallData } from "efi-ui/base/fetchPermitData";
-import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useUserProxy } from "efi-ui/mint/hooks/userProxy";
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
-import { useTranchePosition } from "efi-ui/tranche/useTranchePosition";
-import { useTrancheUnlockTimestamp } from "efi-ui/tranche/useTrancheUnlockTimestamp";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
 import { flushPromises } from "efi/base/flush";
-import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
 import { ContractMethodArgs } from "efi/contracts/types";
+import { PrincipalTokenInfo } from "tokenlists/types";
+import { getTokenInfo } from "efi/tokenlists";
+import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
 
 export function useRedeemTermAssetsToEth(
   signer: Signer | undefined,
   tranche: Tranche | undefined,
   account: string | null | undefined,
   // note both are required.  set to BigNumber.from(0) if you don't want that one.
-  amountPrincipalToken: BigNumber,
+  amountPrinicpalToken: BigNumber,
   amountYieldToken: BigNumber
 ): () => void {
-  const { data: expiration } = useTrancheUnlockTimestamp(tranche);
-  const { data: position } = useTranchePosition(tranche);
-
-  const principalTokenContract = tranche as ERC20Permit;
-  const { data: yieldTokenAddress } = useSmartContractReadCall(
-    tranche,
-    "interestToken"
-  );
-  const yieldTokenContract = getSmartContractFromRegistry(
-    yieldTokenAddress,
-    ERC20Permit__factory.connect
-  );
+  const principalTokenInfo = tranche
+    ? getTokenInfo<PrincipalTokenInfo>(tranche.address)
+    : undefined;
+  const expiration = principalTokenInfo?.extensions.unlockTimestamp;
+  const position = principalTokenInfo?.extensions.position;
+  const interestTokenAddress = principalTokenInfo?.extensions.interestToken;
+  const interestTokenContract = interestTokenAddress
+    ? interestTokenContractsByAddress[interestTokenAddress]
+    : undefined;
 
   const userProxy = useUserProxy();
   const { mutate: withdrawToEth } = useSmartContractTransactionPersisted(
@@ -46,13 +40,13 @@ export function useRedeemTermAssetsToEth(
   );
 
   const { data: ptApproval } = useTokenAllowance(
-    principalTokenContract,
+    tranche,
     account,
     userProxy?.address
   );
 
   const { data: ytApproval } = useTokenAllowance(
-    yieldTokenContract,
+    interestTokenContract,
     account,
     userProxy?.address
   );
@@ -64,15 +58,15 @@ export function useRedeemTermAssetsToEth(
       !userProxy ||
       !expiration ||
       !position ||
-      !principalTokenContract ||
-      !yieldTokenContract ||
+      !tranche ||
+      !interestTokenContract ||
       !ptApproval ||
       !ytApproval
     ) {
       return;
     }
     // we need an amount from at least one
-    if (!amountPrincipalToken.gt(0) && !amountYieldToken.gt(0)) {
+    if (!amountPrinicpalToken.gt(0) && !amountYieldToken.gt(0)) {
       return;
     }
 
@@ -81,10 +75,10 @@ export function useRedeemTermAssetsToEth(
 
     const permits: PermitCallData[] = [];
 
-    if (ptApproval.lt(amountPrincipalToken)) {
+    if (ptApproval.lt(amountPrinicpalToken)) {
       const ptPermitData = await fetchPermitData(
         signer,
-        principalTokenContract,
+        tranche,
         principalTokenName,
         account,
         userProxy.address,
@@ -105,7 +99,7 @@ export function useRedeemTermAssetsToEth(
     if (ytApproval.lt(amountYieldToken)) {
       const ytPermitData = await fetchPermitData(
         signer,
-        yieldTokenContract,
+        interestTokenContract,
         yieldTokenName,
         account,
         userProxy.address,
@@ -123,7 +117,7 @@ export function useRedeemTermAssetsToEth(
     const withdrawInterestToEthCallArgs = makeWithdrawInterestToEthCallArgs(
       expiration,
       position,
-      amountPrincipalToken,
+      amountPrinicpalToken,
       amountYieldToken,
       permits
     );
@@ -131,21 +125,21 @@ export function useRedeemTermAssetsToEth(
     withdrawToEth(withdrawInterestToEthCallArgs);
   }, [
     account,
-    amountPrincipalToken,
+    amountPrinicpalToken,
     amountYieldToken,
     expiration,
+    interestTokenContract,
     position,
-    principalTokenContract,
     ptApproval,
     signer,
+    tranche,
     userProxy,
     withdrawToEth,
-    yieldTokenContract,
     ytApproval,
   ]);
 }
 export function makeWithdrawInterestToEthCallArgs(
-  expiration: BigNumber,
+  expiration: number,
   position: string,
   amountPT: BigNumber,
   amountYT: BigNumber,
