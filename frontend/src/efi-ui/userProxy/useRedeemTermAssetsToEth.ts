@@ -22,7 +22,7 @@ export function useRedeemTermAssetsToEth(
   tranche: Tranche | undefined,
   account: string | null | undefined,
   // note both are required.  set to BigNumber.from(0) if you don't want that one.
-  amountPrinicpalToken: BigNumber,
+  amountPrincipalToken: BigNumber,
   amountYieldToken: BigNumber
 ): () => void {
   const { data: expiration } = useTrancheUnlockTimestamp(tranche);
@@ -72,7 +72,7 @@ export function useRedeemTermAssetsToEth(
       return;
     }
     // we need an amount from at least one
-    if (!amountPrinicpalToken.gt(0) && !amountYieldToken.gt(0)) {
+    if (!amountPrincipalToken.gt(0) && !amountYieldToken.gt(0)) {
       return;
     }
 
@@ -81,7 +81,7 @@ export function useRedeemTermAssetsToEth(
 
     const permits: PermitCallData[] = [];
 
-    if (ptApproval.lt(amountPrinicpalToken)) {
+    if (ptApproval.lt(amountPrincipalToken)) {
       const ptPermitData = await fetchPermitData(
         signer,
         principalTokenContract,
@@ -123,7 +123,7 @@ export function useRedeemTermAssetsToEth(
     const withdrawInterestToEthCallArgs = makeWithdrawInterestToEthCallArgs(
       expiration,
       position,
-      amountPrinicpalToken,
+      amountPrincipalToken,
       amountYieldToken,
       permits
     );
@@ -131,7 +131,7 @@ export function useRedeemTermAssetsToEth(
     withdrawToEth(withdrawInterestToEthCallArgs);
   }, [
     account,
-    amountPrinicpalToken,
+    amountPrincipalToken,
     amountYieldToken,
     expiration,
     position,
