@@ -1,6 +1,13 @@
 import { ReactElement } from "react";
 
-import { Button, Card, Intent, Tag } from "@blueprintjs/core";
+import {
+  Button,
+  Card,
+  Intent,
+  Spinner,
+  SpinnerSize,
+  Tag,
+} from "@blueprintjs/core";
 import { PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
@@ -14,6 +21,8 @@ import { formatBalance } from "efi/base/formatBalance";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getIsMature2 } from "efi/tranche/getIsMature";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
+import { usePendingTransactionPref } from "efi-ui/transactions/usePendingTransactionPref/usePendingTransactionPref";
+import { isPrincipalTokenSwapPendingTransaction } from "efi-ui/portfolio/hooks/isPrincipalTokenSwapPendingTransaction";
 
 interface PrincipalTokenSummaryCardProps {
   account: string | null | undefined;
@@ -47,6 +56,14 @@ export function PrincipalTokenSummaryCard(
   const unlockDate = convertEpochSecondsToDate2(unlockTimestamp);
   const formattedUnlockDate = formatAbbreviatedDate(unlockDate);
   const isRedeemable = getIsMature2(unlockTimestamp);
+
+  // spinner
+  const pendingTxPref = usePendingTransactionPref();
+  const showSpinner = isPrincipalTokenSwapPendingTransaction(
+    pendingTxPref,
+    address
+  );
+
   return (
     <Card
       className={tw("grid", "grid-cols-5", "gap-4")}
@@ -60,7 +77,12 @@ export function PrincipalTokenSummaryCard(
           text={name}
         />
       </div>
-      <span>{balanceLabel}</span>
+      <span>
+        {showSpinner ? (
+          <Spinner className={tw("inline-flex")} size={SpinnerSize.SMALL} />
+        ) : null}{" "}
+        {balanceLabel}
+      </span>
       <span>
         <Tag fill intent={isRedeemable ? Intent.SUCCESS : Intent.PRIMARY}>
           {formattedUnlockDate}
