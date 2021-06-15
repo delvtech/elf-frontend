@@ -2,7 +2,6 @@ import { Fragment, ReactElement, useCallback, useState } from "react";
 
 import { Button, Intent, Tag } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
-import { ConvergentCurvePool } from "elf-contracts/types";
 import { formatUnits } from "ethers/lib/utils";
 import { PrincipalPoolTokenInfo, PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
@@ -12,16 +11,12 @@ import tw from "efi-tailwindcss-classnames";
 import { SwapKind } from "efi-ui/balancer/SwapKind";
 import { getCalcSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
-import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
-import { usePoolSpotPrice2 } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { usePoolTotalSupply } from "efi-ui/pools/usePoolTotalSupply";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { TokenAmountInput } from "efi-ui/token/TokenAmountInput/TokenAmountInput";
 import { formatBalance } from "efi/base/formatBalance";
 import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
-import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { getPrincipalPoolForTranche } from "efi/pools/ccpool";
 import { getPoolContract } from "efi/pools/getPoolContract";
@@ -44,11 +39,11 @@ export function RedeemPrincipalTokensForm(
   const {
     library,
     account,
+    principalToken,
     principalToken: {
       address: ptAddress,
       decimals: ptDecimals,
       symbol: ptSymbol,
-      extensions: { underlying: underlyingAddress },
     },
   } = props;
 
@@ -63,16 +58,12 @@ export function RedeemPrincipalTokensForm(
 
   // base asset
   const baseAsset = getBaseAssetForTranche(ptAddress);
-  const baseAssetIcon = findAssetIcon2(baseAsset);
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
-  const baseAssetDecimals = getCryptoDecimals(baseAsset);
 
   // principal token
   const trancheContract = trancheContractsByAddress[ptAddress];
   const { data: ptBalanceOf } = useTokenBalanceOf(trancheContract, account);
   const ptBalanceLabel = formatBalance(ptBalanceOf, ptDecimals, ptDecimals);
-  const principalTokenCryptoAsset = getCryptoAssetForToken(ptAddress);
-  const ptIcon = findAssetIcon2(principalTokenCryptoAsset);
 
   // inputs
   const poolInfo = getPrincipalPoolForTranche(ptAddress);
@@ -129,10 +120,10 @@ export function RedeemPrincipalTokensForm(
         </div>
       </div>
       <RedeemPrincipalTokensConfirmationDrawer
-        baseAsset={baseAsset}
         library={library}
-        tranche={trancheContractsByAddress[ptAddress]}
+        principalTokenInfo={principalToken}
         account={account}
+        amountIn={amountIn}
         isOpen={isDrawerOpen}
         onClose={closeDrawer}
       />
