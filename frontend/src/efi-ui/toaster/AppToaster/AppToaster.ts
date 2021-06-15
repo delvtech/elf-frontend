@@ -21,7 +21,7 @@ import { IconName, IconNames } from "@blueprintjs/icons";
  * AppToaster.show({ message: "Toasted." });
  */
 export const AppToaster = Toaster.create({
-  position: Position.TOP_RIGHT,
+  position: Position.TOP,
 
   // TODO: Figure out a way to change this dynamically via user pref. Might need
   // to contribute a Toaster.setClassName() method back to Blueprint for this,
