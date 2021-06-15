@@ -103,7 +103,8 @@ export function BuyPrincipalTokensForm(
   );
 
   const buttonDisabled =
-    !!tokenInError || !!tokenOutError || !baseAssetInputValue;
+    !!tokenInError || !!tokenOutError || !+baseAssetInputValue; // cover the case where they type "0"
+
   let buttonIntent: Intent = Intent.PRIMARY;
   if (tokenInError || tokenOutError) {
     buttonIntent = Intent.DANGER;

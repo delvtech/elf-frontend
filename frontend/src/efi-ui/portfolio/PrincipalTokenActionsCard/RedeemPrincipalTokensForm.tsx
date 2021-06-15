@@ -2,7 +2,6 @@ import { Fragment, ReactElement, useCallback, useState } from "react";
 
 import { Button, Intent, Tag } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
-import { ConvergentCurvePool } from "elf-contracts/types";
 import { formatUnits } from "ethers/lib/utils";
 import { PrincipalPoolTokenInfo, PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
@@ -12,17 +11,12 @@ import tw from "efi-tailwindcss-classnames";
 import { SwapKind } from "efi-ui/balancer/SwapKind";
 import { getCalcSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
-import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
-import { usePoolSpotPrice2 } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { usePoolTotalSupply } from "efi-ui/pools/usePoolTotalSupply";
-import { SwapTokensTransactionConfirmationDrawer } from "efi-ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensTransactionConfirmationDrawer";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { TokenAmountInput } from "efi-ui/token/TokenAmountInput/TokenAmountInput";
 import { formatBalance } from "efi/base/formatBalance";
 import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
-import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { getPrincipalPoolForTranche } from "efi/pools/ccpool";
 import { getPoolContract } from "efi/pools/getPoolContract";
@@ -31,26 +25,28 @@ import { validateTradeValues } from "efi/trade/validateTradeValues";
 import { getBaseAssetForTranche } from "efi/tranche/baseAssets";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
+import { RedeemPrincipalTokensConfirmationDrawer } from "efi-ui/tranche/RedeemTokensDrawer/RedeemPrincipalTokensConfirmationDrawer/RedeemPrincipalTokensConfirmationDrawer";
 
-interface SellPrincipalTokensFormProps {
+interface RedeemPrincipalTokensFormProps {
   library: Web3Provider | undefined;
   account: string | null | undefined;
   principalToken: PrincipalTokenInfo;
 }
 
-export function SellPrincipalTokensForm(
-  props: SellPrincipalTokensFormProps
+export function RedeemPrincipalTokensForm(
+  props: RedeemPrincipalTokensFormProps
 ): ReactElement {
   const {
     library,
     account,
+    principalToken,
     principalToken: {
       address: ptAddress,
       decimals: ptDecimals,
       symbol: ptSymbol,
-      extensions: { underlying: underlyingAddress },
     },
   } = props;
+
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const openDrawer = useCallback(() => setDrawerOpen(true), []);
   const { stringValue: amountIn, setValue: onAmountInChange } =
@@ -62,16 +58,12 @@ export function SellPrincipalTokensForm(
 
   // base asset
   const baseAsset = getBaseAssetForTranche(ptAddress);
-  const baseAssetIcon = findAssetIcon2(baseAsset);
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
-  const baseAssetDecimals = getCryptoDecimals(baseAsset);
 
   // principal token
   const trancheContract = trancheContractsByAddress[ptAddress];
   const { data: ptBalanceOf } = useTokenBalanceOf(trancheContract, account);
   const ptBalanceLabel = formatBalance(ptBalanceOf, ptDecimals, ptDecimals);
-  const principalTokenCryptoAsset = getCryptoAssetForToken(ptAddress);
-  const ptIcon = findAssetIcon2(principalTokenCryptoAsset);
 
   // inputs
   const poolInfo = getPrincipalPoolForTranche(ptAddress);
@@ -80,12 +72,8 @@ export function SellPrincipalTokensForm(
     poolInfo,
     amountIn
   );
-  const previewAmountOut = useCalculateUnderlyingTokenOut(poolInfo, amountIn);
-  const poolContract = getPoolContract(poolInfo.address) as ConvergentCurvePool;
-  const spotPrice = usePoolSpotPrice2(poolContract, underlyingAddress);
 
-  const buttonDisabled = !!tokenInError || !!tokenOutError || !+amountIn; // cover the case where they type  "" or "0";
-
+  const buttonDisabled = !!tokenInError || !!tokenOutError || !amountIn;
   let buttonIntent: Intent = Intent.PRIMARY;
   if (tokenInError || tokenOutError) {
     buttonIntent = Intent.DANGER;
@@ -97,7 +85,7 @@ export function SellPrincipalTokensForm(
         <div className={tw("flex", "flex-col", "w-full", "space-y-2")}>
           <span
             className={tw("pb-4")}
-          >{t`Sell your principal tokens for ${baseAssetSymbol}`}</span>
+          >{t`Redeem ${baseAssetSymbol} for your principal tokens`}</span>
           <div className={tw("grid", "grid-cols-4", "gap-3")}>
             <TokenAmountInput
               className={tw("col-span-3")}
@@ -121,7 +109,7 @@ export function SellPrincipalTokensForm(
                 large
                 intent={buttonIntent}
                 onClick={openDrawer}
-              >{t`Sell`}</Button>
+              >{t`Redeem`}</Button>
             </div>
           </div>
           <div className={tw("grid", "grid-cols-4", "gap-3")}>
@@ -131,24 +119,11 @@ export function SellPrincipalTokensForm(
           </div>
         </div>
       </div>
-      <SwapTokensTransactionConfirmationDrawer
-        buttonLabel={t`Sell`}
-        tokenInAddress={ptAddress}
-        tokenInSymbol={ptSymbol}
-        tokenInDecimals={ptDecimals}
-        tokenInAsset={principalTokenCryptoAsset}
-        tokenInIcon={ptIcon}
-        tokenOutAddress={underlyingAddress}
-        tokenOutSymbol={baseAssetSymbol}
-        tokenOutDecimals={baseAssetDecimals}
-        tokenOutIcon={baseAssetIcon}
-        account={account}
+      <RedeemPrincipalTokensConfirmationDrawer
         library={library}
-        pool={poolContract}
+        principalTokenInfo={principalToken}
+        account={account}
         amountIn={amountIn}
-        amountOut={previewAmountOut}
-        swapKind={SwapKind.GIVEN_IN}
-        spotPrice={spotPrice}
         isOpen={isDrawerOpen}
         onClose={closeDrawer}
       />

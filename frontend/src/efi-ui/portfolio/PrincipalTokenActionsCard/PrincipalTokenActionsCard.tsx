@@ -10,7 +10,7 @@ import { PrincipalTokenActionTabId } from "efi-ui/portfolio/PrincipalTokenAction
 import { PrincipalTokenActionTabs } from "efi-ui/portfolio/PrincipalTokenActionTabs/PrincipalTokenActionTabs";
 import { PrincipalTokenInformation } from "efi-ui/portfolio/PrincipalTokenInformation/PrincipalTokenInformation";
 import { SellPrincipalTokensForm } from "efi-ui/portfolio/PrincipalTokenActionsCard/SellPrincipalTokensForm";
-import { getIsMature2 } from "efi/tranche/getIsMature";
+import { RedeemPrincipalTokensForm } from "efi-ui/portfolio/PrincipalTokenActionsCard/RedeemPrincipalTokensForm";
 
 interface PrincipalTokenActionsCardProps {
   library: Web3Provider | undefined;
@@ -23,26 +23,15 @@ interface PrincipalTokenActionsCardProps {
 export function PrincipalTokenActionsCard(
   props: PrincipalTokenActionsCardProps
 ): ReactElement {
-  const {
-    library,
-    account,
-    activeTabId,
-    setActiveTabId,
-    principalToken,
-    principalToken: {
-      extensions: { unlockTimestamp },
-    },
-  } = props;
-
-  // base asset
-  const isMature = getIsMature2(unlockTimestamp);
+  const { library, account, activeTabId, setActiveTabId, principalToken } =
+    props;
 
   return (
     <Card className={tw("flex", "space-x-6")}>
       <PrincipalTokenActionTabs
+        principalToken={principalToken}
         activeTabId={activeTabId}
         onSetActiveTab={setActiveTabId}
-        isRedeemDisabled={!isMature}
       />
 
       <div className={tw("flex", "flex-col", "flex-1")}>
@@ -61,7 +50,7 @@ export function PrincipalTokenActionsCard(
           />
         ) : null}
         {activeTabId === PrincipalTokenActionTabId.REDEEM ? (
-          <SellPrincipalTokensForm
+          <RedeemPrincipalTokensForm
             account={account}
             library={library}
             principalToken={principalToken}

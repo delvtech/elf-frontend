@@ -15,7 +15,10 @@ import styles from "./styles.module.css";
 interface RedeemFormProps {
   tranche: Tranche | undefined;
   amount: string | undefined;
-  onSetMaxAmount: () => void;
+  /**
+   * If provided, this will render a MAX button
+   */
+  onSetMaxAmount?: () => void;
 
   /**
    * If set this will override the symbol lookup for assetTwo. This is useful
@@ -80,11 +83,13 @@ export function RedeemForm({
               </div>
             }
           />
-          <Button
-            className={tw("flex-shrink-0")}
-            outlined
-            onClick={onSetMaxAmount}
-          >{t`MAX`}</Button>
+          {onSetMaxAmount ? (
+            <Button
+              className={tw("flex-shrink-0")}
+              outlined
+              onClick={onSetMaxAmount}
+            >{t`MAX`}</Button>
+          ) : null}
         </div>
       </div>
       <Divider />
