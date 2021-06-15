@@ -10,7 +10,7 @@ import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
 import { flushPromises } from "efi/base/flush";
 import { ContractMethodArgs } from "efi/contracts/types";
-import { PrincipalTokenInfo } from "tokenlists/types";
+import { PrincipalTokenInfo, YieldTokenInfo } from "tokenlists/types";
 import { getTokenInfo } from "efi/tokenlists";
 import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
 
@@ -28,6 +28,9 @@ export function useRedeemTermAssetsToEth(
   const expiration = principalTokenInfo?.extensions.unlockTimestamp;
   const position = principalTokenInfo?.extensions.position;
   const interestTokenAddress = principalTokenInfo?.extensions.interestToken;
+  const yieldTokenInfo = getTokenInfo<YieldTokenInfo>(
+    interestTokenAddress as string
+  );
   const interestTokenContract = interestTokenAddress
     ? interestTokenContractsByAddress[interestTokenAddress]
     : undefined;
@@ -71,7 +74,8 @@ export function useRedeemTermAssetsToEth(
     }
 
     // Note the trailing space is required
-    const principalTokenName = "Principal Token ";
+    const principalTokenName = principalTokenInfo?.name as string;
+    console.log("principalTokenName", principalTokenName);
 
     const permits: PermitCallData[] = [];
 
@@ -94,7 +98,8 @@ export function useRedeemTermAssetsToEth(
     await flushPromises(100);
 
     // Note the trailing space is required
-    const yieldTokenName = "Element Yield Token ";
+    const yieldTokenName = yieldTokenInfo.name;
+    console.log("yieldTokenName", yieldTokenName);
 
     if (ytApproval.lt(amountYieldToken)) {
       const ytPermitData = await fetchPermitData(
@@ -130,11 +135,13 @@ export function useRedeemTermAssetsToEth(
     expiration,
     interestTokenContract,
     position,
+    principalTokenInfo,
     ptApproval,
     signer,
     tranche,
     userProxy,
     withdrawToEth,
+    yieldTokenInfo,
     ytApproval,
   ]);
 }
