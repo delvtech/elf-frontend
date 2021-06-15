@@ -4,6 +4,11 @@ The purpose of this repo is automate the setup of a local testnet to run the elf
 
 ## How to run
 
+###
+
+our code requires npm version 14.11.0. Please update to this version before trying to run the
+testnet.
+
 ### Get the contracts
 
 ```bash
@@ -11,9 +16,11 @@ $ npm run load-contracts
 ```
 
 #### Compile the contracts
+
 ```bash
 $ npm run build
 ```
+
 ### Run the hardhat local testnet
 
 Install npm packages
