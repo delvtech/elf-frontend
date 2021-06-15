@@ -107,6 +107,8 @@ export type { Tranche } from "./Tranche";
 export type { UserProxy } from "./UserProxy";
 export type { WrappedPosition } from "./WrappedPosition";
 export type { YVaultAssetProxy } from "./YVaultAssetProxy";
+export type { ZapTrancheHop } from "./ZapTrancheHop";
+export type { ZapYearnShares } from "./ZapYearnShares";
 export type { USDC } from "./USDC";
 
 export { ERC20Permit__factory } from "./factories/ERC20Permit__factory";
@@ -215,4 +217,6 @@ export { Tranche__factory } from "./factories/Tranche__factory";
 export { UserProxy__factory } from "./factories/UserProxy__factory";
 export { WrappedPosition__factory } from "./factories/WrappedPosition__factory";
 export { YVaultAssetProxy__factory } from "./factories/YVaultAssetProxy__factory";
+export { ZapTrancheHop__factory } from "./factories/ZapTrancheHop__factory";
+export { ZapYearnShares__factory } from "./factories/ZapYearnShares__factory";
 export { USDC__factory } from "./factories/USDC__factory";
