@@ -59,7 +59,7 @@ export function RedeemPrincipalTokensDrawer({
   const { stringValue: trancheAmountString, setValue: setTrancheAmountString } =
     useNumericInput({
       min: 0,
-      maxPrecision: trancheDecimals,
+      maxPrecision: trancheDecimals ?? 18,
     });
 
   const { data: accountTrancheBalance } = useTokenBalanceOf(tranche, account);

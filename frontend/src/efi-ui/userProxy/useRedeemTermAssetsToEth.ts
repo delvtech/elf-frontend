@@ -3,6 +3,7 @@ import { useCallback } from "react";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { UserProxy } from "elf-contracts/types/UserProxy";
 import { BigNumber, ethers, Signer } from "ethers";
+import { PrincipalTokenInfo } from "tokenlists/types";
 
 import { fetchPermitData, PermitCallData } from "efi-ui/base/fetchPermitData";
 import { useUserProxy } from "efi-ui/mint/hooks/userProxy";
@@ -10,9 +11,8 @@ import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
 import { flushPromises } from "efi/base/flush";
 import { ContractMethodArgs } from "efi/contracts/types";
-import { PrincipalTokenInfo, YieldTokenInfo } from "tokenlists/types";
-import { getTokenInfo } from "efi/tokenlists";
 import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
+import { getTokenInfo } from "efi/tokenlists";
 
 export function useRedeemTermAssetsToEth(
   signer: Signer | undefined,
@@ -28,9 +28,6 @@ export function useRedeemTermAssetsToEth(
   const expiration = principalTokenInfo?.extensions.unlockTimestamp;
   const position = principalTokenInfo?.extensions.position;
   const interestTokenAddress = principalTokenInfo?.extensions.interestToken;
-  const yieldTokenInfo = getTokenInfo<YieldTokenInfo>(
-    interestTokenAddress as string
-  );
   const interestTokenContract = interestTokenAddress
     ? interestTokenContractsByAddress[interestTokenAddress]
     : undefined;
@@ -73,17 +70,15 @@ export function useRedeemTermAssetsToEth(
       return;
     }
 
-    // Note the trailing space is required
-    const principalTokenName = principalTokenInfo?.name as string;
-    console.log("principalTokenName", principalTokenName);
-
+    // Note that the name in the TokenInfo is incorrect
+    const ptName = await tranche.name();
     const permits: PermitCallData[] = [];
 
     if (ptApproval.lt(amountPrinicpalToken)) {
       const ptPermitData = await fetchPermitData(
         signer,
         tranche,
-        principalTokenName,
+        ptName,
         account,
         userProxy.address,
         ethers.constants.MaxUint256,
@@ -97,15 +92,14 @@ export function useRedeemTermAssetsToEth(
     // wait before bringing up MM again, otherwise the pop-up can get hidden sometimes.
     await flushPromises(100);
 
-    // Note the trailing space is required
-    const yieldTokenName = yieldTokenInfo.name;
-    console.log("yieldTokenName", yieldTokenName);
+    // Note that the name in the TokenInfo is incorrect
+    const ytName = await interestTokenContract.name();
 
     if (ytApproval.lt(amountYieldToken)) {
       const ytPermitData = await fetchPermitData(
         signer,
         interestTokenContract,
-        yieldTokenName,
+        ytName,
         account,
         userProxy.address,
         ethers.constants.MaxUint256,
@@ -135,13 +129,11 @@ export function useRedeemTermAssetsToEth(
     expiration,
     interestTokenContract,
     position,
-    principalTokenInfo,
     ptApproval,
     signer,
     tranche,
     userProxy,
     withdrawToEth,
-    yieldTokenInfo,
     ytApproval,
   ]);
 }
