@@ -465,6 +465,14 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.YVaultAssetProxy__factory>;
     getContractFactory(
+      name: "ZapTrancheHop",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ZapTrancheHop__factory>;
+    getContractFactory(
+      name: "ZapYearnShares",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ZapYearnShares__factory>;
+    getContractFactory(
       name: "ERC20",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ERC20__factory>;
