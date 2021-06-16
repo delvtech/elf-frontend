@@ -1,4 +1,4 @@
-import { ReactElement, useMemo } from "react";
+import { ReactElement } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
 import { Tranche } from "elf-contracts/types/Tranche";
@@ -10,12 +10,11 @@ import { useMintPreview } from "efi-ui/mint/hooks/useMintPreview";
 import { useMintTransaction } from "efi-ui/mint/hooks/useMintTransaction";
 import { getUserProxy } from "efi-ui/mint/hooks/userProxy";
 import { MintTransactionDetails } from "efi-ui/mint/MintTransactionDetails/MintTransactionDetails";
-import { getUserProxyApprovalMessage } from "efi-ui/mint/userProxyApprovalMessage";
 import { SwapDetailsForm } from "efi-ui/swaps/SwapDetailsPreview/SwapDetailsForm";
 import { TokenIcon } from "efi-ui/token/TokenIcon";
 import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/TransactionDrawer";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
-import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
+import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 
 interface MintTransactionConfirmationDrawerProps {
@@ -67,20 +66,13 @@ export function MintTransactionConfirmationDrawer({
     mutationResult: { isLoading, isSuccess, isError },
   } = useMintTransaction(signer, baseAsset, tranche, amountInAsNumber, onClose);
 
-  // close the drawer after mint succeeds
-  const walletApprovalInfos = useWalletApprovalInfos(
-    baseAsset,
-    account,
-    userProxy?.address
-  );
-
   return (
     <TransactionDrawer
       buttonLabel={t`Mint`}
       transactionPending={isLoading}
       transactionFailed={isError}
       transactionSuccess={isSuccess}
-      walletApprovalInfos={walletApprovalInfos}
+      walletApprovalInfos={[]}
       isOpen={isOpen}
       onClose={onClose}
       account={account}
@@ -108,24 +100,4 @@ export function MintTransactionConfirmationDrawer({
       }
     />
   );
-}
-
-function useWalletApprovalInfos(
-  baseAsset: CryptoAsset | undefined,
-  account: string | null | undefined,
-  userProxyAddress: string | undefined
-) {
-  return useMemo(() => {
-    if (!baseAsset || baseAsset.type === CryptoAssetType.ETHEREUM) {
-      return;
-    }
-    return [
-      {
-        cryptoAsset: baseAsset,
-        ownerAddress: account,
-        spenderAddress: userProxyAddress,
-        messageRenderer: getUserProxyApprovalMessage,
-      },
-    ];
-  }, [account, baseAsset, userProxyAddress]);
 }
