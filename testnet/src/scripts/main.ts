@@ -210,6 +210,40 @@ async function main() {
       ytYieldAssetIn: "2000000",
     }
   );
+
+  console.log("deploy expired USDC tranche");
+  // expired usdc tranche
+  const {
+    trancheContract: expiredUsdcTrancheContract,
+    fytPoolContract: expiredUsdcFytPoolContract,
+    ycPoolContract: expiredYcPoolContract,
+  } = await deployTrancheAndMarket(
+    elementSigner,
+    trancheFactory,
+    usdcYearnVaultAssetProxy,
+    usdcContract,
+    balancerVaultContract,
+    convergentPoolFactory,
+    weightedPoolFactory,
+    {
+      mintAmount: "200000",
+      baseAssetIn: "200000",
+      yieldAssetIn: "100000",
+      ytBaseAssetIn: "1000",
+      ytYieldAssetIn: "20000",
+      durationInSeconds: 120,
+    }
+  );
+
+  console.log("mintTrancheTokensForSigner USDC");
+  await mintTrancheTokensForSigner(
+    userSigner,
+    usdcContract,
+    expiredUsdcTrancheContract,
+    balancerVaultContract,
+    userProxyContract
+  );
+
   // add some interest to yUsdc
   await yUsdc.updateShares();
 
@@ -290,15 +324,22 @@ async function main() {
       firstWethTrancheContract.address,
       firstWethFytPoolContract.address,
       firstWethYcPoolContract.address,
+
       secondWethTrancheContract.address,
       secondWethFytPoolContract.address,
       secondWethYcPoolContract.address,
+
       expiredWethTrancheContract.address,
       expiredWethFytPoolContract.address,
       expiredWethYcPoolContract.address,
+
       usdcTrancheContract.address,
       usdcFytPoolContract.address,
       usdcYcPoolContract.address,
+
+      expiredUsdcTrancheContract.address,
+      expiredUsdcFytPoolContract.address,
+      expiredYcPoolContract.address,
     ],
   };
   const schemaAddresses = JSON.stringify(addressesJson, null, 2);
