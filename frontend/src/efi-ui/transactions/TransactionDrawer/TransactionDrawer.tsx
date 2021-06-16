@@ -8,20 +8,14 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { getQueriesData } from "efi-ui/base/queryResults";
-import { ERC20Shim } from "efi/contracts/ERC20Shim";
 import { useTokenAllowanceMulti } from "efi-ui/token/hooks/useTokenAllowance";
 import { WalletDrawer } from "efi-ui/wallets/WalletDrawer/WalletDrawer";
+import { ERC20Shim } from "efi/contracts/ERC20Shim";
 import { MAX_ALLOWANCE } from "efi/contracts/token";
-import { CryptoAsset, findTokenContract } from "efi/crypto/CryptoAsset";
+import { findTokenContract } from "efi/crypto/CryptoAsset";
 
 import { WalletApprovalCallout } from "./WalletApprovalCallout";
-
-export interface WalletApprovalInfo {
-  spenderAddress: string | null | undefined;
-  ownerAddress: string | null | undefined;
-  cryptoAsset: CryptoAsset | undefined;
-  messageRenderer: (assetSymbol: string) => string;
-}
+import { WalletApprovalInfo } from "efi/wallets/WalletApprovalInfo";
 
 interface TransactionDrawerProps {
   account: string | null | undefined;
@@ -105,7 +99,7 @@ export function TransactionDrawer({
           ({ cryptoAsset, messageRenderer, ownerAddress, spenderAddress }) => {
             return (
               <WalletApprovalCallout
-                key={cryptoAsset?.id}
+                key={cryptoAsset?.id ?? null}
                 spenderAddress={spenderAddress}
                 messageRenderer={messageRenderer}
                 signer={signer}
