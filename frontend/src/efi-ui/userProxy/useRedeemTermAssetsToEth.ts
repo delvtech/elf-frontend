@@ -6,7 +6,7 @@ import { BigNumber, ethers, Signer } from "ethers";
 import { PrincipalTokenInfo } from "tokenlists/types";
 
 import { fetchPermitData, PermitCallData } from "efi-ui/base/fetchPermitData";
-import { useUserProxy } from "efi-ui/mint/hooks/userProxy";
+import { getUserProxy, useUserProxy } from "efi-ui/mint/hooks/userProxy";
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
 import { flushPromises } from "efi/base/flush";
@@ -32,7 +32,7 @@ export function useRedeemTermAssetsToEth(
     ? interestTokenContractsByAddress[interestTokenAddress]
     : undefined;
 
-  const userProxy = useUserProxy();
+  const userProxy = getUserProxy(signer);
   const { mutate: withdrawToEth } = useSmartContractTransactionPersisted(
     userProxy,
     "withdrawWeth",

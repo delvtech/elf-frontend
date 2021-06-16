@@ -6,10 +6,9 @@ import { Signer } from "ethers";
 import { t } from "ttag";
 
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { useMintPreview } from "efi-ui/mint/hooks/useMintPreview";
 import { useMintTransaction } from "efi-ui/mint/hooks/useMintTransaction";
-import { useUserProxy } from "efi-ui/mint/hooks/userProxy";
+import { getUserProxy } from "efi-ui/mint/hooks/userProxy";
 import { MintTransactionDetails } from "efi-ui/mint/MintTransactionDetails/MintTransactionDetails";
 import { getUserProxyApprovalMessage } from "efi-ui/mint/userProxyApprovalMessage";
 import { SwapDetailsForm } from "efi-ui/swaps/SwapDetailsPreview/SwapDetailsForm";
@@ -17,6 +16,7 @@ import { TokenIcon } from "efi-ui/token/TokenIcon";
 import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/TransactionDrawer";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 
 interface MintTransactionConfirmationDrawerProps {
   account: string | null | undefined;
@@ -47,7 +47,7 @@ export function MintTransactionConfirmationDrawer({
   onClose,
 }: MintTransactionConfirmationDrawerProps): ReactElement {
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
-  const userProxy = useUserProxy();
+  const userProxy = getUserProxy(signer);
 
   // base asset calls
   const baseAssetSymbol = getCryptoSymbol(baseAsset);

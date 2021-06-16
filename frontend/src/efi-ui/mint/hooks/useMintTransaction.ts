@@ -8,7 +8,7 @@ import { parseUnits } from "ethers/lib/utils";
 
 import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { useMintCallArgs } from "efi-ui/mint/hooks/useMintCallArgs";
-import { useUserProxy } from "efi-ui/mint/hooks/userProxy";
+import { getUserProxy } from "efi-ui/mint/hooks/userProxy";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 
@@ -32,7 +32,7 @@ export function useMintTransaction(
     Parameters<UserProxy["mint"]>
   >;
 } {
-  const userProxy = useUserProxy();
+  const userProxy = getUserProxy(signer);
   const baseAssetDecimals = getCryptoDecimals(baseAsset);
   const amountInBigNumber = parseUnits(
     amountIn?.toString() || "0",
