@@ -1,39 +1,19 @@
 import { UserProxy } from "elf-contracts/types/UserProxy";
 import { BigNumber, CallOverrides } from "ethers";
-import { PrincipalTokenInfo as TrancheInfo } from "tokenlists/types";
 
+import { PermitCallData } from "efi-ui/base/fetchPermitData";
 import {
   ContractMethodArgs,
   StaticContractMethodArgs,
 } from "efi/contracts/types";
-import { CryptoAsset } from "efi/crypto/CryptoAsset";
-import {
-  getTokenAddressForUserProxy,
-  USER_PROXY_ETH_SENTINEL,
-} from "efi/userProxy";
+import { USER_PROXY_ETH_SENTINEL } from "efi/userProxy";
 
-export function useMintCallArgs(
-  tancheInfo: TrancheInfo,
-  baseAsset: CryptoAsset,
-  amount: BigNumber
-): StaticContractMethodArgs<UserProxy, "mint"> | undefined {
-  const { unlockTimestamp, position } = tancheInfo.extensions;
-
-  const baseAssetAddress = getTokenAddressForUserProxy(baseAsset) as string;
-  const callArgs = makeMintCallArgs(
-    amount,
-    baseAssetAddress,
-    unlockTimestamp,
-    position
-  );
-
-  return callArgs;
-}
-function makeMintCallArgs(
+export function makeMintCallArgs(
   amount: BigNumber,
   baseAssetAddress: string,
   trancheUnlockTimestamp: number,
-  positionAddress: string
+  positionAddress: string,
+  permitCallData: PermitCallData[]
 ): StaticContractMethodArgs<UserProxy, "mint"> | undefined {
   if (
     !amount?.gt(0) ||
@@ -51,7 +31,7 @@ function makeMintCallArgs(
     baseAssetAddress,
     trancheUnlockTimestamp,
     positionAddress,
-    [],
+    permitCallData,
   ];
   if (ethValueOverride) {
     callArgs.push(ethValueOverride);

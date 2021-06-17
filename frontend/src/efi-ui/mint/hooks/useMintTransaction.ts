@@ -11,7 +11,6 @@ import {
 } from "tokenlists/types";
 
 import { fetchPermitData, PermitCallData } from "efi-ui/base/fetchPermitData";
-import { makeMintCallArgs } from "efi-ui/mint/hooks/useMintCallArgs";
 import { getUserProxy } from "efi-ui/mint/hooks/userProxy";
 import { useTokenApprovedForAmount } from "efi-ui/token/hooks/useTokenApprovedForAmount";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
@@ -19,6 +18,7 @@ import ContractAddresses from "efi/addresses";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
+import { makeMintCallArgs } from "efi/mint/makeMintCallArgs";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
 import {
   isERC20PermitAddress,
