@@ -10,7 +10,6 @@ import classNames from "classnames";
 import { tw } from "efi-tailwindcss-classnames";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { SaveView } from "efi-ui/save/SaveView/SaveView";
-import { useClearPendingTransactionOnMined } from "efi-ui/transactions/usePendingTransaction/useClearPendingTransaction";
 import { useTransactionToasts } from "efi-ui/transactions/useTransactionToasts";
 import { useEagerConnect } from "efi-ui/wallets/hooks/useEagerReconnect";
 import { useSyncWithInjectedEthereum } from "efi-ui/wallets/hooks/useSyncWithInjectedEthereum";
@@ -48,7 +47,6 @@ const Save: FC<SaveProps> = () => {
   // callers trying to set event handlers.
   useSyncWithInjectedEthereum();
   useEagerConnect();
-  useClearPendingTransactionOnMined();
   useTransactionToasts();
 
   return (
