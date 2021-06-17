@@ -1,0 +1,36 @@
+.appBackground {
+  background: radial-gradient(
+    circle,
+    #ffffff,
+    #fbfbfd,
+    #f6f8fa,
+    #f1f4f8,
+    #ebf1f5
+  );
+}
+
+.appBackgroundDark {
+  background: radial-gradient(
+    circle,
+    #293742,
+    #25313b,
+    #202b34,
+    #1c262d,
+    #182026
+  );
+}
+
+.mobileView {
+  display: none;
+}
+
+.overlay {
+  color: white;
+}
+
+@media (max-width: 550px) {
+  .mobileView {
+    display: block;
+    text-align: center;
+  }
+}
