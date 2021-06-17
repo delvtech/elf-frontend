@@ -24,6 +24,7 @@ export async function fetchPermitData(
   sourceAddr: string,
   spenderAddr: string,
   spenderAmount: BigNumberish,
+  nonce: number,
   // '1' for every ERC20Permit.  Except USDC which is '2' ¯\_(ツ)_/¯
   version: string
 ): Promise<PermitCallData | undefined> {
@@ -70,8 +71,6 @@ export async function fetchPermitData(
     ],
   };
 
-  // don't do this in a query hook.  make sure we grab the latest
-  const nonce = await token.nonces(sourceAddr);
   if (nonce === undefined || chainId === undefined) {
     return;
   }

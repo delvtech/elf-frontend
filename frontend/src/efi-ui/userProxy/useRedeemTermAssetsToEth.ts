@@ -75,6 +75,7 @@ export function useRedeemTermAssetsToEth(
     const permits: PermitCallData[] = [];
 
     if (ptApproval.lt(amountPrinicpalToken)) {
+      const nonce = await interestTokenContract.nonces(account);
       const ptPermitData = await fetchPermitData(
         signer,
         tranche,
@@ -82,6 +83,7 @@ export function useRedeemTermAssetsToEth(
         account,
         userProxy.address,
         ethers.constants.MaxUint256,
+        nonce.toNumber(),
         "1"
       );
       if (ptPermitData) {
@@ -96,6 +98,7 @@ export function useRedeemTermAssetsToEth(
     const ytName = await interestTokenContract.name();
 
     if (ytApproval.lt(amountYieldToken)) {
+      const nonce = await interestTokenContract.nonces(account);
       const ytPermitData = await fetchPermitData(
         signer,
         interestTokenContract,
@@ -103,6 +106,7 @@ export function useRedeemTermAssetsToEth(
         account,
         userProxy.address,
         ethers.constants.MaxUint256,
+        nonce.toNumber(),
         "1"
       );
       if (ytPermitData) {

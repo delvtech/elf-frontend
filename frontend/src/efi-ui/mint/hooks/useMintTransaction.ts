@@ -209,6 +209,7 @@ async function getPermitCallData(
   ) {
     const tokenName = await baseAssetContract.name();
     const version = baseAssetAddress === usdcAddress ? "2" : "1";
+    const nonce = await baseAssetContract.nonces(account);
     const permitData = await fetchPermitData(
       signer,
       baseAssetContract,
@@ -216,6 +217,7 @@ async function getPermitCallData(
       account,
       userProxyContractAddress,
       ethers.constants.MaxUint256,
+      nonce.toNumber(),
       version
     );
     permitData && permitCallData.push(permitData);
@@ -224,6 +226,7 @@ async function getPermitCallData(
   if (!balancerApprovedForBaseAsset) {
     const tokenName = await baseAssetContract.name();
     const version = baseAssetAddress === usdcAddress ? "2" : "1";
+    const nonce = await baseAssetContract.nonces(account);
     const permitData = await fetchPermitData(
       signer,
       baseAssetContract,
@@ -231,6 +234,7 @@ async function getPermitCallData(
       account,
       balancerVaultAddress,
       ethers.constants.MaxUint256,
+      nonce.toNumber(),
       version
     );
     permitData && permitCallData.push(permitData);
@@ -238,6 +242,7 @@ async function getPermitCallData(
 
   if (!balancerApprovedForPrincipalToken) {
     const tokenName = await principalTokenContract.name();
+    const nonce = await baseAssetContract.nonces(account);
     const version = "1";
     const permitData = await fetchPermitData(
       signer,
@@ -246,6 +251,7 @@ async function getPermitCallData(
       account,
       balancerVaultAddress,
       ethers.constants.MaxUint256,
+      nonce.toNumber(),
       version
     );
     permitData && permitCallData.push(permitData);
@@ -253,6 +259,7 @@ async function getPermitCallData(
 
   if (!balancerApprovedForYieldToken) {
     const tokenName = await yieldTokenContract.name();
+    const nonce = await baseAssetContract.nonces(account);
     const version = "1";
     const permitData = await fetchPermitData(
       signer,
@@ -261,6 +268,7 @@ async function getPermitCallData(
       account,
       balancerVaultAddress,
       ethers.constants.MaxUint256,
+      nonce.toNumber(),
       version
     );
     permitData && permitCallData.push(permitData);
