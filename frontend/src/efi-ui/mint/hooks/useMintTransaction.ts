@@ -1,16 +1,16 @@
 import { useCallback } from "react";
 import { UseMutationResult } from "react-query";
 
-import { Tranche } from "elf-contracts/types/Tranche";
 import { UserProxy } from "elf-contracts/types/UserProxy";
 import { ContractReceipt, Signer } from "ethers";
 import { parseUnits } from "ethers/lib/utils";
+import { PrincipalTokenInfo as TrancheInfo } from "tokenlists/types";
 
-import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { useMintCallArgs } from "efi-ui/mint/hooks/useMintCallArgs";
 import { getUserProxy } from "efi-ui/mint/hooks/userProxy";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
+import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 
 /**
  * Returns the number of Principal Tokens you'd get for minting into a tranche.
@@ -20,9 +20,9 @@ import { CryptoAsset } from "efi/crypto/CryptoAsset";
  */
 export function useMintTransaction(
   signer: Signer | undefined,
-  baseAsset: CryptoAsset | undefined,
-  tranche: Tranche | undefined,
-  amountIn: number | undefined,
+  baseAsset: CryptoAsset,
+  trancheInfo: TrancheInfo,
+  amountIn: number,
   onTransactionStarted: () => void
 ): {
   mint: () => void;
@@ -34,10 +34,7 @@ export function useMintTransaction(
 } {
   const userProxy = getUserProxy(signer);
   const baseAssetDecimals = getCryptoDecimals(baseAsset);
-  const amountInBigNumber = parseUnits(
-    amountIn?.toString() || "0",
-    baseAssetDecimals
-  );
+  const amountInBigNumber = parseUnits(amountIn.toString(), baseAssetDecimals);
 
   const mutationResult = useSmartContractTransactionPersisted(
     userProxy,
@@ -50,7 +47,11 @@ export function useMintTransaction(
     }
   );
   const { mutate: mint } = mutationResult;
-  const mintCallArgs = useMintCallArgs(tranche, baseAsset, amountInBigNumber);
+  const mintCallArgs = useMintCallArgs(
+    trancheInfo,
+    baseAsset,
+    amountInBigNumber
+  );
   const onMintTransaction = useCallback(() => {
     if (mintCallArgs) {
       mint(mintCallArgs);

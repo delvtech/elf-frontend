@@ -19,6 +19,8 @@ import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import classNames from "classnames";
 import { differenceInDays } from "date-fns";
+import { USDC } from "elf-contracts/types/USDC";
+import { WETH } from "elf-contracts/types/WETH";
 import { YieldPoolTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
@@ -33,9 +35,10 @@ import { useTokenYield } from "efi-ui/pools/useTokenYield";
 import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
 import { useTotalValueLockedForTranche } from "efi-ui/pools/useTotalValueLockedForTranche";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
+import { TokenIcon } from "efi-ui/token/TokenIcon";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { formatPercent } from "efi/base/formatPercent";
-import { CryptoAssetType } from "efi/crypto/CryptoAsset";
+import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
@@ -91,17 +94,18 @@ export function DepositCard(props: MintPoolCardProps): ReactElement | null {
   // get infos
   const trancheInfo = getTrancheForPool(poolInfo);
   const principalPoolInfo = getPrincipalPoolForTranche(trancheInfo.address);
+  const { underlying: baseAssetAddress } = trancheInfo.extensions;
 
   // get contracts
   const principalPoolContract =
     principalPoolContractsByAddress[principalPoolInfo.address];
   const yieldPoolContract = yieldPoolContractsByAddress[poolInfo.address];
-  const baseAssetContract =
-    underlyingContractsByAddress[trancheInfo.extensions.underlying];
+  const baseAssetContract = underlyingContractsByAddress[
+    trancheInfo.extensions.underlying
+  ] as WETH | USDC;
   const principalTokenContract = trancheContractsByAddress[trancheInfo.address];
   const yieldTokenContract =
     interestTokenContractsByAddress[poolInfo.extensions.interestToken];
-  const trancheContract = trancheContractsByAddress[trancheInfo.address];
 
   // get static display information
   const { createdAtTimestamp: trancheCreatedAt, unlockTimestamp } =
@@ -118,17 +122,17 @@ export function DepositCard(props: MintPoolCardProps): ReactElement | null {
       onExpandOpen();
     }
   }, [isExpanded, isMature, onExpandClose, onExpandOpen]);
-  const baseAsset = getCryptoAssetForToken(baseAssetContract?.address);
-  const baseAssetSymbol = getCryptoSymbol(baseAsset);
+  const baseAsset = getCryptoAssetForToken(baseAssetAddress) as CryptoAsset;
+  const baseAssetSymbol = getCryptoSymbol(baseAsset) as string;
   const BaseAssetIcon = findAssetIcon2(baseAsset);
-  const vaultSymbol = getVaultSymbol(baseAsset);
+  const vaultSymbol = getVaultSymbol(baseAsset) as string;
   const { data: vaultInfo } = useYearnVault(vaultSymbol);
   const { displayName, type, apy } = vaultInfo || {};
-  const { symbol: yieldTokenSymbol } = getTermAssetSymbol(
+  const { symbol: yieldTokenSymbol = "" } = getTermAssetSymbol(
     yieldTokenContract?.address,
     vaultSymbol
   );
-  const { symbol: principalTokenSymbol } = getTermAssetSymbol(
+  const { symbol: principalTokenSymbol = "" } = getTermAssetSymbol(
     principalTokenContract?.address,
     vaultSymbol
   );
@@ -243,8 +247,8 @@ export function DepositCard(props: MintPoolCardProps): ReactElement | null {
               >
                 <div
                   style={{
-                    borderColor: isDarkMode ? Colors.GRAY5 : undefined,
-                    backgroundColor: isDarkMode ? Colors.WHITE : undefined,
+                    borderColor: isDarkMode ? Colors.GRAY5 : "",
+                    backgroundColor: isDarkMode ? Colors.WHITE : "",
                   }}
                   className={tw(
                     "items-start",
@@ -417,8 +421,8 @@ export function DepositCard(props: MintPoolCardProps): ReactElement | null {
           baseAssetSymbol={baseAssetSymbol}
           principalTokenSymbol={principalTokenSymbol}
           yieldTokenSymbol={yieldTokenSymbol}
-          baseAssetIcon={BaseAssetIcon}
-          tranche={trancheContract}
+          baseAssetIcon={BaseAssetIcon as TokenIcon}
+          trancheInfo={trancheInfo}
         />
       </Collapse>
     </Card>

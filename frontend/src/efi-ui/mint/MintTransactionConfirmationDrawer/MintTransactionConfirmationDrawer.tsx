@@ -1,19 +1,17 @@
 import { ReactElement } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
-import { Tranche } from "elf-contracts/types/Tranche";
 import { Signer } from "ethers";
+import { PrincipalTokenInfo as TrancheInfo } from "tokenlists/types";
 import { t } from "ttag";
 
-import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useMintPreview } from "efi-ui/mint/hooks/useMintPreview";
 import { useMintTransaction } from "efi-ui/mint/hooks/useMintTransaction";
-import { getUserProxy } from "efi-ui/mint/hooks/userProxy";
 import { MintTransactionDetails } from "efi-ui/mint/MintTransactionDetails/MintTransactionDetails";
 import { SwapDetailsForm } from "efi-ui/swaps/SwapDetailsPreview/SwapDetailsForm";
 import { TokenIcon } from "efi-ui/token/TokenIcon";
 import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/TransactionDrawer";
-import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
+import { convertEpochSecondsToDate2 } from "efi/base/convertEpochSecondsToDate";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 
@@ -21,13 +19,13 @@ interface MintTransactionConfirmationDrawerProps {
   account: string | null | undefined;
   library: Web3Provider | undefined;
 
-  amountIn: string | undefined;
-  baseAsset: CryptoAsset | undefined;
-  baseAssetIcon: TokenIcon | undefined;
-  principalTokenSymbol: string | undefined;
-  yieldTokenSymbol: string | undefined;
+  amountIn: string;
+  baseAsset: CryptoAsset;
+  baseAssetIcon: TokenIcon;
+  principalTokenSymbol: string;
+  yieldTokenSymbol: string;
 
-  tranche: Tranche | undefined;
+  trancheInfo: TrancheInfo;
   isOpen: boolean;
 
   onClose: () => void;
@@ -40,31 +38,36 @@ export function MintTransactionConfirmationDrawer({
   baseAsset,
   principalTokenSymbol,
   yieldTokenSymbol,
-  tranche,
+  trancheInfo,
   amountIn,
   isOpen,
   onClose,
 }: MintTransactionConfirmationDrawerProps): ReactElement {
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
-  const userProxy = getUserProxy(signer);
 
   // base asset calls
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
 
   // tranche calls
-  const { data: trancheUnlockTimestamp } = useSmartContractReadCall(
-    tranche,
-    "unlockTimestamp"
+  const { unlockTimestamp: trancheUnlockTimestamp } = trancheInfo.extensions;
+
+  const unlockTimeStampDate = convertEpochSecondsToDate2(
+    trancheUnlockTimestamp
   );
-  const unlockTimeStampDate = convertEpochSecondsToDate(trancheUnlockTimestamp);
 
   const amountInAsNumber = +(amountIn || 0);
-  const numPrincipalTokens = useMintPreview(tranche, amountInAsNumber);
+  const numPrincipalTokens = useMintPreview(trancheInfo, amountInAsNumber);
 
   const {
     mint,
     mutationResult: { isLoading, isSuccess, isError },
-  } = useMintTransaction(signer, baseAsset, tranche, amountInAsNumber, onClose);
+  } = useMintTransaction(
+    signer,
+    baseAsset,
+    trancheInfo,
+    amountInAsNumber,
+    onClose
+  );
 
   return (
     <TransactionDrawer

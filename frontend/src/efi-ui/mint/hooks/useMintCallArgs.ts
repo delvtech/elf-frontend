@@ -1,8 +1,7 @@
-import { Tranche } from "elf-contracts/types/Tranche";
 import { UserProxy } from "elf-contracts/types/UserProxy";
 import { BigNumber, CallOverrides } from "ethers";
+import { PrincipalTokenInfo as TrancheInfo } from "tokenlists/types";
 
-import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import {
   ContractMethodArgs,
   StaticContractMethodArgs,
@@ -14,31 +13,27 @@ import {
 } from "efi/userProxy";
 
 export function useMintCallArgs(
-  tranche: Tranche | undefined,
-  baseAsset: CryptoAsset | undefined,
-  amount: BigNumber | undefined
+  tancheInfo: TrancheInfo,
+  baseAsset: CryptoAsset,
+  amount: BigNumber
 ): StaticContractMethodArgs<UserProxy, "mint"> | undefined {
-  const { data: trancheUnlockTimestamp } = useSmartContractReadCall(
-    tranche,
-    "unlockTimestamp"
-  );
-  const { data: position } = useSmartContractReadCall(tranche, "position");
+  const { unlockTimestamp, position } = tancheInfo.extensions;
 
-  const baseAssetAddress = getTokenAddressForUserProxy(baseAsset);
+  const baseAssetAddress = getTokenAddressForUserProxy(baseAsset) as string;
   const callArgs = makeMintCallArgs(
     amount,
     baseAssetAddress,
-    trancheUnlockTimestamp,
+    unlockTimestamp,
     position
   );
 
   return callArgs;
 }
 function makeMintCallArgs(
-  amount: BigNumber | undefined,
-  baseAssetAddress: string | undefined,
-  trancheUnlockTimestamp: BigNumber | undefined,
-  positionAddress: string | undefined
+  amount: BigNumber,
+  baseAssetAddress: string,
+  trancheUnlockTimestamp: number,
+  positionAddress: string
 ): StaticContractMethodArgs<UserProxy, "mint"> | undefined {
   if (
     !amount?.gt(0) ||

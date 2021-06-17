@@ -6,7 +6,7 @@ import { BigNumber, ethers, Signer } from "ethers";
 import { PrincipalTokenInfo } from "tokenlists/types";
 
 import { fetchPermitData, PermitCallData } from "efi-ui/base/fetchPermitData";
-import { getUserProxy, useUserProxy } from "efi-ui/mint/hooks/userProxy";
+import { getUserProxy } from "efi-ui/mint/hooks/userProxy";
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
 import { flushPromises } from "efi/base/flush";
