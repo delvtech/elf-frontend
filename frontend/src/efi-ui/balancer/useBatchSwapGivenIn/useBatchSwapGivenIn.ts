@@ -5,7 +5,7 @@ import { Vault } from "elf-contracts/types/Vault";
 import {
   BigNumber,
   BytesLike,
-  ContractTransaction,
+  ContractReceipt,
   PayableOverrides,
   Signer,
 } from "ethers";
@@ -47,7 +47,7 @@ export function useBatchSwapGivenIn(
 ): {
   batchSwapGivenIn: () => void;
   mutationResult: UseMutationResult<
-    ContractTransaction | undefined,
+    ContractReceipt | undefined,
     unknown,
     Parameters<Vault["batchSwap"]>
   >;
@@ -61,7 +61,7 @@ export function useBatchSwapGivenIn(
     "batchSwap",
     signer,
     {
-      onTransactionStarted: () => {
+      onTransactionSubmitted: () => {
         onTransactionStarted?.();
       },
       onError: (error) => {

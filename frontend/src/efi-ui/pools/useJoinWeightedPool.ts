@@ -3,7 +3,7 @@ import { UseMutationResult } from "react-query";
 
 import { Vault } from "elf-contracts/types/Vault";
 import { WeightedPool } from "elf-contracts/types/WeightedPool";
-import { BigNumber, CallOverrides, ContractTransaction, Signer } from "ethers";
+import { BigNumber, CallOverrides, ContractReceipt, Signer } from "ethers";
 import { defaultAbiCoder } from "ethers/lib/utils";
 import zipObject from "lodash.zipobject";
 
@@ -28,11 +28,11 @@ export function useJoinWeightedPool(
   account: string | null | undefined,
   pool: WeightedPool | undefined,
   poolTokenMaxAmounts: BigNumber[] | undefined,
-  onTransactionStarted?: () => void
+  onTransactionSubmitted?: () => void
 ): {
   onJoinPool: () => void;
   mutationResult: UseMutationResult<
-    ContractTransaction | undefined,
+    ContractReceipt | undefined,
     unknown,
     Parameters<Vault["joinPool"]>
   >;
@@ -51,7 +51,7 @@ export function useJoinWeightedPool(
     balancerVault,
     "joinPool",
     signer,
-    { onTransactionStarted }
+    { onTransactionSubmitted }
   );
 
   const { mutate: joinPool } = mutationResult;

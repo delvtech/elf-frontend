@@ -17,7 +17,6 @@ import { PoolsView } from "efi-ui/pools/PoolsView/PoolsView";
 import { PoolView } from "efi-ui/pools/PoolView/PoolView";
 import { PortfolioView } from "efi-ui/portfolio/PortfolioView/PortfolioView";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import { useClearPendingTransactionOnMined } from "efi-ui/transactions/usePendingTransaction/useClearPendingTransaction";
 import { useTransactionToasts } from "efi-ui/transactions/useTransactionToasts";
 import { useSyncWithInjectedEthereum } from "efi-ui/wallets/hooks/useSyncWithInjectedEthereum";
 
@@ -56,7 +55,6 @@ const App: FC<AppProps> = () => {
   // callers trying to set event handlers.
   useSyncWithInjectedEthereum();
   useEagerConnect();
-  useClearPendingTransactionOnMined();
   useTransactionToasts();
 
   return (

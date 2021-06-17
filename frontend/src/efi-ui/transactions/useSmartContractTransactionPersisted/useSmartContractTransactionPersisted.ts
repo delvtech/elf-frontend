@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { UseMutationResult, useQueryClient } from "react-query";
 
-import { Contract, ContractTransaction, Signer } from "ethers";
+import { Contract, ContractReceipt, ContractTransaction, Signer } from "ethers";
 
 import {
   useSmartContractTransaction,
@@ -10,22 +10,12 @@ import {
 import { usePendingTransactionPref } from "efi-ui/transactions/usePendingTransactionPref/usePendingTransactionPref";
 import { ContractMethodArgs, ContractMethodName } from "efi/contracts/types";
 import { ETH_BALANCE_QUERY_KEY } from "efi-ui/wallets/hooks/useEthBalance/useEthBalance";
+import { TransactionStatus } from "efi/contracts/transaction";
 
 interface UseSmartContractTransactionPersistedOptions<
   TContract extends Contract,
   TMethodName extends ContractMethodName<TContract>
-> {
-  confirmations?: number;
-  onTransactionStarted?: (
-    result: ContractTransaction,
-    callArgs: ContractMethodArgs<TContract, TMethodName>
-  ) => void | Promise<void>;
-  onTransactionSuccess?: (
-    result: ContractTransaction,
-    callArgs: ContractMethodArgs<TContract, TMethodName>
-  ) => void | Promise<void>;
-  onError?: (Error: Error) => void | Promise<void>;
-}
+> extends UseSmartContractTransactionOptions<TContract, TMethodName> {}
 
 /**
  * A thin wrapper around useSmartContractTransaction that persists the transaction hash to user prefs.
@@ -47,20 +37,15 @@ export function useSmartContractTransactionPersisted<
     TMethodName
   > = {}
 ): UseMutationResult<
-  ContractTransaction | undefined,
+  ContractReceipt | undefined,
   unknown,
   ContractMethodArgs<TContract, TMethodName>
 > {
   const queryClient = useQueryClient();
-  const {
-    onTransactionStarted,
-    onTransactionSuccess,
-    onError: onErrorFromProps,
-  } = options;
-  const { setPendingTransactionPref, clearPendingTransactionPref } =
-    usePendingTransactionPref();
+  const { onTransactionSubmitted, onTransactionMined, onError } = options;
+  const { setPendingTransactionPref } = usePendingTransactionPref();
 
-  const onBeginTransaction = useCallback(
+  const onTxSubmitted = useCallback(
     (
       txReceipt: ContractTransaction,
       callArgs: ContractMethodArgs<TContract, TMethodName>
@@ -69,39 +54,53 @@ export function useSmartContractTransactionPersisted<
         contract?.address,
         methodName as string,
         callArgs,
-        txReceipt.hash
+        txReceipt.hash,
+        TransactionStatus.SUBMITTED
       );
-      onTransactionStarted?.(txReceipt, callArgs);
+      onTransactionSubmitted?.(txReceipt, callArgs);
     },
     [
       contract?.address,
       methodName,
-      onTransactionStarted,
+      onTransactionSubmitted,
       setPendingTransactionPref,
     ]
   );
 
-  const onSuccess = useCallback(
+  const onTxMined = useCallback(
     (
-      txReceipt: ContractTransaction,
-      callArgs: ContractMethodArgs<TContract, TMethodName>
+      txReceipt: ContractReceipt,
+      callArgs: ContractMethodArgs<TContract, TMethodName>,
+      transactionStatus: TransactionStatus
     ) => {
-      clearPendingTransactionPref();
+      setPendingTransactionPref(
+        contract?.address,
+        methodName as string,
+        callArgs,
+        txReceipt.transactionHash,
+        transactionStatus
+      );
       // This ensures that balances refresh when a tx completes. In general,
       // all txs should invalidate all balances.
       queryClient.invalidateQueries(ETH_BALANCE_QUERY_KEY);
       queryClient.invalidateQueries(["contractCall", "balanceOf"]);
-      onTransactionSuccess?.(txReceipt, callArgs);
+
+      onTransactionMined?.(txReceipt, callArgs, transactionStatus);
     },
-    [clearPendingTransactionPref, onTransactionSuccess, queryClient]
+    [
+      contract?.address,
+      methodName,
+      onTransactionMined,
+      queryClient,
+      setPendingTransactionPref,
+    ]
   );
 
-  const onError = useCallback(
+  const onTxError = useCallback(
     (error: Error) => {
-      clearPendingTransactionPref();
-      onErrorFromProps?.(error);
+      onError?.(error);
     },
-    [clearPendingTransactionPref, onErrorFromProps]
+    [onError]
   );
 
   const finalOptions: UseSmartContractTransactionOptions<
@@ -109,9 +108,9 @@ export function useSmartContractTransactionPersisted<
     TMethodName
   > = {
     ...options,
-    onBeginTransaction,
-    onSuccess,
-    onError,
+    onTransactionSubmitted: onTxSubmitted,
+    onTransactionMined: onTxMined,
+    onError: onTxError,
   };
 
   return useSmartContractTransaction(

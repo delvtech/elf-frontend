@@ -1,23 +1,26 @@
 import { useMutation, UseMutationResult } from "react-query";
 
-import { Contract, ContractTransaction, Signer } from "ethers";
+import { Contract, ContractReceipt, ContractTransaction, Signer } from "ethers";
 
 import { lookupAddressKey } from "efi/addresses";
 import { ContractMethodArgs, ContractMethodName } from "efi/contracts/types";
+import { TransactionStatus } from "efi/contracts/transaction";
+import { Logger } from "ethers/lib/utils";
 
 export interface UseSmartContractTransactionOptions<
   TContract extends Contract,
   TMethodName extends ContractMethodName<TContract>
 > {
-  confirmations?: number;
-  onBeginTransaction?: (
-    transactionReceipt: ContractTransaction,
+  onTransactionSubmitted?: (
+    transaction: ContractTransaction,
     callArgs: ContractMethodArgs<TContract, TMethodName>
   ) => void | Promise<void>;
-  onSuccess?: (
-    transactionReceipt: ContractTransaction,
-    callArgs: ContractMethodArgs<TContract, TMethodName>
+  onTransactionMined?: (
+    transactionReceipt: ContractReceipt,
+    callArgs: ContractMethodArgs<TContract, TMethodName>,
+    transactionStatus: TransactionStatus
   ) => void | Promise<void>;
+
   onError?: (result: Error) => void | Promise<void>;
 }
 
@@ -25,44 +28,74 @@ export function useSmartContractTransaction<
   TContract extends Contract,
   TMethodName extends ContractMethodName<TContract>
 >(
+  // TODO: contracts should not be undefined thanks to tokenlist
   contract: TContract | undefined,
   methodName: TMethodName,
   signer: Signer | undefined,
   options: UseSmartContractTransactionOptions<TContract, TMethodName> = {}
 ): UseMutationResult<
-  ContractTransaction | undefined,
+  ContractReceipt | undefined,
   unknown,
   ContractMethodArgs<TContract, TMethodName>
 > {
-  const { confirmations = 1, onSuccess, onBeginTransaction, onError } = options;
-  return useMutation(
-    async (args: ContractMethodArgs<TContract, TMethodName>) => {
-      if (!signer || !contract) {
-        console.warn(
-          `Attempted to call ${methodName} without a signer or contract instance.`
-        );
-        return;
+  const { onTransactionMined, onTransactionSubmitted, onError } = options;
+  return useMutation({
+    mutationFn: async (
+      args: ContractMethodArgs<TContract, TMethodName>
+    ): Promise<ContractReceipt> => {
+      if (!signer) {
+        console.warn(`Tried to call ${methodName} without a signer.`);
+        return undefined as unknown as ContractReceipt;
+      }
+
+      if (!contract) {
+        // only for typesafety, this should never happen
+        console.warn(`Tried to call ${methodName} without contract instance.`);
+        return undefined as unknown as ContractReceipt;
       }
 
       const connected = (await contract.connect(signer)) as TContract;
-      const result = connected[methodName](...args);
-      return result;
-    },
-    {
-      onError: async (error: Error) => {
-        const addressesJsonKey = lookupAddressKey(contract?.address);
-        console.error(
-          `Error calling ${methodName} on ${addressesJsonKey}: ${contract?.address} with arguments:`,
-          error
-        );
-        await onError?.(error);
-      },
+      const transaction: ContractTransaction = await connected[methodName](
+        ...args
+      );
+      onTransactionSubmitted?.(transaction, args);
 
-      onSuccess: async (txReceipt, vars) => {
-        await onBeginTransaction?.(txReceipt, vars);
-        await txReceipt?.wait(confirmations);
-        await onSuccess?.(txReceipt, vars);
-      },
-    }
-  );
+      return transaction?.wait();
+    },
+    onError: async (error: any, variables) => {
+      // handle when we mine speedups and cancellations
+      // see for reference: https://blog.ricmoo.com/highlights-ethers-js-may-2021-2826e858277d
+      if (error.code === Logger.errors.TRANSACTION_REPLACED) {
+        if (error.reason === "cancelled") {
+          return onTransactionMined?.(
+            error.replacement,
+            variables,
+            TransactionStatus.CANCELLED
+          );
+        }
+
+        if (error.reason === "repriced" || error.reason === "replaced") {
+          // The user used "speed up" or something similar
+          // in their client, but we now have the updated info
+          return onTransactionMined?.(
+            error.receipt,
+            variables,
+            TransactionStatus.REPLACED
+          );
+        }
+      }
+
+      // otherwise handle errors like reverts etc...
+      const addressesJsonKey = lookupAddressKey(contract?.address);
+      console.error(
+        `Error calling ${methodName} on ${addressesJsonKey}: ${contract?.address} with arguments:`,
+        error
+      );
+      await onError?.(error);
+    },
+
+    onSuccess: async (txReceipt, vars) => {
+      return onTransactionMined?.(txReceipt, vars, TransactionStatus.MINED);
+    },
+  });
 }

@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import { UseMutationResult } from "react-query";
 
 import { Vault } from "elf-contracts/types/Vault";
-import { BigNumber, CallOverrides, ContractTransaction, Signer } from "ethers";
+import { BigNumber, CallOverrides, ContractReceipt, Signer } from "ethers";
 import { defaultAbiCoder } from "ethers/lib/utils";
 import zipObject from "lodash.zipobject";
 
@@ -25,7 +25,7 @@ export function useJoinConvergentPool(
 ): {
   onJoinPool: () => void;
   mutationResult: UseMutationResult<
-    ContractTransaction | undefined,
+    ContractReceipt | undefined,
     unknown,
     Parameters<Vault["joinPool"]>
   >;
@@ -37,7 +37,7 @@ export function useJoinConvergentPool(
     balancerVault,
     "joinPool",
     signer,
-    { onTransactionStarted }
+    { onTransactionSubmitted: onTransactionStarted }
   );
 
   const { mutate: joinPool } = mutationResult;

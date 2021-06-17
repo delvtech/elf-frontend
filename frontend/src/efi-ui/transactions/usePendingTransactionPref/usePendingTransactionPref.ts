@@ -1,12 +1,14 @@
 import { useCallback } from "react";
 
 import { usePref } from "efi-ui/prefs/usePref/usePref";
+import { TransactionStatus } from "efi/contracts/transaction";
 
 export interface PendingTransactionPref {
   contractAddress: string | undefined;
   transactionHash: string | undefined;
   methodName: string | undefined;
   callArgs: unknown[] | undefined;
+  transactionStatus: TransactionStatus | undefined;
 }
 
 interface UsePendingTransactionPref extends PendingTransactionPref {
@@ -14,7 +16,8 @@ interface UsePendingTransactionPref extends PendingTransactionPref {
     contractAddress: string | undefined,
     methodName: string | undefined,
     callArgs: unknown[],
-    transactionHash: string | undefined
+    transactionHash: string | undefined,
+    transactionStatus: TransactionStatus | undefined
   ) => void;
   clearPendingTransactionPref: () => void;
 }
@@ -40,13 +43,25 @@ export function usePendingTransactionPref(): UsePendingTransactionPref {
       contractAddress: string | undefined,
       methodName: string | undefined,
       callArgs: unknown[] | undefined,
-      transactionHash: string | undefined
+      transactionHash: string | undefined,
+      transactionStatus: TransactionStatus | undefined
     ) => {
-      if (!contractAddress || !methodName || !transactionHash) {
+      if (
+        !contractAddress ||
+        !methodName ||
+        !transactionHash ||
+        !transactionStatus
+      ) {
         setPref(undefined);
         return;
       }
-      setPref({ contractAddress, methodName, callArgs, transactionHash });
+      setPref({
+        contractAddress,
+        methodName,
+        callArgs,
+        transactionHash,
+        transactionStatus,
+      });
     },
     [setPref]
   );
@@ -54,6 +69,7 @@ export function usePendingTransactionPref(): UsePendingTransactionPref {
   return {
     contractAddress: pref?.contractAddress,
     transactionHash: pref?.transactionHash,
+    transactionStatus: pref?.transactionStatus,
     methodName: pref?.methodName,
     callArgs: pref?.callArgs,
     setPendingTransactionPref: setPendingTransaction,

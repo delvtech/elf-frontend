@@ -3,7 +3,7 @@ import { UseMutationResult } from "react-query";
 
 import { Tranche } from "elf-contracts/types/Tranche";
 import { UserProxy } from "elf-contracts/types/UserProxy";
-import { ContractTransaction, Signer } from "ethers";
+import { ContractReceipt, Signer } from "ethers";
 import { parseUnits } from "ethers/lib/utils";
 
 import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
@@ -27,7 +27,7 @@ export function useMintTransaction(
 ): {
   mint: () => void;
   mutationResult: UseMutationResult<
-    ContractTransaction | undefined,
+    ContractReceipt | undefined,
     unknown,
     Parameters<UserProxy["mint"]>
   >;
@@ -44,7 +44,7 @@ export function useMintTransaction(
     "mint",
     signer,
     {
-      onTransactionStarted: () => {
+      onTransactionSubmitted: () => {
         onTransactionStarted();
       },
     }

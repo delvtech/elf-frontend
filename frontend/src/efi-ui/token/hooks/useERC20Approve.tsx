@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import { UseMutationResult, useQueryClient } from "react-query";
 
 import { ERC20 } from "elf-contracts/types/ERC20";
-import { BigNumberish, ContractTransaction, Overrides, Signer } from "ethers";
+import { BigNumberish, ContractReceipt, Overrides, Signer } from "ethers";
 
 import { matchSmartContractReadCallQuery } from "efi-ui/contracts/matchSmartContractReadCallQuery/matchSmartContractReadCallQuery";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
@@ -11,7 +11,7 @@ import { MAX_ALLOWANCE } from "efi/contracts/token";
 interface UseERC20Approve {
   onApproveClick: () => void;
   mutationResult: UseMutationResult<
-    ContractTransaction | undefined,
+    ContractReceipt | undefined,
     unknown,
     [account: string, amount: BigNumberish, overrides?: Overrides | undefined],
     unknown
@@ -29,7 +29,7 @@ export function useERC20Approve(
     "approve",
     signer,
     {
-      onTransactionSuccess: () => {
+      onTransactionMined: () => {
         queryClient.invalidateQueries({
           predicate: (query) => {
             const match = matchSmartContractReadCallQuery(
