@@ -30,7 +30,7 @@ if (process.env.NODE_ENV === "development") {
 window.addresses = AddressesJson;
 window.lookupAddressKey = lookupAddressKey;
 
-const appId = process.env.ELEMENT_APP_ID;
+const appId = process.env.REACT_APP_ELEMENT_APP_ID;
 
 ReactDOM.render(
   <Web3ReactProvider getLibrary={getEthereumProviderLibrary}>
