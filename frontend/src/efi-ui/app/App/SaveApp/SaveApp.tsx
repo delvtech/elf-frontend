@@ -14,7 +14,7 @@ import { useTransactionToasts } from "efi-ui/transactions/useTransactionToasts";
 import { useEagerConnect } from "efi-ui/wallets/hooks/useEagerReconnect";
 import { useSyncWithInjectedEthereum } from "efi-ui/wallets/hooks/useSyncWithInjectedEthereum";
 
-import styles from "./Save.module.css";
+import styles from "./SaveApp.module.css";
 
 FocusStyleManager.onlyShowFocusOnTabs();
 
@@ -28,9 +28,9 @@ const contentClassName = tw(
   "overflow-hidden"
 );
 
-interface SaveProps {}
+interface SaveAppProps {}
 
-const Save: FC<SaveProps> = () => {
+const SaveApp: FC<SaveAppProps> = () => {
   const { active, chainId } = useWeb3React<Web3Provider>();
   const onMainnet = active && chainId === 1;
 
@@ -95,4 +95,4 @@ const Save: FC<SaveProps> = () => {
   );
 };
 
-export default Save;
+export default SaveApp;

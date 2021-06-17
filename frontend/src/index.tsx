@@ -19,7 +19,7 @@ import { efiQueryClient } from "./efi/queryClient";
 import versionJson from "./version.output.json";
 import { AddressesJson, lookupAddressKey } from "efi/addresses";
 import efiLocalStorage from "efi/base/localStorage";
-import Save from "efi-ui/app/App/Save/Save";
+import SaveApp from "efi-ui/app/App/SaveApp/SaveApp";
 
 clearLocalStorageOnNewVersion();
 logAppVersion();
@@ -36,7 +36,7 @@ ReactDOM.render(
   <Web3ReactProvider getLibrary={getEthereumProviderLibrary}>
     <QueryClientProvider client={efiQueryClient}>
       <React.StrictMode /* Only our components should be under strict mode */>
-        {appId === "save" ? <Save /> : <App />}
+        {appId === "save" ? <SaveApp /> : <App />}
       </React.StrictMode>
     </QueryClientProvider>
   </Web3ReactProvider>,
