@@ -67,7 +67,7 @@ async function simpleJoins() {
     trancheContract,
     yieldTokenContract,
     baseAssetContract,
-    (baseAssetContract as unknown) as ERC20Permit,
+    baseAssetContract,
   ] as ERC20Permit[];
 
   const spenders = [
