@@ -25,6 +25,7 @@ import {
   underlyingContractsByAddress,
 } from "efi/underlying/underlying";
 import { getTokenAddressForUserProxy } from "efi/userProxy";
+import { EMPTY_ARRAY } from "efi/base/emptyArray";
 
 /**
  * Returns the number of Principal Tokens you'd get for minting into a tranche.
@@ -145,7 +146,7 @@ function useApprovalsForMint(
     userProxyAddress,
     baseAssetContract,
     baseAssetDecimals,
-    "0" // just check for any approval amount above zero
+    "1" // just check for any approval amount above zero
   );
 
   const balancerApprovedForBaseAsset = useTokenApprovedForAmount(
@@ -153,7 +154,7 @@ function useApprovalsForMint(
     balancerVaultAddress,
     baseAssetContract,
     baseAssetDecimals,
-    "0" // just check for any approval amount above zero
+    "1" // just check for any approval amount above zero
   );
 
   const balancerApprovedForPrincipalToken = useTokenApprovedForAmount(
@@ -161,7 +162,7 @@ function useApprovalsForMint(
     balancerVaultAddress,
     principalTokenContract,
     principalTokenDecimals,
-    "0" // just check for any approval amount above zero
+    "1" // just check for any approval amount above zero
   );
 
   const balancerApprovedForYieldToken = useTokenApprovedForAmount(
@@ -169,7 +170,7 @@ function useApprovalsForMint(
     balancerVaultAddress,
     yieldTokenContract,
     yieldTokenDecimals,
-    "0" // just check for any approval amount above zero
+    "1" // just check for any approval amount above zero
   );
 
   return {
@@ -195,83 +196,91 @@ async function getPermitCallData(
     balancerApprovedForYieldToken,
   } = approvals;
 
-  const { usdcAddress, balancerVaultAddress, userProxyContractAddress } =
-    ContractAddresses;
+  const { balancerVaultAddress, userProxyContractAddress } = ContractAddresses;
   const { address: baseAssetAddress } = baseAssetContract;
 
-  const permitCallData: PermitCallData[] = [];
+  const spenders: string[] = [];
+  const tokenContracts: ERC20Permit[] = [];
+  const tokenNames: string[] = [];
+
   if (!signer || !account) {
-    return permitCallData;
+    return EMPTY_ARRAY as PermitCallData[];
   }
+
   if (
     !userProxyApprovedForBaseAsset &&
     isERC20PermitAddress(baseAssetAddress)
   ) {
     const tokenName = await baseAssetContract.name();
-    const version = baseAssetAddress === usdcAddress ? "2" : "1";
-    const nonce = await baseAssetContract.nonces(account);
-    const permitData = await fetchPermitData(
-      signer,
-      baseAssetContract,
-      tokenName,
-      account,
-      userProxyContractAddress,
-      ethers.constants.MaxUint256,
-      nonce.toNumber(),
-      version
-    );
-    permitData && permitCallData.push(permitData);
+    spenders.push(userProxyContractAddress);
+    tokenContracts.push(baseAssetContract);
+    tokenNames.push(tokenName);
   }
 
   if (!balancerApprovedForBaseAsset) {
     const tokenName = await baseAssetContract.name();
-    const version = baseAssetAddress === usdcAddress ? "2" : "1";
-    const nonce = await baseAssetContract.nonces(account);
-    const permitData = await fetchPermitData(
-      signer,
-      baseAssetContract,
-      tokenName,
-      account,
-      balancerVaultAddress,
-      ethers.constants.MaxUint256,
-      nonce.toNumber(),
-      version
-    );
-    permitData && permitCallData.push(permitData);
+    spenders.push(userProxyContractAddress);
+    tokenContracts.push(baseAssetContract);
+    tokenNames.push(tokenName);
   }
 
   if (!balancerApprovedForPrincipalToken) {
     const tokenName = await principalTokenContract.name();
-    const nonce = await baseAssetContract.nonces(account);
-    const version = "1";
-    const permitData = await fetchPermitData(
-      signer,
-      principalTokenContract,
-      tokenName,
-      account,
-      balancerVaultAddress,
-      ethers.constants.MaxUint256,
-      nonce.toNumber(),
-      version
-    );
-    permitData && permitCallData.push(permitData);
+    spenders.push(balancerVaultAddress);
+    tokenContracts.push(principalTokenContract);
+    tokenNames.push(tokenName);
   }
 
   if (!balancerApprovedForYieldToken) {
     const tokenName = await yieldTokenContract.name();
-    const nonce = await baseAssetContract.nonces(account);
-    const version = "1";
+    spenders.push(balancerVaultAddress);
+    tokenContracts.push(yieldTokenContract);
+    tokenNames.push(tokenName);
+  }
+
+  const permitCallData = await fetchPermitDataMulti(
+    signer,
+    account,
+    spenders,
+    tokenContracts,
+    tokenNames
+  );
+  return permitCallData;
+}
+
+async function fetchPermitDataMulti(
+  signer: Signer,
+  owner: string,
+  spenders: string[],
+  tokenContracts: ERC20Permit[],
+  tokenNames: string[]
+): Promise<PermitCallData[]> {
+  const { usdcAddress } = ContractAddresses;
+  const promises = tokenContracts.map(async (tokenContract, i) => {
+    const tokenName = tokenNames[i];
+    const spender = spenders[i];
+
+    const nonce = await tokenContract.nonces(owner);
+    const version = tokenContract.address === usdcAddress ? "2" : "1";
     const permitData = await fetchPermitData(
       signer,
-      yieldTokenContract,
+      tokenContract,
       tokenName,
-      account,
-      balancerVaultAddress,
+      owner,
+      spender,
       ethers.constants.MaxUint256,
       nonce.toNumber(),
       version
     );
-    permitData && permitCallData.push(permitData);
-  }
-  return permitCallData;
+    if (permitData) {
+      return permitData;
+    }
+  });
+
+  const permitsOrUndefined = await Promise.all(promises);
+
+  const permits = permitsOrUndefined.filter(
+    (permit): permit is PermitCallData => !!permit
+  );
+  return permits;
 }

@@ -43,7 +43,7 @@ export async function fetchPermitData(
   const domain: TypedDataDomain = {
     name: tokenName,
     version: version,
-    chainId: chainId,
+    chainId: `${chainId}`,
     verifyingContract: token.address,
   };
 
