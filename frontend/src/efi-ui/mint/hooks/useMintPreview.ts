@@ -11,6 +11,7 @@ import {
   getVaultForTranche,
   trancheContractsByAddress,
 } from "efi/tranche/tranches";
+import { TestYVault, Tranche } from "elf-contracts/types";
 
 /**
  * Returns the number of Principal Tokens you'd get for minting into a tranche.
@@ -22,44 +23,20 @@ export function useMintPreview(
   trancheInfo: TrancheInfo,
   amountIn: number
 ): number | undefined {
-  const wrappedPosition = getWrappedPositionForTranche(trancheInfo);
-  const vault = getVaultForTranche(trancheInfo.address);
-  const { decimals: trancheDecimals } = trancheInfo;
   const trancheContract = trancheContractsByAddress[trancheInfo.address];
 
-  const { data: wrappedPositionDecimals } = useTokenDecimals(
-    wrappedPosition as unknown as ERC20
-  );
-  const { data: vaultDecimals } = useTokenDecimals(vault as unknown as ERC20);
+  const { wrappedPosition, vault, trancheDecimals } =
+    getStaticInformation(trancheInfo);
 
-  const { data: trancheValueSuppliedBN } = useSmartContractReadCall(
-    trancheContract,
-    "valueSupplied"
-  );
-  const { data: trancheInterestSupplyBN } = useSmartContractReadCall(
-    trancheContract,
-    "interestSupply"
-  );
-
-  const { data: balanceBeforeBN } = useSmartContractReadCall(
-    wrappedPosition,
-    "balanceOf",
-    {
-      callArgs: [trancheInfo?.address as string],
-    }
-  );
-
-  // our stub doesn't have this yet so don't make the call so we don't bork trying to call a method
-  // that doesn't exist
-  const { data: vaultTotalAssetsBN } = useSmartContractReadCall(
-    vault,
-    "totalAssets"
-  );
-
-  const { data: vaultTotalSupplyBN } = useSmartContractReadCall(
-    vault,
-    "totalSupply"
-  );
+  const {
+    wrappedPositionDecimals,
+    vaultDecimals,
+    trancheValueSuppliedBN,
+    trancheInterestSupplyBN,
+    balanceBeforeBN,
+    vaultTotalAssetsBN,
+    vaultTotalSupplyBN,
+  } = useSmartContractData(trancheContract, wrappedPosition, vault);
 
   if (
     !amountIn ||
@@ -108,4 +85,66 @@ function getWrappedPositionForTranche(
   ) as YVaultAssetProxy;
 
   return yVaultAssetProxy;
+}
+
+function getStaticInformation(trancheInfo: TrancheInfo) {
+  const wrappedPosition = getWrappedPositionForTranche(trancheInfo);
+  const vault = getVaultForTranche(trancheInfo.address);
+  const { decimals: trancheDecimals } = trancheInfo;
+
+  return {
+    wrappedPosition,
+    vault,
+    trancheDecimals,
+  };
+}
+
+function useSmartContractData(
+  trancheContract: Tranche,
+  wrappedPosition: YVaultAssetProxy,
+  vault: TestYVault
+) {
+  const { data: wrappedPositionDecimals } = useTokenDecimals(
+    wrappedPosition as unknown as ERC20
+  );
+  const { data: vaultDecimals } = useTokenDecimals(vault as unknown as ERC20);
+
+  const { data: trancheValueSuppliedBN } = useSmartContractReadCall(
+    trancheContract,
+    "valueSupplied"
+  );
+  const { data: trancheInterestSupplyBN } = useSmartContractReadCall(
+    trancheContract,
+    "interestSupply"
+  );
+
+  const { data: balanceBeforeBN } = useSmartContractReadCall(
+    wrappedPosition,
+    "balanceOf",
+    {
+      callArgs: [trancheContract.address],
+    }
+  );
+
+  // our stub doesn't have this yet so don't make the call so we don't bork trying to call a method
+  // that doesn't exist
+  const { data: vaultTotalAssetsBN } = useSmartContractReadCall(
+    vault,
+    "totalAssets"
+  );
+
+  const { data: vaultTotalSupplyBN } = useSmartContractReadCall(
+    vault,
+    "totalSupply"
+  );
+
+  return {
+    wrappedPositionDecimals,
+    vaultDecimals,
+    trancheValueSuppliedBN,
+    trancheInterestSupplyBN,
+    balanceBeforeBN,
+    vaultTotalAssetsBN,
+    vaultTotalSupplyBN,
+  };
 }
