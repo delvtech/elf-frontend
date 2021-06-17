@@ -3,27 +3,19 @@ import { ReactQueryDevtools } from "react-query/devtools";
 
 import { FocusStyleManager, H1, Overlay } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
-import { LocationProvider, Redirect, Router } from "@reach/router";
+import { Router } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
 import classNames from "classnames";
 
 import { tw } from "efi-tailwindcss-classnames";
-import { EarnView } from "efi-ui/earn/EarnView/EarnView";
-import { FAQView } from "efi-ui/faq/FAQView";
-import { MintView } from "efi-ui/mint/MintView/MintView";
-import { MainNavigation } from "efi-ui/navigation/MainNavigation/MainNavigation";
-import { Navigation } from "efi-ui/navigation/navigation";
-import { PoolsView } from "efi-ui/pools/PoolsView/PoolsView";
-import { PoolView } from "efi-ui/pools/PoolView/PoolView";
-import { PortfolioView } from "efi-ui/portfolio/PortfolioView/PortfolioView";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
+import { SaveView } from "efi-ui/save/SaveView/SaveView";
 import { useClearPendingTransactionOnMined } from "efi-ui/transactions/usePendingTransaction/useClearPendingTransaction";
 import { useTransactionToasts } from "efi-ui/transactions/useTransactionToasts";
+import { useEagerConnect } from "efi-ui/wallets/hooks/useEagerReconnect";
 import { useSyncWithInjectedEthereum } from "efi-ui/wallets/hooks/useSyncWithInjectedEthereum";
 
-import styles from "./App.module.css";
-import { useEagerConnect } from "efi-ui/wallets/hooks/useEagerReconnect";
-import { SaveView } from "efi-ui/save/SaveView/SaveView";
+import styles from "./Save.module.css";
 
 FocusStyleManager.onlyShowFocusOnTabs();
 
@@ -37,9 +29,9 @@ const contentClassName = tw(
   "overflow-hidden"
 );
 
-interface AppProps {}
+interface SaveProps {}
 
-const App: FC<AppProps> = () => {
+const Save: FC<SaveProps> = () => {
   const { active, chainId } = useWeb3React<Web3Provider>();
   const onMainnet = active && chainId === 1;
 
@@ -62,20 +54,8 @@ const App: FC<AppProps> = () => {
   return (
     <Fragment>
       <div className={appClassName}>
-        <LocationProvider>
-          <MainNavigation />
-        </LocationProvider>
-
         <Router className={contentClassName}>
-          <Redirect noThrow from="/" to={Navigation.EARN} />
-
-          <PortfolioView path={Navigation.PORTFOLIO} />
-          <EarnView path={Navigation.EARN} />
-          <SaveView path={Navigation.SAVE} />
-          <PoolsView path={Navigation.TRADE} />
-          <MintView path={Navigation.DEPOSIT} />
-          <PoolView path={`pools/:poolAddress`} />
-          <FAQView path={Navigation.RESOURCES} />
+          <SaveView path={"/"} />
         </Router>
       </div>
       <Overlay isOpen={onMainnet}>
@@ -117,4 +97,4 @@ const App: FC<AppProps> = () => {
   );
 };
 
-export default App;
+export default Save;
