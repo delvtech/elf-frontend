@@ -2,7 +2,10 @@ import { ReactElement } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
 import { Signer } from "ethers";
-import { PrincipalTokenInfo as TrancheInfo } from "tokenlists/types";
+import {
+  PrincipalTokenInfo as TrancheInfo,
+  YieldTokenInfo,
+} from "tokenlists/types";
 import { t } from "ttag";
 
 import { useMintPreview } from "efi-ui/mint/hooks/useMintPreview";
@@ -14,6 +17,7 @@ import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/Transac
 import { convertEpochSecondsToDate2 } from "efi/base/convertEpochSecondsToDate";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { getTokenInfo } from "efi/tokenlists";
 
 interface MintTransactionConfirmationDrawerProps {
   account: string | null | undefined;
@@ -45,11 +49,12 @@ export function MintTransactionConfirmationDrawer({
 }: MintTransactionConfirmationDrawerProps): ReactElement {
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
 
-  // base asset calls
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
-
-  // tranche calls
-  const { unlockTimestamp: trancheUnlockTimestamp } = trancheInfo.extensions;
+  const {
+    interestToken: interestTokenAddress,
+    unlockTimestamp: trancheUnlockTimestamp,
+  } = trancheInfo.extensions;
+  const yieldTokenInfo = getTokenInfo<YieldTokenInfo>(interestTokenAddress);
 
   const unlockTimeStampDate = convertEpochSecondsToDate2(
     trancheUnlockTimestamp
@@ -63,8 +68,10 @@ export function MintTransactionConfirmationDrawer({
     mutationResult: { isLoading, isSuccess, isError },
   } = useMintTransaction(
     signer,
+    account,
     baseAsset,
     trancheInfo,
+    yieldTokenInfo,
     amountInAsNumber,
     onClose
   );

@@ -23,3 +23,8 @@ export const underlyingContractsByAddress = Object.freeze({
   [wethAddress]: wethContract,
   [usdcAddress]: usdcContract,
 });
+
+const underlyingERC20PermitAddresses = [usdcAddress];
+export function isERC20PermitAddress(underlyingAddress: string): boolean {
+  return underlyingERC20PermitAddresses.includes(underlyingAddress);
+}
