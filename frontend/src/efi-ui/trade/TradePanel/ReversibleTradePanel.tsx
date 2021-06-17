@@ -27,7 +27,6 @@ import { TradeInput } from "efi-ui/trade/TradeInput/TradeInput";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
 import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 import { formatBalance } from "efi/base/formatBalance";
-import { ContractMethodArgs } from "efi/contracts/types";
 import { CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
@@ -467,29 +466,6 @@ function useReversableTokens(
     tokenOut = tokenInFromProps;
   }
   return { tokenIn, tokenOut, swapAssets, isReversed };
-}
-
-export function useTokenApproval(
-  account: string | null | undefined,
-  pool: PoolContract | undefined,
-  tokenIn: ERC20 | undefined,
-  amountIn: string | undefined,
-  tokenInDecimals: number | undefined
-): boolean {
-  // safe to cast callArgs since we don't enable the call unless they are defnied
-  const callArgs: ContractMethodArgs<ERC20, "allowance"> = [
-    account as string,
-    pool?.address as string,
-  ];
-  const { data: allowance } = useSmartContractReadCall(tokenIn, "allowance", {
-    callArgs,
-    enabled: !!pool?.address && !!account,
-  });
-  const approved =
-    amountIn && allowance
-      ? allowance.gte(parseUnits(amountIn || "0", tokenInDecimals))
-      : false;
-  return approved;
 }
 
 function useTokenInfoForTradeInput(

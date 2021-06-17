@@ -24,7 +24,6 @@ import { useEthBalance } from "efi-ui/wallets/hooks/useEthBalance/useEthBalance"
 import ContractAddresses from "efi/addresses";
 import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 import { formatBalance } from "efi/base/formatBalance";
-import { ContractMethodArgs } from "efi/contracts/types";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
@@ -302,30 +301,6 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
       />
     </div>
   );
-}
-
-// TODO: clean this up, I don't know what we need amountOut in here
-export function useTokenApproval(
-  account: string | null | undefined,
-  pool: PoolContract | undefined,
-  tokenIn: ERC20 | undefined,
-  amountIn: string | undefined,
-  tokenInDecimals: number | undefined
-): boolean {
-  // safe to cast callArgs since we don't enable the call unless they are defnied
-  const callArgs: ContractMethodArgs<ERC20, "allowance"> = [
-    account as string,
-    pool?.address as string,
-  ];
-  const { data: allowance } = useSmartContractReadCall(tokenIn, "allowance", {
-    callArgs,
-    enabled: !!pool?.address && !!account,
-  });
-  const approved =
-    amountIn && allowance
-      ? allowance.gte(parseUnits(amountIn || "0", tokenInDecimals))
-      : false;
-  return approved;
 }
 
 function useTokenInfoForTradeInput(
