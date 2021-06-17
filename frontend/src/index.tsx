@@ -19,7 +19,7 @@ import { efiQueryClient } from "./efi/queryClient";
 import versionJson from "./version.output.json";
 import { AddressesJson, lookupAddressKey } from "efi/addresses";
 import efiLocalStorage from "efi/base/localStorage";
-import Save from "efi-ui/save/Save/Save";
+import Save from "efi-ui/app/App/Save/Save";
 
 clearLocalStorageOnNewVersion();
 logAppVersion();
