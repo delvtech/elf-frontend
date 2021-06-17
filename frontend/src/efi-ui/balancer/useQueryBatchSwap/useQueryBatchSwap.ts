@@ -195,7 +195,7 @@ function calcSwapPrincipalPool(
   const nowInSeconds = Math.round(Date.now() / 1000);
   const { extensions } = poolInfo;
   const { unitSeconds: tParamSeconds, expiration } = extensions;
-  const timeRemainingSeconds = expiration - nowInSeconds;
+  const timeRemainingSeconds = Math.max(expiration - nowInSeconds, 0);
 
   if (swapKind === SwapKind.GIVEN_IN) {
     const calcOutNumber = calcSwapOutGivenInCCPoolUNSAFE(
