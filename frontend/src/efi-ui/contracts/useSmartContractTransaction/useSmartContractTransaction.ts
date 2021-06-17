@@ -74,13 +74,13 @@ export function useSmartContractTransaction<
           );
         }
 
-        if (error.reason === "repriced" || error.reason === "replaced") {
+        if (error.reason === "repriced") {
           // The user used "speed up" or something similar
           // in their client, but we now have the updated info
           return onTransactionMined?.(
             error.receipt,
             variables,
-            TransactionStatus.REPLACED
+            TransactionStatus.REPRICED
           );
         }
       }

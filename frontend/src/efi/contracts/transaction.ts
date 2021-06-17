@@ -1,6 +1,6 @@
 export enum TransactionStatus {
   SUBMITTED = "submitted",
-  REPLACED = "replaced",
+  REPRICED = "repriced",
   CANCELLED = "cancelled",
   MINED = "mined",
 }
