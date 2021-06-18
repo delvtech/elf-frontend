@@ -20,6 +20,7 @@ function getAddressesJsonId() {
 export const AddressesJson: AddressesJsonFile = require(`addresses/${addressesJsonId}.addresses.json`);
 
 const ContractAddresses = AddressesJson.addresses;
+
 export const safeList = AddressesJson.safelist;
 export default ContractAddresses;
 

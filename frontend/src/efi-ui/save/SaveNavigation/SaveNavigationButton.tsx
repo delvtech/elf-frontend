@@ -6,6 +6,17 @@ import { Popover2 } from "@blueprintjs/popover2";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { AddressesJson } from "efi/addresses";
+import { isGoerli, isMainnet } from "efi/ethereum";
+
+// assume testnet by default (goerli)
+let advancedLink = "https://testnet.element.fi";
+if (isGoerli(AddressesJson.chainId)) {
+  advancedLink = "https://testnet.element.fi";
+} else if (isMainnet(AddressesJson.chainId)) {
+  // TODO: What will be the url for mainnet?
+  advancedLink = "https://app.element.fi";
+}
 
 export function SaveNavigationButton(): ReactElement {
   return (
@@ -29,7 +40,7 @@ export function SaveNavigationButton(): ReactElement {
             text={t`Docs`}
           />
           <MenuItem
-            href="https://testnet.element.fi"
+            href={advancedLink}
             target="_blank"
             rel="noreferrer"
             text={t`Advanced UI`}
