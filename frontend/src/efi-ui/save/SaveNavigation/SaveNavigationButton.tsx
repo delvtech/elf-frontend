@@ -6,10 +6,8 @@ import { Popover2 } from "@blueprintjs/popover2";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { useLocation } from "@reach/router";
 
 export function SaveNavigationButton(): ReactElement {
-  const { origin } = useLocation();
   return (
     <Popover2
       fill
@@ -31,7 +29,7 @@ export function SaveNavigationButton(): ReactElement {
             text={t`Docs`}
           />
           <MenuItem
-            href={`${origin}`}
+            href="https://testnet.element.fi"
             target="_blank"
             rel="noreferrer"
             text={t`Advanced UI`}
