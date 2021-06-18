@@ -78,9 +78,7 @@ export function PoolCharts({ poolInfo }: PoolChartsProps): ReactElement {
             {showLiquidityChart ? (
               <ChartMessages
                 poolAtLeastOneDayOld={poolAtLeastOneDayOld}
-                hasData={
-                  !!(liquidityData?.length && liquidityData?.length > 10)
-                }
+                hasData={!!(liquidityData?.length && liquidityData?.length > 1)}
               >
                 <LineChart
                   key={isDarkMode ? "a" : "b"}
@@ -94,7 +92,7 @@ export function PoolCharts({ poolInfo }: PoolChartsProps): ReactElement {
             {showVolumeChart ? (
               <ChartMessages
                 poolAtLeastOneDayOld={poolAtLeastOneDayOld}
-                hasData={!!(volumeData?.length && volumeData?.length > 10)}
+                hasData={!!(volumeData?.length && volumeData?.length > 1)}
               >
                 <LineChart
                   key={isDarkMode ? "a" : "b"}
