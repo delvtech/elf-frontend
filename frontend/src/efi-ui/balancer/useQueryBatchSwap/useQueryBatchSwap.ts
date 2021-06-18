@@ -196,6 +196,10 @@ function calcSwapPrincipalPool(
   const { extensions } = poolInfo;
   const { unitSeconds: tParamSeconds, expiration } = extensions;
   const timeRemainingSeconds = Math.max(expiration - nowInSeconds, 0);
+  if (timeRemainingSeconds === 0) {
+    // after maturity, values trade 1-1
+    return { result: [amount, amount], status: "success" };
+  }
 
   if (swapKind === SwapKind.GIVEN_IN) {
     const calcOutNumber = calcSwapOutGivenInCCPoolUNSAFE(
