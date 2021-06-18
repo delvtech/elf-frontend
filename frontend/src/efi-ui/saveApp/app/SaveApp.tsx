@@ -6,10 +6,12 @@ import { Web3Provider } from "@ethersproject/providers";
 import { Router } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
 import classNames from "classnames";
+import { t } from "ttag";
 
 import { tw } from "efi-tailwindcss-classnames";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import { SaveView } from "efi-ui/save/SaveView/SaveView";
+import { SavePortfolioView } from "efi-ui/saveApp/portfolio/SavePortfolioView/SavePortfolioView";
+import { SaveView } from "efi-ui/saveApp/save/SaveView/SaveView";
 import { useTransactionToasts } from "efi-ui/transactions/useTransactionToasts";
 import { useEagerConnect } from "efi-ui/wallets/hooks/useEagerReconnect";
 import { useSyncWithInjectedEthereum } from "efi-ui/wallets/hooks/useSyncWithInjectedEthereum";
@@ -54,6 +56,7 @@ const SaveApp: FC<SaveAppProps> = () => {
       <div className={appClassName}>
         <Router className={contentClassName}>
           <SaveView path={"/"} />
+          <SavePortfolioView path={"/portfolio"} />
         </Router>
       </div>
       <Overlay isOpen={onMainnet}>
@@ -66,7 +69,9 @@ const SaveApp: FC<SaveAppProps> = () => {
             "h-full"
           )}
         >
-          <H1 className={styles.overlay}>Please Connect to Goerli Testnet</H1>
+          <H1
+            className={styles.overlay}
+          >{t`Please Connect to Goerli Testnet`}</H1>
         </div>
       </Overlay>
       <div className={styles.mobileView}>
@@ -82,7 +87,7 @@ const SaveApp: FC<SaveAppProps> = () => {
           >
             <div>
               <H1 className={styles.overlay}>
-                Mobile Compatibility Coming with Mainnet Launch
+                {t`Mobile Compatibility Coming with Mainnet Launch`}
               </H1>
             </div>
           </div>

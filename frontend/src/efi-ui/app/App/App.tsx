@@ -6,6 +6,7 @@ import { Web3Provider } from "@ethersproject/providers";
 import { LocationProvider, Redirect, Router } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
 import classNames from "classnames";
+import { t } from "ttag";
 
 import { tw } from "efi-tailwindcss-classnames";
 import { FAQView } from "efi-ui/faq/FAQView";
@@ -17,11 +18,10 @@ import { PoolView } from "efi-ui/pools/PoolView/PoolView";
 import { PortfolioView } from "efi-ui/portfolio/PortfolioView/PortfolioView";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTransactionToasts } from "efi-ui/transactions/useTransactionToasts";
+import { useEagerConnect } from "efi-ui/wallets/hooks/useEagerReconnect";
 import { useSyncWithInjectedEthereum } from "efi-ui/wallets/hooks/useSyncWithInjectedEthereum";
 
 import styles from "./App.module.css";
-import { useEagerConnect } from "efi-ui/wallets/hooks/useEagerReconnect";
-import { SaveView } from "efi-ui/save/SaveView/SaveView";
 
 FocusStyleManager.onlyShowFocusOnTabs();
 
@@ -68,7 +68,6 @@ const App: FC<AppProps> = () => {
 
           <PortfolioView path={Navigation.PORTFOLIO} />
           <MintView path={Navigation.EARN} />
-          <SaveView path={Navigation.SAVE} />
           <PoolsView path={Navigation.TRADE} />
           <PoolView path={`pools/:poolAddress`} />
           <FAQView path={Navigation.RESOURCES} />
@@ -84,7 +83,9 @@ const App: FC<AppProps> = () => {
             "h-full"
           )}
         >
-          <H1 className={styles.overlay}>Please Connect to Goerli Testnet</H1>
+          <H1
+            className={styles.overlay}
+          >{t`Please Connect to Goerli Testnet`}</H1>
         </div>
       </Overlay>
       <div className={styles.mobileView}>
@@ -100,7 +101,7 @@ const App: FC<AppProps> = () => {
           >
             <div>
               <H1 className={styles.overlay}>
-                Mobile Compatibility Coming with Mainnet Launch
+                {t`Mobile Compatibility Coming with Mainnet Launch`}
               </H1>
             </div>
           </div>

@@ -25,7 +25,7 @@ import { EarnTermPicker } from "efi-ui/earn/EarnTermPicker/EarnTermPicker";
 import { useActiveTranche } from "efi-ui/earn/hooks/useActiveTranche";
 import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
-import { PrincipalDiscountPreview } from "efi-ui/save/SaveCard/PrincipalDiscountPreview";
+import { PrincipalDiscountPreview } from "efi-ui/saveApp/save/SaveCard/PrincipalDiscountPreview";
 import { BuyPrincipalTokensTransactionConfirmationDrawer } from "efi-ui/swaps/BuyPrincipalTokensTransactionConfirmationDrawer/BuyPrincipalTokensTransactionConfirmationDrawer";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";

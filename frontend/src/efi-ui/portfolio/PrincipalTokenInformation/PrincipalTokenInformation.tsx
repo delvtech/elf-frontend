@@ -98,7 +98,7 @@ function getGoogleCalendarLink(
 
   const event: CalendarEvent = {
     title: t`Redeem ${name}`,
-    description: t`The term has been reached. Visit https://element.fi to redeem your ${baseAssetSymbol}`,
+    description: t`Your ${baseAssetSymbol} fixed rate term has been reached! You can now head back to https://save.element.fi/ to redeem your ${baseAssetSymbol}.`,
     url: "https://element.fi",
     start: unlockTimestamp * 1000,
     duration: [1, "hour"],

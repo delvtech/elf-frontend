@@ -187,10 +187,10 @@ module.exports = {
     {
       name: "efi-not-to-portfolio",
       comment:
-        "Importing from portfolio/ is prohibited outside of the app/ and save/ directories.",
+        "Importing from portfolio/ is prohibited outside of the app/ and saveApp/ directories.",
       severity: "error",
       from: {
-        pathNot: `(${["efi-ui/app", "efi-ui/portfolio", "efi-ui/save"].join(
+        pathNot: `(${["efi-ui/app", "efi-ui/portfolio", "efi-ui/saveApp"].join(
           "|"
         )})`,
       },
@@ -201,13 +201,13 @@ module.exports = {
     {
       name: "efi-not-to-save",
       comment:
-        "Importing from save/ is prohibited outside of the app/ and save/ directories.",
+        "Importing from saveApp/ is prohibited outside of the saveApp/ directories.",
       severity: "error",
       from: {
-        pathNot: `(${["efi-ui/app", "efi-ui/save"].join("|")})`,
+        pathNot: `(${["efi-ui/saveApp", "index.tsx"].join("|")})`,
       },
       to: {
-        path: "efi-ui/save",
+        path: "efi-ui/saveApp",
       },
     },
 

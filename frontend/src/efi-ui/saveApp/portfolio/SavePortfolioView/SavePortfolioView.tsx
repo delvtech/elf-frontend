@@ -1,10 +1,10 @@
-import { CSSProperties, Fragment, ReactElement, useState } from "react";
+import { CSSProperties, Fragment, ReactElement, useCallback } from "react";
 import { Helmet } from "react-helmet";
 
-import { Button } from "@blueprintjs/core";
+import { Button, NonIdealState } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
-import { RouteComponentProps } from "@reach/router";
+import { navigate, RouteComponentProps } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
 import { PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
@@ -14,12 +14,10 @@ import logo from "efi-static-assets/logos/svg/logo--light.svg";
 import tw from "efi-tailwindcss-classnames";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import { SaveNavigation } from "efi-ui/save/SaveNavigation/SaveNavigation";
-import { SaveNavigationButton } from "efi-ui/save/SaveNavigation/SaveNavigationButton";
-import { SavePortfolioList } from "efi-ui/save/SavePortfolioList/SavePortfolioList";
+import { SaveNavigationButton } from "efi-ui/saveApp/navigation/SaveNavigation/SaveNavigationButton";
+import { SavePortfolioList } from "efi-ui/saveApp/portfolio/SavePortfolioList/SavePortfolioList";
 import { useTokensWithBalance } from "efi-ui/token/hooks/useTokensWithBalance";
 import { ConnectWalletButton2 } from "efi-ui/wallets/ConnectWalletButton/ConnectWalletButton2";
-import { assertNever } from "efi/base/assertNever";
 import { isDust } from "efi/coins/isDust";
 import { getTokenInfo } from "efi/tokenlists";
 import {
@@ -27,16 +25,12 @@ import {
   trancheContractsByAddress,
 } from "efi/tranche/tranches";
 
-import { SaveTab } from "./SaveTab";
-import { SaveViewSubtitle } from "./SaveViewSubtitle";
-import { SaveCard } from "efi-ui/save/SaveCard/SaveCard";
-
-interface EarnViewProps extends RouteComponentProps {}
+interface SavePortfolioViewProps extends RouteComponentProps {}
 
 const maxWidthStyle: CSSProperties = { maxWidth: 672 };
 const widthStyle = { width: 672 };
 
-export function SaveView(props: EarnViewProps): ReactElement {
+export function SavePortfolioView(props: SavePortfolioViewProps): ReactElement {
   const {
     account,
     library,
@@ -45,18 +39,10 @@ export function SaveView(props: EarnViewProps): ReactElement {
   } = useWeb3React<Web3Provider>();
   const { isDarkMode, setDarkModeOn, setDarkModeOff } = useDarkMode();
 
-  const [activeTab, setActiveTab] = useState<SaveNavigation>(
-    SaveNavigation.SAVE
-  );
+  const goToSave = useCallback(() => navigate("/"), []);
 
   const principalTokensWithBalance =
     usePrincipalTokensWithNonDustBalance(account);
-
-  const viewTitleLabel = getViewTitle(activeTab);
-
-  // don't show the link to View Balances if they aren't connected or don't have
-  // any balances
-  const showPortfolioLink = account && principalTokensWithBalance.length > 0;
 
   return (
     <Fragment>
@@ -111,23 +97,46 @@ export function SaveView(props: EarnViewProps): ReactElement {
           )}
           style={maxWidthStyle}
         >
-          <ViewTitle
-            title={viewTitleLabel}
-            subtitle={<SaveViewSubtitle activeTab={activeTab} />}
-          />
+          <ViewTitle title={t`Wallet Overview`} subtitle={null} />
           <div
             className={tw("flex", "flex-col", "space-y-4")}
             style={widthStyle}
           >
-            {showPortfolioLink ? (
-              <SaveTab activeTab={activeTab} onActiveTabChange={setActiveTab} />
+            {principalTokensWithBalance.length ? (
+              <div className={tw("text-right")}>
+                <Button
+                  minimal
+                  large
+                  onClick={goToSave}
+                  icon={IconNames.ARROW_LEFT}
+                >
+                  {t`Back to Save`}
+                </Button>
+              </div>
             ) : null}
 
-            {activeTab === SaveNavigation.SAVE && (
-              <SaveCard library={library} account={account} />
-            )}
-
-            {activeTab === SaveNavigation.BALANCES && (
+            {!principalTokensWithBalance.length ? (
+              <NonIdealState
+                icon={IconNames.BANK_ACCOUNT}
+                className={tw(
+                  "flex",
+                  "justify-center",
+                  "items-center",
+                  "pt-16"
+                )}
+                description={t`This wallet does not contain any Principal Tokens.`}
+                action={
+                  <Button
+                    outlined
+                    large
+                    onClick={goToSave}
+                    icon={IconNames.ARROW_LEFT}
+                  >
+                    {t`Back to Save`}
+                  </Button>
+                }
+              />
+            ) : (
               <SavePortfolioList
                 library={library}
                 account={account}
@@ -164,16 +173,4 @@ function usePrincipalTokensWithNonDustBalance(
   );
 
   return principalTokensWithNonDustBalance;
-}
-
-function getViewTitle(activeTab: SaveNavigation) {
-  switch (activeTab) {
-    case SaveNavigation.SAVE:
-      return t`The simplest way to grow your crypto.`;
-
-    case SaveNavigation.BALANCES:
-      return t`Wallet Overview`;
-    default:
-      assertNever(activeTab);
-  }
 }

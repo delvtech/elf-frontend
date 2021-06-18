@@ -8,17 +8,12 @@ import { SidebarNavigation } from "efi-ui/navigation/SidebarNavigation/SidebarNa
 import { TopbarNavigation } from "efi-ui/navigation/TopbarNavigation/TopbarNavigation";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { getConnectorName } from "efi/wallets/connectors";
-import { Navigation } from "efi-ui/navigation/navigation";
 
 export function MainNavigation(): ReactElement | null {
   const { deactivate, account, active, chainId, connector, library } =
     useWeb3React<Web3Provider>();
   const { activeTab, changeTab } = useNavigation();
   const { isDarkMode } = useDarkMode();
-
-  if (activeTab === Navigation.SAVE) {
-    return null;
-  }
 
   return (
     <Fragment>

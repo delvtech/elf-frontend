@@ -5,6 +5,5 @@ export enum Navigation {
 
   TRADE = "pools",
   EARN = "earn",
-  SAVE = "save",
   RESOURCES = "resources",
 }

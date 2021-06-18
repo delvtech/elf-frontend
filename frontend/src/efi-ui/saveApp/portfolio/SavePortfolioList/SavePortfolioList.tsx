@@ -5,7 +5,7 @@ import { PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { SavePortfolioCard } from "efi-ui/save/SavePortfolioList/SavePortfolioCard";
+import { SavePortfolioCard } from "efi-ui/saveApp/portfolio/SavePortfolioList/SavePortfolioCard";
 
 interface SavePortfolioListProps {
   library: Web3Provider | undefined;
