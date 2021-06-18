@@ -10,17 +10,14 @@ import { Navigation } from "efi-ui/navigation/navigation";
 
 export function NoYieldTokensInWalletNonIdealState(): ReactElement {
   const { changeTab } = useNavigation();
-  const goToMint = useCallback(
-    () => changeTab(Navigation.DEPOSIT),
-    [changeTab]
-  );
+  const goToMint = useCallback(() => changeTab(Navigation.EARN), [changeTab]);
   return (
     <NonIdealState
       icon={IconNames.BANK_ACCOUNT}
       className={tw("text-base")}
       description={t`This wallet does not contain any Yield Tokens.`}
       action={
-        <Button outlined large onClick={goToMint}>{t`Go to Deposit`}</Button>
+        <Button outlined large onClick={goToMint}>{t`Go to Earn`}</Button>
       }
     />
   );

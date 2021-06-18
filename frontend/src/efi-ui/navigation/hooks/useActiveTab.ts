@@ -29,9 +29,6 @@ export function useActiveTab(): Navigation {
     case Navigation.EARN: {
       return Navigation.EARN;
     }
-    case Navigation.DEPOSIT: {
-      return Navigation.DEPOSIT;
-    }
 
     default:
       typeAassertNever(navigation);

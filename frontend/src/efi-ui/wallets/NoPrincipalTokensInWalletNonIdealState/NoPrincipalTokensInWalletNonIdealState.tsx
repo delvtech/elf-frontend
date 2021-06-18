@@ -11,10 +11,6 @@ import { Navigation } from "efi-ui/navigation/navigation";
 export function NoPrincipalTokensInWalletNonIdealState(): ReactElement {
   const { changeTab } = useNavigation();
   const goToEarn = useCallback(() => changeTab(Navigation.EARN), [changeTab]);
-  const goToDeposit = useCallback(
-    () => changeTab(Navigation.DEPOSIT),
-    [changeTab]
-  );
 
   return (
     <NonIdealState
@@ -23,12 +19,6 @@ export function NoPrincipalTokensInWalletNonIdealState(): ReactElement {
       description={t`This wallet does not contain any Principal Tokens.`}
       action={
         <div className={tw("flex")}>
-          <Button
-            outlined
-            large
-            onClick={goToDeposit}
-            className={tw("mr-2")}
-          >{t`Go to Deposit`}</Button>
           <Button outlined large onClick={goToEarn}>{t`Go to Earn`}</Button>
         </div>
       }

@@ -8,7 +8,6 @@ import { useWeb3React } from "@web3-react/core";
 import classNames from "classnames";
 
 import { tw } from "efi-tailwindcss-classnames";
-import { EarnView } from "efi-ui/earn/EarnView/EarnView";
 import { FAQView } from "efi-ui/faq/FAQView";
 import { MintView } from "efi-ui/mint/MintView/MintView";
 import { MainNavigation } from "efi-ui/navigation/MainNavigation/MainNavigation";
@@ -68,10 +67,9 @@ const App: FC<AppProps> = () => {
           <Redirect noThrow from="/" to={Navigation.EARN} />
 
           <PortfolioView path={Navigation.PORTFOLIO} />
-          <EarnView path={Navigation.EARN} />
+          <MintView path={Navigation.EARN} />
           <SaveView path={Navigation.SAVE} />
           <PoolsView path={Navigation.TRADE} />
-          <MintView path={Navigation.DEPOSIT} />
           <PoolView path={`pools/:poolAddress`} />
           <FAQView path={Navigation.RESOURCES} />
         </Router>
