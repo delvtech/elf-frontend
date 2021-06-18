@@ -33,7 +33,7 @@ export function MintTransactionDetails({
       <LabeledText
         bold
         muted={false}
-        className={tw("items-center")}
+        className={tw("items-start")}
         text={<span>{t`Principal Tokens you receive`}</span>}
         label={
           <span className={tw("text-base")}>{t`${numPrincipalTokens?.toFixed(
@@ -44,7 +44,7 @@ export function MintTransactionDetails({
       <LabeledText
         muted={false}
         bold
-        className={tw("items-center")}
+        className={tw("items-start")}
         text={<span>{t`Yield Tokens you receive`}</span>}
         label={
           <span className={tw("text-base")}>
@@ -56,7 +56,7 @@ export function MintTransactionDetails({
         bold
         muted={false}
         text={<span>{t`Term date`}</span>}
-        className={tw("items-center")}
+        className={tw("items-start")}
         label={<span className={tw("text-base")}>{unlockTimeStampLabel}</span>}
       />
     </div>
