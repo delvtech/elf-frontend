@@ -164,12 +164,6 @@ export function TopbarNavigation({
                   title={t`Earn`}
                 />
                 <Tab
-                  id={Navigation.DEPOSIT}
-                  className={tw("text-center")}
-                  style={tabStyle}
-                  title={t`Deposit`}
-                />
-                <Tab
                   id={Navigation.TRADE}
                   className={tw("text-center")}
                   style={tabStyle}

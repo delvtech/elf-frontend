@@ -99,15 +99,6 @@ export function SidebarNavigation({
             }
           />
           <Tab
-            id={Navigation.DEPOSIT}
-            title={
-              <div className={tabTitleClassName}>
-                <Icon icon={IconNames.CUBE_ADD} iconSize={IconSize.STANDARD} />
-                <span>{t`Deposit`}</span>
-              </div>
-            }
-          />
-          <Tab
             id={Navigation.TRADE}
             title={
               <div className={tabTitleClassName}>
