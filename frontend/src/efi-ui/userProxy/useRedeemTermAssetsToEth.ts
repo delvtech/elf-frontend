@@ -5,7 +5,7 @@ import { UserProxy } from "elf-contracts/types/UserProxy";
 import { BigNumber, ethers, Signer } from "ethers";
 import { PrincipalTokenInfo } from "tokenlists/types";
 
-import { fetchPermitData, PermitCallData } from "efi-ui/base/fetchPermitData";
+import { fetchPermitData, PermitCallData } from "efi/base/fetchPermitData";
 import { getUserProxy } from "efi-ui/mint/hooks/userProxy";
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";

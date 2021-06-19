@@ -1,7 +1,7 @@
 import { UserProxy } from "elf-contracts/types/UserProxy";
 import { BigNumber, CallOverrides } from "ethers";
 
-import { PermitCallData } from "efi-ui/base/fetchPermitData";
+import { PermitCallData } from "efi/base/fetchPermitData";
 import {
   ContractMethodArgs,
   StaticContractMethodArgs,

@@ -11,7 +11,7 @@ import {
   YieldTokenInfo,
 } from "tokenlists/types";
 
-import { fetchPermitData, PermitCallData } from "efi-ui/base/fetchPermitData";
+import { fetchPermitData, PermitCallData } from "efi/base/fetchPermitData";
 import { getUserProxy } from "efi-ui/mint/hooks/userProxy";
 import { useTokenApprovedForAmount } from "efi-ui/token/hooks/useTokenApprovedForAmount";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
