@@ -3,17 +3,18 @@ import { ReactElement } from "react";
 import { Callout, Icon, Intent } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
+import { CalendarEvent, google } from "calendar-link";
 import { AssetProxyTokenInfo, PrincipalTokenInfo } from "tokenlists/types";
 import { jt, t } from "ttag";
 
 import { makeEtherscanTokenUrl } from "efi-etherscan/links";
 import tw from "efi-tailwindcss-classnames";
+import { AddressesJson } from "efi/addresses";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { isGoerli, isMainnet } from "efi/ethereum";
+import { getPrincipalPoolForTranche } from "efi/pools/ccpool";
 import { getTokenInfo } from "efi/tokenlists";
 import { getBaseAssetForTranche } from "efi/tranche/baseAssets";
-import { CalendarEvent, google } from "calendar-link";
-import { getPrincipalPoolForTranche } from "efi/pools/ccpool";
-import { useLocation } from "@reach/router";
 
 interface PrincipalTokenInformationProps {
   library: Web3Provider | undefined;
@@ -24,8 +25,6 @@ interface PrincipalTokenInformationProps {
 export function PrincipalTokenInformation(
   props: PrincipalTokenInformationProps
 ): ReactElement {
-  const { origin } = useLocation();
-
   const {
     principalToken,
     principalToken: {
@@ -55,8 +54,7 @@ export function PrincipalTokenInformation(
           icon={null}
           intent={Intent.PRIMARY}
         >{jt`Earn additional yield on your principal tokens by adding them as liquidity to the ${getElementPoolLink(
-          principalToken,
-          origin
+          principalToken
         )}`}</Callout>
       </div>
     </div>
@@ -64,18 +62,25 @@ export function PrincipalTokenInformation(
 }
 
 function getElementPoolLink(
-  principalToken: PrincipalTokenInfo,
-  origin: string
+  principalToken: PrincipalTokenInfo
 ): ReactElement | null {
   const { address } = principalToken;
   const { address: poolAddress } = getPrincipalPoolForTranche(address);
+  // assume testnet by default (goerli)
+  let domain = "https://testnet.element.fi";
+  if (isGoerli(AddressesJson.chainId)) {
+    domain = "https://testnet.element.fi";
+  } else if (isMainnet(AddressesJson.chainId)) {
+    // TODO: What will be the url for mainnet?
+    domain = "https://app.element.fi";
+  }
 
   return (
     <a
       key="element-pool-link"
       target="_blank"
       rel="noreferrer"
-      href={`${origin}/pools/${poolAddress}`}
+      href={`${domain}/pools/${poolAddress}`}
     >
       {t`Element Pool`}{" "}
       <sup>
