@@ -23,7 +23,7 @@ import { interestTokenContractsByAddress } from "efi/interestToken/interestToken
 import { makeMintCallArgs } from "efi/mint/makeMintCallArgs";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
 import {
-  isERC20PermitAddress,
+  isUnderlyingAddressERC20Permit,
   underlyingContractsByAddress,
 } from "efi/underlying/underlying";
 import { getTokenAddressForUserProxy } from "efi/userProxy";
@@ -211,7 +211,7 @@ async function getPermitCallData(
 
   if (
     !userProxyApprovedForBaseAsset &&
-    isERC20PermitAddress(baseAssetAddress)
+    isUnderlyingAddressERC20Permit(baseAssetAddress)
   ) {
     const tokenName = await baseAssetContract.name();
     const nonceBN = await baseAssetContract.nonces(account);
@@ -221,7 +221,10 @@ async function getPermitCallData(
     nonces.push(nonceBN.toNumber());
   }
 
-  if (!balancerApprovedForBaseAsset && isERC20PermitAddress(baseAssetAddress)) {
+  if (
+    !balancerApprovedForBaseAsset &&
+    isUnderlyingAddressERC20Permit(baseAssetAddress)
+  ) {
     const tokenName = await baseAssetContract.name();
     const nonceBN = await baseAssetContract.nonces(account);
     spenders.push(userProxyContractAddress);

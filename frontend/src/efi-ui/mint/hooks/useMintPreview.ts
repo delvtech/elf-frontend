@@ -1,17 +1,19 @@
-import { ERC20 } from "elf-contracts/types/ERC20";
+import { TestYVault, Tranche } from "elf-contracts/types";
 import { YVaultAssetProxy__factory } from "elf-contracts/types/factories/YVaultAssetProxy__factory";
 import { YVaultAssetProxy } from "elf-contracts/types/YVaultAssetProxy";
 import { formatUnits } from "ethers/lib/utils";
-import { PrincipalTokenInfo as TrancheInfo } from "tokenlists/types";
+import {
+  AssetProxyTokenInfo,
+  PrincipalTokenInfo as TrancheInfo,
+} from "tokenlists/types";
 
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
+import { getTokenInfo } from "efi/tokenlists";
 import {
   getVaultForTranche,
   trancheContractsByAddress,
 } from "efi/tranche/tranches";
-import { TestYVault, Tranche } from "elf-contracts/types";
 
 /**
  * Returns the number of Principal Tokens you'd get for minting into a tranche.
@@ -104,10 +106,10 @@ function useSmartContractData(
   wrappedPosition: YVaultAssetProxy,
   vault: TestYVault
 ) {
-  const { data: wrappedPositionDecimals } = useTokenDecimals(
-    wrappedPosition as unknown as ERC20
-  );
-  const { data: vaultDecimals } = useTokenDecimals(vault as unknown as ERC20);
+  const { decimals: wrappedPositionDecimals } =
+    getTokenInfo<AssetProxyTokenInfo>(wrappedPosition.address);
+  // the wrapped position gets its decimal value from the vault
+  const vaultDecimals = wrappedPositionDecimals;
 
   const { data: trancheValueSuppliedBN } = useSmartContractReadCall(
     trancheContract,
