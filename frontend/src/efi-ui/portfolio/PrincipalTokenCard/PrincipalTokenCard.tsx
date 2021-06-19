@@ -13,6 +13,7 @@ import { Web3Provider } from "@ethersproject/providers";
 import { Link } from "@reach/router";
 import classNames from "classnames";
 import { Tranche } from "elf-contracts/types/Tranche";
+import { PrincipalTokenInfo } from "tokenlists/types";
 import { jt, t } from "ttag";
 
 import { getCoinGeckoId } from "efi-coingecko";
@@ -21,19 +22,18 @@ import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
+import { GoToPoolButton } from "efi-ui/pools/GoToPoolButton/GoToPoolButton";
 import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
 import { PoolAction } from "efi-ui/pools/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
 import { RedeemPrincipalTokensButton } from "efi-ui/portfolio/RedeemButton/RedeemPrincipalTokensButton";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenBalanceUNSAFE } from "efi-ui/token/hooks/useTokenBalance";
-import { useBaseAssetForTranche } from "efi-ui/tranche/useBaseAssetForTranche";
-import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
-import { useUnderlyingVaultForTranche } from "efi-ui/tranche/useUnderlyingVaultForTranche";
 import { calculateProgress } from "efi/base/calculateProgress";
-import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
+import { convertEpochSecondsToDate2 } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
 import { formatPercent } from "efi/base/formatPercent";
 import { ERC20Shim } from "efi/contracts/ERC20Shim";
+import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { formatMoney } from "efi/money/formatMoney";
 import { getPrincipalPoolForTranche } from "efi/pools/ccpool";
@@ -41,10 +41,10 @@ import { getPoolContract } from "efi/pools/getPoolContract";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
 import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
+import { getVaultForTranche } from "efi/tranche/tranches";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 
 import { MaturityTimeBar } from "./MaturityTimeBar";
-import { GoToPoolButton } from "efi-ui/pools/GoToPoolButton/GoToPoolButton";
 
 interface PrincipalTokenCardProps {
   chainId: number | undefined;
@@ -67,16 +67,18 @@ export function PrincipalTokenCard(
   props: PrincipalTokenCardProps
 ): ReactElement {
   const { library, account, tranche } = props;
-  const { isDarkMode } = useDarkMode();
-  const baseAsset = useBaseAssetForTranche(tranche);
+  const poolInfo = getPrincipalPoolForTranche(tranche.address);
+  const { baseAssetInfo, termAssetInfo } = getPoolTokens(poolInfo);
+  const baseAsset = getCryptoAssetForToken(baseAssetInfo.address);
+  const principalTokenInfo: PrincipalTokenInfo =
+    termAssetInfo as PrincipalTokenInfo; // we know pool is a principal token pool.
+  const { createdAtTimestamp: trancheCreatedAt, unlockTimestamp } =
+    principalTokenInfo.extensions;
 
-  const trancheCreatedAt = useTrancheCreatedAt(tranche);
-  const { data: unlockTimestamp } = useSmartContractReadCall(
-    tranche,
-    "unlockTimestamp"
-  );
-  const unlockDate = convertEpochSecondsToDate(unlockTimestamp);
-  const createdAtDate = convertEpochSecondsToDate(trancheCreatedAt);
+  const { isDarkMode } = useDarkMode();
+
+  const unlockDate = convertEpochSecondsToDate2(unlockTimestamp);
+  const createdAtDate = convertEpochSecondsToDate2(trancheCreatedAt);
   const progress = calculateProgress(createdAtDate, unlockDate);
 
   const formattedDate = unlockDate
@@ -88,9 +90,8 @@ export function PrincipalTokenCard(
     account
   );
 
-  const vaultContract = useUnderlyingVaultForTranche(tranche);
+  const vaultContract = getVaultForTranche(tranche.address);
   const { data: vaultName } = useSmartContractReadCall(vaultContract, "name");
-  const poolInfo = getPrincipalPoolForTranche(tranche.address);
   const pool = getPoolContract(poolInfo.address);
   const { baseAssetContract } = getPoolTokens(poolInfo);
 
@@ -113,7 +114,7 @@ export function PrincipalTokenCard(
 
   const tableRowLink = getTableRowLink(vaultContract?.address, vaultName);
   const maturationDate = useMemo(
-    () => convertEpochSecondsToDate(unlockTimestamp),
+    () => convertEpochSecondsToDate2(unlockTimestamp),
     [unlockTimestamp]
   );
 

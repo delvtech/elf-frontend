@@ -14,8 +14,10 @@ import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { formatPercent } from "efi/base/formatPercent";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { formatMoney } from "efi/money/formatMoney";
-import { useParseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
-import { isConvergentCurvePool, PoolContract } from "efi/pools/PoolContract";
+import { isConvergentCurvePool } from "efi/pools/PoolContract";
+import { getPoolTokens } from "efi/pools/getPoolTokens";
+import { getPoolContract } from "efi/pools/getPoolContract";
+import { PoolInfo } from "efi/pools/PoolInfo";
 
 const summaryCardStyle: CSSProperties = {
   height: 220,
@@ -29,23 +31,23 @@ interface PoolSummaryProps {
   feeVolume: Money | undefined;
   feeVolumeTrend?: number | undefined;
   stakingAPY: number | undefined;
-  pool: PoolContract | undefined;
+  poolInfo: PoolInfo;
 }
 
 export function PoolSummary(props: PoolSummaryProps): ReactElement {
-  const { liquidity, volume, feeVolume, stakingAPY, pool } = props;
+  const { liquidity, volume, feeVolume, stakingAPY, poolInfo } = props;
+  const pool = getPoolContract(poolInfo.address);
 
-  const { data: [tokens, balances] = [undefined, undefined] } =
-    usePoolTokens(pool);
+  const { data: [, balances] = [undefined, undefined] } = usePoolTokens(pool);
 
   const {
     baseAssetIndex,
     termAssetIndex,
     baseAssetContract,
     termAssetContract,
-  } = useParseSortedTokensForPool(tokens);
+  } = getPoolTokens(poolInfo);
 
-  const baseAsset = getCryptoAssetForToken(baseAssetContract?.address);
+  const baseAsset = getCryptoAssetForToken(baseAssetContract.address);
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
 
   const baseAssetBalance = balances?.[baseAssetIndex];

@@ -18,6 +18,8 @@ import { convertEpochSecondsToDate2 } from "efi/base/convertEpochSecondsToDate";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { getTokenInfo } from "efi/tokenlists";
+import { EMPTY_ARRAY } from "efi/base/emptyArray";
+import { WalletApprovalInfo } from "efi/wallets/WalletApprovalInfo";
 
 interface MintTransactionConfirmationDrawerProps {
   account: string | null | undefined;
@@ -82,7 +84,7 @@ export function MintTransactionConfirmationDrawer({
       transactionPending={isLoading}
       transactionFailed={isError}
       transactionSuccess={isSuccess}
-      walletApprovalInfos={[]}
+      walletApprovalInfos={EMPTY_ARRAY as WalletApprovalInfo[]}
       isOpen={isOpen}
       onClose={onClose}
       account={account}

@@ -12,41 +12,37 @@ import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import classNames from "classnames";
 import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
-import { Tranche__factory } from "elf-contracts/types/factories/Tranche__factory";
 import { BigNumber } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
 import zipObject from "lodash.zipobject";
+import { PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
-import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
-import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
-import { useShareOfPool } from "efi-ui/pools/useShareOfPool";
 import { GoToPoolButton } from "efi-ui/pools/GoToPoolButton/GoToPoolButton";
+import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
+import { PoolAction } from "efi-ui/pools/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
+import { useShareOfPool } from "efi-ui/pools/useShareOfPool";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
-import { useTrancheUnlockTimestamp } from "efi-ui/tranche/useTrancheUnlockTimestamp";
-import { KNOWN_BASE_ASSETS } from "efi/addresses";
-import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
+import { convertEpochSecondsToDate2 } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
 import { formatPercent } from "efi/base/formatPercent";
-import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { getPoolInfo } from "efi/pools/getPoolInfo";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { getTokenInfo } from "efi/tokenlists";
 import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
-import { PoolAction } from "efi-ui/pools/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
 
 interface PrincipalTokenLPCardProps {
   library: Web3Provider | undefined;
   connector: AbstractConnector | undefined;
   account: string | null | undefined;
-  pool: ConvergentCurvePool | undefined;
+  pool: ConvergentCurvePool;
 }
 
 const calloutClassName = tw(
@@ -66,21 +62,24 @@ export function PrincipalTokenLPCard({
   pool,
 }: PrincipalTokenLPCardProps): ReactElement {
   const { isDarkMode } = useDarkMode();
+  const poolInfo = getPoolInfo(pool.address);
 
   // base asset
-  const baseAssetContract = useBaseAssetForPool(pool);
-  const { data: baseAssetDecimals } = useTokenDecimals(baseAssetContract);
-  const baseAssetCryptoAsset = getCryptoAssetForToken(
-    baseAssetContract?.address
-  );
+  const { baseAssetInfo } = getPoolTokens(poolInfo);
+  const { decimals: baseAssetDecimals } = baseAssetInfo;
+  const baseAssetCryptoAsset = getCryptoAssetForToken(baseAssetInfo.address);
   const baseAssetSymbol = getCryptoSymbol(baseAssetCryptoAsset);
   const BaseAssetIcon = findAssetIcon2(baseAssetCryptoAsset);
 
   // Principal token
-  const tranche = useTrancheForPool(pool);
-  const { data: trancheDecimals } = useTokenDecimals(tranche);
-  const { data: unlockTimestamp } = useTrancheUnlockTimestamp(tranche);
-  const unlockDate = convertEpochSecondsToDate(unlockTimestamp);
+  const { termAssetInfo } = getPoolTokens(poolInfo);
+  const principalTokenInfo = getTokenInfo<PrincipalTokenInfo>(
+    termAssetInfo.address
+  );
+
+  const { decimals: trancheDecimals } = principalTokenInfo;
+  const { unlockTimestamp } = principalTokenInfo.extensions;
+  const unlockDate = convertEpochSecondsToDate2(unlockTimestamp);
   const formattedDate = unlockDate
     ? formatAbbreviatedDate(unlockDate)
     : t`Loading unlock date...`;
@@ -95,21 +94,20 @@ export function PrincipalTokenLPCard({
     shareOfPool,
     addresses,
     poolBalances,
-    baseAssetContract?.address,
+    baseAssetInfo.address,
     baseAssetDecimals
   );
   const principalTokenLiquidity = calculatePoolShareLiquidity(
     shareOfPool,
     addresses,
     poolBalances,
-    tranche?.address,
+    principalTokenInfo.address,
     trancheDecimals
   );
 
   const baseAssetLiquidityLabel = `${baseAssetLiquidity?.toFixed(4)}`;
   const principalTokenLiquidityLabel = `${principalTokenLiquidity?.toFixed(4)}`;
 
-  const poolInfo = getTokenInfo<PoolInfo>(pool?.address as string);
   const poolName = `${baseAssetSymbol} - ${baseAssetSymbol} Principal Token`;
   const principalTokenSymbol = getPrincipalTokenSymbol(poolInfo);
   const poolLabel = `(${baseAssetSymbol} - ${principalTokenSymbol})`;
@@ -242,18 +240,6 @@ function getPoolSharesLabel(poolShares: number | undefined) {
   }
 
   return formatPercent(poolShares, 2);
-}
-
-function useTrancheForPool(pool: ConvergentCurvePool | undefined) {
-  const { data: [poolTokens = []] = [] } = usePoolTokens(pool);
-  const principalTokenAddress = poolTokens.find(
-    (address) => !KNOWN_BASE_ASSETS.includes(address)
-  );
-
-  return getSmartContractFromRegistry(
-    principalTokenAddress,
-    Tranche__factory.connect
-  );
 }
 
 export function getPrincipalTokenSymbol(poolInfo: PoolInfo): string {

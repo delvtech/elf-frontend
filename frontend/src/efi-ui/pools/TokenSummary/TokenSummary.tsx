@@ -9,23 +9,24 @@ import { Money } from "ts-money";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { useAccumulatedFiatInterestForTranche } from "efi-ui/pools/useAccumulatedFiatInterestForTranche";
 import { useAccumulatedInterestForTranche } from "efi-ui/pools/useAccumulatedInterestForTranche";
-import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
+import { usePoolSpotPrice2 } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useSwaps } from "efi-ui/pools/useSwaps/useSwaps";
 import { useTokenYield } from "efi-ui/pools/useTokenYield";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
-import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { useTokenHistoricalPrice } from "efi-ui/token/hooks/useTokenHistoricalPrice";
 import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
-import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
 import { formatPercent } from "efi/base/formatPercent";
+import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { formatMoney } from "efi/money/formatMoney";
-import { useParseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
-import { isConvergentCurvePool, PoolContract } from "efi/pools/PoolContract";
+import { getPoolContract } from "efi/pools/getPoolContract";
+import { getPoolTokens } from "efi/pools/getPoolTokens";
+import { isConvergentCurvePool } from "efi/pools/PoolContract";
+import { PoolInfo } from "efi/pools/PoolInfo";
+import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 
 const summaryCardStyle: CSSProperties = {
@@ -33,14 +34,15 @@ const summaryCardStyle: CSSProperties = {
 };
 
 interface TokenSummaryProps {
-  pool: PoolContract | undefined;
+  poolInfo: PoolInfo;
   interestSupply: number | undefined;
 }
 
 export function TokenSummary({
-  pool,
+  poolInfo,
   interestSupply,
 }: TokenSummaryProps): ReactElement {
+  const pool = getPoolContract(poolInfo.address);
   const {
     baseAssetSymbol,
     termAssetSymbol,
@@ -53,7 +55,7 @@ export function TokenSummary({
     fiatInterestPerToken,
     interestPerToken,
     spotPrice,
-  } = useTokensSummary(pool, interestSupply || 0);
+  } = useTokensSummary(poolInfo, interestSupply || 0);
 
   const isPrincipalPool = isConvergentCurvePool(pool);
 
@@ -217,15 +219,21 @@ function TokenInfo({
 }
 
 function useTokensSummary(
-  pool: PoolContract | undefined,
+  poolInfo: PoolInfo,
   interestSupply: number
 ): TokensSummary {
+  const pool = getPoolContract(poolInfo.address);
   const { currency } = useCurrencyPref();
-  const { data: [tokens, balances] = [undefined, undefined] } =
-    usePoolTokens(pool);
+  const { data: [, balances] = [undefined, undefined] } = usePoolTokens(pool);
 
-  const { termAssetIndex, baseAssetContract, termAssetContract } =
-    useParseSortedTokensForPool(tokens);
+  const {
+    termAssetIndex,
+    baseAssetContract,
+    termAssetContract,
+    termAssetInfo,
+    baseAssetInfo,
+  } = getPoolTokens(poolInfo);
+
   const baseAsset = getCryptoAssetForToken(baseAssetContract?.address);
 
   // Base Asset Info
@@ -237,8 +245,8 @@ function useTokensSummary(
     1
   );
 
-  const fixedYield = useTokenYield(baseAssetContract, pool, "principal");
-  const { data: baseAssetDecimals } = useTokenDecimals(baseAssetContract);
+  const fixedYield = useTokenYield(poolInfo, "principal");
+  const { decimals: baseAssetDecimals } = baseAssetInfo;
 
   // Term Asset Info
   const termAssetBalance = balances?.[termAssetIndex];
@@ -247,10 +255,10 @@ function useTokensSummary(
     termAssetContract?.address,
     vaultSymbol
   );
-  const { data: termAssetDecimals } = useTokenDecimals(termAssetContract);
+  const { decimals: termAssetDecimals } = termAssetInfo;
 
-  const spotPrice = usePoolSpotPrice(pool, baseAssetContract);
-  const termSpotPrice = usePoolSpotPrice(pool, termAssetContract);
+  const spotPrice = usePoolSpotPrice2(pool, baseAssetContract.address);
+  const termSpotPrice = usePoolSpotPrice2(pool, termAssetContract.address);
 
   const swaps = useSwaps(pool);
 

@@ -1,12 +1,11 @@
-import { ERC20 } from "elf-contracts/types/ERC20";
-
-import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
-import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForPool";
+import { usePoolSpotPrice2 } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { ONE_YEAR_IN_SECONDS } from "efi/base/time";
-import { PoolContract } from "efi/pools/PoolContract";
+import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
+import { getPoolContract } from "efi/pools/getPoolContract";
+import { getPoolTokens } from "efi/pools/getPoolTokens";
+import { getTrancheForPool } from "efi/pools/getTrancheForPool";
+import { PoolInfo } from "efi/pools/PoolInfo";
 import { TermAssetType } from "efi/tranche/TermAssetType";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 
@@ -18,23 +17,20 @@ import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
  * @returns
  */
 export function useTokenYield(
-  baseAssetContract: ERC20 | undefined,
-  pool: PoolContract | undefined,
+  poolInfo: PoolInfo,
   termAssetType: TermAssetType
 ): number {
+  const pool = getPoolContract(poolInfo.address);
+  const { baseAssetContract } = getPoolTokens(poolInfo);
   // get fixed yield
-  const baseAsset = getCryptoAssetForToken(baseAssetContract?.address);
-  const spotPrice = usePoolSpotPrice(pool, baseAssetContract);
-  const trancheContract = useTrancheForPool(pool);
+  const baseAsset = getCryptoAssetForToken(baseAssetContract.address);
+  const spotPrice = usePoolSpotPrice2(pool, baseAssetContract.address);
+  const trancheInfo = getTrancheForPool(poolInfo);
+  const { unlockTimestamp } = trancheInfo.extensions;
 
-  const { data: unlockTimestampBN } = useSmartContractReadCall(
-    trancheContract,
-    "unlockTimestamp"
-  );
   let fixedAPY = 0;
-  if (spotPrice && unlockTimestampBN) {
-    const timeLeftInSeconds =
-      unlockTimestampBN.toNumber() - Math.round(Date.now() / 1000);
+  if (spotPrice) {
+    const timeLeftInSeconds = unlockTimestamp - Math.round(Date.now() / 1000);
 
     // spot price is how much principal tokens for 1 base token.  but we want how much base tokens for 1 principal
     // tokens so we take the inverse.  i.e. 0.9 ETH for 1 principal token.

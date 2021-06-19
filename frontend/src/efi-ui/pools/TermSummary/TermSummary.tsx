@@ -2,49 +2,51 @@ import React, { CSSProperties, ReactElement } from "react";
 
 import { Card, Classes } from "@blueprintjs/core";
 import classNames from "classnames";
-import { ERC20 } from "elf-contracts/types/ERC20";
 import { Money } from "ts-money";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
-import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
-import { formatPercent } from "efi/base/formatPercent";
-import { formatMoney } from "efi/money/formatMoney";
-import { isConvergentCurvePool, PoolContract } from "efi/pools/PoolContract";
-import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 import { formatAbbreviatedDate } from "efi/base/dates";
+import { formatPercent } from "efi/base/formatPercent";
+import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
+import { formatMoney } from "efi/money/formatMoney";
+import { principalPools } from "efi/pools/ccpool";
+import { getPoolTokens } from "efi/pools/getPoolTokens";
+import { PoolInfo } from "efi/pools/PoolInfo";
+import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 
 const summaryCardStyle: CSSProperties = {
   height: 220,
 };
 
 interface TermSummaryProps {
-  pool: PoolContract | undefined;
+  poolInfo: PoolInfo;
   totalValueLocked: Money | undefined;
   maturityTimeMs: number | undefined;
   startTimeMs: number | undefined;
-  baseAssetContract: ERC20 | undefined;
 }
 
-// TODO: add loading states
 export function TermSummary(props: TermSummaryProps): ReactElement {
   const {
-    pool,
+    poolInfo,
     totalValueLocked,
-    baseAssetContract,
     maturityTimeMs = 0,
     startTimeMs = 0,
   } = props;
-  const baseAsset = getCryptoAssetForToken(baseAssetContract?.address);
+
+  const { baseAssetContract } = getPoolTokens(poolInfo);
+  const baseAsset = getCryptoAssetForToken(baseAssetContract.address);
   const vaultSymbol = getVaultSymbol(baseAsset);
   const { data: vaultInfo } = useYearnVault(vaultSymbol);
 
   const { displayName, type, apy } = vaultInfo || {};
   const vaultApy = apy?.recommended ?? 0;
 
-  const isPrincipalPool = isConvergentCurvePool(pool);
+  const isPrincipalPool = principalPools
+    .map(({ address }) => address)
+    .includes(poolInfo.address);
 
   const startDateLabel = startTimeMs
     ? formatAbbreviatedDate(new Date(startTimeMs))
@@ -78,7 +80,7 @@ export function TermSummary(props: TermSummaryProps): ReactElement {
           </div>
 
           {/* Underlying Vault */}
-          {pool && !isPrincipalPool ? (
+          {poolInfo && !isPrincipalPool ? (
             <div className={tw("flex", "flex-col")}>
               <span
                 className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
@@ -90,7 +92,7 @@ export function TermSummary(props: TermSummaryProps): ReactElement {
           ) : null}
 
           {/* Underlying Vault */}
-          {pool && !isPrincipalPool ? (
+          {poolInfo && !isPrincipalPool ? (
             <div className={tw("flex", "flex-col")}>
               <span
                 className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}

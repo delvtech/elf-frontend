@@ -15,33 +15,31 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
-import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
-import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
+import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
+import { GoToPoolButton } from "efi-ui/pools/GoToPoolButton/GoToPoolButton";
 import { useFeeVolumeForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
-import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
-import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
+import { usePoolSpotPrice2 } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { PoolAction } from "efi-ui/pools/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
 import { useStakingAPY } from "efi-ui/pools/useStakingAPY";
 import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
-import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForPool";
-import { GoToPoolButton } from "efi-ui/pools/GoToPoolButton/GoToPoolButton";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
-import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { formatPercent } from "efi/base/formatPercent";
 import { CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { formatMoney } from "efi/money/formatMoney";
+import { getPoolInfo } from "efi/pools/getPoolInfo";
+import { getPoolTokens } from "efi/pools/getPoolTokens";
+import { getTrancheForPool } from "efi/pools/getTrancheForPool";
 import { PoolContract } from "efi/pools/PoolContract";
 import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 
 interface InterestPoolCardProps {
-  pool: PoolContract | undefined;
+  pool: PoolContract;
 }
 
 const cellClassName = tw("flex", "mr-4", "items-center", "overflow-hidden");
@@ -57,30 +55,26 @@ export function InterestPoolCard(
   props: InterestPoolCardProps
 ): ReactElement | null {
   const { pool } = props;
-  const tranche = useTrancheForPool(pool);
+  const poolInfo = getPoolInfo(pool.address);
+  const tranche = getTrancheForPool(poolInfo);
+  const { unlockTimestamp: unlockTime, createdAtTimestamp: trancheCreatedAt } =
+    tranche.extensions;
   const liquidity = useTotalFiatLiquidityForPool(pool);
-  const trancheCreatedAt = useTrancheCreatedAt(tranche);
   const fees = useFeeVolumeForPool(pool) ?? 0;
-  const baseAssetContract = useBaseAssetForPool(pool);
-  const baseAsset = getCryptoAssetForToken(baseAssetContract?.address);
+  const { baseAssetContract, termAssetContract } = getPoolTokens(poolInfo);
+  const baseAsset = getCryptoAssetForToken(baseAssetContract.address);
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
-  const BaseAssetIcon = findAssetIcon(baseAssetSymbol);
-  const termAssetContract = usePoolPairedToken(pool, baseAssetContract);
+  const BaseAssetIcon = findAssetIcon2(baseAsset);
   const vaultSymbol = getVaultSymbol(baseAsset);
   const { symbol: termAssetSymbol } = getTermAssetSymbol(
     termAssetContract?.address,
     vaultSymbol
   );
-  const { data: unlockBN } = useSmartContractReadCall(
-    tranche,
-    "unlockTimestamp"
-  );
-  const unlockTime = unlockBN?.toNumber();
 
   const stakingYield = useStakingAPY(pool);
   const { currency } = useCurrencyPref();
   const [baseAssetPrice] = useTokenPrice(baseAssetContract, currency);
-  const spotPrice = usePoolSpotPrice(pool, termAssetContract) ?? 0;
+  const spotPrice = usePoolSpotPrice2(pool, termAssetContract.address) ?? 0;
 
   const { data: vaultInfo } = useYearnVault(vaultSymbol);
   const { displayName, type, apy } = vaultInfo || {};
@@ -107,7 +101,6 @@ export function InterestPoolCard(
     termAssetSymbol,
     stakingYield,
     spotPrice,
-    unlockBN,
   ];
   // TODO: this is a big hammer for loading state.  we should use a more granular technique when we can.
   const allDataLoaded = dataToLoad.every(

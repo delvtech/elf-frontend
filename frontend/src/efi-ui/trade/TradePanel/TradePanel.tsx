@@ -262,17 +262,19 @@ export function TradePanel(props: TradePanelProps): ReactElement {
       </Button>
       <SwapTokensTransactionConfirmationDrawer
         tokenInAddress={tokenInAddress}
-        tokenInSymbol={tokenInSymbol}
+        // TODO: remove this casting when getCryptoSymbol doesn't return undefined
+        tokenInSymbol={tokenInSymbol as string}
         tokenInDecimals={tokenInDecimals}
         tokenInAsset={tokenInAsset}
         tokenInIcon={tokenInIcon}
         tokenOutAddress={tokenOutAddress}
-        tokenOutSymbol={tokenOutSymbol}
+        // TODO: remove this casting when getCryptoSymbol doesn't return undefined
+        tokenOutSymbol={tokenOutSymbol as string}
         tokenOutDecimals={tokenOutDecimals}
         tokenOutIcon={tokenOutIcon}
         account={account}
         library={library}
-        pool={pool}
+        poolInfo={poolInfo}
         amountIn={amountIn}
         amountOut={amountOut}
         swapKind={swapKind}

@@ -22,15 +22,14 @@ import { TokenAmountInput } from "efi-ui/token/TokenAmountInput/TokenAmountInput
 import { formatBalance } from "efi/base/formatBalance";
 import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { getPrincipalPoolForTranche } from "efi/pools/ccpool";
 import { getPoolContract } from "efi/pools/getPoolContract";
+import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { getTokenInfo } from "efi/tokenlists";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
 import { getBaseAssetForTranche } from "efi/tranche/baseAssets";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
-import { getPoolTokens } from "efi/pools/getPoolTokens";
 
 interface SellPrincipalTokensFormProps {
   library: Web3Provider | undefined;
@@ -51,6 +50,8 @@ export function SellPrincipalTokensForm(
       extensions: { underlying: underlyingAddress },
     },
   } = props;
+  const poolInfo = getPrincipalPoolForTranche(ptAddress);
+  const { baseAssetInfo } = getPoolTokens(poolInfo);
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const openDrawer = useCallback(() => setDrawerOpen(true), []);
   const { stringValue: amountIn, setValue: onAmountInChange } =
@@ -64,7 +65,7 @@ export function SellPrincipalTokensForm(
   const baseAsset = getBaseAssetForTranche(ptAddress);
   const baseAssetIcon = findAssetIcon2(baseAsset);
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
-  const baseAssetDecimals = getCryptoDecimals(baseAsset);
+  const { decimals: baseAssetDecimals } = baseAssetInfo;
 
   // principal token
   const trancheContract = trancheContractsByAddress[ptAddress];
@@ -74,7 +75,6 @@ export function SellPrincipalTokensForm(
   const ptIcon = findAssetIcon2(principalTokenCryptoAsset);
 
   // inputs
-  const poolInfo = getPrincipalPoolForTranche(ptAddress);
   const { tokenOutError, tokenInError } = useValidateInput(
     account,
     poolInfo,
@@ -139,12 +139,12 @@ export function SellPrincipalTokensForm(
         tokenInAsset={principalTokenCryptoAsset}
         tokenInIcon={ptIcon}
         tokenOutAddress={underlyingAddress}
-        tokenOutSymbol={baseAssetSymbol}
+        tokenOutSymbol={baseAssetSymbol as string}
         tokenOutDecimals={baseAssetDecimals}
         tokenOutIcon={baseAssetIcon}
         account={account}
         library={library}
-        pool={poolContract}
+        poolInfo={poolInfo}
         amountIn={amountIn}
         amountOut={previewAmountOut}
         swapKind={SwapKind.GIVEN_IN}

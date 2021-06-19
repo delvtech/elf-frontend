@@ -1,9 +1,10 @@
 import { useCallback } from "react";
 import { UseMutationResult } from "react-query";
 
+import { ContractReceipt } from "@ethersproject/contracts";
 import { ERC20Permit, InterestToken, Tranche } from "elf-contracts/types";
 import { UserProxy } from "elf-contracts/types/UserProxy";
-import { ContractTransaction, ethers, Signer } from "ethers";
+import { ethers, Signer } from "ethers";
 import { parseUnits } from "ethers/lib/utils";
 import {
   PrincipalTokenInfo as TrancheInfo,
@@ -15,6 +16,7 @@ import { getUserProxy } from "efi-ui/mint/hooks/userProxy";
 import { useTokenApprovedForAmount } from "efi-ui/token/hooks/useTokenApprovedForAmount";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
 import ContractAddresses from "efi/addresses";
+import { EMPTY_ARRAY } from "efi/base/emptyArray";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
@@ -25,7 +27,6 @@ import {
   underlyingContractsByAddress,
 } from "efi/underlying/underlying";
 import { getTokenAddressForUserProxy } from "efi/userProxy";
-import { EMPTY_ARRAY } from "efi/base/emptyArray";
 
 /**
  * Returns the number of Principal Tokens you'd get for minting into a tranche.
@@ -202,6 +203,7 @@ async function getPermitCallData(
   const spenders: string[] = [];
   const tokenContracts: ERC20Permit[] = [];
   const tokenNames: string[] = [];
+  const nonces: number[] = [];
 
   if (!signer || !account) {
     return EMPTY_ARRAY as PermitCallData[];
@@ -212,30 +214,41 @@ async function getPermitCallData(
     isERC20PermitAddress(baseAssetAddress)
   ) {
     const tokenName = await baseAssetContract.name();
+    const nonceBN = await baseAssetContract.nonces(account);
     spenders.push(userProxyContractAddress);
     tokenContracts.push(baseAssetContract);
     tokenNames.push(tokenName);
+    nonces.push(nonceBN.toNumber());
   }
 
-  if (!balancerApprovedForBaseAsset) {
+  if (!balancerApprovedForBaseAsset && isERC20PermitAddress(baseAssetAddress)) {
     const tokenName = await baseAssetContract.name();
+    const nonceBN = await baseAssetContract.nonces(account);
     spenders.push(userProxyContractAddress);
     tokenContracts.push(baseAssetContract);
     tokenNames.push(tokenName);
+    const nonce = !userProxyApprovedForBaseAsset
+      ? nonceBN.toNumber() + 1
+      : nonceBN.toNumber();
+    nonces.push(nonce);
   }
 
   if (!balancerApprovedForPrincipalToken) {
     const tokenName = await principalTokenContract.name();
+    const nonceBN = await baseAssetContract.nonces(account);
     spenders.push(balancerVaultAddress);
     tokenContracts.push(principalTokenContract);
     tokenNames.push(tokenName);
+    nonces.push(nonceBN.toNumber());
   }
 
   if (!balancerApprovedForYieldToken) {
     const tokenName = await yieldTokenContract.name();
+    const nonceBN = await baseAssetContract.nonces(account);
     spenders.push(balancerVaultAddress);
     tokenContracts.push(yieldTokenContract);
     tokenNames.push(tokenName);
+    nonces.push(nonceBN.toNumber());
   }
 
   const permitCallData = await fetchPermitDataMulti(
@@ -243,7 +256,8 @@ async function getPermitCallData(
     account,
     spenders,
     tokenContracts,
-    tokenNames
+    tokenNames,
+    nonces
   );
   return permitCallData;
 }
@@ -253,15 +267,15 @@ async function fetchPermitDataMulti(
   owner: string,
   spenders: string[],
   tokenContracts: ERC20Permit[],
-  tokenNames: string[]
+  tokenNames: string[],
+  nonces: number[]
 ): Promise<PermitCallData[]> {
-  const { usdcAddress } = ContractAddresses;
   const promises = tokenContracts.map(async (tokenContract, i) => {
     const tokenName = tokenNames[i];
     const spender = spenders[i];
+    const nonce = nonces[i];
 
-    const nonce = await tokenContract.nonces(owner);
-    const version = tokenContract.address === usdcAddress ? "2" : "1";
+    const version = getPermitVersion(tokenContract.address);
     const permitData = await fetchPermitData(
       signer,
       tokenContract,
@@ -269,7 +283,7 @@ async function fetchPermitDataMulti(
       owner,
       spender,
       ethers.constants.MaxUint256,
-      nonce.toNumber(),
+      nonce,
       version
     );
     if (permitData) {
@@ -283,4 +297,15 @@ async function fetchPermitDataMulti(
     (permit): permit is PermitCallData => !!permit
   );
   return permits;
+}
+
+// USDC is normally uses version '2'.  In development we are using a simple ERC20 for our USDC
+// contract so we keep it at verion '1'.
+function getPermitVersion(tokenAddress: string) {
+  const { usdcAddress } = ContractAddresses;
+  if (process.env.NODE_ENV === "development") {
+    return "1";
+  }
+  const version = tokenAddress === usdcAddress ? "2" : "1";
+  return version;
 }

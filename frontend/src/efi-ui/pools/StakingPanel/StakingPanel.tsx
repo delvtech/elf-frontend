@@ -304,8 +304,8 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
 }
 
 function useTokenInfoForTradeInput(
-  pool: PoolContract | undefined,
-  tokenContract: ERC20 | undefined,
+  pool: PoolContract,
+  tokenContract: ERC20,
   account: string | null | undefined,
   library: Web3Provider | undefined
 ) {

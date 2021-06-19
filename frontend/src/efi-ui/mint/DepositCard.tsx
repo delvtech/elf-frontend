@@ -38,7 +38,7 @@ import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { TokenIcon } from "efi-ui/token/TokenIcon";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { formatPercent } from "efi/base/formatPercent";
-import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
+import { CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
@@ -122,7 +122,7 @@ export function DepositCard(props: MintPoolCardProps): ReactElement | null {
       onExpandOpen();
     }
   }, [isExpanded, isMature, onExpandClose, onExpandOpen]);
-  const baseAsset = getCryptoAssetForToken(baseAssetAddress) as CryptoAsset;
+  const baseAsset = getCryptoAssetForToken(baseAssetAddress);
   const baseAssetSymbol = getCryptoSymbol(baseAsset) as string;
   const BaseAssetIcon = findAssetIcon2(baseAsset);
   const vaultSymbol = getVaultSymbol(baseAsset) as string;
@@ -148,11 +148,7 @@ export function DepositCard(props: MintPoolCardProps): ReactElement | null {
   )?.toFixed(4);
   const fees = useFeeVolumeForPool(yieldPoolContract) ?? 0;
   const tvl = useTotalValueLockedForTranche(trancheInfo, baseAssetContract);
-  const variableYield = useTokenYield(
-    baseAssetContract,
-    yieldPoolContract,
-    "yield"
-  );
+  const variableYield = useTokenYield(poolInfo, "yield");
   const vaultApy = apy?.recommended ?? 0;
 
   // TODO: this is a big hammer for loading state.  we should use a more granular technique when we can.
