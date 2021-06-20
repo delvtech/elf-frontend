@@ -1,93 +1,76 @@
-import { CSSProperties, FC, Fragment, ReactElement } from "react";
-import { Helmet } from "react-helmet";
+import React, { Fragment, ReactElement, useCallback, useState } from "react";
 
 import { Intent, Tag } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
-import { Link, RouteComponentProps } from "@reach/router";
+import { RouteComponentProps } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
-import { jt, t } from "ttag";
+import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { EarnCard } from "efi-ui/earn/EarnCard/EarnCard";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
+import { yieldPools } from "efi/pools/weightedPool";
+import { useSigner } from "efi-ui/provider/useBlockFromTag/useSigner/useSigner";
 
 interface EarnViewProps extends RouteComponentProps {}
 
-const maxWidthStyle: CSSProperties = { maxWidth: 672 };
-const widthStyle = { width: 672 };
 export function EarnView(props: EarnViewProps): ReactElement {
   const { account, library } = useWeb3React<Web3Provider>();
+  const signer = useSigner(account, library);
+  const [expandedPoolIndex, setExpandedPoolIndex] = useState(-1);
+  const onExpandClose = useCallback(() => setExpandedPoolIndex(-1), []);
 
   return (
     <Fragment>
-      <Helmet>
-        <title>{t`Earn fixed yield from buying at a discount. Exit anytime.`}</title>
-      </Helmet>
       <div
-        data-testid="earn-view"
+        data-testid="pools-view"
         className={tw(
           "flex",
           "flex-col",
           "p-12",
+          "pt-24",
+          "lg:pt-12",
           "h-full",
+          "space-y-12",
           "items-center",
-          "overflow-scroll",
-          "text-center"
+          "overflow-scroll"
         )}
       >
-        {/* page title */}
-        <div style={maxWidthStyle}>
+        <div style={{ maxWidth: 610 }}>
           <ViewTitle
-            title={t`Earn fixed yield from buying at a discount.`}
-            bottomTitle={t`Exit anytime.`}
+            title={t`Stay liquid with principal and yield tokens.`}
             titleTag={<Tag minimal intent={Intent.WARNING}>{t`alpha`}</Tag>}
-            subtitle={<EarnViewSubtitle />}
+            className={tw("text-center")}
+            subtitle={t`Gain capital efficiency on your existing positions, boost your APY by staking, and view current APYs across all available terms.`}
           />
         </div>
-        {/* Main content */}
         <div
           className={tw(
             "flex",
             "flex-col",
-            "flex-1",
-            "space-y-12",
-            "pt-12",
             "items-center",
-            "justify-center"
+            "w-full",
+            "space-y-5"
           )}
         >
-          <div
-            className={tw("flex", "flex-col", "space-y-12", "text-center")}
-            style={widthStyle}
-          >
-            <EarnCard library={library} account={account} />
-          </div>
+          {yieldPools.map((poolInfo, index) => {
+            return (
+              <EarnCard
+                signer={signer}
+                library={library}
+                account={account}
+                isExpanded={index === expandedPoolIndex}
+                onExpandOpen={() => {
+                  setExpandedPoolIndex(index);
+                }}
+                onExpandClose={onExpandClose}
+                key={poolInfo.address}
+                poolInfo={poolInfo}
+              />
+            );
+          })}
         </div>
       </div>
     </Fragment>
   );
 }
-
-const EarnViewSubtitle: FC = () => {
-  const fixedYieldLink = (
-    <a
-      key="fixed-yield-link"
-      href={
-        "https://medium.com/element-finance/fixed-rate-interest-markets-a-casual-users-journey-through-fixed-rate-interest-using-element-50f420df1859"
-      }
-      target="_noreferrer"
-    >
-      {t`Read more about Fixed Yield.`}
-    </a>
-  );
-
-  const portfolioLink = (
-    <Link key="portfolio-link" to={`/portfolio`}>
-      {t`Portfolio Page`}
-    </Link>
-  );
-
-  return (
-    <Fragment>{jt`Principal Tokens are redeemable one-to-one with their base asset once they have reached their maturity date. To boost your APY further, you may stake your tokens on the ${portfolioLink}. ${fixedYieldLink}`}</Fragment>
-  );
-};

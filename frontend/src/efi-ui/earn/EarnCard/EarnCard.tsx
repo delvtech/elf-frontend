@@ -1,425 +1,442 @@
-import React, {
-  Fragment,
+import {
+  CSSProperties,
   ReactElement,
   useCallback,
   useEffect,
   useState,
 } from "react";
 
-import { Button, Card, Classes, Elevation, Intent } from "@blueprintjs/core";
+import {
+  Button,
+  Card,
+  Classes,
+  Collapse,
+  Colors,
+  Elevation,
+  Intent,
+} from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import classNames from "classnames";
-import { formatEther, formatUnits } from "ethers/lib/utils";
-import { PrincipalTokenInfo } from "tokenlists/types";
+import { differenceInDays } from "date-fns";
+import { USDC } from "elf-contracts/types/USDC";
+import { WETH } from "elf-contracts/types/WETH";
+import { YieldPoolTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { SwapKind } from "efi-ui/balancer/SwapKind";
-import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
-import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { CryptoAssetPicker } from "efi-ui/crypto/CryptoAssetPicker/CryptoAssetPicker";
+import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
+import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
 import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
-import { useCryptoBalanceOf } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
-import { PrincipalDiscountPreview } from "efi-ui/earn/EarnCard/PrincipalDiscountPreview";
-import { EarnInput } from "efi-ui/earn/EarnInput/EarnInput";
-import { EarnTermPicker } from "efi-ui/earn/EarnTermPicker/EarnTermPicker";
-import { useActiveTranche } from "efi-ui/earn/hooks/useActiveTranche";
-import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
-import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
-import { BuyPrincipalTokensTransactionConfirmationDrawer } from "efi-ui/swaps/BuyPrincipalTokensTransactionConfirmationDrawer/BuyPrincipalTokensTransactionConfirmationDrawer";
-import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
-import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
-import { formatBalance } from "efi/base/formatBalance";
-import { CryptoAsset } from "efi/crypto/CryptoAsset";
-import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
+import { EarnActionsCard } from "efi-ui/earn/EarnActionsCard/EarnActionsCard";
+import { EarnActionsTabId } from "efi-ui/earn/EarnActionsTabs/EarnActionsTabId";
+import { useFeeVolumeForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
+import { usePoolSpotPrice2 } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
+import { useTokenYield } from "efi-ui/pools/useTokenYield";
+import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
+import { useTotalValueLockedForTranche } from "efi-ui/pools/useTotalValueLockedForTranche";
+import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
+import { useYearnVault } from "efi-ui/yearn/useYearnVault";
+import { formatPercent } from "efi/base/formatPercent";
+import { CryptoAssetType } from "efi/crypto/CryptoAsset";
+import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
-import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
+import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
+import { formatMoney } from "efi/money/formatMoney";
 import {
-  calcSwapInGivenOutCCPoolUNSAFE,
-  calcSwapOutGivenInCCPoolUNSAFE,
-} from "efi/pools/calcPoolSwap";
-import {
-  getPrincipalPoolContractForTranche,
   getPrincipalPoolForTranche,
+  principalPoolContractsByAddress,
 } from "efi/pools/ccpool";
-import { useParseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
-import { getTokenInfo } from "efi/tokenlists";
-import { validateTradeValues } from "efi/trade/validateTradeValues";
-import { openTrancheBaseAssets } from "efi/tranche/baseAssets";
+import { getTrancheForPool } from "efi/pools/getTrancheForPool";
+import { PoolContract } from "efi/pools/PoolContract";
+import { yieldPoolContractsByAddress } from "efi/pools/weightedPool";
+import { getIsMature2 } from "efi/tranche/getIsMature";
+import { trancheContractsByAddress } from "efi/tranche/tranches";
 import { underlyingContractsByAddress } from "efi/underlying/underlying";
+import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
+import { Signer } from "ethers";
 
-export interface EarnCardProps {
+interface EarnCardProps {
+  signer: Signer | undefined;
   library: Web3Provider | undefined;
   account: string | null | undefined;
+  poolInfo: YieldPoolTokenInfo;
+  isExpanded: boolean;
+  onExpandOpen: () => void;
+  onExpandClose: () => void;
 }
 
-export function EarnCard({ library, account }: EarnCardProps): ReactElement {
-  const [swapKind, setSwapKind] = useState(SwapKind.GIVEN_IN);
-  const [isWalletDialogOpen, setWalletDialogOpen] = useState(false);
-  // local state
-  const [isDrawerOpen, setDrawerOpen] = useState(false);
-  const openDrawer = useCallback(() => setDrawerOpen(true), []);
-  const closeWalletDialog = useCallback(() => setWalletDialogOpen(false), []);
-  const onClickButton = useCallback(() => {
-    if (!account) {
-      return setWalletDialogOpen(true);
-    }
-    openDrawer();
-  }, [account, openDrawer]);
+const cellClassName = tw("flex", "mr-4", "items-center", "overflow-hidden");
 
-  const { stringValue: amountIn, setValue: setAmountIn } = useNumericInput();
-  const { stringValue: amountOut, setValue: setAmountOut } = useNumericInput();
-  const clearInputs = useCallback(() => {
-    setAmountIn("");
-    setAmountOut("");
-  }, [setAmountIn, setAmountOut]);
-  const closeDrawer = useCallback(
-    (transactionAttemped) => {
-      if (transactionAttemped) {
-        clearInputs();
-      }
-      setDrawerOpen(false);
-    },
-    [clearInputs]
-  );
+const poolCardStyle: CSSProperties = {
+  maxWidth: 1180,
+  minWidth: 800,
+  padding: "0px",
+};
 
-  // base asset
-  const { activeBaseAsset, setActiveBaseAsset } =
-    useActiveBaseAsset(clearInputs);
-  const activeBaseAssetSymbol = getCryptoSymbol(activeBaseAsset);
-  const activeBaseAssetDecimals = getCryptoDecimals(activeBaseAsset);
-  const activeBaseAssetBalanceOf = useCryptoBalanceOf(
+export function EarnCard(props: EarnCardProps): ReactElement | null {
+  const {
+    signer,
     library,
     account,
-    activeBaseAsset
-  );
-  const activeBaseAssetDisplayBalance = formatBalance(
-    activeBaseAssetBalanceOf,
-    activeBaseAssetDecimals
-  );
-  const baseAssetSymbol = getCryptoSymbol(activeBaseAsset);
-  const baseAssetIcon = findAssetIcon2(activeBaseAsset);
+    poolInfo,
+    isExpanded,
+    onExpandClose,
+    onExpandOpen,
+  } = props;
+  // state
+  const { isDarkMode } = useDarkMode();
+  const [transitionsEnabled, setTransitionsEnabled] = useState(true);
+  const [activeTabId, setActiveTabId] = useState(EarnActionsTabId.MINT);
 
-  // principal token
-  const {
-    activeTrancheIndex,
-    activeTranche,
-    availableTranches,
-    setActiveTranche,
-  } = useActiveTranche(activeBaseAsset);
-  const { decimals: principalTokenDecimals } = getTokenInfo<PrincipalTokenInfo>(
-    activeTranche.address
-  );
+  // get infos
+  const trancheInfo = getTrancheForPool(poolInfo);
+  const principalPoolInfo = getPrincipalPoolForTranche(trancheInfo.address);
+  const { underlying: baseAssetAddress } = trancheInfo.extensions;
 
-  const { data: principalTokenBalanceOf } = useTokenBalanceOf(
-    activeTranche,
-    account
-  );
+  // get contracts
+  const principalPoolContract =
+    principalPoolContractsByAddress[principalPoolInfo.address];
+  const yieldPoolContract = yieldPoolContractsByAddress[poolInfo.address];
+  const baseAssetContract = underlyingContractsByAddress[
+    trancheInfo.extensions.underlying
+  ] as WETH | USDC;
+  const principalTokenContract = trancheContractsByAddress[trancheInfo.address];
+  const yieldTokenContract =
+    interestTokenContractsByAddress[poolInfo.extensions.interestToken];
 
-  // pool
-  const {
-    extensions: { expiration, unitSeconds, underlying },
-  } = getPrincipalPoolForTranche(activeTranche.address);
+  // get static display information
+  const { createdAtTimestamp: trancheCreatedAt, unlockTimestamp } =
+    trancheInfo.extensions;
+  const maturityTime = unlockTimestamp * 1000;
+  const isMature = getIsMature2(unlockTimestamp);
+  const baseAsset = getCryptoAssetForToken(baseAssetAddress);
+  const baseAssetSymbol = getCryptoSymbol(baseAsset) as string;
+  const BaseAssetIcon = findAssetIcon2(baseAsset);
+  const vaultSymbol = getVaultSymbol(baseAsset) as string;
+  const { data: vaultInfo } = useYearnVault(vaultSymbol);
+  const { displayName, type, apy } = vaultInfo || {};
 
-  const poolContract = getPrincipalPoolContractForTranche(
-    activeTranche.address
-  );
+  // get dynamic pool information
+  const principalPrice = usePoolSpotPrice2(
+    principalPoolContract,
+    principalTokenContract.address
+  )?.toFixed(4);
+  const yieldPrice = usePoolSpotPrice2(
+    yieldPoolContract,
+    yieldTokenContract.address
+  )?.toFixed(4);
+  const fees = useFeeVolumeForPool(yieldPoolContract) ?? 0;
+  const tvl = useTotalValueLockedForTranche(trancheInfo, baseAssetContract);
+  const variableYield = useTokenYield(poolInfo, "yield");
+  const vaultApy = apy?.recommended ?? 0;
 
-  // TODO: use a global Date.now that updates at a constant interval
-  const nowInSeconds = Math.round(Date.now() / 1000);
-  const timeRemainingSeconds = expiration - nowInSeconds;
-  const tParamSeconds = unitSeconds;
+  const startTime = trancheCreatedAt ? trancheCreatedAt * 1000 : 0;
 
-  const { data: totalSupplyBN } = useSmartContractReadCall(
-    poolContract,
-    "totalSupply"
-  );
-  const totalSupply = formatEther(totalSupplyBN ?? 0);
-
-  const { data: [tokens, balances = []] = [] } = usePoolTokens(poolContract);
-  const { baseAssetIndex, termAssetIndex: principalTokenIndex } =
-    useParseSortedTokensForPool(tokens);
-  const baseAssetReservesBalanceOf = balances[baseAssetIndex];
-  const principalReservesBalanceOf = balances[principalTokenIndex];
-  const baseReserves = formatUnits(
-    baseAssetReservesBalanceOf ?? 0,
-    activeBaseAssetDecimals
-  );
-  const principalReserves = formatUnits(
-    principalReservesBalanceOf ?? 0,
-    activeBaseAssetDecimals
-  );
-
-  const underlyingPoolTokenContract = underlyingContractsByAddress[underlying];
-  const { spotPriceBaseAssetForOneToken: amountOfEthForOnePrincipalEth } =
-    usePoolTokenPrices(poolContract, underlyingPoolTokenContract);
-
-  const {
-    isValidTokenInValue,
-    isValidTokenOutValue,
-    tokenInError,
-    tokenOutError,
-  } = validateTradeValues(
-    amountIn,
-    amountOut,
-    baseAssetReservesBalanceOf,
-    principalReservesBalanceOf,
-    activeBaseAssetBalanceOf,
-    activeBaseAssetDecimals
+  const dayDifference = differenceInDays(
+    maturityTime as number,
+    startTime as number
   );
 
-  const onChangeIn = useCallback(
-    (newAmountIn: string, swapKind: SwapKind) => {
-      if (!newAmountIn) {
-        clearInputs();
-        return;
-      }
-      const newAmountOutNumber = calcSwapOutGivenInCCPoolUNSAFE(
-        newAmountIn,
-        baseReserves,
-        principalReserves,
-        totalSupply,
-        timeRemainingSeconds,
-        tParamSeconds,
-        true
-      );
-      const newAmountOut = clipStringValueToDecimals(
-        newAmountOutNumber.toString(),
-        activeBaseAssetDecimals ?? 18
-      );
-      setSwapKind(swapKind);
-      setAmountIn(newAmountIn);
-      setAmountOut(newAmountOut);
-    },
-    [
-      activeBaseAssetDecimals,
-      baseReserves,
-      clearInputs,
-      principalReserves,
-      setAmountIn,
-      setAmountOut,
-      tParamSeconds,
-      timeRemainingSeconds,
-      totalSupply,
-    ]
-  );
+  const termLength =
+    dayDifference > 10 ? Math.round(dayDifference / 10) * 10 : dayDifference;
 
-  const onChangeOut = useCallback(
-    (newAmountOut: string, swapKind: SwapKind) => {
-      if (!newAmountOut) {
-        clearInputs();
-        return;
-      }
-      const newAmountInNumber = calcSwapInGivenOutCCPoolUNSAFE(
-        newAmountOut,
-        principalReserves,
-        baseReserves,
-        totalSupply,
-        timeRemainingSeconds,
-        tParamSeconds,
-        false
-      );
-      const newAmountIn = clipStringValueToDecimals(
-        newAmountInNumber.toString(),
-        activeBaseAssetDecimals ?? 18
-      );
-      setSwapKind(swapKind);
-      setAmountIn(newAmountIn);
-      setAmountOut(newAmountOut);
-    },
-    [
-      activeBaseAssetDecimals,
-      baseReserves,
-      clearInputs,
-      principalReserves,
-      setAmountIn,
-      setAmountOut,
-      tParamSeconds,
-      timeRemainingSeconds,
-      totalSupply,
-    ]
-  );
+  // TODO: this is a big hammer for loading state.  we should use a more granular technique when we can.
+  const dataToLoad = [tvl, vaultInfo, yieldPrice, fees, variableYield];
+  const allDataLoaded = dataToLoad.every((data) => data !== undefined);
 
-  // need to recalculate output when a new term is selected.
+  const onToggleExpand = useCallback(() => {
+    if (isMature) {
+      return;
+    }
+    if (isExpanded) {
+      onExpandClose();
+    } else {
+      onExpandOpen();
+    }
+  }, [isExpanded, isMature, onExpandClose, onExpandOpen]);
+  // One tme useEffect to let us show transitions for the skeletons once the data is loaded.
+  // Afterwards we disable transitions so they don't interfere with light/dark mode switching.
   useEffect(() => {
-    if (swapKind === SwapKind.GIVEN_IN) {
-      onChangeIn(amountIn ?? "", SwapKind.GIVEN_IN);
+    if (allDataLoaded) {
+      const id = setTimeout(() => {
+        setTransitionsEnabled(false);
+      }, 1000);
+      return () => {
+        clearInterval(id);
+      };
     }
-    if (swapKind === SwapKind.GIVEN_OUT) {
-      onChangeOut(amountOut ?? "", SwapKind.GIVEN_OUT);
-    }
-  }, [activeTranche, amountIn, amountOut, onChangeIn, onChangeOut, swapKind]);
+  }, [allDataLoaded]);
 
-  const roundedPrincipalPrice = amountOfEthForOnePrincipalEth?.toFixed(4);
-  const marketRateLabel = getMarketRateLabel(
-    baseAssetSymbol,
-    roundedPrincipalPrice,
-    activeBaseAssetSymbol
-  );
+  if (!yieldPoolContract || !baseAssetContract) {
+    return null;
+  }
 
-  // true if undefined or zero value
-  const noAmountIn = amountIn ? !+amountIn : true;
-
-  const buttonDisabled =
-    (!!account && (!isValidTokenInValue || !isValidTokenOutValue)) ||
-    noAmountIn;
-  const buttonLabel = !!account ? t`Buy` : t`Connect Wallet`;
-
-  const assetPickerRenderer = useCallback(
-    () => (
-      <CryptoAssetPicker
-        cryptoAssets={openTrancheBaseAssets}
-        activeCryptoAsset={activeBaseAsset}
-        onCryptoAssetChange={setActiveBaseAsset}
-      />
-    ),
-    [activeBaseAsset, setActiveBaseAsset]
-  );
-
-  const termPickerRenderer = useCallback(
-    () => (
-      <EarnTermPicker
-        account={account}
-        onTrancheChange={setActiveTranche}
-        tranches={availableTranches}
-        activeTrancheIndex={activeTrancheIndex}
-      />
-    ),
-    [account, activeTrancheIndex, availableTranches, setActiveTranche]
-  );
+  if (!allDataLoaded) {
+    return (
+      <Card
+        elevation={Elevation.TWO}
+        style={poolCardStyle}
+        interactive
+        className={classNames(
+          Classes.SKELETON,
+          tw("h-24", "w-full", "transition", "duration-1000", "ease-in-out")
+        )}
+      ></Card>
+    );
+  }
 
   return (
-    <Fragment>
-      <Card
-        elevation={isDrawerOpen ? Elevation.ZERO : Elevation.TWO}
-        className={tw("flex", "flex-col", "p-10", "flex-1", "space-y-10")}
-      >
-        <div className={tw("flex", "flex-col", "space-y-2")}>
-          <div className={tw("flex", "justify-between")}>
-            <span
-              className={classNames(tw("text-base"), Classes.TEXT_MUTED)}
-            >{t`From`}</span>
-            {!!account && (
-              <span
-                className={classNames(tw("text-base"), Classes.TEXT_MUTED)}
-              >{t`Balance: ${activeBaseAssetDisplayBalance} ${activeBaseAssetSymbol}`}</span>
+    <Card
+      elevation={Elevation.TWO}
+      interactive={!isMature}
+      style={poolCardStyle}
+      className={classNames(
+        tw("w-full", {
+          transition: transitionsEnabled,
+          "duration-1000": transitionsEnabled,
+          "ease-in-out": transitionsEnabled,
+        })
+      )}
+    >
+      <Card onClick={onToggleExpand} className={tw("w-full", "flex", "p-5")}>
+        <div
+          className={tw(
+            "w-full",
+            "grid",
+            "grid-cols-12",
+            "gap-y-4",
+            "w-full",
+            "items-start"
+          )}
+        >
+          <div
+            className={tw(
+              cellClassName,
+              "col-span-1",
+              "xl:ml-4",
+              "items-center"
             )}
+          >
+            {BaseAssetIcon && baseAsset?.type === CryptoAssetType.ETHEREUM ? (
+              <div
+                className={classNames(
+                  tw(
+                    "items-start",
+                    "justify-center",
+                    "rounded",
+                    "-mt-2",
+                    "p-2",
+                    "flex-shrink-0"
+                  )
+                )}
+              >
+                <div
+                  style={{
+                    borderColor: isDarkMode ? Colors.GRAY5 : "",
+                    backgroundColor: isDarkMode ? Colors.WHITE : "",
+                  }}
+                  className={tw(
+                    "items-start",
+                    "p-2",
+                    "rounded-full",
+                    "z-10",
+                    "bg-white",
+                    "border",
+                    "shadow-sm"
+                  )}
+                >
+                  <BaseAssetIcon height={18} width={18} />
+                </div>
+              </div>
+            ) : BaseAssetIcon ? (
+              <div className={tw("ml-2")}>
+                <BaseAssetIcon height={40} width={40} />
+              </div>
+            ) : null}
           </div>
           <div
-            className={tw("flex", "space-x-1", "h-24", "border", "rounded", {
-              "border-gray-500": isValidTokenInValue,
-              "border-red-600": !isValidTokenInValue,
-            })}
-          >
-            <EarnInput
-              showMaxButton={!!account}
-              assetPickerRenderer={assetPickerRenderer}
-              placeholder="0.00"
-              value={amountIn || ""}
-              isValid={isValidTokenInValue}
-              errorMessage={tokenInError || ""}
-              onValueChange={onChangeIn}
-              valueDecimals={activeBaseAssetDecimals}
-              valueBalanceOf={activeBaseAssetBalanceOf}
-              swapKind={SwapKind.GIVEN_IN}
-            />
-          </div>
-        </div>
-        <div className={tw("flex", "flex-col", "space-y-2")}>
-          <div className={tw("flex", "justify-between")}>
-            <span
-              className={classNames(tw("text-base"), Classes.TEXT_MUTED)}
-            >{t`To`}</span>
-            {marketRateLabel && (
-              <span className={classNames(tw("text-base"), Classes.TEXT_MUTED)}>
-                {marketRateLabel}
-              </span>
+            className={tw(
+              cellClassName,
+              "col-span-2",
+              "lg:col-span-2",
+              "xl:col-span-1"
             )}
+          >
+            <LabeledText
+              text={t`Yearn ${displayName} ${type}`}
+              label={t`Vault`}
+            />
           </div>
           <div
-            className={tw("flex", "space-x-1", "h-24", "border", "rounded", {
-              "border-gray-500": isValidTokenOutValue,
-              "border-red-600": !isValidTokenOutValue,
-            })}
+            className={tw(
+              cellClassName,
+              "col-span-2",
+              "md:col-span-2",
+              "xl:col-span-1"
+            )}
           >
-            <EarnInput
-              showMaxButton={false}
-              assetPickerRenderer={termPickerRenderer}
-              placeholder="0.00"
-              value={amountOut || ""}
-              isValid={isValidTokenOutValue}
-              errorMessage={tokenOutError || ""}
-              onValueChange={onChangeOut}
-              valueDecimals={principalTokenDecimals}
-              valueBalanceOf={principalTokenBalanceOf}
-              swapKind={SwapKind.GIVEN_OUT}
+            <LabeledText text={t`${termLength} Day`} label={t`Term`} />
+          </div>
+          <div
+            className={tw(
+              cellClassName,
+              "col-span-2",
+              "md:col-span-2",
+              "xl:col-span-1"
+            )}
+          >
+            <LabeledText
+              text={t`${formatPercent(vaultApy)}`}
+              label={`Vault APY`}
             />
           </div>
+          <div
+            className={tw(
+              cellClassName,
+              "col-span-3",
+              "xl:col-span-2",
+              "lg:col-span-2"
+            )}
+          >
+            <LabeledText
+              text={tvl ? formatMoney(tvl, { wholeAmounts: true }) : null}
+              label={`Element TVL`}
+            />
+          </div>
+          <div
+            className={tw(
+              cellClassName,
+              "col-span-2",
+              "lg:col-span-3",
+              "xl:col-span-2"
+            )}
+          >
+            <LiquiditySection
+              yieldPoolContract={yieldPoolContract}
+              principalPoolContract={principalPoolContract}
+            />
+          </div>
+          <div
+            className={tw(
+              cellClassName,
+              "col-span-2",
+              "col-start-2",
+              "lg:col-span-3",
+              "lg:col-start-2",
+              "xl:hidden"
+            )}
+          >
+            <LiquiditySection
+              yieldPoolContract={yieldPoolContract}
+              principalPoolContract={principalPoolContract}
+            />
+          </div>
+          <div
+            className={tw(
+              cellClassName,
+              "col-span-2",
+              "lg:col-start-6",
+              "xl:col-start-auto",
+              "xl:col-span-2"
+            )}
+          >
+            <div className={tw("flex", "flex-col")}>
+              <LabeledText
+                text={t`${principalPrice}`}
+                label={`Principal Price (${baseAssetSymbol})`}
+              />
+              <LabeledText
+                className={tw("mt-2", "hidden", "xl:flex")}
+                text={t`${yieldPrice}`}
+                label={`Yield Price (${baseAssetSymbol})`}
+              />
+            </div>
+          </div>
+          <div className={tw(cellClassName, "col-span-2", "xl:hidden")}>
+            <LabeledText
+              text={t`${principalPrice}`}
+              label={`Yield Price (${baseAssetSymbol})`}
+            />
+          </div>
+          <div
+            className={tw(
+              cellClassName,
+              "overflow-visible",
+              "col-span-3",
+              "lg:col-span-3",
+              "xl:col-span-2"
+            )}
+          >
+            <div className={tw("flex", "w-full", "items-start")}>
+              <TimeLeft
+                startTimestamp={startTime}
+                maturityTimestamp={maturityTime}
+              />
+            </div>
+          </div>
         </div>
-
-        <div className={tw("flex", "space-x-10", "h-24", "mt-10")}>
-          <PrincipalDiscountPreview
-            amountIn={amountIn}
-            baseAssetSymbol={activeBaseAssetSymbol}
-            amountOut={amountOut}
-          />
+        <div
+          className={tw(
+            "flex",
+            "flex-col",
+            "overflow-visible",
+            "items-start",
+            maturityTime && Date.now() < maturityTime ? "visible" : "invisible"
+          )}
+        >
           <Button
-            large
-            outlined
             intent={Intent.PRIMARY}
-            className={tw("flex-1")}
-            disabled={buttonDisabled}
-            onClick={onClickButton}
+            minimal
+            outlined
+            active={isExpanded}
+            onClick={onToggleExpand}
           >
-            <div className={tw("p-4", "text-lg")}>{buttonLabel}</div>
+            {t`Deposit`}
           </Button>
         </div>
       </Card>
-
-      {!activeBaseAsset || !isDrawerOpen ? null : (
-        <BuyPrincipalTokensTransactionConfirmationDrawer
-          baseAsset={activeBaseAsset}
-          baseAssetIcon={baseAssetIcon}
-          tranche={activeTranche}
-          account={account}
+      <Collapse isOpen={isExpanded}>
+        <EarnActionsCard
+          signer={signer}
           library={library}
-          pool={poolContract}
-          amountIn={amountIn}
-          amountOut={amountOut}
-          swapKind={swapKind}
-          isOpen={isDrawerOpen}
-          onClose={closeDrawer}
+          account={account}
+          trancheInfo={trancheInfo}
+          activeTabId={activeTabId}
+          setActiveTabId={setActiveTabId}
+        />
+      </Collapse>
+    </Card>
+  );
+}
+
+interface LiquiditySectionProps {
+  yieldPoolContract: PoolContract;
+  principalPoolContract: PoolContract;
+}
+
+function LiquiditySection({
+  yieldPoolContract,
+  principalPoolContract,
+}: LiquiditySectionProps) {
+  const liquidity = useTotalFiatLiquidityForPool(yieldPoolContract);
+  const principalLiquidity = useTotalFiatLiquidityForPool(
+    principalPoolContract
+  );
+  return (
+    <div className={tw("flex", "flex-col")}>
+      {liquidity && (
+        <LabeledText
+          text={formatMoney(liquidity, { wholeAmounts: true })}
+          label={`Yield Pool Liquidity`}
         />
       )}
-      <ConnectWalletDialog
-        isOpen={isWalletDialogOpen}
-        onClose={closeWalletDialog}
-      />
-    </Fragment>
+      {principalLiquidity && (
+        <LabeledText
+          className={tw("mt-2", "hidden", "xl:flex")}
+          text={formatMoney(principalLiquidity, { wholeAmounts: true })}
+          label={`Principal Pool Liquidity`}
+        />
+      )}
+    </div>
   );
-}
-
-function useActiveBaseAsset(onChange: (baseAsset: CryptoAsset) => void) {
-  const [activeBaseAsset, setActiveBaseAssetState] = useState<CryptoAsset>(
-    openTrancheBaseAssets[0]
-  );
-
-  const setActiveBaseAsset = useCallback(
-    (baseAsset: CryptoAsset) => {
-      onChange(baseAsset);
-      setActiveBaseAssetState(baseAsset);
-    },
-    [onChange]
-  );
-  return { activeBaseAsset, setActiveBaseAsset };
-}
-function getMarketRateLabel(
-  inputTokenSymbol: string | undefined,
-  roundedTranchePrice: string | undefined,
-  activeBaseAssetSymbol: string | undefined
-): string | undefined {
-  if (!inputTokenSymbol || !roundedTranchePrice || !activeBaseAssetSymbol) {
-    return;
-  }
-  return t`1 ${inputTokenSymbol} Principal Token ≈ ${roundedTranchePrice} ${activeBaseAssetSymbol}`;
 }

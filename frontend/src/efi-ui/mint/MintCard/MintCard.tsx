@@ -2,16 +2,15 @@ import React, { Fragment, ReactElement, useCallback, useState } from "react";
 
 import { Button, Callout, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
-import { Link } from "@reach/router";
-import { AbstractConnector } from "@web3-react/abstract-connector";
 import classNames from "classnames";
 import { parseUnits } from "ethers/lib/utils";
 import { PrincipalTokenInfo as TrancheInfo } from "tokenlists/types";
-import { jt, t } from "ttag";
+import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
+import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoBalanceOf } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { useMintPreview } from "efi-ui/mint/hooks/useMintPreview";
 import { MintInput } from "efi-ui/mint/MintInput/MintInput";
@@ -19,23 +18,19 @@ import { MintTransactionConfirmationDrawer } from "efi-ui/mint/MintTransactionCo
 import { TokenIcon } from "efi-ui/token/TokenIcon";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
 import { formatBalance } from "efi/base/formatBalance";
-import { CryptoAsset } from "efi/crypto/CryptoAsset";
+import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
+import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
+import { trancheContractsByAddress } from "efi/tranche/tranches";
+import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 
 import styles from "./MintCard.module.css";
 
 interface MintCardProps {
   library: Web3Provider | undefined;
   account: string | null | undefined;
-  chainId: number | undefined;
-  walletConnectionActive: boolean;
-  connector: AbstractConnector | undefined;
-  baseAsset: CryptoAsset;
-  baseAssetIcon: TokenIcon;
-  baseAssetSymbol: string;
-
-  principalTokenSymbol: string;
-  yieldTokenSymbol: string;
   trancheInfo: TrancheInfo;
 }
 
@@ -56,16 +51,26 @@ function useActiveMintPreview(
 }
 
 export function MintCard(props: MintCardProps): ReactElement | null {
-  const {
-    library,
-    account,
-    baseAsset,
-    baseAssetSymbol,
-    baseAssetIcon,
-    principalTokenSymbol,
-    yieldTokenSymbol,
-    trancheInfo: tranche,
-  } = props;
+  const { library, account, trancheInfo } = props;
+
+  const { interestToken, underlying } = trancheInfo.extensions;
+
+  const baseAsset = getCryptoAssetForToken(underlying);
+  const baseAssetSymbol = getCryptoSymbol(baseAsset) as string;
+  const BaseAssetIcon = findAssetIcon2(baseAsset);
+  const vaultSymbol = getVaultSymbol(baseAsset) as string;
+
+  const principalTokenContract = trancheContractsByAddress[trancheInfo.address];
+  const yieldTokenContract = interestTokenContractsByAddress[interestToken];
+
+  const { symbol: yieldTokenSymbol = "" } = getTermAssetSymbol(
+    yieldTokenContract.address,
+    vaultSymbol
+  );
+  const { symbol: principalTokenSymbol = "" } = getTermAssetSymbol(
+    principalTokenContract.address,
+    vaultSymbol
+  );
 
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const [isWalletDialogOpen, setWalletDialogOpen] = useState(false);
@@ -84,7 +89,7 @@ export function MintCard(props: MintCardProps): ReactElement | null {
   );
 
   const { numPrincipalTokensOut, numYieldTokensOut } = useActiveMintPreview(
-    tranche,
+    trancheInfo,
     amountIn
   );
 
@@ -125,25 +130,8 @@ export function MintCard(props: MintCardProps): ReactElement | null {
     [account, setDrawerOpen]
   );
 
-  const link = (
-    <Link key="porfolioLink" to={`/portfolio`}>
-      {t`Portfolio Page`}
-    </Link>
-  );
-
-  const portfolioLink = jt`Go to the ${link}.`;
-
   return (
     <Fragment>
-      <div className={styles.lineBreak} />
-      <div className={tw("flex", "pl-12", "pt-4", "items-center")}>
-        <div
-          className={classNames(styles.circledNumber, tw("mr-4", "text-lg"))}
-        >
-          1
-        </div>
-        <div className={tw("text-lg")}>Mint</div>
-      </div>
       <div className={tw("pl-24", "pt-4", "-ml-1")}>
         <div className={styles.mintInput}>
           <MintInput
@@ -151,11 +139,11 @@ export function MintCard(props: MintCardProps): ReactElement | null {
             cryptoBalanceOf={baseAssetBalance}
             cryptoDisplayBalance={activeBaseAssetDisplayBalance || ""}
             cryptoSymbol={baseAssetSymbol}
-            cryptoIcon={baseAssetIcon}
+            cryptoIcon={BaseAssetIcon}
             disabled={false}
             onChange={setAmountIn}
             value={amountInString}
-            onPreviewUpdate={() => {}}
+            onPreviewUpdate={emptyHandler}
             validValue={!mintButtonError}
           />
         </div>
@@ -167,9 +155,13 @@ export function MintCard(props: MintCardProps): ReactElement | null {
             )}
           >
             <LabeledText
-              text={`${
-                numPrincipalTokensOut || (0).toFixed(4)
-              } ${principalTokenSymbol}`}
+              text={
+                <Fragment>
+                  <span>{`${numPrincipalTokensOut || (0).toFixed(4)}`}</span>
+                  <span>{principalTokenSymbol}</span>
+                </Fragment>
+              }
+              textClassName={tw("flex", "flex-col")}
               label={t`Principal Tokens`}
             />
           </Callout>
@@ -180,9 +172,13 @@ export function MintCard(props: MintCardProps): ReactElement | null {
             )}
           >
             <LabeledText
-              text={`${
-                numYieldTokensOut || (0).toFixed(4)
-              } ${yieldTokenSymbol}`}
+              text={
+                <Fragment>
+                  <span>{`${numYieldTokensOut || (0).toFixed(4)}`}</span>
+                  <span>{yieldTokenSymbol}</span>
+                </Fragment>
+              }
+              textClassName={tw("flex", "flex-col")}
               label={t`Yield Tokens`}
             />
           </Callout>
@@ -199,30 +195,12 @@ export function MintCard(props: MintCardProps): ReactElement | null {
           </Button>
         </div>
       </div>
-      <div className={classNames(styles.lineBreak, tw("mt-4"))} />
-      <div className={tw("flex", "pl-12", "pt-4", "items-center")}>
-        <div
-          className={classNames(styles.circledNumber, tw("mr-4", "text-lg"))}
-        >
-          2
-        </div>
-        <div
-          className={tw("text-lg")}
-        >{t`Stake Your Tokens or Sell Principal`}</div>
-      </div>
-      <div className={tw("flex", "pl-12", "pt-2", "mb-6", "items-center")}>
-        <div className={"flex flex-col ml-10 text-sm"}>
-          <span>{portfolioLink}</span>
-          <span>{t`Stake your tokens for additional APY.`}</span>
-          <span>{t`Or sell your principal to re-invest.`}</span>
-        </div>
-      </div>
       <MintTransactionConfirmationDrawer
         baseAsset={baseAsset}
-        baseAssetIcon={baseAssetIcon}
+        baseAssetIcon={BaseAssetIcon as TokenIcon}
         principalTokenSymbol={principalTokenSymbol}
         yieldTokenSymbol={yieldTokenSymbol}
-        trancheInfo={tranche}
+        trancheInfo={trancheInfo}
         account={account}
         library={library}
         amountIn={amountInString}
@@ -236,3 +214,5 @@ export function MintCard(props: MintCardProps): ReactElement | null {
     </Fragment>
   );
 }
+
+const emptyHandler = () => {};

@@ -35,6 +35,16 @@ export function getPoolForYieldToken(yieldTokenAddress: string): WeightedPool {
   return yieldPoolContractsByAddress[yieldPool.address];
 }
 
+export function getPoolInfoForYieldToken(
+  yieldTokenAddress: string
+): YieldPoolTokenInfo {
+  const yieldPoolInfo = yieldPools.find(
+    ({ extensions: { interestToken } }) => interestToken === yieldTokenAddress
+  ) as YieldPoolTokenInfo;
+
+  return yieldPoolInfo;
+}
+
 export function isYieldPool(
   tokenInfo: TokenInfo
 ): tokenInfo is YieldPoolTokenInfo {
