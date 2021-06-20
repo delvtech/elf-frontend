@@ -16,7 +16,6 @@ import {
   Intent,
 } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
-import { AbstractConnector } from "@web3-react/abstract-connector";
 import classNames from "classnames";
 import { differenceInDays } from "date-fns";
 import { USDC } from "elf-contracts/types/USDC";
@@ -28,14 +27,16 @@ import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
 import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
-import { MintCard } from "efi-ui/mint/MintCard/MintCard";
+import {
+  MintActionsCard,
+  MintActionsTabId,
+} from "efi-ui/mint/MintCard/MintActionsCard";
 import { useFeeVolumeForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
-import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
+import { usePoolSpotPrice2 } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { useTokenYield } from "efi-ui/pools/useTokenYield";
 import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
 import { useTotalValueLockedForTranche } from "efi-ui/pools/useTotalValueLockedForTranche";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import { TokenIcon } from "efi-ui/token/TokenIcon";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { formatPercent } from "efi/base/formatPercent";
 import { CryptoAssetType } from "efi/crypto/CryptoAsset";
@@ -51,7 +52,6 @@ import { getTrancheForPool } from "efi/pools/getTrancheForPool";
 import { PoolContract } from "efi/pools/PoolContract";
 import { yieldPoolContractsByAddress } from "efi/pools/weightedPool";
 import { getIsMature2 } from "efi/tranche/getIsMature";
-import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
 import { underlyingContractsByAddress } from "efi/underlying/underlying";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
@@ -60,9 +60,6 @@ interface MintPoolCardProps {
   poolInfo: YieldPoolTokenInfo;
   library: Web3Provider | undefined;
   account: string | null | undefined;
-  chainId: number | undefined;
-  walletConnectionActive: boolean;
-  connector: AbstractConnector | undefined;
   isExpanded: boolean;
   onExpandOpen: () => void;
   onExpandClose: () => void;
@@ -81,9 +78,6 @@ export function DepositCard(props: MintPoolCardProps): ReactElement | null {
     poolInfo,
     library,
     account,
-    chainId,
-    walletConnectionActive,
-    connector,
     isExpanded,
     onExpandClose,
     onExpandOpen,
@@ -91,6 +85,8 @@ export function DepositCard(props: MintPoolCardProps): ReactElement | null {
   // state
   const { isDarkMode } = useDarkMode();
   const [transitionsEnabled, setTransitionsEnabled] = useState(true);
+  const [activeTabId, setActiveTabId] = useState(MintActionsTabId.MINT);
+
   // get infos
   const trancheInfo = getTrancheForPool(poolInfo);
   const principalPoolInfo = getPrincipalPoolForTranche(trancheInfo.address);
@@ -112,6 +108,41 @@ export function DepositCard(props: MintPoolCardProps): ReactElement | null {
     trancheInfo.extensions;
   const maturityTime = unlockTimestamp * 1000;
   const isMature = getIsMature2(unlockTimestamp);
+  const baseAsset = getCryptoAssetForToken(baseAssetAddress);
+  const baseAssetSymbol = getCryptoSymbol(baseAsset) as string;
+  const BaseAssetIcon = findAssetIcon2(baseAsset);
+  const vaultSymbol = getVaultSymbol(baseAsset) as string;
+  const { data: vaultInfo } = useYearnVault(vaultSymbol);
+  const { displayName, type, apy } = vaultInfo || {};
+
+  // get dynamic pool information
+  const principalPrice = usePoolSpotPrice2(
+    principalPoolContract,
+    principalTokenContract.address
+  )?.toFixed(4);
+  const yieldPrice = usePoolSpotPrice2(
+    yieldPoolContract,
+    yieldTokenContract.address
+  )?.toFixed(4);
+  const fees = useFeeVolumeForPool(yieldPoolContract) ?? 0;
+  const tvl = useTotalValueLockedForTranche(trancheInfo, baseAssetContract);
+  const variableYield = useTokenYield(poolInfo, "yield");
+  const vaultApy = apy?.recommended ?? 0;
+
+  const startTime = trancheCreatedAt ? trancheCreatedAt * 1000 : 0;
+
+  const dayDifference = differenceInDays(
+    maturityTime as number,
+    startTime as number
+  );
+
+  const termLength =
+    dayDifference > 10 ? Math.round(dayDifference / 10) * 10 : dayDifference;
+
+  // TODO: this is a big hammer for loading state.  we should use a more granular technique when we can.
+  const dataToLoad = [tvl, vaultInfo, yieldPrice, fees, variableYield];
+  const allDataLoaded = dataToLoad.every((data) => data !== undefined);
+
   const onToggleExpand = useCallback(() => {
     if (isMature) {
       return;
@@ -122,39 +153,6 @@ export function DepositCard(props: MintPoolCardProps): ReactElement | null {
       onExpandOpen();
     }
   }, [isExpanded, isMature, onExpandClose, onExpandOpen]);
-  const baseAsset = getCryptoAssetForToken(baseAssetAddress);
-  const baseAssetSymbol = getCryptoSymbol(baseAsset) as string;
-  const BaseAssetIcon = findAssetIcon2(baseAsset);
-  const vaultSymbol = getVaultSymbol(baseAsset) as string;
-  const { data: vaultInfo } = useYearnVault(vaultSymbol);
-  const { displayName, type, apy } = vaultInfo || {};
-  const { symbol: yieldTokenSymbol = "" } = getTermAssetSymbol(
-    yieldTokenContract?.address,
-    vaultSymbol
-  );
-  const { symbol: principalTokenSymbol = "" } = getTermAssetSymbol(
-    principalTokenContract?.address,
-    vaultSymbol
-  );
-
-  // get dynamic pool information
-  const principalPrice = usePoolSpotPrice(
-    principalPoolContract,
-    principalTokenContract
-  )?.toFixed(4);
-  const yieldPrice = usePoolSpotPrice(
-    yieldPoolContract,
-    yieldTokenContract
-  )?.toFixed(4);
-  const fees = useFeeVolumeForPool(yieldPoolContract) ?? 0;
-  const tvl = useTotalValueLockedForTranche(trancheInfo, baseAssetContract);
-  const variableYield = useTokenYield(poolInfo, "yield");
-  const vaultApy = apy?.recommended ?? 0;
-
-  // TODO: this is a big hammer for loading state.  we should use a more granular technique when we can.
-  const dataToLoad = [tvl, vaultInfo, yieldPrice, fees, variableYield];
-  const allDataLoaded = dataToLoad.every((data) => data !== undefined);
-
   // One tme useEffect to let us show transitions for the skeletons once the data is loaded.
   // Afterwards we disable transitions so they don't interfere with light/dark mode switching.
   useEffect(() => {
@@ -171,16 +169,6 @@ export function DepositCard(props: MintPoolCardProps): ReactElement | null {
   if (!yieldPoolContract || !baseAssetContract) {
     return null;
   }
-
-  const startTime = trancheCreatedAt ? trancheCreatedAt * 1000 : 0;
-
-  const dayDifference = differenceInDays(
-    maturityTime as number,
-    startTime as number
-  );
-
-  const termLength =
-    dayDifference > 10 ? Math.round(dayDifference / 10) * 10 : dayDifference;
 
   if (!allDataLoaded) {
     return (
@@ -407,18 +395,12 @@ export function DepositCard(props: MintPoolCardProps): ReactElement | null {
         </div>
       </Card>
       <Collapse isOpen={isExpanded}>
-        <MintCard
+        <MintActionsCard
           library={library}
           account={account}
-          chainId={chainId}
-          walletConnectionActive={walletConnectionActive}
-          connector={connector}
-          baseAsset={baseAsset}
-          baseAssetSymbol={baseAssetSymbol}
-          principalTokenSymbol={principalTokenSymbol}
-          yieldTokenSymbol={yieldTokenSymbol}
-          baseAssetIcon={BaseAssetIcon as TokenIcon}
           trancheInfo={trancheInfo}
+          activeTabId={activeTabId}
+          setActiveTabId={setActiveTabId}
         />
       </Collapse>
     </Card>

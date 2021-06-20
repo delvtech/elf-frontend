@@ -7,15 +7,14 @@ import { useWeb3React } from "@web3-react/core";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { DepositCard } from "efi-ui/mint/DepositCard";
+import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { yieldPools } from "efi/pools/weightedPool";
 
 interface MintViewProps extends RouteComponentProps {}
 
 export function MintView(props: MintViewProps): ReactElement {
-  const { account, library, active, chainId, connector } =
-    useWeb3React<Web3Provider>();
+  const { account, library } = useWeb3React<Web3Provider>();
   const [expandedPoolIndex, setExpandedPoolIndex] = useState(-1);
   const onExpandClose = useCallback(() => setExpandedPoolIndex(-1), []);
 
@@ -63,9 +62,6 @@ export function MintView(props: MintViewProps): ReactElement {
                 key={poolInfo.address}
                 library={library}
                 account={account}
-                chainId={chainId}
-                walletConnectionActive={active}
-                connector={connector}
                 poolInfo={poolInfo}
               />
             );
