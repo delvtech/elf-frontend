@@ -53,11 +53,13 @@ import { getIsMature2 } from "efi/tranche/getIsMature";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
 import { underlyingContractsByAddress } from "efi/underlying/underlying";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
+import { Signer } from "ethers";
 
 interface EarnCardProps {
-  poolInfo: YieldPoolTokenInfo;
+  signer: Signer | undefined;
   library: Web3Provider | undefined;
   account: string | null | undefined;
+  poolInfo: YieldPoolTokenInfo;
   isExpanded: boolean;
   onExpandOpen: () => void;
   onExpandClose: () => void;
@@ -73,9 +75,10 @@ const poolCardStyle: CSSProperties = {
 
 export function EarnCard(props: EarnCardProps): ReactElement | null {
   const {
-    poolInfo,
+    signer,
     library,
     account,
+    poolInfo,
     isExpanded,
     onExpandClose,
     onExpandOpen,
@@ -394,6 +397,7 @@ export function EarnCard(props: EarnCardProps): ReactElement | null {
       </Card>
       <Collapse isOpen={isExpanded}>
         <EarnActionsCard
+          signer={signer}
           library={library}
           account={account}
           trancheInfo={trancheInfo}

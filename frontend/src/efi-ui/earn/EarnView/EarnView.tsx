@@ -10,11 +10,13 @@ import tw from "efi-tailwindcss-classnames";
 import { EarnCard } from "efi-ui/earn/EarnCard/EarnCard";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { yieldPools } from "efi/pools/weightedPool";
+import { useSigner } from "efi-ui/provider/useBlockFromTag/useSigner/useSigner";
 
 interface EarnViewProps extends RouteComponentProps {}
 
 export function EarnView(props: EarnViewProps): ReactElement {
   const { account, library } = useWeb3React<Web3Provider>();
+  const signer = useSigner(account, library);
   const [expandedPoolIndex, setExpandedPoolIndex] = useState(-1);
   const onExpandClose = useCallback(() => setExpandedPoolIndex(-1), []);
 
@@ -54,14 +56,15 @@ export function EarnView(props: EarnViewProps): ReactElement {
           {yieldPools.map((poolInfo, index) => {
             return (
               <EarnCard
+                signer={signer}
+                library={library}
+                account={account}
                 isExpanded={index === expandedPoolIndex}
                 onExpandOpen={() => {
                   setExpandedPoolIndex(index);
                 }}
                 onExpandClose={onExpandClose}
                 key={poolInfo.address}
-                library={library}
-                account={account}
                 poolInfo={poolInfo}
               />
             );
