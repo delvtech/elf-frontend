@@ -47,7 +47,7 @@ export function useMintTransaction(
   yieldTokenInfo: YieldTokenInfo,
   amountIn: number,
   includePermits: boolean,
-  onTransactionStarted: () => void
+  onTransactionSubmitted: () => void
 ): {
   mint: () => void;
   mutationResult: UseMutationResult<
@@ -75,7 +75,7 @@ export function useMintTransaction(
     signer,
     {
       onTransactionSubmitted: () => {
-        onTransactionStarted();
+        onTransactionSubmitted();
       },
     }
   );

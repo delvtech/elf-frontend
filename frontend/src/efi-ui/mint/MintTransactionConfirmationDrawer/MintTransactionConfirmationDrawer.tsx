@@ -1,6 +1,8 @@
 import { ReactElement, useState } from "react";
 
+import { Callout, Switch } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
+import { ERC20Permit } from "elf-contracts/types";
 import { Signer } from "ethers";
 import {
   PrincipalTokenInfo as TrancheInfo,
@@ -8,6 +10,7 @@ import {
 } from "tokenlists/types";
 import { t } from "ttag";
 
+import tw from "efi-tailwindcss-classnames";
 import { useMintPreview } from "efi-ui/mint/hooks/useMintPreview";
 import {
   useMintApprovals,
@@ -17,23 +20,20 @@ import { MintTransactionDetails } from "efi-ui/mint/MintTransactionDetails/MintT
 import { SwapDetailsForm } from "efi-ui/swaps/SwapDetailsPreview/SwapDetailsForm";
 import { TokenIcon } from "efi-ui/token/TokenIcon";
 import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/TransactionDrawer";
-import { convertEpochSecondsToDate2 } from "efi/base/convertEpochSecondsToDate";
-import { CryptoAsset } from "efi/crypto/CryptoAsset";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
-import { getTokenInfo } from "efi/tokenlists";
-import { EMPTY_ARRAY } from "efi/base/emptyArray";
-import { WalletApprovalInfo } from "efi/wallets/WalletApprovalInfo";
-import tw from "efi-tailwindcss-classnames";
-import { Callout, Switch } from "@blueprintjs/core";
 import ContractAddresses from "efi/addresses";
-import { ERC20Permit } from "elf-contracts/types";
+import { convertEpochSecondsToDate2 } from "efi/base/convertEpochSecondsToDate";
+import { EMPTY_ARRAY } from "efi/base/emptyArray";
+import { CryptoAsset } from "efi/crypto/CryptoAsset";
+import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
+import { getTokenInfo } from "efi/tokenlists";
+import { trancheContractsByAddress } from "efi/tranche/tranches";
 import {
   isUnderlyingAddressERC20Permit,
   underlyingContractsByAddress,
 } from "efi/underlying/underlying";
-import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
-import { trancheContractsByAddress } from "efi/tranche/tranches";
-import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
+import { WalletApprovalInfo } from "efi/wallets/WalletApprovalInfo";
 
 interface MintTransactionConfirmationDrawerProps {
   account: string | null | undefined;
@@ -83,7 +83,7 @@ export function MintTransactionConfirmationDrawer({
 
   const {
     mint,
-    mutationResult: { isLoading, isSuccess, isError },
+    mutationResult: { isLoading },
   } = useMintTransaction(
     signer,
     account,
@@ -106,8 +106,8 @@ export function MintTransactionConfirmationDrawer({
     <TransactionDrawer
       buttonLabel={t`Mint`}
       transactionPending={isLoading}
-      transactionFailed={isError}
-      transactionSuccess={isSuccess}
+      transactionFailed={false}
+      transactionSuccess={false}
       walletApprovalInfos={EMPTY_ARRAY as WalletApprovalInfo[]}
       isOpen={isOpen}
       onClose={onClose}
@@ -181,8 +181,6 @@ function useShowPermitCallout(
     principalTokenDecimals,
     yieldTokenDecimals
   );
-
-  console.log("approvals", approvals);
 
   const {
     balancerApprovedForBaseAsset,
