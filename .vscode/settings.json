@@ -61,6 +61,12 @@
         "*.addresses.json"
       ],
       "url": "./addresses.schema.json"
+    },
+    {
+      "fileMatch": [
+        "canperform.json"
+      ],
+      "url": "./canperform.schema.json"
     }
   ],
   "solidity.compileUsingRemoteVersion": "v0.8.0+commit.c7dfd78e",
