@@ -9,7 +9,10 @@ import {
 import { t } from "ttag";
 
 import { useMintPreview } from "efi-ui/mint/hooks/useMintPreview";
-import { useMintTransaction } from "efi-ui/mint/hooks/useMintTransaction";
+import {
+  useMintApprovals,
+  useMintTransaction,
+} from "efi-ui/mint/hooks/useMintTransaction";
 import { MintTransactionDetails } from "efi-ui/mint/MintTransactionDetails/MintTransactionDetails";
 import { SwapDetailsForm } from "efi-ui/swaps/SwapDetailsPreview/SwapDetailsForm";
 import { TokenIcon } from "efi-ui/token/TokenIcon";
@@ -22,6 +25,15 @@ import { EMPTY_ARRAY } from "efi/base/emptyArray";
 import { WalletApprovalInfo } from "efi/wallets/WalletApprovalInfo";
 import tw from "efi-tailwindcss-classnames";
 import { Callout, Switch } from "@blueprintjs/core";
+import ContractAddresses from "efi/addresses";
+import { ERC20Permit } from "elf-contracts/types";
+import {
+  isUnderlyingAddressERC20Permit,
+  underlyingContractsByAddress,
+} from "efi/underlying/underlying";
+import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
+import { trancheContractsByAddress } from "efi/tranche/tranches";
+import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 
 interface MintTransactionConfirmationDrawerProps {
   account: string | null | undefined;
@@ -83,6 +95,13 @@ export function MintTransactionConfirmationDrawer({
     onClose
   );
 
+  const showPermitCallout = useShowPermitCallout(
+    trancheInfo,
+    yieldTokenInfo,
+    baseAsset,
+    account
+  );
+
   return (
     <TransactionDrawer
       buttonLabel={t`Mint`}
@@ -97,15 +116,20 @@ export function MintTransactionConfirmationDrawer({
       onConfirmTransaction={mint}
       transactionDetails={
         <div className={tw("flex", "flex-col", "space-y-8")}>
-          <Callout>
-            <div>
-              <Switch
-                label={t`Include permit data to save on approvals for staking?`}
-                checked={includePermits}
-                onChange={() => setIncludePermits(!includePermits)}
-              />
-            </div>
-          </Callout>
+          {showPermitCallout && (
+            <Callout>
+              <div>
+                <Switch
+                  label={t`Include approvals to allow tokens to be staked.`}
+                  checked={includePermits}
+                  onChange={() => setIncludePermits(!includePermits)}
+                />
+                {t`You need to approve balancer to use one or more of the tokens you are about to mint.
+                   If you plan to stake your tokens, you can save on gas by pre approving these tokens now.`}
+              </div>
+            </Callout>
+          )}
+
           <SwapDetailsForm
             amountIn={amountInAsNumber.toFixed(4)}
             heading={t`Mint Preview`}
@@ -128,4 +152,55 @@ export function MintTransactionConfirmationDrawer({
       }
     />
   );
+}
+function useShowPermitCallout(
+  trancheInfo: TrancheInfo,
+  yieldTokenInfo: YieldTokenInfo,
+  baseAsset: CryptoAsset,
+  account: string | null | undefined
+) {
+  const { balancerVaultAddress, userProxyContractAddress } = ContractAddresses;
+  const baseAssetContract = underlyingContractsByAddress[
+    trancheInfo.extensions.underlying
+  ] as unknown as ERC20Permit;
+  const yieldTokenContract =
+    interestTokenContractsByAddress[yieldTokenInfo.address];
+  const principalTokenContract = trancheContractsByAddress[trancheInfo.address];
+  const baseAssetDecimals = getCryptoDecimals(baseAsset) ?? 18;
+  const { decimals: principalTokenDecimals } = trancheInfo;
+  const { decimals: yieldTokenDecimals } = yieldTokenInfo;
+
+  const approvals = useMintApprovals(
+    account,
+    userProxyContractAddress,
+    balancerVaultAddress,
+    baseAssetContract,
+    principalTokenContract,
+    yieldTokenContract,
+    baseAssetDecimals,
+    principalTokenDecimals,
+    yieldTokenDecimals
+  );
+
+  console.log("approvals", approvals);
+
+  const {
+    balancerApprovedForBaseAsset,
+    balancerApprovedForPrincipalToken,
+    balancerApprovedForYieldToken,
+  } = approvals;
+
+  const baseAssetIsERC20Permit = isUnderlyingAddressERC20Permit(
+    baseAssetContract?.address
+  );
+
+  let showPermitCallout = false;
+  if (
+    (baseAssetIsERC20Permit && !balancerApprovedForBaseAsset) ||
+    !balancerApprovedForPrincipalToken ||
+    !balancerApprovedForYieldToken
+  ) {
+    showPermitCallout = true;
+  }
+  return showPermitCallout;
 }
