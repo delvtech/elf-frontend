@@ -1,4 +1,4 @@
-import { Fragment, ReactElement, useState } from "react";
+import { Fragment, ReactElement } from "react";
 
 import { Button, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
@@ -6,10 +6,7 @@ import { Signer } from "ethers";
 import { PrincipalTokenInfo as TrancheInfo } from "tokenlists/types";
 
 import tw from "efi-tailwindcss-classnames";
-import {
-  EarnStakingTabId,
-  EarnStakingTabs,
-} from "efi-ui/earn/EarnStakingForm/EarnStakingTabs";
+import { EarnActionsTabId } from "efi-ui/earn/EarnActionsTabs/EarnActionsTabId";
 import { StakingForm } from "efi-ui/pools/StakingForm/StakingForm";
 import { getPrincipalPoolForTranche } from "efi/pools/ccpool";
 import { PoolInfo } from "efi/pools/PoolInfo";
@@ -26,6 +23,7 @@ interface EarnStakingFormProps {
   submitDisabled?: boolean;
   buttonLabel: string;
   buttonIntent?: Intent;
+  activeTabId: EarnActionsTabId;
 }
 
 export function EarnStakingForm(props: EarnStakingFormProps): ReactElement {
@@ -37,9 +35,8 @@ export function EarnStakingForm(props: EarnStakingFormProps): ReactElement {
     formDisabled = false,
     submitDisabled = false,
     trancheInfo,
+    activeTabId,
   } = props;
-
-  const [activeTabId, setActiveTabId] = useState(EarnStakingTabId.PRINCIPAL);
 
   const principalPoolInfo = getPrincipalPoolForTranche(trancheInfo.address);
   const yieldPoolInfo = getPoolInfoForYieldToken(
@@ -47,16 +44,12 @@ export function EarnStakingForm(props: EarnStakingFormProps): ReactElement {
   );
 
   const poolInfo: PoolInfo =
-    activeTabId === EarnStakingTabId.PRINCIPAL
+    activeTabId === EarnActionsTabId.STAKE_PRINCIPAL
       ? principalPoolInfo
       : yieldPoolInfo;
 
   return (
     <div className={tw("flex")}>
-      <EarnStakingTabs
-        activeTabId={activeTabId}
-        onSetActiveTab={setActiveTabId}
-      />
       <div
         className={tw(
           "flex",

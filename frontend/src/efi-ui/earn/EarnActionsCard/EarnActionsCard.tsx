@@ -2,6 +2,7 @@ import { ReactElement } from "react";
 
 import { Card, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
+import { Signer } from "ethers";
 import { PrincipalTokenInfo as TrancheInfo } from "tokenlists/types";
 import { t } from "ttag";
 
@@ -10,8 +11,6 @@ import { EarnActionsTabId } from "efi-ui/earn/EarnActionsTabs/EarnActionsTabId";
 import { EarnActionsTabs } from "efi-ui/earn/EarnActionsTabs/EarnActionsTabs";
 import { EarnStakingForm } from "efi-ui/earn/EarnStakingForm/EarnStakingForm";
 import { MintCard } from "efi-ui/mint/MintCard/MintCard";
-import { SellPrincipalTokensForm } from "efi-ui/portfolio/PrincipalTokenActionsCard/SellPrincipalTokensForm";
-import { Signer } from "ethers";
 
 interface EarnActionsCardProps {
   signer: Signer | undefined;
@@ -42,16 +41,11 @@ export function EarnActionsCard(props: EarnActionsCardProps): ReactElement {
             trancheInfo={trancheInfo}
           />
         ) : null}
-        {activeTabId === EarnActionsTabId.SELL ? (
-          <SellPrincipalTokensForm
-            account={account}
-            library={library}
-            principalToken={trancheInfo}
-          />
-        ) : null}
-        {activeTabId === EarnActionsTabId.STAKE ? (
+        {activeTabId === EarnActionsTabId.STAKE_PRINCIPAL ||
+        activeTabId === EarnActionsTabId.STAKE_YIELD ? (
           <div className={tw("flex")}>
             <EarnStakingForm
+              key={activeTabId}
               library={library}
               signer={signer}
               account={account}
@@ -60,6 +54,7 @@ export function EarnActionsCard(props: EarnActionsCardProps): ReactElement {
               formDisabled={false}
               submitDisabled={false}
               buttonIntent={Intent.PRIMARY}
+              activeTabId={activeTabId}
             />
           </div>
         ) : null}

@@ -1,6 +1,6 @@
 import { ReactElement } from "react";
 
-import { Tab, Tabs } from "@blueprintjs/core";
+import { Colors, Divider, Label, Tab, Tabs } from "@blueprintjs/core";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -29,11 +29,19 @@ export function EarnActionsTabs(props: EarnActionsTabsProps): ReactElement {
       onChange={onSetActiveTab}
     >
       <Tab disabled={isMature} id={EarnActionsTabId.MINT}>{t`Mint`}</Tab>
-      <Tab disabled={isMature} id={EarnActionsTabId.SELL}>{t`Sell`}</Tab>
+      <div
+        className={tw("w-full", "my-1")}
+        style={{ borderBottom: `1px solid ${Colors.GRAY1}` }}
+      />
+      <div className={tw("pt-2")}>{t`Add liquidity`}</div>
       <Tab
-        id={EarnActionsTabId.STAKE}
+        id={EarnActionsTabId.STAKE_PRINCIPAL}
         disabled={isMature}
-      >{t`Add liquidity`}</Tab>
+      >{t`Principal Tokens`}</Tab>
+      <Tab
+        id={EarnActionsTabId.STAKE_YIELD}
+        disabled={isMature}
+      >{t`Yield Tokens`}</Tab>
     </Tabs>
   );
 }

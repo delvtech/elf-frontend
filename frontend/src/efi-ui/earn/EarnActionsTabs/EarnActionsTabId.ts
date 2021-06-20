@@ -1,5 +1,5 @@
 export enum EarnActionsTabId {
   MINT = "mint",
-  SELL = "sell",
-  STAKE = "stake",
+  STAKE_PRINCIPAL = "stakePrincipal",
+  STAKE_YIELD = "stakeYield",
 }
