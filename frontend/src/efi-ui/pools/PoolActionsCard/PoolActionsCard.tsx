@@ -9,7 +9,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { StakingPanel } from "efi-ui/pools/StakingPanel/StakingPanel";
-import { UnStakePanel } from "efi-ui/pools/UnStakePanel/UnStakePanel";
+import { UnstakePanel } from "efi-ui/pools/UnstakePanel/UnstakePanel";
 import {
   PoolAction,
   usePoolViewPoolActionsTab,
@@ -92,7 +92,7 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
           />
         )}
         {activeTab === PoolAction.REMOVE_LIQUIDITY && (
-          <UnStakePanel
+          <UnstakePanel
             library={library}
             account={account}
             connector={connector}
