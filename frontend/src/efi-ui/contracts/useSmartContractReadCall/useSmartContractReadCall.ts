@@ -79,8 +79,8 @@ export function makeSmartContractReadCallUseQueryOptions<
     enabled: !!contract && enabled,
   };
 
-  if ("staleTime" in (options || {})) {
-    queryOptions.staleTime = staleTime;
+  if ("staleTime" in (options || {}) && Number.isFinite(staleTime)) {
+    queryOptions.staleTime = staleTime as number;
   }
 
   return queryOptions;

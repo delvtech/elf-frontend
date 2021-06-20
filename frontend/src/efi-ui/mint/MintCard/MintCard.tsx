@@ -5,15 +5,14 @@ import { Web3Provider } from "@ethersproject/providers";
 import { Link } from "@reach/router";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import classNames from "classnames";
-import { Tranche } from "elf-contracts/types/Tranche";
 import { parseUnits } from "ethers/lib/utils";
+import { PrincipalTokenInfo as TrancheInfo } from "tokenlists/types";
 import { jt, t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useCryptoBalanceOf } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
-import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { useMintPreview } from "efi-ui/mint/hooks/useMintPreview";
 import { MintInput } from "efi-ui/mint/MintInput/MintInput";
 import { MintTransactionConfirmationDrawer } from "efi-ui/mint/MintTransactionConfirmationDrawer/MintTransactionConfirmationDrawer";
@@ -21,30 +20,31 @@ import { TokenIcon } from "efi-ui/token/TokenIcon";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
 import { formatBalance } from "efi/base/formatBalance";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
+import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 
 import styles from "./MintCard.module.css";
 
 interface MintCardProps {
-  baseAsset: CryptoAsset | undefined;
-  baseAssetIcon: TokenIcon | undefined;
-  baseAssetSymbol: string | undefined;
-
-  principalTokenSymbol: string | undefined;
-  yieldTokenSymbol: string | undefined;
-  tranche: Tranche | undefined;
   library: Web3Provider | undefined;
   account: string | null | undefined;
   chainId: number | undefined;
   walletConnectionActive: boolean;
   connector: AbstractConnector | undefined;
+  baseAsset: CryptoAsset;
+  baseAssetIcon: TokenIcon;
+  baseAssetSymbol: string;
+
+  principalTokenSymbol: string;
+  yieldTokenSymbol: string;
+  trancheInfo: TrancheInfo;
 }
 
 function useActiveMintPreview(
-  activeTranche: Tranche | undefined,
+  activeTrancheInfo: TrancheInfo,
   amountIn: number
 ) {
   const numPrincipalTokensOut = useMintPreview(
-    activeTranche,
+    activeTrancheInfo,
     amountIn
   )?.toFixed(4);
 
@@ -64,7 +64,7 @@ export function MintCard(props: MintCardProps): ReactElement | null {
     baseAssetIcon,
     principalTokenSymbol,
     yieldTokenSymbol,
-    tranche,
+    trancheInfo: tranche,
   } = props;
 
   const [isDrawerOpen, setDrawerOpen] = useState(false);
@@ -222,7 +222,7 @@ export function MintCard(props: MintCardProps): ReactElement | null {
         baseAssetIcon={baseAssetIcon}
         principalTokenSymbol={principalTokenSymbol}
         yieldTokenSymbol={yieldTokenSymbol}
-        tranche={tranche}
+        trancheInfo={tranche}
         account={account}
         library={library}
         amountIn={amountInString}

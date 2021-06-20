@@ -23,7 +23,6 @@ import { mintTokensForAddress } from "./mintTokensForAddress";
 import { deployUserProxy } from "./userProxy";
 import { Tranche } from "src/types/Tranche";
 import { Signer } from "ethers";
-import { ERC20 } from "src/types/ERC20";
 import { Vault } from "src/types/Vault";
 import { UserProxy } from "src/types/UserProxy";
 import { USDC, WETH } from "src/types";

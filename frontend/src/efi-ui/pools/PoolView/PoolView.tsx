@@ -7,7 +7,7 @@ import { useWeb3React } from "@web3-react/core";
 import tw from "efi-tailwindcss-classnames";
 import { PoolDetails } from "efi-ui/pools/PoolDetails/PoolDetails";
 import { useSigner } from "efi-ui/provider/useBlockFromTag/useSigner/useSigner";
-import { getPoolTokenInfo } from "efi/pools/getPoolInfo";
+import { getPoolInfo } from "efi/pools/getPoolInfo";
 
 import { PoolViewHeader } from "./PoolViewHeader";
 import { PoolViewTitle } from "./PoolViewTitle";
@@ -19,7 +19,7 @@ interface PoolViewProps extends RouteComponentProps {
 export function PoolView({ poolAddress }: PoolViewProps): ReactElement {
   const { account, connector, library } = useWeb3React<Web3Provider>();
   const signer = useSigner(account, library);
-  const poolInfo = getPoolTokenInfo(poolAddress as string);
+  const poolInfo = getPoolInfo(poolAddress as string);
 
   return (
     <Fragment>

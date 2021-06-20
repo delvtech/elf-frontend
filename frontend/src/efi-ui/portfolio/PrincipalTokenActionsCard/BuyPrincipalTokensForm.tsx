@@ -30,11 +30,10 @@ import {
   getPrincipalPoolForTranche,
 } from "efi/pools/ccpool";
 import { getPoolContract } from "efi/pools/getPoolContract";
+import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { getTokenInfo } from "efi/tokenlists";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
-import { underlyingContractsByAddress } from "efi/underlying/underlying";
-import { getPoolTokens } from "efi/pools/getPoolTokens";
 
 interface BuyPrincipalTokensFormProps {
   library: Web3Provider | undefined;
@@ -82,12 +81,11 @@ export function BuyPrincipalTokensForm(
     baseAssetDecimals,
     baseAssetDecimals
   );
-  const baseAssetContract = underlyingContractsByAddress[underlying];
 
   // pool
   const poolInfo = getPrincipalPoolForTranche(ptAddress);
   const poolContract = getPrincipalPoolContractForTranche(ptAddress);
-  const apy = useTokenYield(baseAssetContract, poolContract, "principal");
+  const apy = useTokenYield(poolInfo, "principal");
   const formattedAPY = apy ? formatPercent(apy) : "-";
 
   // input validation

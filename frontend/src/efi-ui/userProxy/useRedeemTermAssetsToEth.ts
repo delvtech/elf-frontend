@@ -5,8 +5,8 @@ import { UserProxy } from "elf-contracts/types/UserProxy";
 import { BigNumber, ethers, Signer } from "ethers";
 import { PrincipalTokenInfo } from "tokenlists/types";
 
-import { fetchPermitData, PermitCallData } from "efi-ui/base/fetchPermitData";
-import { useUserProxy } from "efi-ui/mint/hooks/userProxy";
+import { fetchPermitData, PermitCallData } from "efi/base/fetchPermitData";
+import { getUserProxy } from "efi-ui/mint/hooks/userProxy";
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
 import { flushPromises } from "efi/base/flush";
@@ -32,7 +32,7 @@ export function useRedeemTermAssetsToEth(
     ? interestTokenContractsByAddress[interestTokenAddress]
     : undefined;
 
-  const userProxy = useUserProxy();
+  const userProxy = getUserProxy(signer);
   const { mutate: withdrawToEth } = useSmartContractTransactionPersisted(
     userProxy,
     "withdrawWeth",
@@ -75,6 +75,7 @@ export function useRedeemTermAssetsToEth(
     const permits: PermitCallData[] = [];
 
     if (ptApproval.lt(amountPrinicpalToken)) {
+      const nonce = await interestTokenContract.nonces(account);
       const ptPermitData = await fetchPermitData(
         signer,
         tranche,
@@ -82,6 +83,7 @@ export function useRedeemTermAssetsToEth(
         account,
         userProxy.address,
         ethers.constants.MaxUint256,
+        nonce.toNumber(),
         "1"
       );
       if (ptPermitData) {
@@ -96,6 +98,7 @@ export function useRedeemTermAssetsToEth(
     const ytName = await interestTokenContract.name();
 
     if (ytApproval.lt(amountYieldToken)) {
+      const nonce = await interestTokenContract.nonces(account);
       const ytPermitData = await fetchPermitData(
         signer,
         interestTokenContract,
@@ -103,6 +106,7 @@ export function useRedeemTermAssetsToEth(
         account,
         userProxy.address,
         ethers.constants.MaxUint256,
+        nonce.toNumber(),
         "1"
       );
       if (ytPermitData) {

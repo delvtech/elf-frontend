@@ -82,17 +82,16 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
           volume={volume24hr}
           feeVolume={feeVolume24hr}
           stakingAPY={stakingAPY}
-          pool={pool}
+          poolInfo={poolInfo}
         />
         <TermSummary
-          pool={pool}
+          poolInfo={poolInfo}
           totalValueLocked={totalValueLocked}
-          baseAssetContract={baseAssetContract}
           startTimeMs={startTimeMs}
           maturityTimeMs={maturityTimeMs}
         />
         <TokenSummary
-          pool={pool}
+          poolInfo={poolInfo}
           interestSupply={+formatUnits(interestSupplyBN ?? 0, trancheDecimals)}
         />
       </div>

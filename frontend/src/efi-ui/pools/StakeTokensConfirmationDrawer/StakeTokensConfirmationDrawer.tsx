@@ -11,10 +11,7 @@ import { ERC20Shim } from "efi/contracts/ERC20Shim";
 import { useCryptoAssetMetadata } from "efi-ui/crypto/hooks/useCryptoAssetMetadata/useCryptAssetMetadata";
 import { StakeConfirmationForm } from "efi-ui/pools/StakeTokensConfirmationDrawer/StakeConfirmationForm";
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
-import {
-  TransactionDrawer,
-  WalletApprovalInfo,
-} from "efi-ui/transactions/TransactionDrawer/TransactionDrawer";
+import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/TransactionDrawer";
 import {
   CryptoAsset,
   CryptoAssetType,
@@ -22,6 +19,7 @@ import {
 } from "efi/crypto/CryptoAsset";
 import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 import { TokenIcon } from "efi-ui/token/TokenIcon";
+import { WalletApprovalInfo } from "efi/wallets/WalletApprovalInfo";
 
 interface StakingConfirmationDrawerProps {
   account: string | null | undefined;

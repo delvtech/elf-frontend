@@ -15,31 +15,29 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
-import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
-import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
+import { GoToPoolButton } from "efi-ui/pools/GoToPoolButton/GoToPoolButton";
 import { useFeeVolumeFiatForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
-import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
-import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
+import { usePoolSpotPrice2 } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { PoolAction } from "efi-ui/pools/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
 import { useStakingAPY } from "efi-ui/pools/useStakingAPY";
 import { useTokenYield } from "efi-ui/pools/useTokenYield";
 import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
-import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForPool";
-import { GoToPoolButton } from "efi-ui/pools/GoToPoolButton/GoToPoolButton";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import { useTrancheCreatedAt } from "efi-ui/tranche/useTrancheCreatedAt";
 import { formatPercent } from "efi/base/formatPercent";
 import { CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { formatMoney } from "efi/money/formatMoney";
+import { getPoolInfo } from "efi/pools/getPoolInfo";
+import { getPoolTokens } from "efi/pools/getPoolTokens";
+import { getTrancheForPool } from "efi/pools/getTrancheForPool";
 import { PoolContract } from "efi/pools/PoolContract";
 import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 
 interface PrincipalPoolCardProps {
-  pool: PoolContract | undefined;
+  pool: PoolContract;
 }
 
 const cellClassName = tw("flex", "mr-4", "items-center");
@@ -55,31 +53,28 @@ export function PrincipalPoolCard(
   props: PrincipalPoolCardProps
 ): ReactElement | null {
   const { pool } = props;
-  const tranche = useTrancheForPool(pool);
-  const liquidity = useTotalFiatLiquidityForPool(pool);
-  const trancheCreatedAt = useTrancheCreatedAt(tranche);
-  const fees = useFeeVolumeFiatForPool(pool) ?? 0;
-  const baseAssetContract = useBaseAssetForPool(pool);
+  const poolInfo = getPoolInfo(pool.address);
+  const tranche = getTrancheForPool(poolInfo);
+  const { unlockTimestamp: unlockTime, createdAtTimestamp: trancheCreatedAt } =
+    tranche.extensions;
+  const { baseAssetContract, termAssetContract } = getPoolTokens(poolInfo);
   const baseAsset = getCryptoAssetForToken(baseAssetContract?.address);
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
   const BaseAssetIcon = findAssetIcon2(baseAsset);
-  const termAssetContract = usePoolPairedToken(pool, baseAssetContract);
 
   const vaultSymbol = getVaultSymbol(baseAsset);
   const { symbol: termAssetSymbol } = getTermAssetSymbol(
     termAssetContract?.address,
     vaultSymbol
   );
-  const { data: unlockBN } = useSmartContractReadCall(
-    tranche,
-    "unlockTimestamp"
-  );
-  const fixedYield = useTokenYield(baseAssetContract, pool, "principal");
-  const principalPrice = usePoolSpotPrice(pool, termAssetContract);
+
+  const liquidity = useTotalFiatLiquidityForPool(pool);
+  const fees = useFeeVolumeFiatForPool(pool) ?? 0;
+  const fixedYield = useTokenYield(poolInfo, "principal");
+  const principalPrice =
+    usePoolSpotPrice2(pool, termAssetContract.address) ?? 0;
   const principalPriceFormatted = principalPrice?.toFixed(4);
-
   const stakingYield = useStakingAPY(pool);
-
   const { isDarkMode } = useDarkMode();
 
   const goToTrade = useCallback(() => {
@@ -99,10 +94,7 @@ export function PrincipalPoolCard(
     termAssetSymbol,
     fixedYield,
     stakingYield,
-    unlockBN,
   ];
-
-  const unlockTime = unlockBN?.toNumber();
 
   // TODO: this is a big hammer for loading state.  we should use a more granular technique when we can.
   const allDataLoaded = dataToLoad.every((data) => data !== undefined);

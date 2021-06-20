@@ -25,18 +25,17 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
-import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
+import { GoToPoolButton } from "efi-ui/pools/GoToPoolButton/GoToPoolButton";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { PoolAction } from "efi-ui/pools/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
 import { useShareOfPool } from "efi-ui/pools/useShareOfPool";
-import { GoToPoolButton } from "efi-ui/pools/GoToPoolButton/GoToPoolButton";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
-import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
+import { convertEpochSecondsToDate2 } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
 import { formatPercent } from "efi/base/formatPercent";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { getPoolInfo } from "efi/pools/getPoolInfo";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { getTokenInfo } from "efi/tokenlists";
@@ -47,7 +46,7 @@ interface YieldTokenLPCardProps {
   library: Web3Provider | undefined;
   connector: AbstractConnector | undefined;
   account: string | null | undefined;
-  pool: WeightedPool | undefined;
+  pool: WeightedPool;
 }
 
 const calloutClassName = tw(
@@ -67,30 +66,24 @@ export function YieldTokenLPCard({
   pool,
 }: YieldTokenLPCardProps): ReactElement {
   const { isDarkMode } = useDarkMode();
+  const poolInfo = getPoolInfo(pool.address);
 
   // base asset
-  const baseAssetContract = useBaseAssetForPool(pool);
-  const { data: baseAssetDecimals } = useTokenDecimals(baseAssetContract);
-  const baseAssetCryptoAsset = getCryptoAssetForToken(
-    baseAssetContract?.address
-  );
+  const { baseAssetInfo } = getPoolTokens(poolInfo);
+  const { decimals: baseAssetDecimals } = baseAssetInfo;
+  const baseAssetCryptoAsset = getCryptoAssetForToken(baseAssetInfo.address);
   const baseAssetSymbol = getCryptoSymbol(baseAssetCryptoAsset);
   const BaseAssetIcon = findAssetIcon2(baseAssetCryptoAsset);
 
-  let yieldTokenAddress;
-  let yieldTokenDecimals;
-  if (pool?.address) {
-    ({ address: yieldTokenAddress, decimals: yieldTokenDecimals } =
-      getYieldTokenForWeightedPool(pool.address));
-  }
+  // yield asset
+  const { address: yieldTokenAddress, decimals: yieldTokenDecimals } =
+    getYieldTokenForWeightedPool(pool.address);
 
   const {
     extensions: { unlockTimestamp },
-  } = yieldTokenAddress
-    ? getPrincipalTokenForYieldToken(yieldTokenAddress)
-    : { extensions: { unlockTimestamp: undefined } };
+  } = getPrincipalTokenForYieldToken(yieldTokenAddress);
 
-  const unlockDate = convertEpochSecondsToDate(unlockTimestamp);
+  const unlockDate = convertEpochSecondsToDate2(unlockTimestamp);
   const formattedDate = unlockDate
     ? formatAbbreviatedDate(unlockDate)
     : t`Loading unlock date...`;
@@ -105,7 +98,7 @@ export function YieldTokenLPCard({
     poolShares,
     addresses,
     poolBalances,
-    baseAssetContract?.address,
+    baseAssetInfo.address,
     baseAssetDecimals
   );
   const principalTokenLiquidity = calculatePoolShareLiquidity(
@@ -119,7 +112,6 @@ export function YieldTokenLPCard({
   const baseAssetLiquidityLabel = `${baseAssetLiquidity?.toFixed(4)}`;
   const principalTokenLiquidityLabel = `${principalTokenLiquidity?.toFixed(4)}`;
 
-  const poolInfo = getTokenInfo<PoolInfo>(pool?.address as string);
   const poolName = `${baseAssetSymbol} - ${baseAssetSymbol} Yield Token`;
   const yieldTokenSymbol = getYieldTokenSymbol(poolInfo);
   const poolLabel = `(${baseAssetSymbol} - ${yieldTokenSymbol})`;

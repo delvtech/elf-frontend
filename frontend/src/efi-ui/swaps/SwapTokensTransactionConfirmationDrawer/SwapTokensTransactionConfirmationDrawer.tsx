@@ -11,7 +11,6 @@ import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { useBatchSwapGivenIn } from "efi-ui/balancer/useBatchSwapGivenIn/useBatchSwapGivenIn";
 import { parseQueryBatchSwapResult } from "efi-ui/balancer/useQueryBatchSwap/parseQueryBatchSwapResult";
 import { useQueryBatchSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
-import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 import { usePoolSwapFee } from "efi-ui/pools/usePoolSwapFee/usePoolSwapFee";
 import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
 import { SwapDetailsForm } from "efi-ui/swaps/SwapDetailsPreview/SwapDetailsForm";
@@ -23,28 +22,31 @@ import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { calculatePurchasePrice } from "efi/pools/calculatePurchasePrice";
 import { calculateSlippage } from "efi/pools/calculateSlippage";
-import { isConvergentCurvePool, PoolContract } from "efi/pools/PoolContract";
+import { getPoolContract } from "efi/pools/getPoolContract";
+import { getPoolTokens } from "efi/pools/getPoolTokens";
+import { isConvergentCurvePool } from "efi/pools/PoolContract";
+import { PoolInfo } from "efi/pools/PoolInfo";
 import { getAmountOutWithTolerance } from "efi/trade/getAmountOutWithTolerance";
 import { TermAssetType } from "efi/tranche/TermAssetType";
 
 interface SwapTokensTransactionConfirmationDrawerProps {
   account: string | null | undefined;
   library: Web3Provider | undefined;
-  pool: PoolContract | undefined;
+  poolInfo: PoolInfo;
 
   buttonLabel?: string;
 
   amountIn: string;
   amountOut: string;
   swapKind: SwapKind;
-  tokenInAsset: CryptoAsset | undefined;
-  tokenInAddress: string | undefined;
-  tokenInSymbol: string | undefined;
-  tokenInDecimals: number | undefined;
+  tokenInAsset: CryptoAsset;
+  tokenInAddress: string;
+  tokenInSymbol: string;
+  tokenInDecimals: number;
   tokenInIcon: TokenIcon | undefined;
-  tokenOutAddress: string | undefined;
-  tokenOutSymbol: string | undefined;
-  tokenOutDecimals: number | undefined;
+  tokenOutAddress: string;
+  tokenOutSymbol: string;
+  tokenOutDecimals: number;
   tokenOutIcon: TokenIcon | undefined;
 
   // out/in
@@ -74,16 +76,17 @@ export function SwapTokensTransactionConfirmationDrawer({
   swapKind,
   isOpen,
   onClose,
-  pool,
+  poolInfo,
 }: SwapTokensTransactionConfirmationDrawerProps): ReactElement {
+  const pool = getPoolContract(poolInfo.address);
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
-  const balancerVault = useBalancerVault();
-
-  const baseAssetContract = useBaseAssetForPool(pool);
+  const { baseAssetContract } = getPoolTokens(poolInfo);
   const baseAsset = getCryptoAssetForToken(baseAssetContract?.address);
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
   const baseAssetAddress = getTokenAddressForBalancer(baseAsset);
   const baseAssetIn = baseAssetAddress === tokenInAddress;
+
+  const balancerVault = useBalancerVault();
 
   const termAssetType: TermAssetType = isConvergentCurvePool(pool)
     ? "principal"

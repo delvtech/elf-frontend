@@ -7,15 +7,13 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
-import { usePoolForToken } from "efi-ui/pools/usePoolForToken/usePoolForToken";
 import { useTokenYield } from "efi-ui/pools/useTokenYield";
-import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
+import { convertEpochSecondsToDate2 } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
 import { formatPercent } from "efi/base/formatPercent";
-import { ERC20Shim } from "efi/contracts/ERC20Shim";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { getPrincipalPoolForTranche } from "efi/pools/ccpool";
 import { getTokenInfo } from "efi/tokenlists";
 
 interface PrincipalTokenTermButtonLabelProps {
@@ -32,6 +30,8 @@ export function PrincipalTokenTermButtonLabel({
   tranche,
 }: PrincipalTokenTermButtonLabelProps): ReactElement {
   const trancheInfo = getTokenInfo<PrincipalTokenInfo>(tranche.address);
+  const poolInfo = getPrincipalPoolForTranche(trancheInfo.address);
+
   const {
     extensions: { unlockTimestamp },
   } = trancheInfo;
@@ -41,11 +41,8 @@ export function PrincipalTokenTermButtonLabel({
   } = getTokenInfo<PrincipalTokenInfo>(tranche.address);
   const { name: positionName } = getTokenInfo<AssetProxyTokenInfo>(position);
 
-  const unlockDate = convertEpochSecondsToDate(unlockTimestamp);
-
-  const pool = usePoolForToken(tranche as ERC20Shim);
-  const baseAssetContract = useBaseAssetForPool(pool);
-  const fixedYield = useTokenYield(baseAssetContract, pool, "principal");
+  const unlockDate = convertEpochSecondsToDate2(unlockTimestamp);
+  const fixedYield = useTokenYield(poolInfo, "principal");
 
   const formattedTrancheAPY = fixedYield ? formatPercent(fixedYield) : "-";
 
