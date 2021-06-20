@@ -136,14 +136,6 @@ export function MintCard(props: MintCardProps): ReactElement | null {
   return (
     <Fragment>
       <div className={styles.lineBreak} />
-      <div className={tw("flex", "pl-12", "pt-4", "items-center")}>
-        <div
-          className={classNames(styles.circledNumber, tw("mr-4", "text-lg"))}
-        >
-          1
-        </div>
-        <div className={tw("text-lg")}>Mint</div>
-      </div>
       <div className={tw("pl-24", "pt-4", "-ml-1")}>
         <div className={styles.mintInput}>
           <MintInput
@@ -167,9 +159,13 @@ export function MintCard(props: MintCardProps): ReactElement | null {
             )}
           >
             <LabeledText
-              text={`${
-                numPrincipalTokensOut || (0).toFixed(4)
-              } ${principalTokenSymbol}`}
+              text={
+                <Fragment>
+                  <span>{`${numPrincipalTokensOut || (0).toFixed(4)}`}</span>
+                  <span>{principalTokenSymbol}</span>
+                </Fragment>
+              }
+              textClassName={tw("flex", "flex-col")}
               label={t`Principal Tokens`}
             />
           </Callout>
@@ -180,9 +176,13 @@ export function MintCard(props: MintCardProps): ReactElement | null {
             )}
           >
             <LabeledText
-              text={`${
-                numYieldTokensOut || (0).toFixed(4)
-              } ${yieldTokenSymbol}`}
+              text={
+                <Fragment>
+                  <span>{`${numYieldTokensOut || (0).toFixed(4)}`}</span>
+                  <span>{yieldTokenSymbol}</span>
+                </Fragment>
+              }
+              textClassName={tw("flex", "flex-col")}
               label={t`Yield Tokens`}
             />
           </Callout>
@@ -201,11 +201,6 @@ export function MintCard(props: MintCardProps): ReactElement | null {
       </div>
       <div className={classNames(styles.lineBreak, tw("mt-4"))} />
       <div className={tw("flex", "pl-12", "pt-4", "items-center")}>
-        <div
-          className={classNames(styles.circledNumber, tw("mr-4", "text-lg"))}
-        >
-          2
-        </div>
         <div
           className={tw("text-lg")}
         >{t`Stake Your Tokens or Sell Principal`}</div>
