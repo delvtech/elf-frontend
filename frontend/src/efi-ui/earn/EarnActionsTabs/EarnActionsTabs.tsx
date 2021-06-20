@@ -4,20 +4,20 @@ import { Tab, Tabs } from "@blueprintjs/core";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { MintActionsTabId } from "efi-ui/mint/MintCard/MintActionsCard";
+import { EarnActionsTabId } from "efi-ui/earn/EarnActionsTabs/EarnActionsTabId";
 import { getIsMature2 } from "efi/tranche/getIsMature";
 
-interface MintActionTabsProps {
-  activeTabId: MintActionsTabId;
+interface EarnActionsTabsProps {
+  activeTabId: EarnActionsTabId;
   onSetActiveTab: (
-    newTabId: MintActionsTabId,
-    prevTabId: MintActionsTabId
+    newTabId: EarnActionsTabId,
+    prevTabId: EarnActionsTabId
   ) => void;
 
   unlockTimestamp: number;
 }
 
-export function MintActionsTabs(props: MintActionTabsProps): ReactElement {
+export function EarnActionsTabs(props: EarnActionsTabsProps): ReactElement {
   const { activeTabId, onSetActiveTab, unlockTimestamp } = props;
   const isMature = getIsMature2(unlockTimestamp);
   return (
@@ -28,10 +28,10 @@ export function MintActionsTabs(props: MintActionTabsProps): ReactElement {
       className={tw("text-left")}
       onChange={onSetActiveTab}
     >
-      <Tab disabled={isMature} id={MintActionsTabId.MINT}>{t`Mint`}</Tab>
-      <Tab disabled={isMature} id={MintActionsTabId.SELL}>{t`Sell`}</Tab>
+      <Tab disabled={isMature} id={EarnActionsTabId.MINT}>{t`Mint`}</Tab>
+      <Tab disabled={isMature} id={EarnActionsTabId.SELL}>{t`Sell`}</Tab>
       <Tab
-        id={MintActionsTabId.STAKE}
+        id={EarnActionsTabId.STAKE}
         disabled={isMature}
       >{t`Add liquidity`}</Tab>
     </Tabs>

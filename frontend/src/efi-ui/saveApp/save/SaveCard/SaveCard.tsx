@@ -20,9 +20,9 @@ import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadC
 import { CryptoAssetPicker } from "efi-ui/crypto/CryptoAssetPicker/CryptoAssetPicker";
 import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoBalanceOf } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
-import { EarnInput } from "efi-ui/earn/EarnInput/EarnInput";
-import { EarnTermPicker } from "efi-ui/earn/EarnTermPicker/EarnTermPicker";
-import { useActiveTranche } from "efi-ui/earn/hooks/useActiveTranche";
+import { EarnInput } from "efi-ui/saveApp/save/EarnInput/EarnInput";
+import { EarnTermPicker } from "efi-ui/saveApp/save/EarnTermPicker/EarnTermPicker";
+import { useActiveTranche } from "efi-ui/saveApp/save/hooks/useActiveTranche";
 import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { PrincipalDiscountPreview } from "efi-ui/saveApp/save/SaveCard/PrincipalDiscountPreview";

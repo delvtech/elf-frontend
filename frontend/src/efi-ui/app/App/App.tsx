@@ -10,7 +10,7 @@ import { t } from "ttag";
 
 import { tw } from "efi-tailwindcss-classnames";
 import { FAQView } from "efi-ui/faq/FAQView";
-import { MintView } from "efi-ui/mint/MintView/MintView";
+import { EarnView } from "efi-ui/earn/EarnView/EarnView";
 import { MainNavigation } from "efi-ui/navigation/MainNavigation/MainNavigation";
 import { Navigation } from "efi-ui/navigation/navigation";
 import { PoolsView } from "efi-ui/pools/PoolsView/PoolsView";
@@ -67,7 +67,7 @@ const App: FC<AppProps> = () => {
           <Redirect noThrow from="/" to={Navigation.EARN} />
 
           <PortfolioView path={Navigation.PORTFOLIO} />
-          <MintView path={Navigation.EARN} />
+          <EarnView path={Navigation.EARN} />
           <PoolsView path={Navigation.TRADE} />
           <PoolView path={`pools/:poolAddress`} />
           <FAQView path={Navigation.RESOURCES} />

@@ -27,10 +27,8 @@ import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
 import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
-import {
-  MintActionsCard,
-  MintActionsTabId,
-} from "efi-ui/mint/MintCard/MintActionsCard";
+import { EarnActionsCard } from "efi-ui/earn/EarnActionsCard/EarnActionsCard";
+import { EarnActionsTabId } from "efi-ui/earn/EarnActionsTabs/EarnActionsTabId";
 import { useFeeVolumeForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
 import { usePoolSpotPrice2 } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { useTokenYield } from "efi-ui/pools/useTokenYield";
@@ -56,7 +54,7 @@ import { trancheContractsByAddress } from "efi/tranche/tranches";
 import { underlyingContractsByAddress } from "efi/underlying/underlying";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 
-interface MintPoolCardProps {
+interface EarnCardProps {
   poolInfo: YieldPoolTokenInfo;
   library: Web3Provider | undefined;
   account: string | null | undefined;
@@ -73,7 +71,7 @@ const poolCardStyle: CSSProperties = {
   padding: "0px",
 };
 
-export function DepositCard(props: MintPoolCardProps): ReactElement | null {
+export function EarnCard(props: EarnCardProps): ReactElement | null {
   const {
     poolInfo,
     library,
@@ -85,7 +83,7 @@ export function DepositCard(props: MintPoolCardProps): ReactElement | null {
   // state
   const { isDarkMode } = useDarkMode();
   const [transitionsEnabled, setTransitionsEnabled] = useState(true);
-  const [activeTabId, setActiveTabId] = useState(MintActionsTabId.MINT);
+  const [activeTabId, setActiveTabId] = useState(EarnActionsTabId.MINT);
 
   // get infos
   const trancheInfo = getTrancheForPool(poolInfo);
@@ -395,7 +393,7 @@ export function DepositCard(props: MintPoolCardProps): ReactElement | null {
         </div>
       </Card>
       <Collapse isOpen={isExpanded}>
-        <MintActionsCard
+        <EarnActionsCard
           library={library}
           account={account}
           trancheInfo={trancheInfo}

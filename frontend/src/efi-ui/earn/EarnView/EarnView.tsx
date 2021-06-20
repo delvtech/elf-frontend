@@ -7,13 +7,13 @@ import { useWeb3React } from "@web3-react/core";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { DepositCard } from "efi-ui/mint/DepositCard";
+import { EarnCard } from "efi-ui/earn/EarnCard/EarnCard";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { yieldPools } from "efi/pools/weightedPool";
 
-interface MintViewProps extends RouteComponentProps {}
+interface EarnViewProps extends RouteComponentProps {}
 
-export function MintView(props: MintViewProps): ReactElement {
+export function EarnView(props: EarnViewProps): ReactElement {
   const { account, library } = useWeb3React<Web3Provider>();
   const [expandedPoolIndex, setExpandedPoolIndex] = useState(-1);
   const onExpandClose = useCallback(() => setExpandedPoolIndex(-1), []);
@@ -53,7 +53,7 @@ export function MintView(props: MintViewProps): ReactElement {
         >
           {yieldPools.map((poolInfo, index) => {
             return (
-              <DepositCard
+              <EarnCard
                 isExpanded={index === expandedPoolIndex}
                 onExpandOpen={() => {
                   setExpandedPoolIndex(index);
