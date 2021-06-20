@@ -84,6 +84,7 @@ export function useSmartContractTransactionPersisted<
       // all txs should invalidate all balances.
       queryClient.invalidateQueries(ETH_BALANCE_QUERY_KEY);
       queryClient.invalidateQueries(["contractCall", "balanceOf"]);
+      queryClient.invalidateQueries(["contractCall", "allowance"]);
 
       onTransactionMined?.(txReceipt, callArgs, transactionStatus);
     },

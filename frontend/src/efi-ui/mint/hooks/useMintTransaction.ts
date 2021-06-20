@@ -2,7 +2,12 @@ import { useCallback } from "react";
 import { UseMutationResult } from "react-query";
 
 import { ContractReceipt } from "@ethersproject/contracts";
-import { ERC20Permit, InterestToken, Tranche } from "elf-contracts/types";
+import {
+  ERC20,
+  ERC20Permit,
+  InterestToken,
+  Tranche,
+} from "elf-contracts/types";
 import { UserProxy } from "elf-contracts/types/UserProxy";
 import { ethers, Signer } from "ethers";
 import { parseUnits } from "ethers/lib/utils";
@@ -41,7 +46,8 @@ export function useMintTransaction(
   trancheInfo: TrancheInfo,
   yieldTokenInfo: YieldTokenInfo,
   amountIn: number,
-  onTransactionStarted: () => void
+  includePermits: boolean,
+  onTransactionSubmitted: () => void
 ): {
   mint: () => void;
   mutationResult: UseMutationResult<
@@ -69,13 +75,13 @@ export function useMintTransaction(
     signer,
     {
       onTransactionSubmitted: () => {
-        onTransactionStarted();
+        onTransactionSubmitted();
       },
     }
   );
   const { mutate: mint } = mutationResult;
 
-  const approvals = useApprovalsForMint(
+  const approvals = useMintApprovals(
     account,
     userProxyContractAddress,
     balancerVaultAddress,
@@ -94,7 +100,8 @@ export function useMintTransaction(
       approvals,
       baseAssetContract,
       principalTokenContract,
-      yieldTokenContract
+      yieldTokenContract,
+      includePermits
     );
 
     const baseAssetAddress = getTokenAddressForUserProxy(baseAsset) as string;
@@ -117,6 +124,7 @@ export function useMintTransaction(
     approvals,
     baseAsset,
     baseAssetContract,
+    includePermits,
     mint,
     principalTokenContract,
     signer,
@@ -127,21 +135,27 @@ export function useMintTransaction(
   return { mint: onMintTransaction, mutationResult };
 }
 
+interface MintApprovals {
+  userProxyApprovedForBaseAsset: boolean;
+  balancerApprovedForBaseAsset: boolean;
+  balancerApprovedForPrincipalToken: boolean;
+  balancerApprovedForYieldToken: boolean;
+}
 // all the approvals that we need to check before including permit data with the mint call.  to do
 // the actual mint we just need to permit the user proxy to take the user's base asset.  for staking
 // we need to allow balancer to take the base asset/pt/yt.  for now we are just doing a simple check
 // to see if there is any approval amount.
-function useApprovalsForMint(
+export function useMintApprovals(
   ownerAddress: string | null | undefined,
   userProxyAddress: string,
   balancerVaultAddress: string,
-  baseAssetContract: ERC20Permit,
+  baseAssetContract: ERC20Permit | ERC20,
   principalTokenContract: Tranche,
   yieldTokenContract: InterestToken,
   baseAssetDecimals: number,
   principalTokenDecimals: number,
   yieldTokenDecimals: number
-) {
+): MintApprovals {
   const userProxyApprovedForBaseAsset = useTokenApprovedForAmount(
     ownerAddress,
     userProxyAddress,
@@ -185,10 +199,11 @@ function useApprovalsForMint(
 async function getPermitCallData(
   signer: Signer | undefined,
   account: string | null | undefined,
-  approvals: Record<string, boolean>,
+  approvals: MintApprovals,
   baseAssetContract: ERC20Permit,
   principalTokenContract: Tranche,
-  yieldTokenContract: InterestToken
+  yieldTokenContract: InterestToken,
+  includePermits: boolean
 ): Promise<PermitCallData[]> {
   const {
     userProxyApprovedForBaseAsset,
@@ -199,6 +214,8 @@ async function getPermitCallData(
 
   const { balancerVaultAddress, userProxyContractAddress } = ContractAddresses;
   const { address: baseAssetAddress } = baseAssetContract;
+  const baseAssetIsERC20Permit =
+    isUnderlyingAddressERC20Permit(baseAssetAddress);
 
   const spenders: string[] = [];
   const tokenContracts: ERC20Permit[] = [];
@@ -210,6 +227,7 @@ async function getPermitCallData(
   }
 
   if (
+    baseAssetIsERC20Permit &&
     !userProxyApprovedForBaseAsset &&
     isUnderlyingAddressERC20Permit(baseAssetAddress)
   ) {
@@ -221,37 +239,40 @@ async function getPermitCallData(
     nonces.push(nonceBN.toNumber());
   }
 
-  if (
-    !balancerApprovedForBaseAsset &&
-    isUnderlyingAddressERC20Permit(baseAssetAddress)
-  ) {
-    const tokenName = await baseAssetContract.name();
-    const nonceBN = await baseAssetContract.nonces(account);
-    spenders.push(userProxyContractAddress);
-    tokenContracts.push(baseAssetContract);
-    tokenNames.push(tokenName);
-    const nonce = !userProxyApprovedForBaseAsset
-      ? nonceBN.toNumber() + 1
-      : nonceBN.toNumber();
-    nonces.push(nonce);
-  }
+  if (includePermits) {
+    if (
+      baseAssetIsERC20Permit &&
+      !balancerApprovedForBaseAsset &&
+      isUnderlyingAddressERC20Permit(baseAssetAddress)
+    ) {
+      const tokenName = await baseAssetContract.name();
+      const nonceBN = await baseAssetContract.nonces(account);
+      spenders.push(userProxyContractAddress);
+      tokenContracts.push(baseAssetContract);
+      tokenNames.push(tokenName);
+      const nonce = !userProxyApprovedForBaseAsset
+        ? nonceBN.toNumber() + 1
+        : nonceBN.toNumber();
+      nonces.push(nonce);
+    }
 
-  if (!balancerApprovedForPrincipalToken) {
-    const tokenName = await principalTokenContract.name();
-    const nonceBN = await baseAssetContract.nonces(account);
-    spenders.push(balancerVaultAddress);
-    tokenContracts.push(principalTokenContract);
-    tokenNames.push(tokenName);
-    nonces.push(nonceBN.toNumber());
-  }
+    if (!balancerApprovedForPrincipalToken) {
+      const tokenName = await principalTokenContract.name();
+      const nonceBN = await principalTokenContract.nonces(account);
+      spenders.push(balancerVaultAddress);
+      tokenContracts.push(principalTokenContract);
+      tokenNames.push(tokenName);
+      nonces.push(nonceBN.toNumber());
+    }
 
-  if (!balancerApprovedForYieldToken) {
-    const tokenName = await yieldTokenContract.name();
-    const nonceBN = await baseAssetContract.nonces(account);
-    spenders.push(balancerVaultAddress);
-    tokenContracts.push(yieldTokenContract);
-    tokenNames.push(tokenName);
-    nonces.push(nonceBN.toNumber());
+    if (!balancerApprovedForYieldToken) {
+      const tokenName = await yieldTokenContract.name();
+      const nonceBN = await yieldTokenContract.nonces(account);
+      spenders.push(balancerVaultAddress);
+      tokenContracts.push(yieldTokenContract);
+      tokenNames.push(tokenName);
+      nonces.push(nonceBN.toNumber());
+    }
   }
 
   const permitCallData = await fetchPermitDataMulti(
@@ -262,6 +283,7 @@ async function getPermitCallData(
     tokenNames,
     nonces
   );
+
   return permitCallData;
 }
 
