@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import { ReactElement, useState } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
 import { Signer } from "ethers";
@@ -20,6 +20,8 @@ import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { getTokenInfo } from "efi/tokenlists";
 import { EMPTY_ARRAY } from "efi/base/emptyArray";
 import { WalletApprovalInfo } from "efi/wallets/WalletApprovalInfo";
+import tw from "efi-tailwindcss-classnames";
+import { Callout, Switch } from "@blueprintjs/core";
 
 interface MintTransactionConfirmationDrawerProps {
   account: string | null | undefined;
@@ -51,6 +53,8 @@ export function MintTransactionConfirmationDrawer({
 }: MintTransactionConfirmationDrawerProps): ReactElement {
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
 
+  const [includePermits, setIncludePermits] = useState(true);
+
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
   const {
     interestToken: interestTokenAddress,
@@ -75,6 +79,7 @@ export function MintTransactionConfirmationDrawer({
     trancheInfo,
     yieldTokenInfo,
     amountInAsNumber,
+    includePermits,
     onClose
   );
 
@@ -91,24 +96,35 @@ export function MintTransactionConfirmationDrawer({
       library={library}
       onConfirmTransaction={mint}
       transactionDetails={
-        <SwapDetailsForm
-          amountIn={amountInAsNumber.toFixed(4)}
-          heading={t`Mint Preview`}
-          assetInIcon={BaseAssetIcon}
-          amountInLabel={t`Deposit`}
-          assetInSymbol={baseAssetSymbol}
-          assetOutSymbol={`${baseAssetSymbol} Principal Token`}
-          assetOutIcon={null}
-        >
-          <MintTransactionDetails
-            baseAssetSymbol={baseAssetSymbol}
-            principalTokenSymbol={principalTokenSymbol}
-            yieldTokenSymbol={yieldTokenSymbol}
-            unlockTimestamp={unlockTimeStampDate}
-            numPrincipalTokens={numPrincipalTokens}
-            numYieldTokens={amountInAsNumber}
-          />
-        </SwapDetailsForm>
+        <div className={tw("flex", "flex-col", "space-y-8")}>
+          <Callout>
+            <div>
+              <Switch
+                label={t`Include permit data to save on approvals for staking?`}
+                checked={includePermits}
+                onChange={() => setIncludePermits(!includePermits)}
+              />
+            </div>
+          </Callout>
+          <SwapDetailsForm
+            amountIn={amountInAsNumber.toFixed(4)}
+            heading={t`Mint Preview`}
+            assetInIcon={BaseAssetIcon}
+            amountInLabel={t`Deposit`}
+            assetInSymbol={baseAssetSymbol}
+            assetOutSymbol={`${baseAssetSymbol} Principal Token`}
+            assetOutIcon={null}
+          >
+            <MintTransactionDetails
+              baseAssetSymbol={baseAssetSymbol}
+              principalTokenSymbol={principalTokenSymbol}
+              yieldTokenSymbol={yieldTokenSymbol}
+              unlockTimestamp={unlockTimeStampDate}
+              numPrincipalTokens={numPrincipalTokens}
+              numYieldTokens={amountInAsNumber}
+            />
+          </SwapDetailsForm>
+        </div>
       }
     />
   );

@@ -41,6 +41,7 @@ export function useMintTransaction(
   trancheInfo: TrancheInfo,
   yieldTokenInfo: YieldTokenInfo,
   amountIn: number,
+  includePermits: boolean,
   onTransactionStarted: () => void
 ): {
   mint: () => void;
@@ -94,7 +95,8 @@ export function useMintTransaction(
       approvals,
       baseAssetContract,
       principalTokenContract,
-      yieldTokenContract
+      yieldTokenContract,
+      includePermits
     );
 
     const baseAssetAddress = getTokenAddressForUserProxy(baseAsset) as string;
@@ -117,6 +119,7 @@ export function useMintTransaction(
     approvals,
     baseAsset,
     baseAssetContract,
+    includePermits,
     mint,
     principalTokenContract,
     signer,
@@ -188,7 +191,8 @@ async function getPermitCallData(
   approvals: Record<string, boolean>,
   baseAssetContract: ERC20Permit,
   principalTokenContract: Tranche,
-  yieldTokenContract: InterestToken
+  yieldTokenContract: InterestToken,
+  includePermits: boolean
 ): Promise<PermitCallData[]> {
   const {
     userProxyApprovedForBaseAsset,
@@ -221,37 +225,39 @@ async function getPermitCallData(
     nonces.push(nonceBN.toNumber());
   }
 
-  if (
-    !balancerApprovedForBaseAsset &&
-    isUnderlyingAddressERC20Permit(baseAssetAddress)
-  ) {
-    const tokenName = await baseAssetContract.name();
-    const nonceBN = await baseAssetContract.nonces(account);
-    spenders.push(userProxyContractAddress);
-    tokenContracts.push(baseAssetContract);
-    tokenNames.push(tokenName);
-    const nonce = !userProxyApprovedForBaseAsset
-      ? nonceBN.toNumber() + 1
-      : nonceBN.toNumber();
-    nonces.push(nonce);
-  }
+  if (includePermits) {
+    if (
+      !balancerApprovedForBaseAsset &&
+      isUnderlyingAddressERC20Permit(baseAssetAddress)
+    ) {
+      const tokenName = await baseAssetContract.name();
+      const nonceBN = await baseAssetContract.nonces(account);
+      spenders.push(userProxyContractAddress);
+      tokenContracts.push(baseAssetContract);
+      tokenNames.push(tokenName);
+      const nonce = !userProxyApprovedForBaseAsset
+        ? nonceBN.toNumber() + 1
+        : nonceBN.toNumber();
+      nonces.push(nonce);
+    }
 
-  if (!balancerApprovedForPrincipalToken) {
-    const tokenName = await principalTokenContract.name();
-    const nonceBN = await baseAssetContract.nonces(account);
-    spenders.push(balancerVaultAddress);
-    tokenContracts.push(principalTokenContract);
-    tokenNames.push(tokenName);
-    nonces.push(nonceBN.toNumber());
-  }
+    if (!balancerApprovedForPrincipalToken) {
+      const tokenName = await principalTokenContract.name();
+      const nonceBN = await baseAssetContract.nonces(account);
+      spenders.push(balancerVaultAddress);
+      tokenContracts.push(principalTokenContract);
+      tokenNames.push(tokenName);
+      nonces.push(nonceBN.toNumber());
+    }
 
-  if (!balancerApprovedForYieldToken) {
-    const tokenName = await yieldTokenContract.name();
-    const nonceBN = await baseAssetContract.nonces(account);
-    spenders.push(balancerVaultAddress);
-    tokenContracts.push(yieldTokenContract);
-    tokenNames.push(tokenName);
-    nonces.push(nonceBN.toNumber());
+    if (!balancerApprovedForYieldToken) {
+      const tokenName = await yieldTokenContract.name();
+      const nonceBN = await baseAssetContract.nonces(account);
+      spenders.push(balancerVaultAddress);
+      tokenContracts.push(yieldTokenContract);
+      tokenNames.push(tokenName);
+      nonces.push(nonceBN.toNumber());
+    }
   }
 
   const permitCallData = await fetchPermitDataMulti(
@@ -262,6 +268,7 @@ async function getPermitCallData(
     tokenNames,
     nonces
   );
+
   return permitCallData;
 }
 
