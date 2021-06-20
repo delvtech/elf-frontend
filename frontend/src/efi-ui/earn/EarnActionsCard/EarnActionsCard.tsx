@@ -12,7 +12,6 @@ import { EarnStakingForm } from "efi-ui/earn/EarnStakingForm/EarnStakingForm";
 import { MintCard } from "efi-ui/mint/MintCard/MintCard";
 import { SellPrincipalTokensForm } from "efi-ui/portfolio/PrincipalTokenActionsCard/SellPrincipalTokensForm";
 import { Signer } from "ethers";
-import { getPrincipalPoolForTranche } from "efi/pools/ccpool";
 
 interface EarnActionsCardProps {
   signer: Signer | undefined;
@@ -26,8 +25,6 @@ interface EarnActionsCardProps {
 export function EarnActionsCard(props: EarnActionsCardProps): ReactElement {
   const { signer, library, account, activeTabId, setActiveTabId, trancheInfo } =
     props;
-
-  const poolInfo = getPrincipalPoolForTranche(trancheInfo.address);
 
   return (
     <Card className={tw("flex", "space-x-6")}>
@@ -53,16 +50,18 @@ export function EarnActionsCard(props: EarnActionsCardProps): ReactElement {
           />
         ) : null}
         {activeTabId === EarnActionsTabId.STAKE ? (
-          <EarnStakingForm
-            library={library}
-            signer={signer}
-            account={account}
-            poolInfo={poolInfo}
-            buttonLabel={t`Add liquidity`}
-            formDisabled={false}
-            submitDisabled={false}
-            buttonIntent={Intent.PRIMARY}
-          />
+          <div className={tw("flex")}>
+            <EarnStakingForm
+              library={library}
+              signer={signer}
+              account={account}
+              trancheInfo={trancheInfo}
+              buttonLabel={t`Add liquidity`}
+              formDisabled={false}
+              submitDisabled={false}
+              buttonIntent={Intent.PRIMARY}
+            />
+          </div>
         ) : null}
       </div>
     </Card>
