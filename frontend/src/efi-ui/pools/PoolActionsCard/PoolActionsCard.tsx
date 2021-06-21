@@ -3,7 +3,6 @@ import { ReactElement, useEffect, useState } from "react";
 import { Card, Intent, Tab, Tabs } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { TokenInfo } from "@uniswap/token-lists";
-import { AbstractConnector } from "@web3-react/abstract-connector";
 import { Signer } from "ethers";
 import { t } from "ttag";
 
@@ -21,22 +20,14 @@ interface PoolActionsCardProps {
   library: Web3Provider | undefined;
   signer: Signer | undefined;
   account: string | null | undefined;
-  connector: AbstractConnector | undefined;
   poolInfo: PoolInfo;
   baseTokenInfo: TokenInfo;
   termTokenInfo: TokenInfo;
 }
 
 export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
-  const {
-    library,
-    signer,
-    account,
-    connector,
-    baseTokenInfo,
-    termTokenInfo,
-    poolInfo,
-  } = props;
+  const { library, signer, account, baseTokenInfo, termTokenInfo, poolInfo } =
+    props;
   const { tab, setTab } = usePoolViewPoolActionsTab();
   const [activeTab, setActiveTab] = useState(tab);
   // clear pref, use local state above to control tabs for smoother UI
@@ -94,8 +85,8 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
         {activeTab === PoolAction.REMOVE_LIQUIDITY && (
           <UnstakePanel
             library={library}
+            signer={signer}
             account={account}
-            connector={connector}
             poolInfo={poolInfo}
           />
         )}
