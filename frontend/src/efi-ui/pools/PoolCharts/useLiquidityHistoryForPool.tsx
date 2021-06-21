@@ -35,6 +35,7 @@ type PoolBalanceChangedArguments = [
  * over the time period. values in ascending token address order.
  */
 
+const nowInMs = Date.now();
 export function useLiquidityHistoryForPool(
   pool: PoolContract | undefined,
   fromTime: number = ONE_DAY_IN_SECONDS
@@ -61,7 +62,6 @@ export function useLiquidityHistoryForPool(
   const [baseAssetPrice] = useTokenPrice(baseAssetContract, currency);
 
   const { data: lastestBlockNumber } = useLatestBlockNumber();
-  const nowInMs = Date.now();
 
   // TODO: break this up into a query to grab the PoolBalanceChanged events, and another query to
   // get the timestamps
