@@ -2,6 +2,7 @@ import { ReactElement, useCallback, useState } from "react";
 
 import { Button, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
+import { TokenInfo } from "@uniswap/token-lists";
 import { ConvergentCurvePool, WeightedPool } from "elf-contracts/types";
 import { BigNumber, Signer } from "ethers";
 import { formatEther, formatUnits, parseUnits } from "ethers/lib/utils";
@@ -12,24 +13,21 @@ import { t } from "ttag";
 import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
 import tw from "efi-tailwindcss-classnames";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
-import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
+import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { UnstakeInput } from "efi-ui/pools/UnstakeInput/UnstakeInput";
 import { UnstakeConfirmationDrawer } from "efi-ui/pools/UnstakeTokensConfirmationDrawer/UnstakeTokensConfirmationDrawer";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
-import { useShareOfPool } from "efi-ui/pools/useShareOfPool";
 import { useExitConvergentCurvePool } from "efi-ui/pools/useUnstake/useExitConvergentCurvePool";
 import { useExitWeightedPool } from "efi-ui/pools/useUnstake/useExitWeightedPool";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { ElementIcon } from "efi-ui/token/TokenIcon";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
-import { formatPercent } from "efi/base/formatPercent";
-import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { getPoolContract } from "efi/pools/getPoolContract";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
+import { PoolContract } from "efi/pools/PoolContract";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { isYieldPool } from "efi/pools/weightedPool";
-import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
+import { PoolStakeStats } from "efi-ui/pools/UnstakePanel/PoolStakeStats";
 
 interface UnstakeCardProps {
   signer: Signer | undefined;
@@ -38,24 +36,19 @@ interface UnstakeCardProps {
   poolInfo: PoolInfo;
 }
 
-const calloutClassName = tw(
-  "flex",
-  "flex-1",
-  "p-8",
-  "w-full",
-  "items-center",
-  "justify-between"
-);
-
 export function UnstakeCard({
   signer,
   library,
   account,
   poolInfo,
 }: UnstakeCardProps): ReactElement {
+  const pool = getPoolContract(poolInfo.address);
+
   // local state
   const [isWalletDialogOpen, setWalletDialogOpen] = useState(false);
   const [isDrawerOpen, setDrawerOpen] = useState(false);
+  const { stringValue: unstakeValue, setValue: setUnstakeValue } =
+    useNumericInput();
 
   // handlers
   const openDrawer = useCallback(() => setDrawerOpen(true), []);
@@ -67,92 +60,27 @@ export function UnstakeCard({
     openDrawer();
   }, [account, openDrawer]);
 
-  const { stringValue: unstakeValue, setValue: setUnstakeValue } =
-    useNumericInput();
   const unstakeFromPool = useExitPool(signer, account, poolInfo, unstakeValue);
 
-  const pool = getPoolContract(poolInfo.address);
-  // base asset
+  // display info
   const { baseAssetInfo, termAssetInfo } = getPoolTokens(poolInfo);
-  const symbol = `ELF:${baseAssetInfo.symbol}-${termAssetInfo.symbol}`;
-  const { decimals: baseAssetDecimals } = baseAssetInfo;
-  const baseAssetCryptoAsset = getCryptoAssetForToken(baseAssetInfo.address);
-  const baseAssetSymbol = getCryptoSymbol(baseAssetCryptoAsset);
-
-  // pool shares
+  const poolSymbol = `ELF:${baseAssetInfo.symbol}-${termAssetInfo.symbol}`;
   const { data: lpBalanceOf } = useTokenBalanceOf(pool, account);
   const lpDisplayBalance = formatEther(lpBalanceOf ?? 0);
-  const shareOfPool = useShareOfPool(pool, account);
-  const shareOfPoolLabel = getShareOfPoolLabel(shareOfPool);
 
-  // liquidity
-  const { data: [addresses, poolBalances] = [] } = usePoolTokens(pool);
-
-  const baseAssetLiquidity = calculatePoolShareLiquidity(
-    shareOfPool,
-    addresses,
-    poolBalances,
-    baseAssetInfo.address,
-    baseAssetDecimals
+  // drawer info
+  const { baseAssetOut, termAssetOut } = useCalculateAssetsOut(
+    pool,
+    unstakeValue,
+    baseAssetInfo,
+    termAssetInfo
   );
 
-  const termAssetLiquidity = calculatePoolShareLiquidity(
-    shareOfPool,
-    addresses,
-    poolBalances,
-    termAssetInfo.address,
-    termAssetInfo.decimals
+  // form validators
+  const { balanceIsZero, isValidValue, disableUnstake } = getFormValidators(
+    unstakeValue,
+    lpBalanceOf
   );
-
-  const { data: totalSupply } = useSmartContractReadCall(pool, "totalSupply");
-  const shareOut = totalSupply
-    ? Number(unstakeValue) /
-      Number(formatUnits(totalSupply, BALANCER_POOL_LP_TOKEN_DECIMALS))
-    : 0;
-
-  const baseAssetOutValue = calculatePoolShareLiquidity(
-    shareOut,
-    addresses,
-    poolBalances,
-    baseAssetInfo.address,
-    baseAssetDecimals
-  );
-
-  const termAssetOutValue = calculatePoolShareLiquidity(
-    shareOut,
-    addresses,
-    poolBalances,
-    termAssetInfo.address,
-    termAssetInfo.decimals
-  );
-
-  const baseAssetOut = baseAssetOutValue
-    ? `${baseAssetOutValue?.toFixed(4)}`
-    : "0.0000";
-
-  const termAssetOut = termAssetOutValue
-    ? `${termAssetOutValue?.toFixed(4)}`
-    : "0.0000";
-
-  const baseAssetLiquidityLabel = baseAssetLiquidity
-    ? `${baseAssetLiquidity?.toFixed(4)}`
-    : "0.0000";
-
-  const termAssetLiquidityLabel = termAssetLiquidity
-    ? `${termAssetLiquidity?.toFixed(4)}`
-    : "0.0000";
-
-  const valueBN = parseUnits(
-    unstakeValue || "0",
-    BALANCER_POOL_LP_TOKEN_DECIMALS
-  );
-
-  const balanceIsZero = lpBalanceOf?.isZero() ?? true;
-  const valueIsZero = valueBN.isZero();
-  const valueLessThanBalance = lpBalanceOf ? valueBN.lte(lpBalanceOf) : false;
-
-  const isValidValue = valueLessThanBalance;
-  const disableUnstake = balanceIsZero || valueIsZero || !isValidValue;
 
   return (
     <div
@@ -168,7 +96,7 @@ export function UnstakeCard({
     >
       <UnstakeInput
         label={t`LP Tokens`}
-        cryptoSymbol={symbol}
+        cryptoSymbol={poolSymbol}
         cryptoDecimals={poolInfo.decimals}
         cryptoAssetIcon={ElementIcon}
         cryptoBalanceOf={lpBalanceOf}
@@ -178,32 +106,7 @@ export function UnstakeCard({
         value={unstakeValue}
         validValue={isValidValue}
       />
-      <div className={calloutClassName}>
-        <LabeledText
-          muted={false}
-          className={tw("flex", "flex-col", "justify-center", "items-center")}
-          bold
-          textClassName={tw("text-2xl")}
-          text={shareOfPoolLabel}
-          label={t`Share of pool`}
-        />
-        <LabeledText
-          muted={false}
-          className={tw("flex", "flex-col", "justify-center", "items-center")}
-          bold
-          textClassName={tw("text-2xl")}
-          text={termAssetLiquidityLabel}
-          label={t`${termAssetInfo.symbol} liquidity`}
-        />
-        <LabeledText
-          muted={false}
-          className={tw("flex", "flex-col", "justify-center", "items-center")}
-          bold
-          textClassName={tw("text-2xl")}
-          text={baseAssetLiquidityLabel}
-          label={t`${baseAssetSymbol} liquidity`}
-        />
-      </div>
+      <PoolStakeStats account={account} poolInfo={poolInfo} />
 
       <Button
         className={tw("w-full")}
@@ -245,40 +148,6 @@ export function UnstakeCard({
   );
 }
 
-function calculatePoolShareLiquidity(
-  poolShares: number | undefined,
-  poolTokenAddresses: string[] | undefined,
-  poolTokenReserves: BigNumber[] | undefined,
-  tokenAddress: string | undefined,
-  tokenDecimals: number | undefined
-): number | undefined {
-  let baseAssetLiquidity: number | undefined;
-  if (
-    poolShares &&
-    poolTokenAddresses &&
-    poolTokenReserves &&
-    tokenAddress &&
-    tokenDecimals
-  ) {
-    const reservesByAddress = zipObject(poolTokenAddresses, poolTokenReserves);
-    const reserves = reservesByAddress[tokenAddress];
-    const reservesNumber = +formatUnits(reserves ?? 0, tokenDecimals);
-    baseAssetLiquidity = poolShares * reservesNumber;
-  }
-  return baseAssetLiquidity;
-}
-
-function getShareOfPoolLabel(shareOfPool: number | undefined) {
-  if (!shareOfPool) {
-    return formatPercent(0, 0);
-  }
-  if (shareOfPool === 1) {
-    return formatPercent(shareOfPool, 0);
-  }
-
-  return formatPercent(shareOfPool, 2);
-}
-
 function useExitPool(
   signer: Signer | undefined,
   account: string | null | undefined,
@@ -303,4 +172,85 @@ function useExitPool(
   }
 
   return exitPrincipalPool;
+}
+
+function useCalculateAssetsOut(
+  pool: PoolContract,
+  unstakeValue: string,
+  baseAssetInfo: TokenInfo,
+  termAssetInfo: TokenInfo
+) {
+  const { data: [addresses, poolBalances] = [] } = usePoolTokens(pool);
+  const { decimals: baseAssetDecimals } = baseAssetInfo;
+  const { data: totalSupply } = useSmartContractReadCall(pool, "totalSupply");
+  const shareOut = totalSupply
+    ? Number(unstakeValue) /
+      Number(formatUnits(totalSupply, BALANCER_POOL_LP_TOKEN_DECIMALS))
+    : 0;
+
+  const baseAssetOutValue = calculatePoolShareLiquidity(
+    shareOut,
+    addresses,
+    poolBalances,
+    baseAssetInfo.address,
+    baseAssetDecimals
+  );
+
+  const termAssetOutValue = calculatePoolShareLiquidity(
+    shareOut,
+    addresses,
+    poolBalances,
+    termAssetInfo.address,
+    termAssetInfo.decimals
+  );
+
+  const baseAssetOut = baseAssetOutValue
+    ? `${baseAssetOutValue?.toFixed(4)}`
+    : "0.0000";
+
+  const termAssetOut = termAssetOutValue
+    ? `${termAssetOutValue?.toFixed(4)}`
+    : "0.0000";
+  return { baseAssetOut, termAssetOut };
+}
+
+function calculatePoolShareLiquidity(
+  poolShares: number | undefined,
+  poolTokenAddresses: string[] | undefined,
+  poolTokenReserves: BigNumber[] | undefined,
+  tokenAddress: string | undefined,
+  tokenDecimals: number | undefined
+): number | undefined {
+  let baseAssetLiquidity: number | undefined;
+  if (
+    poolShares &&
+    poolTokenAddresses &&
+    poolTokenReserves &&
+    tokenAddress &&
+    tokenDecimals
+  ) {
+    const reservesByAddress = zipObject(poolTokenAddresses, poolTokenReserves);
+    const reserves = reservesByAddress[tokenAddress];
+    const reservesNumber = +formatUnits(reserves ?? 0, tokenDecimals);
+    baseAssetLiquidity = poolShares * reservesNumber;
+  }
+  return baseAssetLiquidity;
+}
+
+function getFormValidators(
+  unstakeValue: string,
+  lpBalanceOf: BigNumber | undefined
+) {
+  const valueBN = parseUnits(
+    unstakeValue || "0",
+    BALANCER_POOL_LP_TOKEN_DECIMALS
+  );
+
+  const balanceIsZero = lpBalanceOf?.isZero() ?? true;
+  const valueIsZero = valueBN.isZero();
+  const valueLessThanBalance = lpBalanceOf ? valueBN.lte(lpBalanceOf) : false;
+
+  const isValidValue = valueLessThanBalance;
+  const disableUnstake = balanceIsZero || valueIsZero || !isValidValue;
+  return { balanceIsZero, isValidValue, disableUnstake };
 }
