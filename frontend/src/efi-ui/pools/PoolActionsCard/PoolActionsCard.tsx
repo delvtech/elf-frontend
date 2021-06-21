@@ -14,7 +14,7 @@ import {
 } from "efi-ui/pools/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
 import { TradePanel } from "efi-ui/trade/TradePanel/TradePanel";
 import { PoolInfo } from "efi/pools/PoolInfo";
-import { UnstakeCard } from "efi-ui/pools/UnstakePanel/UnstakeCard";
+import { UnstakeCard } from "efi-ui/pools/UnstakingPanel/UnstakingCard";
 
 interface PoolActionsCardProps {
   library: Web3Provider | undefined;

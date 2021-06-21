@@ -27,7 +27,7 @@ import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolContract } from "efi/pools/PoolContract";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { isYieldPool } from "efi/pools/weightedPool";
-import { PoolStakeStats } from "efi-ui/pools/UnstakePanel/PoolStakeStats";
+import { PoolStakeStats } from "efi-ui/pools/UnstakingPanel/PoolStakeStats";
 
 interface UnstakeCardProps {
   signer: Signer | undefined;
