@@ -1,6 +1,6 @@
 import { Fragment, ReactElement, useCallback, useState } from "react";
 
-import { Button, Intent, Tag } from "@blueprintjs/core";
+import { Button, Callout, Intent, Tag } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { formatUnits } from "ethers/lib/utils";
 import { PrincipalPoolTokenInfo, PrincipalTokenInfo } from "tokenlists/types";
@@ -26,6 +26,7 @@ import { getBaseAssetForTranche } from "efi/tranche/baseAssets";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { RedeemPrincipalTokensConfirmationDrawer } from "efi-ui/tranche/RedeemTokensDrawer/RedeemPrincipalTokensConfirmationDrawer/RedeemPrincipalTokensConfirmationDrawer";
+import { useTrancheCanPerform } from "efi-ui/tranche/useTrancheCanPerform";
 
 interface RedeemPrincipalTokensFormProps {
   library: Web3Provider | undefined;
@@ -64,6 +65,10 @@ export function RedeemPrincipalTokensForm(
   const trancheContract = trancheContractsByAddress[ptAddress];
   const { data: ptBalanceOf } = useTokenBalanceOf(trancheContract, account);
   const ptBalanceLabel = formatBalance(ptBalanceOf, ptDecimals, ptDecimals);
+  const canPerformWithdrawPrincipal = useTrancheCanPerform(
+    ptAddress,
+    "withdrawPrincipal"
+  );
 
   // inputs
   const poolInfo = getPrincipalPoolForTranche(ptAddress);
@@ -73,15 +78,20 @@ export function RedeemPrincipalTokensForm(
     amountIn
   );
 
-  const buttonDisabled = !!tokenInError || !!tokenOutError || !amountIn;
+  const buttonDisabled =
+    !!tokenInError ||
+    !!tokenOutError ||
+    !amountIn ||
+    !canPerformWithdrawPrincipal;
+
   let buttonIntent: Intent = Intent.PRIMARY;
-  if (tokenInError || tokenOutError) {
+  if (tokenInError || tokenOutError || !canPerformWithdrawPrincipal) {
     buttonIntent = Intent.DANGER;
   }
 
   return (
     <Fragment>
-      <div className={tw("flex", "items-center")}>
+      <div className={tw("flex", "flex-col", "space-y-4")}>
         <div className={tw("flex", "flex-col", "w-full", "space-y-2")}>
           <span
             className={tw("pb-4")}
@@ -118,6 +128,11 @@ export function RedeemPrincipalTokensForm(
             >{t`Available balance: ${ptBalanceLabel}`}</span>
           </div>
         </div>
+        {!canPerformWithdrawPrincipal ? (
+          <Callout intent={Intent.DANGER}>
+            {t`Redeeming for this token has been temporarily disabled, please refer to our Discord or Twitter for further updates.`}
+          </Callout>
+        ) : null}
       </div>
       <RedeemPrincipalTokensConfirmationDrawer
         library={library}

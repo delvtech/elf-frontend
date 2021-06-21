@@ -1,6 +1,6 @@
 import { Fragment, ReactElement, useCallback, useState } from "react";
 
-import { Button, Intent, Tag } from "@blueprintjs/core";
+import { Button, Callout, Intent, Tag } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { ConvergentCurvePool } from "elf-contracts/types";
 import { formatUnits } from "ethers/lib/utils";
@@ -30,6 +30,7 @@ import { getTokenInfo } from "efi/tokenlists";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
 import { getBaseAssetForTranche } from "efi/tranche/baseAssets";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
+import { useConvergentPoolCanPerform } from "efi-ui/pools/usePoolCanPerform/usePoolCanPerform";
 
 interface SellPrincipalTokensFormProps {
   library: Web3Provider | undefined;
@@ -73,6 +74,7 @@ export function SellPrincipalTokensForm(
   const ptBalanceLabel = formatBalance(ptBalanceOf, ptDecimals, ptDecimals);
   const principalTokenCryptoAsset = getCryptoAssetForToken(ptAddress);
   const ptIcon = findAssetIcon2(principalTokenCryptoAsset);
+  const canPerformSell = useConvergentPoolCanPerform(poolInfo.address, "sell");
 
   // inputs
   const { tokenOutError, tokenInError } = useValidateInput(
@@ -84,16 +86,20 @@ export function SellPrincipalTokensForm(
   const poolContract = getPoolContract(poolInfo.address) as ConvergentCurvePool;
   const spotPrice = usePoolSpotPrice2(poolContract, underlyingAddress);
 
-  const buttonDisabled = !!tokenInError || !!tokenOutError || !+amountIn; // cover the case where they type  "" or "0";
+  const buttonDisabled =
+    !!tokenInError ||
+    !!tokenOutError ||
+    !+amountIn || // cover the case where they type  "" or "0"
+    !canPerformSell;
 
   let buttonIntent: Intent = Intent.PRIMARY;
-  if (tokenInError || tokenOutError) {
+  if (tokenInError || tokenOutError || !canPerformSell) {
     buttonIntent = Intent.DANGER;
   }
 
   return (
     <Fragment>
-      <div className={tw("flex", "items-center")}>
+      <div className={tw("flex", "flex-col", "space-y-4")}>
         <div className={tw("flex", "flex-col", "w-full", "space-y-2")}>
           <span
             className={tw("pb-4")}
@@ -130,6 +136,11 @@ export function SellPrincipalTokensForm(
             >{t`Available balance: ${ptBalanceLabel}`}</span>
           </div>
         </div>
+        {!canPerformSell ? (
+          <Callout intent={Intent.DANGER}>
+            {t`Trading for this token has been temporarily disabled, please refer to our Discord or Twitter for further updates.`}
+          </Callout>
+        ) : null}
       </div>
       <SwapTokensTransactionConfirmationDrawer
         buttonLabel={t`Sell`}
