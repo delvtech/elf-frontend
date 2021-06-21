@@ -32,15 +32,20 @@ export function UnstakeConvergentCurvePoolButton({
 }: UnstakeConvergentCurvePoolButtonProps): ReactElement {
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
 
-  const exitPool = useExitConvergentCurvePool(signer, account, pool, amount);
+  const { onExitPool } = useExitConvergentCurvePool(
+    signer,
+    account,
+    pool,
+    amount
+  );
 
   const [isWalletDialogOpen, setWalletDialogOpen] = useState(false);
   const onClickUnstake = useCallback(() => {
     if (!account) {
       return setWalletDialogOpen(true);
     }
-    exitPool();
-  }, [account, exitPool]);
+    onExitPool();
+  }, [account, onExitPool]);
 
   // disable the button when there's lp tokens or fine dust
   const { data: lpBalanceOf } = useTokenBalanceOf(pool, account);

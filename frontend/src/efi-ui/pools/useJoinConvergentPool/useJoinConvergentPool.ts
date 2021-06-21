@@ -21,7 +21,7 @@ export function useJoinConvergentPool(
   account: string | null | undefined,
   pool: PoolContract | undefined,
   poolTokenMaxAmounts: BigNumber[] | undefined,
-  onTransactionStarted?: () => void
+  onTransactionSubmitted?: () => void
 ): {
   onJoinPool: () => void;
   mutationResult: UseMutationResult<
@@ -37,7 +37,7 @@ export function useJoinConvergentPool(
     balancerVault,
     "joinPool",
     signer,
-    { onTransactionSubmitted: onTransactionStarted }
+    { onTransactionSubmitted: onTransactionSubmitted }
   );
 
   const { mutate: joinPool } = mutationResult;

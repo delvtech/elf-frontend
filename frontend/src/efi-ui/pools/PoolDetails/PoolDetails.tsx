@@ -1,7 +1,6 @@
 import { ReactElement } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
-import { AbstractConnector } from "@web3-react/abstract-connector";
 import { Signer } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
 
@@ -28,12 +27,11 @@ interface PoolDetailsProps {
   library: Web3Provider | undefined;
   signer: Signer | undefined;
   account: string | null | undefined;
-  connector: AbstractConnector | undefined;
   poolInfo: PoolInfo;
 }
 
 export function PoolDetails(props: PoolDetailsProps): ReactElement {
-  const { library, signer, account, connector, poolInfo } = props;
+  const { library, signer, account, poolInfo } = props;
   const pool = getPoolContract(poolInfo.address);
   const { baseAssetInfo, termAssetInfo, baseAssetContract } =
     getPoolTokens(poolInfo);
@@ -113,7 +111,6 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
           library={library}
           signer={signer}
           account={account}
-          connector={connector}
           poolInfo={poolInfo}
           baseTokenInfo={baseAssetInfo}
           termTokenInfo={termAssetInfo}

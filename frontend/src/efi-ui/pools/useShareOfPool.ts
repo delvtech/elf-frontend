@@ -52,7 +52,10 @@ export function useShareOfPoolMulti(
   return shareOfPools;
 }
 
-function calculateShareOfPool(lpBalanceOf: BigNumber, totalSupply: BigNumber) {
+export function calculateShareOfPool(
+  lpBalanceOf: BigNumber,
+  totalSupply: BigNumber
+): number {
   const balanceOfNumber = +formatUnits(
     lpBalanceOf,
     BALANCER_POOL_LP_TOKEN_DECIMALS
