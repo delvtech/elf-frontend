@@ -12,6 +12,11 @@ export function useCanPerform(): CanPerformJsonFile {
   const { data: canPerformJson } = useQuery({
     queryKey: ["can-perform"],
     queryFn: async () => {
+      // Don't try to fetch anything if we're testing locally
+      if (process.env.REACT_APP_CHAIN_NAME === "testnet") {
+        return canPerformJsonFromBuild;
+      }
+
       const result = await fetch(CAN_PERFORM_URL);
       const resultJSON = (await result.json()) as CanPerformJsonFile;
       return resultJSON;

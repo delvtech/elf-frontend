@@ -6,7 +6,14 @@ import React, {
   useState,
 } from "react";
 
-import { Button, Card, Classes, Elevation, Intent } from "@blueprintjs/core";
+import {
+  Button,
+  Callout,
+  Card,
+  Classes,
+  Elevation,
+  Intent,
+} from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import classNames from "classnames";
 import { formatEther, formatUnits } from "ethers/lib/utils";
@@ -20,7 +27,7 @@ import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadC
 import { CryptoAssetPicker } from "efi-ui/crypto/CryptoAssetPicker/CryptoAssetPicker";
 import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoBalanceOf } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
-import { EarnInput } from "efi-ui/saveApp/save/EarnInput/EarnInput";
+import { SaveInput } from "efi-ui/saveApp/save/SaveInput/SaveInput";
 import { SaveTermPicker } from "efi-ui/saveApp/save/SaveTermPicker/SaveTermPicker";
 import { useActiveTranche } from "efi-ui/saveApp/save/hooks/useActiveTranche";
 import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
@@ -47,6 +54,7 @@ import { getTokenInfo } from "efi/tokenlists";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
 import { openTrancheBaseAssets } from "efi/tranche/baseAssets";
 import { underlyingContractsByAddress } from "efi/underlying/underlying";
+import { useConvergentPoolCanPerform } from "efi-ui/pools/usePoolCanPerform/usePoolCanPerform";
 
 export interface SaveCardProps {
   library: Web3Provider | undefined;
@@ -118,8 +126,13 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
 
   // pool
   const {
+    address: convergentPoolAddress,
     extensions: { expiration, unitSeconds, underlying },
   } = getPrincipalPoolForTranche(activeTranche.address);
+  const canPerformBuy = useConvergentPoolCanPerform(
+    convergentPoolAddress,
+    "buy"
+  );
 
   const poolContract = getPrincipalPoolContractForTranche(
     activeTranche.address
@@ -262,7 +275,8 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
 
   const buttonDisabled =
     (!!account && (!isValidTokenInValue || !isValidTokenOutValue)) ||
-    noAmountIn;
+    noAmountIn ||
+    !canPerformBuy;
   const buttonLabel = !!account ? t`Buy` : t`Connect Wallet`;
 
   const assetPickerRenderer = useCallback(
@@ -316,7 +330,7 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
               "border-red-600": !isValidTokenInValue,
             })}
           >
-            <EarnInput
+            <SaveInput
               showMaxButton={!!account}
               assetPickerRenderer={assetPickerRenderer}
               placeholder="0.00"
@@ -345,7 +359,7 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
               "border-red-600": !isValidTokenOutValue,
             })}
           >
-            <EarnInput
+            <SaveInput
               showMaxButton={false}
               assetPickerRenderer={termPickerRenderer}
               placeholder="0.00"
@@ -369,7 +383,7 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
           <Button
             large
             outlined
-            intent={Intent.PRIMARY}
+            intent={canPerformBuy ? Intent.PRIMARY : Intent.DANGER}
             className={tw("flex-1")}
             disabled={buttonDisabled}
             onClick={onClickButton}
@@ -377,6 +391,11 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
             <div className={tw("p-4", "text-lg")}>{buttonLabel}</div>
           </Button>
         </div>
+        {!canPerformBuy ? (
+          <Callout intent={Intent.DANGER}>
+            {t`Trading for this token has been temporarily disabled, please refer to our Discord or Twitter for further updates.`}
+          </Callout>
+        ) : null}
       </Card>
 
       {!activeBaseAsset || !isDrawerOpen ? null : (

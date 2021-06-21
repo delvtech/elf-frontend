@@ -1,6 +1,6 @@
 import { Fragment, ReactElement, useCallback, useState } from "react";
 
-import { Button, Intent } from "@blueprintjs/core";
+import { Button, Callout, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { formatUnits } from "ethers/lib/utils";
 import { PrincipalPoolTokenInfo, PrincipalTokenInfo } from "tokenlists/types";
@@ -34,6 +34,7 @@ import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { getTokenInfo } from "efi/tokenlists";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
+import { useConvergentPoolCanPerform } from "efi-ui/pools/usePoolCanPerform/usePoolCanPerform";
 
 interface BuyPrincipalTokensFormProps {
   library: Web3Provider | undefined;
@@ -87,6 +88,7 @@ export function BuyPrincipalTokensForm(
   const poolContract = getPrincipalPoolContractForTranche(ptAddress);
   const apy = useTokenYield(poolInfo, "principal");
   const formattedAPY = apy ? formatPercent(apy) : "-";
+  const canPerformBuy = useConvergentPoolCanPerform(poolInfo.address, "buy");
 
   // input validation
   const amountOut = useCalculatePrincipalTokenAmountOut(
@@ -101,16 +103,19 @@ export function BuyPrincipalTokensForm(
   );
 
   const buttonDisabled =
-    !!tokenInError || !!tokenOutError || !+baseAssetInputValue; // cover the case where they type "0"
+    !!tokenInError ||
+    !!tokenOutError ||
+    !+baseAssetInputValue || // cover the case where they type "0"
+    !canPerformBuy;
 
   let buttonIntent: Intent = Intent.PRIMARY;
-  if (tokenInError || tokenOutError) {
+  if (tokenInError || tokenOutError || !canPerformBuy) {
     buttonIntent = Intent.DANGER;
   }
 
   return (
     <Fragment>
-      <div className={tw("flex")}>
+      <div className={tw("flex", "flex-col", "space-y-4")}>
         <div
           className={tw(
             "flex",
@@ -161,6 +166,11 @@ export function BuyPrincipalTokensForm(
             >{t`Available balance: ${baseAssetBalanceLabel}`}</span>
           </div>
         </div>
+        {!canPerformBuy ? (
+          <Callout intent={Intent.DANGER}>
+            {t`Trading for this token has been temporarily disabled, please refer to our Discord or Twitter for further updates.`}
+          </Callout>
+        ) : null}
       </div>
       <BuyPrincipalTokensTransactionConfirmationDrawer
         baseAsset={baseAsset}

@@ -12,9 +12,9 @@ import { validateInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
 
-import styles from "./EarnInput.module.css";
+import styles from "./SaveInput.module.css";
 
-interface EarnInputProps {
+interface SaveInputProps {
   showMaxButton: boolean;
   // cannot be undefined as that enables 'uncontrolled' component behavior for InputGroup
   value: string;
@@ -31,12 +31,12 @@ interface EarnInputProps {
   valueBalanceOf: BigNumber | undefined;
 }
 
-const earnInputStyle: CSSProperties = {
+const saveInputStyle: CSSProperties = {
   height: "94px",
   width: "100%",
   fontSize: 26,
 };
-export function EarnInput(props: EarnInputProps): ReactElement {
+export function SaveInput(props: SaveInputProps): ReactElement {
   const {
     className,
     value,
@@ -85,7 +85,7 @@ export function EarnInput(props: EarnInputProps): ReactElement {
     <FormGroup className={tw("w-full")} helperText={helperText}>
       <InputGroup
         placeholder={placeholder}
-        style={earnInputStyle}
+        style={saveInputStyle}
         className={classNames(
           tw("w-full"),
           styles.investmentAmount,

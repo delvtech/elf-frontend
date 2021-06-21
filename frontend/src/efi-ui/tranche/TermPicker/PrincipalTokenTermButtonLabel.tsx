@@ -56,12 +56,7 @@ export function PrincipalTokenTermButtonLabel({
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
 
   return (
-    <div
-      className={classNames(
-        tw("flex", "items-center", "h-full", "space-x-4"),
-        className
-      )}
-    >
+    <div className={classNames(tw("flex", "h-full", "space-x-4"), className)}>
       <LabeledText
         large
         icon={
@@ -87,6 +82,7 @@ export function PrincipalTokenTermButtonLabel({
             </Tag>
           </div>
         }
+        className={tw("text-left")}
         text={`${baseAssetSymbol} Principal Token`}
         label={t`via ${positionName}`}
       />

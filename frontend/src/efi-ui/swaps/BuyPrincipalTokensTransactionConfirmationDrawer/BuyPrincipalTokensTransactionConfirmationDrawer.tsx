@@ -11,24 +11,24 @@ import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { useBatchSwapGivenIn } from "efi-ui/balancer/useBatchSwapGivenIn/useBatchSwapGivenIn";
 import { parseQueryBatchSwapResult } from "efi-ui/balancer/useQueryBatchSwap/parseQueryBatchSwapResult";
 import { useQueryBatchSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
-import { ERC20Shim } from "efi/contracts/ERC20Shim";
-import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
-import { usePoolPairedToken } from "efi-ui/pools/usePoolPairedToken/usePoolPairedToken";
 import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
 import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
 import { PrincipalTokenTransactionDetails } from "efi-ui/swaps/PrincipalTokenTransactionDetails/PrincipalTokenTransactionDetails";
 import { SwapDetailsForm } from "efi-ui/swaps/SwapDetailsPreview/SwapDetailsForm";
 import { TokenIcon } from "efi-ui/token/TokenIcon";
 import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/TransactionDrawer";
-import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
+import { convertEpochSecondsToDate2 } from "efi/base/convertEpochSecondsToDate";
 import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { calculatePurchasePrice } from "efi/pools/calculatePurchasePrice";
 import { calculateSlippage } from "efi/pools/calculateSlippage";
 import { PoolContract } from "efi/pools/PoolContract";
 import { getAmountOutWithTolerance } from "efi/trade/getAmountOutWithTolerance";
 import { useSigner } from "efi-ui/provider/useBlockFromTag/useSigner/useSigner";
+import { getTokenInfo } from "efi/tokenlists";
+import { PrincipalTokenInfo } from "tokenlists/types";
+import { underlyingContractsByAddress } from "efi/underlying/underlying";
 
 interface BuyPrincipalTransactionConfirmationDrawerProps {
   account: string | null | undefined;
@@ -42,7 +42,7 @@ interface BuyPrincipalTransactionConfirmationDrawerProps {
   baseAsset: CryptoAsset;
   baseAssetIcon: TokenIcon | undefined;
 
-  tranche: Tranche | undefined;
+  tranche: Tranche;
   isOpen: boolean;
 
   onClose: (transactionAttempted: boolean) => void;
@@ -74,13 +74,16 @@ export function BuyPrincipalTokensTransactionConfirmationDrawer({
   const baseAssetDecimals = getCryptoDecimals(baseAsset);
 
   // tranche calls
-  const { data: trancheUnlockTimestamp } = useSmartContractReadCall(
-    tranche,
-    "unlockTimestamp"
-  );
-  const unlockTimeStampDate = convertEpochSecondsToDate(trancheUnlockTimestamp);
+  const {
+    extensions: { unlockTimestamp: trancheUnlockTimestamp, underlying },
+  } = getTokenInfo<PrincipalTokenInfo>(tranche.address);
 
-  const baseAssetPoolToken = usePoolPairedToken(pool, tranche as ERC20Shim);
+  const unlockTimeStampDate = convertEpochSecondsToDate2(
+    trancheUnlockTimestamp
+  );
+
+  const baseAssetPoolToken = underlyingContractsByAddress[underlying];
+
   const { spotPriceBaseAssetForOneToken, spotPriceTokenForOneBaseAsset } =
     usePoolTokenPrices(pool, baseAssetPoolToken);
 
