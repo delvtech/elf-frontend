@@ -8,13 +8,13 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { StakingPanel } from "efi-ui/pools/StakingPanel/StakingPanel";
-import { UnstakePanel } from "efi-ui/pools/UnstakePanel/UnstakePanel";
 import {
   PoolAction,
   usePoolViewPoolActionsTab,
 } from "efi-ui/pools/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
 import { TradePanel } from "efi-ui/trade/TradePanel/TradePanel";
 import { PoolInfo } from "efi/pools/PoolInfo";
+import { UnstakeCard } from "efi-ui/pools/UnstakePanel/UnstakeCard";
 
 interface PoolActionsCardProps {
   library: Web3Provider | undefined;
@@ -83,7 +83,7 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
           />
         )}
         {activeTab === PoolAction.REMOVE_LIQUIDITY && (
-          <UnstakePanel
+          <UnstakeCard
             library={library}
             signer={signer}
             account={account}
