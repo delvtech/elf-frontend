@@ -60,7 +60,29 @@ export function UnstakeCard({
     openDrawer();
   }, [account, openDrawer]);
 
-  const unstakeFromPool = useExitPool(signer, account, poolInfo, unstakeValue);
+  const onTransactionSubmitted = useCallback(() => {
+    setDrawerOpen(false);
+    setUnstakeValue("");
+  }, [setUnstakeValue]);
+
+  const {
+    exitPool: unstakeFromPool,
+    isLoading,
+    isError,
+    reset,
+  } = useExitPool(
+    signer,
+    account,
+    poolInfo,
+    unstakeValue,
+    onTransactionSubmitted
+  );
+
+  const onCloseDrawer = useCallback(() => {
+    setDrawerOpen(false);
+    setUnstakeValue("");
+    reset();
+  }, [reset, setUnstakeValue]);
 
   // display info
   const { baseAssetInfo, termAssetInfo } = getPoolTokens(poolInfo);
@@ -128,19 +150,10 @@ export function UnstakeCard({
         termAssetValue={termAssetOut}
         lpTokensIn={unstakeValue}
         isOpen={isDrawerOpen}
-        isUnstakeLoading={
-          false
-          // isPrincipalPoolType ? isJoinCCPoolLoading : isJoinWPoolLoading
-        }
-        isUnstakeError={
-          false
-          // isPrincipalPoolType ? isJoinCCPoolError : isJoinWPoolError
-        }
-        isUnstakeSuccess={
-          false
-          // isPrincipalPoolType ? isJoinCCPoolSuccess : isJoinWPoolSuccess
-        }
-        onClose={closeDrawer}
+        isUnstakeLoading={isLoading}
+        isUnstakeError={isError}
+        isUnstakeSuccess={false}
+        onClose={onCloseDrawer}
         onUnstake={unstakeFromPool}
       />
       <ConnectWalletDialog isOpen={isWalletDialogOpen} onClose={closeDrawer} />
@@ -152,26 +165,54 @@ function useExitPool(
   signer: Signer | undefined,
   account: string | null | undefined,
   poolInfo: PoolInfo,
-  amount: string
+  amount: string,
+  onTransactionSubmitted?: () => void
 ) {
   const principalPool = getPoolContract(
     poolInfo.address
   ) as ConvergentCurvePool;
-  const exitPrincipalPool = useExitConvergentCurvePool(
+  const {
+    onExitPool: exitPrincipalPool,
+    isLoading: isPrincipalLoading,
+    isError: isPrincipalError,
+    reset: resetPrincipal,
+  } = useExitConvergentCurvePool(
     signer,
     account,
     principalPool,
-    amount
+    amount,
+    onTransactionSubmitted
   );
 
   const yieldPool = getPoolContract(poolInfo.address) as WeightedPool;
-  const exitYieldPool = useExitWeightedPool(signer, account, yieldPool, amount);
+  const {
+    onExitPool: exitYieldPool,
+    isLoading: isYieldLoading,
+    isError: isYieldError,
+    reset: resetYield,
+  } = useExitWeightedPool(
+    signer,
+    account,
+    yieldPool,
+    amount,
+    onTransactionSubmitted
+  );
 
   if (isYieldPool(poolInfo)) {
-    return exitYieldPool;
+    return {
+      exitPool: exitYieldPool,
+      isLoading: isYieldLoading,
+      isError: isYieldError,
+      reset: resetYield,
+    };
   }
 
-  return exitPrincipalPool;
+  return {
+    exitPool: exitPrincipalPool,
+    isLoading: isPrincipalLoading,
+    isError: isPrincipalError,
+    reset: resetPrincipal,
+  };
 }
 
 function useCalculateAssetsOut(

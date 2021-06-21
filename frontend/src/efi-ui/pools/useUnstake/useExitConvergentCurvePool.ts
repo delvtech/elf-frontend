@@ -25,8 +25,15 @@ export function useExitConvergentCurvePool(
   signer: Signer | undefined,
   account: string | null | undefined,
   pool: ConvergentCurvePool | undefined,
-  lpIn: string
-): () => void {
+  lpIn: string,
+  onTransactionSubmitted?: () => void
+): {
+  onExitPool: () => void;
+  isLoading: boolean;
+  isError: boolean;
+  isSuccess: boolean;
+  reset: () => void;
+} {
   const balancerVault = useBalancerVault();
   const { data: poolId } = useSmartContractReadCall(pool, "getPoolId");
   const { data: [poolTokens = [], poolTokenReserves = []] = [] } =
@@ -41,11 +48,15 @@ export function useExitConvergentCurvePool(
 
   const { data: totalSupply } = useSmartContractReadCall(pool, "totalSupply");
 
-  const { mutate: exitPool } = useSmartContractTransactionPersisted(
-    balancerVault,
-    "exitPool",
-    signer
-  );
+  const {
+    mutate: exitPool,
+    isLoading,
+    isError,
+    isSuccess,
+    reset,
+  } = useSmartContractTransactionPersisted(balancerVault, "exitPool", signer, {
+    onTransactionSubmitted,
+  });
 
   const onExitPool = useCallback(() => {
     const exitPoolCallArgs = makeExitPoolCallArgs(
@@ -72,7 +83,7 @@ export function useExitConvergentCurvePool(
     totalSupply,
   ]);
 
-  return onExitPool;
+  return { onExitPool, isLoading, isError, isSuccess, reset };
 }
 
 function makeExitPoolCallArgs(

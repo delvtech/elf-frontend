@@ -48,16 +48,11 @@ export function UnstakeConfirmationDrawer({
   isUnstakeSuccess,
   onUnstake,
 }: UnstakeConfirmationDrawerProps): ReactElement {
-  // const balancerVault = useBalancerVault();
-  // close the drawer after stake succeeds
-
-  // const { decimals: baseAssetDecimals } = baseAssetInfo;
   const baseAsset = getCryptoAssetForToken(baseAssetInfo.address);
   const baseAssetSymbol = getCryptoSymbol(baseAsset) as string;
   const baseAssetSymbolLabel = getCryptoName(baseAsset) as string;
   const baseAssetIcon = findAssetIcon2(baseAsset) as TokenIcon;
 
-  // const { decimals: termAssetDecimals } = termAssetInfo;
   const termAsset = getCryptoAssetForToken(termAssetInfo.address);
   const termAssetIcon = findAssetIcon2(termAsset) as TokenIcon;
 
