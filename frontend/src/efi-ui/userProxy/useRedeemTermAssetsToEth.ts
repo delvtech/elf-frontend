@@ -20,7 +20,8 @@ export function useRedeemTermAssetsToEth(
   account: string | null | undefined,
   // note both are required.  set to BigNumber.from(0) if you don't want that one.
   amountPrinicpalToken: BigNumber,
-  amountYieldToken: BigNumber
+  amountYieldToken: BigNumber,
+  onTransactionSubmitted?: () => void
 ): {
   withdraw: () => void;
   reset: () => void;
@@ -43,7 +44,9 @@ export function useRedeemTermAssetsToEth(
     isError,
     isLoading,
     reset,
-  } = useSmartContractTransactionPersisted(userProxy, "withdrawWeth", signer);
+  } = useSmartContractTransactionPersisted(userProxy, "withdrawWeth", signer, {
+    onTransactionSubmitted,
+  });
 
   const { data: ptApproval } = useTokenAllowance(
     tranche,

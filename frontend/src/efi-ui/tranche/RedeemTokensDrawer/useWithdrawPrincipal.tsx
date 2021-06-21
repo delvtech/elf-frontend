@@ -10,7 +10,8 @@ export function useWithdrawPrincipal(
   signer: Signer | undefined,
   tranche: Tranche | undefined,
   account: string | null | undefined,
-  amount: BigNumber | undefined
+  amount: BigNumber | undefined,
+  onTransactionSubmitted?: () => void
 ): {
   withdraw: () => void;
   reset: () => void;
@@ -30,7 +31,8 @@ export function useWithdrawPrincipal(
   } = useSmartContractTransactionPersisted(
     tranche,
     "withdrawPrincipal",
-    signer
+    signer,
+    { onTransactionSubmitted }
   );
 
   const withdraw = useCallback(() => {
