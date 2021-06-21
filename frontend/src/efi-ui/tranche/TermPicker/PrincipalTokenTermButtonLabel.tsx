@@ -15,10 +15,12 @@ import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { getPrincipalPoolForTranche } from "efi/pools/ccpool";
 import { getTokenInfo } from "efi/tokenlists";
+import classNames from "classnames";
 
 interface PrincipalTokenTermButtonLabelProps {
   tranche: Tranche;
   baseAsset: CryptoAsset;
+  className?: string;
 }
 
 /**
@@ -28,6 +30,7 @@ interface PrincipalTokenTermButtonLabelProps {
 export function PrincipalTokenTermButtonLabel({
   baseAsset,
   tranche,
+  className,
 }: PrincipalTokenTermButtonLabelProps): ReactElement {
   const trancheInfo = getTokenInfo<PrincipalTokenInfo>(tranche.address);
   const poolInfo = getPrincipalPoolForTranche(trancheInfo.address);
@@ -53,7 +56,12 @@ export function PrincipalTokenTermButtonLabel({
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
 
   return (
-    <div className={tw("flex", "items-center", "h-full", "space-x-4")}>
+    <div
+      className={classNames(
+        tw("flex", "items-center", "h-full", "space-x-4"),
+        className
+      )}
+    >
       <LabeledText
         large
         icon={

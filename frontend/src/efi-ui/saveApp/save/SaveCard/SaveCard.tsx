@@ -21,7 +21,7 @@ import { CryptoAssetPicker } from "efi-ui/crypto/CryptoAssetPicker/CryptoAssetPi
 import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoBalanceOf } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { EarnInput } from "efi-ui/saveApp/save/EarnInput/EarnInput";
-import { EarnTermPicker } from "efi-ui/saveApp/save/EarnTermPicker/EarnTermPicker";
+import { SaveTermPicker } from "efi-ui/saveApp/save/SaveTermPicker/SaveTermPicker";
 import { useActiveTranche } from "efi-ui/saveApp/save/hooks/useActiveTranche";
 import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
@@ -278,14 +278,21 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
 
   const termPickerRenderer = useCallback(
     () => (
-      <EarnTermPicker
+      <SaveTermPicker
         account={account}
         onTrancheChange={setActiveTranche}
         tranches={availableTranches}
+        baseAsset={activeBaseAsset}
         activeTrancheIndex={activeTrancheIndex}
       />
     ),
-    [account, activeTrancheIndex, availableTranches, setActiveTranche]
+    [
+      account,
+      activeBaseAsset,
+      activeTrancheIndex,
+      availableTranches,
+      setActiveTranche,
+    ]
   );
 
   return (
