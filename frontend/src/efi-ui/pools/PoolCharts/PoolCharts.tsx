@@ -7,7 +7,6 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { LineChart } from "efi-ui/charts/LineChart/LineChart";
 import { useVolumeHistoryForPool } from "efi-ui/pools/PoolCharts/useLiquidityVolumeHistoryForPool";
-import { usePoolCreatedAt } from "efi-ui/pools/usePoolCreatedAt";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import {
   ONE_DAY_IN_SECONDS,
@@ -152,9 +151,9 @@ function usePoolCharts(pool: PoolContract) {
   };
 }
 
-function usePoolAtLeastOneDayOld(pool: PoolContract) {
+function usePoolAtLeastOneDayOld(poolInfo: PoolInfo) {
   const nowInSeconds = Math.floor(nowInMs / 1000);
-  const poolCreatedAt = usePoolCreatedAt(pool) ?? nowInSeconds;
+  const poolCreatedAt = poolInfo.extensions.createdAtTimestamp;
 
   const poolAge = nowInSeconds - poolCreatedAt;
   const hasEnoughPoolData = poolAge >= ONE_DAY_IN_SECONDS;
