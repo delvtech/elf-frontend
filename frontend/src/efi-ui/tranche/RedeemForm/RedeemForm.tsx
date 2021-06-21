@@ -1,20 +1,27 @@
 import { ChangeEvent, ReactElement, useCallback } from "react";
 
-import { Button, Callout, Divider, InputGroup } from "@blueprintjs/core";
+import {
+  Button,
+  Callout,
+  Divider,
+  InputGroup,
+  Intent,
+} from "@blueprintjs/core";
 import classNames from "classnames";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
+import { TokenIcon } from "efi-ui/token/TokenIcon";
 
 import styles from "./styles.module.css";
 
 interface RedeemFormProps {
-  tranche: Tranche | undefined;
-  amount: string | undefined;
+  tranche: Tranche;
+  amount: string;
+  intent?: Intent;
   /**
    * If provided, this will render a MAX button
    */
@@ -25,7 +32,8 @@ interface RedeemFormProps {
    * when don't want to show a long principal or yield token symbol in the
    * input
    */
-  assetSymbol?: string | undefined;
+  assetSymbol: string;
+  assetIcon?: TokenIcon;
   heading?: string;
 
   /**
@@ -39,7 +47,9 @@ interface RedeemFormProps {
 export function RedeemForm({
   tranche,
   assetSymbol: assetSymbolFromProps,
+  assetIcon: AssetIcon,
   amount,
+  intent,
   heading = t`Redeem`,
   onAmountChange,
   onSetMaxAmount,
@@ -48,7 +58,6 @@ export function RedeemForm({
   const { isDarkMode } = useDarkMode();
   const { data: assetSymbol } = useTokenSymbol(tranche);
   const assetSymbolLabel = assetSymbolFromProps || assetSymbol;
-  const AssetOneIcon = findAssetIcon(assetSymbol);
   const onAssetOneAmountChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
       onAmountChange?.(event.target.value);
@@ -64,6 +73,7 @@ export function RedeemForm({
           <InputGroup
             large
             fill
+            intent={intent}
             placeholder="0.00"
             disabled={!onAmountChange}
             onChange={onAssetOneAmountChange}
@@ -73,7 +83,7 @@ export function RedeemForm({
             })}
             leftElement={
               <div className={tw("flex", "items-center", "px-2")}>
-                {AssetOneIcon ? <AssetOneIcon height={18} width={18} /> : null}
+                {AssetIcon ? <AssetIcon height={18} width={18} /> : null}
               </div>
             }
             value={amount}
@@ -87,6 +97,7 @@ export function RedeemForm({
             <Button
               className={tw("flex-shrink-0")}
               outlined
+              intent={Intent.PRIMARY}
               onClick={onSetMaxAmount}
             >{t`MAX`}</Button>
           ) : null}

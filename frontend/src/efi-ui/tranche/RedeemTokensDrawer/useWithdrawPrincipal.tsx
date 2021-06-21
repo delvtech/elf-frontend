@@ -10,25 +10,44 @@ export function useWithdrawPrincipal(
   signer: Signer | undefined,
   tranche: Tranche | undefined,
   account: string | null | undefined,
-  amount: BigNumber | undefined
-): () => void {
+  amount: BigNumber | undefined,
+  onTransactionSubmitted?: () => void
+): {
+  withdraw: () => void;
+  reset: () => void;
+  isError: boolean;
+  isLoading: boolean;
+} {
   const withdrawPrincipalCallArgs = makeWithdrawPrincipalCallArgs(
     account,
     amount
   );
 
-  const { mutate: withdrawPrincipal } = useSmartContractTransactionPersisted(
+  const {
+    mutate: withdrawPrincipal,
+    isError,
+    isLoading,
+    reset,
+  } = useSmartContractTransactionPersisted(
     tranche,
     "withdrawPrincipal",
-    signer
+    signer,
+    { onTransactionSubmitted }
   );
 
-  return useCallback(() => {
+  const withdraw = useCallback(() => {
     if (!withdrawPrincipalCallArgs) {
       return;
     }
     withdrawPrincipal(withdrawPrincipalCallArgs);
   }, [withdrawPrincipal, withdrawPrincipalCallArgs]);
+
+  return {
+    withdraw,
+    reset,
+    isError,
+    isLoading,
+  };
 }
 
 function makeWithdrawPrincipalCallArgs(

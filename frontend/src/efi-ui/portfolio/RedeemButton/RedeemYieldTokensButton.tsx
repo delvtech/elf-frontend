@@ -1,46 +1,40 @@
-import React, {
-  Fragment,
-  ReactElement,
-  useCallback,
-  useMemo,
-  useState,
-} from "react";
+import React, { Fragment, ReactElement, useCallback, useState } from "react";
 
 import { AnchorButton, Button, Intent } from "@blueprintjs/core";
 import { Tooltip2 } from "@blueprintjs/popover2";
 import { Web3Provider } from "@ethersproject/providers";
-import { Tranche } from "elf-contracts/types/Tranche";
+import {
+  PrincipalTokenInfo as TrancheInfo,
+  YieldTokenInfo,
+} from "tokenlists/types";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { RedeemYieldTokensDrawer } from "efi-ui/tranche/RedeemTokensDrawer/RedeemYieldTokensDrawer";
-import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
+import { convertEpochSecondsToDate2 } from "efi/base/convertEpochSecondsToDate";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
+import { getTokenInfo } from "efi/tokenlists";
 
 interface RedeemYieldTokensButtonProps {
   account: string | null | undefined;
   library: Web3Provider | undefined;
 
-  tranche: Tranche | undefined;
-  baseAsset: CryptoAsset | undefined;
+  yieldTokenInfo: YieldTokenInfo;
+  baseAsset: CryptoAsset;
 }
 
 export function RedeemYieldTokensButton({
   baseAsset,
-  tranche,
+  yieldTokenInfo,
   account,
   library,
 }: RedeemYieldTokensButtonProps): ReactElement {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
-  const { data: unlockTimestamp } = useSmartContractReadCall(
-    tranche,
-    "unlockTimestamp"
+  const trancheInfo = getTokenInfo<TrancheInfo>(
+    yieldTokenInfo.extensions.tranche
   );
-  const unlockDate = useMemo(
-    () => convertEpochSecondsToDate(unlockTimestamp),
-    [unlockTimestamp]
-  );
+  const { unlockTimestamp } = trancheInfo.extensions;
+  const unlockDate = convertEpochSecondsToDate2(unlockTimestamp);
   const buttonDisabled = unlockDate && unlockDate.getTime() > Date.now();
 
   const openDrawer = useCallback(() => {
@@ -77,7 +71,7 @@ export function RedeemYieldTokensButton({
       {!baseAsset ? null : (
         <RedeemYieldTokensDrawer
           isOpen={isDrawerOpen}
-          tranche={tranche}
+          yieldTokenInfo={yieldTokenInfo}
           account={account}
           baseAsset={baseAsset}
           library={library}

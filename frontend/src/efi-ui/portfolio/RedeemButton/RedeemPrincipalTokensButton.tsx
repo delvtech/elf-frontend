@@ -1,51 +1,41 @@
-import React, {
-  Fragment,
-  ReactElement,
-  useCallback,
-  useMemo,
-  useState,
-} from "react";
+import React, { Fragment, ReactElement, useCallback, useState } from "react";
 
 import { AnchorButton, Button, Intent } from "@blueprintjs/core";
 import { Tooltip2 } from "@blueprintjs/popover2";
 import { Web3Provider } from "@ethersproject/providers";
-import { Tranche } from "elf-contracts/types/Tranche";
+import { PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { RedeemPrincipalTokensDrawer } from "efi-ui/tranche/RedeemTokensDrawer/RedeemPrincipalTokensDrawer";
-import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
+import { convertEpochSecondsToDate2 } from "efi/base/convertEpochSecondsToDate";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 
 interface RedeemPrincipalTokensButtonProps {
   account: string | null | undefined;
   library: Web3Provider | undefined;
 
-  tranche: Tranche | undefined;
-  baseAsset: CryptoAsset | undefined;
+  principalTokenInfo: PrincipalTokenInfo;
+  baseAsset: CryptoAsset;
 }
 
 export function RedeemPrincipalTokensButton({
   baseAsset,
-  tranche,
+  principalTokenInfo,
   account,
   library,
 }: RedeemPrincipalTokensButtonProps): ReactElement {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
-  const { data: unlockTimestamp } = useSmartContractReadCall(
-    tranche,
-    "unlockTimestamp"
-  );
-  const unlockDate = useMemo(
-    () => convertEpochSecondsToDate(unlockTimestamp),
-    [unlockTimestamp]
-  );
-
+  const { unlockTimestamp } = principalTokenInfo.extensions;
+  const unlockDate = convertEpochSecondsToDate2(unlockTimestamp);
   const buttonDisabled = unlockDate && unlockDate.getTime() > Date.now();
 
   const openDrawer = useCallback(() => {
     setDrawerOpen(true);
+  }, []);
+
+  const closeDrawer = useCallback(() => {
+    setDrawerOpen(false);
   }, []);
 
   return (
@@ -78,11 +68,11 @@ export function RedeemPrincipalTokensButton({
       {!baseAsset ? null : (
         <RedeemPrincipalTokensDrawer
           isOpen={isDrawerOpen}
-          tranche={tranche}
+          principalTokenInfo={principalTokenInfo}
           account={account}
           baseAsset={baseAsset}
           library={library}
-          onClose={() => setDrawerOpen(false)}
+          onClose={closeDrawer}
         />
       )}
     </Fragment>

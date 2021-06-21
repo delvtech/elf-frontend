@@ -2,32 +2,37 @@ import { ReactElement, useCallback } from "react";
 
 import { Button, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
-import { Tranche } from "elf-contracts/types/Tranche";
+import { Tranche } from "elf-contracts/types";
 import { BigNumber, Signer } from "ethers";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
+import {
+  PrincipalTokenInfo as TrancheInfo,
+  YieldTokenInfo,
+} from "tokenlists/types";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { useSigner } from "efi-ui/provider/useBlockFromTag/useSigner/useSigner";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
-import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { RedeemForm } from "efi-ui/tranche/RedeemForm/RedeemForm";
 import { useWithdrawInterest } from "efi-ui/tranche/RedeemTokensDrawer/useWithdrawInterest";
 import { useInterestTokenForTranche } from "efi-ui/tranche/useTrancheInterestTokenMulti";
 import { useRedeemTermAssetsToEth } from "efi-ui/userProxy/useRedeemTermAssetsToEth";
 import { WalletDrawer } from "efi-ui/wallets/WalletDrawer/WalletDrawer";
-import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
+import { convertEpochSecondsToDate2 } from "efi/base/convertEpochSecondsToDate";
 import { formatFullDate } from "efi/base/dates";
 import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { getTokenInfo } from "efi/tokenlists";
+import { trancheContractsByAddress } from "efi/tranche/tranches";
 
 interface RedeemYieldTokensDrawerProps {
   account: string | null | undefined;
   library: Web3Provider | undefined;
   baseAsset: CryptoAsset;
-  tranche: Tranche | undefined;
+  yieldTokenInfo: YieldTokenInfo;
   isOpen: boolean;
   onClose: () => void;
 }
@@ -36,89 +41,85 @@ export function RedeemYieldTokensDrawer({
   library,
   account,
   baseAsset,
-  tranche,
+  yieldTokenInfo,
   isOpen,
   onClose,
 }: RedeemYieldTokensDrawerProps): ReactElement {
-  const signer = account ? (library?.getSigner(account) as Signer) : undefined;
+  const signer = useSigner(account, library);
 
   // base asset calls
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
 
-  // tranche calls
-  const { data: trancheUnlockTimestamp } = useSmartContractReadCall(
-    tranche,
-    "unlockTimestamp"
-  );
-  const unlockTimestampDate = convertEpochSecondsToDate(trancheUnlockTimestamp);
+  const { decimals: yieldTokenDecimals } = yieldTokenInfo;
+  const { tranche: trancheAddress } = yieldTokenInfo.extensions;
+  const trancheInfo = getTokenInfo<TrancheInfo>(trancheAddress);
+  const tranche = trancheContractsByAddress[trancheInfo.address];
+  const { unlockTimestamp } = trancheInfo.extensions;
+  const unlockTimestampDate = convertEpochSecondsToDate2(unlockTimestamp);
   const unlockTimestampLabel = unlockTimestampDate
     ? formatFullDate(unlockTimestampDate)
     : undefined;
 
-  const interestToken = useInterestTokenForTranche(tranche);
-
-  const { data: interestTokenDecimals } = useTokenDecimals(interestToken);
+  const yieldToken = useInterestTokenForTranche(tranche);
 
   // input
-  const {
-    stringValue: interestTokenAmountString,
-    setValue: setInterestTokenAmountString,
-  } = useNumericInput({
-    min: 0,
-    maxPrecision: interestTokenDecimals,
-  });
+  const { stringValue: yieldTokenValue, setValue: setYieldTokenValue } =
+    useNumericInput({
+      min: 0,
+      maxPrecision: yieldTokenDecimals,
+    });
 
-  const { data: accountInterestTokenBalance } = useTokenBalanceOf(
-    interestToken,
-    account
-  );
+  const { data: yieldTokenBalanceOf } = useTokenBalanceOf(yieldToken, account);
   const onSetMaxAmount = useCallback(() => {
-    setInterestTokenAmountString(
-      formatUnits(accountInterestTokenBalance ?? 0, interestTokenDecimals)
+    setYieldTokenValue(
+      formatUnits(yieldTokenBalanceOf ?? 0, yieldTokenDecimals)
     );
-  }, [
-    accountInterestTokenBalance,
-    interestTokenDecimals,
-    setInterestTokenAmountString,
-  ]);
+  }, [yieldTokenBalanceOf, yieldTokenDecimals, setYieldTokenValue]);
 
-  const confirmButtonLabel = getConfirmButtonLabel(account);
-  const interestTokenAmountBigNumber =
-    interestTokenAmountString && interestTokenDecimals
-      ? parseUnits(interestTokenAmountString, interestTokenDecimals)
-      : BigNumber.from(0);
+  const yieldTokenValueBN = parseUnits(
+    yieldTokenValue || "0",
+    yieldTokenDecimals
+  );
+
+  const {
+    withdraw: redeemYieldTokens,
+    isError,
+    isLoading,
+    reset,
+  } = useRedeemYieldTokens(
+    signer,
+    tranche,
+    account,
+    yieldTokenValueBN,
+    baseAsset,
+    onClose
+  );
+
+  const confirmButtonLabel = getConfirmButtonLabel(
+    account,
+    yieldTokenValueBN,
+    yieldTokenBalanceOf
+  );
   const confirmButtonDisabled = getConfirmButtonDisabled(
     account,
-    interestTokenAmountBigNumber
+    yieldTokenValueBN,
+    yieldTokenBalanceOf
   );
+  let buttonIntent = isError ? Intent.DANGER : Intent.PRIMARY;
+  if (yieldTokenBalanceOf && yieldTokenValueBN.gt(yieldTokenBalanceOf)) {
+    buttonIntent = Intent.DANGER;
+  }
 
-  const withdrawInterest = useWithdrawInterest(
-    signer,
-    tranche,
-    account,
-    interestTokenAmountBigNumber
-  );
-
-  const withdrawToEth = useRedeemTermAssetsToEth(
-    signer,
-    tranche,
-    account,
-    BigNumber.from(0),
-    interestTokenAmountBigNumber
-  );
-
-  const redeemYieldTokens = useCallback(() => {
-    if (baseAsset.type === CryptoAssetType.ETHEREUM) {
-      withdrawToEth();
-    } else {
-      withdrawInterest();
-    }
-  }, [baseAsset.type, withdrawInterest, withdrawToEth]);
+  const onCloseDrawer = useCallback(() => {
+    setYieldTokenValue("");
+    reset();
+    onClose();
+  }, [onClose, reset, setYieldTokenValue]);
 
   return (
     <WalletDrawer
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={onCloseDrawer}
       className={tw("justify-between")}
     >
       <div className={tw("flex", "flex-col", "space-y-4")}>
@@ -126,9 +127,10 @@ export function RedeemYieldTokensDrawer({
           onSetMaxAmount={onSetMaxAmount}
           heading={t`Redeem ${baseAssetSymbol} Yield Tokens`}
           tranche={tranche}
-          amount={interestTokenAmountString}
+          intent={buttonIntent}
+          amount={yieldTokenValue}
           assetSymbol={t`${baseAssetSymbol} Yield Token`}
-          onAmountChange={setInterestTokenAmountString}
+          onAmountChange={setYieldTokenValue}
         >
           <div className={tw("flex", "flex-col", "space-y-6", "items-center")}>
             <LabeledText
@@ -145,8 +147,9 @@ export function RedeemYieldTokensDrawer({
         </RedeemForm>
         <Button
           fill
-          disabled={confirmButtonDisabled}
-          intent={Intent.PRIMARY}
+          disabled={isLoading || confirmButtonDisabled}
+          loading={isLoading}
+          intent={buttonIntent}
           className={tw("h-16")}
           large
           outlined
@@ -159,9 +162,53 @@ export function RedeemYieldTokensDrawer({
   );
 }
 
-function getConfirmButtonLabel(account: string | null | undefined) {
+function useRedeemYieldTokens(
+  signer: Signer | undefined,
+  tranche: Tranche,
+  account: string | null | undefined,
+  interestTokenAmountBigNumber: BigNumber,
+  baseAsset: CryptoAsset,
+  onClose: () => void
+): {
+  withdraw: () => void;
+  reset: () => void;
+  isError: boolean;
+  isLoading: boolean;
+} {
+  const redeemYield = useWithdrawInterest(
+    signer,
+    tranche,
+    account,
+    interestTokenAmountBigNumber,
+    onClose
+  );
+
+  const redeemEth = useRedeemTermAssetsToEth(
+    signer,
+    tranche,
+    account,
+    BigNumber.from(0),
+    interestTokenAmountBigNumber,
+    onClose
+  );
+
+  if (baseAsset.type === CryptoAssetType.ETHEREUM) {
+    return redeemEth;
+  }
+  return redeemYield;
+}
+
+function getConfirmButtonLabel(
+  account: string | null | undefined,
+  amountIn: BigNumber | undefined,
+  balanceOf: BigNumber | undefined
+) {
   if (!account) {
     return t`Connect your wallet to continue`;
+  }
+
+  if (amountIn && balanceOf && amountIn.gt(balanceOf)) {
+    return t`Insufficient balance`;
   }
 
   return t`Confirm transaction`;
@@ -169,7 +216,8 @@ function getConfirmButtonLabel(account: string | null | undefined) {
 
 function getConfirmButtonDisabled(
   account: string | null | undefined,
-  amountIn: BigNumber | undefined
+  amountIn: BigNumber | undefined,
+  balanceOf: BigNumber | undefined
 ) {
   // must be connected to click this button
   if (!account) {
@@ -177,7 +225,11 @@ function getConfirmButtonDisabled(
   }
 
   // disabled when no amount is entered
-  if (!amountIn) {
+  if (!amountIn || !balanceOf) {
+    return true;
+  }
+
+  if (amountIn.gt(balanceOf)) {
     return true;
   }
 
