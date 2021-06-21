@@ -63,50 +63,58 @@ export function RedeemYieldTokensDrawer({
   const interestToken = useInterestTokenForTranche(tranche);
 
   // input
-  const {
-    stringValue: interestTokenAmountString,
-    setValue: setInterestTokenAmountString,
-  } = useNumericInput({
-    min: 0,
-    maxPrecision: yieldTokenDecimals,
-  });
+  const { stringValue: yieldTokenValue, setValue: setYieldTokenValue } =
+    useNumericInput({
+      min: 0,
+      maxPrecision: yieldTokenDecimals,
+    });
 
   const { data: accountInterestTokenBalance } = useTokenBalanceOf(
     interestToken,
     account
   );
   const onSetMaxAmount = useCallback(() => {
-    setInterestTokenAmountString(
+    setYieldTokenValue(
       formatUnits(accountInterestTokenBalance ?? 0, yieldTokenDecimals)
     );
-  }, [
-    accountInterestTokenBalance,
-    yieldTokenDecimals,
-    setInterestTokenAmountString,
-  ]);
+  }, [accountInterestTokenBalance, yieldTokenDecimals, setYieldTokenValue]);
 
   const confirmButtonLabel = getConfirmButtonLabel(account);
   const interestTokenAmountBigNumber =
-    interestTokenAmountString && yieldTokenDecimals
-      ? parseUnits(interestTokenAmountString, yieldTokenDecimals)
+    yieldTokenValue && yieldTokenDecimals
+      ? parseUnits(yieldTokenValue, yieldTokenDecimals)
       : BigNumber.from(0);
   const confirmButtonDisabled = getConfirmButtonDisabled(
     account,
     interestTokenAmountBigNumber
   );
 
-  const redeemYieldTokens = useRedeemYieldTokens(
+  const {
+    withdraw: redeemYieldTokens,
+    isError,
+    isLoading,
+    reset,
+  } = useRedeemYieldTokens(
     signer,
     tranche,
     account,
     interestTokenAmountBigNumber,
-    baseAsset
+    baseAsset,
+    onClose
   );
+
+  const buttonIntent = isError ? Intent.DANGER : Intent.PRIMARY;
+
+  const onCloseDrawer = useCallback(() => {
+    setYieldTokenValue("");
+    reset();
+    onClose();
+  }, [onClose, reset, setYieldTokenValue]);
 
   return (
     <WalletDrawer
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={onCloseDrawer}
       className={tw("justify-between")}
     >
       <div className={tw("flex", "flex-col", "space-y-4")}>
@@ -114,9 +122,9 @@ export function RedeemYieldTokensDrawer({
           onSetMaxAmount={onSetMaxAmount}
           heading={t`Redeem ${baseAssetSymbol} Yield Tokens`}
           tranche={tranche}
-          amount={interestTokenAmountString}
+          amount={yieldTokenValue}
           assetSymbol={t`${baseAssetSymbol} Yield Token`}
-          onAmountChange={setInterestTokenAmountString}
+          onAmountChange={setYieldTokenValue}
         >
           <div className={tw("flex", "flex-col", "space-y-6", "items-center")}>
             <LabeledText
@@ -133,8 +141,9 @@ export function RedeemYieldTokensDrawer({
         </RedeemForm>
         <Button
           fill
-          disabled={confirmButtonDisabled}
-          intent={Intent.PRIMARY}
+          disabled={isLoading || confirmButtonDisabled}
+          loading={isLoading}
+          intent={buttonIntent}
           className={tw("h-16")}
           large
           outlined
@@ -152,31 +161,35 @@ function useRedeemYieldTokens(
   tranche: Tranche,
   account: string | null | undefined,
   interestTokenAmountBigNumber: BigNumber,
-  baseAsset: CryptoAsset
-) {
-  const { withdraw: withdrawInterest } = useWithdrawInterest(
+  baseAsset: CryptoAsset,
+  onClose: () => void
+): {
+  withdraw: () => void;
+  reset: () => void;
+  isError: boolean;
+  isLoading: boolean;
+} {
+  const redeemYield = useWithdrawInterest(
     signer,
     tranche,
     account,
-    interestTokenAmountBigNumber
+    interestTokenAmountBigNumber,
+    onClose
   );
 
-  const { withdraw: withdrawToEth } = useRedeemTermAssetsToEth(
+  const redeemEth = useRedeemTermAssetsToEth(
     signer,
     tranche,
     account,
     BigNumber.from(0),
-    interestTokenAmountBigNumber
+    interestTokenAmountBigNumber,
+    onClose
   );
 
-  const redeemYieldTokens = useCallback(() => {
-    if (baseAsset.type === CryptoAssetType.ETHEREUM) {
-      withdrawToEth();
-    } else {
-      withdrawInterest();
-    }
-  }, [baseAsset.type, withdrawInterest, withdrawToEth]);
-  return redeemYieldTokens;
+  if (baseAsset.type === CryptoAssetType.ETHEREUM) {
+    return redeemEth;
+  }
+  return redeemYield;
 }
 
 function getConfirmButtonLabel(account: string | null | undefined) {

@@ -34,6 +34,10 @@ export function RedeemPrincipalTokensButton({
     setDrawerOpen(true);
   }, []);
 
+  const closeDrawer = useCallback(() => {
+    setDrawerOpen(false);
+  }, []);
+
   return (
     <Fragment>
       {buttonDisabled ? (
@@ -68,7 +72,7 @@ export function RedeemPrincipalTokensButton({
           account={account}
           baseAsset={baseAsset}
           library={library}
-          onClose={() => setDrawerOpen(false)}
+          onClose={closeDrawer}
         />
       )}
     </Fragment>

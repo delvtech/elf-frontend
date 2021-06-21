@@ -56,7 +56,7 @@ export function RedeemPrincipalTokensDrawer({
     ? formatFullDate(unlockTimestampDate)
     : undefined;
 
-  const { stringValue: trancheAmountString, setValue: setTrancheAmountString } =
+  const { stringValue: principalTokenValue, setValue: setPrincipalTokenValue } =
     useNumericInput({
       min: 0,
       maxPrecision: principalTokenDecimals ?? 18,
@@ -65,33 +65,47 @@ export function RedeemPrincipalTokensDrawer({
   const tranche = trancheContractsByAddress[principalTokenInfo.address];
   const { data: accountTrancheBalance } = useTokenBalanceOf(tranche, account);
   const onSetMaxAmount = useCallback(() => {
-    setTrancheAmountString(
+    setPrincipalTokenValue(
       formatUnits(accountTrancheBalance ?? 0, principalTokenDecimals)
     );
-  }, [accountTrancheBalance, setTrancheAmountString, principalTokenDecimals]);
+  }, [accountTrancheBalance, setPrincipalTokenValue, principalTokenDecimals]);
 
   const confirmButtonLabel = getConfirmButtonLabel(account);
   const trancheAmountBigNumber =
-    trancheAmountString && principalTokenDecimals
-      ? parseUnits(trancheAmountString, principalTokenDecimals)
+    principalTokenValue && principalTokenDecimals
+      ? parseUnits(principalTokenValue, principalTokenDecimals)
       : undefined;
   const confirmButtonDisabled = getConfirmButtonDisabled(
     account,
     trancheAmountBigNumber
   );
 
-  const redeemPrincipalTokens = useRedeemPrincipalTokens(
+  const {
+    withdraw: redeemPrincipalTokens,
+    isError,
+    isLoading,
+    reset,
+  } = useRedeemPrincipalTokens(
     signer,
     tranche,
     account,
     trancheAmountBigNumber,
-    baseAsset
+    baseAsset,
+    onClose
   );
+
+  const buttonIntent = isError ? Intent.DANGER : Intent.PRIMARY;
+
+  const onCloseDrawer = useCallback(() => {
+    setPrincipalTokenValue("");
+    reset();
+    onClose();
+  }, [onClose, reset, setPrincipalTokenValue]);
 
   return (
     <WalletDrawer
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={onCloseDrawer}
       className={tw("justify-between")}
     >
       <div className={tw("flex", "flex-col", "space-y-4")}>
@@ -99,10 +113,10 @@ export function RedeemPrincipalTokensDrawer({
           onSetMaxAmount={onSetMaxAmount}
           heading={t`Redeem ${baseAssetSymbol} Principal Tokens`}
           tranche={tranche}
-          amount={trancheAmountString}
+          amount={principalTokenValue}
           assetSymbol={t`${baseAssetSymbol} Principal Token`}
           assetIcon={baseAssetIcon}
-          onAmountChange={setTrancheAmountString}
+          onAmountChange={setPrincipalTokenValue}
         >
           <div className={tw("flex", "flex-col", "space-y-6", "items-center")}>
             <LabeledText
@@ -120,7 +134,8 @@ export function RedeemPrincipalTokensDrawer({
         <Button
           fill
           disabled={confirmButtonDisabled}
-          intent={Intent.PRIMARY}
+          intent={buttonIntent}
+          loading={isLoading}
           className={tw("h-16")}
           large
           outlined
@@ -138,31 +153,36 @@ function useRedeemPrincipalTokens(
   tranche: Tranche,
   account: string | null | undefined,
   trancheAmountBigNumber: BigNumber | undefined,
-  baseAsset: CryptoAsset
-) {
-  const { withdraw: withdrawPrincipal } = useWithdrawPrincipal(
+  baseAsset: CryptoAsset,
+  onTransactionSubmitted: () => void
+): {
+  withdraw: () => void;
+  reset: () => void;
+  isError: boolean;
+  isLoading: boolean;
+} {
+  const withdrawPrincipal = useWithdrawPrincipal(
     signer,
     tranche,
     account,
-    trancheAmountBigNumber
+    trancheAmountBigNumber,
+    onTransactionSubmitted
   );
 
-  const { withdraw: withdrawToEth } = useRedeemTermAssetsToEth(
+  const withdrawEth = useRedeemTermAssetsToEth(
     signer,
     tranche,
     account,
     trancheAmountBigNumber || BigNumber.from(0),
-    BigNumber.from(0)
+    BigNumber.from(0),
+    onTransactionSubmitted
   );
 
-  const redeemPrincipalTokens = useCallback(() => {
-    if (baseAsset.type === CryptoAssetType.ETHEREUM) {
-      withdrawToEth();
-    } else {
-      withdrawPrincipal();
-    }
-  }, [baseAsset.type, withdrawPrincipal, withdrawToEth]);
-  return redeemPrincipalTokens;
+  if (baseAsset.type === CryptoAssetType.ETHEREUM) {
+    return withdrawEth;
+  }
+
+  return withdrawPrincipal;
 }
 
 function getConfirmButtonLabel(account: string | null | undefined) {
