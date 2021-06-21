@@ -29,6 +29,15 @@ src/addresses/*
 # This is a stub used for unit tests, it does not change on every machine
 !src/addresses/mock.addresses.json
 
+# these are copied in from the top-level scripts and will be different on every
+# machine
+src/canperform/*
+# This definition file is an exception as it does not change on every machine
+# and CI will fail without it.
+!src/canperform/CanPerformJsonFile.d.ts
+# This is a stub used for unit tests, it does not change on every machine
+!src/canperform/mock.canperform.json
+
 # misc
 .DS_Store
 

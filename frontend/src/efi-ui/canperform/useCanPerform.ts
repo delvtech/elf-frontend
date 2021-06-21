@@ -1,0 +1,28 @@
+import { useQuery } from "react-query";
+
+import { CanPerformJsonFile } from "canperform/CanPerformJsonFile";
+
+import { ONE_MINUTE_IN_MILLISECONDS } from "efi/base/time";
+import {
+  canPerformJson as canPerformJsonFromBuild,
+  CAN_PERFORM_URL,
+} from "efi/canperform";
+
+export function useCanPerform(): CanPerformJsonFile {
+  const { data: canPerformJson } = useQuery({
+    queryKey: ["can-perform"],
+    queryFn: async () => {
+      const result = await fetch(CAN_PERFORM_URL);
+      const resultJSON = (await result.json()) as CanPerformJsonFile;
+      return resultJSON;
+    },
+
+    refetchInterval: ONE_MINUTE_IN_MILLISECONDS,
+
+    // this persists the json from the bundle to the queryCache
+    initialData: canPerformJsonFromBuild,
+  });
+
+  // Safe to cast and return just the data because we'll always have `data`.
+  return canPerformJson as CanPerformJsonFile;
+}

@@ -78,7 +78,7 @@ serviceWorker.unregister();
 function logAppVersion() {
   const { version, date } = versionJson;
   const versionUrl = `https://github.com/element-fi/efi-frontend/commit/${version}`;
-  const unreleasedUrl = `https://github.com/element-fi/efi-frontend/compare/${version}...master`;
+  const unreleasedUrl = `https://github.com/element-fi/efi-frontend/compare/${version}...main`;
 
   // eslint-disable-next-line no-console
   console.log(`%cBuild date: ${date}`, "font-size:12px");

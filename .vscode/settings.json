@@ -64,7 +64,7 @@
     },
     {
       "fileMatch": [
-        "canperform.json"
+        "*.canperform.json"
       ],
       "url": "./canperform.schema.json"
     }

@@ -1,5 +1,5 @@
 {
-  "chainId": 5,
+  "chainId": 31337,
   "description": "Freeze minting or trading on any principal or yield token by adding its token address to the corresponding list below.",
   "canPerform": {
     "tranches": [
