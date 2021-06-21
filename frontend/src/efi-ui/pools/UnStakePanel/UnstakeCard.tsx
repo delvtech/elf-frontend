@@ -29,6 +29,7 @@ import { getPoolContract } from "efi/pools/getPoolContract";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { isYieldPool } from "efi/pools/weightedPool";
+import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 
 interface UnstakeCardProps {
   signer: Signer | undefined;
@@ -103,9 +104,40 @@ export function UnstakeCard({
     termAssetInfo.decimals
   );
 
+  const { data: totalSupply } = useSmartContractReadCall(pool, "totalSupply");
+  const shareOut = totalSupply
+    ? Number(unstakeValue) /
+      Number(formatUnits(totalSupply, BALANCER_POOL_LP_TOKEN_DECIMALS))
+    : 0;
+
+  const baseAssetOutValue = calculatePoolShareLiquidity(
+    shareOut,
+    addresses,
+    poolBalances,
+    baseAssetInfo.address,
+    baseAssetDecimals
+  );
+
+  const termAssetOutValue = calculatePoolShareLiquidity(
+    shareOut,
+    addresses,
+    poolBalances,
+    termAssetInfo.address,
+    termAssetInfo.decimals
+  );
+
+  const baseAssetOut = baseAssetOutValue
+    ? `${baseAssetOutValue?.toFixed(4)}`
+    : "0.0000";
+
+  const termAssetOut = termAssetOutValue
+    ? `${termAssetOutValue?.toFixed(4)}`
+    : "0.0000";
+
   const baseAssetLiquidityLabel = baseAssetLiquidity
     ? `${baseAssetLiquidity?.toFixed(4)}`
     : "0.0000";
+
   const termAssetLiquidityLabel = termAssetLiquidity
     ? `${termAssetLiquidity?.toFixed(4)}`
     : "0.0000";
@@ -189,9 +221,9 @@ export function UnstakeCard({
         account={account}
         baseAssetInfo={baseAssetInfo}
         termAssetInfo={termAssetInfo as PrincipalTokenInfo | YieldTokenInfo}
-        baseAssetValue={"0"}
-        termAssetValue={"0"}
-        lpTokensIn={"0"}
+        baseAssetValue={baseAssetOut}
+        termAssetValue={termAssetOut}
+        lpTokensIn={unstakeValue}
         isOpen={isDrawerOpen}
         isUnstakeLoading={
           false

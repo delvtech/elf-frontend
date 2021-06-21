@@ -1,5 +1,6 @@
 import React, { ReactElement } from "react";
 
+import { ElementIcon } from "efi-ui/token/TokenIcon";
 import { Callout, Divider, InputGroup } from "@blueprintjs/core";
 import classNames from "classnames";
 import { t } from "ttag";
@@ -36,7 +37,7 @@ interface UnstakeConfirmationFormProps {
 
 export function UnstakeConfirmationForm({
   heading = t`Unstake`,
-
+  amountIn,
   assetOneIcon: AssetOneIcon,
   assetTwoIcon: AssetTwoIcon,
   assetOneSymbol,
@@ -52,6 +53,7 @@ export function UnstakeConfirmationForm({
     <Callout className={tw("flex", "flex-col", "p-8", "space-y-6")}>
       <span className={classNames("h4", tw("text-center"))}>{heading}</span>
       <div className={tw("flex", "flex-col", "space-y-4", "items-center")}>
+        <span className={tw("w-full")}>{t`Unstake`}</span>
         <InputGroup
           large
           fill
@@ -63,16 +65,17 @@ export function UnstakeConfirmationForm({
           })}
           leftElement={
             <div className={tw("flex", "items-center", "px-2")}>
-              {AssetOneIcon ? <AssetOneIcon height={18} width={18} /> : null}
+              <ElementIcon height={18} width={18} />
             </div>
           }
-          value={assetOneValueLabel}
+          value={amountIn}
           rightElement={
             <div className={tw("flex", "items-center", "px-3")}>
-              {assetOneSymbol}
+              {t`LP Tokens`}
             </div>
           }
         />
+        <span className={tw("w-full")}>{t`for`}</span>
         <InputGroup
           large
           fill
