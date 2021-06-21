@@ -60,7 +60,7 @@ export function RedeemYieldTokensDrawer({
     ? formatFullDate(unlockTimestampDate)
     : undefined;
 
-  const interestToken = useInterestTokenForTranche(tranche);
+  const yieldToken = useInterestTokenForTranche(tranche);
 
   // input
   const { stringValue: yieldTokenValue, setValue: setYieldTokenValue } =
@@ -69,24 +69,16 @@ export function RedeemYieldTokensDrawer({
       maxPrecision: yieldTokenDecimals,
     });
 
-  const { data: accountInterestTokenBalance } = useTokenBalanceOf(
-    interestToken,
-    account
-  );
+  const { data: yieldTokenBalanceOf } = useTokenBalanceOf(yieldToken, account);
   const onSetMaxAmount = useCallback(() => {
     setYieldTokenValue(
-      formatUnits(accountInterestTokenBalance ?? 0, yieldTokenDecimals)
+      formatUnits(yieldTokenBalanceOf ?? 0, yieldTokenDecimals)
     );
-  }, [accountInterestTokenBalance, yieldTokenDecimals, setYieldTokenValue]);
+  }, [yieldTokenBalanceOf, yieldTokenDecimals, setYieldTokenValue]);
 
-  const confirmButtonLabel = getConfirmButtonLabel(account);
-  const interestTokenAmountBigNumber =
-    yieldTokenValue && yieldTokenDecimals
-      ? parseUnits(yieldTokenValue, yieldTokenDecimals)
-      : BigNumber.from(0);
-  const confirmButtonDisabled = getConfirmButtonDisabled(
-    account,
-    interestTokenAmountBigNumber
+  const yieldTokenValueBN = parseUnits(
+    yieldTokenValue || "0",
+    yieldTokenDecimals
   );
 
   const {
@@ -98,12 +90,25 @@ export function RedeemYieldTokensDrawer({
     signer,
     tranche,
     account,
-    interestTokenAmountBigNumber,
+    yieldTokenValueBN,
     baseAsset,
     onClose
   );
 
-  const buttonIntent = isError ? Intent.DANGER : Intent.PRIMARY;
+  const confirmButtonLabel = getConfirmButtonLabel(
+    account,
+    yieldTokenValueBN,
+    yieldTokenBalanceOf
+  );
+  const confirmButtonDisabled = getConfirmButtonDisabled(
+    account,
+    yieldTokenValueBN,
+    yieldTokenBalanceOf
+  );
+  let buttonIntent = isError ? Intent.DANGER : Intent.PRIMARY;
+  if (yieldTokenBalanceOf && yieldTokenValueBN.gt(yieldTokenBalanceOf)) {
+    buttonIntent = Intent.DANGER;
+  }
 
   const onCloseDrawer = useCallback(() => {
     setYieldTokenValue("");
@@ -122,6 +127,7 @@ export function RedeemYieldTokensDrawer({
           onSetMaxAmount={onSetMaxAmount}
           heading={t`Redeem ${baseAssetSymbol} Yield Tokens`}
           tranche={tranche}
+          intent={buttonIntent}
           amount={yieldTokenValue}
           assetSymbol={t`${baseAssetSymbol} Yield Token`}
           onAmountChange={setYieldTokenValue}
@@ -192,9 +198,17 @@ function useRedeemYieldTokens(
   return redeemYield;
 }
 
-function getConfirmButtonLabel(account: string | null | undefined) {
+function getConfirmButtonLabel(
+  account: string | null | undefined,
+  amountIn: BigNumber | undefined,
+  balanceOf: BigNumber | undefined
+) {
   if (!account) {
     return t`Connect your wallet to continue`;
+  }
+
+  if (amountIn && balanceOf && amountIn.gt(balanceOf)) {
+    return t`Insufficient balance`;
   }
 
   return t`Confirm transaction`;
@@ -202,7 +216,8 @@ function getConfirmButtonLabel(account: string | null | undefined) {
 
 function getConfirmButtonDisabled(
   account: string | null | undefined,
-  amountIn: BigNumber | undefined
+  amountIn: BigNumber | undefined,
+  balanceOf: BigNumber | undefined
 ) {
   // must be connected to click this button
   if (!account) {
@@ -210,7 +225,11 @@ function getConfirmButtonDisabled(
   }
 
   // disabled when no amount is entered
-  if (!amountIn) {
+  if (!amountIn || !balanceOf) {
+    return true;
+  }
+
+  if (amountIn.gt(balanceOf)) {
     return true;
   }
 

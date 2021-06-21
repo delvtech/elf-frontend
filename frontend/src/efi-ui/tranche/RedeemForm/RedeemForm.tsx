@@ -1,6 +1,12 @@
 import { ChangeEvent, ReactElement, useCallback } from "react";
 
-import { Button, Callout, Divider, InputGroup } from "@blueprintjs/core";
+import {
+  Button,
+  Callout,
+  Divider,
+  InputGroup,
+  Intent,
+} from "@blueprintjs/core";
 import classNames from "classnames";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { t } from "ttag";
@@ -15,6 +21,7 @@ import styles from "./styles.module.css";
 interface RedeemFormProps {
   tranche: Tranche;
   amount: string;
+  intent?: Intent;
   /**
    * If provided, this will render a MAX button
    */
@@ -42,6 +49,7 @@ export function RedeemForm({
   assetSymbol: assetSymbolFromProps,
   assetIcon: AssetIcon,
   amount,
+  intent,
   heading = t`Redeem`,
   onAmountChange,
   onSetMaxAmount,
@@ -65,6 +73,7 @@ export function RedeemForm({
           <InputGroup
             large
             fill
+            intent={intent}
             placeholder="0.00"
             disabled={!onAmountChange}
             onChange={onAssetOneAmountChange}
@@ -88,6 +97,7 @@ export function RedeemForm({
             <Button
               className={tw("flex-shrink-0")}
               outlined
+              intent={Intent.PRIMARY}
               onClick={onSetMaxAmount}
             >{t`MAX`}</Button>
           ) : null}

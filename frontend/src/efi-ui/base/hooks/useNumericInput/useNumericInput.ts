@@ -63,6 +63,11 @@ export function useNumericInput(
         return;
       }
 
+      // if user leads with a '.'
+      if (inputString === ".") {
+        setStringValueState("0.");
+      }
+
       // or validate and set it
       if (validateInput(inputString, min, max, maxPrecision)) {
         setStringValueState(inputString);

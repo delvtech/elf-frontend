@@ -63,21 +63,16 @@ export function RedeemPrincipalTokensDrawer({
     });
 
   const tranche = trancheContractsByAddress[principalTokenInfo.address];
-  const { data: accountTrancheBalance } = useTokenBalanceOf(tranche, account);
+  const { data: principalTokenBalanceOf } = useTokenBalanceOf(tranche, account);
   const onSetMaxAmount = useCallback(() => {
     setPrincipalTokenValue(
-      formatUnits(accountTrancheBalance ?? 0, principalTokenDecimals)
+      formatUnits(principalTokenBalanceOf ?? 0, principalTokenDecimals)
     );
-  }, [accountTrancheBalance, setPrincipalTokenValue, principalTokenDecimals]);
+  }, [principalTokenBalanceOf, setPrincipalTokenValue, principalTokenDecimals]);
 
-  const confirmButtonLabel = getConfirmButtonLabel(account);
-  const trancheAmountBigNumber =
-    principalTokenValue && principalTokenDecimals
-      ? parseUnits(principalTokenValue, principalTokenDecimals)
-      : undefined;
-  const confirmButtonDisabled = getConfirmButtonDisabled(
-    account,
-    trancheAmountBigNumber
+  const principalTokenValueBN = parseUnits(
+    principalTokenValue || "0",
+    principalTokenDecimals
   );
 
   const {
@@ -89,12 +84,30 @@ export function RedeemPrincipalTokensDrawer({
     signer,
     tranche,
     account,
-    trancheAmountBigNumber,
+    principalTokenValueBN,
     baseAsset,
     onClose
   );
 
-  const buttonIntent = isError ? Intent.DANGER : Intent.PRIMARY;
+  const confirmButtonLabel = getConfirmButtonLabel(
+    account,
+    principalTokenValueBN,
+    principalTokenBalanceOf
+  );
+
+  const confirmButtonDisabled = getConfirmButtonDisabled(
+    account,
+    principalTokenValueBN,
+    principalTokenBalanceOf
+  );
+
+  let buttonIntent = isError ? Intent.DANGER : Intent.PRIMARY;
+  if (
+    principalTokenBalanceOf &&
+    principalTokenValueBN.gt(principalTokenBalanceOf)
+  ) {
+    buttonIntent = Intent.DANGER;
+  }
 
   const onCloseDrawer = useCallback(() => {
     setPrincipalTokenValue("");
@@ -114,6 +127,7 @@ export function RedeemPrincipalTokensDrawer({
           heading={t`Redeem ${baseAssetSymbol} Principal Tokens`}
           tranche={tranche}
           amount={principalTokenValue}
+          intent={buttonIntent}
           assetSymbol={t`${baseAssetSymbol} Principal Token`}
           assetIcon={baseAssetIcon}
           onAmountChange={setPrincipalTokenValue}
@@ -185,9 +199,17 @@ function useRedeemPrincipalTokens(
   return withdrawPrincipal;
 }
 
-function getConfirmButtonLabel(account: string | null | undefined) {
+function getConfirmButtonLabel(
+  account: string | null | undefined,
+  amountIn: BigNumber | undefined,
+  balanceOf: BigNumber | undefined
+) {
   if (!account) {
     return t`Connect your wallet to continue`;
+  }
+
+  if (amountIn && balanceOf && amountIn.gt(balanceOf)) {
+    return t`Insufficient balance`;
   }
 
   return t`Confirm transaction`;
@@ -195,7 +217,8 @@ function getConfirmButtonLabel(account: string | null | undefined) {
 
 function getConfirmButtonDisabled(
   account: string | null | undefined,
-  amountIn: BigNumber | undefined
+  amountIn: BigNumber | undefined,
+  balanceOf: BigNumber | undefined
 ) {
   // must be connected to click this button
   if (!account) {
@@ -203,7 +226,11 @@ function getConfirmButtonDisabled(
   }
 
   // disabled when no amount is entered
-  if (!amountIn) {
+  if (!amountIn || !balanceOf) {
+    return true;
+  }
+
+  if (amountIn.gt(balanceOf)) {
     return true;
   }
 
