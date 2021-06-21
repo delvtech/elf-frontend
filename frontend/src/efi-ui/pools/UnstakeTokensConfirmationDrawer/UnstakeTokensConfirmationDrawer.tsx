@@ -73,7 +73,7 @@ export function UnstakeConfirmationDrawer({
       transactionSuccess={isUnstakeSuccess}
       transactionFailed={isUnstakeError}
       confirmButtonDisabled={false}
-      buttonLabel={t`Stake`}
+      buttonLabel={t`Unstake`}
       isOpen={isOpen}
       onClose={onClose}
       onConfirmTransaction={onUnstake}
@@ -85,7 +85,7 @@ export function UnstakeConfirmationDrawer({
           assetTwoSymbol={termAssetSymbol as string}
           assetOneSymbolLabel={baseAssetSymbolLabel}
           assetTwoSymbolLabel={termAssetSymbolLabel as string}
-          heading={t`Confirm Staking`}
+          heading={t`Confirm Unstake`}
           assetOneIcon={baseAssetIcon}
           assetTwoIcon={termAssetIcon}
           assetOneValueLabel={baseAssetValue}

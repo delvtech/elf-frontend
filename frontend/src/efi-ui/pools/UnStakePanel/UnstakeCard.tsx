@@ -1,34 +1,38 @@
-import { ReactElement } from "react";
+import { ReactElement, useCallback, useState } from "react";
 
+import { Button, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
-import { AbstractConnector } from "@web3-react/abstract-connector";
-import { BigNumber } from "ethers";
+import { ConvergentCurvePool, WeightedPool } from "elf-contracts/types";
+import { BigNumber, Signer } from "ethers";
 import { formatEther, formatUnits, parseUnits } from "ethers/lib/utils";
 import zipObject from "lodash.zipobject";
+import { PrincipalTokenInfo, YieldTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
+import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
 import tw from "efi-tailwindcss-classnames";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { UnstakeConvergentCurvePoolButton } from "efi-ui/pools/UnstakeButton/UnstakeConvergentCurvePoolButton";
-import { UnstakeWeightedPoolButton } from "efi-ui/pools/UnstakeButton/UnstakeWeightedPoolButton";
 import { UnstakeInput } from "efi-ui/pools/UnstakeInput/UnstakeInput";
+import { UnstakeConfirmationDrawer } from "efi-ui/pools/UnstakeTokensConfirmationDrawer/UnstakeTokensConfirmationDrawer";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useShareOfPool } from "efi-ui/pools/useShareOfPool";
+import { useExitConvergentCurvePool } from "efi-ui/pools/useUnstake/useExitConvergentCurvePool";
+import { useExitWeightedPool } from "efi-ui/pools/useUnstake/useExitWeightedPool";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { ElementIcon } from "efi-ui/token/TokenIcon";
+import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
 import { formatPercent } from "efi/base/formatPercent";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
-import { getPoolTokens } from "efi/pools/getPoolTokens";
-import { isConvergentCurvePool, isWeightedPool } from "efi/pools/PoolContract";
-import { PoolInfo } from "efi/pools/PoolInfo";
-import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
 import { getPoolContract } from "efi/pools/getPoolContract";
+import { getPoolTokens } from "efi/pools/getPoolTokens";
+import { PoolInfo } from "efi/pools/PoolInfo";
+import { isYieldPool } from "efi/pools/weightedPool";
 
 interface UnstakeCardProps {
+  signer: Signer | undefined;
   library: Web3Provider | undefined;
-  connector: AbstractConnector | undefined;
   account: string | null | undefined;
   poolInfo: PoolInfo;
 }
@@ -43,15 +47,32 @@ const calloutClassName = tw(
 );
 
 export function UnstakeCard({
+  signer,
   library,
   account,
-  connector,
   poolInfo,
 }: UnstakeCardProps): ReactElement {
+  // local state
+  const [isWalletDialogOpen, setWalletDialogOpen] = useState(false);
+  const [isDrawerOpen, setDrawerOpen] = useState(false);
+
+  // handlers
+  const openDrawer = useCallback(() => setDrawerOpen(true), []);
+  const closeDrawer = useCallback(() => setDrawerOpen(false), []);
+  const onClickButton = useCallback(() => {
+    if (!account) {
+      return setWalletDialogOpen(true);
+    }
+    openDrawer();
+  }, [account, openDrawer]);
+
+  const { stringValue: unstakeValue, setValue: setUnstakeValue } =
+    useNumericInput();
+  const unstakeFromPool = useExitPool(signer, account, poolInfo, unstakeValue);
+
   const pool = getPoolContract(poolInfo.address);
   // base asset
-  const { baseAssetContract, baseAssetInfo, termAssetInfo } =
-    getPoolTokens(poolInfo);
+  const { baseAssetInfo, termAssetInfo } = getPoolTokens(poolInfo);
   const symbol = `ELF:${baseAssetInfo.symbol}-${termAssetInfo.symbol}`;
   const { decimals: baseAssetDecimals } = baseAssetInfo;
   const baseAssetCryptoAsset = getCryptoAssetForToken(baseAssetInfo.address);
@@ -70,7 +91,7 @@ export function UnstakeCard({
     shareOfPool,
     addresses,
     poolBalances,
-    baseAssetContract?.address,
+    baseAssetInfo.address,
     baseAssetDecimals
   );
 
@@ -89,10 +110,8 @@ export function UnstakeCard({
     ? `${termAssetLiquidity?.toFixed(4)}`
     : "0.0000";
 
-  const { stringValue, setValue } = useNumericInput();
-
   const valueBN = parseUnits(
-    stringValue || "0",
+    unstakeValue || "0",
     BALANCER_POOL_LP_TOKEN_DECIMALS
   );
 
@@ -123,8 +142,8 @@ export function UnstakeCard({
         cryptoBalanceOf={lpBalanceOf}
         cryptoDisplayBalance={lpDisplayBalance || ""}
         disabled={balanceIsZero}
-        onChange={setValue}
-        value={stringValue}
+        onChange={setUnstakeValue}
+        value={unstakeValue}
         validValue={isValidValue}
       />
       <div className={calloutClassName}>
@@ -154,27 +173,42 @@ export function UnstakeCard({
         />
       </div>
 
-      {/* Quick Actions */}
-      {isConvergentCurvePool(pool) && (
-        <UnstakeConvergentCurvePoolButton
-          account={account}
-          connector={connector}
-          library={library}
-          pool={pool}
-          amount={stringValue}
-          disabled={disableUnstake}
-        />
-      )}
-      {isWeightedPool(pool) && (
-        <UnstakeWeightedPoolButton
-          account={account}
-          connector={connector}
-          library={library}
-          pool={pool}
-          amount={stringValue}
-          disabled={disableUnstake}
-        />
-      )}
+      <Button
+        className={tw("w-full")}
+        disabled={disableUnstake}
+        onClick={onClickButton}
+        minimal
+        large
+        outlined
+        intent={Intent.PRIMARY}
+      >
+        {t`Unstake`}
+      </Button>
+      <UnstakeConfirmationDrawer
+        library={library}
+        account={account}
+        baseAssetInfo={baseAssetInfo}
+        termAssetInfo={termAssetInfo as PrincipalTokenInfo | YieldTokenInfo}
+        baseAssetValue={"0"}
+        termAssetValue={"0"}
+        lpTokensIn={"0"}
+        isOpen={isDrawerOpen}
+        isUnstakeLoading={
+          false
+          // isPrincipalPoolType ? isJoinCCPoolLoading : isJoinWPoolLoading
+        }
+        isUnstakeError={
+          false
+          // isPrincipalPoolType ? isJoinCCPoolError : isJoinWPoolError
+        }
+        isUnstakeSuccess={
+          false
+          // isPrincipalPoolType ? isJoinCCPoolSuccess : isJoinWPoolSuccess
+        }
+        onClose={closeDrawer}
+        onUnstake={unstakeFromPool}
+      />
+      <ConnectWalletDialog isOpen={isWalletDialogOpen} onClose={closeDrawer} />
     </div>
   );
 }
@@ -211,4 +245,30 @@ function getShareOfPoolLabel(shareOfPool: number | undefined) {
   }
 
   return formatPercent(shareOfPool, 2);
+}
+
+function useExitPool(
+  signer: Signer | undefined,
+  account: string | null | undefined,
+  poolInfo: PoolInfo,
+  amount: string
+) {
+  const principalPool = getPoolContract(
+    poolInfo.address
+  ) as ConvergentCurvePool;
+  const exitPrincipalPool = useExitConvergentCurvePool(
+    signer,
+    account,
+    principalPool,
+    amount
+  );
+
+  const yieldPool = getPoolContract(poolInfo.address) as WeightedPool;
+  const exitYieldPool = useExitWeightedPool(signer, account, yieldPool, amount);
+
+  if (isYieldPool(poolInfo)) {
+    return exitYieldPool;
+  }
+
+  return exitPrincipalPool;
 }
