@@ -1,11 +1,12 @@
 import { ReactElement, useState } from "react";
 
-import { Callout, Card, H4, Intent, Tab, Tabs } from "@blueprintjs/core";
+import { Card, Tab, Tabs } from "@blueprintjs/core";
 import { Serie } from "@nivo/line";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LineChart } from "efi-ui/charts/LineChart/LineChart";
+import { ChartMessages } from "efi-ui/pools/PoolCharts/ChartMessagesProps";
 import { useVolumeHistoryForPool } from "efi-ui/pools/PoolCharts/useLiquidityVolumeHistoryForPool";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import {
@@ -49,27 +50,11 @@ export function PoolCharts({ poolInfo }: PoolChartsProps): ReactElement {
     poolAtLeastOneDayOld,
   } = usePoolCharts(pool);
 
-  const filteredLiquidityData =
-    liquidityData?.filter(
-      (datum) => datum.value >= 0 && datum.timeMs > weekAgoMs
-    ) ?? [];
-
-  const paddedLiquidityData = padLiquidityData(
-    filteredLiquidityData,
-    totalLiquidity
+  const { liquiditySerie, volumeSerie } = convertChartDatasToSeries(
+    liquidityData,
+    totalLiquidity,
+    volumeData
   );
-
-  const filteredVolumeData =
-    volumeData?.filter(
-      (datum) => datum.value >= 0 && datum.timeMs > weekAgoMs
-    ) ?? [];
-  const paddedVolumeData = padVolumeData(filteredVolumeData);
-
-  const liquiditySerie = convertTimeDataToSerie(
-    paddedLiquidityData,
-    "liquidity"
-  );
-  const volumeSerie = convertTimeDataToSerie(paddedVolumeData, "volume");
 
   return (
     <div
@@ -160,41 +145,33 @@ function usePoolAtLeastOneDayOld(poolInfo: PoolInfo) {
   return hasEnoughPoolData;
 }
 
-interface ChartMessagesProps {
-  poolAtLeastOneDayOld: boolean;
-  hasData: boolean;
-  children: ReactElement | null;
-}
+function convertChartDatasToSeries(
+  liquidityData: TimeData[] | undefined,
+  totalLiquidity: number,
+  volumeData: TimeData[] | undefined
+) {
+  const filteredLiquidityData =
+    liquidityData?.filter(
+      (datum) => datum.value >= 0 && datum.timeMs > weekAgoMs
+    ) ?? [];
 
-function ChartMessages(props: ChartMessagesProps): ReactElement {
-  const { poolAtLeastOneDayOld, hasData, children } = props;
+  const paddedLiquidityData = padLiquidityData(
+    filteredLiquidityData,
+    totalLiquidity
+  );
 
-  let message = t`No data available for chart`;
-  if (!poolAtLeastOneDayOld) {
-    message = t`Charts available after 24 hours of activity`;
-  }
+  const filteredVolumeData =
+    volumeData?.filter(
+      (datum) => datum.value >= 0 && datum.timeMs > weekAgoMs
+    ) ?? [];
+  const paddedVolumeData = padVolumeData(filteredVolumeData);
 
-  if (!poolAtLeastOneDayOld || !hasData) {
-    return (
-      <div className={tw("w-full", "h-full", "pt-8")}>
-        <Callout
-          icon={null}
-          className={tw(
-            "flex",
-            "items-center",
-            "justify-center",
-            "h-full",
-            "w-full"
-          )}
-          intent={Intent.NONE}
-        >
-          <H4>{message}</H4>
-        </Callout>
-      </div>
-    );
-  }
-
-  return <div className={tw("w-full", "h-full")}>{children}</div>;
+  const liquiditySerie = convertTimeDataToSerie(
+    paddedLiquidityData,
+    "liquidity"
+  );
+  const volumeSerie = convertTimeDataToSerie(paddedVolumeData, "volume");
+  return { liquiditySerie, volumeSerie };
 }
 
 function convertTimeDataToSerie(timeData: TimeData[], id: string): Serie[] {
