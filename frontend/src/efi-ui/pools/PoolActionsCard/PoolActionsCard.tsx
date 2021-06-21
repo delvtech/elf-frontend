@@ -8,7 +8,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { StakingPanel } from "efi-ui/pools/StakingPanel/StakingPanel";
-import { UnstakePanel } from "efi-ui/pools/UnstakePanel/UnstakePanel";
+import { UnstakePanel } from "efi-ui/pools/UnstakePanel/UnstakingPanel";
 import {
   PoolAction,
   usePoolViewPoolActionsTab,
