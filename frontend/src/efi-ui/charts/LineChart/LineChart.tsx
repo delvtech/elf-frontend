@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import { ReactElement, ReactNode } from "react";
 
 import { Colors } from "@blueprintjs/core";
 import { AxisProps, GridValues } from "@nivo/axes";
@@ -30,9 +30,10 @@ const axisBottom: AxisProps = {
 
 export interface LineChartProps {
   chartType: "lines" | "bars";
-  dataLabel: string;
+  dataLabel: ReactNode;
   darkMode?: boolean;
   data: Serie[];
+  formatYValues: (value: number) => string;
 }
 
 const now = new Date();
@@ -43,6 +44,7 @@ export function LineChart({
   dataLabel,
   darkMode,
   data,
+  formatYValues,
 }: LineChartProps): ReactElement {
   const { dataColor, textColor, tooltipBackground, tooltipColor } =
     getColors(darkMode);
@@ -100,6 +102,7 @@ export function LineChart({
           tickPadding: 5,
           tickRotation: 0,
           legend: dataLabel,
+          format: formatYValues,
           legendOffset: -60,
           legendPosition: "middle",
         }}

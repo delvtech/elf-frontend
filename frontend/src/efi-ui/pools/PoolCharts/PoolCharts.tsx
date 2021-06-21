@@ -1,7 +1,9 @@
-import { ReactElement, useState } from "react";
+import { ReactElement, useCallback, useState } from "react";
 
 import { Card, Tab, Tabs } from "@blueprintjs/core";
 import { Serie } from "@nivo/line";
+import { format } from "d3-format";
+import { commify } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -54,6 +56,16 @@ export function PoolCharts({ poolInfo }: PoolChartsProps): ReactElement {
     volumeData
   );
 
+  const { currency } = useCurrencyPref();
+  const formatYValues = useCallback((value: number) => {
+    const f = format(".2s");
+
+    if (value > 10000) {
+      return f(value);
+    }
+
+    return commify(value);
+  }, []);
   return (
     <div
       className={tw("flex", "flex-1", "h-500")}
@@ -85,9 +97,10 @@ export function PoolCharts({ poolInfo }: PoolChartsProps): ReactElement {
                 <LineChart
                   key={isDarkMode ? "darkline" : "lightline"}
                   chartType="lines"
-                  dataLabel={""}
+                  dataLabel={`(${currency.symbol_native})`}
                   darkMode={isDarkMode}
                   data={liquiditySerie}
+                  formatYValues={formatYValues}
                 />
               </ChartMessages>
             ) : null}
@@ -96,9 +109,10 @@ export function PoolCharts({ poolInfo }: PoolChartsProps): ReactElement {
                 <LineChart
                   key={isDarkMode ? "darkbar" : "lightbar"}
                   chartType="bars"
-                  dataLabel={""}
+                  dataLabel={`(${currency.symbol_native})`}
                   darkMode={isDarkMode}
                   data={volumeSerie}
+                  formatYValues={formatYValues}
                 />
               </ChartMessages>
             ) : null}
