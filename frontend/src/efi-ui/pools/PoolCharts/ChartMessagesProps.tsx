@@ -1,22 +1,27 @@
 import { ReactElement } from "react";
+
 import { Callout, H4, Intent } from "@blueprintjs/core";
 import { t } from "ttag";
+
 import tw from "efi-tailwindcss-classnames";
+import { ONE_DAY_IN_SECONDS } from "efi/base/time";
 
 interface ChartMessagesProps {
-  poolAtLeastOneDayOld: boolean;
+  poolAgeInSeconds: number;
   hasData: boolean;
   children: ReactElement | null;
 }
 export function ChartMessages(props: ChartMessagesProps): ReactElement {
-  const { poolAtLeastOneDayOld, hasData, children } = props;
+  const { poolAgeInSeconds, hasData, children } = props;
 
-  let message = t`No data available for chart`;
-  if (!poolAtLeastOneDayOld) {
+  let message = "";
+  if (poolAgeInSeconds < ONE_DAY_IN_SECONDS) {
     message = t`Charts available after 24 hours of activity`;
+  } else if (poolAgeInSeconds > ONE_DAY_IN_SECONDS && !hasData) {
+    message = t`No data available for chart`;
   }
 
-  if (!poolAtLeastOneDayOld || !hasData) {
+  if (!poolAgeInSeconds || !hasData) {
     return (
       <div className={tw("w-full", "h-full", "pt-8")}>
         <Callout

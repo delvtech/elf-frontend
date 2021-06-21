@@ -9,13 +9,8 @@ import { LineChart } from "efi-ui/charts/LineChart/LineChart";
 import { ChartMessages } from "efi-ui/pools/PoolCharts/ChartMessagesProps";
 import { useVolumeHistoryForPool } from "efi-ui/pools/PoolCharts/useLiquidityVolumeHistoryForPool";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import {
-  ONE_DAY_IN_SECONDS,
-  ONE_WEEK_IN_MILLISECONDS,
-  ONE_WEEK_IN_SECONDS,
-} from "efi/base/time";
+import { ONE_WEEK_IN_MILLISECONDS, ONE_WEEK_IN_SECONDS } from "efi/base/time";
 import { getPoolContract } from "efi/pools/getPoolContract";
-import { PoolContract } from "efi/pools/PoolContract";
 import { PoolInfo } from "efi/pools/PoolInfo";
 
 import { useLiquidityHistoryForPool } from "./useLiquidityHistoryForPool";
@@ -37,7 +32,6 @@ interface PoolChartsProps {
   poolInfo: PoolInfo;
 }
 export function PoolCharts({ poolInfo }: PoolChartsProps): ReactElement {
-  const pool = getPoolContract(poolInfo.address);
   const totalLiquidity = useTotalLiquidity(poolInfo);
 
   const { isDarkMode } = useDarkMode();
@@ -47,8 +41,8 @@ export function PoolCharts({ poolInfo }: PoolChartsProps): ReactElement {
     setChart,
     showLiquidityChart,
     showVolumeChart,
-    poolAtLeastOneDayOld,
-  } = usePoolCharts(pool);
+    poolAge,
+  } = usePoolCharts(poolInfo);
 
   const { liquiditySerie, volumeSerie } = convertChartDatasToSeries(
     liquidityData,
@@ -83,10 +77,7 @@ export function PoolCharts({ poolInfo }: PoolChartsProps): ReactElement {
           </div>
           <div className={tw("w-full", "h-full", "pt-8")}>
             {showLiquidityChart ? (
-              <ChartMessages
-                poolAtLeastOneDayOld={poolAtLeastOneDayOld}
-                hasData={true}
-              >
+              <ChartMessages poolAgeInSeconds={poolAge} hasData={true}>
                 <LineChart
                   key={isDarkMode ? "darkline" : "lightline"}
                   chartType="lines"
@@ -97,10 +88,7 @@ export function PoolCharts({ poolInfo }: PoolChartsProps): ReactElement {
               </ChartMessages>
             ) : null}
             {showVolumeChart ? (
-              <ChartMessages
-                poolAtLeastOneDayOld={poolAtLeastOneDayOld}
-                hasData={true}
-              >
+              <ChartMessages poolAgeInSeconds={poolAge} hasData={true}>
                 <LineChart
                   key={isDarkMode ? "darkbar" : "lightbar"}
                   chartType="bars"
@@ -116,8 +104,9 @@ export function PoolCharts({ poolInfo }: PoolChartsProps): ReactElement {
     </div>
   );
 }
-function usePoolCharts(pool: PoolContract) {
-  const poolAtLeastOneDayOld = usePoolAtLeastOneDayOld(pool);
+function usePoolCharts(poolInfo: PoolInfo) {
+  const pool = getPoolContract(poolInfo.address);
+  const poolAge = getPoolAge(poolInfo);
 
   const liquidityData = useLiquidityHistoryForPool(pool, ONE_WEEK_IN_SECONDS);
   const volumeData = useVolumeHistoryForPool(pool, ONE_WEEK_IN_SECONDS);
@@ -126,7 +115,7 @@ function usePoolCharts(pool: PoolContract) {
   const showLiquidityChart = activeChart === ChartType.LIQUIDITY;
   const showVolumeChart = activeChart === ChartType.VOLUME;
   return {
-    poolAtLeastOneDayOld,
+    poolAge,
     liquidityData,
     volumeData,
     activeChart,
@@ -136,13 +125,12 @@ function usePoolCharts(pool: PoolContract) {
   };
 }
 
-function usePoolAtLeastOneDayOld(poolInfo: PoolInfo) {
+function getPoolAge(poolInfo: PoolInfo) {
   const nowInSeconds = Math.floor(nowInMs / 1000);
   const poolCreatedAt = poolInfo.extensions.createdAtTimestamp;
 
   const poolAge = nowInSeconds - poolCreatedAt;
-  const hasEnoughPoolData = poolAge >= ONE_DAY_IN_SECONDS;
-  return hasEnoughPoolData;
+  return poolAge;
 }
 
 function convertChartDatasToSeries(
