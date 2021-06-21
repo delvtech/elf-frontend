@@ -257,7 +257,7 @@ export function PrincipalTokenCard(
         <RedeemPrincipalTokensButton
           library={library}
           account={account}
-          tranche={tranche}
+          principalTokenInfo={principalTokenInfo}
           baseAsset={baseAsset}
         />
         <GoToPoolButton

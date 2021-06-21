@@ -243,7 +243,7 @@ export function YieldTokenCard({
         <ButtonGroup className={tw("space-x-6")}>
           <RedeemYieldTokensButton
             account={account}
-            tranche={trancheContract}
+            yieldTokenInfo={yieldTokenInfo}
             library={library}
             baseAsset={baseAsset}
           />

@@ -2,32 +2,33 @@ import { ReactElement, useCallback } from "react";
 
 import { Button, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
-import { Tranche } from "elf-contracts/types/Tranche";
-import { BigNumber, Signer } from "ethers";
+import { BigNumber } from "ethers";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
+import { PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
-import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
+import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
+import { useSigner } from "efi-ui/provider/useBlockFromTag/useSigner/useSigner";
+import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { RedeemForm } from "efi-ui/tranche/RedeemForm/RedeemForm";
+import { useRedeemTermAssetsToEth } from "efi-ui/userProxy/useRedeemTermAssetsToEth";
 import { WalletDrawer } from "efi-ui/wallets/WalletDrawer/WalletDrawer";
-import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
+import { convertEpochSecondsToDate2 } from "efi/base/convertEpochSecondsToDate";
 import { formatFullDate } from "efi/base/dates";
 import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { trancheContractsByAddress } from "efi/tranche/tranches";
 
 import { useWithdrawPrincipal } from "./useWithdrawPrincipal";
-import { useRedeemTermAssetsToEth } from "efi-ui/userProxy/useRedeemTermAssetsToEth";
-import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 
 interface RedeemPrincipalTokensDrawerProps {
   account: string | null | undefined;
   library: Web3Provider | undefined;
   baseAsset: CryptoAsset;
-  tranche: Tranche | undefined;
+  principalTokenInfo: PrincipalTokenInfo;
   isOpen: boolean;
   onClose: () => void;
 }
@@ -36,22 +37,20 @@ export function RedeemPrincipalTokensDrawer({
   library,
   account,
   baseAsset,
-  tranche,
+  principalTokenInfo,
   isOpen,
   onClose,
 }: RedeemPrincipalTokensDrawerProps): ReactElement {
-  const signer = account ? (library?.getSigner(account) as Signer) : undefined;
+  const signer = useSigner(account, library);
 
   // base asset calls
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
+  const baseAssetIcon = findAssetIcon2(baseAsset);
 
   // tranche calls
-  const { data: trancheDecimals } = useTokenDecimals(tranche);
-  const { data: trancheUnlockTimestamp } = useSmartContractReadCall(
-    tranche,
-    "unlockTimestamp"
-  );
-  const unlockTimestampDate = convertEpochSecondsToDate(trancheUnlockTimestamp);
+  const { decimals: principalTokenDecimals } = principalTokenInfo;
+  const { unlockTimestamp } = principalTokenInfo.extensions;
+  const unlockTimestampDate = convertEpochSecondsToDate2(unlockTimestamp);
   const unlockTimestampLabel = unlockTimestampDate
     ? formatFullDate(unlockTimestampDate)
     : undefined;
@@ -59,20 +58,21 @@ export function RedeemPrincipalTokensDrawer({
   const { stringValue: trancheAmountString, setValue: setTrancheAmountString } =
     useNumericInput({
       min: 0,
-      maxPrecision: trancheDecimals ?? 18,
+      maxPrecision: principalTokenDecimals ?? 18,
     });
 
+  const tranche = trancheContractsByAddress[principalTokenInfo.address];
   const { data: accountTrancheBalance } = useTokenBalanceOf(tranche, account);
   const onSetMaxAmount = useCallback(() => {
     setTrancheAmountString(
-      formatUnits(accountTrancheBalance ?? 0, trancheDecimals)
+      formatUnits(accountTrancheBalance ?? 0, principalTokenDecimals)
     );
-  }, [accountTrancheBalance, setTrancheAmountString, trancheDecimals]);
+  }, [accountTrancheBalance, setTrancheAmountString, principalTokenDecimals]);
 
   const confirmButtonLabel = getConfirmButtonLabel(account);
   const trancheAmountBigNumber =
-    trancheAmountString && trancheDecimals
-      ? parseUnits(trancheAmountString, trancheDecimals)
+    trancheAmountString && principalTokenDecimals
+      ? parseUnits(trancheAmountString, principalTokenDecimals)
       : undefined;
   const confirmButtonDisabled = getConfirmButtonDisabled(
     account,
@@ -115,6 +115,7 @@ export function RedeemPrincipalTokensDrawer({
           tranche={tranche}
           amount={trancheAmountString}
           assetSymbol={t`${baseAssetSymbol} Principal Token`}
+          assetIcon={baseAssetIcon}
           onAmountChange={setTrancheAmountString}
         >
           <div className={tw("flex", "flex-col", "space-y-6", "items-center")}>
