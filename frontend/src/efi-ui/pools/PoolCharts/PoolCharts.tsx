@@ -8,13 +8,16 @@ import tw from "efi-tailwindcss-classnames";
 import { LineChart } from "efi-ui/charts/LineChart/LineChart";
 import { ChartMessages } from "efi-ui/pools/PoolCharts/ChartMessagesProps";
 import { useVolumeHistoryForPool } from "efi-ui/pools/PoolCharts/useLiquidityVolumeHistoryForPool";
+import { useTotalFiatLiquidity } from "efi-ui/pools/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
+import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
+import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
 import { ONE_WEEK_IN_MILLISECONDS, ONE_WEEK_IN_SECONDS } from "efi/base/time";
 import { getPoolContract } from "efi/pools/getPoolContract";
+import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolInfo } from "efi/pools/PoolInfo";
 
 import { useLiquidityHistoryForPool } from "./useLiquidityHistoryForPool";
-import { useTotalLiquidity } from "./useTotalLiquidity";
 
 const nowInMs = Date.now();
 const weekAgoMs = nowInMs - ONE_WEEK_IN_MILLISECONDS;
@@ -32,7 +35,8 @@ interface PoolChartsProps {
   poolInfo: PoolInfo;
 }
 export function PoolCharts({ poolInfo }: PoolChartsProps): ReactElement {
-  const totalLiquidity = useTotalLiquidity(poolInfo);
+  const totalFiatLiquidity = useTotalFiatLiquidity(poolInfo);
+  const totalLiquidity = totalFiatLiquidity?.toDecimal() ?? 0;
 
   const { isDarkMode } = useDarkMode();
   const {
@@ -110,14 +114,26 @@ function usePoolCharts(poolInfo: PoolInfo) {
 
   const liquidityData = useLiquidityHistoryForPool(pool, ONE_WEEK_IN_SECONDS);
   const volumeData = useVolumeHistoryForPool(pool, ONE_WEEK_IN_SECONDS);
+  const { currency } = useCurrencyPref();
+  const { baseAssetContract } = getPoolTokens(poolInfo);
+  const [baseAssetPrice] = useTokenPrice(baseAssetContract, currency);
+  const fiatPrice = baseAssetPrice?.toDecimal() ?? 1;
+  const liquidityFiatData = liquidityData?.map(({ value, timeMs }) => ({
+    value: fiatPrice * value,
+    timeMs,
+  }));
+  const volumeFiatData = volumeData?.map(({ value, timeMs }) => ({
+    value: fiatPrice * value,
+    timeMs,
+  }));
 
   const [activeChart, setChart] = useState(ChartType.LIQUIDITY);
   const showLiquidityChart = activeChart === ChartType.LIQUIDITY;
   const showVolumeChart = activeChart === ChartType.VOLUME;
   return {
     poolAge,
-    liquidityData,
-    volumeData,
+    liquidityData: liquidityFiatData,
+    volumeData: volumeFiatData,
     activeChart,
     setChart,
     showLiquidityChart,
