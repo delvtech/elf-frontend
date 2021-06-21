@@ -2,7 +2,8 @@ import { ReactElement, useCallback } from "react";
 
 import { Button, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
-import { BigNumber } from "ethers";
+import { Tranche } from "elf-contracts/types";
+import { BigNumber, Signer } from "ethers";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
 import {
   PrincipalTokenInfo as TrancheInfo,
@@ -94,28 +95,13 @@ export function RedeemYieldTokensDrawer({
     interestTokenAmountBigNumber
   );
 
-  const withdrawInterest = useWithdrawInterest(
+  const redeemYieldTokens = useRedeemYieldTokens(
     signer,
     tranche,
     account,
-    interestTokenAmountBigNumber
+    interestTokenAmountBigNumber,
+    baseAsset
   );
-
-  const withdrawToEth = useRedeemTermAssetsToEth(
-    signer,
-    tranche,
-    account,
-    BigNumber.from(0),
-    interestTokenAmountBigNumber
-  );
-
-  const redeemYieldTokens = useCallback(() => {
-    if (baseAsset.type === CryptoAssetType.ETHEREUM) {
-      withdrawToEth();
-    } else {
-      withdrawInterest();
-    }
-  }, [baseAsset.type, withdrawInterest, withdrawToEth]);
 
   return (
     <WalletDrawer
@@ -159,6 +145,38 @@ export function RedeemYieldTokensDrawer({
       </div>
     </WalletDrawer>
   );
+}
+
+function useRedeemYieldTokens(
+  signer: Signer | undefined,
+  tranche: Tranche,
+  account: string | null | undefined,
+  interestTokenAmountBigNumber: BigNumber,
+  baseAsset: CryptoAsset
+) {
+  const { withdraw: withdrawInterest } = useWithdrawInterest(
+    signer,
+    tranche,
+    account,
+    interestTokenAmountBigNumber
+  );
+
+  const { withdraw: withdrawToEth } = useRedeemTermAssetsToEth(
+    signer,
+    tranche,
+    account,
+    BigNumber.from(0),
+    interestTokenAmountBigNumber
+  );
+
+  const redeemYieldTokens = useCallback(() => {
+    if (baseAsset.type === CryptoAssetType.ETHEREUM) {
+      withdrawToEth();
+    } else {
+      withdrawInterest();
+    }
+  }, [baseAsset.type, withdrawInterest, withdrawToEth]);
+  return redeemYieldTokens;
 }
 
 function getConfirmButtonLabel(account: string | null | undefined) {

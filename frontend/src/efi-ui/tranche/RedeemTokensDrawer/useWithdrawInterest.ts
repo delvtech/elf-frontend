@@ -11,24 +11,37 @@ export function useWithdrawInterest(
   tranche: Tranche | undefined,
   account: string | null | undefined,
   amount: BigNumber | undefined
-): () => void {
+): {
+  withdraw: () => void;
+  reset: () => void;
+  isError: boolean;
+  isLoading: boolean;
+} {
   const withdrawInterestCallArgs = makeWithdrawInterestCallArgs(
     account,
     amount
   );
 
-  const { mutate: withdrawInterest } = useSmartContractTransactionPersisted(
-    tranche,
-    "withdrawInterest",
-    signer
-  );
+  const {
+    mutate: withdrawInterest,
+    isError,
+    isLoading,
+    reset,
+  } = useSmartContractTransactionPersisted(tranche, "withdrawInterest", signer);
 
-  return useCallback(() => {
+  const withdraw = useCallback(() => {
     if (!withdrawInterestCallArgs) {
       return;
     }
     withdrawInterest(withdrawInterestCallArgs);
   }, [withdrawInterest, withdrawInterestCallArgs]);
+
+  return {
+    withdraw,
+    isError,
+    isLoading,
+    reset,
+  };
 }
 
 function makeWithdrawInterestCallArgs(

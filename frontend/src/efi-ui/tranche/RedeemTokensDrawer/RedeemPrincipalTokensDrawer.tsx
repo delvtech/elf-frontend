@@ -2,7 +2,8 @@ import { ReactElement, useCallback } from "react";
 
 import { Button, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
-import { BigNumber } from "ethers";
+import { Tranche } from "elf-contracts/types";
+import { BigNumber, Signer } from "ethers";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
 import { PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
@@ -79,28 +80,13 @@ export function RedeemPrincipalTokensDrawer({
     trancheAmountBigNumber
   );
 
-  const withdrawPrincipal = useWithdrawPrincipal(
+  const redeemPrincipalTokens = useRedeemPrincipalTokens(
     signer,
     tranche,
     account,
-    trancheAmountBigNumber
+    trancheAmountBigNumber,
+    baseAsset
   );
-
-  const withdrawToEth = useRedeemTermAssetsToEth(
-    signer,
-    tranche,
-    account,
-    trancheAmountBigNumber || BigNumber.from(0),
-    BigNumber.from(0)
-  );
-
-  const redeemPrincipalTokens = useCallback(() => {
-    if (baseAsset.type === CryptoAssetType.ETHEREUM) {
-      withdrawToEth();
-    } else {
-      withdrawPrincipal();
-    }
-  }, [baseAsset.type, withdrawPrincipal, withdrawToEth]);
 
   return (
     <WalletDrawer
@@ -145,6 +131,38 @@ export function RedeemPrincipalTokensDrawer({
       </div>
     </WalletDrawer>
   );
+}
+
+function useRedeemPrincipalTokens(
+  signer: Signer | undefined,
+  tranche: Tranche,
+  account: string | null | undefined,
+  trancheAmountBigNumber: BigNumber | undefined,
+  baseAsset: CryptoAsset
+) {
+  const { withdraw: withdrawPrincipal } = useWithdrawPrincipal(
+    signer,
+    tranche,
+    account,
+    trancheAmountBigNumber
+  );
+
+  const { withdraw: withdrawToEth } = useRedeemTermAssetsToEth(
+    signer,
+    tranche,
+    account,
+    trancheAmountBigNumber || BigNumber.from(0),
+    BigNumber.from(0)
+  );
+
+  const redeemPrincipalTokens = useCallback(() => {
+    if (baseAsset.type === CryptoAssetType.ETHEREUM) {
+      withdrawToEth();
+    } else {
+      withdrawPrincipal();
+    }
+  }, [baseAsset.type, withdrawPrincipal, withdrawToEth]);
+  return redeemPrincipalTokens;
 }
 
 function getConfirmButtonLabel(account: string | null | undefined) {

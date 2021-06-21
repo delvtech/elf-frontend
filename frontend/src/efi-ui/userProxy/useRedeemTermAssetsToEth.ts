@@ -21,7 +21,12 @@ export function useRedeemTermAssetsToEth(
   // note both are required.  set to BigNumber.from(0) if you don't want that one.
   amountPrinicpalToken: BigNumber,
   amountYieldToken: BigNumber
-): () => void {
+): {
+  withdraw: () => void;
+  reset: () => void;
+  isError: boolean;
+  isLoading: boolean;
+} {
   const principalTokenInfo = tranche
     ? getTokenInfo<PrincipalTokenInfo>(tranche.address)
     : undefined;
@@ -33,11 +38,12 @@ export function useRedeemTermAssetsToEth(
     : undefined;
 
   const userProxy = getUserProxy(signer);
-  const { mutate: withdrawToEth } = useSmartContractTransactionPersisted(
-    userProxy,
-    "withdrawWeth",
-    signer
-  );
+  const {
+    mutate: withdrawToEth,
+    isError,
+    isLoading,
+    reset,
+  } = useSmartContractTransactionPersisted(userProxy, "withdrawWeth", signer);
 
   const { data: ptApproval } = useTokenAllowance(
     tranche,
@@ -51,7 +57,7 @@ export function useRedeemTermAssetsToEth(
     userProxy?.address
   );
 
-  return useCallback(async () => {
+  const withdraw = useCallback(async () => {
     if (
       !signer ||
       !account ||
@@ -140,6 +146,13 @@ export function useRedeemTermAssetsToEth(
     withdrawToEth,
     ytApproval,
   ]);
+
+  return {
+    withdraw,
+    reset,
+    isError,
+    isLoading,
+  };
 }
 export function makeWithdrawInterestToEthCallArgs(
   expiration: number,

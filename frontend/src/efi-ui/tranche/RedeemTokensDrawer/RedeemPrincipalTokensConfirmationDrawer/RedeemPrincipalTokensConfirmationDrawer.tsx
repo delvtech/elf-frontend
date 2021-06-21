@@ -69,14 +69,14 @@ export function RedeemPrincipalTokensConfirmationDrawer({
     trancheAmountBigNumber
   );
 
-  const withdrawPrincipal = useWithdrawPrincipal(
+  const { withdraw: withdrawPrincipal } = useWithdrawPrincipal(
     signer,
     tranche,
     account,
     trancheAmountBigNumber
   );
 
-  const withdrawToEth = useRedeemTermAssetsToEth(
+  const { withdraw: withdrawToEth } = useRedeemTermAssetsToEth(
     signer,
     tranche,
     account,
