@@ -1,20 +1,28 @@
-import { ReactElement, useMemo, useState } from "react";
+import { ReactElement, useCallback, useState } from "react";
 
-import { Callout, Card, H4, Intent, Tab, Tabs } from "@blueprintjs/core";
+import { Card, Tab, Tabs } from "@blueprintjs/core";
 import { Serie } from "@nivo/line";
+import { format } from "d3-format";
+import { commify } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LineChart } from "efi-ui/charts/LineChart/LineChart";
+import { ChartMessages } from "efi-ui/pools/PoolCharts/ChartMessagesProps";
 import { useVolumeHistoryForPool } from "efi-ui/pools/PoolCharts/useLiquidityVolumeHistoryForPool";
-import { usePoolCreatedAt } from "efi-ui/pools/usePoolCreatedAt";
+import { useTotalFiatLiquidity } from "efi-ui/pools/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
+import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import { ONE_DAY_IN_SECONDS } from "efi/base/time";
+import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
+import { ONE_WEEK_IN_MILLISECONDS, ONE_WEEK_IN_SECONDS } from "efi/base/time";
 import { getPoolContract } from "efi/pools/getPoolContract";
-import { PoolContract } from "efi/pools/PoolContract";
+import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolInfo } from "efi/pools/PoolInfo";
 
 import { useLiquidityHistoryForPool } from "./useLiquidityHistoryForPool";
+
+const nowInMs = Date.now();
+const weekAgoMs = nowInMs - ONE_WEEK_IN_MILLISECONDS;
 
 export interface TimeData {
   timeMs: number;
@@ -29,7 +37,9 @@ interface PoolChartsProps {
   poolInfo: PoolInfo;
 }
 export function PoolCharts({ poolInfo }: PoolChartsProps): ReactElement {
-  const pool = getPoolContract(poolInfo.address);
+  const totalFiatLiquidity = useTotalFiatLiquidity(poolInfo);
+  const totalLiquidity = totalFiatLiquidity?.toDecimal() ?? 0;
+
   const { isDarkMode } = useDarkMode();
   const {
     volumeData,
@@ -37,18 +47,16 @@ export function PoolCharts({ poolInfo }: PoolChartsProps): ReactElement {
     setChart,
     showLiquidityChart,
     showVolumeChart,
-    poolAtLeastOneDayOld,
-  } = usePoolCharts(pool);
+    poolAge,
+  } = usePoolCharts(poolInfo);
 
-  const liquiditySerie = convertTimeDataToSerie(
-    liquidityData?.filter((datum) => datum.value >= 0) ?? [],
-    "liquidity"
-  );
-  const volumeSerie = convertTimeDataToSerie(
-    volumeData?.filter((datum) => datum.value >= 0) ?? [],
-    "volume"
+  const { liquiditySerie, volumeSerie } = convertChartDatasToSeries(
+    liquidityData,
+    totalLiquidity,
+    volumeData
   );
 
+  const { currency } = useCurrencyPref();
   return (
     <div
       className={tw("flex", "flex-1", "h-500")}
@@ -76,32 +84,26 @@ export function PoolCharts({ poolInfo }: PoolChartsProps): ReactElement {
           </div>
           <div className={tw("w-full", "h-full", "pt-8")}>
             {showLiquidityChart ? (
-              <ChartMessages
-                poolAtLeastOneDayOld={poolAtLeastOneDayOld}
-                hasData={
-                  !!(liquidityData?.length && liquidityData?.length > 10)
-                }
-              >
+              <ChartMessages poolAgeInSeconds={poolAge} hasData={true}>
                 <LineChart
-                  key={isDarkMode ? "a" : "b"}
+                  key={isDarkMode ? "darkline" : "lightline"}
                   chartType="lines"
-                  dataLabel={t`liquidity`}
+                  dataLabel={`(${currency.symbol_native})`}
                   darkMode={isDarkMode}
                   data={liquiditySerie}
+                  formatYValues={formatYValues}
                 />
               </ChartMessages>
             ) : null}
             {showVolumeChart ? (
-              <ChartMessages
-                poolAtLeastOneDayOld={poolAtLeastOneDayOld}
-                hasData={!!(volumeData?.length && volumeData?.length > 10)}
-              >
+              <ChartMessages poolAgeInSeconds={poolAge} hasData={true}>
                 <LineChart
-                  key={isDarkMode ? "a" : "b"}
+                  key={isDarkMode ? "darkbar" : "lightbar"}
                   chartType="bars"
-                  dataLabel={t`volume`}
+                  dataLabel={`(${currency.symbol_native})`}
                   darkMode={isDarkMode}
                   data={volumeSerie}
+                  formatYValues={formatYValues}
                 />
               </ChartMessages>
             ) : null}
@@ -111,19 +113,32 @@ export function PoolCharts({ poolInfo }: PoolChartsProps): ReactElement {
     </div>
   );
 }
-function usePoolCharts(pool: PoolContract) {
-  const poolAtLeastOneDayOld = usePoolAtLeastOneDayOld(pool);
+function usePoolCharts(poolInfo: PoolInfo) {
+  const pool = getPoolContract(poolInfo.address);
+  const poolAge = getPoolAge(poolInfo);
 
-  const liquidityData = useLiquidityHistoryForPool(pool);
-  const volumeData = useVolumeHistoryForPool(pool);
+  const liquidityData = useLiquidityHistoryForPool(pool, ONE_WEEK_IN_SECONDS);
+  const volumeData = useVolumeHistoryForPool(pool, ONE_WEEK_IN_SECONDS);
+  const { currency } = useCurrencyPref();
+  const { baseAssetContract } = getPoolTokens(poolInfo);
+  const [baseAssetPrice] = useTokenPrice(baseAssetContract, currency);
+  const fiatPrice = baseAssetPrice?.toDecimal() ?? 1;
+  const liquidityFiatData = liquidityData?.map(({ value, timeMs }) => ({
+    value: fiatPrice * value,
+    timeMs,
+  }));
+  const volumeFiatData = volumeData?.map(({ value, timeMs }) => ({
+    value: fiatPrice * value,
+    timeMs,
+  }));
 
   const [activeChart, setChart] = useState(ChartType.LIQUIDITY);
   const showLiquidityChart = activeChart === ChartType.LIQUIDITY;
   const showVolumeChart = activeChart === ChartType.VOLUME;
   return {
-    poolAtLeastOneDayOld,
-    liquidityData,
-    volumeData,
+    poolAge,
+    liquidityData: liquidityFiatData,
+    volumeData: volumeFiatData,
     activeChart,
     setChart,
     showLiquidityChart,
@@ -131,53 +146,41 @@ function usePoolCharts(pool: PoolContract) {
   };
 }
 
-function usePoolAtLeastOneDayOld(pool: PoolContract) {
-  const nowInSeconds = useMemo(() => {
-    const now = Date.now();
-    return Math.round(now / 1000);
-  }, []);
-  const poolCreatedAt = usePoolCreatedAt(pool) ?? nowInSeconds;
+function getPoolAge(poolInfo: PoolInfo) {
+  const nowInSeconds = Math.floor(nowInMs / 1000);
+  const poolCreatedAt = poolInfo.extensions.createdAtTimestamp;
 
   const poolAge = nowInSeconds - poolCreatedAt;
-  const hasEnoughPoolData = poolAge >= ONE_DAY_IN_SECONDS;
-  return hasEnoughPoolData;
+  return poolAge;
 }
 
-interface ChartMessagesProps {
-  poolAtLeastOneDayOld: boolean;
-  hasData: boolean;
-  children: ReactElement | null;
-}
+function convertChartDatasToSeries(
+  liquidityData: TimeData[] | undefined,
+  totalLiquidity: number,
+  volumeData: TimeData[] | undefined
+) {
+  const filteredLiquidityData =
+    liquidityData?.filter(
+      (datum) => datum.value >= 0 && datum.timeMs > weekAgoMs
+    ) ?? [];
 
-function ChartMessages(props: ChartMessagesProps): ReactElement {
-  const { poolAtLeastOneDayOld, hasData, children } = props;
+  const paddedLiquidityData = padLiquidityData(
+    filteredLiquidityData,
+    totalLiquidity
+  );
 
-  let message = t`No data available for chart`;
-  if (!poolAtLeastOneDayOld) {
-    message = t`Charts available after 24 hours of activity`;
-  }
+  const filteredVolumeData =
+    volumeData?.filter(
+      (datum) => datum.value >= 0 && datum.timeMs > weekAgoMs
+    ) ?? [];
+  const paddedVolumeData = padVolumeData(filteredVolumeData);
 
-  if (!poolAtLeastOneDayOld || !hasData) {
-    return (
-      <div className={tw("w-full", "h-full", "pt-8")}>
-        <Callout
-          icon={null}
-          className={tw(
-            "flex",
-            "items-center",
-            "justify-center",
-            "h-full",
-            "w-full"
-          )}
-          intent={Intent.NONE}
-        >
-          <H4>{message}</H4>
-        </Callout>
-      </div>
-    );
-  }
-
-  return <div className={tw("w-full", "h-full")}>{children}</div>;
+  const liquiditySerie = convertTimeDataToSerie(
+    paddedLiquidityData,
+    "liquidity"
+  );
+  const volumeSerie = convertTimeDataToSerie(paddedVolumeData, "volume");
+  return { liquiditySerie, volumeSerie };
 }
 
 function convertTimeDataToSerie(timeData: TimeData[], id: string): Serie[] {
@@ -196,4 +199,48 @@ function convertTimeDataToSerie(timeData: TimeData[], id: string): Serie[] {
   ];
 
   return lineSerie;
+}
+
+function padLiquidityData(
+  data: TimeData[],
+  totalLiquidity: number
+): TimeData[] {
+  if (data.length === 0) {
+    return [
+      { value: totalLiquidity, timeMs: weekAgoMs + 10000 },
+      { value: totalLiquidity, timeMs: nowInMs - 10000 },
+    ];
+  }
+
+  const { value } = data[0];
+  return [
+    { value, timeMs: weekAgoMs + 10000 },
+    ...data,
+    { value: totalLiquidity, timeMs: nowInMs - 10000 },
+  ];
+}
+
+function padVolumeData(data: TimeData[]): TimeData[] {
+  if (data.length === 0) {
+    return [
+      { value: 0, timeMs: weekAgoMs + 10000 },
+      { value: 0, timeMs: nowInMs - 10000 },
+    ];
+  }
+
+  return [
+    { value: 0, timeMs: weekAgoMs + 10000 },
+    ...data,
+    { value: 0, timeMs: nowInMs - 10000 },
+  ];
+}
+
+function formatYValues(value: number) {
+  const f = format(".2s");
+
+  if (value > 10000) {
+    return f(value);
+  }
+
+  return commify(value);
 }

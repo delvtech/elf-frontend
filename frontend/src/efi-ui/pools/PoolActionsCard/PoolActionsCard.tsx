@@ -8,13 +8,13 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { StakingPanel } from "efi-ui/pools/StakingPanel/StakingPanel";
+import { UnstakeCard } from "efi-ui/pools/UnstakingPanel/UnstakingCard";
 import {
   PoolAction,
   usePoolViewPoolActionsTab,
 } from "efi-ui/pools/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
 import { TradePanel } from "efi-ui/trade/TradePanel/TradePanel";
 import { PoolInfo } from "efi/pools/PoolInfo";
-import { UnstakeCard } from "efi-ui/pools/UnstakingPanel/UnstakingCard";
 
 interface PoolActionsCardProps {
   library: Web3Provider | undefined;
