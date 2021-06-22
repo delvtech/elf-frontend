@@ -6,9 +6,11 @@ import { useWeb3React } from "@web3-react/core";
 
 import { ReactComponent as MetamaskIcon } from "efi-static-assets/logos/metamask.svg";
 import { ReactComponent as WalletConnectIcon } from "efi-static-assets/logos/walletConnectIcon.svg";
+import { ReactComponent as LedgerIcon } from "efi-static-assets/logos/ledgerIcon.svg";
 import tw from "efi-tailwindcss-classnames";
 import {
   injectedConnector,
+  ledgerConnector,
   walletConnectConnector,
 } from "efi/wallets/connectors";
 
@@ -46,6 +48,15 @@ export function ConnectWalletButtons({
     onClick?.();
   }, [activate, deactivateActiveConnector, onClick]);
 
+  const connectToLedger = useCallback(async () => {
+    await deactivateActiveConnector();
+    activate(ledgerConnector, (error) => {
+      error && console.error(error);
+      deactivateActiveConnector();
+    });
+    onClick?.();
+  }, [activate, deactivateActiveConnector, onClick]);
+
   return (
     <div
       data-testid="connect-wallet-buttons"
@@ -73,6 +84,14 @@ export function ConnectWalletButtons({
           icon={<WalletConnectIcon style={iconStyle} />}
         >
           <span className={tw("text-base")}>WalletConnect</span>
+        </Button>
+        <Button
+          minimal
+          className={tw("p-12", "w-1/2", "flex-col", "space-y-3")}
+          onClick={connectToLedger}
+          icon={<LedgerIcon style={iconStyle} />}
+        >
+          <span className={tw("text-base")}>Ledger</span>
         </Button>
       </ButtonGroup>
     </div>
