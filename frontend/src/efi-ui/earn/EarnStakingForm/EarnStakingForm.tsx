@@ -1,13 +1,15 @@
 import { Fragment, ReactElement } from "react";
 
-import { Button, Intent } from "@blueprintjs/core";
+import { Button, Callout, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { Signer } from "ethers";
 import { PrincipalTokenInfo as TrancheInfo } from "tokenlists/types";
+import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { EarnActionsTabId } from "efi-ui/earn/EarnActionsTabs/EarnActionsTabId";
 import { StakingForm } from "efi-ui/pools/StakingForm/StakingForm";
+import { useCanPerformPool } from "efi-ui/pools/usePoolCanPerform/usePoolCanPerform";
 import { getPrincipalPoolForTranche } from "efi/pools/ccpool";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { getPoolInfoForYieldToken } from "efi/pools/weightedPool";
@@ -47,6 +49,11 @@ export function EarnStakingForm(props: EarnStakingFormProps): ReactElement {
     activeTabId === EarnActionsTabId.STAKE_PRINCIPAL
       ? principalPoolInfo
       : yieldPoolInfo;
+
+  const canPerformAddLiquidity = useCanPerformPool(
+    poolInfo.address,
+    "addLiquidity"
+  );
 
   return (
     <div className={tw("flex")}>
@@ -119,17 +126,26 @@ export function EarnStakingForm(props: EarnStakingFormProps): ReactElement {
                   totalSupply={baseAssetInputProps.totalSupply}
                 />
                 <Button
-                  disabled={submitButtonProps.disabled}
+                  disabled={
+                    submitButtonProps.disabled || !canPerformAddLiquidity
+                  }
                   onClick={submitButtonProps.onClick}
                   minimal
                   outlined
                   large
                   intent={
-                    submitButtonProps.error ? Intent.DANGER : Intent.PRIMARY
+                    submitButtonProps.error || !canPerformAddLiquidity
+                      ? Intent.DANGER
+                      : Intent.PRIMARY
                   }
                 >
                   {submitButtonProps.label}
                 </Button>
+                {!canPerformAddLiquidity ? (
+                  <Callout intent={Intent.DANGER}>
+                    {t`Adding liquidity for this pool has been temporarily disabled, please refer to our Discord or Twitter for further updates.`}
+                  </Callout>
+                ) : null}
               </Fragment>
             );
           }}

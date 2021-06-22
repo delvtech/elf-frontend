@@ -16,6 +16,7 @@ import { useMintPreview } from "efi-ui/mint/hooks/useMintPreview";
 import { MintInput } from "efi-ui/mint/MintInput/MintInput";
 import { MintTransactionConfirmationDrawer } from "efi-ui/mint/MintTransactionConfirmationDrawer/MintTransactionConfirmationDrawer";
 import { TokenIcon } from "efi-ui/token/TokenIcon";
+import { useTrancheCanPerform } from "efi-ui/tranche/useTrancheCanPerform";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
 import { formatBalance } from "efi/base/formatBalance";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
@@ -53,14 +54,18 @@ function useActiveMintPreview(
 export function MintCard(props: MintCardProps): ReactElement | null {
   const { library, account, trancheInfo } = props;
 
-  const { interestToken, underlying } = trancheInfo.extensions;
+  const {
+    address: trancheAddress,
+    extensions: { interestToken, underlying },
+  } = trancheInfo;
+  const canPerformMint = useTrancheCanPerform(trancheAddress, "mint");
 
   const baseAsset = getCryptoAssetForToken(underlying);
   const baseAssetSymbol = getCryptoSymbol(baseAsset) as string;
   const BaseAssetIcon = findAssetIcon2(baseAsset);
   const vaultSymbol = getVaultSymbol(baseAsset) as string;
 
-  const principalTokenContract = trancheContractsByAddress[trancheInfo.address];
+  const principalTokenContract = trancheContractsByAddress[trancheAddress];
   const yieldTokenContract = interestTokenContractsByAddress[interestToken];
 
   const { symbol: yieldTokenSymbol = "" } = getTermAssetSymbol(
@@ -98,7 +103,8 @@ export function MintCard(props: MintCardProps): ReactElement | null {
     baseAssetDecimals
   ).gt(baseAssetBalance ?? 0);
 
-  const mintButtonDisabled = !!account && (insufficientBalance || !amountIn);
+  const mintButtonDisabled =
+    (!!account && (insufficientBalance || !amountIn)) || !canPerformMint;
 
   let mintButtonLabel = t`Mint tokens`;
   let mintButtonError = false;
@@ -132,7 +138,7 @@ export function MintCard(props: MintCardProps): ReactElement | null {
 
   return (
     <Fragment>
-      <div className={tw("pl-24", "pt-4", "-ml-1")}>
+      <div className={tw("pl-24", "pt-4", "-ml-1", "space-y-4")}>
         <div className={styles.mintInput}>
           <MintInput
             cryptoDecimals={baseAssetDecimals}
@@ -147,7 +153,7 @@ export function MintCard(props: MintCardProps): ReactElement | null {
             validValue={!mintButtonError}
           />
         </div>
-        <div className={tw("flex", "mt-4")}>
+        <div className={tw("flex")}>
           <Callout
             className={classNames(
               styles.callOut,
@@ -183,17 +189,26 @@ export function MintCard(props: MintCardProps): ReactElement | null {
             />
           </Callout>
         </div>
-        <div className={tw("mt-4")}>
+        <div>
           <Button
             minimal
             outlined
             disabled={mintButtonDisabled}
-            intent={mintButtonError ? Intent.DANGER : Intent.PRIMARY}
+            intent={
+              mintButtonError || !canPerformMint
+                ? Intent.DANGER
+                : Intent.PRIMARY
+            }
             onClick={onClick}
           >
             {mintButtonLabel}
           </Button>
         </div>
+        {!canPerformMint ? (
+          <Callout intent={Intent.DANGER}>
+            {t`Minting for this term has been temporarily disabled, please refer to our Discord or Twitter for further updates.`}
+          </Callout>
+        ) : null}
       </div>
       <MintTransactionConfirmationDrawer
         baseAsset={baseAsset}
