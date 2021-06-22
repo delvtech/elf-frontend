@@ -240,7 +240,7 @@ export function YieldTokenCard({
           </Callout>
         </div>
         {/* Quick Actions */}
-        <ButtonGroup className={tw("space-x-6")}>
+        <ButtonGroup fill>
           <RedeemYieldTokensButton
             account={account}
             yieldTokenInfo={yieldTokenInfo}
@@ -250,7 +250,7 @@ export function YieldTokenCard({
           <GoToPoolButton
             poolAddress={pool.address}
             poolAction={PoolAction.ADD_LIQUIDITY}
-            label={t`Stake`}
+            label={t`Add Liquidity`}
           />
           <GoToPoolButton
             poolAddress={pool.address}

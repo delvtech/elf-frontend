@@ -26,9 +26,6 @@ interface PrincipalTokenPortfolioProps {
   account: string | null | undefined;
 }
 
-// TODO: use this wording from will
-// const mintLabel = t`Stake or sell your principal token to gain liquidity again`;
-// const swapLabel = t`Stake when the transaction is confirmed to boost your apy further`;
 export function PrincipalTokenPortfolio({
   library,
   provider,

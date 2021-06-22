@@ -255,10 +255,7 @@ export function PrincipalPoolCard(
             "lg:col-span-2"
           )}
         >
-          <LabeledText
-            text={formatPercent(stakingYield)}
-            label={t`Stake APY`}
-          />
+          <LabeledText text={formatPercent(stakingYield)} label={t`LP APY`} />
         </div>
         <div
           className={tw(
@@ -308,7 +305,7 @@ export function PrincipalPoolCard(
           <GoToPoolButton
             poolAddress={pool.address}
             poolAction={PoolAction.ADD_LIQUIDITY}
-            label={t`Stake`}
+            label={t`Add Liquidity`}
             outlined
             small
           />

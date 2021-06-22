@@ -78,7 +78,7 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
             signer={signer}
             account={account}
             poolInfo={poolInfo}
-            buttonLabel={t`Stake`}
+            buttonLabel={t`Add Liquidity`}
             buttonIntent={Intent.PRIMARY}
           />
         )}

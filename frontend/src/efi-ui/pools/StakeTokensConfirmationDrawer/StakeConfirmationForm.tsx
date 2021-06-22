@@ -34,7 +34,7 @@ interface StakeConfirmationFormProps {
 }
 
 export function StakeConfirmationForm({
-  heading = t`Stake`,
+  heading = t`Add Liquidity`,
   assetOneIcon: AssetOneIcon,
   assetTwoIcon: AssetTwoIcon,
   assetOneSymbol,

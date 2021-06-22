@@ -8,7 +8,7 @@ export function NoLPsInWalletNonIdealState(): ReactElement {
   return (
     <NonIdealState
       icon={IconNames.BANK_ACCOUNT}
-      description={t`This wallet does not contain any Liquidity Positions. Stake your portfolio Yield and Principal tokens.`}
+      description={t`This wallet does not contain any LP positions.`}
     />
   );
 }

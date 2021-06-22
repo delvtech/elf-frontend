@@ -293,10 +293,7 @@ export function InterestPoolCard(
             "xl:-ml-6"
           )}
         >
-          <LabeledText
-            text={formatPercent(stakingYield)}
-            label={t`Stake APY`}
-          />
+          <LabeledText text={formatPercent(stakingYield)} label={t`LP APY`} />
         </div>
         <div
           className={tw(
@@ -337,7 +334,7 @@ export function InterestPoolCard(
           <GoToPoolButton
             poolAddress={pool.address}
             poolAction={PoolAction.ADD_LIQUIDITY}
-            label={t`Stake`}
+            label={t`Add Liquidity`}
             outlined
             small
           />

@@ -387,11 +387,10 @@ export function EarnCard(props: EarnCardProps): ReactElement | null {
           <Button
             intent={Intent.PRIMARY}
             minimal
-            outlined
             active={isExpanded}
             onClick={onToggleExpand}
           >
-            {t`Deposit`}
+            {isExpanded ? t`Hide` : t`Show`}
           </Button>
         </div>
       </Card>

@@ -51,8 +51,8 @@ export function usePortfolioTabs(
       ),
     },
     {
-      id: "staked-positions",
-      name: t`Staked positions`,
+      id: "lp-positions",
+      name: t`LP Positions`,
       quantity: 0,
       totalFiatValue: Money.fromDecimal(0, "USD"),
       contentRenderer: () => (

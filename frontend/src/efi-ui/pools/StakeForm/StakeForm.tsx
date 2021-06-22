@@ -54,7 +54,7 @@ export function StakeForm({
   assetOneAmount,
   activeInput,
   assetTwoAmount,
-  heading = t`Stake`,
+  heading = t`Add Liquidity`,
   onAssetOneAmountChange: onAssetOneAmountChangeFromProps,
   onAssetTwoAmountChange: onAssetTwoAmountChangeFromProps,
   children,

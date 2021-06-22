@@ -253,7 +253,7 @@ export function PrincipalTokenCard(
       </div>
 
       {/* Quick Actions */}
-      <ButtonGroup className={tw("space-x-6")}>
+      <ButtonGroup fill>
         <RedeemPrincipalTokensButton
           library={library}
           account={account}
@@ -263,7 +263,7 @@ export function PrincipalTokenCard(
         <GoToPoolButton
           poolAddress={poolInfo.address}
           poolAction={PoolAction.ADD_LIQUIDITY}
-          label={t`Stake`}
+          label={t`Add Liquidity`}
         />
         <GoToPoolButton
           poolAddress={poolInfo.address}
