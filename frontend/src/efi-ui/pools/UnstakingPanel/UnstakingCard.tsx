@@ -1,6 +1,6 @@
 import { ReactElement, useCallback, useState } from "react";
 
-import { Button, Intent } from "@blueprintjs/core";
+import { Button, Callout, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { TokenInfo } from "@uniswap/token-lists";
 import { ConvergentCurvePool, WeightedPool } from "elf-contracts/types";
@@ -28,6 +28,7 @@ import { PoolContract } from "efi/pools/PoolContract";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { isYieldPool } from "efi/pools/weightedPool";
 import { PoolStakeStats } from "efi-ui/pools/UnstakingPanel/PoolStakeStats";
+import { useCanPerformPool } from "efi-ui/pools/usePoolCanPerform/usePoolCanPerform";
 
 interface UnstakeCardProps {
   signer: Signer | undefined;
@@ -43,6 +44,11 @@ export function UnstakeCard({
   poolInfo,
 }: UnstakeCardProps): ReactElement {
   const pool = getPoolContract(poolInfo.address);
+  const { address: poolAddress } = poolInfo;
+  const canPerformRemoveLiquidity = useCanPerformPool(
+    poolAddress,
+    "removeLiquidity"
+  );
 
   // local state
   const [isWalletDialogOpen, setWalletDialogOpen] = useState(false);
@@ -132,15 +138,21 @@ export function UnstakeCard({
 
       <Button
         className={tw("w-full")}
-        disabled={disableUnstake}
+        disabled={disableUnstake || !canPerformRemoveLiquidity}
         onClick={onClickButton}
         minimal
         large
         outlined
-        intent={Intent.PRIMARY}
+        intent={canPerformRemoveLiquidity ? Intent.PRIMARY : Intent.DANGER}
       >
         {t`Unstake`}
       </Button>
+
+      {!canPerformRemoveLiquidity ? (
+        <Callout intent={Intent.DANGER}>
+          {t`Removing liquidity from this pool has been temporarily disabled, please refer to our Discord or Twitter for further updates.`}
+        </Callout>
+      ) : null}
       <UnstakeConfirmationDrawer
         library={library}
         account={account}

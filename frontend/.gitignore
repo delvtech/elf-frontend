@@ -37,6 +37,7 @@ src/canperform/*
 !src/canperform/CanPerformJsonFile.d.ts
 # This is a stub used for unit tests, it does not change on every machine
 !src/canperform/mock.canperform.json
+!src/canperform/goerli.canperform.json
 
 # misc
 .DS_Store

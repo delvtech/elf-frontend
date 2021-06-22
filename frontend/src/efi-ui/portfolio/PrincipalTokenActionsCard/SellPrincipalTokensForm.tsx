@@ -30,7 +30,7 @@ import { getTokenInfo } from "efi/tokenlists";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
 import { getBaseAssetForTranche } from "efi/tranche/baseAssets";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
-import { useConvergentPoolCanPerform } from "efi-ui/pools/usePoolCanPerform/usePoolCanPerform";
+import { useCanPerformPool } from "efi-ui/pools/usePoolCanPerform/usePoolCanPerform";
 
 interface SellPrincipalTokensFormProps {
   library: Web3Provider | undefined;
@@ -74,7 +74,7 @@ export function SellPrincipalTokensForm(
   const ptBalanceLabel = formatBalance(ptBalanceOf, ptDecimals, ptDecimals);
   const principalTokenCryptoAsset = getCryptoAssetForToken(ptAddress);
   const ptIcon = findAssetIcon2(principalTokenCryptoAsset);
-  const canPerformSell = useConvergentPoolCanPerform(poolInfo.address, "sell");
+  const canPerformSell = useCanPerformPool(poolInfo.address, "sell");
 
   // inputs
   const { tokenOutError, tokenInError } = useValidateInput(

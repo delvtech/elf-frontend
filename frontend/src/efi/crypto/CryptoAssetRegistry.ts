@@ -29,9 +29,6 @@ const baseAssetCryptoAssets: Record<string, CryptoAsset> = {
   [AddressesJson.addresses.wethAddress]: ETHEREUM_CRYPTO_ASSET,
   [AddressesJson.addresses.usdcAddress]: USDC_CRYPTO_ASSET,
 };
-export const BASE_ASSET_CRYPTO_ASSETS: CryptoAsset[] = Object.values(
-  baseAssetCryptoAssets
-);
 
 const principalTokenCryptoAssets: Erc20PermitCryptoAsset[] =
   principalTokenInfos.map(({ address }) => ({

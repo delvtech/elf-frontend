@@ -54,7 +54,7 @@ import { getTokenInfo } from "efi/tokenlists";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
 import { openTrancheBaseAssets } from "efi/tranche/baseAssets";
 import { underlyingContractsByAddress } from "efi/underlying/underlying";
-import { useConvergentPoolCanPerform } from "efi-ui/pools/usePoolCanPerform/usePoolCanPerform";
+import { useCanPerformPool } from "efi-ui/pools/usePoolCanPerform/usePoolCanPerform";
 
 export interface SaveCardProps {
   library: Web3Provider | undefined;
@@ -129,10 +129,7 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
     address: convergentPoolAddress,
     extensions: { expiration, unitSeconds, underlying },
   } = getPrincipalPoolForTranche(activeTranche.address);
-  const canPerformBuy = useConvergentPoolCanPerform(
-    convergentPoolAddress,
-    "buy"
-  );
+  const canPerformBuy = useCanPerformPool(convergentPoolAddress, "buy");
 
   const poolContract = getPrincipalPoolContractForTranche(
     activeTranche.address

@@ -1,12 +1,14 @@
 import { Fragment, ReactElement } from "react";
 
-import { Button, Intent } from "@blueprintjs/core";
+import { Button, Callout, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { Signer } from "ethers";
+import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { StakingForm } from "efi-ui/pools/StakingForm/StakingForm";
 import { StakingInput } from "efi-ui/pools/StakingInput/StakingInput";
+import { useCanPerformPool } from "efi-ui/pools/usePoolCanPerform/usePoolCanPerform";
 import { PoolInfo } from "efi/pools/PoolInfo";
 
 interface StakingPanelProps {
@@ -30,6 +32,8 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
     submitDisabled = false,
     poolInfo,
   } = props;
+  const { address: poolAddress } = poolInfo;
+  const canPerformAddLiquidity = useCanPerformPool(poolAddress, "addLiquidity");
   return (
     <div
       className={tw(
@@ -96,17 +100,24 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
                 totalSupply={baseAssetInputProps.totalSupply}
               />
               <Button
-                disabled={submitButtonProps.disabled}
+                disabled={submitButtonProps.disabled || !canPerformAddLiquidity}
                 onClick={submitButtonProps.onClick}
                 minimal
                 outlined
                 large
                 intent={
-                  submitButtonProps.error ? Intent.DANGER : Intent.PRIMARY
+                  submitButtonProps.error || !canPerformAddLiquidity
+                    ? Intent.DANGER
+                    : Intent.PRIMARY
                 }
               >
                 {submitButtonProps.label}
               </Button>
+              {!canPerformAddLiquidity ? (
+                <Callout intent={Intent.DANGER}>
+                  {t`Adding liquidity for this pool has been temporarily disabled, please refer to our Discord or Twitter for further updates.`}
+                </Callout>
+              ) : null}
             </Fragment>
           );
         }}

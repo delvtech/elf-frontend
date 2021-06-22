@@ -1,27 +1,44 @@
-import { ConvergentPoolCanPerformActions } from "canperform/CanPerformJsonFile";
+import { CanPerformPoolActions } from "canperform/CanPerformJsonFile";
 import { useCanPerform } from "efi-ui/canperform/useCanPerform";
+import { isPrincipalPool } from "efi/pools/ccpool";
+import { isYieldPool } from "efi/pools/weightedPool";
+import { getTokenInfo } from "efi/tokenlists";
 
-type ConvergentPoolAction = keyof Omit<
-  ConvergentPoolCanPerformActions,
-  "convergentPoolAddress"
->;
-export function useConvergentPoolCanPerform(
-  convergentPoolAddress: string,
-  action: ConvergentPoolAction
+export function useCanPerformPool(
+  poolAddress: string,
+  action: keyof CanPerformPoolActions
 ): boolean {
   const {
-    canPerform: { convergentPools },
+    canPerform: { convergentPools, weightedPools },
   } = useCanPerform();
 
-  const convergentPoolCanPerform = convergentPools.find(
-    (covergentPool) =>
-      covergentPool.convergentPoolAddress === convergentPoolAddress
-  );
+  const poolTokenInfo = getTokenInfo(poolAddress);
 
-  // If there's no canPerform entry for this tranche than assume it's not frozen
-  if (!convergentPoolCanPerform) {
-    return true;
+  if (isPrincipalPool(poolTokenInfo)) {
+    const convergentPoolCanPerform = convergentPools.find(
+      (covergentPool) => covergentPool.convergentPoolAddress === poolAddress
+    );
+
+    if (!convergentPoolCanPerform) {
+      // If there's no canPerform entry for this pool than assume it's not frozen
+      return true;
+    }
+
+    return convergentPoolCanPerform[action];
   }
 
-  return !!convergentPoolCanPerform[action];
+  if (isYieldPool(poolTokenInfo)) {
+    const weightedPoolCanPerform = weightedPools.find(
+      (weightedPool) => weightedPool.weightedPoolAddress === poolAddress
+    );
+    if (!weightedPoolCanPerform) {
+      // If there's no canPerform entry for this pool than assume it's not frozen
+      return true;
+    }
+
+    return weightedPoolCanPerform[action];
+  }
+
+  // assume things aren't frozen by default
+  return true;
 }

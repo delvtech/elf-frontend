@@ -1,6 +1,6 @@
 import { ReactElement, useCallback, useState } from "react";
 
-import { Button, Intent } from "@blueprintjs/core";
+import { Button, Callout, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { TokenInfo } from "@uniswap/token-lists";
 import { BigNumber, Signer } from "ethers";
@@ -32,6 +32,9 @@ import { PoolInfo } from "efi/pools/PoolInfo";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
 import { trancheContractsByAddress as principalTokenContractsByAddress } from "efi/tranche/tranches";
 import { underlyingContractsByAddress } from "efi/underlying/underlying";
+import { useCanPerformPool } from "efi-ui/pools/usePoolCanPerform/usePoolCanPerform";
+import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
+import { CryptoAssets } from "efi/crypto/CryptoAssetRegistry";
 
 interface TradePanelProps {
   library: Web3Provider | undefined;
@@ -58,7 +61,13 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     tokenOut,
   } = props;
 
-  const pool = getPoolContract(poolInfo.address);
+  const {
+    address: poolAddress,
+    extensions: { underlying },
+  } = poolInfo;
+  const baseAsset = CryptoAssets[underlying];
+
+  const pool = getPoolContract(poolAddress);
 
   /**
    * Component state
@@ -121,6 +130,15 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     poolIndex: tokenOutPoolIndex,
   } = useTokenInfoForTradeInput(pool, tokenOut, account, library);
 
+  const canPerformBuy = useCanPerformPool(poolAddress, "buy");
+  const canPerformSell = useCanPerformPool(poolAddress, "sell");
+  let canPerformTransaction = true;
+  if (tokenInContractAddress === underlying) {
+    canPerformTransaction = canPerformBuy;
+  } else if (tokenOutAddress === getTokenAddressForBalancer(baseAsset)) {
+    canPerformTransaction = canPerformSell;
+  }
+
   /**
    * Form validation
    */
@@ -151,7 +169,8 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     !isValidTokenOutValue ||
     !amountIn ||
     !amountOut;
-  const submitButtonDisabled = !!account && invalidInput;
+  const submitButtonDisabled =
+    !!account || invalidInput || !canPerformTransaction;
 
   const { submitButtonError, submitButtonLabel } = getSubmitButtonLabel(
     buttonLabel,
@@ -256,10 +275,19 @@ export function TradePanel(props: TradePanelProps): ReactElement {
         minimal
         outlined
         large
-        intent={submitButtonError ? Intent.DANGER : Intent.PRIMARY}
+        intent={
+          submitButtonError || !canPerformTransaction
+            ? Intent.DANGER
+            : Intent.PRIMARY
+        }
       >
         {submitButtonLabel}
       </Button>
+      {!canPerformTransaction ? (
+        <Callout intent={Intent.DANGER}>
+          {t`Trading for this token has been temporarily disabled, please refer to our Discord or Twitter for further updates.`}
+        </Callout>
+      ) : null}
       <SwapTokensTransactionConfirmationDrawer
         tokenInAddress={tokenInAddress}
         // TODO: remove this casting when getCryptoSymbol doesn't return undefined

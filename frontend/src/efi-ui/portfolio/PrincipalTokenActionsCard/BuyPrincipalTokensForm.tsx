@@ -34,7 +34,7 @@ import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { getTokenInfo } from "efi/tokenlists";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
-import { useConvergentPoolCanPerform } from "efi-ui/pools/usePoolCanPerform/usePoolCanPerform";
+import { useCanPerformPool } from "efi-ui/pools/usePoolCanPerform/usePoolCanPerform";
 
 interface BuyPrincipalTokensFormProps {
   library: Web3Provider | undefined;
@@ -88,7 +88,7 @@ export function BuyPrincipalTokensForm(
   const poolContract = getPrincipalPoolContractForTranche(ptAddress);
   const apy = useTokenYield(poolInfo, "principal");
   const formattedAPY = apy ? formatPercent(apy) : "-";
-  const canPerformBuy = useConvergentPoolCanPerform(poolInfo.address, "buy");
+  const canPerformBuy = useCanPerformPool(poolInfo.address, "buy");
 
   // input validation
   const amountOut = useCalculatePrincipalTokenAmountOut(
