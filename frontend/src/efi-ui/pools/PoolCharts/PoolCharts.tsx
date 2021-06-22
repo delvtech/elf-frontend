@@ -57,15 +57,6 @@ export function PoolCharts({ poolInfo }: PoolChartsProps): ReactElement {
   );
 
   const { currency } = useCurrencyPref();
-  const formatYValues = useCallback((value: number) => {
-    const f = format(".2s");
-
-    if (value > 10000) {
-      return f(value);
-    }
-
-    return commify(value);
-  }, []);
   return (
     <div
       className={tw("flex", "flex-1", "h-500")}
@@ -242,4 +233,14 @@ function padVolumeData(data: TimeData[]): TimeData[] {
     ...data,
     { value: 0, timeMs: nowInMs - 10000 },
   ];
+}
+
+function formatYValues(value: number) {
+  const f = format(".2s");
+
+  if (value > 10000) {
+    return f(value);
+  }
+
+  return commify(value);
 }
