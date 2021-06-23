@@ -1,6 +1,6 @@
 import { BigNumber, BytesLike } from "ethers";
 
-import { SwapKind } from "efi-ui/balancer/SwapKind";
+import { SwapKind } from "efi/balancer/SwapKind";
 
 export interface SingleSwap {
   poolId: BytesLike;

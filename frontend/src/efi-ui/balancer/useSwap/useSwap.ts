@@ -10,9 +10,9 @@ import {
   Signer,
 } from "ethers";
 
-import { FundManagement } from "efi-ui/balancer/FundManagement";
-import { SingleSwap } from "efi-ui/balancer/SingleSwap";
-import { SwapKind } from "efi-ui/balancer/SwapKind";
+import { FundManagement } from "efi/balancer/FundManagement";
+import { SingleSwap } from "efi/balancer/SingleSwap";
+import { SwapKind } from "efi/balancer/SwapKind";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import {
   AppToaster,
