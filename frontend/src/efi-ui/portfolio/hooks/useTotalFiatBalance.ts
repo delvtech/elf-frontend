@@ -6,19 +6,20 @@ import zip from "lodash.zip";
 import { Currency, Money } from "ts-money";
 
 import { getCoinGeckoId } from "efi-coingecko";
-import { SwapKind } from "efi/balancer/SwapKind";
 import { parseQueryBatchSwapResult } from "efi-ui/balancer/useQueryBatchSwap/parseQueryBatchSwapResult";
 import { useQueryBatchSwapMulti } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwapMulti";
 import { getQueriesData } from "efi-ui/base/queryResults";
 import { useCoinGeckoPriceMulti } from "efi-ui/coingecko/useCoinGeckoPrices";
-import { ERC20Shim } from "efi/contracts/ERC20Shim";
-import { useCryptoDecimalsMulti } from "efi-ui/crypto/hooks/useCryptoDecimals/useCryptoDecimalsMulti";
-import { useCryptoSymbolMulti } from "efi-ui/crypto/hooks/useCryptoSymbol/useCryptoSymbolMulti";
-import { useBaseAssetForPools } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPoolMulti";
-import { usePoolForTokenMulti } from "efi-ui/pools/usePoolForToken/usePoolForTokenMulti";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
 import { useTokensWithBalance } from "efi-ui/token/hooks/useTokensWithBalance";
+import { SwapKind } from "efi/balancer/SwapKind";
+import { ERC20Shim } from "efi/contracts/ERC20Shim";
+import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
+import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { getPoolContract } from "efi/pools/getPoolContract";
+import { getPoolInfoForToken } from "efi/pools/getPoolInfo";
 
 export function useTotalFiatBalance(
   library: Web3Provider | undefined,
@@ -37,8 +38,14 @@ export function useTotalFiatBalance(
 
   // See how much base asset we get for each token if we dump into their
   // respective pools
-  const pools = usePoolForTokenMulti(tokensWithBalance);
-  const baseAssets = useBaseAssetForPools(pools);
+  const poolInfos = tokensWithBalance.map((token) =>
+    getPoolInfoForToken(token.address)
+  );
+  const pools = poolInfos.map((poolInfo) => getPoolContract(poolInfo.address));
+  const baseAssets = poolInfos.map((poolInfo) =>
+    getCryptoAssetForToken(poolInfo.extensions.underlying)
+  );
+
   const baseAssetBalancerAddresses = baseAssets.map((baseAsset) =>
     getTokenAddressForBalancer(baseAsset)
   );
@@ -68,11 +75,15 @@ export function useTotalFiatBalance(
   );
 
   // Get the total fiat value for how much base asset they'd get per tranche.
-  const baseAssetSymbols = useCryptoSymbolMulti(baseAssets);
+  const baseAssetSymbols = baseAssets.map((baseAsset) =>
+    getCryptoSymbol(baseAsset)
+  );
+  const baseAssetDecimals = baseAssets.map((baseAsset) =>
+    getCryptoDecimals(baseAsset)
+  );
   const coinGeckoIds = baseAssetSymbols.map((baseAssetSymbol) =>
     getCoinGeckoId(baseAssetSymbol)
   );
-  const baseAssetDecimals = useCryptoDecimalsMulti(baseAssets);
   const priceResults = useCoinGeckoPriceMulti(coinGeckoIds, currency);
   const baseAssetCoinGeckoPrices = getQueriesData(priceResults);
   const fiatBalances = zip(

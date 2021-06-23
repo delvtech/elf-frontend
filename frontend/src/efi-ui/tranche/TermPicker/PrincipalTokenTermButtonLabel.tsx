@@ -8,7 +8,7 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useTokenYield } from "efi-ui/pools/useTokenYield";
-import { convertEpochSecondsToDate2 } from "efi/base/convertEpochSecondsToDate";
+import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
 import { formatPercent } from "efi/base/formatPercent";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
@@ -44,7 +44,7 @@ export function PrincipalTokenTermButtonLabel({
   } = getTokenInfo<PrincipalTokenInfo>(tranche.address);
   const { name: positionName } = getTokenInfo<AssetProxyTokenInfo>(position);
 
-  const unlockDate = convertEpochSecondsToDate2(unlockTimestamp);
+  const unlockDate = convertEpochSecondsToDate(unlockTimestamp);
   const fixedYield = useTokenYield(poolInfo, "principal");
 
   const formattedTrancheAPY = fixedYield ? formatPercent(fixedYield) : "-";

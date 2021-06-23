@@ -11,7 +11,7 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
+import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { useSigner } from "efi-ui/provider/useBlockFromTag/useSigner/useSigner";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { RedeemForm } from "efi-ui/tranche/RedeemForm/RedeemForm";
@@ -19,7 +19,7 @@ import { WalletApprovalCallout } from "efi-ui/transactions/TransactionDrawer/Wal
 import { useRedeemTermAssetsToEth } from "efi-ui/userProxy/useRedeemTermAssetsToEth";
 import { WalletDrawer } from "efi-ui/wallets/WalletDrawer/WalletDrawer";
 import ContractAddresses from "efi/addresses";
-import { convertEpochSecondsToDate2 } from "efi/base/convertEpochSecondsToDate";
+import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatFullDate } from "efi/base/dates";
 import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
@@ -52,12 +52,12 @@ export function RedeemPrincipalTokensDrawer({
 
   // base asset calls
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
-  const baseAssetIcon = findAssetIcon2(baseAsset);
+  const baseAssetIcon = findAssetIcon(baseAsset);
 
   // tranche calls
   const { decimals: principalTokenDecimals } = principalTokenInfo;
   const { unlockTimestamp } = principalTokenInfo.extensions;
-  const unlockTimestampDate = convertEpochSecondsToDate2(unlockTimestamp);
+  const unlockTimestampDate = convertEpochSecondsToDate(unlockTimestamp);
   const unlockTimestampLabel = unlockTimestampDate
     ? formatFullDate(unlockTimestampDate)
     : undefined;

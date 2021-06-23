@@ -21,7 +21,7 @@ import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
+import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { GoToPoolButton } from "efi-ui/pools/GoToPoolButton/GoToPoolButton";
 import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
 import { PoolAction } from "efi-ui/pools/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
@@ -29,7 +29,7 @@ import { RedeemPrincipalTokensButton } from "efi-ui/portfolio/RedeemButton/Redee
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenBalanceUNSAFE } from "efi-ui/token/hooks/useTokenBalance";
 import { calculateProgress } from "efi/base/calculateProgress";
-import { convertEpochSecondsToDate2 } from "efi/base/convertEpochSecondsToDate";
+import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
 import { formatPercent } from "efi/base/formatPercent";
 import { ERC20Shim } from "efi/contracts/ERC20Shim";
@@ -77,8 +77,8 @@ export function PrincipalTokenCard(
 
   const { isDarkMode } = useDarkMode();
 
-  const unlockDate = convertEpochSecondsToDate2(unlockTimestamp);
-  const createdAtDate = convertEpochSecondsToDate2(trancheCreatedAt);
+  const unlockDate = convertEpochSecondsToDate(unlockTimestamp);
+  const createdAtDate = convertEpochSecondsToDate(trancheCreatedAt);
   const progress = calculateProgress(createdAtDate, unlockDate);
 
   const formattedDate = unlockDate
@@ -110,11 +110,11 @@ export function PrincipalTokenCard(
     fiatPrice = formatMoney(baseAssetCoinGeckoPrice.multiply(exitValue));
   }
 
-  const BaseAssetIcon = findAssetIcon2(baseAsset);
+  const BaseAssetIcon = findAssetIcon(baseAsset);
 
   const tableRowLink = getTableRowLink(vaultContract?.address, vaultName);
   const maturationDate = useMemo(
-    () => convertEpochSecondsToDate2(unlockTimestamp),
+    () => convertEpochSecondsToDate(unlockTimestamp),
     [unlockTimestamp]
   );
 

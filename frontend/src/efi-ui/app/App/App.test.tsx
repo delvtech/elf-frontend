@@ -1,5 +1,4 @@
-// Ok, so here's what your tests might look like
-
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import React from "react";
 
 // import App from "efi-ui/app/App/App";

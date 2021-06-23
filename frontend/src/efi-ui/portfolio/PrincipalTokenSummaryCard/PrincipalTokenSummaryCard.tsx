@@ -13,9 +13,9 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
+import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
-import { convertEpochSecondsToDate2 } from "efi/base/convertEpochSecondsToDate";
+import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
 import { formatBalance } from "efi/base/formatBalance";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
@@ -51,9 +51,9 @@ export function PrincipalTokenSummaryCard(
   const tranche = trancheContractsByAddress[address];
   const { data: balanceOf } = useTokenBalanceOf(tranche, account);
   const baseAsset = getCryptoAssetForToken(underlying);
-  const BaseAssetIcon = findAssetIcon2(baseAsset);
+  const BaseAssetIcon = findAssetIcon(baseAsset);
   const balanceLabel = formatBalance(balanceOf, decimals);
-  const unlockDate = convertEpochSecondsToDate2(unlockTimestamp);
+  const unlockDate = convertEpochSecondsToDate(unlockTimestamp);
   const formattedUnlockDate = formatAbbreviatedDate(unlockDate);
   const isRedeemable = getIsMature2(unlockTimestamp);
 

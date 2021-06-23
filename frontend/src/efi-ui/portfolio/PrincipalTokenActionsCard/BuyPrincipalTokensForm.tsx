@@ -10,7 +10,7 @@ import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
 import tw from "efi-tailwindcss-classnames";
 import { SwapKind } from "efi/balancer/SwapKind";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
-import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
+import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoBalanceOf } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { usePoolTotalSupply } from "efi-ui/pools/usePoolTotalSupply";
@@ -73,7 +73,7 @@ export function BuyPrincipalTokensForm(
 
   // base asset
   const baseAsset = getCryptoAssetForToken(underlying) as CryptoAsset;
-  const BaseAssetIcon = findAssetIcon2(baseAsset);
+  const BaseAssetIcon = findAssetIcon(baseAsset);
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
   const baseAssetBalanceOf = useCryptoBalanceOf(library, account, baseAsset);
   const baseAssetDecimals = getCryptoDecimals(baseAsset) as number;

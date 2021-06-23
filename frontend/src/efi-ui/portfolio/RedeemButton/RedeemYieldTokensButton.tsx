@@ -14,7 +14,7 @@ import tw from "efi-tailwindcss-classnames";
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
 import { RedeemYieldTokensDrawer } from "efi-ui/tranche/RedeemTokensDrawer/RedeemYieldTokensDrawer";
 import ContractAddresses from "efi/addresses";
-import { convertEpochSecondsToDate2 } from "efi/base/convertEpochSecondsToDate";
+import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
 import { getTokenInfo } from "efi/tokenlists";
@@ -48,7 +48,7 @@ export function RedeemYieldTokensButton({
     address,
     "withdrawInterest"
   );
-  const unlockDate = convertEpochSecondsToDate2(unlockTimestamp);
+  const unlockDate = convertEpochSecondsToDate(unlockTimestamp);
   const buttonDisabled =
     (unlockDate && unlockDate.getTime() > Date.now()) ||
     !canPerformWithdrawInterest;

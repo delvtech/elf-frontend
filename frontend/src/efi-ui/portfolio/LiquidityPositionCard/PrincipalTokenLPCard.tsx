@@ -20,13 +20,13 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
+import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { GoToPoolButton } from "efi-ui/pools/GoToPoolButton/GoToPoolButton";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { PoolAction } from "efi-ui/pools/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
 import { useShareOfPool } from "efi-ui/pools/useShareOfPool";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import { convertEpochSecondsToDate2 } from "efi/base/convertEpochSecondsToDate";
+import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
 import { formatPercent } from "efi/base/formatPercent";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
@@ -69,7 +69,7 @@ export function PrincipalTokenLPCard({
   const { decimals: baseAssetDecimals } = baseAssetInfo;
   const baseAssetCryptoAsset = getCryptoAssetForToken(baseAssetInfo.address);
   const baseAssetSymbol = getCryptoSymbol(baseAssetCryptoAsset);
-  const BaseAssetIcon = findAssetIcon2(baseAssetCryptoAsset);
+  const BaseAssetIcon = findAssetIcon(baseAssetCryptoAsset);
 
   // Principal token
   const { termAssetInfo } = getPoolTokens(poolInfo);
@@ -79,7 +79,7 @@ export function PrincipalTokenLPCard({
 
   const { decimals: trancheDecimals } = principalTokenInfo;
   const { unlockTimestamp } = principalTokenInfo.extensions;
-  const unlockDate = convertEpochSecondsToDate2(unlockTimestamp);
+  const unlockDate = convertEpochSecondsToDate(unlockTimestamp);
   const formattedDate = unlockDate
     ? formatAbbreviatedDate(unlockDate)
     : t`Loading unlock date...`;

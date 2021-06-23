@@ -1,7 +1,7 @@
-import { principalPools } from "efi/pools/ccpool";
+import { getPoolInfoForPrincipalToken, principalPools } from "efi/pools/ccpool";
 import { PoolContract } from "efi/pools/PoolContract";
 import { PoolInfo } from "efi/pools/PoolInfo";
-import { yieldPools } from "efi/pools/weightedPool";
+import { getPoolInfoForYieldToken, yieldPools } from "efi/pools/weightedPool";
 
 export function getPoolTokenInfoFromContract(
   poolContract: PoolContract | undefined
@@ -21,4 +21,11 @@ export function getPoolInfo(address: string): PoolInfo {
   const poolInfo = allPools.find((pool) => pool.address === address);
 
   return poolInfo as PoolInfo;
+}
+
+export function getPoolInfoForToken(address: string): PoolInfo {
+  const principalPool = getPoolInfoForPrincipalToken(address);
+  const yieldPool = getPoolInfoForYieldToken(address);
+
+  return principalPool ?? yieldPool;
 }

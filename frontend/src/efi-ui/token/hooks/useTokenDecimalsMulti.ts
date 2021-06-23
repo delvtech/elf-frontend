@@ -5,6 +5,9 @@ import { ERC20Permit } from "elf-contracts/types/ERC20Permit";
 
 import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
 
+/**
+ *  @deprecated use decimals from tokenlist info instead
+ */
 export function useTokenDecimalsMulti(
   tokenContracts: (ERC20 | ERC20Permit | undefined)[]
 ): QueryObserverResult<number>[] {

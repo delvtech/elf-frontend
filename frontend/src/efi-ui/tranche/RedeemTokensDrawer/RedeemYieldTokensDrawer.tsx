@@ -22,7 +22,7 @@ import { useInterestTokenForTranche } from "efi-ui/tranche/useTrancheInterestTok
 import { useRedeemTermAssetsToEth } from "efi-ui/userProxy/useRedeemTermAssetsToEth";
 import { WalletDrawer } from "efi-ui/wallets/WalletDrawer/WalletDrawer";
 import ContractAddresses from "efi/addresses";
-import { convertEpochSecondsToDate2 } from "efi/base/convertEpochSecondsToDate";
+import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatFullDate } from "efi/base/dates";
 import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
@@ -62,7 +62,7 @@ export function RedeemYieldTokensDrawer({
   const trancheInfo = getTokenInfo<TrancheInfo>(trancheAddress);
   const tranche = trancheContractsByAddress[trancheInfo.address];
   const { unlockTimestamp } = trancheInfo.extensions;
-  const unlockTimestampDate = convertEpochSecondsToDate2(unlockTimestamp);
+  const unlockTimestampDate = convertEpochSecondsToDate(unlockTimestamp);
   const unlockTimestampLabel = unlockTimestampDate
     ? formatFullDate(unlockTimestampDate)
     : undefined;

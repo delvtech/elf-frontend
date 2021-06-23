@@ -11,7 +11,7 @@ import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { RedeemForm } from "efi-ui/tranche/RedeemForm/RedeemForm";
 import { WalletDrawer } from "efi-ui/wallets/WalletDrawer/WalletDrawer";
-import { convertEpochSecondsToDate2 } from "efi/base/convertEpochSecondsToDate";
+import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatFullDate } from "efi/base/dates";
 import { CryptoAssetType } from "efi/crypto/CryptoAsset";
 
@@ -48,9 +48,7 @@ export function RedeemPrincipalTokensConfirmationDrawer({
   } = principalTokenInfo;
 
   const tranche = trancheContractsByAddress[trancheAddress];
-  const unlockTimestampDate = convertEpochSecondsToDate2(
-    trancheUnlockTimestamp
-  );
+  const unlockTimestampDate = convertEpochSecondsToDate(trancheUnlockTimestamp);
   const unlockTimestampLabel = unlockTimestampDate
     ? formatFullDate(unlockTimestampDate)
     : undefined;

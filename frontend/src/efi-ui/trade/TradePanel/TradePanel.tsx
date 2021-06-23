@@ -12,7 +12,7 @@ import { SwapKind } from "efi/balancer/SwapKind";
 import { getCalcSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
+import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoBalanceOf } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { usePoolSpotPrice2 } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { useTokenPoolBalance } from "efi-ui/pools/useTokenPoolBalance/useTokenPoolBalance";
@@ -491,7 +491,7 @@ function useTokenInfoForTradeInput(
       : tokenInfo.address;
 
   const symbol = getCryptoSymbol(asset);
-  const icon = findAssetIcon2(asset);
+  const icon = findAssetIcon(asset);
 
   const balanceOf = useCryptoBalanceOf(library, account, asset);
   const displayBalance = formatBalance(balanceOf, decimals);
