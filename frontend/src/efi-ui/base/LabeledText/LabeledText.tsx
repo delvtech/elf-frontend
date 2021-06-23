@@ -53,7 +53,12 @@ export function LabeledText({
   large = false,
 }: LabeledTextProps): ReactElement {
   return (
-    <div className={classNames(tw("flex", "w-full"), containerClassName)}>
+    <div
+      className={classNames(
+        tw("flex", "items-center", "w-full"),
+        containerClassName
+      )}
+    >
       {icon && <div className={iconClassName}>{icon}</div>}
       <div className={classNames(tw("flex", "flex-col"), className)}>
         <span
