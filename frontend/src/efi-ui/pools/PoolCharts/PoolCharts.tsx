@@ -1,4 +1,4 @@
-import { ReactElement, useCallback, useState } from "react";
+import { ReactElement, useState } from "react";
 
 import { Card, Tab, Tabs } from "@blueprintjs/core";
 import { Serie } from "@nivo/line";

@@ -29,7 +29,6 @@ export function useSwaps(
     toBlock: toBlockNumber,
     refetchOnWindowFocus: false,
   });
-
   const swaps: SwapEventWithTimeStamp[] = useMemo(() => {
     if (!lastestBlockNumber) {
       return EMPTY_ARRAY as SwapEventWithTimeStamp[];
