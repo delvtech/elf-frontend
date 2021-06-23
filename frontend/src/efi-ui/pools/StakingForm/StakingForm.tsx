@@ -23,7 +23,7 @@ import { useJoinConvergentPool } from "efi-ui/pools/useJoinConvergentPool/useJoi
 import { useJoinWeightedPool } from "efi-ui/pools/useJoinWeightedPool";
 import { useTokenPoolBalance } from "efi-ui/pools/useTokenPoolBalance/useTokenPoolBalance";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
-import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
+import { TokenIcon } from "efi-ui/token/TokenIcon";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
 import { useEthBalance } from "efi-ui/wallets/hooks/useEthBalance/useEthBalance";
 import ContractAddresses from "efi/addresses";
@@ -37,9 +37,9 @@ import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolContract } from "efi/pools/PoolContract";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { validateStakingValue } from "efi/staking/validateStakeValue";
+import { getTokenInfo } from "efi/tokenlists";
 import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
 import { trancheContracts } from "efi/tranche/tranches";
-import { TokenIcon } from "efi-ui/token/TokenIcon";
 
 interface StakingAssetInputProps {
   cryptoSymbol: CryptoSymbol;
@@ -301,13 +301,15 @@ export function StakingForm(props: StakingFormProps): ReactElement {
         library={library}
         account={account}
         baseAsset={baseAsset}
-        trancheAsset={termAsset}
+        termAsset={termAsset}
+        baseAssetDecimals={baseAssetDecimals}
+        termAssetDecimals={termAssetDecimals}
         baseAssetSymbol={baseAssetSymbol}
         baseAssetSymbolLabel={baseAssetSymbol}
-        trancheAssetSymbol={termAssetSymbol}
-        trancheAssetSymbolLabel={termAssetSymbolLabel}
+        termAssetSymbol={termAssetSymbol}
+        termAssetSymbolLabel={termAssetSymbolLabel}
         baseAssetIn={amountIn}
-        trancheAssetIn={amountOut}
+        termAssetIn={amountOut}
         isOpen={isDrawerOpen}
         onClose={onClose}
         isStakeLoading={
@@ -339,13 +341,13 @@ function useTokenInfoForTradeInput(
   const { data: ethBalance } = useEthBalance(library, account);
 
   const asset = getCryptoAssetForToken(tokenContract?.address);
-  const symbol = getCryptoSymbol(asset);
+  const symbol = getCryptoSymbol(asset) as string;
   const icon = findAssetIcon2(asset);
 
   // otherwise get values from token calls
   const poolBalance = useTokenPoolBalance(pool, tokenContract);
 
-  const { data: decimals } = useTokenDecimals(tokenContract);
+  const { decimals } = getTokenInfo(tokenContract.address);
   const { data: tokenBalance } = useTokenBalanceOf(tokenContract, account);
 
   const balanceOf = isWETH ? ethBalance : tokenBalance;

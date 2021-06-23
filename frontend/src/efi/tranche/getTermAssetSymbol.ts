@@ -8,12 +8,12 @@ interface TermAssetSymbols {
   /**
    * a short symbol like ePyvUSDC or eYyvCurve-stETH
    */
-  symbol?: string | undefined;
+  symbol: string;
 
   /**
    * a longer label like 'Principal Token ETH'
    */
-  label?: string | undefined;
+  label: string;
 }
 
 // TODO: lets make this the default format for label/symbol in tokenlists
@@ -37,5 +37,6 @@ export function getTermAssetSymbol(
     };
   }
 
-  return {};
+  // shouldn't happen
+  return { symbol: "unknown", label: "unknown" };
 }

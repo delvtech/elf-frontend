@@ -7,31 +7,32 @@ import { t } from "ttag";
 
 import { getBalancerApprovalMessage } from "efi-ui/balancer/balancerApprovalMessage";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
-import { ERC20Shim } from "efi/contracts/ERC20Shim";
-import { useCryptoAssetMetadata } from "efi-ui/crypto/hooks/useCryptoAssetMetadata/useCryptAssetMetadata";
+import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 import { StakeConfirmationForm } from "efi-ui/pools/StakeTokensConfirmationDrawer/StakeConfirmationForm";
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
+import { TokenIcon } from "efi-ui/token/TokenIcon";
 import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/TransactionDrawer";
+import { ERC20Shim } from "efi/contracts/ERC20Shim";
 import {
   CryptoAsset,
   CryptoAssetType,
   findTokenContract,
 } from "efi/crypto/CryptoAsset";
-import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
-import { TokenIcon } from "efi-ui/token/TokenIcon";
 import { WalletApprovalInfo } from "efi/wallets/WalletApprovalInfo";
 
 interface StakingConfirmationDrawerProps {
   account: string | null | undefined;
   library: Web3Provider | undefined;
-  baseAsset: CryptoAsset | undefined;
-  trancheAsset: CryptoAsset | undefined;
-  baseAssetSymbol: string | undefined;
-  baseAssetSymbolLabel: string | undefined;
-  trancheAssetSymbol: string | undefined;
-  trancheAssetSymbolLabel: string | undefined;
-  baseAssetIn: string | undefined;
-  trancheAssetIn: string | undefined;
+  baseAsset: CryptoAsset;
+  termAsset: CryptoAsset;
+  baseAssetDecimals: number;
+  termAssetDecimals: number;
+  baseAssetSymbol: string;
+  baseAssetSymbolLabel: string;
+  termAssetSymbol: string;
+  termAssetSymbolLabel: string;
+  baseAssetIn: string;
+  termAssetIn: string;
   isOpen: boolean;
   onClose: () => void;
   onStake: () => void;
@@ -44,12 +45,14 @@ export function StakingConfirmationDrawer({
   library,
   account,
   baseAsset,
-  trancheAsset,
+  termAsset,
+  termAssetDecimals,
+  baseAssetDecimals,
   baseAssetSymbol,
-  trancheAssetSymbol,
-  trancheAssetSymbolLabel,
+  termAssetSymbol,
+  termAssetSymbolLabel,
   baseAssetIn,
-  trancheAssetIn,
+  termAssetIn,
   isOpen,
   onClose,
   isStakeError,
@@ -60,26 +63,23 @@ export function StakingConfirmationDrawer({
   const balancerVault = useBalancerVault();
   // close the drawer after stake succeeds
 
-  const { decimals: baseAssetDecimals } = useCryptoAssetMetadata(baseAsset);
   const baseAssetIcon = findAssetIcon2(baseAsset) as TokenIcon;
-  const { decimals: trancheAssetDecimals } =
-    useCryptoAssetMetadata(trancheAsset);
-  const trancheAssetIcon = findAssetIcon2(trancheAsset) as TokenIcon;
+  const termAssetIcon = findAssetIcon2(termAsset) as TokenIcon;
 
   const baseAssetInBigNumber = parseUnits(
     baseAssetIn || "0",
     baseAssetDecimals
   );
   const trancheAssetInBigNumber = parseUnits(
-    trancheAssetIn || "0",
-    trancheAssetDecimals
+    termAssetIn || "0",
+    termAssetDecimals
   );
 
   const hasTokenApprovals = useHasTokenApprovals(
     account,
     balancerVault?.address,
     baseAsset,
-    trancheAsset,
+    termAsset,
     baseAssetInBigNumber,
     trancheAssetInBigNumber
   );
@@ -89,7 +89,7 @@ export function StakingConfirmationDrawer({
 
   const walletApprovalInfos = useWalletApprovalInfos(
     baseAsset,
-    trancheAsset,
+    termAsset,
     account,
     balancerVault?.address
   );
@@ -110,14 +110,14 @@ export function StakingConfirmationDrawer({
       transactionDetails={
         <StakeConfirmationForm
           assetOneSymbol={baseAssetSymbol}
-          assetTwoSymbol={trancheAssetSymbol}
+          assetTwoSymbol={termAssetSymbol}
           assetOneSymbolLabel={baseAssetSymbol}
-          assetTwoSymbolLabel={trancheAssetSymbolLabel}
+          assetTwoSymbolLabel={termAssetSymbolLabel}
           heading={t`Confirm Staking`}
           assetOneIcon={baseAssetIcon}
-          assetTwoIcon={trancheAssetIcon}
+          assetTwoIcon={termAssetIcon}
           assetOneValueLabel={baseAssetIn}
-          assetTwoValueLabel={trancheAssetIn}
+          assetTwoValueLabel={termAssetIn}
         />
       }
     />
