@@ -5,11 +5,11 @@ import classNames from "classnames";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 import { ConvergentCurvePoolActiveInput } from "efi-ui/pools/useConvergentCurvePoolStakeInputs/useConvergentCurvePoolStakeInputs";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 
 import styles from "./styles.module.css";
 
@@ -62,7 +62,7 @@ export function StakeForm({
   const { isDarkMode } = useDarkMode();
   const assetOneSymbol = getCryptoSymbol(assetOne);
   const assetOneSymbolLabel = assetOneSymbolFromProps || assetOneSymbol;
-  const AssetOneIcon = findAssetIcon(assetOneSymbol);
+  const AssetOneIcon = findAssetIcon2(assetOne);
   const onAssetOneAmountChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
       onAssetOneAmountChangeFromProps?.(event.target.value);
@@ -71,7 +71,7 @@ export function StakeForm({
   );
 
   const assetTwoSymbol = getCryptoSymbol(assetTwo);
-  const AssetTwoIcon = findAssetIcon(assetTwoSymbol);
+  const AssetTwoIcon = findAssetIcon2(assetTwo);
   const assetTwoSymbolLabel = assetTwoSymbolFromProps || assetTwoSymbol;
   const onAssetTwoAmountChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
