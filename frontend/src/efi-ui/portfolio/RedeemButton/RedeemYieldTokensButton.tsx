@@ -14,6 +14,7 @@ import { RedeemYieldTokensDrawer } from "efi-ui/tranche/RedeemTokensDrawer/Redee
 import { convertEpochSecondsToDate2 } from "efi/base/convertEpochSecondsToDate";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { getTokenInfo } from "efi/tokenlists";
+import { useTrancheCanPerform } from "efi-ui/tranche/useTrancheCanPerform";
 
 interface RedeemYieldTokensButtonProps {
   account: string | null | undefined;
@@ -33,13 +34,49 @@ export function RedeemYieldTokensButton({
   const trancheInfo = getTokenInfo<TrancheInfo>(
     yieldTokenInfo.extensions.tranche
   );
-  const { unlockTimestamp } = trancheInfo.extensions;
+  const {
+    address,
+    extensions: { unlockTimestamp },
+  } = trancheInfo;
+
+  const canPerformWithdrawInterest = useTrancheCanPerform(
+    address,
+    "withdrawInterest"
+  );
   const unlockDate = convertEpochSecondsToDate2(unlockTimestamp);
-  const buttonDisabled = unlockDate && unlockDate.getTime() > Date.now();
+  const buttonDisabled =
+    (unlockDate && unlockDate.getTime() > Date.now()) ||
+    !canPerformWithdrawInterest;
 
   const openDrawer = useCallback(() => {
     setDrawerOpen(true);
   }, []);
+
+  if (!canPerformWithdrawInterest) {
+    return (
+      <Tooltip2
+        inheritDarkTheme={false}
+        className={tw("w-full")}
+        intent={Intent.DANGER}
+        content={t`Redeeming for this token has been temporarily disabled, please refer to our Discord or Twitter for further updates.`}
+      >
+        <AnchorButton
+          fill
+          intent={Intent.DANGER}
+          minimal
+          disabled={
+            /*
+             * See Blueprint docs, we have to use an AnchorButton for a11y
+             * when putting a tooltip on a disabled button
+             */
+            true
+          }
+        >
+          <div className={tw("p-2", "text-base")}>{t`Redeem`}</div>
+        </AnchorButton>
+      </Tooltip2>
+    );
+  }
 
   return (
     <Fragment>

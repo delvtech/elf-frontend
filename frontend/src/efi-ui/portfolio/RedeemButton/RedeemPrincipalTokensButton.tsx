@@ -10,6 +10,7 @@ import tw from "efi-tailwindcss-classnames";
 import { RedeemPrincipalTokensDrawer } from "efi-ui/tranche/RedeemTokensDrawer/RedeemPrincipalTokensDrawer";
 import { convertEpochSecondsToDate2 } from "efi/base/convertEpochSecondsToDate";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
+import { useTrancheCanPerform } from "efi-ui/tranche/useTrancheCanPerform";
 
 interface RedeemPrincipalTokensButtonProps {
   account: string | null | undefined;
@@ -26,9 +27,19 @@ export function RedeemPrincipalTokensButton({
   library,
 }: RedeemPrincipalTokensButtonProps): ReactElement {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
-  const { unlockTimestamp } = principalTokenInfo.extensions;
+  const {
+    address,
+    extensions: { unlockTimestamp },
+  } = principalTokenInfo;
   const unlockDate = convertEpochSecondsToDate2(unlockTimestamp);
-  const buttonDisabled = unlockDate && unlockDate.getTime() > Date.now();
+  const canPerformWithdrawPrincipal = useTrancheCanPerform(
+    address,
+    "withdrawPrincipal"
+  );
+
+  const buttonDisabled =
+    (unlockDate && unlockDate.getTime() > Date.now()) ||
+    !canPerformWithdrawPrincipal;
 
   const openDrawer = useCallback(() => {
     setDrawerOpen(true);
@@ -37,6 +48,32 @@ export function RedeemPrincipalTokensButton({
   const closeDrawer = useCallback(() => {
     setDrawerOpen(false);
   }, []);
+
+  if (!canPerformWithdrawPrincipal) {
+    return (
+      <Tooltip2
+        inheritDarkTheme={false}
+        className={tw("w-full")}
+        intent={Intent.DANGER}
+        content={t`Redeeming for this token has been temporarily disabled, please refer to our Discord or Twitter for further updates.`}
+      >
+        <AnchorButton
+          fill
+          intent={Intent.DANGER}
+          minimal
+          disabled={
+            /*
+             * See Blueprint docs, we have to use an AnchorButton for a11y
+             * when putting a tooltip on a disabled button
+             */
+            true
+          }
+        >
+          <div className={tw("p-2", "text-base")}>{t`Redeem`}</div>
+        </AnchorButton>
+      </Tooltip2>
+    );
+  }
 
   return (
     <Fragment>
