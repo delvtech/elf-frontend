@@ -115,13 +115,13 @@ export function SwapTokensTransactionConfirmationDrawer({
   );
 
   const amountToLimit =
-    swapKind === SwapKind.GIVEN_IN ? queryAmountOut : queryAmountIn;
+    swapKind === SwapKind.GIVEN_IN ? queryAmountOut.abs() : queryAmountIn.abs();
   const limitBN = getToleranceAmount(
     amountToLimit,
-    tokenInDecimals,
-    tokenOutDecimals,
     swapKind,
-    0.01
+    0.01,
+    tokenInDecimals,
+    tokenOutDecimals
   );
 
   const { swap: onConfirmSwapTokens, mutationResult: swapResult } = useSwap(

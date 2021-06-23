@@ -170,7 +170,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     !amountIn ||
     !amountOut;
   const submitButtonDisabled =
-    !!account || invalidInput || !canPerformTransaction;
+    !account || invalidInput || !canPerformTransaction;
 
   const { submitButtonError, submitButtonLabel } = getSubmitButtonLabel(
     buttonLabel,

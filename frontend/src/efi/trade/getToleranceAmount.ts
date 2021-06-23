@@ -1,7 +1,8 @@
-import { SwapKind } from "efi-ui/balancer/SwapKind";
-import { getSafeFixedNumber } from "efi/base/math/fixedPoint";
 import { BigNumber } from "ethers";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
+
+import { SwapKind } from "efi-ui/balancer/SwapKind";
+import { getSafeFixedNumber } from "efi/base/math/fixedPoint";
 
 /**
  * Given an expected amount and a tolerance, returns the tolerance value for a transaction to
@@ -21,19 +22,18 @@ export function getToleranceAmount(
   // for GIVEN_IN, we calculate the minimum amount out we'll accept in the transaction.
   if (swapKind === SwapKind.GIVEN_IN) {
     const toleranceOutFN = getSafeFixedNumber(`${1 - tolerance}`, {
-      signed: true,
       decimals: tokenOutDecimals,
     });
 
     const limitTokenOutFN = getSafeFixedNumber(
-      formatUnits(expectedAmount || "1"),
+      formatUnits(expectedAmount || "1", tokenOutDecimals),
       {
-        signed: true,
         decimals: tokenOutDecimals,
       }
     );
 
     const minAmountOutFN = limitTokenOutFN.mulUnsafe(toleranceOutFN);
+
     const minAmountOut = parseUnits(
       minAmountOutFN.toString(),
       tokenOutDecimals
@@ -44,13 +44,11 @@ export function getToleranceAmount(
 
   // for GIVEN_OUT, we calculate the maximum amount in we'll accept in the transaction.
   const toleranceInFN = getSafeFixedNumber(`${1 + tolerance}`, {
-    signed: true,
     decimals: tokenInDecimals,
   });
   const limitTokenInFN = getSafeFixedNumber(
-    formatUnits(expectedAmount || "1"),
+    formatUnits(expectedAmount || "1", tokenInDecimals),
     {
-      signed: true,
       decimals: tokenInDecimals,
     }
   );

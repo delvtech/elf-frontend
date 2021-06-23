@@ -29,6 +29,7 @@ import { useSigner } from "efi-ui/provider/useBlockFromTag/useSigner/useSigner";
 import { getTokenInfo } from "efi/tokenlists";
 import { PrincipalTokenInfo } from "tokenlists/types";
 import { underlyingContractsByAddress } from "efi/underlying/underlying";
+import { BigNumber } from "ethers";
 
 interface BuyPrincipalTransactionConfirmationDrawerProps {
   account: string | null | undefined;
@@ -71,7 +72,7 @@ export function BuyPrincipalTokensTransactionConfirmationDrawer({
   const balancerVault = useBalancerVault();
   // base asset calls
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
-  const baseAssetDecimals = getCryptoDecimals(baseAsset);
+  const baseAssetDecimals = getCryptoDecimals(baseAsset) ?? 18;
 
   // tranche calls
   const {
@@ -98,16 +99,19 @@ export function BuyPrincipalTokensTransactionConfirmationDrawer({
     tokenOutAddress,
     amountInAsBigNumber
   );
-  const { tokenOut: queryAmountOut } = parseQueryBatchSwapResult(
-    tokenInAddress,
-    tokenOutAddress,
-    queryBatchSwapInResult
-  );
+  const { tokenOut: queryAmountOut = BigNumber.from(0) } =
+    parseQueryBatchSwapResult(
+      tokenInAddress,
+      tokenOutAddress,
+      queryBatchSwapInResult
+    );
 
   const minAmountOut = getToleranceAmount(
-    queryAmountOut,
+    queryAmountOut.abs(),
+    SwapKind.GIVEN_IN,
+    0.01,
     baseAssetDecimals,
-    0.01
+    baseAssetDecimals
   );
 
   const {
