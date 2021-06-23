@@ -2,10 +2,13 @@ import { useMutation, UseMutationResult } from "react-query";
 
 import { Contract, ContractReceipt, ContractTransaction, Signer } from "ethers";
 
+import {
+  isTransactionReplacedError,
+  TransactionError,
+} from "efi-ui/contracts/TransactionError";
 import { lookupAddressKey } from "efi/addresses";
-import { ContractMethodArgs, ContractMethodName } from "efi/contracts/types";
 import { TransactionStatus } from "efi/contracts/transaction";
-import { Logger } from "ethers/lib/utils";
+import { ContractMethodArgs, ContractMethodName } from "efi/contracts/types";
 
 export interface UseSmartContractTransactionOptions<
   TContract extends Contract,
@@ -21,7 +24,7 @@ export interface UseSmartContractTransactionOptions<
     transactionStatus: TransactionStatus
   ) => void | Promise<void>;
 
-  onError?: (result: Error) => void | Promise<void>;
+  onError?: (error: TransactionError) => void | Promise<void>;
 }
 
 export function useSmartContractTransaction<
@@ -62,13 +65,13 @@ export function useSmartContractTransaction<
 
       return transaction?.wait();
     },
-    onError: async (error: any, variables) => {
+    onError: async (error: TransactionError, variables) => {
       // handle when we mine speedups and cancellations
       // see for reference: https://blog.ricmoo.com/highlights-ethers-js-may-2021-2826e858277d
-      if (error.code === Logger.errors.TRANSACTION_REPLACED) {
+      if (isTransactionReplacedError(error)) {
         if (error.reason === "cancelled") {
           return onTransactionMined?.(
-            error.replacement,
+            error.receipt,
             variables,
             TransactionStatus.CANCELLED
           );
