@@ -1,8 +1,11 @@
 import { useMutation, UseMutationResult } from "react-query";
 
 import { Contract, ContractReceipt, ContractTransaction, Signer } from "ethers";
-import { Logger } from "ethers/lib/utils";
 
+import {
+  isTransactionReplacedError,
+  TransactionError,
+} from "efi-ui/contracts/TransactionError";
 import { lookupAddressKey } from "efi/addresses";
 import { TransactionStatus } from "efi/contracts/transaction";
 import { ContractMethodArgs, ContractMethodName } from "efi/contracts/types";
@@ -21,7 +24,7 @@ export interface UseSmartContractTransactionOptions<
     transactionStatus: TransactionStatus
   ) => void | Promise<void>;
 
-  onError?: (error: TransactionReplacedError) => void | Promise<void>;
+  onError?: (error: TransactionError) => void | Promise<void>;
 }
 
 export function useSmartContractTransaction<
@@ -62,10 +65,10 @@ export function useSmartContractTransaction<
 
       return transaction?.wait();
     },
-    onError: async (error: TransactionReplacedError, variables) => {
+    onError: async (error: TransactionError, variables) => {
       // handle when we mine speedups and cancellations
       // see for reference: https://blog.ricmoo.com/highlights-ethers-js-may-2021-2826e858277d
-      if (error.code === Logger.errors.TRANSACTION_REPLACED) {
+      if (isTransactionReplacedError(error)) {
         if (error.reason === "cancelled") {
           return onTransactionMined?.(
             error.receipt,
@@ -98,23 +101,4 @@ export function useSmartContractTransaction<
       return onTransactionMined?.(txReceipt, vars, TransactionStatus.MINED);
     },
   });
-}
-
-export interface TransactionReplacedError extends Error {
-  code: "TRANSACTION_REPLACED";
-  // The reason why the transaction was replaced
-  // - "repriced" is generally nothing of concern, the
-  //   only difference in the transaction is the gasPrice
-  // - "cancelled" means the `to` has been set to the `from`,
-  //   the data has been set to `0x` and value set to 0
-  // - "replaced" means that the transaction is unrelated to
-  //   the original transaction
-  reason: "repriced" | "cancelled" | "replaced";
-  // This is a short-hand property as the effects of either a
-  // "cancelled" or "replaced" tx are effectively cancelled
-  cancelled: boolean;
-  // The TransactionResponse which replaced the original
-  replacement: ContractTransaction;
-  // The TransactionReceipt of the replacement transaction
-  receipt: ContractReceipt;
 }

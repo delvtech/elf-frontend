@@ -3,15 +3,15 @@ import { UseMutationResult, useQueryClient } from "react-query";
 
 import { Contract, ContractReceipt, ContractTransaction, Signer } from "ethers";
 
+import { TransactionError } from "efi-ui/contracts/TransactionError";
 import {
-  TransactionReplacedError,
   useSmartContractTransaction,
   UseSmartContractTransactionOptions,
 } from "efi-ui/contracts/useSmartContractTransaction/useSmartContractTransaction";
 import { usePendingTransactionPref } from "efi-ui/transactions/usePendingTransactionPref/usePendingTransactionPref";
-import { ContractMethodArgs, ContractMethodName } from "efi/contracts/types";
 import { ETH_BALANCE_QUERY_KEY } from "efi-ui/wallets/hooks/useEthBalance/useEthBalance";
 import { TransactionStatus } from "efi/contracts/transaction";
+import { ContractMethodArgs, ContractMethodName } from "efi/contracts/types";
 
 interface UseSmartContractTransactionPersistedOptions<
   TContract extends Contract,
@@ -99,7 +99,7 @@ export function useSmartContractTransactionPersisted<
   );
 
   const onTxError = useCallback(
-    (error: TransactionReplacedError) => {
+    (error: TransactionError) => {
       onError?.(error);
     },
     [onError]
