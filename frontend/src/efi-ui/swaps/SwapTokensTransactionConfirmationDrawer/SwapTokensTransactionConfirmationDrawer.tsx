@@ -105,6 +105,7 @@ export function SwapTokensTransactionConfirmationDrawer({
     tokenOutAddress,
     amountInBN
   );
+
   const {
     tokenOut: queryAmountOut = BigNumber.from(0),
     tokenIn: queryAmountIn = BigNumber.from(0),
@@ -114,12 +115,13 @@ export function SwapTokensTransactionConfirmationDrawer({
     queryBatchSwapInResult
   );
 
+  const slippageTolerance = 0.01;
   const amountToLimit =
     swapKind === SwapKind.GIVEN_IN ? queryAmountOut.abs() : queryAmountIn.abs();
   const limitBN = getToleranceAmount(
     amountToLimit,
     swapKind,
-    0.01,
+    slippageTolerance,
     tokenInDecimals,
     tokenOutDecimals
   );
@@ -191,8 +193,9 @@ export function SwapTokensTransactionConfirmationDrawer({
         >
           <SwapTokenDetails
             baseAssetSymbol={baseAssetSymbol}
-            priceSlippage={priceSlippage}
+            priceImpact={priceSlippage}
             feePercent={appliedFeePercent}
+            slippageTolerance={slippageTolerance}
             spotPriceBaseAssetForOneToken={spotPrice}
             termAssetType={termAssetType}
           />

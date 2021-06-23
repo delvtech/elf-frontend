@@ -12,7 +12,6 @@ export const localhostProvider = new providers.JsonRpcProvider(LOCAL_RPC_HOST);
 const web3 = createAlchemyWeb3(
   `wss://eth-goerli.ws.alchemyapi.io/v2/${ALCHEMY_GOERLI_KEY}`
 );
-
 // TODO: improve on this to dynamically grab the correct chainid/key.  hardcoded to goerli for now.
 const alchWeb3WebSocketProvider = new providers.Web3Provider(
   web3.currentProvider as ExternalProvider,
