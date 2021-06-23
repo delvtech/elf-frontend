@@ -11,7 +11,7 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
+import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { useSigner } from "efi-ui/provider/useBlockFromTag/useSigner/useSigner";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { RedeemForm } from "efi-ui/tranche/RedeemForm/RedeemForm";
@@ -52,7 +52,7 @@ export function RedeemPrincipalTokensDrawer({
 
   // base asset calls
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
-  const baseAssetIcon = findAssetIcon2(baseAsset);
+  const baseAssetIcon = findAssetIcon(baseAsset);
 
   // tranche calls
   const { decimals: principalTokenDecimals } = principalTokenInfo;

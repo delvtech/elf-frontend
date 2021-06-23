@@ -25,7 +25,7 @@ import { SwapKind } from "efi/balancer/SwapKind";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { CryptoAssetPicker } from "efi-ui/crypto/CryptoAssetPicker/CryptoAssetPicker";
-import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
+import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoBalanceOf } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { SaveInput } from "efi-ui/saveApp/save/SaveInput/SaveInput";
 import { SaveTermPicker } from "efi-ui/saveApp/save/SaveTermPicker/SaveTermPicker";
@@ -106,7 +106,7 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
     activeBaseAssetDecimals
   );
   const baseAssetSymbol = getCryptoSymbol(activeBaseAsset);
-  const baseAssetIcon = findAssetIcon2(activeBaseAsset);
+  const baseAssetIcon = findAssetIcon(activeBaseAsset);
 
   // principal token
   const {

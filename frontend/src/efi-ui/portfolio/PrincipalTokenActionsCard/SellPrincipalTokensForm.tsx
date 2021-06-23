@@ -12,7 +12,7 @@ import tw from "efi-tailwindcss-classnames";
 import { SwapKind } from "efi/balancer/SwapKind";
 import { getCalcSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
-import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
+import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { usePoolSpotPrice2 } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { usePoolTotalSupply } from "efi-ui/pools/usePoolTotalSupply";
@@ -64,7 +64,7 @@ export function SellPrincipalTokensForm(
 
   // base asset
   const baseAsset = getBaseAssetForTranche(ptAddress);
-  const baseAssetIcon = findAssetIcon2(baseAsset);
+  const baseAssetIcon = findAssetIcon(baseAsset);
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
   const { decimals: baseAssetDecimals } = baseAssetInfo;
 
@@ -73,7 +73,7 @@ export function SellPrincipalTokensForm(
   const { data: ptBalanceOf } = useTokenBalanceOf(trancheContract, account);
   const ptBalanceLabel = formatBalance(ptBalanceOf, ptDecimals, ptDecimals);
   const principalTokenCryptoAsset = getCryptoAssetForToken(ptAddress);
-  const ptIcon = findAssetIcon2(principalTokenCryptoAsset);
+  const ptIcon = findAssetIcon(principalTokenCryptoAsset);
   const canPerformSell = useCanPerformPool(poolInfo.address, "sell");
 
   // inputs

@@ -6,7 +6,8 @@ const CryptoIconSvg: Record<string, TokenIcon> = {
   [ContractAddresses.usdcAddress]: UsdcIcon,
   [ContractAddresses.wethAddress]: WethIcon,
 };
-export function findAssetIcon2(
+
+export function findAssetIcon(
   cryptoAsset: CryptoAsset | undefined
 ): TokenIcon | undefined {
   if (!cryptoAsset) {

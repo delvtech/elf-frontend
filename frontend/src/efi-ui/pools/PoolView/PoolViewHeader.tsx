@@ -6,7 +6,7 @@ import { differenceInDays, format } from "date-fns";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
+import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
@@ -29,7 +29,7 @@ export function PoolViewHeader({
     termAssetInfo.address,
     baseAssetSymbol
   );
-  const BaseAssetIcon = findAssetIcon2(baseAsset);
+  const BaseAssetIcon = findAssetIcon(baseAsset);
 
   const trancheInfo = getTrancheForPool(poolInfo);
   const { unlockTimestamp, createdAtTimestamp } = trancheInfo.extensions;

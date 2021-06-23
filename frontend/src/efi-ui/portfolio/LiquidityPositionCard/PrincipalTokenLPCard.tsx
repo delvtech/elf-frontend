@@ -20,7 +20,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
+import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { GoToPoolButton } from "efi-ui/pools/GoToPoolButton/GoToPoolButton";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { PoolAction } from "efi-ui/pools/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
@@ -69,7 +69,7 @@ export function PrincipalTokenLPCard({
   const { decimals: baseAssetDecimals } = baseAssetInfo;
   const baseAssetCryptoAsset = getCryptoAssetForToken(baseAssetInfo.address);
   const baseAssetSymbol = getCryptoSymbol(baseAssetCryptoAsset);
-  const BaseAssetIcon = findAssetIcon2(baseAssetCryptoAsset);
+  const BaseAssetIcon = findAssetIcon(baseAssetCryptoAsset);
 
   // Principal token
   const { termAssetInfo } = getPoolTokens(poolInfo);

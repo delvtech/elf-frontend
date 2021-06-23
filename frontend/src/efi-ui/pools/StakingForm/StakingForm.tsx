@@ -17,7 +17,7 @@ import { t } from "ttag";
 
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
+import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { StakingConfirmationDrawer } from "efi-ui/pools/StakeTokensConfirmationDrawer/StakeTokensConfirmationDrawer";
 import { useJoinConvergentPool } from "efi-ui/pools/useJoinConvergentPool/useJoinConvergentPool";
 import { useJoinWeightedPool } from "efi-ui/pools/useJoinWeightedPool";
@@ -127,7 +127,7 @@ export function StakingForm(props: StakingFormProps): ReactElement {
 
   // use this hook to make sure we get the ETH icon if the base asset it WETH
   const cryptoAsset = getCryptoAssetForToken(baseAssetContract?.address);
-  const BaseAssetIcon = findAssetIcon2(cryptoAsset);
+  const BaseAssetIcon = findAssetIcon(cryptoAsset);
 
   const {
     asset: termAsset,
@@ -342,7 +342,7 @@ function useTokenInfoForTradeInput(
 
   const asset = getCryptoAssetForToken(tokenContract?.address);
   const symbol = getCryptoSymbol(asset) as string;
-  const icon = findAssetIcon2(asset);
+  const icon = findAssetIcon(asset);
 
   // otherwise get values from token calls
   const poolBalance = useTokenPoolBalance(pool, tokenContract);

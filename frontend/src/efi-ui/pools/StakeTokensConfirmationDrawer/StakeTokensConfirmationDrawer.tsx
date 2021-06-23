@@ -7,7 +7,7 @@ import { t } from "ttag";
 
 import { getBalancerApprovalMessage } from "efi-ui/balancer/balancerApprovalMessage";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
-import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
+import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { StakeConfirmationForm } from "efi-ui/pools/StakeTokensConfirmationDrawer/StakeConfirmationForm";
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
 import { TokenIcon } from "efi-ui/token/TokenIcon";
@@ -63,8 +63,8 @@ export function StakingConfirmationDrawer({
   const balancerVault = useBalancerVault();
   // close the drawer after stake succeeds
 
-  const baseAssetIcon = findAssetIcon2(baseAsset) as TokenIcon;
-  const termAssetIcon = findAssetIcon2(termAsset) as TokenIcon;
+  const baseAssetIcon = findAssetIcon(baseAsset) as TokenIcon;
+  const termAssetIcon = findAssetIcon(termAsset) as TokenIcon;
 
   const baseAssetInBigNumber = parseUnits(
     baseAssetIn || "0",
