@@ -78,6 +78,9 @@ export function RedeemYieldTokensDrawer({
 
   const [enoughAllowance, setEnoughAllowance] = useState(!!+userProxyAllowance);
   const [includePermits, setIncludePermits] = useState(true);
+  const showPermitCallout =
+    !enoughAllowance && baseAsset.type === CryptoAssetType.ETHEREUM;
+  const showApprovalCallout = showPermitCallout && !includePermits;
   useEffect(() => {
     if (
       parseUnits(userProxyAllowance || "0").lt(
@@ -122,8 +125,11 @@ export function RedeemYieldTokensDrawer({
   const confirmButtonDisabled = getConfirmButtonDisabled(
     account,
     yieldTokenValueBN,
-    yieldTokenBalanceOf
+    yieldTokenBalanceOf,
+    enoughAllowance,
+    showApprovalCallout
   );
+
   let buttonIntent = isError ? Intent.DANGER : Intent.PRIMARY;
   if (yieldTokenBalanceOf && yieldTokenValueBN.gt(yieldTokenBalanceOf)) {
     buttonIntent = Intent.DANGER;
@@ -142,20 +148,16 @@ export function RedeemYieldTokensDrawer({
       className={tw("justify-between")}
     >
       <div className={tw("flex", "flex-col", "space-y-4")}>
-        {!enoughAllowance &&
-          !includePermits &&
-          baseAsset.type === CryptoAssetType.ETHEREUM && (
-            <WalletApprovalCallout
-              spenderAddress={userProxyContractAddress}
-              messageRenderer={() =>
-                `Approval needed for ${yieldTokenInfo.name}`
-              }
-              signer={signer}
-              ownerAddress={account}
-              cryptoAsset={getCryptoAssetForToken(yieldTokenInfo.address)}
-            />
-          )}
-        {!enoughAllowance && baseAsset.type === CryptoAssetType.ETHEREUM && (
+        {showApprovalCallout && (
+          <WalletApprovalCallout
+            spenderAddress={userProxyContractAddress}
+            messageRenderer={() => `Approval needed for ${yieldTokenInfo.name}`}
+            signer={signer}
+            ownerAddress={account}
+            cryptoAsset={getCryptoAssetForToken(yieldTokenInfo.address)}
+          />
+        )}
+        {showPermitCallout && (
           <Callout>
             <div>
               <Switch
@@ -260,7 +262,9 @@ function getConfirmButtonLabel(
 function getConfirmButtonDisabled(
   account: string | null | undefined,
   amountIn: BigNumber | undefined,
-  balanceOf: BigNumber | undefined
+  balanceOf: BigNumber | undefined,
+  enoughAllowance: boolean,
+  useApprovals: boolean
 ) {
   // must be connected to click this button
   if (!account) {
@@ -273,6 +277,10 @@ function getConfirmButtonDisabled(
   }
 
   if (amountIn.gt(balanceOf)) {
+    return true;
+  }
+
+  if (!enoughAllowance && useApprovals) {
     return true;
   }
 
