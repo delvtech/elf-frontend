@@ -4,7 +4,7 @@ import { Vault } from "elf-contracts/types/Vault";
 import { BigNumber } from "ethers";
 import zip from "lodash.zip";
 
-import { SwapKind } from "efi-ui/balancer/SwapKind";
+import { SwapKind } from "efi/balancer/SwapKind";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { makeQueryBatchSwapCallArgs } from "efi-ui/balancer/useQueryBatchSwap/makeQueryBatchSwapCallArgs";
 import { getQueriesData } from "efi-ui/base/queryResults";

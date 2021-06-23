@@ -6,7 +6,7 @@ import zip from "lodash.zip";
 import { Currency, Money } from "ts-money";
 
 import { getCoinGeckoId } from "efi-coingecko";
-import { SwapKind } from "efi-ui/balancer/SwapKind";
+import { SwapKind } from "efi/balancer/SwapKind";
 import { parseQueryBatchSwapResult } from "efi-ui/balancer/useQueryBatchSwap/parseQueryBatchSwapResult";
 import { useQueryBatchSwapMulti } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwapMulti";
 import { getQueriesData } from "efi-ui/base/queryResults";

@@ -3,7 +3,7 @@ import { ERC20 } from "elf-contracts/types/ERC20";
 import { BigNumber } from "ethers";
 
 import { PoolSwapRequest } from "efi-ui/balancer/PoolSwapRequest";
-import { SwapKind } from "efi-ui/balancer/SwapKind";
+import { SwapKind } from "efi/balancer/SwapKind";
 import { EMPTY_BYTES_LIKE } from "efi/base/bytes";
 import { StaticContractMethodArgs } from "efi/contracts/types";
 

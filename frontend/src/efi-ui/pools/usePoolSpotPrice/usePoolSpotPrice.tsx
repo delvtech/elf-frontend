@@ -1,7 +1,7 @@
 import { ERC20 } from "elf-contracts/types/ERC20";
 import { formatUnits } from "ethers/lib/utils";
 
-import { SwapKind } from "efi-ui/balancer/SwapKind";
+import { SwapKind } from "efi/balancer/SwapKind";
 import {
   getCalcSwap,
   getTokenReserves,
