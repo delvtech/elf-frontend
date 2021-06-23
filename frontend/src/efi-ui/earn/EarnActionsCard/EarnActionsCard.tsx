@@ -10,7 +10,7 @@ import tw from "efi-tailwindcss-classnames";
 import { EarnActionsTabId } from "efi-ui/earn/EarnActionsTabs/EarnActionsTabId";
 import { EarnActionsTabs } from "efi-ui/earn/EarnActionsTabs/EarnActionsTabs";
 import { EarnStakingForm } from "efi-ui/earn/EarnStakingForm/EarnStakingForm";
-import { MintCard } from "efi-ui/mint/MintCard/MintCard";
+import { MintForm } from "efi-ui/mint/MintCard/MintForm";
 
 interface EarnActionsCardProps {
   signer: Signer | undefined;
@@ -33,31 +33,42 @@ export function EarnActionsCard(props: EarnActionsCardProps): ReactElement {
         onSetActiveTab={setActiveTabId}
       />
 
-      <div className={tw("flex", "flex-col", "flex-1")}>
-        {activeTabId === EarnActionsTabId.MINT ? (
-          <MintCard
-            library={library}
-            account={account}
-            trancheInfo={trancheInfo}
-          />
-        ) : null}
-        {activeTabId === EarnActionsTabId.STAKE_PRINCIPAL ||
-        activeTabId === EarnActionsTabId.STAKE_YIELD ? (
-          <div className={tw("flex")}>
-            <EarnStakingForm
-              key={activeTabId}
-              library={library}
-              signer={signer}
-              account={account}
-              trancheInfo={trancheInfo}
-              buttonLabel={t`Add liquidity`}
-              formDisabled={false}
-              submitDisabled={false}
-              buttonIntent={Intent.PRIMARY}
-              activeTabId={activeTabId}
-            />
-          </div>
-        ) : null}
+      <div className={tw("flex", "flex-1", "justify-center")}>
+        {(() => {
+          switch (activeTabId) {
+            case EarnActionsTabId.MINT:
+              return (
+                <div
+                  className={tw("flex", "flex-col", "w-3/5", "items-center")}
+                >
+                  <MintForm
+                    library={library}
+                    account={account}
+                    trancheInfo={trancheInfo}
+                  />
+                </div>
+              );
+            case EarnActionsTabId.PROVIDE_LIQUIDITY:
+              return (
+                <div className={tw("flex", "flex-col")}>
+                  <EarnStakingForm
+                    key={activeTabId}
+                    library={library}
+                    signer={signer}
+                    account={account}
+                    trancheInfo={trancheInfo}
+                    buttonLabel={t`Add liquidity`}
+                    formDisabled={false}
+                    submitDisabled={false}
+                    buttonIntent={Intent.PRIMARY}
+                    activeTabId={activeTabId}
+                  />
+                </div>
+              );
+            default:
+              return null;
+          }
+        })()}
       </div>
     </Card>
   );

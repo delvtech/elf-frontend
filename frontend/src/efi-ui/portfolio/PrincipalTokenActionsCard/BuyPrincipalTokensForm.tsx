@@ -27,7 +27,7 @@ import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { calcSwapOutGivenInCCPoolUNSAFE } from "efi/pools/calcPoolSwap";
 import {
   getPrincipalPoolContractForTranche,
-  getPrincipalPoolForTranche,
+  getPoolInfoForPrincipalToken,
 } from "efi/pools/ccpool";
 import { getPoolContract } from "efi/pools/getPoolContract";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
@@ -84,7 +84,7 @@ export function BuyPrincipalTokensForm(
   );
 
   // pool
-  const poolInfo = getPrincipalPoolForTranche(ptAddress);
+  const poolInfo = getPoolInfoForPrincipalToken(ptAddress);
   const poolContract = getPrincipalPoolContractForTranche(ptAddress);
   const apy = useTokenYield(poolInfo, "principal");
   const formattedAPY = apy ? formatPercent(apy) : "-";

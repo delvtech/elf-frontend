@@ -13,7 +13,7 @@ import { formatAbbreviatedDate } from "efi/base/dates";
 import { formatPercent } from "efi/base/formatPercent";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
-import { getPrincipalPoolForTranche } from "efi/pools/ccpool";
+import { getPoolInfoForPrincipalToken } from "efi/pools/ccpool";
 import { getTokenInfo } from "efi/tokenlists";
 import classNames from "classnames";
 
@@ -33,7 +33,7 @@ export function PrincipalTokenTermButtonLabel({
   className,
 }: PrincipalTokenTermButtonLabelProps): ReactElement {
   const trancheInfo = getTokenInfo<PrincipalTokenInfo>(tranche.address);
-  const poolInfo = getPrincipalPoolForTranche(trancheInfo.address);
+  const poolInfo = getPoolInfoForPrincipalToken(trancheInfo.address);
 
   const {
     extensions: { unlockTimestamp },

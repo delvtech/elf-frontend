@@ -36,7 +36,7 @@ import { ERC20Shim } from "efi/contracts/ERC20Shim";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { formatMoney } from "efi/money/formatMoney";
-import { getPrincipalPoolForTranche } from "efi/pools/ccpool";
+import { getPoolInfoForPrincipalToken } from "efi/pools/ccpool";
 import { getPoolContract } from "efi/pools/getPoolContract";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
@@ -67,7 +67,7 @@ export function PrincipalTokenCard(
   props: PrincipalTokenCardProps
 ): ReactElement {
   const { library, account, tranche } = props;
-  const poolInfo = getPrincipalPoolForTranche(tranche.address);
+  const poolInfo = getPoolInfoForPrincipalToken(tranche.address);
   const { baseAssetInfo, termAssetInfo } = getPoolTokens(poolInfo);
   const baseAsset = getCryptoAssetForToken(baseAssetInfo.address);
   const principalTokenInfo: PrincipalTokenInfo =

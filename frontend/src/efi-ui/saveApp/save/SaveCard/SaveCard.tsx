@@ -47,7 +47,7 @@ import {
 } from "efi/pools/calcPoolSwap";
 import {
   getPrincipalPoolContractForTranche,
-  getPrincipalPoolForTranche,
+  getPoolInfoForPrincipalToken,
 } from "efi/pools/ccpool";
 import { useParseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
 import { getTokenInfo } from "efi/tokenlists";
@@ -128,7 +128,7 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
   const {
     address: convergentPoolAddress,
     extensions: { expiration, unitSeconds, underlying },
-  } = getPrincipalPoolForTranche(activeTranche.address);
+  } = getPoolInfoForPrincipalToken(activeTranche.address);
   const canPerformBuy = useCanPerformPool(convergentPoolAddress, "buy");
 
   const poolContract = getPrincipalPoolContractForTranche(

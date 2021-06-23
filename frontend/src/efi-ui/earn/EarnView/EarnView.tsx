@@ -1,4 +1,10 @@
-import React, { Fragment, ReactElement, useCallback, useState } from "react";
+import {
+  CSSProperties,
+  Fragment,
+  ReactElement,
+  useCallback,
+  useState,
+} from "react";
 
 import { Intent, Tag } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
@@ -9,8 +15,8 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { EarnCard } from "efi-ui/earn/EarnCard/EarnCard";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
-import { yieldPools } from "efi/pools/weightedPool";
 import { useSigner } from "efi-ui/provider/useBlockFromTag/useSigner/useSigner";
+import { openPrincipalTokenInfos } from "efi/tranche/tranches";
 
 interface EarnViewProps extends RouteComponentProps {}
 
@@ -20,10 +26,11 @@ export function EarnView(props: EarnViewProps): ReactElement {
   const [expandedPoolIndex, setExpandedPoolIndex] = useState(-1);
   const onExpandClose = useCallback(() => setExpandedPoolIndex(-1), []);
 
+  const earnViewStyle: CSSProperties = { maxWidth: 610 };
   return (
     <Fragment>
       <div
-        data-testid="pools-view"
+        data-testid="earn-view"
         className={tw(
           "flex",
           "flex-col",
@@ -36,7 +43,7 @@ export function EarnView(props: EarnViewProps): ReactElement {
           "overflow-scroll"
         )}
       >
-        <div style={{ maxWidth: 610 }}>
+        <div style={earnViewStyle}>
           <ViewTitle
             title={t`Stay liquid with principal and yield tokens.`}
             titleTag={<Tag minimal intent={Intent.WARNING}>{t`alpha`}</Tag>}
@@ -53,7 +60,7 @@ export function EarnView(props: EarnViewProps): ReactElement {
             "space-y-5"
           )}
         >
-          {yieldPools.map((poolInfo, index) => {
+          {openPrincipalTokenInfos.map((principalTokenInfo, index) => {
             return (
               <EarnCard
                 signer={signer}
@@ -64,8 +71,8 @@ export function EarnView(props: EarnViewProps): ReactElement {
                   setExpandedPoolIndex(index);
                 }}
                 onExpandClose={onExpandClose}
-                key={poolInfo.address}
-                poolInfo={poolInfo}
+                key={principalTokenInfo.address}
+                principalTokenInfo={principalTokenInfo}
               />
             );
           })}

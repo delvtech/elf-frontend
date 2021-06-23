@@ -31,7 +31,7 @@ export function isPrincipalPool(
 ): tokenInfo is PrincipalPoolTokenInfo {
   return !!tokenInfo.tags?.includes(TokenListTag.CCPOOL);
 }
-export function getPrincipalPoolForTranche(
+export function getPoolInfoForPrincipalToken(
   trancheAddress: string
 ): PrincipalPoolTokenInfo {
   return principalPools.find(
@@ -42,7 +42,7 @@ export function getPrincipalPoolForTranche(
 export function getPrincipalPoolContractForTranche(
   trancheAddress: string
 ): ConvergentCurvePool {
-  const pool = getPrincipalPoolForTranche(trancheAddress);
+  const pool = getPoolInfoForPrincipalToken(trancheAddress);
   const poolContract = principalPoolContractsByAddress[pool.address];
   return poolContract;
 }

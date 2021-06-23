@@ -1,8 +1,7 @@
-import React, { Fragment, ReactElement, useCallback, useState } from "react";
+import { Fragment, ReactElement, useCallback, useState } from "react";
 
 import { Button, Callout, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
-import classNames from "classnames";
 import { parseUnits } from "ethers/lib/utils";
 import { PrincipalTokenInfo as TrancheInfo } from "tokenlists/types";
 import { t } from "ttag";
@@ -13,45 +12,27 @@ import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoBalanceOf } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { useMintPreview } from "efi-ui/mint/hooks/useMintPreview";
-import { MintInput } from "efi-ui/mint/MintInput/MintInput";
 import { MintTransactionConfirmationDrawer } from "efi-ui/mint/MintTransactionConfirmationDrawer/MintTransactionConfirmationDrawer";
+import { TokenAmountInput } from "efi-ui/token/TokenAmountInput/TokenAmountInput";
 import { TokenIcon } from "efi-ui/token/TokenIcon";
 import { useTrancheCanPerform } from "efi-ui/tranche/useTrancheCanPerform";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
 import { formatBalance } from "efi/base/formatBalance";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
 import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 
-import styles from "./MintCard.module.css";
-
-interface MintCardProps {
+interface MintFormProps {
   library: Web3Provider | undefined;
   account: string | null | undefined;
   trancheInfo: TrancheInfo;
 }
 
-function useActiveMintPreview(
-  activeTrancheInfo: TrancheInfo,
-  amountIn: number
-) {
-  const numPrincipalTokensOut = useMintPreview(
-    activeTrancheInfo,
-    amountIn
-  )?.toFixed(4);
-
-  // You will always receive the same amount of yield tokens as the amount of
-  // base asset you put in
-  const numYieldTokensOut = amountIn?.toFixed(4);
-
-  return { numPrincipalTokensOut, numYieldTokensOut };
-}
-
-export function MintCard(props: MintCardProps): ReactElement | null {
+export function MintForm(props: MintFormProps): ReactElement | null {
   const { library, account, trancheInfo } = props;
 
   const {
@@ -61,7 +42,7 @@ export function MintCard(props: MintCardProps): ReactElement | null {
   const canPerformMint = useTrancheCanPerform(trancheAddress, "mint");
 
   const baseAsset = getCryptoAssetForToken(underlying);
-  const baseAssetSymbol = getCryptoSymbol(baseAsset) as string;
+  const baseAssetSymbol = getCryptoSymbol(baseAsset);
   const BaseAssetIcon = findAssetIcon2(baseAsset);
   const vaultSymbol = getVaultSymbol(baseAsset) as string;
 
@@ -86,10 +67,10 @@ export function MintCard(props: MintCardProps): ReactElement | null {
   const amountIn = +(amountInString || 0);
 
   const baseAssetDecimals = getCryptoDecimals(baseAsset);
-  const baseAssetBalance = useCryptoBalanceOf(library, account, baseAsset);
+  const baseAssetBalanceOf = useCryptoBalanceOf(library, account, baseAsset);
 
   const activeBaseAssetDisplayBalance = formatBalance(
-    baseAssetBalance,
+    baseAssetBalanceOf,
     baseAssetDecimals
   );
 
@@ -101,7 +82,7 @@ export function MintCard(props: MintCardProps): ReactElement | null {
   const insufficientBalance = parseUnits(
     amountInString || t`0`,
     baseAssetDecimals
-  ).gt(baseAssetBalance ?? 0);
+  ).gt(baseAssetBalanceOf ?? 0);
 
   const mintButtonDisabled =
     (!!account && (insufficientBalance || !amountIn)) || !canPerformMint;
@@ -138,78 +119,84 @@ export function MintCard(props: MintCardProps): ReactElement | null {
 
   return (
     <Fragment>
-      <div className={tw("pl-24", "pt-4", "-ml-1", "space-y-4")}>
-        <div className={styles.mintInput}>
-          <MintInput
-            cryptoDecimals={baseAssetDecimals}
-            cryptoBalanceOf={baseAssetBalance}
-            cryptoDisplayBalance={activeBaseAssetDisplayBalance || ""}
-            cryptoSymbol={baseAssetSymbol}
-            cryptoIcon={BaseAssetIcon}
-            disabled={false}
-            onChange={setAmountIn}
-            value={amountInString}
-            onPreviewUpdate={emptyHandler}
-            validValue={!mintButtonError}
+      <div className={tw("flex", "flex-col", "w-full", "space-y-4")}>
+        <div className={tw("flex", "flex-col", "space-y-2", "mb-4")}>
+          <span
+            className={tw("text-center", "mb-4")}
+          >{t`Mint principal and yield tokens with your ${baseAssetSymbol}`}</span>
+          <div className={tw("grid", "grid-cols-3", "gap-3")}>
+            <TokenAmountInput
+              className={tw("col-span-2")}
+              showMaxButton
+              placeholder="0"
+              leftIcon={
+                BaseAssetIcon ? (
+                  <BaseAssetIcon
+                    height={20}
+                    width={20}
+                    className={tw("ml-2")}
+                  />
+                ) : undefined
+              }
+              maxAmount={baseAssetBalanceOf}
+              tokenDecimals={baseAssetDecimals}
+              value={amountInString}
+              onValueChange={setAmountIn}
+            />
+            <Button
+              outlined
+              className={tw("flex")}
+              disabled={mintButtonDisabled}
+              intent={
+                mintButtonError || !canPerformMint
+                  ? Intent.DANGER
+                  : Intent.PRIMARY
+              }
+              onClick={onClick}
+            >
+              {mintButtonLabel}
+            </Button>
+          </div>
+          <div className={tw("grid", "grid-cols-3")}>
+            <span
+              className={tw("col-span-2", "text-right")}
+            >{t`Available balance: ${activeBaseAssetDisplayBalance} ${baseAssetSymbol}`}</span>
+          </div>
+        </div>
+        <div className={tw("grid", "grid-cols-2", "pb-4")}>
+          <LabeledText
+            bold
+            muted={false}
+            containerClassName={tw("justify-center")}
+            text={<span>{t`Principal Tokens you receive`}</span>}
+            label={
+              <span className={tw("text-base")}>{t`${(+(
+                numPrincipalTokensOut || 0
+              ))?.toFixed(4)} ${principalTokenSymbol}`}</span>
+            }
+          />
+          <LabeledText
+            muted={false}
+            bold
+            containerClassName={tw("justify-center")}
+            text={<span>{t`Yield Tokens you receive`}</span>}
+            label={
+              <span className={tw("text-base")}>
+                {t`${(+(numYieldTokensOut || 0))?.toFixed(
+                  4
+                )} ${yieldTokenSymbol}`}
+              </span>
+            }
           />
         </div>
-        <div className={tw("flex")}>
-          <Callout
-            className={classNames(
-              styles.callOut,
-              tw("flex", "flex-col", "h-full", "items-center", "justify-center")
-            )}
-          >
-            <LabeledText
-              text={
-                <Fragment>
-                  <span>{`${numPrincipalTokensOut || (0).toFixed(4)}`}</span>
-                  <span>{principalTokenSymbol}</span>
-                </Fragment>
-              }
-              textClassName={tw("flex", "flex-col")}
-              label={t`Principal Tokens`}
-            />
-          </Callout>
-          <Callout
-            className={classNames(
-              styles.callOut,
-              tw("flex", "flex-col", "h-full", "items-center", "justify-center")
-            )}
-          >
-            <LabeledText
-              text={
-                <Fragment>
-                  <span>{`${numYieldTokensOut || (0).toFixed(4)}`}</span>
-                  <span>{yieldTokenSymbol}</span>
-                </Fragment>
-              }
-              textClassName={tw("flex", "flex-col")}
-              label={t`Yield Tokens`}
-            />
-          </Callout>
-        </div>
-        <div>
-          <Button
-            minimal
-            outlined
-            disabled={mintButtonDisabled}
-            intent={
-              mintButtonError || !canPerformMint
-                ? Intent.DANGER
-                : Intent.PRIMARY
-            }
-            onClick={onClick}
-          >
-            {mintButtonLabel}
-          </Button>
-        </div>
+
         {!canPerformMint ? (
           <Callout intent={Intent.DANGER}>
             {t`Minting for this term has been temporarily disabled, please refer to our Discord or Twitter for further updates.`}
           </Callout>
         ) : null}
       </div>
+
       <MintTransactionConfirmationDrawer
         baseAsset={baseAsset}
         baseAssetIcon={BaseAssetIcon as TokenIcon}
@@ -230,4 +217,18 @@ export function MintCard(props: MintCardProps): ReactElement | null {
   );
 }
 
-const emptyHandler = () => {};
+function useActiveMintPreview(
+  activeTrancheInfo: TrancheInfo,
+  amountIn: number
+) {
+  const numPrincipalTokensOut = useMintPreview(
+    activeTrancheInfo,
+    amountIn
+  )?.toFixed(4);
+
+  // You will always receive the same amount of yield tokens as the amount of
+  // base asset you put in
+  const numYieldTokensOut = amountIn?.toFixed(4);
+
+  return { numPrincipalTokensOut, numYieldTokensOut };
+}

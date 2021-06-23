@@ -1,6 +1,6 @@
 import { ReactElement } from "react";
 
-import { Colors, Divider, Label, Tab, Tabs } from "@blueprintjs/core";
+import { Intent, Tab, Tabs, Tag } from "@blueprintjs/core";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -28,20 +28,24 @@ export function EarnActionsTabs(props: EarnActionsTabsProps): ReactElement {
       className={tw("text-left")}
       onChange={onSetActiveTab}
     >
-      <Tab disabled={isMature} id={EarnActionsTabId.MINT}>{t`Mint`}</Tab>
-      <div
-        className={tw("w-full", "my-1")}
-        style={{ borderBottom: `1px solid ${Colors.GRAY1}` }}
-      />
-      <div className={tw("pt-2")}>{t`Add liquidity`}</div>
+      <Tab disabled={isMature} id={EarnActionsTabId.MINT}>
+        <Tag round minimal className={tw("mr-2")}>
+          1
+        </Tag>
+        {t`Mint`}
+      </Tab>
       <Tab
-        id={EarnActionsTabId.STAKE_PRINCIPAL}
-        disabled={isMature}
-      >{t`Principal Tokens`}</Tab>
-      <Tab
-        id={EarnActionsTabId.STAKE_YIELD}
-        disabled={isMature}
-      >{t`Yield Tokens`}</Tab>
+        disabled={true /* isMature */}
+        id={EarnActionsTabId.PROVIDE_LIQUIDITY}
+      >
+        <Tag round minimal className={tw("mr-2")}>
+          2
+        </Tag>
+        {t`Provide Liquidity`}
+        <Tag intent={Intent.WARNING} minimal className={tw("ml-2")}>
+          {t`Coming soon`}
+        </Tag>
+      </Tab>
     </Tabs>
   );
 }

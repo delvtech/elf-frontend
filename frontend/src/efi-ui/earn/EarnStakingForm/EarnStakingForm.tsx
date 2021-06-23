@@ -10,7 +10,7 @@ import tw from "efi-tailwindcss-classnames";
 import { EarnActionsTabId } from "efi-ui/earn/EarnActionsTabs/EarnActionsTabId";
 import { StakingForm } from "efi-ui/pools/StakingForm/StakingForm";
 import { useCanPerformPool } from "efi-ui/pools/usePoolCanPerform/usePoolCanPerform";
-import { getPrincipalPoolForTranche } from "efi/pools/ccpool";
+import { getPoolInfoForPrincipalToken } from "efi/pools/ccpool";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { getPoolInfoForYieldToken } from "efi/pools/weightedPool";
 
@@ -40,7 +40,7 @@ export function EarnStakingForm(props: EarnStakingFormProps): ReactElement {
     activeTabId,
   } = props;
 
-  const principalPoolInfo = getPrincipalPoolForTranche(trancheInfo.address);
+  const principalPoolInfo = getPoolInfoForPrincipalToken(trancheInfo.address);
   const yieldPoolInfo = getPoolInfoForYieldToken(
     trancheInfo.extensions.interestToken
   );

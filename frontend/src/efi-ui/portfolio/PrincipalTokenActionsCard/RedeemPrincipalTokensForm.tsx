@@ -18,7 +18,7 @@ import { TokenAmountInput } from "efi-ui/token/TokenAmountInput/TokenAmountInput
 import { formatBalance } from "efi/base/formatBalance";
 import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
-import { getPrincipalPoolForTranche } from "efi/pools/ccpool";
+import { getPoolInfoForPrincipalToken } from "efi/pools/ccpool";
 import { getPoolContract } from "efi/pools/getPoolContract";
 import { getTokenInfo } from "efi/tokenlists";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
@@ -71,7 +71,7 @@ export function RedeemPrincipalTokensForm(
   );
 
   // inputs
-  const poolInfo = getPrincipalPoolForTranche(ptAddress);
+  const poolInfo = getPoolInfoForPrincipalToken(ptAddress);
   const { tokenOutError, tokenInError } = useValidateInput(
     account,
     poolInfo,

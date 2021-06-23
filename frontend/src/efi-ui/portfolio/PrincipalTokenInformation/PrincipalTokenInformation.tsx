@@ -12,7 +12,7 @@ import tw from "efi-tailwindcss-classnames";
 import { AddressesJson } from "efi/addresses";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { isGoerli, isMainnet } from "efi/ethereum";
-import { getPrincipalPoolForTranche } from "efi/pools/ccpool";
+import { getPoolInfoForPrincipalToken } from "efi/pools/ccpool";
 import { getTokenInfo } from "efi/tokenlists";
 import { getBaseAssetForTranche } from "efi/tranche/baseAssets";
 
@@ -65,7 +65,7 @@ function getElementPoolLink(
   principalToken: PrincipalTokenInfo
 ): ReactElement | null {
   const { address } = principalToken;
-  const { address: poolAddress } = getPrincipalPoolForTranche(address);
+  const { address: poolAddress } = getPoolInfoForPrincipalToken(address);
   // assume testnet by default (goerli)
   let domain = "https://testnet.element.fi";
   if (isGoerli(AddressesJson.chainId)) {
