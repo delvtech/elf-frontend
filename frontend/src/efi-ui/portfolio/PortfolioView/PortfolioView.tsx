@@ -16,18 +16,24 @@ import { usePortfolioTabs } from "efi-ui/portfolio/PortfolioTabs/usePortfolioTab
 import { formatWalletAddress } from "efi/wallets/formatWalletAddress";
 
 import styles from "./styles.module.css";
+import { TopNavigation } from "efi-ui/app/navigation/TopNavigation/TopNavigation";
 
 interface PortfolioViewProps extends RouteComponentProps {}
 
 export function PortfolioView(props: PortfolioViewProps): ReactElement {
-  const { account, library, active, chainId, connector } =
-    useWeb3React<Web3Provider>();
+  const {
+    account,
+    library,
+    active: walletConnectionActive,
+    chainId,
+    connector,
+  } = useWeb3React<Web3Provider>();
 
   const portfolioTabs: PortfolioTab[] = usePortfolioTabs(
     chainId,
     library,
     connector,
-    active,
+    walletConnectionActive,
     account
   );
 
@@ -68,6 +74,11 @@ export function PortfolioView(props: PortfolioViewProps): ReactElement {
         <div
           className={tw("flex", "flex-col", "h-full", "flex-1", "items-center")}
         >
+          <TopNavigation
+            account={account}
+            chainId={chainId}
+            walletConnectionActive={walletConnectionActive}
+          />
           <div
             className={tw(
               "flex",

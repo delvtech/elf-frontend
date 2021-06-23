@@ -5,8 +5,8 @@ import { IconNames } from "@blueprintjs/icons";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { useNavigation } from "efi-ui/navigation/hooks/useTab";
-import { Navigation } from "efi-ui/navigation/navigation";
+import { useNavigation } from "efi-ui/app/navigation/hooks/useTab";
+import { Navigation } from "efi-ui/app/navigation/navigation";
 
 export function NoYieldTokensInWalletNonIdealState(): ReactElement {
   const { changeTab } = useNavigation();

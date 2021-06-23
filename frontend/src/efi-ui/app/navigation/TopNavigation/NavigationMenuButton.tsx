@@ -17,15 +17,15 @@ import { isGoerli, isMainnet } from "efi/ethereum";
 import { SocialMediaMenuItems } from "efi/navigation/ContactUsMenuItems/SocialMediaMenuItems";
 
 // assume testnet by default (goerli)
-let advancedLink = "https://testnet.element.fi";
+let advancedLink = "https://save-testnet.element.fi";
 if (isGoerli(AddressesJson.chainId)) {
-  advancedLink = "https://testnet.element.fi";
+  advancedLink = "https://save-testnet.element.fi";
 } else if (isMainnet(AddressesJson.chainId)) {
   // TODO: What will be the url for mainnet?
-  advancedLink = "https://app.element.fi";
+  advancedLink = "https://sneak-save.element.fi";
 }
 
-export function SaveNavigationButton(): ReactElement {
+export function NavigationMenuButton(): ReactElement {
   return (
     <Popover2
       fill
@@ -46,9 +46,9 @@ export function SaveNavigationButton(): ReactElement {
             rel="noreferrer"
             text={t`Docs`}
           />
-          {/* Don't open the advanced UI in another tab, since going back and
+          {/* Don't open the simple UI in another tab, since going back and
           forth would just open up a ton of new tabs. */}
-          <MenuItem href={advancedLink} text={t`Advanced UI`} />
+          <MenuItem href={advancedLink} text={t`Save UI`} />
           <MenuDivider
             title={<span className={tw("text-sm")}>{t`Get in touch`}</span>}
           />

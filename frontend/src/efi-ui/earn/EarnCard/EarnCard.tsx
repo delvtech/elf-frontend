@@ -45,13 +45,6 @@ interface EarnCardProps {
   onExpandClose: () => void;
 }
 
-export const cellClassName = tw(
-  "flex",
-  "mr-4",
-  "items-center",
-  "overflow-hidden"
-);
-
 const poolCardStyle: CSSProperties = {
   maxWidth: 1180,
   minWidth: 800,

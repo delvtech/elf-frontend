@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from "react";
+import { ReactElement, useState } from "react";
 
 import {
   Classes,
@@ -17,11 +17,9 @@ import { t } from "ttag";
 import logoDark from "efi-static-assets/logos/svg/logo-vertical--dark.svg";
 import logo from "efi-static-assets/logos/svg/logo-vertical--light.svg";
 import tw from "efi-tailwindcss-classnames";
-import { Navigation } from "efi-ui/navigation/navigation";
-import { DarkModeSwitch } from "efi-ui/prefs/DarkModeSwitch/DarkModeSwitch";
+import { Navigation } from "efi-ui/app/navigation/navigation";
 import { usePendingTransactionPref } from "efi-ui/transactions/usePendingTransactionPref/usePendingTransactionPref";
 
-import { ConnectWalletButton } from "./ConnectWalletButton";
 import styles from "./SidebarNavigation.module.css";
 
 interface SidebarNavigationProps {
@@ -51,7 +49,6 @@ export function SidebarNavigation({
   changeTab,
   activeTab,
 }: SidebarNavigationProps): ReactElement {
-  const [isWalletDialogOpen, setWalletDialogOpen] = useState(false);
   const { transactionHash } = usePendingTransactionPref();
   const hasPendingTransaction = !!transactionHash;
 
@@ -80,7 +77,7 @@ export function SidebarNavigation({
         <img src={isDarkMode ? logoDark : logo} alt={t`Element Finance`} />
       </Link>
       <div
-        className={tw("flex", "flex-col", "h-full", "justify-between", "pb-8")}
+        className={tw("flex", "flex-col", "h-full", "justify-between", "pt-16")}
       >
         <Tabs
           id="primary-nav-desktop"
@@ -124,38 +121,7 @@ export function SidebarNavigation({
               </div>
             }
           />
-          <Tab
-            id={Navigation.RESOURCES}
-            title={
-              <div className={tabTitleClassName}>
-                <Icon icon={IconNames.MANUAL} iconSize={IconSize.STANDARD} />
-                <span>{t`Resources`}</span>
-              </div>
-            }
-          />
         </Tabs>
-        <div
-          className={tw(
-            "flex",
-            "flex-col",
-            "w-full",
-            "items-center",
-            "space-y-4"
-          )}
-        >
-          <div className={tw("flex", "w-full", "justify-center", "space-y-2")}>
-            <ConnectWalletButton
-              isDialogOpen={isWalletDialogOpen}
-              onDialogOpen={() => setWalletDialogOpen(true)}
-              onDialogClose={() => setWalletDialogOpen(false)}
-              account={account}
-              active={active}
-              chainId={chainId}
-            />
-          </div>
-
-          <DarkModeSwitch />
-        </div>
       </div>
     </div>
   );

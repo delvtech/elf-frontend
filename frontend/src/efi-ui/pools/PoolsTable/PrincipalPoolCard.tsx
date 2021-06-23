@@ -305,7 +305,7 @@ export function PrincipalPoolCard(
           <GoToPoolButton
             poolAddress={pool.address}
             poolAction={PoolAction.ADD_LIQUIDITY}
-            label={t`Add Liquidity`}
+            label={t`LP`}
             outlined
             small
           />

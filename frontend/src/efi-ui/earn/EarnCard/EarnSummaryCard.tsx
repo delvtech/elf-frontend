@@ -12,7 +12,6 @@ import { PoolContract } from "efi/pools/PoolContract";
 import { WeightedPool, ConvergentCurvePool } from "elf-contracts/types";
 import { TokenIcon } from "efi-ui/token/TokenIcon";
 import { Money } from "ts-money";
-import { cellClassName } from "./EarnCard";
 
 interface EarnSummaryCardProps {
   onToggleExpand: () => void;
@@ -34,25 +33,29 @@ interface EarnSummaryCardProps {
   isExpanded: boolean;
 }
 
-export function EarnSummaryCard({
-  onToggleExpand,
-  BaseAssetIcon,
-  baseAsset,
-  isDarkMode,
-  displayName,
-  type,
-  termLength,
-  vaultApy,
-  tvl,
-  yieldPoolContract,
-  principalPoolContract,
-  principalPrice,
-  baseAssetSymbol,
-  yieldPrice,
-  startTime,
-  maturityTime,
-  isExpanded,
-}: EarnSummaryCardProps): JSX.Element {
+const cellClassName = tw("flex", "mr-4", "items-center", "overflow-hidden");
+
+export function EarnSummaryCard(props: EarnSummaryCardProps): JSX.Element {
+  const {
+    onToggleExpand,
+    BaseAssetIcon,
+    baseAsset,
+    isDarkMode,
+    displayName,
+    type,
+    termLength,
+    vaultApy,
+    tvl,
+    yieldPoolContract,
+    principalPoolContract,
+    principalPrice,
+    baseAssetSymbol,
+    yieldPrice,
+    startTime,
+    maturityTime,
+    isExpanded,
+  } = props;
+
   return (
     <Card onClick={onToggleExpand} className={tw("w-full", "flex", "p-5")}>
       <div

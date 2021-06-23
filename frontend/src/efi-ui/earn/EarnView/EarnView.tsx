@@ -13,6 +13,7 @@ import { useWeb3React } from "@web3-react/core";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { TopNavigation } from "efi-ui/app/navigation/TopNavigation/TopNavigation";
 import { EarnCard } from "efi-ui/earn/EarnCard/EarnCard";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { useSigner } from "efi-ui/provider/useBlockFromTag/useSigner/useSigner";
@@ -21,7 +22,13 @@ import { openPrincipalTokenInfos } from "efi/tranche/tranches";
 interface EarnViewProps extends RouteComponentProps {}
 
 export function EarnView(props: EarnViewProps): ReactElement {
-  const { account, library } = useWeb3React<Web3Provider>();
+  const {
+    account,
+    chainId,
+    active: walletConnectionActive,
+    library,
+  } = useWeb3React<Web3Provider>();
+
   const signer = useSigner(account, library);
   const [expandedPoolIndex, setExpandedPoolIndex] = useState(-1);
   const onExpandClose = useCallback(() => setExpandedPoolIndex(-1), []);
@@ -43,6 +50,11 @@ export function EarnView(props: EarnViewProps): ReactElement {
           "overflow-scroll"
         )}
       >
+        <TopNavigation
+          account={account}
+          chainId={chainId}
+          walletConnectionActive={walletConnectionActive}
+        />
         <div style={earnViewStyle}>
           <ViewTitle
             title={t`Stay liquid with principal and yield tokens.`}

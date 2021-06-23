@@ -18,7 +18,7 @@ import logoDark from "efi-static-assets/logos/svg/logo--dark.svg";
 import logo from "efi-static-assets/logos/svg/logo--light.svg";
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { Navigation } from "efi-ui/navigation/navigation";
+import { Navigation } from "efi-ui/app/navigation/navigation";
 import { DarkModeSwitch } from "efi-ui/prefs/DarkModeSwitch/DarkModeSwitch";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
@@ -174,12 +174,6 @@ export function TopbarNavigation({
                   className={tw("text-center")}
                   style={tabStyle}
                   title={t`Portfolio`}
-                />
-                <Tab
-                  id={Navigation.RESOURCES}
-                  className={tw("text-center")}
-                  style={tabStyle}
-                  title={t`Resources`}
                 />
               </Tabs>
             }

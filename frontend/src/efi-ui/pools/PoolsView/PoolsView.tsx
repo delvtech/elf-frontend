@@ -11,12 +11,18 @@ import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { PoolsTable } from "efi-ui/pools/PoolsTable/PoolsTable";
 import { useSigner } from "efi-ui/provider/useBlockFromTag/useSigner/useSigner";
 import { Tab, Tabs } from "@blueprintjs/core";
+import { TopNavigation } from "efi-ui/app/navigation/TopNavigation/TopNavigation";
 
 type TermToken = "principal" | "yield";
 interface PoolsViewProps extends RouteComponentProps {}
 
 export function PoolsView(props: PoolsViewProps): ReactElement {
-  const { library, account } = useWeb3React<Web3Provider>();
+  const {
+    library,
+    account,
+    chainId,
+    active: walletConnectionActive,
+  } = useWeb3React<Web3Provider>();
   const signer = useSigner(account, library);
 
   const [activeTab, setActiveTab] = useState<TermToken>("principal");
@@ -47,6 +53,11 @@ export function PoolsView(props: PoolsViewProps): ReactElement {
           "overflow-scroll"
         )}
       >
+        <TopNavigation
+          account={account}
+          chainId={chainId}
+          walletConnectionActive={walletConnectionActive}
+        />
         <ViewTitle
           title={title}
           subtitle={subtitle}

@@ -1,6 +1,6 @@
 import { useLocation } from "react-use";
 
-import { Navigation } from "efi-ui/navigation/navigation";
+import { Navigation } from "efi-ui/app/navigation/navigation";
 import { typeAassertNever } from "efi/base/typeAssertNever";
 
 export function useActiveTab(): Navigation {
@@ -11,14 +11,8 @@ export function useActiveTab(): Navigation {
     case Navigation.HOME: {
       return Navigation.HOME;
     }
-    case Navigation.PULSE: {
-      return Navigation.PULSE;
-    }
     case Navigation.TRADE: {
       return Navigation.TRADE;
-    }
-    case Navigation.RESOURCES: {
-      return Navigation.RESOURCES;
     }
     case Navigation.PORTFOLIO: {
       return Navigation.PORTFOLIO;

@@ -1,6 +1,6 @@
-import { useActiveTab } from "efi-ui/navigation/hooks/useActiveTab";
-import { useChangeTab } from "efi-ui/navigation/hooks/useChangeTab";
-import { Navigation } from "efi-ui/navigation/navigation";
+import { useActiveTab } from "efi-ui/app/navigation/hooks/useActiveTab";
+import { useChangeTab } from "efi-ui/app/navigation/hooks/useChangeTab";
+import { Navigation } from "efi-ui/app/navigation/navigation";
 
 export interface UseTab {
   changeTab: (tabId: Navigation) => void;

@@ -9,10 +9,9 @@ import classNames from "classnames";
 import { t } from "ttag";
 
 import { tw } from "efi-tailwindcss-classnames";
-import { FAQView } from "efi-ui/faq/FAQView";
 import { EarnView } from "efi-ui/earn/EarnView/EarnView";
-import { MainNavigation } from "efi-ui/navigation/MainNavigation/MainNavigation";
-import { Navigation } from "efi-ui/navigation/navigation";
+import { MainNavigation } from "efi-ui/app/navigation/MainNavigation/MainNavigation";
+import { Navigation } from "efi-ui/app/navigation/navigation";
 import { PoolsView } from "efi-ui/pools/PoolsView/PoolsView";
 import { PoolView } from "efi-ui/pools/PoolView/PoolView";
 import { PortfolioView } from "efi-ui/portfolio/PortfolioView/PortfolioView";
@@ -70,7 +69,6 @@ const App: FC<AppProps> = () => {
           <EarnView path={Navigation.EARN} />
           <PoolsView path={Navigation.TRADE} />
           <PoolView path={`pools/:poolAddress`} />
-          <FAQView path={Navigation.RESOURCES} />
         </Router>
       </div>
       <Overlay isOpen={onMainnet}>
