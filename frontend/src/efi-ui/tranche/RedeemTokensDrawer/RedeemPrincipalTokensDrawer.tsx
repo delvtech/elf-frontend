@@ -19,7 +19,7 @@ import { WalletApprovalCallout } from "efi-ui/transactions/TransactionDrawer/Wal
 import { useRedeemTermAssetsToEth } from "efi-ui/userProxy/useRedeemTermAssetsToEth";
 import { WalletDrawer } from "efi-ui/wallets/WalletDrawer/WalletDrawer";
 import ContractAddresses from "efi/addresses";
-import { convertEpochSecondsToDate2 } from "efi/base/convertEpochSecondsToDate";
+import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatFullDate } from "efi/base/dates";
 import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
@@ -57,7 +57,7 @@ export function RedeemPrincipalTokensDrawer({
   // tranche calls
   const { decimals: principalTokenDecimals } = principalTokenInfo;
   const { unlockTimestamp } = principalTokenInfo.extensions;
-  const unlockTimestampDate = convertEpochSecondsToDate2(unlockTimestamp);
+  const unlockTimestampDate = convertEpochSecondsToDate(unlockTimestamp);
   const unlockTimestampLabel = unlockTimestampDate
     ? formatFullDate(unlockTimestampDate)
     : undefined;

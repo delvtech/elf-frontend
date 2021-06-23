@@ -29,7 +29,7 @@ import { RedeemPrincipalTokensButton } from "efi-ui/portfolio/RedeemButton/Redee
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenBalanceUNSAFE } from "efi-ui/token/hooks/useTokenBalance";
 import { calculateProgress } from "efi/base/calculateProgress";
-import { convertEpochSecondsToDate2 } from "efi/base/convertEpochSecondsToDate";
+import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
 import { formatPercent } from "efi/base/formatPercent";
 import { ERC20Shim } from "efi/contracts/ERC20Shim";
@@ -77,8 +77,8 @@ export function PrincipalTokenCard(
 
   const { isDarkMode } = useDarkMode();
 
-  const unlockDate = convertEpochSecondsToDate2(unlockTimestamp);
-  const createdAtDate = convertEpochSecondsToDate2(trancheCreatedAt);
+  const unlockDate = convertEpochSecondsToDate(unlockTimestamp);
+  const createdAtDate = convertEpochSecondsToDate(trancheCreatedAt);
   const progress = calculateProgress(createdAtDate, unlockDate);
 
   const formattedDate = unlockDate
@@ -114,7 +114,7 @@ export function PrincipalTokenCard(
 
   const tableRowLink = getTableRowLink(vaultContract?.address, vaultName);
   const maturationDate = useMemo(
-    () => convertEpochSecondsToDate2(unlockTimestamp),
+    () => convertEpochSecondsToDate(unlockTimestamp),
     [unlockTimestamp]
   );
 

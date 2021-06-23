@@ -1,8 +1,8 @@
-import React from "react";
+// import React from "react";
 
-test("full app rendering/navigating", async () => {
-  expect(true).toEqual(true);
-});
+// test("full app rendering/navigating", async () => {
+//   expect(true).toEqual(true);
+// });
 
 // import { renderWithClient } from "efi-ui/testing/renderWithClient";
 // import { PoolView } from "efi-ui/pools/PoolView/PoolView";
