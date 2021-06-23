@@ -3,14 +3,20 @@ import React, { Fragment, ReactElement, useCallback, useState } from "react";
 import { AnchorButton, Button, Intent } from "@blueprintjs/core";
 import { Tooltip2 } from "@blueprintjs/popover2";
 import { Web3Provider } from "@ethersproject/providers";
+import { formatUnits } from "ethers/lib/utils";
 import { PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
 import { RedeemPrincipalTokensDrawer } from "efi-ui/tranche/RedeemTokensDrawer/RedeemPrincipalTokensDrawer";
+import { useTrancheCanPerform } from "efi-ui/tranche/useTrancheCanPerform";
+import ContractAddresses from "efi/addresses";
 import { convertEpochSecondsToDate2 } from "efi/base/convertEpochSecondsToDate";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
-import { useTrancheCanPerform } from "efi-ui/tranche/useTrancheCanPerform";
+import { trancheContractsByAddress as principalTokenContractsByAddress } from "efi/tranche/tranches";
+
+const { userProxyContractAddress } = ContractAddresses;
 
 interface RedeemPrincipalTokensButtonProps {
   account: string | null | undefined;
@@ -41,6 +47,18 @@ export function RedeemPrincipalTokensButton({
     (unlockDate && unlockDate.getTime() > Date.now()) ||
     !canPerformWithdrawPrincipal;
 
+  const principalTokenContract =
+    principalTokenContractsByAddress[principalTokenInfo.address];
+  const { data: userProxyAllowanceBN } = useTokenAllowance(
+    principalTokenContract,
+    account,
+    userProxyContractAddress
+  );
+
+  const userProxyAllowance = formatUnits(
+    userProxyAllowanceBN ?? 1,
+    principalTokenInfo.decimals
+  );
   const openDrawer = useCallback(() => {
     setDrawerOpen(true);
   }, []);
@@ -106,6 +124,7 @@ export function RedeemPrincipalTokensButton({
         <RedeemPrincipalTokensDrawer
           isOpen={isDrawerOpen}
           principalTokenInfo={principalTokenInfo}
+          userProxyAllowance={userProxyAllowance}
           account={account}
           baseAsset={baseAsset}
           library={library}

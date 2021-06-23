@@ -1,4 +1,4 @@
-import { ReactElement, useState } from "react";
+import { Fragment, ReactElement, useMemo, useState } from "react";
 
 import { Callout, Switch } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
@@ -22,8 +22,7 @@ import { TokenIcon } from "efi-ui/token/TokenIcon";
 import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/TransactionDrawer";
 import ContractAddresses from "efi/addresses";
 import { convertEpochSecondsToDate2 } from "efi/base/convertEpochSecondsToDate";
-import { EMPTY_ARRAY } from "efi/base/emptyArray";
-import { CryptoAsset } from "efi/crypto/CryptoAsset";
+import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
@@ -102,13 +101,20 @@ export function MintTransactionConfirmationDrawer({
     account
   );
 
+  const useApprovals = showPermitCallout && !includePermits;
+  const walletApprovalInfos = useWalletApprovalInfos(
+    baseAsset,
+    account,
+    useApprovals
+  );
+
   return (
     <TransactionDrawer
       buttonLabel={t`Mint`}
       transactionPending={isLoading}
       transactionFailed={false}
       transactionSuccess={false}
-      walletApprovalInfos={EMPTY_ARRAY as WalletApprovalInfo[]}
+      walletApprovalInfos={walletApprovalInfos}
       isOpen={isOpen}
       onClose={onClose}
       account={account}
@@ -116,20 +122,6 @@ export function MintTransactionConfirmationDrawer({
       onConfirmTransaction={mint}
       transactionDetails={
         <div className={tw("flex", "flex-col", "space-y-8")}>
-          {showPermitCallout && (
-            <Callout>
-              <div>
-                <Switch
-                  label={t`Include approvals to allow tokens to be staked.`}
-                  checked={includePermits}
-                  onChange={() => setIncludePermits(!includePermits)}
-                />
-                {t`You need to approve balancer to use one or more of the tokens you are about to mint.
-                   If you plan to stake your tokens, you can save on gas by pre approving these tokens now.`}
-              </div>
-            </Callout>
-          )}
-
           <SwapDetailsForm
             amountIn={amountInAsNumber.toFixed(4)}
             heading={t`Mint Preview`}
@@ -139,14 +131,30 @@ export function MintTransactionConfirmationDrawer({
             assetOutSymbol={`${baseAssetSymbol} Principal Token`}
             assetOutIcon={null}
           >
-            <MintTransactionDetails
-              baseAssetSymbol={baseAssetSymbol}
-              principalTokenSymbol={principalTokenSymbol}
-              yieldTokenSymbol={yieldTokenSymbol}
-              unlockTimestamp={unlockTimeStampDate}
-              numPrincipalTokens={numPrincipalTokens}
-              numYieldTokens={amountInAsNumber}
-            />
+            <Fragment>
+              <MintTransactionDetails
+                baseAssetSymbol={baseAssetSymbol}
+                principalTokenSymbol={principalTokenSymbol}
+                yieldTokenSymbol={yieldTokenSymbol}
+                unlockTimestamp={unlockTimeStampDate}
+                numPrincipalTokens={numPrincipalTokens}
+                numYieldTokens={amountInAsNumber}
+              />
+              {showPermitCallout && (
+                <Callout>
+                  <div>
+                    <Switch
+                      label={t`Include approvals to allow tokens to be staked.`}
+                      checked={includePermits}
+                      onChange={() => setIncludePermits(!includePermits)}
+                    />
+                    {includePermits &&
+                      t`You need to approve balancer to use one or more of the tokens you are about to mint.
+                   If you plan to stake your tokens, you can save on gas by pre approving these tokens now.`}
+                  </div>
+                </Callout>
+              )}
+            </Fragment>
           </SwapDetailsForm>
         </div>
       }
@@ -201,4 +209,29 @@ function useShowPermitCallout(
     showPermitCallout = true;
   }
   return showPermitCallout;
+}
+
+function useWalletApprovalInfos(
+  tokenInAsset: CryptoAsset | undefined,
+  account: string | null | undefined,
+  useApprovals: boolean
+): WalletApprovalInfo[] {
+  const { userProxyContractAddress } = ContractAddresses;
+  return useMemo(() => {
+    if (
+      !useApprovals ||
+      !tokenInAsset ||
+      tokenInAsset.type === CryptoAssetType.ETHEREUM
+    ) {
+      return [];
+    }
+    return [
+      {
+        cryptoAsset: tokenInAsset,
+        ownerAddress: account,
+        spenderAddress: userProxyContractAddress,
+        messageRenderer: () => t``,
+      },
+    ];
+  }, [account, tokenInAsset, useApprovals, userProxyContractAddress]);
 }

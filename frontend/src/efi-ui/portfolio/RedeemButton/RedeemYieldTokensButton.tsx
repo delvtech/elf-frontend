@@ -3,6 +3,7 @@ import React, { Fragment, ReactElement, useCallback, useState } from "react";
 import { AnchorButton, Button, Intent } from "@blueprintjs/core";
 import { Tooltip2 } from "@blueprintjs/popover2";
 import { Web3Provider } from "@ethersproject/providers";
+import { formatUnits } from "ethers/lib/utils";
 import {
   PrincipalTokenInfo as TrancheInfo,
   YieldTokenInfo,
@@ -10,9 +11,12 @@ import {
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
 import { RedeemYieldTokensDrawer } from "efi-ui/tranche/RedeemTokensDrawer/RedeemYieldTokensDrawer";
+import ContractAddresses from "efi/addresses";
 import { convertEpochSecondsToDate2 } from "efi/base/convertEpochSecondsToDate";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
+import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
 import { getTokenInfo } from "efi/tokenlists";
 import { useTrancheCanPerform } from "efi-ui/tranche/useTrancheCanPerform";
 
@@ -24,6 +28,7 @@ interface RedeemYieldTokensButtonProps {
   baseAsset: CryptoAsset;
 }
 
+const { userProxyContractAddress } = ContractAddresses;
 export function RedeemYieldTokensButton({
   baseAsset,
   yieldTokenInfo,
@@ -47,6 +52,19 @@ export function RedeemYieldTokensButton({
   const buttonDisabled =
     (unlockDate && unlockDate.getTime() > Date.now()) ||
     !canPerformWithdrawInterest;
+
+  const yieldTokenContract =
+    interestTokenContractsByAddress[yieldTokenInfo.address];
+  const { data: userProxyAllowanceBN } = useTokenAllowance(
+    yieldTokenContract,
+    account,
+    userProxyContractAddress
+  );
+
+  const userProxyAllowance = formatUnits(
+    userProxyAllowanceBN ?? 1,
+    yieldTokenInfo.decimals
+  );
 
   const openDrawer = useCallback(() => {
     setDrawerOpen(true);
@@ -109,6 +127,7 @@ export function RedeemYieldTokensButton({
         <RedeemYieldTokensDrawer
           isOpen={isDrawerOpen}
           yieldTokenInfo={yieldTokenInfo}
+          userProxyAllowance={userProxyAllowance}
           account={account}
           baseAsset={baseAsset}
           library={library}
