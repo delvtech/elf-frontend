@@ -1,6 +1,6 @@
-import { ReactElement, useCallback } from "react";
+import { ReactElement, useCallback, useEffect, useState } from "react";
 
-import { Button, Intent } from "@blueprintjs/core";
+import { Button, Callout, Intent, Switch } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { Tranche } from "elf-contracts/types";
 import { BigNumber, Signer } from "ethers";
@@ -15,21 +15,26 @@ import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 import { useSigner } from "efi-ui/provider/useBlockFromTag/useSigner/useSigner";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { RedeemForm } from "efi-ui/tranche/RedeemForm/RedeemForm";
+import { WalletApprovalCallout } from "efi-ui/transactions/TransactionDrawer/WalletApprovalCallout";
 import { useRedeemTermAssetsToEth } from "efi-ui/userProxy/useRedeemTermAssetsToEth";
 import { WalletDrawer } from "efi-ui/wallets/WalletDrawer/WalletDrawer";
+import ContractAddresses from "efi/addresses";
 import { convertEpochSecondsToDate2 } from "efi/base/convertEpochSecondsToDate";
 import { formatFullDate } from "efi/base/dates";
 import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
+import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
 
 import { useWithdrawPrincipal } from "./useWithdrawPrincipal";
 
+const { userProxyContractAddress } = ContractAddresses;
 interface RedeemPrincipalTokensDrawerProps {
   account: string | null | undefined;
   library: Web3Provider | undefined;
   baseAsset: CryptoAsset;
   principalTokenInfo: PrincipalTokenInfo;
+  userProxyAllowance: string;
   isOpen: boolean;
   onClose: () => void;
 }
@@ -39,6 +44,7 @@ export function RedeemPrincipalTokensDrawer({
   account,
   baseAsset,
   principalTokenInfo,
+  userProxyAllowance,
   isOpen,
   onClose,
 }: RedeemPrincipalTokensDrawerProps): ReactElement {
@@ -63,6 +69,17 @@ export function RedeemPrincipalTokensDrawer({
     });
 
   const tranche = trancheContractsByAddress[principalTokenInfo.address];
+  const [enoughAllowance, setEnoughAllowance] = useState(!!+userProxyAllowance);
+  const [includePermits, setIncludePermits] = useState(true);
+  useEffect(() => {
+    if (
+      parseUnits(userProxyAllowance || "0").lt(
+        parseUnits(principalTokenValue || "0")
+      )
+    ) {
+      setEnoughAllowance(false);
+    }
+  }, [userProxyAllowance, principalTokenValue]);
   const { data: principalTokenBalanceOf } = useTokenBalanceOf(tranche, account);
   const onSetMaxAmount = useCallback(() => {
     setPrincipalTokenValue(
@@ -122,6 +139,30 @@ export function RedeemPrincipalTokensDrawer({
       className={tw("justify-between")}
     >
       <div className={tw("flex", "flex-col", "space-y-4")}>
+        {!enoughAllowance &&
+          !includePermits &&
+          baseAsset.type === CryptoAssetType.ETHEREUM && (
+            <WalletApprovalCallout
+              spenderAddress={userProxyContractAddress}
+              messageRenderer={() =>
+                `Approval needed for ${principalTokenInfo.name}`
+              }
+              signer={signer}
+              ownerAddress={account}
+              cryptoAsset={getCryptoAssetForToken(principalTokenInfo.address)}
+            />
+          )}
+        {!enoughAllowance && baseAsset.type === CryptoAssetType.ETHEREUM && (
+          <Callout>
+            <div>
+              <Switch
+                label={t`Include pre-approvals with permit data`}
+                checked={includePermits}
+                onChange={() => setIncludePermits(!includePermits)}
+              />
+            </div>
+          </Callout>
+        )}
         <RedeemForm
           onSetMaxAmount={onSetMaxAmount}
           heading={t`Redeem ${baseAssetSymbol} Principal Tokens`}

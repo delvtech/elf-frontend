@@ -1,6 +1,6 @@
-import { ReactElement, useCallback } from "react";
+import { ReactElement, useCallback, useEffect, useState } from "react";
 
-import { Button, Intent } from "@blueprintjs/core";
+import { Button, Callout, Intent, Switch } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { Tranche } from "elf-contracts/types";
 import { BigNumber, Signer } from "ethers";
@@ -21,18 +21,24 @@ import { useWithdrawInterest } from "efi-ui/tranche/RedeemTokensDrawer/useWithdr
 import { useInterestTokenForTranche } from "efi-ui/tranche/useTrancheInterestTokenMulti";
 import { useRedeemTermAssetsToEth } from "efi-ui/userProxy/useRedeemTermAssetsToEth";
 import { WalletDrawer } from "efi-ui/wallets/WalletDrawer/WalletDrawer";
+import ContractAddresses from "efi/addresses";
 import { convertEpochSecondsToDate2 } from "efi/base/convertEpochSecondsToDate";
 import { formatFullDate } from "efi/base/dates";
 import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { getTokenInfo } from "efi/tokenlists";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
+import { WalletApprovalCallout } from "efi-ui/transactions/TransactionDrawer/WalletApprovalCallout";
+import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
+
+const { userProxyContractAddress } = ContractAddresses;
 
 interface RedeemYieldTokensDrawerProps {
   account: string | null | undefined;
   library: Web3Provider | undefined;
   baseAsset: CryptoAsset;
   yieldTokenInfo: YieldTokenInfo;
+  userProxyAllowance: string;
   isOpen: boolean;
   onClose: () => void;
 }
@@ -42,6 +48,7 @@ export function RedeemYieldTokensDrawer({
   account,
   baseAsset,
   yieldTokenInfo,
+  userProxyAllowance,
   isOpen,
   onClose,
 }: RedeemYieldTokensDrawerProps): ReactElement {
@@ -68,6 +75,18 @@ export function RedeemYieldTokensDrawer({
       min: 0,
       maxPrecision: yieldTokenDecimals,
     });
+
+  const [enoughAllowance, setEnoughAllowance] = useState(!!+userProxyAllowance);
+  const [includePermits, setIncludePermits] = useState(true);
+  useEffect(() => {
+    if (
+      parseUnits(userProxyAllowance || "0").lt(
+        parseUnits(yieldTokenValue || "0")
+      )
+    ) {
+      setEnoughAllowance(false);
+    }
+  }, [userProxyAllowance, yieldTokenValue]);
 
   const { data: yieldTokenBalanceOf } = useTokenBalanceOf(yieldToken, account);
   const onSetMaxAmount = useCallback(() => {
@@ -123,6 +142,30 @@ export function RedeemYieldTokensDrawer({
       className={tw("justify-between")}
     >
       <div className={tw("flex", "flex-col", "space-y-4")}>
+        {!enoughAllowance &&
+          !includePermits &&
+          baseAsset.type === CryptoAssetType.ETHEREUM && (
+            <WalletApprovalCallout
+              spenderAddress={userProxyContractAddress}
+              messageRenderer={() =>
+                `Approval needed for ${yieldTokenInfo.name}`
+              }
+              signer={signer}
+              ownerAddress={account}
+              cryptoAsset={getCryptoAssetForToken(yieldTokenInfo.address)}
+            />
+          )}
+        {!enoughAllowance && baseAsset.type === CryptoAssetType.ETHEREUM && (
+          <Callout>
+            <div>
+              <Switch
+                label={t`Include pre-approvals with permit data`}
+                checked={includePermits}
+                onChange={() => setIncludePermits(!includePermits)}
+              />
+            </div>
+          </Callout>
+        )}
         <RedeemForm
           onSetMaxAmount={onSetMaxAmount}
           heading={t`Redeem ${baseAssetSymbol} Yield Tokens`}
