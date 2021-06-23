@@ -17,7 +17,7 @@ export function usePreviousBlockNumber(
       }
 
       const numBlocksSinceTimestamp = Math.round(
-        secondsAgo / /*AVG_MINE_RATE_SECONDS*/ 30
+        secondsAgo / AVG_MINE_RATE_SECONDS
       );
       const blockNumberAtTimestamp =
         lastestBlockNumber - numBlocksSinceTimestamp;
