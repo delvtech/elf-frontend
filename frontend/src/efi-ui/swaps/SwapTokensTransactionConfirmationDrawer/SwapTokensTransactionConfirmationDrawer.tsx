@@ -1,14 +1,13 @@
 import React, { ReactElement, useCallback, useMemo } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
-import { Signer } from "ethers";
+import { BigNumber, Signer } from "ethers";
 import { formatEther, parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import { getBalancerApprovalMessage } from "efi-ui/balancer/balancerApprovalMessage";
 import { SwapKind } from "efi-ui/balancer/SwapKind";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
-import { useBatchSwapGivenIn } from "efi-ui/balancer/useBatchSwapGivenIn/useBatchSwapGivenIn";
 import { parseQueryBatchSwapResult } from "efi-ui/balancer/useQueryBatchSwap/parseQueryBatchSwapResult";
 import { useQueryBatchSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
 import { usePoolSwapFee } from "efi-ui/pools/usePoolSwapFee/usePoolSwapFee";
@@ -26,8 +25,9 @@ import { getPoolContract } from "efi/pools/getPoolContract";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { isConvergentCurvePool } from "efi/pools/PoolContract";
 import { PoolInfo } from "efi/pools/PoolInfo";
-import { getAmountOutWithTolerance } from "efi/trade/getAmountOutWithTolerance";
+import { getToleranceAmount } from "efi/trade/getToleranceAmount";
 import { TermAssetType } from "efi/tranche/TermAssetType";
+import { useSwap } from "efi-ui/balancer/useSwap/useSwap";
 
 interface SwapTokensTransactionConfirmationDrawerProps {
   account: string | null | undefined;
@@ -78,7 +78,11 @@ export function SwapTokensTransactionConfirmationDrawer({
   onClose,
   poolInfo,
 }: SwapTokensTransactionConfirmationDrawerProps): ReactElement {
-  const pool = getPoolContract(poolInfo.address);
+  const {
+    address: poolAddress,
+    extensions: { poolId },
+  } = poolInfo;
+  const pool = getPoolContract(poolAddress);
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
   const { baseAssetContract } = getPoolTokens(poolInfo);
   const baseAsset = getCryptoAssetForToken(baseAssetContract?.address);
@@ -93,37 +97,44 @@ export function SwapTokensTransactionConfirmationDrawer({
     : "yield";
 
   // pool calls
-  const amountInAsBigNumber = parseUnits(amountIn || "0", tokenInDecimals);
+  const amountInBN = parseUnits(amountIn || "0", tokenInDecimals);
   const { data: queryBatchSwapInResult = [] } = useQueryBatchSwap(
     swapKind,
     pool,
     tokenInAddress,
     tokenOutAddress,
-    amountInAsBigNumber
+    amountInBN
   );
-  const { tokenOut: queryAmountOut } = parseQueryBatchSwapResult(
+  const {
+    tokenOut: queryAmountOut = BigNumber.from(0),
+    tokenIn: queryAmountIn = BigNumber.from(0),
+  } = parseQueryBatchSwapResult(
     tokenInAddress,
     tokenOutAddress,
     queryBatchSwapInResult
   );
 
-  const minAmountOut = getAmountOutWithTolerance(
-    queryAmountOut,
+  const amountToLimit =
+    swapKind === SwapKind.GIVEN_IN ? queryAmountOut : queryAmountIn;
+  const limitBN = getToleranceAmount(
+    amountToLimit,
+    tokenInDecimals,
     tokenOutDecimals,
+    swapKind,
     0.01
   );
 
-  const { batchSwapGivenIn: onConfirmSwapTokens, mutationResult: swapResult } =
-    useBatchSwapGivenIn(
-      account,
-      signer,
-      pool,
-      tokenInAddress,
-      tokenOutAddress,
-      amountInAsBigNumber,
-      minAmountOut,
-      onClose
-    );
+  const { swap: onConfirmSwapTokens, mutationResult: swapResult } = useSwap(
+    account,
+    signer,
+    poolId,
+    tokenInAddress,
+    tokenOutAddress,
+    amountInBN,
+    limitBN,
+    swapKind,
+    onClose
+  );
 
   const { isLoading, isError, isSuccess, reset } = swapResult;
 

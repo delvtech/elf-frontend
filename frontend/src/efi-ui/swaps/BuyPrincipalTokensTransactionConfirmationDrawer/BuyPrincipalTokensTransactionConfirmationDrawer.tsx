@@ -24,7 +24,7 @@ import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { calculatePurchasePrice } from "efi/pools/calculatePurchasePrice";
 import { calculateSlippage } from "efi/pools/calculateSlippage";
 import { PoolContract } from "efi/pools/PoolContract";
-import { getAmountOutWithTolerance } from "efi/trade/getAmountOutWithTolerance";
+import { getToleranceAmount } from "efi/trade/getToleranceAmount";
 import { useSigner } from "efi-ui/provider/useBlockFromTag/useSigner/useSigner";
 import { getTokenInfo } from "efi/tokenlists";
 import { PrincipalTokenInfo } from "tokenlists/types";
@@ -104,7 +104,7 @@ export function BuyPrincipalTokensTransactionConfirmationDrawer({
     queryBatchSwapInResult
   );
 
-  const minAmountOut = getAmountOutWithTolerance(
+  const minAmountOut = getToleranceAmount(
     queryAmountOut,
     baseAssetDecimals,
     0.01
