@@ -8,8 +8,8 @@ import { Signer } from "ethers";
 import tw from "efi-tailwindcss-classnames";
 import { InterestPoolCard } from "efi-ui/pools/PoolsTable/InterestPoolCard";
 import { PrincipalPoolCard } from "efi-ui/pools/PoolsTable/PrincipalPoolCard";
-import { useConvergentCurvePools } from "efi-ui/pools/useConvergentCurvePools/useConvergentCurvePools";
-import { useWeightedPools } from "efi-ui/pools/useWeightedPools/useWeightedPools";
+import { principalPoolContracts } from "efi/pools/ccpool";
+import { yieldPoolContracts } from "efi/pools/weightedPool";
 
 interface PoolsTableProps {
   className?: string;
@@ -21,23 +21,20 @@ export function PoolsTable({
   signerOrProvider,
   isYieldPools,
 }: PoolsTableProps): ReactElement {
-  const principalTokenPools = useConvergentCurvePools(signerOrProvider);
-  const interestTokenPools = useWeightedPools(signerOrProvider);
-
   return (
     <div
       className={tw("flex", "flex-col", "items-center", "w-full", "space-y-5")}
     >
       <Fragment>
         {isYieldPools
-          ? interestTokenPools
+          ? yieldPoolContracts
               .filter((pool): pool is WeightedPool => !!pool)
               .map((pool, index) => {
                 return (
                   <InterestPoolCard key={pool?.address || index} pool={pool} />
                 );
               })
-          : principalTokenPools
+          : principalPoolContracts
               .filter((pool): pool is ConvergentCurvePool => !!pool)
               .map((pool, index) => {
                 return (
