@@ -4,6 +4,7 @@ import { UseMutationResult, useQueryClient } from "react-query";
 import { Contract, ContractReceipt, ContractTransaction, Signer } from "ethers";
 
 import {
+  TransactionReplacedError,
   useSmartContractTransaction,
   UseSmartContractTransactionOptions,
 } from "efi-ui/contracts/useSmartContractTransaction/useSmartContractTransaction";
@@ -98,7 +99,7 @@ export function useSmartContractTransactionPersisted<
   );
 
   const onTxError = useCallback(
-    (error: Error) => {
+    (error: TransactionReplacedError) => {
       onError?.(error);
     },
     [onError]
