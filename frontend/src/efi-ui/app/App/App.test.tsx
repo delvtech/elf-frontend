@@ -1,14 +1,13 @@
-// Ok, so here's what your tests might look like
-
-// import React from "react";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import React from "react";
 
 // import App from "efi-ui/app/App/App";
 
 // import { renderWithAppProviders } from "efi-ui/testing/renderWithAppProviders";
 
-// test("full app rendering/navigating", async () => {
-//   expect(true).toEqual(true);
-// });
+test("full app rendering/navigating", async () => {
+  expect(true).toEqual(true);
+});
 // test.skip("full app rendering/navigating", async () => {
 //   const {
 //     container,

@@ -75,8 +75,12 @@ export function useTotalFiatBalance(
   );
 
   // Get the total fiat value for how much base asset they'd get per tranche.
-  const baseAssetSymbols = baseAssets.map(getCryptoSymbol);
-  const baseAssetDecimals = baseAssets.map(getCryptoDecimals);
+  const baseAssetSymbols = baseAssets.map((baseAsset) =>
+    getCryptoSymbol(baseAsset)
+  );
+  const baseAssetDecimals = baseAssets.map((baseAsset) =>
+    getCryptoDecimals(baseAsset)
+  );
   const coinGeckoIds = baseAssetSymbols.map((baseAssetSymbol) =>
     getCoinGeckoId(baseAssetSymbol)
   );
