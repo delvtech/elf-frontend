@@ -36,7 +36,7 @@ import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { useUnderlyingVaultForTranche } from "efi-ui/tranche/useUnderlyingVaultForTranche";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { calculateProgress } from "efi/base/calculateProgress";
-import { convertEpochSecondsToDate2 } from "efi/base/convertEpochSecondsToDate";
+import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
 import { formatPercent } from "efi/base/formatPercent";
 import { ERC20Shim } from "efi/contracts/ERC20Shim";
@@ -93,8 +93,8 @@ export function YieldTokenCard({
     unlockTimestamp,
     underlying,
   } = trancheInfo?.extensions ?? ({} as PrincipalTokenInfo["extensions"]);
-  const unlockDate = convertEpochSecondsToDate2(unlockTimestamp);
-  const createdAtDate = convertEpochSecondsToDate2(trancheCreatedAt);
+  const unlockDate = convertEpochSecondsToDate(unlockTimestamp);
+  const createdAtDate = convertEpochSecondsToDate(trancheCreatedAt);
   const trancheContract = getSmartContractFromRegistry(
     trancheInfo.address,
     Tranche__factory.connect

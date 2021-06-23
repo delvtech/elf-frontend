@@ -21,7 +21,7 @@ import { SwapDetailsForm } from "efi-ui/swaps/SwapDetailsPreview/SwapDetailsForm
 import { TokenIcon } from "efi-ui/token/TokenIcon";
 import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/TransactionDrawer";
 import ContractAddresses from "efi/addresses";
-import { convertEpochSecondsToDate2 } from "efi/base/convertEpochSecondsToDate";
+import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
@@ -73,9 +73,7 @@ export function MintTransactionConfirmationDrawer({
   } = trancheInfo.extensions;
   const yieldTokenInfo = getTokenInfo<YieldTokenInfo>(interestTokenAddress);
 
-  const unlockTimeStampDate = convertEpochSecondsToDate2(
-    trancheUnlockTimestamp
-  );
+  const unlockTimeStampDate = convertEpochSecondsToDate(trancheUnlockTimestamp);
 
   const amountInAsNumber = +(amountIn || 0);
   const numPrincipalTokens = useMintPreview(trancheInfo, amountInAsNumber);

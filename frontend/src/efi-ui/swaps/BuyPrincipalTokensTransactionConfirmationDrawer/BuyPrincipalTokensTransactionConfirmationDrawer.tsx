@@ -19,7 +19,7 @@ import { PrincipalTokenTransactionDetails } from "efi-ui/swaps/PrincipalTokenTra
 import { SwapDetailsForm } from "efi-ui/swaps/SwapDetailsPreview/SwapDetailsForm";
 import { TokenIcon } from "efi-ui/token/TokenIcon";
 import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/TransactionDrawer";
-import { convertEpochSecondsToDate2 } from "efi/base/convertEpochSecondsToDate";
+import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { calculatePurchasePrice } from "efi/pools/calculatePurchasePrice";
 import { calculateSlippage } from "efi/pools/calculateSlippage";
@@ -79,9 +79,7 @@ export function BuyPrincipalTokensTransactionConfirmationDrawer({
     extensions: { unlockTimestamp: trancheUnlockTimestamp, underlying },
   } = getTokenInfo<PrincipalTokenInfo>(tranche.address);
 
-  const unlockTimeStampDate = convertEpochSecondsToDate2(
-    trancheUnlockTimestamp
-  );
+  const unlockTimeStampDate = convertEpochSecondsToDate(trancheUnlockTimestamp);
 
   const baseAssetPoolToken = underlyingContractsByAddress[underlying];
 

@@ -8,7 +8,7 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
-import { convertEpochSecondsToDate2 } from "efi/base/convertEpochSecondsToDate";
+import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
 import { formatPercent } from "efi/base/formatPercent";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
@@ -39,7 +39,7 @@ export function VaultTermButtonLabel({
   const postedAPY = formatPercent(yearnVault?.apy?.recommended || 0);
   const formattedTVL = formatTVL(yearnVault?.tvl?.value);
 
-  const unlockDate = convertEpochSecondsToDate2(unlockTimestamp);
+  const unlockDate = convertEpochSecondsToDate(unlockTimestamp);
 
   const formattedDate = unlockDate
     ? formatAbbreviatedDate(unlockDate)

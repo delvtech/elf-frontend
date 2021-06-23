@@ -12,7 +12,7 @@ import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
 import { RedeemPrincipalTokensDrawer } from "efi-ui/tranche/RedeemTokensDrawer/RedeemPrincipalTokensDrawer";
 import { useTrancheCanPerform } from "efi-ui/tranche/useTrancheCanPerform";
 import ContractAddresses from "efi/addresses";
-import { convertEpochSecondsToDate2 } from "efi/base/convertEpochSecondsToDate";
+import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { trancheContractsByAddress as principalTokenContractsByAddress } from "efi/tranche/tranches";
 
@@ -37,7 +37,7 @@ export function RedeemPrincipalTokensButton({
     address,
     extensions: { unlockTimestamp },
   } = principalTokenInfo;
-  const unlockDate = convertEpochSecondsToDate2(unlockTimestamp);
+  const unlockDate = convertEpochSecondsToDate(unlockTimestamp);
   const canPerformWithdrawPrincipal = useTrancheCanPerform(
     address,
     "withdrawPrincipal"

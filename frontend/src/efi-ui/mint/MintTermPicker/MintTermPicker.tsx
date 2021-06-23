@@ -35,9 +35,6 @@ export function MintTermPicker({
   );
 }
 
-function buttonLabelRenderer(
-  tranche: Tranche | undefined,
-  baseAsset: CryptoAsset | undefined
-) {
+function buttonLabelRenderer(tranche: Tranche, baseAsset: CryptoAsset) {
   return <VaultTermButtonLabel tranche={tranche} baseAsset={baseAsset} />;
 }
