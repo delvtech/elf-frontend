@@ -25,9 +25,9 @@ import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
+import { GoToPoolButton } from "efi-ui/pools/GoToPoolButton/GoToPoolButton";
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { PoolAction } from "efi-ui/pools/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
-import { GoToPoolButton } from "efi-ui/pools/GoToPoolButton/GoToPoolButton";
 import { MaturityTimeBar } from "efi-ui/portfolio/PrincipalTokenCard/MaturityTimeBar";
 import { RedeemYieldTokensButton } from "efi-ui/portfolio/RedeemButton/RedeemYieldTokensButton";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
@@ -36,7 +36,7 @@ import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { useUnderlyingVaultForTranche } from "efi-ui/tranche/useUnderlyingVaultForTranche";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { calculateProgress } from "efi/base/calculateProgress";
-import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
+import { convertEpochSecondsToDate2 } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
 import { formatPercent } from "efi/base/formatPercent";
 import { ERC20Shim } from "efi/contracts/ERC20Shim";
@@ -93,8 +93,8 @@ export function YieldTokenCard({
     unlockTimestamp,
     underlying,
   } = trancheInfo?.extensions ?? ({} as PrincipalTokenInfo["extensions"]);
-  const unlockDate = convertEpochSecondsToDate(unlockTimestamp);
-  const createdAtDate = convertEpochSecondsToDate(trancheCreatedAt);
+  const unlockDate = convertEpochSecondsToDate2(unlockTimestamp);
+  const createdAtDate = convertEpochSecondsToDate2(trancheCreatedAt);
   const trancheContract = getSmartContractFromRegistry(
     trancheInfo.address,
     Tranche__factory.connect

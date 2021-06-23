@@ -7,19 +7,19 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { getQueryData } from "efi-ui/base/queryResults";
-import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
-import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
+import { convertEpochSecondsToDate2 } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
 import { formatPercent } from "efi/base/formatPercent";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { formatMoney } from "efi/money/formatMoney";
+import { getTokenInfo } from "efi/tokenlists";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
+import { PrincipalTokenInfo as TrancheInfo } from "tokenlists/types";
 
 interface VaultTermButtonLabelProps {
-  tranche: Tranche | undefined;
-  baseAsset: CryptoAsset | undefined;
+  tranche: Tranche;
+  baseAsset: CryptoAsset;
 }
 
 /**
@@ -30,10 +30,8 @@ export function VaultTermButtonLabel({
   baseAsset,
   tranche,
 }: VaultTermButtonLabelProps): ReactElement {
-  const unlockTimestampResult = useSmartContractReadCall(
-    tranche,
-    "unlockTimestamp"
-  );
+  const trancheInfo = getTokenInfo<TrancheInfo>(tranche.address);
+  const { unlockTimestamp } = trancheInfo.extensions;
 
   const vaultSymbol = getVaultSymbol(baseAsset);
   const { data: yearnVault } = useYearnVault(vaultSymbol);
@@ -41,9 +39,7 @@ export function VaultTermButtonLabel({
   const postedAPY = formatPercent(yearnVault?.apy?.recommended || 0);
   const formattedTVL = formatTVL(yearnVault?.tvl?.value);
 
-  const unlockDate = convertEpochSecondsToDate(
-    getQueryData(unlockTimestampResult)
-  );
+  const unlockDate = convertEpochSecondsToDate2(unlockTimestamp);
 
   const formattedDate = unlockDate
     ? formatAbbreviatedDate(unlockDate)
