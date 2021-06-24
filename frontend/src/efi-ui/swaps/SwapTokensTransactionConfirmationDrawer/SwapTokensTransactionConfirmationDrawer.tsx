@@ -1,7 +1,7 @@
 import React, { ReactElement, useCallback, useMemo } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
-import { BigNumber, Signer } from "ethers";
+import { BigNumber } from "ethers";
 import { formatEther, parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 

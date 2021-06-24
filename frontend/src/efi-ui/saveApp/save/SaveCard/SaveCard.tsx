@@ -428,19 +428,6 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
           isOpen={isDrawerOpen}
           onClose={closeDrawer}
         />
-        // <BuyPrincipalTokensTransactionConfirmationDrawer
-        //   baseAsset={activeBaseAsset}
-        //   baseAssetIcon={baseAssetIcon}
-        //   tranche={activeTranche}
-        //   account={account}
-        //   library={library}
-        //   pool={poolContract}
-        //   amountIn={amountIn}
-        //   amountOut={amountOut}
-        //   swapKind={swapKind}
-        //   isOpen={isDrawerOpen}
-        //   onClose={closeDrawer}
-        // />
       )}
       <ConnectWalletDialog
         isOpen={isWalletDialogOpen}
