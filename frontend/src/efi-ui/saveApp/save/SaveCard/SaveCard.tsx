@@ -21,40 +21,42 @@ import { PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { SwapKind } from "efi/balancer/SwapKind";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { CryptoAssetPicker } from "efi-ui/crypto/CryptoAssetPicker/CryptoAssetPicker";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoBalanceOf } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
-import { SaveInput } from "efi-ui/saveApp/save/SaveInput/SaveInput";
-import { SaveTermPicker } from "efi-ui/saveApp/save/SaveTermPicker/SaveTermPicker";
-import { useActiveTranche } from "efi-ui/saveApp/save/hooks/useActiveTranche";
+import { useCanPerformPool } from "efi-ui/pools/usePoolCanPerform/usePoolCanPerform";
 import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
+import { useActiveTranche } from "efi-ui/saveApp/save/hooks/useActiveTranche";
 import { PrincipalDiscountPreview } from "efi-ui/saveApp/save/SaveCard/PrincipalDiscountPreview";
-import { BuyPrincipalTokensTransactionConfirmationDrawer } from "efi-ui/swaps/BuyPrincipalTokensTransactionConfirmationDrawer/BuyPrincipalTokensTransactionConfirmationDrawer";
+import { SaveInput } from "efi-ui/saveApp/save/SaveInput/SaveInput";
+import { SaveTermPicker } from "efi-ui/saveApp/save/SaveTermPicker/SaveTermPicker";
+import { SwapTokensTransactionConfirmationDrawer } from "efi-ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensTransactionConfirmationDrawer";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
+import { BALANCER_ETH_SENTINEL } from "efi/balancer";
+import { SwapKind } from "efi/balancer/SwapKind";
 import { formatBalance } from "efi/base/formatBalance";
 import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
-import { CryptoAsset } from "efi/crypto/CryptoAsset";
-import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
+import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
+import { getCryptoDecimals2 } from "efi/crypto/getCryptoDecimals";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import {
   calcSwapInGivenOutCCPoolUNSAFE,
   calcSwapOutGivenInCCPoolUNSAFE,
 } from "efi/pools/calcPoolSwap";
 import {
-  getPrincipalPoolContractForTranche,
   getPoolInfoForPrincipalToken,
+  getPrincipalPoolContractForTranche,
 } from "efi/pools/ccpool";
-import { useParseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
+import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { getTokenInfo } from "efi/tokenlists";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
 import { openTrancheBaseAssets } from "efi/tranche/baseAssets";
 import { underlyingContractsByAddress } from "efi/underlying/underlying";
-import { useCanPerformPool } from "efi-ui/pools/usePoolCanPerform/usePoolCanPerform";
+import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 
 export interface SaveCardProps {
   library: Web3Provider | undefined;
@@ -62,10 +64,12 @@ export interface SaveCardProps {
 }
 
 export function SaveCard({ library, account }: SaveCardProps): ReactElement {
+  // local state
   const [swapKind, setSwapKind] = useState(SwapKind.GIVEN_IN);
   const [isWalletDialogOpen, setWalletDialogOpen] = useState(false);
-  // local state
   const [isDrawerOpen, setDrawerOpen] = useState(false);
+
+  // handlers
   const openDrawer = useCallback(() => setDrawerOpen(true), []);
   const closeWalletDialog = useCallback(() => setWalletDialogOpen(false), []);
   const onClickButton = useCallback(() => {
@@ -81,21 +85,20 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
     setAmountIn("");
     setAmountOut("");
   }, [setAmountIn, setAmountOut]);
-  const closeDrawer = useCallback(
-    (transactionAttemped) => {
-      if (transactionAttemped) {
-        clearInputs();
-      }
-      setDrawerOpen(false);
-    },
-    [clearInputs]
-  );
+  const closeDrawer = useCallback(() => {
+    clearInputs();
+    setDrawerOpen(false);
+  }, [clearInputs]);
 
   // base asset
   const { activeBaseAsset, setActiveBaseAsset } =
     useActiveBaseAsset(clearInputs);
+  const baseAssetAddress =
+    activeBaseAsset.type === CryptoAssetType.ETHEREUM
+      ? BALANCER_ETH_SENTINEL
+      : activeBaseAsset.tokenContract.address;
   const activeBaseAssetSymbol = getCryptoSymbol(activeBaseAsset);
-  const activeBaseAssetDecimals = getCryptoDecimals(activeBaseAsset);
+  const activeBaseAssetDecimals = getCryptoDecimals2(activeBaseAsset);
   const activeBaseAssetBalanceOf = useCryptoBalanceOf(
     library,
     account,
@@ -115,9 +118,13 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
     availableTranches,
     setActiveTranche,
   } = useActiveTranche(activeBaseAsset);
-  const { decimals: principalTokenDecimals } = getTokenInfo<PrincipalTokenInfo>(
-    activeTranche.address
-  );
+  const {
+    decimals: principalTokenDecimals,
+    symbol: principalTokenSymbol,
+    address: principalTokenAddress,
+  } = getTokenInfo<PrincipalTokenInfo>(activeTranche.address);
+  const principalTokenAsset = getCryptoAssetForToken(principalTokenAddress);
+  const principalTokenIcon = findAssetIcon(principalTokenAsset);
 
   const { data: principalTokenBalanceOf } = useTokenBalanceOf(
     activeTranche,
@@ -125,15 +132,19 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
   );
 
   // pool
-  const {
-    address: convergentPoolAddress,
-    extensions: { expiration, unitSeconds, underlying },
-  } = getPoolInfoForPrincipalToken(activeTranche.address);
-  const canPerformBuy = useCanPerformPool(convergentPoolAddress, "buy");
-
   const poolContract = getPrincipalPoolContractForTranche(
     activeTranche.address
   );
+  const poolInfo = getPoolInfoForPrincipalToken(activeTranche.address);
+  const {
+    address: convergentPoolAddress,
+    extensions: { expiration, unitSeconds, underlying },
+  } = poolInfo;
+  const { baseAssetIndex, termAssetIndex: principalTokenIndex } =
+    getPoolTokens(poolInfo);
+  const { data: [, balances = []] = [] } = usePoolTokens(poolContract);
+
+  const canPerformBuy = useCanPerformPool(convergentPoolAddress, "buy");
 
   // TODO: use a global Date.now that updates at a constant interval
   const nowInSeconds = Math.round(Date.now() / 1000);
@@ -144,11 +155,8 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
     poolContract,
     "totalSupply"
   );
-  const totalSupply = formatEther(totalSupplyBN ?? 0);
 
-  const { data: [tokens, balances = []] = [] } = usePoolTokens(poolContract);
-  const { baseAssetIndex, termAssetIndex: principalTokenIndex } =
-    useParseSortedTokensForPool(tokens);
+  const totalSupply = formatEther(totalSupplyBN ?? 0);
   const baseAssetReservesBalanceOf = balances[baseAssetIndex];
   const principalReservesBalanceOf = balances[principalTokenIndex];
   const baseReserves = formatUnits(
@@ -161,8 +169,10 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
   );
 
   const underlyingPoolTokenContract = underlyingContractsByAddress[underlying];
-  const { spotPriceBaseAssetForOneToken: amountOfEthForOnePrincipalEth } =
-    usePoolTokenPrices(poolContract, underlyingPoolTokenContract);
+  const {
+    spotPriceBaseAssetForOneToken: amountOfEthForOnePrincipalEth,
+    spotPriceTokenForOneBaseAsset,
+  } = usePoolTokenPrices(poolContract, underlyingPoolTokenContract);
 
   const {
     isValidTokenInValue,
@@ -396,16 +406,25 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
       </Card>
 
       {!activeBaseAsset || !isDrawerOpen ? null : (
-        <BuyPrincipalTokensTransactionConfirmationDrawer
-          baseAsset={activeBaseAsset}
-          baseAssetIcon={baseAssetIcon}
-          tranche={activeTranche}
+        <SwapTokensTransactionConfirmationDrawer
+          tokenInAddress={baseAssetAddress}
+          // TODO: remove this casting when getCryptoSymbol doesn't return undefined
+          tokenInSymbol={baseAssetSymbol as string}
+          tokenInDecimals={activeBaseAssetDecimals}
+          tokenInAsset={activeBaseAsset}
+          tokenInIcon={baseAssetIcon}
+          tokenOutAddress={principalTokenAddress}
+          // TODO: remove this casting when getCryptoSymbol doesn't return undefined
+          tokenOutSymbol={principalTokenSymbol as string}
+          tokenOutDecimals={principalTokenDecimals}
+          tokenOutIcon={principalTokenIcon}
           account={account}
           library={library}
-          pool={poolContract}
+          poolInfo={poolInfo}
           amountIn={amountIn}
           amountOut={amountOut}
           swapKind={swapKind}
+          spotPrice={spotPriceTokenForOneBaseAsset}
           isOpen={isDrawerOpen}
           onClose={closeDrawer}
         />

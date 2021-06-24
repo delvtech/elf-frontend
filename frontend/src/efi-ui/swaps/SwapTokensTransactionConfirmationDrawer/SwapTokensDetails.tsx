@@ -13,14 +13,16 @@ import { TermAssetType } from "efi/tranche/TermAssetType";
 interface SwapTokenDetailsProps {
   spotPriceBaseAssetForOneToken: number | undefined;
   baseAssetSymbol: string | undefined;
-  priceSlippage: number | undefined;
+  priceImpact: number | undefined;
+  slippageTolerance: number | undefined;
   feePercent: number | undefined;
   termAssetType: TermAssetType;
 }
 export function SwapTokenDetails({
   baseAssetSymbol,
-  priceSlippage,
+  priceImpact,
   feePercent,
+  slippageTolerance,
   spotPriceBaseAssetForOneToken = 0,
   termAssetType,
 }: SwapTokenDetailsProps): ReactElement {
@@ -30,8 +32,9 @@ export function SwapTokenDetails({
     label = t`1 Yield Token ≈ ${roundedTermAssetPrice} ${baseAssetSymbol}`;
   }
 
-  const formattedSlippage = formatPercent(priceSlippage || 0);
+  const formattedPriceImpact = formatPercent(priceImpact || 0);
   const formattedFeePercent = formatPercent(feePercent || 0);
+  const formattedTolerance = formatPercent(slippageTolerance || 0);
 
   return (
     <div className={tw("flex", "flex-col", "space-y-6", "items-center")}>
@@ -47,7 +50,7 @@ export function SwapTokenDetails({
         muted={false}
         bold
         containerClassName={tw("justify-center")}
-        text={<span>{t`Fees`}</span>}
+        text={<span>{t`Trade fee`}</span>}
         className={tw("items-center")}
         label={<span className={tw("text-base")}>{formattedFeePercent}</span>}
       />
@@ -57,7 +60,15 @@ export function SwapTokenDetails({
         containerClassName={tw("justify-center")}
         text={<span>{t`Price impact`}</span>}
         className={tw("items-center")}
-        label={<span className={tw("text-base")}>{formattedSlippage}</span>}
+        label={<span className={tw("text-base")}>{formattedPriceImpact}</span>}
+      />
+      <LabeledText
+        muted={false}
+        bold
+        containerClassName={tw("justify-center")}
+        text={<span>{t`Slippage tolerance`}</span>}
+        className={tw("items-center")}
+        label={<span className={tw("text-base")}>{formattedTolerance}</span>}
       />
     </div>
   );
