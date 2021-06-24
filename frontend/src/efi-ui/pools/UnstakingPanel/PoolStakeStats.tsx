@@ -97,6 +97,7 @@ export function PoolStakeStats(
         textClassName={tw("text-2xl")}
         text={termAssetLiquidityLabel}
         label={t`${termAssetInfo.symbol} liquidity`}
+        labelClassName={tw("truncate")}
       />
       <LabeledText
         muted={false}

@@ -36,6 +36,7 @@ interface LabeledTextProps {
 
   iconClassName?: string;
   textClassName?: string;
+  labelClassName?: string;
   containerClassName?: string;
 }
 
@@ -47,6 +48,7 @@ export function LabeledText({
   muted = true,
   className,
   textClassName,
+  labelClassName,
   iconClassName,
   containerClassName,
   icon,
@@ -70,7 +72,11 @@ export function LabeledText({
           {text}
         </span>
         <span
-          className={classNames({ [Classes.TEXT_MUTED]: muted }, tw("text-sm"))}
+          className={classNames(
+            { [Classes.TEXT_MUTED]: muted },
+            tw("text-sm"),
+            labelClassName
+          )}
         >
           {label}
         </span>
