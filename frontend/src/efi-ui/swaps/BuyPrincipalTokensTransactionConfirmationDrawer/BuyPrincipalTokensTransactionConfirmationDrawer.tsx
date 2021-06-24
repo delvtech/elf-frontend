@@ -22,7 +22,7 @@ import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/Transac
 import { SwapKind } from "efi/balancer/SwapKind";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
-import { getCryptoDecimals2 } from "efi/crypto/getCryptoDecimals";
+import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { getCryptoSymbol2 } from "efi/crypto/getCryptoSymbol";
 import { calculatePurchasePrice } from "efi/pools/calculatePurchasePrice";
 import { calculateSlippage } from "efi/pools/calculateSlippage";
@@ -72,7 +72,7 @@ export function BuyPrincipalTokensTransactionConfirmationDrawer({
   const balancerVault = useBalancerVault();
   // base asset calls
   const baseAssetSymbol = getCryptoSymbol2(baseAsset);
-  const baseAssetDecimals = getCryptoDecimals2(baseAsset) ?? 18;
+  const baseAssetDecimals = getCryptoDecimals(baseAsset) ?? 18;
 
   // tranche calls
   const {

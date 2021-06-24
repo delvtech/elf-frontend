@@ -7,7 +7,7 @@ import {
 import { NUM_ETH_DECIMALS } from "efi/ethereum";
 import { TokenMetadata } from "efi/tokenlists";
 
-export function getCryptoDecimals2(
+export function getCryptoDecimals(
   // TODO: Remove undefined from this signature, since undefined would mean there's a token we don't have static access to.
   asset: CryptoAsset
 ): number {

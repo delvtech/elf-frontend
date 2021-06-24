@@ -31,7 +31,7 @@ import {
   underlyingContractsByAddress,
 } from "efi/underlying/underlying";
 import { getTokenAddressForUserProxy } from "efi/userProxy";
-import { getCryptoDecimals2 } from "efi/crypto/getCryptoDecimals";
+import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 
 /**
  * Returns the number of Principal Tokens you'd get for minting into a tranche.
@@ -58,7 +58,7 @@ export function useMintTransaction(
 } {
   const { balancerVaultAddress, userProxyContractAddress } = ContractAddresses;
   const userProxy = getUserProxy(signer);
-  const baseAssetDecimals = getCryptoDecimals2(baseAsset);
+  const baseAssetDecimals = getCryptoDecimals(baseAsset);
   const amountInBigNumber = parseUnits(amountIn.toString(), baseAssetDecimals);
   const baseAssetContract = underlyingContractsByAddress[
     trancheInfo.extensions.underlying
