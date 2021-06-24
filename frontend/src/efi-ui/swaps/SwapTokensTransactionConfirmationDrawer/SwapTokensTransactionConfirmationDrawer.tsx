@@ -28,6 +28,7 @@ import { PoolInfo } from "efi/pools/PoolInfo";
 import { getToleranceAmount } from "efi/trade/getToleranceAmount";
 import { TermAssetType } from "efi/tranche/TermAssetType";
 import { useSwap } from "efi-ui/balancer/useSwap/useSwap";
+import { useSigner } from "efi-ui/provider/useBlockFromTag/useSigner/useSigner";
 
 interface SwapTokensTransactionConfirmationDrawerProps {
   account: string | null | undefined;
@@ -78,19 +79,19 @@ export function SwapTokensTransactionConfirmationDrawer({
   onClose,
   poolInfo,
 }: SwapTokensTransactionConfirmationDrawerProps): ReactElement {
+  const signer = useSigner(account, library);
+  const balancerVault = useBalancerVault();
+
   const {
     address: poolAddress,
     extensions: { poolId },
   } = poolInfo;
   const pool = getPoolContract(poolAddress);
-  const signer = account ? (library?.getSigner(account) as Signer) : undefined;
   const { baseAssetContract } = getPoolTokens(poolInfo);
   const baseAsset = getCryptoAssetForToken(baseAssetContract?.address);
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
   const baseAssetAddress = getTokenAddressForBalancer(baseAsset);
   const baseAssetIn = baseAssetAddress === tokenInAddress;
-
-  const balancerVault = useBalancerVault();
 
   const termAssetType: TermAssetType = isConvergentCurvePool(pool)
     ? "principal"
@@ -115,7 +116,8 @@ export function SwapTokensTransactionConfirmationDrawer({
     queryBatchSwapInResult
   );
 
-  const slippageTolerance = 0.01;
+  const slippageTolerance = termAssetType === "principal" ? 0.003 : 0.01;
+
   const amountToLimit =
     swapKind === SwapKind.GIVEN_IN ? queryAmountOut.abs() : queryAmountIn.abs();
   const limitBN = getToleranceAmount(
