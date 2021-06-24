@@ -302,7 +302,6 @@ export function StakingForm(props: StakingFormProps): ReactElement {
       <StakingConfirmationDrawer
         library={library}
         account={account}
-        poolInfo={poolInfo}
         baseAsset={baseAsset}
         termAsset={termAsset}
         baseAssetDecimals={baseAssetDecimals}
