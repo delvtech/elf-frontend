@@ -19,12 +19,12 @@ import {
 import { getUserProxy } from "efi-ui/mint/hooks/userProxy";
 import { useTokenApprovedForAmount } from "efi-ui/token/hooks/useTokenApprovedForAmount";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
-import ContractAddresses, { AddressesJson } from "efi/addresses";
+import ContractAddresses from "efi/addresses";
 import { EMPTY_ARRAY } from "efi/base/emptyArray";
 import { fetchPermitData, PermitCallData } from "efi/base/fetchPermitData";
+import { getPermitVersion } from "efi/permit/getPermitVersion";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
-import { ChainId } from "efi/ethereum";
 import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
 import { makeMintCallArgs } from "efi/mint/makeMintCallArgs";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
@@ -33,6 +33,7 @@ import {
   underlyingContractsByAddress,
 } from "efi/underlying/underlying";
 import { getTokenAddressForUserProxy } from "efi/userProxy";
+import { TransactionError } from "efi-ui/contracts/TransactionError";
 
 /**
  * Returns the number of Principal Tokens you'd get for minting into a tranche.
@@ -48,7 +49,8 @@ export function useMintTransaction(
   yieldTokenInfo: YieldTokenInfo,
   amountIn: number,
   includePermits: boolean,
-  onTransactionSubmitted: () => void
+  onTransactionSubmitted: () => void,
+  onTransactionError: (error: TransactionError) => void
 ): {
   mint: () => void;
   mutationResult: UseMutationResult<
@@ -77,6 +79,9 @@ export function useMintTransaction(
     {
       onTransactionSubmitted: () => {
         onTransactionSubmitted();
+      },
+      onError: (error: TransactionError) => {
+        onTransactionError(error);
       },
     }
   );
@@ -300,7 +305,6 @@ async function getPermitCallData(
     tokenNames,
     nonces
   );
-
   return permitCallData;
 }
 
@@ -318,19 +322,24 @@ async function fetchPermitDataMulti(
     const nonce = nonces[i];
 
     const version = getPermitVersion(tokenContract.address);
-    const permitData = await fetchPermitData(
-      signer,
-      tokenContract,
-      tokenName,
-      owner,
-      spender,
-      ethers.constants.MaxUint256,
-      nonce,
-      version
-    );
-    if (permitData) {
-      return permitData;
-    }
+    // catch the error and filter the rejected permit.  if a required permit is rejected, then
+    // the transaction should fail and the error will propagate through the
+    // useSmartContractPersisted logic.
+    try {
+      const permitData = await fetchPermitData(
+        signer,
+        tokenContract,
+        tokenName,
+        owner,
+        spender,
+        ethers.constants.MaxUint256,
+        nonce,
+        version
+      );
+      if (permitData) {
+        return permitData;
+      }
+    } catch (error) {}
   });
 
   const permitsOrUndefined = await Promise.all(promises);
@@ -339,18 +348,4 @@ async function fetchPermitDataMulti(
     (permit): permit is PermitCallData => !!permit
   );
   return permits;
-}
-
-// USDC is normally uses version '2'.  In development we are using a simple ERC20 for our USDC
-// contract so we keep it at verion '1'.
-
-function getPermitVersion(tokenAddress: string) {
-  const { usdcAddress } = ContractAddresses;
-  const { chainId } = AddressesJson;
-  if (chainId !== ChainId.MAINNET) {
-    return "1";
-  }
-
-  const version = tokenAddress === usdcAddress ? "2" : "1";
-  return version;
 }
