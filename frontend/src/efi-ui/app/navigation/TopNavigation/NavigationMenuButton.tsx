@@ -13,11 +13,15 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { AddressesJson } from "efi/addresses";
-import { isGoerli, isMainnet } from "efi/ethereum";
+import { isGoerli, isLocalnet, isMainnet } from "efi/ethereum";
 import { SocialMediaMenuItems } from "efi/navigation/ContactUsMenuItems/SocialMediaMenuItems";
 
 // assume testnet by default (goerli)
 let advancedLink = "https://save-testnet.element.fi";
+if (isLocalnet(AddressesJson.chainId)) {
+  // TODO: Get this from the env, but for now assume in dev that the Save UI is @ :3001
+  advancedLink = "http://localhost:3001";
+}
 if (isGoerli(AddressesJson.chainId)) {
   advancedLink = "https://save-testnet.element.fi";
 } else if (isMainnet(AddressesJson.chainId)) {

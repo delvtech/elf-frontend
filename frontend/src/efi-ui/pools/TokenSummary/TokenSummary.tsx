@@ -87,7 +87,7 @@ export function TokenSummary({
               )}
             >
               <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
-                {t`Fixed Rate APY`}
+                {t`Fixed Rate APR`}
               </span>
               <div className={tw("flex", "justify-between")}>
                 <span className={classNames("h5", tw("space-x-4"))}>

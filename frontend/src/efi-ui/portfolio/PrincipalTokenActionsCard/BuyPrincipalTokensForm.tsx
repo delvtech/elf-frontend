@@ -128,7 +128,7 @@ export function BuyPrincipalTokensForm(
           <span
             className={tw("pb-4")}
           >{t`Buy principal tokens with your ${baseAssetSymbol}`}</span>
-          <span className={tw("pb-4")}>{t`Current APY: ${formattedAPY}`}</span>
+          <span className={tw("pb-4")}>{t`Current APR: ${formattedAPY}`}</span>
           <div className={tw("grid", "grid-cols-4", "gap-3")}>
             <TokenAmountInput
               className={tw("col-span-3")}

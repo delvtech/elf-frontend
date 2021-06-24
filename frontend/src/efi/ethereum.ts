@@ -21,6 +21,9 @@ export const DEFAULT_CHAIN_IDS: ChainId[] = [
   ChainId.LOCAL,
 ];
 
+export function isLocalnet(chainId: number): boolean {
+  return chainId === ChainId.LOCAL;
+}
 export function isGoerli(chainId: number): boolean {
   return chainId === ChainId.GOERLI;
 }

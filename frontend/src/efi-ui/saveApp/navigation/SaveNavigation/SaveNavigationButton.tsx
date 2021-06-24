@@ -17,7 +17,7 @@ import { isGoerli, isMainnet } from "efi/ethereum";
 import { SocialMediaMenuItems } from "efi/navigation/ContactUsMenuItems/SocialMediaMenuItems";
 
 // assume testnet by default (goerli)
-let advancedLink = "https://testnet.element.fi";
+let advancedLink = "http://localhost:3000";
 if (isGoerli(AddressesJson.chainId)) {
   advancedLink = "https://testnet.element.fi";
 } else if (isMainnet(AddressesJson.chainId)) {

@@ -233,7 +233,7 @@ export function PrincipalTokenCard(
         <Callout icon={null} className={calloutClassName}>
           <span
             className={classNames(tw("text-base", "mb-0"))}
-          >{t`Current exit value`}</span>
+          >{t`Current value`}</span>
           <LabeledText
             bold
             muted={false}
