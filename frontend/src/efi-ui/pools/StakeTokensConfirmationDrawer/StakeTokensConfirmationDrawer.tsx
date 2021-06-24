@@ -102,7 +102,7 @@ export function StakingConfirmationDrawer({
       transactionSuccess={isStakeSuccess}
       transactionFailed={isStakeError}
       confirmButtonDisabled={confirmButtonDisabled}
-      buttonLabel={t`Stake`}
+      buttonLabel={t`Add liquidity`}
       isOpen={isOpen}
       onClose={onClose}
       onConfirmTransaction={onStake}
@@ -113,7 +113,7 @@ export function StakingConfirmationDrawer({
           assetTwoSymbol={termAssetSymbol}
           assetOneSymbolLabel={baseAssetSymbol}
           assetTwoSymbolLabel={termAssetSymbolLabel}
-          heading={t`Confirm Staking`}
+          heading={t`Confirm adding liquidity`}
           assetOneIcon={baseAssetIcon}
           assetTwoIcon={termAssetIcon}
           assetOneValueLabel={baseAssetIn}

@@ -36,7 +36,7 @@ interface UnstakeConfirmationFormProps {
 }
 
 export function UnstakeConfirmationForm({
-  heading = t`Unstake`,
+  heading = t`Remove liquidity`,
   amountIn,
   assetOneIcon: AssetOneIcon,
   assetTwoIcon: AssetTwoIcon,
@@ -53,7 +53,7 @@ export function UnstakeConfirmationForm({
     <Callout className={tw("flex", "flex-col", "p-8", "space-y-6")}>
       <span className={classNames("h4", tw("text-center"))}>{heading}</span>
       <div className={tw("flex", "flex-col", "space-y-4", "items-center")}>
-        <span className={tw("w-full")}>{t`Unstake`}</span>
+        <span className={tw("w-full")}>{t`Remove liquidity`}</span>
         <InputGroup
           large
           fill
