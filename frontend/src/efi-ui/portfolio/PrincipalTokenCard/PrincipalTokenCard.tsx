@@ -21,7 +21,6 @@ import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { GoToPoolButton } from "efi-ui/pools/GoToPoolButton/GoToPoolButton";
 import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
 import { PoolAction } from "efi-ui/pools/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
@@ -45,6 +44,7 @@ import { getVaultForTranche } from "efi/tranche/tranches";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 
 import { MaturityTimeBar } from "./MaturityTimeBar";
+import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 
 interface PrincipalTokenCardProps {
   chainId: number | undefined;
@@ -110,7 +110,7 @@ export function PrincipalTokenCard(
     fiatPrice = formatMoney(baseAssetCoinGeckoPrice.multiply(exitValue));
   }
 
-  const BaseAssetIcon = findAssetIcon(baseAsset);
+  const BaseAssetIcon = findAssetIcon2(baseAsset);
 
   const tableRowLink = getTableRowLink(vaultContract?.address, vaultName);
   const maturationDate = useMemo(
@@ -145,13 +145,7 @@ export function PrincipalTokenCard(
       )}
     >
       <div className={tw("flex", "space-x-4")}>
-        {BaseAssetIcon ? (
-          <BaseAssetIcon
-            className={tw("flex-shrink-0")}
-            height={72}
-            width={72}
-          />
-        ) : null}
+        <BaseAssetIcon className={tw("flex-shrink-0")} height={72} width={72} />
         <div className={tw("flex", "flex-col", "space-y-2")}>
           <div
             className={tw(

@@ -5,10 +5,13 @@ import {
   Callout,
   Card,
   Classes,
+  Icon,
   Intent,
   Tag,
 } from "@blueprintjs/core";
+import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
+import { Link } from "@reach/router";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import classNames from "classnames";
 import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
@@ -123,7 +126,7 @@ export function PrincipalTokenLPCard({
       )}
     >
       <div>
-        <div className={tw("flex", "space-x-4")}>
+        <div className={tw("flex", "space-x-4", "overflow-hidden")}>
           {BaseAssetIcon ? (
             <BaseAssetIcon
               className={tw("flex-shrink-0")}
@@ -131,15 +134,34 @@ export function PrincipalTokenLPCard({
               width={72}
             />
           ) : null}
-          <div className={tw("flex", "w-full", "flex-col", "space-y-2")}>
-            <span className={tw("text-2xl", "font-semibold")}>
-              <a
-                title={t`View LP token on etherscan`}
-                href={`https://etherscan.io/address/${pool?.address}`}
-                target="_blank"
-                rel="noreferrer noopener"
-              >
+          <div
+            className={tw(
+              "flex",
+              "w-full",
+              "flex-col",
+              "space-y-2",
+              "overflow-hidden"
+            )}
+          >
+            <span
+              className={tw("flex", "space-x-2", "text-2xl", "font-semibold")}
+            >
+              <Link className={tw("truncate")} to={`/pools/${pool?.address}`}>
                 {poolName}
+              </Link>
+              <a
+                className={tw("flex", "items-center")}
+                onClick={(e) => e.stopPropagation()}
+                href={`https://etherscan.io/address/${principalTokenInfo.address}`}
+                title={t`View LP token on etherscan`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Icon
+                  intent={Intent.NONE}
+                  className={tw("pr-2")}
+                  icon={IconNames.SHARE}
+                />
               </a>
             </span>
             <span className={classNames(Classes.TEXT_MUTED)}>{poolLabel}</span>
