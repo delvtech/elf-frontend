@@ -16,13 +16,15 @@ import {
   YieldTokenInfo,
 } from "tokenlists/types";
 
-import { fetchPermitData, PermitCallData } from "efi/base/fetchPermitData";
 import { getUserProxy } from "efi-ui/mint/hooks/userProxy";
 import { useTokenApprovedForAmount } from "efi-ui/token/hooks/useTokenApprovedForAmount";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
-import ContractAddresses from "efi/addresses";
+import ContractAddresses, { AddressesJson } from "efi/addresses";
 import { EMPTY_ARRAY } from "efi/base/emptyArray";
+import { fetchPermitData, PermitCallData } from "efi/base/fetchPermitData";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
+import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
+import { ChainId } from "efi/ethereum";
 import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
 import { makeMintCallArgs } from "efi/mint/makeMintCallArgs";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
@@ -31,7 +33,6 @@ import {
   underlyingContractsByAddress,
 } from "efi/underlying/underlying";
 import { getTokenAddressForUserProxy } from "efi/userProxy";
-import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 
 /**
  * Returns the number of Principal Tokens you'd get for minting into a tranche.
@@ -342,11 +343,14 @@ async function fetchPermitDataMulti(
 
 // USDC is normally uses version '2'.  In development we are using a simple ERC20 for our USDC
 // contract so we keep it at verion '1'.
+
 function getPermitVersion(tokenAddress: string) {
   const { usdcAddress } = ContractAddresses;
-  if (process.env.NODE_ENV === "development") {
+  const { chainId } = AddressesJson;
+  if (chainId !== ChainId.MAINNET) {
     return "1";
   }
+
   const version = tokenAddress === usdcAddress ? "2" : "1";
   return version;
 }
