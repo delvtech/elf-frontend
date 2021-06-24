@@ -34,6 +34,7 @@ import { underlyingContractsByAddress } from "efi/underlying/underlying";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 import { Signer } from "ethers";
 import { EarnSummaryCard } from "./EarnSummaryCard";
+import { getYearnVaultAPY } from "efi-yearn/fetchYearnVaults";
 
 interface EarnCardProps {
   signer: Signer | undefined;
@@ -114,7 +115,7 @@ export function EarnCard(props: EarnCardProps): ReactElement | null {
     baseAssetContract
   );
   const variableYield = useTokenYield(yieldPoolInfo, "yield");
-  const vaultApy = apy?.recommended ?? 0;
+  const vaultApy = apy ? getYearnVaultAPY(apy) : 0;
 
   const startTime = trancheCreatedAt ? trancheCreatedAt * 1000 : 0;
 
@@ -160,7 +161,7 @@ export function EarnCard(props: EarnCardProps): ReactElement | null {
     <Card
       interactive={!isExpanded}
       elevation={isExpanded ? Elevation.THREE : Elevation.ZERO}
-      className={tw("p-0")}
+      className={tw("p-0", "w-full")}
       style={poolCardStyle}
     >
       <EarnSummaryCard

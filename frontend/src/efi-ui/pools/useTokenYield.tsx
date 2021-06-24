@@ -1,5 +1,6 @@
 import { usePoolSpotPrice2 } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
+import { getYearnVaultAPY } from "efi-yearn/fetchYearnVaults";
 import { ONE_YEAR_IN_SECONDS } from "efi/base/time";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getPoolContract } from "efi/pools/getPoolContract";
@@ -54,7 +55,7 @@ export function useTokenYield(
   const vaultSymbol = getVaultSymbol(baseAsset);
   const { data: vaultInfo } = useYearnVault(vaultSymbol);
 
-  const variableAPY = vaultInfo?.apy?.recommended ?? 0;
+  const variableAPY = vaultInfo?.apy ? getYearnVaultAPY(vaultInfo?.apy) : 0;
 
   const tokenYield = termAssetType === "principal" ? fixedAPY : variableAPY;
   return tokenYield;

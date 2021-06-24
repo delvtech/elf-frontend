@@ -48,6 +48,7 @@ import { formatMoney } from "efi/money/formatMoney";
 import { getPoolForYieldToken } from "efi/pools/weightedPool";
 import { getTokenInfo } from "efi/tokenlists";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
+import { getYearnVaultAPY } from "efi-yearn/fetchYearnVaults";
 
 interface YieldTokenCardProps {
   library: Web3Provider | undefined;
@@ -118,7 +119,8 @@ export function YieldTokenCard({
   const { data: yearnVault } = useYearnVault(vaultSymbol);
   const { name: vaultName } = yearnVault || {};
 
-  const postedAPY = formatPercent(yearnVault?.apy?.recommended || 0);
+  const vaultApy = yearnVault?.apy ? getYearnVaultAPY(yearnVault?.apy) : 0;
+  const postedAPY = formatPercent(vaultApy);
   const exitValue =
     +formatUnits(yieldTokenBalanceOf || 0, baseAssetDecimals) *
     (spotPrice || 0);

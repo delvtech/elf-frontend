@@ -16,6 +16,7 @@ import { formatMoney } from "efi/money/formatMoney";
 import { getTokenInfo } from "efi/tokenlists";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 import { PrincipalTokenInfo as TrancheInfo } from "tokenlists/types";
+import { getYearnVaultAPY } from "efi-yearn/fetchYearnVaults";
 
 interface VaultTermButtonLabelProps {
   tranche: Tranche;
@@ -36,7 +37,8 @@ export function VaultTermButtonLabel({
   const vaultSymbol = getVaultSymbol(baseAsset);
   const { data: yearnVault } = useYearnVault(vaultSymbol);
   const { name: vaultName } = yearnVault || {};
-  const postedAPY = formatPercent(yearnVault?.apy?.recommended || 0);
+  const vaultApy = yearnVault?.apy ? getYearnVaultAPY(yearnVault?.apy) : 0;
+  const postedAPY = formatPercent(vaultApy);
   const formattedTVL = formatTVL(yearnVault?.tvl?.value);
 
   const unlockDate = convertEpochSecondsToDate(unlockTimestamp);

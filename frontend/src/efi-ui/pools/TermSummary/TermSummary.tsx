@@ -16,6 +16,7 @@ import { principalPools } from "efi/pools/ccpool";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
+import { getYearnVaultAPY } from "efi-yearn/fetchYearnVaults";
 
 const summaryCardStyle: CSSProperties = {
   height: 220,
@@ -42,7 +43,7 @@ export function TermSummary(props: TermSummaryProps): ReactElement {
   const { data: vaultInfo } = useYearnVault(vaultSymbol);
 
   const { displayName, type, apy } = vaultInfo || {};
-  const vaultApy = apy?.recommended ?? 0;
+  const vaultApy = apy ? getYearnVaultAPY(apy) : 0;
 
   const isPrincipalPool = principalPools
     .map(({ address }) => address)

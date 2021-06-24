@@ -1,41 +1,35 @@
+const YEARN_VAULT_APYS_URL = "https://api.yearn.finance/v1/chains/1/vaults/all";
 export async function fetchYearnVaults(): Promise<YearnVaultResult[]> {
-  const result = await fetch("https://vaults.finance/all");
+  const result = await fetch(YEARN_VAULT_APYS_URL);
 
   const resultJSON = (await result.json()) as YearnVaultResult[];
 
   return resultJSON;
 }
 
+export function getYearnVaultAPY(
+  apyFromYearn: YearnVaultResult["apy"]
+): number {
+  const { points, net_apy } = apyFromYearn;
+  if (points) {
+    return points.week_ago;
+  }
+  return net_apy;
+}
+
 export interface YearnVaultResult {
-  inception: number;
-  icon: string;
   symbol: string;
   apy: {
-    description: string;
-    type: string;
-    data: {
-      grossApy: number;
-      managementFee: number;
-      oneWeekSample: number;
-      oneMonthSample: number;
-      netApy: number;
-      performanceFee: number;
-    };
-    composite: boolean;
-    recommended: number;
+    points: { inception: number; month_ago: number; week_ago: number } | null;
+    gross_apr: number;
+    net_apy: number;
   };
-  address: string;
   endorsed: boolean;
-  strategies: {
-    name: string;
-    address: string;
-  }[];
   tvl: {
     totalAssets: number;
     value: string;
     price: number;
   };
-  apiVersion: string;
   name: string;
   displayName: string;
   updated: number;
