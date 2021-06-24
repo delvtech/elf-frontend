@@ -49,7 +49,7 @@ export function EarnStakingForms(props: EarnStakingFormsProps): ReactElement {
         <div
           className={tw("text-center", "font-semibold")}
         >{t`LP your Principal Tokens`}</div>
-        <div className={tw("text-center")}>{t`Current APY: ${formatPercent(
+        <div className={tw("text-center")}>{t`LP APY: ${formatPercent(
           ptStakingAPY
         )}`}</div>
         <StakePrincipalTokenForm
@@ -67,7 +67,7 @@ export function EarnStakingForms(props: EarnStakingFormsProps): ReactElement {
         <div
           className={tw("text-center", "font-semibold")}
         >{t`LP your Yield Tokens`}</div>
-        <div className={tw("text-center")}>{t`Current APY: ${formatPercent(
+        <div className={tw("text-center")}>{t`LP APY: ${formatPercent(
           ytStakingAPY
         )}`}</div>
         <StakeYieldTokensForm
