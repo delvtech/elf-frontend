@@ -4,7 +4,7 @@ import { Intent, ProgressBar } from "@blueprintjs/core";
 
 import tw from "efi-tailwindcss-classnames";
 import { TimeLeftLabel } from "efi-ui/portfolio/PrincipalTokenCard/getTimeLeftLabel";
-import { getIsMature2 } from "efi/tranche/getIsMature";
+import { getIsMature } from "efi/tranche/getIsMature";
 
 interface MaturityTimeBarLabelProps {
   progress: number;
@@ -15,7 +15,7 @@ export function MaturityTimeBar({
   progress,
   maturationDate,
 }: MaturityTimeBarLabelProps): ReactElement {
-  const isMature = getIsMature2(maturationDate?.getTime() ?? 0);
+  const isMature = getIsMature(maturationDate?.getTime() ?? 0);
   return (
     <div className={tw("w-full", "space-y-2", "flex", "flex-col")}>
       <div>

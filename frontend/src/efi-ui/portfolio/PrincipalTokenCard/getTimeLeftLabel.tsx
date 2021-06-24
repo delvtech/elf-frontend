@@ -5,7 +5,7 @@ import { formatDistance, formatDuration, intervalToDuration } from "date-fns";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { getIsMature2 } from "efi/tranche/getIsMature";
+import { getIsMature } from "efi/tranche/getIsMature";
 
 interface TimeLeftLabelProps {
   maturationDate: Date | undefined;
@@ -17,7 +17,7 @@ export function TimeLeftLabel(props: TimeLeftLabelProps): ReactElement | null {
     return null;
   }
 
-  const isMature = getIsMature2(maturationDate.getTime());
+  const isMature = getIsMature(maturationDate.getTime());
   if (isMature) {
     const timeSinceMaturity = getTimeSinceMaturityLabel(maturationDate);
     return (
