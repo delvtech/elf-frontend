@@ -246,11 +246,12 @@ function useShowPermitCallout(
 }
 
 function useWalletApprovalInfos(
-  tokenInAsset: CryptoAsset | undefined,
+  tokenInAsset: CryptoAsset,
   account: string | null | undefined,
   useApprovals: boolean
 ): WalletApprovalInfo[] {
   const { userProxyContractAddress } = ContractAddresses;
+  const assetSymbol = getCryptoSymbol2(tokenInAsset);
   return useMemo(() => {
     if (
       !useApprovals ||
@@ -264,8 +265,16 @@ function useWalletApprovalInfos(
         cryptoAsset: tokenInAsset,
         ownerAddress: account,
         spenderAddress: userProxyContractAddress,
-        messageRenderer: () => t``,
+        messageRenderer: () => t`
+          You need to grant Element approval to spend your ${assetSymbol} in order to perform this transaction.
+        `,
       },
     ];
-  }, [account, tokenInAsset, useApprovals, userProxyContractAddress]);
+  }, [
+    account,
+    assetSymbol,
+    tokenInAsset,
+    useApprovals,
+    userProxyContractAddress,
+  ]);
 }
