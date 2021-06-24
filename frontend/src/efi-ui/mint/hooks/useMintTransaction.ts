@@ -22,7 +22,7 @@ import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSma
 import ContractAddresses from "efi/addresses";
 import { EMPTY_ARRAY } from "efi/base/emptyArray";
 import { fetchPermitData, PermitCallData } from "efi/base/fetchPermitData";
-import { getPermitVersion } from "efi/base/getPermitVersion";
+import { getPermitVersion } from "efi/permit/getPermitVersion";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
