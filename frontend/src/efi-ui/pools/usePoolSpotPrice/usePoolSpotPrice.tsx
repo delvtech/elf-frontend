@@ -28,7 +28,7 @@ import { PoolInfo } from "efi/pools/PoolInfo";
  */
 const SPOT_PRICE_AMOUNT = "0.01";
 
-export function usePoolSpotPrice2(
+export function usePoolSpotPrice(
   poolContract: PoolContract,
   underlyingToken: string
 ): number | undefined {

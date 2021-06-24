@@ -1,4 +1,4 @@
-import { usePoolSpotPrice2 } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
+import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { ONE_YEAR_IN_SECONDS } from "efi/base/time";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
@@ -24,7 +24,7 @@ export function useTokenYield(
   const { baseAssetContract } = getPoolTokens(poolInfo);
   // get fixed yield
   const baseAsset = getCryptoAssetForToken(baseAssetContract.address);
-  const spotPrice = usePoolSpotPrice2(pool, baseAssetContract.address);
+  const spotPrice = usePoolSpotPrice(pool, baseAssetContract.address);
   const trancheInfo = getTrancheForPool(poolInfo);
   const { unlockTimestamp } = trancheInfo.extensions;
 

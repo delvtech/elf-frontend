@@ -1,6 +1,6 @@
 import { ERC20 } from "elf-contracts/types/ERC20";
 
-import { usePoolSpotPrice2 } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
+import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { PoolContract } from "efi/pools/PoolContract";
 
 interface PoolTokenPrices {
@@ -13,7 +13,7 @@ export function usePoolTokenPrices(
 ): PoolTokenPrices {
   // spot price will be zero while we wait for it to load, maybe change this
   // behavior in usePoolSpotPrice to return undefined instead?
-  const spotPriceTokenForOneBaseAsset = usePoolSpotPrice2(
+  const spotPriceTokenForOneBaseAsset = usePoolSpotPrice(
     pool,
     baseAssetToken.address
   );

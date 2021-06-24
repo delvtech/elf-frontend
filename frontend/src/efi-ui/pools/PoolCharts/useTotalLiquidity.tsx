@@ -1,5 +1,5 @@
 import { formatUnits } from "ethers/lib/utils";
-import { usePoolSpotPrice2 } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
+import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { getPoolContract } from "efi/pools/getPoolContract";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
@@ -20,7 +20,7 @@ export function useTotalLiquidity(poolInfo: PoolInfo): number {
     balances?.[termAssetIndex] ?? 0,
     baseAssetDecimals
   );
-  const spotPrice = usePoolSpotPrice2(pool, baseAssetAddress) ?? 0;
+  const spotPrice = usePoolSpotPrice(pool, baseAssetAddress) ?? 0;
   const termBalanceInBaseUnits = termBalance * spotPrice;
   const totalSupplyInBaseUnits = baseBalance + termBalanceInBaseUnits;
   return totalSupplyInBaseUnits;

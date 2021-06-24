@@ -18,7 +18,7 @@ import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
 import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 import { GoToPoolButton } from "efi-ui/pools/GoToPoolButton/GoToPoolButton";
 import { useFeeVolumeFiatForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
-import { usePoolSpotPrice2 } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
+import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { PoolAction } from "efi-ui/pools/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
 import { useStakingAPY } from "efi-ui/pools/useStakingAPY";
 import { useTokenYield } from "efi-ui/pools/useTokenYield";
@@ -71,8 +71,7 @@ export function PrincipalPoolCard(
   const liquidity = useTotalFiatLiquidity(poolInfo);
   const fees = useFeeVolumeFiatForPool(pool) ?? 0;
   const fixedYield = useTokenYield(poolInfo, "principal");
-  const principalPrice =
-    usePoolSpotPrice2(pool, termAssetContract.address) ?? 0;
+  const principalPrice = usePoolSpotPrice(pool, termAssetContract.address) ?? 0;
   const principalPriceFormatted = principalPrice?.toFixed(4);
   const stakingYield = useStakingAPY(pool);
   const { isDarkMode } = useDarkMode();

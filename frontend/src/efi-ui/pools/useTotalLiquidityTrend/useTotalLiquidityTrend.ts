@@ -1,7 +1,7 @@
 import { formatUnits } from "ethers/lib/utils";
 
 import { getQueryData } from "efi-ui/base/queryResults";
-import { usePoolSpotPrice2 } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
+import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useTokenDeltasForPool } from "efi-ui/pools/useTokenDeltasForPool/useTokenDeltasForPool";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
@@ -33,7 +33,7 @@ export function useTotalLiquidityTrend(
   const tokenDeltas = useTokenDeltasForPool(pool, fromTime);
 
   // assumes that yield asset and base asset have the same decimals
-  const spotPrice = usePoolSpotPrice2(pool, baseAssetInfo.address);
+  const spotPrice = usePoolSpotPrice(pool, baseAssetInfo.address);
 
   if (
     !tokenAddresses ||

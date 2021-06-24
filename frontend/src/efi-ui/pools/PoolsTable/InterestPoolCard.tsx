@@ -18,7 +18,7 @@ import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
 import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 import { GoToPoolButton } from "efi-ui/pools/GoToPoolButton/GoToPoolButton";
 import { useFeeVolumeForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
-import { usePoolSpotPrice2 } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
+import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { PoolAction } from "efi-ui/pools/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
 import { useStakingAPY } from "efi-ui/pools/useStakingAPY";
 import { useTotalFiatLiquidity } from "efi-ui/pools/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
@@ -74,7 +74,7 @@ export function InterestPoolCard(
   const stakingYield = useStakingAPY(pool);
   const { currency } = useCurrencyPref();
   const [baseAssetPrice] = useTokenPrice(baseAssetContract, currency);
-  const spotPrice = usePoolSpotPrice2(pool, termAssetContract.address) ?? 0;
+  const spotPrice = usePoolSpotPrice(pool, termAssetContract.address) ?? 0;
 
   const { data: vaultInfo } = useYearnVault(vaultSymbol);
   const { displayName, type, apy } = vaultInfo || {};

@@ -14,7 +14,7 @@ import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInp
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoBalanceOf } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
-import { usePoolSpotPrice2 } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
+import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { useTokenPoolBalance } from "efi-ui/pools/useTokenPoolBalance/useTokenPoolBalance";
 import { useTokenPoolIndex } from "efi-ui/pools/useTokenPoolIndex/useTokenPoolIndex";
 import { SwapTokensTransactionConfirmationDrawer } from "efi-ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensTransactionConfirmationDrawer";
@@ -217,7 +217,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     setAmountOut
   );
 
-  const spotPrice = usePoolSpotPrice2(pool, poolInfo.extensions.underlying);
+  const spotPrice = usePoolSpotPrice(pool, poolInfo.extensions.underlying);
 
   return (
     <div

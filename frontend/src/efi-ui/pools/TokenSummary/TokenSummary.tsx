@@ -11,7 +11,7 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { useAccumulatedFiatInterestForTranche } from "efi-ui/pools/useAccumulatedFiatInterestForTranche";
 import { useAccumulatedInterestForTranche } from "efi-ui/pools/useAccumulatedInterestForTranche";
-import { usePoolSpotPrice2 } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
+import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useSwaps } from "efi-ui/pools/useSwaps/useSwaps";
 import { useTokenYield } from "efi-ui/pools/useTokenYield";
@@ -257,8 +257,8 @@ function useTokensSummary(
   );
   const { decimals: termAssetDecimals } = termAssetInfo;
 
-  const spotPrice = usePoolSpotPrice2(pool, baseAssetContract.address);
-  const termSpotPrice = usePoolSpotPrice2(pool, termAssetContract.address);
+  const spotPrice = usePoolSpotPrice(pool, baseAssetContract.address);
+  const termSpotPrice = usePoolSpotPrice(pool, termAssetContract.address);
 
   const swaps = useSwaps(pool);
 
