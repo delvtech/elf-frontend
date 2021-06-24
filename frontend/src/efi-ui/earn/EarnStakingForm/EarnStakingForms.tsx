@@ -36,9 +36,16 @@ export function EarnStakingForms(props: EarnStakingFormsProps): ReactElement {
   const ptStakingAPY = useStakingAPY(principalPoolInfo);
   const ytStakingAPY = useStakingAPY(yieldPoolInfo);
 
-  const cardClassName = tw("flex", "flex-col", "space-y-4", "border", {
-    "border-gray-600": isDarkMode,
-  });
+  const cardClassName = tw(
+    "flex",
+    "flex-col",
+    "flex-1",
+    "space-y-4",
+    "border",
+    {
+      "border-gray-600": isDarkMode,
+    }
+  );
 
   return (
     <div className={tw("flex", "justify-between", "space-x-6", "w-full")}>
@@ -56,11 +63,7 @@ export function EarnStakingForms(props: EarnStakingFormsProps): ReactElement {
           poolInfo={principalPoolInfo}
         />
       </Card>
-      <Card
-        className={tw("flex", "flex-col", "space-y-4", "border", {
-          "border-gray-600": isDarkMode,
-        })}
-      >
+      <Card className={cardClassName}>
         <div
           className={tw("text-center", "font-semibold")}
         >{t`LP your Yield Tokens`}</div>

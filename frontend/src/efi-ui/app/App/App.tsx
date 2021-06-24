@@ -21,6 +21,7 @@ import { useEagerConnect } from "efi-ui/wallets/hooks/useEagerReconnect";
 import { useSyncWithInjectedEthereum } from "efi-ui/wallets/hooks/useSyncWithInjectedEthereum";
 
 import styles from "./App.module.css";
+import { useToastWrongChain } from "efi-ui/provider/useBlockFromTag/useToastWrongChain";
 
 FocusStyleManager.onlyShowFocusOnTabs();
 
@@ -53,6 +54,7 @@ const App: FC<AppProps> = () => {
   // callers trying to set event handlers.
   useSyncWithInjectedEthereum();
   useEagerConnect();
+  useToastWrongChain(chainId);
   useTransactionToasts();
 
   return (
