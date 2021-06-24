@@ -52,7 +52,7 @@ export function UnstakeWeightedPoolButton({
   }
   disabled = disabledFromProps || disabled;
 
-  const buttonLabel = !!account ? t`Unstake` : t`Connect Wallet`;
+  const buttonLabel = !!account ? t`Withdraw LP` : t`Connect Wallet`;
 
   return (
     <Fragment>

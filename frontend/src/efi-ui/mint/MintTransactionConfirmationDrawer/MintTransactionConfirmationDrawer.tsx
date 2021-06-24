@@ -142,13 +142,15 @@ export function MintTransactionConfirmationDrawer({
                 <Callout>
                   <div>
                     <Switch
-                      label={t`Include approvals to allow tokens to be staked.`}
+                      label={t`Include token approvals for providing liquidity.`}
                       checked={includePermits}
                       onChange={() => setIncludePermits(!includePermits)}
                     />
                     {includePermits &&
-                      t`You need to approve balancer to use one or more of the tokens you are about to mint.
-                   If you plan to stake your tokens, you can save on gas by pre approving these tokens now.`}
+                      t`You need to approve Balancer to use one or more of the
+                        tokens you are about to mint. If you plan to LP your
+                        tokens in the future, you can save on gas by
+                        pre-approving these tokens now.`}
                   </div>
                 </Callout>
               )}

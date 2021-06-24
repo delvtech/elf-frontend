@@ -68,7 +68,7 @@ export function UnstakeConfirmationDrawer({
       transactionSuccess={isUnstakeSuccess}
       transactionFailed={isUnstakeError}
       confirmButtonDisabled={false}
-      buttonLabel={t`Unstake`}
+      buttonLabel={t`Remove liquidity`}
       isOpen={isOpen}
       onClose={onClose}
       onConfirmTransaction={onUnstake}
@@ -80,7 +80,7 @@ export function UnstakeConfirmationDrawer({
           assetTwoSymbol={termAssetSymbol as string}
           assetOneSymbolLabel={baseAssetSymbolLabel}
           assetTwoSymbolLabel={termAssetSymbolLabel as string}
-          heading={t`Confirm Unstake`}
+          heading={t`Confirm removing liquidity`}
           assetOneIcon={baseAssetIcon}
           assetTwoIcon={termAssetIcon}
           assetOneValueLabel={baseAssetValue}

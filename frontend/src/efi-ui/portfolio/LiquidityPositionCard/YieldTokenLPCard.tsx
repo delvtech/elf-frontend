@@ -200,7 +200,7 @@ export function YieldTokenLPCard({
         <GoToPoolButton
           poolAddress={poolInfo.address}
           poolAction={PoolAction.REMOVE_LIQUIDITY}
-          label={t`Unstake`}
+          label={t`Remove LP`}
         />
         <GoToPoolButton
           poolAddress={poolInfo.address}
