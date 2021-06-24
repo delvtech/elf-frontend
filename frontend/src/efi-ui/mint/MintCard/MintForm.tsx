@@ -20,7 +20,7 @@ import { useTrancheCanPerform } from "efi-ui/tranche/useTrancheCanPerform";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
 import { formatBalance } from "efi/base/formatBalance";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { getCryptoDecimals2 } from "efi/crypto/getCryptoDecimals";
+import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { getCryptoSymbol2 } from "efi/crypto/getCryptoSymbol";
 import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
 import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
@@ -68,7 +68,7 @@ export function MintForm(props: MintFormProps): ReactElement | null {
 
   const amountIn = +(amountInString || 0);
 
-  const baseAssetDecimals = getCryptoDecimals2(baseAsset);
+  const baseAssetDecimals = getCryptoDecimals(baseAsset);
   const baseAssetBalanceOf = useCryptoBalanceOf(library, account, baseAsset);
 
   const activeBaseAssetDisplayBalance = formatBalance(

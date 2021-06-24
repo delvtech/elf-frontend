@@ -28,7 +28,7 @@ import {
   getPoolInfoForYieldToken,
   yieldPoolContractsByAddress,
 } from "efi/pools/weightedPool";
-import { getIsMature2 } from "efi/tranche/getIsMature";
+import { getIsMature } from "efi/tranche/getIsMature";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
 import { underlyingContractsByAddress } from "efi/underlying/underlying";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
@@ -91,7 +91,7 @@ export function EarnCard(props: EarnCardProps): ReactElement | null {
   const { createdAtTimestamp: trancheCreatedAt, unlockTimestamp } =
     principalTokenInfo.extensions;
   const maturityTime = unlockTimestamp * 1000;
-  const isMature = getIsMature2(unlockTimestamp);
+  const isMature = getIsMature(unlockTimestamp);
   const baseAsset = getCryptoAssetForToken(baseAssetAddress);
   const baseAssetSymbol = getCryptoSymbol(baseAsset) as string;
   const BaseAssetIcon = findAssetIcon(baseAsset);

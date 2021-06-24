@@ -8,9 +8,8 @@ import tw from "efi-tailwindcss-classnames";
 import { useStakingAPY } from "efi-ui/pools/useStakingAPY";
 import { useTokenYield } from "efi-ui/pools/useTokenYield";
 import { formatPercent } from "efi/base/formatPercent";
-import { getPoolContract } from "efi/pools/getPoolContract";
-import { isWeightedPool } from "efi/pools/PoolContract";
 import { PoolInfo } from "efi/pools/PoolInfo";
+import { isYieldPool } from "efi/pools/weightedPool";
 import { TermAssetType } from "efi/tranche/TermAssetType";
 
 interface APYSummaryProps {
@@ -19,8 +18,7 @@ interface APYSummaryProps {
 
 export function APYSummary(props: APYSummaryProps): ReactElement {
   const { poolInfo } = props;
-  const pool = getPoolContract(poolInfo.address);
-  const termAssetType: TermAssetType = isWeightedPool(pool)
+  const termAssetType: TermAssetType = isYieldPool(poolInfo)
     ? "yield"
     : "principal";
 
@@ -29,7 +27,7 @@ export function APYSummary(props: APYSummaryProps): ReactElement {
       ? t`Principal Fixed Yield`
       : t`Token Variable Yield`;
 
-  const stakingAPY = useStakingAPY(pool);
+  const stakingAPY = useStakingAPY(poolInfo);
 
   const tokenYield = useTokenYield(poolInfo, termAssetType);
 

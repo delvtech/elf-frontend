@@ -1,6 +1,7 @@
 import { ReactElement, useCallback, useMemo } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
+import { ERC20 } from "elf-contracts/types";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { BigNumber } from "ethers";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
@@ -34,14 +35,14 @@ import { underlyingContractsByAddress } from "efi/underlying/underlying";
 interface BuyPrincipalTransactionConfirmationDrawerProps {
   account: string | null | undefined;
   library: Web3Provider | undefined;
-  pool: PoolContract | undefined;
+  pool: PoolContract;
 
-  amountIn: string | undefined;
-  amountOut: string | undefined;
+  amountIn: string;
+  amountOut: string;
   swapKind: SwapKind;
 
   baseAsset: CryptoAsset;
-  baseAssetIcon: TokenIcon | undefined;
+  baseAssetIcon: TokenIcon;
 
   tranche: Tranche;
   isOpen: boolean;
@@ -81,7 +82,7 @@ export function BuyPrincipalTokensTransactionConfirmationDrawer({
 
   const unlockTimeStampDate = convertEpochSecondsToDate(trancheUnlockTimestamp);
 
-  const baseAssetPoolToken = underlyingContractsByAddress[underlying];
+  const baseAssetPoolToken = underlyingContractsByAddress[underlying] as ERC20;
 
   const { spotPriceBaseAssetForOneToken, spotPriceTokenForOneBaseAsset } =
     usePoolTokenPrices(pool, baseAssetPoolToken);

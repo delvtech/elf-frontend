@@ -21,6 +21,7 @@ import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
+import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 import { GoToPoolButton } from "efi-ui/pools/GoToPoolButton/GoToPoolButton";
 import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
 import { PoolAction } from "efi-ui/pools/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
@@ -33,7 +34,7 @@ import { formatAbbreviatedDate } from "efi/base/dates";
 import { formatPercent } from "efi/base/formatPercent";
 import { ERC20Shim } from "efi/contracts/ERC20Shim";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { getCryptoSymbol2 } from "efi/crypto/getCryptoSymbol";
 import { formatMoney } from "efi/money/formatMoney";
 import { getPoolInfoForPrincipalToken } from "efi/pools/ccpool";
 import { getPoolContract } from "efi/pools/getPoolContract";
@@ -44,7 +45,6 @@ import { getVaultForTranche } from "efi/tranche/tranches";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 
 import { MaturityTimeBar } from "./MaturityTimeBar";
-import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 
 interface PrincipalTokenCardProps {
   chainId: number | undefined;
@@ -98,7 +98,7 @@ export function PrincipalTokenCard(
   const { spotPriceBaseAssetForOneToken: tranchePriceInBaseAsset = 0 } =
     usePoolTokenPrices(pool, baseAssetContract);
 
-  const baseAssetSymbol = getCryptoSymbol(baseAsset);
+  const baseAssetSymbol = getCryptoSymbol2(baseAsset);
 
   const exitValue = trancheBalance * tranchePriceInBaseAsset;
   const { data: baseAssetCoinGeckoPrice } = useCoinGeckoPrice(

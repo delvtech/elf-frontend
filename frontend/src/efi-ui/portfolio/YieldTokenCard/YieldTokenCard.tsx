@@ -38,7 +38,7 @@ import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
 import { formatPercent } from "efi/base/formatPercent";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { getCryptoDecimals2 } from "efi/crypto/getCryptoDecimals";
+import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { getCryptoSymbol2 } from "efi/crypto/getCryptoSymbol";
 import { formatMoney } from "efi/money/formatMoney";
 import { getPoolForYieldToken } from "efi/pools/weightedPool";
@@ -100,7 +100,7 @@ export function YieldTokenCard({
     getCoinGeckoId(baseAssetSymbol),
     currency
   );
-  const baseAssetDecimals = getCryptoDecimals2(baseAsset);
+  const baseAssetDecimals = getCryptoDecimals(baseAsset);
 
   const pool = getPoolForYieldToken(yieldToken.address);
 
