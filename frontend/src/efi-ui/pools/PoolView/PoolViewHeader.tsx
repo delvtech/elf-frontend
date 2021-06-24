@@ -52,7 +52,7 @@ export function PoolViewHeader({
   return (
     <div
       style={{ height: 70 }}
-      className={tw("flex", "items-center", "mt-8", "lg:mt-0")}
+      className={tw("flex", "w-full", "items-center", "mt-8", "lg:mt-0")}
     >
       {BaseAssetIcon ? (
         <div
