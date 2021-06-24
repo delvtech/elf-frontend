@@ -263,7 +263,7 @@ async function getPermitCallData(
     ) {
       const tokenName = await baseAssetContract.name();
       const nonceBN = await baseAssetContract.nonces(account);
-      spenders.push(userProxyContractAddress);
+      spenders.push(balancerVaultAddress);
       tokenContracts.push(baseAssetContract);
       tokenNames.push(tokenName);
       const nonce = !userProxyApprovedForBaseAsset
