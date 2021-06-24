@@ -73,7 +73,7 @@ export function PrincipalPoolCard(
   const fixedYield = useTokenYield(poolInfo, "principal");
   const principalPrice = usePoolSpotPrice(pool, termAssetContract.address) ?? 0;
   const principalPriceFormatted = principalPrice?.toFixed(4);
-  const stakingYield = useStakingAPY(pool);
+  const stakingYield = useStakingAPY(poolInfo);
   const { isDarkMode } = useDarkMode();
 
   const goToTrade = useCallback(() => {

@@ -71,7 +71,7 @@ export function InterestPoolCard(
     vaultSymbol
   );
 
-  const stakingYield = useStakingAPY(pool);
+  const stakingYield = useStakingAPY(poolInfo);
   const { currency } = useCurrencyPref();
   const [baseAssetPrice] = useTokenPrice(baseAssetContract, currency);
   const spotPrice = usePoolSpotPrice(pool, termAssetContract.address) ?? 0;

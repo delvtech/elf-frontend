@@ -12,7 +12,7 @@ import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { EarnActionsCard } from "efi-ui/earn/EarnActionsCard/EarnActionsCard";
 import { EarnActionsTabId } from "efi-ui/earn/EarnActionsTabs/EarnActionsTabId";
 import { useFeeVolumeForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
-import { usePoolSpotPrice2 } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
+import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { useTokenYield } from "efi-ui/pools/useTokenYield";
 import { useTotalValueLockedForTranche } from "efi-ui/pools/useTotalValueLockedForTranche";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
@@ -100,11 +100,11 @@ export function EarnCard(props: EarnCardProps): ReactElement | null {
   const { displayName, type, apy } = vaultInfo || {};
 
   // get dynamic pool information
-  const principalPrice = usePoolSpotPrice2(
+  const principalPrice = usePoolSpotPrice(
     principalPoolContract,
     principalTokenContract.address
   )?.toFixed(4);
-  const yieldPrice = usePoolSpotPrice2(
+  const yieldPrice = usePoolSpotPrice(
     yieldPoolContract,
     yieldTokenContract.address
   )?.toFixed(4);
