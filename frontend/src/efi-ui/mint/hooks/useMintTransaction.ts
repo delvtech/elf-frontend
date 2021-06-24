@@ -200,7 +200,7 @@ export function useMintApprovals(
 // name after the constructor uses them to create their PERMIT_HASH's, which breaks permit calls.
 // So, we have to look up these fuckers, and use 'Principal Token ', or 'Element Yield Token '
 // instead of the actual token name.  Once these terms close out we can kill this list.
-const shittyAddresses: string[] = [
+const shittyGoerliAddresses: string[] = [
   "0x89d66Ad25F3A723D606B78170366d8da9870A879",
   "0xBf4B5cB5ca49B1eF6B02615a94980723f6484899",
   "0x80272c960b862B4d6542CDB7338Ad1f727E0D18d",
@@ -268,7 +268,7 @@ async function getPermitCallData(
 
     if (!balancerApprovedForPrincipalToken) {
       let tokenName = await principalTokenContract.name();
-      if (shittyAddresses.includes(principalTokenContract.address)) {
+      if (shittyGoerliAddresses.includes(principalTokenContract.address)) {
         tokenName = "Principal Token ";
       }
       const nonceBN = await principalTokenContract.nonces(account);
@@ -280,7 +280,7 @@ async function getPermitCallData(
 
     if (!balancerApprovedForYieldToken) {
       let tokenName = await principalTokenContract.name();
-      if (shittyAddresses.includes(principalTokenContract.address)) {
+      if (shittyGoerliAddresses.includes(principalTokenContract.address)) {
         tokenName = "Element Yield Token ";
       }
       const nonceBN = await yieldTokenContract.nonces(account);

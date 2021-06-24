@@ -14,6 +14,17 @@ import { ContractMethodArgs } from "efi/contracts/types";
 import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
 import { getTokenInfo } from "efi/tokenlists";
 
+// list of shitty principal and yield token contracts whose names are messed up.  they change their
+// name after the constructor uses them to create their PERMIT_HASH's, which breaks permit calls.
+// So, we have to look up these fuckers, and use 'Principal Token ', or 'Element Yield Token '
+// instead of the actual token name.  Once these terms close out we can kill this list.
+const shittyGoerliAddresses: string[] = [
+  "0x89d66Ad25F3A723D606B78170366d8da9870A879",
+  "0xBf4B5cB5ca49B1eF6B02615a94980723f6484899",
+  "0x80272c960b862B4d6542CDB7338Ad1f727E0D18d",
+  "0x2c637c5142eE4F31A1a78Ad3DF012fc242F6CAe6",
+];
+
 export function useRedeemTermAssetsToEth(
   signer: Signer | undefined,
   tranche: Tranche | undefined,
@@ -80,7 +91,10 @@ export function useRedeemTermAssetsToEth(
     }
 
     // Note that the name in the TokenInfo is incorrect
-    const ptName = await tranche.name();
+    let ptName = await tranche.name();
+    if (shittyGoerliAddresses.includes(tranche.address)) {
+      ptName = "Principal Token ";
+    }
     const permits: PermitCallData[] = [];
 
     if (ptApproval.lt(amountPrinicpalToken)) {
@@ -104,7 +118,10 @@ export function useRedeemTermAssetsToEth(
     await flushPromises(100);
 
     // Note that the name in the TokenInfo is incorrect
-    const ytName = await interestTokenContract.name();
+    let ytName = await interestTokenContract.name();
+    if (shittyGoerliAddresses.includes(interestTokenContract.address)) {
+      ytName = "Element Yield Token ";
+    }
 
     if (ytApproval.lt(amountYieldToken)) {
       const nonce = await interestTokenContract.nonces(account);
