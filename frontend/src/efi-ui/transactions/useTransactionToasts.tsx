@@ -11,6 +11,7 @@ import {
 import { usePendingTransactionPref } from "efi-ui/transactions/usePendingTransactionPref/usePendingTransactionPref";
 import { defaultProvider } from "efi/providers/providers";
 import { TransactionStatus } from "efi/contracts/transaction";
+import { Intent } from "@blueprintjs/core";
 
 export function useTransactionToasts(): void {
   useToastOnPending();
@@ -21,8 +22,8 @@ function useToastOnPending() {
   const { transactionHash, transactionStatus } = usePendingTransactionPref();
   useEffect(() => {
     if (transactionHash && transactionStatus === TransactionStatus.SUBMITTED) {
-      AppToaster.show(
-        makeToast(t`Transaction pending`, {
+      AppToaster.show({
+        ...makeToast(t`Transaction pending`, {
           text: (
             <a
               href={`${ETHERSCAN_DOMAIN}/tx/${transactionHash}`}
@@ -30,8 +31,9 @@ function useToastOnPending() {
               target={"_blank"}
             >{t`View on etherscan`}</a>
           ),
-        })
-      );
+        }),
+        intent: Intent.PRIMARY,
+      });
       return;
     }
   }, [transactionHash, transactionStatus]);

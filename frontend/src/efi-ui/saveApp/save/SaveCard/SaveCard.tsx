@@ -1,4 +1,4 @@
-import React, {
+import {
   Fragment,
   ReactElement,
   useCallback,
@@ -16,6 +16,7 @@ import {
 } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import classNames from "classnames";
+import { ERC20 } from "elf-contracts/types";
 import { formatEther, formatUnits } from "ethers/lib/utils";
 import { PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
@@ -24,7 +25,6 @@ import tw from "efi-tailwindcss-classnames";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { CryptoAssetPicker } from "efi-ui/crypto/CryptoAssetPicker/CryptoAssetPicker";
-import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoBalanceOf } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { useCanPerformPool } from "efi-ui/pools/usePoolCanPerform/usePoolCanPerform";
 import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
@@ -56,8 +56,6 @@ import { getTokenInfo } from "efi/tokenlists";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
 import { openTrancheBaseAssets } from "efi/tranche/baseAssets";
 import { underlyingContractsByAddress } from "efi/underlying/underlying";
-import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { ERC20 } from "elf-contracts/types";
 
 export interface SaveCardProps {
   library: Web3Provider | undefined;
@@ -110,7 +108,6 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
     activeBaseAssetDecimals
   );
   const baseAssetSymbol = getCryptoSymbol(activeBaseAsset);
-  const baseAssetIcon = findAssetIcon(activeBaseAsset);
 
   // principal token
   const {
@@ -124,8 +121,6 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
     symbol: principalTokenSymbol,
     address: principalTokenAddress,
   } = getTokenInfo<PrincipalTokenInfo>(activeTranche.address);
-  const principalTokenAsset = getCryptoAssetForToken(principalTokenAddress);
-  const principalTokenIcon = findAssetIcon(principalTokenAsset);
 
   const { data: principalTokenBalanceOf } = useTokenBalanceOf(
     activeTranche,
@@ -416,12 +411,12 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
           tokenInSymbol={baseAssetSymbol as string}
           tokenInDecimals={activeBaseAssetDecimals}
           tokenInAsset={activeBaseAsset}
-          tokenInIcon={baseAssetIcon}
+          tokenInIcon={undefined}
           tokenOutAddress={principalTokenAddress}
           // TODO: remove this casting when getCryptoSymbol doesn't return undefined
           tokenOutSymbol={principalTokenSymbol as string}
           tokenOutDecimals={principalTokenDecimals}
-          tokenOutIcon={principalTokenIcon}
+          tokenOutIcon={undefined}
           account={account}
           library={library}
           poolInfo={poolInfo}

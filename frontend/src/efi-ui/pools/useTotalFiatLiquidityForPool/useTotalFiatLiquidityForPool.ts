@@ -16,6 +16,7 @@ export function useTotalFiatLiquidity(poolInfo: PoolInfo): Money | undefined {
   if (!baseAssetPrice) {
     return undefined;
   }
+
   const totalFiatLiquidity = baseAssetPrice.multiply(
     totalLiquidity,
     Math.round

@@ -12,10 +12,13 @@ import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
 import { formatPercent } from "efi/base/formatPercent";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { getCryptoSymbol2 } from "efi/crypto/getCryptoSymbol";
 import { getPoolInfoForPrincipalToken } from "efi/pools/ccpool";
 import { getTokenInfo } from "efi/tokenlists";
 import classNames from "classnames";
+import { ONE_DAY_IN_MILLISECONDS } from "efi/base/time";
+import { useTotalFiatLiquidity } from "efi-ui/pools/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
+import { Currencies, Money } from "ts-money";
 
 interface PrincipalTokenTermButtonLabelProps {
   tranche: Tranche;
@@ -53,7 +56,20 @@ export function PrincipalTokenTermButtonLabel({
     ? formatAbbreviatedDate(unlockDate)
     : t`Loading unlock date...`;
 
-  const baseAssetSymbol = getCryptoSymbol(baseAsset);
+  const baseAssetSymbol = getCryptoSymbol2(baseAsset);
+
+  const isPool24HoursOld =
+    Date.now() - poolInfo.extensions.createdAtTimestamp * 1000 >
+    ONE_DAY_IN_MILLISECONDS;
+
+  const fiatLiquidity = useTotalFiatLiquidity(poolInfo);
+  const has200kLiquidity = !!fiatLiquidity?.greaterThan(
+    Money.fromDecimal(200000, Currencies.USD)
+  );
+  let apyLabel = t`✨ NEW ✨`;
+  if (isPool24HoursOld || (!isPool24HoursOld && has200kLiquidity)) {
+    apyLabel = t`${formattedTrancheAPY} APR`;
+  }
 
   return (
     <div className={classNames(tw("flex", "h-full", "space-x-4"), className)}>
@@ -69,9 +85,7 @@ export function PrincipalTokenTermButtonLabel({
               "mr-4"
             )}
           >
-            <span className={tw("text-lg", "text-center")}>
-              {t`${formattedTrancheAPY} APY`}
-            </span>
+            <span className={tw("text-lg", "text-center")}>{apyLabel}</span>
             <Tag
               large
               intent={Intent.PRIMARY}
