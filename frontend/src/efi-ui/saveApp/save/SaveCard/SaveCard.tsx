@@ -21,21 +21,22 @@ import { PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { SwapKind } from "efi/balancer/SwapKind";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { CryptoAssetPicker } from "efi-ui/crypto/CryptoAssetPicker/CryptoAssetPicker";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoBalanceOf } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
-import { SaveInput } from "efi-ui/saveApp/save/SaveInput/SaveInput";
-import { SaveTermPicker } from "efi-ui/saveApp/save/SaveTermPicker/SaveTermPicker";
-import { useActiveTranche } from "efi-ui/saveApp/save/hooks/useActiveTranche";
+import { useCanPerformPool } from "efi-ui/pools/usePoolCanPerform/usePoolCanPerform";
 import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
+import { useActiveTranche } from "efi-ui/saveApp/save/hooks/useActiveTranche";
 import { PrincipalDiscountPreview } from "efi-ui/saveApp/save/SaveCard/PrincipalDiscountPreview";
+import { SaveInput } from "efi-ui/saveApp/save/SaveInput/SaveInput";
+import { SaveTermPicker } from "efi-ui/saveApp/save/SaveTermPicker/SaveTermPicker";
 import { BuyPrincipalTokensTransactionConfirmationDrawer } from "efi-ui/swaps/BuyPrincipalTokensTransactionConfirmationDrawer/BuyPrincipalTokensTransactionConfirmationDrawer";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
+import { SwapKind } from "efi/balancer/SwapKind";
 import { formatBalance } from "efi/base/formatBalance";
 import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
@@ -46,15 +47,14 @@ import {
   calcSwapOutGivenInCCPoolUNSAFE,
 } from "efi/pools/calcPoolSwap";
 import {
-  getPrincipalPoolContractForTranche,
   getPoolInfoForPrincipalToken,
+  getPrincipalPoolContractForTranche,
 } from "efi/pools/ccpool";
-import { useParseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
+import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { getTokenInfo } from "efi/tokenlists";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
 import { openTrancheBaseAssets } from "efi/tranche/baseAssets";
 import { underlyingContractsByAddress } from "efi/underlying/underlying";
-import { useCanPerformPool } from "efi-ui/pools/usePoolCanPerform/usePoolCanPerform";
 
 export interface SaveCardProps {
   library: Web3Provider | undefined;
@@ -125,15 +125,16 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
   );
 
   // pool
-  const {
-    address: convergentPoolAddress,
-    extensions: { expiration, unitSeconds, underlying },
-  } = getPoolInfoForPrincipalToken(activeTranche.address);
-  const canPerformBuy = useCanPerformPool(convergentPoolAddress, "buy");
-
   const poolContract = getPrincipalPoolContractForTranche(
     activeTranche.address
   );
+  const poolInfo = getPoolInfoForPrincipalToken(activeTranche.address);
+  const {
+    address: convergentPoolAddress,
+    extensions: { expiration, unitSeconds, underlying },
+  } = poolInfo;
+
+  const canPerformBuy = useCanPerformPool(convergentPoolAddress, "buy");
 
   // TODO: use a global Date.now that updates at a constant interval
   const nowInSeconds = Math.round(Date.now() / 1000);
@@ -146,9 +147,9 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
   );
   const totalSupply = formatEther(totalSupplyBN ?? 0);
 
-  const { data: [tokens, balances = []] = [] } = usePoolTokens(poolContract);
+  const { data: [, balances = []] = [] } = usePoolTokens(poolContract);
   const { baseAssetIndex, termAssetIndex: principalTokenIndex } =
-    useParseSortedTokensForPool(tokens);
+    getPoolTokens(poolInfo);
   const baseAssetReservesBalanceOf = balances[baseAssetIndex];
   const principalReservesBalanceOf = balances[principalTokenIndex];
   const baseReserves = formatUnits(

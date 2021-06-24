@@ -5,19 +5,18 @@ import { formatUnits } from "ethers/lib/utils";
 
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { TimeData } from "efi-ui/charts/BrushChart/BrushChart";
-import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useLatestBlockNumber } from "efi-ui/ethereum/hooks/useLatestBlockNumber";
 import { usePreviousBlockNumber } from "efi-ui/ethereum/usePreviousBlockNumber/usePreviousBlockNumber";
-import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
-import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
-import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
+import { usePoolSpotPrice2 } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
+import { useTotalFiatLiquidity } from "efi-ui/pools/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
-import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
 import { AVG_MINE_RATE_SECONDS } from "efi/ethereum/miningRate";
-import { useParseSortedTokensForPool } from "efi/pools/parseSortedTokensForPool";
+import { getPoolInfo } from "efi/pools/getPoolInfo";
+import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolContract } from "efi/pools/PoolContract";
+import { getTokenInfo } from "efi/tokenlists";
 
 type PoolBalanceChangedArguments = [
   poolId: string,
@@ -37,11 +36,13 @@ type PoolBalanceChangedArguments = [
 
 const nowInMs = Date.now();
 export function useLiquidityHistoryForPool(
-  pool: PoolContract | undefined,
+  pool: PoolContract,
   fromTime: number = ONE_DAY_IN_SECONDS
 ): TimeData[] | undefined {
-  const totalLiquidity = useTotalFiatLiquidityForPool(pool);
-  const { data: poolId } = useSmartContractReadCall(pool, "getPoolId");
+  const poolInfo = getPoolInfo(pool.address);
+  const { poolId, underlying: baseAssetAddress } = poolInfo.extensions;
+  const { decimals: baseAssetDecimals } = getTokenInfo(baseAssetAddress);
+  const totalLiquidity = useTotalFiatLiquidity(poolInfo);
   const balancerVault = useBalancerVault();
   const { data: fromBlockNumber } = usePreviousBlockNumber(fromTime, {
     staleTime: Infinity,
@@ -50,14 +51,12 @@ export function useLiquidityHistoryForPool(
     refetchOnMount: false,
     refetchOnReconnect: false,
   });
-  const { data: [tokens] = [] } = usePoolTokens(pool);
   const {
     baseAssetContract,
     baseAssetIndex,
     termAssetIndex: yieldAssetIndex,
-  } = useParseSortedTokensForPool(tokens);
-  const { data: baseAssetDecimals } = useTokenDecimals(baseAssetContract);
-  const spotPrice = usePoolSpotPrice(pool, baseAssetContract);
+  } = getPoolTokens(poolInfo);
+  const spotPrice = usePoolSpotPrice2(pool, baseAssetAddress);
   const { currency } = useCurrencyPref();
   const [baseAssetPrice] = useTokenPrice(baseAssetContract, currency);
 
