@@ -8,12 +8,15 @@ interface PoolTokenPrices {
   spotPriceTokenForOneBaseAsset: number | undefined;
 }
 export function usePoolTokenPrices(
-  pool: PoolContract | undefined,
-  baseAssetToken: ERC20 | undefined
+  pool: PoolContract,
+  baseAssetToken: ERC20
 ): PoolTokenPrices {
   // spot price will be zero while we wait for it to load, maybe change this
   // behavior in usePoolSpotPrice to return undefined instead?
-  const spotPriceTokenForOneBaseAsset = usePoolSpotPrice(pool, baseAssetToken);
+  const spotPriceTokenForOneBaseAsset = usePoolSpotPrice(
+    pool,
+    baseAssetToken.address
+  );
   if (!spotPriceTokenForOneBaseAsset) {
     return {
       spotPriceBaseAssetForOneToken: undefined,

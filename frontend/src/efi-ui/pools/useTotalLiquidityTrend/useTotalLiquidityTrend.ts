@@ -1,13 +1,13 @@
 import { formatUnits } from "ethers/lib/utils";
 
 import { getQueryData } from "efi-ui/base/queryResults";
-import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useTokenDeltasForPool } from "efi-ui/pools/useTokenDeltasForPool/useTokenDeltasForPool";
-import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
-import { PoolContract } from "efi/pools/PoolContract";
+import { getPoolContract } from "efi/pools/getPoolContract";
+import { getPoolTokens } from "efi/pools/getPoolTokens";
+import { PoolInfo } from "efi/pools/PoolInfo";
 
 /**
  * Returns the amount of liquidity added or removed for each token in a time period.
@@ -16,46 +16,57 @@ import { PoolContract } from "efi/pools/PoolContract";
  * @returns {number} the liquidity trend as a decimal +/- percent.
  */
 export function useTotalLiquidityTrend(
-  pool: PoolContract | undefined,
+  poolInfo: PoolInfo,
   fromTime: number = ONE_DAY_IN_SECONDS
 ): number | undefined {
+  const {
+    baseAssetContract,
+    baseAssetInfo,
+    termAssetInfo,
+    baseAssetIndex,
+    termAssetIndex,
+  } = getPoolTokens(poolInfo);
+  const pool = getPoolContract(poolInfo.address);
   const poolTokensResult = usePoolTokens(pool);
   const tokenAddresses = getQueryData(poolTokensResult)?.[0];
   const tokenBalances = getQueryData(poolTokensResult)?.[1];
   const tokenDeltas = useTokenDeltasForPool(pool, fromTime);
-  const baseAsset = useBaseAssetForPool(pool);
+
   // assumes that yield asset and base asset have the same decimals
-  const { data: tokenDecimals } = useTokenDecimals(baseAsset);
-  const spotPrice = usePoolSpotPrice(pool, baseAsset);
+  const spotPrice = usePoolSpotPrice(pool, baseAssetInfo.address);
 
   if (
     !tokenAddresses ||
     !tokenBalances ||
     !tokenDeltas ||
-    !baseAsset ||
-    !tokenDecimals ||
+    !baseAssetContract ||
     !spotPrice
   ) {
     return undefined;
   }
 
+  const baseAssetBalance = +formatUnits(
+    tokenBalances[baseAssetIndex],
+    baseAssetInfo.decimals
+  );
+  const baseAssetDelta = +formatUnits(
+    tokenDeltas[baseAssetIndex],
+    baseAssetInfo.decimals
+  );
+
+  const termAssetBalance = +formatUnits(
+    tokenBalances[termAssetIndex],
+    termAssetInfo.decimals
+  );
+  const termAssetDelta = +formatUnits(
+    tokenDeltas[termAssetIndex],
+    termAssetInfo.decimals
+  );
+
   // balance of both tokens added up, normalized to base asset
-  let overallBalance = 0;
+  const overallBalance = baseAssetBalance + termAssetBalance / spotPrice;
   // delta of both tokens added up, for the given time period, normalized to base asset
-  let overallDelta = 0;
-  tokenAddresses.forEach((address, index) => {
-    const balance = +formatUnits(tokenBalances[index], tokenDecimals);
-    const delta = +formatUnits(tokenDeltas[index], tokenDecimals);
-    // if base asset, just add numbers to total
-    if (address === baseAsset?.address) {
-      overallBalance += balance;
-      overallDelta += delta;
-    } else {
-      // if yield asset, normalize numbers to base asset
-      overallBalance += balance / spotPrice;
-      overallDelta += delta / spotPrice;
-    }
-  });
+  const overallDelta = baseAssetDelta + termAssetDelta / spotPrice;
 
   return overallDelta / overallBalance;
 }

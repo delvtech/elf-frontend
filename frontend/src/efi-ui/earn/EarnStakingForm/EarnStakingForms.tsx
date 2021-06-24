@@ -1,21 +1,20 @@
 import { ReactElement } from "react";
 
+import { Card } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { Signer } from "ethers";
 import { PrincipalTokenInfo as TrancheInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { StakeYieldTokensForm } from "efi-ui/earn/EarnStakingForm/StakeYieldTokensForm";
+import { useStakingAPY } from "efi-ui/pools/useStakingAPY";
+import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
+import { formatPercent } from "efi/base/formatPercent";
 import { getPoolInfoForPrincipalToken } from "efi/pools/ccpool";
 import { getPoolInfoForYieldToken } from "efi/pools/weightedPool";
 
 import { StakePrincipalTokenForm } from "./StakePrincipalTokensForm";
-import { StakeYieldTokensForm } from "efi-ui/earn/EarnStakingForm/StakeYieldTokensForm";
-import { useStakingAPY } from "efi-ui/pools/useStakingAPY";
-import { formatPercent } from "efi/base/formatPercent";
-import { getPoolContract } from "efi/pools/getPoolContract";
-import { Card } from "@blueprintjs/core";
-import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 
 interface EarnStakingFormsProps {
   library: Web3Provider | undefined;
@@ -34,10 +33,8 @@ export function EarnStakingForms(props: EarnStakingFormsProps): ReactElement {
   const yieldPoolInfo = getPoolInfoForYieldToken(
     trancheInfo.extensions.interestToken
   );
-  const ptStakingAPY = useStakingAPY(
-    getPoolContract(principalPoolInfo.address)
-  );
-  const ytStakingAPY = useStakingAPY(getPoolContract(yieldPoolInfo.address));
+  const ptStakingAPY = useStakingAPY(principalPoolInfo);
+  const ytStakingAPY = useStakingAPY(yieldPoolInfo);
 
   const cardClassName = tw("flex", "flex-col", "space-y-4", "border", {
     "border-gray-600": isDarkMode,

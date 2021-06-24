@@ -174,7 +174,7 @@ function useShowPermitCallout(
   const yieldTokenContract =
     interestTokenContractsByAddress[yieldTokenInfo.address];
   const principalTokenContract = trancheContractsByAddress[trancheInfo.address];
-  const baseAssetDecimals = getCryptoDecimals(baseAsset) ?? 18;
+  const baseAssetDecimals = getCryptoDecimals(baseAsset);
   const { decimals: principalTokenDecimals } = trancheInfo;
   const { decimals: yieldTokenDecimals } = yieldTokenInfo;
 

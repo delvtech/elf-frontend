@@ -17,7 +17,7 @@ export function TimeLeftLabel(props: TimeLeftLabelProps): ReactElement | null {
     return null;
   }
 
-  const isMature = getIsMature(maturationDate);
+  const isMature = getIsMature(maturationDate.getTime());
   if (isMature) {
     const timeSinceMaturity = getTimeSinceMaturityLabel(maturationDate);
     return (

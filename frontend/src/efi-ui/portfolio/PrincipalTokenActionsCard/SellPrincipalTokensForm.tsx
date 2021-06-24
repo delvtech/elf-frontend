@@ -13,7 +13,7 @@ import { SwapKind } from "efi/balancer/SwapKind";
 import { getCalcSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
-import { usePoolSpotPrice2 } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
+import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { usePoolTotalSupply } from "efi-ui/pools/usePoolTotalSupply";
 import { SwapTokensTransactionConfirmationDrawer } from "efi-ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensTransactionConfirmationDrawer";
@@ -84,7 +84,7 @@ export function SellPrincipalTokensForm(
   );
   const previewAmountOut = useCalculateUnderlyingTokenOut(poolInfo, amountIn);
   const poolContract = getPoolContract(poolInfo.address) as ConvergentCurvePool;
-  const spotPrice = usePoolSpotPrice2(poolContract, underlyingAddress);
+  const spotPrice = usePoolSpotPrice(poolContract, underlyingAddress);
 
   const buttonDisabled =
     !!tokenInError ||

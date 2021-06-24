@@ -11,7 +11,7 @@ import { PrincipalTokenSummaryCard } from "efi-ui/portfolio/PrincipalTokenSummar
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { isDust } from "efi/coins/isDust";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
-import { getIsMature2 } from "efi/tranche/getIsMature";
+import { getIsMature } from "efi/tranche/getIsMature";
 
 interface SavePortfolioCardProps {
   library: Web3Provider | undefined;
@@ -39,7 +39,7 @@ export function SavePortfolioCard(
     },
   } = props;
 
-  const isMature = getIsMature2(unlockTimestamp);
+  const isMature = getIsMature(unlockTimestamp);
   const [activeTabId, setActiveTabId] = useState<PrincipalTokenActionTabId>(
     isMature ? PrincipalTokenActionTabId.REDEEM : PrincipalTokenActionTabId.BUY
   );

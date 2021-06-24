@@ -1,10 +1,13 @@
 import { useFeeVolumeFiatForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
-import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
+import { useTotalFiatLiquidity } from "efi-ui/pools/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
 import { ONE_DAY_IN_SECONDS, ONE_YEAR_IN_SECONDS } from "efi/base/time";
-import { PoolContract } from "efi/pools/PoolContract";
+import { getPoolContract } from "efi/pools/getPoolContract";
+import { PoolInfo } from "efi/pools/PoolInfo";
 
-export function useStakingAPY(pool: PoolContract | undefined): number {
-  const totalLiquidity = useTotalFiatLiquidityForPool(pool);
+export function useStakingAPY(poolInfo: PoolInfo): number {
+  const totalLiquidity = useTotalFiatLiquidity(poolInfo);
+
+  const pool = getPoolContract(poolInfo.address);
   const feeVolume24hr = useFeeVolumeFiatForPool(pool);
 
   const liquidity = totalLiquidity?.toDecimal();

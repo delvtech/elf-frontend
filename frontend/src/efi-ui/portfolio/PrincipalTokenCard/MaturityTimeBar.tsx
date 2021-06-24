@@ -15,7 +15,7 @@ export function MaturityTimeBar({
   progress,
   maturationDate,
 }: MaturityTimeBarLabelProps): ReactElement {
-  const isMature = getIsMature(maturationDate);
+  const isMature = getIsMature(maturationDate?.getTime() ?? 0);
   return (
     <div className={tw("w-full", "space-y-2", "flex", "flex-col")}>
       <div>

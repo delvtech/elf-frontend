@@ -7,17 +7,17 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
-import { getCryptoName } from "efi/crypto/getCryptoName/getCryptoName";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 import { TokenIcon } from "efi-ui/token/TokenIcon";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
+import { getCryptoName } from "efi/crypto/getCryptoName/getCryptoName";
+import { getCryptoSymbol2 } from "efi/crypto/getCryptoSymbol";
 
 interface CryptoAssetButtonProps {
   outlined?: boolean;
   fill?: boolean;
   minimal?: boolean;
-  cryptoAsset: CryptoAsset | undefined;
+  cryptoAsset: CryptoAsset;
 
   rightIcon?: IconName;
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
@@ -32,8 +32,8 @@ export function CryptoAssetButton({
   onClick,
 }: CryptoAssetButtonProps): ReactElement {
   const assetName = getCryptoName(cryptoAsset);
-  const assetSymbol = getCryptoSymbol(cryptoAsset);
-  const assetIcon = findAssetIcon(cryptoAsset);
+  const assetSymbol = getCryptoSymbol2(cryptoAsset);
+  const assetIcon = findAssetIcon2(cryptoAsset);
 
   if (!cryptoAsset || !assetSymbol) {
     return <div className={classNames(Classes.SKELETON)} />;
@@ -62,8 +62,8 @@ export function CryptoAssetButton({
   );
 }
 interface AssetLabelProps {
-  icon: TokenIcon | undefined;
-  assetName: string | undefined;
+  icon: TokenIcon;
+  assetName: string;
   assetSymbol: string;
 }
 function AssetLabel({

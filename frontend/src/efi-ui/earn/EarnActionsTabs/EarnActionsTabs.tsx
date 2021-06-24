@@ -5,7 +5,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { EarnActionsTabId } from "efi-ui/earn/EarnActionsTabs/EarnActionsTabId";
-import { getIsMature2 } from "efi/tranche/getIsMature";
+import { getIsMature } from "efi/tranche/getIsMature";
 
 interface EarnActionsTabsProps {
   activeTabId: EarnActionsTabId;
@@ -19,7 +19,7 @@ interface EarnActionsTabsProps {
 
 export function EarnActionsTabs(props: EarnActionsTabsProps): ReactElement {
   const { activeTabId, onSetActiveTab, unlockTimestamp } = props;
-  const isMature = getIsMature2(unlockTimestamp);
+  const isMature = getIsMature(unlockTimestamp);
   return (
     <Tabs
       id="save-transactions-tab"

@@ -7,7 +7,7 @@ import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { TimeData } from "efi-ui/charts/BrushChart/BrushChart";
 import { useLatestBlockNumber } from "efi-ui/ethereum/hooks/useLatestBlockNumber";
 import { usePreviousBlockNumber } from "efi-ui/ethereum/usePreviousBlockNumber/usePreviousBlockNumber";
-import { usePoolSpotPrice2 } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
+import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { useTotalFiatLiquidity } from "efi-ui/pools/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
@@ -56,7 +56,7 @@ export function useLiquidityHistoryForPool(
     baseAssetIndex,
     termAssetIndex: yieldAssetIndex,
   } = getPoolTokens(poolInfo);
-  const spotPrice = usePoolSpotPrice2(pool, baseAssetAddress);
+  const spotPrice = usePoolSpotPrice(pool, baseAssetAddress);
   const { currency } = useCurrencyPref();
   const [baseAssetPrice] = useTokenPrice(baseAssetContract, currency);
 

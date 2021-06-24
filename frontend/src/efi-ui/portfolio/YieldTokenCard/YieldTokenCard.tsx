@@ -14,7 +14,6 @@ import { Web3Provider } from "@ethersproject/providers";
 import { Link } from "@reach/router";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import classNames from "classnames";
-import { Tranche__factory } from "elf-contracts/types/factories/Tranche__factory";
 import { InterestToken } from "elf-contracts/types/InterestToken";
 import { formatUnits } from "ethers/lib/utils";
 import { PrincipalTokenInfo, YieldTokenInfo } from "tokenlists/types";
@@ -24,7 +23,7 @@ import { getCoinGeckoId } from "efi-coingecko";
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
-import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
+import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 import { GoToPoolButton } from "efi-ui/pools/GoToPoolButton/GoToPoolButton";
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { PoolAction } from "efi-ui/pools/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
@@ -33,20 +32,18 @@ import { RedeemYieldTokensButton } from "efi-ui/portfolio/RedeemButton/RedeemYie
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
-import { useUnderlyingVaultForTranche } from "efi-ui/tranche/useUnderlyingVaultForTranche";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { calculateProgress } from "efi/base/calculateProgress";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
 import { formatPercent } from "efi/base/formatPercent";
-import { ERC20Shim } from "efi/contracts/ERC20Shim";
-import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { getCryptoSymbol2 } from "efi/crypto/getCryptoSymbol";
 import { formatMoney } from "efi/money/formatMoney";
 import { getPoolForYieldToken } from "efi/pools/weightedPool";
 import { getTokenInfo } from "efi/tokenlists";
+import { getVaultForTranche } from "efi/tranche/tranches";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 import { getYearnVaultAPY } from "efi-yearn/fetchYearnVaults";
 
@@ -96,14 +93,10 @@ export function YieldTokenCard({
   } = trancheInfo?.extensions ?? ({} as PrincipalTokenInfo["extensions"]);
   const unlockDate = convertEpochSecondsToDate(unlockTimestamp);
   const createdAtDate = convertEpochSecondsToDate(trancheCreatedAt);
-  const trancheContract = getSmartContractFromRegistry(
-    trancheInfo.address,
-    Tranche__factory.connect
-  );
-  const vaultContract = useUnderlyingVaultForTranche(trancheContract);
+  const vaultContract = getVaultForTranche(trancheInfo.address);
 
   const baseAsset = getCryptoAssetForToken(underlying);
-  const baseAssetSymbol = getCryptoSymbol(baseAsset);
+  const baseAssetSymbol = getCryptoSymbol2(baseAsset);
   const { data: baseAssetFiatPrice } = useCoinGeckoPrice(
     getCoinGeckoId(baseAssetSymbol),
     currency
@@ -112,8 +105,8 @@ export function YieldTokenCard({
 
   const pool = getPoolForYieldToken(yieldToken.address);
 
-  const spotPrice = usePoolSpotPrice(pool, yieldToken as unknown as ERC20Shim);
-  const BaseAssetIcon = findAssetIcon(baseAsset);
+  const spotPrice = usePoolSpotPrice(pool, yieldToken.address);
+  const BaseAssetIcon = findAssetIcon2(baseAsset);
 
   const vaultSymbol = getVaultSymbol(baseAsset);
   const { data: yearnVault } = useYearnVault(vaultSymbol);

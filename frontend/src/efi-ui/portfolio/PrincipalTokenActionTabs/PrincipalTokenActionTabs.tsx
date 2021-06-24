@@ -6,7 +6,7 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { PrincipalTokenActionTabId } from "efi-ui/portfolio/PrincipalTokenActionTabs/tabs";
 import { PrincipalTokenInfo } from "tokenlists/types";
-import { getIsMature2 } from "efi/tranche/getIsMature";
+import { getIsMature } from "efi/tranche/getIsMature";
 
 interface PortfolioActionTabsProps {
   activeTabId: PrincipalTokenActionTabId;
@@ -28,7 +28,7 @@ export function PrincipalTokenActionTabs(
       extensions: { unlockTimestamp },
     },
   } = props;
-  const isMature = getIsMature2(unlockTimestamp);
+  const isMature = getIsMature(unlockTimestamp);
   return (
     <Tabs
       id="save-transactions-tab"

@@ -13,16 +13,16 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
+import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
+import { isPrincipalTokenSwapPendingTransaction } from "efi-ui/portfolio/hooks/isPrincipalTokenSwapPendingTransaction";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
+import { usePendingTransactionPref } from "efi-ui/transactions/usePendingTransactionPref/usePendingTransactionPref";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
 import { formatBalance } from "efi/base/formatBalance";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { getIsMature2 } from "efi/tranche/getIsMature";
+import { getIsMature } from "efi/tranche/getIsMature";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
-import { usePendingTransactionPref } from "efi-ui/transactions/usePendingTransactionPref/usePendingTransactionPref";
-import { isPrincipalTokenSwapPendingTransaction } from "efi-ui/portfolio/hooks/isPrincipalTokenSwapPendingTransaction";
 
 interface PrincipalTokenSummaryCardProps {
   account: string | null | undefined;
@@ -51,11 +51,11 @@ export function PrincipalTokenSummaryCard(
   const tranche = trancheContractsByAddress[address];
   const { data: balanceOf } = useTokenBalanceOf(tranche, account);
   const baseAsset = getCryptoAssetForToken(underlying);
-  const BaseAssetIcon = findAssetIcon(baseAsset);
+  const BaseAssetIcon = findAssetIcon2(baseAsset);
   const balanceLabel = formatBalance(balanceOf, decimals);
   const unlockDate = convertEpochSecondsToDate(unlockTimestamp);
   const formattedUnlockDate = formatAbbreviatedDate(unlockDate);
-  const isRedeemable = getIsMature2(unlockTimestamp);
+  const isRedeemable = getIsMature(unlockTimestamp);
 
   // spinner
   const pendingTxPref = usePendingTransactionPref();

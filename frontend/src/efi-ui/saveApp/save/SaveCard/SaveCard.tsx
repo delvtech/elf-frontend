@@ -41,7 +41,7 @@ import { SwapKind } from "efi/balancer/SwapKind";
 import { formatBalance } from "efi/base/formatBalance";
 import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
 import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
-import { getCryptoDecimals2 } from "efi/crypto/getCryptoDecimals";
+import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import {
   calcSwapInGivenOutCCPoolUNSAFE,
@@ -57,6 +57,7 @@ import { validateTradeValues } from "efi/trade/validateTradeValues";
 import { openTrancheBaseAssets } from "efi/tranche/baseAssets";
 import { underlyingContractsByAddress } from "efi/underlying/underlying";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
+import { ERC20 } from "elf-contracts/types";
 
 export interface SaveCardProps {
   library: Web3Provider | undefined;
@@ -98,7 +99,7 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
       ? BALANCER_ETH_SENTINEL
       : activeBaseAsset.tokenContract.address;
   const activeBaseAssetSymbol = getCryptoSymbol(activeBaseAsset);
-  const activeBaseAssetDecimals = getCryptoDecimals2(activeBaseAsset);
+  const activeBaseAssetDecimals = getCryptoDecimals(activeBaseAsset);
   const activeBaseAssetBalanceOf = useCryptoBalanceOf(
     library,
     account,
@@ -168,7 +169,10 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
     activeBaseAssetDecimals
   );
 
-  const underlyingPoolTokenContract = underlyingContractsByAddress[underlying];
+  const underlyingPoolTokenContract = underlyingContractsByAddress[
+    underlying
+  ] as ERC20;
+
   const {
     spotPriceBaseAssetForOneToken: amountOfEthForOnePrincipalEth,
     spotPriceTokenForOneBaseAsset,

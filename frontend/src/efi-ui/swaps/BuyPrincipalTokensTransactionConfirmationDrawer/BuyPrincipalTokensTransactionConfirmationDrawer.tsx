@@ -1,47 +1,48 @@
 import { ReactElement, useCallback, useMemo } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
+import { ERC20 } from "elf-contracts/types";
 import { Tranche } from "elf-contracts/types/Tranche";
+import { BigNumber } from "ethers";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
+import { PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import { getBalancerApprovalMessage } from "efi-ui/balancer/balancerApprovalMessage";
-import { SwapKind } from "efi/balancer/SwapKind";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { useBatchSwapGivenIn } from "efi-ui/balancer/useBatchSwapGivenIn/useBatchSwapGivenIn";
 import { parseQueryBatchSwapResult } from "efi-ui/balancer/useQueryBatchSwap/parseQueryBatchSwapResult";
 import { useQueryBatchSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
-import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
+import { useSigner } from "efi-ui/provider/useBlockFromTag/useSigner/useSigner";
 import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
 import { PrincipalTokenTransactionDetails } from "efi-ui/swaps/PrincipalTokenTransactionDetails/PrincipalTokenTransactionDetails";
 import { SwapDetailsForm } from "efi-ui/swaps/SwapDetailsPreview/SwapDetailsForm";
 import { TokenIcon } from "efi-ui/token/TokenIcon";
 import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/TransactionDrawer";
+import { SwapKind } from "efi/balancer/SwapKind";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
+import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
+import { getCryptoSymbol2 } from "efi/crypto/getCryptoSymbol";
 import { calculatePurchasePrice } from "efi/pools/calculatePurchasePrice";
 import { calculateSlippage } from "efi/pools/calculateSlippage";
 import { PoolContract } from "efi/pools/PoolContract";
-import { getToleranceAmount } from "efi/trade/getToleranceAmount";
-import { useSigner } from "efi-ui/provider/useBlockFromTag/useSigner/useSigner";
 import { getTokenInfo } from "efi/tokenlists";
-import { PrincipalTokenInfo } from "tokenlists/types";
+import { getToleranceAmount } from "efi/trade/getToleranceAmount";
 import { underlyingContractsByAddress } from "efi/underlying/underlying";
-import { BigNumber } from "ethers";
 
 interface BuyPrincipalTransactionConfirmationDrawerProps {
   account: string | null | undefined;
   library: Web3Provider | undefined;
-  pool: PoolContract | undefined;
+  pool: PoolContract;
 
-  amountIn: string | undefined;
-  amountOut: string | undefined;
+  amountIn: string;
+  amountOut: string;
   swapKind: SwapKind;
 
   baseAsset: CryptoAsset;
-  baseAssetIcon: TokenIcon | undefined;
+  baseAssetIcon: TokenIcon;
 
   tranche: Tranche;
   isOpen: boolean;
@@ -71,7 +72,7 @@ export function BuyPrincipalTokensTransactionConfirmationDrawer({
 
   const balancerVault = useBalancerVault();
   // base asset calls
-  const baseAssetSymbol = getCryptoSymbol(baseAsset);
+  const baseAssetSymbol = getCryptoSymbol2(baseAsset);
   const baseAssetDecimals = getCryptoDecimals(baseAsset) ?? 18;
 
   // tranche calls
@@ -81,7 +82,7 @@ export function BuyPrincipalTokensTransactionConfirmationDrawer({
 
   const unlockTimeStampDate = convertEpochSecondsToDate(trancheUnlockTimestamp);
 
-  const baseAssetPoolToken = underlyingContractsByAddress[underlying];
+  const baseAssetPoolToken = underlyingContractsByAddress[underlying] as ERC20;
 
   const { spotPriceBaseAssetForOneToken, spotPriceTokenForOneBaseAsset } =
     usePoolTokenPrices(pool, baseAssetPoolToken);
