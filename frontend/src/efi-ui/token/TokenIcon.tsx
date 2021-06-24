@@ -35,7 +35,7 @@ export function SvgIcon({
     />
   );
 }
-interface IconProps {
+export interface IconProps {
   height: number;
   width: number;
   className?: string | undefined;

@@ -29,22 +29,16 @@ export function EarnActionsTabs(props: EarnActionsTabsProps): ReactElement {
       onChange={onSetActiveTab}
     >
       <Tab disabled={isMature} id={EarnActionsTabId.MINT}>
-        <Tag round minimal className={tw("mr-2")}>
+        <Tag intent={Intent.PRIMARY} round minimal className={tw("mr-2")}>
           1
         </Tag>
-        {t`Mint`}
+        {t`Mint principal and yield tokens`}
       </Tab>
-      <Tab
-        disabled={true /* isMature */}
-        id={EarnActionsTabId.PROVIDE_LIQUIDITY}
-      >
-        <Tag round minimal className={tw("mr-2")}>
+      <Tab disabled={isMature} id={EarnActionsTabId.PROVIDE_LIQUIDITY}>
+        <Tag intent={Intent.PRIMARY} round minimal className={tw("mr-2")}>
           2
         </Tag>
-        {t`Provide Liquidity`}
-        <Tag intent={Intent.WARNING} minimal className={tw("ml-2")}>
-          {t`Coming soon`}
-        </Tag>
+        {t`LP for additional yield`}
       </Tab>
     </Tabs>
   );

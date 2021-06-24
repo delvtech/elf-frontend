@@ -1,6 +1,6 @@
 import { ReactElement } from "react";
 
-import { Card, Intent } from "@blueprintjs/core";
+import { Button, Callout, Card, H4, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { Signer } from "ethers";
 import { PrincipalTokenInfo as TrancheInfo } from "tokenlists/types";
@@ -9,8 +9,9 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { EarnActionsTabId } from "efi-ui/earn/EarnActionsTabs/EarnActionsTabId";
 import { EarnActionsTabs } from "efi-ui/earn/EarnActionsTabs/EarnActionsTabs";
-import { EarnStakingForm } from "efi-ui/earn/EarnStakingForm/EarnStakingForm";
+import { EarnStakingForms } from "efi-ui/earn/EarnStakingForm/EarnStakingForms";
 import { MintForm } from "efi-ui/mint/MintCard/MintForm";
+import { navigate } from "@reach/router";
 
 interface EarnActionsCardProps {
   signer: Signer | undefined;
@@ -38,30 +39,64 @@ export function EarnActionsCard(props: EarnActionsCardProps): ReactElement {
           switch (activeTabId) {
             case EarnActionsTabId.MINT:
               return (
-                <div
-                  className={tw("flex", "flex-col", "w-3/5", "items-center")}
-                >
+                <div className={tw("flex", "w-full", "space-x-6")}>
                   <MintForm
                     library={library}
                     account={account}
                     trancheInfo={trancheInfo}
                   />
+                  <div
+                    className={tw("flex", "flex-col", "space-y-6", "flex-1")}
+                  >
+                    <Callout
+                      icon={null}
+                      intent={Intent.PRIMARY}
+                      className={tw("p-4")}
+                    >
+                      <H4>{t`Want to earn additional yield?`}</H4>
+                      <div className={tw("space-y-4")}>
+                        <div>
+                          {t`Earn additional trading fees when you provide liquidity
+                        in Element Pools.`}
+                        </div>
+                        <Button
+                          intent={Intent.PRIMARY}
+                          outlined
+                          onClick={() =>
+                            setActiveTabId(EarnActionsTabId.PROVIDE_LIQUIDITY)
+                          }
+                        >
+                          {t`LP for additional yield`}
+                        </Button>
+                      </div>
+                    </Callout>
+                    <Callout
+                      title={t`Sell your position at any time`}
+                      icon={null}
+                      className={tw("p-4")}
+                    >
+                      <div className={tw("space-y-4")}>
+                        <div>
+                          {t`Principal and Yield tokens can be sold at any time from
+                        your Portfolio.`}
+                        </div>
+                        <Button outlined onClick={() => navigate("/portfolio")}>
+                          {t`Go to Portfolio`}
+                        </Button>
+                      </div>
+                    </Callout>
+                  </div>
                 </div>
               );
             case EarnActionsTabId.PROVIDE_LIQUIDITY:
               return (
                 <div className={tw("flex", "flex-col")}>
-                  <EarnStakingForm
+                  <EarnStakingForms
                     key={activeTabId}
                     library={library}
                     signer={signer}
                     account={account}
                     trancheInfo={trancheInfo}
-                    buttonLabel={t`Add liquidity`}
-                    formDisabled={false}
-                    submitDisabled={false}
-                    buttonIntent={Intent.PRIMARY}
-                    activeTabId={activeTabId}
                   />
                 </div>
               );

@@ -17,7 +17,7 @@ import { t } from "ttag";
 
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
+import { findAssetIcon, findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 import { StakingConfirmationDrawer } from "efi-ui/pools/StakeTokensConfirmationDrawer/StakeTokensConfirmationDrawer";
 import { useJoinConvergentPool } from "efi-ui/pools/useJoinConvergentPool/useJoinConvergentPool";
 import { useJoinWeightedPool } from "efi-ui/pools/useJoinWeightedPool";
@@ -44,7 +44,7 @@ import { trancheContracts } from "efi/tranche/tranches";
 interface StakingAssetInputProps {
   cryptoSymbol: CryptoSymbol;
   cryptoDecimals: number | undefined;
-  cryptoAssetIcon: TokenIcon | undefined;
+  cryptoAssetIcon: TokenIcon;
   cryptoBalanceOf: BigNumber | undefined;
   cryptoDisplayBalance: string | number;
   disabled: boolean;
@@ -127,7 +127,9 @@ export function StakingForm(props: StakingFormProps): ReactElement {
 
   // use this hook to make sure we get the ETH icon if the base asset it WETH
   const cryptoAsset = getCryptoAssetForToken(baseAssetContract?.address);
-  const BaseAssetIcon = findAssetIcon(cryptoAsset);
+  const termCryptoAsset = getCryptoAssetForToken(termAssetContract?.address);
+  const BaseAssetIcon = findAssetIcon2(cryptoAsset);
+  const TermAssetIcon = findAssetIcon2(termCryptoAsset);
 
   const {
     asset: termAsset,
@@ -261,7 +263,7 @@ export function StakingForm(props: StakingFormProps): ReactElement {
         termAssetInputProps: {
           cryptoSymbol: termAssetSymbol as CryptoSymbol,
           cryptoDecimals: baseAssetDecimals,
-          cryptoAssetIcon: BaseAssetIcon,
+          cryptoAssetIcon: TermAssetIcon,
           cryptoBalanceOf: termAssetBalanceOf,
           cryptoDisplayBalance: termAssetDisplayBalance || "",
           disabled: formDisabled,

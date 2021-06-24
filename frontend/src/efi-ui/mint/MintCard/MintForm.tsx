@@ -1,6 +1,6 @@
-import { Fragment, ReactElement, useCallback, useState } from "react";
+import { ReactElement, useCallback, useState } from "react";
 
-import { Button, Callout, Intent } from "@blueprintjs/core";
+import { Button, Callout, Card, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { parseUnits } from "ethers/lib/utils";
 import { PrincipalTokenInfo as TrancheInfo } from "tokenlists/types";
@@ -9,7 +9,7 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
+import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoBalanceOf } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { useMintPreview } from "efi-ui/mint/hooks/useMintPreview";
 import { MintTransactionConfirmationDrawer } from "efi-ui/mint/MintTransactionConfirmationDrawer/MintTransactionConfirmationDrawer";
@@ -25,6 +25,7 @@ import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 
 interface MintFormProps {
   library: Web3Provider | undefined;
@@ -34,6 +35,7 @@ interface MintFormProps {
 
 export function MintForm(props: MintFormProps): ReactElement | null {
   const { library, account, trancheInfo } = props;
+  const { isDarkMode } = useDarkMode();
 
   const {
     address: trancheAddress,
@@ -43,7 +45,7 @@ export function MintForm(props: MintFormProps): ReactElement | null {
 
   const baseAsset = getCryptoAssetForToken(underlying);
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
-  const BaseAssetIcon = findAssetIcon(baseAsset);
+  const BaseAssetIcon = findAssetIcon2(baseAsset);
   const vaultSymbol = getVaultSymbol(baseAsset) as string;
 
   const principalTokenContract = trancheContractsByAddress[trancheAddress];
@@ -118,52 +120,35 @@ export function MintForm(props: MintFormProps): ReactElement | null {
   );
 
   return (
-    <Fragment>
+    <Card
+      className={tw("flex", "flex-1", "flex-col", "space-y-4", "border", {
+        "border-gray-600": isDarkMode,
+      })}
+    >
       <div className={tw("flex", "flex-col", "w-full", "space-y-4")}>
         <div className={tw("flex", "flex-col", "space-y-2", "mb-4")}>
           <span
-            className={tw("text-center", "mb-4")}
-          >{t`Mint principal and yield tokens with your ${baseAssetSymbol}`}</span>
-          <div className={tw("grid", "grid-cols-3", "gap-3")}>
-            <TokenAmountInput
-              className={tw("col-span-2")}
-              showMaxButton
-              placeholder="0"
-              leftIcon={
-                BaseAssetIcon ? (
-                  <BaseAssetIcon
-                    height={20}
-                    width={20}
-                    className={tw("ml-2")}
-                  />
-                ) : undefined
-              }
-              maxAmount={baseAssetBalanceOf}
-              tokenDecimals={baseAssetDecimals}
-              value={amountInString}
-              onValueChange={setAmountIn}
-            />
-            <Button
-              outlined
-              className={tw("flex")}
-              disabled={mintButtonDisabled}
-              intent={
-                mintButtonError || !canPerformMint
-                  ? Intent.DANGER
-                  : Intent.PRIMARY
-              }
-              onClick={onClick}
-            >
-              {mintButtonLabel}
-            </Button>
-          </div>
-          <div className={tw("grid", "grid-cols-3")}>
-            <span
-              className={tw("col-span-2", "text-right")}
-            >{t`Available balance: ${activeBaseAssetDisplayBalance} ${baseAssetSymbol}`}</span>
-          </div>
+            className={tw("text-center", "mb-4", "font-semibold")}
+          >{t`Mint Principal and Yield tokens with your ${baseAssetSymbol}`}</span>
+          <TokenAmountInput
+            className={tw("col-span-2")}
+            showMaxButton
+            placeholder="0"
+            leftIcon={
+              BaseAssetIcon ? (
+                <BaseAssetIcon height={20} width={20} className={tw("ml-2")} />
+              ) : undefined
+            }
+            maxAmount={baseAssetBalanceOf}
+            tokenDecimals={baseAssetDecimals}
+            value={amountInString}
+            onValueChange={setAmountIn}
+          />
+          <span
+            className={tw("text-right")}
+          >{t`Available balance: ${activeBaseAssetDisplayBalance} ${baseAssetSymbol}`}</span>
         </div>
-        <div className={tw("grid", "grid-cols-2", "pb-4")}>
+        <div className={tw("flex", "flex-col", "space-y-6")}>
           <LabeledText
             bold
             muted={false}
@@ -188,6 +173,20 @@ export function MintForm(props: MintFormProps): ReactElement | null {
               </span>
             }
           />
+          <Button
+            outlined
+            large
+            className={tw("flex")}
+            disabled={mintButtonDisabled}
+            intent={
+              mintButtonError || !canPerformMint
+                ? Intent.DANGER
+                : Intent.PRIMARY
+            }
+            onClick={onClick}
+          >
+            {mintButtonLabel}
+          </Button>
         </div>
 
         {!canPerformMint ? (
@@ -213,7 +212,7 @@ export function MintForm(props: MintFormProps): ReactElement | null {
         isOpen={isWalletDialogOpen}
         onClose={() => setWalletDialogOpen(false)}
       />
-    </Fragment>
+    </Card>
   );
 }
 
