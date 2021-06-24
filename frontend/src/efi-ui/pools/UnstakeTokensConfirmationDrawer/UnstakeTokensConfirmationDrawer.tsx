@@ -80,7 +80,7 @@ export function UnstakeConfirmationDrawer({
           assetTwoSymbol={termAssetSymbol as string}
           assetOneSymbolLabel={baseAssetSymbolLabel}
           assetTwoSymbolLabel={termAssetSymbolLabel as string}
-          heading={t`Confirm removal`}
+          heading={t`Confirm removing liquidity`}
           assetOneIcon={baseAssetIcon}
           assetTwoIcon={termAssetIcon}
           assetOneValueLabel={baseAssetValue}
