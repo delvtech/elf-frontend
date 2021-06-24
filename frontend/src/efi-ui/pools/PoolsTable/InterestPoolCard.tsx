@@ -15,13 +15,13 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
-import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
+import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 import { GoToPoolButton } from "efi-ui/pools/GoToPoolButton/GoToPoolButton";
 import { useFeeVolumeForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
 import { usePoolSpotPrice2 } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { PoolAction } from "efi-ui/pools/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
 import { useStakingAPY } from "efi-ui/pools/useStakingAPY";
-import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
+import { useTotalFiatLiquidity } from "efi-ui/pools/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
@@ -29,7 +29,7 @@ import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { formatPercent } from "efi/base/formatPercent";
 import { CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { getCryptoSymbol2 } from "efi/crypto/getCryptoSymbol";
 import { formatMoney } from "efi/money/formatMoney";
 import { getPoolInfo } from "efi/pools/getPoolInfo";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
@@ -59,12 +59,12 @@ export function InterestPoolCard(
   const tranche = getTrancheForPool(poolInfo);
   const { unlockTimestamp: unlockTime, createdAtTimestamp: trancheCreatedAt } =
     tranche.extensions;
-  const liquidity = useTotalFiatLiquidityForPool(pool);
+  const liquidity = useTotalFiatLiquidity(poolInfo);
   const fees = useFeeVolumeForPool(pool) ?? 0;
   const { baseAssetContract, termAssetContract } = getPoolTokens(poolInfo);
   const baseAsset = getCryptoAssetForToken(baseAssetContract.address);
-  const baseAssetSymbol = getCryptoSymbol(baseAsset);
-  const BaseAssetIcon = findAssetIcon(baseAsset);
+  const baseAssetSymbol = getCryptoSymbol2(baseAsset);
+  const BaseAssetIcon = findAssetIcon2(baseAsset);
   const vaultSymbol = getVaultSymbol(baseAsset);
   const { symbol: termAssetSymbol } = getTermAssetSymbol(
     termAssetContract?.address,
@@ -181,7 +181,7 @@ export function InterestPoolCard(
         <div
           className={tw(cellClassName, "col-span-1", "xl:ml-4", "items-start")}
         >
-          {BaseAssetIcon && baseAsset?.type === CryptoAssetType.ETHEREUM ? (
+          {baseAsset.type === CryptoAssetType.ETHEREUM ? (
             <div
               className={classNames(
                 tw(

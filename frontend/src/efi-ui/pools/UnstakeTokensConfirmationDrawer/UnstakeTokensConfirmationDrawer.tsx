@@ -5,14 +5,13 @@ import { TokenInfo } from "@uniswap/token-lists";
 import { PrincipalTokenInfo, YieldTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
-import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
+import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 import { UnstakeConfirmationForm } from "efi-ui/pools/UnstakeTokensConfirmationDrawer/UnstakeConfirmationForm";
-import { TokenIcon } from "efi-ui/token/TokenIcon";
 import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/TransactionDrawer";
 import { EMPTY_ARRAY } from "efi/base/emptyArray";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoName } from "efi/crypto/getCryptoName/getCryptoName";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { getCryptoSymbol2 } from "efi/crypto/getCryptoSymbol";
 import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 import { WalletApprovalInfo } from "efi/wallets/WalletApprovalInfo";
@@ -49,12 +48,12 @@ export function UnstakeConfirmationDrawer({
   onUnstake,
 }: UnstakeConfirmationDrawerProps): ReactElement {
   const baseAsset = getCryptoAssetForToken(baseAssetInfo.address);
-  const baseAssetSymbol = getCryptoSymbol(baseAsset) as string;
-  const baseAssetSymbolLabel = getCryptoName(baseAsset) as string;
-  const baseAssetIcon = findAssetIcon(baseAsset) as TokenIcon;
+  const baseAssetSymbol = getCryptoSymbol2(baseAsset);
+  const baseAssetSymbolLabel = getCryptoName(baseAsset);
+  const baseAssetIcon = findAssetIcon2(baseAsset);
 
   const termAsset = getCryptoAssetForToken(termAssetInfo.address);
-  const termAssetIcon = findAssetIcon(termAsset) as TokenIcon;
+  const termAssetIcon = findAssetIcon2(termAsset);
 
   const vaultSymbol = getVaultSymbol(baseAsset);
   const { symbol: termAssetSymbol, label: termAssetSymbolLabel } =
@@ -77,9 +76,9 @@ export function UnstakeConfirmationDrawer({
         <UnstakeConfirmationForm
           amountIn={lpTokensIn}
           assetOneSymbol={baseAssetSymbol}
-          assetTwoSymbol={termAssetSymbol as string}
+          assetTwoSymbol={termAssetSymbol}
           assetOneSymbolLabel={baseAssetSymbolLabel}
-          assetTwoSymbolLabel={termAssetSymbolLabel as string}
+          assetTwoSymbolLabel={termAssetSymbolLabel}
           heading={t`Confirm removing liquidity`}
           assetOneIcon={baseAssetIcon}
           assetTwoIcon={termAssetIcon}

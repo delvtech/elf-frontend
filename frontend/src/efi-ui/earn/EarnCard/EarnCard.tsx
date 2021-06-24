@@ -173,8 +173,8 @@ export function EarnCard(props: EarnCardProps): ReactElement | null {
         termLength={termLength}
         vaultApy={vaultApy}
         tvl={tvl}
-        yieldPoolContract={yieldPoolContract}
-        principalPoolContract={principalPoolContract}
+        yieldPoolInfo={yieldPoolInfo}
+        principalPoolInfo={principalPoolInfo}
         principalPrice={principalPrice}
         baseAssetSymbol={baseAssetSymbol}
         yieldPrice={yieldPrice}

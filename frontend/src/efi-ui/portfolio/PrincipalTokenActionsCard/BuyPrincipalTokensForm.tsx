@@ -23,7 +23,7 @@ import { formatPercent } from "efi/base/formatPercent";
 import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { getCryptoDecimals2 } from "efi/crypto/getCryptoDecimals";
+import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { getCryptoSymbol2 } from "efi/crypto/getCryptoSymbol";
 import { calcSwapOutGivenInCCPoolUNSAFE } from "efi/pools/calcPoolSwap";
 import {
@@ -76,7 +76,7 @@ export function BuyPrincipalTokensForm(
   const BaseAssetIcon = findAssetIcon2(baseAsset);
   const baseAssetSymbol = getCryptoSymbol2(baseAsset);
   const baseAssetBalanceOf = useCryptoBalanceOf(library, account, baseAsset);
-  const baseAssetDecimals = getCryptoDecimals2(baseAsset);
+  const baseAssetDecimals = getCryptoDecimals(baseAsset);
   const baseAssetBalanceLabel = formatBalance(
     baseAssetBalanceOf,
     baseAssetDecimals,

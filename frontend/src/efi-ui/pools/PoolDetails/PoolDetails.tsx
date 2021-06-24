@@ -13,7 +13,7 @@ import { TermSummary } from "efi-ui/pools/TermSummary/TermSummary";
 import { TokenSummary } from "efi-ui/pools/TokenSummary/TokenSummary";
 import { useFeeVolumeFiatForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
 import { useStakingAPY } from "efi-ui/pools/useStakingAPY";
-import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
+import { useTotalFiatLiquidity } from "efi-ui/pools/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
 import { useTotalValueLockedForTranche } from "efi-ui/pools/useTotalValueLockedForTranche";
 import { useVolumeForPool } from "efi-ui/pools/useVolumeForPool/useVolumeForPool";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
@@ -36,7 +36,7 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
   const { baseAssetInfo, termAssetInfo, baseAssetContract } =
     getPoolTokens(poolInfo);
 
-  const totalLiquidity = useTotalFiatLiquidityForPool(pool);
+  const totalLiquidity = useTotalFiatLiquidity(poolInfo);
   const trancheInfo = getTrancheForPool(poolInfo);
   const {
     address: trancheAddress,
@@ -58,7 +58,7 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
 
   const volume24hr = useVolumeForPool(pool, ONE_DAY_IN_SECONDS);
   const feeVolume24hr = useFeeVolumeFiatForPool(pool, ONE_DAY_IN_SECONDS);
-  const stakingAPY = useStakingAPY(pool);
+  const stakingAPY = useStakingAPY(poolInfo);
 
   return (
     <div className={tw("flex", "flex-col", "space-y-8", "w-full")}>

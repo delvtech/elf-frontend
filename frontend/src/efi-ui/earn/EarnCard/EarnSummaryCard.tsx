@@ -1,17 +1,18 @@
 import { Button, Card, Colors, Intent } from "@blueprintjs/core";
 import classNames from "classnames";
+import { PrincipalPoolTokenInfo, YieldPoolTokenInfo } from "tokenlists/types";
+import { Money } from "ts-money";
 import { t } from "ttag";
+
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
-import { useTotalFiatLiquidityForPool } from "efi-ui/pools/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
+import { useTotalFiatLiquidity } from "efi-ui/pools/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
+import { TokenIcon } from "efi-ui/token/TokenIcon";
 import { formatPercent } from "efi/base/formatPercent";
 import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { formatMoney } from "efi/money/formatMoney";
-import { PoolContract } from "efi/pools/PoolContract";
-import { WeightedPool, ConvergentCurvePool } from "elf-contracts/types";
-import { TokenIcon } from "efi-ui/token/TokenIcon";
-import { Money } from "ts-money";
+import { PoolInfo } from "efi/pools/PoolInfo";
 
 interface EarnSummaryCardProps {
   onToggleExpand: () => void;
@@ -23,8 +24,8 @@ interface EarnSummaryCardProps {
   termLength: number;
   vaultApy: number;
   tvl: Money | undefined;
-  yieldPoolContract: WeightedPool;
-  principalPoolContract: ConvergentCurvePool;
+  yieldPoolInfo: YieldPoolTokenInfo;
+  principalPoolInfo: PrincipalPoolTokenInfo;
   principalPrice: string | undefined;
   baseAssetSymbol: string;
   yieldPrice: string | undefined;
@@ -46,8 +47,8 @@ export function EarnSummaryCard(props: EarnSummaryCardProps): JSX.Element {
     termLength,
     vaultApy,
     tvl,
-    yieldPoolContract,
-    principalPoolContract,
+    yieldPoolInfo,
+    principalPoolInfo,
     principalPrice,
     baseAssetSymbol,
     yieldPrice,
@@ -166,8 +167,8 @@ export function EarnSummaryCard(props: EarnSummaryCardProps): JSX.Element {
           )}
         >
           <LiquiditySection
-            yieldPoolContract={yieldPoolContract}
-            principalPoolContract={principalPoolContract}
+            yieldPoolInfo={yieldPoolInfo}
+            principalPoolInfo={principalPoolInfo}
           />
         </div>
         <div
@@ -181,8 +182,8 @@ export function EarnSummaryCard(props: EarnSummaryCardProps): JSX.Element {
           )}
         >
           <LiquiditySection
-            yieldPoolContract={yieldPoolContract}
-            principalPoolContract={principalPoolContract}
+            yieldPoolInfo={yieldPoolInfo}
+            principalPoolInfo={principalPoolInfo}
           />
         </div>
         <div
@@ -252,18 +253,16 @@ export function EarnSummaryCard(props: EarnSummaryCardProps): JSX.Element {
 }
 
 interface LiquiditySectionProps {
-  yieldPoolContract: PoolContract;
-  principalPoolContract: PoolContract;
+  yieldPoolInfo: PoolInfo;
+  principalPoolInfo: PoolInfo;
 }
 
 function LiquiditySection({
-  yieldPoolContract,
-  principalPoolContract,
+  yieldPoolInfo,
+  principalPoolInfo,
 }: LiquiditySectionProps) {
-  const liquidity = useTotalFiatLiquidityForPool(yieldPoolContract);
-  const principalLiquidity = useTotalFiatLiquidityForPool(
-    principalPoolContract
-  );
+  const liquidity = useTotalFiatLiquidity(yieldPoolInfo);
+  const principalLiquidity = useTotalFiatLiquidity(principalPoolInfo);
   return (
     <div className={tw("flex", "flex-col")}>
       {liquidity && (

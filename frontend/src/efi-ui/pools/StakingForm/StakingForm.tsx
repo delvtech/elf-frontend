@@ -17,7 +17,7 @@ import { t } from "ttag";
 
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { findAssetIcon, findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
+import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 import { StakingConfirmationDrawer } from "efi-ui/pools/StakeTokensConfirmationDrawer/StakeTokensConfirmationDrawer";
 import { useJoinConvergentPool } from "efi-ui/pools/useJoinConvergentPool/useJoinConvergentPool";
 import { useJoinWeightedPool } from "efi-ui/pools/useJoinWeightedPool";
@@ -31,7 +31,7 @@ import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 import { formatBalance } from "efi/base/formatBalance";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { getCryptoSymbol2 } from "efi/crypto/getCryptoSymbol";
 import { getPoolContract } from "efi/pools/getPoolContract";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolContract } from "efi/pools/PoolContract";
@@ -302,6 +302,7 @@ export function StakingForm(props: StakingFormProps): ReactElement {
       <StakingConfirmationDrawer
         library={library}
         account={account}
+        poolInfo={poolInfo}
         baseAsset={baseAsset}
         termAsset={termAsset}
         baseAssetDecimals={baseAssetDecimals}
@@ -343,8 +344,8 @@ function useTokenInfoForTradeInput(
   const { data: ethBalance } = useEthBalance(library, account);
 
   const asset = getCryptoAssetForToken(tokenContract?.address);
-  const symbol = getCryptoSymbol(asset) as string;
-  const icon = findAssetIcon(asset);
+  const symbol = getCryptoSymbol2(asset);
+  const icon = findAssetIcon2(asset);
 
   // otherwise get values from token calls
   const poolBalance = useTokenPoolBalance(pool, tokenContract);
