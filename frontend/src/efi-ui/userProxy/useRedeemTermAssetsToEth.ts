@@ -13,7 +13,6 @@ import { flushPromises } from "efi/base/flush";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
 import { getTokenInfo } from "efi/tokenlists";
-import { getPermitVersion } from "efi/base/getPermitVersion";
 
 // list of shitty principal and yield token contracts whose names are messed up.  they change their
 // name after the constructor uses them to create their PERMIT_HASH's, which breaks permit calls.

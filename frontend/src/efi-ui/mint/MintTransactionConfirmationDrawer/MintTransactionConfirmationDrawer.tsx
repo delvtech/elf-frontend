@@ -1,4 +1,11 @@
-import { Fragment, ReactElement, useMemo, useState } from "react";
+import {
+  Fragment,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 import { Callout, Switch } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
@@ -24,7 +31,7 @@ import ContractAddresses from "efi/addresses";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { getCryptoSymbol2 } from "efi/crypto/getCryptoSymbol";
 import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
 import { getTokenInfo } from "efi/tokenlists";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
@@ -33,6 +40,7 @@ import {
   underlyingContractsByAddress,
 } from "efi/underlying/underlying";
 import { WalletApprovalInfo } from "efi/wallets/WalletApprovalInfo";
+import { TransactionError } from "efi-ui/contracts/TransactionError";
 
 interface MintTransactionConfirmationDrawerProps {
   account: string | null | undefined;
@@ -63,10 +71,11 @@ export function MintTransactionConfirmationDrawer({
   onClose,
 }: MintTransactionConfirmationDrawerProps): ReactElement {
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
+  const [loadingPermits, setLoadingPermits] = useState(false);
 
   const [includePermits, setIncludePermits] = useState(true);
 
-  const baseAssetSymbol = getCryptoSymbol(baseAsset);
+  const baseAssetSymbol = getCryptoSymbol2(baseAsset);
   const {
     interestToken: interestTokenAddress,
     unlockTimestamp: trancheUnlockTimestamp,
@@ -78,9 +87,13 @@ export function MintTransactionConfirmationDrawer({
   const amountInAsNumber = +(amountIn || 0);
   const numPrincipalTokens = useMintPreview(trancheInfo, amountInAsNumber);
 
+  const onError = useCallback((error: TransactionError) => {
+    setLoadingPermits(false);
+  }, []);
+
   const {
     mint,
-    mutationResult: { isLoading },
+    mutationResult: { isLoading, isError, isSuccess, reset },
   } = useMintTransaction(
     signer,
     account,
@@ -89,8 +102,29 @@ export function MintTransactionConfirmationDrawer({
     yieldTokenInfo,
     amountInAsNumber,
     includePermits,
-    onClose
+    onClose,
+    onError
   );
+
+  const onCloseDrawer = useCallback(() => {
+    setLoadingPermits(false);
+    reset();
+    onClose();
+  }, [onClose, reset]);
+
+  const onConfirmMint = useCallback(async () => {
+    setLoadingPermits(true);
+    try {
+      mint();
+    } catch (error) {
+      setLoadingPermits(false);
+    }
+  }, [mint]);
+  useEffect(() => {
+    if (isLoading || isError) {
+      setLoadingPermits(false);
+    }
+  }, [isError, isLoading]);
 
   const showPermitCallout = useShowPermitCallout(
     trancheInfo,
@@ -109,15 +143,15 @@ export function MintTransactionConfirmationDrawer({
   return (
     <TransactionDrawer
       buttonLabel={t`Mint`}
-      transactionPending={isLoading}
-      transactionFailed={false}
-      transactionSuccess={false}
+      transactionPending={isLoading || loadingPermits}
+      transactionFailed={isError}
+      transactionSuccess={isSuccess}
       walletApprovalInfos={walletApprovalInfos}
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={onCloseDrawer}
       account={account}
       library={library}
-      onConfirmTransaction={mint}
+      onConfirmTransaction={onConfirmMint}
       transactionDetails={
         <div className={tw("flex", "flex-col", "space-y-8")}>
           <SwapDetailsForm
