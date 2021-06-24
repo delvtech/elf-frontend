@@ -19,12 +19,12 @@ import {
 import { getUserProxy } from "efi-ui/mint/hooks/userProxy";
 import { useTokenApprovedForAmount } from "efi-ui/token/hooks/useTokenApprovedForAmount";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
-import ContractAddresses, { AddressesJson } from "efi/addresses";
+import ContractAddresses from "efi/addresses";
 import { EMPTY_ARRAY } from "efi/base/emptyArray";
 import { fetchPermitData, PermitCallData } from "efi/base/fetchPermitData";
+import { getPermitVersion } from "efi/base/getPermitVersion";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
-import { ChainId } from "efi/ethereum";
 import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
 import { makeMintCallArgs } from "efi/mint/makeMintCallArgs";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
@@ -339,18 +339,4 @@ async function fetchPermitDataMulti(
     (permit): permit is PermitCallData => !!permit
   );
   return permits;
-}
-
-// USDC is normally uses version '2'.  In development we are using a simple ERC20 for our USDC
-// contract so we keep it at verion '1'.
-
-function getPermitVersion(tokenAddress: string) {
-  const { usdcAddress } = ContractAddresses;
-  const { chainId } = AddressesJson;
-  if (chainId !== ChainId.MAINNET) {
-    return "1";
-  }
-
-  const version = tokenAddress === usdcAddress ? "2" : "1";
-  return version;
 }
