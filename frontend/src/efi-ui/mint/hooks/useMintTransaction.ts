@@ -285,8 +285,8 @@ async function getPermitCallData(
     }
 
     if (!balancerApprovedForYieldToken) {
-      let tokenName = await principalTokenContract.name();
-      if (shittyGoerliAddresses.includes(principalTokenContract.address)) {
+      let tokenName = await yieldTokenContract.name();
+      if (shittyGoerliAddresses.includes(yieldTokenContract.address)) {
         tokenName = "Element Yield Token ";
       }
       const nonceBN = await yieldTokenContract.nonces(account);
