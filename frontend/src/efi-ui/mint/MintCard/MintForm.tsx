@@ -13,19 +13,19 @@ import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoBalanceOf } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { useMintPreview } from "efi-ui/mint/hooks/useMintPreview";
 import { MintTransactionConfirmationDrawer } from "efi-ui/mint/MintTransactionConfirmationDrawer/MintTransactionConfirmationDrawer";
+import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { TokenAmountInput } from "efi-ui/token/TokenAmountInput/TokenAmountInput";
 import { TokenIcon } from "efi-ui/token/TokenIcon";
 import { useTrancheCanPerform } from "efi-ui/tranche/useTrancheCanPerform";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
 import { formatBalance } from "efi/base/formatBalance";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
+import { getCryptoDecimals2 } from "efi/crypto/getCryptoDecimals";
+import { getCryptoSymbol2 } from "efi/crypto/getCryptoSymbol";
 import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
 import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
-import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 
 interface MintFormProps {
   library: Web3Provider | undefined;
@@ -44,7 +44,7 @@ export function MintForm(props: MintFormProps): ReactElement | null {
   const canPerformMint = useTrancheCanPerform(trancheAddress, "mint");
 
   const baseAsset = getCryptoAssetForToken(underlying);
-  const baseAssetSymbol = getCryptoSymbol(baseAsset);
+  const baseAssetSymbol = getCryptoSymbol2(baseAsset);
   const BaseAssetIcon = findAssetIcon2(baseAsset);
   const vaultSymbol = getVaultSymbol(baseAsset) as string;
 
@@ -68,7 +68,7 @@ export function MintForm(props: MintFormProps): ReactElement | null {
 
   const amountIn = +(amountInString || 0);
 
-  const baseAssetDecimals = getCryptoDecimals(baseAsset);
+  const baseAssetDecimals = getCryptoDecimals2(baseAsset);
   const baseAssetBalanceOf = useCryptoBalanceOf(library, account, baseAsset);
 
   const activeBaseAssetDisplayBalance = formatBalance(

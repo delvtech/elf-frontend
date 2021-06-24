@@ -7,13 +7,7 @@ import {
 } from "efi/crypto/CryptoAsset";
 import { TokenMetadata } from "efi/tokenlists";
 
-export function getCryptoName(
-  asset: CryptoAsset | undefined
-): string | undefined {
-  if (!asset) {
-    return;
-  }
-
+export function getCryptoName(asset: CryptoAsset): string {
   const assetType = asset.type;
   switch (assetType) {
     case CryptoAssetType.ETHEREUM:
@@ -24,10 +18,12 @@ export function getCryptoName(
       if (tokenContract?.address) {
         return TokenMetadata[tokenContract.address].name;
       }
-      return;
+      break;
     }
     default:
       assertNever(assetType);
-      return;
   }
+
+  // should never happen
+  return "Ethereum";
 }

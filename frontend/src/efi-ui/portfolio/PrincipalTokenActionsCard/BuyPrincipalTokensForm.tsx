@@ -8,33 +8,33 @@ import { t } from "ttag";
 
 import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
 import tw from "efi-tailwindcss-classnames";
-import { SwapKind } from "efi/balancer/SwapKind";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
-import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
+import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoBalanceOf } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
+import { useCanPerformPool } from "efi-ui/pools/usePoolCanPerform/usePoolCanPerform";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { usePoolTotalSupply } from "efi-ui/pools/usePoolTotalSupply";
 import { useTokenYield } from "efi-ui/pools/useTokenYield";
 import { BuyPrincipalTokensTransactionConfirmationDrawer } from "efi-ui/swaps/BuyPrincipalTokensTransactionConfirmationDrawer/BuyPrincipalTokensTransactionConfirmationDrawer";
 import { TokenAmountInput } from "efi-ui/token/TokenAmountInput/TokenAmountInput";
+import { SwapKind } from "efi/balancer/SwapKind";
 import { formatBalance } from "efi/base/formatBalance";
 import { formatPercent } from "efi/base/formatPercent";
 import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { getCryptoDecimals2 } from "efi/crypto/getCryptoDecimals";
+import { getCryptoSymbol2 } from "efi/crypto/getCryptoSymbol";
 import { calcSwapOutGivenInCCPoolUNSAFE } from "efi/pools/calcPoolSwap";
 import {
-  getPrincipalPoolContractForTranche,
   getPoolInfoForPrincipalToken,
+  getPrincipalPoolContractForTranche,
 } from "efi/pools/ccpool";
 import { getPoolContract } from "efi/pools/getPoolContract";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { getTokenInfo } from "efi/tokenlists";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
-import { useCanPerformPool } from "efi-ui/pools/usePoolCanPerform/usePoolCanPerform";
 
 interface BuyPrincipalTokensFormProps {
   library: Web3Provider | undefined;
@@ -73,10 +73,10 @@ export function BuyPrincipalTokensForm(
 
   // base asset
   const baseAsset = getCryptoAssetForToken(underlying) as CryptoAsset;
-  const BaseAssetIcon = findAssetIcon(baseAsset);
-  const baseAssetSymbol = getCryptoSymbol(baseAsset);
+  const BaseAssetIcon = findAssetIcon2(baseAsset);
+  const baseAssetSymbol = getCryptoSymbol2(baseAsset);
   const baseAssetBalanceOf = useCryptoBalanceOf(library, account, baseAsset);
-  const baseAssetDecimals = getCryptoDecimals(baseAsset) as number;
+  const baseAssetDecimals = getCryptoDecimals2(baseAsset);
   const baseAssetBalanceLabel = formatBalance(
     baseAssetBalanceOf,
     baseAssetDecimals,

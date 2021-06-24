@@ -23,7 +23,6 @@ import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSma
 import ContractAddresses from "efi/addresses";
 import { EMPTY_ARRAY } from "efi/base/emptyArray";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
-import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
 import { makeMintCallArgs } from "efi/mint/makeMintCallArgs";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
@@ -32,6 +31,7 @@ import {
   underlyingContractsByAddress,
 } from "efi/underlying/underlying";
 import { getTokenAddressForUserProxy } from "efi/userProxy";
+import { getCryptoDecimals2 } from "efi/crypto/getCryptoDecimals";
 
 /**
  * Returns the number of Principal Tokens you'd get for minting into a tranche.
@@ -58,7 +58,7 @@ export function useMintTransaction(
 } {
   const { balancerVaultAddress, userProxyContractAddress } = ContractAddresses;
   const userProxy = getUserProxy(signer);
-  const baseAssetDecimals = getCryptoDecimals(baseAsset) ?? 18;
+  const baseAssetDecimals = getCryptoDecimals2(baseAsset);
   const amountInBigNumber = parseUnits(amountIn.toString(), baseAssetDecimals);
   const baseAssetContract = underlyingContractsByAddress[
     trancheInfo.extensions.underlying

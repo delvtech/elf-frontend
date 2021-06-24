@@ -23,7 +23,7 @@ import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/Transac
 import ContractAddresses from "efi/addresses";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
-import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
+import { getCryptoDecimals2 } from "efi/crypto/getCryptoDecimals";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
 import { getTokenInfo } from "efi/tokenlists";
@@ -174,7 +174,7 @@ function useShowPermitCallout(
   const yieldTokenContract =
     interestTokenContractsByAddress[yieldTokenInfo.address];
   const principalTokenContract = trancheContractsByAddress[trancheInfo.address];
-  const baseAssetDecimals = getCryptoDecimals(baseAsset) ?? 18;
+  const baseAssetDecimals = getCryptoDecimals2(baseAsset);
   const { decimals: principalTokenDecimals } = trancheInfo;
   const { decimals: yieldTokenDecimals } = yieldTokenInfo;
 
