@@ -26,7 +26,7 @@ const USDC_CRYPTO_ASSET: Erc20PermitCryptoAsset = {
 };
 
 const DAI_CRYPTO_ASSET: Erc20CryptoAsset = {
-  id: AddressesJson.addresses.usdcAddress,
+  id: AddressesJson.addresses.daiAddress,
   type: CryptoAssetType.ERC20,
   tokenContract: underlyingContractsByAddress[
     AddressesJson.addresses.daiAddress
