@@ -7,6 +7,7 @@ import { ChainId } from "efi/ethereum";
 
 const LOCAL_RPC_HOST = "http://127.0.0.1:8545";
 const ALCHEMY_GOERLI_KEY = process.env.REACT_APP_GOERLI_ALCHEMY_KEY as string;
+export const ALCHEMY_GOERLI_HTTP_URL = `https://eth-goerli.alchemyapi.io/v2/${ALCHEMY_GOERLI_KEY}`;
 export const localhostProvider = new providers.JsonRpcProvider(LOCAL_RPC_HOST);
 
 const web3 = createAlchemyWeb3(

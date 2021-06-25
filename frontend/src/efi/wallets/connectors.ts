@@ -1,10 +1,12 @@
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { InjectedConnector } from "@web3-react/injected-connector";
+import { LedgerConnector } from "@web3-react/ledger-connector";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import { t } from "ttag";
 
 import { ChainId, ChainNames, DEFAULT_CHAIN_IDS } from "efi/ethereum";
+import { ALCHEMY_GOERLI_HTTP_URL } from "efi/providers/providers";
 
 /**
  * The 'injected' connector refers to plugin-based wallets like MetaMask, which
@@ -37,6 +39,11 @@ injectedConnector.handleChainChanged = (chainId: string | number) => {
  */
 export const walletConnectConnector = new WalletConnectConnector({
   rpc: { [ChainId.LOCAL]: ChainNames[ChainId.LOCAL] },
+});
+
+export const ledgerConnector = new LedgerConnector({
+  chainId: ChainId.GOERLI,
+  url: ALCHEMY_GOERLI_HTTP_URL,
 });
 
 export function getConnectorName(
