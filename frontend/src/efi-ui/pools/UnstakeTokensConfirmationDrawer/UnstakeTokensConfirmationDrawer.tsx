@@ -5,7 +5,7 @@ import { TokenInfo } from "@uniswap/token-lists";
 import { PrincipalTokenInfo, YieldTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
-import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
+import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { UnstakeConfirmationForm } from "efi-ui/pools/UnstakeTokensConfirmationDrawer/UnstakeConfirmationForm";
 import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/TransactionDrawer";
 import { EMPTY_ARRAY } from "efi/base/emptyArray";
@@ -50,10 +50,10 @@ export function UnstakeConfirmationDrawer({
   const baseAsset = getCryptoAssetForToken(baseAssetInfo.address);
   const baseAssetSymbol = getCryptoSymbol2(baseAsset);
   const baseAssetSymbolLabel = getCryptoName(baseAsset);
-  const baseAssetIcon = findAssetIcon2(baseAsset);
+  const baseAssetIcon = findAssetIcon(baseAsset);
 
   const termAsset = getCryptoAssetForToken(termAssetInfo.address);
-  const termAssetIcon = findAssetIcon2(termAsset);
+  const termAssetIcon = findAssetIcon(termAsset);
 
   const vaultSymbol = getVaultSymbol(baseAsset);
   const { symbol: termAssetSymbol, label: termAssetSymbolLabel } =
