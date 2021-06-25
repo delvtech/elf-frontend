@@ -10,6 +10,8 @@ export function getVaultSymbol(
     vaultSymbol = "yvCurve-stETH";
   } else if (baseAsset?.type === CryptoAssetType.ERC20PERMIT) {
     vaultSymbol = "yvUSDC";
+  } else if (baseAsset?.type === CryptoAssetType.ERC20) {
+    vaultSymbol = "yvDAI";
   }
   return vaultSymbol;
 }

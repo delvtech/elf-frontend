@@ -25,6 +25,7 @@ const symbolOverrides: Record<number, Record<string, string>> = {
     "0x2c637c5142eE4F31A1a78Ad3DF012fc242F6CAe6": "eYyvUSDC",
     "0x8F28E7085882Ef6010a74Fa092C4eC519A0583B5": "eYyvUSDC",
     "0x51E7DF22DF4A391A5702D6a99a350cE3c55c02Ce": "eYyvUSDC",
+    "0x649b9a57cb8fbd01bE019bDBBed9768d2a457173": "eYyvDAI"
   },
   [HARDHAT_CHAIN_ID]: hardhatSymbolOverrides,
 };

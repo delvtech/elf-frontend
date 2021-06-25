@@ -8,6 +8,7 @@ export interface AddressesJsonFile {
     convergentPoolFactoryAddress: string;
     userProxyContractAddress: string;
     wethAddress: string;
+    daiAddress: string;
     usdcAddress: string;
   };
   safelist: string[];

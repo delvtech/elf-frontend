@@ -18,7 +18,7 @@ import { getTokenSymbolMulti } from "src/tokenlist/erc20";
 
 const GOERLI_CHAIN_ID = 5;
 const HARDHAT_CHAIN_ID = 31337;
-const symbolOverrides: Record<number, Record<string, string>> = {
+const trancheSymbolOverrides: Record<number, Record<string, string>> = {
   [GOERLI_CHAIN_ID]: {
     // these contracts have v1 vault symbols, but we want the v2 vaults on testnet
     "0x44eecA004b2612d131EDA7dA2b9d986E7fED562e": "ePyvCurve-stETH",
@@ -26,6 +26,7 @@ const symbolOverrides: Record<number, Record<string, string>> = {
     "0x80272c960b862B4d6542CDB7338Ad1f727E0D18d": "ePyvUSDC",
     "0x8Bd721BB84a30c0078aF4a5a732c7169C5BE6eDB": "ePyvUSDC",
     "0x7D64aD2b83a62C0d02514a43E5B4582C671E5F72": "ePyvUSDC",
+    "0x6866dFc9A60e9dba922668b9b27931DCaCDF645A": "ePyvDAI",
   },
   [HARDHAT_CHAIN_ID]: hardhatSymbolOverrides,
 };
@@ -128,7 +129,7 @@ export async function getPrincipalTokens(
 async function getPrincipalTokenSymbols(chainId: number, tranches: Tranche[]) {
   const trancheAddresses = tranches.map((tranche) => tranche.address);
   const trancheSymbols = await getTokenSymbolMulti(tranches);
-  const overrides = symbolOverrides[chainId] || {};
+  const overrides = trancheSymbolOverrides[chainId] || {};
   const symbols = zip(trancheAddresses, trancheSymbols).map((zipped) => {
     const [address, symbol] = zipped as [string, string];
     if (overrides[address]) {

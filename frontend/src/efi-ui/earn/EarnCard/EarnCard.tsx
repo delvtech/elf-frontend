@@ -1,6 +1,6 @@
 import { CSSProperties, ReactElement, useCallback, useState } from "react";
 
-import { Card, Collapse, Elevation } from "@blueprintjs/core";
+import { Card, Classes, Collapse, Elevation } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { differenceInDays } from "date-fns";
 import { USDC } from "elf-contracts/types/USDC";
@@ -35,6 +35,8 @@ import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 import { Signer } from "ethers";
 import { EarnSummaryCard } from "./EarnSummaryCard";
 import { getYearnVaultAPY } from "efi-yearn/fetchYearnVaults";
+import { ERC20 } from "elf-contracts/types";
+import classNames from "classnames";
 
 interface EarnCardProps {
   signer: Signer | undefined;
@@ -82,11 +84,7 @@ export function EarnCard(props: EarnCardProps): ReactElement | null {
   const yieldPoolContract = yieldPoolContractsByAddress[yieldPoolInfo.address];
   const baseAssetContract = underlyingContractsByAddress[
     principalTokenInfo.extensions.underlying
-  ] as WETH | USDC;
-  const principalTokenContract =
-    trancheContractsByAddress[principalTokenInfo.address];
-  const yieldTokenContract =
-    interestTokenContractsByAddress[yieldPoolInfo.extensions.interestToken];
+  ] as WETH | USDC | ERC20;
 
   // get static display information
   const { createdAtTimestamp: trancheCreatedAt, unlockTimestamp } =
@@ -103,11 +101,11 @@ export function EarnCard(props: EarnCardProps): ReactElement | null {
   // get dynamic pool information
   const principalPrice = usePoolSpotPrice(
     principalPoolContract,
-    principalTokenContract.address
+    principalPoolInfo.extensions.underlying
   )?.toFixed(4);
   const yieldPrice = usePoolSpotPrice(
     yieldPoolContract,
-    yieldTokenContract.address
+    yieldPoolInfo.extensions.underlying
   )?.toFixed(4);
   const fees = useFeeVolumeForPool(yieldPoolContract) ?? 0;
   const tvl = useTotalValueLockedForTranche(
@@ -150,10 +148,14 @@ export function EarnCard(props: EarnCardProps): ReactElement | null {
     return (
       <Card
         style={poolCardStyle}
-        interactive={!isExpanded}
-        elevation={isExpanded ? Elevation.THREE : Elevation.ZERO}
-        className={tw("p-0")}
-      ></Card>
+        interactive={false}
+        elevation={Elevation.ZERO}
+        className={classNames(tw("p-0", "w-full"))}
+      >
+        <div
+          className={classNames(tw("p-0", "w-full", "h-24"), Classes.SKELETON)}
+        />
+      </Card>
     );
   }
 

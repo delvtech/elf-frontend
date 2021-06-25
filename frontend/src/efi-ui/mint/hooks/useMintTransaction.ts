@@ -211,6 +211,8 @@ const shittyGoerliAddresses: string[] = [
   "0xBf4B5cB5ca49B1eF6B02615a94980723f6484899",
   "0x80272c960b862B4d6542CDB7338Ad1f727E0D18d",
   "0x2c637c5142eE4F31A1a78Ad3DF012fc242F6CAe6",
+  "0x6866dFc9A60e9dba922668b9b27931DCaCDF645A",
+  "0x649b9a57cb8fbd01bE019bDBBed9768d2a457173",
 ];
 async function getPermitCallData(
   signer: Signer | undefined,

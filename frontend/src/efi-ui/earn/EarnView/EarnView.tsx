@@ -57,10 +57,10 @@ export function EarnView(props: EarnViewProps): ReactElement {
         />
         <div style={earnViewStyle}>
           <ViewTitle
-            title={t`Stay liquid with principal and yield tokens.`}
+            title={t`Capital efficiency for your yield positions.`}
             titleTag={<Tag minimal intent={Intent.WARNING}>{t`alpha`}</Tag>}
             className={tw("text-center")}
-            subtitle={t`Gain capital efficiency on your existing positions, boost your APY by staking, and view current APYs across all available terms.`}
+            subtitle={t`Mint Principal and Yield Tokens from your base asset, boost your APY by providing liquidity and view current APYs across all available terms.`}
           />
         </div>
         <div

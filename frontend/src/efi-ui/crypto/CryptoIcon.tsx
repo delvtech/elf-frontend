@@ -1,5 +1,6 @@
 import { Tag } from "@blueprintjs/core";
 import {
+  DaiIcon,
   EthIcon,
   IconProps,
   TokenIcon,
@@ -14,6 +15,7 @@ import { ReactElement } from "react";
 const CryptoIconSvg: Record<string, TokenIcon> = {
   [ContractAddresses.usdcAddress]: UsdcIcon,
   [ContractAddresses.wethAddress]: WethIcon,
+  [ContractAddresses.daiAddress]: DaiIcon,
 };
 
 /**

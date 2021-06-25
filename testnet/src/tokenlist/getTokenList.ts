@@ -25,13 +25,19 @@ export async function getTokenList(
       trancheFactoryAddress,
       wethAddress,
       usdcAddress,
+      daiAddress,
       convergentPoolFactoryAddress,
       weightedPoolFactoryAddress,
     },
     safelist,
   } = addressesJson;
 
-  const baseAssetsList = await getBaseAssets(wethAddress, usdcAddress, chainId);
+  const baseAssetsList = await getBaseAssets(
+    wethAddress,
+    usdcAddress,
+    daiAddress,
+    chainId
+  );
   const { tranches, principalTokensList } = await getPrincipalTokens(
     trancheFactoryAddress,
     chainId,
@@ -51,6 +57,7 @@ export async function getTokenList(
   const weightedPoolsList = await getWeightedPools(
     wethAddress,
     usdcAddress,
+    daiAddress,
     balancerVaultAddress,
     weightedPoolFactoryAddress,
     chainId,

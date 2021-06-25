@@ -12,11 +12,14 @@ import {
 
 export const provider = hre.ethers.provider;
 export async function getBaseAssets(
-  wethAddress: string,
-  usdcAddress: string,
+  wethAddress: string | undefined,
+  usdcAddress: string | undefined,
+  daiAddress: string | undefined,
   chainId: number
 ) {
-  const baseAssetAddresses = [wethAddress, usdcAddress];
+  const baseAssetAddresses = [wethAddress, usdcAddress, daiAddress].filter(
+    (address): address is string => !!address
+  );
   const baseAssets = baseAssetAddresses.map((address) =>
     ERC20__factory.connect(address, provider)
   );

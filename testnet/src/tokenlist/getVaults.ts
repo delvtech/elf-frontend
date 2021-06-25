@@ -21,6 +21,7 @@ const VaultSymbolOverrides: Record<number, Record<string, string>> = {
     // these contracts have v1 vault symbols, but we want the v2 vaults on testnet
     "0xdD82595F5eB0e7477D7432B24E44be7c0252bbf1": "yvCurve-stETH",
     "0x23c3C6C06d7684207fB09076914A15B16aba02c5": "yvUSDC",
+    "0x851A97B6520c582dAB33F722Bd9C5939Ea349546": "yvDAI",
   },
 };
 export async function getVaults(vaultAddresses: string[], chainId: number) {

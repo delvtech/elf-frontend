@@ -12,6 +12,7 @@ export const provider = hre.ethers.provider;
 export async function getWeightedPools(
   wethAddress: string,
   usdcAddress: string,
+  daiAddress: string,
   vaultAddress: string,
   weightedPoolFactoryAddress: string,
   chainId: number,
@@ -53,7 +54,7 @@ export async function getWeightedPools(
       const [pool, poolId] = zipped as [WeightedPool, string];
       const [tokenAddresses] = await vault.getPoolTokens(poolId);
       return tokenAddresses.find((address) =>
-        [wethAddress, usdcAddress].includes(address)
+        [wethAddress, usdcAddress, daiAddress].includes(address)
       ) as string;
     })
   );
@@ -62,7 +63,7 @@ export async function getWeightedPools(
       const [pool, poolId] = zipped as [WeightedPool, string];
       const [tokenAddresses] = await vault.getPoolTokens(poolId);
       const interestToken = tokenAddresses.find(
-        (address) => ![wethAddress, usdcAddress].includes(address)
+        (address) => ![wethAddress, usdcAddress, daiAddress].includes(address)
       ) as string;
       return interestToken;
     })

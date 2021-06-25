@@ -3,11 +3,14 @@ import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegist
 import {
   CryptoAsset,
   CryptoAssetType,
+  Erc20CryptoAsset,
   Erc20PermitCryptoAsset,
   ETHEREUM_CRYPTO_ASSET,
 } from "efi/crypto/CryptoAsset";
 import { yieldTokenInfos } from "efi/interestToken/interestToken";
 import { principalTokenInfos } from "efi/tranche/tranches";
+import { underlyingContractsByAddress } from "efi/underlying/underlying";
+import { ERC20, ERC20Permit } from "elf-contracts/types";
 import { InterestToken__factory } from "elf-contracts/types/factories/InterestToken__factory";
 import { Tranche__factory } from "elf-contracts/types/factories/Tranche__factory";
 import { InterestToken } from "elf-contracts/types/InterestToken";
@@ -17,10 +20,17 @@ import keyBy from "lodash.keyby";
 const USDC_CRYPTO_ASSET: Erc20PermitCryptoAsset = {
   id: AddressesJson.addresses.usdcAddress,
   type: CryptoAssetType.ERC20PERMIT,
-  tokenContract: getSmartContractFromRegistry(
-    AddressesJson.addresses.usdcAddress,
-    InterestToken__factory.connect
-  ) as InterestToken,
+  tokenContract: underlyingContractsByAddress[
+    AddressesJson.addresses.usdcAddress
+  ] as ERC20Permit,
+};
+
+const DAI_CRYPTO_ASSET: Erc20CryptoAsset = {
+  id: AddressesJson.addresses.usdcAddress,
+  type: CryptoAssetType.ERC20,
+  tokenContract: underlyingContractsByAddress[
+    AddressesJson.addresses.daiAddress
+  ] as ERC20,
 };
 
 const baseAssetCryptoAssets: Record<string, CryptoAsset> = {
@@ -28,6 +38,7 @@ const baseAssetCryptoAssets: Record<string, CryptoAsset> = {
   // interact with weth
   [AddressesJson.addresses.wethAddress]: ETHEREUM_CRYPTO_ASSET,
   [AddressesJson.addresses.usdcAddress]: USDC_CRYPTO_ASSET,
+  [AddressesJson.addresses.daiAddress]: DAI_CRYPTO_ASSET,
 };
 
 const principalTokenCryptoAssets: Erc20PermitCryptoAsset[] =

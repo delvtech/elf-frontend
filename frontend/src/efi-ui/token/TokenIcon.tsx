@@ -4,6 +4,7 @@ import elementIconDark from "efi-static-assets/logos/svg/ELEMENT-dark.svg";
 import elementIcon from "efi-static-assets/logos/svg/ELEMENT-light.svg";
 import ethIconGrey from "efi-static-assets/logos/svg/ETH-grey.svg";
 import usdcIcon from "efi-static-assets/logos/svg/USDC.svg";
+import daiIcon from "efi-static-assets/logos/svg/DAI.svg";
 import wethIcon from "efi-static-assets/logos/svg/WETH.svg";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 
@@ -60,6 +61,23 @@ export function EthIcon({
   );
 }
 
+export function DaiIcon({
+  height,
+  width,
+  className,
+  style,
+}: IconProps): ReactElement {
+  return (
+    <SvgIcon
+      alt={"dai"}
+      className={className}
+      style={style}
+      src={daiIcon}
+      height={height}
+      width={width}
+    />
+  );
+}
 export function UsdcIcon({
   height,
   width,

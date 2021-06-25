@@ -23,6 +23,7 @@ const symbolOverrides: Record<number, Record<string, string>> = {
     // want the v2 vaults on testnet
     "0x6F643Ba6894D8C50c476A3539e1D1690B2194018": "eyvCurve-stETH",
     "0x814C447a9F58A2b823504Fe2775bA48c843925B6": "eyvUSDC",
+    "0x8dc82c95B8901Db35390Aa4096B643d7724F278D": "eyvDAI",
   },
 };
 export async function getAssetProxies(
