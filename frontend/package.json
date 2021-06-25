@@ -124,6 +124,10 @@
     "prettier:check": "prettier --check src/**/*.ts{,x}",
     "start": "react-scripts start",
     "start:dev": "bash ./scripts/start.sh",
+    "start:dev-testnet-app": "npm run start:dev testnet app",
+    "start:dev-testnet-save-app": "PORT=3001 npm run start:dev testnet save",
+    "start:dev-goerli-app": "npm run start:dev goerli app",
+    "start:dev-goerli-save-app": "PORT=3001 npm run start:dev goerli save",
     "test": "react-scripts test",
     "test:coverage": "npm run test -- --coverage --watchAll=false",
     "update:language": "bash ./scripts/update-language.sh"

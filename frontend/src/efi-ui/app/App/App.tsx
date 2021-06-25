@@ -10,7 +10,6 @@ import { t } from "ttag";
 
 import { tw } from "efi-tailwindcss-classnames";
 import { EarnView } from "efi-ui/earn/EarnView/EarnView";
-import { MainNavigation } from "efi-ui/app/navigation/MainNavigation/MainNavigation";
 import { Navigation } from "efi-ui/app/navigation/navigation";
 import { PoolsView } from "efi-ui/pools/PoolsView/PoolsView";
 import { PoolView } from "efi-ui/pools/PoolView/PoolView";
@@ -22,33 +21,20 @@ import { useSyncWithInjectedEthereum } from "efi-ui/wallets/hooks/useSyncWithInj
 
 import styles from "./App.module.css";
 import { useToastWrongChain } from "efi-ui/provider/useBlockFromTag/useToastWrongChain";
+import { TopbarNavigation } from "efi-ui/app/navigation/TopbarNavigation/TopbarNavigation";
+import { getConnectorName } from "efi/wallets/connectors";
+import { NavigationMenuButton } from "efi-ui/app/navigation/EarnHamburgerButton/EarnHamburgerButton";
 
 FocusStyleManager.onlyShowFocusOnTabs();
-
-const contentClassName = tw(
-  "flex-1",
-  "w-full",
-  "h-full",
-  "lg:h-full",
-  "lg:w-auto",
-  "lg:pt-0",
-  "overflow-hidden"
-);
 
 interface AppProps {}
 
 const App: FC<AppProps> = () => {
-  const { active, chainId } = useWeb3React<Web3Provider>();
+  const { active, account, chainId, deactivate, connector, library } =
+    useWeb3React<Web3Provider>();
   const onMainnet = active && chainId === 1;
 
   const { isDarkMode, darkModeClassName } = useDarkMode();
-
-  const appClassName = classNames(
-    styles.appBackground,
-    { [styles.appBackgroundDark]: isDarkMode },
-    darkModeClassName,
-    tw("flex", "flex-col", "lg:flex-row", "w-full", "h-full")
-  );
 
   // Do these at the top of the app in one place so we don't have multiple
   // callers trying to set event handlers.
@@ -59,12 +45,28 @@ const App: FC<AppProps> = () => {
 
   return (
     <Fragment>
-      <div className={appClassName}>
+      <div
+        className={classNames(
+          styles.appBackground,
+          { [styles.appBackgroundDark]: isDarkMode },
+          darkModeClassName,
+          tw("flex", "flex-col", "w-full", "h-full", "overflow-hidden")
+        )}
+      >
         <LocationProvider>
-          <MainNavigation />
+          <TopbarNavigation
+            account={account}
+            active={active}
+            chainId={chainId}
+            connectorName={getConnectorName(connector, library)}
+            deactivate={deactivate}
+            hamburgerButton={<NavigationMenuButton />}
+          />
         </LocationProvider>
 
-        <Router className={contentClassName}>
+        <Router
+          className={tw("flex", "flex-1", "w-full", "h-full", "overflow-auto")}
+        >
           <Redirect noThrow from="/" to={Navigation.EARN} />
 
           <PortfolioView path={Navigation.PORTFOLIO} />

@@ -1,4 +1,4 @@
-import React, { Fragment, ReactElement, useState } from "react";
+import { Fragment, ReactElement, useState } from "react";
 import { Helmet } from "react-helmet";
 
 import { Web3Provider } from "@ethersproject/providers";
@@ -11,18 +11,12 @@ import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { PoolsTable } from "efi-ui/pools/PoolsTable/PoolsTable";
 import { useSigner } from "efi-ui/provider/useBlockFromTag/useSigner/useSigner";
 import { Tab, Tabs } from "@blueprintjs/core";
-import { TopNavigation } from "efi-ui/app/navigation/TopNavigation/TopNavigation";
 
 type TermToken = "principal" | "yield";
 interface PoolsViewProps extends RouteComponentProps {}
 
 export function PoolsView(props: PoolsViewProps): ReactElement {
-  const {
-    library,
-    account,
-    chainId,
-    active: walletConnectionActive,
-  } = useWeb3React<Web3Provider>();
+  const { library, account } = useWeb3React<Web3Provider>();
   const signer = useSigner(account, library);
 
   const [activeTab, setActiveTab] = useState<TermToken>("principal");
@@ -44,20 +38,15 @@ export function PoolsView(props: PoolsViewProps): ReactElement {
         className={tw(
           "flex",
           "flex-col",
-          "p-12",
-          "pt-24",
-          "lg:pt-12",
+          "flex-1",
+          "w-full",
           "h-full",
           "space-y-12",
+          "pb-12",
           "items-center",
-          "overflow-scroll"
+          "overflow-auto"
         )}
       >
-        <TopNavigation
-          account={account}
-          chainId={chainId}
-          walletConnectionActive={walletConnectionActive}
-        />
         <ViewTitle
           title={title}
           subtitle={subtitle}

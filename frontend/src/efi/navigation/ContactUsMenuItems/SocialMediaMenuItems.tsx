@@ -22,6 +22,7 @@ export function SocialMediaMenuItems(): ReactElement {
             style={{
               height: 30,
               width: 30,
+              marginRight: 4,
             }}
           />
         }

@@ -13,7 +13,6 @@ import { useWeb3React } from "@web3-react/core";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { TopNavigation } from "efi-ui/app/navigation/TopNavigation/TopNavigation";
 import { EarnCard } from "efi-ui/earn/EarnCard/EarnCard";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { useSigner } from "efi-ui/provider/useBlockFromTag/useSigner/useSigner";
@@ -22,12 +21,7 @@ import { openPrincipalTokenInfos } from "efi/tranche/tranches";
 interface EarnViewProps extends RouteComponentProps {}
 
 export function EarnView(props: EarnViewProps): ReactElement {
-  const {
-    account,
-    chainId,
-    active: walletConnectionActive,
-    library,
-  } = useWeb3React<Web3Provider>();
+  const { account, library } = useWeb3React<Web3Provider>();
 
   const signer = useSigner(account, library);
   const [expandedPoolIndex, setExpandedPoolIndex] = useState(-1);
@@ -41,20 +35,13 @@ export function EarnView(props: EarnViewProps): ReactElement {
         className={tw(
           "flex",
           "flex-col",
-          "p-12",
-          "pt-24",
-          "lg:pt-12",
+          "w-full",
           "h-full",
           "space-y-12",
           "items-center",
           "overflow-scroll"
         )}
       >
-        <TopNavigation
-          account={account}
-          chainId={chainId}
-          walletConnectionActive={walletConnectionActive}
-        />
         <div style={earnViewStyle}>
           <ViewTitle
             title={t`Capital efficiency for your yield positions.`}

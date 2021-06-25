@@ -1,31 +1,24 @@
-import { ReactElement, useCallback, useState } from "react";
+import { ReactElement } from "react";
 
 import {
   Button,
-  Colors,
-  Icon,
-  Intent,
-  Navbar,
-  NavbarGroup,
+  Divider,
+  Spinner,
+  SpinnerSize,
   Tab,
   Tabs,
 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
-import { Popover2, Tooltip2 } from "@blueprintjs/popover2";
 import { t } from "ttag";
 
 import logoDark from "efi-static-assets/logos/svg/logo--dark.svg";
 import logo from "efi-static-assets/logos/svg/logo--light.svg";
 import tw from "efi-tailwindcss-classnames";
-import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
+import { useNavigation } from "efi-ui/app/navigation/hooks/useTab";
 import { Navigation } from "efi-ui/app/navigation/navigation";
-import { DarkModeSwitch } from "efi-ui/prefs/DarkModeSwitch/DarkModeSwitch";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
-import { WalletJazzicon } from "efi-ui/wallets/WalletJazzicon/WalletJazzicon";
-import { formatChainName } from "efi/crypto/formatChainName";
-import { ChainId, isMainnet } from "efi/ethereum";
-import { formatWalletAddress } from "efi/wallets/formatWalletAddress";
+import { usePendingTransactionPref } from "efi-ui/transactions/usePendingTransactionPref/usePendingTransactionPref";
+import { ConnectWalletButton2 } from "efi-ui/wallets/ConnectWalletButton/ConnectWalletButton2";
 
 interface TopbarNavigationProps {
   chainId: number | undefined;
@@ -33,159 +26,72 @@ interface TopbarNavigationProps {
   active: boolean;
   connectorName: string | undefined;
   deactivate: () => void;
-  isDarkMode: boolean;
-  activeTab: Navigation;
-  changeTab: (tabId: Navigation) => void;
+  hamburgerButton: ReactElement;
 }
-const tabStyle = {
-  paddingRight: 64,
-  paddingLeft: 64,
-  paddingTop: 24,
-  paddingBottom: 24,
-};
 
-const ChainColor: Record<number, string> = {
-  [ChainId.GOERLI]: Colors.BLUE4,
-  [ChainId.MAINNET]: Colors.GREEN4,
-  [ChainId.LOCAL]: Colors.WHITE,
-};
 export function TopbarNavigation({
-  activeTab,
-  changeTab,
   account,
-  active,
+  active: walletConnectionActive,
   chainId,
+  hamburgerButton,
 }: TopbarNavigationProps): ReactElement {
-  const { isDarkMode } = useDarkMode();
-  const [isWalletDialogOpen, setWalletDialogOpen] = useState(false);
-  const mainnetDanger =
-    !!chainId && isMainnet(chainId) && process.env.NODE_ENV !== "production";
-
-  let walletButtonIntent: Intent = Intent.NONE;
-  if (!account) {
-    walletButtonIntent = Intent.WARNING;
-  } else if (mainnetDanger) {
-    walletButtonIntent = Intent.DANGER;
-  }
-  const connectionStatusColor =
-    active && !!chainId ? ChainColor[chainId] : Colors.RED4;
-  const onCloseWalletDialog = useCallback(() => setWalletDialogOpen(false), []);
-  const onOpenWalletDialog = useCallback(() => setWalletDialogOpen(true), []);
+  const { activeTab, changeTab } = useNavigation();
+  const { isDarkMode, setDarkModeOff, setDarkModeOn } = useDarkMode();
+  const { transactionHash } = usePendingTransactionPref();
+  const hasPendingTransaction = !!transactionHash;
 
   return (
-    <div
-      className={tw(
-        "lg:hidden",
-        "h-16",
-        "flex",
-        "flex-shrink-0",
-        "fixed",
-        "w-full",
-        "z-20"
-      )}
-    >
-      <Navbar className={tw("flex", "justify-between")}>
-        <NavbarGroup>
-          <img
-            style={{
-              height: 32, // don't use tailwind here since we want fixed height and rem is dynamic
-            }}
-            src={isDarkMode ? logoDark : logo}
-            alt={t`Element Finance`}
-          />
-        </NavbarGroup>
-        <NavbarGroup>
-          {!account ? (
-            <div>
-              <Button
-                minimal={!mainnetDanger}
-                fill
-                intent={walletButtonIntent}
-                onClick={onOpenWalletDialog}
+    <div className={tw("flex", "w-full", "justify-between", "p-8")}>
+      <div className={tw("flex", "space-x-12", "items-end", "justify-between")}>
+        <img
+          style={{
+            height: 48, // don't use tailwind here since we want fixed height and rem is dynamic
+          }}
+          src={isDarkMode ? logoDark : logo}
+          alt={"Element Finance"}
+        />
+        <Tabs
+          id="primary-nav"
+          large
+          onChange={changeTab}
+          selectedTabId={activeTab}
+          className={tw("w-full")}
+        >
+          <Tab id={Navigation.EARN} title={<span>{t`Earn`}</span>} />
+          <Divider />
+          <Tab id={Navigation.TRADE} title={<span>{t`Trade`}</span>} />
+          <Divider />
+          <Tab
+            id={Navigation.PORTFOLIO}
+            title={
+              <div
+                className={tw("flex", "space-x-2", "items-center", "h-full")}
               >
-                <span className={tw("text-center")}>
-                  {t`Connect wallet to begin`}
-                </span>
-              </Button>
-            </div>
-          ) : (
-            <Tooltip2
-              inheritDarkTheme={false}
-              content={
-                <div className={tw("flex", "space-x-4", "items-center")}>
-                  <LabeledText
-                    className={tw("text-center")}
-                    text={
-                      <span>
-                        <Icon
-                          className={tw("pr-2")}
-                          icon={IconNames.DOT}
-                          color={connectionStatusColor}
-                        />
-                        {formatWalletAddress(account)}
-                      </span>
-                    }
-                    label={
-                      <span className={tw("text-gray-500")}>
-                        {formatChainName(active, chainId)}
-                      </span>
-                    }
-                  />
-                </div>
-              }
-            >
-              <Button
-                minimal={!mainnetDanger}
-                icon={<WalletJazzicon size={28} account={account} />}
-                fill
-                intent={walletButtonIntent}
-                onClick={onOpenWalletDialog}
-              >
-                {formatWalletAddress(account)}
-              </Button>
-            </Tooltip2>
-          )}
-        </NavbarGroup>
-        <NavbarGroup>
-          <DarkModeSwitch />
-          <Popover2
-            content={
-              <Tabs
-                large
-                vertical
-                id="primary-nav-mobile"
-                selectedTabId={activeTab}
-                onChange={changeTab}
-              >
-                <Tab
-                  id={Navigation.EARN}
-                  className={tw("text-center")}
-                  style={tabStyle}
-                  title={t`Earn`}
-                />
-                <Tab
-                  id={Navigation.TRADE}
-                  className={tw("text-center")}
-                  style={tabStyle}
-                  title={t`Trade`}
-                />
-                <Tab
-                  id={Navigation.PORTFOLIO}
-                  className={tw("text-center")}
-                  style={tabStyle}
-                  title={t`Portfolio`}
-                />
-              </Tabs>
+                <span
+                  className={tw("flex", "w-full", "justify-between")}
+                >{t`Portfolio`}</span>
+                {hasPendingTransaction ? (
+                  <Spinner size={SpinnerSize.SMALL} />
+                ) : null}
+              </div>
             }
-          >
-            <Button large minimal icon={IconNames.MENU}></Button>
-          </Popover2>
-        </NavbarGroup>
-      </Navbar>
-      <ConnectWalletDialog
-        isOpen={isWalletDialogOpen}
-        onClose={onCloseWalletDialog}
-      />
+          />
+        </Tabs>
+      </div>
+      <div className={tw("flex", "flex-1", "space-x-4", "justify-end")}>
+        <Button
+          minimal
+          className={tw("px-6")}
+          icon={isDarkMode ? IconNames.FLASH : IconNames.MOON}
+          onClick={isDarkMode ? setDarkModeOff : setDarkModeOn}
+        />
+        <ConnectWalletButton2
+          account={account}
+          chainId={chainId}
+          walletConnectionActive={walletConnectionActive}
+        />
+        {hamburgerButton}
+      </div>
     </div>
   );
 }

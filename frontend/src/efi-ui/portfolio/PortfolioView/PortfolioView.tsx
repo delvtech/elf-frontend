@@ -16,7 +16,6 @@ import { usePortfolioTabs } from "efi-ui/portfolio/PortfolioTabs/usePortfolioTab
 import { formatWalletAddress } from "efi/wallets/formatWalletAddress";
 
 import styles from "./styles.module.css";
-import { TopNavigation } from "efi-ui/app/navigation/TopNavigation/TopNavigation";
 
 interface PortfolioViewProps extends RouteComponentProps {}
 
@@ -59,26 +58,12 @@ export function PortfolioView(props: PortfolioViewProps): ReactElement {
       </Helmet>
       <div
         data-testid="portfolio-view"
-        className={tw(
-          "flex",
-          "p-12",
-          "pt-32",
-          "lg:pt-12",
-          "h-full",
-          "space-x-12",
-          "items-center",
-          "overflow-scroll"
-        )}
+        className={tw("flex", "w-full", "h-full", "space-x-12", "items-center")}
       >
         {/* Main content */}
         <div
           className={tw("flex", "flex-col", "h-full", "flex-1", "items-center")}
         >
-          <TopNavigation
-            account={account}
-            chainId={chainId}
-            walletConnectionActive={walletConnectionActive}
-          />
           <div
             className={tw(
               "flex",

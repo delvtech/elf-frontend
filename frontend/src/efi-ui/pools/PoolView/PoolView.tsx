@@ -11,19 +11,13 @@ import { getPoolInfo } from "efi/pools/getPoolInfo";
 
 import { PoolViewHeader } from "./PoolViewHeader";
 import { PoolViewTitle } from "./PoolViewTitle";
-import { TopNavigation } from "efi-ui/app/navigation/TopNavigation/TopNavigation";
 
 interface PoolViewProps extends RouteComponentProps {
   poolAddress?: string;
 }
 
 export function PoolView({ poolAddress }: PoolViewProps): ReactElement {
-  const {
-    account,
-    library,
-    chainId,
-    active: walletConnectionActive,
-  } = useWeb3React<Web3Provider>();
+  const { account, library } = useWeb3React<Web3Provider>();
   const signer = useSigner(account, library);
   const poolInfo = getPoolInfo(poolAddress as string);
 
@@ -35,21 +29,17 @@ export function PoolView({ poolAddress }: PoolViewProps): ReactElement {
         className={tw(
           "flex",
           "flex-col",
-          "p-12",
+          "px-12",
+          "pb-12",
           "h-full",
           "w-full",
           "space-y-8",
-          "overflow-scroll"
+          "overflow-auto"
         )}
       >
         {/* page title */}
         <div className={tw("flex", "justify-between")}>
           <PoolViewHeader poolInfo={poolInfo} />
-          <TopNavigation
-            account={account}
-            chainId={chainId}
-            walletConnectionActive={walletConnectionActive}
-          />
         </div>
         <div className={tw("flex", "flex-col", "justify-between")}>
           <PoolDetails
