@@ -1,6 +1,6 @@
 import React, { ReactElement } from "react";
 
-import { Provider, Web3Provider } from "@ethersproject/providers";
+import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { InterestToken } from "elf-contracts/types/InterestToken";
 import { t } from "ttag";
@@ -16,7 +16,6 @@ import { interestTokenContracts } from "efi/interestToken/interestToken";
 interface YieldTokenPortfolioProps {
   chainId: number | undefined;
   library: Web3Provider | undefined;
-  provider?: Provider | undefined;
   connector: AbstractConnector | undefined;
   walletConnectionActive: boolean;
   account: string | null | undefined;
@@ -29,13 +28,8 @@ export function YieldTokenPortfolio({
   connector,
   walletConnectionActive,
   account,
-  provider,
 }: YieldTokenPortfolioProps): ReactElement {
-  const { yieldTokensWithBalance } = useYieldTokenTab(
-    library,
-    account,
-    provider
-  );
+  const { yieldTokensWithBalance } = useYieldTokenTab(library, account);
   const hasInterestTokens = yieldTokensWithBalance?.length;
 
   let nonIdealStateContent = null;
@@ -83,27 +77,18 @@ export function YieldTokenPortfolio({
 
 function useYieldTokenTab(
   library: Web3Provider | undefined,
-  account: string | null | undefined,
-  provider?: Provider
+  account: string | null | undefined
 ) {
   const yieldTokensWithBalanceResults = useTokensWithBalance(
     account,
-    interestTokenContracts as unknown as ERC20Shim[],
-    provider
+    interestTokenContracts as unknown as ERC20Shim[]
   );
 
   const yieldTokensWithBalance = yieldTokensWithBalanceResults.map(
     ({ token }) => token as unknown as InterestToken
   );
 
-  // const totalFiatBalanceAllYieldTokens = useTotalFiatBalance(
-  //   library,
-  //   account,
-  //   yieldTokensWithBalance
-  // );
-
   return {
     yieldTokensWithBalance,
-    // totalFiatBalanceAllYieldTokens,
   };
 }

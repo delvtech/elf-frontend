@@ -9,7 +9,7 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
+import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoBalanceOf } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { useMintPreview } from "efi-ui/mint/hooks/useMintPreview";
 import { MintTransactionConfirmationDrawer } from "efi-ui/mint/MintTransactionConfirmationDrawer/MintTransactionConfirmationDrawer";
@@ -45,7 +45,7 @@ export function MintForm(props: MintFormProps): ReactElement | null {
 
   const baseAsset = getCryptoAssetForToken(underlying);
   const baseAssetSymbol = getCryptoSymbol2(baseAsset);
-  const BaseAssetIcon = findAssetIcon2(baseAsset);
+  const BaseAssetIcon = findAssetIcon(baseAsset);
   const vaultSymbol = getVaultSymbol(baseAsset) as string;
 
   const principalTokenContract = trancheContractsByAddress[trancheAddress];

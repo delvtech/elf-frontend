@@ -5,6 +5,11 @@ import { ERC20Permit } from "elf-contracts/types/ERC20Permit";
 
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 
+/**
+ * @deprecated get from tokenlists
+ * @param contract
+ * @returns
+ */
 export function useTokenSymbol(
   contract: ERC20 | ERC20Permit | undefined
 ): QueryObserverResult<string> {

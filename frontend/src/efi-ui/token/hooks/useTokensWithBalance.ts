@@ -1,6 +1,5 @@
 import { useMemo } from "react";
 
-import { Provider } from "@ethersproject/providers";
 import { ERC20 } from "elf-contracts/types/ERC20";
 import { ERC20Permit } from "elf-contracts/types/ERC20Permit";
 import { BigNumber } from "ethers";
@@ -18,8 +17,7 @@ interface TokenWithBalance<TContract> {
 }
 export function useTokensWithBalance<TContract extends ERC20>(
   account: string | null | undefined,
-  tokens: (TContract | undefined)[],
-  provider?: Provider
+  tokens: (TContract | undefined)[]
 ): TokenWithBalance<TContract>[] {
   const balanceOfArgs: UseSmartContractReadCallOptions<
     ERC20 | ERC20Permit,

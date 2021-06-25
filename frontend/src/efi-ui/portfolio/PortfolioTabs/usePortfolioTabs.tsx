@@ -42,7 +42,6 @@ export function usePortfolioTabs(
         <YieldTokenPortfolio
           chainId={chainId}
           library={library}
-          provider={provider}
           connector={connector}
           account={account}
           walletConnectionActive={walletConnectionActive}

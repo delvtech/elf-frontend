@@ -11,7 +11,7 @@ import { Signer } from "ethers";
 import { PrincipalTokenInfo } from "tokenlists/types";
 
 import tw from "efi-tailwindcss-classnames";
-import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
+import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { EarnActionsCard } from "efi-ui/earn/EarnActionsCard/EarnActionsCard";
 import { EarnActionsTabId } from "efi-ui/earn/EarnActionsTabs/EarnActionsTabId";
 import { useFeeVolumeForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
@@ -92,7 +92,7 @@ export function EarnCard(props: EarnCardProps): ReactElement | null {
   const isMature = getIsMature(unlockTimestamp);
   const baseAsset = getCryptoAssetForToken(baseAssetAddress);
   const baseAssetSymbol = getCryptoSymbol2(baseAsset) as string;
-  const BaseAssetIcon = findAssetIcon2(baseAsset);
+  const BaseAssetIcon = findAssetIcon(baseAsset);
   const vaultSymbol = getVaultSymbol(baseAsset) as string;
   const { data: vaultInfo } = useYearnVault(vaultSymbol);
   const { displayName, type, apy } = vaultInfo || {};

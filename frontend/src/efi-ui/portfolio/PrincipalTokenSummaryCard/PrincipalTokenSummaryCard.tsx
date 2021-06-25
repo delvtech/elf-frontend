@@ -13,7 +13,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
+import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { isPrincipalTokenSwapPendingTransaction } from "efi-ui/portfolio/hooks/isPrincipalTokenSwapPendingTransaction";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { usePendingTransactionPref } from "efi-ui/transactions/usePendingTransactionPref/usePendingTransactionPref";
@@ -51,7 +51,7 @@ export function PrincipalTokenSummaryCard(
   const tranche = trancheContractsByAddress[address];
   const { data: balanceOf } = useTokenBalanceOf(tranche, account);
   const baseAsset = getCryptoAssetForToken(underlying);
-  const BaseAssetIcon = findAssetIcon2(baseAsset);
+  const BaseAssetIcon = findAssetIcon(baseAsset);
   const balanceLabel = formatBalance(balanceOf, decimals);
   const unlockDate = convertEpochSecondsToDate(unlockTimestamp);
   const formattedUnlockDate = formatAbbreviatedDate(unlockDate);

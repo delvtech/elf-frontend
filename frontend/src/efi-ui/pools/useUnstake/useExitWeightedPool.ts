@@ -1,6 +1,5 @@
 import { useCallback } from "react";
 
-import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
 import { Vault } from "elf-contracts/types/Vault";
 import { WeightedPool } from "elf-contracts/types/WeightedPool";
 import { BigNumber, Signer } from "ethers";
@@ -9,17 +8,15 @@ import { defaultAbiCoder, formatUnits, parseUnits } from "ethers/lib/utils";
 import { ExitRequest } from "efi-balancer/ExitRequest";
 import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
-import { getQueriesData } from "efi-ui/base/queryResults";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
-import { useTokenDecimalsMulti } from "efi-ui/token/hooks/useTokenDecimalsMulti";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
 import ContractAddresses from "efi/addresses";
 import { BALANCER_ETH_SENTINEL } from "efi/balancer";
-import { getSmartContractFromRegistryMulti } from "efi/contracts/SmartContractsRegistry";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { calculateTokensOutForLPInFixed } from "efi/pools/calculateTokensOutForLPIn";
 import { WeightedPoolExitKind } from "efi/pools/weightedPool";
+import { getTokenInfo } from "efi/tokenlists";
 
 export function useExitWeightedPool(
   signer: Signer | undefined,
@@ -39,13 +36,10 @@ export function useExitWeightedPool(
   const { data: [poolTokens = [], poolTokenReserves = []] = [] } =
     usePoolTokens(pool);
 
-  const poolTokenContracts = getSmartContractFromRegistryMulti(
-    poolTokens,
-    ERC20__factory.connect
-  );
-
-  const poolTokenDecimalsResults = useTokenDecimalsMulti(poolTokenContracts);
-  const poolTokenDecimals = getQueriesData(poolTokenDecimalsResults);
+  const poolTokenDecimals = poolTokens.map((tokenAddress) => {
+    const { decimals } = getTokenInfo(tokenAddress);
+    return decimals;
+  });
 
   const { data: totalSupply } = useSmartContractReadCall(pool, "totalSupply");
 

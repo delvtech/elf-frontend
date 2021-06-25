@@ -18,27 +18,6 @@ const CryptoIconSvg: Record<string, TokenIcon> = {
   [ContractAddresses.daiAddress]: DaiIcon,
 };
 
-/**
- * @deprecated signatures that take undefined are deprecated. use findAssetIcon2 instead.
- */
-export function findAssetIcon(
-  cryptoAsset: CryptoAsset | undefined
-): TokenIcon | undefined {
-  if (!cryptoAsset) {
-    return undefined;
-  }
-  if (cryptoAsset.type === CryptoAssetType.ETHEREUM) {
-    return EthIcon;
-  }
-  const iconSvg = CryptoIconSvg[cryptoAsset.tokenContract.address];
-  if (iconSvg) {
-    return iconSvg;
-  }
-
-  const tagIcon = makeTagIcon(cryptoAsset);
-  return tagIcon;
-}
-
 function makeTagIcon(cryptoAsset: CryptoAsset) {
   return ({ height, width, style, className }: IconProps): ReactElement => {
     const symbol = getCryptoSymbol2(cryptoAsset);
@@ -50,7 +29,7 @@ function makeTagIcon(cryptoAsset: CryptoAsset) {
   };
 }
 
-export function findAssetIcon2(cryptoAsset: CryptoAsset): TokenIcon {
+export function findAssetIcon(cryptoAsset: CryptoAsset): TokenIcon {
   if (cryptoAsset.type === CryptoAssetType.ETHEREUM) {
     return EthIcon;
   }

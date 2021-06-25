@@ -11,8 +11,6 @@ import tw from "efi-tailwindcss-classnames";
 import { ERC20Shim } from "efi/contracts/ERC20Shim";
 import { useNewPrincipalTokensPendingTransaction } from "efi-ui/portfolio/hooks/useNewPrincipalTokensPendingTransaction";
 import { PrincipalTokenCard } from "efi-ui/portfolio/PrincipalTokenCard/PrincipalTokenCard";
-import { getQueryCombinedStatus } from "efi-ui/query/getQueryCombinedStatus";
-import { useTokenDecimalsMulti } from "efi-ui/token/hooks/useTokenDecimalsMulti";
 import { useTokensWithBalance } from "efi-ui/token/hooks/useTokensWithBalance";
 import { NoPrincipalTokensInWalletNonIdealState } from "efi-ui/wallets/NoPrincipalTokensInWalletNonIdealState/NoPrincipalTokensInWalletNonIdealState";
 import { NoWalletConnectedNonIdealState } from "efi-ui/wallets/NoWalletConnectedNonIdealState/NoWalletConnectedNonIdealState";
@@ -28,11 +26,10 @@ interface PrincipalTokenPortfolioProps {
 
 export function PrincipalTokenPortfolio({
   library,
-  provider,
   account,
   chainId,
 }: PrincipalTokenPortfolioProps): ReactElement {
-  const principalTokens = usePrincipalTokenTab(library, account, provider);
+  const principalTokens = usePrincipalTokenTab(account);
 
   const pendingPrincipalTokenTransaction =
     useNewPrincipalTokensPendingTransaction();
@@ -105,15 +102,10 @@ function PrincipalTokenCards(props: PrincipalTokenCardsProps) {
   );
 }
 
-function usePrincipalTokenTab(
-  library: Web3Provider | undefined,
-  account: string | null | undefined,
-  provider?: Provider
-) {
+function usePrincipalTokenTab(account: string | null | undefined) {
   const principalTokensWithBalanceResults = useTokensWithBalance(
     account,
-    trancheContracts as unknown as ERC20Shim[],
-    provider
+    trancheContracts as unknown as ERC20Shim[]
   );
   const principalTokenDecimals = principalTokensWithBalanceResults?.map(
     ({ token }) =>
@@ -121,14 +113,8 @@ function usePrincipalTokenTab(
         ?.decimals
   );
 
-  const principalTokenDecimalResults = useTokenDecimalsMulti(trancheContracts);
-  const decimalResultsStatus = getQueryCombinedStatus(
-    principalTokenDecimalResults
-  );
-
   // filter out dust, because redeeming a PT can leave a small amount of dust in
   // the user's account
-
   const principalTokensWithoutDust = useMemo(() => {
     const tokens = zip(
       principalTokensWithBalanceResults,
@@ -143,17 +129,5 @@ function usePrincipalTokenTab(
     return tokens;
   }, [principalTokenDecimals, principalTokensWithBalanceResults]);
 
-  if (decimalResultsStatus === "loading") {
-    return undefined;
-  }
-
-  // The total fiat balance
-  // const totalFiatBalanceAllPrincipalTokens = useTotalFiatBalance(
-  //   library,
-  //   account,
-  //   principalTokensWithoutDust
-  // );
-
   return principalTokensWithoutDust;
-  // totalFiatBalanceAllPrincipalTokens,
 }
