@@ -260,7 +260,7 @@ function useTokensSummary(
   const spotPrice = usePoolSpotPrice(pool, baseAssetContract.address);
   const termSpotPrice = usePoolSpotPrice(pool, termAssetContract.address);
 
-  const swaps = useSwaps(pool);
+  const swaps = useSwaps(poolInfo);
 
   const termAssetPrice =
     baseAssetPrice && termSpotPrice

@@ -15,7 +15,6 @@ import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
 import { ONE_WEEK_IN_MILLISECONDS, ONE_WEEK_IN_SECONDS } from "efi/base/time";
-import { getPoolContract } from "efi/pools/getPoolContract";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolInfo } from "efi/pools/PoolInfo";
 
@@ -114,11 +113,13 @@ export function PoolCharts({ poolInfo }: PoolChartsProps): ReactElement {
   );
 }
 function usePoolCharts(poolInfo: PoolInfo) {
-  const pool = getPoolContract(poolInfo.address);
   const poolAge = getPoolAge(poolInfo);
 
-  const liquidityData = useLiquidityHistoryForPool(pool, ONE_WEEK_IN_SECONDS);
-  const volumeData = useVolumeHistoryForPool(pool, ONE_WEEK_IN_SECONDS);
+  const liquidityData = useLiquidityHistoryForPool(
+    poolInfo,
+    ONE_WEEK_IN_SECONDS
+  );
+  const volumeData = useVolumeHistoryForPool(poolInfo, ONE_WEEK_IN_SECONDS);
   const { currency } = useCurrencyPref();
   const { baseAssetContract } = getPoolTokens(poolInfo);
   const [baseAssetPrice] = useTokenPrice(baseAssetContract, currency);

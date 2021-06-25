@@ -69,7 +69,7 @@ export function PrincipalPoolCard(
   );
 
   const liquidity = useTotalFiatLiquidity(poolInfo);
-  const fees = useFeeVolumeFiatForPool(pool) ?? 0;
+  const fees = useFeeVolumeFiatForPool(poolInfo);
   const fixedYield = useTokenYield(poolInfo, "principal");
   const principalPrice = usePoolSpotPrice(pool, termAssetContract.address) ?? 0;
   const principalPriceFormatted = principalPrice?.toFixed(4);

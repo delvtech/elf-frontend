@@ -11,7 +11,7 @@ import { Signer } from "ethers";
 import { PrincipalTokenInfo } from "tokenlists/types";
 
 import tw from "efi-tailwindcss-classnames";
-import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
+import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 import { EarnActionsCard } from "efi-ui/earn/EarnActionsCard/EarnActionsCard";
 import { EarnActionsTabId } from "efi-ui/earn/EarnActionsTabs/EarnActionsTabId";
 import { useFeeVolumeForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
@@ -22,7 +22,7 @@ import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { getYearnVaultAPY } from "efi-yearn/fetchYearnVaults";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { getCryptoSymbol2 } from "efi/crypto/getCryptoSymbol";
 import {
   getPoolInfoForPrincipalToken,
   principalPoolContractsByAddress,
@@ -91,8 +91,8 @@ export function EarnCard(props: EarnCardProps): ReactElement | null {
   const maturityTime = unlockTimestamp * 1000;
   const isMature = getIsMature(unlockTimestamp);
   const baseAsset = getCryptoAssetForToken(baseAssetAddress);
-  const baseAssetSymbol = getCryptoSymbol(baseAsset) as string;
-  const BaseAssetIcon = findAssetIcon(baseAsset);
+  const baseAssetSymbol = getCryptoSymbol2(baseAsset) as string;
+  const BaseAssetIcon = findAssetIcon2(baseAsset);
   const vaultSymbol = getVaultSymbol(baseAsset) as string;
   const { data: vaultInfo } = useYearnVault(vaultSymbol);
   const { displayName, type, apy } = vaultInfo || {};
@@ -106,7 +106,7 @@ export function EarnCard(props: EarnCardProps): ReactElement | null {
     yieldPoolContract,
     yieldPoolInfo.extensions.underlying
   )?.toFixed(4);
-  const fees = useFeeVolumeForPool(yieldPoolContract) ?? 0;
+  const fees = useFeeVolumeForPool(yieldPoolInfo) ?? 0;
   const tvl = useTotalValueLockedForTranche(
     principalTokenInfo,
     baseAssetContract

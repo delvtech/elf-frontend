@@ -7,16 +7,15 @@ import { Money } from "ts-money";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
-import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { formatPercent } from "efi/base/formatPercent";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
+import { getCryptoSymbol2 } from "efi/crypto/getCryptoSymbol";
 import { formatMoney } from "efi/money/formatMoney";
-import { isConvergentCurvePool } from "efi/pools/PoolContract";
-import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { getPoolContract } from "efi/pools/getPoolContract";
+import { getPoolTokens } from "efi/pools/getPoolTokens";
+import { isConvergentCurvePool } from "efi/pools/PoolContract";
 import { PoolInfo } from "efi/pools/PoolInfo";
 
 const summaryCardStyle: CSSProperties = {
@@ -43,18 +42,15 @@ export function PoolSummary(props: PoolSummaryProps): ReactElement {
   const {
     baseAssetIndex,
     termAssetIndex,
-    baseAssetContract,
-    termAssetContract,
+    baseAssetInfo: { decimals: baseAssetDecimals, address: baseAssetAddress },
+    termAssetInfo: { decimals: termAssetDecimals },
   } = getPoolTokens(poolInfo);
 
-  const baseAsset = getCryptoAssetForToken(baseAssetContract.address);
-  const baseAssetSymbol = getCryptoSymbol(baseAsset);
+  const baseAsset = getCryptoAssetForToken(baseAssetAddress);
+  const baseAssetSymbol = getCryptoSymbol2(baseAsset);
 
   const baseAssetBalance = balances?.[baseAssetIndex];
   const termAssetBalance = balances?.[termAssetIndex];
-
-  const { data: baseAssetDecimals } = useTokenDecimals(baseAssetContract);
-  const { data: termAssetDecimals } = useTokenDecimals(termAssetContract);
 
   const quantityLabel = isConvergentCurvePool(pool) ? "PT" : "YT";
 

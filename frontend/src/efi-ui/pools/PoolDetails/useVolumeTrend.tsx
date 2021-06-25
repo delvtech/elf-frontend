@@ -1,17 +1,18 @@
+import { Money } from "ts-money";
+
 import { useFeeVolumeFiatForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
 import { useVolumeForPool } from "efi-ui/pools/useVolumeForPool/useVolumeForPool";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
-import { PoolContract } from "efi/pools/PoolContract";
-import { Money } from "ts-money";
+import { PoolInfo } from "efi/pools/PoolInfo";
 
-export function useVolumeTrend(pool: PoolContract | undefined): {
+export function useVolumeTrend(poolInfo: PoolInfo): {
   volume24hr: number | undefined;
   volumeTrend: number | undefined;
 } {
-  const volume24hr = useVolumeForPool(pool, ONE_DAY_IN_SECONDS);
+  const volume24hr = useVolumeForPool(poolInfo, ONE_DAY_IN_SECONDS);
   // // the volume from 48hrs ago to 24hrs ago
   const volumePrevious24hr = useVolumeForPool(
-    pool,
+    poolInfo,
     ONE_DAY_IN_SECONDS * 2,
     ONE_DAY_IN_SECONDS
   );
@@ -20,13 +21,13 @@ export function useVolumeTrend(pool: PoolContract | undefined): {
   return { volume24hr, volumeTrend };
 }
 
-export function useFeeVolumeTrend(pool: PoolContract | undefined): {
+export function useFeeVolumeTrend(poolInfo: PoolInfo): {
   feeVolume24hr?: Money;
   feeVolumeTrend?: number;
 } {
-  const feeVolume24hr = useFeeVolumeFiatForPool(pool, ONE_DAY_IN_SECONDS);
+  const feeVolume24hr = useFeeVolumeFiatForPool(poolInfo, ONE_DAY_IN_SECONDS);
   const feeVolumePrevious24hr = useFeeVolumeFiatForPool(
-    pool,
+    poolInfo,
     ONE_DAY_IN_SECONDS * 2,
     ONE_DAY_IN_SECONDS
   );
