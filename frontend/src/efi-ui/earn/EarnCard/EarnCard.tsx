@@ -2,9 +2,12 @@ import { CSSProperties, ReactElement, useCallback, useState } from "react";
 
 import { Card, Classes, Collapse, Elevation } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
+import classNames from "classnames";
 import { differenceInDays } from "date-fns";
+import { ERC20 } from "elf-contracts/types";
 import { USDC } from "elf-contracts/types/USDC";
 import { WETH } from "elf-contracts/types/WETH";
+import { Signer } from "ethers";
 import { PrincipalTokenInfo } from "tokenlists/types";
 
 import tw from "efi-tailwindcss-classnames";
@@ -17,9 +20,9 @@ import { useTokenYield } from "efi-ui/pools/useTokenYield";
 import { useTotalValueLockedForTranche } from "efi-ui/pools/useTotalValueLockedForTranche";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
+import { getYearnVaultAPY } from "efi-yearn/fetchYearnVaults";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
-import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
 import {
   getPoolInfoForPrincipalToken,
   principalPoolContractsByAddress,
@@ -29,14 +32,10 @@ import {
   yieldPoolContractsByAddress,
 } from "efi/pools/weightedPool";
 import { getIsMature } from "efi/tranche/getIsMature";
-import { trancheContractsByAddress } from "efi/tranche/tranches";
 import { underlyingContractsByAddress } from "efi/underlying/underlying";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
-import { Signer } from "ethers";
+
 import { EarnSummaryCard } from "./EarnSummaryCard";
-import { getYearnVaultAPY } from "efi-yearn/fetchYearnVaults";
-import { ERC20 } from "elf-contracts/types";
-import classNames from "classnames";
 
 interface EarnCardProps {
   signer: Signer | undefined;
