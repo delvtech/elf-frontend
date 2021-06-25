@@ -17,7 +17,6 @@ import { useTotalFiatLiquidity } from "efi-ui/pools/useTotalFiatLiquidityForPool
 import { useTotalValueLockedForTranche } from "efi-ui/pools/useTotalValueLockedForTranche";
 import { useVolumeForPool } from "efi-ui/pools/useVolumeForPool/useVolumeForPool";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
-import { getPoolContract } from "efi/pools/getPoolContract";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { getTrancheForPool } from "efi/pools/getTrancheForPool";
 import { PoolInfo } from "efi/pools/PoolInfo";
@@ -32,7 +31,6 @@ interface PoolDetailsProps {
 
 export function PoolDetails(props: PoolDetailsProps): ReactElement {
   const { library, signer, account, poolInfo } = props;
-  const pool = getPoolContract(poolInfo.address);
   const { baseAssetInfo, termAssetInfo, baseAssetContract } =
     getPoolTokens(poolInfo);
 
@@ -56,8 +54,8 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
     "interestSupply"
   );
 
-  const volume24hr = useVolumeForPool(pool, ONE_DAY_IN_SECONDS);
-  const feeVolume24hr = useFeeVolumeFiatForPool(pool, ONE_DAY_IN_SECONDS);
+  const volume24hr = useVolumeForPool(poolInfo, ONE_DAY_IN_SECONDS);
+  const feeVolume24hr = useFeeVolumeFiatForPool(poolInfo, ONE_DAY_IN_SECONDS);
   const stakingAPY = useStakingAPY(poolInfo);
 
   return (

@@ -2,13 +2,16 @@ import { CSSProperties, ReactElement, useCallback, useState } from "react";
 
 import { Card, Classes, Collapse, Elevation } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
+import classNames from "classnames";
 import { differenceInDays } from "date-fns";
+import { ERC20 } from "elf-contracts/types";
 import { USDC } from "elf-contracts/types/USDC";
 import { WETH } from "elf-contracts/types/WETH";
+import { Signer } from "ethers";
 import { PrincipalTokenInfo } from "tokenlists/types";
 
 import tw from "efi-tailwindcss-classnames";
-import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
+import { findAssetIcon2 } from "efi-ui/crypto/CryptoIcon";
 import { EarnActionsCard } from "efi-ui/earn/EarnActionsCard/EarnActionsCard";
 import { EarnActionsTabId } from "efi-ui/earn/EarnActionsTabs/EarnActionsTabId";
 import { useFeeVolumeForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
@@ -17,9 +20,9 @@ import { useTokenYield } from "efi-ui/pools/useTokenYield";
 import { useTotalValueLockedForTranche } from "efi-ui/pools/useTotalValueLockedForTranche";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
+import { getYearnVaultAPY } from "efi-yearn/fetchYearnVaults";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
-import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
+import { getCryptoSymbol2 } from "efi/crypto/getCryptoSymbol";
 import {
   getPoolInfoForPrincipalToken,
   principalPoolContractsByAddress,
@@ -29,14 +32,10 @@ import {
   yieldPoolContractsByAddress,
 } from "efi/pools/weightedPool";
 import { getIsMature } from "efi/tranche/getIsMature";
-import { trancheContractsByAddress } from "efi/tranche/tranches";
 import { underlyingContractsByAddress } from "efi/underlying/underlying";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
-import { Signer } from "ethers";
+
 import { EarnSummaryCard } from "./EarnSummaryCard";
-import { getYearnVaultAPY } from "efi-yearn/fetchYearnVaults";
-import { ERC20 } from "elf-contracts/types";
-import classNames from "classnames";
 
 interface EarnCardProps {
   signer: Signer | undefined;
@@ -92,8 +91,8 @@ export function EarnCard(props: EarnCardProps): ReactElement | null {
   const maturityTime = unlockTimestamp * 1000;
   const isMature = getIsMature(unlockTimestamp);
   const baseAsset = getCryptoAssetForToken(baseAssetAddress);
-  const baseAssetSymbol = getCryptoSymbol(baseAsset) as string;
-  const BaseAssetIcon = findAssetIcon(baseAsset);
+  const baseAssetSymbol = getCryptoSymbol2(baseAsset) as string;
+  const BaseAssetIcon = findAssetIcon2(baseAsset);
   const vaultSymbol = getVaultSymbol(baseAsset) as string;
   const { data: vaultInfo } = useYearnVault(vaultSymbol);
   const { displayName, type, apy } = vaultInfo || {};
@@ -107,7 +106,7 @@ export function EarnCard(props: EarnCardProps): ReactElement | null {
     yieldPoolContract,
     yieldPoolInfo.extensions.underlying
   )?.toFixed(4);
-  const fees = useFeeVolumeForPool(yieldPoolContract) ?? 0;
+  const fees = useFeeVolumeForPool(yieldPoolInfo) ?? 0;
   const tvl = useTotalValueLockedForTranche(
     principalTokenInfo,
     baseAssetContract

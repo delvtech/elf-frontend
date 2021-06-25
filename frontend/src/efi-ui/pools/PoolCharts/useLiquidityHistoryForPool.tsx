@@ -13,9 +13,9 @@ import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
 import { AVG_MINE_RATE_SECONDS } from "efi/ethereum/miningRate";
-import { getPoolInfo } from "efi/pools/getPoolInfo";
+import { getPoolContract } from "efi/pools/getPoolContract";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
-import { PoolContract } from "efi/pools/PoolContract";
+import { PoolInfo } from "efi/pools/PoolInfo";
 import { getTokenInfo } from "efi/tokenlists";
 
 type PoolBalanceChangedArguments = [
@@ -36,10 +36,10 @@ type PoolBalanceChangedArguments = [
 
 const nowInMs = Date.now();
 export function useLiquidityHistoryForPool(
-  pool: PoolContract,
+  poolInfo: PoolInfo,
   fromTime: number = ONE_DAY_IN_SECONDS
 ): TimeData[] | undefined {
-  const poolInfo = getPoolInfo(pool.address);
+  const poolContract = getPoolContract(poolInfo.address);
   const { poolId, underlying: baseAssetAddress } = poolInfo.extensions;
   const { decimals: baseAssetDecimals } = getTokenInfo(baseAssetAddress);
   const totalLiquidity = useTotalFiatLiquidity(poolInfo);
@@ -56,7 +56,7 @@ export function useLiquidityHistoryForPool(
     baseAssetIndex,
     termAssetIndex: yieldAssetIndex,
   } = getPoolTokens(poolInfo);
-  const spotPrice = usePoolSpotPrice(pool, baseAssetAddress);
+  const spotPrice = usePoolSpotPrice(poolContract, baseAssetAddress);
   const { currency } = useCurrencyPref();
   const [baseAssetPrice] = useTokenPrice(baseAssetContract, currency);
 

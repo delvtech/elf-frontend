@@ -6,7 +6,7 @@ import tw from "efi-tailwindcss-classnames";
 import { validateInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
-import { calculateLPOutGivenInFixed } from "efi/pools/calculateLPOutGivenIn";
+import { calculateLPOutGivenIn } from "efi/pools/calculateLPOutGivenIn";
 
 import { TokenAmountInput } from "efi-ui/token/TokenAmountInput/TokenAmountInput";
 import { TokenIcon } from "efi-ui/token/TokenIcon";
@@ -101,7 +101,7 @@ function useOnInputChange(
         return;
       }
 
-      const { otherNeeded, lpOut } = calculateLPOutGivenInFixed(
+      const { otherNeeded, lpOut } = calculateLPOutGivenIn(
         safeValue,
         tokenPoolReserves,
         otherTokenPoolReserves,

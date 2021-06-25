@@ -1,4 +1,4 @@
-import { CSSProperties, Fragment, ReactElement } from "react";
+import { Fragment, ReactElement } from "react";
 
 import { MenuItem } from "@blueprintjs/core";
 import { t } from "ttag";

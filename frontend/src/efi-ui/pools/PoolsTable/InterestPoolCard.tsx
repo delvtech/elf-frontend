@@ -61,7 +61,7 @@ export function InterestPoolCard(
   const { unlockTimestamp: unlockTime, createdAtTimestamp: trancheCreatedAt } =
     tranche.extensions;
   const liquidity = useTotalFiatLiquidity(poolInfo);
-  const fees = useFeeVolumeForPool(pool) ?? 0;
+  const fees = useFeeVolumeForPool(poolInfo);
   const { baseAssetContract, termAssetContract } = getPoolTokens(poolInfo);
   const baseAsset = getCryptoAssetForToken(baseAssetContract.address);
   const baseAssetSymbol = getCryptoSymbol2(baseAsset);

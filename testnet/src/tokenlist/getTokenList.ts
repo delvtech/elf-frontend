@@ -1,6 +1,5 @@
 import { TokenList } from "@uniswap/token-lists";
 import fs from "fs";
-import hre from "hardhat";
 
 import { AddressesJsonFile } from "src/addresses/AddressesJsonFile";
 import { getAssetProxies } from "src/tokenlist/getAssetProxies";

@@ -20,7 +20,7 @@ import { useTokenHistoricalPrice } from "efi-ui/token/hooks/useTokenHistoricalPr
 import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
 import { formatPercent } from "efi/base/formatPercent";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { getCryptoSymbol2 } from "efi/crypto/getCryptoSymbol";
 import { formatMoney } from "efi/money/formatMoney";
 import { getPoolContract } from "efi/pools/getPoolContract";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
@@ -237,7 +237,7 @@ function useTokensSummary(
   const baseAsset = getCryptoAssetForToken(baseAssetContract?.address);
 
   // Base Asset Info
-  const baseAssetSymbol = getCryptoSymbol(baseAsset);
+  const baseAssetSymbol = getCryptoSymbol2(baseAsset);
   const [baseAssetPrice] = useTokenPrice(baseAssetContract, currency);
   const [baseAssetPriceYesterday] = useTokenHistoricalPrice(
     baseAssetContract,
@@ -260,7 +260,7 @@ function useTokensSummary(
   const spotPrice = usePoolSpotPrice(pool, baseAssetContract.address);
   const termSpotPrice = usePoolSpotPrice(pool, termAssetContract.address);
 
-  const swaps = useSwaps(pool);
+  const swaps = useSwaps(poolInfo);
 
   const termAssetPrice =
     baseAssetPrice && termSpotPrice
@@ -295,12 +295,10 @@ function useTokensSummary(
 
   let termAssetBalanceTrend;
 
-  const accumulatedFiatInterest = useAccumulatedFiatInterestForTranche(
-    baseAssetContract,
-    pool
-  );
+  const accumulatedFiatInterest =
+    useAccumulatedFiatInterestForTranche(poolInfo);
 
-  const accumulatedInterest = useAccumulatedInterestForTranche(pool);
+  const accumulatedInterest = useAccumulatedInterestForTranche(poolInfo);
 
   const fiatInterestPerToken = interestSupply
     ? accumulatedFiatInterest?.divide(interestSupply, Math.round)

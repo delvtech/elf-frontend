@@ -1,10 +1,12 @@
 import { TokenInfo } from "@uniswap/token-lists";
-import { getSmartContractFromRegistryStatic } from "efi/contracts/SmartContractsRegistry";
-import { PoolInfo } from "efi/pools/PoolInfo";
-import { getTokenInfo } from "efi/tokenlists";
 import { ERC20 } from "elf-contracts/types/ERC20";
 import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
 import { PrincipalPoolTokenInfo, YieldPoolTokenInfo } from "tokenlists/types";
+
+import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
+import { PoolInfo } from "efi/pools/PoolInfo";
+import { getTokenInfo } from "efi/tokenlists";
+import { underlyingContractsByAddress } from "efi/underlying/underlying";
 
 interface PoolTokens {
   baseAssetInfo: TokenInfo;
@@ -23,14 +25,13 @@ export function getPoolTokens(poolInfo: PoolInfo): PoolTokens {
     (poolInfo as YieldPoolTokenInfo)?.extensions?.interestToken;
   const baseAssetInfo = getTokenInfo(baseAssetAddress);
   const termAssetInfo = getTokenInfo(termAssetAddress);
-  const baseAssetContract = getSmartContractFromRegistryStatic(
-    baseAssetAddress,
-    ERC20__factory
-  );
-  const termAssetContract = getSmartContractFromRegistryStatic(
+  const baseAssetContract = underlyingContractsByAddress[
+    baseAssetAddress
+  ] as ERC20;
+  const termAssetContract = getSmartContractFromRegistry(
     termAssetAddress,
-    ERC20__factory
-  );
+    ERC20__factory.connect
+  ) as ERC20;
 
   const sortedAddresses = [baseAssetAddress, termAssetAddress].sort() as [
     string,

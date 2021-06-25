@@ -2,19 +2,16 @@ import { formatEther, formatUnits } from "ethers/lib/utils";
 import { Money } from "ts-money";
 
 import { SwapEventWithTimeStamp } from "efi-balancer/SwapEvent";
-import { useBaseAssetForPool } from "efi-ui/pools/useBaseAssetForPool/useBaseAssetForPool";
 import { usePoolSwapFee } from "efi-ui/pools/usePoolSwapFee/usePoolSwapFee";
 import { useSwaps } from "efi-ui/pools/useSwaps/useSwaps";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
-import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
 import { convertNumberToFiatBalance } from "efi/money/convertToFiatBalance";
-import {
-  isConvergentCurvePool,
-  isWeightedPool,
-  PoolContract,
-} from "efi/pools/PoolContract";
+import { getPoolContract } from "efi/pools/getPoolContract";
+import { getPoolTokens } from "efi/pools/getPoolTokens";
+import { isConvergentCurvePool, isWeightedPool } from "efi/pools/PoolContract";
+import { PoolInfo } from "efi/pools/PoolInfo";
 
 /**
  * Returns the fiat volume for a pool in a given time range
@@ -26,13 +23,17 @@ import {
  * over the time period. values in ascending token address order.
  */
 export function useFeeVolumeForPool(
-  pool: PoolContract | undefined,
+  poolInfo: PoolInfo,
   fromTime: number = ONE_DAY_IN_SECONDS,
   toTime?: number
 ): number | undefined {
-  const swapEvents = useSwaps(pool, fromTime, toTime);
-  const baseAssetContract = useBaseAssetForPool(pool);
-  const { data: baseAssetDecimals } = useTokenDecimals(baseAssetContract);
+  const {
+    baseAssetContract,
+    baseAssetInfo: { decimals: baseAssetDecimals },
+  } = getPoolTokens(poolInfo);
+  const pool = getPoolContract(poolInfo.address);
+
+  const swapEvents = useSwaps(poolInfo, fromTime, toTime);
 
   const swapFeeBN = usePoolSwapFee(pool);
 
@@ -67,13 +68,13 @@ export function useFeeVolumeForPool(
 }
 
 export function useFeeVolumeFiatForPool(
-  pool: PoolContract | undefined,
+  poolInfo: PoolInfo,
   fromTime: number = ONE_DAY_IN_SECONDS,
   toTime?: number
 ): Money {
-  const fees = useFeeVolumeForPool(pool, fromTime, toTime);
+  const { baseAssetContract } = getPoolTokens(poolInfo);
+  const fees = useFeeVolumeForPool(poolInfo, fromTime, toTime);
   const { currency } = useCurrencyPref();
-  const baseAssetContract = useBaseAssetForPool(pool);
   const [baseAssetPrice] = useTokenPrice(baseAssetContract, currency);
 
   if (!baseAssetPrice || !fees) {
