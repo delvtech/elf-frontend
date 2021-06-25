@@ -1,26 +1,15 @@
-import { Provider } from "@ethersproject/providers";
-import { InterestToken__factory } from "elf-contracts/types/factories/InterestToken__factory";
 import { InterestToken } from "elf-contracts/types/InterestToken";
 import { BigNumber } from "ethers";
 import zip from "lodash.zip";
 
 import { getQueriesData } from "efi-ui/base/queryResults";
-import { useSmartContractFromFactoryMulti } from "efi-ui/contracts/useSmartContractFromFactory/useSmartContractFromFactory";
 import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
-import { useTrancheInterestTokenMulti } from "efi-ui/tranche/useTrancheInterestTokenMulti";
-import { trancheContracts } from "efi/tranche/tranches";
+import { interestTokenContracts } from "efi/interestToken/interestToken";
 
 export function useYieldTokensWithBalance(
-  account: string | null | undefined,
-  provider?: Provider
+  account: string | null | undefined
 ): InterestToken[] {
   // InterestTokens are sourced from the Tranche contracts
-  const interestTokenAddressResults =
-    useTrancheInterestTokenMulti(trancheContracts);
-  const interestTokenContracts = useSmartContractFromFactoryMulti(
-    getQueriesData(interestTokenAddressResults),
-    InterestToken__factory.connect
-  );
 
   const interestTokenBalanceResults = useSmartContractReadCalls(
     interestTokenContracts,

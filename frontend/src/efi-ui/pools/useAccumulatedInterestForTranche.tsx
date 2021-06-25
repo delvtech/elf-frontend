@@ -3,16 +3,16 @@ import { BigNumber } from "ethers";
 
 import { getQueryData } from "efi-ui/base/queryResults";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { useTrancheForPool } from "efi-ui/pools/useTrancheForPool/useTrancheForPool";
-import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
-import { PoolContract } from "efi/pools/PoolContract";
+import { PoolInfo } from "efi/pools/PoolInfo";
+import { getTrancheForPool } from "efi/pools/getTrancheForPool";
+import { trancheContractsByAddress } from "efi/tranche/tranches";
 
 export function useAccumulatedInterestForTranche(
-  pool: PoolContract | undefined
+  poolInfo: PoolInfo
 ): BigNumber | undefined {
-  const trancheContract = useTrancheForPool(pool);
-  const { data: decimals } = useTokenDecimals(trancheContract);
+  const trancheInfo = getTrancheForPool(poolInfo);
+  const trancheContract = trancheContractsByAddress[trancheInfo.address];
 
   // this is the amount of underlying that has been deposited into the tranche.
   const { data: balanceOfUnderlying } = useSmartContractReadCall(
@@ -42,7 +42,7 @@ export function useAccumulatedInterestForTranche(
     }
   );
 
-  if (!valueOfSharesInUnderlying || !balanceOfUnderlying || !decimals) {
+  if (!valueOfSharesInUnderlying || !balanceOfUnderlying) {
     return undefined;
   }
 

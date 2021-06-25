@@ -1,22 +1,24 @@
-import { ERC20 } from "elf-contracts/types/ERC20";
 import { Money } from "ts-money";
 
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
-import { useTokenDecimals } from "efi-ui/token/hooks/useTokenDecimals";
 import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
 import { convertToFiatBalance } from "efi/money/convertToFiatBalance";
-import { PoolContract } from "efi/pools/PoolContract";
+import { getPoolTokens } from "efi/pools/getPoolTokens";
+import { PoolInfo } from "efi/pools/PoolInfo";
 
 import { useAccumulatedInterestForTranche } from "./useAccumulatedInterestForTranche";
 
 export function useAccumulatedFiatInterestForTranche(
-  baseAssetContract: ERC20 | undefined,
-  pool: PoolContract | undefined
+  poolInfo: PoolInfo
 ): Money | undefined {
   const { currency } = useCurrencyPref();
+  const {
+    baseAssetContract,
+    baseAssetInfo: { decimals: baseAssetDecimals },
+  } = getPoolTokens(poolInfo);
+
   const [baseAssetPrice] = useTokenPrice(baseAssetContract, currency);
-  const { data: baseAssetDecimals } = useTokenDecimals(baseAssetContract);
-  const accumulatedInterest = useAccumulatedInterestForTranche(pool);
+  const accumulatedInterest = useAccumulatedInterestForTranche(poolInfo);
 
   let accumulatedInterestFiat;
   if (baseAssetPrice && baseAssetDecimals && accumulatedInterest) {
