@@ -11,7 +11,7 @@ import { validateInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput
 import { TokenIcon } from "efi-ui/token/TokenIcon";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
-import { calculateLPOutGivenInFixed } from "efi/pools/calculateLPOutGivenIn";
+import { calculateLPOutGivenIn } from "efi/pools/calculateLPOutGivenIn";
 
 import styles from "./StakingInput.module.css";
 
@@ -214,7 +214,7 @@ function useOnInputChange(
         return;
       }
 
-      const { otherNeeded, lpOut } = calculateLPOutGivenInFixed(
+      const { otherNeeded, lpOut } = calculateLPOutGivenIn(
         safeValue,
         tokenPoolReserves,
         otherTokenPoolReserves,
@@ -259,7 +259,7 @@ function useSetMaxValue(
       ) {
         return;
       }
-      const { otherNeeded, lpOut } = calculateLPOutGivenInFixed(
+      const { otherNeeded, lpOut } = calculateLPOutGivenIn(
         maxValue,
         tokenPoolReserves,
         otherTokenPoolReserves,

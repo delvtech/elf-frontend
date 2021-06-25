@@ -4,24 +4,18 @@ import {
 } from "efi/base/math/fixedPoint";
 
 export interface LPOutGivenTokenIn {
-  otherNeeded: number;
-  givenInNeeded: number;
-  lpOut: number;
-}
-
-export interface LPOutGivenTokenInFixed {
   otherNeeded: string;
-  givenInNeeded: string | undefined;
-  lpOut: string | undefined;
+  givenInNeeded: string;
+  lpOut: string;
 }
 
-export function calculateLPOutGivenInFixed(
+export function calculateLPOutGivenIn(
   yIn: string, // given token
   yReserves: string,
   xReserves: string,
   totalSupply: string, // lp tokens, always 18 point decimal
   tokenDecimals: number
-): LPOutGivenTokenInFixed {
+): LPOutGivenTokenIn {
   const _yIn = getSafeFixedNumber(yIn);
   const _xReserves = getSafeFixedNumber(xReserves);
   const _yReserves = getSafeFixedNumber(yReserves);
