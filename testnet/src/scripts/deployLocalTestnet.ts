@@ -40,12 +40,12 @@ async function main() {
   const userAddress = await userSigner.getAddress();
 
   // deploy base assets
-  const [wethContract, usdcContract, daiContract] = await deployBaseAssets(
-    wethSigner,
-    usdcSigner,
-    daiSigner,
-    lusdSigner
-  );
+  const [
+    wethContract,
+    usdcContract,
+    daiContract,
+    lusdContract,
+  ] = await deployBaseAssets(wethSigner, usdcSigner, daiSigner, lusdSigner);
 
   // supply element with WETH and USDC
   await mintTokensForAddress(elementAddress, {
@@ -323,6 +323,7 @@ async function main() {
       wethAddress: wethContract.address,
       usdcAddress: usdcContract.address,
       daiAddress: daiContract.address,
+      lusdAddress: lusdContract.address,
     },
     safelist: [
       firstWethTrancheContract.address,
