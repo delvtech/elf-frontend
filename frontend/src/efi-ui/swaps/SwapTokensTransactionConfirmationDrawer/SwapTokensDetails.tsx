@@ -26,7 +26,7 @@ export function SwapTokenDetails({
   spotPriceBaseAssetForOneToken = 0,
   termAssetType,
 }: SwapTokenDetailsProps): ReactElement {
-  const roundedTermAssetPrice = (1 / spotPriceBaseAssetForOneToken).toFixed(4);
+  const roundedTermAssetPrice = spotPriceBaseAssetForOneToken.toFixed(4);
   let label = t`1 Principal Token ≈ ${roundedTermAssetPrice} ${baseAssetSymbol}`;
   if (termAssetType === "yield") {
     label = t`1 Yield Token ≈ ${roundedTermAssetPrice} ${baseAssetSymbol}`;
