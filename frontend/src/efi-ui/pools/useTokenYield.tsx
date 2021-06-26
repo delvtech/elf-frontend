@@ -22,21 +22,16 @@ export function useTokenYield(
   termAssetType: TermAssetType
 ): number {
   const pool = getPoolContract(poolInfo.address);
-  const { baseAssetContract } = getPoolTokens(poolInfo);
+  const { baseAssetInfo, termAssetInfo } = getPoolTokens(poolInfo);
   // get fixed yield
-  const baseAsset = getCryptoAssetForToken(baseAssetContract.address);
-  const spotPrice = usePoolSpotPrice(pool, baseAssetContract.address);
+  const baseAsset = getCryptoAssetForToken(baseAssetInfo.address);
+  const principalPrice = usePoolSpotPrice(pool, termAssetInfo.address);
   const trancheInfo = getTrancheForPool(poolInfo);
   const { unlockTimestamp } = trancheInfo.extensions;
 
   let fixedAPY = 0;
-  if (spotPrice) {
+  if (principalPrice) {
     const timeLeftInSeconds = unlockTimestamp - Math.round(Date.now() / 1000);
-
-    // spot price is how much principal tokens for 1 base token.  but we want how much base tokens for 1 principal
-    // tokens so we take the inverse.  i.e. 0.9 ETH for 1 principal token.
-    // base token.
-    const principalPrice = 1 / spotPrice;
 
     // principalPrice is the price in terms of the base asset.  Since we know the principal will be
     // equal to base at term, (1 - principalPrice) gives us the the fixed interest for the rest of

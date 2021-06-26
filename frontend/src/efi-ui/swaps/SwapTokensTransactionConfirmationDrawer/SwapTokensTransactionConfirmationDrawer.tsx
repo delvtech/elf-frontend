@@ -6,16 +6,17 @@ import { formatEther, parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import { getBalancerApprovalMessage } from "efi-ui/balancer/balancerApprovalMessage";
-import { SwapKind } from "efi/balancer/SwapKind";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { parseQueryBatchSwapResult } from "efi-ui/balancer/useQueryBatchSwap/parseQueryBatchSwapResult";
 import { useQueryBatchSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
+import { useSwap } from "efi-ui/balancer/useSwap/useSwap";
 import { usePoolSwapFee } from "efi-ui/pools/usePoolSwapFee/usePoolSwapFee";
-import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
+import { useSigner } from "efi-ui/provider/useBlockFromTag/useSigner/useSigner";
 import { SwapDetailsForm } from "efi-ui/swaps/SwapDetailsPreview/SwapDetailsForm";
 import { SwapTokenDetails } from "efi-ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensDetails";
 import { IconProps } from "efi-ui/token/TokenIcon";
 import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/TransactionDrawer";
+import { SwapKind } from "efi/balancer/SwapKind";
 import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol2 } from "efi/crypto/getCryptoSymbol";
@@ -27,8 +28,6 @@ import { isConvergentCurvePool } from "efi/pools/PoolContract";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { getToleranceAmount } from "efi/trade/getToleranceAmount";
 import { TermAssetType } from "efi/tranche/TermAssetType";
-import { useSwap } from "efi-ui/balancer/useSwap/useSwap";
-import { useSigner } from "efi-ui/provider/useBlockFromTag/useSigner/useSigner";
 
 interface SwapTokensTransactionConfirmationDrawerProps {
   account: string | null | undefined;
@@ -90,8 +89,6 @@ export function SwapTokensTransactionConfirmationDrawer({
   const { baseAssetContract } = getPoolTokens(poolInfo);
   const baseAsset = getCryptoAssetForToken(baseAssetContract?.address);
   const baseAssetSymbol = getCryptoSymbol2(baseAsset);
-  const baseAssetAddress = getTokenAddressForBalancer(baseAsset);
-  const baseAssetIn = baseAssetAddress === tokenInAddress;
 
   const termAssetType: TermAssetType = isConvergentCurvePool(pool)
     ? "principal"
@@ -144,13 +141,12 @@ export function SwapTokensTransactionConfirmationDrawer({
 
   const amountOutNumber = +amountOut;
 
-  // spotPrice is yield out / base in.  So, if the base asset is the output, we need to flip the
+  // spotPrice is the pt or yt's price in terms of base asset
   // spotPrice so it'll match the purchasePrice.
-  const spotPriceInOut = baseAssetIn ? 1 / (spotPrice || 0) : spotPrice;
   const priceSlippage = getPriceSlippageAndTradingFee(
     +(amountIn || 0),
     amountOutNumber,
-    spotPriceInOut
+    spotPrice
   );
 
   const feePercentBN = usePoolSwapFee(pool);

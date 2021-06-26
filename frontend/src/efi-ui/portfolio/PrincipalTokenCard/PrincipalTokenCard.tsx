@@ -23,7 +23,6 @@ import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { GoToPoolButton } from "efi-ui/pools/GoToPoolButton/GoToPoolButton";
-import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
 import { PoolAction } from "efi-ui/pools/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
 import { RedeemPrincipalTokensButton } from "efi-ui/portfolio/RedeemButton/RedeemPrincipalTokensButton";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
@@ -45,6 +44,7 @@ import { getVaultForTranche } from "efi/tranche/tranches";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 
 import { MaturityTimeBar } from "./MaturityTimeBar";
+import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 
 interface PrincipalTokenCardProps {
   chainId: number | undefined;
@@ -93,13 +93,10 @@ export function PrincipalTokenCard(
   const vaultContract = getVaultForTranche(tranche.address);
   const { data: vaultName } = useSmartContractReadCall(vaultContract, "name");
   const pool = getPoolContract(poolInfo.address);
-  const { baseAssetContract } = getPoolTokens(poolInfo);
-
-  const { spotPriceBaseAssetForOneToken: tranchePriceInBaseAsset = 0 } =
-    usePoolTokenPrices(pool, baseAssetContract);
 
   const baseAssetSymbol = getCryptoSymbol2(baseAsset);
 
+  const tranchePriceInBaseAsset = usePoolSpotPrice(pool, tranche.address) ?? 0;
   const exitValue = trancheBalance * tranchePriceInBaseAsset;
   const { data: baseAssetCoinGeckoPrice } = useCoinGeckoPrice(
     getCoinGeckoId(baseAssetSymbol)

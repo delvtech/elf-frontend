@@ -35,6 +35,7 @@ import { underlyingContractsByAddress } from "efi/underlying/underlying";
 import { useCanPerformPool } from "efi-ui/pools/usePoolCanPerform/usePoolCanPerform";
 import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
 import { CryptoAssets } from "efi/crypto/CryptoAssetRegistry";
+import { getPoolTokens } from "efi/pools/getPoolTokens";
 
 interface TradePanelProps {
   tradeType: "buy" | "sell";
@@ -67,6 +68,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     address: poolAddress,
     extensions: { underlying },
   } = poolInfo;
+  const { termAssetInfo } = getPoolTokens(poolInfo);
   const baseAsset = CryptoAssets[underlying];
 
   const pool = getPoolContract(poolAddress);
@@ -219,7 +221,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     setAmountOut
   );
 
-  const spotPrice = usePoolSpotPrice(pool, poolInfo.extensions.underlying);
+  const spotPrice = usePoolSpotPrice(pool, termAssetInfo.address);
 
   return (
     <div
