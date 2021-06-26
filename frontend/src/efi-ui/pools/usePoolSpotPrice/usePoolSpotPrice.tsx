@@ -17,7 +17,7 @@ import { PoolInfo } from "efi/pools/PoolInfo";
 
 /**
  * Lazy spot price technique until we get a better method.  Right now just calculates how much out
- * asset for '1' of the in asset.  A future optimisation might be to do '$1' worth of the in asset
+ * asset for '0.01' of the in asset.  A future optimisation might be to do '$1' worth of the in asset
  * to minimize slippage in the value.
  *
  * NOTE: When using this with a tranche pool, pass the base asset as the underlying token.
@@ -30,7 +30,7 @@ const SPOT_PRICE_AMOUNT = "0.01";
 
 export function usePoolSpotPrice(
   poolContract: PoolContract,
-  underlyingToken: string
+  tokenIn: string
 ): number | undefined {
   const { data } = usePoolTokens(poolContract);
   const [tokens, balances] = data ?? [[], []];
@@ -46,11 +46,11 @@ export function usePoolSpotPrice(
   );
 
   const tokenInAddress =
-    baseAssetInfo.address === underlyingToken
+    baseAssetInfo.address === tokenIn
       ? baseAssetInfo.address
       : termAssetInfo.address;
   const tokenOutAddress =
-    baseAssetInfo.address === underlyingToken
+    baseAssetInfo.address === tokenIn
       ? termAssetInfo.address
       : baseAssetInfo.address;
 
