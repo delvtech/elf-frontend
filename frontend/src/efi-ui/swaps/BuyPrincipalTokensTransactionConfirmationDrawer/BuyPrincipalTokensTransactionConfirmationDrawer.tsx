@@ -18,7 +18,7 @@ import { useSigner } from "efi-ui/provider/useBlockFromTag/useSigner/useSigner";
 import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
 import { PrincipalTokenTransactionDetails } from "efi-ui/swaps/PrincipalTokenTransactionDetails/PrincipalTokenTransactionDetails";
 import { SwapDetailsForm } from "efi-ui/swaps/SwapDetailsPreview/SwapDetailsForm";
-import { IconProps, TokenIcon } from "efi-ui/token/TokenIcon";
+import { IconProps } from "efi-ui/token/TokenIcon";
 import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/TransactionDrawer";
 import { SwapKind } from "efi/balancer/SwapKind";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
