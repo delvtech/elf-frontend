@@ -33,14 +33,18 @@ async function main() {
   const userSigner = await getSigner(SIGNER.USER, hre);
   const wethSigner = await getSigner(SIGNER.WETH, hre);
   const usdcSigner = await getSigner(SIGNER.USDC, hre);
+  const daiSigner = await getSigner(SIGNER.DAI, hre);
+  const lusdSigner = await getSigner(SIGNER.LUSD, hre);
   const elementAddress = await elementSigner.getAddress();
   const balancerAddress = await balancerSigner.getAddress();
   const userAddress = await userSigner.getAddress();
 
   // deploy base assets
-  const [wethContract, usdcContract] = await deployBaseAssets(
+  const [wethContract, usdcContract, daiContract] = await deployBaseAssets(
     wethSigner,
-    usdcSigner
+    usdcSigner,
+    daiSigner,
+    lusdSigner
   );
 
   // supply element with WETH and USDC
@@ -318,6 +322,7 @@ async function main() {
       userProxyContractAddress: userProxyContract.address,
       wethAddress: wethContract.address,
       usdcAddress: usdcContract.address,
+      daiAddress: daiContract.address,
     },
     safelist: [
       firstWethTrancheContract.address,

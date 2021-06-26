@@ -11,6 +11,8 @@ export enum SIGNER {
 
   WETH,
   USDC,
+  DAI,
+  LUSD,
   TRADER3 = 19,
 }
 
