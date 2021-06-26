@@ -18,6 +18,8 @@ import { useSyncWithInjectedEthereum } from "efi-ui/wallets/hooks/useSyncWithInj
 
 import styles from "./SaveApp.module.css";
 import { useToastWrongChain } from "efi-ui/provider/useBlockFromTag/useToastWrongChain";
+import { ChainId, ChainNames } from "efi/ethereum";
+import { AddressesJson } from "efi/addresses";
 
 FocusStyleManager.onlyShowFocusOnTabs();
 
@@ -35,7 +37,8 @@ interface SaveAppProps {}
 
 const SaveApp: FC<SaveAppProps> = () => {
   const { active, chainId } = useWeb3React<Web3Provider>();
-  const onMainnet = active && chainId === 1;
+  const isWrongChain = active && chainId !== AddressesJson.chainId;
+  const chainName = ChainNames[AddressesJson.chainId as ChainId];
 
   const { isDarkMode, darkModeClassName } = useDarkMode();
 
@@ -61,7 +64,7 @@ const SaveApp: FC<SaveAppProps> = () => {
           <SavePortfolioView path={"/portfolio"} />
         </Router>
       </div>
-      <Overlay isOpen={onMainnet}>
+      <Overlay isOpen={isWrongChain}>
         <div
           className={tw(
             "flex",
@@ -73,7 +76,7 @@ const SaveApp: FC<SaveAppProps> = () => {
         >
           <H1
             className={styles.overlay}
-          >{t`Please Connect to Goerli Testnet`}</H1>
+          >{t`Please Connect to ${chainName}`}</H1>
         </div>
       </Overlay>
       <div className={styles.mobileView}>
@@ -89,7 +92,7 @@ const SaveApp: FC<SaveAppProps> = () => {
           >
             <div>
               <H1 className={styles.overlay}>
-                {t`Mobile Compatibility Coming with Mainnet Launch`}
+                {t`Mobile Compatibility Coming Soon`}
               </H1>
             </div>
           </div>

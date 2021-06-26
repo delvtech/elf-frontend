@@ -18,7 +18,7 @@ import { useSigner } from "efi-ui/provider/useBlockFromTag/useSigner/useSigner";
 import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
 import { PrincipalTokenTransactionDetails } from "efi-ui/swaps/PrincipalTokenTransactionDetails/PrincipalTokenTransactionDetails";
 import { SwapDetailsForm } from "efi-ui/swaps/SwapDetailsPreview/SwapDetailsForm";
-import { TokenIcon } from "efi-ui/token/TokenIcon";
+import { IconProps, TokenIcon } from "efi-ui/token/TokenIcon";
 import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/TransactionDrawer";
 import { SwapKind } from "efi/balancer/SwapKind";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
@@ -42,7 +42,7 @@ interface BuyPrincipalTransactionConfirmationDrawerProps {
   swapKind: SwapKind;
 
   baseAsset: CryptoAsset;
-  baseAssetIcon: TokenIcon;
+  baseAssetIcon: React.FC<IconProps>;
 
   tranche: Tranche;
   isOpen: boolean;

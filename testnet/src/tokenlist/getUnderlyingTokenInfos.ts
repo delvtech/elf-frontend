@@ -11,16 +11,11 @@ import {
 } from "src/tokenlist/erc20";
 
 export const provider = hre.ethers.provider;
-export async function getBaseAssets(
-  wethAddress: string | undefined,
-  usdcAddress: string | undefined,
-  daiAddress: string | undefined,
-  chainId: number
+export async function getUnderlyingTokenInfos(
+  chainId: number,
+  underlyingTokenAddresses: string[]
 ) {
-  const baseAssetAddresses = [wethAddress, usdcAddress, daiAddress].filter(
-    (address): address is string => !!address
-  );
-  const baseAssets = baseAssetAddresses.map((address) =>
+  const baseAssets = underlyingTokenAddresses.map((address) =>
     ERC20__factory.connect(address, provider)
   );
 
@@ -28,8 +23,8 @@ export async function getBaseAssets(
   const symbols = await getTokenSymbolMulti(baseAssets);
   const decimals = await getTokenDecimalsMulti(baseAssets);
 
-  const principalTokensList = zip(
-    baseAssetAddresses,
+  const baseAssetsList = zip(
+    underlyingTokenAddresses,
     symbols,
     names,
     decimals
@@ -48,5 +43,5 @@ export async function getBaseAssets(
     }
   );
 
-  return principalTokensList;
+  return baseAssetsList;
 }

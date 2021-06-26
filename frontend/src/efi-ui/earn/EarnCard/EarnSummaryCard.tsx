@@ -8,15 +8,16 @@ import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
 import { useTotalFiatLiquidity } from "efi-ui/pools/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
-import { TokenIcon } from "efi-ui/token/TokenIcon";
+import { IconProps } from "efi-ui/token/TokenIcon";
 import { formatPercent } from "efi/base/formatPercent";
 import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { formatMoney } from "efi/money/formatMoney";
 import { PoolInfo } from "efi/pools/PoolInfo";
+import React from "react";
 
 interface EarnSummaryCardProps {
   onToggleExpand: () => void;
-  BaseAssetIcon: TokenIcon | undefined;
+  BaseAssetIcon: React.FC<IconProps>;
   baseAsset: CryptoAsset;
   isDarkMode: boolean;
   displayName: string | undefined;
@@ -72,7 +73,7 @@ export function EarnSummaryCard(props: EarnSummaryCardProps): JSX.Element {
         <div
           className={tw(cellClassName, "col-span-1", "xl:ml-4", "items-center")}
         >
-          {BaseAssetIcon && baseAsset?.type === CryptoAssetType.ETHEREUM ? (
+          {baseAsset?.type === CryptoAssetType.ETHEREUM ? (
             <div
               className={classNames(
                 tw(

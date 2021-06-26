@@ -6,7 +6,11 @@ import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import { t } from "ttag";
 
 import { ChainId, ChainNames, DEFAULT_CHAIN_IDS } from "efi/ethereum";
-import { ALCHEMY_GOERLI_HTTP_URL } from "efi/providers/providers";
+import {
+  ALCHEMY_GOERLI_HTTP_URL,
+  ALCHEMY_MAINNET_HTTP_URL,
+} from "efi/providers/providers";
+import { AddressesJson } from "efi/addresses";
 
 /**
  * The 'injected' connector refers to plugin-based wallets like MetaMask, which
@@ -43,7 +47,10 @@ export const walletConnectConnector = new WalletConnectConnector({
 
 export const ledgerConnector = new LedgerConnector({
   chainId: ChainId.GOERLI,
-  url: ALCHEMY_GOERLI_HTTP_URL,
+  url:
+    AddressesJson.chainId === ChainId.MAINNET
+      ? ALCHEMY_MAINNET_HTTP_URL
+      : ALCHEMY_GOERLI_HTTP_URL,
 });
 
 export function getConnectorName(

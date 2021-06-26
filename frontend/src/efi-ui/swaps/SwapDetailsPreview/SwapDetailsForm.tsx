@@ -6,14 +6,14 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import { TokenIcon } from "efi-ui/token/TokenIcon";
+import { IconProps } from "efi-ui/token/TokenIcon";
 import { ANY_NUMBER_REGEX } from "efi/base/numbers";
 
 import styles from "./styles.module.css";
 
 interface SwapDetailsFormProps {
-  assetInIcon?: TokenIcon | undefined | null;
-  assetOutIcon?: TokenIcon | undefined | null;
+  assetInIcon?: React.FC<IconProps> | undefined | null;
+  assetOutIcon?: React.FC<IconProps> | undefined | null;
   assetInSymbol: string | undefined;
   assetOutSymbol: string | undefined;
   amountIn: string | undefined;

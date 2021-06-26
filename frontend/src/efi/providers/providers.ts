@@ -7,16 +7,25 @@ import { ChainId } from "efi/ethereum";
 
 const LOCAL_RPC_HOST = "http://127.0.0.1:8545";
 const ALCHEMY_GOERLI_KEY = process.env.REACT_APP_GOERLI_ALCHEMY_KEY as string;
+const ALCHEMY_MAINNET_KEY = process.env.REACT_APP_GOERLI_ALCHEMY_KEY as string;
 export const ALCHEMY_GOERLI_HTTP_URL = `https://eth-goerli.alchemyapi.io/v2/${ALCHEMY_GOERLI_KEY}`;
-export const localhostProvider = new providers.JsonRpcProvider(LOCAL_RPC_HOST);
+export const ALCHEMY_MAINNET_HTTP_URL = `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_MAINNET_KEY}`;
 
-const web3 = createAlchemyWeb3(
+const web3Goerli = createAlchemyWeb3(
   `wss://eth-goerli.ws.alchemyapi.io/v2/${ALCHEMY_GOERLI_KEY}`
 );
-// TODO: improve on this to dynamically grab the correct chainid/key.  hardcoded to goerli for now.
-const alchWeb3WebSocketProvider = new providers.Web3Provider(
-  web3.currentProvider as ExternalProvider,
-  AddressesJson.chainId
+const web3Mainnet = createAlchemyWeb3(
+  `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_MAINNET_KEY}`
+);
+export const localhostProvider = new providers.JsonRpcProvider(LOCAL_RPC_HOST);
+
+const alchemyWeb3GoerliWebSocketProvider = new providers.Web3Provider(
+  web3Goerli.currentProvider as ExternalProvider,
+  ChainId.GOERLI
+);
+const alchemyWeb3MainnetWebSocketProvider = new providers.Web3Provider(
+  web3Mainnet.currentProvider as ExternalProvider,
+  ChainId.MAINNET
 );
 
 // eslint-disable-next-line no-var
@@ -33,7 +42,11 @@ function getProvider() {
   // otherwise, if a chain id is provided, we'll use the corresponding alchemy provider.  right now
   // this is only goerli.
   if (AddressesJson.chainId === ChainId.GOERLI) {
-    return alchWeb3WebSocketProvider as Provider;
+    return alchemyWeb3GoerliWebSocketProvider as Provider;
+  }
+
+  if (AddressesJson.chainId === ChainId.MAINNET) {
+    return alchemyWeb3MainnetWebSocketProvider as Provider;
   }
 
   // default to localhost

@@ -1,13 +1,12 @@
 import React, { ReactElement } from "react";
 
-import { ElementIcon } from "efi-ui/token/TokenIcon";
+import { ElementIcon, IconProps } from "efi-ui/token/TokenIcon";
 import { Callout, Divider, InputGroup } from "@blueprintjs/core";
 import classNames from "classnames";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import { TokenIcon } from "efi-ui/token/TokenIcon";
 
 import styles from "./styles.module.css";
 
@@ -26,8 +25,8 @@ interface UnstakeConfirmationFormProps {
    * input
    */
   assetTwoSymbol: string;
-  assetOneIcon: TokenIcon;
-  assetTwoIcon: TokenIcon;
+  assetOneIcon: React.FC<IconProps>;
+  assetTwoIcon: React.FC<IconProps>;
   assetOneValueLabel: string;
   assetTwoValueLabel: string;
   assetOneSymbolLabel: string;

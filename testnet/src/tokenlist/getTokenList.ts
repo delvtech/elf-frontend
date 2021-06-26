@@ -3,14 +3,15 @@ import fs from "fs";
 
 import { AddressesJsonFile } from "src/addresses/AddressesJsonFile";
 import { getAssetProxies } from "src/tokenlist/getAssetProxies";
-import { getBaseAssets } from "src/tokenlist/getBaseAssets";
+import { getUnderlyingTokenInfos } from "src/tokenlist/getUnderlyingTokenInfos";
 import { getCCPools } from "src/tokenlist/getCCPools";
 import { getVaults } from "src/tokenlist/getVaults";
 import { getWeightedPools } from "src/tokenlist/getWeightedPools";
 
-import { getPrincipalTokens } from "./getPrincipalTokens";
+import { getPrincipalTokens } from "./principalTokens";
 import { getYieldTokensFromTranches } from "./getYieldTokens";
 import { tags } from "./tags";
+import { PrincipalTokenInfo } from "src/tokenlist/types";
 
 export async function getTokenList(
   addressesJson: AddressesJsonFile,
@@ -25,23 +26,33 @@ export async function getTokenList(
       wethAddress,
       usdcAddress,
       daiAddress,
+      lusdAddress,
       convergentPoolFactoryAddress,
       weightedPoolFactoryAddress,
     },
     safelist,
   } = addressesJson;
 
-  const baseAssetsList = await getBaseAssets(
+  // Skip addresses that are "0x0", which can happen if you know the underlying
+  // token isn't available on the given chain.
+  const baseAssetAddresses = [
     wethAddress,
     usdcAddress,
     daiAddress,
-    chainId
+    lusdAddress,
+  ].filter((address) => address !== "0x0");
+
+  const baseAssetsList = await getUnderlyingTokenInfos(
+    chainId,
+    baseAssetAddresses
   );
+
   const { tranches, principalTokensList } = await getPrincipalTokens(
     trancheFactoryAddress,
     chainId,
     safelist
   );
+
   const assetProxiesList = await getAssetProxies(tranches, chainId);
   const vaultsList = await getVaults(
     assetProxiesList.map(({ extensions: { vault } }) => vault),

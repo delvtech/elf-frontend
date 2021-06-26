@@ -37,8 +37,8 @@ export function useFeeVolumeForPool(
 
   const swapFeeBN = usePoolSwapFee(pool);
 
-  if (!swapEvents?.length || !baseAssetContract || !baseAssetDecimals) {
-    return undefined;
+  if (!swapEvents?.length) {
+    return 0;
   }
 
   if (!swapFeeBN) {

@@ -9,7 +9,7 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { SwapKind } from "efi/balancer/SwapKind";
 import { validateInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
-import { TokenIcon } from "efi-ui/token/TokenIcon";
+import { IconProps } from "efi-ui/token/TokenIcon";
 import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
 import { PoolContract } from "efi/pools/PoolContract";
 
@@ -25,7 +25,7 @@ const tradeInputStyle: CSSProperties = {
 
 interface TradeInputProps {
   cryptoAddress: string | undefined;
-  cryptoIcon: TokenIcon | undefined;
+  cryptoIcon: React.FC<IconProps> | undefined;
   cryptoSymbol: string | undefined;
   cryptoDecimals: number | undefined;
   cryptoBalanceOf: BigNumber | undefined;

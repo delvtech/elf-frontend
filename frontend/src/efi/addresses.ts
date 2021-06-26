@@ -34,13 +34,11 @@ export function lookupAddressKey(
     Object.entries(AddressesJson.addresses).find(
       ([key, value]) => value === address
     ) || [];
-  return addressesJsonKey;
+
+  const safeListedAddress = !!AddressesJson.safelist.find(
+    (safeListedAddress) => address === safeListedAddress
+  )
+    ? "safelisted address"
+    : undefined;
+  return addressesJsonKey || safeListedAddress;
 }
-
-export const KNOWN_ERC20_TOKENS = [ContractAddresses.wethAddress];
-export const KNOWN_ERC20PERMIT_TOKENS = [AddressesJson.addresses.usdcAddress];
-
-export const KNOWN_BASE_ASSETS = [
-  ...KNOWN_ERC20_TOKENS,
-  ...KNOWN_ERC20PERMIT_TOKENS,
-];

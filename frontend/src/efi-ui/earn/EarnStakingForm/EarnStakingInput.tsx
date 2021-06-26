@@ -9,12 +9,12 @@ import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
 import { calculateLPOutGivenIn } from "efi/pools/calculateLPOutGivenIn";
 
 import { TokenAmountInput } from "efi-ui/token/TokenAmountInput/TokenAmountInput";
-import { TokenIcon } from "efi-ui/token/TokenIcon";
+import { IconProps } from "efi-ui/token/TokenIcon";
 
 interface EarnStakingInputProps {
   cryptoSymbol: CryptoSymbol;
   cryptoDecimals: number | undefined;
-  cryptoAssetIcon: TokenIcon;
+  cryptoAssetIcon: React.FC<IconProps>;
   cryptoBalanceOf: BigNumber | undefined;
   onPreviewUpdate: (otherNeeded: string, lpOut: string | undefined) => void;
   onChange: (inputValue: string) => void;

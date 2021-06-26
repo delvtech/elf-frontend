@@ -8,7 +8,8 @@
     "usdcAddress": "0x78dEca24CBa286C0f8d56370f5406B48cFCE2f86",
     "userProxyContractAddress": "0xB8d8DD04385De3cbc84132F31dD84d5DaF0675fD",
     "weightedPoolFactoryAddress": "0x7576dB443020ec4F46526c317262347Acdf1B99d",
-    "wethAddress": "0x9A1000D492d40bfccbc03f413A48F5B6516Ec0Fd"
+    "wethAddress": "0x9A1000D492d40bfccbc03f413A48F5B6516Ec0Fd",
+    "lusdAddress": "0x0"
   },
   "chainId": 5,
   "safelist": [

@@ -8,7 +8,7 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
-import { TokenIcon } from "efi-ui/token/TokenIcon";
+import { IconProps } from "efi-ui/token/TokenIcon";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { getCryptoName } from "efi/crypto/getCryptoName/getCryptoName";
 import { getCryptoSymbol2 } from "efi/crypto/getCryptoSymbol";
@@ -62,7 +62,7 @@ export function CryptoAssetButton({
   );
 }
 interface AssetLabelProps {
-  icon: TokenIcon;
+  icon: React.FC<IconProps>;
   assetName: string;
   assetSymbol: string;
 }

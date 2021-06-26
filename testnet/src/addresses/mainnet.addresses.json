@@ -1,0 +1,20 @@
+{
+  "chainId": 1,
+  "addresses": {
+    "balancerVaultAddress": "0xBA12222222228d8Ba445958a75a0704d566BF2C8",
+    "convergentPoolFactoryAddress": "0xb7561f547F3207eDb42A6AfA42170Cd47ADD17BD",
+    "daiAddress": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+    "interestTokenFactoryAddress": "0x17cb1f74119DFE718f786A05bEa7D71bF438678c",
+    "trancheFactoryAddress": "0x62F161BF3692E4015BefB05A03a94A40f520d1c0",
+    "usdcAddress": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+    "userProxyContractAddress": "0xEe4e158c03A10CBc8242350d74510779A364581C",
+    "weightedPoolFactoryAddress": "0x8E9aa87E45e92bad84D5F8DD1bff34Fb92637dE9",
+    "wethAddress": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+    "lusdAddress": "0x5f98805A4E8be255a32880FDeC7F6728C6568bA0"
+  },
+  "safelist": [
+    "0x94BE72dc46fe8f7e9f40FBD2c31826f472F4036E",
+    "0x0a9E96988E21c9A03B8DC011826A00259e02C46e",
+    "0x6De69beB66317557E65168BD7D3fff22a89dBb11"
+  ]
+}

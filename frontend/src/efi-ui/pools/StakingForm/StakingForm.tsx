@@ -23,7 +23,7 @@ import { useJoinConvergentPool } from "efi-ui/pools/useJoinConvergentPool/useJoi
 import { useJoinWeightedPool } from "efi-ui/pools/useJoinWeightedPool";
 import { useTokenPoolBalance } from "efi-ui/pools/useTokenPoolBalance/useTokenPoolBalance";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
-import { TokenIcon } from "efi-ui/token/TokenIcon";
+import { IconProps } from "efi-ui/token/TokenIcon";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
 import { useEthBalance } from "efi-ui/wallets/hooks/useEthBalance/useEthBalance";
 import ContractAddresses from "efi/addresses";
@@ -44,7 +44,7 @@ import { trancheContracts } from "efi/tranche/tranches";
 interface StakingAssetInputProps {
   cryptoSymbol: CryptoSymbol;
   cryptoDecimals: number | undefined;
-  cryptoAssetIcon: TokenIcon;
+  cryptoAssetIcon: React.FC<IconProps>;
   cryptoBalanceOf: BigNumber | undefined;
   cryptoDisplayBalance: string | number;
   disabled: boolean;

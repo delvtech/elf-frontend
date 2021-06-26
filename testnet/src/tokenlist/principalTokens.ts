@@ -16,9 +16,13 @@ if (process.env.NODE_ENV === "development") {
 import { PrincipalTokenInfo, TokenListTag } from "src/tokenlist/types";
 import { getTokenSymbolMulti } from "src/tokenlist/erc20";
 
+const MAINNET_CHAIN_ID = 1;
 const GOERLI_CHAIN_ID = 5;
 const HARDHAT_CHAIN_ID = 31337;
-const trancheSymbolOverrides: Record<number, Record<string, string>> = {
+const trancheSymbolOverrides: Record<
+  number,
+  Record<string, PrincipalTokenInfo["symbol"]>
+> = {
   [GOERLI_CHAIN_ID]: {
     // these contracts have v1 vault symbols, but we want the v2 vaults on testnet
     "0x44eecA004b2612d131EDA7dA2b9d986E7fED562e": "ePyvCurve-stETH",
@@ -30,12 +34,20 @@ const trancheSymbolOverrides: Record<number, Record<string, string>> = {
   },
   [HARDHAT_CHAIN_ID]: hardhatSymbolOverrides,
 };
+
+const trancheUnderlyingOverrides: Record<
+  number,
+  Record<string, PrincipalTokenInfo["extensions"]["underlying"]>
+> = {
+  // TODO: Put the lusd tranche address in here and map it to the lusd base asset address for now
+  [MAINNET_CHAIN_ID]: {},
+};
 export const provider = hre.ethers.provider;
 export async function getPrincipalTokens(
   trancheFactoryAddress: string,
   chainId: number,
   safelist: string[]
-) {
+): Promise<{ tranches: Tranche[]; principalTokensList: PrincipalTokenInfo[] }> {
   const trancheFactory = TrancheFactory__factory.connect(
     trancheFactoryAddress,
     provider
@@ -68,8 +80,9 @@ export async function getPrincipalTokens(
   const decimals = await Promise.all(
     safeTranches.map((tranche) => tranche.decimals())
   );
-  const underlyingAddresses = await Promise.all(
-    safeTranches.map((tranche) => tranche.underlying())
+  const underlyingAddresses = await getPrincipalTokenUnderlyings(
+    chainId,
+    safeTranches
   );
   const unlockTimestamps = await Promise.all(
     safeTranches.map((tranche) => tranche.unlockTimestamp())
@@ -81,7 +94,7 @@ export async function getPrincipalTokens(
     safeTranches.map((tranche) => tranche.position())
   );
 
-  const principalTokensList: TokenInfo[] = zip<any>(
+  const principalTokensList: PrincipalTokenInfo[] = zip<any>(
     safeTrancheAddresses,
     principalTokenSymbols,
     principalTokenNames,
@@ -126,6 +139,26 @@ export async function getPrincipalTokens(
   return { tranches: safeTranches, principalTokensList };
 }
 
+async function getPrincipalTokenUnderlyings(
+  chainId: number,
+  tranches: Tranche[]
+) {
+  const trancheAddresses = tranches.map((tranche) => tranche.address);
+  const underlyingAddresses = await Promise.all(
+    tranches.map((tranche) => tranche.underlying())
+  );
+  const overrides = trancheUnderlyingOverrides[chainId] || {};
+  const underlyings = zip(trancheAddresses, underlyingAddresses).map(
+    (zipped) => {
+      const [trancheAddress, underlyingAddress] = zipped as [string, string];
+      if (overrides[trancheAddress]) {
+        return overrides[trancheAddress];
+      }
+      return underlyingAddress;
+    }
+  );
+  return underlyings;
+}
 async function getPrincipalTokenSymbols(chainId: number, tranches: Tranche[]) {
   const trancheAddresses = tranches.map((tranche) => tranche.address);
   const trancheSymbols = await getTokenSymbolMulti(tranches);

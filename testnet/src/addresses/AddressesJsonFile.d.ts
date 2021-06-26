@@ -10,6 +10,7 @@ export interface AddressesJsonFile {
     wethAddress: string;
     daiAddress: string;
     usdcAddress: string;
+    lusdAddress: string;
   };
   safelist: string[];
 }

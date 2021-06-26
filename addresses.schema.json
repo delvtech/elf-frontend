@@ -24,6 +24,12 @@
         "weightedPoolFactoryAddress": {
           "type": "string"
         },
+        "daiAddress": {
+          "type": "string"
+        },
+        "lusdAddress": {
+          "type": "string"
+        },
         "wethAddress": {
           "type": "string"
         }
@@ -34,6 +40,8 @@
         "interestTokenFactoryAddress",
         "trancheFactoryAddress",
         "usdcAddress",
+        "lusdAddress",
+        "daiAddress",
         "userProxyContractAddress",
         "weightedPoolFactoryAddress",
         "wethAddress"

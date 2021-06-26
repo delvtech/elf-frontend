@@ -1,4 +1,4 @@
-import { ChangeEvent, ReactElement, useCallback } from "react";
+import React, { ChangeEvent, ReactElement, useCallback } from "react";
 
 import {
   Button,
@@ -13,10 +13,11 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
-import { TokenIcon } from "efi-ui/token/TokenIcon";
+import { IconProps } from "efi-ui/token/TokenIcon";
 
 import styles from "./styles.module.css";
+import { getTokenInfo } from "efi/tokenlists";
+import { PrincipalTokenInfo } from "tokenlists/types";
 
 interface RedeemFormProps {
   tranche: Tranche;
@@ -33,7 +34,7 @@ interface RedeemFormProps {
    * input
    */
   assetSymbol: string;
-  assetIcon?: TokenIcon;
+  assetIcon?: React.FC<IconProps>;
   heading?: string;
 
   /**
@@ -56,7 +57,9 @@ export function RedeemForm({
   children,
 }: RedeemFormProps): ReactElement {
   const { isDarkMode } = useDarkMode();
-  const { data: assetSymbol } = useTokenSymbol(tranche);
+  const { symbol: assetSymbol } = getTokenInfo<PrincipalTokenInfo>(
+    tranche.address
+  );
   const assetSymbolLabel = assetSymbolFromProps || assetSymbol;
   const onAssetOneAmountChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {

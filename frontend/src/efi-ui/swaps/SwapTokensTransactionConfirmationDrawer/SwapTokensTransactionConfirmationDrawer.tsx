@@ -14,7 +14,7 @@ import { usePoolSwapFee } from "efi-ui/pools/usePoolSwapFee/usePoolSwapFee";
 import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
 import { SwapDetailsForm } from "efi-ui/swaps/SwapDetailsPreview/SwapDetailsForm";
 import { SwapTokenDetails } from "efi-ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensDetails";
-import { TokenIcon } from "efi-ui/token/TokenIcon";
+import { IconProps } from "efi-ui/token/TokenIcon";
 import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/TransactionDrawer";
 import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
@@ -44,11 +44,11 @@ interface SwapTokensTransactionConfirmationDrawerProps {
   tokenInAddress: string;
   tokenInSymbol: string;
   tokenInDecimals: number;
-  tokenInIcon: TokenIcon | undefined;
+  tokenInIcon: React.FC<IconProps> | undefined;
   tokenOutAddress: string;
   tokenOutSymbol: string;
   tokenOutDecimals: number;
-  tokenOutIcon: TokenIcon | undefined;
+  tokenOutIcon: React.FC<IconProps> | undefined;
 
   // out/in
   spotPrice: number | undefined;

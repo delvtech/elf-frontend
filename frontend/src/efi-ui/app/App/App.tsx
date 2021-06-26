@@ -24,6 +24,8 @@ import { useToastWrongChain } from "efi-ui/provider/useBlockFromTag/useToastWron
 import { TopbarNavigation } from "efi-ui/app/navigation/TopbarNavigation/TopbarNavigation";
 import { getConnectorName } from "efi/wallets/connectors";
 import { NavigationMenuButton } from "efi-ui/app/navigation/EarnHamburgerButton/EarnHamburgerButton";
+import { AddressesJson } from "efi/addresses";
+import { ChainId, ChainNames } from "efi/ethereum";
 
 FocusStyleManager.onlyShowFocusOnTabs();
 
@@ -32,7 +34,8 @@ interface AppProps {}
 const App: FC<AppProps> = () => {
   const { active, account, chainId, deactivate, connector, library } =
     useWeb3React<Web3Provider>();
-  const onMainnet = active && chainId === 1;
+  const isWrongChain = active && chainId !== AddressesJson.chainId;
+  const chainName = ChainNames[AddressesJson.chainId as ChainId];
 
   const { isDarkMode, darkModeClassName } = useDarkMode();
 
@@ -75,7 +78,7 @@ const App: FC<AppProps> = () => {
           <PoolView path={`pools/:poolAddress`} />
         </Router>
       </div>
-      <Overlay isOpen={onMainnet}>
+      <Overlay isOpen={isWrongChain}>
         <div
           className={tw(
             "flex",
@@ -87,7 +90,7 @@ const App: FC<AppProps> = () => {
         >
           <H1
             className={styles.overlay}
-          >{t`Please Connect to Goerli Testnet`}</H1>
+          >{t`Please Connect to ${chainName}`}</H1>
         </div>
       </Overlay>
       <div className={styles.mobileView}>
@@ -103,7 +106,7 @@ const App: FC<AppProps> = () => {
           >
             <div>
               <H1 className={styles.overlay}>
-                {t`Mobile Compatibility Coming with Mainnet Launch`}
+                {t`Mobile Compatibility Coming Soon`}
               </H1>
             </div>
           </div>

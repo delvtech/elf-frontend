@@ -4,19 +4,21 @@ import { Currency, Money } from "ts-money";
 import { getCoinGeckoId } from "efi-coingecko";
 import { ComputedQueryResult } from "efi-ui/base/ComputedQueryResult";
 import { useCoinGeckoHistoricalPrice } from "efi-ui/coingecko/useCoinGeckoHistoricalPrice";
-import { useTokenSymbol } from "efi-ui/token/hooks/useTokenSymbol";
+import { getTokenInfo } from "efi/tokenlists";
 
 export function useTokenHistoricalPrice<TContract extends ERC20>(
   contract: TContract | undefined,
   currency: Currency,
   daysAgo: number
 ): ComputedQueryResult<Money> {
-  const tokenSymbolResult = useTokenSymbol(contract);
+  const tokenSymbolResult = contract
+    ? getTokenInfo(contract.address).symbol
+    : undefined;
   const priceResult = useCoinGeckoHistoricalPrice(
-    getCoinGeckoId(tokenSymbolResult.data),
+    getCoinGeckoId(tokenSymbolResult),
     currency,
     daysAgo
   );
 
-  return [priceResult.data, [tokenSymbolResult, priceResult]];
+  return [priceResult.data, [priceResult]];
 }
