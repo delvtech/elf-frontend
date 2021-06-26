@@ -18,7 +18,7 @@ import { IconProps } from "efi-ui/token/TokenIcon";
 import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/TransactionDrawer";
 import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { getCryptoSymbol2 } from "efi/crypto/getCryptoSymbol";
 import { calculatePurchasePrice } from "efi/pools/calculatePurchasePrice";
 import { calculateSlippage } from "efi/pools/calculateSlippage";
 import { getPoolContract } from "efi/pools/getPoolContract";
@@ -89,7 +89,7 @@ export function SwapTokensTransactionConfirmationDrawer({
   const pool = getPoolContract(poolAddress);
   const { baseAssetContract } = getPoolTokens(poolInfo);
   const baseAsset = getCryptoAssetForToken(baseAssetContract?.address);
-  const baseAssetSymbol = getCryptoSymbol(baseAsset);
+  const baseAssetSymbol = getCryptoSymbol2(baseAsset);
   const baseAssetAddress = getTokenAddressForBalancer(baseAsset);
   const baseAssetIn = baseAssetAddress === tokenInAddress;
 

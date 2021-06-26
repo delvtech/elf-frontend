@@ -95,11 +95,6 @@ export function SwapDetailsForm({
               [styles.inputColor]: !isDarkMode,
               [styles.inputColorDark]: isDarkMode,
             })}
-            leftElement={
-              <div className={tw("flex", "items-center", "px-2")}>
-                {AssetInIcon ? <AssetInIcon height={18} width={18} /> : null}
-              </div>
-            }
             value={amountIn}
             rightElement={
               <div className={tw("flex", "items-center", "px-3")}>
@@ -131,13 +126,6 @@ export function SwapDetailsForm({
                 [styles.inputColor]: !isDarkMode,
                 [styles.inputColorDark]: isDarkMode,
               })}
-              leftElement={
-                <div className={tw("flex", "items-center", "px-2")}>
-                  {AssetOutIcon ? (
-                    <AssetOutIcon height={18} width={18} />
-                  ) : null}
-                </div>
-              }
               value={amountOut}
               placeholder="0.00"
               rightElement={

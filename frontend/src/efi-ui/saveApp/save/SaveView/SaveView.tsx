@@ -99,7 +99,7 @@ export function SaveView(props: EarnViewProps): ReactElement {
         >
           <ViewTitle
             title={t`The simplest way to grow your crypto.`}
-            subtitle={jt`No minimums, no withdrawal penalties, no lockups. Just fixed rate interest. ${fixedYieldLink}`}
+            subtitle={jt`No minimums, no withdrawal penalties, exit anytime. ${fixedYieldLink}`}
           />
           <div
             className={tw("flex", "flex-col", "space-y-4")}

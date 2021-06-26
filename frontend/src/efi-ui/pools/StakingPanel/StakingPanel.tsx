@@ -66,7 +66,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
               <StakingInput
                 cryptoSymbol={termAssetInputProps.cryptoSymbol}
                 cryptoDecimals={termAssetInputProps.cryptoDecimals}
-                cryptoAssetIcon={termAssetInputProps.cryptoAssetIcon}
+                cryptoAssetIcon={undefined}
                 cryptoBalanceOf={termAssetInputProps.cryptoBalanceOf}
                 cryptoDisplayBalance={termAssetInputProps.cryptoDisplayBalance}
                 disabled={termAssetInputProps.disabled}

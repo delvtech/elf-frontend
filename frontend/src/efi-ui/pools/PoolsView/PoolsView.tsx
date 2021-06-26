@@ -26,7 +26,7 @@ export function PoolsView(props: PoolsViewProps): ReactElement {
   const subtitle =
     activeTab === "yield"
       ? t`Buy and sell yield tokens or provide liquidity by staking in Element yield pools.`
-      : t`Buy and sell principal or provide liquidity by staking in Element principal pools.`;
+      : t`Buy and sell principal tokens or provide liquidity by staking in Element principal pools.`;
 
   return (
     <Fragment>

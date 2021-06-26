@@ -37,6 +37,7 @@ import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalan
 import { CryptoAssets } from "efi/crypto/CryptoAssetRegistry";
 
 interface TradePanelProps {
+  tradeType: "buy" | "sell";
   library: Web3Provider | undefined;
   signer: Signer | undefined;
   account: string | null | undefined;
@@ -51,6 +52,7 @@ interface TradePanelProps {
 
 export function TradePanel(props: TradePanelProps): ReactElement {
   const {
+    tradeType,
     account,
     library,
     buttonLabel,
@@ -232,12 +234,11 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     >
       {/* Trade Asset */}
       <TradeInput
-        cryptoAddress={tokenInAddress}
         cryptoDecimals={tokenInDecimals}
         cryptoBalanceOf={tokenInBalanceOf}
         cryptoDisplayBalance={tokenInDisplayBalance || ""}
         cryptoSymbol={tokenInSymbol}
-        cryptoIcon={tokenInIcon}
+        cryptoIcon={tradeType === "buy" ? tokenInIcon : undefined}
         previewCryptoAddress={tokenOutAddress}
         previewCryptoPoolIndex={tokenOutPoolIndex}
         labelTopLeft={
@@ -251,12 +252,11 @@ export function TradePanel(props: TradePanelProps): ReactElement {
         validValue={isValidTokenInValue}
       />
       <TradeInput
-        cryptoAddress={tokenOutAddress}
         cryptoDecimals={tokenOutDecimals}
         cryptoBalanceOf={tokenOutBalanceOf}
         cryptoDisplayBalance={tokenOutDisplayBalance || ""}
         cryptoSymbol={tokenOutSymbol}
-        cryptoIcon={tokenOutIcon}
+        cryptoIcon={tradeType === "sell" ? tokenOutIcon : undefined}
         previewCryptoAddress={tokenInAddress}
         previewCryptoPoolIndex={tokenInPoolIndex}
         labelTopLeft={

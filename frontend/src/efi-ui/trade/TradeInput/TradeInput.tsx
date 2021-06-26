@@ -24,7 +24,6 @@ const tradeInputStyle: CSSProperties = {
 };
 
 interface TradeInputProps {
-  cryptoAddress: string | undefined;
   cryptoIcon: React.FC<IconProps> | undefined;
   cryptoSymbol: string | undefined;
   cryptoDecimals: number | undefined;

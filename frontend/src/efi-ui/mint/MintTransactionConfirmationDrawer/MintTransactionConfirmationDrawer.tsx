@@ -176,7 +176,7 @@ export function MintTransactionConfirmationDrawer({
                 <Callout>
                   <div>
                     <Switch
-                      label={t`Include token approvals for providing liquidity.`}
+                      label={t`Include token approvals for providing liquidity. (Turn this off if you are using a Ledger wallet.)`}
                       checked={includePermits}
                       onChange={() => setIncludePermits(!includePermits)}
                     />

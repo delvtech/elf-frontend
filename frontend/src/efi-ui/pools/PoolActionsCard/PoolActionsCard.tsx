@@ -50,6 +50,7 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
         </Tabs>
         {activeTab === PoolAction.BUY && (
           <TradePanel
+            tradeType="buy"
             library={library}
             signer={signer}
             account={account}
@@ -62,6 +63,7 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
         )}
         {activeTab === PoolAction.SELL && (
           <TradePanel
+            tradeType="sell"
             library={library}
             signer={signer}
             account={account}
