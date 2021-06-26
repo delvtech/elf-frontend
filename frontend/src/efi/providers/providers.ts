@@ -15,7 +15,7 @@ const web3Goerli = createAlchemyWeb3(
   `wss://eth-goerli.ws.alchemyapi.io/v2/${ALCHEMY_GOERLI_KEY}`
 );
 const web3Mainnet = createAlchemyWeb3(
-  `wss://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_MAINNET_KEY}`
+  `wss://eth-mainnet.ws.alchemyapi.io/v2/${ALCHEMY_MAINNET_KEY}`
 );
 export const localhostProvider = new providers.JsonRpcProvider(LOCAL_RPC_HOST);
 
