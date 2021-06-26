@@ -62,7 +62,7 @@ const config: HardhatUserConfig = {
       forking: {
         url:
           "https://eth-mainnet.alchemyapi.io/v2/kwjMP-X-Vajdk1ItCfU-56Uaq1wwhamK",
-        blockNumber: 11853372,
+        blockNumber: 12706268,
       },
     },
     goerli: {
