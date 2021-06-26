@@ -8,10 +8,9 @@ import { PoolInfo } from "efi/pools/PoolInfo";
 export function useTotalLiquidity(poolInfo: PoolInfo): number {
   const pool = getPoolContract(poolInfo.address);
   const { data: [, balances] = [undefined, undefined] } = usePoolTokens(pool);
-  const { baseAssetInfo, baseAssetIndex, termAssetIndex } =
+  const { baseAssetInfo, baseAssetIndex, termAssetInfo, termAssetIndex } =
     getPoolTokens(poolInfo);
-  const { decimals: baseAssetDecimals, address: baseAssetAddress } =
-    baseAssetInfo;
+  const { decimals: baseAssetDecimals } = baseAssetInfo;
   const baseBalance = +formatUnits(
     balances?.[baseAssetIndex] ?? 0,
     baseAssetDecimals
@@ -20,7 +19,7 @@ export function useTotalLiquidity(poolInfo: PoolInfo): number {
     balances?.[termAssetIndex] ?? 0,
     baseAssetDecimals
   );
-  const spotPrice = usePoolSpotPrice(pool, baseAssetAddress) ?? 0;
+  const spotPrice = usePoolSpotPrice(pool, termAssetInfo.address) ?? 0;
   const termBalanceInBaseUnits = termBalance * spotPrice;
   const totalSupplyInBaseUnits = baseBalance + termBalanceInBaseUnits;
   return totalSupplyInBaseUnits;
