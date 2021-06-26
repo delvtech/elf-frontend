@@ -1,6 +1,6 @@
 import "module-alias/register";
 
-import { formatEther, formatUnits } from "ethers/lib/utils";
+import { Signer } from "ethers";
 import fs from "fs";
 import hre, { ethers } from "hardhat";
 
@@ -18,9 +18,10 @@ import {
   WETH__factory,
 } from "src/types";
 
+import { deployVaultsAndProxys } from "src/scripts/deployVaultsAndProxys";
 import { getSigner, SIGNER } from "src/scripts/getSigner";
-import { Signer } from "ethers";
 
+const ETH_WHALE_ADDRESS = "0x73bceb1cd57c711feac4224d062b0f6ff338501e";
 const WETH_WHALE_ADDRESS = "0x0f4ee9631f4be0a63756515141281a3e2b293bbe";
 const USDC_WHALE_ADDRESS = "0x47ac0fb4f2d84898e4d9e7b4dab3c24507a6d503";
 const DAI_WHALE_ADDRESS = "0x4f868c1aa37fcf307ab38d215382e88fca6275e2";
@@ -46,7 +47,12 @@ const json = {
   ],
 };
 async function main() {
-  const { elementSigner, balancerSigner, userSigner } = await getSigners();
+  const {
+    balancerSigner,
+    userSigner,
+    wethWhaleSigner,
+    ethWhaleSigner: elementSigner,
+  } = await getSigners();
 
   const elementAddress = await elementSigner.getAddress();
   const balancerAddress = await balancerSigner.getAddress();
@@ -70,13 +76,20 @@ async function main() {
   );
 
   // get factories
-  getFactoryContracts(elementSigner);
+  const factories = getFactoryContracts(elementSigner);
 
   // get user proxy
   const userProxyContract = UserProxy__factory.connect(
     json.addresses.userProxyContractAddress,
     elementSigner
   );
+
+  const {
+    yWeth,
+    wethYearnVaultAssetProxy,
+    yUsdc,
+    usdcYearnVaultAssetProxy,
+  } = await deployVaultsAndProxys(elementSigner, wethContract, usdcContract);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
@@ -124,15 +137,25 @@ function getFactoryContracts(elementSigner: Signer) {
     json.addresses.trancheFactoryAddress,
     elementSigner
   );
+
+  return {
+    weightedPoolFactory,
+    convergentPoolFactory,
+    interestTokenFactory,
+    trancheFactory,
+  };
 }
 
 async function getSigners() {
   const elementSigner = await getSigner(SIGNER.ELEMENT, hre);
   const balancerSigner = await getSigner(SIGNER.ELEMENT, hre);
   const userSigner = await getSigner(SIGNER.USER, hre);
-  const wethSigner = await getSigner(SIGNER.WETH, hre);
-  const usdcSigner = await getSigner(SIGNER.USDC, hre);
+
   // get some whale accounts
+  await hre.network.provider.request({
+    method: "hardhat_impersonateAccount",
+    params: [ETH_WHALE_ADDRESS],
+  });
   await hre.network.provider.request({
     method: "hardhat_impersonateAccount",
     params: [WETH_WHALE_ADDRESS],
@@ -145,8 +168,17 @@ async function getSigners() {
     method: "hardhat_impersonateAccount",
     params: [DAI_WHALE_ADDRESS],
   });
+  const ethWhaleSigner = await ethers.provider.getSigner(ETH_WHALE_ADDRESS);
   const wethWhaleSigner = await ethers.provider.getSigner(WETH_WHALE_ADDRESS);
   const usdcWhaleSigner = await ethers.provider.getSigner(USDC_WHALE_ADDRESS);
   const daiWhaleSigner = await ethers.provider.getSigner(DAI_WHALE_ADDRESS);
-  return { elementSigner, balancerSigner, userSigner };
+  return {
+    elementSigner,
+    balancerSigner,
+    userSigner,
+    ethWhaleSigner,
+    wethWhaleSigner,
+    usdcWhaleSigner,
+    daiWhaleSigner,
+  };
 }
