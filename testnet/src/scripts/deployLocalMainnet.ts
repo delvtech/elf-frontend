@@ -12,14 +12,18 @@ import {
   USDC,
   USDC__factory,
   UserProxy__factory,
+  Vault__factory,
   WeightedPoolFactory__factory,
   WETH,
   WETH__factory,
 } from "src/types";
 
 import { getSigner, SIGNER } from "src/scripts/getSigner";
+import { Signer } from "ethers";
 
-import { deployBalancerVault } from "./balancerV2Vault";
+const WETH_WHALE_ADDRESS = "0x0f4ee9631f4be0a63756515141281a3e2b293bbe";
+const USDC_WHALE_ADDRESS = "0x47ac0fb4f2d84898e4d9e7b4dab3c24507a6d503";
+const DAI_WHALE_ADDRESS = "0x4f868c1aa37fcf307ab38d215382e88fca6275e2";
 
 const json = {
   chainId: 1,
@@ -42,15 +46,49 @@ const json = {
   ],
 };
 async function main() {
-  const elementSigner = await getSigner(SIGNER.ELEMENT, hre);
-  const balancerSigner = await getSigner(SIGNER.ELEMENT, hre);
-  const userSigner = await getSigner(SIGNER.USER, hre);
-  const wethSigner = await getSigner(SIGNER.WETH, hre);
-  const usdcSigner = await getSigner(SIGNER.USDC, hre);
+  const { elementSigner, balancerSigner, userSigner } = await getSigners();
+
   const elementAddress = await elementSigner.getAddress();
   const balancerAddress = await balancerSigner.getAddress();
   const userAddress = await userSigner.getAddress();
 
+  const { wethContract, usdcContract, daiContract } = getBaseAssetContracts(
+    elementSigner
+  );
+
+  // get balancer vault
+  const balancerVaultContract = Vault__factory.connect(
+    json.addresses.balancerVaultAddress,
+    elementSigner
+  );
+
+  // register element with balancer so we can deploy pools
+  await balancerVaultContract.setRelayerApproval(
+    elementAddress,
+    elementAddress,
+    true
+  );
+
+  // get factories
+  getFactoryContracts(elementSigner);
+
+  // get user proxy
+  const userProxyContract = UserProxy__factory.connect(
+    json.addresses.userProxyContractAddress,
+    elementSigner
+  );
+}
+
+// We recommend this pattern to be able to use async/await everywhere
+// and properly handle errors.
+main()
+  .then(() => process.exit(0))
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });
+
+function getBaseAssetContracts(elementSigner: Signer) {
   const wethContract = WETH__factory.connect(
     json.addresses.wethAddress,
     elementSigner
@@ -65,62 +103,10 @@ async function main() {
     json.addresses.daiAddress,
     elementSigner
   );
+  return { wethContract, usdcContract, daiContract };
+}
 
-  // get some whale accounts
-  const WETH_WHALE_ADDRESS = "0x0f4ee9631f4be0a63756515141281a3e2b293bbe";
-  const USDC_WHALE_ADDRESS = "0x47ac0fb4f2d84898e4d9e7b4dab3c24507a6d503";
-  const DAI_WHALE_ADDRESS = "0x4f868c1aa37fcf307ab38d215382e88fca6275e2";
-
-  await hre.network.provider.request({
-    method: "hardhat_impersonateAccount",
-    params: [WETH_WHALE_ADDRESS],
-  });
-  await hre.network.provider.request({
-    method: "hardhat_impersonateAccount",
-    params: [USDC_WHALE_ADDRESS],
-  });
-  await hre.network.provider.request({
-    method: "hardhat_impersonateAccount",
-    params: [DAI_WHALE_ADDRESS],
-  });
-
-  const wethWhaleSigner = await ethers.provider.getSigner(WETH_WHALE_ADDRESS);
-  const usdcWhaleSigner = await ethers.provider.getSigner(USDC_WHALE_ADDRESS);
-  const daiWhaleSigner = await ethers.provider.getSigner(DAI_WHALE_ADDRESS);
-
-  const wethWhaleBalance = await wethContract.balanceOf(WETH_WHALE_ADDRESS);
-  const usdcWhaleBalance = await usdcContract.balanceOf(USDC_WHALE_ADDRESS);
-  const daiWhaleBalance = await daiContract.balanceOf(DAI_WHALE_ADDRESS);
-  console.log("wethWhaleBalance", formatEther(wethWhaleBalance));
-  console.log("usdcWhaleBalance", formatUnits(usdcWhaleBalance, 6));
-  console.log("daiWhaleBalance", formatEther(daiWhaleBalance));
-
-  // // supply element with WETH and USDC
-  // await mintTokensForAddress(elementAddress, {
-  //   tokens: [wethContract, usdcContract],
-  //   amounts: "100000000000",
-  // });
-
-  // // supply user with WETH and USDC
-  // await mintTokensForAddress(userAddress, {
-  //   tokens: [wethContract, usdcContract],
-  //   amounts: "100000000000",
-  // });
-
-  // deploy main balancer vault
-  const balancerVaultContract = await deployBalancerVault(
-    balancerSigner,
-    wethContract
-  );
-
-  // register element with balancer so we can deploy pools
-  await balancerVaultContract.setRelayerApproval(
-    elementAddress,
-    elementAddress,
-    true
-  );
-
-  // get factories
+function getFactoryContracts(elementSigner: Signer) {
   const weightedPoolFactory = WeightedPoolFactory__factory.connect(
     json.addresses.weightedPoolFactoryAddress,
     elementSigner
@@ -138,19 +124,29 @@ async function main() {
     json.addresses.trancheFactoryAddress,
     elementSigner
   );
-
-  // get user proxy
-  const userProxyContract = UserProxy__factory.connect(
-    json.addresses.userProxyContractAddress,
-    elementSigner
-  );
 }
 
-// We recommend this pattern to be able to use async/await everywhere
-// and properly handle errors.
-main()
-  .then(() => process.exit(0))
-  .catch((error) => {
-    console.error(error);
-    process.exit(1);
+async function getSigners() {
+  const elementSigner = await getSigner(SIGNER.ELEMENT, hre);
+  const balancerSigner = await getSigner(SIGNER.ELEMENT, hre);
+  const userSigner = await getSigner(SIGNER.USER, hre);
+  const wethSigner = await getSigner(SIGNER.WETH, hre);
+  const usdcSigner = await getSigner(SIGNER.USDC, hre);
+  // get some whale accounts
+  await hre.network.provider.request({
+    method: "hardhat_impersonateAccount",
+    params: [WETH_WHALE_ADDRESS],
   });
+  await hre.network.provider.request({
+    method: "hardhat_impersonateAccount",
+    params: [USDC_WHALE_ADDRESS],
+  });
+  await hre.network.provider.request({
+    method: "hardhat_impersonateAccount",
+    params: [DAI_WHALE_ADDRESS],
+  });
+  const wethWhaleSigner = await ethers.provider.getSigner(WETH_WHALE_ADDRESS);
+  const usdcWhaleSigner = await ethers.provider.getSigner(USDC_WHALE_ADDRESS);
+  const daiWhaleSigner = await ethers.provider.getSigner(DAI_WHALE_ADDRESS);
+  return { elementSigner, balancerSigner, userSigner };
+}
