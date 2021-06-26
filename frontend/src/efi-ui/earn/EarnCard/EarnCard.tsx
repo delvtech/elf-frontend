@@ -100,11 +100,11 @@ export function EarnCard(props: EarnCardProps): ReactElement | null {
   // get dynamic pool information
   const principalPrice = usePoolSpotPrice(
     principalPoolContract,
-    principalPoolInfo.extensions.underlying
+    principalPoolInfo.address
   )?.toFixed(4);
   const yieldPrice = usePoolSpotPrice(
     yieldPoolContract,
-    yieldPoolInfo.extensions.underlying
+    yieldPoolInfo.address
   )?.toFixed(4);
   const fees = useFeeVolumeForPool(yieldPoolInfo) ?? 0;
   const tvl = useTotalValueLockedForTranche(
