@@ -257,7 +257,6 @@ function useTokensSummary(
   );
   const { decimals: termAssetDecimals } = termAssetInfo;
 
-  const spotPrice = usePoolSpotPrice(pool, baseAssetContract.address);
   const termSpotPrice = usePoolSpotPrice(pool, termAssetContract.address);
 
   const swaps = useSwaps(poolInfo);
@@ -272,7 +271,12 @@ function useTokensSummary(
       : undefined;
 
   let termAssetPriceTrend;
-  if (swaps?.length && spotPrice && baseAssetPriceYesterday && baseAssetPrice) {
+  if (
+    swaps?.length &&
+    termSpotPrice &&
+    baseAssetPriceYesterday &&
+    baseAssetPrice
+  ) {
     const swapOneDayAgo = swaps[0];
     const [, tokenIn, , amountIn, amountOut] = swapOneDayAgo;
     const baseAmount =
@@ -288,7 +292,7 @@ function useTokensSummary(
     // TOOD: find better historical data for ETH and other base assets.
     const oldTermAssetPrice =
       oldSpotPrice * baseAssetPriceYesterday.toDecimal();
-    const newTermAssetPrice = spotPrice * baseAssetPrice.toDecimal();
+    const newTermAssetPrice = termSpotPrice * baseAssetPrice.toDecimal();
     termAssetPriceTrend =
       (newTermAssetPrice - oldTermAssetPrice) / oldTermAssetPrice;
   }

@@ -55,8 +55,9 @@ export function useLiquidityHistoryForPool(
     baseAssetContract,
     baseAssetIndex,
     termAssetIndex: yieldAssetIndex,
+    termAssetInfo: { address: termAssetAddress },
   } = getPoolTokens(poolInfo);
-  const spotPrice = usePoolSpotPrice(poolContract, baseAssetAddress);
+  const spotPrice = usePoolSpotPrice(poolContract, termAssetAddress);
   const { currency } = useCurrencyPref();
   const [baseAssetPrice] = useTokenPrice(baseAssetContract, currency);
 
@@ -128,7 +129,7 @@ export function useLiquidityHistoryForPool(
         );
 
         // liquidity delta in base asset units
-        const totalDelta = baseDelta + yieldDelta / spotPrice;
+        const totalDelta = baseDelta + yieldDelta * spotPrice;
 
         // estimating timestamp here by taking the current time and subtracting the mining rate
         // multiplied by the number blocks mined:

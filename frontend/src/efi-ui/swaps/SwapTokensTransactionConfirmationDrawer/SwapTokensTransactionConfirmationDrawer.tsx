@@ -146,7 +146,7 @@ export function SwapTokensTransactionConfirmationDrawer({
 
   // spotPrice is yield out / base in.  So, if the base asset is the output, we need to flip the
   // spotPrice so it'll match the purchasePrice.
-  const spotPriceInOut = baseAssetIn ? 1 / (spotPrice || 0) : spotPrice;
+  const spotPriceInOut = baseAssetIn ? spotPrice : 1 / (spotPrice || 0);
   const priceSlippage = getPriceSlippageAndTradingFee(
     +(amountIn || 0),
     amountOutNumber,

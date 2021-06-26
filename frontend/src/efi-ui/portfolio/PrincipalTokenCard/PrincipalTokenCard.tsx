@@ -45,6 +45,7 @@ import { getVaultForTranche } from "efi/tranche/tranches";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 
 import { MaturityTimeBar } from "./MaturityTimeBar";
+import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 
 interface PrincipalTokenCardProps {
   chainId: number | undefined;
@@ -93,13 +94,10 @@ export function PrincipalTokenCard(
   const vaultContract = getVaultForTranche(tranche.address);
   const { data: vaultName } = useSmartContractReadCall(vaultContract, "name");
   const pool = getPoolContract(poolInfo.address);
-  const { baseAssetContract } = getPoolTokens(poolInfo);
-
-  const { spotPriceBaseAssetForOneToken: tranchePriceInBaseAsset = 0 } =
-    usePoolTokenPrices(pool, baseAssetContract);
 
   const baseAssetSymbol = getCryptoSymbol2(baseAsset);
 
+  const tranchePriceInBaseAsset = usePoolSpotPrice(pool, tranche.address) ?? 0;
   const exitValue = trancheBalance * tranchePriceInBaseAsset;
   const { data: baseAssetCoinGeckoPrice } = useCoinGeckoPrice(
     getCoinGeckoId(baseAssetSymbol)

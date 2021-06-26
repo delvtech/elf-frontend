@@ -52,7 +52,7 @@ export function SellPrincipalTokensForm(
     },
   } = props;
   const poolInfo = getPoolInfoForPrincipalToken(ptAddress);
-  const { baseAssetInfo } = getPoolTokens(poolInfo);
+  const { baseAssetInfo, termAssetInfo } = getPoolTokens(poolInfo);
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const openDrawer = useCallback(() => setDrawerOpen(true), []);
   const { stringValue: amountIn, setValue: onAmountInChange } =
@@ -84,7 +84,7 @@ export function SellPrincipalTokensForm(
   );
   const previewAmountOut = useCalculateUnderlyingTokenOut(poolInfo, amountIn);
   const poolContract = getPoolContract(poolInfo.address) as ConvergentCurvePool;
-  const spotPrice = usePoolSpotPrice(poolContract, underlyingAddress);
+  const spotPrice = usePoolSpotPrice(poolContract, termAssetInfo.address);
 
   const buttonDisabled =
     !!tokenInError ||
