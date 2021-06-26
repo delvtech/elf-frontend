@@ -6,20 +6,20 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { getIsMature } from "efi/tranche/getIsMature";
+import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 
 interface TimeLeftLabelProps {
-  maturationDate: Date | undefined;
+  unlockTimestamp: number;
 }
 
 export function TimeLeftLabel(props: TimeLeftLabelProps): ReactElement | null {
-  const { maturationDate } = props;
-  if (!maturationDate) {
-    return null;
-  }
+  const { unlockTimestamp } = props;
+  const unlockTimestampDate = convertEpochSecondsToDate(unlockTimestamp);
 
-  const isMature = getIsMature(maturationDate.getTime());
+  const isMature = getIsMature(unlockTimestamp);
+
   if (isMature) {
-    const timeSinceMaturity = getTimeSinceMaturityLabel(maturationDate);
+    const timeSinceMaturity = getTimeSinceMaturityLabel(unlockTimestampDate);
     return (
       <span className={classNames(tw("text-base"))}>
         {t`Term reached `}
@@ -28,7 +28,7 @@ export function TimeLeftLabel(props: TimeLeftLabelProps): ReactElement | null {
     );
   }
 
-  const timeLeft = getTimeLeft(maturationDate);
+  const timeLeft = getTimeLeft(unlockTimestampDate);
   return (
     <span className={tw("text-base")}>
       {t`Reaches term in`} <strong>{timeLeft}</strong>

@@ -202,7 +202,10 @@ export function YieldTokenCard({
           </div>
         </div>
         <div className={tw("flex", "flex-col", "space-y-5", "items-center")}>
-          <MaturityTimeBar progress={progress} maturationDate={unlockDate} />
+          <MaturityTimeBar
+            progress={progress}
+            unlockTimestamp={unlockTimestamp}
+          />
           <Callout className={calloutClassName}>
             <span
               className={classNames(tw("text-base", "mb-0"))}

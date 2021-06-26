@@ -214,7 +214,10 @@ export function PrincipalTokenCard(
         </div>
       </div>
       <div className={tw("flex", "flex-col", "space-y-5", "items-center")}>
-        <MaturityTimeBar progress={progress} maturationDate={maturationDate} />
+        <MaturityTimeBar
+          progress={progress}
+          unlockTimestamp={unlockTimestamp}
+        />
 
         <Callout className={calloutClassName}>
           <span

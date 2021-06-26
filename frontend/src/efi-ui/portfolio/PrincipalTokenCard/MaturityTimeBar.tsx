@@ -8,18 +8,18 @@ import { getIsMature } from "efi/tranche/getIsMature";
 
 interface MaturityTimeBarLabelProps {
   progress: number;
-  maturationDate: Date | undefined;
+  unlockTimestamp: number;
 }
 
 export function MaturityTimeBar({
   progress,
-  maturationDate,
+  unlockTimestamp,
 }: MaturityTimeBarLabelProps): ReactElement {
-  const isMature = getIsMature(maturationDate?.getTime() ?? 0);
+  const isMature = getIsMature(unlockTimestamp);
   return (
     <div className={tw("w-full", "space-y-2", "flex", "flex-col")}>
       <div>
-        <TimeLeftLabel maturationDate={maturationDate} />
+        <TimeLeftLabel unlockTimestamp={unlockTimestamp} />
       </div>
       <ProgressBar
         intent={isMature ? Intent.SUCCESS : Intent.NONE}
