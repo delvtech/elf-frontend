@@ -1,4 +1,5 @@
-import { scaleLinear } from "@visx/scale";
+import { scaleLinear } from "d3-scale";
+
 import { isIntegerNumber } from "efi/base/numbers";
 
 export function calculateProgress(

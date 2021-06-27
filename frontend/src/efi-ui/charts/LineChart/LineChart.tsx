@@ -11,10 +11,10 @@ import {
   SliceTooltipProps,
 } from "@nivo/line";
 import { LinearScale, TimeScale } from "@nivo/scales";
-import { line } from "@visx/shape/lib/util/D3ShapeFactories";
 
 import tw from "efi-tailwindcss-classnames";
 import { ONE_WEEK_IN_MILLISECONDS } from "efi/base/time";
+import { line } from "d3-shape";
 
 const margin: Partial<Margin> = { top: 40, right: 40, bottom: 60, left: 80 };
 

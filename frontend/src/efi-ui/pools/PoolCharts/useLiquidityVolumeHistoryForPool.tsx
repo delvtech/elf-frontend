@@ -1,6 +1,6 @@
 import { formatUnits } from "ethers/lib/utils";
 
-import { TimeData } from "efi-ui/charts/BrushChart/BrushChart";
+import { TimeData } from "efi-ui/pools/PoolCharts/PoolCharts";
 import { useSwaps } from "efi-ui/pools/useSwaps/useSwaps";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";

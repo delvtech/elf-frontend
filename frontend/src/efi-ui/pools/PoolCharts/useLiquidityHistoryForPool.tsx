@@ -4,7 +4,6 @@ import { BigNumber } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
 
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
-import { TimeData } from "efi-ui/charts/BrushChart/BrushChart";
 import { useLatestBlockNumber } from "efi-ui/ethereum/hooks/useLatestBlockNumber";
 import { usePreviousBlockNumber } from "efi-ui/ethereum/usePreviousBlockNumber/usePreviousBlockNumber";
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
@@ -17,6 +16,7 @@ import { getPoolContract } from "efi/pools/getPoolContract";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { getTokenInfo } from "efi/tokenlists";
+import { TimeData } from "efi-ui/pools/PoolCharts/PoolCharts";
 
 type PoolBalanceChangedArguments = [
   poolId: string,
