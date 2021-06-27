@@ -126,7 +126,7 @@ export function MintTransactionConfirmationDrawer({
     }
   }, [isError, isLoading]);
 
-  const showPermitCallout = useShowPermitCallout(
+  const { showPermitCallout, showWalletApprovalCallout } = useShowCallouts(
     trancheInfo,
     yieldTokenInfo,
     baseAsset,
@@ -137,7 +137,7 @@ export function MintTransactionConfirmationDrawer({
   const walletApprovalInfos = useWalletApprovalInfos(
     baseAsset,
     account,
-    useApprovals
+    useApprovals || showWalletApprovalCallout
   );
 
   return (
@@ -195,7 +195,7 @@ export function MintTransactionConfirmationDrawer({
     />
   );
 }
-function useShowPermitCallout(
+function useShowCallouts(
   trancheInfo: TrancheInfo,
   yieldTokenInfo: YieldTokenInfo,
   baseAsset: CryptoAsset,
@@ -225,6 +225,7 @@ function useShowPermitCallout(
   );
 
   const {
+    userProxyApprovedForBaseAsset,
     balancerApprovedForBaseAsset,
     balancerApprovedForPrincipalToken,
     balancerApprovedForYieldToken,
@@ -242,7 +243,17 @@ function useShowPermitCallout(
   ) {
     showPermitCallout = true;
   }
-  return showPermitCallout;
+
+  let showWalletApprovalCallout = false;
+  if (
+    !userProxyApprovedForBaseAsset &&
+    !baseAssetIsERC20Permit &&
+    baseAsset.type !== CryptoAssetType.ETHEREUM
+  ) {
+    showWalletApprovalCallout = true;
+  }
+
+  return { showPermitCallout, showWalletApprovalCallout };
 }
 
 function useWalletApprovalInfos(
