@@ -115,7 +115,7 @@ export function BuyPrincipalTokensTransactionConfirmationDrawer({
 
   const {
     batchSwapGivenIn: onConfirmBuyPrincipalTokens,
-    mutationResult: { isLoading, isSuccess, isError },
+    mutationResult: { isLoading, isSuccess, isError, error },
   } = useBatchSwapGivenIn(
     account,
     signer,
@@ -149,6 +149,7 @@ export function BuyPrincipalTokensTransactionConfirmationDrawer({
       buttonLabel={t`Buy`}
       transactionPending={isLoading}
       transactionFailed={isError}
+      transactionError={error as Error | undefined}
       transactionSuccess={isSuccess}
       isOpen={isOpen}
       onClose={onCloseWithoutTransaction}

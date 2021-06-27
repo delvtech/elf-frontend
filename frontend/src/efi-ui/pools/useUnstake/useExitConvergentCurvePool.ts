@@ -29,6 +29,7 @@ export function useExitConvergentCurvePool(
   isLoading: boolean;
   isError: boolean;
   isSuccess: boolean;
+  error: Error | undefined;
   reset: () => void;
 } {
   const balancerVault = useBalancerVault();
@@ -48,6 +49,7 @@ export function useExitConvergentCurvePool(
     isError,
     isSuccess,
     reset,
+    error,
   } = useSmartContractTransactionPersisted(balancerVault, "exitPool", signer, {
     onTransactionSubmitted,
   });
@@ -77,7 +79,14 @@ export function useExitConvergentCurvePool(
     totalSupply,
   ]);
 
-  return { onExitPool, isLoading, isError, isSuccess, reset };
+  return {
+    onExitPool,
+    isLoading,
+    isError,
+    isSuccess,
+    reset,
+    error: error as Error | undefined,
+  };
 }
 
 function makeExitPoolCallArgs(

@@ -181,7 +181,11 @@ export function PrincipalTokenCard(
           >
             <Tag
               large
-              intent={Intent.PRIMARY}
+              intent={
+                unlockTimestamp * 1000 < Date.now()
+                  ? Intent.SUCCESS
+                  : Intent.PRIMARY
+              }
               fill
               className={tw("text-center")}
             >

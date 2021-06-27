@@ -73,6 +73,7 @@
     "d3-format": "^3.0.1",
     "d3-time-format": "^4.0.0",
     "date-fns": "^2.22.1",
+    "eth-rpc-errors": "^4.0.3",
     "ethereum-waffle": "^3.4.0",
     "ethers": "^5.3.1",
     "fuzzaldrin-plus": "^0.6.0",

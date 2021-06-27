@@ -137,7 +137,7 @@ export function SwapTokensTransactionConfirmationDrawer({
     onClose
   );
 
-  const { isLoading, isError, isSuccess, reset } = swapResult;
+  const { isLoading, isError, isSuccess, reset, error } = swapResult;
 
   const amountOutNumber = +amountOut;
 
@@ -179,6 +179,7 @@ export function SwapTokensTransactionConfirmationDrawer({
       walletApprovalInfos={walletApprovalInfos}
       transactionPending={isLoading}
       transactionFailed={isError}
+      transactionError={error as Error | undefined}
       transactionSuccess={isSuccess}
       transactionDetails={
         <SwapDetailsForm

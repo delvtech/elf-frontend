@@ -183,7 +183,11 @@ export function YieldTokenCard({
               <div>
                 <Tag
                   large
-                  intent={Intent.SUCCESS}
+                  intent={
+                    unlockTimestamp * 1000 < Date.now()
+                      ? Intent.SUCCESS
+                      : Intent.PRIMARY
+                  }
                   fill
                   className={tw("text-center")}
                 >

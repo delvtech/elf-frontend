@@ -1,8 +1,9 @@
 import { useCallback } from "react";
+import { UseMutationResult } from "react-query";
 
 import { Vault } from "elf-contracts/types/Vault";
 import { WeightedPool } from "elf-contracts/types/WeightedPool";
-import { BigNumber, Signer } from "ethers";
+import { BigNumber, ContractReceipt, Signer } from "ethers";
 import { defaultAbiCoder, formatUnits, parseUnits } from "ethers/lib/utils";
 
 import { ExitRequest } from "efi-balancer/ExitRequest";
@@ -25,11 +26,12 @@ export function useExitWeightedPool(
   lpIn: string,
   onTransactionSubmitted?: () => void
 ): {
+  mutationResult: UseMutationResult<
+    ContractReceipt | undefined,
+    unknown,
+    ContractMethodArgs<Vault, "exitPool">
+  >;
   onExitPool: () => void;
-  isLoading: boolean;
-  isError: boolean;
-  isSuccess: boolean;
-  reset: () => void;
 } {
   const balancerVault = useBalancerVault();
   const { data: poolId } = useSmartContractReadCall(pool, "getPoolId");
@@ -43,15 +45,16 @@ export function useExitWeightedPool(
 
   const { data: totalSupply } = useSmartContractReadCall(pool, "totalSupply");
 
-  const {
-    mutate: exitPool,
-    isLoading,
-    isError,
-    isSuccess,
-    reset,
-  } = useSmartContractTransactionPersisted(balancerVault, "exitPool", signer, {
-    onTransactionSubmitted,
-  });
+  const mutationResult = useSmartContractTransactionPersisted(
+    balancerVault,
+    "exitPool",
+    signer,
+    {
+      onTransactionSubmitted,
+    }
+  );
+
+  const { mutate: exitPool } = mutationResult;
 
   const exitPoolCallArgs = makeExitPoolCallArgs(
     poolId,
@@ -69,7 +72,10 @@ export function useExitWeightedPool(
     exitPool(exitPoolCallArgs);
   }, [exitPool, exitPoolCallArgs]);
 
-  return { onExitPool, isLoading, isError, isSuccess, reset };
+  return {
+    mutationResult,
+    onExitPool,
+  };
 }
 
 function makeExitPoolCallArgs(

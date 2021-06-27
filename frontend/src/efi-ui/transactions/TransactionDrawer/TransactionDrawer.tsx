@@ -3,6 +3,7 @@ import { ReactElement } from "react";
 import { Button, Intent, Tag } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
+import { errorCodes, serializeError } from "eth-rpc-errors";
 import { BigNumber, Signer } from "ethers";
 import { t } from "ttag";
 
@@ -13,9 +14,9 @@ import { WalletDrawer } from "efi-ui/wallets/WalletDrawer/WalletDrawer";
 import { ERC20Shim } from "efi/contracts/ERC20Shim";
 import { MAX_ALLOWANCE } from "efi/contracts/token";
 import { findTokenContract } from "efi/crypto/CryptoAsset";
+import { WalletApprovalInfo } from "efi/wallets/WalletApprovalInfo";
 
 import { WalletApprovalCallout } from "./WalletApprovalCallout";
-import { WalletApprovalInfo } from "efi/wallets/WalletApprovalInfo";
 
 interface TransactionDrawerProps {
   account: string | null | undefined;
@@ -28,6 +29,7 @@ interface TransactionDrawerProps {
   buttonLabel: string;
   walletApprovalInfos?: WalletApprovalInfo[];
   transactionPending?: boolean;
+  transactionError?: Error;
   transactionSuccess?: boolean;
   transactionFailed?: boolean;
 }
@@ -45,6 +47,7 @@ export function TransactionDrawer({
   transactionPending = false,
   transactionSuccess = false,
   transactionFailed = false,
+  transactionError,
 }: TransactionDrawerProps): ReactElement {
   const signer = account ? (library?.getSigner(account) as Signer) : undefined;
 
@@ -80,7 +83,8 @@ export function TransactionDrawer({
     transactionSuccess,
     transactionFailed
   );
-  const helperText = getHelperText(transactionSuccess, transactionFailed);
+
+  const helperText = getHelperText(transactionSuccess, transactionError);
 
   return (
     <WalletDrawer isOpen={isOpen} onClose={onClose}>
@@ -158,12 +162,23 @@ function getConfirmButtonIntent(
   return buttonIntent;
 }
 
-function getHelperText(transactionSuccess: boolean, transactionError: boolean) {
+function getHelperText(
+  transactionSuccess: boolean,
+  transactionError: Error | undefined
+) {
   if (transactionSuccess) {
     return `Transaction succeeded`;
   }
   if (transactionError) {
-    return `Transaction failed`;
+    const serializedError = serializeError(transactionError);
+    if ((serializedError?.data as any)?.code === errorCodes.rpc.internal) {
+      const message = ((serializedError.data as any).message as string).split(
+        ":"
+      );
+      return t`Transaction failed: (${message[message.length - 1].trim()})`;
+    }
+
+    return transactionError.message;
   }
 }
 

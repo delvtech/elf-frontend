@@ -196,6 +196,7 @@ export function StakingForm(props: StakingFormProps): ReactElement {
       isLoading: isJoinCCPoolLoading,
       isSuccess: isJoinCCPoolSuccess,
       isError: isJoinCCPoolError,
+      error: joinCCPoolError,
     },
   } = useJoinConvergentPool(
     signer,
@@ -211,6 +212,7 @@ export function StakingForm(props: StakingFormProps): ReactElement {
       isLoading: isJoinWPoolLoading,
       isSuccess: isJoinWPoolSuccess,
       isError: isJoinWPoolError,
+      error: joinWPoolError,
     },
   } = useJoinWeightedPool(
     signer,
@@ -314,6 +316,11 @@ export function StakingForm(props: StakingFormProps): ReactElement {
         termAssetIn={amountOut}
         isOpen={isDrawerOpen}
         onClose={onClose}
+        stakeError={
+          isPrincipalPoolType
+            ? (joinCCPoolError as Error | undefined)
+            : (joinWPoolError as Error | undefined)
+        }
         isStakeLoading={
           isPrincipalPoolType ? isJoinCCPoolLoading : isJoinWPoolLoading
         }

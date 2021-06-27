@@ -93,7 +93,7 @@ export function MintTransactionConfirmationDrawer({
 
   const {
     mint,
-    mutationResult: { isLoading, isError, isSuccess, reset },
+    mutationResult: { isLoading, isError, error, isSuccess, reset },
   } = useMintTransaction(
     signer,
     account,
@@ -144,6 +144,7 @@ export function MintTransactionConfirmationDrawer({
     <TransactionDrawer
       buttonLabel={t`Mint`}
       transactionPending={isLoading || loadingPermits}
+      transactionError={error as Error | undefined}
       transactionFailed={isError}
       transactionSuccess={isSuccess}
       walletApprovalInfos={walletApprovalInfos}

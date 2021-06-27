@@ -75,6 +75,7 @@ export function UnstakeCard({
     exitPool: unstakeFromPool,
     isLoading,
     isError,
+    error,
     reset,
   } = useExitPool(
     signer,
@@ -161,6 +162,7 @@ export function UnstakeCard({
         baseAssetValue={baseAssetOut}
         termAssetValue={termAssetOut}
         lpTokensIn={unstakeValue}
+        unstakeError={error as Error | undefined}
         isOpen={isDrawerOpen}
         isUnstakeLoading={isLoading}
         isUnstakeError={isError}
@@ -188,6 +190,7 @@ function useExitPool(
     isLoading: isPrincipalLoading,
     isError: isPrincipalError,
     reset: resetPrincipal,
+    error: principalError,
   } = useExitConvergentCurvePool(
     signer,
     account,
@@ -198,10 +201,13 @@ function useExitPool(
 
   const yieldPool = getPoolContract(poolInfo.address) as WeightedPool;
   const {
+    mutationResult: {
+      isLoading: isYieldLoading,
+      isError: isYieldError,
+      reset: resetYield,
+      error: yieldError,
+    },
     onExitPool: exitYieldPool,
-    isLoading: isYieldLoading,
-    isError: isYieldError,
-    reset: resetYield,
   } = useExitWeightedPool(
     signer,
     account,
@@ -216,6 +222,7 @@ function useExitPool(
       isLoading: isYieldLoading,
       isError: isYieldError,
       reset: resetYield,
+      error: yieldError,
     };
   }
 
@@ -224,6 +231,7 @@ function useExitPool(
     isLoading: isPrincipalLoading,
     isError: isPrincipalError,
     reset: resetPrincipal,
+    error: principalError,
   };
 }
 

@@ -39,6 +39,7 @@ interface StakingConfirmationDrawerProps {
   isStakeLoading: boolean;
   isStakeError: boolean;
   isStakeSuccess: boolean;
+  stakeError: Error | undefined;
 }
 
 export function StakingConfirmationDrawer({
@@ -58,6 +59,7 @@ export function StakingConfirmationDrawer({
   isStakeError,
   isStakeLoading,
   isStakeSuccess,
+  stakeError,
   onStake,
 }: StakingConfirmationDrawerProps): ReactElement {
   const balancerVault = useBalancerVault();
@@ -101,6 +103,7 @@ export function StakingConfirmationDrawer({
       transactionPending={isStakeLoading}
       transactionSuccess={isStakeSuccess}
       transactionFailed={isStakeError}
+      transactionError={stakeError}
       confirmButtonDisabled={confirmButtonDisabled}
       buttonLabel={t`Add liquidity`}
       isOpen={isOpen}

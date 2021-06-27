@@ -30,6 +30,7 @@ interface UnstakeConfirmationDrawerProps {
   isUnstakeLoading: boolean;
   isUnstakeError: boolean;
   isUnstakeSuccess: boolean;
+  unstakeError: Error | undefined;
 }
 
 export function UnstakeConfirmationDrawer({
@@ -43,6 +44,7 @@ export function UnstakeConfirmationDrawer({
   isOpen,
   onClose,
   isUnstakeError,
+  unstakeError,
   isUnstakeLoading,
   isUnstakeSuccess,
   onUnstake,
@@ -65,6 +67,7 @@ export function UnstakeConfirmationDrawer({
       account={account}
       transactionPending={isUnstakeLoading}
       transactionSuccess={isUnstakeSuccess}
+      transactionError={unstakeError}
       transactionFailed={isUnstakeError}
       confirmButtonDisabled={false}
       buttonLabel={t`Remove liquidity`}
