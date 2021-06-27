@@ -3,6 +3,8 @@ import { formatDuration, intervalToDuration } from "date-fns";
 /**
  * Returns a human-readable label for how much time is left between now and the
  * given end time.
+ *
+ * Note: inputs are in milliseconds.
  */
 export function formatTimeLeft(start: number, end: number): string {
   const duration = intervalToDuration({
