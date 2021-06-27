@@ -1,6 +1,7 @@
 import "module-alias/register";
 
 import { Signer } from "ethers";
+import { parseEther } from "ethers/lib/utils";
 import fs from "fs";
 import hre, { ethers } from "hardhat";
 
@@ -9,19 +10,17 @@ import {
   ERC20__factory,
   InterestTokenFactory__factory,
   TrancheFactory__factory,
-  USDC,
   USDC__factory,
   UserProxy__factory,
   Vault__factory,
   WeightedPoolFactory__factory,
-  WETH,
   WETH__factory,
 } from "src/types";
 
+import { AddressesJsonFile } from "src/addresses/AddressesJsonFile";
+import { deployTrancheAndMarket } from "src/scripts/deployTrancheAndMarket";
 import { deployVaultsAndProxys } from "src/scripts/deployVaultsAndProxys";
 import { getSigner, SIGNER } from "src/scripts/getSigner";
-import { deployTrancheAndMarket } from "src/scripts/deployTrancheAndMarket";
-import { parseEther } from "ethers/lib/utils";
 
 const ETH_WHALE_ADDRESS = "0x73bceb1cd57c711feac4224d062b0f6ff338501e";
 const WETH_WHALE_ADDRESS = "0x0f4ee9631f4be0a63756515141281a3e2b293bbe";
@@ -60,6 +59,7 @@ async function main() {
   const balancerAddress = await balancerSigner.getAddress();
   const userAddress = await userSigner.getAddress();
 
+  // give elementSigner a good amount of ETH too
   ethWhaleSigner.sendTransaction({
     to: elementAddress,
     value: parseEther("10000"),
@@ -85,6 +85,7 @@ async function main() {
   // get factories
   const {
     trancheFactory,
+    interestTokenFactory,
     convergentPoolFactory,
     weightedPoolFactory,
   } = getFactoryContracts(elementSigner);
@@ -124,6 +125,102 @@ async function main() {
       ytBaseAssetIn: "10",
       ytYieldAssetIn: "200",
     }
+  );
+
+  // add some interest to yUsdc
+  await yUsdc.updateShares();
+
+  console.log("Disabling automine");
+  await hre.ethers.provider.send("evm_setAutomine", [false]);
+  console.log("Setting mining interval to 10s");
+  await hre.ethers.provider.send("evm_setIntervalMining", [10_000]);
+
+  // Produce a full list of all addresses deployed in the mian.ts script.
+  const allAddresses = JSON.stringify(
+    {
+      // signer addresses
+      elementAddress,
+      balancerAddress,
+      userAddress,
+
+      // balancer
+      balancerVaultAddress: balancerVaultContract.address,
+      marketYcFactory: weightedPoolFactory.address,
+
+      // yearn vaults
+      wethYearnVaultAddress: yWeth.address,
+      usdcYearnVaultAddress: yUsdc.address,
+
+      // asset proxys
+      wethYearnVaultAssetProxyAddress: wethYearnVaultAssetProxy.address,
+      usdcYearnVaultAssetProxyAddress: usdcYearnVaultAssetProxy.address,
+
+      // tranche contracts
+      trancheFactoryAddress: trancheFactory.address,
+      interestTokenFactoryAddress: interestTokenFactory.address,
+      wethTrancheAddress: firstWethTrancheContract.address,
+      // usdcTrancheAddress: usdcTrancheContract.address,
+
+      // market addresses and ids
+      weightedPoolFactoryAddress: weightedPoolFactory.address,
+      convergentPoolFactoryAddress: convergentPoolFactory.address,
+      marketFyWethAddress: firstWethFytPoolContract.address,
+      marketFyWethId: wethFytPoolId,
+      marketYcWethAddress: firstWethYcPoolContract.address,
+      marketYcWethId: wethYcPoolId,
+
+      // user proxy
+      userProxyContractAddress: userProxyContract.address,
+
+      // weth addresses
+      wethAddress: wethContract.address,
+
+      //usdc addresses
+      usdcAddress: usdcContract.address,
+    },
+    null,
+    2
+  );
+
+  console.log("all-addresses.json", allAddresses);
+  fs.writeFileSync("./src/all-addresses.json", allAddresses);
+
+  // Produce a schema-compliant testnet.addresses.json file
+  const addressesJson: AddressesJsonFile = {
+    chainId: 31337,
+    addresses: {
+      balancerVaultAddress: balancerVaultContract.address,
+      trancheFactoryAddress: trancheFactory.address,
+      interestTokenFactoryAddress: interestTokenFactory.address,
+      weightedPoolFactoryAddress: weightedPoolFactory.address,
+      convergentPoolFactoryAddress: convergentPoolFactory.address,
+      userProxyContractAddress: userProxyContract.address,
+      wethAddress: wethContract.address,
+      usdcAddress: usdcContract.address,
+      daiAddress: daiContract.address,
+      lusdAddress: json.addresses.lusdAddress,
+    },
+    safelist: [
+      firstWethTrancheContract.address,
+      firstWethFytPoolContract.address,
+      firstWethYcPoolContract.address,
+    ],
+  };
+  const schemaAddresses = JSON.stringify(addressesJson, null, 2);
+
+  console.log("testnet.addresses.json", schemaAddresses);
+  fs.writeFileSync("./src/addresses/testnet.addresses.json", schemaAddresses);
+
+  const firstWethInterestTokenAddress = await firstWethTrancheContract.interestToken();
+
+  const symbolOverrides = {
+    [firstWethTrancheContract.address]: "ePyvCurve-stETH",
+    [firstWethInterestTokenAddress]: "eYyvCurve-stETH",
+  };
+
+  fs.writeFileSync(
+    "./src/addresses/testnet.symbolOverrides.json",
+    JSON.stringify(symbolOverrides)
   );
 }
 
