@@ -20,6 +20,8 @@ import {
 
 import { deployVaultsAndProxys } from "src/scripts/deployVaultsAndProxys";
 import { getSigner, SIGNER } from "src/scripts/getSigner";
+import { deployTrancheAndMarket } from "src/scripts/deployTrancheAndMarket";
+import { parseEther } from "ethers/lib/utils";
 
 const ETH_WHALE_ADDRESS = "0x73bceb1cd57c711feac4224d062b0f6ff338501e";
 const WETH_WHALE_ADDRESS = "0x0f4ee9631f4be0a63756515141281a3e2b293bbe";
@@ -50,13 +52,18 @@ async function main() {
   const {
     balancerSigner,
     userSigner,
-    wethWhaleSigner,
-    ethWhaleSigner: elementSigner,
+    wethWhaleSigner: elementSigner,
+    ethWhaleSigner,
   } = await getSigners();
 
   const elementAddress = await elementSigner.getAddress();
   const balancerAddress = await balancerSigner.getAddress();
   const userAddress = await userSigner.getAddress();
+
+  ethWhaleSigner.sendTransaction({
+    to: elementAddress,
+    value: parseEther("10000"),
+  });
 
   const { wethContract, usdcContract, daiContract } = getBaseAssetContracts(
     elementSigner
@@ -76,7 +83,11 @@ async function main() {
   );
 
   // get factories
-  const factories = getFactoryContracts(elementSigner);
+  const {
+    trancheFactory,
+    convergentPoolFactory,
+    weightedPoolFactory,
+  } = getFactoryContracts(elementSigner);
 
   // get user proxy
   const userProxyContract = UserProxy__factory.connect(
@@ -90,6 +101,30 @@ async function main() {
     yUsdc,
     usdcYearnVaultAssetProxy,
   } = await deployVaultsAndProxys(elementSigner, wethContract, usdcContract);
+
+  console.log("deploy first WETH tranche");
+  const {
+    trancheContract: firstWethTrancheContract,
+    fytPoolContract: firstWethFytPoolContract,
+    ycPoolContract: firstWethYcPoolContract,
+    fytPoolId: wethFytPoolId,
+    ycPoolId: wethYcPoolId,
+  } = await deployTrancheAndMarket(
+    elementSigner,
+    trancheFactory,
+    wethYearnVaultAssetProxy,
+    wethContract,
+    balancerVaultContract,
+    convergentPoolFactory,
+    weightedPoolFactory,
+    {
+      mintAmount: "200",
+      baseAssetIn: "200",
+      yieldAssetIn: "100",
+      ytBaseAssetIn: "10",
+      ytYieldAssetIn: "200",
+    }
+  );
 }
 
 // We recommend this pattern to be able to use async/await everywhere
@@ -168,6 +203,7 @@ async function getSigners() {
     method: "hardhat_impersonateAccount",
     params: [DAI_WHALE_ADDRESS],
   });
+
   const ethWhaleSigner = await ethers.provider.getSigner(ETH_WHALE_ADDRESS);
   const wethWhaleSigner = await ethers.provider.getSigner(WETH_WHALE_ADDRESS);
   const usdcWhaleSigner = await ethers.provider.getSigner(USDC_WHALE_ADDRESS);
