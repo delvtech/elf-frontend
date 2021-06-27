@@ -1,4 +1,4 @@
-import React, { Fragment, ReactElement, useCallback, useState } from "react";
+import { Fragment, ReactElement, useState } from "react";
 import { Helmet } from "react-helmet";
 
 import { Classes, H2 } from "@blueprintjs/core";
@@ -8,14 +8,17 @@ import { useWeb3React } from "@web3-react/core";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { LiquidityPositionPortfolio } from "efi-ui/portfolio/LiquidityPositionPortfolio/LiquidityPositionPortfolio";
 import {
-  PortfolioTab,
+  PortfolioTabId,
   PortfolioTabs,
 } from "efi-ui/portfolio/PortfolioTabs/PortfolioTabs";
-import { usePortfolioTabs } from "efi-ui/portfolio/PortfolioTabs/usePortfolioTabs";
+import { PrincipalTokenPortfolio } from "efi-ui/portfolio/PrincipalTokenPortfolio/PrincipalTokenPortfolio";
+import { YieldTokenPortfolio } from "efi-ui/portfolio/YieldTokenPortfolio/YieldTokenPortfolio";
 import { formatWalletAddress } from "efi/wallets/formatWalletAddress";
 
 import styles from "./styles.module.css";
+import { assertNever } from "efi/base/assertNever";
 
 interface PortfolioViewProps extends RouteComponentProps {}
 
@@ -28,28 +31,9 @@ export function PortfolioView(props: PortfolioViewProps): ReactElement {
     connector,
   } = useWeb3React<Web3Provider>();
 
-  const portfolioTabs: PortfolioTab[] = usePortfolioTabs(
-    chainId,
-    library,
-    connector,
-    walletConnectionActive,
-    account
-  );
-
   const [activePortfolioTabId, setActivePortfolioTab] = useState(
-    portfolioTabs[0].id
+    PortfolioTabId.PRINCIPAL_TOKENS
   );
-
-  const activeTab = portfolioTabs.find(
-    ({ id }) => activePortfolioTabId === id
-  ) as PortfolioTab;
-
-  const { contentRenderer } = activeTab;
-  const activeTabContent = contentRenderer(activeTab);
-
-  const onChangeTab = useCallback((tabId: string) => {
-    setActivePortfolioTab(tabId);
-  }, []);
 
   return (
     <Fragment>
@@ -92,9 +76,8 @@ export function PortfolioView(props: PortfolioViewProps): ReactElement {
 
             {account ? (
               <PortfolioTabs
-                onChangeTab={onChangeTab}
+                onChangeTab={setActivePortfolioTab}
                 activePortfolioTabId={activePortfolioTabId}
-                portfolioTabs={portfolioTabs}
               />
             ) : null}
           </div>
@@ -113,7 +96,38 @@ export function PortfolioView(props: PortfolioViewProps): ReactElement {
               )}
             >
               <div className={tw("flex", "flex-1", "w-full")}>
-                {activeTabContent}
+                {(() => {
+                  switch (activePortfolioTabId) {
+                    case PortfolioTabId.PRINCIPAL_TOKENS:
+                      return (
+                        <PrincipalTokenPortfolio
+                          chainId={chainId}
+                          library={library}
+                          account={account}
+                        />
+                      );
+                    case PortfolioTabId.YIELD_TOKENS:
+                      return (
+                        <YieldTokenPortfolio
+                          chainId={chainId}
+                          library={library}
+                          connector={connector}
+                          account={account}
+                          walletConnectionActive={walletConnectionActive}
+                        />
+                      );
+                    case PortfolioTabId.LP_POSITIONS:
+                      return (
+                        <LiquidityPositionPortfolio
+                          library={library}
+                          connector={connector}
+                          account={account}
+                        />
+                      );
+                    default:
+                      assertNever(activePortfolioTabId);
+                  }
+                })()}
               </div>
             </div>
           </div>

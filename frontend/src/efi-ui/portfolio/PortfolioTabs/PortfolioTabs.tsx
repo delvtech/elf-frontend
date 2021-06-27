@@ -1,29 +1,24 @@
-import React, { ReactElement, ReactNode } from "react";
+import React, { ReactElement } from "react";
 
 import { Tab, Tabs } from "@blueprintjs/core";
-import { Money } from "ts-money";
+import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { PortfolioAssetLabel } from "efi-ui/portfolio/PortfolioView/PortfolioAssetLabel";
 
-export interface PortfolioTab {
-  id: string;
-  name: string;
-  quantity: number;
-
-  totalFiatValue: Money;
-  contentRenderer: (tab: PortfolioTab) => ReactNode;
+export enum PortfolioTabId {
+  PRINCIPAL_TOKENS = "principalTokens",
+  YIELD_TOKENS = "yieldTokens",
+  LP_POSITIONS = "lpPositions",
 }
 
 interface PortfolioTabsProps {
-  onChangeTab: (tabId: string) => void;
+  onChangeTab: (tabId: PortfolioTabId) => void;
   activePortfolioTabId: string;
-  portfolioTabs: PortfolioTab[];
 }
 export function PortfolioTabs({
   onChangeTab,
   activePortfolioTabId,
-  portfolioTabs,
 }: PortfolioTabsProps): ReactElement {
   return (
     <Tabs
@@ -34,11 +29,15 @@ export function PortfolioTabs({
       onChange={onChangeTab}
       selectedTabId={activePortfolioTabId}
     >
-      {portfolioTabs.map(({ id, name }) => (
-        <Tab key={id} id={id} className={tw("lg:w-300")}>
-          <PortfolioAssetLabel name={name} />
-        </Tab>
-      ))}
+      <Tab id={PortfolioTabId.PRINCIPAL_TOKENS} className={tw("lg:w-300")}>
+        <PortfolioAssetLabel name={t`Principal Tokens`} />
+      </Tab>
+      <Tab id={PortfolioTabId.YIELD_TOKENS} className={tw("lg:w-300")}>
+        <PortfolioAssetLabel name={t`Yield Tokens`} />
+      </Tab>
+      <Tab id={PortfolioTabId.LP_POSITIONS} className={tw("lg:w-300")}>
+        <PortfolioAssetLabel name={t`LP Positions`} />
+      </Tab>
     </Tabs>
   );
 }

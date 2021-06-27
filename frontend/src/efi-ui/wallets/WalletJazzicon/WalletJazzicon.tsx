@@ -7,12 +7,15 @@ import { getMetamaskJazziconSeed } from "efi-ui/wallets/icons";
 interface WalletJazziconProps {
   account: string | null | undefined;
   size?: number;
+
+  className?: string;
 }
 
 const JAZZICON_DIAMETER_PIXELS = 48;
 export function WalletJazzicon({
   account,
   size,
+  className,
 }: WalletJazziconProps): ReactElement {
   const jazziconRef = useRef<HTMLDivElement | null>(null);
 
@@ -39,5 +42,5 @@ export function WalletJazzicon({
     };
   }, [account, size]);
 
-  return <div ref={jazziconRef} />;
+  return <div ref={jazziconRef} className={className} />;
 }

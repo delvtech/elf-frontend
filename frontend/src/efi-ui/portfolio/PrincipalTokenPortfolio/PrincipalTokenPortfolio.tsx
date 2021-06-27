@@ -1,6 +1,6 @@
 import { Fragment, ReactElement, useMemo } from "react";
 
-import { Provider, Web3Provider } from "@ethersproject/providers";
+import { Web3Provider } from "@ethersproject/providers";
 import { ERC20 } from "elf-contracts/types/ERC20";
 import { Tranche } from "elf-contracts/types/Tranche";
 import { BigNumber } from "ethers";
@@ -20,7 +20,6 @@ import { principalTokenInfos, trancheContracts } from "efi/tranche/tranches";
 interface PrincipalTokenPortfolioProps {
   chainId: number | undefined;
   library: Web3Provider | undefined;
-  provider: Provider | undefined;
   account: string | null | undefined;
 }
 

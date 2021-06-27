@@ -19,7 +19,6 @@ interface YieldTokenPortfolioProps {
   connector: AbstractConnector | undefined;
   walletConnectionActive: boolean;
   account: string | null | undefined;
-  yieldTokens: InterestToken[];
 }
 
 export function YieldTokenPortfolio({
