@@ -31,15 +31,15 @@ import { ONE_WEEK_IN_SECONDS } from "efi/base/time";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol2 } from "efi/crypto/getCryptoSymbol";
 import { formatMoney } from "efi/money/formatMoney";
-import { getPoolInfo } from "efi/pools/getPoolInfo";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { getTrancheForPool } from "efi/pools/getTrancheForPool";
-import { PoolContract } from "efi/pools/PoolContract";
 import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
+import { YieldPoolTokenInfo } from "tokenlists/types";
+import { yieldPoolContractsByAddress } from "efi/pools/weightedPool";
 
-interface InterestPoolCardProps {
-  pool: PoolContract;
+interface YieldPoolCardProps {
+  yieldPoolInfo: YieldPoolTokenInfo;
 }
 
 const cellClassName = tw("flex", "mr-4", "items-center", "overflow-hidden");
@@ -51,17 +51,18 @@ const stopPropagationHandler = (e: React.MouseEvent<HTMLAnchorElement>) => {
   e.stopPropagation();
 };
 
-export function InterestPoolCard(
-  props: InterestPoolCardProps
-): ReactElement | null {
-  const { pool } = props;
-  const poolInfo = getPoolInfo(pool.address);
-  const tranche = getTrancheForPool(poolInfo);
+export function YieldPoolCard(props: YieldPoolCardProps): ReactElement | null {
+  const {
+    yieldPoolInfo,
+    yieldPoolInfo: { address: poolAddress },
+  } = props;
+  const poolContract = yieldPoolContractsByAddress[poolAddress];
+  const tranche = getTrancheForPool(yieldPoolInfo);
   const { unlockTimestamp: unlockTime, createdAtTimestamp: trancheCreatedAt } =
     tranche.extensions;
-  const liquidity = useTotalFiatLiquidity(poolInfo);
-  const fees = useFeeVolumeForPool(poolInfo);
-  const { baseAssetContract, termAssetContract } = getPoolTokens(poolInfo);
+  const liquidity = useTotalFiatLiquidity(yieldPoolInfo);
+  const fees = useFeeVolumeForPool(yieldPoolInfo);
+  const { baseAssetContract, termAssetContract } = getPoolTokens(yieldPoolInfo);
   const baseAsset = getCryptoAssetForToken(baseAssetContract.address);
   const baseAssetSymbol = getCryptoSymbol2(baseAsset);
   const BaseAssetIcon = findAssetIcon(baseAsset);
@@ -71,18 +72,19 @@ export function InterestPoolCard(
     vaultSymbol
   );
 
-  const stakingYield = useStakingAPY(poolInfo, ONE_WEEK_IN_SECONDS);
+  const stakingYield = useStakingAPY(yieldPoolInfo, ONE_WEEK_IN_SECONDS);
   const { currency } = useCurrencyPref();
   const [baseAssetPrice] = useTokenPrice(baseAssetContract, currency);
-  const spotPrice = usePoolSpotPrice(pool, termAssetContract.address) ?? 0;
+  const spotPrice =
+    usePoolSpotPrice(poolContract, termAssetContract.address) ?? 0;
 
   const { data: vaultInfo } = useYearnVault(vaultSymbol);
   const { displayName, type, apy } = vaultInfo || {};
   const vaultApy = apy ? getYearnVaultAPY(apy) : 0;
 
   const goToTrade = useCallback(() => {
-    navigate(`/pools/${pool?.address}`);
-  }, [pool?.address]);
+    navigate(`/pools/${poolAddress}`);
+  }, [poolAddress]);
 
   // TODO: this is a big hammer for loading state.  we should use a more granular technique when we can.
   const dataToLoad = [
@@ -119,10 +121,6 @@ export function InterestPoolCard(
       };
     }
   }, [allDataLoaded]);
-
-  if (!pool || !baseAssetContract) {
-    return null;
-  }
 
   if (!allDataLoaded) {
     return (
@@ -197,7 +195,7 @@ export function InterestPoolCard(
             text={
               <Link
                 className={tw("flex", "space-x-2")}
-                to={`/pools/${pool?.address}` || ""}
+                to={`/pools/${poolAddress}` || ""}
                 onClick={stopPropagationHandler}
               >
                 {`${baseAssetSymbol} - ${termAssetSymbol}`}
@@ -289,15 +287,15 @@ export function InterestPoolCard(
         )}
       >
         <GoToPoolButton
-          poolAddress={pool.address}
+          poolAddress={poolAddress}
           poolAction={PoolAction.BUY}
-          label={t`Buy`}
+          label={t`Trade`}
           outlined
           small
         />
         {maturityTime && maturityTime > Date.now() ? (
           <GoToPoolButton
-            poolAddress={pool.address}
+            poolAddress={poolAddress}
             poolAction={PoolAction.ADD_LIQUIDITY}
             label={t`LP`}
             outlined

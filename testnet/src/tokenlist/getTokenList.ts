@@ -1,17 +1,26 @@
 import { TokenList } from "@uniswap/token-lists";
 import fs from "fs";
+import hre from "hardhat";
+
+import { TrancheFactory__factory } from "src/types/factories/TrancheFactory__factory";
 
 import { AddressesJsonFile } from "src/addresses/AddressesJsonFile";
-import { getAssetProxies } from "src/tokenlist/getAssetProxies";
-import { getUnderlyingTokenInfos } from "src/tokenlist/getUnderlyingTokenInfos";
-import { getCCPools } from "src/tokenlist/getCCPools";
-import { getVaults } from "src/tokenlist/getVaults";
-import { getWeightedPools } from "src/tokenlist/getWeightedPools";
+import { getAssetProxyTokenInfos } from "src/tokenlist/assetProxies";
+import { getPrincipalPoolTokenInfos } from "src/tokenlist/ccpools";
+import { getUnderlyingTokenInfos } from "src/tokenlist/underlying";
+import { getVaultTokenInfos } from "src/tokenlist/vaults";
+import { getYieldPoolTokenInfos } from "src/tokenlist/weightedPools";
 
-import { getPrincipalTokens } from "./principalTokens";
-import { getYieldTokensFromTranches } from "./getYieldTokens";
+import { getYieldTokenInfos } from "./yieldTokens";
+import { getPrincipalTokenInfos } from "./principalTokens";
 import { tags } from "./tags";
-import { PrincipalTokenInfo } from "src/tokenlist/types";
+import {
+  ConvergentPoolFactory__factory,
+  Vault__factory,
+  WeightedPoolFactory__factory,
+} from "src/types";
+
+const provider = hre.ethers.provider;
 
 export async function getTokenList(
   addressesJson: AddressesJsonFile,
@@ -33,56 +42,69 @@ export async function getTokenList(
     safelist,
   } = addressesJson;
 
+  const trancheFactory = TrancheFactory__factory.connect(
+    trancheFactoryAddress,
+    provider
+  );
+  const convergentPoolFactory = ConvergentPoolFactory__factory.connect(
+    convergentPoolFactoryAddress,
+    provider
+  );
+  const balancerVault = Vault__factory.connect(balancerVaultAddress, provider);
+  const weightedPoolFactory = WeightedPoolFactory__factory.connect(
+    weightedPoolFactoryAddress,
+    provider
+  );
+
   // Skip addresses that are "0x0", which can happen if you know the underlying
   // token isn't available on the given chain.
-  const baseAssetAddresses = [
+  const underlyingTokenAddresses = [
     wethAddress,
     usdcAddress,
     daiAddress,
     lusdAddress,
   ].filter((address) => address !== "0x0");
 
-  const baseAssetsList = await getUnderlyingTokenInfos(
+  const underlyingTokenInfos = await getUnderlyingTokenInfos(
     chainId,
-    baseAssetAddresses
+    underlyingTokenAddresses
   );
 
-  const { tranches, principalTokensList } = await getPrincipalTokens(
-    trancheFactoryAddress,
+  const principalTokenInfos = await getPrincipalTokenInfos(
     chainId,
+    trancheFactory,
     safelist
   );
 
-  const assetProxiesList = await getAssetProxies(tranches, chainId);
-  const vaultsList = await getVaults(
-    assetProxiesList.map(({ extensions: { vault } }) => vault),
-    chainId
-  );
-  const yieldTokensList = await getYieldTokensFromTranches(tranches, chainId);
-  const ccPoolsList = await getCCPools(
-    convergentPoolFactoryAddress,
+  const assetProxyTokenInfos = await getAssetProxyTokenInfos(
     chainId,
+    principalTokenInfos
+  );
+
+  const vaultTokenInfos = await getVaultTokenInfos(
+    chainId,
+    assetProxyTokenInfos
+  );
+
+  const yieldTokenInfos = await getYieldTokenInfos(
+    chainId,
+    principalTokenInfos
+  );
+
+  const principalPoolTokenInfos = await getPrincipalPoolTokenInfos(
+    chainId,
+    convergentPoolFactory,
     safelist
   );
-  const weightedPoolsList = await getWeightedPools(
-    wethAddress,
-    usdcAddress,
-    daiAddress,
-    balancerVaultAddress,
-    weightedPoolFactoryAddress,
+  const yieldPoolTokenInfos = await getYieldPoolTokenInfos(
     chainId,
+    underlyingTokenInfos,
+    yieldTokenInfos,
+    balancerVault,
+    weightedPoolFactory,
     safelist
   );
 
-  const tokens = [
-    ...baseAssetsList,
-    ...assetProxiesList,
-    ...vaultsList,
-    ...principalTokensList,
-    ...yieldTokensList,
-    ...ccPoolsList,
-    ...weightedPoolsList,
-  ];
   const tokenList: TokenList = {
     name,
     logoURI: "https://element.fi/logo.svg",
@@ -94,13 +116,22 @@ export async function getTokenList(
       minor: 0,
       patch: 0,
     },
-    tokens,
+    tokens: [
+      ...underlyingTokenInfos,
+      ...assetProxyTokenInfos,
+      ...vaultTokenInfos,
+      ...principalTokenInfos,
+      ...yieldTokenInfos,
+      ...principalPoolTokenInfos,
+      ...yieldPoolTokenInfos,
+    ],
   };
+
   const tokenListString = JSON.stringify(tokenList, null, 2);
   console.log(tokenListString);
 
   // TODO: We have to validate this json schema ourselves before it can be
-  // shared safely.  For now, just look at this file in vscode and make sure
-  // there are no squiggles.
+  // published to the uniswap directory.  For now, just look at this file in
+  // vscode and make sure there are no squiggles.
   fs.writeFileSync(outputPath, tokenListString);
 }

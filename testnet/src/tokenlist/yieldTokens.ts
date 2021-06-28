@@ -1,8 +1,11 @@
-import { TokenInfo } from "@uniswap/token-lists";
 import hre from "hardhat";
 import zip from "lodash.zip";
 import { getTokenSymbolMulti } from "src/tokenlist/erc20";
-import { TokenListTag } from "src/tokenlist/types";
+import {
+  PrincipalTokenInfo,
+  TokenListTag,
+  YieldTokenInfo,
+} from "src/tokenlist/types";
 import { ERC20__factory } from "src/types/factories/ERC20__factory";
 import { InterestToken__factory } from "src/types/factories/InterestToken__factory";
 import { Tranche__factory } from "src/types/factories/Tranche__factory";
@@ -25,22 +28,29 @@ const symbolOverrides: Record<number, Record<string, string>> = {
     "0x2c637c5142eE4F31A1a78Ad3DF012fc242F6CAe6": "eYyvUSDC",
     "0x8F28E7085882Ef6010a74Fa092C4eC519A0583B5": "eYyvUSDC",
     "0x51E7DF22DF4A391A5702D6a99a350cE3c55c02Ce": "eYyvUSDC",
-    "0x649b9a57cb8fbd01bE019bDBBed9768d2a457173": "eYyvDAI"
+    "0x649b9a57cb8fbd01bE019bDBBed9768d2a457173": "eYyvDAI",
   },
   [HARDHAT_CHAIN_ID]: hardhatSymbolOverrides,
 };
-export async function getYieldTokensFromTranches(
-  tranches: Tranche[],
-  chainId: number
-) {
+
+export async function getYieldTokenInfos(
+  chainId: number,
+  principalTokenInfos: PrincipalTokenInfo[]
+): Promise<YieldTokenInfo[]> {
+  const tranches = principalTokenInfos.map(({ address }) =>
+    Tranche__factory.connect(address, provider)
+  );
+
   const interestTokenAddresses = await Promise.all(
     tranches.map((tranche) => tranche.interestToken())
   );
   const interestTokens = interestTokenAddresses.map((address) =>
     InterestToken__factory.connect(address, provider)
   );
-  const trancheAddresses = await Promise.all(
-    interestTokens.map((interestToken) => interestToken.tranche())
+
+  const trancheAddresses = principalTokenInfos.map(({ address }) => address);
+  const unlockTimestamps = principalTokenInfos.map(
+    ({ extensions: { unlockTimestamp } }) => unlockTimestamp
   );
   const underlyingSymbols = await getUnderlyingSymbols(interestTokens);
   const yieldTokenNames = formatYieldTokenNames(underlyingSymbols);
@@ -56,29 +66,41 @@ export async function getYieldTokensFromTranches(
     interestTokens.map((interestToken) => interestToken.decimals())
   );
 
-  const yieldTokensList: TokenInfo[] = zip<any>(
+  const yieldTokensList: YieldTokenInfo[] = zip<any>(
     interestTokenAddresses,
     yieldTokenSymbols,
     yieldTokenNames,
     decimals,
     underlyingAddresses,
-    trancheAddresses
-  ).map(([address, symbol, name, decimal, underlying, trancheAddress]) => {
-    return {
-      chainId,
-      address: address as string,
-      symbol: symbol as string,
-      decimals: decimal as number,
-      name: name as string,
-      extensions: {
-        tranche: trancheAddress as string,
-        underlying: underlying as string,
-      },
-      tags: [TokenListTag.YIELD],
-      // TODO: What logo do we want to show for interest tokens?
-      // logoURI: ""
-    };
-  });
+    trancheAddresses,
+    unlockTimestamps
+  ).map(
+    ([
+      address,
+      symbol,
+      name,
+      decimal,
+      underlying,
+      trancheAddress,
+      unlockTimestamp,
+    ]): YieldTokenInfo => {
+      return {
+        chainId,
+        address: address as string,
+        symbol: symbol as string,
+        decimals: decimal as number,
+        name: name as string,
+        extensions: {
+          tranche: trancheAddress as string,
+          underlying: underlying as string,
+          unlockTimestamp: unlockTimestamp as number,
+        },
+        tags: [TokenListTag.YIELD],
+        // TODO: What logo do we want to show for interest tokens?
+        // logoURI: ""
+      };
+    }
+  );
 
   return yieldTokensList;
 }

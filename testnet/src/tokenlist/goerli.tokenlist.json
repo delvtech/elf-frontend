@@ -27,7 +27,7 @@
       "description": "Token that wraps a yield position, ie: Yearn vault asset proxy"
     }
   },
-  "timestamp": "2021-06-25T06:34:39.380Z",
+  "timestamp": "2021-06-28T04:09:43.548Z",
   "version": {
     "major": 0,
     "minor": 0,
@@ -243,7 +243,8 @@
       "name": "ETH Yield Token",
       "extensions": {
         "tranche": "0x44eecA004b2612d131EDA7dA2b9d986E7fED562e",
-        "underlying": "0x9A1000D492d40bfccbc03f413A48F5B6516Ec0Fd"
+        "underlying": "0x9A1000D492d40bfccbc03f413A48F5B6516Ec0Fd",
+        "unlockTimestamp": 1621010937
       },
       "tags": [
         "eY"
@@ -257,7 +258,8 @@
       "name": "ETH Yield Token",
       "extensions": {
         "tranche": "0x89d66Ad25F3A723D606B78170366d8da9870A879",
-        "underlying": "0x9A1000D492d40bfccbc03f413A48F5B6516Ec0Fd"
+        "underlying": "0x9A1000D492d40bfccbc03f413A48F5B6516Ec0Fd",
+        "unlockTimestamp": 1628210937
       },
       "tags": [
         "eY"
@@ -271,7 +273,8 @@
       "name": "USDC Yield Token",
       "extensions": {
         "tranche": "0x80272c960b862B4d6542CDB7338Ad1f727E0D18d",
-        "underlying": "0x78dEca24CBa286C0f8d56370f5406B48cFCE2f86"
+        "underlying": "0x78dEca24CBa286C0f8d56370f5406B48cFCE2f86",
+        "unlockTimestamp": 1628211057
       },
       "tags": [
         "eY"
@@ -285,7 +288,8 @@
       "name": "USDC Yield Token",
       "extensions": {
         "tranche": "0x7D64aD2b83a62C0d02514a43E5B4582C671E5F72",
-        "underlying": "0x78dEca24CBa286C0f8d56370f5406B48cFCE2f86"
+        "underlying": "0x78dEca24CBa286C0f8d56370f5406B48cFCE2f86",
+        "unlockTimestamp": 1622661612
       },
       "tags": [
         "eY"
@@ -299,7 +303,8 @@
       "name": "USDC Yield Token",
       "extensions": {
         "tranche": "0x8Bd721BB84a30c0078aF4a5a732c7169C5BE6eDB",
-        "underlying": "0x78dEca24CBa286C0f8d56370f5406B48cFCE2f86"
+        "underlying": "0x78dEca24CBa286C0f8d56370f5406B48cFCE2f86",
+        "unlockTimestamp": 1623266597
       },
       "tags": [
         "eY"
@@ -313,7 +318,8 @@
       "name": "DAI Yield Token",
       "extensions": {
         "tranche": "0x6866dFc9A60e9dba922668b9b27931DCaCDF645A",
-        "underlying": "0x5bD768CCE8C529CDF23B136bB486a81f64985B92"
+        "underlying": "0x5bD768CCE8C529CDF23B136bB486a81f64985B92",
+        "unlockTimestamp": 1624901889
       },
       "tags": [
         "eY"
@@ -436,7 +442,8 @@
         "poolId": "0x252797e51f51631b6956545c45f9d3f9ffcb0940000200000000000000000063",
         "underlying": "0x78dEca24CBa286C0f8d56370f5406B48cFCE2f86",
         "interestToken": "0x2c637c5142eE4F31A1a78Ad3DF012fc242F6CAe6",
-        "createdAtTimestamp": 1620435577
+        "createdAtTimestamp": 1620435577,
+        "expiration": 1628211057
       },
       "name": "Ele BPT",
       "tags": [
@@ -452,7 +459,8 @@
         "poolId": "0xcf6894c48c2af3ddd433cc1edfefc74e654cc9b4000200000000000000000065",
         "underlying": "0x9A1000D492d40bfccbc03f413A48F5B6516Ec0Fd",
         "interestToken": "0x91dDF92af38Afac1B59F450dDb94ddab10a11490",
-        "createdAtTimestamp": 1620435742
+        "createdAtTimestamp": 1620435742,
+        "expiration": 1621010937
       },
       "name": "Ele BPT",
       "tags": [
@@ -468,7 +476,8 @@
         "poolId": "0xd75bff2444ff738d443066ff4688691e6852b217000200000000000000000067",
         "underlying": "0x9A1000D492d40bfccbc03f413A48F5B6516Ec0Fd",
         "interestToken": "0xBf4B5cB5ca49B1eF6B02615a94980723f6484899",
-        "createdAtTimestamp": 1620435862
+        "createdAtTimestamp": 1620435862,
+        "expiration": 1628210937
       },
       "name": "Ele BPT",
       "tags": [
@@ -484,7 +493,8 @@
         "poolId": "0x7dfd3ec2dd0020b7f85e0555b6d499156420d796000200000000000000000070",
         "underlying": "0x78dEca24CBa286C0f8d56370f5406B48cFCE2f86",
         "interestToken": "0x8F28E7085882Ef6010a74Fa092C4eC519A0583B5",
-        "createdAtTimestamp": 1621970877
+        "createdAtTimestamp": 1621970877,
+        "expiration": 1622661612
       },
       "name": "LP Element Yield Token eyUSDC:02-JUN-21-GMT",
       "tags": [
@@ -500,7 +510,8 @@
         "poolId": "0xcdee31456e502ef883316d4f6a3cf12027554afe000200000000000000000073",
         "underlying": "0x78dEca24CBa286C0f8d56370f5406B48cFCE2f86",
         "interestToken": "0x51E7DF22DF4A391A5702D6a99a350cE3c55c02Ce",
-        "createdAtTimestamp": 1622575577
+        "createdAtTimestamp": 1622575577,
+        "expiration": 1623266597
       },
       "name": "LP Element Yield Token eyUSDC:09-JUN-21-GMT",
       "tags": [
@@ -516,7 +527,8 @@
         "poolId": "0x4c3f56cc1ad2bc61293739c7f0550575c9daf313000200000000000000000078",
         "underlying": "0x5bD768CCE8C529CDF23B136bB486a81f64985B92",
         "interestToken": "0x649b9a57cb8fbd01bE019bDBBed9768d2a457173",
-        "createdAtTimestamp": 1624388260
+        "createdAtTimestamp": 1624388260,
+        "expiration": 1624901889
       },
       "name": "LP Element Yield Token eyDAI:28-JUN-21-GMT",
       "tags": [

@@ -2,29 +2,26 @@ import { TokenInfo } from "@uniswap/token-lists";
 import hre from "hardhat";
 import zip from "lodash.zip";
 
-import { TokenListTag, YieldPoolTokenInfo } from "src/tokenlist/types";
-import { Vault__factory } from "src/types/factories/Vault__factory";
-import { WeightedPoolFactory__factory } from "src/types/factories/WeightedPoolFactory__factory";
+import {
+  TokenListTag,
+  YieldPoolTokenInfo,
+  YieldTokenInfo,
+} from "src/tokenlist/types";
+import { Vault, WeightedPoolFactory } from "src/types";
 import { WeightedPool__factory } from "src/types/factories/WeightedPool__factory";
 import { WeightedPool } from "src/types/WeightedPool";
 
 export const provider = hre.ethers.provider;
-export async function getWeightedPools(
-  wethAddress: string,
-  usdcAddress: string,
-  daiAddress: string,
-  vaultAddress: string,
-  weightedPoolFactoryAddress: string,
+export async function getYieldPoolTokenInfos(
   chainId: number,
+  underlyingTokenInfos: TokenInfo[],
+  yieldTokenInfos: YieldTokenInfo[],
+  balancerVault: Vault,
+  weightedPoolFactory: WeightedPoolFactory,
   safelist: string[]
-) {
-  const vault = Vault__factory.connect(vaultAddress, provider);
-  const poolFactory = WeightedPoolFactory__factory.connect(
-    weightedPoolFactoryAddress,
-    provider
-  );
-  const filter = poolFactory.filters.PoolCreated(null);
-  const events = await poolFactory.queryFilter(filter);
+): Promise<YieldPoolTokenInfo[]> {
+  const filter = weightedPoolFactory.filters.PoolCreated(null);
+  const events = await weightedPoolFactory.queryFilter(filter);
   const poolCreatedEvents = events.map((event) => {
     const [poolAddress] = event.args || [];
     const { blockNumber } = event;
@@ -47,41 +44,55 @@ export async function getWeightedPools(
       return +block.timestamp;
     })
   );
+
+  const underlyingAddresses = underlyingTokenInfos.map(
+    ({ address }) => address
+  );
   const poolIds = await Promise.all(safePools.map((pool) => pool.getPoolId()));
   const poolNames = await Promise.all(safePools.map((pool) => pool.name()));
-  const underlyingAddresses = await Promise.all(
+  const poolUnderlyingAddresses = await Promise.all(
     zip(safePools, poolIds).map(async (zipped) => {
       const [pool, poolId] = zipped as [WeightedPool, string];
-      const [tokenAddresses] = await vault.getPoolTokens(poolId);
+      const [tokenAddresses] = await balancerVault.getPoolTokens(poolId);
       return tokenAddresses.find((address) =>
-        [wethAddress, usdcAddress, daiAddress].includes(address)
+        underlyingAddresses.includes(address)
       ) as string;
     })
   );
+
+  const yieldTokenAddresses = yieldTokenInfos.map(({ address }) => address);
   const interestTokenAddresses = await Promise.all(
     zip(safePools, poolIds).map(async (zipped) => {
       const [pool, poolId] = zipped as [WeightedPool, string];
-      const [tokenAddresses] = await vault.getPoolTokens(poolId);
-      const interestToken = tokenAddresses.find(
-        (address) => ![wethAddress, usdcAddress, daiAddress].includes(address)
+      const [tokenAddresses] = await balancerVault.getPoolTokens(poolId);
+      const interestToken = tokenAddresses.find((address) =>
+        yieldTokenAddresses.includes(address)
       ) as string;
       return interestToken;
     })
   );
+
+  const unlockTimestamps = interestTokenAddresses.map((address) => {
+    return yieldTokenInfos.find(
+      ({ address: tokenInfoAddress }) => tokenInfoAddress === address
+    )?.extensions.unlockTimestamp;
+  });
+
   const poolSymbols = await Promise.all(safePools.map((pool) => pool.symbol()));
   const poolDecimals = await Promise.all(
     safePools.map((pool) => pool.decimals())
   );
 
-  const weightedPoolTokensList: TokenInfo[] = zip<any>(
+  const weightedPoolTokensList: YieldPoolTokenInfo[] = zip<any>(
     safePoolAddresses,
     poolSymbols,
     poolNames,
     poolDecimals,
     poolIds,
-    underlyingAddresses,
+    poolUnderlyingAddresses,
     interestTokenAddresses,
-    poolCreatedAts
+    poolCreatedAts,
+    unlockTimestamps
   ).map(
     ([
       address,
@@ -92,6 +103,7 @@ export async function getWeightedPools(
       underlying,
       interestToken,
       poolCreatedAt,
+      unlockTimestamp,
     ]): YieldPoolTokenInfo => {
       return {
         chainId,
@@ -103,6 +115,7 @@ export async function getWeightedPools(
           underlying: underlying as string,
           interestToken: interestToken as string,
           createdAtTimestamp: poolCreatedAt as number,
+          expiration: unlockTimestamp as number,
         },
         name: name as string,
         tags: [TokenListTag.WPOOL],

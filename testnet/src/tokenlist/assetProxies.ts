@@ -7,12 +7,17 @@ import { ERC20 } from "src/types/ERC20";
 import { YVaultAssetProxy__factory } from "src/types/factories/YVaultAssetProxy__factory";
 import { Tranche } from "src/types/Tranche";
 
-import { AssetProxyTokenInfo, TokenListTag } from "src/tokenlist/types";
+import {
+  AssetProxyTokenInfo,
+  PrincipalTokenInfo,
+  TokenListTag,
+} from "src/tokenlist/types";
 import {
   getTokenNameMulti,
   getTokenSymbolMulti,
   getTokenDecimalsMulti,
 } from "src/tokenlist/erc20";
+import { Tranche__factory } from "src/types";
 
 export const provider = hre.ethers.provider;
 
@@ -26,10 +31,14 @@ const symbolOverrides: Record<number, Record<string, string>> = {
     "0x8dc82c95B8901Db35390Aa4096B643d7724F278D": "eyvDAI",
   },
 };
-export async function getAssetProxies(
-  tranches: Tranche[],
-  chainId: number
+export async function getAssetProxyTokenInfos(
+  chainId: number,
+  principalTokenInfos: PrincipalTokenInfo[]
 ): Promise<AssetProxyTokenInfo[]> {
+  const tranches = principalTokenInfos.map(({ address }) =>
+    Tranche__factory.connect(address, provider)
+  );
+
   const allPositions = await Promise.all(
     tranches.map((tranche) => tranche.position())
   );

@@ -27,7 +27,7 @@
       "description": "Token that wraps a yield position, ie: Yearn vault asset proxy"
     }
   },
-  "timestamp": "2021-06-26T00:22:13.813Z",
+  "timestamp": "2021-06-28T03:59:51.795Z",
   "version": {
     "major": 0,
     "minor": 0,
@@ -122,7 +122,8 @@
       "name": "DAI Yield Token",
       "extensions": {
         "tranche": "0x94BE72dc46fe8f7e9f40FBD2c31826f472F4036E",
-        "underlying": "0x6B175474E89094C44Da98b954EedeAC495271d0F"
+        "underlying": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+        "unlockTimestamp": 1624831814
       },
       "tags": [
         "eY"
@@ -155,7 +156,8 @@
         "poolId": "0x0a9e96988e21c9a03b8dc011826a00259e02c46e000200000000000000000055",
         "underlying": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
         "interestToken": "0xe7f4294033d0fDE6eecb94Bef7Da22fdE68a61ec",
-        "createdAtTimestamp": 1624659807
+        "createdAtTimestamp": 1624659807,
+        "expiration": 1624831814
       },
       "name": "Lp Element Yield Token yvDAI-27JUN21",
       "tags": [

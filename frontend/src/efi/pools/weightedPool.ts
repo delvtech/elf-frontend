@@ -16,6 +16,9 @@ export enum WeightedPoolExitKind {
 export const yieldPools: YieldPoolTokenInfo[] = tokenListJson.tokens.filter(
   (tokenInfo): tokenInfo is YieldPoolTokenInfo => isYieldPool(tokenInfo)
 );
+export const openYieldPools: YieldPoolTokenInfo[] = yieldPools.filter(
+  (yieldPool) => yieldPool.extensions.expiration * 1000 > Date.now()
+);
 
 export const yieldPoolContracts = getSmartContractFromRegistryMulti(
   yieldPools.map(({ address }) => address),

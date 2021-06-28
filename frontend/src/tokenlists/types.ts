@@ -65,6 +65,11 @@ export interface YieldTokenInfo extends TokenInfo {
      * The Principal Token's address
      */
     tranche: string;
+
+    /**
+     * Number of seconds after epoch when the yield token can be redeemed
+     */
+    unlockTimestamp: number;
   };
 }
 
@@ -126,6 +131,11 @@ export interface YieldPoolTokenInfo extends TokenInfo {
      * Number of seconds after epoch when the pool was created
      */
     createdAtTimestamp: number;
+
+    /**
+     * Number of seconds after epoch when the yield tokens in the pool will mature
+     */
+    expiration: number;
   };
 }
 

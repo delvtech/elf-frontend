@@ -28,15 +28,15 @@ import { ONE_WEEK_IN_SECONDS } from "efi/base/time";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol2 } from "efi/crypto/getCryptoSymbol";
 import { formatMoney } from "efi/money/formatMoney";
-import { getPoolInfo } from "efi/pools/getPoolInfo";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { getTrancheForPool } from "efi/pools/getTrancheForPool";
-import { PoolContract } from "efi/pools/PoolContract";
 import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
+import { PrincipalPoolTokenInfo } from "tokenlists/types";
+import { principalPoolContractsByAddress } from "efi/pools/ccpool";
 
 interface PrincipalPoolCardProps {
-  pool: PoolContract;
+  principalPoolInfo: PrincipalPoolTokenInfo;
 }
 
 const cellClassName = tw("flex", "mr-4", "items-center");
@@ -51,13 +51,22 @@ const stopPropagationHandler = (e: React.MouseEvent<HTMLAnchorElement>) => {
 export function PrincipalPoolCard(
   props: PrincipalPoolCardProps
 ): ReactElement | null {
-  const { pool } = props;
-  const poolInfo = getPoolInfo(pool.address);
-  const tranche = getTrancheForPool(poolInfo);
-  const { unlockTimestamp: unlockTime, createdAtTimestamp: trancheCreatedAt } =
-    tranche.extensions;
-  const { baseAssetContract, termAssetContract } = getPoolTokens(poolInfo);
-  const baseAsset = getCryptoAssetForToken(baseAssetContract?.address);
+  const {
+    principalPoolInfo,
+    principalPoolInfo: { address: poolAddress },
+  } = props;
+
+  const principalTokenInfo = getTrancheForPool(principalPoolInfo);
+  const {
+    extensions: {
+      unlockTimestamp: unlockTime,
+      createdAtTimestamp: trancheCreatedAt,
+    },
+  } = principalTokenInfo;
+
+  const { baseAssetContract, termAssetContract } =
+    getPoolTokens(principalPoolInfo);
+  const baseAsset = getCryptoAssetForToken(baseAssetContract.address);
   const baseAssetSymbol = getCryptoSymbol2(baseAsset);
   const BaseAssetIcon = findAssetIcon(baseAsset);
 
@@ -67,19 +76,21 @@ export function PrincipalPoolCard(
     vaultSymbol
   );
 
-  const liquidity = useTotalFiatLiquidity(poolInfo);
-  const fees = useFeeVolumeFiatForPool(poolInfo);
-  const fixedYield = useTokenYield(poolInfo, "principal");
-  const principalPrice = usePoolSpotPrice(pool, termAssetContract.address) ?? 0;
+  const liquidity = useTotalFiatLiquidity(principalPoolInfo);
+  const fees = useFeeVolumeFiatForPool(principalPoolInfo);
+  const poolContract = principalPoolContractsByAddress[poolAddress];
+  const fixedYield = useTokenYield(principalPoolInfo, "principal");
+  const principalPrice =
+    usePoolSpotPrice(poolContract, termAssetContract.address) ?? 0;
   const principalPriceFormatted = principalPrice?.toFixed(4);
-  const stakingYield = useStakingAPY(poolInfo, ONE_WEEK_IN_SECONDS);
+  const stakingYield = useStakingAPY(principalPoolInfo, ONE_WEEK_IN_SECONDS);
 
   const goToTrade = useCallback(() => {
-    navigate(`/pools/${pool?.address}`);
-  }, [pool?.address]);
+    navigate(`/pools/${poolAddress}`);
+  }, [poolAddress]);
 
   const dataToLoad = [
-    tranche,
+    principalTokenInfo,
     liquidity,
     trancheCreatedAt,
     fees,
@@ -108,10 +119,6 @@ export function PrincipalPoolCard(
     }
   }, [allDataLoaded]);
 
-  if (!pool || !baseAssetContract) {
-    return null;
-  }
-
   if (!allDataLoaded) {
     return (
       <Card
@@ -127,7 +134,7 @@ export function PrincipalPoolCard(
   }
 
   const startTime = trancheCreatedAt ? trancheCreatedAt * 1000 : undefined;
-  const maturityTime = unlockTime ? unlockTime * 1000 : undefined;
+  const maturityTime = unlockTime * 1000;
 
   const dayDifference = differenceInDays(
     maturityTime as number,
@@ -182,7 +189,7 @@ export function PrincipalPoolCard(
             text={
               <Link
                 className={tw("flex", "space-x-2")}
-                to={`/pools/${pool?.address}` || ""}
+                to={`/pools/${poolAddress}` || ""}
                 onClick={stopPropagationHandler}
               >
                 {`${baseAssetSymbol} - ${termAssetSymbol}`}
@@ -259,15 +266,15 @@ export function PrincipalPoolCard(
         )}
       >
         <GoToPoolButton
-          poolAddress={pool.address}
+          poolAddress={poolAddress}
           poolAction={PoolAction.BUY}
-          label={t`Buy`}
+          label={t`Trade`}
           outlined
           small
         />
         {maturityTime && maturityTime > Date.now() ? (
           <GoToPoolButton
-            poolAddress={pool.address}
+            poolAddress={poolAddress}
             poolAction={PoolAction.ADD_LIQUIDITY}
             label={t`LP`}
             outlined

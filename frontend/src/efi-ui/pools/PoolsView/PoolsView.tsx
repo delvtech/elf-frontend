@@ -1,30 +1,34 @@
 import { Fragment, ReactElement, useState } from "react";
 import { Helmet } from "react-helmet";
 
-import { Web3Provider } from "@ethersproject/providers";
 import { RouteComponentProps } from "@reach/router";
-import { useWeb3React } from "@web3-react/core";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
-import { PoolsTable } from "efi-ui/pools/PoolsTable/PoolsTable";
-import { useSigner } from "efi-ui/provider/useBlockFromTag/useSigner/useSigner";
 import { Tab, Tabs } from "@blueprintjs/core";
+import { assertNever } from "efi/base/assertNever";
+import { PrincipalPoolTable } from "efi-ui/pools/PoolsTable/PrincipalPoolTable";
+import { YieldPoolTable } from "efi-ui/pools/PoolsTable/YieldPoolTable";
 
-type TermToken = "principal" | "yield";
+enum PoolsViewTab {
+  PRINCIPAL = "principal",
+  YIELD = "yield",
+}
 interface PoolsViewProps extends RouteComponentProps {}
 
 export function PoolsView(props: PoolsViewProps): ReactElement {
-  const { library, account } = useWeb3React<Web3Provider>();
-  const signer = useSigner(account, library);
-
-  const [activeTab, setActiveTab] = useState<TermToken>("principal");
+  const [activeTab, setActiveTab] = useState<PoolsViewTab>(
+    PoolsViewTab.PRINCIPAL
+  );
 
   const title =
-    activeTab === "yield" ? t`Yield Token Pools` : t`Principal Token Pools`;
+    activeTab === PoolsViewTab.YIELD
+      ? t`Yield Token Pools`
+      : t`Principal Token Pools`;
+
   const subtitle =
-    activeTab === "yield"
+    activeTab === PoolsViewTab.YIELD
       ? t`Buy and sell yield tokens or provide liquidity by staking in Element yield pools.`
       : t`Buy and sell principal tokens or provide liquidity by staking in Element principal pools.`;
 
@@ -56,17 +60,32 @@ export function PoolsView(props: PoolsViewProps): ReactElement {
         <Tabs
           large
           selectedTabId={activeTab}
-          onChange={setActiveTab as (newTabId: TermToken) => void}
+          onChange={setActiveTab as (newTabId: PoolsViewTab) => void}
         >
-          <Tab id={"principal"} title={t`Principal Tokens`} />
-          <Tab id={"yield"} title={t`Yield Tokens`} />
+          <Tab id={PoolsViewTab.PRINCIPAL} title={t`Principal Tokens`} />
+          <Tab id={PoolsViewTab.YIELD} title={t`Yield Tokens`} />
         </Tabs>
 
-        <PoolsTable
-          signerOrProvider={signer}
-          className={tw("w-full")}
-          isYieldPools={activeTab === "yield"}
-        />
+        <div
+          className={tw(
+            "flex",
+            "flex-col",
+            "items-center",
+            "w-full",
+            "space-y-5"
+          )}
+        >
+          {(() => {
+            switch (activeTab) {
+              case PoolsViewTab.PRINCIPAL:
+                return <PrincipalPoolTable />;
+              case PoolsViewTab.YIELD:
+                return <YieldPoolTable />;
+              default:
+                assertNever(activeTab);
+            }
+          })()}
+        </div>
       </div>
     </Fragment>
   );

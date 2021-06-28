@@ -15,6 +15,7 @@ if (process.env.NODE_ENV === "development") {
 
 import { PrincipalTokenInfo, TokenListTag } from "src/tokenlist/types";
 import { getTokenSymbolMulti } from "src/tokenlist/erc20";
+import { TrancheFactory } from "src/types";
 
 const MAINNET_CHAIN_ID = 1;
 const GOERLI_CHAIN_ID = 5;
@@ -42,16 +43,13 @@ const trancheUnderlyingOverrides: Record<
   // TODO: Put the lusd tranche address in here and map it to the lusd base asset address for now
   [MAINNET_CHAIN_ID]: {},
 };
-export const provider = hre.ethers.provider;
-export async function getPrincipalTokens(
-  trancheFactoryAddress: string,
+
+const provider = hre.ethers.provider;
+export async function getPrincipalTokenInfos(
   chainId: number,
+  trancheFactory: TrancheFactory,
   safelist: string[]
-): Promise<{ tranches: Tranche[]; principalTokensList: PrincipalTokenInfo[] }> {
-  const trancheFactory = TrancheFactory__factory.connect(
-    trancheFactoryAddress,
-    provider
-  );
+): Promise<PrincipalTokenInfo[]> {
   const filter = trancheFactory.filters.TrancheCreated(null, null, null);
   const trancheCreatedEvents = await trancheFactory.queryFilter(filter);
   const trancheAddresses = trancheCreatedEvents.map(
@@ -136,7 +134,7 @@ export async function getPrincipalTokens(
     }
   );
 
-  return { tranches: safeTranches, principalTokensList };
+  return principalTokensList;
 }
 
 async function getPrincipalTokenUnderlyings(

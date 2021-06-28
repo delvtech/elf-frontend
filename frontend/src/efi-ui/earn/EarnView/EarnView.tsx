@@ -6,7 +6,7 @@ import {
   useState,
 } from "react";
 
-import { Intent, Tag } from "@blueprintjs/core";
+import { Intent, NonIdealState, Tag } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { RouteComponentProps } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
@@ -17,6 +17,7 @@ import { EarnCard } from "efi-ui/earn/EarnCard/EarnCard";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { useSigner } from "efi-ui/provider/useBlockFromTag/useSigner/useSigner";
 import { openPrincipalTokenInfos } from "efi/tranche/tranches";
+import { IconNames } from "@blueprintjs/icons";
 
 interface EarnViewProps extends RouteComponentProps {}
 
@@ -59,22 +60,31 @@ export function EarnView(props: EarnViewProps): ReactElement {
             "space-y-5"
           )}
         >
-          {openPrincipalTokenInfos.map((principalTokenInfo, index) => {
-            return (
-              <EarnCard
-                signer={signer}
-                library={library}
-                account={account}
-                isExpanded={index === expandedPoolIndex}
-                onExpandOpen={() => {
-                  setExpandedPoolIndex(index);
-                }}
-                onExpandClose={onExpandClose}
-                key={principalTokenInfo.address}
-                principalTokenInfo={principalTokenInfo}
-              />
-            );
-          })}
+          {!openPrincipalTokenInfos.length ? (
+            <NonIdealState
+              className={tw("mt-12")}
+              icon={IconNames.CLEAN}
+              title={t`No available terms`}
+              description={t`Please check back soon!`}
+            />
+          ) : (
+            openPrincipalTokenInfos.map((principalTokenInfo, index) => {
+              return (
+                <EarnCard
+                  signer={signer}
+                  library={library}
+                  account={account}
+                  isExpanded={index === expandedPoolIndex}
+                  onExpandOpen={() => {
+                    setExpandedPoolIndex(index);
+                  }}
+                  onExpandClose={onExpandClose}
+                  key={principalTokenInfo.address}
+                  principalTokenInfo={principalTokenInfo}
+                />
+              );
+            })
+          )}
         </div>
       </div>
     </Fragment>

@@ -4,7 +4,11 @@ import zip from "lodash.zip";
 
 import { ERC20 } from "src/types/ERC20";
 
-import { TokenListTag, VaultTokenInfo } from "src/tokenlist/types";
+import {
+  AssetProxyTokenInfo,
+  TokenListTag,
+  VaultTokenInfo,
+} from "src/tokenlist/types";
 import { TestYVault__factory } from "src/types/factories/TestYVault__factory";
 import {
   getTokenNameMulti,
@@ -24,7 +28,13 @@ const VaultSymbolOverrides: Record<number, Record<string, string>> = {
     "0x851A97B6520c582dAB33F722Bd9C5939Ea349546": "yvDAI",
   },
 };
-export async function getVaults(vaultAddresses: string[], chainId: number) {
+export async function getVaultTokenInfos(
+  chainId: number,
+  assetProxyTokenInfos: AssetProxyTokenInfo[]
+): Promise<VaultTokenInfo[]> {
+  const vaultAddresses = assetProxyTokenInfos.map(
+    ({ extensions: { vault } }) => vault
+  );
   const vaults = vaultAddresses.map((vaultAddress) =>
     TestYVault__factory.connect(vaultAddress, provider)
   );

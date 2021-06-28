@@ -14,7 +14,7 @@ export const provider = hre.ethers.provider;
 export async function getUnderlyingTokenInfos(
   chainId: number,
   underlyingTokenAddresses: string[]
-) {
+): Promise<TokenInfo[]> {
   const baseAssets = underlyingTokenAddresses.map((address) =>
     ERC20__factory.connect(address, provider)
   );

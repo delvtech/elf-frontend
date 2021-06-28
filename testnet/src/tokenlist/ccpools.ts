@@ -2,22 +2,19 @@ import { TokenInfo } from "@uniswap/token-lists";
 import hre from "hardhat";
 import zip from "lodash.zip";
 import { PrincipalPoolTokenInfo, TokenListTag } from "src/tokenlist/types";
+import { ConvergentCurvePool, ConvergentPoolFactory } from "src/types";
 
 import { ConvergentCurvePool__factory } from "src/types/factories/ConvergentCurvePool__factory";
 import { ConvergentPoolFactory__factory } from "src/types/factories/ConvergentPoolFactory__factory";
 
 export const provider = hre.ethers.provider;
-export async function getCCPools(
-  ccPoolFactoryAddress: string,
+export async function getPrincipalPoolTokenInfos(
   chainId: number,
+  ccPoolFactory: ConvergentPoolFactory,
   safelist: string[]
-) {
-  const poolFactory = ConvergentPoolFactory__factory.connect(
-    ccPoolFactoryAddress,
-    provider
-  );
-  const filter = poolFactory.filters.CCPoolCreated(null, null);
-  const events = await poolFactory.queryFilter(filter);
+): Promise<PrincipalPoolTokenInfo[]> {
+  const filter = ccPoolFactory.filters.CCPoolCreated(null, null);
+  const events = await ccPoolFactory.queryFilter(filter);
   const poolCreatedEvents = events.map((event) => {
     const [poolAddress, bondTokenAddress] = event.args || [];
     const { blockNumber } = event;
@@ -61,7 +58,7 @@ export async function getCCPools(
     safePools.map((pool) => pool.expiration())
   );
 
-  const ccPoolTokensList: TokenInfo[] = zip<any>(
+  const ccPoolTokensList: PrincipalPoolTokenInfo[] = zip<any>(
     safePoolAddresses,
     poolSymbols,
     poolNames,

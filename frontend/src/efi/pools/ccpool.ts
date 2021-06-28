@@ -8,12 +8,21 @@ import { getSmartContractFromRegistryMulti } from "efi/contracts/SmartContractsR
 import { tokenListJson } from "efi/tokenlists";
 
 /**
- * The list of all principal token pools
+ * The list of all principal token pools. This includes pools with mature
+ * principal tokens.
  */
 export const principalPools: PrincipalPoolTokenInfo[] =
   tokenListJson.tokens.filter(
     (tokenInfo): tokenInfo is PrincipalPoolTokenInfo =>
       isPrincipalPool(tokenInfo)
+  );
+
+/**
+ * The list of all principal token pools whose pts aren't yet mature.
+ */
+export const openPrincipalPools: PrincipalPoolTokenInfo[] =
+  principalPools.filter(
+    (principalPool) => principalPool.extensions.expiration * 1000 < Date.now()
   );
 
 export const principalPoolContracts = getSmartContractFromRegistryMulti(
