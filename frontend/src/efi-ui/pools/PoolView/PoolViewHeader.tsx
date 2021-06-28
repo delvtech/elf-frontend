@@ -1,15 +1,14 @@
 import { ReactElement } from "react";
 
-import { Colors, Intent, Tag } from "@blueprintjs/core";
+import { Intent, Tag } from "@blueprintjs/core";
 import classNames from "classnames";
 import { differenceInDays, format } from "date-fns";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
-import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { getCryptoSymbol2 } from "efi/crypto/getCryptoSymbol";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { getTrancheForPool } from "efi/pools/getTrancheForPool";
 import { PoolInfo } from "efi/pools/PoolInfo";
@@ -21,10 +20,9 @@ interface PoolViewHeaderProps {
 export function PoolViewHeader({
   poolInfo,
 }: PoolViewHeaderProps): ReactElement {
-  const { isDarkMode } = useDarkMode();
   const { baseAssetInfo, termAssetInfo } = getPoolTokens(poolInfo);
   const baseAsset = getCryptoAssetForToken(baseAssetInfo.address);
-  const baseAssetSymbol = getCryptoSymbol(baseAsset);
+  const baseAssetSymbol = getCryptoSymbol2(baseAsset);
   const { label: termAssetSymbol } = getTermAssetSymbol(
     termAssetInfo.address,
     baseAssetSymbol

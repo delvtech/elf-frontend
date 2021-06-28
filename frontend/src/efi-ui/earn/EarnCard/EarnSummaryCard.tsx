@@ -1,5 +1,6 @@
-import { Button, Card, Colors, Intent } from "@blueprintjs/core";
-import classNames from "classnames";
+import React from "react";
+
+import { Button, Card, Intent } from "@blueprintjs/core";
 import { PrincipalPoolTokenInfo, YieldPoolTokenInfo } from "tokenlists/types";
 import { Money } from "ts-money";
 import { t } from "ttag";
@@ -10,16 +11,12 @@ import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
 import { useTotalFiatLiquidity } from "efi-ui/pools/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
 import { IconProps } from "efi-ui/token/TokenIcon";
 import { formatPercent } from "efi/base/formatPercent";
-import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { formatMoney } from "efi/money/formatMoney";
 import { PoolInfo } from "efi/pools/PoolInfo";
-import React from "react";
 
 interface EarnSummaryCardProps {
   onToggleExpand: () => void;
   BaseAssetIcon: React.FC<IconProps>;
-  baseAsset: CryptoAsset;
-  isDarkMode: boolean;
   displayName: string | undefined;
   type: string | undefined;
   termLength: number;
@@ -41,8 +38,6 @@ export function EarnSummaryCard(props: EarnSummaryCardProps): JSX.Element {
   const {
     onToggleExpand,
     BaseAssetIcon,
-    baseAsset,
-    isDarkMode,
     displayName,
     type,
     termLength,

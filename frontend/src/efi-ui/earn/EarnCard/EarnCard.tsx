@@ -18,7 +18,6 @@ import { useFeeVolumeForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolu
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { useTokenYield } from "efi-ui/pools/useTokenYield";
 import { useTotalValueLockedForTranche } from "efi-ui/pools/useTotalValueLockedForTranche";
-import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { getYearnVaultAPY } from "efi-yearn/fetchYearnVaults";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
@@ -67,7 +66,6 @@ export function EarnCard(props: EarnCardProps): ReactElement | null {
     onExpandOpen,
   } = props;
   // state
-  const { isDarkMode } = useDarkMode();
   const [activeTabId, setActiveTabId] = useState(EarnActionsTabId.MINT);
 
   // get infos
@@ -168,8 +166,6 @@ export function EarnCard(props: EarnCardProps): ReactElement | null {
       <EarnSummaryCard
         onToggleExpand={onToggleExpand}
         BaseAssetIcon={BaseAssetIcon}
-        baseAsset={baseAsset}
-        isDarkMode={isDarkMode}
         displayName={displayName}
         type={type}
         termLength={termLength}

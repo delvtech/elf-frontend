@@ -6,7 +6,7 @@ import React, {
   useState,
 } from "react";
 
-import { Card, Classes, Colors, Elevation } from "@blueprintjs/core";
+import { Card, Classes, Elevation } from "@blueprintjs/core";
 import { Link, navigate } from "@reach/router";
 import classNames from "classnames";
 import { differenceInDays } from "date-fns";
@@ -23,12 +23,10 @@ import { PoolAction } from "efi-ui/pools/usePoolViewPoolActionsPref/usePoolViewP
 import { useStakingAPY } from "efi-ui/pools/useStakingAPY";
 import { useTotalFiatLiquidity } from "efi-ui/pools/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
-import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { getYearnVaultAPY } from "efi-yearn/fetchYearnVaults";
 import { formatPercent } from "efi/base/formatPercent";
-import { CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol2 } from "efi/crypto/getCryptoSymbol";
 import { formatMoney } from "efi/money/formatMoney";
@@ -80,8 +78,6 @@ export function InterestPoolCard(
   const { data: vaultInfo } = useYearnVault(vaultSymbol);
   const { displayName, type, apy } = vaultInfo || {};
   const vaultApy = apy ? getYearnVaultAPY(apy) : 0;
-
-  const { isDarkMode } = useDarkMode();
 
   const goToTrade = useCallback(() => {
     navigate(`/pools/${pool?.address}`);
