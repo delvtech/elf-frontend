@@ -11,10 +11,14 @@ import {
   SliceTooltipProps,
 } from "@nivo/line";
 import { LinearScale, TimeScale } from "@nivo/scales";
+import { format } from "d3-format";
+import { line } from "d3-shape";
+import { Currency, Money } from "ts-money";
 
 import tw from "efi-tailwindcss-classnames";
+import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { ONE_WEEK_IN_MILLISECONDS } from "efi/base/time";
-import { line } from "d3-shape";
+import { formatMoney } from "efi/money/formatMoney";
 
 const margin: Partial<Margin> = { top: 40, right: 40, bottom: 60, left: 80 };
 
@@ -46,6 +50,7 @@ export function LineChart({
   data,
   formatYValues,
 }: LineChartProps): ReactElement {
+  const { currency } = useCurrencyPref();
   const { dataColor, textColor, tooltipBackground, tooltipColor } =
     getColors(darkMode);
 
@@ -68,7 +73,11 @@ export function LineChart({
   };
 
   const CustomLayer = chartType === "lines" ? "lines" : makeBarLayer(dataColor);
-  const SliceTooltip = makeSliceTooltip(tooltipBackground, tooltipColor);
+  const SliceTooltip = makeSliceTooltip(
+    tooltipBackground,
+    tooltipColor,
+    currency
+  );
   const xScale: TimeScale = {
     type: "time",
     min: weekAgo,
@@ -154,8 +163,14 @@ function getTheme(textColor: string) {
   };
 }
 
-function makeSliceTooltip(tooltipBackground: string, tooltipColor: string) {
+function makeSliceTooltip(
+  tooltipBackground: string,
+  tooltipColor: string,
+  currency: Currency
+) {
   return ({ slice }: SliceTooltipProps) => {
+    const value = slice.points[0].data.y as number;
+    const money = Money.fromDecimal(value, currency, Math.round);
     return (
       <div
         className={tw("p-2", "px-4", "rounded-sm")}
@@ -165,7 +180,7 @@ function makeSliceTooltip(tooltipBackground: string, tooltipColor: string) {
           opacity: 1,
         }}
       >
-        {slice.points[0].data.y}
+        {formatMoney(money)}
       </div>
     );
   };
