@@ -6,22 +6,23 @@ import { formatUnits } from "ethers/lib/utils";
 import { PrincipalPoolTokenInfo, PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
+import { getTokenAddressForBalancer } from "efi-balancer/getTokenAddressForBalancer";
 import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
+import { SwapKind } from "efi-balancer/SwapKind";
 import tw from "efi-tailwindcss-classnames";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoBalanceOf } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { useCanPerformPool } from "efi-ui/pools/usePoolCanPerform/usePoolCanPerform";
+import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { usePoolTotalSupply } from "efi-ui/pools/usePoolTotalSupply";
 import { useTokenYield } from "efi-ui/pools/useTokenYield";
-import { BuyPrincipalTokensTransactionConfirmationDrawer } from "efi-ui/swaps/BuyPrincipalTokensTransactionConfirmationDrawer/BuyPrincipalTokensTransactionConfirmationDrawer";
+import { SwapTokensTransactionConfirmationDrawer } from "efi-ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensTransactionConfirmationDrawer";
 import { TokenAmountInput } from "efi-ui/token/TokenAmountInput/TokenAmountInput";
-import { SwapKind } from "efi/balancer/SwapKind";
 import { formatBalance } from "efi/base/formatBalance";
 import { formatPercent } from "efi/base/formatPercent";
 import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
-import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { getCryptoSymbol2 } from "efi/crypto/getCryptoSymbol";
@@ -34,7 +35,6 @@ import { getPoolContract } from "efi/pools/getPoolContract";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { getTokenInfo } from "efi/tokenlists";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
-import { trancheContractsByAddress } from "efi/tranche/tranches";
 
 interface BuyPrincipalTokensFormProps {
   library: Web3Provider | undefined;
@@ -49,30 +49,25 @@ export function BuyPrincipalTokensForm(
     library,
     account,
     principalToken: {
-      address: ptAddress,
-      extensions: { underlying },
+      symbol: principalTokenSymbol,
+      address: principalTokenAddress,
+      extensions: { underlying: baseAssetAddress },
     },
   } = props;
-
-  const trancheContract = trancheContractsByAddress[ptAddress];
 
   // inputs
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const openDrawer = useCallback(() => setDrawerOpen(true), []);
   const { stringValue: baseAssetInputValue, setValue: onBaseAssetChange } =
     useNumericInput();
-  const closeDrawer = useCallback(
-    (transactionAttemped) => {
-      if (transactionAttemped) {
-        onBaseAssetChange("");
-      }
-      setDrawerOpen(false);
-    },
-    [onBaseAssetChange]
-  );
+  const closeDrawer = useCallback(() => {
+    onBaseAssetChange("");
+    setDrawerOpen(false);
+  }, [onBaseAssetChange]);
 
   // base asset
-  const baseAsset = getCryptoAssetForToken(underlying) as CryptoAsset;
+  const baseAsset = getCryptoAssetForToken(baseAssetAddress);
+  const baseAssetBalancerAddress = getTokenAddressForBalancer(baseAsset);
   const BaseAssetIcon = findAssetIcon(baseAsset);
   const baseAssetSymbol = getCryptoSymbol2(baseAsset);
   const baseAssetBalanceOf = useCryptoBalanceOf(library, account, baseAsset);
@@ -83,12 +78,19 @@ export function BuyPrincipalTokensForm(
     baseAssetDecimals
   );
 
+  const principalToken = getCryptoAssetForToken(principalTokenAddress);
+  const PrincipalTokenIcon = findAssetIcon(principalToken);
+
   // pool
-  const poolInfo = getPoolInfoForPrincipalToken(ptAddress);
-  const poolContract = getPrincipalPoolContractForTranche(ptAddress);
+  const poolInfo = getPoolInfoForPrincipalToken(principalTokenAddress);
+  const poolContract = getPrincipalPoolContractForTranche(
+    principalTokenAddress
+  );
   const apy = useTokenYield(poolInfo, "principal");
   const formattedAPY = apy ? formatPercent(apy) : "-";
   const canPerformBuy = useCanPerformPool(poolInfo.address, "buy");
+
+  const spotPrice = usePoolSpotPrice(poolContract, principalTokenAddress);
 
   // input validation
   const amountOut = useCalculatePrincipalTokenAmountOut(
@@ -172,16 +174,24 @@ export function BuyPrincipalTokensForm(
           </Callout>
         ) : null}
       </div>
-      <BuyPrincipalTokensTransactionConfirmationDrawer
-        baseAsset={baseAsset}
-        baseAssetIcon={BaseAssetIcon}
-        tranche={trancheContract}
+      <SwapTokensTransactionConfirmationDrawer
+        buttonLabel={t`Buy`}
+        tokenInAddress={baseAssetBalancerAddress}
+        tokenInSymbol={baseAssetSymbol}
+        tokenInDecimals={baseAssetDecimals}
+        tokenInAsset={baseAsset}
+        tokenInIcon={BaseAssetIcon}
+        tokenOutAddress={principalTokenAddress}
+        tokenOutSymbol={principalTokenSymbol}
+        tokenOutDecimals={baseAssetDecimals}
+        tokenOutIcon={PrincipalTokenIcon}
         account={account}
         library={library}
-        pool={poolContract}
+        poolInfo={poolInfo}
         amountIn={baseAssetInputValue}
         amountOut={amountOut}
         swapKind={SwapKind.GIVEN_IN}
+        spotPrice={spotPrice}
         isOpen={isDrawerOpen}
         onClose={closeDrawer}
       />

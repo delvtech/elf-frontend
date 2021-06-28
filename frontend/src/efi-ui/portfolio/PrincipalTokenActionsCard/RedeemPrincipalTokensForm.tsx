@@ -8,7 +8,7 @@ import { t } from "ttag";
 
 import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
 import tw from "efi-tailwindcss-classnames";
-import { SwapKind } from "efi/balancer/SwapKind";
+import { SwapKind } from "efi-balancer/SwapKind";
 import { getCalcSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";

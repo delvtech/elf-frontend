@@ -8,7 +8,7 @@ import { formatEther, formatUnits, parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { SwapKind } from "efi/balancer/SwapKind";
+import { SwapKind } from "efi-balancer/SwapKind";
 import { getCalcSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
@@ -33,7 +33,7 @@ import { validateTradeValues } from "efi/trade/validateTradeValues";
 import { trancheContractsByAddress as principalTokenContractsByAddress } from "efi/tranche/tranches";
 import { underlyingContractsByAddress } from "efi/underlying/underlying";
 import { useCanPerformPool } from "efi-ui/pools/usePoolCanPerform/usePoolCanPerform";
-import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
+import { getTokenAddressForBalancer } from "efi-balancer/getTokenAddressForBalancer";
 import { CryptoAssets } from "efi/crypto/CryptoAssetRegistry";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 

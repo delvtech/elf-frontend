@@ -1,17 +1,12 @@
 import { BALANCER_ETH_SENTINEL } from "efi/balancer";
+import { typeAassertNever } from "efi/base/typeAssertNever";
 import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
 
 /**
  * Disambiguates the crypto asset to get a suitable token address for the
  * Balancer Vault.
  */
-export function getTokenAddressForBalancer(
-  cryptoAsset: CryptoAsset | undefined
-): string | undefined {
-  if (!cryptoAsset) {
-    return;
-  }
-
+export function getTokenAddressForBalancer(cryptoAsset: CryptoAsset): string {
   switch (cryptoAsset.type) {
     case CryptoAssetType.ETHEREUM:
       return BALANCER_ETH_SENTINEL;
@@ -19,6 +14,9 @@ export function getTokenAddressForBalancer(
     case CryptoAssetType.ERC20PERMIT:
       return cryptoAsset.tokenContract.address;
     default:
-      return undefined;
+      typeAassertNever(cryptoAsset);
   }
+
+  // should never happen
+  return "";
 }

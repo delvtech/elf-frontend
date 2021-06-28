@@ -1,8 +1,8 @@
 import { Vault } from "elf-contracts/types/Vault";
 import { BigNumber } from "ethers";
 
-import { FundManagement } from "efi/balancer/FundManagement";
-import { SwapKind } from "efi/balancer/SwapKind";
+import { FundManagement } from "efi-balancer/FundManagement";
+import { SwapKind } from "efi-balancer/SwapKind";
 import { BatchSwapStep } from "efi-ui/balancer/SwapRequest";
 import {
   BALANCER_ETH_SENTINEL,

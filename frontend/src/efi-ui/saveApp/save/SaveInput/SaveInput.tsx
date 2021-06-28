@@ -7,7 +7,7 @@ import { formatUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { SwapKind } from "efi/balancer/SwapKind";
+import { SwapKind } from "efi-balancer/SwapKind";
 import { validateInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";

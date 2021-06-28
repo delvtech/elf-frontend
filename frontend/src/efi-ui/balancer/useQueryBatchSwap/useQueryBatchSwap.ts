@@ -4,7 +4,7 @@ import { BigNumber } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
 import { PrincipalPoolTokenInfo } from "tokenlists/types";
 
-import { SwapKind } from "efi/balancer/SwapKind";
+import { SwapKind } from "efi-balancer/SwapKind";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { makeQueryBatchSwapCallArgs } from "efi-ui/balancer/useQueryBatchSwap/makeQueryBatchSwapCallArgs";
 import { getQueryData } from "efi-ui/base/queryResults";

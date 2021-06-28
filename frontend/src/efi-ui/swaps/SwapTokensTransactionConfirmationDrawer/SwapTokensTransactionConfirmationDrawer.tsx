@@ -5,6 +5,7 @@ import { BigNumber } from "ethers";
 import { formatEther, parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
+import { SwapKind } from "efi-balancer/SwapKind";
 import { getBalancerApprovalMessage } from "efi-ui/balancer/balancerApprovalMessage";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { parseQueryBatchSwapResult } from "efi-ui/balancer/useQueryBatchSwap/parseQueryBatchSwapResult";
@@ -16,7 +17,6 @@ import { SwapDetailsForm } from "efi-ui/swaps/SwapDetailsPreview/SwapDetailsForm
 import { SwapTokenDetails } from "efi-ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensDetails";
 import { IconProps } from "efi-ui/token/TokenIcon";
 import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/TransactionDrawer";
-import { SwapKind } from "efi/balancer/SwapKind";
 import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol2 } from "efi/crypto/getCryptoSymbol";

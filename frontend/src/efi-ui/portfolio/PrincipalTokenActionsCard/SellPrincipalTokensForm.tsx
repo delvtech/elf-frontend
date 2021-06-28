@@ -8,11 +8,12 @@ import { PrincipalPoolTokenInfo, PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
+import { SwapKind } from "efi-balancer/SwapKind";
 import tw from "efi-tailwindcss-classnames";
-import { SwapKind } from "efi/balancer/SwapKind";
 import { getCalcSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
+import { useCanPerformPool } from "efi-ui/pools/usePoolCanPerform/usePoolCanPerform";
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { usePoolTotalSupply } from "efi-ui/pools/usePoolTotalSupply";
@@ -22,7 +23,7 @@ import { TokenAmountInput } from "efi-ui/token/TokenAmountInput/TokenAmountInput
 import { formatBalance } from "efi/base/formatBalance";
 import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { getCryptoSymbol2 } from "efi/crypto/getCryptoSymbol";
 import { getPoolInfoForPrincipalToken } from "efi/pools/ccpool";
 import { getPoolContract } from "efi/pools/getPoolContract";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
@@ -30,7 +31,6 @@ import { getTokenInfo } from "efi/tokenlists";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
 import { getBaseAssetForTranche } from "efi/tranche/baseAssets";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
-import { useCanPerformPool } from "efi-ui/pools/usePoolCanPerform/usePoolCanPerform";
 
 interface SellPrincipalTokensFormProps {
   library: Web3Provider | undefined;
@@ -65,7 +65,7 @@ export function SellPrincipalTokensForm(
   // base asset
   const baseAsset = getBaseAssetForTranche(ptAddress);
   const baseAssetIcon = findAssetIcon(baseAsset);
-  const baseAssetSymbol = getCryptoSymbol(baseAsset);
+  const baseAssetSymbol = getCryptoSymbol2(baseAsset);
   const { decimals: baseAssetDecimals } = baseAssetInfo;
 
   // principal token
@@ -150,7 +150,7 @@ export function SellPrincipalTokensForm(
         tokenInAsset={principalTokenCryptoAsset}
         tokenInIcon={ptIcon}
         tokenOutAddress={underlyingAddress}
-        tokenOutSymbol={baseAssetSymbol as string}
+        tokenOutSymbol={baseAssetSymbol}
         tokenOutDecimals={baseAssetDecimals}
         tokenOutIcon={baseAssetIcon}
         account={account}

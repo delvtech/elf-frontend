@@ -11,7 +11,6 @@ import {
   SliceTooltipProps,
 } from "@nivo/line";
 import { LinearScale, TimeScale } from "@nivo/scales";
-import { format } from "d3-format";
 import { line } from "d3-shape";
 import { Currency, Money } from "ts-money";
 

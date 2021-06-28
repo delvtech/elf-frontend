@@ -10,7 +10,7 @@ import {
   Signer,
 } from "ethers";
 
-import { SwapKind } from "efi/balancer/SwapKind";
+import { SwapKind } from "efi-balancer/SwapKind";
 import { BatchSwapStep } from "efi-ui/balancer/SwapRequest";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { getQueryData } from "efi-ui/base/queryResults";

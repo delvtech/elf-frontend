@@ -11,9 +11,9 @@ import { useQueryBatchSwapMulti } from "efi-ui/balancer/useQueryBatchSwap/useQue
 import { getQueriesData } from "efi-ui/base/queryResults";
 import { useCoinGeckoPriceMulti } from "efi-ui/coingecko/useCoinGeckoPrices";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
-import { getTokenAddressForBalancer } from "efi-ui/swaps/getTokenAddressForBalancer";
+import { getTokenAddressForBalancer } from "efi-balancer/getTokenAddressForBalancer";
 import { useTokensWithBalance } from "efi-ui/token/hooks/useTokensWithBalance";
-import { SwapKind } from "efi/balancer/SwapKind";
+import { SwapKind } from "efi-balancer/SwapKind";
 import { ERC20Shim } from "efi/contracts/ERC20Shim";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
