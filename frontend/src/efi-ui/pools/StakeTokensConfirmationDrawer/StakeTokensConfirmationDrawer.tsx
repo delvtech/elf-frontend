@@ -2,15 +2,16 @@ import { ReactElement, useMemo } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
 import { BigNumber } from "ethers";
-import { parseUnits } from "ethers/lib/utils";
+import { formatEther, formatUnits, parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import { getBalancerApprovalMessage } from "efi-ui/balancer/balancerApprovalMessage";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { StakeConfirmationForm } from "efi-ui/pools/StakeTokensConfirmationDrawer/StakeConfirmationForm";
+import { StakeTokensDetails } from "efi-ui/pools/StakeTokensConfirmationDrawer/StakeTokensDetails";
+import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
-import { TokenIcon } from "efi-ui/token/TokenIcon";
 import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/TransactionDrawer";
 import { ERC20Shim } from "efi/contracts/ERC20Shim";
 import {
@@ -18,11 +19,20 @@ import {
   CryptoAssetType,
   findTokenContract,
 } from "efi/crypto/CryptoAsset";
+import { getPoolContract } from "efi/pools/getPoolContract";
+import { getPoolTokens } from "efi/pools/getPoolTokens";
+import { PoolInfo } from "efi/pools/PoolInfo";
 import { WalletApprovalInfo } from "efi/wallets/WalletApprovalInfo";
+import { usePoolSwapFee } from "efi-ui/pools/usePoolSwapFee/usePoolSwapFee";
+import { isConvergentCurvePool } from "efi/pools/PoolContract";
+import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
+import { useStakingAPY } from "efi-ui/pools/useStakingAPY";
+import { isPrincipalPool } from "efi/pools/ccpool";
 
 interface StakingConfirmationDrawerProps {
   account: string | null | undefined;
   library: Web3Provider | undefined;
+  poolInfo: PoolInfo;
   baseAsset: CryptoAsset;
   termAsset: CryptoAsset;
   baseAssetDecimals: number;
@@ -45,6 +55,7 @@ interface StakingConfirmationDrawerProps {
 export function StakingConfirmationDrawer({
   library,
   account,
+  poolInfo,
   baseAsset,
   termAsset,
   termAssetDecimals,
@@ -63,10 +74,15 @@ export function StakingConfirmationDrawer({
   onStake,
 }: StakingConfirmationDrawerProps): ReactElement {
   const balancerVault = useBalancerVault();
+  const shareOfPool = useShareOfPool(poolInfo, baseAssetDecimals, baseAssetIn);
+  const appliedFeePercent = useFeePercent(poolInfo, termAssetIn);
+  const stakingAPY = useStakingAPY(poolInfo);
+  const isPrincipal = isPrincipalPool(poolInfo);
+
   // close the drawer after stake succeeds
 
-  const baseAssetIcon = findAssetIcon(baseAsset) as TokenIcon;
-  const termAssetIcon = findAssetIcon(termAsset) as TokenIcon;
+  const baseAssetIcon = findAssetIcon(baseAsset);
+  const termAssetIcon = findAssetIcon(termAsset);
 
   const baseAssetInBigNumber = parseUnits(
     baseAssetIn || "0",
@@ -121,11 +137,51 @@ export function StakingConfirmationDrawer({
           assetTwoIcon={termAssetIcon}
           assetOneValueLabel={baseAssetIn}
           assetTwoValueLabel={termAssetIn}
-        />
+        >
+          <StakeTokensDetails
+            isPrincipalPool={isPrincipal}
+            shareOfPool={shareOfPool}
+            poolAPY={stakingAPY}
+            poolFees={appliedFeePercent}
+          />
+        </StakeConfirmationForm>
       }
     />
   );
 }
+
+function useFeePercent(poolInfo: PoolInfo, termAssetIn: string) {
+  const poolContract = getPoolContract(poolInfo.address);
+  const spotPrice = usePoolSpotPrice(poolContract, termAssetIn);
+  const feePercentBN = usePoolSwapFee(poolInfo);
+  const feePercent = +formatEther(feePercentBN ?? 0);
+  let appliedFeePercent = feePercent;
+  if (isConvergentCurvePool(poolContract) && spotPrice) {
+    // CCPools apply the fee perent to the difference in price between the two assets
+    appliedFeePercent = feePercent * Math.abs(1 - spotPrice);
+  }
+  return appliedFeePercent;
+}
+
+function useShareOfPool(
+  poolInfo: PoolInfo,
+  baseAssetDecimals: number,
+  baseAssetIn: string
+) {
+  const poolContract = getPoolContract(poolInfo.address);
+  const { baseAssetIndex } = getPoolTokens(poolInfo);
+  const { data: [, balances] = [] } = usePoolTokens(poolContract);
+  const baseAssetReservesBN = balances?.[baseAssetIndex] ?? BigNumber.from(0);
+  const baseAssetReserves = +formatUnits(
+    baseAssetReservesBN,
+    baseAssetDecimals
+  );
+  // because we limit staking of assets to the current reserves ratio, we can just use one side to
+  // calculate share of pool
+  const shareOfPool = +baseAssetIn / baseAssetReserves;
+  return shareOfPool;
+}
+
 function useWalletApprovalInfos(
   baseAsset: CryptoAsset | undefined,
   trancheAsset: CryptoAsset | undefined,

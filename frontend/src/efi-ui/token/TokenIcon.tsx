@@ -1,4 +1,4 @@
-import { CSSProperties, ReactElement } from "react";
+import { CSSProperties, FC, ReactElement } from "react";
 
 import elementIconDark from "efi-static-assets/logos/svg/ELEMENT-dark.svg";
 import elementIcon from "efi-static-assets/logos/svg/ELEMENT-light.svg";
@@ -16,7 +16,12 @@ interface SvgIconProps {
   alt: string;
   src: string;
 }
-export type TokenIcon = typeof EthIcon | typeof UsdcIcon | typeof WethIcon;
+
+/**
+ * @deprecated, just use FC<IconProps>;
+ */
+export type TokenIcon = FC<IconProps>;
+
 export function SvgIcon({
   height,
   width,
@@ -36,6 +41,7 @@ export function SvgIcon({
     />
   );
 }
+
 export interface IconProps {
   height: number;
   width: number;

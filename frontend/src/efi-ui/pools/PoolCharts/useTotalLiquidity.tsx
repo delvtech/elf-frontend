@@ -17,7 +17,7 @@ export function useTotalLiquidity(poolInfo: PoolInfo): number {
   );
   const termBalance = +formatUnits(
     balances?.[termAssetIndex] ?? 0,
-    baseAssetDecimals
+    termAssetInfo.decimals
   );
   const spotPrice = usePoolSpotPrice(pool, termAssetInfo.address) ?? 0;
   const termBalanceInBaseUnits = termBalance * spotPrice;

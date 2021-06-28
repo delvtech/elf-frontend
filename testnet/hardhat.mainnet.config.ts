@@ -53,9 +53,12 @@ const config: HardhatUserConfig = {
 
   networks: {
     hardhat: {
-      gas: 1000000000000000000,
-      blockGasLimit: 0x1fffffffffffff,
       allowUnlimitedContractSize: true,
+      forking: {
+        url:
+          "https://eth-mainnet.alchemyapi.io/v2/kwjMP-X-Vajdk1ItCfU-56Uaq1wwhamK",
+        blockNumber: 12706268,
+      },
     },
     mainnet: {
       url: `https://eth-mainnet.alchemyapi.io/v2/${process.env.ALCHEMY_MAINNET_API_KEY}`,

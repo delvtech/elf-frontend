@@ -91,7 +91,7 @@ export function LineChart({
         xFormat="time:%d-%b"
         yScale={yScale}
         yFormat=" >-.2f"
-        curve="catmullRom"
+        curve="monotoneX"
         axisTop={null}
         axisRight={null}
         theme={theme}

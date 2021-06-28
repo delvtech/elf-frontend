@@ -36,9 +36,7 @@ export function useVolumeHistoryForPool(
       const [, tokenIn, , amountIn, amountOut, timeMs] = swapEvent;
       // only count base asset so we don't double count volume.
       const amount = baseAssetAddress === tokenIn ? amountIn : amountOut;
-      const value =
-        Math.abs(+formatUnits(amount, baseAssetDecimals)) *
-        baseAssetFiatPrice.toDecimal();
+      const value = Math.abs(+formatUnits(amount, baseAssetDecimals));
       return {
         value,
         timeMs,

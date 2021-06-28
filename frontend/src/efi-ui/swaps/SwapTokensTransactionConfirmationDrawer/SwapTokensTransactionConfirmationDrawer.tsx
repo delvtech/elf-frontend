@@ -149,7 +149,7 @@ export function SwapTokensTransactionConfirmationDrawer({
     spotPrice
   );
 
-  const feePercentBN = usePoolSwapFee(pool);
+  const feePercentBN = usePoolSwapFee(poolInfo);
   const feePercent = +formatEther(feePercentBN ?? 0);
   let appliedFeePercent = feePercent;
   if (isConvergentCurvePool(pool) && spotPrice) {

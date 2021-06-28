@@ -1,4 +1,7 @@
+import React, { ReactElement } from "react";
+
 import { Tag } from "@blueprintjs/core";
+
 import {
   DaiIcon,
   EthIcon,
@@ -10,7 +13,6 @@ import {
 import ContractAddresses from "efi/addresses";
 import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { getCryptoSymbol2 } from "efi/crypto/getCryptoSymbol";
-import React, { ReactElement } from "react";
 
 const CryptoIconSvg: Record<string, TokenIcon> = {
   [ContractAddresses.usdcAddress]: UsdcIcon,
@@ -29,7 +31,7 @@ function makeTagIcon(cryptoAsset: CryptoAsset) {
   };
 }
 
-export function findAssetIcon(cryptoAsset: CryptoAsset): React.FC<IconProps> {
+export function findAssetIcon(cryptoAsset: CryptoAsset): TokenIcon {
   if (cryptoAsset.type === CryptoAssetType.ETHEREUM) {
     return EthIcon;
   }

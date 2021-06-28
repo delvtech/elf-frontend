@@ -5,9 +5,9 @@ import { formatDistance } from "date-fns";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { getIsMature } from "efi/tranche/getIsMature";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatTimeLeft } from "efi/base/formatTImeLeft/formatTimeLeft";
+import { getIsMature } from "efi/tranche/getIsMature";
 
 interface TimeLeftLabelProps {
   unlockTimestamp: number;

@@ -171,7 +171,11 @@ function getHelperText(
   }
   if (transactionError) {
     const serializedError = serializeError(transactionError);
+    // 'data' here can take any number of shapes and may not exist at all.  We cast to 'any' and
+    // just check if there is an actual rpc error code that we recognize to handle the error.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if ((serializedError?.data as any)?.code === errorCodes.rpc.internal) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const message = ((serializedError.data as any).message as string).split(
         ":"
       );

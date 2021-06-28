@@ -37,7 +37,7 @@ interface PoolChartsProps {
 }
 export function PoolCharts({ poolInfo }: PoolChartsProps): ReactElement {
   const totalFiatLiquidity = useTotalFiatLiquidity(poolInfo);
-  const totalLiquidity = totalFiatLiquidity?.toDecimal() ?? 0;
+  const totalLiquidity = +(totalFiatLiquidity?.toString() || "0");
 
   const { isDarkMode } = useDarkMode();
   const {
@@ -229,18 +229,15 @@ function padVolumeData(data: TimeData[]): TimeData[] {
     ];
   }
 
-  return [
-    { value: 0, timeMs: weekAgoMs + 10000 },
-    ...data,
-    { value: 0, timeMs: nowInMs - 10000 },
-  ];
+  return data;
 }
 
 function formatYValues(value: number) {
   const f = format(".2s");
 
   if (value > 10000) {
-    return f(value);
+    // use 'B' for billion, not 'G' for giga
+    return f(value).replace("G", "B");
   }
 
   return commify(value);
