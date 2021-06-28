@@ -88,13 +88,13 @@ export function PoolSummary(props: PoolSummaryProps): ReactElement {
             <div className={tw("flex", "flex-col")}>
               <span
                 className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
-              >{t`Volume (24hr)`}</span>
+              >{t`Volume (7d)`}</span>
               <div className={classNames("h5", tw("space-x-4"))}>
                 {volumeDisplayValue}
               </div>
             </div>
           </div>
-          {/* Quantity Base (24hr)*/}
+          {/* Quantity Base (7d)*/}
           <div className={tw("flex", "space-x-4", "justify-between")}>
             <div className={tw("flex", "flex-col")}>
               <span
@@ -122,29 +122,29 @@ export function PoolSummary(props: PoolSummaryProps): ReactElement {
             "overflow-hidden"
           )}
         >
-          {/* LP APY (24hr) */}
+          {/* LP APY (7d) */}
           <div className={tw("flex", "space-x-4", "justify-between")}>
             <div className={tw("flex", "flex-col")}>
               <span
                 className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
-              >{t`LP APY (24h)`}</span>
+              >{t`LP APY (7d)`}</span>
               <div className={classNames("h5", tw("space-x-4"))}>
                 {formatPercent(stakingAPY || 0)}
               </div>
             </div>
           </div>
-          {/* Fees (24hr)*/}
+          {/* Fees (7d)*/}
           <div className={tw("flex", "space-x-4", "justify-between")}>
             <div className={tw("flex", "flex-col")}>
               <span
                 className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
-              >{t`Fees (24hr)`}</span>
+              >{t`Fees (7d)`}</span>
               <div className={classNames("h5", tw("space-x-4"))}>
                 {feeVolume ? formatMoney(feeVolume) : "$0.00"}
               </div>
             </div>
           </div>
-          {/* Quantity Term (24hr)*/}
+          {/* Quantity Term (7d)*/}
           <div className={tw("flex", "space-x-4", "justify-between")}>
             <div className={tw("flex", "flex-col")}>
               <span

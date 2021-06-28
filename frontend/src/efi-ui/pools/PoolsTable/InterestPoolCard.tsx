@@ -27,6 +27,7 @@ import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { getYearnVaultAPY } from "efi-yearn/fetchYearnVaults";
 import { formatPercent } from "efi/base/formatPercent";
+import { ONE_WEEK_IN_SECONDS } from "efi/base/time";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol2 } from "efi/crypto/getCryptoSymbol";
 import { formatMoney } from "efi/money/formatMoney";
@@ -70,7 +71,7 @@ export function InterestPoolCard(
     vaultSymbol
   );
 
-  const stakingYield = useStakingAPY(poolInfo);
+  const stakingYield = useStakingAPY(poolInfo, ONE_WEEK_IN_SECONDS);
   const { currency } = useCurrencyPref();
   const [baseAssetPrice] = useTokenPrice(baseAssetContract, currency);
   const spotPrice = usePoolSpotPrice(pool, termAssetContract.address) ?? 0;

@@ -24,6 +24,7 @@ import { useStakingAPY } from "efi-ui/pools/useStakingAPY";
 import { useTokenYield } from "efi-ui/pools/useTokenYield";
 import { useTotalFiatLiquidity } from "efi-ui/pools/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
 import { formatPercent } from "efi/base/formatPercent";
+import { ONE_WEEK_IN_SECONDS } from "efi/base/time";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol2 } from "efi/crypto/getCryptoSymbol";
 import { formatMoney } from "efi/money/formatMoney";
@@ -71,7 +72,7 @@ export function PrincipalPoolCard(
   const fixedYield = useTokenYield(poolInfo, "principal");
   const principalPrice = usePoolSpotPrice(pool, termAssetContract.address) ?? 0;
   const principalPriceFormatted = principalPrice?.toFixed(4);
-  const stakingYield = useStakingAPY(poolInfo);
+  const stakingYield = useStakingAPY(poolInfo, ONE_WEEK_IN_SECONDS);
 
   const goToTrade = useCallback(() => {
     navigate(`/pools/${pool?.address}`);
