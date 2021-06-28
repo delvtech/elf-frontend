@@ -5,6 +5,16 @@ import {
   ONE_MINUTE_IN_MILLISECONDS,
 } from "efi/base/time";
 
+test("should return 'in less than one minute' when less than 1 minute away", () => {
+  const inThirtySeconds = 30 * 1000;
+
+  expect(formatTimeLeft(0, inThirtySeconds)).toEqual("less than one minute");
+});
+test("should return minutes when less than 1 hour away", () => {
+  const inTwoMinutes = 2 * ONE_MINUTE_IN_MILLISECONDS;
+
+  expect(formatTimeLeft(0, inTwoMinutes)).toEqual("2 minutes");
+});
 test("should return days, hours, and minutes when less than 2 days away", () => {
   const inTwentyThreeHours = 23 * ONE_HOUR_IN_MILLISECONDS;
   const inTwentyThreeHoursTwelveMinutes =

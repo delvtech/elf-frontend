@@ -1,4 +1,7 @@
 import { formatDuration, intervalToDuration } from "date-fns";
+import { t } from "ttag";
+
+import { ONE_MINUTE_IN_MILLISECONDS } from "efi/base/time";
 
 /**
  * Returns a human-readable label for how much time is left between now and the
@@ -12,6 +15,10 @@ export function formatTimeLeft(start: number, end: number): string {
     end: end,
   });
   const { months, days } = duration;
+
+  if (end - start < ONE_MINUTE_IN_MILLISECONDS) {
+    return t`less than one minute`;
+  }
 
   let format = ["months", "days", "hours", "minutes"];
 

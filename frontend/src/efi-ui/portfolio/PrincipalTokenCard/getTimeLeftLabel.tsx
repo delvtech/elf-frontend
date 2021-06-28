@@ -1,7 +1,7 @@
 import { ReactElement } from "react";
 
 import classNames from "classnames";
-import { formatDistance, formatDuration, intervalToDuration } from "date-fns";
+import { formatDistance } from "date-fns";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
