@@ -54,40 +54,9 @@ export function PoolViewHeader({
       style={{ height: 70 }}
       className={tw("flex", "w-full", "items-center", "mt-8", "lg:mt-0")}
     >
-      {BaseAssetIcon ? (
-        <div
-          className={classNames(
-            tw(
-              "hidden",
-              "md:flex",
-              "items-center",
-              "rounded",
-              "p-2",
-              "flex-shrink-0"
-            )
-          )}
-        >
-          <div
-            style={{
-              borderColor: isDarkMode ? Colors.GRAY5 : undefined,
-              backgroundColor: isDarkMode ? Colors.WHITE : undefined,
-            }}
-            className={tw(
-              "flex",
-              "flex-shrink-0",
-              "items-center",
-              "p-2",
-              "rounded-full",
-              "z-10",
-              "bg-white",
-              "border",
-              "shadow-sm"
-            )}
-          >
-            <BaseAssetIcon height={36} width={36} />
-          </div>
-        </div>
-      ) : null}
+      <div className={tw("rounded-full", "z-10", "shadow-sm")}>
+        <BaseAssetIcon height={48} width={48} />
+      </div>
       <div
         className={tw(
           "flex",

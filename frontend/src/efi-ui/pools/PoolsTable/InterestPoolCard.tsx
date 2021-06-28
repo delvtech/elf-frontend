@@ -182,42 +182,9 @@ export function InterestPoolCard(
         <div
           className={tw(cellClassName, "col-span-1", "xl:ml-4", "items-start")}
         >
-          {baseAsset.type === CryptoAssetType.ETHEREUM ? (
-            <div
-              className={classNames(
-                tw(
-                  "items-start",
-                  "justify-center",
-                  "rounded",
-                  "-mt-2",
-                  "p-2",
-                  "flex-shrink-0"
-                )
-              )}
-            >
-              <div
-                style={{
-                  borderColor: isDarkMode ? Colors.GRAY5 : undefined,
-                  backgroundColor: isDarkMode ? Colors.WHITE : undefined,
-                }}
-                className={tw(
-                  "items-start",
-                  "p-2",
-                  "rounded-full",
-                  "z-10",
-                  "bg-white",
-                  "border",
-                  "shadow-sm"
-                )}
-              >
-                <BaseAssetIcon height={24} width={24} />
-              </div>
-            </div>
-          ) : BaseAssetIcon ? (
-            <div className={tw("ml-2")}>
-              <BaseAssetIcon height={46} width={46} />
-            </div>
-          ) : null}
+          <div className={tw("ml-2")}>
+            <BaseAssetIcon height={46} width={46} />
+          </div>
         </div>
         <div
           className={tw(

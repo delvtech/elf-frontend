@@ -2,7 +2,7 @@ import { CSSProperties, FC, ReactElement } from "react";
 
 import elementIconDark from "efi-static-assets/logos/svg/ELEMENT-dark.svg";
 import elementIcon from "efi-static-assets/logos/svg/ELEMENT-light.svg";
-import ethIconGrey from "efi-static-assets/logos/svg/ETH-grey.svg";
+import ethIconGrey from "efi-static-assets/logos/svg/ethereum-eth.svg";
 import usdcIcon from "efi-static-assets/logos/svg/USDC.svg";
 import daiIcon from "efi-static-assets/logos/svg/DAI.svg";
 import wethIcon from "efi-static-assets/logos/svg/WETH.svg";

@@ -73,42 +73,9 @@ export function EarnSummaryCard(props: EarnSummaryCardProps): JSX.Element {
         <div
           className={tw(cellClassName, "col-span-1", "xl:ml-4", "items-center")}
         >
-          {baseAsset?.type === CryptoAssetType.ETHEREUM ? (
-            <div
-              className={classNames(
-                tw(
-                  "items-start",
-                  "justify-center",
-                  "rounded",
-                  "-mt-2",
-                  "p-2",
-                  "flex-shrink-0"
-                )
-              )}
-            >
-              <div
-                style={{
-                  borderColor: isDarkMode ? Colors.GRAY5 : "",
-                  backgroundColor: isDarkMode ? Colors.WHITE : "",
-                }}
-                className={tw(
-                  "items-start",
-                  "p-2",
-                  "rounded-full",
-                  "z-10",
-                  "bg-white",
-                  "border",
-                  "shadow-sm"
-                )}
-              >
-                <BaseAssetIcon height={18} width={18} />
-              </div>
-            </div>
-          ) : BaseAssetIcon ? (
-            <div className={tw("ml-2")}>
-              <BaseAssetIcon height={40} width={40} />
-            </div>
-          ) : null}
+          <div className={tw("ml-2")}>
+            <BaseAssetIcon height={40} width={40} />
+          </div>
         </div>
         <div
           className={tw(
