@@ -1,5 +1,4 @@
 import "@nomiclabs/hardhat-waffle";
-import "@nomiclabs/hardhat-vyper";
 import "@typechain/hardhat";
 import "module-alias/register";
 
