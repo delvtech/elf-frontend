@@ -31,7 +31,7 @@ import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 import { formatBalance } from "efi/base/formatBalance";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { getCryptoSymbol2 } from "efi/crypto/getCryptoSymbol";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { getPoolContract } from "efi/pools/getPoolContract";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolContract } from "efi/pools/PoolContract";
@@ -355,7 +355,7 @@ function useTokenInfoForTradeInput(
   const { data: ethBalance } = useEthBalance(library, account);
 
   const asset = getCryptoAssetForToken(tokenContract?.address);
-  const symbol = getCryptoSymbol2(asset);
+  const symbol = getCryptoSymbol(asset);
   const icon = findAssetIcon(asset);
 
   // otherwise get values from token calls

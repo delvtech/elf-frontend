@@ -11,7 +11,7 @@ import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useShareOfPool } from "efi-ui/pools/useShareOfPool";
 import { formatPercent } from "efi/base/formatPercent";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { getCryptoSymbol2 } from "efi/crypto/getCryptoSymbol";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { getPoolContract } from "efi/pools/getPoolContract";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolInfo } from "efi/pools/PoolInfo";
@@ -36,7 +36,7 @@ export function PoolStakeStats(
   const { account, poolInfo } = props;
   const { baseAssetInfo, termAssetInfo } = getPoolTokens(poolInfo);
   const baseAsset = getCryptoAssetForToken(baseAssetInfo.address);
-  const baseAssetSymbol = getCryptoSymbol2(baseAsset);
+  const baseAssetSymbol = getCryptoSymbol(baseAsset);
   const pool = getPoolContract(poolInfo.address);
 
   const { data: [addresses, poolBalances] = [] } = usePoolTokens(pool);

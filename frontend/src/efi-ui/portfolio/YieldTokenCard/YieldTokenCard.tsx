@@ -39,7 +39,7 @@ import { formatAbbreviatedDate } from "efi/base/dates";
 import { formatPercent } from "efi/base/formatPercent";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
-import { getCryptoSymbol2 } from "efi/crypto/getCryptoSymbol";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { formatMoney } from "efi/money/formatMoney";
 import { getPoolForYieldToken } from "efi/pools/weightedPool";
 import { getTokenInfo } from "efi/tokenlists";
@@ -96,7 +96,7 @@ export function YieldTokenCard({
   const vaultContract = getVaultForTranche(trancheInfo.address);
 
   const baseAsset = getCryptoAssetForToken(underlying);
-  const baseAssetSymbol = getCryptoSymbol2(baseAsset);
+  const baseAssetSymbol = getCryptoSymbol(baseAsset);
   const { data: baseAssetFiatPrice } = useCoinGeckoPrice(
     getCoinGeckoId(baseAssetSymbol),
     currency

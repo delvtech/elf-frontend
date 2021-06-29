@@ -21,7 +21,7 @@ import { useTotalValueLockedForTranche } from "efi-ui/pools/useTotalValueLockedF
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { getYearnVaultAPY } from "efi-yearn/fetchYearnVaults";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { getCryptoSymbol2 } from "efi/crypto/getCryptoSymbol";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import {
   getPoolInfoForPrincipalToken,
   principalPoolContractsByAddress,
@@ -93,7 +93,7 @@ export function EarnCard(props: EarnCardProps): ReactElement | null {
   const maturityTime = unlockTimestamp * 1000;
   const isMature = getIsMature(unlockTimestamp);
   const baseAsset = getCryptoAssetForToken(baseAssetAddress);
-  const baseAssetSymbol = getCryptoSymbol2(baseAsset) as string;
+  const baseAssetSymbol = getCryptoSymbol(baseAsset) as string;
   const BaseAssetIcon = findAssetIcon(baseAsset);
   const vaultSymbol = getVaultSymbol(baseAsset) as string;
   const { data: vaultInfo } = useYearnVault(vaultSymbol);

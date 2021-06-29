@@ -17,7 +17,10 @@ import { useCryptoBalanceOf } from "efi-ui/crypto/hooks/useCryptoBalance/useCryp
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { useTokenPoolBalance } from "efi-ui/pools/useTokenPoolBalance/useTokenPoolBalance";
 import { useTokenPoolIndex } from "efi-ui/pools/useTokenPoolIndex/useTokenPoolIndex";
-import { SwapTokensTransactionConfirmationDrawer } from "efi-ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensTransactionConfirmationDrawer";
+import {
+  getPriceImpact,
+  SwapTokensTransactionConfirmationDrawer,
+} from "efi-ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensTransactionConfirmationDrawer";
 import { TradeInput } from "efi-ui/trade/TradeInput/TradeInput";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
 import { BALANCER_ETH_SENTINEL } from "efi/balancer";
@@ -36,6 +39,10 @@ import { useCanPerformPool } from "efi-ui/pools/usePoolCanPerform/usePoolCanPerf
 import { getTokenAddressForBalancer } from "efi-balancer/getTokenAddressForBalancer";
 import { CryptoAssets } from "efi/crypto/CryptoAssetRegistry";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
+import {
+  isYieldPool,
+  MAX_WEIGHTED_POOL_PRICE_IMPACT,
+} from "efi/pools/weightedPool";
 
 interface TradePanelProps {
   tradeType: "buy" | "sell";
@@ -66,10 +73,10 @@ export function TradePanel(props: TradePanelProps): ReactElement {
 
   const {
     address: poolAddress,
-    extensions: { underlying },
+    extensions: { underlying: baseAssetAddress },
   } = poolInfo;
   const { termAssetInfo } = getPoolTokens(poolInfo);
-  const baseAsset = CryptoAssets[underlying];
+  const baseAsset = CryptoAssets[baseAssetAddress];
 
   const pool = getPoolContract(poolAddress);
 
@@ -137,7 +144,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
   const canPerformBuy = useCanPerformPool(poolAddress, "buy");
   const canPerformSell = useCanPerformPool(poolAddress, "sell");
   let canPerformTransaction = true;
-  if (tokenInContractAddress === underlying) {
+  if (tokenInContractAddress === baseAssetAddress) {
     canPerformTransaction = canPerformBuy;
   } else if (tokenOutAddress === getTokenAddressForBalancer(baseAsset)) {
     canPerformTransaction = canPerformSell;
@@ -164,6 +171,17 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     tokenOutDecimals
   ).gt(tokenOutPoolBalance ?? 0);
 
+  const spotPrice = usePoolSpotPrice(pool, termAssetInfo.address);
+  const priceImpact = getPriceImpact(
+    amountIn,
+    amountOut,
+    spotPrice,
+    baseAssetAddress === tokenInContractAddress
+  );
+
+  const priceImpactTooHigh =
+    isYieldPool(poolInfo) && priceImpact > MAX_WEIGHTED_POOL_PRICE_IMPACT;
+
   const invalidInput =
     formDisabled ||
     submitDisabled ||
@@ -173,8 +191,9 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     !isValidTokenOutValue ||
     !amountIn ||
     !amountOut;
+
   const submitButtonDisabled =
-    !account || invalidInput || !canPerformTransaction;
+    !account || invalidInput || !canPerformTransaction || priceImpactTooHigh;
 
   const { submitButtonError, submitButtonLabel } = getSubmitButtonLabel(
     buttonLabel,
@@ -182,7 +201,8 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     amountOut,
     insufficientBalance,
     account,
-    insufficientPoolBalance
+    insufficientPoolBalance,
+    priceImpactTooHigh
   );
 
   const { data: totalSupplyBN } = useSmartContractReadCall(pool, "totalSupply");
@@ -221,8 +241,6 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     setAmountOut
   );
 
-  const spotPrice = usePoolSpotPrice(pool, termAssetInfo.address);
-
   return (
     <div
       className={tw(
@@ -251,7 +269,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
         pool={pool}
         onChange={onChangeIn}
         value={amountIn}
-        validValue={isValidTokenInValue}
+        validValue={isValidTokenInValue && !priceImpactTooHigh}
       />
       <TradeInput
         cryptoDecimals={tokenOutDecimals}
@@ -269,7 +287,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
         pool={pool}
         onChange={onChangeOut}
         value={amountOut}
-        validValue={isValidTokenOutValue}
+        validValue={isValidTokenOutValue && !priceImpactTooHigh}
       />
       <Button
         disabled={submitButtonDisabled}
@@ -292,14 +310,12 @@ export function TradePanel(props: TradePanelProps): ReactElement {
       ) : null}
       <SwapTokensTransactionConfirmationDrawer
         tokenInAddress={tokenInAddress}
-        // TODO: remove this casting when getCryptoSymbol doesn't return undefined
-        tokenInSymbol={tokenInSymbol as string}
+        tokenInSymbol={tokenInSymbol}
         tokenInDecimals={tokenInDecimals}
         tokenInAsset={tokenInAsset}
         tokenInIcon={tokenInIcon}
         tokenOutAddress={tokenOutAddress}
-        // TODO: remove this casting when getCryptoSymbol doesn't return undefined
-        tokenOutSymbol={tokenOutSymbol as string}
+        tokenOutSymbol={tokenOutSymbol}
         tokenOutDecimals={tokenOutDecimals}
         tokenOutIcon={tokenOutIcon}
         account={account}
@@ -452,7 +468,8 @@ function getSubmitButtonLabel(
   amountOut: string,
   insufficientBalance: boolean,
   account: string | null | undefined,
-  insufficientPoolBalance: boolean
+  insufficientPoolBalance: boolean,
+  priceIpactTooHigh: boolean
 ) {
   let submitButtonLabel = buttonLabel;
   let submitButtonError = false;
@@ -466,6 +483,10 @@ function getSubmitButtonLabel(
   if (insufficientPoolBalance && account) {
     submitButtonError = true;
     submitButtonLabel = t`Insufficient pool liquidity`;
+  }
+  if (priceIpactTooHigh && account) {
+    submitButtonError = true;
+    submitButtonLabel = t`Price impact too high`;
   }
   if (!account) {
     submitButtonLabel = t`Connect wallet`;

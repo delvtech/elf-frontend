@@ -105,7 +105,7 @@ interface WalletApprovalCalloutProps {
   signer: Signer | undefined;
   ownerAddress: string | null | undefined;
   spenderAddress: string | null | undefined;
-  cryptoAsset: CryptoAsset | undefined;
+  cryptoAsset: CryptoAsset;
   messageRenderer: (assetSymbol: string) => string;
 }
 export function WalletApprovalCallout({

@@ -7,6 +7,9 @@ import { getSmartContractFromRegistryMulti } from "efi/contracts/SmartContractsR
 import { tokenListJson } from "efi/tokenlists";
 import keyBy from "lodash.keyby";
 
+// hard limit set by Balancer.  Cannot trade in/out more than 30% of the pool
+export const MAX_WEIGHTED_POOL_PRICE_IMPACT = 0.3;
+
 export enum WeightedPoolExitKind {
   EXACT_BPT_IN_FOR_ONE_TOKEN_OUT,
   EXACT_BPT_IN_FOR_TOKENS_OUT,

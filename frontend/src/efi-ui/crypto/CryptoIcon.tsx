@@ -12,7 +12,7 @@ import {
 } from "efi-ui/token/TokenIcon";
 import ContractAddresses from "efi/addresses";
 import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
-import { getCryptoSymbol2 } from "efi/crypto/getCryptoSymbol";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 
 const CryptoIconSvg: Record<string, TokenIcon> = {
   [ContractAddresses.usdcAddress]: UsdcIcon,
@@ -22,7 +22,7 @@ const CryptoIconSvg: Record<string, TokenIcon> = {
 
 function makeTagIcon(cryptoAsset: CryptoAsset) {
   return ({ height, width, style, className }: IconProps): ReactElement => {
-    const symbol = getCryptoSymbol2(cryptoAsset);
+    const symbol = getCryptoSymbol(cryptoAsset);
     return (
       <Tag large minimal className={className} style={style}>
         {symbol}

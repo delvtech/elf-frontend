@@ -11,7 +11,7 @@ import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { IconProps } from "efi-ui/token/TokenIcon";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { getCryptoName } from "efi/crypto/getCryptoName/getCryptoName";
-import { getCryptoSymbol2 } from "efi/crypto/getCryptoSymbol";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 
 interface CryptoAssetButtonProps {
   outlined?: boolean;
@@ -32,7 +32,7 @@ export function CryptoAssetButton({
   onClick,
 }: CryptoAssetButtonProps): ReactElement {
   const assetName = getCryptoName(cryptoAsset);
-  const assetSymbol = getCryptoSymbol2(cryptoAsset);
+  const assetSymbol = getCryptoSymbol(cryptoAsset);
   const assetIcon = findAssetIcon(cryptoAsset);
 
   if (!cryptoAsset || !assetSymbol) {

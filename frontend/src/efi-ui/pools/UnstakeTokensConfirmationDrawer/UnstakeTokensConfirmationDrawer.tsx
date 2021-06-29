@@ -11,7 +11,7 @@ import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/Transac
 import { EMPTY_ARRAY } from "efi/base/emptyArray";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoName } from "efi/crypto/getCryptoName/getCryptoName";
-import { getCryptoSymbol2 } from "efi/crypto/getCryptoSymbol";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 import { WalletApprovalInfo } from "efi/wallets/WalletApprovalInfo";
@@ -50,7 +50,7 @@ export function UnstakeConfirmationDrawer({
   onUnstake,
 }: UnstakeConfirmationDrawerProps): ReactElement {
   const baseAsset = getCryptoAssetForToken(baseAssetInfo.address);
-  const baseAssetSymbol = getCryptoSymbol2(baseAsset);
+  const baseAssetSymbol = getCryptoSymbol(baseAsset);
   const baseAssetSymbolLabel = getCryptoName(baseAsset);
   const baseAssetIcon = findAssetIcon(baseAsset);
 

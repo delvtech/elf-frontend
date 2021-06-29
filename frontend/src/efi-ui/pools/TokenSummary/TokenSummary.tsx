@@ -20,7 +20,7 @@ import { useTokenHistoricalPrice } from "efi-ui/token/hooks/useTokenHistoricalPr
 import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
 import { formatPercent } from "efi/base/formatPercent";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { getCryptoSymbol2 } from "efi/crypto/getCryptoSymbol";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { formatMoney } from "efi/money/formatMoney";
 import { getPoolContract } from "efi/pools/getPoolContract";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
@@ -237,7 +237,7 @@ function useTokensSummary(
   const baseAsset = getCryptoAssetForToken(baseAssetContract?.address);
 
   // Base Asset Info
-  const baseAssetSymbol = getCryptoSymbol2(baseAsset);
+  const baseAssetSymbol = getCryptoSymbol(baseAsset);
   const { data: baseAssetPrice } = useTokenPrice(baseAssetContract, currency);
   const { data: baseAssetPriceYesterday } = useTokenHistoricalPrice(
     baseAssetContract,

@@ -25,7 +25,7 @@ import { formatPercent } from "efi/base/formatPercent";
 import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
-import { getCryptoSymbol2 } from "efi/crypto/getCryptoSymbol";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { calcSwapOutGivenInCCPoolUNSAFE } from "efi/pools/calcPoolSwap";
 import {
   getPoolInfoForPrincipalToken,
@@ -69,7 +69,7 @@ export function BuyPrincipalTokensForm(
   const baseAsset = getCryptoAssetForToken(baseAssetAddress);
   const baseAssetBalancerAddress = getTokenAddressForBalancer(baseAsset);
   const BaseAssetIcon = findAssetIcon(baseAsset);
-  const baseAssetSymbol = getCryptoSymbol2(baseAsset);
+  const baseAssetSymbol = getCryptoSymbol(baseAsset);
   const baseAssetBalanceOf = useCryptoBalanceOf(library, account, baseAsset);
   const baseAssetDecimals = getCryptoDecimals(baseAsset);
   const baseAssetBalanceLabel = formatBalance(

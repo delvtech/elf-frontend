@@ -23,7 +23,7 @@ import { TokenAmountInput } from "efi-ui/token/TokenAmountInput/TokenAmountInput
 import { formatBalance } from "efi/base/formatBalance";
 import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { getCryptoSymbol2 } from "efi/crypto/getCryptoSymbol";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { getPoolInfoForPrincipalToken } from "efi/pools/ccpool";
 import { getPoolContract } from "efi/pools/getPoolContract";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
@@ -65,7 +65,7 @@ export function SellPrincipalTokensForm(
   // base asset
   const baseAsset = getBaseAssetForTranche(ptAddress);
   const baseAssetIcon = findAssetIcon(baseAsset);
-  const baseAssetSymbol = getCryptoSymbol2(baseAsset);
+  const baseAssetSymbol = getCryptoSymbol(baseAsset);
   const { decimals: baseAssetDecimals } = baseAssetInfo;
 
   // principal token

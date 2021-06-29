@@ -183,8 +183,8 @@ function useShareOfPool(
 }
 
 function useWalletApprovalInfos(
-  baseAsset: CryptoAsset | undefined,
-  trancheAsset: CryptoAsset | undefined,
+  baseAsset: CryptoAsset,
+  trancheAsset: CryptoAsset,
   account: string | null | undefined,
   vaultAddress: string | undefined
 ) {

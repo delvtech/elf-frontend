@@ -10,12 +10,12 @@ export function calcSwapOutGivenInCCPoolUNSAFE(
   const tS = +totalSupply;
   const amountX = +xAmount;
 
-  let xR = +xReserves + tS;
-  let yR = +yReserves;
+  let xR = +xReserves;
+  let yR = +yReserves + tS;
 
   if (baseAssetIn) {
-    xR = +xReserves;
-    yR = +yReserves + tS;
+    xR = +xReserves + tS;
+    yR = +yReserves;
   }
 
   const t = timeRemainingSeconds / tParamSeconds;
@@ -40,8 +40,8 @@ export function calcSwapOutGivenInCCPoolUNSAFE(
 
 export function calcSwapInGivenOutCCPoolUNSAFE(
   xAmount: string,
-  xReserves: string,
   yReserves: string,
+  xReserves: string,
   totalSupply: string,
   timeRemainingSeconds: number,
   tParamSeconds: number,
@@ -50,12 +50,12 @@ export function calcSwapInGivenOutCCPoolUNSAFE(
   const tS = +totalSupply;
   const amountX = +xAmount;
 
-  let xR = +xReserves + tS;
-  let yR = +yReserves;
+  let xR = +xReserves;
+  let yR = +yReserves + tS;
 
   if (baseAssetIn) {
-    xR = +xReserves;
-    yR = +yReserves + tS;
+    xR = +xReserves + tS;
+    yR = +yReserves;
   }
 
   const t = timeRemainingSeconds / tParamSeconds;
@@ -69,6 +69,36 @@ export function calcSwapInGivenOutCCPoolUNSAFE(
   const yAfter = (xBefore + yBefore - xAfter) ** (1 / (1 - t));
 
   const amountY = yAfter - yR;
+
+  return amountY;
+}
+
+export function calcSwapCCPoolUNSAFE(
+  xAmount: string,
+  xReserves: string,
+  yReserves: string,
+  timeRemainingSeconds: number,
+  tParamSeconds: number,
+  getOutputQuote: boolean
+): number {
+  const amountX = +xAmount;
+
+  const xR = +xReserves;
+  const yR = +yReserves;
+
+  const t = timeRemainingSeconds / tParamSeconds;
+
+  const xBefore = xR ** (1 - t);
+  const yBefore = yR ** (1 - t);
+
+  const xAfter = getOutputQuote
+    ? (xR + amountX) ** (1 - t)
+    : (xR - amountX) ** (1 - t);
+
+  // this is the real equation, make ascii art for it
+  const yAfter = (xBefore + yBefore - xAfter) ** (1 / (1 - t));
+
+  const amountY = getOutputQuote ? yR - yAfter : yAfter - yR;
 
   return amountY;
 }

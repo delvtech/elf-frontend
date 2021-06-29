@@ -10,6 +10,7 @@ import {
   mapWETHToETHSentinal,
 } from "efi/balancer";
 import { StaticContractMethodArgs } from "efi/contracts/types";
+import { parseEther } from "ethers/lib/utils";
 
 /**
  * This is a simple read-only funds argument for queryBatchSwap
@@ -64,6 +65,7 @@ export function makeQueryBatchSwapCallArgs(
     swaps,
     assets,
     QUERY_BATCH_SWAP_FUNDS,
+    { gasLimit: parseEther("1") },
   ];
 
   return callArgs;

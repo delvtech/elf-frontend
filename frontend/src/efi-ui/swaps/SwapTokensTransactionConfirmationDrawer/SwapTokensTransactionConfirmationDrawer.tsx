@@ -19,9 +19,7 @@ import { IconProps } from "efi-ui/token/TokenIcon";
 import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/TransactionDrawer";
 import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { getCryptoSymbol2 } from "efi/crypto/getCryptoSymbol";
-import { calculatePurchasePrice } from "efi/pools/calculatePurchasePrice";
-import { calculateSlippage } from "efi/pools/calculateSlippage";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { getPoolContract } from "efi/pools/getPoolContract";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { isConvergentCurvePool } from "efi/pools/PoolContract";
@@ -86,9 +84,13 @@ export function SwapTokensTransactionConfirmationDrawer({
     extensions: { poolId },
   } = poolInfo;
   const pool = getPoolContract(poolAddress);
-  const { baseAssetContract } = getPoolTokens(poolInfo);
+  const {
+    baseAssetContract,
+    termAssetInfo: { address: termAssetAddress },
+  } = getPoolTokens(poolInfo);
   const baseAsset = getCryptoAssetForToken(baseAssetContract?.address);
-  const baseAssetSymbol = getCryptoSymbol2(baseAsset);
+  const baseAssetSymbol = getCryptoSymbol(baseAsset);
+  const baseAssetIn = termAssetAddress !== tokenInAddress;
 
   const termAssetType: TermAssetType = isConvergentCurvePool(pool)
     ? "principal"
@@ -102,6 +104,13 @@ export function SwapTokensTransactionConfirmationDrawer({
     tokenInAddress,
     tokenOutAddress,
     amountInBN
+  );
+
+  const priceImpact = getPriceImpact(
+    amountIn,
+    amountOut,
+    spotPrice,
+    baseAssetIn
   );
 
   const {
@@ -138,16 +147,6 @@ export function SwapTokensTransactionConfirmationDrawer({
   );
 
   const { isLoading, isError, isSuccess, reset, error } = swapResult;
-
-  const amountOutNumber = +amountOut;
-
-  // spotPrice is the pt or yt's price in terms of base asset
-  // spotPrice so it'll match the purchasePrice.
-  const priceSlippage = getPriceSlippageAndTradingFee(
-    +(amountIn || 0),
-    amountOutNumber,
-    spotPrice
-  );
 
   const feePercentBN = usePoolSwapFee(poolInfo);
   const feePercent = +formatEther(feePercentBN ?? 0);
@@ -192,7 +191,7 @@ export function SwapTokensTransactionConfirmationDrawer({
         >
           <SwapTokenDetails
             baseAssetSymbol={baseAssetSymbol}
-            priceImpact={priceSlippage}
+            priceImpact={priceImpact}
             feePercent={appliedFeePercent}
             slippageTolerance={slippageTolerance}
             spotPriceBaseAssetForOneToken={spotPrice}
@@ -203,18 +202,26 @@ export function SwapTokensTransactionConfirmationDrawer({
     />
   );
 }
-function getPriceSlippageAndTradingFee(
-  amountIn: number,
-  amountOutNumber: number,
-  spotPriceTokenForOneBaseAsset: number | undefined
-) {
-  const amountInNumber = +(amountIn || 0);
-  const purchasePrice = calculatePurchasePrice(amountOutNumber, amountInNumber);
-  const priceSlippageAndTradingFee = calculateSlippage(
-    spotPriceTokenForOneBaseAsset || 0,
-    purchasePrice
-  );
-  return priceSlippageAndTradingFee;
+
+export function getPriceImpact(
+  amountIn: string,
+  amountOut: string,
+  spotPriceToken: number | undefined = 0,
+  baseAssetIn: boolean
+): number {
+  // spotPriceToken is baseAssetIn / termAssetOut, so if we are trading termAssetIn, we need to flip
+  // the spot price so that it is termAssetIn / baseAssetOut so that it lines up with the purchase
+  // price calc of amountIn / amountOut:
+  const spotPriceBaseAsset = 1 / (spotPriceToken || 1);
+  const spotPrice = baseAssetIn ? spotPriceToken : spotPriceBaseAsset;
+
+  const purchasePrice = +amountIn / +amountOut;
+
+  const ratioOfPrices = purchasePrice / spotPrice;
+
+  // we don't care if the ratio is 1.01 or 0.99, just that the percent difference is 1%
+  const priceImpact = Math.abs(1 - ratioOfPrices);
+  return priceImpact;
 }
 
 function useWalletApprovalInfos(

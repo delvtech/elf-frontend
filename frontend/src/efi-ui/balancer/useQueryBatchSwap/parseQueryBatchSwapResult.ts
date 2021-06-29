@@ -12,14 +12,10 @@ interface ParsedQueryBatchSwapResult {
 }
 
 export function parseQueryBatchSwapResult(
-  tokenInAddress: string | undefined,
-  tokenOutAddress: string | undefined,
-  batchSwaps: BigNumber[] | undefined
+  tokenInAddress: string,
+  tokenOutAddress: string,
+  batchSwaps: BigNumber[]
 ): ParsedQueryBatchSwapResult {
-  if (!tokenInAddress || !tokenOutAddress) {
-    return { tokenIn: undefined, tokenOut: undefined };
-  }
-
   // balancer's batchSwap requires that the assets be sorted
   let assets = [tokenInAddress, tokenOutAddress].sort();
   // ETH is a special case. Balancer uses the

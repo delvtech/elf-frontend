@@ -18,6 +18,7 @@ interface SwapTokenDetailsProps {
   feePercent: number | undefined;
   termAssetType: TermAssetType;
 }
+
 export function SwapTokenDetails({
   baseAssetSymbol,
   priceImpact,

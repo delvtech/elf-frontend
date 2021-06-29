@@ -33,7 +33,7 @@ import { formatAbbreviatedDate } from "efi/base/dates";
 import { formatPercent } from "efi/base/formatPercent";
 import { ERC20Shim } from "efi/contracts/ERC20Shim";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { getCryptoSymbol2 } from "efi/crypto/getCryptoSymbol";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { formatMoney } from "efi/money/formatMoney";
 import { getPoolInfoForPrincipalToken } from "efi/pools/ccpool";
 import { getPoolContract } from "efi/pools/getPoolContract";
@@ -94,7 +94,7 @@ export function PrincipalTokenCard(
   const { data: vaultName } = useSmartContractReadCall(vaultContract, "name");
   const pool = getPoolContract(poolInfo.address);
 
-  const baseAssetSymbol = getCryptoSymbol2(baseAsset);
+  const baseAssetSymbol = getCryptoSymbol(baseAsset);
 
   const tranchePriceInBaseAsset = usePoolSpotPrice(pool, tranche.address) ?? 0;
   const exitValue = trancheBalance * tranchePriceInBaseAsset;

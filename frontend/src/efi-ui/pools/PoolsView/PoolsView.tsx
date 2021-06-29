@@ -5,7 +5,6 @@ import { RouteComponentProps } from "@reach/router";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { Classes, Divider, H2, Tab, Tabs } from "@blueprintjs/core";
 import { assertNever } from "efi/base/assertNever";
 import { PrincipalPoolTable } from "efi-ui/pools/PoolsTable/PrincipalPoolTable";

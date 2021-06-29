@@ -12,7 +12,7 @@ import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
 import { formatPercent } from "efi/base/formatPercent";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
-import { getCryptoSymbol2 } from "efi/crypto/getCryptoSymbol";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { getPoolInfoForPrincipalToken } from "efi/pools/ccpool";
 import { getTokenInfo } from "efi/tokenlists";
 import classNames from "classnames";
@@ -56,7 +56,7 @@ export function PrincipalTokenTermButtonLabel({
     ? formatAbbreviatedDate(unlockDate)
     : t`Loading unlock date...`;
 
-  const baseAssetSymbol = getCryptoSymbol2(baseAsset);
+  const baseAssetSymbol = getCryptoSymbol(baseAsset);
 
   const isPool24HoursOld =
     Date.now() - poolInfo.extensions.createdAtTimestamp * 1000 >

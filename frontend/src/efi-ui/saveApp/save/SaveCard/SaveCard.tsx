@@ -42,7 +42,7 @@ import { formatBalance } from "efi/base/formatBalance";
 import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
 import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
-import { getCryptoSymbol2 } from "efi/crypto/getCryptoSymbol";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import {
   calcSwapInGivenOutCCPoolUNSAFE,
   calcSwapOutGivenInCCPoolUNSAFE,
@@ -96,7 +96,7 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
     activeBaseAsset.type === CryptoAssetType.ETHEREUM
       ? BALANCER_ETH_SENTINEL
       : activeBaseAsset.tokenContract.address;
-  const activeBaseAssetSymbol = getCryptoSymbol2(activeBaseAsset);
+  const activeBaseAssetSymbol = getCryptoSymbol(activeBaseAsset);
   const activeBaseAssetDecimals = getCryptoDecimals(activeBaseAsset);
   const activeBaseAssetBalanceOf = useCryptoBalanceOf(
     library,
@@ -107,7 +107,7 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
     activeBaseAssetBalanceOf,
     activeBaseAssetDecimals
   );
-  const baseAssetSymbol = getCryptoSymbol2(activeBaseAsset);
+  const baseAssetSymbol = getCryptoSymbol(activeBaseAsset);
 
   // principal token
   const {

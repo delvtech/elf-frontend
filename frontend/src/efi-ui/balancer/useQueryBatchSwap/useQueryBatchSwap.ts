@@ -11,9 +11,8 @@ import { getQueryData } from "efi-ui/base/queryResults";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
 import {
-  calcSwapInGivenOutCCPoolUNSAFE,
+  calcSwapCCPoolUNSAFE,
   calcSwapInGivenOutWeightedPoolUNSAFE,
-  calcSwapOutGivenInCCPoolUNSAFE,
   calcSwapOutGivenInWeightedPoolUNSAFE,
 } from "efi/pools/calcPoolSwap";
 import { isPrincipalPool } from "efi/pools/ccpool";
@@ -21,6 +20,7 @@ import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolContract } from "efi/pools/PoolContract";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { isYieldPool } from "efi/pools/weightedPool";
+import { getTokenInfo } from "efi/tokenlists";
 
 /**
  * Useful for previewing a swap in the balancer V2 vault.
@@ -38,15 +38,13 @@ import { isYieldPool } from "efi/pools/weightedPool";
  */
 export function useQueryBatchSwap(
   kind: SwapKind,
-  pool: PoolContract | undefined,
-  tokenInAddress: string | undefined,
-  tokenOutAddress: string | undefined,
-  amount: BigNumber | undefined
+  pool: PoolContract,
+  tokenInAddress: string,
+  tokenOutAddress: string,
+  amount: BigNumber
 ): QueryObserverResult<BigNumber[]> {
   const balancerVault = useBalancerVault();
-
-  const poolIdResult = useSmartContractReadCall(pool, "getPoolId");
-  const poolId = getQueryData(poolIdResult);
+  const poolId = getTokenInfo<PoolInfo>(pool.address).extensions.poolId;
 
   const queryBatchSwapResults = useSmartContractReadCall(
     balancerVault,
@@ -105,10 +103,7 @@ export function getCalcSwap(
     return { result: undefined, status: "loading" };
   }
 
-  const isBaseAsset =
-    kind === SwapKind.GIVEN_IN
-      ? tokenInAddress === baseAssetAddress
-      : tokenOutAddress === baseAssetAddress;
+  const isBaseAssetIn = tokenInAddress === baseAssetAddress;
 
   if (isPrincipalPool(poolInfo)) {
     return calcSwapPrincipalPool(
@@ -119,7 +114,8 @@ export function getCalcSwap(
       tokenInReserves,
       tokenOutReserves,
       totalSupply,
-      isBaseAsset
+      // TODO: figure out why this is flipped
+      !isBaseAssetIn
     );
   }
 
@@ -201,15 +197,22 @@ function calcSwapPrincipalPool(
     return { result: [amount, amount], status: "success" };
   }
 
+  // always add total supply to base asset reserves
+  const adjustedInReserves = baseAssetIn
+    ? +tokenInReserves + +totalSupply
+    : +tokenInReserves;
+  const adjustedOutReserves = baseAssetIn
+    ? +tokenOutReserves
+    : +tokenOutReserves + +totalSupply;
+
   if (swapKind === SwapKind.GIVEN_IN) {
-    const calcOutNumber = calcSwapOutGivenInCCPoolUNSAFE(
-      amount, // xAmount,
-      tokenInReserves, // xReserves,
-      tokenOutReserves, // yReserves,
-      totalSupply, // totalSupply,
-      timeRemainingSeconds, // timeRemainingSeconds,
-      tParamSeconds, // tParamSeconds,
-      baseAssetIn // baseAssetIn
+    const calcOutNumber = calcSwapCCPoolUNSAFE(
+      amount, //                      xAmount,
+      String(adjustedInReserves), //  xReserves,
+      String(adjustedOutReserves), // yReserves,
+      timeRemainingSeconds, //        timeRemainingSeconds,
+      tParamSeconds, //               tParamSeconds,
+      true //                         swapKind === SwapKind.GIVEN_IN (calculate output)
     );
 
     const calcOut =
@@ -218,15 +221,13 @@ function calcSwapPrincipalPool(
     return { result: [amount, calcOut], status: "success" };
   }
 
-  // SwapKind.GIVEN_OUT
-  const calcInNumber = calcSwapInGivenOutCCPoolUNSAFE(
-    amount, // xAmount,
-    tokenInReserves, // xReserves,
-    tokenOutReserves, // yReserves,
-    totalSupply, // totalSupply,
-    timeRemainingSeconds, // timeRemainingSeconds,
-    tParamSeconds, // tParamSeconds,
-    baseAssetIn // baseAssetIn
+  const calcInNumber = calcSwapCCPoolUNSAFE(
+    amount, //                      xAmount,
+    String(adjustedOutReserves), // xReserves,
+    String(adjustedInReserves), //  yReserves,
+    timeRemainingSeconds, //        timeRemainingSeconds,
+    tParamSeconds, //               tParamSeconds,
+    false //                        swapKind === SwapKind.GIVEN_IN (calculate output)
   );
 
   const calcIn =

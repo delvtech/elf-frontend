@@ -62,7 +62,7 @@ export function usePoolSpotPrice(
     baseAssetInfo.decimals
   );
 
-  const { result: [, amountOut] = [] } = useMemo(() => {
+  const { result: [, amountOut = 0] = [] } = useMemo(() => {
     const result = getCalcSwap(
       SPOT_PRICE_AMOUNT,
       SwapKind.GIVEN_IN,
@@ -83,8 +83,9 @@ export function usePoolSpotPrice(
     totalSupply,
   ]);
 
-  // can't give a meaningful spot price until we have the decimals
-  if (!amountOut) {
+  // can't give a meaningful spot price until we have the decimals.  The protects against NaN or
+  // Infinity
+  if (!Number.isFinite(+amountOut)) {
     return undefined;
   }
 

@@ -23,7 +23,7 @@ import { formatAbbreviatedDate } from "efi/base/dates";
 import { formatPercent } from "efi/base/formatPercent";
 import { ONE_WEEK_IN_SECONDS } from "efi/base/time";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { getCryptoSymbol2 } from "efi/crypto/getCryptoSymbol";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { formatMoney } from "efi/money/formatMoney";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { getTrancheForPool } from "efi/pools/getTrancheForPool";
@@ -50,7 +50,7 @@ export function YieldPoolCard(props: YieldPoolCardProps): ReactElement | null {
   const fees = useFeeVolumeForPool(yieldPoolInfo);
   const { baseAssetContract, termAssetContract } = getPoolTokens(yieldPoolInfo);
   const baseAsset = getCryptoAssetForToken(baseAssetContract.address);
-  const baseAssetSymbol = getCryptoSymbol2(baseAsset);
+  const baseAssetSymbol = getCryptoSymbol(baseAsset);
   const BaseAssetIcon = findAssetIcon(baseAsset);
   const vaultSymbol = getVaultSymbol(baseAsset);
   const { symbol: termAssetSymbol } = getTermAssetSymbol(

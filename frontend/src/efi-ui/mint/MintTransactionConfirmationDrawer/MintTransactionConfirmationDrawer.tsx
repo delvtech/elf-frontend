@@ -31,7 +31,7 @@ import ContractAddresses from "efi/addresses";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
-import { getCryptoSymbol2 } from "efi/crypto/getCryptoSymbol";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
 import { getTokenInfo } from "efi/tokenlists";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
@@ -75,7 +75,7 @@ export function MintTransactionConfirmationDrawer({
 
   const [includePermits, setIncludePermits] = useState(true);
 
-  const baseAssetSymbol = getCryptoSymbol2(baseAsset);
+  const baseAssetSymbol = getCryptoSymbol(baseAsset);
   const {
     interestToken: interestTokenAddress,
     unlockTimestamp: trancheUnlockTimestamp,
@@ -262,7 +262,7 @@ function useWalletApprovalInfos(
   useApprovals: boolean
 ): WalletApprovalInfo[] {
   const { userProxyContractAddress } = ContractAddresses;
-  const assetSymbol = getCryptoSymbol2(tokenInAsset);
+  const assetSymbol = getCryptoSymbol(tokenInAsset);
   return useMemo(() => {
     if (
       !useApprovals ||

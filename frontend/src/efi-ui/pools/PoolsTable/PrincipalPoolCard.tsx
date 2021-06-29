@@ -22,7 +22,7 @@ import { formatAbbreviatedDate } from "efi/base/dates";
 import { formatPercent } from "efi/base/formatPercent";
 import { ONE_WEEK_IN_SECONDS } from "efi/base/time";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { getCryptoSymbol2 } from "efi/crypto/getCryptoSymbol";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { formatMoney } from "efi/money/formatMoney";
 import { principalPoolContractsByAddress } from "efi/pools/ccpool";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
@@ -51,7 +51,7 @@ export function PrincipalPoolCard(
   const { baseAssetContract, termAssetContract } =
     getPoolTokens(principalPoolInfo);
   const baseAsset = getCryptoAssetForToken(baseAssetContract.address);
-  const baseAssetSymbol = getCryptoSymbol2(baseAsset);
+  const baseAssetSymbol = getCryptoSymbol(baseAsset);
   const BaseAssetIcon = findAssetIcon(baseAsset);
 
   const vaultSymbol = getVaultSymbol(baseAsset);

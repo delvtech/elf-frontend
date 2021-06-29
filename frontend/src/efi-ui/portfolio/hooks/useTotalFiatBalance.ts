@@ -1,19 +1,20 @@
 import { Web3Provider } from "@ethersproject/providers";
 import { InterestToken } from "elf-contracts/types/InterestToken";
 import { Tranche } from "elf-contracts/types/Tranche";
+import { BigNumber } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
 import zip from "lodash.zip";
 import { Currency, Money } from "ts-money";
 
+import { getTokenAddressForBalancer } from "efi-balancer/getTokenAddressForBalancer";
+import { SwapKind } from "efi-balancer/SwapKind";
 import { getCoinGeckoId } from "efi-coingecko";
 import { parseQueryBatchSwapResult } from "efi-ui/balancer/useQueryBatchSwap/parseQueryBatchSwapResult";
 import { useQueryBatchSwapMulti } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwapMulti";
 import { getQueriesData } from "efi-ui/base/queryResults";
 import { useCoinGeckoPriceMulti } from "efi-ui/coingecko/useCoinGeckoPrices";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
-import { getTokenAddressForBalancer } from "efi-balancer/getTokenAddressForBalancer";
 import { useTokensWithBalance } from "efi-ui/token/hooks/useTokensWithBalance";
-import { SwapKind } from "efi-balancer/SwapKind";
 import { ERC20Shim } from "efi/contracts/ERC20Shim";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
@@ -63,13 +64,17 @@ export function useTotalFiatBalance(
     trancheOrYieldTokenAddresses,
     baseAssetBalancerAddresses,
     getQueriesData(queryBatchSwapResults)
-  ).map(([tokenInAddress, tokenOutAddress, batchSwaps]) => {
-    return parseQueryBatchSwapResult(
-      tokenInAddress,
-      tokenOutAddress,
-      batchSwaps
-    );
-  });
+  )
+    .filter((zipped): zipped is [string, string, BigNumber[]] =>
+      zipped.every((v) => !!v)
+    )
+    .map(([tokenInAddress, tokenOutAddress, batchSwaps]) => {
+      return parseQueryBatchSwapResult(
+        tokenInAddress,
+        tokenOutAddress,
+        batchSwaps
+      );
+    });
   const amountOutForTrancheOrYieldTokenBalance = parsedBatchSwapResults.map(
     ({ tokenOut }) => tokenOut
   );
