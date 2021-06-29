@@ -3,6 +3,8 @@ import { CSSProperties, FC, ReactElement } from "react";
 import elementIconDark from "efi-static-assets/logos/svg/ELEMENT-dark.svg";
 import elementIcon from "efi-static-assets/logos/svg/ELEMENT-light.svg";
 import ethIconGrey from "efi-static-assets/logos/svg/ethereum-eth.svg";
+import crvLusdIcon from "efi-static-assets/logos/svg/crvLUSD.svg";
+import lusdIcon from "efi-static-assets/logos/svg/LUSD.svg";
 import usdcIcon from "efi-static-assets/logos/svg/USDC.svg";
 import daiIcon from "efi-static-assets/logos/svg/DAI.svg";
 import wethIcon from "efi-static-assets/logos/svg/WETH.svg";
@@ -49,6 +51,40 @@ export interface IconProps {
   style?: CSSProperties | undefined;
 }
 
+export function LusdIcon({
+  height,
+  width,
+  className,
+  style,
+}: IconProps): ReactElement {
+  return (
+    <SvgIcon
+      alt={"lusd"}
+      className={className}
+      style={style}
+      src={lusdIcon}
+      height={height}
+      width={width}
+    />
+  );
+}
+export function CrvLusdIcon({
+  height,
+  width,
+  className,
+  style,
+}: IconProps): ReactElement {
+  return (
+    <SvgIcon
+      alt={"crvlusd"}
+      className={className}
+      style={style}
+      src={crvLusdIcon}
+      height={height}
+      width={width}
+    />
+  );
+}
 export function EthIcon({
   height,
   width,

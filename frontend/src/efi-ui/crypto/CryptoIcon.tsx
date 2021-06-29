@@ -3,6 +3,7 @@ import React, { ReactElement } from "react";
 import { Tag } from "@blueprintjs/core";
 
 import {
+  CrvLusdIcon,
   DaiIcon,
   EthIcon,
   IconProps,
@@ -18,6 +19,7 @@ const CryptoIconSvg: Record<string, TokenIcon> = {
   [ContractAddresses.usdcAddress]: UsdcIcon,
   [ContractAddresses.wethAddress]: WethIcon,
   [ContractAddresses.daiAddress]: DaiIcon,
+  [ContractAddresses.crvlusdAddress]: CrvLusdIcon,
 };
 
 function makeTagIcon(cryptoAsset: CryptoAsset) {
