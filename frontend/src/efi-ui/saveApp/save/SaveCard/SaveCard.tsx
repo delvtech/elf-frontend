@@ -42,7 +42,7 @@ import { formatBalance } from "efi/base/formatBalance";
 import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
 import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { getCryptoSymbol2 } from "efi/crypto/getCryptoSymbol";
 import {
   calcSwapInGivenOutCCPoolUNSAFE,
   calcSwapOutGivenInCCPoolUNSAFE,
@@ -96,7 +96,7 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
     activeBaseAsset.type === CryptoAssetType.ETHEREUM
       ? BALANCER_ETH_SENTINEL
       : activeBaseAsset.tokenContract.address;
-  const activeBaseAssetSymbol = getCryptoSymbol(activeBaseAsset);
+  const activeBaseAssetSymbol = getCryptoSymbol2(activeBaseAsset);
   const activeBaseAssetDecimals = getCryptoDecimals(activeBaseAsset);
   const activeBaseAssetBalanceOf = useCryptoBalanceOf(
     library,
@@ -107,7 +107,7 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
     activeBaseAssetBalanceOf,
     activeBaseAssetDecimals
   );
-  const baseAssetSymbol = getCryptoSymbol(activeBaseAsset);
+  const baseAssetSymbol = getCryptoSymbol2(activeBaseAsset);
 
   // principal token
   const {
@@ -407,14 +407,12 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
       {!activeBaseAsset || !isDrawerOpen ? null : (
         <SwapTokensTransactionConfirmationDrawer
           tokenInAddress={baseAssetAddress}
-          // TODO: remove this casting when getCryptoSymbol doesn't return undefined
-          tokenInSymbol={baseAssetSymbol as string}
+          tokenInSymbol={baseAssetSymbol}
           tokenInDecimals={activeBaseAssetDecimals}
           tokenInAsset={activeBaseAsset}
           tokenInIcon={undefined}
           tokenOutAddress={principalTokenAddress}
-          // TODO: remove this casting when getCryptoSymbol doesn't return undefined
-          tokenOutSymbol={principalTokenSymbol as string}
+          tokenOutSymbol={principalTokenSymbol}
           tokenOutDecimals={principalTokenDecimals}
           tokenOutIcon={undefined}
           account={account}

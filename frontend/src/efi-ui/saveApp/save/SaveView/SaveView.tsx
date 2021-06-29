@@ -15,7 +15,7 @@ import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { SaveNavigationButton } from "efi-ui/saveApp/navigation/SaveNavigation/SaveNavigationButton";
 import { SaveCard } from "efi-ui/saveApp/save/SaveCard/SaveCard";
-import { ConnectWalletButton2 } from "efi-ui/wallets/ConnectWalletButton/ConnectWalletButton2";
+import { ConnectWalletButton } from "efi-ui/wallets/ConnectWalletButton/ConnectWalletButton";
 
 interface EarnViewProps extends RouteComponentProps {}
 
@@ -76,7 +76,7 @@ export function SaveView(props: EarnViewProps): ReactElement {
               icon={isDarkMode ? IconNames.FLASH : IconNames.MOON}
               onClick={isDarkMode ? setDarkModeOff : setDarkModeOn}
             />
-            <ConnectWalletButton2
+            <ConnectWalletButton
               account={account}
               chainId={chainId}
               walletConnectionActive={walletConnectionActive}

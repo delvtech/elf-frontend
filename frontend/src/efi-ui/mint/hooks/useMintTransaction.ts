@@ -47,7 +47,7 @@ export function useMintTransaction(
   baseAsset: CryptoAsset,
   trancheInfo: TrancheInfo,
   yieldTokenInfo: YieldTokenInfo,
-  amountIn: number,
+  amountIn: string,
   includePermits: boolean,
   onTransactionSubmitted: () => void,
   onTransactionError: (error: TransactionError) => void
@@ -62,7 +62,7 @@ export function useMintTransaction(
   const { balancerVaultAddress, userProxyContractAddress } = ContractAddresses;
   const userProxy = getUserProxy(signer);
   const baseAssetDecimals = getCryptoDecimals(baseAsset);
-  const amountInBigNumber = parseUnits(amountIn.toString(), baseAssetDecimals);
+  const amountInBigNumber = parseUnits(amountIn || "0", baseAssetDecimals);
   const baseAssetContract = underlyingContractsByAddress[
     trancheInfo.extensions.underlying
   ] as unknown as ERC20Permit;

@@ -84,8 +84,7 @@ export function MintTransactionConfirmationDrawer({
 
   const unlockTimeStampDate = convertEpochSecondsToDate(trancheUnlockTimestamp);
 
-  const amountInAsNumber = +(amountIn || 0);
-  const numPrincipalTokens = useMintPreview(trancheInfo, amountInAsNumber);
+  const numPrincipalTokens = useMintPreview(trancheInfo, amountIn);
 
   const onError = useCallback((error: TransactionError) => {
     setLoadingPermits(false);
@@ -100,7 +99,7 @@ export function MintTransactionConfirmationDrawer({
     baseAsset,
     trancheInfo,
     yieldTokenInfo,
-    amountInAsNumber,
+    amountIn,
     includePermits,
     onClose,
     onError
@@ -156,7 +155,7 @@ export function MintTransactionConfirmationDrawer({
       transactionDetails={
         <div className={tw("flex", "flex-col", "space-y-8")}>
           <SwapDetailsForm
-            amountIn={amountInAsNumber.toFixed(4)}
+            amountIn={(+amountIn).toFixed(4)}
             heading={t`Mint Preview`}
             assetInIcon={BaseAssetIcon}
             amountInLabel={t`Deposit`}
@@ -171,7 +170,7 @@ export function MintTransactionConfirmationDrawer({
                 yieldTokenSymbol={yieldTokenSymbol}
                 unlockTimestamp={unlockTimeStampDate}
                 numPrincipalTokens={numPrincipalTokens}
-                numYieldTokens={amountInAsNumber}
+                numYieldTokens={+amountIn}
               />
               {showPermitCallout && (
                 <Callout>

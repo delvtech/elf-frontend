@@ -10,7 +10,7 @@ import { jt, t } from "ttag";
 import { makeEtherscanTokenUrl } from "efi-etherscan/links";
 import tw from "efi-tailwindcss-classnames";
 import { AddressesJson } from "efi/addresses";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { getCryptoSymbol2 } from "efi/crypto/getCryptoSymbol";
 import { isGoerli, isMainnet } from "efi/ethereum";
 import { getPoolInfoForPrincipalToken } from "efi/pools/ccpool";
 import { getTokenInfo } from "efi/tokenlists";
@@ -40,7 +40,7 @@ export function PrincipalTokenInformation(
 
   // base asset
   const baseAsset = getBaseAssetForTranche(ptAddress);
-  const baseAssetSymbol = getCryptoSymbol(baseAsset);
+  const baseAssetSymbol = getCryptoSymbol2(baseAsset);
 
   const vaultLink = getVaultLink(vaultAddress, vaultName);
 
@@ -99,7 +99,7 @@ function getGoogleCalendarLink(
   } = principalToken;
 
   const baseAsset = getBaseAssetForTranche(address);
-  const baseAssetSymbol = getCryptoSymbol(baseAsset);
+  const baseAssetSymbol = getCryptoSymbol2(baseAsset);
 
   const event: CalendarEvent = {
     title: t`Redeem ${name}`,

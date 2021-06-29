@@ -23,7 +23,7 @@ import {
  */
 export function useMintPreview(
   trancheInfo: TrancheInfo,
-  amountIn: number
+  amountIn: string
 ): number | undefined {
   const trancheContract = trancheContractsByAddress[trancheInfo.address];
 
@@ -70,7 +70,7 @@ export function useMintPreview(
       trancheValueSupplied) /
     trancheInterestSupply;
 
-  const adjustedAmount = amountIn - amountIn * interestPerUnderlying;
+  const adjustedAmount = +amountIn - +amountIn * interestPerUnderlying;
   return adjustedAmount;
 }
 

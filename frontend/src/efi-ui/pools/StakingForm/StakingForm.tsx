@@ -159,34 +159,36 @@ export function StakingForm(props: StakingFormProps): ReactElement {
     termAssetDecimals
   );
 
-  const { stringValue: amountIn, setValue: onChangeIn } = useNumericInput();
-  const { stringValue: amountOut, setValue: onChangeOut } = useNumericInput();
+  const { stringValue: baseAssetIn, setValue: onChangeBaseAssetIn } =
+    useNumericInput();
+  const { stringValue: termAssetIn, setValue: onChangeTermAssetIn } =
+    useNumericInput();
 
   const isValidBaseAssetValue = validateStakingValue(
-    amountIn,
+    baseAssetIn,
     baseAssetBalanceOf,
     baseAssetDecimals
   );
 
-  const isValidTrancheAssetValue = validateStakingValue(
-    amountOut,
+  const isValidTermAssetValue = validateStakingValue(
+    termAssetIn,
     termAssetBalanceOf,
     termAssetDecimals
   );
 
   const onClose = useCallback(() => {
     setDrawerOpen(false);
-    onChangeIn("");
-    onChangeOut("");
-  }, [onChangeIn, onChangeOut]);
+    onChangeBaseAssetIn("");
+    onChangeTermAssetIn("");
+  }, [onChangeBaseAssetIn, onChangeTermAssetIn]);
 
   const poolTokenMaxAmounts = [BigNumber.from(0), BigNumber.from(0)];
   poolTokenMaxAmounts[baseAssetIndex] = parseUnits(
-    amountIn || "0",
+    baseAssetIn || "0",
     baseAssetDecimals
   );
   poolTokenMaxAmounts[termAssetIndex] = parseUnits(
-    amountOut || "0",
+    termAssetIn || "0",
     termAssetDecimals
   );
 
@@ -231,24 +233,26 @@ export function StakingForm(props: StakingFormProps): ReactElement {
   }, [isPrincipalPoolType, joinConvergentPool, joinWeightedPool]);
 
   const insufficientBalance =
-    parseUnits(amountIn || "0", baseAssetDecimals).gt(
+    parseUnits(baseAssetIn || "0", baseAssetDecimals).gt(
       baseAssetBalanceOf ?? 0
     ) ||
-    parseUnits(amountOut || "0", termAssetDecimals).gt(termAssetBalanceOf ?? 0);
+    parseUnits(termAssetIn || "0", termAssetDecimals).gt(
+      termAssetBalanceOf ?? 0
+    );
 
   const invalidInput =
     formDisabled ||
     submitDisabled ||
     insufficientBalance ||
     !isValidBaseAssetValue ||
-    !isValidTrancheAssetValue ||
-    !amountIn ||
-    !amountOut;
+    !isValidTermAssetValue ||
+    !baseAssetIn ||
+    !termAssetIn;
   const submitButtonDisabled = !!account && invalidInput;
 
   let submitButtonLabel = buttonLabel;
   let submitButtonError = false;
-  if (!amountIn && !amountOut) {
+  if (!baseAssetIn && !termAssetIn) {
     submitButtonLabel = t`Enter an amount`;
   }
   if (insufficientBalance && account) {
@@ -269,11 +273,11 @@ export function StakingForm(props: StakingFormProps): ReactElement {
           cryptoBalanceOf: termAssetBalanceOf,
           cryptoDisplayBalance: termAssetDisplayBalance || "",
           disabled: formDisabled,
-          onChange: onChangeOut,
-          onPreviewUpdate: onChangeIn,
+          onChange: onChangeTermAssetIn,
+          onPreviewUpdate: onChangeBaseAssetIn,
           labelTopLeft: t`Term asset`,
-          value: amountOut,
-          validValue: isValidTrancheAssetValue,
+          value: termAssetIn,
+          validValue: isValidTermAssetValue,
           tokenPoolReserves: yieldAssetReserves,
           otherTokenPoolReserves: baseAssetReserves,
           totalSupply: totalSupply,
@@ -285,10 +289,10 @@ export function StakingForm(props: StakingFormProps): ReactElement {
           cryptoBalanceOf: baseAssetBalanceOf,
           cryptoDisplayBalance: baseAssetDisplayBalance || "",
           disabled: formDisabled,
-          onChange: onChangeIn,
-          onPreviewUpdate: onChangeOut,
+          onChange: onChangeBaseAssetIn,
+          onPreviewUpdate: onChangeTermAssetIn,
           labelTopLeft: t`Base asset`,
-          value: amountIn,
+          value: baseAssetIn,
           validValue: isValidBaseAssetValue,
           tokenPoolReserves: baseAssetReserves,
           otherTokenPoolReserves: yieldAssetReserves,
@@ -313,8 +317,8 @@ export function StakingForm(props: StakingFormProps): ReactElement {
         baseAssetSymbolLabel={baseAssetSymbol}
         termAssetSymbol={termAssetSymbol}
         termAssetSymbolLabel={termAssetSymbolLabel}
-        baseAssetIn={amountIn}
-        termAssetIn={amountOut}
+        baseAssetIn={baseAssetIn}
+        termAssetIn={termAssetIn}
         isOpen={isDrawerOpen}
         onClose={onClose}
         stakeError={

@@ -1,50 +1,87 @@
-import React, { FC } from "react";
+import { ReactElement, useCallback, useState } from "react";
 
-import { Classes, H5 } from "@blueprintjs/core";
-import classNames from "classnames";
+import { Button, Colors, Icon, Intent } from "@blueprintjs/core";
+import { IconNames } from "@blueprintjs/icons";
+import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-
-export enum WalletIconId {
-  WALLET_CONNECT = "WALLET_CONNECT",
-}
+import { WalletJazzicon } from "efi-ui/wallets/WalletJazzicon/WalletJazzicon";
+import { ChainId, isMainnet } from "efi/ethereum";
+import { formatWalletAddress } from "efi/wallets/formatWalletAddress";
+import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
 
 interface ConnectWalletButtonProps {
-  fill?: boolean;
-  iconClassName?: string;
-  icon: JSX.Element;
-  name: string;
-  onClick: () => void;
+  account: string | null | undefined;
+  walletConnectionActive: boolean | undefined;
+  chainId: number | undefined;
 }
 
-export const ConnectWalletButton: FC<ConnectWalletButtonProps> = (props) => {
-  const { fill, iconClassName, icon, name, onClick } = props;
-  // Blueprint wraps the body in a span tag.  Use <button/> with blueprint classnames so we can use flex styles.
-  return (
-    <button
-      className={classNames(
-        Classes.BUTTON,
-        Classes.LARGE,
-        Classes.MINIMAL,
-        tw({ "w-40": !fill, "w-full": fill })
-      )}
-      onClick={onClick}
-    >
-      <div
-        className={tw(
-          "flex",
-          "flex-col",
-          "w-full",
-          "h-full",
-          "items-center",
-          "justify-center"
-        )}
-      >
-        <div className={classNames(iconClassName, tw("m-2"))}>{icon}</div>
-        <div className={tw("flex", "w-full", "items-center", "justify-center")}>
-          <H5>{name}</H5>
-        </div>
-      </div>
-    </button>
-  );
+const ChainColor: Record<number, string> = {
+  [ChainId.GOERLI]: Colors.BLUE4,
+  [ChainId.MAINNET]: Colors.GREEN4,
+  [ChainId.LOCAL]: Colors.WHITE,
 };
+export function ConnectWalletButton(
+  props: ConnectWalletButtonProps
+): ReactElement {
+  const { account, chainId, walletConnectionActive } = props;
+  const [isWalletDialogOpen, setWalletDialogOpen] = useState(false);
+  const onCloseWalletDialog = useCallback(() => setWalletDialogOpen(false), []);
+  const onOpenWalletDialog = useCallback(() => setWalletDialogOpen(true), []);
+
+  const mainnetDanger =
+    !!chainId && isMainnet(chainId) && process.env.NODE_ENV !== "production";
+
+  let walletButtonIntent: Intent = Intent.NONE;
+  if (!account) {
+    walletButtonIntent = Intent.WARNING;
+  } else if (mainnetDanger) {
+    walletButtonIntent = Intent.DANGER;
+  }
+  const connectionStatusColor =
+    walletConnectionActive && !!chainId ? ChainColor[chainId] : Colors.RED4;
+
+  return (
+    <div className={tw("flex", "space-x-8", "items-center")}>
+      {!account ? (
+        <div>
+          <Button
+            outlined
+            fill
+            large
+            intent={walletButtonIntent}
+            onClick={onOpenWalletDialog}
+          >
+            <span className={tw("text-center")}>
+              {t`Connect wallet to begin`}
+            </span>
+          </Button>
+        </div>
+      ) : (
+        <div>
+          <Button
+            minimal={!mainnetDanger}
+            icon={<WalletJazzicon size={28} account={account} />}
+            rightIcon={
+              <Icon
+                className={tw("pr-2")}
+                icon={IconNames.DOT}
+                color={connectionStatusColor}
+              />
+            }
+            fill
+            large
+            intent={walletButtonIntent}
+            onClick={onOpenWalletDialog}
+          >
+            {formatWalletAddress(account)}
+          </Button>
+        </div>
+      )}
+      <ConnectWalletDialog
+        isOpen={isWalletDialogOpen}
+        onClose={onCloseWalletDialog}
+      />
+    </div>
+  );
+}

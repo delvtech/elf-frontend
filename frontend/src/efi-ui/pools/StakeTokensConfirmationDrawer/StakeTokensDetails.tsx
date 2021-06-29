@@ -43,7 +43,7 @@ export function StakeTokensDetails({
         muted={false}
         containerClassName={tw("justify-center")}
         className={tw("items-center")}
-        text={<span>{t`Pool APY`}</span>}
+        text={<span>{t`LP APY`}</span>}
         label={<span className={tw("text-base")}>{poolAPYLabel}</span>}
       />
       <LabeledText

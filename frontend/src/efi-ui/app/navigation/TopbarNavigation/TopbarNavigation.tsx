@@ -18,7 +18,7 @@ import { useNavigation } from "efi-ui/app/navigation/hooks/useTab";
 import { Navigation } from "efi-ui/app/navigation/navigation";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { usePendingTransactionPref } from "efi-ui/transactions/usePendingTransactionPref/usePendingTransactionPref";
-import { ConnectWalletButton2 } from "efi-ui/wallets/ConnectWalletButton/ConnectWalletButton2";
+import { ConnectWalletButton } from "efi-ui/wallets/ConnectWalletButton/ConnectWalletButton";
 
 interface TopbarNavigationProps {
   chainId: number | undefined;
@@ -85,7 +85,7 @@ export function TopbarNavigation({
           icon={isDarkMode ? IconNames.FLASH : IconNames.MOON}
           onClick={isDarkMode ? setDarkModeOff : setDarkModeOn}
         />
-        <ConnectWalletButton2
+        <ConnectWalletButton
           account={account}
           chainId={chainId}
           walletConnectionActive={walletConnectionActive}

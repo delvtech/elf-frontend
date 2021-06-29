@@ -146,7 +146,7 @@ export function UnstakeCard({
         outlined
         intent={canPerformRemoveLiquidity ? Intent.PRIMARY : Intent.DANGER}
       >
-        {t`Unstake`}
+        {t`Remove liquidity`}
       </Button>
 
       {!canPerformRemoveLiquidity ? (

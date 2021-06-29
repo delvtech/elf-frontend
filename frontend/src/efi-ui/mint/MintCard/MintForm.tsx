@@ -15,7 +15,6 @@ import { useMintPreview } from "efi-ui/mint/hooks/useMintPreview";
 import { MintTransactionConfirmationDrawer } from "efi-ui/mint/MintTransactionConfirmationDrawer/MintTransactionConfirmationDrawer";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { TokenAmountInput } from "efi-ui/token/TokenAmountInput/TokenAmountInput";
-import { TokenIcon } from "efi-ui/token/TokenIcon";
 import { useTrancheCanPerform } from "efi-ui/tranche/useTrancheCanPerform";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
 import { formatBalance } from "efi/base/formatBalance";
@@ -63,10 +62,7 @@ export function MintForm(props: MintFormProps): ReactElement | null {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const [isWalletDialogOpen, setWalletDialogOpen] = useState(false);
 
-  const { stringValue: amountInString, setValue: setAmountIn } =
-    useNumericInput();
-
-  const amountIn = +(amountInString || 0);
+  const { stringValue: amountIn, setValue: setAmountIn } = useNumericInput();
 
   const baseAssetDecimals = getCryptoDecimals(baseAsset);
   const baseAssetBalanceOf = useCryptoBalanceOf(library, account, baseAsset);
@@ -81,10 +77,9 @@ export function MintForm(props: MintFormProps): ReactElement | null {
     amountIn
   );
 
-  const insufficientBalance = parseUnits(
-    amountInString || t`0`,
-    baseAssetDecimals
-  ).gt(baseAssetBalanceOf ?? 0);
+  const insufficientBalance = parseUnits(amountIn || "0", baseAssetDecimals).gt(
+    baseAssetBalanceOf ?? 0
+  );
 
   const mintButtonDisabled =
     (!!account && (insufficientBalance || !amountIn)) || !canPerformMint;
@@ -141,7 +136,7 @@ export function MintForm(props: MintFormProps): ReactElement | null {
             }
             maxAmount={baseAssetBalanceOf}
             tokenDecimals={baseAssetDecimals}
-            value={amountInString}
+            value={amountIn}
             onValueChange={setAmountIn}
           />
           <span
@@ -198,13 +193,13 @@ export function MintForm(props: MintFormProps): ReactElement | null {
 
       <MintTransactionConfirmationDrawer
         baseAsset={baseAsset}
-        baseAssetIcon={BaseAssetIcon as TokenIcon}
+        baseAssetIcon={BaseAssetIcon}
         principalTokenSymbol={principalTokenSymbol}
         yieldTokenSymbol={yieldTokenSymbol}
         trancheInfo={trancheInfo}
         account={account}
         library={library}
-        amountIn={amountInString}
+        amountIn={amountIn}
         isOpen={isDrawerOpen}
         onClose={onClose}
       />
@@ -218,7 +213,7 @@ export function MintForm(props: MintFormProps): ReactElement | null {
 
 function useActiveMintPreview(
   activeTrancheInfo: TrancheInfo,
-  amountIn: number
+  amountIn: string
 ) {
   const numPrincipalTokensOut = useMintPreview(
     activeTrancheInfo,
@@ -227,7 +222,7 @@ function useActiveMintPreview(
 
   // You will always receive the same amount of yield tokens as the amount of
   // base asset you put in
-  const numYieldTokensOut = amountIn?.toFixed(4);
+  const numYieldTokensOut = amountIn;
 
   return { numPrincipalTokensOut, numYieldTokensOut };
 }

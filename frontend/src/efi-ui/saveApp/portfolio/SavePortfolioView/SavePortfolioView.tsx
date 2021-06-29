@@ -17,7 +17,7 @@ import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { SaveNavigationButton } from "efi-ui/saveApp/navigation/SaveNavigation/SaveNavigationButton";
 import { SavePortfolioList } from "efi-ui/saveApp/portfolio/SavePortfolioList/SavePortfolioList";
 import { useTokensWithBalance } from "efi-ui/token/hooks/useTokensWithBalance";
-import { ConnectWalletButton2 } from "efi-ui/wallets/ConnectWalletButton/ConnectWalletButton2";
+import { ConnectWalletButton } from "efi-ui/wallets/ConnectWalletButton/ConnectWalletButton";
 import { isDust } from "efi/coins/isDust";
 import { getTokenInfo } from "efi/tokenlists";
 import {
@@ -76,7 +76,7 @@ export function SavePortfolioView(props: SavePortfolioViewProps): ReactElement {
               icon={isDarkMode ? IconNames.FLASH : IconNames.MOON}
               onClick={isDarkMode ? setDarkModeOff : setDarkModeOn}
             />
-            <ConnectWalletButton2
+            <ConnectWalletButton
               account={account}
               chainId={chainId}
               walletConnectionActive={walletConnectionActive}
