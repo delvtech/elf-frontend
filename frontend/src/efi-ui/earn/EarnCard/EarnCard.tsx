@@ -32,10 +32,10 @@ import {
 } from "efi/pools/weightedPool";
 import { getIsMature } from "efi/tranche/getIsMature";
 import { underlyingContractsByAddress } from "efi/underlying/underlying";
-import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 
 import { EarnSummaryCard } from "./EarnSummaryCard";
 import { getTokenInfo } from "efi/tokenlists";
+import { getVaultTokenInfoForTranche } from "efi/tranche/tranches";
 
 interface EarnCardProps {
   signer: Signer | undefined;
@@ -60,6 +60,7 @@ export function EarnCard(props: EarnCardProps): ReactElement | null {
     account,
     principalTokenInfo,
     principalTokenInfo: {
+      address: principalTokenAddress,
       extensions: {
         interestToken: interestTokenAddress,
         underlying: baseAssetAddress,
@@ -72,11 +73,12 @@ export function EarnCard(props: EarnCardProps): ReactElement | null {
   // state
   const [activeTabId, setActiveTabId] = useState(EarnActionsTabId.MINT);
 
-  // get infos
+  // get token infos
   const yieldPoolInfo = getPoolInfoForYieldToken(interestTokenAddress);
   const principalPoolInfo = getPoolInfoForPrincipalToken(
     principalTokenInfo.address
   );
+  const vaultTokenInfo = getVaultTokenInfoForTranche(principalTokenAddress);
   const yieldTokenInfo = getTokenInfo<YieldTokenInfo>(interestTokenAddress);
 
   // get contracts
@@ -88,14 +90,15 @@ export function EarnCard(props: EarnCardProps): ReactElement | null {
   ] as WETH | USDC | ERC20;
 
   // get static display information
-  const { createdAtTimestamp: trancheCreatedAt, unlockTimestamp } =
-    principalTokenInfo.extensions;
+  const {
+    extensions: { createdAtTimestamp: trancheCreatedAt, unlockTimestamp },
+  } = principalTokenInfo;
+  const { symbol: vaultSymbol } = vaultTokenInfo;
   const maturityTime = unlockTimestamp * 1000;
   const isMature = getIsMature(unlockTimestamp);
   const baseAsset = getCryptoAssetForToken(baseAssetAddress);
   const baseAssetSymbol = getCryptoSymbol(baseAsset) as string;
   const BaseAssetIcon = findAssetIcon(baseAsset);
-  const vaultSymbol = getVaultSymbol(baseAsset) as string;
   const { data: vaultInfo } = useYearnVault(vaultSymbol);
   const { displayName, type, apy } = vaultInfo || {};
 
@@ -141,10 +144,6 @@ export function EarnCard(props: EarnCardProps): ReactElement | null {
       onExpandOpen();
     }
   }, [isExpanded, isMature, onExpandClose, onExpandOpen]);
-
-  if (!yieldPoolContract || !baseAssetContract) {
-    return null;
-  }
 
   if (!allDataLoaded) {
     return (

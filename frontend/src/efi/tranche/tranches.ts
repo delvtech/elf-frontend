@@ -7,6 +7,7 @@ import {
   AssetProxyTokenInfo,
   PrincipalTokenInfo,
   TokenListTag,
+  VaultTokenInfo,
 } from "tokenlists/types";
 
 import { getSmartContractFromRegistryMulti } from "efi/contracts/SmartContractsRegistry";
@@ -45,7 +46,7 @@ export const openTranches = getSmartContractFromRegistryMulti(
   Tranche__factory.connect
 ) as Tranche[];
 
-export function getVaultForTranche(trancheAddress: string): TestYVault {
+export function getVaultContractForTranche(trancheAddress: string): TestYVault {
   const {
     extensions: { position },
   } = getTokenInfo<PrincipalTokenInfo>(trancheAddress);
@@ -57,4 +58,20 @@ export function getVaultForTranche(trancheAddress: string): TestYVault {
   const vaultContract = vaultContractsByAddress[vault];
 
   return vaultContract;
+}
+
+export function getVaultTokenInfoForTranche(
+  trancheAddress: string
+): VaultTokenInfo {
+  const {
+    extensions: { position },
+  } = getTokenInfo<PrincipalTokenInfo>(trancheAddress);
+
+  const {
+    extensions: { vault },
+  } = getTokenInfo<AssetProxyTokenInfo>(position);
+
+  const vaultTokenInfo = getTokenInfo<VaultTokenInfo>(vault);
+
+  return vaultTokenInfo;
 }

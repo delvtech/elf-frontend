@@ -27,7 +27,7 @@
         "daiAddress": {
           "type": "string"
         },
-        "lusdAddress": {
+        "crvlusdAddress": {
           "type": "string"
         },
         "wethAddress": {
@@ -40,7 +40,7 @@
         "interestTokenFactoryAddress",
         "trancheFactoryAddress",
         "usdcAddress",
-        "lusdAddress",
+        "crvlusdAddress",
         "daiAddress",
         "userProxyContractAddress",
         "weightedPoolFactoryAddress",

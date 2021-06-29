@@ -27,7 +27,11 @@ import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { isConvergentCurvePool } from "efi/pools/PoolContract";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
-import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
+import {
+  isPrincipalToken,
+  getVaultTokenInfoForTranche,
+} from "efi/tranche/tranches";
+import { getPrincipalTokenForYieldToken } from "efi/tranche/yieldTokens";
 
 const summaryCardStyle: CSSProperties = {
   height: 220,
@@ -250,7 +254,12 @@ function useTokensSummary(
 
   // Term Asset Info
   const termAssetBalance = balances?.[termAssetIndex];
-  const vaultSymbol = getVaultSymbol(baseAsset);
+
+  const { address: trancheAddress } = isPrincipalToken(termAssetInfo)
+    ? termAssetInfo
+    : getPrincipalTokenForYieldToken(termAssetInfo.address);
+
+  const { symbol: vaultSymbol } = getVaultTokenInfoForTranche(trancheAddress);
   const { symbol: termAssetSymbol } = getTermAssetSymbol(
     termAssetContract?.address,
     vaultSymbol

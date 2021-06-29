@@ -43,8 +43,10 @@ import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { formatMoney } from "efi/money/formatMoney";
 import { getPoolForYieldToken } from "efi/pools/weightedPool";
 import { getTokenInfo } from "efi/tokenlists";
-import { getVaultForTranche } from "efi/tranche/tranches";
-import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
+import {
+  getVaultContractForTranche,
+  getVaultTokenInfoForTranche,
+} from "efi/tranche/tranches";
 import { getYearnVaultAPY } from "efi-yearn/fetchYearnVaults";
 
 interface YieldTokenCardProps {
@@ -87,13 +89,16 @@ export function YieldTokenCard({
   const trancheInfo = getTokenInfo<PrincipalTokenInfo>(trancheAddress);
 
   const {
-    createdAtTimestamp: trancheCreatedAt,
-    unlockTimestamp,
-    underlying,
-  } = trancheInfo?.extensions ?? ({} as PrincipalTokenInfo["extensions"]);
+    address: principalTokenAddress,
+    extensions: {
+      createdAtTimestamp: trancheCreatedAt,
+      unlockTimestamp,
+      underlying,
+    },
+  } = trancheInfo;
   const unlockDate = convertEpochSecondsToDate(unlockTimestamp);
   const createdAtDate = convertEpochSecondsToDate(trancheCreatedAt);
-  const vaultContract = getVaultForTranche(trancheInfo.address);
+  const vaultContract = getVaultContractForTranche(trancheInfo.address);
 
   const baseAsset = getCryptoAssetForToken(underlying);
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
@@ -108,7 +113,9 @@ export function YieldTokenCard({
   const spotPrice = usePoolSpotPrice(pool, yieldToken.address);
   const BaseAssetIcon = findAssetIcon(baseAsset);
 
-  const vaultSymbol = getVaultSymbol(baseAsset);
+  const { symbol: vaultSymbol } = getVaultTokenInfoForTranche(
+    principalTokenAddress
+  );
   const { data: yearnVault } = useYearnVault(vaultSymbol);
   const { name: vaultName } = yearnVault || {};
 

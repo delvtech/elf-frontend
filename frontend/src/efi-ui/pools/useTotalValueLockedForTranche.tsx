@@ -18,7 +18,7 @@ import { trancheContractsByAddress } from "efi/tranche/tranches";
 
 export function useTotalValueLockedForTranche(
   trancheInfo: PrincipalTokenInfo,
-  baseAssetContract: ERC20 | undefined
+  baseAssetContract: ERC20
 ): Money | undefined {
   const { address, decimals } = trancheInfo;
   const tranche = trancheContractsByAddress[address];

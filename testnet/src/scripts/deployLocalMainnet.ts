@@ -27,7 +27,7 @@ const WETH_WHALE_ADDRESS = "0x0f4ee9631f4be0a63756515141281a3e2b293bbe";
 const USDC_WHALE_ADDRESS = "0x47ac0fb4f2d84898e4d9e7b4dab3c24507a6d503";
 const DAI_WHALE_ADDRESS = "0x4f868c1aa37fcf307ab38d215382e88fca6275e2";
 
-const json = {
+const json: AddressesJsonFile = {
   chainId: 1,
   addresses: {
     balancerVaultAddress: "0xBA12222222228d8Ba445958a75a0704d566BF2C8",
@@ -39,7 +39,7 @@ const json = {
     userProxyContractAddress: "0xEe4e158c03A10CBc8242350d74510779A364581C",
     weightedPoolFactoryAddress: "0x8E9aa87E45e92bad84D5F8DD1bff34Fb92637dE9",
     wethAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
-    lusdAddress: "0x5f98805A4E8be255a32880FDeC7F6728C6568bA0",
+    crvlusdAddress: "0x5f98805A4E8be255a32880FDeC7F6728C6568bA0",
   },
   safelist: [
     "0x94BE72dc46fe8f7e9f40FBD2c31826f472F4036E",
@@ -47,6 +47,7 @@ const json = {
     "0x6De69beB66317557E65168BD7D3fff22a89dBb11",
   ],
 };
+
 async function main() {
   const {
     balancerSigner,
@@ -198,7 +199,7 @@ async function main() {
       wethAddress: wethContract.address,
       usdcAddress: usdcContract.address,
       daiAddress: daiContract.address,
-      lusdAddress: json.addresses.lusdAddress,
+      crvlusdAddress: json.addresses.crvlusdAddress,
     },
     safelist: [
       firstWethTrancheContract.address,

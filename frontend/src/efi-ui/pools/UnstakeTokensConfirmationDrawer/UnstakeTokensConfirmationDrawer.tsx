@@ -13,8 +13,12 @@ import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoName } from "efi/crypto/getCryptoName/getCryptoName";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
-import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 import { WalletApprovalInfo } from "efi/wallets/WalletApprovalInfo";
+import {
+  isPrincipalToken,
+  getVaultTokenInfoForTranche,
+} from "efi/tranche/tranches";
+import { getPrincipalTokenForYieldToken } from "efi/tranche/yieldTokens";
 
 interface UnstakeConfirmationDrawerProps {
   account: string | null | undefined;
@@ -57,7 +61,11 @@ export function UnstakeConfirmationDrawer({
   const termAsset = getCryptoAssetForToken(termAssetInfo.address);
   const termAssetIcon = findAssetIcon(termAsset);
 
-  const vaultSymbol = getVaultSymbol(baseAsset);
+  const { address: trancheAddress } = isPrincipalToken(termAssetInfo)
+    ? termAssetInfo
+    : getPrincipalTokenForYieldToken(termAssetInfo.address);
+
+  const { symbol: vaultSymbol } = getVaultTokenInfoForTranche(trancheAddress);
   const { symbol: termAssetSymbol, label: termAssetSymbolLabel } =
     getTermAssetSymbol(termAssetInfo.address, vaultSymbol);
 

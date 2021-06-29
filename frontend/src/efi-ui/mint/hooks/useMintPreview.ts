@@ -11,7 +11,7 @@ import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadC
 import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
 import { getTokenInfo } from "efi/tokenlists";
 import {
-  getVaultForTranche,
+  getVaultContractForTranche,
   trancheContractsByAddress,
 } from "efi/tranche/tranches";
 
@@ -91,7 +91,7 @@ function getWrappedPositionForTranche(
 
 function getStaticInformation(trancheInfo: TrancheInfo) {
   const wrappedPosition = getWrappedPositionForTranche(trancheInfo);
-  const vault = getVaultForTranche(trancheInfo.address);
+  const vault = getVaultContractForTranche(trancheInfo.address);
   const { decimals: trancheDecimals } = trancheInfo;
 
   return {

@@ -40,8 +40,10 @@ import { getPoolContract } from "efi/pools/getPoolContract";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
 import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
-import { getVaultForTranche } from "efi/tranche/tranches";
-import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
+import {
+  getVaultContractForTranche,
+  getVaultTokenInfoForTranche,
+} from "efi/tranche/tranches";
 
 import { MaturityTimeBar } from "./MaturityTimeBar";
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
@@ -72,8 +74,10 @@ export function PrincipalTokenCard(
   const baseAsset = getCryptoAssetForToken(baseAssetInfo.address);
   const principalTokenInfo: PrincipalTokenInfo =
     termAssetInfo as PrincipalTokenInfo; // we know pool is a principal token pool.
-  const { createdAtTimestamp: trancheCreatedAt, unlockTimestamp } =
-    principalTokenInfo.extensions;
+  const {
+    address: principalTokenAddress,
+    extensions: { createdAtTimestamp: trancheCreatedAt, unlockTimestamp },
+  } = principalTokenInfo;
 
   const { isDarkMode } = useDarkMode();
 
@@ -90,7 +94,7 @@ export function PrincipalTokenCard(
     account
   );
 
-  const vaultContract = getVaultForTranche(tranche.address);
+  const vaultContract = getVaultContractForTranche(tranche.address);
   const { data: vaultName } = useSmartContractReadCall(vaultContract, "name");
   const pool = getPoolContract(poolInfo.address);
 
@@ -124,7 +128,9 @@ export function PrincipalTokenCard(
     );
   }
 
-  const vaultSymbol: string | undefined = getVaultSymbol(baseAsset);
+  const { symbol: vaultSymbol } = getVaultTokenInfoForTranche(
+    principalTokenAddress
+  );
 
   const { symbol: termAssetSymbol } = getTermAssetSymbol(
     tranche.address,

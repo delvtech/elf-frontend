@@ -2,15 +2,17 @@ import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegist
 import { AddressesJson } from "efi/addresses";
 import { WETH__factory } from "elf-contracts/types/factories/WETH__factory";
 import {
-  ERC20,
+  CRVLUSD,
+  CRVLUSD__factory,
+  DAI,
+  DAI__factory,
   ERC20Permit,
   ERC20Permit__factory,
-  ERC20__factory,
   WETH,
 } from "elf-contracts/types";
 
 const {
-  addresses: { wethAddress, usdcAddress, daiAddress },
+  addresses: { wethAddress, usdcAddress, daiAddress, crvlusdAddress },
 } = AddressesJson;
 
 const wethContract = getSmartContractFromRegistry(
@@ -25,9 +27,13 @@ const usdcContract = getSmartContractFromRegistry(
 
 const daiContract = getSmartContractFromRegistry(
   daiAddress,
-  // TODO: get a DAI__factory
-  ERC20__factory.connect
-) as ERC20;
+  DAI__factory.connect
+) as DAI;
+
+const crvlusdContract = getSmartContractFromRegistry(
+  crvlusdAddress,
+  CRVLUSD__factory.connect
+) as CRVLUSD;
 
 /**
  * Lookup the contract instance for a underlying's address.
@@ -36,6 +42,7 @@ export const underlyingContractsByAddress = Object.freeze({
   [wethAddress]: wethContract,
   [usdcAddress]: usdcContract,
   [daiAddress]: daiContract,
+  [crvlusdAddress]: crvlusdContract,
 });
 
 const underlyingERC20PermitAddresses = [usdcAddress];

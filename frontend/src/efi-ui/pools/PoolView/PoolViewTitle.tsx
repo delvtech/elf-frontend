@@ -8,7 +8,11 @@ import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolInfo } from "efi/pools/PoolInfo";
-import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
+import {
+  getVaultTokenInfoForTranche,
+  isPrincipalToken,
+} from "efi/tranche/tranches";
+import { getPrincipalTokenForYieldToken } from "efi/tranche/yieldTokens";
 
 interface PoolViewTitleProps {
   poolInfo: PoolInfo;
@@ -17,7 +21,12 @@ export function PoolViewTitle({ poolInfo }: PoolViewTitleProps): ReactElement {
   const { baseAssetInfo, termAssetInfo } = getPoolTokens(poolInfo);
   const baseCryptoAsset = getCryptoAssetForToken(baseAssetInfo.address);
   const baseAssetSymbol = getCryptoSymbol(baseCryptoAsset);
-  const vaultSymbol = getVaultSymbol(baseCryptoAsset);
+
+  const { address: trancheAddress } = isPrincipalToken(termAssetInfo)
+    ? termAssetInfo
+    : getPrincipalTokenForYieldToken(termAssetInfo.address);
+
+  const { symbol: vaultSymbol } = getVaultTokenInfoForTranche(trancheAddress);
   const { symbol: termAssetSymbol } = getTermAssetSymbol(
     termAssetInfo.address,
     vaultSymbol

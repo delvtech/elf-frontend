@@ -33,17 +33,27 @@ const DAI_CRYPTO_ASSET: Erc20CryptoAsset = {
   ] as ERC20,
 };
 
+const CRVLUSD_CRYPTO_ASSET: Erc20CryptoAsset = {
+  id: AddressesJson.addresses.crvlusdAddress,
+  type: CryptoAssetType.ERC20,
+  tokenContract: underlyingContractsByAddress[
+    AddressesJson.addresses.crvlusdAddress
+  ] as ERC20,
+};
+
 const baseAssetCryptoAssets: Record<string, CryptoAsset> = {
   // weth should return eth wherever it's used, because the user should never
   // interact with weth
   [AddressesJson.addresses.wethAddress]: ETHEREUM_CRYPTO_ASSET,
   [AddressesJson.addresses.usdcAddress]: USDC_CRYPTO_ASSET,
   [AddressesJson.addresses.daiAddress]: DAI_CRYPTO_ASSET,
+  [AddressesJson.addresses.crvlusdAddress]: CRVLUSD_CRYPTO_ASSET,
 };
 
 const principalTokenCryptoAssets: Erc20PermitCryptoAsset[] =
   principalTokenInfos.map(({ address }) => ({
     id: address,
+    // All of our principal tokens follow the erc20Permit token standard.
     type: CryptoAssetType.ERC20PERMIT,
     tokenContract: getSmartContractFromRegistry(
       address,
@@ -53,6 +63,7 @@ const principalTokenCryptoAssets: Erc20PermitCryptoAsset[] =
 const yieldTokenCryptoAssets: Erc20PermitCryptoAsset[] = yieldTokenInfos.map(
   ({ address }) => ({
     id: address,
+    // All of our yield tokens follow the erc20Permit token standard.
     type: CryptoAssetType.ERC20PERMIT,
     tokenContract: getSmartContractFromRegistry(
       address,

@@ -35,7 +35,7 @@ export async function getTokenList(
       wethAddress,
       usdcAddress,
       daiAddress,
-      lusdAddress,
+      crvlusdAddress: lusdAddress,
       convergentPoolFactoryAddress,
       weightedPoolFactoryAddress,
     },

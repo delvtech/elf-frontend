@@ -39,7 +39,8 @@ import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { getTokenInfo } from "efi/tokenlists";
 import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
-import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
+import { getTrancheForPool } from "efi/pools/getTrancheForPool";
+import { getVaultTokenInfoForTranche } from "efi/tranche/tranches";
 
 interface PrincipalTokenLPCardProps {
   library: Web3Provider | undefined;
@@ -265,9 +266,9 @@ function getPoolSharesLabel(poolShares: number | undefined) {
 }
 
 export function getPrincipalTokenSymbol(poolInfo: PoolInfo): string {
-  const { baseAssetInfo, termAssetInfo } = getPoolTokens(poolInfo);
-  const baseCryptoAsset = getCryptoAssetForToken(baseAssetInfo.address);
-  const vaultSymbol = getVaultSymbol(baseCryptoAsset);
+  const { termAssetInfo } = getPoolTokens(poolInfo);
+  const { address: trancheAddress } = getTrancheForPool(poolInfo);
+  const { symbol: vaultSymbol } = getVaultTokenInfoForTranche(trancheAddress);
   const { symbol: termAssetSymbol } = getTermAssetSymbol(
     termAssetInfo.address,
     vaultSymbol

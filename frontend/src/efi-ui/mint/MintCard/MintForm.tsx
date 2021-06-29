@@ -23,8 +23,10 @@ import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
 import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
-import { trancheContractsByAddress } from "efi/tranche/tranches";
-import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
+import {
+  getVaultTokenInfoForTranche,
+  trancheContractsByAddress,
+} from "efi/tranche/tranches";
 
 interface MintFormProps {
   library: Web3Provider | undefined;
@@ -45,7 +47,7 @@ export function MintForm(props: MintFormProps): ReactElement | null {
   const baseAsset = getCryptoAssetForToken(underlying);
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
   const BaseAssetIcon = findAssetIcon(baseAsset);
-  const vaultSymbol = getVaultSymbol(baseAsset) as string;
+  const { symbol: vaultSymbol } = getVaultTokenInfoForTranche(trancheAddress);
 
   const principalTokenContract = trancheContractsByAddress[trancheAddress];
   const yieldTokenContract = interestTokenContractsByAddress[interestToken];

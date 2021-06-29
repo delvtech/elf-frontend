@@ -2,13 +2,12 @@ import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { getYearnVaultAPY } from "efi-yearn/fetchYearnVaults";
 import { ONE_YEAR_IN_SECONDS } from "efi/base/time";
-import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getPoolContract } from "efi/pools/getPoolContract";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { getTrancheForPool } from "efi/pools/getTrancheForPool";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { TermAssetType } from "efi/tranche/TermAssetType";
-import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
+import { getVaultTokenInfoForTranche } from "efi/tranche/tranches";
 
 /**
  * Returns the APY for either a principal token or a yield token
@@ -22,12 +21,13 @@ export function useTokenYield(
   termAssetType: TermAssetType
 ): number {
   const pool = getPoolContract(poolInfo.address);
-  const { baseAssetInfo, termAssetInfo } = getPoolTokens(poolInfo);
+  const { termAssetInfo } = getPoolTokens(poolInfo);
   // get fixed yield
-  const baseAsset = getCryptoAssetForToken(baseAssetInfo.address);
   const principalPrice = usePoolSpotPrice(pool, termAssetInfo.address);
-  const trancheInfo = getTrancheForPool(poolInfo);
-  const { unlockTimestamp } = trancheInfo.extensions;
+  const {
+    address: trancheAddress,
+    extensions: { unlockTimestamp },
+  } = getTrancheForPool(poolInfo);
 
   let fixedAPY = 0;
   if (principalPrice) {
@@ -47,7 +47,7 @@ export function useTokenYield(
   }
 
   // the yield token apy is the same as the underlying vault, so we pull from there.
-  const vaultSymbol = getVaultSymbol(baseAsset);
+  const { symbol: vaultSymbol } = getVaultTokenInfoForTranche(trancheAddress);
   const { data: vaultInfo } = useYearnVault(vaultSymbol);
 
   const variableAPY = vaultInfo?.apy ? getYearnVaultAPY(vaultInfo?.apy) : 0;

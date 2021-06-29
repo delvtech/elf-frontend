@@ -30,7 +30,7 @@ import { getTrancheForPool } from "efi/pools/getTrancheForPool";
 import { yieldPoolContractsByAddress } from "efi/pools/weightedPool";
 import { formatTermLength } from "efi/tranche/formatTermLength/formatTermLength";
 import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
-import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
+import { getVaultTokenInfoForTranche } from "efi/tranche/tranches";
 
 interface YieldPoolCardProps {
   yieldPoolInfo: YieldPoolTokenInfo;
@@ -44,6 +44,7 @@ export function YieldPoolCard(props: YieldPoolCardProps): ReactElement | null {
   const poolContract = yieldPoolContractsByAddress[poolAddress];
   const principalTokenInfo = getTrancheForPool(yieldPoolInfo);
   const {
+    address: principalTokenAddress,
     extensions: { unlockTimestamp, createdAtTimestamp },
   } = principalTokenInfo;
   const liquidity = useTotalFiatLiquidity(yieldPoolInfo);
@@ -52,7 +53,9 @@ export function YieldPoolCard(props: YieldPoolCardProps): ReactElement | null {
   const baseAsset = getCryptoAssetForToken(baseAssetContract.address);
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
   const BaseAssetIcon = findAssetIcon(baseAsset);
-  const vaultSymbol = getVaultSymbol(baseAsset);
+  const { symbol: vaultSymbol } = getVaultTokenInfoForTranche(
+    principalTokenAddress
+  );
   const { symbol: termAssetSymbol } = getTermAssetSymbol(
     termAssetContract?.address,
     vaultSymbol

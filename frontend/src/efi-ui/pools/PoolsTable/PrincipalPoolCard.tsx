@@ -29,7 +29,7 @@ import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { getTrancheForPool } from "efi/pools/getTrancheForPool";
 import { formatTermLength } from "efi/tranche/formatTermLength/formatTermLength";
 import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
-import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
+import { getVaultTokenInfoForTranche } from "efi/tranche/tranches";
 
 interface PrincipalPoolCardProps {
   principalPoolInfo: PrincipalPoolTokenInfo;
@@ -45,6 +45,7 @@ export function PrincipalPoolCard(
 
   const principalTokenInfo = getTrancheForPool(principalPoolInfo);
   const {
+    address: principalTokenAddress,
     extensions: { unlockTimestamp, createdAtTimestamp },
   } = principalTokenInfo;
 
@@ -54,7 +55,9 @@ export function PrincipalPoolCard(
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
   const BaseAssetIcon = findAssetIcon(baseAsset);
 
-  const vaultSymbol = getVaultSymbol(baseAsset);
+  const { symbol: vaultSymbol } = getVaultTokenInfoForTranche(
+    principalTokenAddress
+  );
   const { symbol: termAssetSymbol } = getTermAssetSymbol(
     termAssetContract?.address,
     vaultSymbol

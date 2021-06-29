@@ -10,13 +10,16 @@ import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { formatAbbreviatedDate } from "efi/base/dates";
 import { formatPercent } from "efi/base/formatPercent";
-import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { formatMoney } from "efi/money/formatMoney";
 import { principalPools } from "efi/pools/ccpool";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolInfo } from "efi/pools/PoolInfo";
-import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 import { getYearnVaultAPY } from "efi-yearn/fetchYearnVaults";
+import {
+  getVaultTokenInfoForTranche,
+  isPrincipalToken,
+} from "efi/tranche/tranches";
+import { getPrincipalTokenForYieldToken } from "efi/tranche/yieldTokens";
 
 const summaryCardStyle: CSSProperties = {
   height: 220,
@@ -37,9 +40,12 @@ export function TermSummary(props: TermSummaryProps): ReactElement {
     startTimeMs = 0,
   } = props;
 
-  const { baseAssetContract } = getPoolTokens(poolInfo);
-  const baseAsset = getCryptoAssetForToken(baseAssetContract.address);
-  const vaultSymbol = getVaultSymbol(baseAsset);
+  const { termAssetInfo } = getPoolTokens(poolInfo);
+  const { address: trancheAddress } = isPrincipalToken(termAssetInfo)
+    ? termAssetInfo
+    : getPrincipalTokenForYieldToken(termAssetInfo.address);
+
+  const { symbol: vaultSymbol } = getVaultTokenInfoForTranche(trancheAddress);
   const { data: vaultInfo } = useYearnVault(vaultSymbol);
 
   const { displayName, type, apy } = vaultInfo || {};

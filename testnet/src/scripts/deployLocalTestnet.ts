@@ -34,7 +34,7 @@ async function main() {
   const wethSigner = await getSigner(SIGNER.WETH, hre);
   const usdcSigner = await getSigner(SIGNER.USDC, hre);
   const daiSigner = await getSigner(SIGNER.DAI, hre);
-  const lusdSigner = await getSigner(SIGNER.LUSD, hre);
+  const lusdSigner = await getSigner(SIGNER.CRVLUSD, hre);
   const elementAddress = await elementSigner.getAddress();
   const balancerAddress = await balancerSigner.getAddress();
   const userAddress = await userSigner.getAddress();
@@ -323,7 +323,7 @@ async function main() {
       wethAddress: wethContract.address,
       usdcAddress: usdcContract.address,
       daiAddress: daiContract.address,
-      lusdAddress: lusdContract.address,
+      crvlusdAddress: lusdContract.address,
     },
     safelist: [
       firstWethTrancheContract.address,
