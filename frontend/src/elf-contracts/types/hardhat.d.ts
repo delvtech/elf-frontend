@@ -473,9 +473,17 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ZapYearnShares__factory>;
     getContractFactory(
+      name: "DAI",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.DAI__factory>;
+    getContractFactory(
       name: "ERC20",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ERC20__factory>;
+    getContractFactory(
+      name: "LUSD",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.LUSD__factory>;
     getContractFactory(
       name: "USDC",
       signerOrOptions?: ethers.Signer | FactoryOptions

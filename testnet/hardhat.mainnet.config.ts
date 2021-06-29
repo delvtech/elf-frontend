@@ -1,4 +1,5 @@
 import "@nomiclabs/hardhat-waffle";
+import "@nomiclabs/hardhat-vyper";
 import "@typechain/hardhat";
 import "module-alias/register";
 
@@ -33,6 +34,9 @@ const config: HardhatUserConfig = {
     sources: "src",
     tests: "src/tests",
   },
+  // vyper: {
+  //   version: "0.2.8",
+  // },
   solidity: {
     compilers: [
       {
