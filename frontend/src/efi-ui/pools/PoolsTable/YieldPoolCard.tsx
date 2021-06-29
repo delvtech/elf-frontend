@@ -142,7 +142,7 @@ export function YieldPoolCard(props: YieldPoolCardProps): ReactElement | null {
 
         {/* Term Length  */}
         <div>
-          <Tag fill intent={isRedeemable ? Intent.SUCCESS : Intent.PRIMARY}>
+          <Tag intent={isRedeemable ? Intent.SUCCESS : Intent.PRIMARY}>
             {formattedUnlockDate}
           </Tag>
         </div>
