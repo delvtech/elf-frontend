@@ -1,13 +1,6 @@
 import { ReactElement, useCallback } from "react";
 
-import {
-  ButtonGroup,
-  Card,
-  Classes,
-  Elevation,
-  Intent,
-  Tag,
-} from "@blueprintjs/core";
+import { ButtonGroup, Card, Classes, Elevation } from "@blueprintjs/core";
 import { navigate } from "@reach/router";
 import classNames from "classnames";
 import { PrincipalPoolTokenInfo } from "tokenlists/types";
@@ -15,6 +8,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
+import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { GoToPoolButton } from "efi-ui/pools/GoToPoolButton/GoToPoolButton";
 import { useFeeVolumeFiatForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
@@ -33,7 +27,7 @@ import { formatMoney } from "efi/money/formatMoney";
 import { principalPoolContractsByAddress } from "efi/pools/ccpool";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { getTrancheForPool } from "efi/pools/getTrancheForPool";
-import { getIsMature } from "efi/tranche/getIsMature";
+import { formatTermLength } from "efi/tranche/formatTermLength/formatTermLength";
 import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 
@@ -51,7 +45,7 @@ export function PrincipalPoolCard(
 
   const principalTokenInfo = getTrancheForPool(principalPoolInfo);
   const {
-    extensions: { unlockTimestamp },
+    extensions: { unlockTimestamp, createdAtTimestamp },
   } = principalTokenInfo;
 
   const { baseAssetContract, termAssetContract } =
@@ -86,15 +80,11 @@ export function PrincipalPoolCard(
       <Card
         elevation={Elevation.TWO}
         interactive
-        className={classNames(
-          Classes.SKELETON,
-          tw("h-24", "w-full", "transition", "duration-1000", "ease-in-out")
-        )}
+        className={classNames(Classes.SKELETON, tw("h-24", "w-full"))}
       ></Card>
     );
   }
 
-  const isRedeemable = getIsMature(unlockTimestamp);
   const unlockDate = convertEpochSecondsToDate(unlockTimestamp);
   const formattedUnlockDate = formatAbbreviatedDate(unlockDate);
 
@@ -103,27 +93,34 @@ export function PrincipalPoolCard(
       elevation={Elevation.TWO}
       interactive
       onClick={goToTrade}
-      className={classNames(tw("w-full"))}
+      className={classNames(tw("w-full", "h-24"))}
     >
-      <div
-        className={tw(
-          "w-full",
-          "inline-grid",
-          "gap-x-6",
-          "grid-cols-8",
-          "text-base"
-        )}
-      >
+      <div className={tw("w-full", "inline-grid", "gap-x-4", "grid-cols-10")}>
         {/* Logo */}
         <div className={tw("w-full", "col-span-2")}>
           <LabeledText
+            iconClassName={tw("flex-shrink-0")}
             className={tw("text-left", "pl-4")}
             label={t`Pool`}
-            icon={<BaseAssetIcon height={38} width={38} />}
+            icon={
+              <div>
+                <BaseAssetIcon height={38} width={38} />
+              </div>
+            }
             text={`${baseAssetSymbol} - ${termAssetSymbol}`}
-            textClassName={tw("text-base")}
           />
         </div>
+
+        {/* Term */}
+        <LabeledText
+          containerItemsCenter={false}
+          className={tw("text-left", "flex-shrink-0")}
+          label={formattedUnlockDate}
+          text={formatTermLength(
+            createdAtTimestamp * 1000,
+            unlockTimestamp * 1000
+          )}
+        />
 
         {/* Pool Liquidity */}
         <div>{formatMoney(liquidity, { wholeAmounts: true })}</div>
@@ -137,11 +134,13 @@ export function PrincipalPoolCard(
         {/* Principal Price */}
         <div>{`${principalPriceFormatted} ${baseAssetSymbol}`}</div>
 
-        {/* Term Length  */}
-        <div>
-          <Tag intent={isRedeemable ? Intent.SUCCESS : Intent.PRIMARY}>
-            {formattedUnlockDate}
-          </Tag>
+        {/* Status */}
+        <div className={tw("col-span-2")}>
+          <TimeLeft
+            showDate={false}
+            startTimestamp={createdAtTimestamp * 1000}
+            maturityTimestamp={unlockTimestamp * 1000}
+          />
         </div>
 
         {/* Action Buttons */}

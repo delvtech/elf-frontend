@@ -13,7 +13,8 @@ interface YieldPoolTableProps {
 }
 
 const yieldPoolTableStyle: CSSProperties = {
-  minWidth: 800,
+  maxWidth: 1240,
+  minWidth: 1000,
 };
 export function YieldPoolTable({
   showMaturePools = true,
@@ -22,28 +23,22 @@ export function YieldPoolTable({
 
   return (
     <div
-      className={tw(
-        "flex",
-        "flex-col",
-        "items-center",
-        "max-w-6xl",
-        "min-w-1/2",
-        "space-y-5"
-      )}
+      className={tw("flex", "flex-col", "items-center", "space-y-5")}
       style={yieldPoolTableStyle}
     >
       <div
         className={classNames(
-          tw("grid", "gap-x-6", "grid-cols-8", "w-full"),
+          tw("grid", "gap-x-4", "grid-cols-10", "w-full"),
           Classes.TEXT_MUTED
         )}
       >
         <div className={tw("col-span-2", "pl-4")}>{t`Pool`}</div>
-        <div className={tw("pl-2")}>{t`Pool Liquidity`}</div>
+        <div>{t`Term`}</div>
+        <div className={tw("pl-2")}>{t`Liquidity`}</div>
         <div>{t`Vault APY`}</div>
         <div>{t`LP APY`}</div>
         <div>{t`Price`}</div>
-        <div>{t`Term`}</div>
+        <div className={tw("col-span-2")}>{t`Status`}</div>
         {/* Actions */}
         <div />
       </div>

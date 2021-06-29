@@ -1,19 +1,14 @@
 import { ReactElement, useCallback } from "react";
 
-import {
-  ButtonGroup,
-  Card,
-  Classes,
-  Elevation,
-  Intent,
-  Tag,
-} from "@blueprintjs/core";
+import { ButtonGroup, Card, Classes, Elevation } from "@blueprintjs/core";
 import { navigate } from "@reach/router";
 import classNames from "classnames";
+import { YieldPoolTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
+import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { GoToPoolButton } from "efi-ui/pools/GoToPoolButton/GoToPoolButton";
 import { useFeeVolumeForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
@@ -23,6 +18,8 @@ import { useStakingAPY } from "efi-ui/pools/useStakingAPY";
 import { useTotalFiatLiquidity } from "efi-ui/pools/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { getYearnVaultAPY } from "efi-yearn/fetchYearnVaults";
+import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
+import { formatAbbreviatedDate } from "efi/base/dates";
 import { formatPercent } from "efi/base/formatPercent";
 import { ONE_WEEK_IN_SECONDS } from "efi/base/time";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
@@ -30,13 +27,10 @@ import { getCryptoSymbol2 } from "efi/crypto/getCryptoSymbol";
 import { formatMoney } from "efi/money/formatMoney";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { getTrancheForPool } from "efi/pools/getTrancheForPool";
+import { yieldPoolContractsByAddress } from "efi/pools/weightedPool";
+import { formatTermLength } from "efi/tranche/formatTermLength/formatTermLength";
 import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
-import { YieldPoolTokenInfo } from "tokenlists/types";
-import { yieldPoolContractsByAddress } from "efi/pools/weightedPool";
-import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
-import { formatAbbreviatedDate } from "efi/base/dates";
-import { getIsMature } from "efi/tranche/getIsMature";
 
 interface YieldPoolCardProps {
   yieldPoolInfo: YieldPoolTokenInfo;
@@ -50,7 +44,7 @@ export function YieldPoolCard(props: YieldPoolCardProps): ReactElement | null {
   const poolContract = yieldPoolContractsByAddress[poolAddress];
   const principalTokenInfo = getTrancheForPool(yieldPoolInfo);
   const {
-    extensions: { unlockTimestamp },
+    extensions: { unlockTimestamp, createdAtTimestamp },
   } = principalTokenInfo;
   const liquidity = useTotalFiatLiquidity(yieldPoolInfo);
   const fees = useFeeVolumeForPool(yieldPoolInfo);
@@ -89,15 +83,11 @@ export function YieldPoolCard(props: YieldPoolCardProps): ReactElement | null {
       <Card
         elevation={Elevation.TWO}
         interactive
-        className={classNames(
-          Classes.SKELETON,
-          tw("h-24", "w-full", "transition", "duration-1000", "ease-in-out")
-        )}
+        className={classNames(Classes.SKELETON, tw("h-24", "w-full"))}
       ></Card>
     );
   }
 
-  const isRedeemable = getIsMature(unlockTimestamp);
   const unlockDate = convertEpochSecondsToDate(unlockTimestamp);
   const formattedUnlockDate = formatAbbreviatedDate(unlockDate);
 
@@ -106,27 +96,29 @@ export function YieldPoolCard(props: YieldPoolCardProps): ReactElement | null {
       elevation={Elevation.TWO}
       interactive
       onClick={goToTrade}
-      className={classNames(tw("w-full"))}
+      className={classNames(tw("w-full", "h-24"))}
     >
-      <div
-        className={tw(
-          "w-full",
-          "inline-grid",
-          "gap-x-6",
-          "grid-cols-8",
-          "text-base"
-        )}
-      >
+      <div className={tw("w-full", "inline-grid", "gap-x-4", "grid-cols-10")}>
         {/* Logo */}
         <div className={tw("w-full", "col-span-2")}>
           <LabeledText
             className={tw("text-left", "pl-4")}
             label={t`Pool`}
+            iconClassName={tw("flex-shrink-0")}
             icon={<BaseAssetIcon height={38} width={38} />}
             text={`${baseAssetSymbol} - ${termAssetSymbol}`}
-            textClassName={tw("text-base")}
           />
         </div>
+        {/* Term */}
+        <LabeledText
+          containerItemsCenter={false}
+          className={tw("text-left", "flex-shrink-0")}
+          label={formattedUnlockDate}
+          text={formatTermLength(
+            createdAtTimestamp * 1000,
+            unlockTimestamp * 1000
+          )}
+        />
 
         {/* Pool Liquidity */}
         <div>{formatMoney(liquidity, { wholeAmounts: true })}</div>
@@ -140,11 +132,13 @@ export function YieldPoolCard(props: YieldPoolCardProps): ReactElement | null {
         {/* Yield Price */}
         <div>{`${yieldPrice} ${baseAssetSymbol}`}</div>
 
-        {/* Term Length  */}
-        <div>
-          <Tag intent={isRedeemable ? Intent.SUCCESS : Intent.PRIMARY}>
-            {formattedUnlockDate}
-          </Tag>
+        {/* Status */}
+        <div className={tw("col-span-2")}>
+          <TimeLeft
+            showDate={false}
+            startTimestamp={createdAtTimestamp * 1000}
+            maturityTimestamp={unlockTimestamp * 1000}
+          />
         </div>
 
         {/* Action Buttons */}

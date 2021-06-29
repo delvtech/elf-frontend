@@ -34,6 +34,8 @@ interface LabeledTextProps {
 
   className?: string;
 
+  containerItemsCenter?: boolean;
+
   iconClassName?: string;
   textClassName?: string;
   labelClassName?: string;
@@ -51,13 +53,14 @@ export function LabeledText({
   labelClassName,
   iconClassName,
   containerClassName,
+  containerItemsCenter = true,
   icon,
   large = false,
 }: LabeledTextProps): ReactElement {
   return (
     <div
       className={classNames(
-        tw("flex", "items-center", "w-full"),
+        tw("flex", { "items-center": containerItemsCenter }, "w-full"),
         containerClassName
       )}
     >

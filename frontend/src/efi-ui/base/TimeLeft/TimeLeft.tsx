@@ -18,11 +18,16 @@ interface TimeLeftProps {
    * unix time in ms
    */
   maturityTimestamp: number | undefined;
+
+  showDate?: boolean;
 }
 
 export function TimeLeft(props: TimeLeftProps): ReactElement {
-  const { startTimestamp: startDate = 0, maturityTimestamp: maturityDate = 0 } =
-    props;
+  const {
+    startTimestamp: startDate = 0,
+    maturityTimestamp: maturityDate = 0,
+    showDate = true,
+  } = props;
   const progress = calculateProgress(startDate, maturityDate);
   const timeLeft = formatTimeLeft(Date.now(), maturityDate);
 
@@ -34,18 +39,27 @@ export function TimeLeft(props: TimeLeftProps): ReactElement {
   const intent = isMature ? Intent.SUCCESS : Intent.PRIMARY;
 
   return (
-    <div className={tw("h-full", "w-full", "space-y-2")}>
-      {isMature ? (
-        <div>
+    <div
+      className={tw(
+        "flex",
+        "flex-col",
+        "h-full",
+        "w-full",
+        "space-y-2",
+        "flex-shrink-0"
+      )}
+    >
+      <div>
+        {isMature ? (
           <Tag intent={Intent.SUCCESS} className={tw("mr-4", "flex-grow-0")}>
             {t`Mature`}
           </Tag>
-        </div>
-      ) : (
-        <Tag intent={Intent.PRIMARY} className={tw("mr-4", "flex-grow-0")}>
-          {t`Running`}
-        </Tag>
-      )}
+        ) : (
+          <Tag intent={Intent.PRIMARY} className={tw("mr-4", "flex-grow-0")}>
+            {t`Running`}
+          </Tag>
+        )}
+      </div>
       {!isMature ? (
         <ProgressBar
           intent={intent}
@@ -54,11 +68,13 @@ export function TimeLeft(props: TimeLeftProps): ReactElement {
           value={progress}
         />
       ) : null}
-      <div
-        className={classNames(Classes.TEXT_MUTED, tw("text-sm", "truncate"))}
-      >
-        {format(maturityDate, "MMM d, y")}
-      </div>
+      {showDate ? (
+        <div
+          className={classNames(Classes.TEXT_MUTED, tw("text-sm", "truncate"))}
+        >
+          {format(maturityDate, "MMM d, y")}
+        </div>
+      ) : null}
       <div
         className={classNames(Classes.TEXT_MUTED, tw("text-sm", "truncate"))}
       >
