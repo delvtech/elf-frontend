@@ -4,8 +4,10 @@ import { WETH__factory } from "elf-contracts/types/factories/WETH__factory";
 import {
   DAI,
   DAI__factory,
+  ERC20,
   ERC20Permit,
   ERC20Permit__factory,
+  ERC20__factory,
   WETH,
 } from "elf-contracts/types";
 import { CRVLUSD__factory } from "elf-contracts/types/factories/CRVLUSD__factory";
@@ -32,8 +34,10 @@ const daiContract = getSmartContractFromRegistry(
 
 const crvlusdContract = getSmartContractFromRegistry(
   crvlusdAddress,
-  CRVLUSD__factory.connect
-) as CRVLUSD;
+  // TODO: hack, make this CRVLUSD__factory one balanceOf and allowance calls
+  // aren't borked
+  ERC20__factory.connect
+) as ERC20;
 
 /**
  * Lookup the contract instance for a underlying's address.

@@ -10,6 +10,8 @@ import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadC
 import { AddressesJson } from "efi/addresses";
 import { formatBalance } from "efi/base/formatBalance";
 import { getTokenInfo } from "efi/tokenlists";
+import { CRVLUSD__factory } from "elf-contracts/types/factories/CRVLUSD__factory";
+import { defaultProvider } from "efi/providers/providers";
 
 export function useTokenPrice<TContract extends ERC20>(
   contract: TContract,
@@ -21,17 +23,20 @@ export function useTokenPrice<TContract extends ERC20>(
   const priceResult = useCoinGeckoPrice(getCoinGeckoId(tokenSymbol), currency);
 
   // otherwise see if it's the crvlusd pool
+  const isCrvlusd = contract.address === AddressesJson.addresses.crvlusdAddress;
   const crvLusdVirtualPriceResult = useSmartContractReadCall(
-    contract as unknown as CRVLUSD,
+    isCrvlusd
+      ? CRVLUSD__factory.connect(contract.address, defaultProvider)
+      : (contract as unknown as CRVLUSD),
     "get_virtual_price",
     // this is a hack so we disable this if the contract isn't specifically crvlus
     {
-      callArgs: [{}],
+      callArgs: [],
       enabled: contract.address === AddressesJson.addresses.crvlusdAddress,
     }
   );
 
-  if (contract.address === AddressesJson.addresses.crvlusdAddress) {
+  if (isCrvlusd) {
     const priceString = formatBalance(crvLusdVirtualPriceResult.data, decimals);
     const price = Money.fromDecimal(
       +priceString,
