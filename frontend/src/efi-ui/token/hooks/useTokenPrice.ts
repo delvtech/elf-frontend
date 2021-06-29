@@ -1,14 +1,15 @@
+import { QueryObserverResult } from "react-query";
+
+import { CRVLUSD } from "elf-contracts/types/CRVLUSD";
 import { ERC20 } from "elf-contracts/types/ERC20";
 import { Currency, Money } from "ts-money";
 
 import { getCoinGeckoId } from "efi-coingecko";
 import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
-import { getTokenInfo } from "efi/tokenlists";
-import { QueryObserverResult } from "react-query";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { CRVLUSD } from "elf-contracts/types";
 import { AddressesJson } from "efi/addresses";
 import { formatBalance } from "efi/base/formatBalance";
+import { getTokenInfo } from "efi/tokenlists";
 
 export function useTokenPrice<TContract extends ERC20>(
   contract: TContract,

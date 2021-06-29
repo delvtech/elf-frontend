@@ -2,14 +2,14 @@ import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegist
 import { AddressesJson } from "efi/addresses";
 import { WETH__factory } from "elf-contracts/types/factories/WETH__factory";
 import {
-  CRVLUSD,
-  CRVLUSD__factory,
   DAI,
   DAI__factory,
   ERC20Permit,
   ERC20Permit__factory,
   WETH,
 } from "elf-contracts/types";
+import { CRVLUSD__factory } from "elf-contracts/types/factories/CRVLUSD__factory";
+import { CRVLUSD } from "elf-contracts/types/CRVLUSD";
 
 const {
   addresses: { wethAddress, usdcAddress, daiAddress, crvlusdAddress },

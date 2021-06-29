@@ -112,9 +112,7 @@ export type { ZapYearnShares } from "./ZapYearnShares";
 export type { DAI } from "./DAI";
 export type { LUSD } from "./LUSD";
 export type { USDC } from "./USDC";
-export type { CRVLUSD } from "./CRVLUSD";
 
-export { CRVLUSD__factory } from "./factories/CRVLUSD__factory";
 export { ERC20Permit__factory } from "./factories/ERC20Permit__factory";
 export { IERC20Permit__factory } from "./factories/IERC20Permit__factory";
 export { ERC20__factory } from "./factories/ERC20__factory";
