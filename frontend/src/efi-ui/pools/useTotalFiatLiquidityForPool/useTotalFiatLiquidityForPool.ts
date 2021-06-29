@@ -9,7 +9,7 @@ import { PoolInfo } from "efi/pools/PoolInfo";
 export function useTotalFiatLiquidity(poolInfo: PoolInfo): Money | undefined {
   const { currency } = useCurrencyPref();
   const { baseAssetContract } = getPoolTokens(poolInfo);
-  const [baseAssetPrice] = useTokenPrice(baseAssetContract, currency);
+  const { data: baseAssetPrice } = useTokenPrice(baseAssetContract, currency);
 
   const totalLiquidity = useTotalLiquidity(poolInfo);
 

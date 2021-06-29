@@ -8,7 +8,7 @@ import { ERC20 } from "elf-contracts/types";
 import { USDC } from "elf-contracts/types/USDC";
 import { WETH } from "elf-contracts/types/WETH";
 import { Signer } from "ethers";
-import { PrincipalTokenInfo } from "tokenlists/types";
+import { PrincipalTokenInfo, YieldTokenInfo } from "tokenlists/types";
 
 import tw from "efi-tailwindcss-classnames";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
@@ -35,6 +35,7 @@ import { underlyingContractsByAddress } from "efi/underlying/underlying";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 
 import { EarnSummaryCard } from "./EarnSummaryCard";
+import { getTokenInfo } from "efi/tokenlists";
 
 interface EarnCardProps {
   signer: Signer | undefined;
@@ -59,7 +60,10 @@ export function EarnCard(props: EarnCardProps): ReactElement | null {
     account,
     principalTokenInfo,
     principalTokenInfo: {
-      extensions: { interestToken: interestTokenAddress },
+      extensions: {
+        interestToken: interestTokenAddress,
+        underlying: baseAssetAddress,
+      },
     },
     isExpanded,
     onExpandClose,
@@ -73,7 +77,7 @@ export function EarnCard(props: EarnCardProps): ReactElement | null {
   const principalPoolInfo = getPoolInfoForPrincipalToken(
     principalTokenInfo.address
   );
-  const { underlying: baseAssetAddress } = principalTokenInfo.extensions;
+  const yieldTokenInfo = getTokenInfo<YieldTokenInfo>(interestTokenAddress);
 
   // get contracts
   const principalPoolContract =
@@ -98,12 +102,13 @@ export function EarnCard(props: EarnCardProps): ReactElement | null {
   // get dynamic pool information
   const principalPrice = usePoolSpotPrice(
     principalPoolContract,
-    principalPoolInfo.address
+    principalTokenInfo.address
   )?.toFixed(4);
   const yieldPrice = usePoolSpotPrice(
     yieldPoolContract,
-    yieldPoolInfo.address
+    yieldTokenInfo.address
   )?.toFixed(4);
+
   const fees = useFeeVolumeForPool(yieldPoolInfo) ?? 0;
   const tvl = useTotalValueLockedForTranche(
     principalTokenInfo,

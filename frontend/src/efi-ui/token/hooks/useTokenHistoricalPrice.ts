@@ -2,15 +2,15 @@ import { ERC20 } from "elf-contracts/types/ERC20";
 import { Currency, Money } from "ts-money";
 
 import { getCoinGeckoId } from "efi-coingecko";
-import { ComputedQueryResult } from "efi-ui/base/ComputedQueryResult";
 import { useCoinGeckoHistoricalPrice } from "efi-ui/coingecko/useCoinGeckoHistoricalPrice";
 import { getTokenInfo } from "efi/tokenlists";
+import { QueryObserverResult } from "react-query";
 
 export function useTokenHistoricalPrice<TContract extends ERC20>(
   contract: TContract | undefined,
   currency: Currency,
   daysAgo: number
-): ComputedQueryResult<Money> {
+): QueryObserverResult<Money> {
   const tokenSymbolResult = contract
     ? getTokenInfo(contract.address).symbol
     : undefined;
@@ -20,5 +20,5 @@ export function useTokenHistoricalPrice<TContract extends ERC20>(
     daysAgo
   );
 
-  return [priceResult.data, [priceResult]];
+  return priceResult;
 }

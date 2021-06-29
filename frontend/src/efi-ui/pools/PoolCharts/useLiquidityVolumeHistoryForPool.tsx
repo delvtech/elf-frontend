@@ -29,7 +29,10 @@ export function useVolumeHistoryForPool(
   } = getPoolTokens(poolInfo);
   const swapEvents = useSwaps(poolInfo, fromTime, toTime);
   const { currency } = useCurrencyPref();
-  const [baseAssetFiatPrice] = useTokenPrice(baseAssetContract, currency);
+  const { data: baseAssetFiatPrice } = useTokenPrice(
+    baseAssetContract,
+    currency
+  );
 
   if (swapEvents?.length && baseAssetContract && baseAssetFiatPrice) {
     return swapEvents.map((swapEvent, index) => {

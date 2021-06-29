@@ -6,10 +6,11 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
-import { Tab, Tabs } from "@blueprintjs/core";
+import { Classes, Divider, H2, Tab, Tabs } from "@blueprintjs/core";
 import { assertNever } from "efi/base/assertNever";
 import { PrincipalPoolTable } from "efi-ui/pools/PoolsTable/PrincipalPoolTable";
 import { YieldPoolTable } from "efi-ui/pools/PoolsTable/YieldPoolTable";
+import classNames from "classnames";
 
 enum PoolsViewTab {
   PRINCIPAL = "principal",
@@ -22,15 +23,10 @@ export function PoolsView(props: PoolsViewProps): ReactElement {
     PoolsViewTab.PRINCIPAL
   );
 
-  const title =
-    activeTab === PoolsViewTab.YIELD
-      ? t`Yield Token Pools`
-      : t`Principal Token Pools`;
-
   const subtitle =
     activeTab === PoolsViewTab.YIELD
-      ? t`Buy and sell yield tokens or provide liquidity by staking in Element yield pools.`
-      : t`Buy and sell principal tokens or provide liquidity by staking in Element principal pools.`;
+      ? t`Buy and sell yield tokens or provide liquidity in Element yield pools.`
+      : t`Buy and sell principal tokens or provide liquidity in Element principal pools.`;
 
   return (
     <Fragment>
@@ -51,20 +47,36 @@ export function PoolsView(props: PoolsViewProps): ReactElement {
           "overflow-auto"
         )}
       >
-        <ViewTitle
-          title={title}
-          subtitle={subtitle}
-          className={tw("text-center")}
-        />
-
-        <Tabs
-          large
-          selectedTabId={activeTab}
-          onChange={setActiveTab as (newTabId: PoolsViewTab) => void}
+        <div
+          className={tw(
+            "flex",
+            "flex-col",
+            "space-y-4",
+            "items-center",
+            "pt-4"
+          )}
         >
-          <Tab id={PoolsViewTab.PRINCIPAL} title={t`Principal Tokens`} />
-          <Tab id={PoolsViewTab.YIELD} title={t`Yield Tokens`} />
-        </Tabs>
+          <Tabs
+            selectedTabId={activeTab}
+            onChange={setActiveTab as (newTabId: PoolsViewTab) => void}
+          >
+            <Tab
+              id={PoolsViewTab.PRINCIPAL}
+              title={<H2>{t`Principal Pools`}</H2>}
+            />
+            <Divider />
+            <Tab id={PoolsViewTab.YIELD} title={<H2>{t`Yield Pools`}</H2>} />
+          </Tabs>
+          <span
+            className={classNames(
+              Classes.RUNNING_TEXT,
+              Classes.TEXT_MUTED,
+              tw("text-base")
+            )}
+          >
+            {subtitle}
+          </span>
+        </div>
 
         <div
           className={tw(

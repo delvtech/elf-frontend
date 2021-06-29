@@ -59,7 +59,7 @@ export function useLiquidityHistoryForPool(
   } = getPoolTokens(poolInfo);
   const spotPrice = usePoolSpotPrice(poolContract, termAssetAddress);
   const { currency } = useCurrencyPref();
-  const [baseAssetPrice] = useTokenPrice(baseAssetContract, currency);
+  const { data: baseAssetPrice } = useTokenPrice(baseAssetContract, currency);
 
   const { data: lastestBlockNumber } = useLatestBlockNumber();
 

@@ -44,7 +44,7 @@ export function useTotalValueLockedForTranche(
   );
 
   const { currency } = useCurrencyPref();
-  const [baseAssetPrice] = useTokenPrice(baseAssetContract, currency);
+  const { data: baseAssetPrice } = useTokenPrice(baseAssetContract, currency);
 
   if (
     !baseAssetLockedBN ||

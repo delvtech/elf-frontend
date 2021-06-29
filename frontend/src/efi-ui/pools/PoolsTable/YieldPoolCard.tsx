@@ -1,20 +1,19 @@
-import React, {
-  CSSProperties,
-  ReactElement,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import { ReactElement, useCallback } from "react";
 
-import { Card, Classes, Elevation } from "@blueprintjs/core";
-import { Link, navigate } from "@reach/router";
+import {
+  ButtonGroup,
+  Card,
+  Classes,
+  Elevation,
+  Intent,
+  Tag,
+} from "@blueprintjs/core";
+import { navigate } from "@reach/router";
 import classNames from "classnames";
-import { differenceInDays } from "date-fns";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { GoToPoolButton } from "efi-ui/pools/GoToPoolButton/GoToPoolButton";
 import { useFeeVolumeForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
@@ -22,8 +21,6 @@ import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice
 import { PoolAction } from "efi-ui/pools/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
 import { useStakingAPY } from "efi-ui/pools/useStakingAPY";
 import { useTotalFiatLiquidity } from "efi-ui/pools/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
-import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
-import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { getYearnVaultAPY } from "efi-yearn/fetchYearnVaults";
 import { formatPercent } from "efi/base/formatPercent";
@@ -37,19 +34,13 @@ import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
 import { getVaultSymbol } from "efi/vaults/getVaultSymbol";
 import { YieldPoolTokenInfo } from "tokenlists/types";
 import { yieldPoolContractsByAddress } from "efi/pools/weightedPool";
+import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
+import { formatAbbreviatedDate } from "efi/base/dates";
+import { getIsMature } from "efi/tranche/getIsMature";
 
 interface YieldPoolCardProps {
   yieldPoolInfo: YieldPoolTokenInfo;
 }
-
-const cellClassName = tw("flex", "mr-4", "items-center", "overflow-hidden");
-
-const poolCardStyle: CSSProperties = { maxWidth: 1180, minWidth: 800 };
-// Stop propagation of clicks from the card title up to the card itself,
-// otherwise you get double routed to /exchange/exchange/0xdeadbeef
-const stopPropagationHandler = (e: React.MouseEvent<HTMLAnchorElement>) => {
-  e.stopPropagation();
-};
 
 export function YieldPoolCard(props: YieldPoolCardProps): ReactElement | null {
   const {
@@ -57,9 +48,10 @@ export function YieldPoolCard(props: YieldPoolCardProps): ReactElement | null {
     yieldPoolInfo: { address: poolAddress },
   } = props;
   const poolContract = yieldPoolContractsByAddress[poolAddress];
-  const tranche = getTrancheForPool(yieldPoolInfo);
-  const { unlockTimestamp: unlockTime, createdAtTimestamp: trancheCreatedAt } =
-    tranche.extensions;
+  const principalTokenInfo = getTrancheForPool(yieldPoolInfo);
+  const {
+    extensions: { unlockTimestamp },
+  } = principalTokenInfo;
   const liquidity = useTotalFiatLiquidity(yieldPoolInfo);
   const fees = useFeeVolumeForPool(yieldPoolInfo);
   const { baseAssetContract, termAssetContract } = getPoolTokens(yieldPoolInfo);
@@ -73,61 +65,30 @@ export function YieldPoolCard(props: YieldPoolCardProps): ReactElement | null {
   );
 
   const stakingYield = useStakingAPY(yieldPoolInfo, ONE_WEEK_IN_SECONDS);
-  const { currency } = useCurrencyPref();
-  const [baseAssetPrice] = useTokenPrice(baseAssetContract, currency);
-  const spotPrice =
-    usePoolSpotPrice(poolContract, termAssetContract.address) ?? 0;
 
+  const yieldPrice = usePoolSpotPrice(
+    poolContract,
+    yieldPoolInfo.address
+  )?.toFixed(4);
   const { data: vaultInfo } = useYearnVault(vaultSymbol);
-  const { displayName, type, apy } = vaultInfo || {};
+  const { apy } = vaultInfo || {};
   const vaultApy = apy ? getYearnVaultAPY(apy) : 0;
 
   const goToTrade = useCallback(() => {
     navigate(`/pools/${poolAddress}`);
   }, [poolAddress]);
 
-  // TODO: this is a big hammer for loading state.  we should use a more granular technique when we can.
-  const dataToLoad = [
-    tranche,
-    liquidity,
-    trancheCreatedAt,
-    fees,
-    baseAssetContract,
-    baseAsset,
-    baseAssetPrice,
-    baseAssetSymbol,
-    BaseAssetIcon,
-    termAssetContract,
-    termAssetSymbol,
-    stakingYield,
-    spotPrice,
-  ];
+  const dataToLoad = [liquidity, fees, stakingYield];
   // TODO: this is a big hammer for loading state.  we should use a more granular technique when we can.
   const allDataLoaded = dataToLoad.every(
     (data): data is typeof data => data !== undefined
   );
-
-  const [transitionsEnabled, setTransitionsEnabled] = useState(true);
-
-  // One tme useEffect to let us show transitions for the skeletons once the data is loaded.
-  // Afterwards we disable transitions so they don't interfere with light/dark mode switching.
-  useEffect(() => {
-    if (allDataLoaded) {
-      const id = setTimeout(() => {
-        setTransitionsEnabled(false);
-      }, 1000);
-      return () => {
-        clearTimeout(id);
-      };
-    }
-  }, [allDataLoaded]);
 
   if (!allDataLoaded) {
     return (
       <Card
         elevation={Elevation.TWO}
         interactive
-        style={poolCardStyle}
         className={classNames(
           Classes.SKELETON,
           tw("h-24", "w-full", "transition", "duration-1000", "ease-in-out")
@@ -136,172 +97,69 @@ export function YieldPoolCard(props: YieldPoolCardProps): ReactElement | null {
     );
   }
 
-  const startTime = trancheCreatedAt ? trancheCreatedAt * 1000 : 0;
-  const maturityTime = unlockTime ? unlockTime * 1000 : 0;
-
-  const dayDifference = differenceInDays(
-    maturityTime as number,
-    startTime as number
-  );
-
-  const termLength =
-    dayDifference > 10 ? (dayDifference / 10) * 10 : dayDifference;
-
-  const yieldTokenPrice = baseAssetPrice?.multiply(spotPrice, Math.round);
+  const isRedeemable = getIsMature(unlockTimestamp);
+  const unlockDate = convertEpochSecondsToDate(unlockTimestamp);
+  const formattedUnlockDate = formatAbbreviatedDate(unlockDate);
 
   return (
     <Card
       elevation={Elevation.TWO}
       interactive
       onClick={goToTrade}
-      style={poolCardStyle}
-      className={classNames(
-        tw("w-full", "flex", {
-          transition: transitionsEnabled,
-          "duration-1000": transitionsEnabled,
-          "ease-in-out": transitionsEnabled,
-        })
-      )}
+      className={classNames(tw("w-full"))}
     >
       <div
         className={tw(
-          "flex-1",
           "w-full",
-          "grid",
-          "grid-cols-11",
-          "gap-y-4",
-          "w-full",
-          "items-start"
+          "inline-grid",
+          "gap-x-6",
+          "grid-cols-8",
+          "text-base"
         )}
       >
-        <div
-          className={tw(cellClassName, "col-span-1", "xl:ml-4", "items-start")}
-        >
-          <div className={tw("ml-2")}>
-            <BaseAssetIcon height={46} width={46} />
-          </div>
-        </div>
-        <div
-          className={tw(
-            cellClassName,
-            "flex-col",
-            "col-span-2",
-            "space-y-2",
-            "xl:col-span-2"
-          )}
-        >
+        {/* Logo */}
+        <div className={tw("w-full", "col-span-2")}>
           <LabeledText
-            className={tw("w-full")}
-            text={
-              <Link
-                className={tw("flex", "space-x-2")}
-                to={`/pools/${poolAddress}` || ""}
-                onClick={stopPropagationHandler}
-              >
-                {`${baseAssetSymbol} - ${termAssetSymbol}`}
-              </Link>
-            }
-            label={t`Token Pool`}
-          />
-          <LabeledText
-            className={tw("w-full")}
-            text={t`Yearn ${displayName} ${type}`}
-            label={t`Vault`}
+            className={tw("text-left", "pl-4")}
+            label={t`Pool`}
+            icon={<BaseAssetIcon height={38} width={38} />}
+            text={`${baseAssetSymbol} - ${termAssetSymbol}`}
+            textClassName={tw("text-base")}
           />
         </div>
-        <div
-          className={tw(
-            cellClassName,
-            "col-span-2",
-            "lg:col-span-2",
-            "xl:col-span-1"
-          )}
-        >
-          <LabeledText text={t`${termLength} Day`} label={t`Term`} />
+
+        {/* Pool Liquidity */}
+        <div>{formatMoney(liquidity, { wholeAmounts: true })}</div>
+
+        {/* Vault APY */}
+        <div>{t`${formatPercent(vaultApy)}`}</div>
+
+        {/* LP APY */}
+        <div>{formatPercent(stakingYield)}</div>
+
+        {/* Yield Price */}
+        <div>{`${yieldPrice} ${baseAssetSymbol}`}</div>
+
+        {/* Term Length  */}
+        <div>
+          <Tag fill intent={isRedeemable ? Intent.SUCCESS : Intent.PRIMARY}>
+            {formattedUnlockDate}
+          </Tag>
         </div>
-        <div className={tw(cellClassName, "col-span-2", "xl:col-span-1")}>
-          <LabeledText
-            text={t`${formatPercent(vaultApy)}`}
-            label={t`Vault APY`}
+
+        {/* Action Buttons */}
+        <ButtonGroup className={tw("p-0")}>
+          <GoToPoolButton
+            poolAddress={poolAddress}
+            poolAction={PoolAction.BUY}
+            label={t`Trade`}
           />
-        </div>
-        <div className={tw(cellClassName, "col-span-2")}>
-          <LabeledText
-            text={formatMoney(liquidity, { wholeAmounts: true })}
-            label={t`Pool Liquidity`}
-          />
-        </div>
-        <div
-          className={tw(
-            cellClassName,
-            "col-span-2",
-            "col-start-4",
-            "xl:col-start-auto",
-            "xl:col-span-1",
-            "xl:-ml-6"
-          )}
-        >
-          <LabeledText
-            text={formatMoney(yieldTokenPrice, {
-              wholeAmounts: (yieldTokenPrice?.toDecimal() ?? 0) > 10,
-            })}
-            label={t`Price`}
-          />
-        </div>
-        <div
-          className={tw(
-            cellClassName,
-            "col-span-2",
-            "xl:col-span-1",
-            "xl:-ml-6"
-          )}
-        >
-          <LabeledText text={formatPercent(stakingYield)} label={t`LP APY`} />
-        </div>
-        <div
-          className={tw(
-            cellClassName,
-            "overflow-visible",
-            "col-span-3",
-            "lg:col-span-3",
-            "xl:col-span-2"
-          )}
-        >
-          <div className={tw("flex", "w-full", "items-start")}>
-            <TimeLeft
-              startTimestamp={startTime}
-              maturityTimestamp={maturityTime}
-            />
-          </div>
-        </div>
-      </div>
-      <div
-        className={tw(
-          "flex",
-          "flex-col",
-          "space-y-2",
-          "overflow-visible",
-          "items-center",
-          "justify-center",
-          maturityTime && Date.now() < maturityTime ? "visible" : "invisible"
-        )}
-      >
-        <GoToPoolButton
-          poolAddress={poolAddress}
-          poolAction={PoolAction.BUY}
-          label={t`Trade`}
-          outlined
-          small
-        />
-        {maturityTime && maturityTime > Date.now() ? (
           <GoToPoolButton
             poolAddress={poolAddress}
             poolAction={PoolAction.ADD_LIQUIDITY}
             label={t`LP`}
-            outlined
-            small
           />
-        ) : null}
+        </ButtonGroup>
       </div>
     </Card>
   );

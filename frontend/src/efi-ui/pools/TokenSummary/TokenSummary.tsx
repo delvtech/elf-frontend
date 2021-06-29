@@ -238,8 +238,8 @@ function useTokensSummary(
 
   // Base Asset Info
   const baseAssetSymbol = getCryptoSymbol2(baseAsset);
-  const [baseAssetPrice] = useTokenPrice(baseAssetContract, currency);
-  const [baseAssetPriceYesterday] = useTokenHistoricalPrice(
+  const { data: baseAssetPrice } = useTokenPrice(baseAssetContract, currency);
+  const { data: baseAssetPriceYesterday } = useTokenHistoricalPrice(
     baseAssetContract,
     currency,
     1

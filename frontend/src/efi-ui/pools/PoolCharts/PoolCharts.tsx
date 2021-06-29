@@ -122,7 +122,7 @@ function usePoolCharts(poolInfo: PoolInfo) {
   const volumeData = useVolumeHistoryForPool(poolInfo, ONE_WEEK_IN_SECONDS);
   const { currency } = useCurrencyPref();
   const { baseAssetContract } = getPoolTokens(poolInfo);
-  const [baseAssetPrice] = useTokenPrice(baseAssetContract, currency);
+  const { data: baseAssetPrice } = useTokenPrice(baseAssetContract, currency);
   const fiatPrice = baseAssetPrice?.toDecimal() ?? 1;
   const liquidityFiatData = liquidityData?.map(({ value, timeMs }) => ({
     value: fiatPrice * value,

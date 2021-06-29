@@ -152,7 +152,7 @@ export function MintForm(props: MintFormProps): ReactElement | null {
           <LabeledText
             bold
             muted={false}
-            containerClassName={tw("justify-center")}
+            containerClassName={tw("justify-center", "text-center")}
             text={<span>{t`Principal Tokens you receive`}</span>}
             label={
               <span className={tw("text-base")}>{t`${(+(
@@ -163,7 +163,7 @@ export function MintForm(props: MintFormProps): ReactElement | null {
           <LabeledText
             muted={false}
             bold
-            containerClassName={tw("justify-center")}
+            containerClassName={tw("justify-center", "text-center")}
             text={<span>{t`Yield Tokens you receive`}</span>}
             label={
               <span className={tw("text-base")}>

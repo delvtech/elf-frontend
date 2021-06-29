@@ -25,7 +25,10 @@ export function useVolumeForPool(
   const { baseAssetContract, baseAssetInfo } = getPoolTokens(poolInfo);
   const swapEvents = useSwaps(poolInfo, fromTime, toTime);
   const { currency } = useCurrencyPref();
-  const [baseAssetFiatPrice] = useTokenPrice(baseAssetContract, currency);
+  const { data: baseAssetFiatPrice } = useTokenPrice(
+    baseAssetContract,
+    currency
+  );
 
   let volume = BigNumber.from(0);
   if (swapEvents?.length && baseAssetContract) {

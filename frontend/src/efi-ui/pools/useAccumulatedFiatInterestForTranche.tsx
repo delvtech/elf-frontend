@@ -17,7 +17,7 @@ export function useAccumulatedFiatInterestForTranche(
     baseAssetInfo: { decimals: baseAssetDecimals },
   } = getPoolTokens(poolInfo);
 
-  const [baseAssetPrice] = useTokenPrice(baseAssetContract, currency);
+  const { data: baseAssetPrice } = useTokenPrice(baseAssetContract, currency);
   const accumulatedInterest = useAccumulatedInterestForTranche(poolInfo);
 
   let accumulatedInterestFiat;

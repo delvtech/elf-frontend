@@ -75,7 +75,7 @@ export function useFeeVolumeFiatForPool(
   const { baseAssetContract } = getPoolTokens(poolInfo);
   const fees = useFeeVolumeForPool(poolInfo, fromTime, toTime);
   const { currency } = useCurrencyPref();
-  const [baseAssetPrice] = useTokenPrice(baseAssetContract, currency);
+  const { data: baseAssetPrice } = useTokenPrice(baseAssetContract, currency);
 
   if (!baseAssetPrice || !fees) {
     return Money.fromDecimal(0, currency);
