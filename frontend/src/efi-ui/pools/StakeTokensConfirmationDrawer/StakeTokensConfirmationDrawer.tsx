@@ -178,7 +178,7 @@ function useShareOfPool(
   );
   // because we limit staking of assets to the current reserves ratio, we can just use one side to
   // calculate share of pool
-  const shareOfPool = +baseAssetIn / baseAssetReserves;
+  const shareOfPool = +baseAssetIn / (baseAssetReserves + +baseAssetIn);
   return shareOfPool;
 }
 
