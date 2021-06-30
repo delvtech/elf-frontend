@@ -24,6 +24,7 @@ import {
   principalTokenInfos,
   trancheContractsByAddress,
 } from "efi/tranche/tranches";
+import { ExperimentalBanner } from "efi-ui/app/navigation/ExperimentalBanner/ExperimentalBanner";
 
 interface SavePortfolioViewProps extends RouteComponentProps {}
 
@@ -54,14 +55,14 @@ export function SavePortfolioView(props: SavePortfolioViewProps): ReactElement {
         className={tw(
           "flex",
           "flex-col",
-          "p-6",
+          "py-6",
           "h-full",
           "items-center",
           "overflow-scroll"
         )}
       >
         {/* page title */}
-        <div className={tw("flex", "w-full", "justify-between")}>
+        <div className={tw("flex", "px-6", "w-full", "justify-between")}>
           <img
             style={{
               height: 48, // don't use tailwind here since we want fixed height and rem is dynamic
@@ -84,6 +85,7 @@ export function SavePortfolioView(props: SavePortfolioViewProps): ReactElement {
             <SaveNavigationButton />
           </div>
         </div>
+        <ExperimentalBanner />
 
         <div
           className={tw(
@@ -91,6 +93,7 @@ export function SavePortfolioView(props: SavePortfolioViewProps): ReactElement {
             "flex-col",
             "flex-1",
             "space-y-10",
+            "px-6",
             "pt-10",
             "items-center",
             "text-center"

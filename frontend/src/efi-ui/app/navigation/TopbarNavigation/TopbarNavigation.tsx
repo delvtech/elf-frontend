@@ -14,6 +14,7 @@ import { t } from "ttag";
 import logoDark from "efi-static-assets/logos/svg/logo--dark.svg";
 import logo from "efi-static-assets/logos/svg/logo--light.svg";
 import tw from "efi-tailwindcss-classnames";
+import { ExperimentalBanner } from "efi-ui/app/navigation/ExperimentalBanner/ExperimentalBanner";
 import { useNavigation } from "efi-ui/app/navigation/hooks/useTab";
 import { Navigation } from "efi-ui/app/navigation/navigation";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
@@ -42,69 +43,76 @@ export function TopbarNavigation({
   const hasPendingTransaction = !!transactionHash;
 
   return (
-    <div className={tw("flex", "w-full", "justify-between", "p-8")}>
-      <div className={tw("flex", "space-x-12", "items-end", "justify-between")}>
-        <img
-          style={{
-            height: 48, // don't use tailwind here since we want fixed height and rem is dynamic
-          }}
-          src={isDarkMode ? logoDark : logo}
-          alt={"Element Finance"}
-        />
-        <Tabs
-          id="primary-nav"
-          large
-          onChange={changeTab}
-          selectedTabId={activeTab}
-          className={tw("w-full")}
-        >
-          <Tab id={Navigation.EARN} title={<span>{t`Earn`}</span>} />
-          <Divider />
-          <Tab id={Navigation.TRADE} title={<span>{t`Trade`}</span>} />
-          <Divider />
-          <Tab
-            id={Navigation.PORTFOLIO}
-            title={
-              <div
-                className={tw("flex", "space-x-2", "items-center", "h-full")}
-              >
-                <span
-                  className={tw("flex", "w-full", "justify-between")}
-                >{t`Portfolio`}</span>
-              </div>
-            }
-          />
-        </Tabs>
-      </div>
-      {hasPendingTransaction ? (
+    <div className={tw("flex", "w-full", "flex-col")}>
+      <div className={tw("flex", "w-full", "justify-between", "p-8", "flex")}>
         <div
-          className={tw("items-center", "flex", "ml-2", "mt-3", "space-x-2")}
+          className={tw("flex", "space-x-12", "items-end", "justify-between")}
         >
-          {hasPendingTransaction ? <Spinner size={SpinnerSize.SMALL} /> : null}
-          <Button
-            outlined
-            small
-            icon={IconNames.CROSS}
-            onClick={clearPendingTransactionPref}
+          <img
+            style={{
+              height: 48, // don't use tailwind here since we want fixed height and rem is dynamic
+            }}
+            src={isDarkMode ? logoDark : logo}
+            alt={"Element Finance"}
+          />
+          <Tabs
+            id="primary-nav"
+            large
+            onChange={changeTab}
+            selectedTabId={activeTab}
+            className={tw("w-full")}
           >
-            {t`Clear spinner`}
-          </Button>
+            <Tab id={Navigation.EARN} title={<span>{t`Earn`}</span>} />
+            <Divider />
+            <Tab id={Navigation.TRADE} title={<span>{t`Trade`}</span>} />
+            <Divider />
+            <Tab
+              id={Navigation.PORTFOLIO}
+              title={
+                <div
+                  className={tw("flex", "space-x-2", "items-center", "h-full")}
+                >
+                  <span
+                    className={tw("flex", "w-full", "justify-between")}
+                  >{t`Portfolio`}</span>
+                </div>
+              }
+            />
+          </Tabs>
         </div>
-      ) : null}
-      <div className={tw("flex", "flex-1", "space-x-4", "justify-end")}>
-        <Button
-          minimal
-          className={tw("px-6")}
-          icon={isDarkMode ? IconNames.FLASH : IconNames.MOON}
-          onClick={isDarkMode ? setDarkModeOff : setDarkModeOn}
-        />
-        <ConnectWalletButton
-          account={account}
-          chainId={chainId}
-          walletConnectionActive={walletConnectionActive}
-        />
-        {hamburgerButton}
+        {hasPendingTransaction ? (
+          <div
+            className={tw("items-center", "flex", "ml-2", "mt-3", "space-x-2")}
+          >
+            {hasPendingTransaction ? (
+              <Spinner size={SpinnerSize.SMALL} />
+            ) : null}
+            <Button
+              outlined
+              small
+              icon={IconNames.CROSS}
+              onClick={clearPendingTransactionPref}
+            >
+              {t`Clear spinner`}
+            </Button>
+          </div>
+        ) : null}
+        <div className={tw("flex", "flex-1", "space-x-4", "justify-end")}>
+          <Button
+            minimal
+            className={tw("px-6")}
+            icon={isDarkMode ? IconNames.FLASH : IconNames.MOON}
+            onClick={isDarkMode ? setDarkModeOff : setDarkModeOn}
+          />
+          <ConnectWalletButton
+            account={account}
+            chainId={chainId}
+            walletConnectionActive={walletConnectionActive}
+          />
+          {hamburgerButton}
+        </div>
       </div>
+      <ExperimentalBanner />
     </div>
   );
 }

@@ -10,16 +10,16 @@ import { t } from "ttag";
 
 import { tw } from "efi-tailwindcss-classnames";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
+import { useToastWrongChain } from "efi-ui/provider/useBlockFromTag/useToastWrongChain";
 import { SavePortfolioView } from "efi-ui/saveApp/portfolio/SavePortfolioView/SavePortfolioView";
 import { SaveView } from "efi-ui/saveApp/save/SaveView/SaveView";
 import { useTransactionToasts } from "efi-ui/transactions/useTransactionToasts";
 import { useEagerConnect } from "efi-ui/wallets/hooks/useEagerReconnect";
 import { useSyncWithInjectedEthereum } from "efi-ui/wallets/hooks/useSyncWithInjectedEthereum";
+import { AddressesJson } from "efi/addresses";
+import { ChainId, ChainNames } from "efi/ethereum";
 
 import styles from "./SaveApp.module.css";
-import { useToastWrongChain } from "efi-ui/provider/useBlockFromTag/useToastWrongChain";
-import { ChainId, ChainNames } from "efi/ethereum";
-import { AddressesJson } from "efi/addresses";
 
 FocusStyleManager.onlyShowFocusOnTabs();
 
