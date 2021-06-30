@@ -139,7 +139,7 @@ export function PrincipalTokenCard(
 
   return (
     <Card
-      style={{ width: 512, height: 632 }}
+      style={{ width: 512 }}
       className={classNames(
         tw("p-8", "flex", "flex-col", "m-4", "space-y-5", "text-base", {
           "text-gray-700": !isDarkMode,
@@ -235,7 +235,7 @@ export function PrincipalTokenCard(
             bold
             textClassName={tw("text-lg")}
             text={`${trancheBalance.toFixed(6)} ${termAssetSymbol}`}
-            label={t`1 Principal Token = 1 ${baseAssetSymbol} at maturity`}
+            label={""}
           />
         </Callout>
         <Callout icon={null} className={calloutClassName}>

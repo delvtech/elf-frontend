@@ -132,144 +132,134 @@ export function YieldTokenCard({
   const tableRowLink = getTableRowLink(vaultContract?.address, vaultName);
 
   return (
-    <div>
-      <Card
-        style={{ width: 512 }}
-        elevation={Elevation.TWO}
-        className={classNames(
-          tw("p-8", "flex", "flex-col", "m-4", "space-y-5", "text-base", {
-            "text-gray-700": !isDarkMode,
-            "text-white": isDarkMode,
-          })
-        )}
-      >
-        <div className={tw("flex", "space-x-4")}>
-          {BaseAssetIcon ? (
-            <BaseAssetIcon
-              className={tw("flex-shrink-0")}
-              height={72}
-              width={72}
-            />
-          ) : null}
-          <div className={tw("flex", "flex-col", "space-y-2")}>
-            <div
-              className={tw(
-                "flex",
-                "items-center",
-                "space-x-2",
-                "text-2xl",
-                "font-semibold"
-              )}
+    <Card
+      style={{ width: 512 }}
+      elevation={Elevation.TWO}
+      className={classNames(
+        tw("p-8", "flex", "flex-col", "m-4", "space-y-5", "text-base", {
+          "text-gray-700": !isDarkMode,
+          "text-white": isDarkMode,
+        })
+      )}
+    >
+      <div className={tw("flex", "space-x-4")}>
+        <BaseAssetIcon className={tw("flex-shrink-0")} height={72} width={72} />
+        <div className={tw("flex", "flex-col", "space-y-2")}>
+          <div
+            className={tw(
+              "flex",
+              "items-center",
+              "space-x-2",
+              "text-2xl",
+              "font-semibold"
+            )}
+          >
+            <Link to={`/pools/${pool?.address}`}>
+              {t`${baseAssetSymbol} Yield Token` || null}
+            </Link>
+            <a
+              className={tw("flex", "items-center")}
+              onClick={(e) => e.stopPropagation()}
+              href={`https://etherscan.io/address/${yieldToken?.address}`}
+              target="_blank"
+              rel="noopener noreferrer"
             >
-              <Link to={`/pools/${pool?.address}`}>
-                {t`${baseAssetSymbol} Yield Token` || null}
-              </Link>
-              <a
-                className={tw("flex", "items-center")}
-                onClick={(e) => e.stopPropagation()}
-                href={`https://etherscan.io/address/${yieldToken?.address}`}
-                target="_blank"
-                rel="noopener noreferrer"
+              <Icon
+                intent={Intent.NONE}
+                className={tw("pr-2")}
+                icon={IconNames.SHARE}
+              />
+            </a>
+          </div>
+          <div
+            className={tw(
+              "flex",
+              "w-full",
+              "items-center",
+              "justify-center",
+              "space-x-8"
+            )}
+          >
+            <div>
+              <Tag
+                large
+                intent={
+                  unlockTimestamp * 1000 < Date.now()
+                    ? Intent.SUCCESS
+                    : Intent.PRIMARY
+                }
+                fill
+                className={tw("text-center")}
               >
-                <Icon
-                  intent={Intent.NONE}
-                  className={tw("pr-2")}
-                  icon={IconNames.SHARE}
-                />
-              </a>
+                {formattedDate}
+              </Tag>
             </div>
-            <div
-              className={tw(
-                "flex",
-                "w-full",
-                "items-center",
-                "justify-center",
-                "space-x-8"
-              )}
-            >
-              <div>
-                <Tag
-                  large
-                  intent={
-                    unlockTimestamp * 1000 < Date.now()
-                      ? Intent.SUCCESS
-                      : Intent.PRIMARY
-                  }
-                  fill
-                  className={tw("text-center")}
-                >
-                  {formattedDate}
-                </Tag>
-              </div>
-              <div className={tw("flex", "space-x-6", "justify-end")}>
-                <LabeledText
-                  bold
-                  textClassName={tw("text-base")}
-                  text={postedAPY}
-                  label={t`Position APY`}
-                />
-              </div>
+            <div className={tw("flex", "space-x-6", "justify-end")}>
+              <LabeledText
+                bold
+                textClassName={tw("text-base")}
+                text={postedAPY}
+                label={t`Position APY`}
+              />
             </div>
           </div>
         </div>
-        <div className={tw("flex", "flex-col", "space-y-5", "items-center")}>
-          <MaturityTimeBar
-            progress={progress}
-            unlockTimestamp={unlockTimestamp}
+      </div>
+      <div className={tw("flex", "flex-col", "space-y-5", "items-center")}>
+        <MaturityTimeBar
+          progress={progress}
+          unlockTimestamp={unlockTimestamp}
+        />
+        <Callout className={calloutClassName}>
+          <span className={classNames(tw("mb-0"))}>{t`Total balance`}</span>
+          <LabeledText
+            muted={false}
+            className={tw("flex", "justify-center", "items-center")}
+            bold
+            textClassName={tw("text-lg")}
+            containerClassName={tw("justify-center")}
+            text={`${yieldTokenBalance.toFixed(6)} ${yieldTokenInfo.symbol}`}
+            label={""}
           />
-          <Callout className={calloutClassName}>
-            <span className={classNames(tw("mb-0"))}>{t`Total balance`}</span>
-            <LabeledText
-              muted={false}
-              className={tw("flex", "justify-center", "items-center")}
-              bold
-              textClassName={tw("text-lg")}
-              containerClassName={tw("justify-center")}
-              text={`${yieldTokenBalance.toFixed(6)} ${yieldTokenInfo.symbol}`}
-              label={t`1 Yield Token = yield on 1 ${baseAssetSymbol} at maturity`}
-            />
-          </Callout>
-          <Callout icon={null} className={calloutClassName}>
-            <span className={classNames(tw("mb-0"))}>{t`Current value`}</span>
-            <LabeledText
-              bold
-              muted={false}
-              className={tw("flex", "justify-center", "items-center")}
-              textClassName={tw("text-lg")}
-              containerClassName={tw("justify-center")}
-              text={
-                <span>{t`${exitValue.toFixed(6)} ${baseAssetSymbol}`}</span>
-              }
-              label={exitValueFiat}
-            />
-          </Callout>
-        </div>
-        {/* Quick Actions */}
-        <ButtonGroup fill>
-          <RedeemYieldTokensButton
-            account={account}
-            yieldTokenInfo={yieldTokenInfo}
-            library={library}
-            baseAsset={baseAsset}
+        </Callout>
+        <Callout icon={null} className={calloutClassName}>
+          <span className={classNames(tw("mb-0"))}>{t`Current value`}</span>
+          <LabeledText
+            bold
+            muted={false}
+            className={tw("flex", "justify-center", "items-center")}
+            textClassName={tw("text-lg")}
+            containerClassName={tw("justify-center")}
+            text={<span>{t`${exitValue.toFixed(6)} ${baseAssetSymbol}`}</span>}
+            label={exitValueFiat}
           />
-          <GoToPoolButton
-            poolAddress={pool.address}
-            poolAction={PoolAction.ADD_LIQUIDITY}
-            label={t`Add Liquidity`}
-          />
-          <GoToPoolButton
-            poolAddress={pool.address}
-            poolAction={PoolAction.SELL}
-            label={t`Sell`}
-          />
-        </ButtonGroup>
-        <div className={tw("flex", "justify-center")}>
-          <span>
-            {jt`Yield accrued on ${baseAssetSymbol} deposited in ${tableRowLink}`}
-          </span>
-        </div>
-      </Card>
-    </div>
+        </Callout>
+      </div>
+      {/* Quick Actions */}
+      <ButtonGroup fill>
+        <RedeemYieldTokensButton
+          account={account}
+          yieldTokenInfo={yieldTokenInfo}
+          library={library}
+          baseAsset={baseAsset}
+        />
+        <GoToPoolButton
+          poolAddress={pool.address}
+          poolAction={PoolAction.ADD_LIQUIDITY}
+          label={t`Add Liquidity`}
+        />
+        <GoToPoolButton
+          poolAddress={pool.address}
+          poolAction={PoolAction.SELL}
+          label={t`Sell`}
+        />
+      </ButtonGroup>
+      <div className={tw("flex", "justify-center")}>
+        <span>
+          {jt`Yield accrued on ${baseAssetSymbol} deposited in ${tableRowLink}`}
+        </span>
+      </div>
+    </Card>
   );
 }
 

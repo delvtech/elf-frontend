@@ -172,7 +172,7 @@ export function EarnSummaryCard(props: EarnSummaryCardProps): JSX.Element {
         </div>
         <div className={tw(cellClassName, "col-span-2", "xl:hidden")}>
           <LabeledText
-            text={t`${principalPrice}`}
+            text={t`${yieldPrice}`}
             label={`Yield Price (${baseAssetSymbol})`}
           />
         </div>
