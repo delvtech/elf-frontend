@@ -100,7 +100,7 @@ export function EarnCard(props: EarnCardProps): ReactElement | null {
   const baseAssetSymbol = getCryptoSymbol(baseAsset) as string;
   const BaseAssetIcon = findAssetIcon(baseAsset);
   const { data: vaultInfo } = useYearnVault(vaultSymbol);
-  const { displayName, type, apy } = vaultInfo || {};
+  const { display_name: displayName, type, apy } = vaultInfo || {};
 
   // get dynamic pool information
   const principalPrice = usePoolSpotPrice(

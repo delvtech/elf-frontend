@@ -48,7 +48,7 @@ export function TermSummary(props: TermSummaryProps): ReactElement {
   const { symbol: vaultSymbol } = getVaultTokenInfoForTranche(trancheAddress);
   const { data: vaultInfo } = useYearnVault(vaultSymbol);
 
-  const { displayName, type, apy } = vaultInfo || {};
+  const { display_name: displayName, type, apy } = vaultInfo || {};
   const vaultApy = apy ? getYearnVaultAPY(apy) : 0;
 
   const isPrincipalPool = principalPools

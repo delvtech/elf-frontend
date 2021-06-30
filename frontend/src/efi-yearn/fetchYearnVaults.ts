@@ -31,7 +31,7 @@ export interface YearnVaultResult {
     price: number;
   };
   name: string;
-  displayName: string;
+  display_name: string;
   updated: number;
   fees: {
     special: Record<string, number>;
