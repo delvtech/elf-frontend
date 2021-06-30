@@ -387,7 +387,7 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
           <PrincipalDiscountPreview
             amountIn={amountIn}
             baseAssetSymbol={activeBaseAssetSymbol}
-            amountOut={amountOut}
+            amountOut={+principalReserves > +amountOut ? amountOut : undefined}
           />
           <Button
             large
