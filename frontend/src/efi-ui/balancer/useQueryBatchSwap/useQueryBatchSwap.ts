@@ -7,7 +7,6 @@ import { PrincipalPoolTokenInfo } from "tokenlists/types";
 import { SwapKind } from "efi-balancer/SwapKind";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { makeQueryBatchSwapCallArgs } from "efi-ui/balancer/useQueryBatchSwap/makeQueryBatchSwapCallArgs";
-import { getQueryData } from "efi-ui/base/queryResults";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
 import {
@@ -125,8 +124,8 @@ export function getCalcSwap(
 export function getTokenReserves(
   tokens: string[] | never[],
   balances: BigNumber[] | never[],
-  tokenInAddress: string | undefined,
-  tokenOutAddress: string | undefined,
+  tokenInAddress: string,
+  tokenOutAddress: string,
   decimals: number
 ): { tokenInReserves: string; tokenOutReserves: string } {
   const balancesByAddress: Record<string, BigNumber | undefined> = {};
@@ -160,6 +159,7 @@ function calcSwapYieldPool(
       tokenOutReserves,
       tokenInReserves
     );
+
     const calcOut =
       clipStringValueToDecimals(calcOutNumber.toString(), decimals) ?? "0";
 

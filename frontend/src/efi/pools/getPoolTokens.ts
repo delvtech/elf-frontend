@@ -7,6 +7,7 @@ import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegist
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { getTokenInfo } from "efi/tokenlists";
 import { underlyingContractsByAddress } from "efi/underlying/underlying";
+import { sortAddresses } from "efi/base/sortAddresses";
 
 interface PoolTokens {
   baseAssetInfo: TokenInfo;
@@ -33,10 +34,10 @@ export function getPoolTokens(poolInfo: PoolInfo): PoolTokens {
     ERC20__factory.connect
   ) as ERC20;
 
-  const sortedAddresses = [baseAssetAddress, termAssetAddress].sort() as [
-    string,
-    string
-  ];
+  const sortedAddresses = sortAddresses([
+    baseAssetAddress,
+    termAssetAddress,
+  ]) as [string, string];
 
   const baseAssetIndex = sortedAddresses.findIndex(
     (address) => address === baseAssetAddress

@@ -20,11 +20,6 @@ import { PoolInfo } from "efi/pools/PoolInfo";
  * asset for '0.01' of the in asset.  A future optimisation might be to do '$1' worth of the in asset
  * to minimize slippage in the value.
  *
- * NOTE: When using this with a tranche pool, pass the base asset as the underlying token.
- * returns spotPrice = yield / base, therefore to convert between base and yield assets:
- *
- * base = yield * spotPrice
- * yield = base / spotPrice
  */
 const SPOT_PRICE_AMOUNT = "0.01";
 

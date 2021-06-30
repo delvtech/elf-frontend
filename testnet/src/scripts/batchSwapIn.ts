@@ -6,6 +6,7 @@ import { ERC20 } from "src/types/ERC20";
 import { Vault } from "src/types/Vault";
 
 import { ONE_DAY_IN_SECONDS } from "src/time";
+import { sortAddresses } from "src/helpers/sortAddresses";
 
 interface SwapIn {
   poolId: BytesLike;
@@ -43,7 +44,7 @@ export async function batchSwapIn(
     tokenInDecimals = await tokenInContract.decimals();
   }
 
-  const tokens: string[] = [tokenInAddress, tokenOutAddress].sort();
+  const tokens: string[] = sortAddresses([tokenInAddress, tokenOutAddress]);
   const assetInIndex = tokens.findIndex(
     (address) => address === tokenInAddress
   );

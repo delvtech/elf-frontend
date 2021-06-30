@@ -1,5 +1,6 @@
 import { BigNumberish } from "ethers";
 import { BytesLike, parseUnits } from "ethers/lib/utils";
+import { sortAddresses } from "src/helpers/sortAddresses";
 import { ERC20 } from "src/types/ERC20";
 import { Vault } from "src/types/Vault";
 
@@ -30,7 +31,7 @@ export async function queryBatchSwap(
   const tokenOutAddress = tokenOutContract.address;
   const tokenInDecimals = await tokenInContract.decimals();
 
-  const tokens: string[] = [tokenInAddress, tokenOutAddress].sort();
+  const tokens: string[] = sortAddresses([tokenInAddress, tokenOutAddress]);
   const assetInIndex = tokens.findIndex(
     (address) => address === tokenInAddress
   );

@@ -1,5 +1,6 @@
 import { Vault } from "elf-contracts/types/Vault";
 import { BigNumber } from "ethers";
+import { parseEther } from "ethers/lib/utils";
 
 import { FundManagement } from "efi-balancer/FundManagement";
 import { SwapKind } from "efi-balancer/SwapKind";
@@ -9,8 +10,8 @@ import {
   mapETHSentinalToWETH,
   mapWETHToETHSentinal,
 } from "efi/balancer";
+import { sortAddresses } from "efi/base/sortAddresses";
 import { StaticContractMethodArgs } from "efi/contracts/types";
-import { parseEther } from "ethers/lib/utils";
 
 /**
  * This is a simple read-only funds argument for queryBatchSwap
@@ -34,12 +35,14 @@ export function makeQueryBatchSwapCallArgs(
   }
 
   // balancer's batchSwap requires that the assets be sorted
-  let assets = [tokenInAddress, tokenOutAddress].sort();
+  let assets = sortAddresses([tokenInAddress, tokenOutAddress]);
   // ETH is a special case. Balancer uses the
   // zero address as an address sentinel for ETH, but still expects the addresses sorted as though
   // it were WETH.
   if (assets.includes(BALANCER_ETH_SENTINEL)) {
-    assets = assets.map(mapETHSentinalToWETH).sort().map(mapWETHToETHSentinal);
+    assets = sortAddresses(assets.map(mapETHSentinalToWETH)).map(
+      mapWETHToETHSentinal
+    );
   }
 
   const assetInIndex = assets.findIndex(

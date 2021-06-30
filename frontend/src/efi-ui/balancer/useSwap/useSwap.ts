@@ -24,6 +24,7 @@ import {
   mapETHSentinalToWETH,
   mapWETHToETHSentinal,
 } from "efi/balancer";
+import { sortAddresses } from "efi/base/sortAddresses";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
 import { ContractMethodArgs } from "efi/contracts/types";
 
@@ -109,12 +110,14 @@ function makeSwapCallArgs(
   }
 
   // balancer's batchSwap requires that the assets be sorted
-  let assets = [tokenInAddress, tokenOutAddress].sort();
+  let assets = sortAddresses([tokenInAddress, tokenOutAddress]);
   // ETH is a special case. Balancer uses the
   // zero address as an address sentinel for ETH, but still expects the addresses sorted as though
   // it were WETH.
   if (assets.includes(BALANCER_ETH_SENTINEL)) {
-    assets = assets.map(mapETHSentinalToWETH).sort().map(mapWETHToETHSentinal);
+    assets = sortAddresses(assets.map(mapETHSentinalToWETH)).map(
+      mapWETHToETHSentinal
+    );
   }
 
   const singleSwap: SingleSwap = {
