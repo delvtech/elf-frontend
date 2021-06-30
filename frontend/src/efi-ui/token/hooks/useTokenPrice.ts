@@ -12,6 +12,7 @@ import { formatBalance } from "efi/base/formatBalance";
 import { getTokenInfo } from "efi/tokenlists";
 import { CRVLUSD__factory } from "elf-contracts/types/factories/CRVLUSD__factory";
 import { defaultProvider } from "efi/providers/providers";
+import { ChainId, isMainnet } from "efi/ethereum";
 
 export function useTokenPrice<TContract extends ERC20>(
   contract: TContract,
@@ -22,22 +23,34 @@ export function useTokenPrice<TContract extends ERC20>(
   // try and get the price from coingecko
   const priceResult = useCoinGeckoPrice(getCoinGeckoId(tokenSymbol), currency);
 
-  // otherwise see if it's the crvlusd pool
+  // otherwise see if it's the mainnet crvlusd or crvALUSD pool
   const isCrvlusd = contract.address === AddressesJson.addresses.crvlusdAddress;
-  const crvLusdVirtualPriceResult = useSmartContractReadCall(
-    isCrvlusd
+  const isCrvalusd =
+    contract.address === AddressesJson.addresses.crvalusdAddress;
+  const virtualPriceResult = useSmartContractReadCall(
+    isMainnet(AddressesJson.chainId) && (isCrvlusd || isCrvalusd)
       ? CRVLUSD__factory.connect(contract.address, defaultProvider)
       : (contract as unknown as CRVLUSD),
     "get_virtual_price",
     // this is a hack so we disable this if the contract isn't specifically crvlusd
     {
       callArgs: [],
-      enabled: contract.address === AddressesJson.addresses.crvlusdAddress,
+      enabled: isCrvlusd,
     }
   );
 
-  if (isCrvlusd) {
-    const priceString = formatBalance(crvLusdVirtualPriceResult.data, decimals);
+  // on goerli, we'll just hard-code crvlusd and crvalusd to 1, since there is
+  // no goerli curve pools available
+  if ((isCrvalusd || isCrvlusd) && AddressesJson.chainId === ChainId.GOERLI) {
+    // return a fake query observer result, which sucks but yoloswag5000 for goerli testnet
+    return {
+      data: Money.fromDecimal(1, currency),
+    } as QueryObserverResult<Money>;
+  }
+
+  // otherwise if we're on mainnet and it's a crv token, return it's virtual price
+  if (isCrvlusd || isCrvalusd) {
+    const priceString = formatBalance(virtualPriceResult.data, decimals);
     const price = Money.fromDecimal(
       +priceString,
       currency,
@@ -47,10 +60,11 @@ export function useTokenPrice<TContract extends ERC20>(
     );
 
     return {
-      ...crvLusdVirtualPriceResult,
+      ...virtualPriceResult,
       data: price,
     } as QueryObserverResult<Money>;
   }
 
+  // if it's not a crv token, return the coingecko price
   return priceResult;
 }

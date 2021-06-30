@@ -35,9 +35,10 @@ export async function getTokenList(
       wethAddress,
       usdcAddress,
       daiAddress,
-      crvlusdAddress: lusdAddress,
+      crvlusdAddress,
       convergentPoolFactoryAddress,
       weightedPoolFactoryAddress,
+      crvalusdAddress,
     },
     safelist,
   } = addressesJson;
@@ -62,7 +63,8 @@ export async function getTokenList(
     wethAddress,
     usdcAddress,
     daiAddress,
-    lusdAddress,
+    crvlusdAddress,
+    crvalusdAddress,
   ].filter(
     (address) => address !== "0x0000000000000000000000000000000000000000"
   );

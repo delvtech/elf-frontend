@@ -12,7 +12,13 @@ import {
 } from "elf-contracts/types";
 
 const {
-  addresses: { wethAddress, usdcAddress, daiAddress, crvlusdAddress },
+  addresses: {
+    wethAddress,
+    usdcAddress,
+    daiAddress,
+    crvlusdAddress,
+    crvalusdAddress,
+  },
 } = AddressesJson;
 
 const wethContract = getSmartContractFromRegistry(
@@ -37,6 +43,12 @@ const crvlusdContract = getSmartContractFromRegistry(
   ERC20__factory.connect
 ) as ERC20;
 
+const crvalusdContract = getSmartContractFromRegistry(
+  crvalusdAddress,
+  // TODO: hack, make this CRVLUSD__factory one balanceOf and allowance calls
+  // aren't borked
+  ERC20__factory.connect
+) as ERC20;
 /**
  * Lookup the contract instance for a underlying's address.
  */
@@ -45,6 +57,7 @@ export const underlyingContractsByAddress = Object.freeze({
   [usdcAddress]: usdcContract,
   [daiAddress]: daiContract,
   [crvlusdAddress]: crvlusdContract,
+  [crvalusdAddress]: crvalusdContract,
 });
 
 const underlyingERC20PermitAddresses = [usdcAddress];

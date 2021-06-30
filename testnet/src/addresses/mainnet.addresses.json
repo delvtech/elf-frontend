@@ -10,7 +10,8 @@
     "userProxyContractAddress": "0xEe4e158c03A10CBc8242350d74510779A364581C",
     "weightedPoolFactoryAddress": "0x8E9aa87E45e92bad84D5F8DD1bff34Fb92637dE9",
     "wethAddress": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
-    "crvlusdAddress": "0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA"
+    "crvlusdAddress": "0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA",
+    "crvalusdAddress": "0x0000000000000000000000000000000000000000"
   },
   "safelist": [
     "0x94BE72dc46fe8f7e9f40FBD2c31826f472F4036E",

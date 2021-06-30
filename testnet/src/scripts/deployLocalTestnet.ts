@@ -324,6 +324,7 @@ async function main() {
       usdcAddress: usdcContract.address,
       daiAddress: daiContract.address,
       crvlusdAddress: lusdContract.address,
+      crvalusdAddress: "0x0000000000000000000000000000000000000000",
     },
     safelist: [
       firstWethTrancheContract.address,

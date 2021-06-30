@@ -40,6 +40,7 @@ const json: AddressesJsonFile = {
     weightedPoolFactoryAddress: "0x8E9aa87E45e92bad84D5F8DD1bff34Fb92637dE9",
     wethAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
     crvlusdAddress: "0x5f98805A4E8be255a32880FDeC7F6728C6568bA0",
+    crvalusdAddress: "0x0000000000000000000000000000000000000000",
   },
   safelist: [
     "0x94BE72dc46fe8f7e9f40FBD2c31826f472F4036E",
@@ -200,6 +201,7 @@ async function main() {
       usdcAddress: usdcContract.address,
       daiAddress: daiContract.address,
       crvlusdAddress: json.addresses.crvlusdAddress,
+      crvalusdAddress: "0x0000000000000000000000000000000000000000",
     },
     safelist: [
       firstWethTrancheContract.address,

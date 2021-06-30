@@ -11,6 +11,7 @@ export interface AddressesJsonFile {
     daiAddress: string;
     usdcAddress: string;
     crvlusdAddress: string;
+    crvalusdAddress: string;
   };
   safelist: string[];
 }

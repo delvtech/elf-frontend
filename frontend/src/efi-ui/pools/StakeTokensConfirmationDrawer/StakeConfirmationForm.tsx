@@ -59,11 +59,6 @@ export function StakeConfirmationForm({
             [styles.inputColor]: !isDarkMode,
             [styles.inputColorDark]: isDarkMode,
           })}
-          leftElement={
-            <div className={tw("flex", "items-center", "px-2")}>
-              {AssetOneIcon ? <AssetOneIcon height={18} width={18} /> : null}
-            </div>
-          }
           value={assetOneValueLabel}
           rightElement={
             <div className={tw("flex", "items-center", "px-3")}>
@@ -79,11 +74,6 @@ export function StakeConfirmationForm({
             [styles.inputColor]: !isDarkMode,
             [styles.inputColorDark]: isDarkMode,
           })}
-          leftElement={
-            <div className={tw("flex", "items-center", "px-2")}>
-              {AssetOneIcon ? <AssetOneIcon height={18} width={18} /> : null}
-            </div>
-          }
           value={assetTwoValueLabel}
           placeholder="0.00"
           rightElement={

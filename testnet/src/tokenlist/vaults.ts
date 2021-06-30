@@ -26,6 +26,7 @@ const VaultSymbolOverrides: Record<number, Record<string, string>> = {
     "0xdD82595F5eB0e7477D7432B24E44be7c0252bbf1": "yvCurve-stETH",
     "0x23c3C6C06d7684207fB09076914A15B16aba02c5": "yvUSDC",
     "0x851A97B6520c582dAB33F722Bd9C5939Ea349546": "yvDAI",
+    "0xf92DD556f826779826b709F5E8f8e261b29e7E30": "yvCurve-alUSD",
   },
 };
 export async function getVaultTokenInfos(
