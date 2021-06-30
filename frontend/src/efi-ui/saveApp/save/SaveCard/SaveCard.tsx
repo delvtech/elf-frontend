@@ -54,6 +54,7 @@ import { getTokenInfo } from "efi/tokenlists";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
 import { openTrancheBaseAssets } from "efi/tranche/baseAssets";
 import { underlyingContractsByAddress } from "efi/underlying/underlying";
+import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 
 export interface SaveCardProps {
   library: Web3Provider | undefined;
@@ -170,6 +171,8 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
     spotPriceBaseAssetForOneToken: amountOfEthForOnePrincipalEth,
     spotPriceTokenForOneBaseAsset,
   } = usePoolTokenPrices(poolContract, underlyingPoolTokenContract);
+
+  const spotPriceToken = usePoolSpotPrice(poolContract, principalTokenAddress);
 
   const {
     isValidTokenInValue,
@@ -424,7 +427,7 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
           amountIn={amountIn}
           amountOut={amountOut}
           swapKind={swapKind}
-          spotPrice={spotPriceTokenForOneBaseAsset}
+          spotPrice={spotPriceToken}
           isOpen={isDrawerOpen}
           onClose={closeDrawer}
         />
