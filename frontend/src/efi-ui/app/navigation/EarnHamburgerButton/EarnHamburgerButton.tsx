@@ -25,8 +25,7 @@ if (isLocalnet(AddressesJson.chainId)) {
 if (isGoerli(AddressesJson.chainId)) {
   advancedLink = "https://save-testnet.element.fi";
 } else if (isMainnet(AddressesJson.chainId)) {
-  // TODO: What will be the url for mainnet?
-  advancedLink = "https://sneak-save.element.fi";
+  advancedLink = "https://save.element.fi";
 }
 
 export function NavigationMenuButton(): ReactElement {

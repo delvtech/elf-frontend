@@ -21,7 +21,6 @@ let advancedLink = "http://localhost:3000";
 if (isGoerli(AddressesJson.chainId)) {
   advancedLink = "https://testnet.element.fi";
 } else if (isMainnet(AddressesJson.chainId)) {
-  // TODO: What will be the url for mainnet?
   advancedLink = "https://app.element.fi";
 }
 
