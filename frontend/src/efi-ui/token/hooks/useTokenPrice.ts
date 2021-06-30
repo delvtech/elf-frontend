@@ -29,7 +29,7 @@ export function useTokenPrice<TContract extends ERC20>(
       ? CRVLUSD__factory.connect(contract.address, defaultProvider)
       : (contract as unknown as CRVLUSD),
     "get_virtual_price",
-    // this is a hack so we disable this if the contract isn't specifically crvlus
+    // this is a hack so we disable this if the contract isn't specifically crvlusd
     {
       callArgs: [],
       enabled: contract.address === AddressesJson.addresses.crvlusdAddress,

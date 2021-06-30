@@ -10,8 +10,6 @@ import {
   ERC20__factory,
   WETH,
 } from "elf-contracts/types";
-import { CRVLUSD__factory } from "elf-contracts/types/factories/CRVLUSD__factory";
-import { CRVLUSD } from "elf-contracts/types/CRVLUSD";
 
 const {
   addresses: { wethAddress, usdcAddress, daiAddress, crvlusdAddress },

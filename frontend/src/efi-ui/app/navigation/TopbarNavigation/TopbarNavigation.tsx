@@ -37,7 +37,8 @@ export function TopbarNavigation({
 }: TopbarNavigationProps): ReactElement {
   const { activeTab, changeTab } = useNavigation();
   const { isDarkMode, setDarkModeOff, setDarkModeOn } = useDarkMode();
-  const { transactionHash } = usePendingTransactionPref();
+  const { transactionHash, clearPendingTransactionPref } =
+    usePendingTransactionPref();
   const hasPendingTransaction = !!transactionHash;
 
   return (
@@ -70,14 +71,26 @@ export function TopbarNavigation({
                 <span
                   className={tw("flex", "w-full", "justify-between")}
                 >{t`Portfolio`}</span>
-                {hasPendingTransaction ? (
-                  <Spinner size={SpinnerSize.SMALL} />
-                ) : null}
               </div>
             }
           />
         </Tabs>
       </div>
+      {hasPendingTransaction ? (
+        <div
+          className={tw("items-center", "flex", "ml-2", "mt-3", "space-x-2")}
+        >
+          {hasPendingTransaction ? <Spinner size={SpinnerSize.SMALL} /> : null}
+          <Button
+            outlined
+            small
+            icon={IconNames.CROSS}
+            onClick={clearPendingTransactionPref}
+          >
+            {t`Clear spinner`}
+          </Button>
+        </div>
+      ) : null}
       <div className={tw("flex", "flex-1", "space-x-4", "justify-end")}>
         <Button
           minimal
