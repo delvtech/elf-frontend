@@ -29,13 +29,18 @@ export function TimeLeft(props: TimeLeftProps): ReactElement {
     showDate = true,
   } = props;
   const progress = calculateProgress(startDate, maturityDate);
-  const timeLeft = formatTimeLeft(Date.now(), maturityDate);
+
+  const now = Date.now();
+  const timeSince = formatTimeLeft(maturityDate, now);
+  const timeSinceLabel = t`${timeSince} ago`;
+  const timeLeft = formatTimeLeft(now, maturityDate);
+  const timeLeftLabel = t`${timeLeft} remaining`;
 
   if (!startDate || !maturityDate) {
     return <span>{t`loading`}</span>;
   }
 
-  const isMature = Date.now() > maturityDate;
+  const isMature = now > maturityDate;
   const intent = isMature ? Intent.SUCCESS : Intent.PRIMARY;
 
   return (
@@ -78,7 +83,7 @@ export function TimeLeft(props: TimeLeftProps): ReactElement {
       <div
         className={classNames(Classes.TEXT_MUTED, tw("text-sm", "truncate"))}
       >
-        {timeLeft}
+        {isMature ? timeSinceLabel : timeLeftLabel}
       </div>
     </div>
   );
