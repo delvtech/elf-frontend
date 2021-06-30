@@ -1,27 +1,27 @@
 import { useCallback } from "react";
 
-import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
+import { ConvergentCurvePool } from "elf-contracts/types";
 import { Vault } from "elf-contracts/types/Vault";
 import { BigNumber, Signer } from "ethers";
 import { defaultAbiCoder, formatUnits, parseUnits } from "ethers/lib/utils";
+import { PrincipalPoolTokenInfo } from "tokenlists/types";
 
 import { ExitRequest } from "efi-balancer/ExitRequest";
 import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
-import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
 import ContractAddresses from "efi/addresses";
 import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { calculateTokensOutForLPInFixed } from "efi/pools/calculateTokensOutForLPIn";
+import { getPoolContract } from "efi/pools/getPoolContract";
 import { getTokenInfo } from "efi/tokenlists";
 
 export function useExitConvergentCurvePool(
   signer: Signer | undefined,
   account: string | null | undefined,
-  pool: ConvergentCurvePool | undefined,
+  poolInfo: PrincipalPoolTokenInfo,
   lpIn: string,
   onTransactionSubmitted?: () => void
 ): {
@@ -33,16 +33,8 @@ export function useExitConvergentCurvePool(
   reset: () => void;
 } {
   const balancerVault = useBalancerVault();
-  const { data: poolId } = useSmartContractReadCall(pool, "getPoolId");
-  const { data: [poolTokens = [], poolTokenReserves = []] = [] } =
-    usePoolTokens(pool);
-  const poolTokenDecimals = poolTokens.map((tokenAddress) => {
-    const { decimals } = getTokenInfo(tokenAddress);
-    return decimals;
-  });
-
-  const { data: totalSupply } = useSmartContractReadCall(pool, "totalSupply");
-
+  const { poolId } = poolInfo.extensions;
+  const pool = getPoolContract(poolInfo.address) as ConvergentCurvePool;
   const {
     mutate: exitPool,
     isLoading,
@@ -54,7 +46,16 @@ export function useExitConvergentCurvePool(
     onTransactionSubmitted,
   });
 
-  const onExitPool = useCallback(() => {
+  const onExitPool = useCallback(async () => {
+    // grab these right when we exit to try to get the latest values
+    const totalSupply = await pool.totalSupply();
+    const [poolTokens = [], poolTokenReserves = []] =
+      await balancerVault.getPoolTokens(poolId);
+    const poolTokenDecimals = poolTokens.map((tokenAddress) => {
+      const { decimals } = getTokenInfo(tokenAddress);
+      return decimals;
+    });
+
     const exitPoolCallArgs = makeExitPoolCallArgs(
       poolId,
       account,
@@ -68,16 +69,7 @@ export function useExitConvergentCurvePool(
       return;
     }
     exitPool(exitPoolCallArgs);
-  }, [
-    account,
-    exitPool,
-    lpIn,
-    poolId,
-    poolTokenDecimals,
-    poolTokenReserves,
-    poolTokens,
-    totalSupply,
-  ]);
+  }, [account, balancerVault, exitPool, lpIn, pool, poolId]);
 
   return {
     onExitPool,
@@ -165,8 +157,14 @@ function getPoolTokenMinAmountsOut(
     poolTokenDecimals[1]
   );
 
-  const { xNeeded, yNeeded } = calculateTokensOutForLPInFixed(
+  // shave off a few decimals to alleviate rounding errors for convergent pools
+  const clippedLpIn = clipStringValueToDecimals(
     lpIn,
+    BALANCER_POOL_LP_TOKEN_DECIMALS - 4
+  );
+
+  const { xNeeded, yNeeded } = calculateTokensOutForLPInFixed(
+    clippedLpIn,
     xReservesString,
     yReservesString,
     totalSupplyString,

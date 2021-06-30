@@ -12,8 +12,6 @@ export function formatBalance(
     return "0.0000";
   }
 
-  const numBalance = +formatUnits(balance, decimals);
-  return commify(
-    clipStringValueToDecimals(numBalance.toString(), maxPrecision)
-  );
+  const stringBalance = formatUnits(balance, decimals);
+  return commify(clipStringValueToDecimals(stringBalance, maxPrecision));
 }

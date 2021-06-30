@@ -3,11 +3,15 @@ import { ReactElement, useCallback, useState } from "react";
 import { Button, Callout, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { TokenInfo } from "@uniswap/token-lists";
-import { ConvergentCurvePool, WeightedPool } from "elf-contracts/types";
 import { BigNumber, Signer } from "ethers";
-import { formatEther, formatUnits, parseUnits } from "ethers/lib/utils";
+import { formatUnits, parseUnits } from "ethers/lib/utils";
 import zipObject from "lodash.zipobject";
-import { PrincipalTokenInfo, YieldTokenInfo } from "tokenlists/types";
+import {
+  PrincipalPoolTokenInfo,
+  PrincipalTokenInfo,
+  YieldPoolTokenInfo,
+  YieldTokenInfo,
+} from "tokenlists/types";
 import { t } from "ttag";
 
 import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
@@ -16,19 +20,20 @@ import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInp
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { UnstakeInput } from "efi-ui/pools/UnstakeInput/UnstakeInput";
 import { UnstakeConfirmationDrawer } from "efi-ui/pools/UnstakeTokensConfirmationDrawer/UnstakeTokensConfirmationDrawer";
+import { PoolStakeStats } from "efi-ui/pools/UnstakingPanel/PoolStakeStats";
+import { useCanPerformPool } from "efi-ui/pools/usePoolCanPerform/usePoolCanPerform";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useExitConvergentCurvePool } from "efi-ui/pools/useUnstake/useExitConvergentCurvePool";
 import { useExitWeightedPool } from "efi-ui/pools/useUnstake/useExitWeightedPool";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { ElementIcon } from "efi-ui/token/TokenIcon";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
+import { formatBalance } from "efi/base/formatBalance";
 import { getPoolContract } from "efi/pools/getPoolContract";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolContract } from "efi/pools/PoolContract";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { isYieldPool } from "efi/pools/weightedPool";
-import { PoolStakeStats } from "efi-ui/pools/UnstakingPanel/PoolStakeStats";
-import { useCanPerformPool } from "efi-ui/pools/usePoolCanPerform/usePoolCanPerform";
 
 interface UnstakeCardProps {
   signer: Signer | undefined;
@@ -95,7 +100,10 @@ export function UnstakeCard({
   const { baseAssetInfo, termAssetInfo } = getPoolTokens(poolInfo);
   const poolSymbol = `ELF:${baseAssetInfo.symbol}-${termAssetInfo.symbol}`;
   const { data: lpBalanceOf } = useTokenBalanceOf(pool, account);
-  const lpDisplayBalance = formatEther(lpBalanceOf ?? 0);
+  const lpDisplayBalance = formatBalance(
+    lpBalanceOf,
+    BALANCER_POOL_LP_TOKEN_DECIMALS
+  );
 
   // drawer info
   const { baseAssetOut, termAssetOut } = useCalculateAssetsOut(
@@ -129,7 +137,7 @@ export function UnstakeCard({
         cryptoDecimals={poolInfo.decimals}
         cryptoAssetIcon={ElementIcon}
         cryptoBalanceOf={lpBalanceOf}
-        cryptoDisplayBalance={lpDisplayBalance || ""}
+        cryptoDisplayBalance={lpDisplayBalance}
         disabled={balanceIsZero}
         onChange={setUnstakeValue}
         value={unstakeValue}
@@ -182,9 +190,6 @@ function useExitPool(
   amount: string,
   onTransactionSubmitted?: () => void
 ) {
-  const principalPool = getPoolContract(
-    poolInfo.address
-  ) as ConvergentCurvePool;
   const {
     onExitPool: exitPrincipalPool,
     isLoading: isPrincipalLoading,
@@ -194,12 +199,11 @@ function useExitPool(
   } = useExitConvergentCurvePool(
     signer,
     account,
-    principalPool,
+    poolInfo as PrincipalPoolTokenInfo,
     amount,
     onTransactionSubmitted
   );
 
-  const yieldPool = getPoolContract(poolInfo.address) as WeightedPool;
   const {
     mutationResult: {
       isLoading: isYieldLoading,
@@ -211,7 +215,7 @@ function useExitPool(
   } = useExitWeightedPool(
     signer,
     account,
-    yieldPool,
+    poolInfo as YieldPoolTokenInfo,
     amount,
     onTransactionSubmitted
   );

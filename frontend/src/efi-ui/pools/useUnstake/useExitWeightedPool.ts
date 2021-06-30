@@ -2,27 +2,26 @@ import { useCallback } from "react";
 import { UseMutationResult } from "react-query";
 
 import { Vault } from "elf-contracts/types/Vault";
-import { WeightedPool } from "elf-contracts/types/WeightedPool";
 import { BigNumber, ContractReceipt, Signer } from "ethers";
 import { defaultAbiCoder, formatUnits, parseUnits } from "ethers/lib/utils";
+import { YieldPoolTokenInfo } from "tokenlists/types";
 
 import { ExitRequest } from "efi-balancer/ExitRequest";
 import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
-import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
 import ContractAddresses from "efi/addresses";
 import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { calculateTokensOutForLPInFixed } from "efi/pools/calculateTokensOutForLPIn";
+import { getPoolContract } from "efi/pools/getPoolContract";
 import { WeightedPoolExitKind } from "efi/pools/weightedPool";
 import { getTokenInfo } from "efi/tokenlists";
 
 export function useExitWeightedPool(
   signer: Signer | undefined,
   account: string | null | undefined,
-  pool: WeightedPool | undefined,
+  poolInfo: YieldPoolTokenInfo,
   lpIn: string,
   onTransactionSubmitted?: () => void
 ): {
@@ -34,16 +33,8 @@ export function useExitWeightedPool(
   onExitPool: () => void;
 } {
   const balancerVault = useBalancerVault();
-  const { data: poolId } = useSmartContractReadCall(pool, "getPoolId");
-  const { data: [poolTokens = [], poolTokenReserves = []] = [] } =
-    usePoolTokens(pool);
-
-  const poolTokenDecimals = poolTokens.map((tokenAddress) => {
-    const { decimals } = getTokenInfo(tokenAddress);
-    return decimals;
-  });
-
-  const { data: totalSupply } = useSmartContractReadCall(pool, "totalSupply");
+  const { poolId } = poolInfo.extensions;
+  const pool = getPoolContract(poolInfo.address);
 
   const mutationResult = useSmartContractTransactionPersisted(
     balancerVault,
@@ -56,21 +47,31 @@ export function useExitWeightedPool(
 
   const { mutate: exitPool } = mutationResult;
 
-  const exitPoolCallArgs = makeExitPoolCallArgs(
-    poolId,
-    account,
-    poolTokens,
-    poolTokenReserves,
-    poolTokenDecimals,
-    totalSupply,
-    lpIn
-  );
-  const onExitPool = useCallback(() => {
+  const onExitPool = useCallback(async () => {
+    // grab these right when we exit to try to get the latest values
+    const totalSupply = await pool.totalSupply();
+    const [poolTokens = [], poolTokenReserves = []] =
+      await balancerVault.getPoolTokens(poolId);
+    const poolTokenDecimals = poolTokens.map((tokenAddress) => {
+      const { decimals } = getTokenInfo(tokenAddress);
+      return decimals;
+    });
+
+    const exitPoolCallArgs = makeExitPoolCallArgs(
+      poolId,
+      account,
+      poolTokens,
+      poolTokenReserves,
+      poolTokenDecimals,
+      totalSupply,
+      lpIn
+    );
+
     if (!exitPoolCallArgs) {
       return;
     }
     exitPool(exitPoolCallArgs);
-  }, [exitPool, exitPoolCallArgs]);
+  }, [account, balancerVault, exitPool, lpIn, pool, poolId]);
 
   return {
     mutationResult,

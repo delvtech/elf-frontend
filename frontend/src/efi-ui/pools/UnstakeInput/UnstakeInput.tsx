@@ -26,7 +26,7 @@ interface UnstakeInputProps {
   cryptoDecimals: number;
   cryptoAssetIcon: TokenIcon;
   cryptoBalanceOf: BigNumber | undefined;
-  cryptoDisplayBalance: string | number;
+  cryptoDisplayBalance: string;
   disabled: boolean;
   onChange: (inputValue: string) => void;
   label: string;

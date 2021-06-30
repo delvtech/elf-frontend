@@ -256,7 +256,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
       <TradeInput
         cryptoDecimals={tokenInDecimals}
         cryptoBalanceOf={tokenInBalanceOf}
-        cryptoDisplayBalance={tokenInDisplayBalance || ""}
+        cryptoDisplayBalance={tokenInDisplayBalance}
         cryptoSymbol={tokenInSymbol}
         cryptoIcon={tradeType === "buy" ? tokenInIcon : undefined}
         previewCryptoAddress={tokenOutAddress}
@@ -274,7 +274,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
       <TradeInput
         cryptoDecimals={tokenOutDecimals}
         cryptoBalanceOf={tokenOutBalanceOf}
-        cryptoDisplayBalance={tokenOutDisplayBalance || ""}
+        cryptoDisplayBalance={tokenOutDisplayBalance}
         cryptoSymbol={tokenOutSymbol}
         cryptoIcon={tradeType === "sell" ? tokenOutIcon : undefined}
         previewCryptoAddress={tokenInAddress}

@@ -7,6 +7,7 @@ import { defaultProvider } from "efi/providers/providers";
 // Do not export this from this file
 const SMART_CONTRACTS_REGISTRY: Record<string, unknown> = {};
 
+// TODO: remove undefineds
 export function getSmartContractFromRegistry<TReturnContract extends Contract>(
   address: string | undefined,
   factoryConnect: FactoryConnectFn<TReturnContract>,
