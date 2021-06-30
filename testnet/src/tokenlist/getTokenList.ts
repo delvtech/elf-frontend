@@ -63,7 +63,9 @@ export async function getTokenList(
     usdcAddress,
     daiAddress,
     lusdAddress,
-  ].filter((address) => address !== "0x0");
+  ].filter(
+    (address) => address !== "0x0000000000000000000000000000000000000000"
+  );
 
   const underlyingTokenInfos = await getUnderlyingTokenInfos(
     chainId,
