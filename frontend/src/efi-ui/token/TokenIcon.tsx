@@ -4,6 +4,7 @@ import elementIconDark from "efi-static-assets/logos/svg/ELEMENT-dark.svg";
 import elementIcon from "efi-static-assets/logos/svg/ELEMENT-light.svg";
 import ethIconGrey from "efi-static-assets/logos/svg/ethereum-eth.svg";
 import crvLusdIcon from "efi-static-assets/logos/svg/crvLUSD.svg";
+import crvAlusdIcon from "efi-static-assets/logos/crvALUSD.png";
 import lusdIcon from "efi-static-assets/logos/svg/LUSD.svg";
 import usdcIcon from "efi-static-assets/logos/svg/USDC.svg";
 import daiIcon from "efi-static-assets/logos/svg/DAI.svg";
@@ -63,6 +64,23 @@ export function LusdIcon({
       className={className}
       style={style}
       src={lusdIcon}
+      height={height}
+      width={width}
+    />
+  );
+}
+export function CrvAlusdIcon({
+  height,
+  width,
+  className,
+  style,
+}: IconProps): ReactElement {
+  return (
+    <SvgIcon
+      alt={"crvalusd"}
+      className={className}
+      style={style}
+      src={crvAlusdIcon}
       height={height}
       width={width}
     />
