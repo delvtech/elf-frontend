@@ -25,9 +25,13 @@
     "assetproxy": {
       "name": "Vault asset proxy",
       "description": "Token that wraps a yield position, ie: Yearn vault asset proxy"
+    },
+    "vault": {
+      "name": "Vault",
+      "description": "The yield position, ie: Yearn yvcrvLUSD"
     }
   },
-  "timestamp": "2021-06-30T08:13:34.065Z",
+  "timestamp": "2021-06-30T13:17:39.955Z",
   "version": {
     "major": 0,
     "minor": 0,
@@ -76,19 +80,6 @@
     },
     {
       "chainId": 1,
-      "address": "0x15d4670Ecb3B308C7604Dd4e18258FF9c520F431",
-      "symbol": "yvDAI",
-      "decimals": 18,
-      "name": "Element Wrapped Yearn V2 DAI",
-      "tags": [
-        "assetproxy"
-      ],
-      "extensions": {
-        "vault": "0x19D3364A399d251E894aC732651be8B0E4e85001"
-      }
-    },
-    {
-      "chainId": 1,
       "address": "0x53b1aEAa018da00b4F458Cc13d40eB3e8d1B85d6",
       "symbol": "yvCurveLUSD",
       "decimals": 18,
@@ -102,16 +93,6 @@
     },
     {
       "chainId": 1,
-      "address": "0x19D3364A399d251E894aC732651be8B0E4e85001",
-      "symbol": "yvDAI",
-      "decimals": 18,
-      "name": "DAI yVault",
-      "tags": [
-        "vault"
-      ]
-    },
-    {
-      "chainId": 1,
       "address": "0x5fA5B62c8AF877CB37031e0a3B2f34A78e3C56A6",
       "symbol": "yvCurve-LUSD",
       "decimals": 18,
@@ -122,32 +103,15 @@
     },
     {
       "chainId": 1,
-      "address": "0x94BE72dc46fe8f7e9f40FBD2c31826f472F4036E",
-      "symbol": "ePyvDAI-27JUN21",
-      "decimals": 18,
-      "extensions": {
-        "underlying": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
-        "position": "0x15d4670Ecb3B308C7604Dd4e18258FF9c520F431",
-        "interestToken": "0xe7f4294033d0fDE6eecb94Bef7Da22fdE68a61ec",
-        "unlockTimestamp": 1624831814,
-        "createdAtTimestamp": 1624659082
-      },
-      "name": "DAI Principal Token",
-      "tags": [
-        "eP"
-      ]
-    },
-    {
-      "chainId": 1,
-      "address": "0xD44bF95Bf21C83B46049BF9E34633F3300B280F6",
-      "symbol": "ePyvCurveLUSD-30JUN21",
+      "address": "0x9b44Ed798a10Df31dee52C5256Dcb4754BCf097E",
+      "symbol": "ePyvCurveLUSD-28SEP21",
       "decimals": 18,
       "extensions": {
         "underlying": "0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA",
         "position": "0x53b1aEAa018da00b4F458Cc13d40eB3e8d1B85d6",
-        "interestToken": "0xd6FD2F39FF3F3565d456Bb8Aa94703Fe5fD88D33",
-        "unlockTimestamp": 1625028466,
-        "createdAtTimestamp": 1624985303
+        "interestToken": "0xBabD64a87881d8df7680907fcde176FF11Fa0292",
+        "unlockTimestamp": 1632834462,
+        "createdAtTimestamp": 1625058479
       },
       "name": "LUSD3CRV-f Principal Token",
       "tags": [
@@ -156,29 +120,14 @@
     },
     {
       "chainId": 1,
-      "address": "0xe7f4294033d0fDE6eecb94Bef7Da22fdE68a61ec",
-      "symbol": "eYyvDAI-27JUN21",
-      "decimals": 18,
-      "name": "DAI Yield Token",
-      "extensions": {
-        "tranche": "0x94BE72dc46fe8f7e9f40FBD2c31826f472F4036E",
-        "underlying": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
-        "unlockTimestamp": 1624831814
-      },
-      "tags": [
-        "eY"
-      ]
-    },
-    {
-      "chainId": 1,
-      "address": "0xd6FD2F39FF3F3565d456Bb8Aa94703Fe5fD88D33",
-      "symbol": "eYyvCurveLUSD-30JUN21",
+      "address": "0xBabD64a87881d8df7680907fcde176FF11Fa0292",
+      "symbol": "eYyvCurveLUSD-28SEP21",
       "decimals": 18,
       "name": "LUSD3CRV-f Yield Token",
       "extensions": {
-        "tranche": "0xD44bF95Bf21C83B46049BF9E34633F3300B280F6",
+        "tranche": "0x9b44Ed798a10Df31dee52C5256Dcb4754BCf097E",
         "underlying": "0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA",
-        "unlockTimestamp": 1625028466
+        "unlockTimestamp": 1632834462
       },
       "tags": [
         "eY"
@@ -186,70 +135,35 @@
     },
     {
       "chainId": 1,
-      "address": "0x6De69beB66317557E65168BD7D3fff22a89dBb11",
-      "symbol": "LpePyvDAI-27JUN21",
+      "address": "0xA8D4433BAdAa1A35506804B43657B0694deA928d",
+      "symbol": "LPePyvCurveLUSD-28SEP21",
       "decimals": 18,
       "extensions": {
-        "bond": "0x94BE72dc46fe8f7e9f40FBD2c31826f472F4036E",
-        "underlying": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
-        "poolId": "0x6de69beb66317557e65168bd7d3fff22a89dbb11000200000000000000000056",
-        "unitSeconds": 788923800,
-        "expiration": 1624831814,
-        "createdAtTimestamp": 1624660032
+        "bond": "0x9b44Ed798a10Df31dee52C5256Dcb4754BCf097E",
+        "underlying": "0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA",
+        "poolId": "0xa8d4433badaa1a35506804b43657b0694dea928d00020000000000000000005e",
+        "unitSeconds": 504911232,
+        "expiration": 1632834462,
+        "createdAtTimestamp": 1625058716
       },
-      "name": "LP Element Principal Token yvDAI-27JUN21",
+      "name": "LP Element Principal Token yvCurveLUSD-28SEP21",
       "tags": [
         "ccpool"
       ]
     },
     {
       "chainId": 1,
-      "address": "0x22939E40Cf467DE8F5Db4F05A4027e5D4c1C658c",
-      "symbol": "LPePyvCurveLUSD-30JUN21",
+      "address": "0xDe620bb8BE43ee54d7aa73f8E99A7409Fe511084",
+      "symbol": "LPeYyvCurveLUSD-28SEP21",
       "decimals": 18,
       "extensions": {
-        "bond": "0xD44bF95Bf21C83B46049BF9E34633F3300B280F6",
+        "poolId": "0xde620bb8be43ee54d7aa73f8e99a7409fe51108400020000000000000000005d",
         "underlying": "0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA",
-        "poolId": "0x22939e40cf467de8f5db4f05a4027e5d4c1c658c000200000000000000000059",
-        "unitSeconds": 631139040,
-        "expiration": 1625028466,
-        "createdAtTimestamp": 1624986155
+        "interestToken": "0xBabD64a87881d8df7680907fcde176FF11Fa0292",
+        "createdAtTimestamp": 1625058649,
+        "expiration": 1632834462
       },
-      "name": "LP Element Principal Token yvCurveLUSD-30JUN21",
-      "tags": [
-        "ccpool"
-      ]
-    },
-    {
-      "chainId": 1,
-      "address": "0x0a9E96988E21c9A03B8DC011826A00259e02C46e",
-      "symbol": "LpElement Yield Token yvDAI-27JUN21",
-      "decimals": 18,
-      "extensions": {
-        "poolId": "0x0a9e96988e21c9a03b8dc011826a00259e02c46e000200000000000000000055",
-        "underlying": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
-        "interestToken": "0xe7f4294033d0fDE6eecb94Bef7Da22fdE68a61ec",
-        "createdAtTimestamp": 1624659807,
-        "expiration": 1624831814
-      },
-      "name": "Lp Element Yield Token yvDAI-27JUN21",
-      "tags": [
-        "wpool"
-      ]
-    },
-    {
-      "chainId": 1,
-      "address": "0xe2cD73cfeB471f9F2b08A18afbc87Ff2324eF24E",
-      "symbol": "LPeYyvCurveLUSD-30JUN21",
-      "decimals": 18,
-      "extensions": {
-        "poolId": "0xe2cd73cfeb471f9f2b08a18afbc87ff2324ef24e000200000000000000000058",
-        "underlying": "0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA",
-        "interestToken": "0xd6FD2F39FF3F3565d456Bb8Aa94703Fe5fD88D33",
-        "createdAtTimestamp": 1624985747,
-        "expiration": 1625028466
-      },
-      "name": "LP Element Yield Token yvCurveLUSD-30JUN21",
+      "name": "LP Element Yield Token yvCurveLUSD-28SEP21",
       "tags": [
         "wpool"
       ]

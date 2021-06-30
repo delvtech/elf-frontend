@@ -29,4 +29,9 @@ export const tags: Tags = {
     description:
       "Token that wraps a yield position, ie: Yearn vault asset proxy",
   },
+  [TokenListTag.VAULT]: {
+    name: "Vault",
+    description:
+      "The yield position, ie: Yearn yvcrvLUSD",
+  },
 };
