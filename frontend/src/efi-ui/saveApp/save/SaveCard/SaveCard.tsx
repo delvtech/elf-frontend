@@ -29,6 +29,7 @@ import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadC
 import { CryptoAssetPicker } from "efi-ui/crypto/CryptoAssetPicker/CryptoAssetPicker";
 import { useCryptoBalanceOf } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { useCanPerformPool } from "efi-ui/pools/usePoolCanPerform/usePoolCanPerform";
+import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useActiveTranche } from "efi-ui/saveApp/save/hooks/useActiveTranche";
@@ -44,7 +45,6 @@ import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
 import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
-import { calcSwapInGivenOutCCPoolUNSAFE } from "efi/pools/calcPoolSwap";
 import {
   getPoolInfoForPrincipalToken,
   getPrincipalPoolContractForTranche,
@@ -54,7 +54,6 @@ import { getTokenInfo } from "efi/tokenlists";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
 import { openTrancheBaseAssets } from "efi/tranche/baseAssets";
 import { underlyingContractsByAddress } from "efi/underlying/underlying";
-import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 
 export interface SaveCardProps {
   library: Web3Provider | undefined;
@@ -133,18 +132,13 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
   const poolInfo = getPoolInfoForPrincipalToken(activeTranche.address);
   const {
     address: convergentPoolAddress,
-    extensions: { expiration, unitSeconds, underlying },
+    extensions: { underlying },
   } = poolInfo;
   const { baseAssetIndex, termAssetIndex: principalTokenIndex } =
     getPoolTokens(poolInfo);
   const { data: [, balances = []] = [] } = usePoolTokens(poolContract);
 
   const canPerformBuy = useCanPerformPool(convergentPoolAddress, "buy");
-
-  // TODO: use a global Date.now that updates at a constant interval
-  const nowInSeconds = Math.round(Date.now() / 1000);
-  const timeRemainingSeconds = expiration - nowInSeconds;
-  const tParamSeconds = unitSeconds;
 
   const { data: totalSupplyBN } = useSmartContractReadCall(
     poolContract,
@@ -167,10 +161,8 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
     underlying
   ] as ERC20;
 
-  const {
-    spotPriceBaseAssetForOneToken: amountOfEthForOnePrincipalEth,
-    spotPriceTokenForOneBaseAsset,
-  } = usePoolTokenPrices(poolContract, underlyingPoolTokenContract);
+  const { spotPriceBaseAssetForOneToken: amountOfEthForOnePrincipalEth } =
+    usePoolTokenPrices(poolContract, underlyingPoolTokenContract);
 
   const spotPriceToken = usePoolSpotPrice(poolContract, principalTokenAddress);
 
@@ -235,17 +227,21 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
         clearInputs();
         return;
       }
-      const newAmountInNumber = calcSwapInGivenOutCCPoolUNSAFE(
+      const newAmountOutResult = getCalcSwap(
         newAmountOut,
-        principalReserves,
+        SwapKind.GIVEN_OUT,
+        poolInfo,
+        baseAssetAddress,
+        principalTokenAddress,
         baseReserves,
-        totalSupply,
-        timeRemainingSeconds,
-        tParamSeconds,
-        false
+        principalReserves,
+        totalSupply
       );
+
+      const { result: [amountIn] = ["", ""] } = newAmountOutResult;
+
       const newAmountIn = clipStringValueToDecimals(
-        newAmountInNumber.toString(),
+        amountIn,
         activeBaseAssetDecimals ?? 18
       );
       setSwapKind(swapKind);
@@ -254,13 +250,14 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
     },
     [
       activeBaseAssetDecimals,
+      baseAssetAddress,
       baseReserves,
       clearInputs,
+      poolInfo,
       principalReserves,
+      principalTokenAddress,
       setAmountIn,
       setAmountOut,
-      tParamSeconds,
-      timeRemainingSeconds,
       totalSupply,
     ]
   );
