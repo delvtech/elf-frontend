@@ -10,9 +10,7 @@ import {
   Tag,
 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
-import { Web3Provider } from "@ethersproject/providers";
 import { Link } from "@reach/router";
-import { AbstractConnector } from "@web3-react/abstract-connector";
 import classNames from "classnames";
 import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
 import { BigNumber } from "ethers";
@@ -36,16 +34,14 @@ import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { getPoolInfo } from "efi/pools/getPoolInfo";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
+import { getTrancheForPool } from "efi/pools/getTrancheForPool";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { getTokenInfo } from "efi/tokenlists";
-import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
-import { getTrancheForPool } from "efi/pools/getTrancheForPool";
-import { getVaultTokenInfoForTranche } from "efi/tranche/tranches";
 import { getIsMature } from "efi/tranche/getIsMature";
+import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
+import { getVaultTokenInfoForTranche } from "efi/tranche/tranches";
 
 interface PrincipalTokenLPCardProps {
-  library: Web3Provider | undefined;
-  connector: AbstractConnector | undefined;
   account: string | null | undefined;
   pool: ConvergentCurvePool;
 }
@@ -61,9 +57,7 @@ const calloutClassName = tw(
 );
 
 export function PrincipalTokenLPCard({
-  library,
   account,
-  connector,
   pool,
 }: PrincipalTokenLPCardProps): ReactElement {
   const { isDarkMode } = useDarkMode();

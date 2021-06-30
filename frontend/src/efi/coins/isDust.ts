@@ -19,8 +19,8 @@ export function isDust(balanceOf: BigNumber, decimals: number): boolean {
   const clippedLPBalanceString = +(
     clipStringValueToDecimals(
       lpBalanceString,
-      // Only keep 5 values of precision when caring about dust
-      5
+      // Only keep 4 values of precision when caring about dust
+      4
     ) || 0
   );
 

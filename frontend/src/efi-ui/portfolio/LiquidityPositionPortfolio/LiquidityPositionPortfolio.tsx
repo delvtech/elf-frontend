@@ -50,22 +50,12 @@ export function LiquidityPositionPortfolio({
         <Fragment>
           {principalTokenPools.map((pool) => [
             <div key={pool.address}>
-              <PrincipalTokenLPCard
-                library={library}
-                connector={connector}
-                account={account}
-                pool={pool}
-              />
+              <PrincipalTokenLPCard account={account} pool={pool} />
             </div>,
           ])}
           {yieldTokenPools.map((pool) => [
             <div key={pool.address}>
-              <YieldTokenLPCard
-                library={library}
-                connector={connector}
-                account={account}
-                pool={pool}
-              />
+              <YieldTokenLPCard account={account} pool={pool} />
             </div>,
           ])}
         </Fragment>
