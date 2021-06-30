@@ -41,6 +41,7 @@ import { getTokenInfo } from "efi/tokenlists";
 import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
 import { getTrancheForPool } from "efi/pools/getTrancheForPool";
 import { getVaultTokenInfoForTranche } from "efi/tranche/tranches";
+import { getIsMature } from "efi/tranche/getIsMature";
 
 interface PrincipalTokenLPCardProps {
   library: Web3Provider | undefined;
@@ -83,6 +84,7 @@ export function PrincipalTokenLPCard({
 
   const { decimals: trancheDecimals } = principalTokenInfo;
   const { unlockTimestamp } = principalTokenInfo.extensions;
+  const isRedeemable = getIsMature(unlockTimestamp);
   const unlockDate = convertEpochSecondsToDate(unlockTimestamp);
   const formattedDate = unlockDate
     ? formatAbbreviatedDate(unlockDate)
@@ -169,7 +171,7 @@ export function PrincipalTokenLPCard({
             <div className={tw("flex", "w-full", "items-center", "space-x-2")}>
               <Tag
                 large
-                intent={Intent.PRIMARY}
+                intent={isRedeemable ? Intent.SUCCESS : Intent.PRIMARY}
                 className={tw("justify-between")}
               >
                 <span>{formattedDate}</span>
