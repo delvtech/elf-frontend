@@ -1,6 +1,6 @@
 import { ReactElement } from "react";
 
-import { Button, Callout, Colors } from "@blueprintjs/core";
+import { Button, Colors } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { t } from "ttag";
 

@@ -10,6 +10,7 @@ import { getTokenAddressForBalancer } from "efi-balancer/getTokenAddressForBalan
 import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
 import { SwapKind } from "efi-balancer/SwapKind";
 import tw from "efi-tailwindcss-classnames";
+import { getCalcSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoBalanceOf } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
@@ -26,7 +27,6 @@ import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
-import { calcSwapOutGivenInCCPoolUNSAFE } from "efi/pools/calcPoolSwap";
 import {
   getPoolInfoForPrincipalToken,
   getPrincipalPoolContractForTranche,
@@ -244,7 +244,7 @@ function useCalculatePrincipalTokenAmountOut(
 ): string {
   const {
     address: poolAddress,
-    extensions: { underlying, expiration, unitSeconds },
+    extensions: { underlying: baseAssetAddress, bond: principalTokenAddress },
   } = poolInfo;
 
   const { baseAssetIndex, termAssetIndex: principalTokenIndex } =
@@ -262,7 +262,7 @@ function useCalculatePrincipalTokenAmountOut(
   const underlyingReservesBalanceOf = balances?.[baseAssetIndex];
   const principalReservesBalanceOf = balances?.[principalTokenIndex];
 
-  const { decimals: baseAssetDecimals } = getTokenInfo(underlying);
+  const { decimals: baseAssetDecimals } = getTokenInfo(baseAssetAddress);
   const underlyingReserves = formatUnits(
     underlyingReservesBalanceOf ?? 0,
     baseAssetDecimals
@@ -272,21 +272,19 @@ function useCalculatePrincipalTokenAmountOut(
     baseAssetDecimals
   );
 
-  const nowInSeconds = Math.round(Date.now() / 1000);
-  const timeRemainingSeconds = expiration - nowInSeconds;
-  const amountOut = calcSwapOutGivenInCCPoolUNSAFE(
+  const newAmountOutResult = getCalcSwap(
     amountIn,
+    SwapKind.GIVEN_IN,
+    poolInfo,
+    baseAssetAddress,
+    principalTokenAddress,
     underlyingReserves,
     principalReserves,
-    totalSupply,
-    timeRemainingSeconds,
-    unitSeconds,
-    true
+    totalSupply
   );
-  const amountOutBN = clipStringValueToDecimals(
-    amountOut.toString(),
-    baseAssetDecimals
-  );
+
+  const { result: [, amountOut] = ["", ""] } = newAmountOutResult;
+  const amountOutBN = clipStringValueToDecimals(amountOut, baseAssetDecimals);
 
   return amountOutBN;
 }

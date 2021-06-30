@@ -21,7 +21,9 @@ import { formatEther, formatUnits } from "ethers/lib/utils";
 import { PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
+import { SwapKind } from "efi-balancer/SwapKind";
 import tw from "efi-tailwindcss-classnames";
+import { getCalcSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { CryptoAssetPicker } from "efi-ui/crypto/CryptoAssetPicker/CryptoAssetPicker";
@@ -37,16 +39,12 @@ import { SwapTokensTransactionConfirmationDrawer } from "efi-ui/swaps/SwapTokens
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
 import { BALANCER_ETH_SENTINEL } from "efi/balancer";
-import { SwapKind } from "efi-balancer/SwapKind";
 import { formatBalance } from "efi/base/formatBalance";
 import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
 import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
-import {
-  calcSwapInGivenOutCCPoolUNSAFE,
-  calcSwapOutGivenInCCPoolUNSAFE,
-} from "efi/pools/calcPoolSwap";
+import { calcSwapInGivenOutCCPoolUNSAFE } from "efi/pools/calcPoolSwap";
 import {
   getPoolInfoForPrincipalToken,
   getPrincipalPoolContractForTranche,
@@ -193,17 +191,21 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
         clearInputs();
         return;
       }
-      const newAmountOutNumber = calcSwapOutGivenInCCPoolUNSAFE(
+
+      const newAmountOutResult = getCalcSwap(
         newAmountIn,
+        SwapKind.GIVEN_IN,
+        poolInfo,
+        baseAssetAddress,
+        principalTokenAddress,
         baseReserves,
         principalReserves,
-        totalSupply,
-        timeRemainingSeconds,
-        tParamSeconds,
-        true
+        totalSupply
       );
+      const { result: [, newAmountOutNumber] = ["", ""] } = newAmountOutResult;
+
       const newAmountOut = clipStringValueToDecimals(
-        newAmountOutNumber.toString(),
+        newAmountOutNumber,
         activeBaseAssetDecimals ?? 18
       );
       setSwapKind(swapKind);
@@ -212,13 +214,14 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
     },
     [
       activeBaseAssetDecimals,
+      baseAssetAddress,
       baseReserves,
       clearInputs,
+      poolInfo,
       principalReserves,
+      principalTokenAddress,
       setAmountIn,
       setAmountOut,
-      tParamSeconds,
-      timeRemainingSeconds,
       totalSupply,
     ]
   );

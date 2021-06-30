@@ -250,5 +250,5 @@ function useCalculateUnderlyingTokenOut(
     totalSupply
   );
 
-  return clipStringValueToDecimals(amountOut?.toString(), baseAssetDecimals);
+  return clipStringValueToDecimals(amountOut, baseAssetDecimals);
 }
