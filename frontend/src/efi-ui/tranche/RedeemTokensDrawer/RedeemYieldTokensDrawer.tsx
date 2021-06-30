@@ -161,7 +161,7 @@ export function RedeemYieldTokensDrawer({
           <Callout>
             <div>
               <Switch
-                label={t`Include pre-approvals with permit data`}
+                label={t`Include pre-approvals with permit data. (Turn this off for ledger)`}
                 checked={includePermits}
                 onChange={() => setIncludePermits(!includePermits)}
               />
