@@ -45,6 +45,7 @@ import { getTokenInfo } from "efi/tokenlists";
 import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
 import { getTrancheForPool } from "efi/pools/getTrancheForPool";
 import { getVaultTokenInfoForTranche } from "efi/tranche/tranches";
+import { getIsMature } from "efi/tranche/getIsMature";
 
 interface YieldTokenLPCardProps {
   library: Web3Provider | undefined;
@@ -86,6 +87,8 @@ export function YieldTokenLPCard({
   const {
     extensions: { unlockTimestamp },
   } = getPrincipalTokenForYieldToken(yieldTokenAddress);
+
+  const isRedeemable = getIsMature(unlockTimestamp);
 
   const unlockDate = convertEpochSecondsToDate(unlockTimestamp);
   const formattedDate = unlockDate
@@ -131,7 +134,7 @@ export function YieldTokenLPCard({
       )}
     >
       <div>
-        <div className={tw("flex", "space-x-4")}>
+        <div className={tw("flex", "space-x-4", "overflow-hidden")}>
           {BaseAssetIcon ? (
             <BaseAssetIcon
               className={tw("flex-shrink-0")}
@@ -139,7 +142,15 @@ export function YieldTokenLPCard({
               width={72}
             />
           ) : null}
-          <div className={tw("flex", "w-full", "flex-col", "space-y-2")}>
+          <div
+            className={tw(
+              "flex",
+              "w-full",
+              "flex-col",
+              "space-y-2",
+              "overflow-hidden"
+            )}
+          >
             <span
               className={tw("flex", "space-x-2", "text-2xl", "font-semibold")}
             >
@@ -165,12 +176,12 @@ export function YieldTokenLPCard({
             <div className={tw("flex", "w-full", "items-center", "space-x-2")}>
               <Tag
                 large
-                intent={Intent.SUCCESS}
+                intent={isRedeemable ? Intent.SUCCESS : Intent.PRIMARY}
                 className={tw("justify-between")}
               >
                 <span>{formattedDate}</span>
               </Tag>
-              <span> {t`Term`}</span>
+              <span> {t`Yield token term`}</span>
             </div>
           </div>
         </div>
@@ -179,25 +190,21 @@ export function YieldTokenLPCard({
         <div className={tw("flex", "w-full", "space-x-5", "items-center")}>
           <Callout className={calloutClassName}>
             <span
-              className={classNames(tw("text-base", "mb-0"))}
+              className={classNames(tw("mb-0"))}
             >{t`${baseAssetSymbol} liquidity`}</span>
             <span className={tw("text-lg", "font-semibold")}>
               {baseAssetLiquidityLabel}
             </span>
           </Callout>
           <Callout className={calloutClassName}>
-            <span
-              className={classNames(tw("text-base", "mb-0"))}
-            >{t`Yield liquidity`}</span>
+            <span className={classNames(tw("mb-0"))}>{t`Yield liquidity`}</span>
             <span className={tw("text-lg", "font-semibold")}>
               {principalTokenLiquidityLabel}
             </span>
           </Callout>
         </div>
         <Callout className={calloutClassName}>
-          <span
-            className={classNames(tw("text-base", "mb-0"))}
-          >{t`Share of pool`}</span>
+          <span className={classNames(tw("mb-0"))}>{t`Share of pool`}</span>
           <LabeledText
             muted={false}
             className={tw("flex", "justify-center", "items-center")}

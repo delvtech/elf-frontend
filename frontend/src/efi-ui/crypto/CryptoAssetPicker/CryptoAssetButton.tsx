@@ -78,12 +78,10 @@ function AssetLabel({
           icon={AssetIcon && <AssetIcon height={50} width={50} />}
           iconClassName={tw("mr-4")}
           large
+          label={<span className={tw("text-sm")}>{t`${assetName}`}</span>}
           text={
-            <span className={tw("text-lg", "text-center")}>
-              {t`${assetName}`}
-            </span>
+            <span className={tw("text-lg", "text-center")}>{assetSymbol}</span>
           }
-          label={<span className={tw("text-sm")}>{assetSymbol}</span>}
         />
       </div>
     </div>

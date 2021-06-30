@@ -183,7 +183,7 @@ export function PrincipalTokenLPCard({
         <div className={tw("flex", "w-full", "space-x-5", "items-center")}>
           <Callout className={calloutClassName}>
             <span
-              className={classNames(tw("text-base", "mb-0"))}
+              className={classNames(tw("mb-0"))}
             >{t`${baseAssetSymbol} liquidity`}</span>
             <span className={tw("text-lg", "font-semibold")}>
               {baseAssetLiquidityLabel}
@@ -191,7 +191,7 @@ export function PrincipalTokenLPCard({
           </Callout>
           <Callout className={calloutClassName}>
             <span
-              className={classNames(tw("text-base", "mb-0"))}
+              className={classNames(tw("mb-0"))}
             >{t`Principal liquidity`}</span>
             <span className={tw("text-lg", "font-semibold")}>
               {principalTokenLiquidityLabel}
@@ -199,9 +199,7 @@ export function PrincipalTokenLPCard({
           </Callout>
         </div>
         <Callout className={calloutClassName}>
-          <span
-            className={classNames(tw("text-base", "mb-0"))}
-          >{t`Share of pool`}</span>
+          <span className={classNames(tw("mb-0"))}>{t`Share of pool`}</span>
           <LabeledText
             muted={false}
             className={tw("flex", "justify-center", "items-center")}
