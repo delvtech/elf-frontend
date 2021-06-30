@@ -218,28 +218,24 @@ export function YieldTokenCard({
             unlockTimestamp={unlockTimestamp}
           />
           <Callout className={calloutClassName}>
-            <span
-              className={classNames(tw("text-base", "mb-0"))}
-            >{t`Total balance`}</span>
+            <span className={classNames(tw("mb-0"))}>{t`Total balance`}</span>
             <LabeledText
               muted={false}
               className={tw("flex", "justify-center", "items-center")}
               bold
-              textClassName={tw("text-2xl")}
+              textClassName={tw("text-lg")}
               containerClassName={tw("justify-center")}
               text={`${yieldTokenBalance.toFixed(6)} ${yieldTokenInfo.symbol}`}
               label={t`1 Yield Token = yield on 1 ${baseAssetSymbol} at maturity`}
             />
           </Callout>
           <Callout icon={null} className={calloutClassName}>
-            <span
-              className={classNames(tw("text-base", "mb-0"))}
-            >{t`Current value`}</span>
+            <span className={classNames(tw("mb-0"))}>{t`Current value`}</span>
             <LabeledText
               bold
               muted={false}
               className={tw("flex", "justify-center", "items-center")}
-              textClassName={tw("text-2xl")}
+              textClassName={tw("text-lg")}
               containerClassName={tw("justify-center")}
               text={
                 <span>{t`${exitValue.toFixed(6)} ${baseAssetSymbol}`}</span>

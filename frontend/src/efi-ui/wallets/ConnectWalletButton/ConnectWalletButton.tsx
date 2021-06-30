@@ -6,7 +6,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { WalletJazzicon } from "efi-ui/wallets/WalletJazzicon/WalletJazzicon";
-import { ChainId, isMainnet } from "efi/ethereum";
+import { ChainId } from "efi/ethereum";
 import { formatWalletAddress } from "efi/wallets/formatWalletAddress";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
 
@@ -29,14 +29,9 @@ export function ConnectWalletButton(
   const onCloseWalletDialog = useCallback(() => setWalletDialogOpen(false), []);
   const onOpenWalletDialog = useCallback(() => setWalletDialogOpen(true), []);
 
-  const mainnetDanger =
-    !!chainId && isMainnet(chainId) && process.env.NODE_ENV !== "production";
-
   let walletButtonIntent: Intent = Intent.NONE;
   if (!account) {
     walletButtonIntent = Intent.WARNING;
-  } else if (mainnetDanger) {
-    walletButtonIntent = Intent.DANGER;
   }
   const connectionStatusColor =
     walletConnectionActive && !!chainId ? ChainColor[chainId] : Colors.RED4;
@@ -60,7 +55,7 @@ export function ConnectWalletButton(
       ) : (
         <div>
           <Button
-            minimal={!mainnetDanger}
+            minimal
             icon={<WalletJazzicon size={28} account={account} />}
             rightIcon={
               <Icon

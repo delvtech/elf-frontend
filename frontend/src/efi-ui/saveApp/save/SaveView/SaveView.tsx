@@ -1,7 +1,7 @@
 import { CSSProperties, Fragment, ReactElement, useCallback } from "react";
 import { Helmet } from "react-helmet";
 
-import { Button } from "@blueprintjs/core";
+import { Button, NonIdealState } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
 import { navigate, RouteComponentProps } from "@reach/router";
@@ -16,6 +16,7 @@ import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { SaveNavigationButton } from "efi-ui/saveApp/navigation/SaveNavigation/SaveNavigationButton";
 import { SaveCard } from "efi-ui/saveApp/save/SaveCard/SaveCard";
 import { ConnectWalletButton } from "efi-ui/wallets/ConnectWalletButton/ConnectWalletButton";
+import { openTranches } from "efi/tranche/tranches";
 
 interface EarnViewProps extends RouteComponentProps {}
 
@@ -116,7 +117,15 @@ export function SaveView(props: EarnViewProps): ReactElement {
               </Button>
             </div>
 
-            <SaveCard library={library} account={account} />
+            {openTranches.length ? (
+              <SaveCard library={library} account={account} />
+            ) : (
+              <NonIdealState
+                icon={IconNames.BANK_ACCOUNT}
+                title={t`No terms available at this time`}
+                description={t`Please check back soon!`}
+              />
+            )}
           </div>
         </div>
       </div>

@@ -27,6 +27,7 @@ import {
 import { sortAddresses } from "efi/base/sortAddresses";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
 import { ContractMethodArgs } from "efi/contracts/types";
+import { serializeError } from "eth-rpc-errors";
 
 /**
  * Hook for Balancer Vault's swap method.
@@ -63,7 +64,8 @@ export function useSwap(
         onTransactionSubmitted?.();
       },
       onError: (error) => {
-        AppToaster.show(makeErrorToast(error.message));
+        const serializedError = serializeError(error);
+        AppToaster.show(makeErrorToast(serializedError.message));
       },
     }
   );

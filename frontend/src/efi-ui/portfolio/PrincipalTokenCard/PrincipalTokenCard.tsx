@@ -227,29 +227,25 @@ export function PrincipalTokenCard(
         />
 
         <Callout className={calloutClassName}>
-          <span
-            className={classNames(tw("text-base", "mb-0"))}
-          >{t`Total balance`}</span>
+          <span className={classNames(tw("mb-0"))}>{t`Total balance`}</span>
           <LabeledText
             muted={false}
             className={tw("flex", "justify-center", "items-center")}
             containerClassName={tw("justify-center")}
             bold
-            textClassName={tw("text-2xl")}
+            textClassName={tw("text-lg")}
             text={`${trancheBalance.toFixed(6)} ${termAssetSymbol}`}
             label={t`1 Principal Token = 1 ${baseAssetSymbol} at maturity`}
           />
         </Callout>
         <Callout icon={null} className={calloutClassName}>
-          <span
-            className={classNames(tw("text-base", "mb-0"))}
-          >{t`Current value`}</span>
+          <span className={classNames(tw("mb-0"))}>{t`Current value`}</span>
           <LabeledText
             bold
             muted={false}
             className={tw("flex", "justify-center", "items-center")}
             containerClassName={tw("justify-center")}
-            textClassName={tw("text-2xl")}
+            textClassName={tw("text-lg")}
             text={<span>{t`${exitValue.toFixed(6)} ${baseAssetSymbol}`}</span>}
             label={fiatPrice}
           />
