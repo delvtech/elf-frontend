@@ -16,7 +16,17 @@ export function useStakingAPY(
     toTime
   );
 
-  const timePeriod = !!toTime ? toTime - fromTime : fromTime;
+  const now = Date.now() / 1000;
+  const { createdAtTimestamp } = poolInfo.extensions;
+
+  const poolAge = Math.floor(now - createdAtTimestamp);
+  // if the pool isn't as old as the fromTime, then we use the pool age so we don't count time that
+  // hasn't happened yet.
+  const adjustedfromTime = Math.min(poolAge, fromTime);
+
+  // if a toTime is specified, then use the to - from time range.  otherwise use the adjusted from time.
+  const timePeriod = !!toTime ? toTime - fromTime : adjustedfromTime;
+
   const liquidity = totalLiquidity?.toDecimal();
   const fees = feeVolumeOverTimePeriod.toDecimal();
   let stakingAPY = 0;
