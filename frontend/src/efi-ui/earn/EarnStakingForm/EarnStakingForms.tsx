@@ -15,6 +15,7 @@ import { getPoolInfoForPrincipalToken } from "efi/pools/ccpool";
 import { getPoolInfoForYieldToken } from "efi/pools/weightedPool";
 
 import { StakePrincipalTokenForm } from "./StakePrincipalTokensForm";
+import { Link } from "@reach/router";
 
 interface EarnStakingFormsProps {
   library: Web3Provider | undefined;
@@ -62,6 +63,10 @@ export function EarnStakingForms(props: EarnStakingFormsProps): ReactElement {
           signer={signer}
           poolInfo={principalPoolInfo}
         />
+        <Link
+          to={`/pools/${principalPoolInfo.address}`}
+          className={tw("text-center", "font-semibold")}
+        >{t`Go to pool`}</Link>
       </Card>
       <Card className={cardClassName}>
         <div
@@ -76,6 +81,10 @@ export function EarnStakingForms(props: EarnStakingFormsProps): ReactElement {
           signer={signer}
           poolInfo={yieldPoolInfo}
         />
+        <Link
+          to={`/pools/${yieldPoolInfo.address}`}
+          className={tw("text-center", "font-semibold")}
+        >{t`Go to pool`}</Link>
       </Card>
     </div>
   );

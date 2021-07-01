@@ -8,6 +8,7 @@ import {
   PrincipalTokenInfo,
   TokenListTag,
   VaultTokenInfo,
+  YieldTokenInfo,
 } from "tokenlists/types";
 
 import { getSmartContractFromRegistryMulti } from "efi/contracts/SmartContractsRegistry";
@@ -74,4 +75,14 @@ export function getVaultTokenInfoForTranche(
   const vaultTokenInfo = getTokenInfo<VaultTokenInfo>(vault);
 
   return vaultTokenInfo;
+}
+
+export function getYieldTokenForPrincipalToken(
+  principalTokenAddress: string
+): YieldTokenInfo {
+  const {
+    extensions: { interestToken },
+  } = getTokenInfo<PrincipalTokenInfo>(principalTokenAddress);
+
+  return getTokenInfo<YieldTokenInfo>(interestToken);
 }

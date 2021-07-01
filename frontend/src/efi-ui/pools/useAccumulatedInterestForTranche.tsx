@@ -5,13 +5,13 @@ import { getQueryData } from "efi-ui/base/queryResults";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
 import { PoolInfo } from "efi/pools/PoolInfo";
-import { getTrancheForPool } from "efi/pools/getTrancheForPool";
+import { getPrincipalTokenInfoForPool } from "efi/pools/getPrincipalTokenInfoForPool";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
 
 export function useAccumulatedInterestForTranche(
   poolInfo: PoolInfo
 ): BigNumber | undefined {
-  const trancheInfo = getTrancheForPool(poolInfo);
+  const trancheInfo = getPrincipalTokenInfoForPool(poolInfo);
   const trancheContract = trancheContractsByAddress[trancheInfo.address];
 
   // this is the amount of underlying that has been deposited into the tranche.

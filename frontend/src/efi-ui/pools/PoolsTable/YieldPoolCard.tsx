@@ -26,7 +26,7 @@ import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { formatMoney } from "efi/money/formatMoney";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
-import { getTrancheForPool } from "efi/pools/getTrancheForPool";
+import { getPrincipalTokenInfoForPool } from "efi/pools/getPrincipalTokenInfoForPool";
 import { yieldPoolContractsByAddress } from "efi/pools/weightedPool";
 import { formatTermLength } from "efi/tranche/formatTermLength/formatTermLength";
 import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
@@ -42,7 +42,7 @@ export function YieldPoolCard(props: YieldPoolCardProps): ReactElement | null {
     yieldPoolInfo: { address: poolAddress },
   } = props;
   const poolContract = yieldPoolContractsByAddress[poolAddress];
-  const principalTokenInfo = getTrancheForPool(yieldPoolInfo);
+  const principalTokenInfo = getPrincipalTokenInfoForPool(yieldPoolInfo);
   const {
     address: principalTokenAddress,
     extensions: { unlockTimestamp, createdAtTimestamp },

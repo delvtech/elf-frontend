@@ -2,7 +2,7 @@ import { ReactElement } from "react";
 
 import { Intent, Tag } from "@blueprintjs/core";
 import classNames from "classnames";
-import { differenceInDays, format } from "date-fns";
+import { format } from "date-fns";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -10,9 +10,13 @@ import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
-import { getTrancheForPool } from "efi/pools/getTrancheForPool";
+import { getPrincipalTokenInfoForPool } from "efi/pools/getPrincipalTokenInfoForPool";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
+import { formatTermLength } from "efi/tranche/formatTermLength/formatTermLength";
+import { isYieldPool } from "efi/pools/weightedPool";
+import { getOppositePoolInfo } from "efi/pools/getOppositePoolInfo";
+import { Link } from "@reach/router";
 
 interface PoolViewHeaderProps {
   poolInfo: PoolInfo;
@@ -29,23 +33,20 @@ export function PoolViewHeader({
   );
   const BaseAssetIcon = findAssetIcon(baseAsset);
 
-  const trancheInfo = getTrancheForPool(poolInfo);
-  const { unlockTimestamp, createdAtTimestamp } = trancheInfo.extensions;
+  const trancheInfo = getPrincipalTokenInfoForPool(poolInfo);
+  const {
+    extensions: { unlockTimestamp, createdAtTimestamp },
+  } = trancheInfo;
 
   const startTime = createdAtTimestamp * 1000;
   const maturityTime = unlockTimestamp * 1000;
 
-  const dayDifference = differenceInDays(
-    maturityTime as number,
-    startTime as number
-  );
+  const termLength = formatTermLength(startTime, maturityTime);
 
-  const termLength =
-    dayDifference > 10
-      ? Math.round(
-          differenceInDays(maturityTime as number, startTime as number) / 10
-        ) * 10
-      : dayDifference;
+  const oppositePoolInfo = getOppositePoolInfo(poolInfo);
+  const oppositePoolType = isYieldPool(oppositePoolInfo)
+    ? t`Yield`
+    : t`Principal`;
 
   return (
     <div
@@ -73,12 +74,14 @@ export function PoolViewHeader({
             </sup>
           ) : null}
         </div>
-        <div>
-          {termLength
-            ? t`${termLength || 0} Day - ${
-                format(maturityTime || 0, "MMM d, y") || 0
-              }`
-            : ""}
+        <div className={tw("flex", "space-x-8")}>
+          <span>
+            {t`${termLength} - ${format(maturityTime || 0, "MMM d, y") || 0}`}
+          </span>
+          <Link
+            to={`/pools/${oppositePoolInfo.address}`}
+            className={tw("text-center")}
+          >{t`Go to ${oppositePoolType} Pool`}</Link>
         </div>
       </div>
     </div>

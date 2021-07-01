@@ -4,7 +4,9 @@ import { isPrincipalPool } from "efi/pools/ccpool";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { principalTokenInfos } from "efi/tranche/tranches";
 
-export function getTrancheForPool(poolInfo: PoolInfo): PrincipalTokenInfo {
+export function getPrincipalTokenInfoForPool(
+  poolInfo: PoolInfo
+): PrincipalTokenInfo {
   if (isPrincipalPool(poolInfo)) {
     const trancheAddress = poolInfo.extensions.bond;
     const trancheInfo = principalTokenInfos.find(

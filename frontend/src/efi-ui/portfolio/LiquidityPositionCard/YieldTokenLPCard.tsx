@@ -38,7 +38,7 @@ import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { getPoolInfo } from "efi/pools/getPoolInfo";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
-import { getTrancheForPool } from "efi/pools/getTrancheForPool";
+import { getPrincipalTokenInfoForPool } from "efi/pools/getPrincipalTokenInfoForPool";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { getTokenInfo } from "efi/tokenlists";
 import { getIsMature } from "efi/tranche/getIsMature";
@@ -282,7 +282,7 @@ function getYieldTokenForWeightedPool(poolAddress: string): YieldTokenInfo {
 
 export function getYieldTokenSymbol(poolInfo: PoolInfo): string {
   const { termAssetInfo } = getPoolTokens(poolInfo);
-  const { address: trancheAddress } = getTrancheForPool(poolInfo);
+  const { address: trancheAddress } = getPrincipalTokenInfoForPool(poolInfo);
   const { symbol: vaultSymbol } = getVaultTokenInfoForTranche(trancheAddress);
   const { symbol: termAssetSymbol } = getTermAssetSymbol(
     termAssetInfo.address,

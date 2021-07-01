@@ -15,6 +15,9 @@ import {
 } from "efi-ui/pools/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
 import { TradePanel } from "efi-ui/trade/TradePanel/TradePanel";
 import { PoolInfo } from "efi/pools/PoolInfo";
+import { getOppositePoolInfo } from "efi/pools/getOppositePoolInfo";
+import { isYieldPool } from "efi/pools/weightedPool";
+import { Link } from "@reach/router";
 
 interface PoolActionsCardProps {
   library: Web3Provider | undefined;
@@ -33,21 +36,32 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
   // clear pref, use local state above to control tabs for smoother UI
   useClearTab(tab, setTab);
 
+  const oppositePoolInfo = getOppositePoolInfo(poolInfo);
+  const oppositePoolType = isYieldPool(oppositePoolInfo)
+    ? t`Yield`
+    : t`Principal`;
+
   return (
     <div className={tw("flex", "flex-col", "flex-1", "h-500")}>
       <div className={tw("mb-2", "flex", "space-x-4")}>
         <span>{t`Pool Actions`}</span>
       </div>
       <Card className={tw("flex", "flex-col", "flex-1", "w-full", "space-y-2")}>
-        <Tabs
-          selectedTabId={activeTab}
-          onChange={setActiveTab as (newTabId: PoolAction) => void}
-        >
-          <Tab id={PoolAction.BUY} title={t`Buy`} />
-          <Tab id={PoolAction.SELL} title={t`Sell`} />
-          <Tab id={PoolAction.ADD_LIQUIDITY} title={t`Add Liquidity`} />
-          <Tab id={PoolAction.REMOVE_LIQUIDITY} title={t`Remove Liquidity`} />
-        </Tabs>
+        <div className={tw("flex", "justify-between", "items-center")}>
+          <Tabs
+            selectedTabId={activeTab}
+            onChange={setActiveTab as (newTabId: PoolAction) => void}
+          >
+            <Tab id={PoolAction.BUY} title={t`Buy`} />
+            <Tab id={PoolAction.SELL} title={t`Sell`} />
+            <Tab id={PoolAction.ADD_LIQUIDITY} title={t`Add Liquidity`} />
+            <Tab id={PoolAction.REMOVE_LIQUIDITY} title={t`Remove Liquidity`} />
+          </Tabs>
+          <Link
+            to={`/pools/${oppositePoolInfo.address}`}
+            className={tw("text-center")}
+          >{t`Go to ${oppositePoolType} Pool`}</Link>
+        </div>
         {activeTab === PoolAction.BUY && (
           <TradePanel
             tradeType="buy"

@@ -26,7 +26,7 @@ import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { formatMoney } from "efi/money/formatMoney";
 import { principalPoolContractsByAddress } from "efi/pools/ccpool";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
-import { getTrancheForPool } from "efi/pools/getTrancheForPool";
+import { getPrincipalTokenInfoForPool } from "efi/pools/getPrincipalTokenInfoForPool";
 import { formatTermLength } from "efi/tranche/formatTermLength/formatTermLength";
 import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
 import { getVaultTokenInfoForTranche } from "efi/tranche/tranches";
@@ -43,7 +43,7 @@ export function PrincipalPoolCard(
     principalPoolInfo: { address: poolAddress },
   } = props;
 
-  const principalTokenInfo = getTrancheForPool(principalPoolInfo);
+  const principalTokenInfo = getPrincipalTokenInfoForPool(principalPoolInfo);
   const {
     address: principalTokenAddress,
     extensions: { unlockTimestamp, createdAtTimestamp },

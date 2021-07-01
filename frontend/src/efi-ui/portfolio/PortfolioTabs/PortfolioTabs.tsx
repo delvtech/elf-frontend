@@ -4,7 +4,8 @@ import { Tab, Tabs } from "@blueprintjs/core";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { PortfolioAssetLabel } from "efi-ui/portfolio/PortfolioView/PortfolioAssetLabel";
+import styles from "./PortfolioTabs.module.css";
+import classNames from "classnames";
 
 export enum PortfolioTabId {
   PRINCIPAL_TOKENS = "principalTokens",
@@ -24,19 +25,19 @@ export function PortfolioTabs({
     <Tabs
       id="portfolio-tabs"
       large
-      className={tw("flex", "justify-center", "items-center")}
+      className={classNames(tw("w-500"), styles.portfolioTabs)}
       renderActiveTabPanelOnly
       onChange={onChangeTab}
       selectedTabId={activePortfolioTabId}
     >
-      <Tab id={PortfolioTabId.PRINCIPAL_TOKENS} className={tw("lg:w-300")}>
-        <PortfolioAssetLabel name={t`Principal Tokens`} />
+      <Tab id={PortfolioTabId.PRINCIPAL_TOKENS}>
+        <div className={tw("text-lg")}>{t`Principal Tokens`}</div>
       </Tab>
-      <Tab id={PortfolioTabId.YIELD_TOKENS} className={tw("lg:w-300")}>
-        <PortfolioAssetLabel name={t`Yield Tokens`} />
+      <Tab id={PortfolioTabId.YIELD_TOKENS}>
+        <div className={tw("text-lg")}>{t`Yield Tokens`}</div>
       </Tab>
-      <Tab id={PortfolioTabId.LP_POSITIONS} className={tw("lg:w-300")}>
-        <PortfolioAssetLabel name={t`LP Positions`} />
+      <Tab id={PortfolioTabId.LP_POSITIONS}>
+        <div className={tw("text-lg")}>{t`LP Positions`}</div>
       </Tab>
     </Tabs>
   );

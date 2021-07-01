@@ -4,7 +4,7 @@ import { getYearnVaultAPY } from "efi-yearn/fetchYearnVaults";
 import { ONE_YEAR_IN_SECONDS } from "efi/base/time";
 import { getPoolContract } from "efi/pools/getPoolContract";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
-import { getTrancheForPool } from "efi/pools/getTrancheForPool";
+import { getPrincipalTokenInfoForPool } from "efi/pools/getPrincipalTokenInfoForPool";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { TermAssetType } from "efi/tranche/TermAssetType";
 import { getVaultTokenInfoForTranche } from "efi/tranche/tranches";
@@ -27,7 +27,7 @@ export function useTokenYield(
   const {
     address: trancheAddress,
     extensions: { unlockTimestamp },
-  } = getTrancheForPool(poolInfo);
+  } = getPrincipalTokenInfoForPool(poolInfo);
 
   let fixedAPY = 0;
   if (principalPrice) {

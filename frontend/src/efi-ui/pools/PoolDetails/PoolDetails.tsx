@@ -18,7 +18,7 @@ import { useTotalValueLockedForTranche } from "efi-ui/pools/useTotalValueLockedF
 import { useVolumeForPool } from "efi-ui/pools/useVolumeForPool/useVolumeForPool";
 import { ONE_WEEK_IN_SECONDS } from "efi/base/time";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
-import { getTrancheForPool } from "efi/pools/getTrancheForPool";
+import { getPrincipalTokenInfoForPool } from "efi/pools/getPrincipalTokenInfoForPool";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
 
@@ -35,7 +35,7 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
     getPoolTokens(poolInfo);
 
   const totalLiquidity = useTotalFiatLiquidity(poolInfo);
-  const trancheInfo = getTrancheForPool(poolInfo);
+  const trancheInfo = getPrincipalTokenInfoForPool(poolInfo);
   const {
     address: trancheAddress,
     decimals: trancheDecimals,

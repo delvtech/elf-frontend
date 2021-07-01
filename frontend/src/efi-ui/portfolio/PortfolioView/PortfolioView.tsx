@@ -53,7 +53,7 @@ export function PortfolioView(props: PortfolioViewProps): ReactElement {
               "flex",
               "flex-col",
               "w-full",
-              "space-y-2",
+              "space-y-6",
               "items-center",
               "mb-6"
             )}
