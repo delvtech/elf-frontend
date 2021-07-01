@@ -1,12 +1,12 @@
 import { useFeeVolumeFiatForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
 import { useTotalFiatLiquidity } from "efi-ui/pools/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
-import { ONE_DAY_IN_SECONDS, ONE_YEAR_IN_SECONDS } from "efi/base/time";
+import { ONE_WEEK_IN_SECONDS, ONE_YEAR_IN_SECONDS } from "efi/base/time";
 import { PoolInfo } from "efi/pools/PoolInfo";
 
 export function useStakingAPY(
   poolInfo: PoolInfo,
 
-  fromTime: number = ONE_DAY_IN_SECONDS,
+  fromTime: number = ONE_WEEK_IN_SECONDS,
   toTime?: number
 ): number {
   const totalLiquidity = useTotalFiatLiquidity(poolInfo);
@@ -16,10 +16,10 @@ export function useStakingAPY(
     toTime
   );
 
-  const now = Date.now() / 1000;
+  const nowInSeconds = Date.now() / 1000;
   const { createdAtTimestamp } = poolInfo.extensions;
 
-  const poolAge = Math.floor(now - createdAtTimestamp);
+  const poolAge = Math.floor(nowInSeconds - createdAtTimestamp);
   // if the pool isn't as old as the fromTime, then we use the pool age so we don't count time that
   // hasn't happened yet.
   const adjustedfromTime = Math.min(poolAge, fromTime);
@@ -31,8 +31,8 @@ export function useStakingAPY(
   const fees = feeVolumeOverTimePeriod.toDecimal();
   let stakingAPY = 0;
   if (liquidity && fees) {
-    const stakingYield24hr = fees / liquidity;
-    stakingAPY = (stakingYield24hr * ONE_YEAR_IN_SECONDS) / timePeriod;
+    const stakingYieldOverPeriod = fees / liquidity;
+    stakingAPY = (stakingYieldOverPeriod * ONE_YEAR_IN_SECONDS) / timePeriod;
   }
   return stakingAPY;
 }

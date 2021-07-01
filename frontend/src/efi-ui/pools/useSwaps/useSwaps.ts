@@ -6,13 +6,13 @@ import { useSmartContractEvents } from "efi-ui/contracts/useSmartContractEvents/
 import { useLatestBlockNumber } from "efi-ui/ethereum/hooks/useLatestBlockNumber";
 import { usePreviousBlockNumber } from "efi-ui/ethereum/usePreviousBlockNumber/usePreviousBlockNumber";
 import { EMPTY_ARRAY } from "efi/base/emptyArray";
-import { ONE_DAY_IN_SECONDS } from "efi/base/time";
+import { ONE_WEEK_IN_SECONDS } from "efi/base/time";
 import { AVG_MINE_RATE_SECONDS } from "efi/ethereum/miningRate";
 import { PoolInfo } from "efi/pools/PoolInfo";
 
 export function useSwaps(
   poolInfo: PoolInfo,
-  fromTime: number = ONE_DAY_IN_SECONDS,
+  fromTime: number = ONE_WEEK_IN_SECONDS,
   toTime?: number
 ): SwapEventWithTimeStamp[] | undefined {
   const { poolId } = poolInfo.extensions;

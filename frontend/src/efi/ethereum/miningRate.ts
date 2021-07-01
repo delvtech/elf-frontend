@@ -9,14 +9,14 @@ import { ChainId } from "efi/ethereum";
 // https://api.etherscan.io/api?module=block&action=getblocknobytime&timestamp=1578638524&closest=before&apikey=<API_KEY>
 // we can use their api just for the block number at timestamp.  they have a 5req/s limit per IP
 // which we shouldn't hit if we only use for this.
-const PRODUCTION = process.env.NODE_ENV === "production";
-const TEST = process.env.NODE_ENV === "test";
+// const PRODUCTION = process.env.NODE_ENV === "production";
+// const TEST = process.env.NODE_ENV === "test";
 function getMineRate() {
-  if (AddressesJson.chainId === ChainId.MAINNET && PRODUCTION) {
+  if (AddressesJson.chainId === ChainId.MAINNET) {
     return 13.1;
   }
 
-  if (AddressesJson.chainId === ChainId.GOERLI && TEST) {
+  if (AddressesJson.chainId === ChainId.GOERLI) {
     return 30;
   }
 
