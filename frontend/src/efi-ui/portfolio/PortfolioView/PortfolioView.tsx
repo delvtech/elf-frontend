@@ -38,7 +38,7 @@ export function PortfolioView(props: PortfolioViewProps): ReactElement {
   return (
     <Fragment>
       <Helmet>
-        <title>{t`Portfolio`}</title>
+        <title>{t`Portfolio | Element.fi`}</title>
       </Helmet>
       <div
         data-testid="portfolio-view"

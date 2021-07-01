@@ -44,6 +44,7 @@ export function TopbarNavigation({
 
   return (
     <div className={tw("flex", "w-full", "flex-col")}>
+      <ExperimentalBanner />
       <div className={tw("flex", "w-full", "justify-between", "p-8", "flex")}>
         <div
           className={tw("flex", "space-x-12", "items-end", "justify-between")}
@@ -112,7 +113,6 @@ export function TopbarNavigation({
           {hamburgerButton}
         </div>
       </div>
-      <ExperimentalBanner />
     </div>
   );
 }

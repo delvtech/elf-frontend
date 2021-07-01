@@ -18,6 +18,7 @@ import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { useSigner } from "efi-ui/provider/useBlockFromTag/useSigner/useSigner";
 import { openPrincipalTokenInfos } from "efi/tranche/tranches";
 import { IconNames } from "@blueprintjs/icons";
+import { Helmet } from "react-helmet";
 
 interface EarnViewProps extends RouteComponentProps {}
 
@@ -31,6 +32,9 @@ export function EarnView(props: EarnViewProps): ReactElement {
   const earnViewStyle: CSSProperties = { maxWidth: 610 };
   return (
     <Fragment>
+      <Helmet>
+        <title>{t`Earn | Element.fi`}</title>
+      </Helmet>
       <div
         data-testid="earn-view"
         className={tw(

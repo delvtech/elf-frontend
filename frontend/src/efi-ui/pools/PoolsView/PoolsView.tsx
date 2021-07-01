@@ -30,7 +30,7 @@ export function PoolsView(props: PoolsViewProps): ReactElement {
   return (
     <Fragment>
       <Helmet>
-        <title>{t`Pools`}</title>
+        <title>{t`Pools | Element.fi`}</title>
       </Helmet>
       <div
         data-testid="pools-view"

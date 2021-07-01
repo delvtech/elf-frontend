@@ -3,6 +3,7 @@ import { Fragment, ReactElement } from "react";
 import { Web3Provider } from "@ethersproject/providers";
 import { RouteComponentProps } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
+import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { PoolDetails } from "efi-ui/pools/PoolDetails/PoolDetails";
@@ -11,6 +12,7 @@ import { getPoolInfo } from "efi/pools/getPoolInfo";
 
 import { PoolViewHeader } from "./PoolViewHeader";
 import { PoolViewTitle } from "./PoolViewTitle";
+import { Helmet } from "react-helmet";
 
 interface PoolViewProps extends RouteComponentProps {
   poolAddress?: string;
@@ -23,6 +25,9 @@ export function PoolView({ poolAddress }: PoolViewProps): ReactElement {
 
   return (
     <Fragment>
+      <Helmet>
+        <title>{t`${poolInfo.name} | Element.fi`}</title>
+      </Helmet>
       <PoolViewTitle poolInfo={poolInfo} />
       <div
         data-testid="pool-view"

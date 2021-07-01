@@ -46,7 +46,7 @@ const SaveApp: FC<SaveAppProps> = () => {
     styles.appBackground,
     { [styles.appBackgroundDark]: isDarkMode },
     darkModeClassName,
-    tw("flex", "flex-col", "lg:flex-row", "w-full", "h-full")
+    tw("flex", "flex-col", "w-full", "h-full")
   );
 
   // Do these at the top of the app in one place so we don't have multiple

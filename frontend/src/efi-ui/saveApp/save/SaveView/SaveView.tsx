@@ -56,14 +56,14 @@ export function SaveView(props: EarnViewProps): ReactElement {
         className={tw(
           "flex",
           "flex-col",
-          "py-6",
           "h-full",
           "items-center",
           "overflow-scroll"
         )}
       >
+        <ExperimentalBanner />
         {/* page title */}
-        <div className={tw("flex", "w-full", "px-6", "justify-between")}>
+        <div className={tw("flex", "w-full", "p-8", "justify-between")}>
           <img
             style={{
               height: 48, // don't use tailwind here since we want fixed height and rem is dynamic
@@ -86,7 +86,6 @@ export function SaveView(props: EarnViewProps): ReactElement {
             <SaveNavigationButton />
           </div>
         </div>
-        <ExperimentalBanner />
 
         <div
           className={tw(
