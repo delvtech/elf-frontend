@@ -5,7 +5,6 @@ import { PoolInfo } from "efi/pools/PoolInfo";
 
 export function useStakingAPY(
   poolInfo: PoolInfo,
-
   fromTime: number = ONE_WEEK_IN_SECONDS,
   toTime?: number
 ): number {

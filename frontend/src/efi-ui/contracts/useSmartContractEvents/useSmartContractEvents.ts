@@ -58,7 +58,9 @@ export function makeSmartContractEventsUseQueryOptions<
   const queryKey = makeSmartContractEventsQueryKey<TContract, TFilterName>(
     contract,
     filterName,
-    callArgs
+    callArgs,
+    fromBlock,
+    toBlock
   );
 
   const queryFn = async (): Promise<Event[]> => {
@@ -100,13 +102,23 @@ export function makeSmartContractEventsQueryKey<
 >(
   contract: TContract | undefined,
   filterName: TFilterName,
-  callArgs: Parameters<TContract["filters"][TFilterName]> | undefined
+  callArgs: Parameters<TContract["filters"][TFilterName]> | undefined,
+  fromBlock?: number,
+  toBlock?: number
 ): [
-  [string, string | undefined],
-  {
-    filterName: TFilterName;
-    callArgs: Parameters<TContract["filters"][TFilterName]> | undefined;
-  }
+  string,
+  TFilterName,
+  string | undefined,
+  number | undefined,
+  number | undefined,
+  Parameters<TContract["filters"][TFilterName]> | undefined
 ] {
-  return [["contractQueryFilter", contract?.address], { filterName, callArgs }];
+  return [
+    "contractQueryFilter",
+    filterName,
+    contract?.address,
+    fromBlock,
+    toBlock,
+    callArgs,
+  ];
 }
