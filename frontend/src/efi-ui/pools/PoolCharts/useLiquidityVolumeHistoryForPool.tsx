@@ -1,6 +1,5 @@
 import { formatUnits } from "ethers/lib/utils";
 
-import { TimeData } from "efi-ui/pools/PoolCharts/PoolCharts";
 import { useSwaps } from "efi-ui/pools/useSwaps/useSwaps";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
@@ -8,6 +7,7 @@ import { EMPTY_ARRAY } from "efi/base/emptyArray";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolInfo } from "efi/pools/PoolInfo";
+import { TimeData } from "efi/charts/TimeData";
 
 /**
  * Returns the fiat volume for a pool in a given time range

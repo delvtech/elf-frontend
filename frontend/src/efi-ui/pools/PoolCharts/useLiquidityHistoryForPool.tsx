@@ -16,7 +16,7 @@ import { getPoolContract } from "efi/pools/getPoolContract";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { getTokenInfo } from "efi/tokenlists";
-import { TimeData } from "efi-ui/pools/PoolCharts/PoolCharts";
+import { TimeData } from "efi/charts/TimeData";
 
 type PoolBalanceChangedArguments = [
   poolId: string,

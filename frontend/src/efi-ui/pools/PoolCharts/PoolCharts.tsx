@@ -19,14 +19,11 @@ import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolInfo } from "efi/pools/PoolInfo";
 
 import { useLiquidityHistoryForPool } from "./useLiquidityHistoryForPool";
+import { TimeData } from "efi/charts/TimeData";
 
 const nowInMs = Date.now();
 const weekAgoMs = nowInMs - ONE_WEEK_IN_MILLISECONDS;
 
-export interface TimeData {
-  timeMs: number;
-  value: number;
-}
 enum ChartType {
   LIQUIDITY = "liquidity",
   VOLUME = "volume",
