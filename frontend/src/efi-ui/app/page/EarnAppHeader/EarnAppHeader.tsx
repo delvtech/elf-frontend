@@ -1,10 +1,8 @@
 import { ReactElement } from "react";
 
 import {
-  AnchorButton,
   Button,
   Divider,
-  Intent,
   Spinner,
   SpinnerSize,
   Tab,
@@ -22,20 +20,7 @@ import { Navigation } from "efi-ui/app/navigation/navigation";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { usePendingTransactionPref } from "efi-ui/transactions/usePendingTransactionPref/usePendingTransactionPref";
 import { ConnectWalletButton } from "efi-ui/wallets/ConnectWalletButton/ConnectWalletButton";
-import { AddressesJson } from "efi/addresses";
-import { isLocalnet, isGoerli, isMainnet } from "efi/ethereum";
 
-// assume testnet by default (goerli)
-let saveAppUrl = "https://save-testnet.element.fi";
-if (isLocalnet(AddressesJson.chainId)) {
-  // TODO: Get this from the env, but for now assume in dev that the Save UI is @ :3001
-  saveAppUrl = "http://localhost:3001";
-}
-if (isGoerli(AddressesJson.chainId)) {
-  saveAppUrl = "https://save-testnet.element.fi";
-} else if (isMainnet(AddressesJson.chainId)) {
-  saveAppUrl = "https://save.element.fi";
-}
 interface EarnAppHeaderProps {
   chainId: number | undefined;
   account: string | null | undefined;
@@ -130,15 +115,6 @@ export function EarnAppHeader({
             chainId={chainId}
             walletConnectionActive={walletConnectionActive}
           />
-          <div className={tw("flex", "flex-shrink-0")}>
-            <AnchorButton
-              href={saveAppUrl}
-              large
-              outlined
-              intent={Intent.PRIMARY}
-              icon={IconNames.SHARE}
-            >{t`Save UI`}</AnchorButton>
-          </div>
           {hamburgerButton}
         </div>
       </div>

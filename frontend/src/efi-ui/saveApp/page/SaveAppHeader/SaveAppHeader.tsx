@@ -47,6 +47,15 @@ export function SaveAppHeader({
           alt={t`Element Finance`}
         />
         <div className={tw("flex", "space-x-4", "items-center")}>
+          <div className={tw("flex", "flex-shrink-0")}>
+            <AnchorButton
+              href={earnAppUrl}
+              large
+              outlined
+              intent={Intent.PRIMARY}
+              icon={IconNames.SHARE}
+            >{t`Advanced UI`}</AnchorButton>
+          </div>
           <Button
             minimal
             className={tw("px-6")}
@@ -58,15 +67,6 @@ export function SaveAppHeader({
             chainId={chainId}
             walletConnectionActive={walletConnectionActive}
           />
-          <div className={tw("flex", "flex-shrink-0")}>
-            <AnchorButton
-              href={earnAppUrl}
-              large
-              outlined
-              intent={Intent.PRIMARY}
-              icon={IconNames.SHARE}
-            >{t`Advanced UI`}</AnchorButton>
-          </div>
           <SaveHamburgerButton />
         </div>
       </div>
