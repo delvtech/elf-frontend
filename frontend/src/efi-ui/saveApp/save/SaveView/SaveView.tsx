@@ -8,16 +8,11 @@ import { navigate, RouteComponentProps } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
 import { jt, t } from "ttag";
 
-import logoDark from "efi-static-assets/logos/svg/logo--dark.svg";
-import logo from "efi-static-assets/logos/svg/logo--light.svg";
 import tw from "efi-tailwindcss-classnames";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
-import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import { SaveNavigationButton } from "efi-ui/saveApp/navigation/SaveNavigation/SaveNavigationButton";
 import { SaveCard } from "efi-ui/saveApp/save/SaveCard/SaveCard";
-import { ConnectWalletButton } from "efi-ui/wallets/ConnectWalletButton/ConnectWalletButton";
 import { openTranches } from "efi/tranche/tranches";
-import { ExperimentalBanner } from "efi-ui/app/navigation/ExperimentalBanner/ExperimentalBanner";
+import { SaveAppHeader } from "efi-ui/saveApp/page/SaveAppHeader/SaveAppHeader";
 
 interface EarnViewProps extends RouteComponentProps {}
 
@@ -43,7 +38,6 @@ export function SaveView(unusedProps: EarnViewProps): ReactElement {
     chainId,
     active: walletConnectionActive,
   } = useWeb3React<Web3Provider>();
-  const { isDarkMode, setDarkModeOn, setDarkModeOff } = useDarkMode();
 
   const goToPortfolio = useCallback(() => navigate("/portfolio"), []);
   return (
@@ -52,7 +46,7 @@ export function SaveView(unusedProps: EarnViewProps): ReactElement {
         <title>{t`Earn fixed yield from buying at a discount. Exit anytime.`}</title>
       </Helmet>
       <div
-        data-testid="earn-view"
+        data-testid="save-view"
         className={tw(
           "flex",
           "flex-col",
@@ -61,31 +55,11 @@ export function SaveView(unusedProps: EarnViewProps): ReactElement {
           "overflow-scroll"
         )}
       >
-        <ExperimentalBanner />
-        {/* page title */}
-        <div className={tw("flex", "w-full", "p-8", "justify-between")}>
-          <img
-            style={{
-              height: 48, // don't use tailwind here since we want fixed height and rem is dynamic
-            }}
-            src={isDarkMode ? logoDark : logo}
-            alt={t`Element Finance`}
-          />
-          <div className={tw("flex", "space-x-4")}>
-            <Button
-              minimal
-              className={tw("px-6")}
-              icon={isDarkMode ? IconNames.FLASH : IconNames.MOON}
-              onClick={isDarkMode ? setDarkModeOff : setDarkModeOn}
-            />
-            <ConnectWalletButton
-              account={account}
-              chainId={chainId}
-              walletConnectionActive={walletConnectionActive}
-            />
-            <SaveNavigationButton />
-          </div>
-        </div>
+        <SaveAppHeader
+          account={account}
+          walletConnectionActive={walletConnectionActive}
+          chainId={chainId}
+        />
 
         <div
           className={tw(

@@ -21,7 +21,7 @@ import { useSyncWithInjectedEthereum } from "efi-ui/wallets/hooks/useSyncWithInj
 
 import styles from "./App.module.css";
 import { useToastWrongChain } from "efi-ui/provider/useBlockFromTag/useToastWrongChain";
-import { TopbarNavigation } from "efi-ui/app/navigation/TopbarNavigation/TopbarNavigation";
+import { EarnAppHeader } from "efi-ui/app/page/EarnAppHeader/EarnAppHeader";
 import { getConnectorName } from "efi/wallets/connectors";
 import { NavigationMenuButton } from "efi-ui/app/navigation/EarnHamburgerButton/EarnHamburgerButton";
 import { AddressesJson } from "efi/addresses";
@@ -57,7 +57,7 @@ const App: FC<AppProps> = () => {
         )}
       >
         <LocationProvider>
-          <TopbarNavigation
+          <EarnAppHeader
             account={account}
             active={active}
             chainId={chainId}

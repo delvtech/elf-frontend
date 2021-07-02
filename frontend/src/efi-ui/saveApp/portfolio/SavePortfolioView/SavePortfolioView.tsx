@@ -9,22 +9,17 @@ import { useWeb3React } from "@web3-react/core";
 import { PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
-import logoDark from "efi-static-assets/logos/svg/logo--dark.svg";
-import logo from "efi-static-assets/logos/svg/logo--light.svg";
 import tw from "efi-tailwindcss-classnames";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
-import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import { SaveNavigationButton } from "efi-ui/saveApp/navigation/SaveNavigation/SaveNavigationButton";
 import { SavePortfolioList } from "efi-ui/saveApp/portfolio/SavePortfolioList/SavePortfolioList";
 import { useTokensWithBalance } from "efi-ui/token/hooks/useTokensWithBalance";
-import { ConnectWalletButton } from "efi-ui/wallets/ConnectWalletButton/ConnectWalletButton";
 import { isDust } from "efi/coins/isDust";
 import { getTokenInfo } from "efi/tokenlists";
 import {
   principalTokenInfos,
   trancheContractsByAddress,
 } from "efi/tranche/tranches";
-import { ExperimentalBanner } from "efi-ui/app/navigation/ExperimentalBanner/ExperimentalBanner";
+import { SaveAppHeader } from "efi-ui/saveApp/page/SaveAppHeader/SaveAppHeader";
 
 interface SavePortfolioViewProps extends RouteComponentProps {}
 
@@ -40,7 +35,6 @@ export function SavePortfolioView(
     chainId,
     active: walletConnectionActive,
   } = useWeb3React<Web3Provider>();
-  const { isDarkMode, setDarkModeOn, setDarkModeOff } = useDarkMode();
 
   const goToSave = useCallback(() => navigate("/"), []);
 
@@ -53,41 +47,19 @@ export function SavePortfolioView(
         <title>{t`Earn fixed yield from buying at a discount. Exit anytime.`}</title>
       </Helmet>
       <div
-        data-testid="earn-view"
         className={tw(
           "flex",
           "flex-col",
-          "py-6",
           "h-full",
           "items-center",
           "overflow-scroll"
         )}
       >
-        {/* page title */}
-        <div className={tw("flex", "px-6", "w-full", "justify-between")}>
-          <img
-            style={{
-              height: 48, // don't use tailwind here since we want fixed height and rem is dynamic
-            }}
-            src={isDarkMode ? logoDark : logo}
-            alt={t`Element Finance`}
-          />
-          <div className={tw("flex", "space-x-4")}>
-            <Button
-              minimal
-              className={tw("px-6")}
-              icon={isDarkMode ? IconNames.FLASH : IconNames.MOON}
-              onClick={isDarkMode ? setDarkModeOff : setDarkModeOn}
-            />
-            <ConnectWalletButton
-              account={account}
-              chainId={chainId}
-              walletConnectionActive={walletConnectionActive}
-            />
-            <SaveNavigationButton />
-          </div>
-        </div>
-        <ExperimentalBanner />
+        <SaveAppHeader
+          account={account}
+          walletConnectionActive={walletConnectionActive}
+          chainId={chainId}
+        />
 
         <div
           className={tw(
