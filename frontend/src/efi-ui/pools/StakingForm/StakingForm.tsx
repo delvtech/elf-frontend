@@ -38,7 +38,6 @@ import { PoolContract } from "efi/pools/PoolContract";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { validateStakingValue } from "efi/staking/validateStakeValue";
 import { getTokenInfo } from "efi/tokenlists";
-import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
 import { trancheContracts } from "efi/tranche/tranches";
 
 interface StakingAssetInputProps {
@@ -143,11 +142,6 @@ export function StakingForm(props: StakingFormProps): ReactElement {
   const isPrincipalPoolType = trancheContracts
     .map(({ address }) => address)
     .includes(termAssetAddress ?? "");
-
-  const { label: termAssetSymbolLabel } = getTermAssetSymbol(
-    termAssetAddress,
-    baseAssetSymbol
-  );
 
   const baseAssetReserves = formatUnits(
     baseAssetPoolBalance ?? 0,
@@ -314,9 +308,7 @@ export function StakingForm(props: StakingFormProps): ReactElement {
         baseAssetDecimals={baseAssetDecimals}
         termAssetDecimals={termAssetDecimals}
         baseAssetSymbol={baseAssetSymbol}
-        baseAssetSymbolLabel={baseAssetSymbol}
         termAssetSymbol={termAssetSymbol}
-        termAssetSymbolLabel={termAssetSymbolLabel}
         baseAssetIn={baseAssetIn}
         termAssetIn={termAssetIn}
         isOpen={isDrawerOpen}

@@ -6,7 +6,6 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import { TokenIcon } from "efi-ui/token/TokenIcon";
 
 import styles from "./styles.module.css";
 
@@ -24,25 +23,17 @@ interface StakeConfirmationFormProps {
    * input
    */
   assetTwoSymbol?: string | undefined;
-  assetOneIcon?: TokenIcon;
-  assetTwoIcon?: TokenIcon;
   assetOneValueLabel?: string | undefined;
   assetTwoValueLabel?: string | undefined;
-  assetOneSymbolLabel?: string | undefined;
-  assetTwoSymbolLabel?: string | undefined;
   children?: ReactElement;
 }
 
 export function StakeConfirmationForm({
   heading = t`Add Liquidity`,
-  assetOneIcon: AssetOneIcon,
-  assetTwoIcon: AssetTwoIcon,
   assetOneSymbol,
   assetTwoSymbol,
   assetOneValueLabel,
   assetTwoValueLabel,
-  assetOneSymbolLabel,
-  assetTwoSymbolLabel,
   children,
 }: StakeConfirmationFormProps): ReactElement {
   const { isDarkMode } = useDarkMode();

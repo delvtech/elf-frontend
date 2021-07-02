@@ -40,7 +40,6 @@ import {
   underlyingContractsByAddress,
 } from "efi/underlying/underlying";
 import { WalletApprovalInfo } from "efi/wallets/WalletApprovalInfo";
-import { TransactionError } from "efi-ui/contracts/TransactionError";
 
 interface MintTransactionConfirmationDrawerProps {
   account: string | null | undefined;
@@ -61,7 +60,6 @@ interface MintTransactionConfirmationDrawerProps {
 export function MintTransactionConfirmationDrawer({
   library,
   account,
-  baseAssetIcon: BaseAssetIcon,
   baseAsset,
   principalTokenSymbol,
   yieldTokenSymbol,
@@ -86,7 +84,7 @@ export function MintTransactionConfirmationDrawer({
 
   const numPrincipalTokens = useMintPreview(trancheInfo, amountIn);
 
-  const onError = useCallback((error: TransactionError) => {
+  const onError = useCallback(() => {
     setLoadingPermits(false);
   }, []);
 
@@ -157,15 +155,12 @@ export function MintTransactionConfirmationDrawer({
           <SwapDetailsForm
             amountIn={(+amountIn).toFixed(4)}
             heading={t`Mint Preview`}
-            assetInIcon={BaseAssetIcon}
             amountInLabel={t`Deposit`}
             assetInSymbol={baseAssetSymbol}
             assetOutSymbol={`${baseAssetSymbol} Principal Token`}
-            assetOutIcon={null}
           >
             <Fragment>
               <MintTransactionDetails
-                baseAssetSymbol={baseAssetSymbol}
                 principalTokenSymbol={principalTokenSymbol}
                 yieldTokenSymbol={yieldTokenSymbol}
                 unlockTimestamp={unlockTimeStampDate}

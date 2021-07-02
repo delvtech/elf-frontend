@@ -105,16 +105,13 @@ export function MintForm(props: MintFormProps): ReactElement | null {
     setAmountIn("");
   }, [setAmountIn]);
 
-  const onClick = useCallback(
-    (event) => {
-      if (!account) {
-        return setWalletDialogOpen(true);
-      }
+  const onClick = useCallback(() => {
+    if (!account) {
+      return setWalletDialogOpen(true);
+    }
 
-      setDrawerOpen(true);
-    },
-    [account, setDrawerOpen]
-  );
+    setDrawerOpen(true);
+  }, [account, setDrawerOpen]);
 
   return (
     <Card

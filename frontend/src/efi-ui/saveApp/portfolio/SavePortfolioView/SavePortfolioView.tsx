@@ -31,7 +31,9 @@ interface SavePortfolioViewProps extends RouteComponentProps {}
 const maxWidthStyle: CSSProperties = { maxWidth: 672 };
 const widthStyle = { width: 672 };
 
-export function SavePortfolioView(props: SavePortfolioViewProps): ReactElement {
+export function SavePortfolioView(
+  unusedProps: SavePortfolioViewProps
+): ReactElement {
   const {
     account,
     library,
@@ -171,8 +173,8 @@ function usePrincipalTokensWithNonDustBalance(
       return !isDust(balanceOf, decimals);
     }
   );
-  const principalTokensWithNonDustBalance = filteredByDust.map(
-    ({ balanceOf, token }) => getTokenInfo<PrincipalTokenInfo>(token.address)
+  const principalTokensWithNonDustBalance = filteredByDust.map(({ token }) =>
+    getTokenInfo<PrincipalTokenInfo>(token.address)
   );
 
   return principalTokensWithNonDustBalance;

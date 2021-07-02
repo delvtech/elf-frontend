@@ -1,7 +1,5 @@
 import React, { Fragment, ReactElement } from "react";
 
-import { Web3Provider } from "@ethersproject/providers";
-import { AbstractConnector } from "@web3-react/abstract-connector";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -13,14 +11,10 @@ import { NoLPsInWalletNonIdealState } from "efi-ui/wallets/NoLPsInWalletNonIdeal
 import { NoWalletConnectedNonIdealState } from "efi-ui/wallets/NoWalletConnectedNonIdealState/NoWalletConnectedNonIdealState";
 
 interface LiquidityPositionPortfolioProps {
-  library: Web3Provider | undefined;
-  connector: AbstractConnector | undefined;
   account: string | null | undefined;
 }
 
 export function LiquidityPositionPortfolio({
-  library,
-  connector,
   account,
 }: LiquidityPositionPortfolioProps): ReactElement {
   const principalTokenPools = useConvergentCurvePoolsWithLPBalance(account);

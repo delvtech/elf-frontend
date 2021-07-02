@@ -36,7 +36,7 @@ const fixedYieldLink = (
   </a>
 );
 
-export function SaveView(props: EarnViewProps): ReactElement {
+export function SaveView(unusedProps: EarnViewProps): ReactElement {
   const {
     account,
     library,

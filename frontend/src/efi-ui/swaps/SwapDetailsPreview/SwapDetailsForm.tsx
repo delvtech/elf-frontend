@@ -6,14 +6,11 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import { IconProps } from "efi-ui/token/TokenIcon";
 import { ANY_NUMBER_REGEX } from "efi/base/numbers";
 
 import styles from "./styles.module.css";
 
 interface SwapDetailsFormProps {
-  assetInIcon?: React.FC<IconProps> | undefined | null;
-  assetOutIcon?: React.FC<IconProps> | undefined | null;
   assetInSymbol: string | undefined;
   assetOutSymbol: string | undefined;
   amountIn: string | undefined;
@@ -35,8 +32,6 @@ interface SwapDetailsFormProps {
   children?: ReactElement;
 }
 export function SwapDetailsForm({
-  assetInIcon: AssetInIcon,
-  assetOutIcon: AssetOutIcon,
   amountIn,
   amountInLabel = t`From`,
   amountOut,

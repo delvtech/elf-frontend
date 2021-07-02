@@ -17,7 +17,7 @@ enum PoolsViewTab {
 }
 interface PoolsViewProps extends RouteComponentProps {}
 
-export function PoolsView(props: PoolsViewProps): ReactElement {
+export function PoolsView(unusedProps: PoolsViewProps): ReactElement {
   const [activeTab, setActiveTab] = useState<PoolsViewTab>(
     PoolsViewTab.PRINCIPAL
   );

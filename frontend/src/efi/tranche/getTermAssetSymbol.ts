@@ -16,7 +16,12 @@ interface TermAssetSymbols {
   label: string;
 }
 
-// TODO: lets make this the default format for label/symbol in tokenlists
+/**
+ * @deprecated use tokenlists info for the symbol. if we need the label, then make a new fn for that
+ * @param termAssetAddress
+ * @param vaultSymbol
+ * @returns
+ */
 export function getTermAssetSymbol(
   termAssetAddress: string | undefined,
   vaultSymbol: string | undefined

@@ -10,7 +10,6 @@ import { formatFullDate } from "efi/base/dates";
  * Generalize this further to handle any transaction confirmation
  */
 interface MintTransactionDetailsProps {
-  baseAssetSymbol: string | undefined;
   principalTokenSymbol: string | undefined;
   yieldTokenSymbol: string | undefined;
   numPrincipalTokens: number | undefined;
@@ -18,7 +17,6 @@ interface MintTransactionDetailsProps {
   unlockTimestamp: Date | undefined;
 }
 export function MintTransactionDetails({
-  baseAssetSymbol,
   principalTokenSymbol,
   yieldTokenSymbol,
   numPrincipalTokens,

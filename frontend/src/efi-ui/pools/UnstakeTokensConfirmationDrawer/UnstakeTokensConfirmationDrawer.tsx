@@ -5,20 +5,18 @@ import { TokenInfo } from "@uniswap/token-lists";
 import { PrincipalTokenInfo, YieldTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
-import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { UnstakeConfirmationForm } from "efi-ui/pools/UnstakeTokensConfirmationDrawer/UnstakeConfirmationForm";
 import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/TransactionDrawer";
 import { EMPTY_ARRAY } from "efi/base/emptyArray";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { getCryptoName } from "efi/crypto/getCryptoName/getCryptoName";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
-import { WalletApprovalInfo } from "efi/wallets/WalletApprovalInfo";
 import {
-  isPrincipalToken,
   getVaultTokenInfoForTranche,
+  isPrincipalToken,
 } from "efi/tranche/tranches";
 import { getPrincipalTokenForYieldToken } from "efi/tranche/yieldTokens";
+import { WalletApprovalInfo } from "efi/wallets/WalletApprovalInfo";
 
 interface UnstakeConfirmationDrawerProps {
   account: string | null | undefined;
@@ -55,19 +53,16 @@ export function UnstakeConfirmationDrawer({
 }: UnstakeConfirmationDrawerProps): ReactElement {
   const baseAsset = getCryptoAssetForToken(baseAssetInfo.address);
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
-  const baseAssetSymbolLabel = getCryptoName(baseAsset);
-  const baseAssetIcon = findAssetIcon(baseAsset);
-
-  const termAsset = getCryptoAssetForToken(termAssetInfo.address);
-  const termAssetIcon = findAssetIcon(termAsset);
 
   const { address: trancheAddress } = isPrincipalToken(termAssetInfo)
     ? termAssetInfo
     : getPrincipalTokenForYieldToken(termAssetInfo.address);
 
   const { symbol: vaultSymbol } = getVaultTokenInfoForTranche(trancheAddress);
-  const { symbol: termAssetSymbol, label: termAssetSymbolLabel } =
-    getTermAssetSymbol(termAssetInfo.address, vaultSymbol);
+  const { symbol: termAssetSymbol } = getTermAssetSymbol(
+    termAssetInfo.address,
+    vaultSymbol
+  );
 
   return (
     <TransactionDrawer
@@ -88,11 +83,7 @@ export function UnstakeConfirmationDrawer({
           amountIn={lpTokensIn}
           assetOneSymbol={baseAssetSymbol}
           assetTwoSymbol={termAssetSymbol}
-          assetOneSymbolLabel={baseAssetSymbolLabel}
-          assetTwoSymbolLabel={termAssetSymbolLabel}
           heading={t`Confirm removing liquidity`}
-          assetOneIcon={baseAssetIcon}
-          assetTwoIcon={termAssetIcon}
           assetOneValueLabel={baseAssetValue}
           assetTwoValueLabel={termAssetValue}
         />

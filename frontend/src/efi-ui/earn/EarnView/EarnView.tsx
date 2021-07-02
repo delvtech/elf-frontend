@@ -22,7 +22,7 @@ import { Helmet } from "react-helmet";
 
 interface EarnViewProps extends RouteComponentProps {}
 
-export function EarnView(props: EarnViewProps): ReactElement {
+export function EarnView(unusedProps: EarnViewProps): ReactElement {
   const { account, library } = useWeb3React<Web3Provider>();
 
   const signer = useSigner(account, library);

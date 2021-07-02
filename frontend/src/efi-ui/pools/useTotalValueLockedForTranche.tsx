@@ -34,14 +34,8 @@ export function useTotalValueLockedForTranche(
     "valueSupplied"
   );
   const accumulatedInterestBN = useAccumulatedInterestForTranche(poolInfo);
-  const baseReservesInPrincipalPoolBN = useBaseAssetReservesInPool(
-    poolInfo,
-    decimals
-  );
-  const baseReservesInYieldPoolBN = useBaseAssetReservesInPool(
-    yieldPoolInfo,
-    decimals
-  );
+  const baseReservesInPrincipalPoolBN = useBaseAssetReservesInPool(poolInfo);
+  const baseReservesInYieldPoolBN = useBaseAssetReservesInPool(yieldPoolInfo);
 
   const { currency } = useCurrencyPref();
   const { data: baseAssetPrice } = useTokenPrice(baseAssetContract, currency);
@@ -80,7 +74,7 @@ export function useTotalValueLockedForTranche(
 
   return totalFiatValueLocked;
 }
-function useBaseAssetReservesInPool(poolInfo: PoolInfo, decimals: number) {
+function useBaseAssetReservesInPool(poolInfo: PoolInfo) {
   const pool = getPoolContract(poolInfo.address);
   const { data: [, balances] = [undefined, undefined] } = usePoolTokens(pool);
   const { baseAssetIndex } = getPoolTokens(poolInfo);

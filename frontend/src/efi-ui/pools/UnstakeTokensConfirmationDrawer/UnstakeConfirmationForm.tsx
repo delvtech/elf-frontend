@@ -1,12 +1,12 @@
 import React, { ReactElement } from "react";
 
-import { ElementIcon, IconProps } from "efi-ui/token/TokenIcon";
 import { Callout, Divider, InputGroup } from "@blueprintjs/core";
 import classNames from "classnames";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
+import { ElementIcon } from "efi-ui/token/TokenIcon";
 
 import styles from "./styles.module.css";
 
@@ -25,26 +25,18 @@ interface UnstakeConfirmationFormProps {
    * input
    */
   assetTwoSymbol: string;
-  assetOneIcon: React.FC<IconProps>;
-  assetTwoIcon: React.FC<IconProps>;
   assetOneValueLabel: string;
   assetTwoValueLabel: string;
-  assetOneSymbolLabel: string;
-  assetTwoSymbolLabel: string;
   children?: ReactElement;
 }
 
 export function UnstakeConfirmationForm({
   heading = t`Remove liquidity`,
   amountIn,
-  assetOneIcon: AssetOneIcon,
-  assetTwoIcon: AssetTwoIcon,
   assetOneSymbol,
   assetTwoSymbol,
   assetOneValueLabel,
   assetTwoValueLabel,
-  assetOneSymbolLabel,
-  assetTwoSymbolLabel,
   children,
 }: UnstakeConfirmationFormProps): ReactElement {
   const { isDarkMode } = useDarkMode();

@@ -7,10 +7,12 @@ import { t } from "ttag";
 
 import { getBalancerApprovalMessage } from "efi-ui/balancer/balancerApprovalMessage";
 import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
-import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { StakeConfirmationForm } from "efi-ui/pools/StakeTokensConfirmationDrawer/StakeConfirmationForm";
 import { StakeTokensDetails } from "efi-ui/pools/StakeTokensConfirmationDrawer/StakeTokensDetails";
+import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
+import { usePoolSwapFee } from "efi-ui/pools/usePoolSwapFee/usePoolSwapFee";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
+import { useStakingAPY } from "efi-ui/pools/useStakingAPY";
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
 import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/TransactionDrawer";
 import { ERC20Shim } from "efi/contracts/ERC20Shim";
@@ -19,15 +21,12 @@ import {
   CryptoAssetType,
   findTokenContract,
 } from "efi/crypto/CryptoAsset";
+import { isPrincipalPool } from "efi/pools/ccpool";
 import { getPoolContract } from "efi/pools/getPoolContract";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
+import { isConvergentCurvePool } from "efi/pools/PoolContract";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { WalletApprovalInfo } from "efi/wallets/WalletApprovalInfo";
-import { usePoolSwapFee } from "efi-ui/pools/usePoolSwapFee/usePoolSwapFee";
-import { isConvergentCurvePool } from "efi/pools/PoolContract";
-import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
-import { useStakingAPY } from "efi-ui/pools/useStakingAPY";
-import { isPrincipalPool } from "efi/pools/ccpool";
 
 interface StakingConfirmationDrawerProps {
   account: string | null | undefined;
@@ -38,9 +37,7 @@ interface StakingConfirmationDrawerProps {
   baseAssetDecimals: number;
   termAssetDecimals: number;
   baseAssetSymbol: string;
-  baseAssetSymbolLabel: string;
   termAssetSymbol: string;
-  termAssetSymbolLabel: string;
   baseAssetIn: string;
   termAssetIn: string;
   isOpen: boolean;
@@ -62,7 +59,6 @@ export function StakingConfirmationDrawer({
   baseAssetDecimals,
   baseAssetSymbol,
   termAssetSymbol,
-  termAssetSymbolLabel,
   baseAssetIn,
   termAssetIn,
   isOpen,
@@ -80,9 +76,6 @@ export function StakingConfirmationDrawer({
   const isPrincipal = isPrincipalPool(poolInfo);
 
   // close the drawer after stake succeeds
-
-  const baseAssetIcon = findAssetIcon(baseAsset);
-  const termAssetIcon = findAssetIcon(termAsset);
 
   const baseAssetInBigNumber = parseUnits(
     baseAssetIn || "0",
@@ -130,11 +123,7 @@ export function StakingConfirmationDrawer({
         <StakeConfirmationForm
           assetOneSymbol={baseAssetSymbol}
           assetTwoSymbol={termAssetSymbol}
-          assetOneSymbolLabel={baseAssetSymbol}
-          assetTwoSymbolLabel={termAssetSymbolLabel}
           heading={t`Confirm adding liquidity`}
-          assetOneIcon={baseAssetIcon}
-          assetTwoIcon={termAssetIcon}
           assetOneValueLabel={baseAssetIn}
           assetTwoValueLabel={termAssetIn}
         >

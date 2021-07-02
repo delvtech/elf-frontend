@@ -32,7 +32,7 @@ export function lookupAddressKey(
 ): string | undefined {
   const [addressesJsonKey] =
     Object.entries(AddressesJson.addresses).find(
-      ([key, value]) => value === address
+      ([unusedKey, value]) => value === address
     ) || [];
 
   const safeListedAddress = !!AddressesJson.safelist.find(

@@ -62,11 +62,9 @@ export function SwapTokensTransactionConfirmationDrawer({
   tokenInAddress,
   tokenInSymbol,
   tokenInDecimals,
-  tokenInIcon,
   tokenOutAddress,
   tokenOutSymbol,
   tokenOutDecimals,
-  tokenOutIcon,
   buttonLabel = t`Trade`,
   spotPrice,
   amountIn,
@@ -184,8 +182,6 @@ export function SwapTokensTransactionConfirmationDrawer({
         <SwapDetailsForm
           amountIn={amountIn}
           amountOut={amountOut}
-          assetInIcon={tokenInIcon}
-          assetOutIcon={tokenOutIcon}
           assetInSymbol={tokenInSymbol}
           assetOutSymbol={tokenOutSymbol}
         >

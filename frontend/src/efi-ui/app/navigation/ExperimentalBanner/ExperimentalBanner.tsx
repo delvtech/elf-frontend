@@ -9,10 +9,7 @@ import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 
 import { useBannerPref } from "./useBannerPref";
 
-interface ExperimentalBannerProps {}
-export function ExperimentalBanner(
-  props: ExperimentalBannerProps
-): ReactElement | null {
+export function ExperimentalBanner(): ReactElement | null {
   const { isDarkMode } = useDarkMode();
   const { bannerIsVisible, hideBanner } = useBannerPref();
 

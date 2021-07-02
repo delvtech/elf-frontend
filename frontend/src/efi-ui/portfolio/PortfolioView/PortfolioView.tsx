@@ -15,14 +15,14 @@ import {
 } from "efi-ui/portfolio/PortfolioTabs/PortfolioTabs";
 import { PrincipalTokenPortfolio } from "efi-ui/portfolio/PrincipalTokenPortfolio/PrincipalTokenPortfolio";
 import { YieldTokenPortfolio } from "efi-ui/portfolio/YieldTokenPortfolio/YieldTokenPortfolio";
+import { assertNever } from "efi/base/assertNever";
 import { formatWalletAddress } from "efi/wallets/formatWalletAddress";
 
 import styles from "./styles.module.css";
-import { assertNever } from "efi/base/assertNever";
 
 interface PortfolioViewProps extends RouteComponentProps {}
 
-export function PortfolioView(props: PortfolioViewProps): ReactElement {
+export function PortfolioView(unusedProps: PortfolioViewProps): ReactElement {
   const {
     account,
     library,
@@ -117,13 +117,7 @@ export function PortfolioView(props: PortfolioViewProps): ReactElement {
                         />
                       );
                     case PortfolioTabId.LP_POSITIONS:
-                      return (
-                        <LiquidityPositionPortfolio
-                          library={library}
-                          connector={connector}
-                          account={account}
-                        />
-                      );
+                      return <LiquidityPositionPortfolio account={account} />;
                     default:
                       assertNever(activePortfolioTabId);
                   }

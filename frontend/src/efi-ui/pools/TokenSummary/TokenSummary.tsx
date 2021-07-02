@@ -28,8 +28,8 @@ import { isConvergentCurvePool } from "efi/pools/PoolContract";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
 import {
-  isPrincipalToken,
   getVaultTokenInfoForTranche,
+  isPrincipalToken,
 } from "efi/tranche/tranches";
 import { getPrincipalTokenForYieldToken } from "efi/tranche/yieldTokens";
 
@@ -50,11 +50,7 @@ export function TokenSummary({
   const {
     baseAssetSymbol,
     termAssetSymbol,
-    termAssetBalance,
-    termAssetBalanceTrend,
-    termAssetDecimals,
     termAssetPrice,
-    termAssetPriceTrend,
     fixedYield,
     fiatInterestPerToken,
     interestPerToken,
@@ -71,10 +67,6 @@ export function TokenSummary({
           baseAssetSymbol={baseAssetSymbol}
           assetSymbol={termAssetSymbol}
           assetPrice={termAssetPrice}
-          assetPriceTrend={termAssetPriceTrend}
-          assetBalance={termAssetBalance}
-          assetDecimals={termAssetDecimals}
-          assetBalanceTrend={termAssetBalanceTrend}
           spotPrice={spotPrice}
         />
         <div
@@ -147,39 +139,16 @@ export function TokenSummary({
   );
 }
 
-interface TokensSummary {
-  baseAssetSymbol: string | undefined;
-  termAssetContract: ERC20 | undefined;
-  termAssetSymbol: string | undefined;
-  termAssetBalance: BigNumber | undefined;
-  termAssetBalanceTrend: number | undefined;
-  termAssetDecimals: number | undefined;
-  termAssetPriceTrend: number | undefined;
-  fixedYield: number | undefined;
-  fiatInterestPerToken: Money | undefined;
-  interestPerToken: number | undefined;
-  termAssetPrice: Money | undefined;
-  spotPrice: number | undefined;
-}
-
 interface TokenInfoProps {
   baseAssetSymbol: string | undefined;
   assetSymbol: string | undefined;
   assetPrice: Money | undefined;
-  assetPriceTrend: number | undefined;
-  assetBalance: BigNumber | undefined;
-  assetDecimals: number | undefined;
-  assetBalanceTrend: number | undefined;
   spotPrice: number | undefined;
 }
 function TokenInfo({
   baseAssetSymbol,
   assetSymbol,
   assetPrice,
-  assetPriceTrend,
-  assetBalance,
-  assetDecimals,
-  assetBalanceTrend,
   spotPrice,
 }: TokenInfoProps): ReactElement {
   return (
@@ -220,6 +189,21 @@ function TokenInfo({
       </div>
     </div>
   );
+}
+
+interface TokensSummary {
+  baseAssetSymbol: string;
+  termAssetContract: ERC20;
+  termAssetSymbol: string | undefined;
+  termAssetBalance: BigNumber | undefined;
+  termAssetBalanceTrend: number | undefined;
+  termAssetDecimals: number | undefined;
+  termAssetPriceTrend: number | undefined;
+  fixedYield: number | undefined;
+  fiatInterestPerToken: Money | undefined;
+  interestPerToken: number | undefined;
+  termAssetPrice: Money | undefined;
+  spotPrice: number | undefined;
 }
 
 function useTokensSummary(

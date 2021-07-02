@@ -115,7 +115,7 @@ export function useLiquidityHistoryForPool(
       //                                              ^
       // start here ---------------------------------/
       // take 100 - 6 = 94 and work backwards
-      const deltaEvents = events.map((event, index) => {
+      const deltaEvents = events.map((event) => {
         const changeEvent = event?.args as PoolBalanceChangedArguments;
         const { blockNumber } = event;
         const [, , , amounts] = changeEvent;
