@@ -35,6 +35,7 @@ enum ChartType {
 interface PoolChartsProps {
   poolInfo: PoolInfo;
 }
+
 export function PoolCharts({ poolInfo }: PoolChartsProps): ReactElement {
   const totalFiatLiquidity = useTotalFiatLiquidity(poolInfo);
   const totalLiquidity = +(totalFiatLiquidity?.toString() || "0");
@@ -165,10 +166,14 @@ function convertChartDatasToSeries(
       (datum) => datum.value >= 0 && datum.timeMs > weekAgoMs
     ) ?? [];
 
+  // if there is no data, pad with two data points
   const paddedLiquidityData = padLiquidityData(
     filteredLiquidityData,
     totalLiquidity
   );
+
+  // remove
+  const dedupedLiquidityData = dedupeLiquidityData(paddedLiquidityData);
 
   const filteredVolumeData =
     volumeData?.filter(
@@ -177,7 +182,7 @@ function convertChartDatasToSeries(
   const paddedVolumeData = padVolumeData(filteredVolumeData);
 
   const liquiditySerie = convertTimeDataToSerie(
-    paddedLiquidityData,
+    dedupedLiquidityData,
     "liquidity"
   );
   const volumeSerie = convertTimeDataToSerie(paddedVolumeData, "volume");
@@ -213,12 +218,7 @@ function padLiquidityData(
     ];
   }
 
-  const { value } = data[0];
-  return [
-    { value, timeMs: weekAgoMs + 10000 },
-    ...data,
-    { value: totalLiquidity, timeMs: nowInMs - 10000 },
-  ];
+  return data;
 }
 
 function padVolumeData(data: TimeData[]): TimeData[] {
@@ -241,4 +241,19 @@ function formatYValues(value: number) {
   }
 
   return commify(value);
+}
+
+// dedupes by timestamp.  if two or more values have the same second value, the last one is kept.
+function dedupeLiquidityData(data: TimeData[]): TimeData[] {
+  // uniqBy keeps the first duplicate values.  since TimeData should be in chronological order, we
+  // reverse the data to keep the last value.
+  const copiedData = [...data].reverse();
+
+  const dedupedData = _.uniqBy(copiedData, (datum) => Math.round(datum.timeMs));
+  // as long as the previous value occurs at the same second,
+
+  // put order back in ascending chronological order
+  dedupedData.reverse();
+
+  return dedupedData;
 }
