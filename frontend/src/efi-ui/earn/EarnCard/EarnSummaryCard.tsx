@@ -8,11 +8,14 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
+import styles from "efi-ui/earn/grid.module.css";
 import { useTotalFiatLiquidity } from "efi-ui/pools/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
 import { IconProps } from "efi-ui/token/TokenIcon";
 import { formatPercent } from "efi/base/formatPercent";
 import { formatMoney } from "efi/money/formatMoney";
 import { PoolInfo } from "efi/pools/PoolInfo";
+import { useTokenYield } from "efi-ui/pools/useTokenYield";
+import { useStakingAPY } from "efi-ui/pools/useStakingAPY";
 
 interface EarnSummaryCardProps {
   onToggleExpand: () => void;
@@ -25,14 +28,11 @@ interface EarnSummaryCardProps {
   yieldPoolInfo: YieldPoolTokenInfo;
   principalPoolInfo: PrincipalPoolTokenInfo;
   principalPrice: string | undefined;
-  baseAssetSymbol: string;
   yieldPrice: string | undefined;
   startTime: number;
   maturityTime: number;
   isExpanded: boolean;
 }
-
-const cellClassName = tw("flex", "mr-4", "items-center", "overflow-hidden");
 
 export function EarnSummaryCard(props: EarnSummaryCardProps): JSX.Element {
   const {
@@ -40,176 +40,84 @@ export function EarnSummaryCard(props: EarnSummaryCardProps): JSX.Element {
     BaseAssetIcon,
     displayName,
     type,
-    termLength,
     vaultApy,
     tvl,
     yieldPoolInfo,
     principalPoolInfo,
     yieldPrice,
     principalPrice,
-    baseAssetSymbol,
     startTime,
     maturityTime,
     isExpanded,
   } = props;
 
+  const fixedYield = useTokenYield(principalPoolInfo, "principal");
+  const ptStakingAPY = useStakingAPY(principalPoolInfo);
+  const ytStakingAPY = useStakingAPY(yieldPoolInfo);
+
   return (
     <Card onClick={onToggleExpand} className={tw("w-full", "flex", "p-5")}>
-      <div
-        className={tw(
-          "w-full",
-          "grid",
-          "grid-cols-12",
-          "gap-y-4",
-          "w-full",
-          "items-start"
-        )}
-      >
-        <div
-          className={tw(cellClassName, "col-span-1", "xl:ml-4", "items-center")}
-        >
-          <div className={tw("ml-2")}>
-            <BaseAssetIcon height={40} width={40} />
-          </div>
-        </div>
-        <div
-          className={tw(
-            cellClassName,
-            "col-span-2",
-            "lg:col-span-2",
-            "xl:col-span-1"
-          )}
-        >
+      <div className={styles.earnGrid}>
+        {/* Vault */}
+        <div>
           <LabeledText
-            text={t`Yearn ${displayName} ${type}`}
-            label={t`Vault`}
+            text={t`${displayName} ${type}`}
+            iconClassName={tw("flex-shrink-0")}
+            className={tw("text-left", "pl-4")}
+            icon={<BaseAssetIcon height={38} width={38} />}
+            label={t`Yearn Vault`}
           />
         </div>
-        <div
-          className={tw(
-            cellClassName,
-            "col-span-2",
-            "md:col-span-2",
-            "xl:col-span-1"
-          )}
-        >
-          <LabeledText text={t`${termLength} Day`} label={t`Term`} />
-        </div>
-        <div
-          className={tw(
-            cellClassName,
-            "col-span-2",
-            "md:col-span-2",
-            "xl:col-span-1"
-          )}
-        >
+
+        {/* Element TVL */}
+        <div>{tvl ? formatMoney(tvl, { wholeAmounts: true }) : null}</div>
+
+        {/* Vault APY */}
+        <div className={tw("font-bold")}>{formatPercent(vaultApy)}</div>
+
+        {/* LP APYs */}
+        <div className={tw("flex", "flex-col", "space-y-3", "font-bold")}>
           <LabeledText
-            text={t`${formatPercent(vaultApy)}`}
-            label={`Vault APY`}
+            text={formatPercent(ptStakingAPY)}
+            label={t`Principal`}
           />
+          <LabeledText text={formatPercent(ytStakingAPY)} label={t`Yield`} />
         </div>
-        <div
-          className={tw(
-            cellClassName,
-            "col-span-3",
-            "xl:col-span-2",
-            "lg:col-span-2"
-          )}
-        >
-          <LabeledText
-            text={tvl ? formatMoney(tvl, { wholeAmounts: true }) : null}
-            label={`Element TVL`}
-          />
-        </div>
-        <div
-          className={tw(
-            cellClassName,
-            "col-span-2",
-            "lg:col-span-3",
-            "xl:col-span-2"
-          )}
-        >
+        {/* Liquidity */}
+        <div className={tw("flex", "flex-col")}>
           <LiquiditySection
             yieldPoolInfo={yieldPoolInfo}
             principalPoolInfo={principalPoolInfo}
           />
         </div>
-        <div
-          className={tw(
-            cellClassName,
-            "col-span-2",
-            "col-start-2",
-            "lg:col-span-3",
-            "lg:col-start-2",
-            "xl:hidden"
-          )}
-        >
-          <LiquiditySection
-            yieldPoolInfo={yieldPoolInfo}
-            principalPoolInfo={principalPoolInfo}
+        {/* Price */}
+        <div className={tw("flex", "flex-col", "space-y-3")}>
+          <LabeledText text={t`${principalPrice}`} label={t`Principal token`} />
+          <LabeledText text={t`${yieldPrice}`} label={t`Yield token`} />
+        </div>
+
+        {/* Fixed APR */}
+        <div>{formatPercent(fixedYield)}</div>
+
+        {/* Term */}
+        <div className={tw("flex", "w-full", "items-start")}>
+          <TimeLeft
+            startTimestamp={startTime}
+            maturityTimestamp={maturityTime}
           />
         </div>
-        <div
-          className={tw(
-            cellClassName,
-            "col-span-2",
-            "lg:col-start-6",
-            "xl:col-start-auto",
-            "xl:col-span-2"
-          )}
-        >
-          <div className={tw("flex", "flex-col")}>
-            <LabeledText
-              text={t`${principalPrice}`}
-              label={`Principal Price (${baseAssetSymbol})`}
-            />
-            <LabeledText
-              className={tw("mt-2", "hidden", "xl:flex")}
-              text={t`${yieldPrice}`}
-              label={`Yield Price (${baseAssetSymbol})`}
-            />
-          </div>
+        <div>
+          <Button
+            intent={Intent.PRIMARY}
+            minimal
+            large
+            fill
+            active={isExpanded}
+            onClick={onToggleExpand}
+          >
+            {isExpanded ? t`Hide` : t`Show`}
+          </Button>
         </div>
-        <div className={tw(cellClassName, "col-span-2", "xl:hidden")}>
-          <LabeledText
-            text={t`${yieldPrice}`}
-            label={`Yield Price (${baseAssetSymbol})`}
-          />
-        </div>
-        <div
-          className={tw(
-            cellClassName,
-            "overflow-visible",
-            "col-span-3",
-            "lg:col-span-3",
-            "xl:col-span-2"
-          )}
-        >
-          <div className={tw("flex", "w-full", "items-start")}>
-            <TimeLeft
-              startTimestamp={startTime}
-              maturityTimestamp={maturityTime}
-            />
-          </div>
-        </div>
-      </div>
-      <div
-        className={tw(
-          "flex",
-          "flex-col",
-          "overflow-visible",
-          "items-start",
-          maturityTime && Date.now() < maturityTime ? "visible" : "invisible"
-        )}
-      >
-        <Button
-          intent={Intent.PRIMARY}
-          minimal
-          active={isExpanded}
-          onClick={onToggleExpand}
-        >
-          {isExpanded ? t`Hide` : t`Show`}
-        </Button>
       </div>
     </Card>
   );
@@ -227,18 +135,17 @@ function LiquiditySection({
   const liquidity = useTotalFiatLiquidity(yieldPoolInfo);
   const principalLiquidity = useTotalFiatLiquidity(principalPoolInfo);
   return (
-    <div className={tw("flex", "flex-col")}>
+    <div className={tw("flex", "flex-col", "space-y-3")}>
+      {principalLiquidity && (
+        <LabeledText
+          text={formatMoney(principalLiquidity, { wholeAmounts: true })}
+          label={`Principal Pool`}
+        />
+      )}
       {liquidity && (
         <LabeledText
           text={formatMoney(liquidity, { wholeAmounts: true })}
-          label={`Yield Pool Liquidity`}
-        />
-      )}
-      {principalLiquidity && (
-        <LabeledText
-          className={tw("mt-2", "hidden", "xl:flex")}
-          text={formatMoney(principalLiquidity, { wholeAmounts: true })}
-          label={`Principal Pool Liquidity`}
+          label={`Yield Pool`}
         />
       )}
     </div>

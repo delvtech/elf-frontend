@@ -5,6 +5,7 @@ import classNames from "classnames";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import styles from "efi-ui/pools/PoolsTable/grid.module.css";
 import { YieldPoolCard } from "efi-ui/pools/PoolsTable/YieldPoolCard";
 import { openYieldPools, yieldPools } from "efi/pools/weightedPool";
 
@@ -28,19 +29,19 @@ export function YieldPoolTable({
     >
       <div
         className={classNames(
-          tw("grid", "gap-x-4", "grid-cols-10", "w-full"),
-          Classes.TEXT_MUTED
+          styles.yieldPoolGrid,
+          Classes.TEXT_MUTED,
+          // padding to match Card default padding, keeps text alignment correct
+          // with card content
+          tw("px-5")
         )}
       >
-        <div className={tw("col-span-2", "pl-4")}>{t`Pool`}</div>
-        <div>{t`Term`}</div>
-        <div className={tw("pl-2")}>{t`Liquidity`}</div>
-        <div>{t`Vault APY`}</div>
+        <div>{t`Pool`}</div>
+        <div>{t`Liquidity`}</div>
         <div>{t`LP APY`}</div>
+        <div>{t`Vault APY`}</div>
         <div>{t`Price`}</div>
-        <div className={tw("col-span-2")}>{t`Status`}</div>
-        {/* Actions */}
-        <div />
+        <div>{t`Term`}</div>
       </div>
       {yieldPoolsToShow.map((poolInfo) => {
         return (

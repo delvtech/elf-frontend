@@ -45,8 +45,8 @@ export function EarnAppHeader({
   return (
     <div className={tw("flex", "w-full", "flex-col")}>
       <ExperimentalBanner />
-      <div className={tw("flex", "w-full")}>
-        <div className={tw("flex", "w-full", "p-8", "space-x-4", "items-end")}>
+      <div className={tw("flex", "w-full", "p-8")}>
+        <div className={tw("flex", "w-full", "space-x-4", "items-end")}>
           <img
             style={{
               height: 48, // don't use tailwind here since we want fixed height and rem is dynamic
@@ -98,7 +98,7 @@ export function EarnAppHeader({
         <div className={tw("flex", "space-x-4", "items-center")}>
           <Button
             minimal
-            className={tw("px-6")}
+            className={tw("px-6", "py-3")}
             icon={isDarkMode ? IconNames.FLASH : IconNames.MOON}
             onClick={isDarkMode ? setDarkModeOff : setDarkModeOn}
           />

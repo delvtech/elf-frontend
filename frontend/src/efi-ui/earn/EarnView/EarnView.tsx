@@ -1,10 +1,4 @@
-import {
-  CSSProperties,
-  Fragment,
-  ReactElement,
-  useCallback,
-  useState,
-} from "react";
+import { CSSProperties, Fragment, ReactElement } from "react";
 
 import { Intent, NonIdealState, Tag } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
@@ -13,12 +7,12 @@ import { useWeb3React } from "@web3-react/core";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { EarnCard } from "efi-ui/earn/EarnCard/EarnCard";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { useSigner } from "efi-ui/provider/useBlockFromTag/useSigner/useSigner";
 import { openPrincipalTokenInfos } from "efi/tranche/tranches";
 import { IconNames } from "@blueprintjs/icons";
 import { Helmet } from "react-helmet";
+import { EarnTable } from "efi-ui/earn/EarnTable/EarnTable";
 
 interface EarnViewProps extends RouteComponentProps {}
 
@@ -26,8 +20,6 @@ export function EarnView(unusedProps: EarnViewProps): ReactElement {
   const { account, library } = useWeb3React<Web3Provider>();
 
   const signer = useSigner(account, library);
-  const [expandedPoolIndex, setExpandedPoolIndex] = useState(-1);
-  const onExpandClose = useCallback(() => setExpandedPoolIndex(-1), []);
 
   const earnViewStyle: CSSProperties = { maxWidth: 610 };
   return (
@@ -72,22 +64,7 @@ export function EarnView(unusedProps: EarnViewProps): ReactElement {
               description={t`Please check back soon!`}
             />
           ) : (
-            openPrincipalTokenInfos.map((principalTokenInfo, index) => {
-              return (
-                <EarnCard
-                  signer={signer}
-                  library={library}
-                  account={account}
-                  isExpanded={index === expandedPoolIndex}
-                  onExpandOpen={() => {
-                    setExpandedPoolIndex(index);
-                  }}
-                  onExpandClose={onExpandClose}
-                  key={principalTokenInfo.address}
-                  principalTokenInfo={principalTokenInfo}
-                />
-              );
-            })
+            <EarnTable library={library} account={account} signer={signer} />
           )}
         </div>
       </div>

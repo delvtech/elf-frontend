@@ -15,6 +15,7 @@ interface GoToPoolButtonProps {
 
   small?: boolean;
   outlined?: boolean;
+  fill?: boolean;
 }
 
 export function GoToPoolButton(props: GoToPoolButtonProps): ReactElement {
@@ -22,6 +23,7 @@ export function GoToPoolButton(props: GoToPoolButtonProps): ReactElement {
     poolAddress,
     poolAction,
     label,
+    fill,
     outlined = false,
     small = false,
   } = props;
@@ -34,7 +36,7 @@ export function GoToPoolButton(props: GoToPoolButtonProps): ReactElement {
 
   return (
     <AnchorButton
-      fill
+      fill={fill}
       intent={Intent.PRIMARY}
       href={`/pools/${poolAddress}`}
       onClick={onClick}

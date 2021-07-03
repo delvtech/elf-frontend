@@ -1,20 +1,20 @@
 import { CSSProperties, ReactElement } from "react";
 
+import { Classes } from "@blueprintjs/core";
+import classNames from "classnames";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import styles from "efi-ui/pools/PoolsTable/grid.module.css";
 import { PrincipalPoolCard } from "efi-ui/pools/PoolsTable/PrincipalPoolCard";
 import { openPrincipalPools, principalPools } from "efi/pools/ccpool";
-import { Classes } from "@blueprintjs/core";
-import classNames from "classnames";
 
 interface PrincipalPoolTableProps {
   showMaturePools?: boolean;
 }
 
 const principalPoolTableStyle: CSSProperties = {
-  maxWidth: 1240,
-  minWidth: 1000,
+  width: 1240,
 };
 export function PrincipalPoolTable({
   showMaturePools = true,
@@ -30,20 +30,20 @@ export function PrincipalPoolTable({
     >
       <div
         className={classNames(
-          tw("grid", "gap-x-4", "grid-cols-11", "w-full"),
-          Classes.TEXT_MUTED
+          styles.principalPoolGrid,
+          Classes.TEXT_MUTED,
+          // padding to match Card default padding, keeps text alignment correct
+          // with card content
+          tw("px-5")
         )}
       >
-        <div className={tw("col-span-2", "pl-4")}>{t`Pool`}</div>
-        <div className={tw("pl-2")}>{t`Term`}</div>
-        <div className={tw("pl-2")}>{t`Liquidity`}</div>
-        <div>{t`Vault APY`}</div>
-        <div>{t`Fixed APY`}</div>
+        <div>{t`Pool`}</div>
+        <div>{t`Liquidity`}</div>
+        <div className={tw("font-bold")}>{t`Fixed APR`}</div>
         <div>{t`LP APY`}</div>
+        <div>{t`Vault APY`}</div>
         <div>{t`Price`}</div>
-        <div className={tw("col-span-2")}>{t`Status`}</div>
-        {/* Actions */}
-        <div />
+        <div>{t`Term`}</div>
       </div>
       {principalPoolsToShow.map((poolInfo) => {
         return (

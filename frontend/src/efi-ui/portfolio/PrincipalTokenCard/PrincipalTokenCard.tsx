@@ -261,11 +261,13 @@ export function PrincipalTokenCard(
           baseAsset={baseAsset}
         />
         <GoToPoolButton
+          fill
           poolAddress={poolInfo.address}
           poolAction={PoolAction.ADD_LIQUIDITY}
           label={t`Add Liquidity`}
         />
         <GoToPoolButton
+          fill
           poolAddress={poolInfo.address}
           poolAction={PoolAction.SELL}
           label={t`Sell`}

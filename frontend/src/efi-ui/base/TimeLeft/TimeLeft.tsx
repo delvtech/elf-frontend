@@ -8,6 +8,7 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { calculateProgress } from "efi/base/calculateProgress";
 import { formatTimeLeft } from "efi/base/formatTImeLeft/formatTimeLeft";
+import { formatTermLength } from "efi/tranche/formatTermLength/formatTermLength";
 
 interface TimeLeftProps {
   /**
@@ -30,6 +31,7 @@ export function TimeLeft(props: TimeLeftProps): ReactElement {
   } = props;
   const progress = calculateProgress(startDate, maturityDate);
 
+  const termLength = formatTermLength(startDate, maturityDate);
   const now = Date.now();
   const timeSince = formatTimeLeft(maturityDate, now);
   const timeSinceLabel = t`${timeSince} ago`;
@@ -54,7 +56,7 @@ export function TimeLeft(props: TimeLeftProps): ReactElement {
         "flex-shrink-0"
       )}
     >
-      <div>
+      <div className={tw("flex", "justify-between")}>
         {isMature ? (
           <Tag intent={Intent.SUCCESS} className={tw("mr-4", "flex-grow-0")}>
             {t`Mature`}
@@ -64,6 +66,7 @@ export function TimeLeft(props: TimeLeftProps): ReactElement {
             {t`Running`}
           </Tag>
         )}
+        <span>{termLength}</span>
       </div>
       {!isMature ? (
         <ProgressBar

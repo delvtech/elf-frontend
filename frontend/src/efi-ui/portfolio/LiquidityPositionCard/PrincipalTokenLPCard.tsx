@@ -211,11 +211,13 @@ export function PrincipalTokenLPCard({
       {/* Quick Actions */}
       <ButtonGroup className={tw("space-x-6")}>
         <GoToPoolButton
+          fill
           poolAddress={poolInfo.address}
           poolAction={PoolAction.REMOVE_LIQUIDITY}
           label={t`Remove LP`}
         />
         <GoToPoolButton
+          fill
           poolAddress={poolInfo.address}
           poolAction={PoolAction.BUY}
           label={t`Go to Market`}

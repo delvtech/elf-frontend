@@ -244,11 +244,13 @@ export function YieldTokenCard({
           baseAsset={baseAsset}
         />
         <GoToPoolButton
+          fill
           poolAddress={pool.address}
           poolAction={PoolAction.ADD_LIQUIDITY}
           label={t`Add Liquidity`}
         />
         <GoToPoolButton
+          fill
           poolAddress={pool.address}
           poolAction={PoolAction.SELL}
           label={t`Sell`}

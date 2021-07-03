@@ -59,7 +59,12 @@ export function NavigationMenuButton(): ReactElement {
         </Menu>
       }
     >
-      <Button fill minimal className={tw("px-6")} icon={IconNames.MENU} />
+      <Button
+        fill
+        minimal
+        className={tw("px-6", "py-3")}
+        icon={IconNames.MENU}
+      />
     </Popover2>
   );
 }
