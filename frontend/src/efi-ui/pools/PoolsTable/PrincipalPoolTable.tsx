@@ -30,13 +30,14 @@ export function PrincipalPoolTable({
     >
       <div
         className={classNames(
-          tw("grid", "gap-x-4", "grid-cols-10", "w-full"),
+          tw("grid", "gap-x-4", "grid-cols-11", "w-full"),
           Classes.TEXT_MUTED
         )}
       >
         <div className={tw("col-span-2", "pl-4")}>{t`Pool`}</div>
         <div className={tw("pl-2")}>{t`Term`}</div>
         <div className={tw("pl-2")}>{t`Liquidity`}</div>
+        <div>{t`Vault APY`}</div>
         <div>{t`Fixed APY`}</div>
         <div>{t`LP APY`}</div>
         <div>{t`Price`}</div>

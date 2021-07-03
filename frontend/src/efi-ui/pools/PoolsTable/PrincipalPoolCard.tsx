@@ -30,6 +30,8 @@ import { getPrincipalTokenInfoForPool } from "efi/pools/getPrincipalTokenInfoFor
 import { formatTermLength } from "efi/tranche/formatTermLength/formatTermLength";
 import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
 import { getVaultTokenInfoForTranche } from "efi/tranche/tranches";
+import { useYearnVault } from "efi-ui/yearn/useYearnVault";
+import { getYearnVaultAPY } from "efi-yearn/fetchYearnVaults";
 
 interface PrincipalPoolCardProps {
   principalPoolInfo: PrincipalPoolTokenInfo;
@@ -62,6 +64,10 @@ export function PrincipalPoolCard(
     termAssetContract?.address,
     vaultSymbol
   );
+
+  const { data: vaultInfo } = useYearnVault(vaultSymbol);
+  const { apy } = vaultInfo || {};
+  const vaultApy = apy ? getYearnVaultAPY(apy) : 0;
 
   const liquidity = useTotalFiatLiquidity(principalPoolInfo);
   const fees = useFeeVolumeFiatForPool(principalPoolInfo);
@@ -98,7 +104,7 @@ export function PrincipalPoolCard(
       onClick={goToTrade}
       className={classNames(tw("w-full", "h-24"))}
     >
-      <div className={tw("w-full", "inline-grid", "gap-x-4", "grid-cols-10")}>
+      <div className={tw("w-full", "inline-grid", "gap-x-4", "grid-cols-11")}>
         {/* Logo */}
         <div className={tw("w-full", "col-span-2")}>
           <LabeledText
@@ -127,6 +133,9 @@ export function PrincipalPoolCard(
 
         {/* Pool Liquidity */}
         <div>{formatMoney(liquidity, { wholeAmounts: true })}</div>
+
+        {/* Vault APY */}
+        <div>{t`${formatPercent(vaultApy)}`}</div>
 
         {/* Fixed APY */}
         <div>{formatPercent(fixedYield)}</div>
