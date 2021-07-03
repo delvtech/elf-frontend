@@ -45,64 +45,56 @@ export function EarnAppHeader({
   return (
     <div className={tw("flex", "w-full", "flex-col")}>
       <ExperimentalBanner />
-      <div
-        className={tw(
-          "flex",
-          "w-full",
-          "justify-between",
-          "p-8",
-          "space-x-16",
-          "items-end"
-        )}
-      >
-        <img
-          style={{
-            height: 48, // don't use tailwind here since we want fixed height and rem is dynamic
-          }}
-          src={isDarkMode ? logoDark : logo}
-          alt={"Element Finance"}
-        />
-        <Tabs
-          id="primary-nav"
-          large
-          onChange={changeTab}
-          selectedTabId={activeTab}
-          className={tw("w-full")}
-        >
-          <Tab id={Navigation.EARN} title={<span>{t`Earn`}</span>} />
-          <Divider />
-          <Tab id={Navigation.TRADE} title={<span>{t`Trade`}</span>} />
-          <Divider />
-          <Tab
-            id={Navigation.PORTFOLIO}
-            title={
-              <div
-                className={tw("flex", "space-x-2", "items-center", "h-full")}
-              >
-                <span
-                  className={tw("flex", "w-full", "justify-between")}
-                >{t`Portfolio`}</span>
-              </div>
-            }
+      <div className={tw("flex", "w-full")}>
+        <div className={tw("flex", "w-full", "p-8", "space-x-4", "items-end")}>
+          <img
+            style={{
+              height: 48, // don't use tailwind here since we want fixed height and rem is dynamic
+            }}
+            src={isDarkMode ? logoDark : logo}
+            alt={"Element Finance"}
+            className={tw("mr-16")}
           />
-        </Tabs>
-        {hasPendingTransaction ? (
-          <div
-            className={tw("items-center", "flex", "ml-2", "mt-3", "space-x-2")}
+          <Tabs
+            id="primary-nav"
+            large
+            onChange={changeTab}
+            selectedTabId={activeTab}
           >
-            {hasPendingTransaction ? (
-              <Spinner size={SpinnerSize.SMALL} />
-            ) : null}
-            <Button
-              outlined
-              small
-              icon={IconNames.CROSS}
-              onClick={clearPendingTransactionPref}
-            >
-              {t`Clear spinner`}
-            </Button>
-          </div>
-        ) : null}
+            <Tab id={Navigation.EARN} title={<span>{t`Earn`}</span>} />
+            <Divider />
+            <Tab id={Navigation.TRADE} title={<span>{t`Trade`}</span>} />
+            <Divider />
+            <Tab
+              id={Navigation.PORTFOLIO}
+              title={
+                <div
+                  className={tw("flex", "space-x-2", "items-center", "h-full")}
+                >
+                  <span
+                    className={tw("flex", "w-full", "justify-between")}
+                  >{t`Portfolio`}</span>
+                  {hasPendingTransaction ? (
+                    <Spinner size={SpinnerSize.SMALL} />
+                  ) : null}
+                </div>
+              }
+            />
+          </Tabs>
+          {hasPendingTransaction ? (
+            <div className={tw("flex", "mb-1")}>
+              <Button
+                outlined
+                small
+                icon={IconNames.CROSS}
+                onClick={clearPendingTransactionPref}
+              >
+                {t`Clear spinner`}
+              </Button>
+            </div>
+          ) : null}
+        </div>
+
         <div className={tw("flex", "space-x-4", "items-center")}>
           <Button
             minimal
