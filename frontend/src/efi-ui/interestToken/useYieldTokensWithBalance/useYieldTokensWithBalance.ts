@@ -28,7 +28,7 @@ export function useYieldTokensWithBalance(
   );
 
   const interestTokensWithBalance = loadedData
-    .filter(([interestToken, balanceOf]) => balanceOf.gt(0))
+    .filter(([unusedInterestToken, balanceOf]) => balanceOf.gt(0))
     .map(([interestToken]) => interestToken);
 
   return interestTokensWithBalance;

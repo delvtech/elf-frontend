@@ -68,8 +68,8 @@ test("passes single arguments object to all smart contract read methods", async 
   const stubAddress = "0xWalletAddress";
   const stubBalanceOf1 = [BigNumber.from(10)];
   const stubBalanceOf2 = [BigNumber.from(90)];
-  const mockFn1 = jest.fn(async (account: string) => stubBalanceOf1);
-  const mockFn2 = jest.fn(async (account: string) => stubBalanceOf2);
+  const mockFn1 = jest.fn(async () => stubBalanceOf1);
+  const mockFn2 = jest.fn(async () => stubBalanceOf2);
 
   const contract1 = {
     address: "0xContract1",
@@ -119,8 +119,8 @@ test("passes arguments object list to smart contract read methods", async () => 
   const stubAddress = "0xWalletAddress";
   const stubBalanceOf1 = [BigNumber.from(10)];
   const stubBalanceOf2 = [BigNumber.from(90)];
-  const mockFn1 = jest.fn(async (account: string) => stubBalanceOf1);
-  const mockFn2 = jest.fn(async (account: string) => stubBalanceOf2);
+  const mockFn1 = jest.fn(async () => stubBalanceOf1);
+  const mockFn2 = jest.fn(async () => stubBalanceOf2);
 
   const contract1 = {
     address: "0xContract1",
