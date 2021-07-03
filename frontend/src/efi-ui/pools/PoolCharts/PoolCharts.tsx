@@ -15,11 +15,11 @@ import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
 import { ONE_WEEK_IN_MILLISECONDS, ONE_WEEK_IN_SECONDS } from "efi/base/time";
+import { TimeData } from "efi/charts/TimeData";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolInfo } from "efi/pools/PoolInfo";
 
 import { useLiquidityHistoryForPool } from "./useLiquidityHistoryForPool";
-import { TimeData } from "efi/charts/TimeData";
 
 const nowInMs = Date.now();
 const weekAgoMs = nowInMs - ONE_WEEK_IN_MILLISECONDS;
@@ -38,14 +38,8 @@ export function PoolCharts({ poolInfo }: PoolChartsProps): ReactElement {
   const totalLiquidity = +(totalFiatLiquidity?.toString() || "0");
 
   const { isDarkMode } = useDarkMode();
-  const {
-    volumeData,
-    liquidityData,
-    setChart,
-    showLiquidityChart,
-    showVolumeChart,
-    poolAge,
-  } = usePoolCharts(poolInfo);
+  const { volumeData, liquidityData, setChart, showLiquidityChart, poolAge } =
+    usePoolCharts(poolInfo);
 
   const { liquiditySerie, volumeSerie } = convertChartDatasToSeries(
     liquidityData,
@@ -80,30 +74,16 @@ export function PoolCharts({ poolInfo }: PoolChartsProps): ReactElement {
             </Tabs>
           </div>
           <div className={tw("w-full", "h-full", "pt-8")}>
-            {showLiquidityChart ? (
-              <ChartMessages poolAgeInSeconds={poolAge} hasData={true}>
-                <LineChart
-                  key={isDarkMode ? "darkline" : "lightline"}
-                  chartType="lines"
-                  dataLabel={`(${currency.symbol_native})`}
-                  darkMode={isDarkMode}
-                  data={liquiditySerie}
-                  formatYValues={formatYValues}
-                />
-              </ChartMessages>
-            ) : null}
-            {showVolumeChart ? (
-              <ChartMessages poolAgeInSeconds={poolAge} hasData={true}>
-                <LineChart
-                  key={isDarkMode ? "darkbar" : "lightbar"}
-                  chartType="bars"
-                  dataLabel={`(${currency.symbol_native})`}
-                  darkMode={isDarkMode}
-                  data={volumeSerie}
-                  formatYValues={formatYValues}
-                />
-              </ChartMessages>
-            ) : null}
+            <ChartMessages poolAgeInSeconds={poolAge} hasData={true}>
+              <LineChart
+                key={isDarkMode ? "darkline" : "lightline"}
+                chartType={showLiquidityChart ? "lines" : "bars"}
+                dataLabel={`(${currency.symbol_native})`}
+                darkMode={isDarkMode}
+                data={showLiquidityChart ? liquiditySerie : volumeSerie}
+                formatYValues={formatYValues}
+              />
+            </ChartMessages>
           </div>
         </Card>
       </div>
@@ -158,31 +138,26 @@ function convertChartDatasToSeries(
   totalLiquidity: number,
   volumeData: TimeData[] | undefined
 ) {
+  // because we are estimating block timestamps, make sure we don't have any older than our time frame
   const filteredLiquidityData =
     liquidityData?.filter(
       (datum) => datum.value >= 0 && datum.timeMs > weekAgoMs
     ) ?? [];
 
-  // if there is no data, pad with two data points
-  const paddedLiquidityData = padLiquidityData(
-    filteredLiquidityData,
-    totalLiquidity
-  );
+  // remove data that have the same timestamp
+  const dedupedLiquidityData = dedupeLiquidityData(filteredLiquidityData);
 
-  // remove
-  const dedupedLiquidityData = dedupeLiquidityData(paddedLiquidityData);
-
+  // because we are estimating block timestamps, make sure we don't have any older than our time frame
   const filteredVolumeData =
     volumeData?.filter(
       (datum) => datum.value >= 0 && datum.timeMs > weekAgoMs
     ) ?? [];
-  const paddedVolumeData = padVolumeData(filteredVolumeData);
 
   const liquiditySerie = convertTimeDataToSerie(
     dedupedLiquidityData,
     "liquidity"
   );
-  const volumeSerie = convertTimeDataToSerie(paddedVolumeData, "volume");
+  const volumeSerie = convertTimeDataToSerie(filteredVolumeData, "volume");
   return { liquiditySerie, volumeSerie };
 }
 
@@ -202,31 +177,6 @@ function convertTimeDataToSerie(timeData: TimeData[], id: string): Serie[] {
   ];
 
   return lineSerie;
-}
-
-function padLiquidityData(
-  data: TimeData[],
-  totalLiquidity: number
-): TimeData[] {
-  if (data.length === 0) {
-    return [
-      { value: totalLiquidity, timeMs: weekAgoMs + 10000 },
-      { value: totalLiquidity, timeMs: nowInMs - 10000 },
-    ];
-  }
-
-  return data;
-}
-
-function padVolumeData(data: TimeData[]): TimeData[] {
-  if (data.length === 0) {
-    return [
-      { value: 0, timeMs: weekAgoMs + 10000 },
-      { value: 0, timeMs: nowInMs - 10000 },
-    ];
-  }
-
-  return data;
 }
 
 function formatYValues(value: number) {

@@ -1,4 +1,4 @@
-import { ReactElement, ReactNode } from "react";
+import { ReactElement, ReactNode, useEffect, useState } from "react";
 
 import { Colors } from "@blueprintjs/core";
 import { AxisProps, GridValues } from "@nivo/axes";
@@ -46,22 +46,26 @@ export function LineChart({
   chartType = "lines",
   dataLabel,
   darkMode,
-  data,
+  data = [],
   formatYValues,
 }: LineChartProps): ReactElement {
+  const [chartData, setChartData] = useLoadChartData(data);
+  useClearDataWhenChartTypeChanges(setChartData, data, chartType);
+
   const { currency } = useCurrencyPref();
   const { dataColor, textColor, tooltipBackground, tooltipColor } =
     getColors(darkMode);
 
   const theme = getTheme(textColor);
 
-  const maxDataValue = data[0].data.reduce((highestValue, datum) => {
+  const maxDataValue = chartData[0]?.data?.reduce((highestValue, datum) => {
     const currentValue = (datum?.y || 0) as number;
     if (currentValue > highestValue) {
       return currentValue;
     }
     return highestValue;
   }, 0);
+
   const maxYScale = Math.round(maxDataValue * 1.2) || 100;
   const yScale: LinearScale = {
     type: "linear",
@@ -88,8 +92,8 @@ export function LineChart({
       <ResponsiveLine
         lineWidth={2}
         enableSlices={"x"}
-        animate={false}
-        data={data}
+        animate={true}
+        data={chartData}
         enableCrosshair={true}
         crosshairType={"x"}
         sliceTooltip={SliceTooltip}
@@ -132,6 +136,33 @@ export function LineChart({
       />
     </div>
   );
+}
+
+function useLoadChartData(data: Serie[]): [Serie[], (data: Serie[]) => void] {
+  const [chartData, setChartData] = useState<Serie[]>(
+    data.map((serie) => ({ ...serie, data: [] }))
+  );
+  useEffect(() => {
+    const animation = setTimeout(() => {
+      setChartData(data);
+    }, 10);
+
+    return () => {
+      clearTimeout(animation);
+    };
+  }, [data]);
+
+  return [chartData, setChartData];
+}
+function useClearDataWhenChartTypeChanges(
+  setChartData: (data: Serie[]) => void,
+  data: Serie[],
+  chartType: string
+) {
+  useEffect(() => {
+    setChartData(data.map((serie) => ({ ...serie, data: [] })));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chartType]);
 }
 
 function getColors(darkMode: boolean | undefined) {
@@ -190,13 +221,13 @@ function makeBarLayer(dataColor: string) {
     const lineGenerator = line();
     const serieData = data[0].data;
     const pathStrings = serieData
-      .map((datum) => {
+      ?.map((datum) => {
         return lineGenerator([
           [xScale(datum.x as Date), yScale(0)],
           [xScale(datum.x as Date), yScale(datum.y as number)],
         ]);
       })
-      .filter(Boolean) as string[];
+      ?.filter(Boolean) as string[];
 
     return (
       <g>

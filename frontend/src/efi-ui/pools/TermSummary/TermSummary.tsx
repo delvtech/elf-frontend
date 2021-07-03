@@ -12,7 +12,6 @@ import { getYearnVaultAPY } from "efi-yearn/fetchYearnVaults";
 import { formatAbbreviatedDate } from "efi/base/dates";
 import { formatPercent } from "efi/base/formatPercent";
 import { formatMoney } from "efi/money/formatMoney";
-import { principalPools } from "efi/pools/ccpool";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import {
@@ -50,10 +49,6 @@ export function TermSummary(props: TermSummaryProps): ReactElement {
 
   const { display_name: displayName, type, apy } = vaultInfo || {};
   const vaultApy = apy ? getYearnVaultAPY(apy) : 0;
-
-  const isPrincipalPool = principalPools
-    .map(({ address }) => address)
-    .includes(poolInfo.address);
 
   const startDateLabel = startTimeMs
     ? formatAbbreviatedDate(new Date(startTimeMs))
