@@ -8,13 +8,13 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
+import { getYearnVaultAPY } from "efi-yearn/fetchYearnVaults";
 import { formatAbbreviatedDate } from "efi/base/dates";
 import { formatPercent } from "efi/base/formatPercent";
 import { formatMoney } from "efi/money/formatMoney";
 import { principalPools } from "efi/pools/ccpool";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolInfo } from "efi/pools/PoolInfo";
-import { getYearnVaultAPY } from "efi-yearn/fetchYearnVaults";
 import {
   getVaultTokenInfoForTranche,
   isPrincipalToken,
@@ -87,7 +87,7 @@ export function TermSummary(props: TermSummaryProps): ReactElement {
           </div>
 
           {/* Underlying Vault */}
-          {poolInfo && !isPrincipalPool ? (
+          {poolInfo && (
             <div className={tw("flex", "flex-col")}>
               <span
                 className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
@@ -96,10 +96,10 @@ export function TermSummary(props: TermSummaryProps): ReactElement {
                 {t`Yearn ${displayName} ${type}`}
               </div>
             </div>
-          ) : null}
+          )}
 
           {/* Underlying Vault */}
-          {poolInfo && !isPrincipalPool ? (
+          {poolInfo && (
             <div className={tw("flex", "flex-col")}>
               <span
                 className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
@@ -108,7 +108,7 @@ export function TermSummary(props: TermSummaryProps): ReactElement {
                 {formatPercent(vaultApy)}
               </div>
             </div>
-          ) : null}
+          )}
         </div>
 
         <div
