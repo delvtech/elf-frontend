@@ -20,6 +20,7 @@ import { PoolContract } from "efi/pools/PoolContract";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { isYieldPool } from "efi/pools/weightedPool";
 import { getTokenInfo } from "efi/tokenlists";
+import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 
 /**
  * Useful for previewing a swap in the balancer V2 vault.
@@ -102,7 +103,10 @@ export function getCalcSwap(
     return { result: undefined, status: "loading" };
   }
 
-  const isBaseAssetIn = tokenInAddress === baseAssetAddress;
+  let isBaseAssetIn = tokenInAddress === baseAssetAddress;
+  if (tokenInAddress === BALANCER_ETH_SENTINEL) {
+    isBaseAssetIn = true;
+  }
 
   if (isPrincipalPool(poolInfo)) {
     return calcSwapPrincipalPool(

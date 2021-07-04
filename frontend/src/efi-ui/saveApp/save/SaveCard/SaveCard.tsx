@@ -201,7 +201,7 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
 
       const newAmountOut = clipStringValueToDecimals(
         newAmountOutNumber,
-        activeBaseAssetDecimals ?? 18
+        activeBaseAssetDecimals
       );
       setSwapKind(swapKind);
       setAmountIn(newAmountIn);
