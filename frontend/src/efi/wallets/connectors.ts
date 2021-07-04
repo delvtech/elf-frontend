@@ -42,11 +42,15 @@ injectedConnector.handleChainChanged = (chainId: string | number) => {
  * like Rainbow, Argent etc.
  */
 export const walletConnectConnector = new WalletConnectConnector({
-  rpc: { [ChainId.LOCAL]: ChainNames[ChainId.LOCAL] },
+  rpc: {
+    [ChainId.MAINNET]: ALCHEMY_MAINNET_HTTP_URL,
+    [ChainId.GOERLI]: ALCHEMY_GOERLI_HTTP_URL,
+    [ChainId.LOCAL]: ChainNames[ChainId.LOCAL],
+  },
 });
 
 export const ledgerConnector = new LedgerConnector({
-  chainId: ChainId.GOERLI,
+  chainId: AddressesJson.chainId,
   url:
     AddressesJson.chainId === ChainId.MAINNET
       ? ALCHEMY_MAINNET_HTTP_URL
