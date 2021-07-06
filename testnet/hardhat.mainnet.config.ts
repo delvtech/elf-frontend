@@ -1,4 +1,6 @@
 import "@nomiclabs/hardhat-waffle";
+// uncomment this to compile vyper contracts
+// import "@nomiclabs/hardhat-vyper";
 import "@typechain/hardhat";
 import "module-alias/register";
 
@@ -33,7 +35,11 @@ const config: HardhatUserConfig = {
     sources: "src",
     tests: "src/tests",
   },
+  // uncomment this to compile vyper contracts.  the version in the file must match.
   // vyper: {
+  // CRVPool
+  // version: "0.2.12",
+  // CRVToken
   //   version: "0.2.8",
   // },
   solidity: {
