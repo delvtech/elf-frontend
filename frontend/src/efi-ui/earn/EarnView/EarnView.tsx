@@ -36,7 +36,8 @@ export function EarnView(unusedProps: EarnViewProps): ReactElement {
           "h-full",
           "space-y-12",
           "items-center",
-          "overflow-scroll"
+          "overflow-scroll",
+          "pb-5"
         )}
       >
         <div style={earnViewStyle}>

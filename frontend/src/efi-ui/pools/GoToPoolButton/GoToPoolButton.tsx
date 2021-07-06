@@ -1,12 +1,15 @@
 import { ReactElement, useCallback } from "react";
 
-import { AnchorButton, Intent } from "@blueprintjs/core";
+import { AnchorButton, Classes, Intent } from "@blueprintjs/core";
 
 import tw from "efi-tailwindcss-classnames";
 import {
   PoolAction,
   usePoolViewPoolActionsTab,
 } from "efi-ui/pools/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
+import { Link } from "@reach/router";
+import { BUTTON } from "@blueprintjs/core/lib/esm/common/classes";
+import classNames from "classnames";
 
 interface GoToPoolButtonProps {
   poolAddress: string;
@@ -35,16 +38,21 @@ export function GoToPoolButton(props: GoToPoolButtonProps): ReactElement {
   }, [setTab, poolAction]);
 
   return (
-    <AnchorButton
-      fill={fill}
-      intent={Intent.PRIMARY}
-      href={`/pools/${poolAddress}`}
+    <Link
+      to={`/pools/${poolAddress}`}
       onClick={onClick}
-      minimal
-      small={small}
-      outlined={outlined}
+      className={classNames(
+        Classes.BUTTON,
+        Classes.MINIMAL,
+        {
+          [Classes.OUTLINED]: outlined,
+          [Classes.SMALL]: small,
+          [Classes.FILL]: fill,
+        },
+        Classes.INTENT_PRIMARY
+      )}
     >
       <div className={tw("p-2", "text-base")}>{label}</div>
-    </AnchorButton>
+    </Link>
   );
 }
