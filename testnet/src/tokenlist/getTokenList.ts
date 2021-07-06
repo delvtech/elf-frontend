@@ -39,6 +39,7 @@ export async function getTokenList(
       convergentPoolFactoryAddress,
       weightedPoolFactoryAddress,
       crvalusdAddress,
+      crvtricryptoAddress,
     },
     safelist,
   } = addressesJson;
@@ -65,6 +66,7 @@ export async function getTokenList(
     daiAddress,
     crvlusdAddress,
     crvalusdAddress,
+    crvtricryptoAddress,
   ].filter(
     (address) => address !== "0x0000000000000000000000000000000000000000"
   );

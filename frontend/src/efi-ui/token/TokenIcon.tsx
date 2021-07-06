@@ -5,6 +5,7 @@ import elementIcon from "efi-static-assets/logos/svg/ELEMENT-light.svg";
 import ethIconGrey from "efi-static-assets/logos/svg/ethereum-eth.svg";
 import crvLusdIcon from "efi-static-assets/logos/svg/crvLUSD.svg";
 import crvAlusdIcon from "efi-static-assets/logos/crvALUSD.png";
+import crvTricryptoIcon from "efi-static-assets/logos/crvtricrypto.png";
 import lusdIcon from "efi-static-assets/logos/svg/LUSD.svg";
 import usdcIcon from "efi-static-assets/logos/svg/USDC.svg";
 import daiIcon from "efi-static-assets/logos/svg/DAI.svg";
@@ -64,6 +65,23 @@ export function LusdIcon({
       className={className}
       style={style}
       src={lusdIcon}
+      height={height}
+      width={width}
+    />
+  );
+}
+export function CrvTricryptoIcon({
+  height,
+  width,
+  className,
+  style,
+}: IconProps): ReactElement {
+  return (
+    <SvgIcon
+      alt={"crvtricrypto"}
+      className={className}
+      style={style}
+      src={crvTricryptoIcon}
       height={height}
       width={width}
     />

@@ -27,8 +27,12 @@ export function useTokenPrice<TContract extends ERC20>(
   const isCrvlusd = contract.address === AddressesJson.addresses.crvlusdAddress;
   const isCrvalusd =
     contract.address === AddressesJson.addresses.crvalusdAddress;
+  const isCrvTricrypto =
+    contract.address === AddressesJson.addresses.crvtricryptoAddress;
+  const isCurve = isCrvalusd || isCrvlusd || isCrvTricrypto;
+
   const virtualPriceResult = useSmartContractReadCall(
-    isMainnet(AddressesJson.chainId) && (isCrvlusd || isCrvalusd)
+    isMainnet(AddressesJson.chainId) && isCurve
       ? CRVLUSD__factory.connect(contract.address, defaultProvider)
       : (contract as unknown as CRVLUSD),
     "get_virtual_price",
@@ -41,7 +45,7 @@ export function useTokenPrice<TContract extends ERC20>(
 
   // on goerli, we'll just hard-code crvlusd and crvalusd to 1, since there is
   // no goerli curve pools available
-  if ((isCrvalusd || isCrvlusd) && AddressesJson.chainId === ChainId.GOERLI) {
+  if (isCurve && AddressesJson.chainId === ChainId.GOERLI) {
     // return a fake query observer result, which sucks but yoloswag5000 for goerli testnet
     return {
       data: Money.fromDecimal(1, currency),
@@ -49,7 +53,7 @@ export function useTokenPrice<TContract extends ERC20>(
   }
 
   // otherwise if we're on mainnet and it's a crv token, return it's virtual price
-  if (isCrvlusd || isCrvalusd) {
+  if (isCurve) {
     const priceString = formatBalance(virtualPriceResult.data, decimals);
     const price = Money.fromDecimal(
       +priceString,

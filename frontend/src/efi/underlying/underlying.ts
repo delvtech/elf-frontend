@@ -18,6 +18,7 @@ const {
     daiAddress,
     crvlusdAddress,
     crvalusdAddress,
+    crvtricryptoAddress,
   },
 } = AddressesJson;
 
@@ -49,6 +50,14 @@ const crvalusdContract = getSmartContractFromRegistry(
   // aren't borked
   ERC20__factory.connect
 ) as ERC20;
+
+const crvTricryptoContract = getSmartContractFromRegistry(
+  crvtricryptoAddress,
+  // TODO: hack, make this CRVTRICRYPTO__factory one balanceOf and allowance calls
+  // aren't borked
+  ERC20__factory.connect
+) as ERC20;
+
 /**
  * Lookup the contract instance for a underlying's address.
  */
@@ -58,6 +67,7 @@ export const underlyingContractsByAddress = Object.freeze({
   [daiAddress]: daiContract,
   [crvlusdAddress]: crvlusdContract,
   [crvalusdAddress]: crvalusdContract,
+  [crvtricryptoAddress]: crvTricryptoContract,
 });
 
 const underlyingERC20PermitAddresses = [usdcAddress];

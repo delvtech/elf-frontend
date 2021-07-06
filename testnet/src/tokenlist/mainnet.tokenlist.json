@@ -31,7 +31,7 @@
       "description": "The yield position, ie: Yearn yvcrvLUSD"
     }
   },
-  "timestamp": "2021-06-30T16:35:56.396Z",
+  "timestamp": "2021-07-06T14:03:41.385Z",
   "version": {
     "major": 0,
     "minor": 0,
@@ -80,6 +80,16 @@
     },
     {
       "chainId": 1,
+      "address": "0xcA3d75aC011BF5aD07a98d02f18225F9bD9A6BDF",
+      "symbol": "crvTricrypto",
+      "decimals": 18,
+      "name": "Curve.fi USD-BTC-ETH",
+      "tags": [
+        "underlying"
+      ]
+    },
+    {
+      "chainId": 1,
       "address": "0x53b1aEAa018da00b4F458Cc13d40eB3e8d1B85d6",
       "symbol": "yvCurveLUSD",
       "decimals": 18,
@@ -93,10 +103,33 @@
     },
     {
       "chainId": 1,
+      "address": "0x97278Ce17D4860f8f49afC6E4c1C5AcBf2584cE5",
+      "symbol": "yvCrvTriCrypto",
+      "decimals": 18,
+      "name": "Element Wrapped Yearn Curve TriCrypto",
+      "tags": [
+        "assetproxy"
+      ],
+      "extensions": {
+        "vault": "0x3D980E50508CFd41a13837A60149927a11c03731"
+      }
+    },
+    {
+      "chainId": 1,
       "address": "0x5fA5B62c8AF877CB37031e0a3B2f34A78e3C56A6",
       "symbol": "yvCurve-LUSD",
       "decimals": 18,
       "name": "Curve LUSD Pool yVault",
+      "tags": [
+        "vault"
+      ]
+    },
+    {
+      "chainId": 1,
+      "address": "0x3D980E50508CFd41a13837A60149927a11c03731",
+      "symbol": "yvCurve-triCrypto",
+      "decimals": 18,
+      "name": "Curve triCrypto Pool yVault",
       "tags": [
         "vault"
       ]
@@ -137,6 +170,23 @@
     },
     {
       "chainId": 1,
+      "address": "0x237535Da7e2f0aBa1b68262ABCf7C4e60B42600C",
+      "symbol": "ePyvCrvTriCrypto-15AUG21",
+      "decimals": 18,
+      "extensions": {
+        "underlying": "0xcA3d75aC011BF5aD07a98d02f18225F9bD9A6BDF",
+        "position": "0x97278Ce17D4860f8f49afC6E4c1C5AcBf2584cE5",
+        "interestToken": "0xC080f19D9E7CCB6ef2096DFa08570e0057490940",
+        "unlockTimestamp": 1628997564,
+        "createdAtTimestamp": 1625571539
+      },
+      "name": "crvTricrypto Principal Token",
+      "tags": [
+        "eP"
+      ]
+    },
+    {
+      "chainId": 1,
       "address": "0xBabD64a87881d8df7680907fcde176FF11Fa0292",
       "symbol": "eYyvCurveLUSD-28SEP21",
       "decimals": 18,
@@ -160,6 +210,21 @@
         "tranche": "0xa2b3d083AA1eaa8453BfB477f062A208Ed85cBBF",
         "underlying": "0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA",
         "unlockTimestamp": 1640620258
+      },
+      "tags": [
+        "eY"
+      ]
+    },
+    {
+      "chainId": 1,
+      "address": "0xC080f19D9E7CCB6ef2096DFa08570e0057490940",
+      "symbol": "eYyvCrvTriCrypto-15AUG21",
+      "decimals": 18,
+      "name": "crvTricrypto Yield Token",
+      "extensions": {
+        "tranche": "0x237535Da7e2f0aBa1b68262ABCf7C4e60B42600C",
+        "underlying": "0xcA3d75aC011BF5aD07a98d02f18225F9bD9A6BDF",
+        "unlockTimestamp": 1628997564
       },
       "tags": [
         "eY"
@@ -203,6 +268,24 @@
     },
     {
       "chainId": 1,
+      "address": "0x3A693EB97b500008d4Bb6258906f7Bbca1D09Cc5",
+      "symbol": "LPePyvCrvTriCrypto-15AUG21",
+      "decimals": 18,
+      "extensions": {
+        "bond": "0x237535Da7e2f0aBa1b68262ABCf7C4e60B42600C",
+        "underlying": "0xcA3d75aC011BF5aD07a98d02f18225F9bD9A6BDF",
+        "poolId": "0x3a693eb97b500008d4bb6258906f7bbca1d09cc5000200000000000000000065",
+        "unitSeconds": 194390824,
+        "expiration": 1628997564,
+        "createdAtTimestamp": 1625578299
+      },
+      "name": "LP Element Principal Token yvCrvTriCrypto-15AUG21",
+      "tags": [
+        "ccpool"
+      ]
+    },
+    {
+      "chainId": 1,
       "address": "0xDe620bb8BE43ee54d7aa73f8E99A7409Fe511084",
       "symbol": "LPeYyvCurveLUSD-28SEP21",
       "decimals": 18,
@@ -231,6 +314,23 @@
         "expiration": 1640620258
       },
       "name": "LP Element Yield Token yvCurveLUSD-27DEC21",
+      "tags": [
+        "wpool"
+      ]
+    },
+    {
+      "chainId": 1,
+      "address": "0xF94A7Df264A2ec8bCEef2cFE54d7cA3f6C6DFC7a",
+      "symbol": "LPeYyvCrvTriCrypto-15AUG21",
+      "decimals": 18,
+      "extensions": {
+        "poolId": "0xf94a7df264a2ec8bceef2cfe54d7ca3f6c6dfc7a000200000000000000000064",
+        "underlying": "0xcA3d75aC011BF5aD07a98d02f18225F9bD9A6BDF",
+        "interestToken": "0xC080f19D9E7CCB6ef2096DFa08570e0057490940",
+        "createdAtTimestamp": 1625577740,
+        "expiration": 1628997564
+      },
+      "name": "LP Element Yield Token yvCrvTriCrypto-15AUG21",
       "tags": [
         "wpool"
       ]
