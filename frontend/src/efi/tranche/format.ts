@@ -10,7 +10,7 @@ export function formatPrincipalTokenShortSymbol(
 ): string {
   const { symbol } = principalToken;
   // symbols look like: ePyvCurveLUSD-12SEP21
-  const [elementSymbol, unusedElementTermDate] = symbol.split("-");
+  const [elementSymbol] = symbol.split("-");
   return elementSymbol;
 }
 

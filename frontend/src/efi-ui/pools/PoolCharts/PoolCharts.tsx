@@ -1,7 +1,16 @@
 import { ReactElement, useState } from "react";
 
-import { Card, Tab, Tabs } from "@blueprintjs/core";
-import { Serie } from "@nivo/line";
+import {
+  Button,
+  Card,
+  Icon,
+  Intent,
+  Menu,
+  MenuItem,
+  Position,
+  Tab,
+  Tabs,
+} from "@blueprintjs/core";
 import { format } from "d3-format";
 import { commify } from "ethers/lib/utils";
 import { t } from "ttag";
@@ -9,8 +18,8 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { LineChart } from "efi-ui/charts/LineChart/LineChart";
 import { ChartMessages } from "efi-ui/pools/PoolCharts/ChartMessagesProps";
-import { useVolumeHistoryForPool } from "efi-ui/pools/PoolCharts/useLiquidityVolumeHistoryForPool";
-import { useTotalFiatLiquidity } from "efi-ui/pools/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
+import { useLiquidityHistoryForPool } from "efi-ui/pools/useLiquidityHistoryForPool";
+import { useVolumeHistoryForPool } from "efi-ui/pools/useLiquidityVolumeHistoryForPool";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
@@ -19,7 +28,10 @@ import { TimeData } from "efi/charts/TimeData";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolInfo } from "efi/pools/PoolInfo";
 
-import { useLiquidityHistoryForPool } from "./useLiquidityHistoryForPool";
+import { binDataByDay } from "./helpers/binDataByDay";
+import { convertChartDatasToSeries } from "./helpers/convertChartDatasToSeries";
+import { Popover2 } from "@blueprintjs/popover2";
+import { IconNames } from "@blueprintjs/icons";
 
 const nowInMs = Date.now();
 const weekAgoMs = nowInMs - ONE_WEEK_IN_MILLISECONDS;
@@ -34,20 +46,32 @@ interface PoolChartsProps {
 }
 
 export function PoolCharts({ poolInfo }: PoolChartsProps): ReactElement {
-  const totalFiatLiquidity = useTotalFiatLiquidity(poolInfo);
-  const totalLiquidity = +(totalFiatLiquidity?.toString() || "0");
-
   const { isDarkMode } = useDarkMode();
-  const { volumeData, liquidityData, setChart, showLiquidityChart, poolAge } =
-    usePoolCharts(poolInfo);
+  const { currency } = useCurrencyPref();
+  const [binVolumeData, setBinVolumeData] = useState(true);
+
+  const {
+    volumeData: rawVolumeData,
+    liquidityData,
+    setChart,
+    showLiquidityChart,
+    poolAge,
+  } = usePoolCharts(poolInfo);
+
+  const volumeData = binVolumeData
+    ? binDataByDay(rawVolumeData)
+    : rawVolumeData;
 
   const { liquiditySerie, volumeSerie } = convertChartDatasToSeries(
     liquidityData,
-    totalLiquidity,
-    volumeData
+    volumeData,
+    weekAgoMs
   );
 
-  const { currency } = useCurrencyPref();
+  const labelElement = binVolumeData ? (
+    <Icon icon={IconNames.SMALL_TICK} intent={Intent.SUCCESS} />
+  ) : undefined;
+
   return (
     <div
       className={tw("flex", "flex-1", "h-500")}
@@ -57,27 +81,38 @@ export function PoolCharts({ poolInfo }: PoolChartsProps): ReactElement {
         <div className={tw("mb-2", "flex", "space-x-4")}>
           <span>{t`Pool Charts`}</span>
         </div>
-        <Card className={tw("flex", "flex-1", "relative")}>
+        <Card className={tw("flex", "flex-1", "flex-col")}>
           <div
-            className={tw(
-              "absolute",
-              "w-full",
-              "flex",
-              "z-10",
-              "justify-between",
-              "pr-10"
-            )}
+            className={tw("w-full", "flex", "z-10", "justify-between", "pr-10")}
           >
             <Tabs onChange={setChart as (newTabId: ChartType) => void}>
               <Tab id={ChartType.LIQUIDITY} title={t`Liquidity`} />
               <Tab id={ChartType.VOLUME} title={t`Volume`} />
             </Tabs>
+            {!showLiquidityChart && (
+              <Popover2
+                content={
+                  <Menu>
+                    <MenuItem
+                      icon={IconNames.GROUPED_BAR_CHART}
+                      onClick={() => setBinVolumeData(!binVolumeData)}
+                      text={t`Group data`}
+                      labelElement={labelElement}
+                    />
+                  </Menu>
+                }
+                position={Position.BOTTOM_LEFT}
+              >
+                <Button icon={IconNames.SETTINGS} />
+              </Popover2>
+            )}
           </div>
-          <div className={tw("w-full", "h-full", "pt-8")}>
+          <div className={tw("w-full", "h-full")}>
             <ChartMessages poolAgeInSeconds={poolAge} hasData={true}>
               <LineChart
                 key={isDarkMode ? "darkline" : "lightline"}
                 chartType={showLiquidityChart ? "lines" : "bars"}
+                groupVolumeData={binVolumeData}
                 dataLabel={`(${currency.symbol_native})`}
                 darkMode={isDarkMode}
                 data={showLiquidityChart ? liquiditySerie : volumeSerie}
@@ -93,20 +128,21 @@ export function PoolCharts({ poolInfo }: PoolChartsProps): ReactElement {
 function usePoolCharts(poolInfo: PoolInfo) {
   const poolAge = getPoolAge(poolInfo);
 
-  const liquidityData = useLiquidityHistoryForPool(
-    poolInfo,
-    ONE_WEEK_IN_SECONDS
-  );
-  const volumeData = useVolumeHistoryForPool(poolInfo, ONE_WEEK_IN_SECONDS);
+  const liquidityData =
+    useLiquidityHistoryForPool(poolInfo, ONE_WEEK_IN_SECONDS) ?? [];
+  const volumeData =
+    useVolumeHistoryForPool(poolInfo, ONE_WEEK_IN_SECONDS) ?? [];
   const { currency } = useCurrencyPref();
   const { baseAssetContract } = getPoolTokens(poolInfo);
   const { data: baseAssetPrice } = useTokenPrice(baseAssetContract, currency);
   const fiatPrice = baseAssetPrice?.toDecimal() ?? 1;
-  const liquidityFiatData = liquidityData?.map(({ value, timeMs }) => ({
-    value: fiatPrice * value,
-    timeMs,
-  }));
-  const volumeFiatData = volumeData?.map(({ value, timeMs }) => ({
+  const liquidityFiatData: TimeData[] = liquidityData.map(
+    ({ value, timeMs }) => ({
+      value: fiatPrice * value,
+      timeMs,
+    })
+  );
+  const volumeFiatData: TimeData[] = volumeData.map(({ value, timeMs }) => ({
     value: fiatPrice * value,
     timeMs,
   }));
@@ -133,52 +169,6 @@ function getPoolAge(poolInfo: PoolInfo) {
   return poolAge;
 }
 
-function convertChartDatasToSeries(
-  liquidityData: TimeData[] | undefined,
-  totalLiquidity: number,
-  volumeData: TimeData[] | undefined
-) {
-  // because we are estimating block timestamps, make sure we don't have any older than our time frame
-  const filteredLiquidityData =
-    liquidityData?.filter(
-      (datum) => datum.value >= 0 && datum.timeMs > weekAgoMs
-    ) ?? [];
-
-  // remove data that have the same timestamp
-  const dedupedLiquidityData = dedupeLiquidityData(filteredLiquidityData);
-
-  // because we are estimating block timestamps, make sure we don't have any older than our time frame
-  const filteredVolumeData =
-    volumeData?.filter(
-      (datum) => datum.value >= 0 && datum.timeMs > weekAgoMs
-    ) ?? [];
-
-  const liquiditySerie = convertTimeDataToSerie(
-    dedupedLiquidityData,
-    "liquidity"
-  );
-  const volumeSerie = convertTimeDataToSerie(filteredVolumeData, "volume");
-  return { liquiditySerie, volumeSerie };
-}
-
-function convertTimeDataToSerie(timeData: TimeData[], id: string): Serie[] {
-  const lineData =
-    timeData?.map(({ value, timeMs }) => {
-      return {
-        x: new Date(timeMs),
-        y: value,
-      };
-    }) ?? [];
-  const lineSerie: Serie[] = [
-    {
-      id,
-      data: lineData,
-    },
-  ];
-
-  return lineSerie;
-}
-
 function formatYValues(value: number) {
   const f = format(".2s");
 
@@ -188,19 +178,4 @@ function formatYValues(value: number) {
   }
 
   return commify(value);
-}
-
-// dedupes by timestamp.  if two or more values have the same second value, the last one is kept.
-function dedupeLiquidityData(data: TimeData[]): TimeData[] {
-  // uniqBy keeps the first duplicate values.  since TimeData should be in chronological order, we
-  // reverse the data to keep the last value.
-  const copiedData = [...data].reverse();
-
-  const dedupedData = _.uniqBy(copiedData, (datum) => Math.round(datum.timeMs));
-  // as long as the previous value occurs at the same second,
-
-  // put order back in ascending chronological order
-  dedupedData.reverse();
-
-  return dedupedData;
 }

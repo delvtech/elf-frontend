@@ -5,6 +5,6 @@ export function formatYieldTokenShortSymbol(
 ): string {
   const { symbol } = yieldToken;
   // symbols look like: `eYyvCurveLUSD-12SEP21
-  const [elementSymbol, unusedElementTermDate] = symbol.split("-");
+  const [elementSymbol] = symbol.split("-");
   return elementSymbol;
 }

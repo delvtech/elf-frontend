@@ -1,4 +1,4 @@
-import { ReactElement, ReactNode, useEffect, useState } from "react";
+import { ReactElement, ReactNode, useEffect, useMemo, useState } from "react";
 
 import { Colors } from "@blueprintjs/core";
 import { AxisProps, GridValues } from "@nivo/axes";
@@ -6,6 +6,7 @@ import { Margin } from "@nivo/core";
 import {
   CustomLayerProps,
   DatumValue,
+  Layer,
   ResponsiveLine,
   Serie,
   SliceTooltipProps,
@@ -16,10 +17,13 @@ import { Currency, Money } from "ts-money";
 
 import tw from "efi-tailwindcss-classnames";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
-import { ONE_WEEK_IN_MILLISECONDS } from "efi/base/time";
+import {
+  ONE_DAY_IN_MILLISECONDS,
+  ONE_WEEK_IN_MILLISECONDS,
+} from "efi/base/time";
 import { formatMoney } from "efi/money/formatMoney";
 
-const margin: Partial<Margin> = { top: 40, right: 40, bottom: 60, left: 80 };
+const margin: Partial<Margin> = { top: 20, right: 40, bottom: 40, left: 80 };
 
 const axisBottom: AxisProps = {
   tickSize: 5,
@@ -33,6 +37,7 @@ const axisBottom: AxisProps = {
 
 export interface LineChartProps {
   chartType: "lines" | "bars";
+  groupVolumeData: boolean;
   dataLabel: ReactNode;
   darkMode?: boolean;
   data: Serie[];
@@ -44,6 +49,7 @@ const nowInMs = Date.now();
 const weekAgo = new Date(nowInMs - ONE_WEEK_IN_MILLISECONDS);
 export function LineChart({
   chartType = "lines",
+  groupVolumeData,
   dataLabel,
   darkMode,
   data = [],
@@ -75,7 +81,18 @@ export function LineChart({
     reverse: false,
   };
 
-  const CustomLayer = chartType === "lines" ? "lines" : makeBarLayer(dataColor);
+  const customLayer = useMemo(() => {
+    let layer: Layer = "lines";
+
+    if (chartType === "bars") {
+      layer = groupVolumeData
+        ? makeBarLayer(dataColor)
+        : makeVerticalLineLayer(dataColor);
+    }
+
+    return layer;
+  }, [chartType, dataColor, groupVolumeData]);
+
   const SliceTooltip = makeSliceTooltip(
     tooltipBackground,
     tooltipColor,
@@ -127,7 +144,7 @@ export function LineChart({
           "areas",
           "slices",
           "crosshair",
-          CustomLayer,
+          customLayer,
           "axes",
           "points",
           "legends",
@@ -138,6 +155,7 @@ export function LineChart({
   );
 }
 
+// this allows for smooth transitions when data changes
 function useLoadChartData(data: Serie[]): [Serie[], (data: Serie[]) => void] {
   const [chartData, setChartData] = useState<Serie[]>(
     data.map((serie) => ({ ...serie, data: [] }))
@@ -154,6 +172,8 @@ function useLoadChartData(data: Serie[]): [Serie[], (data: Serie[]) => void] {
 
   return [chartData, setChartData];
 }
+
+// we need to clear chart data when the chart type changes in order to prevent a flash of incorrect data
 function useClearDataWhenChartTypeChanges(
   setChartData: (data: Serie[]) => void,
   data: Serie[],
@@ -218,10 +238,57 @@ function makeSliceTooltip(
 
 function makeBarLayer(dataColor: string) {
   return ({ xScale, yScale, data }: CustomLayerProps) => {
-    const lineGenerator = line();
     const serieData = data[0].data;
     const pathStrings = serieData
       ?.map((datum) => {
+        const timeStamp = (datum.x as Date).getTime();
+        const xMin = xScale(new Date(timeStamp - ONE_DAY_IN_MILLISECONDS / 2));
+        const xMax = xScale(new Date(timeStamp + ONE_DAY_IN_MILLISECONDS / 2));
+        const yMin = yScale(0);
+        const yMax = yScale(datum.y as number);
+
+        const width = Math.abs(xMax - xMin);
+        const height = Math.abs(yMax - yMin);
+        const radius = Math.min(4, height);
+        const spacing = width * 0.25;
+
+        return roundedRect(
+          xMin + spacing / 2,
+          yMax,
+          width - spacing,
+          height,
+          radius,
+          true,
+          true,
+          false,
+          false
+        );
+      })
+      ?.filter(Boolean) as string[];
+
+    return (
+      <g>
+        {pathStrings.map((pathString) => (
+          <path
+            style={{ pointerEvents: "none" }}
+            d={pathString}
+            stroke={dataColor}
+            fillOpacity={0.2}
+            fill={dataColor}
+            strokeWidth={2}
+          />
+        ))}
+      </g>
+    );
+  };
+}
+
+function makeVerticalLineLayer(dataColor: string) {
+  return ({ xScale, yScale, data }: CustomLayerProps) => {
+    const serieData = data[0].data;
+    const pathStrings = serieData
+      ?.map((datum) => {
+        const lineGenerator = line();
         return lineGenerator([
           [xScale(datum.x as Date), yScale(0)],
           [xScale(datum.x as Date), yScale(datum.y as number)],
@@ -243,7 +310,6 @@ function makeBarLayer(dataColor: string) {
     );
   };
 }
-
 function getTimeTickValues(): GridValues<DatumValue> {
   const date = new Date();
   date.setHours(0);
@@ -259,4 +325,64 @@ function getTimeTickValues(): GridValues<DatumValue> {
     return newDate;
   });
   return dates;
+}
+
+/**
+ * Function to create an svg path string.  Inspiration was found here:
+ *   https://stackoverflow.com/questions/12115691/svg-d3-js-rounded-corner-on-one-corner-of-a-rectangle
+ *
+ * @param x top-left x-coordinate
+ * @param y top-left y-coordinate
+ * @param w width
+ * @param h height
+ * @param r corner-radius
+ * @param tl top-left rounded?
+ * @param tr top-right rounded?
+ * @param bl bottom-left rounded?
+ * @param br bottom-left rounded?
+ * @returns
+ */
+function roundedRect(
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  r: number,
+  tl: boolean,
+  tr: boolean,
+  bl: boolean,
+  br: boolean
+) {
+  let retval;
+  retval = `M${x + r},${y}`;
+  retval += `h${w - 2 * r}`;
+  if (tr) {
+    retval += `a${r},${r} 0 0 1 ${r},${r}`;
+  } else {
+    retval += `h${r}`;
+    retval += `v${r}`;
+  }
+  retval += `v${h - 2 * r}`;
+  if (br) {
+    retval += `a${r},${r} 0 0 1 ${-r},${r}`;
+  } else {
+    retval += `v${r}`;
+    retval += `h${-r}`;
+  }
+  retval += `h${2 * r - w}`;
+  if (bl) {
+    retval += `a${r},${r} 0 0 1 ${-r},${-r}`;
+  } else {
+    retval += `h${-r}`;
+    retval += `v${-r}`;
+  }
+  retval += `v${2 * r - h}`;
+  if (tl) {
+    retval += `a${r},${r} 0 0 1 ${r},${-r}`;
+  } else {
+    retval += `v${-r}`;
+    retval += `h${r}`;
+  }
+  retval += "z";
+  return retval;
 }
