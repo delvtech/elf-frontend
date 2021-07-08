@@ -16,11 +16,7 @@ import { WeightedPool } from "elf-contracts/types/WeightedPool";
 import { BigNumber } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
 import zipObject from "lodash.zipobject";
-import {
-  PrincipalTokenInfo,
-  YieldPoolTokenInfo,
-  YieldTokenInfo,
-} from "tokenlists/types";
+import { YieldPoolTokenInfo, YieldTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -36,14 +32,11 @@ import { formatAbbreviatedDate } from "efi/base/dates";
 import { formatPercent } from "efi/base/formatPercent";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { formatYieldTokenShortSymbol } from "efi/interestToken/formatYieldTokenShortSymbol";
 import { getPoolInfo } from "efi/pools/getPoolInfo";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
-import { getPrincipalTokenInfoForPool } from "efi/pools/getPrincipalTokenInfoForPool";
-import { PoolInfo } from "efi/pools/PoolInfo";
 import { getTokenInfo } from "efi/tokenlists";
 import { getIsMature } from "efi/tranche/getIsMature";
-import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
-import { getVaultTokenInfoForTranche } from "efi/tranche/tranches";
 
 interface YieldTokenLPCardProps {
   account: string | null | undefined;
@@ -75,12 +68,12 @@ export function YieldTokenLPCard({
   const BaseAssetIcon = findAssetIcon(baseAssetCryptoAsset);
 
   // yield asset
-  const { address: yieldTokenAddress, decimals: yieldTokenDecimals } =
-    getYieldTokenForWeightedPool(pool.address);
-
+  const yieldTokenInfo = getYieldTokenForWeightedPool(pool.address);
   const {
+    address: yieldTokenAddress,
+    decimals: yieldTokenDecimals,
     extensions: { unlockTimestamp },
-  } = getPrincipalTokenForYieldToken(yieldTokenAddress);
+  } = yieldTokenInfo;
 
   const isRedeemable = getIsMature(unlockTimestamp);
 
@@ -102,7 +95,7 @@ export function YieldTokenLPCard({
     baseAssetInfo.address,
     baseAssetDecimals
   );
-  const principalTokenLiquidity = calculatePoolShareLiquidity(
+  const yieldTokenLiquidity = calculatePoolShareLiquidity(
     poolShares,
     addresses,
     poolBalances,
@@ -111,11 +104,11 @@ export function YieldTokenLPCard({
   );
 
   const baseAssetLiquidityLabel = `${baseAssetLiquidity?.toFixed(4)}`;
-  const principalTokenLiquidityLabel = `${principalTokenLiquidity?.toFixed(4)}`;
+  const yieldTokenLiquidityLabel = `${yieldTokenLiquidity?.toFixed(4)}`;
 
   const poolName = `${baseAssetSymbol} - ${baseAssetSymbol} Yield Token`;
-  const yieldTokenSymbol = getYieldTokenSymbol(poolInfo);
-  const poolLabel = `(${baseAssetSymbol} - ${yieldTokenSymbol})`;
+  const yieldTokenShortSymbol = formatYieldTokenShortSymbol(yieldTokenInfo);
+  const poolLabel = `(${baseAssetSymbol} - ${yieldTokenShortSymbol})`;
 
   return (
     <Card
@@ -193,7 +186,7 @@ export function YieldTokenLPCard({
           <Callout className={calloutClassName}>
             <span className={classNames(tw("mb-0"))}>{t`Yield liquidity`}</span>
             <span className={tw("text-lg", "font-semibold")}>
-              {principalTokenLiquidityLabel}
+              {yieldTokenLiquidityLabel}
             </span>
           </Callout>
         </div>
@@ -264,32 +257,10 @@ function getPoolSharesLabel(poolShares: number | undefined) {
   return formatPercent(poolShares, 2);
 }
 
-function getPrincipalTokenForYieldToken(
-  interestTokenAddress: string
-): PrincipalTokenInfo {
-  const {
-    extensions: { tranche },
-  } = getTokenInfo<YieldTokenInfo>(interestTokenAddress);
-
-  return getTokenInfo<PrincipalTokenInfo>(tranche);
-}
-
 function getYieldTokenForWeightedPool(poolAddress: string): YieldTokenInfo {
   const {
     extensions: { interestToken: yieldTokenAddress },
   } = getTokenInfo<YieldPoolTokenInfo>(poolAddress);
 
   return getTokenInfo<YieldTokenInfo>(yieldTokenAddress);
-}
-
-export function getYieldTokenSymbol(poolInfo: PoolInfo): string {
-  const { termAssetInfo } = getPoolTokens(poolInfo);
-  const { address: trancheAddress } = getPrincipalTokenInfoForPool(poolInfo);
-  const { symbol: vaultSymbol } = getVaultTokenInfoForTranche(trancheAddress);
-  const { symbol: termAssetSymbol } = getTermAssetSymbol(
-    termAssetInfo.address,
-    vaultSymbol
-  );
-
-  return termAssetSymbol as string;
 }

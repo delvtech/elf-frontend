@@ -3,7 +3,7 @@ import { ReactElement, useCallback, useState } from "react";
 import { Button, Callout, Card, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { parseUnits } from "ethers/lib/utils";
-import { PrincipalTokenInfo as TrancheInfo } from "tokenlists/types";
+import { PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -21,17 +21,14 @@ import { formatBalance } from "efi/base/formatBalance";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
-import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
-import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
-import {
-  getVaultTokenInfoForTranche,
-  trancheContractsByAddress,
-} from "efi/tranche/tranches";
+import { formatYieldTokenShortSymbol } from "efi/interestToken/formatYieldTokenShortSymbol";
+import { getTokenInfo } from "efi/tokenlists";
+import { formatPrincipalTokenShortSymbol } from "efi/tranche/format";
 
 interface MintFormProps {
   library: Web3Provider | undefined;
   account: string | null | undefined;
-  trancheInfo: TrancheInfo;
+  trancheInfo: PrincipalTokenInfo;
 }
 
 export function MintForm(props: MintFormProps): ReactElement | null {
@@ -42,24 +39,17 @@ export function MintForm(props: MintFormProps): ReactElement | null {
     address: trancheAddress,
     extensions: { interestToken, underlying },
   } = trancheInfo;
+
+  const principalTokenSymbol = formatPrincipalTokenShortSymbol(trancheInfo);
+  const yieldTokenSymbol = formatYieldTokenShortSymbol(
+    getTokenInfo(interestToken)
+  );
+
   const canPerformMint = useTrancheCanPerform(trancheAddress, "mint");
 
   const baseAsset = getCryptoAssetForToken(underlying);
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
   const BaseAssetIcon = findAssetIcon(baseAsset);
-  const { symbol: vaultSymbol } = getVaultTokenInfoForTranche(trancheAddress);
-
-  const principalTokenContract = trancheContractsByAddress[trancheAddress];
-  const yieldTokenContract = interestTokenContractsByAddress[interestToken];
-
-  const { symbol: yieldTokenSymbol = "" } = getTermAssetSymbol(
-    yieldTokenContract.address,
-    vaultSymbol
-  );
-  const { symbol: principalTokenSymbol = "" } = getTermAssetSymbol(
-    principalTokenContract.address,
-    vaultSymbol
-  );
 
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const [isWalletDialogOpen, setWalletDialogOpen] = useState(false);
@@ -211,7 +201,7 @@ export function MintForm(props: MintFormProps): ReactElement | null {
 }
 
 function useActiveMintPreview(
-  activeTrancheInfo: TrancheInfo,
+  activeTrancheInfo: PrincipalTokenInfo,
   amountIn: string
 ) {
   const numPrincipalTokensOut = useMintPreview(

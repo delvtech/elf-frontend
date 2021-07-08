@@ -10,12 +10,7 @@ import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/Transac
 import { EMPTY_ARRAY } from "efi/base/emptyArray";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
-import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
-import {
-  getVaultTokenInfoForTranche,
-  isPrincipalToken,
-} from "efi/tranche/tranches";
-import { getPrincipalTokenForYieldToken } from "efi/tranche/yieldTokens";
+import { formatTermAssetShortSymbol } from "efi/tranche/format";
 import { WalletApprovalInfo } from "efi/wallets/WalletApprovalInfo";
 
 interface UnstakeConfirmationDrawerProps {
@@ -54,14 +49,8 @@ export function UnstakeConfirmationDrawer({
   const baseAsset = getCryptoAssetForToken(baseAssetInfo.address);
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
 
-  const { address: trancheAddress } = isPrincipalToken(termAssetInfo)
-    ? termAssetInfo
-    : getPrincipalTokenForYieldToken(termAssetInfo.address);
-
-  const { symbol: vaultSymbol } = getVaultTokenInfoForTranche(trancheAddress);
-  const { symbol: termAssetSymbol } = getTermAssetSymbol(
-    termAssetInfo.address,
-    vaultSymbol
+  const termAssetSymbol = formatTermAssetShortSymbol(
+    termAssetInfo as PrincipalTokenInfo | YieldTokenInfo
   );
 
   return (

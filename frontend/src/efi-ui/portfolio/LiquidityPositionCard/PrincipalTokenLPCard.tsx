@@ -34,12 +34,9 @@ import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { getPoolInfo } from "efi/pools/getPoolInfo";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
-import { getPrincipalTokenInfoForPool } from "efi/pools/getPrincipalTokenInfoForPool";
-import { PoolInfo } from "efi/pools/PoolInfo";
 import { getTokenInfo } from "efi/tokenlists";
+import { formatPrincipalTokenShortSymbol } from "efi/tranche/format";
 import { getIsMature } from "efi/tranche/getIsMature";
-import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
-import { getVaultTokenInfoForTranche } from "efi/tranche/tranches";
 
 interface PrincipalTokenLPCardProps {
   account: string | null | undefined;
@@ -109,7 +106,8 @@ export function PrincipalTokenLPCard({
   const principalTokenLiquidityLabel = `${principalTokenLiquidity?.toFixed(4)}`;
 
   const poolName = `${baseAssetSymbol} - ${baseAssetSymbol} Principal Token`;
-  const principalTokenSymbol = getPrincipalTokenSymbol(poolInfo);
+  const principalTokenSymbol =
+    formatPrincipalTokenShortSymbol(principalTokenInfo);
   const poolLabel = `(${baseAssetSymbol} - ${principalTokenSymbol})`;
 
   return (
@@ -259,16 +257,4 @@ function getPoolSharesLabel(poolShares: number | undefined) {
   }
 
   return formatPercent(poolShares, 2);
-}
-
-export function getPrincipalTokenSymbol(poolInfo: PoolInfo): string {
-  const { termAssetInfo } = getPoolTokens(poolInfo);
-  const { address: trancheAddress } = getPrincipalTokenInfoForPool(poolInfo);
-  const { symbol: vaultSymbol } = getVaultTokenInfoForTranche(trancheAddress);
-  const { symbol: termAssetSymbol } = getTermAssetSymbol(
-    termAssetInfo.address,
-    vaultSymbol
-  );
-
-  return termAssetSymbol as string;
 }

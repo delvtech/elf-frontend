@@ -1,4 +1,4 @@
-import React, { ReactElement, useMemo } from "react";
+import { ReactElement, useMemo } from "react";
 
 import {
   ButtonGroup,
@@ -12,7 +12,6 @@ import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
 import { Link } from "@reach/router";
 import classNames from "classnames";
-import { Tranche } from "elf-contracts/types/Tranche";
 import { PrincipalTokenInfo } from "tokenlists/types";
 import { jt, t } from "ttag";
 
@@ -23,6 +22,7 @@ import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { GoToPoolButton } from "efi-ui/pools/GoToPoolButton/GoToPoolButton";
+import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 import { PoolAction } from "efi-ui/pools/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
 import { RedeemPrincipalTokensButton } from "efi-ui/portfolio/RedeemButton/RedeemPrincipalTokensButton";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
@@ -37,22 +37,20 @@ import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { formatMoney } from "efi/money/formatMoney";
 import { getPoolInfoForPrincipalToken } from "efi/pools/ccpool";
 import { getPoolContract } from "efi/pools/getPoolContract";
-import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
-import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
+import { formatPrincipalTokenShortSymbol } from "efi/tranche/format";
 import {
   getVaultContractForTranche,
-  getVaultTokenInfoForTranche,
+  trancheContractsByAddress,
 } from "efi/tranche/tranches";
 
 import { MaturityTimeBar } from "./MaturityTimeBar";
-import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
 
 interface PrincipalTokenCardProps {
   chainId: number | undefined;
   library: Web3Provider | undefined;
   account: string | null | undefined;
-  tranche: Tranche;
+  principalTokenInfo: PrincipalTokenInfo;
 }
 
 const calloutClassName = tw(
@@ -68,18 +66,23 @@ const calloutClassName = tw(
 export function PrincipalTokenCard(
   props: PrincipalTokenCardProps
 ): ReactElement {
-  const { library, account, tranche } = props;
-  const poolInfo = getPoolInfoForPrincipalToken(tranche.address);
-  const { baseAssetInfo, termAssetInfo } = getPoolTokens(poolInfo);
-  const baseAsset = getCryptoAssetForToken(baseAssetInfo.address);
-  const principalTokenInfo: PrincipalTokenInfo =
-    termAssetInfo as PrincipalTokenInfo; // we know pool is a principal token pool.
   const {
-    address: principalTokenAddress,
-    extensions: { createdAtTimestamp: trancheCreatedAt, unlockTimestamp },
-  } = principalTokenInfo;
-
+    library,
+    account,
+    principalTokenInfo,
+    principalTokenInfo: {
+      address: principalTokenAddress,
+      extensions: {
+        createdAtTimestamp: trancheCreatedAt,
+        unlockTimestamp,
+        underlying: underlyingAddress,
+      },
+    },
+  } = props;
   const { isDarkMode } = useDarkMode();
+
+  const poolInfo = getPoolInfoForPrincipalToken(principalTokenAddress);
+  const baseAsset = getCryptoAssetForToken(underlyingAddress);
 
   const unlockDate = convertEpochSecondsToDate(unlockTimestamp);
   const createdAtDate = convertEpochSecondsToDate(trancheCreatedAt);
@@ -89,18 +92,20 @@ export function PrincipalTokenCard(
     ? formatAbbreviatedDate(unlockDate)
     : t`Loading unlock date...`;
 
+  const tranche = trancheContractsByAddress[principalTokenAddress];
   const trancheBalance = useTokenBalanceUNSAFE(
     tranche as unknown as ERC20Shim,
     account
   );
 
-  const vaultContract = getVaultContractForTranche(tranche.address);
+  const vaultContract = getVaultContractForTranche(principalTokenAddress);
   const { data: vaultName } = useSmartContractReadCall(vaultContract, "name");
   const pool = getPoolContract(poolInfo.address);
 
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
 
-  const tranchePriceInBaseAsset = usePoolSpotPrice(pool, tranche.address) ?? 0;
+  const tranchePriceInBaseAsset =
+    usePoolSpotPrice(pool, principalTokenAddress) ?? 0;
   const exitValue = trancheBalance * tranchePriceInBaseAsset;
   const { data: baseAssetCoinGeckoPrice } = useCoinGeckoPrice(
     getCoinGeckoId(baseAssetSymbol)
@@ -128,14 +133,8 @@ export function PrincipalTokenCard(
     );
   }
 
-  const { symbol: vaultSymbol } = getVaultTokenInfoForTranche(
-    principalTokenAddress
-  );
-
-  const { symbol: termAssetSymbol } = getTermAssetSymbol(
-    tranche.address,
-    vaultSymbol
-  );
+  const principalTokenShortSymbol =
+    formatPrincipalTokenShortSymbol(principalTokenInfo);
 
   return (
     <Card
@@ -165,7 +164,7 @@ export function PrincipalTokenCard(
             <a
               className={tw("flex", "items-center")}
               onClick={(e) => e.stopPropagation()}
-              href={`https://etherscan.io/address/${tranche?.address}`}
+              href={`https://etherscan.io/address/${principalTokenAddress}`}
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -234,7 +233,7 @@ export function PrincipalTokenCard(
             containerClassName={tw("justify-center")}
             bold
             textClassName={tw("text-lg")}
-            text={`${trancheBalance.toFixed(6)} ${termAssetSymbol}`}
+            text={`${trancheBalance.toFixed(6)} ${principalTokenShortSymbol}`}
             label={""}
           />
         </Callout>

@@ -1,8 +1,7 @@
-import { Fragment, ReactElement, useMemo } from "react";
+import { Fragment, ReactElement } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
 import { ERC20 } from "elf-contracts/types/ERC20";
-import { Tranche } from "elf-contracts/types/Tranche";
 import { BigNumber } from "ethers";
 import zip from "lodash.zip";
 import { t } from "ttag";
@@ -15,7 +14,9 @@ import { useTokensWithBalance } from "efi-ui/token/hooks/useTokensWithBalance";
 import { NoPrincipalTokensInWalletNonIdealState } from "efi-ui/wallets/NoPrincipalTokensInWalletNonIdealState/NoPrincipalTokensInWalletNonIdealState";
 import { NoWalletConnectedNonIdealState } from "efi-ui/wallets/NoWalletConnectedNonIdealState/NoWalletConnectedNonIdealState";
 import { isDust } from "efi/coins/isDust";
-import { principalTokenInfos, trancheContracts } from "efi/tranche/tranches";
+import { trancheContracts } from "efi/tranche/tranches";
+import { PrincipalTokenInfo } from "tokenlists/types";
+import { getTokenInfo } from "efi/tokenlists";
 
 interface PrincipalTokenPortfolioProps {
   chainId: number | undefined;
@@ -52,13 +53,12 @@ interface PrincipalTokenCardsProps {
   chainId: number | undefined;
   library: Web3Provider | undefined;
   hasFYTs: boolean;
-  principalTokens: Tranche[] | undefined;
+  principalTokens: PrincipalTokenInfo[];
 }
 
 function PrincipalTokenCards(props: PrincipalTokenCardsProps) {
   const { account, chainId, library, hasFYTs, principalTokens } = props;
 
-  // useWhyDidYouUpdate("PrincipalTokenCards", props);
   let nonIdealStateContent = null;
   if (!account) {
     nonIdealStateContent = (
@@ -91,7 +91,7 @@ function PrincipalTokenCards(props: PrincipalTokenCardsProps) {
                 chainId={chainId}
                 library={library}
                 account={account}
-                tranche={principalToken}
+                principalTokenInfo={principalToken}
               />
             </div>,
           ])}
@@ -101,32 +101,37 @@ function PrincipalTokenCards(props: PrincipalTokenCardsProps) {
   );
 }
 
-function usePrincipalTokenTab(account: string | null | undefined) {
+function usePrincipalTokenTab(
+  account: string | null | undefined
+): PrincipalTokenInfo[] {
   const principalTokensWithBalanceResults = useTokensWithBalance(
     account,
     trancheContracts as unknown as ERC20Shim[]
   );
-  const principalTokenDecimals = principalTokensWithBalanceResults?.map(
-    ({ token }) =>
-      principalTokenInfos.find((info) => info.address === token.address)
-        ?.decimals
+
+  const principalTokenInfosWithBalance = principalTokensWithBalanceResults.map(
+    ({ token }) => getTokenInfo<PrincipalTokenInfo>(token.address)
   );
 
   // filter out dust, because redeeming a PT can leave a small amount of dust in
   // the user's account
-  const principalTokensWithoutDust = useMemo(() => {
-    const tokens = zip(
-      principalTokensWithBalanceResults,
-      principalTokenDecimals
+  const principalTokensWithoutDust = zip(
+    principalTokensWithBalanceResults,
+    principalTokenInfosWithBalance
+  )
+    .filter(
+      (
+        zipped
+      ): zipped is [
+        { token: ERC20; balanceOf: BigNumber },
+        PrincipalTokenInfo
+      ] => zipped.every((v) => !!v)
     )
-      .filter(
-        (zipped): zipped is [{ token: ERC20; balanceOf: BigNumber }, number] =>
-          zipped.every((v) => !!v)
-      )
-      .filter(([{ balanceOf }, decimals]) => !isDust(balanceOf, decimals))
-      .map(([{ token }]) => token as unknown as Tranche);
-    return tokens;
-  }, [principalTokenDecimals, principalTokensWithBalanceResults]);
+    .filter(
+      ([{ balanceOf }, principalTokenInfo]) =>
+        !isDust(balanceOf, principalTokenInfo.decimals)
+    )
+    .map(([unusedTokenWithBalance, principalTokenInfo]) => principalTokenInfo);
 
   return principalTokensWithoutDust;
 }

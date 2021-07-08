@@ -3,7 +3,7 @@ import { ReactElement, useCallback } from "react";
 import { Card, Classes, Elevation } from "@blueprintjs/core";
 import { navigate } from "@reach/router";
 import classNames from "classnames";
-import { YieldPoolTokenInfo } from "tokenlists/types";
+import { YieldPoolTokenInfo, YieldTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -27,8 +27,9 @@ import { formatMoney } from "efi/money/formatMoney";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { getPrincipalTokenInfoForPool } from "efi/pools/getPrincipalTokenInfoForPool";
 import { yieldPoolContractsByAddress } from "efi/pools/weightedPool";
-import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
 import { getVaultTokenInfoForTranche } from "efi/tranche/tranches";
+import { getTokenInfo } from "efi/tokenlists";
+import { formatYieldTokenShortSymbol } from "efi/interestToken/formatYieldTokenShortSymbol";
 
 interface YieldPoolCardProps {
   yieldPoolInfo: YieldPoolTokenInfo;
@@ -43,21 +44,20 @@ export function YieldPoolCard(props: YieldPoolCardProps): ReactElement | null {
   const principalTokenInfo = getPrincipalTokenInfoForPool(yieldPoolInfo);
   const {
     address: principalTokenAddress,
-    extensions: { unlockTimestamp, createdAtTimestamp },
+    extensions: { unlockTimestamp, createdAtTimestamp, interestToken },
   } = principalTokenInfo;
+  const yieldTokenInfo = getTokenInfo<YieldTokenInfo>(interestToken);
+
   const liquidity = useTotalFiatLiquidity(yieldPoolInfo);
   const fees = useFeeVolumeForPool(yieldPoolInfo);
-  const { baseAssetContract, termAssetContract } = getPoolTokens(yieldPoolInfo);
+  const { baseAssetContract } = getPoolTokens(yieldPoolInfo);
   const baseAsset = getCryptoAssetForToken(baseAssetContract.address);
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
   const BaseAssetIcon = findAssetIcon(baseAsset);
   const { symbol: vaultSymbol } = getVaultTokenInfoForTranche(
     principalTokenAddress
   );
-  const { symbol: termAssetSymbol } = getTermAssetSymbol(
-    termAssetContract?.address,
-    vaultSymbol
-  );
+  const yieldTokenShortSymbol = formatYieldTokenShortSymbol(yieldTokenInfo);
 
   const stakingYield = useStakingAPY(yieldPoolInfo, ONE_WEEK_IN_SECONDS);
 
@@ -105,7 +105,7 @@ export function YieldPoolCard(props: YieldPoolCardProps): ReactElement | null {
             label={<br />}
             iconClassName={tw("flex-shrink-0")}
             icon={<BaseAssetIcon height={38} width={38} />}
-            text={`${baseAssetSymbol} - ${termAssetSymbol}`}
+            text={`${baseAssetSymbol} - ${yieldTokenShortSymbol}`}
           />
         </div>
 

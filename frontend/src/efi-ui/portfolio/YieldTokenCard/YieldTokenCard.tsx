@@ -48,6 +48,7 @@ import {
   getVaultTokenInfoForTranche,
 } from "efi/tranche/tranches";
 import { getYearnVaultAPY } from "efi-yearn/fetchYearnVaults";
+import { formatYieldTokenShortSymbol } from "efi/interestToken/formatYieldTokenShortSymbol";
 
 interface YieldTokenCardProps {
   library: Web3Provider | undefined;
@@ -130,6 +131,8 @@ export function YieldTokenCard({
     : t`Loading unlock date...`;
   const progress = calculateProgress(createdAtDate, unlockDate);
   const tableRowLink = getTableRowLink(vaultContract?.address, vaultName);
+
+  const yieldTokenShortSymbol = formatYieldTokenShortSymbol(yieldTokenInfo);
 
   return (
     <Card
@@ -218,7 +221,7 @@ export function YieldTokenCard({
             bold
             textClassName={tw("text-lg")}
             containerClassName={tw("justify-center")}
-            text={`${yieldTokenBalance.toFixed(6)} ${yieldTokenInfo.symbol}`}
+            text={`${yieldTokenBalance.toFixed(6)} ${yieldTokenShortSymbol}`}
             label={""}
           />
         </Callout>

@@ -28,8 +28,8 @@ import { formatMoney } from "efi/money/formatMoney";
 import { principalPoolContractsByAddress } from "efi/pools/ccpool";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { getPrincipalTokenInfoForPool } from "efi/pools/getPrincipalTokenInfoForPool";
-import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
 import { getVaultTokenInfoForTranche } from "efi/tranche/tranches";
+import { formatPrincipalTokenShortSymbol } from "efi/tranche/format";
 
 interface PrincipalPoolCardProps {
   principalPoolInfo: PrincipalPoolTokenInfo;
@@ -49,8 +49,7 @@ export function PrincipalPoolCard(
     extensions: { unlockTimestamp, createdAtTimestamp },
   } = principalTokenInfo;
 
-  const { baseAssetContract, termAssetContract } =
-    getPoolTokens(principalPoolInfo);
+  const { baseAssetContract } = getPoolTokens(principalPoolInfo);
   const baseAsset = getCryptoAssetForToken(baseAssetContract.address);
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
   const BaseAssetIcon = findAssetIcon(baseAsset);
@@ -58,10 +57,8 @@ export function PrincipalPoolCard(
   const { symbol: vaultSymbol } = getVaultTokenInfoForTranche(
     principalTokenAddress
   );
-  const { symbol: termAssetSymbol } = getTermAssetSymbol(
-    termAssetContract?.address,
-    vaultSymbol
-  );
+  const principalTokenShortSymbol =
+    formatPrincipalTokenShortSymbol(principalTokenInfo);
 
   const { data: vaultInfo } = useYearnVault(vaultSymbol);
   const { apy } = vaultInfo || {};
@@ -72,7 +69,7 @@ export function PrincipalPoolCard(
   const poolContract = principalPoolContractsByAddress[poolAddress];
   const fixedYield = useTokenYield(principalPoolInfo, "principal");
   const principalPrice =
-    usePoolSpotPrice(poolContract, termAssetContract.address) ?? 0;
+    usePoolSpotPrice(poolContract, principalTokenInfo.address) ?? 0;
   const principalPriceFormatted = principalPrice?.toFixed(4);
   const stakingYield = useStakingAPY(principalPoolInfo, ONE_WEEK_IN_SECONDS);
 
@@ -112,7 +109,7 @@ export function PrincipalPoolCard(
                 <BaseAssetIcon height={38} width={38} />
               </div>
             }
-            text={`${baseAssetSymbol} – ${termAssetSymbol}`}
+            text={`${baseAssetSymbol} – ${principalTokenShortSymbol}`}
           />
         </div>
 

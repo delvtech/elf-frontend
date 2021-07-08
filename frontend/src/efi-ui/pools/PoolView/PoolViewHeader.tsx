@@ -12,11 +12,12 @@ import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { getPrincipalTokenInfoForPool } from "efi/pools/getPrincipalTokenInfoForPool";
 import { PoolInfo } from "efi/pools/PoolInfo";
-import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
 import { formatTermLength } from "efi/tranche/formatTermLength/formatTermLength";
 import { isYieldPool } from "efi/pools/weightedPool";
 import { getOppositePoolInfo } from "efi/pools/getOppositePoolInfo";
 import { Link } from "@reach/router";
+import { PrincipalTokenInfo, YieldTokenInfo } from "tokenlists/types";
+import { formatTermAssetShortSymbol } from "efi/tranche/format";
 
 interface PoolViewHeaderProps {
   poolInfo: PoolInfo;
@@ -27,9 +28,8 @@ export function PoolViewHeader({
   const { baseAssetInfo, termAssetInfo } = getPoolTokens(poolInfo);
   const baseAsset = getCryptoAssetForToken(baseAssetInfo.address);
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
-  const { label: termAssetSymbol } = getTermAssetSymbol(
-    termAssetInfo.address,
-    baseAssetSymbol
+  const termAssetShortSymbol = formatTermAssetShortSymbol(
+    termAssetInfo as PrincipalTokenInfo | YieldTokenInfo
   );
   const BaseAssetIcon = findAssetIcon(baseAsset);
 
@@ -67,7 +67,9 @@ export function PoolViewHeader({
         )}
       >
         <div className={classNames("h2")}>
-          {baseAssetSymbol ? `${baseAssetSymbol} - ${termAssetSymbol}` : ""}
+          {baseAssetSymbol
+            ? `${baseAssetSymbol} - ${termAssetShortSymbol}`
+            : ""}
           {baseAssetSymbol ? (
             <sup className={tw("ml-1")}>
               <Tag minimal intent={Intent.WARNING}>{t`alpha`}</Tag>

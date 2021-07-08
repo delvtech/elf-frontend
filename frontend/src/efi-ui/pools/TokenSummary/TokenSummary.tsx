@@ -1,10 +1,11 @@
-import React, { CSSProperties, ReactElement } from "react";
+import { CSSProperties, ReactElement } from "react";
 
 import { Card, Classes } from "@blueprintjs/core";
 import classNames from "classnames";
 import { ERC20 } from "elf-contracts/types/ERC20";
 import { BigNumber } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
+import { PrincipalTokenInfo, YieldTokenInfo } from "tokenlists/types";
 import { Money } from "ts-money";
 import { t } from "ttag";
 
@@ -26,12 +27,7 @@ import { getPoolContract } from "efi/pools/getPoolContract";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { isConvergentCurvePool } from "efi/pools/PoolContract";
 import { PoolInfo } from "efi/pools/PoolInfo";
-import { getTermAssetSymbol } from "efi/tranche/getTermAssetSymbol";
-import {
-  getVaultTokenInfoForTranche,
-  isPrincipalToken,
-} from "efi/tranche/tranches";
-import { getPrincipalTokenForYieldToken } from "efi/tranche/yieldTokens";
+import { formatTermAssetShortSymbol } from "efi/tranche/format";
 
 const summaryCardStyle: CSSProperties = {
   height: 220,
@@ -239,14 +235,8 @@ function useTokensSummary(
   // Term Asset Info
   const termAssetBalance = balances?.[termAssetIndex];
 
-  const { address: trancheAddress } = isPrincipalToken(termAssetInfo)
-    ? termAssetInfo
-    : getPrincipalTokenForYieldToken(termAssetInfo.address);
-
-  const { symbol: vaultSymbol } = getVaultTokenInfoForTranche(trancheAddress);
-  const { symbol: termAssetSymbol } = getTermAssetSymbol(
-    termAssetContract?.address,
-    vaultSymbol
+  const termAssetSymbol = formatTermAssetShortSymbol(
+    termAssetInfo as PrincipalTokenInfo | YieldTokenInfo
   );
   const { decimals: termAssetDecimals } = termAssetInfo;
 
