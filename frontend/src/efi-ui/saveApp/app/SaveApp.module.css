@@ -19,18 +19,3 @@
     #182026
   );
 }
-
-.mobileView {
-  display: none;
-}
-
-.overlay {
-  color: white;
-}
-
-@media (max-width: 550px) {
-  .mobileView {
-    display: block;
-    text-align: center;
-  }
-}

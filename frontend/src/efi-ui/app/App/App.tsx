@@ -89,29 +89,10 @@ const App: FC<AppProps> = () => {
           )}
         >
           <H1
-            className={styles.overlay}
+            className={tw("text-white")}
           >{t`Please Connect to ${chainName}`}</H1>
         </div>
       </Overlay>
-      <div className={styles.mobileView}>
-        <Overlay isOpen={true} className={styles.mobileView}>
-          <div
-            className={tw(
-              "flex",
-              "justify-center",
-              "items-center",
-              "w-full",
-              "h-full"
-            )}
-          >
-            <div>
-              <H1 className={styles.overlay}>
-                {t`Mobile Compatibility Coming Soon`}
-              </H1>
-            </div>
-          </div>
-        </Overlay>
-      </div>
       {/* Safe to render unconditionally as it does not render in production
       builds by default */}
       <ReactQueryDevtools initialIsOpen={false} />
