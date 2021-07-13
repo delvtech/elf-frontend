@@ -27,6 +27,9 @@
         "daiAddress": {
           "type": "string"
         },
+        "stecrvAddress": {
+          "type": "string"
+        },
         "crvalusdAddress": {
           "type": "string"
         },
@@ -45,6 +48,7 @@
         "convergentPoolFactoryAddress",
         "interestTokenFactoryAddress",
         "trancheFactoryAddress",
+        "stecrvAddress",
         "usdcAddress",
         "crvlusdAddress",
         "crvalusdAddress",

@@ -326,6 +326,7 @@ async function main() {
       crvlusdAddress: lusdContract.address,
       crvalusdAddress: "0x0000000000000000000000000000000000000000",
       crvtricryptoAddress: "0x0000000000000000000000000000000000000000",
+      stecrvAddress: "0x0000000000000000000000000000000000000000",
     },
     safelist: [
       firstWethTrancheContract.address,

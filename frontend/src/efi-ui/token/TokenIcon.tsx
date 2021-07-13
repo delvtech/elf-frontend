@@ -87,6 +87,23 @@ export function CrvTricryptoIcon({
     />
   );
 }
+export function SteCrvIcon({
+  height,
+  width,
+  className,
+  style,
+}: IconProps): ReactElement {
+  return (
+    <SvgIcon
+      alt={"stecrv"}
+      className={className}
+      style={style}
+      src={crvTricryptoIcon}
+      height={height}
+      width={width}
+    />
+  );
+}
 export function CrvAlusdIcon({
   height,
   width,

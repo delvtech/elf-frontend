@@ -14,13 +14,13 @@ const _abi = [
     inputs: [
       {
         internalType: "uint256",
-        name: "token_amount",
+        name: "_token_amount",
         type: "uint256",
       },
       {
-        internalType: "uint128",
+        internalType: "int128",
         name: "i",
-        type: "uint128",
+        type: "int128",
       },
     ],
     name: "calc_withdraw_one_coin",

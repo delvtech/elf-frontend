@@ -20,7 +20,7 @@ import { TypedEventFilter, TypedEvent, TypedListener } from "./commons";
 
 interface CurveStethPoolInterface extends ethers.utils.Interface {
   functions: {
-    "calc_withdraw_one_coin(uint256,uint128)": FunctionFragment;
+    "calc_withdraw_one_coin(uint256,int128)": FunctionFragment;
   };
 
   encodeFunctionData(
@@ -81,21 +81,21 @@ export class CurveStethPool extends BaseContract {
 
   functions: {
     calc_withdraw_one_coin(
-      token_amount: BigNumberish,
+      _token_amount: BigNumberish,
       i: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
   };
 
   calc_withdraw_one_coin(
-    token_amount: BigNumberish,
+    _token_amount: BigNumberish,
     i: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
   callStatic: {
     calc_withdraw_one_coin(
-      token_amount: BigNumberish,
+      _token_amount: BigNumberish,
       i: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -105,7 +105,7 @@ export class CurveStethPool extends BaseContract {
 
   estimateGas: {
     calc_withdraw_one_coin(
-      token_amount: BigNumberish,
+      _token_amount: BigNumberish,
       i: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -113,7 +113,7 @@ export class CurveStethPool extends BaseContract {
 
   populateTransaction: {
     calc_withdraw_one_coin(
-      token_amount: BigNumberish,
+      _token_amount: BigNumberish,
       i: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;

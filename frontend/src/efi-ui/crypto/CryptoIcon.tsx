@@ -24,6 +24,7 @@ const CryptoIconSvg: Record<string, TokenIcon> = {
   [ContractAddresses.crvlusdAddress]: CrvLusdIcon,
   [ContractAddresses.crvalusdAddress]: CrvAlusdIcon,
   [ContractAddresses.crvtricryptoAddress]: CrvTricryptoIcon,
+  [ContractAddresses.stecrvAddress]: CrvTricryptoIcon,
 };
 
 function makeTagIcon(cryptoAsset: CryptoAsset) {

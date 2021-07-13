@@ -17,7 +17,7 @@ const web3Goerli = createAlchemyWeb3(
 const web3Mainnet = createAlchemyWeb3(
   `wss://eth-mainnet.ws.alchemyapi.io/v2/${ALCHEMY_MAINNET_KEY}`
 );
-export const localhostProvider = new providers.JsonRpcProvider(LOCAL_RPC_HOST);
+const localhostProvider = new providers.JsonRpcProvider(LOCAL_RPC_HOST);
 
 const alchemyWeb3GoerliWebSocketProvider = new providers.Web3Provider(
   web3Goerli.currentProvider as ExternalProvider,

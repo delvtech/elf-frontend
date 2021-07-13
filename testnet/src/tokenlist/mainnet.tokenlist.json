@@ -31,7 +31,7 @@
       "description": "The yield position, ie: Yearn yvcrvLUSD"
     }
   },
-  "timestamp": "2021-07-06T14:03:41.385Z",
+  "timestamp": "2021-07-13T01:04:36.266Z",
   "version": {
     "major": 0,
     "minor": 0,
@@ -90,6 +90,16 @@
     },
     {
       "chainId": 1,
+      "address": "0x06325440D014e39736583c165C2963BA99fAf14E",
+      "symbol": "steCRV",
+      "decimals": 18,
+      "name": "Curve.fi ETH/stETH",
+      "tags": [
+        "underlying"
+      ]
+    },
+    {
+      "chainId": 1,
       "address": "0x53b1aEAa018da00b4F458Cc13d40eB3e8d1B85d6",
       "symbol": "yvCurveLUSD",
       "decimals": 18,
@@ -116,6 +126,19 @@
     },
     {
       "chainId": 1,
+      "address": "0xB3295e739380BD68de96802F7c4Dba4e54477206",
+      "symbol": "yvcrvSTETH",
+      "decimals": 18,
+      "name": "element yvcrvSTETH",
+      "tags": [
+        "assetproxy"
+      ],
+      "extensions": {
+        "vault": "0xdCD90C7f6324cfa40d7169ef80b12031770B4325"
+      }
+    },
+    {
+      "chainId": 1,
       "address": "0x5fA5B62c8AF877CB37031e0a3B2f34A78e3C56A6",
       "symbol": "yvCurve-LUSD",
       "decimals": 18,
@@ -130,6 +153,16 @@
       "symbol": "yvCurve-triCrypto",
       "decimals": 18,
       "name": "Curve triCrypto Pool yVault",
+      "tags": [
+        "vault"
+      ]
+    },
+    {
+      "chainId": 1,
+      "address": "0xdCD90C7f6324cfa40d7169ef80b12031770B4325",
+      "symbol": "yvCurve-stETH",
+      "decimals": 18,
+      "name": "Curve stETH Pool yVault",
       "tags": [
         "vault"
       ]
@@ -187,6 +220,23 @@
     },
     {
       "chainId": 1,
+      "address": "0x26941C63F4587796aBE199348ecd3d7C44F9aE0C",
+      "symbol": "ePyvcrvSTETH-15OCT21",
+      "decimals": 18,
+      "extensions": {
+        "underlying": "0x06325440D014e39736583c165C2963BA99fAf14E",
+        "position": "0xB3295e739380BD68de96802F7c4Dba4e54477206",
+        "interestToken": "0x94046274B5aA816aB236A9Eab42b5563B56E1931",
+        "unlockTimestamp": 1634325622,
+        "createdAtTimestamp": 1626117693
+      },
+      "name": "steCRV Principal Token",
+      "tags": [
+        "eP"
+      ]
+    },
+    {
+      "chainId": 1,
       "address": "0xBabD64a87881d8df7680907fcde176FF11Fa0292",
       "symbol": "eYyvCurveLUSD-28SEP21",
       "decimals": 18,
@@ -225,6 +275,21 @@
         "tranche": "0x237535Da7e2f0aBa1b68262ABCf7C4e60B42600C",
         "underlying": "0xcA3d75aC011BF5aD07a98d02f18225F9bD9A6BDF",
         "unlockTimestamp": 1628997564
+      },
+      "tags": [
+        "eY"
+      ]
+    },
+    {
+      "chainId": 1,
+      "address": "0x94046274B5aA816aB236A9Eab42b5563B56E1931",
+      "symbol": "eYyvcrvSTETH-15OCT21",
+      "decimals": 18,
+      "name": "steCRV Yield Token",
+      "extensions": {
+        "tranche": "0x26941C63F4587796aBE199348ecd3d7C44F9aE0C",
+        "underlying": "0x06325440D014e39736583c165C2963BA99fAf14E",
+        "unlockTimestamp": 1634325622
       },
       "tags": [
         "eY"
@@ -286,6 +351,24 @@
     },
     {
       "chainId": 1,
+      "address": "0xce16E7ed7654a3453E8FaF748f2c82E57069278f",
+      "symbol": "LPePyvcrvSTETH-15OCT21",
+      "decimals": 18,
+      "extensions": {
+        "bond": "0x26941C63F4587796aBE199348ecd3d7C44F9aE0C",
+        "underlying": "0x06325440D014e39736583c165C2963BA99fAf14E",
+        "poolId": "0xce16e7ed7654a3453e8faf748f2c82e57069278f00020000000000000000006d",
+        "unitSeconds": 823636447,
+        "expiration": 1634325622,
+        "createdAtTimestamp": 1626118091
+      },
+      "name": "LP Element Principal Token yvcrvSTETH-15OCT21",
+      "tags": [
+        "ccpool"
+      ]
+    },
+    {
+      "chainId": 1,
       "address": "0xDe620bb8BE43ee54d7aa73f8E99A7409Fe511084",
       "symbol": "LPeYyvCurveLUSD-28SEP21",
       "decimals": 18,
@@ -331,6 +414,23 @@
         "expiration": 1628997564
       },
       "name": "LP Element Yield Token yvCrvTriCrypto-15AUG21",
+      "tags": [
+        "wpool"
+      ]
+    },
+    {
+      "chainId": 1,
+      "address": "0xD5D7bc115B32ad1449C6D0083E43C87be95F2809",
+      "symbol": "LPeYyvcrvSTETH-15OCT21",
+      "decimals": 18,
+      "extensions": {
+        "poolId": "0xd5d7bc115b32ad1449c6d0083e43c87be95f280900020000000000000000006c",
+        "underlying": "0x06325440D014e39736583c165C2963BA99fAf14E",
+        "interestToken": "0x94046274B5aA816aB236A9Eab42b5563B56E1931",
+        "createdAtTimestamp": 1626118013,
+        "expiration": 1634325622
+      },
+      "name": "LP Element Yield Token yvcrvSTETH-15OCT21",
       "tags": [
         "wpool"
       ]

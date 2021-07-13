@@ -10,6 +10,7 @@ export interface AddressesJsonFile {
     wethAddress: string;
     daiAddress: string;
     usdcAddress: string;
+    stecrvAddress: string;
     crvtricryptoAddress: string;
     crvlusdAddress: string;
     crvalusdAddress: string;
