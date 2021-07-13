@@ -32,7 +32,7 @@
     "@types/d3-scale": "^4.0.1",
     "@types/d3-shape": "^3.0.1",
     "@types/d3-time": "^3.0.0",
-    "@types/fuzzaldrin-plus": "^0.6.1",
+    "@types/fuzzaldrin-plus": "^0.6.2",
     "@types/jest": "^24.0.0",
     "@types/lodash.groupby": "^4.6.6",
     "@types/lodash.isequal": "^4.5.5",
