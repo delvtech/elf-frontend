@@ -473,9 +473,9 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ZapYearnShares__factory>;
     getContractFactory(
-      name: "CRVPool",
+      name: "CurveStethPool",
       signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.CRVPool__factory>;
+    ): Promise<Contracts.CurveStethPool__factory>;
     getContractFactory(
       name: "CurveContract",
       signerOrOptions?: ethers.Signer | FactoryOptions
