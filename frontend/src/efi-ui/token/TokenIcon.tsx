@@ -1,14 +1,15 @@
 import { CSSProperties, FC, ReactElement } from "react";
 
+import crvAlusdIcon from "efi-static-assets/logos/crvALUSD.png";
+import crvLusdIcon from "efi-static-assets/logos/svg/crvLUSD.svg";
+import crvStethIcon from "efi-static-assets/logos/svg/crvSTETH.svg";
+import crvTricryptoIcon from "efi-static-assets/logos/svg/crvtricrypto.svg";
+import daiIcon from "efi-static-assets/logos/svg/DAI.svg";
 import elementIconDark from "efi-static-assets/logos/svg/ELEMENT-dark.svg";
 import elementIcon from "efi-static-assets/logos/svg/ELEMENT-light.svg";
 import ethIconGrey from "efi-static-assets/logos/svg/ethereum-eth.svg";
-import crvLusdIcon from "efi-static-assets/logos/svg/crvLUSD.svg";
-import crvAlusdIcon from "efi-static-assets/logos/crvALUSD.png";
-import crvTricryptoIcon from "efi-static-assets/logos/crvtricrypto.png";
 import lusdIcon from "efi-static-assets/logos/svg/LUSD.svg";
 import usdcIcon from "efi-static-assets/logos/svg/USDC.svg";
-import daiIcon from "efi-static-assets/logos/svg/DAI.svg";
 import wethIcon from "efi-static-assets/logos/svg/WETH.svg";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 
@@ -87,7 +88,8 @@ export function CrvTricryptoIcon({
     />
   );
 }
-export function SteCrvIcon({
+
+export function CrvStethIcon({
   height,
   width,
   className,
@@ -95,10 +97,10 @@ export function SteCrvIcon({
 }: IconProps): ReactElement {
   return (
     <SvgIcon
-      alt={"stecrv"}
+      alt={"crvsteth"}
       className={className}
       style={style}
-      src={crvTricryptoIcon}
+      src={crvStethIcon}
       height={height}
       width={width}
     />

@@ -49,8 +49,26 @@ export function PoolSummary(props: PoolSummaryProps): ReactElement {
   const baseAsset = getCryptoAssetForToken(baseAssetAddress);
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
 
-  const baseAssetBalance = balances?.[baseAssetIndex];
-  const termAssetBalance = balances?.[termAssetIndex];
+  const baseAssetBalanceBN = balances?.[baseAssetIndex];
+  const termAssetBalanceBN = balances?.[termAssetIndex];
+  const baseAssetBalance = +formatUnits(
+    baseAssetBalanceBN || 0,
+    baseAssetDecimals
+  );
+  const termAssetBalance = +formatUnits(
+    termAssetBalanceBN || 0,
+    termAssetDecimals
+  );
+  const baseAssetBalanceLabel = commify(
+    baseAssetBalance > 10
+      ? baseAssetBalance.toFixed()
+      : baseAssetBalance.toFixed(2)
+  );
+  const termAssetBalanceLabel = commify(
+    termAssetBalance > 10
+      ? termAssetBalance.toFixed()
+      : termAssetBalance.toFixed(2)
+  );
 
   const quantityLabel = isConvergentCurvePool(pool) ? "PT" : "YT";
 
@@ -101,13 +119,7 @@ export function PoolSummary(props: PoolSummaryProps): ReactElement {
                 className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
               >{t`Quantity ${baseAssetSymbol}`}</span>
               <div className={classNames("h5", tw("space-x-4"))}>
-                {baseAssetBalance
-                  ? commify(
-                      Number(
-                        formatUnits(baseAssetBalance || 0, baseAssetDecimals)
-                      ).toFixed()
-                    )
-                  : "0.00"}
+                {baseAssetBalance ? baseAssetBalanceLabel : "0.00"}
               </div>
             </div>
           </div>
@@ -151,13 +163,7 @@ export function PoolSummary(props: PoolSummaryProps): ReactElement {
                 className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
               >{t`Quantity (${quantityLabel})`}</span>
               <div className={classNames("h5", tw("space-x-4"))}>
-                {termAssetBalance
-                  ? commify(
-                      Number(
-                        formatUnits(termAssetBalance || 0, termAssetDecimals)
-                      ).toFixed()
-                    )
-                  : "0.00"}
+                {termAssetBalance ? termAssetBalanceLabel : "0.00"}
               </div>
             </div>
           </div>

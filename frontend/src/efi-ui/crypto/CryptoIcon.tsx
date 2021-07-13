@@ -5,13 +5,14 @@ import { Tag } from "@blueprintjs/core";
 import {
   CrvAlusdIcon,
   CrvLusdIcon,
+  CrvStethIcon,
+  CrvTricryptoIcon,
   DaiIcon,
   EthIcon,
   IconProps,
   TokenIcon,
   UsdcIcon,
   WethIcon,
-  CrvTricryptoIcon,
 } from "efi-ui/token/TokenIcon";
 import ContractAddresses from "efi/addresses";
 import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
@@ -24,7 +25,7 @@ const CryptoIconSvg: Record<string, TokenIcon> = {
   [ContractAddresses.crvlusdAddress]: CrvLusdIcon,
   [ContractAddresses.crvalusdAddress]: CrvAlusdIcon,
   [ContractAddresses.crvtricryptoAddress]: CrvTricryptoIcon,
-  [ContractAddresses.stecrvAddress]: CrvTricryptoIcon,
+  [ContractAddresses.stecrvAddress]: CrvStethIcon,
 };
 
 function makeTagIcon(cryptoAsset: CryptoAsset) {
