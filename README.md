@@ -23,7 +23,9 @@ Run
 
 ```bash
 npm ci
-npm start
+
+# Run a local version of the mainnet Earn ui
+npm run start:dev-mainnet-app
 ```
 
 ### Updating contracts
