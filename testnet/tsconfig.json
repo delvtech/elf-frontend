@@ -8,11 +8,20 @@
     "outDir": "./build/",
     "resolveJsonModule": true,
     "paths": {
-      "src": ["./src"],
-      "src/*": ["./src/*"]
+      "src/*": [
+        "./src/*"
+      ]
     }
   },
-  "include": ["./src/**/*", "./hardhat.config.ts"],
-  "exclude": ["../frontend/**/*"],
-  "files": ["./src/**/*", "./hardhat.config.ts"]
+  // Include/Exclude is for collections or groups of files or folders, etc..
+  "include": [
+    "./src/**/*",
+  ],
+  "exclude": [
+    "../frontend/**/*"
+  ],
+  // Specify separate files directly by their path
+  "files": [
+    "./hardhat.config.ts"
+  ]
 }
