@@ -15,6 +15,7 @@ import { PoolInfo } from "efi/pools/PoolInfo";
 import { getPoolForYieldToken } from "efi/pools/weightedPool";
 import { getTokenInfo } from "efi/tokenlists";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
+import { useMemo } from "react";
 
 export function useTotalValueLockedForTranche(
   trancheInfo: PrincipalTokenInfo,
@@ -40,6 +41,37 @@ export function useTotalValueLockedForTranche(
   const { currency } = useCurrencyPref();
   const { data: baseAssetPrice } = useTokenPrice(baseAssetContract, currency);
 
+  // convert to numbers
+  const baseAssetLocked = +formatUnits(baseAssetLockedBN || 0, decimals);
+  const accumulatedInterest = +formatUnits(
+    accumulatedInterestBN || 0,
+    decimals
+  );
+  const baseReservesInPrincipalPool = +formatUnits(
+    baseReservesInPrincipalPoolBN || 0,
+    decimals
+  );
+  const baseReservesInYieldPool = +formatUnits(
+    baseReservesInYieldPoolBN || 0,
+    decimals
+  );
+
+  // get total, convert to fiat
+  const totalFiatValueLocked = useMemo(() => {
+    const tvl =
+      baseAssetLocked +
+      accumulatedInterest +
+      baseReservesInPrincipalPool +
+      baseReservesInYieldPool;
+    return baseAssetPrice?.multiply(tvl, Math.round);
+  }, [
+    accumulatedInterest,
+    baseAssetLocked,
+    baseAssetPrice,
+    baseReservesInPrincipalPool,
+    baseReservesInYieldPool,
+  ]);
+
   if (
     !baseAssetLockedBN ||
     !accumulatedInterestBN ||
@@ -48,29 +80,6 @@ export function useTotalValueLockedForTranche(
   ) {
     return undefined;
   }
-
-  // convert to numbers
-  const baseAssetLocked = +formatUnits(baseAssetLockedBN, decimals);
-  const accumulatedInterest = +formatUnits(accumulatedInterestBN, decimals);
-  const baseReservesInPrincipalPool = +formatUnits(
-    baseReservesInPrincipalPoolBN,
-    decimals
-  );
-  const baseReservesInYieldPool = +formatUnits(
-    baseReservesInYieldPoolBN,
-    decimals
-  );
-
-  // get total, convert to fiat
-  const totalValueLocked =
-    baseAssetLocked +
-    accumulatedInterest +
-    baseReservesInPrincipalPool +
-    baseReservesInYieldPool;
-  const totalFiatValueLocked = baseAssetPrice?.multiply(
-    totalValueLocked,
-    Math.round
-  );
 
   return totalFiatValueLocked;
 }

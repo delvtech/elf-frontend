@@ -25,7 +25,7 @@ export function useQueryBatchSwapMulti(
   const zipped = zip(poolIds, tokenInAddresses, amounts, tokenOutAddresses);
   const readCallOptions = zipped.map(
     ([poolId, tokenInAddress, amount, tokenOutAddress]):
-      | UseSmartContractReadCallOptions<Vault, "queryBatchSwap">
+      | UseSmartContractReadCallOptions<Vault, "queryBatchSwap", BigNumber[]>
       | undefined => {
       const callArgs = makeQueryBatchSwapCallArgs(
         kind,

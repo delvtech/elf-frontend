@@ -25,8 +25,8 @@ export function EarnTable({
   library,
   signer,
 }: EarnTableProps): ReactElement {
-  const [expandedPoolIndex, setExpandedPoolIndex] = useState(-1);
-  const onExpandClose = useCallback(() => setExpandedPoolIndex(-1), []);
+  const [expandedCardId, setExpandedCardId] = useState<string | undefined>();
+  const onExpandClose = useCallback(() => setExpandedCardId(undefined), []);
 
   return (
     <div
@@ -45,19 +45,19 @@ export function EarnTable({
         <div>{t`Fixed APR`}</div>
         <div>{t`Term`}</div>
       </div>
-      {openPrincipalTokenInfos.map((principalTokenInfo, index) => {
+      {openPrincipalTokenInfos.map((principalTokenInfo) => {
+        const cardId = principalTokenInfo.address;
         return (
           <EarnCard
             key={principalTokenInfo.address}
+            id={cardId}
             library={library}
             account={account}
             signer={signer}
-            isExpanded={index === expandedPoolIndex}
+            isExpanded={cardId === expandedCardId}
             principalTokenInfo={principalTokenInfo}
             onExpandClose={onExpandClose}
-            onExpandOpen={() => {
-              setExpandedPoolIndex(index);
-            }}
+            onExpandOpen={setExpandedCardId}
           />
         );
       })}

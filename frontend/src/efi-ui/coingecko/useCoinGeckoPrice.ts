@@ -3,6 +3,7 @@ import { QueryObserverResult, useQuery } from "react-query";
 import { Currencies, Currency, Money } from "ts-money";
 
 import { fetchCoinGeckoPrice } from "efi-coingecko";
+import { ONE_MINUTE_IN_MILLISECONDS } from "efi/base/time";
 
 export function useCoinGeckoPrice(
   coinGeckoId: string | undefined,
@@ -18,20 +19,15 @@ export function useCoinGeckoPrice(
       return price;
     },
     enabled: !!coinGeckoId,
+    // Give a longer staleTime on the coingecko price, since its data doesn't
+    // need to update on every component that mounts this hook.
+    staleTime: ONE_MINUTE_IN_MILLISECONDS,
   });
-}
-
-interface CoinGeckoPriceVariables {
-  coinGeckoId: string | undefined;
-  currencyCode: string;
 }
 
 function makeCoinGeckoPriceQueryKey(
   coinGeckoId: string | undefined,
   currency: Currency
-): [string[], CoinGeckoPriceVariables] {
-  return [
-    ["coingecko", "/simple/price"],
-    { coinGeckoId, currencyCode: currency.code },
-  ];
+): [string, string, string, string | undefined] {
+  return ["coingecko", "/simple/price", currency.code, coinGeckoId];
 }

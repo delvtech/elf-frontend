@@ -17,7 +17,6 @@ const web3Goerli = createAlchemyWeb3(
 const web3Mainnet = createAlchemyWeb3(
   `wss://eth-mainnet.ws.alchemyapi.io/v2/${ALCHEMY_MAINNET_KEY}`
 );
-const localhostProvider = new providers.JsonRpcProvider(LOCAL_RPC_HOST);
 
 const alchemyWeb3GoerliWebSocketProvider = new providers.Web3Provider(
   web3Goerli.currentProvider as ExternalProvider,
@@ -36,6 +35,7 @@ export var defaultProvider = getProvider();
 function getProvider() {
   // always use localhostProvider for tests
   if (process.env.NODE_ENV === "test") {
+    const localhostProvider = new providers.JsonRpcProvider(LOCAL_RPC_HOST);
     return localhostProvider;
   }
 
@@ -50,5 +50,6 @@ function getProvider() {
   }
 
   // default to localhost
+  const localhostProvider = new providers.JsonRpcProvider(LOCAL_RPC_HOST);
   return localhostProvider;
 }

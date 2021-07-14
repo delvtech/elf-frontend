@@ -12,23 +12,38 @@ import {
 
 export interface UseSmartContractReadCallOptions<
   TContract extends Contract,
-  TMethodName extends ContractMethodName<TContract>
+  TMethodName extends ContractMethodName<TContract>,
+  TReturnType extends Unpacked<
+    StaticContractReturnType<TContract, TMethodName>
+  >,
+  TSelect = TReturnType
 > {
   callArgs?: ContractMethodArgs<TContract, TMethodName>;
   enabled?: boolean;
-
   staleTime?: number;
+
+  select?: (data: TReturnType) => TSelect;
 }
+
+const IDENTITY_FN = (v: unknown) => v;
 
 export function useSmartContractReadCall<
   TContract extends Contract,
   TMethodName extends ContractMethodName<TContract>,
-  TReturnType extends Unpacked<StaticContractReturnType<TContract, TMethodName>>
+  TContractData extends Unpacked<
+    StaticContractReturnType<TContract, TMethodName>
+  >,
+  TData = TContractData
 >(
   contract: TContract | undefined,
   methodName: TMethodName,
-  options?: UseSmartContractReadCallOptions<TContract, TMethodName>
-): QueryObserverResult<TReturnType> {
+  options?: UseSmartContractReadCallOptions<
+    TContract,
+    TMethodName,
+    TContractData,
+    TData
+  >
+): QueryObserverResult<TData> {
   const queryOptions = makeSmartContractReadCallUseQueryOptions(
     contract,
     methodName,
@@ -43,13 +58,21 @@ export function useSmartContractReadCall<
 export function makeSmartContractReadCallUseQueryOptions<
   TContract extends Contract,
   TMethodName extends ContractMethodName<TContract>,
-  TReturnType extends Unpacked<StaticContractReturnType<TContract, TMethodName>>
+  TContractData extends Unpacked<
+    StaticContractReturnType<TContract, TMethodName>
+  >,
+  TData = TContractData
 >(
   contract: TContract | undefined,
   methodName: TMethodName,
-  options?: UseSmartContractReadCallOptions<TContract, TMethodName>
-): UseQueryOptions<TReturnType> {
-  const { enabled = true, callArgs, staleTime } = options || {};
+  options?: UseSmartContractReadCallOptions<
+    TContract,
+    TMethodName,
+    TContractData,
+    TData
+  >
+): UseQueryOptions<TContractData, unknown, TData> {
+  const { enabled = true, callArgs, staleTime, select } = options || {};
 
   const queryKey = makeSmartContractReadCallQueryKey<TContract, TMethodName>(
     contract?.address,
@@ -57,7 +80,7 @@ export function makeSmartContractReadCallUseQueryOptions<
     callArgs
   );
 
-  const queryFn = async (): Promise<TReturnType> => {
+  const queryFn = async (): Promise<TContractData> => {
     const finalArgs = callArgs || [];
     // Read calls are by definition static, so we make sure to call the static method explicitly
     const result = await contract?.callStatic?.[methodName as string](
@@ -66,7 +89,7 @@ export function makeSmartContractReadCallUseQueryOptions<
     return result;
   };
 
-  const queryOptions: UseQueryOptions<TReturnType> = {
+  const queryOptions: UseQueryOptions<TContractData, unknown, TData> = {
     queryKey,
     queryFn,
     onError: () => {
@@ -76,6 +99,7 @@ export function makeSmartContractReadCallUseQueryOptions<
         callArgs
       );
     },
+    select: select || (IDENTITY_FN as (v: TContractData) => TData),
     enabled: !!contract && enabled,
   };
 

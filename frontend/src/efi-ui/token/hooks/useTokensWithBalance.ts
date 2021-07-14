@@ -20,7 +20,8 @@ export function useTokensWithBalance<TContract extends ERC20>(
 ): TokenWithBalance<TContract>[] {
   const balanceOfArgs: UseSmartContractReadCallOptions<
     ERC20 | ERC20Permit,
-    "balanceOf"
+    "balanceOf",
+    BigNumber
   >[] = tokens.map(() => ({
     callArgs: [account as string],
     enabled: !!account,

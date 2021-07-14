@@ -40,10 +40,11 @@ interface EarnCardProps {
   signer: Signer | undefined;
   library: Web3Provider | undefined;
   account: string | null | undefined;
+  id: string;
   principalTokenInfo: PrincipalTokenInfo;
   isExpanded: boolean;
-  onExpandOpen: () => void;
-  onExpandClose: () => void;
+  onExpandOpen: (id: string) => void;
+  onExpandClose: (id: string) => void;
 }
 
 const poolCardStyle: CSSProperties = {
@@ -53,6 +54,7 @@ const poolCardStyle: CSSProperties = {
 export function EarnCard(props: EarnCardProps): ReactElement | null {
   const {
     signer,
+    id,
     library,
     account,
     principalTokenInfo,
@@ -67,6 +69,7 @@ export function EarnCard(props: EarnCardProps): ReactElement | null {
     onExpandClose,
     onExpandOpen,
   } = props;
+
   // state
   const [activeTabId, setActiveTabId] = useState(EarnActionsTabId.MINT);
 
@@ -135,11 +138,11 @@ export function EarnCard(props: EarnCardProps): ReactElement | null {
       return;
     }
     if (isExpanded) {
-      onExpandClose();
+      onExpandClose(id);
     } else {
-      onExpandOpen();
+      onExpandOpen(id);
     }
-  }, [isExpanded, isMature, onExpandClose, onExpandOpen]);
+  }, [id, isExpanded, isMature, onExpandClose, onExpandOpen]);
 
   if (!allDataLoaded) {
     return (

@@ -24,22 +24,15 @@ export function useCoinGeckoHistoricalPrice(
       return price;
     },
     enabled: !!coinGeckoId,
+    // Historical prices never change, so we can cache this forever
+    staleTime: Infinity,
   });
-}
-
-interface CoinGeckoHistoricalPriceVariables {
-  coinGeckoId: string | undefined;
-  currencyCode: string;
-  daysAgo: number;
 }
 
 function makeCoinGeckoHistoricalPriceQueryKey(
   coinGeckoId: string | undefined,
   currency: Currency,
   daysAgo: number
-): [string[], CoinGeckoHistoricalPriceVariables] {
-  return [
-    ["coingecko", "/coins/"],
-    { coinGeckoId, currencyCode: currency.code, daysAgo },
-  ];
+): [string, string, string, number, string | undefined] {
+  return ["coingecko", "/coins/", currency.code, daysAgo, coinGeckoId];
 }

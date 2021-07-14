@@ -14,7 +14,7 @@ import coinsJSON from "efi-coingecko/coins.json";
  *
  * TODO: This can be auto-generated instead of created at runtime.
  */
-export const CoinGeckoIds: {
+const CoinGeckoIds: {
   [symbol: string]: string;
 } = coinsJSON.reduce(
   (memo, value) => ({ ...memo, [value.symbol]: value.id }),

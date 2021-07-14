@@ -38,24 +38,48 @@ import {
 export function useSmartContractReadCalls<
   TContract extends Contract,
   TMethodName extends ContractMethodName<TContract> = ContractMethodName<TContract>,
-  TReturnType extends Unpacked<
+  TContractData extends Unpacked<
     StaticContractReturnType<TContract, TMethodName>
-  > = Unpacked<StaticContractReturnType<TContract, TMethodName>>
+  > = Unpacked<StaticContractReturnType<TContract, TMethodName>>,
+  TData = TContractData
 >(
   contracts: (TContract | undefined)[],
   methodName: TMethodName,
   options?:
-    | (UseSmartContractReadCallOptions<TContract, TMethodName> | undefined)[]
-    | UseSmartContractReadCallOptions<TContract, TMethodName>
-): QueryObserverResult<TReturnType>[] {
+    | (
+        | UseSmartContractReadCallOptions<
+            TContract,
+            TMethodName,
+            TContractData,
+            TData
+          >
+        | undefined
+      )[]
+    | UseSmartContractReadCallOptions<
+        TContract,
+        TMethodName,
+        TContractData,
+        TData
+      >
+): QueryObserverResult<TContractData>[] {
   let optionsArray: (
-    | UseSmartContractReadCallOptions<TContract, TMethodName>
+    | UseSmartContractReadCallOptions<
+        TContract,
+        TMethodName,
+        TContractData,
+        TData
+      >
     | undefined
   )[] = [];
 
   if (!options || isPlainObject(options)) {
     optionsArray = contracts.map(() => options) as (
-      | UseSmartContractReadCallOptions<TContract, TMethodName>
+      | UseSmartContractReadCallOptions<
+          TContract,
+          TMethodName,
+          TContractData,
+          TData
+        >
       | undefined
     )[];
   } else if (options && Array.isArray(options)) {
@@ -70,7 +94,7 @@ export function useSmartContractReadCalls<
   // yet support generics and string and unknown are incompatible types.
   const queryResult = useQueries(
     queryOptions as UseQueryOptions<unknown, unknown, unknown>[]
-  ) as QueryObserverResult<TReturnType, unknown>[];
+  ) as QueryObserverResult<TContractData, unknown>[];
 
   return queryResult;
 }
