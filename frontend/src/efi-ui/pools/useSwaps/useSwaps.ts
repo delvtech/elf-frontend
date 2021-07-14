@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 
 import { SwapEventWithTimeStamp } from "efi-balancer/SwapEvent";
-import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { useSmartContractEvents } from "efi-ui/contracts/useSmartContractEvents/useSmartContractEvents";
 import { useLatestBlockNumber } from "efi-ui/ethereum/hooks/useLatestBlockNumber";
 import { usePreviousBlockNumber } from "efi-ui/ethereum/usePreviousBlockNumber/usePreviousBlockNumber";
@@ -9,6 +8,7 @@ import { EMPTY_ARRAY } from "efi/base/emptyArray";
 import { ONE_WEEK_IN_SECONDS } from "efi/base/time";
 import { AVG_MINE_RATE_SECONDS } from "efi/ethereum/miningRate";
 import { PoolInfo } from "efi/pools/PoolInfo";
+import { balancerVaultContract } from "efi-balancer/vault";
 
 export function useSwaps(
   poolInfo: PoolInfo,
@@ -16,18 +16,21 @@ export function useSwaps(
   toTime?: number
 ): SwapEventWithTimeStamp[] | undefined {
   const { poolId } = poolInfo.extensions;
-  const balancerVault = useBalancerVault();
   const { data: fromBlockNumber } = usePreviousBlockNumber(fromTime);
   const { data: toBlockNumber } = usePreviousBlockNumber(toTime);
   const { data: lastestBlockNumber } = useLatestBlockNumber();
 
-  const { data: events = [] } = useSmartContractEvents(balancerVault, "Swap", {
-    callArgs: [poolId as string, null, null, null, null],
-    enabled: !!poolId && !!fromBlockNumber,
-    fromBlock: fromBlockNumber,
-    toBlock: toBlockNumber,
-    refetchOnWindowFocus: false,
-  });
+  const { data: events = [] } = useSmartContractEvents(
+    balancerVaultContract,
+    "Swap",
+    {
+      callArgs: [poolId as string, null, null, null, null],
+      enabled: !!poolId && !!fromBlockNumber,
+      fromBlock: fromBlockNumber,
+      toBlock: toBlockNumber,
+      refetchOnWindowFocus: false,
+    }
+  );
   const swaps: SwapEventWithTimeStamp[] = useMemo(() => {
     if (!lastestBlockNumber) {
       return EMPTY_ARRAY as SwapEventWithTimeStamp[];

@@ -13,7 +13,6 @@ import {
 import { FundManagement } from "efi-balancer/FundManagement";
 import { SingleSwap } from "efi-balancer/SingleSwap";
 import { SwapKind } from "efi-balancer/SwapKind";
-import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import {
   AppToaster,
   makeErrorToast,
@@ -28,6 +27,7 @@ import { sortAddresses } from "efi/base/sortAddresses";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { serializeError } from "eth-rpc-errors";
+import { balancerVaultContract } from "efi-balancer/vault";
 
 /**
  * Hook for Balancer Vault's swap method.
@@ -53,10 +53,8 @@ export function useSwap(
     Parameters<Vault["swap"]>
   >;
 } {
-  const balancerVault = useBalancerVault();
-
   const mutationResult = useSmartContractTransactionPersisted(
-    balancerVault,
+    balancerVaultContract,
     "swap",
     signer,
     {

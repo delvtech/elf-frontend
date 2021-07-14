@@ -1,11 +1,11 @@
 import { BigNumber } from "ethers";
 
-import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { useSmartContractEvents } from "efi-ui/contracts/useSmartContractEvents/useSmartContractEvents";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { usePreviousBlockNumber } from "efi-ui/ethereum/usePreviousBlockNumber/usePreviousBlockNumber";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
 import { PoolContract } from "efi/pools/PoolContract";
+import { balancerVaultContract } from "efi-balancer/vault";
 
 type PoolBalanceChangedArguments = [
   poolId: string,
@@ -28,11 +28,10 @@ export function useTokenDeltasForPool(
   fromTime: number = ONE_DAY_IN_SECONDS
 ): BigNumber[] | undefined {
   const { data: poolId } = useSmartContractReadCall(pool, "getPoolId");
-  const balancerVault = useBalancerVault();
   const { data: fromBlockNumber } = usePreviousBlockNumber(fromTime);
 
   const { data: events = [] } = useSmartContractEvents(
-    balancerVault,
+    balancerVaultContract,
     "PoolBalanceChanged",
     {
       callArgs: [poolId as string, null, null, null, null],

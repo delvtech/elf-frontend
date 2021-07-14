@@ -6,7 +6,6 @@ import { formatEther, formatUnits, parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import { getBalancerApprovalMessage } from "efi-ui/balancer/balancerApprovalMessage";
-import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { StakeConfirmationForm } from "efi-ui/pools/StakeTokensConfirmationDrawer/StakeConfirmationForm";
 import { StakeTokensDetails } from "efi-ui/pools/StakeTokensConfirmationDrawer/StakeTokensDetails";
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
@@ -27,6 +26,7 @@ import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { isConvergentCurvePool } from "efi/pools/PoolContract";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { WalletApprovalInfo } from "efi/wallets/WalletApprovalInfo";
+import { AddressesJson } from "efi/addresses";
 
 interface StakingConfirmationDrawerProps {
   account: string | null | undefined;
@@ -69,7 +69,6 @@ export function StakingConfirmationDrawer({
   stakeError,
   onStake,
 }: StakingConfirmationDrawerProps): ReactElement {
-  const balancerVault = useBalancerVault();
   const shareOfPool = useShareOfPool(poolInfo, baseAssetDecimals, baseAssetIn);
   const appliedFeePercent = useFeePercent(poolInfo, termAssetIn);
   const stakingAPY = useStakingAPY(poolInfo);
@@ -88,7 +87,7 @@ export function StakingConfirmationDrawer({
 
   const hasTokenApprovals = useHasTokenApprovals(
     account,
-    balancerVault?.address,
+    AddressesJson.addresses.balancerVaultAddress,
     baseAsset,
     termAsset,
     baseAssetInBigNumber,
@@ -102,7 +101,7 @@ export function StakingConfirmationDrawer({
     baseAsset,
     termAsset,
     account,
-    balancerVault?.address
+    AddressesJson.addresses.balancerVaultAddress
   );
 
   return (

@@ -5,7 +5,6 @@ import { formatUnits } from "ethers/lib/utils";
 import { PrincipalPoolTokenInfo } from "tokenlists/types";
 
 import { SwapKind } from "efi-balancer/SwapKind";
-import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { makeQueryBatchSwapCallArgs } from "efi-ui/balancer/useQueryBatchSwap/makeQueryBatchSwapCallArgs";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
@@ -21,6 +20,7 @@ import { PoolInfo } from "efi/pools/PoolInfo";
 import { isYieldPool } from "efi/pools/weightedPool";
 import { getTokenInfo } from "efi/tokenlists";
 import { BALANCER_ETH_SENTINEL } from "efi/balancer";
+import { balancerVaultContract } from "efi-balancer/vault";
 
 /**
  * Useful for previewing a swap in the balancer V2 vault.
@@ -43,11 +43,10 @@ export function useQueryBatchSwap(
   tokenOutAddress: string,
   amount: BigNumber
 ): QueryObserverResult<BigNumber[]> {
-  const balancerVault = useBalancerVault();
   const poolId = getTokenInfo<PoolInfo>(pool.address).extensions.poolId;
 
   const queryBatchSwapResults = useSmartContractReadCall(
-    balancerVault,
+    balancerVaultContract,
     "queryBatchSwap",
     {
       enabled: [poolId, tokenInAddress, amount?.gt(0), tokenOutAddress].every(

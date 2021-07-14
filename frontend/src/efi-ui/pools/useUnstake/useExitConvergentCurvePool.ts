@@ -8,7 +8,6 @@ import { PrincipalPoolTokenInfo } from "tokenlists/types";
 
 import { ExitRequest } from "efi-balancer/ExitRequest";
 import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
-import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
 import ContractAddresses from "efi/addresses";
 import { BALANCER_ETH_SENTINEL } from "efi/balancer";
@@ -17,6 +16,7 @@ import { ContractMethodArgs } from "efi/contracts/types";
 import { calculateTokensOutForLPInFixed } from "efi/pools/calculateTokensOutForLPIn";
 import { getPoolContract } from "efi/pools/getPoolContract";
 import { getTokenInfo } from "efi/tokenlists";
+import { balancerVaultContract } from "efi-balancer/vault";
 
 export function useExitConvergentCurvePool(
   signer: Signer | undefined,
@@ -32,7 +32,6 @@ export function useExitConvergentCurvePool(
   error: Error | undefined;
   reset: () => void;
 } {
-  const balancerVault = useBalancerVault();
   const { poolId } = poolInfo.extensions;
   const pool = getPoolContract(poolInfo.address) as ConvergentCurvePool;
   const {
@@ -42,15 +41,20 @@ export function useExitConvergentCurvePool(
     isSuccess,
     reset,
     error,
-  } = useSmartContractTransactionPersisted(balancerVault, "exitPool", signer, {
-    onTransactionSubmitted,
-  });
+  } = useSmartContractTransactionPersisted(
+    balancerVaultContract,
+    "exitPool",
+    signer,
+    {
+      onTransactionSubmitted,
+    }
+  );
 
   const onExitPool = useCallback(async () => {
     // grab these right when we exit to try to get the latest values
     const totalSupply = await pool.totalSupply();
     const [poolTokens = [], poolTokenReserves = []] =
-      await balancerVault.getPoolTokens(poolId);
+      await balancerVaultContract.getPoolTokens(poolId);
     const poolTokenDecimals = poolTokens.map((tokenAddress) => {
       const { decimals } = getTokenInfo(tokenAddress);
       return decimals;
@@ -69,7 +73,7 @@ export function useExitConvergentCurvePool(
       return;
     }
     exitPool(exitPoolCallArgs);
-  }, [account, balancerVault, exitPool, lpIn, pool, poolId]);
+  }, [account, exitPool, lpIn, pool, poolId]);
 
   return {
     onExitPool,

@@ -8,7 +8,6 @@ import { YieldPoolTokenInfo } from "tokenlists/types";
 
 import { ExitRequest } from "efi-balancer/ExitRequest";
 import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
-import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
 import ContractAddresses from "efi/addresses";
 import { BALANCER_ETH_SENTINEL } from "efi/balancer";
@@ -17,6 +16,7 @@ import { calculateTokensOutForLPInFixed } from "efi/pools/calculateTokensOutForL
 import { getPoolContract } from "efi/pools/getPoolContract";
 import { WeightedPoolExitKind } from "efi/pools/weightedPool";
 import { getTokenInfo } from "efi/tokenlists";
+import { balancerVaultContract } from "efi-balancer/vault";
 
 export function useExitWeightedPool(
   signer: Signer | undefined,
@@ -32,12 +32,11 @@ export function useExitWeightedPool(
   >;
   onExitPool: () => void;
 } {
-  const balancerVault = useBalancerVault();
   const { poolId } = poolInfo.extensions;
   const pool = getPoolContract(poolInfo.address);
 
   const mutationResult = useSmartContractTransactionPersisted(
-    balancerVault,
+    balancerVaultContract,
     "exitPool",
     signer,
     {
@@ -51,7 +50,7 @@ export function useExitWeightedPool(
     // grab these right when we exit to try to get the latest values
     const totalSupply = await pool.totalSupply();
     const [poolTokens = [], poolTokenReserves = []] =
-      await balancerVault.getPoolTokens(poolId);
+      await balancerVaultContract.getPoolTokens(poolId);
     const poolTokenDecimals = poolTokens.map((tokenAddress) => {
       const { decimals } = getTokenInfo(tokenAddress);
       return decimals;
@@ -71,7 +70,7 @@ export function useExitWeightedPool(
       return;
     }
     exitPool(exitPoolCallArgs);
-  }, [account, balancerVault, exitPool, lpIn, pool, poolId]);
+  }, [account, exitPool, lpIn, pool, poolId]);
 
   return {
     mutationResult,

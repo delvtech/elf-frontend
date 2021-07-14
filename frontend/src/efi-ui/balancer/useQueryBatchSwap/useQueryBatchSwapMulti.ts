@@ -5,12 +5,12 @@ import { BigNumber } from "ethers";
 import zip from "lodash.zip";
 
 import { SwapKind } from "efi-balancer/SwapKind";
-import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { makeQueryBatchSwapCallArgs } from "efi-ui/balancer/useQueryBatchSwap/makeQueryBatchSwapCallArgs";
 import { getQueriesData } from "efi-ui/base/queryResults";
 import { UseSmartContractReadCallOptions } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
 import { PoolContract } from "efi/pools/PoolContract";
+import { balancerVaultContract } from "efi-balancer/vault";
 
 export function useQueryBatchSwapMulti(
   kind: SwapKind,
@@ -19,8 +19,6 @@ export function useQueryBatchSwapMulti(
   tokenOutAddresses: (string | undefined)[],
   amounts: (BigNumber | undefined)[]
 ): QueryObserverResult<BigNumber[]>[] {
-  const balancerVault = useBalancerVault();
-
   const poolIdResults = useSmartContractReadCalls(pools, "getPoolId");
   const poolIds = getQueriesData(poolIdResults);
 
@@ -46,7 +44,7 @@ export function useQueryBatchSwapMulti(
   );
 
   const queryBatchSwapResults = useSmartContractReadCalls(
-    pools.map(() => balancerVault),
+    pools.map(() => balancerVaultContract),
     "queryBatchSwap",
     readCallOptions
   );

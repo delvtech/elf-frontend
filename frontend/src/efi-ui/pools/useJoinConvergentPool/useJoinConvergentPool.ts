@@ -7,7 +7,6 @@ import { defaultAbiCoder } from "ethers/lib/utils";
 import zipObject from "lodash.zipobject";
 
 import { JoinRequest } from "efi-balancer/JoinRequest";
-import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
@@ -15,6 +14,7 @@ import ContractAddresses from "efi/addresses";
 import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { PoolContract } from "efi/pools/PoolContract";
+import { balancerVaultContract } from "efi-balancer/vault";
 
 export function useJoinConvergentPool(
   signer: Signer | undefined,
@@ -30,11 +30,10 @@ export function useJoinConvergentPool(
     Parameters<Vault["joinPool"]>
   >;
 } {
-  const balancerVault = useBalancerVault();
   const { data: poolId } = useSmartContractReadCall(pool, "getPoolId");
   const { data: [poolTokens] = [] } = usePoolTokens(pool);
   const mutationResult = useSmartContractTransactionPersisted(
-    balancerVault,
+    balancerVaultContract,
     "joinPool",
     signer,
     { onTransactionSubmitted: onTransactionSubmitted }

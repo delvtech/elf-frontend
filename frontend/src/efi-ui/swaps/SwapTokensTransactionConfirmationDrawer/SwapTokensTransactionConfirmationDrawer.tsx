@@ -7,7 +7,6 @@ import { t } from "ttag";
 
 import { SwapKind } from "efi-balancer/SwapKind";
 import { getBalancerApprovalMessage } from "efi-ui/balancer/balancerApprovalMessage";
-import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { parseQueryBatchSwapResult } from "efi-ui/balancer/useQueryBatchSwap/parseQueryBatchSwapResult";
 import { useQueryBatchSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
 import { useSwap } from "efi-ui/balancer/useSwap/useSwap";
@@ -26,6 +25,7 @@ import { isConvergentCurvePool } from "efi/pools/PoolContract";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { getToleranceAmount } from "efi/trade/getToleranceAmount";
 import { TermAssetType } from "efi/tranche/TermAssetType";
+import { AddressesJson } from "efi/addresses";
 
 interface SwapTokensTransactionConfirmationDrawerProps {
   account: string | null | undefined;
@@ -75,7 +75,6 @@ export function SwapTokensTransactionConfirmationDrawer({
   poolInfo,
 }: SwapTokensTransactionConfirmationDrawerProps): ReactElement {
   const signer = useSigner(account, library);
-  const balancerVault = useBalancerVault();
 
   const {
     address: poolAddress,
@@ -162,7 +161,7 @@ export function SwapTokensTransactionConfirmationDrawer({
   const walletApprovalInfos = useWalletApprovalInfos(
     tokenInAsset,
     account,
-    balancerVault?.address
+    AddressesJson.addresses.balancerVaultAddress
   );
 
   return (

@@ -3,7 +3,6 @@ import { useQuery } from "react-query";
 import { BigNumber } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
 
-import { useBalancerVault } from "efi-ui/balancer/useBalancerVault";
 import { useLatestBlockNumber } from "efi-ui/ethereum/hooks/useLatestBlockNumber";
 import { usePreviousBlockNumber } from "efi-ui/ethereum/usePreviousBlockNumber/usePreviousBlockNumber";
 import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
@@ -17,6 +16,7 @@ import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { getTokenInfo } from "efi/tokenlists";
 import { TimeData } from "efi/charts/TimeData";
+import { balancerVaultContract } from "efi-balancer/vault";
 
 type PoolBalanceChangedArguments = [
   poolId: string,
@@ -43,7 +43,6 @@ export function useLiquidityHistoryForPool(
   const { poolId, underlying: baseAssetAddress } = poolInfo.extensions;
   const { decimals: baseAssetDecimals } = getTokenInfo(baseAssetAddress);
   const totalLiquidity = useTotalFiatLiquidity(poolInfo);
-  const balancerVault = useBalancerVault();
   const { data: fromBlockNumber } = usePreviousBlockNumber(fromTime, {
     staleTime: Infinity,
     cacheTime: Infinity,
@@ -78,7 +77,6 @@ export function useLiquidityHistoryForPool(
     ],
     queryFn: async () => {
       if (
-        !balancerVault ||
         !poolId ||
         !spotPrice ||
         !baseAssetPrice ||
@@ -88,7 +86,7 @@ export function useLiquidityHistoryForPool(
         return;
       }
 
-      const filterQuery = balancerVault.filters.PoolBalanceChanged(
+      const filterQuery = balancerVaultContract.filters.PoolBalanceChanged(
         poolId,
         null,
         null,
@@ -98,7 +96,7 @@ export function useLiquidityHistoryForPool(
 
       // these are all the events that have liquidity changes when people stake/unstake from the
       // pool.
-      const events = await balancerVault.queryFilter(
+      const events = await balancerVaultContract.queryFilter(
         filterQuery,
         fromBlockNumber
       );
@@ -171,7 +169,6 @@ export function useLiquidityHistoryForPool(
       }));
     },
     enabled:
-      !!balancerVault &&
       !!poolId &&
       !!fromBlockNumber &&
       !!spotPrice &&
