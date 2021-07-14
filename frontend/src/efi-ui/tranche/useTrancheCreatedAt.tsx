@@ -1,21 +1,12 @@
-import { TrancheFactory__factory } from "elf-contracts/types/factories/TrancheFactory__factory";
 import { Tranche } from "elf-contracts/types/Tranche";
 
 import { useSmartContractEvents } from "efi-ui/contracts/useSmartContractEvents/useSmartContractEvents";
 import { useBlockFromTag } from "efi-ui/provider/useBlockFromTag/useBlockFromTag";
-import ContractAddresses from "efi/addresses";
-import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
-
-const { trancheFactoryAddress } = ContractAddresses;
+import { trancheFactoryContract } from "efi/tranche/trancheFactory";
 
 export function useTrancheCreatedAt(
   tranche: Tranche | undefined
 ): number | undefined {
-  const trancheFactoryContract = getSmartContractFromRegistry(
-    trancheFactoryAddress,
-    TrancheFactory__factory.connect
-  );
-
   const { data: events } = useSmartContractEvents(
     trancheFactoryContract,
     "TrancheCreated",

@@ -1,5 +1,4 @@
 import { AddressesJson } from "efi/addresses";
-import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
 import {
   CryptoAsset,
   CryptoAssetType,
@@ -7,14 +6,16 @@ import {
   Erc20PermitCryptoAsset,
   ETHEREUM_CRYPTO_ASSET,
 } from "efi/crypto/CryptoAsset";
-import { yieldTokenInfos } from "efi/interestToken/interestToken";
-import { principalTokenInfos } from "efi/tranche/tranches";
+import {
+  interestTokenContractsByAddress,
+  yieldTokenInfos,
+} from "efi/interestToken/interestToken";
+import {
+  principalTokenInfos,
+  trancheContractsByAddress,
+} from "efi/tranche/tranches";
 import { underlyingContractsByAddress } from "efi/underlying/underlying";
 import { ERC20, ERC20Permit } from "elf-contracts/types";
-import { InterestToken__factory } from "elf-contracts/types/factories/InterestToken__factory";
-import { Tranche__factory } from "elf-contracts/types/factories/Tranche__factory";
-import { InterestToken } from "elf-contracts/types/InterestToken";
-import { Tranche } from "elf-contracts/types/Tranche";
 import keyBy from "lodash.keyby";
 
 const USDC_CRYPTO_ASSET: Erc20PermitCryptoAsset = {
@@ -82,20 +83,15 @@ const principalTokenCryptoAssets: Erc20PermitCryptoAsset[] =
     id: address,
     // All of our principal tokens follow the erc20Permit token standard.
     type: CryptoAssetType.ERC20PERMIT,
-    tokenContract: getSmartContractFromRegistry(
-      address,
-      Tranche__factory.connect
-    ) as Tranche,
+    tokenContract: trancheContractsByAddress[address],
   }));
+
 const yieldTokenCryptoAssets: Erc20PermitCryptoAsset[] = yieldTokenInfos.map(
   ({ address }) => ({
     id: address,
     // All of our yield tokens follow the erc20Permit token standard.
     type: CryptoAssetType.ERC20PERMIT,
-    tokenContract: getSmartContractFromRegistry(
-      address,
-      InterestToken__factory.connect
-    ) as InterestToken,
+    tokenContract: interestTokenContractsByAddress[address],
   })
 );
 

@@ -5,10 +5,7 @@ import { Web3Provider } from "@ethersproject/providers";
 import { Tranche } from "elf-contracts/types";
 import { BigNumber, Signer } from "ethers";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
-import {
-  PrincipalTokenInfo as TrancheInfo,
-  YieldTokenInfo,
-} from "tokenlists/types";
+import { YieldTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -18,7 +15,6 @@ import { useSigner } from "efi-ui/provider/useBlockFromTag/useSigner/useSigner";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { RedeemForm } from "efi-ui/tranche/RedeemForm/RedeemForm";
 import { useWithdrawInterest } from "efi-ui/tranche/RedeemTokensDrawer/useWithdrawInterest";
-import { useInterestTokenForTranche } from "efi-ui/tranche/useTrancheInterestTokenMulti";
 import { useRedeemTermAssetsToEth } from "efi-ui/userProxy/useRedeemTermAssetsToEth";
 import { WalletDrawer } from "efi-ui/wallets/WalletDrawer/WalletDrawer";
 import ContractAddresses from "efi/addresses";
@@ -26,10 +22,10 @@ import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatFullDate } from "efi/base/dates";
 import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
-import { getTokenInfo } from "efi/tokenlists";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
 import { WalletApprovalCallout } from "efi-ui/transactions/TransactionDrawer/WalletApprovalCallout";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
+import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
 
 const { userProxyContractAddress } = ContractAddresses;
 
@@ -57,17 +53,17 @@ export function RedeemYieldTokensDrawer({
   // base asset calls
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
 
-  const { decimals: yieldTokenDecimals } = yieldTokenInfo;
-  const { tranche: trancheAddress } = yieldTokenInfo.extensions;
-  const trancheInfo = getTokenInfo<TrancheInfo>(trancheAddress);
-  const tranche = trancheContractsByAddress[trancheInfo.address];
-  const { unlockTimestamp } = trancheInfo.extensions;
+  const {
+    address: yieldTokenAddress,
+    decimals: yieldTokenDecimals,
+    extensions: { tranche: trancheAddress, unlockTimestamp },
+  } = yieldTokenInfo;
   const unlockTimestampDate = convertEpochSecondsToDate(unlockTimestamp);
   const unlockTimestampLabel = unlockTimestampDate
     ? formatFullDate(unlockTimestampDate)
     : undefined;
-
-  const yieldToken = useInterestTokenForTranche(tranche);
+  const yieldTokenContract = interestTokenContractsByAddress[yieldTokenAddress];
+  const trancheContract = trancheContractsByAddress[trancheAddress];
 
   // input
   const { stringValue: yieldTokenValue, setValue: setYieldTokenValue } =
@@ -91,7 +87,10 @@ export function RedeemYieldTokensDrawer({
     }
   }, [userProxyAllowance, yieldTokenValue]);
 
-  const { data: yieldTokenBalanceOf } = useTokenBalanceOf(yieldToken, account);
+  const { data: yieldTokenBalanceOf } = useTokenBalanceOf(
+    yieldTokenContract,
+    account
+  );
   const onSetMaxAmount = useCallback(() => {
     setYieldTokenValue(
       formatUnits(yieldTokenBalanceOf ?? 0, yieldTokenDecimals)
@@ -110,7 +109,7 @@ export function RedeemYieldTokensDrawer({
     reset,
   } = useRedeemYieldTokens(
     signer,
-    tranche,
+    trancheContract,
     account,
     yieldTokenValueBN,
     baseAsset,
@@ -171,7 +170,7 @@ export function RedeemYieldTokensDrawer({
         <RedeemForm
           onSetMaxAmount={onSetMaxAmount}
           heading={t`Redeem ${baseAssetSymbol} Yield Tokens`}
-          tranche={tranche}
+          tranche={trancheContract}
           intent={buttonIntent}
           amount={yieldTokenValue}
           assetSymbol={t`${baseAssetSymbol} Yield Token`}

@@ -6,7 +6,7 @@ import {
   ContractMethodArgs,
   StaticContractMethodArgs,
 } from "efi/contracts/types";
-import { USER_PROXY_ETH_SENTINEL } from "efi/userProxy";
+import { USER_PROXY_ETH_SENTINEL } from "efi/userProxy/address";
 
 export function makeMintCallArgs(
   amount: BigNumber,

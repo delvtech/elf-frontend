@@ -11,7 +11,7 @@ import { jt, t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { SaveCard } from "efi-ui/saveApp/save/SaveCard/SaveCard";
-import { openTranches } from "efi/tranche/tranches";
+import { openTrancheContracts } from "efi/tranche/tranches";
 import { SaveAppHeader } from "efi-ui/saveApp/page/SaveAppHeader/SaveAppHeader";
 
 interface EarnViewProps extends RouteComponentProps {}
@@ -93,7 +93,7 @@ export function SaveView(unusedProps: EarnViewProps): ReactElement {
               </Button>
             </div>
 
-            {openTranches.length ? (
+            {openTrancheContracts.length ? (
               <SaveCard library={library} account={account} />
             ) : (
               <NonIdealState

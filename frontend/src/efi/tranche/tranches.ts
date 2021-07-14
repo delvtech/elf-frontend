@@ -1,7 +1,6 @@
 import { TokenInfo } from "@uniswap/token-lists";
 import { Tranche__factory } from "elf-contracts/types/factories/Tranche__factory";
 import { TestYVault } from "elf-contracts/types/TestYVault";
-import { Tranche } from "elf-contracts/types/Tranche";
 import keyBy from "lodash.keyby";
 import {
   AssetProxyTokenInfo,
@@ -11,9 +10,9 @@ import {
   YieldTokenInfo,
 } from "tokenlists/types";
 
-import { getSmartContractFromRegistryMulti } from "efi/contracts/SmartContractsRegistry";
 import { getTokenInfo, tokenListJson } from "efi/tokenlists";
 import { vaultContractsByAddress } from "efi/tranche/vaults";
+import { defaultProvider } from "efi/providers/providers";
 
 export function isPrincipalToken(
   tokenInfo: TokenInfo
@@ -29,10 +28,9 @@ export const openPrincipalTokenInfos = principalTokenInfos.filter(
   ({ extensions: { unlockTimestamp } }) => unlockTimestamp * 1000 > Date.now()
 );
 
-export const trancheContracts = getSmartContractFromRegistryMulti(
-  principalTokenInfos.map(({ address }) => address),
-  Tranche__factory.connect
-) as Tranche[];
+export const trancheContracts = principalTokenInfos.map(({ address }) =>
+  Tranche__factory.connect(address, defaultProvider)
+);
 
 export const trancheContractsByAddress = keyBy(
   trancheContracts,
@@ -42,10 +40,9 @@ export const trancheContractsByAddress = keyBy(
 /**
  * The list of tranches that are currently running.
  */
-export const openTranches = getSmartContractFromRegistryMulti(
-  openPrincipalTokenInfos.map(({ address }) => address),
-  Tranche__factory.connect
-) as Tranche[];
+export const openTrancheContracts = openPrincipalTokenInfos.map(
+  ({ address }) => trancheContractsByAddress[address]
+);
 
 export function getVaultContractForTranche(trancheAddress: string): TestYVault {
   const {

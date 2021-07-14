@@ -1,11 +1,10 @@
 import { TokenInfo } from "@uniswap/token-lists";
 import { InterestToken__factory } from "elf-contracts/types/factories/InterestToken__factory";
-import { InterestToken } from "elf-contracts/types/InterestToken";
 import { TokenListTag, YieldTokenInfo } from "tokenlists/types";
 
-import { getSmartContractFromRegistryMulti } from "efi/contracts/SmartContractsRegistry";
 import { tokenListJson } from "efi/tokenlists";
 import keyBy from "lodash.keyby";
+import { defaultProvider } from "efi/providers/providers";
 
 /**
  * The list of all yield tokens
@@ -13,10 +12,9 @@ import keyBy from "lodash.keyby";
 export const yieldTokenInfos: YieldTokenInfo[] = tokenListJson.tokens.filter(
   (tokenInfo): tokenInfo is YieldTokenInfo => isYieldToken(tokenInfo)
 );
-export const interestTokenContracts = getSmartContractFromRegistryMulti(
-  yieldTokenInfos.map(({ address }) => address),
-  InterestToken__factory.connect
-) as InterestToken[];
+export const interestTokenContracts = yieldTokenInfos.map(({ address }) =>
+  InterestToken__factory.connect(address, defaultProvider)
+);
 export const interestTokenContractsByAddress = keyBy(
   interestTokenContracts,
   (interestToken) => interestToken.address

@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 
 import { Tranche } from "elf-contracts/types/Tranche";
 import { UserProxy } from "elf-contracts/types/UserProxy";
@@ -6,13 +6,13 @@ import { BigNumber, ethers, Signer } from "ethers";
 import { PrincipalTokenInfo } from "tokenlists/types";
 
 import { fetchPermitData, PermitCallData } from "efi/base/fetchPermitData";
-import { getUserProxy } from "efi-ui/mint/hooks/userProxy";
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
 import { flushPromises } from "efi/base/flush";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
 import { getTokenInfo } from "efi/tokenlists";
+import { userProxyContract } from "efi/userProxy/contract";
 
 // list of shitty principal and yield token contracts whose names are messed up.  they change their
 // name after the constructor uses them to create their PERMIT_HASH's, which breaks permit calls.
@@ -50,7 +50,10 @@ export function useRedeemTermAssetsToEth(
     ? interestTokenContractsByAddress[interestTokenAddress]
     : undefined;
 
-  const userProxy = getUserProxy(signer);
+  const userProxy = useMemo(
+    () => (signer ? userProxyContract.connect(signer) : userProxyContract),
+    [signer]
+  );
   const {
     mutate: withdrawToEth,
     isError,

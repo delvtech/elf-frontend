@@ -3,9 +3,9 @@ import { WeightedPool__factory } from "elf-contracts/types/factories/WeightedPoo
 import { WeightedPool } from "elf-contracts/types/WeightedPool";
 import { TokenListTag, YieldPoolTokenInfo } from "tokenlists/types";
 
-import { getSmartContractFromRegistryMulti } from "efi/contracts/SmartContractsRegistry";
 import { tokenListJson } from "efi/tokenlists";
 import keyBy from "lodash.keyby";
+import { defaultProvider } from "efi/providers/providers";
 
 // hard limit set by Balancer.  Cannot trade in/out more than 30% of the pool
 export const MAX_WEIGHTED_POOL_PRICE_IMPACT = 0.3;
@@ -23,10 +23,9 @@ export const openYieldPools: YieldPoolTokenInfo[] = yieldPools.filter(
   (yieldPool) => yieldPool.extensions.expiration * 1000 > Date.now()
 );
 
-export const yieldPoolContracts = getSmartContractFromRegistryMulti(
-  yieldPools.map(({ address }) => address),
-  WeightedPool__factory.connect
-) as WeightedPool[];
+export const yieldPoolContracts = yieldPools.map(({ address }) =>
+  WeightedPool__factory.connect(address, defaultProvider)
+);
 
 export const yieldPoolContractsByAddress = keyBy(
   yieldPoolContracts,

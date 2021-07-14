@@ -1,8 +1,7 @@
 import { TokenInfo } from "@uniswap/token-lists";
-import { getSmartContractFromRegistryMulti } from "efi/contracts/SmartContractsRegistry";
+import { defaultProvider } from "efi/providers/providers";
 import { tokenListJson } from "efi/tokenlists";
 import { YVaultAssetProxy__factory } from "elf-contracts/types/factories/YVaultAssetProxy__factory";
-import { YVaultAssetProxy } from "elf-contracts/types/YVaultAssetProxy";
 import keyBy from "lodash.keyby";
 import {
   PrincipalTokenInfo,
@@ -15,10 +14,9 @@ export const assetProxyTokenInfos: AssetProxyTokenInfo[] =
     isAssetProxy(tokenInfo)
   );
 
-const assetProxyContracts = getSmartContractFromRegistryMulti(
-  assetProxyTokenInfos.map(({ address }) => address),
-  YVaultAssetProxy__factory.connect
-) as YVaultAssetProxy[];
+const assetProxyContracts = assetProxyTokenInfos.map(({ address }) =>
+  YVaultAssetProxy__factory.connect(address, defaultProvider)
+);
 
 export const assetProxyContractsByAddress = keyBy(
   assetProxyContracts,

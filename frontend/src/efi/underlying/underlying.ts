@@ -1,15 +1,11 @@
-import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
 import { AddressesJson } from "efi/addresses";
 import { WETH__factory } from "elf-contracts/types/factories/WETH__factory";
 import {
-  DAI,
   DAI__factory,
-  ERC20,
-  ERC20Permit,
   ERC20Permit__factory,
   ERC20__factory,
-  WETH,
 } from "elf-contracts/types";
+import { defaultProvider } from "efi/providers/providers";
 
 const {
   addresses: {
@@ -23,47 +19,19 @@ const {
   },
 } = AddressesJson;
 
-const wethContract = getSmartContractFromRegistry(
-  wethAddress,
-  WETH__factory.connect
-) as WETH;
-
-const usdcContract = getSmartContractFromRegistry(
-  usdcAddress,
-  ERC20Permit__factory.connect
-) as ERC20Permit;
-
-const daiContract = getSmartContractFromRegistry(
-  daiAddress,
-  DAI__factory.connect
-) as DAI;
-
-const crvlusdContract = getSmartContractFromRegistry(
-  crvlusdAddress,
-  // TODO: hack, make this CRVLUSD__factory one balanceOf and allowance calls
-  // aren't borked
-  ERC20__factory.connect
-) as ERC20;
-
-const crvalusdContract = getSmartContractFromRegistry(
+const wethContract = WETH__factory.connect(wethAddress, defaultProvider);
+const usdcContract = ERC20Permit__factory.connect(usdcAddress, defaultProvider);
+const daiContract = DAI__factory.connect(daiAddress, defaultProvider);
+const crvlusdContract = ERC20__factory.connect(crvlusdAddress, defaultProvider);
+const crvalusdContract = ERC20__factory.connect(
   crvalusdAddress,
-  // TODO: hack, make this CRVLUSD__factory one balanceOf and allowance calls
-  // aren't borked
-  ERC20__factory.connect
-) as ERC20;
-
-const crvTricryptoContract = getSmartContractFromRegistry(
+  defaultProvider
+);
+const crvTricryptoContract = ERC20__factory.connect(
   crvtricryptoAddress,
-  // TODO: hack, make this CRVTRICRYPTO__factory once balanceOf and allowance calls
-  // aren't borked
-  ERC20__factory.connect
-) as ERC20;
-const steCrvContract = getSmartContractFromRegistry(
-  stecrvAddress,
-  // TODO: hack, make this STECRV__factory once balanceOf and allowance calls
-  // aren't borked
-  ERC20__factory.connect
-) as ERC20;
+  defaultProvider
+);
+const steCrvContract = ERC20__factory.connect(stecrvAddress, defaultProvider);
 
 /**
  * Lookup the contract instance for a underlying's address.

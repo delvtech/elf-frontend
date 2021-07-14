@@ -1,5 +1,4 @@
 import { TestYVault, Tranche } from "elf-contracts/types";
-import { YVaultAssetProxy__factory } from "elf-contracts/types/factories/YVaultAssetProxy__factory";
 import { YVaultAssetProxy } from "elf-contracts/types/YVaultAssetProxy";
 import { formatUnits } from "ethers/lib/utils";
 import {
@@ -8,12 +7,12 @@ import {
 } from "tokenlists/types";
 
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
 import { getTokenInfo } from "efi/tokenlists";
 import {
   getVaultContractForTranche,
   trancheContractsByAddress,
 } from "efi/tranche/tranches";
+import { assetProxyContractsByAddress } from "efi/tranche/positions";
 
 /**
  * Returns the number of Principal Tokens you'd get for minting into a tranche.
@@ -79,12 +78,7 @@ function getWrappedPositionForTranche(
 ): YVaultAssetProxy {
   const { position: vaultAssetProxyAddress } = trancheInfo.extensions;
 
-  const yVaultAssetProxy = getSmartContractFromRegistry(
-    vaultAssetProxyAddress,
-    // TODO: The vault asset proxy might not necessarily by a YVaultAssetProxy, so
-    // we'll need to make a static object of well-known addresses and factory constructors.
-    YVaultAssetProxy__factory.connect
-  ) as YVaultAssetProxy;
+  const yVaultAssetProxy = assetProxyContractsByAddress[vaultAssetProxyAddress];
 
   return yVaultAssetProxy;
 }

@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { UseMutationResult } from "react-query";
 
 import { ContractReceipt } from "@ethersproject/contracts";
@@ -16,7 +16,6 @@ import {
   YieldTokenInfo,
 } from "tokenlists/types";
 
-import { getUserProxy } from "efi-ui/mint/hooks/userProxy";
 import { useTokenApprovedForAmount } from "efi-ui/token/hooks/useTokenApprovedForAmount";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
 import ContractAddresses from "efi/addresses";
@@ -32,8 +31,9 @@ import {
   isUnderlyingAddressERC20Permit,
   underlyingContractsByAddress,
 } from "efi/underlying/underlying";
-import { getTokenAddressForUserProxy } from "efi/userProxy";
+import { getTokenAddressForUserProxy } from "efi/userProxy/address";
 import { TransactionError } from "efi-ui/contracts/TransactionError";
+import { userProxyContract } from "efi/userProxy/contract";
 
 /**
  * Returns the number of Principal Tokens you'd get for minting into a tranche.
@@ -60,7 +60,10 @@ export function useMintTransaction(
   >;
 } {
   const { balancerVaultAddress, userProxyContractAddress } = ContractAddresses;
-  const userProxy = getUserProxy(signer);
+  const userProxy = useMemo(
+    () => (signer ? userProxyContract.connect(signer) : userProxyContract),
+    [signer]
+  );
   const baseAssetDecimals = getCryptoDecimals(baseAsset);
   const amountInBigNumber = parseUnits(amountIn || "0", baseAssetDecimals);
   const baseAssetContract = underlyingContractsByAddress[

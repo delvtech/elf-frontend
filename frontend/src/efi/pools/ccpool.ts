@@ -4,8 +4,8 @@ import { ConvergentCurvePool__factory } from "elf-contracts/types/factories/Conv
 import keyBy from "lodash.keyby";
 import { PrincipalPoolTokenInfo, TokenListTag } from "tokenlists/types";
 
-import { getSmartContractFromRegistryMulti } from "efi/contracts/SmartContractsRegistry";
 import { tokenListJson } from "efi/tokenlists";
+import { defaultProvider } from "efi/providers/providers";
 
 /**
  * The list of all principal token pools. This includes pools with mature
@@ -25,10 +25,9 @@ export const openPrincipalPools: PrincipalPoolTokenInfo[] =
     (principalPool) => principalPool.extensions.expiration * 1000 < Date.now()
   );
 
-export const principalPoolContracts = getSmartContractFromRegistryMulti(
-  principalPools.map(({ address }) => address),
-  ConvergentCurvePool__factory.connect
-) as ConvergentCurvePool[];
+export const principalPoolContracts = principalPools.map(({ address }) =>
+  ConvergentCurvePool__factory.connect(address, defaultProvider)
+);
 
 export const principalPoolContractsByAddress = keyBy(
   principalPoolContracts,

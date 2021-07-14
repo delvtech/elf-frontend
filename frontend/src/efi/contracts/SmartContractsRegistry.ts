@@ -7,7 +7,10 @@ import { defaultProvider } from "efi/providers/providers";
 // Do not export this from this file
 const SMART_CONTRACTS_REGISTRY: Record<string, unknown> = {};
 
-// TODO: remove undefineds
+/**
+ * @deprecated use a contract lookup object instead, eg:
+ * trancheContractsByAddress or interestTokenContractsByAddress.
+ */
 export function getSmartContractFromRegistry<TReturnContract extends Contract>(
   address: string | undefined,
   factoryConnect: FactoryConnectFn<TReturnContract>,
@@ -30,16 +33,4 @@ export function getSmartContractFromRegistry<TReturnContract extends Contract>(
   );
 
   return SMART_CONTRACTS_REGISTRY[address] as TReturnContract;
-}
-
-export function getSmartContractFromRegistryMulti<
-  TReturnContract extends Contract
->(
-  address: (string | undefined)[],
-  factoryConnect: FactoryConnectFn<TReturnContract>,
-  signerOrProvider?: Signer | Provider
-): (TReturnContract | undefined)[] {
-  return address.map((address) =>
-    getSmartContractFromRegistry(address, factoryConnect, signerOrProvider)
-  );
 }
