@@ -231,7 +231,7 @@ module.exports = {
           "efi/prefs",
           "setupTests.ts",
           "efi-ui/prefs",
-          "index.tsx",
+          "clearLocalStorageOnNewVersion.tsx",
         ].join("|")})`,
       },
       to: {

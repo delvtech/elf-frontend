@@ -1,7 +1,16 @@
 {
-  "name": "efi-frontend",
-  "version": "0.1.0",
-  "private": true,
+  "browserslist": {
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ],
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ]
+  },
   "dependencies": {
     "@alch/alchemy-web3": "^1.1.1",
     "@blueprintjs/core": "^3.46.0",
@@ -101,65 +110,6 @@
     "warning": "^4.0.3",
     "web3": "^1.4.0"
   },
-  "scripts": {
-    "add:language": "bash ./scripts/add-language.sh",
-    "build": "react-scripts build",
-    "build:new": "bash ./scripts/build.sh",
-    "build:tailwind": "tailwindcss build src/tailwind.css -o src/tailwind.output.css",
-    "build:tailwindcss-classnames": "tailwindcss-classnames --config tailwind.config.js -o src/efi-tailwindcss-classnames/index.ts",
-    "build:version-json": "bash ./scripts/build-version-json.sh",
-    "build:coingecko-json": "bash ./scripts/build-coingecko-json.sh",
-    "eject": "react-scripts eject",
-    "lint": "tsc --noEmit && eslint src/**/*.ts{,x}",
-    "lint:fix": "tsc --noEmit && eslint --fix src/**/*.ts{,x}",
-    "depcruise": "depcruise --config .dependency-cruiser.js src",
-    "prebuild": "npm run build:version-json && npm run build:tailwind",
-    "prestart": "npm run build:version-json && npm run build:tailwind",
-    "postinstall": "npm run build:version-json",
-    "prettier": "prettier --write src/**/*.ts{,x}",
-    "prettier:check": "prettier --check src/**/*.ts{,x}",
-    "start": "react-scripts start",
-    "start:dev": "bash ./scripts/start.sh",
-    "start:dev-mainnet-app": "npm run start:dev mainnet app",
-    "start:dev-mainnet-save-app": "PORT=3001 npm run start:dev mainnet save",
-    "start:dev-goerli-app": "npm run start:dev goerli app",
-    "start:dev-goerli-save-app": "PORT=3001 npm run start:dev goerli save",
-    "start:dev-testnet-app": "npm run start:dev testnet app",
-    "start:dev-testnet-save-app": "PORT=3001 npm run start:dev testnet save",
-    "test": "react-scripts test",
-    "test:coverage": "npm run test -- --coverage --watchAll=false",
-    "update:language": "bash ./scripts/update-language.sh"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
-      "prettier --write"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "jest": {
-    "coverageReporters": [
-      "lcov"
-    ],
-    "collectCoverageFrom": [
-      "src/efi/**/**/*.{ts,tsx}"
-    ]
-  },
   "devDependencies": {
     "@testing-library/dom": "^8.1.0",
     "@testing-library/react-hooks": "^7.0.1",
@@ -176,5 +126,56 @@
     "react-test-renderer": "^17.0.2",
     "ttag-cli": "^1.9.2",
     "typechain": "^5.1.1"
-  }
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/efi/**/**/*.{ts,tsx}"
+    ],
+    "coverageReporters": [
+      "lcov"
+    ]
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
+      "prettier --write"
+    ]
+  },
+  "name": "efi-frontend",
+  "private": true,
+  "scripts": {
+    "add:language": "bash ./scripts/add-language.sh",
+    "build": "react-scripts build",
+    "build:coingecko-json": "bash ./scripts/build-coingecko-json.sh",
+    "build:new": "bash ./scripts/build.sh",
+    "build:prod": "bash ./scripts/build-prod.sh",
+    "build:tailwind": "tailwindcss build src/tailwind.css -o src/tailwind.output.css",
+    "build:tailwindcss-classnames": "tailwindcss-classnames --config tailwind.config.js -o src/efi-tailwindcss-classnames/index.ts",
+    "build:version-json": "bash ./scripts/build-version-json.sh",
+    "depcruise": "depcruise --config .dependency-cruiser.js src",
+    "eject": "react-scripts eject",
+    "lint": "tsc --noEmit && eslint src/**/*.ts{,x}",
+    "lint:fix": "tsc --noEmit && eslint --fix src/**/*.ts{,x}",
+    "postinstall": "npm run build:version-json",
+    "prebuild": "npm run build:version-json && npm run build:tailwind",
+    "prestart": "npm run build:version-json && npm run build:tailwind",
+    "prettier": "prettier --write src/**/*.ts{,x}",
+    "prettier:check": "prettier --check src/**/*.ts{,x}",
+    "start": "react-scripts start",
+    "start:dev": "bash ./scripts/start.sh",
+    "start:dev-goerli-app": "npm run start:dev goerli app",
+    "start:dev-goerli-save-app": "PORT=3001 npm run start:dev goerli save",
+    "start:dev-mainnet-app": "npm run start:dev mainnet app",
+    "start:dev-mainnet-save-app": "PORT=3001 npm run start:dev mainnet save",
+    "start:dev-testnet-app": "npm run start:dev testnet app",
+    "start:dev-testnet-save-app": "PORT=3001 npm run start:dev testnet save",
+    "test": "react-scripts test",
+    "test:coverage": "npm run test -- --coverage --watchAll=false",
+    "update:language": "bash ./scripts/update-language.sh"
+  },
+  "version": "0.1.0"
 }

@@ -1,27 +1,24 @@
 // CRA requires that this file live at the top-level, ie: src/index.tsx
-// this file should only be used for development as it bundles all apps together
+// This file should replace src/index.tsx before a production build of this app
 
-import "./stylesheets";
-import "./index.css";
 import "efi/debug/consoleEther";
-import "efi/addresses";
-// end our CSS
-
-import { Web3ReactProvider } from "@web3-react/core";
 import React from "react";
 import ReactDOM from "react-dom";
 import { QueryClientProvider } from "react-query";
+import "index.css";
+import "stylesheets";
+
+// end our CSS
+import { Web3ReactProvider } from "@web3-react/core";
+import { clearLocalStorageOnNewVersion } from "clearLocalStorageOnNewVersion";
+import { logAppVersion } from "logAppVersion";
+import { prefixDocumentTitle } from "prefixDocumentTitle";
 import * as serviceWorker from "serviceWorker";
 
 import App from "efi-ui/app/App/App";
-import { getEthereumProviderLibrary } from "efi/wallets/providers";
-
-import { efiQueryClient } from "./efi/queryClient";
 import { AddressesJson, lookupAddressKey } from "efi/addresses";
-import SaveApp from "efi-ui/saveApp/app/SaveApp";
-import { clearLocalStorageOnNewVersion } from "./clearLocalStorageOnNewVersion";
-import { prefixDocumentTitle } from "./prefixDocumentTitle";
-import { logAppVersion } from "./logAppVersion";
+import { efiQueryClient } from "efi/queryClient";
+import { getEthereumProviderLibrary } from "efi/wallets/providers";
 
 clearLocalStorageOnNewVersion();
 logAppVersion();
@@ -30,13 +27,11 @@ prefixDocumentTitle();
 window.addresses = AddressesJson;
 window.lookupAddressKey = lookupAddressKey;
 
-const appId = process.env.REACT_APP_ELEMENT_APP_ID;
-
 ReactDOM.render(
   <Web3ReactProvider getLibrary={getEthereumProviderLibrary}>
     <QueryClientProvider client={efiQueryClient}>
       <React.StrictMode /* Only our components should be under strict mode */>
-        {appId === "save" ? <SaveApp /> : <App />}
+        <App />
       </React.StrictMode>
     </QueryClientProvider>
   </Web3ReactProvider>,
