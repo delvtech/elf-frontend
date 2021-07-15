@@ -76,6 +76,7 @@ export function PortfolioView(unusedProps: PortfolioViewProps): ReactElement {
 
             {account ? (
               <PortfolioTabs
+                account={account}
                 onChangeTab={setActivePortfolioTab}
                 activePortfolioTabId={activePortfolioTabId}
               />

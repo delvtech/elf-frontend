@@ -1,13 +1,11 @@
 import { ERC20 } from "elf-contracts/types/ERC20";
-import { ERC20Permit } from "elf-contracts/types/ERC20Permit";
 import { BigNumber } from "ethers";
 import zip from "lodash.zip";
 
 import { getQueriesData } from "efi-ui/base/queryResults";
-import { UseSmartContractReadCallOptions } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
 import { getQueryCombinedStatus } from "efi-ui/query/getQueryCombinedStatus";
 import { EMPTY_ARRAY } from "efi/base/emptyArray";
+import { useTokenBalanceOfMulti } from "efi-ui/token/hooks/useTokenBalanceOf";
 
 interface TokenWithBalance<TContract> {
   token: TContract;
@@ -18,21 +16,7 @@ export function useTokensWithBalance<TContract extends ERC20>(
   account: string | null | undefined,
   tokens: (TContract | undefined)[]
 ): TokenWithBalance<TContract>[] {
-  const balanceOfArgs: UseSmartContractReadCallOptions<
-    ERC20 | ERC20Permit,
-    "balanceOf",
-    BigNumber
-  >[] = tokens.map(() => ({
-    callArgs: [account as string],
-    enabled: !!account,
-  }));
-
-  const tokenBalanceOfResults = useSmartContractReadCalls(
-    tokens,
-    "balanceOf",
-    balanceOfArgs
-  );
-
+  const tokenBalanceOfResults = useTokenBalanceOfMulti(tokens, account);
   const status = getQueryCombinedStatus(tokenBalanceOfResults);
 
   const loadedData = zip(tokens, getQueriesData(tokenBalanceOfResults)).filter(
