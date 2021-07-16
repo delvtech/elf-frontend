@@ -69,6 +69,8 @@ export function useExitConvergentCurvePool(
       totalSupply,
       lpIn
     );
+    console.log("exitPoolCallArgs", exitPoolCallArgs);
+
     if (!exitPoolCallArgs) {
       return;
     }
@@ -118,6 +120,11 @@ function makeExitPoolCallArgs(
     poolTokenReserves,
     poolTokenDecimals
   ) as BigNumber[];
+
+  console.log(
+    "poolTokenMinAmountsOut",
+    poolTokenMinAmountsOut.map((bn) => formatUnits(bn, poolTokenDecimals[0]))
+  );
 
   const userData = defaultAbiCoder.encode(
     ["uint256[]"],
