@@ -95,7 +95,9 @@ export function EarnAppHeader({
           ) : null}
         </div>
 
-        <div className={tw("flex", "space-x-4", "items-center")}>
+        <div
+          className={tw("flex", "space-x-4", "items-center", "flex-shrink-0")}
+        >
           <Button
             minimal
             className={tw("px-6", "py-3")}
