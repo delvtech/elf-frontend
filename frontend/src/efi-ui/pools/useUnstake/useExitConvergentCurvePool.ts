@@ -69,7 +69,6 @@ export function useExitConvergentCurvePool(
       totalSupply,
       lpIn
     );
-    console.log("exitPoolCallArgs", exitPoolCallArgs);
 
     if (!exitPoolCallArgs) {
       return;
@@ -121,11 +120,6 @@ function makeExitPoolCallArgs(
     poolTokenDecimals
   ) as BigNumber[];
 
-  console.log(
-    "poolTokenMinAmountsOut",
-    poolTokenMinAmountsOut.map((bn) => formatUnits(bn, poolTokenDecimals[0]))
-  );
-
   const userData = defaultAbiCoder.encode(
     ["uint256[]"],
     [poolTokenMinAmountsOut]
@@ -168,14 +162,8 @@ function getPoolTokenMinAmountsOut(
     poolTokenDecimals[1]
   );
 
-  // shave off a few decimals to alleviate rounding errors for convergent pools
-  const clippedLpIn = clipStringValueToDecimals(
-    lpIn,
-    BALANCER_POOL_LP_TOKEN_DECIMALS - 4
-  );
-
   const { xNeeded, yNeeded } = calculateTokensOutForLPInFixed(
-    clippedLpIn,
+    lpIn,
     xReservesString,
     yReservesString,
     totalSupplyString,
@@ -199,11 +187,11 @@ function getPoolTokenMinAmountsOut(
 
     // for USDC and BTC only clip the last place
     if (decimals < 10) {
-      return decimals - 1;
+      return decimals - 2;
     }
 
     // for ten or higher, which will usually be 18, clip 2
-    return decimals - 2;
+    return decimals - 4;
   });
 
   const poolTokenMinAmountsOut = [
