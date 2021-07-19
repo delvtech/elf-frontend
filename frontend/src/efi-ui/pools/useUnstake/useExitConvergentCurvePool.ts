@@ -185,13 +185,13 @@ function getPoolTokenMinAmountsOut(
       return 18;
     }
 
-    // for USDC and BTC only clip the last place
+    // for USDC and BTC only clip the last 2 decimals
     if (decimals < 10) {
       return decimals - 2;
     }
 
-    // for ten or higher, which will usually be 18, clip 2
-    return decimals - 4;
+    // for ten to eighteen decimals, we'll shave off between 4 and 8
+    return Math.floor(decimals / 2) + 1;
   });
 
   const poolTokenMinAmountsOut = [
