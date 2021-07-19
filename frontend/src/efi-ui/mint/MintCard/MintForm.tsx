@@ -2,7 +2,7 @@ import { ReactElement, useCallback, useState } from "react";
 
 import { Button, Callout, Card, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
-import { parseUnits } from "ethers/lib/utils";
+import { formatUnits, parseUnits } from "ethers/lib/utils";
 import { PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
@@ -103,6 +103,9 @@ export function MintForm(props: MintFormProps): ReactElement | null {
     setDrawerOpen(true);
   }, [account, setDrawerOpen]);
 
+  const showSaveBaseAssetMessage =
+    +amountIn / 2 > +formatUnits(baseAssetBalanceOf ?? 0, baseAssetDecimals);
+
   return (
     <Card
       className={tw("flex", "flex-1", "flex-col", "space-y-4", "border", {
@@ -132,6 +135,13 @@ export function MintForm(props: MintFormProps): ReactElement | null {
             className={tw("text-right")}
           >{t`Available balance: ${activeBaseAssetDisplayBalance} ${baseAssetSymbol}`}</span>
         </div>
+        {showSaveBaseAssetMessage && (
+          <Callout
+            intent={Intent.WARNING}
+          >{t`It looks like you are minting most of your balance.  If you plan to provide liquidity,
+              remember that you'll need to supply some of the base asset as well.`}</Callout>
+        )}
+
         <div className={tw("flex", "flex-col", "space-y-6")}>
           <LabeledText
             bold
