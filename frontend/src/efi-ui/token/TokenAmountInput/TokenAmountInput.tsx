@@ -1,6 +1,6 @@
 import { ReactElement, useCallback } from "react";
 
-import { FormGroup, InputGroup, Intent, Tag } from "@blueprintjs/core";
+import { Button, FormGroup, InputGroup, Intent, Tag } from "@blueprintjs/core";
 import classNames from "classnames";
 import { BigNumber } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
@@ -48,12 +48,11 @@ export function TokenAmountInput(props: TokenAmountInputProps): ReactElement {
 
   const maxButtonElement = showMaxButton ? (
     <div className={tw("pl-1", "mr-1")}>
-      <Tag
-        minimal
+      <Button
+        outlined
         intent={Intent.PRIMARY}
-        interactive
         onClick={setMaxValue}
-      >{t`MAX`}</Tag>
+      >{t`MAX`}</Button>
     </div>
   ) : undefined;
 

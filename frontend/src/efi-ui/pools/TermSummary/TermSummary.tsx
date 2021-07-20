@@ -6,7 +6,6 @@ import { Money } from "ts-money";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { getYearnVaultAPY } from "efi-yearn/fetchYearnVaults";
 import { formatAbbreviatedDate } from "efi/base/dates";
@@ -19,6 +18,7 @@ import {
   isPrincipalToken,
 } from "efi/tranche/tranches";
 import { getPrincipalTokenForYieldToken } from "efi/tranche/yieldTokens";
+import { TimeLeft2 } from "efi-ui/tranche/TimeLeft2";
 
 const summaryCardStyle: CSSProperties = {
   height: 220,
@@ -132,7 +132,7 @@ export function TermSummary(props: TermSummaryProps): ReactElement {
               {t`Status`}
             </span>
             <div style={{ maxWidth: "150px" }} className={tw("mt-1")}>
-              <TimeLeft
+              <TimeLeft2
                 startTimestamp={startTimeMs}
                 maturityTimestamp={maturityTimeMs}
               />

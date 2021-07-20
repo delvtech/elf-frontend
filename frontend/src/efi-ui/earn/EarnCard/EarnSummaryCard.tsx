@@ -7,7 +7,6 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
 import styles from "efi-ui/earn/grid.module.css";
 import { useTotalFiatLiquidity } from "efi-ui/pools/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
 import { IconProps } from "efi-ui/token/TokenIcon";
@@ -16,6 +15,7 @@ import { formatMoney } from "efi/money/formatMoney";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { useTokenYield } from "efi-ui/pools/useTokenYield";
 import { useStakingAPY } from "efi-ui/pools/useStakingAPY";
+import { TimeLeft2 } from "efi-ui/tranche/TimeLeft2";
 
 interface EarnSummaryCardProps {
   onToggleExpand: () => void;
@@ -101,7 +101,7 @@ export function EarnSummaryCard(props: EarnSummaryCardProps): JSX.Element {
 
         {/* Term */}
         <div className={tw("flex", "w-full", "items-start")}>
-          <TimeLeft
+          <TimeLeft2
             startTimestamp={startTime}
             maturityTimestamp={maturityTime}
           />

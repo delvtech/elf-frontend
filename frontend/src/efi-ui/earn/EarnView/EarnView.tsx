@@ -53,7 +53,8 @@ export function EarnView(unusedProps: EarnViewProps): ReactElement {
             "flex-col",
             "items-center",
             "w-full",
-            "space-y-5"
+            "space-y-5",
+            "pb-5"
           )}
         >
           {!openPrincipalTokenInfos.length ? (

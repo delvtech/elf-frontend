@@ -8,7 +8,6 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { GoToPoolButton } from "efi-ui/pools/GoToPoolButton/GoToPoolButton";
 import styles from "efi-ui/pools/PoolsTable/grid.module.css";
@@ -30,6 +29,7 @@ import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { getPrincipalTokenInfoForPool } from "efi/pools/getPrincipalTokenInfoForPool";
 import { getVaultTokenInfoForTranche } from "efi/tranche/tranches";
 import { formatPrincipalTokenShortSymbol } from "efi/tranche/format";
+import { TimeLeft2 } from "efi-ui/tranche/TimeLeft2";
 
 interface PrincipalPoolCardProps {
   principalPoolInfo: PrincipalPoolTokenInfo;
@@ -132,7 +132,7 @@ export function PrincipalPoolCard(
 
         {/* Term */}
         <div>
-          <TimeLeft
+          <TimeLeft2
             startTimestamp={createdAtTimestamp * 1000}
             maturityTimestamp={unlockTimestamp * 1000}
           />

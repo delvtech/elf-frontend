@@ -98,7 +98,6 @@ export function EarnAppHeader({
 
         <div
           className={classNames(
-            "bp3-nav",
             tw(
               "flex-shrink-0",
               "flex-no-wrap",

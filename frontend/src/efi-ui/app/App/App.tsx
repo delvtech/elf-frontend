@@ -56,7 +56,15 @@ const App: FC<AppProps> = () => {
           styles.appBackground,
           { [styles.appBackgroundDark]: isDarkMode },
           darkModeClassName,
-          tw("flex", "flex-col", "w-full", "h-full", "overflow-hidden", "pb-24")
+          tw(
+            "flex",
+            "flex-col",
+            "w-full",
+            "h-full",
+            "overflow-hidden",
+            "pb-24",
+            "md:pb-0"
+          )
         )}
       >
         <div

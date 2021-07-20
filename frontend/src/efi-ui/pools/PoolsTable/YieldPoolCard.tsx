@@ -8,7 +8,6 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { GoToPoolButton } from "efi-ui/pools/GoToPoolButton/GoToPoolButton";
 import styles from "efi-ui/pools/PoolsTable/grid.module.css";
@@ -30,6 +29,7 @@ import { yieldPoolContractsByAddress } from "efi/pools/weightedPool";
 import { getVaultTokenInfoForTranche } from "efi/tranche/tranches";
 import { getTokenInfo } from "efi/tokenlists";
 import { formatYieldTokenShortSymbol } from "efi/interestToken/formatYieldTokenShortSymbol";
+import { TimeLeft2 } from "efi-ui/tranche/TimeLeft2";
 
 interface YieldPoolCardProps {
   yieldPoolInfo: YieldPoolTokenInfo;
@@ -125,7 +125,7 @@ export function YieldPoolCard(props: YieldPoolCardProps): ReactElement | null {
 
         {/* Status */}
         <div>
-          <TimeLeft
+          <TimeLeft2
             startTimestamp={createdAtTimestamp * 1000}
             maturityTimestamp={unlockTimestamp * 1000}
           />
