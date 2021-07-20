@@ -42,8 +42,7 @@ export function PoolsView(unusedProps: PoolsViewProps): ReactElement {
           "h-full",
           "space-y-12",
           "pb-12",
-          "items-center",
-          "overflow-auto"
+          "items-center"
         )}
       >
         <div

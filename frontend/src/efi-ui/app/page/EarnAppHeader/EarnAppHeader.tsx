@@ -9,14 +9,15 @@ import {
   Tabs,
 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
+import classNames from "classnames";
 import { t } from "ttag";
 
 import logoDark from "efi-static-assets/logos/svg/logo--dark.svg";
 import logo from "efi-static-assets/logos/svg/logo--light.svg";
 import tw from "efi-tailwindcss-classnames";
-import { ExperimentalBanner } from "efi-ui/page/ExperimentalBanner/ExperimentalBanner";
 import { useNavigation } from "efi-ui/app/navigation/hooks/useTab";
 import { Navigation } from "efi-ui/app/navigation/navigation";
+import { ExperimentalBanner } from "efi-ui/page/ExperimentalBanner/ExperimentalBanner";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { usePendingTransactionPref } from "efi-ui/transactions/usePendingTransactionPref/usePendingTransactionPref";
 import { ConnectWalletButton } from "efi-ui/wallets/ConnectWalletButton/ConnectWalletButton";
@@ -53,7 +54,7 @@ export function EarnAppHeader({
             }}
             src={isDarkMode ? logoDark : logo}
             alt={"Element Finance"}
-            className={tw("mr-16")}
+            className={tw("mr-16", "hidden", "md:block")}
           />
           <Tabs
             id="primary-nav"
@@ -96,7 +97,18 @@ export function EarnAppHeader({
         </div>
 
         <div
-          className={tw("flex", "space-x-4", "items-center", "flex-shrink-0")}
+          className={classNames(
+            "bp3-nav",
+            tw(
+              "flex-shrink-0",
+              "flex-no-wrap",
+              "space-x-4",
+              "items-center",
+              "hidden",
+              "md:flex"
+            ),
+            { "bp3-dark": isDarkMode }
+          )}
         >
           <Button
             minimal
@@ -104,13 +116,14 @@ export function EarnAppHeader({
             icon={isDarkMode ? IconNames.FLASH : IconNames.MOON}
             onClick={isDarkMode ? setDarkModeOff : setDarkModeOn}
           />
+
           <ConnectWalletButton
             account={account}
             chainId={chainId}
             walletConnectionActive={walletConnectionActive}
           />
-          {hamburgerButton}
         </div>
+        {hamburgerButton}
       </div>
     </div>
   );
