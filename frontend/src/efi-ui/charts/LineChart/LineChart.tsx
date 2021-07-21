@@ -22,6 +22,7 @@ import {
   ONE_WEEK_IN_MILLISECONDS,
 } from "efi/base/time";
 import { formatMoney } from "efi/money/formatMoney";
+import { EMPTY_ARRAY } from "efi/base/emptyArray";
 
 const margin: Partial<Margin> = { top: 20, right: 40, bottom: 40, left: 80 };
 
@@ -44,17 +45,15 @@ export interface LineChartProps {
   formatYValues: (value: number) => string;
 }
 
-const now = new Date();
-const nowInMs = Date.now();
-const weekAgo = new Date(nowInMs - ONE_WEEK_IN_MILLISECONDS);
-export function LineChart({
-  chartType = "lines",
-  groupVolumeData,
-  dataLabel,
-  darkMode,
-  data = [],
-  formatYValues,
-}: LineChartProps): ReactElement {
+export function LineChart(props: LineChartProps): ReactElement {
+  const {
+    chartType = "lines",
+    groupVolumeData,
+    dataLabel,
+    darkMode,
+    data = EMPTY_ARRAY as Serie[],
+    formatYValues,
+  } = props;
   const [chartData, setChartData] = useLoadChartData(data);
   useClearDataWhenChartTypeChanges(setChartData, data, chartType);
 
@@ -98,11 +97,8 @@ export function LineChart({
     tooltipColor,
     currency
   );
-  const xScale: TimeScale = {
-    type: "time",
-    min: weekAgo,
-    max: now,
-  };
+
+  const xScale: TimeScale = useXScale(chartType, groupVolumeData, data);
 
   return (
     <div className={tw("flex", "w-full", "h-full")}>
@@ -153,6 +149,37 @@ export function LineChart({
       />
     </div>
   );
+}
+
+function useXScale(chartType: string, groupVolumeData: boolean, data: Serie[]) {
+  return useMemo(() => {
+    const todayAtMidnight = new Date();
+    todayAtMidnight.setHours(0, 0, 0, 0);
+    const midnightInMs = todayAtMidnight.getTime();
+
+    const noonSixDaysAgo = new Date(
+      midnightInMs - ONE_WEEK_IN_MILLISECONDS + ONE_DAY_IN_MILLISECONDS / 2
+    );
+
+    const noonToday = new Date(midnightInMs + ONE_DAY_IN_MILLISECONDS / 2);
+
+    const today = new Date();
+    const nowMs = today.getTime();
+    const oneWeekAgo = new Date(nowMs - ONE_WEEK_IN_MILLISECONDS);
+
+    const xScaleMin =
+      chartType === "bars" && groupVolumeData ? noonSixDaysAgo : oneWeekAgo;
+    const xScaleMax =
+      chartType === "bars" && groupVolumeData ? noonToday : today;
+
+    const xScale: TimeScale = {
+      type: "time",
+      min: xScaleMin,
+      max: xScaleMax,
+    };
+    return xScale;
+    // 'data' is here because we need to refresh chart boundaries if there is new data
+  }, [chartType, groupVolumeData, data]); // eslint-disable-line react-hooks/exhaustive-deps
 }
 
 // this allows for smooth transitions when data changes

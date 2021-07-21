@@ -11,6 +11,8 @@ import {
   Tab,
   Tabs,
 } from "@blueprintjs/core";
+import { IconNames } from "@blueprintjs/icons";
+import { Popover2 } from "@blueprintjs/popover2";
 import { format } from "d3-format";
 import { commify } from "ethers/lib/utils";
 import { t } from "ttag";
@@ -30,11 +32,9 @@ import { PoolInfo } from "efi/pools/PoolInfo";
 
 import { binDataByDay } from "./helpers/binDataByDay";
 import { convertChartDatasToSeries } from "./helpers/convertChartDatasToSeries";
-import { Popover2 } from "@blueprintjs/popover2";
-import { IconNames } from "@blueprintjs/icons";
 
-const nowInMs = Date.now();
-const weekAgoMs = nowInMs - ONE_WEEK_IN_MILLISECONDS;
+const nowTimestampMs = Date.now();
+const weekAgoTimestampMs = nowTimestampMs - ONE_WEEK_IN_MILLISECONDS;
 
 enum ChartType {
   LIQUIDITY = "liquidity",
@@ -59,13 +59,14 @@ export function PoolCharts({ poolInfo }: PoolChartsProps): ReactElement {
   } = usePoolCharts(poolInfo);
 
   const volumeData = binVolumeData
-    ? binDataByDay(rawVolumeData)
+    ? binDataByDay(rawVolumeData, weekAgoTimestampMs, nowTimestampMs)
     : rawVolumeData;
 
   const { liquiditySerie, volumeSerie } = convertChartDatasToSeries(
     liquidityData,
     volumeData,
-    weekAgoMs
+    weekAgoTimestampMs,
+    nowTimestampMs
   );
 
   const labelElement = binVolumeData ? (
@@ -162,7 +163,7 @@ function usePoolCharts(poolInfo: PoolInfo) {
 }
 
 function getPoolAge(poolInfo: PoolInfo) {
-  const nowInSeconds = Math.floor(nowInMs / 1000);
+  const nowInSeconds = Math.floor(nowTimestampMs / 1000);
   const poolCreatedAt = poolInfo.extensions.createdAtTimestamp;
 
   const poolAge = nowInSeconds - poolCreatedAt;
