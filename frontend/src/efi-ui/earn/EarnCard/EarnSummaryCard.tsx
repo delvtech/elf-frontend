@@ -16,6 +16,8 @@ import { PoolInfo } from "efi/pools/PoolInfo";
 import { useTokenYield } from "efi-ui/pools/useTokenYield";
 import { useStakingAPY } from "efi-ui/pools/useStakingAPY";
 import { TimeLeft2 } from "efi-ui/tranche/TimeLeft2";
+import { isYearnDaiVault } from "efi-yearn/hacks";
+import { getVaultTokenInfoForTranche } from "efi/tranche/tranches";
 
 interface EarnSummaryCardProps {
   onToggleExpand: () => void;
@@ -55,6 +57,10 @@ export function EarnSummaryCard(props: EarnSummaryCardProps): JSX.Element {
   const ptStakingAPY = useStakingAPY(principalPoolInfo);
   const ytStakingAPY = useStakingAPY(yieldPoolInfo);
 
+  const { address: vaultAddress } = getVaultTokenInfoForTranche(
+    principalPoolInfo.extensions.bond
+  );
+
   return (
     <Card onClick={onToggleExpand} className={tw("w-full", "flex", "p-5")}>
       <div className={styles.earnGrid}>
@@ -73,7 +79,11 @@ export function EarnSummaryCard(props: EarnSummaryCardProps): JSX.Element {
         <div>{tvl ? formatMoney(tvl, { wholeAmounts: true }) : null}</div>
 
         {/* Vault APY */}
-        <div className={tw("font-bold")}>{formatPercent(vaultApy)}</div>
+        <div className={tw("font-bold")}>
+          {isYearnDaiVault(vaultAddress)
+            ? t`✨ NEW ✨`
+            : formatPercent(vaultApy)}
+        </div>
 
         {/* LP APYs */}
         <div className={tw("flex", "flex-col", "space-y-3", "font-bold")}>

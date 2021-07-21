@@ -30,6 +30,7 @@ import { getVaultTokenInfoForTranche } from "efi/tranche/tranches";
 import { getTokenInfo } from "efi/tokenlists";
 import { formatYieldTokenShortSymbol } from "efi/interestToken/formatYieldTokenShortSymbol";
 import { TimeLeft2 } from "efi-ui/tranche/TimeLeft2";
+import { isYearnDaiVault } from "efi-yearn/hacks";
 
 interface YieldPoolCardProps {
   yieldPoolInfo: YieldPoolTokenInfo;
@@ -115,7 +116,11 @@ export function YieldPoolCard(props: YieldPoolCardProps): ReactElement | null {
         <div>{formatPercent(stakingYield)}</div>
 
         {/* Vault APY */}
-        <div>{t`${formatPercent(vaultApy)}`}</div>
+        <div>
+          {isYearnDaiVault(vaultAddress)
+            ? t`✨ NEW ✨`
+            : formatPercent(vaultApy)}
+        </div>
 
         {/* Yield Price */}
         <div>

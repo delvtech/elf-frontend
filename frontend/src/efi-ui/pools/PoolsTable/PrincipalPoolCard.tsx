@@ -30,6 +30,7 @@ import { getPrincipalTokenInfoForPool } from "efi/pools/getPrincipalTokenInfoFor
 import { getVaultTokenInfoForTranche } from "efi/tranche/tranches";
 import { formatPrincipalTokenShortSymbol } from "efi/tranche/format";
 import { TimeLeft2 } from "efi-ui/tranche/TimeLeft2";
+import { isYearnDaiVault } from "efi-yearn/hacks";
 
 interface PrincipalPoolCardProps {
   principalPoolInfo: PrincipalPoolTokenInfo;
@@ -122,7 +123,11 @@ export function PrincipalPoolCard(
         <div>{formatPercent(stakingYield)}</div>
 
         {/* Vault APY */}
-        <div>{t`${formatPercent(vaultApy)}`}</div>
+        <div>
+          {isYearnDaiVault(vaultAddress)
+            ? t`✨ NEW ✨`
+            : formatPercent(vaultApy)}
+        </div>
 
         {/* Principal Price */}
         <div>
