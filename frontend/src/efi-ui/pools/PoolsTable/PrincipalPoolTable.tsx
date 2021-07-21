@@ -45,14 +45,17 @@ export function PrincipalPoolTable({
         <div>{t`Price`}</div>
         <div>{t`Term`}</div>
       </div>
-      {principalPoolsToShow.map((poolInfo) => {
-        return (
-          <PrincipalPoolCard
-            key={poolInfo.address}
-            principalPoolInfo={poolInfo}
-          />
-        );
-      })}
+      {[...principalPoolsToShow]
+        .sort((info) => info.extensions.createdAtTimestamp)
+        .reverse()
+        .map((poolInfo) => {
+          return (
+            <PrincipalPoolCard
+              key={poolInfo.address}
+              principalPoolInfo={poolInfo}
+            />
+          );
+        })}
     </div>
   );
 }

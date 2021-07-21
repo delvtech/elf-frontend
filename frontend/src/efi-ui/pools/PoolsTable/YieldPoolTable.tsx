@@ -43,11 +43,14 @@ export function YieldPoolTable({
         <div>{t`Price`}</div>
         <div>{t`Term`}</div>
       </div>
-      {yieldPoolsToShow.map((poolInfo) => {
-        return (
-          <YieldPoolCard key={poolInfo.address} yieldPoolInfo={poolInfo} />
-        );
-      })}
+      {[...yieldPoolsToShow]
+        .sort((info) => info.extensions.createdAtTimestamp)
+        .reverse()
+        .map((poolInfo) => {
+          return (
+            <YieldPoolCard key={poolInfo.address} yieldPoolInfo={poolInfo} />
+          );
+        })}
     </div>
   );
 }
