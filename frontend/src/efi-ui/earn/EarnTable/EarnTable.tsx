@@ -45,22 +45,25 @@ export function EarnTable({
         <div>{t`Fixed APR`}</div>
         <div>{t`Term`}</div>
       </div>
-      {openPrincipalTokenInfos.map((principalTokenInfo) => {
-        const cardId = principalTokenInfo.address;
-        return (
-          <EarnCard
-            key={principalTokenInfo.address}
-            id={cardId}
-            library={library}
-            account={account}
-            signer={signer}
-            isExpanded={cardId === expandedCardId}
-            principalTokenInfo={principalTokenInfo}
-            onExpandClose={onExpandClose}
-            onExpandOpen={setExpandedCardId}
-          />
-        );
-      })}
+      {[...openPrincipalTokenInfos]
+        .sort((info) => info.extensions.createdAtTimestamp)
+        .reverse()
+        .map((principalTokenInfo) => {
+          const cardId = principalTokenInfo.address;
+          return (
+            <EarnCard
+              key={principalTokenInfo.address}
+              id={cardId}
+              library={library}
+              account={account}
+              signer={signer}
+              isExpanded={cardId === expandedCardId}
+              principalTokenInfo={principalTokenInfo}
+              onExpandClose={onExpandClose}
+              onExpandOpen={setExpandedCardId}
+            />
+          );
+        })}
     </div>
   );
 }
