@@ -103,8 +103,8 @@ export function MintForm(props: MintFormProps): ReactElement | null {
     setDrawerOpen(true);
   }, [account, setDrawerOpen]);
 
-  const showSaveBaseAssetMessage =
-    +amountIn / 2 > +formatUnits(baseAssetBalanceOf ?? 0, baseAssetDecimals);
+  const totalAmount = +formatUnits(baseAssetBalanceOf ?? 0, baseAssetDecimals);
+  const showSaveBaseAssetMessage = +amountIn * 2 > totalAmount;
 
   return (
     <Card
