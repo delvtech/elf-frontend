@@ -31,7 +31,7 @@
       "description": "The yield position, ie: Yearn yvcrvLUSD"
     }
   },
-  "timestamp": "2021-07-13T01:04:36.266Z",
+  "timestamp": "2021-07-21T01:33:17.455Z",
   "version": {
     "major": 0,
     "minor": 0,
@@ -139,6 +139,19 @@
     },
     {
       "chainId": 1,
+      "address": "0x21BbC083362022aB8D7e42C18c47D484cc95C193",
+      "symbol": "yvDAI",
+      "decimals": 18,
+      "name": "element yvDAI",
+      "tags": [
+        "assetproxy"
+      ],
+      "extensions": {
+        "vault": "0xdA816459F1AB5631232FE5e97a05BBBb94970c95"
+      }
+    },
+    {
+      "chainId": 1,
       "address": "0x5fA5B62c8AF877CB37031e0a3B2f34A78e3C56A6",
       "symbol": "yvCurve-LUSD",
       "decimals": 18,
@@ -163,6 +176,16 @@
       "symbol": "yvCurve-stETH",
       "decimals": 18,
       "name": "Curve stETH Pool yVault",
+      "tags": [
+        "vault"
+      ]
+    },
+    {
+      "chainId": 1,
+      "address": "0xdA816459F1AB5631232FE5e97a05BBBb94970c95",
+      "symbol": "yvDAI",
+      "decimals": 18,
+      "name": "DAI yVault",
       "tags": [
         "vault"
       ]
@@ -237,6 +260,23 @@
     },
     {
       "chainId": 1,
+      "address": "0xb1cc77e701de60FE246607565CF7eDC9D9b6b963",
+      "symbol": "ePyvDAI-16OCT21",
+      "decimals": 18,
+      "extensions": {
+        "underlying": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+        "position": "0x21BbC083362022aB8D7e42C18c47D484cc95C193",
+        "interestToken": "0xA1Cc9BBcd3731A9fd43E1F1416f9B6Bf824F37D7",
+        "unlockTimestamp": 1634346845,
+        "createdAtTimestamp": 1626829159
+      },
+      "name": "DAI Principal Token",
+      "tags": [
+        "eP"
+      ]
+    },
+    {
+      "chainId": 1,
       "address": "0xBabD64a87881d8df7680907fcde176FF11Fa0292",
       "symbol": "eYyvCurveLUSD-28SEP21",
       "decimals": 18,
@@ -290,6 +330,21 @@
         "tranche": "0x26941C63F4587796aBE199348ecd3d7C44F9aE0C",
         "underlying": "0x06325440D014e39736583c165C2963BA99fAf14E",
         "unlockTimestamp": 1634325622
+      },
+      "tags": [
+        "eY"
+      ]
+    },
+    {
+      "chainId": 1,
+      "address": "0xA1Cc9BBcd3731A9fd43E1F1416f9B6Bf824F37D7",
+      "symbol": "eYyvDAI-16OCT21",
+      "decimals": 18,
+      "name": "DAI Yield Token",
+      "extensions": {
+        "tranche": "0xb1cc77e701de60FE246607565CF7eDC9D9b6b963",
+        "underlying": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+        "unlockTimestamp": 1634346845
       },
       "tags": [
         "eY"
@@ -369,6 +424,24 @@
     },
     {
       "chainId": 1,
+      "address": "0x71628c66C502F988Fbb9e17081F2bD14e361FAF4",
+      "symbol": "LPePyvDAI-16OCT21",
+      "decimals": 18,
+      "extensions": {
+        "bond": "0xb1cc77e701de60FE246607565CF7eDC9D9b6b963",
+        "underlying": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+        "poolId": "0x71628c66c502f988fbb9e17081f2bd14e361faf4000200000000000000000078",
+        "unitSeconds": 700248765,
+        "expiration": 1634346845,
+        "createdAtTimestamp": 1626829410
+      },
+      "name": "LP Element Principal Token yvDAI-16OCT21",
+      "tags": [
+        "ccpool"
+      ]
+    },
+    {
+      "chainId": 1,
       "address": "0xDe620bb8BE43ee54d7aa73f8E99A7409Fe511084",
       "symbol": "LPeYyvCurveLUSD-28SEP21",
       "decimals": 18,
@@ -431,6 +504,23 @@
         "expiration": 1634325622
       },
       "name": "LP Element Yield Token yvcrvSTETH-15OCT21",
+      "tags": [
+        "wpool"
+      ]
+    },
+    {
+      "chainId": 1,
+      "address": "0xE54B3F5c444a801e61BECDCa93e74CdC1C4C1F90",
+      "symbol": "LPeYyvDAI-16OCT21",
+      "decimals": 18,
+      "extensions": {
+        "poolId": "0xe54b3f5c444a801e61becdca93e74cdc1c4c1f90000200000000000000000077",
+        "underlying": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+        "interestToken": "0xA1Cc9BBcd3731A9fd43E1F1416f9B6Bf824F37D7",
+        "createdAtTimestamp": 1626829372,
+        "expiration": 1634346845
+      },
+      "name": "LP Element Yield Token yvDAI-16OCT21",
       "tags": [
         "wpool"
       ]
