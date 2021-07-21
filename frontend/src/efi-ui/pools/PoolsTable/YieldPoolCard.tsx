@@ -54,9 +54,8 @@ export function YieldPoolCard(props: YieldPoolCardProps): ReactElement | null {
   const baseAsset = getCryptoAssetForToken(baseAssetContract.address);
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
   const BaseAssetIcon = findAssetIcon(baseAsset);
-  const { symbol: vaultSymbol } = getVaultTokenInfoForTranche(
-    principalTokenAddress
-  );
+  const { symbol: vaultSymbol, address: vaultAddress } =
+    getVaultTokenInfoForTranche(principalTokenAddress);
   const yieldTokenShortSymbol = formatYieldTokenShortSymbol(yieldTokenInfo);
 
   const stakingYield = useStakingAPY(yieldPoolInfo, ONE_WEEK_IN_SECONDS);
@@ -65,7 +64,7 @@ export function YieldPoolCard(props: YieldPoolCardProps): ReactElement | null {
     poolContract,
     yieldPoolInfo.address
   )?.toFixed(4);
-  const { data: vaultInfo } = useYearnVault(vaultSymbol);
+  const { data: vaultInfo } = useYearnVault(vaultSymbol, vaultAddress);
   const { apy } = vaultInfo || {};
   const vaultApy = apy ? getYearnVaultAPY(apy) : 0;
 

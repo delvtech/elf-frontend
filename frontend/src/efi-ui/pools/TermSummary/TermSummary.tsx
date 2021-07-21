@@ -44,8 +44,9 @@ export function TermSummary(props: TermSummaryProps): ReactElement {
     ? termAssetInfo
     : getPrincipalTokenForYieldToken(termAssetInfo.address);
 
-  const { symbol: vaultSymbol } = getVaultTokenInfoForTranche(trancheAddress);
-  const { data: vaultInfo } = useYearnVault(vaultSymbol);
+  const { symbol: vaultSymbol, address: vaultAddress } =
+    getVaultTokenInfoForTranche(trancheAddress);
+  const { data: vaultInfo } = useYearnVault(vaultSymbol, vaultAddress);
 
   const { display_name: displayName, type, apy } = vaultInfo || {};
   const vaultApy = apy ? getYearnVaultAPY(apy) : 0;

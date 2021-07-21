@@ -47,8 +47,9 @@ export function useTokenYield(
   }
 
   // the yield token apy is the same as the underlying vault, so we pull from there.
-  const { symbol: vaultSymbol } = getVaultTokenInfoForTranche(trancheAddress);
-  const { data: vaultInfo } = useYearnVault(vaultSymbol);
+  const { symbol: vaultSymbol, address: vaultAddress } =
+    getVaultTokenInfoForTranche(trancheAddress);
+  const { data: vaultInfo } = useYearnVault(vaultSymbol, vaultAddress);
 
   const variableAPY = vaultInfo?.apy ? getYearnVaultAPY(vaultInfo?.apy) : 0;
 

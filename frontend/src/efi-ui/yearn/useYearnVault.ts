@@ -4,15 +4,26 @@ import { fetchYearnVaults, YearnVaultResult } from "efi-yearn/fetchYearnVaults";
 
 // TODO: use address when we go live on mainnet
 export function useYearnVault(
-  vaultSymbol: string | undefined
+  vaultSymbol: string | undefined,
+  vaultAddress: string | undefined
 ): UseQueryResult<YearnVaultResult> {
   return useQuery<YearnVaultResult>({
     queryKey: makeYearnAPYQueryKey(vaultSymbol),
     queryFn: async () => {
       const result = await fetchYearnVaults();
-      return result.find(
-        (result) => result.symbol === vaultSymbol && result.endorsed
+
+      // try to match on the address exactly
+      const addressResult = result.find(
+        (result) => result.address === vaultAddress
       ) as YearnVaultResult;
+
+      // if we don't get a match on the exact address we're probably on goerli
+      // so we should compare by symbol instead
+      const symbolResult = result.find((result) => {
+        return result.symbol === vaultSymbol && result.endorsed;
+      }) as YearnVaultResult;
+
+      return addressResult || symbolResult;
     },
     enabled: !!vaultSymbol,
   });

@@ -114,10 +114,9 @@ export function YieldTokenCard({
   const spotPrice = usePoolSpotPrice(pool, yieldToken.address);
   const BaseAssetIcon = findAssetIcon(baseAsset);
 
-  const { symbol: vaultSymbol } = getVaultTokenInfoForTranche(
-    principalTokenAddress
-  );
-  const { data: yearnVault } = useYearnVault(vaultSymbol);
+  const { symbol: vaultSymbol, address: vaultAddress } =
+    getVaultTokenInfoForTranche(principalTokenAddress);
+  const { data: yearnVault } = useYearnVault(vaultSymbol, vaultAddress);
   const { name: vaultName } = yearnVault || {};
 
   const vaultApy = yearnVault?.apy ? getYearnVaultAPY(yearnVault?.apy) : 0;

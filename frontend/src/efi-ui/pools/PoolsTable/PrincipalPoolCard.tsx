@@ -54,13 +54,12 @@ export function PrincipalPoolCard(
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
   const BaseAssetIcon = findAssetIcon(baseAsset);
 
-  const { symbol: vaultSymbol } = getVaultTokenInfoForTranche(
-    principalTokenAddress
-  );
+  const { symbol: vaultSymbol, address: vaultAddress } =
+    getVaultTokenInfoForTranche(principalTokenAddress);
   const principalTokenShortSymbol =
     formatPrincipalTokenShortSymbol(principalTokenInfo);
 
-  const { data: vaultInfo } = useYearnVault(vaultSymbol);
+  const { data: vaultInfo } = useYearnVault(vaultSymbol, vaultAddress);
   const { apy } = vaultInfo || {};
   const vaultApy = apy ? getYearnVaultAPY(apy) : 0;
 

@@ -93,12 +93,12 @@ export function EarnCard(props: EarnCardProps): ReactElement | null {
   const {
     extensions: { createdAtTimestamp: trancheCreatedAt, unlockTimestamp },
   } = principalTokenInfo;
-  const { symbol: vaultSymbol } = vaultTokenInfo;
+  const { symbol: vaultSymbol, address: vaultAddress } = vaultTokenInfo;
   const maturityTime = unlockTimestamp * 1000;
   const isMature = getIsMature(unlockTimestamp);
   const baseAsset = getCryptoAssetForToken(baseAssetAddress);
   const BaseAssetIcon = findAssetIcon(baseAsset);
-  const { data: vaultInfo } = useYearnVault(vaultSymbol);
+  const { data: vaultInfo } = useYearnVault(vaultSymbol, vaultAddress);
   const { display_name: displayName, type, apy } = vaultInfo || {};
 
   // get dynamic pool information

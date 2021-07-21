@@ -18,6 +18,7 @@ export function getYearnVaultAPY(
 }
 
 export interface YearnVaultResult {
+  address: string;
   symbol: string;
   apy: {
     points: { inception: number; month_ago: number; week_ago: number } | null;
