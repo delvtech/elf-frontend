@@ -5,7 +5,7 @@ import { RouteComponentProps } from "@reach/router";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { Classes, Divider, H2, Tab, Tabs } from "@blueprintjs/core";
+import { Classes, Divider, H2, H4, H5, Tab, Tabs } from "@blueprintjs/core";
 import { assertNever } from "efi/base/assertNever";
 import { PrincipalPoolTable } from "efi-ui/pools/PoolsTable/PrincipalPoolTable";
 import { YieldPoolTable } from "efi-ui/pools/PoolsTable/YieldPoolTable";
@@ -60,16 +60,39 @@ export function PoolsView(unusedProps: PoolsViewProps): ReactElement {
           >
             <Tab
               id={PoolsViewTab.PRINCIPAL}
-              title={<H2>{t`Principal Pools`}</H2>}
+              title={
+                <Fragment>
+                  {/* Desktop */}
+                  <H2
+                    className={tw("hidden", "lg:block")}
+                  >{t`Principal Pools`}</H2>
+                  {/* Mobile */}
+                  <H4
+                    className={tw("text-lg", "lg:hidden", "mb-2")}
+                  >{t`Principal Pools`}</H4>
+                </Fragment>
+              }
             />
             <Divider />
-            <Tab id={PoolsViewTab.YIELD} title={<H2>{t`Yield Pools`}</H2>} />
+            <Tab
+              id={PoolsViewTab.YIELD}
+              title={
+                <Fragment>
+                  {/* Desktop */}
+                  <H2 className={tw("hidden", "lg:block")}>{t`Yield Pools`}</H2>
+                  {/* Mobile */}
+                  <H4
+                    className={tw("text-lg", "lg:hidden", "mb-2")}
+                  >{t`Yield Pools`}</H4>
+                </Fragment>
+              }
+            />
           </Tabs>
           <span
             className={classNames(
               Classes.RUNNING_TEXT,
               Classes.TEXT_MUTED,
-              tw("text-base")
+              tw("text-base", "hidden", "lg:inline")
             )}
           >
             {subtitle}
