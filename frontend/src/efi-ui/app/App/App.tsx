@@ -11,7 +11,7 @@ import { t } from "ttag";
 import { tw } from "efi-tailwindcss-classnames";
 import { EarnView } from "efi-ui/earn/EarnView/EarnView";
 import { Navigation } from "efi-ui/app/navigation/navigation";
-import { PoolsView } from "efi-ui/pools/PoolsView/PoolsView";
+import { TradeView } from "efi-ui/app/trade/TradeView/TradeView";
 import { PoolView } from "efi-ui/pools/PoolView/PoolView";
 import { PortfolioView } from "efi-ui/portfolio/PortfolioView/PortfolioView";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
@@ -94,7 +94,7 @@ const App: FC<AppProps> = () => {
 
             <PortfolioView path={Navigation.PORTFOLIO} />
             <EarnView path={Navigation.EARN} />
-            <PoolsView path={Navigation.TRADE} />
+            <TradeView path={Navigation.TRADE} />
             <PoolView path={`pools/:poolAddress`} />
           </Router>
         </div>

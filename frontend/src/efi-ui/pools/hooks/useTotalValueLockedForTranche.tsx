@@ -4,8 +4,8 @@ import { PrincipalTokenInfo, YieldPoolTokenInfo } from "tokenlists/types";
 import { Money } from "ts-money";
 
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { useAccumulatedInterestForTranche } from "efi-ui/pools/useAccumulatedInterestForTranche";
-import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
+import { useAccumulatedInterestForTranche } from "efi-ui/pools/hooks/useAccumulatedInterestForTranche";
+import { usePoolTokens } from "efi-ui/pools/hooks/usePoolTokens/usePoolTokens";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
 import { getPoolInfoForPrincipalToken } from "efi/pools/ccpool";

@@ -8,7 +8,7 @@ import tw from "efi-tailwindcss-classnames";
 import {
   PoolAction,
   usePoolViewPoolActionsTab,
-} from "efi-ui/pools/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
+} from "efi-ui/pools/hooks/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
 
 interface GoToPoolButtonProps {
   poolAddress: string;

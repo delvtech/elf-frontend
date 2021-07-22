@@ -1,6 +1,6 @@
 import { ERC20 } from "elf-contracts/types/ERC20";
 
-import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
+import { usePoolTokens } from "efi-ui/pools/hooks/usePoolTokens/usePoolTokens";
 import { PoolContract } from "efi/pools/PoolContract";
 
 export function useTokenPoolIndex(

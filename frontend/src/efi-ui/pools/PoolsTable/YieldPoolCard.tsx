@@ -11,11 +11,7 @@ import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { GoToPoolButton } from "efi-ui/pools/GoToPoolButton/GoToPoolButton";
 import styles from "efi-ui/pools/PoolsTable/grid.module.css";
-import { useFeeVolumeForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
-import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
-import { PoolAction } from "efi-ui/pools/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
-import { useStakingAPY } from "efi-ui/pools/useStakingAPY";
-import { useTotalFiatLiquidity } from "efi-ui/pools/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
+import { useFeeVolumeForPool } from "efi-ui/pools/hooks/useFeeVolumeForPool/useFeeVolumeForPool";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { getYearnVaultAPY } from "efi-yearn/fetchYearnVaults";
 import { formatPercent } from "efi/base/formatPercent";
@@ -31,6 +27,10 @@ import { getTokenInfo } from "efi/tokenlists";
 import { formatYieldTokenShortSymbol } from "efi/interestToken/formatYieldTokenShortSymbol";
 import { TimeLeft2 } from "efi-ui/tranche/TimeLeft2";
 import { isYearnDaiVault } from "efi-yearn/hacks";
+import { usePoolSpotPrice } from "efi-ui/pools/hooks/usePoolSpotPrice/usePoolSpotPrice";
+import { PoolAction } from "efi-ui/pools/hooks/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
+import { useStakingAPY } from "efi-ui/pools/hooks/useStakingAPY";
+import { useTotalFiatLiquidity } from "efi-ui/pools/hooks/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
 
 interface YieldPoolCardProps {
   yieldPoolInfo: YieldPoolTokenInfo;
@@ -97,7 +97,7 @@ export function YieldPoolCard(props: YieldPoolCardProps): ReactElement | null {
       style={{ height: 128 }}
       className={classNames(tw("w-full"))}
     >
-      <div className={classNames(styles.yieldPoolGrid)}>
+      <div className={classNames(tw("grid"), styles.yieldPoolGridColumns)}>
         {/* Logo */}
         <div>
           <LabeledText

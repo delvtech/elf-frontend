@@ -7,16 +7,18 @@ import { BigNumber, Signer } from "ethers";
 import { formatEther, formatUnits, parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
-import tw from "efi-tailwindcss-classnames";
+import { getTokenAddressForBalancer } from "efi-balancer/getTokenAddressForBalancer";
 import { SwapKind } from "efi-balancer/SwapKind";
+import tw from "efi-tailwindcss-classnames";
 import { getCalcSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoBalanceOf } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
-import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
-import { useTokenPoolBalance } from "efi-ui/pools/useTokenPoolBalance/useTokenPoolBalance";
-import { useTokenPoolIndex } from "efi-ui/pools/useTokenPoolIndex/useTokenPoolIndex";
+import { useCanPerformPool } from "efi-ui/pools/hooks/usePoolCanPerform/usePoolCanPerform";
+import { usePoolSpotPrice } from "efi-ui/pools/hooks/usePoolSpotPrice/usePoolSpotPrice";
+import { useTokenPoolBalance } from "efi-ui/pools/hooks/useTokenPoolBalance/useTokenPoolBalance";
+import { useTokenPoolIndex } from "efi-ui/pools/hooks/useTokenPoolIndex/useTokenPoolIndex";
 import {
   getPriceImpact,
   SwapTokensTransactionConfirmationDrawer,
@@ -26,23 +28,21 @@ import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectW
 import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 import { formatBalance } from "efi/base/formatBalance";
 import { CryptoAssetType } from "efi/crypto/CryptoAsset";
+import { CryptoAssets } from "efi/crypto/CryptoAssetRegistry";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
 import { getPoolContract } from "efi/pools/getPoolContract";
+import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolContract } from "efi/pools/PoolContract";
 import { PoolInfo } from "efi/pools/PoolInfo";
-import { validateTradeValues } from "efi/trade/validateTradeValues";
-import { trancheContractsByAddress as principalTokenContractsByAddress } from "efi/tranche/tranches";
-import { underlyingContractsByAddress } from "efi/underlying/underlying";
-import { useCanPerformPool } from "efi-ui/pools/usePoolCanPerform/usePoolCanPerform";
-import { getTokenAddressForBalancer } from "efi-balancer/getTokenAddressForBalancer";
-import { CryptoAssets } from "efi/crypto/CryptoAssetRegistry";
-import { getPoolTokens } from "efi/pools/getPoolTokens";
 import {
   isYieldPool,
   MAX_WEIGHTED_POOL_PRICE_IMPACT,
 } from "efi/pools/weightedPool";
+import { validateTradeValues } from "efi/trade/validateTradeValues";
+import { trancheContractsByAddress as principalTokenContractsByAddress } from "efi/tranche/tranches";
+import { underlyingContractsByAddress } from "efi/underlying/underlying";
 
 interface TradePanelProps {
   tradeType: "buy" | "sell";

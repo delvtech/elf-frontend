@@ -21,10 +21,10 @@ import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadC
 import { UnstakeInput } from "efi-ui/pools/UnstakeInput/UnstakeInput";
 import { UnstakeConfirmationDrawer } from "efi-ui/pools/UnstakeTokensConfirmationDrawer/UnstakeTokensConfirmationDrawer";
 import { PoolStakeStats } from "efi-ui/pools/UnstakingPanel/PoolStakeStats";
-import { useCanPerformPool } from "efi-ui/pools/usePoolCanPerform/usePoolCanPerform";
-import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
-import { useExitConvergentCurvePool } from "efi-ui/pools/useUnstake/useExitConvergentCurvePool";
-import { useExitWeightedPool } from "efi-ui/pools/useUnstake/useExitWeightedPool";
+import { useCanPerformPool } from "efi-ui/pools/hooks/usePoolCanPerform/usePoolCanPerform";
+import { usePoolTokens } from "efi-ui/pools/hooks/usePoolTokens/usePoolTokens";
+import { useExitConvergentCurvePool } from "efi-ui/pools/hooks/useUnstake/useExitConvergentCurvePool";
+import { useExitWeightedPool } from "efi-ui/pools/hooks/useUnstake/useExitWeightedPool";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { ElementIcon } from "efi-ui/token/TokenIcon";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";

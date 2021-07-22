@@ -10,7 +10,7 @@ import { getBalancerApprovalMessage } from "efi-ui/balancer/balancerApprovalMess
 import { parseQueryBatchSwapResult } from "efi-ui/balancer/useQueryBatchSwap/parseQueryBatchSwapResult";
 import { useQueryBatchSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
 import { useSwap } from "efi-ui/balancer/useSwap/useSwap";
-import { usePoolSwapFee } from "efi-ui/pools/usePoolSwapFee/usePoolSwapFee";
+import { usePoolSwapFee } from "efi-ui/pools/hooks/usePoolSwapFee/usePoolSwapFee";
 import { useSigner } from "efi-ui/provider/useBlockFromTag/useSigner/useSigner";
 import { SwapDetailsForm } from "efi-ui/swaps/SwapDetailsPreview/SwapDetailsForm";
 import { SwapTokenDetails } from "efi-ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensDetails";

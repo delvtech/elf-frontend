@@ -8,7 +8,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { StakeYieldTokensForm } from "efi-ui/earn/EarnStakingForm/StakeYieldTokensForm";
-import { useStakingAPY } from "efi-ui/pools/useStakingAPY";
+import { useStakingAPY } from "efi-ui/pools/hooks/useStakingAPY";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { formatPercent } from "efi/base/formatPercent";
 import { getPoolInfoForPrincipalToken } from "efi/pools/ccpool";

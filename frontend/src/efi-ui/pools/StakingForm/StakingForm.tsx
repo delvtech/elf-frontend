@@ -19,9 +19,9 @@ import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInp
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { StakingConfirmationDrawer } from "efi-ui/pools/StakeTokensConfirmationDrawer/StakeTokensConfirmationDrawer";
-import { useJoinConvergentPool } from "efi-ui/pools/useJoinConvergentPool/useJoinConvergentPool";
-import { useJoinWeightedPool } from "efi-ui/pools/useJoinWeightedPool";
-import { useTokenPoolBalance } from "efi-ui/pools/useTokenPoolBalance/useTokenPoolBalance";
+import { useJoinConvergentPool } from "efi-ui/pools/hooks/useJoinConvergentPool/useJoinConvergentPool";
+import { useJoinWeightedPool } from "efi-ui/pools/hooks/useJoinWeightedPool";
+import { useTokenPoolBalance } from "efi-ui/pools/hooks/useTokenPoolBalance/useTokenPoolBalance";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { IconProps } from "efi-ui/token/TokenIcon";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";

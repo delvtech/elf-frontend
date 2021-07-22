@@ -10,12 +10,12 @@ import { Money } from "ts-money";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { useAccumulatedFiatInterestForTranche } from "efi-ui/pools/useAccumulatedFiatInterestForTranche";
-import { useAccumulatedInterestForTranche } from "efi-ui/pools/useAccumulatedInterestForTranche";
-import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
-import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
-import { useSwaps } from "efi-ui/pools/useSwaps/useSwaps";
-import { useTokenYield } from "efi-ui/pools/useTokenYield";
+import { useAccumulatedFiatInterestForTranche } from "efi-ui/pools/hooks/useAccumulatedFiatInterestForTranche";
+import { useAccumulatedInterestForTranche } from "efi-ui/pools/hooks/useAccumulatedInterestForTranche";
+import { usePoolSpotPrice } from "efi-ui/pools/hooks/usePoolSpotPrice/usePoolSpotPrice";
+import { usePoolTokens } from "efi-ui/pools/hooks/usePoolTokens/usePoolTokens";
+import { useSwaps } from "efi-ui/pools/hooks/useSwaps/useSwaps";
+import { useTokenYield } from "efi-ui/pools/hooks/useTokenYield";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useTokenHistoricalPrice } from "efi-ui/token/hooks/useTokenHistoricalPrice";
 import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";

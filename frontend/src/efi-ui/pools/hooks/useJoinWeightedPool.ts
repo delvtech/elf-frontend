@@ -2,24 +2,31 @@ import { useCallback } from "react";
 import { UseMutationResult } from "react-query";
 
 import { Vault } from "elf-contracts/types/Vault";
+import { WeightedPool } from "elf-contracts/types/WeightedPool";
 import { BigNumber, CallOverrides, ContractReceipt, Signer } from "ethers";
 import { defaultAbiCoder } from "ethers/lib/utils";
 import zipObject from "lodash.zipobject";
 
 import { JoinRequest } from "efi-balancer/JoinRequest";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
+import { usePoolTokens } from "efi-ui/pools/hooks/usePoolTokens/usePoolTokens";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
 import ContractAddresses from "efi/addresses";
 import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 import { ContractMethodArgs } from "efi/contracts/types";
-import { PoolContract } from "efi/pools/PoolContract";
+import { isWeightedPool } from "efi/pools/PoolContract";
 import { balancerVaultContract } from "efi-balancer/vault";
 
-export function useJoinConvergentPool(
+enum JoinKind {
+  INIT,
+  EXACT_TOKENS_IN_FOR_BPT_OUT,
+  TOKEN_IN_FOR_EXACT_BPT_OUT,
+}
+
+export function useJoinWeightedPool(
   signer: Signer | undefined,
   account: string | null | undefined,
-  pool: PoolContract | undefined,
+  pool: WeightedPool | undefined,
   poolTokenMaxAmounts: BigNumber[] | undefined,
   onTransactionSubmitted?: () => void
 ): {
@@ -31,19 +38,28 @@ export function useJoinConvergentPool(
   >;
 } {
   const { data: poolId } = useSmartContractReadCall(pool, "getPoolId");
+  const { data: poolWeights } = useSmartContractReadCall(
+    pool,
+    "getNormalizedWeights",
+    {
+      enabled: isWeightedPool(pool),
+    }
+  );
   const { data: [poolTokens] = [] } = usePoolTokens(pool);
   const mutationResult = useSmartContractTransactionPersisted(
     balancerVaultContract,
     "joinPool",
     signer,
-    { onTransactionSubmitted: onTransactionSubmitted }
+    { onTransactionSubmitted }
   );
 
   const { mutate: joinPool } = mutationResult;
+
   const joinPoolCallArgs = makeJoinPoolCallArgs(
     poolId,
     account,
     poolTokens,
+    poolWeights,
     poolTokenMaxAmounts
   );
   const onJoinPool = useCallback(() => {
@@ -52,7 +68,6 @@ export function useJoinConvergentPool(
     }
     joinPool(joinPoolCallArgs);
   }, [joinPool, joinPoolCallArgs]);
-
   return { onJoinPool, mutationResult };
 }
 
@@ -60,9 +75,16 @@ function makeJoinPoolCallArgs(
   poolId: string | undefined,
   account: string | null | undefined,
   poolTokens: string[] | undefined,
+  poolWeights: BigNumber[] | undefined,
   poolTokenMaxAmounts: BigNumber[] | undefined
 ): ContractMethodArgs<Vault, "joinPool"> | undefined {
-  if (!poolId || !account || !poolTokens || !poolTokenMaxAmounts) {
+  if (
+    !poolId ||
+    !account ||
+    !poolTokens ||
+    !poolTokenMaxAmounts ||
+    !poolWeights
+  ) {
     return;
   }
 
@@ -75,9 +97,12 @@ function makeJoinPoolCallArgs(
     return poolToken;
   });
 
-  // Balancer V2 vault allows userData as a way to pass props through to pool contracts.  In our
-  // case we need to pass the maxAmountsIn.
-  const userData = defaultAbiCoder.encode(["uint256[]"], [poolTokenMaxAmounts]);
+  // By setting minBPTOut we can set the slippage tolerance.
+  const minBPTOut = 0;
+  const userData = defaultAbiCoder.encode(
+    ["uint8", "uint256[]", "uint256"],
+    [JoinKind.EXACT_TOKENS_IN_FOR_BPT_OUT, poolTokenMaxAmounts, minBPTOut]
+  );
 
   const joinRequest: JoinRequest = {
     fromInternalBalance: false,

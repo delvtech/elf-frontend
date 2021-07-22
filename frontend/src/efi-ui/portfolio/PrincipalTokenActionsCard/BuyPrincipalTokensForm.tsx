@@ -14,11 +14,11 @@ import { getCalcSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoBalanceOf } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
-import { useCanPerformPool } from "efi-ui/pools/usePoolCanPerform/usePoolCanPerform";
-import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
-import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
-import { usePoolTotalSupply } from "efi-ui/pools/usePoolTotalSupply";
-import { useTokenYield } from "efi-ui/pools/useTokenYield";
+import { useCanPerformPool } from "efi-ui/pools/hooks/usePoolCanPerform/usePoolCanPerform";
+import { usePoolSpotPrice } from "efi-ui/pools/hooks/usePoolSpotPrice/usePoolSpotPrice";
+import { usePoolTokens } from "efi-ui/pools/hooks/usePoolTokens/usePoolTokens";
+import { usePoolTotalSupply } from "efi-ui/pools/hooks/usePoolTotalSupply";
+import { useTokenYield } from "efi-ui/pools/hooks/useTokenYield";
 import { SwapTokensTransactionConfirmationDrawer } from "efi-ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensTransactionConfirmationDrawer";
 import { TokenAmountInput } from "efi-ui/token/TokenAmountInput/TokenAmountInput";
 import { formatBalance } from "efi/base/formatBalance";

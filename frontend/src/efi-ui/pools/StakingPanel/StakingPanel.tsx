@@ -8,7 +8,7 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { StakingForm } from "efi-ui/pools/StakingForm/StakingForm";
 import { StakingInput } from "efi-ui/pools/StakingInput/StakingInput";
-import { useCanPerformPool } from "efi-ui/pools/usePoolCanPerform/usePoolCanPerform";
+import { useCanPerformPool } from "efi-ui/pools/hooks/usePoolCanPerform/usePoolCanPerform";
 import { PoolInfo } from "efi/pools/PoolInfo";
 
 interface StakingPanelProps {

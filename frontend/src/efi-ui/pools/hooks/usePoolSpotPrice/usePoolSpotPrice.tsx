@@ -8,7 +8,7 @@ import {
   getTokenReserves,
 } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
+import { usePoolTokens } from "efi-ui/pools/hooks/usePoolTokens/usePoolTokens";
 import { SwapKind } from "efi-balancer/SwapKind";
 import { getPoolTokenInfoFromContract } from "efi/pools/getPoolInfo";
 import { getPoolTokens } from "efi/pools/getPoolTokens";

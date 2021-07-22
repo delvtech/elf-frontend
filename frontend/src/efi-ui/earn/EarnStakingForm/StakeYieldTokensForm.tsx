@@ -4,7 +4,7 @@ import { Web3Provider } from "@ethersproject/providers";
 import { Signer } from "ethers";
 import { t } from "ttag";
 import { StakingForm } from "efi-ui/pools/StakingForm/StakingForm";
-import { useCanPerformPool } from "efi-ui/pools/usePoolCanPerform/usePoolCanPerform";
+import { useCanPerformPool } from "efi-ui/pools/hooks/usePoolCanPerform/usePoolCanPerform";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { EarnStakingInput } from "./EarnStakingInput";
 import tw from "efi-tailwindcss-classnames";

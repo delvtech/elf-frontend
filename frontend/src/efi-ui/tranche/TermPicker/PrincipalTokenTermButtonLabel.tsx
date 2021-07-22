@@ -7,7 +7,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { useTokenYield } from "efi-ui/pools/useTokenYield";
+import { useTokenYield } from "efi-ui/pools/hooks/useTokenYield";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
 import { formatPercent } from "efi/base/formatPercent";
@@ -17,7 +17,7 @@ import { getPoolInfoForPrincipalToken } from "efi/pools/ccpool";
 import { getTokenInfo } from "efi/tokenlists";
 import classNames from "classnames";
 import { ONE_DAY_IN_MILLISECONDS } from "efi/base/time";
-import { useTotalFiatLiquidity } from "efi-ui/pools/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
+import { useTotalFiatLiquidity } from "efi-ui/pools/hooks/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
 import { Currencies, Money } from "ts-money";
 
 interface PrincipalTokenTermButtonLabelProps {

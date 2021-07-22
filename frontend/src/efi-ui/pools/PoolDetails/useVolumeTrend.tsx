@@ -1,7 +1,7 @@
 import { Money } from "ts-money";
 
-import { useFeeVolumeFiatForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
-import { useVolumeForPool } from "efi-ui/pools/useVolumeForPool/useVolumeForPool";
+import { useFeeVolumeFiatForPool } from "efi-ui/pools/hooks/useFeeVolumeForPool/useFeeVolumeForPool";
+import { useVolumeForPool } from "efi-ui/pools/hooks/useVolumeForPool/useVolumeForPool";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
 import { PoolInfo } from "efi/pools/PoolInfo";
 

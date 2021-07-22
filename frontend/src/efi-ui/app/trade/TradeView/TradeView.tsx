@@ -5,25 +5,25 @@ import { RouteComponentProps } from "@reach/router";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { Classes, Divider, H2, H4, H5, Tab, Tabs } from "@blueprintjs/core";
+import { Classes, Divider, H2, H4, Tab, Tabs } from "@blueprintjs/core";
 import { assertNever } from "efi/base/assertNever";
 import { PrincipalPoolTable } from "efi-ui/pools/PoolsTable/PrincipalPoolTable";
 import { YieldPoolTable } from "efi-ui/pools/PoolsTable/YieldPoolTable";
 import classNames from "classnames";
 
-enum PoolsViewTab {
+enum TradeViewTab {
   PRINCIPAL = "principal",
   YIELD = "yield",
 }
-interface PoolsViewProps extends RouteComponentProps {}
+interface TradeViewProps extends RouteComponentProps {}
 
-export function PoolsView(unusedProps: PoolsViewProps): ReactElement {
-  const [activeTab, setActiveTab] = useState<PoolsViewTab>(
-    PoolsViewTab.PRINCIPAL
+export function TradeView(unusedProps: TradeViewProps): ReactElement {
+  const [activeTab, setActiveTab] = useState<TradeViewTab>(
+    TradeViewTab.PRINCIPAL
   );
 
   const subtitle =
-    activeTab === PoolsViewTab.YIELD
+    activeTab === TradeViewTab.YIELD
       ? t`Buy and sell yield tokens or provide liquidity in Element yield pools.`
       : t`Buy and sell principal tokens or provide liquidity in Element principal pools.`;
 
@@ -56,10 +56,10 @@ export function PoolsView(unusedProps: PoolsViewProps): ReactElement {
         >
           <Tabs
             selectedTabId={activeTab}
-            onChange={setActiveTab as (newTabId: PoolsViewTab) => void}
+            onChange={setActiveTab as (newTabId: TradeViewTab) => void}
           >
             <Tab
-              id={PoolsViewTab.PRINCIPAL}
+              id={TradeViewTab.PRINCIPAL}
               title={
                 <Fragment>
                   {/* Desktop */}
@@ -75,7 +75,7 @@ export function PoolsView(unusedProps: PoolsViewProps): ReactElement {
             />
             <Divider />
             <Tab
-              id={PoolsViewTab.YIELD}
+              id={TradeViewTab.YIELD}
               title={
                 <Fragment>
                   {/* Desktop */}
@@ -110,9 +110,9 @@ export function PoolsView(unusedProps: PoolsViewProps): ReactElement {
         >
           {(() => {
             switch (activeTab) {
-              case PoolsViewTab.PRINCIPAL:
+              case TradeViewTab.PRINCIPAL:
                 return <PrincipalPoolTable />;
-              case PoolsViewTab.YIELD:
+              case TradeViewTab.YIELD:
                 return <YieldPoolTable />;
               default:
                 assertNever(activeTab);

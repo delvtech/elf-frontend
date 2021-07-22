@@ -29,11 +29,11 @@ export function YieldPoolTable({
     >
       <div
         className={classNames(
-          styles.yieldPoolGrid,
-          Classes.TEXT_MUTED,
           // padding to match Card default padding, keeps text alignment correct
           // with card content
-          tw("px-5")
+          tw("px-5", "hidden", "lg:grid"),
+          styles.yieldPoolGridColumns,
+          Classes.TEXT_MUTED
         )}
       >
         <div>{t`Pool`}</div>

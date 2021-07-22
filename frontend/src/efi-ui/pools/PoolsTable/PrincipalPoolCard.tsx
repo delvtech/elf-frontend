@@ -1,4 +1,4 @@
-import { ReactElement, useCallback } from "react";
+import { Fragment, ReactElement, useCallback } from "react";
 
 import { Card, Classes, Elevation } from "@blueprintjs/core";
 import { navigate } from "@reach/router";
@@ -11,12 +11,7 @@ import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { GoToPoolButton } from "efi-ui/pools/GoToPoolButton/GoToPoolButton";
 import styles from "efi-ui/pools/PoolsTable/grid.module.css";
-import { useFeeVolumeFiatForPool } from "efi-ui/pools/useFeeVolumeForPool/useFeeVolumeForPool";
-import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
-import { PoolAction } from "efi-ui/pools/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
-import { useStakingAPY } from "efi-ui/pools/useStakingAPY";
-import { useTokenYield } from "efi-ui/pools/useTokenYield";
-import { useTotalFiatLiquidity } from "efi-ui/pools/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
+import { useFeeVolumeFiatForPool } from "efi-ui/pools/hooks/useFeeVolumeForPool/useFeeVolumeForPool";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { getYearnVaultAPY } from "efi-yearn/fetchYearnVaults";
 import { formatPercent } from "efi/base/formatPercent";
@@ -31,6 +26,11 @@ import { getVaultTokenInfoForTranche } from "efi/tranche/tranches";
 import { formatPrincipalTokenShortSymbol } from "efi/tranche/format";
 import { TimeLeft2 } from "efi-ui/tranche/TimeLeft2";
 import { isYearnDaiVault } from "efi-yearn/hacks";
+import { usePoolSpotPrice } from "efi-ui/pools/hooks/usePoolSpotPrice/usePoolSpotPrice";
+import { PoolAction } from "efi-ui/pools/hooks/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
+import { useStakingAPY } from "efi-ui/pools/hooks/useStakingAPY";
+import { useTokenYield } from "efi-ui/pools/hooks/useTokenYield";
+import { useTotalFiatLiquidity } from "efi-ui/pools/hooks/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
 
 interface PrincipalPoolCardProps {
   principalPoolInfo: PrincipalPoolTokenInfo;
@@ -81,11 +81,13 @@ export function PrincipalPoolCard(
   const allDataLoaded = dataToLoad.every((data) => data !== undefined);
   if (!allDataLoaded) {
     return (
-      <Card
-        elevation={Elevation.TWO}
-        interactive
-        className={classNames(Classes.SKELETON, tw("h-24", "w-full"))}
-      ></Card>
+      <Fragment>
+        <Card
+          elevation={Elevation.TWO}
+          interactive
+          className={classNames(Classes.SKELETON, tw("h-24", "w-full"))}
+        ></Card>
+      </Fragment>
     );
   }
 
@@ -97,7 +99,7 @@ export function PrincipalPoolCard(
       style={{ height: 128 }}
       className={classNames(tw("w-full"))}
     >
-      <div className={classNames(styles.principalPoolGrid)}>
+      <div className={classNames(tw("grid"), styles.principalPoolGridColumns)}>
         {/* Logo */}
         <div>
           <LabeledText

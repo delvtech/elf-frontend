@@ -1,6 +1,6 @@
 import { Money } from "ts-money";
 
-import { useTotalLiquidity } from "efi-ui/pools/useTotalLiquidity";
+import { useTotalLiquidity } from "efi-ui/pools/hooks/useTotalLiquidity";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
 import { getPoolTokens } from "efi/pools/getPoolTokens";

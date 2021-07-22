@@ -1,6 +1,6 @@
 import { ERC20 } from "elf-contracts/types/ERC20";
 
-import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
+import { usePoolSpotPrice } from "efi-ui/pools/hooks/usePoolSpotPrice/usePoolSpotPrice";
 import { PoolContract } from "efi/pools/PoolContract";
 
 interface PoolTokenPrices {

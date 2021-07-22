@@ -28,10 +28,10 @@ import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInp
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { CryptoAssetPicker } from "efi-ui/crypto/CryptoAssetPicker/CryptoAssetPicker";
 import { useCryptoBalanceOf } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
-import { useCanPerformPool } from "efi-ui/pools/usePoolCanPerform/usePoolCanPerform";
-import { usePoolSpotPrice } from "efi-ui/pools/usePoolSpotPrice/usePoolSpotPrice";
-import { usePoolTokenPrices } from "efi-ui/pools/usePoolTokenPrices/usePoolTokenPrices";
-import { usePoolTokens } from "efi-ui/pools/usePoolTokens/usePoolTokens";
+import { useCanPerformPool } from "efi-ui/pools/hooks/usePoolCanPerform/usePoolCanPerform";
+import { usePoolSpotPrice } from "efi-ui/pools/hooks/usePoolSpotPrice/usePoolSpotPrice";
+import { usePoolTokenPrices } from "efi-ui/pools/hooks/usePoolTokenPrices/usePoolTokenPrices";
+import { usePoolTokens } from "efi-ui/pools/hooks/usePoolTokens/usePoolTokens";
 import { useActiveTranche } from "efi-ui/saveApp/save/hooks/useActiveTranche";
 import { PrincipalDiscountPreview } from "efi-ui/saveApp/save/SaveCard/PrincipalDiscountPreview";
 import { SaveInput } from "efi-ui/saveApp/save/SaveInput/SaveInput";

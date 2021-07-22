@@ -12,7 +12,7 @@ import { UnstakeCard } from "efi-ui/pools/UnstakingPanel/UnstakingCard";
 import {
   PoolAction,
   usePoolViewPoolActionsTab,
-} from "efi-ui/pools/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
+} from "efi-ui/pools/hooks/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
 import { TradePanel } from "efi-ui/trade/TradePanel/TradePanel";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { getOppositePoolInfo } from "efi/pools/getOppositePoolInfo";
