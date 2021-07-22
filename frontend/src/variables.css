@@ -1,4 +1,8 @@
 :root {
+  --rubik-font: "Rubik", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+    "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+
   /*
    * This is the height of the top navbar. Because of how the Navbar manages
    * "stickiness", we need to offset the position of our main content by the

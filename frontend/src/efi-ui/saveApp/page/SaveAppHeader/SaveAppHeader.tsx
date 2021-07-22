@@ -4,8 +4,6 @@ import { AnchorButton, Button, Intent } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { t } from "ttag";
 
-import logoDark from "efi-static-assets/logos/svg/logo--dark.svg";
-import logo from "efi-static-assets/logos/svg/logo--light.svg";
 import tw from "efi-tailwindcss-classnames";
 import { ExperimentalBanner } from "efi-ui/page/ExperimentalBanner/ExperimentalBanner";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
@@ -13,6 +11,7 @@ import { SaveHamburgerButton } from "efi-ui/saveApp/navigation/SaveNavigation/Sa
 import { ConnectWalletButton } from "efi-ui/wallets/ConnectWalletButton/ConnectWalletButton";
 import { AddressesJson } from "efi/addresses";
 import { isGoerli, isMainnet } from "efi/ethereum";
+import { ElementLogo } from "efi-ui/base/ElementLogo";
 
 let earnAppUrl = "http://localhost:3000";
 if (isGoerli(AddressesJson.chainId)) {
@@ -39,12 +38,10 @@ export function SaveAppHeader({
       <div
         className={tw("flex", "p-8", "w-full", "justify-between", "items-end")}
       >
-        <img
-          style={{
-            height: 48, // don't use tailwind here since we want fixed height and rem is dynamic
-          }}
-          src={isDarkMode ? logoDark : logo}
-          alt={t`Element Finance`}
+        <ElementLogo
+          height={48}
+          isDarkMode={isDarkMode}
+          className={tw("mr-16", "hidden", "md:block")}
         />
         <div className={tw("flex", "space-x-4", "items-center")}>
           <div className={tw("flex", "flex-shrink-0")}>

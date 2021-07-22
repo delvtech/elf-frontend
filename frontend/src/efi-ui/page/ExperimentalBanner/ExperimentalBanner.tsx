@@ -8,8 +8,15 @@ import tw from "efi-tailwindcss-classnames";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 
 import { useBannerPref } from "./useBannerPref";
+import classNames from "classnames";
 
-export function ExperimentalBanner(): ReactElement | null {
+interface ExperimentalBannerProps {
+  className?: string;
+}
+
+export function ExperimentalBanner({
+  className,
+}: ExperimentalBannerProps): ReactElement | null {
   const { isDarkMode } = useDarkMode();
   const { bannerIsVisible, hideBanner } = useBannerPref();
 
@@ -19,16 +26,19 @@ export function ExperimentalBanner(): ReactElement | null {
 
   return (
     <div
-      className={tw(
-        "flex",
-        "h-8",
-        "mb-4",
-        "w-full",
-        "font-bold",
-        "text-center",
-        "justify-center",
-        "items-center",
-        "space-x-4"
+      className={classNames(
+        tw(
+          "flex",
+          "h-8",
+          "mb-4",
+          "w-full",
+          "font-bold",
+          "text-center",
+          "justify-center",
+          "items-center",
+          "space-x-4"
+        ),
+        className
       )}
       style={{
         borderRadius: 0,

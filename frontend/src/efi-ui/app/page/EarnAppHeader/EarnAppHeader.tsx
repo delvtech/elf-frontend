@@ -12,8 +12,6 @@ import { IconNames } from "@blueprintjs/icons";
 import classNames from "classnames";
 import { t } from "ttag";
 
-import logoDark from "efi-static-assets/logos/svg/logo--dark.svg";
-import logo from "efi-static-assets/logos/svg/logo--light.svg";
 import tw from "efi-tailwindcss-classnames";
 import { useNavigation } from "efi-ui/app/navigation/hooks/useTab";
 import { Navigation } from "efi-ui/app/navigation/navigation";
@@ -21,6 +19,8 @@ import { ExperimentalBanner } from "efi-ui/page/ExperimentalBanner/ExperimentalB
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { usePendingTransactionPref } from "efi-ui/transactions/usePendingTransactionPref/usePendingTransactionPref";
 import { ConnectWalletButton } from "efi-ui/wallets/ConnectWalletButton/ConnectWalletButton";
+import { ElementLogo } from "efi-ui/base/ElementLogo";
+import { AppMenuButton } from "efi-ui/app/navigation/AppMenuButton/AppMenuButton";
 
 interface EarnAppHeaderProps {
   chainId: number | undefined;
@@ -45,15 +45,20 @@ export function EarnAppHeader({
 
   return (
     <div className={tw("flex", "w-full", "flex-col")}>
-      <ExperimentalBanner />
-      <div className={tw("flex", "w-full", "p-8")}>
+      <ExperimentalBanner className={tw("hidden", "lg:flex")} />
+
+      {/* Mobile */}
+      <div className={tw("flex", "lg:hidden", "w-full", "p-2")}>
+        <AppMenuButton />
+      </div>
+      <ExperimentalBanner className={tw("flex", "lg:hidden", "text-xs")} />
+
+      {/* Desktop */}
+      <div className={tw("hidden", "lg:flex", "w-full", "p-8")}>
         <div className={tw("flex", "w-full", "space-x-4", "items-end")}>
-          <img
-            style={{
-              height: 48, // don't use tailwind here since we want fixed height and rem is dynamic
-            }}
-            src={isDarkMode ? logoDark : logo}
-            alt={"Element Finance"}
+          <ElementLogo
+            height={48}
+            isDarkMode={isDarkMode}
             className={tw("mr-16", "hidden", "md:block")}
           />
           <Tabs
