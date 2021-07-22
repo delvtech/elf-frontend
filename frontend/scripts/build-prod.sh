@@ -14,4 +14,6 @@ then
     cp -f src/efi-ui/saveApp/_index.tsx src/index.tsx
 fi
 
+cp -f src/tokenlists/$1.tokenlist.json public/
+
 npm run build
