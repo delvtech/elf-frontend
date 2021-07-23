@@ -39,7 +39,7 @@ const axisBottom: AxisProps = {
 
 export interface LineChartProps {
   chartType: "lines" | "bars";
-  groupVolumeData: boolean;
+  groupBarData: boolean;
   dataLabel: ReactNode;
   darkMode?: boolean;
   data: Serie[];
@@ -49,7 +49,7 @@ export interface LineChartProps {
 export function LineChart(props: LineChartProps): ReactElement {
   const {
     chartType = "lines",
-    groupVolumeData,
+    groupBarData,
     dataLabel,
     darkMode,
     data = EMPTY_ARRAY as Serie[],
@@ -85,13 +85,13 @@ export function LineChart(props: LineChartProps): ReactElement {
     let layer: Layer = "lines";
 
     if (chartType === "bars") {
-      layer = groupVolumeData
+      layer = groupBarData
         ? makeBarLayer(dataColor)
         : makeVerticalLineLayer(dataColor);
     }
 
     return layer;
-  }, [chartType, dataColor, groupVolumeData]);
+  }, [chartType, dataColor, groupBarData]);
 
   const SliceTooltip = makeSliceTooltip(
     tooltipBackground,
@@ -99,7 +99,7 @@ export function LineChart(props: LineChartProps): ReactElement {
     currency
   );
 
-  const xScale: TimeScale = useXScale(chartType, groupVolumeData, data);
+  const xScale: TimeScale = useXScale(chartType, groupBarData, data);
 
   return (
     <div className={tw("flex", "w-full", "h-full")}>

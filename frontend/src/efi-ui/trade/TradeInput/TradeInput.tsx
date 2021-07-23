@@ -135,11 +135,11 @@ export function TradeInput(props: TradeInputProps): ReactElement {
             </div>
             <div className={tw("flex", "text-2xl", "pr-4")}>
               {CryptoIcon ? (
-                <div className={tw("flex", "items-center", "px-2")}>
+                <div className={tw("flex", "items-center", "pl-2")}>
                   <CryptoIcon height={24} width={24} />
                 </div>
               ) : null}
-              <span>{cryptoSymbol}</span>
+              <span className={tw("pl-2")}>{cryptoSymbol}</span>
             </div>
             <div
               className={tw(

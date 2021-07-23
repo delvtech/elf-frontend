@@ -115,7 +115,7 @@ export function YieldPoolCard(props: YieldPoolCardProps): ReactElement | null {
         <div>{formatPercent(stakingYield)}</div>
 
         {/* Vault APY */}
-        <div>
+        <div className={tw("flex", "justify-center", "font-bold")}>
           {isYearnDaiVault(vaultAddress)
             ? t`✨ NEW ✨`
             : formatPercent(vaultApy)}

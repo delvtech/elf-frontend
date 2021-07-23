@@ -113,7 +113,7 @@ export function PoolCharts({ poolInfo }: PoolChartsProps): ReactElement {
               <LineChart
                 key={isDarkMode ? "darkline" : "lightline"}
                 chartType={showLiquidityChart ? "lines" : "bars"}
-                groupVolumeData={binVolumeData}
+                groupBarData={binVolumeData}
                 dataLabel={`(${currency.symbol_native})`}
                 darkMode={isDarkMode}
                 data={showLiquidityChart ? liquiditySerie : volumeSerie}

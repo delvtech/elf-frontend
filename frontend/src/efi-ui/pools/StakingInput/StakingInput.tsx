@@ -135,11 +135,11 @@ export function StakingInput(props: StakingInputProps): ReactElement {
             </div>
             <div className={tw("flex", "text-2xl", "pr-4")}>
               {CryptoAssetIcon ? (
-                <div className={tw("flex", "items-center", "px-2")}>
+                <div className={tw("flex", "items-center", "pl-2")}>
                   <CryptoAssetIcon height={24} width={24} />
                 </div>
               ) : null}
-              <span>{cryptoSymbol}</span>
+              <span className={tw("pl-2")}>{cryptoSymbol}</span>
             </div>
             <div
               className={tw(

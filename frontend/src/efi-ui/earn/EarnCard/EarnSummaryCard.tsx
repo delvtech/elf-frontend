@@ -81,7 +81,7 @@ export function EarnSummaryCard(props: EarnSummaryCardProps): JSX.Element {
         <div>{tvl ? formatMoney(tvl, { wholeAmounts: true }) : null}</div>
 
         {/* Vault APY */}
-        <div className={tw("font-bold")}>
+        <div className={tw("flex", "justify-center", "font-bold")}>
           {isYearnDaiVault(vaultAddress)
             ? t`✨ NEW ✨`
             : formatPercent(vaultApy)}

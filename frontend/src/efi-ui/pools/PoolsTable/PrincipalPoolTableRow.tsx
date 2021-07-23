@@ -138,7 +138,7 @@ export function PrincipalPoolTableRow(
         <div>{formatPercent(stakingYield)}</div>
 
         {/* Vault APY */}
-        <div>
+        <div className={tw("flex", "justify-center", "font-bold")}>
           {isYearnDaiVault(vaultAddress)
             ? t`✨ NEW ✨`
             : formatPercent(vaultApy)}
