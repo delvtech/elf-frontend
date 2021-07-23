@@ -10,6 +10,7 @@ import { assertNever } from "efi/base/assertNever";
 import { PrincipalPoolTable } from "efi-ui/pools/PoolsTable/PrincipalPoolTable";
 import { YieldPoolTable } from "efi-ui/pools/PoolsTable/YieldPoolTable";
 import classNames from "classnames";
+import { PrincipalPoolCardList } from "efi-ui/pools/PoolsTable/PrincipalPoolCardList";
 
 enum TradeViewTab {
   PRINCIPAL = "principal",
@@ -40,7 +41,8 @@ export function TradeView(unusedProps: TradeViewProps): ReactElement {
           "flex-1",
           "w-full",
           "h-full",
-          "space-y-12",
+          "space-y-2",
+          "lg:space-y-12",
           "pb-12",
           "items-center"
         )}
@@ -99,19 +101,20 @@ export function TradeView(unusedProps: TradeViewProps): ReactElement {
           </span>
         </div>
 
-        <div
-          className={tw(
-            "flex",
-            "flex-col",
-            "items-center",
-            "w-full",
-            "space-y-5"
-          )}
-        >
+        <div className={tw("flex", "flex-col", "items-center", "w-full")}>
           {(() => {
             switch (activeTab) {
               case TradeViewTab.PRINCIPAL:
-                return <PrincipalPoolTable />;
+                return (
+                  <Fragment>
+                    {/* Desktop */}
+                    <PrincipalPoolTable className={tw("hidden", "lg:flex")} />
+                    {/* Mobile */}
+                    <PrincipalPoolCardList
+                      className={tw("flex", "lg:hidden", "p-4")}
+                    />
+                  </Fragment>
+                );
               case TradeViewTab.YIELD:
                 return <YieldPoolTable />;
               default:

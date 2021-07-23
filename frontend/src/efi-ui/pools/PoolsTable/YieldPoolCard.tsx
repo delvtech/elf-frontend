@@ -61,10 +61,7 @@ export function YieldPoolCard(props: YieldPoolCardProps): ReactElement | null {
 
   const stakingYield = useStakingAPY(yieldPoolInfo, ONE_WEEK_IN_SECONDS);
 
-  const yieldPrice = usePoolSpotPrice(
-    poolContract,
-    yieldPoolInfo.address
-  )?.toFixed(4);
+  const yieldPrice = usePoolSpotPrice(poolContract, yieldPoolInfo.address);
   const { data: vaultInfo } = useYearnVault(vaultSymbol, vaultAddress);
   const { apy } = vaultInfo || {};
   const vaultApy = apy ? getYearnVaultAPY(apy) : 0;
@@ -124,7 +121,7 @@ export function YieldPoolCard(props: YieldPoolCardProps): ReactElement | null {
 
         {/* Yield Price */}
         <div>
-          <LabeledText text={yieldPrice} label={baseAssetSymbol} />
+          <LabeledText text={yieldPrice?.toFixed(4)} label={baseAssetSymbol} />
         </div>
 
         {/* Status */}

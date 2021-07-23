@@ -10,72 +10,82 @@ import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { GoToPoolButton } from "efi-ui/pools/GoToPoolButton/GoToPoolButton";
-import styles from "efi-ui/pools/PoolsTable/grid.module.css";
 import { useFeeVolumeFiatForPool } from "efi-ui/pools/hooks/useFeeVolumeForPool/useFeeVolumeForPool";
+import { usePoolSpotPrice } from "efi-ui/pools/hooks/usePoolSpotPrice/usePoolSpotPrice";
+import { PoolAction } from "efi-ui/pools/hooks/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
+import { useStakingAPY } from "efi-ui/pools/hooks/useStakingAPY";
+import { useTokenYield } from "efi-ui/pools/hooks/useTokenYield";
+import { useTotalFiatLiquidity } from "efi-ui/pools/hooks/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
+import styles from "efi-ui/pools/PoolsTable/grid.module.css";
+import { TimeLeft2 } from "efi-ui/tranche/TimeLeft2";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { getYearnVaultAPY } from "efi-yearn/fetchYearnVaults";
+import { isYearnDaiVault } from "efi-yearn/hacks";
 import { formatPercent } from "efi/base/formatPercent";
 import { ONE_WEEK_IN_SECONDS } from "efi/base/time";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { formatMoney } from "efi/money/formatMoney";
 import { principalPoolContractsByAddress } from "efi/pools/ccpool";
-import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { getPrincipalTokenInfoForPool } from "efi/pools/getPrincipalTokenInfoForPool";
-import { getVaultTokenInfoForTranche } from "efi/tranche/tranches";
 import { formatPrincipalTokenShortSymbol } from "efi/tranche/format";
-import { TimeLeft2 } from "efi-ui/tranche/TimeLeft2";
-import { isYearnDaiVault } from "efi-yearn/hacks";
-import { usePoolSpotPrice } from "efi-ui/pools/hooks/usePoolSpotPrice/usePoolSpotPrice";
-import { PoolAction } from "efi-ui/pools/hooks/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
-import { useStakingAPY } from "efi-ui/pools/hooks/useStakingAPY";
-import { useTokenYield } from "efi-ui/pools/hooks/useTokenYield";
-import { useTotalFiatLiquidity } from "efi-ui/pools/hooks/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
+import { getVaultTokenInfoForTranche } from "efi/tranche/tranches";
 
-interface PrincipalPoolCardProps {
-  principalPoolInfo: PrincipalPoolTokenInfo;
+interface PrincipalPoolTableRowProps {
+  className?: string;
+  principalPoolTokenInfo: PrincipalPoolTokenInfo;
 }
-
-export function PrincipalPoolCard(
-  props: PrincipalPoolCardProps
-): ReactElement | null {
+const cardStyle = { height: 128 };
+export function PrincipalPoolTableRow(
+  props: PrincipalPoolTableRowProps
+): ReactElement {
   const {
-    principalPoolInfo,
-    principalPoolInfo: { address: poolAddress },
+    className,
+    principalPoolTokenInfo,
+    principalPoolTokenInfo: {
+      address: poolAddress,
+      extensions: { createdAtTimestamp, underlying },
+    },
   } = props;
-
-  const principalTokenInfo = getPrincipalTokenInfoForPool(principalPoolInfo);
-  const {
-    address: principalTokenAddress,
-    extensions: { unlockTimestamp, createdAtTimestamp },
-  } = principalTokenInfo;
-
-  const { baseAssetContract } = getPoolTokens(principalPoolInfo);
-  const baseAsset = getCryptoAssetForToken(baseAssetContract.address);
-  const baseAssetSymbol = getCryptoSymbol(baseAsset);
-  const BaseAssetIcon = findAssetIcon(baseAsset);
-
-  const { symbol: vaultSymbol, address: vaultAddress } =
-    getVaultTokenInfoForTranche(principalTokenAddress);
-  const principalTokenShortSymbol =
-    formatPrincipalTokenShortSymbol(principalTokenInfo);
-
-  const { data: vaultInfo } = useYearnVault(vaultSymbol, vaultAddress);
-  const { apy } = vaultInfo || {};
-  const vaultApy = apy ? getYearnVaultAPY(apy) : 0;
-
-  const liquidity = useTotalFiatLiquidity(principalPoolInfo);
-  const fees = useFeeVolumeFiatForPool(principalPoolInfo);
-  const poolContract = principalPoolContractsByAddress[poolAddress];
-  const fixedYield = useTokenYield(principalPoolInfo, "principal");
-  const principalPrice =
-    usePoolSpotPrice(poolContract, principalTokenInfo.address) ?? 0;
-  const principalPriceFormatted = principalPrice?.toFixed(4);
-  const stakingYield = useStakingAPY(principalPoolInfo, ONE_WEEK_IN_SECONDS);
 
   const goToTrade = useCallback(() => {
     navigate(`/pools/${poolAddress}`);
   }, [poolAddress]);
+
+  // Base asset
+  const baseAsset = getCryptoAssetForToken(underlying);
+  const baseAssetSymbol = getCryptoSymbol(baseAsset);
+  const BaseAssetIcon = findAssetIcon(baseAsset);
+
+  // Principal Token
+  const principalTokenInfo = getPrincipalTokenInfoForPool(
+    principalPoolTokenInfo
+  );
+  const {
+    address: principalTokenAddress,
+    extensions: { unlockTimestamp },
+  } = principalTokenInfo;
+  const principalTokenShortSymbol =
+    formatPrincipalTokenShortSymbol(principalTokenInfo);
+
+  // Vault
+  const { symbol: vaultSymbol, address: vaultAddress } =
+    getVaultTokenInfoForTranche(principalTokenAddress);
+  const { data: vaultInfo } = useYearnVault(vaultSymbol, vaultAddress);
+  const { apy } = vaultInfo || {};
+  const vaultApy = apy ? getYearnVaultAPY(apy) : 0;
+
+  // Pool
+  const liquidity = useTotalFiatLiquidity(principalPoolTokenInfo);
+  const fees = useFeeVolumeFiatForPool(principalPoolTokenInfo);
+  const poolContract = principalPoolContractsByAddress[poolAddress];
+  const fixedYield = useTokenYield(principalPoolTokenInfo, "principal");
+  const principalPrice =
+    usePoolSpotPrice(poolContract, principalTokenAddress) ?? 0;
+  const stakingYield = useStakingAPY(
+    principalPoolTokenInfo,
+    ONE_WEEK_IN_SECONDS
+  );
 
   const dataToLoad = [liquidity, fees, fixedYield, stakingYield];
   const allDataLoaded = dataToLoad.every((data) => data !== undefined);
@@ -96,10 +106,10 @@ export function PrincipalPoolCard(
       elevation={Elevation.TWO}
       interactive
       onClick={goToTrade}
-      style={{ height: 128 }}
-      className={classNames(tw("w-full"))}
+      style={cardStyle}
+      className={classNames(tw("w-full"), className)}
     >
-      <div className={classNames(tw("grid"), styles.principalPoolGridColumns)}>
+      <div className={classNames(styles.principalPoolGridColumns)}>
         {/* Logo */}
         <div>
           <LabeledText
@@ -133,7 +143,10 @@ export function PrincipalPoolCard(
 
         {/* Principal Price */}
         <div>
-          <LabeledText text={principalPriceFormatted} label={baseAssetSymbol} />
+          <LabeledText
+            text={principalPrice?.toFixed(4)}
+            label={baseAssetSymbol}
+          />
         </div>
 
         {/* Term */}

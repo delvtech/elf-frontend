@@ -18,6 +18,7 @@ interface GoToPoolButtonProps {
   small?: boolean;
   outlined?: boolean;
   fill?: boolean;
+  className?: string;
 }
 
 export function GoToPoolButton(props: GoToPoolButtonProps): ReactElement {
@@ -28,6 +29,7 @@ export function GoToPoolButton(props: GoToPoolButtonProps): ReactElement {
     fill,
     outlined = false,
     small = false,
+    className,
   } = props;
 
   const { setTab } = usePoolViewPoolActionsTab();
@@ -61,10 +63,11 @@ export function GoToPoolButton(props: GoToPoolButtonProps): ReactElement {
           [Classes.SMALL]: small,
           [Classes.FILL]: fill,
         },
-        Classes.INTENT_PRIMARY
+        Classes.INTENT_PRIMARY,
+        className
       )}
     >
-      <div className={tw("p-2", "text-base")}>{label}</div>
+      <div className={tw({ "p-2": !small, "p-0": small })}>{label}</div>
     </Link>
   );
 }
