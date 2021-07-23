@@ -8,6 +8,7 @@ import tw from "efi-tailwindcss-classnames";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatTimeLeft } from "efi/base/formatTImeLeft/formatTimeLeft";
 import { getIsMature } from "efi/tranche/getIsMature";
+import { useNowMs } from "efi-ui/base/hooks/useNowMs/useNowMs";
 
 interface TimeLeftLabelProps {
   unlockTimestamp: number;
@@ -15,12 +16,16 @@ interface TimeLeftLabelProps {
 
 export function TimeLeftLabel(props: TimeLeftLabelProps): ReactElement | null {
   const { unlockTimestamp } = props;
+  const nowMs = useNowMs();
   const unlockTimestampDate = convertEpochSecondsToDate(unlockTimestamp);
 
   const isMature = getIsMature(unlockTimestamp);
 
   if (isMature) {
-    const timeSinceMaturity = getTimeSinceMaturityLabel(unlockTimestampDate);
+    const timeSinceMaturity = getTimeSinceMaturityLabel(
+      unlockTimestampDate,
+      nowMs
+    );
     return (
       <span className={classNames(tw("text-base"))}>
         {t`Term reached `}
@@ -29,7 +34,7 @@ export function TimeLeftLabel(props: TimeLeftLabelProps): ReactElement | null {
     );
   }
 
-  const timeLeft = formatTimeLeft(Date.now(), unlockTimestampDate.getTime());
+  const timeLeft = formatTimeLeft(nowMs, unlockTimestampDate.getTime());
   return (
     <span className={tw("text-base")}>
       {t`Reaches term in`} <strong>{timeLeft}</strong>
@@ -37,7 +42,9 @@ export function TimeLeftLabel(props: TimeLeftLabelProps): ReactElement | null {
   );
 }
 
-function getTimeSinceMaturityLabel(maturationDate: Date): string {
-  const now = Date.now();
-  return formatDistance(maturationDate, now, { addSuffix: true });
+function getTimeSinceMaturityLabel(
+  maturationDate: Date,
+  nowMs: number
+): string {
+  return formatDistance(maturationDate, nowMs, { addSuffix: true });
 }

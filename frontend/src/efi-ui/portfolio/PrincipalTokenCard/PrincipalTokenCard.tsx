@@ -45,6 +45,7 @@ import {
 } from "efi/tranche/tranches";
 
 import { MaturityTimeBar } from "./MaturityTimeBar";
+import { useNowMs } from "efi-ui/base/hooks/useNowMs/useNowMs";
 
 interface PrincipalTokenCardProps {
   chainId: number | undefined;
@@ -80,6 +81,7 @@ export function PrincipalTokenCard(
     },
   } = props;
   const { isDarkMode } = useDarkMode();
+  const nowMs = useNowMs();
 
   const poolInfo = getPoolInfoForPrincipalToken(principalTokenAddress);
   const baseAsset = getCryptoAssetForToken(underlyingAddress);
@@ -128,7 +130,7 @@ export function PrincipalTokenCard(
   if (maturationDate) {
     trancheAPY = calculateTrancheAPY(
       tranchePriceInBaseAsset,
-      Date.now(),
+      nowMs,
       maturationDate?.getTime()
     );
   }
@@ -187,9 +189,7 @@ export function PrincipalTokenCard(
             <Tag
               large
               intent={
-                unlockTimestamp * 1000 < Date.now()
-                  ? Intent.SUCCESS
-                  : Intent.PRIMARY
+                unlockTimestamp * 1000 < nowMs ? Intent.SUCCESS : Intent.PRIMARY
               }
               fill
               className={tw("text-center")}

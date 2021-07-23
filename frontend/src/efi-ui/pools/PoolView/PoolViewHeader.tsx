@@ -12,7 +12,7 @@ import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { getPrincipalTokenInfoForPool } from "efi/pools/getPrincipalTokenInfoForPool";
 import { PoolInfo } from "efi/pools/PoolInfo";
-import { formatTermLength } from "efi/tranche/formatTermLength/formatTermLength";
+import { formatLengthOfTime } from "efi/time/formatLengthOfTime/formatLengthOfTime";
 import { isYieldPool } from "efi/pools/weightedPool";
 import { getOppositePoolInfo } from "efi/pools/getOppositePoolInfo";
 import { Link } from "@reach/router";
@@ -41,7 +41,7 @@ export function PoolViewHeader({
   const startTime = createdAtTimestamp * 1000;
   const maturityTime = unlockTimestamp * 1000;
 
-  const termLength = formatTermLength(startTime, maturityTime);
+  const termLength = formatLengthOfTime(startTime, maturityTime);
 
   const oppositePoolInfo = getOppositePoolInfo(poolInfo);
   const oppositePoolType = isYieldPool(oppositePoolInfo)

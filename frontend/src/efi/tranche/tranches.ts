@@ -24,9 +24,6 @@ export const principalTokenInfos: PrincipalTokenInfo[] =
   tokenListJson.tokens.filter((tokenInfo): tokenInfo is PrincipalTokenInfo =>
     isPrincipalToken(tokenInfo)
   );
-export const openPrincipalTokenInfos = principalTokenInfos.filter(
-  ({ extensions: { unlockTimestamp } }) => unlockTimestamp * 1000 > Date.now()
-);
 
 export const trancheContracts = principalTokenInfos.map(({ address }) =>
   Tranche__factory.connect(address, defaultProvider)
@@ -35,13 +32,6 @@ export const trancheContracts = principalTokenInfos.map(({ address }) =>
 export const trancheContractsByAddress = keyBy(
   trancheContracts,
   (tranche) => tranche.address
-);
-
-/**
- * The list of tranches that are currently running.
- */
-export const openTrancheContracts = openPrincipalTokenInfos.map(
-  ({ address }) => trancheContractsByAddress[address]
 );
 
 export function getVaultContractForTranche(trancheAddress: string): TestYVault {

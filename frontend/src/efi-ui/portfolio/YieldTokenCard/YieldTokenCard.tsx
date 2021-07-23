@@ -50,6 +50,7 @@ import {
 import { getYearnVaultAPY } from "efi-yearn/fetchYearnVaults";
 import { formatYieldTokenShortSymbol } from "efi/interestToken/formatYieldTokenShortSymbol";
 import { isYearnDaiVault } from "efi-yearn/hacks";
+import { useNowMs } from "efi-ui/base/hooks/useNowMs/useNowMs";
 
 interface YieldTokenCardProps {
   library: Web3Provider | undefined;
@@ -76,6 +77,7 @@ export function YieldTokenCard({
   yieldToken,
 }: YieldTokenCardProps): ReactElement {
   const { isDarkMode } = useDarkMode();
+  const nowMs = useNowMs();
   const { currency } = useCurrencyPref();
 
   const yieldTokenInfo = getTokenInfo<YieldTokenInfo>(yieldToken.address);
@@ -190,7 +192,7 @@ export function YieldTokenCard({
               <Tag
                 large
                 intent={
-                  unlockTimestamp * 1000 < Date.now()
+                  unlockTimestamp * 1000 < nowMs
                     ? Intent.SUCCESS
                     : Intent.PRIMARY
                 }

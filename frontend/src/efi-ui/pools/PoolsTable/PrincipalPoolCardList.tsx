@@ -4,7 +4,8 @@ import classNames from "classnames";
 
 import tw from "efi-tailwindcss-classnames";
 import { PrincipalPoolCardListItem } from "efi-ui/pools/PoolsTable/PrincipalPoolCardListItem";
-import { openPrincipalPools, principalPools } from "efi/pools/ccpool";
+import { principalPools } from "efi/pools/ccpool";
+import { useOpenPrincipalPools } from "efi-ui/pools/hooks/useOpenPrincipalPools";
 
 interface PrincipalPoolCardListProps {
   showMaturePools?: boolean;
@@ -15,6 +16,7 @@ export function PrincipalPoolCardList({
   showMaturePools = true,
   className,
 }: PrincipalPoolCardListProps): ReactElement {
+  const openPrincipalPools = useOpenPrincipalPools();
   const principalPoolsToShow = showMaturePools
     ? principalPools
     : openPrincipalPools;

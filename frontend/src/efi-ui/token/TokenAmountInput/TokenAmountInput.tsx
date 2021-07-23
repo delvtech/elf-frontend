@@ -1,6 +1,6 @@
 import { ReactElement, useCallback } from "react";
 
-import { Button, FormGroup, InputGroup, Intent, Tag } from "@blueprintjs/core";
+import { Button, FormGroup, InputGroup, Intent } from "@blueprintjs/core";
 import classNames from "classnames";
 import { BigNumber } from "ethers";
 import { formatUnits } from "ethers/lib/utils";

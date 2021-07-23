@@ -4,8 +4,8 @@ import { ConvergentCurvePool__factory } from "elf-contracts/types/factories/Conv
 import keyBy from "lodash.keyby";
 import { PrincipalPoolTokenInfo, TokenListTag } from "tokenlists/types";
 
-import { tokenListJson } from "efi/tokenlists";
 import { defaultProvider } from "efi/providers/providers";
+import { tokenListJson } from "efi/tokenlists";
 
 /**
  * The list of all principal token pools. This includes pools with mature
@@ -15,14 +15,6 @@ export const principalPools: PrincipalPoolTokenInfo[] =
   tokenListJson.tokens.filter(
     (tokenInfo): tokenInfo is PrincipalPoolTokenInfo =>
       isPrincipalPool(tokenInfo)
-  );
-
-/**
- * The list of all principal token pools whose pts aren't yet mature.
- */
-export const openPrincipalPools: PrincipalPoolTokenInfo[] =
-  principalPools.filter(
-    (principalPool) => principalPool.extensions.expiration * 1000 < Date.now()
   );
 
 export const principalPoolContracts = principalPools.map(({ address }) =>

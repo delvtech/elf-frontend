@@ -19,6 +19,7 @@ import classNames from "classnames";
 import { ONE_DAY_IN_MILLISECONDS } from "efi/base/time";
 import { useTotalFiatLiquidity } from "efi-ui/pools/hooks/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
 import { Currencies, Money } from "ts-money";
+import { useNowMs } from "efi-ui/base/hooks/useNowMs/useNowMs";
 
 interface PrincipalTokenTermButtonLabelProps {
   tranche: Tranche;
@@ -35,6 +36,7 @@ export function PrincipalTokenTermButtonLabel({
   tranche,
   className,
 }: PrincipalTokenTermButtonLabelProps): ReactElement {
+  const nowMs = useNowMs();
   const trancheInfo = getTokenInfo<PrincipalTokenInfo>(tranche.address);
   const poolInfo = getPoolInfoForPrincipalToken(trancheInfo.address);
 
@@ -59,7 +61,7 @@ export function PrincipalTokenTermButtonLabel({
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
 
   const isPool24HoursOld =
-    Date.now() - poolInfo.extensions.createdAtTimestamp * 1000 >
+    nowMs - poolInfo.extensions.createdAtTimestamp * 1000 >
     ONE_DAY_IN_MILLISECONDS;
 
   const fiatLiquidity = useTotalFiatLiquidity(poolInfo);

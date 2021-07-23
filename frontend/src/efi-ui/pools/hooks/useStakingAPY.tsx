@@ -1,3 +1,4 @@
+import { useNowMs } from "efi-ui/base/hooks/useNowMs/useNowMs";
 import { useFeeVolumeFiatForPool } from "efi-ui/pools/hooks/useFeeVolumeForPool/useFeeVolumeForPool";
 import { useTotalFiatLiquidity } from "efi-ui/pools/hooks/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
 import { ONE_WEEK_IN_SECONDS, ONE_YEAR_IN_SECONDS } from "efi/base/time";
@@ -8,6 +9,7 @@ export function useStakingAPY(
   fromTime: number = ONE_WEEK_IN_SECONDS,
   toTime?: number
 ): number {
+  const nowMs = useNowMs();
   const totalLiquidity = useTotalFiatLiquidity(poolInfo);
   const feeVolumeOverTimePeriod = useFeeVolumeFiatForPool(
     poolInfo,
@@ -15,7 +17,7 @@ export function useStakingAPY(
     toTime
   );
 
-  const nowInSeconds = Date.now() / 1000;
+  const nowInSeconds = nowMs / 1000;
   const { createdAtTimestamp } = poolInfo.extensions;
 
   const poolAge = Math.floor(nowInSeconds - createdAtTimestamp);

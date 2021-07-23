@@ -8,6 +8,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
+import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { GoToPoolButton } from "efi-ui/pools/GoToPoolButton/GoToPoolButton";
 import { useFeeVolumeFiatForPool } from "efi-ui/pools/hooks/useFeeVolumeForPool/useFeeVolumeForPool";
@@ -17,7 +18,6 @@ import { useStakingAPY } from "efi-ui/pools/hooks/useStakingAPY";
 import { useTokenYield } from "efi-ui/pools/hooks/useTokenYield";
 import { useTotalFiatLiquidity } from "efi-ui/pools/hooks/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
 import styles from "efi-ui/pools/PoolsTable/grid.module.css";
-import { TimeLeft2 } from "efi-ui/tranche/TimeLeft2";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { getYearnVaultAPY } from "efi-yearn/fetchYearnVaults";
 import { isYearnDaiVault } from "efi-yearn/hacks";
@@ -30,6 +30,7 @@ import { principalPoolContractsByAddress } from "efi/pools/ccpool";
 import { getPrincipalTokenInfoForPool } from "efi/pools/getPrincipalTokenInfoForPool";
 import { formatPrincipalTokenShortSymbol } from "efi/tranche/format";
 import { getVaultTokenInfoForTranche } from "efi/tranche/tranches";
+import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 
 interface PrincipalPoolTableRowProps {
   className?: string;
@@ -47,6 +48,8 @@ export function PrincipalPoolTableRow(
       extensions: { createdAtTimestamp, underlying },
     },
   } = props;
+
+  const { isDarkMode } = useDarkMode();
 
   const goToTrade = useCallback(() => {
     navigate(`/pools/${poolAddress}`);
@@ -151,7 +154,8 @@ export function PrincipalPoolTableRow(
 
         {/* Term */}
         <div>
-          <TimeLeft2
+          <TimeLeft
+            isDarkMode={isDarkMode}
             startTimestamp={createdAtTimestamp * 1000}
             maturityTimestamp={unlockTimestamp * 1000}
           />

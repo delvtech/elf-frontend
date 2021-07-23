@@ -1,8 +1,10 @@
 import { CSSProperties, ReactElement, useMemo } from "react";
 
 import tw from "efi-tailwindcss-classnames";
+import { useOpenYieldPools } from "efi-ui/pools/hooks/useOpenYieldPools";
 import { YieldPoolCard } from "efi-ui/pools/PoolsTable/YieldPoolCard";
-import { openYieldPools, yieldPools } from "efi/pools/weightedPool";
+import { yieldPools } from "efi/pools/weightedPool";
+
 import { YieldPoolTableHeader } from "./YieldPoolTableHeader";
 
 interface YieldPoolTableProps {
@@ -17,6 +19,7 @@ const yieldPoolTableStyle: CSSProperties = {
 export function YieldPoolTable({
   showMaturePools = true,
 }: YieldPoolTableProps): ReactElement {
+  const openYieldPools = useOpenYieldPools();
   const yieldPoolsToShow = showMaturePools ? yieldPools : openYieldPools;
 
   const sortedPools = useMemo(

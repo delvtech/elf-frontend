@@ -23,6 +23,7 @@ import {
 } from "efi/base/time";
 import { formatMoney } from "efi/money/formatMoney";
 import { EMPTY_ARRAY } from "efi/base/emptyArray";
+import { useNowMs } from "efi-ui/base/hooks/useNowMs/useNowMs";
 
 const margin: Partial<Margin> = { top: 20, right: 40, bottom: 40, left: 80 };
 
@@ -152,6 +153,7 @@ export function LineChart(props: LineChartProps): ReactElement {
 }
 
 function useXScale(chartType: string, groupVolumeData: boolean, data: Serie[]) {
+  const nowMs = useNowMs();
   return useMemo(() => {
     const todayAtMidnight = new Date();
     todayAtMidnight.setHours(0, 0, 0, 0);
@@ -164,7 +166,6 @@ function useXScale(chartType: string, groupVolumeData: boolean, data: Serie[]) {
     const noonToday = new Date(midnightInMs + ONE_DAY_IN_MILLISECONDS / 2);
 
     const today = new Date();
-    const nowMs = today.getTime();
     const oneWeekAgo = new Date(nowMs - ONE_WEEK_IN_MILLISECONDS);
 
     const xScaleMin =

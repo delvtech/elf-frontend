@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import { ReactElement } from "react";
 
 import { Classes, Intent, ProgressBar, Tag } from "@blueprintjs/core";
 import classNames from "classnames";
@@ -8,7 +8,8 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { calculateProgress } from "efi/base/calculateProgress";
 import { formatTimeLeft } from "efi/base/formatTImeLeft/formatTimeLeft";
-import { formatTermLength } from "efi/tranche/formatTermLength/formatTermLength";
+import { formatLengthOfTime } from "efi/time/formatLengthOfTime/formatLengthOfTime";
+import { useNowMs } from "efi-ui/base/hooks/useNowMs/useNowMs";
 
 interface TimeLeftProps {
   /**
@@ -20,30 +21,27 @@ interface TimeLeftProps {
    */
   maturityTimestamp: number | undefined;
 
-  showDate?: boolean;
+  isDarkMode: boolean;
 }
 
 export function TimeLeft(props: TimeLeftProps): ReactElement {
   const {
     startTimestamp: startDate = 0,
     maturityTimestamp: maturityDate = 0,
-    showDate = true,
+    isDarkMode,
   } = props;
+  const nowMs = useNowMs();
   const progress = calculateProgress(startDate, maturityDate);
 
-  const termLength = formatTermLength(startDate, maturityDate);
-  const now = Date.now();
-  const timeSince = formatTimeLeft(maturityDate, now);
-  const timeSinceLabel = t`${timeSince} ago`;
-  const timeLeft = formatTimeLeft(now, maturityDate);
+  const termLength = formatLengthOfTime(startDate, maturityDate);
+  const timeLeft = formatTimeLeft(nowMs, maturityDate);
   const timeLeftLabel = t`${timeLeft} remaining`;
 
   if (!startDate || !maturityDate) {
     return <span>{t`loading`}</span>;
   }
 
-  const isMature = now > maturityDate;
-  const intent = isMature ? Intent.SUCCESS : Intent.PRIMARY;
+  const isMature = nowMs > maturityDate;
 
   return (
     <div
@@ -57,36 +55,27 @@ export function TimeLeft(props: TimeLeftProps): ReactElement {
       )}
     >
       <div className={tw("flex", "justify-between")}>
-        {isMature ? (
-          <Tag intent={Intent.SUCCESS} className={tw("mr-4", "flex-grow-0")}>
-            {t`Mature`}
-          </Tag>
-        ) : (
-          <Tag intent={Intent.PRIMARY} className={tw("mr-4", "flex-grow-0")}>
-            {t`Running`}
-          </Tag>
-        )}
-        <span>{termLength}</span>
-      </div>
-      {!isMature ? (
-        <ProgressBar
-          intent={intent}
-          animate={false}
-          stripes={false}
-          value={progress}
-        />
-      ) : null}
-      {showDate ? (
-        <div
-          className={classNames(Classes.TEXT_MUTED, tw("text-sm", "truncate"))}
-        >
+        <div className={classNames(tw("text-sm", "truncate"))}>
           {format(maturityDate, "MMM d, y")}
         </div>
-      ) : null}
+        <Tag
+          minimal={!isDarkMode}
+          intent={isMature ? Intent.SUCCESS : Intent.PRIMARY}
+          className={classNames(tw("truncate"))}
+        >
+          {termLength}
+        </Tag>
+      </div>
+      <ProgressBar
+        intent={isMature ? Intent.SUCCESS : Intent.PRIMARY}
+        animate={false}
+        stripes={false}
+        value={progress}
+      />
       <div
         className={classNames(Classes.TEXT_MUTED, tw("text-sm", "truncate"))}
       >
-        {isMature ? timeSinceLabel : timeLeftLabel}
+        {isMature ? t`Term complete` : timeLeftLabel}
       </div>
     </div>
   );

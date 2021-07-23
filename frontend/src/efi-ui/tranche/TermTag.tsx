@@ -1,8 +1,9 @@
 import { Intent, Tag } from "@blueprintjs/core";
 import classNames from "classnames";
 import tw from "efi-tailwindcss-classnames";
+import { useNowMs } from "efi-ui/base/hooks/useNowMs/useNowMs";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import { formatTermLength } from "efi/tranche/formatTermLength/formatTermLength";
+import { formatLengthOfTime } from "efi/time/formatLengthOfTime/formatLengthOfTime";
 import { ReactElement } from "react";
 
 interface TermTagProps {
@@ -14,12 +15,12 @@ export function TermTag({
   unlockTimestamp,
 }: TermTagProps): ReactElement {
   const { isDarkMode } = useDarkMode();
-  const termLength = formatTermLength(
+  const nowMs = useNowMs();
+  const termLength = formatLengthOfTime(
     createdAtTimestamp * 1000,
     unlockTimestamp * 1000
   );
-  const now = Date.now();
-  const isMature = now > unlockTimestamp * 1000;
+  const isMature = nowMs > unlockTimestamp * 1000;
 
   return (
     <Tag

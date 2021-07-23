@@ -9,7 +9,7 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { EarnCard } from "efi-ui/earn/EarnCard/EarnCard";
 import styles from "efi-ui/earn/grid.module.css";
-import { openPrincipalTokenInfos } from "efi/tranche/tranches";
+import { useOpenPrincipalTokenInfos } from "efi-ui/tranche/useOpenPrincipaltokenInfos";
 
 interface EarnTableProps {
   signer: Signer | undefined;
@@ -26,6 +26,7 @@ export function EarnTable({
   signer,
 }: EarnTableProps): ReactElement {
   const [expandedCardId, setExpandedCardId] = useState<string | undefined>();
+  const openPrincipalTokenInfos = useOpenPrincipalTokenInfos();
   const onExpandClose = useCallback(() => setExpandedCardId(undefined), []);
 
   return (

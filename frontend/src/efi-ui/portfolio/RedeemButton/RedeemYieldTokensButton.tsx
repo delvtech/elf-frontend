@@ -11,14 +11,15 @@ import {
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { useNowMs } from "efi-ui/base/hooks/useNowMs/useNowMs";
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
 import { RedeemYieldTokensDrawer } from "efi-ui/tranche/RedeemTokensDrawer/RedeemYieldTokensDrawer";
+import { useTrancheCanPerform } from "efi-ui/tranche/useTrancheCanPerform";
 import ContractAddresses from "efi/addresses";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
 import { getTokenInfo } from "efi/tokenlists";
-import { useTrancheCanPerform } from "efi-ui/tranche/useTrancheCanPerform";
 
 interface RedeemYieldTokensButtonProps {
   account: string | null | undefined;
@@ -35,6 +36,7 @@ export function RedeemYieldTokensButton({
   account,
   library,
 }: RedeemYieldTokensButtonProps): ReactElement {
+  const nowMs = useNowMs();
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const trancheInfo = getTokenInfo<TrancheInfo>(
     yieldTokenInfo.extensions.tranche
@@ -50,8 +52,7 @@ export function RedeemYieldTokensButton({
   );
   const unlockDate = convertEpochSecondsToDate(unlockTimestamp);
   const buttonDisabled =
-    (unlockDate && unlockDate.getTime() > Date.now()) ||
-    !canPerformWithdrawInterest;
+    (unlockDate && unlockDate.getTime() > nowMs) || !canPerformWithdrawInterest;
 
   const yieldTokenContract =
     interestTokenContractsByAddress[yieldTokenInfo.address];

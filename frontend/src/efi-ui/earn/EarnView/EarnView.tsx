@@ -9,17 +9,18 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { useSigner } from "efi-ui/provider/useBlockFromTag/useSigner/useSigner";
-import { openPrincipalTokenInfos } from "efi/tranche/tranches";
 import { IconNames } from "@blueprintjs/icons";
 import { Helmet } from "react-helmet";
 import { EarnTable } from "efi-ui/earn/EarnTable/EarnTable";
+import { useOpenPrincipalTokenInfos } from "efi-ui/tranche/useOpenPrincipaltokenInfos";
 
 interface EarnViewProps extends RouteComponentProps {}
 
 export function EarnView(unusedProps: EarnViewProps): ReactElement {
   const { account, library } = useWeb3React<Web3Provider>();
-
   const signer = useSigner(account, library);
+
+  const openPrincipalTokenInfos = useOpenPrincipalTokenInfos();
 
   const earnViewStyle: CSSProperties = { maxWidth: 610 };
   return (

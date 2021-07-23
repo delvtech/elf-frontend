@@ -52,8 +52,8 @@ import {
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { getTokenInfo } from "efi/tokenlists";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
-import { openTrancheBaseAssets } from "efi/tranche/baseAssets";
 import { underlyingContractsByAddress } from "efi/underlying/underlying";
+import { useOpenTrancheBaseAssets } from "efi-ui/tranche/useOpenTrancheBaseAssets";
 
 export interface SaveCardProps {
   library: Web3Provider | undefined;
@@ -106,6 +106,7 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
     activeBaseAssetDecimals
   );
   const baseAssetSymbol = getCryptoSymbol(activeBaseAsset);
+  const openTrancheBaseAssets = useOpenTrancheBaseAssets();
 
   // principal token
   const {
@@ -296,7 +297,7 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
         onCryptoAssetChange={setActiveBaseAsset}
       />
     ),
-    [activeBaseAsset, setActiveBaseAsset]
+    [activeBaseAsset, openTrancheBaseAssets, setActiveBaseAsset]
   );
 
   const termPickerRenderer = useCallback(
@@ -438,6 +439,7 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
 }
 
 function useActiveBaseAsset(onChange: (baseAsset: CryptoAsset) => void) {
+  const openTrancheBaseAssets = useOpenTrancheBaseAssets();
   const [activeBaseAsset, setActiveBaseAssetState] = useState<CryptoAsset>(
     openTrancheBaseAssets[0]
   );

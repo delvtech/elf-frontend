@@ -15,9 +15,10 @@ import { formatMoney } from "efi/money/formatMoney";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { useTokenYield } from "efi-ui/pools/hooks/useTokenYield";
 import { useStakingAPY } from "efi-ui/pools/hooks/useStakingAPY";
-import { TimeLeft2 } from "efi-ui/tranche/TimeLeft2";
+import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
 import { isYearnDaiVault } from "efi-yearn/hacks";
 import { getVaultTokenInfoForTranche } from "efi/tranche/tranches";
+import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 
 interface EarnSummaryCardProps {
   onToggleExpand: () => void;
@@ -53,6 +54,7 @@ export function EarnSummaryCard(props: EarnSummaryCardProps): JSX.Element {
     isExpanded,
   } = props;
 
+  const { isDarkMode } = useDarkMode();
   const fixedYield = useTokenYield(principalPoolInfo, "principal");
   const ptStakingAPY = useStakingAPY(principalPoolInfo);
   const ytStakingAPY = useStakingAPY(yieldPoolInfo);
@@ -111,7 +113,8 @@ export function EarnSummaryCard(props: EarnSummaryCardProps): JSX.Element {
 
         {/* Term */}
         <div className={tw("flex", "w-full", "items-start")}>
-          <TimeLeft2
+          <TimeLeft
+            isDarkMode={isDarkMode}
             startTimestamp={startTime}
             maturityTimestamp={maturityTime}
           />

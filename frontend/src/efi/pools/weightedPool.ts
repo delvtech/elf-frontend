@@ -1,11 +1,11 @@
 import { TokenInfo } from "@uniswap/token-lists";
 import { WeightedPool__factory } from "elf-contracts/types/factories/WeightedPool__factory";
 import { WeightedPool } from "elf-contracts/types/WeightedPool";
+import keyBy from "lodash.keyby";
 import { TokenListTag, YieldPoolTokenInfo } from "tokenlists/types";
 
-import { tokenListJson } from "efi/tokenlists";
-import keyBy from "lodash.keyby";
 import { defaultProvider } from "efi/providers/providers";
+import { tokenListJson } from "efi/tokenlists";
 
 // hard limit set by Balancer.  Cannot trade in/out more than 30% of the pool
 export const MAX_WEIGHTED_POOL_PRICE_IMPACT = 0.3;
@@ -18,9 +18,6 @@ export enum WeightedPoolExitKind {
 
 export const yieldPools: YieldPoolTokenInfo[] = tokenListJson.tokens.filter(
   (tokenInfo): tokenInfo is YieldPoolTokenInfo => isYieldPool(tokenInfo)
-);
-export const openYieldPools: YieldPoolTokenInfo[] = yieldPools.filter(
-  (yieldPool) => yieldPool.extensions.expiration * 1000 > Date.now()
 );
 
 export const yieldPoolContracts = yieldPools.map(({ address }) =>

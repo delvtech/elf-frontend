@@ -1,3 +1,4 @@
+import { useNowMs } from "efi-ui/base/hooks/useNowMs/useNowMs";
 import { usePoolSpotPrice } from "efi-ui/pools/hooks/usePoolSpotPrice/usePoolSpotPrice";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { getYearnVaultAPY } from "efi-yearn/fetchYearnVaults";
@@ -20,6 +21,7 @@ export function useTokenYield(
   poolInfo: PoolInfo,
   termAssetType: TermAssetType
 ): number {
+  const nowMs = useNowMs();
   const pool = getPoolContract(poolInfo.address);
   const { termAssetInfo } = getPoolTokens(poolInfo);
   // get fixed yield
@@ -31,7 +33,7 @@ export function useTokenYield(
 
   let fixedAPY = 0;
   if (principalPrice) {
-    const timeLeftInSeconds = unlockTimestamp - Math.round(Date.now() / 1000);
+    const timeLeftInSeconds = unlockTimestamp - Math.round(nowMs / 1000);
 
     // principalPrice is the price in terms of the base asset.  Since we know the principal will be
     // equal to base at term, (1 - principalPrice) gives us the the fixed interest for the rest of

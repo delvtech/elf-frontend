@@ -18,8 +18,9 @@ import {
   isPrincipalToken,
 } from "efi/tranche/tranches";
 import { getPrincipalTokenForYieldToken } from "efi/tranche/yieldTokens";
-import { TimeLeft2 } from "efi-ui/tranche/TimeLeft2";
+import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
 import { isYearnDaiVault } from "efi-yearn/hacks";
+import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 
 const summaryCardStyle: CSSProperties = {
   height: 220,
@@ -39,11 +40,11 @@ export function TermSummary(props: TermSummaryProps): ReactElement {
     maturityTimeMs = 0,
     startTimeMs = 0,
   } = props;
-
   const { termAssetInfo } = getPoolTokens(poolInfo);
   const { address: trancheAddress } = isPrincipalToken(termAssetInfo)
     ? termAssetInfo
     : getPrincipalTokenForYieldToken(termAssetInfo.address);
+  const { isDarkMode } = useDarkMode();
 
   const { symbol: vaultSymbol, address: vaultAddress } =
     getVaultTokenInfoForTranche(trancheAddress);
@@ -136,7 +137,8 @@ export function TermSummary(props: TermSummaryProps): ReactElement {
               {t`Status`}
             </span>
             <div style={{ maxWidth: "150px" }} className={tw("mt-1")}>
-              <TimeLeft2
+              <TimeLeft
+                isDarkMode={isDarkMode}
                 startTimestamp={startTimeMs}
                 maturityTimestamp={maturityTimeMs}
               />

@@ -35,6 +35,8 @@ export function useSwaps(
     if (!lastestBlockNumber) {
       return EMPTY_ARRAY as SwapEventWithTimeStamp[];
     }
+    // ok to use Date.now() directly since this hook updates every time latestBlockNumber updates
+    const nowInMs = Date.now();
 
     return events
       .map((event) => {
@@ -42,7 +44,6 @@ export function useSwaps(
         if (!args) {
           return undefined;
         }
-        const nowInMs = Date.now();
 
         // estimating timestamp here by taking the current time and subtracting the mining rate
         // multiplied by the number blocks mined:

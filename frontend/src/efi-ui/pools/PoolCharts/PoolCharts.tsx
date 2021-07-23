@@ -32,9 +32,7 @@ import { PoolInfo } from "efi/pools/PoolInfo";
 
 import { binDataByDay } from "./helpers/binDataByDay";
 import { convertChartDatasToSeries } from "./helpers/convertChartDatasToSeries";
-
-const nowTimestampMs = Date.now();
-const weekAgoTimestampMs = nowTimestampMs - ONE_WEEK_IN_MILLISECONDS;
+import { useNowMs } from "efi-ui/base/hooks/useNowMs/useNowMs";
 
 enum ChartType {
   LIQUIDITY = "liquidity",
@@ -48,7 +46,9 @@ interface PoolChartsProps {
 export function PoolCharts({ poolInfo }: PoolChartsProps): ReactElement {
   const { isDarkMode } = useDarkMode();
   const { currency } = useCurrencyPref();
+  const nowTimestampMs = useNowMs();
   const [binVolumeData, setBinVolumeData] = useState(true);
+  const weekAgoTimestampMs = nowTimestampMs - ONE_WEEK_IN_MILLISECONDS;
 
   const {
     volumeData: rawVolumeData,
@@ -127,7 +127,8 @@ export function PoolCharts({ poolInfo }: PoolChartsProps): ReactElement {
   );
 }
 function usePoolCharts(poolInfo: PoolInfo) {
-  const poolAge = getPoolAge(poolInfo);
+  const nowMs = useNowMs();
+  const poolAge = getPoolAge(poolInfo, nowMs);
 
   const liquidityData =
     useLiquidityHistoryForPool(poolInfo, ONE_WEEK_IN_SECONDS) ?? [];
@@ -162,7 +163,7 @@ function usePoolCharts(poolInfo: PoolInfo) {
   };
 }
 
-function getPoolAge(poolInfo: PoolInfo) {
+function getPoolAge(poolInfo: PoolInfo, nowTimestampMs: number) {
   const nowInSeconds = Math.floor(nowTimestampMs / 1000);
   const poolCreatedAt = poolInfo.extensions.createdAtTimestamp;
 

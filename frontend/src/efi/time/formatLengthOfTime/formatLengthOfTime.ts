@@ -5,7 +5,7 @@ import {
   ONE_HOUR_IN_MILLISECONDS,
 } from "efi/base/time";
 
-export function formatTermLength(startMs: number, endMs: number): string {
+export function formatLengthOfTime(startMs: number, endMs: number): string {
   const differenceMs = endMs - startMs;
 
   if (differenceMs < ONE_DAY_IN_MILLISECONDS) {

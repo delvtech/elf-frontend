@@ -25,12 +25,13 @@ import { yieldPoolContractsByAddress } from "efi/pools/weightedPool";
 import { getVaultTokenInfoForTranche } from "efi/tranche/tranches";
 import { getTokenInfo } from "efi/tokenlists";
 import { formatYieldTokenShortSymbol } from "efi/interestToken/formatYieldTokenShortSymbol";
-import { TimeLeft2 } from "efi-ui/tranche/TimeLeft2";
+import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
 import { isYearnDaiVault } from "efi-yearn/hacks";
 import { usePoolSpotPrice } from "efi-ui/pools/hooks/usePoolSpotPrice/usePoolSpotPrice";
 import { PoolAction } from "efi-ui/pools/hooks/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
 import { useStakingAPY } from "efi-ui/pools/hooks/useStakingAPY";
 import { useTotalFiatLiquidity } from "efi-ui/pools/hooks/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
+import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 
 interface YieldPoolCardProps {
   yieldPoolInfo: YieldPoolTokenInfo;
@@ -41,6 +42,7 @@ export function YieldPoolCard(props: YieldPoolCardProps): ReactElement | null {
     yieldPoolInfo,
     yieldPoolInfo: { address: poolAddress },
   } = props;
+  const { isDarkMode } = useDarkMode();
   const poolContract = yieldPoolContractsByAddress[poolAddress];
   const principalTokenInfo = getPrincipalTokenInfoForPool(yieldPoolInfo);
   const {
@@ -126,7 +128,8 @@ export function YieldPoolCard(props: YieldPoolCardProps): ReactElement | null {
 
         {/* Status */}
         <div>
-          <TimeLeft2
+          <TimeLeft
+            isDarkMode={isDarkMode}
             startTimestamp={createdAtTimestamp * 1000}
             maturityTimestamp={unlockTimestamp * 1000}
           />

@@ -8,6 +8,7 @@ import { PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { useNowMs } from "efi-ui/base/hooks/useNowMs/useNowMs";
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
 import { RedeemPrincipalTokensDrawer } from "efi-ui/tranche/RedeemTokensDrawer/RedeemPrincipalTokensDrawer";
 import { useTrancheCanPerform } from "efi-ui/tranche/useTrancheCanPerform";
@@ -32,6 +33,7 @@ export function RedeemPrincipalTokensButton({
   account,
   library,
 }: RedeemPrincipalTokensButtonProps): ReactElement {
+  const nowMs = useNowMs();
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const {
     address,
@@ -44,7 +46,7 @@ export function RedeemPrincipalTokensButton({
   );
 
   const buttonDisabled =
-    (unlockDate && unlockDate.getTime() > Date.now()) ||
+    (unlockDate && unlockDate.getTime() > nowMs) ||
     !canPerformWithdrawPrincipal;
 
   const principalTokenContract =

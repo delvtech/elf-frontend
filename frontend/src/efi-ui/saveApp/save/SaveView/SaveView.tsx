@@ -11,8 +11,8 @@ import { jt, t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { SaveCard } from "efi-ui/saveApp/save/SaveCard/SaveCard";
-import { openTrancheContracts } from "efi/tranche/tranches";
 import { SaveAppHeader } from "efi-ui/saveApp/page/SaveAppHeader/SaveAppHeader";
+import { useOpenTrancheContracts } from "efi-ui/tranche/useOpenTrancheContracts";
 
 interface EarnViewProps extends RouteComponentProps {}
 
@@ -38,6 +38,7 @@ export function SaveView(unusedProps: EarnViewProps): ReactElement {
     chainId,
     active: walletConnectionActive,
   } = useWeb3React<Web3Provider>();
+  const openTrancheContracts = useOpenTrancheContracts();
 
   const goToPortfolio = useCallback(() => navigate("/portfolio"), []);
   return (

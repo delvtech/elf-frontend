@@ -17,6 +17,7 @@ import { PoolInfo } from "efi/pools/PoolInfo";
 import { getTokenInfo } from "efi/tokenlists";
 import { TimeData } from "efi/charts/TimeData";
 import { balancerVaultContract } from "efi-balancer/vault";
+import { useNowMs } from "efi-ui/base/hooks/useNowMs/useNowMs";
 
 type PoolBalanceChangedArguments = [
   poolId: string,
@@ -34,11 +35,11 @@ type PoolBalanceChangedArguments = [
  * over the time period. values in ascending token address order.
  */
 
-const nowInMs = Date.now();
 export function useLiquidityHistoryForPool(
   poolInfo: PoolInfo,
   fromTime: number = ONE_DAY_IN_SECONDS
 ): TimeData[] | undefined {
+  const nowInMs = useNowMs();
   const poolContract = getPoolContract(poolInfo.address);
   const { poolId, underlying: baseAssetAddress } = poolInfo.extensions;
   const { decimals: baseAssetDecimals } = getTokenInfo(baseAssetAddress);

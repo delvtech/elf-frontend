@@ -36,6 +36,7 @@ import { getVaultTokenInfoForTranche } from "efi/tranche/tranches";
 import { TermTag } from "efi-ui/tranche/TermTag";
 import { format } from "date-fns";
 import { calculateProgress } from "efi/base/calculateProgress";
+import { useNowMs } from "efi-ui/base/hooks/useNowMs/useNowMs";
 
 interface PrincipalPoolCardListItemProps {
   principalPoolTokenInfo: PrincipalPoolTokenInfo;
@@ -51,6 +52,7 @@ export function PrincipalPoolCardListItem(
     },
   } = props;
 
+  const nowMs = useNowMs();
   const goToTrade = useCallback(() => {
     navigate(`/pools/${poolAddress}`);
   }, [poolAddress]);
@@ -189,9 +191,7 @@ export function PrincipalPoolCardListItem(
       <div>
         <ProgressBar
           intent={
-            Date.now() > unlockTimestamp * 1000
-              ? Intent.SUCCESS
-              : Intent.PRIMARY
+            nowMs > unlockTimestamp * 1000 ? Intent.SUCCESS : Intent.PRIMARY
           }
           animate={false}
           stripes={false}

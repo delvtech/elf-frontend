@@ -3,8 +3,9 @@ import { CSSProperties, ReactElement, useMemo } from "react";
 import classNames from "classnames";
 
 import tw from "efi-tailwindcss-classnames";
+import { useOpenPrincipalPools } from "efi-ui/pools/hooks/useOpenPrincipalPools";
 import { PrincipalPoolTableRow } from "efi-ui/pools/PoolsTable/PrincipalPoolTableRow";
-import { openPrincipalPools, principalPools } from "efi/pools/ccpool";
+import { principalPools } from "efi/pools/ccpool";
 
 import { PrincipalPoolTableHeader } from "./PrincipalPoolTableHeader";
 
@@ -21,6 +22,7 @@ export function PrincipalPoolTable({
   showMaturePools = true,
   className,
 }: PrincipalPoolTableProps): ReactElement {
+  const openPrincipalPools = useOpenPrincipalPools();
   const principalPoolsToShow = showMaturePools
     ? principalPools
     : openPrincipalPools;
