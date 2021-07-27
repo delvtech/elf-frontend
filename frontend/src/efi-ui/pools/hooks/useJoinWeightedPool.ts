@@ -1,8 +1,8 @@
 import { useCallback } from "react";
 import { UseMutationResult } from "react-query";
 
-import { Vault } from "elf-contracts/types/Vault";
-import { WeightedPool } from "elf-contracts/types/WeightedPool";
+import { Vault } from "elf-contracts-typechain/dist/types/Vault";
+import { WeightedPool } from "elf-contracts-typechain/dist/types/WeightedPool";
 import { BigNumber, CallOverrides, ContractReceipt, Signer } from "ethers";
 import { defaultAbiCoder } from "ethers/lib/utils";
 import zipObject from "lodash.zipobject";

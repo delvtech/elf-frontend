@@ -1,4 +1,4 @@
-import { CRVLUSD__factory } from "elf-contracts/types/factories/CRVLUSD__factory";
+import { CRVLUSD__factory } from "elf-contracts-typechain/dist/types/factories/CRVLUSD__factory";
 
 import { AddressesJson } from "efi/addresses";
 import { defaultProvider } from "efi/providers/providers";

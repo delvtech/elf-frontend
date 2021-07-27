@@ -1,7 +1,7 @@
 import { ReactElement } from "react";
 
 import { Intent, Tag } from "@blueprintjs/core";
-import { Tranche } from "elf-contracts/types/Tranche";
+import { Tranche } from "elf-contracts-typechain/dist/types/Tranche";
 import { AssetProxyTokenInfo, PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 

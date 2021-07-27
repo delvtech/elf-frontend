@@ -7,8 +7,8 @@ import {
   ERC20Permit,
   InterestToken,
   Tranche,
-} from "elf-contracts/types";
-import { UserProxy } from "elf-contracts/types/UserProxy";
+} from "elf-contracts-typechain/dist/types";
+import { UserProxy } from "elf-contracts-typechain/dist/types/UserProxy";
 import { ethers, Signer } from "ethers";
 import { parseUnits } from "ethers/lib/utils";
 import {

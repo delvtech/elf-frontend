@@ -2,7 +2,7 @@ import React, { ReactElement } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
-import { InterestToken } from "elf-contracts/types/InterestToken";
+import { InterestToken } from "elf-contracts-typechain/dist/types/InterestToken";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";

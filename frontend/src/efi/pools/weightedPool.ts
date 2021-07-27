@@ -1,6 +1,6 @@
 import { TokenInfo } from "@uniswap/token-lists";
-import { WeightedPool__factory } from "elf-contracts/types/factories/WeightedPool__factory";
-import { WeightedPool } from "elf-contracts/types/WeightedPool";
+import { WeightedPool__factory } from "elf-contracts-typechain/dist/types/factories/WeightedPool__factory";
+import { WeightedPool } from "elf-contracts-typechain/dist/types/WeightedPool";
 import keyBy from "lodash.keyby";
 import { TokenListTag, YieldPoolTokenInfo } from "tokenlists/types";
 

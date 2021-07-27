@@ -8,7 +8,7 @@ import {
   Intent,
 } from "@blueprintjs/core";
 import classNames from "classnames";
-import { Tranche } from "elf-contracts/types/Tranche";
+import { Tranche } from "elf-contracts-typechain/dist/types/Tranche";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";

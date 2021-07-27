@@ -1,4 +1,4 @@
-import { Vault } from "elf-contracts/types/Vault";
+import { Vault } from "elf-contracts-typechain/dist/types/Vault";
 import { BigNumber } from "ethers";
 import { parseEther } from "ethers/lib/utils";
 

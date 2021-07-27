@@ -12,7 +12,7 @@ import {
 import { IconNames } from "@blueprintjs/icons";
 import { Link } from "@reach/router";
 import classNames from "classnames";
-import { WeightedPool } from "elf-contracts/types/WeightedPool";
+import { WeightedPool } from "elf-contracts-typechain/dist/types/WeightedPool";
 import { BigNumber } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
 import zipObject from "lodash.zipobject";

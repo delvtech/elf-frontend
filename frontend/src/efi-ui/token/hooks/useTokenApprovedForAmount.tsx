@@ -1,13 +1,13 @@
 import { QueryObserverResult } from "react-query";
 
-import { ERC20 } from "elf-contracts/types/ERC20";
+import { ERC20 } from "elf-contracts-typechain/dist/types/ERC20";
 import { BigNumber } from "ethers";
 import zip from "lodash.zip";
 
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
 import { ContractMethodArgs } from "efi/contracts/types";
-import { ERC20Permit } from "elf-contracts/types/ERC20Permit";
+import { ERC20Permit } from "elf-contracts-typechain/dist/types/ERC20Permit";
 import { parseUnits } from "ethers/lib/utils";
 
 export function useTokenAllowance(

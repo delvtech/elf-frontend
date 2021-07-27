@@ -1,5 +1,5 @@
 import { TokenInfo } from "@uniswap/token-lists";
-import { TestYVault__factory } from "elf-contracts/types/factories/TestYVault__factory";
+import { TestYVault__factory } from "elf-contracts-typechain/dist/types/factories/TestYVault__factory";
 import keyBy from "lodash.keyby";
 import { TokenListTag, VaultTokenInfo } from "tokenlists/types";
 

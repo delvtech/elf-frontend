@@ -3,7 +3,7 @@ import React from "react";
 import { Classes, Icon } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import classNames from "classnames";
-import { Tranche } from "elf-contracts/types/Tranche";
+import { Tranche } from "elf-contracts-typechain/dist/types/Tranche";
 
 import tw from "efi-tailwindcss-classnames";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";

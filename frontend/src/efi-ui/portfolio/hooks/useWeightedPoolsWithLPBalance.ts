@@ -1,4 +1,4 @@
-import { WeightedPool } from "elf-contracts/types/WeightedPool";
+import { WeightedPool } from "elf-contracts-typechain/dist/types/WeightedPool";
 
 import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
 import { useTokensWithBalance } from "efi-ui/token/hooks/useTokensWithBalance";

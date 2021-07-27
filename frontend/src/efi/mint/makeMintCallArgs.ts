@@ -1,4 +1,4 @@
-import { UserProxy } from "elf-contracts/types/UserProxy";
+import { UserProxy } from "elf-contracts-typechain/dist/types/UserProxy";
 import { BigNumber, CallOverrides } from "ethers";
 
 import { PermitCallData } from "efi/base/fetchPermitData";

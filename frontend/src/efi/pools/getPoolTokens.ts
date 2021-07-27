@@ -1,6 +1,6 @@
 import { TokenInfo } from "@uniswap/token-lists";
-import { ERC20 } from "elf-contracts/types/ERC20";
-import { ERC20__factory } from "elf-contracts/types/factories/ERC20__factory";
+import { ERC20 } from "elf-contracts-typechain/dist/types/ERC20";
+import { ERC20__factory } from "elf-contracts-typechain/dist/types/factories/ERC20__factory";
 import { PrincipalPoolTokenInfo, YieldPoolTokenInfo } from "tokenlists/types";
 
 import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";

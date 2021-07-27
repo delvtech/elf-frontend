@@ -1,6 +1,6 @@
 import { TokenInfo } from "@uniswap/token-lists";
-import { Tranche__factory } from "elf-contracts/types/factories/Tranche__factory";
-import { TestYVault } from "elf-contracts/types/TestYVault";
+import { Tranche__factory } from "elf-contracts-typechain/dist/types/factories/Tranche__factory";
+import { TestYVault } from "elf-contracts-typechain/dist/types/TestYVault";
 import keyBy from "lodash.keyby";
 import {
   AssetProxyTokenInfo,

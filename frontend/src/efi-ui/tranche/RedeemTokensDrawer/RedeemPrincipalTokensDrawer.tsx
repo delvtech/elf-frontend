@@ -2,7 +2,7 @@ import { ReactElement, useCallback, useEffect, useState } from "react";
 
 import { Button, Callout, Intent, Switch } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
-import { Tranche } from "elf-contracts/types";
+import { Tranche } from "elf-contracts-typechain/dist/types";
 import { BigNumber, Signer } from "ethers";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
 import { PrincipalTokenInfo } from "tokenlists/types";

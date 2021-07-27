@@ -1,4 +1,4 @@
-import { Vault } from "elf-contracts/types/Vault";
+import { Vault } from "elf-contracts-typechain/dist/types/Vault";
 
 import { PendingTransactionPref } from "efi-ui/transactions/usePendingTransactionPref/usePendingTransactionPref";
 import ContractAddresses from "efi/addresses";

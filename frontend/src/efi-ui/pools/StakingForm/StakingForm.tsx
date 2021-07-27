@@ -9,8 +9,8 @@ import React, {
 
 import { Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
-import { ERC20 } from "elf-contracts/types/ERC20";
-import { WeightedPool } from "elf-contracts/types/WeightedPool";
+import { ERC20 } from "elf-contracts-typechain/dist/types/ERC20";
+import { WeightedPool } from "elf-contracts-typechain/dist/types/WeightedPool";
 import { BigNumber, Signer } from "ethers";
 import { formatEther, formatUnits, parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";

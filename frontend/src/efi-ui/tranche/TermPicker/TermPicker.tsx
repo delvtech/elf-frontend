@@ -2,7 +2,7 @@ import React, { ReactElement, useCallback } from "react";
 
 import { ItemRenderer, Select } from "@blueprintjs/select";
 import classNames from "classnames";
-import { Tranche } from "elf-contracts/types/Tranche";
+import { Tranche } from "elf-contracts-typechain/dist/types/Tranche";
 
 import tw from "efi-tailwindcss-classnames";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";

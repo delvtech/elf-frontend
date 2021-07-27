@@ -15,7 +15,7 @@ import {
   trancheContractsByAddress,
 } from "efi/tranche/tranches";
 import { underlyingContractsByAddress } from "efi/underlying/underlying";
-import { ERC20, ERC20Permit } from "elf-contracts/types";
+import { ERC20, ERC20Permit } from "elf-contracts-typechain/dist/types";
 import keyBy from "lodash.keyby";
 
 const USDC_CRYPTO_ASSET: Erc20PermitCryptoAsset = {

@@ -9,7 +9,7 @@ import {
 
 import { Callout, Switch } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
-import { ERC20Permit } from "elf-contracts/types";
+import { ERC20Permit } from "elf-contracts-typechain/dist/types";
 import { Signer } from "ethers";
 import {
   PrincipalTokenInfo as TrancheInfo,

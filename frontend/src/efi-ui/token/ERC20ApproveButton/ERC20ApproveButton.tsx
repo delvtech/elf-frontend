@@ -2,7 +2,7 @@ import React, { FC } from "react";
 
 import { Button, Intent } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
-import { ERC20 } from "elf-contracts/types/ERC20";
+import { ERC20 } from "elf-contracts-typechain/dist/types/ERC20";
 import { BigNumber, Signer } from "ethers";
 import { t } from "ttag";
 

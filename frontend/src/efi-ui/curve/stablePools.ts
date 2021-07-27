@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { QueryObserverResult } from "react-query";
 
-import { CRVLUSD } from "elf-contracts/types/CRVLUSD";
+import { CRVLUSD } from "elf-contracts-typechain/dist/types/CRVLUSD";
 import { BigNumber } from "ethers";
 import { Currencies, Money } from "ts-money";
 

@@ -2,7 +2,7 @@ import { Fragment, ReactElement, useCallback, useState } from "react";
 
 import { Button, Callout, Intent, Tag } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
-import { ConvergentCurvePool } from "elf-contracts/types";
+import { ConvergentCurvePool } from "elf-contracts-typechain/dist/types";
 import { formatUnits } from "ethers/lib/utils";
 import { PrincipalPoolTokenInfo, PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";

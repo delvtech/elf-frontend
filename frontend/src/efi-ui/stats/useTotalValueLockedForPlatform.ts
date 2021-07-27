@@ -1,6 +1,5 @@
 import { useQuery } from "react-query";
 
-import { ERC20 } from "elf-contracts/types/ERC20";
 import { Money } from "ts-money";
 
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
@@ -8,6 +7,7 @@ import { useOpenPrincipalTokenInfos } from "efi-ui/tranche/useOpenPrincipaltoken
 import { fetchTokenPrice } from "efi/token/fetchTokenPrice";
 import { fetchTotalValueLockedForTerm } from "efi/tranche/fetchTotalValueLockedForTerm";
 import { underlyingContractsByAddress } from "efi/underlying/underlying";
+import { ERC20 } from "elf-contracts-typechain/dist/types/ERC20";
 
 export function useTotalValueLockedForPlatform(): Money {
   const { currency } = useCurrencyPref();

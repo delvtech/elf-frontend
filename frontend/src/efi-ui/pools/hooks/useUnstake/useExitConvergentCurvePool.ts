@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 
-import { ConvergentCurvePool } from "elf-contracts/types";
-import { Vault } from "elf-contracts/types/Vault";
+import { ConvergentCurvePool } from "elf-contracts-typechain/dist/types";
+import { Vault } from "elf-contracts-typechain/dist/types/Vault";
 import { BigNumber, Signer } from "ethers";
 import { defaultAbiCoder, formatUnits, parseUnits } from "ethers/lib/utils";
 import { PrincipalPoolTokenInfo } from "tokenlists/types";

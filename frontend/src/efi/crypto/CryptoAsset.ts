@@ -1,6 +1,6 @@
 import { assertNever } from "efi/base/assertNever";
-import { ERC20 } from "elf-contracts/types/ERC20";
-import { ERC20Permit } from "elf-contracts/types/ERC20Permit";
+import { ERC20 } from "elf-contracts-typechain/dist/types/ERC20";
+import { ERC20Permit } from "elf-contracts-typechain/dist/types/ERC20Permit";
 
 export enum CryptoAssetType {
   ETHEREUM = "ethereum",

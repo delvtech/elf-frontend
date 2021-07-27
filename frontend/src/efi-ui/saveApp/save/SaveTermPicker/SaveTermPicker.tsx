@@ -1,6 +1,6 @@
 import React, { ReactElement } from "react";
 
-import { Tranche } from "elf-contracts/types/Tranche";
+import { Tranche } from "elf-contracts-typechain/dist/types/Tranche";
 
 import { PrincipalTokenTermButtonLabel } from "efi-ui/tranche/TermPicker/PrincipalTokenTermButtonLabel";
 import { TermPicker } from "efi-ui/tranche/TermPicker/TermPicker";

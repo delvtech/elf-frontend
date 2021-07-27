@@ -2,7 +2,7 @@ import { CSSProperties, ReactElement } from "react";
 
 import { Card, Classes } from "@blueprintjs/core";
 import classNames from "classnames";
-import { ERC20 } from "elf-contracts/types/ERC20";
+import { ERC20 } from "elf-contracts-typechain/dist/types/ERC20";
 import { BigNumber } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
 import { PrincipalTokenInfo, YieldTokenInfo } from "tokenlists/types";

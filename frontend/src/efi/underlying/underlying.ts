@@ -1,10 +1,10 @@
 import { AddressesJson } from "efi/addresses";
-import { WETH__factory } from "elf-contracts/types/factories/WETH__factory";
+import { WETH__factory } from "elf-contracts-typechain/dist/types/factories/WETH__factory";
 import {
   DAI__factory,
   ERC20Permit__factory,
   ERC20__factory,
-} from "elf-contracts/types";
+} from "elf-contracts-typechain/dist/types";
 import { defaultProvider } from "efi/providers/providers";
 
 const {

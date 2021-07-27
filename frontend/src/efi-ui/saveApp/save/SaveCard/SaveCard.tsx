@@ -16,7 +16,7 @@ import {
 } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import classNames from "classnames";
-import { ERC20 } from "elf-contracts/types";
+import { ERC20 } from "elf-contracts-typechain/dist/types";
 import { formatEther, formatUnits } from "ethers/lib/utils";
 import { PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";

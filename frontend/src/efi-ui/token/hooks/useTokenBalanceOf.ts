@@ -1,6 +1,6 @@
 import { QueryObserverResult } from "react-query";
 
-import { ERC20 } from "elf-contracts/types/ERC20";
+import { ERC20 } from "elf-contracts-typechain/dist/types/ERC20";
 import { BigNumber } from "ethers";
 
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";

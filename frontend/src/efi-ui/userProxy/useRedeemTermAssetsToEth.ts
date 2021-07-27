@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from "react";
 
-import { Tranche } from "elf-contracts/types/Tranche";
-import { UserProxy } from "elf-contracts/types/UserProxy";
+import { Tranche } from "elf-contracts-typechain/dist/types/Tranche";
+import { UserProxy } from "elf-contracts-typechain/dist/types/UserProxy";
 import { BigNumber, ethers, Signer } from "ethers";
 import { PrincipalTokenInfo } from "tokenlists/types";
 

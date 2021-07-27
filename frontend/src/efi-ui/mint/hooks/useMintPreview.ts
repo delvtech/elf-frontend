@@ -1,5 +1,5 @@
-import { TestYVault, Tranche } from "elf-contracts/types";
-import { YVaultAssetProxy } from "elf-contracts/types/YVaultAssetProxy";
+import { TestYVault, Tranche } from "elf-contracts-typechain/dist/types";
+import { YVaultAssetProxy } from "elf-contracts-typechain/dist/types/YVaultAssetProxy";
 import { formatUnits } from "ethers/lib/utils";
 import {
   AssetProxyTokenInfo,

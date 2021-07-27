@@ -1,6 +1,6 @@
 import { TokenInfo } from "@uniswap/token-lists";
-import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
-import { ConvergentCurvePool__factory } from "elf-contracts/types/factories/ConvergentCurvePool__factory";
+import { ConvergentCurvePool } from "elf-contracts-typechain/dist/types/ConvergentCurvePool";
+import { ConvergentCurvePool__factory } from "elf-contracts-typechain/dist/types/factories/ConvergentCurvePool__factory";
 import keyBy from "lodash.keyby";
 import { PrincipalPoolTokenInfo, TokenListTag } from "tokenlists/types";
 

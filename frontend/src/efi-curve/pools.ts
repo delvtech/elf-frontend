@@ -1,5 +1,5 @@
-import { CurveContract__factory } from "elf-contracts/types/factories/CurveContract__factory";
-import { CurveStethPool__factory } from "elf-contracts/types/factories/CurveStethPool__factory";
+import { CurveContract__factory } from "elf-contracts-typechain/dist/types/factories/CurveContract__factory";
+import { CurveStethPool__factory } from "elf-contracts-typechain/dist/types/factories/CurveStethPool__factory";
 
 import { defaultProvider } from "efi/providers/providers";
 

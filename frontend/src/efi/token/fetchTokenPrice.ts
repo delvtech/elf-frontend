@@ -1,17 +1,18 @@
-import { ERC20 } from "elf-contracts/types/ERC20";
+import { ERC20 } from "elf-contracts-typechain";
+import { CRVLUSD } from "elf-contracts-typechain/dist/types/CRVLUSD";
+import { formatUnits } from "ethers/lib/utils";
 import { Currencies, Currency, Money } from "ts-money";
+
 import { fetchCoinGeckoPrice, getCoinGeckoId } from "efi-coingecko";
-import { AddressesJson } from "efi/addresses";
-import { isGoerli, NUM_ETH_DECIMALS, ONE_ETHER } from "efi/ethereum";
-import { getTokenInfo } from "efi/tokenlists";
+import { crvTriCryptoPoolContract, steCrvPoolContract } from "efi-curve/pools";
 import {
   curveVirtualPriceContractsByAddress,
   isCurveStablePool,
 } from "efi-curve/stablePools";
-import { CRVLUSD } from "elf-contracts/types/CRVLUSD";
+import { AddressesJson } from "efi/addresses";
 import { formatBalance } from "efi/base/formatBalance";
-import { crvTriCryptoPoolContract, steCrvPoolContract } from "efi-curve/pools";
-import { formatUnits } from "ethers/lib/utils";
+import { isGoerli, NUM_ETH_DECIMALS, ONE_ETHER } from "efi/ethereum";
+import { getTokenInfo } from "efi/tokenlists";
 
 const {
   addresses: { crvtricryptoAddress, stecrvAddress },

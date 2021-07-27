@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { UseMutationResult } from "react-query";
 
-import { Vault } from "elf-contracts/types/Vault";
+import { Vault } from "elf-contracts-typechain/dist/types/Vault";
 import {
   BigNumber,
   BytesLike,

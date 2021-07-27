@@ -14,7 +14,7 @@ import { Web3Provider } from "@ethersproject/providers";
 import { Link } from "@reach/router";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import classNames from "classnames";
-import { InterestToken } from "elf-contracts/types/InterestToken";
+import { InterestToken } from "elf-contracts-typechain/dist/types/InterestToken";
 import { formatUnits } from "ethers/lib/utils";
 import { PrincipalTokenInfo, YieldTokenInfo } from "tokenlists/types";
 import { jt, t } from "ttag";

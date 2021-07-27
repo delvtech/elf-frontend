@@ -1,4 +1,4 @@
-import { Tranche } from "elf-contracts/types";
+import { Tranche } from "elf-contracts-typechain/dist/types";
 import uniqBy from "lodash.uniqby";
 import { PrincipalTokenInfo } from "tokenlists/types";
 

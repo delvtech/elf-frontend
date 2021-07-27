@@ -12,7 +12,7 @@ import {
 import { IconNames } from "@blueprintjs/icons";
 import { Link } from "@reach/router";
 import classNames from "classnames";
-import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
+import { ConvergentCurvePool } from "elf-contracts-typechain/dist/types/ConvergentCurvePool";
 import { BigNumber } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
 import zipObject from "lodash.zipobject";

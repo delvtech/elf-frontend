@@ -1,4 +1,4 @@
-import { Tranche } from "elf-contracts/types/Tranche";
+import { Tranche } from "elf-contracts-typechain/dist/types/Tranche";
 
 import { useSmartContractEvents } from "efi-ui/contracts/useSmartContractEvents/useSmartContractEvents";
 import { useBlockFromTag } from "efi-ui/provider/useBlockFromTag/useBlockFromTag";

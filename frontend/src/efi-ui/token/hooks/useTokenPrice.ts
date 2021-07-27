@@ -1,6 +1,6 @@
 import { QueryObserverResult } from "react-query";
 
-import { ERC20 } from "elf-contracts/types/ERC20";
+import { ERC20 } from "elf-contracts-typechain/dist/types/ERC20";
 import { Currency, Money } from "ts-money";
 
 import { getCoinGeckoId } from "efi-coingecko";

@@ -1,7 +1,7 @@
 import { TokenInfo } from "@uniswap/token-lists";
 import { defaultProvider } from "efi/providers/providers";
 import { tokenListJson } from "efi/tokenlists";
-import { YVaultAssetProxy__factory } from "elf-contracts/types/factories/YVaultAssetProxy__factory";
+import { YVaultAssetProxy__factory } from "elf-contracts-typechain/dist/types/factories/YVaultAssetProxy__factory";
 import keyBy from "lodash.keyby";
 import {
   PrincipalTokenInfo,

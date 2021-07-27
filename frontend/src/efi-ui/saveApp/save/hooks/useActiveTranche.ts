@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 
-import { Tranche } from "elf-contracts/types/Tranche";
+import { Tranche } from "elf-contracts-typechain/dist/types/Tranche";
 import mapValues from "lodash.mapvalues";
 
 import { CryptoAsset } from "efi/crypto/CryptoAsset";

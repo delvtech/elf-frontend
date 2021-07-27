@@ -1,6 +1,6 @@
 import { QueryObserverResult } from "react-query";
 
-import { Vault } from "elf-contracts/types/Vault";
+import { Vault } from "elf-contracts-typechain/dist/types/Vault";
 import { BigNumber } from "ethers";
 
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";

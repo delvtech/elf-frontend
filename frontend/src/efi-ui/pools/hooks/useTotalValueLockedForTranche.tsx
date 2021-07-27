@@ -1,4 +1,4 @@
-import { ERC20 } from "elf-contracts/types/ERC20";
+import { ERC20 } from "elf-contracts-typechain/dist/types/ERC20";
 import { formatUnits } from "ethers/lib/utils";
 import { PrincipalTokenInfo, YieldPoolTokenInfo } from "tokenlists/types";
 import { Money } from "ts-money";

@@ -1,5 +1,5 @@
-import { ConvergentCurvePool } from "elf-contracts/types/ConvergentCurvePool";
-import { WeightedPool } from "elf-contracts/types/WeightedPool";
+import { ConvergentCurvePool } from "elf-contracts-typechain/dist/types/ConvergentCurvePool";
+import { WeightedPool } from "elf-contracts-typechain/dist/types/WeightedPool";
 import { BigNumber } from "ethers";
 
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";

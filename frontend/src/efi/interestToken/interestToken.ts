@@ -1,5 +1,5 @@
 import { TokenInfo } from "@uniswap/token-lists";
-import { InterestToken__factory } from "elf-contracts/types/factories/InterestToken__factory";
+import { InterestToken__factory } from "elf-contracts-typechain/dist/types/factories/InterestToken__factory";
 import { TokenListTag, YieldTokenInfo } from "tokenlists/types";
 
 import { tokenListJson } from "efi/tokenlists";

@@ -1,4 +1,4 @@
-import { Tranche } from "elf-contracts/types/Tranche";
+import { Tranche } from "elf-contracts-typechain/dist/types/Tranche";
 import groupBy from "lodash.groupby";
 import { PrincipalTokenInfo } from "tokenlists/types";
 
