@@ -2,6 +2,7 @@ import { FC, Fragment } from "react";
 import { ReactQueryDevtools } from "react-query/devtools";
 
 import { Button, FocusStyleManager, H1, Overlay } from "@blueprintjs/core";
+import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
 import { LocationProvider, Redirect, Router } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
@@ -9,25 +10,25 @@ import classNames from "classnames";
 import { t } from "ttag";
 
 import { tw } from "efi-tailwindcss-classnames";
-import { EarnView } from "efi-ui/earn/EarnView/EarnView";
+import { NavigationMenuButton } from "efi-ui/app/navigation/EarnHamburgerButton/EarnHamburgerButton";
 import { Navigation } from "efi-ui/app/navigation/navigation";
+import { EarnAppHeader } from "efi-ui/app/page/EarnAppHeader/EarnAppHeader";
 import { TradeView } from "efi-ui/app/trade/TradeView/TradeView";
+import { EarnView } from "efi-ui/earn/EarnView/EarnView";
 import { PoolView } from "efi-ui/pools/PoolView/PoolView";
 import { PortfolioView } from "efi-ui/portfolio/PortfolioView/PortfolioView";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
+import { useToastWrongChain } from "efi-ui/provider/useBlockFromTag/useToastWrongChain";
+import { StatsView } from "efi-ui/stats/StatsView";
 import { useTransactionToasts } from "efi-ui/transactions/useTransactionToasts";
+import { ConnectWalletButton } from "efi-ui/wallets/ConnectWalletButton/ConnectWalletButton";
 import { useEagerConnect } from "efi-ui/wallets/hooks/useEagerReconnect";
 import { useSyncWithInjectedEthereum } from "efi-ui/wallets/hooks/useSyncWithInjectedEthereum";
-
-import styles from "./App.module.css";
-import { useToastWrongChain } from "efi-ui/provider/useBlockFromTag/useToastWrongChain";
-import { EarnAppHeader } from "efi-ui/app/page/EarnAppHeader/EarnAppHeader";
-import { getConnectorName } from "efi/wallets/connectors";
-import { NavigationMenuButton } from "efi-ui/app/navigation/EarnHamburgerButton/EarnHamburgerButton";
 import { AddressesJson } from "efi/addresses";
 import { ChainId, ChainNames } from "efi/ethereum";
-import { ConnectWalletButton } from "efi-ui/wallets/ConnectWalletButton/ConnectWalletButton";
-import { IconNames } from "@blueprintjs/icons";
+import { getConnectorName } from "efi/wallets/connectors";
+
+import styles from "./App.module.css";
 
 FocusStyleManager.onlyShowFocusOnTabs();
 
@@ -96,6 +97,7 @@ const App: FC<AppProps> = () => {
             <EarnView path={Navigation.EARN} />
             <TradeView path={Navigation.TRADE} />
             <PoolView path={`pools/:poolAddress`} />
+            <StatsView path={Navigation.STATS} />
           </Router>
         </div>
         <div
