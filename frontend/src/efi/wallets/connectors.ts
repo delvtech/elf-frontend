@@ -11,6 +11,7 @@ import {
   ALCHEMY_MAINNET_HTTP_URL,
 } from "efi/providers/providers";
 import { AddressesJson } from "efi/addresses";
+import { WalletLinkConnector } from "@web3-react/walletlink-connector";
 
 /**
  * The 'injected' connector refers to plugin-based wallets like MetaMask, which
@@ -47,6 +48,14 @@ export const walletConnectConnector = new WalletConnectConnector({
     [ChainId.GOERLI]: ALCHEMY_GOERLI_HTTP_URL,
     [ChainId.LOCAL]: ChainNames[ChainId.LOCAL],
   },
+});
+
+export const coinbaseConnector = new WalletLinkConnector({
+  url:
+    AddressesJson.chainId === ChainId.MAINNET
+      ? ALCHEMY_MAINNET_HTTP_URL
+      : ALCHEMY_GOERLI_HTTP_URL,
+  appName: "Element Finance",
 });
 
 export const ledgerConnector = new LedgerConnector({

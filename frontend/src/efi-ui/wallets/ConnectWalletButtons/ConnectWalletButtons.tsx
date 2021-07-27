@@ -6,12 +6,14 @@ import { useWeb3React } from "@web3-react/core";
 
 import { ReactComponent as MetamaskIcon } from "efi-static-assets/logos/metamask.svg";
 import { ReactComponent as WalletConnectIcon } from "efi-static-assets/logos/walletConnectIcon.svg";
+import { ReactComponent as CoinbaseIcon } from "efi-static-assets/logos/coinbasewallet.svg";
 import { ReactComponent as LedgerIcon } from "efi-static-assets/logos/ledgerIcon.svg";
 import tw from "efi-tailwindcss-classnames";
 import {
   injectedConnector,
   ledgerConnector,
   walletConnectConnector,
+  coinbaseConnector,
 } from "efi/wallets/connectors";
 
 const iconStyle: CSSProperties = {
@@ -45,6 +47,12 @@ export function ConnectWalletButtons({
   const connectToWalletConnect = useCallback(async () => {
     await deactivateActiveConnector();
     activate(walletConnectConnector, deactivateActiveConnector);
+    onClick?.();
+  }, [activate, deactivateActiveConnector, onClick]);
+
+  const connectToCoinbase = useCallback(async () => {
+    await deactivateActiveConnector();
+    activate(coinbaseConnector, deactivateActiveConnector);
     onClick?.();
   }, [activate, deactivateActiveConnector, onClick]);
 
@@ -84,6 +92,14 @@ export function ConnectWalletButtons({
           icon={<WalletConnectIcon style={iconStyle} />}
         >
           <span className={tw("text-base")}>WalletConnect</span>
+        </Button>
+        <Button
+          minimal
+          className={tw("p-12", "w-1/2", "flex-col", "space-y-3")}
+          onClick={connectToCoinbase}
+          icon={<CoinbaseIcon style={{ ...iconStyle, borderRadius: 8 }} />}
+        >
+          <span className={tw("text-base")}>Coinbase</span>
         </Button>
         <Button
           minimal
