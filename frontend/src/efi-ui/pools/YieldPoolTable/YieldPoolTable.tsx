@@ -2,22 +2,24 @@ import { CSSProperties, ReactElement, useMemo } from "react";
 
 import tw from "efi-tailwindcss-classnames";
 import { useOpenYieldPools } from "efi-ui/pools/hooks/useOpenYieldPools";
-import { YieldPoolCard } from "efi-ui/pools/PoolsTable/YieldPoolCard";
 import { yieldPools } from "efi/pools/weightedPool";
 
 import { YieldPoolTableHeader } from "./YieldPoolTableHeader";
+import { YieldPoolTableRow } from "efi-ui/pools/YieldPoolTable/YieldPoolTableRow";
+import classNames from "classnames";
 
 interface YieldPoolTableProps {
   showMaturePools?: boolean;
+  className: string;
 }
 
 const yieldPoolTableStyle: CSSProperties = {
-  maxWidth: 1240,
-  minWidth: 1000,
+  width: 1240,
 };
 
 export function YieldPoolTable({
   showMaturePools = true,
+  className,
 }: YieldPoolTableProps): ReactElement {
   const openYieldPools = useOpenYieldPools();
   const yieldPoolsToShow = showMaturePools ? yieldPools : openYieldPools;
@@ -32,14 +34,17 @@ export function YieldPoolTable({
 
   return (
     <div
-      className={tw("flex", "flex-col", "items-center", "space-y-5")}
+      className={classNames(
+        tw("flex-col", "items-center", "space-y-5"),
+        className
+      )}
       style={yieldPoolTableStyle}
     >
       <YieldPoolTableHeader className={tw("hidden", "lg:grid")} />
 
       {sortedPools.map((poolInfo) => {
         return (
-          <YieldPoolCard key={poolInfo.address} yieldPoolInfo={poolInfo} />
+          <YieldPoolTableRow key={poolInfo.address} yieldPoolInfo={poolInfo} />
         );
       })}
     </div>

@@ -17,7 +17,8 @@ import { PoolAction } from "efi-ui/pools/hooks/usePoolViewPoolActionsPref/usePoo
 import { useStakingAPY } from "efi-ui/pools/hooks/useStakingAPY";
 import { useTokenYield } from "efi-ui/pools/hooks/useTokenYield";
 import { useTotalFiatLiquidity } from "efi-ui/pools/hooks/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
-import styles from "efi-ui/pools/PoolsTable/grid.module.css";
+import styles from "efi-ui/pools/PrincipalPoolTable/grid.module.css";
+import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { getYearnVaultAPY } from "efi-yearn/fetchYearnVaults";
 import { isYearnDaiVault } from "efi-yearn/hacks";
@@ -30,7 +31,6 @@ import { principalPoolContractsByAddress } from "efi/pools/ccpool";
 import { getPrincipalTokenInfoForPool } from "efi/pools/getPrincipalTokenInfoForPool";
 import { formatPrincipalTokenShortSymbol } from "efi/tranche/format";
 import { getVaultTokenInfoForTranche } from "efi/tranche/tranches";
-import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 
 interface PrincipalPoolTableRowProps {
   className?: string;

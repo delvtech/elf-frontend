@@ -7,10 +7,11 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { Classes, Divider, H2, H4, Tab, Tabs } from "@blueprintjs/core";
 import { assertNever } from "efi/base/assertNever";
-import { PrincipalPoolTable } from "efi-ui/pools/PoolsTable/PrincipalPoolTable";
-import { YieldPoolTable } from "efi-ui/pools/PoolsTable/YieldPoolTable";
 import classNames from "classnames";
-import { PrincipalPoolCardList } from "efi-ui/pools/PoolsTable/PrincipalPoolCardList";
+import { PrincipalPoolCardList } from "efi-ui/pools/PrincipalPoolCardList/PrincipalPoolCardList";
+import { YieldPoolCardList } from "efi-ui/pools/YieldPoolCardList/YieldPoolCardList";
+import { PrincipalPoolTable } from "efi-ui/pools/PrincipalPoolTable/PrincipalPoolTable";
+import { YieldPoolTable } from "efi-ui/pools/YieldPoolTable/YieldPoolTable";
 
 enum TradeViewTab {
   PRINCIPAL = "principal",
@@ -116,7 +117,16 @@ export function TradeView(unusedProps: TradeViewProps): ReactElement {
                   </Fragment>
                 );
               case TradeViewTab.YIELD:
-                return <YieldPoolTable />;
+                return (
+                  <Fragment>
+                    {/* Desktop */}
+                    <YieldPoolTable className={tw("hidden", "lg:flex")} />
+                    {/* Mobile */}
+                    <YieldPoolCardList
+                      className={tw("flex", "lg:hidden", "p-4")}
+                    />
+                  </Fragment>
+                );
               default:
                 assertNever(activeTab);
             }

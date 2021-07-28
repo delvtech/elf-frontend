@@ -10,7 +10,7 @@ import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { GoToPoolButton } from "efi-ui/pools/GoToPoolButton/GoToPoolButton";
-import styles from "efi-ui/pools/PoolsTable/grid.module.css";
+import styles from "efi-ui/pools/YieldPoolTable/grid.module.css";
 import { useFeeVolumeForPool } from "efi-ui/pools/hooks/useFeeVolumeForPool/useFeeVolumeForPool";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { getYearnVaultAPY } from "efi-yearn/fetchYearnVaults";
@@ -33,11 +33,13 @@ import { useStakingAPY } from "efi-ui/pools/hooks/useStakingAPY";
 import { useTotalFiatLiquidity } from "efi-ui/pools/hooks/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 
-interface YieldPoolCardProps {
+interface YieldPoolTableRowProps {
   yieldPoolInfo: YieldPoolTokenInfo;
 }
 
-export function YieldPoolCard(props: YieldPoolCardProps): ReactElement | null {
+export function YieldPoolTableRow(
+  props: YieldPoolTableRowProps
+): ReactElement | null {
   const {
     yieldPoolInfo,
     yieldPoolInfo: { address: poolAddress },

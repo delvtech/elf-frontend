@@ -1,9 +1,11 @@
 import { ReactElement } from "react";
+
 import { Classes } from "@blueprintjs/core";
 import classNames from "classnames";
 import { t } from "ttag";
+
 import tw from "efi-tailwindcss-classnames";
-import styles from "efi-ui/pools/PoolsTable/grid.module.css";
+import styles from "efi-ui/pools/PrincipalPoolTable/grid.module.css";
 
 export function PrincipalPoolTableHeader(): ReactElement {
   return (

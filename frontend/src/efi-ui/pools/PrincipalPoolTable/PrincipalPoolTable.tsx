@@ -1,21 +1,27 @@
-import { ReactElement, useMemo } from "react";
+import { CSSProperties, ReactElement, useMemo } from "react";
 
 import classNames from "classnames";
 
 import tw from "efi-tailwindcss-classnames";
-import { PrincipalPoolCardListItem } from "efi-ui/pools/PoolsTable/PrincipalPoolCardListItem";
-import { principalPools } from "efi/pools/ccpool";
 import { useOpenPrincipalPools } from "efi-ui/pools/hooks/useOpenPrincipalPools";
+import { principalPools } from "efi/pools/ccpool";
 
-interface PrincipalPoolCardListProps {
+import { PrincipalPoolTableHeader } from "./PrincipalPoolTableHeader";
+import { PrincipalPoolTableRow } from "efi-ui/pools/PrincipalPoolTable/PrincipalPoolTableRow";
+
+interface PrincipalPoolTableProps {
   showMaturePools?: boolean;
   className: string;
 }
 
-export function PrincipalPoolCardList({
+const principalPoolTableStyle: CSSProperties = {
+  width: 1240,
+};
+
+export function PrincipalPoolTable({
   showMaturePools = true,
   className,
-}: PrincipalPoolCardListProps): ReactElement {
+}: PrincipalPoolTableProps): ReactElement {
   const openPrincipalPools = useOpenPrincipalPools();
   const principalPoolsToShow = showMaturePools
     ? principalPools
@@ -32,13 +38,16 @@ export function PrincipalPoolCardList({
   return (
     <div
       className={classNames(
-        tw("flex-col", "items-center", "space-y-5", "w-full"),
+        tw("flex-col", "items-center", "space-y-5"),
         className
       )}
+      style={principalPoolTableStyle}
     >
+      <PrincipalPoolTableHeader />
+
       {sortedPools.map((poolInfo) => {
         return (
-          <PrincipalPoolCardListItem
+          <PrincipalPoolTableRow
             key={poolInfo.address}
             principalPoolTokenInfo={poolInfo}
           />
