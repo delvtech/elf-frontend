@@ -49,7 +49,6 @@ import {
 } from "efi/tranche/tranches";
 import { getYearnVaultAPY } from "efi-yearn/fetchYearnVaults";
 import { formatYieldTokenShortSymbol } from "efi/interestToken/formatYieldTokenShortSymbol";
-import { isYearnDaiVault } from "efi-yearn/hacks";
 import { useNowMs } from "efi-ui/base/hooks/useNowMs/useNowMs";
 
 interface YieldTokenCardProps {
@@ -123,9 +122,7 @@ export function YieldTokenCard({
   const { name: vaultName } = yearnVault || {};
 
   const vaultApy = yearnVault?.apy ? getYearnVaultAPY(yearnVault?.apy) : 0;
-  const postedAPY = isYearnDaiVault(vaultAddress)
-    ? t`✨ NEW ✨`
-    : formatPercent(vaultApy);
+  const postedAPY = formatPercent(vaultApy);
 
   const exitValue =
     +formatUnits(yieldTokenBalanceOf || 0, baseAssetDecimals) *

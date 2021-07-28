@@ -26,7 +26,6 @@ import { getVaultTokenInfoForTranche } from "efi/tranche/tranches";
 import { getTokenInfo } from "efi/tokenlists";
 import { formatYieldTokenShortSymbol } from "efi/interestToken/formatYieldTokenShortSymbol";
 import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
-import { isYearnDaiVault } from "efi-yearn/hacks";
 import { usePoolSpotPrice } from "efi-ui/pools/hooks/usePoolSpotPrice/usePoolSpotPrice";
 import { PoolAction } from "efi-ui/pools/hooks/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
 import { useStakingAPY } from "efi-ui/pools/hooks/useStakingAPY";
@@ -118,9 +117,7 @@ export function YieldPoolTableRow(
 
         {/* Vault APY */}
         <div className={tw("flex", "justify-center", "font-bold")}>
-          {isYearnDaiVault(vaultAddress)
-            ? t`✨ NEW ✨`
-            : formatPercent(vaultApy)}
+          {formatPercent(vaultApy)}
         </div>
 
         {/* Yield Price */}

@@ -21,7 +21,6 @@ import styles from "efi-ui/pools/PrincipalPoolTable/grid.module.css";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { getYearnVaultAPY } from "efi-yearn/fetchYearnVaults";
-import { isYearnDaiVault } from "efi-yearn/hacks";
 import { formatPercent } from "efi/base/formatPercent";
 import { ONE_WEEK_IN_SECONDS } from "efi/base/time";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
@@ -139,9 +138,7 @@ export function PrincipalPoolTableRow(
 
         {/* Vault APY */}
         <div className={tw("flex", "justify-center", "font-bold")}>
-          {isYearnDaiVault(vaultAddress)
-            ? t`✨ NEW ✨`
-            : formatPercent(vaultApy)}
+          {formatPercent(vaultApy)}
         </div>
 
         {/* Principal Price */}

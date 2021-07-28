@@ -16,8 +16,6 @@ import { PoolInfo } from "efi/pools/PoolInfo";
 import { useTokenYield } from "efi-ui/pools/hooks/useTokenYield";
 import { useStakingAPY } from "efi-ui/pools/hooks/useStakingAPY";
 import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
-import { isYearnDaiVault } from "efi-yearn/hacks";
-import { getVaultTokenInfoForTranche } from "efi/tranche/tranches";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 
 interface EarnSummaryCardProps {
@@ -59,10 +57,6 @@ export function EarnSummaryCard(props: EarnSummaryCardProps): JSX.Element {
   const ptStakingAPY = useStakingAPY(principalPoolInfo);
   const ytStakingAPY = useStakingAPY(yieldPoolInfo);
 
-  const { address: vaultAddress } = getVaultTokenInfoForTranche(
-    principalPoolInfo.extensions.bond
-  );
-
   return (
     <Card onClick={onToggleExpand} className={tw("w-full", "flex", "p-5")}>
       <div className={styles.earnGrid}>
@@ -82,9 +76,7 @@ export function EarnSummaryCard(props: EarnSummaryCardProps): JSX.Element {
 
         {/* Vault APY */}
         <div className={tw("flex", "justify-center", "font-bold")}>
-          {isYearnDaiVault(vaultAddress)
-            ? t`✨ NEW ✨`
-            : formatPercent(vaultApy)}
+          {formatPercent(vaultApy)}
         </div>
 
         {/* LP APYs */}

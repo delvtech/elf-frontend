@@ -26,7 +26,6 @@ import { useStakingAPY } from "efi-ui/pools/hooks/useStakingAPY";
 import { useTotalFiatLiquidity } from "efi-ui/pools/hooks/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { getYearnVaultAPY } from "efi-yearn/fetchYearnVaults";
-import { isYearnDaiVault } from "efi-yearn/hacks";
 import { formatPercent } from "efi/base/formatPercent";
 import { ONE_WEEK_IN_SECONDS } from "efi/base/time";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
@@ -173,11 +172,7 @@ export function YieldPoolCardListItem(
 
           {/* Vault APY */}
           <span className={classNames(Classes.TEXT_MUTED, tw("text-right"))}>
-            {t`Vault APY: ${
-              isYearnDaiVault(vaultAddress)
-                ? t`✨ NEW ✨`
-                : formatPercent(vaultApy)
-            }`}
+            {formatPercent(vaultApy)}
           </span>
         </div>
       </div>

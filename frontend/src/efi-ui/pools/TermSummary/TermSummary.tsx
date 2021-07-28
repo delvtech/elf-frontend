@@ -19,7 +19,6 @@ import {
 } from "efi/tranche/tranches";
 import { getPrincipalTokenForYieldToken } from "efi/tranche/yieldTokens";
 import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
-import { isYearnDaiVault } from "efi-yearn/hacks";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 
 const summaryCardStyle: CSSProperties = {
@@ -103,9 +102,7 @@ export function TermSummary(props: TermSummaryProps): ReactElement {
                 className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
               >{t`Vault APY`}</span>
               <div className={classNames("h5", tw("space-x-4"))}>
-                {isYearnDaiVault(vaultAddress)
-                  ? t`✨ NEW ✨`
-                  : formatPercent(vaultApy)}
+                {formatPercent(vaultApy)}
               </div>
             </div>
           )}
