@@ -7,7 +7,8 @@ export function convertChartDatasToSeries(
   liquidityData: TimeData[] | undefined,
   volumeData: TimeData[] | undefined,
   fromTimestamp: number,
-  toTimeStamp: number
+  toTimeStamp: number,
+  totalLiquidity: number
 ): Record<string, Serie[]> {
   // because we are estimating block timestamps, make sure we don't have any older than our time frame
   const filteredLiquidityData =
@@ -22,7 +23,8 @@ export function convertChartDatasToSeries(
   const paddedLiquidityData = padTimeData(
     filteredLiquidityData,
     fromTimestamp,
-    toTimeStamp
+    toTimeStamp,
+    totalLiquidity
   );
 
   // remove data that have the same timestamp
@@ -44,17 +46,21 @@ export function convertChartDatasToSeries(
 
 function padTimeData(
   data: TimeData[],
-  fromTimestamp: number,
-  toTimestamp: number
+  startTimestamp: number,
+  endTimestamp: number,
+  value: number
 ) {
-  if (!data.length) {
-    return data;
+  if (data.length === 0) {
+    return [
+      { value, timeMs: startTimestamp + 1 },
+      { value, timeMs: endTimestamp - 1 },
+    ];
   }
 
-  const firstDatum: TimeData = { ...data[0], timeMs: fromTimestamp + 1 };
+  const firstDatum: TimeData = { ...data[0], timeMs: startTimestamp + 1 };
   const lastDatum: TimeData = {
     ...data[data.length - 1],
-    timeMs: toTimestamp - 1,
+    timeMs: endTimestamp - 1,
   };
 
   return [firstDatum, ...data, lastDatum];

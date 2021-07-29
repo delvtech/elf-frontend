@@ -33,6 +33,7 @@ import { PoolInfo } from "efi/pools/PoolInfo";
 import { binDataByDay } from "./helpers/binDataByDay";
 import { convertChartDatasToSeries } from "./helpers/convertChartDatasToSeries";
 import { useNowMs } from "efi-ui/base/hooks/useNowMs/useNowMs";
+import { useTotalFiatLiquidity } from "efi-ui/pools/hooks/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
 
 enum ChartType {
   LIQUIDITY = "liquidity",
@@ -58,6 +59,8 @@ export function PoolCharts({ poolInfo }: PoolChartsProps): ReactElement {
     poolAge,
   } = usePoolCharts(poolInfo);
 
+  const totalLiquidity = useTotalFiatLiquidity(poolInfo);
+
   const volumeData = binVolumeData
     ? binDataByDay(rawVolumeData, weekAgoTimestampMs, nowTimestampMs)
     : rawVolumeData;
@@ -66,7 +69,8 @@ export function PoolCharts({ poolInfo }: PoolChartsProps): ReactElement {
     liquidityData,
     volumeData,
     weekAgoTimestampMs,
-    nowTimestampMs
+    nowTimestampMs,
+    totalLiquidity?.toDecimal() ?? 0
   );
 
   const labelElement = binVolumeData ? (
@@ -132,6 +136,7 @@ function usePoolCharts(poolInfo: PoolInfo) {
 
   const liquidityData =
     useLiquidityHistoryForPool(poolInfo, ONE_WEEK_IN_SECONDS) ?? [];
+
   const volumeData =
     useVolumeHistoryForPool(poolInfo, ONE_WEEK_IN_SECONDS) ?? [];
   const { currency } = useCurrencyPref();

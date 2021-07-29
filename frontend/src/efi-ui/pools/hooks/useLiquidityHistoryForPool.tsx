@@ -151,10 +151,13 @@ export function useLiquidityHistoryForPool(
       deltaEvents.forEach((event, index) => {
         const [delta, timestamp] = event;
 
-        // if we are at index 0, then the value at [index - 1] will be undefined, so we'll use the
-        // currentLiquidity to start
-        const previousLiquidity =
-          liquidityOverTime[index - 1]?.[0] ?? currentLiquidity;
+        // if we are at index 0, we'll use the currentLiquidity to start
+        if (index === 0) {
+          liquidityOverTime.push([currentLiquidity, timestamp]);
+          return;
+        }
+
+        const previousLiquidity = liquidityOverTime[index - 1]?.[0];
 
         // get total liquidity at each timestamp
         const liquidity = previousLiquidity - delta;
