@@ -81,7 +81,7 @@
     "elf-contracts-typechain": "git+https://github.com/element-fi/elf-contracts-typechain.git",
     "eth-rpc-errors": "^4.0.3",
     "ethereum-waffle": "^3.4.0",
-    "ethers": "^5.4.2",
+    "ethers": "^5.4.3",
     "fuzzaldrin-plus": "^0.6.0",
     "graphql": "^15.5.1",
     "lodash.conformsto": "^4.15.0",
