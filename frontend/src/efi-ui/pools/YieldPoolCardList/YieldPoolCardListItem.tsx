@@ -172,7 +172,7 @@ export function YieldPoolCardListItem(
 
           {/* Vault APY */}
           <span className={classNames(Classes.TEXT_MUTED, tw("text-right"))}>
-            {formatPercent(vaultApy)}
+            {t`Vault APY: ${formatPercent(vaultApy)}`}
           </span>
         </div>
       </div>
