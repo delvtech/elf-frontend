@@ -20,7 +20,7 @@
     "@ethersproject/abi": "^5.4.0",
     "@ethersproject/abstract-signer": "^5.4.0",
     "@ethersproject/bytes": "^5.4.0",
-    "@ethersproject/contracts": "^5.4.0",
+    "@ethersproject/contracts": "^5.4.1",
     "@ethersproject/hash": "^5.4.0",
     "@ethersproject/providers": "^5.4.2",
     "@fontsource/inter": "^4.5.0",
