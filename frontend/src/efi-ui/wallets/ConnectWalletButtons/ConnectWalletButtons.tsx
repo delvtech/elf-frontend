@@ -1,21 +1,25 @@
 import React, { CSSProperties, ReactElement, useCallback } from "react";
 
-import { Button, ButtonGroup } from "@blueprintjs/core";
+import { Button, ButtonGroup, Icon, Intent } from "@blueprintjs/core";
+import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
+import { t } from "ttag";
 
-import { ReactComponent as MetamaskIcon } from "efi-static-assets/logos/metamask.svg";
-import { ReactComponent as WalletConnectIcon } from "efi-static-assets/logos/walletConnectIcon.svg";
 import { ReactComponent as CoinbaseIcon } from "efi-static-assets/logos/coinbasewallet.svg";
 import { ReactComponent as LedgerIcon } from "efi-static-assets/logos/ledgerIcon.svg";
+import { ReactComponent as MetamaskIcon } from "efi-static-assets/logos/metamask.svg";
+import { ReactComponent as WalletConnectIcon } from "efi-static-assets/logos/walletConnectIcon.svg";
 import tw from "efi-tailwindcss-classnames";
 import {
+  coinbaseConnector,
+  getWalletConnectConnector,
   injectedConnector,
   ledgerConnector,
-  walletConnectConnector,
-  coinbaseConnector,
 } from "efi/wallets/connectors";
+import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 
+const connectorButtonClassName = tw("p-12", "w-1/4", "flex-col", "space-y-3");
 const iconStyle: CSSProperties = {
   height: 48,
   width: 48,
@@ -30,13 +34,12 @@ export function ConnectWalletButtons({
   vertical,
   onClick,
 }: ConnectWalletButtonsProps): ReactElement {
-  const { active, activate, deactivate } = useWeb3React<Web3Provider>();
+  const { active, activate, deactivate, connector } =
+    useWeb3React<Web3Provider>();
 
   const deactivateActiveConnector = useCallback(async () => {
-    if (active) {
-      await deactivate();
-    }
-  }, [active, deactivate]);
+    await deactivate();
+  }, [deactivate]);
 
   const connectToMetaMask = useCallback(async () => {
     await deactivateActiveConnector();
@@ -46,6 +49,7 @@ export function ConnectWalletButtons({
 
   const connectToWalletConnect = useCallback(async () => {
     await deactivateActiveConnector();
+    const walletConnectConnector = getWalletConnectConnector();
     activate(walletConnectConnector, deactivateActiveConnector);
     onClick?.();
   }, [activate, deactivateActiveConnector, onClick]);
@@ -65,21 +69,45 @@ export function ConnectWalletButtons({
     onClick?.();
   }, [activate, deactivateActiveConnector, onClick]);
 
+  const closeConnection = useCallback(async () => {
+    await deactivateActiveConnector();
+    if (!!(connector as WalletConnectConnector)?.close) {
+      try {
+        await (connector as WalletConnectConnector)?.close();
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  }, [connector, deactivateActiveConnector]);
+
   return (
     <div
       data-testid="connect-wallet-buttons"
       className={tw(
         "flex",
-        { "flex-col": vertical, "flex-wrap": !vertical },
-        "h-full",
+        "flex-col",
         "w-full",
-        "justify-center"
+        "justify-center",
+        "overflow-scroll"
       )}
     >
-      <ButtonGroup fill>
+      <Button
+        minimal
+        outlined
+        intent={Intent.PRIMARY}
+        disabled={!active}
+        onClick={closeConnection}
+        className={tw("p-4", "m-4")}
+        icon={<Icon icon={IconNames.CROSS} />}
+      >{t`Close wallet connection`}</Button>
+      <div className={tw("flex", "flex-col", "w-full", "px-8", "pb-4")}>
+        <span>{t`- Some connectors can only change wallets from their app.`}</span>
+        <span>{t`- Some connectors may cause a page refresh.`}</span>
+      </div>
+      <ButtonGroup className={tw("flex-wrap")} vertical={vertical} fill>
         <Button
           minimal
-          className={tw("p-12", "w-1/2", "flex-col", "space-y-3")}
+          className={connectorButtonClassName}
           onClick={connectToMetaMask}
           icon={<MetamaskIcon style={iconStyle} />}
         >
@@ -87,7 +115,7 @@ export function ConnectWalletButtons({
         </Button>
         <Button
           minimal
-          className={tw("p-12", "w-1/2", "flex-col", "space-y-3")}
+          className={connectorButtonClassName}
           onClick={connectToWalletConnect}
           icon={<WalletConnectIcon style={iconStyle} />}
         >
@@ -95,7 +123,7 @@ export function ConnectWalletButtons({
         </Button>
         <Button
           minimal
-          className={tw("p-12", "w-1/2", "flex-col", "space-y-3")}
+          className={connectorButtonClassName}
           onClick={connectToCoinbase}
           icon={<CoinbaseIcon style={{ ...iconStyle, borderRadius: 8 }} />}
         >
@@ -103,7 +131,7 @@ export function ConnectWalletButtons({
         </Button>
         <Button
           minimal
-          className={tw("p-12", "w-1/2", "flex-col", "space-y-3")}
+          className={connectorButtonClassName}
           onClick={connectToLedger}
           icon={<LedgerIcon style={iconStyle} />}
         >

@@ -113,7 +113,7 @@ const App: FC<AppProps> = () => {
               "py-4",
               "justify-between",
               "block",
-              "md:hidden"
+              "lg:hidden"
             ),
             { [styles.appBackgroundDark]: isDarkMode }
           )}

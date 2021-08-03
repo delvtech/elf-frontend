@@ -7,7 +7,6 @@ import tw from "efi-tailwindcss-classnames";
 import { useNewPrincipalTokensPendingTransaction } from "efi-ui/portfolio/hooks/useNewPrincipalTokensPendingTransaction";
 import { PrincipalTokenCard } from "efi-ui/portfolio/PrincipalTokenCard/PrincipalTokenCard";
 import { NoPrincipalTokensInWalletNonIdealState } from "efi-ui/wallets/NoPrincipalTokensInWalletNonIdealState/NoPrincipalTokensInWalletNonIdealState";
-import { NoWalletConnectedNonIdealState } from "efi-ui/wallets/NoWalletConnectedNonIdealState/NoWalletConnectedNonIdealState";
 import { PrincipalTokenInfo } from "tokenlists/types";
 import { usePrincipalTokensWithoutDust } from "efi-ui/tranche/usePrincipalTokensWithoutDust";
 
@@ -55,9 +54,7 @@ function PrincipalTokenCards(props: PrincipalTokenCardsProps) {
   let nonIdealStateContent = null;
   if (!account) {
     nonIdealStateContent = (
-      <NoWalletConnectedNonIdealState
-        title={t`Connect your wallet to view your portfolio`}
-      />
+      <span>{t`Connect your wallet to view your portfolio`}</span>
     );
   } else if (!hasFYTs) {
     nonIdealStateContent = <NoPrincipalTokensInWalletNonIdealState />;

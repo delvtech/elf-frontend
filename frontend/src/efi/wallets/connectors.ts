@@ -40,15 +40,19 @@ injectedConnector.handleChainChanged = (chainId: string | number) => {
 
 /**
  * WalletConnect.  This provides access to many mobile wallets that use the wallet connect protocol
- * like Rainbow, Argent etc.
+ * like Rainbow, Argent etc.  Note that once this connector is closed, it can't be reopened so we
+ * need to create a new instance to try to connect again.
  */
-export const walletConnectConnector = new WalletConnectConnector({
-  rpc: {
-    [ChainId.MAINNET]: ALCHEMY_MAINNET_HTTP_URL,
-    [ChainId.GOERLI]: ALCHEMY_GOERLI_HTTP_URL,
-    [ChainId.LOCAL]: ChainNames[ChainId.LOCAL],
-  },
-});
+export function getWalletConnectConnector(): WalletConnectConnector {
+  const walletConnectConnector = new WalletConnectConnector({
+    rpc: {
+      [ChainId.MAINNET]: ALCHEMY_MAINNET_HTTP_URL,
+      [ChainId.GOERLI]: ALCHEMY_GOERLI_HTTP_URL,
+      [ChainId.LOCAL]: ChainNames[ChainId.LOCAL],
+    },
+  });
+  return walletConnectConnector;
+}
 
 export const coinbaseConnector = new WalletLinkConnector({
   url:

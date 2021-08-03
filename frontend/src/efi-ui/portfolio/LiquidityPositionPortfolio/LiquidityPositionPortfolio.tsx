@@ -8,7 +8,6 @@ import { useWeightedPoolsWithLPBalance } from "efi-ui/portfolio/hooks/useWeighte
 import { PrincipalTokenLPCard } from "efi-ui/portfolio/LiquidityPositionCard/PrincipalTokenLPCard";
 import { YieldTokenLPCard } from "efi-ui/portfolio/LiquidityPositionCard/YieldTokenLPCard";
 import { NoLPsInWalletNonIdealState } from "efi-ui/wallets/NoLPsInWalletNonIdealState/NoLPsInWalletNonIdealState";
-import { NoWalletConnectedNonIdealState } from "efi-ui/wallets/NoWalletConnectedNonIdealState/NoWalletConnectedNonIdealState";
 
 interface LiquidityPositionPortfolioProps {
   account: string | null | undefined;
@@ -24,9 +23,7 @@ export function LiquidityPositionPortfolio({
   let nonIdealStateContent = null;
   if (!account) {
     nonIdealStateContent = (
-      <NoWalletConnectedNonIdealState
-        title={t`Connect your wallet to view your portfolio`}
-      />
+      <span>{t`Connect your wallet to view your portfolio`}</span>
     );
   }
   // else if because the wallet connection non ideal state is higher priority
