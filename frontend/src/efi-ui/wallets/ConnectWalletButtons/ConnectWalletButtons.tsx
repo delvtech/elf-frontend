@@ -4,25 +4,35 @@ import { Button, ButtonGroup, Icon, Intent } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
+import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import { t } from "ttag";
 
 import { ReactComponent as CoinbaseIcon } from "efi-static-assets/logos/coinbasewallet.svg";
 import { ReactComponent as LedgerIcon } from "efi-static-assets/logos/ledgerIcon.svg";
 import { ReactComponent as MetamaskIcon } from "efi-static-assets/logos/metamask.svg";
+import { ReactComponent as LatticeIcon } from "efi-static-assets/logos/svg/grid-plus-logo-white-blue.svg";
+import { ReactComponent as TrezorIcon } from "efi-static-assets/logos/svg/trezor-dark.svg";
 import { ReactComponent as WalletConnectIcon } from "efi-static-assets/logos/walletConnectIcon.svg";
 import tw from "efi-tailwindcss-classnames";
 import {
   coinbaseConnector,
   getWalletConnectConnector,
   injectedConnector,
+  latticeConnector,
   ledgerConnector,
+  trezorConnector,
 } from "efi/wallets/connectors";
-import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 
 const connectorButtonClassName = tw("p-12", "w-1/4", "flex-col", "space-y-3");
 const iconStyle: CSSProperties = {
   height: 48,
   width: 48,
+};
+const roundedIconStyle: CSSProperties = {
+  height: 48,
+  width: 48,
+  // match border radius of the bp3-dialog
+  borderRadius: 6,
 };
 
 interface ConnectWalletButtonsProps {
@@ -63,6 +73,24 @@ export function ConnectWalletButtons({
   const connectToLedger = useCallback(async () => {
     await deactivateActiveConnector();
     activate(ledgerConnector, (error) => {
+      error && console.error(error);
+      deactivateActiveConnector();
+    });
+    onClick?.();
+  }, [activate, deactivateActiveConnector, onClick]);
+
+  const connectToTrezor = useCallback(async () => {
+    await deactivateActiveConnector();
+    activate(trezorConnector, (error) => {
+      error && console.error(error);
+      deactivateActiveConnector();
+    });
+    onClick?.();
+  }, [activate, deactivateActiveConnector, onClick]);
+
+  const connectToLattice = useCallback(async () => {
+    await deactivateActiveConnector();
+    activate(latticeConnector, (error) => {
       error && console.error(error);
       deactivateActiveConnector();
     });
@@ -125,7 +153,7 @@ export function ConnectWalletButtons({
           minimal
           className={connectorButtonClassName}
           onClick={connectToCoinbase}
-          icon={<CoinbaseIcon style={{ ...iconStyle, borderRadius: 8 }} />}
+          icon={<CoinbaseIcon style={roundedIconStyle} />}
         >
           <span className={tw("text-base")}>Coinbase</span>
         </Button>
@@ -133,9 +161,29 @@ export function ConnectWalletButtons({
           minimal
           className={connectorButtonClassName}
           onClick={connectToLedger}
-          icon={<LedgerIcon style={iconStyle} />}
+          icon={<LedgerIcon style={roundedIconStyle} />}
         >
           <span className={tw("text-base")}>Ledger</span>
+        </Button>
+        <Button
+          minimal
+          className={connectorButtonClassName}
+          onClick={connectToTrezor}
+          icon={
+            <TrezorIcon style={{ ...roundedIconStyle, background: "black" }} />
+          }
+        >
+          <span className={tw("text-base")}>Trezor</span>
+        </Button>
+        <Button
+          minimal
+          className={connectorButtonClassName}
+          onClick={connectToLattice}
+          icon={
+            <LatticeIcon style={{ ...roundedIconStyle, background: "black" }} />
+          }
+        >
+          <span className={tw("text-base")}>Lattice</span>
         </Button>
       </ButtonGroup>
     </div>

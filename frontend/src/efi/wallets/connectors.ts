@@ -1,17 +1,19 @@
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { InjectedConnector } from "@web3-react/injected-connector";
+import { LatticeConnector } from "@web3-react/lattice-connector";
 import { LedgerConnector } from "@web3-react/ledger-connector";
+import { TrezorConnector } from "@web3-react/trezor-connector";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
+import { WalletLinkConnector } from "@web3-react/walletlink-connector";
 import { t } from "ttag";
 
+import { AddressesJson } from "efi/addresses";
 import { ChainId, ChainNames, DEFAULT_CHAIN_IDS } from "efi/ethereum";
 import {
   ALCHEMY_GOERLI_HTTP_URL,
   ALCHEMY_MAINNET_HTTP_URL,
 } from "efi/providers/providers";
-import { AddressesJson } from "efi/addresses";
-import { WalletLinkConnector } from "@web3-react/walletlink-connector";
 
 /**
  * The 'injected' connector refers to plugin-based wallets like MetaMask, which
@@ -63,6 +65,25 @@ export const coinbaseConnector = new WalletLinkConnector({
 });
 
 export const ledgerConnector = new LedgerConnector({
+  chainId: AddressesJson.chainId,
+  url:
+    AddressesJson.chainId === ChainId.MAINNET
+      ? ALCHEMY_MAINNET_HTTP_URL
+      : ALCHEMY_GOERLI_HTTP_URL,
+});
+
+export const trezorConnector = new TrezorConnector({
+  manifestEmail: "support@element.fi",
+  manifestAppUrl: "https://app.element.fi",
+  chainId: AddressesJson.chainId,
+  url:
+    AddressesJson.chainId === ChainId.MAINNET
+      ? ALCHEMY_MAINNET_HTTP_URL
+      : ALCHEMY_GOERLI_HTTP_URL,
+});
+
+export const latticeConnector = new LatticeConnector({
+  appName: "Element Finance",
   chainId: AddressesJson.chainId,
   url:
     AddressesJson.chainId === ChainId.MAINNET
