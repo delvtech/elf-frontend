@@ -1,4 +1,4 @@
-import { FC, Fragment } from "react";
+import React, { FC, Fragment } from "react";
 import { ReactQueryDevtools } from "react-query/devtools";
 
 import { Button, FocusStyleManager, H1, Overlay } from "@blueprintjs/core";
@@ -90,7 +90,10 @@ const App: FC<AppProps> = () => {
             />
           </LocationProvider>
 
-          <Router className={tw("w-full", "h-full")}>
+          {/* need to use primary={false} to prevent scrolling issues.  more can be read here:
+          https://stackoverflow.com/questions/53058110/stop-reach-router-scrolling-down-the-page-after-navigating-to-new-page
+          */}
+          <Router primary={false} className={tw("w-full", "h-full")}>
             <Redirect noThrow from="/" to={Navigation.EARN} />
 
             <PortfolioView path={Navigation.PORTFOLIO} />
@@ -100,6 +103,7 @@ const App: FC<AppProps> = () => {
             <StatsView path={Navigation.STATS} />
           </Router>
         </div>
+
         <div
           className={classNames(
             styles.appBackground,
