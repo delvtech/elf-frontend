@@ -87,7 +87,7 @@ export function SaveInput(props: SaveInputProps): ReactElement {
         placeholder={placeholder}
         style={saveInputStyle}
         className={classNames(
-          tw("w-full"),
+          tw("w-full", "flex", "flex-col"),
           styles.investmentAmount,
           { [styles.investmentAmountLightMode]: !isDarkMode },
           className

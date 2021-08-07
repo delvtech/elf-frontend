@@ -274,6 +274,28 @@ module.exports = {
       },
     },
     {
+      name: "efi-not-to-app",
+      comment: "App should not depend on the Save App",
+      severity: "error",
+      from: {
+        path: "efi-ui/app",
+      },
+      to: {
+        path: `(${["efi-ui/saveApp"].join("|")})`,
+      },
+    },
+    {
+      name: "efi-not-to-save-app",
+      comment: "Save App should not depend on the main App",
+      severity: "error",
+      from: {
+        path: "efi-ui/saveApp",
+      },
+      to: {
+        path: `(${["efi-ui/app"].join("|")})`,
+      },
+    },
+    {
       name: "efi-not-to-crypto",
       comment: "Importing certain modules in crypto/ is prohibited",
       severity: "error",

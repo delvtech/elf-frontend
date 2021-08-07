@@ -1,7 +1,7 @@
 import React, { FC, Fragment } from "react";
 import { ReactQueryDevtools } from "react-query/devtools";
 
-import { FocusStyleManager, H1, Overlay } from "@blueprintjs/core";
+import { Button, FocusStyleManager, H1, Overlay } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { Router } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
@@ -20,6 +20,8 @@ import { AddressesJson } from "efi/addresses";
 import { ChainId, ChainNames } from "efi/ethereum";
 
 import styles from "./SaveApp.module.css";
+import { IconNames } from "@blueprintjs/icons";
+import { ConnectWalletButton } from "efi-ui/wallets/ConnectWalletButton/ConnectWalletButton";
 
 FocusStyleManager.onlyShowFocusOnTabs();
 
@@ -36,11 +38,12 @@ const contentClassName = tw(
 interface SaveAppProps {}
 
 const SaveApp: FC<SaveAppProps> = () => {
-  const { active, chainId } = useWeb3React<Web3Provider>();
+  const { active, account, chainId } = useWeb3React<Web3Provider>();
   const isWrongChain = active && chainId !== AddressesJson.chainId;
   const chainName = ChainNames[AddressesJson.chainId as ChainId];
 
-  const { isDarkMode, darkModeClassName } = useDarkMode();
+  const { isDarkMode, darkModeClassName, setDarkModeOff, setDarkModeOn } =
+    useDarkMode();
 
   const appClassName = classNames(
     styles.appBackground,
@@ -64,6 +67,36 @@ const SaveApp: FC<SaveAppProps> = () => {
           <SavePortfolioView path={"/portfolio"} />
         </Router>
       </div>
+      <div
+        className={classNames(
+          styles.appBackground,
+          darkModeClassName,
+          tw(
+            "absolute",
+            "w-full",
+            "bottom-0",
+            "flex",
+            "px-8",
+            "py-4",
+            "justify-between",
+            "block",
+            "lg:hidden"
+          ),
+          { [styles.appBackgroundDark]: isDarkMode }
+        )}
+      >
+        <Button
+          minimal
+          className={tw("px-6", "py-3")}
+          icon={isDarkMode ? IconNames.FLASH : IconNames.MOON}
+          onClick={isDarkMode ? setDarkModeOff : setDarkModeOn}
+        />
+        <ConnectWalletButton
+          account={account}
+          chainId={chainId}
+          walletConnectionActive={active}
+        />
+      </div>{" "}
       <Overlay isOpen={isWrongChain}>
         <div
           className={tw(

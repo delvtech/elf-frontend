@@ -18,7 +18,7 @@ import { Web3Provider } from "@ethersproject/providers";
 import classNames from "classnames";
 import { ERC20 } from "elf-contracts-typechain/dist/types";
 import { formatEther, formatUnits } from "ethers/lib/utils";
-import { PrincipalTokenInfo } from "tokenlists/types";
+import { PrincipalPoolTokenInfo, PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import { SwapKind } from "efi-balancer/SwapKind";
@@ -181,86 +181,32 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
     activeBaseAssetDecimals
   );
 
-  const onChangeIn = useCallback(
-    (newAmountIn: string, swapKind: SwapKind) => {
-      if (!newAmountIn) {
-        clearInputs();
-        return;
-      }
-
-      const newAmountOutResult = getCalcSwap(
-        newAmountIn,
-        SwapKind.GIVEN_IN,
-        poolInfo,
-        baseAssetAddress,
-        principalTokenAddress,
-        baseReserves,
-        principalReserves,
-        totalSupply
-      );
-      const { result: [, newAmountOutNumber] = ["", ""] } = newAmountOutResult;
-
-      const newAmountOut = clipStringValueToDecimals(
-        newAmountOutNumber,
-        activeBaseAssetDecimals
-      );
-      setSwapKind(swapKind);
-      setAmountIn(newAmountIn);
-      setAmountOut(newAmountOut);
-    },
-    [
-      activeBaseAssetDecimals,
-      baseAssetAddress,
-      baseReserves,
-      clearInputs,
-      poolInfo,
-      principalReserves,
-      principalTokenAddress,
-      setAmountIn,
-      setAmountOut,
-      totalSupply,
-    ]
+  const onChangeIn = useOnChangeIn(
+    clearInputs,
+    poolInfo,
+    baseAssetAddress,
+    principalTokenAddress,
+    baseReserves,
+    principalReserves,
+    totalSupply,
+    activeBaseAssetDecimals,
+    setSwapKind,
+    setAmountIn,
+    setAmountOut
   );
 
-  const onChangeOut = useCallback(
-    (newAmountOut: string, swapKind: SwapKind) => {
-      if (!newAmountOut) {
-        clearInputs();
-        return;
-      }
-      const newAmountOutResult = getCalcSwap(
-        newAmountOut,
-        SwapKind.GIVEN_OUT,
-        poolInfo,
-        baseAssetAddress,
-        principalTokenAddress,
-        baseReserves,
-        principalReserves,
-        totalSupply
-      );
-
-      const { result: [amountIn] = ["", ""] } = newAmountOutResult;
-
-      const newAmountIn = clipStringValueToDecimals(
-        amountIn,
-        activeBaseAssetDecimals ?? 18
-      );
-      setSwapKind(swapKind);
-      setAmountIn(newAmountIn);
-      setAmountOut(newAmountOut);
-    },
-    [
-      activeBaseAssetDecimals,
-      baseAssetAddress,
-      baseReserves,
-      clearInputs,
-      poolInfo,
-      principalReserves,
-      principalTokenAddress,
-      setAmountIn,
-      setAmountOut,
-      totalSupply,
-    ]
+  const onChangeOut = useOnChangeOut(
+    clearInputs,
+    poolInfo,
+    baseAssetAddress,
+    principalTokenAddress,
+    baseReserves,
+    principalReserves,
+    totalSupply,
+    activeBaseAssetDecimals,
+    setSwapKind,
+    setAmountIn,
+    setAmountOut
   );
 
   // need to recalculate output when a new term is selected.
@@ -330,7 +276,10 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
             <span className={classNames(Classes.TEXT_MUTED)}>{t`From`}</span>
             {!!account && (
               <span
-                className={classNames(Classes.TEXT_MUTED)}
+                className={classNames(
+                  Classes.TEXT_MUTED,
+                  tw("hidden", "lg:inline")
+                )}
               >{t`Balance: ${activeBaseAssetDisplayBalance} ${activeBaseAssetSymbol}`}</span>
             )}
           </div>
@@ -354,11 +303,17 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
             />
           </div>
         </div>
+
         <div className={tw("flex", "flex-col", "space-y-2")}>
           <div className={tw("flex", "justify-between")}>
             <span className={classNames(Classes.TEXT_MUTED)}>{t`To`}</span>
             {marketRateLabel && (
-              <span className={classNames(Classes.TEXT_MUTED)}>
+              <span
+                className={classNames(
+                  Classes.TEXT_MUTED,
+                  tw("hidden", "lg:inline")
+                )}
+              >
                 {marketRateLabel}
               </span>
             )}
@@ -435,6 +390,118 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
         onClose={closeWalletDialog}
       />
     </Fragment>
+  );
+}
+
+function useOnChangeOut(
+  clearInputs: () => void,
+  poolInfo: PrincipalPoolTokenInfo,
+  baseAssetAddress: string,
+  principalTokenAddress: string,
+  baseReserves: string,
+  principalReserves: string,
+  totalSupply: string,
+  activeBaseAssetDecimals: number,
+  setSwapKind: (swapKind: SwapKind) => void,
+  setAmountIn: (value: string) => void,
+  setAmountOut: (value: string) => void
+) {
+  return useCallback(
+    (newAmountOut: string, swapKind: SwapKind) => {
+      if (!newAmountOut) {
+        clearInputs();
+        return;
+      }
+      const newAmountOutResult = getCalcSwap(
+        newAmountOut,
+        SwapKind.GIVEN_OUT,
+        poolInfo,
+        baseAssetAddress,
+        principalTokenAddress,
+        baseReserves,
+        principalReserves,
+        totalSupply
+      );
+
+      const { result: [amountIn] = ["", ""] } = newAmountOutResult;
+
+      const newAmountIn = clipStringValueToDecimals(
+        amountIn,
+        activeBaseAssetDecimals ?? 18
+      );
+      setSwapKind(swapKind);
+      setAmountIn(newAmountIn);
+      setAmountOut(newAmountOut);
+    },
+    [
+      activeBaseAssetDecimals,
+      baseAssetAddress,
+      baseReserves,
+      clearInputs,
+      poolInfo,
+      principalReserves,
+      principalTokenAddress,
+      setAmountIn,
+      setAmountOut,
+      setSwapKind,
+      totalSupply,
+    ]
+  );
+}
+
+function useOnChangeIn(
+  clearInputs: () => void,
+  poolInfo: PrincipalPoolTokenInfo,
+  baseAssetAddress: string,
+  principalTokenAddress: string,
+  baseReserves: string,
+  principalReserves: string,
+  totalSupply: string,
+  activeBaseAssetDecimals: number,
+  setSwapKind: (swapKind: SwapKind) => void,
+  setAmountIn: (value: string) => void,
+  setAmountOut: (value: string) => void
+) {
+  return useCallback(
+    (newAmountIn: string, swapKind: SwapKind) => {
+      if (!newAmountIn) {
+        clearInputs();
+        return;
+      }
+
+      const newAmountOutResult = getCalcSwap(
+        newAmountIn,
+        SwapKind.GIVEN_IN,
+        poolInfo,
+        baseAssetAddress,
+        principalTokenAddress,
+        baseReserves,
+        principalReserves,
+        totalSupply
+      );
+      const { result: [, newAmountOutNumber] = ["", ""] } = newAmountOutResult;
+
+      const newAmountOut = clipStringValueToDecimals(
+        newAmountOutNumber,
+        activeBaseAssetDecimals
+      );
+      setSwapKind(swapKind);
+      setAmountIn(newAmountIn);
+      setAmountOut(newAmountOut);
+    },
+    [
+      activeBaseAssetDecimals,
+      baseAssetAddress,
+      baseReserves,
+      clearInputs,
+      poolInfo,
+      principalReserves,
+      principalTokenAddress,
+      setAmountIn,
+      setAmountOut,
+      setSwapKind,
+      totalSupply,
+    ]
   );
 }
 

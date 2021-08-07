@@ -12,6 +12,7 @@ import { ConnectWalletButton } from "efi-ui/wallets/ConnectWalletButton/ConnectW
 import { AddressesJson } from "efi/addresses";
 import { isGoerli, isMainnet } from "efi/ethereum";
 import { ElementLogo } from "efi-ui/base/ElementLogo";
+import { SaveAppMenuButton } from "efi-ui/saveApp/navigation/SaveAppMenuButton/SaveAppMenuButton";
 
 let earnAppUrl = "http://localhost:3000";
 if (isGoerli(AddressesJson.chainId)) {
@@ -32,11 +33,35 @@ export function SaveAppHeader({
 }: SaveAppHeaderProps): ReactElement {
   const { isDarkMode, setDarkModeOff, setDarkModeOn } = useDarkMode();
   return (
-    <div className={tw("flex", "flex-col", "w-full")}>
-      <ExperimentalBanner />
-      {/* page title */}
+    <div className={tw("flex", "w-full", "flex-col")}>
+      <ExperimentalBanner className={tw("hidden", "lg:flex")} />
+
+      {/* Mobile */}
       <div
-        className={tw("flex", "p-8", "w-full", "justify-between", "items-end")}
+        className={tw("flex", "lg:hidden", "w-full", "p-2", "justify-between")}
+      >
+        <SaveAppMenuButton />
+        <AnchorButton
+          href={earnAppUrl}
+          large
+          outlined
+          intent={Intent.PRIMARY}
+          icon={IconNames.SHARE}
+        >{t`Advanced UI`}</AnchorButton>
+      </div>
+      <ExperimentalBanner className={tw("flex", "lg:hidden", "text-xs")} />
+
+      {/* Desktop */}
+      <div
+        className={tw(
+          "hidden",
+          "lg:flex",
+          "w-full",
+          "space-x-4",
+          "p-4",
+          "items-end",
+          "justify-between"
+        )}
       >
         <ElementLogo
           height={48}

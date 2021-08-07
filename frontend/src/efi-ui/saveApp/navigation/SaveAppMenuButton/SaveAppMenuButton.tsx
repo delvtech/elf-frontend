@@ -5,43 +5,40 @@ import { IconNames } from "@blueprintjs/icons";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { useNavigation } from "efi-ui/app/navigation/hooks/useNavigation";
-import { Navigation } from "efi-ui/app/navigation/navigation";
 import { ElementLogo } from "efi-ui/base/ElementLogo";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { AddressesJson } from "efi/addresses";
-import { isGoerli, isLocalnet, isMainnet } from "efi/ethereum";
+import { isGoerli, isMainnet } from "efi/ethereum";
 import { SocialMediaMenuItems } from "efi/navigation/ContactUsMenuItems/SocialMediaMenuItems";
 
-import styles from "./AppMenuButton.module.css";
+import styles from "./SaveAppMenuButton.module.css";
 import classNames from "classnames";
 import { MenuButton } from "efi-ui/base/MenuButton/MenuButton";
+import { useSaveNavigation } from "efi-ui/saveApp/navigation/useSaveNavigation";
+import { SaveNavigation } from "efi-ui/saveApp/navigation/SaveNavigation/SaveNavigation";
 
 // assume testnet by default (goerli)
-let advancedLink = "https://save-testnet.element.fi";
-if (isLocalnet(AddressesJson.chainId)) {
-  // TODO: Get this from the env, but for now assume in dev that the Save UI is @ :3001
-  advancedLink = "http://localhost:3001";
-}
+// assume testnet by default (goerli)
+let earnAppUrl = "http://localhost:3000";
 if (isGoerli(AddressesJson.chainId)) {
-  advancedLink = "https://save-testnet.element.fi";
+  earnAppUrl = "https://testnet.element.fi";
 } else if (isMainnet(AddressesJson.chainId)) {
-  advancedLink = "https://save.element.fi";
+  earnAppUrl = "https://app.element.fi";
 }
 
-export function AppMenuButton(): ReactElement {
+export function SaveAppMenuButton(): ReactElement {
   const { isDarkMode } = useDarkMode();
 
   return (
     <MenuButton
-      menu={<AppMenu />}
+      menu={<SaveAppMenu />}
       buttonLabel={<ElementLogo iconOnly height={48} isDarkMode={isDarkMode} />}
     />
   );
 }
 
-function AppMenu() {
-  const { activeTab, changeTab } = useNavigation();
+function SaveAppMenu() {
+  const { activeTab, changeTab } = useSaveNavigation();
   const [isResourcesMenuOpen, setIsResourcesMenuOpen] = useState(false);
 
   const onResourcesMenuClose = useCallback(
@@ -49,16 +46,12 @@ function AppMenu() {
     []
   );
 
-  const onEarnClick = useCallback(
-    () => changeTab(Navigation.EARN),
-    [changeTab]
-  );
-  const onTradeClick = useCallback(
-    () => changeTab(Navigation.TRADE),
+  const onSaveClick = useCallback(
+    () => changeTab(SaveNavigation.HOME),
     [changeTab]
   );
   const onPortfolioClick = useCallback(
-    () => changeTab(Navigation.PORTFOLIO),
+    () => changeTab(SaveNavigation.PORTFOLIO),
     [changeTab]
   );
   const onResourcesClick = useCallback(
@@ -73,19 +66,13 @@ function AppMenu() {
   return (
     <Menu large>
       <MenuItem
-        active={activeTab === Navigation.EARN}
+        active={activeTab === SaveNavigation.HOME}
         labelElement={<Icon icon={IconNames.CHEVRON_RIGHT} />}
-        onClick={onEarnClick}
-        text={<span className={classNames(styles.menuItem)}>{t`Earn`}</span>}
+        onClick={onSaveClick}
+        text={<span className={classNames(styles.menuItem)}>{t`Home`}</span>}
       />
       <MenuItem
-        active={activeTab === Navigation.TRADE}
-        onClick={onTradeClick}
-        labelElement={<Icon icon={IconNames.CHEVRON_RIGHT} />}
-        text={<span className={classNames(styles.menuItem)}>{t`Trade`}</span>}
-      />
-      <MenuItem
-        active={activeTab === Navigation.PORTFOLIO}
+        active={activeTab === SaveNavigation.PORTFOLIO}
         onClick={onPortfolioClick}
         labelElement={<Icon icon={IconNames.CHEVRON_RIGHT} />}
         text={
@@ -138,8 +125,8 @@ function ResourcesMenu({ onClose }: ResourcesMenuProps) {
     forth would just open up a ton of new tabs. */}
       <MenuItem
         icon={<Icon icon={IconNames.BLANK} />}
-        href={advancedLink}
-        text={t`Save UI`}
+        href={earnAppUrl}
+        text={t`Advanced UI`}
       />
       <MenuDivider
         title={<span className={tw("text-sm")}>{t`Get in touch`}</span>}

@@ -1,7 +1,7 @@
-import { CSSProperties, Fragment, ReactElement, useCallback } from "react";
+import { Fragment, ReactElement, useCallback } from "react";
 import { Helmet } from "react-helmet";
 
-import { Button, NonIdealState } from "@blueprintjs/core";
+import { Button, H5, NonIdealState } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
 import { navigate, RouteComponentProps } from "@reach/router";
@@ -10,14 +10,11 @@ import { jt, t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
-import { SaveCard } from "efi-ui/saveApp/save/SaveCard/SaveCard";
 import { SaveAppHeader } from "efi-ui/saveApp/page/SaveAppHeader/SaveAppHeader";
+import { SaveCard } from "efi-ui/saveApp/save/SaveCard/SaveCard";
 import { useOpenTrancheContracts } from "efi-ui/tranche/useOpenTrancheContracts";
 
 interface EarnViewProps extends RouteComponentProps {}
-
-const maxWidthStyle: CSSProperties = { maxWidth: 672 };
-const widthStyle = { width: 672 };
 
 const fixedYieldLink = (
   <a
@@ -27,7 +24,7 @@ const fixedYieldLink = (
     }
     target="_noreferrer"
   >
-    {t`Read more about Fixed Yield.`}
+    {t`Read more about Fixed Yield`}
   </a>
 );
 
@@ -69,20 +66,19 @@ export function SaveView(unusedProps: EarnViewProps): ReactElement {
             "flex-1",
             "space-y-10",
             "px-6",
-            "pt-10",
+            "lg:pt-10",
             "items-center",
-            "text-center"
+            "text-center",
+            "max-w-2xl"
           )}
-          style={maxWidthStyle}
         >
+          <H5 className={tw("lg:hidden")}>{fixedYieldLink}</H5>
           <ViewTitle
+            className={tw("hidden", "lg:flex")}
             title={t`The simplest way to grow your crypto.`}
-            subtitle={jt`No minimums, no withdrawal penalties, exit anytime. ${fixedYieldLink}`}
+            subtitle={jt`No minimums, no withdrawal penalties, exit anytime. ${fixedYieldLink}.`}
           />
-          <div
-            className={tw("flex", "flex-col", "space-y-4")}
-            style={widthStyle}
-          >
+          <div className={tw("flex", "flex-col", "space-y-4", "max-w-2xl")}>
             <div className={tw("text-right")}>
               <Button
                 minimal

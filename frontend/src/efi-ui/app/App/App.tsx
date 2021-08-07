@@ -149,9 +149,9 @@ const App: FC<AppProps> = () => {
             >{t`Please Connect to ${chainName}`}</H1>
           </div>
         </Overlay>
-        {/* Safe to render unconditionally as it does not render in production
-      builds by default */}
       </div>{" "}
+      {/* Safe to render unconditionally as it does not render in production
+      builds by default */}
       <ReactQueryDevtools initialIsOpen={false} />
     </Fragment>
   );
