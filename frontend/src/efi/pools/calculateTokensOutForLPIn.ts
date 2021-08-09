@@ -2,7 +2,10 @@ import {
   clipFixNumberToStringDecimals,
   getSafeFixedNumber,
 } from "efi/base/math/fixedPoint";
+import { isFiniteNumber } from "efi/base/numbers";
+import warning from "warning";
 
+const undefinedResult = { xNeeded: undefined, yNeeded: undefined };
 /**
  * calculates the tokens that would be recieved for an exact amount of LP in.  uses fixedpoint math
  * to be as accurate as possible
@@ -14,14 +17,25 @@ import {
  * @returns string values of xNeeded and yNeeded with a maximum number decimals of the tokens
  */
 export function calculateTokensOutForLPInFixed(
-  lpIn: string | undefined,
-  xReserves: string | undefined,
-  yReserves: string | undefined,
-  totalSupply: string | undefined,
-  tokenDecimals: number | undefined
+  lpIn: string,
+  xReserves: string,
+  yReserves: string,
+  totalSupply: string,
+  tokenDecimals: number
 ): { xNeeded: string | undefined; yNeeded: string | undefined } {
-  if (!lpIn || !xReserves || !yReserves || !totalSupply || !tokenDecimals) {
-    return { xNeeded: undefined, yNeeded: undefined };
+  if (
+    !isFiniteNumber(Number(lpIn)) ||
+    !isFiniteNumber(Number(xReserves)) ||
+    !isFiniteNumber(Number(yReserves)) ||
+    !isFiniteNumber(Number(totalSupply)) ||
+    !isFiniteNumber(Number(tokenDecimals))
+  ) {
+    return undefinedResult;
+  }
+
+  if (Number(lpIn) > Number(totalSupply)) {
+    warning(lpIn <= totalSupply, "lpIn cannot be great than totalSupply");
+    return undefinedResult;
   }
 
   const _lpIn = getSafeFixedNumber(lpIn);

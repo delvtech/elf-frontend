@@ -1,47 +1,41 @@
 import { useCallback } from "react";
+import { UseMutationResult } from "react-query";
 
-import { ConvergentCurvePool } from "elf-contracts-typechain/dist/types";
 import { Vault } from "elf-contracts-typechain/dist/types/Vault";
-import { BigNumber, Signer } from "ethers";
+import { BigNumber, ContractReceipt, Signer } from "ethers";
 import { defaultAbiCoder, formatUnits, parseUnits } from "ethers/lib/utils";
-import { PrincipalPoolTokenInfo } from "tokenlists/types";
+import { YieldPoolTokenInfo } from "tokenlists/types";
 
 import { ExitRequest } from "efi-balancer/ExitRequest";
 import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
 import ContractAddresses from "efi/addresses";
 import { BALANCER_ETH_SENTINEL } from "efi/balancer";
-import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { calculateTokensOutForLPInFixed } from "efi/pools/calculateTokensOutForLPIn";
 import { getPoolContract } from "efi/pools/getPoolContract";
+import { WeightedPoolExitKind } from "efi/pools/weightedPool";
 import { getTokenInfo } from "efi/tokenlists";
 import { balancerVaultContract } from "efi-balancer/vault";
 
-export function useExitConvergentCurvePool(
+export function useExitWeightedPool(
   signer: Signer | undefined,
   account: string | null | undefined,
-  poolInfo: PrincipalPoolTokenInfo,
+  poolInfo: YieldPoolTokenInfo,
   lpIn: string,
   onTransactionSubmitted?: () => void
 ): {
+  mutationResult: UseMutationResult<
+    ContractReceipt | undefined,
+    unknown,
+    ContractMethodArgs<Vault, "exitPool">
+  >;
   onExitPool: () => void;
-  isLoading: boolean;
-  isError: boolean;
-  isSuccess: boolean;
-  error: Error | undefined;
-  reset: () => void;
 } {
   const { poolId } = poolInfo.extensions;
-  const pool = getPoolContract(poolInfo.address) as ConvergentCurvePool;
-  const {
-    mutate: exitPool,
-    isLoading,
-    isError,
-    isSuccess,
-    reset,
-    error,
-  } = useSmartContractTransactionPersisted(
+  const pool = getPoolContract(poolInfo.address);
+
+  const mutationResult = useSmartContractTransactionPersisted(
     balancerVaultContract,
     "exitPool",
     signer,
@@ -49,6 +43,8 @@ export function useExitConvergentCurvePool(
       onTransactionSubmitted,
     }
   );
+
+  const { mutate: exitPool } = mutationResult;
 
   const onExitPool = useCallback(async () => {
     // grab these right when we exit to try to get the latest values
@@ -77,12 +73,8 @@ export function useExitConvergentCurvePool(
   }, [account, exitPool, lpIn, pool, poolId]);
 
   return {
+    mutationResult,
     onExitPool,
-    isLoading,
-    isError,
-    isSuccess,
-    reset,
-    error: error as Error | undefined,
   };
 }
 
@@ -91,7 +83,7 @@ function makeExitPoolCallArgs(
   account: string | null | undefined,
   poolTokens: string[] | undefined,
   poolTokenReserves: BigNumber[] | undefined,
-  poolTokenDecimals: (number | undefined)[],
+  poolTokenDecimals: number[],
   totalSupply: BigNumber | undefined,
   lpIn: string
 ): ContractMethodArgs<Vault, "exitPool"> | undefined {
@@ -112,7 +104,8 @@ function makeExitPoolCallArgs(
     return poolToken;
   });
 
-  // ok to cast since all input defined above
+  // ok to cast since all inputs are checked above
+  // TODO: see if we can remove this, this is uses logic for exiting from a CCPool
   const poolTokenMinAmountsOut = getPoolTokenMinAmountsOut(
     lpIn,
     totalSupply,
@@ -120,9 +113,12 @@ function makeExitPoolCallArgs(
     poolTokenDecimals
   ) as BigNumber[];
 
+  const lpInBN = parseUnits(lpIn || "0", BALANCER_POOL_LP_TOKEN_DECIMALS);
+
+  // weighted pools take a exit kind and amount of bpt token in the user data
   const userData = defaultAbiCoder.encode(
-    ["uint256[]"],
-    [poolTokenMinAmountsOut]
+    ["uint8", "uint256"],
+    [WeightedPoolExitKind.EXACT_BPT_IN_FOR_TOKENS_OUT, lpInBN]
   );
 
   const exitRequest: ExitRequest = {
@@ -142,12 +138,17 @@ function makeExitPoolCallArgs(
   return callArgs;
 }
 
+// TODO: see if we can remove this, this is uses logic for exiting from a CCPool
 function getPoolTokenMinAmountsOut(
   lpIn: string,
   totalSupply: BigNumber,
   poolTokenReserves: BigNumber[],
-  poolTokenDecimals: (number | undefined)[]
+  poolTokenDecimals: number[]
 ) {
+  if (!poolTokenReserves.length) {
+    return undefined;
+  }
+
   const totalSupplyString = formatUnits(
     totalSupply,
     BALANCER_POOL_LP_TOKEN_DECIMALS
@@ -174,42 +175,9 @@ function getPoolTokenMinAmountsOut(
     return undefined;
   }
 
-  // because ConvergentCurvePool doesn't let you specify exact BPT in, rather you have to specify
-  // min pool tokens out.  because of rounding errors in the contract itself, we can't calculate
-  // the exact tokens out.  therefore we chop off the last two decimals and leave very fine dust.
-  // like really fine. like more fine than playa dust.
-
-  const adjustedDecimals = poolTokenDecimals.map((decimals) => {
-    // this indicates we are loading, set to 18 and risk failing the exit
-    if (!decimals) {
-      return 18;
-    }
-
-    // for USDC and BTC only clip the last 2 decimals
-    if (decimals < 10) {
-      return decimals - 2;
-    }
-
-    // for ten to eighteen decimals, we'll shave off between 4 and 8
-    return Math.floor(decimals / 2) + 1;
-  });
-
   const poolTokenMinAmountsOut = [
-    parseUnits(
-      clipStringValueToDecimals(
-        `${+xNeeded * 0.9999}`,
-        adjustedDecimals[0] ?? 0
-      ) || "0",
-      poolTokenDecimals[0]
-    ),
-    parseUnits(
-      clipStringValueToDecimals(
-        `${+yNeeded * 0.9999}`,
-        adjustedDecimals[1] ?? 0
-      ) || "0",
-      poolTokenDecimals[1]
-    ),
+    parseUnits(xNeeded, poolTokenDecimals[0]),
+    parseUnits(yNeeded, poolTokenDecimals[1]),
   ];
-
   return poolTokenMinAmountsOut;
 }
