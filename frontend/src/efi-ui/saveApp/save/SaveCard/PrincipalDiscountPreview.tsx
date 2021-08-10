@@ -1,4 +1,4 @@
-import { Fragment, ReactElement } from "react";
+import { ReactElement } from "react";
 
 import { Callout, Colors } from "@blueprintjs/core";
 import { t } from "ttag";
@@ -7,6 +7,7 @@ import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { isFiniteNumber } from "efi/base/numbers";
+import { commify } from "ethers/lib/utils";
 
 interface PrincipalDiscountPreviewProps {
   amountIn: string | undefined;
@@ -31,6 +32,7 @@ export function PrincipalDiscountPreview(
   const amountInNumber = amountIn ? +amountIn : undefined;
   const amountOutNumber = amountOut ? +amountOut : undefined;
   const totalYield = calculateTotalYield(amountOutNumber, amountInNumber);
+  const percentYield = calculatePercentYield(amountInNumber, totalYield);
 
   return (
     <Callout className={calloutClassName}>
@@ -45,9 +47,12 @@ export function PrincipalDiscountPreview(
           "items-center"
         )}
         label={<span className={tw("text-base")}>{t`Earned at Maturity`}</span>}
-        textClassName={tw("text-lg")}
+        textClassName={tw("text-base")}
         text={
-          <Fragment>
+          <div>
+            {totalYield && isFiniteNumber(totalYield)
+              ? `${commify(totalYield.toFixed(4))} ${baseAssetSymbol}`
+              : `${0} ${baseAssetSymbol}`}{" "}
             <span
               style={{
                 color:
@@ -58,11 +63,9 @@ export function PrincipalDiscountPreview(
                     : "inherit",
               }}
             >
-              {totalYield && isFiniteNumber(totalYield)
-                ? `${totalYield?.toFixed(4)} ${baseAssetSymbol}`
-                : `${0} ${baseAssetSymbol}`}
+              {percentYield ? `(+${percentYield?.toFixed(2)}%)` : null}
             </span>
-          </Fragment>
+          </div>
         }
       />
     </Callout>
@@ -86,4 +89,16 @@ function calculateTotalYield(
   }
   const totalYield = amountOut - amountIn;
   return totalYield;
+}
+
+function calculatePercentYield(
+  amountIn: number | undefined,
+  totalYield: number | undefined
+): number | undefined {
+  if (!amountIn || !totalYield) {
+    return;
+  }
+
+  const percentYield = (totalYield / amountIn) * 100;
+  return percentYield;
 }
