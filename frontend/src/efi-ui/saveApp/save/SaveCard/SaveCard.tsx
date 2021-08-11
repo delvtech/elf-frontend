@@ -64,7 +64,11 @@ export interface SaveCardProps {
 export function SaveCard({ library, account }: SaveCardProps): ReactElement {
   // local state
   const [swapKind, setSwapKind] = useState(SwapKind.GIVEN_IN);
-  const [isWalletDialogOpen, setWalletDialogOpen] = useState(false);
+  const {
+    value: isWalletDialogOpen,
+    setTrue: openWalletDialog,
+    setFalse: closeWalletDialog,
+  } = useBoolean(false);
   const {
     value: isDrawerOpen,
     setTrue: openDrawer,
@@ -72,13 +76,12 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
   } = useBoolean(false);
 
   // handlers
-  const closeWalletDialog = useCallback(() => setWalletDialogOpen(false), []);
   const onClickButton = useCallback(() => {
     if (!account) {
-      return setWalletDialogOpen(true);
+      return openWalletDialog();
     }
     openDrawer();
-  }, [account, openDrawer]);
+  }, [account, openDrawer, openWalletDialog]);
 
   const { stringValue: amountIn, setValue: setAmountIn } = useNumericInput();
   const { stringValue: amountOut, setValue: setAmountOut } = useNumericInput();

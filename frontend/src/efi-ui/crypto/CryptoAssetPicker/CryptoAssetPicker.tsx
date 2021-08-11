@@ -20,6 +20,7 @@ interface CryptoAssetPickerProps {
 
 const popoverProps: IPopoverProps = {
   minimal: true,
+  targetClassName: tw("w-full"),
   popoverClassName: classNames(styles.baseAssetPicker),
 };
 
@@ -50,6 +51,7 @@ export function CryptoAssetPicker(props: CryptoAssetPickerProps): ReactElement {
     >
       <CryptoAssetButton
         minimal
+        fill
         cryptoAsset={activeCryptoAsset}
         rightIcon={IconNames.CARET_DOWN}
       />

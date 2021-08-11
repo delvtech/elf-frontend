@@ -5,7 +5,6 @@ import { IconNames } from "@blueprintjs/icons";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { ExperimentalBanner } from "efi-ui/page/ExperimentalBanner/ExperimentalBanner";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { SaveHamburgerButton } from "efi-ui/saveApp/navigation/SaveNavigation/SaveHamburgerButton";
 import { ConnectWalletButton } from "efi-ui/wallets/ConnectWalletButton/ConnectWalletButton";
@@ -34,8 +33,6 @@ export function SaveAppHeader({
   const { isDarkMode, setDarkModeOff, setDarkModeOn } = useDarkMode();
   return (
     <div className={tw("flex", "w-full", "flex-col")}>
-      <ExperimentalBanner className={tw("hidden", "lg:flex", "mb-4")} />
-
       {/* Mobile */}
       <div
         className={tw("flex", "lg:hidden", "w-full", "p-2", "justify-between")}
@@ -49,9 +46,6 @@ export function SaveAppHeader({
           icon={IconNames.SHARE}
         >{t`Advanced UI`}</AnchorButton>
       </div>
-      <ExperimentalBanner
-        className={tw("flex", "lg:hidden", "text-xs", "mb-4")}
-      />
 
       {/* Desktop */}
       <div

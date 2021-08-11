@@ -67,7 +67,7 @@ export function SaveInput(props: SaveInputProps): ReactElement {
   );
 
   const maxButtonElement = showMaxButton ? (
-    <div className={tw("px-4")}>
+    <div className={tw("px-1", "lg:px-4")}>
       <Tag minimal interactive onClick={setMaxValue}>{t`MAX`}</Tag>
     </div>
   ) : undefined;
@@ -94,6 +94,7 @@ export function SaveInput(props: SaveInputProps): ReactElement {
       )}
       helperText={helperText}
     >
+      {/* Show the asset picker above the input group on small screens */}
       <div className={tw("flex", "lg:hidden")}>{assetPicker}</div>
       <InputGroup
         placeholder={placeholder}
@@ -106,7 +107,10 @@ export function SaveInput(props: SaveInputProps): ReactElement {
         value={value || ""}
         intent={isValid ? undefined : Intent.DANGER}
         large
-        leftElement={isTailwindLg ? assetPicker : undefined}
+        leftElement={
+          /* Show the asset picker inside the input group on large screens */
+          isTailwindLg ? assetPicker : undefined
+        }
         rightElement={maxButtonElement}
         onChange={onChange}
       />

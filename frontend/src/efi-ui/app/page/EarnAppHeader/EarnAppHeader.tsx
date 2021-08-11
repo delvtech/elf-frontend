@@ -15,7 +15,6 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { useNavigation } from "efi-ui/app/navigation/hooks/useTab";
 import { Navigation } from "efi-ui/app/navigation/navigation";
-import { ExperimentalBanner } from "efi-ui/page/ExperimentalBanner/ExperimentalBanner";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { usePendingTransactionPref } from "efi-ui/transactions/usePendingTransactionPref/usePendingTransactionPref";
 import { ConnectWalletButton } from "efi-ui/wallets/ConnectWalletButton/ConnectWalletButton";
@@ -45,13 +44,10 @@ export function EarnAppHeader({
 
   return (
     <div className={tw("flex", "w-full", "flex-col")}>
-      <ExperimentalBanner className={tw("hidden", "lg:flex")} />
-
       {/* Mobile */}
       <div className={tw("flex", "lg:hidden", "w-full", "p-2")}>
         <AppMenuButton />
       </div>
-      <ExperimentalBanner className={tw("flex", "lg:hidden", "text-xs")} />
 
       {/* Desktop */}
       <div className={tw("hidden", "lg:flex", "w-full", "p-8")}>

@@ -80,7 +80,7 @@ function AssetLabel({
       <div className={tw("flex", "items-center", "space-x-4", "flex-1")}>
         <LabeledText
           icon={AssetIcon && <AssetIcon height={height} width={width} />}
-          iconClassName={tw("mr-4")}
+          iconClassName={tw("flex-shrink-0", "mr-4")}
           large={isLargeScreen}
           label={
             <span

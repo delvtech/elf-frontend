@@ -14,6 +14,10 @@ interface ExperimentalBannerProps {
   className?: string;
 }
 
+/**
+ * TODO: We might want banners for other things in the future. Generalize this
+ * for re-use when that time comes!
+ */
 export function ExperimentalBanner({
   className,
 }: ExperimentalBannerProps): ReactElement | null {
