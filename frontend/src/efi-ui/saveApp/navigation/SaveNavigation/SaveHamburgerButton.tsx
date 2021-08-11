@@ -14,7 +14,7 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { AddressesJson } from "efi/addresses";
 import { isGoerli, isMainnet } from "efi/ethereum";
-import { SocialMediaMenuItems } from "efi/navigation/ContactUsMenuItems/SocialMediaMenuItems";
+import { SocialMediaMenuItems } from "efi-ui/navigation/ContactUsMenuItems/SocialMediaMenuItems";
 
 // assume testnet by default (goerli)
 let earnAppUrl = "http://localhost:3000";

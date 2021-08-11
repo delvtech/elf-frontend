@@ -9,7 +9,7 @@ import { ElementLogo } from "efi-ui/base/ElementLogo";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { AddressesJson } from "efi/addresses";
 import { isGoerli, isMainnet } from "efi/ethereum";
-import { SocialMediaMenuItems } from "efi/navigation/ContactUsMenuItems/SocialMediaMenuItems";
+import { SocialMediaMenuItems } from "efi-ui/navigation/ContactUsMenuItems/SocialMediaMenuItems";
 
 import styles from "./SaveAppMenuButton.module.css";
 import classNames from "classnames";
