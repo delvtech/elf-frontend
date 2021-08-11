@@ -219,7 +219,7 @@ module.exports = {
         pathNot: `(${["index.tsx", "setupTests.ts", "efi-ui"].join("|")})`,
       },
       to: {
-        path: "node_modules/react$",
+        path: "node_modules/react/index.js",
       },
     },
     {
