@@ -1,3 +1,6 @@
+.boxBackgroundDarkMode {
+  background: rgba(16, 22, 26, 0.3);
+}
 .investmentAmount :global(.bp3-input-group) {
   width: 100%;
 }

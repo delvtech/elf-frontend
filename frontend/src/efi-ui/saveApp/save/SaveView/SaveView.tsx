@@ -1,10 +1,10 @@
-import { Fragment, ReactElement, useCallback } from "react";
+import { Fragment, ReactElement } from "react";
 import { Helmet } from "react-helmet";
 
-import { Button, H5, NonIdealState } from "@blueprintjs/core";
+import { H5, NonIdealState } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
-import { navigate, RouteComponentProps } from "@reach/router";
+import { RouteComponentProps } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
 import { jt, t } from "ttag";
 
@@ -13,6 +13,7 @@ import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { SaveAppHeader } from "efi-ui/saveApp/page/SaveAppHeader/SaveAppHeader";
 import { SaveCard } from "efi-ui/saveApp/save/SaveCard/SaveCard";
 import { useOpenTrancheContracts } from "efi-ui/tranche/useOpenTrancheContracts";
+import { ViewBalancesButton } from "./ViewBalancesButton";
 
 interface EarnViewProps extends RouteComponentProps {}
 
@@ -37,7 +38,6 @@ export function SaveView(unusedProps: EarnViewProps): ReactElement {
   } = useWeb3React<Web3Provider>();
   const openTrancheContracts = useOpenTrancheContracts();
 
-  const goToPortfolio = useCallback(() => navigate("/portfolio"), []);
   return (
     <Fragment>
       <Helmet>
@@ -63,13 +63,14 @@ export function SaveView(unusedProps: EarnViewProps): ReactElement {
           className={tw(
             "flex",
             "flex-col",
-            "flex-1",
-            "space-y-10",
-            "px-6",
-            "lg:pt-10",
+            "w-full",
             "items-center",
             "text-center",
-            "max-w-2xl"
+            "space-y-10",
+            "pt-2",
+            "px-6",
+            "lg:pt-10",
+            "lg:max-w-2xl"
           )}
         >
           <H5 className={tw("lg:hidden")}>{fixedYieldLink}</H5>
@@ -78,17 +79,16 @@ export function SaveView(unusedProps: EarnViewProps): ReactElement {
             title={t`The simplest way to grow your crypto.`}
             subtitle={jt`No minimums, no withdrawal penalties, exit anytime. ${fixedYieldLink}.`}
           />
-          <div className={tw("flex", "flex-col", "space-y-4", "max-w-2xl")}>
-            <div className={tw("text-right")}>
-              <Button
-                minimal
-                large
-                onClick={goToPortfolio}
-                icon={IconNames.TH_LIST}
-              >
-                {t`View balances`}
-              </Button>
-            </div>
+          <div
+            className={tw(
+              "flex",
+              "w-full",
+              "flex-col",
+              "space-y-4",
+              "lg:max-w-2xl"
+            )}
+          >
+            <ViewBalancesButton className={tw("hidden", "lg:block")} />
 
             {openTrancheContracts.length ? (
               <SaveCard library={library} account={account} />

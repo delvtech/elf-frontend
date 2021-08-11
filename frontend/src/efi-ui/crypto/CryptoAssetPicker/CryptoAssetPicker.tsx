@@ -41,7 +41,7 @@ export function CryptoAssetPicker(props: CryptoAssetPickerProps): ReactElement {
 
   return (
     <Select
-      className={classNames(tw("flex-shrink-0"), className)}
+      className={classNames(tw("flex-shrink-0", "w-full"), className)}
       popoverProps={popoverProps}
       items={cryptoAssets}
       filterable={false}

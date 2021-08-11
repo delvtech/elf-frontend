@@ -54,6 +54,7 @@ import { getTokenInfo } from "efi/tokenlists";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
 import { underlyingContractsByAddress } from "efi/underlying/underlying";
 import { useOpenTrancheBaseAssets } from "efi-ui/tranche/useOpenTrancheBaseAssets";
+import { useBoolean } from "efi-ui/base/hooks/useBoolean/useBoolean";
 
 export interface SaveCardProps {
   library: Web3Provider | undefined;
@@ -64,10 +65,13 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
   // local state
   const [swapKind, setSwapKind] = useState(SwapKind.GIVEN_IN);
   const [isWalletDialogOpen, setWalletDialogOpen] = useState(false);
-  const [isDrawerOpen, setDrawerOpen] = useState(false);
+  const {
+    value: isDrawerOpen,
+    setTrue: openDrawer,
+    setFalse: setDrawerClosed,
+  } = useBoolean(false);
 
   // handlers
-  const openDrawer = useCallback(() => setDrawerOpen(true), []);
   const closeWalletDialog = useCallback(() => setWalletDialogOpen(false), []);
   const onClickButton = useCallback(() => {
     if (!account) {
@@ -84,8 +88,8 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
   }, [setAmountIn, setAmountOut]);
   const closeDrawer = useCallback(() => {
     clearInputs();
-    setDrawerOpen(false);
-  }, [clearInputs]);
+    setDrawerClosed();
+  }, [clearInputs, setDrawerClosed]);
 
   // base asset
   const { activeBaseAsset, setActiveBaseAsset } =
@@ -284,10 +288,12 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
             )}
           </div>
           <div
-            className={tw("flex", "space-x-1", "h-24", "border", "rounded", {
-              "border-gray-500": isValidTokenInValue,
-              "border-red-600": !isValidTokenInValue,
-            })}
+            className={classNames(
+              tw("flex", "lg:h-24", "border", "rounded", {
+                "border-gray-500": isValidTokenInValue,
+                "border-red-600": !isValidTokenInValue,
+              })
+            )}
           >
             <SaveInput
               showMaxButton={!!account}
@@ -319,7 +325,7 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
             )}
           </div>
           <div
-            className={tw("flex", "space-x-1", "h-24", "border", "rounded", {
+            className={tw("flex", "lg:h-24", "border", "rounded", {
               "border-gray-500": isValidTokenOutValue,
               "border-red-600": !isValidTokenOutValue,
             })}

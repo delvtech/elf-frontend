@@ -12,6 +12,7 @@ import { IconProps } from "efi-ui/token/TokenIcon";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { getCryptoName } from "efi/crypto/getCryptoName/getCryptoName";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { useIsTailwindLargeScreen } from "efi-ui/base/mediaBreakpoints";
 
 interface CryptoAssetButtonProps {
   outlined?: boolean;
@@ -71,16 +72,25 @@ function AssetLabel({
   assetName,
   assetSymbol,
 }: AssetLabelProps): ReactElement {
+  const isLargeScreen = useIsTailwindLargeScreen();
+  const height = isLargeScreen ? 50 : 30;
+  const width = height;
   return (
-    <div className={tw("p-4", "justify-between")}>
+    <div className={tw("p-4", "justify-between", "flex-1")}>
       <div className={tw("flex", "items-center", "space-x-4", "flex-1")}>
         <LabeledText
-          icon={AssetIcon && <AssetIcon height={50} width={50} />}
+          icon={AssetIcon && <AssetIcon height={height} width={width} />}
           iconClassName={tw("mr-4")}
-          large
-          label={<span className={tw("text-sm")}>{t`${assetName}`}</span>}
+          large={isLargeScreen}
+          label={
+            <span
+              className={tw("text-xs", "lg:text-sm", "flex-wrap")}
+            >{t`${assetName}`}</span>
+          }
           text={
-            <span className={tw("text-lg", "text-center")}>{assetSymbol}</span>
+            <span className={tw("lg:text-lg", "text-center")}>
+              {assetSymbol}
+            </span>
           }
         />
       </div>

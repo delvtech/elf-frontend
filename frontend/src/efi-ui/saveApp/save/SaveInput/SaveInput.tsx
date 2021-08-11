@@ -13,6 +13,7 @@ import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
 
 import styles from "./SaveInput.module.css";
+import { useIsTailwindLargeScreen } from "efi-ui/base/mediaBreakpoints";
 
 interface SaveInputProps {
   showMaxButton: boolean;
@@ -51,6 +52,7 @@ export function SaveInput(props: SaveInputProps): ReactElement {
     valueBalanceOf,
   } = props;
   const { isDarkMode } = useDarkMode();
+  const isTailwindLg = useIsTailwindLargeScreen();
 
   const onChange = useOnInputChange(onChangeFromProps, valueDecimals, swapKind);
 
@@ -81,21 +83,30 @@ export function SaveInput(props: SaveInputProps): ReactElement {
 
   const assetPicker = assetPickerRenderer();
 
+  const saveInputSmallScreenStyle = {
+    boxShadow: isDarkMode ? "none" : "inherit",
+  };
   return (
-    <FormGroup className={tw("w-full")} helperText={helperText}>
+    <FormGroup
+      className={classNames(
+        { [styles.boxBackgroundDarkMode]: isDarkMode },
+        tw("w-full", "flex", "mb-0")
+      )}
+      helperText={helperText}
+    >
+      <div className={tw("flex", "lg:hidden")}>{assetPicker}</div>
       <InputGroup
         placeholder={placeholder}
-        style={saveInputStyle}
+        style={isTailwindLg ? saveInputStyle : saveInputSmallScreenStyle}
         className={classNames(
           tw("w-full", "flex", "flex-col"),
           styles.investmentAmount,
-          { [styles.investmentAmountLightMode]: !isDarkMode },
           className
         )}
         value={value || ""}
         intent={isValid ? undefined : Intent.DANGER}
         large
-        leftElement={assetPicker}
+        leftElement={isTailwindLg ? assetPicker : undefined}
         rightElement={maxButtonElement}
         onChange={onChange}
       />

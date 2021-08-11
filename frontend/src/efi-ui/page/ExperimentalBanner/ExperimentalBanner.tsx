@@ -30,7 +30,6 @@ export function ExperimentalBanner({
         tw(
           "flex",
           "h-8",
-          "mb-4",
           "w-full",
           "font-bold",
           "text-center",
