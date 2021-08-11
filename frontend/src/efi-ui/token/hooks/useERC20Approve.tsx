@@ -2,11 +2,16 @@ import { useCallback } from "react";
 import { UseMutationResult, useQueryClient } from "react-query";
 
 import { ERC20 } from "elf-contracts-typechain/dist/types/ERC20";
-import { BigNumberish, ContractReceipt, Overrides, Signer } from "ethers";
+import {
+  BigNumberish,
+  ContractReceipt,
+  ethers,
+  Overrides,
+  Signer,
+} from "ethers";
 
 import { matchSmartContractReadCallQuery } from "efi-ui/contracts/matchSmartContractReadCallQuery/matchSmartContractReadCallQuery";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
-import { MAX_ALLOWANCE } from "efi/contracts/token";
 
 interface UseERC20Approve {
   onApproveClick: () => void;
@@ -49,7 +54,7 @@ export function useERC20Approve(
 
   const onApproveClick = useCallback(() => {
     if (spender) {
-      approve([spender, MAX_ALLOWANCE]);
+      approve([spender, ethers.constants.MaxUint256]);
     }
   }, [approve, spender]);
   return { onApproveClick, mutationResult };

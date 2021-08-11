@@ -4,7 +4,7 @@ import { Button, Intent, Tag } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
 import { errorCodes, serializeError } from "eth-rpc-errors";
-import { BigNumber, Signer } from "ethers";
+import { BigNumber, ethers, Signer } from "ethers";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -12,7 +12,6 @@ import { getQueriesData } from "efi-ui/base/queryResults";
 import { useTokenAllowanceMulti } from "efi-ui/token/hooks/useTokenAllowance";
 import { WalletDrawer } from "efi-ui/wallets/WalletDrawer/WalletDrawer";
 import { ERC20Shim } from "efi/contracts/ERC20Shim";
-import { MAX_ALLOWANCE } from "efi/contracts/token";
 import { findTokenContract } from "efi/crypto/CryptoAsset";
 import { WalletApprovalInfo } from "efi/wallets/WalletApprovalInfo";
 
@@ -222,7 +221,7 @@ function getConfirmButtonDisabled(
   }
 
   const hasEnoughAllowance = allowances.every((allowance) =>
-    allowance?.gte(MAX_ALLOWANCE)
+    allowance?.gte(ethers.constants.MaxUint256)
   );
   if (!hasEnoughAllowance) {
     return true;

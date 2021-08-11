@@ -1,13 +1,6 @@
 import { ERC20 } from "elf-contracts-typechain/dist/types/ERC20";
-import { BigNumber, ContractTransaction, Signer } from "ethers";
+import { BigNumber, ContractTransaction, ethers, Signer } from "ethers";
 import warning from "warning";
-
-/**
- * the erc20 allowance() method takes a unit256, therefore the max you can approve is 2^256 - 1
- */
-export const MAX_ALLOWANCE = BigNumber.from(
-  "115792089237316195423570985008687907853269984665640564039457584007913129639935"
-);
 
 /**
  *
@@ -22,7 +15,7 @@ export async function postApprove(
   poolAddress: string,
   amount: BigNumber
 ): Promise<ContractTransaction | undefined> {
-  const isValidAmount = amount.gt(0) || amount.lte(MAX_ALLOWANCE);
+  const isValidAmount = amount.gt(0) || amount.lte(ethers.constants.MaxUint256);
   warning(
     isValidAmount,
     "Amount must be greater than zero and less than MAX_ALLOWANCE"
