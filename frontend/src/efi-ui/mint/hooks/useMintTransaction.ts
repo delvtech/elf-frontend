@@ -210,13 +210,8 @@ export function useMintApprovals(
 // So, we have to look up these fuckers, and use 'Principal Token ', or 'Element Yield Token '
 // instead of the actual token name.  Once these terms close out we can kill this list.
 const shittyGoerliAddresses: string[] = [
-  "0x89d66Ad25F3A723D606B78170366d8da9870A879",
-  "0xBf4B5cB5ca49B1eF6B02615a94980723f6484899",
-  "0x44eecA004b2612d131EDA7dA2b9d986E7fED562e",
-  "0x80272c960b862B4d6542CDB7338Ad1f727E0D18d",
-  "0x2c637c5142eE4F31A1a78Ad3DF012fc242F6CAe6",
-  "0x6866dFc9A60e9dba922668b9b27931DCaCDF645A",
-  "0x649b9a57cb8fbd01bE019bDBBed9768d2a457173",
+  "0xDCf80C068B7fFDF7273d8ADAE4B076BF384F711A",
+  "0x419b57dE54F7F1E108C72d6E6b405A1E66Fc5895",
 ];
 async function getPermitCallData(
   signer: Signer | undefined,

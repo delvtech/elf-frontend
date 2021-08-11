@@ -25,9 +25,13 @@
     "assetproxy": {
       "name": "Vault asset proxy",
       "description": "Token that wraps a yield position, ie: Yearn vault asset proxy"
+    },
+    "vault": {
+      "name": "Vault",
+      "description": "The yield position, ie: Yearn yvcrvLUSD"
     }
   },
-  "timestamp": "2021-06-30T08:40:54.901Z",
+  "timestamp": "2021-08-11T14:13:11.428Z",
   "version": {
     "major": 0,
     "minor": 0,
@@ -287,6 +291,23 @@
     },
     {
       "chainId": 5,
+      "address": "0xDCf80C068B7fFDF7273d8ADAE4B076BF384F711A",
+      "symbol": "eP:eyUSDC:10-AUG-22-GMT",
+      "decimals": 6,
+      "extensions": {
+        "underlying": "0x78dEca24CBa286C0f8d56370f5406B48cFCE2f86",
+        "position": "0x814C447a9F58A2b823504Fe2775bA48c843925B6",
+        "interestToken": "0x419b57dE54F7F1E108C72d6E6b405A1E66Fc5895",
+        "unlockTimestamp": 1660165080,
+        "createdAtTimestamp": 1628608488
+      },
+      "name": "USDC Principal Token",
+      "tags": [
+        "eP"
+      ]
+    },
+    {
+      "chainId": 5,
       "address": "0x91dDF92af38Afac1B59F450dDb94ddab10a11490",
       "symbol": "eYyvCurve-stETH",
       "decimals": 18,
@@ -385,6 +406,21 @@
         "tranche": "0x6Aee2e1CA91C03b0BbFF419390774B590090782A",
         "underlying": "0x212d5c62e47CCFcB6005fCb7b4B834274374260d",
         "unlockTimestamp": 1625175036
+      },
+      "tags": [
+        "eY"
+      ]
+    },
+    {
+      "chainId": 5,
+      "address": "0x419b57dE54F7F1E108C72d6E6b405A1E66Fc5895",
+      "symbol": "eY:eyUSDC:10-AUG-22-GMT",
+      "decimals": 6,
+      "name": "USDC Yield Token",
+      "extensions": {
+        "tranche": "0xDCf80C068B7fFDF7273d8ADAE4B076BF384F711A",
+        "underlying": "0x78dEca24CBa286C0f8d56370f5406B48cFCE2f86",
+        "unlockTimestamp": 1660165080
       },
       "tags": [
         "eY"
@@ -518,6 +554,24 @@
     },
     {
       "chainId": 5,
+      "address": "0x4294005520c453EB8Fa66F53042cfC79707855c4",
+      "symbol": "LPeP:eyUSDC:10-AUG-22-GMT",
+      "decimals": 18,
+      "extensions": {
+        "bond": "0xDCf80C068B7fFDF7273d8ADAE4B076BF384F711A",
+        "underlying": "0x78dEca24CBa286C0f8d56370f5406B48cFCE2f86",
+        "poolId": "0x4294005520c453eb8fa66f53042cfc79707855c400020000000000000000009a",
+        "unitSeconds": 284012568,
+        "expiration": 1660165080,
+        "createdAtTimestamp": 1628608758
+      },
+      "name": "LP Principal Token eyUSDC:10-AUG-22-GMT",
+      "tags": [
+        "ccpool"
+      ]
+    },
+    {
+      "chainId": 5,
       "address": "0x252797e51F51631b6956545C45F9d3F9fFCb0940",
       "symbol": "eY_USDC_BPT",
       "decimals": 18,
@@ -631,6 +685,23 @@
         "expiration": 1625175036
       },
       "name": "Lp Element Yield Token eyALUSD:01-JUL-21-GMT",
+      "tags": [
+        "wpool"
+      ]
+    },
+    {
+      "chainId": 5,
+      "address": "0xCE3dE100bA6B1fd0d078a938F2d698Ed08a6a54D",
+      "symbol": "LPeY:eyUSDC:10-AUG-22-GMT",
+      "decimals": 18,
+      "extensions": {
+        "poolId": "0xce3de100ba6b1fd0d078a938f2d698ed08a6a54d000200000000000000000099",
+        "underlying": "0x78dEca24CBa286C0f8d56370f5406B48cFCE2f86",
+        "interestToken": "0x419b57dE54F7F1E108C72d6E6b405A1E66Fc5895",
+        "createdAtTimestamp": 1628608608,
+        "expiration": 1660165080
+      },
+      "name": "LP Element Yield Token eyUSDC:10-AUG-22-GMT",
       "tags": [
         "wpool"
       ]
