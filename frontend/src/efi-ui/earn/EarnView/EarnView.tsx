@@ -33,11 +33,11 @@ export function EarnView(unusedProps: EarnViewProps): ReactElement {
         className={tw(
           "flex",
           "flex-col",
-          "w-full",
-          "h-full",
-          "space-y-12",
           "items-center",
-          "pb-5"
+          "w-full",
+          "space-y-12",
+          "lg:pb-12",
+          "pb-24"
         )}
       >
         <div style={earnViewStyle}>
@@ -48,27 +48,16 @@ export function EarnView(unusedProps: EarnViewProps): ReactElement {
             subtitle={t`Mint Principal and Yield Tokens from your base asset, boost your APY by providing liquidity and view current APYs across all available terms.`}
           />
         </div>
-        <div
-          className={tw(
-            "flex",
-            "flex-col",
-            "items-center",
-            "w-full",
-            "space-y-5",
-            "pb-5"
-          )}
-        >
-          {!openPrincipalTokenInfos.length ? (
-            <NonIdealState
-              className={tw("mt-12")}
-              icon={IconNames.CLEAN}
-              title={t`No available terms`}
-              description={t`Please check back soon!`}
-            />
-          ) : (
-            <EarnTable library={library} account={account} signer={signer} />
-          )}
-        </div>
+        {!openPrincipalTokenInfos.length ? (
+          <NonIdealState
+            className={tw("mt-12")}
+            icon={IconNames.CLEAN}
+            title={t`No available terms`}
+            description={t`Please check back soon!`}
+          />
+        ) : (
+          <EarnTable library={library} account={account} signer={signer} />
+        )}
       </div>
     </Fragment>
   );

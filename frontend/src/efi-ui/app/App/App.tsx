@@ -57,99 +57,80 @@ const App: FC<AppProps> = () => {
           styles.appBackground,
           { [styles.appBackgroundDark]: isDarkMode },
           darkModeClassName,
-          tw(
-            "flex",
-            "flex-col",
-            "w-full",
-            "h-full",
-            "overflow-hidden",
-            "pb-24",
-            "md:pb-0"
-          )
+          tw("w-full", "h-full", "overflow-scroll")
         )}
       >
+        <LocationProvider>
+          <EarnAppHeader
+            account={account}
+            active={active}
+            chainId={chainId}
+            connectorName={getConnectorName(connector, library)}
+            deactivate={deactivate}
+            hamburgerButton={<NavigationMenuButton />}
+          />
+        </LocationProvider>
+
+        {/* need to use primary={false} to prevent scrolling issues.  more can be read here:
+          https://stackoverflow.com/questions/53058110/stop-reach-router-scrolling-down-the-page-after-navigating-to-new-page
+          */}
+        <Router primary={false} className={tw("w-full", "h-full")}>
+          <Redirect noThrow from="/" to={Navigation.EARN} />
+
+          <PortfolioView path={Navigation.PORTFOLIO} />
+          <EarnView path={Navigation.EARN} />
+          <TradeView path={Navigation.TRADE} />
+          <PoolView path={`pools/:poolAddress`} />
+          <StatsView path={Navigation.STATS} />
+        </Router>
+      </div>
+
+      <div
+        className={classNames(
+          styles.appBackground,
+          darkModeClassName,
+          tw(
+            "absolute",
+            "w-full",
+            "bottom-0",
+            "flex",
+            "px-8",
+            "py-4",
+            "justify-between",
+            "block",
+            "z-10",
+            "lg:hidden"
+          ),
+          { [styles.appBackgroundDark]: isDarkMode }
+        )}
+      >
+        <Button
+          minimal
+          className={tw("px-6", "py-3")}
+          icon={isDarkMode ? IconNames.FLASH : IconNames.MOON}
+          onClick={isDarkMode ? setDarkModeOff : setDarkModeOn}
+        />
+        <ConnectWalletButton
+          account={account}
+          chainId={chainId}
+          walletConnectionActive={active}
+        />
+      </div>
+      <Overlay isOpen={isWrongChain}>
         <div
           className={tw(
             "flex",
-            "flex-col",
-            "flex-1",
+            "justify-center",
+            "items-center",
             "w-full",
-            "h-full",
-            "pb-8",
-            "overflow-auto"
+            "h-full"
           )}
         >
-          <LocationProvider>
-            <EarnAppHeader
-              account={account}
-              active={active}
-              chainId={chainId}
-              connectorName={getConnectorName(connector, library)}
-              deactivate={deactivate}
-              hamburgerButton={<NavigationMenuButton />}
-            />
-          </LocationProvider>
-
-          {/* need to use primary={false} to prevent scrolling issues.  more can be read here:
-          https://stackoverflow.com/questions/53058110/stop-reach-router-scrolling-down-the-page-after-navigating-to-new-page
-          */}
-          <Router primary={false} className={tw("w-full", "h-full")}>
-            <Redirect noThrow from="/" to={Navigation.EARN} />
-
-            <PortfolioView path={Navigation.PORTFOLIO} />
-            <EarnView path={Navigation.EARN} />
-            <TradeView path={Navigation.TRADE} />
-            <PoolView path={`pools/:poolAddress`} />
-            <StatsView path={Navigation.STATS} />
-          </Router>
+          <H1
+            className={tw("text-white")}
+          >{t`Please Connect to ${chainName}`}</H1>
         </div>
-
-        <div
-          className={classNames(
-            styles.appBackground,
-            darkModeClassName,
-            tw(
-              "absolute",
-              "w-full",
-              "bottom-0",
-              "flex",
-              "px-8",
-              "py-4",
-              "justify-between",
-              "block",
-              "lg:hidden"
-            ),
-            { [styles.appBackgroundDark]: isDarkMode }
-          )}
-        >
-          <Button
-            minimal
-            className={tw("px-6", "py-3")}
-            icon={isDarkMode ? IconNames.FLASH : IconNames.MOON}
-            onClick={isDarkMode ? setDarkModeOff : setDarkModeOn}
-          />
-          <ConnectWalletButton
-            account={account}
-            chainId={chainId}
-            walletConnectionActive={active}
-          />
-        </div>
-        <Overlay isOpen={isWrongChain}>
-          <div
-            className={tw(
-              "flex",
-              "justify-center",
-              "items-center",
-              "w-full",
-              "h-full"
-            )}
-          >
-            <H1
-              className={tw("text-white")}
-            >{t`Please Connect to ${chainName}`}</H1>
-          </div>
-        </Overlay>
-      </div>{" "}
+      </Overlay>
       {/* Safe to render unconditionally as it does not render in production
       builds by default */}
       <ReactQueryDevtools initialIsOpen={false} />

@@ -39,69 +39,56 @@ export function TradeView(unusedProps: TradeViewProps): ReactElement {
         className={tw(
           "flex",
           "flex-col",
-          "flex-1",
           "w-full",
-          "h-full",
-          "space-y-2",
-          "lg:space-y-12",
-          "pb-12",
-          "items-center"
+          "space-y-12",
+          "items-center",
+          "lg:pb-12",
+          "pb-24"
         )}
       >
-        <div
-          className={tw(
-            "flex",
-            "flex-col",
-            "space-y-4",
-            "items-center",
-            "pt-4"
+        <Tabs
+          selectedTabId={activeTab}
+          onChange={setActiveTab as (newTabId: TradeViewTab) => void}
+        >
+          <Tab
+            id={TradeViewTab.PRINCIPAL}
+            title={
+              <Fragment>
+                {/* Desktop */}
+                <H2
+                  className={tw("hidden", "lg:block")}
+                >{t`Principal Pools`}</H2>
+                {/* Mobile */}
+                <H4
+                  className={tw("text-lg", "lg:hidden", "mb-2")}
+                >{t`Principal Pools`}</H4>
+              </Fragment>
+            }
+          />
+          <Divider />
+          <Tab
+            id={TradeViewTab.YIELD}
+            title={
+              <Fragment>
+                {/* Desktop */}
+                <H2 className={tw("hidden", "lg:block")}>{t`Yield Pools`}</H2>
+                {/* Mobile */}
+                <H4
+                  className={tw("text-lg", "lg:hidden", "mb-2")}
+                >{t`Yield Pools`}</H4>
+              </Fragment>
+            }
+          />
+        </Tabs>
+        <span
+          className={classNames(
+            Classes.RUNNING_TEXT,
+            Classes.TEXT_MUTED,
+            tw("text-base", "hidden", "lg:inline")
           )}
         >
-          <Tabs
-            selectedTabId={activeTab}
-            onChange={setActiveTab as (newTabId: TradeViewTab) => void}
-          >
-            <Tab
-              id={TradeViewTab.PRINCIPAL}
-              title={
-                <Fragment>
-                  {/* Desktop */}
-                  <H2
-                    className={tw("hidden", "lg:block")}
-                  >{t`Principal Pools`}</H2>
-                  {/* Mobile */}
-                  <H4
-                    className={tw("text-lg", "lg:hidden", "mb-2")}
-                  >{t`Principal Pools`}</H4>
-                </Fragment>
-              }
-            />
-            <Divider />
-            <Tab
-              id={TradeViewTab.YIELD}
-              title={
-                <Fragment>
-                  {/* Desktop */}
-                  <H2 className={tw("hidden", "lg:block")}>{t`Yield Pools`}</H2>
-                  {/* Mobile */}
-                  <H4
-                    className={tw("text-lg", "lg:hidden", "mb-2")}
-                  >{t`Yield Pools`}</H4>
-                </Fragment>
-              }
-            />
-          </Tabs>
-          <span
-            className={classNames(
-              Classes.RUNNING_TEXT,
-              Classes.TEXT_MUTED,
-              tw("text-base", "hidden", "lg:inline")
-            )}
-          >
-            {subtitle}
-          </span>
-        </div>
-
+          {subtitle}
+        </span>
         <div className={tw("flex", "flex-col", "items-center", "w-full")}>
           {(() => {
             switch (activeTab) {
