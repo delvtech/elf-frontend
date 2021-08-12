@@ -1,22 +1,21 @@
 import { ReactElement } from "react";
 
-import { Intent, Tag } from "@blueprintjs/core";
+import { Link } from "@reach/router";
 import classNames from "classnames";
 import { format } from "date-fns";
+import { PrincipalTokenInfo, YieldTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { getOppositePoolInfo } from "efi/pools/getOppositePoolInfo";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { getPrincipalTokenInfoForPool } from "efi/pools/getPrincipalTokenInfoForPool";
 import { PoolInfo } from "efi/pools/PoolInfo";
-import { formatLengthOfTime } from "efi/time/formatLengthOfTime/formatLengthOfTime";
 import { isYieldPool } from "efi/pools/weightedPool";
-import { getOppositePoolInfo } from "efi/pools/getOppositePoolInfo";
-import { Link } from "@reach/router";
-import { PrincipalTokenInfo, YieldTokenInfo } from "tokenlists/types";
+import { formatLengthOfTime } from "efi/time/formatLengthOfTime/formatLengthOfTime";
 import { formatTermAssetShortSymbol } from "efi/tranche/format";
 
 interface PoolViewHeaderProps {
@@ -70,11 +69,6 @@ export function PoolViewHeader({
           {baseAssetSymbol
             ? `${baseAssetSymbol} - ${termAssetShortSymbol}`
             : ""}
-          {baseAssetSymbol ? (
-            <sup className={tw("ml-1")}>
-              <Tag minimal intent={Intent.WARNING}>{t`alpha`}</Tag>
-            </sup>
-          ) : null}
         </div>
         <div className={tw("flex", "space-x-8")}>
           <span>

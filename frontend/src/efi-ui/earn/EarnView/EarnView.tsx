@@ -1,17 +1,17 @@
 import { CSSProperties, Fragment, ReactElement } from "react";
+import { Helmet } from "react-helmet";
 
-import { Intent, NonIdealState, Tag } from "@blueprintjs/core";
+import { NonIdealState } from "@blueprintjs/core";
+import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
 import { RouteComponentProps } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { EarnTable } from "efi-ui/earn/EarnTable/EarnTable";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { useSigner } from "efi-ui/provider/useBlockFromTag/useSigner/useSigner";
-import { IconNames } from "@blueprintjs/icons";
-import { Helmet } from "react-helmet";
-import { EarnTable } from "efi-ui/earn/EarnTable/EarnTable";
 import { useOpenPrincipalTokenInfos } from "efi-ui/tranche/useOpenPrincipaltokenInfos";
 
 interface EarnViewProps extends RouteComponentProps {}
@@ -43,7 +43,6 @@ export function EarnView(unusedProps: EarnViewProps): ReactElement {
         <div style={earnViewStyle}>
           <ViewTitle
             title={t`Capital efficiency for your yield positions.`}
-            titleTag={<Tag minimal intent={Intent.WARNING}>{t`alpha`}</Tag>}
             className={tw("text-center")}
             subtitle={t`Mint Principal and Yield Tokens from your base asset, boost your APY by providing liquidity and view current APYs across all available terms.`}
           />
