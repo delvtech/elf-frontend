@@ -18,7 +18,7 @@ interface EarnTableProps {
 }
 
 const earnTableStyle: CSSProperties = {
-  width: 1240,
+  width: 1256,
 };
 export function EarnTable({
   account,

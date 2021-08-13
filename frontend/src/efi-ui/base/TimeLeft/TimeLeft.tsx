@@ -35,7 +35,7 @@ export function TimeLeft(props: TimeLeftProps): ReactElement {
 
   const termLength = formatLengthOfTime(startDate, maturityDate);
   const timeLeft = formatTimeLeft(nowMs, maturityDate);
-  const timeLeftLabel = t`${timeLeft} remaining`;
+  const timeLeftLabel = t`${timeLeft} left`;
 
   if (!startDate || !maturityDate) {
     return <span>{t`loading`}</span>;
