@@ -13,11 +13,15 @@ import {
   isCurveStablePool,
 } from "efi-curve/stablePools";
 import { useCurveStablecoinPoolVirtualPrice } from "efi-ui/curve/stablePools";
-import { useSteCrvPrice, useTriCryptoPrice } from "efi-ui/curve/pools";
+import {
+  useCrv3CryptoPrice,
+  useSteCrvPrice,
+  useTriCryptoPrice,
+} from "efi-ui/curve/pools";
 
 const {
   chainId,
-  addresses: { crvtricryptoAddress, stecrvAddress },
+  addresses: { crvtricryptoAddress, crv3cryptoAddress, stecrvAddress },
 } = AddressesJson;
 
 export function useTokenPrice<TContract extends ERC20>(
@@ -47,6 +51,8 @@ export function useTokenPrice<TContract extends ERC20>(
   // Individual Curve non-stable pools, eg crvTricrypto or steCRV
   const isCrvTricrypto = contract.address === crvtricryptoAddress;
   const triCryptoPriceResult = useTriCryptoPrice({ enabled: isCrvTricrypto });
+  const isCrv3crypto = contract.address === crv3cryptoAddress;
+  const crv3CryptoPriceResult = useCrv3CryptoPrice({ enabled: isCrv3crypto });
 
   const isSteCrv = contract.address === stecrvAddress;
   const steCrvPriceResult = useSteCrvPrice({ enabled: isSteCrv });
@@ -54,6 +60,10 @@ export function useTokenPrice<TContract extends ERC20>(
   // Because of the nature of hooks, we must return the correct token price here at the end.
   if (isCurveStablePool(contract.address)) {
     return curveStablePoolPriceResult;
+  }
+
+  if (isCrv3crypto) {
+    return crv3CryptoPriceResult;
   }
 
   if (isCrvTricrypto) {

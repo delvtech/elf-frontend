@@ -6,7 +6,11 @@ import { formatUnits } from "ethers/lib/utils";
 import { Currencies, Money } from "ts-money";
 
 import { getCoinGeckoId } from "efi-coingecko";
-import { crvTriCryptoPoolContract, steCrvPoolContract } from "efi-curve/pools";
+import {
+  crv3CryptoPoolContract,
+  crvTriCryptoPoolContract,
+  steCrvPoolContract,
+} from "efi-curve/pools";
 import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
@@ -22,6 +26,42 @@ const GOERLI_STUB_PRICE = {
   data: new Money(150000, Currencies.USD),
 } as QueryObserverResult<Money>;
 
+export function useCrv3CryptoPrice({
+  enabled,
+}: HookPriceOptions): QueryObserverResult<Money> {
+  const { currency } = useCurrencyPref();
+
+  // tricrypto is made up of usdt, eth, and wbtc so we get a price in usdt
+  const { data: usdtPrice } = useCoinGeckoPrice(
+    getCoinGeckoId("usdt"),
+    currency
+  );
+
+  const calcWithdrawOneCoinResult = useSmartContractReadCall(
+    crv3CryptoPoolContract,
+    "calc_withdraw_one_coin",
+    {
+      callArgs: [ONE_ETHER, 0],
+      enabled: !!usdtPrice && isMainnet(AddressesJson.chainId) && enabled,
+      staleTime: ONE_MINUTE_IN_MILLISECONDS,
+      select: useCallback(
+        (triCryptoPriceInUSDT: BigNumber) => {
+          const price =
+            +formatUnits(triCryptoPriceInUSDT, 6) /
+            +(usdtPrice as Money).toString();
+          return Money.fromDecimal(price, currency, Math.round);
+        },
+        [currency, usdtPrice]
+      ),
+    }
+  );
+
+  if (isGoerli(AddressesJson.chainId)) {
+    return GOERLI_STUB_PRICE;
+  }
+
+  return calcWithdrawOneCoinResult;
+}
 export function useTriCryptoPrice({
   enabled,
 }: HookPriceOptions): QueryObserverResult<Money> {

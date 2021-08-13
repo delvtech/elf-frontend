@@ -35,6 +35,7 @@ export async function getTokenList(
       wethAddress,
       usdcAddress,
       daiAddress,
+      crv3cryptoAddress,
       crvlusdAddress,
       convergentPoolFactoryAddress,
       weightedPoolFactoryAddress,
@@ -68,6 +69,7 @@ export async function getTokenList(
     crvlusdAddress,
     crvalusdAddress,
     crvtricryptoAddress,
+    crv3cryptoAddress,
     stecrvAddress,
   ].filter(
     (address) => address !== "0x0000000000000000000000000000000000000000"

@@ -14,6 +14,7 @@ const {
     daiAddress,
     crvlusdAddress,
     crvalusdAddress,
+    crv3cryptoAddress,
     crvtricryptoAddress,
     stecrvAddress,
   },
@@ -31,6 +32,11 @@ const crvTricryptoContract = ERC20__factory.connect(
   crvtricryptoAddress,
   defaultProvider
 );
+const crv3CryptoContract = ERC20__factory.connect(
+  crv3cryptoAddress,
+  defaultProvider
+);
+
 const steCrvContract = ERC20__factory.connect(stecrvAddress, defaultProvider);
 
 /**
@@ -43,6 +49,7 @@ export const underlyingContractsByAddress = Object.freeze({
   [crvlusdAddress]: crvlusdContract,
   [crvalusdAddress]: crvalusdContract,
   [crvtricryptoAddress]: crvTricryptoContract,
+  [crv3cryptoAddress]: crv3CryptoContract,
   [stecrvAddress]: steCrvContract,
 });
 

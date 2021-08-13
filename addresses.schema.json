@@ -21,6 +21,9 @@
         "userProxyContractAddress": {
           "type": "string"
         },
+        "crv3cryptoAddress": {
+          "type": "string"
+        },
         "weightedPoolFactoryAddress": {
           "type": "string"
         },
@@ -48,6 +51,7 @@
         "convergentPoolFactoryAddress",
         "interestTokenFactoryAddress",
         "trancheFactoryAddress",
+        "crv3cryptoAddress",
         "stecrvAddress",
         "usdcAddress",
         "crvlusdAddress",

@@ -10,10 +10,19 @@ import { defaultProvider } from "efi/providers/providers";
  *
  * To price one of these assets, use the `withdraw_one_coin` method to price one
  * of the assets in the pool against an external price sensor, ie: coingecko.
+ *
+ * NOTE: You can find the pool addresses on curve's website at the bottom of a
+ * pool page.
  */
 const CRVTriCrytoPoolAddress = "0x80466c64868e1ab14a1ddf27a676c3fcbe638fe5";
 export const crvTriCryptoPoolContract = CurveContract__factory.connect(
   CRVTriCrytoPoolAddress,
+  defaultProvider
+);
+
+const CRV3CrytoPoolAddress = "0xD51a44d3FaE010294C616388b506AcdA1bfAAE46";
+export const crv3CryptoPoolContract = CurveContract__factory.connect(
+  CRV3CrytoPoolAddress,
   defaultProvider
 );
 
