@@ -4,7 +4,11 @@ import { formatUnits } from "ethers/lib/utils";
 import { Currencies, Currency, Money } from "ts-money";
 
 import { fetchCoinGeckoPrice, getCoinGeckoId } from "efi-coingecko";
-import { crvTriCryptoPoolContract, steCrvPoolContract } from "efi-curve/pools";
+import {
+  crv3CryptoPoolContract,
+  crvTriCryptoPoolContract,
+  steCrvPoolContract,
+} from "efi-curve/pools";
 import {
   curveVirtualPriceContractsByAddress,
   isCurveStablePool,
@@ -15,7 +19,7 @@ import { isGoerli, NUM_ETH_DECIMALS, ONE_ETHER } from "efi/ethereum";
 import { getTokenInfo } from "efi/tokenlists";
 
 const {
-  addresses: { crvtricryptoAddress, stecrvAddress },
+  addresses: { crvtricryptoAddress, stecrvAddress, crv3cryptoAddress },
 } = AddressesJson;
 
 export function fetchTokenPrice<TContract extends ERC20>(
@@ -30,6 +34,7 @@ export function fetchTokenPrice<TContract extends ERC20>(
   // Individual Curve non-stable pools, eg crvTricrypto or steCRV
   const isCrvTricrypto = contract.address === crvtricryptoAddress;
   const isSteCrv = contract.address === stecrvAddress;
+  const isCrv3crypto = contract.address === crv3cryptoAddress;
 
   if (isStablePool) {
     const curveStablePoolContract =
@@ -45,6 +50,10 @@ export function fetchTokenPrice<TContract extends ERC20>(
   if (isCrvTricrypto) {
     const triCryptoPriceResult = fetchTriCryptoPrice(currency);
     return triCryptoPriceResult;
+  }
+  if (isCrv3crypto) {
+    const crv3CryptoPriceResult = fetch3CryptoPrice(currency);
+    return crv3CryptoPriceResult;
   }
 
   if (isSteCrv) {
@@ -80,8 +89,31 @@ async function fetchCurveStablecoinPoolVirtualPrice(
   const price = +formatBalance(virtualPriceBigNumber, decimals);
   return Money.fromDecimal(price, currency, Math.round);
 }
+
 const ETHER_INDEX_FOR_CRVTRICRYPTO = 0;
 const GOERLI_STUB_PRICE = new Money(150000, Currencies.USD);
+
+async function fetch3CryptoPrice(currency: Currency): Promise<Money> {
+  if (isGoerli(AddressesJson.chainId)) {
+    return GOERLI_STUB_PRICE;
+  }
+
+  // tricrypto is made up of usdt, eth, and wbtc so we get a price in usdt
+  const usdtPrice = await fetchCoinGeckoPrice(
+    getCoinGeckoId("usdt") as string,
+    currency
+  );
+
+  const crv3CryptoPriceInUSDT =
+    await crv3CryptoPoolContract.calc_withdraw_one_coin(
+      ONE_ETHER,
+      ETHER_INDEX_FOR_CRVTRICRYPTO
+    );
+
+  const price =
+    +formatUnits(crv3CryptoPriceInUSDT, 6) / +(usdtPrice as Money).toString();
+  return Money.fromDecimal(price, currency, Math.round);
+}
 async function fetchTriCryptoPrice(currency: Currency): Promise<Money> {
   if (isGoerli(AddressesJson.chainId)) {
     return GOERLI_STUB_PRICE;
@@ -103,6 +135,7 @@ async function fetchTriCryptoPrice(currency: Currency): Promise<Money> {
     +formatUnits(triCryptoPriceInUSDT, 6) / +(usdtPrice as Money).toString();
   return Money.fromDecimal(price, currency, Math.round);
 }
+
 const ETHER_INDEX_FOR_STECRV = 0;
 async function fetchSteCrvPrice(currency: Currency): Promise<Money> {
   if (isGoerli(AddressesJson.chainId)) {
