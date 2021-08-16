@@ -57,7 +57,7 @@ export function TermPicker({
   return (
     <Select
       disabled={hasZeroOrOneTranche}
-      className={tw("pr-2")}
+      className={tw("lg:pr-2")}
       popoverProps={popoverProps}
       items={tranches}
       filterable={false}

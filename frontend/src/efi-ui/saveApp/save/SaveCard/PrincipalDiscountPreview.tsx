@@ -8,21 +8,13 @@ import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { isFiniteNumber } from "efi/base/numbers";
 import { commify } from "ethers/lib/utils";
+import { useIsTailwindLargeScreen } from "efi-ui/base/mediaBreakpoints";
 
 interface PrincipalDiscountPreviewProps {
   amountIn: string | undefined;
   amountOut: string | undefined;
   baseAssetSymbol: string | undefined;
 }
-const calloutClassName = tw(
-  "flex",
-  "flex-col",
-  "flex-1",
-  "h-full",
-  "p-8",
-  "items-center",
-  "justify-center"
-);
 
 export function PrincipalDiscountPreview(
   props: PrincipalDiscountPreviewProps
@@ -33,41 +25,87 @@ export function PrincipalDiscountPreview(
   const amountOutNumber = amountOut ? +amountOut : undefined;
   const totalYield = calculateTotalYield(amountOutNumber, amountInNumber);
   const percentYield = calculatePercentYield(amountInNumber, totalYield);
+  const isLargeScreen = useIsTailwindLargeScreen();
 
-  return (
-    <Callout className={calloutClassName}>
-      <LabeledText
-        muted={false}
-        bold
-        containerClassName={tw("justify-center")}
+  if (isLargeScreen) {
+    return (
+      <Callout
         className={tw(
           "flex",
-          "justify-center",
-          "flex-col-reverse",
-          "items-center"
+          "flex-col",
+          "flex-1",
+          "h-full",
+          "p-8",
+          "items-center",
+          "justify-center"
         )}
-        label={<span className={tw("text-base")}>{t`Earned at Maturity`}</span>}
-        textClassName={tw("text-base")}
-        text={
-          <div>
-            {totalYield && isFiniteNumber(totalYield)
-              ? `${commify(totalYield.toFixed(4))} ${baseAssetSymbol}`
-              : `${0} ${baseAssetSymbol}`}{" "}
-            <span
-              style={{
-                color:
-                  totalYield && isFiniteNumber(totalYield)
-                    ? isDarkMode
-                      ? Colors.GREEN5
-                      : Colors.GREEN3
-                    : "inherit",
-              }}
-            >
-              {percentYield ? `(+${percentYield?.toFixed(2)}%)` : null}
-            </span>
-          </div>
-        }
-      />
+      >
+        <LabeledText
+          muted={false}
+          bold
+          containerClassName={tw("justify-center")}
+          className={tw(
+            "flex",
+            "justify-center",
+            "flex-col-reverse",
+            "items-center"
+          )}
+          label={
+            <span className={tw("text-base")}>{t`Earned at Maturity`}</span>
+          }
+          textClassName={tw("text-base")}
+          text={
+            <div>
+              {totalYield && isFiniteNumber(totalYield)
+                ? `${commify(totalYield.toFixed(4))} ${baseAssetSymbol}`
+                : `${0} ${baseAssetSymbol}`}{" "}
+              <span
+                style={{
+                  color:
+                    totalYield && isFiniteNumber(totalYield)
+                      ? isDarkMode
+                        ? Colors.GREEN5
+                        : Colors.GREEN3
+                      : "inherit",
+                }}
+              >
+                {percentYield ? `(+${percentYield?.toFixed(2)}%)` : null}
+              </span>
+            </div>
+          }
+        />
+      </Callout>
+    );
+  }
+
+  return (
+    <Callout
+      className={tw(
+        "flex",
+        "items-center",
+        "justify-between",
+        "p-2",
+        "text-xs"
+      )}
+    >
+      <div>{t`Earned at Maturity`}</div>
+      <div>
+        {totalYield && isFiniteNumber(totalYield)
+          ? `${commify(totalYield.toFixed(4))} ${baseAssetSymbol}`
+          : `${0} ${baseAssetSymbol}`}{" "}
+        <span
+          style={{
+            color:
+              totalYield && isFiniteNumber(totalYield)
+                ? isDarkMode
+                  ? Colors.GREEN5
+                  : Colors.GREEN3
+                : "inherit",
+          }}
+        >
+          {percentYield ? `(+${percentYield?.toFixed(2)}%)` : null}
+        </span>
+      </div>
     </Callout>
   );
 }

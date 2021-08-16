@@ -276,7 +276,7 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
     <Fragment>
       <Card
         elevation={isDrawerOpen ? Elevation.ZERO : Elevation.TWO}
-        className={tw("flex", "flex-col", "flex-1", "space-y-10")}
+        className={tw("flex", "flex-col", "flex-1", "space-y-4")}
       >
         <div className={tw("flex", "flex-col", "space-y-2")}>
           <div className={tw("flex", "justify-between")}>
@@ -285,6 +285,7 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
               <span
                 className={classNames(
                   Classes.TEXT_MUTED,
+                  // Don't show the balance on small screens as per the design
                   tw("hidden", "lg:inline")
                 )}
               >{t`Balance: ${activeBaseAssetDisplayBalance} ${activeBaseAssetSymbol}`}</span>
@@ -320,6 +321,7 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
               <span
                 className={classNames(
                   Classes.TEXT_MUTED,
+                  // Don't show the market rate on small screens as per the design
                   tw("hidden", "lg:inline")
                 )}
               >
@@ -348,7 +350,18 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
           </div>
         </div>
 
-        <div className={tw("flex", "space-x-10", "h-24", "mt-10")}>
+        <div
+          className={tw(
+            "flex",
+            "flex-col",
+            "space-y-4",
+            "lg:space-y-0",
+            "lg:flex-row",
+            "lg:space-x-10",
+            "h-24",
+            "mt-10"
+          )}
+        >
           <PrincipalDiscountPreview
             amountIn={amountIn}
             baseAssetSymbol={activeBaseAssetSymbol}

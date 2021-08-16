@@ -27,7 +27,7 @@ export function SaveTermPicker({
       <PrincipalTokenTermButtonLabel
         tranche={tranches[0]}
         baseAsset={baseAsset}
-        className={tw("pl-4")}
+        className={tw("p-4", "lg:pl-4")}
       />
     );
   }

@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import { Fragment, ReactElement } from "react";
 
 import { Intent, Tag } from "@blueprintjs/core";
 import { Tranche } from "elf-contracts-typechain/dist/types/Tranche";
@@ -20,6 +20,7 @@ import { ONE_DAY_IN_MILLISECONDS } from "efi/base/time";
 import { useTotalFiatLiquidity } from "efi-ui/pools/hooks/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
 import { Currencies, Money } from "ts-money";
 import { useNowMs } from "efi-ui/base/hooks/useNowMs/useNowMs";
+import { useIsTailwindLargeScreen } from "efi-ui/base/mediaBreakpoints";
 
 interface PrincipalTokenTermButtonLabelProps {
   tranche: Tranche;
@@ -36,6 +37,7 @@ export function PrincipalTokenTermButtonLabel({
   tranche,
   className,
 }: PrincipalTokenTermButtonLabelProps): ReactElement {
+  const isLargeScreen = useIsTailwindLargeScreen();
   const nowMs = useNowMs();
   const trancheInfo = getTokenInfo<PrincipalTokenInfo>(tranche.address);
   const poolInfo = getPoolInfoForPrincipalToken(trancheInfo.address);
@@ -74,32 +76,53 @@ export function PrincipalTokenTermButtonLabel({
   }
 
   return (
-    <div className={classNames(tw("flex", "h-full", "space-x-4"), className)}>
+    <div
+      className={classNames(
+        tw("flex", "h-full", "space-x-4", "w-full"),
+        className
+      )}
+    >
       <LabeledText
-        large
+        large={isLargeScreen}
         icon={
-          <div
-            className={tw(
-              "flex",
-              "flex-col",
-              "items-center",
-              "justify-center",
-              "mr-4"
-            )}
-          >
-            <span className={tw("text-lg", "text-center")}>{apyLabel}</span>
-            <Tag
-              large
-              intent={Intent.PRIMARY}
-              fill
-              className={tw("text-center")}
+          isLargeScreen ? (
+            <div
+              className={tw(
+                "flex",
+                "flex-col",
+                "items-center",
+                "justify-center",
+                "mr-4"
+              )}
             >
-              {formattedDate}
-            </Tag>
-          </div>
+              <span className={tw("text-lg", "text-center")}>{apyLabel}</span>
+              <Tag
+                large
+                intent={Intent.PRIMARY}
+                fill
+                className={tw("text-center")}
+              >
+                {formattedDate}
+              </Tag>
+            </div>
+          ) : null
         }
-        className={tw("text-left")}
-        text={`${baseAssetSymbol} Principal Token`}
+        className={tw("w-full", "text-left")}
+        text={
+          isLargeScreen ? (
+            `${baseAssetSymbol} Principal Token`
+          ) : (
+            <Fragment>
+              <div className={tw("flex", "w-full", "mb-2")}>
+                <span className={tw("flex-1")}>{apyLabel}</span>
+                <Tag intent={Intent.PRIMARY} className={tw("text-center")}>
+                  {formattedDate}
+                </Tag>
+              </div>
+              <span>{`${baseAssetSymbol} Principal Token`}</span>
+            </Fragment>
+          )
+        }
         label={t`via ${positionName}`}
       />
     </div>
