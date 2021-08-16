@@ -69,6 +69,7 @@ export function SaveView(unusedProps: EarnViewProps): ReactElement {
             "space-y-10",
             "pt-2",
             "px-6",
+            "pb-24",
             "lg:pt-10",
             "lg:max-w-2xl"
           )}
