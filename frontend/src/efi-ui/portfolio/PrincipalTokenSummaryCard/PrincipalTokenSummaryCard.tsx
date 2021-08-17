@@ -23,6 +23,7 @@ import { formatBalance } from "efi/base/formatBalance";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getIsMature } from "efi/tranche/getIsMature";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
+import { useIsTailwindLargeScreen } from "efi-ui/base/mediaBreakpoints";
 
 interface PrincipalTokenSummaryCardProps {
   account: string | null | undefined;
@@ -63,16 +64,24 @@ export function PrincipalTokenSummaryCard(
     pendingTxPref,
     address
   );
-
+  const isLargeScreen = useIsTailwindLargeScreen();
   return (
     <Card
-      className={tw("grid", "grid-cols-5", "gap-4")}
+      className={tw(
+        "grid",
+        "grid-flow-row",
+        "grid-rows-1",
+        "lg:grid-flow-col",
+        "lg:grid-cols-5",
+        "gap-4"
+      )}
       onClick={isExpanded ? onExpandClose : onExpandOpen}
     >
-      <div className={tw("flex", "space-x-2", "col-span-2")}>
+      <div className={tw("flex", "space-x-2", "lg:col-span-2")}>
         <LabeledText
           className={tw("text-left", "pl-2")}
           icon={BaseAssetIcon ? <BaseAssetIcon height={36} width={36} /> : null}
+          iconClassName={tw("flex-shrink-0")}
           label={symbol}
           text={name}
         />
@@ -81,10 +90,14 @@ export function PrincipalTokenSummaryCard(
         {showSpinner ? (
           <Spinner className={tw("inline-flex")} size={SpinnerSize.SMALL} />
         ) : null}{" "}
-        {balanceLabel}
+        {!isLargeScreen ? t`Balance: ` : null} {balanceLabel}
       </span>
       <span>
-        <Tag fill intent={isRedeemable ? Intent.SUCCESS : Intent.PRIMARY}>
+        {!isLargeScreen ? t`Matures on: ` : null}
+        <Tag
+          fill={isLargeScreen}
+          intent={isRedeemable ? Intent.SUCCESS : Intent.PRIMARY}
+        >
           {formattedUnlockDate}
         </Tag>
       </span>

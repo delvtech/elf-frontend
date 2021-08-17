@@ -7,6 +7,9 @@ import tw from "efi-tailwindcss-classnames";
 import { PrincipalTokenActionTabId } from "efi-ui/portfolio/PrincipalTokenActionTabs/tabs";
 import { PrincipalTokenInfo } from "tokenlists/types";
 import { getIsMature } from "efi/tranche/getIsMature";
+import { useIsTailwindLargeScreen } from "efi-ui/base/mediaBreakpoints";
+import classNames from "classnames";
+import styles from "./tabs.module.css";
 
 interface PortfolioActionTabsProps {
   activeTabId: PrincipalTokenActionTabId;
@@ -29,12 +32,16 @@ export function PrincipalTokenActionTabs(
     },
   } = props;
   const isMature = getIsMature(unlockTimestamp);
+  const isLargeScreen = useIsTailwindLargeScreen();
   return (
     <Tabs
       id="save-transactions-tab"
-      vertical
+      vertical={isLargeScreen}
       selectedTabId={activeTabId}
-      className={tw("text-left")}
+      className={classNames(
+        tw("text-left", "pb-4", "lg:pb-0", "justify-center"),
+        styles.actionTabs
+      )}
       onChange={onSetActiveTab}
     >
       <Tab disabled={isMature} id={PrincipalTokenActionTabId.BUY}>{t`Buy`}</Tab>

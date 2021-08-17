@@ -1,4 +1,4 @@
-import { CSSProperties, Fragment, ReactElement, useCallback } from "react";
+import { Fragment, ReactElement, useCallback } from "react";
 import { Helmet } from "react-helmet";
 
 import { Button, NonIdealState } from "@blueprintjs/core";
@@ -22,9 +22,6 @@ import {
 import { SaveAppHeader } from "efi-ui/saveApp/page/SaveAppHeader/SaveAppHeader";
 
 interface SavePortfolioViewProps extends RouteComponentProps {}
-
-const maxWidthStyle: CSSProperties = { maxWidth: 672 };
-const widthStyle = { width: 672 };
 
 export function SavePortfolioView(
   unusedProps: SavePortfolioViewProps
@@ -65,22 +62,30 @@ export function SavePortfolioView(
           className={tw(
             "flex",
             "flex-col",
-            "flex-1",
-            "space-y-10",
-            "px-6",
-            "pt-10",
+            "w-full",
             "items-center",
-            "text-center"
+            "text-center",
+            "space-y-4",
+            "lg:space-y-10",
+            "pt-2",
+            "px-6",
+            "pb-24",
+            "lg:pt-10",
+            "lg:max-w-3xl"
           )}
-          style={maxWidthStyle}
         >
           <ViewTitle title={t`Wallet Overview`} subtitle={null} />
           <div
-            className={tw("flex", "flex-col", "space-y-4")}
-            style={widthStyle}
+            className={tw(
+              "flex",
+              "w-full",
+              "flex-col",
+              "space-y-4",
+              "lg:max-w-3xl"
+            )}
           >
             {principalTokensWithBalance.length ? (
-              <div className={tw("text-right")}>
+              <div className={tw("text-right", "hidden", "lg:block")}>
                 <Button
                   minimal
                   large

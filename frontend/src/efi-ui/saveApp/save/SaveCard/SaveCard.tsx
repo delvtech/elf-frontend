@@ -276,7 +276,13 @@ export function SaveCard({ library, account }: SaveCardProps): ReactElement {
     <Fragment>
       <Card
         elevation={isDrawerOpen ? Elevation.ZERO : Elevation.TWO}
-        className={tw("flex", "flex-col", "flex-1", "space-y-4")}
+        className={tw(
+          "flex",
+          "flex-col",
+          "flex-1",
+          "space-y-4",
+          "lg:space-y-10"
+        )}
       >
         <div className={tw("flex", "flex-col", "space-y-2")}>
           <div className={tw("flex", "justify-between")}>

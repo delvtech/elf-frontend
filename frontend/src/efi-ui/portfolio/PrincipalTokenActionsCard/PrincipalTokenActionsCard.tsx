@@ -27,7 +27,7 @@ export function PrincipalTokenActionsCard(
     props;
 
   return (
-    <Card className={tw("flex", "space-x-6")}>
+    <Card className={tw("flex", "space-x-6", "flex-col", "lg:flex-row")}>
       <PrincipalTokenActionTabs
         principalToken={principalToken}
         activeTabId={activeTabId}

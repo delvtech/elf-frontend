@@ -21,7 +21,13 @@ export function SavePortfolioList(props: SavePortfolioListProps): ReactElement {
 
   return (
     <div className={tw("flex", "flex-col", "space-y-4")}>
-      <div className={tw("grid", "grid-cols-5", "gap-4")}>
+      <div
+        className={
+          // don't show the table header on small screens, since we inline the
+          // labels in each card at that size
+          tw("hidden", "lg:grid", "grid-cols-5", "gap-4")
+        }
+      >
         <span
           className={tw("col-span-2", "text-left", "pl-6")}
         >{t`Asset`}</span>
