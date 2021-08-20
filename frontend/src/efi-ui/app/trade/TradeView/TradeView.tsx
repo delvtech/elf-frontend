@@ -12,6 +12,7 @@ import { PrincipalPoolCardList } from "efi-ui/pools/PrincipalPoolCardList/Princi
 import { YieldPoolCardList } from "efi-ui/pools/YieldPoolCardList/YieldPoolCardList";
 import { PrincipalPoolTable } from "efi-ui/pools/PrincipalPoolTable/PrincipalPoolTable";
 import { YieldPoolTable } from "efi-ui/pools/YieldPoolTable/YieldPoolTable";
+import { useIsTailwindSmallScreen } from "efi-ui/base/mediaBreakpoints";
 
 enum TradeViewTab {
   PRINCIPAL = "principal",
@@ -23,6 +24,8 @@ export function TradeView(unusedProps: TradeViewProps): ReactElement {
   const [activeTab, setActiveTab] = useState<TradeViewTab>(
     TradeViewTab.PRINCIPAL
   );
+
+  const isSmallScreenView = useIsTailwindSmallScreen();
 
   const subtitle =
     activeTab === TradeViewTab.YIELD
@@ -95,23 +98,25 @@ export function TradeView(unusedProps: TradeViewProps): ReactElement {
               case TradeViewTab.PRINCIPAL:
                 return (
                   <Fragment>
-                    {/* Desktop */}
-                    <PrincipalPoolTable className={tw("hidden", "lg:flex")} />
-                    {/* Mobile */}
-                    <PrincipalPoolCardList
-                      className={tw("flex", "lg:hidden", "p-4")}
-                    />
+                    {isSmallScreenView ? (
+                      // Mobile
+                      <PrincipalPoolCardList className={tw("flex", "p-4")} />
+                    ) : (
+                      // Desktop
+                      <PrincipalPoolTable className={tw("flex")} />
+                    )}
                   </Fragment>
                 );
               case TradeViewTab.YIELD:
                 return (
                   <Fragment>
-                    {/* Desktop */}
-                    <YieldPoolTable className={tw("hidden", "lg:flex")} />
-                    {/* Mobile */}
-                    <YieldPoolCardList
-                      className={tw("flex", "lg:hidden", "p-4")}
-                    />
+                    {isSmallScreenView ? (
+                      // Mobile
+                      <YieldPoolCardList className={tw("flex", "p-4")} />
+                    ) : (
+                      // Desktop
+                      <YieldPoolTable className={tw("flex")} />
+                    )}
                   </Fragment>
                 );
               default:

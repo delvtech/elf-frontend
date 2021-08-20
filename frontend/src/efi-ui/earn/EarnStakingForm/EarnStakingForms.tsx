@@ -16,8 +16,10 @@ import { getPoolInfoForYieldToken } from "efi/pools/weightedPool";
 
 import { StakePrincipalTokenForm } from "./StakePrincipalTokensForm";
 import { Link } from "@reach/router";
+import classNames from "classnames";
 
 interface EarnStakingFormsProps {
+  className?: string;
   library: Web3Provider | undefined;
   signer: Signer | undefined;
   account: string | null | undefined;
@@ -27,7 +29,7 @@ interface EarnStakingFormsProps {
 }
 
 export function EarnStakingForms(props: EarnStakingFormsProps): ReactElement {
-  const { account, library, signer, trancheInfo } = props;
+  const { className, account, library, signer, trancheInfo } = props;
   const { isDarkMode } = useDarkMode();
 
   const principalPoolInfo = getPoolInfoForPrincipalToken(trancheInfo.address);
@@ -49,7 +51,9 @@ export function EarnStakingForms(props: EarnStakingFormsProps): ReactElement {
   );
 
   return (
-    <div className={tw("flex", "justify-between", "space-x-6", "w-full")}>
+    <div
+      className={classNames(className, tw("flex", "justify-between", "w-full"))}
+    >
       <Card className={cardClassName}>
         <div
           className={tw("text-center", "font-semibold")}

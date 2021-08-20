@@ -1,6 +1,6 @@
 import { ReactElement } from "react";
 
-import { Button, Callout, Card, H4, Intent } from "@blueprintjs/core";
+import { Button, Callout, H4, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { Signer } from "ethers";
 import { PrincipalTokenInfo as TrancheInfo } from "tokenlists/types";
@@ -27,7 +27,7 @@ export function EarnActionsCard(props: EarnActionsCardProps): ReactElement {
     props;
 
   return (
-    <Card className={tw("flex", "space-x-6")}>
+    <div className={tw("flex", "space-x-6", "p-4")}>
       <EarnActionsTabs
         unlockTimestamp={trancheInfo.extensions.unlockTimestamp}
         activeTabId={activeTabId}
@@ -97,6 +97,7 @@ export function EarnActionsCard(props: EarnActionsCardProps): ReactElement {
                     signer={signer}
                     account={account}
                     trancheInfo={trancheInfo}
+                    className={tw("space-x-6")}
                   />
                 </div>
               );
@@ -105,6 +106,6 @@ export function EarnActionsCard(props: EarnActionsCardProps): ReactElement {
           }
         })()}
       </div>
-    </Card>
+    </div>
   );
 }

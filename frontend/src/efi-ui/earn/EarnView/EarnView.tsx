@@ -9,6 +9,8 @@ import { useWeb3React } from "@web3-react/core";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { useIsTailwindSmallScreen } from "efi-ui/base/mediaBreakpoints";
+import { EarnCardList } from "efi-ui/earn/EarnCardList/EarnCardList";
 import { EarnTable } from "efi-ui/earn/EarnTable/EarnTable";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { useSigner } from "efi-ui/provider/useBlockFromTag/useSigner/useSigner";
@@ -21,6 +23,10 @@ export function EarnView(unusedProps: EarnViewProps): ReactElement {
   const signer = useSigner(account, library);
 
   const openPrincipalTokenInfos = useOpenPrincipalTokenInfos();
+  const hasOpenPrincipalTokenInfos = !!openPrincipalTokenInfos.length;
+  const isSmallScreenView = useIsTailwindSmallScreen();
+  const showSmallScreenView = isSmallScreenView && hasOpenPrincipalTokenInfos;
+  const showLargeScreenView = !isSmallScreenView && hasOpenPrincipalTokenInfos;
 
   const earnViewStyle: CSSProperties = { maxWidth: 610 };
   return (
@@ -47,14 +53,19 @@ export function EarnView(unusedProps: EarnViewProps): ReactElement {
             subtitle={t`Mint Principal and Yield Tokens from your base asset, boost your APY by providing liquidity and view current APYs across all available terms.`}
           />
         </div>
-        {!openPrincipalTokenInfos.length ? (
+        {!hasOpenPrincipalTokenInfos && (
           <NonIdealState
             className={tw("mt-12")}
             icon={IconNames.CLEAN}
             title={t`No available terms`}
             description={t`Please check back soon!`}
           />
-        ) : (
+        )}
+
+        {showSmallScreenView && (
+          <EarnCardList library={library} account={account} signer={signer} />
+        )}
+        {showLargeScreenView && (
           <EarnTable library={library} account={account} signer={signer} />
         )}
       </div>

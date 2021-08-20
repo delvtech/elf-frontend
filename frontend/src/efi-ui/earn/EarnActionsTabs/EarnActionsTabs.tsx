@@ -22,7 +22,7 @@ export function EarnActionsTabs(props: EarnActionsTabsProps): ReactElement {
   const isMature = getIsMature(unlockTimestamp);
   return (
     <Tabs
-      id="save-transactions-tab"
+      id="earn-actions-tabs"
       vertical
       selectedTabId={activeTabId}
       className={tw("text-left")}
