@@ -34,6 +34,7 @@ import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolContract } from "efi/pools/PoolContract";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { isYieldPool } from "efi/pools/weightedPool";
+import { useIsTailwindSmallScreen } from "efi-ui/base/mediaBreakpoints";
 
 interface UnstakeCardProps {
   signer: Signer | undefined;
@@ -54,6 +55,7 @@ export function UnstakeCard({
     poolAddress,
     "removeLiquidity"
   );
+  const isSmallScreen = useIsTailwindSmallScreen();
 
   // local state
   const [isWalletDialogOpen, setWalletDialogOpen] = useState(false);
@@ -128,11 +130,12 @@ export function UnstakeCard({
         "py-2",
         "items-center",
         "justify-between",
-        "h-full"
+        "h-full",
+        "overflow-hidden"
       )}
     >
       <UnstakeInput
-        label={t`LP Tokens`}
+        label={isSmallScreen ? "" : t`LP Tokens`}
         cryptoSymbol={poolSymbol}
         cryptoDecimals={poolInfo.decimals}
         cryptoAssetIcon={ElementIcon}

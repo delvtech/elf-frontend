@@ -13,6 +13,7 @@ import { getConnectorName } from "efi/wallets/connectors";
 
 import { ConnectWalletCallout } from "./ConnectWalletCallout";
 import styles from "./WalletDrawer.module.css";
+import { useIsTailwindSmallScreen } from "efi-ui/base/mediaBreakpoints";
 
 interface WalletDrawerProps {
   isOpen: boolean;
@@ -36,6 +37,7 @@ export function WalletDrawer({
   const { isDarkMode, darkModeClassName } = useDarkMode();
   const connectionStatusColor = active ? Colors.GREEN4 : Colors.RED4;
   const connectorMessage = connectorName ?? t`No wallet connection`;
+  const isSmallScreen = useIsTailwindSmallScreen();
 
   return (
     <Drawer
@@ -44,7 +46,7 @@ export function WalletDrawer({
       onClosing={onClose}
       isCloseButtonShown
       title={""}
-      size={500}
+      size={isSmallScreen ? "100%" : 500}
       style={!isDarkMode ? { background: "var(--bp3-bg-color)" } : {}}
       className={classNames(
         darkModeClassName,

@@ -76,7 +76,7 @@ export function TradeInput(props: TradeInputProps): ReactElement {
   );
 
   return (
-    <div className={tw("flex", "flex-col", "space-y-2")}>
+    <div className={tw("flex", "flex-col", "space-y-2", "overflow-hidden")}>
       <InputGroup
         disabled={disabled}
         onChange={onChange}
@@ -132,6 +132,14 @@ export function TradeInput(props: TradeInputProps): ReactElement {
               >
                 {labelTopLeft}
               </span>
+              <span
+                className={classNames(
+                  Classes.TEXT_MUTED,
+                  tw("text-xs", "whitespace-no-wrap", "lg:hidden")
+                )}
+              >
+                {cryptoSymbol}
+              </span>
             </div>
             <div className={tw("flex", "text-2xl", "pr-4")}>
               {CryptoIcon ? (
@@ -139,7 +147,9 @@ export function TradeInput(props: TradeInputProps): ReactElement {
                   <CryptoIcon height={24} width={24} />
                 </div>
               ) : null}
-              <span className={tw("pl-2")}>{cryptoSymbol}</span>
+              <span className={tw("hidden", "lg:inline", "pl-2")}>
+                {cryptoSymbol}
+              </span>
             </div>
             <div
               className={tw(

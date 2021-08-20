@@ -19,6 +19,8 @@ import { getOppositePoolInfo } from "efi/pools/getOppositePoolInfo";
 import { isYieldPool } from "efi/pools/weightedPool";
 import { Link } from "@reach/router";
 
+import styles from "./PoolActionsCard.module.css";
+
 interface PoolActionsCardProps {
   library: Web3Provider | undefined;
   signer: Signer | undefined;
@@ -47,15 +49,23 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
         <span>{t`Pool Actions`}</span>
       </div>
       <Card className={tw("flex", "flex-col", "flex-1", "w-full", "space-y-2")}>
-        <div className={tw("flex", "justify-between", "items-center")}>
+        <div
+          className={tw(
+            "flex",
+            "flex-wrap-reverse",
+            "justify-between",
+            "items-center"
+          )}
+        >
           <Tabs
             selectedTabId={activeTab}
             onChange={setActiveTab as (newTabId: PoolAction) => void}
+            className={styles.poolActionsCard}
           >
             <Tab id={PoolAction.BUY} title={t`Buy`} />
             <Tab id={PoolAction.SELL} title={t`Sell`} />
-            <Tab id={PoolAction.ADD_LIQUIDITY} title={t`Add Liquidity`} />
-            <Tab id={PoolAction.REMOVE_LIQUIDITY} title={t`Remove Liquidity`} />
+            <Tab id={PoolAction.ADD_LIQUIDITY} title={t`Add LP`} />
+            <Tab id={PoolAction.REMOVE_LIQUIDITY} title={t`Remove LP`} />
           </Tabs>
           <Link
             to={`/pools/${oppositePoolInfo.address}`}

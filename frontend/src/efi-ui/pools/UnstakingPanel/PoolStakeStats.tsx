@@ -24,6 +24,8 @@ interface PoolStakeStatsProps {
 const calloutClassName = tw(
   "flex",
   "flex-1",
+  "flex-wrap",
+  "space-y-2",
   "p-8",
   "w-full",
   "items-center",
@@ -97,7 +99,7 @@ export function PoolStakeStats(
         textClassName={tw("text-2xl")}
         text={termAssetLiquidityLabel}
         label={t`${termAssetInfo.symbol} liquidity`}
-        labelClassName={tw("truncate")}
+        labelClassName={tw("break-normal", "lg:truncate")}
       />
       <LabeledText
         muted={false}

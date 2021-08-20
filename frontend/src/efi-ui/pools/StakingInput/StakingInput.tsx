@@ -76,7 +76,7 @@ export function StakingInput(props: StakingInputProps): ReactElement {
     onPreviewUpdate
   );
   return (
-    <div className={tw("flex", "flex-col", "space-y-2")}>
+    <div className={tw("flex", "flex-col", "space-y-2", "overflow-hidden")}>
       <InputGroup
         disabled={disabled}
         onChange={onChange}
@@ -132,6 +132,14 @@ export function StakingInput(props: StakingInputProps): ReactElement {
               >
                 {labelTopLeft}
               </span>
+              <span
+                className={classNames(
+                  Classes.TEXT_MUTED,
+                  tw("text-xs", "whitespace-no-wrap", "md:hidden")
+                )}
+              >
+                {cryptoSymbol}
+              </span>
             </div>
             <div className={tw("flex", "text-2xl", "pr-4")}>
               {CryptoAssetIcon ? (
@@ -139,7 +147,9 @@ export function StakingInput(props: StakingInputProps): ReactElement {
                   <CryptoAssetIcon height={24} width={24} />
                 </div>
               ) : null}
-              <span className={tw("pl-2")}>{cryptoSymbol}</span>
+              <span className={tw("pl-2", "hidden", "md:inline")}>
+                {cryptoSymbol}
+              </span>
             </div>
             <div
               className={tw(
