@@ -99,13 +99,20 @@ export function TransactionDrawer({
         {transactionDetails}
 
         {walletApprovalInfos?.map(
-          ({ cryptoAsset, messageRenderer, ownerAddress, spenderAddress }) => {
+          ({
+            cryptoAsset,
+            messageRenderer,
+            ownerAddress,
+            spenderAddress,
+            amount,
+          }) => {
             return (
               <WalletApprovalCallout
                 key={cryptoAsset?.id ?? null}
                 spenderAddress={spenderAddress}
                 messageRenderer={messageRenderer}
                 signer={signer}
+                amount={amount}
                 ownerAddress={ownerAddress}
                 cryptoAsset={cryptoAsset}
               />

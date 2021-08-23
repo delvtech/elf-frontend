@@ -134,6 +134,7 @@ export function MintTransactionConfirmationDrawer({
   const walletApprovalInfos = useWalletApprovalInfos(
     baseAsset,
     account,
+    amountIn,
     useApprovals || showWalletApprovalCallout
   );
 
@@ -254,6 +255,7 @@ function useShowCallouts(
 function useWalletApprovalInfos(
   tokenInAsset: CryptoAsset,
   account: string | null | undefined,
+  amountIn: string,
   useApprovals: boolean
 ): WalletApprovalInfo[] {
   const { userProxyContractAddress } = ContractAddresses;
@@ -271,6 +273,7 @@ function useWalletApprovalInfos(
         cryptoAsset: tokenInAsset,
         ownerAddress: account,
         spenderAddress: userProxyContractAddress,
+        amount: amountIn,
         messageRenderer: () => t`
           You need to grant Element approval to spend your ${assetSymbol} in order to perform this transaction.
         `,
@@ -278,6 +281,7 @@ function useWalletApprovalInfos(
     ];
   }, [
     account,
+    amountIn,
     assetSymbol,
     tokenInAsset,
     useApprovals,

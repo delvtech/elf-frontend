@@ -26,6 +26,7 @@ import { PoolInfo } from "efi/pools/PoolInfo";
 import { getToleranceAmount } from "efi/trade/getToleranceAmount";
 import { TermAssetType } from "efi/tranche/TermAssetType";
 import { AddressesJson } from "efi/addresses";
+import { WalletApprovalInfo } from "efi/wallets/WalletApprovalInfo";
 
 interface SwapTokensTransactionConfirmationDrawerProps {
   account: string | null | undefined;
@@ -161,6 +162,7 @@ export function SwapTokensTransactionConfirmationDrawer({
   const walletApprovalInfos = useWalletApprovalInfos(
     tokenInAsset,
     account,
+    amountIn,
     AddressesJson.addresses.balancerVaultAddress
   );
 
@@ -222,19 +224,22 @@ export function getPriceImpact(
 function useWalletApprovalInfos(
   tokenInAsset: CryptoAsset | undefined,
   account: string | null | undefined,
+  amountIn: string,
   balancerVaultAddress: string | undefined
-) {
+): WalletApprovalInfo[] | undefined {
   return useMemo(() => {
     if (!tokenInAsset || tokenInAsset.type === CryptoAssetType.ETHEREUM) {
       return;
     }
+
     return [
       {
         cryptoAsset: tokenInAsset,
         ownerAddress: account,
         spenderAddress: balancerVaultAddress,
+        amount: amountIn,
         messageRenderer: getBalancerApprovalMessage,
       },
     ];
-  }, [account, tokenInAsset, balancerVaultAddress]);
+  }, [tokenInAsset, account, balancerVaultAddress, amountIn]);
 }

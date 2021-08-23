@@ -99,7 +99,9 @@ export function StakingConfirmationDrawer({
 
   const walletApprovalInfos = useWalletApprovalInfos(
     baseAsset,
+    baseAssetIn,
     termAsset,
+    termAssetIn,
     account,
     AddressesJson.addresses.balancerVaultAddress
   );
@@ -172,7 +174,9 @@ function useShareOfPool(
 
 function useWalletApprovalInfos(
   baseAsset: CryptoAsset,
+  baseAssetAmount: string,
   trancheAsset: CryptoAsset,
+  trancheAssetAmount: string,
   account: string | null | undefined,
   vaultAddress: string | undefined
 ) {
@@ -182,6 +186,7 @@ function useWalletApprovalInfos(
         cryptoAsset: trancheAsset,
         ownerAddress: account,
         spenderAddress: vaultAddress,
+        amount: trancheAssetAmount,
         messageRenderer: getBalancerApprovalMessage,
       },
     ];
@@ -190,11 +195,19 @@ function useWalletApprovalInfos(
         cryptoAsset: baseAsset,
         ownerAddress: account,
         spenderAddress: vaultAddress,
+        amount: baseAssetAmount,
         messageRenderer: getBalancerApprovalMessage,
       });
     }
     return walletApprovalInfos;
-  }, [account, baseAsset, trancheAsset, vaultAddress]);
+  }, [
+    account,
+    baseAsset,
+    baseAssetAmount,
+    trancheAsset,
+    trancheAssetAmount,
+    vaultAddress,
+  ]);
 }
 
 function getConfirmButtonDisabled(

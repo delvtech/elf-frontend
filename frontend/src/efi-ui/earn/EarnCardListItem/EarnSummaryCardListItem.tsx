@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button, Classes, Intent } from "@blueprintjs/core";
+import { Button, Classes } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { PrincipalPoolTokenInfo, YieldPoolTokenInfo } from "tokenlists/types";
 import { Money } from "ts-money";

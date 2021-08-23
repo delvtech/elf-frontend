@@ -7,7 +7,8 @@ import {
   Spinner,
   SpinnerSize,
 } from "@blueprintjs/core";
-import { ethers, Signer } from "ethers";
+import { Signer } from "ethers";
+import { parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -19,6 +20,7 @@ import {
   CryptoAssetType,
   findTokenContract,
 } from "efi/crypto/CryptoAsset";
+import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 
 interface WalletApprovalCalloutProps {
@@ -26,6 +28,7 @@ interface WalletApprovalCalloutProps {
   ownerAddress: string | null | undefined;
   spenderAddress: string | null | undefined;
   cryptoAsset: CryptoAsset;
+  amount: string;
   messageRenderer: (assetSymbol: string) => string;
 }
 export function WalletApprovalCallout({
@@ -33,9 +36,11 @@ export function WalletApprovalCallout({
   spenderAddress,
   signer,
   messageRenderer,
+  amount,
   cryptoAsset,
 }: WalletApprovalCalloutProps): ReactElement | null {
   const symbol = getCryptoSymbol(cryptoAsset);
+  const decimals = getCryptoDecimals(cryptoAsset);
   const message = symbol ? messageRenderer(symbol) : undefined;
 
   const tokenContract = findTokenContract(cryptoAsset);
@@ -66,7 +71,8 @@ export function WalletApprovalCallout({
   }
 
   // if the approval already exists
-  if (isAllowanceLoading || allowance?.gte(ethers.constants.MaxUint256)) {
+  const hasEnoughAllowance = allowance?.gte(parseUnits(amount, decimals));
+  if (isAllowanceLoading || hasEnoughAllowance) {
     return null;
   }
 

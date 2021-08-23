@@ -149,6 +149,7 @@ export function RedeemYieldTokensDrawer({
       <div className={tw("flex", "flex-col", "space-y-4")}>
         {showApprovalCallout && (
           <WalletApprovalCallout
+            amount={yieldTokenValue}
             spenderAddress={userProxyContractAddress}
             messageRenderer={() => `Approval needed for ${yieldTokenInfo.name}`}
             signer={signer}

@@ -147,6 +147,7 @@ export function RedeemPrincipalTokensDrawer({
         {showApprovalCallout && (
           <WalletApprovalCallout
             spenderAddress={userProxyContractAddress}
+            amount={principalTokenValue || "0"}
             messageRenderer={() =>
               `Approval needed for ${principalTokenInfo.name}`
             }
