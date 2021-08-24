@@ -2,7 +2,7 @@ import { useCallback, useMemo } from "react";
 
 import { Tranche } from "elf-contracts-typechain/dist/types/Tranche";
 import { UserProxy } from "elf-contracts-typechain/dist/types/UserProxy";
-import { BigNumber, ethers, Signer } from "ethers";
+import { BigNumber, Signer } from "ethers";
 import { PrincipalTokenInfo } from "tokenlists/types";
 
 import { fetchPermitData, PermitCallData } from "efi/base/fetchPermitData";
@@ -113,7 +113,6 @@ export function useRedeemTermAssetsToEth(
         ptName,
         account,
         userProxy.address,
-        ethers.constants.MaxUint256,
         nonce.toNumber(),
         "1"
       );
@@ -139,7 +138,6 @@ export function useRedeemTermAssetsToEth(
         ytName,
         account,
         userProxy.address,
-        ethers.constants.MaxUint256,
         nonce.toNumber(),
         "1"
       );

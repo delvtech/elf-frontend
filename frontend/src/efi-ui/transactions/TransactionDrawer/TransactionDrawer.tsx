@@ -4,7 +4,7 @@ import { Button, Intent, Tag } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
 import { errorCodes, serializeError } from "eth-rpc-errors";
-import { BigNumber, ethers, Signer } from "ethers";
+import { BigNumber, Signer } from "ethers";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -16,6 +16,8 @@ import { findTokenContract } from "efi/crypto/CryptoAsset";
 import { WalletApprovalInfo } from "efi/wallets/WalletApprovalInfo";
 
 import { WalletApprovalCallout } from "./WalletApprovalCallout";
+import { parseUnits } from "ethers/lib/utils";
+import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 
 interface TransactionDrawerProps {
   account: string | null | undefined;
@@ -227,9 +229,14 @@ function getConfirmButtonDisabled(
     return true;
   }
 
-  const hasEnoughAllowance = allowances.every((allowance) =>
-    allowance?.gte(ethers.constants.MaxUint256)
-  );
+  const hasEnoughAllowance = allowances.every((allowance, i) => {
+    const amount = parseUnits(
+      // since amounts are passed as strings, this could be an empty string
+      walletApprovalInfos[i].amount || "0",
+      getCryptoDecimals(walletApprovalInfos[i].cryptoAsset)
+    );
+    return allowance?.gte(amount);
+  });
   if (!hasEnoughAllowance) {
     return true;
   }

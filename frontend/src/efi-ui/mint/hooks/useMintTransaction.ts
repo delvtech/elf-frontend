@@ -9,7 +9,7 @@ import {
   Tranche,
 } from "elf-contracts-typechain/dist/types";
 import { UserProxy } from "elf-contracts-typechain/dist/types/UserProxy";
-import { ethers, Signer } from "ethers";
+import { Signer } from "ethers";
 import { parseUnits } from "ethers/lib/utils";
 import {
   PrincipalTokenInfo as TrancheInfo,
@@ -333,7 +333,6 @@ async function fetchPermitDataMulti(
         tokenName,
         owner,
         spender,
-        ethers.constants.MaxUint256,
         nonce,
         version
       );

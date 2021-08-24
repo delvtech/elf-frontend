@@ -14,7 +14,12 @@ export function createQueryClient(): QueryClient {
   const queryClient = new QueryClient({
     queryCache,
     mutationCache,
-    defaultOptions: { queries: { staleTime: 10000 } },
+    defaultOptions: {
+      queries: {
+        // Choosing 20s based on: https://tkdodo.eu/blog/react-query-as-a-state-manager
+        staleTime: 20000,
+      },
+    },
   });
 
   return queryClient;

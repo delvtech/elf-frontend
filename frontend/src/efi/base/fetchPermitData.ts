@@ -23,7 +23,6 @@ export async function fetchPermitData(
   tokenName: string,
   sourceAddr: string,
   spenderAddr: string,
-  spenderAmount: BigNumberish,
   nonce: number,
   // '1' for every ERC20Permit.  Except USDC which is '2' ¯\_(ツ)_/¯
   version: string
