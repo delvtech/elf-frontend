@@ -1,4 +1,4 @@
-import React, { CSSProperties, ReactElement } from "react";
+import React, { ReactElement } from "react";
 
 import { Card, Classes } from "@blueprintjs/core";
 import classNames from "classnames";
@@ -6,6 +6,8 @@ import { Money } from "ts-money";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
+import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { getYearnVaultAPY } from "efi-yearn/fetchYearnVaults";
 import { formatAbbreviatedDate } from "efi/base/dates";
@@ -18,12 +20,6 @@ import {
   isPrincipalToken,
 } from "efi/tranche/tranches";
 import { getPrincipalTokenForYieldToken } from "efi/tranche/yieldTokens";
-import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
-import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-
-const summaryCardStyle: CSSProperties = {
-  height: 220,
-};
 
 interface TermSummaryProps {
   poolInfo: PoolInfo;
@@ -59,26 +55,26 @@ export function TermSummary(props: TermSummaryProps): ReactElement {
   return (
     <div>
       <div className="mb-2">{t`Term Summary`}</div>
-      <Card
-        style={summaryCardStyle}
-        className={tw("grid", "grid-cols-2", "gap-4")}
-      >
+      <Card className={tw("lg:h-200", "grid", "grid-cols-2", "gap-4")}>
         {/* First Column*/}
         <div
           className={tw(
             "flex",
             "flex-col",
             "h-full",
-            "justify-between",
-            "truncate"
+            "space-y-4",
+            "justify-between"
           )}
         >
           {/* Total Value Locked */}
           <div className={tw("flex", "flex-col")}>
             <span
-              className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
+              className={classNames(
+                Classes.TEXT_MUTED,
+                tw("text-sm", "lg:truncate")
+              )}
             >{t`Total Value Locked`}</span>
-            <div className={classNames("h5", tw("space-x-4"))}>
+            <div className={classNames("h5", tw("space-x-4", "lg:truncate"))}>
               {totalValueLocked ? formatMoney(totalValueLocked) : "$0.00"}
             </div>
           </div>
@@ -87,9 +83,12 @@ export function TermSummary(props: TermSummaryProps): ReactElement {
           {poolInfo && (
             <div className={tw("flex", "flex-col")}>
               <span
-                className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
+                className={classNames(
+                  Classes.TEXT_MUTED,
+                  tw("text-sm", "lg:truncate")
+                )}
               >{t`Underlying Vault`}</span>
-              <div className={classNames("h5", tw("space-x-4"))}>
+              <div className={classNames("h5", tw("space-x-4", "lg:truncate"))}>
                 {t`Yearn ${displayName} ${type}`}
               </div>
             </div>
@@ -99,9 +98,12 @@ export function TermSummary(props: TermSummaryProps): ReactElement {
           {poolInfo && (
             <div className={tw("flex", "flex-col")}>
               <span
-                className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
+                className={classNames(
+                  Classes.TEXT_MUTED,
+                  tw("text-sm", "lg:truncate")
+                )}
               >{t`Vault APY`}</span>
-              <div className={classNames("h5", tw("space-x-4"))}>
+              <div className={classNames("h5", tw("space-x-4", "lg:truncate"))}>
                 {formatPercent(vaultApy)}
               </div>
             </div>

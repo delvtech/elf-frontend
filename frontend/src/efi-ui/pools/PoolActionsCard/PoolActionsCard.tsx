@@ -44,7 +44,7 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
     : t`Principal`;
 
   return (
-    <div className={tw("flex", "flex-col", "flex-1", "h-500")}>
+    <div className={tw("flex", "flex-col", "h-500")}>
       <div className={tw("mb-2", "flex", "space-x-4")}>
         <span>{t`Pool Actions`}</span>
       </div>

@@ -1,4 +1,4 @@
-import { CSSProperties, ReactElement } from "react";
+import { ReactElement } from "react";
 
 import { Card, Classes } from "@blueprintjs/core";
 import classNames from "classnames";
@@ -29,10 +29,6 @@ import { isConvergentCurvePool } from "efi/pools/PoolContract";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { formatTermAssetShortSymbol } from "efi/tranche/format";
 
-const summaryCardStyle: CSSProperties = {
-  height: 220,
-};
-
 interface TokenSummaryProps {
   poolInfo: PoolInfo;
   interestSupply: number | undefined;
@@ -58,7 +54,7 @@ export function TokenSummary({
   return (
     <div>
       <div className="mb-2">{t`Token Summary`}</div>
-      <Card style={summaryCardStyle} className={tw("flex", "space-x-8")}>
+      <Card className={tw("lg:h-200", "flex", "space-x-8")}>
         <TokenInfo
           baseAssetSymbol={baseAssetSymbol}
           assetSymbol={termAssetSymbol}
@@ -95,14 +91,17 @@ export function TokenSummary({
                 "flex-col",
                 "justify-center",
                 "space-y-1",
-                "overflow-hidden"
+                "overflow-hidden",
+                "lg:truncate"
               )}
             >
               <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
                 {t`Acc. Interest`}
               </span>
               <div className={tw("flex", "justify-between")}>
-                <span className={classNames("h5", tw("space-x-4"))}>
+                <span
+                  className={classNames("h5", tw("space-x-4", "lg:truncate"))}
+                >
                   {interestPerToken ? +interestPerToken.toFixed(4) : 0}{" "}
                   {t` ${baseAssetSymbol}`}
                 </span>
@@ -116,10 +115,16 @@ export function TokenSummary({
                 "flex-col",
                 "justify-center",
                 "space-y-1",
-                "overflow-hidden"
+                "overflow-hidden",
+                "lg:truncate"
               )}
             >
-              <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
+              <span
+                className={classNames(
+                  Classes.TEXT_MUTED,
+                  tw("text-sm", "lg:truncate")
+                )}
+              >
                 {t`Acc. Interest (USD)`}
               </span>
               <div className={tw("flex", "justify-between")}>
@@ -148,20 +153,21 @@ function TokenInfo({
   spotPrice,
 }: TokenInfoProps): ReactElement {
   return (
-    <div className={tw("space-y-6", "flex-1", "overflow-hidden")}>
+    <div className={tw("space-y-4", "flex-1", "overflow-hidden")}>
       <div
         className={tw(
           "flex",
           "flex-col",
           "justify-center",
           "space-y-1",
-          "overflow-hidden"
+          "overflow-hidden",
+          "lg:truncate"
         )}
       >
         <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
           {t`Token`}
         </span>
-        <span className={classNames("h5", tw("space-x-4", "truncate"))}>
+        <span className={classNames("h5", tw("space-x-4"))}>
           {assetSymbol ? assetSymbol : ""}
         </span>
       </div>
@@ -176,10 +182,15 @@ function TokenInfo({
         </div>
       </div>
       <div className={tw("flex", "flex-col", "justify-center", "space-y-1")}>
-        <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
+        <span
+          className={classNames(
+            Classes.TEXT_MUTED,
+            tw("text-sm", "lg:truncate")
+          )}
+        >
           {baseAssetSymbol ? t`Price (${baseAssetSymbol})` : "Price"}
         </span>
-        <span className={classNames("h5", tw("truncate"))}>
+        <span className={classNames("h5")}>
           {spotPrice ? spotPrice.toFixed(4) : "0.0000"}
         </span>
       </div>

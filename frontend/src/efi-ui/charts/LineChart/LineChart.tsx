@@ -24,10 +24,11 @@ import {
 import { formatMoney } from "efi/money/formatMoney";
 import { EMPTY_ARRAY } from "efi/base/emptyArray";
 import { useNowMs } from "efi-ui/base/hooks/useNowMs/useNowMs";
+import { useIsTailwindSmallScreen } from "efi-ui/base/mediaBreakpoints";
 
 const margin: Partial<Margin> = { top: 20, right: 40, bottom: 40, left: 80 };
 
-const axisBottom: AxisProps = {
+const defaultBottomAxis: AxisProps = {
   tickSize: 5,
   format: "%a",
   tickValues: getTimeTickValues(),
@@ -101,6 +102,12 @@ export function LineChart(props: LineChartProps): ReactElement {
 
   const xScale: TimeScale = useXScale(chartType, groupBarData, data);
 
+  const isSmallScreen = useIsTailwindSmallScreen();
+  const bottomAxis: AxisProps = {
+    ...defaultBottomAxis,
+    tickRotation: isSmallScreen ? 45 : 0,
+  };
+
   return (
     <div className={tw("flex", "w-full", "h-full")}>
       <ResponsiveLine
@@ -122,7 +129,7 @@ export function LineChart(props: LineChartProps): ReactElement {
         axisRight={null}
         theme={theme}
         colors={[dataColor, "white"]}
-        axisBottom={axisBottom}
+        axisBottom={bottomAxis}
         axisLeft={{
           tickSize: 5,
           tickPadding: 5,

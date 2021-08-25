@@ -65,12 +65,12 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
           "flex",
           "flex-col",
           "space-y-8",
-          "xl:space-y-0",
-          "xl:grid",
-          "xl:grid-flow-row",
-          "xl:gap-12",
-          "xl:grid-cols-3",
-          "xl:auto-rows-max"
+          "lg:space-y-0",
+          "lg:grid",
+          "lg:grid-flow-row",
+          "lg:gap-12",
+          "lg:grid-cols-3",
+          "lg:auto-rows-max"
         )}
       >
         <PoolSummary
@@ -96,12 +96,12 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
           "flex",
           "flex-col",
           "space-y-8",
-          "xl:space-y-0",
-          "xl:grid",
-          "xl:grid-flow-row",
-          "xl:gap-12",
-          "xl:grid-cols-2",
-          "xl:auto-rows-max"
+          "lg:space-y-0",
+          "lg:grid",
+          "lg:grid-flow-row",
+          "lg:gap-12",
+          "lg:grid-cols-2",
+          "lg:auto-rows-max"
         )}
       >
         <PoolCharts poolInfo={poolInfo} />

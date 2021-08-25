@@ -1,4 +1,4 @@
-import React, { CSSProperties, ReactElement } from "react";
+import React, { ReactElement } from "react";
 
 import { Card, Classes } from "@blueprintjs/core";
 import classNames from "classnames";
@@ -17,10 +17,6 @@ import { getPoolContract } from "efi/pools/getPoolContract";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { isConvergentCurvePool } from "efi/pools/PoolContract";
 import { PoolInfo } from "efi/pools/PoolInfo";
-
-const summaryCardStyle: CSSProperties = {
-  height: 220,
-};
 
 interface PoolSummaryProps {
   liquidity: Money | undefined;
@@ -78,18 +74,16 @@ export function PoolSummary(props: PoolSummaryProps): ReactElement {
   return (
     <div>
       <div className="mb-2">{t`Pool Summary`}</div>
-      <Card
-        style={summaryCardStyle}
-        className={tw("grid", "grid-cols-2", "gap-4")}
-      >
+      <Card className={tw("lg:h-200", "grid", "grid-cols-2", "gap-4")}>
         {/* First Column*/}
         <div
           className={tw(
             "flex",
             "flex-col",
             "h-full",
+            "space-y-4",
             "justify-between",
-            "truncate"
+            "lg:truncate"
           )}
         >
           <div className={tw("flex", "space-x-4", "justify-between")}>
@@ -116,7 +110,10 @@ export function PoolSummary(props: PoolSummaryProps): ReactElement {
           <div className={tw("flex", "space-x-4", "justify-between")}>
             <div className={tw("flex", "flex-col")}>
               <span
-                className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
+                className={classNames(
+                  Classes.TEXT_MUTED,
+                  tw("text-sm", "lg:truncate")
+                )}
               >{t`Quantity ${baseAssetSymbol}`}</span>
               <div className={classNames("h5", tw("space-x-4"))}>
                 {baseAssetBalance ? baseAssetBalanceLabel : "0.00"}
@@ -160,7 +157,10 @@ export function PoolSummary(props: PoolSummaryProps): ReactElement {
           <div className={tw("flex", "space-x-4", "justify-between")}>
             <div className={tw("flex", "flex-col")}>
               <span
-                className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
+                className={classNames(
+                  Classes.TEXT_MUTED,
+                  tw("text-sm", "lg:truncate")
+                )}
               >{t`Quantity (${quantityLabel})`}</span>
               <div className={classNames("h5", tw("space-x-4"))}>
                 {termAssetBalance ? termAssetBalanceLabel : "0.00"}
