@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import { Fragment, ReactElement } from "react";
 
 import {
   Button,
@@ -13,15 +13,15 @@ import classNames from "classnames";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { AppMenuButton } from "efi-ui/app/AppMenuButton/AppMenuButton";
 import { useNavigation } from "efi-ui/app/navigation/hooks/useTab";
 import { Navigation } from "efi-ui/app/navigation/navigation";
+import { ElementLogo } from "efi-ui/base/ElementLogo";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { usePendingTransactionPref } from "efi-ui/transactions/usePendingTransactionPref/usePendingTransactionPref";
 import { ConnectWalletButton } from "efi-ui/wallets/ConnectWalletButton/ConnectWalletButton";
-import { ElementLogo } from "efi-ui/base/ElementLogo";
-import { AppMenuButton } from "efi-ui/app/navigation/AppMenuButton/AppMenuButton";
 
-interface EarnAppHeaderProps {
+interface AppHeaderProps {
   chainId: number | undefined;
   account: string | null | undefined;
   active: boolean;
@@ -30,17 +30,19 @@ interface EarnAppHeaderProps {
   hamburgerButton: ReactElement;
 }
 
-export function EarnAppHeader({
+export function AppHeader({
   account,
   active: walletConnectionActive,
   chainId,
   hamburgerButton,
-}: EarnAppHeaderProps): ReactElement {
+}: AppHeaderProps): ReactElement {
   const { activeTab, changeTab } = useNavigation();
   const { isDarkMode, setDarkModeOff, setDarkModeOn } = useDarkMode();
   const { transactionHash, clearPendingTransactionPref } =
     usePendingTransactionPref();
   const hasPendingTransaction = !!transactionHash;
+
+  const isFixedRatesPageHACK = activeTab === Navigation.FIXED_RATES;
 
   return (
     <div className={tw("flex", "w-full", "flex-col")}>
@@ -63,7 +65,21 @@ export function EarnAppHeader({
             onChange={changeTab}
             selectedTabId={activeTab}
           >
-            <Tab id={Navigation.EARN} title={<span>{t`Earn`}</span>} />
+            {/*
+             Blueprint Tabs does stuff w/ children so we can't use Fragments, hence two ternarys
+             */}
+            {isFixedRatesPageHACK ? (
+              <Tab
+                id={Navigation.FIXED_RATES}
+                title={<span>{t`Fixed APR`}</span>}
+              />
+            ) : null}
+            {isFixedRatesPageHACK ? <Divider /> : null}
+
+            <Tab
+              id={Navigation.EARN}
+              title={<span>{isFixedRatesPageHACK ? t`Mint` : t`Earn`}</span>}
+            />
             <Divider />
             <Tab id={Navigation.TRADE} title={<span>{t`Trade`}</span>} />
             <Divider />

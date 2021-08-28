@@ -10,9 +10,9 @@ import classNames from "classnames";
 import { t } from "ttag";
 
 import { tw } from "efi-tailwindcss-classnames";
-import { NavigationMenuButton } from "efi-ui/app/navigation/EarnHamburgerButton/EarnHamburgerButton";
+import { AppHamburgerButton } from "efi-ui/app/AppHamburgerButton/AppHamburgerButton";
 import { Navigation } from "efi-ui/app/navigation/navigation";
-import { EarnAppHeader } from "efi-ui/app/page/EarnAppHeader/EarnAppHeader";
+import { AppHeader } from "efi-ui/app/AppHeader/AppHeader";
 import { TradeView } from "efi-ui/app/trade/TradeView/TradeView";
 import { EarnView } from "efi-ui/earn/EarnView/EarnView";
 import { PoolView } from "efi-ui/pools/PoolView/PoolView";
@@ -29,6 +29,7 @@ import { ChainId, ChainNames } from "efi/ethereum";
 import { getConnectorName } from "efi/wallets/connectors";
 
 import styles from "./App.module.css";
+import { FixedRatesView } from "efi-ui/fixedrates/FixedRatesView";
 
 FocusStyleManager.onlyShowFocusOnTabs();
 
@@ -61,13 +62,13 @@ const App: FC<AppProps> = () => {
         )}
       >
         <LocationProvider>
-          <EarnAppHeader
+          <AppHeader
             account={account}
             active={active}
             chainId={chainId}
             connectorName={getConnectorName(connector, library)}
             deactivate={deactivate}
-            hamburgerButton={<NavigationMenuButton />}
+            hamburgerButton={<AppHamburgerButton />}
           />
         </LocationProvider>
 
@@ -77,6 +78,7 @@ const App: FC<AppProps> = () => {
         <Router primary={false} className={tw("w-full", "h-full")}>
           <Redirect noThrow from="/" to={Navigation.EARN} />
 
+          <FixedRatesView path={Navigation.FIXED_RATES} />
           <PortfolioView path={Navigation.PORTFOLIO} />
           <EarnView path={Navigation.EARN} />
           <TradeView path={Navigation.TRADE} />

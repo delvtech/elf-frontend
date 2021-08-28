@@ -77,8 +77,7 @@ export function LabeledText({
         <span
           className={classNames(
             { [Classes.TEXT_MUTED]: muted },
-            tw("text-sm"),
-            labelClassName
+            labelClassName ? labelClassName : tw("text-sm")
           )}
         >
           {label}

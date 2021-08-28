@@ -99,7 +99,7 @@ export function PoolStakeStats(
         textClassName={tw("text-2xl")}
         text={termAssetLiquidityLabel}
         label={t`${termAssetInfo.symbol} liquidity`}
-        labelClassName={tw("break-normal", "lg:truncate")}
+        labelClassName={tw("break-normal", "lg:truncate", "text-sm")}
       />
       <LabeledText
         muted={false}

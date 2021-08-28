@@ -28,7 +28,7 @@ if (isGoerli(AddressesJson.chainId)) {
   advancedLink = "https://save.element.fi";
 }
 
-export function NavigationMenuButton(): ReactElement {
+export function AppHamburgerButton(): ReactElement {
   return (
     <Popover2
       fill

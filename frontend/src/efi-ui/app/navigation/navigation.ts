@@ -3,5 +3,6 @@ export enum Navigation {
   PORTFOLIO = "portfolio",
   TRADE = "pools",
   EARN = "earn",
+  FIXED_RATES = "fixedrates",
   STATS = "stats",
 }
