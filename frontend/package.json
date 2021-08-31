@@ -85,7 +85,6 @@
     "ethereum-waffle": "^3.4.0",
     "ethers": "^5.4.6",
     "fuzzaldrin-plus": "^0.6.0",
-    "graphql": "^15.5.1",
     "lodash.conformsto": "^4.15.0",
     "lodash.groupby": "^4.6.0",
     "lodash.isequal": "^4.5.0",
