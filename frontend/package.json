@@ -15,7 +15,7 @@
     "@alch/alchemy-web3": "^1.1.4",
     "@blueprintjs/core": "^3.49.0",
     "@blueprintjs/icons": "^3.29.0",
-    "@blueprintjs/popover2": "^0.11.2",
+    "@blueprintjs/popover2": "^0.11.3",
     "@blueprintjs/select": "^3.18.0",
     "@ethersproject/abi": "^5.4.1",
     "@ethersproject/abstract-signer": "^5.4.1",
