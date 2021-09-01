@@ -17,7 +17,10 @@ function getAddressesJsonId() {
 // dependency-cruiser, we don't need to run the app, but we need TS to compile
 // correctly, so we use a require() statement here.
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-export const AddressesJson: AddressesJsonFile = require(`addresses/${addressesJsonId}.addresses.json`);
+export const AddressesJson: AddressesJsonFile =
+  addressesJsonId === "mock"
+    ? require(`addresses/${addressesJsonId}.addresses.json`)
+    : require(`elf-tokenlist/dist/${addressesJsonId}.addresses.json`);
 
 const ContractAddresses = AddressesJson.addresses;
 

@@ -12,7 +12,10 @@ const chainName = getTokenListJsonId();
 // dependency-cruiser, we don't need to run the app, but we need TS to compile
 // correctly, so we use a require() statement here.
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-export const tokenListJson: TokenList = require(`tokenlists/${chainName}.tokenlist.json`);
+export const tokenListJson: TokenList =
+  chainName === "mock"
+    ? require(`tokenlists/${chainName}.tokenlist.json`)
+    : require(`elf-tokenlist/dist/${chainName}.tokenlist.json`);
 
 const tokenInfos = tokenListJson.tokens;
 

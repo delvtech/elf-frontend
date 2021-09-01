@@ -26,6 +26,14 @@ const USDC_CRYPTO_ASSET: Erc20PermitCryptoAsset = {
   ] as ERC20Permit,
 };
 
+const WBTC_CRYPTO_ASSET: Erc20CryptoAsset = {
+  id: AddressesJson.addresses.wbtcAddress,
+  type: CryptoAssetType.ERC20,
+  tokenContract: underlyingContractsByAddress[
+    AddressesJson.addresses.wbtcAddress
+  ] as ERC20,
+};
+
 const DAI_CRYPTO_ASSET: Erc20CryptoAsset = {
   id: AddressesJson.addresses.daiAddress,
   type: CryptoAssetType.ERC20,
@@ -35,10 +43,10 @@ const DAI_CRYPTO_ASSET: Erc20CryptoAsset = {
 };
 
 const CRVLUSD_CRYPTO_ASSET: Erc20CryptoAsset = {
-  id: AddressesJson.addresses.crvlusdAddress,
+  id: AddressesJson.addresses["lusd3crv-fAddress"],
   type: CryptoAssetType.ERC20,
   tokenContract: underlyingContractsByAddress[
-    AddressesJson.addresses.crvlusdAddress
+    AddressesJson.addresses["lusd3crv-fAddress"]
   ] as ERC20,
 };
 
@@ -77,14 +85,19 @@ const baseAssetCryptoAssets: Record<string, CryptoAsset> = {
   // weth should return eth wherever it's used, because the user should never
   // interact with weth
   [AddressesJson.addresses.wethAddress]: ETHEREUM_CRYPTO_ASSET,
+  [AddressesJson.addresses.wbtcAddress]: WBTC_CRYPTO_ASSET,
   [AddressesJson.addresses.usdcAddress]: USDC_CRYPTO_ASSET,
   [AddressesJson.addresses.daiAddress]: DAI_CRYPTO_ASSET,
-  [AddressesJson.addresses.crvlusdAddress]: CRVLUSD_CRYPTO_ASSET,
-  [AddressesJson.addresses.crvalusdAddress]: CRVALUSD_CRYPTO_ASSET,
+  [AddressesJson.addresses["lusd3crv-fAddress"]]: CRVLUSD_CRYPTO_ASSET,
   [AddressesJson.addresses.crvtricryptoAddress]: CRVTRICRYPTO_CRYPTO_ASSET,
   [AddressesJson.addresses.crv3cryptoAddress]: CRV3CRYPTO_CRYPTO_ASSET,
   [AddressesJson.addresses.stecrvAddress]: STECRV_CRYPTO_ASSET,
 };
+
+if (AddressesJson.addresses.crvalusdAddress) {
+  baseAssetCryptoAssets[AddressesJson.addresses.crvalusdAddress] =
+    CRVALUSD_CRYPTO_ASSET;
+}
 
 const principalTokenCryptoAssets: Erc20PermitCryptoAsset[] =
   principalTokenInfos.map(({ address }) => ({

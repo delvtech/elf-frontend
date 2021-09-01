@@ -52,7 +52,7 @@
     },
     {
       "fileMatch": ["*.addresses.json"],
-      "url": "./addresses.schema.json"
+      "url": "https://raw.githubusercontent.com/element-fi/elf-deploy/main/addresses.schema.json"
     },
     {
       "fileMatch": ["*.canperform.json"],

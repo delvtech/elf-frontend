@@ -11,6 +11,7 @@ import ethIconGrey from "efi-static-assets/logos/svg/ethereum-eth.svg";
 import lusdIcon from "efi-static-assets/logos/svg/LUSD.svg";
 import usdcIcon from "efi-static-assets/logos/svg/USDC.svg";
 import wethIcon from "efi-static-assets/logos/svg/WETH.svg";
+import wbtcIcon from "efi-static-assets/logos/svg/WBTC.svg";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 
 interface SvgIconProps {
@@ -52,6 +53,24 @@ export interface IconProps {
   width: number;
   className?: string | undefined;
   style?: CSSProperties | undefined;
+}
+
+export function WbtcIcon({
+  height,
+  width,
+  className,
+  style,
+}: IconProps): ReactElement {
+  return (
+    <SvgIcon
+      alt={"wbtc"}
+      className={className}
+      style={style}
+      src={wbtcIcon}
+      height={height}
+      width={width}
+    />
+  );
 }
 
 export function LusdIcon({
