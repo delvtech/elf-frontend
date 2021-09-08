@@ -92,7 +92,7 @@ const App: FC<AppProps> = () => {
           styles.appBackground,
           darkModeClassName,
           tw(
-            "absolute",
+            "fixed",
             "w-full",
             "bottom-0",
             "flex",
