@@ -24,7 +24,14 @@ export function EarnCardList({
 
   return (
     <div
-      className={tw("flex", "flex-col", "items-center", "space-y-5", "w-full")}
+      className={tw(
+        "flex",
+        "flex-col",
+        "items-center",
+        "space-y-5",
+        "w-full",
+        "px-4"
+      )}
     >
       {[...openPrincipalTokenInfos]
         .sort((info) => info.extensions.createdAtTimestamp)

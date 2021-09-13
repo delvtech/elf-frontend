@@ -14,19 +14,26 @@ import {
 import { LinearScale, TimeScale } from "@nivo/scales";
 import { line } from "d3-shape";
 import { Currency, Money } from "ts-money";
+import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { useNowMs } from "efi-ui/base/hooks/useNowMs/useNowMs";
+import { useIsTailwindLargeScreen } from "efi-ui/base/mediaBreakpoints";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
+import { EMPTY_ARRAY } from "efi/base/emptyArray";
 import {
   ONE_DAY_IN_MILLISECONDS,
   ONE_WEEK_IN_MILLISECONDS,
 } from "efi/base/time";
 import { formatMoney } from "efi/money/formatMoney";
-import { EMPTY_ARRAY } from "efi/base/emptyArray";
-import { useNowMs } from "efi-ui/base/hooks/useNowMs/useNowMs";
-import { useIsTailwindSmallScreen } from "efi-ui/base/mediaBreakpoints";
 
 const margin: Partial<Margin> = { top: 20, right: 40, bottom: 40, left: 80 };
+const smallScreenMargin: Partial<Margin> = {
+  top: 8,
+  right: 10,
+  bottom: 40,
+  left: 40,
+};
 
 const defaultBottomAxis: AxisProps = {
   tickSize: 5,
@@ -36,6 +43,12 @@ const defaultBottomAxis: AxisProps = {
   tickRotation: 0,
   legendOffset: 36,
   legendPosition: "middle",
+};
+const smallScreenBottomAxis: AxisProps = {
+  ...defaultBottomAxis,
+  format: "",
+  legend: t`Recent 7(d)`,
+  legendOffset: 24,
 };
 
 export interface LineChartProps {
@@ -73,7 +86,9 @@ export function LineChart(props: LineChartProps): ReactElement {
     return highestValue;
   }, 0);
 
+  // give the chart a 20% cushion from the highest data value so it looks nice
   const maxYScale = Math.round(maxDataValue * 1.2) || 100;
+
   const yScale: LinearScale = {
     type: "linear",
     min: 0,
@@ -102,14 +117,14 @@ export function LineChart(props: LineChartProps): ReactElement {
 
   const xScale: TimeScale = useXScale(chartType, groupBarData, data);
 
-  const isSmallScreen = useIsTailwindSmallScreen();
-  const bottomAxis: AxisProps = {
-    ...defaultBottomAxis,
-    tickRotation: isSmallScreen ? 45 : 0,
-  };
+  const isLargeScreen = useIsTailwindLargeScreen();
+  const bottomAxis = isLargeScreen ? defaultBottomAxis : smallScreenBottomAxis;
 
   return (
-    <div className={tw("flex", "w-full", "h-full")}>
+    <div className={tw("flex", "flex-col", "w-full", "h-full")}>
+      {isLargeScreen && (
+        <div className={tw("ml-2", { "mt-2": isLargeScreen })}>{dataLabel}</div>
+      )}
       <ResponsiveLine
         lineWidth={2}
         enableSlices={"x"}
@@ -119,7 +134,7 @@ export function LineChart(props: LineChartProps): ReactElement {
         crosshairType={"x"}
         sliceTooltip={SliceTooltip}
         useMesh={false}
-        margin={margin}
+        margin={isLargeScreen ? smallScreenMargin : margin}
         xScale={xScale}
         xFormat="time:%d-%b"
         yScale={yScale}
@@ -134,10 +149,10 @@ export function LineChart(props: LineChartProps): ReactElement {
           tickSize: 5,
           tickPadding: 5,
           tickRotation: 0,
-          legend: dataLabel,
+          legend: isLargeScreen ? undefined : dataLabel,
+          legendPosition: "middle",
           format: formatYValues,
           legendOffset: -60,
-          legendPosition: "middle",
         }}
         enablePoints={false}
         enableArea={chartType === "lines"}

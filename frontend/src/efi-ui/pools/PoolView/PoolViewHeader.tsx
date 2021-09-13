@@ -7,6 +7,10 @@ import { PrincipalTokenInfo, YieldTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import {
+  useIsTailwindLargeScreen,
+  useIsTailwindSmallScreen,
+} from "efi-ui/base/mediaBreakpoints";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
@@ -24,6 +28,8 @@ interface PoolViewHeaderProps {
 export function PoolViewHeader({
   poolInfo,
 }: PoolViewHeaderProps): ReactElement {
+  const isSmallScreen = useIsTailwindSmallScreen();
+  const isLargeScreen = useIsTailwindLargeScreen();
   const { baseAssetInfo, termAssetInfo } = getPoolTokens(poolInfo);
   const baseAsset = getCryptoAssetForToken(baseAssetInfo.address);
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
@@ -60,12 +66,12 @@ export function PoolViewHeader({
           "flex",
           "flex-col",
           "justify-center",
-          "ml-0",
+          "ml-2",
           "md:ml-4",
           "m-0"
         )}
       >
-        <div className={classNames("h2")}>
+        <div className={classNames(isSmallScreen ? "h4" : "h2")}>
           {baseAssetSymbol
             ? `${baseAssetSymbol} - ${termAssetShortSymbol}`
             : ""}
@@ -74,10 +80,12 @@ export function PoolViewHeader({
           <span>
             {t`${termLength} - ${format(maturityTime || 0, "MMM d, y") || 0}`}
           </span>
-          <Link
-            to={`/pools/${oppositePoolInfo.address}`}
-            className={tw("text-center")}
-          >{t`Go to ${oppositePoolType} Pool`}</Link>
+          {isLargeScreen && (
+            <Link
+              to={`/pools/${oppositePoolInfo.address}`}
+              className={tw("text-center")}
+            >{t`Go to ${oppositePoolType} Pool`}</Link>
+          )}
         </div>
       </div>
     </div>

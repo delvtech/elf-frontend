@@ -18,10 +18,13 @@ import { commify } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { useNowMs } from "efi-ui/base/hooks/useNowMs/useNowMs";
+import { useIsTailwindLargeScreen } from "efi-ui/base/mediaBreakpoints";
 import { LineChart } from "efi-ui/charts/LineChart/LineChart";
-import { ChartMessages } from "efi-ui/pools/PoolCharts/ChartMessagesProps";
 import { useLiquidityHistoryForPool } from "efi-ui/pools/hooks/useLiquidityHistoryForPool";
 import { useVolumeHistoryForPool } from "efi-ui/pools/hooks/useLiquidityVolumeHistoryForPool";
+import { useTotalFiatLiquidity } from "efi-ui/pools/hooks/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
+import { ChartMessages } from "efi-ui/pools/PoolCharts/ChartMessagesProps";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
@@ -32,8 +35,6 @@ import { PoolInfo } from "efi/pools/PoolInfo";
 
 import { binDataByDay } from "./helpers/binDataByDay";
 import { convertChartDatasToSeries } from "./helpers/convertChartDatasToSeries";
-import { useNowMs } from "efi-ui/base/hooks/useNowMs/useNowMs";
-import { useTotalFiatLiquidity } from "efi-ui/pools/hooks/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
 
 enum ChartType {
   LIQUIDITY = "liquidity",
@@ -77,6 +78,7 @@ export function PoolCharts({ poolInfo }: PoolChartsProps): ReactElement {
     <Icon icon={IconNames.SMALL_TICK} intent={Intent.SUCCESS} />
   ) : undefined;
 
+  const isLargeScreen = useIsTailwindLargeScreen();
   return (
     <div
       className={tw("flex", "flex-1", "h-500")}
@@ -88,7 +90,9 @@ export function PoolCharts({ poolInfo }: PoolChartsProps): ReactElement {
         </div>
         <Card className={tw("flex", "flex-1", "flex-col")}>
           <div
-            className={tw("w-full", "flex", "z-10", "justify-between", "pr-10")}
+            className={tw("w-full", "flex", "z-10", "justify-between", {
+              "pr-10": isLargeScreen,
+            })}
           >
             <Tabs onChange={setChart as (newTabId: ChartType) => void}>
               <Tab id={ChartType.LIQUIDITY} title={t`Liquidity`} />

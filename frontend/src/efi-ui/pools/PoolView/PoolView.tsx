@@ -1,4 +1,5 @@
 import { Fragment, ReactElement } from "react";
+import { Helmet } from "react-helmet";
 
 import { Web3Provider } from "@ethersproject/providers";
 import { RouteComponentProps } from "@reach/router";
@@ -12,7 +13,6 @@ import { getPoolInfo } from "efi/pools/getPoolInfo";
 
 import { PoolViewHeader } from "./PoolViewHeader";
 import { PoolViewTitle } from "./PoolViewTitle";
-import { Helmet } from "react-helmet";
 
 interface PoolViewProps extends RouteComponentProps {
   poolAddress?: string;
@@ -34,13 +34,14 @@ export function PoolView({ poolAddress }: PoolViewProps): ReactElement {
         className={tw(
           "flex",
           "flex-col",
-          "px-12",
           "pb-24",
           "lg:pb-12",
           "h-full",
           "w-full",
           "space-y-8",
-          "overflow-auto"
+          "overflow-auto",
+          "px-4",
+          "lg:px-12"
         )}
       >
         {/* page title */}

@@ -1,22 +1,26 @@
 import React, { ReactElement } from "react";
 
 import { Card, Classes } from "@blueprintjs/core";
+import { Link } from "@reach/router";
 import classNames from "classnames";
 import { commify, formatUnits } from "ethers/lib/utils";
 import { Money } from "ts-money";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { useIsTailwindSmallScreen } from "efi-ui/base/mediaBreakpoints";
 import { usePoolTokens } from "efi-ui/pools/hooks/usePoolTokens/usePoolTokens";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { formatPercent } from "efi/base/formatPercent";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { formatMoney } from "efi/money/formatMoney";
+import { getOppositePoolInfo } from "efi/pools/getOppositePoolInfo";
 import { getPoolContract } from "efi/pools/getPoolContract";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { isConvergentCurvePool } from "efi/pools/PoolContract";
 import { PoolInfo } from "efi/pools/PoolInfo";
+import { isYieldPool } from "efi/pools/weightedPool";
 
 interface PoolSummaryProps {
   liquidity: Money | undefined;
@@ -71,9 +75,22 @@ export function PoolSummary(props: PoolSummaryProps): ReactElement {
   const { currency } = useCurrencyPref();
   const volumeMoney = Money.fromDecimal(volume ?? 0, currency, Math.round);
   const volumeDisplayValue = volume ? formatMoney(volumeMoney) : "$0.00";
+  const oppositePoolInfo = getOppositePoolInfo(poolInfo);
+  const oppositePoolType = isYieldPool(oppositePoolInfo)
+    ? t`Yield`
+    : t`Principal`;
+  const isSmallScreen = useIsTailwindSmallScreen();
   return (
     <div>
-      <div className="mb-2">{t`Pool Summary`}</div>
+      <div className={tw("mb-2", "flex", "justify-between")}>
+        <span>{t`Pool Summary`}</span>
+        {isSmallScreen && (
+          <Link
+            to={`/pools/${oppositePoolInfo.address}`}
+            className={tw("text-center")}
+          >{t`Go to ${oppositePoolType} Pool`}</Link>
+        )}
+      </div>
       <Card className={tw("lg:h-200", "grid", "grid-cols-2", "gap-4")}>
         {/* First Column*/}
         <div
@@ -89,7 +106,7 @@ export function PoolSummary(props: PoolSummaryProps): ReactElement {
           <div className={tw("flex", "space-x-4", "justify-between")}>
             <div className={tw("flex", "flex-col")}>
               <span
-                className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}
+                className={classNames(Classes.TEXT_MUTED)}
               >{t`Total Liquidity`}</span>
               <div className={classNames("h5", tw("space-x-4"))}>
                 {liquidity ? formatMoney(liquidity) : "$0.00"}
