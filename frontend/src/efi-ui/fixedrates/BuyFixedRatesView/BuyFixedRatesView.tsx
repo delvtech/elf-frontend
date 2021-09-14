@@ -1,4 +1,4 @@
-import { Fragment, ReactElement } from "react";
+import { Fragment, ReactElement, useCallback, useState } from "react";
 import { Helmet } from "react-helmet";
 
 import { Button, Card, Classes, H4, Intent } from "@blueprintjs/core";
@@ -33,6 +33,9 @@ import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { getPoolInfoForPrincipalToken } from "efi/pools/ccpool";
 import { getTokenInfo } from "efi/tokenlists";
 import { FixedRatePreviewCallout } from "./FixedRatePreviewCallout";
+import { SwapKind } from "efi-balancer/SwapKind";
+import { SwapTokensTransactionConfirmationDrawer } from "efi-ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensTransactionConfirmationDrawer";
+import { getTokenAddressForBalancer } from "efi-balancer/getTokenAddressForBalancer";
 
 interface BuyFixedRatesViewProps extends RouteComponentProps {
   // principalTokenAddress comes from the url, so it's intentionally optional as
@@ -51,6 +54,11 @@ export function BuyFixedRatesView({
 }: BuyFixedRatesViewProps): ReactElement | null {
   const { account, library } = useWeb3React<Web3Provider>();
   const { isDarkMode } = useDarkMode();
+  const [isDrawerOpen, setDrawerOpen] = useState(false);
+  const openDrawer = useCallback(() => setDrawerOpen(true), []);
+  const closeDrawer = useCallback(() => {
+    setDrawerOpen(false);
+  }, []);
 
   // Tailwind mindset is mobile-first, but sometimes we need to know at runtime
   // if a large screen is being used.
@@ -70,6 +78,7 @@ export function BuyFixedRatesView({
     extensions: { underlying },
   } = principalTokenInfo;
   const baseAsset = getCryptoAssetForToken(underlying);
+  const baseAssetUnderlyingAddress = getTokenAddressForBalancer(baseAsset);
   const baseAssetName = getCryptoName(baseAsset);
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
   const AssetIcon = findAssetIcon(baseAsset);
@@ -115,7 +124,7 @@ export function BuyFixedRatesView({
 
   const isBuyButtonDisabled = hasInputError || !+baseAssetInputValue;
   const buttonErrorMessage = previewError
-    ? t`Insufficient pool reserves`
+    ? t`Insufficient liquidity in pool`
     : inputErrorMessage;
   const buyButtonIntent = hasInputError ? Intent.DANGER : Intent.PRIMARY;
 
@@ -145,6 +154,7 @@ export function BuyFixedRatesView({
             "pt-2",
             "px-6",
             "pb-24",
+            "lg:pb-0",
             "lg:pt-10",
             "lg:max-w-4xl"
           )}
@@ -281,6 +291,7 @@ export function BuyFixedRatesView({
 
             <Button
               disabled={isBuyButtonDisabled}
+              onClick={openDrawer}
               outlined
               large
               intent={buyButtonIntent}
@@ -290,6 +301,27 @@ export function BuyFixedRatesView({
           </Card>
         </div>
       </div>
+      <SwapTokensTransactionConfirmationDrawer
+        buttonLabel={t`Buy`}
+        tokenInAddress={baseAssetUnderlyingAddress}
+        tokenInSymbol={baseAssetSymbol}
+        tokenInDecimals={baseAssetDecimals}
+        tokenInAsset={baseAsset}
+        tokenInIcon={AssetIcon}
+        tokenOutAddress={principalTokenAddress as string}
+        tokenOutSymbol={principalTokenInfo.symbol}
+        tokenOutDecimals={baseAssetDecimals}
+        tokenOutIcon={undefined}
+        account={account}
+        library={library}
+        poolInfo={principalTokenPoolInfo}
+        amountIn={baseAssetInputValue}
+        amountOut={principalTokensOut}
+        swapKind={SwapKind.GIVEN_IN}
+        spotPrice={+principalPrice}
+        isOpen={isDrawerOpen}
+        onClose={closeDrawer}
+      />
     </Fragment>
   );
 }
