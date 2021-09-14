@@ -3,21 +3,24 @@ import { PrincipalPoolTokenInfo } from "tokenlists/types";
 
 import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
 import { SwapKind } from "efi-balancer/SwapKind";
-import { getCalcSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
 import { usePoolTokens } from "efi-ui/pools/hooks/usePoolTokens/usePoolTokens";
 import { usePoolTotalSupply } from "efi-ui/pools/hooks/usePoolTotalSupply";
-import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
 import { getPoolContract } from "efi/pools/getPoolContract";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { getTokenInfo } from "efi/tokenlists";
+import {
+  calcSwapPrincipalPool,
+  PrincipalPoolCalcSwapResult,
+  SwapAsset,
+} from "efi/pools/calcSwapPrincipalPool";
 
 export function useCalculatePrincipalTokenAmountOut(
   poolInfo: PrincipalPoolTokenInfo,
   amountIn: string
-): string {
+): PrincipalPoolCalcSwapResult {
   const {
     address: poolAddress,
-    extensions: { underlying: baseAssetAddress, bond: principalTokenAddress },
+    extensions: { underlying: baseAssetAddress },
   } = poolInfo;
 
   const { baseAssetIndex, termAssetIndex: principalTokenIndex } =
@@ -45,19 +48,16 @@ export function useCalculatePrincipalTokenAmountOut(
     baseAssetDecimals
   );
 
-  const newAmountOutResult = getCalcSwap(
+  const calcSwapResult = calcSwapPrincipalPool(
     amountIn,
     SwapKind.GIVEN_IN,
+    SwapAsset.BASE_ASSET,
     poolInfo,
-    baseAssetAddress,
-    principalTokenAddress,
+    baseAssetDecimals,
     underlyingReserves,
     principalReserves,
     totalSupply
   );
 
-  const { result: [, amountOut] = ["", ""] } = newAmountOutResult;
-  const amountOutBN = clipStringValueToDecimals(amountOut, baseAssetDecimals);
-
-  return amountOutBN;
+  return calcSwapResult;
 }

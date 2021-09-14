@@ -37,14 +37,12 @@ export function useValidateBuyPrincipalTokenInput(
   const underlyingReservesBalanceOf = balances?.[baseAssetIndex];
   const principalReservesBalanceOf = balances?.[principalTokenIndex];
 
-  const amountPrincipalTokensOutBN = useCalculatePrincipalTokenAmountOut(
-    poolInfo,
-    baseAssetAmountIn
-  );
+  const { amountOut: amountPrincipalTokensOut } =
+    useCalculatePrincipalTokenAmountOut(poolInfo, baseAssetAmountIn);
 
   return validateTradeValues(
     baseAssetAmountIn,
-    amountPrincipalTokensOutBN,
+    amountPrincipalTokensOut,
     underlyingReservesBalanceOf,
     principalReservesBalanceOf,
     baseAssetBalanceOf,

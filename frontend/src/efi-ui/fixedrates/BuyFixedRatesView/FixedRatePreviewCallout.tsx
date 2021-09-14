@@ -68,7 +68,7 @@ export function FixedRatePreviewCallout(
       </div>
       <div className={reviewOrderGridRowClassName}>
         <div className={tw("col-span-2")}>{t`Total Tokens Receiving`}</div>
-        <div>{t`${roundedPrincipalTokensOut}`}</div>
+        <div>{`${roundedPrincipalTokensOut}`}</div>
       </div>
     </Callout>
   );
@@ -84,7 +84,8 @@ function calculateTotalYield(
   amountIn: string,
   decimals: number
 ): string {
-  if (!amountOut || !amountIn) {
+  // check for bad inputs, ie: 0 (including "0.0", et al) and empty strings
+  if (!+amountOut || !+amountIn) {
     return "0";
   }
   const amountInBN = BigNumber.from(parseUnits(amountIn, decimals));
@@ -104,18 +105,19 @@ function calculatePercentYield(
   amountIn: string,
   totalYield: string,
   decimals: number
-): number {
-  if (!amountIn || !totalYield) {
-    return 0;
+): string {
+  // check for bad inputs, ie: 0 (including "0.0", et al) and empty strings
+  if (!+amountIn || !+totalYield) {
+    return "0";
   }
 
-  // Actual math should be done using FixedPoint arithmetic
-  const totalYieldFixedNumber = getSafeFixedNumber(totalYield, { decimals });
+  // Math should be be done using fixed point arithmetic with FixedNumber
+  const totalYieldFN = getSafeFixedNumber(totalYield, { decimals });
   const amountInFN = getSafeFixedNumber(amountIn, { decimals });
-  const yieldRatio = totalYieldFixedNumber.divUnsafe(amountInFN);
+  const yieldRatioFN = totalYieldFN.divUnsafe(amountInFN);
 
-  const oneHundred = getSafeFixedNumber("100", { decimals });
-  const percentYield = yieldRatio.mulUnsafe(oneHundred);
+  const oneHundredFN = getSafeFixedNumber("100", { decimals });
+  const percentYieldFN = yieldRatioFN.mulUnsafe(oneHundredFN);
 
-  return +percentYield.toString();
+  return percentYieldFN.toString();
 }

@@ -1,15 +1,13 @@
-import { QueryObserverResult, QueryStatus } from "react-query";
+import { QueryObserverResult } from "react-query";
 
 import { BigNumber } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
-import { PrincipalPoolTokenInfo } from "tokenlists/types";
 
 import { SwapKind } from "efi-balancer/SwapKind";
 import { makeQueryBatchSwapCallArgs } from "efi-ui/balancer/useQueryBatchSwap/makeQueryBatchSwapCallArgs";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
 import {
-  calcSwapCCPoolUNSAFE,
   calcSwapInGivenOutWeightedPoolUNSAFE,
   calcSwapOutGivenInWeightedPoolUNSAFE,
 } from "efi/pools/calcPoolSwap";
@@ -21,6 +19,8 @@ import { isYieldPool } from "efi/pools/weightedPool";
 import { getTokenInfo } from "efi/tokenlists";
 import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 import { balancerVaultContract } from "efi-balancer/vault";
+import { QueryBatchSwapCalcResults } from "efi/pools/QueryBatchSwapCalcResults";
+import { calcSwapPrincipalPoolOld } from "efi/pools/calcSwapPrincipalPool";
 
 /**
  * Useful for previewing a swap in the balancer V2 vault.
@@ -65,12 +65,6 @@ export function useQueryBatchSwap(
   return queryBatchSwapResults;
 }
 
-interface QueryBatchSwapCalcResults {
-  result: [amountIn: string, amountOut: string] | undefined;
-  // TBD
-  status: QueryStatus;
-}
-
 export function getCalcSwap(
   amount: string,
   kind: SwapKind,
@@ -108,7 +102,7 @@ export function getCalcSwap(
   }
 
   if (isPrincipalPool(poolInfo)) {
-    return calcSwapPrincipalPool(
+    return calcSwapPrincipalPoolOld(
       amount,
       kind,
       poolInfo,
@@ -178,62 +172,5 @@ function calcSwapYieldPool(
   const calcIn =
     clipStringValueToDecimals(calcInNumber.toString(), decimals) ?? "0";
 
-  return { result: [calcIn, amount], status: "success" };
-}
-
-function calcSwapPrincipalPool(
-  amount: string,
-  swapKind: SwapKind,
-  poolInfo: PrincipalPoolTokenInfo,
-  decimals: number,
-  tokenInReserves: string,
-  tokenOutReserves: string,
-  totalSupply: string,
-  baseAssetIn: boolean
-): QueryBatchSwapCalcResults {
-  const nowInSeconds = Math.round(Date.now() / 1000);
-  const { extensions } = poolInfo;
-  const { unitSeconds: tParamSeconds, expiration } = extensions;
-  const timeRemainingSeconds = Math.max(expiration - nowInSeconds, 0);
-  if (timeRemainingSeconds === 0) {
-    // after maturity, values trade 1-1
-    return { result: [amount, amount], status: "success" };
-  }
-
-  // always add total supply to base asset reserves
-  const adjustedInReserves = baseAssetIn
-    ? +tokenInReserves + +totalSupply
-    : +tokenInReserves;
-  const adjustedOutReserves = baseAssetIn
-    ? +tokenOutReserves
-    : +tokenOutReserves + +totalSupply;
-
-  if (swapKind === SwapKind.GIVEN_IN) {
-    const calcOutNumber = calcSwapCCPoolUNSAFE(
-      amount, //                      xAmount,
-      String(adjustedInReserves), //  xReserves,
-      String(adjustedOutReserves), // yReserves,
-      timeRemainingSeconds, //        timeRemainingSeconds,
-      tParamSeconds, //               tParamSeconds,
-      true //                         swapKind === SwapKind.GIVEN_IN (calculate output)
-    );
-
-    const calcOut =
-      clipStringValueToDecimals(calcOutNumber.toString(), decimals) ?? "0";
-
-    return { result: [amount, calcOut], status: "success" };
-  }
-
-  const calcInNumber = calcSwapCCPoolUNSAFE(
-    amount, //                      xAmount,
-    String(adjustedOutReserves), // xReserves,
-    String(adjustedInReserves), //  yReserves,
-    timeRemainingSeconds, //        timeRemainingSeconds,
-    tParamSeconds, //               tParamSeconds,
-    false //                        swapKind === SwapKind.GIVEN_IN (calculate output)
-  );
-
-  const calcIn =
-    clipStringValueToDecimals(calcInNumber.toString(), decimals) ?? "0";
   return { result: [calcIn, amount], status: "success" };
 }

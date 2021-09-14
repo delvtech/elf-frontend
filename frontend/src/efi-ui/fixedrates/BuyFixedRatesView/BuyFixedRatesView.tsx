@@ -1,14 +1,14 @@
 import { Fragment, ReactElement } from "react";
 import { Helmet } from "react-helmet";
 
-import { Button, Card, Classes, Intent } from "@blueprintjs/core";
+import { Button, Card, Classes, H4, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { RouteComponentProps } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
 import classNames from "classnames";
 import { commify } from "ethers/lib/utils";
 import { PrincipalTokenInfo } from "tokenlists/types";
-import { t } from "ttag";
+import { jt, t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
@@ -18,14 +18,13 @@ import { useCalculatePrincipalTokenAmountOut } from "efi-ui/ccpools/useCalculate
 import { useMarketPrice } from "efi-ui/ccpools/useMarketPrice";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoBalanceOf } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
-import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { useValidateBuyPrincipalTokenInput } from "efi-ui/pools/hooks/useValidateBuyPrincipalTokenInput";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { TokenAmountInput2 } from "efi-ui/token/TokenAmountInput/TokenAmountInput2";
 import { getMarketRateLabel } from "efi-ui/tranche/getMarketRateLabel";
 import { PrincipalTokenTermButtonLabel2 } from "efi-ui/tranche/TermPicker/PrincipalTokenTermButtonLabel2";
 import { TermPicker2 } from "efi-ui/tranche/TermPicker/TermPicker2";
-import { usePrincipalTokensWithSameBaseAsset } from "efi-ui/tranche/usePrincipalTokensWithSameBaseAsset";
+import { useOpenPrincipalTokensWithSameBaseAsset } from "efi-ui/tranche/useOpenPrincipalTokensWithSameBaseAsset";
 import { formatBalance } from "efi/base/formatBalance";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
@@ -41,6 +40,12 @@ interface BuyFixedRatesViewProps extends RouteComponentProps {
   principalTokenAddress?: string;
 }
 
+const fixedYieldLink = (
+  <a
+    key="fixed-yield-link"
+    href="https://medium.com/element-finance/fixed-rate-interest-markets-a-casual-users-journey-through-fixed-rate-interest-using-element-50f420df1859"
+  >{t`Fixed Yield`}</a>
+);
 export function BuyFixedRatesView({
   principalTokenAddress,
 }: BuyFixedRatesViewProps): ReactElement | null {
@@ -53,7 +58,7 @@ export function BuyFixedRatesView({
 
   // Used for the Term picker, since base assets can have multiple terms (ie:
   // principal tokens) running at the same time.
-  const availablePrincipalTokens = usePrincipalTokensWithSameBaseAsset(
+  const availablePrincipalTokens = useOpenPrincipalTokensWithSameBaseAsset(
     principalTokenAddress
   );
 
@@ -99,15 +104,19 @@ export function BuyFixedRatesView({
     principalTokenPoolInfo,
     baseAssetInputValue
   );
-  const principalTokensOut = useCalculatePrincipalTokenAmountOut(
-    principalTokenPoolInfo,
-    baseAssetInputValue
-  );
+  const { amountOut: principalTokensOut, error: previewError } =
+    useCalculatePrincipalTokenAmountOut(
+      principalTokenPoolInfo,
+      baseAssetInputValue
+    );
 
   const inputErrorMessage = tokenInError || tokenOutError;
-  const hasInputError = !!inputErrorMessage;
+  const hasInputError = !!inputErrorMessage || !!previewError;
 
   const isBuyButtonDisabled = hasInputError || !+baseAssetInputValue;
+  const buttonErrorMessage = previewError
+    ? t`Insufficient pool reserves`
+    : inputErrorMessage;
   const buyButtonIntent = hasInputError ? Intent.DANGER : Intent.PRIMARY;
 
   return (
@@ -133,7 +142,6 @@ export function BuyFixedRatesView({
             "items-center",
             "text-center",
             "space-y-4",
-            "lg:space-y-10",
             "pt-2",
             "px-6",
             "pb-24",
@@ -141,10 +149,7 @@ export function BuyFixedRatesView({
             "lg:max-w-4xl"
           )}
         >
-          <ViewTitle
-            title={t`The simplest way to double your crypto savings.`}
-            subtitle={t`No minimums, no withdrawal penalties, exit anytime.`}
-          />
+          <H4>{jt`Learn more about ${fixedYieldLink}`}</H4>
           <Card className={tw("flex", "flex-col", "w-400", "p-6", "space-y-8")}>
             {/* Base asset Picker */}
             <div className={tw("flex", "flex-col", "space-y-3")}>
@@ -280,7 +285,7 @@ export function BuyFixedRatesView({
               large
               intent={buyButtonIntent}
             >
-              {hasInputError ? inputErrorMessage : t`Buy`}
+              {hasInputError ? buttonErrorMessage : t`Buy`}
             </Button>
           </Card>
         </div>

@@ -5,7 +5,7 @@ import { principalTokenInfos } from "efi/tranche/tranches";
 import { getIsMature } from "efi/tranche/getIsMature";
 import { EMPTY_ARRAY } from "efi/base/emptyArray";
 
-export function usePrincipalTokensWithSameBaseAsset(
+export function useOpenPrincipalTokensWithSameBaseAsset(
   principalTokenAddress: string | undefined
 ): PrincipalTokenInfo[] {
   return useMemo(() => {

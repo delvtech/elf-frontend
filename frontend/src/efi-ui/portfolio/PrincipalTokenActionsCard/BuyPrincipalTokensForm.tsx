@@ -85,7 +85,7 @@ export function BuyPrincipalTokensForm(
   const spotPrice = usePoolSpotPrice(poolContract, principalTokenAddress);
 
   // input validation
-  const amountOut = useCalculatePrincipalTokenAmountOut(
+  const { amountOut } = useCalculatePrincipalTokenAmountOut(
     poolInfo,
     baseAssetInputValue
   );
