@@ -1,25 +1,27 @@
-import { ReactElement } from "react";
+import { ReactElement, useCallback } from "react";
 
 import { Button, Card, Elevation, Intent, Tag } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
+import { useNavigate } from "@reach/router";
 import classNames from "classnames";
 import { AssetProxyTokenInfo, PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { Navigation } from "efi-ui/app/navigation/navigation";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useIsTailwindLargeScreen } from "efi-ui/base/mediaBreakpoints";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import styles from "efi-ui/fixedrates/grid.module.css";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates";
+import { formatPercent } from "efi/base/formatPercent";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { getPoolInfoForPrincipalToken } from "efi/pools/ccpool";
 import { getTokenInfo } from "efi/tokenlists";
 import { getIsMature } from "efi/tranche/getIsMature";
-import { useTokenYield } from "efi-ui/pools/hooks/useTokenYield";
-import { getPoolInfoForPrincipalToken } from "efi/pools/ccpool";
-import { formatPercent } from "efi/base/formatPercent";
+import { usePrincipalTokenYield } from "efi-ui/pools/hooks/usePrincipalTokenYield";
 
 interface FixedRateCardProps {
   principalToken: PrincipalTokenInfo;
@@ -33,9 +35,14 @@ export function FixedRateCard(props: FixedRateCardProps): ReactElement | null {
     },
   } = props;
 
+  const navigateToBuyPage = useNavigate();
+  const onCardClick = useCallback(() => {
+    navigateToBuyPage(`${Navigation.FIXED_RATES}/${address}`);
+  }, [address, navigateToBuyPage]);
+
   const { name: positionName } = getTokenInfo<AssetProxyTokenInfo>(position);
   const principalPool = getPoolInfoForPrincipalToken(address);
-  const fixedRate = useTokenYield(principalPool, "principal");
+  const fixedRate = usePrincipalTokenYield(principalPool);
   const baseAsset = getCryptoAssetForToken(underlying);
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
   const BaseAssetIcon = findAssetIcon(baseAsset);
@@ -61,7 +68,7 @@ export function FixedRateCard(props: FixedRateCardProps): ReactElement | null {
           "lg:space-y-0"
         )
       )}
-      onClick={() => {}}
+      onClick={onCardClick}
     >
       <LabeledText
         className={tw("text-left", "pl-2")}
@@ -77,10 +84,10 @@ export function FixedRateCard(props: FixedRateCardProps): ReactElement | null {
           {formattedUnlockDate}
         </Tag>
       </span>
-      <span className={tw("text-right", "text-base")}>
-        {t`${isLargeScreen ? "" : t`Expected APR: `} ${formatPercent(
-          fixedRate
-        )} ${isLargeScreen ? "APR" : ""}`}
+      <span className={tw("text-base")}>
+        {t`${isLargeScreen ? "" : t`Fixed APR: `} ${formatPercent(fixedRate)} ${
+          isLargeScreen ? "APR" : ""
+        }`}
       </span>
       <div className={tw("text-right")}>
         <Button minimal rightIcon={IconNames.CARET_RIGHT} onClick={() => {}}>

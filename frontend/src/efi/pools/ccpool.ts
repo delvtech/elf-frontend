@@ -32,10 +32,10 @@ export function isPrincipalPool(
   return !!tokenInfo.tags?.includes(TokenListTag.CCPOOL);
 }
 export function getPoolInfoForPrincipalToken(
-  trancheAddress: string
+  principalTokenAddress: string
 ): PrincipalPoolTokenInfo {
   return principalPools.find(
-    ({ extensions: { bond } }) => bond === trancheAddress
+    ({ extensions: { bond } }) => bond === principalTokenAddress
   ) as PrincipalPoolTokenInfo;
 }
 

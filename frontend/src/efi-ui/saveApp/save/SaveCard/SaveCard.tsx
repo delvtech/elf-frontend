@@ -24,6 +24,7 @@ import { t } from "ttag";
 import { SwapKind } from "efi-balancer/SwapKind";
 import tw from "efi-tailwindcss-classnames";
 import { getCalcSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
+import { useBoolean } from "efi-ui/base/hooks/useBoolean/useBoolean";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { CryptoAssetPicker } from "efi-ui/crypto/CryptoAssetPicker/CryptoAssetPicker";
@@ -38,6 +39,8 @@ import { SaveInput } from "efi-ui/saveApp/save/SaveInput/SaveInput";
 import { SaveTermPicker } from "efi-ui/saveApp/save/SaveTermPicker/SaveTermPicker";
 import { SwapTokensTransactionConfirmationDrawer } from "efi-ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensTransactionConfirmationDrawer";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
+import { getMarketRateLabel } from "efi-ui/tranche/getMarketRateLabel";
+import { useOpenTrancheBaseAssets } from "efi-ui/tranche/useOpenTrancheBaseAssets";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
 import { BALANCER_ETH_SENTINEL } from "efi/balancer";
 import { formatBalance } from "efi/base/formatBalance";
@@ -53,8 +56,6 @@ import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { getTokenInfo } from "efi/tokenlists";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
 import { underlyingContractsByAddress } from "efi/underlying/underlying";
-import { useOpenTrancheBaseAssets } from "efi-ui/tranche/useOpenTrancheBaseAssets";
-import { useBoolean } from "efi-ui/base/hooks/useBoolean/useBoolean";
 
 export interface SaveCardProps {
   library: Web3Provider | undefined;
@@ -547,14 +548,4 @@ function useActiveBaseAsset(onChange: (baseAsset: CryptoAsset) => void) {
     [onChange]
   );
   return { activeBaseAsset, setActiveBaseAsset };
-}
-function getMarketRateLabel(
-  inputTokenSymbol: string | undefined,
-  roundedTranchePrice: string | undefined,
-  activeBaseAssetSymbol: string | undefined
-): string | undefined {
-  if (!inputTokenSymbol || !roundedTranchePrice || !activeBaseAssetSymbol) {
-    return;
-  }
-  return t`1 ${inputTokenSymbol} Principal Token ≈ ${roundedTranchePrice} ${activeBaseAssetSymbol}`;
 }

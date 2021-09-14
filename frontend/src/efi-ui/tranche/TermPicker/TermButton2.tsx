@@ -3,38 +3,31 @@ import React from "react";
 import { Classes, Icon } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import classNames from "classnames";
-import { Tranche } from "elf-contracts-typechain/dist/types/Tranche";
 
 import tw from "efi-tailwindcss-classnames";
-import { CryptoAsset } from "efi/crypto/CryptoAsset";
-import { getBaseAssetForTranche } from "efi/tranche/baseAssets";
+import { PrincipalTokenInfo } from "tokenlists/types";
+import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 
-interface TrancheButtonProps {
+interface TermButton2Props {
   account: string | null | undefined;
-  tranche: Tranche;
+  principalTokenInfo: PrincipalTokenInfo;
   disabled?: boolean;
   onClick?: (event: React.MouseEvent<HTMLElement>) => void;
   /**
    * If true will show the dropdown caret, defaults to true
    */
   showCaret?: boolean;
-  buttonLabelRenderer: (
-    tranche: Tranche,
-    baseAsset: CryptoAsset
-  ) => JSX.Element;
+  buttonLabelRenderer: (term: PrincipalTokenInfo) => JSX.Element;
 }
 
-/**
- * @deprecated Passing contracts is deprecated. Refactor this!
- */
-export function TermButton({
-  tranche,
+export function TermButton2({
+  principalTokenInfo,
   disabled = false,
   buttonLabelRenderer,
   showCaret = true,
   onClick,
-}: TrancheButtonProps): JSX.Element {
-  const baseAsset = getBaseAssetForTranche(tranche.address);
+}: TermButton2Props): JSX.Element {
+  const { isDarkMode } = useDarkMode();
   return (
     <button
       disabled={disabled}
@@ -53,10 +46,11 @@ export function TermButton({
           "items-center",
           "space-x-4",
           "flex-1",
-          "p-2"
+          "p-2",
+          isDarkMode ? "text-white" : "text-black"
         )}
       >
-        {buttonLabelRenderer(tranche, baseAsset)}
+        {buttonLabelRenderer(principalTokenInfo)}
         {showCaret ? <Icon icon={IconNames.CARET_DOWN} /> : null}
       </div>
     </button>

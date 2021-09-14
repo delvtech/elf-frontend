@@ -14,6 +14,7 @@ interface FixedRatesViewProps extends RouteComponentProps {}
 export function FixedRatesView(unusedProps: FixedRatesViewProps): ReactElement {
   const openPrincipalTokenInfos = useOpenPrincipalTokenInfos();
 
+  // TODO: Implement custom sorting UI?
   const sortedPrincipalTokenInfos = useMemo(() => {
     return [...openPrincipalTokenInfos]
       .sort((info) => info.extensions.createdAtTimestamp)

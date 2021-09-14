@@ -24,7 +24,7 @@ export function FixedRateCardListHeader(
     >
       <span>{t`Featured Principal Tokens`}</span>
       <span>{t`Term Period`}</span>
-      <span className={tw("text-right")}>{t`Expected APR`}</span>
+      <span>{t`Fixed APR`}</span>
       <span />
     </div>
   );

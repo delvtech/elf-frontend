@@ -71,17 +71,22 @@ export function AppHeader({
             {isFixedRatesPageHACK ? (
               <Tab
                 id={Navigation.FIXED_RATES}
-                title={<span>{t`Fixed APR`}</span>}
+                title={<span>{t`Fixed Rates`}</span>}
               />
             ) : null}
             {isFixedRatesPageHACK ? <Divider /> : null}
 
             <Tab
               id={Navigation.EARN}
-              title={<span>{isFixedRatesPageHACK ? t`Mint` : t`Earn`}</span>}
+              title={
+                <span>{isFixedRatesPageHACK ? t`Add Liquidity` : t`Earn`}</span>
+              }
             />
             <Divider />
-            <Tab id={Navigation.TRADE} title={<span>{t`Trade`}</span>} />
+            <Tab
+              id={Navigation.TRADE}
+              title={<span>{isFixedRatesPageHACK ? t`Pools` : t`Trade`}</span>}
+            />
             <Divider />
             <Tab
               id={Navigation.PORTFOLIO}

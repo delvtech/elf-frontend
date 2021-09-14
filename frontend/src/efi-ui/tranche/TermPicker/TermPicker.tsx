@@ -29,6 +29,10 @@ const popoverProps: IPopoverProps = {
   popoverClassName: tw("w-full", "h-full"),
   portalClassName: tw("w-64"),
 };
+/**
+ *
+ * @deprecated passing contracts as props is deprecated, refactor this component!
+ */
 export function TermPicker({
   tranches,
   account,

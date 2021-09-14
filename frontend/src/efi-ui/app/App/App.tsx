@@ -30,6 +30,7 @@ import { getConnectorName } from "efi/wallets/connectors";
 
 import styles from "./App.module.css";
 import { FixedRatesView } from "efi-ui/fixedrates/FixedRatesView";
+import { BuyFixedRatesView } from "efi-ui/fixedrates/BuyFixedRatesView/BuyFixedRatesView";
 
 FocusStyleManager.onlyShowFocusOnTabs();
 
@@ -79,6 +80,9 @@ const App: FC<AppProps> = () => {
           <Redirect noThrow from="/" to={Navigation.EARN} />
 
           <FixedRatesView path={Navigation.FIXED_RATES} />
+          <BuyFixedRatesView
+            path={`${Navigation.FIXED_RATES}/:principalTokenAddress`}
+          />
           <PortfolioView path={Navigation.PORTFOLIO} />
           <EarnView path={Navigation.EARN} />
           <TradeView path={Navigation.TRADE} />

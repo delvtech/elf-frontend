@@ -2,28 +2,24 @@ import { Fragment, ReactElement, useCallback, useState } from "react";
 
 import { Button, Callout, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
-import { formatUnits } from "ethers/lib/utils";
-import { PrincipalPoolTokenInfo, PrincipalTokenInfo } from "tokenlists/types";
+import { PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import { getTokenAddressForBalancer } from "efi-balancer/getTokenAddressForBalancer";
-import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
 import { SwapKind } from "efi-balancer/SwapKind";
 import tw from "efi-tailwindcss-classnames";
-import { getCalcSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
+import { useCalculatePrincipalTokenAmountOut } from "efi-ui/ccpools/useCalculatePrincipalTokenAmountOut";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoBalanceOf } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { useCanPerformPool } from "efi-ui/pools/hooks/usePoolCanPerform/usePoolCanPerform";
 import { usePoolSpotPrice } from "efi-ui/pools/hooks/usePoolSpotPrice/usePoolSpotPrice";
-import { usePoolTokens } from "efi-ui/pools/hooks/usePoolTokens/usePoolTokens";
-import { usePoolTotalSupply } from "efi-ui/pools/hooks/usePoolTotalSupply";
 import { useTokenYield } from "efi-ui/pools/hooks/useTokenYield";
+import { useValidateBuyPrincipalTokenInput } from "efi-ui/pools/hooks/useValidateBuyPrincipalTokenInput";
 import { SwapTokensTransactionConfirmationDrawer } from "efi-ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensTransactionConfirmationDrawer";
 import { TokenAmountInput } from "efi-ui/token/TokenAmountInput/TokenAmountInput";
 import { formatBalance } from "efi/base/formatBalance";
 import { formatPercent } from "efi/base/formatPercent";
-import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
@@ -31,10 +27,6 @@ import {
   getPoolInfoForPrincipalToken,
   getPrincipalPoolContractForTranche,
 } from "efi/pools/ccpool";
-import { getPoolContract } from "efi/pools/getPoolContract";
-import { getPoolTokens } from "efi/pools/getPoolTokens";
-import { getTokenInfo } from "efi/tokenlists";
-import { validateTradeValues } from "efi/trade/validateTradeValues";
 
 interface BuyPrincipalTokensFormProps {
   library: Web3Provider | undefined;
@@ -97,7 +89,7 @@ export function BuyPrincipalTokensForm(
     poolInfo,
     baseAssetInputValue
   );
-  const { tokenOutError, tokenInError } = useValidateInput(
+  const { tokenOutError, tokenInError } = useValidateBuyPrincipalTokenInput(
     library,
     account,
     poolInfo,
@@ -197,94 +189,4 @@ export function BuyPrincipalTokensForm(
       />
     </Fragment>
   );
-}
-
-function useValidateInput(
-  library: Web3Provider | undefined,
-  account: string | null | undefined,
-  poolInfo: PrincipalPoolTokenInfo,
-  amountIn: string
-) {
-  const {
-    address: poolAddress,
-    extensions: { underlying },
-  } = poolInfo;
-
-  const baseAsset = getCryptoAssetForToken(underlying);
-  const baseAssetBalanceOf = useCryptoBalanceOf(library, account, baseAsset);
-  const { decimals: baseAssetDecimals } = getTokenInfo(underlying);
-
-  const { baseAssetIndex, termAssetIndex: principalTokenIndex } =
-    getPoolTokens(poolInfo);
-
-  const poolContract = getPoolContract(poolAddress);
-
-  const { data: [, balances] = [] } = usePoolTokens(poolContract);
-  const underlyingReservesBalanceOf = balances?.[baseAssetIndex];
-  const principalReservesBalanceOf = balances?.[principalTokenIndex];
-
-  const amountPrincipalTokensOutBN = useCalculatePrincipalTokenAmountOut(
-    poolInfo,
-    amountIn
-  );
-
-  return validateTradeValues(
-    amountIn,
-    amountPrincipalTokensOutBN,
-    underlyingReservesBalanceOf,
-    principalReservesBalanceOf,
-    baseAssetBalanceOf,
-    baseAssetDecimals
-  );
-}
-
-function useCalculatePrincipalTokenAmountOut(
-  poolInfo: PrincipalPoolTokenInfo,
-  amountIn: string
-): string {
-  const {
-    address: poolAddress,
-    extensions: { underlying: baseAssetAddress, bond: principalTokenAddress },
-  } = poolInfo;
-
-  const { baseAssetIndex, termAssetIndex: principalTokenIndex } =
-    getPoolTokens(poolInfo);
-
-  const poolContract = getPoolContract(poolAddress);
-
-  const { data: totalSupplyBN } = usePoolTotalSupply(poolContract);
-  const totalSupply = formatUnits(
-    totalSupplyBN ?? 0,
-    BALANCER_POOL_LP_TOKEN_DECIMALS
-  );
-
-  const { data: [, balances] = [] } = usePoolTokens(poolContract);
-  const underlyingReservesBalanceOf = balances?.[baseAssetIndex];
-  const principalReservesBalanceOf = balances?.[principalTokenIndex];
-
-  const { decimals: baseAssetDecimals } = getTokenInfo(baseAssetAddress);
-  const underlyingReserves = formatUnits(
-    underlyingReservesBalanceOf ?? 0,
-    baseAssetDecimals
-  );
-  const principalReserves = formatUnits(
-    principalReservesBalanceOf ?? 0,
-    baseAssetDecimals
-  );
-
-  const newAmountOutResult = getCalcSwap(
-    amountIn,
-    SwapKind.GIVEN_IN,
-    poolInfo,
-    baseAssetAddress,
-    principalTokenAddress,
-    underlyingReserves,
-    principalReserves,
-    totalSupply
-  );
-
-  const { result: [, amountOut] = ["", ""] } = newAmountOutResult;
-  const amountOutBN = clipStringValueToDecimals(amountOut, baseAssetDecimals);
-
-  return amountOutBN;
 }

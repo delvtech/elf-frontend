@@ -2,6 +2,13 @@ import { BigNumber } from "ethers";
 import { parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
+export interface TradeValuesValidationResult {
+  isValidTokenInValue: boolean;
+  isValidTokenOutValue: boolean;
+  tokenInError?: string;
+  tokenOutError?: string;
+}
+
 export function validateTradeValues(
   amountIn: string | undefined,
   amountOut: string | undefined,
@@ -9,12 +16,7 @@ export function validateTradeValues(
   tokenOutPoolBalance: BigNumber | undefined,
   tokenInBalanceOf: BigNumber | undefined,
   tokenInDecimals: number | undefined
-): {
-  isValidTokenInValue: boolean;
-  isValidTokenOutValue: boolean;
-  tokenInError?: string;
-  tokenOutError?: string;
-} {
+): TradeValuesValidationResult {
   // input value must be lower than the user's balance
   let isValidTokenInValue = true;
   let isValidTokenOutValue = true;
