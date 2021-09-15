@@ -79,7 +79,7 @@ const App: FC<AppProps> = () => {
         <Router primary={false} className={tw("w-full", "h-full")}>
           <Redirect noThrow from="/" to={Navigation.FIXED_RATES} />
 
-          <FixedRatesListView path={Navigation.FIXED_RATES} />
+          <FixedRatesListView default path={Navigation.FIXED_RATES} />
           <BuyFixedRatesView
             path={`${Navigation.FIXED_RATES}/:principalTokenAddress`}
           />
