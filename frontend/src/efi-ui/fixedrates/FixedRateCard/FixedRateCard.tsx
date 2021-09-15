@@ -37,7 +37,7 @@ export function FixedRateCard(props: FixedRateCardProps): ReactElement | null {
 
   const navigateToBuyPage = useNavigate();
   const onCardClick = useCallback(() => {
-    navigateToBuyPage(`${Navigation.FIXED_RATES}/${address}`);
+    navigateToBuyPage(`/${Navigation.FIXED_RATES}/${address}`);
   }, [address, navigateToBuyPage]);
 
   const { name: positionName } = getTokenInfo<AssetProxyTokenInfo>(position);
