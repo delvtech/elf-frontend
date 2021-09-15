@@ -246,7 +246,7 @@ export function BuyFixedRatesView({
             <div className={tw("flex", "flex-col")}>
               <span
                 className={tw("text-base", "text-left")}
-              >{t`You Deposit`}</span>
+              >{t`You Spend`}</span>
               {!!account && (
                 <span
                   className={classNames(
