@@ -10,7 +10,7 @@ import {
 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import classNames from "classnames";
-import { t } from "ttag";
+import { jt, t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { AppMenuButton } from "efi-ui/app/AppMenuButton/AppMenuButton";
@@ -30,6 +30,14 @@ interface AppHeaderProps {
   hamburgerButton: ReactElement;
 }
 
+const fixedYieldLink = (
+  <a
+    key="fixed-yield-link"
+    href="https://medium.com/element-finance/fixed-rate-interest-markets-a-casual-users-journey-through-fixed-rate-interest-using-element-50f420df1859"
+    target="_noreferrer"
+  >{t`Fixed Yield`}</a>
+);
+
 export function AppHeader({
   account,
   active: walletConnectionActive,
@@ -47,8 +55,20 @@ export function AppHeader({
   return (
     <div className={tw("flex", "w-full", "flex-col")}>
       {/* Mobile */}
-      <div className={tw("flex", "lg:hidden", "w-full", "p-2")}>
+      <div
+        className={tw(
+          "flex",
+          "lg:hidden",
+          "w-full",
+          "p-2",
+          "items-center",
+          "justify-between"
+        )}
+      >
         <AppMenuButton />
+        {isFixedRatesPageHACK ? (
+          <span>{jt`Learn more about ${fixedYieldLink}`}</span>
+        ) : null}
       </div>
 
       {/* Desktop */}
@@ -131,6 +151,9 @@ export function AppHeader({
             { "bp3-dark": isDarkMode }
           )}
         >
+          {isFixedRatesPageHACK ? (
+            <span>{jt`Learn more about ${fixedYieldLink}`}</span>
+          ) : null}
           <Button
             minimal
             className={tw("px-6", "py-3")}

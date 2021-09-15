@@ -1,14 +1,14 @@
 import { Fragment, ReactElement, useCallback, useState } from "react";
 import { Helmet } from "react-helmet";
 
-import { Button, Card, Classes, H4, Intent } from "@blueprintjs/core";
+import { Button, Card, Classes, Colors, Icon, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { RouteComponentProps } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
 import classNames from "classnames";
 import { commify } from "ethers/lib/utils";
 import { PrincipalTokenInfo } from "tokenlists/types";
-import { jt, t } from "ttag";
+import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
@@ -36,6 +36,9 @@ import { FixedRatePreviewCallout } from "./FixedRatePreviewCallout";
 import { SwapKind } from "efi-balancer/SwapKind";
 import { SwapTokensTransactionConfirmationDrawer } from "efi-ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensTransactionConfirmationDrawer";
 import { getTokenAddressForBalancer } from "efi-balancer/getTokenAddressForBalancer";
+import { IconNames } from "@blueprintjs/icons";
+import { useNavigation } from "efi-ui/app/navigation/hooks/useNavigation";
+import { Navigation } from "efi-ui/app/navigation/navigation";
 
 interface BuyFixedRatesViewProps extends RouteComponentProps {
   // principalTokenAddress comes from the url, so it's intentionally optional as
@@ -43,17 +46,15 @@ interface BuyFixedRatesViewProps extends RouteComponentProps {
   principalTokenAddress?: string;
 }
 
-const fixedYieldLink = (
-  <a
-    key="fixed-yield-link"
-    href="https://medium.com/element-finance/fixed-rate-interest-markets-a-casual-users-journey-through-fixed-rate-interest-using-element-50f420df1859"
-  >{t`Fixed Yield`}</a>
-);
 export function BuyFixedRatesView({
   principalTokenAddress,
 }: BuyFixedRatesViewProps): ReactElement | null {
   const { account, library } = useWeb3React<Web3Provider>();
   const { isDarkMode } = useDarkMode();
+  const { changeTab } = useNavigation();
+  const goToFixedRatesListPage = useCallback(() => {
+    changeTab(Navigation.FIXED_RATES);
+  }, [changeTab]);
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const openDrawer = useCallback(() => setDrawerOpen(true), []);
   const closeDrawer = useCallback(() => {
@@ -134,15 +135,41 @@ export function BuyFixedRatesView({
         <title>{t`Earn fixed yield from buying at a discount. Exit anytime.`}</title>
       </Helmet>
       {/* Top-level route components should specify their own containers. */}
-      <div
-        className={tw(
-          "flex",
-          "flex-col",
-          "h-full",
-          "items-center",
-          "overflow-scroll"
-        )}
-      >
+      <div className={tw("flex", "flex-col", "h-full", "items-center")}>
+        <div
+          className={tw(
+            "flex",
+            "items-center",
+            "w-full",
+            "space-x-5",
+            "lg:px-16",
+            "lg:text-lg"
+          )}
+        >
+          <Button
+            className={tw("font-semibold")}
+            icon={
+              <Icon
+                color={Colors.WHITE}
+                icon={IconNames.DOWNLOAD}
+                size={32}
+                className={tw(
+                  // transform is a weird property that requires casting in tw()
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  "transform" as any,
+                  "rotate-90"
+                )}
+              />
+            }
+            minimal
+            large
+            onClick={goToFixedRatesListPage}
+          >{t`Principal Pools`}</Button>
+          <div style={{ width: 1 }} className={tw("h-full", "bg-white")} />
+          <span
+            className={tw("pl-2", "font-semibold")}
+          >{`${baseAssetSymbol}`}</span>
+        </div>
         <div
           className={tw(
             "flex",
@@ -154,18 +181,16 @@ export function BuyFixedRatesView({
             "pt-2",
             "px-6",
             "pb-24",
-            "lg:pb-0",
-            "lg:pt-10",
+            "lg:py-10",
             "lg:max-w-4xl"
           )}
         >
-          <H4>{jt`Learn more about ${fixedYieldLink}`}</H4>
           <Card className={tw("flex", "flex-col", "w-400", "p-6", "space-y-8")}>
             {/* Base asset Picker */}
             <div className={tw("flex", "flex-col", "space-y-3")}>
               <span
                 className={tw("text-base", "text-left")}
-              >{t`Choose Token Pool`}</span>
+              >{t`Choose Token`}</span>
               <div
                 style={{
                   background: isDarkMode ? "var(--bp3-dark-bg-color)" : "",

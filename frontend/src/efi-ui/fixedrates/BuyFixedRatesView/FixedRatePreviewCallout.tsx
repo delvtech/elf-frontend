@@ -60,15 +60,15 @@ export function FixedRatePreviewCallout(
         )}
       >
         <div className={tw("col-span-2")}>{t`Total Rate Earned`}</div>
-        <div>{`${roundedPercentYield}%`}</div>
+        <div className={tw("text-right")}>{`${roundedPercentYield}%`}</div>
       </div>
       <div className={reviewOrderGridRowClassName}>
         <div className={tw("col-span-2")}>{t`Total Tokens Earned`}</div>
-        <div>{roundedTotalTokensEarned}</div>
+        <div className={tw("text-right")}>{roundedTotalTokensEarned}</div>
       </div>
       <div className={reviewOrderGridRowClassName}>
         <div className={tw("col-span-2")}>{t`Total Tokens Receiving`}</div>
-        <div>{`${roundedPrincipalTokensOut}`}</div>
+        <div className={tw("text-right")}>{`${roundedPrincipalTokensOut}`}</div>
       </div>
     </Callout>
   );

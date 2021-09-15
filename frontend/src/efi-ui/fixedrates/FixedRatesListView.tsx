@@ -9,9 +9,11 @@ import { FixedRateCardList } from "efi-ui/fixedrates/FixedRateCardList/FixedRate
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { useOpenPrincipalTokenInfos } from "efi-ui/tranche/useOpenPrincipaltokenInfos";
 
-interface FixedRatesViewProps extends RouteComponentProps {}
+interface FixedRatesListViewProps extends RouteComponentProps {}
 
-export function FixedRatesView(unusedProps: FixedRatesViewProps): ReactElement {
+export function FixedRatesListView(
+  unusedProps: FixedRatesListViewProps
+): ReactElement {
   const openPrincipalTokenInfos = useOpenPrincipalTokenInfos();
 
   // TODO: Implement custom sorting UI?
@@ -27,15 +29,7 @@ export function FixedRatesView(unusedProps: FixedRatesViewProps): ReactElement {
         <title>{t`Earn fixed yield from buying at a discount. Exit anytime.`}</title>
       </Helmet>
       {/* Top-level route components should specify their own containers. */}
-      <div
-        className={tw(
-          "flex",
-          "flex-col",
-          "h-full",
-          "items-center",
-          "overflow-scroll"
-        )}
-      >
+      <div className={tw("flex", "flex-col", "h-full", "items-center")}>
         <div
           className={tw(
             "flex",
@@ -47,7 +41,7 @@ export function FixedRatesView(unusedProps: FixedRatesViewProps): ReactElement {
             "lg:space-y-10",
             "pt-2",
             "px-6",
-            "pb-24",
+            "lg:pb-0",
             "lg:pt-10",
             "lg:max-w-4xl"
           )}

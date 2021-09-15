@@ -11,10 +11,11 @@ import { t } from "ttag";
 
 import { tw } from "efi-tailwindcss-classnames";
 import { AppHamburgerButton } from "efi-ui/app/AppHamburgerButton/AppHamburgerButton";
-import { Navigation } from "efi-ui/app/navigation/navigation";
 import { AppHeader } from "efi-ui/app/AppHeader/AppHeader";
+import { Navigation } from "efi-ui/app/navigation/navigation";
 import { TradeView } from "efi-ui/app/trade/TradeView/TradeView";
 import { EarnView } from "efi-ui/earn/EarnView/EarnView";
+import { FixedRatesListView } from "efi-ui/fixedrates/FixedRatesListView";
 import { PoolView } from "efi-ui/pools/PoolView/PoolView";
 import { PortfolioView } from "efi-ui/portfolio/PortfolioView/PortfolioView";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
@@ -29,7 +30,6 @@ import { ChainId, ChainNames } from "efi/ethereum";
 import { getConnectorName } from "efi/wallets/connectors";
 
 import styles from "./App.module.css";
-import { FixedRatesView } from "efi-ui/fixedrates/FixedRatesView";
 import { BuyFixedRatesView } from "efi-ui/fixedrates/BuyFixedRatesView/BuyFixedRatesView";
 
 FocusStyleManager.onlyShowFocusOnTabs();
@@ -79,7 +79,7 @@ const App: FC<AppProps> = () => {
         <Router primary={false} className={tw("w-full", "h-full")}>
           <Redirect noThrow from="/" to={Navigation.EARN} />
 
-          <FixedRatesView path={Navigation.FIXED_RATES} />
+          <FixedRatesListView path={Navigation.FIXED_RATES} />
           <BuyFixedRatesView
             path={`${Navigation.FIXED_RATES}/:principalTokenAddress`}
           />
