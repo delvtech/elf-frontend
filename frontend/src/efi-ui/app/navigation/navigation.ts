@@ -1,8 +1,8 @@
 export enum Navigation {
   HOME = "",
   PORTFOLIO = "portfolio",
-  TRADE = "pools",
-  EARN = "earn",
+  POOLS = "pools",
+  MINT = "mint",
   FIXED_RATES = "fixedrates",
   STATS = "stats",
 }

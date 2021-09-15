@@ -10,7 +10,7 @@ import { Navigation } from "efi-ui/app/navigation/navigation";
 
 export function NoPrincipalTokensInWalletNonIdealState(): ReactElement {
   const { changeTab } = useNavigation();
-  const goToEarn = useCallback(() => changeTab(Navigation.EARN), [changeTab]);
+  const goToEarn = useCallback(() => changeTab(Navigation.MINT), [changeTab]);
 
   return (
     <NonIdealState

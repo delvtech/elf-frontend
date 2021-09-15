@@ -11,14 +11,14 @@ export function useActiveTab(): Navigation {
     case Navigation.HOME: {
       return Navigation.HOME;
     }
-    case Navigation.TRADE: {
-      return Navigation.TRADE;
+    case Navigation.POOLS: {
+      return Navigation.POOLS;
     }
     case Navigation.PORTFOLIO: {
       return Navigation.PORTFOLIO;
     }
-    case Navigation.EARN: {
-      return Navigation.EARN;
+    case Navigation.MINT: {
+      return Navigation.MINT;
     }
     case Navigation.FIXED_RATES: {
       return Navigation.FIXED_RATES;

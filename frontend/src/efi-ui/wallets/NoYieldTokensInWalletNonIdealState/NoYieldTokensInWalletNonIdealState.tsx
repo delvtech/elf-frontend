@@ -10,7 +10,7 @@ import { Navigation } from "efi-ui/app/navigation/navigation";
 
 export function NoYieldTokensInWalletNonIdealState(): ReactElement {
   const { changeTab } = useNavigation();
-  const goToMint = useCallback(() => changeTab(Navigation.EARN), [changeTab]);
+  const goToMint = useCallback(() => changeTab(Navigation.MINT), [changeTab]);
   return (
     <NonIdealState
       icon={IconNames.BANK_ACCOUNT}

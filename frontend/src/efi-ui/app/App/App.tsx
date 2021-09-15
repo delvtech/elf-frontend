@@ -77,15 +77,15 @@ const App: FC<AppProps> = () => {
           https://stackoverflow.com/questions/53058110/stop-reach-router-scrolling-down-the-page-after-navigating-to-new-page
           */}
         <Router primary={false} className={tw("w-full", "h-full")}>
-          <Redirect noThrow from="/" to={Navigation.EARN} />
+          <Redirect noThrow from="/" to={Navigation.FIXED_RATES} />
 
           <FixedRatesListView path={Navigation.FIXED_RATES} />
           <BuyFixedRatesView
             path={`${Navigation.FIXED_RATES}/:principalTokenAddress`}
           />
           <PortfolioView path={Navigation.PORTFOLIO} />
-          <EarnView path={Navigation.EARN} />
-          <TradeView path={Navigation.TRADE} />
+          <EarnView path={Navigation.MINT} />
+          <TradeView path={Navigation.POOLS} />
           <PoolView path={`pools/:poolAddress`} />
           <StatsView path={Navigation.STATS} />
         </Router>

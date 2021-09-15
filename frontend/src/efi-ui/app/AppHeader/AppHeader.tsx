@@ -50,7 +50,7 @@ export function AppHeader({
     usePendingTransactionPref();
   const hasPendingTransaction = !!transactionHash;
 
-  const isFixedRatesPageHACK = activeTab === Navigation.FIXED_RATES;
+  const isFixedRatesPage = activeTab === Navigation.FIXED_RATES;
 
   return (
     <div className={tw("flex", "w-full", "flex-col")}>
@@ -66,7 +66,7 @@ export function AppHeader({
         )}
       >
         <AppMenuButton />
-        {isFixedRatesPageHACK ? (
+        {isFixedRatesPage ? (
           <span>{jt`Learn more about ${fixedYieldLink}`}</span>
         ) : null}
       </div>
@@ -85,28 +85,15 @@ export function AppHeader({
             onChange={changeTab}
             selectedTabId={activeTab}
           >
-            {/*
-             Blueprint Tabs does stuff w/ children so we can't use Fragments, hence two ternarys
-             */}
-            {isFixedRatesPageHACK ? (
-              <Tab
-                id={Navigation.FIXED_RATES}
-                title={<span>{t`Fixed Rates`}</span>}
-              />
-            ) : null}
-            {isFixedRatesPageHACK ? <Divider /> : null}
-
             <Tab
-              id={Navigation.EARN}
-              title={
-                <span>{isFixedRatesPageHACK ? t`Add Liquidity` : t`Earn`}</span>
-              }
+              id={Navigation.FIXED_RATES}
+              title={<span>{t`Fixed Rates`}</span>}
             />
             <Divider />
-            <Tab
-              id={Navigation.TRADE}
-              title={<span>{isFixedRatesPageHACK ? t`Pools` : t`Trade`}</span>}
-            />
+
+            <Tab id={Navigation.MINT} title={<span>{t`Mint & LP`}</span>} />
+            <Divider />
+            <Tab id={Navigation.POOLS} title={<span>{t`Pools`}</span>} />
             <Divider />
             <Tab
               id={Navigation.PORTFOLIO}
@@ -151,8 +138,10 @@ export function AppHeader({
             { "bp3-dark": isDarkMode }
           )}
         >
-          {isFixedRatesPageHACK ? (
-            <span>{jt`Learn more about ${fixedYieldLink}`}</span>
+          {isFixedRatesPage ? (
+            <span
+              className={tw("text-base")}
+            >{jt`Learn more about ${fixedYieldLink}`}</span>
           ) : null}
           <Button
             minimal
