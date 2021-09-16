@@ -1,13 +1,24 @@
 import { Fragment, ReactElement, useState } from "react";
 import { Helmet } from "react-helmet";
 
-import { Classes, H2 } from "@blueprintjs/core";
+import {
+  Button,
+  Classes,
+  H2,
+  Icon,
+  Intent,
+  Menu,
+  MenuItem,
+  Tag,
+} from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { RouteComponentProps } from "@reach/router";
+import { AbstractConnector } from "@web3-react/abstract-connector";
 import { useWeb3React } from "@web3-react/core";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { useIsTailwindLargeScreen } from "efi-ui/base/mediaBreakpoints";
 import { LiquidityPositionPortfolio } from "efi-ui/portfolio/LiquidityPositionPortfolio/LiquidityPositionPortfolio";
 import {
   PortfolioTabId,
@@ -19,6 +30,15 @@ import { assertNever } from "efi/base/assertNever";
 import { formatWalletAddress } from "efi/wallets/formatWalletAddress";
 
 import styles from "./styles.module.css";
+import { IconNames } from "@blueprintjs/icons";
+import { Popover2 } from "@blueprintjs/popover2";
+import { usePrincipalTokensWithoutDust } from "efi-ui/tranche/usePrincipalTokensWithoutDust";
+import classNames from "classnames";
+import { useConvergentCurvePoolsWithLPBalance } from "efi-ui/portfolio/hooks/useConvergentCurvePoolsWithLPBalance";
+import { useWeightedPoolsWithLPBalance } from "efi-ui/portfolio/hooks/useWeightedPoolsWithLPBalance";
+import { useTokensWithBalance } from "efi-ui/token/hooks/useTokensWithBalance";
+import { interestTokenContracts } from "efi/interestToken/interestToken";
+import { useBoolean } from "efi-ui/base/hooks/useBoolean/useBoolean";
 
 interface PortfolioViewProps extends RouteComponentProps {}
 
@@ -30,10 +50,7 @@ export function PortfolioView(unusedProps: PortfolioViewProps): ReactElement {
     chainId,
     connector,
   } = useWeb3React<Web3Provider>();
-
-  const [activePortfolioTabId, setActivePortfolioTab] = useState(
-    PortfolioTabId.PRINCIPAL_TOKENS
-  );
+  const isLargeScreen = useIsTailwindLargeScreen();
 
   return (
     <Fragment>
@@ -51,73 +68,346 @@ export function PortfolioView(unusedProps: PortfolioViewProps): ReactElement {
           "items-center"
         )}
       >
-        {account ? (
-          <H2 className={tw("text-center")}>
-            {t`Portfolio `}{" "}
-            <a
-              className={styles.accountLink}
-              href={`https://etherscan.io/address/${account}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <span className={Classes.TEXT_MUTED}>{`(${formatWalletAddress(
-                account
-              )})`}</span>
-            </a>
-          </H2>
-        ) : null}
+        {isLargeScreen ? (
+          // Large screen version
+          <PortfolioViewOriginal
+            account={account}
+            chainId={chainId}
+            library={library}
+            connector={connector}
+            walletConnectionActive={walletConnectionActive}
+          />
+        ) : (
+          <PortfolioViewSmallScreen
+            account={account}
+            chainId={chainId}
+            library={library}
+            connector={connector}
+            walletConnectionActive={walletConnectionActive}
+          />
+        )}
+      </div>
+    </Fragment>
+  );
+}
+interface PortfolioViewOriginalProps {
+  account: string | null | undefined;
+  chainId: number | undefined;
+  library: Web3Provider | undefined;
+  connector: AbstractConnector | undefined;
+  walletConnectionActive: boolean;
+}
 
-        <div className={tw("w-full", "flex", "flex-col", "items-center")}>
-          {account ? (
-            <PortfolioTabs
-              account={account}
-              onChangeTab={setActivePortfolioTab}
-              activePortfolioTabId={activePortfolioTabId}
-            />
-          ) : null}
-          <div
-            className={tw(
-              "w-full",
-              "flex",
-              "flex-col",
-              "pt-8",
-              "space-y-10",
-              "lg:flex-row",
-              "lg:space-y-0",
-              "lg:space-x-10"
-            )}
+function PortfolioViewOriginal({
+  account,
+  chainId,
+  library,
+  connector,
+  walletConnectionActive,
+}: PortfolioViewOriginalProps): ReactElement {
+  const [activePortfolioTabId, setActivePortfolioTab] = useState(
+    PortfolioTabId.PRINCIPAL_TOKENS
+  );
+  return (
+    <Fragment>
+      {account ? (
+        <H2 className={tw("text-center")}>
+          {t`Portfolio `}{" "}
+          <a
+            className={styles.accountLink}
+            href={`https://etherscan.io/address/${account}`}
+            target="_blank"
+            rel="noopener noreferrer"
           >
-            <div className={tw("flex", "flex-1", "w-full")}>
-              {(() => {
-                switch (activePortfolioTabId) {
-                  case PortfolioTabId.PRINCIPAL_TOKENS:
-                    return (
-                      <PrincipalTokenPortfolio
-                        chainId={chainId}
-                        library={library}
-                        account={account}
-                      />
-                    );
-                  case PortfolioTabId.YIELD_TOKENS:
-                    return (
-                      <YieldTokenPortfolio
-                        chainId={chainId}
-                        library={library}
-                        connector={connector}
-                        account={account}
-                        walletConnectionActive={walletConnectionActive}
-                      />
-                    );
-                  case PortfolioTabId.LP_POSITIONS:
-                    return <LiquidityPositionPortfolio account={account} />;
-                  default:
-                    assertNever(activePortfolioTabId);
-                }
-              })()}
-            </div>
+            <span className={Classes.TEXT_MUTED}>{`(${formatWalletAddress(
+              account
+            )})`}</span>
+          </a>
+        </H2>
+      ) : null}
+      <div className={tw("w-full", "flex", "flex-col", "items-center")}>
+        {account ? (
+          <PortfolioTabs
+            account={account}
+            onChangeTab={setActivePortfolioTab}
+            activePortfolioTabId={activePortfolioTabId}
+          />
+        ) : null}
+        <div
+          className={tw(
+            "w-full",
+            "flex",
+            "flex-col",
+            "pt-8",
+            "space-y-10",
+            "lg:flex-row",
+            "lg:space-y-0",
+            "lg:space-x-10"
+          )}
+        >
+          <div className={tw("flex", "flex-1", "w-full")}>
+            {(() => {
+              switch (activePortfolioTabId) {
+                case PortfolioTabId.PRINCIPAL_TOKENS:
+                  return (
+                    <PrincipalTokenPortfolio
+                      chainId={chainId}
+                      library={library}
+                      account={account}
+                    />
+                  );
+                case PortfolioTabId.YIELD_TOKENS:
+                  return (
+                    <YieldTokenPortfolio
+                      chainId={chainId}
+                      library={library}
+                      connector={connector}
+                      account={account}
+                      walletConnectionActive={walletConnectionActive}
+                    />
+                  );
+                case PortfolioTabId.LP_POSITIONS:
+                  return <LiquidityPositionPortfolio account={account} />;
+                default:
+                  assertNever(activePortfolioTabId);
+              }
+            })()}
           </div>
         </div>
       </div>
     </Fragment>
+  );
+}
+
+function PortfolioViewSmallScreen({
+  account,
+  chainId,
+  library,
+  connector,
+  walletConnectionActive,
+}: PortfolioViewOriginalProps): ReactElement {
+  const {
+    value: showPrincipalTokens,
+    setTrue: setPrincipalTokensShowing,
+    setFalse: setPrincipalTokensHidden,
+  } = useBoolean(true);
+  const {
+    value: showYieldTokens,
+    setTrue: setYieldTokensShowing,
+    setFalse: setYieldTokensHidden,
+  } = useBoolean(true);
+  const {
+    value: showLPTokens,
+    setTrue: setLPTokensShowing,
+    setFalse: setLPTokensHidden,
+  } = useBoolean(true);
+
+  const principalTokenInfosWithoutDust = usePrincipalTokensWithoutDust(account);
+  const yieldTokensWithBalanceResults = useTokensWithBalance(
+    account,
+    interestTokenContracts
+  );
+
+  const interestTokenLPs = useWeightedPoolsWithLPBalance(account);
+  const principalTokenLPs = useConvergentCurvePoolsWithLPBalance(account);
+  const numLPs = principalTokenLPs.length + interestTokenLPs.length;
+  return (
+    <div className={tw("w-full", "flex", "flex-col", "items-center")}>
+      {account ? (
+        <Popover2
+          minimal
+          content={
+            <Menu className={tw("w-300")}>
+              <MenuItem
+                shouldDismissPopover={false}
+                className={tw("h-12", "items-center")}
+                onClick={
+                  showPrincipalTokens
+                    ? setPrincipalTokensHidden
+                    : setPrincipalTokensShowing
+                }
+                text={
+                  <div
+                    className={tw(
+                      "flex",
+                      "items-center",
+                      "text-base",
+                      "space-x-4"
+                    )}
+                  >
+                    <span>{t`Principal Tokens`} </span>
+                  </div>
+                }
+                labelElement={
+                  <div className={tw("flex", "space-x-4", "items-center")}>
+                    {principalTokenInfosWithoutDust.length ? (
+                      <Tag
+                        intent={Intent.PRIMARY}
+                        minimal
+                        large
+                        round
+                        className={classNames(tw("font-bold"))}
+                      >
+                        {principalTokenInfosWithoutDust.length}
+                      </Tag>
+                    ) : null}
+                    {showPrincipalTokens ? (
+                      <Icon
+                        intent={Intent.PRIMARY}
+                        icon={IconNames.SELECTION}
+                        size={28}
+                      />
+                    ) : (
+                      <Icon
+                        icon={IconNames.CIRCLE}
+                        intent={Intent.PRIMARY}
+                        size={28}
+                      />
+                    )}
+                  </div>
+                }
+              />
+              <MenuItem
+                className={tw("h-12", "items-center")}
+                shouldDismissPopover={false}
+                onClick={
+                  showYieldTokens ? setYieldTokensHidden : setYieldTokensShowing
+                }
+                text={
+                  <div
+                    className={tw(
+                      "flex",
+                      "items-center",
+                      "text-base",
+                      "space-x-4"
+                    )}
+                  >
+                    <span>{t`Yield Tokens`} </span>
+                  </div>
+                }
+                labelElement={
+                  <div className={tw("flex", "space-x-4", "items-center")}>
+                    {yieldTokensWithBalanceResults.length ? (
+                      <Tag
+                        intent={Intent.PRIMARY}
+                        minimal
+                        large
+                        round
+                        className={classNames(tw("font-bold"))}
+                      >
+                        {yieldTokensWithBalanceResults.length}
+                      </Tag>
+                    ) : null}
+                    {showYieldTokens ? (
+                      <Icon
+                        intent={Intent.PRIMARY}
+                        icon={IconNames.SELECTION}
+                        size={28}
+                      />
+                    ) : (
+                      <Icon
+                        icon={IconNames.CIRCLE}
+                        intent={Intent.PRIMARY}
+                        size={28}
+                      />
+                    )}
+                  </div>
+                }
+              />
+              <MenuItem
+                className={tw("h-12", "items-center")}
+                shouldDismissPopover={false}
+                onClick={showLPTokens ? setLPTokensHidden : setLPTokensShowing}
+                text={
+                  <div
+                    className={tw(
+                      "flex",
+                      "items-center",
+                      "text-base",
+                      "space-x-4"
+                    )}
+                  >
+                    <span>{t`LP Positions`} </span>
+                  </div>
+                }
+                labelElement={
+                  <div className={tw("flex", "space-x-4", "items-center")}>
+                    {numLPs > 0 ? (
+                      <Tag
+                        intent={Intent.PRIMARY}
+                        minimal
+                        large
+                        round
+                        className={classNames(tw("font-bold"))}
+                      >
+                        {numLPs}
+                      </Tag>
+                    ) : null}
+                    {showLPTokens ? (
+                      <Icon
+                        intent={Intent.PRIMARY}
+                        icon={IconNames.SELECTION}
+                        size={28}
+                      />
+                    ) : (
+                      <Icon
+                        icon={IconNames.CIRCLE}
+                        intent={Intent.PRIMARY}
+                        size={28}
+                      />
+                    )}
+                  </div>
+                }
+              />
+            </Menu>
+          }
+        >
+          <Button large minimal icon={IconNames.SETTINGS}>
+            <span className={tw("text-center", "text-xl", "font-semibold")}>
+              {t`Portfolio `}
+              <span className={Classes.TEXT_MUTED}>{`(${formatWalletAddress(
+                account
+              )})`}</span>
+            </span>
+          </Button>
+        </Popover2>
+      ) : null}
+      <div
+        className={tw(
+          "w-full",
+          "flex",
+          "flex-col",
+          "pt-8",
+          "space-y-10",
+          "lg:flex-row",
+          "lg:space-y-0",
+          "lg:space-x-10"
+        )}
+      >
+        <div className={tw("flex", "flex-col", "flex-1", "w-full")}>
+          {showPrincipalTokens ? (
+            <PrincipalTokenPortfolio
+              chainId={chainId}
+              library={library}
+              account={account}
+            />
+          ) : null}
+
+          {showYieldTokens ? (
+            <YieldTokenPortfolio
+              chainId={chainId}
+              library={library}
+              connector={connector}
+              account={account}
+              walletConnectionActive={walletConnectionActive}
+            />
+          ) : null}
+
+          {showLPTokens ? (
+            <LiquidityPositionPortfolio account={account} />
+          ) : null}
+        </div>
+      </div>
+    </div>
   );
 }
