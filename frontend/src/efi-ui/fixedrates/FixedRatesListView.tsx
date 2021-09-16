@@ -47,7 +47,7 @@ export function FixedRatesListView(
           )}
         >
           <ViewTitle
-            title={t`The simplest way to double your crypto savings.`}
+            title={t`The simplest way to grow your crypto savings.`}
             subtitle={t`No minimums, no withdrawal penalties, exit anytime.`}
           />
           <div className={tw("flex", "w-full", "flex-col", "space-y-4")}>
