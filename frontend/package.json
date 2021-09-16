@@ -14,7 +14,7 @@
   "dependencies": {
     "@alch/alchemy-web3": "^1.1.4",
     "@blueprintjs/core": "^3.50.1",
-    "@blueprintjs/icons": "^3.30.0",
+    "@blueprintjs/icons": "^3.30.1",
     "@blueprintjs/popover2": "^0.12.1",
     "@blueprintjs/select": "^3.18.3",
     "@ethersproject/abi": "^5.4.1",
