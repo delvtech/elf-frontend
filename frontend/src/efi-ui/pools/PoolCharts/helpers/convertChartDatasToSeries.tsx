@@ -8,6 +8,7 @@ export function convertChartDatasToSeries(
   volumeData: TimeData[] | undefined,
   fromTimestamp: number,
   toTimeStamp: number,
+  createdAtTimestamp: number,
   totalLiquidity: number
 ): Record<string, Serie[]> {
   // because we are estimating block timestamps, make sure we don't have any older than our time frame
@@ -19,6 +20,9 @@ export function convertChartDatasToSeries(
         datum.timeMs <= toTimeStamp
     ) ?? [];
 
+  if (createdAtTimestamp > fromTimestamp) {
+    filteredLiquidityData.unshift({ timeMs: createdAtTimestamp, value: 0 });
+  }
   // make sure chart data fills up chart
   const paddedLiquidityData = padTimeData(
     filteredLiquidityData,

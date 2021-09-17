@@ -66,11 +66,14 @@ export function PoolCharts({ poolInfo }: PoolChartsProps): ReactElement {
     ? binDataByDay(rawVolumeData, weekAgoTimestampMs, nowTimestampMs)
     : rawVolumeData;
 
+  const { createdAtTimestamp } = poolInfo.extensions;
+  const createdAtMs = createdAtTimestamp * 1000;
   const { liquiditySerie, volumeSerie } = convertChartDatasToSeries(
     liquidityData,
     volumeData,
     weekAgoTimestampMs,
     nowTimestampMs,
+    createdAtMs,
     totalLiquidity?.toDecimal() ?? 0
   );
 

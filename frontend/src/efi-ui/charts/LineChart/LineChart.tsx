@@ -122,7 +122,7 @@ export function LineChart(props: LineChartProps): ReactElement {
 
   return (
     <div className={tw("flex", "flex-col", "w-full", "h-full")}>
-      {isLargeScreen && (
+      {!isLargeScreen && (
         <div className={tw("ml-2", { "mt-2": isLargeScreen })}>{dataLabel}</div>
       )}
       <ResponsiveLine
@@ -134,7 +134,7 @@ export function LineChart(props: LineChartProps): ReactElement {
         crosshairType={"x"}
         sliceTooltip={SliceTooltip}
         useMesh={false}
-        margin={isLargeScreen ? smallScreenMargin : margin}
+        margin={isLargeScreen ? margin : smallScreenMargin}
         xScale={xScale}
         xFormat="time:%d-%b"
         yScale={yScale}
@@ -149,7 +149,7 @@ export function LineChart(props: LineChartProps): ReactElement {
           tickSize: 5,
           tickPadding: 5,
           tickRotation: 0,
-          legend: isLargeScreen ? undefined : dataLabel,
+          legend: isLargeScreen ? dataLabel : undefined,
           legendPosition: "middle",
           format: formatYValues,
           legendOffset: -60,
