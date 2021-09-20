@@ -14,4 +14,4 @@ then
     cp -f src/efi-ui/saveApp/_index.tsx src/index.tsx
 fi
 
-npm run build
+npm run build && npx compress-cra
