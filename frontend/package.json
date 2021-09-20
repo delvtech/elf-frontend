@@ -79,7 +79,7 @@
     "d3-shape": "^3.0.1",
     "d3-time": "^3.0.0",
     "d3-time-format": "^4.0.0",
-    "date-fns": "^2.23.0",
+    "date-fns": "^2.24.0",
     "elf-contracts-typechain": "git+https://github.com/element-fi/elf-contracts-typechain.git",
     "elf-tokenlist": "git+https://github.com/element-fi/elf-tokenlist.git",
     "eth-rpc-errors": "^4.0.3",
