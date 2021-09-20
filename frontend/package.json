@@ -84,7 +84,7 @@
     "elf-tokenlist": "git+https://github.com/element-fi/elf-tokenlist.git",
     "eth-rpc-errors": "^4.0.3",
     "ethereum-waffle": "^3.4.0",
-    "ethers": "^5.4.6",
+    "ethers": "^5.4.7",
     "fuzzaldrin-plus": "^0.6.0",
     "lodash.conformsto": "^4.15.0",
     "lodash.groupby": "^4.6.0",
