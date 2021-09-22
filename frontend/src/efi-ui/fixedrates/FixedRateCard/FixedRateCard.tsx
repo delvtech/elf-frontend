@@ -60,6 +60,7 @@ export function FixedRateCard(props: FixedRateCardProps): ReactElement | null {
         { [styles.fixedRatesGrid]: isLargeScreen },
         tw(
           "w-full",
+          "max-w-sm",
           "lg:min-w-full",
           "lg:max-w-xl",
           "flex",
@@ -86,7 +87,7 @@ export function FixedRateCard(props: FixedRateCardProps): ReactElement | null {
       </span>
       <span className={tw("text-base")}>
         {t`${isLargeScreen ? "" : t`Fixed APR: `} ${formatPercent(fixedRate)} ${
-          isLargeScreen ? "APR" : ""
+          isLargeScreen ? t`APR` : ""
         }`}
       </span>
       <div className={tw("text-right")}>

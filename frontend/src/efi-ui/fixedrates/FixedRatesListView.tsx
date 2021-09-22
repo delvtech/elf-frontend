@@ -50,7 +50,20 @@ export function FixedRatesListView(
             title={t`The simplest way to grow your crypto savings.`}
             subtitle={t`No minimums, no withdrawal penalties, exit anytime.`}
           />
-          <div className={tw("flex", "w-full", "flex-col", "space-y-4")}>
+          <div
+            className={tw(
+              "flex",
+              "w-full",
+              "flex-col",
+              "space-y-4",
+              // there is a footer on small screens, so we need to add padding
+              // in order for the list to scroll all the way to the bottom.
+              "pb-20",
+              // On large screens, we just need enough padding so the last card
+              // isn't up against the bottom edge of the browser
+              "lg:pb-4"
+            )}
+          >
             <FixedRateCardList principalTokens={sortedPrincipalTokenInfos} />
           </div>
         </div>

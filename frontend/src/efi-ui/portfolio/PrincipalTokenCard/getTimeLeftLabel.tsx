@@ -36,7 +36,7 @@ export function TimeLeftLabel(props: TimeLeftLabelProps): ReactElement | null {
 
   const timeLeft = formatTimeLeft(nowMs, unlockTimestampDate.getTime());
   return (
-    <span className={tw("text-base")}>
+    <span>
       {t`Reaches term in`} <strong>{timeLeft}</strong>
     </span>
   );

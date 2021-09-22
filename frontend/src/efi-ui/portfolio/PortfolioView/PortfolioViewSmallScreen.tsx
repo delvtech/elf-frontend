@@ -12,7 +12,6 @@ import {
 import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { LiquidityPositionPortfolio } from "efi-ui/portfolio/LiquidityPositionPortfolio/LiquidityPositionPortfolio";
-import { PrincipalTokenPortfolio } from "efi-ui/portfolio/PrincipalTokenPortfolio/PrincipalTokenPortfolio";
 import { YieldTokenPortfolio } from "efi-ui/portfolio/YieldTokenPortfolio/YieldTokenPortfolio";
 import { formatWalletAddress } from "efi/wallets/formatWalletAddress";
 import { IconNames } from "@blueprintjs/icons";
@@ -26,6 +25,7 @@ import { interestTokenContracts } from "efi/interestToken/interestToken";
 import { useBoolean } from "efi-ui/base/hooks/useBoolean/useBoolean";
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
+import { PrincipalTokenPortfolio } from "efi-ui/portfolio/PrincipalTokenPortfolio/PrincipalTokenPortfolio";
 export interface PortfolioViewSmallScreenProps {
   account: string | null | undefined;
   chainId: number | undefined;
@@ -78,7 +78,10 @@ export function PortfolioViewSmallScreen({
   }, [setLPTokensShowing, setPrincipalTokensShowing, setYieldTokensShowing]);
 
   return (
-    <div className={tw("w-full", "flex", "flex-col", "items-center")}>
+    <div
+      className={tw("w-full", "flex", "flex-col", "items-center")}
+      style={{ fontFamily: "var(--rubik-font)" }}
+    >
       {account ? (
         <Popover2
           minimal

@@ -9,7 +9,7 @@ import {
   PortfolioTabId,
   PortfolioTabs,
 } from "efi-ui/portfolio/PortfolioTabs/PortfolioTabs";
-import { PrincipalTokenPortfolio } from "efi-ui/portfolio/PrincipalTokenPortfolio/PrincipalTokenPortfolio";
+import { PrincipalTokenPortfolioOld } from "efi-ui/portfolio/PrincipalTokenPortfolio/PrincipalTokenPortfolioOld";
 import { YieldTokenPortfolio } from "efi-ui/portfolio/YieldTokenPortfolio/YieldTokenPortfolio";
 import { assertNever } from "efi/base/assertNever";
 import { formatWalletAddress } from "efi/wallets/formatWalletAddress";
@@ -75,7 +75,7 @@ export function PortfolioViewOriginal({
               switch (activePortfolioTabId) {
                 case PortfolioTabId.PRINCIPAL_TOKENS:
                   return (
-                    <PrincipalTokenPortfolio
+                    <PrincipalTokenPortfolioOld
                       chainId={chainId}
                       library={library}
                       account={account}

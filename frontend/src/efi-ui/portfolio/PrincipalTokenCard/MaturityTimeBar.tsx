@@ -22,7 +22,7 @@ export function MaturityTimeBar({
         <TimeLeftLabel unlockTimestamp={unlockTimestamp} />
       </div>
       <ProgressBar
-        intent={isMature ? Intent.SUCCESS : Intent.NONE}
+        intent={isMature ? Intent.SUCCESS : Intent.PRIMARY}
         stripes={false}
         animate={false}
         value={progress}

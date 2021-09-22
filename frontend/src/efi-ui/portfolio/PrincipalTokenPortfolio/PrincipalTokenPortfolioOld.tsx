@@ -5,22 +5,22 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { useNewPrincipalTokensPendingTransaction } from "efi-ui/portfolio/hooks/useNewPrincipalTokensPendingTransaction";
+import { PrincipalTokenCardOld } from "efi-ui/portfolio/PrincipalTokenCard/PrincipalTokenCardOld";
 import { NoPrincipalTokensInWalletNonIdealState } from "efi-ui/wallets/NoPrincipalTokensInWalletNonIdealState/NoPrincipalTokensInWalletNonIdealState";
 import { PrincipalTokenInfo } from "tokenlists/types";
 import { usePrincipalTokensWithoutDust } from "efi-ui/tranche/usePrincipalTokensWithoutDust";
-import { PrincipalTokenCard } from "efi-ui/portfolio/PrincipalTokenCard/PrincipalTokenCard";
 
-interface PrincipalTokenPortfolioProps {
+interface PrincipalTokenPortfolioOldProps {
   chainId: number | undefined;
   library: Web3Provider | undefined;
   account: string | null | undefined;
 }
 
-export function PrincipalTokenPortfolio({
+export function PrincipalTokenPortfolioOld({
   library,
   account,
   chainId,
-}: PrincipalTokenPortfolioProps): ReactElement {
+}: PrincipalTokenPortfolioOldProps): ReactElement {
   const principalTokens = usePrincipalTokensWithoutDust(account);
 
   const pendingPrincipalTokenTransaction =
@@ -60,16 +60,24 @@ function PrincipalTokenCards(props: PrincipalTokenCardsProps) {
     nonIdealStateContent = <NoPrincipalTokensInWalletNonIdealState />;
   }
   return (
-    <div className={tw("flex", "flex-col", "justify-center", "items-center")}>
+    <div
+      className={tw(
+        "flex",
+        "flex-1",
+        "flex-wrap",
+        "justify-center",
+        "items-center"
+      )}
+    >
       {nonIdealStateContent ? (
-        <div className={tw("flex", "justify-center", "items-center")}>
+        <div className={tw("flex", "flex-1", "justify-center", "items-center")}>
           {nonIdealStateContent}
         </div>
       ) : (
         <Fragment>
           {principalTokens?.map((principalToken) => [
             <div key={principalToken.address}>
-              <PrincipalTokenCard
+              <PrincipalTokenCardOld
                 chainId={chainId}
                 library={library}
                 account={account}

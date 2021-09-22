@@ -47,7 +47,7 @@ import {
 import { MaturityTimeBar } from "./MaturityTimeBar";
 import { useNowMs } from "efi-ui/base/hooks/useNowMs/useNowMs";
 
-interface PrincipalTokenCardProps {
+interface PrincipalTokenCardOldProps {
   chainId: number | undefined;
   library: Web3Provider | undefined;
   account: string | null | undefined;
@@ -59,13 +59,13 @@ const calloutClassName = tw(
   "flex-col",
   "flex-1",
   "h-full",
-  "p-4",
+  "p-8",
   "items-center",
   "justify-center"
 );
 
-export function PrincipalTokenCard(
-  props: PrincipalTokenCardProps
+export function PrincipalTokenCardOld(
+  props: PrincipalTokenCardOldProps
 ): ReactElement {
   const {
     library,
@@ -140,23 +140,42 @@ export function PrincipalTokenCard(
 
   return (
     <Card
+      style={{ width: 512 }}
       className={classNames(
-        tw("p-6", "flex", "flex-col", "m-4", "space-y-5", "max-w-sm", {
+        tw("p-8", "flex", "flex-col", "m-4", "space-y-5", "text-base", {
           "text-gray-700": !isDarkMode,
           "text-white": isDarkMode,
         })
       )}
     >
-      <div className={tw("flex", "space-x-3", "items-start")}>
-        <BaseAssetIcon className={tw("flex-shrink-0")} height={48} width={48} />
-        <div className={tw("flex", "flex-col", "space-y-1")}>
-          <div className={tw("flex", "text-base", "font-semibold")}>
-            <Link
-              to={`/pools/${pool?.address}`}
-              style={{ fontFamily: "var(--rubik-font)" }}
-            >
+      <div className={tw("flex", "space-x-4")}>
+        <BaseAssetIcon className={tw("flex-shrink-0")} height={72} width={72} />
+        <div className={tw("flex", "flex-col", "space-y-2")}>
+          <div
+            className={tw(
+              "flex",
+              "items-center",
+              "space-x-2",
+              "text-2xl",
+              "font-semibold"
+            )}
+          >
+            <Link to={`/pools/${pool?.address}`}>
               {t`${baseAssetSymbol} Principal Token` || null}
             </Link>
+            <a
+              className={tw("flex", "items-center")}
+              onClick={(e) => e.stopPropagation()}
+              href={`https://etherscan.io/address/${principalTokenAddress}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Icon
+                intent={Intent.NONE}
+                className={tw("pr-2")}
+                icon={IconNames.SHARE}
+              />
+            </a>
           </div>
           <div
             className={tw(
@@ -172,22 +191,29 @@ export function PrincipalTokenCard(
               intent={
                 unlockTimestamp * 1000 < nowMs ? Intent.SUCCESS : Intent.PRIMARY
               }
-              className={tw("text-center", "text-sm")}
+              fill
+              className={tw("text-center")}
             >
               {formattedDate}
             </Tag>
-            <div
-              className={tw(
-                "flex",
-                "flex-shrink-0",
-                "space-x-6",
-                "justify-end"
-              )}
-            >
+            <div className={tw("flex", "space-x-6", "justify-end")}>
               <LabeledText
                 bold
+                textClassName={tw("text-base")}
                 text={`${formatPercent(trancheAPY)}`}
-                label={t`Fixed APR`}
+                label={t`yearly`}
+              />
+              <LabeledText
+                bold
+                textClassName={tw("text-base")}
+                text={`${formatPercent(trancheAPY / 12)}`}
+                label={t`monthly`}
+              />
+              <LabeledText
+                bold
+                textClassName={tw("text-base")}
+                text={`${formatPercent(trancheAPY / 365)}`}
+                label={t`daily`}
               />
             </div>
           </div>
@@ -206,6 +232,7 @@ export function PrincipalTokenCard(
             className={tw("flex", "justify-center", "items-center")}
             containerClassName={tw("justify-center")}
             bold
+            textClassName={tw("text-lg")}
             text={`${trancheBalance.toFixed(6)} ${principalTokenShortSymbol}`}
             label={""}
           />
@@ -217,19 +244,15 @@ export function PrincipalTokenCard(
             muted={false}
             className={tw("flex", "justify-center", "items-center")}
             containerClassName={tw("justify-center")}
+            textClassName={tw("text-lg")}
             text={<span>{t`${exitValue.toFixed(6)} ${baseAssetSymbol}`}</span>}
             label={fiatPrice}
           />
         </Callout>
       </div>
-      <div className={tw("flex")}>
-        <span>
-          {jt`Fixed yield is backed by ${baseAssetSymbol} deposited in ${tableRowLink}`}
-        </span>
-      </div>
 
       {/* Quick Actions */}
-      <ButtonGroup vertical fill>
+      <ButtonGroup fill>
         <RedeemPrincipalTokensButton
           library={library}
           account={account}
@@ -240,17 +263,20 @@ export function PrincipalTokenCard(
           fill
           poolAddress={poolInfo.address}
           poolAction={PoolAction.ADD_LIQUIDITY}
-          className={tw("text-base")}
           label={t`Add Liquidity`}
         />
         <GoToPoolButton
           fill
           poolAddress={poolInfo.address}
-          className={tw("text-base")}
           poolAction={PoolAction.SELL}
           label={t`Sell`}
         />
       </ButtonGroup>
+      <div className={tw("flex", "justify-center")}>
+        <span>
+          {jt`Fixed yield is backed by ${baseAssetSymbol} deposited in ${tableRowLink}`}
+        </span>
+      </div>
     </Card>
   );
 }
