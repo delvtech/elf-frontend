@@ -22,7 +22,7 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
-import { GoToPoolButton } from "efi-ui/pools/GoToPoolButton/GoToPoolButton";
+import { GoToPoolButtonOld } from "efi-ui/pools/GoToPoolButton/GoToPoolButtonOld";
 import { usePoolTokens } from "efi-ui/pools/hooks/usePoolTokens/usePoolTokens";
 import { PoolAction } from "efi-ui/pools/hooks/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
 import { useShareOfPool } from "efi-ui/pools/hooks/useShareOfPool";
@@ -208,13 +208,13 @@ export function PrincipalTokenLPCard({
 
       {/* Quick Actions */}
       <ButtonGroup className={tw("space-x-6")}>
-        <GoToPoolButton
+        <GoToPoolButtonOld
           fill
           poolAddress={poolInfo.address}
           poolAction={PoolAction.REMOVE_LIQUIDITY}
           label={t`Remove LP`}
         />
-        <GoToPoolButton
+        <GoToPoolButtonOld
           fill
           poolAddress={poolInfo.address}
           poolAction={PoolAction.BUY}

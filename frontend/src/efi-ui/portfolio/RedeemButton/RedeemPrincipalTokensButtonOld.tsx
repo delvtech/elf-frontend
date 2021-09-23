@@ -19,7 +19,7 @@ import { trancheContractsByAddress as principalTokenContractsByAddress } from "e
 
 const { userProxyContractAddress } = ContractAddresses;
 
-interface RedeemPrincipalTokensButtonProps {
+interface RedeemPrincipalTokensButtonOldProps {
   account: string | null | undefined;
   library: Web3Provider | undefined;
 
@@ -27,12 +27,12 @@ interface RedeemPrincipalTokensButtonProps {
   baseAsset: CryptoAsset;
 }
 
-export function RedeemPrincipalTokensButton({
+export function RedeemPrincipalTokensButtonOld({
   baseAsset,
   principalTokenInfo,
   account,
   library,
-}: RedeemPrincipalTokensButtonProps): ReactElement {
+}: RedeemPrincipalTokensButtonOldProps): ReactElement {
   const nowMs = useNowMs();
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const {

@@ -14,7 +14,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
-import { GoToPoolButton } from "efi-ui/pools/GoToPoolButton/GoToPoolButton";
+import { GoToPoolButtonOld } from "efi-ui/pools/GoToPoolButton/GoToPoolButtonOld";
 import { useFeeVolumeFiatForPool } from "efi-ui/pools/hooks/useFeeVolumeForPool/useFeeVolumeForPool";
 import { usePoolSpotPrice } from "efi-ui/pools/hooks/usePoolSpotPrice/usePoolSpotPrice";
 import { PoolAction } from "efi-ui/pools/hooks/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
@@ -123,7 +123,7 @@ export function PrincipalPoolCardListItem(
 
         {/* Action Buttons */}
         <div className={tw("space-y-1")}>
-          <GoToPoolButton
+          <GoToPoolButtonOld
             fill
             small
             outlined
@@ -132,7 +132,7 @@ export function PrincipalPoolCardListItem(
             label={t`Trade`}
             className={tw("text-xs")}
           />
-          <GoToPoolButton
+          <GoToPoolButtonOld
             fill
             small
             outlined

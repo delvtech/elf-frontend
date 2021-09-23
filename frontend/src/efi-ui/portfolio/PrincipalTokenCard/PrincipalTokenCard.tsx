@@ -21,10 +21,9 @@ import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
-import { GoToPoolButton } from "efi-ui/pools/GoToPoolButton/GoToPoolButton";
+import { GoToPoolButtonOld } from "efi-ui/pools/GoToPoolButton/GoToPoolButtonOld";
 import { usePoolSpotPrice } from "efi-ui/pools/hooks/usePoolSpotPrice/usePoolSpotPrice";
 import { PoolAction } from "efi-ui/pools/hooks/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
-import { RedeemPrincipalTokensButton } from "efi-ui/portfolio/RedeemButton/RedeemPrincipalTokensButton";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenBalanceUNSAFE } from "efi-ui/token/hooks/useTokenBalance";
 import { calculateProgress } from "efi/base/calculateProgress";
@@ -46,6 +45,8 @@ import {
 
 import { MaturityTimeBar } from "./MaturityTimeBar";
 import { useNowMs } from "efi-ui/base/hooks/useNowMs/useNowMs";
+import { RedeemPrincipalTokensButtonTag } from "efi-ui/portfolio/RedeemButton/RedeemPrincipalTokensButtonTag";
+import { GoToPoolButtonTag } from "efi-ui/pools/GoToPoolButton/GoToPoolButtonTag";
 
 interface PrincipalTokenCardProps {
   chainId: number | undefined;
@@ -229,22 +230,20 @@ export function PrincipalTokenCard(
       </div>
 
       {/* Quick Actions */}
-      <ButtonGroup vertical fill>
-        <RedeemPrincipalTokensButton
+      <ButtonGroup vertical fill className={tw("space-y-3")}>
+        <RedeemPrincipalTokensButtonTag
           library={library}
           account={account}
           principalTokenInfo={principalTokenInfo}
           baseAsset={baseAsset}
         />
-        <GoToPoolButton
-          fill
+        <GoToPoolButtonTag
           poolAddress={poolInfo.address}
           poolAction={PoolAction.ADD_LIQUIDITY}
           className={tw("text-base")}
           label={t`Add Liquidity`}
         />
-        <GoToPoolButton
-          fill
+        <GoToPoolButtonTag
           poolAddress={poolInfo.address}
           className={tw("text-base")}
           poolAction={PoolAction.SELL}

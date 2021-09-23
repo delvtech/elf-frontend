@@ -21,10 +21,10 @@ import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
-import { GoToPoolButton } from "efi-ui/pools/GoToPoolButton/GoToPoolButton";
+import { GoToPoolButtonOld } from "efi-ui/pools/GoToPoolButton/GoToPoolButtonOld";
 import { usePoolSpotPrice } from "efi-ui/pools/hooks/usePoolSpotPrice/usePoolSpotPrice";
 import { PoolAction } from "efi-ui/pools/hooks/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
-import { RedeemPrincipalTokensButton } from "efi-ui/portfolio/RedeemButton/RedeemPrincipalTokensButton";
+import { RedeemPrincipalTokensButtonOld } from "efi-ui/portfolio/RedeemButton/RedeemPrincipalTokensButtonOld";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenBalanceUNSAFE } from "efi-ui/token/hooks/useTokenBalance";
 import { calculateProgress } from "efi/base/calculateProgress";
@@ -253,19 +253,19 @@ export function PrincipalTokenCardOld(
 
       {/* Quick Actions */}
       <ButtonGroup fill>
-        <RedeemPrincipalTokensButton
+        <RedeemPrincipalTokensButtonOld
           library={library}
           account={account}
           principalTokenInfo={principalTokenInfo}
           baseAsset={baseAsset}
         />
-        <GoToPoolButton
+        <GoToPoolButtonOld
           fill
           poolAddress={poolInfo.address}
           poolAction={PoolAction.ADD_LIQUIDITY}
           label={t`Add Liquidity`}
         />
-        <GoToPoolButton
+        <GoToPoolButtonOld
           fill
           poolAddress={poolInfo.address}
           poolAction={PoolAction.SELL}

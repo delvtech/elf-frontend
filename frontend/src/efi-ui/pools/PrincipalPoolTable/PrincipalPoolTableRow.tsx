@@ -10,7 +10,7 @@ import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
-import { GoToPoolButton } from "efi-ui/pools/GoToPoolButton/GoToPoolButton";
+import { GoToPoolButtonOld } from "efi-ui/pools/GoToPoolButton/GoToPoolButtonOld";
 import { useFeeVolumeFiatForPool } from "efi-ui/pools/hooks/useFeeVolumeForPool/useFeeVolumeForPool";
 import { usePoolSpotPrice } from "efi-ui/pools/hooks/usePoolSpotPrice/usePoolSpotPrice";
 import { PoolAction } from "efi-ui/pools/hooks/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
@@ -160,13 +160,13 @@ export function PrincipalPoolTableRow(
 
         {/* Action Buttons */}
         <div>
-          <GoToPoolButton
+          <GoToPoolButtonOld
             fill
             poolAddress={poolAddress}
             poolAction={PoolAction.BUY}
             label={t`Trade`}
           />
-          <GoToPoolButton
+          <GoToPoolButtonOld
             fill
             poolAddress={poolAddress}
             poolAction={PoolAction.ADD_LIQUIDITY}

@@ -21,7 +21,7 @@ import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
 import { getTokenInfo } from "efi/tokenlists";
 
-interface RedeemYieldTokensButtonProps {
+interface RedeemYieldTokensButtonOldProps {
   account: string | null | undefined;
   library: Web3Provider | undefined;
 
@@ -30,12 +30,12 @@ interface RedeemYieldTokensButtonProps {
 }
 
 const { userProxyContractAddress } = ContractAddresses;
-export function RedeemYieldTokensButton({
+export function RedeemYieldTokensButtonOld({
   baseAsset,
   yieldTokenInfo,
   account,
   library,
-}: RedeemYieldTokensButtonProps): ReactElement {
+}: RedeemYieldTokensButtonOldProps): ReactElement {
   const nowMs = useNowMs();
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const trancheInfo = getTokenInfo<TrancheInfo>(

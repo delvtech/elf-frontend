@@ -24,11 +24,11 @@ import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
-import { GoToPoolButton } from "efi-ui/pools/GoToPoolButton/GoToPoolButton";
+import { GoToPoolButtonOld } from "efi-ui/pools/GoToPoolButton/GoToPoolButtonOld";
 import { usePoolSpotPrice } from "efi-ui/pools/hooks/usePoolSpotPrice/usePoolSpotPrice";
 import { PoolAction } from "efi-ui/pools/hooks/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
 import { MaturityTimeBar } from "efi-ui/portfolio/PrincipalTokenCard/MaturityTimeBar";
-import { RedeemYieldTokensButton } from "efi-ui/portfolio/RedeemButton/RedeemYieldTokensButton";
+import { RedeemYieldTokensButtonOld } from "efi-ui/portfolio/RedeemButton/RedeemYieldTokensButtonOld";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
@@ -242,19 +242,19 @@ export function YieldTokenCard({
       </div>
       {/* Quick Actions */}
       <ButtonGroup fill>
-        <RedeemYieldTokensButton
+        <RedeemYieldTokensButtonOld
           account={account}
           yieldTokenInfo={yieldTokenInfo}
           library={library}
           baseAsset={baseAsset}
         />
-        <GoToPoolButton
+        <GoToPoolButtonOld
           fill
           poolAddress={pool.address}
           poolAction={PoolAction.ADD_LIQUIDITY}
           label={t`Add Liquidity`}
         />
-        <GoToPoolButton
+        <GoToPoolButtonOld
           fill
           poolAddress={pool.address}
           poolAction={PoolAction.SELL}

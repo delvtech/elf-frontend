@@ -21,7 +21,7 @@ interface GoToPoolButtonProps {
   className?: string;
 }
 
-export function GoToPoolButton(props: GoToPoolButtonProps): ReactElement {
+export function GoToPoolButtonOld(props: GoToPoolButtonProps): ReactElement {
   const {
     poolAddress,
     poolAction,
