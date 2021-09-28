@@ -51,10 +51,10 @@ const CRVLUSD_CRYPTO_ASSET: Erc20CryptoAsset = {
 };
 
 const CRVALUSD_CRYPTO_ASSET: Erc20CryptoAsset = {
-  id: AddressesJson.addresses.crvalusdAddress,
+  id: AddressesJson.addresses["alusd3crv-fAddress"],
   type: CryptoAssetType.ERC20,
   tokenContract: underlyingContractsByAddress[
-    AddressesJson.addresses.crvalusdAddress
+    AddressesJson.addresses["alusd3crv-fAddress"]
   ] as ERC20,
 };
 
@@ -89,15 +89,11 @@ const baseAssetCryptoAssets: Record<string, CryptoAsset> = {
   [AddressesJson.addresses.usdcAddress]: USDC_CRYPTO_ASSET,
   [AddressesJson.addresses.daiAddress]: DAI_CRYPTO_ASSET,
   [AddressesJson.addresses["lusd3crv-fAddress"]]: CRVLUSD_CRYPTO_ASSET,
+  [AddressesJson.addresses["alusd3crv-fAddress"]]: CRVALUSD_CRYPTO_ASSET,
   [AddressesJson.addresses.crvtricryptoAddress]: CRVTRICRYPTO_CRYPTO_ASSET,
   [AddressesJson.addresses.crv3cryptoAddress]: CRV3CRYPTO_CRYPTO_ASSET,
   [AddressesJson.addresses.stecrvAddress]: STECRV_CRYPTO_ASSET,
 };
-
-if (AddressesJson.addresses.crvalusdAddress) {
-  baseAssetCryptoAssets[AddressesJson.addresses.crvalusdAddress] =
-    CRVALUSD_CRYPTO_ASSET;
-}
 
 const principalTokenCryptoAssets: Erc20PermitCryptoAsset[] =
   principalTokenInfos.map(({ address }) => ({

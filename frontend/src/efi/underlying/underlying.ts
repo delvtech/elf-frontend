@@ -14,13 +14,13 @@ const {
     wbtcAddress,
     usdcAddress,
     daiAddress,
-    crvalusdAddress = "0x0000000000000000000000000000000000000000",
+    "alusd3crv-fAddress": crvalusdAddress,
+    "lusd3crv-fAddress": crvlusdAddress,
     crv3cryptoAddress,
     crvtricryptoAddress,
     stecrvAddress,
   },
 } = AddressesJson;
-const crvlusdAddress = AddressesJson.addresses["lusd3crv-fAddress"];
 
 const wethContract = WETH__factory.connect(wethAddress, defaultProvider);
 const wbtcContract = ERC20__factory.connect(wbtcAddress, defaultProvider);

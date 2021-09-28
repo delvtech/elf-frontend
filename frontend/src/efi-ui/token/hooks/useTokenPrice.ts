@@ -4,20 +4,20 @@ import { ERC20 } from "elf-contracts-typechain/dist/types/ERC20";
 import { Currency, Money } from "ts-money";
 
 import { getCoinGeckoId } from "efi-coingecko";
-import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
-import { AddressesJson } from "efi/addresses";
-import { isMainnet } from "efi/ethereum";
-import { getTokenInfo } from "efi/tokenlists";
 import {
   curveVirtualPriceContractsByAddress,
   isCurveStablePool,
 } from "efi-curve/stablePools";
-import { useCurveStablecoinPoolVirtualPrice } from "efi-ui/curve/stablePools";
+import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
 import {
   useCrv3CryptoPrice,
   useSteCrvPrice,
   useTriCryptoPrice,
 } from "efi-ui/curve/pools";
+import { useCurveStablecoinPoolVirtualPrice } from "efi-ui/curve/stablePools";
+import { AddressesJson } from "efi/addresses";
+import { isMainnet } from "efi/ethereum";
+import { getTokenInfo } from "efi/tokenlists";
 
 const {
   chainId,
@@ -53,7 +53,6 @@ export function useTokenPrice<TContract extends ERC20>(
   const triCryptoPriceResult = useTriCryptoPrice({ enabled: isCrvTricrypto });
   const isCrv3crypto = contract.address === crv3cryptoAddress;
   const crv3CryptoPriceResult = useCrv3CryptoPrice({ enabled: isCrv3crypto });
-
   const isSteCrv = contract.address === stecrvAddress;
   const steCrvPriceResult = useSteCrvPrice({ enabled: isSteCrv });
 

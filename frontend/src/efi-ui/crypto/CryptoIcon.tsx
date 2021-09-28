@@ -24,7 +24,7 @@ const CryptoIconSvg: Record<string, TokenIcon> = {
   [ContractAddresses.wethAddress]: WethIcon,
   [ContractAddresses.daiAddress]: DaiIcon,
   [ContractAddresses["lusd3crv-fAddress"]]: CrvLusdIcon,
-  [ContractAddresses.crvalusdAddress]: CrvAlusdIcon,
+  [ContractAddresses["alusd3crv-fAddress"]]: CrvAlusdIcon,
   [ContractAddresses.crvtricryptoAddress]: CrvTricryptoIcon,
   [ContractAddresses.crv3cryptoAddress]: CrvTricryptoIcon,
   [ContractAddresses.stecrvAddress]: CrvStethIcon,

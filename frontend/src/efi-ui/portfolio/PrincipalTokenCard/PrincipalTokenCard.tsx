@@ -17,13 +17,15 @@ import { jt, t } from "ttag";
 
 import { getCoinGeckoId } from "efi-coingecko";
 import tw from "efi-tailwindcss-classnames";
+import { useNowMs } from "efi-ui/base/hooks/useNowMs/useNowMs";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
-import { GoToPoolButtonOld } from "efi-ui/pools/GoToPoolButton/GoToPoolButtonOld";
+import { GoToPoolButtonTag } from "efi-ui/pools/GoToPoolButton/GoToPoolButtonTag";
 import { usePoolSpotPrice } from "efi-ui/pools/hooks/usePoolSpotPrice/usePoolSpotPrice";
 import { PoolAction } from "efi-ui/pools/hooks/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
+import { RedeemPrincipalTokensButtonTag } from "efi-ui/portfolio/RedeemButton/RedeemPrincipalTokensButtonTag";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenBalanceUNSAFE } from "efi-ui/token/hooks/useTokenBalance";
 import { calculateProgress } from "efi/base/calculateProgress";
@@ -44,9 +46,6 @@ import {
 } from "efi/tranche/tranches";
 
 import { MaturityTimeBar } from "./MaturityTimeBar";
-import { useNowMs } from "efi-ui/base/hooks/useNowMs/useNowMs";
-import { RedeemPrincipalTokensButtonTag } from "efi-ui/portfolio/RedeemButton/RedeemPrincipalTokensButtonTag";
-import { GoToPoolButtonTag } from "efi-ui/pools/GoToPoolButton/GoToPoolButtonTag";
 
 interface PrincipalTokenCardProps {
   chainId: number | undefined;

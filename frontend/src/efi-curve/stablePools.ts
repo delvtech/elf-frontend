@@ -7,7 +7,10 @@ import { defaultProvider } from "efi/providers/providers";
  * Curve stable pools provide a `get_virtual_price` method for getting the price.
  */
 const {
-  addresses: { crvalusdAddress, "lusd3crv-fAddress": crvlusdAddress },
+  addresses: {
+    "alusd3crv-fAddress": crvalusdAddress,
+    "lusd3crv-fAddress": crvlusdAddress,
+  },
 } = AddressesJson;
 
 const crvalusdContract = CRVLUSD__factory.connect(

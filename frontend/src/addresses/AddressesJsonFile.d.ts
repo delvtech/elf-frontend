@@ -14,7 +14,7 @@ export interface AddressesJsonFile {
     stecrvAddress: string;
     crvtricryptoAddress: string;
     "lusd3crv-fAddress": string;
-    crvalusdAddress: string;
+    "alusd3crv-fAddress": string;
   };
   safelist: string[];
 }
