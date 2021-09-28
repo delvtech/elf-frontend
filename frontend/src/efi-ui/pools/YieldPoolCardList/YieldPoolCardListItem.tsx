@@ -155,7 +155,7 @@ export function YieldPoolCardListItem(
               createdAtTimestamp={createdAtTimestamp}
               unlockTimestamp={unlockTimestamp}
             />
-            <span>{format(createdAtTimestamp * 1000, "MMM d, y")}</span>
+            <span>{format(unlockTimestamp * 1000, "MMM d, y")}</span>
           </div>
         </div>
 
