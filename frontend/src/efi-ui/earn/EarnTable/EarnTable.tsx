@@ -9,7 +9,7 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { EarnCard } from "efi-ui/earn/EarnCard/EarnCard";
 import styles from "efi-ui/earn/grid.module.css";
-import { useOpenPrincipalTokenInfos } from "efi-ui/tranche/useOpenPrincipaltokenInfos";
+import { useOpenPrincipalTokenInfos } from "efi-ui/tranche/useOpenPrincipalTokenInfos";
 
 interface EarnTableProps {
   signer: Signer | undefined;

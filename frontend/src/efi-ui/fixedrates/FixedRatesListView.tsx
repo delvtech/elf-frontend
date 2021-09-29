@@ -7,7 +7,7 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { FixedRateCardList } from "efi-ui/fixedrates/FixedRateCardList/FixedRateCardList";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
-import { useOpenPrincipalTokenInfos } from "efi-ui/tranche/useOpenPrincipaltokenInfos";
+import { useOpenPrincipalTokenInfos } from "efi-ui/tranche/useOpenPrincipalTokenInfos";
 
 interface FixedRatesListViewProps extends RouteComponentProps {}
 

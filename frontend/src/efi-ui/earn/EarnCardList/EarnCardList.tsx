@@ -5,7 +5,7 @@ import { Signer } from "ethers";
 
 import tw from "efi-tailwindcss-classnames";
 import { EarnCardListItem } from "efi-ui/earn/EarnCardListItem/EarnCardListItem";
-import { useOpenPrincipalTokenInfos } from "efi-ui/tranche/useOpenPrincipaltokenInfos";
+import { useOpenPrincipalTokenInfos } from "efi-ui/tranche/useOpenPrincipalTokenInfos";
 
 interface EarnCartListProps {
   signer: Signer | undefined;

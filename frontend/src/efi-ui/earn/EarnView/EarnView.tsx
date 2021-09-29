@@ -14,7 +14,7 @@ import { EarnCardList } from "efi-ui/earn/EarnCardList/EarnCardList";
 import { EarnTable } from "efi-ui/earn/EarnTable/EarnTable";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { useSigner } from "efi-ui/provider/useBlockFromTag/useSigner/useSigner";
-import { useOpenPrincipalTokenInfos } from "efi-ui/tranche/useOpenPrincipaltokenInfos";
+import { useOpenPrincipalTokenInfos } from "efi-ui/tranche/useOpenPrincipalTokenInfos";
 
 interface EarnViewProps extends RouteComponentProps {}
 
