@@ -116,7 +116,7 @@
   "devDependencies": {
     "@testing-library/dom": "^8.6.0",
     "@testing-library/react-hooks": "^7.0.2",
-    "@typechain/ethers-v5": "^7.1.1",
+    "@typechain/ethers-v5": "^7.1.2",
     "@types/d3-format": "^3.0.1",
     "@types/d3-time-format": "^4.0.0",
     "compress-create-react-app": "^1.1.2",
