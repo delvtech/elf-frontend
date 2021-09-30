@@ -1,6 +1,8 @@
 {
   "short_name": "EFI",
   "name": "Element.fi",
+  "description": "Element Finance",
+  "iconPath": "https://elementfi.s3.us-east-2.amazonaws.com/logo.svg",
   "icons": [
     {
       "src": "favicon.ico",
