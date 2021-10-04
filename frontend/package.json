@@ -72,7 +72,7 @@
     "@web3-react/walletlink-connector": "^6.2.5",
     "calendar-link": "^2.1.1",
     "classnames": "^2.3.1",
-    "d3-array": "^3.0.4",
+    "d3-array": "^3.1.0",
     "d3-collection": "^1.0.7",
     "d3-format": "^3.0.1",
     "d3-scale": "^4.0.2",
