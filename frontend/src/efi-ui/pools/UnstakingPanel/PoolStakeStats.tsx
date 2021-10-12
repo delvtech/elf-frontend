@@ -97,9 +97,8 @@ export function PoolStakeStats(
         )}
         bold
         textClassName={tw("text-2xl")}
-        text={termAssetLiquidityLabel}
-        label={t`${termAssetInfo.symbol} liquidity`}
-        labelClassName={tw("break-normal", "lg:truncate", "text-sm")}
+        text={baseAssetLiquidityLabel}
+        label={t`${baseAssetSymbol} liquidity`}
       />
       <LabeledText
         muted={false}
@@ -112,8 +111,9 @@ export function PoolStakeStats(
         )}
         bold
         textClassName={tw("text-2xl")}
-        text={baseAssetLiquidityLabel}
-        label={t`${baseAssetSymbol} liquidity`}
+        text={termAssetLiquidityLabel}
+        label={t`${termAssetInfo.symbol} liquidity`}
+        labelClassName={tw("break-normal", "lg:truncate", "text-sm")}
       />
     </div>
   );
