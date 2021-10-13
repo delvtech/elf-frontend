@@ -15,6 +15,7 @@ export interface AddressesJsonFile {
     crvtricryptoAddress: string;
     "lusd3crv-fAddress": string;
     "alusd3crv-fAddress": string;
+    "mim-3lp3crv-fAddress": string;
   };
   safelist: string[];
 }

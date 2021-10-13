@@ -2,6 +2,7 @@ import { CSSProperties, FC, ReactElement } from "react";
 
 import crvAlusdIcon from "efi-static-assets/logos/crvALUSD.png";
 import crvLusdIcon from "efi-static-assets/logos/svg/crvLUSD.svg";
+import crvMimIcon from "efi-static-assets/logos/crvMIM.png";
 import crvStethIcon from "efi-static-assets/logos/svg/crvSTETH.svg";
 import crvTricryptoIcon from "efi-static-assets/logos/svg/crvtricrypto.svg";
 import daiIcon from "efi-static-assets/logos/svg/DAI.svg";
@@ -55,6 +56,23 @@ export interface IconProps {
   style?: CSSProperties | undefined;
 }
 
+export function CrvMimIcon({
+  height,
+  width,
+  className,
+  style,
+}: IconProps): ReactElement {
+  return (
+    <SvgIcon
+      alt={"crvMIM"}
+      className={className}
+      style={style}
+      src={crvMimIcon}
+      height={height}
+      width={width}
+    />
+  );
+}
 export function WbtcIcon({
   height,
   width,

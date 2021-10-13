@@ -14,6 +14,7 @@ import {
   UsdcIcon,
   WethIcon,
   WbtcIcon,
+  CrvMimIcon,
 } from "efi-ui/token/TokenIcon";
 import ContractAddresses from "efi/addresses";
 import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
@@ -29,6 +30,7 @@ const CryptoIconSvg: Record<string, TokenIcon> = {
   [ContractAddresses.crv3cryptoAddress]: CrvTricryptoIcon,
   [ContractAddresses.stecrvAddress]: CrvStethIcon,
   [ContractAddresses.wbtcAddress]: WbtcIcon,
+  [ContractAddresses["mim-3lp3crv-fAddress"]]: CrvMimIcon,
 };
 
 function makeTagIcon(cryptoAsset: CryptoAsset) {

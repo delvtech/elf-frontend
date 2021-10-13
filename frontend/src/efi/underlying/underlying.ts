@@ -15,6 +15,7 @@ const {
     usdcAddress,
     daiAddress,
     "alusd3crv-fAddress": crvalusdAddress,
+    "mim-3lp3crv-fAddress": crvmimAddress,
     "lusd3crv-fAddress": crvlusdAddress,
     crv3cryptoAddress,
     crvtricryptoAddress,
@@ -31,6 +32,8 @@ const crvalusdContract = ERC20__factory.connect(
   crvalusdAddress,
   defaultProvider
 );
+const crvmimContract = ERC20__factory.connect(crvmimAddress, defaultProvider);
+
 const crvTricryptoContract = ERC20__factory.connect(
   crvtricryptoAddress,
   defaultProvider
@@ -54,6 +57,7 @@ export const underlyingContractsByAddress = Object.freeze({
   [crvalusdAddress]: crvalusdContract,
   [crvtricryptoAddress]: crvTricryptoContract,
   [crv3cryptoAddress]: crv3CryptoContract,
+  [crvmimAddress]: crvmimContract,
   [stecrvAddress]: steCrvContract,
 });
 
