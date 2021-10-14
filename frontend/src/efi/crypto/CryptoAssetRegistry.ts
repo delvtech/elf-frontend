@@ -88,6 +88,14 @@ const STECRV_CRYPTO_ASSET: Erc20CryptoAsset = {
   ] as ERC20,
 };
 
+const CRVEURS_CRYPTO_ASSET: Erc20CryptoAsset = {
+  id: AddressesJson.addresses.eurscrvAddress,
+  type: CryptoAssetType.ERC20,
+  tokenContract: underlyingContractsByAddress[
+    AddressesJson.addresses.eurscrvAddress
+  ] as ERC20,
+};
+
 const baseAssetCryptoAssets: Record<string, CryptoAsset> = {
   // weth should return eth wherever it's used, because the user should never
   // interact with weth
@@ -101,6 +109,7 @@ const baseAssetCryptoAssets: Record<string, CryptoAsset> = {
   [AddressesJson.addresses.crvtricryptoAddress]: CRVTRICRYPTO_CRYPTO_ASSET,
   [AddressesJson.addresses.crv3cryptoAddress]: CRV3CRYPTO_CRYPTO_ASSET,
   [AddressesJson.addresses.stecrvAddress]: STECRV_CRYPTO_ASSET,
+  [AddressesJson.addresses.eurscrvAddress]: CRVEURS_CRYPTO_ASSET,
 };
 
 const principalTokenCryptoAssets: Erc20PermitCryptoAsset[] =

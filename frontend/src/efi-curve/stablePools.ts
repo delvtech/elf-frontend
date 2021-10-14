@@ -11,6 +11,7 @@ const {
     "alusd3crv-fAddress": crvalusdAddress,
     "lusd3crv-fAddress": crvlusdAddress,
     "mim-3lp3crv-fAddress": crvMimAddress,
+    eurscrvAddress,
   },
 } = AddressesJson;
 
@@ -31,10 +32,17 @@ const crvMimContract = CRVLUSD__factory.connect(
   defaultProvider
 );
 
+const crvEursContract = CRVLUSD__factory.connect(
+  // Note: the CRVLUSD_factory is the same, so it can handle both lusd and mim pools.
+  eurscrvAddress,
+  defaultProvider
+);
+
 export const curveVirtualPriceContractsByAddress = {
   [crvalusdAddress]: crvalusdContract,
   [crvlusdAddress]: crvlusdContract,
   [crvMimAddress]: crvMimContract,
+  [eurscrvAddress]: crvEursContract,
 };
 
 export function isCurveStablePool(address: string): boolean {

@@ -20,6 +20,7 @@ const {
     crv3cryptoAddress,
     crvtricryptoAddress,
     stecrvAddress,
+    eurscrvAddress,
   },
 } = AddressesJson;
 
@@ -44,6 +45,7 @@ const crv3CryptoContract = ERC20__factory.connect(
 );
 
 const steCrvContract = ERC20__factory.connect(stecrvAddress, defaultProvider);
+const eursCrvContract = ERC20__factory.connect(eurscrvAddress, defaultProvider);
 
 /**
  * Lookup the contract instance for a underlying's address.
@@ -59,6 +61,7 @@ export const underlyingContractsByAddress = Object.freeze({
   [crv3cryptoAddress]: crv3CryptoContract,
   [crvmimAddress]: crvmimContract,
   [stecrvAddress]: steCrvContract,
+  [eurscrvAddress]: eursCrvContract,
 });
 
 const underlyingERC20PermitAddresses = [usdcAddress];

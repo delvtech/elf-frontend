@@ -13,6 +13,7 @@ export interface AddressesJsonFile {
     usdcAddress: string;
     stecrvAddress: string;
     crvtricryptoAddress: string;
+    eurscrvAddress: string;
     "lusd3crv-fAddress": string;
     "alusd3crv-fAddress": string;
     "mim-3lp3crv-fAddress": string;
