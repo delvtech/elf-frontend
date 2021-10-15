@@ -34,7 +34,11 @@ const crvMimContract = CRVLUSD__factory.connect(
 
 const crvEursContract = CRVLUSD__factory.connect(
   // Note: the CRVLUSD_factory is the same, so it can handle both lusd and mim pools.
-  eurscrvAddress,
+  // Note: this is the pool contract address, the eurscrvAddress is the token contract address.
+  // This is inconsistent with the other stable pool addresses passed down from elf-deploy and
+  // elf-tokenlist which all pass down the pool contract address.
+  // TODO: fix the above inconsistency
+  "0x0Ce6a5fF5217e38315f87032CF90686C96627CAA",
   defaultProvider
 );
 
@@ -46,5 +50,10 @@ export const curveVirtualPriceContractsByAddress = {
 };
 
 export function isCurveStablePool(address: string): boolean {
-  return [crvalusdAddress, crvlusdAddress, crvMimAddress].includes(address);
+  return [
+    crvalusdAddress,
+    crvlusdAddress,
+    crvMimAddress,
+    eurscrvAddress,
+  ].includes(address);
 }
