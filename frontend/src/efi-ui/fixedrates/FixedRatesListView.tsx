@@ -2,7 +2,7 @@ import { Fragment, ReactElement, useMemo } from "react";
 import { Helmet } from "react-helmet";
 
 import { RouteComponentProps } from "@reach/router";
-import { t } from "ttag";
+import { jt, t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { FixedRateCardList } from "efi-ui/fixedrates/FixedRateCardList/FixedRateCardList";
@@ -11,6 +11,13 @@ import { useOpenPrincipalTokenInfos } from "efi-ui/tranche/useOpenPrincipalToken
 
 interface FixedRatesListViewProps extends RouteComponentProps {}
 
+const fixedYieldLink = (
+  <a
+    key="fixed-yield-link"
+    href="https://medium.com/element-finance/fixed-rate-interest-markets-a-casual-users-journey-through-fixed-rate-interest-using-element-50f420df1859"
+    target="_noreferrer"
+  >{t`Fixed Yield`}</a>
+);
 export function FixedRatesListView(
   unusedProps: FixedRatesListViewProps
 ): ReactElement {
@@ -48,7 +55,7 @@ export function FixedRatesListView(
         >
           <ViewTitle
             title={t`The simplest way to grow your crypto savings.`}
-            subtitle={t`No minimums, no withdrawal penalties, exit anytime.`}
+            subtitle={jt`No minimums, no withdrawal penalties, exit anytime. Learn more about ${fixedYieldLink}.`}
           />
           <div
             className={tw(
