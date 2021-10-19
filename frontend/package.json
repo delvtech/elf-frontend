@@ -114,7 +114,7 @@
     "warning": "^4.0.3"
   },
   "devDependencies": {
-    "@testing-library/dom": "^8.9.1",
+    "@testing-library/dom": "^8.10.1",
     "@testing-library/react-hooks": "^7.0.2",
     "@typechain/ethers-v5": "^7.2.0",
     "@types/d3-format": "^3.0.1",
