@@ -21,16 +21,18 @@ import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { getPrincipalTokenInfoForPool } from "efi/pools/getPrincipalTokenInfoForPool";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
+import { PoolAction } from "efi-ui/pools/hooks/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
 
 interface PoolDetailsProps {
   library: Web3Provider | undefined;
   signer: Signer | undefined;
   account: string | null | undefined;
   poolInfo: PoolInfo;
+  poolAction: PoolAction;
 }
 
 export function PoolDetails(props: PoolDetailsProps): ReactElement {
-  const { library, signer, account, poolInfo } = props;
+  const { library, signer, account, poolInfo, poolAction } = props;
   const { baseAssetInfo, termAssetInfo, baseAssetContract } =
     getPoolTokens(poolInfo);
 
@@ -110,6 +112,7 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
           signer={signer}
           account={account}
           poolInfo={poolInfo}
+          poolAction={poolAction}
           baseTokenInfo={baseAssetInfo}
           termTokenInfo={termAssetInfo}
         />

@@ -13,12 +13,17 @@ import { getPoolInfo } from "efi/pools/getPoolInfo";
 
 import { PoolViewHeader } from "./PoolViewHeader";
 import { PoolViewTitle } from "./PoolViewTitle";
+import { PoolAction } from "efi-ui/pools/hooks/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
 
 interface PoolViewProps extends RouteComponentProps {
   poolAddress?: string;
+  poolAction?: PoolAction;
 }
 
-export function PoolView({ poolAddress }: PoolViewProps): ReactElement {
+export function PoolView({
+  poolAddress,
+  poolAction = PoolAction.BUY,
+}: PoolViewProps): ReactElement {
   const { account, library } = useWeb3React<Web3Provider>();
   const signer = useSigner(account, library);
   const poolInfo = getPoolInfo(poolAddress as string);
@@ -54,6 +59,7 @@ export function PoolView({ poolAddress }: PoolViewProps): ReactElement {
             signer={signer}
             account={account}
             poolInfo={poolInfo}
+            poolAction={poolAction}
           />
         </div>
       </div>

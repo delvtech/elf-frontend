@@ -14,7 +14,7 @@ interface PoolActionsPref {
 const POOL_VIEW_ACTION_TAB_PREF_ID = "poolview-action-tab";
 
 export function usePoolViewPoolActionsTab(): PoolActionsPref {
-  const { pref: tab = PoolAction.BUY, setPref: setTab } = usePref<PoolAction>(
+  const { pref: tab, setPref: setTab } = usePref<PoolAction>(
     POOL_VIEW_ACTION_TAB_PREF_ID,
     PoolAction.BUY
   );
