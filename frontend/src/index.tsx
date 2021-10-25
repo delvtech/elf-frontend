@@ -18,7 +18,6 @@ import { getEthereumProviderLibrary } from "efi/wallets/providers";
 
 import { efiQueryClient } from "./efi/queryClient";
 import { AddressesJson, lookupAddressKey } from "efi/addresses";
-import SaveApp from "efi-ui/saveApp/app/SaveApp";
 import { clearLocalStorageOnNewVersion } from "./clearLocalStorageOnNewVersion";
 import { prefixDocumentTitle } from "./prefixDocumentTitle";
 import { logAppVersion } from "./logAppVersion";
@@ -30,13 +29,11 @@ prefixDocumentTitle();
 window.addresses = AddressesJson;
 window.lookupAddressKey = lookupAddressKey;
 
-const appId = process.env.REACT_APP_ELEMENT_APP_ID;
-
 ReactDOM.render(
   <Web3ReactProvider getLibrary={getEthereumProviderLibrary}>
     <QueryClientProvider client={efiQueryClient}>
       <React.StrictMode /* Only our components should be under strict mode */>
-        {appId === "save" ? <SaveApp /> : <App />}
+        <App />
       </React.StrictMode>
     </QueryClientProvider>
   </Web3ReactProvider>,

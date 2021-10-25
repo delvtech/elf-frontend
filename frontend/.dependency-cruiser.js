@@ -187,27 +187,13 @@ module.exports = {
     {
       name: "efi-not-to-portfolio",
       comment:
-        "Importing from portfolio/ is prohibited outside of the app/ and saveApp/ directories.",
+        "Importing from portfolio/ is prohibited outside of the app/ and  directories.",
       severity: "error",
       from: {
-        pathNot: `(${["efi-ui/app", "efi-ui/portfolio", "efi-ui/saveApp"].join(
-          "|"
-        )})`,
+        pathNot: `(${["efi-ui/app", "efi-ui/portfolio"].join("|")})`,
       },
       to: {
         path: "efi-ui/portfolio",
-      },
-    },
-    {
-      name: "efi-not-to-save",
-      comment:
-        "Importing from saveApp/ is prohibited outside of the saveApp/ directories.",
-      severity: "error",
-      from: {
-        pathNot: `(${["efi-ui/saveApp", "index.tsx"].join("|")})`,
-      },
-      to: {
-        path: "efi-ui/saveApp",
       },
     },
 
@@ -271,28 +257,6 @@ module.exports = {
       },
       to: {
         path: "efi/(?!base)",
-      },
-    },
-    {
-      name: "efi-not-to-app",
-      comment: "App should not depend on the Save App",
-      severity: "error",
-      from: {
-        path: "efi-ui/app",
-      },
-      to: {
-        path: `(${["efi-ui/saveApp"].join("|")})`,
-      },
-    },
-    {
-      name: "efi-not-to-save-app",
-      comment: "Save App should not depend on the main App",
-      severity: "error",
-      from: {
-        path: "efi-ui/saveApp",
-      },
-      to: {
-        path: `(${["efi-ui/app"].join("|")})`,
       },
     },
     {
