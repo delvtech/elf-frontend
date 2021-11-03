@@ -1,9 +1,13 @@
 import { AddressesJsonFile } from "addresses/AddressesJsonFile";
+import AddressesJsonFileMock from "addresses/mock.addresses.json";
 import AddressesJsonFileTestnet from "addresses/testnet.addresses.json";
+import AddressesJsonFileGoerli from "elf-tokenlist/dist/goerli.addresses.json";
+import AddressesJsonFileMainnet from "elf-tokenlist/dist/mainnet.addresses.json";
+import { ChainId, ChainNames } from "efi/ethereum";
 
 // Default to the testnet in this repo so `npm start` Just Works without having
 // to specify it on the command line.
-const addressesJsonId = getAddressesJsonId();
+const chainName = getAddressesJsonId();
 function getAddressesJsonId() {
   if (process.env.NODE_ENV === "test") {
     return "mock";
@@ -12,18 +16,27 @@ function getAddressesJsonId() {
   return process.env.REACT_APP_CHAIN_NAME || "testnet";
 }
 
-const AddressesJsonFilePath = `elf-tokenlist/dist/${addressesJsonId}.addresses.json`;
+function getAddressesJson(): AddressesJsonFile {
+  if (chainName === "testnet") {
+    return AddressesJsonFileTestnet;
+  }
 
-// Import statements in TS are statically checked, and will throw compile-time
-// errors if the file doesn't exist. Require statements on the other hand are
-// dynamic and will throw an error at runtime. For tools like eslint and
-// dependency-cruiser, we don't need to run the app, but we need TS to compile
-// correctly, so we use a require() statement here.
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-export const AddressesJson: AddressesJsonFile =
-  addressesJsonId === "mock" || addressesJsonId === "testnet"
-    ? AddressesJsonFileTestnet
-    : require(AddressesJsonFilePath);
+  if (chainName === "mock") {
+    return AddressesJsonFileMock;
+  }
+
+  if (chainName === ChainNames[ChainId.MAINNET]) {
+    return AddressesJsonFileMainnet;
+  }
+
+  if (chainName === ChainNames[ChainId.GOERLI]) {
+    return AddressesJsonFileGoerli;
+  }
+
+  return AddressesJsonFileMock;
+}
+
+export const AddressesJson: AddressesJsonFile = getAddressesJson();
 
 const ContractAddresses = AddressesJson.addresses;
 
