@@ -40,12 +40,8 @@ async function main() {
   const userAddress = await userSigner.getAddress();
 
   // deploy base assets
-  const [
-    wethContract,
-    usdcContract,
-    daiContract,
-    lusdContract,
-  ] = await deployBaseAssets(wethSigner, usdcSigner, daiSigner, lusdSigner);
+  const [wethContract, usdcContract, daiContract, lusdContract] =
+    await deployBaseAssets(wethSigner, usdcSigner, daiSigner, lusdSigner);
 
   // supply element with WETH and USDC
   await mintTokensForAddress(elementAddress, {
@@ -86,7 +82,7 @@ async function main() {
     "DateString",
     elementSigner
   );
-  const testDate = ((await dateLibraryDeployer.deploy()) as unknown) as TestDate;
+  const testDate = (await dateLibraryDeployer.deploy()) as unknown as TestDate;
 
   const trancheFactory = await deployTrancheFactory(
     elementSigner,
@@ -100,12 +96,8 @@ async function main() {
     trancheFactory
   );
 
-  const {
-    yWeth,
-    wethYearnVaultAssetProxy,
-    yUsdc,
-    usdcYearnVaultAssetProxy,
-  } = await deployVaultsAndProxys(elementSigner, wethContract, usdcContract);
+  const { yWeth, wethYearnVaultAssetProxy, yUsdc, usdcYearnVaultAssetProxy } =
+    await deployVaultsAndProxys(elementSigner, wethContract, usdcContract);
 
   console.log("deploy first WETH tranche");
   const {
@@ -324,6 +316,12 @@ async function main() {
       usdcAddress: usdcContract.address,
       daiAddress: daiContract.address,
       crvlusdAddress: lusdContract.address,
+      wbtcAddress: "0x0000000000000000000000000000000000000000",
+      "alusd3crv-fAddress": "0x0000000000000000000000000000000000000000",
+      "lusd3crv-fAddress": "0x0000000000000000000000000000000000000000",
+      "mim-3lp3crv-fAddress": "0x0000000000000000000000000000000000000000",
+      eurscrvAddress: "0x0000000000000000000000000000000000000000",
+      crv3cryptoAddress: "0x0000000000000000000000000000000000000000",
       crvalusdAddress: "0x0000000000000000000000000000000000000000",
       crvtricryptoAddress: "0x0000000000000000000000000000000000000000",
       stecrvAddress: "0x0000000000000000000000000000000000000000",
@@ -355,9 +353,12 @@ async function main() {
   console.log("testnet.addresses.json", schemaAddresses);
   fs.writeFileSync("./src/addresses/testnet.addresses.json", schemaAddresses);
 
-  const firstWethInterestTokenAddress = await firstWethTrancheContract.interestToken();
-  const secondWethInterestTokenAddress = await secondWethTrancheContract.interestToken();
-  const expiredWethInterestTokenAddress = await expiredWethTrancheContract.interestToken();
+  const firstWethInterestTokenAddress =
+    await firstWethTrancheContract.interestToken();
+  const secondWethInterestTokenAddress =
+    await secondWethTrancheContract.interestToken();
+  const expiredWethInterestTokenAddress =
+    await expiredWethTrancheContract.interestToken();
   const usdcInterestTokenAddress = await usdcTrancheContract.interestToken();
 
   const symbolOverrides = {

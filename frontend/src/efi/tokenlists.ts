@@ -1,10 +1,14 @@
 import { TokenInfo, TokenList } from "@uniswap/token-lists";
 import keyBy from "lodash.keyby";
 import { AnyTokenListInfo } from "tokenlists/types";
+import TokenListJsonFileTestnet from "tokenlists/testnet.tokenlist.json";
 
+// export const tokenListJson: TokenList = require(tokenListJsonFilePath);
 // Default to the testnet in this repo so `npm start` Just Works without having
 // to specify it on the command line.
 const chainName = getTokenListJsonId();
+
+const tokenListJsonFilePath = `elf-tokenlist/dist/${chainName}.tokenlist.json`;
 
 // Import statements in TS are statically checked, and will throw compile-time
 // errors if the file doesn't exist. Require statements on the other hand are
@@ -12,10 +16,11 @@ const chainName = getTokenListJsonId();
 // dependency-cruiser, we don't need to run the app, but we need TS to compile
 // correctly, so we use a require() statement here.
 // eslint-disable-next-line @typescript-eslint/no-var-requires
+// export const tokenListJson: TokenList = require(tokenListJsonFilePath);
 export const tokenListJson: TokenList =
-  chainName === "mock"
-    ? require(`tokenlists/${chainName}.tokenlist.json`)
-    : require(`elf-tokenlist/dist/${chainName}.tokenlist.json`);
+  chainName === "mock" || chainName === "testnet"
+    ? TokenListJsonFileTestnet
+    : require(tokenListJsonFilePath);
 
 const tokenInfos = tokenListJson.tokens;
 

@@ -1,6 +1,7 @@
 import { usePref } from "efi-ui/prefs/usePref/usePref";
 
 export enum PoolAction {
+  REDEEM = "redeem",
   BUY = "buy",
   SELL = "sell",
   ADD_LIQUIDITY = "stake",

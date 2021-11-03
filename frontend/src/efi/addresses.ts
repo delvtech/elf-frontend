@@ -1,4 +1,5 @@
 import { AddressesJsonFile } from "addresses/AddressesJsonFile";
+import AddressesJsonFileTestnet from "addresses/testnet.addresses.json";
 
 // Default to the testnet in this repo so `npm start` Just Works without having
 // to specify it on the command line.
@@ -11,6 +12,8 @@ function getAddressesJsonId() {
   return process.env.REACT_APP_CHAIN_NAME || "testnet";
 }
 
+const AddressesJsonFilePath = `elf-tokenlist/dist/${addressesJsonId}.addresses.json`;
+
 // Import statements in TS are statically checked, and will throw compile-time
 // errors if the file doesn't exist. Require statements on the other hand are
 // dynamic and will throw an error at runtime. For tools like eslint and
@@ -18,9 +21,9 @@ function getAddressesJsonId() {
 // correctly, so we use a require() statement here.
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 export const AddressesJson: AddressesJsonFile =
-  addressesJsonId === "mock"
-    ? require(`addresses/${addressesJsonId}.addresses.json`)
-    : require(`elf-tokenlist/dist/${addressesJsonId}.addresses.json`);
+  addressesJsonId === "mock" || addressesJsonId === "testnet"
+    ? AddressesJsonFileTestnet
+    : require(AddressesJsonFilePath);
 
 const ContractAddresses = AddressesJson.addresses;
 

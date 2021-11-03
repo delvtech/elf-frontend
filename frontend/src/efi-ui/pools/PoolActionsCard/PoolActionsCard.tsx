@@ -1,20 +1,24 @@
-import { ReactElement, useCallback } from "react";
+import { ReactElement, useCallback, useEffect } from "react";
 
 import { Card, Intent, Tab, Tabs } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
+import { Link, navigate, useLocation } from "@reach/router";
 import { TokenInfo } from "@uniswap/token-lists";
 import { Signer } from "ethers";
+import { PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { PoolAction } from "efi-ui/pools/hooks/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
 import { StakingPanel } from "efi-ui/pools/StakingPanel/StakingPanel";
 import { UnstakeCard } from "efi-ui/pools/UnstakingPanel/UnstakingCard";
-import { PoolAction } from "efi-ui/pools/hooks/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
+import { RedeemPanel } from "efi-ui/redeem/RedeemPanel/RedeemPanel";
 import { TradePanel } from "efi-ui/trade/TradePanel/TradePanel";
-import { PoolInfo } from "efi/pools/PoolInfo";
 import { getOppositePoolInfo } from "efi/pools/getOppositePoolInfo";
+import { PoolInfo } from "efi/pools/PoolInfo";
 import { isYieldPool } from "efi/pools/weightedPool";
-import { Link, navigate, useLocation } from "@reach/router";
+import { getTokenInfo } from "efi/tokenlists";
+import { getIsMature } from "efi/tranche/getIsMature";
 
 import styles from "./PoolActionsCard.module.css";
 
@@ -32,12 +36,36 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
   const { library, signer, account, baseTokenInfo, termTokenInfo, poolInfo } =
     props;
 
+  const principalTokenInfo = getTokenInfo<PrincipalTokenInfo>(
+    termTokenInfo.address
+  );
+
+  const { unlockTimestamp } = principalTokenInfo.extensions;
+  const isRedeemable = getIsMature(unlockTimestamp);
+
   // The active tab state is kept in a URL query parameter.
   const { search } = useLocation();
   const urlSearchParams = new URLSearchParams(search);
   const { action: activeTab = PoolAction.BUY } = Object.fromEntries(
     urlSearchParams.entries()
   );
+
+  // safety measure to make sure we end up on a tab that exists
+  useEffect(() => {
+    if (isRedeemable && activeTab === PoolAction.BUY) {
+      navigate(`?action=${PoolAction.REDEEM}`);
+    }
+    if (isRedeemable && activeTab === PoolAction.SELL) {
+      navigate(`?action=${PoolAction.REDEEM}`);
+    }
+    if (isRedeemable && activeTab === PoolAction.ADD_LIQUIDITY) {
+      navigate(`?action=${PoolAction.REMOVE_LIQUIDITY}`);
+    }
+    if (!isRedeemable && activeTab === PoolAction.REDEEM) {
+      navigate(`?action=${PoolAction.BUY}`);
+    }
+  }, [activeTab, isRedeemable]);
+
   const onTabChange = useCallback((newTab: PoolAction) => {
     navigate(`?action=${newTab}`);
   }, []);
@@ -66,9 +94,12 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
             onChange={onTabChange}
             className={styles.poolActionsCard}
           >
-            <Tab id={PoolAction.BUY} title={t`Buy`} />
-            <Tab id={PoolAction.SELL} title={t`Sell`} />
-            <Tab id={PoolAction.ADD_LIQUIDITY} title={t`Add LP`} />
+            {!isRedeemable && <Tab id={PoolAction.BUY} title={t`Buy`} />}
+            {!isRedeemable && <Tab id={PoolAction.SELL} title={t`Sell`} />}
+            {isRedeemable && <Tab id={PoolAction.REDEEM} title={t`Redeem`} />}
+            {!isRedeemable && (
+              <Tab id={PoolAction.ADD_LIQUIDITY} title={t`Add LP`} />
+            )}
             <Tab id={PoolAction.REMOVE_LIQUIDITY} title={t`Remove LP`} />
           </Tabs>
           <Link
@@ -87,6 +118,13 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
             tokenOut={termTokenInfo}
             buttonLabel={t`Buy`}
             buttonIntent={Intent.PRIMARY}
+          />
+        )}
+        {activeTab === PoolAction.REDEEM && (
+          <RedeemPanel
+            library={library}
+            account={account}
+            poolInfo={poolInfo}
           />
         )}
         {activeTab === PoolAction.SELL && (

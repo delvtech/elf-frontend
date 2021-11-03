@@ -40,6 +40,12 @@ const json: AddressesJsonFile = {
     weightedPoolFactoryAddress: "0x8E9aa87E45e92bad84D5F8DD1bff34Fb92637dE9",
     wethAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
     crvlusdAddress: "0x5f98805A4E8be255a32880FDeC7F6728C6568bA0",
+    wbtcAddress: "0x0000000000000000000000000000000000000000",
+    "alusd3crv-fAddress": "0x0000000000000000000000000000000000000000",
+    "lusd3crv-fAddress": "0x0000000000000000000000000000000000000000",
+    "mim-3lp3crv-fAddress": "0x0000000000000000000000000000000000000000",
+    eurscrvAddress: "0x0000000000000000000000000000000000000000",
+    crv3cryptoAddress: "0x0000000000000000000000000000000000000000",
     crvalusdAddress: "0x0000000000000000000000000000000000000000",
     crvtricryptoAddress: "0x0000000000000000000000000000000000000000",
     stecrvAddress: "0x0000000000000000000000000000000000000000",
@@ -69,9 +75,8 @@ async function main() {
     value: parseEther("10000"),
   });
 
-  const { wethContract, usdcContract, daiContract } = getBaseAssetContracts(
-    elementSigner
-  );
+  const { wethContract, usdcContract, daiContract } =
+    getBaseAssetContracts(elementSigner);
 
   // get balancer vault
   const balancerVaultContract = Vault__factory.connect(
@@ -100,12 +105,8 @@ async function main() {
     elementSigner
   );
 
-  const {
-    yWeth,
-    wethYearnVaultAssetProxy,
-    yUsdc,
-    usdcYearnVaultAssetProxy,
-  } = await deployVaultsAndProxys(elementSigner, wethContract, usdcContract);
+  const { yWeth, wethYearnVaultAssetProxy, yUsdc, usdcYearnVaultAssetProxy } =
+    await deployVaultsAndProxys(elementSigner, wethContract, usdcContract);
 
   console.log("deploy first WETH tranche");
   const {
@@ -199,6 +200,12 @@ async function main() {
       weightedPoolFactoryAddress: weightedPoolFactory.address,
       convergentPoolFactoryAddress: convergentPoolFactory.address,
       userProxyContractAddress: userProxyContract.address,
+      wbtcAddress: "0x0000000000000000000000000000000000000000",
+      "alusd3crv-fAddress": "0x0000000000000000000000000000000000000000",
+      "lusd3crv-fAddress": "0x0000000000000000000000000000000000000000",
+      "mim-3lp3crv-fAddress": "0x0000000000000000000000000000000000000000",
+      crv3cryptoAddress: "0x0000000000000000000000000000000000000000",
+      eurscrvAddress: "0x0000000000000000000000000000000000000000",
       wethAddress: wethContract.address,
       usdcAddress: usdcContract.address,
       daiAddress: daiContract.address,
@@ -218,7 +225,8 @@ async function main() {
   console.log("testnet.addresses.json", schemaAddresses);
   fs.writeFileSync("./src/addresses/testnet.addresses.json", schemaAddresses);
 
-  const firstWethInterestTokenAddress = await firstWethTrancheContract.interestToken();
+  const firstWethInterestTokenAddress =
+    await firstWethTrancheContract.interestToken();
 
   const symbolOverrides = {
     [firstWethTrancheContract.address]: "ePyvCurve-stETH",
