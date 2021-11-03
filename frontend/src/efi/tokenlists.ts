@@ -5,27 +5,25 @@ import keyBy from "lodash.keyby";
 import TokenListJsonFileTestnet from "tokenlists/testnet.tokenlist.json";
 import { AnyTokenListInfo } from "tokenlists/types";
 
-import { ChainId, ChainNames } from "efi/ethereum";
-
 // export const tokenListJson: TokenList = require(tokenListJsonFilePath);
 // Default to the testnet in this repo so `npm start` Just Works without having
 // to specify it on the command line.
-const chainName = getTokenListJsonId();
+const tokenlistJsonId = getTokenListJsonId();
 
 export const tokenListJson: TokenList = getTokenListJson();
 
 const tokenInfos = tokenListJson.tokens;
 
 function getTokenListJson(): TokenList {
-  if (chainName === "testnet") {
+  if (tokenlistJsonId === "testnet") {
     return TokenListJsonFileTestnet as TokenList;
   }
 
-  if (chainName === ChainNames[ChainId.MAINNET]) {
+  if (tokenlistJsonId === "mainnet") {
     return TokenListJsonFileMainnet as TokenList;
   }
 
-  if (chainName === ChainNames[ChainId.GOERLI]) {
+  if (tokenlistJsonId === "goerli") {
     return TokenListJsonFileGoerli as TokenList;
   }
 

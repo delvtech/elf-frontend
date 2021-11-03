@@ -7,7 +7,7 @@ import { ChainId, ChainNames } from "efi/ethereum";
 
 // Default to the testnet in this repo so `npm start` Just Works without having
 // to specify it on the command line.
-const chainName = getAddressesJsonId();
+const addressesJsonId = getAddressesJsonId();
 function getAddressesJsonId() {
   if (process.env.NODE_ENV === "test") {
     return "mock";
@@ -17,19 +17,19 @@ function getAddressesJsonId() {
 }
 
 function getAddressesJson(): AddressesJsonFile {
-  if (chainName === "testnet") {
+  if (addressesJsonId === "testnet") {
     return AddressesJsonFileTestnet;
   }
 
-  if (chainName === "mock") {
+  if (addressesJsonId === "mock") {
     return AddressesJsonFileMock;
   }
 
-  if (chainName === ChainNames[ChainId.MAINNET]) {
+  if (addressesJsonId === "mainnet") {
     return AddressesJsonFileMainnet;
   }
 
-  if (chainName === ChainNames[ChainId.GOERLI]) {
+  if (addressesJsonId === "goerli") {
     return AddressesJsonFileGoerli;
   }
 
