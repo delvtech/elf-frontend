@@ -3,7 +3,6 @@ import AddressesJsonFileMock from "addresses/mock.addresses.json";
 import AddressesJsonFileTestnet from "addresses/testnet.addresses.json";
 import AddressesJsonFileGoerli from "elf-tokenlist/dist/goerli.addresses.json";
 import AddressesJsonFileMainnet from "elf-tokenlist/dist/mainnet.addresses.json";
-import { ChainId, ChainNames } from "efi/ethereum";
 
 // Default to the testnet in this repo so `npm start` Just Works without having
 // to specify it on the command line.
