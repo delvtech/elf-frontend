@@ -21,7 +21,7 @@ import { PoolInfo } from "efi/pools/PoolInfo";
  * to minimize slippage in the value.
  *
  */
-const SPOT_PRICE_AMOUNT = "0.00001";
+const SPOT_PRICE_AMOUNT = "0.01";
 
 export function usePoolSpotPrice(
   poolContract: PoolContract,
