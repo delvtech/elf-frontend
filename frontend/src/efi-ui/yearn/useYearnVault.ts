@@ -8,7 +8,7 @@ export function useYearnVault(
   vaultAddress: string | undefined
 ): UseQueryResult<YearnVaultResult> {
   return useQuery<YearnVaultResult>({
-    queryKey: makeYearnAPYQueryKey(vaultSymbol),
+    queryKey: makeYearnAPYQueryKey(vaultAddress, vaultSymbol),
     queryFn: async () => {
       const result = await fetchYearnVaults();
 
@@ -31,10 +31,12 @@ export function useYearnVault(
 
 interface YearnAPYVariables {
   vaultSymbol: string | undefined;
+  vaultAddress: string | undefined;
 }
 
 function makeYearnAPYQueryKey(
+  vaultAddress: string | undefined,
   vaultSymbol: string | undefined
 ): [string[], YearnAPYVariables] {
-  return [["yearn", "/vaults/all"], { vaultSymbol }];
+  return [["yearn", "/vaults/all"], { vaultSymbol, vaultAddress }];
 }
