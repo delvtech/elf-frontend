@@ -36,12 +36,18 @@ export async function getTokenList(
       usdcAddress,
       daiAddress,
       crv3cryptoAddress,
-      crvlusdAddress,
+      // crvlusdAddress,
       convergentPoolFactoryAddress,
       weightedPoolFactoryAddress,
-      crvalusdAddress,
+      // crvalusdAddress,
       crvtricryptoAddress,
       stecrvAddress,
+
+      wbtcAddress,
+      "alusd3crv-fAddress": crvalusdAddress,
+      "lusd3crv-fAddress": crvlusdAddress,
+      // "mim-3lp3crv-fAddress": string;
+      // eurscrvAddress: string;
     },
     safelist,
   } = addressesJson;
