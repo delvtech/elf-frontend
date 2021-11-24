@@ -2,10 +2,6 @@ name: Jest
 
 on: [pull_request]
 
-defaults:
-  run:
-    working-directory: frontend
-
 jobs:
   jest-check:
     runs-on: ubuntu-latest

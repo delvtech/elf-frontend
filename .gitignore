@@ -1,2 +1,67 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# production
+/build
+
+# these are copied in from the top-level scripts and will be different on every
+# machine
+src/tokenlists/*
+# This is a stub used for unit tests, it does not change on every machine
+!src/tokenlists/mock.tokenlist.json
+# This can't be required conditionally for local builds, so we have to use import statement, so we
+# have to check the file in so CI doesn't break
+!src/tokenlists/testnet.tokenlist.json
+# These are definitions, they do not change on every machine and are required
+# for compilation
+!src/tokenlists/types.ts
+
+# these are copied in from the top-level scripts and will be different on every
+# machine
+src/addresses/*
+# This definition file is an exception as it does not change on every machine
+# and CI will fail without it.
+!src/addresses/AddressesJsonFile.d.ts
+# This is a stub used for unit tests, it does not change on every machine
+!src/addresses/mock.addresses.json
+# This can't be required conditionally for local builds, so we have to use import statement, so we
+# have to check the file in so CI doesn't break
+!src/addresses/testnet.addresses.json
+
+# these are copied in from the top-level scripts and will be different on every
+# machine
+src/canperform/*
+# This definition file is an exception as it does not change on every machine
+# and CI will fail without it.
+!src/canperform/CanPerformJsonFile.d.ts
+# This is a stub used for unit tests, it does not change on every machine
+!src/canperform/mock.canperform.json
+!src/canperform/goerli.canperform.json
+!src/canperform/mainnet.canperform.json
+
+# misc
 .DS_Store
-*node_modules*
+
+# https://create-react-app.dev/docs/adding-custom-environment-variables/#adding-development-environment-variables-in-env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# These are generated fresh on every build
+version.output.json
+tailwind.output.css
+
+.eslintcache
+

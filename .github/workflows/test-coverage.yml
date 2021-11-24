@@ -2,10 +2,6 @@ name: Test coverage
 
 on: [pull_request]
 
-defaults:
-  run:
-    working-directory: frontend
-
 jobs:
   test-coverage:
     runs-on: ubuntu-latest
@@ -20,4 +16,4 @@ jobs:
         uses: vebr/jest-lcov-reporter@v0.2.0
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          lcov-file: frontend/coverage/lcov.info
+          lcov-file: coverage/lcov.info

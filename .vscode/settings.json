@@ -1,6 +1,6 @@
 {
   "typescript.tsdk": "./node_modules/typescript/lib",
-  "eslint.workingDirectories": ["./frontend"],
+  "eslint.workingDirectories": ["./"],
   "eslint.nodePath": "./node_modules/.bin/eslint",
   "eslint.options": {
     "configFile": ".eslintrc"
@@ -9,7 +9,7 @@
     "source.fixAll": true
   },
   "importSorter.importStringConfiguration.quoteMark": "double",
-  "importSorter.generalConfiguration.exclude": ["frontend/src/index.tsx"],
+  "importSorter.generalConfiguration.exclude": ["src/index.tsx"],
   "importSorter.importStringConfiguration.trailingComma": "multiLine",
   "importSorter.importStringConfiguration.maximumNumberOfImportExpressionsPerLine.type": "newLineEachExpressionAfterCountLimit",
   "importSorter.importStringConfiguration.maximumNumberOfImportExpressionsPerLine.count": 80,
