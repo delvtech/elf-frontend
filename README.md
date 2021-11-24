@@ -1,36 +1,29 @@
-The frontend for Element.fi
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## How to run locally
+## Building for production
 
-From the testnet directory, run the following commands:
+### `npm run build:new <addresses-json-id>`
 
-```bash
-npm ci 
-npm run build
-npm start
-npm run deploy-contracts
+Example:
+
+Create a prod build against the element Goerli contracts
+```
+npm run build:new goerli
 ```
 
-From the project top-level directory, run the following commands:
+## Developer setup
 
-```bash
-npm run copy-contracts
-```
+In the project directory, run:
 
-From the frontend directory, run the following commands:
+### `npm ci`
 
-Run
+Then start the development server with
 
-```bash
-npm ci
+### `npm start`
 
-# Run a local version of the mainnet Earn ui
-npm run start:dev-mainnet-app
-```
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-### Updating contracts
-From the testnet directory, run:
-
-```bash
-npm run load-contracts
-```
+### Adding a new base asset
+1. Run `npm run update-elf-tokenlist`.
+1. Add a logo svg to `src/efi-static-assets/svg/` directory.
+1. Update `src/addresses/AddressesJsonFile.d.ts`
