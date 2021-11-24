@@ -2,10 +2,6 @@ name: Test coverage
 
 on: [pull_request]
 
-defaults:
-  run:
-    working-directory: frontend
-
 jobs:
   test-coverage:
     runs-on: ubuntu-latest
