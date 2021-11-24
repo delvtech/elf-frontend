@@ -17,7 +17,7 @@
     "@blueprintjs/icons": "^3.31.0",
     "@blueprintjs/popover2": "^0.12.6",
     "@blueprintjs/select": "^3.18.8",
-    "@ethersproject/abi": "^5.4.1",
+    "@ethersproject/abi": "^5.5.0",
     "@ethersproject/abstract-signer": "^5.5.0",
     "@ethersproject/bytes": "^5.4.0",
     "@ethersproject/contracts": "^5.4.1",
