@@ -149,7 +149,7 @@
       "prettier --write"
     ]
   },
-  "name": "efi-frontend",
+  "name": "elf-frontend",
   "private": true,
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",
