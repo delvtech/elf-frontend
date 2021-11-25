@@ -1,5 +1,5 @@
 import versionJson from "./version.output.json";
-import efiLocalStorage from "efi/base/localStorage";
+import efiLocalStorage from "elf/base/localStorage";
 
 export function clearLocalStorageOnNewVersion(): void {
   const lastVersion = efiLocalStorage.getItem("app-version");

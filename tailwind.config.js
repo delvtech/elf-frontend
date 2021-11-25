@@ -3,7 +3,7 @@ const defaultTheme = require("tailwindcss/defaultTheme");
 module.exports = {
   purge: {
     // tree shake tailwind css for production builds
-    content: ["./src/efi/**/*.tsx", "./src/efi/**/*.ts"],
+    content: ["./src/elf/**/*.tsx", "./src/elf/**/*.ts"],
   },
   future: {
     // don't use deprecated grid gap utilities

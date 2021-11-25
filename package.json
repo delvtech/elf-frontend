@@ -138,7 +138,7 @@
   },
   "jest": {
     "collectCoverageFrom": [
-      "src/efi/**/**/*.{ts,tsx}"
+      "src/elf/**/**/*.{ts,tsx}"
     ],
     "coverageReporters": [
       "lcov"
@@ -159,7 +159,7 @@
     "build:new": "bash ./scripts/build.sh",
     "build:prod": "bash ./scripts/build-prod.sh",
     "build:tailwind": "tailwindcss build src/tailwind.css -o src/tailwind.output.css",
-    "build:tailwindcss-classnames": "tailwindcss-classnames --config tailwind.config.js -o src/efi-tailwindcss-classnames/index.ts",
+    "build:tailwindcss-classnames": "tailwindcss-classnames --config tailwind.config.js -o src/elf-tailwindcss-classnames/index.ts",
     "build:version-json": "bash ./scripts/build-version-json.sh",
     "depcruise": "depcruise --config .dependency-cruiser.js src",
     "eject": "react-scripts eject",

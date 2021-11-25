@@ -1,5 +1,5 @@
 import versionJson from "./version.output.json";
-import { AddressesJson } from "efi/addresses";
+import { AddressesJson } from "elf/addresses";
 
 export function logAppVersion(): void {
   const { version, date } = versionJson;

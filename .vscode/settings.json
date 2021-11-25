@@ -33,11 +33,11 @@
       "orderLevel": 40
     },
     {
-      "regex": "^efi",
+      "regex": "^elf",
       "orderLevel": 40
     },
     {
-      "regex": "^efi.ui",
+      "regex": "^elf.ui",
       "orderLevel": 40
     },
     {

@@ -1,0 +1,100 @@
+import { ReactElement, useCallback } from "react";
+
+import { Button, Card, Elevation, Intent, Tag } from "@blueprintjs/core";
+import { IconNames } from "@blueprintjs/icons";
+import { useNavigate } from "@reach/router";
+import classNames from "classnames";
+import { AssetProxyTokenInfo, PrincipalTokenInfo } from "tokenlists/types";
+import { t } from "ttag";
+
+import tw from "elf-tailwindcss-classnames";
+import { Navigation } from "elf-ui/app/navigation/navigation";
+import { LabeledText } from "elf-ui/base/LabeledText/LabeledText";
+import { useIsTailwindLargeScreen } from "elf-ui/base/mediaBreakpoints";
+import { findAssetIcon } from "elf-ui/crypto/CryptoIcon";
+import styles from "elf-ui/fixedrates/grid.module.css";
+import { convertEpochSecondsToDate } from "elf/base/convertEpochSecondsToDate";
+import { formatAbbreviatedDate } from "elf/base/dates";
+import { formatPercent } from "elf/base/formatPercent";
+import { getCryptoAssetForToken } from "elf/crypto/getCryptoAssetForToken";
+import { getCryptoSymbol } from "elf/crypto/getCryptoSymbol";
+import { getPoolInfoForPrincipalToken } from "elf/pools/ccpool";
+import { getTokenInfo } from "elf/tokenlists";
+import { getIsMature } from "elf/tranche/getIsMature";
+import { usePrincipalTokenYield } from "elf-ui/pools/hooks/usePrincipalTokenYield";
+
+interface FixedRateCardProps {
+  principalToken: PrincipalTokenInfo;
+}
+
+export function FixedRateCard(props: FixedRateCardProps): ReactElement | null {
+  const {
+    principalToken: {
+      address,
+      extensions: { unlockTimestamp, underlying, position },
+    },
+  } = props;
+
+  const navigateToBuyPage = useNavigate();
+  const onCardClick = useCallback(() => {
+    navigateToBuyPage(`/${Navigation.FIXED_RATES}/${address}`);
+  }, [address, navigateToBuyPage]);
+
+  const { name: positionName } = getTokenInfo<AssetProxyTokenInfo>(position);
+  const principalPool = getPoolInfoForPrincipalToken(address);
+  const fixedRate = usePrincipalTokenYield(principalPool);
+  const baseAsset = getCryptoAssetForToken(underlying);
+  const baseAssetSymbol = getCryptoSymbol(baseAsset);
+  const BaseAssetIcon = findAssetIcon(baseAsset);
+  const unlockDate = convertEpochSecondsToDate(unlockTimestamp);
+  const formattedUnlockDate = formatAbbreviatedDate(unlockDate);
+  const isRedeemable = getIsMature(unlockTimestamp);
+
+  const isLargeScreen = useIsTailwindLargeScreen();
+
+  return (
+    <Card
+      interactive
+      elevation={Elevation.TWO}
+      className={classNames(
+        { [styles.fixedRatesGrid]: isLargeScreen },
+        tw(
+          "w-full",
+          "max-w-sm",
+          "lg:min-w-full",
+          "lg:max-w-xl",
+          "flex",
+          "flex-col",
+          "space-y-4",
+          "lg:space-y-0"
+        )
+      )}
+      onClick={onCardClick}
+    >
+      <LabeledText
+        className={tw("text-left", "pl-2")}
+        icon={BaseAssetIcon ? <BaseAssetIcon height={36} width={36} /> : null}
+        iconClassName={tw("flex-shrink-0")}
+        label={t`via ${positionName}`}
+        labelClassName={tw("text-xs")}
+        textClassName={tw("text-base")}
+        text={t`${baseAssetSymbol} Principal Token`}
+      />
+      <span>
+        <Tag large fill intent={isRedeemable ? Intent.SUCCESS : Intent.PRIMARY}>
+          {formattedUnlockDate}
+        </Tag>
+      </span>
+      <span className={tw("text-base")}>
+        {t`${isLargeScreen ? "" : t`Fixed APR: `} ${formatPercent(fixedRate)} ${
+          isLargeScreen ? t`APR` : ""
+        }`}
+      </span>
+      <div className={tw("text-right")}>
+        <Button minimal rightIcon={IconNames.CARET_RIGHT} onClick={() => {}}>
+          {!isLargeScreen ? t`Continue` : null}
+        </Button>
+      </div>
+    </Card>
+  );
+}

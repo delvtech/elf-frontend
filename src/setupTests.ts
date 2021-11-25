@@ -3,7 +3,7 @@
 // https://github.com/testing-library/jest-dom
 import "@testing-library/jest-dom";
 
-import efiLocalStorage from "efi/base/localStorage";
+import efiLocalStorage from "elf/base/localStorage";
 
 beforeEach(() => {
   efiLocalStorage.clear();

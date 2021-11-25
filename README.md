@@ -25,5 +25,5 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 ### Adding a new base asset
 1. Run `npm run update-elf-tokenlist`.
-1. Add a logo svg to `src/efi-static-assets/svg/` directory.
+1. Add a logo svg to `src/elf-static-assets/svg/` directory.
 1. Update `src/addresses/AddressesJsonFile.d.ts`
