@@ -1,7 +1,7 @@
 import { ReactElement, useCallback } from "react";
 
 import { Card, Classes, Elevation } from "@blueprintjs/core";
-import { useRouter } from "reach/router";
+import { useRouter } from "next/router";
 import classNames from "classnames";
 import { YieldPoolTokenInfo, YieldTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
