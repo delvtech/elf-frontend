@@ -7,12 +7,12 @@ import { useWeb3React } from "@web3-react/core";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import { t } from "ttag";
 
-import { ReactComponent as CoinbaseIcon } from "efi-static-assets/logos/coinbasewallet.svg";
-import { ReactComponent as LedgerIcon } from "efi-static-assets/logos/ledgerIcon.svg";
-import { ReactComponent as MetamaskIcon } from "efi-static-assets/logos/metamask.svg";
-import { ReactComponent as LatticeIcon } from "efi-static-assets/logos/svg/grid-plus-logo-white-blue.svg";
-import { ReactComponent as TrezorIcon } from "efi-static-assets/logos/svg/trezor-dark.svg";
-import { ReactComponent as WalletConnectIcon } from "efi-static-assets/logos/walletConnectIcon.svg";
+import CoinbaseIcon from "efi-static-assets/logos/coinbasewallet.svg";
+import LedgerIcon from "efi-static-assets/logos/ledgerIcon.svg";
+import MetamaskIcon from "efi-static-assets/logos/metamask.svg";
+import LatticeIcon from "efi-static-assets/logos/svg/grid-plus-logo-white-blue.svg";
+import TrezorIcon from "efi-static-assets/logos/svg/trezor-dark.svg";
+import WalletConnectIcon from "efi-static-assets/logos/walletConnectIcon.svg";
 import tw from "efi-tailwindcss-classnames";
 import {
   coinbaseConnector,
