@@ -1,7 +1,6 @@
 import { Fragment, ReactElement, useState } from "react";
 import { Helmet } from "react-helmet";
 
-import { RouteComponentProps } from "@reach/router";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -18,7 +17,7 @@ enum TradeViewTab {
   PRINCIPAL = "principal",
   YIELD = "yield",
 }
-interface TradeViewProps extends RouteComponentProps {}
+interface TradeViewProps {}
 
 export function TradeView(unusedProps: TradeViewProps): ReactElement {
   const [activeTab, setActiveTab] = useState<TradeViewTab>(

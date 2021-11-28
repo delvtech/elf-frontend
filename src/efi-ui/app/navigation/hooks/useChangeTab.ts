@@ -1,13 +1,13 @@
 import { useCallback } from "react";
 
-import { useNavigate } from "@reach/router";
+import { useRouter } from "next/router";
 
 import { Navigation } from "efi-ui/app/navigation/navigation";
 
 type ChangeTabFn = (tabId: Navigation) => void;
 
 export function useChangeTab(): ChangeTabFn {
-  const navigate = useNavigate();
+  const { push: navigate } = useRouter();
   return useCallback(
     (tabId: Navigation) => {
       navigate(`/${tabId}`);

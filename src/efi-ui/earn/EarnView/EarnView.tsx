@@ -4,7 +4,6 @@ import { Helmet } from "react-helmet";
 import { NonIdealState } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
-import { RouteComponentProps } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
 import { t } from "ttag";
 
@@ -16,7 +15,7 @@ import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { useSigner } from "efi-ui/provider/useBlockFromTag/useSigner/useSigner";
 import { useOpenPrincipalTokenInfos } from "efi-ui/tranche/useOpenPrincipalTokenInfos";
 
-interface EarnViewProps extends RouteComponentProps {}
+interface EarnViewProps {}
 
 export function EarnView(unusedProps: EarnViewProps): ReactElement {
   const { account, library } = useWeb3React<Web3Provider>();

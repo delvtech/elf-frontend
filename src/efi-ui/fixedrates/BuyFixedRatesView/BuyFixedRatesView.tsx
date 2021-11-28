@@ -3,7 +3,6 @@ import { Helmet } from "react-helmet";
 
 import { Button, Card, Classes, Colors, Icon, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
-import { RouteComponentProps } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
 import classNames from "classnames";
 import { commify } from "ethers/lib/utils";
@@ -40,7 +39,7 @@ import { IconNames } from "@blueprintjs/icons";
 import { useNavigation } from "efi-ui/app/navigation/hooks/useNavigation";
 import { Navigation } from "efi-ui/app/navigation/navigation";
 
-interface BuyFixedRatesViewProps extends RouteComponentProps {
+interface BuyFixedRatesViewProp {
   // principalTokenAddress comes from the url, so it's intentionally optional as
   // per https://reach.tech/router/typescript
   principalTokenAddress?: string;

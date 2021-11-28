@@ -9,7 +9,7 @@ import styles from "./TermPicker.module.css";
 import { IPopoverProps } from "@blueprintjs/core";
 import { PrincipalTokenInfo } from "tokenlists/types";
 import { TermButton2 } from "efi-ui/tranche/TermPicker/TermButton2";
-import { useNavigate } from "@reach/router";
+import { useRouter } from "next/router";
 import { Navigation } from "efi-ui/app/navigation/navigation";
 
 interface TermPicker2Props {
@@ -31,7 +31,7 @@ export function TermPicker2({
   activePrincipalToken,
   buttonLabelRenderer,
 }: TermPicker2Props): ReactElement | null {
-  const navigate = useNavigate();
+  const { push: navigate } = useRouter();
   const onItemSelect = useCallback(
     (principalToken: PrincipalTokenInfo) => {
       navigate(`/${Navigation.FIXED_RATES}/${principalToken.address}`);

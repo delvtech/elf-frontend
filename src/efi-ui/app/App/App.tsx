@@ -4,7 +4,6 @@ import { ReactQueryDevtools } from "react-query/devtools";
 import { Button, FocusStyleManager, H1, Overlay } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
-import { LocationProvider, Redirect, Router } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
 import classNames from "classnames";
 import { t } from "ttag";
@@ -12,15 +11,8 @@ import { t } from "ttag";
 import { tw } from "efi-tailwindcss-classnames";
 import { AppHamburgerButton } from "efi-ui/app/AppHamburgerButton/AppHamburgerButton";
 import { AppHeader } from "efi-ui/app/AppHeader/AppHeader";
-import { Navigation } from "efi-ui/app/navigation/navigation";
-import { TradeView } from "efi-ui/app/trade/TradeView/TradeView";
-import { EarnView } from "efi-ui/earn/EarnView/EarnView";
-import { FixedRatesListView } from "efi-ui/fixedrates/FixedRatesListView";
-import { PoolView } from "efi-ui/pools/PoolView/PoolView";
-import { PortfolioView } from "efi-ui/portfolio/PortfolioView/PortfolioView";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useToastWrongChain } from "efi-ui/provider/useBlockFromTag/useToastWrongChain";
-import { StatsView } from "efi-ui/stats/StatsView";
 import { useTransactionToasts } from "efi-ui/transactions/useTransactionToasts";
 import { ConnectWalletButton } from "efi-ui/wallets/ConnectWalletButton/ConnectWalletButton";
 import { useEagerConnect } from "efi-ui/wallets/hooks/useEagerReconnect";
@@ -30,13 +22,12 @@ import { ChainId, ChainNames } from "efi/ethereum";
 import { getConnectorName } from "efi/wallets/connectors";
 
 import styles from "./App.module.css";
-import { BuyFixedRatesView } from "efi-ui/fixedrates/BuyFixedRatesView/BuyFixedRatesView";
 
 FocusStyleManager.onlyShowFocusOnTabs();
 
 interface AppProps {}
 
-const App: FC<AppProps> = () => {
+const App: FC<AppProps> = ({ children }) => {
   const { active, account, chainId, deactivate, connector, library } =
     useWeb3React<Web3Provider>();
   const isWrongChain = active && chainId !== AddressesJson.chainId;
@@ -62,33 +53,15 @@ const App: FC<AppProps> = () => {
           tw("w-full", "h-full", "overflow-scroll")
         )}
       >
-        <LocationProvider>
-          <AppHeader
-            account={account}
-            active={active}
-            chainId={chainId}
-            connectorName={getConnectorName(connector, library)}
-            deactivate={deactivate}
-            hamburgerButton={<AppHamburgerButton />}
-          />
-        </LocationProvider>
-
-        {/* need to use primary={false} to prevent scrolling issues.  more can be read here:
-          https://stackoverflow.com/questions/53058110/stop-reach-router-scrolling-down-the-page-after-navigating-to-new-page
-          */}
-        <Router primary={false} className={tw("w-full", "h-full")}>
-          <Redirect noThrow from="/" to={Navigation.FIXED_RATES} />
-
-          <FixedRatesListView default path={Navigation.FIXED_RATES} />
-          <BuyFixedRatesView
-            path={`${Navigation.FIXED_RATES}/:principalTokenAddress`}
-          />
-          <PortfolioView path={Navigation.PORTFOLIO} />
-          <EarnView path={Navigation.MINT} />
-          <TradeView path={Navigation.POOLS} />
-          <PoolView path={`pools/:poolAddress`} />
-          <StatsView path={Navigation.STATS} />
-        </Router>
+        <AppHeader
+          account={account}
+          active={active}
+          chainId={chainId}
+          connectorName={getConnectorName(connector, library)}
+          deactivate={deactivate}
+          hamburgerButton={<AppHamburgerButton />}
+        />
+        {children}
       </div>
 
       <div

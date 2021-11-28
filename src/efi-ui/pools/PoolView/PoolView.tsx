@@ -2,7 +2,6 @@ import { Fragment, ReactElement } from "react";
 import { Helmet } from "react-helmet";
 
 import { Web3Provider } from "@ethersproject/providers";
-import { RouteComponentProps } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
 import { t } from "ttag";
 
@@ -15,7 +14,7 @@ import { PoolViewHeader } from "./PoolViewHeader";
 import { PoolViewTitle } from "./PoolViewTitle";
 import { PoolAction } from "efi-ui/pools/hooks/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
 
-interface PoolViewProps extends RouteComponentProps {
+interface PoolViewProps {
   poolAddress?: string;
   poolAction?: PoolAction;
 }

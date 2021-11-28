@@ -11,7 +11,7 @@ import { EarnActionsTabId } from "efi-ui/earn/EarnActionsTabs/EarnActionsTabId";
 import { EarnActionsTabs } from "efi-ui/earn/EarnActionsTabs/EarnActionsTabs";
 import { EarnStakingForms } from "efi-ui/earn/EarnStakingForm/EarnStakingForms";
 import { MintForm } from "efi-ui/mint/MintCard/MintForm";
-import { navigate } from "@reach/router";
+import { useRouter } from "next/router";
 
 interface EarnActionsCardProps {
   signer: Signer | undefined;
@@ -25,6 +25,7 @@ interface EarnActionsCardProps {
 export function EarnActionsCard(props: EarnActionsCardProps): ReactElement {
   const { signer, library, account, activeTabId, setActiveTabId, trancheInfo } =
     props;
+  const { push: navigate } = useRouter();
 
   return (
     <div className={tw("flex", "space-x-6", "p-4")}>

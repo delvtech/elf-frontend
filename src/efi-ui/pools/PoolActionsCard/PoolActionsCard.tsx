@@ -2,13 +2,15 @@ import { ReactElement, useCallback, useEffect } from "react";
 
 import { Card, Intent, Tab, Tabs } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
-import { Link, navigate, useLocation } from "@reach/router";
+import Link from "next/link";
+import { useRouter } from "next/router";
 import { TokenInfo } from "@uniswap/token-lists";
 import { Signer } from "ethers";
 import { PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { useParams } from "efi-ui/next/useParams";
 import { PoolAction } from "efi-ui/pools/hooks/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
 import { StakingPanel } from "efi-ui/pools/StakingPanel/StakingPanel";
 import { UnstakeCard } from "efi-ui/pools/UnstakingPanel/UnstakingCard";
@@ -43,12 +45,10 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
   const { unlockTimestamp } = principalTokenInfo.extensions;
   const isRedeemable = getIsMature(unlockTimestamp);
 
+  const { push: navigate } = useRouter();
+
   // The active tab state is kept in a URL query parameter.
-  const { search } = useLocation();
-  const urlSearchParams = new URLSearchParams(search);
-  const { action: activeTab = PoolAction.BUY } = Object.fromEntries(
-    urlSearchParams.entries()
-  );
+  const { action: activeTab } = useParams();
 
   // safety measure to make sure we end up on a tab that exists
   useEffect(() => {
@@ -102,10 +102,11 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
             )}
             <Tab id={PoolAction.REMOVE_LIQUIDITY} title={t`Remove LP`} />
           </Tabs>
-          <Link
-            to={`/pools/${oppositePoolInfo.address}`}
-            className={tw("text-center")}
-          >{t`Go to ${oppositePoolType} Pool`}</Link>
+          <Link href={`/pools/${oppositePoolInfo.address}`}>
+            <a className={tw("text-center")}>
+              {t`Go to ${oppositePoolType} Pool`}
+            </a>
+          </Link>
         </div>
         {activeTab === PoolAction.BUY && (
           <TradePanel

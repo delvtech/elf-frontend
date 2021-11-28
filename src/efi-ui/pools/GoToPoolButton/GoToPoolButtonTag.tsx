@@ -1,7 +1,7 @@
 import { ReactElement } from "react";
 
 import { Classes, Icon } from "@blueprintjs/core";
-import { Link } from "@reach/router";
+import Link from "next/link";
 import classNames from "classnames";
 
 import tw from "efi-tailwindcss-classnames";
@@ -24,21 +24,22 @@ export function GoToPoolButtonTag(props: GoToPoolButtonTagProps): ReactElement {
   // clicking a link doesn't cause a full-page refresh (like with an anchor
   // tag).
   return (
-    <Link
-      to={`/pools/${poolAddress}?action=${poolAction}`}
-      className={classNames(
-        Classes.TAG,
-        Classes.LARGE,
-        Classes.MINIMAL,
-        Classes.INTERACTIVE,
-        Classes.INTENT_PRIMARY,
-        Classes.FILL,
-        tw("flex", "justify-between"),
-        className
-      )}
-    >
-      <div className={tw("p-2")}>{label}</div>
-      <Icon icon={IconNames.CHEVRON_RIGHT} color={"#a7b6c2"} />
+    <Link href={`/pools/${poolAddress}?action=${poolAction}`}>
+      <a
+        className={classNames(
+          Classes.TAG,
+          Classes.LARGE,
+          Classes.MINIMAL,
+          Classes.INTERACTIVE,
+          Classes.INTENT_PRIMARY,
+          Classes.FILL,
+          tw("flex", "justify-between"),
+          className
+        )}
+      >
+        <div className={tw("p-2")}>{label}</div>
+        <Icon icon={IconNames.CHEVRON_RIGHT} color={"#a7b6c2"} />
+      </a>
     </Link>
   );
 }

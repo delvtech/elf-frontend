@@ -2,14 +2,13 @@ import { Fragment, ReactElement } from "react";
 import { Helmet } from "react-helmet";
 
 import { Card } from "@blueprintjs/core";
-import { RouteComponentProps } from "@reach/router";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { useTotalValueLockedForPlatform } from "efi-ui/stats/useTotalValueLockedForPlatform";
 import { formatMoney } from "efi/money/formatMoney";
 
-interface StatsViewProps extends RouteComponentProps {}
+interface StatsViewProps {}
 
 export function StatsView(unusedProps: StatsViewProps): ReactElement {
   const tvl = useTotalValueLockedForPlatform();

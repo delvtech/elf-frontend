@@ -1,7 +1,7 @@
 import React, { ReactElement } from "react";
 
 import { Card, Classes } from "@blueprintjs/core";
-import { Link } from "@reach/router";
+import Link from "next/link";
 import classNames from "classnames";
 import { commify, formatUnits } from "ethers/lib/utils";
 import { Money } from "ts-money";
@@ -85,10 +85,11 @@ export function PoolSummary(props: PoolSummaryProps): ReactElement {
       <div className={tw("mb-2", "flex", "justify-between")}>
         <span>{t`Pool Summary`}</span>
         {isSmallScreen && (
-          <Link
-            to={`/pools/${oppositePoolInfo.address}`}
-            className={tw("text-center")}
-          >{t`Go to ${oppositePoolType} Pool`}</Link>
+          <Link href={`/pools/${oppositePoolInfo.address}`}>
+            <a className={tw("text-center")}>
+              {t`Go to ${oppositePoolType} Pool`}
+            </a>
+          </Link>
         )}
       </div>
       <Card className={tw("lg:h-200", "grid", "grid-cols-2", "gap-4")}>

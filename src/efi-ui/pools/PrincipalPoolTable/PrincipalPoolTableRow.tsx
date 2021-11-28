@@ -1,7 +1,7 @@
 import { Fragment, ReactElement, useCallback } from "react";
 
 import { Card, Classes, Elevation } from "@blueprintjs/core";
-import { navigate } from "@reach/router";
+import { useRouter } from "next/router";
 import classNames from "classnames";
 import { PrincipalPoolTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
@@ -50,6 +50,7 @@ export function PrincipalPoolTableRow(
 
   const { isDarkMode } = useDarkMode();
 
+  const { push: navigate } = useRouter();
   const goToTrade = useCallback(() => {
     navigate(`/pools/${poolAddress}`);
   }, [poolAddress]);

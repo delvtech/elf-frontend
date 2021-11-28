@@ -1,7 +1,6 @@
 import { Fragment, ReactElement, useMemo } from "react";
 import { Helmet } from "react-helmet";
 
-import { RouteComponentProps } from "@reach/router";
 import { jt, t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -9,7 +8,7 @@ import { FixedRateCardList } from "efi-ui/fixedrates/FixedRateCardList/FixedRate
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { useOpenPrincipalTokenInfos } from "efi-ui/tranche/useOpenPrincipalTokenInfos";
 
-interface FixedRatesListViewProps extends RouteComponentProps {}
+interface FixedRatesListViewProps {}
 
 const fixedYieldLink = (
   <a

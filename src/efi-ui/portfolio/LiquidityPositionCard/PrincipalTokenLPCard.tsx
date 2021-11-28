@@ -10,7 +10,7 @@ import {
   Tag,
 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
-import { Link } from "@reach/router";
+import Link from "next/link";
 import classNames from "classnames";
 import { ConvergentCurvePool } from "elf-contracts-typechain/dist/types/ConvergentCurvePool";
 import { BigNumber } from "ethers";
@@ -141,8 +141,8 @@ export function PrincipalTokenLPCard({
             <span
               className={tw("flex", "space-x-2", "text-2xl", "font-semibold")}
             >
-              <Link className={tw("truncate")} to={`/pools/${pool?.address}`}>
-                {poolName}
+              <Link href={`/pools/${pool?.address}`}>
+                <a className={tw("truncate")}>{poolName}</a>
               </Link>
               <a
                 className={tw("flex", "items-center")}
